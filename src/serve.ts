@@ -27432,16 +27432,6 @@ function buildFreeTierTrackerPage(): string {
       detail: "X/Twitter API eliminated its free tier, replacing it with pay-per-use credit model. Active free-tier users receive a $0 voucher. 'For-good' utility apps remain free. Basic fixed tier remains at $200/month.",
       alternatives: ["Bluesky AT Protocol", "Mastodon API"],
     },
-    {
-      vendor: "Logz.io",
-      slug: "logz-io",
-      date: "2026-03-02",
-      oneLiner: "Free Community plan removed — trial only",
-      changeType: "free_tier_removed",
-      impact: "medium",
-      detail: "Logz.io removed its Free Community plan (1 GB/day, 1-day retention, 10 alerts). Only a 14-day free trial remains. Consumption-based pricing starts at $0.92/ingested GB/day.",
-      alternatives: ["Grafana Cloud", "BetterStack", "Axiom"],
-    },
   ];
 
   const featuredExpansions: ErosionEntry[] = [

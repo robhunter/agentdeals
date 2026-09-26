@@ -966,7 +966,13 @@
         "New Relic"
       ],
       "recorded_date": "2026-03-02",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: duplicate of our Logz.io record dated 2024-11-17; the Community plan left logz.io/pricing between 2024-10-11 and 2024-11-17.",
+        "source_url": "https://web.archive.org/web/20241011003556/https://logz.io/pricing/"
+      }
     },
     {
       "vendor": "X (Twitter)",
@@ -4206,12 +4212,12 @@
     {
       "vendor": "Logz.io",
       "change_type": "free_tier_removed",
-      "date": "2026-04-13",
-      "summary": "No free tier, pay-as-you-go only ($0.92/GB/day)",
-      "previous_state": "",
-      "current_state": "No free tier, pay-as-you-go only ($0.92/GB/day)",
+      "date": "2024-11-17",
+      "summary": "Logz.io dropped its free Community plan (Log Management 1 GB a day with 1-day retention) between 2024-10-11 and 2024-11-17. Its terms, revised 2025-01-15, delete an account when its 14-day trial lapses unless it moves to a paid plan.",
+      "previous_state": "\"Community (Free!)\": Log Management 1 GB daily data volume with 1-day retention, plus free metrics and tracing tiers",
+      "current_state": "\"Completely free for 14 days, no strings attached.\" Log Management \"$ 0.92 Per ingested GB, per day\". \"Billed annually (or monthly for 1.2x the cost).\"",
       "impact": "low",
-      "source_url": "https://logz.io/pricing/",
+      "source_url": "https://web.archive.org/web/20241011003556/https://logz.io/pricing/",
       "category": "Logging",
       "alternatives": [],
       "recorded_date": "2026-04-13",
@@ -11319,6 +11325,20 @@
       "impact": "medium",
       "source_url": "https://blog.ovhcloud.com/en/posts/pricing-evolution-of-public-cloud-bare-metal-and-vps-at-ovhcloud/",
       "category": "Cloud IaaS",
+      "alternatives": [],
+      "recorded_date": "2026-09-26",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Logz.io",
+      "change_type": "record_corrected",
+      "date": "2026-09-26",
+      "summary": "Data correction - Logz.io's free Community plan ended between 2024-10-11 and 2024-11-17, not on 2026-04-13. Its plans are billed annually, or monthly at 1.2x the cost, so \"pay-as-you-go only\" was also wrong.",
+      "previous_state": "Recorded as: No free tier, pay-as-you-go only ($0.92/GB/day)",
+      "current_state": "\"Completely free for 14 days, no strings attached.\" Log Management \"$ 0.92 Per ingested GB, per day\". \"Billed annually (or monthly for 1.2x the cost).\"",
+      "impact": "low",
+      "source_url": "https://logz.io/pricing/",
+      "category": "Logging",
       "alternatives": [],
       "recorded_date": "2026-09-26",
       "date_source": "hand_written"

@@ -91,17 +91,7 @@ interface DurationTheRecordDoesNotDescribe {
   because: string;
 }
 
-const DESCRIBES_A_PLAN_THE_RECORD_DOES_NOT: DurationTheRecordDoesNotDescribe[] = [
-  {
-    builder: "buildFreeTierTrackerPage",
-    array: "featuredRemovals",
-    slug: "logz-io",
-    field: "detail",
-    days: 1,
-    because:
-      "the 1-day retention it states belonged to the Community plan the same sentence says was removed, and the record describes the 14-day trial that is left",
-  },
-];
+const DESCRIBES_A_PLAN_THE_RECORD_DOES_NOT: DurationTheRecordDoesNotDescribe[] = [];
 
 function describesAPlanTheRecordDoesNot(duration: DurationOnARow): DurationTheRecordDoesNotDescribe | null {
   return (
@@ -151,8 +141,6 @@ describe("a hardcoded row states no number of days its vendor's record does not"
 });
 
 describe("the durations this rule is declared not to read", () => {
-  const declared = DESCRIBES_A_PLAN_THE_RECORD_DOES_NOT[0]!;
-
   it("holds every declared exception to a duration the sweep still finds", () => {
     const stale = DESCRIBES_A_PLAN_THE_RECORD_DOES_NOT.filter(
       exception => !durations.some(duration => describesAPlanTheRecordDoesNot(duration) === exception),
@@ -170,21 +158,23 @@ describe("the durations this rule is declared not to read", () => {
     }
   });
 
-  it("suppresses the one duration it names and nothing beside it", () => {
-    const suppressed = durations.find(duration => describesAPlanTheRecordDoesNot(duration) === declared);
-    assert.ok(suppressed, `no row states ${declared.days} days at ${declared.builder}.${declared.array} for ${declared.slug}`);
-    for (const drifted of [
-      { ...suppressed, days: suppressed.days + 1 },
-      { ...suppressed, field: `${suppressed.field}Notes` },
-      { ...suppressed, row: { ...suppressed.row, builder: "buildSomeOtherPage" } },
-      { ...suppressed, row: { ...suppressed.row, array: "someOtherArray" } },
-      { ...suppressed, row: { ...suppressed.row, slug: "some-other-vendor" } },
-    ]) {
-      assert.strictEqual(
-        describesAPlanTheRecordDoesNot(drifted),
-        null,
-        `the exception also suppresses ${drifted.row.builder}.${drifted.row.array} ${drifted.row.slug} ${drifted.field} ${drifted.days}`,
-      );
+  it("suppresses each duration it names and nothing beside it", () => {
+    for (const declared of DESCRIBES_A_PLAN_THE_RECORD_DOES_NOT) {
+      const suppressed = durations.find(duration => describesAPlanTheRecordDoesNot(duration) === declared);
+      assert.ok(suppressed, `no row states ${declared.days} days at ${declared.builder}.${declared.array} for ${declared.slug}`);
+      for (const drifted of [
+        { ...suppressed, days: suppressed.days + 1 },
+        { ...suppressed, field: `${suppressed.field}Notes` },
+        { ...suppressed, row: { ...suppressed.row, builder: "buildSomeOtherPage" } },
+        { ...suppressed, row: { ...suppressed.row, array: "someOtherArray" } },
+        { ...suppressed, row: { ...suppressed.row, slug: "some-other-vendor" } },
+      ]) {
+        assert.strictEqual(
+          describesAPlanTheRecordDoesNot(drifted),
+          null,
+          `the exception also suppresses ${drifted.row.builder}.${drifted.row.array} ${drifted.row.slug} ${drifted.field} ${drifted.days}`,
+        );
+      }
     }
   });
 });
