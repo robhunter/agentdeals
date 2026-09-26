@@ -3,6 +3,7 @@ import assert from "node:assert";
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { assertPopulationFloor } from "./population-floor.ts";
 
 const {
   rankOffers,
@@ -66,6 +67,7 @@ const SERVE_SOURCE = readFileSync(join(REPO, "src", "serve.ts"), "utf8");
 const BEST_OF_MIN_VENDORS = Number(/const BEST_OF_MIN_VENDORS = (\d+);/.exec(SERVE_SOURCE)?.[1]);
 
 const WITHDRAWAL_CHANGE_TYPES = new Set(["free_tier_removed", "open_source_killed", "product_deprecated"]);
+const DISCLOSURE_CHANGE_TYPES = new Set(["limits_reduced", "pricing_restructured", "restriction"]);
 const ADVERSE_CHANGE_WINDOW_DAYS = 365;
 const STALE_VERIFICATION_DAYS = 90;
 
@@ -265,14 +267,33 @@ describe("recorded changes that must not move rank", () => {
     });
   }
 
-  it("Supabase and Neon stay in the top band despite their recorded changes", () => {
+  it("the Databases ranking is the same without its disclosed changes, and each offer with one shows it", () => {
     const dbs = index.offers.filter((o) => o.category === "Databases");
+    const disclosable = (c: DealChange) => DISCLOSURE_CHANGE_TYPES.has(c.change_type);
     const r = rankOffers(dbs, { queryKey: "best-of:Databases", changes: dealChanges, date: TODAY });
-    for (const vendor of ["Supabase", "Neon"]) {
-      const entry = r.qualified.find((e) => e.offer.vendor === vendor);
-      assert.ok(entry, `${vendor} should be in the qualified band`);
-      assert.strictEqual(entry.demerit_total, 0);
-      assert.ok(entry.disclosures.length > 0, `${vendor}'s recorded change should still be disclosed`);
+    const withoutThem = rankOffers(dbs, {
+      queryKey: "best-of:Databases",
+      changes: dealChanges.filter((c) => !disclosable(c)),
+      date: TODAY,
+    });
+    const places = (result: typeof r) => result.ranked.map((e) => `${e.offer.vendor} ${e.demerit_total}`);
+    assert.deepStrictEqual(places(r), places(withoutThem));
+
+    const withADisclosedChange = r.ranked.filter((e) =>
+      dealChanges.some(
+        (c) =>
+          c.vendor.toLowerCase() === e.offer.vendor.toLowerCase()
+          && disclosable(c)
+          && daysApart(c.date, TODAY) <= ADVERSE_CHANGE_WINDOW_DAYS,
+      ),
+    );
+    assertPopulationFloor(
+      withADisclosedChange.filter((e) => e.demerit_total === 0).length,
+      1,
+      "qualified Databases offers with a disclosed change, without which nothing here is about the top band",
+    );
+    for (const entry of withADisclosedChange) {
+      assert.ok(entry.disclosures.length > 0, `${entry.offer.vendor}'s recorded change should still be disclosed`);
     }
   });
 });

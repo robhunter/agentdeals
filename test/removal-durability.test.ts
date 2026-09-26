@@ -343,8 +343,12 @@ function claimsOfPermanence(text: string): string[] {
   return sentences(text).filter((sentence) => prosePutsRemovalBeyondReturn(sentence));
 }
 
+function statesFigureOfRemovals(text: string, part: number, standBehind: number, phrase = "removals"): boolean {
+  return new RegExp(`(?<![\\d,])${part} of the ${standBehind} ${phrase}`).test(text);
+}
+
 function sentenceStatingRemovalsHeld(text: string, held: number, standBehind: number): string {
-  const found = sentences(text).find((sentence) => sentence.includes(`${held} of the ${standBehind} removals`));
+  const found = sentences(text).find((sentence) => statesFigureOfRemovals(sentence, held, standBehind));
   assert.ok(found, `no sentence states that ${held} of ${standBehind} removals are still in force`);
   return found;
 }
@@ -411,12 +415,12 @@ describe("no page tells a reader a removed free tier cannot return", () => {
       const text = visibleText(body);
       assert.deepStrictEqual(claimsOfPermanence(text), []);
       assert.ok(
-        text.includes(`${after.cameBack.length} of the ${after.weStandBehind.length} removals we stand behind`),
+        statesFigureOfRemovals(text, after.cameBack.length, after.weStandBehind.length, "removals we stand behind"),
         `the page did not publish ${after.cameBack.length} of ${after.weStandBehind.length}`,
       );
       assert.ok(text.includes(standing.vendor), `${standing.vendor} came back and the page does not say so`);
       assert.ok(
-        !text.includes(`${before.cameBack.length} of the ${before.weStandBehind.length} removals we stand behind`),
+        !statesFigureOfRemovals(text, before.cameBack.length, before.weStandBehind.length, "removals we stand behind"),
         "the page published the figure from before the reversal",
       );
     } finally {
