@@ -2880,7 +2880,7 @@
       ],
       "verifiedDate": "2026-07-25",
       "source_check": {
-        "checked": "2026-09-19",
+        "checked": "2026-09-26",
         "outcome": "unreadable",
         "detail": "HTTP 429"
       }
@@ -4014,7 +4014,7 @@
         "notes": "Technology and SI partner programs. No individual referral program."
       },
       "source_check": {
-        "checked": "2026-09-19",
+        "checked": "2026-09-26",
         "outcome": "unreadable",
         "detail": "HTTP 429"
       },
@@ -4645,7 +4645,7 @@
     {
       "vendor": "MinIO",
       "category": "Storage",
-      "description": "S3-compatible object storage — self-hosted free (GNU AGPL v3). High performance, Kubernetes-native. No usage limits when self-hosted. Primary alternative for LocalStack S3 emulation",
+      "description": "S3-compatible object storage — MinIO OSS is at end of life and is no longer being maintained. Its codebase is frozen, with no new features, bug fixes, or security patches.",
       "tier": "Open Source",
       "url": "https://min.io/pricing",
       "tags": [
@@ -4665,14 +4665,21 @@
         "reviewed": "2026-08-25"
       },
       "source_check": {
-        "checked": "2026-09-25",
+        "checked": "2026-09-26",
         "outcome": "ok",
         "detail": "the page names MinIO, renders \"Enterprise tiers\" and no amount, and its markup states 1 typed price (AIStor Free USD 0)",
         "read": "markup"
       },
       "free_grounds": [
         "licence"
-      ]
+      ],
+      "restated_from": {
+        "reading_date": "2026-09-26",
+        "source_url": "https://min.io/pricing",
+        "record_date": "2026-09-26",
+        "change_type": "open_source_killed",
+        "restated_on": "2026-09-26"
+      }
     },
     {
       "vendor": "Backblaze",
@@ -4747,7 +4754,7 @@
       ],
       "verifiedDate": "2026-09-09",
       "source_check": {
-        "checked": "2026-09-25",
+        "checked": "2026-09-26",
         "outcome": "ok",
         "detail": "the page names Pulumi as \"pulumi\" and states \"10K API calls / month\""
       }
@@ -4790,7 +4797,7 @@
       ],
       "verifiedDate": "2026-04-19",
       "source_check": {
-        "checked": "2026-09-19",
+        "checked": "2026-09-26",
         "outcome": "unreadable",
         "detail": "HTTP 429"
       }
@@ -5114,7 +5121,7 @@
       ],
       "verifiedDate": "2026-07-28",
       "source_check": {
-        "checked": "2026-09-25",
+        "checked": "2026-09-26",
         "outcome": "ok",
         "detail": "the page names LogRocket as \"logrocket\" and states amounts, none of which we matched to the terms we publish"
       }
@@ -5135,7 +5142,7 @@
       ],
       "verifiedDate": "2026-07-28",
       "source_check": {
-        "checked": "2026-09-25",
+        "checked": "2026-09-26",
         "outcome": "ok",
         "detail": "the page names LiveKit as \"livekit\" and states \"$0\""
       }
@@ -5364,7 +5371,7 @@
       ],
       "verifiedDate": "2026-07-28",
       "source_check": {
-        "checked": "2026-09-25",
+        "checked": "2026-09-26",
         "outcome": "ok",
         "detail": "the page names Mapbox as \"mapbox\" and states \"$0.30\" and \"$0.08\""
       },
@@ -5392,7 +5399,7 @@
       ],
       "verifiedDate": "2026-08-15",
       "source_check": {
-        "checked": "2026-09-25",
+        "checked": "2026-09-26",
         "outcome": "ok",
         "detail": "the page names Google Maps Platform as \"google maps platform\" and states \"$300\""
       }
@@ -5625,7 +5632,7 @@
         "program": "IBM Cloud for Startups"
       },
       "source_check": {
-        "checked": "2026-09-19",
+        "checked": "2026-09-26",
         "outcome": "unreadable",
         "detail": "HTTP 404"
       }
@@ -5772,7 +5779,7 @@
       ],
       "verifiedDate": "2026-07-30",
       "source_check": {
-        "checked": "2026-09-25",
+        "checked": "2026-09-26",
         "outcome": "ok",
         "detail": "the page names Expo as \"expo\" and states \"$ 0\" and \"$0\""
       },
@@ -5932,7 +5939,7 @@
     {
       "vendor": "Nango",
       "category": "API Development",
-      "description": "The Free plan is $0/mo and includes 10 connections, 100k proxy requests, 10 hours of function compute time, 100k function runs, 100k custom function logs, 100k custom sync storage records, and 100k API webhooks.",
+      "description": "The Free plan is $0 /mo and includes 10 connections, 10 hours / mo compute time, and 10GB / mo data transfer.",
       "tier": "Free",
       "url": "https://nango.dev/pricing",
       "tags": [
@@ -5945,16 +5952,16 @@
       ],
       "verifiedDate": "2026-07-27",
       "source_check": {
-        "checked": "2026-09-25",
+        "checked": "2026-09-26",
         "outcome": "ok",
         "detail": "the page names Nango as \"nango\" and states \"$0\""
       },
       "restated_from": {
-        "reading_date": "2026-08-28",
+        "reading_date": "2026-09-26",
         "source_url": "https://nango.dev/pricing",
-        "record_date": "2026-08-28",
+        "record_date": "2026-09-26",
         "change_type": "limits_reduced",
-        "restated_on": "2026-09-20"
+        "restated_on": "2026-09-26"
       }
     },
     {
@@ -6059,7 +6066,7 @@
       ],
       "verifiedDate": "2026-05-02",
       "source_check": {
-        "checked": "2026-09-19",
+        "checked": "2026-09-26",
         "outcome": "unreadable",
         "detail": "HTTP 404"
       },
@@ -6248,9 +6255,9 @@
       ],
       "verifiedDate": "2026-07-27",
       "source_check": {
-        "checked": "2026-09-10",
+        "checked": "2026-09-26",
         "outcome": "ok",
-        "detail": "the page names LocationIQ as \"locationiq\""
+        "detail": "the page names LocationIQ as \"locationiq\" and states \"5000 requests /day\""
       }
     },
     {
@@ -6313,9 +6320,9 @@
       ],
       "verifiedDate": "2026-07-29",
       "source_check": {
-        "checked": "2026-09-10",
+        "checked": "2026-09-26",
         "outcome": "ok",
-        "detail": "the page names ScraperAPI as \"scraperapi\""
+        "detail": "the page names ScraperAPI as \"scraperapi\" and states amounts, none of which we matched to the terms we publish"
       }
     },
     {
@@ -6834,11 +6841,11 @@
         "nodejs",
         "open source"
       ],
-      "verifiedDate": "2026-09-10",
+      "verifiedDate": "2026-09-26",
       "source_check": {
-        "checked": "2026-09-10",
+        "checked": "2026-09-26",
         "outcome": "ok",
-        "detail": "the page names BullMQ as \"bullmq\""
+        "detail": "the page names BullMQ as \"bullmq\" and states amounts, none of which we matched to the terms we publish"
       },
       "free_grounds": [
         "licence"
@@ -7123,9 +7130,9 @@
       ],
       "verifiedDate": "2026-07-28",
       "source_check": {
-        "checked": "2026-09-10",
+        "checked": "2026-09-26",
         "outcome": "ok",
-        "detail": "the page names Gitea as \"gitea\""
+        "detail": "the page names Gitea as \"gitea\" and states amounts, none of which we matched to the terms we publish"
       },
       "free_grounds": [
         "licence"
@@ -7143,11 +7150,11 @@
         "admin panel",
         "open source"
       ],
-      "verifiedDate": "2026-09-08",
+      "verifiedDate": "2026-09-26",
       "source_check": {
-        "checked": "2026-09-10",
+        "checked": "2026-09-26",
         "outcome": "ok",
-        "detail": "the page names Appsmith as \"appsmith\""
+        "detail": "the page names Appsmith as \"appsmith\" and states amounts, none of which we matched to the terms we publish"
       },
       "free_grounds": [
         "licence"
@@ -7474,9 +7481,9 @@
         "notes": "No public affiliate/referral program. Referral features reportedly in development but not launched."
       },
       "source_check": {
-        "checked": "2026-09-10",
+        "checked": "2026-09-26",
         "outcome": "ok",
-        "detail": "the page names OpenAI as \"openai\""
+        "detail": "the page names OpenAI as \"openai\" and states \"$5.00\" and \"$0.02\" and \"$30.00\" and \"1 GB free per account per month\""
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -7720,7 +7727,7 @@
     {
       "vendor": "Pinecone",
       "category": "AI / ML",
-      "description": "Vector database — The Starter plan is free and includes up to 2 GB storage, 2M write units/month, 1M read units/month, 5 indexes, 1GB Assistant storage, 500k input tokens, 300k output tokens, and 500k context processed tokens. It also includes access to various embedding and reranking models with token/request limits.",
+      "description": "Vector database — The Starter plan is free and includes up to 2 GB storage, 2M write units/month, 1M read units/month, 1GB Assistant storage, 500k input tokens, 300k output tokens, and 500k context processed tokens. It also includes access to various embedding and reranking models with token/request limits.",
       "tier": "Starter",
       "url": "https://pinecone.io/pricing",
       "tags": [
@@ -7741,9 +7748,9 @@
         }
       ],
       "source_check": {
-        "checked": "2026-09-10",
+        "checked": "2026-09-26",
         "outcome": "ok",
-        "detail": "the page names Pinecone as \"pinecone\""
+        "detail": "the page names Pinecone as \"pinecone\" and states \"1GB/mo\""
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -7762,11 +7769,11 @@
         "reviewed": "2026-09-01"
       },
       "restated_from": {
-        "reading_date": "2026-09-10",
+        "reading_date": "2026-09-26",
         "source_url": "https://pinecone.io/pricing",
-        "record_date": "2026-09-10",
-        "change_type": "pricing_restructured",
-        "restated_on": "2026-09-20"
+        "record_date": "2026-09-26",
+        "change_type": "limits_increased",
+        "restated_on": "2026-09-26"
       }
     },
     {
@@ -7782,7 +7789,7 @@
         "embeddings",
         "search"
       ],
-      "verifiedDate": "2026-07-30",
+      "verifiedDate": "2026-09-26",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -7793,9 +7800,9 @@
         }
       ],
       "source_check": {
-        "checked": "2026-09-10",
+        "checked": "2026-09-26",
         "outcome": "ok",
-        "detail": "the page names Qdrant as \"qdrant\""
+        "detail": "the page names Qdrant as \"qdrant\" and states amounts, none of which we matched to the terms we publish"
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -8106,9 +8113,9 @@
       ],
       "verifiedDate": "2026-07-05",
       "source_check": {
-        "checked": "2026-09-10",
+        "checked": "2026-09-26",
         "outcome": "ok",
-        "detail": "the page names Semaphore CI as \"semaphore ci\""
+        "detail": "the page names Semaphore CI as \"semaphore ci\" and states \"$0.0075\" and \"$0.0025\" and \"$15\" and \"15 free credits per month\""
       }
     },
     {
@@ -8373,9 +8380,9 @@
       ],
       "verifiedDate": "2026-07-28",
       "source_check": {
-        "checked": "2026-09-10",
+        "checked": "2026-09-26",
         "outcome": "ok",
-        "detail": "the page names Geocodio as \"geocodio\""
+        "detail": "the page names Geocodio as \"geocodio\" and states \"2,500 lookups/day\""
       }
     },
     {
@@ -8495,11 +8502,11 @@
         "competitions",
         "datasets"
       ],
-      "verifiedDate": "2026-09-09",
+      "verifiedDate": "2026-09-26",
       "source_check": {
-        "checked": "2026-09-10",
+        "checked": "2026-09-26",
         "outcome": "ok",
-        "detail": "the page names Kaggle as \"kaggle\"",
+        "detail": "the page names Kaggle as \"kaggle\" and states amounts, none of which we matched to the terms we publish",
         "rendered": true
       },
       "product_subtypes": {
@@ -8527,11 +8534,11 @@
         "object-detection",
         "model-training"
       ],
-      "verifiedDate": "2026-07-28",
+      "verifiedDate": "2026-09-26",
       "source_check": {
-        "checked": "2026-09-10",
+        "checked": "2026-09-26",
         "outcome": "ok",
-        "detail": "the page names Roboflow as \"roboflow\""
+        "detail": "the page names Roboflow as \"roboflow\" and states \"15 credits / month\""
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -8670,9 +8677,9 @@
       ],
       "verifiedDate": "2026-07-05",
       "source_check": {
-        "checked": "2026-09-10",
+        "checked": "2026-09-26",
         "outcome": "ok",
-        "detail": "the page names LanceDB as \"lancedb\""
+        "detail": "the page names LanceDB as \"lancedb\" and states amounts, none of which we matched to the terms we publish"
       },
       "product_subtypes": {
         "taxonomy": "Databases",
@@ -9042,7 +9049,7 @@
       ],
       "verifiedDate": "2026-07-15",
       "source_check": {
-        "checked": "2026-09-19",
+        "checked": "2026-09-26",
         "outcome": "unreadable",
         "detail": "fetch failed"
       }
@@ -9062,7 +9069,7 @@
       ],
       "verifiedDate": "2026-05-13",
       "source_check": {
-        "checked": "2026-09-19",
+        "checked": "2026-09-26",
         "outcome": "unreadable",
         "detail": "fetch failed"
       }
@@ -9082,7 +9089,7 @@
       ],
       "verifiedDate": "2026-06-09",
       "source_check": {
-        "checked": "2026-09-19",
+        "checked": "2026-09-26",
         "outcome": "unreadable",
         "detail": "HTTP 404"
       },
@@ -9113,9 +9120,9 @@
       ],
       "verifiedDate": "2026-07-30",
       "source_check": {
-        "checked": "2026-09-10",
+        "checked": "2026-09-26",
         "outcome": "ok",
-        "detail": "the page names Tyk as \"tyk\""
+        "detail": "the page names Tyk as \"tyk\" and states amounts, none of which we matched to the terms we publish"
       },
       "free_grounds": [
         "licence"
@@ -9136,9 +9143,9 @@
       ],
       "verifiedDate": "2026-07-30",
       "source_check": {
-        "checked": "2026-09-10",
+        "checked": "2026-09-26",
         "outcome": "ok",
-        "detail": "the page names Stoplight as \"stoplight\""
+        "detail": "the page names Stoplight as \"stoplight\" and states amounts, none of which we matched to the terms we publish"
       },
       "restated_from": {
         "reading_date": "2026-08-28",
@@ -9403,9 +9410,9 @@
       ],
       "verifiedDate": "2026-08-02",
       "source_check": {
-        "checked": "2026-09-10",
+        "checked": "2026-09-26",
         "outcome": "ok",
-        "detail": "the page names Apollo GraphOS as \"apollo graphos\""
+        "detail": "the page names Apollo GraphOS as \"apollo graphos\" and states \"$0\""
       }
     },
     {
@@ -9600,9 +9607,9 @@
         "status-page",
         "slack"
       ],
-      "verifiedDate": "2026-09-08",
+      "verifiedDate": "2026-09-26",
       "source_check": {
-        "checked": "2026-09-25",
+        "checked": "2026-09-26",
         "outcome": "ok",
         "detail": "the page names incident.io as \"incident io\" and states amounts, none of which we matched to the terms we publish"
       },
@@ -9626,7 +9633,7 @@
     {
       "vendor": "AppSignal",
       "category": "Monitoring",
-      "description": "Application monitoring (APM, errors, logging) — free plan: 50,000 requests/month, 1 GB logging/month, 5-day data retention, unlimited apps and hosts. Extended free limits for OSS and humanitarian projects",
+      "description": "Application monitoring (APM, errors, logging) — Our free plan is perfect for startups, hobby, or side-projects 30K requests 1GB logging 5-day retention",
       "tier": "Free",
       "url": "https://www.appsignal.com/plans",
       "tags": [
@@ -9639,7 +9646,7 @@
       ],
       "verifiedDate": "2026-09-08",
       "source_check": {
-        "checked": "2026-09-25",
+        "checked": "2026-09-26",
         "outcome": "ok",
         "detail": "the page names AppSignal as \"appsignal\" and states \"279 Logging 1GB /month\""
       },
@@ -9663,6 +9670,13 @@
           }
         ],
         "reviewed": "2026-09-01"
+      },
+      "restated_from": {
+        "reading_date": "2026-09-26",
+        "source_url": "https://www.appsignal.com/plans",
+        "record_date": "2026-09-26",
+        "change_type": "limits_reduced",
+        "restated_on": "2026-09-26"
       }
     },
     {
@@ -9815,9 +9829,9 @@
       ],
       "verifiedDate": "2026-07-09",
       "source_check": {
-        "checked": "2026-09-10",
+        "checked": "2026-09-26",
         "outcome": "ok",
-        "detail": "the page names Bitrise as \"bitrise\""
+        "detail": "the page names Bitrise as \"bitrise\" and states \"300 credits per month\""
       }
     },
     {
@@ -9864,11 +9878,11 @@
         "distribution",
         "codepush"
       ],
-      "verifiedDate": "2026-09-08",
+      "verifiedDate": "2026-09-26",
       "source_check": {
-        "checked": "2026-09-10",
+        "checked": "2026-09-26",
         "outcome": "ok",
-        "detail": "the page names Appcircle as \"appcircle\""
+        "detail": "the page names Appcircle as \"appcircle\" and states \"20 builds per month\" and \"1000 CodePush updates per month\" and \"100 Testing Distribution downloads per month\" and \"100 Enterprise App Store downloads per month\""
       }
     },
     {
@@ -10224,9 +10238,9 @@
       ],
       "verifiedDate": "2026-09-10",
       "source_check": {
-        "checked": "2026-09-10",
+        "checked": "2026-09-26",
         "outcome": "ok",
-        "detail": "the page names Zoho Sign as \"zoho sign\""
+        "detail": "the page names Zoho Sign as \"zoho sign\" and states amounts, none of which we matched to the terms we publish"
       }
     },
     {
@@ -10453,7 +10467,7 @@
       ],
       "verifiedDate": "2026-06-12",
       "source_check": {
-        "checked": "2026-09-19",
+        "checked": "2026-09-26",
         "outcome": "unreadable",
         "detail": "HTTP 403"
       }
@@ -10596,9 +10610,9 @@
       ],
       "verifiedDate": "2026-08-02",
       "source_check": {
-        "checked": "2026-09-10",
+        "checked": "2026-09-26",
         "outcome": "ok",
-        "detail": "the page names APIVerve as \"apiverve\""
+        "detail": "the page names APIVerve as \"apiverve\" and states amounts, none of which we matched to the terms we publish"
       }
     },
     {
@@ -10649,11 +10663,11 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-06-10",
+      "verifiedDate": "2026-09-26",
       "source_check": {
-        "checked": "2026-09-19",
-        "outcome": "unreadable",
-        "detail": "HTTP 402"
+        "checked": "2026-09-26",
+        "outcome": "ok",
+        "detail": "the page names BrowserCat as \"browsercat\" and states \"$0\""
       }
     },
     {
@@ -10683,11 +10697,11 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-09-08",
+      "verifiedDate": "2026-09-26",
       "source_check": {
-        "checked": "2026-09-10",
+        "checked": "2026-09-26",
         "outcome": "ok",
-        "detail": "the page names Canopy as \"canopy\""
+        "detail": "the page names Canopy as \"canopy\" and states \"$0\""
       }
     },
     {
@@ -10727,7 +10741,7 @@
     {
       "vendor": "Composio",
       "category": "AI / ML",
-      "description": "Integration platform for AI Agents and LLMs. Integrate over 200+ tools across the agentic internet.",
+      "description": "Integration platform for AI Agents and LLMs — Free $0 No credit card required 100,000 tool calls / mo 50,000 triggers / mo 3 team members",
       "tier": "Free",
       "url": "https://composio.dev/pricing",
       "tags": [
@@ -10745,7 +10759,7 @@
         }
       ],
       "source_check": {
-        "checked": "2026-09-25",
+        "checked": "2026-09-26",
         "outcome": "ok",
         "detail": "the page names Composio as \"composio\" and states \"$0\""
       },
@@ -10759,6 +10773,13 @@
           }
         ],
         "reviewed": "2026-09-01"
+      },
+      "restated_from": {
+        "reading_date": "2026-09-26",
+        "source_url": "https://composio.dev/pricing",
+        "record_date": "2026-09-26",
+        "change_type": "limits_reduced",
+        "restated_on": "2026-09-26"
       }
     },
     {
@@ -10842,9 +10863,9 @@
       ],
       "verifiedDate": "2026-08-03",
       "source_check": {
-        "checked": "2026-09-10",
-        "outcome": "ok",
-        "detail": "the page names Cube as \"cube\""
+        "checked": "2026-09-26",
+        "outcome": "states_no_terms",
+        "detail": "the page names Cube but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
     },
     {
@@ -10997,11 +11018,11 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-05",
+      "verifiedDate": "2026-09-26",
       "source_check": {
-        "checked": "2026-09-10",
+        "checked": "2026-09-26",
         "outcome": "ok",
-        "detail": "the page names DB-IP as \"db ip\""
+        "detail": "the page names DB-IP as \"db ip\" and states amounts, none of which we matched to the terms we publish"
       },
       "restated_from": {
         "reading_date": "2026-08-28",
@@ -11119,11 +11140,11 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-09-10",
+      "verifiedDate": "2026-09-26",
       "source_check": {
-        "checked": "2026-09-10",
+        "checked": "2026-09-26",
         "outcome": "ok",
-        "detail": "the page names Doppio as \"doppio\""
+        "detail": "the page names Doppio as \"doppio\" and states amounts, none of which we matched to the terms we publish"
       }
     },
     {
@@ -11156,9 +11177,9 @@
       ],
       "verifiedDate": "2026-07-07",
       "source_check": {
-        "checked": "2026-09-10",
+        "checked": "2026-09-26",
         "outcome": "ok",
-        "detail": "the page names DynamicDocs as \"dynamicdocs\""
+        "detail": "the page names DynamicDocs as \"dynamicdocs\" and states amounts, none of which we matched to the terms we publish"
       }
     },
     {
@@ -11171,11 +11192,11 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-09-10",
+      "verifiedDate": "2026-09-26",
       "source_check": {
-        "checked": "2026-09-10",
+        "checked": "2026-09-26",
         "outcome": "ok",
-        "detail": "the page names Export SDK as \"export sdk\""
+        "detail": "the page names Export SDK as \"export sdk\" and states \"250 free pages / month\" and \"250 pages per month\""
       }
     },
     {
@@ -11354,11 +11375,11 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-27",
+      "verifiedDate": "2026-09-26",
       "source_check": {
-        "checked": "2026-09-10",
+        "checked": "2026-09-26",
         "outcome": "ok",
-        "detail": "the page names Invantive Cloud as \"invantive cloud\""
+        "detail": "the page names Invantive Cloud as \"invantive cloud\" and states amounts, none of which we matched to the terms we publish"
       },
       "restated_from": {
         "reading_date": "2026-08-28",
@@ -11378,11 +11399,11 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-07",
+      "verifiedDate": "2026-09-26",
       "source_check": {
-        "checked": "2026-09-10",
+        "checked": "2026-09-26",
         "outcome": "ok",
-        "detail": "the page names IP Geolocation API by ipwho.org as \"geolocation\""
+        "detail": "the page names IP Geolocation API by ipwho.org as \"geolocation\" and states \"$2.50\""
       },
       "restated_from": {
         "reading_date": "2026-08-28",
@@ -11404,7 +11425,7 @@
       ],
       "verifiedDate": "2026-08-27",
       "source_check": {
-        "checked": "2026-09-25",
+        "checked": "2026-09-26",
         "outcome": "states_a_free_price",
         "detail": "the page names IP Geolocation and states its price in words as \"Free API\", and its markup carries no structured data"
       }
@@ -11488,11 +11509,11 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-09-08",
+      "verifiedDate": "2026-09-26",
       "source_check": {
-        "checked": "2026-09-10",
+        "checked": "2026-09-26",
         "outcome": "ok",
-        "detail": "the page names ipbase.com as \"ipbase com\""
+        "detail": "the page names ipbase.com as \"ipbase com\" and states \"150 free API requests per month\""
       }
     },
     {
@@ -11524,9 +11545,9 @@
       ],
       "verifiedDate": "2026-07-08",
       "source_check": {
-        "checked": "2026-09-10",
+        "checked": "2026-09-26",
         "outcome": "ok",
-        "detail": "the page names IPTrace as \"iptrace\""
+        "detail": "the page names IPTrace as \"iptrace\" and states amounts, none of which we matched to the terms we publish"
       }
     },
     {
@@ -11573,11 +11594,11 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-09-09",
+      "verifiedDate": "2026-09-26",
       "source_check": {
-        "checked": "2026-09-10",
+        "checked": "2026-09-26",
         "outcome": "ok",
-        "detail": "the page names JSON2Video as \"json2video\""
+        "detail": "the page names JSON2Video as \"json2video\" and states amounts, none of which we matched to the terms we publish"
       }
     },
     {
@@ -11624,11 +11645,11 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-09-10",
+      "verifiedDate": "2026-09-26",
       "source_check": {
-        "checked": "2026-09-10",
+        "checked": "2026-09-26",
         "outcome": "ok",
-        "detail": "the page names JSONSwiss as \"jsonswiss\""
+        "detail": "the page names JSONSwiss as \"jsonswiss\" and states amounts, none of which we matched to the terms we publish"
       }
     },
     {
@@ -11659,11 +11680,11 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-09-09",
+      "verifiedDate": "2026-09-26",
       "source_check": {
-        "checked": "2026-09-10",
+        "checked": "2026-09-26",
         "outcome": "ok",
-        "detail": "the page names Kreya as \"kreya\""
+        "detail": "the page names Kreya as \"kreya\" and states amounts, none of which we matched to the terms we publish"
       }
     },
     {
@@ -11783,9 +11804,9 @@
       ],
       "verifiedDate": "2026-07-30",
       "source_check": {
-        "checked": "2026-09-10",
+        "checked": "2026-09-26",
         "outcome": "ok",
-        "detail": "the page names Mockerito as \"mockerito\""
+        "detail": "the page names Mockerito as \"mockerito\" and states \"$ 10\" and \"$10\" and \"50,000 API calls/month\""
       },
       "restated_from": {
         "reading_date": "2026-08-28",
@@ -11909,11 +11930,11 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-09-10",
+      "verifiedDate": "2026-09-26",
       "source_check": {
-        "checked": "2026-09-10",
+        "checked": "2026-09-26",
         "outcome": "ok",
-        "detail": "the page names numlookupapi.com as \"numlookupapi com\""
+        "detail": "the page names numlookupapi.com as \"numlookupapi com\" and states \"100 Free Requests / Month\""
       }
     },
     {
@@ -11978,11 +11999,11 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-09-09",
+      "verifiedDate": "2026-09-26",
       "source_check": {
-        "checked": "2026-09-10",
+        "checked": "2026-09-26",
         "outcome": "ok",
-        "detail": "the page names Parseur as \"parseur\""
+        "detail": "the page names Parseur as \"parseur\" and states \"$0\""
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -12008,9 +12029,9 @@
       ],
       "verifiedDate": "2026-07-08",
       "source_check": {
-        "checked": "2026-09-10",
+        "checked": "2026-09-26",
         "outcome": "ok",
-        "detail": "the page names PDF-API.io as \"pdf api io\""
+        "detail": "the page names PDF-API.io as \"pdf api io\" and states \"1 Template 100 PDF per month\""
       }
     },
     {
@@ -12252,11 +12273,11 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-09-08",
+      "verifiedDate": "2026-09-26",
       "source_check": {
-        "checked": "2026-09-10",
+        "checked": "2026-09-26",
         "outcome": "ok",
-        "detail": "the page names SerpApi as \"serpapi\""
+        "detail": "the page names SerpApi as \"serpapi\" and states \"250 searches per month\""
       }
     },
     {
@@ -12287,11 +12308,11 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-09-09",
+      "verifiedDate": "2026-09-26",
       "source_check": {
-        "checked": "2026-09-10",
+        "checked": "2026-09-26",
         "outcome": "ok",
-        "detail": "the page names Geekflare API as \"geekflare api\""
+        "detail": "the page names Geekflare API as \"geekflare api\" and states \"500 credits a month\" and \"500 credits / month\""
       }
     },
     {
@@ -12306,9 +12327,9 @@
       ],
       "verifiedDate": "2026-08-28",
       "source_check": {
-        "checked": "2026-09-10",
+        "checked": "2026-09-26",
         "outcome": "ok",
-        "detail": "the page names SmartParse as \"smartparse\""
+        "detail": "the page names SmartParse as \"smartparse\" and states amounts, none of which we matched to the terms we publish"
       }
     },
     {
@@ -12426,11 +12447,11 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-31",
+      "verifiedDate": "2026-09-26",
       "source_check": {
-        "checked": "2026-09-10",
+        "checked": "2026-09-26",
         "outcome": "ok",
-        "detail": "the page names TinyMCE as \"tinymce\""
+        "detail": "the page names TinyMCE as \"tinymce\" and states \"1,000 editor loads per month\""
       },
       "restated_from": {
         "reading_date": "2026-08-28",
@@ -12443,7 +12464,7 @@
     {
       "vendor": "Tomorrow.io Weather API",
       "category": "Dev Utilities",
-      "description": "Tomorrow.io offers a free tier with access to 60+ data layers, 5-Day Forecast, Weather Timelines, Core Weather Data Layers, Industry-Based Insights Templates, 24 hours Historical Weather Data, and 1 automatically monitored Location. Enterprise plans offer more features like 14-Day Forecast, Custom SLAs, and access to Premium Data Layers.",
+      "description": "The free tier includes access to 80+ data layers, Weather on Routes API, and historical data up to 20 years in the past.",
       "tier": "Free",
       "url": "https://www.tomorrow.io/weather-api/",
       "tags": [
@@ -12452,16 +12473,16 @@
       ],
       "verifiedDate": "2026-07-08",
       "source_check": {
-        "checked": "2026-09-10",
+        "checked": "2026-09-26",
         "outcome": "ok",
-        "detail": "the page names Tomorrow.io Weather API as \"tomorrow io weather api\""
+        "detail": "the page names Tomorrow.io Weather API as \"tomorrow io weather api\" and states amounts, none of which we matched to the terms we publish"
       },
       "restated_from": {
-        "reading_date": "2026-08-28",
+        "reading_date": "2026-09-26",
         "source_url": "https://www.tomorrow.io/weather-api/",
-        "record_date": "2026-08-28",
+        "record_date": "2026-09-26",
         "change_type": "limits_increased",
-        "restated_on": "2026-09-20"
+        "restated_on": "2026-09-26"
       }
     },
     {
@@ -12517,9 +12538,9 @@
       ],
       "verifiedDate": "2026-07-11",
       "source_check": {
-        "checked": "2026-09-10",
+        "checked": "2026-09-26",
         "outcome": "ok",
-        "detail": "the page names vatcheckapi.com as \"vatcheckapi com\""
+        "detail": "the page names vatcheckapi.com as \"vatcheckapi com\" and states amounts, none of which we matched to the terms we publish"
       }
     },
     {
@@ -12549,11 +12570,11 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-09-08",
+      "verifiedDate": "2026-09-26",
       "source_check": {
-        "checked": "2026-09-10",
+        "checked": "2026-09-26",
         "outcome": "ok",
-        "detail": "the page names WebScraping.AI as \"webscraping ai\""
+        "detail": "the page names WebScraping.AI as \"webscraping ai\" and states amounts, none of which we matched to the terms we publish"
       }
     },
     {
@@ -12634,11 +12655,11 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-09",
+      "verifiedDate": "2026-09-26",
       "source_check": {
-        "checked": "2026-09-10",
+        "checked": "2026-09-26",
         "outcome": "ok",
-        "detail": "the page names Zipcodestack as \"zipcodestack\""
+        "detail": "the page names Zipcodestack as \"zipcodestack\" and states \"300 Free Requests / month\" and \"100 requests per day\" and \"10 requests per minute\" and \"100 requests per second\""
       },
       "restated_from": {
         "reading_date": "2026-08-28",
@@ -12845,9 +12866,9 @@
       ],
       "verifiedDate": "2026-08-04",
       "source_check": {
-        "checked": "2026-09-10",
+        "checked": "2026-09-26",
         "outcome": "ok",
-        "detail": "the page names Calendly as \"calendly\""
+        "detail": "the page names Calendly as \"calendly\" and states amounts, none of which we matched to the terms we publish"
       }
     },
     {
@@ -12877,11 +12898,11 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-09-09",
+      "verifiedDate": "2026-09-26",
       "source_check": {
-        "checked": "2026-09-10",
+        "checked": "2026-09-26",
         "outcome": "ok",
-        "detail": "the page names cDox as \"cdox\""
+        "detail": "the page names cDox as \"cdox\" and states amounts, none of which we matched to the terms we publish"
       }
     },
     {
@@ -13152,11 +13173,11 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-09-09",
+      "verifiedDate": "2026-09-26",
       "source_check": {
-        "checked": "2026-09-10",
+        "checked": "2026-09-26",
         "outcome": "ok",
-        "detail": "the page names Linkinize as \"linkinize\""
+        "detail": "the page names Linkinize as \"linkinize\" and states amounts, none of which we matched to the terms we publish"
       }
     },
     {
@@ -13295,11 +13316,11 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-09-10",
+      "verifiedDate": "2026-09-26",
       "source_check": {
-        "checked": "2026-09-10",
+        "checked": "2026-09-26",
         "outcome": "ok",
-        "detail": "the page names Pumble as \"pumble\""
+        "detail": "the page names Pumble as \"pumble\" and states amounts, none of which we matched to the terms we publish"
       }
     },
     {
@@ -13761,9 +13782,9 @@
       ],
       "verifiedDate": "2026-08-03",
       "source_check": {
-        "checked": "2026-09-10",
+        "checked": "2026-09-26",
         "outcome": "ok",
-        "detail": "the page names Webvizio as \"webvizio\""
+        "detail": "the page names Webvizio as \"webvizio\" and states amounts, none of which we matched to the terms we publish"
       }
     },
     {
@@ -14118,7 +14139,7 @@
       ],
       "verifiedDate": "2026-08-04",
       "source_check": {
-        "checked": "2026-09-19",
+        "checked": "2026-09-26",
         "outcome": "unreadable",
         "detail": "fetch failed"
       }
@@ -14262,7 +14283,7 @@
       ],
       "verifiedDate": "2026-08-26",
       "source_check": {
-        "checked": "2026-09-25",
+        "checked": "2026-09-26",
         "outcome": "ok",
         "detail": "the page names coderabbit.ai as \"coderabbit\" and states \"$24\""
       }
@@ -14435,9 +14456,9 @@
       ],
       "verifiedDate": "2026-08-02",
       "source_check": {
-        "checked": "2026-09-10",
+        "checked": "2026-09-26",
         "outcome": "ok",
-        "detail": "the page names houndci.com as \"houndci\""
+        "detail": "the page names houndci.com as \"houndci\" and states amounts, none of which we matched to the terms we publish"
       }
     },
     {
@@ -14468,11 +14489,11 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-09-08",
+      "verifiedDate": "2026-09-26",
       "source_check": {
-        "checked": "2026-09-10",
+        "checked": "2026-09-26",
         "outcome": "ok",
-        "detail": "the page names scan.coverity.com as \"coverity\""
+        "detail": "the page names scan.coverity.com as \"coverity\" and states amounts, none of which we matched to the terms we publish"
       }
     },
     {
@@ -14591,9 +14612,9 @@
       ],
       "verifiedDate": "2026-08-04",
       "source_check": {
-        "checked": "2026-09-10",
+        "checked": "2026-09-26",
         "outcome": "ok",
-        "detail": "the page names tickgit.com as \"tickgit\""
+        "detail": "the page names tickgit.com as \"tickgit\" and states amounts, none of which we matched to the terms we publish"
       }
     },
     {
@@ -15967,7 +15988,7 @@
     {
       "vendor": "MojoAuth",
       "category": "Auth",
-      "description": "MojoAuth makes it easy to implement Passwordless authentication on your web, mobile, or any application in minutes.",
+      "description": "MojoAuth makes it easy to implement Passwordless authentication on your web, mobile, or any application in minutes. — Free up to 25,000 MAUs. No credit card required.",
       "tier": "Free",
       "url": "https://mojoauth.com/",
       "tags": [
@@ -15978,13 +15999,20 @@
       ],
       "verifiedDate": "2026-09-09",
       "source_check": {
-        "checked": "2026-09-25",
+        "checked": "2026-09-26",
         "outcome": "ok",
         "detail": "the page names MojoAuth, renders \"Enterprise Plan\" and no amount, and its markup states 2 typed prices (Free USD 0, Business Pro USD 120)",
         "read": "markup",
         "unrendered_prices": [
           "Business Pro USD 120"
         ]
+      },
+      "restated_from": {
+        "reading_date": "2026-09-26",
+        "source_url": "https://mojoauth.com/",
+        "record_date": "2026-09-26",
+        "change_type": "limits_reduced",
+        "restated_on": "2026-09-26"
       }
     },
     {
@@ -20687,9 +20715,9 @@
       ],
       "verifiedDate": "2026-07-16",
       "source_check": {
-        "checked": "2026-09-10",
+        "checked": "2026-09-26",
         "outcome": "ok",
-        "detail": "the page names Northflank as \"northflank\""
+        "detail": "the page names Northflank as \"northflank\" and states amounts, none of which we matched to the terms we publish"
       },
       "product_subtypes": {
         "taxonomy": "Cloud Hosting",
@@ -21637,9 +21665,9 @@
       ],
       "verifiedDate": "2026-04-12",
       "source_check": {
-        "checked": "2026-09-10",
+        "checked": "2026-09-26",
         "outcome": "ok",
-        "detail": "the page names SourceForge as \"sourceforge\""
+        "detail": "the page names SourceForge as \"sourceforge\" and states amounts, none of which we matched to the terms we publish"
       }
     },
     {
@@ -22348,9 +22376,9 @@
       ],
       "verifiedDate": "2026-07-14",
       "source_check": {
-        "checked": "2026-09-10",
+        "checked": "2026-09-26",
         "outcome": "ok",
-        "detail": "the page names skyvia.com as \"skyvia com\""
+        "detail": "the page names skyvia.com as \"skyvia com\" and states amounts, none of which we matched to the terms we publish"
       },
       "product_subtypes": {
         "taxonomy": "Databases",
@@ -23194,7 +23222,7 @@
       ],
       "verifiedDate": "2026-08-26",
       "source_check": {
-        "checked": "2026-09-25",
+        "checked": "2026-09-26",
         "outcome": "ok",
         "detail": "the page names Shake as \"shake\" and states \"$0\""
       },
@@ -24071,9 +24099,9 @@
       ],
       "verifiedDate": "2026-07-17",
       "source_check": {
-        "checked": "2026-09-10",
+        "checked": "2026-09-26",
         "outcome": "ok",
-        "detail": "the page names sirv.com as \"sirv com\""
+        "detail": "the page names sirv.com as \"sirv com\" and states amounts, none of which we matched to the terms we publish"
       }
     },
     {
@@ -25340,9 +25368,9 @@
       ],
       "verifiedDate": "2026-07-19",
       "source_check": {
-        "checked": "2026-09-10",
+        "checked": "2026-09-26",
         "outcome": "ok",
-        "detail": "the page names ShadcnUI as \"shadcn ui\""
+        "detail": "the page names ShadcnUI as \"shadcn ui\" and states amounts, none of which we matched to the terms we publish"
       }
     },
     {
@@ -27362,9 +27390,9 @@
       ],
       "verifiedDate": "2026-07-20",
       "source_check": {
-        "checked": "2026-09-10",
+        "checked": "2026-09-26",
         "outcome": "ok",
-        "detail": "the page names inspectlet.com as \"inspectlet com\""
+        "detail": "the page names inspectlet.com as \"inspectlet com\" and states amounts, none of which we matched to the terms we publish"
       }
     },
     {
@@ -32265,11 +32293,11 @@
         "full-stack",
         "developer tools"
       ],
-      "verifiedDate": "2026-09-09",
+      "verifiedDate": "2026-09-26",
       "source_check": {
-        "checked": "2026-09-09",
+        "checked": "2026-09-26",
         "outcome": "ok",
-        "detail": "the page writes \"bolt\", the domain we cite Bolt.new from"
+        "detail": "the page writes \"bolt\", the domain we cite Bolt.new from, and states \"1M tokens per month\""
       }
     },
     {
@@ -34714,9 +34742,9 @@
         }
       ],
       "source_check": {
-        "checked": "2026-09-10",
+        "checked": "2026-09-26",
         "outcome": "ok",
-        "detail": "the page names Hyperbrowser as \"hyperbrowser\"",
+        "detail": "the page names Hyperbrowser as \"hyperbrowser\" and states \"$0\"",
         "rendered": true
       }
     },
@@ -35173,9 +35201,9 @@
       ],
       "verifiedDate": "2026-08-27",
       "source_check": {
-        "checked": "2026-09-09",
+        "checked": "2026-09-26",
         "outcome": "ok",
-        "detail": "the page names Amazon SES as \"amazon ses\""
+        "detail": "the page names Amazon SES as \"amazon ses\" and states \"$0.10\" and \"$200.00\" and \"$200\""
       }
     },
     {
@@ -35217,9 +35245,9 @@
       ],
       "verifiedDate": "2026-08-27",
       "source_check": {
-        "checked": "2026-09-09",
+        "checked": "2026-09-26",
         "outcome": "ok",
-        "detail": "the page names SigNoz as \"signoz\""
+        "detail": "the page names SigNoz as \"signoz\" and states \"$49\" and \"$ 0.3\" and \"$ 0.1\" and \"$0.30\""
       },
       "product_subtypes": {
         "taxonomy": "Monitoring",
@@ -35386,11 +35414,11 @@
         "self-hosted",
         "open source"
       ],
-      "verifiedDate": "2026-09-09",
+      "verifiedDate": "2026-09-26",
       "source_check": {
-        "checked": "2026-09-09",
+        "checked": "2026-09-26",
         "outcome": "ok",
-        "detail": "the page names authentik as \"authentik\""
+        "detail": "the page names authentik as \"authentik\" and states \"$5\" and \"$0.02\""
       },
       "free_grounds": [
         "licence"

@@ -208,6 +208,18 @@
       "refused_date": "2026-09-09"
     },
     {
+      "vendor": "Amazon SES",
+      "change_type": "free_tier_removed",
+      "reason": "zero_allowance",
+      "detail": "free_tier_removed claimed on a state that grants zero of a resource — \"0-\", \"0-\", \"0-\". A vendor states a withdrawn allowance by dropping the row, not by publishing a zero, so a literal zero reads as a widget or plan configurator that had not populated when the page was fetched",
+      "summary": "The free tier information is outdated. The page details three pricing plans: Essentials, Pro, and Enterprise, with tiered pricing based on email volume. There is no mention of a $200 AWS credit applicable to SES specifically. The pricing starts at $0.10 per 1,000 emails for the Essentials plan, and there are additional costs for features like dedicated IPs and Mail Manager.",
+      "previous_state": "Transactional and bulk email API/SMTP. No perpetual free tier: new AWS accounts get up to $200 in AWS Free Tier credits usable across eligible services, the free plan runs for 6 months after account creation, and credits expire 12 months after account creation. $0.10 per 1,000 outbound emails after that, plus EC2 compute and data transfer if you send from AWS.",
+      "current_state": "Amazon SES offers three pricing plans: Essentials ($0.16 per 1,000 emails for 0-10M emails/month), Pro ($0.22 per 1,000 emails for 0-10M emails/month), and Enterprise ($0.23 per 1,000 emails for 0-10M emails/month). À la carte pricing is also available at $0.10 per 1,000 emails.",
+      "source_url": "https://aws.amazon.com/ses/pricing/",
+      "category": "Email",
+      "refused_date": "2026-09-26"
+    },
+    {
       "vendor": "Amplitude",
       "change_type": "new_tier",
       "reason": "dangling_reference",
@@ -261,12 +273,24 @@
       "change_type": "limits_increased",
       "reason": "unquantified_limit",
       "detail": "limits_increased claimed, but the current state names no quantity for anything the stored state measured (120 api, 50 api)",
-      "summary": "The free tier now offers 200 free credits per month instead of 50 API Tokens.",
+      "summary": "The free plan now offers 200 free credits per month instead of 50 API Tokens.",
       "previous_state": "Get instant access to over 120+ APIs for free, built with quality, consistency, and reliability in mind. The free plan covers up to 50 API Tokens per month. (Possibly taken down, 2025-06-25)",
-      "current_state": "200 credits a month, no card required.",
+      "current_state": "Sign up free — 200 credits a month, no card required.",
       "source_url": "https://apiverve.com",
       "category": "API Development",
-      "refused_date": "2026-09-10"
+      "refused_date": "2026-09-26"
+    },
+    {
+      "vendor": "Apollo GraphOS",
+      "change_type": "pricing_model_change",
+      "reason": "confirmed_unchanged",
+      "detail": "The report incorrectly states a credit card is required; both descriptions state no credit card is required. The $50 credit is a different offering than the 'forever free' tier, but doesn't invalidate the original terms. The 'more detailed feature breakdowns' is just detail.",
+      "summary": "The free tier now includes $50 in credit. Requires a credit card. The free tier also has more detailed feature breakdowns and limits.",
+      "previous_state": "GraphQL federation and supergraph platform — forever free: up to 3 users, 1-day data retention, self-hosted router (60 req/min rate limit), community support. No credit card required",
+      "current_state": "Start for free with $50 in credit for new signups. No credit card required. Includes GraphOS, self-hosted Router (60 req/min), up to 3 developers, 1-day data retention, and community support.",
+      "source_url": "https://www.apollographql.com/pricing",
+      "category": "API Development",
+      "refused_date": "2026-09-26"
     },
     {
       "vendor": "Apollo GraphOS",
@@ -834,15 +858,15 @@
     },
     {
       "vendor": "Calendly",
-      "change_type": "limits_increased",
+      "change_type": "limits_reduced",
       "reason": "unquantified_limit",
-      "detail": "limits_increased claimed, but the current state names no quantity for anything the stored state measured (1 calendar)",
-      "summary": "The free plan is still offered, but the description is significantly expanded. The free plan now includes features like AI assistant (Callie Beta), Notetaker, and Payments, which were not mentioned in the stored deal info. The page highlights features like automated email/text workflows, website embeds, and integrations, which were also not originally mentioned.",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (1 calendar)",
+      "summary": "The free plan is no longer explicitly mentioned with specific features. While the page states 'Start for free' and 'Sign up with Google/Microsoft/email • No credit card required', it focuses heavily on paid features like Callie, Notetaker, and Payments. The core scheduling functionality remains accessible without a credit card, but the description of 'Unlimited sessions' and '1 Calendar connection per user' is not confirmed. The page emphasizes AI-powered features and paid add-ons, suggesting the free tier is significantly more limited than previously described.",
       "previous_state": "Calendly is the tool for connecting and scheduling meetings. The free plan provides 1 Calendar connection per user and Unlimited sessions. Desktop and Mobile apps are also offered.",
-      "current_state": "The free plan includes scheduling, AI assistant (Callie Beta), Notetaker, Payments, and integrations.",
+      "current_state": "The page offers a 'Start for free' option with no credit card required, allowing users to book meetings. However, details about calendar connections or session limits are not provided. The focus is on features like Callie, Notetaker, and Payments, which are likely part of paid plans.",
       "source_url": "https://calendly.com",
       "category": "Team Collaboration",
-      "refused_date": "2026-09-10"
+      "refused_date": "2026-09-26"
     },
     {
       "vendor": "Carta",
@@ -2003,6 +2027,18 @@
       "refused_date": "2026-09-02"
     },
     {
+      "vendor": "Expo",
+      "change_type": "limits_reduced",
+      "reason": "measures_no_change",
+      "detail": "limits_reduced claimed, and every quantity the record compares holds the same value once notation and period are normalised — 15 android against 15 android, 15 build against 15 build, 60 workflow against 60 workflow",
+      "summary": "The Free tier now includes build credit instead of a fixed number of builds. The free tier also includes access to Observe, which was not mentioned in the stored information. The CI/CD workflow minutes are still included, but the page details usage-based pricing for Starter and above.",
+      "previous_state": "React Native build and deployment platform — The Free tier is $0/month and includes up to 15 Android and 15 iOS builds with a low-priority queue, 60 min. on CI/CD Workflows, and access to Submit, Update, and Launch.",
+      "current_state": "Includes: 15 Android and 15 iOS builds, Low-priority queue, 60 min. on CI/CD Workflows, Submit to app stores, Send updates to 1K MAUs, Access to Launch, Access to Observe. Builds are now based on build credit.",
+      "source_url": "https://expo.dev/pricing",
+      "category": "Mobile Development",
+      "refused_date": "2026-09-26"
+    },
+    {
       "vendor": "FabForm",
       "change_type": "limits_increased",
       "reason": "unquantified_limit",
@@ -2396,6 +2432,18 @@
       "refused_date": "2026-09-10"
     },
     {
+      "vendor": "Geocodio",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (2,500 lookup)",
+      "summary": "The free tier is now 2,500 lookups *daily*, but the credits are 'use it or lose it' and do not roll over. The stored information implied rollover.",
+      "previous_state": "Geocoding and reverse geocoding API for US and Canada — free tier: 2,500 lookups/day. Includes address parsing, congressional districts, timezone, and census data fields",
+      "current_state": "All Pay-as-you-go and Flex accounts get the first 2,500 credits per day for free. Free credits are \"use it or lose it\" and do not roll over.",
+      "source_url": "https://www.geocod.io/pricing/",
+      "category": "Maps/Geolocation",
+      "refused_date": "2026-09-26"
+    },
+    {
       "vendor": "getpantry.cloud",
       "change_type": "limits_increased",
       "reason": "page_does_not_name_vendor",
@@ -2605,12 +2653,12 @@
       "change_type": "pricing_restructured",
       "reason": "states_no_terms",
       "detail": "every clause of the summary states absence or narration rather than a term the page carries, so it reports the reading rather than a change",
-      "summary": "The page mentions new pricing subscriptions and doesn't explicitly state the previous free tier limits (10K/5K/1K calls per SKU). It highlights a demo key for starting to build, and mentions pay-as-you-go and subscription options.",
+      "summary": "The page does not explicitly mention the per-SKU free usage tiers (Essentials 10K, Pro 5K, Enterprise 1K) described in the stored deal info. It highlights new pricing subscriptions and a Maps Demo Key, but doesn't detail the previous free tier structure.",
       "previous_state": "Per-SKU free usage (restructured March 2025): Essentials 10K calls/SKU/month, Pro 5K, Enterprise 1K. Covers Maps, Routes, Places, Environment APIs. Separate from one-time $300 trial credit",
-      "current_state": "The page promotes new pricing subscriptions and a Maps Demo Key with no credit card required. It also mentions pay-as-you-go and subscription options.",
+      "current_state": "The page announces new pricing subscriptions and a Maps Demo Key, but does not detail the previous free usage tiers. It mentions exploring subscription and pay-as-you-go options.",
       "source_url": "https://mapsplatform.google.com/pricing/",
       "category": "Maps/Geolocation",
-      "refused_date": "2026-09-09"
+      "refused_date": "2026-09-26"
     },
     {
       "vendor": "Google Meet",
@@ -3182,12 +3230,12 @@
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
       "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (1,000 request)",
-      "summary": "The free plan now provides 1 credit per successful request, and includes core modules (location, country metadata, currency, ASN, and time zone). User Agent is not included in the free plan.",
+      "summary": "The free plan now provides 1 credit per successful request and includes core modules (location, country metadata, currency, ASN, and time zone). User Agent is not included in the free plan and requires a Developer plan.",
       "previous_state": "IP Geolocation API - Forever free plan for developers with a 1,000 requests per day limit.",
-      "current_state": "Free Plan: 1 credit per successful request. Core modules: location, country metadata, currency, ASN, and time zone. User Agent is not included.",
+      "current_state": "Free Plan provides 1 credit per successful request and includes core modules: location, country metadata, currency, ASN, and time zone. User Agent is not included.",
       "source_url": "https://ipgeolocation.io/",
       "category": "Dev Utilities",
-      "refused_date": "2026-09-09"
+      "refused_date": "2026-09-26"
     },
     {
       "vendor": "IP2Location.io",
@@ -3228,15 +3276,15 @@
     },
     {
       "vendor": "IPTrace",
-      "change_type": "free_tier_removed",
+      "change_type": "rebranded",
       "reason": "same_transition_graded_differently",
       "detail": "same vendor, source_url and previous_state as IPTrace|free_tier_removed|2026-08-28|https://iptrace.io",
-      "summary": "The free tier is being discontinued and users are directed to switch to ipstack.",
+      "summary": "IPTrace is joining ipstack.com and users are directed to switch to ipstack to continue using the API. The free tier is no longer directly offered by IPTrace.",
       "previous_state": "An embarrassingly simple API that provides your business with reliable and helpful IP geolocation data with 50,000 free lookups per month.",
-      "current_state": "The page encourages users to switch to ipstack to continue using the API and offers paid plans starting at $10 for 200k requests per month. A free API key is mentioned but only in the context of switching to ipstack.",
+      "current_state": "To keep using our API, switch to ipstack and get your free API key.",
       "source_url": "https://iptrace.io",
       "category": "Dev Utilities",
-      "refused_date": "2026-09-10",
+      "refused_date": "2026-09-26",
       "collided_with": "IPTrace|free_tier_removed|2026-08-28|https://iptrace.io"
     },
     {
@@ -3497,6 +3545,19 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "LiveKit",
+      "change_type": "pricing_restructured",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as LiveKit|limits_reduced|2026-09-09|https://livekit.io/pricing",
+      "summary": "LiveKit's own page now redirects to livekit.com. The 'Build' plan is now a free tier with different limits.",
+      "previous_state": "Real-time audio/video and AI agent infrastructure — 5,000 WebRTC minutes/mo, 1,000 agent session minutes/mo, 5 concurrent agent sessions, 100 concurrent connections, 1 free US phone number. Open source",
+      "current_state": "The 'Build' plan is $0/mo and includes 5,000 WebRTC minutes, 1,000 agent session minutes, 5 concurrent agent sessions, 100 concurrent connections, and 1 free US phone number. Additional usage is billed per minute/GB as detailed on the page.",
+      "source_url": "https://livekit.io/pricing",
+      "category": "Communication",
+      "refused_date": "2026-09-26",
+      "collided_with": "LiveKit|limits_reduced|2026-09-09|https://livekit.io/pricing"
+    },
+    {
       "vendor": "localazy.com",
       "change_type": "limits_reduced",
       "reason": "measures_no_change",
@@ -3537,12 +3598,12 @@
       "change_type": "limits_reduced",
       "reason": "measures_the_opposite",
       "detail": "limits_reduced claimed, and every quantity that moved between the two states moved the other way — 5,000 request/day against 2 request/sec, 5,000 request/day against 60 request/min",
-      "summary": "The free tier now has a limit of 5000 requests/day and 60 requests per minute, and requires attribution with a link to LocationIQ.com.",
+      "summary": "The free plan now has a limit of 5000 requests/day and 60 requests per minute, and requires attribution.",
       "previous_state": "Geocoding, reverse geocoding, and routing API. Free plan: 5,000 requests/day, commercial use allowed with attribution",
       "current_state": "Free $25 value $0 €0 R$0 ₹0 Free sign up 5000 requests /day 2 requests /second Geocoding APIs Routing APIs Street & Static Maps 60 requests per minute Limited Commercial Use You can use our free plan in commercial projects if you spread the love by adding a prominent link back to us on your website or app in this format: <a href=&#x27;https://locationiq.com&#x27;>Search by LocationIQ.com</a> 1 Access Token IP and HTTP Restrictions Best-effort Email Support US & EU Datacenters",
       "source_url": "https://locationiq.com/pricing",
       "category": "Maps/Geolocation",
-      "refused_date": "2026-09-10"
+      "refused_date": "2026-09-26"
     },
     {
       "vendor": "logflare.app",
@@ -3556,6 +3617,19 @@
       "category": "Logging",
       "refused_date": "2026-09-13",
       "collided_with": "logflare.app|pricing_restructured|2026-09-01|https://logflare.app/"
+    },
+    {
+      "vendor": "LogRocket",
+      "change_type": "free_tier_removed",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as LogRocket|free_tier_removed|2026-08-28|https://logrocket.com/pricing",
+      "summary": "The pricing page offers a free trial. No 'Free Forever' plan with the specified limits. The page now focuses on session-based pricing, starting at $176/month for 25K sessions.",
+      "previous_state": "Session replay and error tracking — 1,000 sessions/month, 1-month data retention, 3 seats. Includes session replay, console logs, stack traces, network request data",
+      "current_state": "The page offers a free trial and then session-based pricing starting at $176/mo for 25K sessions. Analytics, errors, and logs are always unlimited, but you pay for sessions captured.",
+      "source_url": "https://logrocket.com/pricing",
+      "category": "Error Tracking",
+      "refused_date": "2026-09-26",
+      "collided_with": "LogRocket|free_tier_removed|2026-08-28|https://logrocket.com/pricing"
     },
     {
       "vendor": "Logto",
@@ -3764,6 +3838,18 @@
       "source_url": "https://mantledb.sh",
       "category": "Storage",
       "refused_date": "2026-09-12"
+    },
+    {
+      "vendor": "Mapbox",
+      "change_type": "pricing_restructured",
+      "reason": "confirmed_unchanged",
+      "detail": "The report simply restates the stored description.",
+      "summary": "The pricing for Navigation SDK v3.x has changed. While a free tier up to 100 MAUs and 1,000 trips still exists, the cost per user beyond that is $0.30 and per trip is $0.08. There's also an option for a flat fee per MAU (free up to 10, then contact sales).",
+      "previous_state": "Navigation SDK v3.x offers a free tier up to 100 MAUs and 1,000 trips with a cost of $0.30/user and $0.08/trip beyond that. Another option is a flat fee per MAU (free up to 10, then contact sales). Navigation SDK v2.x also has similar tiered pricing.",
+      "current_state": "Navigation SDK v3.x offers a free tier up to 100 MAUs and 1,000 trips with a cost of $0.30/user and $0.08/trip beyond that. Another option is a flat fee per MAU (free up to 10, then contact sales).",
+      "source_url": "https://www.mapbox.com/pricing",
+      "category": "Maps/Geolocation",
+      "refused_date": "2026-09-26"
     },
     {
       "vendor": "Market Data API",
@@ -4425,15 +4511,15 @@
     },
     {
       "vendor": "PDF-API.io",
-      "change_type": "limits_reduced",
+      "change_type": "pricing_restructured",
       "reason": "confirmed_unchanged",
-      "detail": "The report highlights '1 User' which wasn't mentioned in the stored description, but doesn't indicate a functional difference for a developer relying on the stored terms (template count and PDF limit are the same).",
-      "summary": "The free plan now has limits of 1 User and 100 PDFs per month, but it exists.",
+      "detail": "The addition of '1 User' is a detail not present in the stored description, but doesn't change the core functionality or limits previously understood.",
+      "summary": "The free plan now has limits of 1 User and 100 PDFs per month. The pricing page details several paid plans (Basic, Pro) and a free plan. The free plan is explicitly stated as 'No credit card required'.",
       "previous_state": "PDF Automation API, visual template editor or HTML to PDF, dynamic data integration, and PDF rendering with an API. The free plan comes with one template, 100 PDFs/month.",
-      "current_state": "Free No credit card required 1 User 1 Template 100 PDF per month API / Zapier integration",
+      "current_state": "The free plan includes 1 User, 1 Template, and 100 PDFs per month. No credit card is required.",
       "source_url": "https://pdf-api.io",
       "category": "Dev Utilities",
-      "refused_date": "2026-09-10"
+      "refused_date": "2026-09-26"
     },
     {
       "vendor": "PDFBolt",
@@ -5150,13 +5236,13 @@
       "vendor": "Semaphore CI",
       "change_type": "pricing_restructured",
       "reason": "confirmed_unchanged",
-      "detail": "The current page provides more detail on pricing options, but the core free tier offering ($15 credits/month, 20 concurrent jobs) remains the same. The stored description didn't claim to have a comprehensive list of all pricing options.",
-      "summary": "The pricing has been restructured. The free tier still exists, offering $15 credits per month (≈ 2,000 Ubuntu x64 2-vCPU minutes) and 20 concurrent jobs. However, the pricing for compute is now tiered based on CPU and OS (Ubuntu ARM, Ubuntu x64, MacOS) and self-hosted is $0.0025/min.",
+      "detail": "The stored description only mentioned Ubuntu x64 at $0.0075/min, and the current page confirms that price. The report highlights new ARM pricing which wasn't in the original description, and a calculation of free tier minutes based on a different CPU size, which isn't a change to the stated free tier.",
+      "summary": "The pricing for Ubuntu x64 has changed to $0.0075/min, and ARM is now $0.003/min. The free tier still offers $15 credits/month (≈ 2,000 Ubuntu x64 2-vCPU minutes) and 20 concurrent jobs.",
       "previous_state": "CI/CD platform — free cloud plan: $15 credits/month (~2,000 Ubuntu build minutes), 20 concurrent jobs, YAML pipelines, secrets management. Self-hosted available at $0.0025/min. Cloud starts at $0.0075/min for Ubuntu",
-      "current_state": "Ubuntu ARM $0.003 /min, 2vCPU $0.006 /min, 4vCPU $0.012 /min, 8vCPU Ubuntu x64 $0.0075 /min, 2vCPU $0.015 /min, 4vCPU MacOS $0.09 /min, 4vCPU Self-Hosted $0.0025 /min. Free Credits Get $15 free credits per month (≈ 2,000 Ubuntu x64 2-vCPU minutes). Concurrency Includes 20 concurrent jobs by default.",
+      "current_state": "Ubuntu ARM $0.003 /min, 2vCPU $0.006 /min, 4vCPU $0.012 /min, 8vCPU. Ubuntu x64 $0.0075 /min, 2vCPU $0.015 /min, 4vCPU.",
       "source_url": "https://semaphore.io/pricing",
       "category": "CI/CD",
-      "refused_date": "2026-08-28"
+      "refused_date": "2026-09-26"
     },
     {
       "vendor": "Semaphore CI",
@@ -5405,6 +5491,18 @@
       "source_url": "https://smartparse.io",
       "category": "Dev Utilities",
       "refused_date": "2026-09-10"
+    },
+    {
+      "vendor": "SmartParse",
+      "change_type": "limits_reduced",
+      "reason": "states_no_difference",
+      "detail": "limits_reduced claimed, summary asserts the page matches what we stored, and the two states carry the same quantities",
+      "summary": "The free tier now has a processing unit limit of 300, which matches the stored information. However, the free tier is now explicitly named 'Intro' and only allows browser uploads, whereas the stored information did not mention upload restrictions.",
+      "previous_state": "SmartParse is a data migration and CSV to API platform that offers time- and cost-saving developer tools. The Free tier includes 300 Processing Units per month, Browser uploads, Data quarantining, Circuit breakers, and Job Alerts.",
+      "current_state": "Up to 300 processing units available. Free. Suitable for testing and small uploads. Browser uploads only. Data quarantining. Circuit breakers. Notifications.",
+      "source_url": "https://smartparse.io",
+      "category": "Dev Utilities",
+      "refused_date": "2026-09-26"
     },
     {
       "vendor": "Snap",
@@ -5841,10 +5939,10 @@
       "detail": "a restriction was measured against \"Surfaces `TODO` comments (and other markers) to identify areas of code worth returning to for improvement.\", a stored description that states no price, named tier or allowance, so there is nothing for the terms to have narrowed from",
       "summary": "The free tier is now limited to public repositories. Private repositories require a $3/month subscription with a 3-day free trial.",
       "previous_state": "Surfaces `TODO` comments (and other markers) to identify areas of code worth returning to for improvement.",
-      "current_state": "Free for Public Repositories 🎉 No login required. $3/month for Private Repositories 💵 3 day free trial.",
+      "current_state": "Free for Public Repositories. $3/month for Private Repositories with a 3 day free trial.",
       "source_url": "https://www.tickgit.com/",
       "category": "Code Quality",
-      "refused_date": "2026-09-10"
+      "refused_date": "2026-09-26"
     },
     {
       "vendor": "TimeCamp",
@@ -6209,10 +6307,10 @@
       "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (150 validation)",
       "summary": "The free tier now offers 100 free requests per month, down from the previously stated 150.",
       "previous_state": "Simple and free VAT number validation API. 150 free validations per month.",
-      "current_state": "100 Free Requests / Month Free for hobby projects & enough to get your professional project up and running.",
+      "current_state": "Free & Reliable VAT Number Validation & Lookup REST API. 100 Free Requests / Month Free for hobby projects & enough to get your professional project up and running.",
       "source_url": "https://vatcheckapi.com",
       "category": "Dev Utilities",
-      "refused_date": "2026-09-10"
+      "refused_date": "2026-09-26"
     },
     {
       "vendor": "vatlayer",
@@ -6300,6 +6398,18 @@
       "category": "Communication",
       "refused_date": "2026-09-10",
       "collided_with": "Webvizio|free_tier_removed|2026-08-28|https://webvizio.com"
+    },
+    {
+      "vendor": "Webvizio",
+      "change_type": "free_tier_removed",
+      "reason": "states_no_terms",
+      "detail": "every clause of the summary states bookkeeping or hedge rather than a term the page carries, so it reports the reading rather than a change",
+      "summary": "The free tier now appears to be a 7-day free trial. It requires a signup and does not appear to be a permanently free option as previously stated.",
+      "previous_state": "Website feedback tool, website review software, and bug reporting tool for streamlining web development collaboration on tasks directly on live websites and web apps, images, PDFs, and design files.",
+      "current_state": "Start Free Log In. 7-day free trial. Cancel anytime. No credit card required.",
+      "source_url": "https://webvizio.com",
+      "category": "Communication",
+      "refused_date": "2026-09-26"
     },
     {
       "vendor": "Weights & Biases",
@@ -6653,6 +6763,18 @@
       "source_url": "https://zoho.com/projects",
       "category": "Project Management",
       "refused_date": "2026-08-31"
+    },
+    {
+      "vendor": "Zoho Sign",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (5 document)",
+      "summary": "The free plan now allows sending or signing up to five documents each month.",
+      "previous_state": "Electronic signatures with 5 documents/month free forever",
+      "current_state": "Zoho Sign offers a free plan for individuals allowing to send or sign up to five documents each month.",
+      "source_url": "https://zoho.com/sign",
+      "category": "Workflow Automation",
+      "refused_date": "2026-09-26"
     },
     {
       "vendor": "Zoho Survey",

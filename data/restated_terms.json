@@ -2534,6 +2534,97 @@
       "record_date": "2026-09-25",
       "change_type": "pricing_restructured",
       "summary": "While Code Time remains free for basic use, the offering now includes a 90-day data history limit and pushes users towards a paid antenna.dev account for advanced features and data visualizations."
+    },
+    {
+      "vendor": "MinIO",
+      "url": "https://min.io/pricing",
+      "restated_on": "2026-09-26",
+      "previous_description": "S3-compatible object storage — self-hosted free (GNU AGPL v3). High performance, Kubernetes-native. No usage limits when self-hosted. Primary alternative for LocalStack S3 emulation",
+      "description": "S3-compatible object storage — MinIO OSS is at end of life and is no longer being maintained. Its codebase is frozen, with no new features, bug fixes, or security patches.",
+      "reading_date": "2026-09-26",
+      "reading_terms": "MinIO OSS is at end of life and is no longer being maintained. Its codebase is frozen, with no new features, bug fixes, or security patches.",
+      "source_url": "https://min.io/pricing",
+      "record_date": "2026-09-26",
+      "change_type": "open_source_killed",
+      "summary": "The original open-source MinIO edition (AGPL v3) is no longer maintained and is considered end-of-life. Users are encouraged to upgrade to AIStor. AIStor offers three tiers: Free, Enterprise Lite, and Enterprise. The Free tier is a single-node deployment."
+    },
+    {
+      "vendor": "Nango",
+      "url": "https://nango.dev/pricing",
+      "restated_on": "2026-09-26",
+      "previous_description": "The Free plan is $0/mo and includes 10 connections, 100k proxy requests, 10 hours of function compute time, 100k function runs, 100k custom function logs, 100k custom sync storage records, and 100k API webhooks.",
+      "description": "The Free plan is $0 /mo and includes 10 connections, 10 hours / mo compute time, and 10GB / mo data transfer.",
+      "reading_date": "2026-09-26",
+      "reading_terms": "The Free plan is $0 /mo and includes 10 connections, 10 hours / mo compute time, and 10GB / mo data transfer.",
+      "source_url": "https://nango.dev/pricing",
+      "record_date": "2026-09-26",
+      "change_type": "limits_reduced",
+      "summary": "The free plan now has a 10GB/mo data transfer limit. Previously 100k custom function logs, 100k custom sync storage records, and 100k API webhooks."
+    },
+    {
+      "vendor": "Pinecone",
+      "url": "https://pinecone.io/pricing",
+      "restated_on": "2026-09-26",
+      "previous_description": "Vector database — The Starter plan is free and includes up to 2 GB storage, 2M write units/month, 1M read units/month, 5 indexes, 1GB Assistant storage, 500k input tokens, 300k output tokens, and 500k context processed tokens. It also includes access to various embedding and reranking models with token/request limits.",
+      "description": "Vector database — The Starter plan is free and includes up to 2 GB storage, 2M write units/month, 1M read units/month, 1GB Assistant storage, 500k input tokens, 300k output tokens, and 500k context processed tokens. It also includes access to various embedding and reranking models with token/request limits.",
+      "reading_date": "2026-09-26",
+      "reading_terms": "The Starter plan is free and includes up to 2 GB storage, 2M write units/month, 1M read units/month, 1GB Assistant storage, 500k input tokens, 300k output tokens, and 500k context processed tokens. It also includes access to various embedding and reranking models with token/request limits.",
+      "source_url": "https://pinecone.io/pricing",
+      "record_date": "2026-09-26",
+      "change_type": "limits_increased",
+      "summary": "The Starter plan is still available as a free tier. The limits have been updated."
+    },
+    {
+      "vendor": "AppSignal",
+      "url": "https://www.appsignal.com/plans",
+      "restated_on": "2026-09-26",
+      "previous_description": "Application monitoring (APM, errors, logging) — free plan: 50,000 requests/month, 1 GB logging/month, 5-day data retention, unlimited apps and hosts. Extended free limits for OSS and humanitarian projects",
+      "description": "Application monitoring (APM, errors, logging) — Our free plan is perfect for startups, hobby, or side-projects 30K requests 1GB logging 5-day retention",
+      "reading_date": "2026-09-26",
+      "reading_terms": "Our free plan is perfect for startups, hobby, or side-projects 30K requests 1GB logging 5-day retention",
+      "source_url": "https://www.appsignal.com/plans",
+      "record_date": "2026-09-26",
+      "change_type": "limits_reduced",
+      "summary": "The free plan now offers 30,000 requests/month instead of 50,000."
+    },
+    {
+      "vendor": "Composio",
+      "url": "https://composio.dev/pricing",
+      "restated_on": "2026-09-26",
+      "previous_description": "Integration platform for AI Agents and LLMs. Integrate over 200+ tools across the agentic internet.",
+      "description": "Integration platform for AI Agents and LLMs — Free $0 No credit card required 100,000 tool calls / mo 50,000 triggers / mo 3 team members",
+      "reading_date": "2026-09-26",
+      "reading_terms": "Free $0 No credit card required 100,000 tool calls / mo 50,000 triggers / mo 3 team members",
+      "source_url": "https://composio.dev/pricing",
+      "record_date": "2026-09-26",
+      "change_type": "limits_reduced",
+      "summary": "The free tier now has limits: 100,000 tool calls, 50,000 triggers, and 3 team members per month."
+    },
+    {
+      "vendor": "Tomorrow.io Weather API",
+      "url": "https://www.tomorrow.io/weather-api/",
+      "restated_on": "2026-09-26",
+      "previous_description": "Tomorrow.io offers a free tier with access to 60+ data layers, 5-Day Forecast, Weather Timelines, Core Weather Data Layers, Industry-Based Insights Templates, 24 hours Historical Weather Data, and 1 automatically monitored Location. Enterprise plans offer more features like 14-Day Forecast, Custom SLAs, and access to Premium Data Layers.",
+      "description": "The free tier includes access to 80+ data layers, Weather on Routes API, and historical data up to 20 years in the past.",
+      "reading_date": "2026-09-26",
+      "reading_terms": "The free tier includes access to 80+ data layers, Weather on Routes API, and historical data up to 20 years in the past.",
+      "source_url": "https://www.tomorrow.io/weather-api/",
+      "record_date": "2026-09-26",
+      "change_type": "limits_increased",
+      "summary": "The free tier now includes access to 80+ data layers instead of 60+, and offers access to historical data up to 20 years in the past instead of 24 hours. The free tier also includes access to Weather on Routes API. The page details several paid tiers with additional features like 14-Day Forecast and Custom SLAs."
+    },
+    {
+      "vendor": "MojoAuth",
+      "url": "https://mojoauth.com/",
+      "restated_on": "2026-09-26",
+      "previous_description": "MojoAuth makes it easy to implement Passwordless authentication on your web, mobile, or any application in minutes.",
+      "description": "MojoAuth makes it easy to implement Passwordless authentication on your web, mobile, or any application in minutes. — Free up to 25,000 MAUs. No credit card required.",
+      "reading_date": "2026-09-26",
+      "reading_terms": "Free up to 25,000 MAUs. No credit card required.",
+      "source_url": "https://mojoauth.com/",
+      "record_date": "2026-09-26",
+      "change_type": "limits_reduced",
+      "summary": "The free tier is limited to 25,000 MAUs."
     }
   ]
 }
