@@ -148,6 +148,12 @@ const RETIRED_FIGURES: Retired[] = [
     replacedBy: /\$1 of free credit/i,
     vendorRecord: () => recordFor("Railway", "Cloud Hosting").description,
   },
+  {
+    what: "a DigitalOcean Droplet price cut in January 2026",
+    pattern: /20% (?:Droplet )?price cuts?|cut 20% in January|20% cut \(was|cut Basic Droplet prices by 20%|Jan(?:uary)? 2026 (?:price )?cuts?|Droplet Price Cut/i,
+    replacedBy: /\$4(?:\.00)?\/mo/,
+    vendorRecord: () => recordFor("DigitalOcean", "Cloud IaaS").description,
+  },
 ];
 
 type Hit = { route: string; surface: string; excerpt: string; what: string };
@@ -248,6 +254,7 @@ describe("hosting pages publish the free-tier figures our records hold (#1183)",
         "/free-django-stack", "/free-fastapi-stack", "/free-go-stack", "/free-nextjs-stack", "/free-saas-stack",
         "/railway-vs-render", "/vercel-vs-netlify", "/heroku-alternatives", "/aws-app-runner-migration", "/google-developer-program-2026",
       ],
+      "a DigitalOcean Droplet price cut in January 2026": ["/hetzner-pricing-2026", "/digitalocean-free-tier-2026", "/cloud-free-tier-comparison-2026"],
     };
     const missing: string[] = [];
     for (const [what, pages] of Object.entries(carried)) {
