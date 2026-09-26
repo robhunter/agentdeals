@@ -83,6 +83,12 @@ type Retired = { what: string; pattern: RegExp; replacedBy: RegExp; vendorRecord
 
 const RETIRED_FIGURES: Retired[] = [
   {
+    what: "Cloud Functions as free on Firebase's Spark plan",
+    pattern: /Cloud Functions \(2M invocations\/month\)/i,
+    replacedBy: /Cloud Functions and Cloud Storage need the Blaze plan/,
+    vendorRecord: () => recordFor("Firebase", "Databases").description,
+  },
+  {
     what: "Deno Deploy free egress of 100 GB",
     pattern: /Deno Deploy[^.]{0,90}100 ?GB|100 ?GB[^.]{0,60}(?:egress|outbound bandwidth)[^.]{0,60}Deno/i,
     replacedBy: /20 ?GiB/,
@@ -252,6 +258,7 @@ describe("hosting pages publish the free-tier figures our records hold (#1183)",
 
   it("states the current figure on every page that carried a retired one", async () => {
     const carried: Record<string, string[]> = {
+      "Cloud Functions as free on Firebase's Spark plan": ["/vendor/firebase"],
       "Deno Deploy free egress of 100 GB": ["/hosting-free-tier-comparison-2026", "/serverless-free-tier-comparison-2026", "/hosting-pricing", "/vercel-alternatives"],
       "Deno Deploy free CPU allowance of 15 hours": ["/hosting-free-tier-comparison-2026", "/serverless-free-tier-comparison-2026", "/heroku-alternatives"],
       "a Koyeb free web service": ["/hosting-free-tier-comparison-2026", "/free-fastapi-stack"],
