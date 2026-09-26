@@ -5351,7 +5351,13 @@
       "category": "Dev Utilities",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: the backgrounds did not become paid. The site, now called MeetBackdrops, says \"All backgrounds on MeetBackdrops are completely free to download and use for personal purposes\". HD editions were already sold separately before this record; the reading took the HD line for the whole offer.",
+        "source_url": "https://meetbackdrops.com/faq"
+      }
     },
     {
       "vendor": "Algolia",
@@ -5751,7 +5757,13 @@
       "category": "Email",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: DNSExit's free email plan did not change. Its free email hosting page says \"You can create up to 2 email addresses under your domain with 100MB of total storage\", as in a capture of 2026-03-16. The reading compared the homepage, which never listed those limits, with our text.",
+        "source_url": "https://dnsexit.com/services/free-email-hosting/"
+      }
     },
     {
       "vendor": "Wraps",
@@ -5766,7 +5778,13 @@
       "category": "Email",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: the free tier is not new. Wraps' changelog dates its Free plan to January 2026, and a capture of 2026-03-06 shows the same Free Forever plan (5K tracked events a month, 1 workflow, unlimited contacts).",
+        "source_url": "https://wraps.dev/changelog"
+      }
     },
     {
       "vendor": "phare.io",
@@ -5892,7 +5910,13 @@
       "category": "Cloud Hosting",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: nothing increased. AwardSpace's free-hosting page stated 5GB of monthly bandwidth and 1000mb of disk space in a capture of 2024-01-05 and still does. Our stored text listed features and never stated those limits.",
+        "source_url": "https://www.awardspace.com/free-hosting/"
+      }
     },
     {
       "vendor": "leiga.com",
@@ -5967,7 +5991,13 @@
       "category": "Email",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: nothing was reduced. The Free plan's 50 MB attachment limit and forwarding-only restriction were on the pricing page in captures of 2025-01-16 and 2026-02-14, before our text was written.",
+        "source_url": "https://forwardemail.net/en/private-business-email"
+      }
     },
     {
       "vendor": "readthedocs.org",
@@ -9382,7 +9412,13 @@
       "category": "Notebooks & Data Science",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-09"
+      "recorded_date": "2026-09-09",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: nothing increased. The Free plan's limits, including 5 calls a month for each AI feature, are the same in captures from 2026-03-20 to 2026-08-25 and today. Deepnote renamed \"Auto AI\" to \"Deepnote Agent\" with the same limit; our text had left those limits out.",
+        "source_url": "https://deepnote.com/pricing"
+      }
     },
     {
       "vendor": "Shake",
@@ -9714,7 +9750,13 @@
       "category": "DNS & Domain Management",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-10"
+      "recorded_date": "2026-09-10",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: the limits are not new. DNSPod's free-plan card has listed the same terms since at least 2024-08-03: unlimited records, 5-level subdomains, a 600s minimum TTL, 2 URL forwards and 10 load-balancing entries. Our stored text left most of them out.",
+        "source_url": "https://www.dnspod.com/"
+      }
     },
     {
       "vendor": "Pinecone",
@@ -10683,7 +10725,13 @@
       "category": "Feature Flags",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-25"
+      "recorded_date": "2026-09-25",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: nothing increased. The Forever Free plan lists 10 feature flags, 2 environments and 2 products, as in captures of 2026-04-20 and 2026-08-29. The page says \"unlimited\" only for seats, MAUs, flag reads and the higher plans.",
+        "source_url": "https://configcat.com/pricing/"
+      }
     },
     {
       "vendor": "Code Time",
@@ -11034,7 +11082,13 @@
       "category": "Source Control",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-26"
+      "recorded_date": "2026-09-26",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: Gitea did not add a tier. Its site offered Gitea Cloud with a 30-day free trial in the Internet Archive's capture of 2026-02-02 (\"Try Gitea Cloud free for 30 days\"), before our catalogue text was written; the reading compared the page with our text, which left Gitea Cloud out. The free open-source edition is unchanged.",
+        "source_url": "https://web.archive.org/web/20260202203636/https://about.gitea.com/"
+      }
     },
     {
       "vendor": "Pinecone",
@@ -11051,7 +11105,13 @@
       "category": "AI / ML",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-26"
+      "recorded_date": "2026-09-26",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: Pinecone's limits did not change. The pricing page, read 2026-09-26, still lists the Starter plan with \"Indexes Up to 5\"; the reading left the index limit out and the record called the difference an increase.",
+        "source_url": "https://www.pinecone.io/pricing/"
+      }
     },
     {
       "vendor": "Tomorrow.io Weather API",
@@ -11068,7 +11128,13 @@
       "category": "Dev Utilities",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-26"
+      "recorded_date": "2026-09-26",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: the free tier did not change. The Free plan card still lists \"5-Day Forecast … Core Weather Data Layers … 24 hours Historical Weather Data 1 Automatically monitored Location\", as in a capture of 2026-05-01. The reading took \"80+ layers\" from the Weather API's menu blurb, \"up to 20 years\" from the Historical Weather API, and \"Weather on routes\" from the Enterprise plan.",
+        "source_url": "https://www.tomorrow.io/weather-api/"
+      }
     },
     {
       "vendor": "AppSignal",
@@ -11102,24 +11168,44 @@
       "category": "Code Quality",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-26"
+      "recorded_date": "2026-09-26",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: CodeRabbit's free plan did not change. Its docs list \"Free and OSS access plus four paid plans: Essentials, Team, Advanced, and Enterprise\", and organizations that do not subscribe \"revert to Free with lower rate limits\". The pricing page took the Free card off its plan grid between 2026-08-08 and 2026-08-25; that is a change to the page, not to the free terms.",
+        "source_url": "https://docs.coderabbit.ai/management/plans"
+      }
     },
     {
       "vendor": "Composio",
-      "change_type": "limits_reduced",
-      "date": "2026-09-26",
-      "date_source": "discovered",
-      "summary": "The free tier now has limits: 100,000 tool calls, 50,000 triggers, and 3 team members per month.",
+      "change_type": "limits_increased",
+      "date": "2026-08-15",
+      "date_source": "vendor_page",
+      "summary": "Composio's new pricing, for signups on or after 2026-08-15, raised the free plan from 20,000 tool calls a month (triggers counted inside them) to 100,000 tool calls and a separate 50,000 triggers a month, with 3 team members. Accounts from before 2026-08-15 keep the old plan through 2026-12-31.",
       "tier": "Free",
       "tier_direction": "narrowed",
-      "previous_state": "Integration platform for AI Agents and LLMs. Integrate over 200+ tools across the agentic internet.",
-      "current_state": "Free $0 No credit card required 100,000 tool calls / mo 50,000 triggers / mo 3 team members",
+      "previous_state": "Totally Free plan: 20,000 tool calls a month, with triggers counted as tool calls (pricing page, Internet Archive captures of 2026-02-27 and 2026-08-04)",
+      "current_state": "\"Free $0 No credit card required 100,000 tool calls / mo 50,000 triggers / mo 3 team members\". \"New pricing applies to signups on or after August 15, 2026. Existing customers stay on their current plan through December 31, 2026.\"",
       "impact": "medium",
       "source_url": "https://composio.dev/pricing",
       "category": "AI / ML",
       "alternatives": [],
       "detected_by": "reverify-ai",
       "recorded_date": "2026-09-26"
+    },
+    {
+      "vendor": "Composio",
+      "change_type": "record_corrected",
+      "date": "2026-09-26",
+      "summary": "Data correction - Composio's free plan grew with its new pricing for signups from 2026-08-15, from 20,000 to 100,000 tool calls a month plus 50,000 triggers. Our re-read of 2026-09-26 recorded it as a reduction, because our stored text stated no free-plan terms to compare with.",
+      "previous_state": "Recorded 2026-09-26 as limits_reduced: The free tier now has limits: 100,000 tool calls, 50,000 triggers, and 3 team members per month.",
+      "current_state": "limits_increased, dated 2026-08-15 from the vendor's pricing page",
+      "impact": "low",
+      "source_url": "https://composio.dev/pricing",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-09-26",
+      "date_source": "hand_written"
     },
     {
       "vendor": "MinIO",
@@ -11136,7 +11222,13 @@
       "category": "Storage",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-26"
+      "recorded_date": "2026-09-26",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: this records again an event we already hold. MinIO marked its open-source repository \"NO LONGER MAINTAINED\" on 2026-02-12 and archived it on 2026-02-13 (our MinIO record of 2026-02-12); nothing changed on 2026-09-26. The reading compared the page with our catalogue text, which still described the community edition as maintained.",
+        "source_url": "https://github.com/minio/minio"
+      }
     },
     {
       "vendor": "MojoAuth",

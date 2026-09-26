@@ -7727,7 +7727,7 @@
     {
       "vendor": "Pinecone",
       "category": "AI / ML",
-      "description": "Vector database — The Starter plan is free and includes up to 2 GB storage, 2M write units/month, 1M read units/month, 1GB Assistant storage, 500k input tokens, 300k output tokens, and 500k context processed tokens. It also includes access to various embedding and reranking models with token/request limits.",
+      "description": "Vector database — The Starter plan is free and includes up to 2 GB storage, 2M write units/month, 1M read units/month, 5 indexes, 1GB Assistant storage, 500k input tokens, 300k output tokens, and 500k context processed tokens. It also includes access to various embedding and reranking models with token/request limits.",
       "tier": "Starter",
       "url": "https://pinecone.io/pricing",
       "tags": [
@@ -7769,11 +7769,15 @@
         "reviewed": "2026-09-01"
       },
       "restated_from": {
-        "reading_date": "2026-09-26",
+        "reading_date": "2026-09-10",
         "source_url": "https://pinecone.io/pricing",
+        "record_date": "2026-09-10",
+        "change_type": "pricing_restructured",
+        "restated_on": "2026-09-20"
+      },
+      "restatement_reverted": {
         "record_date": "2026-09-26",
-        "change_type": "limits_increased",
-        "restated_on": "2026-09-26"
+        "reverted_on": "2026-09-26"
       }
     },
     {
@@ -12464,7 +12468,7 @@
     {
       "vendor": "Tomorrow.io Weather API",
       "category": "Dev Utilities",
-      "description": "The free tier includes access to 80+ data layers, Weather on Routes API, and historical data up to 20 years in the past.",
+      "description": "Tomorrow.io offers a free tier with access to 60+ data layers, 5-Day Forecast, Weather Timelines, Core Weather Data Layers, Industry-Based Insights Templates, 24 hours Historical Weather Data, and 1 automatically monitored Location. Enterprise plans offer more features like 14-Day Forecast, Custom SLAs, and access to Premium Data Layers.",
       "tier": "Free",
       "url": "https://www.tomorrow.io/weather-api/",
       "tags": [
@@ -12478,11 +12482,15 @@
         "detail": "the page names Tomorrow.io Weather API as \"tomorrow io weather api\" and states amounts, none of which we matched to the terms we publish"
       },
       "restated_from": {
-        "reading_date": "2026-09-26",
+        "reading_date": "2026-08-28",
         "source_url": "https://www.tomorrow.io/weather-api/",
-        "record_date": "2026-09-26",
+        "record_date": "2026-08-28",
         "change_type": "limits_increased",
-        "restated_on": "2026-09-26"
+        "restated_on": "2026-09-20"
+      },
+      "restatement_reverted": {
+        "record_date": "2026-09-26",
+        "reverted_on": "2026-09-26"
       }
     },
     {
@@ -19073,7 +19081,7 @@
     {
       "vendor": "ConfigCat",
       "category": "Feature Flags",
-      "description": "The Forever Free plan includes unlimited feature flags and configs for everyone, 5 million config JSON downloads / mo, and 20 GB network traffic / mo.",
+      "description": "ConfigCat is a developer-centric feature flag service with unlimited team members (within 1 permission group). Forever Free plan: 10 feature flags, 2 environments, 2 products, 5M config JSON requests/mo, 20 GB network traffic/mo, 2 segments, 4 targeting rules/flag, 1 webhook, 7-day audit log retention.",
       "tier": "Free",
       "url": "https://configcat.com",
       "tags": [
@@ -19087,12 +19095,9 @@
         "outcome": "ok",
         "detail": "the page names ConfigCat as \"configcat\" and states \"20 GB / mo\""
       },
-      "restated_from": {
-        "reading_date": "2026-09-25",
-        "source_url": "https://configcat.com",
+      "restatement_reverted": {
         "record_date": "2026-09-25",
-        "change_type": "limits_increased",
-        "restated_on": "2026-09-25"
+        "reverted_on": "2026-09-26"
       }
     },
     {
