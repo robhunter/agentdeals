@@ -312,7 +312,7 @@ const RETIRED_FIGURES: Retired[] = [
   },
   {
     what: "an unsourced share of SaaS apps running on Postgres",
-    pattern: /\d+% of SaaS apps/i,
+    pattern: /\d+% of SaaS (?:apps|workloads)/i,
     replacedBy: /We publish no ranking of these/,
     vendorRecord: () => recordFor("Neon", "Databases").description,
   },

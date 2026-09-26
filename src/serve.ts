@@ -18494,7 +18494,7 @@ function buildFreeSaasStackPage(): string {
       recommended: { vendor: "Neon", why: "Serverless Postgres. Free plan: 0.5 GB of storage and 100 CU-hours per project, up to 100 projects, scales to zero after 5 minutes idle. Branching for preview environments. Works with every ORM (Prisma, Drizzle, TypeORM, SQLAlchemy, pgx). Connection pooling handles concurrent users efficiently." },
       alternatives: ["Supabase", "CockroachDB", "Turso"],
       outgrow: "When you exceed 0.5 GiB storage or need always-on compute. Supabase gives 500 MB Postgres with auth + storage + realtime bundled (pauses after 1 week inactive). Turso provides 5 GB edge SQLite \u2014 great for read-heavy, globally distributed apps.",
-      whyNot: "Why not MongoDB Atlas: 512 MB free, but document databases add complexity for SaaS (no joins, denormalized data, eventual consistency). Postgres handles 95% of SaaS workloads better. Why not PlanetScale: Removed free tier in April 2024.",
+      whyNot: "Why not MongoDB Atlas: 512 MB free, but document databases add complexity for SaaS (no joins, denormalized data, eventual consistency). Why not PlanetScale: Removed free tier in April 2024.",
       relatedPage: "/database-free-tier-comparison-2026",
       isFrameworkSection: false,
     },
