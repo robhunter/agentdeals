@@ -12464,7 +12464,7 @@
     {
       "vendor": "Tomorrow.io Weather API",
       "category": "Dev Utilities",
-      "description": "The free tier includes access to 80+ data layers, Weather on Routes API, and historical data up to 20 years in the past.",
+      "description": "Tomorrow.io offers a free tier with access to 60+ data layers, 5-Day Forecast, Weather Timelines, Core Weather Data Layers, Industry-Based Insights Templates, 24 hours Historical Weather Data, and 1 automatically monitored Location. Enterprise plans offer more features like 14-Day Forecast, Custom SLAs, and access to Premium Data Layers.",
       "tier": "Free",
       "url": "https://www.tomorrow.io/weather-api/",
       "tags": [
@@ -12477,12 +12477,9 @@
         "outcome": "ok",
         "detail": "the page names Tomorrow.io Weather API as \"tomorrow io weather api\" and states amounts, none of which we matched to the terms we publish"
       },
-      "restated_from": {
-        "reading_date": "2026-09-26",
-        "source_url": "https://www.tomorrow.io/weather-api/",
+      "restatement_reverted": {
         "record_date": "2026-09-26",
-        "change_type": "limits_increased",
-        "restated_on": "2026-09-26"
+        "reverted_on": "2026-09-26"
       }
     },
     {

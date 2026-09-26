@@ -2611,7 +2611,8 @@
       "source_url": "https://www.tomorrow.io/weather-api/",
       "record_date": "2026-09-26",
       "change_type": "limits_increased",
-      "summary": "The free tier now includes access to 80+ data layers instead of 60+, and offers access to historical data up to 20 years in the past instead of 24 hours. The free tier also includes access to Weather on Routes API. The page details several paid tiers with additional features like 14-Day Forecast and Custom SLAs."
+      "summary": "The free tier now includes access to 80+ data layers instead of 60+, and offers access to historical data up to 20 years in the past instead of 24 hours. The free tier also includes access to Weather on Routes API. The page details several paid tiers with additional features like 14-Day Forecast and Custom SLAs.",
+      "reverted_on": "2026-09-26"
     },
     {
       "vendor": "MojoAuth",

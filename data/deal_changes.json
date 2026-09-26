@@ -11068,7 +11068,13 @@
       "category": "Dev Utilities",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-26"
+      "recorded_date": "2026-09-26",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: the free tier did not change. The Free plan card still lists \"5-Day Forecast … Core Weather Data Layers … 24 hours Historical Weather Data 1 Automatically monitored Location\", as in a capture of 2026-05-01. The reading took \"80+ layers\" from the Weather API's menu blurb, \"up to 20 years\" from the Historical Weather API, and \"Weather on routes\" from the Enterprise plan.",
+        "source_url": "https://www.tomorrow.io/weather-api/"
+      }
     },
     {
       "vendor": "AppSignal",
@@ -11102,7 +11108,13 @@
       "category": "Code Quality",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-26"
+      "recorded_date": "2026-09-26",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: CodeRabbit's free plan did not change. Its docs list \"Free and OSS access plus four paid plans: Essentials, Team, Advanced, and Enterprise\", and organizations that do not subscribe \"revert to Free with lower rate limits\". The pricing page took the Free card off its plan grid between 2026-08-08 and 2026-08-25; that is a change to the page, not to the free terms.",
+        "source_url": "https://docs.coderabbit.ai/management/plans"
+      }
     },
     {
       "vendor": "Composio",
