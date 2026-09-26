@@ -32497,7 +32497,7 @@
     {
       "vendor": "Gemini CLI",
       "category": "AI Coding",
-      "description": "Open-source terminal AI coding agent by Google. Free tier with personal Google account: 60 requests/minute, 1,000 requests/day, 1M token context window. Powered by Gemini 3. Supports MCP tools, shell commands, file editing. Apache 2.0 licensed",
+      "description": "Open-source terminal AI coding agent by Google, Apache 2.0 licensed. Since 2026-06-18, Login with Google no longer works for personal accounts, according to Google's Gemini Code Assist deprecation notice; the README still advertises 60 requests a minute and 1,000 a day with a personal Google account. With a Gemini API key, use counts against the Gemini API's own free tier and pricing. A Gemini Code Assist Standard or Enterprise licence is unaffected. Supports MCP tools, shell commands and file editing.",
       "tier": "Free",
       "url": "https://github.com/google-gemini/gemini-cli",
       "tags": [
@@ -33035,9 +33035,9 @@
     {
       "vendor": "Google Gemini Code Assist",
       "category": "IDE & Code Editors",
-      "description": "AI coding assistant by Google — 6,000 code completions/day, 240 chat requests/day, 1,000 Gemini CLI + Agent Mode requests/day (shared pool), powered by Gemini 2.5 on the free Individual tier. Gemini 3 is available to Google AI Ultra subscribers; others can join the waitlist. Available in VS Code, JetBrains IDEs, Android Studio, Cloud Workstations. Requires only a Gmail account, no credit card. 90x more completions than GitHub Copilot free tier",
-      "tier": "Individual (Free)",
-      "url": "https://codeassist.google",
+      "description": "Gemini Code Assist for individuals, Google's free tier of its IDE coding assistant, stopped serving requests on 2026-06-18, according to Google's deprecation notice. Login with Google no longer works in the IDE extensions or in Gemini CLI for the individuals, Google AI Pro and Google AI Ultra tiers. Google's product page, codeassist.google, still advertises the tier at no cost with 6,000 code-related requests and 240 chat requests a day. Gemini Code Assist Standard and Enterprise subscriptions are unchanged.",
+      "tier": "Retired",
+      "url": "https://developers.google.com/gemini-code-assist/docs/deprecations/code-assist-individuals",
       "tags": [
         "developer tools",
         "ai",
@@ -33049,9 +33049,9 @@
       ],
       "verifiedDate": "2026-08-27",
       "source_check": {
-        "checked": "2026-09-05",
-        "outcome": "does_not_name_vendor",
-        "detail": "the page never names Google Gemini Code Assist and is not served from its domain"
+        "checked": "2026-09-26",
+        "outcome": "states_no_terms",
+        "detail": "the page names Google Gemini Code Assist but states no amount, tier or rate we can read, and the 2 structured-data blocks in its markup state no price"
       }
     },
     {
