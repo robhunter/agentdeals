@@ -18310,9 +18310,9 @@
     {
       "vendor": "Burnermail",
       "category": "Email",
-      "description": "Disposable email addresses that forward to your inbox, formerly with a free plan. No free tier: Burner Mail's post of 2026-06-27, read 2026-09-26, says it \"is removing the public Free plan and moving forward with a paid-only offering\".",
-      "tier": "Retired",
-      "url": "https://burnermail.io/blog/why-were-removing-burner-mails-free-plan/",
+      "description": "Free 5 Burner Email Addresses, 1 Mailbox, 7-day Mailbox History",
+      "tier": "Free",
+      "url": "https://burnermail.io/",
       "tags": [
         "email",
         "free-for-dev"
