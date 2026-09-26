@@ -59,6 +59,12 @@ function readableText(html: string): string {
   );
 }
 
+function embeddedData(html: string): string {
+  const parts: string[] = [];
+  for (const m of html.matchAll(/<script(?![^>]*application\/ld\+json)[^>]*>([\s\S]*?)<\/script>/gi)) parts.push(m[1]);
+  return decode(parts.join(" "));
+}
+
 function metaAndStructuredData(html: string): string {
   const parts: string[] = [];
   for (const m of html.matchAll(/<meta[^>]+content="([^"]*)"/gi)) parts.push(m[1]);
@@ -144,7 +150,7 @@ const RETIRED_FIGURES: Retired[] = [
   },
   {
     what: "Railway's $5 Hobby credit described as free",
-    pattern: /\$5\/(?:month|mo)(?: free)? credit|\$5 free credit|\$5 credit\/mo|Free \$5 monthly/i,
+    pattern: /\$5\/(?:month|mo)(?: free)? credit|\$5 free credit|\$5 credit\/mo|Free \$5 monthly|Railway's \$5 credit|Railway \(\$5 credit\)/i,
     replacedBy: /\$1\/(?:month|mo)|\$1 of free credit|trial credit/i,
     vendorRecord: () => recordFor("Railway", "Cloud Hosting").description,
   },
@@ -155,6 +161,36 @@ const RETIRED_FIGURES: Retired[] = [
     vendorRecord: () => recordFor("Railway", "Cloud Hosting").description,
   },
   {
+    what: "Railway's Free plan credit called enough to run an app",
+    pattern: /\$1 of free credit a month, enough for/i,
+    replacedBy: /\$1 of free credit a month, with/i,
+    vendorRecord: () => recordFor("Railway", "Cloud Hosting").description,
+  },
+  {
+    what: "Railway crowned the best free hosting for a stack",
+    pattern: /The best (?:all-around )?free (?:[A-Za-z]+ )?hosting(?: for [A-Za-z]+)? in 2026/i,
+    replacedBy: /Its Free plan opens with a 30-day trial/i,
+    vendorRecord: () => recordFor("Railway", "Cloud Hosting").description,
+  },
+  {
+    what: "Railway's free tier graded as expanded in October 2025",
+    pattern: /Series B \(Oct 2025\)|\$5 credit, no sleep/i,
+    replacedBy: /Added a Free plan in 2025/i,
+    vendorRecord: () => recordFor("Railway", "Cloud Hosting").description,
+  },
+  {
+    what: "DigitalOcean Functions' free allowance as 25,000 GiB-seconds",
+    pattern: /25,000 GiB-seconds|25K GiB-seconds/i,
+    replacedBy: /90,000 GiB-seconds|90K GiB-seconds/i,
+    vendorRecord: () => recordFor("DigitalOcean", "Cloud IaaS").description,
+  },
+  {
+    what: "a five-minute Droplet costing less than the 60-second minimum charge",
+    pattern: /5 minutes costs ~?\$0\.005/i,
+    replacedBy: /60-second minimum \(\$0\.01\)/i,
+    vendorRecord: () => recordFor("DigitalOcean", "Cloud IaaS").description,
+  },
+  {
     what: "a DigitalOcean Droplet price cut in January 2026",
     pattern: /20% (?:Droplet )?price cuts?|cut 20% in January|20% cut \(was|cut Basic Droplet prices by 20%|Jan(?:uary)? 2026 (?:price )?cuts?|Droplet Price Cut/i,
     replacedBy: /\$4(?:\.00)?\/mo/,
@@ -162,14 +198,20 @@ const RETIRED_FIGURES: Retired[] = [
   },
   {
     what: "Neon's retired free plan, or Neon as database-only",
-    pattern: /190 compute hours|Database-only needs|database-only vs full platform|Best Pure Postgres|better for pure Postgres|Need pure serverless Postgres/i,
+    pattern: /190 compute hours|Database-only needs|database-only vs full platform|Database-Only vs\.? Full Platform|Neon is (?:a )?database-only|Best Pure Postgres|better for pure Postgres|Need pure serverless Postgres/i,
     replacedBy: /100 CU-hours|serverless Postgres with branching/i,
     vendorRecord: () => recordFor("Neon", "Databases").description,
   },
   {
     what: "Neon Launch at $19 a month",
-    pattern: /Neon Launch (?:at |plan at )?\$19|\$19\/mo Neon Launch/i,
-    replacedBy: /usage-based,? (?:with )?no monthly minimum/i,
+    pattern: /Neon Launch (?:at |plan at )?\$19|\$19\/mo Neon Launch|Launch \$19|Launch \(\$19/i,
+    replacedBy: /usage-based,? (?:with )?no monthly minimum|Launch, usage-based|Launch, no monthly minimum/i,
+    vendorRecord: () => recordFor("Neon", "Databases").description,
+  },
+  {
+    what: "a first paid upgrade priced as a fixed monthly total including Neon Launch",
+    pattern: /The \$\d+\/month breakpoint/i,
+    replacedBy: /The first paid upgrade:/,
     vendorRecord: () => recordFor("Neon", "Databases").description,
   },
 ];
@@ -226,6 +268,7 @@ describe("hosting pages publish the free-tier figures our records hold (#1183)",
         for (const [surface, body] of [
           ["page", readableText(html)],
           ["metadata", metaAndStructuredData(html)],
+          ["embedded data", embeddedData(html)],
         ] as const) {
           for (const retired of RETIRED_FIGURES) {
             const match = body.match(retired.pattern);
@@ -267,7 +310,12 @@ describe("hosting pages publish the free-tier figures our records hold (#1183)",
       "a Sentry free session-replay allowance of 10K": ["/monitoring-comparison-2026"],
       "Sentry's free data retention as 90 days": ["/monitoring-comparison-2026"],
       "a Better Stack free log allowance of 1 GB": ["/monitoring-comparison-2026"],
-      "Railway's $5 Hobby credit described as free": ["/hetzner-pricing-2026", "/hosting-pricing", "/hosting-alternatives"],
+      "Railway's $5 Hobby credit described as free": ["/hetzner-pricing-2026", "/hosting-pricing", "/hosting-alternatives", "/free-fastapi-stack", "/free-go-stack"],
+      "Railway's Free plan credit called enough to run an app": ["/free-django-stack", "/free-fastapi-stack", "/free-go-stack", "/free-saas-stack"],
+      "Railway crowned the best free hosting for a stack": ["/free-django-stack", "/free-fastapi-stack", "/free-go-stack", "/free-saas-stack"],
+      "Railway's free tier graded as expanded in October 2025": ["/free-tier-risk"],
+      "DigitalOcean Functions' free allowance as 25,000 GiB-seconds": ["/digitalocean-free-tier-2026", "/cloud-free-tier-comparison-2026"],
+      "a five-minute Droplet costing less than the 60-second minimum charge": ["/digitalocean-free-tier-2026"],
       "Railway's Free plan as a $1 monthly minimum charge": [
         "/hetzner-pricing-2026", "/hosting-free-tier-comparison-2026", "/hosting-pricing", "/hosting-alternatives",
         "/free-django-stack", "/free-fastapi-stack", "/free-go-stack", "/free-nextjs-stack", "/free-saas-stack",
@@ -279,6 +327,10 @@ describe("hosting pages publish the free-tier figures our records hold (#1183)",
       ],
       "Neon Launch at $19 a month": [
         "/neon-vs-supabase", "/free-nextjs-stack", "/free-django-stack", "/free-fastapi-stack", "/free-go-stack", "/free-saas-stack",
+        "/database-pricing", "/vector-database-pricing",
+      ],
+      "a first paid upgrade priced as a fixed monthly total including Neon Launch": [
+        "/free-nextjs-stack", "/free-django-stack", "/free-fastapi-stack", "/free-go-stack", "/free-saas-stack",
       ],
     };
     const missing: string[] = [];

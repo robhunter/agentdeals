@@ -1219,12 +1219,12 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 55,
+      "table_figures": 54,
       "table_figures_from_records": 10,
       "tables": [
         {
           "label": "Free Services (Permanent)",
-          "figures": 5,
+          "figures": 4,
           "from_records": 0
         },
         {
@@ -1732,7 +1732,7 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 44,
+      "table_figures": 43,
       "table_figures_from_records": 13,
       "tables": [
         {
@@ -1747,7 +1747,7 @@
         },
         {
           "label": "When to Upgrade — Service by Service",
-          "figures": 22,
+          "figures": 21,
           "from_records": 4
         }
       ],
@@ -1852,7 +1852,7 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 48,
+      "table_figures": 50,
       "table_figures_from_records": 0,
       "tables": [
         {
@@ -1862,7 +1862,7 @@
         },
         {
           "label": "3. 🟡 Medium Risk — Use with Caution",
-          "figures": 8,
+          "figures": 9,
           "from_records": 0
         },
         {
@@ -1882,7 +1882,7 @@
         },
         {
           "label": "7. Full Scoring Table",
-          "figures": 24,
+          "figures": 25,
           "from_records": 0
         }
       ],
@@ -2608,17 +2608,17 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 23,
+      "table_figures": 28,
       "table_figures_from_records": 8,
       "tables": [
         {
           "label": "1. Free Tier Comparison Table",
-          "figures": 8,
+          "figures": 9,
           "from_records": 0
         },
         {
           "label": "3. Cost at Scale",
-          "figures": 7,
+          "figures": 11,
           "from_records": 0
         },
         {

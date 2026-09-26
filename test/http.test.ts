@@ -3335,7 +3335,7 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("1K-5K"), "Should have 1K users scale");
     assert.ok(html.includes("10K-25K"), "Should have 10K users scale");
     assert.ok(html.includes("50K-100K"), "Should have 100K users scale");
-    assert.ok(html.includes("$19/month breakpoint"), "Should have breakpoint analysis");
+    assert.ok(html.includes("The first paid upgrade:"), "Should have breakpoint analysis");
     assert.ok(html.includes("When to Upgrade"), "Should have upgrade guidance");
     assert.ok(html.includes("hit first"), "Should indicate which limits hit first");
     assert.ok(html.includes("outgrow"), "Should have outgrow guidance");
