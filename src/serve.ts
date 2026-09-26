@@ -100,7 +100,7 @@ import {
 import { changeAnchor, changeRecordHref } from "./change-anchor.js";
 import { SSE_KEEPALIVE_FRAME, keepaliveIntervalMs, sessionRecoveryBody } from "./mcp-stream.js";
 import { ASSISTANTS_API_SHUTDOWN } from "./assistants-shutdown.js";
-import { discontinuedClause, discontinuedOnOrBefore, PRODUCT_DEPRECATED } from "./product-deprecation.js";
+import { discontinuedClause, discontinuedOnOrBefore, endsAFreeTier, PRODUCT_DEPRECATED } from "./product-deprecation.js";
 import { rankOffers, rankForListing, rotateListing, utcDate, gateFor, notAFreeOfferGateFor, descriptionDeniesFreeTier, classifyTier, CRITERIA_PATH, DEMOTE_ONLY_POLICY, DISCLOSURE_RATIONALE, TIE_BREAK_ALGORITHM, NAMED_SUBSET_RULE, NAMED_SUBSET_FIELD_RULE, wholeRankedOrderClause, GATE_TABLE, gateTableRowText, DEMERIT_TABLE, demeritTableRowText, NOT_FREE_TIER_RULES, TIME_LIMITED_TIER_RULES, type TieBreak, type Gate } from "./ranking.js";
 import type { RankedEntry, RankingResult } from "./ranking.js";
 import { eligibilityGateAsPublished, gatedShareDescriptionClause, gatedShareLede, publishableEligibilityConditions } from "./eligibility.js";
@@ -50375,13 +50375,13 @@ ${altHtml}
   const countable = trackedChanges(sorted);
   const undatedCounted = trackedChanges(undatedChanges).length;
   const upcomingCount = countable.filter(c => c.date >= today).length;
-  const removedCount = countedAll.filter(c => c.change_type === "free_tier_removed" || c.change_type === "open_source_killed" || c.change_type === "product_deprecated").length;
+  const removedCount = countedAll.filter(endsAFreeTier).length;
   const thisMonth = today.slice(0, 7);
   const thisMonthCount = countable.filter(c => c.date.slice(0, 7) === thisMonth).length;
 
   const currentYearStr = String(currentYear);
   const ytdChanges = countable.filter(c => c.date.startsWith(currentYearStr) && c.date <= today);
-  const ytdRemovals = ytdChanges.filter(c => c.change_type === "free_tier_removed" || c.change_type === "open_source_killed" || c.change_type === "product_deprecated").length;
+  const ytdRemovals = ytdChanges.filter(endsAFreeTier).length;
   const ytdReductions = ytdChanges.filter(c => c.change_type === "limits_reduced" || c.change_type === "restriction").length;
   const ytdNewFree = ytdChanges.filter(c => c.change_type === "new_free_tier" || c.change_type === "limits_increased" || c.change_type === "startup_program_expanded").length;
   const ytdRestructured = ytdChanges.filter(c => c.change_type === "pricing_restructured" || c.change_type === "pricing_model_change" || c.change_type === "pricing_postponed").length;
@@ -50858,7 +50858,7 @@ ${altHtml}
   }
 
   const upcomingCount = trackedChanges(sorted).filter(c => c.date >= today).length;
-  const removedCount = counted.filter(c => c.change_type === "free_tier_removed" || c.change_type === "open_source_killed" || c.change_type === "product_deprecated").length;
+  const removedCount = counted.filter(endsAFreeTier).length;
   const entriesListed = sorted.length + undatedSorted.length;
 
   const monthsHtml = Array.from(byMonth.entries()).map(([month, changes]) => {

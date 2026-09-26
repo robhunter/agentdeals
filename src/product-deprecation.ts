@@ -97,6 +97,13 @@ function decide(change: DeprecationSubject): boolean {
   return productNamedApartFromVendor(reading.subject, change.vendor).length === 0;
 }
 
+const CHANGE_TYPES_THAT_END_A_FREE_TIER = new Set(["free_tier_removed", "open_source_killed"]);
+
+export function endsAFreeTier(change: DeprecationSubject): boolean {
+  if (CHANGE_TYPES_THAT_END_A_FREE_TIER.has(change.change_type)) return true;
+  return change.change_type === PRODUCT_DEPRECATED && deprecationEndsTheListedProduct(change);
+}
+
 export function deprecationEndsTheListedProduct(change: DeprecationSubject): boolean {
   const cached = endsTheListedProductCache.get(change as object);
   if (cached !== undefined) return cached;
