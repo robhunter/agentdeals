@@ -154,6 +154,18 @@ const RETIRED_FIGURES: Retired[] = [
     replacedBy: /\$4(?:\.00)?\/mo/,
     vendorRecord: () => recordFor("DigitalOcean", "Cloud IaaS").description,
   },
+  {
+    what: "Neon's retired free plan, or Neon as database-only",
+    pattern: /190 compute hours|Database-only needs|database-only vs full platform|Best Pure Postgres|better for pure Postgres|Need pure serverless Postgres/i,
+    replacedBy: /100 CU-hours|serverless Postgres with branching/i,
+    vendorRecord: () => recordFor("Neon", "Databases").description,
+  },
+  {
+    what: "Neon Launch at $19 a month",
+    pattern: /Neon Launch (?:at |plan at )?\$19|\$19\/mo Neon Launch/i,
+    replacedBy: /usage-based,? (?:with )?no monthly minimum/i,
+    vendorRecord: () => recordFor("Neon", "Databases").description,
+  },
 ];
 
 type Hit = { route: string; surface: string; excerpt: string; what: string };
@@ -255,6 +267,12 @@ describe("hosting pages publish the free-tier figures our records hold (#1183)",
         "/railway-vs-render", "/vercel-vs-netlify", "/heroku-alternatives", "/aws-app-runner-migration", "/google-developer-program-2026",
       ],
       "a DigitalOcean Droplet price cut in January 2026": ["/hetzner-pricing-2026", "/digitalocean-free-tier-2026", "/cloud-free-tier-comparison-2026"],
+      "Neon's retired free plan, or Neon as database-only": [
+        "/gcp-free-tier-2026", "/aws-free-tier-2026", "/azure-free-tier-2026", "/database-free-tier-comparison-2026", "/database-alternatives",
+      ],
+      "Neon Launch at $19 a month": [
+        "/neon-vs-supabase", "/free-nextjs-stack", "/free-django-stack", "/free-fastapi-stack", "/free-go-stack", "/free-saas-stack",
+      ],
     };
     const missing: string[] = [];
     for (const [what, pages] of Object.entries(carried)) {
