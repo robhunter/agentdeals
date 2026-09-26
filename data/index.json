@@ -13498,9 +13498,9 @@
     {
       "vendor": "Stickies",
       "category": "Team Collaboration",
-      "description": "Visual collaboration app used for brainstorming, content curation, and notes. Free for up to 3 Walls, unlimited users, and 1 GB storage.",
-      "tier": "Free",
-      "url": "https://stickies.app/",
+      "description": "Visual collaboration app used for brainstorming, content curation, and notes. No free plan since Stickies dropped its Free Forever plan between 2026-08-28 and 2026-09-26. Plus is $5/month billed annually and Pro $10/month, each with a 14-day free trial and no credit card required.",
+      "tier": "Trial",
+      "url": "https://stickies.app/pricing/",
       "tags": [
         "developer-tools",
         "free-for-dev"

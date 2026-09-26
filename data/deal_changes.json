@@ -3804,6 +3804,26 @@
       "category": "Team Collaboration",
       "alternatives": [],
       "recorded_date": "2026-04-13",
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: when this record was written, Stickies still offered its Free Forever plan; captures of its pricing page on 2026-04-16 and 2026-08-28 list it. The plan ended between 2026-08-28 and 2026-09-26, recorded under Stickies on 2026-09-26.",
+        "source_url": "https://web.archive.org/web/20260828130550/https://stickies.app/pricing/"
+      }
+    },
+    {
+      "vendor": "Stickies",
+      "change_type": "free_tier_removed",
+      "date": "2026-09-26",
+      "summary": "Stickies dropped its Free Forever plan between 2026-08-28 and 2026-09-26. It now sells Plus ($5 a month billed annually, $7 monthly) and Pro ($10 a month billed annually), with a 14-day free trial.",
+      "previous_state": "\"Free Forever\" (pricing page, 2026-08-28)",
+      "current_state": "No free plan. \"Plus $5 / mo. billed annually\"; \"14-Day Free Trial - No credit card required\" (pricing page, 2026-09-26)",
+      "impact": "high",
+      "source_url": "https://stickies.app/pricing/",
+      "category": "Team Collaboration",
+      "alternatives": [],
+      "recorded_date": "2026-09-26",
       "date_source": "hand_written"
     },
     {
