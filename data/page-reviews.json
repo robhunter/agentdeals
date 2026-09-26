@@ -106,13 +106,13 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 16,
-      "table_figures_from_records": 16,
+      "table_figures": 18,
+      "table_figures_from_records": 18,
       "tables": [
         {
           "label": "RAG Agent",
-          "figures": 7,
-          "from_records": 7
+          "figures": 8,
+          "from_records": 8
         },
         {
           "label": "Autonomous Coding Agent",
@@ -126,8 +126,8 @@
         },
         {
           "label": "Chat / Customer Agent",
-          "figures": 2,
-          "from_records": 2
+          "figures": 3,
+          "from_records": 3
         }
       ],
       "reads_changes": true,
