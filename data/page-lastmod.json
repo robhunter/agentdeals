@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2026-09-25",
+  "generated": "2026-09-26",
   "pages": {
     "/": {
       "daily": true
@@ -3282,8 +3282,7 @@
       "daily": true
     },
     "/stability": {
-      "hash": "01fcb3ec5795b28d",
-      "changed": "2026-09-25"
+      "daily": true
     },
     "/stack-check": {
       "hash": "11f618064d8aa200",
