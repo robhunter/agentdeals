@@ -2364,7 +2364,8 @@
       "source_url": "https://kiro.dev/pricing",
       "record_date": "2026-09-03",
       "change_type": "pricing_restructured",
-      "summary": "The tier names have changed. 'Pro+' is now 'Pro Max'. There is a new 'Pro Max' tier at $100/month for 5,000 credits. The sign-up bonus is now $20 towards a paid plan, instead of 500 bonus credits. Add-on credits are available for all paid tiers and cost $0.04/credit, with packs ranging from $5 to $100. Unused add-on credits roll over for 12 months."
+      "summary": "The tier names have changed. 'Pro+' is now 'Pro Max'. There is a new 'Pro Max' tier at $100/month for 5,000 credits. The sign-up bonus is now $20 towards a paid plan, instead of 500 bonus credits. Add-on credits are available for all paid tiers and cost $0.04/credit, with packs ranging from $5 to $100. Unused add-on credits roll over for 12 months.",
+      "reverted_on": "2026-09-26"
     },
     {
       "vendor": "Scalr",
