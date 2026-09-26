@@ -1,10 +1,16 @@
-import type { DealChange, ChangeDateSource } from "./types.js";
+import type { DealChange, ChangeDateSource, DateMeaning } from "./types.js";
 import { PRODUCT_DEPRECATED, deprecationEndsTheListedProduct } from "./product-deprecation.js";
 import { sliceById } from "./change-census.js";
+import { isACorrectionToOurOwnRecord } from "./change-resolution.js";
 
-type DatedChange = Pick<DealChange, "date" | "date_source">;
+export interface DatedChange {
+  date: string;
+  date_source?: ChangeDateSource;
+  recorded_date?: string | null;
+  change_type?: string;
+}
 
-type ExpiringChange = Pick<DealChange, "date" | "date_source" | "change_type" | "vendor" | "summary">;
+type ExpiringChange = DatedChange & Pick<DealChange, "change_type" | "vendor" | "summary">;
 
 export const DISCOVERED_DATE_PREFIX = "discovered";
 
@@ -16,11 +22,24 @@ export const DATE_SOURCES: ChangeDateSource[] = ["vendor_page", "hand_written", 
 
 export const EVENT_DATED_SOURCES: ChangeDateSource[] = ["vendor_page", "hand_written"];
 
-export function isEventDated(change: Pick<DealChange, "date_source">): boolean {
-  return EVENT_DATED_SOURCES.includes(change.date_source as ChangeDateSource);
+export function carriesTheDayItWasTyped(change: DatedChange): boolean {
+  if (change.date_source !== "hand_written" || isACorrectionToOurOwnRecord(change)) return false;
+  return !change.recorded_date || change.date === change.recorded_date;
 }
 
-export function partitionByDateProvenance<T extends Pick<DealChange, "date_source">>(
+export function isEventDated(change: DatedChange): boolean {
+  return EVENT_DATED_SOURCES.includes(change.date_source as ChangeDateSource) && !carriesTheDayItWasTyped(change);
+}
+
+export function dateMeaningOf(change: DatedChange): DateMeaning {
+  return isEventDated(change) ? EFFECTIVE_DATE_PREFIX : DISCOVERED_DATE_PREFIX;
+}
+
+export function withDateMeaningDeclared<T extends DatedChange>(change: T): T & { date_meaning: DateMeaning } {
+  return { ...change, date_meaning: dateMeaningOf(change) };
+}
+
+export function partitionByDateProvenance<T extends DatedChange>(
   changes: T[]
 ): { dated: T[]; discovered: T[] } {
   const dated: T[] = [];
@@ -40,7 +59,7 @@ export function groupByMonth<T extends Pick<DealChange, "date">>(changes: T[]): 
   return new Map([...byMonth.entries()].sort((a, b) => a[0].localeCompare(b[0])));
 }
 
-export function monthlyChangeSeries<T extends Pick<DealChange, "date" | "date_source">>(
+export function monthlyChangeSeries<T extends DatedChange>(
   changes: T[]
 ): { effective: Map<string, T[]>; discovered: Map<string, T[]> } {
   const { dated, discovered } = partitionByDateProvenance(changes);
@@ -110,7 +129,7 @@ export function withinWindow(date: string, window: DateWindow): boolean {
   return date >= window.start && (window.end === undefined || date <= window.end);
 }
 
-export function changesInWindow<T extends Pick<DealChange, "date" | "date_source">>(
+export function changesInWindow<T extends DatedChange>(
   changes: T[],
   window: DateWindow
 ): { dated: T[]; discovered: T[] } {
@@ -143,7 +162,7 @@ export function changeDateLabel(c: DatedChange): string {
   return isEventDated(c) ? c.date : `${DISCOVERED_DATE_PREFIX} ${c.date}`;
 }
 
-export function changeEntryDateLabelFor(c: Pick<DealChange, "date_source">, rendered: string): string {
+export function changeEntryDateLabelFor(c: DatedChange, rendered: string): string {
   return isEventDated(c)
     ? `${EFFECTIVE_DATE_PREFIX} ${rendered}`
     : `${DISCOVERED_DATE_PREFIX} ${rendered} · ${UNKNOWN_EFFECTIVE_DATE_MARKER}`;

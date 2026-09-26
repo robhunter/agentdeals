@@ -4,6 +4,7 @@ import { spawn, type ChildProcess } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { assertPopulationFloor } from "./population-floor.ts";
+import { statesWhenItTookEffect } from "./effective-date-rule.ts";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -333,7 +334,7 @@ describe("every published total is the tracked count or names the slice it is", 
   it("states one Q1 figure in prose and in both JSON-LD nodes", async () => {
     const body = await get("/q1-2026-developer-pricing-report");
     const inQ1 = dealChanges.filter(
-      (c) => isTrackedChange(c) && c.date >= "2026-01-01" && c.date <= "2026-03-31" && c.date_source !== "discovered",
+      (c) => isTrackedChange(c) && c.date >= "2026-01-01" && c.date <= "2026-03-31" && statesWhenItTookEffect(c),
     ).length;
     assert.ok(inQ1 > 10, `only ${inQ1} Q1 records, so the check proves nothing`);
     const claimed = [...body.matchAll(/([\d,]+) recorded pricing changes/g)].map((m) => Number(m[1].replace(/,/g, "")));

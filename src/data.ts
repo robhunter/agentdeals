@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import type { Offer, EnrichedOffer, OfferIndex, DealChange, PublishedDealChange, DealChangesIndex, ChangeDateSource, StabilityClass, Referral, RiskCause, RatingWithheld, LinkUnreachable, SourceCheck } from "./types.js";
+import type { Offer, EnrichedOffer, OfferIndex, DealChange, DateMeaning, PublishedDealChange, DealChangesIndex, ChangeDateSource, StabilityClass, Referral, RiskCause, RatingWithheld, LinkUnreachable, SourceCheck } from "./types.js";
 import { isUrlSuspended } from "./referral-health.js";
 import { CHANGE_DIRECTION, NEGATIVE_CHANGE_TYPES, POSITIVE_CHANGE_TYPES } from "./change-direction.js";
 import { changeRatesTheListedTier } from "./change-tier.js";
@@ -26,7 +26,7 @@ import { restatementCensus, restatementRulings, withheldTermsMeasure, type Resta
 import { isSubSlug, toSlug } from "./slug.js";
 export { sanitizeQuery } from "./search-query.js";
 import { matchingSubject } from "./gate-disclosure.js";
-import { DATE_SOURCES, isEventDated, changeDateClause, changeEntryDateLabel, isoWeekWindow, changesInWindow, discoveryBatchNote, firstReadHeading, type DateWindow } from "./change-dates.js";
+import { DATE_SOURCES, isEventDated, withDateMeaningDeclared, type DatedChange, changeDateClause, changeEntryDateLabel, isoWeekWindow, changesInWindow, discoveryBatchNote, firstReadHeading, type DateWindow } from "./change-dates.js";
 import { PRODUCT_DEPRECATED, deprecationEndsTheListedProduct } from "./product-deprecation.js";
 import { RISK_DEMOTION } from "./change-demotion.js";
 import { sinceFilterDay } from "./since-parameter.js";
@@ -34,7 +34,7 @@ import { DEFAULT_CHANGE_WINDOW_DAYS, defaultChangeWindow, servedWindowOpens, win
 import { nameMatchDisclosure, type AskedByName, type NameMatch } from "./name-match.js";
 export { RISK_DEMOTION, SEVERE_TYPES_WITHOUT_FLAT_DEMOTION, changeTypeCanDemote } from "./change-demotion.js";
 import { vendorHistorySentence } from "./vendor-history.js";
-import { isNoLongerInForce, recordsStillInForce, recordsWeStandBehind, theEventNeverHappened, withResolutionInSummary, withStandingDeclaredOnEach } from "./change-resolution.js";
+import { isACorrectionToOurOwnRecord, isNoLongerInForce, recordsStillInForce, recordsWeStandBehind, theEventNeverHappened, withResolutionInSummary, withStandingDeclaredOnEach } from "./change-resolution.js";
 import { trackedChanges, recordsOtherThanOurOwnIndexHousekeeping } from "./change-census.js";
 import { changeCitesASource, changeIsUncited, changeSummaryHtml, changeSummaryMarkdown, changeSummaryText, ratingWithheldForNoSourceSentence, type CitableChange } from "./change-citation.js";
 import { endedVerdictSentence } from "./retirement.js";
@@ -309,11 +309,7 @@ export function searchOffers(
 
 export { CHANGE_DIRECTION, narrowsTheStoredTerms } from "./change-direction.js";
 
-export const CORRECTION_TO_OUR_OWN_RECORD = "record_corrected";
-
-export function isACorrectionToOurOwnRecord(change: Pick<DealChange, "change_type">): boolean {
-  return change.change_type === CORRECTION_TO_OUR_OWN_RECORD;
-}
+export { CORRECTION_TO_OUR_OWN_RECORD, isACorrectionToOurOwnRecord } from "./change-resolution.js";
 
 type BookkeepingFields = Pick<DealChange, "change_type"> & { resolution?: DealChange["resolution"] };
 
@@ -893,7 +889,7 @@ export function getDealChanges(
     : recordsOtherThanOurOwnIndexHousekeeping(stoodBehind);
 
   return {
-    changes: withStandingDeclaredOnEach(served),
+    changes: withStandingDeclaredOnEach(served).map(withDateMeaningDeclared),
     total: served.length,
     retracted_excluded: results.length - stoodBehind.length,
     index_housekeeping_excluded: stoodBehind.length - served.length,
@@ -1166,7 +1162,7 @@ export function demotionLapsesOn(date: string): string {
 }
 
 export function lapsingDemotionStated(
-  cause: { change_type: string; date: string; date_source?: ChangeDateSource },
+  cause: DatedChange & { change_type: string },
 ): string {
   return demotionCanLapse(cause.change_type)
     ? `${A_VERDICT_LAPSES_RULE} This one rests on a record ${changeEntryDateLabel(cause)}, so it lapses on ${demotionLapsesOn(cause.date)} unless we record something new first.`
@@ -1227,6 +1223,7 @@ export function riskCauseOf(cause: DealChange | null | undefined): RiskCause | n
     vendor: cause.vendor,
     date: cause.date,
     date_source: cause.date_source,
+    recorded_date: cause.recorded_date,
     change_type: cause.change_type,
     summary: cause.summary,
     source_url: cause.source_url?.trim() ? cause.source_url.trim() : null,
@@ -1604,8 +1601,8 @@ export function compareServices(
 
   return {
     comparison: {
-      vendor_a: stripReferrerValue({ ...offerA, last_read_date: lastReadDate(offerA), deal_changes: changesA }),
-      vendor_b: stripReferrerValue({ ...offerB, last_read_date: lastReadDate(offerB), deal_changes: changesB }),
+      vendor_a: stripReferrerValue({ ...offerA, last_read_date: lastReadDate(offerA), deal_changes: changesA.map(withDateMeaningDeclared) }),
+      vendor_b: stripReferrerValue({ ...offerB, last_read_date: lastReadDate(offerB), deal_changes: changesB.map(withDateMeaningDeclared) }),
       vendor_a_match: vendorMatchNotice(vendorA, matchA)!,
       vendor_b_match: vendorMatchNotice(vendorB, matchB)!,
       shared_categories: sharedCategories,
@@ -1806,8 +1803,8 @@ export function getFreshnessMetrics(): FreshnessMetrics {
 export function getWeeklyDigest(): {
   week: string;
   date_range: string;
-  deal_changes: DealChange[];
-  discovered_changes: DealChange[];
+  deal_changes: Array<DealChange & { date_meaning: DateMeaning }>;
+  discovered_changes: Array<DealChange & { date_meaning: DateMeaning }>;
   discovery_note: string;
   new_offers: { vendor: string; category: string; description: string }[];
   upcoming_deadlines: { vendor: string; date: string; change_type: string; summary: string }[];
@@ -1884,8 +1881,8 @@ export function getWeeklyDigest(): {
   return {
     week,
     date_range: `${changeWindow.start} to ${changeWindow.end}`,
-    deal_changes: changes,
-    discovered_changes: discovered,
+    deal_changes: changes.map(withDateMeaningDeclared),
+    discovered_changes: discovered.map(withDateMeaningDeclared),
     discovery_note: discoveryNote,
     new_offers: newOffers,
     upcoming_deadlines: deadlines,

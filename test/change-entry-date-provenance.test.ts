@@ -129,9 +129,14 @@ describe("the label an entry carries beside its date", () => {
       `${EFFECTIVE_DATE_PREFIX} ${TODAY}`
     );
     assert.strictEqual(
-      changeEntryDateLabel({ date: TODAY, date_source: "hand_written" } as never),
+      changeEntryDateLabel({ date: TODAY, date_source: "hand_written", recorded_date: dayOffset(-30) } as never),
       `${EFFECTIVE_DATE_PREFIX} ${TODAY}`
     );
+  });
+
+  it("says a hand-written date typed on the day it was recorded is not one", () => {
+    const label = changeEntryDateLabel({ date: TODAY, date_source: "hand_written", recorded_date: TODAY } as never);
+    assert.strictEqual(label, changeEntryDateLabel({ date: TODAY, date_source: "discovered" } as never));
   });
 
   it("says a discovery date is not one, in the entry rather than above it", () => {
@@ -243,7 +248,7 @@ describe("an entry lifted out of its section still says what its date is", () =>
   let routes: string[] = [];
   let ENTRY_DATE = "";
   let discoveredPort = 0;
-  const rendered = new Map<string, { discovered: string; dated: string; withoutTheEntry: string }>();
+  const rendered = new Map<string, { discovered: string; dated: string; typed: string; withoutTheEntry: string }>();
 
   before(async () => {
     tmp = mkdtempSync(path.join(tmpdir(), "change-entry-provenance-"));
@@ -261,8 +266,11 @@ describe("an entry lifted out of its section still says what its date is", () =>
     const dated = await startServer(
       write("dated.json", [control, change(SUBJECT, ENTRY_DATE, "vendor_page", SUMMARY)])
     );
+    const typed = await startServer(
+      write("typed-on-the-day.json", [control, { ...change(SUBJECT, ENTRY_DATE, "hand_written", SUMMARY), recorded_date: ENTRY_DATE }])
+    );
     const withoutTheEntry = await startServer(write("without-the-entry.json", [control]));
-    servers.push(discovered.proc, dated.proc, withoutTheEntry.proc);
+    servers.push(discovered.proc, dated.proc, typed.proc, withoutTheEntry.proc);
     discoveredPort = discovered.port;
 
     const index = await (await fetch(`http://localhost:${discovered.port}/sitemap.xml`)).text();
@@ -280,15 +288,17 @@ describe("an entry lifted out of its section still says what its date is", () =>
         const route = queue.shift();
         if (!route) return;
         try {
-          const [a, b, c] = await Promise.all([
+          const [a, b, c, d] = await Promise.all([
             fetch(`http://localhost:${discovered.port}${route}`),
             fetch(`http://localhost:${dated.port}${route}`),
             fetch(`http://localhost:${withoutTheEntry.port}${route}`),
+            fetch(`http://localhost:${typed.port}${route}`),
           ]);
           if (a.status !== 200 || b.status !== 200) continue;
           const bodies = {
             discovered: await a.text(),
             dated: await b.text(),
+            typed: d.status === 200 ? await d.text() : "",
             withoutTheEntry: c.status === 200 ? await c.text() : "",
           };
           if (bodies.discovered.includes(SUMMARY)) rendered.set(route, bodies);
@@ -358,6 +368,26 @@ describe("an entry lifted out of its section still says what its date is", () =>
         offenders.push(`${route}: ${field}`);
       }
     }
+    assert.deepStrictEqual(offenders, []);
+  });
+
+  it("says the effective date is unknown in every field that prints a hand-written date typed on the day it was recorded", () => {
+    const offenders: string[] = [];
+    let fields = 0;
+    for (const [route, b] of rendered) {
+      for (const field of fieldsTheEntryPuts(b.typed, b)) {
+        fields += 1;
+        if (
+          field.includes(`${DISCOVERED_DATE_PREFIX} ${ENTRY_DATE}`) &&
+          field.includes(UNKNOWN_EFFECTIVE_DATE_MARKER)
+        ) {
+          continue;
+        }
+        if (EXEMPT.some((e) => e.allows(field))) continue;
+        offenders.push(`${route}: ${field}`);
+      }
+    }
+    assert.ok(fields > 0, "no route put the typed entry's date in a field, so the check proves nothing");
     assert.deepStrictEqual(offenders, []);
   });
 

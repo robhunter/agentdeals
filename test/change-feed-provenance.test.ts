@@ -16,6 +16,7 @@ import {
   recordedOn,
 } from "../dist/change-feed.js";
 import { weekRangeLabel, changeEntryDateLabel, DISCOVERED_DATE_PREFIX, EFFECTIVE_DATE_PREFIX, UNKNOWN_EFFECTIVE_DATE_MARKER } from "../dist/change-dates.js";
+import { statesWhenItTookEffect } from "./effective-date-rule.ts";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -231,14 +232,16 @@ describe("the change feeds date every entry by when we recorded it and say what 
     for (const entry of entries) {
       assert.ok(["discovered", "hand_written", "vendor_page"].includes(entry.dateSource), entry.title);
       assert.match(entry.recordedDate, /^\d{4}-\d{2}-\d{2}$/, entry.title);
-      if (entry.dateSource === "discovered") assert.strictEqual(entry.effectiveDate, null, entry.title);
-      else assert.match(entry.effectiveDate ?? "", /^\d{4}-\d{2}-\d{2}$/, entry.title);
+      const record = recordFor(entry);
+      assert.ok(record, `${entry.title} matches no record in /api/changes`);
+      if (!statesWhenItTookEffect(record!)) assert.strictEqual(entry.effectiveDate, null, entry.title);
+      else assert.strictEqual(entry.effectiveDate, record!.date, entry.title);
     }
   });
 
   it("declares in the feed document how many of its entries are dated by discovery", () => {
     const subtitle = tag(perChange, "subtitle") ?? "";
-    const discovered = entries.filter((e) => e.dateSource === "discovered").length;
+    const discovered = entries.filter((e) => !statesWhenItTookEffect(recordFor(e)!)).length;
     assert.ok(
       subtitle.includes(`${discovered} of ${entries.length} are dated by discovery`),
       `subtitle does not state the ${discovered} discovered entries: ${subtitle}`

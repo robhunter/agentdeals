@@ -15,6 +15,7 @@ import {
 } from "../dist/change-census.js";
 import { reportsOurIndex } from "../dist/change-reporting.js";
 import { isNoLongerInForce } from "../dist/change-resolution.js";
+import { statesWhenItTookEffect } from "./effective-date-rule.ts";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -23,6 +24,7 @@ interface StoredChange {
   vendor: string;
   date: string;
   date_source: string;
+  recorded_date?: string;
   summary: string;
   change_type: string;
   current_state: string;
@@ -32,14 +34,13 @@ interface StoredChange {
 }
 
 const WEEK_15_2026 = { start: "2026-04-06", end: "2026-04-12" };
-const EVENT_DATED = ["vendor_page", "hand_written"];
 
 function getWeek15Tracked(): number {
   return storedChanges().filter(
     c =>
       c.date >= WEEK_15_2026.start
       && c.date <= WEEK_15_2026.end
-      && EVENT_DATED.includes(c.date_source)
+      && statesWhenItTookEffect(c)
       && !isNoLongerInForce(c)
       && !isIndexHousekeeping(c),
   ).length;

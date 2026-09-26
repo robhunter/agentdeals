@@ -15,6 +15,7 @@ import {
 } from "../dist/change-dates.js";
 import { FEED_CORRECTIONS } from "../dist/feed-corrections.js";
 import { recordsStillInForce } from "../dist/change-resolution.js";
+import { statesWhenItTookEffect } from "./effective-date-rule.ts";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -29,12 +30,11 @@ const publishedChanges = JSON.parse(
   resolution?: { state: string; date: string } | null;
 }>;
 
-function eventDated(c: { date_source?: string }): boolean {
-  return c.date_source === "vendor_page" || c.date_source === "hand_written";
-}
+const eventDated = statesWhenItTookEffect;
 
 function dated(dateSource: string, date: string) {
-  return { vendor: "Acme", date, date_source: dateSource, change_type: "limits_reduced" };
+  const recorded_date = dateSource === "hand_written" ? "2026-12-31" : date;
+  return { vendor: "Acme", date, date_source: dateSource, change_type: "limits_reduced", recorded_date };
 }
 
 const WEEKS_OF_ARCHIVE = 120;
@@ -201,7 +201,7 @@ describe("a weekly digest counts only changes with an effective date", () => {
 
   it("leaves a record we have withdrawn out of the week its date falls in", () => {
     const week = isoWeekWindow(new Date());
-    const template = publishedChanges.find((c) => !eventDated(c))!;
+    const template = publishedChanges.find((c) => c.date_source === "discovered")!;
     const standingRecord = { ...template, vendor: "Weekly Window Control", date: week.start, resolution: null };
     const withdrawnRecord = {
       ...template,

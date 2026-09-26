@@ -46,8 +46,15 @@ export const DATE_SOURCES = [
 
 export const EVENT_DATED_SOURCES = [DATE_SOURCE_VENDOR_PAGE, DATE_SOURCE_HAND_WRITTEN];
 
+export const CORRECTION_TO_OUR_OWN_RECORD = "record_corrected";
+
+export function carriesTheDayItWasTyped(change) {
+  if (change?.date_source !== DATE_SOURCE_HAND_WRITTEN || change?.change_type === CORRECTION_TO_OUR_OWN_RECORD) return false;
+  return !change.recorded_date || change.date === change.recorded_date;
+}
+
 export function isEventDated(change) {
-  return EVENT_DATED_SOURCES.includes(change?.date_source);
+  return EVENT_DATED_SOURCES.includes(change?.date_source) && !carriesTheDayItWasTyped(change);
 }
 
 export const SUPPRESSED_ALREADY_RECORDED = "already_recorded";

@@ -5,6 +5,7 @@ import { SINCE_DEFAULT_SENTENCE } from "./change-window.js";
 import { NAME_MATCH_SENTENCE } from "./name-match.js";
 import { gateDisclosureFor } from "./gate-disclosure.js";
 import { standingOf, INCLUDE_RETRACTED_ACCEPTS } from "./change-resolution.js";
+import { dateMeaningOf } from "./change-dates.js";
 import { changeCountPhrase, trackedChanges, INCLUDE_INDEX_HOUSEKEEPING_ACCEPTS, TRACKED_CHANGE_RULE_PATH } from "./change-census.js";
 import { toSlug, vendorSlugMap, resolveVendorSlug } from "./vendor-slug.js";
 import { noLiveRecordUnderThatNameSentence } from "./retirement.js";
@@ -58,7 +59,7 @@ function toConciseOffer(offer: Offer | EnrichedOffer) {
 }
 
 function toConciseDealChange(change: DealChange) {
-  return { vendor: change.vendor, change_type: change.change_type, date: change.date, date_source: change.date_source, standing: standingOf(change), summary: change.summary };
+  return { vendor: change.vendor, change_type: change.change_type, date: change.date, date_source: change.date_source, date_meaning: dateMeaningOf(change), standing: standingOf(change), summary: change.summary };
 }
 
 export function createServer(getSessionId?: () => string | undefined, getClientName?: () => string | undefined): McpServer {

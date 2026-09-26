@@ -16,6 +16,7 @@ import {
 import {
   capListSections,
   changeDateLabel,
+  changeEntryDateLabel,
   changeDatePublished,
   feedEntryUpdated,
   undatedGroupHeading,
@@ -23,8 +24,9 @@ import {
   UNDATED_GROUP_NOTE,
 } from "../dist/change-dates.js";
 import { sliceById, TRACKED_CHANGE_NOUN } from "../dist/change-census.js";
+import { statesWhenItTookEffect } from "./effective-date-rule.ts";
 
-const { buildChangeEntry } = await import("../scripts/change-log.js");
+const { buildChangeEntry, isEventDated: isEventDatedByTheWriter } = await import("../scripts/change-log.js");
 const { planBackfill } = await import("../scripts/backfill-change-date-sources.js");
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -77,12 +79,39 @@ function controlChange() {
   };
 }
 
+function typedOnTheDay() {
+  return { ...fixtureChange("hand_written"), date: TEN_DAYS_AGO, recorded_date: TEN_DAYS_AGO };
+}
+
+function setApartFromTheDayItWasTyped() {
+  return { ...fixtureChange("hand_written"), date: TEN_DAYS_AGO, recorded_date: TODAY };
+}
+
 describe("what a date_source means", () => {
-  it("treats only an explicitly recorded provenance as an event date", () => {
+  it("treats a vendor-page date as an event date, and a hand-written one only when it was set apart from the day it was typed", () => {
+    assert.strictEqual(isEventDated(fixtureChange("vendor_page") as any), true);
+    assert.strictEqual(isEventDated(setApartFromTheDayItWasTyped() as any), true);
+    assert.strictEqual(isEventDated({ ...setApartFromTheDayItWasTyped(), date: TODAY, recorded_date: TEN_DAYS_AGO } as any), true);
+    assert.strictEqual(isEventDated(typedOnTheDay() as any), false);
+    assert.strictEqual(isEventDated(fixtureChange("discovered") as any), false);
+  });
+
+  it("treats a hand-written date with no recording date beside it as a discovery", () => {
+    const { recorded_date: _dropped, ...unrecorded } = setApartFromTheDayItWasTyped();
+    assert.strictEqual(isEventDated(unrecorded as any), false);
+    assert.strictEqual(isEventDated({ ...unrecorded, recorded_date: null } as any), false);
+  });
+
+  it("keeps the day we made a correction to our own record as that correction's date", () => {
+    const correction = { ...typedOnTheDay(), change_type: "record_corrected" };
+    assert.strictEqual(isEventDated(correction as any), true);
+    assert.strictEqual(isEventDated({ ...correction, date_source: "discovered" } as any), false);
+  });
+
+  it("lets every event-dated provenance carry an event date", () => {
     for (const source of EVENT_DATED_SOURCES) {
-      assert.strictEqual(isEventDated({ date_source: source } as any), true, source);
+      assert.strictEqual(isEventDated({ ...setApartFromTheDayItWasTyped(), date_source: source } as any), true, source);
     }
-    assert.strictEqual(isEventDated({ date_source: "discovered" } as any), false);
   });
 
   it("under-claims rather than over-claims when the provenance is absent or unrecognised", () => {
@@ -100,13 +129,62 @@ describe("what a date_source means", () => {
     const mixed = [
       fixtureChange("vendor_page"),
       fixtureChange("discovered"),
-      fixtureChange("hand_written"),
+      setApartFromTheDayItWasTyped(),
+      typedOnTheDay(),
       { ...fixtureChange("discovered"), date_source: undefined },
     ];
     const { dated, discovered } = partitionByDateProvenance(mixed as any);
     assert.strictEqual(dated.length, 2);
-    assert.strictEqual(discovered.length, 2);
+    assert.strictEqual(discovered.length, 3);
     assert.strictEqual(dated.length + discovered.length, mixed.length);
+  });
+
+  it("gives the change-log writer the same rule as the site, record for record", () => {
+    const published = JSON.parse(readFileSync(path.join(REPO, "data", "deal_changes.json"), "utf-8")).changes;
+    const disagreements = published
+      .filter((c: any) => isEventDatedByTheWriter(c) !== isEventDated(c))
+      .map((c: any) => `${c.vendor} ${c.date} ${c.date_source}`);
+    assert.deepStrictEqual(disagreements, []);
+    for (const fixture of [typedOnTheDay(), setApartFromTheDayItWasTyped(), { ...typedOnTheDay(), change_type: "record_corrected" }]) {
+      assert.strictEqual(isEventDatedByTheWriter(fixture), isEventDated(fixture as any), JSON.stringify(fixture));
+    }
+  });
+});
+
+describe("a hand-written date typed on the day it was recorded", () => {
+  const published = JSON.parse(readFileSync(path.join(REPO, "data", "deal_changes.json"), "utf-8")).changes;
+  const { dated, discovered } = partitionByDateProvenance(published);
+  const typedThatDay = (c: any) => c.date_source === "hand_written" && !statesWhenItTookEffect(c);
+
+  it("moves out of the event-dated records exactly the hand-written ones typed that day", () => {
+    const moved = discovered.filter((c: any) => c.date_source === "hand_written");
+    assert.deepStrictEqual(moved, published.filter(typedThatDay));
+  });
+
+  it("leaves every record the re-read dated by discovery where it was", () => {
+    const readByTheRereading = published.filter((c: any) => c.date_source === "discovered");
+    assert.deepStrictEqual(discovered.filter((c: any) => c.date_source === "discovered"), readByTheRereading);
+  });
+
+  it("leaves every vendor-page date, every set-apart hand-written date and every correction event-dated", () => {
+    const stays = published.filter((c: any) => c.date_source !== "discovered" && !typedThatDay(c));
+    assert.deepStrictEqual(dated, stays);
+    assert.ok(stays.some((c: any) => c.date_source === "vendor_page"), "no vendor-page record to hold still");
+    assert.ok(stays.some((c: any) => c.change_type === "record_corrected" && c.date === c.recorded_date), "no correction dated the day it was made");
+  });
+
+  it("labels the three rows the rule was written from as the rule says", () => {
+    const heroku = { vendor: "Heroku", change_type: "free_tier_removed", date: "2022-11-28", recorded_date: "2026-03-19", date_source: "hand_written" };
+    const stackHawk = { vendor: "StackHawk", change_type: "free_tier_removed", date: "2026-04-12", recorded_date: "2026-04-12", date_source: "hand_written" };
+    const momento = { vendor: "Momento", change_type: "free_tier_removed", date: "2026-09-05", recorded_date: "2026-09-05", date_source: "discovered" };
+    assert.strictEqual(changeDateLabel(heroku as any), "2022-11-28");
+    assert.strictEqual(changeDateLabel(stackHawk as any), `${DISCOVERED_DATE_PREFIX} 2026-04-12`);
+    assert.strictEqual(changeDateLabel(momento as any), `${DISCOVERED_DATE_PREFIX} 2026-09-05`);
+  });
+
+  it("counts every typed-that-day record as a discovery in the change log's freshness", () => {
+    const freshness = changeLogFreshness(published, new Date());
+    assert.strictEqual(freshness.discovered_date_total, discovered.length);
   });
 });
 
@@ -181,7 +259,8 @@ describe("backfilling the entries written before the field existed", () => {
 describe("the rendering helpers", () => {
   it("prefixes a discovery date and leaves an event date bare", () => {
     assert.strictEqual(changeDateLabel(fixtureChange("vendor_page") as any), TODAY);
-    assert.strictEqual(changeDateLabel(fixtureChange("hand_written") as any), TODAY);
+    assert.strictEqual(changeDateLabel(setApartFromTheDayItWasTyped() as any), TEN_DAYS_AGO);
+    assert.strictEqual(changeDateLabel(typedOnTheDay() as any), `${DISCOVERED_DATE_PREFIX} ${TEN_DAYS_AGO}`);
     assert.strictEqual(
       changeDateLabel(fixtureChange("discovered") as any),
       `${DISCOVERED_DATE_PREFIX} ${TODAY}`
@@ -256,8 +335,14 @@ describe("no surface renders a discovery date as the date the vendor changed som
   let tmp: string;
   let datedPort = 0;
   let discoveredPort = 0;
+  let typedPort = 0;
+  let recordedAheadPort = 0;
+  let vendorPageAheadPort = 0;
   let datedProc: ChildProcess;
   let discoveredProc: ChildProcess;
+  let typedProc: ChildProcess;
+  let recordedAheadProc: ChildProcess;
+  let vendorPageAheadProc: ChildProcess;
 
   function start(changesPath: string): Promise<{ proc: ChildProcess; port: number }> {
     return new Promise((resolve, reject) => {
@@ -294,19 +379,47 @@ describe("no surface renders a discovery date as the date the vendor changed som
     const discoveredPath = path.join(tmp, "discovered.json");
     writeFileSync(datedPath, JSON.stringify({ changes: [controlChange(), fixtureChange("vendor_page")] }, null, 2));
     writeFileSync(discoveredPath, JSON.stringify({ changes: [controlChange(), fixtureChange("discovered")] }, null, 2));
-    const dated = await start(datedPath);
-    const discovered = await start(discoveredPath);
+    const typedPath = path.join(tmp, "typed-on-the-day.json");
+    const recordedAheadPath = path.join(tmp, "recorded-ahead.json");
+    const vendorPageAheadPath = path.join(tmp, "vendor-page-recorded-ahead.json");
+    const recordedAhead = (source: string) => ({ ...fixtureChange(source), recorded_date: TEN_DAYS_AGO });
+    writeFileSync(typedPath, JSON.stringify({ changes: [controlChange(), fixtureChange("hand_written")] }, null, 2));
+    writeFileSync(recordedAheadPath, JSON.stringify({ changes: [controlChange(), recordedAhead("hand_written")] }, null, 2));
+    writeFileSync(vendorPageAheadPath, JSON.stringify({ changes: [controlChange(), recordedAhead("vendor_page")] }, null, 2));
+    const [dated, discovered, typed, handWrittenAhead, vendorPageAhead] = await Promise.all([
+      start(datedPath),
+      start(discoveredPath),
+      start(typedPath),
+      start(recordedAheadPath),
+      start(vendorPageAheadPath),
+    ]);
     datedProc = dated.proc;
     datedPort = dated.port;
     discoveredProc = discovered.proc;
     discoveredPort = discovered.port;
+    typedProc = typed.proc;
+    typedPort = typed.port;
+    recordedAheadProc = handWrittenAhead.proc;
+    recordedAheadPort = handWrittenAhead.port;
+    vendorPageAheadProc = vendorPageAhead.proc;
+    vendorPageAheadPort = vendorPageAhead.port;
   });
 
   after(() => {
-    if (datedProc) datedProc.kill();
-    if (discoveredProc) discoveredProc.kill();
+    for (const proc of [datedProc, discoveredProc, typedProc, recordedAheadProc, vendorPageAheadProc]) if (proc) proc.kill();
     if (tmp) rmSync(tmp, { recursive: true, force: true });
   });
+
+  async function handWrittenBodies(route: string) {
+    const [a, b, c] = await Promise.all([
+      fetch(`http://localhost:${typedPort}${route}`),
+      fetch(`http://localhost:${recordedAheadPort}${route}`),
+      fetch(`http://localhost:${vendorPageAheadPort}${route}`),
+    ]);
+    return { typed: await a.text(), recordedAhead: await b.text(), vendorPageAhead: await c.text() };
+  }
+
+  const PAGES = CHANGE_SURFACES.filter((route) => !route.startsWith("/api/"));
 
   async function bodies(route: string) {
     const [a, b] = await Promise.all([
@@ -449,6 +562,80 @@ describe("no surface renders a discovery date as the date the vendor changed som
     const discoveredRes = await (await fetch(`http://localhost:${discoveredPort}/api/changes`)).json() as any;
     assert.strictEqual(datedRes.change_log_freshness.discovered_date_total, 0);
     assert.strictEqual(discoveredRes.change_log_freshness.discovered_date_total, 1);
+  });
+
+  it("renders a hand-written date typed on the day it was recorded exactly as a discovery, on every page", async () => {
+    const differing: string[] = [];
+    for (const route of PAGES) {
+      const { discovered } = await bodies(route);
+      const { typed } = await handWrittenBodies(route);
+      if (typed !== discovered) differing.push(route);
+    }
+    assert.deepStrictEqual(differing, []);
+  });
+
+  it("renders a hand-written date recorded ahead of the day it took effect exactly as a vendor-page date, on every page", async () => {
+    const differing: string[] = [];
+    for (const route of PAGES) {
+      const { recordedAhead, vendorPageAhead } = await handWrittenBodies(route);
+      if (recordedAhead !== vendorPageAhead) differing.push(route);
+    }
+    assert.deepStrictEqual(differing, []);
+  });
+
+  it("tells agents on each record which kind of date it carries, and counts them the same way", async () => {
+    const expected: Array<[number, string, number]> = [
+      [datedPort, "effective", 0],
+      [discoveredPort, "discovered", 1],
+      [typedPort, "discovered", 1],
+      [recordedAheadPort, "effective", 0],
+    ];
+    for (const [port, meaning, undated] of expected) {
+      const body = (await (await fetch(`http://localhost:${port}/api/changes`)).json()) as any;
+      const entry = body.changes.find((c: any) => c.vendor === SUBJECT);
+      assert.ok(entry, `the API on port ${port} dropped the entry`);
+      assert.strictEqual(entry.date_meaning, meaning, `${entry.date_source} recorded ${entry.recorded_date}`);
+      assert.strictEqual(body.changes.find((c: any) => c.vendor === CONTROL)?.date_meaning, "effective");
+      assert.strictEqual(body.date_provenance.discovered, undated);
+      assert.strictEqual(body.change_log_freshness.discovered_date_total, undated);
+    }
+  });
+
+  it("labels a compared vendor's change in the browser as the server labels it", async () => {
+    const browserLabeller = async (port: number) => {
+      const page = await (await fetch(`http://localhost:${port}/compare-tool`)).text();
+      const constants = [...page.matchAll(/var (?:EFFECTIVE_DATE_PREFIX|DISCOVERED_DATE_PREFIX|UNKNOWN_EFFECTIVE_DATE_MARKER) = [^;]+;/g)];
+      const labeller = page.match(/function changeEntryDateLabel\(c\) \{[\s\S]*?\n  \}/);
+      assert.strictEqual(constants.length, 3, "the compare tool no longer ships the words it labels dates with");
+      assert.ok(labeller, "the compare tool no longer labels dates in the browser");
+      return new Function(`${constants.map((m) => m[0]).join("\n")}\n${labeller![0]}\nreturn changeEntryDateLabel;`)();
+    };
+    const cases: Array<[number, Record<string, unknown>]> = [
+      [typedPort, fixtureChange("hand_written")],
+      [recordedAheadPort, { ...fixtureChange("hand_written"), recorded_date: TEN_DAYS_AGO }],
+      [discoveredPort, fixtureChange("discovered")],
+    ];
+    const labels = new Set<string>();
+    for (const [port, fixture] of cases) {
+      const compared = (await (await fetch(`http://localhost:${port}/api/compare?a=${SUBJECT}&b=${CONTROL}`)).json()) as any;
+      const served = compared.vendor_a.deal_changes.find((c: any) => c.date === TODAY);
+      assert.ok(served, `the compare API on port ${port} dropped the entry`);
+      const label = (await browserLabeller(port))(served);
+      assert.strictEqual(label, changeEntryDateLabel(fixture as any), `port ${port}`);
+      labels.add(label);
+    }
+    assert.strictEqual(labels.size, 2, "the three cases should produce both kinds of label");
+  });
+
+  it("does not turn a hand-written date typed on the day into a deadline in the agent digest", async () => {
+    const recordedAhead = (await (await fetch(`http://localhost:${recordedAheadPort}/api/digest`)).json()) as any;
+    assert.ok(
+      (recordedAhead.upcoming_deadlines ?? []).some((d: any) => d.vendor === SUBJECT),
+      "the control recorded ahead of its date is not a deadline either, so the check below proves nothing"
+    );
+    const typed = (await (await fetch(`http://localhost:${typedPort}/api/digest`)).json()) as any;
+    assert.ok(!(typed.upcoming_deadlines ?? []).some((d: any) => d.vendor === SUBJECT));
+    assert.ok(typed.discovered_changes.some((c: any) => c.vendor === SUBJECT && c.date_meaning === "discovered"));
   });
 
   it("does not turn a discovery into a deadline in the agent digest", async () => {

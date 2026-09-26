@@ -8,6 +8,7 @@ import { DEFAULT_CHANGE_WINDOW_DAYS, SINCE_DEFAULT_SENTENCE } from "./change-win
 import { NAME_MATCH_SENTENCE } from "./name-match.js";
 import { CHANGE_STANDINGS, INCLUDE_RETRACTED_ACCEPTS } from "./change-resolution.js";
 import { CHANGE_SLICES, CENSUS_NOTE, INCLUDE_INDEX_HOUSEKEEPING_ACCEPTS, INDEX_HOUSEKEEPING_REPORTS, TRACKED_CHANGE_RULE_PATH, TRACKED_CHANGE_RULE_SENTENCE } from "./change-census.js";
+import { EFFECTIVE_DATE_PREFIX, DISCOVERED_DATE_PREFIX } from "./change-dates.js";
 
 export const CHANGE_TYPES: readonly string[] = Object.keys(CHANGE_DIRECTION);
 
@@ -1588,9 +1589,10 @@ export const openapiSpec = {
             type: "object",
             properties: {
               standing: { type: "string", enum: [...CHANGE_STANDINGS], description: "Where the record stands with us. 'in_force' — the change happened and still holds. 'reversed' — it happened and has since been undone, so the record is true history. 'retracted' — the record was our error and we do not stand behind it. Read this rather than testing whether resolution is present: 'reversed' and 'retracted' are different answers to a reader asking whether to trust the record, and the presence of resolution flattens them into one." },
-              impact: { type: "string", enum: ["high", "medium", "low", "none"], description: "'none' whenever standing is 'retracted' — a record we have withdrawn describes no event, so it weighs nothing. Derived at the point of serving; the stored value is left alone." }
+              impact: { type: "string", enum: ["high", "medium", "low", "none"], description: "'none' whenever standing is 'retracted' — a record we have withdrawn describes no event, so it weighs nothing. Derived at the point of serving; the stored value is left alone." },
+              date_meaning: { type: "string", enum: [EFFECTIVE_DATE_PREFIX, DISCOVERED_DATE_PREFIX] }
             },
-            required: ["standing"]
+            required: ["standing", "date_meaning"]
           }
         ],
         description: "A change record as /api/changes serves it: every field of DealChange, plus a standing on every record rather than only on the ones we have withdrawn."
