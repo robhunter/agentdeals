@@ -9960,16 +9960,16 @@
     },
     {
       "vendor": "CockroachDB",
-      "change_type": "new_tier",
-      "date": "2026-09-16",
-      "date_source": "discovered",
-      "summary": "The page offers a 30-day free trial with $400 in credit for new Cloud organizations, and then moves to paid plans like 'Standard' and 'Mission Critical'.",
-      "tier": "Standard",
+      "change_type": "free_tier_removed",
+      "date": "2026-09-15",
+      "date_source": "vendor_page",
+      "summary": "CockroachDB stopped offering its free Basic plan (50 million RUs and 10 GiB of storage free per month) to new deployments on 2026-09-15, when it moved new clusters to Cockroach Continuum pricing. New Cloud organizations now get a 30-day free trial with $400 in credit. Clusters created before 2026-09-15 stay on their existing plans during their current term.",
+      "tier": "Basic",
       "tier_direction": "narrowed",
-      "previous_state": "Free serverless distributed SQL — 50M Request Units + 10 GiB storage/month, scales to zero",
-      "current_state": "Start free with a $400 credit today $0.092 per vCPU-hour* ≈ $203/mo based on 2 vCPU · 100 GB",
+      "previous_state": "Basic: starts at $0/month, 50 million RUs and 10 GiB storage free per month, scales to zero",
+      "current_state": "No free plan for new deployments. 30-day free trial with $400 in credit; Standard from $0.092 per vCPU-hour",
       "impact": "high",
-      "source_url": "https://www.cockroachlabs.com/pricing/",
+      "source_url": "https://www.cockroachlabs.com/cockroachdb/pricing/",
       "category": "Databases",
       "alternatives": [],
       "detected_by": "reverify-ai",
@@ -11062,6 +11062,20 @@
       "alternatives": [],
       "detected_by": "reverify-ai",
       "recorded_date": "2026-09-26"
+    },
+    {
+      "vendor": "CockroachDB",
+      "change_type": "record_corrected",
+      "date": "2026-09-26",
+      "summary": "Data correction - Our re-read of 2026-09-16 recorded CockroachDB's pricing change as a new tier. It was the end of the free Basic plan for new deployments, effective 2026-09-15, and our catalogue kept listing the free plan until 2026-09-26.",
+      "previous_state": "Recorded 2026-09-16 as a new tier: The page offers a 30-day free trial with $400 in credit for new Cloud organizations, and then moves to paid plans like 'Standard' and 'Mission Critical'.",
+      "current_state": "\"These pricing plans apply to pay-as-you-go and committed-use CockroachDB Cloud customers with clusters created prior to September 15, 2026 and remain applicable to all clusters during their current term. Such pricing is no longer available for purchase.\"",
+      "impact": "medium",
+      "source_url": "https://www.cockroachlabs.com/cockroachdb/pricing/",
+      "category": "Databases",
+      "alternatives": [],
+      "recorded_date": "2026-09-26",
+      "date_source": "hand_written"
     }
   ]
 }

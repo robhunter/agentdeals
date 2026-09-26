@@ -847,16 +847,16 @@
     {
       "vendor": "CockroachDB",
       "category": "Databases",
-      "description": "Free serverless distributed SQL — 50M Request Units + 10 GiB storage/month, scales to zero",
-      "tier": "Basic",
+      "description": "Distributed SQL database. No free plan for new deployments since 2026-09-15, when CockroachDB moved new clusters to Cockroach Continuum pricing. New Cloud organizations get a 30-day free trial with $400 in credit; Standard is $0.092 per vCPU-hour. Clusters created before 2026-09-15 stay on their existing plans during their current term.",
+      "tier": "Trial",
       "url": "https://www.cockroachlabs.com/pricing/",
       "tags": [
         "database",
         "sql",
         "distributed",
         "serverless",
-        "free tier",
-        "mongodb-alternative"
+        "mongodb-alternative",
+        "trial"
       ],
       "verifiedDate": "2026-08-31",
       "source_check": {
