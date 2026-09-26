@@ -36,6 +36,7 @@ const {
   applyRestatements,
   newestRestatementFor,
   restatementEntry,
+  restatementsTheIndexNeverTook,
   revertRestatement,
   revertRun,
   termsTheWriteWouldPublish,
@@ -445,6 +446,31 @@ describe("a restatement is reversible, visible and does not overwrite a hand-wri
       "the entry still reads what the later run stored, rather than the terms the earlier run replaced",
     );
     assert.deepEqual(outcome.left, held);
+  });
+
+  it("points the entry back at the earlier restatement when it reverts the newer of two", () => {
+    for (const revert of ["run", "vendor"] as const) {
+      const data = { offers: [{ ...IPAPI.offer }] };
+      const first = applyRestatements(data, [ruleOnRestating(IPAPI.offer, IPAPI.change, TODAY)!], TODAY);
+      const pointerTheFirstWrote = { ...data.offers[0].restated_from };
+      const newer = {
+        ...IPAPI.change,
+        date: "2026-09-18",
+        recorded_date: "2026-09-18",
+        previous_state: data.offers[0].description,
+        current_state: "The free tier now offers 500 lookups/day.",
+      };
+      const second = applyRestatements(data, [ruleOnRestating(data.offers[0], newer, "2026-09-18")!], "2026-09-18");
+      assert.equal(second.length, 1, "the fixture must restate the same entry twice for this to prove anything");
+
+      const held = [...first, ...second];
+      const left = revert === "run"
+        ? revertRun(data, held, "2026-09-18").left
+        : revertRestatement(data, held, "ipapi", "2026-09-18").left;
+      assert.equal(data.offers[0].description, first[0].description, `${revert}: the entry does not read the earlier restatement's terms`);
+      assert.deepEqual(data.offers[0].restated_from, pointerTheFirstWrote, `${revert}: the entry does not point at the restatement still standing`);
+      assert.deepEqual(restatementsTheIndexNeverTook(left, data.offers), [], `${revert}: the ledger and the index disagree after the revert`);
+    }
   });
 
   it("leaves the date a reading last agreed with us exactly where it was", () => {

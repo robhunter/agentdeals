@@ -158,13 +158,39 @@ export function newestRestatementFor(entries, vendor) {
   return named.sort((a, b) => a.restated_on.localeCompare(b.restated_on)).pop() ?? null;
 }
 
-export function putTheStoredTermsBack(data, entry, today) {
+export function restatementStandingBefore(entries, entry) {
+  return (
+    standingRestatements(entries)
+      .filter(
+        (held) =>
+          held !== entry &&
+          offerKey(held.vendor, held.url) === offerKey(entry.vendor, entry.url) &&
+          held.restated_on < entry.restated_on,
+      )
+      .sort((a, b) => a.restated_on.localeCompare(b.restated_on))
+      .pop() ?? null
+  );
+}
+
+export function restatedFromPointer(entry) {
+  return {
+    reading_date: entry.reading_date,
+    source_url: entry.source_url,
+    record_date: entry.record_date,
+    change_type: entry.change_type,
+    restated_on: entry.restated_on,
+  };
+}
+
+export function putTheStoredTermsBack(data, entry, today, entries = []) {
   const offer = (data.offers ?? []).find(
     (candidate) => offerKey(candidate.vendor, candidate.url) === offerKey(entry.vendor, entry.url),
   );
   if (!offer) return null;
   offer.description = entry.previous_description;
-  delete offer.restated_from;
+  const stillStanding = restatementStandingBefore(entries, entry);
+  if (stillStanding) offer.restated_from = restatedFromPointer(stillStanding);
+  else delete offer.restated_from;
   offer.restatement_reverted = { record_date: entry.record_date, reverted_on: today };
   return { ...entry, reverted_on: today };
 }
@@ -176,7 +202,7 @@ export function withTheRevertRecorded(entries, entry, recorded) {
 export function revertRestatement(data, entries, vendor, today) {
   const entry = newestRestatementFor(entries, vendor);
   if (!entry) return { entry: null, reverted: false };
-  const recorded = putTheStoredTermsBack(data, entry, today ?? entry.restated_on);
+  const recorded = putTheStoredTermsBack(data, entry, today ?? entry.restated_on, entries);
   if (!recorded) return { entry, reverted: false };
   return { entry, reverted: true, left: withTheRevertRecorded(entries, entry, recorded) };
 }
@@ -205,7 +231,7 @@ export function revertRun(data, entries, day, today) {
       supersededBefore.push(entry);
       continue;
     }
-    const recorded = putTheStoredTermsBack(data, entry, today ?? day);
+    const recorded = putTheStoredTermsBack(data, entry, today ?? day, entries);
     if (!recorded) {
       gone.push(entry);
       continue;
