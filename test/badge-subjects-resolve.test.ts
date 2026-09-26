@@ -255,7 +255,7 @@ describe("#1063 which records an editorial subject commits us to", () => {
 
 function comparisonRow(html: string, subject: string): string[] {
   const rows = html.match(/<tr>[\s\S]*?<\/tr>/g) ?? [];
-  const row = rows.find(r => new RegExp(`<td class="provider-col">${subject}<`).test(r));
+  const row = rows.find(r => new RegExp(`<td class="provider-col">(?:<span style="[^"]*line-through[^"]*">)?${subject}<`).test(r));
   assert.ok(row, `no comparison-table row for ${subject}`);
   return [...row.matchAll(/<td[^>]*>([\s\S]*?)<\/td>/g)].map(c => c[1].replace(/<[^>]*>/g, "").trim());
 }
