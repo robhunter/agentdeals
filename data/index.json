@@ -10496,8 +10496,8 @@
     {
       "vendor": "Pagure.io",
       "category": "Source Control",
-      "description": "Pagure.io was sunset in 2026; this is a read-only snapshot.",
-      "tier": "Free",
+      "description": "There is no free tier: pagure.io states \"pagure.io was sunset in 2026; this is a read-only snapshot.\" It says Fedora-related projects likely moved to forge.fedoraproject.org.",
+      "tier": "Retired",
       "url": "https://pagure.io",
       "tags": [
         "developer-tools",
@@ -19103,8 +19103,8 @@
     {
       "vendor": "Hypertune",
       "category": "Feature Flags",
-      "description": "Free: $0 / month, 1m CDN requests, 1m analytics events, Up to 3 team members, Unlimited CDN bandwidth and service connections, Unlimited MAUs / MTUs, Unlimited environments and projects, Unlimited feature flags and experiments. The service will shut down on 10th August 2026.",
-      "tier": "Free",
+      "description": "There is no free tier: Hypertune's pricing page states \"Hypertune is shutting down. We're no longer accepting new sign ups. The service will shut down on 10th August 2026.\"",
+      "tier": "Retired",
       "url": "https://www.hypertune.com/pricing",
       "tags": [
         "feature-flags",
@@ -34964,9 +34964,9 @@
     {
       "vendor": "Google Content API for Shopping",
       "category": "API Development",
-      "description": "Product data management API for Google Merchant Center. Sunset on 2026-08-18. Its successor, Merchant API, has been generally available since July 2025. Free to use with a Google Merchant Center account. Provided product listing, inventory management, and order management endpoints. Developers must migrate to Merchant API before the sunset date.",
-      "tier": "Free (Deprecated)",
-      "url": "https://developers.google.com/shopping-content/guides/quickstart",
+      "description": "There is no free tier: Google sunset the Content API for Shopping on August 18, 2026. Google's Merchant API migration guide states \"Content API for Shopping was sunset on August 18, 2026\" and that from September 1, 2026 its requests \"will experience progressive errors\"; extended access is by application. Its successor is Merchant API.",
+      "tier": "Retired",
+      "url": "https://developers.google.com/merchant/api/guides/compatibility/overview",
       "tags": [
         "api",
         "e-commerce",
