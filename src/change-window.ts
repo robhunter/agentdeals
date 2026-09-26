@@ -15,8 +15,8 @@ export function servedWindowOpens(nowMs: number = Date.now()): string {
 }
 
 const FIELD_NOTE =
-  "The filter compares against each record's date, which is the day the change took effect unless date_source is "
-  + "\"discovered\", in which case it is the day we read the page.";
+  "The filter compares against each record's date. Where date_meaning is \"effective\", that is the day the change "
+  + "took effect; where it is \"discovered\", it is the day we recorded the change, and when it took effect is unknown.";
 
 export const DECLARED_CHANGE_FILTERS = ["type", "vendor", "vendors", "categories"] as const;
 

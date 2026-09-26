@@ -73,14 +73,14 @@ export function monthlyChangeSeries<T extends DatedChange>(
 }
 
 export const EFFECTIVE_MONTH_SERIES_NOTE =
-  "Each change is counted in the month its terms took effect. A change read off a page that does not say when it changed is not counted here — those are below, by the month we read the page.";
+  "Each change is counted in the month its terms took effect. A change we hold no effective date for is not counted here; those are below, by the month we recorded it.";
 
 export function discoveryMonthSeriesHeading(count: number): string {
-  return `Changes Found by Reading a Page (${count})`;
+  return `Changes With No Known Effective Date (${count})`;
 }
 
 export const DISCOVERY_MONTH_SERIES_NOTE =
-  "These vendors’ pages state terms that differ from what we had stored and do not say when they changed. Each is counted in the month we read the page, so this series measures when we looked, not when the market moved. None of them are in the monthly figures above.";
+  "We hold no effective date for these changes. Each is counted in the month we recorded it, so this series measures when we looked, not when the market moved. None of them are in the monthly figures above.";
 
 export function periodComparisonSentence(
   earlier: { label: string; count: number },
@@ -143,19 +143,17 @@ export function changesInWindow<T extends DatedChange>(
 }
 
 export function firstReadHeading(count: number): string {
-  return `Pages read for the first time (${count})`;
+  return `Effective date unknown (${count})`;
 }
 
 export function discoveryBatchNote(count: number, when: string): string {
-  const pages = `${count} pricing page${count === 1 ? "" : "s"}`;
-  const subject = count === 1 ? "it is" : "they are";
-  const verb = count === 1 ? "is" : "are";
-  const object = count === 1 ? "a change that took" : "changes that took";
-  return `${pages} read for the first time ${when}. Each records terms that differ from what we had stored, on a page that does not say when they changed — so ${subject} dated by discovery and ${verb} not counted as ${object} effect ${when}.`;
+  return count === 1
+    ? `1 change recorded ${when} has no known effective date. It is dated the day we recorded it, not the day its terms took effect, so it is not counted as a change that took effect ${when}.`
+    : `${count} changes recorded ${when} have no known effective date. Each is dated the day we recorded it, not the day its terms took effect, so none is counted as a change that took effect ${when}.`;
 }
 
 export const UNDATED_GROUP_NOTE =
-  "The vendor’s page states these terms but not when they took effect, so we can only tell you when we found them. They are listed by discovery date and are excluded from the monthly groups and the Last 30 Days count above, both of which count changes by the date they took effect.";
+  "We hold no effective date for these changes, so each is dated the day we recorded it; the change may have taken effect long before. They are listed by that date and are excluded from the monthly groups and the Last 30 Days count above, both of which count changes by the date they took effect.";
 
 export const UNDATED_TILE_LABEL = "Effective Date Unknown";
 

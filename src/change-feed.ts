@@ -85,7 +85,7 @@ export function feedEntryDateSentence(change: FeedChange): string {
   const recorded = recordedOn(change);
   return isEventDated(change)
     ? `${EFFECTIVE_DATE_PREFIX} ${change.date} · recorded ${recorded}.`
-    : `${DISCOVERED_DATE_PREFIX} ${change.date} · ${UNKNOWN_EFFECTIVE_DATE_MARKER} — this date is when we read the vendor's pricing page and found terms that differ from what we had stored. The page does not say when they changed, so it is not the date this took effect.`;
+    : `${DISCOVERED_DATE_PREFIX} ${change.date} · ${UNKNOWN_EFFECTIVE_DATE_MARKER} — this is the day we recorded the change. We do not know when it took effect.`;
 }
 
 export function feedEntrySummary(change: DealChange): string {
@@ -112,14 +112,17 @@ export function feedUpdatedTimestamp(entries: FeedChange[], now: Date = new Date
 }
 
 export const WEEKLY_FEED_POPULATION_NOTE =
-  "Each issue counts only changes with a known effective date. Pricing pages read for the first time in a week are reported inside the issue under their own heading and are not counted as changes that took effect that week — the per-change feed carries them individually and labels each one.";
+  "Each issue counts only changes with a known effective date. Changes recorded that week without one are listed inside the issue under their own heading and are not counted as changes that took effect that week. The per-change feed carries them individually and labels each one.";
 
 export function changeFeedProvenanceNote(entries: FeedChange[], weeklyFeedUrl: string): string {
   const { dated, discovered } = partitionByDateProvenance(entries);
   const total = entries.length;
   const carried = `The ${total} most recently recorded ${total === 1 ? "change" : "changes"}, newest first.`;
-  const split = `${discovered.length} of ${total} ${discovered.length === 1 ? "is" : "are"} dated by discovery: the date is when we read the vendor's pricing page, which does not say when the terms changed. ${dated.length} ${dated.length === 1 ? "carries" : "carry"} a known effective date.`;
-  const reconcile = `Every entry states which of the two it is. The Weekly Pricing Digest at ${weeklyFeedUrl} counts only changes with a known effective date and reports pages read for the first time under their own heading, so a week's totals there will differ from a count of the entries here.`;
+  const undated = discovered.length === 1
+    ? `1 of ${total} has no known effective date and is dated the day we recorded it.`
+    : `${discovered.length} of ${total} have no known effective date and are dated the day we recorded them.`;
+  const split = `${undated} ${dated.length} ${dated.length === 1 ? "carries" : "carry"} a known effective date.`;
+  const reconcile = `Every entry states which of the two it is. The Weekly Pricing Digest at ${weeklyFeedUrl} counts only changes with a known effective date and lists the others under their own heading, so a week's totals there will differ from a count of the entries here.`;
   return `${carried} ${split} ${reconcile}`;
 }
 

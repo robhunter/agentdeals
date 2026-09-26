@@ -679,7 +679,7 @@ const DOCUMENTED_OPERATIONS: Record<string, Record<string, any>> = {
                       properties: {
                         vendor: { type: "string" },
                         change_type: { type: "string" },
-                        date: { type: "string", format: "date", description: "When the change took effect, unless date_source is \"discovered\" — then it is the day we found it and the effective date is unknown." },
+                        date: { type: "string", format: "date", description: "The day the change took effect if date_meaning is \"effective\". If date_meaning is \"discovered\", the day we recorded the change; its effective date is unknown." },
                         date_source: { type: "string", enum: ["vendor_page", "hand_written", "discovered"], description: "Where date came from. \"vendor_page\": the vendor's page stated it. \"hand_written\": a person recorded it before this field existed. \"discovered\": the page stated no effective date, so date is the day we read the page — do not present it as the date the vendor changed anything." },
                         summary: { type: "string" },
                         impact: { type: "string", enum: ["high", "medium", "low"] }
@@ -1590,7 +1590,7 @@ export const openapiSpec = {
             properties: {
               standing: { type: "string", enum: [...CHANGE_STANDINGS], description: "Where the record stands with us. 'in_force' — the change happened and still holds. 'reversed' — it happened and has since been undone, so the record is true history. 'retracted' — the record was our error and we do not stand behind it. Read this rather than testing whether resolution is present: 'reversed' and 'retracted' are different answers to a reader asking whether to trust the record, and the presence of resolution flattens them into one." },
               impact: { type: "string", enum: ["high", "medium", "low", "none"], description: "'none' whenever standing is 'retracted' — a record we have withdrawn describes no event, so it weighs nothing. Derived at the point of serving; the stored value is left alone." },
-              date_meaning: { type: "string", enum: [EFFECTIVE_DATE_PREFIX, DISCOVERED_DATE_PREFIX] }
+              date_meaning: { type: "string", enum: [EFFECTIVE_DATE_PREFIX, DISCOVERED_DATE_PREFIX], description: "What this record's date means. \"effective\": the day the change took effect. \"discovered\": the day we recorded the change; when it took effect is unknown. Read this field, not date_source: date_source says who wrote the record, not what its date means." }
             },
             required: ["standing", "date_meaning"]
           }
@@ -1604,7 +1604,7 @@ export const openapiSpec = {
           applied: { type: "boolean", description: "Whether any date filter narrowed this response." },
           from: { type: "string", format: "date", nullable: true, description: "The earliest date a record could carry and still be returned. Null when applied is false." },
           source: { type: "string", enum: ["default", "since_parameter", "none"], description: "'since_parameter' — your since value. 'default' — our window, because the request named no filter. 'none' — no date filter ran." },
-          field: { type: "string", enum: ["date"], description: "The record field from compares against. Note that date is the effective date only where date_source is 'vendor_page' or 'hand_written'; where it is 'discovered', date is the day we read the page." },
+          field: { type: "string", enum: ["date"], description: "The record field from compares against. date is the effective date only where date_meaning is \"effective\"; where it is \"discovered\", date is the day we recorded the change." },
           note: { type: "string", description: "The same statement in prose, for a caller reading the response rather than parsing it." }
         },
         required: ["applied", "from", "source", "field", "note"]

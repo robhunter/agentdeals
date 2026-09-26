@@ -4462,7 +4462,7 @@ function buildDigestPage(weekKey: string): string | null {
   const dateRange = formatDateRange(year, week);
   const discoveryNote = discovered.length > 0 ? discoveryBatchNote(discovered.length, `during ${dateRange}`) : "";
   const discoveryClause = discovered.length > 0
-    ? ` ${discovered.length} pricing page${discovered.length !== 1 ? "s" : ""} read for the first time, with no effective date of their own.`
+    ? ` ${discovered.length} more recorded with no known effective date.`
     : "";
   const title = `Developer Tool Pricing Changes: ${dateRange} — AgentDeals`;
   const metaDesc = changes.length > 0
@@ -4737,7 +4737,7 @@ function buildThisWeekPage(weeksAgo: number): string {
   if (s.limits_increased > 0) summaryPills.push(`<span class="tw-pill" style="border-color:#3fb950"><strong>${s.limits_increased}</strong> limit${s.limits_increased !== 1 ? "s" : ""} increased</span>`);
   if (s.products_deprecated > 0) summaryPills.push(`<span class="tw-pill" style="border-color:#f85149"><strong>${s.products_deprecated}</strong> deprecated</span>`);
   if (s.pricing_restructured > 0) summaryPills.push(`<span class="tw-pill" style="border-color:#bc8cff"><strong>${s.pricing_restructured}</strong> restructured</span>`);
-  if (digest.discovered_in_week > 0) summaryPills.push(`<span class="tw-pill" style="border-color:#8b949e"><strong>${digest.discovered_in_week}</strong> pages read for the first time</span>`);
+  if (digest.discovered_in_week > 0) summaryPills.push(`<span class="tw-pill" style="border-color:#8b949e"><strong>${digest.discovered_in_week}</strong> effective date unknown</span>`);
   const summaryBar = summaryPills.length > 0 ? `<div class="tw-summary-bar">${summaryPills.join("")}</div>` : "";
 
   const navHtml = `<div class="tw-nav">
@@ -19731,6 +19731,10 @@ function buildQ2PricingPreview2026Page(): string {
   const q2Changes = confirmed.filter(c => c.date >= "2026-04-01" && c.date <= "2026-06-30");
   const lateQ1Changes = confirmed.filter(c => c.date >= "2026-03-25" && c.date < "2026-04-01");
   const timelineChanges = [...lateQ1Changes, ...q2Changes].sort((a, b) => a.date.localeCompare(b.date));
+  const { dated: effectiveDatedChanges, discovered: changesWithNoKnownEffectiveDate } = partitionByDateProvenance(timelineChanges);
+  const uncountedLine = changesWithNoKnownEffectiveDate.length > 0
+    ? `<p class="section-intro">${changesWithNoKnownEffectiveDate.length} more were recorded in these dates with no known effective date and are not counted.</p>`
+    : "";
 
   const impactColors: Record<string, string> = { high: "#f85149", medium: "#d29922", low: "#3fb950" };
   const changeTypeLabels: Record<string, string> = {
@@ -19877,14 +19881,15 @@ ${mcpCtaCss()}
   ${buildGlobalNav("changes")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/changes">Changes</a> &rsaquo; Q2 2026 Preview</div>
   <h1>Q2 2026 Developer Pricing Preview</h1>
-  <p class="pub-date">Published ${pubDate} &middot; ${timelineChanges.length} confirmed changes + ${watchItems.length} signals to watch &middot; ${pageDataProvenance("/q2-pricing-preview-2026", offers.length)}</p>
+  <p class="pub-date">Published ${pubDate} &middot; ${effectiveDatedChanges.length} confirmed changes + ${watchItems.length} signals to watch &middot; ${pageDataProvenance("/q2-pricing-preview-2026", offers.length)}</p>
 
   <div class="summary-stats">
-    <div class="stat-card"><div class="stat-number">${timelineChanges.length}</div><div class="stat-label">Confirmed Changes</div></div>
+    <div class="stat-card"><div class="stat-number">${effectiveDatedChanges.length}</div><div class="stat-label">Confirmed Changes</div></div>
     <div class="stat-card"><div class="stat-number">${highImpact}</div><div class="stat-label">High Impact</div></div>
     <div class="stat-card"><div class="stat-number">${uniqueVendors}</div><div class="stat-label">Vendors Affected</div></div>
     <div class="stat-card"><div class="stat-number">${watchItems.length}</div><div class="stat-label">Signals to Watch</div></div>
   </div>
+  ${uncountedLine}
 
   <div class="executive-summary">
     <p><strong>Q2 2026 brings infrastructure cost pressure.</strong> The biggest confirmed change is Hetzner's 30-50% price increase on April 1 — driven by DRAM costs up 171% YoY and AI-fueled chip demand. Google shuts down the Tenor GIF API on June 30. Several Q1-end changes (odrive removal, HCP Terraform migration, Google Developer Program restructuring) take full effect as Q2 begins.</p>
