@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 import {
   CANNOT_CONFIRM_THESE_TERMS,
   CHANGE_KIND_NOUN,
+  freeTierClaim,
   gateStatesAnEnding,
   narrowingSentence,
   publishedVendorLevel,
@@ -23,6 +24,7 @@ import { isNoLongerInForce } from "../dist/change-resolution.js";
 import { levelWithheldReason } from "../dist/source-check.js";
 import { vendorVerdictContextFrom } from "../dist/vendor-verdict-input.js";
 import { offerEnded, endedVerdictSentence, ENDED_BADGE_LABEL } from "../dist/retirement.js";
+import { PRODUCT_DEPRECATED } from "../dist/product-deprecation.js";
 import { CONFIRMED_DATE_LABEL, UNCONFIRMED_DATE_LABEL } from "../dist/read-date.js";
 import { gateFor, utcDate } from "../dist/ranking.js";
 import type { DealChange, RiskCause } from "../dist/types.js";
@@ -40,6 +42,14 @@ const REPO = path.join(__dirname, "..");
 
 const STABILITY_SCALE_WORDS = /\b(volatile|improving)\b|on our watch list/i;
 const RATES_THE_TIER = /is considered (stable|risky)|requires caution/i;
+const ENDED_VERDICT_OPENING: Record<string, string> = {
+  "free tier removed": "Its free tier has ended — one recorded ",
+  "deprecated": "The product is being shut down — one recorded ",
+};
+const ENDED_RELIABILITY_OPENING: Record<string, (vendor: string) => string> = {
+  "free tier removed": (vendor) => `${vendor}'s free tier has ended — one recorded `,
+  "deprecated": (vendor) => `${vendor} is shutting the product down — one recorded `,
+};
 const OTHER_SCALE_ON_A_SURFACE_THAT_EMBEDS_SUMMARIES = /\bvolatile\b|on our watch list/i;
 const COUNT_AS_EVIDENCE = /\b\d+ pricing changes? recorded/;
 const CLAIMS_A_NARROWING = /(?:One recorded [^.]*|(?<!None of the )\d+ recorded changes) narrowed the terms/;
@@ -77,10 +87,10 @@ describe("vendor verdict — one rating word, and it carries its cause", () => {
     assert.doesNotMatch(sentence, COUNT_AS_EVIDENCE);
   });
 
-  it("names a free tier removal as the cause of a risky rating", () => {
+  it("states a free tier removal that would rate the vendor risky as the ending, in place of the rating", () => {
     const c = change({ change_type: "free_tier_removed", date: "2026-04-13" });
     const sentence = vendorVerdictSentence(input({ level: "risky", cause: causeOf(c), changes: [c] }));
-    assert.strictEqual(sentence, "We rate it risky — one recorded free tier removal, on 2026-04-13.");
+    assert.strictEqual(sentence, "Its free tier has ended — one recorded free tier removal, on 2026-04-13. We no longer rate it.");
   });
 
   it("dates a cause we found ourselves as discovered, not as the day it took effect", () => {
@@ -327,6 +337,7 @@ interface VendorRow {
   expected: "stable" | "caution" | "risky" | null;
   historyLevel: "stable" | "caution" | "risky";
   badge: string;
+  endingLabel: string | null;
   ended: boolean;
   badgeEnded: boolean;
   withheld: ReturnType<typeof levelWithheldReason>;
@@ -365,6 +376,10 @@ function vendorRows(): VendorRow[] {
     const ended = offerEnded(primary);
     const badgeEnded = ended || gateStatesAnEnding(gate?.code ?? null);
     const termsSuperseded = context.input.termsSuperseded ?? false;
+    const claim = freeTierClaim(context.input);
+    const endingLabel = !badgeEnded && claim.states === "ended" && claim.how === "removed"
+      ? (claim.cause.change_type === PRODUCT_DEPRECATED ? "deprecated" : "free tier removed")
+      : null;
     rows.push({
       slug,
       vendor,
@@ -372,9 +387,10 @@ function vendorRows(): VendorRow[] {
       historyLevel: context.input.historyLevel,
       ended,
       badgeEnded,
-      badge: badgeEnded ? ENDED_BADGE_LABEL : expected,
+      badge: endingLabel ?? (badgeEnded ? ENDED_BADGE_LABEL : expected),
+      endingLabel,
       withheld,
-      badgeRendered: badgeEnded || !(gate || enriched.risk_level === null || (enriched.link_unreachable && expected === "stable")),
+      badgeRendered: endingLabel !== null || badgeEnded || !(gate || enriched.risk_level === null || (enriched.link_unreachable && expected === "stable")),
       sentence: vendorVerdictSentence(context.input),
       readAgainOn: refusedReadWeHold(context.input)?.read_again_on ?? null,
       termsSuperseded,
@@ -399,6 +415,15 @@ describe("vendor verdict — corpus invariant, computed offline", () => {
       if (row.ended) {
         if (row.sentence !== endedVerdictSentence()) {
           wrong.push(`${row.slug}: badge says ${row.badge}, verdict of an ended offer says ${row.sentence}`);
+        }
+        continue;
+      }
+      if (row.endingLabel) {
+        if (!row.sentence.startsWith(ENDED_VERDICT_OPENING[row.endingLabel]) || !row.sentence.includes(" We no longer rate it.")) {
+          wrong.push(`${row.slug}: badge says ${row.badge}, verdict says ${row.sentence}`);
+        }
+        if (row.withheld && !row.sentence.includes(CANNOT_CONFIRM_THESE_TERMS)) {
+          wrong.push(`${row.slug}: states the ending without saying we cannot confirm the terms we print`);
         }
         continue;
       }
@@ -484,7 +509,7 @@ describe("vendor verdict — as rendered", () => {
 
   const badgeWord = (html: string): string | null => {
     const h1 = html.match(/<h1>[\s\S]*?<\/h1>/)?.[0] ?? "";
-    return h1.match(/<span class="risk-badge"[^>]*>([a-z]+)<\/span>/)?.[1] ?? null;
+    return h1.match(/<span class="risk-badge"[^>]*>([a-z ]+)<\/span>/)?.[1] ?? null;
   };
 
   const verdictParagraph = (html: string): string => {
@@ -530,11 +555,11 @@ describe("vendor verdict — as rendered", () => {
         const verdict = verdictParagraph(html);
         const cell = comparisonCell(html);
 
-        if (badge !== null && badge !== ENDED_BADGE_LABEL) rating++;
+        if (badge !== null && badge !== ENDED_BADGE_LABEL && badge !== row.endingLabel) rating++;
         if (row.gate && !row.badgeEnded && badge !== null) {
           wrong.push(`${row.slug}: the h1 of a ${row.gate.code} record rates it ${badge}`);
         }
-        if (row.gate && row.badgeEnded && badge !== ENDED_BADGE_LABEL) {
+        if (row.gate && row.badgeEnded && badge !== (row.endingLabel ?? ENDED_BADGE_LABEL)) {
           wrong.push(`${row.slug}: the h1 of an ended offer reads ${badge ?? "nothing"}`);
         }
         if (row.badgeRendered && badge !== row.badge) {
@@ -591,7 +616,11 @@ describe("vendor verdict — as rendered", () => {
         if (!wouldRateAGatedOffer && answers.reliable === null) {
           wrong.push(`${row.slug}: no longer asks whether its free tier is reliable`);
         }
-        if (answers.reliable !== null && !row.withheld && !row.ended) {
+        if (answers.reliable !== null && row.endingLabel) {
+          if (!answers.reliable.startsWith(ENDED_RELIABILITY_OPENING[row.endingLabel](row.vendor)) || RATES_THE_TIER.test(answers.reliable)) {
+            wrong.push(`${row.slug}: the reliability answer does not state the ending its badge names — ${answers.reliable}`);
+          }
+        } else if (answers.reliable !== null && !row.withheld && !row.ended) {
           if (row.expected === null) {
             if (RATES_THE_TIER.test(answers.reliable)) {
               wrong.push(`${row.slug}: the reliability answer rates a vendor whose level we withhold — ${answers.reliable}`);
@@ -606,7 +635,9 @@ describe("vendor verdict — as rendered", () => {
           }
         }
         const productionRating = answers.production.match(/we rate it (stable|caution|risky)\b/)?.[1];
-        if (productionRating && productionRating !== row.expected) {
+        if (productionRating && row.endingLabel) {
+          wrong.push(`${row.slug}: the production answer rates it ${productionRating} under a badge that says ${row.badge}`);
+        } else if (productionRating && productionRating !== row.expected) {
           wrong.push(`${row.slug}: the production answer says ${productionRating}, the badge says ${row.expected}`);
         }
       }
@@ -715,6 +746,6 @@ describe("vendor verdict — as rendered", () => {
     const pageMeta = html.match(/<p class="page-meta">([\s\S]*?)<\/p>/)?.[1] ?? "";
     assert.match(pageMeta, new RegExp(`(${CONFIRMED_DATE_LABEL}|${UNCONFIRMED_DATE_LABEL}) [A-Z][a-z]+ \\d{4}`));
     assert.doesNotMatch(pageMeta, /Discontinued/);
-    assert.strictEqual(badgeWord(html), "risky", "a product being sunset is still rated on the record we hold");
+    assert.strictEqual(badgeWord(html), "deprecated", "a product being sunset heads with the label its badge carries");
   });
 });

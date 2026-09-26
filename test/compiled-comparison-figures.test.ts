@@ -367,6 +367,37 @@ describe("marking a compiled figure whose vendor has moved since", () => {
     assert.doesNotMatch(marked, /line-through">500 MB/);
   });
 
+  it("does not strike a row whose cells state the trial that replaced the free tier", () => {
+    const trial = row.replace("<td>500 MB</td>", "<td>500 MB for 30 days</td>");
+    const marked = markCompiledFigures(trial, () => ({
+      slug: "acme",
+      vendor: "Acme",
+      freeTierEnded: true,
+      endedBy: { date: "2026-09-03", summary: "Free tier removed" },
+      since: [{ date: "2026-09-03", summary: "Free tier removed" }],
+    }), markup);
+    assert.match(marked, />FREE REMOVED</);
+    assert.match(marked, /line-through">Acme<\/span>/);
+    assert.match(marked, /<td>500 MB for 30 days<\/td>/);
+  });
+
+  it("keeps a card description that states the trial that replaced the free tier", () => {
+    const card =
+      '<div class="diff-card"><h3>Acme</h3>' +
+      '<div class="diff-desc"><strong>Free trial:</strong> 50 units for 30 days. There is no permanent free tier.</div></div>' +
+      '<h2 id="changes">Pricing Change Timeline</h2>';
+    const marked = markCompiledFigures(card, () => ({
+      slug: "acme",
+      vendor: "Acme",
+      freeTierEnded: true,
+      endedBy: { date: "2026-09-03", summary: "The free tier no longer exists." },
+      since: [{ date: "2026-09-03", summary: "The free tier no longer exists." }],
+    }), markup);
+    assert.match(marked, />FREE REMOVED</);
+    assert.match(marked, /<strong>Free trial:<\/strong> 50 units for 30 days\. There is no permanent free tier\./);
+    assert.doesNotMatch(marked, /<strong>Free tier:<\/strong> none\./);
+  });
+
   it("replaces the stated free tier on a card whose vendor no longer offers one", () => {
     const card =
       '<div class="diff-card"><h3>Acme</h3>' +

@@ -1,6 +1,7 @@
 import { loadOffers } from "./data.js";
 import { offerRetired } from "./retirement.js";
 import { toSlug } from "./slug.js";
+import { statesATrialPeriod } from "./trial-period.js";
 import type { Offer } from "./types.js";
 
 export type EndedOffer = Pick<Offer, "vendor" | "tier">;
@@ -16,7 +17,7 @@ const BLOCK_TAGS = "tr|li|dd|dt|p|h1|h2|h3|h4|h5|h6|figcaption|blockquote|summar
 
 const CARD_DESCRIPTION = /<div\b[^>]*class="[^"]*\bdiff-desc\b[^"]*"[^>]*>(?:(?!<div\b)[\s\S])*?<\/div>/gi;
 
-const ENDED_WORD = /\b(?:retired|retires|retiring|retirement|deprecated|deprecation|discontinued|sunset|sunsetting|withdrawn|withdrew|shut down|shutting down|shutdown|wound down|no longer|stopped serving|stopped offering|stopped accepting|has ended|have ended|ended|closed to new|removed|removal|killed|kills|killing|eliminated|eliminates)\b/i;
+const ENDED_WORD = /\b(?:retired|retires|retiring|retirement|deprecated|deprecation|discontinued|sunset|sunsetting|withdrawn|withdrew|shut down|shutting down|shutdown|wound down|no longer|stopped serving|stopped offering|stopped accepting|has ended|have ended|ended|closed(?: [^.;]{1,60})? to new|removed|removal|killed|kills|killing|eliminated|eliminates)\b/i;
 
 const NO_OFFER_WORD = /\bno free\b|\bnot free\b|\bwithout a free\b|\bfree tier (?:removed|gone|withdrawn|is gone)\b|\bnot available\b|\bn\/a\b/i;
 
@@ -140,7 +141,7 @@ function names(vendor: string): RegExp {
 
 function claimIn(unit: string): StatedTerms["reason"] | null {
   const text = unit.replace(FREE_AS_A_LICENCE, " ").replace(FREE_AS_A_CREDENTIAL, " ");
-  if (ENDED_WORD.test(text) || NO_OFFER_WORD.test(text)) return null;
+  if (ENDED_WORD.test(text) || NO_OFFER_WORD.test(text) || statesATrialPeriod(text)) return null;
   if (AFFIRMATIVE_FREE.test(text)) return "names a free tier";
   if (ZERO_PRICE.test(text)) return "prices it at zero";
   if (ALLOWANCE_QUANTITY.test(text) && !PRICE.test(text)) return "states an allowance";

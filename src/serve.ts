@@ -38,7 +38,7 @@ import { NO_CURRENT_FIGURE, costHeadlineCaveat, limitCellText, mayRecommendAsFre
 import { changesByVendor } from "./superseded-census.js";
 import { buildComparisonMap, comparisonSlug } from "./comparison-pairs.js";
 import { comparisonVerdictText, freeTierFaqAnswer, stabilityFaqAnswer, type ComparisonSide, type FreeTierSide, type SideFreeTier, type StabilityRating } from "./comparison-verdict.js";
-import { publishedVendorLevel, vendorVerdictSentence, vendorBadge, freeTierClaim, statesRiskCause, withholdingThatDoesNotLapse, demotionTheVerdictNames, narrowingSentence, ourOwnRecordsSentence, changeKindNoun, isOurOwnBookkeeping, emptyHistoryCaveatSentence, refusedReadOurConfirmationSupersedes, refusedReadWeHold, refusedReadWithholdingSentence, nothingWeReadDescribesTheTerms, unconfirmedThresholdSentence, unconfirmedTermsOpening, whyWeCannotConfirmTheseTerms, withheldForARefusedRead, withUnconfirmedTerms, refusalWithholdsStability, termsUnconfirmedBySource, termsTheVerdictWithholds, closingTerms, termsWithTheReasonWeCannotConfirmThem, termsNotVerifiedMetaSentence, termsWithheldLabel, theReadConfirmedThePrice, unconfirmedTermsSentence, whereTheDoubtSits, withheldBadgeLabel, type BadgeWithholding, type UnconfirmedTerms, type FreeTierClaim, type VendorVerdictInput, type WhereTheDoubtSits } from "./vendor-verdict.js";
+import { publishedVendorLevel, vendorVerdictSentence, vendorBadge, freeTierClaim, endingStatedInPlaceOfARating, endingShutsTheProductDown, endedClaimReliabilityAnswer, statesRiskCause, withholdingThatDoesNotLapse, demotionTheVerdictNames, narrowingSentence, ourOwnRecordsSentence, changeKindNoun, isOurOwnBookkeeping, emptyHistoryCaveatSentence, refusedReadOurConfirmationSupersedes, refusedReadWeHold, refusedReadWithholdingSentence, nothingWeReadDescribesTheTerms, unconfirmedThresholdSentence, unconfirmedTermsOpening, whyWeCannotConfirmTheseTerms, withheldForARefusedRead, withUnconfirmedTerms, refusalWithholdsStability, termsUnconfirmedBySource, termsTheVerdictWithholds, closingTerms, termsWithTheReasonWeCannotConfirmThem, termsNotVerifiedMetaSentence, termsWithheldLabel, theReadConfirmedThePrice, unconfirmedTermsSentence, whereTheDoubtSits, withheldBadgeLabel, type BadgeWithholding, type UnconfirmedTerms, type FreeTierClaim, type VendorVerdictInput, type WhereTheDoubtSits } from "./vendor-verdict.js";
 import { descriptionDeniesAFreeTier, tierRecordsAFreeTier } from "./free-tier-record.js";
 import { PAGE_HEAD_OPEN, withLedeBeforeNav } from "./page-lede.js";
 import { withReviewByline } from "./page-byline.js";
@@ -100,7 +100,7 @@ import {
 import { changeAnchor, changeRecordHref } from "./change-anchor.js";
 import { SSE_KEEPALIVE_FRAME, keepaliveIntervalMs, sessionRecoveryBody } from "./mcp-stream.js";
 import { ASSISTANTS_API_SHUTDOWN } from "./assistants-shutdown.js";
-import { discontinuedClause, discontinuedOnOrBefore, endsAFreeTier, PRODUCT_DEPRECATED } from "./product-deprecation.js";
+import { discontinuedClause, discontinuedOnOrBefore, endsAFreeTier } from "./product-deprecation.js";
 import { rankOffers, rankForListing, rotateListing, utcDate, gateFor, notAFreeOfferGateFor, descriptionDeniesFreeTier, classifyTier, CRITERIA_PATH, DEMOTE_ONLY_POLICY, DISCLOSURE_RATIONALE, TIE_BREAK_ALGORITHM, NAMED_SUBSET_RULE, NAMED_SUBSET_FIELD_RULE, wholeRankedOrderClause, GATE_TABLE, gateTableRowText, DEMERIT_TABLE, demeritTableRowText, NOT_FREE_TIER_RULES, TIME_LIMITED_TIER_RULES, type TieBreak, type Gate } from "./ranking.js";
 import type { RankedEntry, RankingResult } from "./ranking.js";
 import { eligibilityGateAsPublished, gatedShareDescriptionClause, gatedShareLede, publishableEligibilityConditions } from "./eligibility.js";
@@ -544,6 +544,8 @@ const trackedChangeCount = trackedChangeRecords.length;
 
 const q1TrackedChanges = trackedChanges(changesInWindow(dealChanges, { start: "2026-01-01", end: "2026-03-31" }).dated);
 const q1ChangeCount = q1TrackedChanges.length;
+const q1FreeTierRemovalCount = q1TrackedChanges.filter(c => c.change_type === "free_tier_removed").length;
+const q1LimitsReducedCount = q1TrackedChanges.filter(c => c.change_type === "limits_reduced").length;
 
 const verifiedDatesBySlug = (() => {
   const dates = new Map<string, string[]>();
@@ -1550,6 +1552,10 @@ function freeTierSideOf(vendor: string, tier: string, context: VendorVerdictCont
   return { vendor, free };
 }
 
+function removedClaimLabel(cause: { change_type: string }): string {
+  return endingShutsTheProductDown(cause) ? "deprecated" : "free tier removed";
+}
+
 function readBadgeStatus(vendorSlug: string, servedOn: string): BadgeReading {
   const vendorName = vendorSlugMap.get(vendorSlug);
   if (!vendorName) return UNKNOWN_BADGE;
@@ -1570,7 +1576,7 @@ function readBadgeStatus(vendorSlug: string, servedOn: string): BadgeReading {
     if (claim.how === "retired") return { status: "retired", label: ENDED_BADGE_LABEL, verifiedDate: latestVerified };
     return {
       status: "removed",
-      label: claim.cause.change_type === PRODUCT_DEPRECATED ? "deprecated" : "free tier removed",
+      label: removedClaimLabel(claim.cause),
       verifiedDate: claim.cause.date,
     };
   }
@@ -5116,21 +5122,30 @@ function buildVendorPage(slug: string): string | null {
   const termsWeCannotConfirm = whyWeCannotConfirmTheseTerms(verdictInput);
   const ratingWithheld = withholdingThatDoesNotLapse(verdictInput);
 
-  const riskCauseLine = statesRiskCause(verdictInput) && riskCause
-    ? `  <p class="risk-cause-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong style="color:${riskColor}">Why ${riskLevel}:</strong> <span class="risk-cause-date" style="font-family:var(--mono)">${escHtmlServer(changeEntryDateLabel(riskCause))}</span> &mdash; ${changeSummaryHtml(riskCause, escHtmlServer)} <a href="#changes" style="white-space:nowrap">Full history &darr;</a></p>`
+  const endedBy = endingStatedInPlaceOfARating(verdictInput);
+  const causeLineHtml = (label: string, color: string, cause: NonNullable<typeof riskCause>) =>
+    `  <p class="risk-cause-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong style="color:${color}">${label}</strong> <span class="risk-cause-date" style="font-family:var(--mono)">${escHtmlServer(changeEntryDateLabel(cause))}</span> &mdash; ${changeSummaryHtml(cause, escHtmlServer)} <a href="#changes" style="white-space:nowrap">Full history &darr;</a></p>`;
+  const riskCauseLine = endedBy
+    ? causeLineHtml("How it ended:", BADGE_COLORS.removed, endedBy)
+    : statesRiskCause(verdictInput) && riskCause
+    ? causeLineHtml(`Why ${riskLevel}:`, riskColor, riskCause)
     : "";
 
-  const demotionNamed = demotionTheVerdictNames(verdictInput);
-  const verdictLapseLine = demotionNamed
-    ? `  <p class="verdict-lapse-line" style="margin:.4rem 0 .6rem;font-size:.85rem;color:var(--text-muted)">${escHtmlServer(lapsingDemotionStated(demotionNamed))}</p>`
+  const recordTheVerdictRestsOn = endedBy ?? demotionTheVerdictNames(verdictInput);
+  const verdictLapseLine = recordTheVerdictRestsOn
+    ? `  <p class="verdict-lapse-line" style="margin:.4rem 0 .6rem;font-size:.85rem;color:var(--text-muted)">${escHtmlServer(lapsingDemotionStated(recordTheVerdictRestsOn))}</p>`
     : "";
 
   const retiredBadgeColor = "#8b949e";
   const badge = vendorBadge(verdictInput);
-  const h1RiskBadge = badge.kind === "ended"
-    ? ` <span class="risk-badge" style="background:${retiredBadgeColor}20;color:${retiredBadgeColor};border:1px solid ${retiredBadgeColor}40">${ENDED_BADGE_LABEL}</span>`
+  const riskBadgeHtml = (label: string, color: string) =>
+    ` <span class="risk-badge" style="background:${color}20;color:${color};border:1px solid ${color}40">${label}</span>`;
+  const h1RiskBadge = endedBy
+    ? riskBadgeHtml(removedClaimLabel(endedBy), BADGE_COLORS.removed)
+    : badge.kind === "ended"
+    ? riskBadgeHtml(ENDED_BADGE_LABEL, retiredBadgeColor)
     : badge.kind === "rating"
-    ? ` <span class="risk-badge" style="background:${riskColor}20;color:${riskColor};border:1px solid ${riskColor}40">${badge.word}</span>`
+    ? riskBadgeHtml(badge.word, riskColor)
     : "";
   const linkUnreachableLine = linkUnreachable
     ? `  <p class="link-unreachable-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong style="color:#f85149">Link unreachable:</strong> ${escHtmlServer(primary.url)} did not resolve on our check of <span class="link-checked-date" style="font-family:var(--mono)">${escHtmlServer(linkUnreachable.checked)}</span>. ${linkUnreachable.last_reachable ? `Last reachable <span class="link-last-reachable" style="font-family:var(--mono)">${escHtmlServer(linkUnreachable.last_reachable)}</span>.` : "We have no date on which it was reachable."}</p>`
@@ -5578,6 +5593,8 @@ ${allCompareLinks.join("\n")}
     : `${vendorName}'s free tier is called "${primary.tier}". ${primary.description}`);
   const faqReliableAnswer = offerHasEnded
     ? endedReliabilitySentence(vendorName)
+    : endedBy
+    ? endedClaimReliabilityAnswer(vendorName, endedBy)
     : levelWithheld
     ? `We cannot say. ${withheldLevelSentence(levelWithheld, vendorName, unconfirmableSince)} Nothing we have read describes these terms, so we are not publishing a stability judgement for this vendor until that is fixed.`
     : riskLevel === null
@@ -5596,7 +5613,9 @@ ${allCompareLinks.join("\n")}
     : eligibilityGateSentence + (levelWithheld
     ? `${withheldLevelSentence(levelWithheld, vendorName, unconfirmableSince)} We cannot confirm what this offer provides today, so we are not recommending it for production or for anything else until we can.`
     : hasFree
-    ? (riskLevel === "stable" || (primaryGate && historyLevel === "stable")
+    ? (endedBy
+      ? endedClaimReliabilityAnswer(vendorName, endedBy)
+      : riskLevel === "stable" || (primaryGate && historyLevel === "stable")
       ? `${vendorName}'s free tier can be suitable for small production workloads and side projects. ${primaryGate ? "It" : "We rate it stable and it"} offers ${keyLimit}, so it's a reasonable starting point.${vendorChanges.length > 0 ? ` ${narrowingSentence(vendorChanges, primary, termsSuperseded !== null)}` : ""} Monitor your usage against the limits and have an upgrade plan ready.`
       : riskLevel === null
       ? `${vendorName}'s free tier is usable for prototyping and development. ${primaryGate ? vendorHistorySentence(vendorName, historyLevel, riskCause) : levelWithheldBecause}`
@@ -7738,11 +7757,11 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "q1-2026-developer-pricing-report",
     title: "Q1 2026 Developer Pricing Report — The Great Free Tier Reckoning",
-    metaDesc: `${q1ChangeCount} recorded pricing changes across developer tools in Q1 2026: 8 free tiers removed, 6 limits reduced, 1 OSS project killed, while Cloudflare bucked the trend. The definitive quarterly analysis.`,
+    metaDesc: `${q1ChangeCount} recorded pricing changes across developer tools in Q1 2026: ${q1FreeTierRemovalCount} free tiers removed, ${q1LimitsReducedCount} limits reduced, 1 OSS project killed, while Cloudflare bucked the trend. The definitive quarterly analysis.`,
     contextHtml: "",
     tag: "q1-report",
     primaryVendor: "AgentDeals",
-    hubDesc: `${q1ChangeCount} pricing changes in Q1 2026 — 8 free tiers removed, narrative analysis, category breakdown, monthly timeline, Cloudflare counter-trend, Q2 outlook`,
+    hubDesc: `${q1ChangeCount} pricing changes in Q1 2026 — ${q1FreeTierRemovalCount} free tiers removed, narrative analysis, category breakdown, monthly timeline, Cloudflare counter-trend, Q2 outlook`,
   },
   {
     slug: "hetzner-pricing-2026",
@@ -19306,7 +19325,7 @@ ${mcpCtaCss()}
 
 function buildQ1PricingReportPage(): string {
   const title = "Q1 2026 Developer Pricing Report — The Great Free Tier Reckoning";
-  const metaDesc = `${q1ChangeCount} recorded pricing changes across developer tools in Q1 2026: 8 free tiers removed, 6 limits reduced, 1 OSS project killed, while Cloudflare bucked the trend. The definitive quarterly analysis of developer tool pricing.`;
+  const metaDesc = `${q1ChangeCount} recorded pricing changes across developer tools in Q1 2026: ${q1FreeTierRemovalCount} free tiers removed, ${q1LimitsReducedCount} limits reduced, 1 OSS project killed, while Cloudflare bucked the trend. The definitive quarterly analysis of developer tool pricing.`;
   const slug = "q1-2026-developer-pricing-report";
   const pubDate = "2026-03-24";
 
@@ -27421,16 +27440,6 @@ function buildFreeTierTrackerPage(): string {
       impact: "high",
       detail: "X/Twitter API eliminated its free tier, replacing it with pay-per-use credit model. Active free-tier users receive a $0 voucher. 'For-good' utility apps remain free. Basic fixed tier remains at $200/month.",
       alternatives: ["Bluesky AT Protocol", "Mastodon API"],
-    },
-    {
-      vendor: "Logz.io",
-      slug: "logz-io",
-      date: "2026-03-02",
-      oneLiner: "Free Community plan removed — trial only",
-      changeType: "free_tier_removed",
-      impact: "medium",
-      detail: "Logz.io removed its Free Community plan (1 GB/day, 1-day retention, 10 alerts). Only a 14-day free trial remains. Consumption-based pricing starts at $0.92/ingested GB/day.",
-      alternatives: ["Grafana Cloud", "BetterStack", "Axiom"],
     },
   ];
 

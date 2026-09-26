@@ -333,7 +333,7 @@ describe("a category lede counts no free tier the site says has ended", () => {
       if (saysRetired) retired++;
       const saysDiscontinued = /was discontinued on \d{4}-\d{2}-\d{2}, so it is not a current option/.test(vendorPage);
       assert.ok(
-        saysRetired || saysDiscontinued || vendorPage.includes("Why risky:"),
+        saysRetired || saysDiscontinued || vendorPage.includes("How it ended:"),
         `/vendor/${slug} publishes neither a retirement nor a cause, but its badge reads ended`,
       );
       const lede = ledeOf(await page(`/category/${slugOf(offer.category)}`));

@@ -3,7 +3,7 @@ import { restatedReadingDate, type TermsWeCannotConfirm } from "./read-date.js";
 import { CHANGE_DIRECTION, isACorrectionToOurOwnRecord, isOurOwnBookkeeping } from "./data.js";
 import { changeRatesTheListedTier, type GradedOffer } from "./change-tier.js";
 import { isNoLongerInForce, theEventNeverHappened } from "./change-resolution.js";
-import { changeIsUncited, ratingWithheldForNoSourceSentence } from "./change-citation.js";
+import { changeIsUncited, changeSummaryText, ratingWithheldForNoSourceSentence } from "./change-citation.js";
 import { changeDateClause } from "./change-dates.js";
 import { PRODUCT_DEPRECATED, deprecationTouchesTheListing } from "./product-deprecation.js";
 import {
@@ -75,6 +75,7 @@ export interface VendorVerdictInput {
   level: PublishedRiskLevel | null;
   historyLevel: PublishedRiskLevel;
   cause: RiskCause | null;
+  endingTheListingConfirms?: RiskCause | null;
   changes: Array<Pick<DealChange, "date" | "date_source" | "change_type"> & { source_url?: string | null } & { tier?: string | null; current_state?: string | null } & { resolution?: DealChange["resolution"] } & { vendor?: string; summary?: string; listing_effect?: DealChange["listing_effect"] }>;
   levelWithheld: LevelWithheldReason | null;
   unconfirmableSince: string;
@@ -621,7 +622,34 @@ export function freeTierClaim(input: VendorVerdictInput): FreeTierClaim {
   }
   if (badge.kind === "none") return { states: "unconfirmed", because: badge.because };
   if (badge.word === "risky" && input.cause) return { states: "ended", how: "removed", cause: input.cause };
+  if (input.endingTheListingConfirms) return { states: "ended", how: "removed", cause: input.endingTheListingConfirms };
   return { states: "offered", level: badge.word };
+}
+
+export function endingStatedInPlaceOfARating(input: VendorVerdictInput): RiskCause | null {
+  if (gateStatesAnEnding(input.gate)) return null;
+  const claim = freeTierClaim(input);
+  return claim.states === "ended" && claim.how === "removed" ? claim.cause : null;
+}
+
+export function endingShutsTheProductDown(ending: { change_type: string }): boolean {
+  return ending.change_type === PRODUCT_DEPRECATED;
+}
+
+function oneRecordedEnding(ending: RiskCause): string {
+  return `one recorded ${changeKindNoun(ending.change_type)}, ${changeDateClause(ending)}`;
+}
+
+export function endedClaimVerdictSentence(ending: RiskCause): string {
+  return endingShutsTheProductDown(ending)
+    ? `The product is being shut down — ${oneRecordedEnding(ending)}. We no longer rate it.`
+    : `Its free tier has ended — ${oneRecordedEnding(ending)}. We no longer rate it.`;
+}
+
+export function endedClaimReliabilityAnswer(vendor: string, ending: RiskCause): string {
+  return endingShutsTheProductDown(ending)
+    ? `${vendor} is shutting the product down — ${oneRecordedEnding(ending)}: ${changeSummaryText(ending)} We don't rate a product that is ending.`
+    : `${vendor}'s free tier has ended — ${oneRecordedEnding(ending)}: ${changeSummaryText(ending)} There is no free tier left to rate.`;
 }
 
 export function statesRiskCause(input: VendorVerdictInput): boolean {
@@ -700,6 +728,12 @@ export function narrowingSentence(
   return `${narrowing.length} recorded changes narrowed the terms, the most recent ${changeDateClause(narrowing[0])}.`;
 }
 
+function termsWeCannotConfirmToday(input: VendorVerdictInput): string {
+  return input.levelWithheld
+    ? ` ${capitalise(withheldLevelClause(input.levelWithheld, input.unconfirmableSince))}, ${CANNOT_CONFIRM_THESE_TERMS} today.`
+    : "";
+}
+
 export function vendorVerdictSentence(input: VendorVerdictInput): string {
   if (input.offerEnded) return endedVerdictSentence();
   if (withholdingDecides(input)) {
@@ -714,14 +748,14 @@ export function vendorVerdictSentence(input: VendorVerdictInput): string {
     return refusedReadVerdictSentence(refusedReadWithholding(refused));
   }
 
+  const ending = endingStatedInPlaceOfARating(input);
+  if (ending) return `${endedClaimVerdictSentence(ending)}${termsWeCannotConfirmToday(input)}`;
+
   const level = publishedVendorLevel(input.level, input.cause);
   if (input.gate || level === null) return vendorHistorySentence(input.vendor, input.historyLevel, input.cause);
 
   if (level !== "stable" && input.cause) {
-    const unconfirmed = input.levelWithheld
-      ? ` ${capitalise(withheldLevelClause(input.levelWithheld, input.unconfirmableSince))}, ${CANNOT_CONFIRM_THESE_TERMS} today.`
-      : "";
-    return `We rate it ${level} — one recorded ${changeKindNoun(input.cause.change_type)}, ${changeDateClause(input.cause)}.${unconfirmed}`;
+    return `We rate it ${level} — one recorded ${changeKindNoun(input.cause.change_type)}, ${changeDateClause(input.cause)}.${termsWeCannotConfirmToday(input)}`;
   }
 
   if (input.changes.length === 0) {

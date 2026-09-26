@@ -130,10 +130,40 @@ describe("a route that badges a vendor and then states terms for it", () => {
     assert.deepStrictEqual(contradictionsOn(html, "/security-free-tier-comparison-2026"), []);
   });
 
+  it("leaves a cell that states the trial period the badged vendor offers", () => {
+    const html = page(`<table>
+      <tr><td class="provider-col">Storj ${SWEPT_BADGE("Storj", "storj")}</td><td>Object</td></tr>
+      <tr><td>Starting capacity</td><td>25 GB for 30 days (Storj)</td></tr>
+    </table>`);
+    assert.deepStrictEqual(contradictionsOn(html, "/storage-comparison-2026"), []);
+  });
+
+  it("leaves a sentence that states the badged vendor's allowance as a trial", () => {
+    const html = page(`<div class="diff-card"><h3>Storj ${SWEPT_BADGE("Storj", "storj")}</h3></div>
+      <p>Storj offers the largest starting capacity at 25 GB, but as a 30-day trial rather than a free tier.</p>`);
+    assert.deepStrictEqual(contradictionsOn(html, "/storage-comparison-2026"), []);
+  });
+
+  it("still flags a cell that states the badged vendor's allowance with no period", () => {
+    const html = page(`<table>
+      <tr><td class="provider-col">Storj ${SWEPT_BADGE("Storj", "storj")}</td><td>Object</td></tr>
+      <tr><td>Starting capacity</td><td>25 GB (Storj)</td></tr>
+    </table>`);
+    const found = contradictionsOn(html, "/storage-comparison-2026");
+    assert.strictEqual(found.length, 1);
+    assert.strictEqual(found[0].reason, "states an allowance");
+  });
+
   it("leaves a sentence saying the vendor stopped serving its free tier", () => {
     const html = page(`<div class="diff-card"><h3>Gemini Code Assist ${SWEPT_BADGE("Gemini Code Assist", "google-gemini-code-assist")}</h3>
       <div class="diff-desc">Google stopped serving Gemini Code Assist for individuals, its free tier, on 2026-06-18.</div></div>`);
     assert.deepStrictEqual(contradictionsOn(html, "/ai-coding-tools-pricing"), []);
+  });
+
+  it("leaves a sentence saying the vendor closed its free plan to new sign-ups", () => {
+    const html = page(`<div class="diff-card"><h3>CockroachDB ${SWEPT_BADGE("CockroachDB", "cockroachdb")}</h3></div>
+      <p>CockroachDB closed its free Basic plan to new deployments on 2026-09-15.</p>`);
+    assert.deepStrictEqual(contradictionsOn(html, "/database-pricing"), []);
   });
 
   it("does not read a licence as an offer", () => {

@@ -24,6 +24,7 @@ import { isNoLongerInForce } from "../dist/change-resolution.js";
 import { PRODUCT_DEPRECATED, deprecationEndsTheListedProduct } from "../dist/product-deprecation.js";
 import { vendorSlugMap } from "../dist/vendor-slug.js";
 import { ENDED_BADGE_LABEL } from "../dist/retirement.js";
+import { endingTheListingConfirms } from "../dist/vendor-verdict-input.js";
 import type { DealChange } from "../src/types.ts";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -214,6 +215,10 @@ describe("#1206 the badge and the vendor page read the same scale", () => {
       const risk = publishedRisk(listed, records);
       return { level: risk.history_level, rating_withheld: risk.rating_withheld };
     };
+    const endedByTheListing = (vendor: string) => {
+      const listed = offers.find(o => o.vendor === vendor);
+      return listed !== undefined && endingTheListingConfirms(listed, held.get(vendor.toLowerCase()) ?? []) !== null;
+    };
     const slugs = [...vendorSlugMap.entries()];
     const disagreeing: string[] = [];
     let queue = 0;
@@ -236,7 +241,9 @@ describe("#1206 the badge and the vendor page read the same scale", () => {
         const level = LEVEL_FOR_BADGE[label];
         if (level === undefined) { disagreeing.push(`/badge/${slug}.svg reads "${label}"`); continue; }
         const expected = scaleFor(vendor).level;
-        if (level !== expected) disagreeing.push(`/badge/${slug}.svg reads ${level}, the risk scale reads ${expected}`);
+        if (level === expected) continue;
+        if (label === "free tier removed" && endedByTheListing(vendor)) continue;
+        disagreeing.push(`/badge/${slug}.svg reads ${level}, the risk scale reads ${expected}`);
       }
     };
     await Promise.all(Array.from({ length: 12 }, worker));

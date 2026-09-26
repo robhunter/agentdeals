@@ -91,7 +91,8 @@ before(async () => {
   const { loadOffers, loadDealChanges, enrichOffers, publishedRisk, refusalsForVendor, gateForOffer } = await import("../dist/data.js");
   const { vendorSlugMap } = await import("../dist/vendor-slug.js");
   const { levelWithheldReason } = await import("../dist/source-check.js");
-  const { vendorBadge } = await import("../dist/vendor-verdict.js");
+  const { vendorBadge, freeTierClaim } = await import("../dist/vendor-verdict.js");
+  const { endingTheListingConfirms } = await import("../dist/vendor-verdict-input.js");
   const { offerEnded } = await import("../dist/retirement.js");
   const { gateFor, utcDate } = await import("../dist/ranking.js");
   const { reverificationIntervalDays, verificationAgeDays } = await import("../dist/badge-staleness.js");
@@ -114,11 +115,12 @@ before(async () => {
     };
     const levelWithheld = levelWithheldReason(primary, e.link_unreachable);
     const vendorChanges = changes.filter((c: { vendor: string }) => c.vendor.toLowerCase() === vendor.toLowerCase());
-    const badge = vendorBadge({
+    const input = {
       vendor,
       level: e.risk_level as never,
       historyLevel: publishedRisk(primary, vendorChanges, servedOn, nowMs).history_level,
       cause: e.risk_cause,
+      endingTheListingConfirms: endingTheListingConfirms(primary, vendorChanges),
       changes: vendorChanges,
       refusedReads: refusalsForVendor(vendor),
       levelWithheld,
@@ -128,7 +130,10 @@ before(async () => {
       offerEnded: offerEnded(primary),
       gate: gateForOffer(primary, servedOn)?.code ?? null,
       linkUnreachable: Boolean(e.link_unreachable),
-    }) as { kind: "rating" | "ended" | "none"; word?: string; because?: Withholding };
+    };
+    const rated = vendorBadge(input) as { kind: "rating" | "ended" | "none"; word?: string; because?: Withholding };
+    const endedByTheListing = rated.kind === "rating" && rated.word !== "risky" && freeTierClaim(input).states === "ended";
+    const badge = endedByTheListing ? { kind: "ended" as const, word: undefined, because: undefined } : rated;
     const verifiedDate = own.reduce(
       (max: string, o: { verifiedDate: string }) => (o.verifiedDate > max ? o.verifiedDate : max),
       primary.verifiedDate,
