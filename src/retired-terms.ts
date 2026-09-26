@@ -26,6 +26,12 @@ export function statesNoFreeTier(text: string): boolean {
   return OPENS_BY_DENYING_A_FREE_TIER.test(text);
 }
 
+const STATES_A_TRIAL_PERIOD = /\btrial\b|\bfor \d+ (?:days?|weeks?|months?)\b/i;
+
+export function statesATrialPeriod(text: string): boolean {
+  return STATES_A_TRIAL_PERIOD.test(text);
+}
+
 const AFFIRMATIVE_FREE = /\bfree\b|\bfreemium\b|\bno credit card\b|\bgenerous\b/i;
 
 const ALLOWANCE_UNIT = "gb|gib|mb|mib|tb|tib|kb|tokens?|requests?|req|calls?|rpm|rps|tpm|qps|models?|minutes?|hours?|builds?|seats?|users?|projects?|messages?|emails?|operations?|ops|commands?|neurons?|rows?|records?|events?|pageviews?|visits?|sessions?|domains?|sites?|repos(?:itories)?|containers?|deploys?|queries|invocations?|executions?|jobs?|runs?|workflows?|credits?|checks?|monitors?|alerts?|dashboards?|members?|collaborators?";
@@ -140,7 +146,7 @@ function names(vendor: string): RegExp {
 
 function claimIn(unit: string): StatedTerms["reason"] | null {
   const text = unit.replace(FREE_AS_A_LICENCE, " ").replace(FREE_AS_A_CREDENTIAL, " ");
-  if (ENDED_WORD.test(text) || NO_OFFER_WORD.test(text)) return null;
+  if (ENDED_WORD.test(text) || NO_OFFER_WORD.test(text) || statesATrialPeriod(text)) return null;
   if (AFFIRMATIVE_FREE.test(text)) return "names a free tier";
   if (ZERO_PRICE.test(text)) return "prices it at zero";
   if (ALLOWANCE_QUANTITY.test(text) && !PRICE.test(text)) return "states an allowance";
