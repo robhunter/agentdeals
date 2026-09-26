@@ -2911,59 +2911,76 @@
     {
       "vendor": "Backlight",
       "change_type": "product_deprecated",
-      "date": "2026-04-12",
+      "date": "2025-06-01",
       "discontinued_date": "unknown",
-      "summary": "Shutting down June 2025",
+      "summary": "Backlight.dev, a design-system platform, shut down on 2025-06-01. A banner announcing the shutdown went up between 2025-03-16 and 2025-03-25.",
       "previous_state": "",
-      "current_state": "Shutting down June 2025",
+      "current_state": "\"Backlight.dev is shutting down June 1st 2025.\" (backlight.dev)",
       "impact": "low",
-      "source_url": "",
+      "source_url": "https://backlight.dev/",
       "category": "Design",
       "alternatives": [],
       "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Backlight",
+      "change_type": "record_corrected",
+      "date": "2026-09-26",
+      "summary": "Data correction - Backlight.dev shut down on 2025-06-01, not on 2026-04-12. Its own site says \"Backlight.dev is shutting down June 1st 2025.\"",
+      "previous_state": "Recorded 2026-04-12 as: Shutting down June 2025 dated 2026-04-12",
+      "current_state": "\"Backlight.dev is shutting down June 1st 2025.\" (backlight.dev)",
+      "impact": "low",
+      "source_url": "https://backlight.dev/",
+      "category": "Design",
+      "alternatives": [],
+      "recorded_date": "2026-09-26",
       "date_source": "hand_written"
     },
     {
       "vendor": "Branition Colors",
       "change_type": "product_deprecated",
       "date": "2026-04-12",
-      "summary": "Domain hijacked, redirects to gambling site",
+      "summary": "Removed: source page no longer accessible or deal program discontinued",
       "previous_state": "",
-      "current_state": "Domain hijacked, redirects to gambling site",
+      "current_state": "Removed from index",
       "impact": "low",
       "source_url": "",
       "category": "Design",
       "alternatives": [],
       "recorded_date": "2026-04-12",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "reports": "our_index"
     },
     {
       "vendor": "MovingPencils",
       "change_type": "product_deprecated",
       "date": "2026-04-12",
-      "summary": "Domain redirects to unrelated site",
+      "summary": "Removed: source page no longer accessible or deal program discontinued",
       "previous_state": "",
-      "current_state": "Domain redirects to unrelated site",
+      "current_state": "Removed from index",
       "impact": "low",
       "source_url": "",
       "category": "Design",
       "alternatives": [],
       "recorded_date": "2026-04-12",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "reports": "our_index"
     },
     {
       "vendor": "Free For Commercial Use",
       "change_type": "product_deprecated",
       "date": "2026-04-12",
-      "summary": "Completely different product now (coloring pages, not stock photos)",
+      "summary": "Removed: source page no longer accessible or deal program discontinued",
       "previous_state": "",
-      "current_state": "Completely different product now (coloring pages, not stock photos)",
+      "current_state": "Removed from index",
       "impact": "low",
       "source_url": "",
       "category": "Design",
       "alternatives": [],
       "recorded_date": "2026-04-12",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "reports": "our_index"
     },
     {
       "vendor": "Pixelixe",
@@ -3178,15 +3195,29 @@
     {
       "vendor": "Kitemaker",
       "change_type": "product_deprecated",
-      "date": "2026-04-12",
-      "summary": "Acquired by ClickUp, shut down Sep 2025",
+      "date": "2025-09-01",
+      "summary": "Kitemaker was acquired by ClickUp, closed new signups when the deal was announced on 2025-05-06, and discontinued the service on 2025-09-01.",
       "previous_state": "",
-      "current_state": "Acquired by ClickUp, shut down Sep 2025",
+      "current_state": "\"Kitemaker has been acquired by ClickUp. The service was discontinued on September 1st, 2025.\" (kitemaker.co)",
       "impact": "low",
-      "source_url": "",
+      "source_url": "https://kitemaker.co/",
       "category": "Project Management",
       "alternatives": [],
       "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Kitemaker",
+      "change_type": "record_corrected",
+      "date": "2026-09-26",
+      "summary": "Data correction - Kitemaker was discontinued on 2025-09-01, not on 2026-04-12. Its own site says \"The service was discontinued on September 1st, 2025.\"",
+      "previous_state": "Recorded 2026-04-12 as: Acquired by ClickUp, shut down Sep 2025 dated 2026-04-12",
+      "current_state": "\"Kitemaker has been acquired by ClickUp. The service was discontinued on September 1st, 2025.\" (kitemaker.co)",
+      "impact": "low",
+      "source_url": "https://kitemaker.co/",
+      "category": "Project Management",
+      "alternatives": [],
+      "recorded_date": "2026-09-26",
       "date_source": "hand_written"
     },
     {
@@ -3263,20 +3294,40 @@
       "category": "Project Management",
       "alternatives": [],
       "recorded_date": "2026-04-12",
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: HeySpace became TimeCamp Planner in March 2023, not in April 2026, and it kept a free plan: TimeCamp's Planner page offered \"$ 0 Free forever UNLIMITED USERS\" on 2025-10-16.",
+        "source_url": "https://web.archive.org/web/20251016155301/https://www.timecamp.com/planner/"
+      }
+    },
+    {
+      "vendor": "Wikifactory",
+      "change_type": "limits_reduced",
+      "date": "2025-06-23",
+      "summary": "Wikifactory ended its self-serve free Starter plan (a personal workspace with 10 GB of private storage) between 2025-02-11 and 2025-06-23. Free hosting remains for open-source projects, now called Discovery, and paid workspaces became CAD ROOMS.",
+      "previous_state": "\"Starter Free Forever Personal Workspace 10 GB of private Cloud Storage\" (pricing page, 2025-02-11)",
+      "current_state": "\"For Open Source Free Get in touch. Public Space 5 GB of public Cloud Storage\" (pricing page, 2025-06-23)",
+      "impact": "low",
+      "source_url": "https://web.archive.org/web/20250623220336/https://wikifactory.com/pricing/",
+      "category": "Project Management",
+      "alternatives": [],
+      "recorded_date": "2026-04-12",
       "date_source": "hand_written"
     },
     {
       "vendor": "Wikifactory",
-      "change_type": "product_deprecated",
-      "date": "2026-04-12",
-      "summary": "Pivoted to CAD ROOMS platform",
-      "previous_state": "",
-      "current_state": "Pivoted to CAD ROOMS platform",
+      "change_type": "record_corrected",
+      "date": "2026-09-26",
+      "summary": "Data correction - Wikifactory narrowed its free offer to open-source projects between 2025-02-11 and 2025-06-23, not on 2026-04-12, and it did not shut down: its pricing page offers a free Discovery plan today.",
+      "previous_state": "Recorded 2026-04-12 as: Pivoted to CAD ROOMS platform dated 2026-04-12",
+      "current_state": "\"For Open Source Free Get in touch. Public Space 5 GB of public Cloud Storage\" (pricing page, 2025-06-23)",
       "impact": "low",
-      "source_url": "",
+      "source_url": "https://web.archive.org/web/20250623220336/https://wikifactory.com/pricing/",
       "category": "Project Management",
       "alternatives": [],
-      "recorded_date": "2026-04-12",
+      "recorded_date": "2026-09-26",
       "date_source": "hand_written"
     },
     {
@@ -3296,15 +3347,29 @@
     {
       "vendor": "MeScrum",
       "change_type": "product_deprecated",
-      "date": "2026-04-12",
-      "summary": "Service appears abandoned, empty page",
-      "previous_state": "",
-      "current_state": "Service appears abandoned, empty page",
+      "date": "2026-02-07",
+      "summary": "MeuScrum, a free scrum and kanban tool, was replaced by a holding page between 2026-01-15 and 2026-02-07. Its login and signup pages are gone.",
+      "previous_state": "\"Yes! MeuScrum is totally free and no amount will be charged from you\" (meuscrum.com, 2025-12-03)",
+      "current_state": "\"online scrum project management system Get in touch\" (meuscrum.com, 2026-02-07)",
       "impact": "low",
-      "source_url": "",
+      "source_url": "https://web.archive.org/web/20260207200657/https://meuscrum.com/",
       "category": "Project Management",
       "alternatives": [],
       "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "MeScrum",
+      "change_type": "record_corrected",
+      "date": "2026-09-26",
+      "summary": "Data correction - MeuScrum (misspelled MeScrum in this record) went offline between 2026-01-15 and 2026-02-07, not on 2026-04-12.",
+      "previous_state": "Recorded 2026-04-12 as: Service appears abandoned, empty page dated 2026-04-12",
+      "current_state": "\"online scrum project management system Get in touch\" (meuscrum.com, 2026-02-07)",
+      "impact": "low",
+      "source_url": "https://web.archive.org/web/20260207200657/https://meuscrum.com/",
+      "category": "Project Management",
+      "alternatives": [],
+      "recorded_date": "2026-09-26",
       "date_source": "hand_written"
     },
     {
@@ -3417,7 +3482,13 @@
       "category": "Storage",
       "alternatives": [],
       "recorded_date": "2026-04-12",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: this record described our own miscategorisation of Redbooth, not a change Redbooth made. Redbooth's pricing page lists a free plan today: $0, 2 users, 2 GB of storage, 2 workspaces.",
+        "source_url": "https://redbooth.com/pricing"
+      }
     },
     {
       "vendor": "Kraken.io",
@@ -3478,15 +3549,29 @@
     {
       "vendor": "Segment Startups",
       "change_type": "free_tier_removed",
-      "date": "2026-04-12",
-      "summary": "Twilio explicitly states no startup credits available",
-      "previous_state": "",
-      "current_state": "Twilio explicitly states no startup credits available",
+      "date": "2025-09-04",
+      "summary": "Twilio withdrew the Segment Startup Program (the Team plan free for up to two years, up to $25,000) between 2025-08-08 and 2025-09-04, when its startups page stopped mentioning it.",
+      "previous_state": "\"We have a program available through Segment that gives early-stage startups access to Segment for free for up to two years.\" (Twilio startups page, 2025-08-08)",
+      "current_state": "\"We do not offer additional credits to startups at this time.\" (Twilio startups page, 2025-09-04)",
       "impact": "low",
-      "source_url": "",
+      "source_url": "https://web.archive.org/web/20250904201737/https://www.twilio.com/en-us/solutions/startups",
       "category": "Analytics",
       "alternatives": [],
       "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Segment Startups",
+      "change_type": "record_corrected",
+      "date": "2026-09-26",
+      "summary": "Data correction - the Segment Startup Program was withdrawn between 2025-08-08 and 2025-09-04, not on 2026-04-12.",
+      "previous_state": "Recorded 2026-04-12 as: Twilio explicitly states no startup credits available dated 2026-04-12",
+      "current_state": "\"We do not offer additional credits to startups at this time.\" (Twilio startups page, 2025-09-04)",
+      "impact": "low",
+      "source_url": "https://web.archive.org/web/20250904201737/https://www.twilio.com/en-us/solutions/startups",
+      "category": "Analytics",
+      "alternatives": [],
+      "recorded_date": "2026-09-26",
       "date_source": "hand_written"
     },
     {
@@ -3585,7 +3670,13 @@
       "category": "Cloud IaaS",
       "alternatives": [],
       "recorded_date": "2026-04-13",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: this happened in September 2023, not 2026. Zoho announced on 2023-09-12 that Zoho Billing would replace Zoho Subscriptions. The Subscriptions pricing page offered a free plan on 2023-08-31, and Zoho Billing's offered a 14-day trial by 2023-09-24.",
+        "source_url": "https://www.zoho.com/blog/billing/introducing-endtoend-billing-solution-zoho-billing.html"
+      }
     },
     {
       "vendor": "API-Ninjas",
@@ -3599,20 +3690,40 @@
       "category": "API Development",
       "alternatives": [],
       "recorded_date": "2026-04-13",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: API-Ninjas did not remove its free plan. A capture of its pricing page on 2026-04-09 says \"Yes, you can sign up for a free account to test our APIs.\", and the page lists a Free plan today: \"Evaluation and demo purposes only - no payment information required\", 3,000 API calls a month. Between late 2025 and mid 2026 only the Free card was missing from the plan grid.",
+        "source_url": "https://api-ninjas.com/pricing"
+      }
     },
     {
       "vendor": "HeyForm",
       "change_type": "free_tier_removed",
-      "date": "2026-04-13",
-      "summary": "Permanent free tier removed, only 7-day trial. Basic $15/month",
-      "previous_state": "",
-      "current_state": "Permanent free tier removed, only 7-day trial. Basic $15/month",
+      "date": "2026-03-29",
+      "summary": "HeyForm ended its hosted free plan between 2026-03-01 and 2026-03-29, when its site relaunched. Paid plans start at $15 a month billed annually, with a 7-day trial; self-hosting the open-source version stays free.",
+      "previous_state": "\"HeyForm provides a real free plan without time limit.\" (pricing page, 2026-02-06)",
+      "current_state": "\"Start 7-day free trial\"; \"Self-host for free\" (heyform.net, 2026-03-29)",
       "impact": "low",
-      "source_url": "",
+      "source_url": "https://heyform.net/pricing",
       "category": "Forms",
       "alternatives": [],
       "recorded_date": "2026-04-13",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "HeyForm",
+      "change_type": "record_corrected",
+      "date": "2026-09-26",
+      "summary": "Data correction - HeyForm's hosted free plan ended between 2026-03-01 and 2026-03-29, not on 2026-04-13.",
+      "previous_state": "Recorded 2026-04-13 as: Permanent free tier removed, only 7-day trial. Basic $15/month dated 2026-04-13",
+      "current_state": "\"Start 7-day free trial\"; \"Self-host for free\" (heyform.net, 2026-03-29)",
+      "impact": "low",
+      "source_url": "https://heyform.net/pricing",
+      "category": "Forms",
+      "alternatives": [],
+      "recorded_date": "2026-09-26",
       "date_source": "hand_written"
     },
     {
@@ -3680,7 +3791,13 @@
       "category": "Forms",
       "alternatives": [],
       "recorded_date": "2026-04-13",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: Typeform did not remove its free plan. Its help centre documents it (\"10 responses/month: Collect 10 responses per month across all your forms.\") and its pricing page says \"Still undecided? Try our Free plan\".",
+        "source_url": "https://help.typeform.com/hc/en-us/articles/360032972852-Free-plan"
+      }
     },
     {
       "vendor": "CodeRabbit",
@@ -3694,7 +3811,13 @@
       "category": "Code Quality",
       "alternatives": [],
       "recorded_date": "2026-04-13",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: CodeRabbit did not remove its free plan. Captures of its pricing page on 2026-03-10 and 2026-04-27 list it (\"Get summarization for each Pull request\"), and its docs list it today: \"CodeRabbit offers Free and OSS access plus four paid plans\".",
+        "source_url": "https://docs.coderabbit.ai/management/plans"
+      }
     },
     {
       "vendor": "SwaggerHub",
@@ -3736,7 +3859,13 @@
       "category": "Testing",
       "alternatives": [],
       "recorded_date": "2026-04-13",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: Katalon did not remove the free version of Katalon Studio. Its docs say \"Katalon Studio is a single product available for Free and Paid tiers\", a capture of its download page on 2026-05-09 says Studio \"continues to work for free with core functionality\" after the trial, and its pricing page lists Free today (\"For students and personal projects\").",
+        "source_url": "https://katalon.com/pricing"
+      }
     },
     {
       "vendor": "TestingBot",
@@ -4226,7 +4355,13 @@
       "category": "CDN",
       "alternatives": [],
       "recorded_date": "2026-04-13",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: this happened in 2017, not 2026. A capture of 2017-02-14 offers Toran Proxy \"Free for personal use\"; by 2017-07-02 the page says \"Toran Proxy is being phased out. Try Private Packagist instead!\"",
+        "source_url": "https://web.archive.org/web/20170702111225/http://toranproxy.com/"
+      }
     },
     {
       "vendor": "Shotstack",
