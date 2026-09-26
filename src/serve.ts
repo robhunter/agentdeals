@@ -20137,7 +20137,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("changes")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/changes">Changes</a> &rsaquo; Google Developer Program 2026</div>
   <h1>Google Developer Program Premium — What's Ending &amp; What Replaces It</h1>
-  <p class="pub-date">Published ${pubDate} &middot; Deadline: March 30, 2026 &middot; Affects all GDP Premium subscribers &middot; ${pageDataProvenance("/google-developer-program-2026", offers.length)}</p>
+  <p class="pub-date">Published ${pubDate} &middot; Deadline: March 30, 2026 &middot; ${pageDataProvenance("/google-developer-program-2026", offers.length)}</p>
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number red">Mar 30</div><div class="stat-label">Premium Ends</div></div>
