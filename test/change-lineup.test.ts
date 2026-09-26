@@ -124,9 +124,11 @@ describe("the stored change log, read through the rule", () => {
     }
   });
 
-  it("marks Windsurf's March lineup, which the April one restates", () => {
+  it("leaves Windsurf's March lineup standing once the April record that restated it is retracted", () => {
     const march = find("Windsurf", "2026-03-19");
-    assert.strictEqual(superseded.get(march)?.date, "2026-04-13");
+    const april = stored.find(c => c.vendor === "Windsurf" && c.date === "2026-04-13")!;
+    assert.strictEqual(april.resolution?.state, "retracted");
+    assert.strictEqual(superseded.has(march), false);
   });
 
   it("leaves the retracted Cursor Hobby record out of the lineup population entirely", () => {
@@ -198,7 +200,7 @@ describe("the AI coding pages state one lineup per vendor", () => {
         const summary = row.match(/<td style="font-size:.85rem">([\s\S]*?)<\/td>/)?.[1] ?? "";
         const prices = new Set(summary.replace(/<div[\s\S]*$/, "").match(/\$\d[\d,]*(?:\.\d+)?/g) ?? []);
         if (prices.size < 2) continue;
-        if (row.includes("superseded-note")) continue;
+        if (row.includes("superseded-note") || row.startsWith('<tr class="superseded-row"')) continue;
         unmarked.set(vendor, (unmarked.get(vendor) ?? 0) + 1);
       }
       const competing = [...unmarked].filter(([, n]) => n > 1).map(([vendor, n]) => `${page} ${vendor} ${n}`);
@@ -206,16 +208,22 @@ describe("the AI coding pages state one lineup per vendor", () => {
     }
   });
 
-  it("marks Windsurf's superseded row with the date of the record that replaced it", async () => {
+  it("marks every superseded row it renders with the date of the record that replaced it", async () => {
+    const superseded = supersededLineups(stored);
+    let rendered = 0;
     for (const page of AI_CODING_PAGES) {
-      const body = await get(page);
-      const march = rowsOf(body).find(r => r.includes("Windsurf") && r.includes("Ultimate $40/mo"));
-      assert.ok(march, `${page} renders the March Windsurf record`);
-      assert.ok(
-        march!.includes(`Superseded by our ${changeTimelineDate("2026-04-13")} record`),
-        `${page} names the record that replaced the March one`
-      );
+      const rows = rowsOf(await get(page)).filter(isChangeRow);
+      for (const [older, newest] of superseded) {
+        const row = rows.find(r => r.includes(`>${older.vendor}</td>`) && r.includes(older.summary.slice(0, 40)));
+        if (!row) continue;
+        rendered += 1;
+        assert.ok(
+          row.includes(`Superseded by our ${changeTimelineDate(newest.date)} record`),
+          `${page} does not name the record that replaced ${older.vendor} ${older.date}`
+        );
+      }
     }
+    assert.ok(rendered > 0, "no superseded record renders on the AI coding pages, so the check proves nothing");
   });
 
   it("prices no Cursor plan named Hobby outside the change log recording that we did", async () => {
