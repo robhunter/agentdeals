@@ -117,12 +117,12 @@ open(p, "w").write(s)
 PY
 }
 
-m_a_discovery_batch_is_described_as_changes() {
+m_a_batch_is_counted_as_changes_that_took_effect() {
   py <<'PY'
 p = "src/change-dates.ts"
 s = open(p).read()
-s = s.replace('  const pages = `${count} pricing page${count === 1 ? "" : "s"}`;',
-              '  const pages = `${count} pricing change${count === 1 ? "" : "s"}`;')
+s = s.replace('so none is counted as a change that took effect ${when}.`',
+              'so each is counted as a change that took effect ${when}.`')
 open(p, "w").write(s)
 PY
 }
@@ -131,8 +131,8 @@ m_the_note_names_the_window_once() {
   py <<'PY'
 p = "src/change-dates.ts"
 s = open(p).read()
-s = s.replace('so ${subject} dated by discovery and ${verb} not counted as ${object} effect ${when}.`;',
-              'so ${subject} dated by discovery.`;')
+s = s.replace(', so none is counted as a change that took effect ${when}.`;',
+              '.`;')
 open(p, "w").write(s)
 PY
 }
@@ -141,8 +141,8 @@ m_the_first_read_heading_hides_its_count() {
   py <<'PY'
 p = "src/change-dates.ts"
 s = open(p).read()
-s = s.replace('  return `Pages read for the first time (${count})`;',
-              '  return `Pages read for the first time`;')
+s = s.replace('  return `Effective date unknown (${count})`;',
+              '  return `Effective date unknown`;')
 open(p, "w").write(s)
 PY
 }
@@ -325,9 +325,9 @@ m_the_api_calls_every_record_event_dated() {
   py <<'PY'
 p = "src/serve.ts"
 s = open(p).read()
-s = s.replace('      const { dated, discovered } = partitionByDateProvenance(result.changes);',
-              '      const dated = result.changes;\n'
-              '      const discovered: typeof result.changes = [];')
+s = s.replace('    const { dated, discovered } = partitionByDateProvenance(result.changes);',
+              '    const dated = result.changes;\n'
+              '    const discovered: typeof result.changes = [];')
 open(p, "w").write(s)
 PY
 }
@@ -338,7 +338,7 @@ run_mutation "a window excludes its first day" m_a_window_excludes_its_first_day
 run_mutation "every record in the window is a dated change" m_every_record_in_the_window_is_a_dated_change
 run_mutation "the week starts on the day it is handed" m_the_week_starts_on_the_day_it_is_handed
 run_mutation "Sunday belongs to the week that follows it" m_sunday_belongs_to_the_week_that_follows_it
-run_mutation "a discovery batch is described as changes" m_a_discovery_batch_is_described_as_changes
+run_mutation "a batch is counted as changes that took effect" m_a_batch_is_counted_as_changes_that_took_effect
 run_mutation "the note names the window once" m_the_note_names_the_window_once
 run_mutation "the first-read heading hides its count" m_the_first_read_heading_hides_its_count
 run_mutation "the weekly summary counts the discovery batch" m_the_weekly_summary_counts_the_discovery_batch

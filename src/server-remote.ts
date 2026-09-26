@@ -319,7 +319,7 @@ export function createServer(): McpServer {
         if (!since && !change_type && !vendor && !vendors && !categories && include_expiring === undefined && include_retracted === undefined && include_index_housekeeping === undefined) {
           const data = await fetchWeeklyDigest() as Record<string, unknown>;
           if (response_format === "concise" && Array.isArray(data.deal_changes)) {
-            const conciseDigest = { ...data, deal_changes: (data.deal_changes as Record<string, unknown>[]).map((c) => ({ vendor: c.vendor, change_type: c.change_type, date: c.date, date_source: c.date_source, standing: c.standing ?? "in_force", summary: c.summary })) };
+            const conciseDigest = { ...data, deal_changes: (data.deal_changes as Record<string, unknown>[]).map((c) => ({ vendor: c.vendor, change_type: c.change_type, date: c.date, date_source: c.date_source, date_meaning: c.date_meaning, standing: c.standing ?? "in_force", summary: c.summary })) };
             return mcpText(conciseDigest);
           }
           return mcpText(data);
@@ -341,12 +341,12 @@ export function createServer(): McpServer {
 
         if (response_format === "concise") {
           if (Array.isArray(result.changes)) {
-            result = { ...result, changes: result.changes.map((c: Record<string, unknown>) => ({ vendor: c.vendor, change_type: c.change_type, date: c.date, standing: c.standing ?? "in_force", summary: c.summary })) };
+            result = { ...result, changes: result.changes.map((c: Record<string, unknown>) => ({ vendor: c.vendor, change_type: c.change_type, date: c.date, date_meaning: c.date_meaning, standing: c.standing ?? "in_force", summary: c.summary })) };
           }
           if (Array.isArray(result.advisory)) {
             result = {
               ...result,
-              advisory: result.advisory.map((c: Record<string, unknown>) => ({ vendor: c.vendor, change_type: c.change_type, date: c.date, standing: c.standing ?? "in_force", summary: c.summary })),
+              advisory: result.advisory.map((c: Record<string, unknown>) => ({ vendor: c.vendor, change_type: c.change_type, date: c.date, date_meaning: c.date_meaning, standing: c.standing ?? "in_force", summary: c.summary })),
             };
           }
         }

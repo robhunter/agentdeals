@@ -9,17 +9,18 @@ import { fileURLToPath } from "node:url";
 import { directionRatioLabel, RATIO_ROUNDING_TOLERANCE } from "../dist/change-direction.js";
 import { recordsStillInForce, isNoLongerInForce, resolutionTag } from "../dist/change-resolution.js";
 import { trackedChanges, isIndexHousekeeping } from "../dist/change-census.js";
+import { statesWhenItTookEffect } from "./effective-date-rule.ts";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
 
-const EVENT_DATED = ["vendor_page", "hand_written"];
 const NEGATIVE_TYPES = ["free_tier_removed", "limits_reduced", "restriction", "open_source_killed", "product_deprecated"];
 
 interface StoredChange {
   vendor: string;
   date: string;
   date_source: string;
+  recorded_date?: string;
   change_type: string;
   impact: string;
   summary: string;
@@ -76,7 +77,7 @@ function subjectRecord(changes: StoredChange[]): StoredChange {
   const candidates = changes
     .filter(
       (c) =>
-        EVENT_DATED.includes(c.date_source) &&
+        statesWhenItTookEffect(c) &&
         NEGATIVE_TYPES.includes(c.change_type) &&
         !c.resolution &&
         c.date <= now &&

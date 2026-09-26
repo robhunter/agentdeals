@@ -465,7 +465,8 @@ describe("what a reader and an agent are told about a resolved change", () => {
     const retracted = events.find((e) => e.eventStatus);
     assert.ok(retracted, "the retracted record is published with a status");
     assert.strictEqual(retracted.eventStatus, EVENT_CANCELLED);
-    assert.strictEqual(retracted.startDate, "2026-04-13");
+    assert.match(retracted.description, /Cursor now offers 6 plans/);
+    assert.ok(events.some((e) => e.startDate === "2026-04-07"), "the standing control is not on the page");
     assert.ok(!events.some((e) => e.startDate === "2026-04-07" && e.eventStatus), "a standing record has no status");
   });
 

@@ -15,6 +15,7 @@ import {
 } from "../dist/change-dates.js";
 import { FEED_CORRECTIONS } from "../dist/feed-corrections.js";
 import { recordsStillInForce } from "../dist/change-resolution.js";
+import { statesWhenItTookEffect } from "./effective-date-rule.ts";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -29,12 +30,11 @@ const publishedChanges = JSON.parse(
   resolution?: { state: string; date: string } | null;
 }>;
 
-function eventDated(c: { date_source?: string }): boolean {
-  return c.date_source === "vendor_page" || c.date_source === "hand_written";
-}
+const eventDated = statesWhenItTookEffect;
 
 function dated(dateSource: string, date: string) {
-  return { vendor: "Acme", date, date_source: dateSource, change_type: "limits_reduced" };
+  const recorded_date = dateSource === "hand_written" ? "2026-12-31" : date;
+  return { vendor: "Acme", date, date_source: dateSource, change_type: "limits_reduced", recorded_date };
 }
 
 const WEEKS_OF_ARCHIVE = 120;
@@ -47,7 +47,7 @@ async function mostRecentWeekWithADiscoveryBatch() {
     if (digest.discovered_in_week > 0) return digest;
   }
   throw new Error(
-    `no week in the last ${WEEKS_OF_ARCHIVE} carries a page read for the first time, so the split between the two counts cannot be checked`
+    `no week in the last ${WEEKS_OF_ARCHIVE} carries a change with no known effective date, so the split between the two counts cannot be checked`
   );
 }
 
@@ -149,22 +149,22 @@ describe("one definition of the week a digest is about", () => {
   });
 });
 
-describe("the sentence a discovery batch gets", () => {
-  it("names the window twice and never calls the batch a change", () => {
+describe("the sentence a batch with no known effective date gets", () => {
+  it("names the window twice and never counts the batch as changes that took effect in it", () => {
     const note = discoveryBatchNote(153, "this week");
-    assert.match(note, /^153 pricing pages read for the first time this week\./);
-    assert.match(note, /not counted as changes that took effect this week\.$/);
-    assert.ok(!/153 (pricing )?changes/.test(note), note);
+    assert.match(note, /^153 changes recorded this week have no known effective date\./);
+    assert.match(note, /so none is counted as a change that took effect this week\.$/);
+    assert.ok(!/153 changes (that )?took effect/.test(note), note);
   });
 
-  it("reads as one page when there is one", () => {
+  it("reads as one change when there is one", () => {
     const note = discoveryBatchNote(1, "this week");
-    assert.match(note, /^1 pricing page read for the first time this week\./);
-    assert.match(note, /it is dated by discovery and is not counted as a change that took effect this week\./);
+    assert.match(note, /^1 change recorded this week has no known effective date\./);
+    assert.match(note, /so it is not counted as a change that took effect this week\.$/);
   });
 
   it("counts the batch in its own heading", () => {
-    assert.strictEqual(firstReadHeading(153), "Pages read for the first time (153)");
+    assert.strictEqual(firstReadHeading(153), "Effective date unknown (153)");
   });
 });
 
@@ -201,7 +201,7 @@ describe("a weekly digest counts only changes with an effective date", () => {
 
   it("leaves a record we have withdrawn out of the week its date falls in", () => {
     const week = isoWeekWindow(new Date());
-    const template = publishedChanges.find((c) => !eventDated(c))!;
+    const template = publishedChanges.find((c) => c.date_source === "discovered")!;
     const standingRecord = { ...template, vendor: "Weekly Window Control", date: week.start, resolution: null };
     const withdrawnRecord = {
       ...template,
@@ -281,8 +281,8 @@ describe("a weekly digest counts only changes with an effective date", () => {
       quiet.push(weeksAgo);
       assert.strictEqual(digest.discovery_note, "");
       assert.strictEqual(digest.discovered_changes.length, 0);
-      assert.ok(!digest.digest_markdown.includes("read for the first time"), String(weeksAgo));
-      assert.ok(!digest.digest_html.includes("read for the first time"), String(weeksAgo));
+      assert.ok(!digest.digest_markdown.includes("no known effective date"), String(weeksAgo));
+      assert.ok(!digest.digest_html.includes("no known effective date"), String(weeksAgo));
       assert.strictEqual(Math.min(digest.changes_in_week, 200), digest.top_changes.length);
     }
     assert.ok(quiet.length > 20, `expected most archived weeks to carry no discovery batch, got ${quiet.length}`);
@@ -335,7 +335,7 @@ describe("the digest returns only what the window it names contains", () => {
     assert.ok(digest.summary.startsWith(opening), digest.summary);
     assert.ok(digest.summary.includes("with a known effective date"), digest.summary);
     if (digest.discovered_changes.length > 0) {
-      assert.ok(digest.summary.includes("read for the first time this week"), digest.summary);
+      assert.match(digest.summary, /recorded this week (has|have) no known effective date/);
     }
   });
 });
@@ -398,7 +398,7 @@ describe("every weekly surface reports the same week", () => {
       assert.ok(!page.includes(`across ${combined} developer tool pricing change`), "/this-week");
       assert.ok(page.includes(firstReadHeading(weekly.discovered_in_week)), "/this-week");
     } else {
-      assert.ok(!page.includes("read for the first time"), "/this-week");
+      assert.ok(!page.includes("no known effective date"), "/this-week");
     }
   });
 
@@ -514,7 +514,10 @@ describe("every weekly surface reports the same week", () => {
     assert.ok(expectedDiscovered > 0, "the window should carry a discovery batch to report");
     assert.strictEqual(body.date_provenance.event_dated, expectedDated);
     assert.strictEqual(body.date_provenance.discovered, expectedDiscovered);
-    assert.ok(body.date_provenance.note.startsWith(`${expectedDiscovered} pricing pages read`), body.date_provenance.note);
+    const opening = expectedDiscovered === 1
+      ? "1 change recorded in this window has no known effective date."
+      : `${expectedDiscovered} changes recorded in this window have no known effective date.`;
+    assert.ok(body.date_provenance.note.startsWith(opening), body.date_provenance.note);
   });
 
   it("leaves an archived week with no discovery batch alone", async () => {
@@ -522,6 +525,6 @@ describe("every weekly surface reports the same week", () => {
     const base = `http://127.0.0.1:${serverPort}`;
     const week = await (await fetch(`${base}/digest/2026-w34`)).text();
     assert.ok(week.includes("1 change tracked in week 34, 2026."), "week 34 should count one change");
-    assert.ok(!week.includes("read for the first time"), "week 34 has no discovery batch to report");
+    assert.ok(!week.includes("no known effective date"), "week 34 has no batch without a known effective date to report");
   });
 });
