@@ -1556,6 +1556,30 @@ function removedClaimLabel(cause: { change_type: string }): string {
   return endingShutsTheProductDown(cause) ? "deprecated" : "free tier removed";
 }
 
+interface HeadingBadge {
+  label: string;
+  color: string;
+}
+
+const RETIRED_BADGE_COLOR = "#8b949e";
+
+const RATING_BADGE_COLORS: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
+
+function vendorHeadingBadge(input: VendorVerdictInput): HeadingBadge | null {
+  const endedBy = endingStatedInPlaceOfARating(input);
+  if (endedBy) return { label: removedClaimLabel(endedBy), color: BADGE_COLORS.removed };
+  const badge = vendorBadge(input);
+  if (badge.kind === "ended") return { label: ENDED_BADGE_LABEL, color: RETIRED_BADGE_COLOR };
+  if (badge.kind === "rating") return { label: badge.word, color: RATING_BADGE_COLORS[badge.word] };
+  return null;
+}
+
+function vendorHeadingBadgeForName(name: string, servedOn: string): HeadingBadge | null {
+  const vendorName = vendorSlugMap.get(servedVendorSlugForName(name) ?? "");
+  const context = vendorName ? vendorVerdictContext(vendorName, servedOn) : null;
+  return context ? vendorHeadingBadge(context.input) : null;
+}
+
 function readBadgeStatus(vendorSlug: string, servedOn: string): BadgeReading {
   const vendorName = vendorSlugMap.get(vendorSlug);
   if (!vendorName) return UNKNOWN_BADGE;
@@ -5136,16 +5160,9 @@ function buildVendorPage(slug: string): string | null {
     ? `  <p class="verdict-lapse-line" style="margin:.4rem 0 .6rem;font-size:.85rem;color:var(--text-muted)">${escHtmlServer(lapsingDemotionStated(recordTheVerdictRestsOn))}</p>`
     : "";
 
-  const retiredBadgeColor = "#8b949e";
-  const badge = vendorBadge(verdictInput);
-  const riskBadgeHtml = (label: string, color: string) =>
-    ` <span class="risk-badge" style="background:${color}20;color:${color};border:1px solid ${color}40">${label}</span>`;
-  const h1RiskBadge = endedBy
-    ? riskBadgeHtml(removedClaimLabel(endedBy), BADGE_COLORS.removed)
-    : badge.kind === "ended"
-    ? riskBadgeHtml(ENDED_BADGE_LABEL, retiredBadgeColor)
-    : badge.kind === "rating"
-    ? riskBadgeHtml(badge.word, riskColor)
+  const headingBadge = vendorHeadingBadge(verdictInput);
+  const h1RiskBadge = headingBadge
+    ? ` <span class="risk-badge" style="background:${headingBadge.color}20;color:${headingBadge.color};border:1px solid ${headingBadge.color}40">${headingBadge.label}</span>`
     : "";
   const linkUnreachableLine = linkUnreachable
     ? `  <p class="link-unreachable-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong style="color:#f85149">Link unreachable:</strong> ${escHtmlServer(primary.url)} did not resolve on our check of <span class="link-checked-date" style="font-family:var(--mono)">${escHtmlServer(linkUnreachable.checked)}</span>. ${linkUnreachable.last_reachable ? `Last reachable <span class="link-last-reachable" style="font-family:var(--mono)">${escHtmlServer(linkUnreachable.last_reachable)}</span>.` : "We have no date on which it was reachable."}</p>`
@@ -22823,17 +22840,23 @@ function buildGeminiApiPricing2026Page(): string {
   const spendCapChange = dealChanges.find(c => c.vendor === "Google Gemini API" && c.change_type === "restriction");
 
   const llmProviders = [
-    { name: "Google Gemini API", freeLimit: "10 RPM (Flash), 15 RPM (Flash-Lite)", context: "1M tokens", models: "2.5 Flash, Flash-Lite, 2.5 Pro (free); 3.1 Pro (paid-only)", notes: "Spend caps enforced April 1. 3.1 Pro paid-only. Prepaid billing for new users.", risk: "high" },
-    { name: "Anthropic Claude API", freeLimit: "Pay-as-you-go only", context: "1M tokens", models: "Fable 5.1, Opus 5, Sonnet 5, Haiku 4.5", notes: "No free tier — $10/$50 per MTok (Fable 5.1), $5/$25 (Opus 5). Batch API at 50% off.", risk: "none" },
-    { name: "OpenAI API", freeLimit: "GPT-3.5 only, 3 RPM", context: "128K tokens", models: "GPT-3.5 Turbo (free), GPT-4o (paid)", notes: "Free trial credits discontinued mid-2025. Very limited free access.", risk: "medium" },
-    { name: "Groq", freeLimit: "30 RPM; 1K requests and 200K tokens/day per model", context: "128K tokens", models: "gpt-oss-120b, gpt-oss-20b, Qwen3.8 27B, Whisper", notes: "Ultra-fast LPU inference. Most generous free RPM. No credit card needed.", risk: "low" },
-    { name: "Mistral AI", freeLimit: "$10/month in API credits", context: "128K tokens", models: "Large, Codestral, Pixtral", notes: "Free plan includes monthly API credits.", risk: "low" },
-    { name: "OpenRouter", freeLimit: "~20 RPM per model, ~30 free models", context: "Varies by model", models: "DeepSeek R1, Llama 3.3, Qwen3, Gemma 3", notes: "One API key for many models. Best model variety on free tier.", risk: "low" },
-    { name: "Cerebras", freeLimit: "10-30 RPM, 1M tokens/day", context: "128K tokens", models: "Llama 3.1 8B, Qwen 3 235B, GPT-OSS 120B", notes: "Fastest inference speeds. 1M tokens/day is very generous.", risk: "low" },
-    { name: "DeepSeek", freeLimit: "Pay-as-you-go, very low pricing", context: "1M tokens", models: "deepseek-flash (V4.1-Flash), deepseek-v4-pro", notes: "$0.30/$1.20 per MTok for deepseek-flash at peak hours, half off-peak.", risk: "low" },
+    { name: "Google Gemini API", freeLimit: "10 RPM (Flash), 15 RPM (Flash-Lite)", context: "1M tokens", models: "2.5 Flash, Flash-Lite, 2.5 Pro (free); 3.1 Pro (paid-only)", notes: "Spend caps enforced April 1. 3.1 Pro paid-only. Prepaid billing for new users." },
+    { name: "Anthropic Claude API", freeLimit: "Pay-as-you-go only", context: "1M tokens", models: "Fable 5.1, Opus 5, Sonnet 5, Haiku 4.5", notes: "No free tier — $10/$50 per MTok (Fable 5.1), $5/$25 (Opus 5). Batch API at 50% off." },
+    { name: "OpenAI API", freeLimit: "GPT-3.5 only, 3 RPM", context: "128K tokens", models: "GPT-3.5 Turbo (free), GPT-4o (paid)", notes: "Free trial credits discontinued mid-2025. Very limited free access." },
+    { name: "Groq", freeLimit: "30 RPM; 1K requests and 200K tokens/day per model", context: "128K tokens", models: "gpt-oss-120b, gpt-oss-20b, Qwen3.8 27B, Whisper", notes: "Ultra-fast LPU inference. Most generous free RPM. No credit card needed." },
+    { name: "Mistral AI", freeLimit: "$10/month in API credits", context: "128K tokens", models: "Large, Codestral, Pixtral", notes: "Free plan includes monthly API credits." },
+    { name: "OpenRouter", freeLimit: "~20 RPM per model, ~30 free models", context: "Varies by model", models: "DeepSeek R1, Llama 3.3, Qwen3, Gemma 3", notes: "One API key for many models. Best model variety on free tier." },
+    { name: "Cerebras", freeLimit: "10-30 RPM, 1M tokens/day", context: "128K tokens", models: "Llama 3.1 8B, Qwen 3 235B, GPT-OSS 120B", notes: "Fastest inference speeds. 1M tokens/day is very generous." },
+    { name: "DeepSeek", freeLimit: "Pay-as-you-go, very low pricing", context: "1M tokens", models: "deepseek-flash (V4.1-Flash), deepseek-v4-pro", notes: "$0.30/$1.20 per MTok for deepseek-flash at peak hours, half off-peak." },
   ];
 
-  const riskColors: Record<string, string> = { low: "#3fb950", medium: "#d29922", high: "#f85149", none: "#64748b" };
+  const servedOn = new Date().toISOString().slice(0, 10);
+  const servedRatingHtml = (name: string) => {
+    const heading = vendorHeadingBadgeForName(name, servedOn);
+    return heading
+      ? `<span style="display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;background:${heading.color}22;color:${heading.color};font-weight:600">${escHtmlServer(heading.label)}</span>`
+      : "&mdash;";
+  };
 
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["free-llm-apis", "ai-ml-alternatives", "free-ai-stack", "free-tier-risk", "google-developer-program-2026", "q2-pricing-preview-2026"].includes(p.slug)
@@ -23073,7 +23096,7 @@ ${mcpCtaCss()}
         <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(p.freeLimit)}</td>
         <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(p.context)}</td>
         <td style="font-size:.8rem;color:var(--text-muted)">${escHtmlServer(p.models)}</td>
-        <td><span style="display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;background:${riskColors[p.risk]}22;color:${riskColors[p.risk]};font-weight:600">${p.risk}</span></td>
+        <td>${servedRatingHtml(p.name)}</td>
       </tr>`).join("\n      ")}
     </tbody>
   </table>
