@@ -22800,7 +22800,7 @@ function buildGeminiApiPricing2026Page(): string {
     { name: "Mistral AI", freeLimit: "2 RPM, 1B tokens/month", context: "128K tokens", models: "Large, Codestral, Pixtral", notes: "Highest free token volume among proprietary providers.", risk: "low" },
     { name: "OpenRouter", freeLimit: "~20 RPM per model, ~30 free models", context: "Varies by model", models: "DeepSeek R1, Llama 3.3, Qwen3, Gemma 3", notes: "One API key for many models. Best model variety on free tier.", risk: "low" },
     { name: "Cerebras", freeLimit: "10-30 RPM, 1M tokens/day", context: "128K tokens", models: "Llama 3.1 8B, Qwen 3 235B, GPT-OSS 120B", notes: "Fastest inference speeds. 1M tokens/day is very generous.", risk: "low" },
-    { name: "DeepSeek", freeLimit: "Pay-as-you-go, very low pricing", context: "128K tokens", models: "DeepSeek-V3, DeepSeek-R1", notes: "$0.27/$1.10 per MTok. Cheapest frontier-class API.", risk: "low" },
+    { name: "DeepSeek", freeLimit: "Pay-as-you-go, very low pricing", context: "1M tokens", models: "deepseek-flash (V4.1-Flash), deepseek-v4-pro", notes: "$0.30/$1.20 per MTok for deepseek-flash at peak hours, half off-peak.", risk: "low" },
   ];
 
   const riskColors: Record<string, string> = { low: "#3fb950", medium: "#d29922", high: "#f85149", none: "#64748b" };
@@ -23155,7 +23155,7 @@ function buildGeminiApiPricingChangesPage(): string {
     { name: "NVIDIA NIM", slug: "nvidia-nim", freeRequests: "~50 RPM", freeTokens: "1,000 free credits", models: "Llama 4, Mistral, Gemma", context: "128K", bestFor: "GPU-optimized inference", monthlyCostAt1K: "$10-25" },
     { name: "Anthropic Claude API", slug: "anthropic-api", freeRequests: "Pay-as-you-go only", freeTokens: "No free tier", models: "Fable 5.1, Opus 5, Sonnet 5, Haiku 4.5", context: "1M", bestFor: "Complex reasoning, coding", monthlyCostAt1K: "$15-75" },
     { name: "OpenAI API", slug: "openai", freeRequests: "GPT-3.5: 3 RPM", freeTokens: "Very limited", models: "GPT-4o, o3, GPT-3.5 Turbo", context: "128K", bestFor: "Broad ecosystem, plugins", monthlyCostAt1K: "$10-50" },
-    { name: "DeepSeek", slug: "deepseek", freeRequests: "Pay-as-you-go", freeTokens: "No free tier", models: "DeepSeek-V3, DeepSeek-R1", context: "128K", bestFor: "Cheapest frontier-class API", monthlyCostAt1K: "$1-5" },
+    { name: "DeepSeek", slug: "deepseek", freeRequests: "Pay-as-you-go", freeTokens: "No free tier", models: "deepseek-flash (V4.1-Flash), deepseek-v4-pro", context: "1M tokens", bestFor: "Long context at low per-token prices", monthlyCostAt1K: "$1-5" },
     { name: "Google Gemini API", slug: "google-gemini-api", freeRequests: "5 RPM, ~100 RPD", freeTokens: "Flash, Flash-Lite, 2.5 Pro", models: "2.5 Flash, Flash-Lite, 2.5 Pro", context: "1M", bestFor: "Long context (1M tokens)", monthlyCostAt1K: "$10-30" },
   ];
 
@@ -23189,10 +23189,10 @@ function buildGeminiApiPricingChangesPage(): string {
   const faqItems = [
     { q: "What changed with Gemini API pricing in April 2026?", a: "Google enforced mandatory spending caps ($250-$100K+/mo by tier), cut free tier rate limits 50-80% (down to 5 RPM/100 req/day for free users), and introduced prepaid billing for new accounts. Gemini 3.1 Pro launched paid-only. Gemini 2.5 Pro is still on the free tier, alongside Flash and Flash-Lite." },
     { q: "Can I still use Gemini API for free?", a: "Yes — Flash, Flash-Lite and Gemini 2.5 Pro, at heavily reduced limits: 5 RPM, approximately 100 requests/day. Gemini 3.1 Pro requires a paid plan. The 1M token context window remains available on the free models." },
-    { q: "What are the best free alternatives to Gemini API?", a: "Groq (30 RPM free, ultra-fast), Cerebras (1M tokens/day free), Mistral AI (1B tokens/month free), and OpenRouter (~30 free models) all offer more generous free tiers than post-cut Gemini. For the cheapest paid option, DeepSeek offers frontier-class models at $0.27-$1.10 per million tokens." },
+    { q: "What are the best free alternatives to Gemini API?", a: "Groq (30 RPM free, ultra-fast), Cerebras (1M tokens/day free), Mistral AI (1B tokens/month free), and OpenRouter (~30 free models) all offer more generous free tiers than post-cut Gemini. Among paid options, DeepSeek's deepseek-flash is $0.30 per million input tokens and $1.20 per million output tokens at peak hours, half that off-peak." },
     { q: "How much does Gemini API cost now for 1,000 requests per day?", a: "A developer making 1,000 requests/day now needs a paid plan (approximately $15-30/month). Previously, this usage level was fully covered by the free tier. Alternatives like Groq, Cerebras, and Mistral handle this volume for free." },
     { q: "What is Gemini API spend cap and how does it work?", a: "Spend caps are billing-account-level monthly limits that automatically pause all API requests when reached. Tier 1 caps at $250/mo, Tier 2 at $2,000/mo, Tier 3 at $20K-$100K+. Unlike rate limits, spend caps fully stop API access until the next billing month." },
-    { q: "Should I migrate away from Gemini API?", a: "It depends on your use case. If you need the 1M token context window, Gemini Flash still offers one free. For general chat/code tasks at higher volumes, Groq and Cerebras offer better free tiers. For production workloads, evaluate DeepSeek (cheapest) or Anthropic/OpenAI (most established)." },
+    { q: "Should I migrate away from Gemini API?", a: "It depends on your use case. If you need the 1M token context window, Gemini Flash still offers one free. For general chat/code tasks at higher volumes, Groq and Cerebras offer better free tiers. For production workloads, evaluate DeepSeek (low per-token prices) or Anthropic/OpenAI (most established)." },
   ];
 
   const faqJsonLd = faqPageJsonLd("/gemini-api-pricing-changes", faqItems);
@@ -23383,7 +23383,7 @@ function buildGeminiApiPricingChangesPage(): string {
     + '  </div>\n'
     + '\n'
     + '  <div class="context-box">\n'
-    + '    <strong>Key insight:</strong> For light usage (100 req/day), Gemini is still free, on Flash, Flash-Lite and 2.5 Pro. For moderate usage (1,000 req/day), <strong>Groq, Cerebras, and Mistral all handle this volume for free</strong> &mdash; compared to $15-30/mo on Gemini. For heavy usage (10,000 req/day), DeepSeek is the cheapest paid option at ~$25/mo. The cost gap is stark: what was $0 on Gemini\'s old free tier now costs $15-300/mo depending on volume.\n'
+    + '    <strong>Key insight:</strong> For light usage (100 req/day), Gemini is still free, on Flash, Flash-Lite and 2.5 Pro. For moderate usage (1,000 req/day), <strong>Groq, Cerebras, and Mistral all handle this volume for free</strong> &mdash; compared to $15-30/mo on Gemini. The cost gap is stark: what was $0 on Gemini\'s old free tier now costs $15-300/mo depending on volume.\n'
     + '  </div>\n'
     + '\n'
     + '  <h2 id="alternatives">4. Alternative Free LLM APIs</h2>\n'
@@ -23419,7 +23419,7 @@ function buildGeminiApiPricingChangesPage(): string {
     + '      <li><strong><a href="/vendor/cerebras">Cerebras</a></strong> &mdash; 1M tokens/day free. Best for high-volume prototyping where token count matters more than RPM.</li>\n'
     + '      <li><strong><a href="/vendor/mistral-ai">Mistral AI</a></strong> &mdash; 1B tokens/month free. Best for code generation (Codestral) and multilingual tasks.</li>\n'
     + '      <li><strong><a href="/vendor/openrouter">OpenRouter</a></strong> &mdash; ~30 free models through one API. Best for flexibility and model experimentation.</li>\n'
-    + '      <li><strong><a href="/vendor/deepseek">DeepSeek</a></strong> &mdash; $0.27/$1.10 per MTok. Cheapest frontier-class paid API if you outgrow free tiers.</li>\n'
+    + '      <li><strong><a href="/vendor/deepseek">DeepSeek</a></strong> &mdash; $0.30/$1.20 per MTok for deepseek-flash at peak hours, half off-peak.</li>\n'
     + '    </ul>\n'
     + '  </div>\n'
     + '\n'
@@ -23432,7 +23432,7 @@ function buildGeminiApiPricingChangesPage(): string {
     + '  </div>\n'
     + '  <div class="impact-card" style="border-left-color:#8b5cf6">\n'
     + '    <h3 style="color:#8b5cf6">Code Generation</h3>\n'
-    + '    <p class="impact-desc"><strong>Switch to: <a href="/vendor/mistral-ai">Mistral AI</a> (Codestral)</strong> &mdash; purpose-built code model with 1B free tokens/month. For heavier usage or better code quality, <a href="/vendor/deepseek">DeepSeek-V3</a> at $0.27/MTok input is the cheapest high-quality option. <a href="/vendor/anthropic-api">Claude Sonnet 5</a> at $2/$10 per MTok offers the best code quality but requires payment.</p>\n'
+    + '    <p class="impact-desc"><strong>Switch to: <a href="/vendor/mistral-ai">Mistral AI</a> (Codestral)</strong> &mdash; purpose-built code model with 1B free tokens/month. <a href="/vendor/anthropic-api">Claude Sonnet 5</a> at $2/$10 per MTok offers the best code quality but requires payment.</p>\n'
     + '  </div>\n'
     + '  <div class="impact-card" style="border-left-color:#8b5cf6">\n'
     + '    <h3 style="color:#8b5cf6">Document Processing &amp; Long Context</h3>\n'
@@ -24480,7 +24480,7 @@ function buildOpenaiAssistantsAlternativesPage(): string {
     { name: "Fireworks AI", slug: "fireworks-ai", toolUse: "Native (function calling)", codeExec: "No built-in", fileHandling: "No built-in", bestFor: "Fast open-source model hosting" },
     { name: "Together AI", slug: "together-ai", toolUse: "Native (function calling)", codeExec: "No built-in", fileHandling: "No built-in", bestFor: "Open-source fine-tuning + inference" },
     { name: "Mistral AI", slug: "mistral-ai", toolUse: "Native (function calling)", codeExec: "No built-in", fileHandling: "Document understanding", bestFor: "European hosting, code generation" },
-    { name: "DeepSeek API", slug: "deepseek-api", toolUse: "Native (function calling)", codeExec: "No built-in", fileHandling: "No built-in", bestFor: "Cheapest frontier-class reasoning" },
+    { name: "DeepSeek API", slug: "deepseek-api", toolUse: "Native (function calling)", codeExec: "No built-in", fileHandling: "No built-in", bestFor: "Reasoning" },
     { name: "Cerebras", slug: "cerebras", toolUse: "Via Llama models", codeExec: "No built-in", fileHandling: "No built-in", bestFor: "Ultra-fast inference (custom silicon)" },
   ];
 
@@ -24921,7 +24921,7 @@ function buildOpenaiAssistantsMigration2026Page(): string {
     { name: "OpenAI (Responses API)", slug: "openai", toolUse: "Native function calling + MCP", codeExec: "Code interpreter tool", bestFor: "Direct migration, least code changes" },
     { name: "Anthropic Claude", slug: "anthropic-api", toolUse: "Native tool use", codeExec: "Computer use, code execution", bestFor: "Best reasoning, long context" },
     { name: "Google Gemini", slug: "google-gemini-api", toolUse: "Native function calling", codeExec: "Code execution tool", bestFor: "Free tier, multimodal" },
-    { name: "DeepSeek", slug: "deepseek-api", toolUse: "Native function calling", codeExec: "No built-in", bestFor: "Cheapest frontier reasoning" },
+    { name: "DeepSeek", slug: "deepseek-api", toolUse: "Native function calling", codeExec: "No built-in", bestFor: "Reasoning" },
     { name: "Mistral AI", slug: "mistral-ai", toolUse: "Native function calling", codeExec: "No built-in", bestFor: "European hosting, code generation" },
     { name: "Meta Llama (via Groq)", slug: "groq", toolUse: "Via Llama models", codeExec: "No built-in", bestFor: "Fastest inference, open-source" },
   ];
@@ -25285,7 +25285,7 @@ ${mcpCtaCss()}
     </div>
     <div class="decision-path" style="border-left:3px solid #8b5cf6">
       <h3>\ud83d\udd00 Path 2: Switch to Another AI API Provider</h3>
-      <p>Claude (best reasoning, long context), Gemini (free tier, multimodal), DeepSeek (cheapest frontier reasoning), Mistral (European hosting). Each has native tool use/function calling. Requires API integration changes but not architectural rewrites.</p>
+      <p>Claude (best reasoning, long context), Gemini (free tier, multimodal), DeepSeek (1M context, thinking mode by default), Mistral (European hosting). Each has native tool use/function calling. Requires API integration changes but not architectural rewrites.</p>
       <p><strong>Choose this when:</strong> You want to reduce single-vendor dependency, need specific capabilities (long context, multimodal, EU hosting), or were already considering alternatives after repeated OpenAI API changes.</p>
       <p><strong>Watch out for:</strong> Different API shapes require code changes. Some features (code interpreter, web search) may not have direct equivalents. Evaluate each provider\u2019s tool use implementation carefully.</p>
       <p class="best-for">Effort: Medium &middot; Cost: Varies (often cheaper) &middot; Lock-in: Medium</p>
@@ -32574,15 +32574,15 @@ function buildLlmApiPricingPage(): string {
       name: "DeepSeek",
       slug: "deepseek-api",
       category: "specialized",
-      freeTier: "5M tokens free",
-      flagshipModel: "DeepSeek V4",
+      freeTier: "No free tier",
+      flagshipModel: "DeepSeek-V4.1-Flash",
       inputPrice: "$0.30/M",
-      outputPrice: "$0.50/M",
+      outputPrice: "$1.20/M",
       contextWindow: "1M",
       rateLimit: "Standard",
-      freeDetails: "5M free tokens for new accounts (30-day validity). DeepSeek V4: $0.30/M input, $0.50/M output (1M context). R1 reasoning: $0.55/M input, $2.19/M output. Cache hits 90% cheaper. Off-peak discounts up to 75% off. China-based.",
-      freeType: "credits",
-      differentiator: "Cheapest 1M-context model; cache-hit discounts (90% off); R1 reasoning model competitive with frontier",
+      freeDetails: "No free tokens. deepseek-flash (DeepSeek-V4.1-Flash): $0.30/M input, $0.006/M cached input, $1.20/M output. deepseek-v4-pro: $1.32/M input, $0.044/M cached, $3.96/M output. Peak-hour prices; off-peak is half. 1M context on both. China-based.",
+      freeType: "pay-as-you-go",
+      differentiator: "1M context on both models; cached input 97-98% cheaper than uncached; off-peak prices half the peak rate",
     },
     {
       name: "GitHub Models",
@@ -32747,7 +32747,7 @@ function buildLlmApiPricingPage(): string {
     { q: "Which LLM API has the best free tier in 2026?", a: "Groq's free tier is 30 RPM with 100K-500K tokens/day, no credit card required, with fast LPU-accelerated inference. " + freeTiersThisPageStandsBehind + " For frontier models specifically, Mistral's Experiment tier gives 1B tokens/month at 2 RPM." },
     { q: "How much does GPT-4o cost per token?", a: "GPT-4o costs $2.50 per million input tokens and $10 per million output tokens. For reference, 1 million tokens is roughly 750,000 words. The batch API offers 50% discount ($1.25/$5 per M tokens). GPT-4o-mini is significantly cheaper at $0.15/$0.60 per M tokens." },
     { q: "How much does Claude cost per token?", a: "Claude Fable 5.1 costs $10/M input and $50/M output tokens. Opus 5 is $5/$25 per M tokens, Sonnet 5 is $2/$10, and Haiku 4.5 is the budget option at $1/$5. The Batch API offers 50% discount on all models." },
-    { q: "What is the cheapest LLM API for production use?", a: "For frontier-quality models: xAI Grok 4.1 Fast at $0.20/M input, $0.50/M output. For open-source models: DeepSeek V4 at $0.30/M input, $0.50/M output with cache-hit discounts up to 90%. Groq and Cerebras offer free tiers that can handle moderate production traffic. Google Gemini Flash models are free with rate limits." },
+    { q: "What is the cheapest LLM API for production use?", a: "For frontier-quality models: xAI Grok 4.1 Fast at $0.20/M input, $0.50/M output. DeepSeek's deepseek-flash is $0.30/M input and $1.20/M output at peak hours, half that off-peak, with cached input at $0.006/M. Groq and Cerebras offer free tiers that can handle moderate production traffic. Google Gemini Flash models are free with rate limits." },
     { q: "Should I use a frontier lab API or an inference provider?", a: "Use frontier lab APIs (OpenAI, Anthropic, Google) when you need their proprietary models (GPT-4o, Claude, Gemini Pro) or specific features (function calling, vision, extended thinking). Use inference providers (Groq, Cerebras, OpenRouter) when running open-source models — they're 5-10x cheaper and often faster. Many apps work well with Llama 3.3 70B or DeepSeek R1 at a fraction of frontier pricing." },
   ];
 
@@ -32873,14 +32873,14 @@ function buildLlmApiPricingPage(): string {
     '  </div>\n' +
     '\n' +
     '  <div class="executive-summary">\n' +
-    '    <p><strong>LLM API pricing, frontier rows read ' + escHtmlServer(frontierReadOn ?? "on no recorded date") + ':</strong> ' + providers.length + ' providers across four categories — frontier labs, inference providers, open-source hosts, and specialized services. OpenAI and Anthropic price their top model identically: GPT-6 Astra and Claude Fable 5.1 are both $10/$50 per M tokens. Gemini 3.8 Flash is $0.75/$3.75 through December 31, 2026 and $1.50/$7.50 after it. Mistral Medium 3.5 is $1.50/$7.50. Google\'s Gemini free tier keeps Flash, Flash-Lite and 2.5 Pro, with 3.1 Pro paid-only. DeepSeek V4 delivers 1M context at $0.30/M input — the cheapest long-context option. Groq and Cerebras offer genuinely free inference at thousands of tokens/second.</p>\n' +
+    '    <p><strong>LLM API pricing, frontier rows read ' + escHtmlServer(frontierReadOn ?? "on no recorded date") + ':</strong> ' + providers.length + ' providers across four categories — frontier labs, inference providers, open-source hosts, and specialized services. OpenAI and Anthropic price their top model identically: GPT-6 Astra and Claude Fable 5.1 are both $10/$50 per M tokens. Gemini 3.8 Flash is $0.75/$3.75 through December 31, 2026 and $1.50/$7.50 after it. Mistral Medium 3.5 is $1.50/$7.50. Google\'s Gemini free tier keeps Flash, Flash-Lite and 2.5 Pro, with 3.1 Pro paid-only. DeepSeek\'s deepseek-flash offers 1M context at $0.30/M input at peak and $0.15/M off-peak. Groq and Cerebras offer genuinely free inference at thousands of tokens/second.</p>\n' +
     '    <p><strong>Key trends:</strong> Inference providers (Groq, Cerebras, OpenRouter) are commoditizing open-source model access — free tiers with no credit card required. xAI Grok 4.1 is the cheapest frontier model at $0.20/M input. The gap between frontier and open-source quality is narrowing, making the price delta harder to justify for many use cases.</p>\n' +
     '    <p><strong>This guide covers:</strong> pricing tables, provider breakdowns, free tier analysis, cheapest-per-token rankings, pricing gotchas, recent changes, and best-for-use-case recommendations — compiled by hand from vendor pricing pages.</p>\n' +
     '  </div>\n' +
     '\n' +
     '  <div class="highlight-box">\n' +
     '    <h3>Cheapest per Million Tokens</h3>\n' +
-    '    <p><strong>Frontier:</strong> xAI Grok 4.1 Fast ($0.20/M input, $0.50/M output) &middot; <strong>Open-source:</strong> Groq Llama 4 Scout ($0.11/M input) &middot; <strong>Long context (1M):</strong> DeepSeek V4 ($0.30/M input) &middot; <strong>Reasoning:</strong> DeepSeek R1 ($0.55/M input) vs Claude Opus 5 ($5/M) vs OpenAI o3 ($2/M)</p>\n' +
+    '    <p><strong>Frontier:</strong> xAI Grok 4.1 Fast ($0.20/M input, $0.50/M output) &middot; <strong>Open-source:</strong> Groq Llama 4 Scout ($0.11/M input) &middot; <strong>Long context (1M):</strong> deepseek-flash ($0.30/$1.20/M at peak) &middot; <strong>Reasoning:</strong> DeepSeek V4-Pro ($1.32/M input at peak) vs Claude Opus 5 ($5/M) vs OpenAI o3 ($2/M)</p>\n' +
     '  </div>\n' +
     '\n' +
     '  <div class="highlight-box">\n' +
@@ -32923,7 +32923,7 @@ function buildLlmApiPricingPage(): string {
     '  </div>\n' +
     '\n' +
     '  <div class="context-box">\n' +
-    '    <strong>The price floor:</strong> xAI Grok 4.1 Fast at $0.20/M input is the cheapest frontier model. For open-source, Groq and SiliconFlow serve Llama and DeepSeek models at $0.10–0.15/M. DeepSeek V4 offers 1M context at $0.30/M input — 4x cheaper than Gemini 2.5 Pro for long-context work. The batch APIs from OpenAI and Anthropic offer 50% discounts for non-real-time workloads.\n' +
+    '    <strong>The price floor:</strong> xAI Grok 4.1 Fast at $0.20/M input is the cheapest frontier model. For open-source, Groq and SiliconFlow serve Llama and DeepSeek models at $0.10–0.15/M. DeepSeek\'s deepseek-flash offers 1M context at $0.30/M input at peak and $0.15/M off-peak. The batch APIs from OpenAI and Anthropic offer 50% discounts for non-real-time workloads.\n' +
     '  </div>\n' +
     '\n' +
     '  <h2 id="categories">Provider Breakdown</h2>\n' +
@@ -33031,17 +33031,17 @@ function buildLlmApiPricingPage(): string {
     '\n' +
     '    <div class="verdict-item">\n' +
     '      <strong>Best for complex reasoning</strong>\n' +
-    '      <p><a href="/vendor/anthropic-api">Claude Opus 5</a> ($5/$25/M), or <a href="/vendor/anthropic-api">Claude Fable 5.1</a> ($10/$50/M) for long-horizon agentic work. <a href="/vendor/deepseek-api">DeepSeek R1</a> ($0.55/$2.19/M) for budget reasoning. OpenAI GPT-6 Astra ($10/$50/M) for the hardest end-to-end work.</p>\n' +
+    '      <p><a href="/vendor/anthropic-api">Claude Opus 5</a> ($5/$25/M), or <a href="/vendor/anthropic-api">Claude Fable 5.1</a> ($10/$50/M) for long-horizon agentic work. <a href="/vendor/deepseek-api">DeepSeek V4-Pro</a> ($1.32/$3.96/M at peak, half off-peak), thinking mode on by default. OpenAI GPT-6 Astra ($10/$50/M) for the hardest end-to-end work.</p>\n' +
     '    </div>\n' +
     '\n' +
     '    <div class="verdict-item">\n' +
     '      <strong>Best for high-volume / cost-sensitive</strong>\n' +
-    '      <p><a href="/vendor/xai">xAI Grok 4.1 Fast</a> ($0.20/$0.50/M) — cheapest frontier model. <a href="/vendor/deepseek-api">DeepSeek V4</a> ($0.30/$0.50/M) with 90% cache-hit discounts. OpenAI/Anthropic batch APIs at 50% off for async workloads.</p>\n' +
+    '      <p><a href="/vendor/xai">xAI Grok 4.1 Fast</a> ($0.20/$0.50/M) — cheapest frontier model. <a href="/vendor/deepseek-api">deepseek-flash</a> ($0.30/$1.20/M at peak) with 97-98% cache-hit discounts. OpenAI/Anthropic batch APIs at 50% off for async workloads.</p>\n' +
     '    </div>\n' +
     '\n' +
     '    <div class="verdict-item">\n' +
     '      <strong>Best for long-context (100K+ tokens)</strong>\n' +
-    '      <p><a href="/vendor/deepseek-api">DeepSeek V4</a> (1M context, $0.30/M) or <a href="/vendor/google-gemini-api">Google Gemini 2.5 Pro</a> (1M context, $1.25/M). <a href="/vendor/anthropic-api">Claude</a> (200K) for highest quality within context window.</p>\n' +
+    '      <p><a href="/vendor/deepseek-api">deepseek-flash</a> (1M context, $0.30/$1.20/M at peak) or <a href="/vendor/google-gemini-api">Google Gemini 2.5 Pro</a> (1M context, $1.25/M). <a href="/vendor/anthropic-api">Claude</a> (200K) for highest quality within context window.</p>\n' +
     '    </div>\n' +
     '\n' +
     '    <div class="verdict-item">\n' +
