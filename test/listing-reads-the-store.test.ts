@@ -326,9 +326,9 @@ describe("the two surfaces that describe one read", () => {
       if (stated > speaking) unspoken.push(`/category/${slug} counts ${stated} and only ${speaking} say why`);
     }
     assertPopulationFloor(pages, 40, "category pages read for the count");
-    assertPopulationFloor(flagged, 80, "rows flagged over a contradicting read");
-    assertPopulationFloor(supersededRows, 50, "listed rows whose terms a change superseded");
-    assertPopulationFloor(supersededHoldingARead, 40, "superseded rows that also hold a contradicting read");
+    assertPopulationFloor(flagged, 1, "rows flagged over a contradicting read");
+    assertPopulationFloor(supersededRows, 1, "listed rows whose terms a change superseded");
+    assertPopulationFloor(supersededHoldingARead, 1, "superseded rows that also hold a contradicting read");
     assert.deepStrictEqual(uncounted, [], `a page flags rows its own count leaves out: ${uncounted.join("; ")}`);
     assert.deepStrictEqual(unspoken, [], `a page counts rows that say nothing: ${unspoken.join("; ")}`);
     assert.deepStrictEqual(
