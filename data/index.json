@@ -25891,7 +25891,7 @@
     {
       "vendor": "Foursquare",
       "category": "Maps/Geolocation",
-      "description": "Location discovery, venue search, and context-aware content — Places API Pro endpoints: Enjoy up to 10,000 free calls. 0 – 500 Calls $0.00 CPM, 501 to 100,000 Calls $15.00 CPM, 100,001 to 500,000 Calls $12.00 CPM, 500,001+ Calls $9.00 CPM",
+      "description": "Location discovery, venue search, and context-aware content — Places API Pro endpoints: 0-500 Calls $0.00 CPM, 501 to 100,000 Calls $15.00 CPM, 100,001 to 500,000 Calls $12.00 CPM, 500,001+ Calls $9.00 CPM. Places API Premium endpoints: 0-100,000 Calls $18.75 CPM, 100,001 to 500,000 Calls $15.00 CPM, 500,001+ Calls $11.25 CPM.",
       "tier": "Free",
       "url": "https://foursquare.com/pricing/",
       "tags": [
@@ -25906,11 +25906,15 @@
         "detail": "the page names Foursquare as \"foursquare\" and states \"$0\" and \"$0.00\" and \"$15.00\" and \"$12.00\""
       },
       "restated_from": {
-        "reading_date": "2026-09-24",
+        "reading_date": "2026-09-07",
         "source_url": "https://foursquare.com/pricing/",
+        "record_date": "2026-09-07",
+        "change_type": "pricing_restructured",
+        "restated_on": "2026-09-20"
+      },
+      "restatement_reverted": {
         "record_date": "2026-09-24",
-        "change_type": "new_free_tier",
-        "restated_on": "2026-09-24"
+        "reverted_on": "2026-09-26"
       }
     },
     {
