@@ -176,9 +176,11 @@ describe("the change feeds date every entry by when we recorded it and say what 
   });
 
   function recordFor(entry: Entry): Record<string, any> | undefined {
-    const vendor = entry.title.slice(0, entry.title.lastIndexOf(": "));
+    const split = entry.title.lastIndexOf(": ");
+    const vendor = entry.title.slice(0, split);
+    const kind = entry.title.slice(split + 2);
     return apiChanges.changes.find(
-      (c: any) => c.vendor === vendor && c.date === entry.anchorDate
+      (c: any) => c.vendor === vendor && c.date === entry.anchorDate && changeTypeFeedLabel(c.change_type) === kind
     );
   }
 
