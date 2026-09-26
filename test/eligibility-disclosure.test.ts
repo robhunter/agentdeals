@@ -1,12 +1,13 @@
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
 import { spawn, type ChildProcess } from "node:child_process";
-import { readFileSync } from "node:fs";
+import { mkdtempSync, readFileSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { fetchBadgeVerdicts, type SiteFreeTierVerdict } from "./badge-verdicts.ts";
-import { assertAheadOfTheVendorList } from "./snippet-order.ts";
+import { assertAheadOfTheVendorList, vendorsNamedAsUncontradicted } from "./snippet-order.ts";
 
 const { eligibilityGate, eligibilityGateAsPublished, publishableEligibilityConditions, CONDITION_RECORDING_AN_UNREAD_PROGRAM } =
   await import("../dist/eligibility.js");
@@ -21,7 +22,8 @@ type DealChange = import("../src/types.ts").DealChange;
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
 
-const offers: Offer[] = JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf-8")).offers;
+const liveIndex = JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf-8"));
+const offers: Offer[] = liveIndex.offers;
 const { loadDealChanges } = await import("../dist/data.js");
 
 const dealChanges: DealChange[] = loadDealChanges();
@@ -62,16 +64,16 @@ const publishesARestriction = (offer: Offer) => gateForOffer(offer, TODAY)?.code
 let port = 0;
 let proc: ChildProcess | null = null;
 
-function startServer(): Promise<ChildProcess> {
+function startServer(env: Record<string, string> = {}): Promise<{ child: ChildProcess; port: number }> {
   return new Promise((resolve, reject) => {
     const child = spawn("node", [path.join(REPO, "dist", "serve.js")], {
       stdio: ["pipe", "pipe", "pipe"],
-      env: { ...process.env, PORT: "0", BASE_URL: "http://localhost", TZ: "UTC" },
+      env: { ...process.env, PORT: "0", BASE_URL: "http://localhost", TZ: "UTC", ...env },
     });
     const timeout = setTimeout(() => { child.kill(); reject(new Error("Server startup timeout")); }, 30000);
     child.stderr!.on("data", (data: Buffer) => {
       const m = data.toString().match(/running on http:\/\/localhost:(\d+)/);
-      if (m) { port = parseInt(m[1], 10); clearTimeout(timeout); resolve(child); }
+      if (m) { clearTimeout(timeout); resolve({ child, port: parseInt(m[1], 10) }); }
     });
     child.on("error", (e) => { clearTimeout(timeout); reject(e); });
   });
@@ -125,7 +127,7 @@ let rendered: RenderedPage[] = [];
 let verdicts = new Map<string, SiteFreeTierVerdict>();
 
 before(async () => {
-  proc = await startServer();
+  ({ child: proc, port } = await startServer());
   verdicts = await fetchBadgeVerdicts(port);
   for (const vendor of vendorsHoldingAGatedRecord) {
     const slug = slugOf(vendor);
@@ -350,7 +352,6 @@ describe("a category page does not count a gated offer as a plain free tier", ()
   });
 
   it("carries the same qualification into the search snippet, ahead of the vendor list", async () => {
-    let ordered = 0;
     for (const category of categoryNames) {
       const { total, restricted } = censusOf(category);
       const html = await page(`/category/${slugOf(category)}`);
@@ -361,9 +362,42 @@ describe("a category page does not count a gated offer as a plain free tier", ()
         continue;
       }
       assert.ok(description.includes(QUALIFICATION), `${where} description is ${description}`);
-      if (assertAheadOfTheVendorList(description, QUALIFICATION, where)) ordered++;
+      assertAheadOfTheVendorList(description, QUALIFICATION, where);
     }
-    assert.ok(ordered > 0, "no category description states both a qualification and a vendor list, so the ordering is read on nothing");
+  });
+
+  const theOnlyOfferOfAVendorTheSiteNamesAsUncontradicted = async (): Promise<Offer> => {
+    for (const category of categoryNames) {
+      const inCategory = offers.filter(o => o.category === category);
+      for (const vendor of vendorsNamedAsUncontradicted(descriptionOf(await page(`/category/${slugOf(category)}`)))) {
+        const held = inCategory.filter(o => o.vendor === vendor);
+        if (held.length === 1) return held[0];
+      }
+    }
+    assert.fail("no category page names a vendor whose terms nothing on record contradicts");
+  };
+
+  const descriptionOfTheOnlyCategoryIn = async (catalogue: Offer[]): Promise<string> => {
+    const fixture = path.join(mkdtempSync(path.join(tmpdir(), "one-category-index-")), "index.json");
+    writeFileSync(fixture, JSON.stringify({ ...liveIndex, offers: catalogue }));
+    const served = await startServer({ AGENTDEALS_INDEX_PATH: fixture });
+    try {
+      const res = await fetch(`http://localhost:${served.port}/category/${slugOf(catalogue[0].category)}`);
+      return descriptionOf(await res.text());
+    } finally {
+      served.child.kill();
+    }
+  };
+
+  it("states the qualification ahead of the vendor list in a category holding both", async () => {
+    const restricted = offers.find(o => publishesARestriction(o) && verdicts.get(slugOf(o.vendor)) !== "ended");
+    assert.ok(restricted, "no offer we list publishes a restriction, so no category states one");
+    const named = await theOnlyOfferOfAVendorTheSiteNamesAsUncontradicted();
+    const description = await descriptionOfTheOnlyCategoryIn([{ ...restricted, category: named.category }, named]);
+    assert.ok(
+      assertAheadOfTheVendorList(description, QUALIFICATION, "a category holding one restricted offer and one we name"),
+      `a category holding one restricted offer and one we name does not state both: ${description}`,
+    );
   });
 });
 
