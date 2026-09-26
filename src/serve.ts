@@ -6515,12 +6515,12 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "hetzner-alternatives",
     title: "Hetzner Alternatives After April 2026 Price Increase — Budget Cloud Options",
-    metaDesc: "Hetzner raised prices twice in 2026 and its whole shared-vCPU line is unavailable. Compare free-tier alternatives: DigitalOcean, Oracle Cloud, Render, Railway, Fly.io, Cloudflare Workers, Google Cloud.",
-    contextHtml: `<p><strong>Hetzner</strong> raised cloud and dedicated server prices twice in 2026, driven by surging DRAM costs (+171% YoY) from AI infrastructure demand. The April 1 round applied to <strong>all regions and all customers</strong>; the June 15 round applies to <strong>new orders and rescales only</strong>, and renamed the lineup. All ${unorderableHetznerPlans().length} shared-vCPU plans are now listed as not available, so the cheapest plan you can order is ${hetznerEntryPriceClause()}, read from hetzner.com on ${HETZNER_PRICES_READ}. See our <a href="/hetzner-pricing-2026">full pricing analysis</a>.</p>
+    metaDesc: "Hetzner raised prices twice in 2026 and its whole Cost-Optimized line is unavailable. Compare free-tier alternatives: DigitalOcean, Oracle Cloud, Render, Railway, Fly.io, Cloudflare Workers, Google Cloud.",
+    contextHtml: `<p><strong>Hetzner</strong> raised cloud and dedicated server prices twice in 2026, driven by surging DRAM costs (+171% YoY) from AI infrastructure demand. The April 1 round applied to <strong>all regions and all customers</strong>; the June 15 round applies to <strong>new orders and rescales only</strong>, and renamed the lineup. All ${unorderableHetznerPlans().length} Cost-Optimized plans are now listed as not available, so the cheapest plan you can order is ${hetznerEntryPriceClause()}, read from hetzner.com on ${HETZNER_PRICES_READ}. See our <a href="/hetzner-pricing-2026">full pricing analysis</a>.</p>
       <p>If you're looking for budget-friendly alternatives with generous free tiers or credits, here are the best options across VPS/cloud providers, managed platforms, and serverless offerings.</p>`,
     tag: "hetzner-alternative",
     primaryVendor: "Hetzner",
-    hubDesc: "Hetzner raised prices twice in 2026 and its shared-vCPU line is unavailable — cloud hosting alternatives with free tiers",
+    hubDesc: "Hetzner raised prices twice in 2026 and its Cost-Optimized line is unavailable — cloud hosting alternatives with free tiers",
   },
   {
     slug: "freshping-alternatives",
@@ -7742,7 +7742,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "hetzner-pricing-2026",
     title: "Hetzner Cloud Pricing After the April and June 2026 Adjustments",
-    metaDesc: "Hetzner raised cloud prices twice in 2026 — April 1 for all customers, June 15 for new orders and rescales. Current prices for every CX, CAX, CPX and CCX plan, with the shared-vCPU lines marked unavailable.",
+    metaDesc: "Hetzner raised cloud prices twice in 2026 — April 1 for all customers, June 15 for new orders and rescales. Current prices for every CX, CAX, CPX and CCX plan, with the Cost-Optimized line marked unavailable.",
     contextHtml: "",
     tag: "hetzner-pricing-analysis",
     primaryVendor: "Hetzner",
@@ -10485,7 +10485,7 @@ ${mcpCtaCss()}
   <h1>Best Free Hosting for Developers</h1>
 
   <div class="context">
-    <p>Finding free hosting in 2026 is both easier and harder than ever. Easier because there are <strong>${hostingOffers.length} options</strong> across PaaS, static hosting, serverless functions, containers, and traditional VPS. Harder because the landscape keeps shifting — <strong>Heroku killed its free tier</strong> in 2022, <strong>Render now spins down free services</strong> after 15 minutes, <strong>Vercel moved to credit-based pricing</strong>, and <strong>Hetzner raised prices twice in 2026</strong> and now lists every shared-vCPU plan as unavailable.</p>
+    <p>Finding free hosting in 2026 is both easier and harder than ever. Easier because there are <strong>${hostingOffers.length} options</strong> across PaaS, static hosting, serverless functions, containers, and traditional VPS. Harder because the landscape keeps shifting — <strong>Heroku killed its free tier</strong> in 2022, <strong>Render now spins down free services</strong> after 15 minutes, <strong>Vercel moved to credit-based pricing</strong>, and <strong>Hetzner raised prices twice in 2026</strong> and now lists every Cost-Optimized plan as unavailable.</p>
     <p>This page compares every free hosting option in our index, organized by type, with exact limits read from live pricing pages. Whether you need a PaaS for a full-stack app, static hosting for a portfolio, serverless functions for an API, or a VPS for full control — we have the comparison.</p>
   </div>
 
@@ -10636,7 +10636,7 @@ ${buildCards(startupCredits)}
 
   <div class="context-box" style="border-left:3px solid ${riskColors.risky}">
     <div style="font-weight:600;color:${riskColors.risky};margin-bottom:.5rem">Hetzner raised prices twice in 2026, and its cheapest line is unavailable</div>
-    <p style="margin:0;font-size:.9rem">Hetzner Cloud prices rose on April 1 for all customers and again on June 15 for new orders and rescales. Every shared-vCPU plan is now listed as not available, so the cheapest plan you can order is ${hetznerEntryPriceClause()}, read from hetzner.com on ${HETZNER_PRICES_READ}. See our <a href="/hetzner-pricing-2026">full pricing analysis</a> or the <a href="/hetzner-alternatives">Hetzner Alternatives</a> guide.</p>
+    <p style="margin:0;font-size:.9rem">Hetzner Cloud prices rose on April 1 for all customers and again on June 15 for new orders and rescales. Every Cost-Optimized plan is now listed as not available, so the cheapest plan you can order is ${hetznerEntryPriceClause()}, read from hetzner.com on ${HETZNER_PRICES_READ}. See our <a href="/hetzner-pricing-2026">full pricing analysis</a> or the <a href="/hetzner-alternatives">Hetzner Alternatives</a> guide.</p>
   </div>
 
   <h2>Which Free Hosting Should I Use?</h2>
@@ -18964,7 +18964,7 @@ ${upgradeTable}
 
 function buildHetznerPricing2026Page(): string {
   const title = "Hetzner Cloud Pricing After the April and June 2026 Adjustments";
-  const metaDesc = `Hetzner raised cloud prices twice in 2026 — April 1 for all customers, June 15 for new orders and rescales. Current prices for every CX, CAX, CPX and CCX plan, read from hetzner.com on ${HETZNER_PRICES_READ}, with the shared-vCPU lines marked unavailable.`;
+  const metaDesc = `Hetzner raised cloud prices twice in 2026 — April 1 for all customers, June 15 for new orders and rescales. Current prices for every CX, CAX, CPX and CCX plan, read from hetzner.com on ${HETZNER_PRICES_READ}, with the Cost-Optimized line marked unavailable.`;
   const slug = "hetzner-pricing-2026";
   const pubDate = "2026-03-25";
 
@@ -18999,11 +18999,11 @@ function buildHetznerPricing2026Page(): string {
     </tr>`).join("\n        ");
 
   const competitorPricing = [
-    { vendor: "Hetzner (cheapest orderable)", spec: `${cheapestOrderable.sku} — ${cheapestOrderable.vcpu} vCPU, ${cheapestOrderable.ram} GB`, price: `${eur(cheapestOrderable.eur)}/mo`, region: cheapestOrderable.region, note: "Shared-vCPU line unavailable" },
+    { vendor: "Hetzner (cheapest orderable)", spec: `${cheapestOrderable.sku} — ${cheapestOrderable.vcpu} vCPU, ${cheapestOrderable.ram} GB`, price: `${eur(cheapestOrderable.eur)}/mo`, region: cheapestOrderable.region, note: "Cost-Optimized line unavailable" },
     { vendor: "DigitalOcean", spec: "Basic — 1 vCPU, 512 MB", price: "$4/mo", region: "Global", note: "" },
     { vendor: "Vultr", spec: "Cloud — 1 vCPU, 1 GB", price: "$5/mo", region: "Global", note: "Not re-read since March 2026" },
     { vendor: "Linode/Akamai", spec: "Nanode — 1 vCPU, 1 GB", price: "$5/mo", region: "Global", note: "Not re-read since March 2026" },
-    { vendor: "OVHcloud", spec: "VPS-1 — 1 vCPU, 2 GB", price: "$7.60/mo", region: "EU", note: "Rose 55% on April 1, 2026" },
+    { vendor: "OVHcloud", spec: "VPS-1 — 2 vCores, 4 GB", price: "$5.35/mo", region: "EU", note: "VPS 2027 range; $4.54/mo on 12 months. The 2026 range rose 36-49% from April 2026" },
     { vendor: "AWS Lightsail", spec: "2 vCPUs, 512 MB", price: "$5/mo", region: "US", note: "The $3.50 bundle is IPv6-only; every other row here has a public IPv4 address" },
     { vendor: "Oracle Cloud", spec: oracleArmAllowance(), price: "Free (Always Free)", region: "Global", note: "Best free tier for VMs" },
     { vendor: "Railway", spec: "Free Plan", price: "$0/mo", region: "US", note: "30-day trial with $5 credits, then $1 of free credit a month" },
@@ -19135,7 +19135,7 @@ ${mcpCtaCss()}
 
   <div class="executive-summary">
     <p><strong>Hetzner raised cloud prices twice in 2026, and the second round changed the lineup as well as the numbers.</strong> The April 1 adjustment applied to all regions and all customers, new and existing. The June 15 adjustment applies only to new orders and rescales — existing server contracts keep their terms — and it came with a standardization that renamed the plans.</p>
-    <p><strong>Every shared-vCPU plan is currently unavailable.</strong> All ${unorderable.length} plans in the Cost-Optimized line, Intel and Arm alike, are listed on hetzner.com with a price and marked not available. The cheapest plan a reader can actually order is <strong>${escHtmlServer(cheapestOrderable.sku)} at ${eur(cheapestOrderable.eur)}/mo</strong> (${cheapestOrderable.vcpu} vCPU, ${cheapestOrderable.ram} GB). A price for a plan nobody can buy is not an entry price.</p>
+    <p><strong>Every Cost-Optimized plan is currently unavailable.</strong> All ${unorderable.length} plans in the Cost-Optimized line, Intel and Arm alike, are listed on hetzner.com with a price and marked not available. The cheapest plan a reader can actually order is <strong>${escHtmlServer(cheapestOrderable.sku)} at ${eur(cheapestOrderable.eur)}/mo</strong> (${cheapestOrderable.vcpu} vCPU, ${cheapestOrderable.ram} GB). A price for a plan nobody can buy is not an entry price.</p>
     <p><strong>The root cause is hardware costs.</strong> DRAM prices surged 171% year-over-year, NAND flash roughly doubled, and AI infrastructure buildout consumed the supply that smaller operators depend on. Hetzner's own statements cite increased procurement costs for key hardware components. The same pressure moved OVHcloud and Netcup.</p>
   </div>
 
@@ -19207,7 +19207,7 @@ ${mcpCtaCss()}
   <p class="section-intro">How much more you pay depends on your workload size, and on whether you are starting something new. The two figures below the first card are April-round estimates for a fleet that moved to the new prices in one step; the June round only reaches you when you order or rescale.</p>
   <div class="impact-card" style="border-left-color:#3fb950">
     <h3><span style="display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;background:#3fb95022;color:#3fb950;font-weight:600;margin-right:.5rem">LOW</span>Hobby Projects &amp; Side Projects</h3>
-    <p class="impact-desc">If you already run a small server, June left it alone — you are on your existing contract at your existing price. Starting one now is the expensive case: the cheapest orderable plan is ${escHtmlServer(cheapestOrderable.sku)} at ${eur(cheapestOrderable.eur)}/mo for ${cheapestOrderable.vcpu} vCPU and ${cheapestOrderable.ram} GB, and the shared-vCPU line you would once have reached for cannot be ordered at all.</p>
+    <p class="impact-desc">If you already run a small server, June left it alone — you are on your existing contract at your existing price. Starting one now is the expensive case: the cheapest orderable plan is ${escHtmlServer(cheapestOrderable.sku)} at ${eur(cheapestOrderable.eur)}/mo for ${cheapestOrderable.vcpu} vCPU and ${cheapestOrderable.ram} GB, and the Cost-Optimized line you would once have reached for cannot be ordered at all.</p>
   </div>
   <div class="impact-card" style="border-left-color:#d29922">
     <h3><span style="display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;background:#d2992222;color:#d29922;font-weight:600;margin-right:.5rem">MEDIUM</span>Small Teams &amp; Startups</h3>
@@ -19239,12 +19239,12 @@ ${mcpCtaCss()}
   <p class="section-intro">Hetzner is not an outlier — the entire European hosting market repriced through 2026.</p>
   <div class="context-box">
     <ul>
-      <li><strong>OVHcloud:</strong> VPS-1 rose from $4.90 to $7.60 on April 1, 2026, a 55% increase, with VPS-4 up 67%. Public Cloud, Private Cloud and Bare Metal rose 9-11% for new deployments. Same root cause — DRAM and component costs.</li>
+      <li><strong>OVHcloud:</strong> raised prices on its VPS 2026 range from 1 April 2026, with euro list prices up 36-49% (VPS-1 from €4.49 to €6.49 a month). It has since launched a VPS 2027 range, whose VPS-1 (2 vCores, 4 GB RAM) is $5.35 a month without commitment. Public Cloud, Private Cloud and Bare Metal rose 9-11% on average for new deployments.</li>
       <li><strong>Netcup:</strong> Also raised prices. Community reports increases across VPS and dedicated server lines.</li>
       <li><strong>US cloud providers:</strong> Already priced 3-6x higher than Hetzner. AWS, GCP, and Azure haven't announced increases yet, but their hardware costs are rising too — they have more margin to absorb it.</li>
       <li><strong>The AI paradox:</strong> AI infrastructure buildout is making hardware more expensive for everyone. The companies building AI consume the supply that smaller operations depend on. As one HN commenter put it: "The AI bubble is pricing out smaller operations."</li>
     </ul>
-    <p style="margin-top:.75rem"><strong>Community reaction</strong> at the time of the April round (from <a href="https://news.ycombinator.com/item?id=47120145" target="_blank" rel="noopener">Hacker News discussion</a>): "Even after +30-50%, Hetzner is still the cheapest option. The real story is the entire hosting market repricing due to AI-driven hardware costs." That was written before the June round and before the shared-vCPU line went unavailable; the table in section 1 is what to check it against.</p>
+    <p style="margin-top:.75rem"><strong>Community reaction</strong> at the time of the April round (from <a href="https://news.ycombinator.com/item?id=47120145" target="_blank" rel="noopener">Hacker News discussion</a>): "Even after +30-50%, Hetzner is still the cheapest option. The real story is the entire hosting market repricing due to AI-driven hardware costs." That was written before the June round and before the Cost-Optimized line went unavailable; the table in section 1 is what to check it against.</p>
   </div>
 
   <h2 id="optimize">8. Optimization Strategies</h2>
