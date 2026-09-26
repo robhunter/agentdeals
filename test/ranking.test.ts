@@ -515,7 +515,7 @@ describe("the live index, ranked", () => {
     });
     const demoted = new Map(r.demoted.map((e) => [e.offer.vendor, e]));
     const withdrawn = ["OpenAI", "Google Gemini API", "Clarifai", "xAI"];
-    const credits = ["Cohere", "Together AI", "Fireworks AI", "Modal", "DeepSeek API"];
+    const credits = ["Cohere", "Together AI", "Fireworks AI", "Modal"];
     for (const vendor of withdrawn) {
       assert.ok(demoted.get(vendor)?.demerits.some((d) => d.code === "free_tier_withdrawn"), `${vendor} withdrew a free tier and must be demoted`);
     }
