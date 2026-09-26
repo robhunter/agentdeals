@@ -28677,7 +28677,7 @@ function buildAiCodingToolsPricingPage(): string {
       power: "From $99.99/mo (Google AI Ultra)",
       teams: "Via Google Cloud",
       model: "Subscription + rate limits",
-      freeDetails: "Agentic development platform by Google, generally available: a desktop app to run several local agents in parallel, an agentic IDE, a CLI and an SDK, for macOS, Windows and Linux. The individual plan is $0/month, with Gemini, Claude Sonnet and Opus 4.6 and gpt-oss-120b as agent models, unlimited Tab completions and command requests, and basic weekly rate limits.",
+      freeDetails: "Agentic development platform by Google, generally available: a desktop app to run several local agents in parallel, an agentic IDE, a CLI and an SDK, for macOS, Windows and Linux. The individual plan is $0/month, with unlimited Tab completions and command requests and basic weekly rate limits.",
       freeType: "limited",
       monthlyCostSolo: "$0–19.99",
       monthlyCostTeam5: "Usage-based (Google Cloud)",
