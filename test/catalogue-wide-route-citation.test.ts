@@ -33,8 +33,12 @@ function aVendorWhoseWholeCatalogueIsOneOffer(offers: IndexedOffer[]): IndexedOf
   return found;
 }
 
+function verifiedTheDayTheSuiteRuns(offer: IndexedOffer): IndexedOffer {
+  return { ...offer, verifiedDate: new Date().toISOString().slice(0, 10) };
+}
+
 const CATALOGUE_WIDE_ROUTES: [string, (vendor: string, category: string) => string][] = [
-  ["/api/new", () => "/api/new?days=3650"],
+  ["/api/new", () => "/api/new?days=1"],
   ["/api/newest", () => "/api/newest?limit=3"],
   ["/api/audit-stack", (vendor) => `/api/audit-stack?services=${encodeURIComponent(vendor)}`],
   ["/api/stack", (vendor, category) => `/api/stack?use_case=a+small+web+app&requirements=${encodeURIComponent(category)}`],
@@ -85,7 +89,7 @@ describe("a route answering from the whole catalogue cites the whole catalogue",
     vendor = only.vendor;
     category = only.category!;
     const fixture = path.join(mkdtempSync(path.join(tmpdir(), "one-vendor-index-")), "index.json");
-    writeFileSync(fixture, JSON.stringify({ ...index, offers: [only] }));
+    writeFileSync(fixture, JSON.stringify({ ...index, offers: [verifiedTheDayTheSuiteRuns(only)] }));
 
     const serverPath = path.join(__dirname, "..", "dist", "serve.js");
     const started = await new Promise<{ proc: ChildProcess; port: number }>((resolve, reject) => {
