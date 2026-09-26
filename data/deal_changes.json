@@ -9331,7 +9331,7 @@
       "date_source": "vendor_page",
       "summary": "Foursquare cut the free Places API allowance on Pro endpoints from 10,000 to 500 calls a month, effective 2026-06-01. Its docs: \"Beginning June 1, 2026, the following Places API & V2 Pro endpoint rates go into effect for all users: 0 - 500 calls – $0.00 CPM ... You will now receive 500 free Pro calls.\"",
       "previous_state": "Places API Pro endpoints: 0 – 10,000 calls at $0.00 CPM, then $15.00 CPM from 10,001 calls (pricing page, Internet Archive capture of 2026-04-19)",
-      "current_state": "Places API Pro endpoints: 0-500 Calls $0.00 CPM, 501 to 100,000 Calls $15.00 CPM, 100,001 to 500,000 Calls $12.00 CPM, 500,001+ Calls $9.00 CPM. Places API Premium endpoints: 0-100,000 Calls $18.75 CPM, 100,001 to 500,000 Calls $15.00 CPM, 500,001+ Calls $11.25 CPM.",
+      "current_state": "Places API Pro endpoints: the first 500 calls a month are free ($0.00 CPM), then $15.00 CPM from 501 to 100,000 calls, $12.00 CPM from 100,001 to 500,000 calls and $9.00 CPM above 500,000. Places API Premium endpoints: $18.75 CPM up to 100,000 calls, $15.00 CPM from 100,001 to 500,000 calls and $11.25 CPM above 500,000.",
       "impact": "medium",
       "source_url": "https://docs.foursquare.com/developer/reference/upcoming-changes",
       "category": "Maps/Geolocation",
