@@ -35503,8 +35503,8 @@ ${mcpCtaCss()}
   </div>
 
   <div class="executive-summary">
-    <p><strong>Three tiers, different rules.</strong> GCP bundles its free offerings into three categories. <strong>Always Free</strong> products have permanent monthly quotas — Cloud Run (2M requests), BigQuery (1 TiB), and ${alwaysFreeServices.length - 2} other services stay free forever within limits. The <strong>$300 Free Trial</strong> gives 90 days of full GCP access (credit card required, but won't auto-charge). <strong>AI &amp; ML tools</strong> have their own free tiers with daily rate limits. Most "GCP free tier" guides conflate these. We separate them.</p>
-    <p><strong>GCP's unique strength:</strong> The Always Free e2-micro VM is the only major cloud provider offering a permanent free virtual machine. Combined with 30 GB persistent disk, you can run a real server 24/7 forever. AWS and Azure don't match this — their free VMs expire after 12 months.</p>
+    <p><strong>Three tiers, different rules.</strong> GCP bundles its free offerings into three categories. <strong>Always Free</strong> products have permanent monthly quotas — Cloud Run (2M requests), BigQuery (1 TiB), and ${alwaysFreeServices.length - 2} other services are free within monthly limits. The <strong>$300 Free Trial</strong> gives 90 days of full GCP access (credit card required, but won't auto-charge). <strong>AI &amp; ML tools</strong> have their own free tiers with daily rate limits. Most "GCP free tier" guides conflate these. We separate them.</p>
+    <p><strong>The free VM:</strong> Always Free includes one e2-micro VM a month in us-west1, us-central1 or us-east1, with 30 GB of standard persistent disk.</p>
     <p><strong>The hidden costs:</strong> GCP's free tier has traps — the free VM is region-restricted, egress charges apply everywhere, Firestore daily operation limits are tight, and load balancers are never free. We cover all gotchas below.</p>
     <p><strong>Comparing clouds?</strong> See our <a href="/cloud-free-tier-comparison-2026">Cloud Free Tier Comparison</a> for a side-by-side matrix of AWS vs GCP vs Azure vs DigitalOcean.</p>
   </div>
@@ -35523,7 +35523,7 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="always-free">Always Free Products</h2>
-  <p class="section-intro">These products remain free indefinitely within their monthly (or daily) quotas. No expiration, no trial period. GCP has the most generous always-free compute tier of any major cloud provider.</p>
+  <p class="section-intro">These products remain free indefinitely within their monthly (or daily) quotas. No expiration, no trial period.</p>
 
   <div style="overflow-x:auto">
   <table class="pricing-table">
@@ -35579,7 +35579,7 @@ ${mcpCtaCss()}
 
     <div class="verdict-item">
       <strong>Always-on server</strong>
-      <p>e2-micro VM (us-central1) + 30 GB persistent disk + Cloud Monitoring. The only major cloud offering a permanent free VM. Great for bots, cron jobs, small web servers. Add Cloud Shell for web-based SSH access.</p>
+      <p>e2-micro VM (us-central1) + 30 GB persistent disk + Cloud Monitoring. Great for bots, cron jobs, small web servers. Add Cloud Shell for web-based SSH access.</p>
     </div>
 
     <div class="verdict-item">
@@ -35608,7 +35608,7 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="alternatives">GCP vs AWS vs Others</h2>
-  <p class="section-intro">GCP has the most generous always-free compute (permanent VM, Cloud Run 2M req/mo), while AWS has more services overall. Here's how they compare for developers building side projects or MVPs. See our <a href="/aws-free-tier-2026">AWS Free Tier guide</a> for the full AWS breakdown.</p>
+  <p class="section-intro">Here's how they compare for developers building side projects or MVPs. See our <a href="/aws-free-tier-2026">AWS Free Tier guide</a> for the full AWS breakdown.</p>
 
   <div style="overflow-x:auto">
   <table class="pricing-table">
@@ -35626,7 +35626,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="context-box">
-    <strong>The trade-off:</strong> GCP wins on always-free compute (permanent e2-micro VM, Cloud Run 2M req/mo) and analytics (BigQuery 1 TiB). AWS wins on service breadth (30+ always-free services) and serverless (Lambda 1M req/mo + DynamoDB 25 GB). For a complete free-tier stack combining the best of multiple providers, see our <a href="/free-startup-stack">Free Startup Stack</a> guide.
+    <strong>The trade-off:</strong> GCP's Always Free tier includes an e2-micro VM, 2M Cloud Run requests a month and 1 TiB of BigQuery queries a month. For a complete free-tier stack combining the best of multiple providers, see our <a href="/free-startup-stack">Free Startup Stack</a> guide.
   </div>
 
   <h2 id="changes">Recent GCP &amp; Google Changes</h2>

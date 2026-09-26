@@ -13,6 +13,7 @@ const root = path.join(__dirname, "..");
 const PAGE = "/gcp-free-tier-2026";
 const CITED_ON_THE_VENDOR_PRICING_PAGE = ["Cloud Scheduler", "Cloud Translation API"];
 const SERVICES_THE_HERO_NAMES = ["Cloud Run", "BigQuery"];
+const RANKED_OR_CALLED_FOREVER = /most generous|the only major cloud|GCP wins|free forever|24\/7 forever|stay free forever/gi;
 const STATED_BY_NEITHER_SOURCE: Array<{ row: string; phrase: RegExp }> = [
   { row: "BigQuery", phrase: /ML model creation/i },
   { row: "Application Integration", phrase: /active connectors/i },
@@ -145,6 +146,11 @@ describe(`${PAGE} publishes Google's Always Free quotas (#1623)`, () => {
       rows.filter((r) => r.name === row && phrase.test(r.limits)).map((r) => `${r.name}: ${r.limits}`),
     );
     assert.deepStrictEqual(kept, []);
+  });
+
+  it("ranks its free tier above no other cloud and calls none of it free forever (#1623 AC-6)", () => {
+    const claims = [...text(html).matchAll(RANKED_OR_CALLED_FOREVER)].map(([claim]) => claim);
+    assert.deepStrictEqual(claims, []);
   });
 
   it("counts the other services in the introduction from the table", () => {

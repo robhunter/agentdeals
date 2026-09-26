@@ -954,7 +954,7 @@
     {
       "vendor": "Firebase",
       "category": "Databases",
-      "description": "Full BaaS — Auth (50K MAU), Firestore (1 GiB storage, 50K reads/day), Cloud Functions (2M invocations/month), Hosting, Analytics, Crashlytics all free",
+      "description": "Spark plan, no payment method needed: Auth (50K MAU), Firestore (1 GiB stored, 50K reads/day, 20K writes/day, 20K deletes/day), Hosting (10 GB storage, 360 MB/day transfer), and no-cost Analytics, Crashlytics and Cloud Messaging. Cloud Functions and Cloud Storage need the Blaze plan.",
       "tier": "Spark",
       "url": "https://firebase.google.com/pricing",
       "tags": [
