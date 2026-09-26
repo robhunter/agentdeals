@@ -2049,7 +2049,7 @@
       "review_note": "Written in the future tense about an event 165 days past. Section 1 is headed \"What's Changing April 1\" and reads \"Google is introducing billing-account-level spend caps\"; \"April 1\" appears 7 times and the byline says \"Figures compiled 2026-03-26, last checked 2026-04-02\". It calls Gemini 3.1 Pro \"the latest flagship\" twice; ai.google.dev/gemini-api/docs/pricing, fetched 2026-09-13, lists 3.5, 3.6, 3.7 and 3.8 Flash and says \"Gemini 3.8 Flash is now available\" - the page names none of them. Gemini 2.0 Flash is listed as \"Deprecated, scheduled for retirement\" and is absent from Google's page entirely. Three comparison rows contradict our own records: OpenAI reads \"GPT-3.5 only, 3 RPM\" and \"GPT-3.5 Turbo (free)\" against a record verified 2026-09-10 saying the only free OpenAI model is omni-moderation-latest; Mistral AI reads \"1B tokens/month\" against a record verified 2026-09-05 saying $10/mo in API credits, and the What To Do section recommends Mistral on that number; DeepSeek reads V3/R1 against our V3.2 record. The Gemini row omits four free models our own record lists. Filed on https://github.com/robhunter/agentdeals/issues/1183 and https://github.com/robhunter/agentdeals/issues/1637.",
       "reads_index": false,
       "tables_read_index": false,
-      "table_figures": 9,
+      "table_figures": 10,
       "table_figures_from_records": 0,
       "tables": [
         {
@@ -2064,7 +2064,7 @@
         },
         {
           "label": "6. Free LLM API Comparison",
-          "figures": 0,
+          "figures": 1,
           "from_records": 0
         }
       ],
@@ -2100,7 +2100,7 @@
       "review_note": "Hero stat reads 5 RPM for the Gemini free tier. Our own record for Google Gemini API (verifiedDate 2026-08-18, source_check.checked 2026-09-05, outcome ok) gives Gemini 2.5 Flash 10 RPM and 2.5 Flash-Lite 15 RPM, and its 2026-09-03 change records a restructure to Gemini 3.6 Flash, 3.5 Flash and 3.5 Live - models the page never names. The page's \"Figures compiled 2026-04-08, not re-checked since\" byline is honest and does not fix the number a reader takes away. Filed as row ten on https://github.com/robhunter/agentdeals/issues/1183.",
       "reads_index": false,
       "tables_read_index": false,
-      "table_figures": 36,
+      "table_figures": 37,
       "table_figures_from_records": 0,
       "tables": [
         {
@@ -2115,7 +2115,7 @@
         },
         {
           "label": "4. Alternative Free LLM APIs",
-          "figures": 13,
+          "figures": 14,
           "from_records": 0
         }
       ],
@@ -2465,12 +2465,12 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 63,
+      "table_figures": 64,
       "table_figures_from_records": 37,
       "tables": [
         {
           "label": "Pricing Comparison Table",
-          "figures": 25,
+          "figures": 26,
           "from_records": 0
         },
         {

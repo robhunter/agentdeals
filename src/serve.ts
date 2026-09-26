@@ -4108,9 +4108,9 @@ const VS_PAGES: VsPageConfig[] = [
     verdict: "Groq offers ultra-fast LLM inference on custom LPU hardware with free API access. Hugging Face is the ML model hub with inference credits and a vast open-source ecosystem. Groq is for speed-optimized LLM inference; Hugging Face is for model discovery and flexible inference.",
     keyDifferences: `<ul>
       <li><strong>Focus:</strong> Groq is purely an LLM inference API optimized for speed (custom LPU hardware). Hugging Face is a comprehensive ML platform (model hub, datasets, Spaces, inference API).</li>
-      <li><strong>Free tier:</strong> Groq offers 30 RPM with 100K-500K tokens/day depending on model. Hugging Face offers $0.10/month in free inference credits with access to 200+ models.</li>
+      <li><strong>Free tier:</strong> Groq's free plan allows 30 RPM, 1,000 requests and 200K tokens a day per model. Hugging Face offers $0.10/month in free inference credits with access to 200+ models.</li>
       <li><strong>Speed:</strong> Groq's LPU hardware delivers industry-leading token generation speed — often 5-10x faster than GPU-based inference. Hugging Face inference speed varies by provider.</li>
-      <li><strong>Model selection:</strong> Hugging Face provides access to 200+ models across providers. Groq supports a curated set of popular models (Llama, Mixtral, Gemma) optimized for its hardware.</li>
+      <li><strong>Model selection:</strong> Hugging Face provides access to 200+ models across providers. Groq serves a short list of open-weight models on its hardware; the free plan covers gpt-oss-120b, gpt-oss-20b and Qwen3.8 27B.</li>
     </ul>`,
     recommendation: `<p><strong>Choose Groq if</strong> you need the fastest possible LLM inference, are building latency-sensitive applications, or want a simple API for popular open models.</p>
     <p><strong>Choose Hugging Face if</strong> you need access to the broadest model selection, want to host your own models, or need the full ML development platform (datasets, training, Spaces).</p>`,
@@ -4118,14 +4118,14 @@ const VS_PAGES: VsPageConfig[] = [
   {
     vendorA: "Groq", vendorB: "Mistral AI",
     category: "AI / ML",
-    verdict: "Groq provides ultra-fast inference for open models on custom hardware. Mistral AI offers its own proprietary models (Mistral Large, Codestral, Pixtral) with a generous 1B tokens/month free. Groq wins on speed; Mistral wins on model variety and free token volume.",
+    verdict: "Groq provides ultra-fast inference for open models on custom hardware. Mistral AI offers its own proprietary models (Mistral Large, Codestral, Pixtral) and its Free plan includes $10 a month in API credits. Groq wins on speed; Mistral wins on model variety and free token volume.",
     keyDifferences: `<ul>
-      <li><strong>Models:</strong> Groq serves open models (Llama, Mixtral, Gemma) on its hardware. Mistral serves its own proprietary models (Mistral Large, Codestral, Pixtral) plus Mistral-tuned open models.</li>
-      <li><strong>Free tier volume:</strong> Mistral offers 1B tokens/month at 2 RPM. Groq offers 100K-500K tokens/day (3-15M/month) at 30 RPM — more rate-limited but higher throughput ceiling.</li>
+      <li><strong>Models:</strong> Groq serves open-weight models (gpt-oss, Qwen) on its hardware. Mistral serves its own proprietary models (Mistral Large, Codestral, Pixtral) plus Mistral-tuned open models.</li>
+      <li><strong>Free tier volume:</strong> Mistral's Free plan includes $10 a month in API credits. Groq allows 200K tokens a day per model (about 6M a month) at 30 RPM — more rate-limited but higher throughput ceiling.</li>
       <li><strong>Speed:</strong> Groq's custom LPU hardware delivers significantly faster inference. Mistral runs on standard GPU infrastructure.</li>
       <li><strong>Code models:</strong> Mistral has Codestral, a dedicated coding model. Groq serves general models that also handle code but without a specialized coding model.</li>
     </ul>`,
-    recommendation: `<p><strong>Choose Groq if</strong> you need the fastest inference speed, want to use popular open models (Llama 4, Mixtral), or are building real-time applications.</p>
+    recommendation: `<p><strong>Choose Groq if</strong> you need the fastest inference speed, want to use open-weight models such as gpt-oss, or are building real-time applications.</p>
     <p><strong>Choose Mistral AI if</strong> you want access to Mistral's proprietary models (especially Codestral for code), need the largest free token allowance, or prefer European-based AI providers.</p>`,
   },
 ];
@@ -10250,7 +10250,7 @@ ${mcpCtaCss()}
   <h1>Best Free AI APIs and Coding Tools</h1>
 
   <div class="context">
-    <p>The AI pricing landscape is volatile. <strong>Google slashed Gemini free tier limits 50-80%</strong> in late 2025. <strong>OpenAI discontinued free trial credits</strong> and deprecated the Assistants API. But new players are offering generous free tiers to win developer mindshare — <strong>Groq</strong> and <strong>Cerebras</strong> provide blazing-fast inference, <strong>Mistral</strong> offers 1 billion tokens/month, and <strong>Google Antigravity</strong> is 100% free during preview.</p>
+    <p>The AI pricing landscape is volatile. <strong>Google slashed Gemini free tier limits 50-80%</strong> in late 2025. <strong>OpenAI discontinued free trial credits</strong> and deprecated the Assistants API. But new players are offering generous free tiers to win developer mindshare — <strong>Groq</strong> and <strong>Cerebras</strong> provide blazing-fast inference, <strong>Mistral</strong> includes $10 a month in API credits, and <strong>Google Antigravity</strong> has a free individual plan with weekly limits.</p>
     <p>This page compares <strong>${allAiOffers.length} free AI offers</strong> across our index — exact rate limits, not marketing copy. We track ${enrichedMl.length} AI/ML tools and ${enrichedCoding.length} AI coding tools. ${escHtmlServer(confirmationCoverageSentence(confirmationCoverage(allAiOffers), "AI"))}</p>
   </div>
 
@@ -10288,7 +10288,7 @@ ${buildCards(mlPlatforms)}
       <tr>
         <td style="font-weight:600"><a href="/vendor/groq" style="color:var(--text)">Groq</a></td>
         <td>~30 RPM</td>
-        <td>Llama 3.3, Gemma 2, Mixtral</td>
+        <td>gpt-oss-120b, gpt-oss-20b, Qwen3.8 27B</td>
         <td style="color:#3fb950">Ultra-fast (LPU)</td>
       </tr>
       <tr>
@@ -10299,7 +10299,7 @@ ${buildCards(mlPlatforms)}
       </tr>
       <tr>
         <td style="font-weight:600"><a href="/vendor/mistral-ai" style="color:var(--text)">Mistral AI</a></td>
-        <td>2 RPM, 1B tokens/month</td>
+        <td>$10/month in API credits</td>
         <td>Mistral Large, Codestral, Pixtral</td>
         <td>Fast</td>
       </tr>
@@ -10342,7 +10342,7 @@ ${buildCards(mlPlatforms)}
     </tbody>
   </table>
   </div>
-  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Groq and Cerebras achieve 500+ tokens/second via custom silicon (LPU and WSE respectively). Mistral's 1B tokens/month is the most generous raw allowance but rate-limited to 2 RPM. OpenAI's free tier is now GPT-3.5 only after discontinuing trial credits. Gemini free tier limits were quietly reduced in late 2025.</p>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Groq and Cerebras achieve 500+ tokens/second via custom silicon (LPU and WSE respectively). Mistral's Free plan includes $10 a month in API credits. OpenAI's free tier is now GPT-3.5 only after discontinuing trial credits. Gemini free tier limits were quietly reduced in late 2025.</p>
 
   <h2>Free AI Coding Tools</h2>
   <p style="color:var(--text-muted);margin-bottom:1rem">AI-powered code editors, assistants, and autonomous coding agents. From IDE plugins to fully autonomous engineers.</p>
@@ -13130,7 +13130,7 @@ ${mcpCtaCss()}
   <h1>Best Free AI &amp; ML Tools for Developers</h1>
 
   <div class="context">
-    <p>AI infrastructure is evolving faster than any other developer tooling category. The good news: competition has driven generous free tiers. <strong>Groq</strong> offers blazing-fast Llama 3.3 70B inference at ~30 RPM free. <strong>Cerebras</strong> gives <strong>1M tokens/day</strong> free. <strong>Mistral</strong> offers access to all models including Large and Codestral at 1B tokens/month. And open-source tools like <strong>Cline</strong>, <strong>Aider</strong>, and <strong>Gemini CLI</strong> are completely free \u2014 just bring your own API key.</p>
+    <p>AI infrastructure is evolving faster than any other developer tooling category. The good news: competition has driven generous free tiers. <strong>Groq</strong> offers blazing-fast gpt-oss-120b inference at 30 RPM free. <strong>Cerebras</strong> gives <strong>1M tokens/day</strong> free. <strong>Mistral</strong> offers access to all models including Large and Codestral with $10 a month in free API credits. And open-source tools like <strong>Cline</strong>, <strong>Aider</strong>, and <strong>Gemini CLI</strong> are completely free \u2014 just bring your own API key.</p>
     <p>This page compares every free AI and ML tool in our index \u2014 <strong>${aiOffers.length} tools</strong> across LLM APIs, AI coding assistants, ML platforms, observability, and specialized services. Whether you need an OpenAI alternative or a free AI coding assistant, we have the comparison with exact free tier limits.</p>
   </div>
 
@@ -13179,7 +13179,7 @@ ${buildCards(other)}
       <tr>
         <td style="font-weight:600"><a href="/vendor/groq" style="color:var(--text)">Groq</a></td>
         <td>LLM API</td>
-        <td>~30 RPM, Llama 3.3 70B</td>
+        <td>~30 RPM, gpt-oss-120b</td>
         <td>No</td>
         <td>Fastest free LLM inference (LPU hardware)</td>
       </tr>
@@ -13193,7 +13193,7 @@ ${buildCards(other)}
       <tr>
         <td style="font-weight:600"><a href="/vendor/mistral-ai" style="color:var(--text)">Mistral AI</a></td>
         <td>LLM API</td>
-        <td>1B tokens/mo, 2 RPM</td>
+        <td>$10/month in API credits</td>
         <td>No</td>
         <td>Access to all Mistral models including Codestral</td>
       </tr>
@@ -13269,10 +13269,10 @@ ${buildCards(other)}
   <div class="decision-guide">
     <dl>
       <dt>Need fast, free LLM API access?</dt>
-      <dd><a href="/vendor/groq">Groq</a> \u2014 ultra-fast inference on LPU hardware with Llama 3.3 70B, ~30 RPM free. <a href="/vendor/cerebras">Cerebras</a> \u2014 1M tokens/day free, great for batch workloads. <a href="/vendor/openrouter">OpenRouter</a> for access to ~30 free models through one API.</dd>
+      <dd><a href="/vendor/groq">Groq</a> \u2014 ultra-fast inference on LPU hardware with gpt-oss-120b, 30 RPM free. <a href="/vendor/cerebras">Cerebras</a> \u2014 1M tokens/day free, great for batch workloads. <a href="/vendor/openrouter">OpenRouter</a> for access to ~30 free models through one API.</dd>
 
       <dt>Want access to all frontier models?</dt>
-      <dd><a href="/vendor/mistral-ai">Mistral AI</a> \u2014 all models including Large and Codestral, 1B tokens/month free at 2 RPM. Best free access to frontier-class models without credit card.</dd>
+      <dd><a href="/vendor/mistral-ai">Mistral AI</a> \u2014 $10 a month in free API credits across its models, including Large and Codestral. Best free access to frontier-class models without credit card.</dd>
 
       <dt>Looking for an AI coding assistant?</dt>
       <dd><a href="/vendor/github-copilot">GitHub Copilot</a> for IDE-integrated autocomplete (2,000/mo free). <a href="/vendor/cursor">Cursor</a> for an AI-native editor. <a href="/vendor/gemini-cli">Gemini CLI</a> and <a href="/vendor/cline">Cline</a> for free open-source terminal agents (BYOK).</dd>
@@ -14780,7 +14780,7 @@ ${mcpCtaCss()}
   <h1>Best Free LLM APIs for Developers</h1>
 
   <div class="context">
-    <p>Free LLM API access has never been better. <strong>Groq</strong> delivers Llama 3.3 70B at ~30 RPM on custom LPU hardware \u2014 the fastest free inference available. <strong>Cerebras</strong> offers <strong>1M tokens/day</strong> free. <strong>Mistral</strong> gives access to all models including Large and Codestral at 1B tokens/month. <strong>OpenRouter</strong> aggregates ~30 free models through one OpenAI-compatible API. ${ledeClause}</p>
+    <p>Free LLM API access has never been better. <strong>Groq</strong> delivers gpt-oss-120b at 30 RPM on custom LPU hardware \u2014 the fastest free inference available. <strong>Cerebras</strong> offers <strong>1M tokens/day</strong> free. <strong>Mistral</strong> gives access to all models including Large and Codestral with $10 a month in free API credits. <strong>OpenRouter</strong> aggregates ~30 free models through one OpenAI-compatible API. ${ledeClause}</p>
     <p>This page compares <strong>${allLlmOffers.length} free LLM API providers</strong> \u2014 from proprietary model APIs (OpenAI, Anthropic, Gemini) to open-model inference platforms (Groq, Cerebras, NVIDIA NIM) and AI gateways (OpenRouter, Portkey). The rate limit comparison table below has the data developers actually need when choosing a provider.</p>
   </div>
 
@@ -14818,7 +14818,7 @@ ${buildCards(aiGateways)}
         <td>Inference</td>
         <td>~30 RPM</td>
         <td>Generous daily</td>
-        <td>Llama 3.3 70B, Whisper</td>
+        <td>gpt-oss-120b, gpt-oss-20b, Qwen3.8 27B, Whisper</td>
         <td>Fastest free inference (LPU)</td>
       </tr>
       <tr>
@@ -14832,10 +14832,10 @@ ${buildCards(aiGateways)}
       <tr>
         <td style="font-weight:600"><a href="/vendor/mistral-ai" style="color:var(--text)">Mistral AI</a></td>
         <td>Provider</td>
-        <td>2 RPM</td>
-        <td>1B tokens/month</td>
+        <td>Not published</td>
+        <td>$10/month in API credits</td>
         <td>Large, Codestral, Pixtral</td>
-        <td>All models free, huge monthly quota</td>
+        <td>Free plan includes monthly API credits.</td>
       </tr>
       <tr>
         <td style="font-weight:600"><a href="/vendor/openrouter" style="color:var(--text)">OpenRouter</a></td>
@@ -14912,16 +14912,16 @@ ${buildCards(aiGateways)}
     </tbody>
   </table>
   </div>
-  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Groq and Cerebras lead on free inference \u2014 Groq for speed (custom LPU silicon), Cerebras for daily token volume (1M/day). Mistral offers the broadest model access on free tier (all models, 1B tokens/month at 2 RPM). OpenRouter is ideal if you want one API key for ~30 free models. ${summaryClause} For proprietary frontier models, most providers are pay-as-you-go with signup credits rather than ongoing free tiers. [[freshness]]</p>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Groq and Cerebras lead on free inference \u2014 Groq for speed (custom LPU silicon), Cerebras for daily token volume (1M/day). Mistral offers the broadest model access on free tier (all models, with $10 a month in API credits). OpenRouter is ideal if you want one API key for ~30 free models. ${summaryClause} For proprietary frontier models, most providers are pay-as-you-go with signup credits rather than ongoing free tiers. [[freshness]]</p>
 
   <h2>Which Free LLM API Should I Use?</h2>
   <div class="decision-guide">
     <dl>
       <dt>Need the fastest free LLM inference?</dt>
-      <dd><a href="/vendor/groq">Groq</a> \u2014 custom LPU hardware delivers the fastest token generation, ~30 RPM free with Llama 3.3 70B. No credit card required.</dd>
+      <dd><a href="/vendor/groq">Groq</a> \u2014 custom LPU hardware delivers the fastest token generation, 30 RPM free with gpt-oss-120b. No credit card required.</dd>
 
       <dt>Need maximum free token volume?</dt>
-      <dd><a href="/vendor/cerebras">Cerebras</a> \u2014 1M tokens/day free, ideal for batch processing. <a href="/vendor/mistral-ai">Mistral AI</a> \u2014 1B tokens/month free across all models including Large and Codestral.</dd>
+      <dd><a href="/vendor/cerebras">Cerebras</a> \u2014 1M tokens/day free, ideal for batch processing. <a href="/vendor/mistral-ai">Mistral AI</a> \u2014 $10 a month in free API credits across all models, including Large and Codestral.</dd>
 
       <dt>Want one API key for many models?</dt>
       <dd><a href="/vendor/openrouter">OpenRouter</a> \u2014 ~30 free models (DeepSeek R1, Llama 3.3, Qwen3, Gemma 3) through one OpenAI-compatible API, ~20 RPM per model. ${manyModelsAnswer}</dd>
@@ -15894,7 +15894,7 @@ function buildFreeAiStackPage(): string {
     {
       name: "LLM API Access",
       icon: "🧠",
-      recommended: { vendor: "Groq", why: "Ultra-fast inference on LPU hardware — 30 RPM with 100K-500K tokens/day free. Supports Llama 3.3 70B, Mixtral, Gemma 2. Best balance of speed, limits, and model quality for prototyping." },
+      recommended: { vendor: "Groq", why: "Ultra-fast inference on LPU hardware — 30 RPM, 1,000 requests and 200K tokens a day per model, free. Serves gpt-oss-120b, gpt-oss-20b and Qwen3.8 27B. Best balance of speed, limits, and model quality for prototyping." },
       alternatives: ["Google Gemini API", "Cerebras", "Mistral AI", "Cohere", "OpenRouter"],
       outgrow: "When you exceed 30 RPM or 500K tokens/day. At that point, Cerebras (1M tokens/day) or OpenRouter (~30 free models) extend the free runway. Production apps typically need paid tiers for reliability SLAs.",
       relatedPage: "/free-llm-apis",
@@ -20034,7 +20034,7 @@ function buildGoogleDeveloperProgram2026Page(): string {
     </tr>`).join("\n        ");
 
   const llmAlternatives = [
-    { vendor: "Groq", free: "30 RPM, 100K-500K tokens/day", models: "Llama 3, Mixtral, Gemma", link: "/vendor/groq" },
+    { vendor: "Groq", free: "30 RPM; 1K requests and 200K tokens/day per model", models: "gpt-oss-120b, gpt-oss-20b, Qwen3.8 27B", link: "/vendor/groq" },
     { vendor: "OpenRouter", free: "Free models available", models: "100+ models aggregated", link: "/vendor/openrouter" },
     { vendor: "Cerebras", free: "Free tier available", models: "Llama 3, fast inference", link: "/vendor/cerebras" },
     { vendor: "Mistral AI", free: "Free plan, $10/mo API credits", models: "Mistral, Mixtral, Codestral", link: "/vendor/mistral-ai" },
@@ -22826,8 +22826,8 @@ function buildGeminiApiPricing2026Page(): string {
     { name: "Google Gemini API", freeLimit: "10 RPM (Flash), 15 RPM (Flash-Lite)", context: "1M tokens", models: "2.5 Flash, Flash-Lite, 2.5 Pro (free); 3.1 Pro (paid-only)", notes: "Spend caps enforced April 1. 3.1 Pro paid-only. Prepaid billing for new users.", risk: "high" },
     { name: "Anthropic Claude API", freeLimit: "Pay-as-you-go only", context: "1M tokens", models: "Fable 5.1, Opus 5, Sonnet 5, Haiku 4.5", notes: "No free tier — $10/$50 per MTok (Fable 5.1), $5/$25 (Opus 5). Batch API at 50% off.", risk: "none" },
     { name: "OpenAI API", freeLimit: "GPT-3.5 only, 3 RPM", context: "128K tokens", models: "GPT-3.5 Turbo (free), GPT-4o (paid)", notes: "Free trial credits discontinued mid-2025. Very limited free access.", risk: "medium" },
-    { name: "Groq", freeLimit: "30 RPM, 100K-500K tokens/day", context: "128K tokens", models: "Llama 4, Qwen3, Whisper", notes: "Ultra-fast LPU inference. Most generous free RPM. No credit card needed.", risk: "low" },
-    { name: "Mistral AI", freeLimit: "2 RPM, 1B tokens/month", context: "128K tokens", models: "Large, Codestral, Pixtral", notes: "Highest free token volume among proprietary providers.", risk: "low" },
+    { name: "Groq", freeLimit: "30 RPM; 1K requests and 200K tokens/day per model", context: "128K tokens", models: "gpt-oss-120b, gpt-oss-20b, Qwen3.8 27B, Whisper", notes: "Ultra-fast LPU inference. Most generous free RPM. No credit card needed.", risk: "low" },
+    { name: "Mistral AI", freeLimit: "$10/month in API credits", context: "128K tokens", models: "Large, Codestral, Pixtral", notes: "Free plan includes monthly API credits.", risk: "low" },
     { name: "OpenRouter", freeLimit: "~20 RPM per model, ~30 free models", context: "Varies by model", models: "DeepSeek R1, Llama 3.3, Qwen3, Gemma 3", notes: "One API key for many models. Best model variety on free tier.", risk: "low" },
     { name: "Cerebras", freeLimit: "10-30 RPM, 1M tokens/day", context: "128K tokens", models: "Llama 3.1 8B, Qwen 3 235B, GPT-OSS 120B", notes: "Fastest inference speeds. 1M tokens/day is very generous.", risk: "low" },
     { name: "DeepSeek", freeLimit: "Pay-as-you-go, very low pricing", context: "1M tokens", models: "deepseek-flash (V4.1-Flash), deepseek-v4-pro", notes: "$0.30/$1.20 per MTok for deepseek-flash at peak hours, half off-peak.", risk: "low" },
@@ -23079,7 +23079,7 @@ ${mcpCtaCss()}
   </table>
 
   <div class="context-box">
-    <strong>Key takeaway:</strong> <a href="/vendor/groq">Groq</a> offers 30 RPM free (3x Gemini Flash) with ultra-fast inference. <a href="/vendor/cerebras">Cerebras</a> gives 1M tokens/day free. <a href="/vendor/mistral-ai">Mistral AI</a> offers 1B tokens/month free. <a href="/vendor/openrouter">OpenRouter</a> provides ~30 free models through one API. All are more generous than Gemini's post-cut free tier. For the full comparison, see our <a href="/free-llm-apis">Free LLM APIs</a> guide.
+    <strong>Key takeaway:</strong> <a href="/vendor/groq">Groq</a> offers 30 RPM free (3x Gemini Flash) with ultra-fast inference. <a href="/vendor/cerebras">Cerebras</a> gives 1M tokens/day free. <a href="/vendor/mistral-ai">Mistral AI</a> includes $10 a month in free API credits. <a href="/vendor/openrouter">OpenRouter</a> provides ~30 free models through one API. All are more generous than Gemini's post-cut free tier. For the full comparison, see our <a href="/free-llm-apis">Free LLM APIs</a> guide.
   </div>
 
   <h2 id="what-to-do">7. What to Do</h2>
@@ -23098,7 +23098,7 @@ ${mcpCtaCss()}
     <h3>If you're evaluating alternatives</h3>
     <p class="impact-desc">
       <strong>1. For maximum free requests:</strong> <a href="/vendor/groq">Groq</a> — 30 RPM, no credit card, ultra-fast inference.<br>
-      <strong>2. For maximum free tokens:</strong> <a href="/vendor/cerebras">Cerebras</a> (1M tokens/day) or <a href="/vendor/mistral-ai">Mistral AI</a> (1B tokens/month).<br>
+      <strong>2. For maximum free tokens:</strong> <a href="/vendor/cerebras">Cerebras</a> (1M tokens/day).<br>
       <strong>3. For model variety:</strong> <a href="/vendor/openrouter">OpenRouter</a> — ~30 free models through one OpenAI-compatible API.<br>
       <strong>4. For long context:</strong> Gemini's 1M context window is still the largest free option. If context is your key requirement, stay on Gemini and manage the rate limits.<br>
       <strong>5. For production workloads:</strong> <a href="/vendor/anthropic-api">Anthropic Claude</a> or <a href="/vendor/openai">OpenAI</a> offer more predictable pricing without surprise pausing.
@@ -23176,9 +23176,9 @@ function buildGeminiApiPricingChangesPage(): string {
   }
 
   const alternatives: LlmAlternative[] = [
-    { name: "Groq", slug: "groq", freeRequests: "30 RPM, 14.4K RPD", freeTokens: "100K-500K/day", models: "Llama 4, Qwen3, Whisper", context: "128K", bestFor: "Fast inference, chatbots", monthlyCostAt1K: "$0 (within free tier)" },
+    { name: "Groq", slug: "groq", freeRequests: "30 RPM, 1K RPD", freeTokens: "200K/day per model", models: "gpt-oss-120b, gpt-oss-20b, Qwen3.8 27B, Whisper", context: "128K", bestFor: "Fast inference, chatbots", monthlyCostAt1K: "$0 (within free tier)" },
     { name: "Cerebras", slug: "cerebras", freeRequests: "10-30 RPM", freeTokens: "1M tokens/day", models: "Llama 3.1 8B, Qwen 3 235B", context: "128K", bestFor: "High-volume prototyping", monthlyCostAt1K: "$0 (within free tier)" },
-    { name: "Mistral AI", slug: "mistral-ai", freeRequests: "2 RPM, ~2.8K RPD", freeTokens: "1B tokens/month", models: "Large, Codestral, Pixtral", context: "128K", bestFor: "Code generation, multilingual", monthlyCostAt1K: "$0 (within free tier)" },
+    { name: "Mistral AI", slug: "mistral-ai", freeRequests: "Not published", freeTokens: "$10/month in API credits", models: "Large, Codestral, Pixtral", context: "128K", bestFor: "Code generation, multilingual", monthlyCostAt1K: "$0 (within free tier)" },
     { name: "OpenRouter", slug: "openrouter", freeRequests: "~20 RPM per model", freeTokens: "Varies (~30 free models)", models: "DeepSeek R1, Llama 3.3, Qwen3", context: "Varies", bestFor: "Model variety, flexibility", monthlyCostAt1K: "$0 (free models)" },
     { name: "Together.ai", slug: "together-ai", freeRequests: "~60 RPM", freeTokens: "$1 free credit", models: "Llama 4, Mistral, Qwen", context: "128K", bestFor: "Fine-tuning, open models", monthlyCostAt1K: "$5-15" },
     { name: "Fireworks.ai", slug: "fireworks-ai", freeRequests: "~600 RPM", freeTokens: "$1 free credit", models: "Llama 4, Mixtral, DeepSeek", context: "128K", bestFor: "Production inference, low latency", monthlyCostAt1K: "$5-20" },
@@ -23219,7 +23219,7 @@ function buildGeminiApiPricingChangesPage(): string {
   const faqItems = [
     { q: "What changed with Gemini API pricing in April 2026?", a: "Google enforced mandatory spending caps ($250-$100K+/mo by tier), cut free tier rate limits 50-80% (down to 5 RPM/100 req/day for free users), and introduced prepaid billing for new accounts. Gemini 3.1 Pro launched paid-only. Gemini 2.5 Pro is still on the free tier, alongside Flash and Flash-Lite." },
     { q: "Can I still use Gemini API for free?", a: "Yes — Flash, Flash-Lite and Gemini 2.5 Pro, at heavily reduced limits: 5 RPM, approximately 100 requests/day. Gemini 3.1 Pro requires a paid plan. The 1M token context window remains available on the free models." },
-    { q: "What are the best free alternatives to Gemini API?", a: "Groq (30 RPM free, ultra-fast), Cerebras (1M tokens/day free), Mistral AI (1B tokens/month free), and OpenRouter (~30 free models) all offer more generous free tiers than post-cut Gemini. Among paid options, DeepSeek's deepseek-flash is $0.30 per million input tokens and $1.20 per million output tokens at peak hours, half that off-peak." },
+    { q: "What are the best free alternatives to Gemini API?", a: "Groq (30 RPM free, ultra-fast), Cerebras (1M tokens/day free), Mistral AI ($10 a month in free API credits), and OpenRouter (~30 free models) all offer more generous free tiers than post-cut Gemini. Among paid options, DeepSeek's deepseek-flash is $0.30 per million input tokens and $1.20 per million output tokens at peak hours, half that off-peak." },
     { q: "How much does Gemini API cost now for 1,000 requests per day?", a: "A developer making 1,000 requests/day now needs a paid plan (approximately $15-30/month). Previously, this usage level was fully covered by the free tier. Alternatives like Groq, Cerebras, and Mistral handle this volume for free." },
     { q: "What is Gemini API spend cap and how does it work?", a: "Spend caps are billing-account-level monthly limits that automatically pause all API requests when reached. Tier 1 caps at $250/mo, Tier 2 at $2,000/mo, Tier 3 at $20K-$100K+. Unlike rate limits, spend caps fully stop API access until the next billing month." },
     { q: "Should I migrate away from Gemini API?", a: "It depends on your use case. If you need the 1M token context window, Gemini Flash still offers one free. For general chat/code tasks at higher volumes, Groq and Cerebras offer better free tiers. For production workloads, evaluate DeepSeek (low per-token prices) or Anthropic/OpenAI (most established)." },
@@ -23447,7 +23447,7 @@ function buildGeminiApiPricingChangesPage(): string {
     + '    <ul>\n'
     + '      <li><strong><a href="/vendor/groq">Groq</a></strong> &mdash; 30 RPM free (6x Gemini Flash), ultra-fast LPU inference, no credit card required. Best all-around free alternative.</li>\n'
     + '      <li><strong><a href="/vendor/cerebras">Cerebras</a></strong> &mdash; 1M tokens/day free. Best for high-volume prototyping where token count matters more than RPM.</li>\n'
-    + '      <li><strong><a href="/vendor/mistral-ai">Mistral AI</a></strong> &mdash; 1B tokens/month free. Best for code generation (Codestral) and multilingual tasks.</li>\n'
+    + '      <li><strong><a href="/vendor/mistral-ai">Mistral AI</a></strong> &mdash; $10 a month in free API credits. Best for code generation (Codestral) and multilingual tasks.</li>\n'
     + '      <li><strong><a href="/vendor/openrouter">OpenRouter</a></strong> &mdash; ~30 free models through one API. Best for flexibility and model experimentation.</li>\n'
     + '      <li><strong><a href="/vendor/deepseek">DeepSeek</a></strong> &mdash; $0.30/$1.20 per MTok for deepseek-flash at peak hours, half off-peak.</li>\n'
     + '    </ul>\n'
@@ -23458,7 +23458,7 @@ function buildGeminiApiPricingChangesPage(): string {
     + '\n'
     + '  <div class="impact-card" style="border-left-color:#8b5cf6">\n'
     + '    <h3 style="color:#8b5cf6">Chatbot Prototyping</h3>\n'
-    + '    <p class="impact-desc"><strong>Switch to: <a href="/vendor/groq">Groq</a></strong> &mdash; 30 RPM free with Llama 4 and Qwen3. OpenAI-compatible API means minimal code changes (swap base URL and model name). For multi-model experimentation, use <a href="/vendor/openrouter">OpenRouter</a> to test 30+ models through one API key. Groq\'s LPU inference is faster than Gemini, improving perceived chatbot responsiveness.</p>\n'
+    + '    <p class="impact-desc"><strong>Switch to: <a href="/vendor/groq">Groq</a></strong> &mdash; 30 RPM free with gpt-oss-120b and Qwen3.8 27B. OpenAI-compatible API means minimal code changes (swap base URL and model name). For multi-model experimentation, use <a href="/vendor/openrouter">OpenRouter</a> to test 30+ models through one API key. Groq\'s LPU inference is faster than Gemini, improving perceived chatbot responsiveness.</p>\n'
     + '  </div>\n'
     + '  <div class="impact-card" style="border-left-color:#8b5cf6">\n'
     + '    <h3 style="color:#8b5cf6">Code Generation</h3>\n'
@@ -32404,13 +32404,13 @@ function buildLlmApiPricingPage(): string {
       name: "Mistral AI",
       slug: "mistral-ai",
       category: "frontier",
-      freeTier: "2 RPM, 1B tok/mo",
+      freeTier: "$10/mo in API credits",
       flagshipModel: "Mistral Medium 3.5",
       inputPrice: "$1.50/M",
       outputPrice: "$7.50/M",
       contextWindow: "256K",
-      rateLimit: "2 RPM (free)",
-      freeDetails: "Experiment tier: 2 RPM, 1 billion tokens/month. No credit card required. Access to the current lineup: Mistral Medium 3.5 at $1.50/$7.50 per MTok, Mistral Large 3 at $0.50/$1.50, Mistral Small 4 at $0.15/$0.60 and Codestral at $0.30/$0.90. Le Chat consumer app included.",
+      rateLimit: "Not published",
+      freeDetails: "Free plan: $10 a month in API credits. Access to the current lineup: Mistral Medium 3.5 at $1.50/$7.50 per MTok, Mistral Large 3 at $0.50/$1.50, Mistral Small 4 at $0.15/$0.60 and Codestral at $0.30/$0.90. Le Chat consumer app included.",
       freeType: "generous",
       differentiator: "European AI lab; open weights through Mistral Large 3 and the Ministral 3 family; Codestral for code generation",
       readOn: FRONTIER_PRICES_READ_ON,
@@ -32449,12 +32449,12 @@ function buildLlmApiPricingPage(): string {
       slug: "groq",
       category: "inference",
       freeTier: "30 RPM free",
-      flagshipModel: "Llama 4 Scout 17B",
-      inputPrice: "$0.11/M",
-      outputPrice: "$0.18/M",
+      flagshipModel: "gpt-oss-20b",
+      inputPrice: "$0.075/M",
+      outputPrice: "$0.30/M",
       contextWindow: "128K",
-      rateLimit: "30 RPM, 100K-500K tok/day",
-      freeDetails: "30 RPM, 100K-500K tokens/day depending on model. No credit card required. Custom LPU hardware delivers thousands of tokens/second. Models: Llama 4 Scout 17B, Llama 3.3 70B, Qwen3 32B, Whisper.",
+      rateLimit: "30 RPM, 1K RPD, 200K tok/day per model",
+      freeDetails: "30 RPM, 1,000 requests and 200K tokens a day per model. No credit card required. Custom LPU hardware delivers thousands of tokens/second. Models: gpt-oss-120b, gpt-oss-20b, Qwen3.8 27B, Whisper.",
       freeType: "generous",
       differentiator: "Fastest inference speed (custom LPU hardware); generous free tier with no credit card",
     },
@@ -32744,7 +32744,7 @@ function buildLlmApiPricingPage(): string {
   );
 
   const faqEntries = [
-    { q: "Which LLM API has the best free tier in 2026?", a: "Groq's free tier is 30 RPM with 100K-500K tokens/day, no credit card required, with fast LPU-accelerated inference. " + freeTiersThisPageStandsBehind + " For frontier models specifically, Mistral's Experiment tier gives 1B tokens/month at 2 RPM." },
+    { q: "Which LLM API has the best free tier in 2026?", a: "Groq's free plan allows 30 RPM, 1,000 requests and 200K tokens a day per model, no credit card required, with fast LPU-accelerated inference. " + freeTiersThisPageStandsBehind + " For frontier models specifically, Mistral's Free plan includes $10 a month in API credits." },
     { q: "How much does GPT-4o cost per token?", a: "GPT-4o costs $2.50 per million input tokens and $10 per million output tokens. For reference, 1 million tokens is roughly 750,000 words. The batch API offers 50% discount ($1.25/$5 per M tokens). GPT-4o-mini is significantly cheaper at $0.15/$0.60 per M tokens." },
     { q: "How much does Claude cost per token?", a: "Claude Fable 5.1 costs $10/M input and $50/M output tokens. Opus 5 is $5/$25 per M tokens, Sonnet 5 is $2/$10, and Haiku 4.5 is the budget option at $1/$5. The Batch API offers 50% discount on all models." },
     { q: "What is the cheapest LLM API for production use?", a: "For frontier-quality models: xAI Grok 4.1 Fast at $0.20/M input, $0.50/M output. DeepSeek's deepseek-flash is $0.30/M input and $1.20/M output at peak hours, half that off-peak, with cached input at $0.006/M. Groq and Cerebras offer free tiers that can handle moderate production traffic. Google Gemini Flash models are free with rate limits." },
@@ -32880,7 +32880,7 @@ function buildLlmApiPricingPage(): string {
     '\n' +
     '  <div class="highlight-box">\n' +
     '    <h3>Cheapest per Million Tokens</h3>\n' +
-    '    <p><strong>Frontier:</strong> xAI Grok 4.1 Fast ($0.20/M input, $0.50/M output) &middot; <strong>Open-source:</strong> Groq Llama 4 Scout ($0.11/M input) &middot; <strong>Long context (1M):</strong> deepseek-flash ($0.30/$1.20/M at peak) &middot; <strong>Reasoning:</strong> DeepSeek V4-Pro ($1.32/M input at peak) vs Claude Opus 5 ($5/M) vs OpenAI o3 ($2/M)</p>\n' +
+    '    <p><strong>Frontier:</strong> xAI Grok 4.1 Fast ($0.20/M input, $0.50/M output) &middot; <strong>Open-source:</strong> Groq gpt-oss-20b ($0.075/M input) &middot; <strong>Long context (1M):</strong> deepseek-flash ($0.30/$1.20/M at peak) &middot; <strong>Reasoning:</strong> DeepSeek V4-Pro ($1.32/M input at peak) vs Claude Opus 5 ($5/M) vs OpenAI o3 ($2/M)</p>\n' +
     '  </div>\n' +
     '\n' +
     '  <div class="highlight-box">\n' +
