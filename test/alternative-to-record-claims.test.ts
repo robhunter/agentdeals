@@ -7,6 +7,7 @@ import { CHANGE_DIRECTION, loadDealChanges, loadOffers } from "../dist/data.js";
 import { changeRatesTheListedTier } from "../dist/change-tier.js";
 import { CHANGE_KIND_NOUN, narrowingSentence } from "../dist/vendor-verdict.js";
 import { isNoLongerInForce } from "../dist/change-resolution.js";
+import { PRODUCT_DEPRECATED, deprecationTouchesTheListing } from "../dist/product-deprecation.js";
 import { vendorSlugMap } from "../dist/vendor-slug.js";
 import type { DealChange } from "../src/types.ts";
 
@@ -34,7 +35,11 @@ function negativeKinds(records: DealChange[]): string[] {
 }
 
 function stillNarrowing(records: DealChange[]): DealChange[] {
-  return records.filter(c => CHANGE_DIRECTION[c.change_type] === "negative" && !isNoLongerInForce(c));
+  return records.filter(
+    c => CHANGE_DIRECTION[c.change_type] === "negative"
+      && !isNoLongerInForce(c)
+      && (c.change_type !== PRODUCT_DEPRECATED || deprecationTouchesTheListing(c)),
+  );
 }
 
 function kindsCalledAbsent(answer: string, kinds: string[]): string[] {
