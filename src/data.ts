@@ -1812,7 +1812,7 @@ export function getWeeklyDigest(): {
   const fmt = (d: Date) => d.toISOString().slice(0, 10);
   const today = fmt(now);
 
-  const allDealChanges = trackedChanges(loadDealChanges());
+  const allDealChanges = changesTheVendorMade(trackedChanges(loadDealChanges()));
   const weekWindow = isoWeekWindow(now);
   const week = `${weekWindow.start} to ${weekWindow.end}`;
   const inWeek = changesInWindow(allDealChanges, weekWindow);
@@ -1942,7 +1942,7 @@ export function getFormattedWeeklyDigest(weeksAgo: number = 0, limit: number = 2
   const weekStart = new Date(weekStartStr + "T00:00:00Z");
   const weekEnd = new Date(weekEndStr + "T00:00:00Z");
 
-  const { dated: weekChanges, discovered: weekDiscovered } = changesInWindow(allChanges, week);
+  const { dated: weekChanges, discovered: weekDiscovered } = changesInWindow(changesTheVendorMade(allChanges), week);
   const sorted = [...weekChanges].sort((a, b) => scoreChange(b) - scoreChange(a));
   const topChanges = sorted.slice(0, limit);
   const discoveredChanges = [...weekDiscovered].sort((a, b) => scoreChange(b) - scoreChange(a)).slice(0, limit);

@@ -4400,6 +4400,10 @@ function getChangesByWeek(): Map<string, typeof dealChanges> {
   return byWeek;
 }
 
+function vendorChangesAmong(records: typeof dealChanges): typeof dealChanges {
+  return changesTheVendorMade(records.filter(c => !isIndexHousekeeping(c)));
+}
+
 function formatDateRange(year: number, week: number): string {
   const start = getWeekStart(year, week);
   const end = new Date(start.getTime() + 6 * 86400000);
@@ -4458,7 +4462,7 @@ function buildDigestPage(weekKey: string): string | null {
   const { year, week } = parsed;
 
   const byWeek = getChangesByWeek();
-  const weekRecords = (byWeek.get(weekKey) ?? []).filter(c => !isIndexHousekeeping(c));
+  const weekRecords = vendorChangesAmong(byWeek.get(weekKey) ?? []);
   const { dated: changes, discovered } = partitionByDateProvenance(weekRecords);
   const dateRange = formatDateRange(year, week);
   const discoveryNote = discovered.length > 0 ? discoveryBatchNote(discovered.length, `during ${dateRange}`) : "";
@@ -4611,7 +4615,7 @@ function buildDigestArchivePage(): string {
   const listHtml = weeks.map(([key, records]) => {
     const parsed = parseWeekKey(key)!;
     const dateRange = formatDateRange(parsed.year, parsed.week);
-    const { dated, discovered } = partitionByDateProvenance(records);
+    const { dated, discovered } = partitionByDateProvenance(vendorChangesAmong(records));
     const firstRead = discovered.length > 0 ? ` + ${discovered.length} first read` : "";
     return `<li><a href="/digest/${key}"><span class="week-label">${dateRange}</span><span class="week-count">${dated.length} change${dated.length !== 1 ? "s" : ""}${firstRead}</span></a></li>`;
   }).join("\n    ");
