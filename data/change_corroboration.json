@@ -936,18 +936,6 @@
       "resolved_date": "2026-09-21"
     },
     {
-      "vendor": "Buildkite",
-      "change_type": "limits_reduced",
-      "impact": "medium",
-      "summary": "The free plan now offers 2,000 Linux vCPU minutes/month and 250k test executions, up from 500 minutes and 50k executions. The free plan also has a 30-day build retention instead of 90 days.",
-      "previous_state": "500 hosted agent minutes/month, 3 concurrent jobs, 90-day build retention, 50K test executions. Free for open-source projects",
-      "source_url": "https://buildkite.com/pricing/",
-      "first_read_date": "2026-09-21",
-      "outcome": "baseline_moved",
-      "detail": "the terms it was read against are no longer the terms we publish",
-      "resolved_date": "2026-09-21"
-    },
-    {
       "vendor": "Anthropic API",
       "change_type": "pricing_restructured",
       "impact": "medium",
@@ -1101,18 +1089,6 @@
       "first_read_date": "2026-09-21",
       "outcome": "corroborated",
       "detail": "a reading on 2026-09-22 read it as limits_reduced too",
-      "resolved_date": "2026-09-22"
-    },
-    {
-      "vendor": "Buildkite",
-      "change_type": "limits_reduced",
-      "impact": "medium",
-      "summary": "The free plan now offers 2,000 Linux vCPU minutes/month and 250k test executions, up from 500 minutes and 50k executions. The free plan also has a 30-day build retention instead of 90 days.",
-      "previous_state": "500 hosted agent minutes/month, 3 concurrent jobs, 90-day build retention, 50K test executions. Free for open-source projects",
-      "source_url": "https://buildkite.com/pricing/",
-      "first_read_date": "2026-09-22",
-      "outcome": "baseline_moved",
-      "detail": "the terms it was read against are no longer the terms we publish",
       "resolved_date": "2026-09-22"
     },
     {

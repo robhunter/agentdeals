@@ -119,6 +119,38 @@ export function standingRestatements(entries) {
   return entries.filter((entry) => !entry.reverted_on);
 }
 
+export function newestStandingRestatements(entries) {
+  const newest = new Map();
+  for (const entry of standingRestatements(entries)) {
+    const key = offerKey(entry.vendor, entry.url);
+    const held = newest.get(key);
+    if (!held || entry.restated_on > held.restated_on) newest.set(key, entry);
+  }
+  return newest;
+}
+
+export function theIndexPublishes(offer, entry) {
+  return offer?.restated_from?.restated_on === entry.restated_on && offer?.description === entry.description;
+}
+
+export function restatementsTheIndexNeverTook(entries, offers) {
+  const published = new Map((offers ?? []).map((offer) => [offerKey(offer.vendor, offer.url), offer]));
+  return [...newestStandingRestatements(entries)]
+    .filter(([key, entry]) => published.has(key) && !theIndexPublishes(published.get(key), entry))
+    .map(([, entry]) => entry);
+}
+
+export function restatementsWrittenAgain(entries) {
+  const first = new Set();
+  const again = [];
+  for (const entry of standingRestatements(entries)) {
+    const reading = `${offerKey(entry.vendor, entry.url)}|${entry.reading_date}|${entry.description}`;
+    if (first.has(reading)) again.push(entry);
+    else first.add(reading);
+  }
+  return again;
+}
+
 export function newestRestatementFor(entries, vendor) {
   const named = standingRestatements(entries).filter(
     (entry) => entry.vendor.toLowerCase() === vendor.toLowerCase(),
