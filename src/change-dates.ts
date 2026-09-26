@@ -1,10 +1,18 @@
-import type { DealChange, ChangeDateSource } from "./types.js";
+import type { DealChange, ChangeDateSource, DateMeaning } from "./types.js";
 import { PRODUCT_DEPRECATED, deprecationEndsTheListedProduct } from "./product-deprecation.js";
 import { sliceById } from "./change-census.js";
+import { isACorrectionToOurOwnRecord } from "./change-resolution.js";
+import { reportsOurIndex } from "./change-reporting.js";
 
-type DatedChange = Pick<DealChange, "date" | "date_source">;
+export interface DatedChange {
+  date: string;
+  date_source?: ChangeDateSource;
+  recorded_date?: string | null;
+  change_type?: string;
+  reports?: string | null;
+}
 
-type ExpiringChange = Pick<DealChange, "date" | "date_source" | "change_type" | "vendor" | "summary">;
+type ExpiringChange = DatedChange & Pick<DealChange, "change_type" | "vendor" | "summary">;
 
 export const DISCOVERED_DATE_PREFIX = "discovered";
 
@@ -16,11 +24,28 @@ export const DATE_SOURCES: ChangeDateSource[] = ["vendor_page", "hand_written", 
 
 export const EVENT_DATED_SOURCES: ChangeDateSource[] = ["vendor_page", "hand_written"];
 
-export function isEventDated(change: Pick<DealChange, "date_source">): boolean {
-  return EVENT_DATED_SOURCES.includes(change.date_source as ChangeDateSource);
+function recordsSomethingWeDid(change: DatedChange): boolean {
+  return isACorrectionToOurOwnRecord(change) || reportsOurIndex(change);
 }
 
-export function partitionByDateProvenance<T extends Pick<DealChange, "date_source">>(
+export function carriesTheDayItWasTyped(change: DatedChange): boolean {
+  if (change.date_source !== "hand_written" || recordsSomethingWeDid(change)) return false;
+  return !change.recorded_date || change.date === change.recorded_date;
+}
+
+export function isEventDated(change: DatedChange): boolean {
+  return EVENT_DATED_SOURCES.includes(change.date_source as ChangeDateSource) && !carriesTheDayItWasTyped(change);
+}
+
+export function dateMeaningOf(change: DatedChange): DateMeaning {
+  return isEventDated(change) ? EFFECTIVE_DATE_PREFIX : DISCOVERED_DATE_PREFIX;
+}
+
+export function withDateMeaningDeclared<T extends DatedChange>(change: T): T & { date_meaning: DateMeaning } {
+  return { ...change, date_meaning: dateMeaningOf(change) };
+}
+
+export function partitionByDateProvenance<T extends DatedChange>(
   changes: T[]
 ): { dated: T[]; discovered: T[] } {
   const dated: T[] = [];
@@ -40,7 +65,7 @@ export function groupByMonth<T extends Pick<DealChange, "date">>(changes: T[]): 
   return new Map([...byMonth.entries()].sort((a, b) => a[0].localeCompare(b[0])));
 }
 
-export function monthlyChangeSeries<T extends Pick<DealChange, "date" | "date_source">>(
+export function monthlyChangeSeries<T extends DatedChange>(
   changes: T[]
 ): { effective: Map<string, T[]>; discovered: Map<string, T[]> } {
   const { dated, discovered } = partitionByDateProvenance(changes);
@@ -48,14 +73,14 @@ export function monthlyChangeSeries<T extends Pick<DealChange, "date" | "date_so
 }
 
 export const EFFECTIVE_MONTH_SERIES_NOTE =
-  "Each change is counted in the month its terms took effect. A change read off a page that does not say when it changed is not counted here — those are below, by the month we read the page.";
+  "Each change is counted in the month its terms took effect. A change we hold no effective date for is not counted here; those are below, by the month we recorded it.";
 
 export function discoveryMonthSeriesHeading(count: number): string {
-  return `Changes Found by Reading a Page (${count})`;
+  return `Changes With No Known Effective Date (${count})`;
 }
 
 export const DISCOVERY_MONTH_SERIES_NOTE =
-  "These vendors’ pages state terms that differ from what we had stored and do not say when they changed. Each is counted in the month we read the page, so this series measures when we looked, not when the market moved. None of them are in the monthly figures above.";
+  "We hold no effective date for these changes. Each is counted in the month we recorded it, so this series measures when we looked, not when the market moved. None of them are in the monthly figures above.";
 
 export function periodComparisonSentence(
   earlier: { label: string; count: number },
@@ -110,7 +135,7 @@ export function withinWindow(date: string, window: DateWindow): boolean {
   return date >= window.start && (window.end === undefined || date <= window.end);
 }
 
-export function changesInWindow<T extends Pick<DealChange, "date" | "date_source">>(
+export function changesInWindow<T extends DatedChange>(
   changes: T[],
   window: DateWindow
 ): { dated: T[]; discovered: T[] } {
@@ -118,19 +143,17 @@ export function changesInWindow<T extends Pick<DealChange, "date" | "date_source
 }
 
 export function firstReadHeading(count: number): string {
-  return `Pages read for the first time (${count})`;
+  return `Effective date unknown (${count})`;
 }
 
 export function discoveryBatchNote(count: number, when: string): string {
-  const pages = `${count} pricing page${count === 1 ? "" : "s"}`;
-  const subject = count === 1 ? "it is" : "they are";
-  const verb = count === 1 ? "is" : "are";
-  const object = count === 1 ? "a change that took" : "changes that took";
-  return `${pages} read for the first time ${when}. Each records terms that differ from what we had stored, on a page that does not say when they changed — so ${subject} dated by discovery and ${verb} not counted as ${object} effect ${when}.`;
+  return count === 1
+    ? `1 change recorded ${when} has no known effective date. It is dated the day we recorded it, not the day its terms took effect, so it is not counted as a change that took effect ${when}.`
+    : `${count} changes recorded ${when} have no known effective date. Each is dated the day we recorded it, not the day its terms took effect, so none is counted as a change that took effect ${when}.`;
 }
 
 export const UNDATED_GROUP_NOTE =
-  "The vendor’s page states these terms but not when they took effect, so we can only tell you when we found them. They are listed by discovery date and are excluded from the monthly groups and the Last 30 Days count above, both of which count changes by the date they took effect.";
+  "We hold no effective date for these changes, so each is dated the day we recorded it; the change may have taken effect long before. They are listed by that date and are excluded from the monthly groups and the Last 30 Days count above, both of which count changes by the date they took effect.";
 
 export const UNDATED_TILE_LABEL = "Effective Date Unknown";
 
@@ -143,7 +166,7 @@ export function changeDateLabel(c: DatedChange): string {
   return isEventDated(c) ? c.date : `${DISCOVERED_DATE_PREFIX} ${c.date}`;
 }
 
-export function changeEntryDateLabelFor(c: Pick<DealChange, "date_source">, rendered: string): string {
+export function changeEntryDateLabelFor(c: DatedChange, rendered: string): string {
   return isEventDated(c)
     ? `${EFFECTIVE_DATE_PREFIX} ${rendered}`
     : `${DISCOVERED_DATE_PREFIX} ${rendered} · ${UNKNOWN_EFFECTIVE_DATE_MARKER}`;

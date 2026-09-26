@@ -28,11 +28,11 @@ const MUTANTS = [
   ["risk-card-hides-the-discovery-series", "src/serve.ts",
     `    \${discoveredTotal > 0 ? \`<p class="diff-desc"><strong>\${discoveryMonthSeriesHeading(discoveredTotal)}.</strong>`,
     `    \${false ? \`<p class="diff-desc"><strong>\${discoveryMonthSeriesHeading(discoveredTotal)}.</strong>`],
-  ["discovery-series-does-not-say-when-we-read-the-page", "src/change-dates.ts",
+  ["undated-series-does-not-say-it-counts-the-month-we-recorded", "src/change-dates.ts",
     `export const DISCOVERY_MONTH_SERIES_NOTE =
-  "These vendors’ pages state terms that differ from what we had stored and do not say when they changed. Each is counted in the month we read the page, so this series measures when we looked, not when the market moved. None of them are in the monthly figures above.";`,
+  "We hold no effective date for these changes. Each is counted in the month we recorded it, so this series measures when we looked, not when the market moved. None of them are in the monthly figures above.";`,
     `export const DISCOVERY_MONTH_SERIES_NOTE =
-  "These vendors’ pages state terms that differ from what we had stored.";`],
+  "We hold no effective date for these changes.";`],
   ["trend-caption-claims-an-acceleration", "src/serve.ts",
     `  <p class="section-desc">\${EFFECTIVE_MONTH_SERIES_NOTE} Red bars = negative changes`,
     `  <p class="section-desc">Pricing changes by month, showing the acceleration in 2026. Red bars = negative changes`],

@@ -126,6 +126,7 @@ export interface RiskCause {
   vendor: string;
   date: string;
   date_source?: ChangeDateSource;
+  recorded_date?: string;
   change_type: string;
   summary: string;
   source_url: string | null;
@@ -194,9 +195,12 @@ export interface DealChange {
 
 export type PublishedChangeImpact = DealChange["impact"] | "none";
 
+export type DateMeaning = "effective" | "discovered";
+
 export type PublishedDealChange = Omit<DealChange, "impact"> & {
   impact: PublishedChangeImpact;
   standing: ChangeStanding;
+  date_meaning: DateMeaning;
 };
 
 export interface ChangeSourceCheck {

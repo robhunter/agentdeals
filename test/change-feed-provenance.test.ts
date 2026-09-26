@@ -16,6 +16,7 @@ import {
   recordedOn,
 } from "../dist/change-feed.js";
 import { weekRangeLabel, changeEntryDateLabel, DISCOVERED_DATE_PREFIX, EFFECTIVE_DATE_PREFIX, UNKNOWN_EFFECTIVE_DATE_MARKER } from "../dist/change-dates.js";
+import { statesWhenItTookEffect } from "./effective-date-rule.ts";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -199,7 +200,7 @@ describe("the change feeds date every entry by when we recorded it and say what 
     assert.strictEqual(checked, entries.length, `matched only ${checked} of ${entries.length} entries back to /api/changes`);
   });
 
-  it("states inside every entry whether its date is when the terms changed or when we read the page", () => {
+  it("states inside every entry whether its date is when the terms changed or the day we recorded the change", () => {
     const unlabelled = entries.filter((e) => {
       const record = recordFor(e);
       if (!record) return true;
@@ -218,12 +219,11 @@ describe("the change feeds date every entry by when we recorded it and say what 
     assert.deepStrictEqual(absent.map((e) => `${e.title} — ${e.summary.slice(0, 50)}`), []);
   });
 
-  it("tells an entry read on its own that a discovery date is a reading date", () => {
-    const discovered = entries.filter((e) => e.dateSource === "discovered");
-    assert.ok(discovered.length > 0, "no discovered entry in the feed to check");
-    for (const entry of discovered) {
-      assert.match(entry.summary, /when we read the vendor's pricing page/);
-      assert.match(entry.summary, /does not say when they changed/);
+  it("tells an entry read on its own that a date with no known effective date is the day we recorded the change", () => {
+    const undated = entries.filter((e) => !statesWhenItTookEffect(recordFor(e)!));
+    assert.ok(undated.length > 0, "no entry without a known effective date in the feed to check");
+    for (const entry of undated) {
+      assert.match(entry.summary, /effective date unknown — this is the day we recorded the change\. We do not know when it took effect\./);
     }
   });
 
@@ -231,24 +231,26 @@ describe("the change feeds date every entry by when we recorded it and say what 
     for (const entry of entries) {
       assert.ok(["discovered", "hand_written", "vendor_page"].includes(entry.dateSource), entry.title);
       assert.match(entry.recordedDate, /^\d{4}-\d{2}-\d{2}$/, entry.title);
-      if (entry.dateSource === "discovered") assert.strictEqual(entry.effectiveDate, null, entry.title);
-      else assert.match(entry.effectiveDate ?? "", /^\d{4}-\d{2}-\d{2}$/, entry.title);
+      const record = recordFor(entry);
+      assert.ok(record, `${entry.title} matches no record in /api/changes`);
+      if (!statesWhenItTookEffect(record!)) assert.strictEqual(entry.effectiveDate, null, entry.title);
+      else assert.strictEqual(entry.effectiveDate, record!.date, entry.title);
     }
   });
 
-  it("declares in the feed document how many of its entries are dated by discovery", () => {
+  it("declares in the feed document how many of its entries have no known effective date", () => {
     const subtitle = tag(perChange, "subtitle") ?? "";
-    const discovered = entries.filter((e) => e.dateSource === "discovered").length;
-    assert.ok(
-      subtitle.includes(`${discovered} of ${entries.length} are dated by discovery`),
-      `subtitle does not state the ${discovered} discovered entries: ${subtitle}`
-    );
+    const undated = entries.filter((e) => !statesWhenItTookEffect(recordFor(e)!)).length;
+    const stated = undated === 1
+      ? `1 of ${entries.length} has no known effective date and is dated the day we recorded it.`
+      : `${undated} of ${entries.length} have no known effective date and are dated the day we recorded them.`;
+    assert.ok(subtitle.includes(stated), `subtitle does not state the ${undated} entries with no known effective date: ${subtitle}`);
   });
 
   it("says in each feed which population it counts, so the two are reconcilable", () => {
     assert.match(tag(perChange, "subtitle") ?? "", /Weekly Pricing Digest/);
     assert.match(tag(weekly, "subtitle") ?? "", /only changes with a known effective date/);
-    assert.match(tag(weekly, "subtitle") ?? "", /read for the first time/);
+    assert.match(tag(weekly, "subtitle") ?? "", /Changes recorded that week without one are listed inside the issue under their own heading/);
   });
 
   it("never stamps a feed as generated later than it was generated", async () => {

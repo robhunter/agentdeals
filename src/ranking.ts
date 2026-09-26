@@ -225,6 +225,7 @@ export interface Disclosure {
   vendor: string;
   date: string;
   date_source?: ChangeDateSource;
+  recorded_date?: string;
   summary: string;
   source_url: string | null;
 }
@@ -613,6 +614,7 @@ export function evaluate<T extends Offer>(
         vendor: change.vendor,
         date: change.date,
         date_source: change.date_source,
+        recorded_date: change.recorded_date,
         summary: change.summary,
         source_url: change.source_url?.trim() ? change.source_url.trim() : null,
       });

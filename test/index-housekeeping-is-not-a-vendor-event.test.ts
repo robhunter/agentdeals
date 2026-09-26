@@ -15,6 +15,7 @@ import {
 } from "../dist/change-census.js";
 import { reportsOurIndex } from "../dist/change-reporting.js";
 import { isNoLongerInForce } from "../dist/change-resolution.js";
+import { statesWhenItTookEffect } from "./effective-date-rule.ts";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -23,6 +24,7 @@ interface StoredChange {
   vendor: string;
   date: string;
   date_source: string;
+  recorded_date?: string;
   summary: string;
   change_type: string;
   current_state: string;
@@ -32,14 +34,13 @@ interface StoredChange {
 }
 
 const WEEK_15_2026 = { start: "2026-04-06", end: "2026-04-12" };
-const EVENT_DATED = ["vendor_page", "hand_written"];
 
 function getWeek15Tracked(): number {
   return storedChanges().filter(
     c =>
       c.date >= WEEK_15_2026.start
       && c.date <= WEEK_15_2026.end
-      && EVENT_DATED.includes(c.date_source)
+      && statesWhenItTookEffect(c)
       && !isNoLongerInForce(c)
       && !isIndexHousekeeping(c),
   ).length;
@@ -196,23 +197,32 @@ describe("the surfaces a reader takes for vendor market activity", () => {
     );
   });
 
-  it("counts only tracked changes into the Q2 preview's confirmed figure", async () => {
+  it("counts only tracked changes with a known effective date into the Q2 preview's confirmed figure", async () => {
     const page = await body("/q2-pricing-preview-2026");
     const stored = storedChanges();
     const inWindow = (changes: StoredChange[]) =>
-      changes.filter(c => c.date >= "2026-03-25" && c.date <= "2026-06-30").length;
-    const confirmed = inWindow(trackedChanges(stored) as StoredChange[]);
-    const held = inWindow(stored);
-    assertPopulationFloor(confirmed, 100, "changes whose terms took effect in the window the preview covers");
-    assert.ok(held > confirmed, "the window holds nothing that is not a tracked change, so this proves nothing");
+      changes.filter(c => c.date >= "2026-03-25" && c.date <= "2026-06-30");
+    const tracked = inWindow(trackedChanges(stored) as StoredChange[]);
+    const confirmed = tracked.filter(statesWhenItTookEffect).length;
+    const withNoKnownEffectiveDate = tracked.length - confirmed;
+    const held = inWindow(stored).length;
+    assertPopulationFloor(confirmed, 1, "tracked changes with a known effective date in the window the preview covers");
+    assertPopulationFloor(withNoKnownEffectiveDate, 1, "tracked changes with no known effective date in the window the preview covers");
+    assert.ok(held > tracked.length, "the window holds nothing that is not a tracked change, so this proves nothing");
 
     assert.ok(
       page.includes(`${confirmed} confirmed changes`),
-      `the preview does not state the ${confirmed} tracked changes in its window`,
+      `the preview does not state the ${confirmed} tracked changes in its window that have a known effective date`,
     );
+    for (const overcount of [tracked.length, held]) {
+      assert.ok(
+        !page.includes(`${overcount} confirmed changes`),
+        `the preview counts ${overcount} records in its window as confirmed changes`,
+      );
+    }
     assert.ok(
-      !page.includes(`${held} confirmed changes`),
-      `the preview counts all ${held} records in its window as confirmed changes`,
+      page.includes(`${withNoKnownEffectiveDate} more were recorded in these dates with no known effective date and are not counted.`),
+      `the preview does not say that ${withNoKnownEffectiveDate} records in its window are left out of the count`,
     );
     const swept = stored.filter(isIndexHousekeeping);
     const sweptSummaries = new Set(swept.map(c => c.summary as unknown as string));
@@ -225,8 +235,8 @@ describe("the surfaces a reader takes for vendor market activity", () => {
     for (const markup of ['<div class="change-card"', '<div class="timeline-item"']) {
       assert.strictEqual(
         page.split(markup).length - 1,
-        confirmed,
-        `the preview renders a different number of ${markup} than the ${confirmed} tracked changes in its window`,
+        tracked.length,
+        `the preview renders a different number of ${markup} than the ${tracked.length} tracked changes in its window`,
       );
     }
   });
