@@ -248,7 +248,7 @@ describe("an entry lifted out of its section still says what its date is", () =>
   let routes: string[] = [];
   let ENTRY_DATE = "";
   let discoveredPort = 0;
-  const rendered = new Map<string, { discovered: string; dated: string; typed: string; withoutTheEntry: string }>();
+  const rendered = new Map<string, { discovered: string; dated: string; typed: string; setApart: string; withoutTheEntry: string }>();
 
   before(async () => {
     tmp = mkdtempSync(path.join(tmpdir(), "change-entry-provenance-"));
@@ -269,8 +269,11 @@ describe("an entry lifted out of its section still says what its date is", () =>
     const typed = await startServer(
       write("typed-on-the-day.json", [control, { ...change(SUBJECT, ENTRY_DATE, "hand_written", SUMMARY), recorded_date: ENTRY_DATE }])
     );
+    const setApart = await startServer(
+      write("set-apart.json", [control, { ...change(SUBJECT, ENTRY_DATE, "hand_written", SUMMARY), recorded_date: dayOffset(-30) }])
+    );
     const withoutTheEntry = await startServer(write("without-the-entry.json", [control]));
-    servers.push(discovered.proc, dated.proc, typed.proc, withoutTheEntry.proc);
+    servers.push(discovered.proc, dated.proc, typed.proc, setApart.proc, withoutTheEntry.proc);
     discoveredPort = discovered.port;
 
     const index = await (await fetch(`http://localhost:${discovered.port}/sitemap.xml`)).text();
@@ -288,17 +291,19 @@ describe("an entry lifted out of its section still says what its date is", () =>
         const route = queue.shift();
         if (!route) return;
         try {
-          const [a, b, c, d] = await Promise.all([
+          const [a, b, c, d, e] = await Promise.all([
             fetch(`http://localhost:${discovered.port}${route}`),
             fetch(`http://localhost:${dated.port}${route}`),
             fetch(`http://localhost:${withoutTheEntry.port}${route}`),
             fetch(`http://localhost:${typed.port}${route}`),
+            fetch(`http://localhost:${setApart.port}${route}`),
           ]);
           if (a.status !== 200 || b.status !== 200) continue;
           const bodies = {
             discovered: await a.text(),
             dated: await b.text(),
             typed: d.status === 200 ? await d.text() : "",
+            setApart: e.status === 200 ? await e.text() : "",
             withoutTheEntry: c.status === 200 ? await c.text() : "",
           };
           if (bodies.discovered.includes(SUMMARY)) rendered.set(route, bodies);
@@ -368,6 +373,21 @@ describe("an entry lifted out of its section still says what its date is", () =>
         offenders.push(`${route}: ${field}`);
       }
     }
+    assert.deepStrictEqual(offenders, []);
+  });
+
+  it("declares a hand-written date set apart from the day it was recorded as an effective date in every field that prints it", () => {
+    const offenders: string[] = [];
+    let fields = 0;
+    for (const [route, b] of rendered) {
+      for (const field of fieldsTheEntryPuts(b.setApart, b)) {
+        fields += 1;
+        if (field.includes(`${EFFECTIVE_DATE_PREFIX} ${ENTRY_DATE}`)) continue;
+        if (EXEMPT.some((e) => e.allows(field))) continue;
+        offenders.push(`${route}: ${field}`);
+      }
+    }
+    assert.ok(fields > 0, "no route put the set-apart entry's date in a field, so the check proves nothing");
     assert.deepStrictEqual(offenders, []);
   });
 

@@ -627,6 +627,35 @@ describe("no surface renders a discovery date as the date the vendor changed som
     assert.strictEqual(labels.size, 2, "the three cases should produce both kinds of label");
   });
 
+  it("keeps at the MCP door, in both shapes, which kind of date each record carries", async () => {
+    const trackChanges = async (port: number, args: Record<string, unknown>) => {
+      const headers = { "Content-Type": "application/json", Accept: "application/json, text/event-stream" };
+      const base = `http://localhost:${port}`;
+      const init = await fetch(`${base}/mcp`, {
+        method: "POST",
+        headers,
+        body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "initialize", params: { protocolVersion: "2025-06-18", capabilities: {}, clientInfo: { name: "test", version: "1.0.0" } } }),
+      });
+      const session = init.headers.get("mcp-session-id");
+      const res = await fetch(`${base}/mcp`, {
+        method: "POST",
+        headers: session ? { ...headers, "mcp-session-id": session } : headers,
+        body: JSON.stringify({ jsonrpc: "2.0", id: 2, method: "tools/call", params: { name: "track_changes", arguments: { since: "2000-01-01", include_expiring: false, ...args } } }),
+      });
+      const text = await res.text();
+      const frame = text.split("\n").filter((l) => l.startsWith("data: ")).map((l) => l.slice(6)).pop() ?? text;
+      return JSON.parse(JSON.parse(frame).result.content[0].text);
+    };
+    for (const [port, meaning] of [[typedPort, "discovered"], [vendorPageAheadPort, "effective"], [recordedAheadPort, "effective"]] as const) {
+      for (const shape of [{}, { response_format: "concise" }]) {
+        const body = await trackChanges(port, shape);
+        const entry = body.changes.find((c: any) => c.vendor === SUBJECT);
+        assert.ok(entry, `track_changes on port ${port} dropped the entry`);
+        assert.strictEqual(entry.date_meaning, meaning, `port ${port}, ${JSON.stringify(shape)}`);
+      }
+    }
+  });
+
   it("does not turn a hand-written date typed on the day into a deadline in the agent digest", async () => {
     const recordedAhead = (await (await fetch(`http://localhost:${recordedAheadPort}/api/digest`)).json()) as any;
     assert.ok(
