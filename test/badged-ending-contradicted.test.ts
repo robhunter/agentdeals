@@ -160,6 +160,12 @@ describe("a route that badges a vendor and then states terms for it", () => {
     assert.deepStrictEqual(contradictionsOn(html, "/ai-coding-tools-pricing"), []);
   });
 
+  it("leaves a sentence saying the vendor closed its free plan to new sign-ups", () => {
+    const html = page(`<div class="diff-card"><h3>CockroachDB ${SWEPT_BADGE("CockroachDB", "cockroachdb")}</h3></div>
+      <p>CockroachDB closed its free Basic plan to new deployments on 2026-09-15.</p>`);
+    assert.deepStrictEqual(contradictionsOn(html, "/database-pricing"), []);
+  });
+
   it("does not read a licence as an offer", () => {
     const html = page(`<div class="diff-card"><h3>MinIO ${SWEPT_BADGE("MinIO", "minio")}</h3>
       <div class="diff-desc">MinIO is free software, but running it in production costs infrastructure and on-call time.</div></div>`);
