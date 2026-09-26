@@ -2977,7 +2977,13 @@
       "category": "Design",
       "alternatives": [],
       "recorded_date": "2026-04-12",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: Pixelixe's free plan (\"FREE Forever\", 6 downloads a month) was replaced by a 10-day trial between 2021-02-02 and 2021-05-09, not in April 2026. What changed in spring 2026 was the entry price: $9 a month in a capture of 2026-03-06, $12 in one of 2026-04-12.",
+        "source_url": "https://pixelixe.com/pricing.html"
+      }
     },
     {
       "vendor": "WalkMe",
@@ -2991,7 +2997,13 @@
       "category": "Design",
       "alternatives": [],
       "recorded_date": "2026-04-12",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: WalkMe's free plan did not end in April 2026. Its self-serve Free Plan (3 Walk-Thrus) was relabelled Basic Plan in early 2019 and left the pricing page between 2022-05-24 and 2022-08-10; pricing has been quote-only since.",
+        "source_url": "https://www.walkme.com/pricing/"
+      }
     },
     {
       "vendor": "NextUI",
@@ -3047,7 +3059,13 @@
       "category": "Email",
       "alternatives": [],
       "recorded_date": "2026-04-12",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: Contact.do stopped taking new free accounts between 2023-09-25 and 2023-12-08, not in April 2026. Its homepage has said since then: \"we can't accept new free accounts. If you want a lifetime custom account ($19), please contact me\".",
+        "source_url": "https://contact.do/"
+      }
     },
     {
       "vendor": "MailerLite",
@@ -3159,7 +3177,13 @@
       "category": "Email",
       "alternatives": [],
       "recorded_date": "2026-04-12",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: Parsio's Sandbox plan went from 30 credits a month to 30 one-time credits between 2023-12-26 and 2024-10-04, not in April 2026, and by 2026-09-21 it was back to a monthly allowance: the pricing page lists \"Free 30 credits / mo\" and \"Free forever\".",
+        "source_url": "https://parsio.io/pricing/"
+      }
     },
     {
       "vendor": "Maildroppa",
@@ -3240,15 +3264,29 @@
     {
       "vendor": "Zenkit",
       "change_type": "free_tier_removed",
-      "date": "2026-04-12",
-      "summary": "No free tier — trial only, then data export only",
-      "previous_state": "",
-      "current_state": "No free tier — trial only, then data export only",
+      "date": "2026-03-06",
+      "summary": "Zenkit removed its free Personal plan from its pricing page between 2026-02-03 and 2026-03-06. Plus, Team, Business and Enterprise remain, with a 14-day trial.",
+      "previous_state": "Personal: free for personal use",
+      "current_state": "No free plan. \"Zenkit typically offers a free trial period of 14 days\"; Plus from €8.00 a month per seat.",
       "impact": "low",
-      "source_url": "",
+      "source_url": "https://web.archive.org/web/20260306153800/https://zenkit.com/en/pricing/",
       "category": "Project Management",
       "alternatives": [],
       "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Zenkit",
+      "change_type": "record_corrected",
+      "date": "2026-09-26",
+      "summary": "Data correction - Zenkit's free Personal plan left its pricing page between 2026-02-03 and 2026-03-06, not on 2026-04-12. A capture of 2026-02-03 lists it and one of 2026-03-06 offers only a trial.",
+      "previous_state": "Recorded 2026-04-12 as: No free tier — trial only, then data export only dated 2026-04-12",
+      "current_state": "\"Zenkit typically offers a free trial period of 14 days\" (pricing page, 2026-03-06)",
+      "impact": "low",
+      "source_url": "https://web.archive.org/web/20260306153800/https://zenkit.com/en/pricing/",
+      "category": "Project Management",
+      "alternatives": [],
+      "recorded_date": "2026-09-26",
       "date_source": "hand_written"
     },
     {
@@ -3324,15 +3362,29 @@
     {
       "vendor": "HostedScan",
       "change_type": "free_tier_removed",
-      "date": "2026-04-12",
-      "summary": "No free tier — plans start at $49/mo",
-      "previous_state": "",
-      "current_state": "No free tier — plans start at $49/mo",
+      "date": "2026-03-05",
+      "summary": "HostedScan removed its Free plan (Lite Scans, up to 3 targets) between 2026-01-25 and 2026-03-05; Basic, with a free trial, became the entry plan.",
+      "previous_state": "Free: Lite Scans, up to 3 targets (limited re-scans), no credit card required",
+      "current_state": "No free plan. Basic: 5 targets, $39 a month, \"Try 14 days for free\" (read 2026-09-26).",
       "impact": "low",
-      "source_url": "",
+      "source_url": "https://web.archive.org/web/20260305025053/https://hostedscan.com/pricing",
       "category": "Security",
       "alternatives": [],
       "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "HostedScan",
+      "change_type": "record_corrected",
+      "date": "2026-09-26",
+      "summary": "Data correction - HostedScan's Free plan left its pricing page between 2026-01-25 and 2026-03-05, not on 2026-04-12, and Basic has since fallen from $49 to $39 a month.",
+      "previous_state": "Recorded 2026-04-12 as: No free tier — plans start at $49/mo dated 2026-04-12",
+      "current_state": "\"Basic 5 Targets Included $49 / month … Try 30 days for free\" (pricing page, 2026-03-05)",
+      "impact": "low",
+      "source_url": "https://web.archive.org/web/20260305025053/https://hostedscan.com/pricing",
+      "category": "Security",
+      "alternatives": [],
+      "recorded_date": "2026-09-26",
       "date_source": "hand_written"
     },
     {
@@ -3361,7 +3413,13 @@
       "category": "Security",
       "alternatives": [],
       "recorded_date": "2026-04-12",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: CookieFirst did not remove its free plan. Its pricing lists \"Free € 0.00 Per Month\" (1 third-party script, one-time cookie scan), as it did in captures of 2026-04-01 and 2026-04-23. The 2-week trial is for paid plans.",
+        "source_url": "https://cookiefirst.com/"
+      }
     },
     {
       "vendor": "Tailscale",
@@ -3750,7 +3808,13 @@
       "category": "Testing",
       "alternatives": [],
       "recorded_date": "2026-04-13",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: TestingBot removed no free plan in April 2026. Its free offer for general users has been a time-limited trial since at least 2012, and its free plan for open-source projects (\"Free forever for active open source projects\") was offered before and after that date and still is.",
+        "source_url": "https://testingbot.com/open-source"
+      }
     },
     {
       "vendor": "Knowlarity",
@@ -4106,15 +4170,29 @@
     {
       "vendor": "Papertrail",
       "change_type": "free_tier_removed",
-      "date": "2026-04-13",
-      "summary": "No free plan, log observability starts at $5/GB/month",
-      "previous_state": "",
-      "current_state": "No free plan, log observability starts at $5/GB/month",
+      "date": "2025-04-22",
+      "summary": "Papertrail removed its $0 plan from its plans page between 2025-04-15 and 2025-04-22, replacing it with Log Observability at $5.00 per GB per month and a 30-day trial.",
+      "previous_state": "$0: 48 hours search, 7 days archive, 16 GB first month, then 50 MB a month, never expires",
+      "current_state": "No free plan. \"Log Observability Starts at: $5.00 Per GB per month\"; 30-day free trial.",
       "impact": "low",
-      "source_url": "",
+      "source_url": "https://web.archive.org/web/20250422232859/https://www.papertrail.com/plans/",
       "category": "Logging",
       "alternatives": [],
       "recorded_date": "2026-04-13",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Papertrail",
+      "change_type": "record_corrected",
+      "date": "2026-09-26",
+      "summary": "Data correction - Papertrail's free plan left its plans page between 2025-04-15 and 2025-04-22, not on 2026-04-13. A capture of 2025-04-15 lists the $0 plan and one of 2025-04-22 only paid pricing.",
+      "previous_state": "Recorded 2026-04-13 as: No free plan, log observability starts at $5/GB/month dated 2026-04-13",
+      "current_state": "\"Log Observability Starts at: $5.00 Per GB per month\" (plans page, 2025-04-22)",
+      "impact": "low",
+      "source_url": "https://web.archive.org/web/20250422232859/https://www.papertrail.com/plans/",
+      "category": "Logging",
+      "alternatives": [],
+      "recorded_date": "2026-09-26",
       "date_source": "hand_written"
     },
     {
@@ -4129,7 +4207,13 @@
       "category": "Logging",
       "alternatives": [],
       "recorded_date": "2026-04-13",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: LogZab did not remove its free tier. Its pricing page has listed an \"Always Free Tier\" (up to 5 apps, 1,000 audit logs a month, 1 month retention) from at least December 2022 to today; the $29 figure is its Basic plan.",
+        "source_url": "https://logzab.com/pricing/"
+      }
     },
     {
       "vendor": "Elmah.io",
@@ -4143,7 +4227,13 @@
       "category": "Error Tracking",
       "alternatives": [],
       "recorded_date": "2026-04-13",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: elmah.io ended its general free plan on 2015-01-16, not in April 2026 (\"Starting today, we provide 30 days of free trial for all new users.\"). The trial is 21 days today, and open-source projects can apply for a free Small Business subscription.",
+        "source_url": "https://blog.elmah.io/trial-accounts-introduced/"
+      }
     },
     {
       "vendor": "Beanstalk",
@@ -4185,17 +4275,31 @@
       }
     },
     {
-      "vendor": "Imgix",
+      "vendor": "imgix",
       "change_type": "free_tier_removed",
-      "date": "2026-04-13",
-      "summary": "No permanent free tier, 30-day trial with 100 credits only",
-      "previous_state": "",
-      "current_state": "No permanent free tier, 30-day trial with 100 credits only",
+      "date": "2025-07-01",
+      "summary": "Imgix replaced its self-service Free plan ($0, up to 1,000 origin images) with a 30-day trial of 100 credits when it moved to credit-based pricing on 2025-07-01.",
+      "previous_state": "Self-Service Free: $0 a month, up to 1,000 origin images",
+      "current_state": "No free plan. \"Get 30 days and 100 credits\"; paid plans from $25 a month.",
       "impact": "low",
-      "source_url": "",
+      "source_url": "https://www.imgix.com/faq-categories/general",
       "category": "CDN",
       "alternatives": [],
       "recorded_date": "2026-04-13",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "imgix",
+      "change_type": "record_corrected",
+      "date": "2026-09-26",
+      "summary": "Data correction - Imgix ended its free plan on 2025-07-01, when its credit-based pricing took effect, not on 2026-04-13. A capture of 2025-06-14 lists the $0 plan and one of 2025-07-08 the 30-day trial.",
+      "previous_state": "Recorded 2026-04-13 as: No permanent free tier, 30-day trial with 100 credits only dated 2026-04-13",
+      "current_state": "\"This will go into effect on July 1, 2025.\" (Imgix FAQ, on the credit system)",
+      "impact": "low",
+      "source_url": "https://www.imgix.com/faq-categories/general",
+      "category": "CDN",
+      "alternatives": [],
+      "recorded_date": "2026-09-26",
       "date_source": "hand_written"
     },
     {
@@ -4211,7 +4315,13 @@
       "category": "CDN",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-07"
+      "recorded_date": "2026-09-07",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: imgix's terms did not change around 2026-09-07. Its free plan ended on 2025-07-01, when its credit-based pricing took effect, and this record's previous state already said \"no permanent free tier\". The re-read compared the page with our own description, not with an earlier state of the page.",
+        "source_url": "https://www.imgix.com/faq-categories/general"
+      }
     },
     {
       "vendor": "Toran Proxy",
@@ -4268,7 +4378,13 @@
       "category": "Localization",
       "alternatives": [],
       "recorded_date": "2026-04-13",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: nothing changed at LingoHub in April 2026. Commercial users have had a 14-day trial rather than a free plan since at least 2016, and its free plan for open-source projects and non-profits was offered before and after that date and still is.",
+        "source_url": "https://lingohub.com/pricing"
+      }
     },
     {
       "vendor": "Transifex",
@@ -4282,7 +4398,13 @@
       "category": "Localization",
       "alternatives": [],
       "recorded_date": "2026-04-13",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: Transifex removed nothing in April 2026. It had no general free plan before or after that date, and it still offers Transifex free \"to Open Source projects that have no funding, revenue, and/or commercialization model\". Starter is from $160 a month, or $135 billed annually.",
+        "source_url": "https://www.transifex.com/pricing"
+      }
     },
     {
       "vendor": "RunCloud",
@@ -4296,7 +4418,13 @@
       "category": "Server Management",
       "alternatives": [],
       "recorded_date": "2026-04-13",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: RunCloud ended its free plan on 2022-08-22, not in April 2026 (\"As of 22nd August 2022, RunCloud no longer offers a free plan.\"). New users get a 7-day trial.",
+        "source_url": "https://runcloud.io/docs/locked-and-deactivated-accounts"
+      }
     },
     {
       "vendor": "Pipedream",
