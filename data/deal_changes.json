@@ -1625,9 +1625,9 @@
       "vendor": "Windsurf",
       "change_type": "pricing_restructured",
       "date": "2026-03-19",
-      "summary": "Windsurf replaced credits-based pricing with daily/weekly quotas (Mar 19, 2026). New tiers: Pro $20/mo (was $15), Ultimate $40/mo, Team $200/mo/seat. Free tier changed from flexible credits to hard quotas. Existing Pro subscribers grandfathered at $15/mo",
+      "summary": "Windsurf replaced credits-based pricing with daily/weekly quotas (Mar 19, 2026). New tiers: Pro $20/mo (was $15), Teams $40/user/month, Max $200/month. Free tier changed from flexible credits to hard quotas. Existing Pro subscribers grandfathered at $15/mo",
       "previous_state": "Credits-based system allowing flexible allocation between completions and chat. Pro plan $15/month",
-      "current_state": "Daily/weekly quotas replace credits. Pro $20/mo (existing subs grandfathered at $15), Ultimate $40/mo, Team $200/mo/seat. Free tier gets limited daily completions and chat messages",
+      "current_state": "Daily/weekly quotas replace credits. Pro $20/mo (existing subs grandfathered at $15), Teams $40/user/month, Max $200/month. Free tier gets limited daily completions and chat messages",
       "impact": "medium",
       "source_url": "https://windsurf.com/pricing",
       "category": "AI Coding",
@@ -4510,7 +4510,13 @@
         "Claude Code"
       ],
       "recorded_date": "2026-04-13",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: Windsurf's plans did not change near 2026-04-13; its pricing page was the same as on 2026-03-23. Max at $200/month and Teams at $40/user/month came with the restructure that took effect on 2026-03-19 (\"The plans will go into effect on Thursday, March 19th, 2026\"), which our record of that date describes. SWE-1.5 was released on 2025-10-29.",
+        "source_url": "https://devin.ai/blog/windsurf-pricing-plans"
+      }
     },
     {
       "vendor": "GitHub Copilot",

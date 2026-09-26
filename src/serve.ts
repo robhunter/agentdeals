@@ -27405,7 +27405,7 @@ function buildFreeTierTrackerPage(): string {
     {
       vendor: "Windsurf",
       slug: "windsurf",
-      date: "2026-03-01",
+      date: "2026-03-19",
       oneLiner: "Credits replaced with hard quotas, Pro price +33%",
       changeType: "pricing_restructured",
       impact: "medium",
