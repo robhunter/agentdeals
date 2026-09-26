@@ -1435,9 +1435,9 @@ function comparisonPageWithLiveRecords(
   const marked = compiledFiguresMarked(html, compiledOn);
 
   const rows = timelineRecordsFor(
-    declaredScope,
+    changesTheVendorMade(declaredScope),
     vendorSubjectsOnCompiledPage(html),
-    changesFor,
+    (vendor) => changesTheVendorMade(changesFor(vendor)),
     TIMELINE_ROW_LIMIT,
   );
   return fillComparedServicesCount(replaceTimelineRows(marked, changeTimelineRowsHtml(rows)));
