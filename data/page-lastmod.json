@@ -1281,7 +1281,7 @@
       "changed": "2026-09-20"
     },
     "/cloud-free-tier-comparison-2026": {
-      "hash": "28a2a435424b4cb5",
+      "hash": "25a86a69ce854c3e",
       "changed": "2026-09-26"
     },
     "/cloudflare-pages-vs-vercel": {
@@ -2640,11 +2640,11 @@
       "changed": "2026-09-26"
     },
     "/database-free-tier-comparison-2026": {
-      "hash": "6bf713267d343cf5",
+      "hash": "66aa624540b83de5",
       "changed": "2026-09-26"
     },
     "/database-pricing": {
-      "hash": "f9b6011ccd4d8d34",
+      "hash": "c4684c6d8aa0093f",
       "changed": "2026-09-26"
     },
     "/datadog-alternatives": {
@@ -2964,11 +2964,11 @@
       "changed": "2026-09-26"
     },
     "/free-django-stack": {
-      "hash": "e5af1bb53139a717",
+      "hash": "d65918df2b743b56",
       "changed": "2026-09-26"
     },
     "/free-fastapi-stack": {
-      "hash": "18aca97ec8386299",
+      "hash": "e79b8adf92748af4",
       "changed": "2026-09-26"
     },
     "/free-frontend-stack": {
@@ -2976,7 +2976,7 @@
       "changed": "2026-09-26"
     },
     "/free-go-stack": {
-      "hash": "e6b5c7a61e957a27",
+      "hash": "399ae6f93aa0c1b2",
       "changed": "2026-09-26"
     },
     "/free-llm-apis": {
@@ -2984,11 +2984,11 @@
       "changed": "2026-09-26"
     },
     "/free-nextjs-stack": {
-      "hash": "25a162e159d5fc71",
+      "hash": "81dad1a2e13b5775",
       "changed": "2026-09-26"
     },
     "/free-saas-stack": {
-      "hash": "455678d3e150d0ea",
+      "hash": "5c9e3ee7b8b82e9f",
       "changed": "2026-09-26"
     },
     "/free-startup-stack": {
@@ -3115,7 +3115,7 @@
       "changed": "2026-09-25"
     },
     "/neon-vs-supabase": {
-      "hash": "fbfffb1466011b22",
+      "hash": "862a053067a9a4e7",
       "changed": "2026-09-26"
     },
     "/neon-vs-turso": {
@@ -3637,7 +3637,7 @@
       "changed": "2026-09-26"
     },
     "/vector-database-pricing": {
-      "hash": "2e271b8822be5202",
+      "hash": "9e74ec65593bb909",
       "changed": "2026-09-26"
     },
     "/vendor": {
