@@ -6625,7 +6625,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
       </tr>
       <tr>
         <td style="font-weight:600"><a href="/vendor/railway" style="color:var(--text)">Railway</a></td>
-        <td>$5 trial credit, then $1/mo min</td><td>Included in credit</td><td>\u2705</td><td>\u2705</td>
+        <td>$5 trial credit, then $1 of free credit a month</td><td>Included in credit</td><td>\u2705</td><td>\u2705</td>
         <td>No</td><td>Usage-based</td>
       </tr>
       <tr>
@@ -8068,11 +8068,11 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "digitalocean-free-tier-2026",
     title: "DigitalOcean Free Tier Complete Guide 2026 — Pricing, Free Credits, and Hidden Costs",
-    metaDesc: "Complete guide to DigitalOcean pricing and free tier in 2026. $200 free credits, App Platform free static sites, 20% Droplet price cuts, per-second billing, and comparison with AWS, GCP, and Azure.",
+    metaDesc: "Complete guide to DigitalOcean pricing and free tier in 2026. $200 free credits, App Platform free static sites, per-second billing, and comparison with AWS, GCP, and Azure.",
     contextHtml: "",
     tag: "digitalocean-free-tier-2026",
     primaryVendor: "DigitalOcean",
-    hubDesc: "Complete DigitalOcean guide — $200 free credits, 20% Droplet price cuts, App Platform free tier, per-second billing, and Big Three comparison",
+    hubDesc: "Complete DigitalOcean guide — $200 free credits, App Platform free tier, per-second billing, and Big Three comparison",
   },
   {
     slug: "cloud-free-tier-comparison-2026",
@@ -10543,7 +10543,7 @@ ${buildCards(startupCredits)}
       <tr>
         <td style="font-weight:600"><a href="/vendor/railway" style="color:var(--text)">Railway</a></td>
         <td>PaaS</td>
-        <td>$1/mo min after 30-day trial</td>
+        <td>$1 of free credit a month after 30-day trial</td>
         <td>$0.05/GB</td>
         <td>Full-stack apps, databases, quick deploys</td>
       </tr>
@@ -10634,7 +10634,7 @@ ${buildCards(startupCredits)}
     </tbody>
   </table>
   </div>
-  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Oracle Cloud's Always Free tier is permanently free (not time-limited) and the most generous VPS offering. Cloudflare Pages and Workers offer unlimited bandwidth on free tier. Railway's Free plan opens with a 30-day $5 trial credit and then costs $1/month minimum. AWS and Azure free tiers are mostly 12-month introductory offers, with one exception that matters in the Bandwidth column: AWS's first ${monthlyEgressGrantGb("AWS S3")} GB of internet egress each month is free on an account of any age, aggregated across all AWS services and regions. [[freshness]]</p>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Oracle Cloud's Always Free tier is permanently free (not time-limited) and the most generous VPS offering. Cloudflare Pages and Workers offer unlimited bandwidth on free tier. Railway's Free plan opens with a 30-day $5 trial credit, then $1 of free credit a month. AWS and Azure free tiers are mostly 12-month introductory offers, with one exception that matters in the Bandwidth column: AWS's first ${monthlyEgressGrantGb("AWS S3")} GB of internet egress each month is free on an account of any age, aggregated across all AWS services and regions. [[freshness]]</p>
 
   <div class="context-box" style="border-left:3px solid ${riskColors.risky}">
     <div style="font-weight:600;color:${riskColors.risky};margin-bottom:.5rem">Hetzner raised prices twice in 2026, and its cheapest line is unavailable</div>
@@ -10648,7 +10648,7 @@ ${buildCards(startupCredits)}
       <dd><a href="/vendor/cloudflare-pages">Cloudflare Pages</a> (unlimited bandwidth, fast global CDN) or <a href="/vendor/github-pages">GitHub Pages</a> (simplest setup, great for docs). <a href="/vendor/netlify">Netlify</a> and <a href="/vendor/vercel">Vercel</a> add serverless functions if you need them.</dd>
 
       <dt>Building a full-stack web app?</dt>
-      <dd><a href="/vendor/railway">Railway</a> (Free plan: 30-day $5 trial credit, then $1/mo minimum; supports databases) or <a href="/vendor/render">Render</a> (free web services, spins down after 15 min). For edge deployment, <a href="/vendor/fly-io">Fly.io</a> is paid-only for new accounts.</dd>
+      <dd><a href="/vendor/railway">Railway</a> (Free plan: 30-day $5 trial credit, then $1 of free credit a month; supports databases) or <a href="/vendor/render">Render</a> (free web services, spins down after 15 min). For edge deployment, <a href="/vendor/fly-io">Fly.io</a> is paid-only for new accounts.</dd>
 
       <dt>Building a Next.js or React app?</dt>
       <dd><a href="/vendor/vercel">Vercel</a> is purpose-built for Next.js with the best DX. <a href="/vendor/cloudflare-pages">Cloudflare Pages</a> is the alternative with unlimited bandwidth. <a href="/vendor/netlify">Netlify</a> supports most frameworks.</dd>
@@ -16973,7 +16973,7 @@ function buildFreeNextjsStackPage(): string {
   };
 
   const faqJsonLd = faqPageJsonLd("/free-nextjs-stack", [
-    { q: "Is Vercel free for Next.js?", a: "Yes. Vercel's Hobby plan is free with 100 GB bandwidth, 100 hours serverless function execution, and 6,000 build minutes per month. However, it's limited to non-commercial, personal use. For commercial projects, Vercel Pro starts at $20/month per team member. Alternatives like Railway ($5 trial credit for 30 days, then $1/month minimum) and Cloudflare Pages (unlimited bandwidth) allow commercial use on free tiers." },
+    { q: "Is Vercel free for Next.js?", a: "Yes. Vercel's Hobby plan is free with 100 GB bandwidth, 100 hours serverless function execution, and 6,000 build minutes per month. However, it's limited to non-commercial, personal use. For commercial projects, Vercel Pro starts at $20/month per team member. Alternatives like Railway ($5 trial credit for 30 days, then $1 of free credit a month) and Cloudflare Pages (unlimited bandwidth) allow commercial use on free tiers." },
     { q: "What's the best free database for Next.js?", a: "Neon (serverless Postgres) has a serverless driver that works in Vercel Edge Functions, it scales to zero when not in use, and offers 0.5 GiB storage free. Supabase (500 MB, includes auth and realtime) is great if you need a full BaaS. Turso (9 GB, edge SQLite) is ideal for read-heavy apps. PlanetScale removed its free tier in April 2024." },
     { q: "Can I build a SaaS for free with Next.js?", a: "Yes — with limits. This guide covers 10 infrastructure layers that cost $0/month total: hosting (Vercel), database (Neon), auth (Clerk 10K MAU), storage (R2), email (Resend 3K/mo), monitoring (Sentry), CI/CD (GitHub Actions), analytics (PostHog 1M events), search (Algolia 10K records), and background jobs (Inngest 25K runs). Most projects can run their entire stack on free tiers until they hit significant traction." },
     { q: "What's the first thing to spend money on when scaling a Next.js app?", a: "Database. Neon's 0.5 GiB free storage is the tightest limit in the stack. The Neon Launch plan at $19/month gets you 10 GiB storage, 300 compute hours, and autoscaling. After that, hosting: Vercel Pro at $20/month unlocks commercial use, 1 TB bandwidth, and faster builds. Everything else (auth, email, monitoring, analytics) scales to meaningful traffic on free tiers." },
@@ -17226,7 +17226,7 @@ function buildFreeDjangoStackPage(): string {
     {
       name: "Hosting & Deployment",
       icon: "🚀",
-      recommended: { vendor: "Railway", why: "The best free Django hosting in 2026. Its Free plan opens with a 30-day trial carrying $5 of credits and then costs $1/month minimum, enough for a small Django app with WSGI/ASGI support, managed Postgres add-on, and auto-deploy from GitHub. Supports Gunicorn, Uvicorn, and Daphne out of the box. No sleep timer — your app stays warm. Nixpacks auto-detects Django projects and installs dependencies from requirements.txt or pyproject.toml." },
+      recommended: { vendor: "Railway", why: "The best free Django hosting in 2026. Its Free plan opens with a 30-day trial carrying $5 of credits, then $1 of free credit a month, enough for a small Django app with WSGI/ASGI support, managed Postgres add-on, and auto-deploy from GitHub. Supports Gunicorn, Uvicorn, and Daphne out of the box. No sleep timer — your app stays warm. Nixpacks auto-detects Django projects and installs dependencies from requirements.txt or pyproject.toml." },
       alternatives: ["Render", "Fly.io", "PythonAnywhere"],
       outgrow: "When you exceed the $5 of usage that Hobby's $5/month includes (usually 1-2 services). Render's free tier spins down after 15 minutes of inactivity — cold starts of 30-60 seconds hurt Django apps. Fly.io has no free tier for new accounts — new signups get a trial of 2 hours runtime or 7 days, whichever comes first. PythonAnywhere offers a free tier with WSGI support but only one web app and no custom domain.",
       whyNot: "Why not Heroku: No free tier since November 2022 — Eco dynos start at $5/month with mandatory credit card. Why not AWS Elastic Beanstalk: No free tier for the EB service itself, only the underlying EC2 instances (12-month trial). Overkill for a Django side project.",
@@ -17347,10 +17347,10 @@ function buildFreeDjangoStackPage(): string {
   };
 
   const faqJsonLd = faqPageJsonLd("/free-django-stack", [
-    { q: "Can I host Django for free in 2026?", a: "Yes. Railway's Free plan starts with a 30-day trial carrying $5 of credits and then costs $1/month minimum, enough for a small Django app with Gunicorn, auto-deploy from GitHub, and managed Postgres; its Hobby plan is $5/month and includes $5 of usage. Render has a free tier but spins down after 15 minutes of inactivity (30-60 second cold starts). PythonAnywhere offers free WSGI hosting but limits you to one web app with no custom domain. Fly.io has no free tier for new accounts — new signups get a trial of 2 hours runtime or 7 days, whichever comes first." },
+    { q: "Can I host Django for free in 2026?", a: "Yes. Railway's Free plan starts with a 30-day trial carrying $5 of credits, then $1 of free credit a month, enough for a small Django app with Gunicorn, auto-deploy from GitHub, and managed Postgres; its Hobby plan is $5/month and includes $5 of usage. Render has a free tier but spins down after 15 minutes of inactivity (30-60 second cold starts). PythonAnywhere offers free WSGI hosting but limits you to one web app with no custom domain. Fly.io has no free tier for new accounts — new signups get a trial of 2 hours runtime or 7 days, whichever comes first." },
     { q: "What's the best free database for Django?", a: "Neon (serverless Postgres) — 0.5 GiB storage, 190+ compute hours/month, scales to zero. Django's ORM is built for Postgres, and django.contrib.postgres adds JSONField, ArrayField, full-text search, and range types. Supabase (500 MB) is a good alternative with built-in auth. CockroachDB offers 10 GiB free with distributed Postgres-compatible SQL." },
     { q: "Does Django need Redis?", a: "Not strictly, but practically yes for production. Redis powers Django's cache framework (fast page/fragment caching), session storage (faster than database sessions), and Celery (the standard Django task queue for background jobs). Upstash offers 10,000 Redis commands/day free. Without Redis, you can use Django's built-in database cache and in-process task runners, but you'll hit performance ceilings sooner." },
-    { q: "PythonAnywhere vs Railway vs Render for Django?", a: "Railway gives you a 30-day $5 trial credit then a $1/month minimum, with no sleep timer, managed Postgres, and auto-deploy from GitHub. PythonAnywhere is great for learning (free WSGI hosting, built-in console) but limits you to one web app with no custom domain on free tier. Render has a free tier but your app sleeps after 15 minutes, causing 30-60 second cold starts that hurt user experience. For production Django apps, Railway or Fly.io." },
+    { q: "PythonAnywhere vs Railway vs Render for Django?", a: "Railway gives you a 30-day $5 trial credit then $1 of free credit a month, with no sleep timer, managed Postgres, and auto-deploy from GitHub. PythonAnywhere is great for learning (free WSGI hosting, built-in console) but limits you to one web app with no custom domain on free tier. Render has a free tier but your app sleeps after 15 minutes, causing 30-60 second cold starts that hurt user experience. For production Django apps, Railway or Fly.io." },
   ]);
 
   const pageReadings = stackPrimaryReadings(stackCategories);
@@ -17427,7 +17427,7 @@ function buildFreeDjangoStackPage(): string {
 
   const growthCosts = [
     { layer: "Database", vendor: "Neon", freeLimit: "0.5 GiB storage", firstPaid: "Launch $19/mo", gets: "10 GiB storage, 300 compute hours, autoscaling", hitFirst: true },
-    { layer: "Hosting", vendor: "Railway", freeLimit: "$1/mo min after 30-day $5 trial", firstPaid: "Hobby $5/mo", gets: "$5 of usage included, no sleep, more RAM", hitFirst: true },
+    { layer: "Hosting", vendor: "Railway", freeLimit: "$1 of free credit a month after 30-day $5 trial", firstPaid: "Hobby $5/mo", gets: "$5 of usage included, no sleep, more RAM", hitFirst: true },
     { layer: "Cache/Redis", vendor: "Upstash", freeLimit: "10K cmds/day", firstPaid: "Pay-as-you-go $0.2/100K", gets: "Unlimited commands, 1 GB storage", hitFirst: false },
     { layer: "Auth", vendor: "Django Built-in", freeLimit: "Unlimited", firstPaid: "Free forever", gets: "N/A — scales with your app", hitFirst: false },
     { layer: "Email", vendor: "Resend", freeLimit: "3,000 emails/mo", firstPaid: "Pro $20/mo", gets: "50,000 emails/mo, custom domains, analytics", hitFirst: false },
@@ -17636,7 +17636,7 @@ function buildFreeFastapiStackPage(): string {
     {
       name: "Hosting & Deployment",
       icon: "🚀",
-      recommended: { vendor: "Railway", why: "The best free FastAPI hosting in 2026. Its Free plan opens with a 30-day trial carrying $5 of credits and then costs $1/month minimum, enough for a FastAPI app with uvicorn ASGI server, auto-deploy from GitHub, and managed add-ons. Nixpacks auto-detects Python projects — just add a Procfile with `web: uvicorn main:app --host 0.0.0.0 --port $PORT`. No sleep timer — your API stays warm for consistent response times." },
+      recommended: { vendor: "Railway", why: "The best free FastAPI hosting in 2026. Its Free plan opens with a 30-day trial carrying $5 of credits, then $1 of free credit a month, enough for a FastAPI app with uvicorn ASGI server, auto-deploy from GitHub, and managed add-ons. Nixpacks auto-detects Python projects — just add a Procfile with `web: uvicorn main:app --host 0.0.0.0 --port $PORT`. No sleep timer — your API stays warm for consistent response times." },
       alternatives: ["Render", "Fly.io", "Koyeb"],
       outgrow: "When you exceed the $5 of usage that Hobby's $5/month includes (usually 1-2 services). Render's free tier spins down after 15 minutes of inactivity — cold starts of 30-60 seconds kill API latency. Fly.io has no free tier for new accounts (legacy accounts retain 3 shared VMs). Koyeb has no free compute — only a free Postgres database.",
       whyNot: "Why not Vercel: Vercel supports FastAPI via serverless functions (Mangum adapter), but loses WebSocket support, background tasks, and startup events — core FastAPI features. Why not Deta Space: Deta shut down Space in 2024. Many FastAPI tutorials still reference it — those guides are outdated.",
@@ -17755,7 +17755,7 @@ function buildFreeFastapiStackPage(): string {
   };
 
   const faqJsonLd = faqPageJsonLd("/free-fastapi-stack", [
-    { q: "Can I host FastAPI for free in 2026?", a: "Yes. Railway's Free plan starts with a 30-day trial carrying $5 of credits and then costs $1/month minimum, enough for a small FastAPI app with uvicorn, auto-deploy from GitHub, and no sleep timer; its Hobby plan is $5/month and includes $5 of usage. Render has a free tier but spins down after 15 minutes of inactivity (30-60 second cold starts). Fly.io has no free tier for new accounts — new signups get a trial of 2 hours runtime or 7 days, whichever comes first. Koyeb has no free compute tier, only a free Postgres database. Avoid Vercel for FastAPI — it requires a serverless adapter and loses WebSocket/background task support." },
+    { q: "Can I host FastAPI for free in 2026?", a: "Yes. Railway's Free plan starts with a 30-day trial carrying $5 of credits, then $1 of free credit a month, enough for a small FastAPI app with uvicorn, auto-deploy from GitHub, and no sleep timer; its Hobby plan is $5/month and includes $5 of usage. Render has a free tier but spins down after 15 minutes of inactivity (30-60 second cold starts). Fly.io has no free tier for new accounts — new signups get a trial of 2 hours runtime or 7 days, whichever comes first. Koyeb has no free compute tier, only a free Postgres database. Avoid Vercel for FastAPI — it requires a serverless adapter and loses WebSocket/background task support." },
     { q: "What database should I use with FastAPI?", a: "Neon (serverless Postgres) — 0.5 GiB storage, 190+ compute hours/month, scales to zero. Use with SQLAlchemy 2.0 async engine + asyncpg for async queries, or Tortoise ORM for an async-native alternative. FastAPI has no built-in ORM, so you choose your own — SQLAlchemy is the most popular choice. Supabase (500 MB) is an alternative with built-in auth and realtime." },
     { q: "Does Vercel support FastAPI?", a: "Technically yes, via the Mangum adapter that wraps ASGI apps for AWS Lambda-style serverless functions. But you lose WebSocket support, FastAPI's startup/shutdown lifespan events, background tasks, and long-running connections. For API-only services, this may be acceptable. For anything using FastAPI's async features fully, use Railway, Render, or Fly.io instead." },
     { q: "FastAPI vs Django for free hosting?", a: "FastAPI is lighter weight and async-native — ideal for APIs, microservices, and AI/ML serving. Django is batteries-included with built-in ORM, admin, auth, and forms — better for full web applications. Both host free on Railway ($5 credit) or Render. FastAPI needs you to choose every component (ORM, auth, admin) separately. Django includes them. If you're building a REST/GraphQL API or serving ML models, FastAPI. If you're building a web app with admin panel and user accounts, Django." },
@@ -17835,7 +17835,7 @@ function buildFreeFastapiStackPage(): string {
 
   const growthCosts = [
     { layer: "Database", vendor: "Neon", freeLimit: "0.5 GiB storage", firstPaid: "Launch $19/mo", gets: "10 GiB storage, 300 compute hours, autoscaling", hitFirst: true },
-    { layer: "Hosting", vendor: "Railway", freeLimit: "$1/mo min after 30-day $5 trial", firstPaid: "Hobby $5/mo", gets: "$5 of usage included, no sleep, more RAM", hitFirst: true },
+    { layer: "Hosting", vendor: "Railway", freeLimit: "$1 of free credit a month after 30-day $5 trial", firstPaid: "Hobby $5/mo", gets: "$5 of usage included, no sleep, more RAM", hitFirst: true },
     { layer: "Cache/Redis", vendor: "Upstash", freeLimit: "10K cmds/day", firstPaid: "Pay-as-you-go $0.2/100K", gets: "Unlimited commands, 1 GB storage", hitFirst: false },
     { layer: "Auth", vendor: "Auth0", freeLimit: "25,000 MAU", firstPaid: "Essential $35/mo", gets: "Custom domains, roles, MFA policies", hitFirst: false },
     { layer: "Email", vendor: "Resend", freeLimit: "3,000 emails/mo", firstPaid: "Pro $20/mo", gets: "50,000 emails/mo, custom domains, analytics", hitFirst: false },
@@ -18061,7 +18061,7 @@ function buildFreeGoStackPage(): string {
     {
       name: "Hosting & Deployment",
       icon: "🚀",
-      recommended: { vendor: "Railway", why: "The best free Go hosting in 2026. Its Free plan opens with a 30-day trial carrying $5 of credits and then costs $1/month minimum, enough for a Go binary with auto-deploy from GitHub. Nixpacks auto-detects Go projects — compiles your binary and runs it. No sleep timer — your service stays warm. Go binaries start in milliseconds, so even serverless cold starts are negligible. Docker images from scratch base are typically 5-15 MB, maximizing the free credit." },
+      recommended: { vendor: "Railway", why: "The best free Go hosting in 2026. Its Free plan opens with a 30-day trial carrying $5 of credits, then $1 of free credit a month, enough for a Go binary with auto-deploy from GitHub. Nixpacks auto-detects Go projects — compiles your binary and runs it. No sleep timer — your service stays warm. Go binaries start in milliseconds, so even serverless cold starts are negligible. Docker images from scratch base are typically 5-15 MB, maximizing the free credit." },
       alternatives: ["Render", "Fly.io", "Koyeb"],
       outgrow: "When you exceed the $5 of usage that Hobby's $5/month includes (usually 1-2 services). Render's free tier spins down after 15 minutes of inactivity, but Go's instant cold starts (~50ms) make this less painful than Python/Node. Fly.io has no free tier for new accounts (legacy accounts retain 3 shared VMs with 256 MB RAM). Koyeb has no free compute tier. Google Cloud Run's free tier (2M requests/month) is excellent for Go — instant scale-to-zero with near-instant cold starts.",
       whyNot: "Why not Heroku: No free tier since November 2022. Why not AWS Lambda: Go compiles to a native binary that works great on Lambda (via provided.al2023 runtime), but the 3.2M free invocations expire after 12 months. Cloud Run is simpler and stays free forever. Why not Vercel: Vercel's Go support is limited to serverless functions — no persistent connections, WebSockets, or goroutines.",
@@ -18180,7 +18180,7 @@ function buildFreeGoStackPage(): string {
   };
 
   const faqJsonLd = faqPageJsonLd("/free-go-stack", [
-    { q: "Can I host Go for free in 2026?", a: "Yes. Railway's Free plan starts with a 30-day trial carrying $5 of credits and then costs $1/month minimum — Go's tiny memory footprint (~10 MB Docker images from scratch) stretches that furthest; its Hobby plan is $5/month and includes $5 of usage. Render has a free tier but spins down after 15 minutes; Go's instant cold starts (~50ms) make this tolerable. Fly.io has no free tier for new accounts — new signups get a trial of 2 hours runtime or 7 days, whichever comes first. Google Cloud Run's free tier (2M requests/month) is excellent for Go — near-instant cold starts and true scale-to-zero." },
+    { q: "Can I host Go for free in 2026?", a: "Yes. Railway's Free plan starts with a 30-day trial carrying $5 of credits, then $1 of free credit a month — Go's tiny memory footprint (~10 MB Docker images from scratch) stretches that furthest; its Hobby plan is $5/month and includes $5 of usage. Render has a free tier but spins down after 15 minutes; Go's instant cold starts (~50ms) make this tolerable. Fly.io has no free tier for new accounts — new signups get a trial of 2 hours runtime or 7 days, whichever comes first. Google Cloud Run's free tier (2M requests/month) is excellent for Go — near-instant cold starts and true scale-to-zero." },
     { q: "What database should I use with Go?", a: "Neon (serverless Postgres) — 0.5 GiB storage, 190+ compute hours/month. Use with pgx, the fastest Go Postgres driver (pure Go, no CGo). For type-safe SQL without an ORM, use sqlc — it generates Go code from SQL queries at compile time. Go developers typically prefer raw SQL + pgx or sqlc over ORMs like GORM." },
     { q: "Go vs Node.js for free hosting?", a: "Go compiles to a single binary with no runtime dependencies — Docker images are 5-15 MB vs 100+ MB for Node.js. This means lower memory usage (more headroom on free tiers), instant cold starts (better for serverless), and simpler deploys (no node_modules, no npm install). Go's goroutines handle concurrency without async/await complexity. Trade-off: Go's ecosystem for web frameworks is smaller, and there's no equivalent to npm's package breadth." },
     { q: "Do I need a framework for Go web apps?", a: "No. Go's net/http standard library is production-ready — it powers many of the world's largest services. Add a router (chi or gorilla/mux) for path parameters and middleware chaining. Frameworks like Gin, Echo, and Fiber add convenience (binding, validation, structured logging) but aren't required. The stdlib-first approach means fewer dependencies, smaller binaries, and no framework lock-in." },
@@ -18260,7 +18260,7 @@ function buildFreeGoStackPage(): string {
 
   const growthCosts = [
     { layer: "Database", vendor: "Neon", freeLimit: "0.5 GiB storage", firstPaid: "Launch $19/mo", gets: "10 GiB storage, 300 compute hours, autoscaling", hitFirst: true },
-    { layer: "Hosting", vendor: "Railway", freeLimit: "$1/mo min after 30-day $5 trial", firstPaid: "Hobby $5/mo", gets: "$5 of usage included, no sleep, more RAM", hitFirst: true },
+    { layer: "Hosting", vendor: "Railway", freeLimit: "$1 of free credit a month after 30-day $5 trial", firstPaid: "Hobby $5/mo", gets: "$5 of usage included, no sleep, more RAM", hitFirst: true },
     { layer: "Cache/Redis", vendor: "Upstash", freeLimit: "10K cmds/day", firstPaid: "Pay-as-you-go $0.2/100K", gets: "Unlimited commands, 1 GB storage", hitFirst: false },
     { layer: "Auth", vendor: "Auth0", freeLimit: "25,000 MAU", firstPaid: "Essential $35/mo", gets: "Custom domains, roles, MFA policies", hitFirst: false },
     { layer: "Email", vendor: "Resend", freeLimit: "3,000 emails/mo", firstPaid: "Pro $20/mo", gets: "50,000 emails/mo, custom domains, analytics", hitFirst: false },
@@ -18489,7 +18489,7 @@ function buildFreeSaasStackPage(): string {
     {
       name: "Hosting & Deployment",
       icon: "\u{1F680}",
-      recommended: { vendor: "Railway", why: "The best all-around free hosting for SaaS in 2026. Its Free plan opens with a 30-day trial carrying $5 of credits and then costs $1/month minimum, enough for a small app with auto-deploy from GitHub. Supports any language/framework via Nixpacks or Dockerfile. No cold starts \u2014 your service stays warm. Includes free Postgres and Redis add-ons. Best DX: instant deploys, logs, and metrics in one dashboard." },
+      recommended: { vendor: "Railway", why: "The best all-around free hosting for SaaS in 2026. Its Free plan opens with a 30-day trial carrying $5 of credits, then $1 of free credit a month, enough for a small app with auto-deploy from GitHub. Supports any language/framework via Nixpacks or Dockerfile. No cold starts \u2014 your service stays warm. Includes free Postgres and Redis add-ons. Best DX: instant deploys, logs, and metrics in one dashboard." },
       alternatives: ["Vercel", "Render", "Cloudflare Pages"],
       outgrow: "When you exceed the $5 of usage that Hobby's $5/month includes (1-2 services). Vercel is best for Next.js (100 GB bandwidth, but bans commercial use on Hobby plan \u2014 you must upgrade to Pro at $20/seat/month when you launch your SaaS). Render offers a free tier with 750 hours/month but spins down after 15 min inactivity. Cloudflare Pages is best for static/Jamstack with unlimited bandwidth.",
       whyNot: "Why not Heroku: No free tier since November 2022. Why not Vercel Hobby: Bans commercial use \u2014 the moment your SaaS charges users, you owe $20/seat/month. Great for prototyping, but plan for the upgrade. Why not AWS/GCP/Azure directly: Free tiers exist but are complex to configure and most services expire after 12 months.",
@@ -18721,7 +18721,7 @@ function buildFreeSaasStackPage(): string {
 
   const growthCosts = [
     { layer: "Database", vendor: "Neon", freeLimit: "0.5 GiB", firstPaid: "Launch $19/mo", atScale: "$69/mo (Scale)", hitFirst: true },
-    { layer: "Hosting", vendor: "Railway", freeLimit: "$1/mo min after 30-day $5 trial", firstPaid: "Hobby $5/mo", atScale: "$20+/mo (usage)", hitFirst: true },
+    { layer: "Hosting", vendor: "Railway", freeLimit: "$1 of free credit a month after 30-day $5 trial", firstPaid: "Hobby $5/mo", atScale: "$20+/mo (usage)", hitFirst: true },
     { layer: "Email", vendor: "Resend", freeLimit: "3K/mo", firstPaid: "Pro $20/mo", atScale: "$100/mo (100K)", hitFirst: false },
     { layer: "Auth", vendor: "Clerk", freeLimit: "50K MRU", firstPaid: "$25/mo", atScale: "$175/mo (100K)", hitFirst: false },
     { layer: "Analytics", vendor: "PostHog", freeLimit: "1M events", firstPaid: "Pay-as-you-go", atScale: "$450/mo", hitFirst: false },
@@ -19008,13 +19008,13 @@ function buildHetznerPricing2026Page(): string {
 
   const competitorPricing = [
     { vendor: "Hetzner (cheapest orderable)", spec: `${cheapestOrderable.sku} — ${cheapestOrderable.vcpu} vCPU, ${cheapestOrderable.ram} GB`, price: `${eur(cheapestOrderable.eur)}/mo`, region: cheapestOrderable.region, note: "Shared-vCPU line unavailable" },
-    { vendor: "DigitalOcean", spec: "Basic — 1 vCPU, 512 MB", price: "$4/mo", region: "Global", note: "Cut 20% in January 2026" },
+    { vendor: "DigitalOcean", spec: "Basic — 1 vCPU, 512 MB", price: "$4/mo", region: "Global", note: "" },
     { vendor: "Vultr", spec: "Cloud — 1 vCPU, 1 GB", price: "$5/mo", region: "Global", note: "Not re-read since March 2026" },
     { vendor: "Linode/Akamai", spec: "Nanode — 1 vCPU, 1 GB", price: "$5/mo", region: "Global", note: "Not re-read since March 2026" },
     { vendor: "OVHcloud", spec: "VPS-1 — 1 vCPU, 2 GB", price: "$7.60/mo", region: "EU", note: "Rose 55% on April 1, 2026" },
     { vendor: "AWS Lightsail", spec: "2 vCPUs, 512 MB", price: "$5/mo", region: "US", note: "The $3.50 bundle is IPv6-only; every other row here has a public IPv4 address" },
     { vendor: "Oracle Cloud", spec: oracleArmAllowance(), price: "Free (Always Free)", region: "Global", note: "Best free tier for VMs" },
-    { vendor: "Railway", spec: "Free Plan", price: "$1/mo min", region: "US", note: "30-day trial with $5 credits, then $1/mo minimum" },
+    { vendor: "Railway", spec: "Free Plan", price: "$0/mo", region: "US", note: "30-day trial with $5 credits, then $1 of free credit a month" },
     { vendor: "Render", spec: "Free Tier", price: "Free (750h/mo)", region: "US", note: "Auto-sleep on free tier" },
     { vendor: "Fly.io", spec: "shared-cpu-1x, 256 MB", price: "$1.94/mo", region: "Global", note: "No free tier for new accounts — 2 hrs runtime or 7-day trial" },
   ];
@@ -20002,7 +20002,7 @@ function buildGoogleDeveloperProgram2026Page(): string {
     { vendor: "Oracle Cloud", credits: "Always Free — no expiry", highlight: oracleAlwaysFreeSpec(), link: "/vendor/oracle-cloud" },
     { vendor: "DigitalOcean", credits: "$200 credits (60 days)", highlight: "Good for testing, then $4/mo droplets", link: "/vendor/digitalocean" },
     { vendor: "Google Cloud (direct)", credits: "$300 credits (90 days) + always-free tier", highlight: "Same GCP services, no subscription needed", link: "/vendor/google-cloud-run" },
-    { vendor: "Railway", credits: "$5 trial credit, then $1/mo min", highlight: "No sleep, GitHub deploy, usage-based", link: "/vendor/railway" },
+    { vendor: "Railway", credits: "$5 trial credit, then $1 of free credit a month", highlight: "No sleep, GitHub deploy, usage-based", link: "/vendor/railway" },
   ];
 
   const creditAltRows = creditAlternatives.map(c => `<tr>
@@ -20962,7 +20962,7 @@ ${mcpCtaCss()}
     </table>
   </div>
   <div class="context-box">
-    <strong>Notable mentions:</strong> <a href="/vendor/cloudflare-pages">Cloudflare Pages</a> offers unlimited bandwidth and commercial use on the free tier — the most generous option if you don't need Vercel/Netlify's framework-specific features. <a href="/vendor/railway">Railway</a> gives you a 30-day $5 trial credit, then a $1/month minimum, with Docker support. <a href="/vendor/render">Render</a> offers free static sites and web services (with spin-down). See our <a href="/hosting-alternatives">full hosting comparison</a> for 30+ options.
+    <strong>Notable mentions:</strong> <a href="/vendor/cloudflare-pages">Cloudflare Pages</a> offers unlimited bandwidth and commercial use on the free tier — the most generous option if you don't need Vercel/Netlify's framework-specific features. <a href="/vendor/railway">Railway</a> gives you a 30-day $5 trial credit, then $1 of free credit a month, with Docker support. <a href="/vendor/render">Render</a> offers free static sites and web services (with spin-down). See our <a href="/hosting-alternatives">full hosting comparison</a> for 30+ options.
   </div>
 
   <h2 id="changes">6. Recent Deal Changes</h2>
@@ -21347,7 +21347,7 @@ function buildRailwayVsRenderPage(): string {
   );
 
   const comparisonRows = [
-    { feature: "Free Tier Cost", railway: "$0/mo for 30 days, then $1/mo min", render: "$0/mo (Hobby plan)", notes: "Railway's Free plan opens with a one-time $5 trial credit and then charges a $1/month minimum; Render's Hobby stays $0 but has compute limits" },
+    { feature: "Free Tier Cost", railway: "$0, a 30-day trial with a one-time $5 credit, then $1 of free credit a month", render: "$0/mo (Hobby plan)", notes: "Railway's Free plan opens with a one-time $5 trial credit, then $1 of free credit a month; Render's Hobby stays $0 but has compute limits" },
     { feature: "RAM per Service", railway: "0.5 GB", render: "512 MB", notes: "Effectively identical — both ~512 MB per service" },
     { feature: "CPU per Service", railway: "1 vCPU (shared)", render: "0.1 CPU", notes: "Railway allocates more CPU on paper. Render's 0.1 CPU is quite constrained" },
     { feature: "Projects", railway: "1", render: "Unlimited (2 environments each)", notes: "Render does not cap the free workspace by project count; Railway's Free plan allows one" },
@@ -31672,16 +31672,16 @@ function buildHostingPricingPage(): string {
       name: "Railway",
       slug: "railway",
       category: "traditional-paas",
-      freeTier: "Free plan: $0/mo, $1/mo min after trial",
+      freeTier: "Free plan: $0/mo, $1 of free credit a month after trial",
       paidFrom: "$5/mo (Hobby)",
       freeBandwidth: "None included ($0.05/GB)",
       freeBuildMinutes: "Included",
       freeCompute: "Up to 1 vCPU, 0.5 GB RAM per service",
-      freeDetails: "Free plan: $0/month, opening with a 30-day trial carrying $5 of credits, then a $1/month minimum. Up to 1 vCPU and 0.5 GB RAM per service, 0.5 GB volume storage, 1 project, 3 services. Hobby plan ($5/mo minimum usage) includes $5 of monthly usage credits, not a free allowance. Supports Docker, Node, Python, Go, Rust, and more. Built-in Postgres, Redis, MySQL.",
+      freeDetails: "Free plan: $0/month, opening with a 30-day trial carrying $5 of credits, then $1 of free credit a month. Up to 1 vCPU and 0.5 GB RAM per service, 0.5 GB volume storage, 1 project, 3 services. Hobby plan ($5/mo minimum usage) includes $5 of monthly usage credits, not a free allowance. Supports Docker, Node, Python, Go, Rust, and more. Built-in Postgres, Redis, MySQL.",
       freeType: "credits",
-      monthlyCostSolo: "$1–5",
+      monthlyCostSolo: "$0–5",
       monthlyCostTeam: "$20/seat",
-      hiddenCosts: "The $5 trial credit is one-time — once the 30 days end the Free plan carries a $1/month minimum. Hobby's $5 credit resets monthly but is what the $5 subscription buys, not a free allowance, and usage can exceed it. Service egress is billed at $0.05/GB from the first GB on every plan.",
+      hiddenCosts: "The $5 trial credit is one-time — once the 30 days end the Free plan provides $1 of free credit per month. Hobby's $5 credit resets monthly but is what the $5 subscription buys, not a free allowance, and usage can exceed it. Service egress is billed at $0.05/GB from the first GB on every plan.",
     },
     {
       name: "Render",
@@ -34284,7 +34284,7 @@ function buildAppRunnerMigrationPage(): string {
     { name: "Elastic Beanstalk", slug: "aws", freeTier: "No EB fee (pay for underlying resources)", startingPrice: "EC2 pricing (t2.micro free 12 mo)", pricingModel: "Per-hour (underlying EC2/RDS)", sourceCodeDeploy: "Yes — source code + Dockerfiles", autoScaling: "Yes (EC2 Auto Scaling)", migrationEffort: "Low — supports source code deploy like App Runner", bestFor: "Source code deploy with full AWS control" },
     { name: "Google Cloud Run", slug: "google-cloud-run", freeTier: "2M requests/mo, 360K vCPU-sec, 180K GiB-sec free", startingPrice: "$0.00002400/vCPU-sec", pricingModel: "Per-request + per-second (scale to zero)", sourceCodeDeploy: "Yes — source code via buildpacks", autoScaling: "Yes (scale to zero)", migrationEffort: "Moderate — different cloud, similar DX", bestFor: "Pay-per-request with generous free tier" },
     { name: "Azure Container Apps", slug: "azure", freeTier: "180K vCPU-sec, 360K GiB-sec/mo free", startingPrice: "$0.000024/vCPU-sec", pricingModel: "Per-second (consumption) or dedicated", sourceCodeDeploy: "Yes — source code via buildpacks", autoScaling: "Yes (KEDA-based, scale to zero)", migrationEffort: "Moderate — different cloud, similar concepts", bestFor: "Azure ecosystem, event-driven scaling" },
-    { name: "Railway", slug: "railway", freeTier: "$5 trial credit (30 days), then $1/mo min", startingPrice: "$5/mo + usage ($0.000463/vCPU-min)", pricingModel: "Per-minute (vCPU + memory) + subscription", sourceCodeDeploy: "Yes — GitHub/GitLab auto-deploy", autoScaling: "Yes (horizontal + vertical)", migrationEffort: "Low — push to deploy, minimal config", bestFor: "Developer experience, fast deployment" },
+    { name: "Railway", slug: "railway", freeTier: "$5 trial credit (30 days), then $1 of free credit a month", startingPrice: "$5/mo + usage ($0.000463/vCPU-min)", pricingModel: "Per-minute (vCPU + memory) + subscription", sourceCodeDeploy: "Yes — GitHub/GitLab auto-deploy", autoScaling: "Yes (horizontal + vertical)", migrationEffort: "Low — push to deploy, minimal config", bestFor: "Developer experience, fast deployment" },
     { name: "Render", slug: "render", freeTier: "Free tier (750 hrs/mo, sleeps after inactivity)", startingPrice: "$7/mo (Starter)", pricingModel: "Per-service fixed monthly", sourceCodeDeploy: "Yes — GitHub auto-deploy", autoScaling: "Yes (paid plans)", migrationEffort: "Low — similar DX to App Runner", bestFor: "Simple web services, closest App Runner experience" },
     { name: "Fly.io", slug: "fly-io", freeTier: "None for new accounts — 2 hrs runtime or 7-day trial", startingPrice: "$1.94/mo (shared-cpu-1x)", pricingModel: "Per-VM + bandwidth", sourceCodeDeploy: "Yes — Dockerfiles + buildpacks", autoScaling: "Yes (scale to zero, multi-region)", migrationEffort: "Low-Moderate — CLI-driven, different paradigm", bestFor: "Multi-region, edge deployment" },
     { name: "DigitalOcean App Platform", slug: "digitalocean", freeTier: "3 static sites free, starter apps $5/mo", startingPrice: "$5/mo (Basic)", pricingModel: "Fixed monthly per app", sourceCodeDeploy: "Yes — GitHub/GitLab auto-deploy", autoScaling: "Yes (Pro+ plans)", migrationEffort: "Low — similar source code deploy model", bestFor: "Simple apps, predictable pricing" },
@@ -34319,7 +34319,7 @@ function buildAppRunnerMigrationPage(): string {
     { name: "ECS Express Mode (Fargate)", free: "AWS Free Tier (limited)", monthly: "~$30/mo (0.5 vCPU, 1GB 24/7)", scaling: "Per-second, service auto-scaling", color: "var(--accent)" },
     { name: "Google Cloud Run", free: "2M req + 360K vCPU-sec/mo", monthly: "Pay-per-use (scale to zero)", scaling: "Per-request, scale to zero", color: "#3fb950" },
     { name: "Azure Container Apps", free: "180K vCPU-sec/mo", monthly: "Pay-per-use (scale to zero)", scaling: "Per-second, KEDA events", color: "#3fb950" },
-    { name: "Railway", free: "$5 trial credit (30 days), then $1/mo min", monthly: "From $5/mo + usage", scaling: "Per-minute, horizontal", color: "#d29922" },
+    { name: "Railway", free: "$5 trial credit (30 days), then $1 of free credit a month", monthly: "From $5/mo + usage", scaling: "Per-minute, horizontal", color: "#d29922" },
     { name: "Render", free: "750 hrs/mo (sleeps)", monthly: "From $7/mo (Starter)", scaling: "Fixed + auto-scaling (paid)", color: "#3fb950" },
     { name: "Fly.io", free: "None (2 hrs or 7-day trial)", monthly: "From $1.94/mo per VM", scaling: "Per-VM, multi-region", color: "#3fb950" },
     { name: "DigitalOcean App Platform", free: "Static sites free", monthly: "From $5/mo (Basic)", scaling: "Fixed monthly per app", color: "#d29922" },
@@ -36134,7 +36134,7 @@ ${mcpCtaCss()}
 
 function buildDigitalOceanFreeTier2026Page(): string {
   const title = "DigitalOcean Free Tier Complete Guide 2026 — Pricing, Free Credits, and Hidden Costs";
-  const metaDescDO = "Complete guide to DigitalOcean pricing and free tier in 2026. $200 free credits for 60 days, App Platform free static sites, 20% Droplet price cuts, per-second billing, Functions serverless, and comparison with AWS, GCP, and Azure.";
+  const metaDescDO = "Complete guide to DigitalOcean pricing and free tier in 2026. $200 free credits for 60 days, App Platform free static sites, per-second billing, Functions serverless, and comparison with AWS, GCP, and Azure.";
   const slug = "digitalocean-free-tier-2026";
   const pubDate = "2026-03-31";
 
@@ -36174,9 +36174,9 @@ function buildDigitalOceanFreeTier2026Page(): string {
   }
 
   const paidHighlights: PaidService[] = [
-    { name: "Basic Droplet", price: "$4/mo", specs: "1 vCPU, 512 MB RAM, 10 GB SSD, 500 GB transfer", note: "20% price cut Jan 2026 (was $5)" },
-    { name: "Basic Droplet", price: "$6/mo", specs: "1 vCPU, 1 GB RAM, 25 GB SSD, 1 TB transfer", note: "20% cut (was $6, from $7)" },
-    { name: "Basic Droplet", price: "$12/mo", specs: "1 vCPU, 2 GB RAM, 50 GB SSD, 2 TB transfer", note: "20% cut (was $15)" },
+    { name: "Basic Droplet", price: "$4/mo", specs: "1 vCPU, 512 MB RAM, 10 GB SSD, 500 GB transfer", note: "" },
+    { name: "Basic Droplet", price: "$6/mo", specs: "1 vCPU, 1 GB RAM, 25 GB SSD, 1 TB transfer", note: "" },
+    { name: "Basic Droplet", price: "$12/mo", specs: "1 vCPU, 2 GB RAM, 50 GB SSD, 2 TB transfer", note: "" },
     { name: "Spaces Object Storage", price: "$5/mo", specs: "250 GB storage + 1 TB outbound transfer", note: "S3-compatible, CDN included" },
     { name: "Managed Database (PostgreSQL)", price: "$15/mo", specs: "1 vCPU, 1 GB RAM, 10 GB storage", note: "Not free tier — starts at $15" },
     { name: "Managed Kubernetes", price: "$12/mo", specs: "Free control plane + $4/mo per worker node (Basic)", note: "Per-second billing applies" },
@@ -36355,13 +36355,12 @@ ${mcpCtaCss()}
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number green">$200</div><div class="stat-label">Free Credits (60 days)</div></div>
     <div class="stat-card"><div class="stat-number">${freeServices.length}</div><div class="stat-label">Free Services</div></div>
-    <div class="stat-card"><div class="stat-number green">20%</div><div class="stat-label">Droplet Price Cut</div></div>
     <div class="stat-card"><div class="stat-number amber">$4/mo</div><div class="stat-label">Cheapest Droplet</div></div>
   </div>
 
   <div class="executive-summary">
     <p><strong>Different model than the Big Three.</strong> Unlike AWS, GCP, and Azure which offer always-free compute tiers, DigitalOcean's free offering is limited to <strong>$200 in trial credits (60 days)</strong>, <strong>3 free static sites</strong> on App Platform, <strong>serverless Functions</strong> (25,000 GiB-seconds/month), and <strong>free DNS management</strong>. There is no perpetual free compute — after credits expire, the cheapest Droplet is $4/month.</p>
-    <p><strong>The value proposition is simplicity and price.</strong> DigitalOcean's 2026 pricing changes made it significantly more competitive: a <strong>20% price cut</strong> on Basic Droplets (cheapest now $4/month from $5) and <strong>per-second billing</strong> (minimum 60 seconds or $0.01). For developers who want straightforward cloud infrastructure without the complexity of AWS/GCP/Azure, DigitalOcean trades free-tier generosity for operational simplicity.</p>
+    <p><strong>The value proposition is simplicity and price.</strong> DigitalOcean's 2026 pricing changes made it significantly more competitive: <strong>per-second billing</strong> (minimum 60 seconds or $0.01). For developers who want straightforward cloud infrastructure without the complexity of AWS/GCP/Azure, DigitalOcean trades free-tier generosity for operational simplicity.</p>
     <p><strong>Best for:</strong> Developers who value simplicity over free tiers, small-to-medium projects that outgrow free hosting, teams that want managed infrastructure without enterprise complexity. Not ideal for bootstrapped projects that need to stay at $0/month indefinitely.</p>
     <p><strong>Comparing clouds?</strong> See our <a href="/cloud-free-tier-comparison-2026">Cloud Free Tier Comparison</a> for a side-by-side matrix of AWS vs GCP vs Azure vs DigitalOcean.</p>
   </div>
@@ -36411,7 +36410,7 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="pricing">2026 Pricing Highlights</h2>
-  <p class="section-intro">DigitalOcean cut Basic Droplet prices by 20% in January 2026 and introduced per-second billing. Here are the key price points developers should know.</p>
+  <p class="section-intro">DigitalOcean introduced per-second billing. Here are the key price points developers should know.</p>
 
   <div style="overflow-x:auto">
   <table class="pricing-table">
@@ -36430,7 +36429,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="context-box">
-    <strong>Per-second billing changes the math.</strong> Before January 2026, DigitalOcean billed hourly. Now it's per-second with a 60-second minimum ($0.01). This matters for ephemeral workloads — CI/CD build servers, batch processing, dev environments. A Droplet running for 5 minutes costs ~$0.005 instead of a full hour. Combined with the 20% price cut, DigitalOcean is now price-competitive with Hetzner for basic VPS workloads.
+    <strong>Per-second billing changes the math.</strong> Before January 2026, DigitalOcean billed hourly. Now it's per-second with a 60-second minimum ($0.01). This matters for ephemeral workloads — CI/CD build servers, batch processing, dev environments. A Droplet running for 5 minutes costs ~$0.005 instead of a full hour.
   </div>
 
   <h2 id="stacks">Best Use Cases</h2>
@@ -36493,7 +36492,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="context-box">
-    <strong>The trade-off:</strong> If you need to run at $0/month indefinitely, DigitalOcean isn't the answer — choose AWS, GCP, Azure, or Cloudflare. If you need simple, predictable pricing with excellent documentation and a clean UI, DigitalOcean is hard to beat at $4-12/month. The 20% price cut and per-second billing make it competitive with budget providers like Hetzner and Vultr. For a complete comparison of free tiers, see our <a href="/free-startup-stack">Free Startup Stack</a> guide.
+    <strong>The trade-off:</strong> If you need to run at $0/month indefinitely, DigitalOcean isn't the answer — choose AWS, GCP, Azure, or Cloudflare. If you need simple, predictable pricing with excellent documentation and a clean UI, DigitalOcean is hard to beat at $4-12/month. For a complete comparison of free tiers, see our <a href="/free-startup-stack">Free Startup Stack</a> guide.
   </div>
 
   <h2 id="startups">For Startups</h2>
@@ -36840,7 +36839,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="executive-summary">
-    <p><strong>Quick verdict:</strong> <strong>GCP</strong> wins for side projects — it's the only provider with a permanent free VM (e2-micro) and the most generous always-free limits (Cloud Run 2M req/mo, BigQuery 1 TiB). <strong>AWS</strong> has the broadest service catalog and the best serverless stack (Lambda + DynamoDB). <strong>Azure</strong> has the strongest enterprise play (Active Directory, Cosmos DB lifetime free tier, .NET ecosystem). <strong>DigitalOcean</strong> doesn't compete on free tiers but wins on simplicity and competitive paid pricing ($4/mo Droplets after Jan 2026 price cuts).</p>
+    <p><strong>Quick verdict:</strong> <strong>GCP</strong> wins for side projects — it's the only provider with a permanent free VM (e2-micro) and the most generous always-free limits (Cloud Run 2M req/mo, BigQuery 1 TiB). <strong>AWS</strong> has the broadest service catalog and the best serverless stack (Lambda + DynamoDB). <strong>Azure</strong> has the strongest enterprise play (Active Directory, Cosmos DB lifetime free tier, .NET ecosystem). <strong>DigitalOcean</strong> doesn't compete on free tiers but wins on simplicity and competitive paid pricing ($4/mo Droplets).</p>
     <p><strong>The catch:</strong> Every cloud hides costs differently. AWS charges for data transfer and NAT gateways. GCP charges for egress and has confusing Firestore pricing tiers. Azure has no spending cap on pay-as-you-go. DigitalOcean has minimal free services but the fewest gotchas. We compare all of them below.</p>
   </div>
 
@@ -36954,7 +36953,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="context-box">
-    <strong>GCP is the only provider with a permanent free VM.</strong> AWS and Azure offer 12-month free instances that silently convert to paid. If you need a persistent server that costs nothing, GCP's e2-micro is the only option among the Big Four. DigitalOcean doesn't offer any free compute but starts at just $4/mo after the Jan 2026 price cut.
+    <strong>GCP is the only provider with a permanent free VM.</strong> AWS and Azure offer 12-month free instances that silently convert to paid. If you need a persistent server that costs nothing, GCP's e2-micro is the only option among the Big Four. DigitalOcean doesn't offer any free compute but starts at just $4/mo.
   </div>
 
   <h2 id="databases">Always-Free Databases</h2>
@@ -37215,7 +37214,7 @@ ${mcpCtaCss()}
 
     <div class="verdict-item">
       <strong>Simple VPS / paid hosting &rarr; DigitalOcean</strong>
-      <p>If you need predictable pricing, clean docs, and a simple UI, DO's $4/mo Droplets (after Jan 2026 cuts) beat the complexity of AWS/GCP/Azure. Per-second billing means you only pay for uptime. <a href="/digitalocean-free-tier-2026">Read the full DigitalOcean guide &rarr;</a></p>
+      <p>If you need predictable pricing, clean docs, and a simple UI, DO's $4/mo Droplets beat the complexity of AWS/GCP/Azure. Per-second billing means you only pay for uptime. <a href="/digitalocean-free-tier-2026">Read the full DigitalOcean guide &rarr;</a></p>
     </div>
 
     <div class="verdict-item">
@@ -45951,7 +45950,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
       </tr>
       <tr>
-        <td class="provider-col"><a href="/vendor/railway">Railway</a><span class="caution-badge">TRIAL ONLY</span></td>
+        <td class="provider-col"><a href="/vendor/railway">Railway</a></td>
         <td>$5 one-time credit</td>
         <td>Included in credit</td>
         <td>1 vCPU, 0.5 GB RAM</td>
@@ -46085,8 +46084,8 @@ ${mcpCtaCss()}
   </div>
 
   <div class="diff-card">
-    <h3><a href="/vendor/railway">Railway</a> <span class="caution-badge">TRIAL ONLY</span></h3>
-    <div class="diff-desc"><strong>Free tier:</strong> $5 one-time credit with 30-day trial. 1 vCPU, 0.5 GB RAM per service, 0.5 GB volume storage, 1 project, 3 services max. No credit card required. Usage-based billing after trial &mdash; $1/mo minimum on Developer plan. Supports Docker, Node.js, Python, Go, Rust, and more. Managed PostgreSQL, MySQL, Redis, and MongoDB. <strong>Key limitation:</strong> This is a trial, not a permanent free tier. The $5 credit runs out, and $1/mo minimum applies after. But the DX is exceptional &mdash; the best deploy experience of any PaaS.</div>
+    <h3><a href="/vendor/railway">Railway</a></h3>
+    <div class="diff-desc"><strong>Free tier:</strong> $0, a 30-day trial with a one-time $5 credit, then $1 of free credit a month. 1 vCPU, 0.5 GB RAM per service, 0.5 GB volume storage, 1 project, 3 services max. No credit card required. Supports Docker, Node.js, Python, Go, Rust, and more. Managed PostgreSQL, MySQL, Redis, and MongoDB. The DX is exceptional &mdash; the best deploy experience of any PaaS.</div>
   </div>
 
   <div class="diff-card">
@@ -46224,7 +46223,7 @@ ${mcpCtaCss()}
 
     <div class="verdict-item">
       <strong>Best for Docker containers &rarr; Google Cloud Run</strong>
-      <p>2M requests/month free with automatic scale-to-zero. Supports any Docker container. No cold start penalty for lightweight images. Koyeb removed its free compute tier and Fly.io has no free tier for new accounts. Railway supports Docker but is trial-only ($5 credit).</p>
+      <p>2M requests/month free with automatic scale-to-zero. Supports any Docker container. No cold start penalty for lightweight images. Koyeb removed its free compute tier and Fly.io has no free tier for new accounts.</p>
     </div>
 
     <div class="verdict-item">
@@ -46248,11 +46247,6 @@ ${mcpCtaCss()}
   <div class="diff-card">
     <h3>Vercel Hobby plan bans commercial use</h3>
     <div class="diff-desc">The most common gotcha in developer hosting. Vercel's Hobby plan terms prohibit commercial use &mdash; any project generating revenue, displaying ads, or serving a business needs Pro ($20/seat/month). This restriction is unique among hosting platforms. Cloudflare Pages, Netlify, Render, and Railway all allow commercial use on free/entry tiers. Many developers build on Vercel Hobby and only discover this when they launch.</div>
-  </div>
-
-  <div class="diff-card">
-    <h3>Railway is a trial, not a free tier</h3>
-    <div class="diff-desc">Railway's "free plan" is a one-time $5 credit lasting up to 30 days. After that, the Developer plan has a $1/month minimum. Don't start a project on Railway expecting permanent free hosting &mdash; plan for the transition to paid. That said, Railway's paid pricing is very competitive ($0.000463/min for 0.5 vCPU), and the trial is enough to build and validate an idea.</div>
   </div>
 
   <div class="diff-card">
