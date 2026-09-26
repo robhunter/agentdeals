@@ -72,7 +72,6 @@ const WHERE_THE_RULE_IS_WRONG = {
 const CORRECTED_ON = "2026-09-09";
 
 const RETRACTED = [
-  "Middleware.io",
   "ploi.io",
   "Simple Observability",
   "Financial Data",
@@ -80,6 +79,8 @@ const RETRACTED = [
   "Survicate",
   "ScraperAPI",
 ];
+
+const REREAD_SINCE = ["Middleware.io"];
 
 const RETYPED: Record<string, { date: string; type: string }> = {
   "localazy.com": { date: "2026-09-07", type: "limits_reduced" },
@@ -355,6 +356,14 @@ describe("records whose own pricing page sells the plan they withheld", () => {
     });
   }
 
+  for (const vendor of REREAD_SINCE) {
+    it(`${vendor} no longer withholds a free tier, whichever way a later reading resolved it`, () => {
+      const record = changesFor(vendor).find((c) => c.change_type === "free_tier_removed");
+      assert.ok(record, `${vendor} has no free_tier_removed record`);
+      assert.deepEqual(removalRecordsStillInForce([record]), []);
+    });
+  }
+
   for (const [vendor, expected] of Object.entries(RETYPED)) {
     it(`${vendor} records the narrowing that actually happened`, () => {
       const record = changesFor(vendor).find((c) => c.date === expected.date);
@@ -366,7 +375,7 @@ describe("records whose own pricing page sells the plan they withheld", () => {
 
   it("leaves none of them rated risky", () => {
     const risky: string[] = [];
-    for (const vendor of [...RETRACTED, ...Object.keys(RETYPED)]) {
+    for (const vendor of [...RETRACTED, ...REREAD_SINCE, ...Object.keys(RETYPED)]) {
       const offer = offerFor(vendor);
       if (!offer) continue;
       const risk = publishedRisk(offer, changesFor(vendor));
@@ -377,7 +386,7 @@ describe("records whose own pricing page sells the plan they withheld", () => {
 
   it("restores the vendor's own terms wherever the record was withdrawn", () => {
     const withheld: string[] = [];
-    for (const vendor of RETRACTED) {
+    for (const vendor of [...RETRACTED, ...REREAD_SINCE]) {
       const offer = offerFor(vendor);
       if (!offer) continue;
       const superseding = storedTermsAreSuperseded(offer, changesFor(vendor));
@@ -461,7 +470,7 @@ describe("the records this correction must not move", () => {
   }
 
   it("keeps every removal record we did not read", () => {
-    const read = new Set([...RETRACTED, ...Object.keys(RETYPED)].map((v) => v.toLowerCase()));
+    const read = new Set([...RETRACTED, ...REREAD_SINCE, ...Object.keys(RETYPED)].map((v) => v.toLowerCase()));
     const withdrawnOn = changes.filter(
       (c) => c.resolution?.date === CORRECTED_ON && !read.has(c.vendor.toLowerCase()),
     );

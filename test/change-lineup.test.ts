@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 import type { DealChange } from "../src/types.ts";
 import { DISCOVERED_DATE_PREFIX, EFFECTIVE_DATE_PREFIX } from "../dist/change-dates.js";
 import {
+  PRICES_THAT_MAKE_A_LINEUP,
   changeTimelineDate,
   statedPrices,
   statesAPlanLineup,
@@ -140,10 +141,23 @@ describe("the stored change log, read through the rule", () => {
   });
 
   it("leaves our newest read of a vendor standing when a correction follows it", () => {
-    const newest = find("Cursor", "2026-08-28");
-    assert.strictEqual(superseded.has(newest), false);
-    const correction = stored.find(c => c.vendor === "Cursor" && c.change_type === "record_corrected")!;
-    assert.ok(correction.date > newest.date, "the correction is the later record");
+    const newestRead = new Map<string, DealChange>();
+    for (const read of stored.filter(c => c.change_type !== "record_corrected" && statesAPlanLineup(c))) {
+      const held = newestRead.get(read.vendor);
+      if (!held || read.date > held.date) newestRead.set(read.vendor, read);
+    }
+    const correctionStatingALineupFollows = (read: DealChange) =>
+      stored.some(c =>
+        c.vendor === read.vendor
+        && c.change_type === "record_corrected"
+        && c.date > read.date
+        && statedPrices(c).size >= PRICES_THAT_MAKE_A_LINEUP
+      );
+    const followed = [...newestRead.values()].filter(correctionStatingALineupFollows);
+    assert.ok(followed.length > 0, "no vendor's newest read is followed by a correction naming a lineup's worth of prices");
+    for (const read of followed) {
+      assert.strictEqual(superseded.get(read), undefined, `${read.vendor} ${read.date} is superseded by our own correction`);
+    }
   });
 
   it("leaves AWS's deprecations standing, each naming a different product", () => {

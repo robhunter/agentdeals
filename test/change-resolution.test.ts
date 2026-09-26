@@ -462,12 +462,15 @@ describe("what a reader and an agent are told about a resolved change", () => {
 
   it("cancels the structured event for a record we withdrew", async () => {
     const events = await vendorEvents(get, "/vendor/cursor");
-    const retracted = events.find((e) => e.eventStatus);
-    assert.ok(retracted, "the retracted record is published with a status");
-    assert.strictEqual(retracted.eventStatus, EVENT_CANCELLED);
-    assert.match(retracted.description, /Cursor now offers 6 plans/);
-    assert.ok(events.some((e) => e.startDate === "2026-04-07"), "the standing control is not on the page");
-    assert.ok(!events.some((e) => e.startDate === "2026-04-07" && e.eventStatus), "a standing record has no status");
+    const hobby = events.find((e) => /Cursor now offers 6 plans/.test(e.description));
+    assert.ok(hobby, "the retracted Hobby record is not on the page");
+    assert.strictEqual(hobby.eventStatus, EVENT_CANCELLED);
+    const standingSummaries = stored.filter((c) => c.vendor === "Cursor" && !c.resolution).map((c) => c.summary);
+    const standing = events.filter((e) => standingSummaries.includes(e.description));
+    assert.ok(standing.length > 0, "no standing Cursor record is on the page to control against");
+    for (const event of standing) {
+      assert.ok(!("eventStatus" in event), `a standing record has a status: ${event.description}`);
+    }
   });
 
   it("tells the stack checker which of its changes are no longer in force", async () => {
