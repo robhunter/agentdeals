@@ -2,16 +2,30 @@
   "changes": [
     {
       "vendor": "Hyperping",
-      "change_type": "pricing_restructured",
-      "date": "2026-04-21",
-      "summary": "Hyperping free plan limits restructured: monitor cap raised from 5 to 20 (HTTP, port, ping, keyword), but the check interval slowed from 3 minutes to 5 minutes. Free plan now also includes 1 seat and 1 server monitoring agent. Trade-off: 4x more endpoints can be monitored, at the cost of slower check granularity.",
-      "previous_state": "Free plan: 5 monitors, 3-minute check interval, 1 status page",
-      "current_state": "Free plan: 20 monitors, 5-minute check interval, 1 basic status page, 1 seat, 1 server monitoring agent",
+      "change_type": "limits_increased",
+      "date": "2026-04-08",
+      "summary": "Between 2026-03-08 and 2026-04-08, Hyperping's free plan went from 5 monitors checked every 3 minutes to 20 monitors checked every 5 minutes, with 1 basic status page and 1 seat. Paid plans did not change.",
+      "previous_state": "\"Free Forever ... 5 monitors 3 min check interval 1 status page\"",
+      "current_state": "\"$0/forever Includes: 1 seat included 20 monitors 5 min check interval 1 basic status page HTTP, port, ping & keyword monitoring\". A free server monitoring agent was added later, between 2026-04-18 and 2026-05-10.",
       "impact": "medium",
-      "source_url": "https://hyperping.com/pricing",
+      "source_url": "https://web.archive.org/web/20260308042204/https://hyperping.com/pricing",
       "category": "Monitoring",
       "alternatives": [],
       "recorded_date": "2026-04-21",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Hyperping",
+      "change_type": "record_corrected",
+      "date": "2026-09-26",
+      "summary": "Data correction - Hyperping's free plan moved to 20 monitors at 5-minute checks between 2026-03-08 and 2026-04-08, not on 2026-04-21, and no paid price changed. The free server monitoring agent was a separate, later addition.",
+      "previous_state": "Recorded 2026-04-21 as: Hyperping free plan limits restructured: monitor cap raised from 5 to 20 (HTTP, port, ping, keyword), but the check interval slowed from 3 minutes to 5 minutes. Free plan now also includes 1 seat and 1 server monitoring agent. Trade-off: 4x more endpoints can be monitored, at the cost of slower check granularity. dated 2026-04-21",
+      "current_state": "\"$0/forever Includes: 1 seat included 20 monitors 5 min check interval 1 basic status page HTTP, port, ping & keyword monitoring\". A free server monitoring agent was added later, between 2026-04-18 and 2026-05-10.",
+      "impact": "low",
+      "source_url": "https://web.archive.org/web/20260308042204/https://hyperping.com/pricing",
+      "category": "Monitoring",
+      "alternatives": [],
+      "recorded_date": "2026-09-26",
       "date_source": "hand_written"
     },
     {
@@ -44,6 +58,26 @@
         "CockroachDB"
       ],
       "recorded_date": "2026-04-19",
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: Xata's free tier ended when it retired Xata Lite on 2026-02-28, which our Xata Lite record holds. The Xata platform had no free tier before April (\"We don't have a free tier for the Xata platform\", 2026-04-06), and on 2026-04-15 Xata open-sourced it under Apache 2.0, adding a free self-hosted option.",
+        "source_url": "https://web.archive.org/web/20260406174653/https://xata.io/pricing"
+      }
+    },
+    {
+      "vendor": "Xata",
+      "change_type": "new_free_tier",
+      "date": "2026-04-15",
+      "summary": "Xata open-sourced its platform under the Apache 2.0 license on 2026-04-15. Its pricing page added a free self-hosted option (\"Open Source Free forever. Free Deploy on Kubernetes\"); Xata Cloud stayed paid, starting with a 14-day free trial.",
+      "previous_state": "\"We don't have a free tier for the Xata platform, however, you can start with as low as $9 per month and cancel anytime.\" (2026-04-06)",
+      "current_state": "\"Open Source Free forever. Free Deploy on Kubernetes Copy-on-Write branches Scale-to-zero Community support\" (2026-04-19). \"Xata Cloud starts with a 14-day free trial.\"",
+      "impact": "low",
+      "source_url": "https://xata.io/blog/xata-is-now-open-source",
+      "category": "Databases",
+      "alternatives": [],
+      "recorded_date": "2026-09-26",
       "date_source": "hand_written"
     },
     {
@@ -104,10 +138,10 @@
     {
       "vendor": "OpenAI Codex",
       "change_type": "pricing_restructured",
-      "date": "2026-04-03",
-      "summary": "Switched from per-seat subscription to pay-as-you-go token-based pricing. Teams can add Codex-only seats billed on token consumption with no rate limits. ChatGPT Business price cut from $25 to $20/month (annual). $100 credit per new Codex team member (up to $500/team, limited time)",
-      "previous_state": "Per-seat subscription model, Business plan $25/user/mo",
-      "current_state": "Pay-as-you-go token-based pricing, Business $20/user/mo (annual), Codex-only seats with usage-based billing, $100 new member credits",
+      "date": "2026-04-02",
+      "summary": "OpenAI let ChatGPT Business and Enterprise teams add Codex-only seats billed on token use, with no rate limits, alongside standard per-seat seats. It cut the annual Business seat price from $25 to $20 and offered $100 per new Codex-only member, up to $500 per team.",
+      "previous_state": "Per-seat subscription: ChatGPT Business $25 per user per month billed annually, with Codex usage limits included",
+      "current_state": "Standard Business seats $20 per user per month billed annually ($25 monthly), with Codex usage limits. Optional Codex-only seats: \"Codex-only seats have no rate limits, and usage is billed on token consumption.\" $100 in credits per new Codex-only member, up to $500 per team, for a limited time.",
       "impact": "medium",
       "source_url": "https://openai.com/index/codex-flexible-pricing-for-teams/",
       "category": "AI Coding",
@@ -117,6 +151,20 @@
         "Devin"
       ],
       "recorded_date": "2026-04-15",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "OpenAI Codex",
+      "change_type": "record_corrected",
+      "date": "2026-09-26",
+      "summary": "Data correction - OpenAI did not switch Codex from per-seat to pay-as-you-go pricing on 2026-04-02. It added optional token-billed Codex-only seats and kept the per-seat Business seats.",
+      "previous_state": "Recorded 2026-04-15 as: Switched from per-seat subscription to pay-as-you-go token-based pricing. Teams can add Codex-only seats billed on token consumption with no rate limits. ChatGPT Business price cut from $25 to $20/month (annual). $100 credit per new Codex team member (up to $500/team, limited time) dated 2026-04-03",
+      "current_state": "Standard Business seats $20 per user per month billed annually ($25 monthly), with Codex usage limits. Optional Codex-only seats: \"Codex-only seats have no rate limits, and usage is billed on token consumption.\" $100 in credits per new Codex-only member, up to $500 per team, for a limited time.",
+      "impact": "low",
+      "source_url": "https://openai.com/index/codex-flexible-pricing-for-teams/",
+      "category": "AI Coding",
+      "alternatives": [],
+      "recorded_date": "2026-09-26",
       "date_source": "hand_written"
     },
     {
@@ -1009,11 +1057,11 @@
       "change_type": "product_deprecated",
       "date": "2025-05-30",
       "discontinued_date": "2025-05-30",
-      "summary": "Fauna shut down entirely on May 30, 2025. The serverless document database ceased all operations. Over 80,000 development teams affected",
-      "previous_state": "Free tier: 100K read ops/day, 50K write ops/day, 500K compute ops/day, 5 GB storage. Consumption-based pricing above free limits",
-      "current_state": "Service discontinued. No longer available in any form. All customer data deleted",
+      "summary": "Fauna turned off its hosted database service on 2025-05-30, as announced on 2025-03-19, and said all accounts and their data would be permanently deleted. It had open-sourced the core database under the Apache 2.0 license on 2025-04-29.",
+      "previous_state": "Free plan: \"100k TROs, 50k TWOs, 500k TCOs per month 1GB storage 5 DBs\"; \"$25-a-month pay as you go to increase usage capacity\"",
+      "current_state": "\"The Fauna service will be turned off on Friday May 30 at 12:00pm Pacific time.\" \"After this date, all Fauna accounts and their associated data will be permanently deleted.\" The core database can be self-hosted from github.com/fauna/faunadb under Apache 2.0.",
       "impact": "high",
-      "source_url": "https://fauna.com",
+      "source_url": "https://web.archive.org/web/20250530173027/https://status.fauna.com/",
       "category": "Databases",
       "alternatives": [
         "Supabase",
@@ -1022,6 +1070,20 @@
         "DynamoDB"
       ],
       "recorded_date": "2026-03-11",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Fauna",
+      "change_type": "record_corrected",
+      "date": "2026-09-26",
+      "summary": "Data correction - Fauna's free plan allowed 100k read, 50k write and 500k compute operations a month with 1 GB of storage, not a day with 5 GB. \"80,000+ development teams\" was a homepage total, and the database remains available as Apache-2.0 open source.",
+      "previous_state": "Recorded 2026-03-11 as: Fauna shut down entirely on May 30, 2025. The serverless document database ceased all operations. Over 80,000 development teams affected dated 2025-05-30",
+      "current_state": "\"The Fauna service will be turned off on Friday May 30 at 12:00pm Pacific time.\" \"After this date, all Fauna accounts and their associated data will be permanently deleted.\" The core database can be self-hosted from github.com/fauna/faunadb under Apache 2.0.",
+      "impact": "low",
+      "source_url": "https://web.archive.org/web/20250530173027/https://status.fauna.com/",
+      "category": "Databases",
+      "alternatives": [],
+      "recorded_date": "2026-09-26",
       "date_source": "hand_written"
     },
     {
@@ -1259,11 +1321,11 @@
       "vendor": "Heroku",
       "change_type": "free_tier_removed",
       "date": "2022-11-28",
-      "summary": "Heroku removed all free dynos, free Heroku Postgres, and free Heroku Data for Redis. The iconic PaaS that defined 'free tier' for a generation eliminated free offerings entirely after Salesforce acquisition",
+      "summary": "Heroku stopped offering free dynos, hobby-dev Heroku Postgres and hobby-dev Heroku Data for Redis on 2022-11-28, as announced on 2022-08-25.",
       "previous_state": "Free dyno: 550 hours/month (1,000 with credit card), free Postgres: 10K rows, free Redis: 25 MB. Dynos slept after 30 min inactivity",
-      "current_state": "No free tier. Mini plan starts at $5/month (Eco dynos $5/month for 1,000 shared hours). Postgres starts at $5/month",
+      "current_state": "No free tier. Eco dynos: \"1000 dyno hours for $5 per month\". Postgres Essential 0: \"$5/mo.\" Key-Value Store Mini: \"Max of $3/month\".",
       "impact": "high",
-      "source_url": "https://blog.heroku.com/next-chapter",
+      "source_url": "https://devcenter.heroku.com/changelog-items/2502",
       "category": "Cloud Hosting",
       "alternatives": [
         "Render",
@@ -1272,6 +1334,20 @@
         "Koyeb"
       ],
       "recorded_date": "2026-03-19",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Heroku",
+      "change_type": "record_corrected",
+      "date": "2026-09-26",
+      "summary": "Data correction - Heroku's $5 dyno plan is Eco, not Mini. Its only current Mini plan is Key-Value Store Mini, at a maximum of $3 a month.",
+      "previous_state": "Recorded 2026-03-19 as: Heroku removed all free dynos, free Heroku Postgres, and free Heroku Data for Redis. The iconic PaaS that defined 'free tier' for a generation eliminated free offerings entirely after Salesforce acquisition dated 2022-11-28",
+      "current_state": "No free tier. Eco dynos: \"1000 dyno hours for $5 per month\". Postgres Essential 0: \"$5/mo.\" Key-Value Store Mini: \"Max of $3/month\".",
+      "impact": "low",
+      "source_url": "https://devcenter.heroku.com/changelog-items/2502",
+      "category": "Cloud Hosting",
+      "alternatives": [],
+      "recorded_date": "2026-09-26",
       "date_source": "hand_written"
     },
     {
@@ -1505,13 +1581,13 @@
     },
     {
       "vendor": "xAI (Grok)",
-      "change_type": "free_tier_removed",
+      "change_type": "limits_reduced",
       "date": "2026-03-19",
-      "summary": "Grok Imagine free image/video generation locked behind SuperGrok subscription ($30/mo). Over 1B generations in first month overwhelmed capacity",
-      "previous_state": "Free image and video generation for all Grok users",
-      "current_state": "Image/video generation requires SuperGrok subscription ($30/month). Text-only Grok remains free with limits",
+      "summary": "Between 2026-03-18 and 2026-03-19, xAI put Grok Imagine image and video generation behind a paywall for free Grok users. SuperGrok ($30/month) included it, and from 2026-03-25 SuperGrok Lite ($10/month) included basic images and videos.",
+      "previous_state": "Grok Imagine image and video generation free for Grok users: \"now available free worldwide for a limited time\" (Elon Musk, 2025-08-14)",
+      "current_state": "Imagine paywalled for free users (grok.com config \"imagine_show_paywall_web\":true). Grok's Free $0 plan continues. SuperGrok $30/month includes \"Image and video generation\"; SuperGrok Lite, $10/month from 2026-03-25: \"Make basic AI images & videos\".",
       "impact": "medium",
-      "source_url": "https://x.com/xai",
+      "source_url": "http://web.archive.org/web/20260319034941/https://grok.com/imagine",
       "category": "AI / ML",
       "alternatives": [
         "DALL-E (credits)",
@@ -1519,6 +1595,20 @@
         "Pollinations.AI"
       ],
       "recorded_date": "2026-03-24",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "xAI (Grok)",
+      "change_type": "record_corrected",
+      "date": "2026-09-26",
+      "summary": "Data correction - Grok kept its free plan in March 2026; only Imagine image and video generation left it. xAI gave no capacity reason, and its 1.245 billion videos covered the 30 days to 2026-02-02, months after Imagine launched free.",
+      "previous_state": "Recorded 2026-03-24 as: Grok Imagine free image/video generation locked behind SuperGrok subscription ($30/mo). Over 1B generations in first month overwhelmed capacity dated 2026-03-19",
+      "current_state": "Imagine paywalled for free users (grok.com config \"imagine_show_paywall_web\":true). Grok's Free $0 plan continues. SuperGrok $30/month includes \"Image and video generation\"; SuperGrok Lite, $10/month from 2026-03-25: \"Make basic AI images & videos\".",
+      "impact": "low",
+      "source_url": "http://web.archive.org/web/20260319034941/https://grok.com/imagine",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-09-26",
       "date_source": "hand_written"
     },
     {
@@ -2131,15 +2221,29 @@
     {
       "vendor": "incidenthub.cloud",
       "change_type": "limits_reduced",
-      "date": "2026-04-12",
-      "summary": "Free tier monitors reduced from 20 to 5",
-      "previous_state": "20 monitors, 2 notification channels",
-      "current_state": "5 monitors, 2 notification channels",
+      "date": "2026-02-28",
+      "summary": "Between 2026-02-10 and 2026-02-28, incidenthub.cloud cut its free tier from 10 monitors to 5 and dropped its status page; Discord and Slack integration remained. It had cut the free tier from 20 monitors to 10 in October 2025.",
+      "previous_state": "\"Free (forever) $ 0 /month ... Monitors 10 Unlimited Notifications\", Max Integrations 2",
+      "current_state": "\"We also have a free (forever) tier with 5 monitors, Discord and Slack integration, and no status page.\"",
       "impact": "medium",
-      "source_url": "https://incidenthub.cloud/",
+      "source_url": "https://web.archive.org/web/20260210234054/https://incidenthub.cloud/",
       "category": "Monitoring",
       "alternatives": [],
       "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "incidenthub.cloud",
+      "change_type": "record_corrected",
+      "date": "2026-09-26",
+      "summary": "Data correction - incidenthub.cloud's free tier went from 20 to 10 monitors in October 2025 and from 10 to 5 between 2026-02-10 and 2026-02-28. It never went straight from 20 to 5, and nothing changed near 2026-04-12.",
+      "previous_state": "Recorded 2026-04-12 as: Free tier monitors reduced from 20 to 5 dated 2026-04-12",
+      "current_state": "\"We also have a free (forever) tier with 5 monitors, Discord and Slack integration, and no status page.\"",
+      "impact": "low",
+      "source_url": "https://web.archive.org/web/20260210234054/https://incidenthub.cloud/",
+      "category": "Monitoring",
+      "alternatives": [],
+      "recorded_date": "2026-09-26",
       "date_source": "hand_written"
     },
     {
@@ -2820,16 +2924,30 @@
     },
     {
       "vendor": "DiffJSON",
-      "change_type": "pricing_restructured",
-      "date": "2026-04-12",
-      "summary": "Domain changed from diffjson.com to comparejson.com",
-      "previous_state": "https://comparejson.com/",
-      "current_state": "https://comparejson.com/",
+      "change_type": "rebranded",
+      "date": "2026-03-03",
+      "summary": "DiffJSON was renamed Compare JSON between 2026-02-26 and 2026-03-03, and diffjson.com now 301-redirects to comparejson.com. The tool stayed free, with no sign-up and no pricing.",
+      "previous_state": "\"Diff JSON - Compare JSON data online\" at diffjson.com",
+      "current_state": "Compare JSON at comparejson.com: \"no installation or signup needed\"",
       "impact": "low",
-      "source_url": "https://comparejson.com/",
+      "source_url": "https://diffjson.com/",
       "category": "Dev Utilities",
       "alternatives": [],
       "recorded_date": "2026-04-12",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "DiffJSON",
+      "change_type": "record_corrected",
+      "date": "2026-09-26",
+      "summary": "Data correction - DiffJSON's move to comparejson.com was a rename of a free tool with no pricing change, and it happened between 2026-02-26 and 2026-03-03, not on 2026-04-12.",
+      "previous_state": "Recorded 2026-04-12 as: Domain changed from diffjson.com to comparejson.com dated 2026-04-12",
+      "current_state": "Compare JSON at comparejson.com: \"no installation or signup needed\"",
+      "impact": "low",
+      "source_url": "https://diffjson.com/",
+      "category": "Dev Utilities",
+      "alternatives": [],
+      "recorded_date": "2026-09-26",
       "date_source": "hand_written"
     },
     {

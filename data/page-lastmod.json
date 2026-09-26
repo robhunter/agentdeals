@@ -4723,6 +4723,10 @@
     "/vendor/comet-ml": {
       "daily": true
     },
+    "/vendor/compare-json": {
+      "hash": "4f2550b296a7cfa2",
+      "changed": "2026-09-26"
+    },
     "/vendor/composio": {
       "hash": "64c13ab91731173c",
       "changed": "2026-09-26"
@@ -5060,10 +5064,6 @@
     },
     "/vendor/diawi": {
       "hash": "feb266ddfd3d014b",
-      "changed": "2026-09-26"
-    },
-    "/vendor/diffjson": {
-      "hash": "5fd706ed6388602b",
       "changed": "2026-09-26"
     },
     "/vendor/difftext": {
