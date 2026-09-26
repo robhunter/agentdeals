@@ -1997,8 +1997,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 38,
-      "table_figures_from_records": 2,
+      "table_figures": 40,
+      "table_figures_from_records": 4,
       "tables": [
         {
           "label": "Always Free Products",
@@ -2017,8 +2017,8 @@
         },
         {
           "label": "Recent GCP & Google Changes",
-          "figures": 2,
-          "from_records": 2
+          "figures": 4,
+          "from_records": 4
         }
       ],
       "reads_changes": true,
