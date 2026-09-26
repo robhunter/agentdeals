@@ -27473,16 +27473,6 @@ function buildFreeTierTrackerPage(): string {
 
   const featuredExpansions: ErosionEntry[] = [
     {
-      vendor: "Gemini Code Assist",
-      slug: "gemini-code-assist",
-      date: "2025-12-18",
-      oneLiner: "Free tier launched for individual developers",
-      changeType: "new_free_tier",
-      impact: "high",
-      detail: "Google launched Gemini Code Assist free tier for individual developers. Includes code completions, chat, and multi-file editing powered by Gemini 2.5 Pro. Available in VS Code, JetBrains, and Cloud Shell.",
-      alternatives: ["GitHub Copilot Free", "Cursor", "Cline"],
-    },
-    {
       vendor: "Cloudflare Startup Program",
       slug: "cloudflare",
       date: "2026-02-01",
@@ -27520,7 +27510,7 @@ function buildFreeTierTrackerPage(): string {
       changeType: "new_free_tier",
       impact: "high",
       detail: "GitHub launched a free tier for Copilot: 2,000 code completions and 50 chat messages per month. Available in VS Code, Visual Studio, JetBrains, and Neovim. Strategic move to compete with Cursor and Claude.",
-      alternatives: ["Gemini Code Assist", "Cursor", "Cline"],
+      alternatives: ["Cursor", "Cline"],
     },
     {
       vendor: "Unity DevOps",
@@ -27714,7 +27704,7 @@ ${mcpCtaCss()}
   <div class="executive-summary">
     <p><strong>${removedOrReduced.length} developer tool free tiers were removed in Q1 2026. ${limitsReduced.length + restructured.length} more were reduced or restructured. Here&rsquo;s what changed and what&rsquo;s still free.</strong></p>
     <p>March 2026 saw an unprecedented wave of free tier removals in a single month: <strong>Postman</strong> killed team collaboration on its free plan, <strong>LocalStack</strong> discontinued its open-source Community Edition (212 points on Hacker News), <strong>Brave Search API</strong> replaced its free tier with metered billing, <strong>HCP Terraform</strong> is ending its legacy free plan March 31, and <strong>Windsurf</strong> replaced credits with hard quotas while raising prices 33%.</p>
-    <p>But it&rsquo;s not all erosion. <strong>Gemini Code Assist</strong> launched a free tier, <strong>Cloudflare</strong> expanded its startup program to $250K, <strong>Terragrunt Scale</strong> launched a free tier specifically to capture HCP Terraform refugees, and <strong>GitHub Copilot</strong> went free. The pattern: some vendors are removing free tiers, while competitors swoop in to capture displaced developers.</p>
+    <p>But it&rsquo;s not all erosion. <strong>Cloudflare</strong> expanded its startup program to $250K, <strong>Terragrunt Scale</strong> launched a free tier specifically to capture HCP Terraform refugees, and <strong>GitHub Copilot</strong> went free. The pattern: some vendors are removing free tiers, while competitors swoop in to capture displaced developers.</p>
   </div>
 
   <div class="toc">
@@ -28266,8 +28256,8 @@ function buildAiCodingPricing2026Page(): string {
       free: "Ended 2026-06-18",
       pro: "\u2014",
       power: "\u2014",
-      teams: "$19/seat",
-      model: "Free individual + Enterprise",
+      teams: "$22.80/seat",
+      model: "Standard + Enterprise (per user)",
       freeDetails: "Google stopped serving the free individuals tier on 2026-06-18 (deprecation notice). codeassist.google still advertises 6,000 code-related requests and 240 chat requests a day. Standard and Enterprise subscriptions are unchanged.",
     },
     {
@@ -28697,13 +28687,13 @@ function buildAiCodingToolsPricingPage(): string {
       free: "Ended 2026-06-18",
       pro: "\u2014",
       power: "\u2014",
-      teams: "$19/seat",
-      model: "Free individual + Enterprise",
+      teams: "$22.80/seat",
+      model: "Standard + Enterprise (per user)",
       freeDetails: "Google stopped serving the free individuals tier on 2026-06-18 (deprecation notice). codeassist.google still advertises 6,000 code-related requests and 240 chat requests a day. Standard and Enterprise subscriptions are unchanged.",
       freeType: "none",
-      monthlyCostSolo: "$19",
-      monthlyCostTeam5: "$95",
-      hiddenCosts: "Enterprise tier ($19/seat) needed for org-wide admin controls, policy management.",
+      monthlyCostSolo: "$22.80",
+      monthlyCostTeam5: "$114",
+      hiddenCosts: "$19/user/month with an annual commitment.",
     },
     {
       name: "Google Antigravity",
@@ -35316,7 +35306,6 @@ function buildGcpFreeTier2026Page(): string {
   const trialServices: GcpService[] = [
     { name: "$300 Free Trial Credit", slug: "google-cloud", limits: "$300 credit for 90 days, full access to all GCP services, credit card required", category: "Trial" },
     { name: "Vertex AI (Gemini)", slug: "google-gemini-api", limits: "Free tier: Gemini 2.5 Flash 500 req/day, Gemini 2.5 Pro 25 req/day", category: "AI/ML", highlight: true },
-    { name: "Gemini Code Assist", slug: "google-gemini-code-assist", limits: "Free individual tier: code completions, chat, multi-file editing (VS Code, JetBrains)", category: "AI Coding", highlight: true },
     { name: "Google Colab", slug: "google-colab", limits: "Free tier: T4 GPU (limited), standard RAM, 12-hour session limit", category: "AI/ML" },
     { name: "AlloyDB Omni", slug: "google-cloud", limits: "Free to download and run locally (PostgreSQL-compatible, columnar engine)", category: "Database" },
     { name: "Looker Studio", slug: "google-cloud", limits: "Free for individual use (unlimited reports, 10 data sources)", category: "Analytics" },
@@ -35558,7 +35547,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="context-box">
-    <strong>Gemini Code Assist is a strong free-tier AI coding option.</strong> Launched December 2025, it includes code completions, chat, and multi-file editing powered by Gemini 2.5 Pro — all free for individual developers. Available in VS Code, JetBrains, and Cloud Shell. See our <a href="/ai-coding-tools-pricing">AI Coding Tools comparison</a> for how it stacks up against Copilot, Cursor, and others.
+    Gemini Code Assist's free tier for individuals has ended. Google's <a href="https://developers.google.com/gemini-code-assist/docs/deprecations/code-assist-individuals" target="_blank" rel="nofollow noopener">deprecation notice</a> says that starting June 18, 2026, the IDE extensions stopped serving requests for the Gemini Code Assist for individuals, Google AI Pro and Google AI Ultra tiers, and that this also applies to Gemini CLI. Gemini CLI still runs with a Gemini API key.
   </div>
 
   <h2 id="stacks">Best Picks by Use Case</h2>

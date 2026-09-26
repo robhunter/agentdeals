@@ -140,6 +140,25 @@ describe(`Google ended the free Gemini Code Assist individuals tier and Gemini C
     assert.deepStrictEqual(undated.sort(), []);
   });
 
+  it("states the ending on /gcp-free-tier-2026 and links Google's deprecation notice from those words", async () => {
+    const html = await (await fetch(`${base}/gcp-free-tier-2026`)).text();
+    assert.match(
+      html,
+      /<a href="https:\/\/developers\.google\.com\/gemini-code-assist\/docs\/deprecations\/code-assist-individuals"[^>]*>deprecation notice<\/a> says that starting June 18, 2026, the IDE extensions stopped serving requests/,
+    );
+  });
+
+  it("offers Gemini Code Assist on /free-tier-tracker neither as a current expansion nor as still free", async () => {
+    const html = await (await fetch(`${base}/free-tier-tracker`)).text();
+    const from = html.indexOf('id="expanded"');
+    const to = html.indexOf('id="patterns"');
+    assert.ok(from >= 0 && to > from, "/free-tier-tracker no longer marks its expansions section, so this reads nothing");
+    assert.doesNotMatch(html.slice(from, to), /Gemini Code Assist/);
+    const stillFree = [...html.matchAll(/Still free:<\/strong>([\s\S]*?)<\/p>/g)].map((m) => m[1]);
+    assert.ok(stillFree.length > 0, "/free-tier-tracker prints no \"Still free\" list, so this reads nothing");
+    assert.deepStrictEqual(stillFree.filter((list) => /Gemini Code Assist/.test(list)), []);
+  });
+
   it("records the ending on both products' risk endpoints", async () => {
     for (const [slug, type] of [["google-gemini-code-assist", "free_tier_removed"], ["gemini-cli", "restriction"]] as const) {
       const risk = await (await fetch(`${base}/api/vendor-risk/${slug}`)).json();
