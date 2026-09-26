@@ -125,6 +125,18 @@ const RETIRED_FIGURES: Retired[] = [
     vendorRecord: () => recordFor("Supabase", "Databases").description,
   },
   {
+    what: "Windsurf's free tier as 25 credits a month",
+    pattern: /Windsurf's "25 credits\/month"|Windsurf[^.]{0,40}25 credits\/month/i,
+    replacedBy: /a light quota to code with agents/,
+    vendorRecord: () => recordFor("Windsurf", "AI Coding").description,
+  },
+  {
+    what: "Cursor's Opus requests as burning credits ten times faster than Sonnet",
+    pattern: /burn credits 10.? faster/i,
+    replacedBy: /Limited Agent requests/,
+    vendorRecord: () => recordFor("Cursor", "AI Coding").description,
+  },
+  {
     what: "a Fly.io free tier for new accounts",
     pattern: /Fly\.io(?:'s)?[^.]{0,70}(?:free tier includes|gives 3 shared|3 shared-cpu VMs)|3 shared-cpu-1x VMs, 160 ?GB|3 shared VMs free|3 shared VMs, 160 ?GB/i,
     replacedBy: /no free tier for new accounts|2 hrs? runtime|2 hours runtime|7-day trial/i,

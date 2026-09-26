@@ -28467,8 +28467,8 @@ ${mcpCtaCss()}
   </div>
 
   <div class="executive-summary">
-    <p><strong>The pricing earthquake:</strong> AI coding tools pricing has converged. $20/month is the new standard, $200/month for power users, and free tiers are getting thinner. Windsurf just overhauled from credits to quotas and hiked Pro by 33%. Meanwhile, Gemini Code Assist went fully free with 90\u00d7 more completions than Copilot's free tier.</p>
-    <p><strong>Key insight:</strong> Cursor and Windsurf now charge <strong>identical prices</strong> ($20/$200/$40). GitHub Copilot remains the cheapest paid option at $10/mo. Gemini Code Assist offers the most generous free tier by far. Open-source tools (Cline, Aider) remain fully free with BYO API keys.</p>
+    <p><strong>The pricing earthquake:</strong> AI coding tools pricing has converged. $20/month is the new standard, $200/month for power users, and free tiers are getting thinner. Windsurf just overhauled from credits to quotas and hiked Pro by 33%.</p>
+    <p><strong>Key insight:</strong> Cursor and Windsurf now charge <strong>identical prices</strong> ($20/$200/$40). GitHub Copilot remains the cheapest paid option at $10/mo. Open-source tools (Cline, Aider) remain fully free with BYO API keys.</p>
     <p><strong>Our advantage:</strong> Unlike other comparison guides, we track pricing changes over time. We've recorded ${aiCodingChanges.length} pricing changes for AI coding tools — so you can see not just where prices are, but where they're heading.</p>
   </div>
 
@@ -29113,7 +29113,7 @@ function buildAiCodingToolsPricingPage(): string {
     '\n' +
     '  <div class="executive-summary">\n' +
     '    <p><strong>The AI coding tools market in April 2026:</strong> 17 tools across four categories \u2014 IDE-based editors, CLI/terminal agents, cloud coding agents, and AI app builders. $20/month has become the standard price point. Some free tiers are metered by the month (GitHub Copilot Free: 2,000 completions), some are absent (Devin: $20/mo minimum), and Google ended the free Gemini Code Assist individuals tier on 2026-06-18. The BYOK (bring your own key) tools \u2014 Cline, Aider, Gemini CLI \u2014 are technically free but shift costs to API providers.</p>\n' +
-    '    <p><strong>Key trends:</strong> Credit and quota models are replacing flat subscriptions (Cursor Jun 2025, Augment Oct 2025, Windsurf Mar 2026). Cloud agents (Codex, Devin) are a new category that didn\'t exist a year ago. Google is flooding the market with free options (Gemini Code Assist, Antigravity, Gemini CLI) while competitors charge $20/mo.</p>\n' +
+    '    <p><strong>Key trends:</strong> Credit and quota models are replacing flat subscriptions (Cursor Jun 2025, Augment Oct 2025, Windsurf Mar 2026). Cloud agents (Codex, Devin) are a new category that didn\'t exist a year ago.</p>\n' +
     '    <p><strong>This guide covers:</strong> pricing tables, category breakdowns, what you actually get for free, cost analysis for solo devs and teams, hidden costs, and best-for-use-case recommendations \u2014 compiled by hand from vendor pricing pages.</p>\n' +
     '  </div>\n' +
     '\n' +
