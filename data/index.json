@@ -6659,8 +6659,8 @@
     {
       "vendor": "Cerebras",
       "category": "AI / ML",
-      "description": "Ultra-fast LLM inference API. Free tier: 1M tokens/day, 10-30 requests/min (varies by model). Models include Llama 3.1 8B, Qwen 3 235B, GPT-OSS 120B. Multi-thousand tokens/sec inference speed",
-      "tier": "Free",
+      "description": "Ultra-fast LLM inference API — no permanent free tier. New accounts get $5 in free credits after adding a verified payment method, expiring 30 days after they are granted. Free Trial limits on gpt-oss-120b and qwen-3.8-27b: 5 requests/min and 1M tokens/day. Pay as you go after: GPT OSS 120B $0.35/$0.75 per M tokens, Qwen 3.8 27B $0.99/$1.49 per M tokens. Multi-thousand tokens/sec inference speed",
+      "tier": "Trial",
       "url": "https://cerebras.ai/",
       "tags": [
         "ai",
