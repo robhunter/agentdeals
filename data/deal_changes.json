@@ -9326,14 +9326,14 @@
     },
     {
       "vendor": "Foursquare",
-      "change_type": "pricing_restructured",
-      "date": "2026-09-07",
-      "date_source": "discovered",
-      "summary": "The Spatial Desktop Basic plan is $0/month through 2026, includes $1 of agent tokens, 3 GB of cloud storage, and 5 shared projects. The Places API free tier is now 10,000 free calls on Pro endpoints. The pricing for Pro and Premium endpoints has been updated with specific CPMs based on call volume.",
-      "previous_state": "Location discovery, venue search, and context-aware content. Places API: 10,000 free calls/mo on Pro endpoints ($0.00 CPM), then pay-per-call. New users get $200 in free credits. Spatial Studio Community (always free: 1 GB cloud storage, limited data catalog, public-only map publishing). Spatial Desktop Basic ($0/mo through 2026, includes $1 of agent tokens to preview FSQ Spatial Agent, 5 shared projects, 3 GB cloud storage). Spatial Workbench 30-day free trial (pay only for compute/storage used).",
+      "change_type": "limits_reduced",
+      "date": "2026-06-01",
+      "date_source": "vendor_page",
+      "summary": "Foursquare cut the free Places API allowance on Pro endpoints from 10,000 to 500 calls a month, effective 2026-06-01. Its docs: \"Beginning June 1, 2026, the following Places API & V2 Pro endpoint rates go into effect for all users: 0 - 500 calls – $0.00 CPM ... You will now receive 500 free Pro calls.\"",
+      "previous_state": "Places API Pro endpoints: 0 – 10,000 calls at $0.00 CPM, then $15.00 CPM from 10,001 calls (pricing page, Internet Archive capture of 2026-04-19)",
       "current_state": "Places API Pro endpoints: 0-500 Calls $0.00 CPM, 501 to 100,000 Calls $15.00 CPM, 100,001 to 500,000 Calls $12.00 CPM, 500,001+ Calls $9.00 CPM. Places API Premium endpoints: 0-100,000 Calls $18.75 CPM, 100,001 to 500,000 Calls $15.00 CPM, 500,001+ Calls $11.25 CPM.",
       "impact": "medium",
-      "source_url": "https://foursquare.com/pricing/",
+      "source_url": "https://docs.foursquare.com/developer/reference/upcoming-changes",
       "category": "Maps/Geolocation",
       "alternatives": [],
       "detected_by": "reverify-ai",
@@ -10640,7 +10640,13 @@
       "category": "Maps/Geolocation",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-24"
+      "recorded_date": "2026-09-24",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: Foursquare added no free tier. The pricing page still carries a promo card saying \"Enjoy up to 10,000 free calls on Pro endpoints\", but its price table lists \"0 – 500 Calls\" at $0.00 CPM, and Foursquare's docs say the 500-call allowance took effect on 2026-06-01. The reading took the stale card for a new tier.",
+        "source_url": "https://docs.foursquare.com/developer/reference/upcoming-changes"
+      }
     },
     {
       "vendor": "Slack",
@@ -11183,7 +11189,7 @@
       "date_source": "vendor_page",
       "summary": "Composio's new pricing, for signups on or after 2026-08-15, raised the free plan from 20,000 tool calls a month (triggers counted inside them) to 100,000 tool calls and a separate 50,000 triggers a month, with 3 team members. Accounts from before 2026-08-15 keep the old plan through 2026-12-31.",
       "tier": "Free",
-      "tier_direction": "narrowed",
+      "tier_direction": "widened",
       "previous_state": "Totally Free plan: 20,000 tool calls a month, with triggers counted as tool calls (pricing page, Internet Archive captures of 2026-02-27 and 2026-08-04)",
       "current_state": "\"Free $0 No credit card required 100,000 tool calls / mo 50,000 triggers / mo 3 team members\". \"New pricing applies to signups on or after August 15, 2026. Existing customers stay on their current plan through December 31, 2026.\"",
       "impact": "medium",
@@ -11361,6 +11367,20 @@
       "impact": "low",
       "source_url": "https://weaviate.io/blog/weaviate-free-tier",
       "category": "Databases",
+      "alternatives": [],
+      "recorded_date": "2026-09-26",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Foursquare",
+      "change_type": "record_corrected",
+      "date": "2026-09-26",
+      "summary": "Data correction - Foursquare's Places API change was a cut in the free Pro-call allowance, effective 2026-06-01. Our re-read of 2026-09-07 recorded it as a restructure dated the day it read the page.",
+      "previous_state": "Recorded 2026-09-07 as pricing_restructured, dated 2026-09-07",
+      "current_state": "limits_reduced, dated 2026-06-01 from Foursquare's docs",
+      "impact": "low",
+      "source_url": "https://docs.foursquare.com/developer/reference/upcoming-changes",
+      "category": "Maps/Geolocation",
       "alternatives": [],
       "recorded_date": "2026-09-26",
       "date_source": "hand_written"
