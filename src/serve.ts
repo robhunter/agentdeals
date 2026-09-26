@@ -944,6 +944,7 @@ const today = new Date().toISOString().slice(0, 10);
 const hasAlreadyTakenEffect = (c: { date: string }) => c.date <= today;
 
 const recentChanges = changesTheVendorMade(dealChanges)
+  .filter(isEventDated)
   .filter(hasAlreadyTakenEffect)
   .sort((a, b) => b.date.localeCompare(a.date))
   .slice(0, RECENT_CHANGES_ON_THE_HOME_PAGE);

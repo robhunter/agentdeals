@@ -22,16 +22,16 @@ const FUTURE = [
 const EFFECTIVE_TODAY = { vendor: "Datumforge", date: TODAY, type: "limits_reduced", source: "vendor_page" };
 const PAST = [
   { vendor: "Everglow", date: dayOffset(-2), type: "free_tier_removed", source: "vendor_page" },
-  { vendor: "Foldergrid", date: dayOffset(-4), type: "limits_reduced", source: "hand_written" },
+  { vendor: "Foldergrid", date: dayOffset(-4), type: "limits_reduced", source: "hand_written", recorded: TODAY },
   { vendor: "Gustline", date: dayOffset(-9), type: "pricing_restructured", source: "discovered" },
   { vendor: "Halcyonio", date: dayOffset(-15), type: "limits_increased", source: "vendor_page" },
   { vendor: "Ironvale", date: dayOffset(-21), type: "limits_reduced", source: "discovered" },
   { vendor: "Junipernet", date: dayOffset(-40), type: "free_tier_removed", source: "vendor_page" },
 ];
 
-const EXPECTED_RECENT = [EFFECTIVE_TODAY, ...PAST].slice(0, 5).map((c) => c.vendor);
+const EXPECTED_RECENT = [EFFECTIVE_TODAY, ...PAST].filter((c) => c.source !== "discovered").slice(0, 5).map((c) => c.vendor);
 
-function change(spec: { vendor: string; date: string; type: string; source: string }) {
+function change(spec: { vendor: string; date: string; type: string; source: string; recorded?: string }) {
   return {
     vendor: spec.vendor,
     change_type: spec.type,
@@ -44,7 +44,7 @@ function change(spec: { vendor: string; date: string; type: string; source: stri
     source_url: `https://example.com/${spec.vendor.toLowerCase()}/pricing`,
     category: "Databases",
     alternatives: [],
-    recorded_date: spec.date,
+    recorded_date: spec.recorded ?? spec.date,
   };
 }
 

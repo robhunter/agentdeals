@@ -130,6 +130,9 @@ describe("the machine-readable change lists carry the entries the pages carry", 
       );
     });
 
+  }
+
+  for (const route of ROUTES.filter((r) => r !== "/")) {
     it(`lists an entry whose effective date is unknown on ${route}, without inventing one`, () => {
       const discovery = itemFor(changeList(bodies.get(route)!, route), DISCOVERY, route);
       assert.ok(
@@ -138,6 +141,15 @@ describe("the machine-readable change lists carry the entries the pages carry", 
       );
     });
   }
+
+  it("leaves an entry whose effective date is unknown out of the home page's list", () => {
+    const home = changeList(bodies.get("/")!, "/");
+    itemFor(home, RECENT, "/");
+    assert.ok(
+      !home.items.some((it) => it.headline?.startsWith(`${DISCOVERY}:`)),
+      `the home page listed ${DISCOVERY}, whose effective date is unknown`
+    );
+  });
 
   it("carries an entry that has not taken effect on the routes that list changes by date, and not on the home page", () => {
     for (const route of ["/changes", "/expiring"]) {
