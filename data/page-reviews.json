@@ -1219,7 +1219,7 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 60,
+      "table_figures": 56,
       "table_figures_from_records": 12,
       "tables": [
         {
@@ -1229,7 +1229,7 @@
         },
         {
           "label": "2026 Pricing Highlights",
-          "figures": 31,
+          "figures": 27,
           "from_records": 0
         },
         {
@@ -2394,7 +2394,7 @@
       "review_note": null,
       "reads_index": false,
       "tables_read_index": false,
-      "table_figures": 140,
+      "table_figures": 141,
       "table_figures_from_records": 54,
       "tables": [
         {
@@ -2409,7 +2409,7 @@
         },
         {
           "label": "Cost Comparison by Use Case",
-          "figures": 38,
+          "figures": 39,
           "from_records": 0
         },
         {

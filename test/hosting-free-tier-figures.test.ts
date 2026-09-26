@@ -139,7 +139,13 @@ const RETIRED_FIGURES: Retired[] = [
   {
     what: "Railway's $5 Hobby credit described as free",
     pattern: /\$5\/(?:month|mo)(?: free)? credit|\$5 free credit|\$5 credit\/mo|Free \$5 monthly/i,
-    replacedBy: /\$1\/(?:month|mo)|trial credit/i,
+    replacedBy: /\$1\/(?:month|mo)|\$1 of free credit|trial credit/i,
+    vendorRecord: () => recordFor("Railway", "Cloud Hosting").description,
+  },
+  {
+    what: "Railway's Free plan as a $1 monthly minimum charge",
+    pattern: /\$1\/mo(?:nth)? min(?:imum)?|\$1\/month minimum|\$1 (?:a|per) month minimum/i,
+    replacedBy: /\$1 of free credit/i,
     vendorRecord: () => recordFor("Railway", "Cloud Hosting").description,
   },
 ];
@@ -237,6 +243,11 @@ describe("hosting pages publish the free-tier figures our records hold (#1183)",
       "Sentry's free data retention as 90 days": ["/monitoring-comparison-2026"],
       "a Better Stack free log allowance of 1 GB": ["/monitoring-comparison-2026"],
       "Railway's $5 Hobby credit described as free": ["/hetzner-pricing-2026", "/hosting-pricing", "/hosting-alternatives"],
+      "Railway's Free plan as a $1 monthly minimum charge": [
+        "/hetzner-pricing-2026", "/hosting-free-tier-comparison-2026", "/hosting-pricing", "/hosting-alternatives",
+        "/free-django-stack", "/free-fastapi-stack", "/free-go-stack", "/free-nextjs-stack", "/free-saas-stack",
+        "/railway-vs-render", "/vercel-vs-netlify", "/heroku-alternatives", "/aws-app-runner-migration", "/google-developer-program-2026",
+      ],
     };
     const missing: string[] = [];
     for (const [what, pages] of Object.entries(carried)) {
