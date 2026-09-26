@@ -567,9 +567,9 @@
       "vendor": "DigitalOcean",
       "change_type": "limits_increased",
       "date": "2026-01-01",
-      "summary": "20% price cut on Basic Droplets (cheapest now $4/mo from $5/mo). Per-second billing introduced (minimum 60 seconds or $0.01). Functions free tier increased to 25,000 GiB-seconds/mo",
-      "previous_state": "Basic Droplets from $5/mo, hourly billing, Functions 90K GiB-seconds/mo free",
-      "current_state": "Basic Droplets from $4/mo (1 vCPU, 512 MB, 10 GB SSD). Per-second billing (min 60s/$0.01). Functions 25,000 GiB-seconds/mo free",
+      "summary": "Droplets moved from hourly to per-second billing (with a minimum charge of 60 seconds or $0.01, whichever is higher)",
+      "previous_state": "Hourly billing",
+      "current_state": "Per-second billing (with a minimum charge of 60 seconds or $0.01, whichever is higher) for Droplets",
       "impact": "medium",
       "source_url": "https://www.digitalocean.com/pricing/droplets",
       "category": "Cloud IaaS",
@@ -1320,7 +1320,12 @@
         "Koyeb"
       ],
       "recorded_date": "2026-03-19",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: Railway's trial credit is a one-time $5, not $5 a month; the trial needed no credit card in January 2025 either; the Free plan's $1 a month first appears on railway.com/pricing between the Internet Archive's 2025-08-24 and 2025-09-03 captures; and Railway's $100M Series B was announced on 2026-01-22."
+      }
     },
     {
       "vendor": "Render",
@@ -8075,7 +8080,13 @@
       "category": "Cloud Hosting",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-03"
+      "recorded_date": "2026-09-03",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: Railway's Free plan has no minimum charge. After the trial it gives $1 of free credit a month; docs.railway.com/pricing/free-trial says \"After 30 days passes or $5 is spent, the free trial reverts to the Free plan, which provides $1 of free credit per month.\" This record set our own earlier wording against Railway's pricing card, and the project count did not change.",
+        "source_url": "https://docs.railway.com/pricing/free-trial"
+      }
     },
     {
       "vendor": "Supabase",
@@ -10099,14 +10110,20 @@
       "summary": "The page does mention a $5 free credit. Details are limited. App Platform is free for 3 static sites. Functions are free up to 90,000 GiB-seconds/month. Spaces pricing is $5/month for 250 GB + 1 TB transfer.",
       "tier": "Functions",
       "tier_direction": "widened",
-      "previous_state": "$200 credit for 60 days for new accounts. Basic Droplets from $4/mo (1 vCPU, 512 MB RAM, 10 GB SSD — 20% price cut Jan 2026). Per-second billing (min 60s or $0.01). App Platform: 3 free static sites (1 GiB outbound/mo each). Functions: 25,000 GiB-seconds/mo free. Spaces: 250 GB + 1 TB transfer for $5/mo. Managed databases start at $15/mo (not free). No perpetual free compute tier",
+      "previous_state": "$200 credit for 60 days for new accounts. Basic Droplets from $4/mo (1 vCPU, 512 MB RAM, 10 GB SSD). Per-second billing (min 60s or $0.01). App Platform: 3 free static sites (1 GiB outbound/mo each). Functions: 25,000 GiB-seconds/mo free. Spaces: 250 GB + 1 TB transfer for $5/mo. Managed databases start at $15/mo (not free). No perpetual free compute tier",
       "current_state": "DigitalOcean Functions offers 90,000 GiB-seconds per month for free.",
       "impact": "medium",
       "source_url": "https://www.digitalocean.com/pricing",
       "category": "Cloud IaaS",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-19"
+      "recorded_date": "2026-09-19",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: DigitalOcean's Functions allowance did not grow. Its Functions pricing page stated \"90,000 GiB-seconds of compute free per month per account\" in September 2025 as well. The 25,000 in this record's before-state was our own error, corrected 2026-09-26.",
+        "source_url": "http://web.archive.org/web/20250905160050/https://www.digitalocean.com/pricing/functions"
+      }
     },
     {
       "vendor": "Hasura",
@@ -10616,6 +10633,62 @@
       "impact": "medium",
       "source_url": "https://planetscale.com/docs/plans/hobby-plan-deprecation-faq",
       "category": "Databases",
+      "alternatives": [],
+      "recorded_date": "2026-09-26",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Railway",
+      "change_type": "record_corrected",
+      "date": "2026-09-26",
+      "summary": "Data correction - Railway's Free plan has no minimum charge. It costs $0 and gives $1 of free credit a month after the 30-day trial; our 2026-09-03 record read that as a new monthly minimum.",
+      "previous_state": "Recorded 2026-09-03 as: a monthly minimum charge after the trial, and projects reduced to 1",
+      "current_state": "Free $0 per month: a 30-day trial with a one-time $5 credit, then $1 of free credit a month. No credit card required.",
+      "impact": "medium",
+      "source_url": "https://docs.railway.com/pricing/free-trial",
+      "category": "Cloud Hosting",
+      "alternatives": [],
+      "recorded_date": "2026-09-26",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "DigitalOcean",
+      "change_type": "record_corrected",
+      "date": "2026-09-26",
+      "summary": "Data correction - DigitalOcean did not cut Basic Droplet prices in January 2026; its page listed the $4.00 Droplet in 2025 as well. Functions' free allowance is 90,000 GiB-seconds a month, not 25,000.",
+      "previous_state": "Recorded 2026-03-31 as: Basic Droplets down from $5/mo to $4/mo in January 2026, and Functions' free tier increased to 25,000 GiB-seconds/mo",
+      "current_state": "Basic Droplets from $4.00/mo, as in the page's 2025 captures. \"Use 90,000 GiB-seconds per month for free with DigitalOcean Functions.\"",
+      "impact": "medium",
+      "source_url": "https://www.digitalocean.com/pricing/droplets",
+      "category": "Cloud IaaS",
+      "alternatives": [],
+      "recorded_date": "2026-09-26",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Railway",
+      "change_type": "limits_reduced",
+      "date": "2025-06-30",
+      "summary": "Railway's trial credit now expires. The one-time $5 grant, which previously did not expire, lasts 30 days. The Internet Archive's 2025-06-26 capture still says the credits do not expire; the 2025-06-30 capture says they expire in 30 days.",
+      "previous_state": "Trial: a one-time grant of $5 in credits that do not expire",
+      "current_state": "Trial: a one-time grant of $5 in credits that expire in 30 days",
+      "impact": "medium",
+      "source_url": "http://web.archive.org/web/20250630223305/https://railway.com/pricing",
+      "category": "Cloud Hosting",
+      "alternatives": [],
+      "recorded_date": "2026-09-26",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Railway",
+      "change_type": "new_free_tier",
+      "date": "2025-09-03",
+      "summary": "Railway added a Free plan: after the 30-day trial, $1 of free credit a month. It first appears in the Internet Archive's 2025-09-03 capture; the 2025-08-24 capture has no Free plan.",
+      "previous_state": "Trial only: a one-time $5 credit that expires after 30 days",
+      "current_state": "Free plan: $1 of free credit a month after the 30-day trial",
+      "impact": "medium",
+      "source_url": "http://web.archive.org/web/20250903210249/https://railway.com/pricing",
+      "category": "Cloud Hosting",
       "alternatives": [],
       "recorded_date": "2026-09-26",
       "date_source": "hand_written"
