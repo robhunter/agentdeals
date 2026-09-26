@@ -204,15 +204,39 @@ const RETIRED_FIGURES: Retired[] = [
   },
   {
     what: "Neon Launch at $19 a month",
-    pattern: /Neon Launch (?:at |plan at )?\$19|\$19\/mo Neon Launch|Launch \$19|Launch \(\$19/i,
+    pattern: /Neon Launch (?:at |plan at )?\$19|\$19\/mo Neon Launch|Launch \$19|Launch \(\$19|\$19\/mo \(Launch\)|Neon starts at \$19/i,
     replacedBy: /usage-based,? (?:with )?no monthly minimum|Launch, usage-based|Launch, no monthly minimum/i,
     vendorRecord: () => recordFor("Neon", "Databases").description,
   },
   {
     what: "a first paid upgrade priced as a fixed monthly total including Neon Launch",
-    pattern: /The \$\d+\/month breakpoint/i,
-    replacedBy: /The first paid upgrade:/,
+    pattern: /The \$\d+\/month breakpoint|The \$\d+\/Month Upgrade/i,
+    replacedBy: /The first paid upgrade:|The First Paid Upgrade/,
     vendorRecord: () => recordFor("Neon", "Databases").description,
+  },
+  {
+    what: "Neon's free plan as unlimited projects on 0.25 compute units",
+    pattern: /unlimited projects and databases|0\.25 compute units/i,
+    replacedBy: /up to 100 projects/i,
+    vendorRecord: () => recordFor("Neon", "Databases").description,
+  },
+  {
+    what: "Supabase Pro priced at $25 per project",
+    pattern: /Supabase Pro is \$25\/project/i,
+    replacedBy: /the first project and \$10 a month of compute credits included/i,
+    vendorRecord: () => recordFor("Supabase", "Databases").description,
+  },
+  {
+    what: "Neon set beside Supabase as a database without auth or storage",
+    pattern: /best database experience|best BaaS features|Supabase for auth and storage|complete BaaS platform|instead of assembling services|Neon gives you 100 projects with 0\.5 GB storage each/i,
+    replacedBy: /realtime subscriptions alongside Postgres, auth, file storage and edge functions/i,
+    vendorRecord: () => recordFor("Neon", "Databases").description,
+  },
+  {
+    what: "DigitalOcean Functions tied to paid resources",
+    pattern: /Included with paid resources|tied to paid resources|90K with any paid resource/i,
+    replacedBy: /No separate request quota\s+90K GiB-seconds\s+Every month \(no end date stated\)/,
+    vendorRecord: () => recordFor("DigitalOcean", "Cloud IaaS").description,
   },
 ];
 
@@ -332,6 +356,10 @@ describe("hosting pages publish the free-tier figures our records hold (#1183)",
       "a first paid upgrade priced as a fixed monthly total including Neon Launch": [
         "/free-nextjs-stack", "/free-django-stack", "/free-fastapi-stack", "/free-go-stack", "/free-saas-stack",
       ],
+      "Neon's free plan as unlimited projects on 0.25 compute units": ["/database-pricing"],
+      "Supabase Pro priced at $25 per project": ["/database-pricing"],
+      "Neon set beside Supabase as a database without auth or storage": ["/neon-vs-supabase"],
+      "DigitalOcean Functions tied to paid resources": ["/cloud-free-tier-comparison-2026"],
     };
     const missing: string[] = [];
     for (const [what, pages] of Object.entries(carried)) {

@@ -3134,7 +3134,7 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("Inngest"), "Should recommend Inngest");
     assert.ok(html.includes("outgrow"), "Should have outgrow guidance");
     assert.ok(html.includes("whynot-box"), "Should have why-not callouts");
-    assert.ok(html.includes("$20/Month Upgrade"), "Should have growth cost section");
+    assert.ok(html.includes("First Paid Upgrade"), "Should have growth cost section");
     assert.ok(html.includes("Stack Overview"), "Should have overview table");
     assert.ok(html.includes("Architecture"), "Should have architecture section");
     assert.ok(html.includes("Is Vercel free for Next.js"), "Should have FAQ content");
@@ -3180,7 +3180,7 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("Celery"), "Should mention Celery");
     assert.ok(html.includes("outgrow"), "Should have outgrow guidance");
     assert.ok(html.includes("whynot-box"), "Should have why-not callouts");
-    assert.ok(html.includes("$24/Month Upgrade"), "Should have growth cost section");
+    assert.ok(html.includes("First Paid Upgrade"), "Should have growth cost section");
     assert.ok(html.includes("Stack Overview"), "Should have overview table");
     assert.ok(html.includes("Architecture"), "Should have architecture section");
     assert.ok(html.includes("Batteries Included"), "Should have batteries-included section");
@@ -3231,7 +3231,7 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("What FastAPI Gives You"), "Should have built-in features section");
     assert.ok(html.includes("outgrow"), "Should have outgrow guidance");
     assert.ok(html.includes("whynot-box"), "Should have why-not callouts");
-    assert.ok(html.includes("$20/Month Upgrade"), "Should have growth cost section");
+    assert.ok(html.includes("First Paid Upgrade"), "Should have growth cost section");
     assert.ok(html.includes("Stack Overview"), "Should have overview table");
     assert.ok(html.includes("Architecture"), "Should have architecture section");
     assert.ok(html.includes("Can I host FastAPI for free"), "Should have FAQ content");
@@ -3282,7 +3282,7 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("Standard Library"), "Should have stdlib features section");
     assert.ok(html.includes("outgrow"), "Should have outgrow guidance");
     assert.ok(html.includes("whynot-box"), "Should have why-not callouts");
-    assert.ok(html.includes("$20/Month Upgrade") || html.includes("$19/month breakpoint"), "Should have growth cost section");
+    assert.ok(html.includes("First Paid Upgrade"), "Should have growth cost section");
     assert.ok(html.includes("Stack Overview"), "Should have overview table");
     assert.ok(html.includes("Architecture"), "Should have architecture section");
     assert.ok(html.includes("Can I host Go for free"), "Should have FAQ content");
