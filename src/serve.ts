@@ -943,12 +943,12 @@ export function changeLogFreshnessNote(now: Date = new Date()): string {
 const today = new Date().toISOString().slice(0, 10);
 const hasAlreadyTakenEffect = (c: { date: string }) => c.date <= today;
 
-const recentChanges = [...dealChanges]
+const recentChanges = changesTheVendorMade(dealChanges)
   .filter(hasAlreadyTakenEffect)
   .sort((a, b) => b.date.localeCompare(a.date))
   .slice(0, RECENT_CHANGES_ON_THE_HOME_PAGE);
 
-const upcomingDeadlines = [...dealChanges]
+const upcomingDeadlines = changesTheVendorMade(dealChanges)
   .filter((c) => !hasAlreadyTakenEffect(c))
   .sort((a, b) => a.date.localeCompare(b.date))
   .slice(0, UPCOMING_DEADLINES_ON_THE_HOME_PAGE);
