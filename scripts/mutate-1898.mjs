@@ -3,6 +3,7 @@ import { execFileSync } from "node:child_process";
 
 const SUITES = [
   "test/data-push-holdback.test.ts",
+  "test/restatement-ledger-matches-the-index.test.ts",
 ];
 
 const MUTANTS = [
@@ -25,6 +26,26 @@ const MUTANTS = [
   ["a-vendor-moved-in-two-arrays-is-named-twice", "src/data-push-holdback.ts",
     "  return [...moved.values()].sort((a, b) => a.localeCompare(b));\n}\n\nexport function withVendorsAsTheyWereBeforeIn(",
     "  return arrayKeys.flatMap((arrayKey) => vendorsMoved(before, after, arrayKey)).sort((a, b) => a.localeCompare(b));\n}\n\nexport function withVendorsAsTheyWereBeforeIn("],
+
+  ["the-index-is-read-for-the-date-alone", "scripts/restate-superseded-terms.js",
+    "  return offer?.restated_from?.restated_on === entry.restated_on && offer?.description === entry.description;",
+    "  return offer?.restated_from?.restated_on === entry.restated_on;"],
+
+  ["the-index-is-read-for-the-terms-alone", "scripts/restate-superseded-terms.js",
+    "  return offer?.restated_from?.restated_on === entry.restated_on && offer?.description === entry.description;",
+    "  return offer?.description === entry.description;"],
+
+  ["the-oldest-entry-stands-for-the-record", "scripts/restate-superseded-terms.js",
+    "    if (!held || entry.restated_on > held.restated_on) newest.set(key, entry);",
+    "    if (!held || entry.restated_on < held.restated_on) newest.set(key, entry);"],
+
+  ["a-reverted-entry-still-counts", "scripts/restate-superseded-terms.js",
+    "  for (const entry of standingRestatements(entries)) {\n    const key = offerKey(entry.vendor, entry.url);",
+    "  for (const entry of entries) {\n    const key = offerKey(entry.vendor, entry.url);"],
+
+  ["a-second-reading-is-read-as-the-same-one", "scripts/restate-superseded-terms.js",
+    "    const reading = `${offerKey(entry.vendor, entry.url)}|${entry.reading_date}|${entry.description}`;",
+    "    const reading = `${offerKey(entry.vendor, entry.url)}`;"],
 ];
 
 function run(cmd, args) {

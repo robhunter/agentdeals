@@ -79,19 +79,6 @@
       "summary": "The free tier still exists. The details have been expanded. The free tier now includes options for different resource classes and concurrency levels. Previously about 30K credits/month (up to 6,000 build minutes on small Docker), 5 users, and 30x concurrency is still accurate as a baseline. The free tier now offers more options."
     },
     {
-      "vendor": "Buildkite",
-      "url": "https://buildkite.com/pricing/",
-      "restated_on": "2026-09-20",
-      "previous_description": "500 hosted agent minutes/month, 3 concurrent jobs, 90-day build retention, 50K test executions. Free for open-source projects",
-      "description": "The Free Plan offers up to 5 users, up to 10 concurrent jobs, up to 2,000 Linux vCPU minutes per month, up to 250k test executions per month, 30 days build retention, and 50GB/month artifact storage.",
-      "reading_date": "2026-09-05",
-      "reading_terms": "The Free Plan offers up to 5 users, up to 10 concurrent jobs, up to 2,000 Linux vCPU minutes per month, up to 250k test executions per month, 30 days build retention, and 50GB/month artifact storage.",
-      "source_url": "https://buildkite.com/pricing/",
-      "record_date": "2026-09-05",
-      "change_type": "limits_reduced",
-      "summary": "The free plan now offers 2,000 Linux vCPU minutes/month and 250k test executions, up from 500 minutes and 50k executions. The free plan also includes 30 days build retention instead of 90. The open-source specific mention is gone."
-    },
-    {
       "vendor": "Grafana Cloud",
       "url": "https://grafana.com/pricing/",
       "restated_on": "2026-09-20",
@@ -2380,19 +2367,6 @@
       "summary": "The tier names have changed. 'Pro+' is now 'Pro Max'. There is a new 'Pro Max' tier at $100/month for 5,000 credits. The sign-up bonus is now $20 towards a paid plan, instead of 500 bonus credits. Add-on credits are available for all paid tiers and cost $0.04/credit, with packs ranging from $5 to $100. Unused add-on credits roll over for 12 months."
     },
     {
-      "vendor": "Buildkite",
-      "url": "https://buildkite.com/pricing/",
-      "restated_on": "2026-09-21",
-      "previous_description": "500 hosted agent minutes/month, 3 concurrent jobs, 90-day build retention, 50K test executions. Free for open-source projects",
-      "description": "The Free Plan offers up to 5 users, up to 10 concurrent jobs, up to 2,000 Linux vCPU minutes per month, up to 250k test executions per month, 30 days build retention, and 50GB/month artifact storage.",
-      "reading_date": "2026-09-05",
-      "reading_terms": "The Free Plan offers up to 5 users, up to 10 concurrent jobs, up to 2,000 Linux vCPU minutes per month, up to 250k test executions per month, 30 days build retention, and 50GB/month artifact storage.",
-      "source_url": "https://buildkite.com/pricing/",
-      "record_date": "2026-09-05",
-      "change_type": "limits_reduced",
-      "summary": "The free plan now offers 2,000 Linux vCPU minutes/month and 250k test executions, up from 500 minutes and 50k executions. The free plan also includes 30 days build retention instead of 90. The open-source specific mention is gone."
-    },
-    {
       "vendor": "Scalr",
       "url": "https://www.scalr.com/pricing",
       "restated_on": "2026-09-21",
@@ -2417,58 +2391,6 @@
       "record_date": "2026-09-21",
       "change_type": "pricing_restructured",
       "summary": "The free plan now has limited AI credits (50,000/month) and basic views. The page highlights a new 'Genesis' AI app builder with various paid plans and features, and the free plan is now positioned as a starting point with limitations."
-    },
-    {
-      "vendor": "Google Cloud Run",
-      "url": "https://cloud.google.com/run/pricing",
-      "restated_on": "2026-09-21",
-      "previous_description": "Always Free: 2M requests/month, 360K GB-seconds memory, 180K vCPU-seconds compute, 1 GB North America egress. Fully managed serverless containers",
-      "description": "The free tier includes 2 million requests per month, 360,000 GiB-seconds of RAM, and 240,000 vCPU-seconds per month.",
-      "reading_date": "2026-09-21",
-      "reading_terms": "The free tier includes 2 million requests per month, 360,000 GiB-seconds of RAM, and 240,000 vCPU-seconds per month.",
-      "source_url": "https://cloud.google.com/run/pricing",
-      "record_date": "2026-09-21",
-      "change_type": "limits_increased",
-      "summary": "The free tier limits for requests and resources have changed. Previously 2M requests/month, 360K GB-seconds memory, and 180K vCPU-seconds compute. The current pricing page states 2 million requests/month, 360,000 GiB-seconds RAM, and 240,000 vCPU-seconds for both Services with request-based billing and Jobs."
-    },
-    {
-      "vendor": "Appwrite Cloud",
-      "url": "https://appwrite.io/pricing",
-      "restated_on": "2026-09-22",
-      "previous_description": "Open-source BaaS — 75K MAU, 2 GB storage, 750K function executions/month, 5 GB bandwidth, 1 database, 1 bucket and 2 functions per project. Limit of 2 projects. Projects pause after 1 week of inactivity",
-      "description": "Open-source BaaS — Serverless compute is available for $0 fixed fee. $10 of compute credits for database usage are included every month. Reads and writes are subject to plan quotas and overage rates.",
-      "reading_date": "2026-09-22",
-      "reading_terms": "Serverless compute is available for $0 fixed fee. $10 of compute credits for database usage are included every month. Reads and writes are subject to plan quotas and overage rates.",
-      "source_url": "https://appwrite.io/pricing",
-      "record_date": "2026-09-22",
-      "change_type": "pricing_restructured",
-      "summary": "The page now focuses on a $0 fixed fee for serverless compute and mentions $10 of compute credits per month."
-    },
-    {
-      "vendor": "Buildkite",
-      "url": "https://buildkite.com/pricing/",
-      "restated_on": "2026-09-22",
-      "previous_description": "500 hosted agent minutes/month, 3 concurrent jobs, 90-day build retention, 50K test executions. Free for open-source projects",
-      "description": "The Free Plan offers up to 5 users, up to 10 concurrent jobs, up to 2,000 Linux vCPU minutes per month, up to 250k test executions per month, 30 days build retention, and 50GB/month artifact storage.",
-      "reading_date": "2026-09-05",
-      "reading_terms": "The Free Plan offers up to 5 users, up to 10 concurrent jobs, up to 2,000 Linux vCPU minutes per month, up to 250k test executions per month, 30 days build retention, and 50GB/month artifact storage.",
-      "source_url": "https://buildkite.com/pricing/",
-      "record_date": "2026-09-05",
-      "change_type": "limits_reduced",
-      "summary": "The free plan now offers 2,000 Linux vCPU minutes/month and 250k test executions, up from 500 minutes and 50k executions. The free plan also includes 30 days build retention instead of 90. The open-source specific mention is gone."
-    },
-    {
-      "vendor": "WorkOS",
-      "url": "https://workos.com/pricing",
-      "restated_on": "2026-09-22",
-      "previous_description": "User Management is free for up to 1 million users. Single Sign-On starts at $125/connection. Directory Sync starts at $125/connection. Audit Logs are free with paid options for log streaming and event retention. Radar is free for the first 1,000 checks.",
-      "description": "Up to 1 million users Free. Per additional 1M users $2,500 / mo",
-      "reading_date": "2026-09-22",
-      "reading_terms": "Up to 1 million users Free. Per additional 1M users $2,500 / mo",
-      "source_url": "https://workos.com/pricing",
-      "record_date": "2026-09-22",
-      "change_type": "limits_reduced",
-      "summary": "The free tier for User Management is now limited to 1 million monthly active users, and additional users are $2,500/month. Single Sign-On and Directory Sync are now priced per connection, starting at $125/connection, with tiered discounts. Audit Logs are free, but log streaming and event retention are paid add-ons. Radar is free for the first 1,000 checks, then $100/month for 50k checks."
     },
     {
       "vendor": "Ollama Cloud",
