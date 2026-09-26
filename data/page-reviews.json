@@ -1530,7 +1530,7 @@
           "from_records": 8
         },
         {
-          "label": "The $24/Month Upgrade — What to Spend First",
+          "label": "The First Paid Upgrade — What to Spend First",
           "figures": 18,
           "from_records": 5
         }
@@ -1571,7 +1571,7 @@
           "from_records": 8
         },
         {
-          "label": "The $20/Month Upgrade — What to Spend First",
+          "label": "The First Paid Upgrade — What to Spend First",
           "figures": 18,
           "from_records": 5
         }
@@ -1655,7 +1655,7 @@
           "from_records": 7
         },
         {
-          "label": "The $20/Month Upgrade — What to Spend First",
+          "label": "The First Paid Upgrade — What to Spend First",
           "figures": 17,
           "from_records": 5
         }
@@ -1698,7 +1698,7 @@
           "from_records": 7
         },
         {
-          "label": "The $20/Month Upgrade — What to Spend First",
+          "label": "The First Paid Upgrade — What to Spend First",
           "figures": 18,
           "from_records": 3
         }
@@ -1732,7 +1732,7 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 43,
+      "table_figures": 41,
       "table_figures_from_records": 13,
       "tables": [
         {
@@ -1742,7 +1742,7 @@
         },
         {
           "label": "The Growth Path — From $0 to $500/Month",
-          "figures": 9,
+          "figures": 7,
           "from_records": 1
         },
         {
@@ -3694,7 +3694,7 @@
       "review_note": null,
       "reads_index": false,
       "tables_read_index": false,
-      "table_figures": 65,
+      "table_figures": 64,
       "table_figures_from_records": 7,
       "tables": [
         {
@@ -3709,7 +3709,7 @@
         },
         {
           "label": "Cost Comparison by Team Size",
-          "figures": 22,
+          "figures": 21,
           "from_records": 0
         },
         {

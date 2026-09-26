@@ -3352,7 +3352,7 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("/free-go-stack"), "Should cross-link to Go stack");
     assert.ok(html.includes("cheapest way to launch a SaaS"), "Should have FAQ content");
     assert.ok(html.includes("build a SaaS for free"), "Should have FAQ content");
-    assert.ok(html.includes("best free database for SaaS"), "Should have FAQ content");
+    assert.ok(html.includes("free databases can a SaaS start on"), "Should have FAQ content");
     assert.ok(html.includes("start paying for infrastructure"), "Should have FAQ content");
     assert.ok(html.includes("More Alternatives Guides"), "Should have cross-links to other guides");
   });

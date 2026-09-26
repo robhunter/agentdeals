@@ -198,25 +198,25 @@ const RETIRED_FIGURES: Retired[] = [
   },
   {
     what: "Neon's retired free plan, or Neon as database-only",
-    pattern: /190 compute hours|Database-only needs|database-only vs full platform|Database-Only vs\.? Full Platform|Neon is (?:a )?database-only|Best Pure Postgres|better for pure Postgres|Need pure serverless Postgres/i,
+    pattern: /190\+? compute hours|Database-only needs|database-only vs full platform|Database-Only vs\.? Full Platform|Neon is (?:a )?database-only|Best Pure Postgres|better for pure Postgres|Need pure serverless Postgres/i,
     replacedBy: /100 CU-hours|serverless Postgres with branching/i,
     vendorRecord: () => recordFor("Neon", "Databases").description,
   },
   {
     what: "Neon Launch at $19 a month",
-    pattern: /Neon Launch (?:at |plan at )?\$19|\$19\/mo Neon Launch|Launch \$19|Launch \(\$19|\$19\/mo \(Launch\)|Neon starts at \$19/i,
+    pattern: /Neon Launch (?:at |plan at )?\$19|\$19\/mo Neon Launch|Launch \$19|Launch (?:plan )?\(\$19|\$19\/mo \(Launch\)|Neon starts at \$19|Neon(?: pgvector)? \$0 \$19\+/i,
     replacedBy: /usage-based,? (?:with )?no monthly minimum|Launch, usage-based|Launch, no monthly minimum/i,
     vendorRecord: () => recordFor("Neon", "Databases").description,
   },
   {
     what: "a first paid upgrade priced as a fixed monthly total including Neon Launch",
-    pattern: /The \$\d+\/month breakpoint|The \$\d+\/Month Upgrade/i,
+    pattern: /The \$\d+\/month breakpoint|The \$\d+\/Month Upgrade|free to first paid tier is \$\d+|Database \(\$\d+\)/i,
     replacedBy: /The first paid upgrade:|The First Paid Upgrade/,
     vendorRecord: () => recordFor("Neon", "Databases").description,
   },
   {
     what: "Neon's free plan as unlimited projects on 0.25 compute units",
-    pattern: /unlimited projects and databases|0\.25 compute units/i,
+    pattern: /unlimited projects and databases|0\.25 compute units|0\.25 CU(?: compute)? is limited/i,
     replacedBy: /up to 100 projects/i,
     vendorRecord: () => recordFor("Neon", "Databases").description,
   },
@@ -237,6 +237,48 @@ const RETIRED_FIGURES: Retired[] = [
     pattern: /Included with paid resources|tied to paid resources|90K with any paid resource/i,
     replacedBy: /No separate request quota\s+90K GiB-seconds\s+Every month \(no end date stated\)/,
     vendorRecord: () => recordFor("DigitalOcean", "Cloud IaaS").description,
+  },
+  {
+    what: "Supabase's team cost as $25 per project",
+    pattern: /\$25\/project/i,
+    replacedBy: /Supabase(?: pgvector)? \$0 \$25\+/,
+    vendorRecord: () => recordFor("Supabase", "Databases").description,
+  },
+  {
+    what: "Supabase crowned the most complete free package",
+    pattern: /most complete free package/i,
+    replacedBy: /free plan bundles Postgres with auth, file storage, edge functions and realtime/,
+    vendorRecord: () => recordFor("Supabase", "Databases").description,
+  },
+  {
+    what: "Supabase's inactivity pause dated to a February 2026 tightening Supabase does not state",
+    pattern: /tightened Feb(?:ruary)? 2026/i,
+    replacedBy: /after 1 week of inactivity/,
+    vendorRecord: () => recordFor("Supabase", "Databases").description,
+  },
+  {
+    what: "Supabase pgvector ranked the cheapest option",
+    pattern: /Supabase pgvector is the cheapest option/i,
+    replacedBy: /Supabase and Neon both include pgvector on their free plans/,
+    vendorRecord: () => recordFor("Supabase", "Databases").description,
+  },
+  {
+    what: "Neon ranked the best SaaS database, or said to be used internally by named companies",
+    pattern: /best SaaS database|Vercel, Replit, and Retool use internally/i,
+    replacedBy: /Free plan: 0\.5 GB of storage and 100 CU-hours per project/,
+    vendorRecord: () => recordFor("Neon", "Databases").description,
+  },
+  {
+    what: "Neon's scale-to-zero described as having no cold start",
+    pattern: /no cold start for reads/i,
+    replacedBy: /Scales to zero after 5 minutes idle/,
+    vendorRecord: () => recordFor("Neon", "Databases").description,
+  },
+  {
+    what: "an unsourced share of SaaS apps running on Postgres",
+    pattern: /\d+% of SaaS apps/i,
+    replacedBy: /We publish no ranking of these/,
+    vendorRecord: () => recordFor("Neon", "Databases").description,
   },
 ];
 
@@ -348,6 +390,7 @@ describe("hosting pages publish the free-tier figures our records hold (#1183)",
       "a DigitalOcean Droplet price cut in January 2026": ["/hetzner-pricing-2026", "/digitalocean-free-tier-2026", "/cloud-free-tier-comparison-2026"],
       "Neon's retired free plan, or Neon as database-only": [
         "/gcp-free-tier-2026", "/aws-free-tier-2026", "/azure-free-tier-2026", "/database-free-tier-comparison-2026", "/database-alternatives",
+        "/free-nextjs-stack", "/free-django-stack", "/free-fastapi-stack", "/free-go-stack", "/free-saas-stack",
       ],
       "Neon Launch at $19 a month": [
         "/neon-vs-supabase", "/free-nextjs-stack", "/free-django-stack", "/free-fastapi-stack", "/free-go-stack", "/free-saas-stack",
@@ -356,10 +399,17 @@ describe("hosting pages publish the free-tier figures our records hold (#1183)",
       "a first paid upgrade priced as a fixed monthly total including Neon Launch": [
         "/free-nextjs-stack", "/free-django-stack", "/free-fastapi-stack", "/free-go-stack", "/free-saas-stack",
       ],
-      "Neon's free plan as unlimited projects on 0.25 compute units": ["/database-pricing"],
+      "Neon's free plan as unlimited projects on 0.25 compute units": ["/database-pricing", "/vector-database-pricing"],
       "Supabase Pro priced at $25 per project": ["/database-pricing"],
       "Neon set beside Supabase as a database without auth or storage": ["/neon-vs-supabase"],
       "DigitalOcean Functions tied to paid resources": ["/cloud-free-tier-comparison-2026"],
+      "Supabase's team cost as $25 per project": ["/database-pricing", "/vector-database-pricing"],
+      "Supabase crowned the most complete free package": ["/database-free-tier-comparison-2026"],
+      "Supabase's inactivity pause dated to a February 2026 tightening Supabase does not state": ["/database-pricing", "/neon-vs-supabase"],
+      "Supabase pgvector ranked the cheapest option": ["/database-pricing"],
+      "Neon ranked the best SaaS database, or said to be used internally by named companies": ["/free-saas-stack"],
+      "Neon's scale-to-zero described as having no cold start": ["/vector-database-pricing"],
+      "an unsourced share of SaaS apps running on Postgres": ["/free-saas-stack"],
     };
     const missing: string[] = [];
     for (const [what, pages] of Object.entries(carried)) {
