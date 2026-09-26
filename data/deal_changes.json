@@ -4385,7 +4385,13 @@
         "Zapier"
       ],
       "recorded_date": "2026-04-13",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: n8n Cloud had no free plan to remove. n8n's pricing page listed only paid Cloud plans, each with a free trial, in the Internet Archive's captures from 2024-01-08, 2026-04-10 and 2026-04-28. Unlimited active workflows on every plan came from n8n's pricing change of 2025-08-07, which said \"Nothing changes for community edition.\"",
+        "source_url": "https://web.archive.org/web/20260410124716/https://n8n.io/pricing/"
+      }
     },
     {
       "vendor": "Microsoft",
