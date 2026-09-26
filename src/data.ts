@@ -27,8 +27,8 @@ import { isSubSlug, toSlug } from "./slug.js";
 export { sanitizeQuery } from "./search-query.js";
 import { matchingSubject } from "./gate-disclosure.js";
 import { DATE_SOURCES, isEventDated, changeDateClause, changeEntryDateLabel, isoWeekWindow, changesInWindow, discoveryBatchNote, firstReadHeading, type DateWindow } from "./change-dates.js";
-import { PRODUCT_DEPRECATED, deprecationEndsTheListedProduct } from "./product-deprecation.js";
-import { RISK_DEMOTION } from "./change-demotion.js";
+import { PRODUCT_DEPRECATED, deprecationCall } from "./product-deprecation.js";
+import { DEMOTION_FOR_A_DEPRECATION, RISK_DEMOTION } from "./change-demotion.js";
 import { sinceFilterDay } from "./since-parameter.js";
 import { DEFAULT_CHANGE_WINDOW_DAYS, defaultChangeWindow, servedWindowOpens, windowFromSinceParameter, wholeChangeLog, type ChangeWindow } from "./change-window.js";
 import { nameMatchDisclosure, type AskedByName, type NameMatch } from "./name-match.js";
@@ -344,33 +344,31 @@ export const VOLATILE_TYPES = new Set([
 ]);
 
 function demotionTheRecordCarries(
-  change: Pick<DealChange, "change_type" | "vendor" | "summary"> & { resolution?: DealChange["resolution"] },
+  change: Pick<DealChange, "change_type" | "vendor" | "summary" | "listing_effect"> & { resolution?: DealChange["resolution"] },
 ): "risky" | "caution" | null {
   if (isNoLongerInForce(change)) return null;
   const flat = RISK_DEMOTION[change.change_type];
   if (flat) return flat;
-  if (change.change_type === PRODUCT_DEPRECATED) {
-    return deprecationEndsTheListedProduct(change) ? "risky" : null;
-  }
+  if (change.change_type === PRODUCT_DEPRECATED) return DEMOTION_FOR_A_DEPRECATION[deprecationCall(change)];
   return null;
 }
 
 export function demotionForChange(
-  change: Pick<DealChange, "change_type" | "vendor" | "summary"> & CitableChange & { resolution?: DealChange["resolution"] },
+  change: Pick<DealChange, "change_type" | "vendor" | "summary" | "listing_effect"> & CitableChange & { resolution?: DealChange["resolution"] },
 ): "risky" | "caution" | null {
   return changeCitesASource(change) ? demotionTheRecordCarries(change) : null;
 }
 
 export function demotionWithheldForNoSource(
-  change: Pick<DealChange, "change_type" | "vendor" | "summary"> & CitableChange & { resolution?: DealChange["resolution"] },
+  change: Pick<DealChange, "change_type" | "vendor" | "summary" | "listing_effect"> & CitableChange & { resolution?: DealChange["resolution"] },
 ): "risky" | "caution" | null {
   return changeCitesASource(change) ? null : demotionTheRecordCarries(change);
 }
 
 export function isSevereChange(
-  change: Pick<DealChange, "change_type" | "vendor" | "summary"> & { resolution?: DealChange["resolution"] },
+  change: Pick<DealChange, "change_type" | "vendor" | "summary" | "listing_effect"> & { resolution?: DealChange["resolution"] },
 ): boolean {
-  return VOLATILE_TYPES.has(change.change_type) && demotionForChange(change) !== null;
+  return VOLATILE_TYPES.has(change.change_type) && demotionForChange(change) === "risky";
 }
 
 export const SEVERE_CHANGE_TYPES = new Set(["free_tier_removed", "open_source_killed"]);

@@ -1,5 +1,5 @@
 import type { DealChange, Offer } from "./types.js";
-import { PRODUCT_DEPRECATED, deprecationEndsTheListedProduct } from "./product-deprecation.js";
+import { PRODUCT_DEPRECATED, deprecationTouchesTheListing } from "./product-deprecation.js";
 import { isNoLongerInForce } from "./change-resolution.js";
 import { isIndexHousekeeping } from "./change-census.js";
 import { tierRecordsAFreeTier } from "./free-tier-record.js";
@@ -53,7 +53,7 @@ export function catalogueVendorFor(entry: RiskEntry): string {
 export function whyNotEvidence(change: GradableChange): NotEvidenceReason | null {
   if (isNoLongerInForce(change)) return "no_longer_in_force";
   if (isIndexHousekeeping(change)) return "index_sweep";
-  if (change.change_type === PRODUCT_DEPRECATED && !deprecationEndsTheListedProduct(change)) return "another_product";
+  if (change.change_type === PRODUCT_DEPRECATED && !deprecationTouchesTheListing(change)) return "another_product";
   return null;
 }
 

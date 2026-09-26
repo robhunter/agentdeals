@@ -5,6 +5,7 @@ import { changeRatesTheListedTier, type GradedOffer } from "./change-tier.js";
 import { isNoLongerInForce, theEventNeverHappened } from "./change-resolution.js";
 import { changeIsUncited, ratingWithheldForNoSourceSentence } from "./change-citation.js";
 import { changeDateClause } from "./change-dates.js";
+import { PRODUCT_DEPRECATED, deprecationTouchesTheListing } from "./product-deprecation.js";
 import {
   amountUnstatedSentence,
   freePriceConfirmedSentence,
@@ -74,7 +75,7 @@ export interface VendorVerdictInput {
   level: PublishedRiskLevel | null;
   historyLevel: PublishedRiskLevel;
   cause: RiskCause | null;
-  changes: Array<Pick<DealChange, "date" | "date_source" | "change_type"> & { source_url?: string | null } & { tier?: string | null; current_state?: string | null } & { resolution?: DealChange["resolution"] }>;
+  changes: Array<Pick<DealChange, "date" | "date_source" | "change_type"> & { source_url?: string | null } & { tier?: string | null; current_state?: string | null } & { resolution?: DealChange["resolution"] } & { vendor?: string; summary?: string; listing_effect?: DealChange["listing_effect"] }>;
   levelWithheld: LevelWithheldReason | null;
   unconfirmableSince: string;
   ratingWithheld?: RatingWithheld | null;
@@ -230,6 +231,7 @@ export function narrowingChanges(
 ): VendorVerdictInput["changes"] {
   return changes
     .filter(c => CHANGE_DIRECTION[c.change_type] === "negative" && !isNoLongerInForce(c))
+    .filter(c => c.change_type !== PRODUCT_DEPRECATED || deprecationTouchesTheListing(c))
     .filter(c => offer === null || changeRatesTheListedTier(c, offer))
     .slice()
     .sort((a, b) => b.date.localeCompare(a.date));

@@ -86,7 +86,15 @@ export function productNamedApartFromVendor(subject: string, vendor: string): st
   return words(named).filter(w => !fromVendor.has(w) && !GENERIC_WORDS.has(w));
 }
 
-type DeprecationSubject = Pick<DealChange, "change_type" | "vendor" | "summary">;
+export const DEPRECATION_CALLS = ["ends", "narrows", "none"] as const;
+
+export type DeprecationCall = (typeof DEPRECATION_CALLS)[number];
+
+type DeprecationSubject = Pick<DealChange, "change_type"> & {
+  vendor?: string;
+  summary?: string;
+  listing_effect?: DeprecationCall | null;
+};
 
 const endsTheListedProductCache = new WeakMap<object, boolean>();
 
@@ -94,22 +102,40 @@ function decide(change: DeprecationSubject): boolean {
   if (change.change_type !== PRODUCT_DEPRECATED) return false;
   const reading = readDeprecation(change.summary ?? "");
   if (!reading) return false;
-  return productNamedApartFromVendor(reading.subject, change.vendor).length === 0;
+  return productNamedApartFromVendor(reading.subject, change.vendor ?? "").length === 0;
+}
+
+function textSaysTheListedProductEnds(change: DeprecationSubject): boolean {
+  const cached = endsTheListedProductCache.get(change as object);
+  if (cached !== undefined) return cached;
+  const decision = decide(change);
+  endsTheListedProductCache.set(change as object, decision);
+  return decision;
+}
+
+export function deprecationCallIsRecorded(change: DeprecationSubject): boolean {
+  return (DEPRECATION_CALLS as readonly unknown[]).includes(change.listing_effect);
+}
+
+export function deprecationCall(change: DeprecationSubject): DeprecationCall {
+  if (change.change_type !== PRODUCT_DEPRECATED) return "none";
+  if (deprecationCallIsRecorded(change)) return change.listing_effect as DeprecationCall;
+  return textSaysTheListedProductEnds(change) ? "ends" : "none";
 }
 
 const CHANGE_TYPES_THAT_END_A_FREE_TIER = new Set(["free_tier_removed", "open_source_killed"]);
 
 export function endsAFreeTier(change: DeprecationSubject): boolean {
   if (CHANGE_TYPES_THAT_END_A_FREE_TIER.has(change.change_type)) return true;
-  return change.change_type === PRODUCT_DEPRECATED && deprecationEndsTheListedProduct(change);
+  return deprecationEndsTheListedProduct(change);
 }
 
 export function deprecationEndsTheListedProduct(change: DeprecationSubject): boolean {
-  const cached = endsTheListedProductCache.get(change as object);
-  if (cached !== undefined) return cached;
-  const decision = decide(change);
-  endsTheListedProductCache.set(change as object, decision);
-  return decision;
+  return deprecationCall(change) === "ends";
+}
+
+export function deprecationTouchesTheListing(change: DeprecationSubject): boolean {
+  return deprecationCall(change) !== "none";
 }
 
 function isoFrom(match: RegExpExecArray, pattern: RegExp): string | null {

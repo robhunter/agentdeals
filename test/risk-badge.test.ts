@@ -291,14 +291,14 @@ describe("#1147 — a shutdown of the product we list demotes the vendor", () =>
 
   it("a vendor that retired one of its other services keeps the level its own record earned", async () => {
     const { enrichOffers, loadOffers, loadDealChanges } = await import("../dist/data.js");
-    const { deprecationEndsTheListedProduct } = await import("../dist/product-deprecation.js");
+    const { deprecationTouchesTheListing } = await import("../dist/product-deprecation.js");
     const enriched = enrichOffers(loadOffers());
     const held = changesByVendor(loadDealChanges() as Change[]);
     let controlled = 0;
     for (const offer of enriched) {
       const deprecations = (held.get(offer.vendor.toLowerCase()) ?? [])
         .filter((c) => c.change_type === "product_deprecated");
-      if (deprecations.length === 0 || deprecations.some((c) => deprecationEndsTheListedProduct(c))) continue;
+      if (deprecations.length === 0 || deprecations.some((c) => deprecationTouchesTheListing(c))) continue;
       controlled++;
       assert.notStrictEqual(
         offer.risk_cause?.change_type,
