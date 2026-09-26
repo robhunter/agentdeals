@@ -941,7 +941,13 @@
         "Groq"
       ],
       "recorded_date": "2026-02-26",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: this logs the same event as the Google Gemini API record of 2026-06-01. Google announced on 2026-02-18 that gemini-2.0-flash and gemini-2.0-flash-lite would shut down on 2026-06-01; nothing happened on 2026-03-03.",
+        "source_url": "https://ai.google.dev/gemini-api/docs/changelog"
+      }
     },
     {
       "vendor": "Logz.io",
@@ -1242,7 +1248,7 @@
       "change_type": "product_deprecated",
       "date": "2026-06-30",
       "summary": "Google Tenor public API shutting down June 30, 2026. New API key signups halted January 13, 2026. Only the public GIF search API is affected — Tenor website and app continue operating. Developers must migrate to alternative GIF APIs",
-      "previous_state": "Free public API for GIF search, trending GIFs, and autocomplete. No rate limits for reasonable use. Used by messaging apps and social platforms",
+      "previous_state": "Free public API for GIF search, trending GIFs, and autocomplete. Default rate limit of 1 request per second. Used by messaging apps and social platforms",
       "current_state": "API shutdown June 30, 2026. No new API keys issued since Jan 13, 2026. Existing keys work until shutdown date. No replacement API from Google",
       "impact": "high",
       "source_url": "https://developers.google.com/tenor/guides/api-shutdown",
@@ -1499,11 +1505,11 @@
       "vendor": "Firebase",
       "change_type": "product_deprecated",
       "date": "2026-03-19",
-      "summary": "Firebase Studio (formerly Project IDX) shut down March 19, 2026. Cloud IDE and AI code generation features discontinued. Existing projects accessible until March 2027 for migration",
+      "summary": "Google announced the sunset of Firebase Studio (formerly Project IDX) on 2026-03-19. New workspaces and signups stopped on 2026-06-22, and Firebase Studio shuts down on 2027-03-22, when remaining data is deleted. Other Firebase products are not affected.",
       "previous_state": "Firebase Studio: cloud IDE with AI code generation, Gemini integration, multi-platform preview",
-      "current_state": "Discontinued. Projects accessible until March 2027 for data export only. Google recommends migrating to other IDEs",
+      "current_state": "\"June 22, 2026: New workspace creation and user signup are disabled.\" \"March 22, 2027: Firebase Studio is shut down, and all remaining data is permanently deleted and cannot be recovered.\"",
       "impact": "medium",
-      "source_url": "https://firebase.google.com/docs/studio",
+      "source_url": "https://firebase.google.com/docs/studio/migrating-project",
       "category": "Databases",
       "alternatives": [
         "Supabase",
@@ -4133,7 +4139,13 @@
       "category": "IDE & Code Editors",
       "alternatives": [],
       "recorded_date": "2026-04-13",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: Adobe ended support for Brackets on 2021-09-01, not in 2026, and no free tier ended: the project continues as Phoenix Code, which is free and open source.",
+        "source_url": "https://brackets.io/"
+      }
     },
     {
       "vendor": "Apiary",
@@ -5539,9 +5551,9 @@
       "change_type": "product_deprecated",
       "date": "2026-08-20",
       "date_source": "vendor_page",
-      "summary": "Several discrepancies were found. Music generation APIs (Music-3.0, Music-2.6, Lyrics Generation) are discontinued for new users as of August 20, 2026, and free versions are being removed. The Hailuo video pricing is significantly different, with new models and pricing structures. The M2.7 pricing is also different. The page introduces MiniMax-M3 with different pricing tiers.",
+      "summary": "MiniMax closed its paid Music Generation and Lyrics Generation APIs to new users on 2026-08-20, and says its free music models (Music-3.0-free, Music-2.6-free, music-cover-free) will be discontinued, with no date given. M2.7 and Hailuo prices are unchanged.",
       "previous_state": "Chinese AI lab (稀宇科技, Shanghai) offering multimodal APIs via platform.minimax.io. Pay-as-you-go: MiniMax-M2.7 text $0.3/$1.2 per Mtok (highspeed $0.6/$2.4), prompt-cache read $0.06/Mtok; speech/TTS $60/M chars (standard) or $100/M chars (HD), rapid voice clone $1.50/voice; MiniMax-Hailuo-02/2.3 video $0.10-$0.56/video depending on resolution and duration; image-01 $0.0035/image; Music-2.6 $0.15 per ~5 min with a 2-week free trial. Alternative Token Plan subscriptions from $10/mo (Starter: 1,500 M2.7 requests/5hr) to $150/mo (Ultra-Highspeed: 30K requests/5hr, 5 Hailuo videos/day). No documented permanent API free tier. Also maker of Hailuo AI (consumer video) and Talkie.",
-      "current_state": "Music generation APIs are being discontinued for new users. Hailuo video pricing varies by resolution and duration, with models like MiniMax-Hailuo-2.3-Fast and MiniMax-H3. MiniMax-M3 is available with pay-as-you-go pricing.",
+      "current_state": "\"Starting August 20, 2026, the paid APIs (Music Generation and Lyrics Generation) will no longer be available to new users; existing paying users can continue to use the current API services.\"",
       "impact": "high",
       "source_url": "https://platform.minimax.io/docs/guides/pricing-paygo",
       "category": "AI / ML",

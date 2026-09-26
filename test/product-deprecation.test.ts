@@ -82,7 +82,7 @@ describe("#1147 — a deprecation demotes when the thing deprecated is the thing
   });
 
   it("reads a summary that opens on the predicate as the product itself, successor and all", () => {
-    const brackets = onlyRecord("Brackets");
+    const brackets = record({ vendor: "Brackets", summary: "No longer maintained by Adobe, succeeded by Phoenix Code" });
     assert.strictEqual(readDeprecation(brackets.summary)?.subject, "");
     assert.ok(deprecationEndsTheListedProduct(brackets), brackets.summary);
   });
