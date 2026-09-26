@@ -248,7 +248,7 @@ describe("no vendor we hold a change record for is hidden from a filter by its a
   it("states the default window and where it runs, wherever the parameter is declared", async () => {
     const { SINCE_DEFAULT_SENTENCE } = await import("../dist/change-window.js");
     assert.match(SINCE_DEFAULT_SENTENCE, new RegExp(`${DEFAULT_CHANGE_WINDOW_DAYS} days ago`));
-    assert.match(SINCE_DEFAULT_SENTENCE, /date_source/);
+    assert.match(SINCE_DEFAULT_SENTENCE, /date_meaning/);
     assert.match(SINCE_DEFAULT_SENTENCE, /date_window/);
 
     const declarations = [

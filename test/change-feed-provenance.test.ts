@@ -200,7 +200,7 @@ describe("the change feeds date every entry by when we recorded it and say what 
     assert.strictEqual(checked, entries.length, `matched only ${checked} of ${entries.length} entries back to /api/changes`);
   });
 
-  it("states inside every entry whether its date is when the terms changed or when we read the page", () => {
+  it("states inside every entry whether its date is when the terms changed or the day we recorded the change", () => {
     const unlabelled = entries.filter((e) => {
       const record = recordFor(e);
       if (!record) return true;

@@ -282,7 +282,7 @@ describe("the rendering helpers", () => {
   it("says in the group heading and note that the effective date is what is missing", () => {
     assert.match(undatedGroupHeading(1, 2), /1 change\b/);
     assert.match(undatedGroupHeading(3, 9), /3 changes\b/);
-    assert.match(UNDATED_GROUP_NOTE, /not when they took effect/);
+    assert.match(UNDATED_GROUP_NOTE, /We hold no effective date for these changes/);
     assert.match(UNDATED_GROUP_NOTE, /excluded from the monthly groups/);
   });
 

@@ -251,23 +251,23 @@ describe("every surface that bins changes by month", () => {
     }
   });
 
-  it("shows the discovery batch under a label saying the date is when we read the page", async () => {
+  it("shows the batch with no known effective date under a label saying the date is the month we recorded it", async () => {
     for (const surface of SURFACES) {
       const control = renderedSeries(await body(live, surface.route), "discovered");
       const after = renderedSeries(await body(injected, surface.route), "discovered");
       assert.strictEqual(
         (after.get(INJECTED_MONTH) ?? 0) - (control.get(INJECTED_MONTH) ?? 0),
         INJECTED_COUNT,
-        `${surface.name} did not show the batch as pages read in ${INJECTED_MONTH}`
+        `${surface.name} did not show the batch as recorded in ${INJECTED_MONTH}`
       );
 
       const page = await body(injected, surface.route);
       const start = page.indexOf(DISCOVERY_SERIES_LEAD);
-      assert.notStrictEqual(start, -1, `${surface.name} does not head the batch as changes found by reading a page`);
+      assert.notStrictEqual(start, -1, `${surface.name} does not head the batch as changes with no known effective date`);
       const lead = page.slice(start, page.indexOf("data-series=\"discovered\"", start));
       assert.ok(
-        /the month we read the page/.test(lead),
-        `${surface.name} shows a discovery month without saying the date is when we read the page: ${lead.replace(/<[^>]+>/g, " ")}`
+        /the month we recorded it/.test(lead),
+        `${surface.name} shows a month with no known effective date without saying it is the month we recorded the change: ${lead.replace(/<[^>]+>/g, " ")}`
       );
     }
   });

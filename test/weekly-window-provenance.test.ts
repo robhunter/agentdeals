@@ -514,7 +514,10 @@ describe("every weekly surface reports the same week", () => {
     assert.ok(expectedDiscovered > 0, "the window should carry a discovery batch to report");
     assert.strictEqual(body.date_provenance.event_dated, expectedDated);
     assert.strictEqual(body.date_provenance.discovered, expectedDiscovered);
-    assert.ok(body.date_provenance.note.startsWith(`${expectedDiscovered} pricing pages read`), body.date_provenance.note);
+    const opening = expectedDiscovered === 1
+      ? "1 change recorded in this window has no known effective date."
+      : `${expectedDiscovered} changes recorded in this window have no known effective date.`;
+    assert.ok(body.date_provenance.note.startsWith(opening), body.date_provenance.note);
   });
 
   it("leaves an archived week with no discovery batch alone", async () => {
