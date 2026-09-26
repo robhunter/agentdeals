@@ -420,7 +420,7 @@ describe("no surface renders a discovery date as the date the vendor changed som
   });
 
   it("does not publish a discovery date as datePublished in structured data", async () => {
-    for (const route of ["/", "/changes", "/expiring"]) {
+    for (const route of ["/changes", "/expiring"]) {
       const { dated, discovered } = await bodies(route);
       assert.strictEqual(
         structuredItemFor(dated, SUBJECT)?.datePublished,
@@ -434,6 +434,16 @@ describe("no surface renders a discovery date as the date the vendor changed som
         `${route} published a discovery date as datePublished`
       );
     }
+  });
+
+  it("leaves a discovery out of the home page's structured data", async () => {
+    const { dated, discovered } = await bodies("/");
+    assert.strictEqual(
+      structuredItemFor(dated, SUBJECT)?.datePublished,
+      TODAY,
+      "/ carries no structured item for the entry when its date is an effective date, so the check below proves nothing"
+    );
+    assert.strictEqual(structuredItemFor(discovered, SUBJECT), null, "/ listed a change with no known effective date");
   });
 
   it("hands agents the provenance alongside the date", async () => {
