@@ -544,6 +544,8 @@ const trackedChangeCount = trackedChangeRecords.length;
 
 const q1TrackedChanges = trackedChanges(changesInWindow(dealChanges, { start: "2026-01-01", end: "2026-03-31" }).dated);
 const q1ChangeCount = q1TrackedChanges.length;
+const q1FreeTierRemovalCount = q1TrackedChanges.filter(c => c.change_type === "free_tier_removed").length;
+const q1LimitsReducedCount = q1TrackedChanges.filter(c => c.change_type === "limits_reduced").length;
 
 const verifiedDatesBySlug = (() => {
   const dates = new Map<string, string[]>();
@@ -7738,11 +7740,11 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "q1-2026-developer-pricing-report",
     title: "Q1 2026 Developer Pricing Report — The Great Free Tier Reckoning",
-    metaDesc: `${q1ChangeCount} recorded pricing changes across developer tools in Q1 2026: 8 free tiers removed, 6 limits reduced, 1 OSS project killed, while Cloudflare bucked the trend. The definitive quarterly analysis.`,
+    metaDesc: `${q1ChangeCount} recorded pricing changes across developer tools in Q1 2026: ${q1FreeTierRemovalCount} free tiers removed, ${q1LimitsReducedCount} limits reduced, 1 OSS project killed, while Cloudflare bucked the trend. The definitive quarterly analysis.`,
     contextHtml: "",
     tag: "q1-report",
     primaryVendor: "AgentDeals",
-    hubDesc: `${q1ChangeCount} pricing changes in Q1 2026 — 8 free tiers removed, narrative analysis, category breakdown, monthly timeline, Cloudflare counter-trend, Q2 outlook`,
+    hubDesc: `${q1ChangeCount} pricing changes in Q1 2026 — ${q1FreeTierRemovalCount} free tiers removed, narrative analysis, category breakdown, monthly timeline, Cloudflare counter-trend, Q2 outlook`,
   },
   {
     slug: "hetzner-pricing-2026",
@@ -19306,7 +19308,7 @@ ${mcpCtaCss()}
 
 function buildQ1PricingReportPage(): string {
   const title = "Q1 2026 Developer Pricing Report — The Great Free Tier Reckoning";
-  const metaDesc = `${q1ChangeCount} recorded pricing changes across developer tools in Q1 2026: 8 free tiers removed, 6 limits reduced, 1 OSS project killed, while Cloudflare bucked the trend. The definitive quarterly analysis of developer tool pricing.`;
+  const metaDesc = `${q1ChangeCount} recorded pricing changes across developer tools in Q1 2026: ${q1FreeTierRemovalCount} free tiers removed, ${q1LimitsReducedCount} limits reduced, 1 OSS project killed, while Cloudflare bucked the trend. The definitive quarterly analysis of developer tool pricing.`;
   const slug = "q1-2026-developer-pricing-report";
   const pubDate = "2026-03-24";
 
