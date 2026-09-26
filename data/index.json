@@ -2455,7 +2455,7 @@
     {
       "vendor": "Cursor",
       "category": "AI Coding",
-      "description": "AI-powered code editor built on VS Code. Hobby is the free plan: no credit card required, limited Agent requests, access to Composer — cursor.com/pricing states no completion or request figure for it. Individual paid plans: Pro $20/month, Pro+ $60/month (3x Pro's Agent limits), Ultra $200/month (20x). Teams $40/user/month (Standard; Premium at 5x Standard's Agent limits). Enterprise is custom-priced with pooled usage, invoice/PO billing and SCIM. Cursor renders only the selected tier's price in the page body; the full ladder is published in the page's JSON-LD Offer list.",
+      "description": "AI-powered code editor built on VS Code. Hobby is the free plan: no credit card required, limited Agent requests, access to Composer — cursor.com/pricing states no completion or request figure for it. Individual paid plans: Pro $20/month, Pro+ $60/month (3x Pro's Agent limits), Ultra $200/month (20x). Teams is $40/user/month for a Standard seat or $120/user/month for a Premium seat (5x Standard's Agent limits). Enterprise is custom-priced with pooled usage, invoice/PO billing and SCIM. Cursor renders only the selected tier's price in the page body.",
       "tier": "Free",
       "url": "https://www.cursor.com/pricing",
       "tags": [
@@ -32272,8 +32272,8 @@
     {
       "vendor": "Devin",
       "category": "AI Coding",
-      "description": "Autonomous AI software engineer by Cognition Labs. Core plan pay-as-you-go starting at $20 (ACUs at $2.25 each). Team plan $500/mo (250 ACUs at $2.00 each). Enterprise with custom pricing, VPC deployment, SSO. Previously $500-only pricing before January 2026 restructuring",
-      "tier": "Free Credits",
+      "description": "Autonomous AI software engineer by Cognition. Cognition replaced its Core and Team plans on 2026-04-14 with Free, Pro, Max, Teams and Enterprise. Free ($0) includes a \"Light quota to code with agents\", \"Limited model availability\", \"Unlimited inline edits\" and \"Unlimited Tab completions\". Pro ($20/month) adds cloud agents, Max ($200/month) has \"Significantly higher quotas\", and Teams is \"$80/month for team plan + $40/mo per full dev seat\". Paid plans include a usage allowance, and extra usage is billed in dollars at API pricing. Enterprise is custom-priced, with VPC deployment and SAML/OIDC SSO, and is billed in Agent Compute Units (ACUs).",
+      "tier": "Free",
       "url": "https://devin.ai/pricing",
       "tags": [
         "ai",
@@ -32292,7 +32292,7 @@
     {
       "vendor": "Bolt.new",
       "category": "AI Coding",
-      "description": "AI app builder by StackBlitz — generates frontend, backend, and database code in a live runtime environment. Free tier: 1M tokens/month (300K daily cap), unlimited databases, public + private projects, native hosting with Bolt branding, 10MB file upload limit. Paid plans from $20/mo for higher token limits.",
+      "description": "AI builder for websites, web apps and mobile apps by StackBlitz; it builds full-stack apps in the browser on WebContainers. Free plan ($0): 1M tokens per month with a 300K daily limit, public and private projects, unlimited databases, a 10MB file upload limit, and hosting on a bolt.host URL with up to 10 GB of bandwidth and 333,333 web requests a month, with Bolt branding. Pro is $25/month billed monthly ($18/month billed yearly), with no daily token limit and from 10M tokens a month. Teams is $30 per member a month ($27 billed yearly), and Enterprise is custom-priced.",
       "tier": "Free",
       "url": "https://bolt.new/pricing",
       "tags": [
@@ -32339,7 +32339,7 @@
     {
       "vendor": "Claude Code",
       "category": "AI Coding",
-      "description": "Agentic coding tool by Anthropic — terminal-based AI coding agent that reads/writes files, runs commands, and manages git workflows. Available to Claude Pro ($20/mo), Team ($25/seat/mo), and Max ($100-200/mo) subscribers. Uses Claude Sonnet/Opus models. Also available via Anthropic API with usage-based pricing. Free tier via Claude.ai (limited Sonnet usage, Projects, Artifacts). April 2026 changes: (1) Third-party tool restrictions — external tools like OpenClaw now billed separately on pay-as-you-go basis, can no longer apply standard usage limits. (2) Extra usage option — all paid plans (Pro, Max 5x, Max 20x) now have pay-as-you-go overage at standard API rates beyond included usage. (3) Peak-hour throttling — 5-hour session limits reduced during weekdays 5 AM–11 AM Pacific.",
+      "description": "Agentic coding tool by Anthropic: it reads a codebase, edits files, runs commands and works with development tools, in the terminal, IDEs, a desktop app and the browser. No free plan: \"Claude Code is included in all paid plans\", and Claude's Free plan does not include it. Pro is $20/month billed monthly ($17/month billed annually), Max is $100/month (5x) or $200/month (20x), Team Standard seats are $25/seat billed monthly ($20 billed annually), and Enterprise is \"$20 per seat per month plus usage billed at API rates\". Plan usage is shared with Claude chat. At the limit, paid plans can turn on usage credits billed at standard API rates, or use an Anthropic API key billed pay-as-you-go.",
       "tier": "Paid",
       "url": "https://docs.anthropic.com/en/docs/claude-code/overview",
       "tags": [
@@ -32399,7 +32399,7 @@
     {
       "vendor": "Amazon Q Developer",
       "category": "AI Coding",
-      "description": "AI coding assistant by AWS. Free tier: inline code suggestions, chat, 1,000 lines code transformation/month, 50 agentic requests/month, access to latest Claude models. Supports VS Code, JetBrains, CLI, and AWS Console. Pro plan $19/user/month (higher limits, admin controls, IP indemnity)",
+      "description": "AI coding assistant by AWS. Free tier: inline code suggestions, chat, 1,000 lines code transformation/month, 50 agentic requests/month, access to latest Claude models. Supports VS Code, JetBrains, CLI, and AWS Console. Pro plan $19/user/month (higher limits, admin controls, IP indemnity). AWS will end support for the Amazon Q Developer IDE plugins on April 30, 2027, and points IDE users to Kiro.",
       "tier": "Free",
       "url": "https://aws.amazon.com/q/developer/pricing/",
       "tags": [
@@ -32469,7 +32469,7 @@
     {
       "vendor": "Windsurf",
       "category": "AI Coding",
-      "description": "AI-powered IDE by Codeium (formerly Codeium Editor). Free tier: limited daily quotas for Cascade AI flows, code completions, AI chat (credit system replaced by quotas Mar 2026). Pro $20/mo, Teams $40/mo, Max $200/mo. SWE-1.5 Fast Agent model for faster iteration. Grandfathered Pro subscribers keep $15/mo indefinitely. All tiers include premium models",
+      "description": "Windsurf is now Devin Desktop (\"Devin Desktop is the new name for Windsurf.\"), Cognition's AI IDE. windsurf.com/pricing redirects to devin.ai/pricing, which prices it together with Devin. The Free plan ($0) includes a \"Light quota to code with agents\", \"Limited model availability\", \"Unlimited inline edits\" and \"Unlimited Tab completions\", with quotas that reset daily and weekly. Pro is $20/month, Max $200/month, and Teams \"$80/month for team plan + $40/mo per full dev seat\"; paid plans can buy extra usage at API list prices. Pro subscribers on the old $15/month price keep it indefinitely.",
       "tier": "Free",
       "url": "https://windsurf.com/pricing",
       "tags": [
@@ -32513,7 +32513,7 @@
     {
       "vendor": "Google Antigravity",
       "category": "AI Coding",
-      "description": "Agent-first IDE by Google, powered by Gemini 3. 100% free during public preview — no paid tiers yet. Built-in browser automation, multi-agent orchestration, cross-platform (Mac/Windows/Linux). Announced November 2025.",
+      "description": "Agentic development platform by Google, generally available: a desktop app to manage multiple local agents in parallel, an agentic IDE, a CLI and an SDK, for macOS, Windows and Linux. Its agents can open and drive a local Chrome browser. The individual plan is $0/month, with Gemini, Claude and gpt-oss agent models, \"Unlimited Tab completions\", \"Unlimited Command requests\" and \"Basic weekly rate limits\". Google AI Pro ($19.99/month) and Google AI Ultra (from $99.99/month) add \"More generous rate limits\" and a \"Flexible AI credit pool\", and organizations can use it through Google Cloud. Announced November 2025.",
       "tier": "Free",
       "url": "https://antigravity.google",
       "tags": [
@@ -34606,7 +34606,7 @@
     {
       "vendor": "Amazon Kiro",
       "category": "AI Coding",
-      "description": "Claude-powered AI IDE by Amazon (GA launch) — KIRO FREE $0 per month 50 credits. KIRO PRO $20 per user / month 1,000 credits. KIRO PRO+ $40 per user / month 2,000 credits. KIRO PRO MAX $100 per user / month 5,000 credits. KIRO POWER $200 per user / month 10,000 credits. Add-on credits are $0.04/credit. $20 credit towards first paid plan upgrade.",
+      "description": "AI coding tool by AWS, with an IDE, a CLI and a web interface. Prompts run by default on Auto, \"an agent that uses a mix of different frontier models\", and users can pick Claude, GPT or open-weight models. KIRO FREE $0 per month 50 credits. KIRO PRO $20 per user / month 1,000 credits. KIRO PRO+ $40 per user / month 2,000 credits. KIRO PRO MAX $100 per user / month 5,000 credits. KIRO POWER $200 per user / month 10,000 credits. Add-on credits are $0.04/credit. $20 credit towards first paid plan upgrade.",
       "tier": "Free",
       "url": "https://kiro.dev/pricing",
       "tags": [
@@ -34623,12 +34623,9 @@
         "outcome": "ok",
         "detail": "the page names Amazon Kiro as \"amazon\" and states \"$20\" and \"$0\" and \"$0.04\" and \"$40\""
       },
-      "restated_from": {
-        "reading_date": "2026-09-03",
-        "source_url": "https://kiro.dev/pricing",
+      "restatement_reverted": {
         "record_date": "2026-09-03",
-        "change_type": "pricing_restructured",
-        "restated_on": "2026-09-20"
+        "reverted_on": "2026-09-26"
       }
     },
     {
