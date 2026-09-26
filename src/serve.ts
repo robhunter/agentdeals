@@ -6,7 +6,7 @@ import { dirname, join } from "node:path";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { createServer, getServerCard } from "./server.js";
 import { changesForVendor, oldestVerifiedDateForSlug, vendorRiskAssessment, publishedRisk, levelWithheldStatement, vendorNotIndexedSentence, riskCauseOf, freeTierEndingRecord, NEGATIVE_CHANGE_TYPES, POSITIVE_CHANGE_TYPES, SEVERE_CHANGE_TYPES, loadOffers, getCategories, getNewOffers, getNewestDeals, searchOffers, enrichOffers, gateForOffer, loadDealChanges, getDealChanges, changeContext, DEFAULT_CHANGE_WINDOW_DAYS, getOfferDetails, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, getFormattedWeeklyDigest, getFreshnessMetrics, publishedStabilityIndex, stabilityWithheldDisclosure, UNRATED_STABILITY, type StabilityIndex, type PublishedStabilityClass, getVendorReferral, sanitizeQuery, getChangeLogFreshness, isEventDated, partitionByDateProvenance } from "./data.js";
-import { loadChangeRefusals, changesRatingTheListedTier, stabilityDeciders, vendorNameAsPublished } from "./data.js";
+import { loadChangeRefusals, changesRatingTheListedTier, changesTheVendorMade, stabilityDeciders, vendorNameAsPublished } from "./data.js";
 import { A_DEMOTION_IN_FORCE_RULE, NO_DEMOTION_IN_FORCE_RULE, A_COMPLETE_LOG_NOTICE, A_VERDICT_ROLLS_NOTICE, A_WITHHELD_RATING_DOES_NOT_LAPSE, lapsingDemotionStated, VOLATILE_WHILE_A_DEMOTION_COUNTS_RULE, WATCH_RECEIVES_FROM_VOLATILE_RULE , confirmationCoverage, confirmationCoverageSentence, HOW_THE_CATALOGUE_IS_MAINTAINED, NOTHING_CONTRADICTS_OUR_TERMS_FOR, THE_DATES_WE_HOLD } from "./data.js";
 import { confirmingRead, confirmingReadSentence, refusalsByVendor, refusedReadSentence, supersededRefusalSentence, type ChangeRefusal } from "./change-refusal.js";
 import { getStackRecommendation } from "./stacks.js";
@@ -38,7 +38,7 @@ import { NO_CURRENT_FIGURE, costHeadlineCaveat, limitCellText, mayRecommendAsFre
 import { changesByVendor } from "./superseded-census.js";
 import { buildComparisonMap, comparisonSlug } from "./comparison-pairs.js";
 import { comparisonVerdictText, freeTierFaqAnswer, stabilityFaqAnswer, type ComparisonSide, type FreeTierSide, type SideFreeTier, type StabilityRating } from "./comparison-verdict.js";
-import { publishedVendorLevel, vendorVerdictSentence, vendorBadge, freeTierClaim, statesRiskCause, withholdingThatDoesNotLapse, demotionTheVerdictNames, narrowingSentence, changeKindNoun, isOurOwnBookkeeping, emptyHistoryCaveatSentence, refusedReadOurConfirmationSupersedes, refusedReadWeHold, refusedReadWithholdingSentence, nothingWeReadDescribesTheTerms, unconfirmedThresholdSentence, unconfirmedTermsOpening, whyWeCannotConfirmTheseTerms, withheldForARefusedRead, withUnconfirmedTerms, refusalWithholdsStability, termsUnconfirmedBySource, termsTheVerdictWithholds, closingTerms, termsWithTheReasonWeCannotConfirmThem, termsNotVerifiedMetaSentence, termsWithheldLabel, theReadConfirmedThePrice, unconfirmedTermsSentence, whereTheDoubtSits, withheldBadgeLabel, type BadgeWithholding, type UnconfirmedTerms, type FreeTierClaim, type VendorVerdictInput, type WhereTheDoubtSits } from "./vendor-verdict.js";
+import { publishedVendorLevel, vendorVerdictSentence, vendorBadge, freeTierClaim, statesRiskCause, withholdingThatDoesNotLapse, demotionTheVerdictNames, narrowingSentence, ourOwnRecordsSentence, changeKindNoun, isOurOwnBookkeeping, emptyHistoryCaveatSentence, refusedReadOurConfirmationSupersedes, refusedReadWeHold, refusedReadWithholdingSentence, nothingWeReadDescribesTheTerms, unconfirmedThresholdSentence, unconfirmedTermsOpening, whyWeCannotConfirmTheseTerms, withheldForARefusedRead, withUnconfirmedTerms, refusalWithholdsStability, termsUnconfirmedBySource, termsTheVerdictWithholds, closingTerms, termsWithTheReasonWeCannotConfirmThem, termsNotVerifiedMetaSentence, termsWithheldLabel, theReadConfirmedThePrice, unconfirmedTermsSentence, whereTheDoubtSits, withheldBadgeLabel, type BadgeWithholding, type UnconfirmedTerms, type FreeTierClaim, type VendorVerdictInput, type WhereTheDoubtSits } from "./vendor-verdict.js";
 import { descriptionDeniesAFreeTier, tierRecordsAFreeTier } from "./free-tier-record.js";
 import { PAGE_HEAD_OPEN, withLedeBeforeNav } from "./page-lede.js";
 import { withReviewByline } from "./page-byline.js";
@@ -5597,8 +5597,11 @@ ${allCompareLinks.join("\n")}
       ? `${vendorName}'s free tier is usable for prototyping and development. ${primaryGate ? vendorHistorySentence(vendorName, historyLevel, riskCause) : levelWithheldBecause}`
       : `${vendorName}'s free tier is usable for prototyping and development, but we rate it ${riskLevel}${riskCause ? ` because of one recorded ${changeKindNoun(riskCause.change_type)}, ${changeDateClause(riskCause)}` : ""}. Consider alternatives with more stable pricing for critical services.`)
     : `${vendorName} does not offer a free tier for production use. Consider free alternatives in ${primary.category}.`);
-  const faqChangedAnswer = vendorChanges.length > 0
-    ? `${vendorName} has had ${vendorChanges.length} recorded pricing change${vendorChanges.length > 1 ? "s" : ""}. Most recently: ${changeSummaryText(vendorChanges[0])} (${changeDateLabel(vendorChanges[0])}).${offerHasEnded ? ` ${ENDED_SINCE_CHANGES_SENTENCE}` : ""}`
+  const changesVendorMade = changesTheVendorMade(vendorChanges);
+  const faqChangedAnswer = changesVendorMade.length > 0
+    ? `${vendorName} has had ${changesVendorMade.length} recorded pricing change${changesVendorMade.length > 1 ? "s" : ""}. Most recently: ${changeSummaryText(changesVendorMade[0])} (${changeDateLabel(changesVendorMade[0])}).${offerHasEnded ? ` ${ENDED_SINCE_CHANGES_SENTENCE}` : ""}`
+    : vendorChanges.length > 0
+    ? `${ourOwnRecordsSentence(vendorChanges)}${offerHasEnded ? ` ${ENDED_SINCE_CHANGES_SENTENCE}` : ""}`
     : offerHasEnded
     ? endedEmptyChangeHistorySentence(vendorName)
     : refusedRead
@@ -6046,8 +6049,11 @@ ${renderAuditBlock(altRanking.tie_break)}
     ? `${vendorName} has a free tier (${primary.tier}), but it's flagged as "caution" because of one specific recorded change${riskCause ? `, ${changeDateClause(riskCause)}: ${changeSummaryText(riskCause)}` : "."}`
     : `${vendorName}'s free tier (${primary.tier}) is considered risky because of one specific recorded change${riskCause ? `, ${changeDateClause(riskCause)}: ${changeSummaryText(riskCause)}` : "."} Consider migrating to a more stable alternative.`;
   const faqCountAnswer = `There are ${enrichedAlts.length} free alternatives to ${vendorName} tracked on AgentDeals across the ${listedCategories.join(", ")} categor${listedCategories.length > 1 ? "ies" : "y"}.`;
-  const faqChangesAnswer = vendorChanges.length > 0
-    ? `${vendorName} has ${vendorChanges.length} recorded pricing change${vendorChanges.length !== 1 ? "s" : ""}. The most recent was ${changeDateClause(vendorChanges[0])}: ${changeSummaryText(vendorChanges[0])}`
+  const altChangesVendorMade = changesTheVendorMade(vendorChanges);
+  const faqChangesAnswer = altChangesVendorMade.length > 0
+    ? `${vendorName} has ${altChangesVendorMade.length} recorded pricing change${altChangesVendorMade.length !== 1 ? "s" : ""}. The most recent was ${changeDateClause(altChangesVendorMade[0])}: ${changeSummaryText(altChangesVendorMade[0])}`
+    : vendorChanges.length > 0
+    ? ourOwnRecordsSentence(vendorChanges)
     : altLevelWithheld
     ? `We hold no recorded pricing changes for ${vendorName}, but ${altWithheldClause}, so that is a statement about our records rather than a positive signal.`
     : `No, ${vendorName} has no recorded pricing changes on AgentDeals. This indicates stable pricing.`;
