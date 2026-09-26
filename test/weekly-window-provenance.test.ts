@@ -14,7 +14,7 @@ import {
   partitionByDateProvenance,
 } from "../dist/change-dates.js";
 import { FEED_CORRECTIONS } from "../dist/feed-corrections.js";
-import { recordsStillInForce } from "../dist/change-resolution.js";
+import { recordsStillInForce, CORRECTION_TO_OUR_OWN_RECORD } from "../dist/change-resolution.js";
 import { statesWhenItTookEffect } from "./effective-date-rule.ts";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -31,6 +31,46 @@ const publishedChanges = JSON.parse(
 }>;
 
 const eventDated = statesWhenItTookEffect;
+
+function madeByTheVendor(c: { change_type: string }): boolean {
+  return c.change_type !== CORRECTION_TO_OUR_OWN_RECORD;
+}
+
+function vendorChangesStillInForce<T extends { change_type: string; resolution?: { state: string; date: string } | null }>(
+  records: T[]
+): T[] {
+  return recordsStillInForce(records).filter(madeByTheVendor);
+}
+
+function weekStartOf(date: string): string {
+  return isoWeekWindow(new Date(date + "T12:00:00Z")).start;
+}
+
+function isoWeekSlug(weekStart: string): string {
+  const thursday = new Date(Date.parse(weekStart + "T00:00:00Z") + 3 * 86400000);
+  const yearStart = Date.UTC(thursday.getUTCFullYear(), 0, 1);
+  const week = Math.ceil(((thursday.getTime() - yearStart) / 86400000 + 1) / 7);
+  return `${thursday.getUTCFullYear()}-w${String(week).padStart(2, "0")}`;
+}
+
+function weeksHoldingOurCorrections(): string[] {
+  const corrections = recordsStillInForce(publishedChanges).filter((c) => !madeByTheVendor(c));
+  return [...new Set(corrections.map((c) => weekStartOf(c.date)))].sort();
+}
+
+function digestAndWeeklyDigestOver(changesPath: string) {
+  const dataModule = pathToFileURL(path.join(REPO, "dist", "data.js")).href;
+  const run = spawnSync(
+    "node",
+    [
+      "-e",
+      `import(${JSON.stringify(dataModule)}).then((m) => process.stdout.write(JSON.stringify({ weekly: m.getWeeklyDigest(), formatted: m.getFormattedWeeklyDigest(0, 200) })))`,
+    ],
+    { env: { ...process.env, AGENTDEALS_CHANGES_PATH: changesPath, TZ: "UTC" }, encoding: "utf-8" }
+  );
+  assert.strictEqual(run.status, 0, run.stderr);
+  return JSON.parse(run.stdout);
+}
 
 function dated(dateSource: string, date: string) {
   const recorded_date = dateSource === "hand_written" ? "2026-12-31" : date;
@@ -173,7 +213,7 @@ describe("a weekly digest counts only changes with an effective date", () => {
     const { getFormattedWeeklyDigest } = await import("../dist/data.js");
     const digest = getFormattedWeeklyDigest(0, 200);
     const window = { start: digest.week_of, end: digest.week_ending };
-    const countable = recordsStillInForce(publishedChanges);
+    const countable = vendorChangesStillInForce(publishedChanges);
     const expectedDated = countable.filter((c) => eventDated(c) && withinWindow(c.date, window));
     const expectedDiscovered = countable.filter((c) => !eventDated(c) && withinWindow(c.date, window));
 
@@ -286,6 +326,84 @@ describe("a weekly digest counts only changes with an effective date", () => {
       assert.strictEqual(Math.min(digest.changes_in_week, 200), digest.top_changes.length);
     }
     assert.ok(quiet.length > 20, `expected most archived weeks to carry no discovery batch, got ${quiet.length}`);
+  });
+});
+
+describe("a weekly digest counts only changes the vendor made", () => {
+  it("keeps a correction of ours out of the week and the deadlines, and keeps the vendor's change in both", () => {
+    const today = new Date().toISOString().slice(0, 10);
+    const tomorrow = new Date(Date.now() + 86400000).toISOString().slice(0, 10);
+    const template = publishedChanges.find((c) => c.change_type === CORRECTION_TO_OUR_OWN_RECORD);
+    assert.ok(template, "the change log holds no correction of ours to model the control on");
+    const correction = {
+      ...template,
+      vendor: "Weekly Correction Control",
+      date: today,
+      date_source: "hand_written",
+      recorded_date: today,
+      resolution: null,
+    };
+    const vendorChange = {
+      ...template,
+      vendor: "Weekly Vendor Control",
+      change_type: "limits_reduced",
+      date: today,
+      date_source: "vendor_page",
+      recorded_date: today,
+      resolution: null,
+    };
+    const deadline = {
+      ...vendorChange,
+      vendor: "Weekly Deadline Control",
+      change_type: "product_deprecated",
+      date: tomorrow,
+    };
+    assert.ok(eventDated(correction), "a correction dated the day we made it should read as dated, or the control proves nothing");
+
+    const file = JSON.parse(readFileSync(path.join(REPO, "data", "deal_changes.json"), "utf-8"));
+    file.changes.push(correction, vendorChange, deadline);
+    const dir = mkdtempSync(path.join(tmpdir(), "weekly-vendor-"));
+    const changesPath = path.join(dir, "deal_changes.json");
+    writeFileSync(changesPath, JSON.stringify(file));
+
+    try {
+      const { weekly, formatted } = digestAndWeeklyDigestOver(changesPath);
+      const week = { start: formatted.week_of, end: formatted.week_ending };
+      const vendors = (list: Array<{ vendor: string }>) => list.map((c) => c.vendor);
+
+      assert.strictEqual(
+        formatted.changes_in_week,
+        vendorChangesStillInForce(file.changes).filter((c) => eventDated(c) && withinWindow(c.date, week)).length
+      );
+      assert.ok(!vendors(formatted.top_changes).includes(correction.vendor), vendors(formatted.top_changes).join(", "));
+      assert.ok(!vendors(formatted.discovered_changes).includes(correction.vendor));
+      assert.ok(!vendors(weekly.deal_changes).includes(correction.vendor), vendors(weekly.deal_changes).join(", "));
+      assert.ok(!vendors(weekly.upcoming_deadlines).includes(correction.vendor), vendors(weekly.upcoming_deadlines).join(", "));
+
+      assert.ok(vendors(formatted.top_changes).includes(vendorChange.vendor), vendors(formatted.top_changes).join(", "));
+      assert.ok(vendors(weekly.deal_changes).includes(vendorChange.vendor), vendors(weekly.deal_changes).join(", "));
+      assert.ok(
+        weekly.upcoming_deadlines.some((d: { vendor: string; date: string }) => d.vendor === deadline.vendor && d.date === deadline.date),
+        vendors(weekly.upcoming_deadlines).join(", ")
+      );
+      assert.ok(weekly.summary.startsWith(`${weekly.deal_changes.length} pricing change`), weekly.summary);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  it("counts none of our corrections in any week that holds one", async () => {
+    const weeks = weeksHoldingOurCorrections();
+    assert.ok(weeks.length > 0, "the change log holds no correction of ours, so this proves nothing");
+    for (const weekStart of weeks) {
+      const digest = await digestForWeekStarting(weekStart);
+      const window = { start: digest.week_of, end: digest.week_ending };
+      const expected = vendorChangesStillInForce(publishedChanges).filter((c) => eventDated(c) && withinWindow(c.date, window));
+      assert.strictEqual(digest.changes_in_week, expected.length, weekStart);
+      for (const c of [...digest.top_changes, ...digest.discovered_changes]) {
+        assert.ok(madeByTheVendor(c), `${weekStart}: ${c.vendor} ${c.change_type}`);
+      }
+    }
   });
 });
 
@@ -491,6 +609,25 @@ describe("every weekly surface reports the same week", () => {
       !archive.includes(changeCount(digest.changes_in_week + digest.discovered_in_week)),
       "the archive should not count the batch as changes"
     );
+  });
+
+  it("counts on each week page and in the archive only the changes the vendor made", async () => {
+    proc = await startHttpServer();
+    const base = `http://127.0.0.1:${serverPort}`;
+    const archive = await (await fetch(`${base}/digest/archive`)).text();
+    const weeks = weeksHoldingOurCorrections();
+    assert.ok(weeks.length > 0, "the change log holds no correction of ours, so this proves nothing");
+    for (const weekStart of weeks) {
+      const digest = await digestForWeekStarting(weekStart);
+      const slug = isoWeekSlug(weekStart);
+      const page = await (await fetch(`${base}/digest/${slug}`)).text();
+      const pageCount = page.match(/<p class="page-meta">(\d+) changes? tracked in week/);
+      assert.ok(pageCount, `/digest/${slug} should state its count`);
+      assert.strictEqual(parseInt(pageCount![1], 10), digest.changes_in_week, `/digest/${slug}`);
+      const row = archive.match(new RegExp(`href="/digest/${slug}"><span class="week-label">[^<]*</span><span class="week-count">(\\d+) changes?`));
+      assert.ok(row, `the archive should list ${slug}`);
+      assert.strictEqual(parseInt(row![1], 10), digest.changes_in_week, `/digest/archive row for ${slug}`);
+    }
   });
 
   it("files a change in the same week whatever zone the server clock is set to", async () => {
