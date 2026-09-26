@@ -108,6 +108,12 @@ describe("what a date_source means", () => {
     assert.strictEqual(isEventDated({ ...correction, date_source: "discovered" } as any), false);
   });
 
+  it("keeps the day we stopped listing an offer as the date of that record", () => {
+    const housekeeping = { ...typedOnTheDay(), change_type: "product_deprecated", reports: "our_index", current_state: "Removed from index" };
+    assert.strictEqual(isEventDated(housekeeping as any), true);
+    assert.strictEqual(isEventDated({ ...housekeeping, reports: "vendor_offer" } as any), false);
+  });
+
   it("lets every event-dated provenance carry an event date", () => {
     for (const source of EVENT_DATED_SOURCES) {
       assert.strictEqual(isEventDated({ ...setApartFromTheDayItWasTyped(), date_source: source } as any), true, source);
@@ -145,7 +151,7 @@ describe("what a date_source means", () => {
       .filter((c: any) => isEventDatedByTheWriter(c) !== isEventDated(c))
       .map((c: any) => `${c.vendor} ${c.date} ${c.date_source}`);
     assert.deepStrictEqual(disagreements, []);
-    for (const fixture of [typedOnTheDay(), setApartFromTheDayItWasTyped(), { ...typedOnTheDay(), change_type: "record_corrected" }]) {
+    for (const fixture of [typedOnTheDay(), setApartFromTheDayItWasTyped(), { ...typedOnTheDay(), change_type: "record_corrected" }, { ...typedOnTheDay(), reports: "our_index" }]) {
       assert.strictEqual(isEventDatedByTheWriter(fixture), isEventDated(fixture as any), JSON.stringify(fixture));
     }
   });
@@ -166,11 +172,12 @@ describe("a hand-written date typed on the day it was recorded", () => {
     assert.deepStrictEqual(discovered.filter((c: any) => c.date_source === "discovered"), readByTheRereading);
   });
 
-  it("leaves every vendor-page date, every set-apart hand-written date and every correction event-dated", () => {
+  it("leaves every vendor-page date, every set-apart hand-written date, every correction and every index removal event-dated", () => {
     const stays = published.filter((c: any) => c.date_source !== "discovered" && !typedThatDay(c));
     assert.deepStrictEqual(dated, stays);
     assert.ok(stays.some((c: any) => c.date_source === "vendor_page"), "no vendor-page record to hold still");
     assert.ok(stays.some((c: any) => c.change_type === "record_corrected" && c.date === c.recorded_date), "no correction dated the day it was made");
+    assert.ok(stays.some((c: any) => c.reports === "our_index" && c.date === c.recorded_date), "no index removal dated the day it was made");
   });
 
   it("labels the three rows the rule was written from as the rule says", () => {

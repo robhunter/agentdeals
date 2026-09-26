@@ -2,12 +2,14 @@ import type { DealChange, ChangeDateSource, DateMeaning } from "./types.js";
 import { PRODUCT_DEPRECATED, deprecationEndsTheListedProduct } from "./product-deprecation.js";
 import { sliceById } from "./change-census.js";
 import { isACorrectionToOurOwnRecord } from "./change-resolution.js";
+import { reportsOurIndex } from "./change-reporting.js";
 
 export interface DatedChange {
   date: string;
   date_source?: ChangeDateSource;
   recorded_date?: string | null;
   change_type?: string;
+  reports?: string | null;
 }
 
 type ExpiringChange = DatedChange & Pick<DealChange, "change_type" | "vendor" | "summary">;
@@ -22,8 +24,12 @@ export const DATE_SOURCES: ChangeDateSource[] = ["vendor_page", "hand_written", 
 
 export const EVENT_DATED_SOURCES: ChangeDateSource[] = ["vendor_page", "hand_written"];
 
+function recordsSomethingWeDid(change: DatedChange): boolean {
+  return isACorrectionToOurOwnRecord(change) || reportsOurIndex(change);
+}
+
 export function carriesTheDayItWasTyped(change: DatedChange): boolean {
-  if (change.date_source !== "hand_written" || isACorrectionToOurOwnRecord(change)) return false;
+  if (change.date_source !== "hand_written" || recordsSomethingWeDid(change)) return false;
   return !change.recorded_date || change.date === change.recorded_date;
 }
 
