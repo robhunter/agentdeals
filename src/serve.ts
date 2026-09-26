@@ -35547,7 +35547,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="context-box">
-    Gemini Code Assist's free tier for individuals has ended. Google's <a href="https://developers.google.com/gemini-code-assist/docs/deprecations/code-assist-individuals" target="_blank" rel="nofollow noopener">deprecation notice</a> says that starting June 18, 2026, the IDE extensions stopped serving requests for the Gemini Code Assist for individuals, Google AI Pro and Google AI Ultra tiers, and that this also applies to Gemini CLI. Gemini CLI still runs with a Gemini API key.
+    Gemini Code Assist's free tier for individuals has ended. Google's <a href="https://developers.google.com/gemini-code-assist/docs/deprecations/code-assist-individuals" target="_blank" rel="nofollow noopener" class="change-source" title="developers.google.com/gemini-code-assist/docs/deprecations/code-assist-individuals">deprecation notice</a> says that starting June 18, 2026, the IDE extensions stopped serving requests for the Gemini Code Assist for individuals, Google AI Pro and Google AI Ultra tiers, and that this also applies to Gemini CLI. Gemini CLI still runs with a Gemini API key.
   </div>
 
   <h2 id="stacks">Best Picks by Use Case</h2>

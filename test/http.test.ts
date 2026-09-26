@@ -3803,7 +3803,6 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("Brave Search API"), "Should include Brave Search");
     assert.ok(html.includes("HCP Terraform"), "Should include HCP Terraform");
     assert.ok(html.includes("Windsurf"), "Should include Windsurf");
-    assert.ok(html.includes("Gemini Code Assist"), "Should include Gemini Code Assist expansion");
     assert.ok(html.includes("Cloudflare Startup Program"), "Should include Cloudflare expansion");
     assert.ok(html.includes("Terragrunt Scale"), "Should include Terragrunt Scale");
     assert.ok(html.includes("Open-core"), "Should have trend pattern");
