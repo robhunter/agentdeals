@@ -1320,7 +1320,12 @@
         "Koyeb"
       ],
       "recorded_date": "2026-03-19",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: Railway's trial credit is a one-time $5, not $5 a month; the trial needed no credit card in January 2025 either; the Free plan's $1 a month first appears on railway.com/pricing between the Internet Archive's 2025-08-24 and 2025-09-03 captures; and Railway's $100M Series B was announced on 2026-01-22."
+      }
     },
     {
       "vendor": "Render",
@@ -10112,7 +10117,13 @@
       "category": "Cloud IaaS",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-19"
+      "recorded_date": "2026-09-19",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: DigitalOcean's Functions allowance did not grow. Its Functions pricing page stated \"90,000 GiB-seconds of compute free per month per account\" in September 2025 as well. The 25,000 in this record's before-state was our own error, corrected 2026-09-26.",
+        "source_url": "http://web.archive.org/web/20250905160050/https://www.digitalocean.com/pricing/functions"
+      }
     },
     {
       "vendor": "Hasura",
@@ -10650,6 +10661,34 @@
       "impact": "medium",
       "source_url": "https://www.digitalocean.com/pricing/droplets",
       "category": "Cloud IaaS",
+      "alternatives": [],
+      "recorded_date": "2026-09-26",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Railway",
+      "change_type": "limits_reduced",
+      "date": "2025-06-30",
+      "summary": "Railway's trial credit now expires. The one-time $5 grant, which previously did not expire, lasts 30 days. The Internet Archive's 2025-06-26 capture still says the credits do not expire; the 2025-06-30 capture says they expire in 30 days.",
+      "previous_state": "Trial: a one-time grant of $5 in credits that do not expire",
+      "current_state": "Trial: a one-time grant of $5 in credits that expire in 30 days",
+      "impact": "medium",
+      "source_url": "http://web.archive.org/web/20250630223305/https://railway.com/pricing",
+      "category": "Cloud Hosting",
+      "alternatives": [],
+      "recorded_date": "2026-09-26",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Railway",
+      "change_type": "new_free_tier",
+      "date": "2025-09-03",
+      "summary": "Railway added a Free plan: after the 30-day trial, $1 of free credit a month. It first appears in the Internet Archive's 2025-09-03 capture; the 2025-08-24 capture has no Free plan.",
+      "previous_state": "Trial only: a one-time $5 credit that expires after 30 days",
+      "current_state": "Free plan: $1 of free credit a month after the 30-day trial",
+      "impact": "medium",
+      "source_url": "http://web.archive.org/web/20250903210249/https://railway.com/pricing",
+      "category": "Cloud Hosting",
       "alternatives": [],
       "recorded_date": "2026-09-26",
       "date_source": "hand_written"
