@@ -173,6 +173,15 @@ export function citedSourceLinkHtml(read: SourceRead, esc: Escaper): string {
   );
 }
 
+export const FIGURE_SOURCE_CLASS = "figure-source";
+
+export function figureSourceLinkHtml(url: string, esc: Escaper): string {
+  return (
+    ` <a href="${esc(url)}" rel="nofollow noopener" class="${FIGURE_SOURCE_CLASS}"` +
+    ` style="${MARKER_STYLE}" title="${esc(citationLabel(url))}">${CITATION_LINK_HTML}</a>`
+  );
+}
+
 const UNCITED_TAG_STYLE =
   "display:inline-block;margin-left:.35rem;padding:.1rem .4rem;border-radius:10px;" +
   "font-size:.65rem;font-weight:600;background:#8b949e22;color:#8b949e";
