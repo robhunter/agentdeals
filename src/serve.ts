@@ -9439,7 +9439,7 @@ function buildEventPage(slug: string): string | null {
   const vendorNames = [...new Set(eventOffers.map(o => o.vendor))];
   const eventCategories = [...new Set(eventOffers.map(o => o.category))];
   const allChanges = loadDealChanges();
-  const eventChanges = allChanges
+  const eventChanges = recordsOtherThanOurOwnIndexHousekeeping(allChanges)
     .filter(c => event.vendorFilter(c.vendor))
     .sort((a, b) => b.date.localeCompare(a.date));
 
@@ -32366,7 +32366,7 @@ function buildLlmApiPricingPage(): string {
   const aiMlOffers = offers.filter(o => o.category === "AI / ML");
 
   const llmVendorNames = ["OpenAI", "Anthropic", "Google Gemini", "Mistral", "Groq", "Cohere", "xAI", "Cerebras", "OpenRouter", "DeepSeek", "Cloudflare Workers AI", "GitHub Models", "NVIDIA NIM", "Ollama", "SiliconFlow", "LLM7", "Hugging Face", "Replicate", "Baseten"];
-  const llmChanges = dealChanges.filter(c =>
+  const llmChanges = recordsOtherThanOurOwnIndexHousekeeping(dealChanges).filter(c =>
     llmVendorNames.some(v => c.vendor.includes(v) || v.includes(c.vendor))
   ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
@@ -35264,7 +35264,7 @@ function buildGcpFreeTier2026Page(): string {
     o.vendor === "Firebase" || o.tags?.some((t: string) => t === "gcp" || t === "google-cloud")
   );
 
-  const gcpChanges = dealChanges.filter((c: any) =>
+  const gcpChanges = recordsOtherThanOurOwnIndexHousekeeping(dealChanges).filter((c: any) =>
     c.vendor === "Google Cloud" || c.vendor.startsWith("Google") || c.vendor === "Firebase" ||
     c.vendor.includes("Gemini")
   ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
