@@ -38,7 +38,7 @@ import { NO_CURRENT_FIGURE, costHeadlineCaveat, limitCellText, mayRecommendAsFre
 import { changesByVendor } from "./superseded-census.js";
 import { buildComparisonMap, comparisonSlug } from "./comparison-pairs.js";
 import { comparisonVerdictText, freeTierFaqAnswer, stabilityFaqAnswer, type ComparisonSide, type FreeTierSide, type SideFreeTier, type StabilityRating } from "./comparison-verdict.js";
-import { publishedVendorLevel, vendorVerdictSentence, vendorBadge, freeTierClaim, statesRiskCause, withholdingThatDoesNotLapse, demotionTheVerdictNames, narrowingSentence, ourOwnRecordsSentence, changeKindNoun, isOurOwnBookkeeping, emptyHistoryCaveatSentence, refusedReadOurConfirmationSupersedes, refusedReadWeHold, refusedReadWithholdingSentence, nothingWeReadDescribesTheTerms, unconfirmedThresholdSentence, unconfirmedTermsOpening, whyWeCannotConfirmTheseTerms, withheldForARefusedRead, withUnconfirmedTerms, refusalWithholdsStability, termsUnconfirmedBySource, termsTheVerdictWithholds, closingTerms, termsWithTheReasonWeCannotConfirmThem, termsNotVerifiedMetaSentence, termsWithheldLabel, theReadConfirmedThePrice, unconfirmedTermsSentence, whereTheDoubtSits, withheldBadgeLabel, type BadgeWithholding, type UnconfirmedTerms, type FreeTierClaim, type VendorVerdictInput, type WhereTheDoubtSits } from "./vendor-verdict.js";
+import { publishedVendorLevel, vendorVerdictSentence, vendorBadge, freeTierClaim, endingStatedInPlaceOfARating, endingShutsTheProductDown, endedClaimReliabilityAnswer, statesRiskCause, withholdingThatDoesNotLapse, demotionTheVerdictNames, narrowingSentence, ourOwnRecordsSentence, changeKindNoun, isOurOwnBookkeeping, emptyHistoryCaveatSentence, refusedReadOurConfirmationSupersedes, refusedReadWeHold, refusedReadWithholdingSentence, nothingWeReadDescribesTheTerms, unconfirmedThresholdSentence, unconfirmedTermsOpening, whyWeCannotConfirmTheseTerms, withheldForARefusedRead, withUnconfirmedTerms, refusalWithholdsStability, termsUnconfirmedBySource, termsTheVerdictWithholds, closingTerms, termsWithTheReasonWeCannotConfirmThem, termsNotVerifiedMetaSentence, termsWithheldLabel, theReadConfirmedThePrice, unconfirmedTermsSentence, whereTheDoubtSits, withheldBadgeLabel, type BadgeWithholding, type UnconfirmedTerms, type FreeTierClaim, type VendorVerdictInput, type WhereTheDoubtSits } from "./vendor-verdict.js";
 import { descriptionDeniesAFreeTier, tierRecordsAFreeTier } from "./free-tier-record.js";
 import { PAGE_HEAD_OPEN, withLedeBeforeNav } from "./page-lede.js";
 import { withReviewByline } from "./page-byline.js";
@@ -100,7 +100,7 @@ import {
 import { changeAnchor, changeRecordHref } from "./change-anchor.js";
 import { SSE_KEEPALIVE_FRAME, keepaliveIntervalMs, sessionRecoveryBody } from "./mcp-stream.js";
 import { ASSISTANTS_API_SHUTDOWN } from "./assistants-shutdown.js";
-import { discontinuedClause, discontinuedOnOrBefore, endsAFreeTier, PRODUCT_DEPRECATED } from "./product-deprecation.js";
+import { discontinuedClause, discontinuedOnOrBefore, endsAFreeTier } from "./product-deprecation.js";
 import { rankOffers, rankForListing, rotateListing, utcDate, gateFor, notAFreeOfferGateFor, descriptionDeniesFreeTier, classifyTier, CRITERIA_PATH, DEMOTE_ONLY_POLICY, DISCLOSURE_RATIONALE, TIE_BREAK_ALGORITHM, NAMED_SUBSET_RULE, NAMED_SUBSET_FIELD_RULE, wholeRankedOrderClause, GATE_TABLE, gateTableRowText, DEMERIT_TABLE, demeritTableRowText, NOT_FREE_TIER_RULES, TIME_LIMITED_TIER_RULES, type TieBreak, type Gate } from "./ranking.js";
 import type { RankedEntry, RankingResult } from "./ranking.js";
 import { eligibilityGateAsPublished, gatedShareDescriptionClause, gatedShareLede, publishableEligibilityConditions } from "./eligibility.js";
@@ -1553,7 +1553,7 @@ function freeTierSideOf(vendor: string, tier: string, context: VendorVerdictCont
 }
 
 function removedClaimLabel(cause: { change_type: string }): string {
-  return cause.change_type === PRODUCT_DEPRECATED ? "deprecated" : "free tier removed";
+  return endingShutsTheProductDown(cause) ? "deprecated" : "free tier removed";
 }
 
 function readBadgeStatus(vendorSlug: string, servedOn: string): BadgeReading {
@@ -5122,8 +5122,7 @@ function buildVendorPage(slug: string): string | null {
   const termsWeCannotConfirm = whyWeCannotConfirmTheseTerms(verdictInput);
   const ratingWithheld = withholdingThatDoesNotLapse(verdictInput);
 
-  const claim = freeTierClaim(verdictInput);
-  const endedBy = claim.states === "ended" && claim.how === "removed" ? claim.cause : null;
+  const endedBy = endingStatedInPlaceOfARating(verdictInput);
   const causeLineHtml = (label: string, color: string, cause: NonNullable<typeof riskCause>) =>
     `  <p class="risk-cause-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong style="color:${color}">${label}</strong> <span class="risk-cause-date" style="font-family:var(--mono)">${escHtmlServer(changeEntryDateLabel(cause))}</span> &mdash; ${changeSummaryHtml(cause, escHtmlServer)} <a href="#changes" style="white-space:nowrap">Full history &darr;</a></p>`;
   const riskCauseLine = endedBy
@@ -5132,9 +5131,9 @@ function buildVendorPage(slug: string): string | null {
     ? causeLineHtml(`Why ${riskLevel}:`, riskColor, riskCause)
     : "";
 
-  const demotionNamed = demotionTheVerdictNames(verdictInput);
-  const verdictLapseLine = demotionNamed
-    ? `  <p class="verdict-lapse-line" style="margin:.4rem 0 .6rem;font-size:.85rem;color:var(--text-muted)">${escHtmlServer(lapsingDemotionStated(demotionNamed))}</p>`
+  const recordTheVerdictRestsOn = endedBy ?? demotionTheVerdictNames(verdictInput);
+  const verdictLapseLine = recordTheVerdictRestsOn
+    ? `  <p class="verdict-lapse-line" style="margin:.4rem 0 .6rem;font-size:.85rem;color:var(--text-muted)">${escHtmlServer(lapsingDemotionStated(recordTheVerdictRestsOn))}</p>`
     : "";
 
   const retiredBadgeColor = "#8b949e";
@@ -5594,6 +5593,8 @@ ${allCompareLinks.join("\n")}
     : `${vendorName}'s free tier is called "${primary.tier}". ${primary.description}`);
   const faqReliableAnswer = offerHasEnded
     ? endedReliabilitySentence(vendorName)
+    : endedBy
+    ? endedClaimReliabilityAnswer(vendorName, endedBy)
     : levelWithheld
     ? `We cannot say. ${withheldLevelSentence(levelWithheld, vendorName, unconfirmableSince)} Nothing we have read describes these terms, so we are not publishing a stability judgement for this vendor until that is fixed.`
     : riskLevel === null
@@ -5612,7 +5613,9 @@ ${allCompareLinks.join("\n")}
     : eligibilityGateSentence + (levelWithheld
     ? `${withheldLevelSentence(levelWithheld, vendorName, unconfirmableSince)} We cannot confirm what this offer provides today, so we are not recommending it for production or for anything else until we can.`
     : hasFree
-    ? (riskLevel === "stable" || (primaryGate && historyLevel === "stable")
+    ? (endedBy
+      ? endedClaimReliabilityAnswer(vendorName, endedBy)
+      : riskLevel === "stable" || (primaryGate && historyLevel === "stable")
       ? `${vendorName}'s free tier can be suitable for small production workloads and side projects. ${primaryGate ? "It" : "We rate it stable and it"} offers ${keyLimit}, so it's a reasonable starting point.${vendorChanges.length > 0 ? ` ${narrowingSentence(vendorChanges, primary, termsSuperseded !== null)}` : ""} Monitor your usage against the limits and have an upgrade plan ready.`
       : riskLevel === null
       ? `${vendorName}'s free tier is usable for prototyping and development. ${primaryGate ? vendorHistorySentence(vendorName, historyLevel, riskCause) : levelWithheldBecause}`

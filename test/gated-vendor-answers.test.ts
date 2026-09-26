@@ -501,6 +501,8 @@ const CLAIMS_A_RATING = (vendor: string, category: string) => [
   `Best for ${category.toLowerCase()} workloads`,
 ];
 
+const RATING_A_STATED_ENDING_REPLACES = "We rate it risky";
+
 const NAMES_A_FREE_TIER = (vendor: string) => [
   `${vendor}'s free tier is called`,
   `${vendor} offers a free tier:`,
@@ -659,9 +661,12 @@ describe("the same page an ungated record renders is unchanged", () => {
     assert.deepStrictEqual(silentOnReliability.slice(0, 20), [], "ungated pages that stopped asking whether it is reliable");
   });
 
-  it("still makes every one of those claims somewhere", () => {
+  it("still makes every one of those claims somewhere, apart from the risky rating a stated ending replaces", () => {
+    const stillRatedRisky = ungated().filter(p => pageProse(p).includes(RATING_A_STATED_ENDING_REPLACES)).map(p => p.slug);
+    assert.deepStrictEqual(stillRatedRisky, [], "ungated pages that rate a vendor risky rather than state the ending that rating rests on");
     const unmade: string[] = [];
     for (const claim of [...CLAIMS_A_RATING("<vendor>", "<category>"), ...NAMES_A_FREE_TIER("<vendor>")]) {
+      if (claim === RATING_A_STATED_ENDING_REPLACES) continue;
       const made = ungated().filter(p =>
         pageProse(p).includes(
           claim.replace(/<vendor>/g, p.vendor).replace(/<category>/g, p.primary.category.toLowerCase()),

@@ -33,6 +33,8 @@ const STABILITY_CLAIMS: Array<{ name: string; pattern: RegExp }> = [
 
 const A_STABLE_HISTORY = /has a stable pricing history/;
 
+const A_VERDICT_A_PUBLISHED_CHANGE_SETS = /We rate it | — one recorded [^.]+\. We no longer rate it\./;
+
 const A_BARE_THRESHOLD = /<li>At [^<]*?, you'll need to upgrade\.<\/li>/;
 const A_THRESHOLD_WE_CANNOT_CONFIRM = /we cannot confirm that threshold today/;
 const AN_EMPTY_HISTORY_ABOUT_OUR_RECORDS =
@@ -370,7 +372,7 @@ describe("a refused change is not a signal that nothing changed", () => {
       const page = pages.get(subject.slug) ?? "";
       if (WITHHELD_FOR_A_REFUSAL.test(page)) moved.push(`/vendor/${subject.slug} withholds for a refusal it does not hold`);
       const verdict = verdictParagraphOf(page);
-      if (!/We rate it /.test(verdict)) moved.push(`/vendor/${subject.slug}: ${verdict.slice(0, 120)}`);
+      if (!A_VERDICT_A_PUBLISHED_CHANGE_SETS.test(verdict)) moved.push(`/vendor/${subject.slug}: ${verdict.slice(0, 120)}`);
     }
     assert.deepStrictEqual(
       moved.slice(0, 20),
@@ -808,7 +810,7 @@ describe("a page states the reason we withheld, not a reason its own refusal con
     }
     for (const subject of givenARating) {
       const verdict = verdictParagraphOf(pages.get(subject.slug) ?? "");
-      if (!/We rate it /.test(verdict)) moved.push(`/vendor/${subject.slug}: ${verdict.slice(0, 120)}`);
+      if (!A_VERDICT_A_PUBLISHED_CHANGE_SETS.test(verdict)) moved.push(`/vendor/${subject.slug}: ${verdict.slice(0, 120)}`);
     }
     assert.deepStrictEqual(moved, [], `a published change stopped setting the verdict:\n${moved.join("\n")}`);
   });
