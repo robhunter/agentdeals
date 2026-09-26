@@ -216,6 +216,9 @@
     "/alternative-to/deno-deploy": {
       "daily": true
     },
+    "/alternative-to/devin": {
+      "daily": true
+    },
     "/alternative-to/digitalocean": {
       "daily": true
     },
