@@ -1,6 +1,7 @@
 import { loadOffers } from "./data.js";
 import { offerRetired } from "./retirement.js";
 import { toSlug } from "./slug.js";
+import { statesATrialPeriod } from "./trial-period.js";
 import type { Offer } from "./types.js";
 
 export type EndedOffer = Pick<Offer, "vendor" | "tier">;
@@ -24,12 +25,6 @@ const OPENS_BY_DENYING_A_FREE_TIER = /^\s*(?:none|no free (?:tier|plan|allowance
 
 export function statesNoFreeTier(text: string): boolean {
   return OPENS_BY_DENYING_A_FREE_TIER.test(text);
-}
-
-const STATES_A_TRIAL_PERIOD = /\btrial\b|\bfor \d+ (?:days?|weeks?|months?)\b/i;
-
-export function statesATrialPeriod(text: string): boolean {
-  return STATES_A_TRIAL_PERIOD.test(text);
 }
 
 const AFFIRMATIVE_FREE = /\bfree\b|\bfreemium\b|\bno credit card\b|\bgenerous\b/i;

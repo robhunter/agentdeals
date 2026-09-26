@@ -1,6 +1,7 @@
 import { assertedVendorSlugs, changeLogAnchorFor, changeLogVendorNamed, isNonVendorSubject, resolveVendorSlug, toSlug, vendorSlugMap } from "./vendor-slug.js";
 import { SOURCE_MARKER_MARKUP, changeSummaryHtml, changeSummaryText } from "./change-citation.js";
 import { ENDED_STATUS_WHEN_THE_TIER_NAMES_NONE, recordedTierSentence } from "./retirement.js";
+import { statesATrialPeriod } from "./trial-period.js";
 
 export interface CompiledPageRecord {
   vendor: string;
@@ -309,7 +310,7 @@ export function markCompiledFigures(
       edits.push({ start: slot.innerStart + slot.inner.length, end: slot.innerStart + slot.inner.length, text: badge });
       if (!verdict.freeTierEnded || slot.alreadyStatesRemoval) continue;
       const description = CARD_DESCRIPTION.exec(staticHtml.slice(slot.end, slot.end + 6000));
-      if (!description) continue;
+      if (!description || statesATrialPeriod(plainText(description[0]))) continue;
       edits.push({
         start: slot.end + description.index,
         end: slot.end + description.index + description[0].length,
@@ -334,7 +335,7 @@ export function markCompiledFigures(
       start: rowStart,
       end: rowEnd + "</tr>".length,
       text:
-        verdict.freeTierEnded && !slot.alreadyStatesRemoval
+        verdict.freeTierEnded && !slot.alreadyStatesRemoval && !statesATrialPeriod(plainText(row))
           ? withEndedRowCells(withProvider, cellEndInRow + shift)
           : withProvider,
     });
