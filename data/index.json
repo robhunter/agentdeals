@@ -13773,9 +13773,9 @@
     {
       "vendor": "Webvizio",
       "category": "Communication",
-      "description": "Website feedback tool, website review software, and bug reporting tool for streamlining web development collaboration on tasks directly on live websites and web apps, images, PDFs, and design files.",
-      "tier": "Free",
-      "url": "https://webvizio.com",
+      "description": "Website feedback and bug reporting tool for web development teams — no permanent free tier. 7-day free trial of the Advanced plan, no credit card required; Solo is $8/month for 2 users and 5 projects.",
+      "tier": "Trial",
+      "url": "https://webvizio.com/pricing/",
       "tags": [
         "developer-tools",
         "free-for-dev"
@@ -17196,8 +17196,8 @@
     {
       "vendor": "fivenines.io",
       "category": "Monitoring",
-      "description": "Linux server monitoring with real‑time dashboards and alerting — free forever for up to 5 monitored servers at 60-seconds interval. No credit card required.",
-      "tier": "Free",
+      "description": "Linux server monitoring with real-time dashboards and alerting — no permanent free tier. 14-day free trial with no credit card required; paid plans from €19/month.",
+      "tier": "Trial",
       "url": "https://fivenines.io/",
       "tags": [
         "monitoring",
@@ -31691,8 +31691,8 @@
     {
       "vendor": "Applitools Eyes",
       "category": "Testing",
-      "description": "Free tier: 50 Test Units per month, unlimited users. AI-powered Visual AI testing to detect meaningful visual differences while ignoring acceptable rendering variations. Supports Playwright, Cypress, Selenium, Storybook. No credit card required.",
-      "tier": "Free",
+      "description": "AI-powered visual testing for Playwright, Cypress, Selenium and Storybook — no permanent free tier. Free trial; the Starter plan is $667/month paid annually, with unlimited users and 100,000 component checkpoints or 1,000 page checkpoints.",
+      "tier": "Trial",
       "url": "https://applitools.com/platform-pricing/",
       "tags": [
         "testing",
