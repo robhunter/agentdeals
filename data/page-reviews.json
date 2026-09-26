@@ -979,7 +979,6 @@
       "tier": "A",
       "vendors_asserted": [
         "cloudflare-d1",
-        "cockroachdb",
         "firebase",
         "neon",
         "planetscale",
@@ -994,7 +993,6 @@
         "appwrite-cloud",
         "cloudflare-d1",
         "cloudflare-kv",
-        "cockroachdb",
         "convex",
         "firebase",
         "lancedb",
@@ -1017,17 +1015,17 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 49,
+      "table_figures": 47,
       "table_figures_from_records": 14,
       "tables": [
         {
           "label": "Main Comparison Table",
-          "figures": 14,
+          "figures": 13,
           "from_records": 0
         },
         {
           "label": "Postgres-Compatible Databases",
-          "figures": 5,
+          "figures": 4,
           "from_records": 0
         },
         {
@@ -1115,17 +1113,17 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 150,
-      "table_figures_from_records": 42,
+      "table_figures": 149,
+      "table_figures_from_records": 43,
       "tables": [
         {
           "label": "Pricing Comparison Table",
-          "figures": 39,
+          "figures": 38,
           "from_records": 0
         },
         {
           "label": "What You Actually Get for Free",
-          "figures": 16,
+          "figures": 15,
           "from_records": 0
         },
         {
@@ -1135,8 +1133,8 @@
         },
         {
           "label": "Recent Pricing Changes",
-          "figures": 45,
-          "from_records": 42
+          "figures": 46,
+          "from_records": 43
         }
       ],
       "reads_changes": true,
@@ -1852,12 +1850,12 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 50,
+      "table_figures": 48,
       "table_figures_from_records": 0,
       "tables": [
         {
           "label": "2. 🟢 Low Risk — Safe to Build On",
-          "figures": 7,
+          "figures": 5,
           "from_records": 0
         },
         {
@@ -1872,7 +1870,7 @@
         },
         {
           "label": "5. ⚫ Already Changed — Lessons Learned",
-          "figures": 9,
+          "figures": 10,
           "from_records": 0
         },
         {
@@ -1882,7 +1880,7 @@
         },
         {
           "label": "7. Full Scoring Table",
-          "figures": 25,
+          "figures": 24,
           "from_records": 0
         }
       ],
@@ -2591,7 +2589,6 @@
       "tier": "A",
       "vendors_asserted": [
         "appwrite",
-        "cockroachdb",
         "neon",
         "pocketbase",
         "supabase",
@@ -2610,8 +2607,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 28,
-      "table_figures_from_records": 8,
+      "table_figures": 25,
+      "table_figures_from_records": 5,
       "tables": [
         {
           "label": "1. Free Tier Comparison Table",
@@ -2625,8 +2622,8 @@
         },
         {
           "label": "5. Other Database Alternatives",
-          "figures": 8,
-          "from_records": 8
+          "figures": 5,
+          "from_records": 5
         }
       ],
       "reads_changes": true,
@@ -3221,13 +3218,13 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 34,
-      "table_figures_from_records": 6,
+      "table_figures": 26,
+      "table_figures_from_records": 2,
       "tables": [
         {
           "label": "The Stack",
-          "figures": 34,
-          "from_records": 6
+          "figures": 26,
+          "from_records": 2
         }
       ],
       "reads_changes": true,
