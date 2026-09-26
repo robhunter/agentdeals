@@ -11793,6 +11793,20 @@
       "alternatives": [],
       "recorded_date": "2026-09-26",
       "date_source": "hand_written"
+    },
+    {
+      "vendor": "Groq",
+      "change_type": "limits_reduced",
+      "date": "2026-08-16",
+      "date_source": "vendor_page",
+      "summary": "Groq shut down Llama 3.1 8B and Llama 3.3 70B on its free and developer plans. On the free plan Llama 3.1 8B had allowed 14,400 requests and 500,000 tokens a day; the free chat models left (gpt-oss-120b, gpt-oss-20b and a Qwen 27B model) allow 1,000 requests and 200,000 tokens a day each.",
+      "previous_state": "Free plan (console.groq.com/docs/rate-limits, Internet Archive capture of 2026-08-15): llama-3.1-8b-instant 30 RPM, 14.4K RPD, 6K TPM, 500K TPD; llama-3.3-70b-versatile 30 RPM, 1K RPD, 12K TPM, 100K TPD; gpt-oss-120b and gpt-oss-20b 30 RPM, 1K RPD, 8K TPM, 200K TPD.",
+      "current_state": "\"This deprecation applies to free and developer-tier usage; enterprise customers with a committed-spend contract are not affected.\" Free chat models: gpt-oss-120b, gpt-oss-20b, gpt-oss-safeguard-20b and Qwen3.8 27B, each 30 RPM, 1K RPD, 8K TPM, 200K TPD.",
+      "impact": "medium",
+      "source_url": "https://console.groq.com/docs/deprecations",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-09-26"
     }
   ]
 }

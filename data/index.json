@@ -2990,7 +2990,7 @@
     {
       "vendor": "Groq",
       "category": "AI / ML",
-      "description": "Ultra-fast LLM inference on LPU hardware — free tier: 30 RPM, 100K-500K tokens/day depending on model. Supports Llama 4 Scout 17B, Llama 3.3 70B, Qwen3 32B, Whisper, and more. No credit card required",
+      "description": "Fast LLM inference on Groq's LPU hardware. Free plan: gpt-oss-120b, gpt-oss-20b and Qwen3.8 27B, each at 30 requests a minute, 1,000 requests and 200,000 tokens a day, plus Whisper speech-to-text at 2,000 requests a day. Llama 3.3 70B and Llama 3.1 8B left the free and developer plans on 2026-08-16 and are Enterprise-only.",
       "tier": "Free",
       "url": "https://groq.com/pricing",
       "tags": [
