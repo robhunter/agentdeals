@@ -3859,13 +3859,7 @@
       "category": "Testing",
       "alternatives": [],
       "recorded_date": "2026-04-13",
-      "date_source": "hand_written",
-      "resolution": {
-        "state": "retracted",
-        "date": "2026-09-26",
-        "detail": "Retracted 2026-09-26: Katalon did not remove the free version of Katalon Studio. Its docs say \"Katalon Studio is a single product available for Free and Paid tiers\", a capture of its download page on 2026-05-09 says Studio \"continues to work for free with core functionality\" after the trial, and its pricing page lists Free today (\"For students and personal projects\").",
-        "source_url": "https://katalon.com/pricing"
-      }
+      "date_source": "hand_written"
     },
     {
       "vendor": "TestingBot",
