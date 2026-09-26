@@ -58,26 +58,6 @@
         "CockroachDB"
       ],
       "recorded_date": "2026-04-19",
-      "date_source": "hand_written",
-      "resolution": {
-        "state": "retracted",
-        "date": "2026-09-26",
-        "detail": "Retracted 2026-09-26: Xata's free tier ended when it retired Xata Lite on 2026-02-28, which our Xata Lite record holds. The Xata platform had no free tier before April (\"We don't have a free tier for the Xata platform\", 2026-04-06), and on 2026-04-15 Xata open-sourced it under Apache 2.0, adding a free self-hosted option.",
-        "source_url": "https://web.archive.org/web/20260406174653/https://xata.io/pricing"
-      }
-    },
-    {
-      "vendor": "Xata",
-      "change_type": "new_free_tier",
-      "date": "2026-04-15",
-      "summary": "Xata open-sourced its platform under the Apache 2.0 license on 2026-04-15. Its pricing page added a free self-hosted option (\"Open Source Free forever. Free Deploy on Kubernetes\"); Xata Cloud stayed paid, starting with a 14-day free trial.",
-      "previous_state": "\"We don't have a free tier for the Xata platform, however, you can start with as low as $9 per month and cancel anytime.\" (2026-04-06)",
-      "current_state": "\"Open Source Free forever. Free Deploy on Kubernetes Copy-on-Write branches Scale-to-zero Community support\" (2026-04-19). \"Xata Cloud starts with a 14-day free trial.\"",
-      "impact": "low",
-      "source_url": "https://xata.io/blog/xata-is-now-open-source",
-      "category": "Databases",
-      "alternatives": [],
-      "recorded_date": "2026-09-26",
       "date_source": "hand_written"
     },
     {
@@ -1323,7 +1303,7 @@
       "date": "2022-11-28",
       "summary": "Heroku stopped offering free dynos, hobby-dev Heroku Postgres and hobby-dev Heroku Data for Redis on 2022-11-28, as announced on 2022-08-25.",
       "previous_state": "Free dyno: 550 hours/month (1,000 with credit card), free Postgres: 10K rows, free Redis: 25 MB. Dynos slept after 30 min inactivity",
-      "current_state": "No free tier. Eco dynos: \"1000 dyno hours for $5 per month\". Postgres Essential 0: \"$5/mo.\" Key-Value Store Mini: \"Max of $3/month\".",
+      "current_state": "No free tier. Eco dynos cost $5 a month for 1,000 dyno hours, the cheapest Heroku Postgres plan is $5 a month, and Key-Value Store Mini costs at most $3 a month.",
       "impact": "high",
       "source_url": "https://devcenter.heroku.com/changelog-items/2502",
       "category": "Cloud Hosting",
@@ -1342,7 +1322,7 @@
       "date": "2026-09-26",
       "summary": "Data correction - Heroku's $5 dyno plan is Eco, not Mini. Its only current Mini plan is Key-Value Store Mini, at a maximum of $3 a month.",
       "previous_state": "Recorded 2026-03-19 as: Heroku removed all free dynos, free Heroku Postgres, and free Heroku Data for Redis. The iconic PaaS that defined 'free tier' for a generation eliminated free offerings entirely after Salesforce acquisition dated 2022-11-28",
-      "current_state": "No free tier. Eco dynos: \"1000 dyno hours for $5 per month\". Postgres Essential 0: \"$5/mo.\" Key-Value Store Mini: \"Max of $3/month\".",
+      "current_state": "No free tier. Eco dynos cost $5 a month for 1,000 dyno hours, the cheapest Heroku Postgres plan is $5 a month, and Key-Value Store Mini costs at most $3 a month.",
       "impact": "low",
       "source_url": "https://devcenter.heroku.com/changelog-items/2502",
       "category": "Cloud Hosting",
