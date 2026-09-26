@@ -2573,7 +2573,8 @@
       "source_url": "https://pinecone.io/pricing",
       "record_date": "2026-09-26",
       "change_type": "limits_increased",
-      "summary": "The Starter plan is still available as a free tier. The limits have been updated."
+      "summary": "The Starter plan is still available as a free tier. The limits have been updated.",
+      "reverted_on": "2026-09-26"
     },
     {
       "vendor": "AppSignal",

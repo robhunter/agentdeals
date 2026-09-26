@@ -11082,7 +11082,13 @@
       "category": "Source Control",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-26"
+      "recorded_date": "2026-09-26",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: Gitea did not add a tier. Its site offered Gitea Cloud with a 30-day free trial in the Internet Archive's capture of 2026-02-02 (\"Try Gitea Cloud free for 30 days\"), before our catalogue text was written; the reading compared the page with our text, which left Gitea Cloud out. The free open-source edition is unchanged.",
+        "source_url": "https://web.archive.org/web/20260202203636/https://about.gitea.com/"
+      }
     },
     {
       "vendor": "Pinecone",
@@ -11099,7 +11105,13 @@
       "category": "AI / ML",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-26"
+      "recorded_date": "2026-09-26",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: Pinecone's limits did not change. The pricing page, read 2026-09-26, still lists the Starter plan with \"Indexes Up to 5\"; the reading left the index limit out and the record called the difference an increase.",
+        "source_url": "https://www.pinecone.io/pricing/"
+      }
     },
     {
       "vendor": "Tomorrow.io Weather API",
@@ -11166,20 +11178,34 @@
     },
     {
       "vendor": "Composio",
-      "change_type": "limits_reduced",
-      "date": "2026-09-26",
-      "date_source": "discovered",
-      "summary": "The free tier now has limits: 100,000 tool calls, 50,000 triggers, and 3 team members per month.",
+      "change_type": "limits_increased",
+      "date": "2026-08-15",
+      "date_source": "vendor_page",
+      "summary": "Composio's new pricing, for signups on or after 2026-08-15, raised the free plan from 20,000 tool calls a month (triggers counted inside them) to 100,000 tool calls and a separate 50,000 triggers a month, with 3 team members. Accounts from before 2026-08-15 keep the old plan through 2026-12-31.",
       "tier": "Free",
       "tier_direction": "narrowed",
-      "previous_state": "Integration platform for AI Agents and LLMs. Integrate over 200+ tools across the agentic internet.",
-      "current_state": "Free $0 No credit card required 100,000 tool calls / mo 50,000 triggers / mo 3 team members",
+      "previous_state": "Totally Free plan: 20,000 tool calls a month, with triggers counted as tool calls (pricing page, Internet Archive captures of 2026-02-27 and 2026-08-04)",
+      "current_state": "\"Free $0 No credit card required 100,000 tool calls / mo 50,000 triggers / mo 3 team members\". \"New pricing applies to signups on or after August 15, 2026. Existing customers stay on their current plan through December 31, 2026.\"",
       "impact": "medium",
       "source_url": "https://composio.dev/pricing",
       "category": "AI / ML",
       "alternatives": [],
       "detected_by": "reverify-ai",
       "recorded_date": "2026-09-26"
+    },
+    {
+      "vendor": "Composio",
+      "change_type": "record_corrected",
+      "date": "2026-09-26",
+      "summary": "Data correction - Composio's free plan grew with its new pricing for signups from 2026-08-15, from 20,000 to 100,000 tool calls a month plus 50,000 triggers. Our re-read of 2026-09-26 recorded it as a reduction, because our stored text stated no free-plan terms to compare with.",
+      "previous_state": "Recorded 2026-09-26 as limits_reduced: The free tier now has limits: 100,000 tool calls, 50,000 triggers, and 3 team members per month.",
+      "current_state": "limits_increased, dated 2026-08-15 from the vendor's pricing page",
+      "impact": "low",
+      "source_url": "https://composio.dev/pricing",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-09-26",
+      "date_source": "hand_written"
     },
     {
       "vendor": "MinIO",
