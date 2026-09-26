@@ -19028,7 +19028,7 @@ function buildHetznerPricing2026Page(): string {
     { vendor: "DigitalOcean", spec: "Basic — 1 vCPU, 512 MB", price: "$4/mo", region: "Global", note: "" },
     { vendor: "Vultr", spec: "Cloud — 1 vCPU, 1 GB", price: "$5/mo", region: "Global", note: "Not re-read since March 2026" },
     { vendor: "Linode/Akamai", spec: "Nanode — 1 vCPU, 1 GB", price: "$5/mo", region: "Global", note: "Not re-read since March 2026" },
-    { vendor: "OVHcloud", spec: "VPS-1 — 2 vCores, 4 GB", price: "$5.35/mo", region: "EU", note: "VPS 2027 range; $4.54/mo on 12 months. The 2026 range rose 36-49% from April 2026" },
+    { vendor: "OVHcloud", spec: "VPS-1 — 2 vCores, 4 GB", price: "€4.49/mo", region: "EU", note: "VPS 2027 range, ex-VAT, without commitment (€3.81/mo on 12 months). $5.35/mo in the US. The 2026 range rose 36-49% from April 2026" },
     { vendor: "AWS Lightsail", spec: "2 vCPUs, 512 MB", price: "$5/mo", region: "US", note: "The $3.50 bundle is IPv6-only; every other row here has a public IPv4 address" },
     { vendor: "Oracle Cloud", spec: oracleArmAllowance(), price: "Free (Always Free)", region: "Global", note: "Best free tier for VMs" },
     { vendor: "Railway", spec: "Free Plan", price: "$0/mo", region: "US", note: "30-day trial with $5 credits, then $1 of free credit a month" },
@@ -19264,7 +19264,7 @@ ${mcpCtaCss()}
   <p class="section-intro">Hetzner is not an outlier — the entire European hosting market repriced through 2026.</p>
   <div class="context-box">
     <ul>
-      <li><strong>OVHcloud:</strong> raised prices on its VPS 2026 range from 1 April 2026, with euro list prices up 36-49% (VPS-1 from €4.49 to €6.49 a month). It has since launched a VPS 2027 range, whose VPS-1 (2 vCores, 4 GB RAM) is $5.35 a month without commitment. Public Cloud, Private Cloud and Bare Metal rose 9-11% on average for new deployments.</li>
+      <li><strong>OVHcloud:</strong> raised prices on its VPS 2026 range from 1 April 2026, with euro list prices up 36-49% (VPS-1 from €4.49 to €6.49 a month). It has since launched a VPS 2027 range, whose VPS-1 (2 vCores, 4 GB RAM) is €4.49 a month ex-VAT without commitment in Europe ($5.35 in the US). Public Cloud, Private Cloud and Bare Metal rose 9-11% on average for new deployments.</li>
       <li><strong>Netcup:</strong> Also raised prices. Community reports increases across VPS and dedicated server lines.</li>
       <li><strong>US cloud providers:</strong> Already priced 3-6x higher than Hetzner. AWS, GCP, and Azure haven't announced increases yet, but their hardware costs are rising too — they have more margin to absorb it.</li>
       <li><strong>The AI paradox:</strong> AI infrastructure buildout is making hardware more expensive for everyone. The companies building AI consume the supply that smaller operations depend on. As one HN commenter put it: "The AI bubble is pricing out smaller operations."</li>
