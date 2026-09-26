@@ -201,11 +201,16 @@ describe("#1038 — the level is checkable", () => {
     for (const offer of listed) {
       const { text } = await get(`/vendor/${toSlug(offer.vendor)}`);
       const h1 = text.match(/<h1>[\s\S]*?<\/h1>/)?.[0] ?? "";
-      assert.ok(new RegExp(offer.risk_level!).test(h1), `${offer.vendor}: expected ${offer.risk_level} in the <h1>`);
-      assert.ok(
-        text.includes(`Why ${offer.risk_level}:`),
-        `${offer.vendor}: <h1> says ${offer.risk_level} and the page never says why`,
-      );
+      const ending = h1.match(/<span class="risk-badge"[^>]*>(free tier removed|deprecated)<\/span>/)?.[1];
+      if (ending) {
+        assert.ok(text.includes("How it ended:"), `${offer.vendor}: <h1> says ${ending} and the page never says how it ended`);
+      } else {
+        assert.ok(new RegExp(offer.risk_level!).test(h1), `${offer.vendor}: expected ${offer.risk_level} in the <h1>`);
+        assert.ok(
+          text.includes(`Why ${offer.risk_level}:`),
+          `${offer.vendor}: <h1> says ${offer.risk_level} and the page never says why`,
+        );
+      }
       assert.ok(
         text.includes(offer.risk_cause.date),
         `${offer.vendor}: the cause is dated ${offer.risk_cause.date} and that date is nowhere on the page`,

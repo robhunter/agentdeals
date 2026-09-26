@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 import {
   CANNOT_CONFIRM_THESE_TERMS,
   CHANGE_KIND_NOUN,
+  freeTierClaim,
   gateStatesAnEnding,
   narrowingSentence,
   publishedVendorLevel,
@@ -23,6 +24,7 @@ import { isNoLongerInForce } from "../dist/change-resolution.js";
 import { levelWithheldReason } from "../dist/source-check.js";
 import { vendorVerdictContextFrom } from "../dist/vendor-verdict-input.js";
 import { offerEnded, endedVerdictSentence, ENDED_BADGE_LABEL } from "../dist/retirement.js";
+import { PRODUCT_DEPRECATED } from "../dist/product-deprecation.js";
 import { CONFIRMED_DATE_LABEL, UNCONFIRMED_DATE_LABEL } from "../dist/read-date.js";
 import { gateFor, utcDate } from "../dist/ranking.js";
 import type { DealChange, RiskCause } from "../dist/types.js";
@@ -327,6 +329,7 @@ interface VendorRow {
   expected: "stable" | "caution" | "risky" | null;
   historyLevel: "stable" | "caution" | "risky";
   badge: string;
+  endingLabel: string | null;
   ended: boolean;
   badgeEnded: boolean;
   withheld: ReturnType<typeof levelWithheldReason>;
@@ -365,6 +368,10 @@ function vendorRows(): VendorRow[] {
     const ended = offerEnded(primary);
     const badgeEnded = ended || gateStatesAnEnding(gate?.code ?? null);
     const termsSuperseded = context.input.termsSuperseded ?? false;
+    const claim = freeTierClaim(context.input);
+    const endingLabel = claim.states === "ended" && claim.how === "removed"
+      ? (claim.cause.change_type === PRODUCT_DEPRECATED ? "deprecated" : "free tier removed")
+      : null;
     rows.push({
       slug,
       vendor,
@@ -372,9 +379,10 @@ function vendorRows(): VendorRow[] {
       historyLevel: context.input.historyLevel,
       ended,
       badgeEnded,
-      badge: badgeEnded ? ENDED_BADGE_LABEL : expected,
+      badge: endingLabel ?? (badgeEnded ? ENDED_BADGE_LABEL : expected),
+      endingLabel,
       withheld,
-      badgeRendered: badgeEnded || !(gate || enriched.risk_level === null || (enriched.link_unreachable && expected === "stable")),
+      badgeRendered: endingLabel !== null || badgeEnded || !(gate || enriched.risk_level === null || (enriched.link_unreachable && expected === "stable")),
       sentence: vendorVerdictSentence(context.input),
       readAgainOn: refusedReadWeHold(context.input)?.read_again_on ?? null,
       termsSuperseded,
@@ -484,7 +492,7 @@ describe("vendor verdict — as rendered", () => {
 
   const badgeWord = (html: string): string | null => {
     const h1 = html.match(/<h1>[\s\S]*?<\/h1>/)?.[0] ?? "";
-    return h1.match(/<span class="risk-badge"[^>]*>([a-z]+)<\/span>/)?.[1] ?? null;
+    return h1.match(/<span class="risk-badge"[^>]*>([a-z ]+)<\/span>/)?.[1] ?? null;
   };
 
   const verdictParagraph = (html: string): string => {
@@ -530,11 +538,11 @@ describe("vendor verdict — as rendered", () => {
         const verdict = verdictParagraph(html);
         const cell = comparisonCell(html);
 
-        if (badge !== null && badge !== ENDED_BADGE_LABEL) rating++;
+        if (badge !== null && badge !== ENDED_BADGE_LABEL && badge !== row.endingLabel) rating++;
         if (row.gate && !row.badgeEnded && badge !== null) {
           wrong.push(`${row.slug}: the h1 of a ${row.gate.code} record rates it ${badge}`);
         }
-        if (row.gate && row.badgeEnded && badge !== ENDED_BADGE_LABEL) {
+        if (row.gate && row.badgeEnded && badge !== (row.endingLabel ?? ENDED_BADGE_LABEL)) {
           wrong.push(`${row.slug}: the h1 of an ended offer reads ${badge ?? "nothing"}`);
         }
         if (row.badgeRendered && badge !== row.badge) {
@@ -715,6 +723,6 @@ describe("vendor verdict — as rendered", () => {
     const pageMeta = html.match(/<p class="page-meta">([\s\S]*?)<\/p>/)?.[1] ?? "";
     assert.match(pageMeta, new RegExp(`(${CONFIRMED_DATE_LABEL}|${UNCONFIRMED_DATE_LABEL}) [A-Z][a-z]+ \\d{4}`));
     assert.doesNotMatch(pageMeta, /Discontinued/);
-    assert.strictEqual(badgeWord(html), "risky", "a product being sunset is still rated on the record we hold");
+    assert.strictEqual(badgeWord(html), "deprecated", "a product being sunset heads with the label its badge carries");
   });
 });
