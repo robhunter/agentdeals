@@ -16038,9 +16038,9 @@
     {
       "vendor": "Phase Two",
       "category": "Auth",
-      "description": "Keycloak Open Source Identity and Access Management. Free Starter realm up to 100 users. SSO connections require paid Premium tier ($749/month). Leveraging Phase Two's enhanced Keycloak container with Organization extension.",
-      "tier": "Free",
-      "url": "https://phasetwo.io",
+      "description": "Managed Keycloak hosting with Phase Two's Organization extension. No free tier since 2026-07-30, when Phase Two shut down its free shared realms. The Starter cluster is $149/month with a 30-day free trial, for up to 15K monthly active users.",
+      "tier": "Trial",
+      "url": "https://phasetwo.io/pricing/hosting/",
       "tags": [
         "auth",
         "authentication",

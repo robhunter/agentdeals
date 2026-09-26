@@ -983,11 +983,11 @@
       "vendor": "PlanetScale",
       "change_type": "free_tier_removed",
       "date": "2024-04-08",
-      "summary": "PlanetScale removed free Hobby plan entirely. All databases on free tier deleted after 30-day grace period. Minimum plan now Scaler at $39/month",
+      "summary": "PlanetScale retired its free Hobby plan on 2024-04-08, after stopping new Hobby databases on 2024-03-06. Hobby databases that were not upgraded were put to sleep with their data kept. The cheapest plan became Scaler Pro at $39 a month with 10 GB of storage.",
       "previous_state": "Free Hobby plan: 5 GB storage, 1B row reads/month, 10M row writes/month, 1 production branch, 1 development branch",
-      "current_state": "No free tier. Scaler plan starts at $39/month (25 GB storage). Enterprise custom pricing. Company pivoted to enterprise focus",
+      "current_state": "No free tier. Scaler Pro from $39/month with 10 GB storage included. Enterprise custom pricing",
       "impact": "high",
-      "source_url": "https://planetscale.com/blog/planetscale-forever",
+      "source_url": "https://planetscale.com/changelog/deprecating-hobby",
       "category": "Databases",
       "alternatives": [
         "Neon",
@@ -2076,12 +2076,12 @@
     {
       "vendor": "Phase Two",
       "change_type": "limits_reduced",
-      "date": "2026-04-12",
-      "summary": "Free tier significantly reduced: users from 1,000 to 100, SSO connections from 10 to 0 (now requires paid Premium tier)",
-      "previous_state": "1,000 users, 10 SSO connections",
-      "current_state": "100 users, 0 SSO connections (SSO requires $749/month Premium)",
+      "date": "2025-09-16",
+      "summary": "Phase Two replaced its free shared-cluster Starter tier (fewer than 1,000 users and 10 SSO connections) with a $0 Starter tier capped at 100 users and no SSO connections. SSO started at the $749-a-month Premium tier.",
+      "previous_state": "Starter, always free: 1 shared cluster, fewer than 1,000 users, fewer than 10 SSO connections",
+      "current_state": "Starter, $0/month: 100 users, SSO connections not included (Premium $749/month)",
       "impact": "high",
-      "source_url": "https://phasetwo.io",
+      "source_url": "https://github.com/p2-inc/p2-inc.github.io/blob/84e740dcf78abb4338ac4c69deb47eede7d453a0/pricing/hosting/index.html",
       "category": "Auth",
       "alternatives": [
         "Keycloak",
@@ -2790,12 +2790,12 @@
     {
       "vendor": "PDFMonkey",
       "change_type": "limits_reduced",
-      "date": "2026-04-12",
-      "summary": "Free plan reduced from 300 to 20 documents/month",
+      "date": "2025-03-24",
+      "summary": "PDFMonkey cut its Free plan from 300 to 20 documents a month on 2025-03-24. It announced the change on 2025-02-24, alongside a new €5-a-month Starter plan with 300 documents.",
       "previous_state": "300 documents/month",
       "current_state": "20 documents/month",
       "impact": "low",
-      "source_url": "https://www.pdfmonkey.io/",
+      "source_url": "https://pdfmonkey.io/blog/2025-02-24-starter-plan/",
       "category": "Dev Utilities",
       "alternatives": [],
       "recorded_date": "2026-04-12",
@@ -2813,7 +2813,13 @@
       "category": "Dev Utilities",
       "alternatives": [],
       "recorded_date": "2026-04-12",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: redirect.pizza's Free plan did not change near 2026-04-12. The record merged two unrelated changes: the Free plan went from 10 sources to 5 source hostnames in autumn 2021, and on 2025-09-12 its traffic limit rose from 100,000 to 250,000 requests a month.",
+        "source_url": "https://redirect.pizza/changelog/2025-09-12-unlimited-traffic"
+      }
     },
     {
       "vendor": "Renamer.ai",
@@ -10543,6 +10549,76 @@
       "alternatives": [],
       "detected_by": "reverify-ai",
       "recorded_date": "2026-09-25"
+    },
+    {
+      "vendor": "PDFMonkey",
+      "change_type": "record_corrected",
+      "date": "2026-09-26",
+      "summary": "Data correction - PDFMonkey's cut from 300 to 20 free documents a month took effect on 2025-03-24, not 2026-04-12. Its announcement is dated 2025-02-24, and nothing changed near April 2026.",
+      "previous_state": "Recorded 2026-04-12 as: Free plan reduced from 300 to 20 documents/month, dated 2026-04-12",
+      "current_state": "\"The new Free Plan will take effect on March 24, 2025.\" Free plan: 20 documents per month.",
+      "impact": "medium",
+      "source_url": "https://pdfmonkey.io/blog/2025-02-24-starter-plan/",
+      "category": "Dev Utilities",
+      "alternatives": [],
+      "recorded_date": "2026-09-26",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Phase Two",
+      "change_type": "record_corrected",
+      "date": "2026-09-26",
+      "summary": "Data correction - Phase Two's cut to 100 users and no SSO on its free Starter tier went live on 2025-09-16, not 2026-04-12. Its pricing page was the same in April 2026 as in October 2025.",
+      "previous_state": "Recorded 2026-04-12 as: free tier reduced from 1,000 to 100 users and from 10 SSO connections to 0, dated 2026-04-12",
+      "current_state": "Phase Two's site deploy of 2025-09-16 shows \"Starter … $0/month\" with \"Users 100\" and \"SSO connections Not included in Starter\".",
+      "impact": "medium",
+      "source_url": "https://github.com/p2-inc/p2-inc.github.io/blob/84e740dcf78abb4338ac4c69deb47eede7d453a0/pricing/hosting/index.html",
+      "category": "Auth",
+      "alternatives": [],
+      "recorded_date": "2026-09-26",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Phase Two",
+      "change_type": "free_tier_removed",
+      "date": "2026-07-30",
+      "summary": "Phase Two shut down its free shared realms on 2026-07-30, 30 days after announcing it on 2026-06-30. Its cheapest plan is now the Starter cluster at $149 a month, with a 30-day free trial.",
+      "previous_state": "Free Starter realm on shared infrastructure: up to 100 users, no SSO connections",
+      "current_state": "No free tier. Starter cluster $149/month after a 30-day free trial",
+      "impact": "high",
+      "source_url": "https://phasetwo.io/blog/starter-tier-launch/",
+      "category": "Auth",
+      "alternatives": [],
+      "recorded_date": "2026-09-26",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "redirect.pizza",
+      "change_type": "limits_increased",
+      "date": "2025-09-12",
+      "summary": "redirect.pizza raised its Free plan's monthly traffic limit from 100,000 to 250,000 requests, and gave paid plans unlimited traffic.",
+      "previous_state": "Free plan: 5 source hostnames, 100,000 requests a month",
+      "current_state": "Free plan: 5 source hostnames, 250,000 requests a month",
+      "impact": "low",
+      "source_url": "https://redirect.pizza/changelog/2025-09-12-unlimited-traffic",
+      "category": "Dev Utilities",
+      "alternatives": [],
+      "recorded_date": "2026-09-26",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "PlanetScale",
+      "change_type": "record_corrected",
+      "date": "2026-09-26",
+      "summary": "Data correction - PlanetScale's Hobby databases were put to sleep with their data kept, not deleted, and the cheapest remaining plan was Scaler Pro at $39 a month with 10 GB, not Scaler with 25 GB.",
+      "previous_state": "Recorded 2026-03-02 as: all free-tier databases deleted after a 30-day grace period; minimum plan Scaler at $39/month with 25 GB; company pivoted to enterprise focus",
+      "current_state": "\"Databases which are not upgraded by April 8th will be put into sleep mode.\" \"Will PlanetScale delete my data? No!\" Scaler Pro started at $39/month with 10 GB included.",
+      "impact": "medium",
+      "source_url": "https://planetscale.com/docs/plans/hobby-plan-deprecation-faq",
+      "category": "Databases",
+      "alternatives": [],
+      "recorded_date": "2026-09-26",
+      "date_source": "hand_written"
     }
   ]
 }
