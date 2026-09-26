@@ -23160,7 +23160,7 @@ function buildGeminiApiPricingChangesPage(): string {
   ];
 
   const costTiers = [
-    { tier: "Light", requests: "100 req/day", description: "Hobby projects, learning, prototyping", geminiBefore: "$0", geminiAfter: "$0 (Flash, Flash-Lite, 2.5 Pro)", groq: "$0", cerebras: "$0", mistral: "$0", openrouter: "$0", deepseek: "~$0.08/day" },
+    { tier: "Light", requests: "100 req/day", description: "Hobby projects, learning, prototyping", geminiBefore: "$0", geminiAfter: "$0 (Flash, Flash-Lite, 2.5 Pro)", groq: "$0", cerebras: "$0", mistral: "$0", openrouter: "$0", deepseek: "~$0.25/mo" },
     { tier: "Moderate", requests: "1,000 req/day", description: "Active development, small apps", geminiBefore: "$0 (within old limits)", geminiAfter: "$15-30/mo (paid plan required)", groq: "$0", cerebras: "$0", mistral: "$0", openrouter: "$0-5/mo", deepseek: "~$2.50/mo" },
     { tier: "Heavy", requests: "10,000 req/day", description: "Production apps, startups", geminiBefore: "$0-50/mo (generous free + cheap paid)", geminiAfter: "$100-300/mo (spend cap territory)", groq: "$20-50/mo", cerebras: "$30-80/mo", mistral: "$20-60/mo", openrouter: "$30-100/mo", deepseek: "~$25/mo" },
   ];
@@ -23375,7 +23375,7 @@ function buildGeminiApiPricingChangesPage(): string {
       + '<td class="cost-highlight cost-free">' + escHtmlServer(t.groq) + '</td>'
       + '<td class="cost-highlight cost-free">' + escHtmlServer(t.cerebras) + '</td>'
       + '<td class="cost-highlight cost-free">' + escHtmlServer(t.mistral) + '</td>'
-      + '<td class="cost-highlight ' + (t.tier === "Heavy" ? "cost-low" : "cost-free") + '">' + escHtmlServer(t.deepseek) + '</td>'
+      + '<td class="cost-highlight cost-low">' + escHtmlServer(t.deepseek) + '</td>'
       + '</tr>\n'
     ).join("")
     + '    </tbody>\n'
