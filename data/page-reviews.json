@@ -2637,7 +2637,6 @@
       "vendors_asserted": [
         "cerebras",
         "cohere",
-        "deepseek-api",
         "github-models",
         "google-gemini-api",
         "groq",
@@ -2662,8 +2661,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 25,
-      "table_figures_from_records": 25,
+      "table_figures": 27,
+      "table_figures_from_records": 27,
       "tables": [
         {
           "label": "What’s Changing",
@@ -2672,8 +2671,8 @@
         },
         {
           "label": "Free Tier Comparison Table",
-          "figures": 20,
-          "from_records": 20
+          "figures": 22,
+          "from_records": 22
         },
         {
           "label": "OpenAI Pricing Change Timeline",
@@ -2760,8 +2759,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 40,
-      "table_figures_from_records": 40,
+      "table_figures": 45,
+      "table_figures_from_records": 45,
       "tables": [
         {
           "label": "2. Feature Migration Map",
@@ -2770,8 +2769,8 @@
         },
         {
           "label": "Direct API Alternatives",
-          "figures": 14,
-          "from_records": 14
+          "figures": 16,
+          "from_records": 16
         },
         {
           "label": "Agent Frameworks",
@@ -2785,8 +2784,8 @@
         },
         {
           "label": "6. Token Cost Comparison",
-          "figures": 21,
-          "from_records": 21
+          "figures": 24,
+          "from_records": 24
         },
         {
           "label": "7. OpenAI Pricing Change Timeline",

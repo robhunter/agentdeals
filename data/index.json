@@ -33197,8 +33197,8 @@
     {
       "vendor": "DeepSeek API",
       "category": "AI / ML",
-      "description": "Among the cheapest LLM APIs available. DeepSeek V3.2 (deepseek-chat): $0.28/M input, $0.42/M output (1M context). DeepSeek V3.2 Thinking (deepseek-reasoner): $0.28/M input, $0.42/M output. Cache hits 90% cheaper. Off-peak discounts available. China-based.",
-      "tier": "Free Credits + Pay-as-you-go",
+      "description": "Pay-as-you-go LLM API with no free tier, billed from a prepaid balance. DeepSeek-V4.1-Flash (deepseek-flash): $0.30/M input, $1.20/M output at peak. DeepSeek-V4-Pro (deepseek-v4-pro): $1.32/M input, $3.96/M output at peak. Cache-hit input is $0.006/M on Flash and $0.044/M on Pro. Off-peak rates are half; peak hours are 01:00-04:00 and 06:00-10:00 UTC on weekdays. 1M context, up to 384K output. China-based.",
+      "tier": "Pay-as-you-go",
       "url": "https://api-docs.deepseek.com/quick_start/pricing",
       "tags": [
         "ai",
