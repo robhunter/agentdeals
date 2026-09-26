@@ -47,6 +47,7 @@ type StackRow = { stack: string; vendor: string; slug: string; freeTier: string 
 
 const rows: StackRow[] = [];
 const stackPaths: string[] = [];
+let serviceRowsPublished = 0;
 const estimatorVendors: Array<{
   slug: string;
   name: string;
@@ -66,6 +67,7 @@ describe("a stack that totals $0 names no vendor our catalogue says is paid (#11
 
     for (const stack of stackPaths) {
       const html = await (await fetch(`${base}${stack}`)).text();
+      serviceRowsPublished += (html.match(/<td class="vendor-name">/g) ?? []).length;
       for (const m of html.matchAll(
         /<td class="vendor-name">(?:<a href="\/vendor\/([a-z0-9.-]+)">)?([^<]+)(?:<\/a>)?<span class="free-tier-info">([\s\S]*?)<\/span><\/td>/g,
       )) {
@@ -85,7 +87,8 @@ describe("a stack that totals $0 names no vendor our catalogue says is paid (#11
 
   it("reads every stack template, not the one the issue named", () => {
     assert.ok(stackPaths.length >= 5, `expected the whole stack index, got ${stackPaths.length}`);
-    assert.ok(rows.length >= 30, `expected every service row, got ${rows.length}`);
+    assert.ok(serviceRowsPublished >= stackPaths.length, `expected a service row on every stack, got ${serviceRowsPublished}`);
+    assert.strictEqual(rows.length, serviceRowsPublished, `read ${rows.length} of the ${serviceRowsPublished} service rows the stack pages publish`);
   });
 
   it("puts no vendor in a stack whose own record classifies its tier as anything but free", () => {

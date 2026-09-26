@@ -186,7 +186,7 @@ const RETIRED_FIGURES: Retired[] = [
   },
   {
     what: "Railway's $5 Hobby credit described as free",
-    pattern: /\$5\/(?:month|mo)(?: free)? credit|\$5 free credit|\$5 credit\/mo|Free \$5 monthly|Railway's \$5 credit|Railway \(\$5 credit\)/i,
+    pattern: /\$5\/(?:month|mo)(?: free)? credit|\$5 free credit|\$5 credit\/mo|Free \$5 monthly|Railway's \$5 credit|Railway \(\$5 credit\)|same \$5 credit/i,
     replacedBy: /\$1\/(?:month|mo)|\$1 of free credit|trial credit/i,
     vendorRecord: () => recordFor("Railway", "Cloud Hosting").description,
   },
@@ -312,9 +312,21 @@ const RETIRED_FIGURES: Retired[] = [
   },
   {
     what: "an unsourced share of SaaS apps running on Postgres",
-    pattern: /\d+% of SaaS apps/i,
+    pattern: /\d+% of SaaS (?:apps|workloads)/i,
     replacedBy: /We publish no ranking of these/,
     vendorRecord: () => recordFor("Neon", "Databases").description,
+  },
+  {
+    what: "CockroachDB's closed Basic plan sold as free",
+    pattern: /CockroachDB[^.]{0,60}(?:10 GiB|10 GB|50M Request Units)|(?:10 GiB|10 GB)[^.]{0,30}CockroachDB|serverless free tier is permanently free|CockroachDB (?:leads|continues to offer)/i,
+    replacedBy: /closed its free Basic plan to new deployments on 2026-09-15/,
+    vendorRecord: () => recordFor("CockroachDB", "Databases").description,
+  },
+  {
+    what: "Turso's $4.99 Developer plan given as its free plan",
+    pattern: /Turso[^.]{0,60}9 GB|9 GB[^.]{0,30}Turso|Turso[^.]{0,60}500 databases/i,
+    replacedBy: /Turso[^.]{0,60}5 GB/,
+    vendorRecord: () => recordFor("Turso", "Databases").description,
   },
 ];
 
@@ -344,11 +356,20 @@ function excerptAround(body: string, match: RegExpMatchArray): string {
 
 const SHORTEST_TRACEABLE_QUOTE = 45;
 
-function quotesStoredChangeRecord(excerpt: string, prose: string): boolean {
-  for (let i = 0; i + SHORTEST_TRACEABLE_QUOTE <= excerpt.length; i++) {
-    if (prose.includes(excerpt.slice(i, i + SHORTEST_TRACEABLE_QUOTE))) return true;
+function quotesStoredChangeRecord(body: string, match: RegExpMatchArray, prose: string): boolean {
+  const end = match.index! + match[0].length;
+  for (let i = Math.max(0, match.index! - SHORTEST_TRACEABLE_QUOTE + 1); i < end && i + SHORTEST_TRACEABLE_QUOTE <= body.length; i++) {
+    if (prose.includes(body.slice(i, i + SHORTEST_TRACEABLE_QUOTE))) return true;
   }
   return false;
+}
+
+function firstUnquotedMatch(body: string, pattern: RegExp, prose: string): RegExpMatchArray | null {
+  const everyMatch = new RegExp(pattern.source, pattern.flags.includes("g") ? pattern.flags : `${pattern.flags}g`);
+  for (const match of body.matchAll(everyMatch)) {
+    if (!quotesStoredChangeRecord(body, match, prose)) return match;
+  }
+  return null;
 }
 
 describe("hosting pages publish the free-tier figures our records hold (#1183)", () => {
@@ -373,11 +394,9 @@ describe("hosting pages publish the free-tier figures our records hold (#1183)",
           ["embedded data", embeddedData(html)],
         ] as const) {
           for (const retired of RETIRED_FIGURES) {
-            const match = body.match(retired.pattern);
+            const match = firstUnquotedMatch(body, retired.pattern, prose);
             if (!match) continue;
-            const excerpt = excerptAround(body, match);
-            if (quotesStoredChangeRecord(excerpt, prose)) continue;
-            hits.push({ route, surface, excerpt: excerpt.trim(), what: retired.what });
+            hits.push({ route, surface, excerpt: excerptAround(body, match).trim(), what: retired.what });
           }
         }
       }
@@ -414,7 +433,7 @@ describe("hosting pages publish the free-tier figures our records hold (#1183)",
       "a Sentry free session-replay allowance of 10K": ["/monitoring-comparison-2026"],
       "Sentry's free data retention as 90 days": ["/monitoring-comparison-2026"],
       "a Better Stack free log allowance of 1 GB": ["/monitoring-comparison-2026"],
-      "Railway's $5 Hobby credit described as free": ["/hetzner-pricing-2026", "/hosting-pricing", "/hosting-alternatives", "/free-fastapi-stack", "/free-go-stack"],
+      "Railway's $5 Hobby credit described as free": ["/hetzner-pricing-2026", "/hosting-pricing", "/hosting-alternatives", "/free-django-stack", "/free-fastapi-stack", "/free-go-stack"],
       "Railway's Free plan credit called enough to run an app": ["/free-django-stack", "/free-fastapi-stack", "/free-go-stack", "/free-saas-stack"],
       "Railway crowned the best free hosting for a stack": ["/free-django-stack", "/free-fastapi-stack", "/free-go-stack", "/free-saas-stack"],
       "Railway's free tier graded as expanded in October 2025": ["/free-tier-risk"],
@@ -441,6 +460,8 @@ describe("hosting pages publish the free-tier figures our records hold (#1183)",
       "Supabase Pro priced at $25 per project": ["/database-pricing"],
       "Neon set beside Supabase as a database without auth or storage": ["/neon-vs-supabase"],
       "DigitalOcean Functions tied to paid resources": ["/cloud-free-tier-comparison-2026"],
+      "CockroachDB's closed Basic plan sold as free": ["/cockroachdb-vs-mongodb", "/database-pricing", "/database-free-tier-comparison-2026"],
+      "Turso's $4.99 Developer plan given as its free plan": ["/database-pricing", "/free-nextjs-stack", "/free-go-stack", "/free-saas-stack"],
       "Supabase's team cost as $25 per project": ["/database-pricing", "/vector-database-pricing"],
       "Supabase crowned the most complete free package": ["/database-free-tier-comparison-2026"],
       "Supabase's inactivity pause dated to a February 2026 tightening Supabase does not state": ["/database-pricing", "/neon-vs-supabase"],

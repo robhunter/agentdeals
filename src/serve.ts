@@ -3893,11 +3893,11 @@ const VS_PAGES: VsPageConfig[] = [
     verdict: "CockroachDB offers distributed SQL with PostgreSQL compatibility, while MongoDB is a NoSQL document database. Choose CockroachDB for relational data with horizontal scaling; choose MongoDB for flexible schemas and startup credits.",
     keyDifferences: `<ul>
       <li><strong>Data model:</strong> CockroachDB is relational SQL (PostgreSQL-compatible wire protocol), MongoDB is document-oriented NoSQL (JSON/BSON). This is the fundamental architectural decision.</li>
-      <li><strong>Free tier structure:</strong> CockroachDB gives 50M Request Units + 10 GiB storage/month on serverless. MongoDB offers $5K Atlas credits for Brex startups — generous but time-limited.</li>
+      <li><strong>Free tier structure:</strong> CockroachDB closed its free Basic plan to new deployments on 2026-09-15; new Cloud organizations get a 30-day free trial with $400 in credit. MongoDB offers $5K Atlas credits for Brex startups — generous but time-limited.</li>
       <li><strong>Scaling model:</strong> CockroachDB scales horizontally with automatic sharding and strong consistency. MongoDB scales via replica sets and sharding but requires manual shard key selection.</li>
       <li><strong>Best for:</strong> CockroachDB excels at multi-region, ACID-compliant workloads. MongoDB excels at rapid prototyping with flexible schemas and rich query operators.</li>
     </ul>`,
-    recommendation: `<p><strong>Choose CockroachDB if</strong> you need PostgreSQL compatibility, strong consistency across regions, or want to avoid NoSQL lock-in. The serverless free tier is permanently free with no credit card.</p>
+    recommendation: `<p><strong>Choose CockroachDB if</strong> you need PostgreSQL compatibility, strong consistency across regions, or want to avoid NoSQL lock-in.</p>
     <p><strong>Choose MongoDB if</strong> you need flexible document schemas, have a Brex startup account for $5K credits, or your team already knows the MongoDB query language.</p>`,
   },
   {
@@ -7320,14 +7320,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
         <td>Branching + scale-to-zero Postgres</td>
       </tr>
       <tr>
-        <td style="font-weight:600"><a href="/vendor/cockroachdb" style="color:var(--text)">CockroachDB</a></td>
-        <td>10 GiB</td>
-        <td>Distributed SQL</td>
-        <td>Yes</td>
-        <td>Yes (BSL)</td>
-        <td>Multi-region + horizontal scale</td>
-      </tr>
-      <tr>
         <td style="font-weight:600"><a href="/vendor/turso" style="color:var(--text)">Turso</a></td>
         <td>5 GB</td>
         <td>SQLite (libSQL)</td>
@@ -7386,7 +7378,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     </tbody>
   </table>
   </div>
-  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">*PocketBase and Xata (post-April-2026 open-source pivot) are fully free when self-hosted \u2014 actual limits depend on your hardware. CockroachDB leads managed free offerings at 10 GiB. Turso and D1 provide 5 GB of edge SQLite.</p>`,
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">*PocketBase and Xata (post-April-2026 open-source pivot) are fully free when self-hosted \u2014 actual limits depend on your hardware. Turso and D1 provide 5 GB of edge SQLite.</p>`,
   },
   {
     slug: "redis-alternatives",
@@ -10837,7 +10829,7 @@ ${mcpCtaCss()}
   <h1>Best Free Database Hosting for Developers</h1>
 
   <div class="context">
-    <p>Choosing a database is one of the most consequential infrastructure decisions for any project. The good news: in 2026, there are <strong>${dbOffers.length} free database options</strong> across every category — relational, document, key-value, edge, graph, vector, and time-series. The bad news: free tiers vary wildly, from <strong>MongoDB Atlas's cramped 512 MB</strong> to <strong>Turso's generous 5 GB</strong> and <strong>CockroachDB's 10 GiB</strong>.</p>
+    <p>Choosing a database is one of the most consequential infrastructure decisions for any project. The good news: in 2026, there are <strong>${dbOffers.length} free database options</strong> across every category — relational, document, key-value, edge, graph, vector, and time-series. The bad news: free tiers vary wildly, from <strong>MongoDB Atlas's cramped 512 MB</strong> to <strong>Turso's generous 5 GB</strong>.</p>
     <p>This page compares every free database in our index, organized by type, with exact limits read from live pricing pages. Whether you need a Postgres database, a Redis cache, an edge SQLite store, or a vector database for RAG — we've got the comparison.</p>
     <p><strong>New:</strong> See our <a href="/database-free-tier-comparison-2026">Database Free Tier Comparison 2026</a> for a focused side-by-side matrix of the top 10 databases with use-case recommendations and the story of PlanetScale&rsquo;s free tier removal.</p>
   </div>
@@ -10902,12 +10894,6 @@ ${buildCards(timeSeries)}
         <td>Postgres</td>
         <td>0.5 GB</td>
         <td>Serverless Postgres with branching</td>
-      </tr>
-      <tr>
-        <td style="font-weight:600"><a href="/vendor/cockroachdb" style="color:var(--text)">CockroachDB</a></td>
-        <td>Distributed SQL</td>
-        <td>10 GiB</td>
-        <td>Multi-region, high availability</td>
       </tr>
       <tr>
         <td style="font-weight:600"><a href="/vendor/turso" style="color:var(--text)">Turso</a></td>
@@ -10984,7 +10970,7 @@ ${buildCards(timeSeries)}
     </tbody>
   </table>
   </div>
-  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Storage limits are for the free tier only. CockroachDB (10 GiB) offers the most generous managed storage. PocketBase, Weaviate, and Xata (post-April-2026 open-source pivot) are unlimited when self-hosted. [[freshness]]</p>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Storage limits are for the free tier only. PocketBase, Weaviate, and Xata (post-April-2026 open-source pivot) are unlimited when self-hosted. [[freshness]]</p>
 
   <h2>Which Free Database Should I Use?</h2>
   <div class="decision-guide">
@@ -10993,7 +10979,7 @@ ${buildCards(timeSeries)}
       <dd><a href="/vendor/supabase">Supabase</a> or <a href="/vendor/nhost">Nhost</a> — Postgres + auth + storage + real-time in one platform. Supabase has the larger ecosystem.</dd>
 
       <dt>Need serverless Postgres with branching?</dt>
-      <dd><a href="/vendor/neon">Neon</a> (managed, branching, scale-to-zero). <a href="/vendor/xata">Xata</a> went open-source (Apache 2.0) in April 2026 \u2014 self-host on Kubernetes for unlimited free usage with copy-on-write branching and scale-to-zero. For max managed free storage, <a href="/vendor/cockroachdb">CockroachDB</a> gives 10 GiB.</dd>
+      <dd><a href="/vendor/neon">Neon</a> (managed, branching, scale-to-zero). <a href="/vendor/xata">Xata</a> went open-source (Apache 2.0) in April 2026 \u2014 self-host on Kubernetes for unlimited free usage with copy-on-write branching and scale-to-zero.</dd>
 
       <dt>Building at the edge?</dt>
       <dd><a href="/vendor/turso">Turso</a> (5 GB, 500M reads) or <a href="/vendor/cloudflare-d1">Cloudflare D1</a> (5 GB, tight Workers integration). Both use SQLite under the hood.</dd>
@@ -16880,7 +16866,7 @@ function buildFreeNextjsStackPage(): string {
       icon: "🗄️",
       recommended: { vendor: "Neon", why: "Serverless Postgres with branching — perfect for Next.js server components and API routes. Free plan: 0.5 GB of storage and 100 CU-hours per project, up to 100 projects, scales to zero after 5 minutes idle. Neon's serverless driver (@neondatabase/serverless) works in Vercel Edge Functions where traditional Postgres clients cannot." },
       alternatives: ["Supabase", "Turso", "PlanetScale"],
-      outgrow: "When you exceed 0.5 GiB storage or need always-on connections. Supabase offers 500 MB storage with built-in auth and realtime but pauses after 7 days inactive. Turso gives 9 GB total storage across edge locations. PlanetScale's free tier was removed in April 2024.",
+      outgrow: "When you exceed 0.5 GiB storage or need always-on connections. Supabase offers 500 MB storage with built-in auth and realtime but pauses after 7 days inactive. Turso gives 5 GB total storage across edge locations. PlanetScale's free tier was removed in April 2024.",
       whyNot: "Why not PlanetScale: Free tier removed April 2024 — now starts at $39/month. Why not MongoDB Atlas: 512 MB storage is workable, but Postgres is the better fit for Next.js's server-side patterns (Prisma, Drizzle, raw SQL in server components).",
       relatedPage: "/database-free-tier-comparison-2026",
     },
@@ -16980,7 +16966,7 @@ function buildFreeNextjsStackPage(): string {
 
   const faqJsonLd = faqPageJsonLd("/free-nextjs-stack", [
     { q: "Is Vercel free for Next.js?", a: "Yes. Vercel's Hobby plan is free with 100 GB bandwidth, 100 hours serverless function execution, and 6,000 build minutes per month. However, it's limited to non-commercial, personal use. For commercial projects, Vercel Pro starts at $20/month per team member. Alternatives like Railway ($5 trial credit for 30 days, then $1 of free credit a month) and Cloudflare Pages (unlimited bandwidth) allow commercial use on free tiers." },
-    { q: "What's the best free database for Next.js?", a: "Neon (serverless Postgres) has a serverless driver that works in Vercel Edge Functions, it scales to zero when not in use, and offers 0.5 GiB storage free. Supabase (500 MB, includes auth and realtime) is great if you need a full BaaS. Turso (9 GB, edge SQLite) is ideal for read-heavy apps. PlanetScale removed its free tier in April 2024." },
+    { q: "What's the best free database for Next.js?", a: "Neon (serverless Postgres) has a serverless driver that works in Vercel Edge Functions, it scales to zero when not in use, and offers 0.5 GiB storage free. Supabase (500 MB, includes auth and realtime) is great if you need a full BaaS. Turso (5 GB, edge SQLite) is ideal for read-heavy apps. PlanetScale removed its free tier in April 2024." },
     { q: "Can I build a SaaS for free with Next.js?", a: "Yes — with limits. This guide covers 10 infrastructure layers that cost $0/month total: hosting (Vercel), database (Neon), auth (Clerk 10K MAU), storage (R2), email (Resend 3K/mo), monitoring (Sentry), CI/CD (GitHub Actions), analytics (PostHog 1M events), search (Algolia 10K records), and background jobs (Inngest 25K runs). Most projects can run their entire stack on free tiers until they hit significant traction." },
     { q: "What's the first thing to spend money on when scaling a Next.js app?", a: "Database. Neon's 0.5 GiB free storage is the tightest limit in the stack. Neon's Launch plan is usage-based with no monthly minimum: $0.106 per CU-hour of compute and $0.35 per GB-month of storage. After that, hosting: Vercel Pro at $20/month unlocks commercial use, 1 TB bandwidth, and faster builds. Everything else (auth, email, monitoring, analytics) scales to meaningful traffic on free tiers." },
   ]);
@@ -17243,7 +17229,7 @@ function buildFreeDjangoStackPage(): string {
       icon: "🗄️",
       recommended: { vendor: "Neon", why: "Serverless Postgres — Django's recommended database. Free plan: 0.5 GB of storage and 100 CU-hours per project, up to 100 projects, scales to zero after 5 minutes idle. Django's ORM, migrations, and django.contrib.postgres module all work perfectly. Neon's connection pooler handles Django's synchronous database connections efficiently. Branching lets you test migrations safely before applying to production." },
       alternatives: ["Supabase", "CockroachDB", "Railway"],
-      outgrow: "When you exceed 0.5 GiB storage. Supabase offers 500 MB Postgres with built-in auth and realtime, but pauses after 7 days inactive. CockroachDB's free tier gives 10 GiB storage with distributed Postgres-compatible SQL. Railway's managed Postgres comes out of the same $5 credit as hosting.",
+      outgrow: "When you exceed 0.5 GiB storage. Supabase offers 500 MB Postgres with built-in auth and realtime, but pauses after 7 days inactive.",
       whyNot: "Why not SQLite: Fine for local development, but most free hosting platforms use ephemeral filesystems — your database would be wiped on every deploy. Why not MySQL: Django supports it, but Postgres-specific features (JSONField, ArrayField, full-text search, range types) are too valuable to leave on the table.",
       relatedPage: "/database-free-tier-comparison-2026",
     },
@@ -17252,7 +17238,7 @@ function buildFreeDjangoStackPage(): string {
       icon: "⚡",
       recommended: { vendor: "Upstash", why: "Serverless Redis with a generous free tier: 10,000 commands/day, 256 MB storage. Perfect for Django's cache framework (django.core.cache with django-redis backend), session storage, and Celery broker. Pay-per-request pricing means you only pay for what you use beyond free limits. REST API works anywhere — no persistent connections needed." },
       alternatives: ["Redis Cloud", "Railway"],
-      outgrow: "When you exceed 10,000 commands/day. Redis Cloud offers 30 MB free with unlimited commands — better if you have high command volume but small data. Railway Redis comes from the same $5 credit. For simple caching without Redis, Django's built-in database cache backend costs nothing extra.",
+      outgrow: "When you exceed 10,000 commands/day. Redis Cloud offers 30 MB free with unlimited commands — better if you have high command volume but small data. For simple caching without Redis, Django's built-in database cache backend costs nothing extra.",
       whyNot: null,
       relatedPage: null,
     },
@@ -17616,7 +17602,7 @@ ${growthCosts.map(g => `      <tr>
                                           → Sentry (error tracking + performance)
                                           → Algolia (search index, synced from Django ORM)
 GitHub → GitHub Actions (CI: pytest + ruff) → Railway (CD: auto-deploy)</div>
-    <p style="color:var(--text-dim);font-size:.8rem;margin-top:1rem">All connections use HTTPS APIs — no VPCs, no SSH tunnels, no complex networking. Each service is independently replaceable. The Celery worker runs as a separate Railway service from the same $5 credit.</p>
+    <p style="color:var(--text-dim);font-size:.8rem;margin-top:1rem">All connections use HTTPS APIs — no VPCs, no SSH tunnels, no complex networking. Each service is independently replaceable. The Celery worker runs as a separate Railway service.</p>
   </div>
 
   <div class="search-cta">
@@ -17653,7 +17639,7 @@ function buildFreeFastapiStackPage(): string {
       icon: "🗄️",
       recommended: { vendor: "Neon", why: "Serverless Postgres with native async support. Free plan: 0.5 GB of storage and 100 CU-hours per project, up to 100 projects, scales to zero after 5 minutes idle. Use with asyncpg for async queries or SQLAlchemy 2.0's async engine. Neon's connection pooler handles FastAPI's concurrent async connections efficiently. Branching lets you test schema changes safely." },
       alternatives: ["Supabase", "CockroachDB"],
-      outgrow: "When you exceed 0.5 GiB storage. Supabase offers 500 MB Postgres with built-in auth and realtime subscriptions, but pauses after 7 days inactive. CockroachDB's free tier gives 10 GiB storage with distributed Postgres-compatible SQL — good for multi-region APIs.",
+      outgrow: "When you exceed 0.5 GiB storage. Supabase offers 500 MB Postgres with built-in auth and realtime subscriptions, but pauses after 7 days inactive.",
       whyNot: "Why not MongoDB Atlas: FastAPI works with MongoDB (via Motor or Beanie ODM), but most FastAPI tutorials and the ecosystem assume relational data with Pydantic models mapping to SQL tables. Postgres + SQLAlchemy is the mainstream path. Why not SQLite: Most free hosting uses ephemeral filesystems — your database would be wiped on every deploy.",
       relatedPage: "/database-free-tier-comparison-2026",
     },
@@ -18078,7 +18064,7 @@ function buildFreeGoStackPage(): string {
       icon: "🗄️",
       recommended: { vendor: "Neon", why: "Serverless Postgres with the fastest Go driver. Free plan: 0.5 GB of storage and 100 CU-hours per project, up to 100 projects, scales to zero after 5 minutes idle. Use with pgx — the fastest Go Postgres driver, written in pure Go with zero CGo dependencies. pgx supports connection pooling, prepared statements, COPY protocol, and native Go types (time.Time, net.IP, uuid.UUID). Neon's connection pooler handles high-concurrency goroutine access efficiently." },
       alternatives: ["Supabase", "CockroachDB", "Turso"],
-      outgrow: "When you exceed 0.5 GiB storage. Supabase offers 500 MB Postgres with built-in auth. CockroachDB's free tier gives 10 GiB with distributed Postgres-compatible SQL — ideal for multi-region Go services. Turso offers 9 GB of edge SQLite via libsql-go — great for read-heavy, globally distributed Go APIs.",
+      outgrow: "When you exceed 0.5 GiB storage. Supabase offers 500 MB Postgres with built-in auth. Turso offers 5 GB of edge SQLite via libsql-go — great for read-heavy, globally distributed Go APIs.",
       whyNot: "Why not SQLite (embedded): Go has excellent SQLite support via modernc.org/sqlite (pure Go, no CGo), but most free hosting uses ephemeral filesystems — your database is wiped on every deploy. Only viable on persistent VMs or with Litestream replication. Why not MySQL: Go's database/sql works with MySQL, but the Postgres ecosystem (pgx, sqlc, migrations) is stronger in Go. Most Go ORMs default to Postgres.",
       relatedPage: "/database-free-tier-comparison-2026",
     },
@@ -18507,8 +18493,8 @@ function buildFreeSaasStackPage(): string {
       icon: "\u{1F5C4}\u{FE0F}",
       recommended: { vendor: "Neon", why: "Serverless Postgres. Free plan: 0.5 GB of storage and 100 CU-hours per project, up to 100 projects, scales to zero after 5 minutes idle. Branching for preview environments. Works with every ORM (Prisma, Drizzle, TypeORM, SQLAlchemy, pgx). Connection pooling handles concurrent users efficiently." },
       alternatives: ["Supabase", "CockroachDB", "Turso"],
-      outgrow: "When you exceed 0.5 GiB storage or need always-on compute. Supabase gives 500 MB Postgres with auth + storage + realtime bundled (pauses after 1 week inactive). CockroachDB offers 10 GiB distributed SQL \u2014 best for multi-region SaaS. Turso provides 9 GB edge SQLite \u2014 great for read-heavy, globally distributed apps.",
-      whyNot: "Why not MongoDB Atlas: 512 MB free, but document databases add complexity for SaaS (no joins, denormalized data, eventual consistency). Postgres handles 95% of SaaS workloads better. Why not PlanetScale: Removed free tier in April 2024.",
+      outgrow: "When you exceed 0.5 GiB storage or need always-on compute. Supabase gives 500 MB Postgres with auth + storage + realtime bundled (pauses after 1 week inactive). Turso provides 5 GB edge SQLite \u2014 great for read-heavy, globally distributed apps.",
+      whyNot: "Why not MongoDB Atlas: 512 MB free, but document databases add complexity for SaaS (no joins, denormalized data, eventual consistency). Why not PlanetScale: Removed free tier in April 2024.",
       relatedPage: "/database-free-tier-comparison-2026",
       isFrameworkSection: false,
     },
@@ -21265,7 +21251,7 @@ ${mcpCtaCss()}
     </div>
     <div class="verdict-item">
       <strong>Consider alternatives if:</strong>
-      <p>For embedded/edge databases, try <a href="/vendor/turso">Turso</a> (SQLite at the edge, 100 databases free). For a self-hosted BaaS, try <a href="/vendor/appwrite">Appwrite</a> or <a href="/vendor/pocketbase">PocketBase</a>. For a managed Postgres with generous storage, check <a href="/vendor/cockroachdb">CockroachDB</a> (10 GB free). See alternatives below.</p>
+      <p>For embedded/edge databases, try <a href="/vendor/turso">Turso</a> (SQLite at the edge, 100 databases free). For a self-hosted BaaS, try <a href="/vendor/appwrite">Appwrite</a> or <a href="/vendor/pocketbase">PocketBase</a>. See alternatives below.</p>
     </div>
   </div>
 
@@ -21282,7 +21268,7 @@ ${mcpCtaCss()}
     </table>
   </div>
   <div class="context-box">
-    <strong>Notable mentions:</strong> <a href="/vendor/cockroachdb">CockroachDB</a> offers 10 GB free storage with multi-region support — great for distributed Postgres. <a href="/vendor/turso">Turso</a> gives 100 databases with 5 GB storage for SQLite-at-the-edge workloads. For a Firebase-like self-hosted experience, see <a href="/supabase-vs-firebase">Supabase vs Firebase</a>. See our <a href="/database-alternatives">full database comparison</a> for 30+ options.
+    <strong>Notable mentions:</strong> <a href="/vendor/turso">Turso</a> gives 100 databases with 5 GB storage for SQLite-at-the-edge workloads. For a Firebase-like self-hosted experience, see <a href="/supabase-vs-firebase">Supabase vs Firebase</a>. See our <a href="/database-alternatives">full database comparison</a> for 30+ options.
   </div>
 
   <h2 id="changes">6. Recent Deal Changes</h2>
@@ -27495,7 +27481,7 @@ function buildFreeTierTrackerPage(): string {
       changeType: "pricing_restructured",
       impact: "medium",
       detail: "Post-Databricks acquisition, Neon restructured pricing with both expansions and changes. Projects increased from 10 to 100, storage became per-project (0.5 GB each, up to 5 GB total), and Neon Auth added at 60K MAU.",
-      alternatives: ["Supabase", "CockroachDB", "Turso"],
+      alternatives: ["Supabase", "Turso"],
     },
     {
       vendor: "GitHub Copilot",
@@ -30145,16 +30131,16 @@ function buildDatabasePricingPage(): string {
       slug: "cockroachdb",
       category: "managed-postgres",
       dbType: "PostgreSQL-compatible (Distributed)",
-      freeStorage: "10 GiB",
-      freeConnections: "Unlimited",
-      freeCompute: "50M RUs/mo",
-      paidFrom: "$0 (usage-based)",
-      pricingModel: "Usage-based (RUs)",
-      freeDetails: "10 GiB storage, 50M Request Units/month on Serverless plan. PostgreSQL-compatible wire protocol. Automatic sharding and replication. Multi-region on paid plans. Single-region free cluster with 3-node high availability. SQL API compatible with most PostgreSQL drivers.",
-      freeType: "generous",
-      monthlyCostSmall: "$0",
-      monthlyCostTeam: "$0\u201350+",
-      hiddenCosts: "Request Unit pricing is hard to predict — depends on query complexity, data size, and cross-region traffic. 50M RUs sounds generous but complex queries consume RUs quickly. No multi-region on free tier.",
+      freeStorage: "REMOVED",
+      freeConnections: "N/A",
+      freeCompute: "N/A",
+      paidFrom: "$0.092/vCPU-hour (Standard)",
+      pricingModel: "Usage-based (vCPU-hours)",
+      freeDetails: "CockroachDB closed its free Basic plan to new deployments on 2026-09-15; new Cloud organizations get a 30-day free trial with $400 in credit. Clusters created before that date stay on their plans during their current term. PostgreSQL-compatible wire protocol, automatic sharding and replication.",
+      freeType: "removed",
+      monthlyCostSmall: "≈$203",
+      monthlyCostTeam: "≈$203+",
+      hiddenCosts: "Billed per vCPU-hour on the vCPUs a cluster runs. CockroachDB's own example is about $203 a month for 2 vCPU and 100 GB.",
     },
     {
       name: "Amazon Aurora PostgreSQL",
@@ -30193,16 +30179,16 @@ function buildDatabasePricingPage(): string {
       slug: "turso",
       category: "serverless-edge",
       dbType: "SQLite (libSQL, Edge)",
-      freeStorage: "9 GB total",
+      freeStorage: "5 GB total",
       freeConnections: "Unlimited",
-      freeCompute: "500 DBs, 1B rows read",
+      freeCompute: "100 DBs, 500M rows read",
       paidFrom: "$29/mo (Scaler)",
       pricingModel: "Usage-based",
-      freeDetails: "9 GB total storage, 500 databases, 1 billion row reads/month, 25 million row writes/month. Built on libSQL (SQLite fork). Embedded replicas for zero-latency reads at the edge. Databases replicate to 26+ locations. No cold starts — SQLite is always fast.",
+      freeDetails: "5 GB total storage, 100 databases, 500 million row reads/month, 10 million row writes/month. Built on libSQL (SQLite fork). Embedded replicas for zero-latency reads at the edge. Databases replicate to 26+ locations. No cold starts — SQLite is always fast.",
       freeType: "generous",
       monthlyCostSmall: "$0",
       monthlyCostTeam: "$29+",
-      hiddenCosts: "SQLite semantics differ from PostgreSQL — no concurrent writers. 25M row writes/month can be limiting for write-heavy apps. Edge replication adds eventual consistency considerations.",
+      hiddenCosts: "SQLite semantics differ from PostgreSQL — no concurrent writers. 10M row writes/month can be limiting for write-heavy apps. Edge replication adds eventual consistency considerations.",
     },
     {
       name: "Cloudflare D1",
@@ -30266,7 +30252,7 @@ function buildDatabasePricingPage(): string {
       freeType: "removed",
       monthlyCostSmall: "$39",
       monthlyCostTeam: "$39+",
-      hiddenCosts: "No free option at all. The $39/mo Scaler plan includes 10 GB storage and 1B row reads. Significant community backlash after free tier removal. Consider alternatives: Neon, Turso, or CockroachDB for free database hosting.",
+      hiddenCosts: "No free option at all. The $39/mo Scaler plan includes 10 GB storage and 1B row reads. Significant community backlash after free tier removal. Consider alternatives: Neon or Turso for free database hosting.",
     },
     {
       name: "Prisma Accelerate",
@@ -30611,9 +30597,9 @@ function buildDatabasePricingPage(): string {
   };
 
   const faqEntries = [
-    { q: "Which database has the best free tier in 2026?", a: "We publish no ranking of database free tiers. Supabase gives you 500 MB Postgres with Auth, Storage, Edge Functions, and Realtime included. CockroachDB offers 10 GiB storage with 50M Request Units/month. For edge/serverless, Turso (9 GB, 500 databases) and Cloudflare D1 (5 GB) are standouts." },
+    { q: "Which database has the best free tier in 2026?", a: "We publish no ranking of database free tiers. Supabase gives you 500 MB Postgres with Auth, Storage, Edge Functions, and Realtime included. For edge/serverless, Turso (5 GB, 100 databases) and Cloudflare D1 (5 GB) are standouts." },
     { q: "Is Supabase really free?", a: "Yes, but with caveats. Supabase free tier includes 500 MB Postgres, Auth, Storage, Edge Functions, and Realtime. However, free projects pause after 1 week of inactivity, you are limited to 2 projects, and egress is capped at 5 GB total across all services. For active projects, it is genuinely free." },
-    { q: "What happened to PlanetScale's free tier?", a: "PlanetScale removed its free Hobby plan entirely in April 2024. All free databases were deleted after a 30-day grace period. The minimum plan is now Scaler at $39/month. This was one of the most impactful free tier removals in developer tools. Alternatives: Neon (512 MB free), Turso (9 GB free), CockroachDB (10 GiB free)." },
+    { q: "What happened to PlanetScale's free tier?", a: "PlanetScale removed its free Hobby plan entirely in April 2024. All free databases were deleted after a 30-day grace period. The minimum plan is now Scaler at $39/month. This was one of the most impactful free tier removals in developer tools. Alternatives: Neon (0.5 GB free), Turso (5 GB free)." },
     { q: "Neon vs Supabase: which is cheaper?", a: "Both have a free plan. Neon's gives 0.5 GB of storage and 100 CU-hours per project across up to 100 projects, with auth up to 60k MAU, 5 GB of object storage per project and Functions. Supabase's gives a 500 MB database per project across 2 active projects, with 50,000 MAU, 1 GB of file storage and 500,000 Edge Function invocations. On paid plans, Neon's Launch plan is usage-based with no monthly minimum; Supabase Pro starts at $25 a month, with the first project and $10 a month of compute credits included. Which costs less depends on your compute and storage use." },
     { q: "Should I use a managed database or self-host?", a: "Managed databases (Supabase, Neon, MongoDB Atlas) are better for small teams — zero ops overhead, automatic backups, and scaling. Self-hosting (PostgreSQL, MongoDB, Redis) makes sense when you need full control, have strict data residency requirements, or are optimizing costs at scale. The break-even point is typically around $200-500/month in managed database costs." },
     { q: "Which database is best for AI/ML applications?", a: "For vector search: Weaviate, Zilliz Cloud (Milvus), or Supabase (pgvector). Weaviate offers the richest AI integrations but only has a trial sandbox. Supabase and Neon both include pgvector on their free plans. For RAG applications, Turso (edge) + any vector store gives low-latency retrieval." },
@@ -30730,7 +30716,7 @@ function buildDatabasePricingPage(): string {
     '\n' +
     '  <div class="executive-summary">\n' +
     '    <p><strong>The database landscape in April 2026:</strong> ' + services.length + ' services across five categories \u2014 managed PostgreSQL, serverless/edge, document/NoSQL, cloud provider, and specialized (vector, graph, time-series, cache). The market is volatile: PlanetScale killed its free tier (April 2024), Supabase tightened pause policies, Neon pivoted to usage-based pricing post-Databricks acquisition, and Aurora PostgreSQL joined the AWS free tier.</p>\n' +
-    '    <p><strong>Key trends:</strong> PostgreSQL has won the developer database war \u2014 Supabase, Neon, CockroachDB, and Aurora all offer PostgreSQL-compatible free tiers. Edge/serverless databases (Turso, D1) are the fastest-growing category. Vector databases (Weaviate, Zilliz) are essential for AI applications but most only offer limited free tiers. The biggest shift: managed databases are converging on usage-based pricing, making costs harder to predict but scaling more efficient.</p>\n' +
+    '    <p><strong>Key trends:</strong> PostgreSQL has won the developer database war \u2014 Supabase, Neon, and Aurora all offer PostgreSQL-compatible free tiers. Edge/serverless databases (Turso, D1) are the fastest-growing category. Vector databases (Weaviate, Zilliz) are essential for AI applications but most only offer limited free tiers. The biggest shift: managed databases are converging on usage-based pricing, making costs harder to predict but scaling more efficient.</p>\n' +
     '    <p><strong>This guide covers:</strong> pricing tables, category breakdowns, storage and connection analysis, cost comparison for solo developers and teams, hidden costs, and best-for-use-case recommendations \u2014 compiled by hand from vendor pricing pages.</p>\n' +
     '  </div>\n' +
     '\n' +
@@ -30770,7 +30756,7 @@ function buildDatabasePricingPage(): string {
     '  </div>\n' +
     '\n' +
     '  <div class="context-box">\n' +
-    '    <strong>The PostgreSQL advantage:</strong> Supabase, Neon, CockroachDB, and Aurora all offer PostgreSQL-compatible free tiers. Choosing PostgreSQL-compatible means you can migrate between providers using pg_dump \u2014 the lowest lock-in risk of any database choice. If you are starting a new project and have no strong reason to choose otherwise, start with PostgreSQL.\n' +
+    '    <strong>The PostgreSQL advantage:</strong> Supabase, Neon, and Aurora all offer PostgreSQL-compatible free tiers. Choosing PostgreSQL-compatible means you can migrate between providers using pg_dump \u2014 the lowest lock-in risk of any database choice. If you are starting a new project and have no strong reason to choose otherwise, start with PostgreSQL.\n' +
     '  </div>\n' +
     '\n' +
     '  <h2 id="categories">Category Breakdown</h2>\n' +
@@ -30829,7 +30815,7 @@ function buildDatabasePricingPage(): string {
     '  </div>\n' +
     '\n' +
     '  <div class="context-box">\n' +
-    '    <strong>Best value picks:</strong> For most projects, <a href="/vendor/supabase">Supabase</a> (500 MB + Auth + Storage + Functions) or <a href="/vendor/neon">Neon</a> (512 MB, scales to zero) offer the best free-to-paid journey. For maximum free storage, <a href="/vendor/cockroachdb">CockroachDB</a> (10 GiB) or <a href="/vendor/turso">Turso</a> (9 GB) lead. For serverless edge use cases, <a href="/vendor/cloudflare-d1">Cloudflare D1</a> pairs naturally with Workers.\n' +
+    '    <strong>Best value picks:</strong> For most projects, <a href="/vendor/supabase">Supabase</a> (500 MB + Auth + Storage + Functions) or <a href="/vendor/neon">Neon</a> (512 MB, scales to zero) offer the best free-to-paid journey. For serverless edge use cases, <a href="/vendor/cloudflare-d1">Cloudflare D1</a> pairs naturally with Workers.\n' +
     '  </div>\n' +
     '\n' +
     '  <h2 id="hidden-costs">Hidden Costs</h2>\n' +
@@ -30878,7 +30864,7 @@ function buildDatabasePricingPage(): string {
     ) : '  <p class="section-intro">No database-specific pricing changes tracked recently.</p>\n') +
     '\n' +
     '  <div class="context-box">\n' +
-    '    <strong>The trend:</strong> Database pricing is in upheaval. PlanetScale killed its free tier entirely (2024). Supabase tightened inactivity pausing to 1 week. Neon moved to fully usage-based pricing post-Databricks acquisition. Firebase removed Cloud Storage from the free plan. The counter-trend: Amazon Aurora PostgreSQL joined the AWS Free Tier (March 2026), and CockroachDB continues to offer one of the most generous free tiers at 10 GiB.\n' +
+    '    <strong>The trend:</strong> Database pricing is in upheaval. PlanetScale killed its free tier entirely (2024). Supabase tightened inactivity pausing to 1 week. Neon moved to fully usage-based pricing post-Databricks acquisition. Firebase removed Cloud Storage from the free plan. The counter-trend: Amazon Aurora PostgreSQL joined the AWS Free Tier (March 2026), while CockroachDB closed its free Basic plan to new deployments on 2026-09-15.\n' +
     '  </div>\n' +
     '\n' +
     '  <h2 id="recommendations">Best-for-Use-Case Recommendations</h2>\n' +
@@ -30888,12 +30874,12 @@ function buildDatabasePricingPage(): string {
     '\n' +
     '    <div class="verdict-item">\n' +
     '      <strong>Best overall free tier</strong>\n' +
-    '      <p><a href="/vendor/supabase">Supabase</a> \u2014 500 MB Postgres with Auth, Storage, Edge Functions, and Realtime included. The most batteries-included free database. Or <a href="/vendor/cockroachdb">CockroachDB</a> for 10 GiB storage with distributed PostgreSQL.</p>\n' +
+    '      <p><a href="/vendor/supabase">Supabase</a> \u2014 500 MB Postgres with Auth, Storage, Edge Functions, and Realtime included. The most batteries-included free database.</p>\n' +
     '    </div>\n' +
     '\n' +
     '    <div class="verdict-item">\n' +
     '      <strong>Best for serverless / edge</strong>\n' +
-    '      <p><a href="/vendor/turso">Turso</a> (9 GB, 500 databases, edge replicas) or <a href="/vendor/cloudflare-d1">Cloudflare D1</a> (5 GB, integrated with Workers). Both use SQLite \u2014 zero cold starts, global distribution, no connection management.</p>\n' +
+    '      <p><a href="/vendor/turso">Turso</a> (5 GB, 100 databases, edge replicas) or <a href="/vendor/cloudflare-d1">Cloudflare D1</a> (5 GB, integrated with Workers). Both use SQLite \u2014 zero cold starts, global distribution, no connection management.</p>\n' +
     '    </div>\n' +
     '\n' +
     '    <div class="verdict-item">\n' +
@@ -37539,16 +37525,6 @@ ${mcpCtaCss()}
         <td style="color:#d29922">Medium (MongoDB query language)</td>
       </tr>
       <tr>
-        <td class="provider-col"><a href="/vendor/cockroachdb" style="color:var(--text)">CockroachDB</a></td>
-        <td>Distributed SQL</td>
-        <td style="font-family:var(--mono)">10 GiB</td>
-        <td>50M Request Units/mo</td>
-        <td>Scales to zero, single region</td>
-        <td class="cross">No</td>
-        <td style="color:#3fb950">Yes</td>
-        <td style="color:#3fb950">Low (Postgres-compatible)</td>
-      </tr>
-      <tr>
         <td class="provider-col"><a href="/vendor/cloudflare-d1" style="color:var(--text)">Cloudflare D1</a></td>
         <td>Edge SQLite</td>
         <td style="font-family:var(--mono)">5 GB</td>
@@ -37593,7 +37569,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="context-box">
-    <strong>Storage leaders:</strong> CockroachDB (10 GiB) and Turso/Cloudflare D1 (5 GB each) offer the most free storage. <strong>Supabase</strong>'s free plan bundles Postgres with auth, file storage, edge functions and realtime; <strong>Neon</strong>'s bundles Postgres with auth, object storage and Functions. <strong>Neon</strong> lets you create up to 100 projects with 0.5 GB each — ideal for microservices or per-client databases. PlanetScale's free tier removal in April 2024 was one of the most impactful such changes in developer tooling history.
+    Turso and Cloudflare D1 give 5 GB of free storage each. <strong>Supabase</strong>'s free plan bundles Postgres with auth, file storage, edge functions and realtime; <strong>Neon</strong>'s bundles Postgres with auth, object storage and Functions. <strong>Neon</strong> lets you create up to 100 projects with 0.5 GB each — ideal for microservices or per-client databases. PlanetScale's free tier removal in April 2024 was one of the most impactful such changes in developer tooling history.
   </div>
 
   <h2 id="postgres">Postgres-Compatible Databases</h2>
@@ -37630,15 +37606,6 @@ ${mcpCtaCss()}
         <td class="check">Yes (instant resume)</td>
         <td>Database branching, point-in-time restore, connection pooling</td>
         <td>Postgres purists, CI/CD preview DBs</td>
-      </tr>
-      <tr>
-        <td class="provider-col">CockroachDB</td>
-        <td style="font-family:var(--mono)">10 GiB</td>
-        <td>50M Request Units/mo</td>
-        <td class="cross">No</td>
-        <td class="check">Yes</td>
-        <td>Distributed SQL, automatic failover, Postgres wire protocol</td>
-        <td>Startups needing horizontal scale</td>
       </tr>
       <tr>
         <td class="provider-col">Nile</td>
@@ -37905,7 +37872,7 @@ ${mcpCtaCss()}
 
     <div class="verdict-item">
       <strong>Startup scaling to production &rarr; CockroachDB or Neon</strong>
-      <p>CockroachDB: 10 GiB free, distributed SQL, automatic failover — start free and scale horizontally. Neon: serverless Postgres with usage-based pricing beyond free tier. Both have Postgres-compatible wire protocols for easy migration.</p>
+      <p>CockroachDB: CockroachDB closed its free Basic plan to new deployments on 2026-09-15; new Cloud organizations get a 30-day free trial with $400 in credit. Neon: serverless Postgres with usage-based pricing beyond free tier. Both have Postgres-compatible wire protocols for easy migration.</p>
     </div>
   </div>
 
@@ -47317,7 +47284,6 @@ const STACK_TEMPLATES: StackTemplate[] = [
     ],
     swaps: [
       { from: "Render", to: "Cloudflare Pages", toSlug: "cloudflare-pages", saving: "Save $85/mo at 100K users — if your project is static/Jamstack, Cloudflare Pages is free at any scale" },
-      { from: "Turso", to: "CockroachDB", toSlug: "cockroachdb", saving: "Get 10 GiB storage free — better for side projects that grow unexpectedly" },
     ],
     relatedComparisons: [
       { href: "/railway-vs-render", label: "Railway vs Render" },
@@ -47360,11 +47326,10 @@ const STACK_TEMPLATES: StackTemplate[] = [
   {
     slug: "open-source",
     title: "Best Free Stack for an Open-Source Project — CI, Hosting, and Community for $0 in 2026",
-    metaDesc: "Run open-source projects on free tiers. CockroachDB, Netlify, GitHub OAuth, BetterStack, GitHub Actions, Codecov — published limits, cost at scale, stability ratings.",
+    metaDesc: "Run open-source projects on free tiers. Netlify, GitHub OAuth, BetterStack, GitHub Actions, Codecov — published limits, cost at scale, stability ratings.",
     heroSubtitle: "Free infrastructure for open-source maintainers. Focus on your code, not your cloud bill.",
     description: "Open-source projects get special treatment from most cloud providers — free tiers are more generous and often unlimited for public repos. This stack leverages those OSS advantages with services that have stable, long-standing free tiers and strong community support.",
     services: [
-      { category: "Database", vendor: "CockroachDB", slug: "cockroachdb", estimatorCategory: "database", freeTier: "10 GiB storage", whyChosen: "10 GiB free distributed SQL. Excellent for OSS projects that need a resilient, scalable database.", starter: 0, growth: 0, scale: 295 },
       { category: "Hosting", vendor: "Netlify", slug: "netlify", estimatorCategory: "hosting", freeTier: "300 credits/mo", whyChosen: "Great for docs sites and project landing pages. Deploy previews for every PR.", starter: 19, growth: 19, scale: 99 },
       { category: "Auth", vendor: "WorkOS", slug: "workos", estimatorCategory: "auth", freeTier: "1M MAU (AuthKit)", whyChosen: "1M MAU free — effectively unlimited for any OSS project's auth needs.", starter: 0, growth: 0, scale: 0 },
       { category: "Monitoring", vendor: "BetterStack", slug: "betterstack", estimatorCategory: "monitoring", freeTier: "10 monitors, 3 GB logs", whyChosen: "Free status page for your OSS project. Users can check uptime without filing issues.", starter: 0, growth: 25, scale: 85 },
@@ -47373,7 +47338,6 @@ const STACK_TEMPLATES: StackTemplate[] = [
     ],
     swaps: [
       { from: "Netlify", to: "Cloudflare Pages", toSlug: "cloudflare-pages", saving: "Save $99/mo at 100K users — unlimited bandwidth and builds for static sites" },
-      { from: "CockroachDB", to: "Neon", toSlug: "neon", saving: "Better developer experience with branching and scale-to-zero, though smaller free tier (0.5 GB)" },
     ],
     relatedComparisons: [
       { href: "/vercel-vs-netlify", label: "Vercel vs Netlify" },
@@ -47824,7 +47788,7 @@ function buildEstimatorData(): EstimatorCategory[] {
         { slug: "turso", name: "Turso", free: "100 DBs, 5 GB storage", starter: 0, growth: 29, scale: 29, notes: "Generous free tier, Scaler $29/mo" },
         { slug: "upstash", name: "Upstash", free: "256 MB Redis, 500K cmd/mo", starter: 0, growth: 10, scale: 50, notes: "Pay-per-request, $0.2/100K commands" },
         { slug: "mongodb-atlas", name: "MongoDB Atlas", free: "512 MB shared cluster", starter: 9, growth: 57, scale: 230, notes: "Dedicated clusters from $57/mo" },
-        { slug: "cockroachdb", name: "CockroachDB", free: "10 GiB storage", starter: 0, growth: 0, scale: 295, notes: "Generous free tier, Standard from $295/mo" },
+        { slug: "cockroachdb", name: "CockroachDB", free: "No free plan for new deployments (30-day trial, $400 credit)", starter: 203, growth: 203, scale: 203, notes: "CockroachDB's own example: Standard, 2 vCPU and 100 GB, about $203/mo. Larger clusters cost $0.092 per vCPU-hour." },
         { slug: "firebase", name: "Firebase", free: "1 GB Firestore, 50K reads/day", starter: 0, growth: 25, scale: 100, notes: "Blaze pay-as-you-go" },
       ],
     },
