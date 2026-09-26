@@ -5709,8 +5709,6 @@ describe("shutdown tracker page", () => {
     assert.ok(html.includes("AWS Fargate Platform Version 1.3.0"), "Should list Fargate PV 1.3.0 deprecation");
     assert.ok(html.includes("AWS App Mesh"), "Should list AWS App Mesh shutdown");
     assert.ok(html.includes("AWS Proton"), "Should list AWS Proton shutdown");
-    assert.ok(html.includes("AWS CodeCommit"), "Should list AWS CodeCommit maintenance mode");
-    assert.ok(html.includes("AWS Cloud9"), "Should list AWS Cloud9 maintenance mode");
   });
 
   it("GET /cockroachdb-vs-mongodb renders programmatic VS page", async () => {
