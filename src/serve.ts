@@ -22790,7 +22790,6 @@ function buildGeminiApiPricing2026Page(): string {
   const pubDate = "2026-03-26";
 
   const rateLimitChange = dealChanges.find(c => c.vendor === "Google Gemini" && c.change_type === "limits_reduced");
-  const deprecationChange = dealChanges.find(c => c.vendor === "Google Gemini 2.0 Flash" && c.change_type === "product_deprecated");
   const spendCapChange = dealChanges.find(c => c.vendor === "Google Gemini API" && c.change_type === "restriction");
 
   const llmProviders = [
@@ -22970,13 +22969,6 @@ ${mcpCtaCss()}
     <div class="timeline-content">
       <h3 style="color:#f85149">Rate Limits Slashed 50-80%</h3>
       <p>${rateLimitChange ? changeSummaryHtml(rateLimitChange, escHtmlServer) : "Gemini API free tier rate limits reduced dramatically. Flash went from ~250 RPD to 20-50 RPD. Pro model free tier removed entirely."}</p>
-    </div>
-  </div>
-  <div class="timeline-item">
-    <div class="timeline-date">Mar 2026</div>
-    <div class="timeline-content">
-      <h3 style="color:#d29922">Gemini 2.0 Flash Deprecated</h3>
-      <p>${deprecationChange ? changeSummaryHtml(deprecationChange, escHtmlServer) : "Gemini 2.0 Flash and Flash-Lite deprecated. Developers must migrate to 2.5 series models."}</p>
     </div>
   </div>
   <div class="timeline-item">
