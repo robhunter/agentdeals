@@ -2647,6 +2647,7 @@
       ],
       "vendors_tabulated": [
         "anthropic-api",
+        "cerebras",
         "deepseek-api",
         "fireworks-ai",
         "google-gemini-api",
@@ -2662,8 +2663,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 21,
-      "table_figures_from_records": 21,
+      "table_figures": 25,
+      "table_figures_from_records": 25,
       "tables": [
         {
           "label": "What’s Changing",
@@ -2672,8 +2673,8 @@
         },
         {
           "label": "Free Tier Comparison Table",
-          "figures": 16,
-          "from_records": 16
+          "figures": 20,
+          "from_records": 20
         },
         {
           "label": "OpenAI Pricing Change Timeline",
