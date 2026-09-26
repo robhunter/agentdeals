@@ -93,7 +93,13 @@
         "Playwright"
       ],
       "recorded_date": "2026-04-18",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: EveryStep did not remove a free plan. Its pricing page lists \"Free Plan EveryStep Web Recorder\", as it did in 2019 and 2025 captures, and the 30-day free trial is for its paid monitoring plans. The removal existed only in our catalogue's reclassification.",
+        "source_url": "https://everystep-automation.com/pricing/"
+      }
     },
     {
       "vendor": "OpenAI Codex",
@@ -782,7 +788,7 @@
       "date": "2026-03-31",
       "summary": "odrive free tier discontinued effective March 31, 2026. Previously free unified cloud storage sync across multiple providers (Google Drive, Dropbox, S3, etc.).",
       "previous_state": "Free tier with basic sync across multiple cloud storage providers, file manager interface",
-      "current_state": "Free tier removed. Business plans at $20/user/month (min 5 users) or $200/year org subscription. March 31, 2026 deadline",
+      "current_state": "Free tier removed. Business plans at $20/user/month (min 5 users) or $200/user/year. March 31, 2026 deadline",
       "impact": "medium",
       "source_url": "https://www.odrive.com/pricing",
       "category": "Storage",
@@ -798,11 +804,11 @@
       "vendor": "MinIO",
       "change_type": "open_source_killed",
       "date": "2026-02-12",
-      "summary": "MinIO archived its open-source GitHub repository. All development moved to proprietary MinIO AIStor. No new Docker images, PRs, or contributions accepted. Only case-by-case critical security fixes",
-      "previous_state": "Open-source S3-compatible object storage under AGPL-3.0. Active GitHub repo with community contributions, regular Docker image releases",
-      "current_state": "GitHub repository archived. Development moved to proprietary AIStor product. No new open-source releases. Critical security fixes only on case-by-case basis",
+      "summary": "MinIO marked its open-source repository \"NO LONGER MAINTAINED\" on 2026-02-12 and archived it on 2026-02-13, ending the AGPL community edition with no further bug fixes or security patches. Development continues in the commercially licensed MinIO AIStor. Community releases had been source-only since 2025-10-15, and the repository had been in maintenance mode since 2025-12-03.",
+      "previous_state": "AGPL-3.0 community edition in maintenance mode: source-only releases since 2025-10-15, no new features or pull requests since 2025-12-03",
+      "current_state": "Repository archived and read-only; no bug fixes or security patches; community binaries no longer served from dl.min.io",
       "impact": "high",
-      "source_url": "https://linuxiac.com/minio-ends-active-development/",
+      "source_url": "https://github.com/minio/minio/commit/7aac2a2c5b7c882e68c1ce017d8256be2feea27f",
       "category": "Storage",
       "alternatives": [
         "Ceph",
@@ -1641,7 +1647,13 @@
         "DeepSource"
       ],
       "recorded_date": "2026-04-08",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: SonarQube Cloud's plans did not change near 2026-04-01. It listed Free, Team (from $32 a month) and Enterprise in captures of 2026-03-05 and 2026-04-12, and neither shows a Developer tier.",
+        "source_url": "https://web.archive.org/web/20260412133551/https://www.sonarsource.com/plans-and-pricing/sonarcloud/"
+      }
     },
     {
       "vendor": "Cursor",
@@ -1989,9 +2001,9 @@
     {
       "vendor": "Xata Lite",
       "change_type": "product_deprecated",
-      "date": "2026-04-12",
+      "date": "2026-02-28",
       "discontinued_date": "unknown",
-      "summary": "Xata Lite returned HTTP 410 Gone. Service has been discontinued.",
+      "summary": "Xata retired Xata Lite, its original serverless platform with a 15 GB free plan, on 2026-02-28. It announced the retirement and closed Lite sign-ups by 2025-12-08.",
       "previous_state": "10 branches, 15 GB storage, no pausing or cold starts",
       "current_state": "Service discontinued (410 Gone)",
       "impact": "high",
@@ -2108,7 +2120,13 @@
       "category": "CI/CD",
       "alternatives": [],
       "recorded_date": "2026-04-12",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: Nx Cloud's free Hobby plan never had 150,000 credits or 30 contributors; it had 50,000 credits throughout. The real change near that date went the other way on contributors, and is recorded separately.",
+        "source_url": "https://github.com/nrwl/nx/blob/b1717a687d24c45b3cf545b56894736a0a4e8913/nx-dev/ui-pricing/src/lib/faq.tsx"
+      }
     },
     {
       "vendor": "incidenthub.cloud",
@@ -2139,7 +2157,13 @@
         "Xitoring"
       ],
       "recorded_date": "2026-04-12",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: Servervana's free plan did not drop to 1 HTTP monitor. Its pricing data listed 10 free HTTP monitors in a 2025-06-04 capture and still does, and its free-monitoring page reads \"10 x HTTP monitors. 1 x DNS monitor. 1 x Status Page.\"",
+        "source_url": "https://servervana.com/free-uptime-monitoring"
+      }
     },
     {
       "vendor": "economize.cloud",
@@ -2706,7 +2730,13 @@
       "category": "Dev Utilities",
       "alternatives": [],
       "recorded_date": "2026-04-12",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: APITemplate.io's free plan did not change near 2026-04-12. Its pricing page read \"Free $ 0 Monthly 50 images, PDFs /month 3 Templates\" in captures from 2024-02-09, 2026-02-11 and 2026-06-11.",
+        "source_url": "https://web.archive.org/web/20240209190614/https://apitemplate.io/pricing/"
+      }
     },
     {
       "vendor": "Conversion Tools",
@@ -2720,7 +2750,13 @@
       "category": "Dev Utilities",
       "alternatives": [],
       "recorded_date": "2026-04-12",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: Conversion Tools' file size limits did not change. They were 20 MB for registered users and 10 MB for users who don't register from January 2025 on; the record read those two plans as before and after. The real change was to conversion counts, recorded separately.",
+        "source_url": "https://web.archive.org/web/20250109013518/https://conversiontools.io/pricing"
+      }
     },
     {
       "vendor": "CraftMyPDF",
@@ -2734,7 +2770,13 @@
       "category": "Dev Utilities",
       "alternatives": [],
       "recorded_date": "2026-04-12",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: CraftMyPDF's Free plan did not change near 2026-04-12 and was never 100 PDFs a month. It has been 50 PDFs or images a month since it was cut from 80 in 2022, between captures of 2022-05-24 and 2022-10-03.",
+        "source_url": "https://web.archive.org/web/20221003213942/https://craftmypdf.com/pricing/"
+      }
     },
     {
       "vendor": "CurrencyScoop",
@@ -2748,7 +2790,13 @@
       "category": "Dev Utilities",
       "alternatives": [],
       "recorded_date": "2026-04-12",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: CurrencyScoop's pricing did not change near 2026-04-12, and a rebrand is not a pricing change. CurrencyScoop became CurrencyBeacon between captures of 2022-11-21 and 2022-12-05, with the same Free plan of 5,000 requests a month.",
+        "source_url": "https://web.archive.org/web/20221205212023/https://currencyscoop.com/"
+      }
     },
     {
       "vendor": "CustomJS",
@@ -2762,7 +2810,13 @@
       "category": "Dev Utilities",
       "alternatives": [],
       "recorded_date": "2026-04-12",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: CustomJS's pricing did not change near 2026-04-12, and a domain change is not a pricing change. Its site has been served from customjs.space since at least March 2024, and www.customjs.io has redirected there since at least 2024-08-15.",
+        "source_url": "https://web.archive.org/web/20240815210357/http://www.customjs.io/"
+      }
     },
     {
       "vendor": "DiffJSON",
@@ -4566,7 +4620,13 @@
         "Postmark"
       ],
       "recorded_date": "2026-04-17",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: nothing changed in April 2026. SendGrid Accelerate folded into Twilio Startups in early 2021 (sendgrid.com/accelerate/ redirected there between captures of 2021-02-25 and 2021-03-03), and Twilio has said \"We do not offer additional credits to startups at this time\" since at least 2024-06-13. A startup credit programme is not a free tier.",
+        "source_url": "https://www.twilio.com/en-us/solutions/startups"
+      }
     },
     {
       "vendor": "Prospect.io",
@@ -4594,13 +4654,13 @@
     },
     {
       "vendor": "Kluster AI",
-      "change_type": "free_tier_removed",
-      "date": "2026-04-18",
-      "summary": "Kluster AI removed from index. Public pricing page shows a code review product ($30/month), not batch LLM inference. The $5 free credits for open-source model inference cannot be verified from any public page.",
+      "change_type": "product_deprecated",
+      "date": "2025-07-24",
+      "summary": "kluster.ai shut down its inference, fine-tuning and dedicated deployment services on 2025-07-24, announced on 2025-07-17, which ended its free trial and $5 signup credits.",
       "previous_state": "$5 free credits for open-source model inference (DeepSeek-R1, Llama 3.3/3.1, Gemma 3)",
       "current_state": "Free credits offer unverifiable — removed from index",
       "impact": "low",
-      "source_url": "https://kluster.ai/pricing",
+      "source_url": "https://web.archive.org/web/20250911115351/https://www.kluster.ai/blog/end-of-life-announcement",
       "category": "AI / ML",
       "alternatives": [
         "Groq",
@@ -4631,12 +4691,12 @@
     {
       "vendor": "ImageEngine",
       "change_type": "free_tier_removed",
-      "date": "2026-04-19",
-      "summary": "ImageEngine's free developer program is no longer on offer. Only access path is a 30-day free trial (no credit card), followed by flat-rate enterprise licensing. Reclassified to Trial tier.",
+      "date": "2026-04-09",
+      "summary": "ImageEngine withdrew its free Developer Program (10 GB of monthly traffic, one image origin) between captures of 2026-02-17 and 2026-04-09, when it replaced its SaaS plans with self-hosted ImageEngine Kube. The programme's page now redirects to a 30-day free trial with no credit card required.",
       "previous_state": "Free developer account available via imageengine.io/developer-program",
       "current_state": "30-day free trial only; flat-rate enterprise licensing after trial",
       "impact": "medium",
-      "source_url": "https://imageengine.io/",
+      "source_url": "https://web.archive.org/web/20260409213729/https://imageengine.io/developer-program/",
       "category": "Storage",
       "alternatives": [
         "Cloudinary",
@@ -4650,12 +4710,12 @@
     {
       "vendor": "DBOS",
       "change_type": "free_tier_removed",
-      "date": "2026-04-19",
-      "summary": "DBOS Cloud free tier (1 Firecracker microVM per app, 1M service calls/mo) no longer appears on dbos.dev/pricing. Only the open-source DBOS Transact library remains free; managed cloud is paid-only starting at Pro $99/mo. Description updated accordingly; vendor remains in index under the open-source tier.",
-      "previous_state": "Hosted free tier with 1 Firecracker microVM per app (512 MB RAM, 1 vCPU), scale to zero, 1M service calls/mo",
-      "current_state": "Open-source DBOS Transact library free; managed DBOS Cloud paid-only from Pro at $99/mo",
+      "date": "2025-04-04",
+      "summary": "DBOS replaced its free DBOS Cloud plan ($0 a month, \"Free forever\": 100,000 requests a day, 1,000,000 ms of CPU a month, 1 application) with DBOS Pro at $99 a month with a 30-day free trial, between captures of 2025-03-21 and 2025-04-04. The open-source DBOS Transact library stays free.",
+      "previous_state": "DBOS Cloud Free: $0/month, 100,000 requests/day, 1,000,000 ms CPU/month, 1 application",
+      "current_state": "No free cloud plan. DBOS Pro $99/month with a 30-day free trial; DBOS Transact library free and open source",
       "impact": "medium",
-      "source_url": "https://www.dbos.dev/pricing",
+      "source_url": "https://web.archive.org/web/20250404224119/https://www.dbos.dev/dbos-pricing",
       "category": "Workflow Automation",
       "alternatives": [
         "Temporal",
@@ -10689,6 +10749,104 @@
       "impact": "medium",
       "source_url": "http://web.archive.org/web/20250903210249/https://railway.com/pricing",
       "category": "Cloud Hosting",
+      "alternatives": [],
+      "recorded_date": "2026-09-26",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Conversion Tools",
+      "change_type": "limits_reduced",
+      "date": "2026-02-16",
+      "summary": "Conversion Tools cut registered free users from 30 to 10 conversions a day (300 to 100 a month) between captures of 2025-12-02 and 2026-02-16. By 2026-05-14, users who don't register had 5 a day, down from 10. File size limits stayed at 20 MB and 10 MB.",
+      "previous_state": "Registered, free: 30 conversions/day, 20 MB files. Not registered: 10 conversions/day, 10 MB files",
+      "current_state": "Registered, free: 10 conversions/day (100/month), 20 MB files. Not registered: 5 conversions/day, 10 MB files",
+      "impact": "low",
+      "source_url": "https://web.archive.org/web/20260216033714/https://conversiontools.io/main.c2c8fd09dc9551619b50.js",
+      "category": "Dev Utilities",
+      "alternatives": [],
+      "recorded_date": "2026-09-26",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Nx Cloud",
+      "change_type": "limits_reduced",
+      "date": "2026-05-13",
+      "summary": "Between captures of 2026-04-13 and 2026-05-13, Nx Cloud's free Hobby plan began listing \"5 complimentary contributors\". Its 50,000 monthly credits did not change. Its FAQ had said the plan was limited only by credits, whatever the team size.",
+      "previous_state": "Hobby: 50,000 credits a month, no contributor limit",
+      "current_state": "Hobby: 50,000 credits a month (resets monthly), 5 complimentary contributors, 10 concurrent CI connections",
+      "impact": "medium",
+      "source_url": "https://nx.dev/pricing",
+      "category": "CI/CD",
+      "alternatives": [],
+      "recorded_date": "2026-09-26",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Xata Lite",
+      "change_type": "record_corrected",
+      "date": "2026-09-26",
+      "summary": "Data correction - Xata retired Xata Lite on 2026-02-28, the date it had announced by 2025-12-08. Our record was dated 2026-04-12, the day we saw lite.xata.io return 410.",
+      "previous_state": "Recorded as: Xata Lite returned HTTP 410 Gone. Service has been discontinued.",
+      "current_state": "\"Xata Lite was permanently retired on February 28, 2026.\"",
+      "impact": "medium",
+      "source_url": "https://lite.xata.io/",
+      "category": "Databases",
+      "alternatives": [],
+      "recorded_date": "2026-09-26",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "ImageEngine",
+      "change_type": "record_corrected",
+      "date": "2026-09-26",
+      "summary": "Data correction - ImageEngine's free Developer Program was withdrawn between 2026-02-17 and 2026-04-09, before our 2026-04-19 date, which was the day we recorded it.",
+      "previous_state": "Recorded as: ImageEngine's free developer program is no longer on offer. Only access path is a 30-day free trial (no credit card), followed by flat-rate enterprise licensing. Reclassified to Trial tier.",
+      "current_state": "2026-02-17: \"Our free Developer Program includes a maximum of 10GB of monthly traffic\". 2026-04-09: the page redirects to \"START YOUR FREE TRIAL 30 days · No credit card required\".",
+      "impact": "medium",
+      "source_url": "https://web.archive.org/web/20260217050741/https://imageengine.io/developer-program/",
+      "category": "Storage",
+      "alternatives": [],
+      "recorded_date": "2026-09-26",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "DBOS",
+      "change_type": "record_corrected",
+      "date": "2026-09-26",
+      "summary": "Data correction - DBOS dropped its free cloud plan between 2025-03-21 and 2025-04-04, about a year before our 2026-04-19 date, and the plan's limits were 100,000 requests a day and 1,000,000 ms of CPU a month.",
+      "previous_state": "Recorded as: DBOS Cloud free tier (1 Firecracker microVM per app, 1M service calls/mo) no longer appears on dbos.dev/pricing. Only the open-source DBOS Transact library remains free; managed cloud is paid-only starting at Pro $99/mo. Description updated accordingly; vendor remains in index under the open-source tier.",
+      "current_state": "2025-03-21: \"Free $0/mo Perfect for individuals & hobbyists. Free forever.\" 2025-04-04: \"DBOS Pro $99/mo … Free 30-day Trial\".",
+      "impact": "medium",
+      "source_url": "https://web.archive.org/web/20250321040005/https://www.dbos.dev/pricing",
+      "category": "Workflow Automation",
+      "alternatives": [],
+      "recorded_date": "2026-09-26",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Kluster AI",
+      "change_type": "record_corrected",
+      "date": "2026-09-26",
+      "summary": "Data correction - kluster.ai's $5 credits ended on 2025-07-24, when it shut down its whole inference service, not on 2026-04-18. Our record called it a free tier removal.",
+      "previous_state": "Recorded as: Kluster AI removed from index. Public pricing page shows a code review product ($30/month), not batch LLM inference. The $5 free credits for open-source model inference cannot be verified from any public page.",
+      "current_state": "\"As of July 24 at 11PM ET, we will be sunsetting our Inference, Fine-Tuning, and Dedicated Deployments\"",
+      "impact": "medium",
+      "source_url": "https://web.archive.org/web/20250911115351/https://www.kluster.ai/blog/end-of-life-announcement",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-09-26",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "MinIO",
+      "change_type": "record_corrected",
+      "date": "2026-09-26",
+      "summary": "Data correction - MinIO's archived community edition gets no security patches; the \"case-by-case critical security fixes\" our record quoted was its December 2025 policy, dropped by January 2026. Its Docker images and pull requests had already stopped in late 2025.",
+      "previous_state": "Recorded as: MinIO archived its open-source GitHub repository. All development moved to proprietary MinIO AIStor. No new Docker images, PRs, or contributions accepted. Only case-by-case critical security fixes",
+      "current_state": "\"The original open-source MinIO edition, licensed under AGPLv3, is no longer maintained. Its codebase is frozen, with no new features, bug fixes, or security patches.\"",
+      "impact": "medium",
+      "source_url": "https://www.min.io/pricing",
+      "category": "Storage",
       "alternatives": [],
       "recorded_date": "2026-09-26",
       "date_source": "hand_written"

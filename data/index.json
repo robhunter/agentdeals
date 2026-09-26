@@ -10764,7 +10764,7 @@
     {
       "vendor": "Conversion Tools",
       "category": "Dev Utilities",
-      "description": "Online File Converter for documents, images, video, audio, and eBooks. REST API is available. Libraries for Node.js, PHP, Python. Support files up to 50 GB (for paid plans). The free tier is limited by file size (10MB) and number of conversions (30/Day, 300/Month).",
+      "description": "Online File Converter for documents, images, video, audio, and eBooks. REST API is available. Libraries for Node.js, PHP, Python. Support files up to 50 GB (for paid plans). Registered free users get 10 conversions a day (100 a month) and a 20 MB file size limit.",
       "tier": "Free",
       "url": "https://conversiontools.io/",
       "tags": [
@@ -14742,7 +14742,7 @@
     {
       "vendor": "Nx Cloud",
       "category": "CI/CD",
-      "description": "Nx Cloud speeds up your monorepos on CI with features such as remote caching, distribution of tasks across machines and even automated splitting of your e2e test runs. It comes with a free Hobby plan with unlimited contributors and 50,000 credits included.",
+      "description": "Nx Cloud speeds up your monorepos on CI with features such as remote caching, distribution of tasks across machines and even automated splitting of your e2e test runs. Its free Hobby plan includes 50,000 credits a month, 5 complimentary contributors and 10 concurrent CI connections.",
       "tier": "Free",
       "url": "https://nx.dev/ci",
       "tags": [
@@ -14988,13 +14988,13 @@
     {
       "vendor": "everystep-automation.com",
       "category": "Testing",
-      "description": "Desktop tool that records and replays all steps made in a web browser and creates scripts. 30-day free trial only — no permanent free tier. Paid licenses required after trial.",
-      "tier": "Trial",
+      "description": "Desktop tool that records and replays the steps made in a web browser and creates scripts. The EveryStep Web Recorder is free; paid monitoring plans start at $38.99/month, with a 30-day free trial.",
+      "tier": "Free",
       "url": "https://www.everystep-automation.com/",
       "tags": [
         "testing",
         "qa",
-        "trial"
+        "free tier"
       ],
       "verifiedDate": "2026-08-24",
       "source_check": {
@@ -17636,7 +17636,7 @@
     {
       "vendor": "Servervana",
       "category": "Monitoring",
-      "description": "Uptime monitoring with support for large projects and teams. Free tier: 1 HTTP monitor, 1 DNS monitor, and 1 status page.",
+      "description": "Uptime monitoring with support for large projects and teams. Free tier: 10 HTTP monitors, 1 DNS monitor and 1 status page.",
       "tier": "Free",
       "url": "https://servervana.com",
       "tags": [
@@ -24189,8 +24189,8 @@
     {
       "vendor": "odrive",
       "category": "Storage",
-      "description": "Cloud storage sync and unification platform — connects Google Drive, Dropbox, S3, OneDrive, and other providers into a single file manager. Free tier being discontinued March 31, 2026",
-      "tier": "Free",
+      "description": "Cloud storage sync and unification platform — connects Google Drive, Dropbox, S3, OneDrive, and other providers into a single file manager. No free plan since 2026-03-31, when odrive ended free consumer accounts. New users get a 30-day free trial with no credit card; Standard is $20/user/month or $200/user/year.",
+      "tier": "Trial",
       "url": "https://www.odrive.com/",
       "tags": [
         "storage",
@@ -34931,7 +34931,7 @@
     {
       "vendor": "Google Content API for Shopping",
       "category": "API Development",
-      "description": "Product data management API for Google Merchant Center. Being sunset August 18, 2026 — replaced by Merchant API (rolling out April 22, 2026). Free to use with a Google Merchant Center account. Provided product listing, inventory management, and order management endpoints. Developers must migrate to Merchant API before the sunset date.",
+      "description": "Product data management API for Google Merchant Center. Sunset on 2026-08-18. Its successor, Merchant API, has been generally available since July 2025. Free to use with a Google Merchant Center account. Provided product listing, inventory management, and order management endpoints. Developers must migrate to Merchant API before the sunset date.",
       "tier": "Free (Deprecated)",
       "url": "https://developers.google.com/shopping-content/guides/quickstart",
       "tags": [
