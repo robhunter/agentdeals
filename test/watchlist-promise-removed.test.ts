@@ -5,6 +5,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { assertCoversPopulation, vendorsInTheCatalogue } from "./population-floor.ts";
 import { API_ENDPOINTS, WITHDRAWN_ENDPOINTS, withdrawalReasonFor } from "../dist/api-inventory.js";
+import { loadOffers } from "../dist/data.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -170,12 +171,14 @@ describe("the per-vendor change feed filters on the vendor it names", () => {
     return { status: res.status, vendors, body };
   }
 
-  it("names one vendor and returns only that vendor", async () => {
+  it("names one vendor the catalogue lists and returns only that vendor", async () => {
     const unfiltered = await feed("");
     assert.strictEqual(unfiltered.status, 200);
     assert.ok(unfiltered.vendors.length > 1, `the unfiltered feed carried ${unfiltered.vendors.length} entries`);
 
-    const subject = unfiltered.vendors[0];
+    const listed = new Set(loadOffers().map((o: { vendor: string }) => o.vendor));
+    const subject = unfiltered.vendors.find((vendor) => listed.has(vendor));
+    assert.ok(subject, "no vendor in the unfiltered feed is one the catalogue lists");
     const filtered = await feed(`?vendor=${encodeURIComponent(subject)}`);
     assert.strictEqual(filtered.status, 200);
     assert.ok(filtered.vendors.length > 0, `${subject} is in the unfiltered feed and its own feed is empty`);
