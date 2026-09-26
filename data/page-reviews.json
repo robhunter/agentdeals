@@ -1919,7 +1919,6 @@
         "conversion-tools",
         "devin",
         "digitalocean",
-        "dub-co",
         "firebase",
         "fly-io",
         "github-actions",
@@ -1928,7 +1927,6 @@
         "google-cloud",
         "hcp-terraform",
         "localstack",
-        "logz-io",
         "minio",
         "neo4j-auradb",
         "neon",
@@ -1953,13 +1951,13 @@
       "review_note": null,
       "reads_index": false,
       "tables_read_index": false,
-      "table_figures": 47,
-      "table_figures_from_records": 46,
+      "table_figures": 46,
+      "table_figures_from_records": 45,
       "tables": [
         {
           "label": "All Q1 2026 Changes",
-          "figures": 47,
-          "from_records": 46
+          "figures": 46,
+          "from_records": 45
         }
       ],
       "reads_changes": true,

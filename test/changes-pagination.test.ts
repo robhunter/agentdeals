@@ -352,4 +352,16 @@ describe("the stdio proxy asks for what it means to return", () => {
     const unstated = changes.filter((c) => !("standing" in c));
     assert.deepStrictEqual(unstated, [], "the concise shape is the one place a caller cannot tell a withdrawn record");
   });
+
+  it("says in the concise shape whether each date is when the change took effect", async () => {
+    const concise = await trackChanges({ since: "2000-01-01", include_expiring: false, response_format: "concise" });
+    const detailed = await trackChanges({ since: "2000-01-01", include_expiring: false });
+    const meanings = (result: Record<string, unknown>) =>
+      (result.changes as Record<string, unknown>[]).map((c) => `${c.vendor} ${c.date} ${c.date_meaning}`);
+    assert.deepStrictEqual(meanings(concise), meanings(detailed));
+    assert.deepStrictEqual(
+      [...new Set((concise.changes as Record<string, unknown>[]).map((c) => c.date_meaning))].sort(),
+      ["discovered", "effective"],
+    );
+  });
 });
