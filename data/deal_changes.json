@@ -150,7 +150,13 @@
       "category": "AI Coding",
       "alternatives": [],
       "recorded_date": "2026-04-13",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: not a pricing change. Quotas replacing credits is the restructure that took effect on 2026-03-19, which our record of that date describes, and a confirmation that grandfathered Pro subscribers keep $15 a month changes nothing.",
+        "source_url": "https://devin.ai/blog/windsurf-pricing-plans"
+      }
     },
     {
       "vendor": "Brave Search API",
@@ -1691,7 +1697,13 @@
         "Claude Code"
       ],
       "recorded_date": "2026-04-08",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: Kiro did not launch in April 2026. It became generally available on 2025-11-17 (\"Kiro is generally available\"), and its free plan of 50 credits a month is on kiro.dev/pricing in the capture of 2025-12-02.",
+        "source_url": "https://kiro.dev/blog/general-availability/"
+      }
     },
     {
       "vendor": "Replit",
@@ -1833,7 +1845,13 @@
         "Claude Code"
       ],
       "recorded_date": "2026-04-09",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: duplicate of our 2026-04-07 Kiro record, and wrong for the same reason: Kiro became generally available on 2025-11-17, and its free plan of 50 credits a month is on kiro.dev/pricing in the capture of 2025-12-02.",
+        "source_url": "https://kiro.dev/blog/general-availability/"
+      }
     },
     {
       "vendor": "OpenAI",
@@ -4748,7 +4766,13 @@
         "Claude Code"
       ],
       "recorded_date": "2026-04-13",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: not a pricing change. It describes kiro.dev/pricing as it already stood: credits, the $0.04 overage and the 500 sign-up bonus credits are all in the captures of 2026-03-17 and 2026-04-03.",
+        "source_url": "https://web.archive.org/web/20260403033417/https://kiro.dev/pricing/"
+      }
     },
     {
       "vendor": "Amazon Kiro (AWS Startups)",
@@ -8785,14 +8809,14 @@
     },
     {
       "vendor": "Amazon Kiro",
-      "change_type": "pricing_restructured",
-      "date": "2026-09-03",
-      "date_source": "discovered",
-      "summary": "The tier names have changed. 'Pro+' is now 'Pro Max'. There is a new 'Pro Max' tier at $100/month for 5,000 credits. The sign-up bonus is now $20 towards a paid plan, instead of 500 bonus credits. Add-on credits are available for all paid tiers and cost $0.04/credit, with packs ranging from $5 to $100. Unused add-on credits roll over for 12 months.",
-      "previous_state": "Claude-powered AI IDE by Amazon (GA launch). Free tier: 50 credits/month. Pro $20/month (1,000 credits). Pro+ $40/month (2,000 credits). Power $200/month (10,000 credits). Credits metered to 0.01 increments — different models consume at different rates (Sonnet 4 costs 1.3x more than Auto mode). $0.04 overage per additional credit (disabled by default, must enable in Settings). 500 bonus credits for new users (valid 30 days). Unused monthly credits do NOT roll over. Enterprise tier: custom pricing with SAML/SCIM SSO, usage analytics, organizational management. GovCloud pricing ~20% higher; Free tier unavailable in GovCloud. Built on Claude, focuses on spec-driven development with automated requirements, design docs, and test generation.",
-      "current_state": "KIRO FREE $0 per month 50 credits. KIRO PRO $20 per user / month 1,000 credits. KIRO PRO+ $40 per user / month 2,000 credits. KIRO PRO MAX $100 per user / month 5,000 credits. KIRO POWER $200 per user / month 10,000 credits. Add-on credits are $0.04/credit. $20 credit towards first paid plan upgrade.",
+      "change_type": "limits_reduced",
+      "date": "2026-06-03",
+      "date_source": "hand_written",
+      "summary": "Kiro stopped giving new users 500 bonus credits on sign-up, usable within 30 days, and now credits $20 toward the first paid plan instead. The change falls between the 2026-05-02 and 2026-06-03 captures of kiro.dev/pricing.",
+      "previous_state": "\"Get 500 bonus credits usable within 30 days when you first sign up using social login or Builder ID.\" (kiro.dev/pricing, Internet Archive capture of 2026-05-02)",
+      "current_state": "\"Get $20 credited toward your subscription when you first upgrade to a paid plan using social login or Builder ID.\" The Free plan still includes 50 credits a month.",
       "impact": "medium",
-      "source_url": "https://kiro.dev/pricing",
+      "source_url": "https://web.archive.org/web/20260502165957/https://kiro.dev/pricing/",
       "category": "AI Coding",
       "alternatives": [],
       "detected_by": "reverify-ai",
@@ -10559,15 +10583,15 @@
     {
       "vendor": "Devin",
       "change_type": "pricing_restructured",
-      "date": "2026-09-18",
-      "date_source": "discovered",
-      "summary": "The pricing has been restructured. Is no longer accurate. There is now a Free plan, a Pro plan at $20/month, a Max plan at $200/month, and a Team plan at $80/month + $40/mo per full dev seat. The free tier now exists as a distinct plan with limited features.",
+      "date": "2026-04-14",
+      "date_source": "vendor_page",
+      "summary": "Cognition retired Devin's Core and Team plans and introduced Free, Pro, Max, Teams and Enterprise; Core users moved to the Free plan. Usage past a paid plan's allowance is billed in dollars, and only Enterprise still uses ACUs.",
       "tier": "Free",
       "tier_direction": "widened",
-      "previous_state": "Autonomous AI software engineer by Cognition Labs. Core plan pay-as-you-go starting at $20 (ACUs at $2.25 each). Team plan $500/mo (250 ACUs at $2.00 each). Enterprise with custom pricing, VPC deployment, SSO. Previously $500-only pricing before January 2026 restructuring",
-      "current_state": "The Free plan includes a light quota to code with agents, limited model availability, unlimited inline edits, and unlimited Tab completions.",
+      "previous_state": "Core: pay-as-you-go from $20 with ACUs; Team: $500 a month",
+      "current_state": "\"We're retiring the old Core and Team plans and introducing a new lineup: Free, Pro, Max, Teams, and Enterprise.\" \"If you're on Core today, you'll move to Free.\" Pricing page: Free $0, Pro $20/month, Max $200/month, Teams \"$80/month for team plan + $40/mo per full dev seat\".",
       "impact": "high",
-      "source_url": "https://devin.ai/pricing",
+      "source_url": "https://cognition.com/blog/new-self-serve-plans-for-devin",
       "category": "AI Coding",
       "alternatives": [],
       "detected_by": "reverify-ai",
@@ -11704,6 +11728,48 @@
       "impact": "low",
       "source_url": "https://docs.foursquare.com/developer/reference/upcoming-changes",
       "category": "Maps/Geolocation",
+      "alternatives": [],
+      "recorded_date": "2026-09-26",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Amazon Kiro",
+      "change_type": "new_tier",
+      "date": "2026-07-10",
+      "date_source": "hand_written",
+      "summary": "Kiro added a Pro Max plan at $100 per user a month with 5,000 credits, between Pro+ and Power. It first appears on kiro.dev/pricing between the 2026-06-03 and 2026-07-10 captures.",
+      "previous_state": "Paid plans: Pro, Pro+ and Power (kiro.dev/pricing, Internet Archive capture of 2026-06-03)",
+      "current_state": "\"KIRO PRO MAX $100 per user / month 5,000 credits\"",
+      "impact": "low",
+      "source_url": "https://web.archive.org/web/20260710090211/https://kiro.dev/pricing/",
+      "category": "AI Coding",
+      "alternatives": [],
+      "recorded_date": "2026-09-26"
+    },
+    {
+      "vendor": "Amazon Kiro",
+      "change_type": "record_corrected",
+      "date": "2026-09-26",
+      "summary": "Data correction - Kiro's change was the end of its 500 sign-up bonus credits, between 2026-05-02 and 2026-06-03, and a new Pro Max plan came later. Our re-read of 2026-09-03 recorded both as a restructure dated the day it read the page, and misread Pro+ as renamed.",
+      "previous_state": "Recorded 2026-09-03 as pricing_restructured, dated 2026-09-03",
+      "current_state": "limits_reduced dated 2026-06-03, and new_tier dated 2026-07-10, from Internet Archive captures of kiro.dev/pricing",
+      "impact": "low",
+      "source_url": "https://web.archive.org/web/20260502165957/https://kiro.dev/pricing/",
+      "category": "AI Coding",
+      "alternatives": [],
+      "recorded_date": "2026-09-26",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Devin",
+      "change_type": "record_corrected",
+      "date": "2026-09-26",
+      "summary": "Data correction - Cognition's new Devin plans took effect on 2026-04-14. Our re-read of 2026-09-18 recorded the change dated the day it read the page.",
+      "previous_state": "Recorded 2026-09-18 as pricing_restructured, dated 2026-09-18",
+      "current_state": "pricing_restructured, dated 2026-04-14 from Cognition's post",
+      "impact": "low",
+      "source_url": "https://cognition.com/blog/new-self-serve-plans-for-devin",
+      "category": "AI Coding",
       "alternatives": [],
       "recorded_date": "2026-09-26",
       "date_source": "hand_written"
