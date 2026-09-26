@@ -5351,7 +5351,13 @@
       "category": "Dev Utilities",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: the backgrounds did not become paid. The site, now called MeetBackdrops, says \"All backgrounds on MeetBackdrops are completely free to download and use for personal purposes\". HD editions were already sold separately before this record; the reading took the HD line for the whole offer.",
+        "source_url": "https://meetbackdrops.com/faq"
+      }
     },
     {
       "vendor": "Algolia",
@@ -5751,7 +5757,13 @@
       "category": "Email",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: DNSExit's free email plan did not change. Its free email hosting page says \"You can create up to 2 email addresses under your domain with 100MB of total storage\", as in a capture of 2026-03-16. The reading compared the homepage, which never listed those limits, with our text.",
+        "source_url": "https://dnsexit.com/services/free-email-hosting/"
+      }
     },
     {
       "vendor": "Wraps",
@@ -5766,7 +5778,13 @@
       "category": "Email",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: the free tier is not new. Wraps' changelog dates its Free plan to January 2026, and a capture of 2026-03-06 shows the same Free Forever plan (5K tracked events a month, 1 workflow, unlimited contacts).",
+        "source_url": "https://wraps.dev/changelog"
+      }
     },
     {
       "vendor": "phare.io",
@@ -5892,7 +5910,13 @@
       "category": "Cloud Hosting",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: nothing increased. AwardSpace's free-hosting page stated 5GB of monthly bandwidth and 1000mb of disk space in a capture of 2024-01-05 and still does. Our stored text listed features and never stated those limits.",
+        "source_url": "https://www.awardspace.com/free-hosting/"
+      }
     },
     {
       "vendor": "leiga.com",
@@ -5967,7 +5991,13 @@
       "category": "Email",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: nothing was reduced. The Free plan's 50 MB attachment limit and forwarding-only restriction were on the pricing page in captures of 2025-01-16 and 2026-02-14, before our text was written.",
+        "source_url": "https://forwardemail.net/en/private-business-email"
+      }
     },
     {
       "vendor": "readthedocs.org",
@@ -9382,7 +9412,13 @@
       "category": "Notebooks & Data Science",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-09"
+      "recorded_date": "2026-09-09",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: nothing increased. The Free plan's limits, including 5 calls a month for each AI feature, are the same in captures from 2026-03-20 to 2026-08-25 and today. Deepnote renamed \"Auto AI\" to \"Deepnote Agent\" with the same limit; our text had left those limits out.",
+        "source_url": "https://deepnote.com/pricing"
+      }
     },
     {
       "vendor": "Shake",
@@ -9714,7 +9750,13 @@
       "category": "DNS & Domain Management",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-10"
+      "recorded_date": "2026-09-10",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: the limits are not new. DNSPod's free-plan card has listed the same terms since at least 2024-08-03: unlimited records, 5-level subdomains, a 600s minimum TTL, 2 URL forwards and 10 load-balancing entries. Our stored text left most of them out.",
+        "source_url": "https://www.dnspod.com/"
+      }
     },
     {
       "vendor": "Pinecone",
@@ -10683,7 +10725,13 @@
       "category": "Feature Flags",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-25"
+      "recorded_date": "2026-09-25",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: nothing increased. The Forever Free plan lists 10 feature flags, 2 environments and 2 products, as in captures of 2026-04-20 and 2026-08-29. The page says \"unlimited\" only for seats, MAUs, flag reads and the higher plans.",
+        "source_url": "https://configcat.com/pricing/"
+      }
     },
     {
       "vendor": "Code Time",

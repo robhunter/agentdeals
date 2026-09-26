@@ -2507,7 +2507,8 @@
       "source_url": "https://configcat.com",
       "record_date": "2026-09-25",
       "change_type": "limits_increased",
-      "summary": "The Forever Free plan now includes unlimited feature flags, environments, and products, along with 5 million config JSON requests/mo and 20 GB network traffic/mo. Differs from previously 10 feature flags, 2 environments, and 2 products."
+      "summary": "The Forever Free plan now includes unlimited feature flags, environments, and products, along with 5 million config JSON requests/mo and 20 GB network traffic/mo. Differs from previously 10 feature flags, 2 environments, and 2 products.",
+      "reverted_on": "2026-09-26"
     },
     {
       "vendor": "podio.com",

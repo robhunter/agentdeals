@@ -19070,7 +19070,7 @@
     {
       "vendor": "ConfigCat",
       "category": "Feature Flags",
-      "description": "The Forever Free plan includes unlimited feature flags and configs for everyone, 5 million config JSON downloads / mo, and 20 GB network traffic / mo.",
+      "description": "ConfigCat is a developer-centric feature flag service with unlimited team members (within 1 permission group). Forever Free plan: 10 feature flags, 2 environments, 2 products, 5M config JSON requests/mo, 20 GB network traffic/mo, 2 segments, 4 targeting rules/flag, 1 webhook, 7-day audit log retention.",
       "tier": "Free",
       "url": "https://configcat.com",
       "tags": [
@@ -19084,12 +19084,9 @@
         "outcome": "ok",
         "detail": "the page names ConfigCat as \"configcat\" and states \"20 GB / mo\""
       },
-      "restated_from": {
-        "reading_date": "2026-09-25",
-        "source_url": "https://configcat.com",
+      "restatement_reverted": {
         "record_date": "2026-09-25",
-        "change_type": "limits_increased",
-        "restated_on": "2026-09-25"
+        "reverted_on": "2026-09-26"
       }
     },
     {
