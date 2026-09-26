@@ -1997,12 +1997,12 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 40,
+      "table_figures": 41,
       "table_figures_from_records": 4,
       "tables": [
         {
           "label": "Always Free Products",
-          "figures": 19,
+          "figures": 20,
           "from_records": 0
         },
         {
