@@ -28504,7 +28504,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="context-box">
-    <strong>Price convergence:</strong> Cursor, Windsurf, and Augment Code have all adopted credit or consumption-based models in the past year. The $20/mo Pro and $200/mo Power price points have emerged as the de facto standard. GitHub Copilot at $10/mo is the outlier — kept low by Microsoft's distribution strategy. Gemini Code Assist's unlimited free tier is Google's play to capture developers before monetizing.
+    <strong>Price convergence:</strong> Cursor, Windsurf, and Augment Code have all adopted credit or consumption-based models in the past year. The $20/mo Pro and $200/mo Power price points have emerged as the de facto standard. GitHub Copilot at $10/mo is the outlier — kept low by Microsoft's distribution strategy.
   </div>
 
   <h2 id="free-tiers">What You Actually Get for Free</h2>
@@ -29152,7 +29152,7 @@ function buildAiCodingToolsPricingPage(): string {
     '  </div>\n' +
     '\n' +
     '  <div class="context-box">\n' +
-    '    <strong>Price convergence:</strong> Cursor, Windsurf, Augment, Bolt.new, Lovable, Codex (via ChatGPT Plus), and Devin all land at or near $20/month for their entry paid tier. GitHub Copilot at $10/mo is the outlier \u2014 kept low by Microsoft\'s distribution strategy. Google is the wildcard: Gemini Code Assist, Antigravity, and Gemini CLI are all free or have extremely generous free tiers.\n' +
+    '    <strong>Price convergence:</strong> Cursor, Windsurf, Augment, Bolt.new, Lovable, Codex (via ChatGPT Plus), and Devin all land at or near $20/month for their entry paid tier. GitHub Copilot at $10/mo is the outlier \u2014 kept low by Microsoft\'s distribution strategy.\n' +
     '  </div>\n' +
     '\n' +
     '  <h2 id="categories">Category Breakdown</h2>\n' +
@@ -29212,7 +29212,7 @@ function buildAiCodingToolsPricingPage(): string {
     '  </div>\n' +
     '\n' +
     '  <div class="context-box">\n' +
-    '    <strong>Best value picks:</strong> For a solo developer on a budget, <a href="/vendor/google-gemini-code-assist">Gemini Code Assist</a> ($0) or <a href="/vendor/github-copilot">GitHub Copilot</a> ($10/mo) offer the best cost-to-capability ratio. For teams, Copilot Business ($19/seat = $95/mo for 5) is the cheapest managed option. BYO-key tools (Cline, Aider) can be cheapest or most expensive depending on usage patterns.\n' +
+    '    <strong>Best value picks:</strong> For teams, Copilot Business ($19/seat = $95/mo for 5) is the cheapest managed option. BYO-key tools (Cline, Aider) can be cheapest or most expensive depending on usage patterns.\n' +
     '  </div>\n' +
     '\n' +
     '  <h2 id="hidden-costs">Hidden Costs</h2>\n' +

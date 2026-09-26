@@ -14,8 +14,8 @@ const ENDED_ON_SPELLED = /2026-06-18|June 18, 2026/;
 const NAMED = /Gemini Code Assist|Gemini CLI/i;
 const QUOTA =
   /6,000 (?:code[- ])?(?:code-related )?(?:completions|requests)|6K (?:completions|code)|180,000|180K|1,000 (?:req|requests)(?:\/day| a day| per day)|1K (?:req|requests)|60 (?:req|requests)(?:\/min| a minute| per minute)|60 RPM/gi;
-const NAME_WITHIN = 150;
-const DATE_WITHIN = 400;
+const BLOCK_END = /<\/(?:td|th|p|li|div|h[1-6]|tr|dd|dt|summary|figcaption)>|<br\s*\/?>|<\/script>/gi;
+const BLOCKS_BEFORE_THAT_MAY_NAME_IT = 4;
 const QUOTED_CONTEXT_BEFORE = 30;
 const QUOTED_CONTEXT_AFTER = 15;
 
@@ -107,16 +107,18 @@ describe(`Google ended the free Gemini Code Assist individuals tier and Gemini C
         const route = queue.shift()!;
         const res = await fetch(`${base}${route}`);
         if (res.status !== 200) continue;
-        const body = readable(await res.text());
-        for (const m of body.matchAll(QUOTA)) {
-          const near = body.slice(Math.max(0, m.index! - NAME_WITHIN), m.index! + m[0].length + NAME_WITHIN);
-          if (!NAMED.test(near)) continue;
-          quotasNearTheNames++;
-          const around = body.slice(Math.max(0, m.index! - DATE_WITHIN), m.index! + m[0].length + DATE_WITHIN);
-          if (ENDED_ON_SPELLED.test(around)) continue;
-          if (quotesAStoredChangeRecord(body, m.index!, m[0])) continue;
-          undated.push(`${route}: ${body.slice(Math.max(0, m.index! - 110), m.index! + m[0].length + 60).trim()}`);
-        }
+        const html = (await res.text()).replace(/<(style|svg)\b[\s\S]*?<\/\1>/gi, " ");
+        const blocks = html.split(BLOCK_END).map(readable);
+        blocks.forEach((block, i) => {
+          for (const m of block.matchAll(QUOTA)) {
+            const neighbourhood = blocks.slice(Math.max(0, i - BLOCKS_BEFORE_THAT_MAY_NAME_IT), i + 2).join(" ");
+            if (!NAMED.test(neighbourhood)) continue;
+            quotasNearTheNames++;
+            if (ENDED_ON_SPELLED.test(block)) continue;
+            if (quotesAStoredChangeRecord(block, m.index!, m[0])) continue;
+            undated.push(`${route}: ${block.slice(Math.max(0, m.index! - 110), m.index! + m[0].length + 60).trim()}`);
+          }
+        });
       }
     };
     await Promise.all(Array.from({ length: 12 }, worker));
@@ -134,7 +136,7 @@ describe(`Google ended the free Gemini Code Assist individuals tier and Gemini C
     assert.ok(quotasNearTheNames > 0, "no quota is named near Gemini Code Assist or Gemini CLI on any route, so this sweep reads nothing");
   });
 
-  it(`states ${ENDED_ON} wherever it names a personal-account quota for either product`, () => {
+  it(`states ${ENDED_ON} in the same block wherever it names a personal-account quota for either product`, () => {
     assert.deepStrictEqual(undated.sort(), []);
   });
 

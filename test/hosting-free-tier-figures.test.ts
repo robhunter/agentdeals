@@ -137,6 +137,12 @@ const RETIRED_FIGURES: Retired[] = [
     vendorRecord: () => recordFor("Cursor", "AI Coding").description,
   },
   {
+    what: "Gemini Code Assist sold as free after Google ended its free tier",
+    pattern: /Gemini Code Assist's unlimited free tier|wildcard: Gemini Code Assist[^.]*\bfree\b|Gemini Code Assist \(\$0\)/i,
+    replacedBy: /Ended 2026-06-18/,
+    vendorRecord: () => recordFor("Google Gemini Code Assist", "IDE & Code Editors").description,
+  },
+  {
     what: "a Fly.io free tier for new accounts",
     pattern: /Fly\.io(?:'s)?[^.]{0,70}(?:free tier includes|gives 3 shared|3 shared-cpu VMs)|3 shared-cpu-1x VMs, 160 ?GB|3 shared VMs free|3 shared VMs, 160 ?GB/i,
     replacedBy: /no free tier for new accounts|2 hrs? runtime|2 hours runtime|7-day trial/i,
