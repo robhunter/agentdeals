@@ -5537,21 +5537,20 @@
     {
       "vendor": "Middleware.io",
       "change_type": "free_tier_removed",
-      "date": "2026-08-28",
-      "date_source": "discovered",
-      "summary": "The free tier now offers a 14-day free trial with unlimited data ingestion, instead of a 'free forever' plan with specific limits. Previously 100 GB/month data, 1,000 RUM sessions/month, 20,000 synthetic checks/month, and 14-day data retention.",
-      "previous_state": "Full-stack observability platform — free forever plan: 100 GB/month data (APM, logs, infrastructure, traces, RUM, synthetics, database, serverless), 1,000 RUM sessions/month, 20,000 synthetic checks/month, 14-day data retention, unlimited users",
-      "current_state": "We provide 14 days free trial with unlimited data ingestion.",
+      "date": "2026-05-03",
+      "date_source": "hand_written",
+      "summary": "Middleware replaced its Free Forever plan (100 GB of data, 1,000 RUM sessions and 20,000 synthetic checks a month, 14-day retention) with a 14-day free trial. The change falls between the 2026-04-20 and 2026-05-03 Internet Archive captures of middleware.io, and Middleware's April 2026 product update announced a pricing update to its free trial limits and free usage tiers.",
+      "previous_state": "\"Free Forever $0 Free access to all features with monthly limits. ... Up to 100GB Data Up to 1k RUM Sessions Up to 20K Synthetic Checks 10 Browser Test Runs Unlimited Users Community Based Support 14 day retention\" (middleware.io/pricing/, Internet Archive capture of 2026-03-11)",
+      "current_state": "Reversed. \"Free Trial $0 Free access to all features for 14 days\" replaced the Free Forever card from the 2026-05-03 capture to the 2026-09-01 capture; the Free Forever plan was back by 2026-09-08 and is on middleware.io/pricing/ today.",
       "impact": "high",
-      "source_url": "https://middleware.io/pricing/",
+      "source_url": "https://middleware.io/product-updates/april-2026/",
       "category": "Monitoring",
       "alternatives": [],
-      "detected_by": "reverify-ai",
       "recorded_date": "2026-08-28",
       "resolution": {
-        "state": "retracted",
-        "date": "2026-09-09",
-        "detail": "Retracted 2026-09-09: middleware.io/pricing/, the page this record cites, opens its plan ladder with \"Free Forever. $0. Free access to all features with monthly limits.\" and lists \"Up to 100GB Data. Up to 1k RUM Sessions. Up to 20k Synthetic Checks. 10 Browser Test Runs. Unlimited Users.\" Those are the terms this record withheld, figure for figure. The sentence this record read - \"We provide 14 days free trial with unlimited data ingestion\" - is an answer about trial retention further down the same page, and it is still there today beside the free plan. The page did not change; the reading did.",
+        "state": "reversed",
+        "date": "2026-09-08",
+        "detail": "No longer in force from 2026-09-08 at the latest: Middleware's site shows the Free Forever card again in a Common Crawl capture of 2026-09-08, after the 14-day trial in the Internet Archive capture of 2026-09-01, and middleware.io/pricing/ opens with it today: \"Free Forever $0 Free access to all features with monthly limits.\"",
         "source_url": "https://middleware.io/pricing/"
       }
     },
@@ -11978,6 +11977,20 @@
       "category": "API Development",
       "alternatives": [],
       "recorded_date": "2026-09-27",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Middleware.io",
+      "change_type": "record_corrected",
+      "date": "2026-09-26",
+      "summary": "Data correction - Middleware's Free Forever plan did end: it left Middleware's site between 2026-04-20 and 2026-05-03 and came back between 2026-09-01 and 2026-09-08. We had withdrawn our record of the removal on 2026-09-09 as a misreading, because the plan was back by then.",
+      "previous_state": "Recorded 2026-08-28 as free_tier_removed dated 2026-08-28, withdrawn 2026-09-09 as a misreading",
+      "current_state": "free_tier_removed dated 2026-05-03 from Internet Archive captures, ended 2026-09-08",
+      "impact": "low",
+      "source_url": "https://web.archive.org/web/20260503150511/https://middleware.io/product/ops-ai/",
+      "category": "Monitoring",
+      "alternatives": [],
+      "recorded_date": "2026-09-26",
       "date_source": "hand_written"
     }
   ]
