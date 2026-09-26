@@ -23,7 +23,7 @@ const GUIDE_ENTRIES: Array<{ slug: string; title: string; description: string }>
   { slug: "hetzner-alternatives", title: "Hetzner Alternatives", description: "Hetzner raised prices twice in 2026 and its Cost-Optimized line is unavailable — cloud hosting alternatives with free tiers" },
   { slug: "freshping-alternatives", title: "Freshping Alternatives", description: "Freshping shut down March 6, 2026 — 13 free uptime monitoring alternatives" },
   { slug: "heroku-alternatives", title: "Heroku Alternatives", description: "Heroku removed free tier Nov 2022, entered sustaining mode Feb 2026 — 8 free PaaS options" },
-  { slug: "firebase-alternatives", title: "Firebase Alternatives", description: "Firebase Studio shut down March 19, 2026 + Spark forced Blaze migration — 7 BaaS alternatives" },
+  { slug: "firebase-alternatives", title: "Firebase Alternatives", description: "Firebase Studio is closing (no new workspaces since June 22, 2026; shutdown March 22, 2027) + Spark forced Blaze migration — 7 BaaS alternatives" },
   { slug: "github-actions-alternatives", title: "GitHub Actions Alternatives", description: "Self-hosted runner costs introduced March 2026 — 10 free CI/CD alternatives compared" },
   { slug: "cursor-alternatives", title: "Cursor Alternatives", description: "Cursor credit-based pricing drives alternatives search — 8 free AI coding tools compared" },
   { slug: "datadog-alternatives", title: "Datadog Alternatives", description: "Unpredictable pricing drives developer search — 12 free monitoring alternatives compared" },
