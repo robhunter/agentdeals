@@ -227,8 +227,8 @@
       "review_note": "Recommends GitHub Copilot Pro and Copilot Student to two reader segments while its own change table renders a HIGH-impact 2026-04-20 record saying new signups for both are paused. GitHub reopened them in June 2026 and our change log holds no reopening record, so the table is stale and the recommendation was wrong for the two months it was true. Also names Gemini 2.5 Pro and 'Claude Opus 4 and o3' as current models, and omits the Copilot Business signup pause of 2026-04-22 while recommending Copilot Business to enterprise readers.",
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 143,
-      "table_figures_from_records": 52,
+      "table_figures": 141,
+      "table_figures_from_records": 50,
       "tables": [
         {
           "label": "Pricing Comparison Table",
@@ -247,8 +247,8 @@
         },
         {
           "label": "Recent Pricing Changes",
-          "figures": 55,
-          "from_records": 52
+          "figures": 53,
+          "from_records": 50
         }
       ],
       "reads_changes": true,
