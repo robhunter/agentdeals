@@ -45,7 +45,7 @@ import { withReviewByline } from "./page-byline.js";
 import { freshnessClaimFor, withFreshnessClaim } from "./page-freshness.js";
 import { UNGRADED_IMPACT_COLOR, changeImpactColor, changeImpactLabel, changeImpactWord, isChangeImpactLevel } from "./change-impact.js";
 import { COMPARED_SERVICES_PLACEHOLDER, appendToCompiledFigureSlots, fillComparedServicesCount, markCompiledFigures, recordsSinceCompiled, replaceTimelineRows, staticHalfOf, timelineRecordsFor, vendorForSubject, vendorSubjectsOnCompiledPage, type CompiledFigureSubject, type CompiledFigureVendor, type CompiledFigureVerdict, type CompiledPageRecord } from "./compiled-figures.js";
-import { CHECK_ESTABLISHES, CHECK_SCOPE_CLASS, NO_CATALOGUE_RECORD_SOURCE, citedSourcesListHtml, freeTierSourceOf, freeTierSourceWeMayCite, pageQuoteHtml, readClauseHtml, serviceSourceMarkerHtml, uncitedSourceTagHtml, withCitedSources, type CitedService, type FreeTierSource } from "./source-citation.js";
+import { CHECK_ESTABLISHES, CHECK_SCOPE_CLASS, NO_CATALOGUE_RECORD_SOURCE, citedSourcesListHtml, figureSourceLinkHtml, freeTierSourceOf, freeTierSourceWeMayCite, pageQuoteHtml, readClauseHtml, serviceSourceMarkerHtml, uncitedSourceTagHtml, withCitedSources, type CitedService, type FreeTierSource } from "./source-citation.js";
 import { vendorHistorySentence } from "./vendor-history.js";
 import { HETZNER_APRIL_CHANGES, HETZNER_CLOUD_PLANS, HETZNER_PRICES_READ, HETZNER_PRICE_SOURCE, HETZNER_SINGAPORE_EXAMPLE, cheapestOrderableHetznerPlan, hetznerEntryPriceClause, unorderableHetznerPlans } from "./hetzner-pricing.js";
 import { HUNDRED_GB_SCENARIO, HUNDRED_TB_SCENARIO, ONE_TO_ONE_SCENARIO, STORAGE_RATES_READ, STORAGE_SCALE_WORKLOADS, TEN_TO_ONE_SCENARIO, cheapestProviderAt, costAfterMonthlyEgressGrantFor, costliestProviderAt, egressAllowanceSentence, egressBillAfterMonthlyGrantFor, egressBillOnceOverAllowance, egressRatioWhereCostsMatch, fixedMonthlyGrantsSentence, monthlyEgressGrantGb, monthlyEgressGrantSentence, monthlyStorageCost, providersWithScalingEgressAllowance, rateCardFor, scaleCostFor } from "./storage-cost-model.js";
@@ -35278,37 +35278,38 @@ function buildGcpFreeTier2026Page(): string {
     source?: string;
   }
 
+  const GOOGLE_FREE_TIER_LIST = "https://docs.cloud.google.com/free/docs/free-cloud-features#free-tier-usage-limits";
+
   const alwaysFreeServices: GcpService[] = [
-    { name: "Compute Engine (e2-micro)", slug: "google-compute-engine", limits: "1 e2-micro VM/month (us-west1, us-central1, us-east1), 30 GB standard persistent disk", category: "Compute" },
-    { name: "Cloud Run", slug: "google-cloud-run", limits: "2M requests/month, 360K GiB-seconds memory, 180K vCPU-seconds", category: "Compute" },
-    { name: "Cloud Functions", slug: "google-cloud", limits: "2M invocations/month, 400K GB-seconds, 200K GHz-seconds", category: "Compute" },
-    { name: "App Engine", slug: "google-cloud", limits: "28 instance-hours/day (F1 instances), 1 GB egress/day", category: "Compute" },
-    { name: "GKE Autopilot", slug: "google-cloud", limits: "1 free zonal cluster (no cluster management fee, pay for pods only)", category: "Containers" },
-    { name: "Cloud Shell", slug: "google-cloud-shell", limits: "5 GB persistent home directory, web-based terminal with built-in tools", category: "Dev Tools" },
-    { name: "BigQuery", slug: "google-cloud-bigquery", limits: "1 TiB queries/month, 10 GiB storage, ML model creation included", category: "Analytics" },
-    { name: "Firestore", slug: "firebase", limits: "1 GiB storage, 50K reads/day, 20K writes/day, 20K deletes/day", category: "Database" },
-    { name: "Cloud Storage", slug: "google-cloud-storage", limits: "5 GB-months Standard (us-west1, us-central1, us-east1), 5K Class A ops, 50K Class B ops", category: "Storage" },
-    { name: "Pub/Sub", slug: "google-cloud-pub-sub", limits: "10 GiB messages/month", category: "Messaging" },
-    { name: "Cloud Build", slug: "google-cloud-build", limits: "2,500 build-minutes/month (e2-standard-2)", category: "CI/CD" },
-    { name: "Artifact Registry", slug: "google-artifact-registry", limits: "500 MB storage", category: "Containers" },
-    { name: "Cloud Logging", slug: "google-cloud-logging", limits: "50 GiB logs ingestion/month, 30-day retention", category: "Logging" },
-    { name: "Cloud Monitoring", slug: "google-cloud-monitoring", limits: "All non-chargeable Google Cloud metrics; the first 1 million time series read through the Monitoring API per billing account", category: "Monitoring" },
-    { name: "Secret Manager", slug: "google-secret-manager", limits: "6 active secret versions, 10K access operations/month", category: "Security" },
-    { name: "Cloud Source Repositories", slug: "google-cloud", limits: "Up to 5 users, 50 GiB storage, 50 GiB egress", category: "Source Control" },
-    { name: "Cloud Vision API", slug: "google-cloud", limits: "1,000 units/month (label detection, face detection, OCR, etc.)", category: "AI/ML" },
-    { name: "Cloud Natural Language API", slug: "google-cloud", limits: "5,000 units/month (sentiment analysis, entity extraction)", category: "AI/ML" },
-    { name: "Cloud Speech-to-Text", slug: "google-cloud", limits: "60 minutes/month audio transcription", category: "AI/ML" },
-    { name: "Cloud Video Intelligence API", slug: "google-cloud", limits: "1,000 units/month (label detection, shot detection)", category: "AI/ML" },
+    { name: "Compute Engine (e2-micro)", slug: "google-compute-engine", limits: "1 e2-micro VM/month (us-west1, us-central1, us-east1), 30 GB standard persistent disk", category: "Compute", source: GOOGLE_FREE_TIER_LIST },
+    { name: "Cloud Run", slug: "google-cloud-run", limits: "2M requests/month, 360K GiB-seconds memory, 180K vCPU-seconds", category: "Compute", source: GOOGLE_FREE_TIER_LIST },
+    { name: "Cloud Run functions", slug: "google-cloud", limits: "2M invocations/month, 400K GB-seconds, 200K GHz-seconds", category: "Compute", source: GOOGLE_FREE_TIER_LIST },
+    { name: "App Engine", slug: "google-cloud", limits: "28 instance-hours/day (F1 instances), 1 GB egress/day", category: "Compute", source: GOOGLE_FREE_TIER_LIST },
+    { name: "GKE Autopilot", slug: "google-cloud", limits: "1 free zonal cluster (no cluster management fee, pay for pods only)", category: "Containers", source: GOOGLE_FREE_TIER_LIST },
+    { name: "Cloud Shell", slug: "google-cloud-shell", limits: "5 GB persistent home directory, web-based terminal with built-in tools", category: "Dev Tools", source: GOOGLE_FREE_TIER_LIST },
+    { name: "BigQuery", slug: "google-cloud-bigquery", limits: "1 TiB queries/month, 10 GiB storage", category: "Analytics", source: GOOGLE_FREE_TIER_LIST },
+    { name: "Firestore", slug: "firebase", limits: "1 GiB storage, 50K reads/day, 20K writes/day, 20K deletes/day", category: "Database", source: GOOGLE_FREE_TIER_LIST },
+    { name: "Cloud Storage", slug: "google-cloud-storage", limits: "5 GB-months Standard (us-west1, us-central1, us-east1), 5K Class A ops, 50K Class B ops", category: "Storage", source: GOOGLE_FREE_TIER_LIST },
+    { name: "Pub/Sub", slug: "google-cloud-pub-sub", limits: "10 GiB messages/month", category: "Messaging", source: GOOGLE_FREE_TIER_LIST },
+    { name: "Cloud Build", slug: "google-cloud-build", limits: "2,500 build-minutes/month (e2-standard-2)", category: "CI/CD", source: GOOGLE_FREE_TIER_LIST },
+    { name: "Artifact Registry", slug: "google-artifact-registry", limits: "500 MB storage", category: "Containers", source: GOOGLE_FREE_TIER_LIST },
+    { name: "Cloud Logging", slug: "google-cloud-logging", limits: "50 GiB logs ingestion/month, 30-day retention", category: "Logging", source: GOOGLE_FREE_TIER_LIST },
+    { name: "Cloud Monitoring", slug: "google-cloud-monitoring", limits: "All non-chargeable Google Cloud metrics; the first 1 million time series read through the Monitoring API per billing account", category: "Monitoring", source: GOOGLE_FREE_TIER_LIST },
+    { name: "Secret Manager", slug: "google-secret-manager", limits: "6 active secret versions, 10K access operations/month", category: "Security", source: GOOGLE_FREE_TIER_LIST },
+    { name: "Cloud Source Repositories", slug: "google-cloud", limits: "Up to 5 users, 50 GiB storage, 50 GiB egress", category: "Source Control", source: GOOGLE_FREE_TIER_LIST },
+    { name: "Cloud Vision API", slug: "google-cloud", limits: "1,000 units/month (label detection, face detection, OCR, etc.)", category: "AI/ML", source: GOOGLE_FREE_TIER_LIST },
+    { name: "Cloud Natural Language API", slug: "google-cloud", limits: "5,000 units/month (sentiment analysis, entity extraction)", category: "AI/ML", source: GOOGLE_FREE_TIER_LIST },
+    { name: "Cloud Speech-to-Text", slug: "google-cloud", limits: "60 minutes/month audio transcription", category: "AI/ML", source: GOOGLE_FREE_TIER_LIST },
+    { name: "Cloud Video Intelligence API", slug: "google-cloud", limits: "1,000 units/month (label detection, shot detection)", category: "AI/ML", source: GOOGLE_FREE_TIER_LIST },
     { name: "Cloud Translation API", slug: "google-cloud", limits: "500,000 characters/month (applied as a $10 monthly credit)", category: "AI/ML", source: "https://cloud.google.com/translate/pricing" },
-    { name: "Workflows", slug: "google-cloud", limits: "5,000 internal steps and 2,000 external HTTP calls per month", category: "Integration" },
-    { name: "Application Integration", slug: "google-cloud", limits: "400 executions/month, 2 active connectors", category: "Integration" },
-    { name: "reCAPTCHA Enterprise", slug: "google-cloud", limits: "10,000 assessments/month", category: "Security" },
-    { name: "Cloud KMS", slug: "google-cloud", limits: "100 active key versions and 10,000 cryptographic operations per month, for keys created with Cloud KMS Autokey", category: "Security" },
+    { name: "Workflows", slug: "google-cloud", limits: "5,000 internal steps and 2,000 external HTTP calls per month", category: "Integration", source: GOOGLE_FREE_TIER_LIST },
+    { name: "Application Integration", slug: "google-cloud", limits: "400 executions/month, first 2 connection nodes for Google services; up to 20 GiB of data processed per month", category: "Integration", source: GOOGLE_FREE_TIER_LIST },
+    { name: "reCAPTCHA Enterprise", slug: "google-cloud", limits: "10,000 assessments/month", category: "Security", source: GOOGLE_FREE_TIER_LIST },
+    { name: "Cloud KMS", slug: "google-cloud", limits: "100 active key versions and 10,000 cryptographic operations per month, for keys created with Cloud KMS Autokey", category: "Security", source: GOOGLE_FREE_TIER_LIST },
     { name: "Cloud Scheduler", slug: "google-cloud", limits: "3 jobs per billing account per month", category: "Scheduling", source: "https://cloud.google.com/scheduler/pricing" },
-    { name: "Firebase Auth", slug: "firebase", limits: "50,000 MAUs (phone auth: 10K verifications/month)", category: "Auth" },
+    { name: "Firebase Auth", slug: "firebase", limits: "50,000 MAUs", category: "Auth" },
     { name: "Firebase Hosting", slug: "firebase", limits: "10 GiB storage, 360 MB/day transfer, custom domain + SSL", category: "Hosting" },
     { name: "Firebase Realtime Database", slug: "firebase", limits: "1 GB storage, 10 GB/month transfer, 100 simultaneous connections", category: "Database" },
-    { name: "Firebase Remote Config", slug: "firebase", limits: "Unlimited, including A/B testing", category: "Feature Flags" },
   ];
 
   const trialServices: GcpService[] = [
@@ -35358,7 +35359,7 @@ function buildGcpFreeTier2026Page(): string {
 
   const alwaysFreeRows = alwaysFreeServices.map(s => `<tr>
       <td style="font-weight:600">${escHtmlServer(s.name)}</td>
-      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(s.limits)}${s.source ? ` ${changeSourceLinkHtml({ source_url: s.source }, escHtmlServer)}` : ""}</td>
+      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(s.limits)}${s.source ? figureSourceLinkHtml(s.source, escHtmlServer) : ""}</td>
       <td style="color:var(--text-muted);font-size:.8rem">${escHtmlServer(s.category)}</td>
     </tr>`).join("\n        ");
 

@@ -4,12 +4,21 @@ import { spawn, type ChildProcess } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+const { FIGURE_SOURCE_CLASS } = await import("../dist/source-citation.js");
+const { SOURCE_MARKER_IN_A_CELL } = await import("../dist/page-reviews.js");
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "..");
 
 const PAGE = "/gcp-free-tier-2026";
 const CITED_ON_THE_VENDOR_PRICING_PAGE = ["Cloud Scheduler", "Cloud Translation API"];
 const SERVICES_THE_HERO_NAMES = ["Cloud Run", "BigQuery"];
+const STATED_BY_NEITHER_SOURCE: Array<{ row: string; phrase: RegExp }> = [
+  { row: "BigQuery", phrase: /ML model creation/i },
+  { row: "Application Integration", phrase: /active connectors/i },
+  { row: "Firebase Auth", phrase: /phone auth/i },
+  { row: "Firebase Remote Config", phrase: /unlimited/i },
+];
 
 let server: ChildProcess;
 let html = "";
@@ -47,7 +56,9 @@ function text(fragment: string): string {
     .trim();
 }
 
-type Row = { name: string; limits: string; sources: string[] };
+type Row = { name: string; limits: string; sources: string[]; resolvesToARecord: boolean };
+
+const CITATION = new RegExp(`<a href="([^"]+)"[^>]*class="${FIGURE_SOURCE_CLASS}"`, "g");
 
 function alwaysFreeRows(): Row[] {
   const section = html.slice(html.indexOf('id="always-free"'));
@@ -57,9 +68,10 @@ function alwaysFreeRows(): Row[] {
     .map(([, row]) => [...row.matchAll(/<td[^>]*>([\s\S]*?)<\/td>/g)].map(([, cell]) => cell))
     .filter((cells) => cells.length >= 2)
     .map(([name, limits]) => ({
-      name: text(name),
+      name: text(name.replace(new RegExp(SOURCE_MARKER_IN_A_CELL.source, "g"), "")),
+      resolvesToARecord: new RegExp(SOURCE_MARKER_IN_A_CELL.source).test(name),
       limits: text(limits),
-      sources: [...limits.matchAll(/<a href="([^"]+)"/g)].map(([, href]) => href),
+      sources: [...limits.matchAll(CITATION)].map(([, href]) => href),
     }));
 }
 
@@ -109,6 +121,30 @@ describe(`${PAGE} publishes Google's Always Free quotas (#1623)`, () => {
         `${name} carries no link to a cloud.google.com pricing page: ${JSON.stringify(sources)}`,
       );
     }
+  });
+
+  it("cites the page stating the quota on every Always Free row (#1623 AC-5)", () => {
+    const rows = alwaysFreeRows();
+    const cited = rows.filter((r) => r.sources.some((href) => href.startsWith("https://")));
+    const uncited = rows.filter((r) => !cited.includes(r) && !r.resolvesToARecord);
+    assert.deepStrictEqual(uncited.map((r) => r.name), []);
+    assert.ok(cited.length >= 20, `only ${cited.length} rows carry a source of their own`);
+    assert.ok(rows.some((r) => r.resolvesToARecord), "no row resolves to a catalogue record, so that path goes untested");
+  });
+
+  it("names each product as Google's free-tier list names it", () => {
+    rowNamed("Cloud Run functions");
+    assert.ok(!alwaysFreeRows().some((r) => r.name === "Cloud Functions"), "Google lists the product as Cloud Run functions");
+  });
+
+  it("drops each clause that neither Google's list nor the product's own pricing page states", () => {
+    const rows = alwaysFreeRows();
+    const read = STATED_BY_NEITHER_SOURCE.filter(({ row }) => rows.some((r) => r.name === row));
+    assert.ok(read.length >= 3, `only ${read.length} of the rows this guard names are in the table`);
+    const kept = STATED_BY_NEITHER_SOURCE.flatMap(({ row, phrase }) =>
+      rows.filter((r) => r.name === row && phrase.test(r.limits)).map((r) => `${r.name}: ${r.limits}`),
+    );
+    assert.deepStrictEqual(kept, []);
   });
 
   it("counts the other services in the introduction from the table", () => {
