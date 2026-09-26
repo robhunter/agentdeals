@@ -1,9 +1,11 @@
-import type { DealChange, Offer } from "./types.js";
-import { changesByVendor, enrichOffers, publishedRisk, refusalsForVendor } from "./data.js";
+import type { DealChange, Offer, RiskCause } from "./types.js";
+import { changesByVendor, enrichOffers, freeTierEndingRecord, publishedRisk, refusalsForVendor, riskCauseOf } from "./data.js";
 
 type EnrichedOfferRow = ReturnType<typeof enrichOffers>[number];
 import { gateFor, utcDate, type Gate } from "./ranking.js";
 import { offerEnded } from "./retirement.js";
+import { changeCitesASource } from "./change-citation.js";
+import { tierRecordsAFreeTier } from "./free-tier-record.js";
 import { levelWithheldReason, levelWithheldSince, recordPublishesAQuantity, type LevelWithheldReason } from "./source-check.js";
 import type { RefusedRead } from "./change-refusal.js";
 import { restatedReadingDate } from "./read-date.js";
@@ -27,6 +29,15 @@ export interface VendorVerdictEvidence {
   vendorChanges: DealChange[];
   refusedReads: readonly RefusedRead[];
   servedOn: string;
+}
+
+export function endingTheListingConfirms(
+  listing: Pick<Offer, "tier">,
+  vendorChanges: readonly DealChange[],
+): RiskCause | null {
+  if (tierRecordsAFreeTier(listing.tier)) return null;
+  const ending = freeTierEndingRecord(vendorChanges);
+  return ending && changeCitesASource(ending) ? riskCauseOf(ending) : null;
 }
 
 export function vendorVerdictContextFrom(evidence: VendorVerdictEvidence): VendorVerdictContext | null {
@@ -54,6 +65,7 @@ export function vendorVerdictContextFrom(evidence: VendorVerdictEvidence): Vendo
       level: enriched.risk_level ?? null,
       historyLevel: publishedRisk(primary, vendorChanges, servedOn).history_level,
       cause: enriched.risk_cause,
+      endingTheListingConfirms: endingTheListingConfirms(primary, vendorChanges),
       changes: vendorChanges,
       levelWithheld,
       unconfirmableSince,

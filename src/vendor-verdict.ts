@@ -74,6 +74,7 @@ export interface VendorVerdictInput {
   level: PublishedRiskLevel | null;
   historyLevel: PublishedRiskLevel;
   cause: RiskCause | null;
+  endingTheListingConfirms?: RiskCause | null;
   changes: Array<Pick<DealChange, "date" | "date_source" | "change_type"> & { source_url?: string | null } & { tier?: string | null; current_state?: string | null } & { resolution?: DealChange["resolution"] }>;
   levelWithheld: LevelWithheldReason | null;
   unconfirmableSince: string;
@@ -619,6 +620,7 @@ export function freeTierClaim(input: VendorVerdictInput): FreeTierClaim {
   }
   if (badge.kind === "none") return { states: "unconfirmed", because: badge.because };
   if (badge.word === "risky" && input.cause) return { states: "ended", how: "removed", cause: input.cause };
+  if (input.endingTheListingConfirms) return { states: "ended", how: "removed", cause: input.endingTheListingConfirms };
   return { states: "offered", level: badge.word };
 }
 
