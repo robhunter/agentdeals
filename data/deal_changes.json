@@ -1826,7 +1826,13 @@
         "Claude Code"
       ],
       "recorded_date": "2026-04-08",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: Cursor did not add Pro+ in April 2026. Pro+ at $60 a month is already on cursor.com/pricing in the Internet Archive capture of 2025-09-22, and Cursor describes it as \"3x Pro limits on Agent\", not 10x.",
+        "source_url": "https://web.archive.org/web/20250922053513/https://cursor.com/pricing"
+      }
     },
     {
       "vendor": "Google Gemini API",
@@ -6797,7 +6803,13 @@
       "category": "AI Coding",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: not a change Cursor made on or near 2026-08-28. The reading compared cursor.com/pricing with our own description, which carried a $10 Hobby tier Cursor never sold (corrected 2026-09-02) and the free plan's 2,000 completions and 50 slow premium requests, which the page no longer listed by September 2025. The Hobby card did change between the 2026-06-01 and 2026-08-01 captures, from \"Limited Tab completions\" to \"Access to Composer\", but Cursor's help center still includes Tab completions in the free plan: \"You can use Agent, Chat, and Tab completions with the Auto model.\"",
+        "source_url": "https://cursor.com/help/account-and-billing/pricing"
+      }
     },
     {
       "vendor": "Sanity",
