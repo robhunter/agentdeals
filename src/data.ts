@@ -34,7 +34,7 @@ import { DEFAULT_CHANGE_WINDOW_DAYS, defaultChangeWindow, servedWindowOpens, win
 import { nameMatchDisclosure, type AskedByName, type NameMatch } from "./name-match.js";
 export { RISK_DEMOTION, SEVERE_TYPES_WITHOUT_FLAT_DEMOTION, changeTypeCanDemote } from "./change-demotion.js";
 import { vendorHistorySentence } from "./vendor-history.js";
-import { isNoLongerInForce, recordsStillInForce, recordsWeStandBehind, withResolutionInSummary, withStandingDeclaredOnEach } from "./change-resolution.js";
+import { isNoLongerInForce, recordsStillInForce, recordsWeStandBehind, theEventNeverHappened, withResolutionInSummary, withStandingDeclaredOnEach } from "./change-resolution.js";
 import { trackedChanges, recordsOtherThanOurOwnIndexHousekeeping } from "./change-census.js";
 import { changeCitesASource, changeIsUncited, changeSummaryHtml, changeSummaryMarkdown, changeSummaryText, ratingWithheldForNoSourceSentence, type CitableChange } from "./change-citation.js";
 import { endedVerdictSentence } from "./retirement.js";
@@ -313,6 +313,26 @@ export const CORRECTION_TO_OUR_OWN_RECORD = "record_corrected";
 
 export function isACorrectionToOurOwnRecord(change: Pick<DealChange, "change_type">): boolean {
   return change.change_type === CORRECTION_TO_OUR_OWN_RECORD;
+}
+
+type BookkeepingFields = Pick<DealChange, "change_type"> & { resolution?: DealChange["resolution"] };
+
+export function isOurOwnBookkeeping(change: BookkeepingFields): boolean {
+  return isACorrectionToOurOwnRecord(change) || theEventNeverHappened(change);
+}
+
+export function changesTheVendorMade<T extends BookkeepingFields>(changes: readonly T[]): T[] {
+  return changes.filter(change => !isOurOwnBookkeeping(change));
+}
+
+export function freeTierLongevityStart(
+  changes: readonly Pick<DealChange, "change_type" | "date" | "resolution">[],
+  verifiedDate: Date,
+): Date {
+  const lastNarrowing = changesTheVendorMade(changes)
+    .filter(change => NEGATIVE_CHANGE_TYPES.has(change.change_type))
+    .reduce((latest, change) => Math.max(latest, new Date(change.date).getTime()), Number.NEGATIVE_INFINITY);
+  return new Date(Math.max(lastNarrowing, verifiedDate.getTime()));
 }
 
 export { NEGATIVE_CHANGE_TYPES, POSITIVE_CHANGE_TYPES, NEUTRAL_CHANGE_TYPES } from "./change-direction.js";
@@ -1328,11 +1348,7 @@ export function checkVendorRisk(
   const linkUnreachable = published.link_unreachable;
   const riskLevel = assessment.level;
 
-  const verifiedDate = new Date(offer.verifiedDate);
-  const lastNegativeChange = vendorChanges.find((c) => NEGATIVE_CHANGE_TYPES.has(c.change_type));
-  const longevityStart = lastNegativeChange
-    ? new Date(Math.max(new Date(lastNegativeChange.date).getTime(), verifiedDate.getTime()))
-    : verifiedDate;
+  const longevityStart = freeTierLongevityStart(vendorChanges, new Date(offer.verifiedDate));
   const longevityDays = Math.max(
     0,
     Math.floor((Date.now() - longevityStart.getTime()) / (24 * 60 * 60 * 1000))
