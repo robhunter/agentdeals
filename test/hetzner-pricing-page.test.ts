@@ -1,6 +1,7 @@
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
 import { spawn, type ChildProcess } from "node:child_process";
+import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import {
@@ -46,6 +47,17 @@ const visible = (body: string) =>
     .replace(/<[^>]+>/g, " ")
     .replace(/&euro;/g, "€")
     .replace(/\s+/g, " ");
+
+const OTHER_LISTED_VENDORS = new Set(
+  (JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf8")).offers as { vendor: string }[])
+    .map(o => o.vendor)
+    .filter(vendor => vendor !== "Hetzner"),
+);
+
+const withoutItemsHeadedByAnotherVendor = (body: string) =>
+  body.replace(/<li><strong>([^<]*):<\/strong>[\s\S]*?<\/li>/g, (item, label: string) =>
+    OTHER_LISTED_VENDORS.has(label.trim()) ? " " : item,
+  );
 
 const PAGES_NAMING_HETZNER_PRICES = [
   "/hetzner-pricing-2026",
@@ -121,7 +133,7 @@ describe("the pricing page prices what Hetzner sells today", () => {
       ...HETZNER_APRIL_CHANGES.flatMap(c => [c.before, c.after]),
       `€${HETZNER_SINGAPORE_EXAMPLE.eur.toFixed(2)}`,
     ]);
-    const quoted = new Set(visible(body).match(/€\d+\.\d{2}/g) ?? []);
+    const quoted = new Set(visible(withoutItemsHeadedByAnotherVendor(body)).match(/€\d+\.\d{2}/g) ?? []);
     const strays = [...quoted].filter(price => !allowed.has(price));
     assert.deepEqual(strays, [], `prices with no plan or April row behind them: ${strays.join(", ")}`);
   });

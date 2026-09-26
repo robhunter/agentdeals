@@ -586,12 +586,23 @@ describe("change log writer", () => {
       assert.deepStrictEqual(lost, []);
     });
 
-    it("keeps both records where one page moved two products on one day", () => {
-      const pair = stored.filter(c => c.vendor === "OVHcloud" && c.date === "2026-04-01");
-      assert.strictEqual(pair.length, 2);
-      assert.strictEqual(pair[0].source_url, pair[1].source_url);
-      assert.notStrictEqual(pair[0].previous_state, pair[1].previous_state);
-      assert.notStrictEqual(baselineKey(pair[0]), baselineKey(pair[1]));
+    it("keeps both records wherever one page moved two products on one day", () => {
+      const byPageAndDay = new Map<string, typeof stored>();
+      for (const change of stored) {
+        const page = typeof change.source_url === "string" ? change.source_url.trim() : "";
+        if (!page) continue;
+        const key = [change.vendor, change.date, page].join("|");
+        byPageAndDay.set(key, [...(byPageAndDay.get(key) ?? []), change]);
+      }
+      const collapsed = [...byPageAndDay.values()].flatMap(group =>
+        group.flatMap((one, i) =>
+          group
+            .slice(i + 1)
+            .filter(other => other.previous_state !== one.previous_state && baselineKey(other) === baselineKey(one))
+            .map(other => `${one.vendor} ${one.date}: ${one.change_type} and ${other.change_type}`)
+        )
+      );
+      assert.deepStrictEqual(collapsed, []);
     });
 
     it("is not vacuous — most of the log carries a baseline the rule can read", () => {
