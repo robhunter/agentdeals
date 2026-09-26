@@ -10105,7 +10105,7 @@
       "summary": "The page does mention a $5 free credit. Details are limited. App Platform is free for 3 static sites. Functions are free up to 90,000 GiB-seconds/month. Spaces pricing is $5/month for 250 GB + 1 TB transfer.",
       "tier": "Functions",
       "tier_direction": "widened",
-      "previous_state": "$200 credit for 60 days for new accounts. Basic Droplets from $4/mo (1 vCPU, 512 MB RAM, 10 GB SSD — 20% price cut Jan 2026). Per-second billing (min 60s or $0.01). App Platform: 3 free static sites (1 GiB outbound/mo each). Functions: 25,000 GiB-seconds/mo free. Spaces: 250 GB + 1 TB transfer for $5/mo. Managed databases start at $15/mo (not free). No perpetual free compute tier",
+      "previous_state": "$200 credit for 60 days for new accounts. Basic Droplets from $4/mo (1 vCPU, 512 MB RAM, 10 GB SSD). Per-second billing (min 60s or $0.01). App Platform: 3 free static sites (1 GiB outbound/mo each). Functions: 25,000 GiB-seconds/mo free. Spaces: 250 GB + 1 TB transfer for $5/mo. Managed databases start at $15/mo (not free). No perpetual free compute tier",
       "current_state": "DigitalOcean Functions offers 90,000 GiB-seconds per month for free.",
       "impact": "medium",
       "source_url": "https://www.digitalocean.com/pricing",
