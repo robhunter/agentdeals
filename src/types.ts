@@ -190,6 +190,7 @@ export interface DealChange {
   resolution?: ChangeResolution | null;
   source_check?: ChangeSourceCheck | null;
   discontinued_date?: string | null;
+  listing_effect?: import("./product-deprecation.js").DeprecationCall | null;
 }
 
 export type PublishedChangeImpact = DealChange["impact"] | "none";

@@ -759,7 +759,8 @@
         "Cohere API"
       ],
       "recorded_date": "2026-02-26",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "listing_effect": "none"
     },
     {
       "vendor": "Hetzner",
@@ -1098,7 +1099,8 @@
         "DynamoDB"
       ],
       "recorded_date": "2026-03-11",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "listing_effect": "ends"
     },
     {
       "vendor": "LocalStack",
@@ -1258,7 +1260,8 @@
         "Imgur API"
       ],
       "recorded_date": "2026-03-14",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "listing_effect": "ends"
     },
     {
       "vendor": "Testcontainers Cloud",
@@ -1519,7 +1522,8 @@
         "Convex"
       ],
       "recorded_date": "2026-03-21",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "listing_effect": "none"
     },
     {
       "vendor": "Dub.co",
@@ -1850,7 +1854,8 @@
         "Replicate"
       ],
       "recorded_date": "2026-04-10",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "listing_effect": "none"
     },
     {
       "vendor": "OpenAI",
@@ -1871,7 +1876,8 @@
         "Google Cloud Speech-to-Text"
       ],
       "recorded_date": "2026-04-10",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "listing_effect": "none"
     },
     {
       "vendor": "AWS",
@@ -1894,7 +1900,8 @@
         "DigitalOcean App Platform"
       ],
       "recorded_date": "2026-04-10",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "listing_effect": "none"
     },
     {
       "vendor": "AWS",
@@ -1913,7 +1920,8 @@
         "Web client"
       ],
       "recorded_date": "2026-04-10",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "listing_effect": "none"
     },
     {
       "vendor": "AWS",
@@ -1929,7 +1937,8 @@
         "Node.js 22 Lambda runtime"
       ],
       "recorded_date": "2026-04-10",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "listing_effect": "none"
     },
     {
       "vendor": "Google Maps",
@@ -1945,7 +1954,8 @@
         "Google Maps API key authentication"
       ],
       "recorded_date": "2026-04-10",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "listing_effect": "none"
     },
     {
       "vendor": "AWS",
@@ -1961,7 +1971,8 @@
         "Fargate Platform Version 1.4.0+"
       ],
       "recorded_date": "2026-04-10",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "listing_effect": "none"
     },
     {
       "vendor": "AWS",
@@ -1984,7 +1995,8 @@
         "checked": "2026-09-08",
         "outcome": "ok",
         "finding": "the page carries an End of support notice reading \"On September 30, 2026, AWS will discontinue support for AWS App Mesh\""
-      }
+      },
+      "listing_effect": "none"
     },
     {
       "vendor": "AWS",
@@ -2007,7 +2019,8 @@
         "checked": "2026-09-08",
         "outcome": "ok",
         "finding": "the page carries an End of support notice reading \"On October 7, 2026, AWS will end support for AWS Proton\""
-      }
+      },
+      "listing_effect": "none"
     },
     {
       "vendor": "Vercel",
@@ -2091,7 +2104,8 @@
         "Neon"
       ],
       "recorded_date": "2026-04-12",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "listing_effect": "ends"
     },
     {
       "vendor": "stathat.com",
@@ -2108,7 +2122,8 @@
         "Grafana Cloud"
       ],
       "recorded_date": "2026-04-12",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "listing_effect": "ends"
     },
     {
       "vendor": "Prisma Accelerate",
@@ -2997,7 +3012,8 @@
       "category": "Design",
       "alternatives": [],
       "recorded_date": "2026-04-12",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "listing_effect": "ends"
     },
     {
       "vendor": "Branition Colors",
@@ -3263,7 +3279,8 @@
       "category": "Project Management",
       "alternatives": [],
       "recorded_date": "2026-04-12",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "listing_effect": "ends"
     },
     {
       "vendor": "sflow.io",
@@ -3393,7 +3410,8 @@
       "category": "Project Management",
       "alternatives": [],
       "recorded_date": "2026-04-12",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "listing_effect": "ends"
     },
     {
       "vendor": "Protectumus",
@@ -3407,7 +3425,8 @@
       "category": "Security",
       "alternatives": [],
       "recorded_date": "2026-04-12",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "listing_effect": "ends"
     },
     {
       "vendor": "HostedScan",
@@ -3547,7 +3566,8 @@
       "category": "Analytics",
       "alternatives": [],
       "recorded_date": "2026-04-12",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "listing_effect": "ends"
     },
     {
       "vendor": "Seline",
@@ -3715,7 +3735,8 @@
       "category": "IDE & Code Editors",
       "alternatives": [],
       "recorded_date": "2026-04-13",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "listing_effect": "ends"
     },
     {
       "vendor": "xAI",
@@ -4068,7 +4089,8 @@
       "category": "Communication",
       "alternatives": [],
       "recorded_date": "2026-04-13",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "listing_effect": "none"
     },
     {
       "vendor": "Synadia NGS",
@@ -4159,7 +4181,8 @@
       "category": "API Development",
       "alternatives": [],
       "recorded_date": "2026-04-13",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "listing_effect": "ends"
     },
     {
       "vendor": "Stamen Maps",
@@ -4649,7 +4672,8 @@
         "BigCommerce API"
       ],
       "recorded_date": "2026-04-15",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "listing_effect": "ends"
     },
     {
       "vendor": "DeepSeek",
@@ -4722,7 +4746,8 @@
         "Groq"
       ],
       "recorded_date": "2026-04-17",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "listing_effect": "none"
     },
     {
       "vendor": "SendGrid Accelerate",
@@ -4788,7 +4813,8 @@
         "OpenRouter"
       ],
       "recorded_date": "2026-04-17",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "listing_effect": "ends"
     },
     {
       "vendor": "searchly.com",
@@ -5409,7 +5435,8 @@
       "category": "Feature Flags",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "listing_effect": "ends"
     },
     {
       "vendor": "Permit.io",
@@ -5565,7 +5592,8 @@
       "category": "AI / ML",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "listing_effect": "narrows"
     },
     {
       "vendor": "Notion",
@@ -6304,7 +6332,8 @@
       "category": "Analytics",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "listing_effect": "ends"
     },
     {
       "vendor": "veriphone",
@@ -7286,7 +7315,8 @@
       "category": "Testing",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "listing_effect": "ends"
     },
     {
       "vendor": "bitnami.com",
@@ -10124,7 +10154,8 @@
       "category": "Source Control",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-15"
+      "recorded_date": "2026-09-15",
+      "listing_effect": "ends"
     },
     {
       "vendor": "CockroachDB",
@@ -10623,7 +10654,8 @@
       "category": "AI Coding",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-22"
+      "recorded_date": "2026-09-22",
+      "listing_effect": "none"
     },
     {
       "vendor": "Foursquare",

@@ -17,6 +17,12 @@ export const RISK_DEMOTION: Record<DealChange["change_type"], "risky" | "caution
   product_deprecated: null,
 };
 
+export const DEMOTION_FOR_A_DEPRECATION: Record<import("./product-deprecation.js").DeprecationCall, "risky" | "caution" | null> = {
+  ends: "risky",
+  narrows: "caution",
+  none: null,
+};
+
 export const SEVERE_TYPES_WITHOUT_FLAT_DEMOTION: Record<string, string> = {
   product_deprecated:
     "Whether a deprecation is severe is a property of the record, not of the type: it demotes when " +

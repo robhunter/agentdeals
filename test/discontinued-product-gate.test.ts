@@ -180,7 +180,7 @@ describe("nothing we hold ranks as a free tier past the day its own record ends 
 });
 
 describe("a record that ends another product, or names a day still ahead, keeps its listing", () => {
-  const ENDS_ANOTHER_PRODUCT = ["Firebase", "Google Gemini API", "Google Tenor API", "MiniMax"];
+  const ENDS_ANOTHER_PRODUCT = ["Firebase", "Google Gemini API", "MiniMax"];
 
   for (const vendor of ENDS_ANOTHER_PRODUCT) {
     it(`leaves ${vendor} where the fix found it`, () => {
