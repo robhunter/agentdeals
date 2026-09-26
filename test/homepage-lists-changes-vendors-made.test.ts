@@ -5,6 +5,7 @@ import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { assertPopulationFloor } from "./population-floor.ts";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -92,8 +93,8 @@ describe("the home page lists changes the vendors made", () => {
       record(retractedAhead, { change_type: "free_tier_removed", date: tomorrow, summary: "A removal we dated ahead and later retracted.", resolution: retraction }),
     ];
     const theirs = [
-      record(changed, { change_type: "limits_reduced", date: today, summary: "The vendor halved its free allowance." }),
-      record(changingAhead, { change_type: "free_tier_removed", date: tomorrow, summary: "The vendor ends its free plan tomorrow." }),
+      record(changed, { change_type: "limits_reduced", date: today, date_source: "vendor_page", summary: "The vendor halved its free allowance." }),
+      record(changingAhead, { change_type: "free_tier_removed", date: tomorrow, date_source: "vendor_page", summary: "The vendor ends its free plan tomorrow." }),
     ];
 
     const dir = mkdtempSync(path.join(tmpdir(), "homepage-vendor-changes-"));
@@ -131,6 +132,84 @@ describe("the home page lists changes the vendors made", () => {
         [],
         "the home page lists a correction or a retracted record as a vendor's change",
       );
+    } finally {
+      proc.kill();
+    }
+  });
+});
+
+describe("the home page lists only changes with a known effective date", () => {
+  function cardsIn(recent: string): Array<{ vendor: string; label: string }> {
+    return [...recent.matchAll(/class="rc-vendor"[^>]*>([^<]*)<\/a>\s*<span class="rc-date">([^<]*)<\/span>/g)].map(
+      ([, vendor, label]) => ({ vendor, label }),
+    );
+  }
+
+  function itemListIn(recent: string): { numberOfItems: number; itemListElement: Array<{ item: { headline: string } }> } {
+    const json = recent.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)?.[1];
+    assert.ok(json, "the Recent pricing changes section carries no ItemList");
+    return JSON.parse(json);
+  }
+
+  it("lists a change dated by the vendor's page today and leaves out one we only discovered today, though both are the newest in the log", async () => {
+    const { ONLY_EFFECTIVE_DATES_LISTED, WHICH_DATE_WE_HOLD } = await import("../dist/change-dates.js");
+    const [dated, discovered, ahead] = CATALOGUE.slice(0, 3);
+    const today = dayOffset(0);
+    const record = (offer: { vendor: string; category: string }, fields: Record<string, unknown>) => ({
+      vendor: offer.vendor,
+      category: offer.category,
+      change_type: "limits_reduced",
+      date: today,
+      previous_state: "Before the change",
+      current_state: "After the change",
+      impact: "medium",
+      source_url: "https://example.com/pricing",
+      alternatives: [],
+      recorded_date: today,
+      ...fields,
+    });
+    const withADate = record(dated, { date_source: "vendor_page", summary: "The vendor's page dates this reduction today." });
+    const withoutOne = record(discovered, { date_source: "discovered", summary: "A reduction we found today on a page that states no date." });
+    const tomorrow = record(ahead, { date_source: "vendor_page", date: dayOffset(1), summary: "The vendor's page dates this reduction tomorrow." });
+
+    const dir = mkdtempSync(path.join(tmpdir(), "homepage-effective-dates-"));
+    const changesPath = path.join(dir, "deal_changes.json");
+    writeFileSync(changesPath, JSON.stringify({ changes: [withoutOne, withADate, tomorrow, ...LOG] }));
+    const { proc, base } = await startServer(changesPath);
+    try {
+      const home = await (await fetch(`${base}/`)).text();
+      const recent = section(home, "recent-changes");
+      assert.ok(recent.includes(withADate.summary), "a change the vendor's page dates today is missing from Recent pricing changes");
+      assert.ok(!recent.includes(withoutOne.summary), "Recent pricing changes lists a change with no known effective date");
+      assert.ok(recent.includes(ONLY_EFFECTIVE_DATES_LISTED), "Recent pricing changes does not say it lists only changes with a known effective date");
+      assert.ok(!recent.includes(WHICH_DATE_WE_HOLD), "Recent pricing changes still says its dates include discovery dates");
+      assert.ok(section(home, "changing-soon").includes(WHICH_DATE_WE_HOLD), "Changing Soon lost the sentence saying which date it holds");
+
+      const itemList = itemListIn(recent);
+      const headlines = itemList.itemListElement.map((entry) => entry.item.headline);
+      assert.strictEqual(itemList.numberOfItems, cardsIn(recent).length, "the ItemList counts a different set from the cards");
+      assert.ok(headlines.some((headline) => headline.startsWith(`${withADate.vendor}:`)), "the ItemList leaves out the dated change");
+      assert.ok(!headlines.some((headline) => headline.startsWith(`${withoutOne.vendor}:`)), "the ItemList lists the change with no known effective date");
+    } finally {
+      proc.kill();
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  it("shows only changes with a known effective date among the home page's changes today", async () => {
+    const { isEventDated } = await import("../dist/change-dates.js");
+    const { proc, base } = await startServer(null);
+    try {
+      const home = await (await fetch(`${base}/`)).text();
+      const cards = cardsIn(section(home, "recent-changes"));
+      assertPopulationFloor(cards.length, 1, "cards in Recent pricing changes");
+      const undated = cards.filter(({ vendor, label }) => {
+        const date = label.match(/\d{4}-\d{2}-\d{2}/)?.[0];
+        const records = LOG.filter((c) => c.vendor === vendor && c.date === date);
+        assert.ok(records.length > 0, `no record in the change log matches the card for ${vendor} on ${date}`);
+        return !records.some((c) => isEventDated(c as never));
+      });
+      assert.deepStrictEqual(undated.map(({ vendor, label }) => `${vendor} ${label}`), [], "a card on the home page has no known effective date");
     } finally {
       proc.kill();
     }

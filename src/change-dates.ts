@@ -281,8 +281,11 @@ export function namedWhileAheadOf(subject: string, asOf: string): string {
   return `${subject} is named here only while the date we hold for it is later than ${asOf}. ${WHICH_DATE_WE_HOLD}`;
 }
 
+export const ONLY_EFFECTIVE_DATES_LISTED =
+  "Only changes with a known effective date are listed. Changes we found by reading a vendor's page, with no effective date, are in the full change log.";
+
 export function namedOnceItsDateArrived(subject: string, asOf: string): string {
-  return `${subject} is named here only once the date we hold for it has arrived, on or before ${asOf}. ${WHICH_DATE_WE_HOLD}`;
+  return `${subject} is named here only once the date we hold for it has arrived, on or before ${asOf}. ${ONLY_EFFECTIVE_DATES_LISTED}`;
 }
 
 export function namedWhileNotBefore(subject: string, asOf: string): string {
