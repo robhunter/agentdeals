@@ -294,6 +294,9 @@
     "/alternative-to/google-gemini-api": {
       "daily": true
     },
+    "/alternative-to/google-gemini-code-assist": {
+      "daily": true
+    },
     "/alternative-to/google-gemini-embedding-2": {
       "daily": true
     },
@@ -2702,6 +2705,10 @@
       "hash": "f08b32979565c848",
       "changed": "2026-09-26"
     },
+    "/digest/2025-w09": {
+      "hash": "8af415df54cc21b9",
+      "changed": "2026-09-26"
+    },
     "/digest/2025-w13": {
       "hash": "74c9d156921b92d7",
       "changed": "2026-09-26"
@@ -3215,6 +3222,10 @@
     },
     "/reports/2025-01": {
       "hash": "a209ef45feb10964",
+      "changed": "2026-09-26"
+    },
+    "/reports/2025-02": {
+      "hash": "3d91a6b5f98ff1ae",
       "changed": "2026-09-26"
     },
     "/reports/2025-03": {
