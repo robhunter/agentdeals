@@ -11136,7 +11136,13 @@
       "category": "Storage",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-26"
+      "recorded_date": "2026-09-26",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-26",
+        "detail": "Retracted 2026-09-26: this records again an event we already hold. MinIO marked its open-source repository \"NO LONGER MAINTAINED\" on 2026-02-12 and archived it on 2026-02-13 (our MinIO record of 2026-02-12); nothing changed on 2026-09-26. The reading compared the page with our catalogue text, which still described the community edition as maintained.",
+        "source_url": "https://github.com/minio/minio"
+      }
     },
     {
       "vendor": "MojoAuth",
