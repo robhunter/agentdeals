@@ -130,6 +130,12 @@ describe("a route that badges a vendor and then states terms for it", () => {
     assert.deepStrictEqual(contradictionsOn(html, "/security-free-tier-comparison-2026"), []);
   });
 
+  it("leaves a sentence saying the vendor stopped serving its free tier", () => {
+    const html = page(`<div class="diff-card"><h3>Gemini Code Assist ${SWEPT_BADGE("Gemini Code Assist", "google-gemini-code-assist")}</h3>
+      <div class="diff-desc">Google stopped serving Gemini Code Assist for individuals, its free tier, on 2026-06-18.</div></div>`);
+    assert.deepStrictEqual(contradictionsOn(html, "/ai-coding-tools-pricing"), []);
+  });
+
   it("does not read a licence as an offer", () => {
     const html = page(`<div class="diff-card"><h3>MinIO ${SWEPT_BADGE("MinIO", "minio")}</h3>
       <div class="diff-desc">MinIO is free software, but running it in production costs infrastructure and on-call time.</div></div>`);

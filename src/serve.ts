@@ -6912,7 +6912,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
       </tr>
       <tr>
         <td style="font-weight:600"><a href="/vendor/gemini-cli" style="color:var(--text)">Gemini CLI</a></td>
-        <td>1,000 req/day (personal account)</td>
+        <td>With a Gemini API key</td>
         <td>Terminal CLI</td>
         <td>\u2705 Apache-2.0</td>
         <td>1M token context window — massive codebase analysis</td>
@@ -6920,7 +6920,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     </tbody>
   </table>
   </div>
-  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Cline and Aider are fully free — you pay only for the LLM API calls (OpenRouter, Anthropic, OpenAI, etc.). Claude Code is free during beta (expected to become paid). Gemini CLI free tier is generous: 60 req/min, 1,000 req/day with a personal Google account.</p>`,
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Cline and Aider are fully free — you pay only for the LLM API calls (OpenRouter, Anthropic, OpenAI, etc.). Gemini CLI has run on a Gemini API key since Google stopped personal-account sign-in on 2026-06-18.</p>`,
   },
   {
     slug: "datadog-alternatives",
@@ -13210,7 +13210,7 @@ ${buildCards(other)}
       <tr>
         <td style="font-weight:600"><a href="/vendor/gemini-cli" style="color:var(--text)">Gemini CLI</a></td>
         <td>AI Coding</td>
-        <td>1,000 req/day, 60 RPM</td>
+        <td>With a Gemini API key</td>
         <td>Yes</td>
         <td>Free terminal AI agent, open-source</td>
       </tr>
@@ -27468,16 +27468,6 @@ function buildFreeTierTrackerPage(): string {
 
   const featuredExpansions: ErosionEntry[] = [
     {
-      vendor: "Gemini Code Assist",
-      slug: "gemini-code-assist",
-      date: "2025-12-18",
-      oneLiner: "Free tier launched for individual developers",
-      changeType: "new_free_tier",
-      impact: "high",
-      detail: "Google launched Gemini Code Assist free tier for individual developers. Includes code completions, chat, and multi-file editing powered by Gemini 2.5 Pro. Available in VS Code, JetBrains, and Cloud Shell.",
-      alternatives: ["GitHub Copilot Free", "Cursor", "Cline"],
-    },
-    {
       vendor: "Cloudflare Startup Program",
       slug: "cloudflare",
       date: "2026-02-01",
@@ -27515,7 +27505,7 @@ function buildFreeTierTrackerPage(): string {
       changeType: "new_free_tier",
       impact: "high",
       detail: "GitHub launched a free tier for Copilot: 2,000 code completions and 50 chat messages per month. Available in VS Code, Visual Studio, JetBrains, and Neovim. Strategic move to compete with Cursor and Claude.",
-      alternatives: ["Gemini Code Assist", "Cursor", "Cline"],
+      alternatives: ["Cursor", "Cline"],
     },
     {
       vendor: "Unity DevOps",
@@ -27709,7 +27699,7 @@ ${mcpCtaCss()}
   <div class="executive-summary">
     <p><strong>${removedOrReduced.length} developer tool free tiers were removed in Q1 2026. ${limitsReduced.length + restructured.length} more were reduced or restructured. Here&rsquo;s what changed and what&rsquo;s still free.</strong></p>
     <p>March 2026 saw an unprecedented wave of free tier removals in a single month: <strong>Postman</strong> killed team collaboration on its free plan, <strong>LocalStack</strong> discontinued its open-source Community Edition (212 points on Hacker News), <strong>Brave Search API</strong> replaced its free tier with metered billing, <strong>HCP Terraform</strong> is ending its legacy free plan March 31, and <strong>Windsurf</strong> replaced credits with hard quotas while raising prices 33%.</p>
-    <p>But it&rsquo;s not all erosion. <strong>Gemini Code Assist</strong> launched a free tier, <strong>Cloudflare</strong> expanded its startup program to $250K, <strong>Terragrunt Scale</strong> launched a free tier specifically to capture HCP Terraform refugees, and <strong>GitHub Copilot</strong> went free. The pattern: some vendors are removing free tiers, while competitors swoop in to capture displaced developers.</p>
+    <p>But it&rsquo;s not all erosion. <strong>Cloudflare</strong> expanded its startup program to $250K, <strong>Terragrunt Scale</strong> launched a free tier specifically to capture HCP Terraform refugees, and <strong>GitHub Copilot</strong> went free. The pattern: some vendors are removing free tiers, while competitors swoop in to capture displaced developers.</p>
   </div>
 
   <div class="toc">
@@ -28258,12 +28248,12 @@ function buildAiCodingPricing2026Page(): string {
     {
       name: "Gemini Code Assist",
       slug: "google-gemini-code-assist",
-      free: "6K completions/day",
+      free: "Ended 2026-06-18",
       pro: "\u2014",
       power: "\u2014",
-      teams: "$19/seat",
-      model: "Free individual + Enterprise",
-      freeDetails: "6,000 code completions/day (~180,000/month), 240 chat messages/day. Powered by Gemini 2.5 Pro. Supports VS Code, JetBrains, Android Studio, Cloud Shell. No credit card required. 90\u00d7 more completions than Copilot free tier.",
+      teams: "$22.80/seat",
+      model: "Standard + Enterprise (per user)",
+      freeDetails: "Google stopped serving the free individuals tier on 2026-06-18 (deprecation notice). codeassist.google still advertises 6,000 code-related requests and 240 chat requests a day. Standard and Enterprise subscriptions are unchanged.",
     },
     {
       name: "Amazon Q Developer",
@@ -28462,8 +28452,8 @@ ${mcpCtaCss()}
   </div>
 
   <div class="executive-summary">
-    <p><strong>The pricing earthquake:</strong> AI coding tools pricing has converged. $20/month is the new standard, $200/month for power users, and free tiers are getting thinner. Windsurf just overhauled from credits to quotas and hiked Pro by 33%. Meanwhile, Gemini Code Assist went fully free with 90\u00d7 more completions than Copilot's free tier.</p>
-    <p><strong>Key insight:</strong> Cursor and Windsurf now charge <strong>identical prices</strong> ($20/$200/$40). GitHub Copilot remains the cheapest paid option at $10/mo. Gemini Code Assist offers the most generous free tier by far. Open-source tools (Cline, Aider) remain fully free with BYO API keys.</p>
+    <p><strong>The pricing earthquake:</strong> AI coding tools pricing has converged. $20/month is the new standard, $200/month for power users, and free tiers are getting thinner. Windsurf just overhauled from credits to quotas and hiked Pro by 33%.</p>
+    <p><strong>Key insight:</strong> Cursor and Windsurf now charge <strong>identical prices</strong> ($20/$200/$40). GitHub Copilot remains the cheapest paid option at $10/mo. Open-source tools (Cline, Aider) remain fully free with BYO API keys.</p>
     <p><strong>Our advantage:</strong> Unlike other comparison guides, we track pricing changes over time. We've recorded ${aiCodingChanges.length} pricing changes for AI coding tools — so you can see not just where prices are, but where they're heading.</p>
   </div>
 
@@ -28499,7 +28489,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="context-box">
-    <strong>Price convergence:</strong> Cursor, Windsurf, and Augment Code have all adopted credit or consumption-based models in the past year. The $20/mo Pro and $200/mo Power price points have emerged as the de facto standard. GitHub Copilot at $10/mo is the outlier — kept low by Microsoft's distribution strategy. Gemini Code Assist's unlimited free tier is Google's play to capture developers before monetizing.
+    <strong>Price convergence:</strong> Cursor, Windsurf, and Augment Code have all adopted credit or consumption-based models in the past year. The $20/mo Pro and $200/mo Power price points have emerged as the de facto standard. GitHub Copilot at $10/mo is the outlier — kept low by Microsoft's distribution strategy.
   </div>
 
   <h2 id="free-tiers">What You Actually Get for Free</h2>
@@ -28537,7 +28527,7 @@ ${mcpCtaCss()}
 
     <div class="verdict-item">
       <strong>Budget-conscious / students</strong>
-      <p><a href="/vendor/google-gemini-code-assist">Gemini Code Assist</a> (free, 180K completions/month) or <a href="/vendor/github-copilot">GitHub Copilot</a> ($10/mo, cheapest paid tier). Copilot is free for verified students and OSS maintainers.</p>
+      <p><a href="/vendor/github-copilot">GitHub Copilot</a> ($10/mo, cheapest paid tier). Copilot is free for verified students and OSS maintainers.</p>
     </div>
 
     <div class="verdict-item">
@@ -28689,16 +28679,16 @@ function buildAiCodingToolsPricingPage(): string {
       name: "Gemini Code Assist",
       slug: "google-gemini-code-assist",
       category: "ide",
-      free: "6K completions/day",
+      free: "Ended 2026-06-18",
       pro: "\u2014",
       power: "\u2014",
-      teams: "$19/seat",
-      model: "Free individual + Enterprise",
-      freeDetails: "6,000 code completions/day (~180,000/month), 240 chat messages/day. Powered by Gemini 2.5 Pro. Supports VS Code, JetBrains, Android Studio, Cloud Shell. No credit card required. 90\u00d7 more completions than Copilot free tier.",
-      freeType: "generous",
-      monthlyCostSolo: "$0",
-      monthlyCostTeam5: "$95",
-      hiddenCosts: "Enterprise tier ($19/seat) needed for org-wide admin controls, policy management. Individual tier is genuinely unlimited for solo use.",
+      teams: "$22.80/seat",
+      model: "Standard + Enterprise (per user)",
+      freeDetails: "Google stopped serving the free individuals tier on 2026-06-18 (deprecation notice). codeassist.google still advertises 6,000 code-related requests and 240 chat requests a day. Standard and Enterprise subscriptions are unchanged.",
+      freeType: "none",
+      monthlyCostSolo: "$22.80",
+      monthlyCostTeam5: "$114",
+      hiddenCosts: "$19/user/month with an annual commitment.",
     },
     {
       name: "Google Antigravity",
@@ -28734,16 +28724,16 @@ function buildAiCodingToolsPricingPage(): string {
       name: "Gemini CLI",
       slug: "gemini-cli",
       category: "cli",
-      free: "1K requests/day",
+      free: "With a Gemini API key",
       pro: "Gemini API pricing",
       power: "\u2014",
       teams: "\u2014",
       model: "Free tier + API",
-      freeDetails: "Open-source terminal AI agent by Google. Free tier: 60 requests/minute, 1,000 requests/day, 1M token context window. Powered by Gemini 2.5 Pro. Supports MCP tools, shell commands, file editing. Apache 2.0 licensed.",
-      freeType: "generous",
+      freeDetails: "Open-source terminal AI agent by Google, Apache 2.0 licensed. Login with Google stopped working for personal accounts on 2026-06-18; it runs on a Gemini API key, Vertex AI, or a Code Assist Standard or Enterprise licence. Supports MCP tools, shell commands, file editing.",
+      freeType: "byok",
       monthlyCostSolo: "$0",
       monthlyCostTeam5: "$0",
-      hiddenCosts: "Free tier is extremely generous (1K req/day). Beyond that, Gemini API pricing applies. Open-source, so no lock-in.",
+      hiddenCosts: "Model use is billed at Gemini API rates after the API's own free tier. Open-source, so no lock-in.",
     },
     {
       name: "Cline",
@@ -28988,7 +28978,7 @@ function buildAiCodingToolsPricingPage(): string {
   };
 
   const faqEntries = [
-    { q: "What is the best free AI coding tool in 2026?", a: "Gemini Code Assist's free tier is 6,000 completions/day (180,000/month) and 240 chat messages/day. For open-source alternatives, Cline and Aider are fully free with BYO API keys. Gemini CLI offers 1,000 free requests/day. Amazon Kiro offers 50 free credits/month — limited, but enough to try spec-driven development." },
+    { q: "Which AI coding tools are free in 2026?", a: "Cline and Aider are free and open source; you pay only for the model API you connect. Gemini CLI is also open source and runs on a Gemini API key: Google stopped personal-account sign-in on 2026-06-18, when it ended the free Gemini Code Assist individuals tier. GitHub Copilot Free includes 2,000 code completions a month." },
     { q: "How much does Cursor cost vs Windsurf?", a: "Both start at $20/month for an individual paid plan and $40/user/month for teams, and both top out at $200/month — Cursor Ultra and Windsurf Max. Cursor's free plan is called Hobby. Between them sits Pro+ at $60/mo with 3x Pro's Agent limits; Ultra is 20x. Windsurf has 4 plans (Free, Pro $20, Teams $40/seat, Max $200) and raised Pro from $15 to $20 in March 2026. Windsurf's SWE-1.5 Fast Agent model optimizes for iteration speed." },
     { q: "Is GitHub Copilot still the cheapest AI coding tool?", a: "Yes \u2014 Copilot Pro at $10/month is the cheapest paid plan among the tools compared here. The free tier gives 2,000 code completions a month plus limited chat and agent use. On paid plans, completions and next edit suggestions are unlimited and consume nothing; agent and chat work is metered in GitHub AI Credits at $0.01 each \u2014 $15 of credits on Pro, $70 on Pro+ ($39/mo), $200 on Max ($100/mo). GitHub's premium-request billing and its $0.04 overage are retired; the docs now label that model legacy." },
     { q: "What are the hidden costs of BYO-key AI coding tools?", a: "Tools like Cline and Aider are free to install but require API keys. Typical costs: $5-50/month for moderate use with Claude Sonnet or GPT-4o. Heavy agentic usage (Cline with Opus) can reach $50-100/month in API costs alone." },
@@ -29107,8 +29097,8 @@ function buildAiCodingToolsPricingPage(): string {
     '  </div>\n' +
     '\n' +
     '  <div class="executive-summary">\n' +
-    '    <p><strong>The AI coding tools market in April 2026:</strong> 17 tools across four categories \u2014 IDE-based editors, CLI/terminal agents, cloud coding agents, and AI app builders. $20/month has become the standard price point. Free tiers range from genuinely generous (Gemini Code Assist: 180K completions/month) to functionally absent (Devin: $20/mo minimum). The BYOK (bring your own key) tools \u2014 Cline, Aider, Gemini CLI \u2014 are technically free but shift costs to API providers.</p>\n' +
-    '    <p><strong>Key trends:</strong> Credit and quota models are replacing flat subscriptions (Cursor Jun 2025, Augment Oct 2025, Windsurf Mar 2026). Cloud agents (Codex, Devin) are a new category that didn\'t exist a year ago. Google is flooding the market with free options (Gemini Code Assist, Antigravity, Gemini CLI) while competitors charge $20/mo.</p>\n' +
+    '    <p><strong>The AI coding tools market in April 2026:</strong> 17 tools across four categories \u2014 IDE-based editors, CLI/terminal agents, cloud coding agents, and AI app builders. $20/month has become the standard price point. Some free tiers are metered by the month (GitHub Copilot Free: 2,000 completions), some are absent (Devin: $20/mo minimum), and Google ended the free Gemini Code Assist individuals tier on 2026-06-18. The BYOK (bring your own key) tools \u2014 Cline, Aider, Gemini CLI \u2014 are technically free but shift costs to API providers.</p>\n' +
+    '    <p><strong>Key trends:</strong> Credit and quota models are replacing flat subscriptions (Cursor Jun 2025, Augment Oct 2025, Windsurf Mar 2026). Cloud agents (Codex, Devin) are a new category that didn\'t exist a year ago.</p>\n' +
     '    <p><strong>This guide covers:</strong> pricing tables, category breakdowns, what you actually get for free, cost analysis for solo devs and teams, hidden costs, and best-for-use-case recommendations \u2014 compiled by hand from vendor pricing pages.</p>\n' +
     '  </div>\n' +
     '\n' +
@@ -29147,7 +29137,7 @@ function buildAiCodingToolsPricingPage(): string {
     '  </div>\n' +
     '\n' +
     '  <div class="context-box">\n' +
-    '    <strong>Price convergence:</strong> Cursor, Windsurf, Augment, Bolt.new, Lovable, Codex (via ChatGPT Plus), and Devin all land at or near $20/month for their entry paid tier. GitHub Copilot at $10/mo is the outlier \u2014 kept low by Microsoft\'s distribution strategy. Google is the wildcard: Gemini Code Assist, Antigravity, and Gemini CLI are all free or have extremely generous free tiers.\n' +
+    '    <strong>Price convergence:</strong> Cursor, Windsurf, Augment, Bolt.new, Lovable, Codex (via ChatGPT Plus), and Devin all land at or near $20/month for their entry paid tier. GitHub Copilot at $10/mo is the outlier \u2014 kept low by Microsoft\'s distribution strategy.\n' +
     '  </div>\n' +
     '\n' +
     '  <h2 id="categories">Category Breakdown</h2>\n' +
@@ -29207,7 +29197,7 @@ function buildAiCodingToolsPricingPage(): string {
     '  </div>\n' +
     '\n' +
     '  <div class="context-box">\n' +
-    '    <strong>Best value picks:</strong> For a solo developer on a budget, <a href="/vendor/google-gemini-code-assist">Gemini Code Assist</a> ($0) or <a href="/vendor/github-copilot">GitHub Copilot</a> ($10/mo) offer the best cost-to-capability ratio. For teams, Copilot Business ($19/seat = $95/mo for 5) is the cheapest managed option. BYO-key tools (Cline, Aider) can be cheapest or most expensive depending on usage patterns.\n' +
+    '    <strong>Best value picks:</strong> For teams, Copilot Business ($19/seat = $95/mo for 5) is the cheapest managed option. BYO-key tools (Cline, Aider) can be cheapest or most expensive depending on usage patterns.\n' +
     '  </div>\n' +
     '\n' +
     '  <h2 id="hidden-costs">Hidden Costs</h2>\n' +
@@ -29218,8 +29208,8 @@ function buildAiCodingToolsPricingPage(): string {
     '    <p>Cline, Aider, and Gemini CLI shift costs to API providers. A typical coding session with Claude Sonnet costs $0.50\u2013$5 per session depending on context size. Heavy Cline users report $50\u2013100/month in API costs. Aider with local models (Ollama) is truly free but quality drops significantly.</p>\n' +
     '  </div>\n' +
     '  <div class="hidden-cost-card">\n' +
-    '    <h4>Credit Consumption Variability</h4>\n' +
-    '    <p>Cursor, Windsurf, and Augment Code use credit/quota systems where consumption varies by model. Cursor\'s Opus requests burn credits 10\u00d7 faster than Sonnet. Windsurf\'s "25 credits/month" on free tier can mean 25 prompts or 5 complex agentic flows.</p>\n' +
+    '    <h4>Usage Allowances Vary by Model</h4>\n' +
+    '    <p>Cursor, Windsurf and Augment Code include a monthly usage allowance rather than a fixed number of requests. Cursor\'s free Hobby plan lists "Limited Agent requests"; Windsurf\'s Free plan has "a light quota to code with agents"; Augment Code\'s Standard plan includes $20 of usage a month. Windsurf says usage per message "varies based on the model used, the task size and complexity, and the reasoning required."</p>\n' +
     '  </div>\n' +
     '  <div class="hidden-cost-card">\n' +
     '    <h4>Context Window Limits</h4>\n' +
@@ -29265,11 +29255,6 @@ function buildAiCodingToolsPricingPage(): string {
     '    <h3>Pick the Right Tool</h3>\n' +
     '\n' +
     '    <div class="verdict-item">\n' +
-    '      <strong>Best free option overall</strong>\n' +
-    '      <p><a href="/vendor/google-gemini-code-assist">Gemini Code Assist</a> \u2014 180K completions/month, 240 chat messages/day, powered by Gemini 2.5 Pro. No credit card required. More free usage than any competitor by 90\u00d7.</p>\n' +
-    '    </div>\n' +
-    '\n' +
-    '    <div class="verdict-item">\n' +
     '      <strong>Best if budget is $20/mo</strong>\n' +
     '      <p><a href="/vendor/cursor">Cursor Pro</a> or <a href="/vendor/windsurf">Windsurf Pro</a> (both $20/mo). Cursor has more mature multi-model support. Windsurf\'s agentic Cascade flows are compelling for complex tasks. Or save $10: <a href="/vendor/github-copilot">GitHub Copilot Pro</a> at $10/mo covers most needs.</p>\n' +
     '    </div>\n' +
@@ -29281,7 +29266,7 @@ function buildAiCodingToolsPricingPage(): string {
     '\n' +
     '    <div class="verdict-item">\n' +
     '      <strong>Best for open source / zero vendor lock-in</strong>\n' +
-    '      <p><a href="/vendor/cline">Cline</a> (VS Code), <a href="/vendor/aider">Aider</a> (CLI), or <a href="/vendor/gemini-cli">Gemini CLI</a>. All free and open-source. Cline and Aider are BYO key; Gemini CLI has a generous 1K req/day free tier.</p>\n' +
+    '      <p><a href="/vendor/cline">Cline</a> (VS Code), <a href="/vendor/aider">Aider</a> (CLI), or <a href="/vendor/gemini-cli">Gemini CLI</a>. All free and open-source, and all bring your own key: Gemini CLI has run on a Gemini API key since Google stopped personal-account sign-in on 2026-06-18.</p>\n' +
     '    </div>\n' +
     '\n' +
     '    <div class="verdict-item">\n' +
@@ -29296,7 +29281,7 @@ function buildAiCodingToolsPricingPage(): string {
     '\n' +
     '    <div class="verdict-item">\n' +
     '      <strong>Best for students / budget-conscious</strong>\n' +
-    '      <p><a href="/vendor/github-copilot">GitHub Copilot</a> \u2014 free unlimited access for verified students, teachers, and OSS maintainers. Combine with <a href="/vendor/gemini-cli">Gemini CLI</a> (free 1K req/day) for terminal-based work.</p>\n' +
+    '      <p><a href="/vendor/github-copilot">GitHub Copilot</a> \u2014 free unlimited access for verified students, teachers, and OSS maintainers.</p>\n' +
     '    </div>\n' +
     '  </div>\n' +
     '\n' +
@@ -35316,7 +35301,6 @@ function buildGcpFreeTier2026Page(): string {
   const trialServices: GcpService[] = [
     { name: "$300 Free Trial Credit", slug: "google-cloud", limits: "$300 credit for 90 days, full access to all GCP services, credit card required", category: "Trial" },
     { name: "Vertex AI (Gemini)", slug: "google-gemini-api", limits: "Free tier: Gemini 2.5 Flash 500 req/day, Gemini 2.5 Pro 25 req/day", category: "AI/ML", highlight: true },
-    { name: "Gemini Code Assist", slug: "google-gemini-code-assist", limits: "Free individual tier: code completions, chat, multi-file editing (VS Code, JetBrains)", category: "AI Coding", highlight: true },
     { name: "Google Colab", slug: "google-colab", limits: "Free tier: T4 GPU (limited), standard RAM, 12-hour session limit", category: "AI/ML" },
     { name: "AlloyDB Omni", slug: "google-cloud", limits: "Free to download and run locally (PostgreSQL-compatible, columnar engine)", category: "Database" },
     { name: "Looker Studio", slug: "google-cloud", limits: "Free for individual use (unlimited reports, 10 data sources)", category: "Analytics" },
@@ -35558,7 +35542,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="context-box">
-    <strong>Gemini Code Assist is a strong free-tier AI coding option.</strong> Launched December 2025, it includes code completions, chat, and multi-file editing powered by Gemini 2.5 Pro — all free for individual developers. Available in VS Code, JetBrains, and Cloud Shell. See our <a href="/ai-coding-tools-pricing">AI Coding Tools comparison</a> for how it stacks up against Copilot, Cursor, and others.
+    Gemini Code Assist's free tier for individuals has ended. Google's <a href="https://developers.google.com/gemini-code-assist/docs/deprecations/code-assist-individuals" target="_blank" rel="nofollow noopener" class="change-source" title="developers.google.com/gemini-code-assist/docs/deprecations/code-assist-individuals">deprecation notice</a> says that starting June 18, 2026, the IDE extensions stopped serving requests for the Gemini Code Assist for individuals, Google AI Pro and Google AI Ultra tiers, and that this also applies to Gemini CLI. Gemini CLI still runs with a Gemini API key.
   </div>
 
   <h2 id="stacks">Best Picks by Use Case</h2>

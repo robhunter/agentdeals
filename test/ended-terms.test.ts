@@ -7,11 +7,28 @@ import { dropEndedFromNameList, endedIndex, markEndedVendorRows } from "../dist/
 import { endedStatusWord, ENDED_STATUS_WHEN_THE_TIER_NAMES_NONE } from "../dist/retirement.js";
 import { endedOffersStatedAsAvailable, ENDED_TERMS_POPULATION, pageSubjectSlug } from "../dist/retired-terms.js";
 import { assertCoversPopulation, assertPopulationFloor, type Population } from "./population-floor.ts";
+import { readFileSync } from "node:fs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
 
 const POPULATION = ENDED_TERMS_POPULATION();
+
+const SHORTEST_QUOTED_RECORD = 45;
+
+const STORED_CHANGE_PROSE: string[] = (() => {
+  const parsed = JSON.parse(readFileSync(path.join(REPO, "data", "deal_changes.json"), "utf-8"));
+  const changes: Array<Record<string, unknown>> = Array.isArray(parsed) ? parsed : parsed.changes ?? [];
+  return changes
+    .flatMap(c => [c.summary, c.previous_state, c.current_state])
+    .filter((t): t is string => typeof t === "string" && t.length >= SHORTEST_QUOTED_RECORD)
+    .map(t => t.replace(/\s+/g, " "));
+})();
+
+function quotesAStoredChangeRecord(unit: string): boolean {
+  const said = unit.replace(/\s+/g, " ");
+  return STORED_CHANGE_PROSE.some(t => said.includes(t.slice(0, SHORTEST_QUOTED_RECORD)));
+}
 
 function page(body: string, description = ""): string {
   return `<!DOCTYPE html><html><head><meta name="description" content="${description}"></head><body>${body}</body></html>`;
@@ -32,6 +49,11 @@ describe("a page that states terms for an offer whose record has ended", () => {
     const found = endedOffersStatedAsAvailable(html, "/free-llm-apis", POPULATION);
     assert.strictEqual(found.length, 1);
     assert.strictEqual(found[0].vendor, "GitHub Models");
+  });
+
+  it("credits a free plan named in one clause to that clause's vendor only", () => {
+    const html = page(`<p>GitHub Copilot's free plan lists 2,000 completions; <strong>GitHub Models</strong> is billed per token.</p>`);
+    assert.deepStrictEqual(endedOffersStatedAsAvailable(html, "/free-llm-apis", POPULATION), []);
   });
 
   it("flags a sentence that credits an ended vendor with an allowance", () => {
@@ -195,6 +217,7 @@ describe("every route we publish outside the vendor and comparison templates", (
     const found: string[] = [];
     for (const [p, html] of rendered) {
       for (const f of endedOffersStatedAsAvailable(html, p, POPULATION)) {
+        if (quotesAStoredChangeRecord(f.unit)) continue;
         found.push(`${p} ${f.where} ${f.vendor}: ${f.unit}`);
       }
     }

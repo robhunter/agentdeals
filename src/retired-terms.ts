@@ -16,7 +16,7 @@ const BLOCK_TAGS = "tr|li|dd|dt|p|h1|h2|h3|h4|h5|h6|figcaption|blockquote|summar
 
 const CARD_DESCRIPTION = /<div\b[^>]*class="[^"]*\bdiff-desc\b[^"]*"[^>]*>(?:(?!<div\b)[\s\S])*?<\/div>/gi;
 
-const ENDED_WORD = /\b(?:retired|retires|retiring|retirement|deprecated|deprecation|discontinued|sunset|sunsetting|withdrawn|withdrew|shut down|shutting down|shutdown|wound down|no longer|has ended|have ended|ended|closed to new|removed|removal|killed|kills|killing|eliminated|eliminates)\b/i;
+const ENDED_WORD = /\b(?:retired|retires|retiring|retirement|deprecated|deprecation|discontinued|sunset|sunsetting|withdrawn|withdrew|shut down|shutting down|shutdown|wound down|no longer|stopped serving|stopped offering|stopped accepting|has ended|have ended|ended|closed to new|removed|removal|killed|kills|killing|eliminated|eliminates)\b/i;
 
 const NO_OFFER_WORD = /\bno free\b|\bnot free\b|\bwithout a free\b|\bfree tier (?:removed|gone|withdrawn|is gone)\b|\bnot available\b|\bn\/a\b/i;
 
@@ -128,7 +128,7 @@ function rowCells(rowHtml: string): string[] {
 }
 
 function sentences(text: string): string[] {
-  return text.split(/(?<=[.!?])\s+(?=[A-Z0-9"'(])/).filter(s => s.trim().length > 0);
+  return text.split(/(?<=[.!?])\s+(?=[A-Z0-9"'(])|;\s+/).filter(s => s.trim().length > 0);
 }
 
 function names(vendor: string): RegExp {

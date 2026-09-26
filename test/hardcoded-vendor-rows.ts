@@ -133,7 +133,7 @@ const DENIES_IT = /^\s*(?:no\b|non-existent|none\b|n\/?a\b|not\b|never\b|zero\b|
 const STATES_FREENESS = /\bfree\b|\bno cost\b|\$0(?![.,\d])/i;
 
 const ENDED =
-  "removed|removal|retired|retirement|ended|withdrawn|discontinued|eliminated|sunset|killed|shut down|shut off";
+  "removed|removal|retired|retirement|ended|withdrawn|discontinued|eliminated|sunset|killed|shut down|shut off|stopped serving|stopped offering";
 
 const ASKS_RATHER_THAN_STATES = /\?\s*$/;
 

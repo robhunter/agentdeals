@@ -174,7 +174,7 @@ describe("the rows this rule must leave alone", () => {
 });
 
 const STATES_FREENESS = /\bfree\b|\bno cost\b|\$0(?![.,\d])/i;
-const SENTENCE = /[^.!?]+[.!?]?/g;
+const CLAUSE = /[^.!?;]+[.!?;]?/g;
 
 interface PublishedPair {
   page: string;
@@ -244,7 +244,7 @@ function structuredStrings(html: string): string[] {
 }
 
 function claimsNaming(text: string, vendor: string): string[] {
-  return (text.match(SENTENCE) ?? []).filter(sentence => sentence.includes(vendor)).map(s => s.trim());
+  return (text.match(CLAUSE) ?? []).filter(clause => clause.includes(vendor)).map(s => s.trim());
 }
 
 let port = 0;

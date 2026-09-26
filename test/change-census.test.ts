@@ -59,6 +59,8 @@ const NAMES_A_WINDOW =
 
 const COUNTS_SOMETHING_ELSE = /\bof\b/i;
 
+const COUNTS_FREE_TIERS_NOT_CHANGES = /^\s+(?:of the [\d,]+\s+)?(?:recorded\s+)?free tiers?\b/i;
+
 const SENTENCE_BREAK = /[.!?;:]\s|\s[–—]\s/;
 
 const BLOCK_CLOSE = /<\/(?:div|p|li|tr|section|article|blockquote|h[1-6])>/gi;
@@ -212,7 +214,8 @@ describe("every published total is the tracked count or names the slice it is", 
       for (const slice of superseded) {
         for (const match of text.matchAll(new RegExp(`(?<![\\w.,$/-])${slice.count}(?![\\w.,%/-])`, "g"))) {
           const sentence = sentenceAround(text, match.index ?? 0);
-          if (!/\bchange|\brecord|\btrack/i.test(sentence)) continue;
+          if (!/\bchange|\brecords?\b|\btrack/i.test(sentence)) continue;
+          if (COUNTS_FREE_TIERS_NOT_CHANGES.test(text.slice((match.index ?? 0) + match[0].length))) continue;
           examined++;
           if (!sentence.includes(slice.noun)) unnamed.push(`${route}: ${slice.count} (${slice.id}) in "${sentence.trim().slice(0, 90)}"`);
         }

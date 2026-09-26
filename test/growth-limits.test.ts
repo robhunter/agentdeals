@@ -16,6 +16,22 @@ const rateLimit = (description: string): string => {
   return phrases[0];
 };
 
+describe("the free-tier threshold reads only the clauses that state the terms", () => {
+  it("reads no threshold from a clause reporting a quota a page still advertises", () => {
+    assert.deepEqual(
+      growthLimitPhrases("Login with Google no longer works for personal accounts; the README still advertises 60 requests a minute and 1,000 a day."),
+      [],
+    );
+  });
+
+  it("still reads the threshold the other clauses state", () => {
+    assert.deepEqual(
+      growthLimitPhrases("The free plan allows 300 requests per day. The old landing page advertised 1,000 requests a day."),
+      ["300 requests/day"],
+    );
+  });
+});
+
 describe("the free-tier threshold reads its period from the clause the quantity is in", () => {
   it("keeps a per-day rate written with a slash", () => {
     assert.equal(

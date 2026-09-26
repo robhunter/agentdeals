@@ -146,11 +146,20 @@ export const LIMIT_PATTERNS: LimitPattern[] = [
   },
 ];
 
+const REPORTS_WHAT_A_PAGE_ADVERTISES = /\badvertis(?:es|ed)\b/i;
+
+function clausesThatStateTheTerms(description: string): string {
+  const clauses = description.split(/(?<=[.!?])\s+|;\s+/);
+  const stated = clauses.filter((clause) => !REPORTS_WHAT_A_PAGE_ADVERTISES.test(clause));
+  return stated.length === clauses.length ? description : stated.join(" ");
+}
+
 export function growthLimitPhrases(description: string): string[] {
+  const stated = clausesThatStateTheTerms(description);
   const phrases: string[] = [];
   for (const pattern of LIMIT_PATTERNS) {
-    const m = description.match(pattern.regex);
-    if (m) phrases.push(pattern.format(m, description));
+    const m = stated.match(pattern.regex);
+    if (m) phrases.push(pattern.format(m, stated));
   }
   return phrases;
 }
