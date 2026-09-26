@@ -28209,9 +28209,9 @@ function buildAiCodingPricing2026Page(): string {
       free: "Limited daily quotas",
       pro: "$20/mo",
       power: "$200/mo (Max)",
-      teams: "$40/seat (Teams)",
+      teams: "$80/mo + $40/seat",
       model: "Quota-based (Mar 2026)",
-      freeDetails: "Limited daily quotas for completions, chat, and Cascade flows. Three paid tiers: Pro ($20/mo), Teams ($40/mo/seat), Max ($200/mo). SWE-1.5 Fast Agent model. Credit system replaced by quotas in March 2026. Grandfathered Pro subscribers keep $15/mo indefinitely.",
+      freeDetails: "Renamed Devin Desktop by Cognition. Free: a light agent quota, limited models, unlimited inline edits and Tab completions. Paid: Pro $20/mo, Max $200/mo, Teams $80/mo plus $40 per dev seat. Credits were replaced by daily and weekly quotas in March 2026; subscribers on the old $15/mo Pro price keep it.",
     },
     {
       name: "GitHub Copilot",
@@ -28246,12 +28246,12 @@ function buildAiCodingPricing2026Page(): string {
     {
       name: "Claude Code",
       slug: "claude-code",
-      free: "API-based",
-      pro: "API usage",
+      free: "None (paid plans or API key)",
+      pro: "$20/mo (Pro)",
       power: "$100\u2013200/mo (Max)",
       teams: "$25/seat (Team)",
-      model: "Usage-based + overage",
-      freeDetails: "Terminal-based agentic coding tool. Available via Claude Pro ($20/mo), Team ($25/seat), and Max ($100\u2013200/mo) subscriptions. All paid plans now have pay-as-you-go overage at API rates. April 2026: third-party tools billed separately, peak-hour throttling weekdays 5\u201311 AM PT.",
+      model: "Subscription + usage credits",
+      freeDetails: "Agentic coding tool by Anthropic, in the terminal, IDEs, a desktop app and the browser. Included in every paid Claude plan, not in Free: Pro $20/mo ($17 billed annually), Max $100 or $200/mo, Team Standard $25/seat ($20 billed annually), Enterprise $20/seat plus usage at API rates. Also runs on an Anthropic API key, billed per token.",
     },
     {
       name: "Augment Code",
@@ -28431,7 +28431,7 @@ ${mcpCtaCss()}
 
   <div class="executive-summary">
     <p><strong>The pricing earthquake:</strong> AI coding tools pricing has converged. $20/month is the new standard, $200/month for power users, and free tiers are getting thinner. Windsurf just overhauled from credits to quotas and hiked Pro by 33%.</p>
-    <p><strong>Key insight:</strong> Cursor and Windsurf now charge <strong>identical prices</strong> ($20/$200/$40). GitHub Copilot remains the cheapest paid option at $10/mo. Open-source tools (Cline, Aider) remain fully free with BYO API keys.</p>
+    <p><strong>Key insight:</strong> Cursor and Windsurf both charge $20/month for Pro and $200/month for their top individual plan; for teams, Cursor is $40/user/month and Windsurf $80/month plus $40 per seat. GitHub Copilot remains the cheapest paid option at $10/mo. Open-source tools (Cline, Aider) remain fully free with BYO API keys.</p>
     <p><strong>Our advantage:</strong> Unlike other comparison guides, we track pricing changes over time. We've recorded ${aiCodingChanges.length} pricing changes for AI coding tools — so you can see not just where prices are, but where they're heading.</p>
   </div>
 
@@ -28615,13 +28615,13 @@ function buildAiCodingToolsPricingPage(): string {
       free: "Limited daily quotas",
       pro: "$20/mo",
       power: "$200/mo (Max)",
-      teams: "$40/seat (Teams)",
+      teams: "$80/mo + $40/seat",
       model: "Quota-based (Mar 2026)",
-      freeDetails: "Limited daily quotas for completions, Cascade flows, and AI chat — not unlimited. Credit system replaced by fixed quotas in March 2026 — Pro increased from $15 to $20/month (+33%). Three paid tiers: Pro ($20/mo), Teams ($40/mo/seat), Max ($200/mo). SWE-1.5 Fast Agent model for faster iteration. Grandfathered Pro subscribers keep $15/mo indefinitely.",
+      freeDetails: "Renamed Devin Desktop by Cognition, and priced with Devin on devin.ai/pricing. Free: a light quota to code with agents, limited models, unlimited inline edits and Tab completions, with quotas that reset daily and weekly. Pro $20/mo, Max $200/mo, Teams $80/mo plus $40 per dev seat. Credits were replaced by quotas in March 2026; subscribers on the old $15/mo Pro price keep it.",
       freeType: "limited",
       monthlyCostSolo: "$20",
-      monthlyCostTeam5: "$200",
-      hiddenCosts: "Max plan ($200/mo) is the power-user tier — significantly larger daily/weekly quotas, positioned alongside Cursor Ultra and Claude Code Max 20x at the same price point. Pro price rose 33% in March 2026 (was $15). Grandfathered subscribers keep $15/mo indefinitely. Quota system means hard daily/weekly limits — can't burst through anymore.",
+      monthlyCostTeam5: "$280",
+      hiddenCosts: "Quotas are hard daily and weekly limits; past them, paid plans buy extra usage at API list prices. Max ($200/mo) is the power-user tier. Pro rose from $15 to $20 in March 2026; subscribers on the old price keep it.",
     },
     {
       name: "Amazon Kiro",
@@ -28629,14 +28629,14 @@ function buildAiCodingToolsPricingPage(): string {
       category: "ide",
       free: "50 credits/mo",
       pro: "$20/mo",
-      power: "$40/mo (Pro+) / $200/mo (Power)",
+      power: "$40/mo (Pro+) / $100/mo (Pro Max) / $200/mo (Power)",
       teams: "Enterprise (custom)",
       model: "Credit-based",
-      freeDetails: "Claude-powered IDE by Amazon focused on spec-driven development. Free tier: 50 credits/month. Pro: 1,000 credits, Pro+: 2,000, Power: 10,000. Credits metered to 0.01 increments — Sonnet 4 costs 1.3x more than Auto mode. $0.04/credit overage (disabled by default). 500 bonus credits for new users (30 days). Enterprise tier with SAML/SCIM SSO. GovCloud ~20% premium.",
+      freeDetails: "AI coding tool by AWS, with an IDE, a CLI and a web interface. Prompts run by default on Auto, a mix of frontier models; Claude, GPT and open-weight models can also be picked. Free: 50 credits/month with open-weight models and Claude Sonnet 4.5, rate-limited to a weekly quota. Pro: 1,000 credits, Pro+: 2,000, Pro Max: 5,000, Power: 10,000. Paid plans can buy add-on credits at $0.04 each.",
       freeType: "limited",
       monthlyCostSolo: "$0\u201320",
       monthlyCostTeam5: "Enterprise (custom)",
-      hiddenCosts: "Credit-based pricing means model choice affects cost — Sonnet 4 consumes 1.3x more credits than Auto mode. Complex tasks (spec generation, multi-file edits) burn credits faster. Unused credits don't roll over. $0.04/credit overage if enabled. GovCloud ~20% higher, no free tier. Power tier at $200/mo needed for heavy use.",
+      hiddenCosts: "Credit use depends on the model and the task. Add-on credits ($0.04 each) are for paid plans only. The free tier is not available in Kiro Enterprise or AWS GovCloud (US), where prices are about 20% higher.",
     },
     {
       name: "GitHub Copilot",
@@ -28672,31 +28672,31 @@ function buildAiCodingToolsPricingPage(): string {
       name: "Google Antigravity",
       slug: "google-antigravity",
       category: "ide",
-      free: "100% free (preview)",
-      pro: "\u2014",
-      power: "\u2014",
-      teams: "\u2014",
-      model: "Free during preview",
-      freeDetails: "Agent-first IDE by Google, powered by Gemini 3. 100% free during public preview \u2014 no paid tiers yet. Built-in browser automation, multi-agent orchestration, cross-platform (Mac/Windows/Linux). Announced November 2025.",
-      freeType: "preview",
-      monthlyCostSolo: "$0",
-      monthlyCostTeam5: "$0",
-      hiddenCosts: "Free during preview only \u2014 pricing not announced. Google will almost certainly monetize this. Treat as temporary.",
+      free: "$0 plan, weekly limits",
+      pro: "$19.99/mo (Google AI Pro)",
+      power: "From $99.99/mo (Google AI Ultra)",
+      teams: "Via Google Cloud",
+      model: "Subscription + rate limits",
+      freeDetails: "Agentic development platform by Google, generally available: a desktop app to run several local agents in parallel, an agentic IDE, a CLI and an SDK, for macOS, Windows and Linux. The individual plan is $0/month, with unlimited Tab completions and command requests and basic weekly rate limits.",
+      freeType: "limited",
+      monthlyCostSolo: "$0–19.99",
+      monthlyCostTeam5: "Usage-based (Google Cloud)",
+      hiddenCosts: "The free plan's quota refreshes weekly. Google AI Pro ($19.99/mo) and Ultra (from $99.99/mo) raise the limits and can spend purchased AI credits past them. Organizations pay consumption-based API prices through Google Cloud.",
     },
     {
       name: "Claude Code",
       slug: "claude-code",
       category: "cli",
-      free: "API-based",
+      free: "None (paid plans or API key)",
       pro: "$20/mo (Pro)",
       power: "$100\u2013200/mo (Max)",
       teams: "$25/seat",
-      model: "Usage-based / subscription + overage",
-      freeDetails: "Terminal-based agentic coding tool. Available via Claude Pro ($20/mo), Team ($25/seat), and Max ($100\u2013200/mo) subscriptions. All paid plans now have pay-as-you-go overage at standard API rates. April 2026: third-party tools (e.g. OpenClaw) billed separately. Peak-hour throttling weekdays 5\u201311 AM PT.",
+      model: "Subscription + usage credits",
+      freeDetails: "Agentic coding tool by Anthropic, in the terminal, IDEs, a desktop app and the browser. Included in every paid Claude plan, not in Free: Pro $20/mo ($17 billed annually), Max $100 or $200/mo, Team Standard $25/seat ($20 billed annually), Enterprise $20/seat plus usage at API rates. Also runs on an Anthropic API key, billed per token.",
       freeType: "none",
       monthlyCostSolo: "$20\u2013200+",
       monthlyCostTeam5: "$125+",
-      hiddenCosts: "April 2026 policy changes: (1) Third-party tools now billed separately — can't use standard limits. (2) Pay-as-you-go overage on all plans at API rates (Opus ~$15/M input, $75/M output). (3) Peak-hour throttling reduces 5-hour session limits weekdays 5\u201311 AM Pacific. Heavy users may see unexpected overage charges.",
+      hiddenCosts: "Plan usage is shared with Claude chat and resets in five-hour windows. At the limit, paid plans can turn on usage credits billed at standard API rates, so heavy use can cost more than the plan price.",
     },
     {
       name: "Gemini CLI",
@@ -28779,59 +28779,59 @@ function buildAiCodingToolsPricingPage(): string {
       category: "cloud-agent",
       free: "Limited (ChatGPT Free)",
       pro: "$20/mo (Plus)",
-      power: "$200/mo (Pro)",
+      power: "From $100/mo (Pro)",
       teams: "$20/user",
       model: "Subscription + pay-as-you-go",
-      freeDetails: "Cloud-native coding agent by OpenAI. Included in ChatGPT Plus ($20/mo), Pro ($200/mo), and Business ($20/user/mo, reduced from $30). Pay-as-you-go seats available \u2014 usage billed on token consumption, no rate limits. $100 credits for new team members (up to $500/team, limited time). 2M+ weekly users.",
+      freeDetails: "Coding agent by OpenAI, included in every ChatGPT plan. Free ($0) and Go ($8/mo) cover quick and lightweight coding tasks in the desktop app. Plus ($20/mo) adds Codex on the web, in the CLI, in the IDE extension and on iOS, with cloud code review. Pro (from $100/mo) gives 5x or 20x Plus's usage. Business is $20/user/mo billed annually ($25 monthly). With an API key, Codex runs in the CLI, SDK or IDE extension at API prices.",
       freeType: "limited",
-      monthlyCostSolo: "$20\u2013200",
+      monthlyCostSolo: "$0–100+",
       monthlyCostTeam5: "$100",
-      hiddenCosts: "Free plan access is very limited. Plus gives reasonable usage but Pro ($200/mo) needed for heavy workloads. Business dropped from $30 to $20/user. Pay-as-you-go seats have no fixed fee but usage costs can spike. Cloud-only \u2014 can't run locally.",
+      hiddenCosts: "Free and Go state no message count. Paid plans' allowances are ranges per five-hour window that depend on the model and the task, and weekly limits may also apply; cloud tasks use more of the allowance than local messages. Pro buys 5x or 20x Plus's usage. API-key use is billed per token.",
     },
     {
       name: "Devin",
       slug: "devin",
       category: "cloud-agent",
-      free: "\u2014",
-      pro: "$20/mo + ACUs",
-      power: "\u2014",
-      teams: "$500/mo (250 credits)",
-      model: "Usage-based",
-      freeDetails: "Autonomous AI software engineer by Cognition Labs. Core plan $20/month (pay-as-you-go ACUs at $2.25 each). Team plan $500/mo (250 credits). Devin Review (PR review) is free during early release. Open-source maintainers with 100+ forks can apply for $0 access.",
-      freeType: "none",
-      monthlyCostSolo: "$20+",
-      monthlyCostTeam5: "$500",
-      hiddenCosts: "Base $20/mo is just the entry \u2014 ACUs (Autonomous Compute Units) charged at $2.25 each on top. A complex task can consume 5\u201320 ACUs ($11\u201345). Team plan at $500/mo is the real starting price.",
+      free: "Light agent quota",
+      pro: "$20/mo",
+      power: "$200/mo (Max)",
+      teams: "$80/mo + $40/seat",
+      model: "Quota-based",
+      freeDetails: "Autonomous AI software engineer by Cognition. Since 2026-04-14 the plans are Free ($0: a light quota to code with agents, limited models, unlimited inline edits and Tab completions), Pro ($20/mo, adds cloud agents), Max ($200/mo) and Teams ($80/mo plus $40 per dev seat). Enterprise is custom-priced and billed in ACUs.",
+      freeType: "limited",
+      monthlyCostSolo: "$0–20",
+      monthlyCostTeam5: "$280",
+      hiddenCosts: "Cognition publishes no figure for the Free quota. Paid plans include a usage allowance; past it, extra usage is billed in dollars at API pricing. ACUs now apply only to Enterprise, at the rate in the order form.",
     },
     {
       name: "Bolt.new",
       slug: "bolt-new",
       category: "app-builder",
       free: "1M tokens/mo",
-      pro: "$20/mo",
-      power: "$100/mo",
-      teams: "\u2014",
+      pro: "$25/mo",
+      power: "—",
+      teams: "$30/member",
       model: "Token-based",
-      freeDetails: "AI app builder by StackBlitz. Free tier: 1M tokens/month (300K daily cap), unlimited databases, public + private projects, native hosting with Bolt branding, 10MB file uploads. Generates full-stack apps in the browser.",
+      freeDetails: "AI builder for websites, web apps and mobile apps by StackBlitz. Free: 1M tokens/month with a 300K daily limit, public and private projects, unlimited databases, 10MB file uploads, and hosting on a bolt.host URL (10 GB bandwidth, 333,333 requests a month) with Bolt branding.",
       freeType: "freemium",
-      monthlyCostSolo: "$0\u201320",
-      monthlyCostTeam5: "\u2014",
-      hiddenCosts: "1M tokens/month sounds generous but complex apps consume tokens fast. Bolt branding on free tier. No team plans \u2014 collaboration is limited.",
+      monthlyCostSolo: "$0–25",
+      monthlyCostTeam5: "$150",
+      hiddenCosts: "1M tokens a month goes fast on complex apps, and free tokens don't roll over. A free site that exceeds the hosting limit goes offline for the rest of the month. Pro is $25/mo billed monthly or $18/mo billed yearly, from 10M tokens a month.",
     },
     {
       name: "Lovable",
       slug: "lovable",
       category: "app-builder",
       free: "5 credits/day",
-      pro: "$20/mo",
-      power: "$100/mo",
-      teams: "$33/seat",
+      pro: "$25/mo",
+      power: "—",
+      teams: "$50/mo (Business)",
       model: "Credit-based",
-      freeDetails: "AI app builder (formerly GPT Engineer). Free tier: 5 daily credits (up to 30/month), public projects only (private require paid plan), cloud hosting on lovable.app, Lovable branding badge. Creates full-stack apps from natural language.",
+      freeDetails: "AI app builder (formerly GPT Engineer). Free: 5 build credits a day (up to 30 a month) plus 20 Cloud credits a month, workspace-private projects, unlimited collaborators and 5 lovable.app domains, no credit card.",
       freeType: "freemium",
-      monthlyCostSolo: "$0\u201320",
-      monthlyCostTeam5: "$165",
-      hiddenCosts: "5 daily credits run out fast when iterating on an app. Private projects require paid plan. Export/download limited on free tier.",
+      monthlyCostSolo: "$0–25",
+      monthlyCostTeam5: "$50+",
+      hiddenCosts: "5 daily credits run out fast when iterating on an app. Pro ($25/mo) and Business ($50/mo) each include 100 monthly credits; billed annually they are $21 and $42 a month.",
     },
     {
       name: "MarsCode",
@@ -28957,14 +28957,14 @@ function buildAiCodingToolsPricingPage(): string {
 
   const faqEntries = [
     { q: "Which AI coding tools are free in 2026?", a: "Cline and Aider are free and open source; you pay only for the model API you connect. Gemini CLI is also open source and runs on a Gemini API key: Google stopped personal-account sign-in on 2026-06-18, when it ended the free Gemini Code Assist individuals tier. GitHub Copilot Free includes 2,000 code completions a month." },
-    { q: "How much does Cursor cost vs Windsurf?", a: "Both start at $20/month for an individual paid plan and $40/user/month for teams, and both top out at $200/month — Cursor Ultra and Windsurf Max. Cursor's free plan is called Hobby. Between them sits Pro+ at $60/mo with 3x Pro's Agent limits; Ultra is 20x. Windsurf has 4 plans (Free, Pro $20, Teams $40/seat, Max $200) and raised Pro from $15 to $20 in March 2026. Windsurf's SWE-1.5 Fast Agent model optimizes for iteration speed." },
+    { q: "How much does Cursor cost vs Windsurf?", a: "Both start at $20/month for an individual paid plan and top out at $200/month: Cursor Ultra and Windsurf Max. For teams, Cursor charges $40/user/month for a Standard seat or $120 for Premium, and Windsurf $80/month plus $40 per seat. Cursor's free plan is called Hobby; between Pro and Ultra sits Pro+ at $60/mo with 3x Pro's Agent limits, and Ultra is 20x. Windsurf, renamed Devin Desktop, raised Pro from $15 to $20 in March 2026." },
     { q: "Is GitHub Copilot still the cheapest AI coding tool?", a: "Yes \u2014 Copilot Pro at $10/month is the cheapest paid plan among the tools compared here. The free tier gives 2,000 code completions a month plus limited chat and agent use. On paid plans, completions and next edit suggestions are unlimited and consume nothing; agent and chat work is metered in GitHub AI Credits at $0.01 each \u2014 $15 of credits on Pro, $70 on Pro+ ($39/mo), $200 on Max ($100/mo). GitHub's premium-request billing and its $0.04 overage are retired; the docs now label that model legacy." },
     { q: "What are the hidden costs of BYO-key AI coding tools?", a: "Tools like Cline and Aider are free to install but require API keys. Typical costs: $5-50/month for moderate use with Claude Sonnet or GPT-4o. Heavy agentic usage (Cline with Opus) can reach $50-100/month in API costs alone." },
     { q: "Which AI coding tool is best for teams?", a: "GitHub Copilot Business ($19/seat) is cheapest for teams. Gemini Code Assist Enterprise matches at $19/seat with Google Cloud integration. Cursor and Windsurf Business ($40/seat) offer the highest AI throughput per developer." },
     { q: "Are AI app builders like Bolt.new and Lovable worth it?", a: "For prototyping and MVPs, yes. Bolt.new offers 1M free tokens/month and Lovable gives 5 daily credits. Both generate full-stack apps from natural language. They are not designed for production-grade software development." },
-    { q: "What is Google Antigravity?", a: "Google Antigravity is an agent-first IDE powered by Gemini 3, announced November 2025. It is 100% free during public preview with built-in browser automation and multi-agent orchestration. Pricing has not been announced yet." },
-    { q: "How do cloud coding agents (Codex, Devin) differ from IDE tools?", a: "Cloud agents run code in sandboxed environments and work autonomously — they can execute tests, create branches, and open PRs. IDE tools assist while you code. Cloud agents are better for delegated tasks; IDE tools are better for interactive development." },
-    { q: "What is Amazon Kiro and how does it compare to Cursor?", a: "Amazon Kiro is a Claude-powered IDE that launched GA in April 2026. It focuses on spec-driven development — automated requirements, design docs, and test generation. Free tier: 50 credits/month. Pro: $20/month (1,000 credits), matching Cursor's price. Credits are metered to 0.01 increments with model-dependent rates (Sonnet 4 costs 1.3x more). $0.04/credit overage available. Enterprise tier with SAML/SCIM SSO for larger teams." },
+    { q: "What is Google Antigravity?", a: "Google Antigravity is Google's agentic development platform, announced in November 2025 and now generally available. The individual plan is free, with basic weekly rate limits; Google AI Pro ($19.99/month) and Google AI Ultra (from $99.99/month) raise the limits, and organizations can use it through Google Cloud." },
+    { q: "How do cloud coding agents (Codex, Devin) differ from IDE tools?", a: "Cloud agents run code in sandboxed environments and work autonomously — they can execute tests, create branches, and open PRs. Codex does both: it runs cloud tasks and also works locally in its desktop app, CLI and IDE extension. IDE tools assist while you code. Cloud agents are better for delegated tasks; IDE tools are better for interactive development." },
+    { q: "What is Amazon Kiro and how does it compare to Cursor?", a: "Amazon Kiro is an AI coding tool from AWS, generally available since November 2025, built around spec-driven development: requirements, design docs and tests. By default it runs on Auto, a mix of frontier models. Free: 50 credits/month. Pro: $20/month (1,000 credits), matching Cursor's price. Paid plans can buy add-on credits at $0.04 each. Enterprise adds SAML/SCIM SSO." },
   ];
 
   const faqJsonLd = faqPageJsonLd("/ai-coding-tools-pricing", faqEntries);
@@ -29075,8 +29075,8 @@ function buildAiCodingToolsPricingPage(): string {
     '  </div>\n' +
     '\n' +
     '  <div class="executive-summary">\n' +
-    '    <p><strong>The AI coding tools market in April 2026:</strong> 17 tools across four categories \u2014 IDE-based editors, CLI/terminal agents, cloud coding agents, and AI app builders. $20/month has become the standard price point. Some free tiers are metered by the month (GitHub Copilot Free: 2,000 completions), some are absent (Devin: $20/mo minimum), and Google ended the free Gemini Code Assist individuals tier on 2026-06-18. The BYOK (bring your own key) tools \u2014 Cline, Aider, Gemini CLI \u2014 are technically free but shift costs to API providers.</p>\n' +
-    '    <p><strong>Key trends:</strong> Credit and quota models are replacing flat subscriptions (Cursor Jun 2025, Augment Oct 2025, Windsurf Mar 2026). Cloud agents (Codex, Devin) are a new category that didn\'t exist a year ago.</p>\n' +
+    '    <p><strong>The AI coding tools market in April 2026:</strong> 17 tools across four categories \u2014 IDE-based editors, CLI/terminal agents, cloud coding agents, and AI app builders. $20/month has become the standard price point. Some free tiers are metered by the month (GitHub Copilot Free: 2,000 completions), some publish no figure (Devin\'s Free plan: a "light quota"), and Google ended the free Gemini Code Assist individuals tier on 2026-06-18. The BYOK (bring your own key) tools \u2014 Cline, Aider, Gemini CLI \u2014 are technically free but shift costs to API providers.</p>\n' +
+    '    <p><strong>Key trends:</strong> Credit and quota models are replacing flat subscriptions (Cursor Jun 2025, Augment Oct 2025, Windsurf Mar 2026). Cloud agents (Codex, Devin) are a newer category.</p>\n' +
     '    <p><strong>This guide covers:</strong> pricing tables, category breakdowns, what you actually get for free, cost analysis for solo devs and teams, hidden costs, and best-for-use-case recommendations \u2014 compiled by hand from vendor pricing pages.</p>\n' +
     '  </div>\n' +
     '\n' +
@@ -29254,7 +29254,7 @@ function buildAiCodingToolsPricingPage(): string {
     '\n' +
     '    <div class="verdict-item">\n' +
     '      <strong>Best for prototyping / non-developers</strong>\n' +
-    '      <p><a href="/vendor/bolt-new">Bolt.new</a> (1M free tokens/month) or <a href="/vendor/lovable">Lovable</a> (5 daily credits). Both generate full-stack apps from natural language. Bolt.new has more generous free tier; Lovable has better team features at $33/seat.</p>\n' +
+    '      <p><a href="/vendor/bolt-new">Bolt.new</a> (1M free tokens/month) or <a href="/vendor/lovable">Lovable</a> (5 daily credits). Both generate full-stack apps from natural language. Bolt.new has more generous free tier; Lovable\'s Business plan is $50/month.</p>\n' +
     '    </div>\n' +
     '\n' +
     '    <div class="verdict-item">\n' +
