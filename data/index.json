@@ -11080,7 +11080,7 @@
       }
     },
     {
-      "vendor": "DiffJSON",
+      "vendor": "Compare JSON",
       "category": "Dev Utilities",
       "description": "An online tool for comparing differences between two JSON data structures, helping you quickly locate the differences in JSON data.",
       "tier": "Free",
