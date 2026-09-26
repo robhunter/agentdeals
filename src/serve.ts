@@ -1552,6 +1552,10 @@ function freeTierSideOf(vendor: string, tier: string, context: VendorVerdictCont
   return { vendor, free };
 }
 
+function removedClaimLabel(cause: { change_type: string }): string {
+  return cause.change_type === PRODUCT_DEPRECATED ? "deprecated" : "free tier removed";
+}
+
 function readBadgeStatus(vendorSlug: string, servedOn: string): BadgeReading {
   const vendorName = vendorSlugMap.get(vendorSlug);
   if (!vendorName) return UNKNOWN_BADGE;
@@ -1572,7 +1576,7 @@ function readBadgeStatus(vendorSlug: string, servedOn: string): BadgeReading {
     if (claim.how === "retired") return { status: "retired", label: ENDED_BADGE_LABEL, verifiedDate: latestVerified };
     return {
       status: "removed",
-      label: claim.cause.change_type === PRODUCT_DEPRECATED ? "deprecated" : "free tier removed",
+      label: removedClaimLabel(claim.cause),
       verifiedDate: claim.cause.date,
     };
   }
@@ -5118,8 +5122,14 @@ function buildVendorPage(slug: string): string | null {
   const termsWeCannotConfirm = whyWeCannotConfirmTheseTerms(verdictInput);
   const ratingWithheld = withholdingThatDoesNotLapse(verdictInput);
 
-  const riskCauseLine = statesRiskCause(verdictInput) && riskCause
-    ? `  <p class="risk-cause-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong style="color:${riskColor}">Why ${riskLevel}:</strong> <span class="risk-cause-date" style="font-family:var(--mono)">${escHtmlServer(changeEntryDateLabel(riskCause))}</span> &mdash; ${changeSummaryHtml(riskCause, escHtmlServer)} <a href="#changes" style="white-space:nowrap">Full history &darr;</a></p>`
+  const claim = freeTierClaim(verdictInput);
+  const endedBy = claim.states === "ended" && claim.how === "removed" ? claim.cause : null;
+  const causeLineHtml = (label: string, color: string, cause: NonNullable<typeof riskCause>) =>
+    `  <p class="risk-cause-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong style="color:${color}">${label}</strong> <span class="risk-cause-date" style="font-family:var(--mono)">${escHtmlServer(changeEntryDateLabel(cause))}</span> &mdash; ${changeSummaryHtml(cause, escHtmlServer)} <a href="#changes" style="white-space:nowrap">Full history &darr;</a></p>`;
+  const riskCauseLine = endedBy
+    ? causeLineHtml("How it ended:", BADGE_COLORS.removed, endedBy)
+    : statesRiskCause(verdictInput) && riskCause
+    ? causeLineHtml(`Why ${riskLevel}:`, riskColor, riskCause)
     : "";
 
   const demotionNamed = demotionTheVerdictNames(verdictInput);
@@ -5129,10 +5139,14 @@ function buildVendorPage(slug: string): string | null {
 
   const retiredBadgeColor = "#8b949e";
   const badge = vendorBadge(verdictInput);
-  const h1RiskBadge = badge.kind === "ended"
-    ? ` <span class="risk-badge" style="background:${retiredBadgeColor}20;color:${retiredBadgeColor};border:1px solid ${retiredBadgeColor}40">${ENDED_BADGE_LABEL}</span>`
+  const riskBadgeHtml = (label: string, color: string) =>
+    ` <span class="risk-badge" style="background:${color}20;color:${color};border:1px solid ${color}40">${label}</span>`;
+  const h1RiskBadge = endedBy
+    ? riskBadgeHtml(removedClaimLabel(endedBy), BADGE_COLORS.removed)
+    : badge.kind === "ended"
+    ? riskBadgeHtml(ENDED_BADGE_LABEL, retiredBadgeColor)
     : badge.kind === "rating"
-    ? ` <span class="risk-badge" style="background:${riskColor}20;color:${riskColor};border:1px solid ${riskColor}40">${badge.word}</span>`
+    ? riskBadgeHtml(badge.word, riskColor)
     : "";
   const linkUnreachableLine = linkUnreachable
     ? `  <p class="link-unreachable-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong style="color:#f85149">Link unreachable:</strong> ${escHtmlServer(primary.url)} did not resolve on our check of <span class="link-checked-date" style="font-family:var(--mono)">${escHtmlServer(linkUnreachable.checked)}</span>. ${linkUnreachable.last_reachable ? `Last reachable <span class="link-last-reachable" style="font-family:var(--mono)">${escHtmlServer(linkUnreachable.last_reachable)}</span>.` : "We have no date on which it was reachable."}</p>`

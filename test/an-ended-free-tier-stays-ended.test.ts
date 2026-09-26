@@ -150,3 +150,70 @@ describe("no badge sells a free tier that our record and our listing both say ha
     assert.deepStrictEqual(context!.input.endingTheListingConfirms, endingTheListingConfirms(vendor, vendorChanges));
   });
 });
+
+describe("the vendor page heading states the ending its badge states", () => {
+  let proc: ChildProcess | null = null;
+  let port = 0;
+
+  before(async () => {
+    const child = spawn("node", [path.join(REPO, "dist", "serve.js")], {
+      stdio: ["pipe", "pipe", "pipe"],
+      env: { ...process.env, PORT: "0", BASE_URL: "http://localhost", TZ: "UTC" },
+    });
+    proc = child;
+    port = await new Promise<number>((resolve, reject) => {
+      const timeout = setTimeout(() => { child.kill(); reject(new Error("Server startup timeout")); }, 30000);
+      child.stderr!.on("data", (data: Buffer) => {
+        const m = data.toString().match(/running on http:\/\/localhost:(\d+)/);
+        if (m) { clearTimeout(timeout); resolve(parseInt(m[1], 10)); }
+      });
+    });
+  });
+
+  after(() => { proc?.kill(); });
+
+  const ENDING_LABELS = ["free tier removed", "deprecated", "retired"];
+  const REMOVAL_LABELS = ["free tier removed", "deprecated"];
+
+  async function headingAndBadge(slug: string) {
+    const [page, svg] = await Promise.all([
+      fetch(`http://localhost:${port}/vendor/${slug}`).then((r) => r.text()),
+      fetch(`http://localhost:${port}/badge/${slug}.svg`).then((r) => r.text()),
+    ]);
+    const h1 = page.match(/<h1>([\s\S]*?)<\/h1>/)?.[1] ?? "";
+    const heading = h1.match(/<span class="risk-badge"[^>]*>([^<]*)<\/span>/)?.[1] ?? null;
+    const causeLine = page.match(/<p class="risk-cause-line"[^>]*><strong[^>]*>([^<]*)<\/strong> <span class="risk-cause-date"[^>]*>([^<]*)<\/span>/);
+    const [badge, badgeMonth] = (svg.match(/<title>([\s\S]*?)<\/title>/)?.[1] ?? "").split(": ").slice(1).join(": ").split(" · ").map((s) => s.trim());
+    return { heading, badge, badgeMonth, causeLabel: causeLine?.[1] ?? null, causeDate: causeLine?.[2].match(/\d{4}-\d{2}-\d{2}/)?.[0] ?? null };
+  }
+
+  it("heads every vendor page whose free tier ended with the label its badge carries, and says how it ended", async () => {
+    const sitemap = await (await fetch(`http://localhost:${port}/sitemap-vendors.xml`)).text();
+    const slugs = [...new Set([...sitemap.matchAll(/\/vendor\/([^<\/"]+)</g)].map((m) => m[1]))];
+    const disagreeing: string[] = [];
+    const unexplained: string[] = [];
+    const misdated: string[] = [];
+    let removals = 0;
+    for (let i = 0; i < slugs.length; i += 16) {
+      const batch = slugs.slice(i, i + 16);
+      const readings = await Promise.all(batch.map(headingAndBadge));
+      batch.forEach((slug, j) => {
+        const r = readings[j];
+        if ((ENDING_LABELS.includes(r.badge) || ENDING_LABELS.includes(r.heading ?? "")) && r.heading !== r.badge) {
+          disagreeing.push(`${slug}: heading ${r.heading}, badge ${r.badge}`);
+        }
+        if (!REMOVAL_LABELS.includes(r.heading ?? "")) return;
+        removals++;
+        if (r.causeLabel !== "How it ended:") unexplained.push(`${slug}: ${r.causeLabel}`);
+        const month = r.causeDate
+          ? new Date(r.causeDate + "T00:00:00Z").toLocaleDateString("en-US", { month: "short", year: "numeric", timeZone: "UTC" })
+          : null;
+        if (month !== r.badgeMonth) misdated.push(`${slug}: heading names ${r.causeDate}, badge ${r.badgeMonth}`);
+      });
+    }
+    assertPopulationFloor(removals, 1, "vendor pages headed with a removed or deprecated free tier");
+    assert.deepStrictEqual(disagreeing, [], "a vendor page heading and its badge disagree about an ended free tier");
+    assert.deepStrictEqual(unexplained, [], "a heading states an ending without saying how it ended");
+    assert.deepStrictEqual(misdated, [], "a heading names a different record from the one its badge dates");
+  });
+});
