@@ -110,7 +110,7 @@ import { partitionAlternatives, partitionSubstitutes, type SubstitutesPartition,
 import { buildProductFunctions, functionMembers, functionDefinitions, functionMeaningSentence, admissionFor, splitByFunction, labelsNaming, FUNCTION_RESIDUE_COPY, type ProductFunction, FUNCTION_MEMBERSHIP_RULE, FUNCTION_SPLIT_RULE, FUNCTION_NAMING_RULE, FUNCTION_TITLE_RULE, FUNCTION_PICK_RULE } from "./product-function.js";
 import { resolveCuratedAlternatives, curatedAlternativesFor, addCuratedToPool } from "./curated-alternatives.js";
 import type { Agent, ChangeDateSource, DealChange, RiskCause, RatingWithheld, LinkUnreachable, Offer, StabilityClass, SubtypeLabel } from "./types.js";
-import { A_DATED_HEADING_MARKER, A_DATED_SECTION_MARKER, datedHeadingNoticeHtml, datedSectionNoticeHtml, namedOnceItsDateArrived, namedWhileAheadOf, namedWhileNotBefore, ANNOUNCED_BADGE, ANNOUNCED_HEADING, announcedIntro, changeDateLabel, changeEntryDateLabel, changeEntryLongDateLabel, changeDateClause, changeDatePublished, changeEventStartDate, capListSections, latestEventDate, offerExpiryAfter, feedEntryUpdated, undatedGroupHeading, UNDATED_TILE_LABEL, firstReadHeading, discoveryBatchNote, isoWeekOf, monthlyChangeSeries, changesInWindow, discoveryMonthSeriesHeading, periodComparisonSentence, DISCOVERED_DATE_PREFIX, EFFECTIVE_DATE_PREFIX, UNDATED_GROUP_NOTE, UNKNOWN_EFFECTIVE_DATE_MARKER, EFFECTIVE_MONTH_SERIES_NOTE, DISCOVERY_MONTH_SERIES_NOTE, weekRangeLabel } from "./change-dates.js";
+import { A_DATED_HEADING_MARKER, A_DATED_SECTION_MARKER, datedHeadingNoticeHtml, datedSectionNoticeHtml, namedOnceItsDateArrived, namedWhileAheadOf, namedWhileNotBefore, ANNOUNCED_BADGE, ANNOUNCED_HEADING, announcedIntro, changeDateLabel, changeEntryDateLabel, changeEntryLongDateLabel, changeDateClause, changeDatePublished, changeEventStartDate, capListSections, latestEventDate, offerExpiryAfter, feedEntryUpdated, undatedGroupHeading, UNDATED_TILE_LABEL, firstReadHeading, discoveryBatchNote, isoWeekOf, monthlyChangeSeries, changesInWindow, discoveryMonthSeriesHeading, periodComparisonSentence, DISCOVERED_DATE_PREFIX, EFFECTIVE_DATE_PREFIX, UNDATED_GROUP_NOTE, UNKNOWN_EFFECTIVE_DATE_MARKER, EFFECTIVE_MONTH_SERIES_NOTE, DISCOVERY_MONTH_SERIES_NOTE, weekRangeLabel, newestChangeInEffect, vendorPageLastUpdated } from "./change-dates.js";
 import { changeFeedEntries, feedEntryFields, feedUpdatedTimestamp, changeFeedProvenanceNote, CHANGE_FEED_ENTRY_LIMIT, CHANGE_FEED_DESCRIPTION, CHANGE_FEED_NAMESPACE, CHANGE_FEED_NAMESPACE_PREFIX, channelUpdatedTimestamp, WEEKLY_FEED_POPULATION_NOTE, feedLinkTag, feedEntrySourceXml, digestSourceXml, PER_CHANGE_FEED, WEEKLY_DIGEST_FEED } from "./change-feed.js";
 import { FEED_CORRECTIONS, correctionEntriesXml } from "./feed-corrections.js";
 import { buildDay, emptyPageLastmod, entryDay, fallbackDay, httpDate, lastmodFor, newestLastmod, readPageLastmod, type PageLastmodLedger } from "./page-lastmod.js";
@@ -5500,10 +5500,9 @@ ${allCompareLinks.join("\n")}
     </div>
   </div>` : "";
 
-  const lastPricingChange = latestEventDate(vendorChanges);
   const primaryLastRead = lastReadDate(primary);
   const primaryTermsWithheld = termsTheVerdictWithholds(unconfirmedTermsFor(primary));
-  const lastUpdated = lastPricingChange && lastPricingChange > primaryLastRead ? lastPricingChange : primaryLastRead;
+  const lastUpdated = vendorPageLastUpdated(vendorChanges, primaryLastRead, servedOn);
   const offerExpiry = offerExpiryAfter(vendorChanges, servedOn);
 
   const watchCommands = watchCommandBlock([vendorName], BASE_URL);
@@ -5622,8 +5621,9 @@ ${allCompareLinks.join("\n")}
       : `${vendorName}'s free tier is usable for prototyping and development, but we rate it ${riskLevel}${riskCause ? ` because of one recorded ${changeKindNoun(riskCause.change_type)}, ${changeDateClause(riskCause)}` : ""}. Consider alternatives with more stable pricing for critical services.`)
     : `${vendorName} does not offer a free tier for production use. Consider free alternatives in ${primary.category}.`);
   const changesVendorMade = changesTheVendorMade(vendorChanges);
+  const mostRecentChange = newestChangeInEffect(changesVendorMade, servedOn);
   const faqChangedAnswer = changesVendorMade.length > 0
-    ? `${vendorName} has had ${changesVendorMade.length} recorded pricing change${changesVendorMade.length > 1 ? "s" : ""}. Most recently: ${changeSummaryText(changesVendorMade[0])} (${changeDateLabel(changesVendorMade[0])}).${offerHasEnded ? ` ${ENDED_SINCE_CHANGES_SENTENCE}` : ""}`
+    ? `${vendorName} has had ${changesVendorMade.length} recorded pricing change${changesVendorMade.length > 1 ? "s" : ""}.${mostRecentChange ? ` Most recently: ${changeSummaryText(mostRecentChange)} (${changeDateLabel(mostRecentChange)}).` : ""}${offerHasEnded ? ` ${ENDED_SINCE_CHANGES_SENTENCE}` : ""}`
     : vendorChanges.length > 0
     ? `${ourOwnRecordsSentence(vendorChanges)}${offerHasEnded ? ` ${ENDED_SINCE_CHANGES_SENTENCE}` : ""}`
     : offerHasEnded
@@ -6074,8 +6074,9 @@ ${renderAuditBlock(altRanking.tie_break)}
     : `${vendorName}'s free tier (${primary.tier}) is considered risky because of one specific recorded change${riskCause ? `, ${changeDateClause(riskCause)}: ${changeSummaryText(riskCause)}` : "."} Consider migrating to a more stable alternative.`;
   const faqCountAnswer = `There are ${enrichedAlts.length} free alternatives to ${vendorName} tracked on AgentDeals across the ${listedCategories.join(", ")} categor${listedCategories.length > 1 ? "ies" : "y"}.`;
   const altChangesVendorMade = changesTheVendorMade(vendorChanges);
+  const altMostRecentChange = newestChangeInEffect(altChangesVendorMade, utcToday());
   const faqChangesAnswer = altChangesVendorMade.length > 0
-    ? `${vendorName} has ${altChangesVendorMade.length} recorded pricing change${altChangesVendorMade.length !== 1 ? "s" : ""}. The most recent was ${changeDateClause(altChangesVendorMade[0])}: ${changeSummaryText(altChangesVendorMade[0])}`
+    ? `${vendorName} has ${altChangesVendorMade.length} recorded pricing change${altChangesVendorMade.length !== 1 ? "s" : ""}.${altMostRecentChange ? ` The most recent was ${changeDateClause(altMostRecentChange)}: ${changeSummaryText(altMostRecentChange)}` : ""}`
     : vendorChanges.length > 0
     ? ourOwnRecordsSentence(vendorChanges)
     : altLevelWithheld

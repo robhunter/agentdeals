@@ -247,12 +247,26 @@ export function latestEventDate(changes: DatedChange[], notAfter?: string): stri
   return latest;
 }
 
+export function vendorPageLastUpdated(changes: DatedChange[], lastRead: string, servedOn: string): string {
+  const lastChange = latestEventDate(changes, servedOn);
+  return lastChange && lastChange > lastRead ? lastChange : lastRead;
+}
+
 export const ANNOUNCED_HEADING = "Announced, not yet in effect";
 
 export const ANNOUNCED_BADGE = "Announced";
 
 export function hasNotTakenEffect(change: Pick<DealChange, "date">, asOf: string): boolean {
   return change.date > asOf;
+}
+
+export function newestChangeInEffect<T extends Pick<DealChange, "date">>(changes: readonly T[], asOf: string): T | null {
+  let newest: T | null = null;
+  for (const c of changes) {
+    if (hasNotTakenEffect(c, asOf)) continue;
+    if (newest === null || c.date > newest.date) newest = c;
+  }
+  return newest;
 }
 
 export function announcedIntro(count: number, asOf: string): string {
