@@ -10751,7 +10751,13 @@
       "category": "AI / ML",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-18"
+      "recorded_date": "2026-09-18",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-27",
+        "detail": "Retracted 2026-09-27: nothing changed on 2026-09-18. The Internet Archive's captures of cohere.com/pricing on 2026-09-17 and 2026-09-19 carry the same text. The trial-key terms this record quotes (free calls, rate limited, not for production or commercial use) are in every capture from 2026-06-14 on, as are the Model Vault hourly prices. The record compared the page with our own listing text.",
+        "source_url": "https://web.archive.org/web/20260917215838/https://cohere.com/pricing"
+      }
     },
     {
       "vendor": "Devin",
