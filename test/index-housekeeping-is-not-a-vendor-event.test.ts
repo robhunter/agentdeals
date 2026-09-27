@@ -188,7 +188,7 @@ describe("the surfaces a reader takes for vendor market activity", () => {
       !page.includes(sentence),
       "the week's digest publishes our own index housekeeping as developer tool pricing changes",
     );
-    const stated = page.match(/<strong>(\d+)<\/strong> changes/);
+    const stated = page.match(/<strong>(\d+)<\/strong> changes?</);
     assert.ok(stated, "the digest states no figure for the week");
     assert.strictEqual(
       parseInt(stated[1], 10),
