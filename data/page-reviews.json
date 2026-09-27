@@ -74,8 +74,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 34,
-      "table_figures_from_records": 34,
+      "table_figures": 29,
+      "table_figures_from_records": 29,
       "tables": [
         {
           "label": "Protocol Comparison",
@@ -84,8 +84,8 @@
         },
         {
           "label": "All Payment-Enabled Services",
-          "figures": 34,
-          "from_records": 34
+          "figures": 29,
+          "from_records": 29
         }
       ],
       "reads_changes": true,
@@ -1378,13 +1378,13 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 8,
-      "table_figures_from_records": 8,
+      "table_figures": 7,
+      "table_figures_from_records": 7,
       "tables": [
         {
           "label": "Stack Overview",
-          "figures": 8,
-          "from_records": 8
+          "figures": 7,
+          "from_records": 7
         },
         {
           "label": "Open-Source Self-Hosted Alternatives",
@@ -3671,13 +3671,13 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 53,
-      "table_figures_from_records": 2,
+      "table_figures": 52,
+      "table_figures_from_records": 1,
       "tables": [
         {
           "label": "All x402-Enabled Services",
-          "figures": 53,
-          "from_records": 2
+          "figures": 52,
+          "from_records": 1
         }
       ],
       "reads_changes": true,

@@ -675,7 +675,8 @@
       "source_url": "https://pinecone.io/pricing",
       "record_date": "2026-09-10",
       "change_type": "pricing_restructured",
-      "summary": "The Starter plan is still available as a free tier. The details have been expanded. The page now lists specific example workloads and their estimated usage within the Starter plan. It also details pricing for exceeding the free tier limits for various components like storage, write units, read units, egress, and assistant features."
+      "summary": "The Starter plan is still available as a free tier. The details have been expanded. The page now lists specific example workloads and their estimated usage within the Starter plan. It also details pricing for exceeding the free tier limits for various components like storage, write units, read units, egress, and assistant features.",
+      "reverted_on": "2026-09-27"
     },
     {
       "vendor": "Qdrant",
@@ -753,7 +754,8 @@
       "source_url": "https://roboflow.com/pricing",
       "record_date": "2026-08-28",
       "change_type": "limits_reduced",
-      "summary": "The free Public plan now offers 15 credits/month instead of 250,000 images, 10 projects, 2 users, and $60/month free inference credits."
+      "summary": "The free Public plan now offers 15 credits/month instead of 250,000 images, 10 projects, 2 users, and $60/month free inference credits.",
+      "reverted_on": "2026-09-27"
     },
     {
       "vendor": "Upstash Vector",
@@ -792,7 +794,8 @@
       "source_url": "https://wandb.ai/site/pricing/",
       "record_date": "2026-09-03",
       "change_type": "restriction",
-      "summary": "The free tier now explicitly states it's for personal development and prohibits corporate use. It includes 1 user seat, 5GB of storage, and up to 5 model seats. The page also details Pro and Enterprise tiers with associated costs and features."
+      "summary": "The free tier now explicitly states it's for personal development and prohibits corporate use. It includes 1 user seat, 5GB of storage, and up to 5 model seats. The page also details Pro and Enterprise tiers with associated costs and features.",
+      "reverted_on": "2026-09-27"
     },
     {
       "vendor": "Comet ML",
@@ -1104,7 +1107,8 @@
       "source_url": "https://www.paperspace.com/pricing",
       "record_date": "2026-09-05",
       "change_type": "pricing_restructured",
-      "summary": "The free tier now offers 'Free GPU' with public projects and 5GB storage. Instances are billed per hour. There are also multiple paid tiers with varying storage and instance types. All GPU and CPU instances are billed hourly'. Is now partially inaccurate as a 'Free GPU' is offered. Still billed hourly."
+      "summary": "The free tier now offers 'Free GPU' with public projects and 5GB storage. Instances are billed per hour. There are also multiple paid tiers with varying storage and instance types. All GPU and CPU instances are billed hourly'. Is now partially inaccurate as a 'Free GPU' is offered. Still billed hourly.",
+      "reverted_on": "2026-09-27"
     },
     {
       "vendor": "Braid",
