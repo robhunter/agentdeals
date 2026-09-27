@@ -35728,7 +35728,7 @@
     {
       "vendor": "Serper",
       "category": "AI / ML",
-      "description": "Google Search API returning real-time results as JSON. 2,500 free queries when you sign up, no credit card required; no Serper page says they renew or expire, and the terms bar registering more than one account. Successful queries deduct credits, and Serper stops accepting queries when the balance reaches zero. Paid credits are prepaid packs with no subscription: Starter is $50 for 50,000 queries ($1.00 per 1,000) at 50 queries per second, valid for 6 months; the largest pack falls to $0.30 per 1,000.",
+      "description": "Google Search API returning real-time results. 2,500 free queries when you sign up, no credit card required; a plain search uses one credit, and Maps and Lens searches use 3. No Serper page says the free queries renew or expire, and the terms bar registering more than one account. Serper stops accepting queries when the balance reaches zero. Paid credits are prepaid packs with no subscription: Starter is $50 for 50,000 queries ($1.00 per 1,000) at 50 queries per second, valid for 6 months; the largest pack falls to $0.30 per 1,000.",
       "tier": "Free Credits",
       "url": "https://serper.dev/",
       "tags": [
@@ -35781,7 +35781,7 @@
     {
       "vendor": "Parallel",
       "category": "AI / ML",
-      "description": "Web search and research APIs for AI agents. Organizations with a credit card on file get $5 of free credit each month, and unused credit expires at month end. $5 covers up to 5,000 Search requests in Turbo or Fast mode, or 1,000 in Basic or Advanced, the API default. One monthly credit per organization and per card; marketplace and postpaid organizations are not eligible. The pricing page also offers \"up to $80 at signup\" without stating its terms. A hosted Search MCP is free without an account or API key, at lower rate limits, for personal and hobby use. Then pay as you go: Search $1 per 1,000 requests (Turbo, Fast) or $5 (Basic, Advanced) with 10 results, at 600 requests a minute.",
+      "description": "Web search and research APIs for AI agents. Organizations with a credit card on file get $5 of free credit each month, and unused credit expires at month end. $5 covers up to 5,000 Search requests in Turbo or Fast mode, or 1,000 in Basic or Advanced (Advanced is the API default); usage beyond $5 is billed to the card at standard rates. One monthly credit per organization and per card; marketplace and postpaid organizations are not eligible. The pricing page also offers \"up to $80 at signup\" without stating its terms. A hosted Search MCP is free without an account or API key, at lower rate limits, for personal and hobby use. Then pay as you go: Search $1 per 1,000 requests (Turbo, Fast) or $5 (Basic, Advanced) with 10 results, at 600 requests a minute.",
       "tier": "Free",
       "url": "https://parallel.ai/pricing",
       "tags": [
@@ -35809,7 +35809,7 @@
     {
       "vendor": "Jina AI",
       "category": "AI / ML",
-      "description": "Search, Reader, embeddings and reranker APIs. Each new API key comes with 10M free tokens, for non-commercial use only (CC-BY-NC); no page says they renew. Search (s.jina.ai) needs a key and costs at least 10,000 tokens a request, so the free tokens cover at most 1,000 searches, at 100 requests a minute. Reader (r.jina.ai), which converts a URL to LLM-friendly text, also works without a key at 20 requests a minute. Paid tokens are prepaid: 1 billion for $50 ($0.05 per million), or 11 billion for $500 with a premium key. Jina AI has been part of Elastic since October 2025.",
+      "description": "Search, Reader, embeddings and reranker APIs. Each new API key comes with 10M free tokens, shared across these APIs and for non-commercial use only (CC-BY-NC); no page says they renew. Search (s.jina.ai) needs a key and costs at least 10,000 tokens a request, so the free tokens cover at most 1,000 searches, at 100 requests a minute. Reader (r.jina.ai), which converts a URL to LLM-friendly text, also works without a key at 20 requests a minute. Paid tokens are prepaid: 1 billion for $50 ($0.05 per million), or 11 billion for $500 with a premium key. Jina AI has been part of Elastic since October 2025.",
       "tier": "Free Credits",
       "url": "https://jina.ai/reader/",
       "tags": [
