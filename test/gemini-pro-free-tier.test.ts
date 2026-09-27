@@ -7,13 +7,14 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const REPO = path.join(__dirname, "..");
 
 let server: ChildProcess;
 let base = "";
 
 function startServer(): Promise<ChildProcess> {
   return new Promise((resolve, reject) => {
-    const serverPath = path.join(__dirname, "..", "dist", "serve.js");
+    const serverPath = path.join(REPO, "dist", "serve.js");
     const proc = spawn("node", [serverPath], {
       stdio: ["pipe", "pipe", "pipe"],
       env: { ...process.env, PORT: "0", BASE_URL: "http://localhost", TZ: "UTC" },
@@ -38,113 +39,134 @@ function startServer(): Promise<ChildProcess> {
 }
 
 const ENTITIES: Record<string, string> = {
-  "&mdash;": "—", "&ndash;": "–", "&amp;": "&", "&quot;": '"', "&#39;": "'",
+  "&mdash;": "—", "&ndash;": "–", "&amp;": "&", "&quot;": '"', "&#39;": "'", "&#x27;": "'",
   "&rsquo;": "'", "&lsquo;": "'", "&nbsp;": " ", "&darr;": "↓", "&rsaquo;": ">",
-  "&lt;": "<", "&gt;": ">", "&middot;": "·",
+  "&lt;": "<", "&gt;": ">", "&middot;": "·", "&rarr;": "→", "&nearr;": "↗", "&hellip;": "…",
 };
 
-function readableText(html: string): string {
-  const withoutMarkup = html
+const INLINE_TAG = /<\/?(?:a|abbr|b|code|em|i|small|span|strong|sub|sup)\b[^>]*>/gi;
+
+function decode(text: string): string {
+  return text.replace(/&[a-z#0-9]+;/gi, (e) => ENTITIES[e] ?? e);
+}
+
+function withoutHeadAndScripts(html: string): string {
+  return html
     .replace(/<head[\s\S]*?<\/head>/gi, " ")
-    .replace(/<(script|style|svg)\b[\s\S]*?<\/\1>/gi, " ")
-    .replace(/<[^>]+>/g, " ");
-  const decoded = withoutMarkup.replace(/&[a-z#0-9]+;/gi, (e) => ENTITIES[e] ?? e);
-  return decoded.replace(/\s+/g, " ").trim();
+    .replace(/<(script|style|svg)\b[\s\S]*?<\/\1>/gi, " ");
 }
 
-function metaAndStructuredData(html: string): string {
-  const parts: string[] = [];
-  for (const m of html.matchAll(/<meta[^>]+content="([^"]*)"/gi)) parts.push(m[1]);
-  for (const m of html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/gi)) parts.push(m[1]);
-  const decoded = parts.join(" ").replace(/&[a-z#0-9]+;/gi, (e) => ENTITIES[e] ?? e);
-  return decoded.replace(/\s+/g, " ").trim();
+function readableText(html: string): string {
+  const withoutMarkup = withoutHeadAndScripts(html).replace(INLINE_TAG, "").replace(/<[^>]+>/g, " ");
+  return decode(withoutMarkup).replace(/\s+/g, " ").trim();
 }
 
-const PRO_IS_WITHHELD_AFTER = /\b(?:paid[- ]only|is\s+paid\b|are\s+paid\b|removed|gone|no longer free|not free|not available|restricted to paid|now require|require[sd]?\s+(?:a\s+)?paid|has no free|have no free)/i;
-const PRO_IS_WITHHELD_BEFORE = /\b(?:no|zero|0)\s+free\s+$|\bremoval of free\s+$/i;
-const VERSION_IMMEDIATELY_BEFORE = /\d+\.\d+\s+$/;
-
-const FREE_TIER_IS_FLASH_ONLY = [
-  { pattern: /\bflash[- ]only\b/i, enumerationContinues: false },
-  { pattern: /\bflash(?:\s*(?:and|,|\/)\s*flash[- ]lite)?\s*(?:models\s*)?only\b/i, enumerationContinues: false },
-  { pattern: /\b(?:restricted|limited|preserved|reserved|covers?|covered)\b[^.]{0,15}?\b(?:to|for)\s+flash\b[^.]{0,60}/i, enumerationContinues: true },
-];
-
-export type Claim = { route: string; surface: "page" | "metadata"; sentence: string; trigger: string };
-
-function claimsIn(route: string, surface: "page" | "metadata", body: string, wholePageIsAboutGemini = false): Claim[] {
-  const found: Claim[] = [];
-  const seen = new Set<string>();
-  const record = (sentence: string, trigger: string) => {
-    const trimmed = sentence.trim();
-    if (seen.has(trimmed)) return;
-    seen.add(trimmed);
-    found.push({ route, surface, sentence: trimmed, trigger: trigger.trim() });
-  };
-  const mentionsGemini = (index: number, length: number) =>
-    wholePageIsAboutGemini
-    || /gemini/i.test(body.slice(Math.max(0, index - 240), Math.min(body.length, index + length + 240)));
-
-  const quotable = (index: number, length: number) =>
-    body.slice(Math.max(0, index - 34), Math.min(body.length, index + length + 90));
-
-  for (const m of body.matchAll(/\bPro\b(?!\+)/gi)) {
-    const index = m.index!;
-    const before = body.slice(Math.max(0, index - 34), index);
-    const rest = body.slice(index + m[0].length, index + m[0].length + 74);
-    const after = rest.split(/(?<=[.;])\s+(?=[A-Z0-9])/)[0];
-    const withheld = PRO_IS_WITHHELD_AFTER.test(after) || PRO_IS_WITHHELD_BEFORE.test(before);
-    if (!withheld) continue;
-    if (VERSION_IMMEDIATELY_BEFORE.test(before)) continue;
-    if (!mentionsGemini(index, m[0].length)) continue;
-    record(quotable(index, m[0].length), `${m[0]}${after}`);
-  }
-
-  for (const { pattern, enumerationContinues } of FREE_TIER_IS_FLASH_ONLY) {
-    for (const m of body.matchAll(new RegExp(pattern.source, "gi"))) {
-      const span = enumerationContinues
-        ? body.slice(m.index!, m.index! + Math.max(m[0].length, 60))
-        : m[0];
-      if (/\bpro\b/i.test(span)) continue;
-      if (!mentionsGemini(m.index!, m[0].length)) continue;
-      record(quotable(m.index!, m[0].length), m[0]);
+function structuredStrings(html: string): string[] {
+  const strings: string[] = [];
+  for (const m of html.matchAll(/<meta[^>]+content="([^"]*)"/gi)) strings.push(decode(m[1]));
+  for (const m of html.matchAll(/<title>([\s\S]*?)<\/title>/gi)) strings.push(decode(m[1]));
+  for (const [, raw] of html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/gi)) {
+    const walk = (value: unknown): void => {
+      if (typeof value === "string") strings.push(value);
+      else if (value && typeof value === "object") Object.values(value).forEach(walk);
+    };
+    try {
+      walk(JSON.parse(raw));
+    } catch {
+      continue;
     }
+  }
+  return strings.map((s) => s.replace(/\s+/g, " ").trim());
+}
+
+function sentencesOf(text: string): string[] {
+  return text.split(/(?<=[.!?])\s+/).map((s) => s.replace(/\s+/g, " ").trim()).filter(Boolean);
+}
+
+type Surface = "page" | "metadata";
+
+function unitsOf(html: string): { surface: Surface; unit: string }[] {
+  const units: { surface: Surface; unit: string }[] = [];
+  for (const text of structuredStrings(html)) {
+    for (const unit of sentencesOf(text)) units.push({ surface: "metadata", unit });
+  }
+  const body = withoutHeadAndScripts(html).replace(INLINE_TAG, "").replace(/<[^>]+>/g, "\n");
+  for (const line of decode(body).split("\n")) {
+    for (const unit of sentencesOf(line)) units.push({ surface: "page", unit });
+  }
+  return units;
+}
+
+function storedSentences(file: string): string[] {
+  const strings: string[] = [];
+  const walk = (value: unknown): void => {
+    if (typeof value === "string") strings.push(value);
+    else if (value && typeof value === "object") Object.values(value).forEach(walk);
+  };
+  walk(JSON.parse(readFileSync(path.join(REPO, "data", file), "utf8")));
+  return [...new Set(strings.flatMap(sentencesOf))].filter((sentence) => sentence.length >= 20);
+}
+
+const CHANGE_RECORD_SENTENCES = storedSentences("deal_changes.json");
+const LISTING_SENTENCES = storedSentences("index.json");
+
+const RETIRED_FREE_TIER_LINES = [
+  "10-15 RPM",
+  "10–15 RPM",
+  "10 RPM (Flash)",
+  "15 RPM (Flash-Lite)",
+  "1,500 requests/day",
+  "1,500 req/day",
+  "1,500 free requests",
+  "Gemini 2.5 Pro 25 req/day",
+  "full removal September 24, 2026",
+  "Migrate to 2.5 models",
+  "migrate to 2.5 models",
+  "Gemini Code Assist is new in late 2025",
+];
+const RETIRED_CUT_SIZE = "50-80%";
+const CUT_SIZE_READS_AS_GEMINI_WITHIN = 200;
+const QUOTE_REACHES_BACK_AT_LEAST = 20;
+
+const STORED_WITH_A_RETIRED_LINE = [...CHANGE_RECORD_SENTENCES, ...LISTING_SENTENCES]
+  .filter((sentence) => [...RETIRED_FREE_TIER_LINES, RETIRED_CUT_SIZE].some((needle) => sentence.includes(needle)));
+
+function quotesAStoredSentence(text: string, at: number, needle: string): boolean {
+  return STORED_WITH_A_RETIRED_LINE.some((sentence) => {
+    for (let within = sentence.indexOf(needle); within >= 0; within = sentence.indexOf(needle, within + 1)) {
+      const start = at - within;
+      if (start < 0) continue;
+      if (text.startsWith(sentence, start)) return true;
+      if (within >= QUOTE_REACHES_BACK_AT_LEAST && text.startsWith(sentence.slice(0, within + needle.length), start)) return true;
+    }
+    return false;
+  });
+}
+
+function retiredLinesOutsideStoredText(route: string, surface: Surface, text: string): string[] {
+  const found: string[] = [];
+  const check = (at: number, needle: string) => {
+    if (quotesAStoredSentence(text, at, needle)) return;
+    found.push(`${route} (${surface}) "${needle}": ${text.slice(Math.max(0, at - 60), at + needle.length + 40)}`);
+  };
+  for (const needle of RETIRED_FREE_TIER_LINES) {
+    for (let at = text.indexOf(needle); at >= 0; at = text.indexOf(needle, at + 1)) check(at, needle);
+  }
+  for (let at = text.indexOf(RETIRED_CUT_SIZE); at >= 0; at = text.indexOf(RETIRED_CUT_SIZE, at + 1)) {
+    const around = text.slice(Math.max(0, at - CUT_SIZE_READS_AS_GEMINI_WITHIN), at + RETIRED_CUT_SIZE.length + CUT_SIZE_READS_AS_GEMINI_WITHIN);
+    if (/Gemini/i.test(around)) check(at, RETIRED_CUT_SIZE);
   }
   return found;
 }
 
-const SHORTEST_TRACEABLE_TRIGGER = 15;
-const LONGEST_TRACEABLE_TRIGGER = 40;
+const NAMES_2_5_PRO_WITH_THE_FREE_TIER = /free[^.]{0,60}2\.5 Pro|2\.5 Pro[^.]{0,60}free/i;
+const DATED = /\b20\d\d-\d\d(?:-\d\d)?\b|\b(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.? (?:\d{1,2}, )?20\d\d\b/;
 
-function quotesStoredProse(claim: Claim, prose: string): boolean {
-  const quoted = claim.trigger.split(/\s*(?:\.\.\.|…)/)[0].trim();
-  if (quoted.length < SHORTEST_TRACEABLE_TRIGGER) return false;
-  return prose.includes(quoted.slice(0, LONGEST_TRACEABLE_TRIGGER));
+function quotesAChangeRecord(unit: string): boolean {
+  return CHANGE_RECORD_SENTENCES.some((sentence) => unit.includes(sentence) || sentence.includes(unit.replace(/(?:\.{3}|…)$/, "")));
 }
 
-function storedChangeProse(): string {
-  const file = path.join(__dirname, "..", "data", "deal_changes.json");
-  const parsed = JSON.parse(readFileSync(file, "utf8"));
-  const records = Array.isArray(parsed) ? parsed : (parsed.changes ?? parsed.deal_changes ?? []);
-  return JSON.stringify(records).replace(/\\"/g, '"').replace(/\s+/g, " ");
-}
-
-function changeRecordsMakingTheClaim(): string[] {
-  const file = path.join(__dirname, "..", "data", "deal_changes.json");
-  const parsed = JSON.parse(readFileSync(file, "utf8"));
-  const records: any[] = Array.isArray(parsed) ? parsed : (parsed.changes ?? parsed.deal_changes ?? []);
-  return records
-    .filter((r) => {
-      const prose = [r.summary, r.previous_state, r.current_state].filter(Boolean).join(" ");
-      return /gemini/i.test(prose) && claimsIn("record", "page", prose).length > 0;
-    })
-    .map((r) => `${r.vendor} ${r.date}`);
-}
-
-const CHANGE_RECORDS_AWAITING_A_DATA_FIX = [
-  "Google Gemini 2025-12-15",
-  "Google Gemini API 2026-04-08",
-];
+type Sentence = { route: string; surface: Surface; sentence: string };
 
 async function locs(sitemap: string): Promise<string[]> {
   const body = await (await fetch(`${base}${sitemap}`)).text();
@@ -163,36 +185,110 @@ async function everyPublishedRoute(): Promise<string[]> {
   return [...routes].filter((p) => !p.endsWith(".xml"));
 }
 
-async function claimsAcrossTheSite(routes: string[]): Promise<{ claims: Claim[]; geminiPages: number }> {
-  const claims: Claim[] = [];
-  let geminiPages = 0;
+type Crawl = { geminiPages: number; retired: string[]; proWithTheFreeTier: Sentence[] };
+
+async function crawl(routes: string[]): Promise<Crawl> {
+  const result: Crawl = { geminiPages: 0, retired: [], proWithTheFreeTier: [] };
   const queue = [...routes];
   const worker = async () => {
     for (let route = queue.pop(); route !== undefined; route = queue.pop()) {
       const response = await fetch(`${base}${route}`);
       if (!response.ok) continue;
       const html = await response.text();
+      result.retired.push(
+        ...retiredLinesOutsideStoredText(route, "page", readableText(html)),
+        ...retiredLinesOutsideStoredText(route, "metadata", structuredStrings(html).join(" ")),
+      );
       if (!/gemini/i.test(html)) continue;
-      geminiPages++;
-      const heading = html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i)?.[1] ?? "";
-      const aboutGemini = /gemini/i.test(route) || /gemini/i.test(heading);
-      claims.push(...claimsIn(route, "page", readableText(html), aboutGemini));
-      claims.push(...claimsIn(route, "metadata", metaAndStructuredData(html), aboutGemini));
+      result.geminiPages++;
+      for (const { surface, unit } of unitsOf(html)) {
+        if (NAMES_2_5_PRO_WITH_THE_FREE_TIER.test(unit)) result.proWithTheFreeTier.push({ route, surface, sentence: unit });
+      }
     }
   };
   await Promise.all(Array.from({ length: 12 }, worker));
-  return { claims, geminiPages };
+  return result;
 }
 
+const S1 = "The free tier covers the Gemini 3.x Flash and Flash-Lite models. Google publishes no free-tier limits; AI Studio shows each project's.";
+const S2 = "Since 2026-09-18 Google serves the Gemini 2.5 models only to users who used them before. New projects use 3.5 Flash-Lite or 3.8 Flash.";
+const S3 = "On 2025-12-06 Google cut 2.5 Flash's free tier from 250 requests a day to about 20, and 2.5 Pro's to none.";
+
+const STATED: Record<string, string[]> = {
+  "/gcp-free-tier-2026": [
+    "$300 credit for 90 days, credit card required. Accounts opened after 2026-03-02 cannot spend it on the Gemini API.",
+    "Free tier on the Gemini 3.x Flash and Flash-Lite models; limits shown per project in AI Studio",
+    "The $300 trial is credit for Google Cloud products over 90 days; accounts opened after 2026-03-02 cannot spend it on the Gemini API. The Gemini API has its own free tier, with limits shown per project in AI Studio.",
+  ],
+  "/shutdowns": [
+    "Gemini 2.0 Flash and 2.0 Flash-Lite shut down on June 1, 2026. Image generation via 2.0 Flash shut down November 14, 2025.",
+    "Calls to the gemini-2.0-flash and gemini-2.0-flash-lite model IDs no longer work.",
+    "Google recommends gemini-3.6-flash for 2.0 Flash and gemini-3.1-flash-lite for 2.0 Flash-Lite.",
+  ],
+  "/llm-api-pricing": [
+    S1,
+    S2,
+    "Google's Gemini free tier covers the 3.x Flash and Flash-Lite models; 3.1 Pro Preview is paid-only.",
+    "Google's Gemini free tier covers the 3.x Flash and Flash-Lite models. Gemini 3.1 Pro Preview has no free tier.",
+  ],
+  "/free-llm-apis": ["Google publishes no free-tier limits; AI Studio shows each project's."],
+  "/ai-free-tiers": [S3, "Cut on 2025-12-06"],
+  "/state-of-free-tiers": [
+    "GitHub Copilot launched a free tier (Dec 2024), Google shipped Gemini Code Assist free (Feb 2025, ended June 2026)",
+  ],
+  "/free-tier-risk": [
+    "Google cut the free tier on 2025-12-06: 2.5 Flash went from 250 requests a day to about 20, and 2.5 Pro to none. Since 2026-09-18 the 2.5 models are limited to earlier users. The 3.x Flash models are free, with limits Google does not publish.",
+  ],
+  "/openai-assistants-migration": [
+    "Free on Gemini 3.x Flash models",
+    "Google Gemini API has a free tier on its 3.x Flash models.",
+  ],
+  "/gemini-api-pricing-2026": [
+    "Gemini API billing changes in March and April 2026: spend caps by tier ($250 to $100K+ a month, enforced from April 1), prepay for some new users, and Gemini 3.1 Pro Preview paid only. The free tier covers the Gemini 3.x Flash and Flash-Lite models.",
+    "Google began enforcing monthly spend caps on the Gemini API on April 1, 2026 (Tier 1: $250, Tier 2: $2,000, Tier 3: $20,000 to $100,000+). When a billing account reaches its cap, requests pause until the next billing month. Since March 23, 2026, AI Studio may ask new users to prepay at least $10 to set up billing. Gemini 3.1 Pro Preview is paid only.",
+    "What Changed on April 1",
+    "Since April 1, 2026, billing-account spend caps pause API requests when an account reaches its tier's cap.",
+    "Prepay may be required for new users (from March 23, 2026)",
+    "Minimum $10 prepayment",
+    "Dated changes to the Gemini API's free tier and billing.",
+    "Google added project-level spend caps on March 12, 2026.",
+    "Free Tier Cut",
+    S3,
+    S1,
+    S2,
+    "Not published. About 5 RPM and 20 RPD on 2.5 Flash, none on 2.5 Pro (2025-12-06)",
+    "92% fewer daily requests on 2.5 Flash",
+    "If you built on the free tier before December 2025: on 2025-12-06, 2.5 Flash's daily requests fell from 250 to about 20 and 2.5 Pro's to none. Gemini 3.1 Pro Preview has no free tier.",
+    "Not published; shown per project in AI Studio",
+    "No free Pro model for new projects.",
+    "Gemini 3.1 Pro Preview has no free tier. The free tier covers the 3.x Flash and Flash-Lite models, including 3.8 Flash.",
+    "3. Move to the 3.x models — Gemini 2.0 Flash shut down on 2026-06-01, and new projects cannot use the 2.5 models. Google points new projects to gemini-3.5-flash-lite or gemini-3.8-flash.",
+    "Stay on Gemini Flash. Set budget alerts, and use 3.5 Flash-Lite or 3.8 Flash for new work.",
+    "Since March 23, 2026, AI Studio may ask a new user to prepay at least $10 to set up billing; others choose between Prepay and Postpay.",
+    "The Gemini 3.x Flash and Flash-Lite models are free. Google publishes no free-tier limits; AI Studio shows each project's. For lightweight tasks such as classification, extraction and simple Q&A, 3.5 Flash-Lite or 3.1 Flash-Lite costs nothing.",
+    "1. Set project-level spend caps in AI Studio (available since March 12, 2026; Google marks them experimental).",
+    "every project on a billing account shares its tier spend cap",
+    "Set project-level spend caps in AI Studio (available since March 12, 2026).",
+    "None (GPT models are paid)",
+    "All GPT models paid",
+    "Small free credit for new users",
+    "Fable 5.1, Opus 5.5, Sonnet 5, Haiku 4.5",
+    "Groq's free plan allows 30 requests a minute and 1,000 a day per model. Mistral AI includes $10 a month in API credits. OpenRouter serves about 30 free models through one API.",
+  ],
+};
+
 describe("Gemini free tier claims", () => {
-  let claims: Claim[] = [];
-  let geminiPages = 0;
   let routes: string[] = [];
+  let found: Crawl = { geminiPages: 0, retired: [], proWithTheFreeTier: [] };
+  const served = new Map<string, string>();
 
   before(async () => {
     server = await startServer();
     routes = await everyPublishedRoute();
-    ({ claims, geminiPages } = await claimsAcrossTheSite(routes));
+    found = await crawl(routes);
+    for (const page of [...Object.keys(STATED), "/shutdowns"]) {
+      served.set(page, await (await fetch(`${base}${page}`)).text());
+    }
   });
   after(() => {
     server?.kill();
@@ -200,55 +296,48 @@ describe("Gemini free tier claims", () => {
 
   it("reads every published page that mentions Gemini", () => {
     assertPopulationFloor(routes.length, 1000, "routes in the sitemap");
-    assert.ok(geminiPages > 20, `expected many pages to mention Gemini, got ${geminiPages}`);
+    assert.ok(found.geminiPages > 20, `expected many pages to mention Gemini, got ${found.geminiPages}`);
   });
 
-  it("names the Pro version wherever page copy says a Pro model is off the free tier", () => {
-    const prose = storedChangeProse();
-    const fromPageCopy = [
-      ...new Set(
-        claims
-          .filter((c) => !quotesStoredProse(c, prose))
-          .map((c) => `${c.route} (${c.surface}): ${c.sentence}`),
-      ),
-    ].sort();
-
-    assert.deepStrictEqual(fromPageCopy, []);
+  it("states none of the free-tier limits Google stopped offering, outside text quoting a stored record or listing", () => {
+    assertPopulationFloor(STORED_WITH_A_RETIRED_LINE.length, 1, "stored sentences that carry a retired limit");
+    assert.deepStrictEqual([...new Set(found.retired)].sort(), []);
   });
 
-  it("adds no change record making the claim beyond those already filed for correction", () => {
-    const unfiled = changeRecordsMakingTheClaim()
-      .filter((r) => !CHANGE_RECORDS_AWAITING_A_DATA_FIX.includes(r))
-      .sort();
-
-    assert.deepStrictEqual(
-      unfiled,
-      [],
-      `change records state a Gemini Pro model is off the free tier without naming a version, or name 2.5 Pro, which the vendor lists as free: ${unfiled.join("; ")}`,
-    );
+  it("names Gemini 2.5 Pro with the free tier only in a dated sentence or a change record", () => {
+    assertPopulationFloor(found.proWithTheFreeTier.length, 1, "sentences naming Gemini 2.5 Pro with the free tier");
+    const undated = found.proWithTheFreeTier
+      .filter(({ sentence }) => !DATED.test(sentence) && !quotesAChangeRecord(sentence))
+      .map(({ route, surface, sentence }) => `${route} (${surface}): ${sentence}`);
+    assert.deepStrictEqual([...new Set(undated)].sort(), []);
   });
 
-  it("publishes Gemini 2.5 Pro as a free-tier model on the two Gemini pricing pages", async () => {
-    for (const route of ["/gemini-api-pricing-changes", "/gemini-api-pricing-2026"]) {
-      const text = readableText(await (await fetch(`${base}${route}`)).text());
-      assert.ok(
-        /2\.5 Pro/.test(text),
-        `${route} does not name Gemini 2.5 Pro at all`,
-      );
-      assert.ok(
-        /free[^.]{0,60}2\.5 Pro|2\.5 Pro[^.]{0,60}(?:free|still free)/i.test(text),
-        `${route} never places Gemini 2.5 Pro on the free tier`,
-      );
-    }
+  it("publishes /gemini-api-pricing-changes in no sitemap", () => {
+    assert.ok(!routes.includes("/gemini-api-pricing-changes"));
   });
 
-  it("keeps saying Gemini 3.1 Pro is paid-only", async () => {
-    for (const route of ["/gemini-api-pricing-changes", "/gemini-api-pricing-2026"]) {
-      const text = readableText(await (await fetch(`${base}${route}`)).text());
-      assert.ok(
-        /3\.1 Pro[^.]{0,60}(?:paid|no free)/i.test(text),
-        `${route} no longer states that Gemini 3.1 Pro requires payment`,
-      );
-    }
+  it("lists Gemini 2.0 Flash among the completed shutdowns, dated June 1, 2026", () => {
+    const sections = served.get("/shutdowns")!.split(/<h2\b/).slice(1).map((section) => ({
+      heading: readableText(`<h2${section.slice(0, section.indexOf("</h2>") + 5)}`),
+      cards: section.split('<div class="shutdown-card"').slice(1).map((card) => readableText(`<div${card}`)),
+    }));
+    const holding = sections.filter(({ cards }) => cards.some((card) => card.startsWith("Gemini 2.0 Flash ")));
+    assert.deepStrictEqual(holding.map(({ heading }) => heading.replace(/\s*\(\d+\)$/, "")), ["✅ Recently Completed"]);
+    const card = holding[0].cards.find((text) => text.startsWith("Gemini 2.0 Flash "))!;
+    assert.ok(card.includes("June 1, 2026"), card);
+  });
+
+  it("renders every replacement where it belongs", () => {
+    const missing = Object.entries(STATED).flatMap(([page, lines]) => {
+      const html = served.get(page)!;
+      const text = `${readableText(html)} ${structuredStrings(html).join(" ")}`;
+      return lines.filter((line) => !text.includes(line)).map((line) => `${page}: ${line}`);
+    });
+    assert.deepStrictEqual(missing, []);
+  });
+
+  it("keeps saying Gemini 3.1 Pro is paid-only", () => {
+    const text = readableText(served.get("/gemini-api-pricing-2026")!);
+    assert.ok(/3\.1 Pro[^.]{0,60}(?:paid|no free)/i.test(text), "/gemini-api-pricing-2026 no longer states that Gemini 3.1 Pro requires payment");
   });
 });

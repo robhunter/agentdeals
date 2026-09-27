@@ -71,7 +71,6 @@ const GUIDE_ENTRIES: Array<{ slug: string; title: string; description: string }>
   { slug: "hcp-terraform-migration", title: "HCP Terraform Migration Guide", description: "5 migration paths, decision matrix, step-by-step process for HCP Terraform EOL" },
   { slug: "terraform-cloud-free-tier-removed", title: "Terraform Cloud Free Tier Removed", description: "HCP Terraform free tier removal guide — cost analysis at 10-500 resources, 8 alternatives compared, migration paths" },
   { slug: "gemini-api-pricing-2026", title: "Gemini API Pricing 2026", description: "Gemini API billing guide — free tier changes, spend caps ($250-$100K+/mo), prepaid billing, 3.1 Pro paid-only, 8-provider comparison" },
-  { slug: "gemini-api-pricing-changes", title: "Gemini API Pricing Overhaul Guide", description: "Complete Gemini API pricing changes guide — before/after limits, cost analysis by usage tier, 11 LLM alternatives compared, migration recommendations by use case" },
   { slug: "free-tier-tracker", title: "Free Tier Tracker Q1 2026", description: "Q1 2026 free tier erosion report — 8 removals, 6 expansions, 4 trend patterns" },
   { slug: "startup-credits", title: "Startup Credits Directory", description: "19 startup credit programs across 3 tiers, $1M+ combined credits, stacking strategy" },
   { slug: "openai-assistants-migration", title: "OpenAI Assistants API Migration Cost Guide", description: "OpenAI Assistants API sunset August 2026 — 6 migration paths compared with cost analysis at 3 usage tiers, free tier options, and recommended timeline" },

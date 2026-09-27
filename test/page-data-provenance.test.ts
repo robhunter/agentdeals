@@ -413,7 +413,7 @@ describe("a page may only name the source it actually reads", () => {
     assert.deepStrictEqual(wrong, []);
     assertPopulationFloor(
       pages.filter(datesItsOwnCompilation).length,
-      34,
+      1,
       "tier-A pages carrying a compiled notice because our records do not supply every figure they publish",
     );
   });

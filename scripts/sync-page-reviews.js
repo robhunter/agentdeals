@@ -92,7 +92,7 @@ const EDITORIAL_PAGES = [
   "/firebase-studio-shutdown", "/free-ai-stack", "/free-devops-stack", "/free-django-stack",
   "/free-fastapi-stack", "/free-frontend-stack", "/free-go-stack", "/free-nextjs-stack",
   "/free-saas-stack", "/free-startup-stack", "/free-tier-risk", "/free-tier-tracker",
-  "/gcp-free-tier-2026", "/gemini-api-pricing-2026", "/gemini-api-pricing-changes",
+  "/gcp-free-tier-2026", "/gemini-api-pricing-2026",
   "/google-developer-program-2026", "/hcp-terraform-migration", "/hetzner-pricing-2026",
   "/hosting-free-tier-comparison-2026", "/hosting-pricing", "/llm-api-pricing",
   "/monitoring-comparison-2026", "/neon-vs-supabase",
