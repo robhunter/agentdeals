@@ -10034,7 +10034,13 @@
       "category": "CDN",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-09"
+      "recorded_date": "2026-09-09",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-27",
+        "detail": "Retracted 2026-09-27: nothing changed on 2026-09-09. The Internet Archive's captures of Fastly's pricing page on 2026-07-31 and 2026-09-01 state the same free allowances this record reports, 100 GB of bandwidth and 1 million requests a month for Full Site Delivery and 5 GB of Object Storage, which our listing already held. The record compared the page with our own listing text.",
+        "source_url": "https://web.archive.org/web/20260901084521/https://www.fastly.com/pricing"
+      }
     },
     {
       "vendor": "Harness Feature Flags",
@@ -11299,7 +11305,13 @@
       "category": "CDN",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-25"
+      "recorded_date": "2026-09-25",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-27",
+        "detail": "Retracted 2026-09-27: nothing changed on 2026-09-25. Fastly's pricing page, read 2026-09-27, still gives Full Site Delivery 1 million requests and 100 GB of bandwidth free a month, as do the Internet Archive's captures of 2026-07-31, 2026-09-01 and 2026-09-11. The 100,000 free requests this record reports belong to AI Runtime Control, a separate product listed above Full Site Delivery on the same page.",
+        "source_url": "https://www.fastly.com/pricing"
+      }
     },
     {
       "vendor": "OneSignal",
