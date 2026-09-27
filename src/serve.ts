@@ -26171,7 +26171,7 @@ ${mcpCtaCss()}
 
   <div class="deadline-banner">
     <div class="deadline-label">New workspaces disabled since June 22, 2026.</div>
-    <div class="deadline-date">June 22, 2026 &middot; <span style="color:${stabilityColor};font-weight:600">Firebase stability: ${firebaseStability.toUpperCase()}</span></div>
+    <div class="deadline-date"><span style="color:${stabilityColor};font-weight:600">Firebase stability: ${firebaseStability.toUpperCase()}</span></div>
     <div class="deadline-secondary">${daysToShutdown} days until full shutdown (March 22, 2027)</div>
   </div>
 
@@ -26434,7 +26434,7 @@ ${mcpCtaCss()}
 
   <div class="methodology">
     <p><strong>How we track this data:</strong> AgentDeals monitors free tier changes across ${offers.length.toLocaleString()} developer tools in ${categories.length} categories. Cloud IDE and AI coding tool free tiers were read from vendor pricing pages on ${pubDate} and have not been re-checked since. Stability ratings are computed from our <a href="/changes">deal changes database</a> \u2014 Firebase is classified as <strong style="color:${stabilityColor}">${firebaseStability}</strong> based on ${firebaseChanges.length} tracked changes.</p>
-    <p><strong>Shutdown dates:</strong> June 22, 2026 (workspace freeze) and March 22, 2027 (data deletion) are sourced from Google\u2019s official Firebase Studio shutdown announcement. Countdown timers are computed dynamically.</p>
+    <p><strong>Shutdown dates:</strong> June 22, 2026 (new workspaces and sign-ups disabled) and March 22, 2027 (data deletion) are sourced from Google\u2019s official Firebase Studio shutdown announcement. Countdown timers are computed dynamically.</p>
     <p>For real-time data, use our <a href="/stability">stability dashboard</a>, <a href="/feed.xml">Atom feed</a>, or <a href="/setup">MCP server</a>. Full dataset available via <a href="/api/offers">REST API</a>.</p>
   </div>
 
@@ -42532,7 +42532,7 @@ ${mcpCtaCss()}
         <td>None on Spark (Blaze only)</td>
         <td class="cross">&#10007;</td>
         <td class="check">&#10003;</td>
-        <td class="check">&#10003;</td>
+        <td class="partial">Blaze only</td>
         <td>$0.12/GB</td>
       </tr>
       <tr>

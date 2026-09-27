@@ -40,6 +40,7 @@ const STATED: Record<string, string[]> = {
     "Generally available, with a $0 plan for individuals.",
     "Google Antigravity or AI Studio for Gemini prototyping.",
     "Verify everything works before March 22, 2027.",
+    "June 22, 2026 (new workspaces and sign-ups disabled) and March 22, 2027 (data deletion)",
   ],
   "/q1-2026-developer-pricing-report": [
     "Google hit Firebase with a double blow: removing Cloud Storage from the free Spark plan (February 3) and announcing on March 19 that Firebase Studio will shut down (no new workspaces from June 22, 2026; shutdown March 22, 2027). Cloud Storage now requires the Blaze (pay-as-you-go) plan.",
@@ -72,6 +73,8 @@ const WITHDRAWN: Record<string, string[]> = {
     "Still in early access",
     "(when available)",
     "before the June 22 freeze",
+    "(workspace freeze)",
+    "June 22, 2026 · Firebase stability",
   ],
   "/supabase-vs-firebase": [
     "Blaze includes 5 GB at no cost.",
@@ -147,6 +150,7 @@ function decode(text: string): string {
     .replace(/&#39;|&#x27;|&rsquo;/g, "'")
     .replace(/&quot;/g, '"')
     .replace(/&mdash;/g, "—")
+    .replace(/&middot;/g, "·")
     .replace(/&nbsp;/g, " ");
 }
 
@@ -252,5 +256,15 @@ describe("Firebase Studio's shutdown and the Spark plan, as Google states them",
     for (const cells of database) {
       assert.deepStrictEqual(cells.filter((cell) => /\binvocations\b|Cloud Functions/.test(cell)), [], cells.join(" | "));
     }
+  });
+
+  it("does not mark Firebase Storage's allowance permanently free on the storage comparison, since Spark has none", () => {
+    const table = rowsOf(served.get("/storage-comparison-2026")!);
+    const header = table.find((cells) => cells.includes("Permanent Free"));
+    assert.ok(header, "the storage comparison has a Permanent Free column");
+    const column = header!.indexOf("Permanent Free");
+    const firebase = table.find((cells) => cells[0]?.startsWith("Firebase Storage") && cells.length > column);
+    assert.ok(firebase, "the storage comparison has a Firebase Storage row");
+    assert.strictEqual(firebase![column], "Blaze only");
   });
 });
