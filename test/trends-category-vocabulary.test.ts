@@ -7,7 +7,8 @@ import { getCategories, loadDealChanges } from "../dist/data.js";
 import { trackedChanges } from "../dist/change-census.js";
 import { CATEGORY_ALIASES, CHANGE_LOG_CATEGORY_NAMES, resolveChangeCategory } from "../dist/category-scope.js";
 import { isOurOwnBookkeeping } from "../dist/vendor-verdict.js";
-import { NEGATIVE_CHANGE_TYPES, POSITIVE_CHANGE_TYPES } from "../dist/change-direction.js";
+import { POSITIVE_CHANGE_TYPES } from "../dist/change-direction.js";
+import { countsAsANegativeChange } from "../dist/product-deprecation.js";
 import { toSlug } from "../dist/slug.js";
 import { assertPopulationFloor } from "./population-floor.ts";
 
@@ -234,7 +235,7 @@ describe("the category risk heatmap counts the population its caption names", ()
       const mine = population.filter(
         (c: { category: string }) => resolveChangeCategory(c.category) === bar.category,
       );
-      const negative = mine.filter((c: { change_type: string }) => NEGATIVE_CHANGE_TYPES.has(c.change_type)).length;
+      const negative = mine.filter(countsAsANegativeChange).length;
       const positive = mine.filter((c: { change_type: string }) => POSITIVE_CHANGE_TYPES.has(c.change_type)).length;
       if (mine.length !== bar.total) wrong.push(`${bar.category}: bar ${bar.total}, records ${mine.length}`);
       if (negative !== bar.negative) wrong.push(`${bar.category}: bar ${bar.negative} negative, records ${negative}`);
