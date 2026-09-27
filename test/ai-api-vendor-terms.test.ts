@@ -213,7 +213,7 @@ const STATED: Record<string, string[]> = {
     "1M tokens/24h with a free token",
     "Opus 5.5 is $4/$20 per M tokens, Sonnet 5 is $2/$10",
     "xAI retired Grok 4.1 Fast on 2026-05-15; requests to its model names now go to grok-4.3 at $1.25/M input and $2.50/M output (under 200k prompt tokens).",
-    "The price floor: For open-source,",
+    "The price floor: For open models,",
     "($20/M on Opus 5.5, $50/M on Fable 5.1)",
     "Fable 5.1, Opus 5.5 and Sonnet 5 decide their own thinking budget (adaptive thinking) rather than taking one from the request",
     "OpenAI and Anthropic set rate limits by usage tier. OpenAI moves an organization up a tier as its paid spend grows ($5 paid for Tier 1, $50 for Tier 2, $100 for Tier 3). Anthropic places organizations on a tier based on usage history and account standing, and new organizations may start in an Evaluation tier with lower limits.",
