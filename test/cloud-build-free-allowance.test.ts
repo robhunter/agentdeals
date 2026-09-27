@@ -71,7 +71,34 @@ function textOf(html: string): string {
     .replace(/\s+/g, " ");
 }
 
+function alwaysFreeColumn(html: string): { vendorPage: string; cell: string }[] {
+  const table = html.split("<th>Always Free?</th>")[1]?.split("</table>")[0] ?? "";
+  return [...table.matchAll(/<tr>([\s\S]*?)<\/tr>/g)].map((row) => {
+    const cells = [...row[1].matchAll(/<td[^>]*>[\s\S]*?<\/td>/g)].map((m) => m[0]);
+    const vendorPage = (cells[0] ?? "").match(/href="(\/vendor\/[^"]+)"/)?.[1] ?? "";
+    return { vendorPage, cell: cells[cells.length - 1] ?? "" };
+  });
+}
+
+function openingTag(cell: string): string {
+  return cell.match(/^<td[^>]*>/)?.[0] ?? "";
+}
+
 describe("the CI/CD and hosting pages state Cloud Build's free allowance as Google does", () => {
+  it("answers Always Free? for Cloud Build as a promotional yes, styled like the table's other yes rows", () => {
+    const rows = alwaysFreeColumn(served.get("/cicd-free-tier-comparison-2026")!);
+    const cloudBuild = rows.filter((row) => row.vendorPage === "/vendor/google-cloud-build");
+    assert.strictEqual(cloudBuild.length, 1, "one Cloud Build row under the Always Free? column");
+    assert.strictEqual(textOf(cloudBuild[0].cell).trim(), "Yes (promotional)");
+    const otherYesTags = new Set(
+      rows
+        .filter((row) => row.vendorPage !== "/vendor/google-cloud-build" && /^Yes\b/.test(textOf(row.cell).trim()))
+        .map((row) => openingTag(row.cell)),
+    );
+    assert.ok(otherYesTags.size > 0, "the table answers yes for at least one other provider");
+    assert.deepStrictEqual([...otherYesTags], [openingTag(cloudBuild[0].cell)]);
+  });
+
   it("prints none of the daily allowance, in the body or the structured data", () => {
     const left = PAGES.flatMap((page) =>
       WITHDRAWN.filter((phrase) => textOf(served.get(page)!).includes(phrase)).map((phrase) => `${page}: ${phrase}`),

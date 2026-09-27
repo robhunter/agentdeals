@@ -38221,7 +38221,7 @@ ${mcpCtaCss()}
         <td>e2-standard-2 (2 vCPU, 8 GB)</td>
         <td>Same limits for all repos</td>
         <td class="cross">No (GCE-based)</td>
-        <td style="color:#3fb950">Always Free</td>
+        <td style="color:#3fb950">Yes (promotional)</td>
       </tr>
       <tr>
         <td class="provider-col"><a href="/vendor/bitrise" style="color:var(--text)">Bitrise</a></td>
