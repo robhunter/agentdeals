@@ -19,6 +19,19 @@ export const FEED_CORRECTIONS: FeedCorrection[] = [
       "<p>153 of those 154 records came from a single run on 2026-08-28 in which we read those vendors’ pricing pages for the first time. Each one records terms that differ from what we had stored, on a page that does not say when they changed — so the record carries the date we read it, not the date it took effect. Some of what they describe is years old. One change in that week has a known effective date: OpenAI’s removal of the Assistants API, on 2026-08-26.</p>" +
       "<p>Weekly counts now include only changes with a known effective date. Pages read for the first time are reported separately, under their own heading, and are not counted as changes that took effect in the week we read them.</p>",
   },
+  {
+    id: "urn:agentdeals:correction:2026-09-27:weekly-digest-2026-09-21",
+    updated: "2026-09-27T00:00:00.000Z",
+    title: "Correction: the digests for the weeks of August 31, September 7 and September 21, 2026",
+    path: "/digest/archive",
+    summaryHtml:
+      "<p>Our entries for three weeks counted corrections we made to our own records as developer tool pricing changes.</p>" +
+      "<ul>" +
+      "<li>September 21–27, 2026: the entry read <em>1 free tier removed across 16 developer tool pricing changes</em>, and later <em>20 developer tool pricing changes tracked this week</em>. 15 of the 16, and all 20, were our corrections. The other one was Stickies ending its free plan, which we found on September 26 and cannot date.</li>" +
+      "<li>August 31 – September 6 and September 7–13, 2026: the 2 changes and the 1 change counted were our corrections.</li>" +
+      "</ul>" +
+      "<p>None of the three weeks has a vendor change with a known effective date, so their weekly entries have left this feed. Weekly counts no longer include our corrections.</p>",
+  },
 ];
 
 export function correctionEntriesXml(baseUrl: string, escXml: (s: string) => string): string[] {
