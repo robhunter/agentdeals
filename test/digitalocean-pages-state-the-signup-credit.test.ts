@@ -13,7 +13,9 @@ const STATED: Record<string, string[]> = {
     "New DigitalOcean accounts get a $5 signup credit, applied automatically to the first team and valid for 90 days after signup. It covers all products except SaaS Add-Ons, and you must add a payment method before you can create Droplets or other resources. Until April 2026, new accounts got $200 for 60 days.",
     "DigitalOcean's free offering is limited to $5 in trial credits (90 days)",
     "The $5 credit expires after 90 days.",
-    "You need a valid credit card or PayPal to claim the $5 free credits.",
+    "Payment method required to use the credit",
+    "The $5 credit is applied automatically, but you must add a valid payment method before you can create Droplets or other resources.",
+    "Using the $5 credit. It covers about nine days of the smallest Managed PostgreSQL node ($15.15 a month), so destroy test resources when you are done with them. App Platform hosts up to three static-site apps free. Charges to your payment method begin when the credit runs out or expires.",
     "$5 Free Credits (90 days)",
   ],
   "/cloud-free-tier-comparison-2026": [
@@ -45,7 +47,22 @@ const WITHDRAWN = [
   "$200/60-day",
 ];
 
+const REPLACED = [
+  "How to maximize the trial",
+  "Credit card required at signup",
+  "Credit card required for free credits",
+  "claim the $5 free credits",
+  "None (service-level free tiers)",
+  "Each service has individual limits",
+];
+
 const TRIAL_ROWS: Record<string, string[]> = {
+  AWS: [
+    "$100 + up to $100",
+    "6 months (Free plan)",
+    "New accounts only; the Free plan closes at 6 months or when the credits run out, and AWS erases the account 90 days later unless you upgrade",
+    "Yes",
+  ],
   GCP: ["$300", "90 days"],
   Azure: ["$200", "30 days"],
   DigitalOcean: ["$5", "90 days", "New accounts only", "Yes"],
@@ -138,7 +155,14 @@ describe("the DigitalOcean guides state the $5 signup credit for 90 days", () =>
     assert.deepStrictEqual(left, []);
   });
 
-  it("lists DigitalOcean's credit beside GCP's and Azure's unchanged ones in the trial credits table", () => {
+  it("prints none of the replaced trial advice, payment pitfall or AWS trial row on these pages or in their structured data", () => {
+    const left = [...served.entries()].flatMap(([page, html]) =>
+      REPLACED.filter((claim) => readable(html).includes(claim) || decode(html).includes(claim)).map((claim) => `${page}: ${claim}`),
+    );
+    assert.deepStrictEqual(left, []);
+  });
+
+  it("lists AWS's and DigitalOcean's credits beside GCP's and Azure's unchanged ones in the trial credits table", () => {
     const rows = rowsOf(served.get("/cloud-free-tier-comparison-2026")!);
     for (const [provider, cells] of Object.entries(TRIAL_ROWS)) {
       assert.ok(rowFor(rows, provider, cells), `${provider}: ${rows.filter(([first]) => first?.startsWith(provider)).map((r) => r.join(" | ")).join(" / ")}`);
