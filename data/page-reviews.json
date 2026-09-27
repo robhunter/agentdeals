@@ -74,8 +74,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 37,
-      "table_figures_from_records": 37,
+      "table_figures": 34,
+      "table_figures_from_records": 34,
       "tables": [
         {
           "label": "Protocol Comparison",
@@ -84,8 +84,8 @@
         },
         {
           "label": "All Payment-Enabled Services",
-          "figures": 37,
-          "from_records": 37
+          "figures": 34,
+          "from_records": 34
         }
       ],
       "reads_changes": true,
@@ -2587,7 +2587,8 @@
         "google-gemini-api",
         "groq",
         "openai",
-        "openrouter"
+        "openrouter",
+        "together-ai"
       ],
       "vendors_tabulated": [
         "anthropic-api",
@@ -2607,8 +2608,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 27,
-      "table_figures_from_records": 27,
+      "table_figures": 29,
+      "table_figures_from_records": 29,
       "tables": [
         {
           "label": "What’s Changing",
@@ -2617,8 +2618,8 @@
         },
         {
           "label": "Free Tier Comparison Table",
-          "figures": 22,
-          "from_records": 22
+          "figures": 24,
+          "from_records": 24
         },
         {
           "label": "OpenAI Pricing Change Timeline",
@@ -3779,13 +3780,13 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 54,
-      "table_figures_from_records": 3,
+      "table_figures": 53,
+      "table_figures_from_records": 2,
       "tables": [
         {
           "label": "All x402-Enabled Services",
-          "figures": 54,
-          "from_records": 3
+          "figures": 53,
+          "from_records": 2
         }
       ],
       "reads_changes": true,

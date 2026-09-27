@@ -4024,21 +4024,16 @@
     {
       "vendor": "xAI",
       "change_type": "free_tier_removed",
-      "date": "2026-04-13",
-      "summary": "$25/month free API credits no longer offered — Grok API paid-only",
-      "previous_state": "",
-      "current_state": "$25/month free API credits no longer offered — Grok API paid-only",
+      "date": "2024-12-31",
+      "summary": "xAI's $25 a month of free API credits was a public beta offer that ran until the end of 2024. No xAI page has offered free API credits since; API usage is billed per token.",
+      "previous_state": "\"We will run a public beta program until the end of 2024 during which everyone will get $25 of free API credits per month.\" (xAI announcement, 2024-11-04)",
+      "current_state": "\"API usage is billed per token rather than free, but the Playground comes with every Console account, so you can test the latest Grok models before adding billing.\" (x.ai/api, read 2026-09-27)",
       "impact": "low",
-      "source_url": "",
+      "source_url": "https://x.ai/news/api",
       "category": "AI / ML",
       "alternatives": [],
       "recorded_date": "2026-04-13",
-      "date_source": "hand_written",
-      "resolution": {
-        "state": "reversed",
-        "date": "2026-09-05",
-        "detail": "No longer in force as of 2026-09-05. This record cites nothing and xAI does not publish its sign-up credit terms on a page we can read, so it cannot be retracted on evidence; it is withdrawn because the claim it makes is contradicted by our own later record. Our xAI offer, verified 2026-08-14 and re-checked 2026-09-02, reads \"Sign-up gives $25 in free API credits\". Recorded separately: the URL that offer cites, docs.x.ai/developers/models, contains no occurrence of \"free\", \"credit\" or \"$25\" in its 5,452 characters of visible text, so that claim is also uncited and needs a source of its own."
-      }
+      "date_source": "hand_written"
     },
     {
       "vendor": "Clarifai",
@@ -5129,8 +5124,8 @@
       "source_url": "https://ai.google.dev/gemini-api/docs/deprecations",
       "category": "AI / ML",
       "alternatives": [
-        "Gemini 2.5 Flash",
-        "Gemini 3.0 Flash",
+        "Gemini 3.5 Flash-Lite",
+        "Gemini 3.8 Flash",
         "OpenRouter",
         "Groq"
       ],
@@ -7145,11 +7140,11 @@
       "change_type": "free_tier_removed",
       "date": "2026-08-28",
       "date_source": "discovered",
-      "summary": "The pricing page now focuses on session-based pricing starting at $76/month for 1K sessions, and offers a free trial.",
-      "previous_state": "Session replay and error tracking — 1,000 sessions/month, 1-month data retention, 3 seats. Includes session replay, console logs, stack traces, network request data",
-      "current_state": "Pricing starts at $76 / mo for 1K sessions. A free trial is available.",
+      "summary": "LogRocket removed its Free plan (\"Free forever\", $0 a month, 1,000 sessions a month) between captures of its pricing page on 2026-06-08 and 2026-08-19. The page now prices by sessions captured, with a free trial of the paid plans.",
+      "previous_state": "\"Free Free forever $0 / month Includes 1,000 Sessions / Month 1 Month Data Retention\" (pricing page, Internet Archive capture of 2026-06-08)",
+      "current_state": "No free plan. \"Pay for the sessions you capture.\"; \"Start free trial — no credit card required\" (pricing page, 2026-09-27)",
       "impact": "high",
-      "source_url": "https://logrocket.com/pricing",
+      "source_url": "https://web.archive.org/web/20260819234559/https://logrocket.com/pricing",
       "category": "Error Tracking",
       "alternatives": [],
       "detected_by": "reverify-ai",
@@ -8523,7 +8518,12 @@
       "category": "AI / ML",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-02"
+      "recorded_date": "2026-09-02",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-27",
+        "detail": "The difference this record reports was our own out-of-date listing text, not a change xAI made on 2026-09-02. Its previous state is our catalogue description: xAI's free credits had ended in 2024 and 2025, and Grok 4.1 Fast was retired on 2026-05-15."
+      }
     },
     {
       "vendor": "Oracle Cloud",
@@ -12023,6 +12023,34 @@
       "impact": "low",
       "source_url": "https://web.archive.org/web/20251119051438/https://www.mailersend.com/help/how-will-the-hobby-plan-update-affect-my-account",
       "category": "Email",
+      "alternatives": [],
+      "recorded_date": "2026-09-27",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "xAI",
+      "change_type": "record_corrected",
+      "date": "2026-09-27",
+      "summary": "Data correction - xAI's $25 monthly API credit ended on 2024-12-31, when its public beta closed, not on 2026-04-13, the day we typed the record. It stays in force: no xAI page has offered free API credits since, so our 2026-09-05 withdrawal of that record was wrong.",
+      "previous_state": "Recorded 2026-04-13 as free_tier_removed dated 2026-04-13, with no source, and withdrawn on 2026-09-05",
+      "current_state": "free_tier_removed dated 2024-12-31 from xAI's beta announcement, in force",
+      "impact": "low",
+      "source_url": "https://x.ai/news/api",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-09-27",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Together AI",
+      "change_type": "free_tier_removed",
+      "date": "2025-08-31",
+      "summary": "Together AI stopped giving new accounts $1 of free credit and began requiring a $5 credit purchase. Its notice is titled \"August 2025 Changes to Free Tier and Billing\"; the docs sentence offering the credit went between 2025-08-18 and 2025-08-31 (Internet Archive captures).",
+      "previous_state": "\"First, register for an account to get an API key. New accounts come with $1 to get started.\" (docs quickstart, capture of 2025-07-23)",
+      "current_state": "\"Free tier is being phased out. New users will no longer receive free credits upon sign-up. Access to the platform will now require a $5 credit purchase.\"",
+      "impact": "low",
+      "source_url": "https://web.archive.org/web/20250907141857/https://support.together.ai/articles/1862638756-changes-to-free-tier-and-billing-july-2025",
+      "category": "AI / ML",
       "alternatives": [],
       "recorded_date": "2026-09-27",
       "date_source": "hand_written"

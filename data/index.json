@@ -5106,15 +5106,14 @@
     {
       "vendor": "LogRocket",
       "category": "Error Tracking",
-      "description": "Session replay and error tracking — 1,000 sessions/month, 1-month data retention, 3 seats. Includes session replay, console logs, stack traces, network request data",
-      "tier": "Free Forever",
+      "description": "Session replay, product analytics and error monitoring, priced by sessions captured; analytics, logs and errors are unlimited on every plan. No free plan: Core, Pro and Enterprise each start with a free trial, no credit card required.",
+      "tier": "Trial",
       "url": "https://logrocket.com/pricing",
       "tags": [
         "error-tracking",
         "session-replay",
         "debugging",
-        "frontend",
-        "free tier"
+        "frontend"
       ],
       "verifiedDate": "2026-07-28",
       "source_check": {
@@ -7447,8 +7446,8 @@
     {
       "vendor": "OpenAI",
       "category": "AI / ML",
-      "description": "AI API platform. One model is priced Free in OpenAI's own table: the moderation model omni-moderation-latest. Everything else is paid: embeddings from $0.02 per 1M tokens; chat-latest $5.00/$30.00 (per 1M tokens). Three further free amounts are sub-quotas inside paid tools: 1 GB of File search storage (then $0.10/GB per day), 1 GB per account per month of ChatKit upload storage, and search content tokens from the web search preview tool on non-reasoning models. GPT models are paid only.",
-      "tier": "Free",
+      "description": "AI API platform. One model is priced Free in OpenAI's own table: the moderation model omni-moderation-latest. Everything else is paid: embeddings from $0.02 per 1M tokens; chat-latest $5.00/$30.00 (per 1M tokens). Three further free amounts are sub-quotas inside paid tools: 1 GB of File search storage (then $0.10/GB per day), 1 GB per account per month of ChatKit upload storage, and search content tokens from the web search preview tool on non-reasoning models. No GPT model is priced free.",
+      "tier": "Pay-as-you-go",
       "url": "https://developers.openai.com/api/docs/pricing",
       "tags": [
         "ai",
@@ -32228,15 +32227,14 @@
     {
       "vendor": "xAI",
       "category": "AI / ML",
-      "description": "Sign-up gives $25 in free API credits. Additional $150/month via data sharing program (opt-in, requires $5 minimum spend first). Access to Grok models including Grok 4.1 series. Starting at $0.20/M input tokens, $0.50/M output tokens for Grok 4.1 Fast.",
-      "tier": "Free Credits",
-      "url": "https://docs.x.ai/developers/models",
+      "description": "Grok API, pay as you go: sign up at console.x.ai, then load it with credits. grok-4.7 $2.00/$6.00 (per 1M tokens, under 200k prompt tokens). grok-4.3 $1.25/$2.50 (under 200k prompt tokens). grok-build-0.1 $1.00/$2.00 (under 200k prompt tokens). Grok 4.1 Fast was retired on 2026-05-15; its model names now route to grok-4.3 at grok-4.3 rates.",
+      "tier": "Pay-as-you-go",
+      "url": "https://docs.x.ai/developers/pricing",
       "tags": [
         "ai",
         "ml",
         "llm",
         "inference",
-        "free credits",
         "api"
       ],
       "verifiedDate": "2026-08-14",
@@ -33091,7 +33089,7 @@
     {
       "vendor": "LLM7.io",
       "category": "AI / ML",
-      "description": "LLM inference gateway. Without a key: 10 requests a minute, 60 an hour, 500,000 tokens per 24 hours. With a free token from dash.llm7.io: 40 a minute, 100 an hour, 1,000,000 tokens per 24 hours. Free access covers the turbo-tier models, such as DeepSeek-V4-Flash-0731 and GLM-5.3-Flash. Other models, including all image and speech-to-text models, need Pro ($12/mo) or a paid balance.",
+      "description": "LLM inference gateway. Without a key: 10 requests a minute, 60 an hour, 500,000 tokens per 24 hours. With a free token from dash.llm7.io: 40 a minute, 100 an hour, 1,000,000 tokens per 24 hours. Free access covers turbo-tier models not marked usage-only, such as GLM-5.3-Flash and codestral-latest. Other models, including all image and speech-to-text models, need Pro ($12/mo) or a paid balance.",
       "tier": "Free",
       "url": "https://docs.llm7.io/limits",
       "tags": [
@@ -35051,15 +35049,14 @@
     {
       "vendor": "Together AI",
       "category": "AI / ML",
-      "description": "Fast inference API for open-source LLMs (Llama, Mixtral, Code Llama). Free tier: $1 free credits on signup. Pay-per-token after",
-      "tier": "Free ($1 credits)",
-      "url": "https://www.together.ai/pricing",
+      "description": "Inference API for open-source models, billed per token. Together AI does not currently offer free trials; access requires a minimum $5 credit purchase, and the platform is fully prepaid. Llama 3.3 70B $1.04/$1.04 (per 1M tokens). gpt-oss-120B $0.15/$0.60.",
+      "tier": "Pay-as-you-go",
+      "url": "https://docs.together.ai/docs/billing-credits",
       "tags": [
         "ai",
         "inference",
         "llm",
-        "open-source",
-        "free tier"
+        "open-source"
       ],
       "verifiedDate": "2026-08-24",
       "payment_protocols": [
@@ -35074,7 +35071,7 @@
       "source_check": {
         "checked": "2026-09-24",
         "outcome": "ok",
-        "detail": "the page names Together AI as \"together ai\" and states \"$1.00\"",
+        "detail": "the page names Together AI as \"together ai\"",
         "unrendered_prices": [
           "USD 6.49",
           "Image generation (per image) USD 0.0006",
