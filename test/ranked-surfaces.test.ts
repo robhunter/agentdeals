@@ -1,10 +1,11 @@
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
 import { spawn, type ChildProcess } from "node:child_process";
-import { readFileSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { loadOffers, enrichOffers } from "../dist/data.js";
+import { loadOffers, gateForOffer } from "../dist/data.js";
 import { substitutesFor } from "../dist/product-role.js";
 import { toSlug, vendorSlugMap } from "../dist/vendor-slug.js";
 import { changesByVendor, evaluate, utcDate } from "../dist/ranking.js";
@@ -14,11 +15,51 @@ const REPO = path.join(__dirname, "..");
 let serverPort = 0;
 let proc: ChildProcess | null = null;
 
+const TODAY = utcDate();
+const LAST_REACHABLE = new Date(Date.parse(`${TODAY}T00:00:00Z`) - 30 * 86_400_000).toISOString().slice(0, 10);
+const liveLinkHealth: { links: Array<{ url: string; outcome: string }> } = JSON.parse(
+  readFileSync(path.join(REPO, "data", "link_health.json"), "utf8"),
+);
+
+const deadLink = (() => {
+  const offers = loadOffers();
+  const unreachableToday = new Set(liveLinkHealth.links.filter((l) => l.outcome === "unreachable").map((l) => l.url));
+  for (const vendor of [...new Set(offers.map((o) => o.vendor))].sort()) {
+    if (vendorSlugMap.get(toSlug(vendor)) !== vendor) continue;
+    const subject = offers.find((o) => o.vendor === vendor)!;
+    const alternative = substitutesFor(offers, subject)
+      .map((a) => offers.find((o) => o.vendor === a.vendor)!)
+      .find((a) => gateForOffer(a) === null && !unreachableToday.has(a.url));
+    if (alternative) return { slug: toSlug(vendor), alternative };
+  }
+  return null;
+})();
+
+const scratchLinkHealth = mkdtempSync(path.join(tmpdir(), "ranked-surfaces-links-"));
+const linkHealthWithOneDeadAlternative = path.join(scratchLinkHealth, "link_health.json");
+writeFileSync(linkHealthWithOneDeadAlternative, JSON.stringify({
+  ...liveLinkHealth,
+  links: [
+    ...liveLinkHealth.links.filter((l) => l.url !== deadLink?.alternative.url),
+    ...(deadLink
+      ? [{
+          url: deadLink.alternative.url,
+          checked: TODAY,
+          outcome: "unreachable",
+          detail: "HTTP 404",
+          terminal: false,
+          last_reachable: LAST_REACHABLE,
+          consecutive_unreachable: 3,
+        }]
+      : []),
+  ],
+}));
+
 function startHttpServer(): Promise<ChildProcess> {
   return new Promise((resolve, reject) => {
     const child = spawn("node", [path.join(REPO, "dist", "serve.js")], {
       stdio: ["pipe", "pipe", "pipe"],
-      env: { ...process.env, PORT: "0", BASE_URL: "http://localhost" },
+      env: { ...process.env, PORT: "0", BASE_URL: "http://localhost", AGENTDEALS_LINK_HEALTH_PATH: linkHealthWithOneDeadAlternative },
     });
     const timeout = setTimeout(() => { child.kill(); reject(new Error("Server startup timeout")); }, 15000);
     child.stderr!.on("data", (data: Buffer) => {
@@ -35,27 +76,13 @@ const get = async (p: string) => {
 };
 
 before(async () => { proc = await startHttpServer(); });
-after(() => { if (proc) proc.kill(); });
+after(() => {
+  if (proc) proc.kill();
+  rmSync(scratchLinkHealth, { recursive: true, force: true });
+});
 
 const stripComments = (src: string) =>
   src.split("\n").filter((l) => !/^\s*(\*|\/\/|\/\*|\*\/)/.test(l)).join("\n");
-
-const deadLinkSubjectSlug = (() => {
-  const offers = loadOffers();
-  const dated = new Set(
-    enrichOffers(offers)
-      .filter((o) => o.link_unreachable && !o.link_unreachable.terminal && o.link_unreachable.last_reachable)
-      .map((o) => o.vendor)
-  );
-  if (dated.size === 0) return null;
-  const subjects = [...new Set(offers.map((o) => o.vendor))].sort();
-  for (const vendor of subjects) {
-    if (vendorSlugMap.get(toSlug(vendor)) !== vendor) continue;
-    const subject = offers.find((o) => o.vendor === vendor)!;
-    if (substitutesFor(offers, subject).some((a) => dated.has(a.vendor))) return toSlug(vendor);
-  }
-  return null;
-})();
 
 const withdrawalSubjectSlug = (() => {
   const offers = loadOffers();
@@ -117,7 +144,7 @@ describe("/alternative-to/:slug", () => {
     { path: `/alternative-to/${withdrawalSubjectSlug ?? ""}`, pattern: /<strong>&minus;3 free_tier_withdrawn<\/strong> Recorded [a-z ]+ on \d{4}-\d{2}-\d{2}/, why: "a withdrawn free tier must name the change and its date" },
     { path: "/alternative-to/openai", pattern: /<strong>&minus;2 time_limited_offer<\/strong> Tier &quot;[^&]+&quot; is a credit grant/, why: "a credit grant must say so" },
     { path: "/alternative-to/n8n", pattern: /<strong>&minus;1 stale_verification<\/strong>[^<]*not a change by the vendor/, why: "our own verification gap must be labelled as ours" },
-    { path: `/alternative-to/${deadLinkSubjectSlug ?? ""}`, pattern: /<strong>&minus;2 link_unreachable<\/strong>[^<]*pricing page has not resolved for us since \d{4}-\d{2}-\d{2}/, why: "a dead pricing page must name the date it was last reachable" },
+    { path: `/alternative-to/${deadLink?.slug ?? ""}`, pattern: new RegExp(`<strong>&minus;2 link_unreachable</strong>[^<]*pricing page has not resolved for us since ${LAST_REACHABLE}`), why: "a dead pricing page must name the date it was last reachable" },
   ];
 
   it("draws the withdrawal subject from a list that publishes one today", () => {
@@ -127,10 +154,17 @@ describe("/alternative-to/:slug", () => {
     );
   });
 
-  it("draws the dead-link subject from a list that publishes one today", () => {
-    assert.ok(
-      deadLinkSubjectSlug,
-      "no alternatives list publishes a record with an unreachable pricing page, so the row below asserts nothing and needs a surface that does"
+  it("demotes the alternative whose pricing page a copy of the link health marks unreachable, on that alternative's own card", async () => {
+    assert.ok(deadLink, "no alternatives list holds an alternative our gate lets through, so no pricing page can be marked unreachable");
+    const { text } = await get(`/alternative-to/${deadLink.slug}`);
+    const name = deadLink.alternative.vendor
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+    const card = text.split('<div class="alt-row').slice(1).find((c) => c.includes(`class="alt-vendor-name">${name}<`));
+    assert.ok(card, `${deadLink.alternative.vendor} is not listed on /alternative-to/${deadLink.slug}`);
+    assert.match(
+      card,
+      new RegExp(`<strong>&minus;2 link_unreachable</strong>[^<]*pricing page has not resolved for us since ${LAST_REACHABLE}`),
+      `${deadLink.alternative.vendor}'s card does not name the day its pricing page last resolved`,
     );
   });
 

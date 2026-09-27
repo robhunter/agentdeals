@@ -19,6 +19,7 @@ import { rankOffers, rotateListing, tieBreakSeed } from "../dist/ranking.js";
 import { readBestOfPublished } from "../dist/best-of-publication.js";
 import { verificationLedger } from "../dist/verification-state.js";
 import type { Offer } from "../dist/types.js";
+import { leaveOnePick, picksOf, type OnePickLeft } from "./picks-floor-fixture.ts";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -207,35 +208,49 @@ describe("two names are the same function only when they name the same thing", (
   });
 });
 
+function subtypesOwedAPage(from: readonly Offer[]): string[] {
+  const bySubtype = new Map<string, Offer[]>();
+  for (const offer of from) {
+    for (const label of offer.product_subtypes?.labels ?? []) {
+      const held = bySubtype.get(label.subtype);
+      if (held) held.push(offer);
+      else bySubtype.set(label.subtype, [offer]);
+    }
+  }
+  return [...bySubtype.entries()]
+    .filter(([, list]) => list.filter(o => !o.eligibility).length >= MIN_VENDORS)
+    .map(([subtype]) => subtype);
+}
+
+async function subtypePagesAnswer(on: {
+  offers: readonly Offer[];
+  publishedBefore: ReadonlySet<string>;
+  port: number;
+}): Promise<{ served: ProductFunction[]; withheld: ProductFunction[] }> {
+  const served: ProductFunction[] = [];
+  const withheldHere: ProductFunction[] = [];
+  for (const subtype of subtypesOwedAPage(on.offers)) {
+    const fn = functions.find(f => f.subtypes.includes(subtype));
+    assert.ok(fn, `${subtype} names no function`);
+    const picks = picksOf(on.offers, fn!, TODAY).length;
+    const { status } = await page(`/best/free-${fn!.slug}`, on.port);
+    if (picks >= MIN_PICKS || on.publishedBefore.has(`free-${fn!.slug}`)) {
+      served.push(fn!);
+      assert.strictEqual(status, 200, `/best/free-${fn!.slug} answers ${status} for a subtype with ${picks} picks`);
+    } else {
+      withheldHere.push(fn!);
+      assert.notStrictEqual(status, 200, `/best/free-${fn!.slug} answers 200 while publishing ${picks} pick`);
+    }
+  }
+  return { served, withheld: withheldHere };
+}
+
 describe("every function with enough vendors to compare has a page", () => {
   it("publishes one for every subtype whose list would hold more than one pick, and no others", async () => {
-    const bySubtype = new Map<string, Offer[]>();
-    for (const offer of offers) {
-      for (const label of offer.product_subtypes?.labels ?? []) {
-        const held = bySubtype.get(label.subtype);
-        if (held) held.push(offer);
-        else bySubtype.set(label.subtype, [offer]);
-      }
-    }
-    const owed = [...bySubtype.entries()].filter(([, list]) => list.filter(o => !o.eligibility).length >= MIN_VENDORS);
+    const owed = subtypesOwedAPage(offers);
     assert.ok(owed.length >= 20, `only ${owed.length} subtypes clear the record threshold, so this sweep is not measuring the backlog`);
-    let served = 0;
-    let withheldHere = 0;
-    for (const [subtype] of owed) {
-      const fn = functions.find(f => f.subtypes.includes(subtype));
-      assert.ok(fn, `${subtype} names no function`);
-      const picks = rankedFor(fn!, TODAY).qualified.length;
-      const { status } = await page(`/best/free-${fn!.slug}`);
-      if (picks >= MIN_PICKS || heldOpen(fn!.slug)) {
-        served++;
-        assert.strictEqual(status, 200, `/best/free-${fn!.slug} answers ${status} for a subtype with ${picks} picks`);
-      } else {
-        withheldHere++;
-        assert.notStrictEqual(status, 200, `/best/free-${fn!.slug} answers 200 while publishing ${picks} pick`);
-      }
-    }
-    assert.ok(served >= 15, `only ${served} subtype pages are served, so this sweep is not measuring the namespace`);
-    assert.ok(withheldHere >= 1, "no subtype falls under the pick threshold, so the negative half of this sweep is vacuous");
+    const { served } = await subtypePagesAnswer({ offers, publishedBefore, port });
+    assert.ok(served.length >= 15, `only ${served.length} subtype pages are served, so this sweep is not measuring the namespace`);
   });
 
   it("puts every one of them in the sitemap and on the index, and no withheld page in either", async () => {
@@ -267,6 +282,45 @@ describe("every function with enough vendors to compare has a page", () => {
         assert.ok(block.includes(escapeForTest(label.source_quote)), `${vendor} on /best/free-${fn.slug} states no words read from the page`);
       }
     }
+  });
+});
+
+describe("a subtype whose list falls to one pick has no page until one has been published", () => {
+  const subject = [...new Set(subtypesOwedAPage(offers).map(subtype => functions.find(f => f.subtypes.includes(subtype))))]
+    .filter((fn): fn is ProductFunction => fn !== undefined)
+    .map(fn => ({ fn, picks: rankedFor(fn, TODAY).qualified.length }))
+    .filter(({ picks }) => picks >= MIN_PICKS)
+    .sort((a, b) => a.picks - b.picks || a.fn.slug.localeCompare(b.fn.slug))[0]?.fn;
+  let onePickLeft: OnePickLeft;
+  let scratchServer: ChildProcess;
+  let scratchPort = 0;
+
+  before(async () => {
+    assert.ok(subject, "no subtype's page publishes more than one pick today, so there is no list to take picks from");
+    onePickLeft = leaveOnePick(offers, subject, TODAY);
+    ({ child: scratchServer, port: scratchPort } = await startServer(onePickLeft.env));
+  });
+  after(() => {
+    scratchServer?.kill();
+    onePickLeft?.remove();
+  });
+
+  it("withholds the page once every pick but one has expired, in a copy of the catalogue whose ledger never published it", async () => {
+    const live = await page(`/best/free-${subject!.slug}`);
+    assert.strictEqual(live.status, 200, `/best/free-${subject!.slug} answers ${live.status} before any of its picks expire`);
+    assert.strictEqual(picksOf(onePickLeft.offers, subject!, TODAY).length, 1, `/best/free-${subject!.slug} does not fall to one pick`);
+
+    const { withheld: withheldThere } = await subtypePagesAnswer({
+      offers: onePickLeft.offers,
+      publishedBefore: onePickLeft.publishedBefore,
+      port: scratchPort,
+    });
+    assert.ok(withheldThere.includes(subject!), `/best/free-${subject!.slug} holds one pick and is not withheld`);
+
+    const map = await page("/sitemap-pages.xml", scratchPort);
+    const index = await page("/best", scratchPort);
+    assert.ok(!map.html.includes(`/best/free-${subject!.slug}<`), `/best/free-${subject!.slug} is withheld and still in the sitemap`);
+    assert.ok(!index.html.includes(`href="/best/free-${subject!.slug}"`), `/best/free-${subject!.slug} is withheld and still linked from /best`);
   });
 });
 
