@@ -55,6 +55,16 @@ const later = (vendor: string, date: string, changeType: string): LogRecord => (
   summary: `${vendor} record dated ${date}`,
 });
 
+function withAStandingRemovalReversed(log: LogRecord[]): LogRecord[] {
+  const standing = removalDurability(log).stillInForce.find(
+    (r) =>
+      !REMOVALS_PAGES_NAME_AS_LASTING.some(
+        (named) => vendorNameAsPublished(named.vendor) === vendorNameAsPublished(r.vendor),
+      ),
+  );
+  return log.map((c) => (c === standing ? { ...c, resolution: reversedOn("2026-09-08") } : c));
+}
+
 describe("what makes a recorded removal one that came back", () => {
   it("reads the log's own reversal as a return", () => {
     const subject = removal("Acme", "2025-01-15", reversedOn("2026-09-06"));
@@ -89,6 +99,14 @@ describe("what makes a recorded removal one that came back", () => {
     assert.strictEqual(theFreeTierCameBackAfter(subject, log), null);
   });
 
+  it("does not read a later positive record we retracted as a return", () => {
+    const subject = removal("Acme", "2026-08-28");
+    const log = [subject, { ...later("Acme", "2026-09-09", "limits_increased"), resolution: retractedOn("2026-09-10") }];
+    assert.strictEqual(theFreeTierCameBackAfter(subject, log), null);
+    assert.deepStrictEqual(removalDurability(log).cameBack, []);
+    assert.strictEqual(removalDurability(log).stillInForce.length, 1);
+  });
+
   it("counts a retracted record as neither a removal nor a return", () => {
     const subject = removal("Acme", "2026-04-13", retractedOn("2026-09-05"));
     const log = [subject, later("Acme", "2026-09-07", "limits_increased")];
@@ -113,7 +131,7 @@ describe("what makes a recorded removal one that came back", () => {
 
 describe("the sentences the report builds from that partition", () => {
   it("names every vendor whose removal came back", () => {
-    const durability = removalDurability(LOG);
+    const durability = removalDurability(withAStandingRemovalReversed(LOG));
     assertPopulationFloor(durability.cameBack.length, 1, "recorded removals the log says came back");
     const sentence = removalReturnRateSentence(durability);
     for (const returned of durability.cameBack) {
@@ -122,7 +140,7 @@ describe("the sentences the report builds from that partition", () => {
   });
 
   it("states the count against the population it was counted in", () => {
-    const durability = removalDurability(LOG);
+    const durability = removalDurability(withAStandingRemovalReversed(LOG));
     const sentence = removalReturnRateSentence(durability);
     assert.ok(sentence.includes(String(durability.cameBack.length)), sentence);
     assert.ok(sentence.includes(String(durability.weStandBehind.length)), sentence);
@@ -355,12 +373,17 @@ function sentenceStatingRemovalsHeld(text: string, held: number, standBehind: nu
 
 describe("no page tells a reader a removed free tier cannot return", () => {
   it("finds none on any page in the sitemap, while the log holds removals that came back", async () => {
+    const log = withAStandingRemovalReversed(LOG);
+    const durability = removalDurability(log);
     assertPopulationFloor(
-      removalDurability(LOG).cameBack.length,
+      durability.cameBack.length,
       1,
-      "removals in the published log that came back, without which this property is vacuous",
+      "removals in the log this scan serves that came back, without which this property is vacuous",
     );
-    const { proc, port } = await startServer(null);
+    const dir = mkdtempSync(path.join(tmpdir(), "removal-durability-sitemap-"));
+    const changesPath = path.join(dir, "deal_changes.json");
+    writeFileSync(changesPath, JSON.stringify({ changes: log }));
+    const { proc, port } = await startServer(changesPath);
     try {
       const base = `http://localhost:${port}`;
       const routes = await routesInSitemap(base);
@@ -375,18 +398,18 @@ describe("no page tells a reader a removed free tier cannot return", () => {
       }
       assert.deepStrictEqual(offenders, []);
 
-      const durability = removalDurability(LOG);
       const report = visibleText(await (await fetch(`${base}/state-of-free-tiers`)).text());
       const held = sentenceStatingRemovalsHeld(report, durability.stillInForce.length, durability.weStandBehind.length);
-      for (const example of lastingRemovalExamplesFor("/state-of-free-tiers", LOG, vendorNameAsPublished)) {
+      for (const example of lastingRemovalExamplesFor("/state-of-free-tiers", log, vendorNameAsPublished)) {
         assert.ok(held.includes(example.vendor), `${example.vendor} lasted and the report does not name it: ${held}`);
       }
-      assert.deepStrictEqual(removalsNamedAsLastingWeHoldNoRecordFor(LOG, vendorNameAsPublished), []);
+      assert.deepStrictEqual(removalsNamedAsLastingWeHoldNoRecordFor(log, vendorNameAsPublished), []);
       for (const returned of durability.cameBack) {
         assert.ok(report.includes(returned.removal.vendor), `${returned.removal.vendor} came back and the report is silent`);
       }
     } finally {
       proc.kill();
+      rmSync(dir, { recursive: true, force: true });
     }
   });
 
@@ -438,16 +461,19 @@ describe("no page tells a reader a removed free tier cannot return", () => {
       .map((o) => o.vendor)
       .find((vendor) => !STORED.some((c) => c.vendor === vendor) && !named.vendor.includes(vendor))!;
 
+    const log = withAStandingRemovalReversed(STORED);
     const dir = mkdtempSync(path.join(tmpdir(), "removal-durability-renamed-"));
     const mergesPath = path.join(dir, "vendor_merges.json");
+    const changesPath = path.join(dir, "deal_changes.json");
     writeFileSync(
       mergesPath,
       JSON.stringify({ merges: [{ retired: named.vendor, survivor }], shared_pricing_pages: [] }),
     );
-    const { proc, port } = await startServer(null, { AGENTDEALS_MERGES_PATH: mergesPath });
+    writeFileSync(changesPath, JSON.stringify({ changes: log }));
+    const { proc, port } = await startServer(changesPath, { AGENTDEALS_MERGES_PATH: mergesPath });
     try {
       const text = visibleText(await (await fetch(`http://localhost:${port}/state-of-free-tiers`)).text());
-      const durability = removalDurability(STORED);
+      const durability = removalDurability(log);
       const held = sentenceStatingRemovalsHeld(text, durability.stillInForce.length, durability.weStandBehind.length);
       assert.ok(
         held.includes(survivor),
