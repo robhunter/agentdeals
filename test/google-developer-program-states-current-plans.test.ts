@@ -3,6 +3,9 @@ import assert from "node:assert";
 import { spawn, type ChildProcess } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { readFileSync } from "node:fs";
+import { changesTheVendorMade } from "../dist/data.js";
+import { changeEntryDateLabelFor } from "../dist/change-dates.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -23,6 +26,11 @@ const RETIRED = [
   "before March 30",
   "lose access",
   "GitHub Models",
+  "Premium ending March 30",
+  "What's Ending",
+  "Premium Ends",
+  "API access included",
+  "may not be significantly better than what's available for free",
 ];
 
 const STATED = [
@@ -39,7 +47,15 @@ const STATED = [
   "Free plan: $100 credit at sign-up + up to $100 more, 6 months",
   "$5 credit (90 days)",
   "1 GiB Firestore, 50K reads/day; Cloud Storage needs Blaze since Feb 2026",
-  "GDP Premium included Gemini API access. These providers offer free API tiers of their own.",
+  "GDP Premium included a $50 annual credit for Google AI Studio and Vertex AI. These providers offer free API tiers of their own.",
+  "Google Developer Program Premium — What Replaced It",
+  "Closed Standalone Premium",
+  "$199.99/yr AI Pro (Premium was $299/yr)",
+  "1. What Changed & When",
+  "This analysis covers what replaced standalone Google Developer Program Premium, which no longer takes sign-ups.",
+  "to \"expanded Gemini access with a small credit bonus.\"",
+  "Gemini 3 Pro access, $50/yr GenAI credit",
+  "What replaced standalone Google Developer Program Premium: Google AI Pro and AI Ultra at today's prices, and free alternatives",
   "Ultra 5x costs $99.99 and includes $40 in Cloud credits: $59.99/mo for its other benefits. Ultra 20x costs $199.99 and includes $100: $99.99/mo.",
 ];
 
@@ -80,6 +96,12 @@ function textOf(html: string): string {
     .replace(/\s+/g, " ");
 }
 
+function withoutTheChangeTrackerBox(html: string): string {
+  const start = html.indexOf("From our change tracker:");
+  if (start === -1) return html;
+  return html.slice(0, start) + html.slice(html.indexOf("</ul>", start));
+}
+
 function planRows(html: string): string[] {
   const header = html.indexOf("<th>Status</th>");
   assert.ok(header > 0, `${PAGE} has no plan table`);
@@ -88,8 +110,8 @@ function planRows(html: string): string[] {
 }
 
 describe("/google-developer-program-2026 describes what replaced Premium, at today's prices", () => {
-  it("keeps none of the March checklist's retired prices, plans or deadlines, in the body or its metadata", () => {
-    const text = textOf(served.get(PAGE)!);
+  it("keeps none of the March checklist's retired prices, plans or deadlines, in the body or its metadata, outside the dated records it quotes", () => {
+    const text = textOf(withoutTheChangeTrackerBox(served.get(PAGE)!));
     assert.deepStrictEqual(RETIRED.filter((phrase) => text.includes(phrase)), []);
   });
 
@@ -101,6 +123,26 @@ describe("/google-developer-program-2026 describes what replaced Premium, at tod
   it("states the current plans and what happened to Premium in Google's terms", () => {
     const text = textOf(served.get(PAGE)!);
     assert.deepStrictEqual(STATED.filter((line) => !text.includes(line)), []);
+  });
+
+  it("names its sections as they read today in the table of contents", () => {
+    const toc = served.get(PAGE)!.split('<div class="toc">')[1]?.split("</div>")[0] ?? "";
+    assert.ok(toc.includes('<a href="#timeline">What Changed &amp; When</a>'), toc);
+    assert.ok(toc.includes('<a href="#migration">If You Held Premium</a>'), toc);
+    assert.ok(!toc.includes("Migration Guide"), toc);
+  });
+
+  it("lists every change Google made since Premium closed in its change tracker box, oldest first, each with its date", () => {
+    const box = served.get(PAGE)!.split("From our change tracker:")[1]?.split("</ul>")[0] ?? "";
+    const since = changesTheVendorMade(JSON.parse(readFileSync(path.join(REPO, "data", "deal_changes.json"), "utf-8")).changes)
+      .filter((c: { vendor: string; date: string }) => c.vendor === "Google" && c.date >= "2026-03-30")
+      .sort((a: { date: string }, b: { date: string }) => a.date.localeCompare(b.date));
+    assert.ok(since.length > 0, "no Google record dates from Premium's closing, so the box proves nothing");
+    const servedOnUtc = (date: string) =>
+      new Date(`${date}T00:00:00Z`).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" }).replace(/ /g, "\u00a0");
+    const at = since.map((c: { date: string; date_source?: string }) => box.indexOf(`<strong>${changeEntryDateLabelFor(c, servedOnUtc(c.date))}:</strong>`));
+    assert.ok(at.every((i: number) => i >= 0), `each record's date is in the box: ${JSON.stringify(at)}`);
+    assert.deepStrictEqual([...at].sort((a, b) => a - b), at);
   });
 
   it("compares four plans: the closed Premium and the three sold today", () => {

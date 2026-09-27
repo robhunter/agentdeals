@@ -6709,8 +6709,8 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "firebase-alternatives",
     title: "Firebase Alternatives \u2014 Free Backend-as-a-Service Options for 2026",
-    metaDesc: "Firebase Studio shut down March 2026 and Spark plan forced migrations to pay-as-you-go Blaze. Compare free alternatives with exact tier limits: Supabase, Appwrite, PocketBase, Nhost, Convex, Back4App, Hasura.",
-    contextHtml: `<p><strong>Firebase</strong> \u2014 Google's all-in-one Backend-as-a-Service \u2014 is facing developer trust issues in 2026. <strong>Firebase Studio was shut down on March 19, 2026</strong> (accessible until March 2027 for migration). In February 2026, <strong>Spark plan projects using legacy *.appspot.com Cloud Storage buckets were forced to upgrade to Blaze</strong> (pay-as-you-go) or lose access \u2014 with no hard billing caps to prevent runaway charges.</p>
+    metaDesc: "Firebase's free Spark plan lost Cloud Storage in February 2026, and Firebase Studio shuts down on March 22, 2027. Compare free alternatives with exact tier limits: Supabase, Appwrite, PocketBase, Nhost, Convex, Back4App, Hasura.",
+    contextHtml: `<p><strong>Firebase</strong> \u2014 Google's all-in-one Backend-as-a-Service \u2014 is facing developer trust issues in 2026. Google announced on March 19, 2026 that <strong>Firebase Studio will shut down</strong>: it has taken no new workspaces since June 22, 2026, and it closes, deleting all remaining data, on March 22, 2027. Since February 3, 2026, <strong>Cloud Storage for Firebase requires the pay-as-you-go Blaze plan</strong>, and a Spark project has no access to any bucket, including its default one.</p>
       <p>Developer sentiment is increasingly negative: "building on Google products is always a gamble." The Spark free tier still exists for new projects, but the pattern of forced migrations and product shutdowns is driving developers to open-source, self-hostable alternatives.</p>
       <p>Below are the best free Firebase alternatives, compared by <strong>what you actually get for free</strong> \u2014 exact storage, MAU, bandwidth, and function limits. Not marketing copy.</p>`,
     tag: "firebase-alternative",
@@ -6736,7 +6736,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     <tbody>
       <tr>
         <td style="font-weight:600;color:var(--text-dim)">Firebase (Spark)</td>
-        <td>1 GiB Firestore</td><td>5 GB</td><td>50K</td><td>2M invocations/mo</td><td>10 GB/mo</td><td>\u2705</td>
+        <td>1 GiB Firestore</td><td>None on Spark (Blaze only)</td><td>50K</td><td>None on Spark (Blaze only)</td><td>10 GB/mo</td><td>\u2705</td>
         <td style="color:var(--text-dim)">Proprietary</td>
       </tr>
       <tr>
@@ -8270,7 +8270,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "firebase-studio-shutdown",
     title: "Firebase Studio Shutdown Guide — Free Cloud IDE Alternatives & Migration Paths",
-    metaDesc: "Firebase Studio shuts down June 22, 2026 (new workspaces) and March 2027 (full shutdown). Compare free cloud IDE alternatives: GitHub Codespaces, Gitpod, Replit, StackBlitz, CodeSandbox, Coder. Migration paths and free tier comparison.",
+    metaDesc: "Firebase Studio has taken no new workspaces since June 22, 2026 and shuts down on March 22, 2027. Compare free cloud IDE alternatives: GitHub Codespaces, Gitpod, Replit, StackBlitz, CodeSandbox, Coder. Migration paths and free tier comparison.",
     contextHtml: "",
     tag: "firebase-studio-alternative",
     primaryVendor: "Firebase Studio",
@@ -19661,7 +19661,7 @@ mcpCtaCss() + "\n" +
   "<div class=\"story-card\">\n" +
     "<h3>Firebase Restrictions &amp; Studio Shutdown</h3>\n" +
     "<span class=\"story-impact\" style=\"background:#f8514922;color:#f85149\">Restriction + Deprecation &middot; High Impact</span>\n" +
-    "<p>Google hit Firebase with a double blow: restricting Cloud Storage on the free Spark plan (February) and announcing Firebase Studio shutdown (March 19, effective June 2026). The Spark plan now requires Blaze (pay-as-you-go) for full Storage access. Firebase Studio, Google&rsquo;s cloud IDE, lasted less than a year.</p>\n" +
+    "<p>Google hit Firebase with a double blow: removing Cloud Storage from the free Spark plan (February 3) and announcing on March 19 that Firebase Studio will shut down (no new workspaces from June 22, 2026; shutdown March 22, 2027). Cloud Storage now requires the Blaze (pay-as-you-go) plan.</p>\n" +
     "<p><a href=\"/vendor/firebase\">View vendor profile</a> &middot; <a href=\"/firebase-alternatives\">Firebase alternatives</a> &middot; <a href=\"/firebase-studio-shutdown\">Studio shutdown guide</a></p>\n" +
   "</div>\n" +
 
@@ -19729,7 +19729,7 @@ mcpCtaCss() + "\n" +
     "<ul style=\"margin:0 0 0 1.5rem;color:var(--text-muted)\">\n" +
       "<li><strong>OpenAI Assistants API shutdown</strong> (August 26, 2026) &mdash; migration window is Q2. Developers must move to Responses API + Conversations API. <a href=\"/openai-assistants-migration-2026\">Migration guide</a></li>\n" +
       "<li><strong>Google Tenor API shutdown</strong> (June 30, 2026) &mdash; GIF API going offline. <a href=\"/tenor-alternatives\">Alternatives guide</a></li>\n" +
-      "<li><strong>Firebase Studio shutdown</strong> (June 2026) &mdash; cloud IDE going offline. <a href=\"/firebase-studio-shutdown\">Migration guide</a></li>\n" +
+      "<li><strong>Firebase Studio shutdown</strong> (no new workspaces from June 22, 2026; closes March 22, 2027) &mdash; cloud IDE going offline. <a href=\"/firebase-studio-shutdown\">Migration guide</a></li>\n" +
       "<li><strong>Gemini API billing overhaul</strong> &mdash; spend caps ($250&ndash;$100K+/mo), prepaid billing, 3.1 Pro paid-only. <a href=\"/gemini-api-pricing-changes\">Full analysis</a></li>\n" +
       "<li><strong>DRAM price surge</strong> &mdash; 171% YoY increase driving hosting costs up. Hetzner already raised prices 30&ndash;50%. Other hosting providers may follow in Q2.</li>\n" +
       "<li><strong>AI API price war continues</strong> &mdash; Groq, Cerebras, and OpenRouter offering generous free tiers. Expect more free tier launches from challengers while incumbents focus on paid plans.</li>\n" +
@@ -19999,7 +19999,9 @@ function buildGoogleDeveloperProgram2026Page(): string {
   const slug = "google-developer-program-2026";
   const pubDate = "2026-03-26";
 
-  const gdpChange = dealChanges.find(c => c.vendor === "Google" && c.change_type === "pricing_restructured" && c.date === "2026-03-30");
+  const gdpChanges = changesTheVendorMade(dealChanges)
+    .filter(c => c.vendor === "Google" && c.date >= "2026-03-30")
+    .sort((a, b) => a.date.localeCompare(b.date));
   const geminiChange = dealChanges.find(c => c.vendor === "Google Gemini" && c.change_type === "limits_reduced");
 
   const cloudOffers = offers.filter(o =>
@@ -20015,7 +20017,7 @@ function buildGoogleDeveloperProgram2026Page(): string {
   );
 
   const planComparison = [
-    { plan: "GDP Premium (standalone, closed)", price: "$299/year or $24.99/mo", credits: "$500/year (~$41.67/mo)", gemini: "API access included", firebase: "30 Firebase Studio workspaces", status: "closed" as const },
+    { plan: "GDP Premium (standalone, closed)", price: "$299/year or $24.99/mo", credits: "$500/year (~$41.67/mo)", gemini: "Gemini 3 Pro access, $50/yr GenAI credit", firebase: "30 Firebase Studio workspaces", status: "closed" as const },
     { plan: "Google AI Pro", price: "$19.99/mo ($199.99/yr)", credits: "$10/mo ($120/yr)", gemini: "Expanded Gemini 3.1 Pro and Deep Research", firebase: "—", status: "current" as const },
     { plan: "Google AI Ultra 5x (20 TB)", price: "$99.99/mo (monthly only)", credits: "$40/mo ($480/yr)", gemini: "5x AI Pro's usage limits", firebase: "—", status: "current" as const },
     { plan: "Google AI Ultra 20x (30 TB)", price: "$199.99/mo (monthly only)", credits: "$100/mo ($1,200/yr)", gemini: "20x AI Pro's usage limits", firebase: "—", status: "current" as const },
@@ -20094,7 +20096,7 @@ function buildGoogleDeveloperProgram2026Page(): string {
     about: {
       "@type": "Thing",
       name: "Google Developer Program Premium discontinuation",
-      description: "Analysis of Google Developer Program Premium ending March 30, 2026 and migration to AI Pro/Ultra subscriptions",
+      description: "What replaced standalone Google Developer Program Premium: Google AI Pro and AI Ultra at today's prices, and free alternatives",
     },
   };
 
@@ -20182,12 +20184,12 @@ ${mcpCtaCss()}
 <div class="container">
   ${buildGlobalNav("changes")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/changes">Changes</a> &rsaquo; Google Developer Program 2026</div>
-  <h1>Google Developer Program Premium — What's Ending &amp; What Replaces It</h1>
+  <h1>Google Developer Program Premium — What Replaced It</h1>
   <p class="pub-date">Published ${pubDate} &middot; ${pageDataProvenance("/google-developer-program-2026", offers.length)}</p>
 
   <div class="summary-stats">
-    <div class="stat-card"><div class="stat-number red">Mar 30</div><div class="stat-label">Premium Ends</div></div>
-    <div class="stat-card"><div class="stat-number">$299/yr</div><div class="stat-label">→ $19.99/mo</div></div>
+    <div class="stat-card"><div class="stat-number red">Closed</div><div class="stat-label">Standalone Premium</div></div>
+    <div class="stat-card"><div class="stat-number">$199.99/yr</div><div class="stat-label">AI Pro (Premium was $299/yr)</div></div>
     <div class="stat-card"><div class="stat-number red">−76%</div><div class="stat-label">Cloud Credits Cut</div></div>
     <div class="stat-card"><div class="stat-number" style="color:#3fb950">6+</div><div class="stat-label">Free Alternatives</div></div>
   </div>
@@ -20202,10 +20204,10 @@ ${mcpCtaCss()}
   <div class="toc">
     <h3>Jump to section</h3>
     <ol>
-      <li><a href="#timeline">What's Changing &amp; Timeline</a></li>
+      <li><a href="#timeline">What Changed &amp; When</a></li>
       <li><a href="#comparison">Price Comparison Table</a></li>
       <li><a href="#affected">Who's Affected</a></li>
-      <li><a href="#migration">Migration Guide</a></li>
+      <li><a href="#migration">If You Held Premium</a></li>
       <li><a href="#cloud-alts">Free Cloud Alternatives</a></li>
       <li><a href="#ai-alts">Free AI/LLM API Alternatives</a></li>
       <li><a href="#firebase-alts">Firebase Alternatives</a></li>
@@ -20214,7 +20216,7 @@ ${mcpCtaCss()}
     </ol>
   </div>
 
-  <h2 id="timeline">1. What's Changing &amp; Timeline</h2>
+  <h2 id="timeline">1. What Changed &amp; When</h2>
   <p class="section-intro">Google announced the transition in January 2026. Here's the timeline:</p>
   <div style="display:grid;gap:.75rem;margin:1rem 0">
     <div class="impact-card" style="border-left-color:#d29922">
@@ -20234,7 +20236,11 @@ ${mcpCtaCss()}
       <p class="impact-desc">Cloud Run, BigQuery and Cloud Build keep their free tiers. Firebase's Spark plan lost Cloud Storage on February 3, 2026. The free Google Developer Program (non-Premium) continues.</p>
     </div>
   </div>
-  ${gdpChange ? `<div class="context-box"><strong>From our change tracker:</strong> ${changeSummaryHtml(gdpChange, escHtmlServer)}<br><a href="${escHtmlServer(gdpChange.source_url)}" target="_blank" rel="noopener">Source →</a></div>` : ""}
+  ${gdpChanges.length > 0 ? `<div class="context-box"><strong>From our change tracker:</strong>
+    <ul>
+${gdpChanges.map(c => `      <li><strong>${escHtmlServer(changeEntryLongDateLabel(c))}:</strong> ${changeSummaryHtml(c, escHtmlServer)}</li>`).join("\n")}
+    </ul>
+  </div>` : ""}
 
   <h2 id="comparison">2. Price Comparison Table</h2>
   <p class="section-intro">Side-by-side comparison of what you're losing and what replaces it.</p>
@@ -20249,7 +20255,7 @@ ${mcpCtaCss()}
     </table>
   </div>
   <div class="context-box">
-    <strong>Key takeaway:</strong> GDP Premium gave you $500/year in Cloud credits for $299/year — effectively a 40% discount on GCP. AI Pro gives you $120/year in credits for $199.99/year — you're paying more than you get back in credits. The value proposition has shifted from "cheap Cloud access" to "Gemini API access with a small credit bonus."
+    <strong>Key takeaway:</strong> GDP Premium gave you $500/year in Cloud credits for $299/year — effectively a 40% discount on GCP. AI Pro gives you $120/year in credits for $199.99/year — you're paying more than you get back in credits. The value proposition has shifted from "cheap Cloud access" to "expanded Gemini access with a small credit bonus."
   </div>
 
   <h2 id="affected">3. Who's Affected</h2>
@@ -20317,7 +20323,7 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="ai-alts">6. Free AI/LLM API Alternatives</h2>
-  <p class="section-intro">GDP Premium included Gemini API access. These providers offer free API tiers of their own.</p>
+  <p class="section-intro">GDP Premium included a $50 annual credit for Google AI Studio and Vertex AI. These providers offer free API tiers of their own.</p>
   <div style="overflow-x:auto">
     <table class="pricing-table">
       <thead>
@@ -20328,7 +20334,7 @@ ${mcpCtaCss()}
       </tbody>
     </table>
   </div>
-  ${geminiChange ? `<div class="context-box"><strong>Context — Gemini API free tier reduction:</strong> ${changeSummaryHtml(geminiChange, escHtmlServer)} This means the Gemini API access in AI Pro may not be significantly better than what's available for free via other providers. See our <a href="/free-llm-apis">Free LLM APIs</a> comparison for full details.</div>` : ""}
+  ${geminiChange ? `<div class="context-box"><strong>Context — Gemini API free tier reduction:</strong> ${changeSummaryHtml(geminiChange, escHtmlServer)} See our <a href="/free-llm-apis">Free LLM APIs</a> comparison for full details.</div>` : ""}
 
   <h2 id="firebase-alts">7. Firebase Alternatives</h2>
   <p class="section-intro">Firebase's Spark (free) plan was not part of GDP Premium, but it lost Cloud Storage on February 3, 2026. If you're re-evaluating your stack, these BaaS alternatives offer competitive free tiers.</p>
@@ -20399,7 +20405,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="search-cta">
-    <p>This analysis covers Google Developer Program Premium ending March 30, 2026. For the full Q2 outlook including Hetzner, Tenor API, and more, see the <a href="/q2-pricing-preview-2026">Q2 2026 Pricing Preview</a>. Browse all ${offers.length.toLocaleString()} developer tools at <a href="/search">/search</a>.</p>
+    <p>This analysis covers what replaced standalone Google Developer Program Premium, which no longer takes sign-ups. For the full Q2 outlook including Hetzner, Tenor API, and more, see the <a href="/q2-pricing-preview-2026">Q2 2026 Pricing Preview</a>. Browse all ${offers.length.toLocaleString()} developer tools at <a href="/search">/search</a>.</p>
   </div>
 
   ${buildMoreAlternativesGuides(slug)}
@@ -20432,8 +20438,8 @@ function buildSupabaseVsFirebasePage(): string {
   const comparisonRows = [
     { feature: "Database", supabase: "500 MB PostgreSQL", firebase: "1 GiB Firestore", notes: "Supabase: SQL + joins. Firebase: NoSQL document model" },
     { feature: "Auth", supabase: "50K MAU", firebase: "50K MAU", notes: "Equivalent. Both include email, OAuth, social login" },
-    { feature: "Storage", supabase: "1 GB file storage", firebase: "5 GB Cloud Storage*", notes: "*Firebase removed Cloud Storage from Spark plan (Feb 2026). Blaze required" },
-    { feature: "Functions", supabase: "500K Edge Function invocations", firebase: "2M Cloud Function invocations/mo", notes: "Firebase has higher invocation limit. Supabase runs on Deno edge runtime" },
+    { feature: "Storage", supabase: "1 GB file storage", firebase: "None on Spark (Blaze only)", notes: "Firebase removed Cloud Storage from the Spark plan on February 3, 2026. Blaze includes 5 GB at no cost." },
+    { feature: "Functions", supabase: "500K Edge Function invocations", firebase: "None on Spark (Blaze only)", notes: "Cloud Functions need the Blaze plan, which includes 2M invocations a month at no cost." },
     { feature: "Bandwidth", supabase: "10 GB total (5 GB cached + 5 GB uncached)", firebase: "10 GB/mo hosting, 1 GB/day Firestore download", notes: "Supabase: database egress limited. Firebase: per-service bandwidth" },
     { feature: "Realtime", supabase: "200 concurrent connections", firebase: "100 concurrent (Realtime DB)", notes: "Both support real-time sync. Supabase uses Postgres changes" },
     { feature: "API Requests", supabase: "Unlimited API requests", firebase: "50K reads + 20K writes/day (Firestore)", notes: "Supabase has no request caps. Firebase daily limits can be restrictive" },
@@ -25964,7 +25970,7 @@ ${mcpCtaCss()}
 
 function buildFirebaseStudioShutdownPage(): string {
   const title = "Firebase Studio Shutdown: Migration Cost Guide & Free IDE Alternatives";
-  const metaDesc = "Firebase Studio shuts down June 22, 2026. Compare migration costs for GitHub Codespaces, Gitpod, Replit, StackBlitz, CodeSandbox, Coder. Hidden costs of switching, free tier comparison, and step-by-step migration checklist.";
+  const metaDesc = "Firebase Studio has taken no new workspaces since June 22, 2026 and shuts down on March 22, 2027. Compare migration costs for GitHub Codespaces, Gitpod, Replit, StackBlitz, CodeSandbox, Coder. Hidden costs of switching, free tier comparison, and step-by-step migration checklist.";
   const slug = "firebase-studio-shutdown";
   const pubDate = "2026-04-02";
 
@@ -26170,7 +26176,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="executive-summary">
-    <p><strong>What\u2019s happening:</strong> Google is shutting down Firebase Studio (formerly Project IDX), its cloud-based IDE. <strong>New workspace creation will be disabled on June 22, 2026.</strong> Existing workspaces remain accessible until <strong>March 22, 2027</strong>, when all data will be permanently deleted. Developers must export their projects before this date.</p>
+    <p><strong>What\u2019s happening:</strong> Google is shutting down Firebase Studio (formerly Project IDX), its cloud-based IDE. <strong>New workspace creation has been disabled since June 22, 2026.</strong> Existing workspaces remain accessible until <strong>March 22, 2027</strong>, when all data will be permanently deleted. Developers must export their projects before this date.</p>
     <p><strong>What\u2019s NOT affected:</strong> Core Firebase services \u2014 Firestore, Authentication, Cloud Functions, App Hosting, Realtime Database, Cloud Storage, Hosting \u2014 are <strong>not affected</strong> by this shutdown. This only impacts the cloud IDE/development environment.</p>
     <p><strong>Google\u2019s official paths:</strong> Google is directing developers to <strong>Antigravity</strong> (a new agentic code-first IDE) and <strong>AI Studio</strong> (web-based prototyping for Gemini API). Neither is a 1:1 replacement for Firebase Studio\u2019s full cloud IDE experience.</p>
     <p><strong>Our data says:</strong> Firebase\u2019s stability rating is <strong style="color:${stabilityColor}">${firebaseStability}</strong> based on ${firebaseChanges.length} tracked changes \u2014 including Studio shutdown, Spark plan forced Blaze migration, and storage bucket access restrictions. Developers should evaluate independent cloud IDEs for long-term stability.</p>
@@ -37515,7 +37521,7 @@ ${mcpCtaCss()}
         <td>NoSQL (Firestore) + BaaS</td>
         <td style="font-family:var(--mono)">1 GiB</td>
         <td>50K reads/day, 20K writes/day</td>
-        <td>50K MAU auth, 2M Cloud Functions</td>
+        <td>50K MAU auth</td>
         <td class="cross">No</td>
         <td style="color:#d29922">Mostly (Storage removed Feb 2026)</td>
         <td style="color:#f85149">High (proprietary)</td>
@@ -37662,7 +37668,7 @@ ${mcpCtaCss()}
         <td>Firestore (document)</td>
         <td style="font-family:var(--mono)">1 GiB</td>
         <td class="check">50K MAU</td>
-        <td class="check">2M invocations/mo</td>
+        <td class="cross">None on Spark (Blaze only)</td>
         <td class="check">Yes</td>
         <td style="color:#f85149">High — proprietary API, hard to migrate</td>
       </tr>
@@ -37698,7 +37704,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="context-box">
-    <strong>Firebase had major free tier changes in early 2026:</strong> Cloud Storage was removed from the Spark (free) plan in February 2026, and Firebase Studio (formerly Project IDX) was discontinued in March. If you're starting new, <strong>Supabase</strong> gives you a similar feature set on standard Postgres with no lock-in. <strong>Appwrite</strong> has the most generous free tier (75K MAU) and is fully open-source, with two constraints its plan card states and this table does not: the free plan is limited to 2 projects, and a free project is paused after 1 week of inactivity. See our <a href="/supabase-vs-firebase">Supabase vs Firebase comparison</a>.
+    <strong>Firebase had major free tier changes in early 2026:</strong> Cloud Storage was removed from the Spark (free) plan in February 2026, and Google announced in March that Firebase Studio (formerly Project IDX) will shut down on March 22, 2027. If you're starting new, <strong>Supabase</strong> gives you a similar feature set on standard Postgres with no lock-in. <strong>Appwrite</strong> has the most generous free tier (75K MAU) and is fully open-source, with two constraints its plan card states and this table does not: the free plan is limited to 2 projects, and a free project is paused after 1 week of inactivity. See our <a href="/supabase-vs-firebase">Supabase vs Firebase comparison</a>.
   </div>
 
   <h2 id="edge">Edge / Embedded Databases</h2>
