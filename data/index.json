@@ -2422,7 +2422,7 @@
     {
       "vendor": "Apify",
       "category": "Web Scraping",
-      "description": "Web scraping and automation — Free plan offers $5 to spend in Apify Store or on your own Actors, unlimited Actor runs, and no credit card is required. There is also a $500 credit for 6 months.",
+      "description": "Web scraping and automation platform. The Free plan is $0 with $5 of prepaid usage a month to spend in Apify Store or on your own Actors, at $0.2 per compute unit, with up to 16 GB of Actor RAM and community support; no credit card is required. Starter is $19/month with $19 of usage a month. The Creator plan, for developers who run their own Actors, costs $1/month paid six months in advance, adds a one-time $500 of usage for those six months, and limits access to Apify Store Actors.",
       "tier": "Free",
       "url": "https://apify.com/pricing",
       "tags": [
@@ -2433,18 +2433,15 @@
         "actors",
         "free tier"
       ],
-      "verifiedDate": "2026-08-09",
+      "verifiedDate": "2026-09-27",
       "source_check": {
         "checked": "2026-09-13",
         "outcome": "ok",
         "detail": "the page names Apify as \"apify\""
       },
-      "restated_from": {
-        "reading_date": "2026-09-01",
-        "source_url": "https://apify.com/pricing",
+      "restatement_reverted": {
         "record_date": "2026-09-01",
-        "change_type": "limits_increased",
-        "restated_on": "2026-09-20"
+        "reverted_on": "2026-09-27"
       }
     },
     {
@@ -19829,7 +19826,7 @@
     {
       "vendor": "Lumenfall.ai",
       "category": "AI / ML",
-      "description": "AI media gateway providing unified access to leading image generation models via an OpenAI-compatible API — Start Free with $1 Credit. No credit card. No commitment. Provider charges $0.04 = You pay $0.04. Zero markup. Zero fees. Zero catch.",
+      "description": "AI media gateway: one OpenAI-compatible API to image and video generation models from several providers, billed at each provider's price with no markup, platform fee or subscription. One model, FLUX.1 [schnell] FP8, is listed free per image (\"Free to try\", served through Fireworks AI). New accounts also get a $1 credit with no card required; Lumenfall's terms say promotional credits typically expire after 90 days. After that you top up prepaid credits. Under Lumenfall's terms (2026-03-05), content sent through free features, including free API usage, may be used to train AI models.",
       "tier": "Free",
       "url": "https://lumenfall.ai/pricing",
       "tags": [
@@ -19838,7 +19835,7 @@
         "generative-ai",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-09-01",
+      "verifiedDate": "2026-09-27",
       "source_check": {
         "checked": "2026-09-13",
         "outcome": "ok",
@@ -19860,12 +19857,9 @@
         ],
         "reviewed": "2026-09-01"
       },
-      "restated_from": {
-        "reading_date": "2026-09-13",
-        "source_url": "https://lumenfall.ai/pricing",
+      "restatement_reverted": {
         "record_date": "2026-09-13",
-        "change_type": "pricing_model_change",
-        "restated_on": "2026-09-20"
+        "reverted_on": "2026-09-27"
       }
     },
     {

@@ -1266,12 +1266,12 @@
     {
       "vendor": "Cursor",
       "change_type": "pricing_restructured",
-      "date": "2025-06-01",
-      "summary": "Moved from flat monthly subscription to credit-based pricing model with new $200/month Ultra tier",
+      "date": "2025-06-16",
+      "summary": "Cursor moved Pro from 500 requests a month to usage-based pricing and introduced a $200/month Ultra tier.",
       "previous_state": "Pro plan $20/month with 500 fast requests",
       "current_state": "Pro plan $20/month (credit-based), Business $40/seat/month, Ultra $200/month (higher credit limits)",
       "impact": "medium",
-      "source_url": "https://www.cursor.com/pricing",
+      "source_url": "https://cursor.com/blog/new-tier",
       "category": "AI Coding",
       "alternatives": [
         "Windsurf",
@@ -8056,7 +8056,13 @@
       "category": "Web Scraping",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-01"
+      "recorded_date": "2026-09-01",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-27",
+        "detail": "Retracted 2026-09-27: Apify's free limits did not increase. Our listing already said $5 of platform usage a month, and the reading's \"unlimited Actor runs\" counts runs, not concurrent runs, which Apify still caps on the Free plan (5 on its pricing page, 25 in its limits documentation).",
+        "source_url": "https://apify.com/pricing"
+      }
     },
     {
       "vendor": "Cloudflare Workers AI",
@@ -12349,6 +12355,20 @@
       "recorded_date": "2026-09-27",
       "date_source": "hand_written",
       "listing_effect": "none"
+    },
+    {
+      "vendor": "Cursor",
+      "change_type": "record_corrected",
+      "date": "2026-09-27",
+      "summary": "Data correction - Cursor changed its Pro plan and introduced Ultra on 2025-06-16, not on 2025-06-01. The date comes from Cursor's own announcement.",
+      "previous_state": "Recorded 2026-03-13 with the change dated 2025-06-01",
+      "current_state": "pricing_restructured dated 2025-06-16, from Cursor's announcement of the Pro and Ultra changes",
+      "impact": "low",
+      "source_url": "https://cursor.com/blog/new-tier",
+      "category": "AI Coding",
+      "alternatives": [],
+      "recorded_date": "2026-09-27",
+      "date_source": "hand_written"
     }
   ]
 }
