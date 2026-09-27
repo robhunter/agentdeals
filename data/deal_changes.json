@@ -1234,14 +1234,14 @@
       "date_source": "hand_written"
     },
     {
-      "vendor": "Cognition Devin",
+      "vendor": "Devin",
       "change_type": "pricing_restructured",
-      "date": "2026-01-15",
+      "date": "2025-04-03",
       "summary": "Launched $20/month Core plan with pay-as-you-go ACU pricing, down from previous $500/month-only Team plan",
       "previous_state": "Team plan only at $500/month (250 credits)",
       "current_state": "Core plan $20/month (pay-as-you-go at $2.25/ACU), Team plan $500/month remains",
       "impact": "high",
-      "source_url": "https://devin.ai/pricing",
+      "source_url": "https://cognition.com/blog/devin-2",
       "category": "AI Coding",
       "alternatives": [
         "GitHub Copilot",
@@ -1249,7 +1249,7 @@
         "Aider"
       ],
       "recorded_date": "2026-03-13",
-      "date_source": "hand_written"
+      "date_source": "vendor_page"
     },
     {
       "vendor": "Cursor",
@@ -4822,13 +4822,13 @@
     },
     {
       "vendor": "Claude Code",
-      "change_type": "pricing_restructured",
+      "change_type": "restriction",
       "date": "2026-04-04",
-      "summary": "Three material policy changes: (1) Third-party tool restrictions — external tools like OpenClaw now billed separately on pay-as-you-go, can no longer apply standard usage limits. (2) Extra usage option — all paid plans (Pro, Max 5x, Max 20x) have pay-as-you-go overage at standard API rates. (3) Peak-hour throttling (acknowledged March 31) — 5-hour session limits reduced during weekdays 5 AM–11 AM Pacific.",
-      "previous_state": "Flat subscription pricing with included usage limits. Third-party tools shared standard limits. No overage option.",
-      "current_state": "Subscription + pay-as-you-go overage. Third-party tools billed separately. Peak-hour throttling during weekday mornings.",
-      "impact": "high",
-      "source_url": "https://docs.anthropic.com/en/docs/claude-code/overview",
+      "summary": "From noon Pacific on 2026-04-04, Claude subscription limits stopped covering third-party harnesses such as OpenClaw. That usage had to be paid for as extra usage, billed separately from the subscription.",
+      "previous_state": "Third-party harnesses signed in with a Claude subscription, such as OpenClaw, drew on the plan's usage limits.",
+      "current_state": "Reversed. On 2026-05-13 Anthropic let third-party apps draw on subscriptions again and announced a separate monthly Agent SDK credit from 2026-06-15, then paused that plan on 2026-06-15: \"Claude Agent SDK, claude -p, and third-party app usage still draw from your subscription's usage limits.\"",
+      "impact": "medium",
+      "source_url": "https://techcrunch.com/2026/04/04/anthropic-says-claude-code-subscribers-will-need-to-pay-extra-for-openclaw-support/",
       "category": "AI Coding",
       "alternatives": [
         "Cursor",
@@ -4837,7 +4837,13 @@
         "Windsurf"
       ],
       "recorded_date": "2026-04-13",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "reversed",
+        "date": "2026-05-13",
+        "detail": "No longer in force from 2026-05-13, when Anthropic let third-party apps draw on Claude subscriptions again. The separate Agent SDK credit it announced for 2026-06-15 was paused that day: \"For now, nothing has changed: Claude Agent SDK, claude -p, and third-party app usage still draw from your subscription's usage limits.\"",
+        "source_url": "https://support.claude.com/en/articles/15036540-use-the-claude-agent-sdk-with-your-claude-plan"
+      }
     },
     {
       "vendor": "Amazon Kiro",
@@ -11891,6 +11897,48 @@
       "category": "AI / ML",
       "alternatives": [],
       "recorded_date": "2026-09-26"
+    },
+    {
+      "vendor": "Windsurf",
+      "change_type": "rebranded",
+      "date": "2026-06-02",
+      "date_source": "vendor_page",
+      "summary": "Cognition renamed Windsurf Devin Desktop. Existing Windsurf users kept their plans and prices.",
+      "previous_state": "Windsurf, an AI code editor by Cognition",
+      "current_state": "\"We're excited to launch the next generation of Windsurf: Devin Desktop.\" \"Your plan, pricing, extensions, and other features remain the same.\"",
+      "impact": "low",
+      "source_url": "https://devin.ai/blog/windsurf-is-now-devin-desktop",
+      "category": "AI Coding",
+      "alternatives": [],
+      "recorded_date": "2026-09-26"
+    },
+    {
+      "vendor": "Claude Code",
+      "change_type": "record_corrected",
+      "date": "2026-09-26",
+      "summary": "Data correction - our 2026-04-04 Claude Code record listed three changes. Only one happened that day: Claude subscription limits stopped covering third-party harnesses such as OpenClaw, until Anthropic lifted the restriction on 2026-05-13. Extra usage on paid plans was older, and the peak-hour limit reduction ran from 2026-03-26 until Anthropic removed it on 2026-05-06.",
+      "previous_state": "Recorded 2026-04-13 as pricing_restructured: third-party tools billed separately, pay-as-you-go overage, and peak-hour throttling, all dated 2026-04-04",
+      "current_state": "restriction dated 2026-04-04, lifted 2026-05-13",
+      "impact": "low",
+      "source_url": "https://support.claude.com/en/articles/15036540-use-the-claude-agent-sdk-with-your-claude-plan",
+      "category": "AI Coding",
+      "alternatives": [],
+      "recorded_date": "2026-09-26",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Devin",
+      "change_type": "record_corrected",
+      "date": "2026-09-26",
+      "summary": "Data correction - Devin's Core plan came with Devin 2.0 on 2025-04-03, not on 2026-01-15. We had typed the record under the name Cognition Devin with the date we typed it.",
+      "previous_state": "Recorded 2026-03-13 as pricing_restructured for Cognition Devin, dated 2026-01-15",
+      "current_state": "pricing_restructured for Devin, dated 2025-04-03 from Cognition's Devin 2.0 post",
+      "impact": "low",
+      "source_url": "https://cognition.com/blog/devin-2",
+      "category": "AI Coding",
+      "alternatives": [],
+      "recorded_date": "2026-09-26",
+      "date_source": "hand_written"
     }
   ]
 }
