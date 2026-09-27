@@ -4465,18 +4465,18 @@
       }
     },
     {
-      "vendor": "Apiary",
+      "vendor": "apiary.io",
       "change_type": "product_deprecated",
-      "date": "2026-04-13",
-      "summary": "Free tier marked Deprecated, being phased out",
-      "previous_state": "",
-      "current_state": "Free tier marked Deprecated, being phased out",
-      "impact": "low",
-      "source_url": "",
+      "date": "2026-10-31",
+      "date_source": "vendor_page",
+      "summary": "Apiary reaches end of life on 2026-10-31, when Oracle stops the service and deletes remaining instances. Oracle announced it on 2025-10-28. The Free plan is the only one still open, so it ends with the product.",
+      "previous_state": "Free: unlimited API blueprints and unlimited users with one admin account and hosted documentation. The paid Standard and Pro plans have taken no new teams since 2021-09-09.",
+      "current_state": "\"Service Change: End-of-Life (EOL) for Apiary Cloud Service effective October 31, 2026. Date Announced: Oct 28, 2025 Date in Effect: Oct 31, 2026\"",
+      "impact": "high",
+      "source_url": "https://docs.oracle.com/en-us/iaas/Content/servicechanges.htm#oracle-apiary",
       "category": "API Development",
       "alternatives": [],
       "recorded_date": "2026-04-13",
-      "date_source": "hand_written",
       "listing_effect": "ends"
     },
     {
@@ -11953,6 +11953,20 @@
       "category": "Cloud IaaS",
       "alternatives": [],
       "recorded_date": "2026-09-27"
+    },
+    {
+      "vendor": "apiary.io",
+      "change_type": "record_corrected",
+      "date": "2026-09-27",
+      "summary": "Data correction - Apiary's Free plan was not marked Deprecated on 2026-04-13; that label has been on the paid Standard and Pro plans since September 2021. What ends the Free plan is Oracle's end of life for all of Apiary, announced 2025-10-28 and effective 2026-10-31.",
+      "previous_state": "Recorded 2026-04-13 as product_deprecated for Apiary: \"Free tier marked Deprecated, being phased out\"",
+      "current_state": "product_deprecated for apiary.io, dated 2026-10-31 from Oracle's service-change notice",
+      "impact": "low",
+      "source_url": "https://docs.oracle.com/en-us/iaas/Content/servicechanges.htm#oracle-apiary",
+      "category": "API Development",
+      "alternatives": [],
+      "recorded_date": "2026-09-27",
+      "date_source": "hand_written"
     }
   ]
 }
