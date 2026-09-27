@@ -8307,7 +8307,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "aws-app-runner-migration",
     title: "AWS App Runner Migration Guide: Alternatives with Free Tiers & Pricing (2026)",
-    metaDesc: "AWS App Runner closes to new customers April 30, 2026. Migrate to ECS Express Mode, Google Cloud Run, Railway, Render, Fly.io, or Azure Container Apps. Free tier comparison, pricing, and migration paths.",
+    metaDesc: "AWS App Runner closed to new customers on April 30, 2026. Migrate to ECS Express Mode, Google Cloud Run, Railway, Render, Fly.io, or Azure Container Apps. Free tier comparison, pricing, and migration paths.",
     contextHtml: "",
     tag: "app-runner-shutdown",
     primaryVendor: "AWS",
@@ -19801,7 +19801,7 @@ ${mcpCtaCss()}
   <div class="executive-summary">
     <p><strong>Q2 2026 brings infrastructure cost pressure.</strong> The biggest confirmed change is Hetzner's 30-50% price increase on April 1 — driven by DRAM costs up 171% YoY and AI-fueled chip demand. Google shuts down the Tenor GIF API on June 30. Several Q1-end changes (odrive removal, HCP Terraform migration, Google Developer Program restructuring) take full effect as Q2 begins.</p>
     <p><strong>The broader trend:</strong> Cloud infrastructure costs are rising across Europe (OVHcloud, Netcup also raising prices). Meanwhile, AI API challengers (Groq, Cerebras, OpenRouter) are expanding free tiers to compete with incumbents. The gap between "cheap to prototype" and "expensive to scale" continues to widen.</p>
-    <p><strong>Key action item:</strong> If you're on Hetzner, evaluate alternatives or optimize before April 1. If you're using OpenAI Assistants API, start migration planning — the August shutdown deadline is within the Q2 planning window.</p>
+    <p><strong>Since this preview was published:</strong> Hetzner's price changes took effect on April 1, 2026, for new orders and existing products. Google shut down the Tenor API on June 30, 2026, and OpenAI shut down the Assistants API on August 26, 2026.</p>
   </div>
 
   <h2>Timeline</h2>
@@ -25022,10 +25022,6 @@ function buildTenorAlternativesPage(): string {
   const tenorStability = stabilityMap.of("google-tenor-api");
   const stabilityColor = tenorStability === "volatile" ? "#f85149" : tenorStability === "watch" ? "#d29922" : tenorStability === "improving" ? "#3fb950" : "var(--text-muted)";
 
-  const shutdownDate = new Date("2026-06-30");
-  const today = new Date();
-  const daysLeft = Math.max(0, Math.ceil((shutdownDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)));
-
   const providerTableRows = providers.map(p => {
     const freeColor = p.freeTier.includes("Free") || p.freeTier.includes("free") ? "#3fb950" : "var(--accent)";
     const effortColor = p.migrationEffort.startsWith("Minimal") ? "#3fb950" : p.migrationEffort.startsWith("Moderate") ? "#d29922" : "#f85149";
@@ -25161,22 +25157,22 @@ ${mcpCtaCss()}
   <p class="pub-date">Published ${pubDate} &middot; ${pageDataProvenance("/tenor-alternatives", offers.length)} &middot; ${tenorChanges.length} Tenor pricing change${tenorChanges.length !== 1 ? "s" : ""} tracked</p>
 
   <div class="deadline-banner">
-    <div class="deadline-days">${daysLeft} days</div>
-    <div class="deadline-label">until Tenor API shutdown</div>
-    <div class="deadline-date">June 30, 2026 &middot; <span style="color:${stabilityColor};font-weight:600">Tenor stability: ${tenorStability.toUpperCase()}</span></div>
+    <div class="deadline-days">Shut down</div>
+    <div class="deadline-label">June 30, 2026</div>
+    <div class="deadline-date"><span style="color:${stabilityColor};font-weight:600">Tenor stability: ${tenorStability.toUpperCase()}</span></div>
   </div>
 
   <div class="summary-stats">
-    <div class="stat-card"><div class="stat-number red">${daysLeft}</div><div class="stat-label">Days Remaining</div></div>
+    <div class="stat-card"><div class="stat-number red">Shut down</div><div class="stat-label">June 30, 2026</div></div>
     <div class="stat-card"><div class="stat-number">${providers.length}</div><div class="stat-label">Alternatives Compared</div></div>
     <div class="stat-card"><div class="stat-number green">1</div><div class="stat-label">Drop-In Replacement</div></div>
     <div class="stat-card"><div class="stat-number">3</div><div class="stat-label">Migration Paths</div></div>
   </div>
 
   <div class="executive-summary">
-    <p><strong>What\u2019s happening:</strong> Google is shutting down the Tenor GIF API on <strong>June 30, 2026</strong>. New API key registration was disabled on January 13, 2026. Existing API keys will stop working at the deadline. Only the public GIF search API is affected \u2014 the Tenor website and keyboard app continue to operate.</p>
+    <p><strong>What happened:</strong> Google shut down the Tenor GIF API on <strong>June 30, 2026</strong>. New API key sign-ups stopped on January 13, 2026, and Google says any API request after June 30 fails with an error. Only the API was discontinued: Tenor content stays available in Google's own apps, including Gboard, Tenor.com and the GIF Keyboard app.</p>
     <p><strong>Key insight:</strong> <strong>Klipy is the easiest migration path.</strong> Founded by former Tenor employees, Klipy\u2019s API is near-identical to Tenor\u2019s \u2014 in many cases you can migrate by changing the base URL. Free tier available, actively growing library.</p>
-    <p><strong>Who\u2019s affected:</strong> Discord, WhatsApp, Bluesky, and thousands of apps, bots, and forums that use Tenor for inline GIF search. Discord is testing Giphy and Klipy. WhatsApp has switched to Klipy. Bluesky is actively working on migration (issue #9728).</p>
+    <p><strong>Who was affected:</strong> apps, bots and forums that used the Tenor API for inline GIF search, including Discord, WhatsApp and Bluesky.</p>
   </div>
 
   <div class="toc">
@@ -25194,7 +25190,7 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="timeline">Migration Timeline</h2>
-  <p class="section-intro">Key dates from announcement to shutdown. Act now \u2014 the earlier you migrate, the more time you have to catch integration issues.</p>
+  <p class="section-intro">Key dates from announcement to shutdown.</p>
 
   <div style="overflow-x:auto">
   <table class="pricing-table">
@@ -25218,7 +25214,7 @@ ${mcpCtaCss()}
       </tr>
       <tr>
         <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">Jun 30, 2026</td>
-        <td style="font-size:.85rem"><strong>Complete API shutdown.</strong> All existing API keys stop working. All endpoints return errors.</td>
+        <td style="font-size:.85rem"><strong>Complete API shutdown.</strong> Existing API keys stopped working; Google says every API request now fails with an error.</td>
         <td><span style="color:#f85149;font-size:.8rem;font-weight:600">HIGH</span></td>
       </tr>
       <tr>
@@ -25259,7 +25255,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="context-box">
-    <strong>Giphy API limits:</strong> Giphy\u2019s API requires approval for production use. The beta API key is rate-limited and not intended for production apps. Approval can take days to weeks. If you\u2019re migrating a high-traffic app, start the Giphy approval process early \u2014 don\u2019t wait until close to the June 30 deadline.
+    <strong>Giphy API limits:</strong> Giphy\u2019s API requires approval for production use. The beta API key is rate-limited and not intended for production apps. Approval can take days to weeks. If you\u2019re migrating a high-traffic app, apply for Giphy's production approval before you switch.
   </div>
 
   <h2 id="migration-paths">Migration Paths</h2>
@@ -25345,12 +25341,12 @@ ${mcpCtaCss()}
     </div>
     <div class="diff-card">
       <h3>Thousands of Apps, Bots &amp; Forums</h3>
-      <div class="diff-desc">Any app, Slack bot, Discord bot, forum, or messaging integration that uses the Tenor API for GIF search. Most indie developers haven\u2019t started migration yet \u2014 the June 30 deadline is approaching fast.</div>
+      <div class="diff-desc">Any app, Slack bot, Discord bot, forum, or messaging integration that used the Tenor API for GIF search.</div>
     </div>
   </div>
 
   <div class="context-box">
-    <strong>Why Google is shutting it down:</strong> Google acquired Tenor in 2018 primarily for GIF integration in Google Search, Messages, and Gboard. The public developer API was never a revenue priority. With Google\u2019s broader cost-cutting and focus on core products, maintaining a free GIF API for third-party developers doesn\u2019t align with current strategy.
+    <strong>Why Google shut it down:</strong> Google says the decision is part of "an ongoing effort to focus resources on enhancing our core products."
   </div>
 
   ${tenorChanges.length > 0 ? `<h2 id="tenor-timeline">Tenor Pricing Change Timeline</h2>
@@ -32920,7 +32916,7 @@ ${faqHtml}
 
 function buildAppRunnerMigrationPage(): string {
   const title = "AWS App Runner Migration Guide: Alternatives with Free Tiers & Pricing (2026)";
-  const metaDesc = "AWS App Runner closes to new customers April 30, 2026. Migrate to ECS Express Mode, Google Cloud Run, Railway, Render, Fly.io, or Azure Container Apps. Free tier comparison, pricing, and migration paths.";
+  const metaDesc = "AWS App Runner closed to new customers on April 30, 2026. Migrate to ECS Express Mode, Google Cloud Run, Railway, Render, Fly.io, or Azure Container Apps. Free tier comparison, pricing, and migration paths.";
   const slug = "aws-app-runner-migration";
   const pubDate = "2026-04-10";
 
@@ -32958,9 +32954,6 @@ function buildAppRunnerMigrationPage(): string {
   const awsStability = stabilityMap.of("aws");
   const stabilityColor = awsStability === "volatile" ? "#f85149" : awsStability === "watch" ? "#d29922" : awsStability === "improving" ? "#3fb950" : "var(--text-muted)";
 
-  const deadlineDate = new Date("2026-04-30");
-  const today = new Date();
-  const daysLeft = Math.max(0, Math.ceil((deadlineDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)));
 
   const freeProviderCount = providers.filter(p => p.freeTier.toLowerCase().includes("free")).length;
 
@@ -33009,9 +33002,9 @@ function buildAppRunnerMigrationPage(): string {
   );
 
   const faqs = [
-    { q: "When does AWS App Runner shut down?", a: "AWS App Runner stops accepting new customers on April 30, 2026. Existing customers can continue using the service, but it has entered maintenance mode with no new features planned. AWS has not announced a final shutdown date for existing services, but recommends migrating to Amazon ECS Express Mode." },
+    { q: "When does AWS App Runner shut down?", a: "AWS App Runner closed to new customers on April 30, 2026. Existing customers can keep using it, including creating new services, and AWS says it does not plan new features. AWS has not announced a shutdown date for existing services, and recommends Amazon ECS Express Mode for migrations." },
     { q: "What is ECS Express Mode and how does it replace App Runner?", a: "ECS Express Mode is AWS's recommended migration path. It simplifies Amazon ECS by providing a streamlined container deployment experience similar to App Runner — easier configuration, managed networking, and automatic scaling — while giving you access to the full ECS ecosystem. The main difference is that ECS Express Mode only supports container images (no source code deploy), so you'll need to build your container first." },
-    { q: "Can I still use App Runner if I'm already a customer?", a: "Yes. Existing App Runner services will continue to run after April 30, 2026. You can update existing services and deploy new versions. However, the service is in maintenance mode — no new features will be added, and AWS strongly recommends planning a migration." },
+    { q: "Can I still use App Runner if I'm already a customer?", a: "Yes. AWS says existing customers can continue to use App Runner as normal, including creating new services. AWS does not plan new features and recommends ECS Express Mode when you migrate." },
     { q: "What are the best free alternatives to App Runner?", a: "Google Cloud Run's free tier is 2 million requests/month, 360K vCPU-seconds, and scale to zero. Fly.io provides 3 free shared VMs. Render has a free tier with 750 hours/month (services sleep after inactivity). Azure Container Apps offers 180K vCPU-seconds/month free. For AWS-native options, Elastic Beanstalk has no management fee — you only pay for underlying resources." },
     { q: "Which alternative supports source code deployment like App Runner?", a: "App Runner's source code deployment (push code, AWS builds the container) is available on: Google Cloud Run (Cloud Build + buildpacks), Railway (GitHub auto-deploy), Render (GitHub auto-deploy), Fly.io (Dockerfiles + buildpacks), DigitalOcean App Platform (GitHub/GitLab auto-deploy), Azure Container Apps (source code via buildpacks), Elastic Beanstalk (source bundles + Dockerfiles), and Northflank (buildpacks + Dockerfiles). ECS Express Mode does NOT support source code deploy — you must provide a container image." },
   ];
@@ -33145,20 +33138,20 @@ ${mcpCtaCss()}
   <p class="pub-date">Published ${pubDate} &middot; ${pageDataProvenance("/aws-app-runner-migration", offers.length)} &middot; ${awsChanges.length} AWS pricing change${awsChanges.length !== 1 ? "s" : ""} tracked</p>
 
   <div class="deadline-banner">
-    <div class="deadline-days">${daysLeft} days</div>
-    <div class="deadline-label">until App Runner closes to new customers</div>
-    <div class="deadline-date">April 30, 2026 &middot; <span style="color:${stabilityColor};font-weight:600">AWS stability: ${awsStability.toUpperCase()}</span></div>
+    <div class="deadline-days">Closed</div>
+    <div class="deadline-label">to new customers, April 30, 2026</div>
+    <div class="deadline-date"><span style="color:${stabilityColor};font-weight:600">AWS stability: ${awsStability.toUpperCase()}</span></div>
   </div>
 
   <div class="summary-stats">
-    <div class="stat-card"><div class="stat-number red">${daysLeft}</div><div class="stat-label">Days Remaining</div></div>
+    <div class="stat-card"><div class="stat-number red">Closed</div><div class="stat-label">To new customers since April 30, 2026</div></div>
     <div class="stat-card"><div class="stat-number">${providers.length}</div><div class="stat-label">Alternatives Compared</div></div>
     <div class="stat-card"><div class="stat-number green">${freeProviderCount}</div><div class="stat-label">With Free Tiers</div></div>
     <div class="stat-card"><div class="stat-number">3</div><div class="stat-label">Migration Paths</div></div>
   </div>
 
   <div class="executive-summary">
-    <p><strong>What&rsquo;s happening:</strong> AWS App Runner will <strong>stop accepting new customers on April 30, 2026</strong>. The service has entered maintenance mode with no new features planned. Existing services continue to run, but AWS officially recommends migrating to <strong>Amazon ECS Express Mode</strong>.</p>
+    <p><strong>What happened:</strong> AWS App Runner <strong>stopped accepting new customers on April 30, 2026</strong>. Existing customers can keep using it as normal, including creating new services, and AWS says it does not plan new features. AWS recommends <strong>Amazon ECS Express Mode</strong> for migrating.</p>
     <p><strong>AWS&rsquo;s recommendation:</strong> <strong>ECS Express Mode</strong> provides a simplified ECS experience designed to replace App Runner. It supports auto-scaling, managed networking, and integration with ECR. The key difference: ECS Express Mode requires container images — it does not support App Runner&rsquo;s source code deployment.</p>
     <p><strong>Free alternatives exist:</strong> If you want to leave AWS, <strong>Google Cloud Run</strong> (2M requests/mo free, scale to zero), <strong>Fly.io</strong> (3 free VMs), and <strong>Render</strong> (free tier with 750 hrs/mo) all offer container deployment with free tiers and source code deployment support.</p>
   </div>
@@ -33194,7 +33187,7 @@ ${mcpCtaCss()}
     <tbody>
       <tr>
         <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">Apr 2026</td>
-        <td style="font-size:.85rem">AWS announces App Runner will stop accepting new customers. Service enters maintenance mode. ECS Express Mode recommended as replacement.</td>
+        <td style="font-size:.85rem">AWS announces that App Runner closes to new customers on April 30, 2026, with no new features planned, and recommends ECS Express Mode.</td>
         <td><span style="color:#f85149;font-size:.8rem;font-weight:600">HIGH</span></td>
       </tr>
       <tr>

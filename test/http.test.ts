@@ -5560,7 +5560,7 @@ describe("shutdown tracker page", () => {
     assert.ok(html.includes("canonical"), "Should have canonical link");
     assert.ok(html.includes("global-nav"), "Should have global nav");
     assert.ok(html.includes("April 30, 2026"), "Should show deadline date");
-    assert.ok(html.includes("days"), "Should show days remaining");
+    assert.ok(html.includes('<div class="deadline-days">Closed</div>'), "Should show that App Runner closed to new customers");
     assert.ok(html.includes("ECS Express Mode"), "Should list ECS Express Mode");
     assert.ok(html.includes("Google Cloud Run"), "Should list Cloud Run");
     assert.ok(html.includes("Railway"), "Should list Railway");
@@ -5592,7 +5592,7 @@ describe("shutdown tracker page", () => {
     assert.ok(html.includes("canonical"), "Should have canonical link");
     assert.ok(html.includes("global-nav"), "Should have global nav");
     assert.ok(html.includes("June 30, 2026"), "Should show shutdown date");
-    assert.ok(html.includes("days"), "Should show days remaining");
+    assert.ok(html.includes('<div class="deadline-days">Shut down</div>'), "Should show that the Tenor API shut down");
     assert.ok(html.includes("Klipy"), "Should list Klipy as alternative");
     assert.ok(html.includes("Giphy"), "Should list Giphy as alternative");
     assert.ok(html.includes("Imgur"), "Should list Imgur as alternative");
