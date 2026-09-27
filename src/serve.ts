@@ -49088,10 +49088,10 @@ ${altHtml}
   }
 
   const countedAll = trackedChanges(allChanges);
-  const countable = trackedChanges(sorted);
+  const countable = changesTheVendorMade(trackedChanges(sorted));
   const undatedCounted = trackedChanges(undatedChanges).length;
   const upcomingCount = countable.filter(c => c.date >= today).length;
-  const removedCount = countedAll.filter(endsAFreeTier).length;
+  const removedCount = changesTheVendorMade(countedAll).filter(endsAFreeTier).length;
   const thisMonth = today.slice(0, 7);
   const thisMonthCount = countable.filter(c => c.date.slice(0, 7) === thisMonth).length;
 
@@ -49515,7 +49515,7 @@ function buildChangesPage(): string {
   const { dated: eventDated, discovered: undatedChanges } = partitionByDateProvenance(allChanges);
   const today = new Date().toISOString().slice(0, 10);
   const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
-  const last30DaysCount = trackedChanges(eventDated).filter(c => c.date >= thirtyDaysAgo).length;
+  const last30DaysCount = changesTheVendorMade(trackedChanges(eventDated)).filter(c => c.date >= thirtyDaysAgo).length;
   const undatedCounted = trackedChanges(undatedChanges).length;
 
   const sorted = [...eventDated].sort((a, b) => b.date.localeCompare(a.date));
@@ -49573,8 +49573,8 @@ ${altHtml}
       </div>`;
   }
 
-  const upcomingCount = trackedChanges(sorted).filter(c => c.date >= today).length;
-  const removedCount = counted.filter(endsAFreeTier).length;
+  const upcomingCount = changesTheVendorMade(trackedChanges(sorted)).filter(c => c.date >= today).length;
+  const removedCount = changesTheVendorMade(counted).filter(endsAFreeTier).length;
   const entriesListed = sorted.length + undatedSorted.length;
 
   const monthsHtml = Array.from(byMonth.entries()).map(([month, changes]) => {

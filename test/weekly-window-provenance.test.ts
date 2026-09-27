@@ -575,7 +575,7 @@ describe("every weekly surface reports the same week", () => {
     const base = `http://127.0.0.1:${serverPort}`;
     const changesPage = await (await fetch(`${base}/changes`)).text();
     const thirtyDaysAgo = new Date(Date.now() - 30 * 86400000).toISOString().slice(0, 10);
-    const expected = changesInWindow(publishedChanges as never[], { start: thirtyDaysAgo }).dated.length;
+    const expected = changesInWindow(vendorChangesStillInForce(publishedChanges) as never[], { start: thirtyDaysAgo }).dated.length;
     const rendered = changesPage.match(/<div class="stat-value">(\d+)<\/div>\s*<div class="stat-label">Last 30 Days<\/div>/);
     assert.ok(rendered, "/changes should publish a Last 30 Days count");
     assert.strictEqual(parseInt(rendered![1], 10), expected);
