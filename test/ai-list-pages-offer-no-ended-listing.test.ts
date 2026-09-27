@@ -28,6 +28,24 @@ type Offer = { vendor: string; tier: string; category: string; description?: str
 type Catalogue = { offers: Offer[] };
 
 const shipped: Catalogue = JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf8"));
+const shippedChanges: Record<string, unknown>[] = JSON.parse(readFileSync(path.join(REPO, "data", "deal_changes.json"), "utf8")).changes;
+
+const aRecordThatEndsTheProduct = (vendor: string): Record<string, unknown> => ({
+  vendor,
+  change_type: "product_deprecated",
+  listing_effect: "ends",
+  date: "2026-01-15",
+  discontinued_date: "2026-01-15",
+  summary: `${vendor} shut down the product we list on 2026-01-15.`,
+  previous_state: "The product is available.",
+  current_state: "The product is shut down.",
+  impact: "high",
+  source_url: "https://example.com/shutdown",
+  category: "AI / ML",
+  alternatives: [],
+  recorded_date: "2026-01-20",
+  date_source: "hand_written",
+});
 
 function endedSlugs(catalogue: Catalogue): Map<string, string> {
   const ended = new Map<string, string>();
@@ -124,13 +142,22 @@ function findingsOn(page: string, html: string, ended: Map<string, string>): str
   return found;
 }
 
-async function servePages(catalogue: Catalogue): Promise<Map<string, string>> {
+async function servePages(catalogue: Catalogue, changes?: Record<string, unknown>[]): Promise<Map<string, string>> {
   const dir = mkdtempSync(path.join(tmpdir(), "ai-list-pages-"));
   const indexPath = path.join(dir, "index.json");
   writeFileSync(indexPath, JSON.stringify(catalogue));
+  const changesPath = path.join(dir, "changes.json");
+  if (changes) writeFileSync(changesPath, JSON.stringify({ changes }));
   const proc: ChildProcess = spawn("node", [path.join(REPO, "dist", "serve.js")], {
     stdio: ["pipe", "pipe", "pipe"],
-    env: { ...process.env, PORT: "0", BASE_URL: "http://localhost", TZ: "UTC", AGENTDEALS_INDEX_PATH: indexPath },
+    env: {
+      ...process.env,
+      PORT: "0",
+      BASE_URL: "http://localhost",
+      TZ: "UTC",
+      AGENTDEALS_INDEX_PATH: indexPath,
+      ...(changes ? { AGENTDEALS_CHANGES_PATH: changesPath } : {}),
+    },
   });
   try {
     const base = await new Promise<string>((resolve, reject) => {
@@ -164,6 +191,7 @@ describe("the AI list pages offer no listing whose tier has ended or whose vendo
   const ended = endedSlugs(shipped);
   let shippedPages = new Map<string, string>();
   let subject: Card | null = null;
+  let gateSubject: Card | null = null;
   let rowSubject: string | null = null;
   let subjectRetired = new Map<string, string>();
   let endedWithTheSubject = new Map<string, string>();
@@ -171,25 +199,19 @@ describe("the AI list pages offer no listing whose tier has ended or whose vendo
   before(async () => {
     shippedPages = await servePages(shipped);
     const html = shippedPages.get("/ai-ml-alternatives")!;
-    subject = cardsOn(html).find((card) => !ended.has(card.slug) && !CATCH_ALL_HEADINGS["/ai-ml-alternatives"].includes(card.heading)) ?? null;
-    assert.ok(subject, "no current listing sits in a named section of /ai-ml-alternatives");
-    rowSubject = rowSlugsOn(shippedPages.get("/vector-database-pricing")!).find((slug) => !ended.has(slug) && slug !== subject!.slug) ?? null;
+    const named = cardsOn(html).filter((card) => !ended.has(card.slug) && !CATCH_ALL_HEADINGS["/ai-ml-alternatives"].includes(card.heading));
+    [subject = null, gateSubject = null] = named;
+    assert.ok(subject && gateSubject, "fewer than two current listings sit in a named section of /ai-ml-alternatives");
+    rowSubject = rowSlugsOn(shippedPages.get("/vector-database-pricing")!).find((slug) => !ended.has(slug) && slug !== subject!.slug && slug !== gateSubject!.slug) ?? null;
     assert.ok(rowSubject, "no current listing has a row on /vector-database-pricing");
     const retiring = new Set([subject!.slug, rowSubject!]);
     const retired: Catalogue = {
       ...shipped,
       offers: shipped.offers.map((o) => (retiring.has(toSlug(o.vendor)) ? { ...o, tier: "Retired" } : o)),
     };
-    endedWithTheSubject = endedSlugs(retired);
-    subjectRetired = await servePages(retired);
-  });
-
-  it("reads an ended population from the catalogue's tiers and gates, including a gate the tier does not state", () => {
-    assert.ok(ended.size > 0, "no listing's tier or gate says it has ended, so nothing below is exercised");
-    const gatedOnly = shipped.offers.filter(
-      (o) => !offerRetired(o) && GATES_THAT_END_A_LISTING.has(gateForOffer(o)?.code ?? ""),
-    );
-    assert.ok(gatedOnly.length > 0, "no listing is ended by its gate alone, so the gate half of the rule is not exercised");
+    const gateVendor = shipped.offers.find((o) => toSlug(o.vendor) === gateSubject!.slug)!.vendor;
+    endedWithTheSubject = new Map([...endedSlugs(retired), [gateSubject!.slug, gateVendor]]);
+    subjectRetired = await servePages(retired, [...shippedChanges, aRecordThatEndsTheProduct(gateVendor)]);
   });
 
   it("lists an ended listing only in a catch-all section, on a card that says it has ended, and never in a list of options", () => {
@@ -197,7 +219,7 @@ describe("the AI list pages offer no listing whose tier has ended or whose vendo
     assert.deepStrictEqual(found, []);
   });
 
-  it("moves a listing out of its named section by rule once its tier ends, rather than by its name", () => {
+  it("moves a listing out of its named section by rule once its tier ends or a record discontinues it, rather than by its name", () => {
     assert.ok(subject);
     assert.ok(endedWithTheSubject.has(subject!.slug) && endedWithTheSubject.has(rowSubject!));
     assert.ok(rowSlugsOn(subjectRetired.get("/vector-database-pricing")!).includes(rowSubject!), `${rowSubject} loses its row on /vector-database-pricing rather than being marked`);
@@ -206,5 +228,8 @@ describe("the AI list pages offer no listing whose tier has ended or whose vendo
     const moved = cardsOn(subjectRetired.get("/ai-ml-alternatives")!).filter((card) => card.slug === subject!.slug);
     assert.ok(moved.length > 0, `${subject!.slug} disappears from /ai-ml-alternatives rather than moving to its catch-all`);
     for (const card of moved) assert.strictEqual(card.label, "Retired");
+    const discontinued = cardsOn(subjectRetired.get("/ai-ml-alternatives")!).filter((card) => card.slug === gateSubject!.slug);
+    assert.ok(discontinued.length > 0, `${gateSubject!.slug} disappears from /ai-ml-alternatives rather than moving to its catch-all`);
+    for (const card of discontinued) assert.strictEqual(card.label, "Discontinued");
   });
 });
