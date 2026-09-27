@@ -80,7 +80,7 @@ import { clauseNaming, quantitiesNotIn } from "./quoted-figures.js";
 import { statesNoFreeTier } from "./retired-terms.js";
 import { createRegistrationLimiter, rateLimitHeaders } from "./rate-limit.js";
 import { offerForSlug, vendorRates, cheapestRate, dearestRate, spanOfRates, formatRate, formatRateSpan, monthlyTokenCost, formatDollars, type ModelRate } from "./model-rates.js";
-import { DECLARED_FIGURE_READS, FRONTIER_PRICES_READ_ON, READ_DATES_THAT_ARE_NOT_FIGURE_READS, STALE_FACT_PAGES_BASELINE, TABLE_STALENESS_DISCLOSURES, declaredFigureReadsFor, factsOutdatedBy, linkifyVerdictBlocks, newestChangeBySlug, overdueReport, pageCompiledClause, pageDataProvenance, pageDateModified, pageFigureSource, tabulatedVendorSlots, tabulatedVendors, utcToday, verdictsOutdatedBy } from "./page-reviews.js";
+import { DECLARED_FIGURE_READS, READ_DATES_THAT_ARE_NOT_FIGURE_READS, STALE_FACT_PAGES_BASELINE, TABLE_STALENESS_DISCLOSURES, declaredFigureReadsFor, factsOutdatedBy, linkifyVerdictBlocks, newestChangeBySlug, overdueReport, pageCompiledClause, pageDataProvenance, pageDateModified, pageFigureSource, tabulatedVendorSlots, tabulatedVendors, utcToday, verdictsOutdatedBy } from "./page-reviews.js";
 import { faqPageJsonLd, type FaqItem } from "./faq-provenance.js";
 import {
   GENEROSITY_JSON_TOKEN,
@@ -10192,6 +10192,24 @@ function buildAiFreeTiersPage(): string {
     })),
   };
 
+  const llmInferenceProviders: Array<{ slug: string; name: string; speed: string; fast?: boolean }> = [
+    { slug: "groq", name: "Groq", speed: "Ultra-fast (LPU)", fast: true },
+    { slug: "cerebras", name: "Cerebras", speed: "Ultra-fast (WSE)", fast: true },
+    { slug: "mistral-ai", name: "Mistral AI", speed: "Fast" },
+    { slug: "openrouter", name: "OpenRouter", speed: "Varies by model" },
+    { slug: "cohere", name: "Cohere", speed: "Standard" },
+    { slug: "google-gemini-api", name: "Google Gemini", speed: "Fast" },
+    { slug: "openai", name: "OpenAI", speed: "Standard" },
+    { slug: "cloudflare-workers-ai", name: "Cloudflare Workers AI", speed: "Edge (low latency)" },
+    { slug: "hugging-face", name: "Hugging Face", speed: "Varies" },
+  ];
+  const llmInferenceRows = llmInferenceProviders.map(p => `<tr>
+        <td style="font-weight:600">${handwrittenVendorLinkHtml(p.slug, p.name, ' style="color:var(--text)"')}</td>
+        <td style="font-size:.85rem">${listingTermsCellHtml(p.slug)}</td>
+        <td style="font-family:var(--mono);font-size:.8rem">${listingCells(p.slug).rateCell}</td>
+        <td${p.fast ? ' style="color:#3fb950"' : ""}>${escHtmlServer(p.speed)}</td>
+      </tr>`).join("\n      ");
+
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10273,72 +10291,19 @@ ${buildCards(vectorDbs)}
 ${buildCards(mlPlatforms)}
 
   <h2>LLM Inference Comparison</h2>
-  <p style="color:var(--text-muted);margin-bottom:1rem">Top free LLM inference APIs compared. Rate limits as of March 2026; the OpenAI and OpenRouter rows were read on 2026-09-27.</p>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Top free LLM inference APIs compared.</p>
   <div style="overflow-x:auto">
-  <table class="compare-table">
+  <table class="compare-table" data-figures="index">
     <thead>
       <tr>
         <th>Provider</th>
-        <th>Free Tier Limit</th>
-        <th>Models</th>
+        <th>Free Tier</th>
+        <th>Paid Rate</th>
         <th>Speed</th>
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td style="font-weight:600"><a href="/vendor/groq" style="color:var(--text)">Groq</a></td>
-        <td>~30 RPM</td>
-        <td>gpt-oss-120b, gpt-oss-20b, Qwen3.8 27B</td>
-        <td style="color:#3fb950">Ultra-fast (LPU)</td>
-      </tr>
-      <tr>
-        <td style="font-weight:600"><a href="/vendor/cerebras" style="color:var(--text)">Cerebras</a></td>
-        <td>1M tokens/day, 30 RPM</td>
-        <td>Llama 3.3, Qwen 2.5</td>
-        <td style="color:#3fb950">Ultra-fast (WSE)</td>
-      </tr>
-      <tr>
-        <td style="font-weight:600"><a href="/vendor/mistral-ai" style="color:var(--text)">Mistral AI</a></td>
-        <td>$10/month in API credits</td>
-        <td>Mistral Large, Codestral, Pixtral</td>
-        <td>Fast</td>
-      </tr>
-      <tr>
-        <td style="font-weight:600"><a href="/vendor/openrouter" style="color:var(--text)">OpenRouter</a></td>
-        <td>25+ free models, 20 RPM, 50 req/day</td>
-        <td>Qwen3.8 27B, Gemma 4 31B, Nemotron 3 Ultra</td>
-        <td>Varies by model</td>
-      </tr>
-      <tr>
-        <td style="font-weight:600"><a href="/vendor/cohere" style="color:var(--text)">Cohere</a></td>
-        <td>1,000 calls/month</td>
-        <td>Command R+, Embed, Rerank</td>
-        <td>Standard</td>
-      </tr>
-      <tr>
-        <td style="font-weight:600"><a href="/vendor/google-gemini-api" style="color:var(--text)">Google Gemini</a></td>
-        <td style="color:#d29922">Cut on 2025-12-06</td>
-        <td>Gemini 3.x Flash and Flash-Lite</td>
-        <td>Fast</td>
-      </tr>
-      <tr>
-        <td style="font-weight:600"><a href="/vendor/openai" style="color:var(--text)">OpenAI</a></td>
-        <td style="color:#f85149">Moderation model only (250 RPM); no GPT model priced free</td>
-        <td>omni-moderation-latest</td>
-        <td>Standard</td>
-      </tr>
-      <tr>
-        <td style="font-weight:600"><a href="/vendor/cloudflare-workers-ai" style="color:var(--text)">Cloudflare Workers AI</a></td>
-        <td>10,000 neurons/day</td>
-        <td>Llama, Mistral, Stable Diffusion</td>
-        <td>Edge (low latency)</td>
-      </tr>
-      <tr>
-        <td style="font-weight:600"><a href="/vendor/hugging-face" style="color:var(--text)">Hugging Face</a></td>
-        <td>$0.10/month credits</td>
-        <td>200+ via Inference Providers</td>
-        <td>Varies</td>
-      </tr>
+      ${llmInferenceRows}
     </tbody>
   </table>
   </div>
@@ -14687,6 +14652,27 @@ function buildFreeLlmApisPage(): string {
       </div>`;
   }).join("\n");
 
+  const rateLimitTableProviders: Array<{ slug: string; name: string; type: string }> = [
+    { slug: "groq", name: "Groq", type: "Inference" },
+    { slug: "cerebras", name: "Cerebras", type: "Inference" },
+    { slug: "mistral-ai", name: "Mistral AI", type: "Provider" },
+    { slug: "openrouter", name: "OpenRouter", type: "Gateway" },
+    { slug: "github-models", name: "GitHub Models", type: "Retired" },
+    { slug: "google-gemini-api", name: "Google Gemini API", type: "Provider" },
+    { slug: "nvidia-nim", name: "NVIDIA NIM", type: "Inference" },
+    { slug: "cloudflare-workers-ai", name: "Cloudflare Workers AI", type: "Inference" },
+    { slug: "openai", name: "OpenAI", type: "Provider" },
+    { slug: "anthropic-api", name: "Anthropic API", type: "Provider" },
+    { slug: "hugging-face", name: "Hugging Face", type: "Platform" },
+    { slug: "xai", name: "xAI", type: "Provider" },
+  ];
+  const rateLimitTableRows = rateLimitTableProviders.map(p => `<tr>
+        <td style="font-weight:600">${handwrittenVendorLinkHtml(p.slug, p.name, ' style="color:var(--text)"')}</td>
+        <td>${escHtmlServer(p.type)}</td>
+        <td style="font-size:.85rem">${listingTermsCellHtml(p.slug)}</td>
+        <td style="font-family:var(--mono);font-size:.8rem">${listingCells(p.slug).rateCell}</td>
+      </tr>`).join("\n      ");
+
   const llmChangeVendors = ["OpenAI", "Anthropic", "Google Gemini", "Mistral", "Groq", "Cerebras", "Cohere", "xAI"];
   const llmChanges = dealChanges.filter(c => llmChangeVendors.some(v => c.vendor.includes(v)));
   const changesHtml = llmChanges.length > 0 ? `
@@ -14801,114 +14787,17 @@ ${buildCards(aiGateways)}
   <h2>Free LLM API Rate Limit Comparison</h2>
   <p style="color:var(--text-muted);margin-bottom:1rem">The data developers actually need \u2014 exact rate limits, token quotas, and model availability for every free LLM API tier.</p>
   <div style="overflow-x:auto">
-  <table class="compare-table">
+  <table class="compare-table" data-figures="index">
     <thead>
       <tr>
         <th>Provider</th>
         <th>Type</th>
-        <th>Rate Limit</th>
-        <th>Token/Volume Quota</th>
-        <th>Top Models</th>
-        <th>Best For</th>
+        <th>Free Tier</th>
+        <th>Paid Rate</th>
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td style="font-weight:600"><a href="/vendor/groq" style="color:var(--text)">Groq</a></td>
-        <td>Inference</td>
-        <td>~30 RPM</td>
-        <td>Generous daily</td>
-        <td>gpt-oss-120b, gpt-oss-20b, Qwen3.8 27B, Whisper</td>
-        <td>Fastest free inference (LPU)</td>
-      </tr>
-      <tr>
-        <td style="font-weight:600"><a href="/vendor/cerebras" style="color:var(--text)">Cerebras</a></td>
-        <td>Inference</td>
-        <td>10\u201330 RPM</td>
-        <td>1M tokens/day</td>
-        <td>Llama 3.1 8B, Qwen 3 235B</td>
-        <td>Highest free daily token quota</td>
-      </tr>
-      <tr>
-        <td style="font-weight:600"><a href="/vendor/mistral-ai" style="color:var(--text)">Mistral AI</a></td>
-        <td>Provider</td>
-        <td>Not published</td>
-        <td>$10/month in API credits</td>
-        <td>Large, Codestral, Pixtral</td>
-        <td>Free plan includes monthly API credits.</td>
-      </tr>
-      <tr>
-        <td style="font-weight:600"><a href="/vendor/openrouter" style="color:var(--text)">OpenRouter</a></td>
-        <td>Gateway</td>
-        <td>20 RPM (free models)</td>
-        <td>25+ free models; 50 req/day, 1,000 after buying $10 of credits</td>
-        <td>Qwen3.8 27B, Gemma 4 31B, Nemotron 3 Ultra</td>
-        <td>Multi-model router, one API key</td>
-      </tr>
-      <tr>
-        <td style="font-weight:600"><a href="/vendor/github-models" style="color:var(--text)">GitHub Models</a></td>
-        <td>Inference</td>
-        <td>10\u201315 RPM</td>
-        <td>50\u2013150 req/day</td>
-        <td>100+ models, GPT-4o, Llama</td>
-        <td>Widest model selection free</td>
-      </tr>
-      <tr>
-        <td style="font-weight:600"><a href="/vendor/google-gemini-api" style="color:var(--text)">Google Gemini API</a></td>
-        <td>Provider</td>
-        <td>Shown per project in AI Studio</td>
-        <td>Reduced (late 2025)</td>
-        <td>Flash, Flash-Lite, 1M context</td>
-        <td>Longest context window (1M tokens)</td>
-      </tr>
-      <tr>
-        <td style="font-weight:600"><a href="/vendor/nvidia-nim" style="color:var(--text)">NVIDIA NIM</a></td>
-        <td>Inference</td>
-        <td>Up to 40 RPM</td>
-        <td>Models marked Free Endpoint</td>
-        <td>Kimi K3, DeepSeek V4.1 Flash, Nemotron</td>
-        <td>Testing and evaluation only, not production</td>
-      </tr>
-      <tr>
-        <td style="font-weight:600"><a href="/vendor/cloudflare-workers-ai" style="color:var(--text)">Cloudflare Workers AI</a></td>
-        <td>Inference</td>
-        <td>\u2014</td>
-        <td>10K neurons/day</td>
-        <td>Text gen, translation, STT</td>
-        <td>Edge inference, no cold starts</td>
-      </tr>
-      <tr>
-        <td style="font-weight:600"><a href="/vendor/openai" style="color:var(--text)">OpenAI</a></td>
-        <td>Provider</td>
-        <td>250 RPM (moderation, Free tier)</td>
-        <td>Moderation model only; no GPT model priced free</td>
-        <td>omni-moderation-latest (free); GPT-6 Astra (paid)</td>
-        <td>Content moderation (free model)</td>
-      </tr>
-      <tr>
-        <td style="font-weight:600"><a href="/vendor/anthropic-api" style="color:var(--text)">Anthropic API</a></td>
-        <td>Provider</td>
-        <td>Pay-as-you-go</td>
-        <td>Small free credits for new users</td>
-        <td>Claude Fable 5.1, Opus 5.5, Sonnet 5</td>
-        <td>Demanding reasoning, long-horizon agentic work (Fable 5.1)</td>
-      </tr>
-      <tr>
-        <td style="font-weight:600"><a href="/vendor/hugging-face" style="color:var(--text)">Hugging Face</a></td>
-        <td>Platform</td>
-        <td>Varies</td>
-        <td>$0.10/mo credits</td>
-        <td>200+ models via providers</td>
-        <td>Model hub, community, hosting</td>
-      </tr>
-      <tr>
-        <td style="font-weight:600"><a href="/vendor/xai" style="color:var(--text)">xAI</a></td>
-        <td>Provider</td>
-        <td>Pay-as-you-go</td>
-        <td>None; billed per token</td>
-        <td>grok-4.7, grok-4.3, grok-build-0.1</td>
-        <td>Testing models in the free Console Playground</td>
-      </tr>
+      ${rateLimitTableRows}
     </tbody>
   </table>
   </div>
@@ -22831,14 +22720,14 @@ function buildGeminiApiPricing2026Page(): string {
   const spendCapChange = dealChanges.find(c => c.vendor === "Google Gemini API" && c.change_type === "restriction");
 
   const llmProviders = [
-    { name: "Google Gemini API", freeLimit: "Shown per project in AI Studio", context: "1M tokens", models: "3.x Flash and Flash-Lite (free); 3.1 Pro Preview (paid-only)", notes: "Spend caps enforced April 1. 3.1 Pro paid-only. Prepaid billing for new users." },
-    { name: "Anthropic Claude API", freeLimit: "Small free credit for new users", context: "1M tokens", models: "Fable 5.1, Opus 5.5, Sonnet 5, Haiku 4.5", notes: "New users receive a small amount of free credits to test the API. $10/$50 per MTok (Fable 5.1), $4/$20 (Opus 5.5). Batch API at 50% off." },
-    { name: "OpenAI API", freeLimit: "None (GPT models are paid)", context: "128K tokens", models: "All GPT models paid", notes: "No GPT model is priced free; the moderation model omni-moderation-latest is free. Tier 1 requires $5 paid." },
-    { name: "Groq", freeLimit: "30 RPM; 1K requests and 200K tokens/day per model", context: "128K tokens", models: "gpt-oss-120b, gpt-oss-20b, Qwen3.8 27B, Whisper", notes: "Ultra-fast LPU inference. Most generous free RPM. No credit card needed." },
-    { name: "Mistral AI", freeLimit: "$10/month in API credits", context: "128K tokens", models: "Large, Codestral, Pixtral", notes: "Free plan includes monthly API credits." },
-    { name: "OpenRouter", freeLimit: "20 RPM, 50 req/day, 25+ free models", context: "Varies by model", models: "Qwen3.8 27B, Gemma 4 31B, Nemotron 3 Ultra", notes: "One API key for many models. 1,000 free-model requests a day after buying $10 of credits." },
-    { name: "Cerebras", freeLimit: "10-30 RPM, 1M tokens/day", context: "128K tokens", models: "Llama 3.1 8B, Qwen 3 235B, GPT-OSS 120B", notes: "Fastest inference speeds. 1M tokens/day is very generous." },
-    { name: "DeepSeek", freeLimit: "Pay-as-you-go, very low pricing", context: "1M tokens", models: "deepseek-flash (V4.1-Flash), deepseek-v4-pro", notes: "$0.30/$1.20 per MTok for deepseek-flash at peak hours, half off-peak." },
+    { name: "Google Gemini API", slug: "google-gemini-api" },
+    { name: "Anthropic Claude API", slug: "anthropic-api" },
+    { name: "OpenAI API", slug: "openai" },
+    { name: "Groq", slug: "groq" },
+    { name: "Mistral AI", slug: "mistral-ai" },
+    { name: "OpenRouter", slug: "openrouter" },
+    { name: "Cerebras", slug: "cerebras" },
+    { name: "DeepSeek", slug: "deepseek-api" },
   ];
 
   const servedOn = new Date().toISOString().slice(0, 10);
@@ -23077,16 +22966,15 @@ ${mcpCtaCss()}
   <h2 id="comparison">6. Free LLM API Comparison</h2>
   <p class="section-intro">How Gemini's free tier compares to alternatives.</p>
 
-  <table class="pricing-table">
+  <table class="pricing-table" data-figures="index">
     <thead>
-      <tr><th>Provider</th><th>Free Tier Limits</th><th>Context</th><th>Key Models</th><th>Risk</th></tr>
+      <tr><th>Provider</th><th>Free Tier</th><th>Paid Rate</th><th>Risk</th></tr>
     </thead>
     <tbody>
       ${llmProviders.map(p => `<tr>
-        <td style="font-weight:600">${handwrittenVendorLinkHtml(toSlug(p.name), p.name, ' style="color:var(--text)"')}</td>
-        <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(p.freeLimit)}</td>
-        <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(p.context)}</td>
-        <td style="font-size:.8rem;color:var(--text-muted)">${escHtmlServer(p.models)}</td>
+        <td style="font-weight:600">${handwrittenVendorLinkHtml(p.slug, p.name, ' style="color:var(--text)"')}</td>
+        <td style="font-size:.8rem">${listingTermsCellHtml(p.slug)}</td>
+        <td style="font-family:var(--mono);font-size:.8rem">${listingCells(p.slug).rateCell}</td>
         <td>${servedRatingHtml(p.name)}</td>
       </tr>`).join("\n      ")}
     </tbody>
@@ -24026,36 +23914,71 @@ const RECORD_ENDED_COLOR = "#8b949e";
 const RESPONSES_TOOL_PRICES_URL = "https://developers.openai.com/api/docs/pricing";
 const RESPONSES_TOOL_PRICES_READ = "2026-09-27";
 
-interface ProviderRecordCells {
+interface ListingCells {
   tier: string;
   tierColor: string;
-  stability: string;
-  stabilityColor: string;
   rateCell: string;
   rates: ModelRate[];
   retired: boolean;
 }
 
-function providerRecordCells(slug: string, stabilityMap: StabilityIndex): ProviderRecordCells {
+interface ProviderRecordCells extends ListingCells {
+  stability: string;
+  stabilityColor: string;
+}
+
+function listingCells(slug: string): ListingCells {
   const record = offerForSlug(slug);
   const retired = offerRetired(record);
-  const rates = vendorRates(slug);
+  const rates = record && supersedingChangeFor(record) ? [] : vendorRates(slug);
   const span = formatRateSpan(rates);
-  const stability = stabilityMap.of(slug);
   const pricingLink = record && !retired
     ? `&mdash; <a href="${escHtmlServer(record.url)}" target="_blank" rel="noopener nofollow">vendor pricing</a>`
     : "&mdash;";
   return {
     tier: record ? record.tier : "Not in our index",
     tierColor: retired ? RECORD_ENDED_COLOR : /free/i.test(record?.tier ?? "") ? "#3fb950" : "var(--accent)",
-    stability: retired ? ENDED_BADGE_LABEL : stability,
-    stabilityColor: retired
-      ? RECORD_ENDED_COLOR
-      : stability === "volatile" ? "#f85149" : stability === "watch" ? "#d29922" : stability === "improving" ? "#3fb950" : "var(--text-dim)",
     rateCell: span ? escHtmlServer(`${span} per MTok`) : pricingLink,
     rates,
     retired,
   };
+}
+
+function providerRecordCells(slug: string, stabilityMap: StabilityIndex): ProviderRecordCells {
+  const cells = listingCells(slug);
+  const stability = stabilityMap.of(slug);
+  return {
+    ...cells,
+    stability: cells.retired ? ENDED_BADGE_LABEL : stability,
+    stabilityColor: cells.retired
+      ? RECORD_ENDED_COLOR
+      : stability === "volatile" ? "#f85149" : stability === "watch" ? "#d29922" : stability === "improving" ? "#3fb950" : "var(--text-dim)",
+  };
+}
+
+const LISTING_TERMS_CAP = 240;
+
+function openingWithinCap(text: string, cap: number): string {
+  const sentences = text.trim().split(/(?<=[.!?])\s+/);
+  let opening = sentences[0];
+  for (const next of sentences.slice(1)) {
+    if (opening.length + 1 + next.length > cap) break;
+    opening = `${opening} ${next}`;
+  }
+  return opening;
+}
+
+function listingTermsCellHtml(slug: string): string {
+  const record = offerForSlug(slug);
+  if (!record) return "&mdash;";
+  if (supersedingChangeFor(record)) return storedTermsHtml(record);
+  const whole = record.description.trim();
+  const opening = openingWithinCap(whole, LISTING_TERMS_CAP);
+  const profile = opening.length < whole.length && servedVendorSlug(slug) !== null
+    ? ` <a href="/vendor/${slug}">Full profile</a>`
+    : "";
+  const unconfirmed = reasonWeCannotConfirmFor(record);
+  return escHtmlServer(opening) + profile + (unconfirmed ? unconfirmedTermsSpanHtml(unconfirmed) : "");
 }
 
 function buildOpenaiAssistantsAlternativesPage(): string {
@@ -31930,16 +31853,7 @@ function buildLlmApiPricingPage(): string {
     slug: string;
     category: "frontier" | "inference" | "open-source-host" | "specialized";
     freeTier: string;
-    flagshipModel: string;
-    inputPrice: string;
-    outputPrice: string;
-    contextWindow: string;
-    rateLimit: string;
-    freeDetails: string;
     freeType: "generous" | "limited" | "credits" | "trial" | "pay-as-you-go" | "none";
-    differentiator: string;
-    readOn?: string;
-    readFrom?: string;
   }
 
   const providers: LlmProvider[] = [
@@ -31948,274 +31862,133 @@ function buildLlmApiPricingPage(): string {
       slug: "openai",
       category: "frontier",
       freeTier: "Moderation model only",
-      flagshipModel: "GPT-6 Astra",
-      inputPrice: "$10/M",
-      outputPrice: "$50/M",
-      contextWindow: "1M",
-      rateLimit: "250 RPM, 5,000 RPD (moderation, Free tier)",
-      freeDetails: "One model is priced Free: the moderation model omni-moderation-latest. No GPT model is priced free: GPT-6 Astra at $10/$50 per MTok, GPT-5.6 Sol at $4/$20 (a promotional price, available at least through November 21, 2026), GPT-5.6 Terra at $2/$12 and GPT-5.6 Luna at $0.20/$1.20. GPT-4o remains available at $2.50/$10. Batch and Flex at 50% of standard rates.",
       freeType: "limited",
-      differentiator: "Widest model selection; ecosystem leader with function calling, vision, and structured outputs",
-      readOn: FRONTIER_PRICES_READ_ON,
-      readFrom: "developers.openai.com/api/docs/pricing",
     },
     {
       name: "Anthropic",
       slug: "anthropic-api",
       category: "frontier",
       freeTier: "Small free credits (new users)",
-      flagshipModel: "Claude Fable 5.1",
-      inputPrice: "$10/M",
-      outputPrice: "$50/M",
-      contextWindow: "1M",
-      rateLimit: "Set by usage tier",
-      freeDetails: "New users receive a small amount of free credits to test the API. Fable 5.1: $10/$50 per MTok (input/output). Opus 5.5: $4/$20 per MTok. Sonnet 5: $2/$10 per MTok. Haiku 4.5: $1/$5 per MTok. Batch API at 50% discount. Adaptive thinking on Fable 5.1, Opus 5.5 and Sonnet 5; extended thinking on Haiku 4.5.",
       freeType: "pay-as-you-go",
-      differentiator: "1M-token context on Fable 5.1, Opus 5.5 and Sonnet 5; adaptive thinking; Opus 5.5, Anthropic's suggested starting model, at $4/$20",
-      readOn: FRONTIER_PRICES_READ_ON,
-      readFrom: "platform.claude.com/docs/en/about-claude/pricing",
     },
     {
       name: "Google Gemini",
       slug: "google-gemini-api",
       category: "frontier",
       freeTier: "3.x Flash and Flash-Lite, Gemma 4",
-      flagshipModel: "Gemini 3.8 Flash",
-      inputPrice: "$0.75/M",
-      outputPrice: "$3.75/M",
-      contextWindow: "1M",
-      rateLimit: "Shown per project in AI Studio",
-      freeDetails: "The free tier covers the Gemini 3.x Flash and Flash-Lite models. Google publishes no free-tier limits; AI Studio shows each project's. Since 2026-09-18 Google serves the Gemini 2.5 models only to users who used them before. New projects use 3.5 Flash-Lite or 3.8 Flash. Gemini 3.8 Flash is $0.75/$3.75 per MTok through December 31, 2026 and $1.50/$7.50 from January 1, 2027. Gemini 2.5 Pro stays at $1.25/$10. Gemini 3.1 Pro is in preview at $2/$12 and requires paid billing. Mandatory spend caps enforced since April 1, 2026.",
       freeType: "limited",
-      differentiator: "1M token context window; cheapest frontier input tokens; Flash models genuinely free",
-      readOn: FRONTIER_PRICES_READ_ON,
-      readFrom: "ai.google.dev/gemini-api/docs/pricing",
     },
     {
       name: "Mistral AI",
       slug: "mistral-ai",
       category: "frontier",
       freeTier: "$10/mo in API credits",
-      flagshipModel: "Mistral Medium 3.5",
-      inputPrice: "$1.50/M",
-      outputPrice: "$7.50/M",
-      contextWindow: "256K",
-      rateLimit: "Not published",
-      freeDetails: "Free plan: $10 a month in API credits. Access to the current lineup: Mistral Medium 3.5 at $1.50/$7.50 per MTok, Mistral Large 3 at $0.50/$1.50, Mistral Small 4 at $0.15/$0.60 and Codestral at $0.30/$0.90. Le Chat consumer app included.",
       freeType: "generous",
-      differentiator: "European AI lab; open weights through Mistral Large 3 and the Ministral 3 family; Codestral for code generation",
-      readOn: FRONTIER_PRICES_READ_ON,
-      readFrom: "docs.mistral.ai/inference/pricing",
     },
     {
       name: "Cohere",
       slug: "cohere",
       category: "frontier",
       freeTier: "1K calls/mo",
-      flagshipModel: "Command R+",
-      inputPrice: "$2.50/M",
-      outputPrice: "$10/M",
-      contextWindow: "128K",
-      rateLimit: "1K calls/month",
-      freeDetails: "Trial key: 1,000 API calls/month across all endpoints (Chat, Embed, Rerank). Non-commercial use only. Access to Command R+, Rerank 3.5, Embed 4.",
       freeType: "trial",
-      differentiator: "Best-in-class RAG pipeline (Embed + Rerank + Chat); enterprise-focused; non-commercial free tier",
     },
     {
       name: "xAI (Grok)",
       slug: "xai",
       category: "frontier",
       freeTier: "None (billed per token)",
-      flagshipModel: "grok-4.7",
-      inputPrice: "$2.00/M",
-      outputPrice: "$6.00/M",
-      contextWindow: "500K",
-      rateLimit: "Set by spend tier",
-      freeDetails: "Grok API, pay as you go: sign up at console.x.ai, then load it with credits. grok-4.7 $2.00/$6.00 (per 1M tokens, under 200k prompt tokens). grok-4.3 $1.25/$2.50 (under 200k prompt tokens). grok-build-0.1 $1.00/$2.00 (under 200k prompt tokens). Grok 4.1 Fast was retired on 2026-05-15; its model names now route to grok-4.3 at grok-4.3 rates. The Console Playground is free for testing models before adding billing.",
       freeType: "pay-as-you-go",
-      differentiator: "Free Console Playground for testing before adding billing; 1M-token context on grok-4.3",
     },
     {
       name: "Groq",
       slug: "groq",
       category: "inference",
       freeTier: "30 RPM free",
-      flagshipModel: "gpt-oss-20b",
-      inputPrice: "$0.075/M",
-      outputPrice: "$0.30/M",
-      contextWindow: "128K",
-      rateLimit: "30 RPM, 1K RPD, 200K tok/day per model",
-      freeDetails: "30 RPM, 1,000 requests and 200K tokens a day per model. No credit card required. Custom LPU hardware delivers thousands of tokens/second. Models: gpt-oss-120b, gpt-oss-20b, Qwen3.8 27B, Whisper.",
       freeType: "generous",
-      differentiator: "Fastest inference speed (custom LPU hardware); generous free tier with no credit card",
     },
     {
       name: "Cerebras",
       slug: "cerebras",
       category: "inference",
       freeTier: "1M tok/day",
-      flagshipModel: "Llama 3.1 70B",
-      inputPrice: "$0.60/M",
-      outputPrice: "$0.60/M",
-      contextWindow: "128K",
-      rateLimit: "10-30 RPM, 1M tok/day",
-      freeDetails: "1M tokens/day, 10-30 requests/min. Custom wafer-scale chips for multi-thousand tokens/sec inference. Models: Llama 3.1 8B/70B, Qwen 3 235B, GPT-OSS 120B.",
       freeType: "generous",
-      differentiator: "Wafer-scale chip inference; competitive speeds with Groq; 1M tokens/day free",
     },
     {
       name: "OpenRouter",
       slug: "openrouter",
       category: "inference",
       freeTier: "25+ free models",
-      flagshipModel: "Multi-model gateway",
-      inputPrice: "Varies",
-      outputPrice: "Varies",
-      contextWindow: "Varies",
-      rateLimit: "20 RPM, 50 req/day (free models)",
-      freeDetails: "Free plan: 25+ free models, 4 free providers, 50 requests a day, no BYOK. Free models are capped at 20 requests a minute; accounts that have bought at least $10 of credits get 1,000 free-model requests a day. OpenAI-compatible API. By default, requests are load balanced across providers, prioritizing price. Paid plans reach 500+ models.",
       freeType: "generous",
-      differentiator: "500+ models from 80+ providers through one API; falls back to other providers when one goes down; OpenAI-compatible API",
     },
     {
       name: "NVIDIA NIM",
       slug: "nvidia-nim",
       category: "inference",
       freeTier: "Free endpoints (testing only)",
-      flagshipModel: "Kimi K3",
-      inputPrice: "Free",
-      outputPrice: "Free",
-      contextWindow: "1M",
-      rateLimit: "Up to 40 RPM",
-      freeDetails: "Free inference endpoints on build.nvidia.com: models marked Free Endpoint, including Kimi K3, DeepSeek V4.1 Flash and NVIDIA Nemotron, can be called at no cost. Up to 40 requests per minute; limits may vary by model, and traffic from other users may cause throttling. NVIDIA's API Trial Terms allow free use for testing and evaluation only, not production.",
       freeType: "limited",
-      differentiator: "Free endpoints for prototyping; Kimi K3 and NVIDIA Nemotron can also be downloaded for self-hosted deployment",
     },
     {
       name: "SiliconFlow",
       slug: "siliconflow",
       category: "inference",
       freeTier: "100 req/day + $1",
-      flagshipModel: "DeepSeek-R1",
-      inputPrice: "$0.14/M",
-      outputPrice: "$0.14/M",
-      contextWindow: "64K",
-      rateLimit: "100 req/day",
-      freeDetails: "100 requests/day and $1 free credits. Models: DeepSeek-R1, DeepSeek-V3, QwQ-32B, other open-source models. China-based provider.",
       freeType: "limited",
-      differentiator: "China-based with competitive pricing; strong DeepSeek model support",
     },
     {
       name: "Hugging Face",
       slug: "hugging-face",
       category: "open-source-host",
       freeTier: "$0.10/mo credits",
-      flagshipModel: "200+ models",
-      inputPrice: "Provider-dependent",
-      outputPrice: "Provider-dependent",
-      contextWindow: "Varies",
-      rateLimit: "Varies",
-      freeDetails: "Free users get $0.10 a month of Inference Providers credits (subject to change); Inference Providers serves 200+ models, and extra usage requires a credits purchase. Free accounts get 100GB of private storage and best-effort public storage. By default, requests go to the fastest available partner provider, such as Cerebras, Groq, Together or Replicate.",
       freeType: "limited",
-      differentiator: "3M+ models on the Hub; Inference Providers picks the fastest available provider by default; community ecosystem",
     },
     {
       name: "Replicate",
       slug: "replicate",
       category: "open-source-host",
       freeTier: "Free runs (curated)",
-      flagshipModel: "Llama, Stable Diffusion",
-      inputPrice: "Per-second billing",
-      outputPrice: "Per-second billing",
-      contextWindow: "Varies",
-      rateLimit: "Standard",
-      freeDetails: "Free runs on curated model collection without billing. No credit card required to start. Pay-per-second billing by hardware type (CPU/GPU) after free allowance.",
       freeType: "generous",
-      differentiator: "Run any open-source model; per-second GPU billing; one-click model deployment",
     },
     {
       name: "Baseten",
       slug: "baseten",
       category: "open-source-host",
       freeTier: "Credits for new workspaces",
-      flagshipModel: "Custom deployments",
-      inputPrice: "Per-minute GPU",
-      outputPrice: "Per-minute GPU",
-      contextWindow: "Varies",
-      rateLimit: "Standard",
-      freeDetails: "New workspaces receive credits for testing and deployment; Baseten does not state the amount. Basic plan: $0 per month, pay as you go. Dedicated deployments bill per minute. Model APIs bill per 1M tokens: GLM-5.3 $1.40/$4.40. GLM-5.3-Flash $0.15/$0.50.",
       freeType: "credits",
-      differentiator: "Deploy custom, fine-tuned, and open-source models; Truss, Baseten's open-source standard for packaging and serving models",
     },
     {
       name: "Cloudflare Workers AI",
       slug: "cloudflare-workers-ai",
       category: "open-source-host",
       freeTier: "10K neurons/day",
-      flagshipModel: "Llama, Mistral, SDXL",
-      inputPrice: "Neuron-based",
-      outputPrice: "Neuron-based",
-      contextWindow: "Varies",
-      rateLimit: "10K neurons/day",
-      freeDetails: "10,000 neurons/day free across text generation, image classification, translation, speech-to-text models. Runs on Cloudflare's 300+ edge locations. No cold starts.",
       freeType: "generous",
-      differentiator: "Edge inference on 300+ locations; zero cold starts; bundled with Workers ecosystem",
     },
     {
       name: "DeepSeek",
       slug: "deepseek-api",
       category: "specialized",
       freeTier: "No free tier",
-      flagshipModel: "DeepSeek-V4.1-Flash",
-      inputPrice: "$0.30/M",
-      outputPrice: "$1.20/M",
-      contextWindow: "1M",
-      rateLimit: "Standard",
-      freeDetails: "No free tokens. deepseek-flash (DeepSeek-V4.1-Flash): $0.30/M input, $0.006/M cached input, $1.20/M output. deepseek-v4-pro: $1.32/M input, $0.044/M cached, $3.96/M output. Peak-hour prices; off-peak is half. 1M context on both. China-based.",
       freeType: "pay-as-you-go",
-      differentiator: "1M context on both models; cached input 97-98% cheaper than uncached; off-peak prices half the peak rate",
     },
     {
       name: "GitHub Models",
       slug: "github-models",
       category: "specialized",
       freeTier: "Retired",
-      flagshipModel: "GPT-4o, Llama, Mistral",
-      inputPrice: "Unavailable",
-      outputPrice: "Unavailable",
-      contextWindow: "Varies",
-      rateLimit: "None — the offer was retired",
-      freeDetails: "No free tier — the offer was retired.",
       freeType: "none",
-      differentiator: "Retired — the playground, model catalog, inference API and bring-your-own-key access are no longer available to any customer",
     },
     {
       name: "LLM7.io",
       slug: "llm7-io",
       category: "specialized",
       freeTier: "1M tokens/24h with a free token",
-      flagshipModel: "GLM-5.3-Flash (turbo)",
-      inputPrice: "Free",
-      outputPrice: "Free",
-      contextWindow: "Varies",
-      rateLimit: "40 RPM, 100/hour (free token)",
-      freeDetails: "LLM inference gateway. Without a key: 10 requests a minute, 60 an hour, 500,000 tokens per 24 hours. With a free token from dash.llm7.io: 40 a minute, 100 an hour, 1,000,000 tokens per 24 hours. Free access covers turbo-tier models not marked usage-only, such as GLM-5.3-Flash and codestral-latest. Other models, including all image and speech-to-text models, need Pro ($12/mo) or a paid balance.",
       freeType: "generous",
-      differentiator: "One endpoint for 64 models; turbo-tier models such as GLM-5.3-Flash are free without a key",
     },
     {
-      name: "Ollama",
-      slug: "ollama",
+      name: "Ollama Cloud",
+      slug: "ollama-cloud",
       category: "specialized",
       freeTier: "Free (light usage)",
-      flagshipModel: "Llama, Mistral, Gemma",
-      inputPrice: "Free (self-host)",
-      outputPrice: "Free (self-host)",
-      contextWindow: "Varies",
-      rateLimit: "1 concurrent model",
-      freeDetails: "Free tier for light usage with 1 concurrent model. Ollama Cloud provides hosted API. Local installation runs models on your hardware at zero cost. Models: Llama, Mistral, Gemma, and hundreds more.",
       freeType: "generous",
-      differentiator: "Local-first with optional cloud; run models on your own hardware; largest model library",
     },
   ];
 
@@ -32233,23 +32006,8 @@ function buildLlmApiPricingPage(): string {
     "specialized": "Providers with unique positioning — free tiers, self-hosting, or niche model access.",
   };
 
-  const freeTypeLabels: Record<string, string> = {
-    "generous": "Generous free tier",
-    "limited": "Limited free tier",
-    "credits": "Free credits",
-    "trial": "Trial only",
-    "pay-as-you-go": "Pay-as-you-go",
-    "none": "No free tier",
-  };
-
-  const freeTypeColors: Record<string, string> = {
-    "generous": "#3fb950",
-    "limited": "#d29922",
-    "credits": "#58a6ff",
-    "trial": "#bc8cff",
-    "pay-as-you-go": "#f0883e",
-    "none": "#f85149",
-  };
+  const cellsOf = new Map(providers.map(p => [p.slug, listingCells(p.slug)]));
+  const recordCells = (p: LlmProvider): ListingCells => cellsOf.get(p.slug)!;
 
   const generousCount = providers.filter(p => p.freeType === "generous").length;
   const creditsCount = providers.filter(p => p.freeType === "credits" || p.freeType === "limited" || p.freeType === "trial").length;
@@ -32267,8 +32025,6 @@ function buildLlmApiPricingPage(): string {
   const namedPlainly = (slugs: string[]): string =>
     stillOffered(slugs).map(p => escHtmlServer(p.name)).join(", ");
 
-  const detailOf = (p: LlmProvider): string => detailForEndedOffer(offerForSlug(p.slug), p.freeDetails);
-
   const freeTiersThisPageStandsBehind = "The other free tiers on this page are "
     + stillOffered(["openrouter", "cerebras", "cloudflare-workers-ai", "llm7-io"])
       .map(p => p.name + " (" + p.freeTier + ")")
@@ -32281,37 +32037,34 @@ function buildLlmApiPricingPage(): string {
     : ' ' + handwrittenVendorLinkHtml(thirdChoiceForPrototyping.slug, thirdChoiceForPrototyping.name)
       + ' for ' + escHtmlServer(thirdChoiceForPrototyping.freeTier) + ' without a credit card.';
 
-  const frontierReads = providers.filter(p => p.readOn && p.readFrom);
-  const frontierReadOn = frontierReads.map(p => p.readOn as string).sort()[0] ?? null;
-  const rowsWithNoReadDate = providers.length - frontierReads.length;
-  const frontierReadLine = frontierReadOn === null
-    ? "No row on this table carries a date on which its price was read."
-    : "Frontier prices read from each vendor's own pricing page on " + frontierReadOn + ": "
-      + frontierReads.map(p => p.name + " (" + p.readFrom + ")").join(", ")
-      + ". The other " + rowsWithNoReadDate + " rows carry no read date.";
-
   const pricingTableRows = providers.map(p => {
-    const freeColor = freeTypeColors[p.freeType] || "var(--text-muted)";
+    const cells = recordCells(p);
     return '<tr>' +
       '<td style="font-weight:600">' + handwrittenVendorLinkHtml(p.slug, p.name, ' style="color:var(--text)"') + '</td>' +
-      '<td style="font-family:var(--mono);font-size:.85rem;color:' + freeColor + '">' + escHtmlServer(p.freeTier) + '</td>' +
-      '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(p.flagshipModel) + '</td>' +
-      '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(p.inputPrice) + '</td>' +
-      '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(p.outputPrice) + '</td>' +
-      '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(p.contextWindow) + '</td>' +
+      '<td style="font-family:var(--mono);font-size:.85rem;color:' + cells.tierColor + '">' + escHtmlServer(cells.tier) + '</td>' +
+      '<td style="font-family:var(--mono);font-size:.85rem">' + cells.rateCell + '</td>' +
       '</tr>';
   }).join("\n        ");
+
+  const freeTermsTableRows = providers.map(p => {
+    const cells = recordCells(p);
+    return '      <tr>' +
+      '<td style="font-weight:600">' + handwrittenVendorLinkHtml(p.slug, p.name, ' style="color:var(--text)"') + '</td>' +
+      '<td style="font-family:var(--mono);font-size:.85rem;color:' + cells.tierColor + '">' + escHtmlServer(cells.tier) + '</td>' +
+      '<td style="font-size:.85rem">' + listingTermsCellHtml(p.slug) + '</td>' +
+      '</tr>';
+  }).join("\n");
 
   const categories: Array<"frontier" | "inference" | "open-source-host" | "specialized"> = ["frontier", "inference", "open-source-host", "specialized"];
   const categorySections = categories.map(cat => {
     const catProviders = providers.filter(p => p.category === cat);
     const cards = catProviders.map(p => {
-      const borderColor = freeTypeColors[p.freeType] || "var(--accent)";
-      return '<div class="diff-card" style="border-left-color:' + borderColor + '">' +
+      const cells = recordCells(p);
+      const record = offerForSlug(p.slug);
+      return '<div class="diff-card" style="border-left-color:' + cells.tierColor + '">' +
         '<h3>' + handwrittenVendorLinkHtml(p.slug, p.name, ' style="color:var(--text)"') + ' ' +
-        '<span style="font-size:.75rem;color:var(--text-dim);font-weight:400">' + escHtmlServer(freeTypeLabels[p.freeType]) + '</span></h3>' +
-        '<p class="diff-desc">' + escHtmlServer(detailOf(p)) + '</p>' +
-        '<p class="diff-desc" style="margin-top:.5rem"><strong style="color:var(--text)">Key differentiator:</strong> ' + escHtmlServer(p.differentiator) + '</p>' +
+        '<span style="font-size:.75rem;color:var(--text-dim);font-weight:400">' + escHtmlServer(cells.tier) + '</span></h3>' +
+        '<p class="diff-desc">' + (record ? publishedTermsHtml(record) : "&mdash;") + '</p>' +
         '</div>';
     }).join("\n    ");
     return '<h3 id="cat-' + cat + '">' + escHtmlServer(categoryLabels[cat]) + '</h3>' +
@@ -32464,9 +32217,9 @@ function buildLlmApiPricingPage(): string {
     '  </div>\n' +
     '\n' +
     '  <div class="executive-summary">\n' +
-    '    <p><strong>LLM API pricing, frontier rows read ' + escHtmlServer(frontierReadOn ?? "on no recorded date") + ':</strong> ' + providers.length + ' providers across four categories — frontier labs, inference providers, open-source hosts, and specialized services. OpenAI and Anthropic price their top model identically: GPT-6 Astra and Claude Fable 5.1 are both $10/$50 per M tokens. Gemini 3.8 Flash is $0.75/$3.75 through December 31, 2026 and $1.50/$7.50 after it. Mistral Medium 3.5 is $1.50/$7.50. Google\'s Gemini free tier covers the 3.x Flash and Flash-Lite models; 3.1 Pro Preview is paid-only. DeepSeek\'s deepseek-flash offers 1M context at $0.30/M input at peak and $0.15/M off-peak. Groq and Cerebras offer genuinely free inference at thousands of tokens/second.</p>\n' +
+    '    <p><strong>LLM API pricing:</strong> ' + providers.length + ' providers across four categories — frontier labs, inference providers, open-source hosts, and specialized services. OpenAI and Anthropic price their top model identically: GPT-6 Astra and Claude Fable 5.1 are both $10/$50 per M tokens. Gemini 3.8 Flash is $0.75/$3.75 through December 31, 2026 and $1.50/$7.50 after it. Mistral Medium 3.5 is $1.50/$7.50. Google\'s Gemini free tier covers the 3.x Flash and Flash-Lite models; 3.1 Pro Preview is paid-only. DeepSeek\'s deepseek-flash offers 1M context at $0.30/M input at peak and $0.15/M off-peak. Groq and Cerebras offer genuinely free inference at thousands of tokens/second.</p>\n' +
     '    <p><strong>Key trends:</strong> Inference providers (Groq, Cerebras, OpenRouter) are commoditizing open-source model access — free tiers with no credit card required. xAI retired Grok 4.1 Fast on 2026-05-15; requests to its model names now go to grok-4.3 at $1.25/M input and $2.50/M output (under 200k prompt tokens). The gap between frontier and open-source quality is narrowing, making the price delta harder to justify for many use cases.</p>\n' +
-    '    <p><strong>This guide covers:</strong> pricing tables, provider breakdowns, free tier analysis, cheapest-per-token rankings, pricing gotchas, recent changes, and best-for-use-case recommendations — compiled by hand from vendor pricing pages.</p>\n' +
+    '    <p><strong>This guide covers:</strong> pricing tables, provider breakdowns, free tier analysis, cheapest-per-token rankings, pricing gotchas, recent changes, and best-for-use-case recommendations.</p>\n' +
     '  </div>\n' +
     '\n' +
     '  <div class="highlight-box">\n' +
@@ -32493,18 +32246,15 @@ function buildLlmApiPricingPage(): string {
     '  </div>\n' +
     '\n' +
     '  <h2 id="pricing-table">Pricing Comparison Table</h2>\n' +
-    '  <p class="section-intro">' + escHtmlServer(frontierReadLine) + ' Per-million-token pricing for flagship models. Hover rows to highlight. Click provider names for full vendor profiles.</p>\n' +
+    '  <p class="section-intro">Hover rows to highlight. Click provider names for full vendor profiles.</p>\n' +
     '\n' +
     '  <div style="overflow-x:auto">\n' +
-    '  <table class="pricing-table">\n' +
+    '  <table class="pricing-table" data-figures="index">\n' +
     '    <thead>\n' +
     '      <tr>\n' +
     '        <th>Provider</th>\n' +
-    '        <th>Free Tier</th>\n' +
-    '        <th>Flagship Model</th>\n' +
-    '        <th>Input /M</th>\n' +
-    '        <th>Output /M</th>\n' +
-    '        <th>Context</th>\n' +
+    '        <th>Recorded Tier</th>\n' +
+    '        <th>Paid Rate</th>\n' +
     '      </tr>\n' +
     '    </thead>\n' +
     '    <tbody>\n' +
@@ -32526,32 +32276,16 @@ function buildLlmApiPricingPage(): string {
     '  <p class="section-intro">Free tiers range from genuinely production-viable (' + namedPlainly(["groq", "cerebras"]) + ') to token giveaways that run out in hours. Here\'s the honest breakdown.</p>\n' +
     '\n' +
     '  <div style="overflow-x:auto">\n' +
-    '  <table class="pricing-table">\n' +
+    '  <table class="pricing-table" data-figures="index">\n' +
     '    <thead>\n' +
     '      <tr>\n' +
     '        <th>Provider</th>\n' +
-    '        <th>Free Tier Type</th>\n' +
-    '        <th>Rate Limit</th>\n' +
-    '        <th>Context Window</th>\n' +
-    '        <th>When You Hit the Wall</th>\n' +
+    '        <th>Recorded Tier</th>\n' +
+    '        <th>Free Tier</th>\n' +
     '      </tr>\n' +
     '    </thead>\n' +
     '    <tbody>\n' +
-    providers.map(p => {
-      const wallDesc = p.freeType === "generous" ? "Weeks to months of real usage" :
-        p.freeType === "credits" ? "When credits run out" :
-        p.freeType === "pay-as-you-go" ? "Immediately (pay per token)" :
-        p.freeType === "trial" ? "1K calls/month limit" :
-        p.freeType === "none" ? "Immediately" :
-        "Days of moderate use";
-      return '      <tr>' +
-        '<td style="font-weight:600">' + escHtmlServer(p.name) + '</td>' +
-        '<td><span style="color:' + (freeTypeColors[p.freeType] || "var(--text-muted)") + ';font-size:.8rem;font-weight:600">' + escHtmlServer(freeTypeLabels[p.freeType]) + '</span></td>' +
-        '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(p.rateLimit) + '</td>' +
-        '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(p.contextWindow) + '</td>' +
-        '<td style="font-size:.85rem;color:var(--text-muted)">' + escHtmlServer(wallDesc) + '</td>' +
-        '</tr>';
-    }).join("\n") + '\n' +
+    freeTermsTableRows + '\n' +
     '    </tbody>\n' +
     '  </table>\n' +
     '  </div>\n' +

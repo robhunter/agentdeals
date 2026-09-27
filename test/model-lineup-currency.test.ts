@@ -54,16 +54,6 @@ function everySurface(html: string): string {
   return decode(parts.join(" "));
 }
 
-function tableRows(html: string): string[][] {
-  const rows: string[][] = [];
-  for (const row of html.matchAll(/<tr[^>]*>([\s\S]*?)<\/tr>/gi)) {
-    const cells = [...row[1].matchAll(/<t[dh][^>]*>([\s\S]*?)<\/t[dh]>/gi)]
-      .map(c => decode(c[1].replace(/<[^>]+>/g, " ")));
-    if (cells.length > 0) rows.push(cells);
-  }
-  return rows;
-}
-
 const SUPERSEDED_BY = new Map([
   ["Opus 4.6", "Opus 5"],
   ["Sonnet 4.6", "Sonnet 5"],
@@ -162,18 +152,6 @@ describe("#1362 a superseded Claude version is not published as the current one"
     assert.deepEqual(wrong, [], `Haiku 3.5's retired price is published beside a Haiku 4.5 claim on ${wrong.join(", ")}`);
   });
 
-  it("names four Claude models on /llm-api-pricing at the prices Anthropic lists", async () => {
-    const surfaces = everySurface(await body("/llm-api-pricing"));
-    for (const [model, price] of [
-      ["Fable 5.1", "$10/$50"],
-      ["Opus 5.5", "$4/$20"],
-      ["Sonnet 5", "$2/$10"],
-      ["Haiku 4.5", "$1/$5"],
-    ]) {
-      assert.ok(surfaces.includes(`${model}: ${price} per MTok`), `no "${model}: ${price} per MTok" on /llm-api-pricing`);
-    }
-  });
-
   it("answers the Claude price question with the current lineup in the JSON-LD an assistant reads", async () => {
     const html = await body("/llm-api-pricing");
     const blocks = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/gi)].map(m => JSON.parse(m[1]));
@@ -199,65 +177,7 @@ describe("#1362 a superseded Claude version is not published as the current one"
   });
 });
 
-describe("#1362 the /llm-api-pricing frontier rows say when they were read", () => {
-  const FRONTIER = new Map([
-    ["OpenAI", "GPT-6 Astra"],
-    ["Anthropic", "Claude Fable 5.1"],
-    ["Google Gemini", "Gemini 3.8 Flash"],
-    ["Mistral AI", "Mistral Medium 3.5"],
-  ]);
-
-  it("names each frontier provider's current flagship in the comparison table", async () => {
-    const rows = tableRows(await body("/llm-api-pricing"));
-    for (const [provider, flagship] of FRONTIER) {
-      const row = rows.find(cells => cells[0] === provider);
-      assert.ok(row, `no ${provider} row in the comparison table`);
-      assert.equal(row![2], flagship, `${provider}'s flagship cell reads "${row![2]}"`);
-    }
-  });
-
-  it("carries the read date and the page each frontier price was read from", async () => {
-    const surfaces = everySurface(await body("/llm-api-pricing"));
-    const dated = surfaces.match(/Frontier prices read from each vendor's own pricing page on (\d{4}-\d{2}-\d{2}): (.*?)\. The other/);
-    assert.ok(dated, "the pricing table states no date on which its frontier prices were read");
-    for (const host of [
-      "developers.openai.com/api/docs/pricing",
-      "platform.claude.com/docs/en/about-claude/pricing",
-      "ai.google.dev/gemini-api/docs/pricing",
-      "docs.mistral.ai/inference/pricing",
-    ]) {
-      assert.ok(dated![2].includes(host), `the read line does not name ${host}`);
-    }
-  });
-
-  it("cannot claim a read date from before the page existed", async () => {
-    const surfaces = everySurface(await body("/llm-api-pricing"));
-    const readOn = surfaces.match(/own pricing page on (\d{4}-\d{2}-\d{2})/);
-    const published = surfaces.match(/Published (\d{4}-\d{2}-\d{2})/);
-    assert.ok(readOn, "the pricing table states no read date");
-    assert.ok(published, "the page states no publication date");
-    assert.ok(
-      readOn![1] >= published![1],
-      `the table says its prices were read on ${readOn![1]}, before the page was published on ${published![1]}`
-    );
-  });
-
-  it("counts the rows it did not read, so adding one without a read date fails", async () => {
-    const html = await body("/llm-api-pricing");
-    const surfaces = everySurface(html);
-    const stated = surfaces.match(/The other (\d+) rows carry no read date\./);
-    assert.ok(stated, "the pricing table does not say how many of its rows carry no read date");
-    const rows = tableRows(html);
-    const header = rows.find(cells => cells[0] === "Provider");
-    assert.ok(header, "no header row in the comparison table");
-    const priced = rows.filter(cells => cells.length === header!.length && cells[0] !== "Provider");
-    assert.equal(
-      Number(stated![1]),
-      priced.length - FRONTIER.size,
-      `the table holds ${priced.length} rows and ${FRONTIER.size} were read, so ${priced.length - FRONTIER.size} carry no read date`
-    );
-  });
-
+describe("#1362 the /llm-api-pricing pricing table carries no date that has passed", () => {
   it("no longer dates the whole table to a month that has passed", async () => {
     const surfaces = everySurface(await body("/llm-api-pricing"));
     assert.ok(!surfaces.includes("All prices verified as of April 2026"), "the table still claims every price was verified in April 2026");

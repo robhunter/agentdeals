@@ -1975,14 +1975,14 @@
         "openrouter"
       ],
       "vendors_tabulated": [
-        "anthropic-claude-api",
+        "anthropic-api",
         "cerebras",
-        "deepseek",
+        "deepseek-api",
         "free-po-editor",
         "google-gemini-api",
         "groq",
         "mistral-ai",
-        "openai-api",
+        "openai",
         "openrouter"
       ],
       "badge_subjects_unresolved": [],
@@ -1993,8 +1993,8 @@
       "review_note": "Written in the future tense about an event 165 days past. Section 1 is headed \"What's Changing April 1\" and reads \"Google is introducing billing-account-level spend caps\"; \"April 1\" appears 7 times and the byline says \"Figures compiled 2026-03-26, last checked 2026-04-02\". It calls Gemini 3.1 Pro \"the latest flagship\" twice; ai.google.dev/gemini-api/docs/pricing, fetched 2026-09-13, lists 3.5, 3.6, 3.7 and 3.8 Flash and says \"Gemini 3.8 Flash is now available\" - the page names none of them. Gemini 2.0 Flash is listed as \"Deprecated, scheduled for retirement\" and is absent from Google's page entirely. Three comparison rows contradict our own records: OpenAI reads \"GPT-3.5 only, 3 RPM\" and \"GPT-3.5 Turbo (free)\" against a record verified 2026-09-10 saying the only free OpenAI model is omni-moderation-latest; Mistral AI reads \"1B tokens/month\" against a record verified 2026-09-05 saying $10/mo in API credits, and the What To Do section recommends Mistral on that number; DeepSeek reads V3/R1 against our V3.2 record. The Gemini row omits four free models our own record lists. Filed on https://github.com/robhunter/agentdeals/issues/1183 and https://github.com/robhunter/agentdeals/issues/1637.",
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 12,
-      "table_figures_from_records": 0,
+      "table_figures": 56,
+      "table_figures_from_records": 46,
       "tables": [
         {
           "label": "1. What Changed on April 1",
@@ -2008,8 +2008,8 @@
         },
         {
           "label": "6. Free LLM API Comparison",
-          "figures": 2,
-          "from_records": 0
+          "figures": 46,
+          "from_records": 46
         }
       ],
       "reads_changes": true,
@@ -2331,6 +2331,7 @@
       ],
       "vendors_tabulated": [
         "anthropic-api",
+        "baseten",
         "cerebras",
         "cloudflare-workers-ai",
         "cohere",
@@ -2345,6 +2346,7 @@
         "ollama-cloud",
         "openai",
         "openrouter",
+        "replicate",
         "siliconflow",
         "xai"
       ],
@@ -2355,24 +2357,24 @@
       "review_outcome": "fail",
       "review_note": null,
       "reads_index": true,
-      "tables_read_index": false,
-      "table_figures": 59,
-      "table_figures_from_records": 30,
+      "tables_read_index": true,
+      "table_figures": 97,
+      "table_figures_from_records": 94,
       "tables": [
         {
           "label": "Pricing Comparison Table",
-          "figures": 25,
-          "from_records": 0
+          "figures": 33,
+          "from_records": 32
         },
         {
           "label": "What You Actually Get for Free",
-          "figures": 2,
-          "from_records": 0
+          "figures": 32,
+          "from_records": 31
         },
         {
           "label": "Recent Pricing Changes",
           "figures": 32,
-          "from_records": 30
+          "from_records": 31
         }
       ],
       "reads_changes": true,
