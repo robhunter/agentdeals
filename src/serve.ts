@@ -26,8 +26,8 @@ import { AGENT_CARD_PATHS, OPENAPI_ALIAS_PATHS, OPENAPI_CANONICAL_PATH, OPENAPI_
 import { CATEGORY_ALIASES, CATEGORY_RETIREMENTS, CHANGE_LOG_CATEGORY_NAMES, EXAMPLE_MEMBERS_BASIS, buildCategoryDirectory, categoryHolds, familySiblings, publishedScopeFor, resolveCategoryName, resolveChangeCategory, retiredCategoryNames, retirementFor, scopeFor } from "./category-scope.js";
 import { retiredCategoryDescription, retiredCategoryNoticeHtml, retiredCategoryTitle } from "./category-retirement.js";
 import { LINK_GRACE_DAYS, unreachableNoticeForUrl } from "./link-health.js";
-import { offerEnded, offerRetired, recordedTierSentence, endedHeadline, endedHistorySentence, endedReliabilitySentence, endedEmptyChangeHistorySentence, detailForEndedOffer, noLiveRecordUnderThatNameSentence, ENDED_BADGE_LABEL, ENDED_SINCE_CHANGES_SENTENCE, type OfferTierAndUrl } from "./retirement.js";
-import { dropEndedFromNameList, endedIndex, endedRowStatement, markEndedVendorRows } from "./ended-surfaces.js";
+import { endedStatusWord, offerEnded, offerRetired, recordedTierSentence, endedHeadline, endedHistorySentence, endedReliabilitySentence, endedEmptyChangeHistorySentence, detailForEndedOffer, noLiveRecordUnderThatNameSentence, ENDED_BADGE_LABEL, ENDED_SINCE_CHANGES_SENTENCE, type OfferTierAndUrl } from "./retirement.js";
+import { dropEndedFromNameList, endedIndex, endedRowStatement, markEndedVendorRows, type EndedIndex } from "./ended-surfaces.js";
 import { amountUnstatedSentence, freePriceConfirmedSentence, freePriceOnlySentence, LAST_RESOLVED, levelWithheldReason, levelWithheldSince, recordPublishesAQuantity, withheldLevelClause, withheldLevelSentence, type LevelWithheldReason } from "./source-check.js";
 import { offerVerdictInput, reasonWeCannotConfirmTheTerms, vendorVerdictContextFrom, type VendorVerdictContext } from "./vendor-verdict-input.js";
 import { readingIsBehindTheLoop, reverificationIntervalDays } from "./badge-staleness.js";
@@ -38,7 +38,7 @@ import { NO_CURRENT_FIGURE, costHeadlineCaveat, limitCellText, mayRecommendAsFre
 import { changesByVendor } from "./superseded-census.js";
 import { buildComparisonMap, comparisonSlug } from "./comparison-pairs.js";
 import { comparisonVerdictText, freeTierFaqAnswer, stabilityFaqAnswer, type ComparisonSide, type FreeTierSide, type SideFreeTier, type StabilityRating } from "./comparison-verdict.js";
-import { publishedVendorLevel, vendorVerdictSentence, vendorBadge, freeTierClaim, endingStatedInPlaceOfARating, endingShutsTheProductDown, endedClaimReliabilityAnswer, statesRiskCause, withholdingThatDoesNotLapse, demotionTheVerdictNames, narrowingSentence, ourOwnRecordsSentence, changeKindNoun, isOurOwnBookkeeping, emptyHistoryCaveatSentence, refusedReadOurConfirmationSupersedes, refusedReadWeHold, refusedReadWithholdingSentence, nothingWeReadDescribesTheTerms, unconfirmedThresholdSentence, unconfirmedTermsOpening, whyWeCannotConfirmTheseTerms, withheldForARefusedRead, withUnconfirmedTerms, refusalWithholdsStability, termsUnconfirmedBySource, termsTheVerdictWithholds, closingTerms, termsWithTheReasonWeCannotConfirmThem, termsNotVerifiedMetaSentence, termsWithheldLabel, theReadConfirmedThePrice, unconfirmedTermsSentence, whereTheDoubtSits, withheldBadgeLabel, type BadgeWithholding, type UnconfirmedTerms, type FreeTierClaim, type VendorVerdictInput, type WhereTheDoubtSits } from "./vendor-verdict.js";
+import { gateStatesAnEnding, publishedVendorLevel, vendorVerdictSentence, vendorBadge, freeTierClaim, endingStatedInPlaceOfARating, endingShutsTheProductDown, endedClaimReliabilityAnswer, statesRiskCause, withholdingThatDoesNotLapse, demotionTheVerdictNames, narrowingSentence, ourOwnRecordsSentence, changeKindNoun, isOurOwnBookkeeping, emptyHistoryCaveatSentence, refusedReadOurConfirmationSupersedes, refusedReadWeHold, refusedReadWithholdingSentence, nothingWeReadDescribesTheTerms, unconfirmedThresholdSentence, unconfirmedTermsOpening, whyWeCannotConfirmTheseTerms, withheldForARefusedRead, withUnconfirmedTerms, refusalWithholdsStability, termsUnconfirmedBySource, termsTheVerdictWithholds, closingTerms, termsWithTheReasonWeCannotConfirmThem, termsNotVerifiedMetaSentence, termsWithheldLabel, theReadConfirmedThePrice, unconfirmedTermsSentence, whereTheDoubtSits, withheldBadgeLabel, type BadgeWithholding, type UnconfirmedTerms, type FreeTierClaim, type VendorVerdictInput, type WhereTheDoubtSits } from "./vendor-verdict.js";
 import { descriptionDeniesAFreeTier, listingOffersAFreeTier, tierRecordsAFreeTier } from "./free-tier-record.js";
 import { PAGE_HEAD_OPEN, withLedeBeforeNav } from "./page-lede.js";
 import { withReviewByline } from "./page-byline.js";
@@ -811,6 +811,28 @@ function pricedTierDescription(offer: Offer, describedAs: string): string {
   if (!unconfirmed) return offer.tier;
   const reason = unconfirmedTermsSentence(unconfirmed);
   return describedAs.endsWith(reason) ? `${offer.tier} — ${reason}` : offer.tier;
+}
+
+const DISCONTINUED_STATUS = "Discontinued";
+
+function endedListingStatus(offer: Offer): string | null {
+  if (offerRetired(offer)) return endedStatusWord(offer.tier);
+  return gateStatesAnEnding(gateForOffer(offer)?.code) ? DISCONTINUED_STATUS : null;
+}
+
+function listingHasEnded(offer: Offer): boolean {
+  return endedListingStatus(offer) !== null;
+}
+
+function cardTierLabel(offer: Offer): string {
+  return endedListingStatus(offer) ?? offer.tier;
+}
+
+function endedListingsIndex(): EndedIndex {
+  return endedIndex(offers.flatMap((offer) => {
+    const status = endedListingStatus(offer);
+    return status === null ? [] : [{ vendor: offer.vendor, tier: status }];
+  }));
 }
 
 function freeTierOfferJsonLd(
@@ -10126,15 +10148,16 @@ function buildAiFreeTiersPage(): string {
   const allAiOffers = [...aiMlOffers, ...aiCodingOffers];
   const enrichedMl = enrichOffers(aiMlOffers);
   const enrichedCoding = enrichOffers(aiCodingOffers);
+  const mlOfferedToday = enrichedMl.filter(o => !listingHasEnded(o));
 
   const aiChangeVendors = ["Google Gemini", "OpenAI", "Cursor", "GitHub Copilot", "Google Gemini 2.0 Flash", "Cloudflare Workers AI"];
   const aiChanges = dealChanges.filter(c => aiChangeVendors.some(v => c.vendor.includes(v)));
   const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
 
-  const llmInference = enrichedMl.filter(o =>
+  const llmInference = mlOfferedToday.filter(o =>
     ["Groq", "Cerebras", "OpenRouter", "Mistral AI", "Cohere", "OpenAI", "Google Gemini API", "Cloudflare Workers AI", "Hugging Face", "Anthropic API", "xAI", "Replicate", "Baseten"].includes(o.vendor)
   );
-  const vectorDbs = enrichedMl.filter(o =>
+  const vectorDbs = mlOfferedToday.filter(o =>
     ["Pinecone", "Qdrant"].includes(o.vendor)
   );
   const mlPlatforms = enrichedMl.filter(o =>
@@ -10146,7 +10169,7 @@ function buildAiFreeTiersPage(): string {
     return `<div class="alt-card">
         <div class="alt-card-header">
           <a href="/vendor/${toSlug(o.vendor)}" class="alt-card-name">${escHtmlServer(o.vendor)}</a>
-          <span class="alt-card-tier">${escHtmlServer(o.tier)}</span>
+          <span class="alt-card-tier">${escHtmlServer(cardTierLabel(o))}</span>
           ${riskBadge}
         </div>
         <p class="alt-card-desc">${publishedTermsHtml(o)}</p>
@@ -10179,7 +10202,7 @@ function buildAiFreeTiersPage(): string {
     name: title,
     description: metaDesc,
     numberOfItems: allAiOffers.length,
-    itemListElement: allAiOffers.slice(0, 20).map((o, i) => ({
+    itemListElement: allAiOffers.filter(o => !listingHasEnded(o)).slice(0, 20).map((o, i) => ({
       "@type": "ListItem",
       position: i + 1,
       item: {
@@ -10210,7 +10233,7 @@ function buildAiFreeTiersPage(): string {
         <td${p.fast ? ' style="color:#3fb950"' : ""}>${escHtmlServer(p.speed)}</td>
       </tr>`).join("\n      ");
 
-  return `<!DOCTYPE html>
+  return markEndedVendorRows(`<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -10327,7 +10350,7 @@ ${buildCards(enrichedCoding)}
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
-</html>`;
+</html>`, endedListingsIndex());
 }
 
 function buildHostingAlternativesPage(): string {
@@ -12963,22 +12986,23 @@ function buildAiMlAlternativesPage(): string {
 
   const aiOffers = offers.filter(o => o.category === "AI / ML" || o.category === "AI Coding");
   const enrichedAll = enrichOffers(aiOffers);
+  const offeredToday = enrichedAll.filter(o => !listingHasEnded(o));
   const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
 
-  const llmApis = enrichedAll.filter(o =>
+  const llmApis = offeredToday.filter(o =>
     ["OpenAI", "Anthropic API", "Google Gemini API", "Mistral AI", "Groq", "Cerebras", "Cohere", "xAI", "OpenRouter", "Cloudflare Workers AI", "Pollinations.AI", "Mediaworkbench.ai", "Lumenfall.ai"].includes(o.vendor)
   );
-  const aiCoding = enrichedAll.filter(o =>
+  const aiCoding = offeredToday.filter(o =>
     ["GitHub Copilot", "Cursor", "Claude Code", "Amazon Q Developer", "Windsurf", "Cline", "Aider", "Devin", "Bolt.new", "Lovable", "Augment Code", "Google Antigravity", "Gemini CLI", "OpenAI Codex"].includes(o.vendor)
   );
-  const mlPlatforms = enrichedAll.filter(o =>
-    ["Hugging Face", "Kaggle", "Replicate", "Baseten", "Vast.ai", "paperspace", "Weights & Biases", "Comet ML", "Neptune.ai"].includes(o.vendor)
+  const mlPlatforms = offeredToday.filter(o =>
+    ["Hugging Face", "Kaggle", "Replicate", "Baseten", "Vast.ai", "paperspace", "Weights & Biases", "Comet ML"].includes(o.vendor)
   );
-  const aiObservability = enrichedAll.filter(o =>
+  const aiObservability = offeredToday.filter(o =>
     ["Langfuse", "LangWatch", "Langtrace", "Arize AX", "Braintrust", "Maxim AI", "Keywords AI", "Portkey", "Composio", "Zenable"].includes(o.vendor)
   );
-  const specializedAi = enrichedAll.filter(o =>
-    ["Deepgram", "AssemblyAI", "Roboflow", "Scale AI", "Clarifai", "Labelbox", "Pinecone", "Qdrant", "OCR.Space", "Parseur", "Reducto", "Tavily AI", "wolfram.com", "DeepAR", "Audio Enhancer", "Clair", "Othor AI", "ReportGPT"].includes(o.vendor)
+  const specializedAi = offeredToday.filter(o =>
+    ["Deepgram", "AssemblyAI", "Roboflow", "Scale AI", "Labelbox", "Pinecone", "Qdrant", "OCR.Space", "Parseur", "Reducto", "Tavily AI", "wolfram.com", "DeepAR", "Audio Enhancer", "Clair", "Othor AI", "ReportGPT"].includes(o.vendor)
   );
   const other = enrichedAll.filter(o =>
     !llmApis.includes(o) && !aiCoding.includes(o) && !mlPlatforms.includes(o) && !aiObservability.includes(o) && !specializedAi.includes(o)
@@ -12989,7 +13013,7 @@ function buildAiMlAlternativesPage(): string {
     return `<div class="alt-card">
         <div class="alt-card-header">
           <a href="/vendor/${toSlug(o.vendor)}" class="alt-card-name">${escHtmlServer(o.vendor)}</a>
-          <span class="alt-card-tier">${escHtmlServer(o.tier)}</span>
+          <span class="alt-card-tier">${escHtmlServer(cardTierLabel(o))}</span>
           ${riskBadge}
         </div>
         <p class="alt-card-desc">${publishedTermsHtml(o)}</p>
@@ -13020,7 +13044,7 @@ function buildAiMlAlternativesPage(): string {
     name: title,
     description: metaDesc,
     numberOfItems: aiOffers.length,
-    itemListElement: enrichedAll.slice(0, 30).map((o, i) => ({
+    itemListElement: offeredToday.slice(0, 30).map((o, i) => ({
       "@type": "ListItem",
       position: i + 1,
       item: {
@@ -13033,7 +13057,7 @@ function buildAiMlAlternativesPage(): string {
     })),
   };
 
-  return `<!DOCTYPE html>
+  return markEndedVendorRows(`<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -13200,7 +13224,7 @@ ${buildCards(other)}
       <tr>
         <td style="font-weight:600"><a href="/vendor/langfuse" style="color:var(--text)">Langfuse</a></td>
         <td>Observability</td>
-        <td>50K observations/mo</td>
+        <td>50K units/mo, 30-day data access</td>
         <td>Yes</td>
         <td>Open-source LLM observability &amp; tracing</td>
       </tr>
@@ -13221,7 +13245,7 @@ ${buildCards(other)}
     </tbody>
   </table>
   </div>
-  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Mistral offers the broadest model access on free tier (all models including Large). For AI coding, GitHub Copilot and Cursor both offer 2,000 free completions/month, while Gemini CLI is completely free and open-source. Langfuse is the standout for LLM observability (open-source, 50K observations free). [[freshness]]</p>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Mistral offers the broadest model access on free tier (all models including Large). For AI coding, GitHub Copilot Free includes 2,000 completions a month; Cursor's free Hobby plan has limited Agent requests and publishes no completions figure. Langfuse is the standout for LLM observability (open-source, 50K units a month free on Cloud Hobby). [[freshness]]</p>
 
   <h2>Which Free AI Tool Should I Use?</h2>
   <div class="decision-guide">
@@ -13236,16 +13260,16 @@ ${buildCards(other)}
       <dd><a href="/vendor/github-copilot">GitHub Copilot</a> for IDE-integrated autocomplete (2,000/mo free). <a href="/vendor/cursor">Cursor</a> for an AI-native editor. <a href="/vendor/gemini-cli">Gemini CLI</a> and <a href="/vendor/cline">Cline</a> for free open-source terminal agents (BYOK).</dd>
 
       <dt>Building an AI app and need observability?</dt>
-      <dd><a href="/vendor/langfuse">Langfuse</a> \u2014 open-source LLM tracing, 50K observations/month free. <a href="/vendor/langwatch">LangWatch</a> for monitoring and optimization. <a href="/vendor/braintrust">Braintrust</a> for evals with 1 GB/month free.</dd>
+      <dd><a href="/vendor/langfuse">Langfuse</a> \u2014 open-source LLM tracing, 50K units/month free on the Cloud Hobby plan (traces, observations and scores each count). <a href="/vendor/langwatch">LangWatch</a> for monitoring and optimization. <a href="/vendor/braintrust">Braintrust</a> for evals with 1 GB/month free.</dd>
 
       <dt>Need free GPU compute for ML training?</dt>
-      <dd><a href="/vendor/kaggle">Kaggle</a> \u2014 30 hrs/week GPU (Tesla T4) and 20 hrs/week TPU, completely free. <a href="/vendor/paperspace">Paperspace</a> for free project storage (no free compute). <a href="/vendor/vast-ai">Vast.ai</a> startup program for $2,500 in GPU credits.</dd>
+      <dd><a href="/vendor/kaggle">Kaggle</a> \u2014 30 hrs/week GPU (Tesla T4) and 20 hrs/week TPU, completely free. <a href="/vendor/paperspace">Paperspace</a> for free Notebook machines in private workspaces (Free GPU M4000 or Free CPU C4, shut down after at most 6 hours). <a href="/vendor/vast-ai">Vast.ai</a> startup program for $2,500 in GPU credits.</dd>
 
       <dt>Want to host or deploy ML models?</dt>
       <dd><a href="/vendor/hugging-face">Hugging Face</a> \u2014 free accounts get 100GB of private storage and best-effort public storage; Inference Providers serves 200+ models, with $0.10 a month of credits for free users. <a href="/vendor/replicate">Replicate</a> for free runs on curated models. <a href="/vendor/baseten">Baseten</a> \u2014 new workspaces receive credits for testing and deployment; Baseten does not state the amount.</dd>
 
       <dt>Need speech-to-text or computer vision?</dt>
-      <dd><a href="/vendor/deepgram">Deepgram</a> \u2014 $200 free credits for speech AI (~43K minutes). <a href="/vendor/assemblyai">AssemblyAI</a> \u2014 $50 credits (~185 hours). <a href="/vendor/roboflow">Roboflow</a> for computer vision with 250K images free.</dd>
+      <dd><a href="/vendor/deepgram">Deepgram</a> \u2014 $200 free credits for speech AI (~43K minutes). <a href="/vendor/assemblyai">AssemblyAI</a> \u2014 $50 credits (~185 hours). <a href="/vendor/roboflow">Roboflow</a> for computer vision, with a free Core plan: 10 credits a month and private projects.</dd>
 
       <dt>Looking for a vector database for RAG?</dt>
       <dd><a href="/vendor/pinecone">Pinecone</a> \u2014 2 GB storage and 5 indexes free. <a href="/vendor/qdrant">Qdrant</a> \u2014 1 GB free forever cluster, fully managed. Both excellent for retrieval-augmented generation.</dd>
@@ -13263,7 +13287,7 @@ ${buildCards(other)}
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
-</html>`;
+</html>`, endedListingsIndex());
 }
 
 function buildEmailAlternativesPage(): string {
@@ -14597,6 +14621,7 @@ function buildFreeLlmApisPage(): string {
 
   const aiOffers = offers.filter(o => o.category === "AI / ML");
   const enrichedAll = enrichOffers(aiOffers);
+  const offeredToday = enrichedAll.filter(o => !listingHasEnded(o));
   const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
 
   const githubModels = offerForSlug("github-models");
@@ -14615,14 +14640,14 @@ function buildFreeLlmApisPage(): string {
     ? `<a href="/vendor/github-models">GitHub Models</a> is recorded as ${githubModelsStatus} and is no longer a second route to many models.`
     : `<a href="/vendor/github-models">GitHub Models</a> for 100+ models with daily limits.`;
 
-  const providerApis = enrichedAll.filter(o =>
+  const providerApis = offeredToday.filter(o =>
     ["OpenAI", "Anthropic API", "Google Gemini API", "Mistral AI", "Cohere", "xAI"].includes(o.vendor)
   );
-  const inferencePlatforms = enrichedAll.filter(o =>
+  const inferencePlatforms = offeredToday.filter(o =>
     ["Groq", "Cerebras", "GitHub Models", "NVIDIA NIM", "Cloudflare Workers AI", "Hugging Face", "OpenRouter", "Replicate", "Ollama Cloud"].includes(o.vendor)
   );
-  const aiGateways = enrichedAll.filter(o =>
-    ["Baseten", "Clarifai", "Keywords AI", "Portkey", "Pollinations.AI", "Mediaworkbench.ai", "Lumenfall.ai"].includes(o.vendor)
+  const aiGateways = offeredToday.filter(o =>
+    ["Baseten", "Keywords AI", "Portkey", "Pollinations.AI", "Mediaworkbench.ai", "Lumenfall.ai"].includes(o.vendor)
   );
 
   const allLlmOffers = [...providerApis, ...inferencePlatforms, ...aiGateways];
@@ -14632,7 +14657,7 @@ function buildFreeLlmApisPage(): string {
     return `<div class="alt-card">
         <div class="alt-card-header">
           <a href="/vendor/${toSlug(o.vendor)}" class="alt-card-name">${escHtmlServer(o.vendor)}</a>
-          <span class="alt-card-tier">${escHtmlServer(o.tier)}</span>
+          <span class="alt-card-tier">${escHtmlServer(cardTierLabel(o))}</span>
           ${riskBadge}
         </div>
         <p class="alt-card-desc">${publishedTermsHtml(o)}</p>
@@ -14836,7 +14861,7 @@ ${buildCards(aiGateways)}
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
-</html>`, endedIndex(offers));
+</html>`, endedListingsIndex());
 }
 
 function buildApiDevelopmentAlternativesPage(): string {
@@ -15800,9 +15825,9 @@ function buildFreeAiStackPage(): string {
     {
       name: "ML Experiment Tracking",
       icon: "📊",
-      recommended: { vendor: "Weights & Biases", why: "Unlimited experiments with 100 GB storage free. Industry-standard experiment tracking with hyperparameter sweeps, model registry, and team dashboards." },
-      alternatives: ["Comet ML", "Neptune.ai"],
-      outgrow: "When you need more than 100 GB storage or team collaboration features beyond 1 user. Neptune.ai offers 200 GB metadata storage for individuals.",
+      recommended: { vendor: "Weights & Biases", why: "Free cloud plan for personal development: up to 5 model seats, 5 GB/month of storage and 1 GB/month of Weave ingestion. Industry-standard experiment tracking." },
+      alternatives: ["Comet ML"],
+      outgrow: "When you need more than 5 GB/month of storage or more than 5 model seats. W&B Pro starts at $60/month with a 30-day free trial.",
       relatedPage: "/ai-ml-alternatives",
     },
     {
@@ -15824,17 +15849,17 @@ function buildFreeAiStackPage(): string {
     {
       name: "Data Labeling & Annotation",
       icon: "🏷️",
-      recommended: { vendor: "Roboflow", why: "250,000 images free with 10 projects, 2 users, and $60/month compute credits. Best for computer vision projects with built-in model training and deployment." },
-      alternatives: ["Labelbox", "Scale AI", "Clarifai"],
-      outgrow: "When you exceed 250K images or need more than 2 users. Labelbox offers 500 LBUs/month. Scale AI gives 1,000 annotation units free.",
+      recommended: { vendor: "Roboflow", why: "Free Core plan: 10 credits that refresh every month, private projects and models, and model weight download. Best for computer vision projects with built-in model training and deployment." },
+      alternatives: ["Labelbox", "Scale AI"],
+      outgrow: "When you need more than the 10 monthly credits. Labelbox offers 500 LBUs/month. Scale AI gives 1,000 annotation units free.",
       relatedPage: "/ai-ml-alternatives",
     },
     {
       name: "AI Observability & Evaluation",
       icon: "🔍",
-      recommended: { vendor: "Langfuse", why: "50K observations/month with all features, open-source. Trace LLM calls, evaluate outputs, manage prompts, and debug chains — the emerging standard for LLM ops." },
+      recommended: { vendor: "Langfuse", why: "50K units/month free on Cloud Hobby (traces, observations and scores each count), all platform features with limits, 30 days of data access, open-source. Trace LLM calls, evaluate outputs, manage prompts, and debug chains — the emerging standard for LLM ops." },
       alternatives: ["Langtrace", "Braintrust", "LangWatch", "Portkey"],
-      outgrow: "When you exceed 50K observations/month. Langtrace (50K traces/month) and LangWatch (1K traces/month) are alternatives. For production, self-host Langfuse (open-source) for unlimited traces.",
+      outgrow: "When you exceed 50K units/month; Langfuse Core is $29/month with 100K units. Langtrace (50K traces/month) and LangWatch (1K traces/month) are alternatives. For production, self-host Langfuse (open-source) for unlimited traces.",
       relatedPage: "/ai-ml-alternatives",
     },
     {
@@ -16076,7 +16101,7 @@ ${ossAlternatives.map(oss => `      <tr>
       <li><strong>LLM API rate limits</strong> (Groq 30 RPM) — production apps with concurrent users need higher throughput</li>
       <li><strong>Vector storage</strong> (Pinecone 2 GB) — RAG applications with large document corpora</li>
       <li><strong>Speech credits</strong> (Deepgram $200 one-time) — real-time transcription burns through credits quickly</li>
-      <li><strong>Observability volume</strong> (Langfuse 50K obs/month) — high-traffic AI apps with detailed tracing</li>
+      <li><strong>Observability volume</strong> (Langfuse 50K units/month) — high-traffic AI apps with detailed tracing</li>
     </ol>
     <p style="color:var(--text-dim);font-size:.85rem;margin-top:1rem">The good news: the open-source alternatives above have no limits. Ollama + Chroma + MLflow + Langfuse (self-hosted) gives you a complete local AI stack at zero ongoing cost.</p>
   </div>
@@ -30475,9 +30500,9 @@ function buildVectorDatabasePricingPage(): string {
       freeStorage: "2 GB",
       freeDimensions: "Up to 20,000",
       freeQueries: "1M read units/mo",
-      paidFrom: "$0.33/M reads (Standard)",
+      paidFrom: "$20/mo flat (Builder)",
       pricingModel: "Usage-based (read/write units)",
-      freeDetails: "Starter plan: 2 GB storage, 2M write units/month, 1M read units/month, 5 serverless indexes, 5M embedding tokens/month. Pinecone Assistant: 100 documents / 1 GB. Supports metadata filtering, namespaces, and sparse-dense hybrid search. No credit card required.",
+      freeDetails: "Starter plan: 2 GB storage, 2M write units/month, 1M read units/month, 1 GB/month egress (reads that return data are blocked at the cap), 5 serverless indexes, 1 project, 2 users, AWS us-east-1 only. Three embedding models include 5M tokens/month each. Pinecone Assistant: 1 GB storage. Supports metadata filtering, namespaces, and sparse-dense hybrid search.",
       freeType: "generous",
       monthlyCostSmall: "$0",
       monthlyCostTeam: "$70+ (Standard)",
@@ -30762,7 +30787,7 @@ function buildVectorDatabasePricingPage(): string {
     ["database-pricing", "free-llm-apis", "ai-ml-alternatives", "database-alternatives"].includes(p.slug)
   );
 
-  return compiledFiguresMarked('<!DOCTYPE html>\n<html lang="en">\n<head>\n' +
+  return markEndedVendorRows(compiledFiguresMarked('<!DOCTYPE html>\n<html lang="en">\n<head>\n' +
     '<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">\n' +
     '<title>' + escHtmlServer(title) + ' \u2014 AgentDeals</title>\n' +
     '<meta name="description" content="' + escHtmlServer(metaDesc) + '">\n' +
@@ -31091,7 +31116,7 @@ function buildVectorDatabasePricingPage(): string {
     '  </div>\n' +
     '</footer>\n' +
     '<script>' + mcpCtaScript() + '</script>\n' +
-    '</body>\n</html>', pubDate);
+    '</body>\n</html>', pubDate), endedListingsIndex());
 }
 
 function buildHostingPricingPage(): string {
@@ -32384,7 +32409,7 @@ function buildLlmApiPricingPage(): string {
     '\n' +
     '  <h2>Data Source &amp; Methodology</h2>\n' +
     '  <div class="methodology">\n' +
-    '    <strong>Powered by AgentDeals.</strong> The tables on this page were compiled by hand from official vendor pricing pages and have not been re-checked since. Pricing changes are tracked via our <a href="/pricing-changes">deal changes timeline</a> (' + trackedChangeCount + ' total changes tracked). The pricing changes we track are updated continuously; the tables above are not.<br><br>\n' +
+    '    <strong>Powered by AgentDeals.</strong> The tables on this page read our catalogue: each vendor\'s listing, and our change records for recent changes. Pricing changes are tracked via our <a href="/pricing-changes">deal changes timeline</a> (' + trackedChangeCount + ' total changes tracked).<br><br>\n' +
     '    <strong>Query this data programmatically</strong> via <a href="/api/llm-pricing">/api/llm-pricing</a> (JSON), our <a href="/setup">MCP tools</a>, or <a href="/developers">REST API</a> — search for LLM providers, compare pricing, or track changes from your AI coding assistant.\n' +
     '  </div>\n' +
     '\n' +
