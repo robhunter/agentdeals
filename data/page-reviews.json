@@ -1376,8 +1376,8 @@
       "review_note": null,
       "reads_index": false,
       "tables_read_index": false,
-      "table_figures": 33,
-      "table_figures_from_records": 13,
+      "table_figures": 29,
+      "table_figures_from_records": 9,
       "tables": [
         {
           "label": "Shutdown Timeline",
@@ -1401,8 +1401,8 @@
         },
         {
           "label": "Firebase Pricing Change Timeline",
-          "figures": 14,
-          "from_records": 13
+          "figures": 10,
+          "from_records": 9
         }
       ],
       "reads_changes": true,
@@ -1996,7 +1996,7 @@
       "reads_index": true,
       "tables_read_index": false,
       "table_figures": 46,
-      "table_figures_from_records": 7,
+      "table_figures_from_records": 8,
       "tables": [
         {
           "label": "Always Free Products",
@@ -2016,7 +2016,7 @@
         {
           "label": "Recent GCP & Google Changes",
           "figures": 9,
-          "from_records": 7
+          "from_records": 8
         }
       ],
       "reads_changes": true,
@@ -3416,12 +3416,12 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 76,
+      "table_figures": 74,
       "table_figures_from_records": 14,
       "tables": [
         {
           "label": "Main Comparison Table",
-          "figures": 32,
+          "figures": 30,
           "from_records": 0
         },
         {

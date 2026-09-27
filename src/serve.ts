@@ -5107,6 +5107,16 @@ function storedTermsOf(offer: StoredTermsOf): string {
   return `${offer.description.slice(0, 200)}${offer.description.length > 200 ? "..." : ""}`;
 }
 
+const OUTGROW_SENTENCE_BY_VENDOR_AND_TEMPLATE_PHRASE: Record<string, Record<string, string>> = {
+  Firebase: {
+    "10 GB storage": "At 1 GiB of Firestore data or 50K reads a day, you'll need Blaze.",
+  },
+};
+
+function outgrowSentence(vendorName: string, phrase: string): string {
+  return OUTGROW_SENTENCE_BY_VENDOR_AND_TEMPLATE_PHRASE[vendorName]?.[phrase] ?? `At ${phrase}, you'll need to upgrade.`;
+}
+
 function buildVendorPage(slug: string): string | null {
   const vendorName = vendorSlugMap.get(slug);
   if (!vendorName) return null;
@@ -5323,7 +5333,7 @@ function buildVendorPage(slug: string): string | null {
   for (const phrase of growthLimitPhrases(publishableTerms)) {
     growthBullets.push(termsWeCannotConfirm
       ? unconfirmedThresholdSentence(phrase, termsWeCannotConfirm)
-      : `At ${phrase}, you'll need to upgrade.`);
+      : outgrowSentence(vendorName, phrase));
   }
   if (growthBullets.length === 0 && hasFree && !termsSuperseded) {
     growthBullets.push(`When your usage exceeds the free tier limits, you'll need to upgrade.`);
@@ -20438,9 +20448,9 @@ function buildSupabaseVsFirebasePage(): string {
   const comparisonRows = [
     { feature: "Database", supabase: "500 MB PostgreSQL", firebase: "1 GiB Firestore", notes: "Supabase: SQL + joins. Firebase: NoSQL document model" },
     { feature: "Auth", supabase: "50K MAU", firebase: "50K MAU", notes: "Equivalent. Both include email, OAuth, social login" },
-    { feature: "Storage", supabase: "1 GB file storage", firebase: "None on Spark (Blaze only)", notes: "Firebase removed Cloud Storage from the Spark plan on February 3, 2026. Blaze includes 5 GB at no cost." },
+    { feature: "Storage", supabase: "1 GB file storage", firebase: "None on Spark (Blaze only)", notes: "Firebase removed Cloud Storage from the Spark plan on February 3, 2026. Blaze includes 5 GB at no cost in us-central1, us-east1 and us-west1." },
     { feature: "Functions", supabase: "500K Edge Function invocations", firebase: "None on Spark (Blaze only)", notes: "Cloud Functions need the Blaze plan, which includes 2M invocations a month at no cost." },
-    { feature: "Bandwidth", supabase: "10 GB total (5 GB cached + 5 GB uncached)", firebase: "10 GB/mo hosting, 1 GB/day Firestore download", notes: "Supabase: database egress limited. Firebase: per-service bandwidth" },
+    { feature: "Bandwidth", supabase: "10 GB total (5 GB cached + 5 GB uncached)", firebase: "360 MB/day Hosting, 10 GiB/mo Firestore egress", notes: "Supabase: database egress limited. Firebase: per-service bandwidth" },
     { feature: "Realtime", supabase: "200 concurrent connections", firebase: "100 concurrent (Realtime DB)", notes: "Both support real-time sync. Supabase uses Postgres changes" },
     { feature: "API Requests", supabase: "Unlimited API requests", firebase: "50K reads + 20K writes/day (Firestore)", notes: "Supabase has no request caps. Firebase daily limits can be restrictive" },
     { feature: "Projects", supabase: "2 free projects", firebase: "Unlimited Spark projects", notes: "Firebase wins on project count. Supabase pauses inactive projects" },
@@ -20464,7 +20474,7 @@ function buildSupabaseVsFirebasePage(): string {
     { metric: "Starter paid plan", supabase: "$25/mo (Pro)", firebase: "Pay-as-you-go (Blaze)", notes: "Supabase: predictable flat rate. Firebase: usage-based, no spending cap" },
     { metric: "Database at 10 GB", supabase: "$25/mo (8 GB included)", firebase: "$1.56/mo (Firestore)", notes: "Firebase cheaper for pure storage. Supabase includes more in base price" },
     { metric: "100K MAU auth", supabase: "$25/mo (100K MAU included in Pro)", firebase: "$0 (unlimited on Spark)", notes: "Both effectively free at this scale" },
-    { metric: "1M function invocations", supabase: "$25/mo (2M included in Pro)", firebase: "~$0.40 (beyond 2M free)", notes: "Similar — both cover 1M in free/base tier" },
+    { metric: "1M function invocations", supabase: "$25/mo (2M included in Pro)", firebase: "$0 on Blaze (2M a month at no cost)", notes: "Firebase needs Blaze for any function." },
     { metric: "50 GB storage", supabase: "$25/mo + ~$2.50 overage", firebase: "Blaze required, ~$1.30/mo", notes: "Firebase cheaper for raw storage on Blaze pay-as-you-go" },
     { metric: "Billing protection", supabase: "Hard limits, spend caps available", firebase: "No hard caps — set budget alerts only", notes: "Supabase safer for indie devs. Firebase can generate surprise bills" },
   ];
@@ -25976,17 +25986,15 @@ function buildFirebaseStudioShutdownPage(): string {
 
   const stabilityMap = publishedStabilityIndex();
 
-  const firebaseChanges = dealChanges.filter(c =>
+  const firebaseChanges = changesTheVendorMade(dealChanges).filter(c =>
     c.vendor === "Firebase" || c.vendor === "Google"
   ).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   const firebaseStability = stabilityMap.of("firebase");
   const stabilityColor = firebaseStability === "volatile" ? "#f85149" : firebaseStability === "watch" ? "#d29922" : firebaseStability === "improving" ? "#3fb950" : "var(--text-muted)";
 
-  const workspaceFreeze = new Date("2026-06-22");
   const fullShutdown = new Date("2027-03-22");
   const today = new Date();
-  const daysToFreeze = Math.max(0, Math.ceil((workspaceFreeze.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)));
   const daysToShutdown = Math.max(0, Math.ceil((fullShutdown.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)));
 
   const ideCategory = categories.find(c => c.name.toLowerCase().includes("ide") || c.name.toLowerCase().includes("code editor"));
@@ -26162,14 +26170,13 @@ ${mcpCtaCss()}
   <p class="pub-date">Published ${pubDate} &middot; ${pageDataProvenance("/firebase-studio-shutdown", offers.length)} &middot; ${firebaseChanges.length} Firebase/Google pricing changes tracked</p>
 
   <div class="deadline-banner">
-    <div class="deadline-days">${daysToFreeze} days</div>
-    <div class="deadline-label">until new workspace creation disabled</div>
-    <div class="deadline-date">June 22, 2026 &middot; <span style="color:${stabilityColor};font-weight:600">Firebase stability: ${firebaseStability.toUpperCase()}</span></div>
+    <div class="deadline-label">New workspaces disabled since June 22, 2026.</div>
+    <div class="deadline-date"><span style="color:${stabilityColor};font-weight:600">Firebase stability: ${firebaseStability.toUpperCase()}</span></div>
     <div class="deadline-secondary">${daysToShutdown} days until full shutdown (March 22, 2027)</div>
   </div>
 
   <div class="summary-stats">
-    <div class="stat-card"><div class="stat-number red">${daysToFreeze}</div><div class="stat-label">Days to Workspace Freeze</div></div>
+    <div class="stat-card"><div class="stat-label">New workspaces disabled since June 22, 2026.</div></div>
     <div class="stat-card"><div class="stat-number orange">${daysToShutdown}</div><div class="stat-label">Days to Full Shutdown</div></div>
     <div class="stat-card"><div class="stat-number">${alternatives.filter(a => a.type === "cloud-ide").length}</div><div class="stat-label">Cloud IDE Alternatives</div></div>
     <div class="stat-card"><div class="stat-number green">${aiBuilders.length}</div><div class="stat-label">AI Builder Alternatives</div></div>
@@ -26217,8 +26224,8 @@ ${mcpCtaCss()}
       </tr>
       <tr>
         <td style="font-weight:600;font-family:var(--mono);font-size:.85rem">June 22, 2026 \u2013 Mar 2027</td>
-        <td>Read-only access to existing workspaces</td>
-        <td><span style="color:#d29922;font-size:.8rem;font-weight:600">MEDIUM</span> \u2014 Can export but not create</td>
+        <td>Existing workspaces keep working and can be migrated.</td>
+        <td><span style="color:#d29922;font-size:.8rem;font-weight:600">MEDIUM</span> \u2014 New ones cannot be created.</td>
       </tr>
       <tr>
         <td style="font-weight:600;font-family:var(--mono);font-size:.85rem">March 22, 2027</td>
@@ -26239,7 +26246,7 @@ ${mcpCtaCss()}
   <div class="decision-tree">
     <div class="decision-path" style="border-left:3px solid #4285f4">
       <h3>Antigravity \u2014 Agentic Code-First IDE</h3>
-      <p>Google\u2019s next-generation IDE focused on <strong>agentic local workflows</strong>. Emphasizes AI-driven code generation with local execution. Still in early access \u2014 details and pricing TBA. Likely best for developers who want Google\u2019s AI models integrated into a local development experience.</p>
+      <p>Google\u2019s next-generation IDE focused on <strong>agentic local workflows</strong>. Emphasizes AI-driven code generation with local execution. Generally available, with a $0 plan for individuals. Likely best for developers who want Google\u2019s AI models integrated into a local development experience.</p>
       <p class="best-for">Best for: Google ecosystem developers who want AI-assisted local development rather than a cloud IDE</p>
     </div>
     <div class="decision-path" style="border-left:3px solid #34a853">
@@ -26333,7 +26340,7 @@ ${mcpCtaCss()}
     </div>
     <div class="verdict-item">
       <strong>Staying in Google ecosystem:</strong>
-      <p>Google Antigravity (when available) or AI Studio for Gemini prototyping. Note: Antigravity is local-first, not a cloud IDE \u2014 it\u2019s a different paradigm than Firebase Studio.</p>
+      <p>Google Antigravity or AI Studio for Gemini prototyping. Note: Antigravity is local-first, not a cloud IDE \u2014 it\u2019s a different paradigm than Firebase Studio.</p>
     </div>
   </div>
 
@@ -26347,7 +26354,7 @@ ${mcpCtaCss()}
     <li><strong>Choose your replacement IDE</strong> \u2014 use the comparison table above. Test with a small project first before migrating everything.</li>
     <li><strong>Recreate dev environment</strong> \u2014 set up equivalent config in your new IDE (devcontainer.json for Codespaces, .gitpod.yml for Gitpod, etc.).</li>
     <li><strong>Update CI/CD pipelines</strong> \u2014 if you used Firebase Studio\u2019s integrated deploy, set up Firebase CLI deployment in your new workflow.</li>
-    <li><strong>Test the full workflow</strong> \u2014 edit, build, test, and deploy from your new environment. Verify everything works before the June 22 freeze.</li>
+    <li><strong>Test the full workflow</strong> \u2014 edit, build, test, and deploy from your new environment. Verify everything works before March 22, 2027.</li>
     <li><strong>Notify team members</strong> \u2014 share the new environment setup. Update README and onboarding docs.</li>
     <li><strong>Set a calendar reminder</strong> \u2014 March 2027 for final data deletion. Even if you\u2019ve migrated, verify nothing was left behind.</li>
   </ul>
@@ -26427,7 +26434,7 @@ ${mcpCtaCss()}
 
   <div class="methodology">
     <p><strong>How we track this data:</strong> AgentDeals monitors free tier changes across ${offers.length.toLocaleString()} developer tools in ${categories.length} categories. Cloud IDE and AI coding tool free tiers were read from vendor pricing pages on ${pubDate} and have not been re-checked since. Stability ratings are computed from our <a href="/changes">deal changes database</a> \u2014 Firebase is classified as <strong style="color:${stabilityColor}">${firebaseStability}</strong> based on ${firebaseChanges.length} tracked changes.</p>
-    <p><strong>Shutdown dates:</strong> June 22, 2026 (workspace freeze) and March 22, 2027 (data deletion) are sourced from Google\u2019s official Firebase Studio shutdown announcement. Countdown timers are computed dynamically.</p>
+    <p><strong>Shutdown dates:</strong> June 22, 2026 (new workspaces and sign-ups disabled) and March 22, 2027 (data deletion) are sourced from Google\u2019s official Firebase Studio shutdown announcement. Countdown timers are computed dynamically.</p>
     <p>For real-time data, use our <a href="/stability">stability dashboard</a>, <a href="/feed.xml">Atom feed</a>, or <a href="/setup">MCP server</a>. Full dataset available via <a href="/api/offers">REST API</a>.</p>
   </div>
 
@@ -35258,7 +35265,7 @@ function buildGcpFreeTier2026Page(): string {
     o.vendor === "Firebase" || o.tags?.some((t: string) => t === "gcp" || t === "google-cloud")
   );
 
-  const gcpChanges = recordsOtherThanOurOwnIndexHousekeeping(dealChanges).filter((c: any) =>
+  const gcpChanges = changesTheVendorMade(recordsOtherThanOurOwnIndexHousekeeping(dealChanges)).filter((c: any) =>
     c.vendor === "Google Cloud" || c.vendor.startsWith("Google") || c.vendor === "Firebase" ||
     c.vendor.includes("Gemini")
   ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
@@ -42521,11 +42528,11 @@ ${mcpCtaCss()}
       <tr>
         <td class="provider-col">Firebase Storage</td>
         <td>BaaS</td>
-        <td>5 GB</td>
-        <td>1 GB/day</td>
+        <td>None on Spark (Blaze only)</td>
+        <td>None on Spark (Blaze only)</td>
         <td class="cross">&#10007;</td>
         <td class="check">&#10003;</td>
-        <td class="check">&#10003;</td>
+        <td class="partial">Blaze only</td>
         <td>$0.12/GB</td>
       </tr>
       <tr>
@@ -42770,7 +42777,7 @@ ${mcpCtaCss()}
 
   <div class="diff-card">
     <h3>Firebase Storage (Cloud Storage for Firebase)</h3>
-    <div class="diff-desc"><strong>Free tier:</strong> 5 GB storage, 1 GB/day download bandwidth, 20,000 uploads/day, 50,000 downloads/day. Backed by Google Cloud Storage. Firebase Security Rules for access control. Excellent mobile SDK integration. The 1 GB/day egress limit can be restrictive for media-heavy apps. Beyond free: $0.026/GB storage, $0.12/GB egress. Best for mobile apps using Firebase suite.</div>
+    <div class="diff-desc"><strong>No free plan since February 3, 2026:</strong> Cloud Storage for Firebase needs the Blaze plan. On Blaze, buckets in us-central1, us-east1 and us-west1 include 5 GB stored, 100 GB downloaded, 5,000 uploads and 50,000 downloads a month at no cost. Backed by Google Cloud Storage. Firebase Security Rules for access control. Excellent mobile SDK integration. Beyond free: $0.026/GB storage, $0.12/GB egress. Best for mobile apps using Firebase suite.</div>
   </div>
 
   <div class="diff-card">
