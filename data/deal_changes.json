@@ -834,7 +834,13 @@
         "Mistral"
       ],
       "recorded_date": "2026-02-26",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-27",
+        "detail": "Retracted 2026-09-27: nothing changed on 2026-02-05. Claude Opus 4.6 launched that day and Anthropic's announcement says \"Pricing remains the same at $5/$25 per million tokens\". The cut from $15/$75 came with Claude Opus 4.5 on 2025-11-24 (\"Pricing is now $5/$25 per million tokens\").",
+        "source_url": "https://www.anthropic.com/news/claude-opus-4-6"
+      }
     },
     {
       "vendor": "OpenAI",
@@ -1372,7 +1378,13 @@
         "Google Gemini Advanced"
       ],
       "recorded_date": "2026-03-15",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-27",
+        "detail": "Retracted 2026-09-27: this record describes a two-week promotion for Claude Pro and Team subscribers. We list no Claude subscription plan, and the Anthropic API's limits did not change.",
+        "source_url": "https://www.anthropic.com/news"
+      }
     },
     {
       "vendor": "Heroku",
@@ -1946,12 +1958,12 @@
     {
       "vendor": "OpenAI",
       "change_type": "product_deprecated",
-      "date": "2026-05-07",
-      "summary": "Realtime API beta endpoints deprecated. Developers must remove OpenAI-Beta header, use new client_secrets endpoint, specify session_type, and update event names. GA Realtime API is the direct replacement.",
+      "date": "2026-05-12",
+      "summary": "The Realtime API beta was removed on 2026-05-12; OpenAI's generally available Realtime API replaces it.",
       "previous_state": "Realtime API beta: required OpenAI-Beta: realtime=v1 header, single session type, beta event names",
-      "current_state": "Realtime API GA: no beta header, POST /v1/realtime/client_secrets for ephemeral keys, session_type required (speech-to-speech or transcription), updated event names",
+      "current_state": "\"The Realtime API Beta was deprecated and removed from the API on May 12, 2026\" (OpenAI deprecations page, read 2026-09-27)",
       "impact": "high",
-      "source_url": "https://platform.openai.com/docs/deprecations",
+      "source_url": "https://developers.openai.com/api/docs/deprecations",
       "category": "AI / ML",
       "alternatives": [
         "OpenAI Realtime API (GA)",
@@ -12050,6 +12062,20 @@
       "current_state": "\"Free tier is being phased out. New users will no longer receive free credits upon sign-up. Access to the platform will now require a $5 credit purchase.\"",
       "impact": "low",
       "source_url": "https://web.archive.org/web/20250907141857/https://support.together.ai/articles/1862638756-changes-to-free-tier-and-billing-july-2025",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-09-27",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "OpenAI",
+      "change_type": "record_corrected",
+      "date": "2026-09-27",
+      "summary": "Data correction - The Realtime API beta was removed on 2026-05-12, not 2026-05-07, which is when the gpt-4o-realtime-preview models were removed.",
+      "previous_state": "Recorded as product_deprecated dated 2026-05-07",
+      "current_state": "product_deprecated dated 2026-05-12 from OpenAI's deprecations page",
+      "impact": "low",
+      "source_url": "https://developers.openai.com/api/docs/deprecations",
       "category": "AI / ML",
       "alternatives": [],
       "recorded_date": "2026-09-27",
