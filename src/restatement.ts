@@ -1,7 +1,7 @@
 import { tierRecordsAFreeTier, DENIES_A_FREE_TIER } from "./free-tier-record.js";
 import { describesThePageRatherThanTheTerms, mentionsSomethingFree } from "./superseding-reading.js";
 import { VERDICTS_ABOUT_THE_EDITION_ITSELF, comparableTerms } from "./change-tier.js";
-import { restatedDescription, statesAFigure } from "./restated-description.js";
+import { restatedDescription, statesAFigure, statesAnAllowanceFigure } from "./restated-description.js";
 import { confirmationALaterReadContradicted, storedConfirmationDate } from "./read-date.js";
 import {
   readingBehindTheChange,
@@ -47,6 +47,9 @@ export const READING_DESCRIBES_THE_PAGE_NOT_THE_TERMS = "reading_describes_the_p
 export const READING_STATES_NO_FIGURE_WHERE_OUR_TERMS_DO =
   "reading_states_no_figure_where_our_terms_do";
 
+export const READING_STATES_ONLY_PRICES_WHERE_OUR_TERMS_STATE_ALLOWANCES =
+  "reading_states_only_prices_where_our_terms_state_allowances";
+
 export const READING_DROPS_THE_CAP_ON_WHO_MAY_USE_IT = "reading_drops_the_cap_on_who_may_use_it";
 
 export const READING_SAYS_WHAT_WE_ALREADY_STORE = "reading_says_what_we_already_store";
@@ -62,6 +65,7 @@ export const RESTATEMENT_REFUSALS: readonly string[] = [
   READING_ANSWERS_FOR_SOMETHING_ELSE,
   READING_DESCRIBES_THE_PAGE_NOT_THE_TERMS,
   READING_STATES_NO_FIGURE_WHERE_OUR_TERMS_DO,
+  READING_STATES_ONLY_PRICES_WHERE_OUR_TERMS_STATE_ALLOWANCES,
   READING_DROPS_THE_CAP_ON_WHO_MAY_USE_IT,
   READING_SAYS_WHAT_WE_ALREADY_STORE,
   A_RECORD_NO_NEWER_ALREADY_RESTATED_THIS,
@@ -125,6 +129,10 @@ export function readingStatesNoFigureWhereOurTermsDo(description: string, readin
   return statesAFigure(description) && !statesAFigure(reading);
 }
 
+export function readingStatesOnlyPricesWhereOurTermsStateAllowances(description: string, reading: string): boolean {
+  return statesAnAllowanceFigure(description) && !statesAnAllowanceFigure(reading);
+}
+
 export function readingDropsTheCapOnWhoMayUseIt(description: string, reading: string): boolean {
   return A_CAP_ON_WHO_MAY_USE_IT.test(description) && !SOMEONE_WHO_USES_IT.test(reading);
 }
@@ -174,6 +182,9 @@ export function restatementRefusal(
   }
   if (readingStatesNoFigureWhereOurTermsDo(offer.description, reading.terms)) {
     return READING_STATES_NO_FIGURE_WHERE_OUR_TERMS_DO;
+  }
+  if (readingStatesOnlyPricesWhereOurTermsStateAllowances(offer.description, reading.terms)) {
+    return READING_STATES_ONLY_PRICES_WHERE_OUR_TERMS_STATE_ALLOWANCES;
   }
   if (readingDropsTheCapOnWhoMayUseIt(offer.description, reading.terms)) {
     return READING_DROPS_THE_CAP_ON_WHO_MAY_USE_IT;
