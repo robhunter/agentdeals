@@ -2,7 +2,7 @@ import type { DealChange, RatingWithheld, RiskCause, SourceCheck, SourceCheckOut
 import { restatedReadingDate, type TermsWeCannotConfirm } from "./read-date.js";
 import { CHANGE_DIRECTION, isACorrectionToOurOwnRecord, isOurOwnBookkeeping } from "./data.js";
 import { changeRatesTheListedTier, type GradedOffer } from "./change-tier.js";
-import { isNoLongerInForce, theEventNeverHappened } from "./change-resolution.js";
+import { isNoLongerInForce, reversedOn, theEventNeverHappened } from "./change-resolution.js";
 import { changeIsUncited, changeSummaryText, ratingWithheldForNoSourceSentence } from "./change-citation.js";
 import { changeDateClause } from "./change-dates.js";
 import { PRODUCT_DEPRECATED, deprecationTouchesTheListing } from "./product-deprecation.js";
@@ -702,10 +702,6 @@ export function supersededTermsHoldTheDirection(recorded: number): string {
     : `Of the ${recorded} changes we have recorded, at least one ${STORED_TERMS_NAMED_AS_PREVIOUS}.`;
 }
 
-function aNarrowingLaterReversed(change: VendorVerdictInput["changes"][number]): boolean {
-  return CHANGE_DIRECTION[change.change_type] === "negative" && change.resolution?.state === "reversed";
-}
-
 function oneReversedNarrowingSentence(change: VendorVerdictInput["changes"][number], reversedOn: string): string {
   return `The one change we have recorded, a ${changeKindNoun(change.change_type)} ${changeDateClause(change)}, was reversed on ${reversedOn}.`;
 }
@@ -727,7 +723,10 @@ export function narrowingSentence(
   if (narrowing.length === 0) {
     if (termsSuperseded) return supersededTermsHoldTheDirection(total);
     const only = byTheVendor[0]!;
-    if (total === 1 && aNarrowingLaterReversed(only)) return oneReversedNarrowingSentence(only, only.resolution!.date);
+    const reversal = reversedOn(only);
+    if (total === 1 && reversal && CHANGE_DIRECTION[only.change_type] === "negative") {
+      return oneReversedNarrowingSentence(only, reversal);
+    }
     return total === 1
       ? `The one change we have recorded did not narrow the terms.`
       : `None of the ${total} recorded changes narrowed the terms.`;

@@ -18,6 +18,10 @@ export function isNoLongerInForce(change: { resolution?: ChangeResolution | null
   return Boolean(change.resolution);
 }
 
+export function reversedOn(change: { resolution?: ChangeResolution | null }): string | null {
+  return change.resolution?.state === "reversed" ? change.resolution.date : null;
+}
+
 export function theEventNeverHappened(change: { resolution?: ChangeResolution | null }): boolean {
   return change.resolution?.state === "retracted";
 }
