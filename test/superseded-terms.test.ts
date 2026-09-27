@@ -1,6 +1,5 @@
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
-import { assertPopulationFloor, assertSharesPopulation, type Population } from "./population-floor.ts";
 import { spawn, type ChildProcess } from "node:child_process";
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -220,13 +219,19 @@ describe("#1103 the catalogue population", () => {
   it("keeps a record correction under the ceiling, which is the only exit a data pull request has", () => {
     const today = utcDate();
     const budget = qualityBudget("records_with_superseded_terms");
-    const atRest = supersededCensus(offers, changes, today).records_with_superseded_terms;
-    const { offer } = supersededRecords()[0];
+    const offer = offers.find((o) => !supersedingChange(o, changesFor(o.vendor)))!;
+    const naming = {
+      ...A_CHANGE_QUOTING_IT,
+      vendor: offer.vendor,
+      previous_state: offer.description,
+    } as DealChange;
+    const withIt = [...changes, naming];
+    const atRest = supersededCensus(offers, withIt, today).records_with_superseded_terms;
     const corrected = offers.map((o) =>
       o === offer ? { ...o, description: `${o.description}, re-read on ${today}` } : o,
     );
 
-    const after = supersededCensus(corrected, changes, today).records_with_superseded_terms;
+    const after = supersededCensus(corrected, withIt, today).records_with_superseded_terms;
     assert.strictEqual(after, atRest - 1);
     assert.ok(after <= budget, "correcting a record must not go red");
   });
@@ -345,15 +350,21 @@ describe("#1721 which recorded changes make the stored terms unpublishable", () 
     const { changeRatesTheListedTier } = await import("../dist/change-tier.js");
     const { isNoLongerInForce } = await import("../dist/change-resolution.js");
     const { readingPricesNothingButATrial } = await import("../dist/superseded-description.js");
-    const quotingAndPublishing = offers.filter((offer) => {
-      const quoting = changesFor(offer.vendor).filter(
-        (c) => !c.resolution && quotesTheStoredTermsAsPrevious(c, offer.description),
-      );
-      return quoting.length > 0 && !supersedingChange(offer, changesFor(offer.vendor));
+    const aReadingOfOnlyATrial = { ...A_CHANGE_QUOTING_IT, current_state: "Offers a 7-day free trial, no credit card required." };
+    const subjects = [
+      ...offers.map((offer) => ({ offer, held: changesFor(offer.vendor) })),
+      { offer: A_RECORD, held: [aReadingOfOnlyATrial] },
+    ];
+    const quotingAndPublishing = subjects.filter(({ offer, held }) => {
+      const quoting = held.filter((c) => !c.resolution && quotesTheStoredTermsAsPrevious(c, offer.description));
+      return quoting.length > 0 && !supersedingChange(offer, held);
     });
-    assert.ok(quotingAndPublishing.length > 0, "no record in the shipped data exercises this, so the assertion is vacuous");
-    for (const offer of quotingAndPublishing) {
-      for (const change of changesFor(offer.vendor)) {
+    assert.ok(
+      quotingAndPublishing.some(({ offer }) => offer === A_RECORD),
+      "a record quoted by a reading that prices only a trial must still publish, or this sweep can pass with no subject",
+    );
+    for (const { offer, held } of quotingAndPublishing) {
+      for (const change of held) {
         if (!quotesTheStoredTermsAsPrevious(change, offer.description)) continue;
         assert.ok(
           isNoLongerInForce(change)
@@ -667,10 +678,13 @@ describe("#1386 the reading the superseding record already holds", () => {
   });
 
   it("closes the reading on every record that read terms with no stop of their own", () => {
-    const unstopped = supersededRecords()
+    const unstopped = [...supersededRecords(), { offer: A_RECORD, change: A_CHANGE_QUOTING_IT }]
       .map(({ offer, change }) => ({ offer, change, reading: readingBehindTheChange(change)! }))
       .filter(({ reading }) => reading && !/[.!?…]$/.test(reading.terms));
-    assert.ok(unstopped.length > 10, `only ${unstopped.length} records read terms with no closing stop`);
+    assert.ok(
+      unstopped.some(({ change }) => change === A_CHANGE_QUOTING_IT),
+      "the synthetic record must read terms with no closing stop, or this sweep can pass with no subject",
+    );
     for (const { offer, change, reading } of unstopped) {
       const notice = supersededTermsNotice(offer.vendor, change);
       const after = notice.indexOf(reading.terms) + reading.terms.length;
@@ -739,20 +753,25 @@ describe("#1386 the reading the superseding record already holds", () => {
 const FIXTURE_VENDOR = "Deno Deploy";
 const FIXTURE_SLUG = toSlug(FIXTURE_VENDOR);
 
-function fixtureFrom(withResolution: boolean, changeType?: string) {
+const A_READING_NAMING_ITS_FREE_PLAN_LATE =
+  "Pro is $20 a month with 5M requests and 200 GiB egress. Builder is $200 a month with 20M requests. " +
+  "The free plan includes 1M requests a month and 100 GiB egress.";
+
+function fixtureFrom(withResolution: boolean, changeType?: string, currentState?: string) {
   const record = JSON.parse(JSON.stringify(offers.find((o) => o.vendor === FIXTURE_VENDOR)));
   const change = JSON.parse(JSON.stringify(changes.find((c) => c.vendor === FIXTURE_VENDOR)));
   assert.ok(record && change, "the fixture is built from the record and change this issue names");
   record.description = change.previous_state;
   if (changeType) change.change_type = changeType;
+  if (currentState) change.current_state = currentState;
   if (withResolution) {
     change.resolution = { state: "reversed", date: "2026-09-04", detail: "The vendor restored the earlier limits." };
   }
   return { record, change };
 }
 
-function writeFixture(dir: string, name: string, withResolution: boolean, changeType?: string) {
-  const { record, change } = fixtureFrom(withResolution, changeType);
+function writeFixture(dir: string, name: string, withResolution: boolean, changeType?: string, currentState?: string) {
+  const { record, change } = fixtureFrom(withResolution, changeType, currentState);
   writeFileSync(path.join(dir, `${name}-index.json`), JSON.stringify({ offers: [record, ...offers.filter((o) => o.vendor !== FIXTURE_VENDOR)] }));
   writeFileSync(path.join(dir, `${name}-changes.json`), JSON.stringify({ changes: [change] }));
   return { record, change };
@@ -835,9 +854,13 @@ describe("#1103 a page whose stored terms its own change log quotes as previous"
   let superseded: { proc: ChildProcess; port: number } | null = null;
   let resolved: { proc: ChildProcess; port: number } | null = null;
   let improved: { proc: ChildProcess; port: number } | null = null;
+  let neutral: { proc: ChildProcess; port: number } | null = null;
+  let namingItLate: { proc: ChildProcess; port: number } | null = null;
   let supersededPage = "";
   let resolvedPage = "";
   let improvedPage = "";
+  let neutralPage = "";
+  let namingItLatePage = "";
   let storedTerms = "";
 
   before(async () => {
@@ -845,8 +868,10 @@ describe("#1103 a page whose stored terms its own change log quotes as previous"
     const built = writeFixture(dir, "superseded", false);
     writeFixture(dir, "resolved", true);
     writeFixture(dir, "improved", false, "limits_increased");
+    writeFixture(dir, "neutral", false, "rebranded");
+    writeFixture(dir, "naming-it-late", false, undefined, A_READING_NAMING_ITS_FREE_PLAN_LATE);
     storedTerms = built.record.description;
-    [superseded, resolved, improved] = await Promise.all([
+    [superseded, resolved, improved, neutral, namingItLate] = await Promise.all([
       startServer({
         AGENTDEALS_INDEX_PATH: path.join(dir, "superseded-index.json"),
         AGENTDEALS_CHANGES_PATH: path.join(dir, "superseded-changes.json"),
@@ -859,18 +884,42 @@ describe("#1103 a page whose stored terms its own change log quotes as previous"
         AGENTDEALS_INDEX_PATH: path.join(dir, "improved-index.json"),
         AGENTDEALS_CHANGES_PATH: path.join(dir, "improved-changes.json"),
       }),
+      startServer({
+        AGENTDEALS_INDEX_PATH: path.join(dir, "neutral-index.json"),
+        AGENTDEALS_CHANGES_PATH: path.join(dir, "neutral-changes.json"),
+      }),
+      startServer({
+        AGENTDEALS_INDEX_PATH: path.join(dir, "naming-it-late-index.json"),
+        AGENTDEALS_CHANGES_PATH: path.join(dir, "naming-it-late-changes.json"),
+      }),
     ]);
     supersededPage = await fetch(`http://localhost:${superseded.port}/vendor/${FIXTURE_SLUG}`).then((r) => r.text());
     resolvedPage = await fetch(`http://localhost:${resolved.port}/vendor/${FIXTURE_SLUG}`).then((r) => r.text());
     improvedPage = await fetch(`http://localhost:${improved.port}/vendor/${FIXTURE_SLUG}`).then((r) => r.text());
+    neutralPage = await fetch(`http://localhost:${neutral.port}/vendor/${FIXTURE_SLUG}`).then((r) => r.text());
+    namingItLatePage = await fetch(`http://localhost:${namingItLate.port}/vendor/${FIXTURE_SLUG}`).then((r) => r.text());
   });
 
   after(() => {
     superseded?.proc.kill();
     resolved?.proc.kill();
     improved?.proc.kill();
+    neutral?.proc.kill();
+    namingItLate?.proc.kill();
     if (dir) rmSync(dir, { recursive: true, force: true });
   });
+
+  const withholdsAsWhereItNarrowed = (page: string, changeType: string) => {
+    const { change } = fixtureFrom(false, changeType);
+    assert.strictEqual(change.previous_state, fixtureFrom(false).record.description);
+    assert.ok(!unescaped(descriptionBlockOf(page)).includes(storedTerms), "the page states a figure its own record names as the previous one");
+    const isFree = faqAnswersOf(page).find((pair) => pair.question === `Is ${FIXTURE_VENDOR} free?`);
+    assert.ok(!isFree!.answer.startsWith("Yes,"), isFree!.answer);
+    assert.ok(isFree!.answer.includes(STORED_TERMS_WITHHELD_PHRASE), isFree!.answer);
+    assert.ok(!("offers" in jsonLdOfType(page, "WebPage")!.mainEntity));
+    assert.ok(page.includes(`class="terms-superseded-text"`));
+    assert.ok(unescaped(descriptionBlockOf(page)).includes(change.current_state), descriptionBlockOf(page));
+  };
 
   it("builds a fixture whose stored terms are the change's previous_state", () => {
     const { record, change } = fixtureFrom(false);
@@ -934,15 +983,22 @@ describe("#1103 a page whose stored terms its own change log quotes as previous"
   });
 
   it("#1721 withholds the stored terms where the recorded change widened them, exactly as where it narrowed them", () => {
-    const { change } = fixtureFrom(false, "limits_increased");
-    assert.strictEqual(change.previous_state, fixtureFrom(false).record.description);
-    assert.ok(!unescaped(descriptionBlockOf(improvedPage)).includes(storedTerms), "the page states a figure its own record names as the previous one");
-    const isFree = faqAnswersOf(improvedPage).find((pair) => pair.question === `Is ${FIXTURE_VENDOR} free?`);
-    assert.ok(!isFree!.answer.startsWith("Yes,"), isFree!.answer);
-    assert.ok(isFree!.answer.includes(STORED_TERMS_WITHHELD_PHRASE), isFree!.answer);
-    assert.ok(!("offers" in jsonLdOfType(improvedPage, "WebPage")!.mainEntity));
-    assert.ok(improvedPage.includes(`class="terms-superseded-text"`));
-    assert.ok(unescaped(descriptionBlockOf(improvedPage)).includes(change.current_state), descriptionBlockOf(improvedPage));
+    assert.strictEqual(CHANGE_DIRECTION_OF["limits_increased"], "positive");
+    withholdsAsWhereItNarrowed(improvedPage, "limits_increased");
+  });
+
+  it("#1721 withholds the stored terms where the recorded change is counted neutral, exactly as where it narrowed them", () => {
+    assert.strictEqual(CHANGE_DIRECTION_OF["rebranded"], "neutral");
+    withholdsAsWhereItNarrowed(neutralPage, "rebranded");
+  });
+
+  it("names the free plan in the meta description where the reading names it only after the opening", () => {
+    const terms = A_READING_NAMING_ITS_FREE_PLAN_LATE;
+    assert.ok(whereAFreePlanIsNamed(terms) > 0, "the fixture's reading must name a free plan");
+    assert.ok(!mentionsSomethingFree(openingOfTerms(terms, 90)), "the fixture's reading must not open on it");
+    const meta = unescaped(metaDescriptionOf(namingItLatePage));
+    assert.ok(meta.includes(STORED_TERMS_WITHHELD_META_PHRASE), meta);
+    assert.ok(mentionsSomethingFree(meta), meta);
   });
 
   it("publishes the same terms as current once the change is resolved", () => {
@@ -958,10 +1014,6 @@ describe("#1103 every catalogue record whose stored terms are superseded", () =>
   const bodies = new Map<string, string>();
   const population = supersededPagesRender();
   const withARecordedReading = () => population.filter(({ change }) => readingBehindTheChange(change));
-  const recordsThesePagesWithhold = (): Population => ({
-    size: population.length,
-    read: "records these pages withhold the stored terms of",
-  });
 
   before(async () => {
     server = await startServer({});
@@ -981,15 +1033,6 @@ describe("#1103 every catalogue record whose stored terms are superseded", () =>
 
   it("renders a page for every one of them", () => {
     assert.strictEqual(bodies.size, population.length);
-  });
-
-  it("#1721 holds records counted every way, so the assertions below are not about negative ones only", async () => {
-    const { CHANGE_DIRECTION } = await import("../dist/change-direction.js");
-    const counted: Record<string, number> = { negative: 0, positive: 0, neutral: 0 };
-    for (const { change } of population) counted[CHANGE_DIRECTION[change.change_type]]++;
-    assertSharesPopulation(counted.positive, recordsThesePagesWithhold(), 0.1, "records counted positive that withhold their stored terms");
-    assert.ok(counted.neutral > 0, `no record counted neutral withholds its stored terms`);
-    assertSharesPopulation(counted.negative, recordsThesePagesWithhold(), 0.4, "records counted negative that withhold their stored terms");
   });
 
   it("holds a dated, sourced reading for most of them, so the citations below have subjects", () => {
@@ -1164,10 +1207,6 @@ describe("#1103 every catalogue record whose stored terms are superseded", () =>
       .filter(({ offer }) => !mentionsSomethingFree(unescaped(metaDescriptionOf(bodies.get(`/vendor/${toSlug(offer.vendor)}`)!))))
       .map(({ offer }) => offer.vendor);
     assert.deepStrictEqual(silent.slice(0, 20), []);
-  });
-
-  it("finds readings that name one, so the assertion above has subjects", () => {
-    assert.ok(readingNamesAFreePlanLaterOn().length > 0, `${readingNamesAFreePlanLaterOn().length} readings name a free plan the opening would miss`);
   });
 
   it("leaves the opening alone wherever it already says something is free", () => {
@@ -1359,31 +1398,74 @@ describe("#1721 the topic APIs that publish a record beside its terms", () => {
     "/api/agent-payments": "services",
   };
   let server: { proc: ChildProcess; port: number } | null = null;
+  let supersedingServer: { proc: ChildProcess; port: number } | null = null;
+  let dir = "";
   const rowsByRoute = new Map<string, Record<string, any>[]>();
+  const supersededRowsByRoute = new Map<string, Record<string, any>[]>();
+  const SUBJECT_ON = new Map<string, { offer: Offer; change: DealChange }>();
 
   const recordFor = (vendor: string, tier: string | undefined): SupersededTermsRecord | null => {
     const offer = offers.find((o) => o.vendor === vendor && (tier === undefined || o.tier === tier));
     return offer ? supersededTermsRecordFor(offer, changesFor(vendor)) : null;
   };
 
+  const rowsServedBy = async (port: number, into: Map<string, Record<string, any>[]>) => {
+    for (const route of Object.keys(ROWS_AT)) {
+      const body = await fetch(`http://localhost:${port}${route}`).then((r) => r.json());
+      into.set(route, (body as Record<string, any>)[ROWS_AT[route]] ?? []);
+    }
+  };
+
+  const rowOf = (rows: Record<string, any>[], offer: Offer) =>
+    rows.find((row) => row.vendor === offer.vendor && row.tier === offer.tier);
+
+  const noRecordQuotesTheTermsOf = (offer: Offer): boolean =>
+    changesFor(offer.vendor).every((change) => !quotesTheStoredTermsAsPrevious(change, offer.description));
+
+  const aRecordNamingTheTermsOf = (offer: Offer): DealChange =>
+    ({
+      ...A_CHANGE_QUOTING_IT,
+      vendor: offer.vendor,
+      tier: offer.tier,
+      category: offer.category,
+      previous_state: offer.description,
+      source_url: offer.url,
+    }) as DealChange;
+
   before(async () => {
     server = await startServer({});
-    for (const route of Object.keys(ROWS_AT)) {
-      const body = await fetch(`http://localhost:${server.port}${route}`).then((r) => r.json());
-      rowsByRoute.set(route, (body as Record<string, any>)[ROWS_AT[route]] ?? []);
+    await rowsServedBy(server.port, rowsByRoute);
+    const taken = new Set<string>();
+    for (const [route, rows] of rowsByRoute) {
+      const offer = rows
+        .map((row) => offers.filter((o) => o.vendor === row.vendor && o.tier === row.tier))
+        .filter((matching) => matching.length === 1)
+        .map(([only]) => only!)
+        .find((candidate) => !taken.has(candidate.vendor) && noRecordQuotesTheTermsOf(candidate));
+      if (!offer) continue;
+      taken.add(offer.vendor);
+      SUBJECT_ON.set(route, { offer, change: aRecordNamingTheTermsOf(offer) });
     }
+    dir = mkdtempSync(path.join(tmpdir(), "superseded-topic-rows-"));
+    const stored = JSON.parse(readFileSync(path.join(REPO, "data", "deal_changes.json"), "utf-8"));
+    stored.changes.push(...[...SUBJECT_ON.values()].map(({ change }) => change));
+    writeFileSync(path.join(dir, "changes.json"), JSON.stringify(stored));
+    supersedingServer = await startServer({ AGENTDEALS_CHANGES_PATH: path.join(dir, "changes.json") });
+    await rowsServedBy(supersedingServer.port, supersededRowsByRoute);
   });
 
-  after(() => { server?.proc.kill(); });
+  after(() => {
+    server?.proc.kill();
+    supersedingServer?.proc.kill();
+    if (dir) rmSync(dir, { recursive: true, force: true });
+  });
 
   it("answers with the same record the vendor page withholds its terms behind", () => {
     const wrong: string[] = [];
-    let carried = 0;
     for (const [route, rows] of rowsByRoute) {
       assert.ok(rows.length > 0, `${route} lists no records, so nothing below is exercised`);
       for (const row of rows) {
         const expected = recordFor(row.vendor, row.tier);
-        if (expected) carried++;
         const published = row.terms_superseded ?? null;
         if (JSON.stringify(published) !== JSON.stringify(expected)) {
           wrong.push(`${route} ${row.vendor}: publishes ${published ? "a record" : "nothing"} where the catalogue says ${expected ? "the terms are superseded" : "they are not"}`);
@@ -1391,6 +1473,29 @@ describe("#1721 the topic APIs that publish a record beside its terms", () => {
       }
     }
     assert.deepStrictEqual(wrong.slice(0, 20), [], wrong.slice(0, 20).join("\n"));
-    assert.ok(carried > 20, `only ${carried} rows across these routes hold superseded terms, so the assertion is close to vacuous`);
+  });
+
+  it("publishes the record on every one of these routes once a record names a listing's terms as the previous ones, however few listings are stale today", () => {
+    assert.deepStrictEqual(
+      [...SUBJECT_ON.keys()].sort(),
+      Object.keys(ROWS_AT).sort(),
+      "every listing on some route is already quoted by a record, so that route has no subject to supersede",
+    );
+    for (const [route, { offer, change }] of SUBJECT_ON) {
+      assert.strictEqual(
+        supersedingChange(offer, [...changesFor(offer.vendor), change]),
+        change,
+        `the added record does not supersede ${offer.vendor}'s terms by the catalogue's own rule`,
+      );
+      const asListed = rowOf(rowsByRoute.get(route)!, offer);
+      assert.ok(asListed, `${route} does not list ${offer.vendor}`);
+      assert.strictEqual(asListed!.terms_superseded ?? null, null, `${route} already withholds ${offer.vendor}'s terms`);
+      const asSuperseded = rowOf(supersededRowsByRoute.get(route)!, offer);
+      assert.ok(asSuperseded?.terms_superseded, `${route} publishes no record for ${offer.vendor} where one names its terms as the previous ones`);
+      assert.strictEqual(asSuperseded!.terms_superseded.change_date, change.date, route);
+      assert.strictEqual(asSuperseded!.terms_superseded.summary, change.summary, route);
+      assert.strictEqual(asSuperseded!.terms_superseded.reading?.terms, change.current_state, route);
+      assert.deepStrictEqual(asSuperseded!.terms_superseded, supersededTermsRecordFor(offer, [change]), route);
+    }
   });
 });
