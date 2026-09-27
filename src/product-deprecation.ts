@@ -1,4 +1,5 @@
 import type { DealChange } from "./types.js";
+import { NEGATIVE_CHANGE_TYPES } from "./change-direction.js";
 
 export const PRODUCT_DEPRECATED = "product_deprecated";
 
@@ -136,6 +137,11 @@ export function deprecationEndsTheListedProduct(change: DeprecationSubject): boo
 
 export function deprecationTouchesTheListing(change: DeprecationSubject): boolean {
   return deprecationCall(change) !== "none";
+}
+
+export function countsAsANegativeChange(change: DeprecationSubject): boolean {
+  if (!NEGATIVE_CHANGE_TYPES.has(change.change_type)) return false;
+  return change.change_type !== PRODUCT_DEPRECATED || deprecationTouchesTheListing(change);
 }
 
 function isoFrom(match: RegExpExecArray, pattern: RegExp): string | null {

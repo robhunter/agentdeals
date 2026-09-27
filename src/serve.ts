@@ -100,7 +100,7 @@ import {
 import { changeAnchor, changeRecordHref } from "./change-anchor.js";
 import { SSE_KEEPALIVE_FRAME, keepaliveIntervalMs, sessionRecoveryBody } from "./mcp-stream.js";
 import { ASSISTANTS_API_SHUTDOWN } from "./assistants-shutdown.js";
-import { discontinuedClause, discontinuedOnOrBefore, endsAFreeTier } from "./product-deprecation.js";
+import { countsAsANegativeChange, discontinuedClause, discontinuedOnOrBefore, endsAFreeTier } from "./product-deprecation.js";
 import { rankOffers, rankForListing, rotateListing, utcDate, gateFor, notAFreeOfferGateFor, descriptionDeniesFreeTier, classifyTier, CRITERIA_PATH, DEMOTE_ONLY_POLICY, DISCLOSURE_RATIONALE, TIE_BREAK_ALGORITHM, NAMED_SUBSET_RULE, NAMED_SUBSET_FIELD_RULE, wholeRankedOrderClause, GATE_TABLE, gateTableRowText, DEMERIT_TABLE, demeritTableRowText, NOT_FREE_TIER_RULES, TIME_LIMITED_TIER_RULES, type TieBreak, type Gate } from "./ranking.js";
 import type { RankedEntry, RankingResult } from "./ranking.js";
 import { eligibilityGateAsPublished, gatedShareDescriptionClause, gatedShareLede, publishableEligibilityConditions } from "./eligibility.js";
@@ -9722,7 +9722,7 @@ function buildReportsIndexPage(): string {
   const monthCards = months.map(m => {
     const [y, mo] = m.split("-");
     const monthChanges = trackedChanges(changesEffectiveIn(allChanges, m));
-    const negative = monthChanges.filter(c => NEGATIVE_CHANGE_TYPES.has(c.change_type)).length;
+    const negative = monthChanges.filter(countsAsANegativeChange).length;
     const positive = monthChanges.filter(c => POSITIVE_CHANGE_TYPES.has(c.change_type)).length;
     const neutral = monthChanges.length - negative - positive;
     const sentiment = negative > positive ? "bearish" : positive > negative ? "bullish" : "mixed";
@@ -9804,9 +9804,9 @@ function buildMonthlyReportPage(yearMonth: string): string | null {
   const negativeTypes = NEGATIVE_CHANGE_TYPES;
   const positiveTypes = POSITIVE_CHANGE_TYPES;
 
-  const negative = monthChanges.filter(c => negativeTypes.has(c.change_type));
+  const negative = monthChanges.filter(countsAsANegativeChange);
   const positive = monthChanges.filter(c => positiveTypes.has(c.change_type));
-  const neutral = monthChanges.filter(c => !negativeTypes.has(c.change_type) && !positiveTypes.has(c.change_type));
+  const neutral = monthChanges.filter(c => !countsAsANegativeChange(c) && !positiveTypes.has(c.change_type));
 
   const typeCounts = new Map<string, number>();
   for (const c of monthChanges) typeCounts.set(c.change_type, (typeCounts.get(c.change_type) || 0) + 1);
@@ -9816,7 +9816,7 @@ function buildMonthlyReportPage(yearMonth: string): string | null {
     const cat = c.category || "Uncategorized";
     const entry = catCounts.get(cat) || { total: 0, negative: 0, positive: 0 };
     entry.total++;
-    if (negativeTypes.has(c.change_type)) entry.negative++;
+    if (countsAsANegativeChange(c)) entry.negative++;
     if (positiveTypes.has(c.change_type)) entry.positive++;
     catCounts.set(cat, entry);
   }
@@ -9824,7 +9824,7 @@ function buildMonthlyReportPage(yearMonth: string): string | null {
 
   const prevMonth = monthNum === 1 ? (parseInt(yearStr) - 1) + "-12" : yearStr + "-" + String(monthNum - 1).padStart(2, "0");
   const prevChanges = recordsStillInForce(changesEffectiveIn(allChanges, prevMonth));
-  const prevNeg = prevChanges.filter(c => negativeTypes.has(c.change_type)).length;
+  const prevNeg = prevChanges.filter(countsAsANegativeChange).length;
   const prevPos = prevChanges.filter(c => positiveTypes.has(c.change_type)).length;
 
   function momIndicator(current: number, previous: number): string {
@@ -44984,12 +44984,11 @@ function buildStateOfFreeTiersPage(): string {
   const eligibilityOffers = offers.filter(o => o.eligibility);
   const startupOffers = offers.filter(o => o.tier.toLowerCase().includes("startup") || (o.eligibility && JSON.stringify(o.eligibility).toLowerCase().includes("startup")));
 
-  const negativeTypes = NEGATIVE_CHANGE_TYPES;
   const positiveTypes = POSITIVE_CHANGE_TYPES;
   function tallyMonths(months: Map<string, typeof dealChanges>): Array<[string, { total: number; negative: number; positive: number }]> {
     return [...months.entries()].map(([month, records]) => [month, {
       total: records.length,
-      negative: records.filter(c => negativeTypes.has(c.change_type)).length,
+      negative: records.filter(countsAsANegativeChange).length,
       positive: records.filter(c => positiveTypes.has(c.change_type)).length,
     }]);
   }
@@ -45033,7 +45032,7 @@ function buildStateOfFreeTiersPage(): string {
     if (c.category) {
       const entry = catChangeCounts.get(c.category) ?? { negative: 0, positive: 0, total: 0 };
       entry.total++;
-      if (negativeTypes.has(c.change_type)) entry.negative++;
+      if (countsAsANegativeChange(c)) entry.negative++;
       if (positiveTypes.has(c.change_type)) entry.positive++;
       catChangeCounts.set(c.category, entry);
     }
@@ -45043,7 +45042,7 @@ function buildStateOfFreeTiersPage(): string {
     .slice(0, 15);
 
   const trackedHere = trackedChanges(changesInForce);
-  const negativeChanges = trackedHere.filter(c => negativeTypes.has(c.change_type)).sort((a, b) => b.date.localeCompare(a.date));
+  const negativeChanges = trackedHere.filter(countsAsANegativeChange).sort((a, b) => b.date.localeCompare(a.date));
   const positiveChanges = trackedHere.filter(c => positiveTypes.has(c.change_type)).sort((a, b) => b.date.localeCompare(a.date));
 
   const durability = removalDurability(dealChanges);
