@@ -10512,7 +10512,13 @@
       "category": "Cloud Hosting",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-13"
+      "recorded_date": "2026-09-13",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-27",
+        "detail": "Retracted 2026-09-27: nothing changed on 2026-09-13. The Internet Archive's capture of Cloudflare's Workers pricing page on 2026-09-10 carries the paragraph this record quotes and the same Free plan limits, 100,000 requests a day and 10 milliseconds of CPU time per invocation, which our listing already held. The record compared the page with our own listing text.",
+        "source_url": "https://web.archive.org/web/20260910235259/https://developers.cloudflare.com/workers/platform/pricing/"
+      }
     },
     {
       "vendor": "synadia.com",
@@ -11035,7 +11041,13 @@
       "category": "Education",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-22"
+      "recorded_date": "2026-09-22",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-27",
+        "detail": "Retracted 2026-09-27: nothing changed on 2026-09-22. Cloudflare's Workers for Students post, published 2025-09-22, gives student accounts 10 million Workers requests a month and 10 million KV reads a month, as our listing already said. The 100,000 KV reads this record quotes are the Free plan's daily figure in the same table.",
+        "source_url": "https://blog.cloudflare.com/workers-for-students/"
+      }
     },
     {
       "vendor": "Proton Pass",

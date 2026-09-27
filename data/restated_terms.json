@@ -24,7 +24,8 @@
       "source_url": "https://developers.cloudflare.com/workers/platform/pricing/",
       "record_date": "2026-09-13",
       "change_type": "pricing_restructured",
-      "summary": "The free plan now has limits of 100K requests/day and 10ms CPU time per invocation, but the paid plan has increased limits and a minimum charge of $5 USD per month. The free plan is still available, but the pricing structure has been clarified and expanded with paid options."
+      "summary": "The free plan now has limits of 100K requests/day and 10ms CPU time per invocation, but the paid plan has increased limits and a minimum charge of $5 USD per month. The free plan is still available, but the pricing structure has been clarified and expanded with paid options.",
+      "reverted_on": "2026-09-27"
     },
     {
       "vendor": "Netlify",
