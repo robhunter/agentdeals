@@ -116,6 +116,9 @@
     "/alternative-to/betterstack": {
       "daily": true
     },
+    "/alternative-to/blaxel": {
+      "daily": true
+    },
     "/alternative-to/bleemeo-com": {
       "daily": true
     },
@@ -198,6 +201,9 @@
       "daily": true
     },
     "/alternative-to/datadog": {
+      "daily": true
+    },
+    "/alternative-to/daytona": {
       "daily": true
     },
     "/alternative-to/dbos": {
@@ -446,6 +452,9 @@
     "/alternative-to/northflank": {
       "daily": true
     },
+    "/alternative-to/novita-sandbox": {
+      "daily": true
+    },
     "/alternative-to/nvidia-nim": {
       "daily": true
     },
@@ -569,6 +578,9 @@
     "/alternative-to/roboflow": {
       "daily": true
     },
+    "/alternative-to/runloop": {
+      "daily": true
+    },
     "/alternative-to/scale-ai": {
       "daily": true
     },
@@ -687,6 +699,9 @@
       "daily": true
     },
     "/alternative-to/vercel": {
+      "daily": true
+    },
+    "/alternative-to/vercel-sandbox": {
       "daily": true
     },
     "/alternative-to/versoly": {
@@ -1370,6 +1385,18 @@
       "hash": "e9c86a7e98023e7c",
       "changed": "2026-09-20"
     },
+    "/compare/anthropic-api-vs-mistral-ai": {
+      "hash": "80e00d33e02740f5",
+      "changed": "2026-09-27"
+    },
+    "/compare/anthropic-api-vs-reportgpt": {
+      "hash": "2e760b9ab6a6d175",
+      "changed": "2026-09-27"
+    },
+    "/compare/anthropic-api-vs-together-ai": {
+      "hash": "a396864656318a0f",
+      "changed": "2026-09-27"
+    },
     "/compare/apache-netbeans-vs-code-cs50-io": {
       "hash": "c081393668fd3e0e",
       "changed": "2026-09-19"
@@ -1558,14 +1585,6 @@
       "hash": "d74119599c627ed1",
       "changed": "2026-09-18"
     },
-    "/compare/cloudflare-dynamic-workers-vs-daestro": {
-      "hash": "1e794538c54160c3",
-      "changed": "2026-09-18"
-    },
-    "/compare/cloudflare-dynamic-workers-vs-netlify": {
-      "hash": "7042034a2573e60e",
-      "changed": "2026-09-22"
-    },
     "/compare/cloudflare-pages-vs-netlify": {
       "hash": "517dc324fbc36120",
       "changed": "2026-09-22"
@@ -1576,14 +1595,6 @@
     },
     "/compare/cloudflare-pages-vs-vercel": {
       "hash": "4cfc886c2b958a68",
-      "changed": "2026-09-22"
-    },
-    "/compare/cloudflare-sandboxes-vs-daestro": {
-      "hash": "7f47c97cf0957acf",
-      "changed": "2026-09-18"
-    },
-    "/compare/cloudflare-sandboxes-vs-netlify": {
-      "hash": "250123b19cfdf6d9",
       "changed": "2026-09-22"
     },
     "/compare/cloudflare-warp-vs-proton-vpn": {
@@ -1645,14 +1656,6 @@
     "/compare/codspeed-vs-scrutinizer-ci-com": {
       "hash": "2e4c890226d108dd",
       "changed": "2026-09-18"
-    },
-    "/compare/cohere-vs-gpu-bridge": {
-      "hash": "3ac40deab9c470e3",
-      "changed": "2026-09-19"
-    },
-    "/compare/cohere-vs-scale-ai": {
-      "hash": "8bdc550bcc62b3ee",
-      "changed": "2026-09-27"
     },
     "/compare/coinmarketcap-vs-revenuecat": {
       "hash": "b72f8e42b5fef91c",
@@ -1750,9 +1753,17 @@
       "hash": "f229783d0f182fbc",
       "changed": "2026-09-27"
     },
-    "/compare/daestro-vs-netlify": {
-      "hash": "cc12ad89f8a5d4ff",
-      "changed": "2026-09-22"
+    "/compare/daestro-vs-encore-dev": {
+      "hash": "eb04327a39514700",
+      "changed": "2026-09-27"
+    },
+    "/compare/daestro-vs-freeflarum": {
+      "hash": "c8e67936a00060a4",
+      "changed": "2026-09-27"
+    },
+    "/compare/daestro-vs-neocities": {
+      "hash": "fb71ca9601b34221",
+      "changed": "2026-09-27"
     },
     "/compare/datadog-vs-grafana-cloud": {
       "hash": "697e25de09c1585e",
@@ -1970,6 +1981,10 @@
       "hash": "3030c27e7547b0d8",
       "changed": "2026-09-20"
     },
+    "/compare/freeflarum-vs-encore-dev": {
+      "hash": "443617c8d7dce482",
+      "changed": "2026-09-27"
+    },
     "/compare/geekflare-api-vs-snapapi": {
       "hash": "815e3238e11158f7",
       "changed": "2026-09-26"
@@ -2081,14 +2096,6 @@
     "/compare/gorgias-vs-zoom": {
       "hash": "a3bd0fd6aa7ff13f",
       "changed": "2026-09-18"
-    },
-    "/compare/gpu-bridge-vs-openai": {
-      "hash": "37f5037c8690a20b",
-      "changed": "2026-09-27"
-    },
-    "/compare/gpu-bridge-vs-scale-ai": {
-      "hash": "1682b7371706b598",
-      "changed": "2026-09-27"
     },
     "/compare/grafana-cloud-vs-sentry": {
       "hash": "bd2c0a1400f870bf",
@@ -2315,6 +2322,10 @@
       "hash": "f5b9697a0556552d",
       "changed": "2026-09-22"
     },
+    "/compare/mistral-ai-vs-reportgpt": {
+      "hash": "f04e912cea95ae5d",
+      "changed": "2026-09-27"
+    },
     "/compare/mongodb-vs-supabase": {
       "hash": "1d6f483144d684ee",
       "changed": "2026-09-20"
@@ -2342,6 +2353,10 @@
     "/compare/mux-vs-zoho-meeting": {
       "hash": "426d647d26c74fe2",
       "changed": "2026-09-26"
+    },
+    "/compare/neocities-vs-encore-dev": {
+      "hash": "4d1cd7f78c54950b",
+      "changed": "2026-09-27"
     },
     "/compare/neon-vs-supabase": {
       "hash": "f28f54ce2fef2161",
@@ -2381,10 +2396,6 @@
     },
     "/compare/openai-codex-vs-windsurf": {
       "hash": "7271c927f743f6d0",
-      "changed": "2026-09-27"
-    },
-    "/compare/openai-vs-scale-ai": {
-      "hash": "599785c6c994d999",
       "changed": "2026-09-27"
     },
     "/compare/opencagedata-com-vs-osmnames": {
@@ -2494,6 +2505,10 @@
     "/compare/render-vs-vercel": {
       "hash": "8a2010a74a6e68c9",
       "changed": "2026-09-22"
+    },
+    "/compare/reportgpt-vs-together-ai": {
+      "hash": "7937a1b9614142d2",
+      "changed": "2026-09-27"
     },
     "/compare/resend-vs-mail-tester-com": {
       "hash": "6646adc0669f4575",
@@ -4179,6 +4194,9 @@
       "hash": "5333fc99e5ca6ec1",
       "changed": "2026-09-27"
     },
+    "/vendor/blaxel": {
+      "daily": true
+    },
     "/vendor/blazemeter": {
       "hash": "da28dfe78752401f",
       "changed": "2026-09-27"
@@ -5026,6 +5044,9 @@
     "/vendor/davinci-resolve": {
       "hash": "e4ab0f8419ab5c3a",
       "changed": "2026-09-27"
+    },
+    "/vendor/daytona": {
+      "daily": true
     },
     "/vendor/db-designer": {
       "hash": "6afb18720d7d376d",
@@ -7269,6 +7290,9 @@
       "hash": "6a4a40134e62c704",
       "changed": "2026-09-27"
     },
+    "/vendor/novita-sandbox": {
+      "daily": true
+    },
     "/vendor/novu": {
       "hash": "1f7f7060fe4d8f37",
       "changed": "2026-09-27"
@@ -8067,6 +8091,9 @@
     "/vendor/runcloud-io": {
       "hash": "9d8205c3054ecb9b",
       "changed": "2026-09-27"
+    },
+    "/vendor/runloop": {
+      "daily": true
     },
     "/vendor/runmyjob": {
       "hash": "a76102d84cfbce47",
@@ -9210,6 +9237,9 @@
       "changed": "2026-09-27"
     },
     "/vendor/vercel": {
+      "daily": true
+    },
+    "/vendor/vercel-sandbox": {
       "daily": true
     },
     "/vendor/verifalia": {
