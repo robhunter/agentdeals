@@ -9,12 +9,11 @@ import { fileURLToPath } from "node:url";
 import { directionRatioLabel, RATIO_ROUNDING_TOLERANCE } from "../dist/change-direction.js";
 import { recordsStillInForce, isNoLongerInForce, resolutionTag } from "../dist/change-resolution.js";
 import { trackedChanges, isIndexHousekeeping } from "../dist/change-census.js";
+import { countsAsANegativeChange } from "../dist/product-deprecation.js";
 import { statesWhenItTookEffect } from "./effective-date-rule.ts";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
-
-const NEGATIVE_TYPES = ["free_tier_removed", "limits_reduced", "restriction", "open_source_killed", "product_deprecated"];
 
 interface StoredChange {
   vendor: string;
@@ -74,11 +73,11 @@ function today(): string {
 
 function subjectRecord(changes: StoredChange[]): StoredChange {
   const now = today();
-  const candidates = changes
+  const candidates = (trackedChanges(changes as never[]) as StoredChange[])
     .filter(
       (c) =>
         statesWhenItTookEffect(c) &&
-        NEGATIVE_TYPES.includes(c.change_type) &&
+        countsAsANegativeChange(c as never) &&
         !c.resolution &&
         c.date <= now &&
         c.date.slice(0, 4) === now.slice(0, 4)
