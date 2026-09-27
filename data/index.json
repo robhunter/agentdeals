@@ -7723,8 +7723,8 @@
     {
       "vendor": "Pinecone",
       "category": "AI / ML",
-      "description": "Vector database — The Starter plan is free and includes up to 2 GB storage, 2M write units/month, 1M read units/month, 5 indexes, 1GB Assistant storage, 500k input tokens, 300k output tokens, and 500k context processed tokens. It also includes access to various embedding and reranking models with token/request limits.",
-      "tier": "Starter",
+      "description": "Vector database. The Starter plan is free: up to 2 GB storage, 2M write units and 1M read units a month, 1 GB of egress a month (reads that return data stop at the cap until the next billing period), 5 indexes, 1 project and 2 users, on AWS us-east-1 only. Assistant includes 1 GB storage and 500k input, 300k output and 500k context tokens a month. Three embedding models include 5M tokens a month each; bge-reranker-v2-m3 includes 500 requests a month. Builder is $20/month flat.",
+      "tier": "Free",
       "url": "https://pinecone.io/pricing",
       "tags": [
         "ai",
@@ -7764,16 +7764,9 @@
         ],
         "reviewed": "2026-09-01"
       },
-      "restated_from": {
-        "reading_date": "2026-09-10",
-        "source_url": "https://pinecone.io/pricing",
-        "record_date": "2026-09-10",
-        "change_type": "pricing_restructured",
-        "restated_on": "2026-09-20"
-      },
       "restatement_reverted": {
-        "record_date": "2026-09-26",
-        "reverted_on": "2026-09-26"
+        "record_date": "2026-09-10",
+        "reverted_on": "2026-09-27"
       }
     },
     {
@@ -8524,9 +8517,9 @@
     {
       "vendor": "Roboflow",
       "category": "AI / ML",
-      "description": "Computer vision platform — Public plan is free, requires no credit card, and includes 15 credits / month, 2 users, and Community Support. Data and models are open source on Roboflow Universe.",
-      "tier": "Public (Free)",
-      "url": "https://roboflow.com/pricing",
+      "description": "Computer vision platform for labeling, training and deploying models. On September 18, 2026 Roboflow announced a free tier for its Core plan: 10 credits that refresh every month, private projects and models, and model weight download. More credits can be bought. Credits pay for storage, labeling, training and cloud deployment; running models on your own hardware with Roboflow Inference uses none. Core's data licensing and model training setting is on by default, including for private projects; a workspace can turn it off. Public plan workspaces are moving to the Core free tier.",
+      "tier": "Free",
+      "url": "https://docs.roboflow.com/platform/billing-and-plans/plans",
       "tags": [
         "ml",
         "computer-vision",
@@ -8538,7 +8531,7 @@
       "source_check": {
         "checked": "2026-09-26",
         "outcome": "ok",
-        "detail": "the page names Roboflow as \"roboflow\" and states \"15 credits / month\""
+        "detail": "the page names Roboflow as \"roboflow\""
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -8556,12 +8549,9 @@
         ],
         "reviewed": "2026-09-01"
       },
-      "restated_from": {
-        "reading_date": "2026-08-28",
-        "source_url": "https://roboflow.com/pricing",
+      "restatement_reverted": {
         "record_date": "2026-08-28",
-        "change_type": "limits_reduced",
-        "restated_on": "2026-09-20"
+        "reverted_on": "2026-09-27"
       }
     },
     {
@@ -8810,9 +8800,9 @@
     {
       "vendor": "AssemblyAI",
       "category": "AI / ML",
-      "description": "Speech-to-text and audio intelligence API — free tier: up to 185 hours of pre-recorded transcription and up to 333 hours of streaming transcription, no credit card required. Pay as you go after: Universal-2 $0.15/hr, Universal-3.5 Pro $0.21/hr",
-      "tier": "Free",
-      "url": "https://www.assemblyai.com/pricing",
+      "description": "Speech-to-text and Speech Understanding API. New accounts get $50 in free credits with no credit card required; the credits do not expire and cover pre-recorded and streaming speech-to-text, the Voice Agent API, Speech Understanding and Guardrails, but not LLM Gateway. Free accounts can run 5 pre-recorded transcriptions in parallel and open 5 new streaming sessions per minute. Pay-as-you-go rates: Universal-3.5 Pro $0.21/hr; Universal-2 $0.15/hr; Universal-Streaming $0.15/hr; Universal-3.5 Pro Realtime $0.45/hr.",
+      "tier": "Free Credits",
+      "url": "https://www.assemblyai.com/docs/billing-and-pricing",
       "tags": [
         "ai",
         "speech-to-text",
@@ -8951,7 +8941,7 @@
     {
       "vendor": "Weights & Biases",
       "category": "AI / ML",
-      "description": "ML experiment tracking and model registry — The free tier is $0/mo and includes 1 user seat, experiment tracking, registry & lineage tracking, and is for personal projects only. Corporate use is not allowed.",
+      "description": "ML experiment tracking, model registry, and LLM app tracing and evaluation (Weave). The cloud Free plan is $0/mo and designed for personal development, with up to 5 model seats, 5 GB/mo of storage and 1 GB/mo of Weave data ingestion. Pro starts at $60/month with a 30-day free trial and is for teams with fewer than 50 employees. A separate self-hosted Personal plan (W&B server on your own machine) is $0/mo with 1 user seat, for personal projects only; corporate use is not allowed.",
       "tier": "Free",
       "url": "https://wandb.ai/site/pricing/",
       "tags": [
@@ -8978,12 +8968,9 @@
         ],
         "reviewed": "2026-09-01"
       },
-      "restated_from": {
-        "reading_date": "2026-09-03",
-        "source_url": "https://wandb.ai/site/pricing/",
+      "restatement_reverted": {
         "record_date": "2026-09-03",
-        "change_type": "restriction",
-        "restated_on": "2026-09-20"
+        "reverted_on": "2026-09-27"
       }
     },
     {
@@ -9037,9 +9024,9 @@
     {
       "vendor": "Clarifai",
       "category": "AI / ML",
-      "description": "Full-stack AI platform (computer vision, NLP, audio) — Community tier: 1,000 API calls/month. Access to pre-trained models for image recognition, NLP, and audio. No credit card required",
-      "tier": "Community (Free)",
-      "url": "https://www.clarifai.com/pricing",
+      "description": "Clarifai's platform is no longer available, so there is no free tier. On May 12, 2026 Nebius announced it was licensing Clarifai's inference technology and that Clarifai's core engineering and research team was joining Nebius. Clarifai's site said platform credit purchases would be disabled after June 18, 2026. Its pricing page returned 404 from June 2026, and on 2026-09-27 Clarifai's API and documentation hosts did not resolve.",
+      "tier": "Retired",
+      "url": "https://nebius.com/newsroom/nebius-welcomes-clarifai-s-core-team-and-licenses-inference-ip-to-strengthen-nebius-token-factory",
       "tags": [
         "ai",
         "computer-vision",
@@ -12386,7 +12373,7 @@
     {
       "vendor": "Tavily AI",
       "category": "AI / ML",
-      "description": "API for online search and rapid insights and comprehensive research, with the capability of organization of research results. 1000 request/month for the Free tier with No credit card required.",
+      "description": "Real-time web search API for AI agents, with search, extract, crawl and research endpoints. The free Researcher plan gives 1,000 API credits per month with no credit card required, resetting on the first of each month. A basic search costs 1 credit and an advanced search 2; extract costs 1 credit per 5 successful URLs (2 at advanced depth); research costs 4 to 250 credits per request. Search and Extract can also be called without an API key, free and rate-limited. Pay-as-you-go costs $0.008 per credit; the Project plan is $30 per month for 4,000 credits.",
       "tier": "Free",
       "url": "https://www.tavily.com/pricing",
       "tags": [
@@ -12710,9 +12697,9 @@
     {
       "vendor": "paperspace",
       "category": "AI / ML",
-      "description": "ML platform (now part of DigitalOcean) — There is a 'Free' tier offering public projects, 5GB storage, and basic instances (billed per hour). Other tiers include 'Pro' ($12/month), 'Growth' ($39/month), and various team plans (T0, T1, T2) with different storage and instance limits, all with utilization costs on paid instances.",
+      "description": "ML platform (Gradient Notebooks, Workflows and Deployments) from Paperspace, now part of DigitalOcean. The Free plan is $0 with public projects, 5 GB of storage and free machines for Notebooks in your private workspace (Free CPU C4 and Free GPU M4000; free machines shut down after at most 6 hours). Other machines are billed per hour. Pro is $8/month for individuals and $12/month for teams; Growth is $39/month. DigitalOcean says new customers can still sign up but recommends its own GPU products instead.",
       "tier": "Free",
-      "url": "https://www.paperspace.com/pricing",
+      "url": "https://docs.digitalocean.com/products/paperspace/pricing/",
       "tags": [
         "developer-tools",
         "free-for-dev"
@@ -12739,12 +12726,9 @@
         ],
         "reviewed": "2026-09-01"
       },
-      "restated_from": {
-        "reading_date": "2026-09-05",
-        "source_url": "https://www.paperspace.com/pricing",
+      "restatement_reverted": {
         "record_date": "2026-09-05",
-        "change_type": "pricing_restructured",
-        "restated_on": "2026-09-20"
+        "reverted_on": "2026-09-27"
       }
     },
     {
@@ -19740,7 +19724,7 @@
     {
       "vendor": "Langfuse",
       "category": "AI / ML",
-      "description": "Open-source LLM engineering platform that helps teams collaboratively debug, analyze, and iterate on their LLM applications. Free forever plan includes 50k observations per month and all platform features. [#opensource](https://github.com/langfuse/langfuse)",
+      "description": "Open-source LLM engineering platform for tracing, evaluating and debugging AI applications. The Langfuse Cloud Hobby plan is free with no credit card: 50k units a month (each trace, observation and score counts as one unit), 30 days of data access, 2 users, community support via GitHub, and all platform features with limits. Core is $29/month with 100k units, then $8 per 100k units up to 1M units and less above that. The open-source self-hosted edition is free under the MIT license.",
       "tier": "Free",
       "url": "https://langfuse.com/pricing",
       "tags": [
@@ -33238,7 +33222,7 @@
     {
       "vendor": "MiniMax",
       "category": "AI / ML",
-      "description": "Chinese AI lab (稀宇科技, Shanghai) offering multimodal APIs via platform.minimax.io. Pay-as-you-go: MiniMax-M2.7 text $0.3/$1.2 per Mtok (highspeed $0.6/$2.4), prompt-cache read $0.06/Mtok; speech/TTS $60/M chars (standard) or $100/M chars (HD), rapid voice clone $1.50/voice; MiniMax-Hailuo-02/2.3 video $0.10-$0.56/video depending on resolution and duration; image-01 $0.0035/image; Music-2.6 $0.15 per ~5 min with a 2-week free trial. Alternative Token Plan subscriptions from $10/mo (Starter: 1,500 M2.7 requests/5hr) to $150/mo (Ultra-Highspeed: 30K requests/5hr, 5 Hailuo videos/day). No documented permanent API free tier. Also maker of Hailuo AI (consumer video) and Talkie.",
+      "description": "MiniMax sells API access pay-as-you-go on platform.minimax.io. Its pricing pages list no free API allowance; one docs page mentions a free quota for new pay-as-you-go users but gives no amount. Text: MiniMax-M3 $0.30/$1.20 (per 1M tokens, inputs up to 512k, after a permanent 50% discount); MiniMax-M2.7 $0.30/$1.20 (per 1M tokens); MiniMax-M2.7-highspeed $0.60/$2.40 (per 1M tokens). Speech: speech-2.8-turbo $60 and speech-2.8-hd $100 per 1M characters. Video: MiniMax-H3 $0.08 per second at 768P. Image: image-01 $0.0035 per image. Music and lyrics APIs closed to new users on 2026-08-20. Token Plan subscriptions: Plus $22, Max $55 and Ultra $132 per month.",
       "tier": "Pay-as-you-go",
       "url": "https://platform.minimax.io/docs/guides/pricing-paygo",
       "tags": [
@@ -35009,8 +34993,8 @@
     {
       "vendor": "E2B",
       "category": "AI / ML",
-      "description": "Cloud sandboxes for AI agents. Secure code execution environments with filesystem, process management, and network access. Free tier: 100 sandbox hours/month",
-      "tier": "Free (100 sandbox hrs/mo)",
+      "description": "Cloud sandboxes for AI agents: isolated Linux machines that run generated code and shell commands, work with files and reach the internet. The Hobby plan has no monthly fee and a one-time $100 usage credit, with no credit card needed to start. When the credit runs out, the account is blocked until a payment method is added. Hobby allows 20 concurrent sandboxes and up to 1 hour of continuous runtime per sandbox. Running sandboxes are billed per second for CPU and RAM. Pro is $150/month plus usage.",
+      "tier": "Free Credits",
       "url": "https://e2b.dev/pricing",
       "tags": [
         "ai",
@@ -35143,8 +35127,8 @@
     {
       "vendor": "Modal",
       "category": "AI / ML",
-      "description": "Serverless cloud for AI/ML. Run code on GPUs without managing infrastructure. Free tier: $30/month free compute credits",
-      "tier": "Free ($30/mo credits)",
+      "description": "Serverless platform for running CPU and GPU workloads. The Starter plan has no monthly fee and includes $30 of compute per month (GPU, CPU and memory), 3 workspace seats, 100 containers and 10 GPU concurrency. Usage beyond the $30 is billed per second: T4 $0.000164 per second; H100 $0.001097 per second. Since 2026-09-01, Shared Endpoints are billed per token from the first request and are not covered by the $30. Team is $250 per month with $100 of compute included.",
+      "tier": "Free Credits",
       "url": "https://modal.com/pricing",
       "tags": [
         "ai",
