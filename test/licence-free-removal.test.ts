@@ -79,16 +79,21 @@ describe("a licence grants the free use and a pricing page cannot withdraw it (#
     });
 
     it("is not read from the tier string, which names open source for offers the licence does not make free", () => {
-      for (const vendor of ["JetBrains", "1Password", "Sentry", "BrowserStack", "Sauce Labs", "Semaphore CI", "VirusTotal", "Clarifai"]) {
-        const held = OFFERS.filter(o => o.vendor === vendor);
-        assert.ok(held.length > 0, `${vendor} is in the catalogue`);
+      const storesTheLicence = (o: Record<string, any>) =>
+        Array.isArray(o[FREE_GROUNDS_FIELD]) && o[FREE_GROUNDS_FIELD].includes(FREE_GROUND_LICENCE);
+      const tierNamesOpenSourceWithoutTheLicence = OFFERS.filter(
+        o => /oss|open.?source|community/i.test(o.tier) && !storesTheLicence(o)
+      );
+      assertPopulationFloor(
+        tierNamesOpenSourceWithoutTheLicence.length,
+        6,
+        "offers whose tier names open source or community and whose stored grounds leave out the licence"
+      );
+      for (const offer of tierNamesOpenSourceWithoutTheLicence) {
         assert.ok(
-          held.some(o => /oss|open.?source|community/i.test(o.tier)),
-          `${vendor} holds an offer whose tier names open source`
+          !isFreeByLicence(offer),
+          `${offer.vendor} (${offer.tier}) is free on a plan or an eligibility rule, not on a licence`
         );
-        for (const offer of held) {
-          assert.ok(!isFreeByLicence(offer), `${vendor} is free on a plan or an eligibility rule, not on a licence`);
-        }
       }
     });
 

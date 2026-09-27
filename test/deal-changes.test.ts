@@ -1,7 +1,8 @@
 import { describe, it } from "node:test";
 import assert from "node:assert";
 import { assertPopulationFloor } from "./population-floor.ts";
-import { INDEX_SWEEP_STATE } from "../dist/change-census.js";
+import { INDEX_SWEEP_STATE, recordsOtherThanOurOwnIndexHousekeeping } from "../dist/change-census.js";
+import { recordsWeStandBehind } from "../dist/change-resolution.js";
 import { spawn } from "node:child_process";
 import path from "node:path";
 import fs from "node:fs";
@@ -74,9 +75,9 @@ function changeLogOnFile(): { vendor: string; date: string; resolution?: { state
   ).changes;
 }
 
-function namedInTheChangeLog(names: string[], since: string): { vendor: string; date: string }[] {
+function servedRecordsNaming(names: string[], since: string): { vendor: string; date: string }[] {
   const wanted = names.map((n) => n.toLowerCase());
-  return changeLogOnFile().filter(
+  return recordsOtherThanOurOwnIndexHousekeeping(recordsWeStandBehind(changeLogOnFile())).filter(
     (c) => c.date >= since && wanted.some((n) => c.vendor.toLowerCase().includes(n))
   );
 }
@@ -308,7 +309,7 @@ describe("track_changes tool", () => {
     const since = "2024-01-01";
 
     const single = getDealChanges(since, undefined, undefined, "Netlify");
-    assert.strictEqual(single.total, namedInTheChangeLog(["Netlify"], since).length);
+    assert.strictEqual(single.total, servedRecordsNaming(["Netlify"], since).length);
     assert.ok(single.total > 0, "the change log names no Netlify record for the filter to return");
     for (const change of single.changes) {
       assert.ok(
@@ -318,7 +319,7 @@ describe("track_changes tool", () => {
     }
 
     const multi = getDealChanges(since, undefined, undefined, "Netlify,OpenAI");
-    assert.strictEqual(multi.total, namedInTheChangeLog(["Netlify", "OpenAI"], since).length);
+    assert.strictEqual(multi.total, servedRecordsNaming(["Netlify", "OpenAI"], since).length);
     assert.ok(multi.total >= single.total, "a second name returned fewer records than the first alone");
     for (const change of multi.changes) {
       const lower = change.vendor.toLowerCase();
