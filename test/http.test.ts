@@ -4192,7 +4192,7 @@ describe("HTTP transport", () => {
     assert.ok(html.includes('"Article"'), "Should use Article schema");
     assert.ok(html.includes("canonical"), "Should have canonical link");
     assert.ok(html.includes("global-nav"), "Should have global nav");
-    assert.ok(html.includes("$200 Free Credits"), "Should have free credits section");
+    assert.ok(html.includes("$5 Signup Credit"), "Should have signup credit section");
     assert.ok(html.includes("Free Services"), "Should have free services section");
     assert.ok(html.includes("2026 Pricing Highlights"), "Should have pricing section");
     assert.ok(html.includes("App Platform"), "Should include App Platform");

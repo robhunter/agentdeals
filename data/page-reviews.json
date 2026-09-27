@@ -1161,8 +1161,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 54,
-      "table_figures_from_records": 10,
+      "table_figures": 58,
+      "table_figures_from_records": 14,
       "tables": [
         {
           "label": "Free Services (Permanent)",
@@ -1181,8 +1181,8 @@
         },
         {
           "label": "Recent DigitalOcean Changes",
-          "figures": 11,
-          "from_records": 10
+          "figures": 15,
+          "from_records": 14
         }
       ],
       "reads_changes": true,
@@ -3155,8 +3155,8 @@
       "review_note": null,
       "reads_index": false,
       "tables_read_index": false,
-      "table_figures": 113,
-      "table_figures_from_records": 73,
+      "table_figures": 117,
+      "table_figures_from_records": 77,
       "tables": [
         {
           "label": "Comparison Table",
@@ -3165,8 +3165,8 @@
         },
         {
           "label": "Recent Changes",
-          "figures": 78,
-          "from_records": 73
+          "figures": 82,
+          "from_records": 77
         }
       ],
       "reads_changes": true,

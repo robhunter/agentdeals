@@ -186,9 +186,11 @@ describe("every surface publishes the level /api/offers publishes", () => {
 
   it("counts a vendor we decline to rate as unrated rather than as a risk found", () => {
     const offers = loadOffers();
-    const withheld = offers
-      .filter(o => publishedRisk(o, changesFor(o.vendor)).risk_level === null)
-      .map(o => o.vendor)
+    const withheld = [...new Set(offers.map(o => o.vendor))]
+      .filter(name => {
+        const match = findVendor(offers, name);
+        return match.type === "exact" && publishedRisk(match.offer, changesFor(match.offer.vendor)).risk_level === null;
+      })
       .slice(0, 8);
     assert.ok(withheld.length > 0, "no record has its level withheld, so nothing here is exercised");
     assert.strictEqual(auditStack(withheld).risks_found, 0, "a stack of vendors we decline to rate reports risks");

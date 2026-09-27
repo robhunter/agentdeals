@@ -6727,7 +6727,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
       </tr>
       <tr>
         <td style="font-weight:600"><a href="/vendor/digitalocean" style="color:var(--text)">DigitalOcean</a></td>
-        <td>$200 credit (60 days)</td><td>Not in free tier</td><td>\u2705</td><td>\u2705</td>
+        <td>$5 credit (90 days)</td><td>Not in free tier</td><td>\u2705</td><td>\u2705</td>
         <td>No</td><td>$5/mo</td>
       </tr>
       <tr>
@@ -6738,7 +6738,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     </tbody>
   </table>
   </div>
-  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">\u2705 = supported &nbsp; \u274c = not available &nbsp; \u2014 = not applicable. Railway's $5/mo is a resource credit shared across all services. Coolify is free when self-hosted on your own server. DigitalOcean credit expires after 60 days.</p>`,
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">\u2705 = supported &nbsp; \u274c = not available &nbsp; \u2014 = not applicable. Railway's $5/mo is a resource credit shared across all services. Coolify is free when self-hosted on your own server. DigitalOcean credit expires after 90 days.</p>`,
   },
   {
     slug: "firebase-alternatives",
@@ -8133,11 +8133,11 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "digitalocean-free-tier-2026",
     title: "DigitalOcean Free Tier Complete Guide 2026 — Pricing, Free Credits, and Hidden Costs",
-    metaDesc: "Complete guide to DigitalOcean pricing and free tier in 2026. $200 free credits, App Platform free static sites, per-second billing, and comparison with AWS, GCP, and Azure.",
+    metaDesc: "Complete guide to DigitalOcean pricing and free tier in 2026. $5 free credits, App Platform free static sites, per-second billing, and comparison with AWS, GCP, and Azure.",
     contextHtml: "",
     tag: "digitalocean-free-tier-2026",
     primaryVendor: "DigitalOcean",
-    hubDesc: "Complete DigitalOcean guide — $200 free credits, App Platform free tier, per-second billing, and Big Three comparison",
+    hubDesc: "Complete DigitalOcean guide — $5 free credits, App Platform free tier, per-second billing, and Big Three comparison",
   },
   {
     slug: "cloud-free-tier-comparison-2026",
@@ -34817,7 +34817,7 @@ ${mcpCtaCss()}
 
 function buildDigitalOceanFreeTier2026Page(): string {
   const title = "DigitalOcean Free Tier Complete Guide 2026 — Pricing, Free Credits, and Hidden Costs";
-  const metaDescDO = "Complete guide to DigitalOcean pricing and free tier in 2026. $200 free credits for 60 days, App Platform free static sites, per-second billing, Functions serverless, and comparison with AWS, GCP, and Azure.";
+  const metaDescDO = "Complete guide to DigitalOcean pricing and free tier in 2026. $5 free credits for 90 days, App Platform free static sites, per-second billing, Functions serverless, and comparison with AWS, GCP, and Azure.";
   const slug = "digitalocean-free-tier-2026";
   const pubDate = "2026-03-31";
 
@@ -34873,14 +34873,14 @@ function buildDigitalOceanFreeTier2026Page(): string {
   }
 
   const gotchas: GotchaItem[] = [
-    { title: "No perpetual free compute", desc: "Unlike AWS (Lambda 1M req/mo), GCP (e2-micro VM), or Azure (Functions 1M executions), DigitalOcean has no always-free compute tier. The $200 credit expires after 60 days. After that, even the cheapest Droplet is $4/month.", cost: "$4/mo minimum" },
+    { title: "No perpetual free compute", desc: "Unlike AWS (Lambda 1M req/mo), GCP (e2-micro VM), or Azure (Functions 1M executions), DigitalOcean has no always-free compute tier. The $5 credit expires after 90 days. After that, even the cheapest Droplet is $4/month.", cost: "$4/mo minimum" },
     { title: "Bandwidth overage charges", desc: "Droplet plans include transfer allowances (500 GB–10 TB). Excess bandwidth costs $0.01/GiB for outbound. Inbound is free. This adds up fast for media-heavy apps.", cost: "$0.01/GiB overage" },
     { title: "Per-second billing minimum", desc: "Per-second billing sounds great, but there's a 60-second minimum charge ($0.01). Creating and destroying Droplets rapidly still costs money — each creation incurs at least $0.01.", cost: "$0.01 minimum" },
     { title: "App Platform build minutes", desc: "Free static sites don't include build minutes for dynamic apps. Web service builds consume resources and the free tier only covers static content. Dynamic apps start at $5/mo.", cost: "$5/mo for dynamic" },
     { title: "Spaces CDN bandwidth", desc: "Spaces includes 1 TB outbound transfer, but CDN bandwidth beyond that is $0.01/GiB. If you're serving files through the CDN, monitor your transfer usage.", cost: "$0.01/GiB overage" },
     { title: "Managed database is never free", desc: "Despite the free credits, managed databases (PostgreSQL, MySQL, Redis, MongoDB, Kafka) start at $15/month with no free tier. This is the #1 gotcha — AWS, GCP, and Azure all offer always-free database options.", cost: "$15/mo minimum" },
     { title: "Backups cost extra", desc: "Droplet backups cost 20% of the Droplet price. A $4/mo Droplet's backup is $0.80/mo. Snapshots are $0.06/GiB/mo. Neither is included in the base price.", cost: "20% of Droplet price" },
-    { title: "Credit card required for free credits", desc: "You need a valid credit card or PayPal to claim the $200 free credits. If you forget to cancel or exceed limits during the trial, charges begin immediately.", cost: "Immediate billing" },
+    { title: "Credit card required for free credits", desc: "You need a valid credit card or PayPal to claim the $5 free credits. If you forget to cancel or exceed limits during the trial, charges begin immediately.", cost: "Immediate billing" },
   ];
 
   interface CloudAlt {
@@ -35036,13 +35036,13 @@ ${mcpCtaCss()}
   <p class="pub-date">Published ${pubDate} &middot; ${pageDataProvenance("/digitalocean-free-tier-2026", offers.length)} &middot; ${doOffers.length} DigitalOcean entries tracked</p>
 
   <div class="summary-stats">
-    <div class="stat-card"><div class="stat-number green">$200</div><div class="stat-label">Free Credits (60 days)</div></div>
+    <div class="stat-card"><div class="stat-number green">$5</div><div class="stat-label">Free Credits (90 days)</div></div>
     <div class="stat-card"><div class="stat-number">${freeServices.length}</div><div class="stat-label">Free Services</div></div>
     <div class="stat-card"><div class="stat-number amber">$4/mo</div><div class="stat-label">Cheapest Droplet</div></div>
   </div>
 
   <div class="executive-summary">
-    <p><strong>Different model than the Big Three.</strong> Unlike AWS, GCP, and Azure which offer always-free compute tiers, DigitalOcean's free offering is limited to <strong>$200 in trial credits (60 days)</strong>, <strong>3 free static sites</strong> on App Platform, <strong>serverless Functions</strong> (90,000 GiB-seconds/month), and <strong>free DNS management</strong>. There is no perpetual free compute — after credits expire, the cheapest Droplet is $4/month.</p>
+    <p><strong>Different model than the Big Three.</strong> Unlike AWS, GCP, and Azure which offer always-free compute tiers, DigitalOcean's free offering is limited to <strong>$5 in trial credits (90 days)</strong>, <strong>3 free static sites</strong> on App Platform, <strong>serverless Functions</strong> (90,000 GiB-seconds/month), and <strong>free DNS management</strong>. There is no perpetual free compute — after credits expire, the cheapest Droplet is $4/month.</p>
     <p><strong>The value proposition is simplicity and price.</strong> DigitalOcean's 2026 pricing changes made it significantly more competitive: <strong>per-second billing</strong> (minimum 60 seconds or $0.01). For developers who want straightforward cloud infrastructure without the complexity of AWS/GCP/Azure, DigitalOcean trades free-tier generosity for operational simplicity.</p>
     <p><strong>Best for:</strong> Developers who value simplicity over free tiers, small-to-medium projects that outgrow free hosting, teams that want managed infrastructure without enterprise complexity. Not ideal for bootstrapped projects that need to stay at $0/month indefinitely.</p>
     <p><strong>Comparing clouds?</strong> See our <a href="/cloud-free-tier-comparison-2026">Cloud Free Tier Comparison</a> for a side-by-side matrix of AWS vs GCP vs Azure vs DigitalOcean.</p>
@@ -35051,7 +35051,7 @@ ${mcpCtaCss()}
   <div class="toc">
     <h3>Jump to section</h3>
     <ol>
-      <li><a href="#free-credits">$200 Free Credits</a></li>
+      <li><a href="#free-credits">$5 Signup Credit</a></li>
       <li><a href="#free-services">Free Services</a></li>
       <li><a href="#pricing">2026 Pricing Highlights</a></li>
       <li><a href="#stacks">Best Use Cases</a></li>
@@ -35063,11 +35063,11 @@ ${mcpCtaCss()}
     </ol>
   </div>
 
-  <h2 id="free-credits">$200 Free Credits</h2>
-  <p class="section-intro">New DigitalOcean accounts get $200 in free credits valid for 60 days. This is more generous than Azure ($200/30 days) but less than GCP ($300/90 days). Credits work with all services including Droplets, Managed Databases, and Kubernetes.</p>
+  <h2 id="free-credits">$5 Signup Credit</h2>
+  <p class="section-intro">New DigitalOcean accounts get a $5 signup credit, applied automatically to the first team and valid for 90 days after signup. It covers all products except SaaS Add-Ons, and you must add a payment method before you can create Droplets or other resources. Until April 2026, new accounts got $200 for 60 days.</p>
 
   <div class="context-box">
-    <strong>How to maximize the trial.</strong> The 60-day window is tight. Focus on evaluating the services you'd actually use long-term — spin up a Droplet, test App Platform deployment, try Managed PostgreSQL. Don't waste credits on services you won't continue paying for. Set a calendar reminder for day 55 to clean up or convert to paid. Credit card required at signup, so charges begin immediately after credits expire.
+    <strong>How to maximize the trial.</strong> Focus on evaluating the services you'd actually use long-term — spin up a Droplet, test App Platform deployment, try Managed PostgreSQL. Don't waste credits on services you won't continue paying for. Credit card required at signup, so charges begin immediately after credits expire.
   </div>
 
   <h2 id="free-services">Free Services (Permanent)</h2>
@@ -35517,7 +35517,7 @@ ${mcpCtaCss()}
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number">4</div><div class="stat-label">Clouds Compared</div></div>
     <div class="stat-card"><div class="stat-number green">GCP</div><div class="stat-label">Most Free Services</div></div>
-    <div class="stat-card"><div class="stat-number amber">$200&ndash;300</div><div class="stat-label">Trial Credits Range</div></div>
+    <div class="stat-card"><div class="stat-number amber">$5&ndash;300</div><div class="stat-label">Trial Credits Range</div></div>
     <div class="stat-card"><div class="stat-number">$100K&ndash;200K</div><div class="stat-label">Startup Program Credits</div></div>
   </div>
 
@@ -35580,9 +35580,9 @@ ${mcpCtaCss()}
       </tr>
       <tr>
         <td class="provider-col"><a href="/digitalocean-free-tier-2026" style="color:var(--text)">DigitalOcean</a></td>
-        <td style="font-family:var(--mono)">$200</td>
-        <td>60 days</td>
-        <td>New accounts only; good middle ground on duration</td>
+        <td style="font-family:var(--mono)">$5</td>
+        <td>90 days</td>
+        <td>New accounts only</td>
         <td>Yes</td>
       </tr>
     </tbody>
@@ -35590,7 +35590,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="context-box">
-    <strong>GCP offers the most generous trial:</strong> $300 over 90 days vs Azure's $200/30 days. AWS doesn't offer a blanket credit — instead each service has its own free tier. DigitalOcean's $200/60 days is a solid middle ground. All require a credit card.
+    <strong>GCP offers the most generous trial:</strong> $300 over 90 days vs Azure's $200/30 days. AWS gives new accounts $100 in credits and up to $100 more for trying key services, on a Free plan that closes after 6 months or when the credits run out. DigitalOcean gives new accounts a $5 credit for 90 days. All require a credit card.
   </div>
 
   <h2 id="compute">Always-Free Compute</h2>
@@ -41355,7 +41355,7 @@ ${mcpCtaCss()}
 
   <div class="diff-card">
     <h3>DigitalOcean Spaces</h3>
-    <div class="diff-desc"><strong>Pricing:</strong> No free tier. $5/month for 250 GB storage + 1 TB egress. S3-compatible API. Built-in CDN included. Simple, predictable pricing. Available during the $200/60-day trial. Best for DigitalOcean Droplet users wanting co-located storage.</div>
+    <div class="diff-desc"><strong>Pricing:</strong> No free tier. $5/month for 250 GB storage + 1 TB egress. S3-compatible API. Built-in CDN included. Simple, predictable pricing. Available during the $5/90-day trial. Best for DigitalOcean Droplet users wanting co-located storage.</div>
   </div>
 
   <h2 id="media-cdn">Media &amp; Image CDN</h2>
