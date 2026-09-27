@@ -16,7 +16,7 @@ export const FEED_CORRECTIONS: FeedCorrection[] = [
     path: "/this-week",
     summaryHtml:
       "<p>The digest published for the week of August 24–30, 2026 reported <em>24 free tiers removed, 6 new ones added, 3 products deprecated, 53 limits reduced, 23 limits increased, 29 pricing restructures across 154 developer tool pricing changes</em>. That count was wrong, and this entry replaces it.</p>" +
-      "<p>153 of those 154 records came from a single run on 2026-08-28 in which we read those vendors’ pricing pages for the first time. Each one records terms that differ from what we had stored, on a page that does not say when they changed — so the record carries the date we read it, not the date it took effect. Some of what they describe is years old. One change in that week has a known effective date: OpenAI’s removal of the Assistants API free tier, on 2026-08-26.</p>" +
+      "<p>153 of those 154 records came from a single run on 2026-08-28 in which we read those vendors’ pricing pages for the first time. Each one records terms that differ from what we had stored, on a page that does not say when they changed — so the record carries the date we read it, not the date it took effect. Some of what they describe is years old. One change in that week has a known effective date: OpenAI’s removal of the Assistants API, on 2026-08-26.</p>" +
       "<p>Weekly counts now include only changes with a known effective date. Pages read for the first time are reported separately, under their own heading, and are not counted as changes that took effect in the week we read them.</p>",
   },
 ];

@@ -116,7 +116,8 @@ const RULES: Rule[] = [
     retired: [/1,000 free (?:API )?credits/, /1K credits/, /Credit-based/, /Llama 3\.1, Mistral/, /[Ee]nterprise-grade/, /~40 RPM/, /No credit card required for development/],
   },
   { vendor: "NVIDIA NIM", names: /NVIDIA NIM/g, within: 40, retired: [/Llama 3\.1 70B/] },
-  { vendor: "LLM7.io", names: /LLM7/g, within: 200, retired: [/UK-based/, /donor/, /No published (?:rate )?limits/, /30\+ models/, /DeepSeek R1, Qwen2\.5/] },
+  { vendor: "LLM7.io", names: /LLM7/g, within: 200, retired: [/UK-based/, /donor/, /No published (?:rate )?limits/, /30\+ models/, /DeepSeek R1, Qwen2\.5/, /Completely free/] },
+  { vendor: "Claude Code", names: /Claude Code/g, within: 60, retired: [/Free during beta/] },
   { vendor: "Zhipu AI", names: /Zhipu|GLM-4/g, within: 200, retired: [/no rate limits/, /20 million tokens/, /GLM-4\.5-Flash/, /welcome package/] },
   { vendor: "Baseten", names: /Baseten/g, within: 200, retired: [/\$30 (?:in |free )/] },
   {
@@ -126,6 +127,9 @@ const RULES: Rule[] = [
       "Routes to cheapest provider", "Optimized with TensorRT-LLM", "Supported by donors", "Universal gateway to 200",
       "Largest model hub (800K", "(200K) for highest quality", "Free option: Free tier with rate limits",
       "$25.00 for the preview tool on non-reasoning models, and retrieved content",
+      "more predictable pricing without surprise pausing", "only OpenAI Responses API and Google Gemini offer direct equivalents",
+      "Claude offers computer use for browser-based code execution", "removal of the Assistants API free tier",
+      "Limits increased Feb 2026 and Mar 2026",
     ].map(literally),
   },
 ];
@@ -190,6 +194,8 @@ function retiredTermsIn(route: string, surface: string, text: string): string[] 
 
 const RETIRED_PAGES = ["/dall-e-shutdown", "/openai-realtime-migration"];
 
+const UNLISTED_SURFACES = ["/feed.xml"];
+
 const STATED: Record<string, string[]> = {
   "/google-developer-program-2026": [
     "500+ models aggregated",
@@ -216,6 +222,7 @@ const STATED: Record<string, string[]> = {
     "Claude Fable 5.1, Opus 5.5 or Sonnet 5 (1M context each).",
     "Anthropic Thinking: Output Tokens Add Up",
     "Rate Limits Follow Usage Tiers",
+    "Free for light use: LLM7.io",
   ],
   "/free-llm-apis": [
     "OpenRouter aggregates 25+ free models through one OpenAI-compatible API.",
@@ -229,6 +236,7 @@ const STATED: Record<string, string[]> = {
   "/gemini-api-pricing-2026": [
     "OpenRouter (25+ free models).",
     "OpenRouter — 25+ free models through one OpenAI-compatible API.",
+    "5. For production workloads: Anthropic and OpenAI also cap monthly spend by usage tier. Anthropic pauses API usage at its tier's cap ($500 a month on Start) until the next month, and OpenAI sets each organization a monthly usage limit ($100 on Tier 1).",
   ],
   "/ai-free-tiers": [
     "OpenAI removed the Assistants API on 2026-08-26.",
@@ -256,6 +264,13 @@ const STATED: Record<string, string[]> = {
   ],
   "/openai-assistants-alternatives": [
     "OpenRouter — unified API across 500+ models from 80+ providers.",
+    "If you relied on Code Interpreter, OpenAI's Responses API, Google Gemini and Anthropic's code execution tool offer direct equivalents.",
+  ],
+  "/cursor-alternatives": [
+    "Claude Code None (paid plans or API key) Terminal agent",
+  ],
+  "/feed.xml": [
+    "One change in that week has a known effective date: OpenAI’s removal of the Assistants API, on 2026-08-26.",
   ],
   "/openai-assistants-migration": [
     "No GPT model is priced free",
@@ -318,7 +333,7 @@ describe("AI API vendors' free terms on the guides", () => {
   before(async () => {
     server = await startServer();
     routes = await everyPublishedRoute();
-    found = await crawl(routes);
+    found = await crawl([...routes, ...UNLISTED_SURFACES]);
     for (const page of Object.keys(STATED)) served.set(page, await (await fetch(`${base}${page}`)).text());
   });
   after(() => {

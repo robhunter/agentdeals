@@ -6915,7 +6915,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
       </tr>
       <tr>
         <td style="font-weight:600"><a href="/vendor/claude-code" style="color:var(--text)">Claude Code</a></td>
-        <td>Free during beta</td>
+        <td>None (paid plans or API key)</td>
         <td>Terminal agent</td>
         <td>\u2014</td>
         <td>Deep agentic coding — reads/writes files, runs commands</td>
@@ -23003,7 +23003,7 @@ ${mcpCtaCss()}
       <strong>2. For maximum free tokens:</strong> <a href="/vendor/cerebras">Cerebras</a> (1M tokens/day).<br>
       <strong>3. For model variety:</strong> <a href="/vendor/openrouter">OpenRouter</a> — 25+ free models through one OpenAI-compatible API.<br>
       <strong>4. For long context:</strong> Gemini's 1M context window is still the largest free option. If context is your key requirement, stay on Gemini and manage the rate limits.<br>
-      <strong>5. For production workloads:</strong> <a href="/vendor/anthropic-api">Anthropic Claude</a> or <a href="/vendor/openai">OpenAI</a> offer more predictable pricing without surprise pausing.
+      <strong>5. For production workloads:</strong> <a href="/vendor/anthropic-api">Anthropic</a> and <a href="/vendor/openai">OpenAI</a> also cap monthly spend by usage tier. Anthropic pauses API usage at its tier's cap ($500 a month on Start) until the next month, and OpenAI sets each organization a monthly usage limit ($100 on Tier 1).
     </p>
   </div>
 
@@ -24322,7 +24322,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="context-box">
-    <strong>Assistants API feature mapping:</strong> If you relied on <em>Code Interpreter</em>, only OpenAI Responses API and Google Gemini offer direct equivalents. Claude offers computer use for browser-based code execution. For <em>File Search</em>, Claude handles PDFs natively, Gemini is multimodal (images, audio, video), and Cohere specializes in document RAG. For <em>Threads/conversation state</em>, most providers are stateless \u2014 you\u2019ll manage context yourself or use Conversations API (OpenAI only).
+    <strong>Assistants API feature mapping:</strong> If you relied on <em>Code Interpreter</em>, OpenAI's Responses API, Google Gemini and Anthropic's code execution tool offer direct equivalents. For <em>File Search</em>, Claude handles PDFs natively, Gemini is multimodal (images, audio, video), and Cohere specializes in document RAG. For <em>Threads/conversation state</em>, most providers are stateless \u2014 you\u2019ll manage context yourself or use Conversations API (OpenAI only).
   </div>
 
   <div class="context-box">
@@ -32229,7 +32229,7 @@ function buildLlmApiPricingPage(): string {
     '\n' +
     '  <div class="highlight-box">\n' +
     '    <h3>Best Free Tiers</h3>\n' +
-    '    <p><strong>Most generous:</strong> ' + namedWithTheirFreeTier(["groq", "mistral-ai", "cerebras"]) + ' &middot; <strong>Best for prototyping:</strong> ' + namedWithTheirFreeTier(["openrouter", "cloudflare-workers-ai"]) + ' &middot; <strong>Completely free:</strong> ' + namedWithTheirFreeTier(["llm7-io", "ollama"]) + '</p>\n' +
+    '    <p><strong>Most generous:</strong> ' + namedWithTheirFreeTier(["groq", "mistral-ai", "cerebras"]) + ' &middot; <strong>Best for prototyping:</strong> ' + namedWithTheirFreeTier(["openrouter", "cloudflare-workers-ai"]) + ' &middot; <strong>Free for light use:</strong> ' + namedWithTheirFreeTier(["llm7-io", "ollama"]) + '</p>\n' +
     '  </div>\n' +
     '\n' +
     '  <div class="toc">\n' +
