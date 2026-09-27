@@ -38,7 +38,8 @@
       "source_url": "https://www.netlify.com/pricing/",
       "record_date": "2026-09-07",
       "change_type": "pricing_restructured",
-      "summary": "The free tier now offers 300 credits/month."
+      "summary": "The free tier now offers 300 credits/month.",
+      "reverted_on": "2026-09-27"
     },
     {
       "vendor": "Railway",

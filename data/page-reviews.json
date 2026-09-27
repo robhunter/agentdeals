@@ -2757,8 +2757,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 50,
-      "table_figures_from_records": 10,
+      "table_figures": 52,
+      "table_figures_from_records": 11,
       "tables": [
         {
           "label": "1. Free Tier Comparison Table",
@@ -2772,8 +2772,8 @@
         },
         {
           "label": "5. Other PaaS Alternatives",
-          "figures": 10,
-          "from_records": 10
+          "figures": 12,
+          "from_records": 11
         }
       ],
       "reads_changes": true,
@@ -3054,13 +3054,13 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 26,
-      "table_figures_from_records": 2,
+      "table_figures": 27,
+      "table_figures_from_records": 3,
       "tables": [
         {
           "label": "The Stack",
-          "figures": 26,
-          "from_records": 2
+          "figures": 27,
+          "from_records": 3
         }
       ],
       "reads_changes": true,
