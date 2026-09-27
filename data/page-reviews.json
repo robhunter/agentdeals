@@ -1114,7 +1114,7 @@
       "reads_index": true,
       "tables_read_index": false,
       "table_figures": 156,
-      "table_figures_from_records": 50,
+      "table_figures_from_records": 51,
       "tables": [
         {
           "label": "Pricing Comparison Table",
@@ -1134,7 +1134,7 @@
         {
           "label": "Recent Pricing Changes",
           "figures": 53,
-          "from_records": 50
+          "from_records": 51
         }
       ],
       "reads_changes": true,

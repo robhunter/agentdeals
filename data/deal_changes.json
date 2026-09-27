@@ -5432,10 +5432,10 @@
       "detected_by": "reverify-ai",
       "recorded_date": "2026-08-28",
       "resolution": {
-        "state": "reversed",
-        "date": "2026-09-07",
-        "source_url": "https://www.influxdata.com/influxdb-pricing/",
-        "detail": "No longer in force as of 2026-09-07: influxdata.com/influxdb-pricing/, the page this record cites, answers \"Is InfluxDB free to use?\" with \"InfluxDB Cloud Serverless also has a free tier with limited data ingestion rates and 30-day retention. Paid plans unlock higher rate limits, unlimited data retention, and enterprise features.\" That is the stored 30-day retention, and the same sentence separates the free tier from the paid plans. The page also sells \"InfluxDB 3 Core — Open source. Local dev, exploration, and prototyping. Free Forever\". The $250 credit and usage-based pricing this record reports are the paid Cloud Serverless plan above that free tier, not in place of it. We hold no evidence either way about the state on 2026-08-28, so this is recorded as no longer in force rather than retracted."
+        "state": "retracted",
+        "date": "2026-09-27",
+        "detail": "Retracted 2026-09-27: InfluxDB's pricing did not change near 2026-08-28. The Internet Archive's captures of influxdata.com/influxdb-pricing/ on 2026-07-05 and 2026-08-28 both offer Cloud Serverless's \"$250 free credit to start\" and answer \"Is InfluxDB free to use?\" with \"InfluxDB Cloud Serverless also has a free tier with limited data ingestion rates and 30-day retention.\" The reading compared the page with our own description.",
+        "source_url": "https://web.archive.org/web/20260828130720/https://www.influxdata.com/influxdb-pricing/"
       }
     },
     {
@@ -6167,10 +6167,10 @@
       "detected_by": "reverify-ai",
       "recorded_date": "2026-08-28",
       "resolution": {
-        "state": "reversed",
-        "date": "2026-09-07",
-        "source_url": "https://www.mailersend.com",
-        "detail": "No longer in force as of 2026-09-07: mailersend.com, the page this record cites, sells a plan named Free — \"Free — For occasional email testing and sending. Get started for free — includes: 500 emails /month, 10 email verification credits, Email threads support, Drag & Drop email builder\" — which is the stored 500 emails/month figure. The 14-day Professional trial this record reports is a separate hero bullet on the same page: \"14-day free Professional trial • Send 500 emails/month for free\". We hold no evidence either way about the state on 2026-08-28, so this is recorded as no longer in force rather than retracted."
+        "state": "retracted",
+        "date": "2026-09-27",
+        "detail": "Retracted 2026-09-27: MailerSend's free plan did not change. Its pricing page listed \"Free — For occasional email testing and sending\" with \"500 emails /month\" in the Internet Archive's captures of 2026-08-04 and 2026-09-14. The 14-day trial this record read is a trial of the paid Professional plan, which the homepage advertised beside the Free plan in the capture of 2026-08-28: \"14-day free Professional trial • Send 500 emails/month for free\".",
+        "source_url": "https://web.archive.org/web/20260804172308/https://www.mailersend.com/pricing"
       }
     },
     {
@@ -7201,10 +7201,10 @@
       "detected_by": "reverify-ai",
       "recorded_date": "2026-08-28",
       "resolution": {
-        "state": "reversed",
-        "date": "2026-09-07",
-        "source_url": "https://sendbird.com/pricing/chat",
-        "detail": "No longer in force as of 2026-09-07: sendbird.com/pricing/chat, the page this record cites, answers \"Is the Sendbird Developer plan free forever?\" with \"Yes, the Developer plan is free and remains active as long as you log into the Sendbird dashboard once a year.\" The column the page now labels Free trial carries the stored Developer figures — \"MAUs Up to 1,000\" and \"Peak concurrent connections Up to 20\" — priced \"Free\", with \"No credit card required\" and \"All pro features\". The page disagrees with itself about the label and agrees with us about the terms, so the label alone is not grounds to withhold them. We hold no evidence either way about the state on 2026-08-28, so this is recorded as no longer in force rather than retracted."
+        "state": "retracted",
+        "date": "2026-09-27",
+        "detail": "Retracted 2026-09-27: Sendbird's pricing did not change near 2026-08-28. The Internet Archive's captures of sendbird.com/pricing/chat on 2026-08-04 and 2026-09-14 show the same page: the column this record read was already labelled \"Free trial\" (\"Experiment with chat. Free. No overages allowed\"), and the FAQ answered \"Is the Sendbird Developer plan free forever?\" with \"Yes, the Developer plan is free and remains active as long as you log into the Sendbird dashboard once a year.\"",
+        "source_url": "https://web.archive.org/web/20260804180828/https://sendbird.com/pricing/chat"
       }
     },
     {
