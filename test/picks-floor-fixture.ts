@@ -36,10 +36,16 @@ export interface OnePickLeft {
   remove(): void;
 }
 
-export function leaveOnePick(offers: readonly Offer[], subject: ProductFunction, date: string): OnePickLeft {
+export interface PicksExpiring {
+  offers: Offer[];
+  kept: Offer;
+  expired: Offer[];
+}
+
+export function expireEveryPickButOne(offers: readonly Offer[], subject: ProductFunction, date: string): PicksExpiring {
   const [kept, ...others] = picksOf(offers, subject, date);
   if (!kept || others.length === 0) {
-    throw new Error(`/best/free-${subject.slug} publishes ${kept ? 1 : 0} picks today, so there is no pick to take away`);
+    throw new Error(`/best/free-${subject.slug} publishes ${kept ? 1 : 0} picks on ${date}, so there is no pick to take away`);
   }
   const expiring = new Set<Offer>(others);
   const expired: Offer[] = [];
@@ -49,6 +55,11 @@ export function leaveOnePick(offers: readonly Offer[], subject: ProductFunction,
     expired.push(lapsed);
     return lapsed;
   });
+  return { offers: scratchOffers, kept, expired };
+}
+
+export function leaveOnePick(offers: readonly Offer[], subject: ProductFunction, date: string): OnePickLeft {
+  const { offers: scratchOffers, kept, expired } = expireEveryPickButOne(offers, subject, date);
   const ledger = readBestOfPublished();
   const publishedBefore = new Set(ledger.slugs.filter(slug => slug !== `free-${subject.slug}`));
 
