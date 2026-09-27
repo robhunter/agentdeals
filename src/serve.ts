@@ -7992,7 +7992,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "gemini-api-pricing-2026",
     title: "Gemini API Pricing 2026 — Free Tier Changes, Spend Caps & Alternatives",
-    metaDesc: "Gemini API billing overhaul April 2026: enforced spend caps ($250-$100K+/mo by tier), prepaid billing for new users, Gemini 3.1 Pro paid-only. Free tier covers Flash, Flash-Lite and Gemini 2.5 Pro. Compare 8 free LLM API alternatives.",
+    metaDesc: "Gemini API billing changes in March and April 2026: spend caps by tier ($250 to $100K+ a month, enforced from April 1), prepay for some new users, and Gemini 3.1 Pro Preview paid only. The free tier covers the Gemini 3.x Flash and Flash-Lite models.",
     contextHtml: "",
     tag: "gemini-api-pricing-2026",
     primaryVendor: "Google Gemini API",
@@ -10277,7 +10277,7 @@ ${mcpCtaCss()}
   <h1>Best Free AI APIs and Coding Tools</h1>
 
   <div class="context">
-    <p>The AI pricing landscape is volatile. <strong>Google slashed Gemini free tier limits 50-80%</strong> in late 2025. <strong>OpenAI discontinued free trial credits</strong> and deprecated the Assistants API. But new players are offering generous free tiers to win developer mindshare — <strong>Groq</strong> and <strong>Cerebras</strong> provide blazing-fast inference, <strong>Mistral</strong> includes $10 a month in API credits, and <strong>Google Antigravity</strong> has a free individual plan with weekly limits.</p>
+    <p>The AI pricing landscape is volatile. On 2025-12-06 Google cut 2.5 Flash's free tier from 250 requests a day to about 20, and 2.5 Pro's to none. <strong>OpenAI discontinued free trial credits</strong> and deprecated the Assistants API. But new players are offering generous free tiers to win developer mindshare — <strong>Groq</strong> and <strong>Cerebras</strong> provide blazing-fast inference, <strong>Mistral</strong> includes $10 a month in API credits, and <strong>Google Antigravity</strong> has a free individual plan with weekly limits.</p>
     <p>This page compares <strong>${allAiOffers.length} free AI offers</strong> across our index — exact rate limits, not marketing copy. We track ${enrichedMl.length} AI/ML tools and ${enrichedCoding.length} AI coding tools. ${escHtmlServer(confirmationCoverageSentence(confirmationCoverage(allAiOffers), "AI"))}</p>
   </div>
 
@@ -10344,8 +10344,8 @@ ${buildCards(mlPlatforms)}
       </tr>
       <tr>
         <td style="font-weight:600"><a href="/vendor/google-gemini-api" style="color:var(--text)">Google Gemini</a></td>
-        <td style="color:#d29922">Reduced 50-80%</td>
-        <td>Gemini 2.5 Flash, Gemini 2.5 Pro</td>
+        <td style="color:#d29922">Cut on 2025-12-06</td>
+        <td>Gemini 3.x Flash and Flash-Lite</td>
         <td>Fast</td>
       </tr>
       <tr>
@@ -14883,7 +14883,7 @@ ${buildCards(aiGateways)}
       <tr>
         <td style="font-weight:600"><a href="/vendor/google-gemini-api" style="color:var(--text)">Google Gemini API</a></td>
         <td>Provider</td>
-        <td>10\u201315 RPM</td>
+        <td>Shown per project in AI Studio</td>
         <td>Reduced (late 2025)</td>
         <td>Flash, Flash-Lite, 1M context</td>
         <td>Longest context window (1M tokens)</td>
@@ -14954,7 +14954,7 @@ ${buildCards(aiGateways)}
       <dd><a href="/vendor/openrouter">OpenRouter</a> \u2014 ~30 free models (DeepSeek R1, Llama 3.3, Qwen3, Gemma 3) through one OpenAI-compatible API, ~20 RPM per model. ${manyModelsAnswer}</dd>
 
       <dt>Need a long context window?</dt>
-      <dd><a href="/vendor/google-gemini-api">Google Gemini API</a> \u2014 1M token context window on Flash models. Free tier at 10\u201315 RPM (reduced from 2025 levels).</dd>
+      <dd><a href="/vendor/google-gemini-api">Google Gemini API</a> \u2014 1M token context window on Flash models. Google publishes no free-tier limits; AI Studio shows each project's.</dd>
 
       <dt>Building AI agents and need routing/observability?</dt>
       <dd><a href="/vendor/portkey">Portkey</a> \u2014 AI gateway with load balancing, fallbacks, and caching across providers. <a href="/vendor/keywords-ai">Keywords AI</a> for LLM monitoring and optimization.</dd>
@@ -22850,7 +22850,7 @@ function buildTerraformCloudFreeTierRemovedPage(): string {
 
 function buildGeminiApiPricing2026Page(): string {
   const title = "Gemini API Pricing 2026 — Free Tier Changes, Spend Caps & Alternatives";
-  const metaDesc = "Gemini API billing overhaul April 2026: enforced spend caps ($250-$100K+/mo by tier), prepaid billing for new users, Gemini 3.1 Pro paid-only. Free tier covers Flash, Flash-Lite and Gemini 2.5 Pro. Compare 8 free LLM API alternatives.";
+  const metaDesc = "Gemini API billing changes in March and April 2026: spend caps by tier ($250 to $100K+ a month, enforced from April 1), prepay for some new users, and Gemini 3.1 Pro Preview paid only. The free tier covers the Gemini 3.x Flash and Flash-Lite models.";
   const slug = "gemini-api-pricing-2026";
   const pubDate = "2026-03-26";
 
@@ -22858,9 +22858,9 @@ function buildGeminiApiPricing2026Page(): string {
   const spendCapChange = dealChanges.find(c => c.vendor === "Google Gemini API" && c.change_type === "restriction");
 
   const llmProviders = [
-    { name: "Google Gemini API", freeLimit: "10 RPM (Flash), 15 RPM (Flash-Lite)", context: "1M tokens", models: "2.5 Flash, Flash-Lite, 2.5 Pro (free); 3.1 Pro (paid-only)", notes: "Spend caps enforced April 1. 3.1 Pro paid-only. Prepaid billing for new users." },
+    { name: "Google Gemini API", freeLimit: "Shown per project in AI Studio", context: "1M tokens", models: "3.x Flash and Flash-Lite (free); 3.1 Pro Preview (paid-only)", notes: "Spend caps enforced April 1. 3.1 Pro paid-only. Prepaid billing for new users." },
     { name: "Anthropic Claude API", freeLimit: "Pay-as-you-go only", context: "1M tokens", models: "Fable 5.1, Opus 5, Sonnet 5, Haiku 4.5", notes: "No free tier — $10/$50 per MTok (Fable 5.1), $5/$25 (Opus 5). Batch API at 50% off." },
-    { name: "OpenAI API", freeLimit: "GPT-3.5 only, 3 RPM", context: "128K tokens", models: "GPT-3.5 Turbo (free), GPT-4o (paid)", notes: "Free trial credits discontinued mid-2025. Very limited free access." },
+    { name: "OpenAI API", freeLimit: "None (pay as you go)", context: "128K tokens", models: "Paid models only", notes: "Free trial credits discontinued mid-2025. Very limited free access." },
     { name: "Groq", freeLimit: "30 RPM; 1K requests and 200K tokens/day per model", context: "128K tokens", models: "gpt-oss-120b, gpt-oss-20b, Qwen3.8 27B, Whisper", notes: "Ultra-fast LPU inference. Most generous free RPM. No credit card needed." },
     { name: "Mistral AI", freeLimit: "$10/month in API credits", context: "128K tokens", models: "Large, Codestral, Pixtral", notes: "Free plan includes monthly API credits." },
     { name: "OpenRouter", freeLimit: "~20 RPM per model, ~30 free models", context: "Varies by model", models: "DeepSeek R1, Llama 3.3, Qwen3, Gemma 3", notes: "One API key for many models. Best model variety on free tier." },
@@ -22986,21 +22986,21 @@ ${mcpCtaCss()}
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number red">$250</div><div class="stat-label">Tier 1 Spend Cap</div></div>
-    <div class="stat-card"><div class="stat-number red">50-80%</div><div class="stat-label">Rate Limit Cuts</div></div>
-    <div class="stat-card"><div class="stat-number">1</div><div class="stat-label">Free Pro Model (2.5 Pro)</div></div>
+    <div class="stat-card"><div class="stat-number red">Dec 2025</div><div class="stat-label">Free tier cut</div></div>
+    <div class="stat-card"><div class="stat-number">0</div><div class="stat-label">Free Pro models for new projects</div></div>
     <div class="stat-card"><div class="stat-number">${llmProviders.length}</div><div class="stat-label">Providers Compared</div></div>
   </div>
 
   <div class="executive-summary">
-    <p><strong>Google overhauled Gemini API billing effective April 1, 2026.</strong> Enforced monthly spend caps by tier (Tier 1: $250/mo, Tier 2: $2,000/mo, Tier 3: $20K-$100K+) automatically pause API requests when reached. New users face <strong>prepaid billing</strong> — buy credits before using the API. The latest flagship <strong>Gemini 3.1 Pro is paid-only</strong> with no free tier access.</p>
-    <p>For developers who built on Gemini's generous early free tier, the API has fundamentally changed: <strong>Flash went from ~250 to 20-50 requests/day, spend caps add another constraint for paid users, and the newest model requires payment.</strong> Free tier access is preserved for Flash, Flash-Lite and Gemini 2.5 Pro, with restructured rate limits. Below we cover what changed, who's affected, and which alternatives offer better free access. See also our <a href="/gemini-api-pricing-changes">complete pricing overhaul guide</a> with cost analysis by usage tier and migration recommendations.</p>
+    <p>Google began enforcing monthly spend caps on the Gemini API on April 1, 2026 (Tier 1: $250, Tier 2: $2,000, Tier 3: $20,000 to $100,000+). When a billing account reaches its cap, requests pause until the next billing month. Since March 23, 2026, AI Studio may ask new users to prepay at least $10 to set up billing. Gemini 3.1 Pro Preview is paid only.</p>
+    <p>For developers who built on Gemini's generous early free tier, the API has fundamentally changed: <strong>On 2025-12-06 Google cut 2.5 Flash's free tier from 250 requests a day to about 20, and 2.5 Pro's to none.</strong> The free tier covers the Gemini 3.x Flash and Flash-Lite models. Google publishes no free-tier limits; AI Studio shows each project's. Since 2026-09-18 Google serves the Gemini 2.5 models only to users who used them before. New projects use 3.5 Flash-Lite or 3.8 Flash. Below we cover what changed, who's affected, and which alternatives offer better free access.</p>
     ${rateLimitChange ? `<p><strong>From our tracker:</strong> ${changeSummaryHtml(rateLimitChange, escHtmlServer)}</p>` : ""}
   </div>
 
   <div class="toc">
     <h3>In This Guide</h3>
     <ol>
-      <li><a href="#whats-changing">What's Changing April 1</a></li>
+      <li><a href="#whats-changing">What Changed on April 1</a></li>
       <li><a href="#timeline">Timeline of Gemini API Changes</a></li>
       <li><a href="#who-affected">Who's Affected</a></li>
       <li><a href="#new-tiers">New Tier Structure &amp; Spend Caps</a></li>
@@ -23010,21 +23010,21 @@ ${mcpCtaCss()}
     </ol>
   </div>
 
-  <h2 id="whats-changing">1. What's Changing April 1</h2>
-  <p class="section-intro">Google is introducing billing-account-level spend caps that automatically pause API requests when your tier's cap is reached. Combined with rate limit reductions already in effect, this is the third major Gemini API pricing change in six months.</p>
+  <h2 id="whats-changing">1. What Changed on April 1</h2>
+  <p class="section-intro">Since April 1, 2026, billing-account spend caps pause API requests when an account reaches its tier's cap.</p>
 
   <table class="pricing-table">
     <thead>
       <tr><th>What Changed</th><th>Before</th><th>After</th><th>Impact</th></tr>
     </thead>
     <tbody>
-      <tr><td style="font-weight:600">Free tier rate limits</td><td>Flash: ~250 RPD, Pro: available</td><td style="font-weight:600">Flash: 10 RPM (~20-50 RPD). 2.5 Pro: free, 3.1 Pro: paid</td><td style="color:#f85149;font-weight:600">50-80% reduction</td></tr>
-      <tr><td style="font-weight:600">Gemini 2.0 Flash</td><td>Available, standard limits</td><td style="font-weight:600">Deprecated, scheduled for retirement</td><td style="color:#f85149;font-weight:600">Must migrate to 2.5</td></tr>
+      <tr><td style="font-weight:600">Free tier rate limits</td><td>2.5 Flash: 10 RPM, 250 RPD. 2.5 Pro: 2 RPM, 50 RPD</td><td style="font-weight:600">Not published. About 5 RPM and 20 RPD on 2.5 Flash, none on 2.5 Pro (2025-12-06)</td><td style="color:#f85149;font-weight:600">92% fewer daily requests on 2.5 Flash</td></tr>
+      <tr><td style="font-weight:600">Gemini 2.0 Flash</td><td>Available, standard limits</td><td style="font-weight:600">Shut down 2026-06-01</td><td style="color:#f85149;font-weight:600">Google recommends 3.6 Flash or 3.1 Flash-Lite</td></tr>
       <tr><td style="font-weight:600">Spend caps (Apr 1)</td><td>No hard caps — billed without pausing</td><td style="font-weight:600">$250/mo (Tier 1), $2K/mo (Tier 2), $20K+ (Tier 3)</td><td style="color:#d29922;font-weight:600">Requests pause at cap</td></tr>
-      <tr><td style="font-weight:600">Billing model</td><td>Pay-as-you-go for all</td><td style="font-weight:600">Prepaid billing for new users</td><td style="color:#d29922;font-weight:600">Buy credits in advance</td></tr>
-      <tr><td style="font-weight:600">Gemini 3.1 Pro</td><td>N/A (new model)</td><td style="font-weight:600">Paid-only — no free tier access</td><td style="color:#f85149;font-weight:600">Latest flagship paywalled</td></tr>
+      <tr><td style="font-weight:600">Billing model</td><td>Pay-as-you-go for all</td><td style="font-weight:600">Prepay may be required for new users (from March 23, 2026)</td><td style="color:#d29922;font-weight:600">Minimum $10 prepayment</td></tr>
+      <tr><td style="font-weight:600">Gemini 3.1 Pro</td><td>N/A (new model)</td><td style="font-weight:600">Paid only</td><td style="color:#f85149;font-weight:600">No free tier</td></tr>
       <tr><td style="font-weight:600">Context window</td><td>1M tokens</td><td>1M tokens</td><td style="color:var(--text-dim)">Unchanged</td></tr>
-      <tr><td style="font-weight:600">Flash-Lite limits</td><td>Generous (unspecified)</td><td style="font-weight:600">15 RPM (preserved)</td><td style="color:#3fb950;font-weight:600">Free tier preserved</td></tr>
+      <tr><td style="font-weight:600">Flash-Lite limits</td><td>Generous (unspecified)</td><td style="font-weight:600">Not published</td><td style="color:#3fb950;font-weight:600">Free tier preserved</td></tr>
     </tbody>
   </table>
 
@@ -23033,7 +23033,7 @@ ${mcpCtaCss()}
   </div>` : ""}
 
   <h2 id="timeline">2. Timeline of Gemini API Changes</h2>
-  <p class="section-intro">Three significant changes in six months — a pattern of tightening that started with rate limits and is now extending to spend controls.</p>
+  <p class="section-intro">Dated changes to the Gemini API's free tier and billing.</p>
 
   <div class="timeline-item">
     <div class="timeline-date">Dec 2025</div>
@@ -23055,7 +23055,7 @@ ${mcpCtaCss()}
 
   <div class="impact-card" style="border-left-color:#f85149">
     <h3 style="color:#f85149">Free tier developers (most affected)</h3>
-    <p class="impact-desc">If you built on Gemini's generous early free tier (250+ RPD Flash, free Pro access), your application likely broke when limits dropped 50-80% in late 2025. Flash is now 10 RPM, and the flagship Gemini 3.1 Pro is paid-only. <strong>Consider switching to <a href="/vendor/groq">Groq</a> (30 RPM free) or <a href="/vendor/openrouter">OpenRouter</a> (~30 free models).</strong></p>
+    <p class="impact-desc">If you built on the free tier before December 2025: on 2025-12-06, 2.5 Flash's daily requests fell from 250 to about 20 and 2.5 Pro's to none. Gemini 3.1 Pro Preview has no free tier. <strong>Consider switching to <a href="/vendor/groq">Groq</a> (30 RPM free) or <a href="/vendor/openrouter">OpenRouter</a> (~30 free models).</strong></p>
   </div>
   <div class="impact-card" style="border-left-color:#d29922">
     <h3 style="color:#d29922">Pay-as-you-go developers</h3>
@@ -23063,7 +23063,7 @@ ${mcpCtaCss()}
   </div>
   <div class="impact-card" style="border-left-color:#3fb950">
     <h3 style="color:#3fb950">Low-volume / hobby developers</h3>
-    <p class="impact-desc">If you're making fewer than 10 requests per minute on Flash, the free tier still works — just with less headroom. The 1M token context window remains Gemini's key differentiator. For occasional use, the impact is minimal.</p>
+    <p class="impact-desc">If you make a few requests a minute on a 3.x Flash model, the free tier still works — just with less headroom. The 1M token context window remains Gemini's key differentiator. For occasional use, the impact is minimal.</p>
   </div>
 
   <h2 id="new-tiers">4. New Tier Structure &amp; Spend Caps</h2>
@@ -23074,7 +23074,7 @@ ${mcpCtaCss()}
       <tr><th>Tier</th><th>Monthly Spend Cap</th><th>Free Rate Limits</th><th>Paid Rate Limits</th><th>Key Constraint</th></tr>
     </thead>
     <tbody>
-      <tr><td style="font-weight:600">Free</td><td style="font-family:var(--mono)">$0</td><td style="font-family:var(--mono)">Flash: 10 RPM, Flash-Lite: 15 RPM</td><td>N/A</td><td style="color:#f85149">No Pro/3.1 Pro access. Heavily limited.</td></tr>
+      <tr><td style="font-weight:600">Free</td><td style="font-family:var(--mono)">$0</td><td style="font-family:var(--mono)">Not published; shown per project in AI Studio</td><td>N/A</td><td style="color:#f85149">No free Pro model for new projects.</td></tr>
       <tr><td style="font-weight:600">Tier 1 (Pay-as-you-go)</td><td style="font-family:var(--mono);color:#d29922;font-weight:600">$250/mo</td><td style="font-family:var(--mono)">Same as free</td><td>Higher RPM per model</td><td style="color:#d29922">Requests pause at $250 aggregate spend</td></tr>
       <tr><td style="font-weight:600">Tier 2</td><td style="font-family:var(--mono);color:#d29922;font-weight:600">$2,000/mo</td><td style="font-family:var(--mono)">Same as free</td><td>Even higher RPM</td><td style="color:#d29922">Auto-upgraded at spend threshold</td></tr>
       <tr><td style="font-weight:600">Tier 3+</td><td style="font-family:var(--mono);color:#d29922;font-weight:600">$20K&ndash;$100K+</td><td style="font-family:var(--mono)">Same as free</td><td>Highest RPM, priority</td><td>Enterprise scale, custom caps</td></tr>
@@ -23082,7 +23082,7 @@ ${mcpCtaCss()}
   </table>
 
   <div class="context-box">
-    <strong>What "spend cap" means in practice:</strong> Unlike rate limits (which reject individual requests), spend caps <em>pause all requests</em> for the remainder of the billing month once the tier's aggregate spend limit is reached. This is a billing-account-level control — all projects under the same billing account share the cap. Google added project-level caps on March 16, 2026 as a mitigation tool.
+    <strong>What "spend cap" means in practice:</strong> Unlike rate limits (which reject individual requests), spend caps <em>pause all requests</em> for the remainder of the billing month once the tier's aggregate spend limit is reached. This is a billing-account-level control — all projects under the same billing account share the cap. Google added project-level spend caps on March 12, 2026.
   </div>
 
   <h2 id="prepaid">5. Prepaid Billing &amp; Paid-Only Models</h2>
@@ -23090,15 +23090,15 @@ ${mcpCtaCss()}
 
   <div class="impact-card" style="border-left-color:#d29922">
     <h3 style="color:#d29922">Prepaid billing for new users</h3>
-    <p class="impact-desc">New Gemini API users are now enrolled in <strong>prepaid billing</strong> — you buy credits in advance and consume them with API calls. This replaces the previous pay-as-you-go model for new accounts. Existing users retain pay-as-you-go billing for now, but the transition signals Google's move toward pre-commitment pricing.</p>
+    <p class="impact-desc">Since March 23, 2026, AI Studio may ask a new user to prepay at least $10 to set up billing; others choose between Prepay and Postpay.</p>
   </div>
   <div class="impact-card" style="border-left-color:#f85149">
     <h3 style="color:#f85149">Gemini 3.1 Pro is paid-only</h3>
-    <p class="impact-desc"><strong>The latest flagship model (Gemini 3.1 Pro) has no free tier access.</strong> Google's newest model is entirely behind the paywall. Free tier developers are limited to Flash, Flash-Lite and Gemini 2.5 Pro. This widens the gap between free and paid Gemini API capabilities.</p>
+    <p class="impact-desc">Gemini 3.1 Pro Preview has no free tier. The free tier covers the 3.x Flash and Flash-Lite models, including 3.8 Flash.</p>
   </div>
   <div class="impact-card" style="border-left-color:#3fb950">
     <h3 style="color:#3fb950">Flash-Lite models remain free</h3>
-    <p class="impact-desc">Flash-Lite is still free at 15 RPM, with restructured rate limits. For lightweight tasks (classification, extraction, simple Q&amp;A), Flash-Lite remains a viable zero-cost option. Flash is also free at 10 RPM — just significantly reduced from pre-2025 levels.</p>
+    <p class="impact-desc">The Gemini 3.x Flash and Flash-Lite models are free. Google publishes no free-tier limits; AI Studio shows each project's. For lightweight tasks such as classification, extraction and simple Q&amp;A, 3.5 Flash-Lite or 3.1 Flash-Lite costs nothing.</p>
   </div>
 
   <h2 id="comparison">6. Free LLM API Comparison</h2>
@@ -23120,7 +23120,7 @@ ${mcpCtaCss()}
   </table>
 
   <div class="context-box">
-    <strong>Key takeaway:</strong> <a href="/vendor/groq">Groq</a> offers 30 RPM free (3x Gemini Flash) with ultra-fast inference. <a href="/vendor/cerebras">Cerebras</a> gives 1M tokens/day free. <a href="/vendor/mistral-ai">Mistral AI</a> includes $10 a month in free API credits. <a href="/vendor/openrouter">OpenRouter</a> provides ~30 free models through one API. All are more generous than Gemini's post-cut free tier. For the full comparison, see our <a href="/free-llm-apis">Free LLM APIs</a> guide.
+    <strong>Key takeaway:</strong> <a href="/vendor/groq">Groq</a>'s free plan allows 30 requests a minute and 1,000 a day per model. <a href="/vendor/mistral-ai">Mistral AI</a> includes $10 a month in API credits. <a href="/vendor/openrouter">OpenRouter</a> serves about 30 free models through one API. For the full comparison, see our <a href="/free-llm-apis">Free LLM APIs</a> guide.
   </div>
 
   <h2 id="what-to-do">7. What to Do</h2>
@@ -23131,7 +23131,7 @@ ${mcpCtaCss()}
     <p class="impact-desc">
       <strong>1. Set project-level budget caps</strong> in Google Cloud Console (available since March 16). This prevents one project from consuming the entire billing account's spend cap.<br>
       <strong>2. Monitor usage</strong> via the Gemini API usage dashboard. Set billing alerts before you hit the spend cap.<br>
-      <strong>3. Migrate to 2.5 models</strong> — Gemini 2.0 Flash is deprecated and will be retired. Update your API calls to use <code style="background:var(--bg-elevated);padding:.1rem .3rem;border-radius:4px;font-family:var(--mono);font-size:.8rem">gemini-2.5-flash</code> or <code style="background:var(--bg-elevated);padding:.1rem .3rem;border-radius:4px;font-family:var(--mono);font-size:.8rem">gemini-2.5-pro</code>.<br>
+      <strong>3. Move to the 3.x models</strong> — Gemini 2.0 Flash shut down on 2026-06-01, and new projects cannot use the 2.5 models. Google points new projects to <code style="background:var(--bg-elevated);padding:.1rem .3rem;border-radius:4px;font-family:var(--mono);font-size:.8rem">gemini-3.5-flash-lite</code> or <code style="background:var(--bg-elevated);padding:.1rem .3rem;border-radius:4px;font-family:var(--mono);font-size:.8rem">gemini-3.8-flash</code>.<br>
       <strong>4. Separate billing accounts</strong> if you run multiple projects — spend caps are per billing account, not per project.
     </p>
   </div>
@@ -23154,7 +23154,7 @@ ${mcpCtaCss()}
     </div>
     <div class="verdict-item">
       <strong>If you need the 1M context window:</strong>
-      <p>Stay on Gemini Flash — no other free tier offers this context length. Set budget alerts and migrate to 2.5 models before the 2.0 retirement.</p>
+      <p>Stay on Gemini Flash. Set budget alerts, and use 3.5 Flash-Lite or 3.8 Flash for new work.</p>
     </div>
     <div class="verdict-item">
       <strong>If you're a paying Gemini customer:</strong>
@@ -26528,9 +26528,9 @@ function buildOpenAIAssistantsMigrationPage(): string {
       monthlyCostMid: "$10\u201350",
       monthlyCostHigh: "$200\u20131,000",
       migrationEffort: "Medium\u2013High",
-      freeOption: "1,500 requests/day (Flash)",
+      freeOption: "Free on Gemini 3.x Flash models",
       bestFor: "Cost-sensitive projects, teams wanting generous free tier",
-      details: "Gemini 2.5 Pro and Flash models, both on the free tier. Free tier: 1,500 requests/day (as of April 2026). Function calling, code execution, grounding with Google Search. OpenAI-compatible endpoint available for easier migration.",
+      details: "The free tier covers the Gemini 3.x Flash and Flash-Lite models. Google publishes no free-tier limits; AI Studio shows each project's. Function calling, code execution, grounding with Google Search. OpenAI-compatible endpoint available for easier migration.",
     },
     {
       name: "LangChain + BYO LLM",
@@ -26633,7 +26633,7 @@ function buildOpenAIAssistantsMigrationPage(): string {
 
   const faqEntries = [
     { q: "When does the OpenAI Assistants API shut down?", a: "The Assistants API will be fully shut down on August 26, 2026. After this date, all Assistants API calls will return errors. OpenAI recommends migrating to the Responses API (for prompts and tool use) and Conversations API (for thread/session management)." },
-    { q: "What is the cheapest alternative to the OpenAI Assistants API?", a: "Google Gemini API's free tier is 1,500 requests/day (Flash model). For open-source options, LangChain and CrewAI are free frameworks \u2014 you only pay for the LLM API you choose (or use free local models via Ollama). Anthropic Claude also offers a free tier with rate limits." },
+    { q: "What is the cheapest alternative to the OpenAI Assistants API?", a: "Google Gemini API has a free tier on its 3.x Flash models. For open-source options, LangChain and CrewAI are free frameworks \u2014 you only pay for the LLM API you choose (or use free local models via Ollama). Anthropic Claude also offers a free tier with rate limits." },
     { q: "Can I keep using the Assistants API on Azure OpenAI?", a: `No. Microsoft retired the Azure OpenAI Assistants API on ${ASSISTANTS_API_SHUTDOWN.date}, the same date OpenAI retired its own. Microsoft's documentation states that the Assistants API is retired and directs Azure workloads to ${ASSISTANTS_API_SHUTDOWN.azureSuccessor}, which is generally available; inference-only workloads can use the ${ASSISTANTS_API_SHUTDOWN.azureInferenceApi} instead. Running on Azure does not extend the deadline.` },
     { q: "What replaces Threads in the new Responses API?", a: "OpenAI's Conversations API replaces the Threads functionality from the Assistants API. It provides session management, message history, and context handling. The migration is not automated \u2014 you need to manually update your code to use the new Conversations API endpoints." },
     { q: "How much will migration cost in developer time?", a: "For a small project (single assistant), expect 1\u20132 days of developer time for the Responses API migration. For complex multi-assistant systems, budget 1\u20132 weeks. Switching to a different provider (Anthropic, Gemini, LangChain) adds additional time for API differences and testing. See our cost comparison table for per-path estimates." },
@@ -26797,7 +26797,7 @@ function buildOpenAIAssistantsMigrationPage(): string {
     '  </div>\n' +
     '\n' +
     '  <div class="context-box">\n' +
-    '    <strong>Cost insight:</strong> If cost is your primary concern, <a href="/vendor/google-gemini-api">Google Gemini API</a> offers the best free tier (1,500 requests/day on Flash). If migration speed is the priority, the Responses API is the path of least resistance. Teams already on Azure face the same deadline: Microsoft retired the Azure OpenAI Assistants API on ' + ASSISTANTS_API_SHUTDOWN.date + ' and directs agents to ' + ASSISTANTS_API_SHUTDOWN.azureSuccessor + '.\n' +
+    '    <strong>Cost insight:</strong> If cost is your primary concern, <a href="/vendor/google-gemini-api">Google Gemini API</a> has a free tier on its 3.x Flash models. If migration speed is the priority, the Responses API is the path of least resistance. Teams already on Azure face the same deadline: Microsoft retired the Azure OpenAI Assistants API on ' + ASSISTANTS_API_SHUTDOWN.date + ' and directs agents to ' + ASSISTANTS_API_SHUTDOWN.azureSuccessor + '.\n' +
     '  </div>\n' +
     '\n' +
     '  <h2 id="migration-paths">Migration Paths Detailed</h2>\n' +
@@ -26819,7 +26819,7 @@ function buildOpenAIAssistantsMigrationPage(): string {
     '      </tr>\n' +
     '    </thead>\n' +
     '    <tbody>\n' +
-    '      <tr><td style="font-weight:600"><a href="/vendor/google-gemini-api" style="color:var(--text)">Google Gemini API</a></td><td style="color:#3fb950;font-weight:600">1,500 req/day (Flash)</td><td style="font-size:.85rem">Flash model only (April 2026)</td><td style="font-size:.85rem">Function calling, code execution</td></tr>\n' +
+    '      <tr><td style="font-weight:600"><a href="/vendor/google-gemini-api" style="color:var(--text)">Google Gemini API</a></td><td style="color:#3fb950;font-weight:600">Free on 3.x Flash models</td><td style="font-size:.85rem">Limits shown in AI Studio</td><td style="font-size:.85rem">Function calling, code execution</td></tr>\n' +
     '      <tr><td style="font-weight:600"><a href="/vendor/openai" style="color:var(--text)">OpenAI (Responses API)</a></td><td style="color:#d29922;font-weight:600">GPT-3.5 at 3 RPM</td><td style="font-size:.85rem">Very limited, no GPT-4</td><td style="font-size:.85rem">Prompts + tool use</td></tr>\n' +
     '      <tr><td style="font-weight:600">Anthropic Claude</td><td style="color:#3fb950;font-weight:600">Free tier available</td><td style="font-size:.85rem">Rate-limited</td><td style="font-size:.85rem">Tool use, 200K\u20131M context</td></tr>\n' +
     '      <tr><td style="font-weight:600">LangChain</td><td style="color:#3fb950;font-weight:600">Fully free (MIT)</td><td style="font-size:.85rem">LLM API costs only</td><td style="font-size:.85rem">LangGraph agents, tool calling</td></tr>\n' +
@@ -26852,7 +26852,7 @@ function buildOpenAIAssistantsMigrationPage(): string {
     '  <div class="verdict-box">\n' +
     '    <h3>Which migration path is right for you?</h3>\n' +
     '    <div class="verdict-item"><strong>Fastest migration:</strong><p>OpenAI Responses API \u2014 same provider, same models, just new API patterns. Minimal code changes.</p></div>\n' +
-    '    <div class="verdict-item"><strong>Lowest cost:</strong><p>Google Gemini API \u2014 1,500 free requests/day on Flash, competitive paid pricing. OpenAI-compatible endpoint eases migration.</p></div>\n' +
+    '    <div class="verdict-item"><strong>Lowest cost:</strong><p>Google Gemini API \u2014 a free tier on its 3.x Flash models. OpenAI-compatible endpoint eases migration.</p></div>\n' +
     '    <div class="verdict-item"><strong>Enterprise / compliance:</strong><p>Azure OpenAI \u2014 same GPT models, enterprise SLAs, data residency. Rebuild on ' + escHtmlServer(ASSISTANTS_API_SHUTDOWN.azureSuccessor) + ': Microsoft retired the Azure Assistants API on ' + escHtmlServer(ASSISTANTS_API_SHUTDOWN.date) + ' too, so this path is a change of platform, not a way to keep the old API.</p></div>\n' +
     '    <div class="verdict-item"><strong>Best reasoning quality:</strong><p>Anthropic Claude \u2014 Claude 4 Opus for complex tasks. Tool use built in. Prompt caching reduces costs 90% for repeated context.</p></div>\n' +
     '    <div class="verdict-item"><strong>Maximum flexibility:</strong><p>LangChain + BYO LLM \u2014 swap models anytime, no platform lock-in. More work upfront but full control.</p></div>\n' +
@@ -26995,11 +26995,11 @@ function buildShutdownTrackerPage(): string {
     {
       service: "Gemini 2.0 Flash",
       vendorSlug: "google-gemini-api",
-      what: "Gemini 2.0 Flash and Flash-Lite models deprecated \u2014 full removal September 24, 2026. Image generation via 2.0 Flash shut down March 31.",
-      deadline: "2026-09-24",
-      impact: "All applications using gemini-2.0-flash or gemini-2.0-flash-lite model IDs will stop working",
-      whoAffected: "Developers using Gemini 2.0 Flash model ID in API calls \u2014 migration to Gemini 2.5 Flash required",
-      migrationPath: "Update model parameter to gemini-2.5-flash \u2014 straightforward migration, improved performance",
+      what: "Gemini 2.0 Flash and 2.0 Flash-Lite shut down on June 1, 2026. Image generation via 2.0 Flash shut down November 14, 2025.",
+      deadline: "2026-06-01",
+      impact: "Calls to the gemini-2.0-flash and gemini-2.0-flash-lite model IDs no longer work.",
+      whoAffected: "Developers who called the Gemini 2.0 Flash model IDs.",
+      migrationPath: "Google recommends gemini-3.6-flash for 2.0 Flash and gemini-3.1-flash-lite for 2.0 Flash-Lite.",
       migrationLink: "/gemini-api-pricing-2026",
       status: "active",
     },
@@ -32425,13 +32425,13 @@ function buildLlmApiPricingPage(): string {
       name: "Google Gemini",
       slug: "google-gemini-api",
       category: "frontier",
-      freeTier: "Flash, Flash-Lite, 2.5 Pro",
+      freeTier: "3.x Flash and Flash-Lite, Gemma 4",
       flagshipModel: "Gemini 3.8 Flash",
       inputPrice: "$0.75/M",
       outputPrice: "$3.75/M",
       contextWindow: "1M",
-      rateLimit: "10-15 RPM (free)",
-      freeDetails: "Free tier covers Flash, Flash-Lite and Gemini 2.5 Pro. Gemini 3.8 Flash is $0.75/$3.75 per MTok through December 31, 2026 and $1.50/$7.50 from January 1, 2027. Gemini 2.5 Pro stays at $1.25/$10. Gemini 3.1 Pro is in preview at $2/$12 and requires paid billing. Mandatory spend caps enforced since April 1, 2026.",
+      rateLimit: "Shown per project in AI Studio",
+      freeDetails: "The free tier covers the Gemini 3.x Flash and Flash-Lite models. Google publishes no free-tier limits; AI Studio shows each project's. Since 2026-09-18 Google serves the Gemini 2.5 models only to users who used them before. New projects use 3.5 Flash-Lite or 3.8 Flash. Gemini 3.8 Flash is $0.75/$3.75 per MTok through December 31, 2026 and $1.50/$7.50 from January 1, 2027. Gemini 2.5 Pro stays at $1.25/$10. Gemini 3.1 Pro is in preview at $2/$12 and requires paid billing. Mandatory spend caps enforced since April 1, 2026.",
       freeType: "limited",
       differentiator: "1M token context window; cheapest frontier input tokens; Flash models genuinely free",
       readOn: FRONTIER_PRICES_READ_ON,
@@ -32910,7 +32910,7 @@ function buildLlmApiPricingPage(): string {
     '  </div>\n' +
     '\n' +
     '  <div class="executive-summary">\n' +
-    '    <p><strong>LLM API pricing, frontier rows read ' + escHtmlServer(frontierReadOn ?? "on no recorded date") + ':</strong> ' + providers.length + ' providers across four categories — frontier labs, inference providers, open-source hosts, and specialized services. OpenAI and Anthropic price their top model identically: GPT-6 Astra and Claude Fable 5.1 are both $10/$50 per M tokens. Gemini 3.8 Flash is $0.75/$3.75 through December 31, 2026 and $1.50/$7.50 after it. Mistral Medium 3.5 is $1.50/$7.50. Google\'s Gemini free tier keeps Flash, Flash-Lite and 2.5 Pro, with 3.1 Pro paid-only. DeepSeek\'s deepseek-flash offers 1M context at $0.30/M input at peak and $0.15/M off-peak. Groq and Cerebras offer genuinely free inference at thousands of tokens/second.</p>\n' +
+    '    <p><strong>LLM API pricing, frontier rows read ' + escHtmlServer(frontierReadOn ?? "on no recorded date") + ':</strong> ' + providers.length + ' providers across four categories — frontier labs, inference providers, open-source hosts, and specialized services. OpenAI and Anthropic price their top model identically: GPT-6 Astra and Claude Fable 5.1 are both $10/$50 per M tokens. Gemini 3.8 Flash is $0.75/$3.75 through December 31, 2026 and $1.50/$7.50 after it. Mistral Medium 3.5 is $1.50/$7.50. Google\'s Gemini free tier covers the 3.x Flash and Flash-Lite models; 3.1 Pro Preview is paid-only. DeepSeek\'s deepseek-flash offers 1M context at $0.30/M input at peak and $0.15/M off-peak. Groq and Cerebras offer genuinely free inference at thousands of tokens/second.</p>\n' +
     '    <p><strong>Key trends:</strong> Inference providers (Groq, Cerebras, OpenRouter) are commoditizing open-source model access — free tiers with no credit card required. xAI Grok 4.1 is the cheapest frontier model at $0.20/M input. The gap between frontier and open-source quality is narrowing, making the price delta harder to justify for many use cases.</p>\n' +
     '    <p><strong>This guide covers:</strong> pricing tables, provider breakdowns, free tier analysis, cheapest-per-token rankings, pricing gotchas, recent changes, and best-for-use-case recommendations — compiled by hand from vendor pricing pages.</p>\n' +
     '  </div>\n' +
@@ -33015,7 +33015,7 @@ function buildLlmApiPricingPage(): string {
     '  </div>\n' +
     '  <div class="hidden-cost-card">\n' +
     '    <h4>Gemini Free Tier: Gemini 3.1 Pro Needs a Paid Account</h4>\n' +
-    '    <p>Google\'s Gemini free tier covers Flash, Flash-Lite and Gemini 2.5 Pro. The current flagship, Gemini 3.1 Pro, has no free tier access — it needs a paid billing account, and paid accounts carry mandatory spend caps.</p>\n' +
+    '    <p>Google\'s Gemini free tier covers the 3.x Flash and Flash-Lite models. Gemini 3.1 Pro Preview has no free tier.</p>\n' +
     '  </div>\n' +
     '  <div class="hidden-cost-card">\n' +
     '    <h4>Context Window ≠ Effective Context</h4>\n' +
@@ -33078,7 +33078,7 @@ function buildLlmApiPricingPage(): string {
     '\n' +
     '    <div class="verdict-item">\n' +
     '      <strong>Best for long-context (100K+ tokens)</strong>\n' +
-    '      <p><a href="/vendor/deepseek-api">deepseek-flash</a> (1M context, $0.30/$1.20/M at peak) or <a href="/vendor/google-gemini-api">Google Gemini 2.5 Pro</a> (1M context, $1.25/M). <a href="/vendor/anthropic-api">Claude</a> (200K) for highest quality within context window.</p>\n' +
+    '      <p><a href="/vendor/deepseek-api">deepseek-flash</a> (1M context, $0.30/$1.20/M at peak). <a href="/vendor/anthropic-api">Claude</a> (200K) for highest quality within context window.</p>\n' +
     '    </div>\n' +
     '\n' +
     '    <div class="verdict-item">\n' +
@@ -35314,8 +35314,8 @@ function buildGcpFreeTier2026Page(): string {
   ];
 
   const trialServices: GcpService[] = [
-    { name: "$300 Free Trial Credit", slug: "google-cloud", limits: "$300 credit for 90 days, full access to all GCP services, credit card required", category: "Trial" },
-    { name: "Vertex AI (Gemini)", slug: "google-gemini-api", limits: "Free tier: Gemini 2.5 Flash 500 req/day, Gemini 2.5 Pro 25 req/day", category: "AI/ML", highlight: true },
+    { name: "$300 Free Trial Credit", slug: "google-cloud", limits: "$300 credit for 90 days, credit card required. Accounts opened after 2026-03-02 cannot spend it on the Gemini API.", category: "Trial" },
+    { name: "Gemini API (AI Studio)", slug: "google-gemini-api", limits: "Free tier on the Gemini 3.x Flash and Flash-Lite models; limits shown per project in AI Studio", category: "AI/ML", highlight: true },
     { name: "Google Colab", slug: "google-colab", limits: "Free tier: T4 GPU (limited), standard RAM, 12-hour session limit", category: "AI/ML" },
     { name: "AlloyDB Omni", slug: "google-cloud", limits: "Free to download and run locally (PostgreSQL-compatible, columnar engine)", category: "Database" },
     { name: "Looker Studio", slug: "google-cloud", limits: "Free for individual use (unlimited reports, 10 data sources)", category: "Analytics" },
@@ -35497,7 +35497,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="executive-summary">
-    <p><strong>Three tiers, different rules.</strong> GCP bundles its free offerings into three categories. <strong>Always Free</strong> products have permanent monthly quotas — Cloud Run (2M requests), BigQuery (1 TiB), and ${alwaysFreeServices.length - 2} other services are free within monthly limits. The <strong>$300 Free Trial</strong> gives 90 days of full GCP access (credit card required, but won't auto-charge). <strong>AI &amp; ML tools</strong> have their own free tiers with daily rate limits. Most "GCP free tier" guides conflate these. We separate them.</p>
+    <p><strong>Three tiers, different rules.</strong> GCP bundles its free offerings into three categories. <strong>Always Free</strong> products have permanent monthly quotas — Cloud Run (2M requests), BigQuery (1 TiB), and ${alwaysFreeServices.length - 2} other services are free within monthly limits. The <strong>$300 Free Trial</strong> gives $300 of credit to spend on Google Cloud products over 90 days (credit card required, but won't auto-charge; accounts opened after 2026-03-02 cannot spend it on the Gemini API). <strong>AI &amp; ML tools</strong> have their own free tiers with daily rate limits. Most "GCP free tier" guides conflate these. We separate them.</p>
     <p><strong>The free VM:</strong> Always Free includes one e2-micro VM a month in us-west1, us-central1 or us-east1, with 30 GB of standard persistent disk.</p>
     <p><strong>The hidden costs:</strong> GCP's free tier has traps — the free VM is region-restricted, egress charges apply everywhere, Firestore daily operation limits are tight, and load balancers are never free. We cover all gotchas below.</p>
     <p><strong>Comparing clouds?</strong> See our <a href="/cloud-free-tier-comparison-2026">Cloud Free Tier Comparison</a> for a side-by-side matrix of AWS vs GCP vs Azure vs DigitalOcean.</p>
@@ -35539,7 +35539,7 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="trial-ai">Free Trial &amp; AI/ML Tools</h2>
-  <p class="section-intro">The $300 trial gives full access to every GCP service for 90 days. AI/ML tools have their own always-free tiers with daily rate limits. Gemini Code Assist is new in late 2025.</p>
+  <p class="section-intro">The $300 trial is credit for Google Cloud products over 90 days; accounts opened after 2026-03-02 cannot spend it on the Gemini API. The Gemini API has its own free tier, with limits shown per project in AI Studio.</p>
 
   <div style="overflow-x:auto">
   <table class="pricing-table">
@@ -46631,7 +46631,7 @@ ${globalNavCss()}
   <h2>The Bright Spots: Who&rsquo;s Expanding</h2>
   <p class="section-desc">${positiveChanges.length} of the ${trackedHere.length} ${TRACKED_CHANGE_NOUN} are developer-positive: new free tiers, expanded limits, and improved startup programs. Notable expansions include GitHub Copilot Free, Auth0 tripling MAU limits, and Amazon Aurora PostgreSQL joining the AWS Free Tier.</p>
   <div class="callout callout-good">
-    <strong>Trend worth watching:</strong> AI coding tools are in a free-tier arms race. GitHub Copilot launched a free tier (Dec 2025), Google shipped Gemini Code Assist free (Dec 2025), and multiple vendors are competing on generous free completions to capture developer lock-in.
+    <strong>Trend worth watching:</strong> AI coding tools are in a free-tier arms race. GitHub Copilot launched a free tier (Dec 2024), Google shipped Gemini Code Assist free (Feb 2025, ended June 2026), and multiple vendors are competing on generous free completions to capture developer lock-in.
   </div>
   ${brightSpotsHtml}
 
