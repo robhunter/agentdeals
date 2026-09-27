@@ -45,17 +45,6 @@
       "first_read_date": "2026-09-26"
     },
     {
-      "vendor": "OpenAI",
-      "change_type": "free_tier_removed",
-      "impact": "high",
-      "summary": "The free tier for flagship models has been removed. The moderation model omni-moderation-latest may still be free, the page details pricing for gpt-6-astra, gpt-6-sol, and gpt-6-luna, all of which are paid per token.",
-      "previous_state": "AI API platform. One model is priced Free in OpenAI's own table — the moderation model omni-moderation-latest. Everything else is per-token: embeddings from $0.02/1M, chat-latest $5.00/1M input and $30.00/1M output. Three further free amounts are sub-quotas inside paid tools: 1 GB per day of File search storage, 1 GB per account per month of ChatKit upload storage, and web-search content tokens on non-reasoning models. No free token allowance for the flagship models; trial credits for new accounts were discontinued in mid-2025.",
-      "current_state": "Flagship models are priced per 1M tokens: gpt-6-astra ($10.00 input, $12.50 output), gpt-6-sol ($2.00 input, $2.50 output), gpt-6-luna ($0.10 input, $0.125 output).",
-      "source_url": "https://developers.openai.com/api/docs/pricing",
-      "category": "AI / ML",
-      "first_read_date": "2026-09-26"
-    },
-    {
       "vendor": "ScraperAPI",
       "change_type": "free_tier_removed",
       "impact": "high",
@@ -1420,6 +1409,18 @@
       "outcome": "contradicted",
       "detail": "a reading on 2026-09-26 read it as pricing_restructured",
       "resolved_date": "2026-09-26"
+    },
+    {
+      "vendor": "OpenAI",
+      "change_type": "free_tier_removed",
+      "impact": "high",
+      "summary": "The free tier for flagship models has been removed. The moderation model omni-moderation-latest may still be free, the page details pricing for gpt-6-astra, gpt-6-sol, and gpt-6-luna, all of which are paid per token.",
+      "previous_state": "AI API platform. One model is priced Free in OpenAI's own table — the moderation model omni-moderation-latest. Everything else is per-token: embeddings from $0.02/1M, chat-latest $5.00/1M input and $30.00/1M output. Three further free amounts are sub-quotas inside paid tools: 1 GB per day of File search storage, 1 GB per account per month of ChatKit upload storage, and web-search content tokens on non-reasoning models. No free token allowance for the flagship models; trial credits for new accounts were discontinued in mid-2025.",
+      "source_url": "https://developers.openai.com/api/docs/pricing",
+      "first_read_date": "2026-09-26",
+      "outcome": "baseline_moved",
+      "detail": "the terms it was read against are no longer the terms we publish",
+      "resolved_date": "2026-09-27"
     }
   ]
 }

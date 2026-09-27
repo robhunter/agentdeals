@@ -219,7 +219,8 @@
       "source_url": "https://openrouter.ai/pricing",
       "record_date": "2026-09-07",
       "change_type": "limits_reduced",
-      "summary": "The free tier now has a rate limit of 50 requests/day, and offers access to 25+ free models and 4 free providers. Previously ~30 free models and ~20 RPM per model. There is also a $25,000/month inference limit with no fees, followed by a 5% fee."
+      "summary": "The free tier now has a rate limit of 50 requests/day, and offers access to 25+ free models and 4 free providers. Previously ~30 free models and ~20 RPM per model. There is also a $25,000/month inference limit with no fees, followed by a 5% fee.",
+      "reverted_on": "2026-09-27"
     },
     {
       "vendor": "Cloudflare Workers AI",
