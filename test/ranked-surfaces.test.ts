@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 import { loadOffers, enrichOffers } from "../dist/data.js";
 import { substitutesFor } from "../dist/product-role.js";
 import { toSlug, vendorSlugMap } from "../dist/vendor-slug.js";
+import { changesByVendor, evaluate, utcDate } from "../dist/ranking.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -56,6 +57,26 @@ const deadLinkSubjectSlug = (() => {
   return null;
 })();
 
+const withdrawalSubjectSlug = (() => {
+  const offers = loadOffers();
+  const changes = JSON.parse(readFileSync(path.join(REPO, "data", "deal_changes.json"), "utf8")).changes;
+  const byVendor = changesByVendor(changes);
+  const today = utcDate();
+  const demoted = new Set(
+    offers
+      .filter((o) => evaluate(o, { date: today, changesForVendor: byVendor.get(o.vendor.toLowerCase()) ?? [] })
+        .demerits.some((d: { code: string }) => d.code === "free_tier_withdrawn"))
+      .map((o) => o.vendor)
+  );
+  if (demoted.size === 0) return null;
+  for (const vendor of [...new Set(offers.map((o) => o.vendor))].sort()) {
+    if (vendorSlugMap.get(toSlug(vendor)) !== vendor) continue;
+    const subject = offers.find((o) => o.vendor === vendor)!;
+    if (substitutesFor(offers, subject).some((a) => demoted.has(a.vendor))) return toSlug(vendor);
+  }
+  return null;
+})();
+
 describe("the templates no longer name winners", () => {
   const stacks = stripComments(readFileSync(path.join(REPO, "src", "stacks.ts"), "utf8"));
 
@@ -93,11 +114,18 @@ describe("/vendor/:slug alternatives", () => {
 
 describe("/alternative-to/:slug", () => {
   const DEMOTION_EVIDENCE: Array<{ path: string; pattern: RegExp; why: string }> = [
-    { path: "/alternative-to/openai", pattern: /<strong>&minus;3 free_tier_withdrawn<\/strong> Recorded [a-z ]+ on \d{4}-\d{2}-\d{2}/, why: "a withdrawn free tier must name the change and its date" },
+    { path: `/alternative-to/${withdrawalSubjectSlug ?? ""}`, pattern: /<strong>&minus;3 free_tier_withdrawn<\/strong> Recorded [a-z ]+ on \d{4}-\d{2}-\d{2}/, why: "a withdrawn free tier must name the change and its date" },
     { path: "/alternative-to/openai", pattern: /<strong>&minus;2 time_limited_offer<\/strong> Tier &quot;[^&]+&quot; is a credit grant/, why: "a credit grant must say so" },
     { path: "/alternative-to/n8n", pattern: /<strong>&minus;1 stale_verification<\/strong>[^<]*not a change by the vendor/, why: "our own verification gap must be labelled as ours" },
     { path: `/alternative-to/${deadLinkSubjectSlug ?? ""}`, pattern: /<strong>&minus;2 link_unreachable<\/strong>[^<]*pricing page has not resolved for us since \d{4}-\d{2}-\d{2}/, why: "a dead pricing page must name the date it was last reachable" },
   ];
+
+  it("draws the withdrawal subject from a list that publishes one today", () => {
+    assert.ok(
+      withdrawalSubjectSlug,
+      "no alternatives list publishes a vendor demoted on a withdrawal still in force, so the row below asserts nothing and needs a surface that does"
+    );
+  });
 
   it("draws the dead-link subject from a list that publishes one today", () => {
     assert.ok(

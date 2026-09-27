@@ -1,8 +1,9 @@
 import { createHash } from "node:crypto";
 import { changeSummaryText } from "./change-citation.js";
+import { recordsStillInForce } from "./change-resolution.js";
 import { gateCensusSentence, VERIFICATION_LAPSED_DAYS } from "./gate-disclosure.js";
 import { LINK_GRACE_DAYS, unreachableNoticeForUrl } from "./link-health.js";
-import { discontinuedClause, discontinuedOnOrBefore } from "./product-deprecation.js";
+import { discontinuedClause, discontinuedOnOrBefore, endsAFreeTier } from "./product-deprecation.js";
 import { lastReadingFor, type LastReading, type ReadingLookup } from "./read-date.js";
 import { listEndedTiers, offerEnded, recordedTierSentence, THE_PAGE_STAYS_UP_UNRANKED } from "./retirement.js";
 import { LAST_RESOLVED, withheldLevelSentence } from "./source-check.js";
@@ -174,7 +175,7 @@ export const DEMERIT_TABLE: DemeritTableRow[] = [
     code: "free_tier_withdrawn",
     points: 3,
     trigger:
-      `A recorded free-tier removal, open-source licence change or product deprecation within the last ${ADVERSE_CHANGE_WINDOW_DAYS} days.`,
+      `A removal, licence change, or deprecation that ends the listed product, still in force, within the last ${ADVERSE_CHANGE_WINDOW_DAYS} days.`,
   },
   {
     code: "link_gone",
@@ -601,11 +602,11 @@ export function evaluate<T extends Offer>(
   const adverseCutoff = shiftDays(date, -ADVERSE_CHANGE_WINDOW_DAYS);
 
   let withdrawal: { change: DealChange; label: string } | null = null;
-  for (const change of changesForVendor) {
+  for (const change of recordsStillInForce(changesForVendor)) {
     if (change.date < adverseCutoff) continue;
     const label = WITHDRAWAL_CHANGE_TYPES[change.change_type];
     if (label) {
-      if (!withdrawal || change.date > withdrawal.change.date) withdrawal = { change, label };
+      if (endsAFreeTier(change) && (!withdrawal || change.date > withdrawal.change.date)) withdrawal = { change, label };
       continue;
     }
     if (DISCLOSURE_CHANGE_TYPES.has(change.change_type)) {
