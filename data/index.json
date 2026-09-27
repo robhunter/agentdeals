@@ -35568,6 +35568,132 @@
         "outcome": "ok",
         "detail": "the page states \"Wingman by StackHawk\" at \"$10 /user/mo\" with \"Unlimited apps and 50 scans/user/month\" and \"StackHawk Scale\" as \"Talk to us\"; $10 is the only amount in 4,482 characters of visible text, and all four occurrences of \"free\" name the 14-day trial"
       }
+    },
+    {
+      "vendor": "Vercel Sandbox",
+      "category": "Cloud Hosting",
+      "description": "Isolated Linux microVMs for running untrusted or agent-generated code, metered by active CPU, memory, sandbox creations and data transfer. The Hobby plan includes each month at no cost: 5 hours of Active CPU, 420 GB-hours of provisioned memory, 5,000 sandbox creations and 20 GB of data transfer, plus 15 GB of snapshot storage for the life of the account. Hobby sandboxes run for at most 45 minutes, 10 at a time. Past the quota, sandbox creation pauses and nothing is charged. Hobby is for non-commercial, personal use only. On Pro, Active CPU costs $0.128 an hour and memory $0.0212 per GB-hour.",
+      "tier": "Hobby",
+      "url": "https://vercel.com/docs/sandbox/pricing",
+      "tags": [
+        "sandboxes",
+        "code-execution",
+        "agents",
+        "microvm",
+        "vercel"
+      ],
+      "verifiedDate": "2026-09-27",
+      "product_subtypes": {
+        "taxonomy": "Cloud Hosting",
+        "labels": [
+          {
+            "subtype": "agent_sandbox",
+            "source_url": "https://vercel.com/docs/sandbox",
+            "source_quote": "Run untrusted or agent-generated code in isolated Linux microVMs."
+          }
+        ],
+        "reviewed": "2026-09-27"
+      }
+    },
+    {
+      "vendor": "Daytona",
+      "category": "AI / ML",
+      "description": "Sandboxes for running AI-generated code, priced pay as you go. New accounts get $200 in free compute on a free trial that needs no credit card; Daytona does not say whether the credit expires or renews, and it does not cover GPU sandboxes. A sandbox can use up to 4 vCPUs, 8 GB of RAM and 10 GB of disk, and on the first two usage tiers its network access is restricted. After the credit: $0.0504 an hour per vCPU and $0.0162 an hour per GiB of memory; the first 5 GiB of storage is free.",
+      "tier": "Free Credits",
+      "url": "https://www.daytona.io/pricing",
+      "tags": [
+        "sandboxes",
+        "code-execution",
+        "agents",
+        "ai"
+      ],
+      "verifiedDate": "2026-09-27",
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "agent_sandbox",
+            "source_url": "https://www.daytona.io/pricing",
+            "source_quote": "Daytona lets you spin up sandboxes in milliseconds and shut them down just as fast."
+          }
+        ],
+        "reviewed": "2026-09-27"
+      }
+    },
+    {
+      "vendor": "Blaxel",
+      "category": "AI / ML",
+      "description": "Sandboxes and runtime for AI agents, priced on usage with no plan fee. New accounts get up to $200 in free credits; Blaxel does not say whether they renew, and its terms say unused service credits expire one year after they are issued unless otherwise specified. The free quota tier allows 10 sandboxes, which it deletes after at most 7 days, and free accounts cannot request higher quotas. A running sandbox costs $0.0000115 per GB of RAM per second; idle time is not billed as active CPU.",
+      "tier": "Free Credits",
+      "url": "https://blaxel.ai/pricing",
+      "tags": [
+        "sandboxes",
+        "code-execution",
+        "agents",
+        "ai"
+      ],
+      "verifiedDate": "2026-09-27",
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "agent_sandbox",
+            "source_url": "https://blaxel.ai/pricing",
+            "source_quote": "Up to $200 in free credits. Spin up your first sandbox in under a second."
+          }
+        ],
+        "reviewed": "2026-09-27"
+      }
+    },
+    {
+      "vendor": "Novita Sandbox",
+      "category": "AI / ML",
+      "description": "Sandboxes for AI agents from Novita AI, billed per second for CPU and RAM while a sandbox runs. New users who complete an account setup survey get $100 in promotional credits for Novita Sandbox usage, with no credit card; the credits expire, and Novita does not state after how long. The free tier allows 5 concurrent sandboxes of up to 2 vCPUs and 4 GB of RAM, each running for at most 1 hour. Paid usage costs $0.0000098 per vCPU-second and $0.0000032 per GiB-second.",
+      "tier": "Free Credits",
+      "url": "https://docs.novita.ai/guides/sandbox-pricing",
+      "tags": [
+        "sandboxes",
+        "code-execution",
+        "agents",
+        "ai"
+      ],
+      "verifiedDate": "2026-09-27",
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "agent_sandbox",
+            "source_url": "https://docs.novita.ai/guides/sandbox-pricing",
+            "source_quote": "Novita Sandbox is billed per second for CPU and RAM while a sandbox is running."
+          }
+        ],
+        "reviewed": "2026-09-27"
+      }
+    },
+    {
+      "vendor": "Runloop",
+      "category": "AI / ML",
+      "description": "Devboxes: secure micro-VM environments for building and running AI agents. New accounts get $50 in usage credits with Pro features and no credit card; usage draws the credit down until it is gone, and nothing is charged automatically when it ends. On the trial: 3 running devboxes, sizes up to Medium (2 CPUs, 4 GB), and at most 1 hour of keep-alive. After the credit, the Basic plan is a free subscription with usage billed at $0.108 per CPU-hour and $0.0252 per GB-hour of memory. Pro is $250 a month plus usage.",
+      "tier": "Free Credits",
+      "url": "https://runloop.ai/pricing",
+      "tags": [
+        "sandboxes",
+        "code-execution",
+        "agents",
+        "ai"
+      ],
+      "verifiedDate": "2026-09-27",
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "agent_sandbox",
+            "source_url": "https://runloop.ai/pricing",
+            "source_quote": "Secure micro-VM environments to build and run AI agents at speed"
+          }
+        ],
+        "reviewed": "2026-09-27"
+      }
     }
   ],
   "changes": []
