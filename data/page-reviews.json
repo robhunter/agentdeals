@@ -74,8 +74,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 27,
-      "table_figures_from_records": 27,
+      "table_figures": 23,
+      "table_figures_from_records": 23,
       "tables": [
         {
           "label": "Protocol Comparison",
@@ -84,8 +84,8 @@
         },
         {
           "label": "All Payment-Enabled Services",
-          "figures": 27,
-          "from_records": 27
+          "figures": 23,
+          "from_records": 23
         }
       ],
       "reads_changes": true,
@@ -1378,13 +1378,13 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 7,
-      "table_figures_from_records": 7,
+      "table_figures": 5,
+      "table_figures_from_records": 5,
       "tables": [
         {
           "label": "Stack Overview",
-          "figures": 7,
-          "from_records": 7
+          "figures": 5,
+          "from_records": 5
         },
         {
           "label": "Open-Source Self-Hosted Alternatives",
@@ -1992,8 +1992,8 @@
       "review_note": "Written in the future tense about an event 165 days past. Section 1 is headed \"What's Changing April 1\" and reads \"Google is introducing billing-account-level spend caps\"; \"April 1\" appears 7 times and the byline says \"Figures compiled 2026-03-26, last checked 2026-04-02\". It calls Gemini 3.1 Pro \"the latest flagship\" twice; ai.google.dev/gemini-api/docs/pricing, fetched 2026-09-13, lists 3.5, 3.6, 3.7 and 3.8 Flash and says \"Gemini 3.8 Flash is now available\" - the page names none of them. Gemini 2.0 Flash is listed as \"Deprecated, scheduled for retirement\" and is absent from Google's page entirely. Three comparison rows contradict our own records: OpenAI reads \"GPT-3.5 only, 3 RPM\" and \"GPT-3.5 Turbo (free)\" against a record verified 2026-09-10 saying the only free OpenAI model is omni-moderation-latest; Mistral AI reads \"1B tokens/month\" against a record verified 2026-09-05 saying $10/mo in API credits, and the What To Do section recommends Mistral on that number; DeepSeek reads V3/R1 against our V3.2 record. The Gemini row omits four free models our own record lists. Filed on https://github.com/robhunter/agentdeals/issues/1183 and https://github.com/robhunter/agentdeals/issues/1637.",
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 56,
-      "table_figures_from_records": 46,
+      "table_figures": 57,
+      "table_figures_from_records": 47,
       "tables": [
         {
           "label": "1. What Changed on April 1",
@@ -2007,8 +2007,8 @@
         },
         {
           "label": "6. Free LLM API Comparison",
-          "figures": 46,
-          "from_records": 46
+          "figures": 47,
+          "from_records": 47
         }
       ],
       "reads_changes": true,
@@ -2282,8 +2282,8 @@
       "review_note": null,
       "reads_index": false,
       "tables_read_index": false,
-      "table_figures": 160,
-      "table_figures_from_records": 66,
+      "table_figures": 159,
+      "table_figures_from_records": 65,
       "tables": [
         {
           "label": "Pricing Comparison Table",
@@ -2302,8 +2302,8 @@
         },
         {
           "label": "Recent Pricing Changes",
-          "figures": 73,
-          "from_records": 66
+          "figures": 72,
+          "from_records": 65
         }
       ],
       "reads_changes": true,
@@ -2355,23 +2355,23 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 93,
-      "table_figures_from_records": 90,
+      "table_figures": 91,
+      "table_figures_from_records": 88,
       "tables": [
         {
           "label": "Pricing Comparison Table",
-          "figures": 33,
-          "from_records": 32
+          "figures": 34,
+          "from_records": 33
         },
         {
           "label": "What You Actually Get for Free",
-          "figures": 32,
-          "from_records": 31
+          "figures": 31,
+          "from_records": 30
         },
         {
           "label": "Recent Pricing Changes",
-          "figures": 28,
-          "from_records": 27
+          "figures": 26,
+          "from_records": 25
         }
       ],
       "reads_changes": true,
@@ -2527,6 +2527,7 @@
         "github-models",
         "google-gemini-api",
         "groq",
+        "mistral-ai",
         "openai",
         "openrouter"
       ],
@@ -2549,8 +2550,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 38,
-      "table_figures_from_records": 38,
+      "table_figures": 42,
+      "table_figures_from_records": 42,
       "tables": [
         {
           "label": "What’s Changing",
@@ -2559,8 +2560,8 @@
         },
         {
           "label": "Free Tier Comparison Table",
-          "figures": 30,
-          "from_records": 30
+          "figures": 34,
+          "from_records": 34
         },
         {
           "label": "OpenAI Pricing Change Timeline",
@@ -2647,8 +2648,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 53,
-      "table_figures_from_records": 53,
+      "table_figures": 57,
+      "table_figures_from_records": 57,
       "tables": [
         {
           "label": "2. Feature Migration Map",
@@ -2657,8 +2658,8 @@
         },
         {
           "label": "Direct API Alternatives",
-          "figures": 18,
-          "from_records": 18
+          "figures": 19,
+          "from_records": 19
         },
         {
           "label": "Agent Frameworks",
@@ -2672,8 +2673,8 @@
         },
         {
           "label": "6. Token Cost Comparison",
-          "figures": 27,
-          "from_records": 27
+          "figures": 30,
+          "from_records": 30
         },
         {
           "label": "7. OpenAI Pricing Change Timeline",
@@ -2894,8 +2895,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 66,
-      "table_figures_from_records": 28,
+      "table_figures": 62,
+      "table_figures_from_records": 25,
       "tables": [
         {
           "label": "Main Comparison Table",
@@ -2924,8 +2925,8 @@
         },
         {
           "label": "Pricing Change Timeline",
-          "figures": 29,
-          "from_records": 28
+          "figures": 25,
+          "from_records": 25
         }
       ],
       "reads_changes": true,
@@ -3255,8 +3256,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 74,
-      "table_figures_from_records": 14,
+      "table_figures": 72,
+      "table_figures_from_records": 12,
       "tables": [
         {
           "label": "Main Comparison Table",
@@ -3275,8 +3276,8 @@
         },
         {
           "label": "Pricing Change Timeline",
-          "figures": 14,
-          "from_records": 14
+          "figures": 12,
+          "from_records": 12
         }
       ],
       "reads_changes": true,
@@ -3527,8 +3528,8 @@
       "review_note": null,
       "reads_index": false,
       "tables_read_index": false,
-      "table_figures": 64,
-      "table_figures_from_records": 7,
+      "table_figures": 65,
+      "table_figures_from_records": 5,
       "tables": [
         {
           "label": "Free Tier Comparison Table",
@@ -3547,8 +3548,8 @@
         },
         {
           "label": "Recent Pricing Changes",
-          "figures": 7,
-          "from_records": 7
+          "figures": 8,
+          "from_records": 5
         }
       ],
       "reads_changes": true,
@@ -3670,13 +3671,13 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 53,
-      "table_figures_from_records": 1,
+      "table_figures": 52,
+      "table_figures_from_records": 0,
       "tables": [
         {
           "label": "All x402-Enabled Services",
-          "figures": 53,
-          "from_records": 1
+          "figures": 52,
+          "from_records": 0
         }
       ],
       "reads_changes": true,

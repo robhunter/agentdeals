@@ -3081,7 +3081,7 @@
     {
       "vendor": "Mistral AI",
       "category": "AI / ML",
-      "description": "Free plan includes $10/mo in API credits and access to Mistral models in Studio, alongside limited messages, web searches and coding sessions. Paid API rates start at $0.5/M input and $1.5/M output tokens for Mistral Large; batch processing halves the price and cached input tokens cost up to 90% less.",
+      "description": "Mistral's Free plan includes $10 per month in API credits and lets you test Mistral models in Studio, alongside limited messages, web searches and coding sessions in Vibe. API keys work in Free mode with no credit card, within usage and rate limits. In Free mode, Mistral may use your inputs and outputs to train its models unless you opt out. API prices: Ministral 3 (3B) $0.1/$0.1 (per 1M tokens); Mistral Small 4 $0.15/$0.6 (per 1M tokens); Mistral Large 3 $0.5/$1.5 (per 1M tokens); Mistral Medium 3.5 $1.5/$7.5 (per 1M tokens). Batch processing is half price, and cached input tokens cost up to 90% less.",
       "tier": "Free",
       "url": "https://mistral.ai/pricing",
       "tags": [
@@ -3173,7 +3173,7 @@
     {
       "vendor": "Cloudflare Workers AI",
       "category": "AI / ML",
-      "description": "AI inference at the edge — Workers AI has a free tier with 10,000 Neurons per day. Usage above this is $0.011 / 1,000 Neurons. Some models require a paid plan or AI Gateway credits.",
+      "description": "Workers AI runs AI models on Cloudflare's global network. Every account gets 10,000 Neurons per day at no charge, reset daily at 00:00 UTC; on the Workers Free plan, requests beyond that fail until the reset. On the Workers Paid plan (from $5 per month), usage above 10,000 Neurons per day costs $0.011 per 1,000 Neurons. Seven models, including @cf/moonshotai/kimi-k2.6, @cf/zai-org/glm-5.3 and @cf/deepseek-ai/deepseek-v4-pro-0813, require the Workers Paid plan or prepaid AI Gateway credits.",
       "tier": "Free",
       "url": "https://developers.cloudflare.com/workers-ai/platform/pricing/",
       "tags": [
@@ -3218,12 +3218,9 @@
         ],
         "reviewed": "2026-09-01"
       },
-      "restated_from": {
-        "reading_date": "2026-09-01",
-        "source_url": "https://developers.cloudflare.com/workers-ai/platform/pricing/",
+      "restatement_reverted": {
         "record_date": "2026-09-01",
-        "change_type": "pricing_restructured",
-        "restated_on": "2026-09-20"
+        "reverted_on": "2026-09-27"
       }
     },
     {
@@ -7772,8 +7769,8 @@
     {
       "vendor": "Qdrant",
       "category": "AI / ML",
-      "description": "Vector database — Free Tier: For testing, and prototypes Single Node Cluster 0.5 vCPU / 1GB RAM/ 4 GB Disk.",
-      "tier": "Free Forever",
+      "description": "Vector database. The Qdrant Cloud Free Tier is a single-node cluster with 0.5 vCPU, 1 GB RAM and 4 GB disk, for testing and prototypes, with no credit card required; Qdrant says it serves about 1M vectors of 768 dimensions. It includes free Cloud Inference with selected models. An unused free cluster is suspended after 1 week and deleted after 4 weeks of inactivity if not reactivated. Paid clusters are billed on CPU, memory and disk usage.",
+      "tier": "Free",
       "url": "https://qdrant.tech/pricing/",
       "tags": [
         "ai",
@@ -7808,12 +7805,9 @@
         ],
         "reviewed": "2026-09-01"
       },
-      "restated_from": {
-        "reading_date": "2026-09-10",
-        "source_url": "https://qdrant.tech/pricing/",
+      "restatement_reverted": {
         "record_date": "2026-09-10",
-        "change_type": "limits_reduced",
-        "restated_on": "2026-09-20"
+        "reverted_on": "2026-09-27"
       }
     },
     {
@@ -8484,9 +8478,9 @@
     {
       "vendor": "Kaggle",
       "category": "AI / ML",
-      "description": "Data science platform (Google) — entirely free: 30 hrs/week GPU compute (NVIDIA Tesla P100), 20 hrs/week TPU with a 9-hour cap per session, 20 GB working disk per session. Unlimited public notebooks, datasets, and competitions",
+      "description": "Google's data science platform with free notebooks, datasets and competitions. Notebooks get a weekly GPU quota of 30 hours, sometimes more depending on demand (one NVIDIA Tesla P100 or two Tesla T4s), and a TPU v3-8 for up to 20 hours per week. Sessions run up to 12 hours on CPU or GPU and 9 hours on TPU, with 20 GB of auto-saved disk in /kaggle/working. Free GPUs and TPUs may queue at busy times. Datasets are capped at 200 GB each and 200 GB of private datasets in total. Kaggle's one paid service is hosting a competition.",
       "tier": "Free",
-      "url": "https://www.kaggle.com",
+      "url": "https://www.kaggle.com/docs/efficient-gpu-usage",
       "tags": [
         "ml",
         "data-science",
@@ -8557,8 +8551,8 @@
     {
       "vendor": "Scale AI",
       "category": "AI / ML",
-      "description": "Data labeling and AI data platform — free tier: first 1,000 annotation units and 10,000 images uploaded free. Nucleus free tier for individuals and academia. Pay-as-you-go after free allocation",
-      "tier": "Free",
+      "description": "Data labeling and AI data platform. scale.com/pricing now redirects to a form for booking an intro call and states no prices. Self-serve sign-up for labeling and Nucleus dataset management is open at dashboard.scale.com, and Scale's docs describe a billing tab for on-demand customers. Until at least August 25, 2026, the pricing page offered a Self-Serve Data Engine, paid as you go by credit card, with the first 1,000 labeling units free when you label with your own workforce and the first 10,000 images free in data management. Scale's Nucleus docs still show a 2022 pricing table with a free Nucleus tier that includes 10,000 items of data.",
+      "tier": "Pay-as-you-go",
       "url": "https://scale.com/pricing",
       "tags": [
         "ml",
@@ -8976,7 +8970,7 @@
     {
       "vendor": "Comet ML",
       "category": "AI / ML",
-      "description": "ML experiment tracking and LLM evaluation — There are multiple free options: 'Free' (Open Source GitHub), 'Free Cloud' (up to 10 team members, 25k spans per month, 60-day data retention), and a 'Free' plan for academics. The 'Free Cloud' plan includes Agent tracing & analysis, Test Suites & assertions, and Agent Playground.",
+      "description": "Comet makes Opik, for LLM and agent observability and evaluation, and an MLOps platform for ML experiment tracking. Opik is open source and free to self-host. Opik Free Cloud allows up to 10 team members, 25k spans per month and 60-day data retention, with agent tracing and analysis, test suites and assertions, and Agent Playground. MLOps Free covers 1 platform user, with experiment tracking, dataset management and versioning, Model Registry and 100GB of data storage. Academics can apply for a free Pro plan.",
       "tier": "Free",
       "url": "https://www.comet.com/site/pricing/",
       "tags": [
@@ -9013,12 +9007,9 @@
         ],
         "reviewed": "2026-09-01"
       },
-      "restated_from": {
-        "reading_date": "2026-08-28",
-        "source_url": "https://www.comet.com/site/pricing/",
+      "restatement_reverted": {
         "record_date": "2026-08-28",
-        "change_type": "pricing_restructured",
-        "restated_on": "2026-09-20"
+        "reverted_on": "2026-09-27"
       }
     },
     {
@@ -9064,9 +9055,9 @@
     {
       "vendor": "Labelbox",
       "category": "AI / ML",
-      "description": "Data labeling and annotation platform — free tier: 500 Labelbox Units (LBUs)/month. Image, video, text, and geospatial annotation. Free for qualified educational institutions",
+      "description": "Data labeling platform (Catalog, Annotate and Model). The Free plan includes 500 Labelbox Units (LBUs) each month, up to 30 users, 50 projects and 25 ontologies. When the LBUs run out you can still access and export data, but cannot add data rows, labels or predictions until the next billing period. It handles image, video, text, audio, document, chat and geospatial data. The Starter plan costs $0.10 per LBU. Students and faculty at qualifying institutions can apply for a free Education License for non-commercial use.",
       "tier": "Free",
-      "url": "https://labelbox.com/pricing/",
+      "url": "https://docs.labelbox.com/docs/limits",
       "tags": [
         "ai",
         "data-labeling",
@@ -19565,7 +19556,7 @@
     {
       "vendor": "Arize AX",
       "category": "AI / ML",
-      "description": "AI engineering platform for evaluating and observing AI applications and agents. AX Free plan: 25K trace spans/month, 1 GB ingestion/month, 15 days data retention. Includes online evals, product observability, built-in Alyx agent, and community support.",
+      "description": "Platform for agent observability, evaluation and improvement. AX Free costs $0 with no credit card required: 25k trace spans per month, 1 GB ingestion per month, 15 days of retention, unlimited users and evals, 10 Signal issues per month, the Alyx agent and community support. AX Pro is $50 per month with 50k spans and 10 GB of ingestion per month and 30 days of retention. Arize also offers Phoenix, which is ELv2 licensed and can be self-hosted, and 2 Phoenix Cloud instances for free.",
       "tier": "Free",
       "url": "https://arize.com/pricing",
       "tags": [
@@ -33106,8 +33097,8 @@
     {
       "vendor": "SiliconFlow",
       "category": "AI / ML",
-      "description": "Pay-per-token inference for open-weight models. siliconflow.cn/pricing lists some models at no charge: Hunyuan-MT-7B, Xing4.0-29B and PaddleOCR-VL-1.5, the BGE embedding and reranker models, Kolors image generation, and several speech recognition models. DeepSeek and most chat models are paid per token. The international site, siliconflow.com, gives $1 in free credits to start. China-based provider.",
-      "tier": "Free (Limited)",
+      "description": "Pay-as-you-go model inference. siliconflow.cn, run by a Beijing company, lists these models at no charge: the chat models Qwen3-8B, Qwen2.5-7B-Instruct (Free), Qwen3.5-4B, GLM-4-9B-0414, GLM-Z1-9B-0414, DeepSeek-R1-0528-Qwen3-8B (Free) and Xing4.0-29B; the translation model Hunyuan-MT-7B; the OCR models PaddleOCR-VL-1.5 and DeepSeek-OCR; the embedding models bge-m3, bge-large-zh-v1.5 and bge-large-en-v1.5; the reranker bge-reranker-v2-m3; Kolors image generation; and six speech recognition models. The Pro versions are paid: Qwen2.5-7B-Instruct (Pro), bge-m3 (Pro) and bge-reranker-v2-m3 (Pro). All other models are paid too, including DeepSeek-V4-Flash, DeepSeek-V4-Pro and GLM-5.3. Using all the free models requires real-name verification, and online personal verification accepts only Chinese-issued documents, such as a resident ID card or a Foreign Permanent Resident ID Card. The international site, siliconflow.com, is run by SiliconFlow Labs Pte. Ltd. under Singapore law, is not offered in mainland China, and gives $1 in free credits to start.",
+      "tier": "Free",
       "url": "https://siliconflow.cn/pricing",
       "tags": [
         "ai",
@@ -35082,8 +35073,8 @@
     {
       "vendor": "Fireworks AI",
       "category": "AI / ML",
-      "description": "Fast inference platform for LLMs and image models. Free tier: $1 free credits. Serverless and on-demand deployment options",
-      "tier": "Free ($1 credits)",
+      "description": "Inference platform for open models, with serverless per-token pricing and on-demand GPU deployments billed per GPU second. Fireworks offers $1 in free credits to get started. Accounts with no payment method, or with no credits, are limited to 10 requests per minute, and an account without a payment method is suspended when the $1 credit runs out until one is added. Serverless prices: OpenAI GPT OSS 120B $0.15/$0.60 (per 1M tokens); MiniMax M3 $0.30/$1.20 (per 1M tokens); GLM 5.3 $1.40/$4.40 (per 1M tokens); Kimi K3 $3.00/$15.00 (per 1M tokens). Batch inference costs 50% of serverless prices. Image generation and audio inference were deprecated on June 10, 2026.",
+      "tier": "Free Credits",
       "url": "https://fireworks.ai/pricing",
       "tags": [
         "ai",
