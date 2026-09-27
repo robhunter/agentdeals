@@ -166,7 +166,7 @@ describe("#1362 a superseded Claude version is not published as the current one"
     const surfaces = everySurface(await body("/llm-api-pricing"));
     for (const [model, price] of [
       ["Fable 5.1", "$10/$50"],
-      ["Opus 5", "$5/$25"],
+      ["Opus 5.5", "$4/$20"],
       ["Sonnet 5", "$2/$10"],
       ["Haiku 4.5", "$1/$5"],
     ]) {
@@ -182,7 +182,7 @@ describe("#1362 a superseded Claude version is not published as the current one"
     const asked = faq.mainEntity.find((q: { name: string }) => /How much does Claude cost/i.test(q.name));
     assert.ok(asked, "the FAQ structured data does not answer what Claude costs");
     const answer = decode(asked.acceptedAnswer.text);
-    for (const model of ["Fable 5.1", "Opus 5", "Sonnet 5", "Haiku 4.5"]) {
+    for (const model of ["Fable 5.1", "Opus 5.5", "Sonnet 5", "Haiku 4.5"]) {
       assert.ok(answer.includes(model), `the structured answer never names ${model}`);
     }
     for (const old of SUPERSEDED_BY.keys()) {

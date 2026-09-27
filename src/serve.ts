@@ -8305,24 +8305,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     hubDesc: "Directory of developer services accepting AI agent payments via x402 and Stripe MPP — per-call pricing, free tiers, and protocol comparison",
   },
   {
-    slug: "dall-e-shutdown",
-    title: "DALL-E API Shutdown: Migration Guide & Free Image Generation Alternatives (2026)",
-    metaDesc: "OpenAI shuts down DALL-E 2 and DALL-E 3 API on May 12, 2026. Migrate to gpt-image-1 or free alternatives: Pollinations.AI, Lumenfall.ai, Cloudflare Workers AI. Code examples, pricing comparison, and migration paths.",
-    contextHtml: "",
-    tag: "dalle-shutdown",
-    primaryVendor: "OpenAI",
-    hubDesc: "DALL-E 2 & 3 API shutdown May 12, 2026 — migration guide to gpt-image-1 and free alternatives with code examples and pricing comparison",
-  },
-  {
-    slug: "openai-realtime-migration",
-    title: "OpenAI Realtime API Beta Shutdown: Migration Guide & Real-Time Audio Alternatives (2026)",
-    metaDesc: "OpenAI Realtime API beta shuts down May 7, 2026. Migrate to GA Realtime API or switch to Deepgram, AssemblyAI, ElevenLabs, Azure OpenAI, or Google Cloud Speech-to-Text. Code examples and pricing comparison.",
-    contextHtml: "",
-    tag: "openai-realtime-shutdown",
-    primaryVendor: "OpenAI",
-    hubDesc: "OpenAI Realtime API beta deprecated May 7, 2026 — migration guide to GA API and real-time audio alternatives with code examples and pricing",
-  },
-  {
     slug: "aws-app-runner-migration",
     title: "AWS App Runner Migration Guide: Alternatives with Free Tiers & Pricing (2026)",
     metaDesc: "AWS App Runner closes to new customers April 30, 2026. Migrate to ECS Express Mode, Google Cloud Run, Railway, Render, Fly.io, or Azure Container Apps. Free tier comparison, pricing, and migration paths.",
@@ -10268,7 +10250,7 @@ ${mcpCtaCss()}
   <h1>Best Free AI APIs and Coding Tools</h1>
 
   <div class="context">
-    <p>The AI pricing landscape is volatile. On 2025-12-06 Google cut 2.5 Flash's free tier from 250 requests a day to about 20, and 2.5 Pro's to none. <strong>OpenAI discontinued free trial credits</strong> and deprecated the Assistants API. But new players are offering generous free tiers to win developer mindshare — <strong>Groq</strong> and <strong>Cerebras</strong> provide blazing-fast inference, <strong>Mistral</strong> includes $10 a month in API credits, and <strong>Google Antigravity</strong> has a free individual plan with weekly limits.</p>
+    <p>The AI pricing landscape is volatile. On 2025-12-06 Google cut 2.5 Flash's free tier from 250 requests a day to about 20, and 2.5 Pro's to none. <strong>OpenAI removed the Assistants API</strong> on 2026-08-26. But new players are offering generous free tiers to win developer mindshare — <strong>Groq</strong> and <strong>Cerebras</strong> provide blazing-fast inference, <strong>Mistral</strong> includes $10 a month in API credits, and <strong>Google Antigravity</strong> has a free individual plan with weekly limits.</p>
     <p>This page compares <strong>${allAiOffers.length} free AI offers</strong> across our index — exact rate limits, not marketing copy. We track ${enrichedMl.length} AI/ML tools and ${enrichedCoding.length} AI coding tools. ${escHtmlServer(confirmationCoverageSentence(confirmationCoverage(allAiOffers), "AI"))}</p>
   </div>
 
@@ -10291,7 +10273,7 @@ ${buildCards(vectorDbs)}
 ${buildCards(mlPlatforms)}
 
   <h2>LLM Inference Comparison</h2>
-  <p style="color:var(--text-muted);margin-bottom:1rem">Top free LLM inference APIs compared. Rate limits as of March 2026.</p>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Top free LLM inference APIs compared. Rate limits as of March 2026; the OpenAI and OpenRouter rows were read on 2026-09-27.</p>
   <div style="overflow-x:auto">
   <table class="compare-table">
     <thead>
@@ -10323,8 +10305,8 @@ ${buildCards(mlPlatforms)}
       </tr>
       <tr>
         <td style="font-weight:600"><a href="/vendor/openrouter" style="color:var(--text)">OpenRouter</a></td>
-        <td>~30 free models</td>
-        <td>DeepSeek R1, Llama 3.3, Qwen3</td>
+        <td>25+ free models, 20 RPM, 50 req/day</td>
+        <td>Qwen3.8 27B, Gemma 4 31B, Nemotron 3 Ultra</td>
         <td>Varies by model</td>
       </tr>
       <tr>
@@ -10341,8 +10323,8 @@ ${buildCards(mlPlatforms)}
       </tr>
       <tr>
         <td style="font-weight:600"><a href="/vendor/openai" style="color:var(--text)">OpenAI</a></td>
-        <td style="color:#f85149">GPT-3.5 only, 3 RPM</td>
-        <td>GPT-3.5 Turbo</td>
+        <td style="color:#f85149">Moderation model only (250 RPM); no GPT model priced free</td>
+        <td>omni-moderation-latest</td>
         <td>Standard</td>
       </tr>
       <tr>
@@ -10354,13 +10336,13 @@ ${buildCards(mlPlatforms)}
       <tr>
         <td style="font-weight:600"><a href="/vendor/hugging-face" style="color:var(--text)">Hugging Face</a></td>
         <td>$0.10/month credits</td>
-        <td>200+ via Inference Pro</td>
+        <td>200+ via Inference Providers</td>
         <td>Varies</td>
       </tr>
     </tbody>
   </table>
   </div>
-  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Groq and Cerebras achieve 500+ tokens/second via custom silicon (LPU and WSE respectively). Mistral's Free plan includes $10 a month in API credits. OpenAI's free tier is now GPT-3.5 only after discontinuing trial credits. Gemini free tier limits were quietly reduced in late 2025.</p>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Groq and Cerebras achieve 500+ tokens/second via custom silicon (LPU and WSE respectively). Mistral's Free plan includes $10 a month in API credits. OpenAI prices one model Free, the moderation model omni-moderation-latest; no GPT model is priced free. Gemini free tier limits were quietly reduced in late 2025.</p>
 
   <h2>Free AI Coding Tools</h2>
   <p style="color:var(--text-muted);margin-bottom:1rem">AI-powered code editors, assistants, and autonomous coding agents. From IDE plugins to fully autonomous engineers.</p>
@@ -13218,7 +13200,7 @@ ${buildCards(other)}
       <tr>
         <td style="font-weight:600"><a href="/vendor/openrouter" style="color:var(--text)">OpenRouter</a></td>
         <td>LLM API</td>
-        <td>~30 free models, ~20 RPM</td>
+        <td>25+ free models, 20 RPM, 50 req/day</td>
         <td>No</td>
         <td>Multi-model router, OpenAI-compatible API</td>
       </tr>
@@ -13246,9 +13228,9 @@ ${buildCards(other)}
       <tr>
         <td style="font-weight:600"><a href="/vendor/hugging-face" style="color:var(--text)">Hugging Face</a></td>
         <td>ML Platform</td>
-        <td>Free inference, unlimited hosting</td>
+        <td>$0.10/month inference credits, 100GB private storage</td>
         <td>Yes</td>
-        <td>Model hub, 200+ inference providers</td>
+        <td>Model hub; 200+ models via Inference Providers</td>
       </tr>
       <tr>
         <td style="font-weight:600"><a href="/vendor/kaggle" style="color:var(--text)">Kaggle</a></td>
@@ -13287,7 +13269,7 @@ ${buildCards(other)}
   <div class="decision-guide">
     <dl>
       <dt>Need fast, free LLM API access?</dt>
-      <dd><a href="/vendor/groq">Groq</a> \u2014 ultra-fast inference on LPU hardware with gpt-oss-120b, 30 RPM free. <a href="/vendor/cerebras">Cerebras</a> \u2014 1M tokens/day free, great for batch workloads. <a href="/vendor/openrouter">OpenRouter</a> for access to ~30 free models through one API.</dd>
+      <dd><a href="/vendor/groq">Groq</a> \u2014 ultra-fast inference on LPU hardware with gpt-oss-120b, 30 RPM free. <a href="/vendor/cerebras">Cerebras</a> \u2014 1M tokens/day free, great for batch workloads. <a href="/vendor/openrouter">OpenRouter</a> for access to 25+ free models through one API.</dd>
 
       <dt>Want access to all frontier models?</dt>
       <dd><a href="/vendor/mistral-ai">Mistral AI</a> \u2014 $10 a month in free API credits across its models, including Large and Codestral. Best free access to frontier-class models without credit card.</dd>
@@ -13302,7 +13284,7 @@ ${buildCards(other)}
       <dd><a href="/vendor/kaggle">Kaggle</a> \u2014 30 hrs/week GPU (Tesla T4) and 20 hrs/week TPU, completely free. <a href="/vendor/paperspace">Paperspace</a> for free project storage (no free compute). <a href="/vendor/vast-ai">Vast.ai</a> startup program for $2,500 in GPU credits.</dd>
 
       <dt>Want to host or deploy ML models?</dt>
-      <dd><a href="/vendor/hugging-face">Hugging Face</a> \u2014 free model hosting, inference API with 200+ providers. <a href="/vendor/replicate">Replicate</a> for free runs on curated models. <a href="/vendor/baseten">Baseten</a> for $30 in deployment credits.</dd>
+      <dd><a href="/vendor/hugging-face">Hugging Face</a> \u2014 free accounts get 100GB of private storage and best-effort public storage; Inference Providers serves 200+ models, with $0.10 a month of credits for free users. <a href="/vendor/replicate">Replicate</a> for free runs on curated models. <a href="/vendor/baseten">Baseten</a> \u2014 new workspaces receive credits for testing and deployment; Baseten does not state the amount.</dd>
 
       <dt>Need speech-to-text or computer vision?</dt>
       <dd><a href="/vendor/deepgram">Deepgram</a> \u2014 $200 free credits for speech AI (~43K minutes). <a href="/vendor/assemblyai">AssemblyAI</a> \u2014 $50 credits (~185 hours). <a href="/vendor/roboflow">Roboflow</a> for computer vision with 250K images free.</dd>
@@ -14798,7 +14780,7 @@ ${mcpCtaCss()}
   <h1>Best Free LLM APIs for Developers</h1>
 
   <div class="context">
-    <p>Free LLM API access has never been better. <strong>Groq</strong> delivers gpt-oss-120b at 30 RPM on custom LPU hardware \u2014 the fastest free inference available. <strong>Cerebras</strong> offers <strong>1M tokens/day</strong> free. <strong>Mistral</strong> gives access to all models including Large and Codestral with $10 a month in free API credits. <strong>OpenRouter</strong> aggregates ~30 free models through one OpenAI-compatible API. ${ledeClause}</p>
+    <p>Free LLM API access has never been better. <strong>Groq</strong> delivers gpt-oss-120b at 30 RPM on custom LPU hardware \u2014 the fastest free inference available. <strong>Cerebras</strong> offers <strong>1M tokens/day</strong> free. <strong>Mistral</strong> gives access to all models including Large and Codestral with $10 a month in free API credits. <strong>OpenRouter</strong> aggregates 25+ free models through one OpenAI-compatible API. ${ledeClause}</p>
     <p>This page compares <strong>${allLlmOffers.length} free LLM API providers</strong> \u2014 from proprietary model APIs (OpenAI, Anthropic, Gemini) to open-model inference platforms (Groq, Cerebras, NVIDIA NIM) and AI gateways (OpenRouter, Portkey). The rate limit comparison table below has the data developers actually need when choosing a provider.</p>
   </div>
 
@@ -14858,9 +14840,9 @@ ${buildCards(aiGateways)}
       <tr>
         <td style="font-weight:600"><a href="/vendor/openrouter" style="color:var(--text)">OpenRouter</a></td>
         <td>Gateway</td>
-        <td>~20 RPM/model</td>
-        <td>~30 free models</td>
-        <td>DeepSeek R1, Llama 3.3, Qwen3</td>
+        <td>20 RPM (free models)</td>
+        <td>25+ free models; 50 req/day, 1,000 after buying $10 of credits</td>
+        <td>Qwen3.8 27B, Gemma 4 31B, Nemotron 3 Ultra</td>
         <td>Multi-model router, one API key</td>
       </tr>
       <tr>
@@ -14882,10 +14864,10 @@ ${buildCards(aiGateways)}
       <tr>
         <td style="font-weight:600"><a href="/vendor/nvidia-nim" style="color:var(--text)">NVIDIA NIM</a></td>
         <td>Inference</td>
-        <td>~40 RPM</td>
-        <td>1,000 free credits</td>
-        <td>Llama 3.1, Mistral, NVIDIA</td>
-        <td>Enterprise-grade inference</td>
+        <td>Up to 40 RPM</td>
+        <td>Models marked Free Endpoint</td>
+        <td>Kimi K3, DeepSeek V4.1 Flash, Nemotron</td>
+        <td>Testing and evaluation only, not production</td>
       </tr>
       <tr>
         <td style="font-weight:600"><a href="/vendor/cloudflare-workers-ai" style="color:var(--text)">Cloudflare Workers AI</a></td>
@@ -14898,18 +14880,18 @@ ${buildCards(aiGateways)}
       <tr>
         <td style="font-weight:600"><a href="/vendor/openai" style="color:var(--text)">OpenAI</a></td>
         <td>Provider</td>
-        <td>3 RPM (free)</td>
-        <td>GPT-3.5 only (free)</td>
-        <td>GPT-4o (paid), GPT-3.5 (free)</td>
-        <td>Industry standard, widest ecosystem</td>
+        <td>250 RPM (moderation, Free tier)</td>
+        <td>Moderation model only; no GPT model priced free</td>
+        <td>omni-moderation-latest (free); GPT-6 Astra (paid)</td>
+        <td>Content moderation (free model)</td>
       </tr>
       <tr>
         <td style="font-weight:600"><a href="/vendor/anthropic-api" style="color:var(--text)">Anthropic API</a></td>
         <td>Provider</td>
         <td>Pay-as-you-go</td>
-        <td>No free tier</td>
-        <td>Claude Fable 5.1, Opus 5, Sonnet 5</td>
-        <td>Best for complex reasoning tasks</td>
+        <td>Small free credits for new users</td>
+        <td>Claude Fable 5.1, Opus 5.5, Sonnet 5</td>
+        <td>Demanding reasoning, long-horizon agentic work (Fable 5.1)</td>
       </tr>
       <tr>
         <td style="font-weight:600"><a href="/vendor/hugging-face" style="color:var(--text)">Hugging Face</a></td>
@@ -14923,14 +14905,14 @@ ${buildCards(aiGateways)}
         <td style="font-weight:600"><a href="/vendor/xai" style="color:var(--text)">xAI</a></td>
         <td>Provider</td>
         <td>Pay-as-you-go</td>
-        <td>$25 free credits</td>
-        <td>Grok 4.1 series</td>
-        <td>Generous signup credits</td>
+        <td>None; billed per token</td>
+        <td>grok-4.7, grok-4.3, grok-build-0.1</td>
+        <td>Testing models in the free Console Playground</td>
       </tr>
     </tbody>
   </table>
   </div>
-  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Groq and Cerebras lead on free inference \u2014 Groq for speed (custom LPU silicon), Cerebras for daily token volume (1M/day). Mistral offers the broadest model access on free tier (all models, with $10 a month in API credits). OpenRouter is ideal if you want one API key for ~30 free models. ${summaryClause} For proprietary frontier models, most providers are pay-as-you-go with signup credits rather than ongoing free tiers. [[freshness]]</p>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Groq and Cerebras lead on free inference \u2014 Groq for speed (custom LPU silicon), Cerebras for daily token volume (1M/day). Mistral offers the broadest model access on free tier (all models, with $10 a month in API credits). OpenRouter gives one API key for 25+ free models. ${summaryClause} Of the proprietary frontier APIs, xAI and Anthropic are pay-as-you-go (Anthropic gives new users a small amount of free credits to test the API), and OpenAI prices no GPT model free. [[freshness]]</p>
 
   <h2>Which Free LLM API Should I Use?</h2>
   <div class="decision-guide">
@@ -14942,7 +14924,7 @@ ${buildCards(aiGateways)}
       <dd><a href="/vendor/cerebras">Cerebras</a> \u2014 1M tokens/day free, ideal for batch processing. <a href="/vendor/mistral-ai">Mistral AI</a> \u2014 $10 a month in free API credits across all models, including Large and Codestral.</dd>
 
       <dt>Want one API key for many models?</dt>
-      <dd><a href="/vendor/openrouter">OpenRouter</a> \u2014 ~30 free models (DeepSeek R1, Llama 3.3, Qwen3, Gemma 3) through one OpenAI-compatible API, ~20 RPM per model. ${manyModelsAnswer}</dd>
+      <dd><a href="/vendor/openrouter">OpenRouter</a> \u2014 25+ free models through one OpenAI-compatible API; free models are capped at 20 requests a minute and 50 a day, or 1,000 a day once you have bought at least $10 of credits. ${manyModelsAnswer}</dd>
 
       <dt>Need a long context window?</dt>
       <dd><a href="/vendor/google-gemini-api">Google Gemini API</a> \u2014 1M token context window on Flash models. Google publishes no free-tier limits; AI Studio shows each project's.</dd>
@@ -14953,11 +14935,11 @@ ${buildCards(aiGateways)}
       <dt>Want to run models at the edge?</dt>
       <dd><a href="/vendor/cloudflare-workers-ai">Cloudflare Workers AI</a> \u2014 10,000 neurons/day free, runs at the edge with no cold starts. Supports text generation, translation, and speech-to-text.</dd>
 
-      <dt>Need enterprise-grade inference?</dt>
-      <dd><a href="/vendor/nvidia-nim">NVIDIA NIM</a> \u2014 1,000 free API credits, optimized inference for Llama, Mistral, and NVIDIA models. <a href="/vendor/baseten">Baseten</a> for $30 in deployment credits.</dd>
+      <dt>Want to test hosted models before paying?</dt>
+      <dd><a href="/vendor/nvidia-nim">NVIDIA NIM</a> \u2014 free endpoints on build.nvidia.com for models marked Free Endpoint, such as Kimi K3, DeepSeek V4.1 Flash and NVIDIA Nemotron, at up to 40 requests per minute; NVIDIA's API Trial Terms allow testing and evaluation only, not production. <a href="/vendor/baseten">Baseten</a> \u2014 new workspaces receive credits for testing and deployment; Baseten does not state the amount.</dd>
 
       <dt>Want completely free, self-hosted inference?</dt>
-      <dd><a href="/vendor/ollama-cloud">Ollama Cloud</a> \u2014 1 concurrent model free. Or run <a href="/vendor/hugging-face">Hugging Face</a> models locally with their inference API ($0.10/month free credits, 200+ models).</dd>
+      <dd><a href="/vendor/ollama-cloud">Ollama Cloud</a> \u2014 1 concurrent model free. Or download <a href="/vendor/hugging-face">Hugging Face</a> models and run them locally; Hugging Face's hosted Inference Providers API serves 200+ models, with $0.10 a month of credits for free users (subject to change).</dd>
     </dl>
   </div>
 
@@ -15914,7 +15896,7 @@ function buildFreeAiStackPage(): string {
       icon: "🧠",
       recommended: { vendor: "Groq", why: "Ultra-fast inference on LPU hardware — 30 RPM, 1,000 requests and 200K tokens a day per model, free. Serves gpt-oss-120b, gpt-oss-20b and Qwen3.8 27B. Best balance of speed, limits, and model quality for prototyping." },
       alternatives: ["Google Gemini API", "Cerebras", "Mistral AI", "Cohere", "OpenRouter"],
-      outgrow: "When you exceed 30 RPM or 200K tokens a day on a model. At that point, OpenRouter (~30 free models) extends the free runway. Production apps typically need paid tiers for reliability SLAs.",
+      outgrow: "When you exceed 30 RPM or 200K tokens a day on a model. At that point, OpenRouter (25+ free models) extends the free runway. Production apps typically need paid tiers for reliability SLAs.",
       relatedPage: "/free-llm-apis",
     },
     {
@@ -15946,7 +15928,7 @@ function buildFreeAiStackPage(): string {
       icon: "🚀",
       recommended: { vendor: "Hugging Face", why: "Free inference API with $0.10/month credits and access to 200+ models. The largest open-source model hub — deploy models, share datasets, and collaborate on ML projects." },
       alternatives: ["Replicate"],
-      outgrow: "When you need dedicated endpoints or higher throughput. Free inference API has rate limits and cold starts — production apps need Inference Endpoints ($0.06/hr+).",
+      outgrow: "When you need dedicated endpoints or higher throughput. Free users get $0.10 a month of Inference Providers credits — production apps can use Inference Endpoints (dedicated, from $0.033/hour).",
       relatedPage: "/ai-ml-alternatives",
     },
     {
@@ -20055,7 +20037,7 @@ function buildGoogleDeveloperProgram2026Page(): string {
 
   const llmAlternatives = [
     { vendor: "Groq", free: "30 RPM; 1K requests and 200K tokens/day per model", models: "gpt-oss-120b, gpt-oss-20b, Qwen3.8 27B", link: "/vendor/groq" },
-    { vendor: "OpenRouter", free: "Free models available", models: "100+ models aggregated", link: "/vendor/openrouter" },
+    { vendor: "OpenRouter", free: "Free models available", models: "500+ models aggregated", link: "/vendor/openrouter" },
     { vendor: "Cerebras", free: "Free tier available", models: "Llama 3, fast inference", link: "/vendor/cerebras" },
     { vendor: "Mistral AI", free: "Free plan, $10/mo API credits", models: "Mistral Large, Medium 3.5, Small 4, Devstral", link: "/vendor/mistral-ai" },
     { vendor: "Cohere", free: "Trial key available", models: "Command, Embed, Rerank", link: "/vendor/cohere" },
@@ -22854,7 +22836,7 @@ function buildGeminiApiPricing2026Page(): string {
     { name: "OpenAI API", freeLimit: "None (GPT models are paid)", context: "128K tokens", models: "All GPT models paid", notes: "No GPT model is priced free; the moderation model omni-moderation-latest is free. Tier 1 requires $5 paid." },
     { name: "Groq", freeLimit: "30 RPM; 1K requests and 200K tokens/day per model", context: "128K tokens", models: "gpt-oss-120b, gpt-oss-20b, Qwen3.8 27B, Whisper", notes: "Ultra-fast LPU inference. Most generous free RPM. No credit card needed." },
     { name: "Mistral AI", freeLimit: "$10/month in API credits", context: "128K tokens", models: "Large, Codestral, Pixtral", notes: "Free plan includes monthly API credits." },
-    { name: "OpenRouter", freeLimit: "~20 RPM per model, ~30 free models", context: "Varies by model", models: "DeepSeek R1, Llama 3.3, Qwen3, Gemma 3", notes: "One API key for many models. Best model variety on free tier." },
+    { name: "OpenRouter", freeLimit: "20 RPM, 50 req/day, 25+ free models", context: "Varies by model", models: "Qwen3.8 27B, Gemma 4 31B, Nemotron 3 Ultra", notes: "One API key for many models. 1,000 free-model requests a day after buying $10 of credits." },
     { name: "Cerebras", freeLimit: "10-30 RPM, 1M tokens/day", context: "128K tokens", models: "Llama 3.1 8B, Qwen 3 235B, GPT-OSS 120B", notes: "Fastest inference speeds. 1M tokens/day is very generous." },
     { name: "DeepSeek", freeLimit: "Pay-as-you-go, very low pricing", context: "1M tokens", models: "deepseek-flash (V4.1-Flash), deepseek-v4-pro", notes: "$0.30/$1.20 per MTok for deepseek-flash at peak hours, half off-peak." },
   ];
@@ -23046,7 +23028,7 @@ ${mcpCtaCss()}
 
   <div class="impact-card" style="border-left-color:#f85149">
     <h3 style="color:#f85149">Free tier developers (most affected)</h3>
-    <p class="impact-desc">If you built on the free tier before December 2025: on 2025-12-06, 2.5 Flash's daily requests fell from 250 to about 20 and 2.5 Pro's to none. Gemini 3.1 Pro Preview has no free tier. <strong>Consider switching to <a href="/vendor/groq">Groq</a> (30 RPM free) or <a href="/vendor/openrouter">OpenRouter</a> (~30 free models).</strong></p>
+    <p class="impact-desc">If you built on the free tier before December 2025: on 2025-12-06, 2.5 Flash's daily requests fell from 250 to about 20 and 2.5 Pro's to none. Gemini 3.1 Pro Preview has no free tier. <strong>Consider switching to <a href="/vendor/groq">Groq</a> (30 RPM free) or <a href="/vendor/openrouter">OpenRouter</a> (25+ free models).</strong></p>
   </div>
   <div class="impact-card" style="border-left-color:#d29922">
     <h3 style="color:#d29922">Pay-as-you-go developers</h3>
@@ -23131,7 +23113,7 @@ ${mcpCtaCss()}
     <p class="impact-desc">
       <strong>1. For maximum free requests:</strong> <a href="/vendor/groq">Groq</a> — 30 RPM, no credit card, ultra-fast inference.<br>
       <strong>2. For maximum free tokens:</strong> <a href="/vendor/cerebras">Cerebras</a> (1M tokens/day).<br>
-      <strong>3. For model variety:</strong> <a href="/vendor/openrouter">OpenRouter</a> — ~30 free models through one OpenAI-compatible API.<br>
+      <strong>3. For model variety:</strong> <a href="/vendor/openrouter">OpenRouter</a> — 25+ free models through one OpenAI-compatible API.<br>
       <strong>4. For long context:</strong> Gemini's 1M context window is still the largest free option. If context is your key requirement, stay on Gemini and manage the rate limits.<br>
       <strong>5. For production workloads:</strong> <a href="/vendor/anthropic-api">Anthropic Claude</a> or <a href="/vendor/openai">OpenAI</a> offer more predictable pricing without surprise pausing.
     </p>
@@ -24042,7 +24024,7 @@ function joinWithAnd(items: string[]): string {
 
 const RECORD_ENDED_COLOR = "#8b949e";
 const RESPONSES_TOOL_PRICES_URL = "https://developers.openai.com/api/docs/pricing";
-const RESPONSES_TOOL_PRICES_READ = "2026-09-05";
+const RESPONSES_TOOL_PRICES_READ = "2026-09-27";
 
 interface ProviderRecordCells {
   tier: string;
@@ -24472,7 +24454,7 @@ ${mcpCtaCss()}
     </div>
     <div class="verdict-item">
       <strong>No vendor lock-in:</strong>
-      <p>OpenRouter \u2014 unified API across 100+ models from multiple providers. Switch models without code changes. Compare pricing in real-time.</p>
+      <p>OpenRouter \u2014 unified API across 500+ models from 80+ providers. Switch models without code changes. Compare pricing in real-time.</p>
     </div>
     <div class="verdict-item">
       <strong>Enterprise RAG &amp; search:</strong>
@@ -25018,7 +25000,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="context-box">
-    <strong>The hidden cost of Responses API tools:</strong> token rates are not the whole bill. From <a href="${RESPONSES_TOOL_PRICES_URL}" target="_blank" rel="noopener nofollow">OpenAI\u2019s pricing documentation</a>, read on ${RESPONSES_TOOL_PRICES_READ}: file search storage is $0.10 per GB per day with the first GB free, and the file search tool call is billed separately at $2.50 per 1,000 calls. Hosted Shell and Code Interpreter run on containers charged per 20-minute session, from $0.03 at 1 GB to $1.92 at 64 GB, with a five-minute minimum. Web search is $10.00 per 1,000 calls, or $25.00 for the preview tool on non-reasoning models, and retrieved content is billed as input tokens at the model\u2019s own rate. We hold no record for any of these, so nothing re-verifies them \u2014 that date is when we read them. Claude processes PDFs with no per-file charge and Gemini includes grounding in the base token price.
+    <strong>The hidden cost of Responses API tools:</strong> token rates are not the whole bill. From <a href="${RESPONSES_TOOL_PRICES_URL}" target="_blank" rel="noopener nofollow">OpenAI\u2019s pricing documentation</a>, read on ${RESPONSES_TOOL_PRICES_READ}: file search storage is $0.10 per GB per day with the first GB free, and the file search tool call is billed separately at $2.50 per 1,000 calls. Hosted Shell and Code Interpreter run on containers charged per 20-minute session, from $0.03 at 1 GB to $1.92 at 64 GB, with a five-minute minimum. Web search is $10.00 per 1,000 calls, with retrieved content billed as input tokens at the model\u2019s own rate, or $25.00 per 1,000 calls for the preview tool on non-reasoning models, whose search content tokens are free. We hold no record for any of these, so nothing re-verifies them \u2014 that date is when we read them. Claude processes PDFs with no per-file charge and Gemini includes grounding in the base token price.
   </div>
 
   ${scaleEconomicsBox}
@@ -26055,7 +26037,7 @@ function buildOpenAIAssistantsMigrationPage(): string {
       monthlyCostMid: "$50\u2013150",
       monthlyCostHigh: "$500\u20132,000",
       migrationEffort: "Medium",
-      freeOption: "GPT-3.5 at 3 RPM",
+      freeOption: "No GPT model is priced free",
       bestFor: "Existing OpenAI users who want minimal code changes",
       details: "Direct successor to Assistants API. Prompts replace Assistants, Conversations API replaces Threads. Token-based pricing unchanged. No automated migration tool \u2014 manual code rewrite required.",
     },
@@ -26079,9 +26061,9 @@ function buildOpenAIAssistantsMigrationPage(): string {
       monthlyCostMid: "$50\u2013200",
       monthlyCostHigh: "$500\u20133,000",
       migrationEffort: "Medium\u2013High",
-      freeOption: "Free tier with rate limits",
+      freeOption: "Small free credits for new users",
       bestFor: "Teams wanting longer context, better reasoning, or tool use capabilities",
-      details: "Drop-in replacement for many use cases. Claude 4 Opus/Sonnet models. Tool use (function calling) built in. 200K\u20131M context window vs GPT-4o's 128K. Prompt caching reduces costs 90% for repeated context.",
+      details: "Drop-in replacement for many use cases. Current models: Claude Fable 5.1, Opus 5.5, Sonnet 5 and Haiku 4.5. Tool use (function calling) built in. 200K\u20131M context window vs GPT-4o's 128K. Prompt caching reduces costs 90% for repeated context.",
     },
     {
       name: "Google Gemini API",
@@ -26196,7 +26178,7 @@ function buildOpenAIAssistantsMigrationPage(): string {
 
   const faqEntries = [
     { q: "When does the OpenAI Assistants API shut down?", a: "The Assistants API will be fully shut down on August 26, 2026. After this date, all Assistants API calls will return errors. OpenAI recommends migrating to the Responses API (for prompts and tool use) and Conversations API (for thread/session management)." },
-    { q: "What is the cheapest alternative to the OpenAI Assistants API?", a: "Google Gemini API has a free tier on its 3.x Flash models. For open-source options, LangChain and CrewAI are free frameworks \u2014 you only pay for the LLM API you choose (or use free local models via Ollama). Anthropic Claude also offers a free tier with rate limits." },
+    { q: "What is the cheapest alternative to the OpenAI Assistants API?", a: "Google Gemini API has a free tier on its 3.x Flash models. For open-source options, LangChain and CrewAI are free frameworks \u2014 you only pay for the LLM API you choose (or use free local models via Ollama). Anthropic gives new users a small amount of free credits to test the API." },
     { q: "Can I keep using the Assistants API on Azure OpenAI?", a: `No. Microsoft retired the Azure OpenAI Assistants API on ${ASSISTANTS_API_SHUTDOWN.date}, the same date OpenAI retired its own. Microsoft's documentation states that the Assistants API is retired and directs Azure workloads to ${ASSISTANTS_API_SHUTDOWN.azureSuccessor}, which is generally available; inference-only workloads can use the ${ASSISTANTS_API_SHUTDOWN.azureInferenceApi} instead. Running on Azure does not extend the deadline.` },
     { q: "What replaces Threads in the new Responses API?", a: "OpenAI's Conversations API replaces the Threads functionality from the Assistants API. It provides session management, message history, and context handling. The migration is not automated \u2014 you need to manually update your code to use the new Conversations API endpoints." },
     { q: "How much will migration cost in developer time?", a: "For a small project (single assistant), expect 1\u20132 days of developer time for the Responses API migration. For complex multi-assistant systems, budget 1\u20132 weeks. Switching to a different provider (Anthropic, Gemini, LangChain) adds additional time for API differences and testing. See our cost comparison table for per-path estimates." },
@@ -26383,8 +26365,8 @@ function buildOpenAIAssistantsMigrationPage(): string {
     '    </thead>\n' +
     '    <tbody>\n' +
     '      <tr><td style="font-weight:600"><a href="/vendor/google-gemini-api" style="color:var(--text)">Google Gemini API</a></td><td style="color:#3fb950;font-weight:600">Free on 3.x Flash models</td><td style="font-size:.85rem">Limits shown in AI Studio</td><td style="font-size:.85rem">Function calling, code execution</td></tr>\n' +
-    '      <tr><td style="font-weight:600"><a href="/vendor/openai" style="color:var(--text)">OpenAI (Responses API)</a></td><td style="color:#d29922;font-weight:600">GPT-3.5 at 3 RPM</td><td style="font-size:.85rem">Very limited, no GPT-4</td><td style="font-size:.85rem">Prompts + tool use</td></tr>\n' +
-    '      <tr><td style="font-weight:600">Anthropic Claude</td><td style="color:#3fb950;font-weight:600">Free tier available</td><td style="font-size:.85rem">Rate-limited</td><td style="font-size:.85rem">Tool use, 200K\u20131M context</td></tr>\n' +
+    '      <tr><td style="font-weight:600"><a href="/vendor/openai" style="color:var(--text)">OpenAI (Responses API)</a></td><td style="color:#d29922;font-weight:600">No GPT model priced free</td><td style="font-size:.85rem">omni-moderation-latest is the only Free model</td><td style="font-size:.85rem">Prompts + tool use</td></tr>\n' +
+    '      <tr><td style="font-weight:600">Anthropic Claude</td><td style="color:#d29922;font-weight:600">Small free credits for new users</td><td style="font-size:.85rem">Amount not stated</td><td style="font-size:.85rem">Tool use, 200K\u20131M context</td></tr>\n' +
     '      <tr><td style="font-weight:600">LangChain</td><td style="color:#3fb950;font-weight:600">Fully free (MIT)</td><td style="font-size:.85rem">LLM API costs only</td><td style="font-size:.85rem">LangGraph agents, tool calling</td></tr>\n' +
     '      <tr><td style="font-weight:600">CrewAI</td><td style="color:#3fb950;font-weight:600">Fully free (MIT)</td><td style="font-size:.85rem">LLM API costs only</td><td style="font-size:.85rem">Multi-agent orchestration</td></tr>\n' +
     '      <tr><td style="font-weight:600"><a href="/vendor/azure" style="color:var(--text)">Azure OpenAI</a></td><td style="color:#d29922;font-weight:600">$200 credit, 30 days</td><td style="font-size:.85rem">General Azure trial credit, not an agent entitlement</td><td style="font-size:.85rem">' + escHtmlServer(ASSISTANTS_API_SHUTDOWN.azureSuccessor) + ' — Assistants API retired ' + escHtmlServer(ASSISTANTS_API_SHUTDOWN.date) + '</td></tr>\n' +
@@ -26417,7 +26399,7 @@ function buildOpenAIAssistantsMigrationPage(): string {
     '    <div class="verdict-item"><strong>Fastest migration:</strong><p>OpenAI Responses API \u2014 same provider, same models, just new API patterns. Minimal code changes.</p></div>\n' +
     '    <div class="verdict-item"><strong>Lowest cost:</strong><p>Google Gemini API \u2014 a free tier on its 3.x Flash models. OpenAI-compatible endpoint eases migration.</p></div>\n' +
     '    <div class="verdict-item"><strong>Enterprise / compliance:</strong><p>Azure OpenAI \u2014 same GPT models, enterprise SLAs, data residency. Rebuild on ' + escHtmlServer(ASSISTANTS_API_SHUTDOWN.azureSuccessor) + ': Microsoft retired the Azure Assistants API on ' + escHtmlServer(ASSISTANTS_API_SHUTDOWN.date) + ' too, so this path is a change of platform, not a way to keep the old API.</p></div>\n' +
-    '    <div class="verdict-item"><strong>Best reasoning quality:</strong><p>Anthropic Claude \u2014 Claude 4 Opus for complex tasks. Tool use built in. Prompt caching reduces costs 90% for repeated context.</p></div>\n' +
+    '    <div class="verdict-item"><strong>Best reasoning quality:</strong><p>Anthropic Claude \u2014 Claude Fable 5.1 for demanding reasoning and long-horizon agentic work. Tool use built in. Prompt caching reduces costs 90% for repeated context.</p></div>\n' +
     '    <div class="verdict-item"><strong>Maximum flexibility:</strong><p>LangChain + BYO LLM \u2014 swap models anytime, no platform lock-in. More work upfront but full control.</p></div>\n' +
     '    <div class="verdict-item"><strong>Multi-agent workflows:</strong><p>CrewAI \u2014 if your Assistants setup used multiple coordinating agents, CrewAI\'s role-based agent model is a natural fit.</p></div>\n' +
     '  </div>\n' +
@@ -26517,21 +26499,30 @@ function buildShutdownTrackerPage(): string {
       service: "OpenAI Realtime API Beta",
       vendorSlug: "openai",
       what: "Realtime API beta endpoints deprecated \u2014 replaced by stable Realtime API",
-      deadline: "2026-05-07",
+      deadline: "2026-05-12",
       impact: "Voice and streaming AI applications using beta endpoints",
       whoAffected: "Developers building voice assistants, real-time transcription, or streaming AI apps with OpenAI",
       migrationPath: "Switch to stable Realtime API endpoints \u2014 mostly compatible, some parameter changes",
-      migrationLink: "/openai-realtime-migration",
       status: "active",
     },
     {
       service: "OpenAI DALL\u00b7E Model Snapshots",
       vendorSlug: "openai",
-      what: "Legacy DALL\u00b7E model snapshots removed from API \u2014 use dall-e-3 or gpt-image-1",
+      what: "dall-e-2 and dall-e-3 removed from the API \u2014 OpenAI lists gpt-image-2, gpt-image-1 or gpt-image-1-mini as substitutes, and gpt-image-1 itself shuts down on 2026-10-23 (gpt-image-1-mini on 2026-12-01)",
       deadline: "2026-05-12",
-      impact: "Image generation apps pinned to specific DALL\u00b7E versions",
-      whoAffected: "Developers using versioned DALL\u00b7E model IDs in API calls",
-      migrationPath: "Update model parameter to dall-e-3 or gpt-image-1 \u2014 test output quality differences",
+      impact: "Image generation apps calling dall-e-2 or dall-e-3",
+      whoAffected: "Developers using the dall-e-2 or dall-e-3 model IDs in API calls",
+      migrationPath: "Update the model parameter to gpt-image-2 \u2014 test output quality differences",
+      status: "active",
+    },
+    {
+      service: "OpenAI legacy model snapshots",
+      vendorSlug: "openai",
+      what: "gpt-3.5-turbo, gpt-4, gpt-4-1106-preview, gpt-4-turbo, gpt-4.1-nano, gpt-4o-2024-05-13, o1, o1-pro, o3-mini, o4-mini and gpt-image-1 shut down, with fine-tuned versions of gpt-3.5-turbo, gpt-4, gpt-4.1-nano, o4-mini, babbage-002 and davinci-002",
+      deadline: "2026-10-23",
+      impact: "Apps and fine-tunes pinned to these model IDs stop working",
+      whoAffected: "Developers calling any of these model IDs or their fine-tuned versions",
+      migrationPath: "OpenAI's substitutes: gpt-5.6-terra for gpt-3.5-turbo and o4-mini; gpt-5.6-sol for gpt-4, gpt-4-turbo, gpt-4o-2024-05-13, o1, o1-pro and o3-mini; gpt-5.6-luna for gpt-4.1-nano; gpt-image-2 for gpt-image-1",
       status: "active",
     },
     {
@@ -31956,13 +31947,13 @@ function buildLlmApiPricingPage(): string {
       name: "OpenAI",
       slug: "openai",
       category: "frontier",
-      freeTier: "GPT-3.5 only",
+      freeTier: "Moderation model only",
       flagshipModel: "GPT-6 Astra",
       inputPrice: "$10/M",
       outputPrice: "$50/M",
       contextWindow: "1M",
-      rateLimit: "3 RPM (free)",
-      freeDetails: "Limited to GPT-3.5 Turbo only, 3 requests/minute rate limit. No free trial credits for new accounts (discontinued mid-2025). Paid tiers unlock GPT-6 Astra at $10/$50 per MTok, GPT-5.6 Sol at $4/$20, GPT-5.6 Terra at $2/$12 and GPT-5.6 Luna at $0.20/$1.20. GPT-4o remains available at $2.50/$10. Batch and Flex at 50% of standard rates.",
+      rateLimit: "250 RPM, 5,000 RPD (moderation, Free tier)",
+      freeDetails: "One model is priced Free: the moderation model omni-moderation-latest. No GPT model is priced free: GPT-6 Astra at $10/$50 per MTok, GPT-5.6 Sol at $4/$20 (a promotional price, available at least through November 21, 2026), GPT-5.6 Terra at $2/$12 and GPT-5.6 Luna at $0.20/$1.20. GPT-4o remains available at $2.50/$10. Batch and Flex at 50% of standard rates.",
       freeType: "limited",
       differentiator: "Widest model selection; ecosystem leader with function calling, vision, and structured outputs",
       readOn: FRONTIER_PRICES_READ_ON,
@@ -31972,15 +31963,15 @@ function buildLlmApiPricingPage(): string {
       name: "Anthropic",
       slug: "anthropic-api",
       category: "frontier",
-      freeTier: "Console access",
+      freeTier: "Small free credits (new users)",
       flagshipModel: "Claude Fable 5.1",
       inputPrice: "$10/M",
       outputPrice: "$50/M",
       contextWindow: "1M",
-      rateLimit: "Rate-limited (free)",
-      freeDetails: "Limited access via console with rate limits. Fable 5.1: $10/$50 per MTok (input/output). Opus 5: $5/$25 per MTok. Sonnet 5: $2/$10 per MTok. Haiku 4.5: $1/$5 per MTok. Batch API at 50% discount. Adaptive thinking across the current lineup.",
+      rateLimit: "Set by usage tier",
+      freeDetails: "New users receive a small amount of free credits to test the API. Fable 5.1: $10/$50 per MTok (input/output). Opus 5.5: $4/$20 per MTok. Sonnet 5: $2/$10 per MTok. Haiku 4.5: $1/$5 per MTok. Batch API at 50% discount. Adaptive thinking on Fable 5.1, Opus 5.5 and Sonnet 5; extended thinking on Haiku 4.5.",
       freeType: "pay-as-you-go",
-      differentiator: "1M-token context on Fable 5.1, Opus 5 and Sonnet 5; adaptive thinking; Opus 5 holds frontier reasoning at $5/$25",
+      differentiator: "1M-token context on Fable 5.1, Opus 5.5 and Sonnet 5; adaptive thinking; Opus 5.5, Anthropic's suggested starting model, at $4/$20",
       readOn: FRONTIER_PRICES_READ_ON,
       readFrom: "platform.claude.com/docs/en/about-claude/pricing",
     },
@@ -32034,15 +32025,15 @@ function buildLlmApiPricingPage(): string {
       name: "xAI (Grok)",
       slug: "xai",
       category: "frontier",
-      freeTier: "$25 signup credits",
-      flagshipModel: "Grok 4.1 Fast",
-      inputPrice: "$0.20/M",
-      outputPrice: "$0.50/M",
-      contextWindow: "128K",
-      rateLimit: "Standard",
-      freeDetails: "$25 in free API credits on signup. Additional $150/month via data sharing program (opt-in, requires $5 minimum spend first). Grok 4.1 Fast: $0.20/M input, $0.50/M output — cheapest frontier model.",
-      freeType: "credits",
-      differentiator: "Cheapest frontier pricing ($0.20/M input); $175/month possible in free credits via data sharing",
+      freeTier: "None (billed per token)",
+      flagshipModel: "grok-4.7",
+      inputPrice: "$2.00/M",
+      outputPrice: "$6.00/M",
+      contextWindow: "500K",
+      rateLimit: "Set by spend tier",
+      freeDetails: "Grok API, pay as you go: sign up at console.x.ai, then load it with credits. grok-4.7 $2.00/$6.00 (per 1M tokens, under 200k prompt tokens). grok-4.3 $1.25/$2.50 (under 200k prompt tokens). grok-build-0.1 $1.00/$2.00 (under 200k prompt tokens). Grok 4.1 Fast was retired on 2026-05-15; its model names now route to grok-4.3 at grok-4.3 rates. The Console Playground is free for testing models before adding billing.",
+      freeType: "pay-as-you-go",
+      differentiator: "Free Console Playground for testing before adding billing; 1M-token context on grok-4.3",
     },
     {
       name: "Groq",
@@ -32076,29 +32067,29 @@ function buildLlmApiPricingPage(): string {
       name: "OpenRouter",
       slug: "openrouter",
       category: "inference",
-      freeTier: "~30 free models",
+      freeTier: "25+ free models",
       flagshipModel: "Multi-model gateway",
       inputPrice: "Varies",
       outputPrice: "Varies",
       contextWindow: "Varies",
-      rateLimit: "~20 RPM per model",
-      freeDetails: "~30 free models including DeepSeek R1, Llama 3.3, Qwen3, Gemma 3. ~20 RPM per model. OpenAI-compatible API. Routes to cheapest provider automatically. One API key for 200+ models.",
+      rateLimit: "20 RPM, 50 req/day (free models)",
+      freeDetails: "Free plan: 25+ free models, 4 free providers, 50 requests a day, no BYOK. Free models are capped at 20 requests a minute; accounts that have bought at least $10 of credits get 1,000 free-model requests a day. OpenAI-compatible API. By default, requests are load balanced across providers, prioritizing price. Paid plans reach 500+ models.",
       freeType: "generous",
-      differentiator: "Universal gateway to 200+ models; automatic provider routing; OpenAI-compatible API",
+      differentiator: "500+ models from 80+ providers through one API; falls back to other providers when one goes down; OpenAI-compatible API",
     },
     {
       name: "NVIDIA NIM",
       slug: "nvidia-nim",
       category: "inference",
-      freeTier: "1K credits",
-      flagshipModel: "Llama 3.1 70B",
-      inputPrice: "Credit-based",
-      outputPrice: "Credit-based",
-      contextWindow: "128K",
-      rateLimit: "~40 RPM",
-      freeDetails: "~40 RPM, 1,000 free API credits. No credit card required for development. Models: Llama 3.1, Mistral, and NVIDIA models. Optimized with TensorRT-LLM for NVIDIA GPUs.",
-      freeType: "credits",
-      differentiator: "NVIDIA-optimized inference; deploy on your own NVIDIA GPUs; enterprise support",
+      freeTier: "Free endpoints (testing only)",
+      flagshipModel: "Kimi K3",
+      inputPrice: "Free",
+      outputPrice: "Free",
+      contextWindow: "1M",
+      rateLimit: "Up to 40 RPM",
+      freeDetails: "Free inference endpoints on build.nvidia.com: models marked Free Endpoint, including Kimi K3, DeepSeek V4.1 Flash and NVIDIA Nemotron, can be called at no cost. Up to 40 requests per minute; limits may vary by model, and traffic from other users may cause throttling. NVIDIA's API Trial Terms allow free use for testing and evaluation only, not production.",
+      freeType: "limited",
+      differentiator: "Free endpoints for prototyping; Kimi K3 and NVIDIA Nemotron can also be downloaded for self-hosted deployment",
     },
     {
       name: "SiliconFlow",
@@ -32124,9 +32115,9 @@ function buildLlmApiPricingPage(): string {
       outputPrice: "Provider-dependent",
       contextWindow: "Varies",
       rateLimit: "Varies",
-      freeDetails: "$0.10/month free inference credits, 200+ models via Inference Providers, unlimited model hosting on Hub. Routes to multiple inference providers (AWS, GCP, etc.).",
+      freeDetails: "Free users get $0.10 a month of Inference Providers credits (subject to change); Inference Providers serves 200+ models, and extra usage requires a credits purchase. Free accounts get 100GB of private storage and best-effort public storage. By default, requests go to the fastest available partner provider, such as Cerebras, Groq, Together or Replicate.",
       freeType: "limited",
-      differentiator: "Largest model hub (800K+ models); Inference Providers route to optimal backend; community ecosystem",
+      differentiator: "3M+ models on the Hub; Inference Providers picks the fastest available provider by default; community ecosystem",
     },
     {
       name: "Replicate",
@@ -32146,15 +32137,15 @@ function buildLlmApiPricingPage(): string {
       name: "Baseten",
       slug: "baseten",
       category: "open-source-host",
-      freeTier: "$30 free credits",
+      freeTier: "Credits for new workspaces",
       flagshipModel: "Custom deployments",
       inputPrice: "Per-minute GPU",
       outputPrice: "Per-minute GPU",
       contextWindow: "Varies",
       rateLimit: "Standard",
-      freeDetails: "$30 in free credits for new accounts. Basic plan: $0/month with pay-as-you-go billing after credits. Per-minute GPU/CPU billing for custom deployments, per-token for Model APIs.",
+      freeDetails: "New workspaces receive credits for testing and deployment; Baseten does not state the amount. Basic plan: $0 per month, pay as you go. Dedicated deployments bill per minute. Model APIs bill per 1M tokens: GLM-5.3 $1.40/$4.40. GLM-5.3-Flash $0.15/$0.50.",
       freeType: "credits",
-      differentiator: "Deploy custom models with autoscaling; $30 free credits; optimized Truss framework",
+      differentiator: "Deploy custom, fine-tuned, and open-source models; Truss, Baseten's open-source standard for packaging and serving models",
     },
     {
       name: "Cloudflare Workers AI",
@@ -32202,15 +32193,15 @@ function buildLlmApiPricingPage(): string {
       name: "LLM7.io",
       slug: "llm7-io",
       category: "specialized",
-      freeTier: "No published limits",
-      flagshipModel: "30+ models",
+      freeTier: "1M tokens/24h with a free token",
+      flagshipModel: "GLM-5.3-Flash (turbo)",
       inputPrice: "Free",
       outputPrice: "Free",
       contextWindow: "Varies",
-      rateLimit: "No published limits",
-      freeDetails: "No published rate limits on free tier. Supported by donors. 30+ models including DeepSeek R1, Qwen2.5 Coder, text, image, and speech-to-text models. UK-based.",
+      rateLimit: "40 RPM, 100/hour (free token)",
+      freeDetails: "LLM inference gateway. Without a key: 10 requests a minute, 60 an hour, 500,000 tokens per 24 hours. With a free token from dash.llm7.io: 40 a minute, 100 an hour, 1,000,000 tokens per 24 hours. Free access covers turbo-tier models not marked usage-only, such as GLM-5.3-Flash and codestral-latest. Other models, including all image and speech-to-text models, need Pro ($12/mo) or a paid balance.",
       freeType: "generous",
-      differentiator: "Completely free donor-supported inference; 30+ models; UK-based",
+      differentiator: "One endpoint for 64 models; turbo-tier models such as GLM-5.3-Flash are free without a key",
     },
     {
       name: "Ollama",
@@ -32346,8 +32337,8 @@ function buildLlmApiPricingPage(): string {
   const faqEntries = [
     { q: "Which LLM API has the best free tier in 2026?", a: "Groq's free plan allows 30 RPM, 1,000 requests and 200K tokens a day per model, no credit card required, with fast LPU-accelerated inference. " + freeTiersThisPageStandsBehind + " For frontier models specifically, Mistral's Free plan includes $10 a month in API credits." },
     { q: "How much does GPT-4o cost per token?", a: "GPT-4o costs $2.50 per million input tokens and $10 per million output tokens. For reference, 1 million tokens is roughly 750,000 words. The batch API offers 50% discount ($1.25/$5 per M tokens). GPT-4o-mini is significantly cheaper at $0.15/$0.60 per M tokens." },
-    { q: "How much does Claude cost per token?", a: "Claude Fable 5.1 costs $10/M input and $50/M output tokens. Opus 5 is $5/$25 per M tokens, Sonnet 5 is $2/$10, and Haiku 4.5 is the budget option at $1/$5. The Batch API offers 50% discount on all models." },
-    { q: "What is the cheapest LLM API for production use?", a: "For frontier-quality models: xAI Grok 4.1 Fast at $0.20/M input, $0.50/M output. DeepSeek's deepseek-flash is $0.30/M input and $1.20/M output at peak hours, half that off-peak, with cached input at $0.006/M. Groq and Cerebras offer free tiers that can handle moderate production traffic. Google Gemini Flash models are free with rate limits." },
+    { q: "How much does Claude cost per token?", a: "Claude Fable 5.1 costs $10/M input and $50/M output tokens. Opus 5.5 is $4/$20 per M tokens, Sonnet 5 is $2/$10, and Haiku 4.5 is the budget option at $1/$5. The Batch API offers 50% discount on all models." },
+    { q: "What is the cheapest LLM API for production use?", a: "DeepSeek's deepseek-flash is $0.30/M input and $1.20/M output at peak hours, half that off-peak, with cached input at $0.006/M. Groq and Cerebras offer free tiers that can handle moderate production traffic. Google Gemini Flash models are free with rate limits." },
     { q: "Should I use a frontier lab API or an inference provider?", a: "Use frontier lab APIs (OpenAI, Anthropic, Google) when you need their proprietary models (GPT-4o, Claude, Gemini Pro) or specific features (function calling, vision, extended thinking). Use inference providers (Groq, Cerebras, OpenRouter) when running open-source models — they're 5-10x cheaper and often faster. Many apps work well with Llama 3.3 70B or DeepSeek R1 at a fraction of frontier pricing." },
   ];
 
@@ -32474,13 +32465,13 @@ function buildLlmApiPricingPage(): string {
     '\n' +
     '  <div class="executive-summary">\n' +
     '    <p><strong>LLM API pricing, frontier rows read ' + escHtmlServer(frontierReadOn ?? "on no recorded date") + ':</strong> ' + providers.length + ' providers across four categories — frontier labs, inference providers, open-source hosts, and specialized services. OpenAI and Anthropic price their top model identically: GPT-6 Astra and Claude Fable 5.1 are both $10/$50 per M tokens. Gemini 3.8 Flash is $0.75/$3.75 through December 31, 2026 and $1.50/$7.50 after it. Mistral Medium 3.5 is $1.50/$7.50. Google\'s Gemini free tier covers the 3.x Flash and Flash-Lite models; 3.1 Pro Preview is paid-only. DeepSeek\'s deepseek-flash offers 1M context at $0.30/M input at peak and $0.15/M off-peak. Groq and Cerebras offer genuinely free inference at thousands of tokens/second.</p>\n' +
-    '    <p><strong>Key trends:</strong> Inference providers (Groq, Cerebras, OpenRouter) are commoditizing open-source model access — free tiers with no credit card required. xAI Grok 4.1 is the cheapest frontier model at $0.20/M input. The gap between frontier and open-source quality is narrowing, making the price delta harder to justify for many use cases.</p>\n' +
+    '    <p><strong>Key trends:</strong> Inference providers (Groq, Cerebras, OpenRouter) are commoditizing open-source model access — free tiers with no credit card required. xAI retired Grok 4.1 Fast on 2026-05-15; requests to its model names now go to grok-4.3 at $1.25/M input and $2.50/M output (under 200k prompt tokens). The gap between frontier and open-source quality is narrowing, making the price delta harder to justify for many use cases.</p>\n' +
     '    <p><strong>This guide covers:</strong> pricing tables, provider breakdowns, free tier analysis, cheapest-per-token rankings, pricing gotchas, recent changes, and best-for-use-case recommendations — compiled by hand from vendor pricing pages.</p>\n' +
     '  </div>\n' +
     '\n' +
     '  <div class="highlight-box">\n' +
     '    <h3>Cheapest per Million Tokens</h3>\n' +
-    '    <p><strong>Frontier:</strong> xAI Grok 4.1 Fast ($0.20/M input, $0.50/M output) &middot; <strong>Open-source:</strong> Groq gpt-oss-20b ($0.075/M input) &middot; <strong>Long context (1M):</strong> deepseek-flash ($0.30/$1.20/M at peak) &middot; <strong>Reasoning:</strong> DeepSeek V4-Pro ($1.32/M input at peak) vs Claude Opus 5 ($5/M) vs OpenAI o3 ($2/M)</p>\n' +
+    '    <p><strong>Open-source:</strong> Groq gpt-oss-20b ($0.075/M input) &middot; <strong>Long context (1M):</strong> deepseek-flash ($0.30/$1.20/M at peak)</p>\n' +
     '  </div>\n' +
     '\n' +
     '  <div class="highlight-box">\n' +
@@ -32523,7 +32514,7 @@ function buildLlmApiPricingPage(): string {
     '  </div>\n' +
     '\n' +
     '  <div class="context-box">\n' +
-    '    <strong>The price floor:</strong> xAI Grok 4.1 Fast at $0.20/M input is the cheapest frontier model. For open-source, SiliconFlow serves Llama and DeepSeek models at $0.10–0.15/M. DeepSeek\'s deepseek-flash offers 1M context at $0.30/M input at peak and $0.15/M off-peak. The batch APIs from OpenAI and Anthropic offer 50% discounts for non-real-time workloads.\n' +
+    '    <strong>The price floor:</strong> For open-source, SiliconFlow serves Llama and DeepSeek models at $0.10–0.15/M. DeepSeek\'s deepseek-flash offers 1M context at $0.30/M input at peak and $0.15/M off-peak. The batch APIs from OpenAI and Anthropic offer 50% discounts for non-real-time workloads.\n' +
     '  </div>\n' +
     '\n' +
     '  <h2 id="categories">Provider Breakdown</h2>\n' +
@@ -32573,8 +32564,8 @@ function buildLlmApiPricingPage(): string {
     '    <p>OpenAI o3 and o4-mini models generate internal "reasoning tokens" that count toward output pricing but aren\'t visible in the response. A simple query can generate 10x more reasoning tokens than output tokens. Monitor usage carefully — your bill reflects total tokens, not just visible output.</p>\n' +
     '  </div>\n' +
     '  <div class="hidden-cost-card">\n' +
-    '    <h4>Anthropic Extended Thinking: Output Tokens Add Up</h4>\n' +
-    '    <p>Claude\'s thinking tokens are billed at output rates ($25/M on Opus 5, $50/M on Fable 5.1). A complex reasoning task can produce 10K+ thinking tokens before the actual answer. Budget for 2–5x the output tokens you\'d expect from a non-thinking request. Anthropic\'s current lineup decides its own thinking budget rather than taking one from the request, so the multiplier is harder to cap than it was on the 4.6 generation.</p>\n' +
+    '    <h4>Anthropic Thinking: Output Tokens Add Up</h4>\n' +
+    '    <p>Claude\'s thinking tokens are billed at output rates ($20/M on Opus 5.5, $50/M on Fable 5.1). A complex reasoning task can produce 10K+ thinking tokens before the actual answer. Budget for 2–5x the output tokens you\'d expect from a non-thinking request. Fable 5.1, Opus 5.5 and Sonnet 5 decide their own thinking budget (adaptive thinking) rather than taking one from the request, so the multiplier is harder to cap than it was on the 4.6 generation.</p>\n' +
     '  </div>\n' +
     '  <div class="hidden-cost-card">\n' +
     '    <h4>Gemini Free Tier: Gemini 3.1 Pro Needs a Paid Account</h4>\n' +
@@ -32585,8 +32576,8 @@ function buildLlmApiPricingPage(): string {
     '    <p>A 128K context window doesn\'t mean the model performs well at 128K tokens. Quality degrades in the middle of long contexts ("lost in the middle" problem). For retrieval-heavy tasks, expect effective context of 30–50% of the advertised window. DeepSeek and Gemini\'s 1M windows are more susceptible to this.</p>\n' +
     '  </div>\n' +
     '  <div class="hidden-cost-card">\n' +
-    '    <h4>Rate Limits Scale with Spend, Not Plan</h4>\n' +
-    '    <p>OpenAI and Anthropic increase rate limits based on cumulative spend, not the plan you\'re on. A new account with $100 in credits still starts at Tier 1 limits. Groq\'s free tier limits are per-model, so switching models resets your quota.</p>\n' +
+    '    <h4>Rate Limits Follow Usage Tiers</h4>\n' +
+    '    <p>OpenAI and Anthropic set rate limits by usage tier. OpenAI moves an organization up a tier as its paid spend grows ($5 paid for Tier 1, $50 for Tier 2, $100 for Tier 3). Anthropic places organizations on a tier based on usage history and account standing, and new organizations may start in an Evaluation tier with lower limits. Groq\'s free tier limits are per-model, so switching models resets your quota.</p>\n' +
     '  </div>\n' +
     '\n' +
     '  <h2 id="changes">Recent Pricing Changes</h2>\n' +
@@ -32621,7 +32612,7 @@ function buildLlmApiPricingPage(): string {
     '\n' +
     '    <div class="verdict-item">\n' +
     '      <strong>Best for prototyping</strong>\n' +
-    '      <p><a href="/vendor/groq">Groq</a> (free, fast, no credit card) or <a href="/vendor/openrouter">OpenRouter</a> (~30 free models, try different providers).' + thirdForPrototyping + '</p>\n' +
+    '      <p><a href="/vendor/groq">Groq</a> (free, fast, no credit card) or <a href="/vendor/openrouter">OpenRouter</a> (25+ free models, try different providers).' + thirdForPrototyping + '</p>\n' +
     '    </div>\n' +
     '\n' +
     '    <div class="verdict-item">\n' +
@@ -32631,17 +32622,17 @@ function buildLlmApiPricingPage(): string {
     '\n' +
     '    <div class="verdict-item">\n' +
     '      <strong>Best for complex reasoning</strong>\n' +
-    '      <p><a href="/vendor/anthropic-api">Claude Opus 5</a> ($5/$25/M), or <a href="/vendor/anthropic-api">Claude Fable 5.1</a> ($10/$50/M) for long-horizon agentic work. <a href="/vendor/deepseek-api">DeepSeek V4-Pro</a> ($1.32/$3.96/M at peak, half off-peak), thinking mode on by default. OpenAI GPT-6 Astra ($10/$50/M) for the hardest end-to-end work.</p>\n' +
+    '      <p><a href="/vendor/anthropic-api">Claude Opus 5.5</a> ($4/$20/M), or <a href="/vendor/anthropic-api">Claude Fable 5.1</a> ($10/$50/M) for long-horizon agentic work. <a href="/vendor/deepseek-api">DeepSeek V4-Pro</a> ($1.32/$3.96/M at peak, half off-peak), thinking mode on by default. OpenAI GPT-6 Astra ($10/$50/M) for the hardest end-to-end work.</p>\n' +
     '    </div>\n' +
     '\n' +
     '    <div class="verdict-item">\n' +
     '      <strong>Best for high-volume / cost-sensitive</strong>\n' +
-    '      <p><a href="/vendor/xai">xAI Grok 4.1 Fast</a> ($0.20/$0.50/M) — cheapest frontier model. <a href="/vendor/deepseek-api">deepseek-flash</a> ($0.30/$1.20/M at peak) with 97-98% cache-hit discounts. OpenAI/Anthropic batch APIs at 50% off for async workloads.</p>\n' +
+    '      <p><a href="/vendor/deepseek-api">deepseek-flash</a> ($0.30/$1.20/M at peak) with 97-98% cache-hit discounts. OpenAI/Anthropic batch APIs at 50% off for async workloads.</p>\n' +
     '    </div>\n' +
     '\n' +
     '    <div class="verdict-item">\n' +
     '      <strong>Best for long-context (100K+ tokens)</strong>\n' +
-    '      <p><a href="/vendor/deepseek-api">deepseek-flash</a> (1M context, $0.30/$1.20/M at peak). <a href="/vendor/anthropic-api">Claude</a> (200K) for highest quality within context window.</p>\n' +
+    '      <p><a href="/vendor/deepseek-api">deepseek-flash</a> (1M context, $0.30/$1.20/M at peak). <a href="/vendor/anthropic-api">Claude</a> Fable 5.1, Opus 5.5 or Sonnet 5 (1M context each).</p>\n' +
     '    </div>\n' +
     '\n' +
     '    <div class="verdict-item">\n' +
@@ -33192,630 +33183,6 @@ ${faqHtml}
 <script>${mcpCtaScript()}</script>
 </body>
 </html>`;
-}
-
-function buildDallEShutdownPage(): string {
-  const title = "DALL-E API Shutdown: Migration Guide & Free Image Generation Alternatives (2026)";
-  const metaDesc = "OpenAI shuts down DALL-E 2 and DALL-E 3 API on May 12, 2026. Migrate to gpt-image-1 or free alternatives: Pollinations.AI, Lumenfall.ai, Cloudflare Workers AI. Code examples, pricing comparison, and migration paths.";
-  const slug = "dall-e-shutdown";
-  const pubDate = "2026-04-10";
-
-  const stabilityMap = publishedStabilityIndex();
-
-  const dalleChanges = dealChanges.filter(c =>
-    c.vendor === "OpenAI" || c.vendor === "DALL-E"
-  ).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-
-  interface ImageApiProvider {
-    name: string;
-    slug: string;
-    freeTier: string;
-    costPerImage: string;
-    imageQuality: string;
-    apiStyle: string;
-    migrationEffort: string;
-    bestFor: string;
-  }
-
-  const providers: ImageApiProvider[] = [
-    { name: "gpt-image-1 (OpenAI)", slug: "openai", freeTier: "Paid only ($0.011\u2013$0.167/image)", costPerImage: "$0.011\u2013$0.167", imageQuality: "Best (same provider)", apiStyle: "Drop-in replacement", migrationEffort: "Minimal \u2014 same SDK", bestFor: "Existing OpenAI users" },
-    { name: "Pollinations.AI", slug: "pollinations-ai", freeTier: "Free, no auth required", costPerImage: "Free", imageQuality: "Good (multiple models)", apiStyle: "REST API, OpenAI-compatible", migrationEffort: "Low \u2014 different endpoint", bestFor: "Zero-cost prototyping" },
-    { name: "Cloudflare Workers AI", slug: "cloudflare-workers-ai", freeTier: "Free (10K neurons/day)", costPerImage: "Free within limits", imageQuality: "Good (Stable Diffusion)", apiStyle: "REST API", migrationEffort: "Moderate \u2014 different SDK", bestFor: "Edge deployment" },
-    { name: "Stability AI", slug: "stability-ai", freeTier: "Free credits", costPerImage: "~$0.002\u2013$0.065", imageQuality: "Excellent (SDXL, SD3)", apiStyle: "REST API", migrationEffort: "Moderate \u2014 different params", bestFor: "Quality-focused" },
-    { name: "Lumenfall.ai", slug: "lumenfall", freeTier: "Free (FLUX.1 schnell unlimited)", costPerImage: "Free (schnell)", imageQuality: "Excellent (FLUX models)", apiStyle: "OpenAI-compatible API", migrationEffort: "Low \u2014 compatible endpoint", bestFor: "Free unlimited generation" },
-    { name: "Replicate", slug: "replicate", freeTier: "Free runs available", costPerImage: "~$0.003\u2013$0.05/run", imageQuality: "Varies by model", apiStyle: "REST API", migrationEffort: "Moderate \u2014 model-based", bestFor: "Multi-model flexibility" },
-    { name: "Hugging Face", slug: "hugging-face", freeTier: "Free inference API", costPerImage: "Free (inference API)", imageQuality: "Varies by model", apiStyle: "REST API", migrationEffort: "Moderate \u2014 model selection", bestFor: "Open-source models" },
-  ];
-
-  const openaiStability = stabilityMap.of("openai");
-  const stabilityColor = openaiStability === "volatile" ? "#f85149" : openaiStability === "watch" ? "#d29922" : openaiStability === "improving" ? "#3fb950" : "var(--text-muted)";
-
-  const shutdownDate = new Date("2026-05-12");
-  const today = new Date();
-  const daysLeft = Math.max(0, Math.ceil((shutdownDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)));
-
-  const freeProviderCount = providers.filter(p => p.freeTier.toLowerCase().includes("free")).length;
-
-  const providerTableRows = providers.map(p => {
-    const freeColor = p.freeTier.toLowerCase().includes("free") ? "#3fb950" : "var(--accent)";
-    const effortColor = p.migrationEffort.startsWith("Minimal") ? "#3fb950" : p.migrationEffort.startsWith("Low") ? "#3fb950" : p.migrationEffort.startsWith("Moderate") ? "#d29922" : "#f85149";
-    const vendorLink = p.slug ? `${handwrittenVendorLinkHtml(p.slug, p.name, ' style="color:var(--text)"')}` : escHtmlServer(p.name);
-    return `<tr>
-      <td style="font-weight:600">${vendorLink}</td>
-      <td style="font-family:var(--mono);font-size:.8rem;color:${freeColor}">${escHtmlServer(p.freeTier)}</td>
-      <td style="font-size:.8rem">${escHtmlServer(p.costPerImage)}</td>
-      <td style="font-size:.8rem">${escHtmlServer(p.imageQuality)}</td>
-      <td style="font-size:.8rem">${escHtmlServer(p.apiStyle)}</td>
-      <td><span style="color:${effortColor};font-size:.8rem;font-weight:600">${escHtmlServer(p.migrationEffort.split(" \u2014 ")[0])}</span></td>
-    </tr>`;
-  }).join("\n        ");
-
-  const pricingTableRows = [
-    { name: "DALL-E 3 (discontinued)", free: "None (API shutting down)", cost: "$0.040\u2013$0.120", quality: "standard, hd", color: "#f85149" },
-    { name: "gpt-image-1", free: "None", cost: "$0.011\u2013$0.167", quality: "low, medium, high", color: "var(--accent)" },
-    { name: "Pollinations.AI", free: "Unlimited free", cost: "Free", quality: "Multiple models", color: "#3fb950" },
-    { name: "Lumenfall.ai", free: "FLUX.1 schnell free", cost: "Free (schnell)", quality: "FLUX models", color: "#3fb950" },
-    { name: "Cloudflare Workers AI", free: "10K neurons/day", cost: "Free within limits", quality: "Stable Diffusion", color: "#3fb950" },
-    { name: "Stability AI", free: "Free credits", cost: "~$0.002\u2013$0.065", quality: "SDXL, SD3", color: "#3fb950" },
-    { name: "Replicate", free: "Free runs", cost: "~$0.003\u2013$0.05/run", quality: "Model-dependent", color: "#d29922" },
-  ].map(r => `<tr>
-      <td style="font-weight:600">${escHtmlServer(r.name)}</td>
-      <td style="font-family:var(--mono);font-size:.8rem;color:${r.color}">${escHtmlServer(r.free)}</td>
-      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(r.cost)}</td>
-      <td style="font-size:.8rem">${escHtmlServer(r.quality)}</td>
-    </tr>`).join("\n        ");
-
-  const changeTimelineRows = dalleChanges.slice(0, 10).map(c => {
-    const dateStr = changeEntryLongDateLabel(c);
-    const impactColor = changeImpactColor(c.impact);
-    return `<tr>
-      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(dateStr)}</td>
-      <td style="font-size:.85rem">${changeSummaryHtml(c, escHtmlServer)}</td>
-      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
-    </tr>`;
-  }).join("\n        ");
-
-  const relatedPages = ALTERNATIVES_PAGES.filter(p =>
-    ["shutdowns", "stability", "free-tier-risk", "state-of-free-tiers", "ai-image-generation-alternatives"].includes(p.slug)
-  );
-
-  const faqs = [
-    { q: "When does the DALL-E API shut down?", a: "OpenAI is shutting down DALL-E 2 and DALL-E 3 API access on May 12, 2026. After this date, all API calls to DALL-E models will stop working. The DALL-E image editor in ChatGPT is unaffected \u2014 only the developer API is being discontinued." },
-    { q: "What replaces DALL-E API?", a: "OpenAI\u2019s gpt-image-1 is the direct replacement. It uses the same OpenAI SDK and images.generate endpoint \u2014 you only need to change the model parameter from \"dall-e-3\" to \"gpt-image-1\" and update quality values from standard/hd to low/medium/high." },
-    { q: "Are there free DALL-E alternatives in 2026?", a: "Yes \u2014 Pollinations.AI offers free image generation with no API key required. Lumenfall.ai provides free unlimited FLUX.1 schnell generation. Cloudflare Workers AI includes 10,000 neurons per day free for Stable Diffusion models. Hugging Face offers free inference API access to open-source image models." },
-    { q: "How do I migrate from DALL-E 3 to gpt-image-1?", a: "The migration is straightforward \u2014 change the model parameter from \"dall-e-3\" to \"gpt-image-1\" in your images.generate call. Update quality values: \"standard\" becomes \"low\" and \"hd\" becomes \"high\" (with a new \"medium\" option). The response format remains the same. No SDK upgrade is required." },
-    { q: "What happens to DALL-E images after shutdown?", a: "Previously generated images remain accessible at their existing URLs. Only the API for generating new images is discontinued. If you stored image URLs from previous generations, they will continue to work. However, OpenAI may eventually expire old image URLs, so it\u2019s recommended to download and store images you want to keep." },
-  ];
-
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    headline: title,
-    description: metaDesc,
-    datePublished: pubDate,
-    dateModified: pageDateModified("/dall-e-shutdown", pubDate),
-    author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
-    publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
-    mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
-    about: providers.map(p => ({ "@type": "SoftwareApplication", name: p.name })),
-  };
-
-  const faqJsonLd = faqPageJsonLd("/dall-e-shutdown", faqs);
-
-  const breadcrumbJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "AgentDeals", item: BASE_URL },
-      { "@type": "ListItem", position: 2, name: "Guides", item: `${BASE_URL}/alternatives` },
-      { "@type": "ListItem", position: 3, name: "DALL-E Shutdown Guide", item: `${BASE_URL}/${slug}` },
-    ],
-  };
-
-  return `<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>${escHtmlServer(title)} \u2014 AgentDeals</title>
-<meta name="description" content="${escHtmlServer(metaDesc)}">
-<link rel="canonical" href="${BASE_URL}/${slug}">
-<meta property="og:title" content="${escHtmlServer(title)}">
-<meta property="og:description" content="${escHtmlServer(metaDesc)}">
-<meta property="og:type" content="article">
-<meta property="og:url" content="${BASE_URL}/${slug}">
-<meta property="article:published_time" content="${pubDate}">
-<meta name="keywords" content="dall-e api shutdown, dall-e 3 alternative, gpt-image-1 migration, free image generation api, dall-e replacement 2026, openai image api, pollinations ai, lumenfall ai, image generation api free">
-${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
-${feedLinkTag(PER_CHANGE_FEED)}
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
-<script type="application/ld+json">${JSON.stringify(faqJsonLd)}</script>
-<script type="application/ld+json">${JSON.stringify(breadcrumbJsonLd)}</script>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
-body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
-a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
-.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
-.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
-.breadcrumb a{color:var(--text-muted)}
-h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
-h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
-h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}
-.pub-date{color:var(--text-dim);font-size:.85rem;margin-bottom:1.5rem}
-.deadline-banner{background:linear-gradient(135deg,rgba(248,81,73,0.15),rgba(210,153,34,0.1));border:1px solid #f85149;border-radius:12px;padding:1.5rem;margin:1.5rem 0;text-align:center}
-.deadline-days{font-size:2.5rem;font-weight:700;font-family:var(--mono);color:#f85149}
-.deadline-label{font-size:.9rem;color:var(--text-muted);margin-top:.25rem}
-.deadline-date{font-size:.85rem;color:var(--text-dim);margin-top:.5rem}
-.summary-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin:1.5rem 0 2rem}
-.stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center}
-.stat-number{font-size:1.8rem;font-weight:700;font-family:var(--mono);color:var(--accent)}
-.stat-number.red{color:#f85149}
-.stat-number.green{color:#3fb950}
-.stat-label{font-size:.8rem;color:var(--text-muted);margin-top:.25rem}
-.executive-summary{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:1.5rem 0;line-height:1.8}
-.executive-summary p{color:var(--text-muted);margin-bottom:.75rem;font-size:.95rem}
-.executive-summary p:last-child{margin-bottom:0}
-.executive-summary strong{color:var(--text)}
-.section-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:1.25rem;line-height:1.7}
-.pricing-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.85rem}
-.pricing-table th{text-align:left;padding:.75rem .5rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
-.pricing-table td{padding:.6rem .5rem;border-bottom:1px solid var(--border)}
-.pricing-table tr:hover{background:var(--accent-glow)}
-.diff-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem}
-.diff-card h3{margin:0 0 .5rem;font-size:1rem}
-.diff-desc{color:var(--text-muted);font-size:.9rem;line-height:1.6}
-.context-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
-.context-box strong{color:var(--text)}
-.decision-tree{display:grid;gap:1rem;margin:1.5rem 0}
-.decision-path{padding:1.25rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);transition:border-color .15s}
-.decision-path:hover{border-color:var(--accent)}
-.decision-path h3{margin:0 0 .5rem;font-size:1rem;color:var(--accent)}
-.decision-path p{color:var(--text-muted);font-size:.9rem;margin-bottom:.5rem}
-.decision-path .best-for{font-size:.8rem;color:var(--text-dim);font-style:italic}
-.verdict-box{background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(139,92,246,0.1));border:1px solid var(--accent);border-radius:12px;padding:1.5rem;margin:1.5rem 0}
-.verdict-box h3{color:var(--accent);margin:0 0 .75rem;font-size:1.1rem}
-.verdict-item{margin-bottom:.75rem;padding-left:1rem;border-left:2px solid var(--border)}
-.verdict-item strong{color:var(--text)}
-.verdict-item p{color:var(--text-muted);font-size:.9rem;margin:.25rem 0 0}
-.methodology{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
-.methodology strong{color:var(--text)}
-.related-pages{display:flex;flex-direction:column;gap:.5rem;margin:1rem 0}
-.related-page-link{padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .15s}
-.related-page-link:hover{border-color:var(--accent);text-decoration:none}
-.related-page-link .link-title{color:var(--accent);font-weight:600;font-size:.95rem}
-.related-page-link .link-desc{color:var(--text-muted);font-size:.8rem;margin-top:.25rem}
-.toc{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1.5rem 0}
-.toc h3{margin:0 0 .5rem;font-size:.9rem;color:var(--text-muted)}
-.toc ol{padding-left:1.25rem;margin:0}
-.toc li{margin-bottom:.35rem;font-size:.9rem}
-.toc a{color:var(--accent)}
-.code-block{background:#0d1117;border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1rem 0;overflow-x:auto;font-family:var(--mono);font-size:.8rem;line-height:1.5;color:#c9d1d9}
-.code-block .comment{color:#8b949e}
-.code-block .keyword{color:#ff7b72}
-.code-block .string{color:#a5d6ff}
-.code-block .highlight{color:#ffa657}
-.faq-section{margin:2rem 0}
-.faq-item{border:1px solid var(--border);border-radius:8px;margin-bottom:.75rem;overflow:hidden}
-.faq-question{padding:1rem 1.25rem;background:var(--bg-card);cursor:pointer;font-weight:600;font-size:.95rem;display:flex;justify-content:space-between;align-items:center}
-.faq-question:hover{background:var(--accent-glow)}
-.faq-answer{padding:0 1.25rem 1rem;color:var(--text-muted);font-size:.9rem;line-height:1.7}
-footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
-footer a{color:var(--accent)}
-@media(max-width:768px){h1{font-size:1.6rem}.summary-stats{grid-template-columns:1fr 1fr}.pricing-table{font-size:.75rem}.pricing-table td,.pricing-table th{padding:.4rem .25rem}.deadline-days{font-size:1.8rem}}
-${globalNavCss()}
-${mcpCtaCss()}
-</style>
-</head>
-<body>
-<div class="container">
-  ${buildGlobalNav("alternatives")}
-  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternatives">Guides</a> &rsaquo; DALL-E Shutdown Guide</div>
-  <h1>DALL-E API Shutdown: Migration Guide &amp; Free Image Generation Alternatives</h1>
-  <p class="pub-date">Published ${pubDate} &middot; ${pageDataProvenance("/dall-e-shutdown", offers.length)} &middot; ${dalleChanges.length} OpenAI pricing change${dalleChanges.length !== 1 ? "s" : ""} tracked</p>
-
-  <div class="deadline-banner">
-    <div class="deadline-days">${daysLeft} days</div>
-    <div class="deadline-label">until DALL-E API shutdown</div>
-    <div class="deadline-date">May 12, 2026 &middot; <span style="color:${stabilityColor};font-weight:600">OpenAI stability: ${openaiStability.toUpperCase()}</span></div>
-  </div>
-
-  <div class="summary-stats">
-    <div class="stat-card"><div class="stat-number red">${daysLeft}</div><div class="stat-label">Days Remaining</div></div>
-    <div class="stat-card"><div class="stat-number">${providers.length}</div><div class="stat-label">Alternatives Compared</div></div>
-    <div class="stat-card"><div class="stat-number green">${freeProviderCount}</div><div class="stat-label">Free Alternatives</div></div>
-    <div class="stat-card"><div class="stat-number">3</div><div class="stat-label">Migration Paths</div></div>
-  </div>
-
-  <div class="executive-summary">
-    <p><strong>What\u2019s happening:</strong> OpenAI is shutting down DALL-E 2 and DALL-E 3 API access on <strong>May 12, 2026</strong>. After this date, all API calls using the <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">dall-e-2</code> and <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">dall-e-3</code> model parameters will fail. The DALL-E features in ChatGPT are unaffected.</p>
-    <p><strong>Easiest migration:</strong> <strong>gpt-image-1 is OpenAI\u2019s direct replacement.</strong> Change the model parameter from <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">dall-e-3</code> to <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">gpt-image-1</code> and update quality values. Same SDK, same endpoint, minimal code changes.</p>
-    <p><strong>Free alternatives exist:</strong> If you want to avoid per-image costs, <strong>Pollinations.AI</strong> (free, no auth), <strong>Lumenfall.ai</strong> (free FLUX.1 schnell), and <strong>Cloudflare Workers AI</strong> (10K neurons/day free) all offer image generation at zero cost.</p>
-  </div>
-
-  <div class="toc">
-    <h3>Jump to section</h3>
-    <ol>
-      <li><a href="#timeline">Shutdown Timeline</a></li>
-      <li><a href="#comparison-table">Alternative Comparison Table</a></li>
-      <li><a href="#pricing">Pricing Comparison</a></li>
-      <li><a href="#migration-paths">Migration Paths</a></li>
-      <li><a href="#code-migration">Code Migration Examples</a></li>
-      <li><a href="#faq">FAQ</a></li>
-      <li><a href="#openai-timeline">OpenAI Pricing Change Timeline</a></li>
-      <li><a href="#recommendations">Recommendations</a></li>
-      <li><a href="#methodology">Methodology</a></li>
-    </ol>
-  </div>
-
-  <h2 id="timeline">Shutdown Timeline</h2>
-  <p class="section-intro">Key dates from announcement to shutdown. Migrate before May 12 to avoid service disruption.</p>
-
-  <div style="overflow-x:auto">
-  <table class="pricing-table">
-    <thead>
-      <tr>
-        <th>Date</th>
-        <th>Event</th>
-        <th>Impact</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">Mar 2025</td>
-        <td style="font-size:.85rem">OpenAI releases gpt-image-1 as DALL-E successor with improved quality and native text rendering.</td>
-        <td><span style="color:var(--text-dim);font-size:.8rem;font-weight:600">INFO</span></td>
-      </tr>
-      <tr>
-        <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">Apr 2026</td>
-        <td style="font-size:.85rem">OpenAI announces DALL-E 2 and DALL-E 3 API deprecation. Migration deadline set for May 12, 2026.</td>
-        <td><span style="color:#f85149;font-size:.8rem;font-weight:600">HIGH</span></td>
-      </tr>
-      <tr>
-        <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">May 12, 2026</td>
-        <td style="font-size:.85rem"><strong>Complete API shutdown.</strong> All DALL-E 2 and DALL-E 3 API calls stop working. Applications must use gpt-image-1 or alternatives.</td>
-        <td><span style="color:#f85149;font-size:.8rem;font-weight:600">HIGH</span></td>
-      </tr>
-      <tr>
-        <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">Post-shutdown</td>
-        <td style="font-size:.85rem">Previously generated image URLs remain accessible. DALL-E in ChatGPT is unaffected. Only the developer API is discontinued.</td>
-        <td><span style="color:var(--text-dim);font-size:.8rem;font-weight:600">INFO</span></td>
-      </tr>
-    </tbody>
-  </table>
-  </div>
-
-  <div class="context-box">
-    <strong>What\u2019s NOT affected:</strong> DALL-E image generation within ChatGPT continues to work. The ChatGPT interface uses internal APIs that are separate from the public developer API. Only direct API calls using <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">dall-e-2</code> or <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">dall-e-3</code> model parameters are affected.
-  </div>
-
-  <h2 id="comparison-table">Image Generation API Alternatives</h2>
-  <p class="section-intro">All ${providers.length} alternatives compared. Migration effort rated from the perspective of a DALL-E API integration.</p>
-
-  <div style="overflow-x:auto">
-  <table class="pricing-table">
-    <thead>
-      <tr>
-        <th>Provider</th>
-        <th>Free Tier</th>
-        <th>Cost / Image</th>
-        <th>Image Quality</th>
-        <th>API Style</th>
-        <th>Migration</th>
-      </tr>
-    </thead>
-    <tbody>
-        ${providerTableRows}
-    </tbody>
-  </table>
-  </div>
-
-  <div class="context-box">
-    <strong>OpenAI-compatible APIs:</strong> Both Pollinations.AI and Lumenfall.ai offer OpenAI-compatible endpoints. This means you can often use the standard OpenAI SDK with a different base URL \u2014 reducing migration effort to changing a configuration value rather than rewriting API calls.
-  </div>
-
-  <h2 id="pricing">Pricing Comparison</h2>
-  <p class="section-intro">Cost per 1024x1024 image across all providers. DALL-E 3 pricing shown for reference.</p>
-
-  <div style="overflow-x:auto">
-  <table class="pricing-table">
-    <thead>
-      <tr>
-        <th>Provider</th>
-        <th>Free Tier</th>
-        <th>Cost per Image (1024x1024)</th>
-        <th>Quality Options</th>
-      </tr>
-    </thead>
-    <tbody>
-        ${pricingTableRows}
-    </tbody>
-  </table>
-  </div>
-
-  <div class="context-box">
-    <strong>gpt-image-1 pricing note:</strong> The wide $0.011\u2013$0.167 range reflects quality tiers. Low quality (1024x1024) costs $0.011, medium costs $0.042, and high quality costs $0.167. DALL-E 3 had a narrower range of $0.040\u2013$0.120. For most use cases, gpt-image-1 at low or medium quality is <strong>cheaper</strong> than DALL-E 3 was.
-  </div>
-
-  <h2 id="migration-paths">Migration Paths</h2>
-  <p class="section-intro">Three paths depending on your budget and quality requirements. The right choice depends on whether you need zero cost, maximum quality, or minimal code changes.</p>
-
-  <div class="decision-tree">
-    <div class="decision-path" style="border-left:3px solid #3fb950">
-      <h3>Path 1: Stay with OpenAI (gpt-image-1)</h3>
-      <p>The easiest migration. Change the model parameter from <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">dall-e-3</code> to <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">gpt-image-1</code>, update quality values, and you\u2019re done. Same SDK, same endpoint, same billing. Image quality is generally better than DALL-E 3, with improved text rendering.</p>
-      <p class="best-for">Best for: Existing OpenAI users who want minimal code changes and don\u2019t mind per-image costs</p>
-    </div>
-    <div class="decision-path" style="border-left:3px solid var(--accent)">
-      <h3>Path 2: Free Alternatives (Pollinations.AI, Lumenfall.ai, Cloudflare)</h3>
-      <p>Zero-cost image generation. Pollinations.AI requires no API key at all \u2014 just construct a URL. Lumenfall.ai offers unlimited FLUX.1 schnell generation with an OpenAI-compatible API. Cloudflare Workers AI provides Stable Diffusion at the edge with 10K free neurons per day.</p>
-      <p class="best-for">Best for: Prototyping, hobby projects, cost-sensitive applications, high-volume generation</p>
-    </div>
-    <div class="decision-path" style="border-left:3px solid #8b5cf6">
-      <h3>Path 3: Quality-Focused (Stability AI, Replicate + FLUX/SDXL)</h3>
-      <p>When image quality is the top priority. Stability AI offers SDXL and SD3 models with fine-grained control. Replicate provides access to cutting-edge models like FLUX and SDXL with per-run pricing. Both offer free credits or free runs to get started.</p>
-      <p class="best-for">Best for: Production applications where image quality matters more than cost, creative tools, marketing assets</p>
-    </div>
-  </div>
-
-  <h2 id="code-migration">Code Migration Examples</h2>
-
-  <h3>Python: DALL-E 3 \u2192 gpt-image-1</h3>
-  <p class="section-intro">Minimal changes required. Update the model name and quality parameter:</p>
-
-  <div class="code-block">
-<span class="comment"># Before: DALL-E 3</span>
-response = client.images.generate(
-    model=<span class="string">"dall-e-3"</span>,
-    prompt=<span class="string">"a white siamese cat"</span>,
-    size=<span class="string">"1024x1024"</span>,
-    quality=<span class="string">"standard"</span>,
-    n=<span class="highlight">1</span>,
-)
-
-<span class="comment"># After: gpt-image-1</span>
-response = client.images.generate(
-    model=<span class="string">"gpt-image-1"</span>,
-    prompt=<span class="string">"a white siamese cat"</span>,
-    size=<span class="string">"1024x1024"</span>,
-    quality=<span class="string">"low"</span>,  <span class="comment"># low|medium|high (replaces standard|hd)</span>
-    n=<span class="highlight">1</span>,
-)
-  </div>
-
-  <h3>Node.js: DALL-E 3 \u2192 gpt-image-1</h3>
-  <p class="section-intro">Same pattern \u2014 change model and quality:</p>
-
-  <div class="code-block">
-<span class="comment">// Before: DALL-E 3</span>
-<span class="keyword">const</span> response = <span class="keyword">await</span> openai.images.generate({
-  model: <span class="string">"dall-e-3"</span>,
-  prompt: <span class="string">"a white siamese cat"</span>,
-  size: <span class="string">"1024x1024"</span>,
-  quality: <span class="string">"standard"</span>,
-  n: <span class="highlight">1</span>,
-});
-
-<span class="comment">// After: gpt-image-1</span>
-<span class="keyword">const</span> response = <span class="keyword">await</span> openai.images.generate({
-  model: <span class="string">"gpt-image-1"</span>,
-  prompt: <span class="string">"a white siamese cat"</span>,
-  size: <span class="string">"1024x1024"</span>,
-  quality: <span class="string">"low"</span>,
-  n: <span class="highlight">1</span>,
-});
-  </div>
-
-  <h3>Free Alternative: Pollinations.AI (No API Key)</h3>
-  <p class="section-intro">The simplest free option \u2014 no authentication, no SDK, just a URL:</p>
-
-  <div class="code-block">
-<span class="comment">// Free alternative: Pollinations.AI (no API key needed)</span>
-<span class="keyword">const</span> prompt = <span class="string">"a white siamese cat"</span>;
-<span class="keyword">const</span> imageUrl = <span class="string">\`https://image.pollinations.ai/prompt/\${<span class="highlight">encodeURIComponent</span>(prompt)}?width=1024&amp;height=1024\`</span>;
-<span class="keyword">const</span> response = <span class="keyword">await</span> fetch(imageUrl);
-<span class="keyword">const</span> imageBuffer = <span class="keyword">await</span> response.arrayBuffer();
-  </div>
-
-  <div class="context-box">
-    <strong>Quality mapping:</strong> When migrating from DALL-E 3 to gpt-image-1, update quality values: <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">"standard"</code> \u2192 <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">"low"</code> (cheapest, $0.011), <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">"hd"</code> \u2192 <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">"high"</code> ($0.167). New <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">"medium"</code> tier ($0.042) provides a balanced option that didn\u2019t exist with DALL-E 3.
-  </div>
-
-  <h2 id="faq">Frequently Asked Questions</h2>
-
-  <div class="faq-section">
-    ${faqs.map(f => `<div class="faq-item">
-      <div class="faq-question">${escHtmlServer(f.q)}<span style="color:var(--text-dim)">\u25BC</span></div>
-      <div class="faq-answer">${escHtmlServer(f.a)}</div>
-    </div>`).join("\n    ")}
-  </div>
-
-  ${dalleChanges.length > 0 ? `<h2 id="openai-timeline">OpenAI Pricing Change Timeline</h2>
-  <p class="section-intro">Changes tracked in our <a href="/changes">deal changes database</a>:</p>
-
-  <div style="overflow-x:auto">
-  <table class="pricing-table">
-    <thead>
-      <tr>
-        <th>Date</th>
-        <th>Change</th>
-        <th>Impact</th>
-      </tr>
-    </thead>
-    <tbody>
-        ${changeTimelineRows}
-    </tbody>
-  </table>
-  </div>` : `<h2 id="openai-timeline">OpenAI Pricing Change Timeline</h2>
-  <p class="section-intro">No OpenAI pricing changes tracked yet. Check our <a href="/changes">deal changes database</a> for updates.</p>`}
-
-  <h2 id="recommendations">Recommendations</h2>
-
-  <div class="verdict-box">
-    <h3>Best Alternative for Each Use Case</h3>
-    <div class="verdict-item">
-      <strong>Fastest migration (recommended for most):</strong>
-      <p>gpt-image-1 \u2014 same OpenAI SDK, change one parameter. Low quality tier is actually cheaper than DALL-E 3 standard was ($0.011 vs $0.040). Best image quality of any option.</p>
-    </div>
-    <div class="verdict-item">
-      <strong>Zero cost, no setup:</strong>
-      <p>Pollinations.AI \u2014 no API key, no account, no rate limits on basic usage. Just construct a URL. Quality is good for prototyping but won\u2019t match gpt-image-1 or SDXL.</p>
-    </div>
-    <div class="verdict-item">
-      <strong>Free with high quality:</strong>
-      <p>Lumenfall.ai \u2014 free unlimited FLUX.1 schnell generation with an OpenAI-compatible API. Excellent quality from the FLUX model family. Low migration effort if you\u2019re using the OpenAI SDK.</p>
-    </div>
-    <div class="verdict-item">
-      <strong>Edge deployment:</strong>
-      <p>Cloudflare Workers AI \u2014 run Stable Diffusion models at the edge with 10K free neurons per day. Great for applications that need low-latency image generation close to users.</p>
-    </div>
-    <div class="verdict-item">
-      <strong>Maximum quality control:</strong>
-      <p>Stability AI \u2014 SDXL and SD3 models with fine-grained parameters for style, composition, and quality. Best for creative tools and production marketing assets where you need precise control.</p>
-    </div>
-    <div class="verdict-item">
-      <strong>Multi-model flexibility:</strong>
-      <p>Replicate \u2014 access FLUX, SDXL, and dozens of other models through one API. Pay per run. Ideal if you want to experiment with different models or let users choose their preferred style.</p>
-    </div>
-    <div class="verdict-item">
-      <strong>Enterprise image generation:</strong>
-      <p>For enterprise use, consider Midjourney API (waitlist) for creative quality or Adobe Firefly API for commercial-safe generation with built-in content credentials and IP indemnification.</p>
-    </div>
-  </div>
-
-  <h2 id="methodology">Methodology</h2>
-
-  <div class="methodology">
-    <p><strong>How we track this data:</strong> AgentDeals monitors free tier changes across ${offers.length.toLocaleString()} developer tools in ${categories.length} categories. The DALL-E API shutdown is tracked in our <a href="/shutdowns">shutdown tracker</a> and <a href="/stability">stability dashboard</a>.</p>
-    <p><strong>Migration recommendations:</strong> Based on API documentation review, SDK compatibility testing, and community reports. Pricing data read from official provider pricing pages as of ${pubDate}. Free tier availability confirmed via direct API testing.</p>
-    <p>For real-time data, use our <a href="/stability">stability dashboard</a>, <a href="/feed.xml">Atom feed</a>, or <a href="/setup">MCP server</a>. Full dataset available via <a href="/api/offers">REST API</a>.</p>
-  </div>
-
-  <h2>Related Guides</h2>
-  <div class="related-pages">
-    ${relatedPages.map(p => `<a href="/${p.slug}" class="related-page-link">
-      <div class="link-title">${escHtmlServer(p.title.split(" \u2014 ")[0])}</div>
-      <div class="link-desc">${escHtmlServer(p.hubDesc)}</div>
-    </a>`).join("\n    ")}
-  </div>
-
-  ${buildMoreAlternativesGuides(slug)}
-
-  ${buildMcpCta("Track image generation API shutdowns and compare developer tool free tiers from your AI assistant. Get stability ratings, migration alerts, and pricing comparisons \u2014 directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
-</div>
-<script>${mcpCtaScript()}</script>
-</body>
-</html>`;
-}
-
-function buildOpenAIRealtimeMigrationPage(): string {
-  const title = "OpenAI Realtime API Beta Shutdown: Migration Guide & Real-Time Audio Alternatives (2026)";
-  const metaDesc = "OpenAI Realtime API beta shuts down May 7, 2026. Migrate to GA Realtime API or switch to Deepgram, AssemblyAI, ElevenLabs, Azure OpenAI, or Google Cloud Speech-to-Text. Code examples and pricing comparison.";
-  const slug = "openai-realtime-migration";
-  const pubDate = "2026-04-10";
-
-  const stabilityMap = publishedStabilityIndex();
-
-  const openaiChanges = dealChanges.filter(c =>
-    c.vendor === "OpenAI" && (c.summary.toLowerCase().includes("realtime") || c.summary.toLowerCase().includes("real-time") || c.summary.toLowerCase().includes("real time"))
-  ).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-
-  const relevantChanges = openaiChanges.length > 0 ? openaiChanges : dealChanges.filter(c =>
-    c.vendor === "OpenAI"
-  ).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-
-  interface RealtimeProvider {
-    name: string;
-    slug: string;
-    freeTier: string;
-    pricing: string;
-    capability: string;
-    latency: string;
-    migrationEffort: string;
-    bestFor: string;
-  }
-
-  const providers: RealtimeProvider[] = [
-    { name: "OpenAI Realtime API (GA)", slug: "openai", freeTier: "Paid only (pay-per-token)", pricing: "$0.06/min audio input, $0.24/min audio output", capability: "Speech-to-speech, transcription", latency: "Low (~200ms)", migrationEffort: "Minimal \u2014 same SDK", bestFor: "Existing OpenAI users" },
-    { name: "Deepgram", slug: "deepgram", freeTier: "$200 free credit", pricing: "$0.0043/min (Nova-2)", capability: "Real-time speech-to-text", latency: "Very low (~100ms)", migrationEffort: "Moderate \u2014 different SDK", bestFor: "High-accuracy transcription" },
-    { name: "AssemblyAI", slug: "assemblyai", freeTier: "Free tier available", pricing: "$0.0065/15s (~$0.026/min)", capability: "Real-time transcription, LeMUR", latency: "Low (~300ms)", migrationEffort: "Moderate \u2014 different SDK", bestFor: "Transcription + AI analysis" },
-    { name: "Azure OpenAI Realtime", slug: "azure", freeTier: "$200 credit (new accounts)", pricing: "Same as OpenAI (enterprise pricing)", capability: "Speech-to-speech, transcription", latency: "Low (~200ms)", migrationEffort: "Low \u2014 same API, different endpoint", bestFor: "Enterprise / Azure shops" },
-    { name: "ElevenLabs", slug: "elevenlabs", freeTier: "10K characters/month free", pricing: "$0.30/1K characters", capability: "Real-time text-to-speech", latency: "Very low (~75ms)", migrationEffort: "Moderate \u2014 different paradigm", bestFor: "Voice synthesis / cloning" },
-    { name: "Google Cloud Speech-to-Text", slug: "google-cloud", freeTier: "60 min/month free", pricing: "$0.006/15s (~$0.024/min)", capability: "Real-time speech-to-text", latency: "Low (~200ms)", migrationEffort: "Moderate \u2014 different SDK", bestFor: "Multi-language support" },
-  ];
-
-  const openaiStability = stabilityMap.of("openai");
-  const stabilityColor = openaiStability === "volatile" ? "#f85149" : openaiStability === "watch" ? "#d29922" : openaiStability === "improving" ? "#3fb950" : "var(--text-muted)";
-
-  const shutdownDate = new Date("2026-05-07");
-  const today = new Date();
-  const daysLeft = Math.max(0, Math.ceil((shutdownDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)));
-
-  const freeProviderCount = providers.filter(p => p.freeTier.toLowerCase().includes("free")).length;
-
-  const providerTableRows = providers.map(p => {
-    const freeColor = p.freeTier.toLowerCase().includes("free") ? "#3fb950" : "var(--accent)";
-    const effortColor = p.migrationEffort.startsWith("Minimal") ? "#3fb950" : p.migrationEffort.startsWith("Low") ? "#3fb950" : p.migrationEffort.startsWith("Moderate") ? "#d29922" : "#f85149";
-    const vendorLink = p.slug ? handwrittenVendorLinkHtml(p.slug, p.name, ' style="color:var(--text)"') : escHtmlServer(p.name);
-    return '<tr>\n      <td style="font-weight:600">' + vendorLink + '</td>\n      <td style="font-family:var(--mono);font-size:.8rem;color:' + freeColor + '">' + escHtmlServer(p.freeTier) + '</td>\n      <td style="font-size:.8rem">' + escHtmlServer(p.pricing) + '</td>\n      <td style="font-size:.8rem">' + escHtmlServer(p.capability) + '</td>\n      <td style="font-size:.8rem">' + escHtmlServer(p.latency) + '</td>\n      <td><span style="color:' + effortColor + ';font-size:.8rem;font-weight:600">' + escHtmlServer(p.migrationEffort.split(" \u2014 ")[0]) + "</span></td>\n    </tr>";
-  }).join("\n        ");
-
-  const pricingTableRows = [
-    { name: "OpenAI Realtime (beta)", free: "None (shutting down)", cost: "$0.06/min in, $0.24/min out", features: "Speech-to-speech + transcription", color: "#f85149" },
-    { name: "OpenAI Realtime (GA)", free: "None", cost: "$0.06/min in, $0.24/min out", features: "Speech-to-speech + transcription", color: "var(--accent)" },
-    { name: "Deepgram", free: "$200 credit", cost: "$0.0043/min (Nova-2)", features: "Speech-to-text, 30+ languages", color: "#3fb950" },
-    { name: "AssemblyAI", free: "Free tier", cost: "~$0.026/min", features: "Transcription + LeMUR AI", color: "#3fb950" },
-    { name: "Azure OpenAI Realtime", free: "$200 credit", cost: "Enterprise pricing", features: "Same as OpenAI + Azure compliance", color: "#3fb950" },
-    { name: "ElevenLabs", free: "10K chars/mo", cost: "$0.30/1K characters", features: "Text-to-speech, voice cloning", color: "#3fb950" },
-    { name: "Google Cloud STT", free: "60 min/mo", cost: "~$0.024/min", features: "125+ languages, streaming", color: "#3fb950" },
-  ].map(r => '<tr>\n      <td style="font-weight:600">' + escHtmlServer(r.name) + '</td>\n      <td style="font-family:var(--mono);font-size:.8rem;color:' + r.color + '">' + escHtmlServer(r.free) + '</td>\n      <td style="font-family:var(--mono);font-size:.8rem">' + escHtmlServer(r.cost) + '</td>\n      <td style="font-size:.8rem">' + escHtmlServer(r.features) + "</td>\n    </tr>").join("\n        ");
-
-  const changeTimelineRows = relevantChanges.slice(0, 10).map(c => {
-    const dateStr = changeEntryLongDateLabel(c);
-    const impactColor = changeImpactColor(c.impact);
-    return '<tr>\n      <td style="font-family:var(--mono);font-size:.8rem">' + escHtmlServer(dateStr) + '</td>\n      <td style="font-size:.85rem">' + changeSummaryHtml(c, escHtmlServer) + '</td>\n      <td><span style="color:' + impactColor + ';font-size:.8rem;font-weight:600">' + escHtmlServer(changeImpactLabel(c.impact)) + "</span></td>\n    </tr>";
-  }).join("\n        ");
-
-  const relatedPages = ALTERNATIVES_PAGES.filter(p =>
-    ["shutdowns", "dall-e-shutdown", "ai-free-tiers", "state-of-free-tiers"].includes(p.slug)
-  );
-
-  const faqs = [
-    { q: "When does the OpenAI Realtime API beta shut down?", a: "OpenAI is deprecating the Realtime API beta on May 7, 2026. After this date, requests using the OpenAI-Beta: realtime=v1 header will stop working. The stable (GA) Realtime API continues to function and is the direct replacement." },
-    { q: "What are the key breaking changes from beta to GA?", a: "There are four main changes: (1) Remove the OpenAI-Beta: realtime=v1 header, (2) Use the new POST /v1/realtime/client_secrets endpoint for ephemeral keys instead of the beta session creation flow, (3) Specify session_type as either 'speech-to-speech' or 'transcription' when creating sessions, and (4) Some event names and payload structures have been updated." },
-    { q: "Do I need to change my OpenAI SDK version?", a: "If you are using the latest OpenAI Python SDK (1.x+) or Node.js SDK, the GA Realtime API is supported. The main code changes are removing the beta header, updating the session creation flow to use client_secrets, and adding session_type to your configuration. No major SDK upgrade is required." },
-    { q: "What are the best alternatives to OpenAI Realtime API?", a: "For speech-to-text: Deepgram (Nova-2 model, $200 free credit, very low latency) and AssemblyAI (free tier, includes AI analysis via LeMUR). For text-to-speech: ElevenLabs (10K characters/month free, ultra-low latency voice synthesis). For enterprise: Azure OpenAI Realtime (same API, Azure compliance). For multi-language: Google Cloud Speech-to-Text (125+ languages, 60 min/month free)." },
-    { q: "Is the OpenAI Realtime API GA more expensive than the beta?", a: "The GA pricing model is the same as the beta: audio input costs approximately $0.06/minute and audio output costs approximately $0.24/minute (based on token pricing). There is no price increase with the GA release. However, if cost is a concern, alternatives like Deepgram ($0.0043/min) offer significantly lower per-minute pricing for speech-to-text use cases." },
-  ];
-
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    headline: title,
-    description: metaDesc,
-    datePublished: pubDate,
-    dateModified: pageDateModified("/openai-realtime-migration", pubDate),
-    author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
-    publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
-    mainEntityOfPage: { "@type": "WebPage", "@id": BASE_URL + "/" + slug },
-    about: providers.map(p => ({ "@type": "SoftwareApplication", name: p.name })),
-  };
-
-  const faqJsonLd = faqPageJsonLd("/openai-realtime-migration", faqs);
-
-  const breadcrumbJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "AgentDeals", item: BASE_URL },
-      { "@type": "ListItem", position: 2, name: "Guides", item: BASE_URL + "/alternatives" },
-      { "@type": "ListItem", position: 3, name: "Realtime API Migration Guide", item: BASE_URL + "/" + slug },
-    ],
-  };
-
-  return '<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1">\n<title>' + escHtmlServer(title) + ' \u2014 AgentDeals</title>\n<meta name="description" content="' + escHtmlServer(metaDesc) + '">\n<link rel="canonical" href="' + BASE_URL + '/' + slug + '">\n<meta property="og:title" content="' + escHtmlServer(title) + '">\n<meta property="og:description" content="' + escHtmlServer(metaDesc) + '">\n<meta property="og:type" content="article">\n<meta property="og:url" content="' + BASE_URL + '/' + slug + '">\n<meta property="article:published_time" content="' + pubDate + '">\n<meta name="keywords" content="openai realtime api, realtime api beta shutdown, realtime api migration, real-time audio api, speech-to-text api, deepgram alternative, assemblyai, elevenlabs, voice ai api 2026">\n' + OG_IMAGE_META + GOOGLE_VERIFICATION_META + '<link rel="icon" type="image/png" href="/favicon.png">\n${feedLinkTag(PER_CHANGE_FEED)}\n<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">\n<script type="application/ld+json">' + JSON.stringify(jsonLd) + '</script>\n<script type="application/ld+json">' + JSON.stringify(faqJsonLd) + '</script>\n<script type="application/ld+json">' + JSON.stringify(breadcrumbJsonLd) + '</script>\n<style>\n*{margin:0;padding:0;box-sizing:border-box}\n:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:\'Inter\',-apple-system,sans-serif;--sans:\'Inter\',-apple-system,sans-serif;--mono:\'JetBrains Mono\',SFMono-Regular,monospace}\nbody{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}\na{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}\n.container{max-width:960px;margin:0 auto;padding:0 1.5rem}\n.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}\n.breadcrumb a{color:var(--text-muted)}\nh1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}\nh2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}\nh3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}\n.pub-date{color:var(--text-dim);font-size:.85rem;margin-bottom:1.5rem}\n.deadline-banner{background:linear-gradient(135deg,rgba(248,81,73,0.15),rgba(210,153,34,0.1));border:1px solid #f85149;border-radius:12px;padding:1.5rem;margin:1.5rem 0;text-align:center}\n.deadline-days{font-size:2.5rem;font-weight:700;font-family:var(--mono);color:#f85149}\n.deadline-label{font-size:.9rem;color:var(--text-muted);margin-top:.25rem}\n.deadline-date{font-size:.85rem;color:var(--text-dim);margin-top:.5rem}\n.summary-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin:1.5rem 0 2rem}\n.stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center}\n.stat-number{font-size:1.8rem;font-weight:700;font-family:var(--mono);color:var(--accent)}\n.stat-number.red{color:#f85149}\n.stat-number.green{color:#3fb950}\n.stat-label{font-size:.8rem;color:var(--text-muted);margin-top:.25rem}\n.executive-summary{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:1.5rem 0;line-height:1.8}\n.executive-summary p{color:var(--text-muted);margin-bottom:.75rem;font-size:.95rem}\n.executive-summary p:last-child{margin-bottom:0}\n.executive-summary strong{color:var(--text)}\n.section-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:1.25rem;line-height:1.7}\n.pricing-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.85rem}\n.pricing-table th{text-align:left;padding:.75rem .5rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}\n.pricing-table td{padding:.6rem .5rem;border-bottom:1px solid var(--border)}\n.pricing-table tr:hover{background:var(--accent-glow)}\n.diff-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem}\n.diff-card h3{margin:0 0 .5rem;font-size:1rem}\n.diff-desc{color:var(--text-muted);font-size:.9rem;line-height:1.6}\n.context-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}\n.context-box strong{color:var(--text)}\n.decision-tree{display:grid;gap:1rem;margin:1.5rem 0}\n.decision-path{padding:1.25rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);transition:border-color .15s}\n.decision-path:hover{border-color:var(--accent)}\n.decision-path h3{margin:0 0 .5rem;font-size:1rem;color:var(--accent)}\n.decision-path p{color:var(--text-muted);font-size:.9rem;margin-bottom:.5rem}\n.decision-path .best-for{font-size:.8rem;color:var(--text-dim);font-style:italic}\n.verdict-box{background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(139,92,246,0.1));border:1px solid var(--accent);border-radius:12px;padding:1.5rem;margin:1.5rem 0}\n.verdict-box h3{color:var(--accent);margin:0 0 .75rem;font-size:1.1rem}\n.verdict-item{margin-bottom:.75rem;padding-left:1rem;border-left:2px solid var(--border)}\n.verdict-item strong{color:var(--text)}\n.verdict-item p{color:var(--text-muted);font-size:.9rem;margin:.25rem 0 0}\n.methodology{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}\n.methodology strong{color:var(--text)}\n.related-pages{display:flex;flex-direction:column;gap:.5rem;margin:1rem 0}\n.related-page-link{padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .15s}\n.related-page-link:hover{border-color:var(--accent);text-decoration:none}\n.related-page-link .link-title{color:var(--accent);font-weight:600;font-size:.95rem}\n.related-page-link .link-desc{color:var(--text-muted);font-size:.8rem;margin-top:.25rem}\n.toc{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1.5rem 0}\n.toc h3{margin:0 0 .5rem;font-size:.9rem;color:var(--text-muted)}\n.toc ol{padding-left:1.25rem;margin:0}\n.toc li{margin-bottom:.35rem;font-size:.9rem}\n.toc a{color:var(--accent)}\n.code-block{background:#0d1117;border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1rem 0;overflow-x:auto;font-family:var(--mono);font-size:.8rem;line-height:1.5;color:#c9d1d9}\n.code-block .comment{color:#8b949e}\n.code-block .keyword{color:#ff7b72}\n.code-block .string{color:#a5d6ff}\n.code-block .highlight{color:#ffa657}\n.faq-section{margin:2rem 0}\n.faq-item{border:1px solid var(--border);border-radius:8px;margin-bottom:.75rem;overflow:hidden}\n.faq-question{padding:1rem 1.25rem;background:var(--bg-card);cursor:pointer;font-weight:600;font-size:.95rem;display:flex;justify-content:space-between;align-items:center}\n.faq-question:hover{background:var(--accent-glow)}\n.faq-answer{padding:0 1.25rem 1rem;color:var(--text-muted);font-size:.9rem;line-height:1.7}\nfooter{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}\nfooter a{color:var(--accent)}\n@media(max-width:768px){h1{font-size:1.6rem}.summary-stats{grid-template-columns:1fr 1fr}.pricing-table{font-size:.75rem}.pricing-table td,.pricing-table th{padding:.4rem .25rem}.deadline-days{font-size:1.8rem}}\n' + globalNavCss() + '\n' + mcpCtaCss() + '\n</style>\n</head>\n<body>\n<div class="container">\n  ' + buildGlobalNav("alternatives") + '\n  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternatives">Guides</a> &rsaquo; Realtime API Migration Guide</div>\n  <h1>OpenAI Realtime API Beta Shutdown: Migration Guide &amp; Real-Time Audio Alternatives</h1>\n  <p class="pub-date">Published ' + pubDate + ' &middot; ' + pageDataProvenance("/openai-realtime-migration", offers.length) + ' &middot; ' + relevantChanges.length + ' OpenAI pricing change' + (relevantChanges.length !== 1 ? "s" : "") + ' tracked</p>\n\n  <div class="deadline-banner">\n    <div class="deadline-days">' + daysLeft + ' days</div>\n    <div class="deadline-label">until Realtime API beta shutdown</div>\n    <div class="deadline-date">May 7, 2026 &middot; <span style="color:' + stabilityColor + ';font-weight:600">OpenAI stability: ' + openaiStability.toUpperCase() + '</span></div>\n  </div>\n\n  <div class="summary-stats">\n    <div class="stat-card"><div class="stat-number red">' + daysLeft + '</div><div class="stat-label">Days Remaining</div></div>\n    <div class="stat-card"><div class="stat-number">' + providers.length + '</div><div class="stat-label">Alternatives Compared</div></div>\n    <div class="stat-card"><div class="stat-number green">' + freeProviderCount + '</div><div class="stat-label">With Free Tiers</div></div>\n    <div class="stat-card"><div class="stat-number">4</div><div class="stat-label">Breaking Changes</div></div>\n  </div>\n\n  <div class="executive-summary">\n    <p><strong>What\'s happening:</strong> OpenAI is deprecating the Realtime API <strong>beta</strong> on <strong>May 7, 2026</strong>. The beta endpoints (which required the <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">OpenAI-Beta: realtime=v1</code> header) will stop working. The GA (stable) Realtime API is the replacement.</p>\n    <p><strong>Easiest migration:</strong> <strong>Remove the beta header, update session creation to use client_secrets, and add session_type.</strong> If you are already using the OpenAI SDK, the changes are minimal. The GA API uses the same WebSocket protocol with updated event names.</p>\n    <p><strong>Alternatives exist:</strong> If you are reconsidering OpenAI for real-time audio, <strong>Deepgram</strong> ($200 free credit, $0.0043/min), <strong>AssemblyAI</strong> (free tier), and <strong>Google Cloud Speech-to-Text</strong> (60 min/month free) offer real-time transcription at lower per-minute costs.</p>\n  </div>\n\n  <div class="toc">\n    <h3>Jump to section</h3>\n    <ol>\n      <li><a href="#breaking-changes">Breaking Changes</a></li>\n      <li><a href="#comparison-table">Alternative Comparison Table</a></li>\n      <li><a href="#pricing">Pricing Comparison</a></li>\n      <li><a href="#migration-paths">Migration Paths</a></li>\n      <li><a href="#code-migration">Code Migration Examples</a></li>\n      <li><a href="#faq">FAQ</a></li>\n      <li><a href="#openai-timeline">OpenAI Change Timeline</a></li>\n      <li><a href="#recommendations">Recommendations</a></li>\n      <li><a href="#methodology">Methodology</a></li>\n    </ol>\n  </div>\n\n  <h2 id="breaking-changes">Breaking Changes: Beta to GA</h2>\n  <p class="section-intro">Four key changes required when migrating from the Realtime API beta to the stable GA release.</p>\n\n  <div class="diff-card">\n    <h3>1. Remove the Beta Header</h3>\n    <div class="diff-desc">The <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">OpenAI-Beta: realtime=v1</code> header is no longer needed. The GA Realtime API is the default. Remove this header from all requests.</div>\n  </div>\n  <div class="diff-card">\n    <h3>2. New Ephemeral Key Endpoint</h3>\n    <div class="diff-desc">Use <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">POST /v1/realtime/client_secrets</code> to generate ephemeral keys for client-side WebSocket connections. This replaces the beta session creation flow.</div>\n  </div>\n  <div class="diff-card">\n    <h3>3. Required session_type Parameter</h3>\n    <div class="diff-desc">You must now specify <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">session_type</code> when creating sessions: <strong>"speech-to-speech"</strong> for bidirectional voice conversations or <strong>"transcription"</strong> for audio-to-text. The beta used a single session type for both.</div>\n  </div>\n  <div class="diff-card">\n    <h3>4. Updated Event Names and Payloads</h3>\n    <div class="diff-desc">Some WebSocket event names and payload structures have been updated in the GA release. Review the <a href="https://platform.openai.com/docs/guides/realtime" style="color:var(--accent)">official documentation</a> for the updated event reference.</div>\n  </div>\n\n  <h2 id="comparison-table">Real-Time Audio API Alternatives</h2>\n  <p class="section-intro">All ' + providers.length + ' alternatives compared. Migration effort rated from the perspective of an OpenAI Realtime API integration.</p>\n\n  <div style="overflow-x:auto">\n  <table class="pricing-table">\n    <thead>\n      <tr>\n        <th>Provider</th>\n        <th>Free Tier</th>\n        <th>Pricing</th>\n        <th>Capability</th>\n        <th>Latency</th>\n        <th>Migration</th>\n      </tr>\n    </thead>\n    <tbody>\n        ' + providerTableRows + '\n    </tbody>\n  </table>\n  </div>\n\n  <div class="context-box">\n    <strong>OpenAI vs alternatives:</strong> OpenAI Realtime API is unique in offering <strong>speech-to-speech</strong> (bidirectional voice conversations with an AI model). Most alternatives focus on either speech-to-text (Deepgram, AssemblyAI, Google) or text-to-speech (ElevenLabs). If you need full voice conversation capability, OpenAI GA or Azure OpenAI are your primary options.\n  </div>\n\n  <h2 id="pricing">Pricing Comparison</h2>\n  <p class="section-intro">Per-minute costs across all providers. OpenAI Realtime beta pricing shown for reference.</p>\n\n  <div style="overflow-x:auto">\n  <table class="pricing-table">\n    <thead>\n      <tr>\n        <th>Provider</th>\n        <th>Free Tier</th>\n        <th>Per-Minute Cost</th>\n        <th>Features</th>\n      </tr>\n    </thead>\n    <tbody>\n        ' + pricingTableRows + '\n    </tbody>\n  </table>\n  </div>\n\n  <div class="context-box">\n    <strong>Cost comparison:</strong> OpenAI Realtime API is significantly more expensive per minute than speech-to-text alternatives because it includes AI model inference (GPT-4o) in the pipeline. If you only need transcription, <strong>Deepgram at $0.0043/min</strong> is roughly 14x cheaper than OpenAI\'s audio input rate. However, for full speech-to-speech with AI reasoning, OpenAI remains the most integrated option.\n  </div>\n\n  <h2 id="migration-paths">Migration Paths</h2>\n  <p class="section-intro">Three paths depending on your use case. The right choice depends on whether you need speech-to-speech, transcription only, or voice synthesis.</p>\n\n  <div class="decision-tree">\n    <div class="decision-path" style="border-left:3px solid #3fb950">\n      <h3>Path 1: Stay with OpenAI (Beta to GA)</h3>\n      <p>The easiest migration. Remove the beta header, update session creation to use <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">/v1/realtime/client_secrets</code>, add <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">session_type</code>, and update any changed event names. Same SDK, same pricing, same capabilities.</p>\n      <p class="best-for">Best for: Existing OpenAI Realtime users who need speech-to-speech and want minimal code changes</p>\n    </div>\n    <div class="decision-path" style="border-left:3px solid var(--accent)">\n      <h3>Path 2: Transcription-Only (Deepgram, AssemblyAI, Google)</h3>\n      <p>If you only need speech-to-text, dedicated transcription services offer better per-minute pricing and often lower latency. Deepgram Nova-2 leads on accuracy and speed. AssemblyAI adds AI-powered analysis via LeMUR. Google offers the widest language support (125+).</p>\n      <p class="best-for">Best for: Applications that process audio input but generate text responses, transcription services, meeting recorders</p>\n    </div>\n    <div class="decision-path" style="border-left:3px solid #8b5cf6">\n      <h3>Path 3: Voice Synthesis (ElevenLabs)</h3>\n      <p>If your use case is generating spoken audio from text, ElevenLabs offers the lowest latency (~75ms) and highest quality voice synthesis with voice cloning capabilities. 10K characters/month free to start.</p>\n      <p class="best-for">Best for: Voice assistants, audiobook generation, voice cloning, accessibility features</p>\n    </div>\n  </div>\n\n  <h2 id="code-migration">Code Migration Examples</h2>\n\n  <h3>Python: Beta to GA Migration</h3>\n  <p class="section-intro">Key changes to your server-side session creation:</p>\n\n  <div class="code-block">\n<span class="comment"># Before: Beta session creation</span>\n<span class="keyword">import</span> openai\n\nclient = openai.OpenAI()\nresponse = client.chat.completions.create(\n    model=<span class="string">"gpt-4o-realtime-preview"</span>,\n    <span class="comment"># Beta required OpenAI-Beta header (set automatically by SDK)</span>\n    extra_headers={<span class="string">"OpenAI-Beta"</span>: <span class="string">"realtime=v1"</span>},\n)\n\n<span class="comment"># After: GA session creation with client_secrets</span>\n<span class="keyword">import</span> openai\n\nclient = openai.OpenAI()\n<span class="comment"># Create ephemeral key for client-side WebSocket</span>\nresponse = client.post(\n    <span class="string">"/v1/realtime/client_secrets"</span>,\n    body={\n        <span class="string">"model"</span>: <span class="string">"gpt-4o-realtime"</span>,\n        <span class="string">"session_type"</span>: <span class="string">"speech-to-speech"</span>,  <span class="comment"># NEW: required</span>\n    },\n)\nephemeral_key = response[<span class="string">"client_secret"</span>][<span class="string">"value"</span>]\n  </div>\n\n  <h3>Node.js: Beta to GA Migration</h3>\n  <p class="section-intro">Same pattern \u2014 update session creation and remove beta header:</p>\n\n  <div class="code-block">\n<span class="comment">// Before: Beta WebSocket connection</span>\n<span class="keyword">const</span> ws = <span class="keyword">new</span> WebSocket(\n  <span class="string">"wss://api.openai.com/v1/realtime?model=gpt-4o-realtime-preview"</span>,\n  {\n    headers: {\n      <span class="string">"Authorization"</span>: <span class="string">"Bearer "</span> + apiKey,\n      <span class="string">"OpenAI-Beta"</span>: <span class="string">"realtime=v1"</span>,  <span class="comment">// REMOVE this</span>\n    },\n  }\n);\n\n<span class="comment">// After: GA \u2014 get ephemeral key, then connect</span>\n<span class="keyword">const</span> resp = <span class="keyword">await</span> fetch(<span class="string">"https://api.openai.com/v1/realtime/client_secrets"</span>, {\n  method: <span class="string">"POST"</span>,\n  headers: {\n    <span class="string">"Authorization"</span>: <span class="string">"Bearer "</span> + apiKey,\n    <span class="string">"Content-Type"</span>: <span class="string">"application/json"</span>,\n  },\n  body: JSON.stringify({\n    model: <span class="string">"gpt-4o-realtime"</span>,\n    session_type: <span class="string">"speech-to-speech"</span>,  <span class="comment">// NEW: required</span>\n  }),\n});\n<span class="keyword">const</span> { client_secret } = <span class="keyword">await</span> resp.json();\n<span class="keyword">const</span> ws = <span class="keyword">new</span> WebSocket(\n  <span class="string">"wss://api.openai.com/v1/realtime?model=gpt-4o-realtime"</span>,\n  { headers: { <span class="string">"Authorization"</span>: <span class="string">"Bearer "</span> + client_secret.value } }\n);\n  </div>\n\n  <h3>Alternative: Deepgram Real-Time Transcription</h3>\n  <p class="section-intro">For speech-to-text only, Deepgram offers a simpler WebSocket API with lower per-minute costs:</p>\n\n  <div class="code-block">\n<span class="comment">// Deepgram real-time transcription (Node.js)</span>\n<span class="keyword">const</span> { createClient, LiveTranscriptionEvents } = require(<span class="string">"@deepgram/sdk"</span>);\n\n<span class="keyword">const</span> deepgram = createClient(<span class="string">"YOUR_DEEPGRAM_API_KEY"</span>);\n<span class="keyword">const</span> connection = deepgram.listen.live({\n  model: <span class="string">"nova-2"</span>,\n  language: <span class="string">"en"</span>,\n  smart_format: <span class="highlight">true</span>,\n});\n\nconnection.on(LiveTranscriptionEvents.Transcript, (data) =&gt; {\n  <span class="keyword">const</span> transcript = data.channel.alternatives[<span class="highlight">0</span>].transcript;\n  console.log(<span class="string">"Transcript:"</span>, transcript);\n});\n\n<span class="comment">// Send audio data to connection.send(audioBuffer)</span>\n  </div>\n\n  <div class="context-box">\n    <strong>session_type options:</strong> The GA Realtime API requires specifying <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">"speech-to-speech"</code> for bidirectional voice conversations (the model speaks back) or <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">"transcription"</code> for audio-to-text only. The beta handled both in a single session type, so you need to choose which mode your application uses.\n  </div>\n\n  <h2 id="faq">Frequently Asked Questions</h2>\n\n  <div class="faq-section">\n    ' + faqs.map(f => '<div class="faq-item">\n      <div class="faq-question">' + escHtmlServer(f.q) + '<span style="color:var(--text-dim)">\u25BC</span></div>\n      <div class="faq-answer">' + escHtmlServer(f.a) + '</div>\n    </div>').join("\n    ") + '\n  </div>\n\n  ' + (relevantChanges.length > 0 ? '<h2 id="openai-timeline">OpenAI Change Timeline</h2>\n  <p class="section-intro">Changes tracked in our <a href="/changes">deal changes database</a>:</p>\n\n  <div style="overflow-x:auto">\n  <table class="pricing-table">\n    <thead>\n      <tr>\n        <th>Date</th>\n        <th>Change</th>\n        <th>Impact</th>\n      </tr>\n    </thead>\n    <tbody>\n        ' + changeTimelineRows + '\n    </tbody>\n  </table>\n  </div>' : '<h2 id="openai-timeline">OpenAI Change Timeline</h2>\n  <p class="section-intro">Check our <a href="/changes">deal changes database</a> for the latest OpenAI updates.</p>') + '\n\n  <h2 id="recommendations">Recommendations</h2>\n\n  <div class="verdict-box">\n    <h3>Best Alternative for Each Use Case</h3>\n    <div class="verdict-item">\n      <strong>Fastest migration (recommended for most):</strong>\n      <p>OpenAI Realtime API GA \u2014 same SDK, same pricing. Remove the beta header, update session creation, add session_type. If it worked in beta, it will work in GA with minimal changes.</p>\n    </div>\n    <div class="verdict-item">\n      <strong>Best for transcription:</strong>\n      <p>Deepgram Nova-2 \u2014 $200 free credit, $0.0043/min (14x cheaper than OpenAI audio input). Industry-leading accuracy and very low latency (~100ms). Supports 30+ languages.</p>\n    </div>\n    <div class="verdict-item">\n      <strong>Best for transcription + AI analysis:</strong>\n      <p>AssemblyAI \u2014 real-time transcription plus LeMUR for summarization, sentiment analysis, and Q&amp;A on transcribed content. Free tier available.</p>\n    </div>\n    <div class="verdict-item">\n      <strong>Best for enterprise:</strong>\n      <p>Azure OpenAI Realtime \u2014 same API as OpenAI with Azure compliance, data residency, and enterprise support. $200 credit for new accounts.</p>\n    </div>\n    <div class="verdict-item">\n      <strong>Best for voice synthesis:</strong>\n      <p>ElevenLabs \u2014 ultra-low latency (~75ms) text-to-speech with voice cloning. 10K characters/month free. Best quality synthetic voices on the market.</p>\n    </div>\n    <div class="verdict-item">\n      <strong>Best for multi-language:</strong>\n      <p>Google Cloud Speech-to-Text \u2014 125+ languages and variants, 60 min/month free. Best choice if you need broad language coverage.</p>\n    </div>\n  </div>\n\n  <h2 id="methodology">Methodology</h2>\n\n  <div class="methodology">\n    <p><strong>How we track this data:</strong> AgentDeals monitors free tier changes across ' + offers.length.toLocaleString() + ' developer tools in ' + categories.length + ' categories. The Realtime API beta deprecation is tracked in our <a href="/shutdowns">shutdown tracker</a> and <a href="/stability">stability dashboard</a>.</p>\n    <p><strong>Migration recommendations:</strong> Based on API documentation review, SDK compatibility analysis, and community reports. Pricing data read from official provider pricing pages as of ' + pubDate + '. Free tier availability confirmed via official documentation.</p>\n    <p>For real-time data, use our <a href="/stability">stability dashboard</a>, <a href="/feed.xml">Atom feed</a>, or <a href="/setup">MCP server</a>. Full dataset available via <a href="/api/offers">REST API</a>.</p>\n  </div>\n\n  <h2>Related Guides</h2>\n  <div class="related-pages">\n    ' + relatedPages.map(p => '<a href="/' + p.slug + '" class="related-page-link">\n      <div class="link-title">' + escHtmlServer(p.title.split(" \u2014 ")[0]) + '</div>\n      <div class="link-desc">' + escHtmlServer(p.hubDesc) + '</div>\n    </a>').join("\n    ") + '\n  </div>\n\n  ' + buildMoreAlternativesGuides(slug) + '\n\n  ' + buildMcpCta("Track real-time API shutdowns and compare developer tool free tiers from your AI assistant. Get stability ratings, migration alerts, and pricing comparisons \u2014 directly in your editor.") + '\n  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>\n</div>\n<script>' + mcpCtaScript() + '</script>\n</body>\n</html>';
 }
 
 function buildAppRunnerMigrationPage(): string {
@@ -51102,10 +50469,8 @@ function buildDeadlinesPage(): string {
     .sort((a, b) => a.date.localeCompare(b.date));
 
   const migrationGuides: Record<string, string> = {
-    "dall-e": "/dall-e-shutdown",
     "tenor": "/tenor-alternatives",
     "openai assistants": "/openai-assistants-migration-2026",
-    "openai realtime": "/openai-realtime-migration",
     "aws app runner": "/aws-app-runner-migration",
     "gemini": "/gemini-api-pricing-2026",
   };
@@ -54098,6 +53463,12 @@ const dispatchRequest = async (req: IncomingMessage, res: ServerResponse) => {
     res.end();
     return;
   }
+  if ((url.pathname === "/dall-e-shutdown" || url.pathname === "/openai-realtime-migration") && isGetOrHead) {
+    res.writeHead(301, { Location: "/shutdowns" });
+    res.end();
+    return;
+  }
+
 
   if ((url.pathname === "/auth-free-tier-comparison-2026" || url.pathname === "/auth-pricing" || url.pathname === "/auth-identity-pricing") && isGetOrHead) {
     res.writeHead(301, { Location: "/auth-comparison-2026" });
@@ -55997,16 +55368,6 @@ ${catList}
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/x402-services", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(withVerdictLinks(buildX402ServicesPage()));
-  } else if (url.pathname === "/dall-e-shutdown" && isGetOrHead) {
-    recordApiHit("/dall-e-shutdown");
-    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/dall-e-shutdown", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
-    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(withVerdictLinks(buildDallEShutdownPage()));
-  } else if (url.pathname === "/openai-realtime-migration" && isGetOrHead) {
-    recordApiHit("/openai-realtime-migration");
-    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/openai-realtime-migration", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
-    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(withVerdictLinks(buildOpenAIRealtimeMigrationPage()));
   } else if (url.pathname === "/aws-app-runner-migration" && isGetOrHead) {
     recordApiHit("/aws-app-runner-migration");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/aws-app-runner-migration", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });

@@ -2636,10 +2636,6 @@
       "hash": "64cdb57a42897f34",
       "changed": "2026-09-27"
     },
-    "/dall-e-shutdown": {
-      "hash": "94c0c621b620a6d3",
-      "changed": "2026-09-27"
-    },
     "/database-alternatives": {
       "hash": "8ca5033303dcf001",
       "changed": "2026-09-27"
@@ -3188,10 +3184,6 @@
     },
     "/openai-assistants-migration-2026": {
       "hash": "d933f490faea6c73",
-      "changed": "2026-09-27"
-    },
-    "/openai-realtime-migration": {
-      "hash": "a43ce45359784683",
       "changed": "2026-09-27"
     },
     "/postman-alternatives": {

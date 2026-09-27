@@ -5530,65 +5530,20 @@ describe("shutdown tracker page", () => {
     assert.ok(html.includes("/vendor/"), "Should have vendor detail links");
   });
 
-  it("GET /dall-e-shutdown renders DALL-E API shutdown migration guide", async () => {
+  it("GET /dall-e-shutdown redirects to /shutdowns", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${serverPort}/dall-e-shutdown`);
-    assert.strictEqual(response.status, 200);
-    assert.ok(response.headers.get("content-type")?.includes("text/html"));
-    const html = await response.text();
-    assert.ok(html.includes("DALL-E"), "Should have DALL-E in title");
-    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
-    assert.ok(html.includes('"Article"'), "Should use Article schema");
-    assert.ok(html.includes('"FAQPage"'), "Should have FAQPage schema");
-    assert.ok(html.includes("canonical"), "Should have canonical link");
-    assert.ok(html.includes("global-nav"), "Should have global nav");
-    assert.ok(html.includes("May 12, 2026"), "Should show shutdown date");
-    assert.ok(html.includes("days"), "Should show days remaining");
-    assert.ok(html.includes("gpt-image-1"), "Should list gpt-image-1 replacement");
-    assert.ok(html.includes("Pollinations"), "Should list Pollinations.AI as alternative");
-    assert.ok(html.includes("Lumenfall"), "Should list Lumenfall.ai as alternative");
-    assert.ok(html.includes("Cloudflare Workers AI"), "Should list Cloudflare Workers AI");
-    assert.ok(html.includes("Stability AI"), "Should list Stability AI");
-    assert.ok(html.includes("Replicate"), "Should list Replicate");
-    assert.ok(html.includes("Migration"), "Should have migration section");
-    assert.ok(html.includes("Pricing"), "Should have pricing comparison");
-    assert.ok(html.includes("dall-e-3"), "Should have code migration example");
-    assert.ok(html.includes("Recommendations"), "Should have recommendations");
-    assert.ok(html.includes("Methodology"), "Should have methodology section");
-    assert.ok(html.includes("/vendor/"), "Should have vendor detail links");
-    assert.ok(html.includes("/shutdowns"), "Should cross-link to shutdowns tracker");
+    const response = await fetch(`http://localhost:${serverPort}/dall-e-shutdown`, { redirect: "manual" });
+    assert.strictEqual(response.status, 301);
+    assert.strictEqual(response.headers.get("location"), "/shutdowns");
   });
 
-  it("GET /openai-realtime-migration renders OpenAI Realtime API migration guide", async () => {
+  it("GET /openai-realtime-migration redirects to /shutdowns", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${serverPort}/openai-realtime-migration`);
-    assert.strictEqual(response.status, 200);
-    assert.ok(response.headers.get("content-type")?.includes("text/html"));
-    const html = await response.text();
-    assert.ok(html.includes("Realtime API"), "Should have Realtime API in title");
-    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
-    assert.ok(html.includes('"Article"'), "Should use Article schema");
-    assert.ok(html.includes('"FAQPage"'), "Should have FAQPage schema");
-    assert.ok(html.includes("canonical"), "Should have canonical link");
-    assert.ok(html.includes("global-nav"), "Should have global nav");
-    assert.ok(html.includes("May 7, 2026"), "Should show shutdown date");
-    assert.ok(html.includes("days"), "Should show days remaining");
-    assert.ok(html.includes("Deepgram"), "Should list Deepgram as alternative");
-    assert.ok(html.includes("AssemblyAI"), "Should list AssemblyAI as alternative");
-    assert.ok(html.includes("ElevenLabs"), "Should list ElevenLabs as alternative");
-    assert.ok(html.includes("Azure"), "Should list Azure OpenAI");
-    assert.ok(html.includes("Google Cloud"), "Should list Google Cloud Speech-to-Text");
-    assert.ok(html.includes("session_type"), "Should explain session_type breaking change");
-    assert.ok(html.includes("client_secrets"), "Should explain new client_secrets endpoint");
-    assert.ok(html.includes("OpenAI-Beta"), "Should reference beta header removal");
-    assert.ok(html.includes("Migration"), "Should have migration section");
-    assert.ok(html.includes("Pricing"), "Should have pricing comparison");
-    assert.ok(html.includes("Recommendations"), "Should have recommendations");
-    assert.ok(html.includes("Methodology"), "Should have methodology section");
-    assert.ok(html.includes("/vendor/"), "Should have vendor detail links");
-    assert.ok(html.includes("/shutdowns"), "Should cross-link to shutdowns tracker");
+    const response = await fetch(`http://localhost:${serverPort}/openai-realtime-migration`, { redirect: "manual" });
+    assert.strictEqual(response.status, 301);
+    assert.strictEqual(response.headers.get("location"), "/shutdowns");
   });
 
   it("GET /aws-app-runner-migration renders App Runner migration guide", async () => {
