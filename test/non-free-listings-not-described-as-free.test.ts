@@ -19,6 +19,7 @@ const PAGES = [
   "/llm-api-pricing",
   "/gemini-api-pricing-2026",
   "/ai-ml-alternatives",
+  "/ai-free-tiers",
 ];
 
 type Offer = { vendor: string; tier: string; description?: string };
@@ -36,11 +37,10 @@ const FREE_CLAIMS: RegExp[] = [
   /\bdaily token (?:volume|quota)\b/gi,
   /\b(?:no|without a) credit card\b/gi,
   /\b\d+ RPM free\b/gi,
+  /\bfree (?:(?:AI|ML|AI\/ML|LLM|API|inference|and) ){1,4}(?:providers?|tools?|offers?|APIs?)\b/gi,
 ];
 
 const DENIED_JUST_BEFORE = /\b(?:no|not a|never a)(?:\s+[a-z]+)?\s+$/i;
-
-const COMPARED_JUST_BEFORE = /\bcompare(?:s|d)?(?:\s+[\w/]+){0,3}\s+$/i;
 
 const PRODUCT_NAMES: Record<string, string[]> = {
   "Google Gemini API": ["Gemini"],
@@ -169,7 +169,7 @@ function scan(page: string, html: string, catalogue: Catalogue): Scan {
         const at = claim.index!;
         const end = at + claim[0].length;
         const justBefore = sentence.slice(Math.max(0, at - 40), at);
-        if (DENIED_JUST_BEFORE.test(justBefore) || COMPARED_JUST_BEFORE.test(justBefore)) continue;
+        if (DENIED_JUST_BEFORE.test(justBefore)) continue;
         if (quotesAStoredSentence(sentence, at, end, stored)) continue;
         result.claimsRead++;
         const before = mentions.map((m, i) => ({ m, i })).filter(({ m }) => m.end <= at).pop();
