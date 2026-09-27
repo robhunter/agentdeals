@@ -21,14 +21,7 @@ const STATED: Record<string, string[]> = {
     "30 RPM; 1K requests and 200K tokens/day per model",
     "gpt-oss-120b, gpt-oss-20b, Qwen3.8 27B, Whisper",
     "$10/month in API credits",
-    "includes $10 a month in free API credits",
-  ],
-  "/gemini-api-pricing-changes": [
-    "30 RPM, 1K RPD",
-    "200K/day per model",
-    "30 RPM free with gpt-oss-120b and Qwen3.8 27B",
-    "Mistral AI ($10 a month in free API credits)",
-    "$10 a month in free API credits.",
+    "Mistral AI includes $10 a month in API credits.",
   ],
   "/free-ai-stack": [
     "Ultra-fast inference on LPU hardware — 30 RPM, 1,000 requests and 200K tokens a day per model, free. Serves gpt-oss-120b, gpt-oss-20b and Qwen3.8 27B. Best balance of speed, limits, and model quality for prototyping.",
@@ -76,7 +69,6 @@ const STATED: Record<string, string[]> = {
 };
 
 const WITHDRAWN: Record<string, string[]> = {
-  "/gemini-api-pricing-changes": ["supports Llama vision models for free"],
   "/llm-api-pricing": ["Groq and SiliconFlow serve", "Groq and Cerebras give away", "Opus pricing 67% in 2026"],
   "/free-ai-stack": ["Cerebras (1M tokens/day) or OpenRouter", "500K tokens/day"],
   "/openai-assistants-migration-2026": ["Meta Llama (via Groq)", "Via Llama models"],
@@ -202,15 +194,6 @@ describe("the AI guides state Groq's and Mistral's free plans as the vendors lis
       lines.filter((line) => textOf(served.get(page)!).includes(line)).map((line) => `${page}: ${line}`),
     );
     assert.deepStrictEqual(left, []);
-  });
-
-  it("states the cost of Mistral's row in the provider table as depending on the model, not as free", () => {
-    const rows = unitsOf(served.get("/gemini-api-pricing-changes")!).filter((unit) => unit.startsWith("Mistral AI |"));
-    assert.ok(rows.length > 0, "the provider table on /gemini-api-pricing-changes has a Mistral AI row");
-    for (const row of rows) {
-      assert.ok(row.includes("Depends on model"), row);
-      assert.ok(!row.includes("within free tier"), row);
-    }
   });
 
   it("still states Groq's 30 RPM beside Groq, and Mistral's $10 credit beside Mistral", () => {

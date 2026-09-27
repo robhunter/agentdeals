@@ -3719,7 +3719,7 @@ describe("HTTP transport", () => {
     assert.ok(html.includes('"Article"'), "Should use Article schema");
     assert.ok(html.includes("canonical"), "Should have canonical link");
     assert.ok(html.includes("global-nav"), "Should have global nav");
-    assert.ok(html.includes("What's Changing April 1"), "Should have what's changing section");
+    assert.ok(html.includes("What Changed on April 1"), "Should have what changed section");
     assert.ok(html.includes("Timeline of Gemini API Changes"), "Should have timeline section");
     assert.ok(html.includes("Who's Affected"), "Should have who's affected section");
     assert.ok(html.includes("Free LLM API Comparison"), "Should have comparison section");
@@ -3727,7 +3727,7 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("Groq"), "Should include Groq as alternative");
     assert.ok(html.includes("OpenRouter"), "Should include OpenRouter as alternative");
     assert.ok(html.includes("Cerebras"), "Should include Cerebras as alternative");
-    assert.ok(html.includes("50-80%"), "Should mention rate limit reduction");
+    assert.ok(html.includes("Free tier cut"), "Should mention the free tier cut");
     assert.ok(html.includes("Spend Caps"), "Should mention spend caps");
     assert.ok(html.includes("$250"), "Should include Tier 1 spend cap amount");
     assert.ok(html.includes("$2,000"), "Should include Tier 2 spend cap amount");
@@ -3748,38 +3748,12 @@ describe("HTTP transport", () => {
     assert.strictEqual(response.headers.get("location"), "/gemini-api-pricing-2026");
   });
 
-  it("GET /gemini-api-pricing-changes renders Gemini API pricing overhaul guide", async () => {
+  it("GET /gemini-api-pricing-changes redirects to /gemini-api-pricing-2026", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${serverPort}/gemini-api-pricing-changes`);
-    assert.strictEqual(response.status, 200);
-    assert.ok(response.headers.get("content-type")?.includes("text/html"));
-    const html = await response.text();
-    assert.ok(html.includes("Gemini API Pricing Overhaul Guide"), "Should have title");
-    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
-    assert.ok(html.includes('"Article"'), "Should use Article schema");
-    assert.ok(html.includes('"FAQPage"'), "Should use FAQPage schema");
-    assert.ok(html.includes("canonical"), "Should have canonical link");
-    assert.ok(html.includes("global-nav"), "Should have global nav");
-    assert.ok(html.includes("What Changed"), "Should have before/after section");
-    assert.ok(html.includes("Who"), "Should have who's affected section");
-    assert.ok(html.includes("Cost Analysis"), "Should have cost analysis section");
-    assert.ok(html.includes("Alternative Free LLM APIs"), "Should have alternatives section");
-    assert.ok(html.includes("Migration Recommendations"), "Should have migration section");
-    assert.ok(html.includes("Still Free"), "Should have what's still free section");
-    assert.ok(html.includes("Timeline"), "Should have timeline section");
-    assert.ok(html.includes("FAQ"), "Should have FAQ section");
-    assert.ok(html.includes("Groq"), "Should include Groq");
-    assert.ok(html.includes("Cerebras"), "Should include Cerebras");
-    assert.ok(html.includes("Together.ai"), "Should include Together.ai");
-    assert.ok(html.includes("Fireworks.ai"), "Should include Fireworks.ai");
-    assert.ok(html.includes("NVIDIA NIM"), "Should include NVIDIA NIM");
-    assert.ok(html.includes("100 req/day"), "Should have light usage tier");
-    assert.ok(html.includes("1,000 req/day"), "Should have moderate usage tier");
-    assert.ok(html.includes("10,000 req/day"), "Should have heavy usage tier");
-    assert.ok(html.includes("/gemini-api-pricing-2026"), "Should cross-link to billing deep-dive");
-    assert.ok(html.includes("/free-llm-apis"), "Should cross-link to free LLM APIs");
-    assert.ok(html.includes("Methodology"), "Should have methodology section");
+    const response = await fetch(`http://localhost:${serverPort}/gemini-api-pricing-changes`, { redirect: "manual" });
+    assert.strictEqual(response.status, 301);
+    assert.strictEqual(response.headers.get("location"), "/gemini-api-pricing-2026");
   });
 
   it("GET /free-tier-tracker renders free tier tracker page", async () => {
