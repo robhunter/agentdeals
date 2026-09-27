@@ -265,7 +265,10 @@ const FAILING_BY_MODE: Record<string, Array<{ file: string; drifted?: typeof A_G
   vendor: [],
   "vendor-one-at-a-time": [],
   "budget-against-the-tree": [],
+  "green-and-rewrites-a-committed-file": [],
 };
+
+const WHAT_A_TEST_REWROTE = `${JSON.stringify({ checked: "rewritten by a test" })}\n`;
 
 const GATE_CONFIGURATION = ["GATE_RATCHET_BUDGETS", "GATE_UPDATE_PAGE_LASTMOD", "GATE_REGENERATE_LLM_INDEX", "GATE_SYNC_PAGE_REVIEWS"];
 
@@ -290,6 +293,9 @@ if (mode.startsWith("vendor")) {
   blamed = rows.filter((r) => r.reading === "wrong").map((r) => r.vendor);
   if (mode === "vendor-one-at-a-time") blamed = blamed.slice(0, 1);
   failing = blamed.length > 0 ? [{ file: "test/the-data-this-run-wrote-is-wrong.test.ts" }] : [];
+}
+if (mode === "green-and-rewrites-a-committed-file") {
+  writeFileSync("data/health.json", ${JSON.stringify(WHAT_A_TEST_REWROTE)});
 }
 const red = mode === "crashed" || failing.length > 0;
 writeFileSync(
@@ -1579,6 +1585,63 @@ describe("#1337 main moving under a run whose data the suite accepted", () => {
     assert.strictEqual(suiteRuns(run.stdout), 1);
     assert.strictEqual(quarantineRefs(origin, "data-quarantine/fixture").length, 1);
     assert.match(run.stdout, /more often than this run replays onto it/);
+  });
+});
+
+describe("#2057 a replay starts from the run's own commit, whatever else the workspace holds", () => {
+  before(() => {
+    scratch = mkdtempSync(join(tmpdir(), "gate-replay-workspace-"));
+  });
+
+  after(() => {
+    if (scratch && existsSync(scratch)) rmSync(scratch, { recursive: true, force: true });
+  });
+
+  const LEFT_OUTSIDE_THE_COMMITTED_PATHS: Array<[string, (work: string) => void]> = [
+    ["modified", (work) => writeFileSync(join(work, "untracked-by-the-gate.txt"), "rewritten by a step before the gate\n")],
+    ["deleted", (work) => rmSync(join(work, "untracked-by-the-gate.txt"))],
+  ];
+
+  for (const [how, leave] of LEFT_OUTSIDE_THE_COMMITTED_PATHS) {
+    it(`replays onto a moved main over a tracked file ${how} outside the paths it commits, and keeps that file off main`, () => {
+      const { work, origin } = fixtureRepo();
+      writeFileSync(join(work, "data", "health.json"), '{"checked":41}\n');
+      leave(work);
+      commitToMainFromElsewhere(origin, "another-job-wrote-this.txt", "landed while the suite ran\n");
+
+      const run = runGate(work, "green", "data-quarantine/fixture", "data(auto): fixture", "data/health.json");
+
+      assert.strictEqual(run.status, 0, `${run.stdout}${run.stderr}`);
+      assert.deepStrictEqual(quarantineRefs(origin, "data-quarantine/fixture"), [], "the run's data was held back rather than replayed");
+      assert.strictEqual(git(origin, "show", "main:data/health.json"), '{"checked":41}');
+      assert.strictEqual(git(origin, "show", "main:another-job-wrote-this.txt"), "landed while the suite ran");
+      assert.strictEqual(git(origin, "show", "main:untracked-by-the-gate.txt"), "before", "a file the run was not given reached main");
+      assert.strictEqual(suiteRuns(run.stdout), 2, "the suite did not read the tree the replay produced");
+      assert.match(run.stdout, /untracked-by-the-gate\.txt/, "the log does not name the file the replay put back");
+    });
+  }
+
+  it("pushes what the run committed, not the copy a test rewrote while the suite ran", () => {
+    const { work, origin } = fixtureRepo();
+    writeFileSync(join(work, "data", "health.json"), '{"checked":42}\n');
+    commitToMainFromElsewhere(origin, "another-job-wrote-this.txt", "landed while the suite ran\n");
+
+    const run = runGate(
+      work,
+      "green-and-rewrites-a-committed-file",
+      "data-quarantine/fixture",
+      "data(auto): fixture",
+      "data/health.json",
+    );
+
+    assert.strictEqual(run.status, 0, `${run.stdout}${run.stderr}`);
+    assert.deepStrictEqual(quarantineRefs(origin, "data-quarantine/fixture"), []);
+    assert.strictEqual(
+      git(origin, "show", "main:data/health.json"),
+      '{"checked":42}',
+      "main carries what a test wrote, not what the run committed",
+    );
+    assert.strictEqual(suiteRuns(run.stdout), 2);
   });
 });
 
