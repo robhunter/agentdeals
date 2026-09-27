@@ -9122,7 +9122,13 @@
       "category": "Workflow Automation",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-03"
+      "recorded_date": "2026-09-03",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-27",
+        "detail": "Retracted 2026-09-27: nothing changed on 2026-09-03. The Internet Archive's capture of DBOS's pricing page on 2026-08-04 already lists DBOS Pro at $99 a month with 2 user seats, 3 apps and 1 million checkpoints a month, and DBOS Teams at $499 a month with 10 user seats, 10 apps and 10 million checkpoints, as this record does. The record compared the page with our own listing text, which said 3 seats and 5 apps.",
+        "source_url": "https://web.archive.org/web/20260804172436/https://dbos.dev/dbos-pricing"
+      }
     },
     {
       "vendor": "Braintrust",
@@ -10255,7 +10261,13 @@
       "category": "AI / ML",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-10"
+      "recorded_date": "2026-09-10",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-27",
+        "detail": "Retracted 2026-09-27: nothing changed on 2026-09-10. The Internet Archive's captures of Pinecone's pricing page on 2026-09-02 and 2026-09-12 list the same Starter plan: up to 2 GB of storage, 2M write units and 1M read units a month, up to 5 indexes, and 1 GB of Assistant storage with 500k input and 300k output tokens a month. The record compared the page with our own listing text.",
+        "source_url": "https://web.archive.org/web/20260912072433/https://www.pinecone.io/pricing/"
+      }
     },
     {
       "vendor": "Qdrant",
