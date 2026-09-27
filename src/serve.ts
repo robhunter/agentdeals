@@ -29503,16 +29503,16 @@ function buildCiCdPricingPage(): string {
       name: "Google Cloud Build",
       slug: "google-cloud-build",
       category: "cloud-native",
-      freeMinutes: "120 min/day",
+      freeMinutes: "2,500 min/mo",
       concurrency: "10+ concurrent",
       selfHosted: "N/A (managed)",
       paidFrom: "$0.003/min (e2-medium)",
       pricingModel: "Per-minute",
-      freeDetails: "120 build minutes/day (~3,600 min/month) on e2-medium (Always Free). By far the most generous cloud-native CI/CD free tier. Supports Docker, custom builders, and Cloud Deploy. Triggers from GitHub, Bitbucket, and Cloud Source Repos.",
+      freeDetails: "2,500 build-minutes a month per billing account, on e2-standard-2 machines in the default pool. Google calls this free tier promotional and subject to change. Supports Docker, custom builders, and Cloud Deploy. Triggers from GitHub, Bitbucket, and Cloud Source Repos.",
       freeType: "generous",
       monthlyCostSmall: "$0",
       monthlyCostTeam: "$0\u201350",
-      hiddenCosts: "Free tier is genuinely generous at 120 min/day. But: Artifact Registry storage, Cloud Deploy, and network egress are charged separately. Larger machine types (e2-highcpu, custom) cost significantly more per minute.",
+      hiddenCosts: "The free minutes cover e2-standard-2 only. Also: Artifact Registry storage, Cloud Deploy, and network egress are charged separately. Larger machine types (e2-highcpu, custom) cost significantly more per minute.",
     },
     {
       name: "Azure DevOps",
@@ -29735,7 +29735,7 @@ function buildCiCdPricingPage(): string {
   };
 
   const faqEntries = [
-    { q: "Which CI/CD tool has the best free tier?", a: "Google Cloud Build offers 120 build minutes/day (~3,600/month) on e2-medium instances for free. GitHub Actions offers unlimited minutes for public repos and 2,000 min/month for private repos. For self-hosted, Jenkins and Woodpecker CI are 100% free with no limits." },
+    { q: "Which CI/CD tool has the best free tier?", a: "Google Cloud Build offers 2,500 build-minutes a month on e2-standard-2 machines for free. GitHub Actions offers unlimited minutes for public repos and 2,000 min/month for private repos. For self-hosted, Jenkins and Woodpecker CI are 100% free with no limits." },
     { q: "Is Jenkins really free?", a: "Yes, Jenkins is 100% free and open-source (MIT license). The software costs nothing. However, you need to provide and maintain your own servers, which typically costs $20-100/month in cloud hosting. You also handle security patches, plugin updates, and scaling." },
     { q: "How do CI/CD pricing models differ?", a: "There are four main models: per-seat (GitLab, Buildkite), per-minute/credit (CircleCI, AWS CodeBuild, Google Cloud Build), per-parallel-job (Azure DevOps), and per-pipeline (Buddy). Per-seat is predictable but penalizes large teams. Per-minute rewards fast builds but can spike. Per-parallel-job charges for concurrency." },
     { q: "GitHub Actions vs GitLab CI — which is cheaper?", a: "For open-source: GitHub Actions (unlimited free minutes). For small private projects: both are effectively free (GitHub: 2,000 min, GitLab: 400 min + free self-hosted runners). For teams: GitLab Premium is $29/user/month, GitHub Team is $4/user/month but with limited CI minutes. GitLab includes more DevOps features (registry, security scanning) in its price." },
@@ -29851,7 +29851,7 @@ function buildCiCdPricingPage(): string {
     '  </div>\n' +
     '\n' +
     '  <div class="executive-summary">\n' +
-    '    <p><strong>The CI/CD landscape in April 2026:</strong> ' + tools.length + ' tools across four categories \u2014 general-purpose platforms, cloud-native services, mobile CI/CD specialists, and self-hosted open-source solutions. Pricing models are fragmented: per-seat, per-minute, per-credit, and per-parallel-job all coexist. Free tiers range from Google Cloud Build\'s generous 120 min/day to Bitbucket Pipelines\' tight 50 min/month.</p>\n' +
+    '    <p><strong>The CI/CD landscape in April 2026:</strong> ' + tools.length + ' tools across four categories \u2014 general-purpose platforms, cloud-native services, mobile CI/CD specialists, and self-hosted open-source solutions. Pricing models are fragmented: per-seat, per-minute, per-credit, and per-parallel-job all coexist. Free tiers range from Google Cloud Build\'s 2,500 min/month to Bitbucket Pipelines\' tight 50 min/month.</p>\n' +
     '    <p><strong>Key trends:</strong> Self-hosted runners are becoming the cost optimization strategy \u2014 GitHub Actions, GitLab CI, Buildkite, Harness CI, and Azure DevOps all offer free unlimited self-hosted execution. Cloud-native CI/CD (AWS CodeBuild, Google Cloud Build) charges per-minute with modest free tiers. Mobile CI/CD remains the most expensive category, with macOS build minutes costing 2\u201310x Linux minutes.</p>\n' +
     '    <p><strong>This guide covers:</strong> pricing tables, category breakdowns, build minute analysis, cost comparison for small teams and growing organizations, hidden costs, and best-for-use-case recommendations \u2014 compiled by hand from vendor pricing pages.</p>\n' +
     '  </div>\n' +
@@ -29951,7 +29951,7 @@ function buildCiCdPricingPage(): string {
     '  </div>\n' +
     '\n' +
     '  <div class="context-box">\n' +
-    '    <strong>Best value picks:</strong> For open-source projects, <a href="/vendor/github-actions">GitHub Actions</a> (unlimited free minutes). For private repos on a budget, <a href="/vendor/google-cloud-build">Google Cloud Build</a> (120 min/day free) or <a href="/vendor/github-actions">GitHub Actions</a> (2,000 min/mo). For teams wanting zero CI cost, self-hosted ' + handwrittenVendorLinkHtml("jenkins", "Jenkins") + ' or <a href="/vendor/woodpecker-ci">Woodpecker CI</a> with your own infrastructure.\n' +
+    '    <strong>Best value picks:</strong> For open-source projects, <a href="/vendor/github-actions">GitHub Actions</a> (unlimited free minutes). For private repos on a budget, <a href="/vendor/google-cloud-build">Google Cloud Build</a> (2,500 min/month free) or <a href="/vendor/github-actions">GitHub Actions</a> (2,000 min/mo). For teams wanting zero CI cost, self-hosted ' + handwrittenVendorLinkHtml("jenkins", "Jenkins") + ' or <a href="/vendor/woodpecker-ci">Woodpecker CI</a> with your own infrastructure.\n' +
     '  </div>\n' +
     '\n' +
     '  <h2 id="hidden-costs">Hidden Costs</h2>\n' +
@@ -30000,7 +30000,7 @@ function buildCiCdPricingPage(): string {
     ) : '  <p class="section-intro">No CI/CD-specific pricing changes tracked recently. This category has been relatively stable.</p>\n') +
     '\n' +
     '  <div class="context-box">\n' +
-    '    <strong>The trend:</strong> Free CI/CD minutes are shrinking while self-hosted runner support is expanding. GitHub Actions introduced per-minute fees for private self-hosted runners in March 2026 \u2014 previously free. The counter-trend: Google Cloud Build\'s generous 120 min/day free tier has remained stable, and Buildkite continues to offer unlimited free self-hosted agents.\n' +
+    '    <strong>The trend:</strong> Free CI/CD minutes are shrinking while self-hosted runner support is expanding. GitHub Actions introduced per-minute fees for private self-hosted runners in March 2026 \u2014 previously free. The counter-trend: Buildkite continues to offer unlimited free self-hosted agents.\n' +
     '  </div>\n' +
     '\n' +
     '  <h2 id="recommendations">Best-for-Use-Case Recommendations</h2>\n' +
@@ -30015,7 +30015,7 @@ function buildCiCdPricingPage(): string {
     '\n' +
     '    <div class="verdict-item">\n' +
     '      <strong>Best free option for private repos</strong>\n' +
-    '      <p><a href="/vendor/google-cloud-build">Google Cloud Build</a> (120 min/day free) or <a href="/vendor/github-actions">GitHub Actions</a> (2,000 min/month). Cloud Build wins on raw minutes; GitHub Actions wins on ecosystem and ease of setup.</p>\n' +
+    '      <p><a href="/vendor/google-cloud-build">Google Cloud Build</a> (2,500 min/month free) or <a href="/vendor/github-actions">GitHub Actions</a> (2,000 min/month). Cloud Build wins on raw minutes; GitHub Actions wins on ecosystem and ease of setup.</p>\n' +
     '    </div>\n' +
     '\n' +
     '    <div class="verdict-item">\n' +
@@ -31834,13 +31834,13 @@ function buildHostingPricingPage(): string {
       freeTier: "Always free tier",
       paidFrom: "Usage-based",
       freeBandwidth: "1 GB North America",
-      freeBuildMinutes: "120/day (Cloud Build)",
+      freeBuildMinutes: "2,500/mo (Cloud Build)",
       freeCompute: "2M requests/mo, 360K vCPU-sec, 180K GiB-sec",
       freeDetails: "Always Free tier: 2 million requests/month, 360,000 vCPU-seconds, 180,000 GiB-seconds of memory, 1 GB outbound (North America). Runs containers, auto-scales to zero. Supports any language/framework via Docker. Integrated with Google Cloud ecosystem.",
       freeType: "generous",
       monthlyCostSolo: "$0",
       monthlyCostTeam: "Usage-based",
-      hiddenCosts: "Google Cloud account required with billing enabled. Egress to other regions is expensive. Cloud Build minutes for container builds are separate (120 free/day). Cold starts for scaled-to-zero services.",
+      hiddenCosts: "Google Cloud account required with billing enabled. Egress to other regions is expensive. Cloud Build minutes for container builds are separate (2,500 free a month). Cold starts for scaled-to-zero services.",
     },
     {
       name: "GitHub Pages",
@@ -38220,13 +38220,13 @@ ${mcpCtaCss()}
       </tr>
       <tr>
         <td class="provider-col"><a href="/vendor/google-cloud-build" style="color:var(--text)">Google Cloud Build</a></td>
-        <td style="font-family:var(--mono)">120 min/day (e2-standard)</td>
+        <td style="font-family:var(--mono)">2,500 min/mo (e2-standard-2)</td>
         <td>10 concurrent</td>
         <td>GCS storage (separate)</td>
         <td>e2-standard-2 (2 vCPU, 8 GB)</td>
         <td>Same limits for all repos</td>
         <td class="cross">No (GCE-based)</td>
-        <td style="color:#3fb950">Always Free</td>
+        <td style="color:#3fb950">Yes (promotional)</td>
       </tr>
       <tr>
         <td class="provider-col"><a href="/vendor/bitrise" style="color:var(--text)">Bitrise</a></td>
@@ -38443,7 +38443,7 @@ ${mcpCtaCss()}
       </tr>
       <tr>
         <td class="provider-col">Google Cloud Build</td>
-        <td>120 build-min/day (e2-standard)</td>
+        <td>2,500 build-min/mo (e2-standard-2)</td>
         <td>GCP-native, container builds</td>
         <td>GCP projects, container image builds</td>
       </tr>
@@ -38470,7 +38470,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="context-box">
-    <strong>Nx Cloud</strong> can dramatically speed up monorepo builds by caching task results across CI runs. <strong>Codefresh</strong> is the best free option for Kubernetes/GitOps workflows with native Argo CD support. <strong>Google Cloud Build</strong> is generous at 120 min/day but only makes sense if you&rsquo;re already on GCP. <strong>RunMyJob</strong> is a newer entrant that optimizes runner costs for existing GitHub Actions/GitLab CI pipelines.
+    <strong>Nx Cloud</strong> can dramatically speed up monorepo builds by caching task results across CI runs. <strong>Codefresh</strong> is the best free option for Kubernetes/GitOps workflows with native Argo CD support. <strong>Google Cloud Build</strong> gives 2,500 min/month but only makes sense if you&rsquo;re already on GCP. <strong>RunMyJob</strong> is a newer entrant that optimizes runner costs for existing GitHub Actions/GitLab CI pipelines.
   </div>
 
   <h2 id="self-hosted">Self-Hosted CI/CD (Unlimited Free)</h2>
