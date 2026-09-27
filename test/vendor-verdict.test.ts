@@ -675,14 +675,12 @@ describe("vendor verdict — as rendered", () => {
 
   it("counts one narrowing where a repair to our own entry sits beside it", async () => {
     const digitalocean = vendorRows().find(r => r.slug === "digitalocean")!;
-    assert.ok(
-      digitalocean.gate,
-      "/vendor/digitalocean renders an ungated record again, so assert this on the page rather than on the composer",
-    );
-    const composed = narrowingSentence(digitalocean.changes, digitalocean);
-    assert.match(composed, /One recorded restriction/);
-    assert.doesNotMatch(composed, /2 recorded changes narrowed the terms/);
-    assert.doesNotMatch(composed, /corrects our own earlier entry/);
+    const stated = digitalocean.gate
+      ? narrowingSentence(digitalocean.changes, digitalocean)
+      : verdictParagraph(await get("/vendor/digitalocean"));
+    assert.match(stated, /one recorded restriction/i);
+    assert.doesNotMatch(stated, /2 recorded changes narrowed the terms/);
+    assert.doesNotMatch(stated, /corrects our own earlier entry/);
 
     const neo4j = verdictParagraph(await get("/vendor/neo4j-auradb"));
     assert.match(neo4j, /The one record we hold corrects our own earlier entry rather than reporting a change the vendor made\./);

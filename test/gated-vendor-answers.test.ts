@@ -2,7 +2,8 @@ import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
 import { assertPopulationFloor, assertSharesPopulation, type Population } from "./population-floor.ts";
 import { spawn, type ChildProcess } from "node:child_process";
-import { readFileSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -20,7 +21,8 @@ type Gate = { code: string; reason: string };
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
 
-const offers: Offer[] = JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf-8")).offers;
+const catalogue: { offers: Offer[] } = JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf-8"));
+const offers: Offer[] = catalogue.offers;
 const { loadDealChanges, refusalsForVendor, gateForOffer } = await import("../dist/data.js");
 const { badgeWithholding, freeTierClaim, withholdsTheTerms } = await import("../dist/vendor-verdict.js");
 const { vendorVerdictContextFrom } = await import("../dist/vendor-verdict-input.js");
@@ -37,8 +39,22 @@ for (const offer of offers) {
   if (superseding) supersededBy.set(offer, superseding);
 }
 
+const EXPIRED_ON = "2026-01-31";
+const EXPIRY_REASON = `Offer expired on ${EXPIRED_ON}.`;
+const expiredSubject = [...vendorSlugMap.entries()]
+  .map(([slug, vendor]) => ({ slug, vendor, records: offers.filter(o => o.vendor === vendor) }))
+  .find(({ records }) =>
+    records.length === 1 &&
+    !records[0].expires_date &&
+    !supersededBy.has(records[0]) &&
+    gateForOffer(records[0], TODAY) === null,
+  ) ?? null;
+if (expiredSubject) expiredSubject.records[0].expires_date = EXPIRED_ON;
+const scratch = mkdtempSync(path.join(tmpdir(), "gated-vendor-answers-"));
+const scratchIndex = path.join(scratch, "index.json");
+writeFileSync(scratchIndex, JSON.stringify(catalogue));
+
 const PAY_AS_YOU_GO_REASON = 'Tier "Pay-as-you-go" is usage-billed from the first request.';
-const DIGITALOCEAN_EXPIRY_REASON = "Offer expired on 2026-06-30.";
 const NO_FREE_TIER_FOR_PRODUCTION = "There is no free tier here to run in production.";
 const STABLE_RATING_CLAUSE = "We rate it stable and";
 const RECOMMENDATION_CLAUSE = "so it's a reasonable starting point";
@@ -51,7 +67,7 @@ function startServer(): Promise<ChildProcess> {
   return new Promise((resolve, reject) => {
     const child = spawn("node", [path.join(REPO, "dist", "serve.js")], {
       stdio: ["pipe", "pipe", "pipe"],
-      env: { ...process.env, PORT: "0", BASE_URL: "http://localhost", TZ: "UTC" },
+      env: { ...process.env, PORT: "0", BASE_URL: "http://localhost", TZ: "UTC", AGENTDEALS_INDEX_PATH: scratchIndex },
     });
     const timeout = setTimeout(() => { child.kill(); reject(new Error("Server startup timeout")); }, 60000);
     child.stderr!.on("data", (data: Buffer) => {
@@ -165,9 +181,18 @@ before(async () => {
   }
 });
 
-after(() => { proc?.kill(); });
+after(() => {
+  proc?.kill();
+  rmSync(scratch, { recursive: true, force: true });
+});
 
 const gated = () => rendered.filter(p => p.gate);
+const expiredPage = (): VendorPage => {
+  assert.ok(expiredSubject, "no vendor holds a single ungated record to give a past expiry");
+  const page = rendered.find(p => p.slug === expiredSubject.slug)!;
+  assert.strictEqual(page.gate?.code, "offer_expired", `/vendor/${page.slug} is gated ${page.gate?.code ?? "not at all"}`);
+  return page;
+};
 const ungated = () => rendered.filter(p => !p.gate);
 const gatedPages = (): Population => ({ size: gated().length, read: "vendor pages a gate holds back" });
 const ungatedPages = (): Population => ({ size: ungated().length, read: "vendor pages no gate holds back" });
@@ -255,13 +280,13 @@ describe("the page a gated record renders does not answer the free-tier question
     }
   });
 
-  it("publishes the composed sentence verbatim on the pages the issue names", () => {
+  it("publishes the composed sentence verbatim for a pay-as-you-go tier and for an offer past its expiry", () => {
     const stripe = rendered.find(p => p.slug === "stripe")!;
     const turbopuffer = rendered.find(p => p.slug === "turbopuffer")!;
-    const digitalocean = rendered.find(p => p.slug === "digitalocean")!;
+    const expired = expiredPage();
     assert.ok(freeAnswer(stripe).startsWith(PAY_AS_YOU_GO_REASON), freeAnswer(stripe).slice(0, 90));
     assert.ok(freeAnswer(turbopuffer).startsWith(PAY_AS_YOU_GO_REASON), freeAnswer(turbopuffer).slice(0, 90));
-    assert.ok(freeAnswer(digitalocean).startsWith(DIGITALOCEAN_EXPIRY_REASON), freeAnswer(digitalocean).slice(0, 90));
+    assert.ok(freeAnswer(expired).startsWith(EXPIRY_REASON), freeAnswer(expired).slice(0, 90));
   });
 
   it("asks nothing about a free tier its own gate says is not there", () => {
@@ -478,11 +503,11 @@ describe("a reader sees why the record is gated without opening the FAQ", () => 
     }
   });
 
-  it("states the expiry date on the page the issue names", () => {
-    const digitalocean = rendered.find(p => p.slug === "digitalocean")!;
+  it("states the expiry date in the gate line of an offer past its expiry", () => {
+    const expired = expiredPage();
     assert.ok(
-      (gateLineOf(digitalocean.html) ?? "").includes(DIGITALOCEAN_EXPIRY_REASON),
-      gateLineOf(digitalocean.html) ?? "no gate line",
+      (gateLineOf(expired.html) ?? "").includes(EXPIRY_REASON),
+      gateLineOf(expired.html) ?? "no gate line",
     );
   });
 });

@@ -186,7 +186,7 @@ const RETIRED_FIGURES: Retired[] = [
   },
   {
     what: "Railway's $5 Hobby credit described as free",
-    pattern: /\$5\/(?:month|mo)(?: free)? credit|\$5 free credit|\$5 credit\/mo|Free \$5 monthly|Railway's \$5 credit|Railway \(\$5 credit\)|same \$5 credit/i,
+    pattern: /\$5\/(?:month|mo)(?: free)? credit|Railway[^.]{0,120}\$5 free credit|\$5 free credit[^.]{0,120}Railway|\$5 credit\/mo|Free \$5 monthly|Railway's \$5 credit|Railway \(\$5 credit\)|same \$5 credit/i,
     replacedBy: /\$1\/(?:month|mo)|\$1 of free credit|trial credit/i,
     vendorRecord: () => recordFor("Railway", "Cloud Hosting").description,
   },
@@ -411,6 +411,24 @@ describe("hosting pages publish the free-tier figures our records hold (#1183)",
   it("reads every published page rather than the pages the issue happened to name", () => {
     assertPopulationFloor(routes.length, 1000, "routes in the sitemap");
     assertPopulationFloor(scanned, 1000, "routes read from the sitemap");
+  });
+
+  it("reads Railway's old $5 wording as the retired figure, and another vendor's $5 credit as not Railway's", () => {
+    const railway = RETIRED_FIGURES.find((r) => r.what === "Railway's $5 Hobby credit described as free")!;
+    for (const old of [
+      "or deploy directly to Railway ($5 free credit, any framework, Docker support).",
+      "For full-stack: Railway ($5 free credit, no card required), Render (free tier with 15-min spin-down), or Vercel Hobby.",
+      "Railway for full-stack apps ($5 free credit, no credit card).",
+      "Railway | $5 free credit | Usage-based",
+    ]) {
+      assert.ok(railway.pattern.test(old), old);
+    }
+    for (const other of [
+      "Complete DigitalOcean guide — $5 free credits, App Platform free tier, per-second billing, and Big Three comparison",
+      "You need a valid credit card or PayPal to claim the $5 free credits.",
+    ]) {
+      assert.ok(!railway.pattern.test(other), other);
+    }
   });
 
   it("publishes no free-tier figure the vendor has retired", () => {

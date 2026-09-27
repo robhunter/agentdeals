@@ -12231,6 +12231,21 @@
       "alternatives": [],
       "recorded_date": "2026-09-27",
       "date_source": "hand_written"
+    },
+    {
+      "vendor": "DigitalOcean",
+      "change_type": "limits_reduced",
+      "date": "2026-04-07",
+      "summary": "DigitalOcean's new-account credit fell from $200 for 60 days to $5 for 90 days. Its pricing page changed between the Internet Archive's 2026-04-05 and 2026-04-07 captures. The $200 offer page (try.digitalocean.com/freetrialoffer/) was still up on 2026-05-15 and now redirects to the homepage.",
+      "tier": "Credits",
+      "previous_state": "$200 credit for 60 days for new accounts",
+      "current_state": "$5 signup credit, applied automatically and expiring 90 days after signup",
+      "impact": "medium",
+      "source_url": "http://web.archive.org/web/20260407173809/https://www.digitalocean.com/pricing",
+      "category": "Cloud IaaS",
+      "alternatives": [],
+      "recorded_date": "2026-09-27",
+      "date_source": "hand_written"
     }
   ]
 }

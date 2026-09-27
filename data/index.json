@@ -564,7 +564,7 @@
     {
       "vendor": "DigitalOcean",
       "category": "Cloud IaaS",
-      "description": "$200 credit for 60 days for new accounts. Basic Droplets from $4/mo (1 vCPU, 512 MB RAM, 10 GB SSD). Per-second billing (min 60s or $0.01). App Platform: 3 free static sites (1 GiB outbound/mo each). Functions: 90,000 GiB-seconds/mo free. Spaces: 250 GB + 1 TB transfer for $5/mo. Managed databases start at $15/mo (not free). No perpetual free compute tier",
+      "description": "New accounts get a $5 signup credit, applied automatically to the first team and expiring 90 days after signup; a payment method is required before creating resources. Basic Droplets from $4/mo (1 vCPU, 512 MB RAM, 10 GB SSD). Per-second billing (min 60s or $0.01). App Platform: 3 free static sites (1 GiB outbound/mo each). Functions: 90,000 GiB-seconds/mo free. Spaces: 250 GB + 1 TB transfer for $5/mo. Managed databases start at $15/mo (not free). No perpetual free compute tier",
       "tier": "Credits",
       "url": "https://www.digitalocean.com/pricing",
       "tags": [
@@ -578,9 +578,8 @@
         "digitalocean-free-tier-2026"
       ],
       "verifiedDate": "2026-08-18",
-      "expires_date": "2026-06-30",
       "free_tier_limits": {
-        "credits": "$200 for 60 days",
+        "credits": "$5 for 90 days",
         "static_sites": "3 apps, 1 GiB outbound/mo each",
         "functions": "90,000 GiB-seconds/mo",
         "droplets_from": "$4/mo (1 vCPU, 512 MB, 10 GB SSD)"
@@ -625,7 +624,6 @@
         ],
         "program": "DigitalOcean Hatch"
       },
-      "expires_date": "2026-06-30",
       "referral_program": {
         "available": true,
         "referrer_benefit": "$25 credit",

@@ -1,7 +1,8 @@
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
 import { spawn, type ChildProcess } from "node:child_process";
-import { readFileSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -16,8 +17,18 @@ type Gate = { code: string; reason: string } | null;
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
 
-const offers: Offer[] = JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf-8")).offers;
+const catalogue: { offers: Offer[] } = JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf-8"));
+const offers: Offer[] = catalogue.offers;
 const TODAY = utcDate();
+
+const EXPIRED_ON = "2026-01-31";
+const recordsOf = (vendor: string) => offers.filter(o => o.vendor.toLowerCase() === vendor.toLowerCase());
+const givenAnExpiry = offers.find(o => recordsOf(o.vendor).length === 1 && !o.expires_date && gateForOffer(o, TODAY) === null);
+if (givenAnExpiry) givenAnExpiry.expires_date = EXPIRED_ON;
+const scratch = mkdtempSync(path.join(tmpdir(), "api-gate-field-"));
+const scratchIndex = path.join(scratch, "index.json");
+writeFileSync(scratchIndex, JSON.stringify(catalogue));
+after(() => rmSync(scratch, { recursive: true, force: true }));
 
 const CATALOG_SIZE = offers.length;
 const MOST_OF_THE_CATALOG = 0.8;
@@ -52,7 +63,7 @@ function startServer(): Promise<ChildProcess> {
   return new Promise((resolve, reject) => {
     const child = spawn("node", [path.join(REPO, "dist", "serve.js")], {
       stdio: ["pipe", "pipe", "pipe"],
-      env: { ...process.env, PORT: "0", BASE_URL: "http://localhost", TZ: "UTC" },
+      env: { ...process.env, PORT: "0", BASE_URL: "http://localhost", TZ: "UTC", AGENTDEALS_INDEX_PATH: scratchIndex },
     });
     const timeout = setTimeout(() => { child.kill(); reject(new Error("Server startup timeout")); }, 60000);
     child.stderr!.on("data", (data: Buffer) => {
