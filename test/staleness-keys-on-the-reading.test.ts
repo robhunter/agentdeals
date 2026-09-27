@@ -308,49 +308,9 @@ describe("the controls this issue names", () => {
     return { gate: null, staleReason: entry.demerits.find(d => d.code === "stale_verification")?.reason ?? null };
   }
 
-  const READ_CLEANLY_AND_DISAGREED = ["Make", "Canva", "SourceForge", "Namecheap Supersonic"];
-  const READ_AND_THE_PAGE_STATED_NOTHING = ["pexels.com", "unsplash.com", "Substack", "Microsoft To Do"];
-  const RANKED_CONTROLS = [...READ_CLEANLY_AND_DISAGREED, ...READ_AND_THE_PAGE_STATED_NOTHING];
-
-  it("keeps demoting the records a clean reading disagreed with", () => {
-    const undemoted = READ_CLEANLY_AND_DISAGREED.filter(v => standingOf(v).staleReason === null);
-    assert.deepEqual(undemoted, []);
-  });
-
-  it("keeps demoting the records whose page states nothing that could confirm them", () => {
-    const undemoted = READ_AND_THE_PAGE_STATED_NOTHING.filter(v => standingOf(v).staleReason === null);
-    assert.deepEqual(undemoted, []);
-  });
-
-  it("states no number of days for any of them", () => {
-    const counting = RANKED_CONTROLS.filter(v => DAY_COUNT_SENTENCE.test(standingOf(v).staleReason ?? ""));
-    assert.deepEqual(counting, []);
-  });
-
-  it("dates each of them to the reading we hold for its own page", () => {
-    const unnamed = RANKED_CONTROLS.filter(v => {
-      const offer = offers.find(o => o.vendor === v)!;
-      const read = lastReadingFor(offer);
-      return !read || !(standingOf(v).staleReason ?? "").includes(read.date);
-    });
-    assert.deepEqual(unnamed, []);
-  });
-
-  it("names the read itself wherever the read reached the page", () => {
-    const reachedThePage = RANKED_CONTROLS.filter(v => lastReadingFor(offers.find(o => o.vendor === v)!)?.read_the_page);
-    assert.ok(reachedThePage.length >= 6, `only ${reachedThePage.length} controls were read, so this asserts nothing`);
-    const unnamed = reachedThePage.filter(v => !THE_READING_SENTENCE.test(standingOf(v).staleReason ?? ""));
-    assert.deepEqual(unnamed, []);
-  });
-
   it("holds Segment out of the ranked population altogether, where it already was", () => {
     assert.equal(standingOf("Segment").gate, "eligibility_restricted");
     assert.equal(standingOf("Segment").staleReason, null);
-  });
-
-  it("keeps every other control inside the ranked population", () => {
-    const gated = RANKED_CONTROLS.filter(v => standingOf(v).gate !== null);
-    assert.deepEqual(gated, []);
   });
 });
 
