@@ -155,7 +155,8 @@
       "source_url": "https://apify.com/pricing",
       "record_date": "2026-09-01",
       "change_type": "limits_increased",
-      "summary": "The free tier now provides $5/month of platform credit instead of $5 platform credits, and the concurrent Actor runs are unlimited instead of 25. A $500 credit for 6 months is also offered for new users."
+      "summary": "The free tier now provides $5/month of platform credit instead of $5 platform credits, and the concurrent Actor runs are unlimited instead of 25. A $500 credit for 6 months is also offered for new users.",
+      "reverted_on": "2026-09-27"
     },
     {
       "vendor": "Fingerprint",
@@ -1704,7 +1705,8 @@
       "source_url": "https://lumenfall.ai/pricing",
       "record_date": "2026-09-13",
       "change_type": "pricing_model_change",
-      "summary": "The platform is now offering a $1 credit upon signup, and users pay providers directly with no markup. The platform itself remains free, the previous mention of FLUX.1 [schnell] FP8 being free forever with unlimited usage is no longer present."
+      "summary": "The platform is now offering a $1 credit upon signup, and users pay providers directly with no markup. The platform itself remains free, the previous mention of FLUX.1 [schnell] FP8 being free forever with unlimited usage is no longer present.",
+      "reverted_on": "2026-09-27"
     },
     {
       "vendor": "Othor AI",
