@@ -25,6 +25,8 @@ import { rankOffers } from "../dist/ranking.js";
 import { readBestOfPublished } from "../dist/best-of-publication.js";
 import { verificationLedger } from "../dist/verification-state.js";
 import { assertSharesPopulation, categoriesInTheCatalogue } from "./population-floor.ts";
+import { leaveOnePick, picksOf, type OnePickLeft } from "./picks-floor-fixture.ts";
+import type { Offer } from "../dist/types.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -73,9 +75,28 @@ let port = 0;
 before(async () => { ({ child: server, port } = await startServer()); });
 after(() => { server?.kill(); });
 
-async function page(pathname: string): Promise<{ status: number; html: string }> {
-  const res = await fetch(`http://localhost:${port}${pathname}`, { redirect: "error" });
+async function page(pathname: string, atPort = port): Promise<{ status: number; html: string }> {
+  const res = await fetch(`http://localhost:${atPort}${pathname}`, { redirect: "error" });
   return { status: res.status, html: await res.text() };
+}
+
+async function withheldFunctionsAnswer404(on: {
+  offers: readonly Offer[];
+  publishedBefore: ReadonlySet<string>;
+  port: number;
+}): Promise<ProductFunction[]> {
+  const withheld = functions.filter(fn =>
+    functionMembers(on.offers, fn).filter(o => !o.eligibility).length >= MIN_VENDORS &&
+    picksOf(on.offers, fn, TODAY).length < MIN_PICKS &&
+    !on.publishedBefore.has(`free-${fn.slug}`),
+  );
+  const map = await page("/sitemap-pages.xml", on.port);
+  for (const fn of withheld) {
+    const { status } = await page(`/best/free-${fn.slug}`, on.port);
+    assert.strictEqual(status, 404, `/best/free-${fn.slug} answers ${status} while publishing ${picksOf(on.offers, fn, TODAY).length} pick`);
+    assert.ok(!map.html.includes(`/best/free-${fn.slug}<`), `/best/free-${fn.slug} answers 404 and is in the sitemap`);
+  }
+  return withheld;
 }
 
 const unescapeForTest = (s: string) =>
@@ -343,17 +364,8 @@ describe("a page named after a class publishes more than one of them", () => {
     }
   });
 
-  it("withholds the URL from a function that reaches the record threshold and would publish one", async () => {
-    const withheld = reaching.filter(fn => picksFor(fn) < MIN_PICKS && !heldOpen(fn));
-    assert.ok(withheld.length > 0, "no function is withheld today, so this test asserts nothing");
-    const map = await page("/sitemap-pages.xml");
-    for (const fn of withheld) {
-      const reachable = functionMembers(offers, fn).filter(o => !o.eligibility).length;
-      assert.ok(reachable >= MIN_VENDORS, `${fn.slug} does not reach the record threshold, so it is not the case under test`);
-      const { status } = await page(`/best/free-${fn.slug}`);
-      assert.strictEqual(status, 404, `/best/free-${fn.slug} answers ${status} while publishing ${picksFor(fn)} pick`);
-      assert.ok(!map.html.includes(`/best/free-${fn.slug}<`), `/best/free-${fn.slug} answers 404 and is in the sitemap`);
-    }
+  it("withholds the URL from every function that reaches the record threshold and would publish one pick today", async () => {
+    await withheldFunctionsAnswer404({ offers, publishedBefore, port });
   });
 
   it("states on the published method why a function with enough records can still have no page", async () => {
@@ -368,5 +380,37 @@ describe("a page named after a class publishes more than one of them", () => {
     assert.match(html, /Rankings start every offer at zero and can only demote/);
     assert.match(html, /There is no top slot here to sell/);
     assert.ok(!/\bbest pick\b|\bwinner\b|\bnumber one\b|\btop pick\b/i.test(html), "/best/free-vector crowns an entry");
+  });
+});
+
+describe("a function whose list falls to one pick has no page until one has been published", () => {
+  const subject = meetingThePicksFloor
+    .map(fn => ({ fn, picks: picksFor(fn) }))
+    .sort((a, b) => a.picks - b.picks || a.fn.slug.localeCompare(b.fn.slug))[0]?.fn;
+  let onePickLeft: OnePickLeft;
+  let scratchServer: ChildProcess;
+  let scratchPort = 0;
+
+  before(async () => {
+    assert.ok(subject, "no function publishes a page today, so there is no list to take picks from");
+    onePickLeft = leaveOnePick(offers, subject, TODAY);
+    ({ child: scratchServer, port: scratchPort } = await startServer(onePickLeft.env));
+  });
+  after(() => {
+    scratchServer?.kill();
+    onePickLeft?.remove();
+  });
+
+  it("withholds the URL once every pick but one has expired, in a copy of the catalogue whose ledger never published it", async () => {
+    const live = await page(`/best/free-${subject!.slug}`);
+    assert.strictEqual(live.status, 200, `/best/free-${subject!.slug} answers ${live.status} before any of its picks expire`);
+    assert.strictEqual(picksOf(onePickLeft.offers, subject!, TODAY).length, 1, `/best/free-${subject!.slug} does not fall to one pick`);
+
+    const withheld = await withheldFunctionsAnswer404({
+      offers: onePickLeft.offers,
+      publishedBefore: onePickLeft.publishedBefore,
+      port: scratchPort,
+    });
+    assert.ok(withheld.includes(subject!), `/best/free-${subject!.slug} reaches the record threshold with one pick and is not withheld`);
   });
 });

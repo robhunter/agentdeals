@@ -526,22 +526,49 @@ describe("a row we cannot vouch for says so in the row", () => {
 });
 
 describe("a record whose terms were superseded shows what they replaced", () => {
-  it("shows the prior terms and the date they stopped being current", () => {
-    const superseded = rows.filter(r => r.prior !== null);
-    const behindARow = new Set(rows.map(r => `${r.vendor}|${r.tier}`));
+  function rowsShowingPriorTerms(changes: DealChange[]) {
+    const built = readmeSelection(catalogue, changes, CONTEXT).rows;
+    const superseded = built.filter(r => r.prior !== null);
+    const behindARow = new Set(built.map(r => `${r.vendor}|${r.tier}`));
     const expected = publishedRecords.filter(o => {
       if (!behindARow.has(`${o.vendor}|${o.tier}`)) return false;
-      const forVendor = catalogueChanges.filter(c => c.vendor.toLowerCase() === o.vendor.toLowerCase());
+      const forVendor = changes.filter(c => c.vendor.toLowerCase() === o.vendor.toLowerCase());
       const superseding = supersedingChange(o, forVendor);
       return Boolean(superseding && (superseding.previous_state ?? "").trim());
     });
     assert.equal(superseded.length, expected.length);
-    assert.ok(superseded.length > 0, "the catalogue holds records whose stored terms are superseded");
     for (const row of superseded) {
       const line = renderRow(row);
       assert.ok(line.includes(`**Until ${row.prior!.until}, our record read:**`), row.vendor);
       assert.ok(line.includes(row.prior!.text.slice(0, 40).replace(/\|/g, "\\|")), row.vendor);
     }
+    return superseded;
+  }
+
+  it("shows the prior terms and the date they stopped being current on every row the change log supersedes", () => {
+    rowsShowingPriorTerms(catalogueChanges);
+  });
+
+  it("shows them on a row once a copy of the change log names its stored terms as the previous ones", () => {
+    const subject = rows
+      .filter(r => r.prior === null)
+      .map(r => catalogue.find(o => o.vendor === r.vendor && o.tier === r.tier && o.description.trim() !== ""))
+      .find((o): o is Offer => o !== undefined);
+    assert.ok(subject, "no published row stands on its own stored terms, so there is no row a new record could supersede");
+    const narrowing = change({
+      vendor: subject.vendor,
+      tier: subject.tier,
+      date: "2026-08-14",
+      recorded_date: "2026-08-15",
+      previous_state: subject.description,
+      current_state: "Free tier with 100 requests/month",
+      source_url: "https://example.com/new-pricing",
+    });
+
+    const superseded = rowsShowingPriorTerms([...catalogueChanges, narrowing]);
+    const row = superseded.find(r => r.vendor === subject.vendor && r.tier === subject.tier);
+    assert.ok(row, `${subject.vendor}'s row shows no prior terms once a record names them as the previous ones`);
+    assert.deepEqual(row.prior, { text: subject.description.trim(), until: "2026-08-14" });
   });
 
   it("quotes the newer reading from the change record's own source", () => {
