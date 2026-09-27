@@ -1301,11 +1301,11 @@
       "vendor": "Google Tenor API",
       "change_type": "product_deprecated",
       "date": "2026-06-30",
-      "summary": "Google Tenor public API shutting down June 30, 2026. New API key signups halted January 13, 2026. Only the public GIF search API is affected — Tenor website and app continue operating. Developers must migrate to alternative GIF APIs",
+      "summary": "Google Tenor API shut down on June 30, 2026, and new API key sign-ups stopped on January 13, 2026. Only the API ended: Tenor.com, the GIF Keyboard apps and Gboard still serve Tenor GIFs. Developers who used the API need another GIF API.",
       "previous_state": "Free public API for GIF search, trending GIFs, and autocomplete. Default rate limit of 1 request per second. Used by messaging apps and social platforms",
       "current_state": "API shutdown June 30, 2026. No new API keys issued since Jan 13, 2026. Existing keys work until shutdown date. No replacement API from Google",
       "impact": "high",
-      "source_url": "https://developers.google.com/tenor/guides/api-shutdown",
+      "source_url": "https://support.google.com/tenor/answer/10455265",
       "category": "Media",
       "alternatives": [
         "Giphy API",
@@ -12280,6 +12280,51 @@
       "alternatives": [],
       "recorded_date": "2026-09-27",
       "date_source": "hand_written"
+    },
+    {
+      "vendor": "OpenAI",
+      "change_type": "product_deprecated",
+      "date": "2026-09-24",
+      "summary": "Sora 2 video generation in the OpenAI API shut down on September 24, 2026: OpenAI removed the Videos API and the sora-2 and sora-2-pro models, and names no replacement.",
+      "previous_state": "The OpenAI API offered Sora 2 and Sora 2 Pro video generation through the Videos API, billed per second of video.",
+      "current_state": "The Videos API and the Sora 2 models are no longer available in the OpenAI API.",
+      "impact": "medium",
+      "source_url": "https://developers.openai.com/api/docs/models/sora-2",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-09-27",
+      "date_source": "hand_written",
+      "listing_effect": "none"
+    },
+    {
+      "vendor": "OpenAI",
+      "change_type": "product_deprecated",
+      "date": "2026-09-28",
+      "summary": "gpt-3.5-turbo-instruct, babbage-002, davinci-002 and gpt-3.5-turbo-1106 shut down in the OpenAI API on September 28, 2026. OpenAI names gpt-5.6-terra as the replacement.",
+      "previous_state": "The four models were callable in the OpenAI API at pay-as-you-go rates.",
+      "current_state": "OpenAI's deprecations page lists September 28, 2026 as the date after which the four models are no longer accessible.",
+      "impact": "low",
+      "source_url": "https://developers.openai.com/api/docs/deprecations",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-09-27",
+      "date_source": "hand_written",
+      "listing_effect": "none"
+    },
+    {
+      "vendor": "OpenAI",
+      "change_type": "product_deprecated",
+      "date": "2026-10-23",
+      "summary": "gpt-3.5-turbo, gpt-4, gpt-4-turbo, gpt-4.1-nano, gpt-4o-2024-05-13, gpt-image-1, o1, o1-pro, o3-mini and o4-mini shut down in the OpenAI API on October 23, 2026, with their fine-tuned versions. OpenAI names gpt-5.6-sol, gpt-5.6-terra, gpt-5.6-luna and gpt-image-2 as substitutes.",
+      "previous_state": "The models were callable in the OpenAI API at pay-as-you-go rates.",
+      "current_state": "OpenAI's deprecations page lists October 23, 2026 as the date after which the models are no longer accessible.",
+      "impact": "medium",
+      "source_url": "https://developers.openai.com/api/docs/deprecations",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-09-27",
+      "date_source": "hand_written",
+      "listing_effect": "none"
     }
   ]
 }
