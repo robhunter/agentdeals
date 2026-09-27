@@ -6908,7 +6908,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "cursor-alternatives",
     title: "Cursor Alternatives — Best Free AI Code Editors for 2026",
-    metaDesc: "Cursor moved to credit-based pricing in 2025. Compare free AI coding alternatives: Claude Code, GitHub Copilot, Cline, Aider, Windsurf, Augment Code, Amazon Q Developer, Gemini CLI. [[freshness]]",
+    metaDesc: "Cursor moved to credit-based pricing in 2025. Compare AI coding alternatives and their free tiers: GitHub Copilot, Cline, Aider, Windsurf, Augment Code, Amazon Q Developer and Gemini CLI, beside paid Claude Code. [[freshness]]",
     contextHtml: `<p><strong>Cursor</strong> — the AI-powered code editor built on VS Code — shifted to <strong>credit-based pricing</strong> in mid-2025, plus a new <strong>$200/month Ultra tier</strong>. The free tier still exists (limited Agent requests, no published figure), but the credit model makes costs less predictable for heavy users. Developers are actively evaluating alternatives.</p>
       <p>The AI coding tool landscape has exploded in 2026. Terminal-based agents (Claude Code, Aider, Gemini CLI), IDE extensions (GitHub Copilot, Windsurf, Augment Code), and open-source autonomous agents (Cline) each offer different trade-offs between cost, flexibility, and capability.</p>
       <p>Below are the best free alternatives to Cursor, compared by <strong>what you actually get for free</strong> — exact limits, open-source status, and what each tool is best at.</p>`,
@@ -13121,7 +13121,7 @@ ${mcpCtaCss()}
   <h1>Best Free AI &amp; ML Tools for Developers</h1>
 
   <div class="context">
-    <p>AI infrastructure is evolving faster than any other developer tooling category. The good news: competition has driven generous free tiers. <strong>Groq</strong> offers blazing-fast gpt-oss-120b inference at 30 RPM free. <strong>Mistral</strong> offers access to all models including Large and Codestral with $10 a month in free API credits. And open-source tools like <strong>Cline</strong>, <strong>Aider</strong>, and <strong>Gemini CLI</strong> are completely free \u2014 just bring your own API key.</p>
+    <p>AI infrastructure is evolving faster than any other developer tooling category. The good news: competition has driven generous free tiers. <strong>Groq</strong> offers blazing-fast gpt-oss-120b inference at 30 RPM free. <strong>Mistral</strong>'s Free plan includes $10 a month in API credits. And open-source tools like <strong>Cline</strong>, <strong>Aider</strong>, and <strong>Gemini CLI</strong> are completely free \u2014 just bring your own API key.</p>
     <p>This page compares every AI and ML tool in our index \u2014 <strong>${aiOffers.length} tools</strong> across LLM APIs, AI coding assistants, ML platforms, observability, and specialized services. Whether you need an OpenAI alternative or a free AI coding assistant, we have the comparison with exact free tier limits.</p>
   </div>
 
@@ -13247,7 +13247,7 @@ ${buildCards(other)}
     </tbody>
   </table>
   </div>
-  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Mistral offers the broadest model access on free tier (all models including Large). For AI coding, GitHub Copilot Free includes 2,000 completions a month; Cursor's free Hobby plan has limited Agent requests and publishes no completions figure. Langfuse is the standout for LLM observability (open-source, 50K units a month free on Cloud Hobby). [[freshness]]</p>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">For AI coding, GitHub Copilot Free includes 2,000 completions a month; Cursor's free Hobby plan has limited Agent requests and publishes no completions figure. Langfuse is the standout for LLM observability (open-source, 50K units a month free on Cloud Hobby). [[freshness]]</p>
 
   <h2>Which Free AI Tool Should I Use?</h2>
   <div class="decision-guide">
@@ -13256,7 +13256,7 @@ ${buildCards(other)}
       <dd><a href="/vendor/groq">Groq</a> \u2014 ultra-fast inference on LPU hardware with gpt-oss-120b, 30 RPM free. <a href="/vendor/openrouter">OpenRouter</a> for access to 25+ free models through one API.</dd>
 
       <dt>Want access to all frontier models?</dt>
-      <dd><a href="/vendor/mistral-ai">Mistral AI</a> \u2014 $10 a month in free API credits across its models, including Large and Codestral. Best free access to frontier-class models without credit card.</dd>
+      <dd><a href="/vendor/mistral-ai">Mistral AI</a> \u2014 $10 a month in API credits on the Free plan, and API keys need no credit card.</dd>
 
       <dt>Looking for an AI coding assistant?</dt>
       <dd><a href="/vendor/github-copilot">GitHub Copilot</a> for IDE-integrated autocomplete (2,000/mo free). <a href="/vendor/cursor">Cursor</a> for an AI-native editor. <a href="/vendor/gemini-cli">Gemini CLI</a> and <a href="/vendor/cline">Cline</a> for free open-source terminal agents (BYOK).</dd>
@@ -13265,7 +13265,7 @@ ${buildCards(other)}
       <dd><a href="/vendor/langfuse">Langfuse</a> \u2014 open-source LLM tracing, 50K units/month free on the Cloud Hobby plan (traces, observations and scores each count). <a href="/vendor/langwatch">LangWatch</a> for monitoring and optimization. <a href="/vendor/braintrust">Braintrust</a> for evals with 1 GB/month free.</dd>
 
       <dt>Need free GPU compute for ML training?</dt>
-      <dd><a href="/vendor/kaggle">Kaggle</a> \u2014 30 hrs/week GPU (Tesla T4) and 20 hrs/week TPU, completely free. <a href="/vendor/paperspace">Paperspace</a> for free Notebook machines in private workspaces (Free GPU M4000 or Free CPU C4, shut down after at most 6 hours). <a href="/vendor/vast-ai">Vast.ai</a> startup program for $2,500 in GPU credits.</dd>
+      <dd><a href="/vendor/kaggle">Kaggle</a> \u2014 a weekly quota of 30 GPU hours (one P100 or two T4s) and up to 20 TPU hours, at no charge. <a href="/vendor/paperspace">Paperspace</a> for free Notebook machines in private workspaces (Free GPU M4000 or Free CPU C4, shut down after at most 6 hours). <a href="/vendor/vast-ai">Vast.ai</a> startup program for $2,500 in GPU credits.</dd>
 
       <dt>Want to host or deploy ML models?</dt>
       <dd><a href="/vendor/hugging-face">Hugging Face</a> \u2014 free accounts get 100GB of private storage and best-effort public storage; Inference Providers serves 200+ models, with $0.10 a month of credits for free users. <a href="/vendor/replicate">Replicate</a> for free runs on curated models. <a href="/vendor/baseten">Baseten</a> \u2014 new workspaces receive credits for testing and deployment; Baseten does not state the amount.</dd>
@@ -13274,7 +13274,7 @@ ${buildCards(other)}
       <dd><a href="/vendor/deepgram">Deepgram</a> \u2014 $200 free credits for speech AI (~43K minutes). <a href="/vendor/assemblyai">AssemblyAI</a> \u2014 $50 credits (~185 hours). <a href="/vendor/roboflow">Roboflow</a> for computer vision, with a free Core plan: 10 credits a month and private projects.</dd>
 
       <dt>Looking for a vector database for RAG?</dt>
-      <dd><a href="/vendor/pinecone">Pinecone</a> \u2014 2 GB storage and 5 indexes free. <a href="/vendor/qdrant">Qdrant</a> \u2014 1 GB free forever cluster, fully managed. Both excellent for retrieval-augmented generation.</dd>
+      <dd><a href="/vendor/pinecone">Pinecone</a> \u2014 2 GB storage and 5 indexes free. <a href="/vendor/qdrant">Qdrant</a> \u2014 a free single-node cluster (0.5 vCPU, 1 GB RAM, 4 GB disk) for testing, suspended after a week unused. Both excellent for retrieval-augmented generation.</dd>
     </dl>
   </div>
 
@@ -14786,7 +14786,7 @@ ${mcpCtaCss()}
   <h1>Best Free LLM APIs for Developers</h1>
 
   <div class="context">
-    <p>Free LLM API access has never been better. <strong>Groq</strong> delivers gpt-oss-120b at 30 RPM on custom LPU hardware \u2014 the fastest free inference available. <strong>Mistral</strong> gives access to all models including Large and Codestral with $10 a month in free API credits. <strong>OpenRouter</strong> aggregates 25+ free models through one OpenAI-compatible API. ${ledeClause}</p>
+    <p>Free LLM API access has never been better. <strong>Groq</strong> delivers gpt-oss-120b at 30 RPM on custom LPU hardware \u2014 the fastest free inference available. <strong>Mistral</strong>'s Free plan includes $10 a month in API credits. <strong>OpenRouter</strong> aggregates 25+ free models through one OpenAI-compatible API. ${ledeClause}</p>
     <p>This page compares <strong>${allLlmOffers.length} LLM API providers</strong> \u2014 from proprietary model APIs (OpenAI, Anthropic, Gemini) to open-model inference platforms (Groq, Cerebras, NVIDIA NIM) and AI gateways (OpenRouter, Portkey). The rate limit comparison table below has the data developers actually need when choosing a provider.</p>
   </div>
 
@@ -14821,7 +14821,7 @@ ${buildCards(aiGateways)}
     </tbody>
   </table>
   </div>
-  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Mistral offers the broadest model access on free tier (all models, with $10 a month in API credits). OpenRouter gives one API key for 25+ free models. ${summaryClause} Of the proprietary frontier APIs, xAI and Anthropic are pay-as-you-go (Anthropic gives new users a small amount of free credits to test the API), and OpenAI prices no GPT model free. [[freshness]]</p>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Mistral's Free plan includes $10 a month in API credits. OpenRouter gives one API key for 25+ free models. ${summaryClause} Of the proprietary frontier APIs, xAI and Anthropic are pay-as-you-go (Anthropic gives new users a small amount of free credits to test the API), and OpenAI prices no GPT model free. [[freshness]]</p>
 
   <h2>Which Free LLM API Should I Use?</h2>
   <div class="decision-guide">
@@ -14830,7 +14830,7 @@ ${buildCards(aiGateways)}
       <dd><a href="/vendor/groq">Groq</a> \u2014 custom LPU hardware delivers the fastest token generation, 30 RPM free with gpt-oss-120b. No credit card required.</dd>
 
       <dt>Need maximum free token volume?</dt>
-      <dd><a href="/vendor/mistral-ai">Mistral AI</a> \u2014 $10 a month in free API credits across all models, including Large and Codestral.</dd>
+      <dd><a href="/vendor/mistral-ai">Mistral AI</a> \u2014 $10 a month in API credits on the Free plan.</dd>
 
       <dt>Want one API key for many models?</dt>
       <dd><a href="/vendor/openrouter">OpenRouter</a> \u2014 25+ free models through one OpenAI-compatible API; free models are capped at 20 requests a minute and 50 a day, or 1,000 a day once you have bought at least $10 of credits. ${manyModelsAnswer}</dd>
@@ -14842,13 +14842,13 @@ ${buildCards(aiGateways)}
       <dd><a href="/vendor/portkey">Portkey</a> \u2014 AI gateway with load balancing, fallbacks, and caching across providers. <a href="/vendor/keywords-ai">Keywords AI</a> for LLM monitoring and optimization.</dd>
 
       <dt>Want to run models at the edge?</dt>
-      <dd><a href="/vendor/cloudflare-workers-ai">Cloudflare Workers AI</a> \u2014 10,000 neurons/day free, runs at the edge with no cold starts. Supports text generation, translation, and speech-to-text.</dd>
+      <dd><a href="/vendor/cloudflare-workers-ai">Cloudflare Workers AI</a> \u2014 10,000 Neurons a day at no charge on every account; on the Workers Free plan, requests beyond that fail until the daily reset at 00:00 UTC. Some models, including Kimi K2.6 and GLM-5.3, need the Workers Paid plan or prepaid AI Gateway credits.</dd>
 
       <dt>Want to test hosted models before paying?</dt>
       <dd><a href="/vendor/nvidia-nim">NVIDIA NIM</a> \u2014 free endpoints on build.nvidia.com for models marked Free Endpoint, such as Kimi K3, DeepSeek V4.1 Flash and NVIDIA Nemotron, at up to 40 requests per minute; NVIDIA's API Trial Terms allow testing and evaluation only, not production. <a href="/vendor/baseten">Baseten</a> \u2014 new workspaces receive credits for testing and deployment; Baseten does not state the amount.</dd>
 
       <dt>Want completely free, self-hosted inference?</dt>
-      <dd><a href="/vendor/ollama-cloud">Ollama Cloud</a> \u2014 1 concurrent model free. Or download <a href="/vendor/hugging-face">Hugging Face</a> models and run them locally; Hugging Face's hosted Inference Providers API serves 200+ models, with $0.10 a month of credits for free users (subject to change).</dd>
+      <dd><a href="/vendor/ollama-cloud">Ollama</a> \u2014 open source (MIT) and free to run on your own machine; its cloud models are paid with usage credits, and the Free plan includes starter credits. Or download <a href="/vendor/hugging-face">Hugging Face</a> models and run them locally; Hugging Face's hosted Inference Providers API serves 200+ models, with $0.10 a month of credits for free users (subject to change).</dd>
     </dl>
   </div>
 
@@ -15821,7 +15821,7 @@ function buildFreeAiStackPage(): string {
       icon: "📐",
       recommended: { vendor: "Pinecone", why: "2 GB storage with 5 indexes and 2M write units/month on the Starter plan. Serverless architecture means zero ops. The most popular vector DB with excellent SDK support." },
       alternatives: ["Qdrant"],
-      outgrow: "When you exceed 2 GB storage or need more than 5 indexes. Qdrant's 1 GB free forever cluster is a solid alternative with unlimited requests.",
+      outgrow: "When you exceed 2 GB storage or need more than 5 indexes. Qdrant Cloud's free cluster (1 GB RAM, 4 GB disk) is an alternative; Qdrant suspends it after a week without use.",
       relatedPage: "/ai-ml-alternatives",
     },
     {
@@ -15843,17 +15843,17 @@ function buildFreeAiStackPage(): string {
     {
       name: "Compute & Training",
       icon: "⚡",
-      recommended: { vendor: "Kaggle", why: "30 hrs/week GPU (Tesla T4) and 20 hrs/week TPU — entirely free. No credit card needed. Integrated datasets and community notebooks." },
+      recommended: { vendor: "Kaggle", why: "A weekly quota of 30 GPU hours (one P100 or two T4s) and up to 20 TPU hours, at no charge. Integrated datasets and community notebooks." },
       alternatives: ["Google Colab"],
-      outgrow: "When you need longer sessions (Kaggle limits to 9 hrs), more VRAM (T4 = 16 GB), or persistent storage. Google Colab offers T4 free but with session time limits.",
+      outgrow: "When you need longer sessions (Kaggle caps them at 12 hours on CPU or GPU and 9 on TPU), more VRAM (T4 = 16 GB), or persistent storage. Google Colab offers T4 free but with session time limits.",
       relatedPage: "/ai-ml-alternatives",
     },
     {
       name: "Data Labeling & Annotation",
       icon: "🏷️",
       recommended: { vendor: "Roboflow", why: "Free Core plan: 10 credits that refresh every month, private projects and models, and model weight download. Best for computer vision projects with built-in model training and deployment." },
-      alternatives: ["Labelbox", "Scale AI"],
-      outgrow: "When you need more than the 10 monthly credits. Labelbox offers 500 LBUs/month. Scale AI gives 1,000 annotation units free.",
+      alternatives: ["Labelbox"],
+      outgrow: "When you need more than the 10 monthly credits. Labelbox offers 500 LBUs/month.",
       relatedPage: "/ai-ml-alternatives",
     },
     {
@@ -24340,7 +24340,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="context-box">
-    <strong>Cost comparison at scale:</strong> ${cheapestAtScale && dearestAtScale && cheapestAtScale !== dearestAtScale ? `At 100M input and 100M output tokens a month, the cheapest rate our index holds for the providers above is ${escHtmlServer(cheapestAtScale.rate.model ?? cheapestAtScale.name)} at ${escHtmlServer(formatDollars(cheapestAtScale.monthly))}, and the dearest is ${escHtmlServer(dearestAtScale.rate.model ?? dearestAtScale.name)} at ${escHtmlServer(formatDollars(dearestAtScale.monthly))}.` : ""} ${escHtmlServer(joinWithAnd(freeWithinLimits))} carry no paid rate in our index &mdash; their records describe rate-limited free access only, so what you pay above the free tier is on the vendor's own page.
+    <strong>Cost comparison at scale:</strong> ${cheapestAtScale && dearestAtScale && cheapestAtScale !== dearestAtScale ? `At 100M input and 100M output tokens a month, the cheapest rate our index holds for the providers above is ${escHtmlServer(cheapestAtScale.rate.model ?? cheapestAtScale.name)} at ${escHtmlServer(formatDollars(cheapestAtScale.monthly))}, and the dearest is ${escHtmlServer(dearestAtScale.rate.model ?? dearestAtScale.name)} at ${escHtmlServer(formatDollars(dearestAtScale.monthly))}.` : ""} ${escHtmlServer(joinWithAnd(freeWithinLimits))} carry no per-token price in our index, so what you pay above the free tier is on the vendor's own page.
   </div>
 
   <h2 id="openai-timeline">OpenAI Pricing Change Timeline</h2>
@@ -32285,7 +32285,7 @@ function buildLlmApiPricingPage(): string {
     '  </div>\n' +
     '\n' +
     '  <div class="context-box">\n' +
-    '    <strong>The price floor:</strong> For open-source, SiliconFlow serves Llama and DeepSeek models at $0.10–0.15/M. DeepSeek\'s deepseek-flash offers 1M context at $0.30/M input at peak and $0.15/M off-peak. The batch APIs from OpenAI and Anthropic offer 50% discounts for non-real-time workloads.\n' +
+    '    <strong>The price floor:</strong> For open models, SiliconFlow\'s international site lists gpt-oss-120b at $0.05/$0.45 and DeepSeek-V4.1-Flash at $0.15/$0.60 (per 1M tokens). DeepSeek\'s deepseek-flash offers 1M context at $0.30/M input at peak and $0.15/M off-peak. The batch APIs from OpenAI and Anthropic offer 50% discounts for non-real-time workloads.\n' +
     '  </div>\n' +
     '\n' +
     '  <h2 id="categories">Provider Breakdown</h2>\n' +
