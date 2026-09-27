@@ -202,6 +202,7 @@ export type PublishedDealChange = Omit<DealChange, "impact"> & {
   impact: PublishedChangeImpact;
   standing: ChangeStanding;
   date_meaning: DateMeaning;
+  ends_a_free_tier: boolean;
 };
 
 export interface ChangeSourceCheck {

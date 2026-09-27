@@ -60,3 +60,6 @@ export function atMostShownHere(cap: number): string {
 export function onlyTheMostRecentShown(cap: number): string {
   return `Only the ${cap} most recent are shown.`;
 }
+
+export const NOTHING_CHANGING_SOON_HTML =
+  'No upcoming change we hold ends or narrows a free tier we list. Every deadline we hold, including shutdowns of products we don\'t list, is on <a href="/deadlines">the deadline tracker</a>.';

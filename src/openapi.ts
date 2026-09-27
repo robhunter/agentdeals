@@ -9,10 +9,15 @@ import { NAME_MATCH_SENTENCE } from "./name-match.js";
 import { CHANGE_STANDINGS, INCLUDE_RETRACTED_ACCEPTS } from "./change-resolution.js";
 import { CHANGE_SLICES, CENSUS_NOTE, INCLUDE_INDEX_HOUSEKEEPING_ACCEPTS, INDEX_HOUSEKEEPING_REPORTS, TRACKED_CHANGE_RULE_PATH, TRACKED_CHANGE_RULE_SENTENCE } from "./change-census.js";
 import { EFFECTIVE_DATE_PREFIX, DISCOVERED_DATE_PREFIX } from "./change-dates.js";
+import { DEPRECATION_CALLS } from "./product-deprecation.js";
 
 export const CHANGE_TYPES: readonly string[] = Object.keys(CHANGE_DIRECTION);
 
 export const PROVENANCE_REF = "#/components/schemas/Provenance";
+
+const ENDS_A_FREE_TIER_PROPERTY = { type: "boolean" };
+
+const LISTING_EFFECT_PROPERTY = { type: "string", enum: [...DEPRECATION_CALLS] };
 
 export const PATHS_OUTSIDE_THE_ENDPOINT_INVENTORY: Record<string, string> = {
   "/feed.xml": "The Atom alias every page's <link rel=\"alternate\"> points at. /api/feed serves the same body and is the name the endpoint inventory holds it under.",
@@ -682,7 +687,9 @@ const DOCUMENTED_OPERATIONS: Record<string, Record<string, any>> = {
                         date: { type: "string", format: "date", description: "The day the change took effect if date_meaning is \"effective\". If date_meaning is \"discovered\", the day we recorded the change; its effective date is unknown." },
                         date_source: { type: "string", enum: ["vendor_page", "hand_written", "discovered"], description: "Where date came from. \"vendor_page\": the vendor's page stated it. \"hand_written\": a person recorded it before this field existed. \"discovered\": the page stated no effective date, so date is the day we read the page — do not present it as the date the vendor changed anything." },
                         summary: { type: "string" },
-                        impact: { type: "string", enum: ["high", "medium", "low"] }
+                        impact: { type: "string", enum: ["high", "medium", "low"] },
+                        ends_a_free_tier: ENDS_A_FREE_TIER_PROPERTY,
+                        listing_effect: LISTING_EFFECT_PROPERTY
                       }
                     }
                   },
@@ -1590,9 +1597,11 @@ export const openapiSpec = {
             properties: {
               standing: { type: "string", enum: [...CHANGE_STANDINGS], description: "Where the record stands with us. 'in_force' — the change happened and still holds. 'reversed' — it happened and has since been undone, so the record is true history. 'retracted' — the record was our error and we do not stand behind it. Read this rather than testing whether resolution is present: 'reversed' and 'retracted' are different answers to a reader asking whether to trust the record, and the presence of resolution flattens them into one." },
               impact: { type: "string", enum: ["high", "medium", "low", "none"], description: "'none' whenever standing is 'retracted' — a record we have withdrawn describes no event, so it weighs nothing. Derived at the point of serving; the stored value is left alone." },
-              date_meaning: { type: "string", enum: [EFFECTIVE_DATE_PREFIX, DISCOVERED_DATE_PREFIX], description: "What this record's date means. \"effective\": the day the change took effect. \"discovered\": the day we recorded the change; when it took effect is unknown. Read this field, not date_source: date_source says who wrote the record, not what its date means." }
+              date_meaning: { type: "string", enum: [EFFECTIVE_DATE_PREFIX, DISCOVERED_DATE_PREFIX], description: "What this record's date means. \"effective\": the day the change took effect. \"discovered\": the day we recorded the change; when it took effect is unknown. Read this field, not date_source: date_source says who wrote the record, not what its date means." },
+              ends_a_free_tier: ENDS_A_FREE_TIER_PROPERTY,
+              listing_effect: LISTING_EFFECT_PROPERTY
             },
-            required: ["standing", "date_meaning"]
+            required: ["standing", "date_meaning", "ends_a_free_tier"]
           }
         ],
         description: "A change record as /api/changes serves it: every field of DealChange, plus a standing on every record rather than only on the ones we have withdrawn."
