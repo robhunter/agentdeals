@@ -34882,7 +34882,7 @@ function buildDigitalOceanFreeTier2026Page(): string {
     { title: "Spaces CDN bandwidth", desc: "Spaces includes 1 TB outbound transfer, but CDN bandwidth beyond that is $0.01/GiB. If you're serving files through the CDN, monitor your transfer usage.", cost: "$0.01/GiB overage" },
     { title: "Managed database is never free", desc: "Despite the free credits, managed databases (PostgreSQL, MySQL, Redis, MongoDB, Kafka) start at $15/month with no free tier. This is the #1 gotcha — AWS, GCP, and Azure all offer always-free database options.", cost: "$15/mo minimum" },
     { title: "Backups cost extra", desc: "Droplet backups cost 20% of the Droplet price. A $4/mo Droplet's backup is $0.80/mo. Snapshots are $0.06/GiB/mo. Neither is included in the base price.", cost: "20% of Droplet price" },
-    { title: "Credit card required for free credits", desc: "You need a valid credit card or PayPal to claim the $5 free credits. If you forget to cancel or exceed limits during the trial, charges begin immediately.", cost: "Immediate billing" },
+    { title: "Payment method required to use the credit", desc: "The $5 credit is applied automatically, but you must add a valid payment method before you can create Droplets or other resources. If you forget to cancel or exceed limits during the trial, charges begin immediately.", cost: "Immediate billing" },
   ];
 
   interface CloudAlt {
@@ -35069,7 +35069,7 @@ ${mcpCtaCss()}
   <p class="section-intro">New DigitalOcean accounts get a $5 signup credit, applied automatically to the first team and valid for 90 days after signup. It covers all products except SaaS Add-Ons, and you must add a payment method before you can create Droplets or other resources. Until April 2026, new accounts got $200 for 60 days.</p>
 
   <div class="context-box">
-    <strong>How to maximize the trial.</strong> Focus on evaluating the services you'd actually use long-term — spin up a Droplet, test App Platform deployment, try Managed PostgreSQL. Don't waste credits on services you won't continue paying for. Credit card required at signup, so charges begin immediately after credits expire.
+    <strong>Using the $5 credit.</strong> It covers about nine days of the smallest Managed PostgreSQL node ($15.15 a month), so destroy test resources when you are done with them. App Platform hosts up to three static-site apps free. Charges to your payment method begin when the credit runs out or expires.
   </div>
 
   <h2 id="free-services">Free Services (Permanent)</h2>
@@ -35561,9 +35561,9 @@ ${mcpCtaCss()}
     <tbody>
       <tr>
         <td class="provider-col"><a href="/aws-free-tier-2026" style="color:var(--text)">AWS</a></td>
-        <td style="font-family:var(--mono)">None (service-level free tiers)</td>
-        <td>N/A</td>
-        <td>Each service has individual limits; no blanket credit</td>
+        <td style="font-family:var(--mono)">$100 + up to $100</td>
+        <td>6 months (Free plan)</td>
+        <td>New accounts only; the Free plan closes at 6 months or when the credits run out, and AWS erases the account 90 days later unless you upgrade</td>
         <td>Yes</td>
       </tr>
       <tr>

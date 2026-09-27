@@ -853,12 +853,12 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 67,
+      "table_figures": 71,
       "table_figures_from_records": 16,
       "tables": [
         {
           "label": "Free Trial Credits",
-          "figures": 7,
+          "figures": 11,
           "from_records": 0
         },
         {
