@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2026-09-20",
+  "generated": "2026-09-27",
   "slugs": [
     "free-ai-coding",
     "free-ai-ml",
@@ -33,6 +33,7 @@
     "free-documentation",
     "free-education",
     "free-email",
+    "free-embeddings-api",
     "free-error-tracking",
     "free-feature-flags",
     "free-forms",

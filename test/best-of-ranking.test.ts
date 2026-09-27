@@ -5,6 +5,7 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { createHash } from "node:crypto";
+import { assertPopulationFloor } from "./population-floor.ts";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 let serverPort = 0;
@@ -31,6 +32,15 @@ function startHttpServer(): Promise<ChildProcess> {
     });
     child.on("error", (err) => { clearTimeout(timeout); reject(err); });
   });
+}
+
+async function bestOfPaths(): Promise<string[]> {
+  const locs = (xml: string) => [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1].replace(/^https?:\/\/[^/]+/, ""));
+  const paths: string[] = [];
+  for (const child of locs((await get("/sitemap.xml")).html)) {
+    paths.push(...locs((await get(child)).html).filter((p) => p.startsWith("/best/")));
+  }
+  return paths;
 }
 
 const get = async (p: string) => {
@@ -86,9 +96,17 @@ describe("/best/:slug shows the whole qualified band", () => {
   it("keeps demoted vendors on the page with the reason named", async () => {
     const { html } = await get("/best/free-databases");
     assert.match(html, /Demoted &mdash; and exactly why/);
-    assert.ok(html.includes("Firebase"), "Firebase withdrew a free tier and should still be listed, below the band");
-    assert.match(html, /free_tier_withdrawn/);
-    assert.match(html, /Recorded product deprecation on \d{4}-\d{2}-\d{2}/);
+    let named = 0;
+    for (const page of await bestOfPaths()) {
+      const { html } = await get(page);
+      const demotedAt = html.indexOf("Demoted &mdash; and exactly why");
+      for (const row of html.matchAll(/<span class="demerit-code">&minus;3 free_tier_withdrawn<\/span> ([^<]*)/g)) {
+        assert.ok(demotedAt > -1 && row.index! > demotedAt, `${page}: a withdrawal demerit sits above the demoted band`);
+        assert.match(row[1], /^Recorded (?:free tier removal|open-source licence change|product deprecation) on \d{4}-\d{2}-\d{2}: /, page);
+        named++;
+      }
+    }
+    assertPopulationFloor(named, 1, "withdrawal demerits named on the best-of pages");
   });
 
   it("discloses a recorded change without letting it move rank", async () => {

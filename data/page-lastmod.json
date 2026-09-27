@@ -879,6 +879,9 @@
     "/best/free-email": {
       "daily": true
     },
+    "/best/free-embeddings-api": {
+      "daily": true
+    },
     "/best/free-error-tracking": {
       "daily": true
     },
