@@ -23059,10 +23059,9 @@ function buildFreeTierRiskPage(): string {
 
   const changesInForce = recordsStillInForce(dealChanges);
 
-  const negativeTypes = NEGATIVE_CHANGE_TYPES;
   const positiveTypes = POSITIVE_CHANGE_TYPES;
   const trackedHere = trackedChanges(changesInForce);
-  const negativeChanges = trackedHere.filter(c => negativeTypes.has(c.change_type));
+  const negativeChanges = trackedHere.filter(countsAsANegativeChange);
   const positiveChanges = trackedHere.filter(c => positiveTypes.has(c.change_type));
 
 
@@ -23117,7 +23116,7 @@ function buildFreeTierRiskPage(): string {
     const cat = resolveChangeCategory(dc.category);
     const entry = categoryMap.get(cat) ?? { total: 0, negative: 0, positive: 0 };
     entry.total++;
-    if (negativeTypes.has(dc.change_type)) entry.negative++;
+    if (countsAsANegativeChange(dc)) entry.negative++;
     if (positiveTypes.has(dc.change_type)) entry.positive++;
     categoryMap.set(cat, entry);
   }
@@ -52373,7 +52372,7 @@ ${globalNavCss()}
 
   <div style="text-align:center;margin:-1.5rem auto 2.5rem;max-width:640px">
     <a href="/state-of-free-tiers" style="display:inline-flex;align-items:center;gap:.5rem;padding:.6rem 1.25rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);color:var(--text-muted);font-size:.85rem;text-decoration:none;transition:all .2s">
-      <span style="color:#f85149;font-weight:600">${trackedChanges(dealChanges).filter(c => NEGATIVE_CHANGE_TYPES.has(c.change_type)).length} negative</span> vs <span style="color:#3fb950;font-weight:600">${trackedChanges(dealChanges).filter(c => POSITIVE_CHANGE_TYPES.has(c.change_type)).length} positive</span> changes &mdash; <span style="color:var(--accent)">Read the State of Free Tiers Report &rarr;</span>
+      <span style="color:#f85149;font-weight:600">${trackedChanges(dealChanges).filter(countsAsANegativeChange).length} negative</span> vs <span style="color:#3fb950;font-weight:600">${trackedChanges(dealChanges).filter(c => POSITIVE_CHANGE_TYPES.has(c.change_type)).length} positive</span> changes &mdash; <span style="color:var(--accent)">Read the State of Free Tiers Report &rarr;</span>
     </a>
   </div>
 

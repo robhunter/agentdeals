@@ -21,6 +21,7 @@ import {
   VERDICT_WINDOW_DAYS,
 } from "../dist/data.js";
 import { substitutesFor } from "../dist/product-role.js";
+import { changeTouchesTheListing } from "../dist/product-deprecation.js";
 import { A_DATED_HEADING_MARKER, A_DATED_SECTION_MARKER, ANNOUNCED_HEADING } from "../dist/change-dates.js";
 import { RECENT_CHANGES_ON_THE_HOME_PAGE, UPCOMING_DEADLINES_ON_THE_HOME_PAGE, atMostShownHere, onlyTheMostRecentShown } from "../dist/homepage-claims.js";
 
@@ -1066,14 +1067,14 @@ describe("the rule that decides it is published where a reader can find it", () 
           entry: "cs-entry",
           states: atMostShownHere(UPCOMING_DEADLINES_ON_THE_HOME_PAGE),
           cap: UPCOMING_DEADLINES_ON_THE_HOME_PAGE,
-          qualifying: held.filter(change => change.date > onThisDay).length,
+          qualifying: held.filter(change => change.date > onThisDay && changeTouchesTheListing(change)).length,
         },
         {
           id: "recent-changes",
           entry: "rc-entry",
           states: onlyTheMostRecentShown(RECENT_CHANGES_ON_THE_HOME_PAGE),
           cap: RECENT_CHANGES_ON_THE_HOME_PAGE,
-          qualifying: held.filter(change => change.date <= onThisDay).length,
+          qualifying: held.filter(change => change.date <= onThisDay && changeTouchesTheListing(change)).length,
         },
       ];
       for (const section of sections) {

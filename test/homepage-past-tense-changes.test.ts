@@ -16,8 +16,8 @@ const dayOffset = (days: number) =>
 const FUTURE = [
   { vendor: "Kestrelmark", date: dayOffset(1), type: "free_tier_removed", source: "vendor_page" },
   { vendor: "Aurorabase", date: dayOffset(13), type: "new_free_tier", source: "vendor_page" },
-  { vendor: "Beaconstack", date: dayOffset(31), type: "product_deprecated", source: "hand_written" },
-  { vendor: "Cirruslane", date: dayOffset(38), type: "product_deprecated", source: "hand_written" },
+  { vendor: "Beaconstack", date: dayOffset(31), type: "product_deprecated", source: "hand_written", effect: "ends" },
+  { vendor: "Cirruslane", date: dayOffset(38), type: "product_deprecated", source: "hand_written", effect: "ends" },
 ];
 const EFFECTIVE_TODAY = { vendor: "Datumforge", date: TODAY, type: "limits_reduced", source: "vendor_page" };
 const PAST = [
@@ -31,7 +31,7 @@ const PAST = [
 
 const EXPECTED_RECENT = [EFFECTIVE_TODAY, ...PAST].filter((c) => c.source !== "discovered").slice(0, 5).map((c) => c.vendor);
 
-function change(spec: { vendor: string; date: string; type: string; source: string; recorded?: string }) {
+function change(spec: { vendor: string; date: string; type: string; source: string; recorded?: string; effect?: string }) {
   return {
     vendor: spec.vendor,
     change_type: spec.type,
@@ -45,6 +45,7 @@ function change(spec: { vendor: string; date: string; type: string; source: stri
     category: "Databases",
     alternatives: [],
     recorded_date: spec.recorded ?? spec.date,
+    ...(spec.effect ? { listing_effect: spec.effect } : {}),
   };
 }
 
