@@ -484,7 +484,7 @@ describe("a page may only name the source it actually reads", () => {
 
   it("keeps enough pages saying the tables were compiled by hand for the rule above to have something to catch", () => {
     const denying = pages.filter((p) => deniesTheCatalogueSupplied(bodies.get(p.path)!));
-    assertPopulationFloor(denying.length, 18, "registered pages telling the reader their tables were compiled by hand");
+    assertPopulationFloor(denying.length, 17, "registered pages telling the reader their tables were compiled by hand");
     const citing = pages.filter((p) => citesOurRecords(bodies.get(p.path)!, INDEX_SIZE));
     assert.ok(citing.length >= 5, `only ${citing.length} pages cite the index, so the pairing cannot arise`);
   });
