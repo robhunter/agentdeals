@@ -10576,7 +10576,13 @@
       "category": "AI / ML",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-13"
+      "recorded_date": "2026-09-13",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-27",
+        "detail": "Retracted 2026-09-27: nothing changed on 2026-09-13. The Internet Archive's captures of lumenfall.ai/pricing on 2026-03-11, 2026-06-09 and 2026-08-28 carry the same terms this record reports, \"Start Free with $1 Credit\" with zero markup, and none mentions FLUX.1 [schnell]. The free-forever FLUX.1 [schnell] FP8 line was in our listing text, and Lumenfall's model catalogue still lists that model as free on 2026-09-27. The record compared the pricing page with our own listing text.",
+        "source_url": "https://web.archive.org/web/20260828131241/https://lumenfall.ai/pricing"
+      }
     },
     {
       "vendor": "ToolJet",
@@ -12386,9 +12392,9 @@
       "vendor": "Svix",
       "change_type": "limits_reduced",
       "date": "2026-09-27",
-      "summary": "Svix cut its Free plan from 200 to 50 messages a second and from 30-day to 7-day payload retention, and moved the 99.9% uptime SLA to a new Basic plan from $20 a month. Its pricing page changed between the Internet Archive's 2026-09-14 capture and our read on 2026-09-27.",
+      "summary": "Svix cut its Free plan from 200 to 50 messages a second and from 30-day to 7-day payload retention, and moved the 99.9% uptime SLA to a new Basic plan from $20 a month. Free's 50,000 messages a month, beyond which messages were billed, now reads \"Up to 50k messages per month\". The pricing page changed between the Internet Archive's 2026-09-14 capture and our read on 2026-09-27.",
       "tier": "Free",
-      "previous_state": "Free: 200 messages a second, 30-day payload retention, 99.9% uptime SLA, 50,000 messages a month included",
+      "previous_state": "Free: 200 messages a second, 30-day payload retention, 99.9% uptime SLA, 50,000 messages a month included and further messages billed per message",
       "current_state": "Free: up to 50,000 messages a month, 50 messages a second, 7-day payload retention; the 99.9% SLA, 200 messages a second and 30-day retention are on Basic, from $20 a month",
       "impact": "medium",
       "source_url": "https://www.svix.com/pricing/",

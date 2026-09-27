@@ -4354,7 +4354,7 @@
     {
       "vendor": "Svix",
       "category": "Messaging",
-      "description": "Webhook sending service (Dispatch, Stream and Ingest). The Free plan is $0 with no credit card: up to 50,000 messages a month, 50 messages a second, 7-day payload retention and the embeddable webhooks UI. Basic, from $20 a month, adds a 99.9% uptime SLA, 200 messages a second and 30-day retention, the Free plan's terms until September 2026.",
+      "description": "Webhook service for sending (Dispatch), receiving (Ingest) and data streaming (Stream). The Free plan is $0 with no credit card: up to 50,000 messages a month, 50 messages a second, 7-day payload retention and the embeddable webhooks UI. Basic, from $20 a month, adds a 99.9% uptime SLA, 200 messages a second and 30-day retention, the Free plan's terms until September 2026, and bills messages beyond 50,000 a month.",
       "tier": "Free",
       "url": "https://www.svix.com/pricing/",
       "tags": [
