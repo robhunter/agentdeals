@@ -49743,7 +49743,7 @@ ${monthsHtml}
 }
 
 function buildExpiringPage(): string {
-  const allChanges = loadDealChanges();
+  const allChanges = changesTheVendorMade(loadDealChanges());
   const { dated: eventDated, discovered: undatedChanges } = partitionByDateProvenance(allChanges);
   const today = new Date().toISOString().slice(0, 10);
   const todayMs = new Date(today + "T00:00:00Z").getTime();
