@@ -8244,7 +8244,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "openai-assistants-alternatives",
     title: "OpenAI Assistants API Sunset — Free Alternatives & Migration Guide",
-    metaDesc: "OpenAI Assistants API shuts down August 26, 2026. Compare migration paths: Responses API, Claude, Gemini, open-source frameworks. Free tier comparison for 10+ AI API providers with stability ratings.",
+    metaDesc: "OpenAI shut down the Assistants API on August 26, 2026. Compare migration paths: Responses API, Claude, Gemini, open-source frameworks. Free tier comparison for 10+ AI API providers with stability ratings.",
     contextHtml: "",
     tag: "openai-assistants-alternative",
     primaryVendor: "OpenAI",
@@ -8262,7 +8262,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "openai-assistants-migration",
     title: "OpenAI Assistants API Sunset: Migration Cost Guide & Alternatives",
-    metaDesc: "OpenAI Assistants API shuts down August 26, 2026. Compare migration costs: Responses API, Azure OpenAI, Anthropic Claude, LangChain, open-source alternatives. Cost analysis at 3 usage tiers, free tier options, and migration timeline.",
+    metaDesc: "OpenAI shut down the Assistants API on August 26, 2026. Compare migration costs: Responses API, Azure OpenAI, Anthropic Claude, LangChain, open-source alternatives. Cost analysis at 3 usage tiers, free tier options, and migration timeline.",
     contextHtml: "",
     tag: "openai-assistants-alternative",
     primaryVendor: "OpenAI",
@@ -23974,7 +23974,7 @@ function listingTermsCellHtml(slug: string): string {
 
 function buildOpenaiAssistantsAlternativesPage(): string {
   const title = "OpenAI Assistants API Sunset: Free Alternatives & Migration Guide for AI Agent Builders";
-  const metaDesc = "OpenAI Assistants API shuts down August 26, 2026. Compare migration paths: Responses API, Claude, Gemini, open-source frameworks. Free tier comparison for 10+ AI API providers with stability ratings.";
+  const metaDesc = "OpenAI shut down the Assistants API on August 26, 2026. Compare migration paths: Responses API, Claude, Gemini, open-source frameworks. Free tier comparison for 10+ AI API providers with stability ratings.";
   const slug = "openai-assistants-alternatives";
   const pubDate = "2026-04-02";
 
@@ -24017,9 +24017,6 @@ function buildOpenaiAssistantsAlternativesPage(): string {
   const openaiStability = stabilityMap.of("openai");
   const stabilityColor = openaiStability === "volatile" ? "#f85149" : openaiStability === "watch" ? "#d29922" : openaiStability === "improving" ? "#3fb950" : "var(--text-muted)";
 
-  const shutdownDate = new Date("2026-08-26");
-  const today = new Date();
-  const daysLeft = Math.max(0, Math.ceil((shutdownDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)));
 
   const providerTableRows = providers.map(p => {
     const cells = providerRecordCells(p.slug, stabilityMap);
@@ -24184,20 +24181,20 @@ ${mcpCtaCss()}
   <p class="pub-date">Published ${pubDate} &middot; ${pageDataProvenance("/openai-assistants-alternatives", offers.length)} &middot; ${openaiChanges.length} OpenAI pricing changes tracked</p>
 
   <div class="deadline-banner">
-    <div class="deadline-days">${daysLeft} days</div>
-    <div class="deadline-label">until Assistants API shutdown</div>
-    <div class="deadline-date">August 26, 2026 &middot; <span style="color:${stabilityColor};font-weight:600">OpenAI stability: ${openaiStability.toUpperCase()}</span></div>
+    <div class="deadline-days">Shut down</div>
+    <div class="deadline-label">August 26, 2026</div>
+    <div class="deadline-date"><span style="color:${stabilityColor};font-weight:600">OpenAI stability: ${openaiStability.toUpperCase()}</span></div>
   </div>
 
   <div class="summary-stats">
-    <div class="stat-card"><div class="stat-number red">${daysLeft}</div><div class="stat-label">Days Remaining</div></div>
+    <div class="stat-card"><div class="stat-number red">Shut down</div><div class="stat-label">August 26, 2026</div></div>
     <div class="stat-card"><div class="stat-number">${providers.length}</div><div class="stat-label">Alternatives Compared</div></div>
     <div class="stat-card"><div class="stat-number green">${startableWithoutPaying.length}</div><div class="stat-label">Free or Trial Tiers</div></div>
     <div class="stat-card"><div class="stat-number">4</div><div class="stat-label">Migration Paths</div></div>
   </div>
 
   <div class="executive-summary">
-    <p><strong>What\u2019s happening:</strong> OpenAI deprecated the Assistants API in favor of the Responses API. The Assistants API will be <strong>fully shut down on August 26, 2026</strong>. All developers using Threads, persistent Assistants, Code Interpreter, or File Search through the Assistants API must migrate.</p>
+    <p><strong>What\u2019s happening:</strong> OpenAI deprecated the Assistants API in favor of the Responses API. OpenAI shut down the Assistants API on <strong>August 26, 2026</strong>; it is no longer available. All developers using Threads, persistent Assistants, Code Interpreter, or File Search through the Assistants API must migrate.</p>
     <p><strong>Key insight:</strong> The Responses API is a direct replacement with feature parity plus new capabilities (MCP support, deep research, computer use). Most developers should migrate to Responses API first \u2014 then evaluate whether to diversify to other providers for cost or capability reasons.</p>
     <p><strong>Our data says:</strong> OpenAI\u2019s stability rating is <strong style="color:${stabilityColor}">${openaiStability}</strong> based on ${openaiChanges.length} tracked pricing changes \u2014 including free tier credit removal, ChatGPT ad insertion, and now this API sunset. Developers building on OpenAI should have a diversification plan.</p>
   </div>
@@ -24414,9 +24411,6 @@ function buildOpenaiAssistantsMigration2026Page(): string {
     c.vendor === "OpenAI"
   ).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
-  const shutdownDate = new Date("2026-08-26");
-  const today = new Date();
-  const daysLeft = Math.max(0, Math.ceil((shutdownDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)));
 
   const openaiStability = stabilityMap.of("openai");
   const stabilityColor = openaiStability === "volatile" ? "#f85149" : openaiStability === "watch" ? "#d29922" : openaiStability === "improving" ? "#3fb950" : "var(--text-muted)";
@@ -24693,13 +24687,13 @@ ${mcpCtaCss()}
   <p class="pub-date">Published ${pubDate} &middot; ${pageDataProvenance("/openai-assistants-migration-2026", offers.length)} &middot; ${openaiChanges.length} OpenAI pricing changes tracked</p>
 
   <div class="deadline-banner">
-    <div class="deadline-days">${daysLeft} days</div>
-    <div class="deadline-label">until Assistants API shutdown</div>
-    <div class="deadline-date">August 26, 2026 &middot; <span style="color:${stabilityColor};font-weight:600">OpenAI stability: ${openaiStability.toUpperCase()}</span></div>
+    <div class="deadline-days">Shut down</div>
+    <div class="deadline-label">August 26, 2026</div>
+    <div class="deadline-date"><span style="color:${stabilityColor};font-weight:600">OpenAI stability: ${openaiStability.toUpperCase()}</span></div>
   </div>
 
   <div class="summary-stats">
-    <div class="stat-card"><div class="stat-number red">${daysLeft}</div><div class="stat-label">Days Remaining</div></div>
+    <div class="stat-card"><div class="stat-number red">Shut down</div><div class="stat-label">August 26, 2026</div></div>
     <div class="stat-card"><div class="stat-number">${apiProviders.length + frameworks.length + bridges.length}</div><div class="stat-label">Alternatives Compared</div></div>
     <div class="stat-card"><div class="stat-number green">3</div><div class="stat-label">Migration Paths</div></div>
     <div class="stat-card"><div class="stat-number">${featureMappings.length}</div><div class="stat-label">Feature Mappings</div></div>
@@ -24736,17 +24730,13 @@ ${mcpCtaCss()}
     <div class="timeline-date" style="color:#d29922">Dec 18, 2024</div>
     <div class="timeline-content"><strong>v1 beta access ended.</strong> Assistants API v1 beta endpoints stopped accepting new requests. All users must be on v2.</div>
   </div>
-  <div class="timeline-event">
-    <div class="timeline-date" style="color:var(--accent)">Now</div>
-    <div class="timeline-content"><strong>${daysLeft} days remaining.</strong> Assistants API v2 still functional. Responses API fully available with feature parity plus new capabilities.</div>
-  </div>
   <div class="timeline-event" style="border-bottom:none">
     <div class="timeline-date" style="color:#f85149">Aug 26, 2026</div>
     <div class="timeline-content"><strong>Full shutdown.</strong> All Assistants, Threads, Runs, and Messages endpoints cease functioning. No grace period announced. Microsoft retired the Azure OpenAI Assistants API on ${ASSISTANTS_API_SHUTDOWN.date} too and directs Azure agents to ${ASSISTANTS_API_SHUTDOWN.azureSuccessor}.</div>
   </div>
 
   <div class="context-box">
-    <strong>What happens after shutdown:</strong> API calls to Assistants endpoints will return errors. Thread history, assistant configurations, and vector store data associated with the Assistants API will become inaccessible. Export your data before the deadline.
+    <strong>What happens after shutdown:</strong> Since the shutdown on August 26, 2026, Assistants API calls no longer work, including the call that retrieves thread messages; OpenAI says to migrate history from messages your application stored.
   </div>
 
   <h2 id="feature-map">2. Feature Migration Map</h2>
@@ -25917,7 +25907,7 @@ ${mcpCtaCss()}
 
 function buildOpenAIAssistantsMigrationPage(): string {
   const title = "OpenAI Assistants API Sunset: Migration Cost Guide & Alternatives";
-  const metaDesc = "OpenAI Assistants API shuts down August 26, 2026. Compare migration costs: Responses API, Azure OpenAI, Anthropic Claude, LangChain, open-source alternatives. Cost analysis at 3 usage tiers, free tier options, and migration timeline.";
+  const metaDesc = "OpenAI shut down the Assistants API on August 26, 2026. Compare migration costs: Responses API, Azure OpenAI, Anthropic Claude, LangChain, open-source alternatives. Cost analysis at 3 usage tiers, free tier options, and migration timeline.";
   const slug = "openai-assistants-migration";
   const pubDate = "2026-04-09";
 
@@ -25925,9 +25915,6 @@ function buildOpenAIAssistantsMigrationPage(): string {
     c.vendor === "OpenAI"
   ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
-  const shutdownDate = new Date("2026-08-26");
-  const today = new Date();
-  const daysToShutdown = Math.max(0, Math.ceil((shutdownDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)));
 
   interface MigrationPath {
     name: string;
@@ -26091,7 +26078,7 @@ function buildOpenAIAssistantsMigrationPage(): string {
   );
 
   const faqEntries = [
-    { q: "When does the OpenAI Assistants API shut down?", a: "The Assistants API will be fully shut down on August 26, 2026. After this date, all Assistants API calls will return errors. OpenAI recommends migrating to the Responses API (for prompts and tool use) and Conversations API (for thread/session management)." },
+    { q: "When did the OpenAI Assistants API shut down?", a: "OpenAI shut down the Assistants API on August 26, 2026; it is no longer available. OpenAI recommends the Responses API for prompts and tool use and the Conversations API for thread and session state." },
     { q: "What is the cheapest alternative to the OpenAI Assistants API?", a: "Google Gemini API has a free tier on its 3.x Flash models. For open-source options, LangChain and CrewAI are free frameworks \u2014 you only pay for the LLM API you choose (or use free local models via Ollama). Anthropic gives new users a small amount of free credits to test the API." },
     { q: "Can I keep using the Assistants API on Azure OpenAI?", a: `No. Microsoft retired the Azure OpenAI Assistants API on ${ASSISTANTS_API_SHUTDOWN.date}, the same date OpenAI retired its own. Microsoft's documentation states that the Assistants API is retired and directs Azure workloads to ${ASSISTANTS_API_SHUTDOWN.azureSuccessor}, which is generally available; inference-only workloads can use the ${ASSISTANTS_API_SHUTDOWN.azureInferenceApi} instead. Running on Azure does not extend the deadline.` },
     { q: "What replaces Threads in the new Responses API?", a: "OpenAI's Conversations API replaces the Threads functionality from the Assistants API. It provides session management, message history, and context handling. The migration is not automated \u2014 you need to manually update your code to use the new Conversations API endpoints." },
@@ -26205,19 +26192,19 @@ function buildOpenAIAssistantsMigrationPage(): string {
     '  <p class="pub-date">Published ' + pubDate + ' &middot; ' + migrationPaths.length + ' migration paths compared &middot; ' + pageDataProvenance("/openai-assistants-migration", offers.length) + ' &middot; ' + openaiChanges.length + ' OpenAI pricing changes tracked</p>\n' +
     '\n' +
     '  <div class="deadline-banner">\n' +
-    '    <div class="days">' + daysToShutdown + ' days</div>\n' +
-    '    <div class="label">until Assistants API shutdown &middot; August 26, 2026</div>\n' +
+    '    <div class="days">Shut down</div>\n' +
+    '    <div class="label">August 26, 2026</div>\n' +
     '  </div>\n' +
     '\n' +
     '  <div class="summary-stats">\n' +
-    '    <div class="stat-card"><div class="stat-number red">' + daysToShutdown + '</div><div class="stat-label">Days to Shutdown</div></div>\n' +
+    '    <div class="stat-card"><div class="stat-number red">Shut down</div><div class="stat-label">August 26, 2026</div></div>\n' +
     '    <div class="stat-card"><div class="stat-number">' + migrationPaths.length + '</div><div class="stat-label">Migration Paths</div></div>\n' +
     '    <div class="stat-card"><div class="stat-number green">3</div><div class="stat-label">Free Options</div></div>\n' +
     '    <div class="stat-card"><div class="stat-number yellow">2</div><div class="stat-label">Open Source</div></div>\n' +
     '  </div>\n' +
     '\n' +
     '  <div class="executive-summary">\n' +
-    '    <p><strong>What\'s happening:</strong> OpenAI is sunsetting the Assistants API on ' + ASSISTANTS_API_SHUTDOWN.date + '. All Assistants, Threads, and associated API calls will stop working. Developers must migrate to the Responses API + Conversations API, or move to an alternative platform entirely. Azure is not a way out: Microsoft retired the Azure OpenAI Assistants API on the same date, ' + ASSISTANTS_API_SHUTDOWN.date + ', and points agentic workloads at ' + ASSISTANTS_API_SHUTDOWN.azureSuccessor + '.</p>\n' +
+    '    <p><strong>What\'s happening:</strong> OpenAI sunset the Assistants API on ' + ASSISTANTS_API_SHUTDOWN.date + ', and it is no longer available. Developers must migrate to the Responses API + Conversations API, or move to an alternative platform entirely. Azure is not a way out: Microsoft retired the Azure OpenAI Assistants API on the same date, ' + ASSISTANTS_API_SHUTDOWN.date + ', and points agentic workloads at ' + ASSISTANTS_API_SHUTDOWN.azureSuccessor + '.</p>\n' +
     '    <p><strong>The cost question:</strong> Migration isn\'t just about code changes \u2014 it\'s about ongoing costs. Staying with OpenAI means the same token pricing but new API patterns. Switching providers can reduce or increase costs, depending on the models you move to. Open-source frameworks (LangChain, CrewAI) eliminate platform lock-in but require more engineering investment.</p>\n' +
     '    <p><strong>This guide covers:</strong> cost comparison at 3 usage tiers (hobby, production, scale), migration effort estimates, free tier options, and a recommended timeline \u2014 compiled by hand from vendor pricing pages.</p>\n' +
     '  </div>\n' +
@@ -26289,7 +26276,7 @@ function buildOpenAIAssistantsMigrationPage(): string {
     '  </div>\n' +
     '\n' +
     '  <h2 id="timeline">Migration Timeline</h2>\n' +
-    '  <p class="section-intro">Key dates and recommended migration schedule. Start now \u2014 the shutdown date is firm.</p>\n' +
+    '  <p class="section-intro">Key dates and recommended migration schedule.</p>\n' +
     '\n' +
     '  <div style="overflow-x:auto">\n' +
     '  <table class="pricing-table">\n' +
