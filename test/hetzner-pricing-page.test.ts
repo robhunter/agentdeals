@@ -54,10 +54,14 @@ const OTHER_LISTED_VENDORS = new Set(
     .filter(vendor => vendor !== "Hetzner"),
 );
 
-const withoutItemsHeadedByAnotherVendor = (body: string) =>
-  body.replace(/<li><strong>([^<]*):<\/strong>[\s\S]*?<\/li>/g, (item, label: string) =>
-    OTHER_LISTED_VENDORS.has(label.trim()) ? " " : item,
-  );
+const withoutItemsOrRowsHeadedByAnotherVendor = (body: string) =>
+  body
+    .replace(/<li><strong>([^<]*):<\/strong>[\s\S]*?<\/li>/g, (item, label: string) =>
+      OTHER_LISTED_VENDORS.has(label.trim()) ? " " : item,
+    )
+    .replace(/<tr[^>]*>\s*<td[^>]*>([\s\S]*?)<\/td>[\s\S]*?<\/tr>/g, (row, firstCell: string) =>
+      OTHER_LISTED_VENDORS.has(firstCell.replace(/<[^>]+>/g, "").trim()) ? " " : row,
+    );
 
 const PAGES_NAMING_HETZNER_PRICES = [
   "/hetzner-pricing-2026",
@@ -133,7 +137,7 @@ describe("the pricing page prices what Hetzner sells today", () => {
       ...HETZNER_APRIL_CHANGES.flatMap(c => [c.before, c.after]),
       `€${HETZNER_SINGAPORE_EXAMPLE.eur.toFixed(2)}`,
     ]);
-    const quoted = new Set(visible(withoutItemsHeadedByAnotherVendor(body)).match(/€\d+\.\d{2}/g) ?? []);
+    const quoted = new Set(visible(withoutItemsOrRowsHeadedByAnotherVendor(body)).match(/€\d+\.\d{2}/g) ?? []);
     const strays = [...quoted].filter(price => !allowed.has(price));
     assert.deepEqual(strays, [], `prices with no plan or April row behind them: ${strays.join(", ")}`);
   });
@@ -174,5 +178,14 @@ describe("every page that states a Hetzner entry price states the same one", () 
   it("composes that price from the plan table rather than from a literal", () => {
     const cheapest = cheapestOrderableHetznerPlan();
     assert.equal(hetznerEntryPriceClause(), `${cheapest.sku} at €${cheapest.eur.toFixed(2)}/mo (${cheapest.vcpu} vCPU, ${cheapest.ram} GB)`);
+  });
+});
+
+describe("OVHcloud's VPS-1 beside Hetzner on /hetzner-pricing-2026", () => {
+  it("prices the EU row in euros ex-VAT and gives the US price as the US one", async () => {
+    const text = visible((await get("/hetzner-pricing-2026")).body);
+    assert.ok(text.includes("€4.49/mo EU VPS 2027 range, ex-VAT, without commitment (€3.81/mo on 12 months). $5.35/mo in the US. The 2026 range rose 36-49% from April 2026"));
+    assert.ok(text.includes("It has since launched a VPS 2027 range, whose VPS-1 (2 vCores, 4 GB RAM) is €4.49 a month ex-VAT without commitment in Europe ($5.35 in the US)."));
+    assert.doesNotMatch(text, /\$5\.35\/mo EU|is \$5\.35 a month without commitment/);
   });
 });
