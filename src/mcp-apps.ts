@@ -381,8 +381,10 @@ function render(args, data) {
   const summary = isPersonalized ? data.summary : null;
   const expiring = data.expiring_deals || data.expiring || [];
 
-  const removals = changes.filter(c => c.change_type === "free_tier_removed" || c.change_type === "open_source_killed" || c.change_type === "product_deprecated");
-  const reductions = changes.filter(c => c.change_type === "limits_reduced" || c.change_type === "restriction");
+  const endsAFreeTier = (c) => c.ends_a_free_tier === true;
+  const reducesAFreeTier = (c) => c.change_type === "limits_reduced" || c.change_type === "restriction" || (c.change_type === "product_deprecated" && c.listing_effect === "narrows");
+  const removals = changes.filter(endsAFreeTier);
+  const reductions = changes.filter(reducesAFreeTier);
   const positiveTypes = ${JSON.stringify([...POSITIVE_CHANGE_TYPES])};
   const positive = changes.filter(c => positiveTypes.indexOf(c.change_type) >= 0);
 
@@ -394,25 +396,27 @@ function render(args, data) {
     ...(expiring.length > 0 ? [{ label: "Expiring Soon", value: expiring.length }] : []),
   ];
 
-  const timelineClass = (type) => {
-    if (type === "free_tier_removed" || type === "open_source_killed" || type === "product_deprecated") return "timeline-removed";
-    if (type === "limits_reduced" || type === "restriction") return "timeline-reduced";
-    if (type === "limits_increased" || type === "new_free_tier" || type === "startup_program_expanded") return "timeline-increased";
+  const widensAFreeTier = (c) => c.change_type === "limits_increased" || c.change_type === "new_free_tier" || c.change_type === "startup_program_expanded";
+
+  const timelineClass = (c) => {
+    if (endsAFreeTier(c)) return "timeline-removed";
+    if (reducesAFreeTier(c)) return "timeline-reduced";
+    if (widensAFreeTier(c)) return "timeline-increased";
     return "timeline-other";
   };
 
-  const changeBadge = (type) => {
-    if (type === "free_tier_removed" || type === "open_source_killed" || type === "product_deprecated") return "badge-red";
-    if (type === "limits_reduced" || type === "restriction") return "badge-yellow";
-    if (type === "limits_increased" || type === "new_free_tier" || type === "startup_program_expanded") return "badge-green";
+  const changeBadge = (c) => {
+    if (endsAFreeTier(c)) return "badge-red";
+    if (reducesAFreeTier(c)) return "badge-yellow";
+    if (widensAFreeTier(c)) return "badge-green";
     return "badge-blue";
   };
 
   function renderTimelineItem(c, isPersonalItem) {
     return \`
-      <div class="timeline-item \${timelineClass(c.change_type)}\${isPersonalItem ? " personal" : ""}">
+      <div class="timeline-item \${timelineClass(c)}\${isPersonalItem ? " personal" : ""}">
         <div class="change-date">\${esc(c.date)}</div>
-        <div><span class="change-vendor">\${esc(c.vendor)}</span> <span class="badge \${changeBadge(c.change_type)}">\${esc((c.change_type || "").replace(/_/g, " "))}</span></div>
+        <div><span class="change-vendor">\${esc(c.vendor)}</span> <span class="badge \${changeBadge(c)}">\${esc((c.change_type || "").replace(/_/g, " "))}</span></div>
         <div class="change-summary">\${esc(c.summary)}</div>
         \${c.previous_state ? \`<div style="margin-top:4px;font-size:12px"><span style="color:#64748b">Before:</span> \${esc(c.previous_state)}</div>\` : ""}
         \${c.current_state ? \`<div style="font-size:12px"><span style="color:#64748b">After:</span> \${esc(c.current_state)}</div>\` : ""}

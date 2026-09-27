@@ -62,7 +62,7 @@ export function publishedImpactOf(change: Resolvable & Pick<DealChange, "impact"
   return theEventNeverHappened(change) ? WITHDRAWN_RECORDS_CARRY_NO_IMPACT : change.impact;
 }
 
-export type StandingDeclared = Omit<PublishedDealChange, "date_meaning">;
+export type StandingDeclared = Omit<PublishedDealChange, "date_meaning" | "ends_a_free_tier">;
 
 export function withStandingDeclared(change: DealChange): StandingDeclared {
   return { ...change, impact: publishedImpactOf(change), standing: standingOf(change) };

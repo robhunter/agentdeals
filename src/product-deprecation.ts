@@ -91,7 +91,7 @@ export const DEPRECATION_CALLS = ["ends", "narrows", "none"] as const;
 
 export type DeprecationCall = (typeof DEPRECATION_CALLS)[number];
 
-type DeprecationSubject = Pick<DealChange, "change_type"> & {
+export type DeprecationSubject = Pick<DealChange, "change_type"> & {
   vendor?: string;
   summary?: string;
   listing_effect?: DeprecationCall | null;
@@ -137,6 +137,22 @@ export function deprecationEndsTheListedProduct(change: DeprecationSubject): boo
 
 export function deprecationTouchesTheListing(change: DeprecationSubject): boolean {
   return deprecationCall(change) !== "none";
+}
+
+export interface ListingEffectDeclared {
+  ends_a_free_tier: boolean;
+  listing_effect?: DeprecationCall;
+}
+
+export function listingEffectOf(change: DeprecationSubject): ListingEffectDeclared {
+  return {
+    ends_a_free_tier: endsAFreeTier(change),
+    ...(change.change_type === PRODUCT_DEPRECATED ? { listing_effect: deprecationCall(change) } : {}),
+  };
+}
+
+export function withListingEffectDeclared<T extends DeprecationSubject>(change: T): T & ListingEffectDeclared {
+  return { ...change, ...listingEffectOf(change) };
 }
 
 export function changeTouchesTheListing(change: DeprecationSubject): boolean {

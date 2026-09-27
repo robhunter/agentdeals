@@ -23,7 +23,7 @@ import {
 import { substitutesFor } from "../dist/product-role.js";
 import { changeTouchesTheListing } from "../dist/product-deprecation.js";
 import { A_DATED_HEADING_MARKER, A_DATED_SECTION_MARKER, ANNOUNCED_HEADING } from "../dist/change-dates.js";
-import { RECENT_CHANGES_ON_THE_HOME_PAGE, UPCOMING_DEADLINES_ON_THE_HOME_PAGE, atMostShownHere, onlyTheMostRecentShown } from "../dist/homepage-claims.js";
+import { NOTHING_CHANGING_SOON_HTML, RECENT_CHANGES_ON_THE_HOME_PAGE, UPCOMING_DEADLINES_ON_THE_HOME_PAGE, atMostShownHere, onlyTheMostRecentShown } from "../dist/homepage-claims.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -1066,6 +1066,7 @@ describe("the rule that decides it is published where a reader can find it", () 
           id: "changing-soon",
           entry: "cs-entry",
           states: atMostShownHere(UPCOMING_DEADLINES_ON_THE_HOME_PAGE),
+          whenNoneQualify: stripTags(NOTHING_CHANGING_SOON_HTML),
           cap: UPCOMING_DEADLINES_ON_THE_HOME_PAGE,
           qualifying: held.filter(change => change.date > onThisDay && changeTouchesTheListing(change)).length,
         },
@@ -1073,6 +1074,7 @@ describe("the rule that decides it is published where a reader can find it", () 
           id: "recent-changes",
           entry: "rc-entry",
           states: onlyTheMostRecentShown(RECENT_CHANGES_ON_THE_HOME_PAGE),
+          whenNoneQualify: null,
           cap: RECENT_CHANGES_ON_THE_HOME_PAGE,
           qualifying: held.filter(change => change.date <= onThisDay && changeTouchesTheListing(change)).length,
         },
@@ -1082,9 +1084,10 @@ describe("the rule that decides it is published where a reader can find it", () 
         assert.ok(at !== -1, `the home page serves no section with id="${section.id}", so nothing below reads its stated length`);
         const ends = body.indexOf('<div class="divider">', at);
         const region = body.slice(at, ends === -1 ? undefined : ends);
+        const expected = section.qualifying === 0 && section.whenNoneQualify ? section.whenNoneQualify : section.states;
         assert.ok(
-          stripTags(region).includes(section.states),
-          `"${section.id}" does not print "${section.states}", so a reader cannot tell a full list from a truncated one`,
+          stripTags(region).includes(expected),
+          `"${section.id}" holds ${section.qualifying} that qualify and does not print "${expected}"`,
         );
         const printed = [...region.matchAll(new RegExp(`class="${section.entry}"`, "g"))].length;
         assert.equal(

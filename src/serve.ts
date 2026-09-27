@@ -68,7 +68,7 @@ import { submitReferralCode, getCodesByAgent, getCodeById, updateCode, revokeCod
 import { getBestReferralCode, listAllReferralCodes, AGENT_SUBMISSION_RETIRED_REASON } from "./platform-codes.js";
 import { DOCUMENTED_GROUPS, HOMEPAGE_GROUPS, endpointHref, endpointPathHref, endpointsInGroups, exampleSubjects, readableRequestLines, withdrawalReasonFor, type ApiEndpoint, type ExampleSubjects } from "./api-inventory.js";
 import { MCP_TOOLS, MCP_TOOL_COUNT, mcpToolNameList } from "./mcp-tool-inventory.js";
-import { ACCELERATOR_CREDIT_PROGRAM, ACCELERATOR_CREDIT_VENDOR, RECENT_CHANGES_ON_THE_HOME_PAGE, UPCOMING_DEADLINES_ON_THE_HOME_PAGE, acceleratorCreditClause, atMostShownHere, onlyTheMostRecentShown, programCeiling } from "./homepage-claims.js";
+import { ACCELERATOR_CREDIT_PROGRAM, ACCELERATOR_CREDIT_VENDOR, NOTHING_CHANGING_SOON_HTML, RECENT_CHANGES_ON_THE_HOME_PAGE, UPCOMING_DEADLINES_ON_THE_HOME_PAGE, acceleratorCreditClause, atMostShownHere, onlyTheMostRecentShown, programCeiling } from "./homepage-claims.js";
 import { REFERRAL_CONDITIONS_HEADING, allOurReferralLinks, heldReferralLinkForVendor, ourReferralLinkFor, platformCodeAsVendorReferral, referralLinkCountClause, referrerDisclosureSentence } from "./referral-surfaces.js";
 import type { VendorReferralAnswer } from "./referral-surfaces.js";
 import { runHealthCheck, getLastReport, startPeriodicChecks } from "./referral-health.js";
@@ -1115,8 +1115,20 @@ function riskCellHtml(level: string | null | undefined, cause: RiskCause | null 
   return `<span style="color:${color}">${resolved}</span>${causeHtml}`;
 }
 
+function buildChangingSoonWithNothingQualifying(): string {
+  return `
+  <div class="section" id="changing-soon">
+    <div class="section-label">Changing Soon</div>
+    <h2>Upcoming deal changes</h2>
+    <p>${NOTHING_CHANGING_SOON_HTML}</p>
+    <a href="/changes" class="see-all-link">View all changes \u2192</a>
+  </div>
+
+  <div class="divider"></div>`;
+}
+
 function buildChangingSoonSection(): string {
-  if (upcomingDeadlines.length === 0) return "";
+  if (upcomingDeadlines.length === 0) return buildChangingSoonWithNothingQualifying();
   const entries = upcomingDeadlines.slice(0, 5).map((c) => {
     const badge = changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
     const deadlineDate = new Date(c.date + "T00:00:00Z");

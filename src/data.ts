@@ -27,7 +27,7 @@ import { isSubSlug, toSlug } from "./slug.js";
 export { sanitizeQuery } from "./search-query.js";
 import { matchingSubject } from "./gate-disclosure.js";
 import { DATE_SOURCES, isEventDated, withDateMeaningDeclared, type DatedChange, changeDateClause, changeEntryDateLabel, isoWeekWindow, changesInWindow, discoveryBatchNote, firstReadHeading, type DateWindow } from "./change-dates.js";
-import { PRODUCT_DEPRECATED, deprecationCall } from "./product-deprecation.js";
+import { PRODUCT_DEPRECATED, deprecationCall, withListingEffectDeclared } from "./product-deprecation.js";
 import { DEMOTION_FOR_A_DEPRECATION, RISK_DEMOTION } from "./change-demotion.js";
 import { sinceFilterDay } from "./since-parameter.js";
 import { DEFAULT_CHANGE_WINDOW_DAYS, defaultChangeWindow, servedWindowOpens, windowFromSinceParameter, wholeChangeLog, type ChangeWindow } from "./change-window.js";
@@ -887,7 +887,7 @@ export function getDealChanges(
     : recordsOtherThanOurOwnIndexHousekeeping(stoodBehind);
 
   return {
-    changes: withStandingDeclaredOnEach(served).map(withDateMeaningDeclared),
+    changes: withStandingDeclaredOnEach(served).map(withDateMeaningDeclared).map(withListingEffectDeclared),
     total: served.length,
     retracted_excluded: results.length - stoodBehind.length,
     index_housekeeping_excluded: stoodBehind.length - served.length,
@@ -1801,8 +1801,8 @@ export function getFreshnessMetrics(): FreshnessMetrics {
 export function getWeeklyDigest(): {
   week: string;
   date_range: string;
-  deal_changes: Array<DealChange & { date_meaning: DateMeaning }>;
-  discovered_changes: Array<DealChange & { date_meaning: DateMeaning }>;
+  deal_changes: Array<DealChange & { date_meaning: DateMeaning; ends_a_free_tier: boolean }>;
+  discovered_changes: Array<DealChange & { date_meaning: DateMeaning; ends_a_free_tier: boolean }>;
   discovery_note: string;
   new_offers: { vendor: string; category: string; description: string }[];
   upcoming_deadlines: { vendor: string; date: string; change_type: string; summary: string }[];
@@ -1879,8 +1879,8 @@ export function getWeeklyDigest(): {
   return {
     week,
     date_range: `${changeWindow.start} to ${changeWindow.end}`,
-    deal_changes: changes.map(withDateMeaningDeclared),
-    discovered_changes: discovered.map(withDateMeaningDeclared),
+    deal_changes: changes.map(withDateMeaningDeclared).map(withListingEffectDeclared),
+    discovered_changes: discovered.map(withDateMeaningDeclared).map(withListingEffectDeclared),
     discovery_note: discoveryNote,
     new_offers: newOffers,
     upcoming_deadlines: deadlines,
