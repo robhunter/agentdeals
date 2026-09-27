@@ -85,6 +85,28 @@ describe("the shutdown tracker counts down only to dates a vendor set", () => {
     assert.ok(!/will stop working/i.test(proton!.text), proton!.text);
     assert.ok(proton!.text.includes("Deployed CloudFormation stacks and the resources they manage keep running"), proton!.text);
   });
+
+  it("dates WorkSpaces Thin Client to AWS's end of support, and says existing customers can still buy devices until then", () => {
+    const thinClient = cards.find((c) => /WorkSpaces Thin Client/.test(c.title));
+    assert.ok(thinClient, "the WorkSpaces Thin Client entry is missing");
+    assert.ok(thinClient!.text.includes("March 31, 2027"), thinClient!.text);
+    assert.ok(!/continue working|continues to function|Cannot purchase/i.test(thinClient!.text), thinClient!.text);
+    assert.ok(thinClient!.text.includes("can still buy devices"), thinClient!.text);
+  });
+
+  it("states that only the Tenor API ended, in the past tense", () => {
+    const tenor = cards.find((c) => /Tenor API/.test(c.title));
+    assert.ok(tenor, "the Tenor API entry is missing");
+    assert.ok(!/will stop working|Complete API shutdown|service discontinued/i.test(tenor!.text), tenor!.text);
+    assert.ok(tenor!.text.includes("Only the API ended"), tenor!.text);
+  });
+
+  it("states that existing App Runner customers can still create services", () => {
+    const appRunner = cards.find((c) => /App Runner/.test(c.title));
+    assert.ok(appRunner, "the App Runner entry is missing");
+    assert.ok(!/Cannot create new App Runner services/i.test(appRunner!.text), appRunner!.text);
+    assert.ok(appRunner!.text.includes("including creating new services"), appRunner!.text);
+  });
 });
 
 describe("a date on the shutdown tracker", () => {
