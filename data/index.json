@@ -2682,7 +2682,7 @@
     {
       "vendor": "Fastly",
       "category": "CDN",
-      "description": "Edge cloud — Requests: 100,000 free. Bandwidth: 100 GB free.",
+      "description": "Edge cloud platform with usage-based pricing; many of its products include a monthly free allowance. Full Site Delivery (CDN): 100 GB of bandwidth and 1 million requests free a month; beyond that, bandwidth costs $0.12 per GB in Europe and North America (100 GB to 10 TB) and requests $0.01 per 10,000. Compute: 10 million requests and 100 million vCPU milliseconds free. Object Storage: 5 GB free. KV Store: 1 GB free. Websockets and Fanout: 100 million minutes free each. Image Optimizer: 100,000 image requests. DDoS Protection: 500,000 requests. Managed TLS with a non-profit CA or your own certificates: 5 domains. Secret Store: 10 secrets. Accounts opened before 4 November 2025 have separate legacy pricing.",
       "tier": "Free Developer",
       "url": "https://www.fastly.com/pricing",
       "tags": [
@@ -2706,12 +2706,9 @@
         "outcome": "ok",
         "detail": "the page names Fastly as \"fastly\" and states amounts, none of which we matched to the terms we publish"
       },
-      "restated_from": {
-        "reading_date": "2026-09-25",
-        "source_url": "https://www.fastly.com/pricing",
+      "restatement_reverted": {
         "record_date": "2026-09-25",
-        "change_type": "limits_reduced",
-        "restated_on": "2026-09-25"
+        "reverted_on": "2026-09-27"
       }
     },
     {
@@ -4357,7 +4354,7 @@
     {
       "vendor": "Svix",
       "category": "Messaging",
-      "description": "Webhook delivery — Free tier includes 200 messages / second, 30-day payload retention, and an uptime SLA of 99.9%",
+      "description": "Webhook service for sending (Dispatch), receiving (Ingest) and data streaming (Stream). The Free plan is $0 with no credit card: up to 50,000 messages a month, 50 messages a second, 7-day payload retention and the embeddable webhooks UI. Basic, from $20 a month, adds a 99.9% uptime SLA, 200 messages a second and 30-day retention, the Free plan's terms until September 2026, and bills messages beyond 50,000 a month.",
       "tier": "Free",
       "url": "https://www.svix.com/pricing/",
       "tags": [
@@ -4372,12 +4369,9 @@
         "outcome": "ok",
         "detail": "the page names Svix as \"svix\" and states \"200 messages / second\""
       },
-      "restated_from": {
-        "reading_date": "2026-09-09",
-        "source_url": "https://www.svix.com/pricing/",
+      "restatement_reverted": {
         "record_date": "2026-09-09",
-        "change_type": "limits_increased",
-        "restated_on": "2026-09-20"
+        "reverted_on": "2026-09-27"
       }
     },
     {

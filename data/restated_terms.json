@@ -182,7 +182,8 @@
       "source_url": "https://www.fastly.com/pricing",
       "record_date": "2026-09-09",
       "change_type": "pricing_restructured",
-      "summary": "The free tier now offers 100 GB of bandwidth, 1 Million requests, and 5 GB of object storage. The page details pricing beyond the free tier, indicating the free tier is a starting point and not necessarily a permanently free offering. Several other features like Compute, Websockets, and DDoS protection also have free tiers with specific limits."
+      "summary": "The free tier now offers 100 GB of bandwidth, 1 Million requests, and 5 GB of object storage. The page details pricing beyond the free tier, indicating the free tier is a starting point and not necessarily a permanently free offering. Several other features like Compute, Websockets, and DDoS protection also have free tiers with specific limits.",
+      "reverted_on": "2026-09-27"
     },
     {
       "vendor": "LaunchDarkly",
@@ -327,7 +328,8 @@
       "source_url": "https://www.svix.com/pricing/",
       "record_date": "2026-09-09",
       "change_type": "limits_increased",
-      "summary": "The free tier now has a limit of 200 messages/second instead of 50 messages/second."
+      "summary": "The free tier now has a limit of 200 messages/second instead of 50 messages/second.",
+      "reverted_on": "2026-09-27"
     },
     {
       "vendor": "Mintlify",
@@ -2489,7 +2491,8 @@
       "source_url": "https://www.fastly.com/pricing",
       "record_date": "2026-09-25",
       "change_type": "limits_reduced",
-      "summary": "The free tier for Requests has been reduced from 1 Million to 100,000. Bandwidth has also been reduced from 100 GB to 100 GB."
+      "summary": "The free tier for Requests has been reduced from 1 Million to 100,000. Bandwidth has also been reduced from 100 GB to 100 GB.",
+      "reverted_on": "2026-09-27"
     },
     {
       "vendor": "OneSignal",
