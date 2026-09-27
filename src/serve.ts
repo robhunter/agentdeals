@@ -78,6 +78,7 @@ import { changeLogAnchorFor, changeLogVendorMap, toSlug, vendorSlugMap, resolveV
 import { NO_PUSH_NOTICE, watchCommandBlock, watchRequestsFor } from "./change-watching.js";
 import { clauseNaming, quantitiesNotIn } from "./quoted-figures.js";
 import { statesNoFreeTier } from "./retired-terms.js";
+import { countsDownTo, shutdownDeadlineHtml } from "./shutdown-deadline.js";
 import { createRegistrationLimiter, rateLimitHeaders } from "./rate-limit.js";
 import { offerForSlug, vendorRates, cheapestRate, dearestRate, spanOfRates, formatRate, formatRateSpan, monthlyTokenCost, formatDollars, type ModelRate } from "./model-rates.js";
 import { DECLARED_FIGURE_READS, READ_DATES_THAT_ARE_NOT_FIGURE_READS, STALE_FACT_PAGES_BASELINE, TABLE_STALENESS_DISCLOSURES, declaredFigureReadsFor, factsOutdatedBy, linkifyVerdictBlocks, newestChangeBySlug, overdueReport, pageCompiledClause, pageDataProvenance, pageDateModified, pageFigureSource, tabulatedVendorSlots, tabulatedVendors, utcToday, verdictsOutdatedBy } from "./page-reviews.js";
@@ -26399,6 +26400,7 @@ function buildShutdownTrackerPage(): string {
     vendorSlug: string;
     what: string;
     deadline: string;
+    dateSource?: string;
     impact: string;
     whoAffected: string;
     migrationPath: string;
@@ -26414,6 +26416,7 @@ function buildShutdownTrackerPage(): string {
       vendorSlug: "aws",
       what: "App Runner closed to new customers — existing users can continue, but no new features. AWS recommends ECS Express Mode.",
       deadline: "2026-04-30",
+      dateSource: "https://web.archive.org/web/20260415193500/https://docs.aws.amazon.com/apprunner/latest/dg/apprunner-availability-change.html",
       impact: "Cannot create new App Runner services. Existing services continue but service is in maintenance mode.",
       whoAffected: "Developers looking to deploy new containerized web apps on App Runner, existing users planning long-term",
       migrationPath: "Migrate to ECS Express Mode (AWS recommended), Google Cloud Run, Railway, Render, or Fly.io",
@@ -26425,6 +26428,7 @@ function buildShutdownTrackerPage(): string {
       vendorSlug: "hubspot",
       what: "Legacy Contact Lists API v1 sunset \u2014 replaced by Lists API v3",
       deadline: "2026-04-30",
+      dateSource: "https://developers.hubspot.com/changelog/extension-contact-lists-api-v1-sunset-moved-to-april-30-2026",
       impact: "CRM integrations using v1 endpoints will stop working",
       whoAffected: "Developers with HubSpot CRM integrations using Contact Lists API v1",
       migrationPath: "Migrate to Lists API v3 \u2014 new filtering syntax, pagination changes",
@@ -26435,6 +26439,7 @@ function buildShutdownTrackerPage(): string {
       vendorSlug: "openai",
       what: "Realtime API beta endpoints deprecated \u2014 replaced by stable Realtime API",
       deadline: "2026-05-12",
+      dateSource: "https://developers.openai.com/api/docs/deprecations",
       impact: "Voice and streaming AI applications using beta endpoints",
       whoAffected: "Developers building voice assistants, real-time transcription, or streaming AI apps with OpenAI",
       migrationPath: "Switch to stable Realtime API endpoints \u2014 mostly compatible, some parameter changes",
@@ -26445,6 +26450,7 @@ function buildShutdownTrackerPage(): string {
       vendorSlug: "openai",
       what: "dall-e-2 and dall-e-3 removed from the API \u2014 OpenAI lists gpt-image-2, gpt-image-1 or gpt-image-1-mini as substitutes, and gpt-image-1 itself shuts down on 2026-10-23 (gpt-image-1-mini on 2026-12-01)",
       deadline: "2026-05-12",
+      dateSource: "https://developers.openai.com/api/docs/deprecations",
       impact: "Image generation apps calling dall-e-2 or dall-e-3",
       whoAffected: "Developers using the dall-e-2 or dall-e-3 model IDs in API calls",
       migrationPath: "Update the model parameter to gpt-image-2 \u2014 test output quality differences",
@@ -26455,6 +26461,7 @@ function buildShutdownTrackerPage(): string {
       vendorSlug: "openai",
       what: "gpt-3.5-turbo, gpt-4, gpt-4-1106-preview, gpt-4-turbo, gpt-4.1-nano, gpt-4o-2024-05-13, o1, o1-pro, o3-mini, o4-mini and gpt-image-1 shut down, with fine-tuned versions of gpt-3.5-turbo, gpt-4, gpt-4.1-nano, o4-mini, babbage-002 and davinci-002",
       deadline: "2026-10-23",
+      dateSource: "https://developers.openai.com/api/docs/deprecations",
       impact: "Apps and fine-tunes pinned to these model IDs stop working",
       whoAffected: "Developers calling any of these model IDs or their fine-tuned versions",
       migrationPath: "OpenAI's substitutes: gpt-5.6-terra for gpt-3.5-turbo and o4-mini; gpt-5.6-sol for gpt-4, gpt-4-turbo, gpt-4o-2024-05-13, o1, o1-pro and o3-mini; gpt-5.6-luna for gpt-4.1-nano; gpt-image-2 for gpt-image-1",
@@ -26465,6 +26472,7 @@ function buildShutdownTrackerPage(): string {
       vendorSlug: "firebase",
       what: "New Firebase Studio workspace creation disabled",
       deadline: "2026-06-22",
+      dateSource: "https://firebase.google.com/docs/studio/migrating-project",
       impact: "Cannot create new cloud IDE workspaces",
       whoAffected: "Developers starting new projects on Firebase Studio",
       migrationPath: "Export projects to local dev or alternative cloud IDEs (GitHub Codespaces, Gitpod, Replit)",
@@ -26475,6 +26483,7 @@ function buildShutdownTrackerPage(): string {
       vendorSlug: "tenor",
       what: "Complete API shutdown \u2014 GIF search and sharing service discontinued",
       deadline: "2026-06-30",
+      dateSource: "https://support.google.com/tenor/answer/10455265",
       impact: "All GIF integrations using Tenor API will stop working",
       whoAffected: "Apps, bots, forums, and messaging integrations using Tenor for GIF search",
       migrationPath: "Migrate to Klipy (ex-Tenor team, same API structure) or Giphy API",
@@ -26486,6 +26495,7 @@ function buildShutdownTrackerPage(): string {
       vendorSlug: "google-gemini-api",
       what: "Gemini 2.0 Flash and 2.0 Flash-Lite shut down on June 1, 2026. Image generation via 2.0 Flash shut down November 14, 2025.",
       deadline: "2026-06-01",
+      dateSource: "https://ai.google.dev/gemini-api/docs/deprecations",
       impact: "Calls to the gemini-2.0-flash and gemini-2.0-flash-lite model IDs no longer work.",
       whoAffected: "Developers who called the Gemini 2.0 Flash model IDs.",
       migrationPath: "Google recommends gemini-3.6-flash for 2.0 Flash and gemini-3.1-flash-lite for 2.0 Flash-Lite.",
@@ -26497,6 +26507,7 @@ function buildShutdownTrackerPage(): string {
       vendorSlug: "openai",
       what: "Complete API shutdown \u2014 Assistants, Threads, Runs, and Messages endpoints removed",
       deadline: "2026-08-26",
+      dateSource: "https://developers.openai.com/api/docs/deprecations",
       impact: "All AI agent applications built on Assistants API will break",
       whoAffected: "AI agent builders using Assistants API for threads, code interpreter, file search, and persistent assistants",
       migrationPath: "Migrate to Responses API, or switch to Claude/Gemini/open-source frameworks",
@@ -26508,6 +26519,7 @@ function buildShutdownTrackerPage(): string {
       vendorSlug: "openai",
       what: "Videos API (Sora) deprecated March 24, 2026 \u2014 complete removal September 24, 2026. No direct OpenAI replacement for video generation.",
       deadline: "2026-09-24",
+      dateSource: "https://developers.openai.com/api/docs/deprecations",
       impact: "All video generation applications using the Videos API will stop working with no OpenAI replacement",
       whoAffected: "Developers using POST /v1/videos/generations and the Sora 2 model for AI video generation",
       migrationPath: "No direct OpenAI replacement \u2014 evaluate third-party video generation APIs (Runway, Pika, Luma)",
@@ -26518,6 +26530,7 @@ function buildShutdownTrackerPage(): string {
       vendorSlug: "firebase",
       what: "Complete shutdown \u2014 all workspaces deleted, data removed",
       deadline: "2027-03-22",
+      dateSource: "https://firebase.google.com/docs/studio/migrating-project",
       impact: "All remaining Firebase Studio data permanently deleted",
       whoAffected: "Anyone with data still in Firebase Studio workspaces",
       migrationPath: "Export all workspace data before deadline \u2014 move to GitHub Codespaces, Gitpod, or local development",
@@ -26528,6 +26541,7 @@ function buildShutdownTrackerPage(): string {
       vendorSlug: "aws",
       what: "End of availability \u2014 AWS stopping sales of WorkSpaces Thin Client devices. Existing devices continue working.",
       deadline: "2026-04-20",
+      dateSource: "https://docs.aws.amazon.com/workspaces-thin-client/latest/ug/workspacesthinclient-end-of-support.html",
       impact: "Cannot purchase new Thin Client devices. Existing hardware continues to function.",
       whoAffected: "Teams planning to deploy new WorkSpaces Thin Client hardware",
       migrationPath: "Use existing devices until end of life, or switch to standard WorkSpaces clients (Windows, Mac, web, Linux)",
@@ -26538,6 +26552,7 @@ function buildShutdownTrackerPage(): string {
       vendorSlug: "aws",
       what: "Deprecated 2026-04-30.",
       deadline: "2027-02-01",
+      dateSource: "https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtimes.html",
       impact: "Lambda blocks creating functions on nodejs20.x from 2027-02-01 and updating them from 2027-03-03. Functions keep running; AWS never blocks invocations.",
       whoAffected: "All AWS Lambda functions running on the nodejs20.x runtime",
       migrationPath: "Upgrade to Node.js 22 runtime (nodejs22.x) \u2014 test for breaking changes in Node.js 22 (fetch global, V8 updates)",
@@ -26548,6 +26563,7 @@ function buildShutdownTrackerPage(): string {
       vendorSlug: "google-maps",
       what: "Client ID authentication sunset \u2014 all Client ID auth will stop working",
       deadline: "2026-05-31",
+      dateSource: "https://developers.google.com/maps/premium/migrate-client-id",
       impact: "Maps API requests using Client ID authentication will be rejected",
       whoAffected: "Any application using Client ID (not API key) authentication for Google Maps APIs",
       migrationPath: "Switch to API key authentication \u2014 generate key in Google Cloud Console, update all API calls",
@@ -26558,6 +26574,7 @@ function buildShutdownTrackerPage(): string {
       vendorSlug: "aws",
       what: "End of support \u2014 tasks on Platform Version 1.3.0 will stop running",
       deadline: "2026-06-30",
+      dateSource: "https://web.archive.org/web/20260702093328/https://docs.aws.amazon.com/AmazonECS/latest/developerguide/platform-versions-retired.html",
       impact: "ECS Fargate tasks on PV 1.3.0 will fail to launch",
       whoAffected: "ECS Fargate users with tasks pinned to Platform Version 1.3.0",
       migrationPath: "Update task definition to Platform Version 1.4.0+ \u2014 test for networking and storage behavior changes",
@@ -26568,6 +26585,7 @@ function buildShutdownTrackerPage(): string {
       vendorSlug: "aws",
       what: "Complete service shutdown \u2014 App Mesh service mesh for ECS/EKS being retired",
       deadline: "2026-09-30",
+      dateSource: "https://docs.aws.amazon.com/app-mesh/latest/userguide/what-is-app-mesh.html",
       impact: "After September 30, 2026, you will no longer be able to access the AWS App Mesh console or AWS App Mesh resources.",
       whoAffected: "Teams using AWS App Mesh for microservice networking on ECS or EKS",
       migrationPath: "Migrate to Amazon ECS Service Connect, Istio, Linkerd, or Amazon EKS native service mesh capabilities",
@@ -26578,6 +26596,7 @@ function buildShutdownTrackerPage(): string {
       vendorSlug: "aws",
       what: "Complete service shutdown \u2014 infrastructure-as-code provisioning service being retired",
       deadline: "2026-10-07",
+      dateSource: "https://docs.aws.amazon.com/proton/latest/userguide/proton-end-of-support.html",
       impact: "The Proton console and Proton resources are no longer accessible after 2026-10-07. Deployed CloudFormation stacks and the resources they manage keep running.",
       whoAffected: "Platform engineering teams using Proton for developer self-service infrastructure provisioning",
       migrationPath: "Migrate to CloudFormation Git Sync, Harmonix on AWS, CodePipeline with CodeBuild, or GitHub Actions",
@@ -26607,7 +26626,7 @@ function buildShutdownTrackerPage(): string {
   }
 
   const activeCount = imminent.length + upcoming.length + later.length;
-  const nextDeadline = shutdowns.find(s => new Date(s.deadline) > today);
+  const nextDeadline = shutdowns.find(s => countsDownTo(s) && new Date(s.deadline) > today);
   const nextDaysLeft = nextDeadline ? Math.max(0, Math.ceil((new Date(nextDeadline.deadline).getTime() - today.getTime()) / (1000 * 60 * 60 * 24))) : 0;
 
   function urgencyColor(deadline: string): string {
@@ -26643,11 +26662,7 @@ function buildShutdownTrackerPage(): string {
       <div class="shutdown-header">
         <div>
           <h3 style="margin:0">${handwrittenVendorLinkHtml(s.vendorSlug, s.service, ' style="color:var(--text)"')}</h3>
-          <div class="shutdown-deadline" style="color:${color}">
-            <span class="deadline-icon">\u23f0</span>
-            <span>${escHtmlServer(dateStr)}</span>
-            <span class="days-badge" style="background:${color}20;color:${color}">${escHtmlServer(daysLabel(s.deadline))}</span>
-          </div>
+          ${shutdownDeadlineHtml(s, { date: dateStr, color, countdown: daysLabel(s.deadline) }, escHtmlServer)}
         </div>
         <div class="stability-badge" style="color:${stabColor}">${escHtmlServer(stability.toUpperCase())}</div>
       </div>

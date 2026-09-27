@@ -3,6 +3,8 @@ import assert from "node:assert";
 import { spawn, type ChildProcess } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { countsDownTo, shutdownDeadlineHtml } from "../dist/shutdown-deadline.js";
+import { FIGURE_SOURCE_CLASS } from "../dist/source-citation.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -51,6 +53,16 @@ describe("the shutdown tracker counts down only to dates a vendor set", () => {
     assert.deepStrictEqual(contradicted, []);
   });
 
+  it("cites beside every date the vendor page it comes from", () => {
+    const uncited = cards
+      .filter((c) => {
+        const deadline = c.html.match(/<div class="shutdown-deadline"[\s\S]*?<\/div>/)?.[0] ?? "";
+        return !new RegExp(`<a href="https?://[^"]+"[^>]*class="${FIGURE_SOURCE_CLASS}"`).test(deadline);
+      })
+      .map((c) => c.title);
+    assert.deepStrictEqual(uncited, []);
+  });
+
   it("gives CodeCommit and Cloud9 no countdown, since AWS set no end date for either", () => {
     const counted = cards
       .filter((c) => /CodeCommit|Cloud9/.test(c.title) && c.html.includes('class="days-badge"'))
@@ -72,5 +84,27 @@ describe("the shutdown tracker counts down only to dates a vendor set", () => {
     assert.ok(proton, "the AWS Proton entry is missing");
     assert.ok(!/will stop working/i.test(proton!.text), proton!.text);
     assert.ok(proton!.text.includes("Deployed CloudFormation stacks and the resources they manage keep running"), proton!.text);
+  });
+});
+
+describe("a date on the shutdown tracker", () => {
+  const esc = (text: string) => text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  const shown = { date: "June 30, 2026", color: "#f85149", countdown: "5 days left" };
+
+  it("counts down only beside a date that cites the vendor page it comes from", () => {
+    const cited = shutdownDeadlineHtml({ deadline: "2026-06-30", dateSource: "https://example.com/notice" }, shown, esc);
+    const uncited = shutdownDeadlineHtml({ deadline: "2026-06-30" }, shown, esc);
+    assert.match(cited, /class="days-badge"/);
+    assert.match(cited, new RegExp(`<a href="https://example\\.com/notice"[^>]*class="${FIGURE_SOURCE_CLASS}"`));
+    assert.doesNotMatch(uncited, /class="days-badge"/);
+    assert.doesNotMatch(uncited, new RegExp(FIGURE_SOURCE_CLASS));
+    assert.match(uncited, /June 30, 2026/);
+  });
+
+  it("takes only a web address as the page a date comes from", () => {
+    assert.strictEqual(countsDownTo({ deadline: "2026-06-30", dateSource: "https://example.com/notice" }), true);
+    assert.strictEqual(countsDownTo({ deadline: "2026-06-30" }), false);
+    assert.strictEqual(countsDownTo({ deadline: "2026-06-30", dateSource: "" }), false);
+    assert.strictEqual(countsDownTo({ deadline: "2026-06-30", dateSource: "AWS announcement" }), false);
   });
 });
