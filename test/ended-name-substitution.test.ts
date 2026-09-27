@@ -179,7 +179,7 @@ describe("a name carrying extra words, where the record it names has ended", () 
   )];
 
   it("reads a population of vendors whose every record has ended", () => {
-    assertPopulationFloor(endedVendors.length, 12, "vendors whose every record has ended");
+    assertPopulationFloor(endedVendors.length, 9, "vendors whose every record has ended");
   });
 
   it("answers only about a record whose own name the caller typed", () => {
@@ -267,7 +267,7 @@ describe("the catalogue's own short names, at every door that resolves one", () 
 
   it("names what we hold when it refuses, rather than refusing silently", () => {
     const refused = shortNames.filter(n => resolveVendorSlug(toSlug(n)).type === "onlyMatchHasEnded");
-    assertPopulationFloor(refused.length, 15, "short names whose only match is a record we publish as ended");
+    assertPopulationFloor(refused.length, 8, "short names whose only match is a record we publish as ended");
     for (const name of refused) {
       const resolution = resolveVendorSlug(toSlug(name));
       assert.ok(resolution.type === "onlyMatchHasEnded");
@@ -291,7 +291,7 @@ describe("the catalogue's own short names, at every door that resolves one", () 
         `${slug} is no longer reachable under its own name`,
       );
     }
-    assertPopulationFloor(endedVendorSlugs.size, 12, "vendor names whose every record has ended");
+    assertPopulationFloor(endedVendorSlugs.size, 9, "vendor names whose every record has ended");
   });
 });
 

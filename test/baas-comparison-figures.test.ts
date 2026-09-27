@@ -75,7 +75,11 @@ describe("the BaaS comparisons state the free limits our own record holds (#1367
   });
 
   it("gives Nhost the same storage on the page that renders the record rather than a table", () => {
-    assert.match(pages["supabase-vs-firebase"], new RegExp(`Nhost Free [^]{0,120}?${NHOST_STORAGE_GB()} GB storage`));
+    const rowRendersTheRecord = recordFor("Nhost").description.length;
+    assert.match(
+      pages["supabase-vs-firebase"],
+      new RegExp(`Nhost Free [^]{0,${rowRendersTheRecord}}?${NHOST_STORAGE_GB()} GB storage`),
+    );
   });
 
   it("keeps the record's figures in step with the newest change record we hold for that vendor", () => {

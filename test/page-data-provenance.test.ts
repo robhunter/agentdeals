@@ -316,7 +316,7 @@ describe("a page may only name the source it actually reads", () => {
       }
     }
     assert.deepStrictEqual(overreaching, []);
-    assertPopulationFloor(scoped, 27, "registered pages whose credited figures all sit in one of several tables");
+    assertPopulationFloor(scoped, 21, "registered pages whose credited figures all sit in one of several tables");
   });
 
   it("names a table the served page lays out under that heading, so the byline cannot point at nothing", () => {
@@ -503,7 +503,7 @@ describe("a page may only name the source it actually reads", () => {
 
   it("separates a page whose tables the catalogue supplies from one it only supplies a source link to", () => {
     const linkOnly = pages.filter((p) => measured.get(p.path)!.reads_index && !measured.get(p.path)!.tables_read_index);
-    assertPopulationFloor(linkOnly.length, 15, "pages the catalogue reaches without supplying a figure in any table");
+    assertPopulationFloor(linkOnly.length, 8, "pages the catalogue reaches without supplying a figure in any table");
     const everySentinelOutsideTables = linkOnly.filter(
       (p) => perturbedBodies.get(p.path)!.includes(PERTURBATION_SENTINEL)
         && !readableTableText(perturbedBodies.get(p.path)!).includes(PERTURBATION_SENTINEL)

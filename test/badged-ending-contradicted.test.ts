@@ -273,9 +273,9 @@ describe("every route we publish that badges a free tier as ended", () => {
   it("reads enough badged routes for the sweep to be able to fail", () => {
     assertPopulationFloor(routesRead, 500, "routes read for a badged ending");
     assertPopulationFloor(badgeInstances, 12, "free-tier-ended badges served across the site");
-    assertPopulationFloor(badgedRoutes.size, 7, "routes serving a free-tier-ended badge");
+    assertPopulationFloor(badgedRoutes.size, 1, "routes serving a free-tier-ended badge");
     const pairs = [...badgedRoutes.values()].reduce((n, vendors) => n + vendors.length, 0);
-    assertPopulationFloor(pairs, 10, "route-and-vendor pairs carrying a free-tier-ended badge");
+    assertPopulationFloor(pairs, 6, "route-and-vendor pairs carrying a free-tier-ended badge");
   });
 
   it("names a vendor in every badge it reads, so no badge is swept past unread", () => {

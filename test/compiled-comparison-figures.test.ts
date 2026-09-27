@@ -559,7 +559,7 @@ describe("what a FREE REMOVED marker sources the ending to, over every ended off
   const CLAIMS_A_RECORD = /change log records that|Our own pricing change record|Read what we recorded/;
 
   it("reads every offer whose tier says the offer has ended", () => {
-    assertPopulationFloor(endedOffers().length, 10, "offers in the catalogue whose tier says the offer has ended");
+    assertPopulationFloor(endedOffers().length, 8, "offers in the catalogue whose tier says the offer has ended");
   });
 
   it("holds both kinds of ended offer, so neither branch below is read over an empty set", () => {

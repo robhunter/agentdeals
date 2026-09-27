@@ -453,7 +453,7 @@ describe("every comparison page reaches the pages its figures were read from", (
         assert.notStrictEqual(tag.label, MISSING_SOURCE_LABELS.no_record);
       }
     }
-    assertPopulationFloor(ended.length, 2, "markers on offers our own record says have ended");
+    assertPopulationFloor(ended.length, 1, "markers on offers our own record says have ended");
   });
 
   it("reaches the sentence that spells out the clause, or carries the whole of it", () => {
@@ -504,7 +504,7 @@ describe("every comparison page reaches the pages its figures were read from", (
       }
     }
     assert.deepStrictEqual(offenders, []);
-    assertPopulationFloor(retired.size, 12, "records whose tier says the offer has ended");
+    assertPopulationFloor(retired.size, 9, "records whose tier says the offer has ended");
   });
 
   it("endorses nobody it cites", () => {

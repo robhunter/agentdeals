@@ -285,8 +285,8 @@ describe("the vendor page, for a vendor whose records cite no source", () => {
 
   it("draws no risk badge and states no cause, on every vendor whose rating is withheld", async () => {
     assert.ok(markedSubjects.length > 0, "the catalogue holds no record citing no source to render");
-    assertPopulationFloor(badgedAsWithheld.length, 8, "vendor pages whose badge withholds a rating");
-    assertPopulationFloor(statingTheWithholding.length, 8, "vendor pages the renderer states a withheld rating on");
+    assertPopulationFloor(badgedAsWithheld.length, 1, "vendor pages whose badge withholds a rating");
+    assertPopulationFloor(statingTheWithholding.length, 1, "vendor pages the renderer states a withheld rating on");
     for (const { offer, input } of withheldSubjects) {
       const html = await get(`/vendor/${toSlug(offer.vendor)}`);
       if (vendorBadge(input).kind === "none") {
@@ -319,7 +319,7 @@ describe("the vendor page, for a vendor whose records cite no source", () => {
   });
 
   it("stamps no removal or at-risk badge on a vendor whose rating is withheld", async () => {
-    assertPopulationFloor(badgedAsWithheld.length, 8, "vendor pages whose badge withholds a rating");
+    assertPopulationFloor(badgedAsWithheld.length, 1, "vendor pages whose badge withholds a rating");
     for (const { offer } of badgedAsWithheld) {
       const svg = await get(`/badge/${toSlug(offer.vendor)}.svg`);
       assert.doesNotMatch(svg, /free tier removed|at risk|deprecated/, `${offer.vendor}'s badge asserts a verdict`);

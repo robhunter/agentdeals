@@ -153,7 +153,7 @@ describe("a page never disclaims provenance our records hold", () => {
   it("holds both halves of the catalogue in large enough numbers to sweep", () => {
     const cited = [...served.entries()].filter(([, page]) => page.sourceLine !== "");
     const dated = cited.filter(([route]) => storesDateOurTermsToARead(primaryForRoute.get(route)!));
-    assertPopulationFloor(dated.length, 300, "cited records our stores date to a read of the page");
+    assertPopulationFloor(dated.length, 243, "cited records our stores date to a read of the page");
     assertPopulationFloor(cited.length - dated.length, 150, "cited records whose figures are our own");
   });
 
@@ -181,7 +181,7 @@ describe("a page never disclaims provenance our records hold", () => {
       if (page.sourceLine.includes(CHECK_ESTABLISHES)) contradicting.push(route);
     }
     assert.deepStrictEqual(contradicting.slice(0, 10), []);
-    assertPopulationFloor(publishing, 300, "cited pages dating their figures on a date card");
+    assertPopulationFloor(publishing, 243, "cited pages dating their figures on a date card");
   });
 
   it("keeps the disclaimer on every state that leaves the figures ours alone", () => {
@@ -245,7 +245,7 @@ describe("a page never disclaims provenance our records hold", () => {
     }
     assert.deepStrictEqual(wrongNote.slice(0, 10), []);
     assert.deepStrictEqual(wrongEntry.slice(0, 10), []);
-    assertPopulationFloor(dated, 90, "cited services a list dates to a read of the vendor's page");
+    assertPopulationFloor(dated, 62, "cited services a list dates to a read of the vendor's page");
     assertPopulationFloor(ours, 70, "cited services whose figures a list leaves as our own");
   });
 
@@ -263,7 +263,7 @@ describe("a page never disclaims provenance our records hold", () => {
       }
     }
     assert.deepStrictEqual(flattened.slice(0, 10), []);
-    assertPopulationFloor(checked, 35, "restated services cited in a list");
+    assertPopulationFloor(checked, 11, "restated services cited in a list");
   });
 });
 

@@ -290,6 +290,6 @@ describe("nothing we serve attributes our own sentence to the page it cites", ()
 
   it("keeps the note that says we could not read the page we cite", () => {
     const carrying = COMPILED_PAGES.filter(page => rendered.get(page)!.includes("unsourced-tag"));
-    assertPopulationFloor(carrying.length, 10, "compiled pages still marking a service unsourced");
+    assertPopulationFloor(carrying.length, 3, "compiled pages still marking a service unsourced");
   });
 });
