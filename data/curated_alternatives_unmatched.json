@@ -523,6 +523,12 @@
       ]
     },
     {
+      "name": "MLflow",
+      "named_by": [
+        "Neptune.ai"
+      ]
+    },
+    {
       "name": "Moto (open-source AWS mock)",
       "named_by": [
         "LocalStack"

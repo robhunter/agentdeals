@@ -9044,9 +9044,9 @@
     {
       "vendor": "Neptune.ai",
       "category": "AI / ML",
-      "description": "ML experiment tracking — free for individuals/researchers. 200 GB metadata storage, 50 GB file storage, 100K tracking calls/hour, 20 active runs, unlimited archived experiments, Jupyter/Colab integration",
+      "description": "ML experiment tracker, now shut down. After agreeing to be acquired by OpenAI, Neptune closed new sign-ups and trials on December 3, 2025, and set March 5, 2026 as the day its hosted app and API would be turned off and remaining hosted data deleted; on 2026-09-27 neptune.ai returned errors. Its free plan for individuals and researchers ended with the service. Neptune's migration guides cover Weights & Biases, Comet, MLflow and ZenML, among others.",
       "tier": "Free (Individual)",
-      "url": "https://neptune.ai/pricing",
+      "url": "https://docs.neptune.ai/transition_hub",
       "tags": [
         "ml",
         "experiment-tracking",
