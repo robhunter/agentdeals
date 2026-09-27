@@ -1614,10 +1614,10 @@
       "recorded_date": "2026-03-22",
       "date_source": "hand_written",
       "resolution": {
-        "state": "reversed",
-        "date": "2026-09-06",
-        "source_url": "https://uploadthing.com/pricing",
-        "detail": "No longer in force as of 2026-09-06: uploadthing.com/pricing, the page this record cites, opens its plan ladder with \"2GB App - Everything you need to start uploading! - $0 /month\", listing 2GB of storage shared between all apps, 7 days of audit log retention and unlimited uploads and downloads. The $25/month usage-based plan named here is the third rung of that ladder, above a $10/month 100GB App, not the entry point. We hold no evidence either way about the state on 2025-01-15, so this is recorded as no longer in force rather than retracted."
+        "state": "retracted",
+        "date": "2026-09-27",
+        "detail": "Retracted 2026-09-27: Uploadthing did not remove its free tier. The Internet Archive's captures of uploadthing.com/pricing on 2024-12-06 and on 2025-01-15, the date of this record, open with \"2GB App - Everything you need to start uploading! - $0 /month\", as the page does today. The $25 usage-based plan this record names is on today's page above the $10 100GB App, and in neither capture.",
+        "source_url": "https://web.archive.org/web/20250115224458/https://uploadthing.com/pricing"
       }
     },
     {
@@ -11939,6 +11939,20 @@
       "alternatives": [],
       "recorded_date": "2026-09-26",
       "date_source": "hand_written"
+    },
+    {
+      "vendor": "Google",
+      "change_type": "new_tier",
+      "date": "2026-05-19",
+      "date_source": "vendor_page",
+      "summary": "Google added a Google AI Ultra plan at $99.99 a month with $40 a month in Google Cloud credits, and cut the top AI Ultra plan from $249.99 to $199.99 a month; the top plan keeps $100 a month in credits.",
+      "previous_state": "Google AI Pro \"$19.99 / month\" with $10 a month in Cloud credits; Google AI Ultra \"$249.99 / month\" with $100 a month.",
+      "current_state": "\"We're launching a $100/month AI Ultra plan, specifically tailored for developers, technical leads, knowledge workers and advanced creators\" and \"reducing the monthly price of our top-tier AI Ultra plan from $250 to $200\". The Google Developer Program lists \"$40 per user per month for Google AI Ultra (20TB)\" and \"$100 per user per month for Google AI Ultra (30TB)\".",
+      "impact": "medium",
+      "source_url": "https://blog.google/products-and-platforms/products/google-one/google-ai-subscriptions/",
+      "category": "Cloud IaaS",
+      "alternatives": [],
+      "recorded_date": "2026-09-27"
     }
   ]
 }
