@@ -262,12 +262,12 @@
     {
       "vendor": "Google Gemini",
       "change_type": "limits_reduced",
-      "date": "2025-12-15",
-      "summary": "Google quietly slashed Gemini API free tier rate limits by 50-80% in late 2025. Gemini 2.5 Flash went from ~250 requests/day to 20-50. Pro model free tier removed entirely. A Google PM admitted generous limits were only supposed to be available for a single weekend",
-      "previous_state": "Pro model available on free tier, Flash ~250 RPD, Flash-Lite generous limits",
-      "current_state": "Pro free tier removed. Flash reduced to 10 RPM (~20-50 RPD). Flash-Lite 15 RPM. 50-80% reduction across the board. Gemini 2.0 Flash retiring March 2026",
+      "date": "2025-12-06",
+      "summary": "Google cut the Gemini API free tier's rate limits on 2025-12-06. Gemini 2.5 Flash went from 10 requests a minute and 250 a day to 5 and 20, and Gemini 2.5 Pro went to no free requests. Google's rate-limits page stopped listing free-tier limits the same day.",
+      "previous_state": "Free tier (ai.google.dev/gemini-api/docs/rate-limits, Internet Archive capture of 2025-12-06 01:30 UTC): Gemini 2.5 Pro 2 RPM, 50 RPD; Gemini 2.5 Flash 10 RPM, 250 RPD; Gemini 2.5 Flash-Lite 15 RPM, 1,000 RPD; Gemini 2.0 Flash 15 RPM, 200 RPD.",
+      "current_state": "The rate-limits page says limits \"can be viewed in Google AI Studio\" (capture of 2025-12-06 21:15 UTC). Google's Logan Kilpatrick, 2025-12-07: \"we turned down the 2.5 Pro free limits which were originally only supposed to be available for a single weekend\". Free projects then received \"limit: 0, model: gemini-2.5-pro\", and users reported Gemini 2.5 Flash at 5 RPM and 20 RPD.",
       "impact": "high",
-      "source_url": "https://ai.google.dev/gemini-api/docs/pricing",
+      "source_url": "https://discuss.ai.google.dev/t/is-gemini-2-5-pro-disabled-for-free-tier/111261/9",
       "category": "AI / ML",
       "alternatives": [
         "OpenRouter",
@@ -1075,7 +1075,7 @@
       "date": "2026-02-03",
       "summary": "Cloud Storage for Firebase now requires the pay-as-you-go Blaze plan, in effect from February 3, 2026. Projects on the no-cost Spark plan lose access to all Cloud Storage buckets, including default buckets; console access redirects to an upgrade page and API calls return 402 or 403. Provisioning a new default bucket also requires Blaze.",
       "previous_state": "Spark plan included Cloud Storage with a *.appspot.com default bucket and no card required: 5 GB stored, 1 GB downloaded/day, 20,000 uploads/day, 50,000 downloads/day",
-      "current_state": "Any Cloud Storage access requires the Blaze plan and a billing account. No-cost usage continues on Blaze: a legacy *.appspot.com default bucket keeps 5 GB stored, 1 GB downloaded/day, 20,000 uploads/day, 50,000 downloads/day; default buckets created after September 2024 are *.firebasestorage.app and follow Google Cloud Storage pricing with its Always Free tier in US-CENTRAL1, US-EAST1 and US-WEST1. Other Spark limits unchanged (Firestore, Auth, Functions, Hosting)",
+      "current_state": "Any Cloud Storage access requires the Blaze plan and a billing account. No-cost usage continues on Blaze: a legacy *.appspot.com default bucket keeps 5 GB stored, 1 GB downloaded/day, 20,000 uploads/day, 50,000 downloads/day; default buckets created after September 2024 are *.firebasestorage.app and follow Google Cloud Storage pricing with its Always Free tier in US-CENTRAL1, US-EAST1 and US-WEST1. Other Spark limits unchanged (Firestore, Auth, Hosting)",
       "impact": "high",
       "source_url": "https://firebase.google.com/docs/storage/faqs-storage-changes-announced-sept-2024",
       "category": "Cloud Storage",
@@ -1853,10 +1853,10 @@
       "recorded_date": "2026-04-08",
       "date_source": "hand_written",
       "resolution": {
-        "state": "reversed",
-        "date": "2026-09-05",
-        "detail": "No longer in force as of 2026-09-05: this record's own source page gives Gemini 2.5 Pro a Free Tier of \"Free of charge\" for input and for output. The contrast is on the same table - Gemini 3.1 Pro Preview reads \"Not available\" in the Free Tier column, which is what a paid-only model looks like there. Gemini 3.1 Pro is paid-only; 2.5 Pro is not. We hold no evidence either way about the state on 2026-04-08, so this is recorded as no longer in force rather than retracted.",
-        "source_url": "https://ai.google.dev/gemini-api/docs/pricing"
+        "state": "retracted",
+        "date": "2026-09-27",
+        "detail": "Retracted 2026-09-27: nothing changed on 2026-04-08. Google's changelog has no entry between 2026-04-02 and 2026-04-14 about the free tier, and Gemini 2.5 Pro's free requests had gone to zero on 2025-12-06, which the Google Gemini record of that date covers. On 2026-05-29 a Google staff member wrote that \"2.5 Flash and Pro are still available on the free tier in the API\". Google's pricing page labelled 2.5 Pro \"Free of charge\" in every capture from 2025-09 to 2026-09, so it dates neither change.",
+        "source_url": "https://discuss.ai.google.dev/t/are-gemini-2-5-pro-and-2-5-flash-now-paid-models-in-google-ai-studio/146909/10"
       }
     },
     {
@@ -5122,9 +5122,9 @@
       "vendor": "Google Gemini API",
       "change_type": "product_deprecated",
       "date": "2026-06-01",
-      "summary": "Gemini 2.0 Flash and 2.0 Flash-Lite will be deprecated June 1, 2026. Developers must migrate to Gemini 2.5 Flash or 3.x Flash models. Google is consolidating the model lineup — 2.0 generation reaching end of life as 2.5 and 3.x become production-ready.",
+      "summary": "Gemini 2.0 Flash and 2.0 Flash-Lite were shut down on 2026-06-01, as Google announced on 2026-02-18. Google points new projects to Gemini 3.5 Flash-Lite or 3.8 Flash.",
       "previous_state": "Gemini 2.0 Flash and 2.0 Flash-Lite available on free and paid tiers",
-      "current_state": "Gemini 2.0 Flash and 2.0 Flash-Lite deprecated June 1, 2026. Migrate to 2.5 Flash or 3.x Flash",
+      "current_state": "Gemini 2.0 Flash and 2.0 Flash-Lite shut down on 2026-06-01.",
       "impact": "high",
       "source_url": "https://ai.google.dev/gemini-api/docs/deprecations",
       "category": "AI / ML",
@@ -8867,7 +8867,13 @@
       "category": "AI / ML",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-03"
+      "recorded_date": "2026-09-03",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-27",
+        "detail": "Retracted 2026-09-27: Google's pricing did not change near 2026-09-03. The Internet Archive's capture of ai.google.dev/gemini-api/docs/pricing on 2026-08-20 already lists Gemini 3.7 Flash, 3.6 Flash, 3.5 Flash and 3.5 Flash-Lite; Google's changelog made 3.6 Flash and 3.5 Flash-Lite generally available on 2026-07-21. The reading compared the page with our own description, and its figures were wrong: Gemini 3.6 Flash is free of charge on the free tier and $0.75/$3.75 per million tokens paid until 2026-12-31.",
+        "source_url": "https://web.archive.org/web/20260820001217/https://ai.google.dev/gemini-api/docs/pricing"
+      }
     },
     {
       "vendor": "DeepSeek API",
@@ -11096,13 +11102,13 @@
       "change_type": "restriction",
       "date": "2026-09-24",
       "date_source": "discovered",
-      "summary": "The free tier now only offers 3 static sites, and requires account verification with a credit or debit card.",
+      "summary": "Qoddi began requiring a credit or debit card to verify accounts, including for free static sites. Its homepage and pricing page state the requirement on 2026-09-24; neither did in the Internet Archive's captures of 2026-08-28.",
       "tier": "Free",
-      "tier_direction": "unchanged",
-      "previous_state": "PaaS service similar to Heroku with a developer-centric approach. Free tier: 3 static sites (512 MB RAM, shared CPU, Git deployment, unlimited bandwidth). Preview environments auto-deleted after 48 hours.",
+      "tier_direction": "narrowed",
+      "previous_state": "Pricing page (Internet Archive capture of 2026-08-28): \"3 free static sites for everyone, then $3/month/app\". No card requirement on the pricing page or the homepage.",
       "current_state": "Your first three static sites are free. Account verification requires a credit or debit card.",
       "impact": "medium",
-      "source_url": "https://qoddi.com",
+      "source_url": "https://qoddi.com/pricing/",
       "category": "Cloud Hosting",
       "alternatives": [],
       "detected_by": "reverify-ai",
@@ -11991,6 +11997,20 @@
       "category": "Monitoring",
       "alternatives": [],
       "recorded_date": "2026-09-26",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Google Gemini",
+      "change_type": "record_corrected",
+      "date": "2026-09-27",
+      "summary": "Data correction - Google cut the Gemini API free tier on 2025-12-06, not 2025-12-15. Our record said limits fell 50-80% with Gemini 2.5 Flash at 10 requests a minute; Flash went to 5 a minute and 20 a day, and Gemini 2.5 Pro to none.",
+      "previous_state": "Recorded 2026-03-09 as limits_reduced dated 2025-12-15: limits cut 50-80% across the board, with Gemini 2.5 Flash at 10 requests a minute and 20-50 a day",
+      "current_state": "limits_reduced dated 2025-12-06 from Internet Archive captures of Google's rate-limits page",
+      "impact": "medium",
+      "source_url": "https://web.archive.org/web/20251206211553/https://ai.google.dev/gemini-api/docs/rate-limits",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-09-27",
       "date_source": "hand_written"
     }
   ]
