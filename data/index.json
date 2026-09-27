@@ -2936,7 +2936,7 @@
     {
       "vendor": "Hugging Face",
       "category": "AI / ML",
-      "description": "ML model hub — $0.10/month free inference credits, 200+ models via Inference Providers, unlimited model hosting on Hub",
+      "description": "ML model hub. Free users get $0.10 a month of Inference Providers credits (subject to change); Inference Providers serves 200+ models, and extra usage requires a credits purchase. PRO ($9/month) gets $2.00 a month. Free accounts get 100GB of private storage and best-effort public storage; substantial storage needs PRO, Team or Enterprise.",
       "tier": "Free",
       "url": "https://huggingface.co/docs/inference-providers/pricing",
       "tags": [
@@ -3122,7 +3122,7 @@
     {
       "vendor": "OpenRouter",
       "category": "AI / ML",
-      "description": "AI model router — Free tier includes 25+ free models, 4 free providers, 50 reqs/day rate limit, $25,000 of list price inference / month with no fees, 5% fee after that.",
+      "description": "AI model router. Free plan: 25+ free models, 4 free providers, 50 requests a day, no BYOK. Free models are capped at 20 requests a minute; accounts that have bought at least $10 of credits get 1,000 free-model requests a day. The Standard plan (pay-as-you-go) charges a 5.5% fee on credit purchases and includes BYOK up to $25,000 of list-price inference a month with no fees, 5% after.",
       "tier": "Free",
       "url": "https://openrouter.ai/pricing",
       "tags": [
@@ -3165,12 +3165,9 @@
         ],
         "reviewed": "2026-09-01"
       },
-      "restated_from": {
-        "reading_date": "2026-09-07",
-        "source_url": "https://openrouter.ai/pricing",
+      "restatement_reverted": {
         "record_date": "2026-09-07",
-        "change_type": "limits_reduced",
-        "restated_on": "2026-09-20"
+        "reverted_on": "2026-09-27"
       }
     },
     {
@@ -7450,7 +7447,7 @@
     {
       "vendor": "OpenAI",
       "category": "AI / ML",
-      "description": "AI API platform. One model is priced Free in OpenAI's own table — the moderation model omni-moderation-latest. Everything else is per-token: embeddings from $0.02/1M, chat-latest $5.00/1M input and $30.00/1M output. Three further free amounts are sub-quotas inside paid tools: 1 GB per day of File search storage, 1 GB per account per month of ChatKit upload storage, and web-search content tokens on non-reasoning models. No free token allowance for the flagship models; trial credits for new accounts were discontinued in mid-2025.",
+      "description": "AI API platform. One model is priced Free in OpenAI's own table: the moderation model omni-moderation-latest. Everything else is paid: embeddings from $0.02 per 1M tokens; chat-latest $5.00/$30.00 (per 1M tokens). Three further free amounts are sub-quotas inside paid tools: 1 GB of File search storage (then $0.10/GB per day), 1 GB per account per month of ChatKit upload storage, and search content tokens from the web search preview tool on non-reasoning models. GPT models are paid only.",
       "tier": "Free",
       "url": "https://developers.openai.com/api/docs/pricing",
       "tags": [
@@ -8909,7 +8906,7 @@
     {
       "vendor": "Baseten",
       "category": "AI / ML",
-      "description": "ML model deployment platform — $30 in free credits for new accounts. Basic plan is $0/month with pay-as-you-go billing after credits. Per-minute GPU/CPU billing for custom deployments, per-token for Model APIs",
+      "description": "ML model deployment platform. New workspaces receive credits for testing and deployment; Baseten does not state the amount. Basic plan: $0 per month, pay as you go. Dedicated deployments bill per minute. Model APIs bill per 1M tokens: GLM-5.3 $1.40/$4.40. GLM-5.3-Flash $0.15/$0.50.",
       "tier": "Basic (Free Credits)",
       "url": "https://www.baseten.co/pricing/",
       "tags": [
@@ -32614,9 +32611,9 @@
     {
       "vendor": "Anthropic API",
       "category": "AI / ML",
-      "description": "Claude API access with usage-based pricing. Fable 5.1: $10/$50 per MTok (input/output). Opus 5: $5/$25 per MTok. Sonnet 5: $2/$10 per MTok. Haiku 4.5: $1/$5 per MTok. Batch API at 50% discount. Free tier: limited access via console with rate limits.",
+      "description": "Claude API with usage-based pricing per million tokens (input/output). Claude Fable 5.1 $10/$50. Claude Opus 5.5 $4/$20. Claude Sonnet 5 $2/$10. Claude Haiku 4.5 $1/$5. The Batch API gives a 50% discount on input and output tokens. New users receive a small amount of free credits to test the API.",
       "tier": "Pay-as-you-go",
-      "url": "https://docs.anthropic.com/en/docs/about-claude/models",
+      "url": "https://platform.claude.com/docs/en/about-claude/pricing",
       "tags": [
         "ai",
         "ml",
@@ -32647,7 +32644,7 @@
       "source_check": {
         "checked": "2026-09-22",
         "outcome": "ok",
-        "detail": "the page names Anthropic API as \"anthropic\" and states \"$10\" and \"$50\" and \"$5\" and \"$25\""
+        "detail": "the page names Anthropic API as \"anthropic\" and states \"$10\" and \"$50\" and \"$5\""
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -32990,7 +32987,7 @@
     {
       "vendor": "NVIDIA NIM",
       "category": "AI / ML",
-      "description": "Free serverless APIs for LLM inference — access Llama 3.1, Mistral, and NVIDIA models. Free tier: ~40 RPM, 1,000 free API credits. No credit card required for development",
+      "description": "Free inference endpoints on build.nvidia.com: models marked Free Endpoint, including Kimi K3, DeepSeek V4.1 Flash and NVIDIA Nemotron, can be called at no cost. Up to 40 requests per minute; limits may vary by model, and traffic from other users may cause throttling. NVIDIA's API Trial Terms allow free use for testing and evaluation only, not production.",
       "tier": "Free",
       "url": "https://build.nvidia.com",
       "tags": [
@@ -33094,9 +33091,9 @@
     {
       "vendor": "LLM7.io",
       "category": "AI / ML",
-      "description": "UK-based free LLM inference gateway. Free tier supported by donors — access to 30+ models including DeepSeek R1, Qwen2.5 Coder, text, image, and speech-to-text models. No published rate limits on free tier.",
+      "description": "LLM inference gateway. Without a key: 10 requests a minute, 60 an hour, 500,000 tokens per 24 hours. With a free token from dash.llm7.io: 40 a minute, 100 an hour, 1,000,000 tokens per 24 hours. Free access covers the turbo-tier models, such as DeepSeek-V4-Flash-0731 and GLM-5.3-Flash. Other models, including all image and speech-to-text models, need Pro ($12/mo) or a paid balance.",
       "tier": "Free",
-      "url": "https://llm7.io",
+      "url": "https://docs.llm7.io/limits",
       "tags": [
         "ai",
         "ml",
@@ -33168,9 +33165,9 @@
     {
       "vendor": "Zhipu AI",
       "category": "AI / ML",
-      "description": "Free tier for GLM-4 series models. 20 million tokens welcome package plus permanently free Flash models (GLM-4.7-Flash, GLM-4.5-Flash, GLM-4.6V-Flash) with no rate limits or expiration. China-based, function calling support.",
+      "description": "China-based GLM model API. The price list marks these models free: GLM-4.7-Flash, GLM-4-Flash-250414 and GLM-Z1-Flash (text); GLM-4.6V-Flash, GLM-4V-Flash and GLM-4.1V-Thinking-Flash (vision); CogView-3-Flash (image); CogVideoX-Flash (video). API calls are rate limited, with a separate concurrency limit per model.",
       "tier": "Free",
-      "url": "https://open.bigmodel.cn",
+      "url": "https://docs.bigmodel.cn/cn/guide/start/pricing",
       "tags": [
         "ai",
         "ml",

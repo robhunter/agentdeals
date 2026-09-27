@@ -74,8 +74,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 41,
-      "table_figures_from_records": 41,
+      "table_figures": 37,
+      "table_figures_from_records": 37,
       "tables": [
         {
           "label": "Protocol Comparison",
@@ -84,8 +84,8 @@
         },
         {
           "label": "All Payment-Enabled Services",
-          "figures": 41,
-          "from_records": 41
+          "figures": 37,
+          "from_records": 37
         }
       ],
       "reads_changes": true,
