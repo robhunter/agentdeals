@@ -1199,7 +1199,7 @@
     {
       "vendor": "Nhost",
       "category": "Databases",
-      "description": "Open-source Firebase alternative with Postgres + Hasura GraphQL — 1 GB database, 1 GB storage, 5 GB bandwidth free",
+      "description": "Open-source backend with Postgres and Hasura GraphQL, plus Auth, Storage and Functions. The Starter plan is $0 a month: 1 GB database, 1 GB storage and 5 GB egress, with functions, realtime APIs and unlimited users. It is limited to 1 project, and the project is paused after 1 week of inactivity. Pro starts at $25 a month with $15 of compute credits, a 10 GB database, 50 GB storage and 50 GB egress.",
       "tier": "Free",
       "url": "https://nhost.io/pricing",
       "tags": [
