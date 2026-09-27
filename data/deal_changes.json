@@ -858,7 +858,13 @@
         "Perplexity"
       ],
       "recorded_date": "2026-02-26",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-27",
+        "detail": "Retracted 2026-09-27: this record describes ads in ChatGPT's Free and Go consumer plans. It is filed under OpenAI's API platform, whose free terms did not change on 2026-02-09, and we list no ChatGPT plan.",
+        "source_url": "https://openai.com/index/testing-ads-in-chatgpt/"
+      }
     },
     {
       "vendor": "Google Programmable Search Engine",
@@ -1021,13 +1027,13 @@
     },
     {
       "vendor": "OpenAI",
-      "change_type": "limits_reduced",
-      "date": "2025-06-01",
-      "summary": "Free trial credits ($5-$18 for new accounts) completely discontinued. Free tier now limited to GPT-3.5 Turbo at 3 RPM with no credits. All advanced models (GPT-4, DALL-E, Whisper) require paid access",
-      "previous_state": "$5-$18 in free trial credits for new accounts, 3-month expiry, access to all models",
-      "current_state": "No free credits. Free tier: GPT-3.5 Turbo only, 3 requests/minute. Must add payment method for any other model access",
+      "change_type": "free_tier_removed",
+      "date": "2024-03-20",
+      "summary": "Between 2024-03-13 and 2024-03-20, OpenAI stopped giving new API accounts the $5 free trial credit, which could be used during an account's first 3 months. New accounts now have to buy prepaid credits, $5 minimum, to use any paid model.",
+      "previous_state": "\"To explore and experiment with the API, all new users get free $5 worth of free tokens. These tokens expire after 3 months.\" (OpenAI help center, captured 2024-03-13)",
+      "current_state": "No free credit for new accounts. \"Most API users will need to pre-purchase credits to use the API and Playground\"; \"The minimum purchase is $5.\" (OpenAI help center, captured 2024-02-25). New accounts reported receiving no credit from 2024-03-20, and the help-center text on trial credits was gone by 2024-04-09.",
       "impact": "high",
-      "source_url": "https://openai.com/api/pricing/",
+      "source_url": "https://web.archive.org/web/20240313145816/https://help.openai.com/en/articles/4936830-what-happens-after-i-use-my-free-tokens-or-the-3-months-is-up-in-the-free-trial",
       "category": "AI / ML",
       "alternatives": [
         "Google Gemini API",
@@ -8804,7 +8810,13 @@
       "category": "AI / ML",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-03"
+      "recorded_date": "2026-09-03",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-27",
+        "detail": "Retracted 2026-09-27: the wording this record reports as new, \"For personal projects only. Corporate use is not allowed.\", belongs to the self-hosted Personal plan and is on W&B's pricing page in the Internet Archive's captures of 2025-07-25 and 2026-07-14. The cloud Free plan's terms did not change.",
+        "source_url": "https://web.archive.org/web/20250725175035/https://wandb.ai/site/pricing/"
+      }
     },
     {
       "vendor": "Create@Alibaba Cloud",
@@ -9368,7 +9380,13 @@
       "category": "AI / ML",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-05"
+      "recorded_date": "2026-09-05",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-27",
+        "detail": "Retracted 2026-09-27: Paperspace's pricing page did not change. Its text is identical in the Internet Archive's captures of 2026-05-19, 2026-08-21 and 2026-09-23 (a Free plan with public projects, 5GB storage and basic instances; Pro at $8 per month). The differences this record describes were between the page and our own listing.",
+        "source_url": "https://web.archive.org/web/20260821053156/https://www.paperspace.com/pricing"
+      }
     },
     {
       "vendor": "Coursera",
@@ -9413,7 +9431,13 @@
       "category": "AI / ML",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-05"
+      "recorded_date": "2026-09-05",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-27",
+        "detail": "Retracted 2026-09-27: E2B's free terms did not change. Its pricing page offered a one-time $100 usage credit, sandbox sessions of up to 1 hour and up to 20 concurrent sandboxes in the Internet Archive's captures of 2024-11-09, 2026-08-02 and 2026-09-03. The \"100 sandbox hours/month\" this record compared against was our own listing's text, not an E2B term.",
+        "source_url": "https://web.archive.org/web/20241109015309/https://e2b.dev/pricing"
+      }
     },
     {
       "vendor": "Appwrite Cloud",
@@ -12113,6 +12137,20 @@
       "recorded_date": "2026-09-27",
       "date_source": "vendor_page",
       "discontinued_date": "2026-03-05"
+    },
+    {
+      "vendor": "OpenAI",
+      "change_type": "record_corrected",
+      "date": "2026-09-27",
+      "summary": "Data correction - OpenAI's $5 free trial credit for new API accounts ended between 2024-03-13 and 2024-03-20, not on 2025-06-01. Our record also bundled earlier cuts from 2023 (the credit fell from $18 to $5, and the free trial's rate limit from 20 to 3 requests a minute), which are not recorded separately.",
+      "previous_state": "Recorded 2026-03-11 as limits_reduced dated 2025-06-01, describing trial credits of $5 to $18 as ended and the Free tier as limited to one older chat model",
+      "current_state": "free_tier_removed dated 2024-03-20 ($5 credit for new accounts ended)",
+      "impact": "medium",
+      "source_url": "https://web.archive.org/web/20240313145816/https://help.openai.com/en/articles/4936830-what-happens-after-i-use-my-free-tokens-or-the-3-months-is-up-in-the-free-trial",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-09-27",
+      "date_source": "hand_written"
     }
   ]
 }
