@@ -26990,16 +26990,6 @@ function buildFreeTierTrackerPage(): string {
       alternatives: ["Supabase", "Turso"],
     },
     {
-      vendor: "GitHub Copilot",
-      slug: "github-copilot",
-      date: "2025-12-18",
-      oneLiner: "New free tier: 2K completions + 50 chat messages/mo",
-      changeType: "new_free_tier",
-      impact: "high",
-      detail: "GitHub launched a free tier for Copilot: 2,000 code completions and 50 chat messages per month. Available in VS Code, Visual Studio, JetBrains, and Neovim. Strategic move to compete with Cursor and Claude.",
-      alternatives: ["Cursor", "Cline"],
-    },
-    {
       vendor: "Unity DevOps",
       slug: "unity-devops",
       date: "2026-03-01",
@@ -45311,9 +45301,6 @@ ${globalNavCss()}
 
   <h2>The Bright Spots: Who&rsquo;s Expanding</h2>
   <p class="section-desc">${positiveChanges.length} of the ${trackedHere.length} ${TRACKED_CHANGE_NOUN} are developer-positive: new free tiers, expanded limits, and improved startup programs. Notable expansions include GitHub Copilot Free, Auth0 tripling MAU limits, and Amazon Aurora PostgreSQL joining the AWS Free Tier.</p>
-  <div class="callout callout-good">
-    <strong>Trend worth watching:</strong> AI coding tools are in a free-tier arms race. GitHub Copilot launched a free tier (Dec 2024), Google shipped Gemini Code Assist free (Feb 2025, ended June 2026), and multiple vendors are competing on generous free completions to capture developer lock-in.
-  </div>
   ${brightSpotsHtml}
 
   <h2>Category Erosion: Where Free Tiers Are Disappearing</h2>
