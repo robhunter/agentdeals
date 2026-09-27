@@ -27002,16 +27002,6 @@ function buildFreeTierTrackerPage(): string {
       alternatives: ["Supabase", "Turso"],
     },
     {
-      vendor: "GitHub Copilot",
-      slug: "github-copilot",
-      date: "2025-12-18",
-      oneLiner: "New free tier: 2K completions + 50 chat messages/mo",
-      changeType: "new_free_tier",
-      impact: "high",
-      detail: "GitHub launched a free tier for Copilot: 2,000 code completions and 50 chat messages per month. Available in VS Code, Visual Studio, JetBrains, and Neovim. Strategic move to compete with Cursor and Claude.",
-      alternatives: ["Cursor", "Cline"],
-    },
-    {
       vendor: "Unity DevOps",
       slug: "unity-devops",
       date: "2026-03-01",
@@ -28713,7 +28703,7 @@ function buildAiCodingToolsPricingPage(): string {
     '  </div>\n' +
     '  <div class="hidden-cost-card">\n' +
     '    <h4>Usage Allowances Vary by Model</h4>\n' +
-    '    <p>Cursor, Windsurf and Augment Code include a monthly usage allowance rather than a fixed number of requests. Cursor\'s free Hobby plan lists "Limited Agent requests"; Windsurf\'s Free plan has "a light quota to code with agents"; Augment Code\'s Standard plan includes $20 of usage a month. Windsurf says usage per message "varies based on the model used, the task size and complexity, and the reasoning required."</p>\n' +
+    '    <p>Cursor, Windsurf and Augment Code include a usage allowance rather than a fixed number of requests. Cursor\'s free Hobby plan lists "Limited Agent requests"; Windsurf\'s Free plan has "a light quota to code with agents"; Augment Code\'s Standard plan includes $20 of usage a month. Windsurf says usage per message "varies based on the model used, the task size and complexity, and the reasoning required."</p>\n' +
     '  </div>\n' +
     '  <div class="hidden-cost-card">\n' +
     '    <h4>Context Window Limits</h4>\n' +
@@ -45323,9 +45313,6 @@ ${globalNavCss()}
 
   <h2>The Bright Spots: Who&rsquo;s Expanding</h2>
   <p class="section-desc">${positiveChanges.length} of the ${trackedHere.length} ${TRACKED_CHANGE_NOUN} are developer-positive: new free tiers, expanded limits, and improved startup programs. Notable expansions include GitHub Copilot Free, Auth0 tripling MAU limits, and Amazon Aurora PostgreSQL joining the AWS Free Tier.</p>
-  <div class="callout callout-good">
-    <strong>Trend worth watching:</strong> AI coding tools are in a free-tier arms race. GitHub Copilot launched a free tier (Dec 2024), Google shipped Gemini Code Assist free (Feb 2025, ended June 2026), and multiple vendors are competing on generous free completions to capture developer lock-in.
-  </div>
   ${brightSpotsHtml}
 
   <h2>Category Erosion: Where Free Tiers Are Disappearing</h2>

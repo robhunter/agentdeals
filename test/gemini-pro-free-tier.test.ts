@@ -232,9 +232,7 @@ const STATED: Record<string, string[]> = {
   ],
   "/free-llm-apis": ["Google publishes no free-tier limits; AI Studio shows each project's."],
   "/ai-free-tiers": [S3],
-  "/state-of-free-tiers": [
-    "GitHub Copilot launched a free tier (Dec 2024), Google shipped Gemini Code Assist free (Feb 2025, ended June 2026)",
-  ],
+  "/state-of-free-tiers": [],
   "/free-tier-risk": [
     "Google cut the free tier on 2025-12-06: 2.5 Flash went from 250 requests a day to about 20, and 2.5 Pro to none. Since 2026-09-18 the 2.5 models are limited to earlier users. The 3.x Flash models are free, with limits Google does not publish.",
   ],
