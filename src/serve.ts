@@ -28691,7 +28691,7 @@ function buildAiCodingToolsPricingPage(): string {
     '  </div>\n' +
     '  <div class="hidden-cost-card">\n' +
     '    <h4>Usage Allowances Vary by Model</h4>\n' +
-    '    <p>Cursor, Windsurf and Augment Code include a monthly usage allowance rather than a fixed number of requests. Cursor\'s free Hobby plan lists "Limited Agent requests"; Windsurf\'s Free plan has "a light quota to code with agents"; Augment Code\'s Standard plan includes $20 of usage a month. Windsurf says usage per message "varies based on the model used, the task size and complexity, and the reasoning required."</p>\n' +
+    '    <p>Cursor, Windsurf and Augment Code include a usage allowance rather than a fixed number of requests. Cursor\'s free Hobby plan lists "Limited Agent requests"; Windsurf\'s Free plan has "a light quota to code with agents"; Augment Code\'s Standard plan includes $20 of usage a month. Windsurf says usage per message "varies based on the model used, the task size and complexity, and the reasoning required."</p>\n' +
     '  </div>\n' +
     '  <div class="hidden-cost-card">\n' +
     '    <h4>Context Window Limits</h4>\n' +
