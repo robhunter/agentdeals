@@ -35667,6 +35667,81 @@
         ],
         "reviewed": "2026-09-27"
       }
+    },
+    {
+      "vendor": "Mem0",
+      "category": "AI / ML",
+      "description": "Memory layer for AI agents and apps. The Hobby plan is free with no credit card: 10,000 memory add requests and 1,000 retrieval requests a month, 1 project, unlimited end users and community support. Mem0 calls it permanently free. Graph memory is not on Hobby. Starter is $19/month for 50,000 add and 5,000 retrieval requests a month. Under Mem0's terms (2026-08-03), Free Plan users grant Mem0 a perpetual licence to their content, including to train AI models; paid plans exclude that, apart from aggregated, de-identified data. Mem0 Open-Source (Apache 2.0) can be self-hosted.",
+      "tier": "Free",
+      "url": "https://mem0.ai/pricing",
+      "tags": [
+        "ai",
+        "agents",
+        "memory",
+        "open-source",
+        "free tier"
+      ],
+      "verifiedDate": "2026-09-27"
+    },
+    {
+      "vendor": "Zep",
+      "category": "AI / ML",
+      "description": "Context and memory layer for AI agents: Zep gives an agent context from past conversations, user activity and changing preferences. The Free plan includes 10,000 credits a month, with no rollover or auto top-up. An Episode (a chat message, JSON payload or block of text) up to 350 bytes costs 1 credit; retrieval, storage and users cost none. Free allows 2 projects, 1 Memory MCP Server seat and 5 custom entity and edge types, with variable rate limits and lower-priority processing. When the credits run out, Episodes stop processing until the next billing cycle and the account's rate limit drops to 5 requests a minute. Flex, the first paid plan, is $125/month for 50,000 credits. The self-hosted Community Edition is deprecated; Graphiti, the framework under Zep, is open source (Apache 2.0).",
+      "tier": "Free",
+      "url": "https://www.getzep.com/pricing/",
+      "tags": [
+        "ai",
+        "agents",
+        "memory",
+        "knowledge graph",
+        "free tier"
+      ],
+      "verifiedDate": "2026-09-27"
+    },
+    {
+      "vendor": "Letta",
+      "category": "AI / ML",
+      "description": "Stateful AI agents that keep their memory across sessions. The Free plan is $0/month for the Letta app, CLI and web app: up to 3 stateful agents, limited use of Letta Auto, a limited number of LLM requests on rotating free models, and your own model API keys or coding plans. Free is a Personal Plan; API-key access to the Letta API is sold as a Developer Plan, the API Plan at $20/month plus $0.10 per active agent a month and pay-as-you-go model usage. Pro is $20/month for up to 20 stateful agents. The Letta agent harness is open source (Apache 2.0) and runs on your own infrastructure with no Letta account.",
+      "tier": "Free",
+      "url": "https://docs.letta.com/pricing",
+      "tags": [
+        "ai",
+        "agents",
+        "memory",
+        "open-source",
+        "free tier"
+      ],
+      "verifiedDate": "2026-09-27"
+    },
+    {
+      "vendor": "Supermemory",
+      "category": "AI / ML",
+      "description": "Memory and search API for AI agents, with user profiles and plugins for coding agents. The Free plan is $0/month with $5 of credits included, renewed every month; plan credits do not roll over. Credits pay the same rates on every plan, such as $5 per 1M SM tokens of plain-text memory and $5 per 1M search queries, and usage needs an available credit balance. Free includes the memory and search API and the coding-agent plugins for 1 team seat and unlimited end users; connectors such as Google Drive and Notion need a paid plan. Pro is $19/month with $20 of credits included.",
+      "tier": "Free",
+      "url": "https://supermemory.ai/pricing/",
+      "tags": [
+        "ai",
+        "agents",
+        "memory",
+        "search",
+        "free tier"
+      ],
+      "verifiedDate": "2026-09-27"
+    },
+    {
+      "vendor": "Cognee",
+      "category": "AI / ML",
+      "description": "Open-source memory engine that turns documents and data into a knowledge graph agents can query. Cognee Cloud's Free plan is $0/month, labelled \"Free forever\", with no card required: 1 workspace, unlimited users and API calls, and 1M tokens included (Cognee's billing docs say 10M). Cognee does not say the tokens renew; when the balance runs out, uploads, graph processing and search are refused. Tokens beyond it cost $1.00 per 1M on every plan, and Standard adds workspaces at $5 a month each. The open-source engine (Apache 2.0) is free to self-host.",
+      "tier": "Free Credits",
+      "url": "https://www.cognee.ai/pricing",
+      "tags": [
+        "ai",
+        "agents",
+        "memory",
+        "knowledge graph",
+        "open-source"
+      ],
+      "verifiedDate": "2026-09-27"
     }
   ],
   "changes": []

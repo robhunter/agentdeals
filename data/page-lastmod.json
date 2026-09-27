@@ -1385,18 +1385,6 @@
       "hash": "e9c86a7e98023e7c",
       "changed": "2026-09-20"
     },
-    "/compare/anthropic-api-vs-mistral-ai": {
-      "hash": "80e00d33e02740f5",
-      "changed": "2026-09-27"
-    },
-    "/compare/anthropic-api-vs-reportgpt": {
-      "hash": "2e760b9ab6a6d175",
-      "changed": "2026-09-27"
-    },
-    "/compare/anthropic-api-vs-together-ai": {
-      "hash": "a396864656318a0f",
-      "changed": "2026-09-27"
-    },
     "/compare/apache-netbeans-vs-code-cs50-io": {
       "hash": "c081393668fd3e0e",
       "changed": "2026-09-19"
@@ -1604,6 +1592,14 @@
     "/compare/cloudflare-warp-vs-windscribe": {
       "hash": "6218d85163c35f45",
       "changed": "2026-09-22"
+    },
+    "/compare/cloudflare-workers-ai-vs-labelbox": {
+      "hash": "8f533a6290a85b01",
+      "changed": "2026-09-27"
+    },
+    "/compare/cloudflare-workers-ai-vs-openai": {
+      "hash": "c2246466ea8cc91a",
+      "changed": "2026-09-27"
     },
     "/compare/cloudflare-workers-vs-duolingo": {
       "hash": "c9d1c33240d1ce10",
@@ -2258,6 +2254,14 @@
       "hash": "5562b352c92ecd9a",
       "changed": "2026-09-18"
     },
+    "/compare/labelbox-vs-openai": {
+      "hash": "7ac2186667c20ff8",
+      "changed": "2026-09-27"
+    },
+    "/compare/labelbox-vs-pinecone": {
+      "hash": "d79a8d740d3ed9b2",
+      "changed": "2026-09-27"
+    },
     "/compare/lastpass-vs-proton-pass": {
       "hash": "3c965c87486d7f4e",
       "changed": "2026-09-24"
@@ -2321,10 +2325,6 @@
     "/compare/mintlify-vs-treblle": {
       "hash": "f5b9697a0556552d",
       "changed": "2026-09-22"
-    },
-    "/compare/mistral-ai-vs-reportgpt": {
-      "hash": "f04e912cea95ae5d",
-      "changed": "2026-09-27"
     },
     "/compare/mongodb-vs-supabase": {
       "hash": "1d6f483144d684ee",
@@ -2396,6 +2396,10 @@
     },
     "/compare/openai-codex-vs-windsurf": {
       "hash": "7271c927f743f6d0",
+      "changed": "2026-09-27"
+    },
+    "/compare/openai-vs-pinecone": {
+      "hash": "fcdfbf6ad87356ba",
       "changed": "2026-09-27"
     },
     "/compare/opencagedata-com-vs-osmnames": {
@@ -2504,10 +2508,6 @@
     },
     "/compare/render-vs-vercel": {
       "hash": "35925385e6bedb0c",
-      "changed": "2026-09-27"
-    },
-    "/compare/reportgpt-vs-together-ai": {
-      "hash": "7937a1b9614142d2",
       "changed": "2026-09-27"
     },
     "/compare/resend-vs-mail-tester-com": {
@@ -4779,6 +4779,9 @@
       "hash": "84db44b8b4ea84ef",
       "changed": "2026-09-27"
     },
+    "/vendor/cognee": {
+      "daily": true
+    },
     "/vendor/cohere": {
       "daily": true
     },
@@ -6674,6 +6677,9 @@
       "hash": "b2dd82c524924990",
       "changed": "2026-09-27"
     },
+    "/vendor/letta": {
+      "daily": true
+    },
     "/vendor/libeo": {
       "hash": "8df8dd2b93602b8e",
       "changed": "2026-09-27"
@@ -6999,6 +7005,9 @@
     "/vendor/meistertask": {
       "hash": "022ffef46533c56c",
       "changed": "2026-09-27"
+    },
+    "/vendor/mem0": {
+      "daily": true
     },
     "/vendor/memfault-com": {
       "hash": "7ab63cbad118646d",
@@ -8690,6 +8699,9 @@
       "hash": "e0db2ee00bf504a8",
       "changed": "2026-09-27"
     },
+    "/vendor/supermemory": {
+      "daily": true
+    },
     "/vendor/supertokens": {
       "hash": "8e2feea1f94cd0e4",
       "changed": "2026-09-27"
@@ -9565,6 +9577,9 @@
     "/vendor/zentail": {
       "hash": "61a23e734f5bb31e",
       "changed": "2026-09-27"
+    },
+    "/vendor/zep": {
+      "daily": true
     },
     "/vendor/zeplin": {
       "hash": "35200bc5451c4f84",
