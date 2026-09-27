@@ -15,6 +15,7 @@ const STATED: Record<string, string[]> = {
   "/google-developer-program-2026": [
     "30 RPM; 1K requests and 200K tokens/day per model",
     "gpt-oss-120b, gpt-oss-20b, Qwen3.8 27B",
+    "Mistral Large, Medium 3.5, Small 4, Devstral",
   ],
   "/gemini-api-pricing-2026": [
     "30 RPM; 1K requests and 200K tokens/day per model",
@@ -31,6 +32,7 @@ const STATED: Record<string, string[]> = {
   ],
   "/free-ai-stack": [
     "Ultra-fast inference on LPU hardware — 30 RPM, 1,000 requests and 200K tokens a day per model, free. Serves gpt-oss-120b, gpt-oss-20b and Qwen3.8 27B. Best balance of speed, limits, and model quality for prototyping.",
+    "When you exceed 30 RPM or 200K tokens a day on a model. At that point, OpenRouter (~30 free models) extends the free runway.",
   ],
   "/ai-ml-alternatives": [
     "offers blazing-fast gpt-oss-120b inference at 30 RPM free",
@@ -50,6 +52,9 @@ const STATED: Record<string, string[]> = {
     "Groq gpt-oss-20b ($0.075/M input)",
     "Free plan: $10 a month in API credits.",
     "Mistral's Free plan includes $10 a month in API credits",
+    "For open-source, SiliconFlow serves Llama and DeepSeek models at $0.10–0.15/M.",
+    "Open-weight inference is cheap: Groq's free plan allows 200K tokens a day on each of its free chat models.",
+    "Anthropic cut Opus pricing 67% in November 2025.",
   ],
   "/groq-vs-hugging-face": [
     "Groq's free plan allows 30 RPM, 1,000 requests and 200K tokens a day per model.",
@@ -59,8 +64,10 @@ const STATED: Record<string, string[]> = {
     "and its Free plan includes $10 a month in API credits",
     "Groq serves open-weight models (gpt-oss, Qwen) on its hardware.",
     "Mistral's Free plan includes $10 a month in API credits.",
-    "Groq allows 200K tokens a day per model (about 6M a month) at 30 RPM",
+    "Groq allows 200K tokens a day per model (about 6M a month) at 30 RPM.",
     "want to use open-weight models such as gpt-oss",
+    "Groq wins on speed; Mistral wins on model variety.",
+    "(especially Codestral for code), or prefer European-based AI providers.",
   ],
   "/ai-free-tiers": [
     "Mistral includes $10 a month in API credits, and Google Antigravity has a free individual plan with weekly limits.",
@@ -68,7 +75,17 @@ const STATED: Record<string, string[]> = {
   ],
 };
 
+const WITHDRAWN: Record<string, string[]> = {
+  "/gemini-api-pricing-changes": ["supports Llama vision models for free"],
+  "/llm-api-pricing": ["Groq and SiliconFlow serve", "Groq and Cerebras give away", "Opus pricing 67% in 2026"],
+  "/free-ai-stack": ["Cerebras (1M tokens/day) or OpenRouter", "500K tokens/day"],
+  "/openai-assistants-migration-2026": ["Meta Llama (via Groq)", "Via Llama models"],
+  "/groq-vs-mistral-ai": ["free token volume", "higher throughput ceiling", "the largest free token allowance"],
+  "/google-developer-program-2026": ["Mixtral"],
+};
+
 const PAGES = Object.keys(STATED);
+const SERVED_PAGES = [...new Set([...PAGES, ...Object.keys(WITHDRAWN)])];
 
 interface StoredChange {
   vendor: string;
@@ -146,7 +163,7 @@ before(async () => {
       if (m) { clearTimeout(timeout); resolve(parseInt(m[1], 10)); }
     });
   });
-  for (const page of PAGES) {
+  for (const page of SERVED_PAGES) {
     served.set(page, await (await fetch(`http://localhost:${port}${page}`)).text());
   }
 });
@@ -178,6 +195,22 @@ describe("the AI guides state Groq's and Mistral's free plans as the vendors lis
       STATED[page].filter((text) => !textOf(served.get(page)!).includes(text)).map((text) => `${page}: ${text}`),
     );
     assert.deepStrictEqual(missing, []);
+  });
+
+  it("prints none of the withdrawn lines, in the body or the structured data", () => {
+    const left = Object.entries(WITHDRAWN).flatMap(([page, lines]) =>
+      lines.filter((line) => textOf(served.get(page)!).includes(line)).map((line) => `${page}: ${line}`),
+    );
+    assert.deepStrictEqual(left, []);
+  });
+
+  it("states the cost of Mistral's row in the provider table as depending on the model, not as free", () => {
+    const rows = unitsOf(served.get("/gemini-api-pricing-changes")!).filter((unit) => unit.startsWith("Mistral AI |"));
+    assert.ok(rows.length > 0, "the provider table on /gemini-api-pricing-changes has a Mistral AI row");
+    for (const row of rows) {
+      assert.ok(row.includes("Depends on model"), row);
+      assert.ok(!row.includes("within free tier"), row);
+    }
   });
 
   it("still states Groq's 30 RPM beside Groq, and Mistral's $10 credit beside Mistral", () => {
