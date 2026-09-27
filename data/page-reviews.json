@@ -74,8 +74,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 29,
-      "table_figures_from_records": 29,
+      "table_figures": 27,
+      "table_figures_from_records": 27,
       "tables": [
         {
           "label": "Protocol Comparison",
@@ -84,8 +84,8 @@
         },
         {
           "label": "All Payment-Enabled Services",
-          "figures": 29,
-          "from_records": 29
+          "figures": 27,
+          "from_records": 27
         }
       ],
       "reads_changes": true,
@@ -3670,12 +3670,12 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 52,
+      "table_figures": 53,
       "table_figures_from_records": 1,
       "tables": [
         {
           "label": "All x402-Enabled Services",
-          "figures": 52,
+          "figures": 53,
           "from_records": 1
         }
       ],

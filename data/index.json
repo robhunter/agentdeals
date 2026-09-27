@@ -34663,9 +34663,9 @@
     {
       "vendor": "Exa",
       "category": "AI / ML",
-      "description": "AI-native search engine API — x402 pay-per-query search, semantic and keyword search, auto-generated summaries, contents retrieval. No API key required with x402. 1,000 free searches/month with API key.",
+      "description": "Web search API for AI agents with Search, Contents, Answer, Monitors and Agent endpoints. The free tier gives $10 in credits each month, about 1,400 searches, resetting on the first of the month without rollover, plus a one-time $10 onboarding bonus; no payment method required. Free teams get 10 QPS on search. Search costs $7 per 1,000 requests; Contents $1 per 1,000 pages per content type; Deep Search $12 to $15 per 1,000 requests. Search and Contents can also be paid per request over x402 in USDC on Base or Solana, with no API key.",
       "tier": "Free",
-      "url": "https://exa.ai/pricing",
+      "url": "https://exa.ai/docs/admin/pricing",
       "tags": [
         "ai",
         "search",
@@ -34681,8 +34681,8 @@
           "protocol": "x402",
           "chain": "Base",
           "settlement": "USDC",
-          "pricing_model": "per-query",
-          "example_cost": "$0.001-0.005/query"
+          "pricing_model": "per-request",
+          "example_cost": "$0.007-0.015/search, $0.001/page (contents)"
         }
       ],
       "source_check": {
