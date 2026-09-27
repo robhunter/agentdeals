@@ -21,6 +21,8 @@ import { toSlug } from "../dist/slug.js";
 import { gateDisclosureSentence, matchingSubject } from "../dist/gate-disclosure.js";
 import { CATEGORY_RETIREMENTS } from "../dist/category-scope.js";
 import { assertPopulationFloor } from "./population-floor.ts";
+import { expireEveryPickButOne } from "./picks-floor-fixture.ts";
+import type { Offer } from "../dist/types.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -44,8 +46,8 @@ function dayAfter(from: string, days: number): string {
   return new Date(Date.parse(`${from}T00:00:00Z`) + days * DAY_MS).toISOString().slice(0, 10);
 }
 
-function rankingOf(fn: ProductFunction, date: string) {
-  return rankOffers(enrichOffers(functionMembers(offers, fn)), {
+function rankingOf(fn: ProductFunction, date: string, from: readonly Offer[] = offers) {
+  return rankOffers(enrichOffers(functionMembers(from, fn)), {
     queryKey: `best-of:${fn.categories[0] ?? fn.subtypes[0]}`,
     changes,
     date,
@@ -53,8 +55,8 @@ function rankingOf(fn: ProductFunction, date: string) {
   });
 }
 
-function qualifiedCount(fn: ProductFunction, date: string): number {
-  return rankingOf(fn, date).qualified.length;
+function qualifiedCount(fn: ProductFunction, date: string, from: readonly Offer[] = offers): number {
+  return rankingOf(fn, date, from).qualified.length;
 }
 
 function escapeForHtml(text: string): string {
@@ -66,23 +68,33 @@ function escapeForHtml(text: string): string {
     .replace(/'/g, "&#39;");
 }
 
-function reachesTheVendorFloor(fn: ProductFunction): boolean {
-  return functionMembers(offers, fn).filter(o => !o.eligibility).length >= MIN_VENDORS;
+function reachesTheVendorFloor(fn: ProductFunction, from: readonly Offer[] = offers): boolean {
+  return functionMembers(from, fn).filter(o => !o.eligibility).length >= MIN_VENDORS;
 }
 
-function slugsResolvingOn(date: string): Set<string> {
+function slugsResolvingOn(date: string, from: readonly Offer[] = offers): Set<string> {
   const resolving = new Set<string>();
   for (const fn of functions) {
     const slug = `free-${fn.slug}`;
-    if (!reachesTheVendorFloor(fn) && !published.slugs.includes(slug)) continue;
+    if (!reachesTheVendorFloor(fn, from) && !published.slugs.includes(slug)) continue;
     const resolves = bestOfPathResolves({
-      qualified: qualifiedCount(fn, date),
+      qualified: qualifiedCount(fn, date, from),
       minPicks: MIN_PICKS,
       publishedBefore: published.slugs.includes(slug),
     });
     if (resolves) resolving.add(slug);
   }
   return resolving;
+}
+
+function servedUnderThePicksFloorOn(date: string, from: readonly Offer[] = offers): ProductFunction[] {
+  const resolving = slugsResolvingOn(date, from);
+  const underTheFloor = functions.filter(fn =>
+    resolving.has(`free-${fn.slug}`) && qualifiedCount(fn, date, from) < MIN_PICKS);
+  for (const fn of underTheFloor) {
+    assert.ok(published.slugs.includes(`free-${fn.slug}`), `free-${fn.slug} serves on ${date} without ever having published`);
+  }
+  return underTheFloor;
 }
 
 describe("the rule that decides whether a best-of path resolves", () => {
@@ -151,17 +163,23 @@ describe("a best-of path that has answered 200 keeps answering", () => {
   });
 
   it("holds on the two days the qualified lists collapse furthest", () => {
-    for (const date of CLOCK_DAYS_DEMONSTRATED) {
-      const resolving = slugsResolvingOn(date);
-      const underTheFloor = functions.filter(fn =>
-        resolving.has(`free-${fn.slug}`) && qualifiedCount(fn, date) < MIN_PICKS);
+    for (const date of CLOCK_DAYS_DEMONSTRATED) servedUnderThePicksFloorOn(date);
+  });
+
+  it("keeps serving a published page whose picks a copy of the catalogue has expired, on every day it reads", () => {
+    const subject = functions
+      .filter(fn => published.slugs.includes(`free-${fn.slug}`))
+      .map(fn => ({ fn, picks: qualifiedCount(fn, TODAY) }))
+      .filter(({ picks }) => picks >= MIN_PICKS)
+      .sort((a, b) => a.picks - b.picks || a.fn.slug.localeCompare(b.fn.slug))[0]?.fn;
+    assert.ok(subject, "no published page holds more than one pick today, so there is no list to take picks from");
+    const copy = expireEveryPickButOne(offers, subject, TODAY).offers;
+
+    for (const date of [TODAY, dayAfter(TODAY, 60), dayAfter(TODAY, 120)]) {
       assert.ok(
-        underTheFloor.length > 0,
-        `${date} puts no published best-of page under the picks floor, so this day demonstrates nothing`,
+        servedUnderThePicksFloorOn(date, copy).includes(subject),
+        `free-${subject.slug} holds ${qualifiedCount(subject, date, copy)} picks on ${date} and stops resolving`,
       );
-      for (const fn of underTheFloor) {
-        assert.ok(published.slugs.includes(`free-${fn.slug}`), `free-${fn.slug} serves on ${date} without ever having published`);
-      }
     }
   });
 

@@ -21,7 +21,12 @@ const liveLinkHealth: { links: Array<{ url: string; outcome: string }> } = JSON.
   readFileSync(path.join(REPO, "data", "link_health.json"), "utf8"),
 );
 
-const deadLink = (() => {
+const liveVerificationState: { records: Array<{ vendor: string; url: string }> } = JSON.parse(
+  readFileSync(path.join(REPO, "data", "verification_state.json"), "utf8"),
+);
+const LAST_READ = new Date(Date.parse(`${TODAY}T00:00:00Z`) - 3 * 86_400_000).toISOString().slice(0, 10);
+
+function firstUngatedAlternative(passOver: ReadonlySet<string> = new Set()) {
   const offers = loadOffers();
   const unreachableToday = new Set(liveLinkHealth.links.filter((l) => l.outcome === "unreachable").map((l) => l.url));
   for (const vendor of [...new Set(offers.map((o) => o.vendor))].sort()) {
@@ -29,14 +34,39 @@ const deadLink = (() => {
     const subject = offers.find((o) => o.vendor === vendor)!;
     const alternative = substitutesFor(offers, subject)
       .map((a) => offers.find((o) => o.vendor === a.vendor)!)
-      .find((a) => gateForOffer(a) === null && !unreachableToday.has(a.url));
+      .find((a) => gateForOffer(a) === null && !unreachableToday.has(a.url) && !passOver.has(a.vendor));
     if (alternative) return { slug: toSlug(vendor), alternative };
   }
   return null;
-})();
+}
 
-const scratchLinkHealth = mkdtempSync(path.join(tmpdir(), "ranked-surfaces-links-"));
-const linkHealthWithOneDeadAlternative = path.join(scratchLinkHealth, "link_health.json");
+const deadLink = firstUngatedAlternative();
+const unconfirmedRead = firstUngatedAlternative(new Set(deadLink ? [deadLink.alternative.vendor] : []));
+
+const scratchData = mkdtempSync(path.join(tmpdir(), "ranked-surfaces-data-"));
+const linkHealthWithOneDeadAlternative = path.join(scratchData, "link_health.json");
+const verificationStateWithOneUnconfirmedRead = path.join(scratchData, "verification_state.json");
+writeFileSync(verificationStateWithOneUnconfirmedRead, JSON.stringify({
+  ...liveVerificationState,
+  records: [
+    ...liveVerificationState.records.filter((r) =>
+      !(unconfirmedRead && r.vendor === unconfirmedRead.alternative.vendor && r.url === unconfirmedRead.alternative.url)),
+    ...(unconfirmedRead
+      ? [{
+          vendor: unconfirmedRead.alternative.vendor,
+          url: unconfirmedRead.alternative.url,
+          last_attempt_at: LAST_READ,
+          last_outcome: "states_no_price",
+          last_error: null,
+          failure_category: null,
+          consecutive_failures: 0,
+          last_success: null,
+          last_read_at: LAST_READ,
+          quarantined_since: null,
+        }]
+      : []),
+  ],
+}));
 writeFileSync(linkHealthWithOneDeadAlternative, JSON.stringify({
   ...liveLinkHealth,
   links: [
@@ -59,7 +89,13 @@ function startHttpServer(): Promise<ChildProcess> {
   return new Promise((resolve, reject) => {
     const child = spawn("node", [path.join(REPO, "dist", "serve.js")], {
       stdio: ["pipe", "pipe", "pipe"],
-      env: { ...process.env, PORT: "0", BASE_URL: "http://localhost", AGENTDEALS_LINK_HEALTH_PATH: linkHealthWithOneDeadAlternative },
+      env: {
+        ...process.env,
+        PORT: "0",
+        BASE_URL: "http://localhost",
+        AGENTDEALS_LINK_HEALTH_PATH: linkHealthWithOneDeadAlternative,
+        AGENTDEALS_VERIFICATION_STATE_PATH: verificationStateWithOneUnconfirmedRead,
+      },
     });
     const timeout = setTimeout(() => { child.kill(); reject(new Error("Server startup timeout")); }, 15000);
     child.stderr!.on("data", (data: Buffer) => {
@@ -78,7 +114,7 @@ const get = async (p: string) => {
 before(async () => { proc = await startHttpServer(); });
 after(() => {
   if (proc) proc.kill();
-  rmSync(scratchLinkHealth, { recursive: true, force: true });
+  rmSync(scratchData, { recursive: true, force: true });
 });
 
 const stripComments = (src: string) =>
@@ -140,11 +176,11 @@ describe("/vendor/:slug alternatives", () => {
 });
 
 describe("/alternative-to/:slug", () => {
-  const DEMOTION_EVIDENCE: Array<{ path: string; pattern: RegExp; why: string }> = [
-    { path: `/alternative-to/${withdrawalSubjectSlug ?? ""}`, pattern: /<strong>&minus;3 free_tier_withdrawn<\/strong> Recorded [a-z ]+ on \d{4}-\d{2}-\d{2}/, why: "a withdrawn free tier must name the change and its date" },
-    { path: "/alternative-to/openai", pattern: /<strong>&minus;2 time_limited_offer<\/strong> Tier &quot;[^&]+&quot; is a credit grant/, why: "a credit grant must say so" },
-    { path: "/alternative-to/n8n", pattern: /<strong>&minus;1 stale_verification<\/strong>[^<]*not a change by the vendor/, why: "our own verification gap must be labelled as ours" },
-    { path: `/alternative-to/${deadLink?.slug ?? ""}`, pattern: new RegExp(`<strong>&minus;2 link_unreachable</strong>[^<]*pricing page has not resolved for us since ${LAST_REACHABLE}`), why: "a dead pricing page must name the date it was last reachable" },
+  const DEMOTION_EVIDENCE: Array<{ code: string; path: string; pattern: RegExp; why: string }> = [
+    { code: "free_tier_withdrawn", path: `/alternative-to/${withdrawalSubjectSlug ?? ""}`, pattern: /<strong>&minus;3 free_tier_withdrawn<\/strong> Recorded [a-z ]+ on \d{4}-\d{2}-\d{2}/, why: "a withdrawn free tier must name the change and its date" },
+    { code: "time_limited_offer", path: "/alternative-to/openai", pattern: /<strong>&minus;2 time_limited_offer<\/strong> Tier &quot;[^&]+&quot; is a credit grant/, why: "a credit grant must say so" },
+    { code: "stale_verification", path: `/alternative-to/${unconfirmedRead?.slug ?? ""}`, pattern: /<strong>&minus;1 stale_verification<\/strong>[^<]*not a change by the vendor/, why: "our own verification gap must be labelled as ours" },
+    { code: "link_unreachable", path: `/alternative-to/${deadLink?.slug ?? ""}`, pattern: new RegExp(`<strong>&minus;2 link_unreachable</strong>[^<]*pricing page has not resolved for us since ${LAST_REACHABLE}`), why: "a dead pricing page must name the date it was last reachable" },
   ];
 
   it("draws the withdrawal subject from a list that publishes one today", () => {
@@ -154,12 +190,16 @@ describe("/alternative-to/:slug", () => {
     );
   });
 
+  async function cardOn(slug: string, vendor: string): Promise<string | undefined> {
+    const { text } = await get(`/alternative-to/${slug}`);
+    const name = vendor
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+    return text.split('<div class="alt-row').slice(1).find((c) => c.includes(`class="alt-vendor-name">${name}<`));
+  }
+
   it("demotes the alternative whose pricing page a copy of the link health marks unreachable, on that alternative's own card", async () => {
     assert.ok(deadLink, "no alternatives list holds an alternative our gate lets through, so no pricing page can be marked unreachable");
-    const { text } = await get(`/alternative-to/${deadLink.slug}`);
-    const name = deadLink.alternative.vendor
-      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
-    const card = text.split('<div class="alt-row').slice(1).find((c) => c.includes(`class="alt-vendor-name">${name}<`));
+    const card = await cardOn(deadLink.slug, deadLink.alternative.vendor);
     assert.ok(card, `${deadLink.alternative.vendor} is not listed on /alternative-to/${deadLink.slug}`);
     assert.match(
       card,
@@ -168,8 +208,19 @@ describe("/alternative-to/:slug", () => {
     );
   });
 
-  for (const { path, pattern, why } of DEMOTION_EVIDENCE) {
-    it(`names the recorded fact behind every demotion on ${path}`, async () => {
+  it("demotes the alternative whose last read a copy of the verification state says found no price, on that alternative's own card", async () => {
+    assert.ok(unconfirmedRead, "no alternatives list holds a second alternative our gate lets through, so no read can be recorded against one");
+    const card = await cardOn(unconfirmedRead.slug, unconfirmedRead.alternative.vendor);
+    assert.ok(card, `${unconfirmedRead.alternative.vendor} is not listed on /alternative-to/${unconfirmedRead.slug}`);
+    assert.match(
+      card,
+      new RegExp(`<strong>&minus;1 stale_verification</strong>[^<]*on ${LAST_READ}, could read no amount, tier or rate on the page[^<]*not a change by the vendor`),
+      `${unconfirmedRead.alternative.vendor}'s card does not say what its last read found`,
+    );
+  });
+
+  for (const { code, path, pattern, why } of DEMOTION_EVIDENCE) {
+    it(`names the recorded fact behind every ${code} demotion on ${path}`, async () => {
       const { status, text } = await get(path);
       assert.strictEqual(status, 200);
       assert.match(text, /All Free Alternatives \(\d+\)/, `${path} must rank a list for the assertion to mean anything`);
