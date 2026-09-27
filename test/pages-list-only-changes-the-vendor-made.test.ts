@@ -34,7 +34,7 @@ const ourCorrections = vendorsWithAChange.map(vendor => ({
 }));
 
 const LOGS_THAT_LIST_EVERY_RECORD = new Set(["/changes", "/pricing-changes"]);
-const listsAVendorsOwnHistory = (route: string) => route.startsWith("/alternative-to/") || route.startsWith("/vendor/");
+const listsAVendorsOwnHistory = (route: string) => route.startsWith("/vendor/");
 
 const scratch = mkdtempSync(path.join(tmpdir(), "vendor-made-pages-"));
 const changesPath = path.join(scratch, "deal_changes.json");

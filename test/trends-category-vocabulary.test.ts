@@ -5,6 +5,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { getCategories, loadDealChanges } from "../dist/data.js";
 import { trackedChanges } from "../dist/change-census.js";
+import { recordsStillInForce } from "../dist/change-resolution.js";
 import { CATEGORY_ALIASES, CHANGE_LOG_CATEGORY_NAMES, resolveChangeCategory } from "../dist/category-scope.js";
 import { isOurOwnBookkeeping } from "../dist/vendor-verdict.js";
 import { POSITIVE_CHANGE_TYPES } from "../dist/change-direction.js";
@@ -148,11 +149,14 @@ describe("every trends row lands on the page it promised", () => {
   });
 
   it("leaves a record that corrects our own entry out of every category count", async () => {
-    const corrections = trackedChanges(loadDealChanges()).filter((c: { change_type: string }) => isOurOwnBookkeeping(c));
+    const log = loadDealChanges();
+    const corrections = recordsStillInForce(log).filter((c: { change_type: string }) => isOurOwnBookkeeping(c));
     assert.ok(corrections.length > 0, "no record corrects an earlier entry, so the exclusion proves nothing");
+    const tracked = trackedChanges(log);
+    assert.deepStrictEqual(corrections.filter((c) => tracked.includes(c)), [], "a correction of our own is counted as a tracked change");
     const rows = await rowsOnTheIndex();
     const summed = rows.reduce((total, r) => total + r.changes, 0);
-    assert.strictEqual(summed, trackedChanges(loadDealChanges()).length - corrections.length);
+    assert.strictEqual(summed, tracked.length);
     for (const correction of corrections) {
       const category = resolveChangeCategory((correction as { category: string }).category);
       const row = rows.find((r) => r.category === category);

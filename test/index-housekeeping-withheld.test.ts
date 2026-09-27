@@ -7,7 +7,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { assertCoversPopulation, assertPopulationFloor, type Population } from "./population-floor.ts";
 import { recordKey, storedChanges, type StoredChange } from "./withdrawn-change-records.ts";
-import { INDEX_SWEEP_STATE, INDEX_HOUSEKEEPING_REPORTS, INCLUDE_INDEX_HOUSEKEEPING_REJECTED } from "../dist/change-census.js";
+import { INDEX_SWEEP_STATE, INDEX_HOUSEKEEPING_REPORTS, INCLUDE_INDEX_HOUSEKEEPING_REJECTED, isTrackedChange } from "../dist/change-census.js";
 import { openapiSpec } from "../dist/openapi.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -137,7 +137,7 @@ describe("our own index housekeeping reaches no caller who did not ask for it", 
 
   it("counts a type-filtered total over the population all_time_total measures", async () => {
     const answer = await ask("type=product_deprecated&limit=1000");
-    const tracked = heldRecords().filter((c) => c.current_state !== INDEX_SWEEP_STATE && !c.resolution);
+    const tracked = heldRecords().filter((c) => isTrackedChange(c));
 
     assert.strictEqual(answer.all_time_total, tracked.length);
     assert.strictEqual(

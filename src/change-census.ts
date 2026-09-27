@@ -1,4 +1,4 @@
-import { isNoLongerInForce, theEventNeverHappened } from "./change-resolution.js";
+import { isACorrectionToOurOwnRecord, isNoLongerInForce, theEventNeverHappened } from "./change-resolution.js";
 import type { ChangeResolution } from "./types.js";
 
 export const INDEX_SWEEP_STATE = "Removed from index";
@@ -14,6 +14,7 @@ export const TRACKED_CHANGE_RULE_SENTENCE =
   + "Most carry the date the terms took effect; the rest carry the date we read the page.";
 
 export type CensusSubject = {
+  change_type?: string;
   current_state?: string;
   resolution?: ChangeResolution | null;
 };
@@ -33,6 +34,8 @@ export function isIndexHousekeeping(change: CensusSubject): boolean {
 }
 
 export const INDEX_HOUSEKEEPING_CLASS = "chg-housekeeping";
+
+export const CORRECTION_TO_OUR_OWN_RECORD_CLASS = "chg-correction";
 
 export const INDEX_HOUSEKEEPING_BADGE = "our index";
 
@@ -58,7 +61,7 @@ export const INCLUDE_INDEX_HOUSEKEEPING_REJECTED =
   "Invalid 'include_index_housekeeping' parameter. Expected 'true' or 'false'.";
 
 export function isTrackedChange(change: CensusSubject): boolean {
-  return !isNoLongerInForce(change) && !isIndexHousekeeping(change);
+  return !isNoLongerInForce(change) && !isIndexHousekeeping(change) && !isACorrectionToOurOwnRecord(change);
 }
 
 export function recordsOtherThanOurOwnIndexHousekeeping<T extends CensusSubject>(changes: readonly T[]): T[] {
@@ -92,7 +95,7 @@ export const CHANGE_SLICES: ChangeSlice[] = [
     noun: "changes still in force",
     field: "changes_still_in_force",
     admits:
-      "Adds our own index housekeeping — a source we dropped, written up as the vendor deprecating a product.",
+      "Adds our own bookkeeping: corrections we made to our own records, each dated the day we made it, and index housekeeping — a source we dropped, written up as the vendor deprecating a product.",
     of: (changes) => changes.filter((c) => !isNoLongerInForce(c)),
   },
   {
