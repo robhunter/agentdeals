@@ -50,8 +50,8 @@ import { vendorHistorySentence } from "./vendor-history.js";
 import { HETZNER_APRIL_CHANGES, HETZNER_CLOUD_PLANS, HETZNER_PRICES_READ, HETZNER_PRICE_SOURCE, HETZNER_SINGAPORE_EXAMPLE, cheapestOrderableHetznerPlan, hetznerEntryPriceClause, unorderableHetznerPlans } from "./hetzner-pricing.js";
 import { HUNDRED_GB_SCENARIO, HUNDRED_TB_SCENARIO, ONE_TO_ONE_SCENARIO, STORAGE_RATES_READ, STORAGE_SCALE_WORKLOADS, TEN_TO_ONE_SCENARIO, cheapestProviderAt, costAfterMonthlyEgressGrantFor, costliestProviderAt, egressAllowanceSentence, egressBillAfterMonthlyGrantFor, egressBillOnceOverAllowance, egressRatioWhereCostsMatch, fixedMonthlyGrantsSentence, monthlyEgressGrantGb, monthlyEgressGrantSentence, monthlyStorageCost, providersWithScalingEgressAllowance, rateCardFor, scaleCostFor } from "./storage-cost-model.js";
 import { changeTimelineDate, supersededLineups, supersessionNote } from "./change-lineup.js";
-import { isNoLongerInForce, eventResolutionFields, recordsStillInForce, recordsWeStandBehind, INCLUDE_RETRACTED_REJECTED } from "./change-resolution.js";
-import { trackedChanges, howEachRecordWasRead, isTrackedChange, isIndexHousekeeping, recordsOtherThanOurOwnIndexHousekeeping, changeCensus, changeCountPhrase, recordsNotCountedSentence, sliceById, CHANGE_SLICES, CENSUS_NOTE, TRACKED_CHANGE_RULE_ANCHOR, TRACKED_CHANGE_RULE_PATH, TRACKED_CHANGE_NOUN, INDEX_HOUSEKEEPING_CLASS, INDEX_HOUSEKEEPING_BADGE, INDEX_HOUSEKEEPING_BADGE_COLOR, INDEX_HOUSEKEEPING_NOTE, INCLUDE_INDEX_HOUSEKEEPING_REJECTED, indexHousekeepingHeadline } from "./change-census.js";
+import { isACorrectionToOurOwnRecord, isNoLongerInForce, eventResolutionFields, recordsStillInForce, recordsWeStandBehind, INCLUDE_RETRACTED_REJECTED } from "./change-resolution.js";
+import { trackedChanges, howEachRecordWasRead, isTrackedChange, isIndexHousekeeping, recordsOtherThanOurOwnIndexHousekeeping, changeCensus, changeCountPhrase, recordsNotCountedSentence, sliceById, CHANGE_SLICES, CENSUS_NOTE, TRACKED_CHANGE_RULE_ANCHOR, TRACKED_CHANGE_RULE_PATH, TRACKED_CHANGE_NOUN, INDEX_HOUSEKEEPING_CLASS, CORRECTION_TO_OUR_OWN_RECORD_CLASS, INDEX_HOUSEKEEPING_BADGE, INDEX_HOUSEKEEPING_BADGE_COLOR, INDEX_HOUSEKEEPING_NOTE, INCLUDE_INDEX_HOUSEKEEPING_REJECTED, indexHousekeepingHeadline } from "./change-census.js";
 import { SINCE_DEFAULT_SENTENCE } from "./change-window.js";
 import { NAME_MATCH_SENTENCE } from "./name-match.js";
 import { FREE_TIER_STANDING_LABELS, GRADE_FACTORS_WITHOUT_PRICING_HISTORY, NOT_EVIDENCE_LABELS, citesAChangeOlderThanTheGrade, freeTierStanding, gradesFirstSet, gradesLastSet, gradingDatesClause, neverTracked, pricingHistoryCoverageAnswer, pricingHistoryCoverageSentence, riskEntries, scorecard, splitByFreeTierStanding, trackedSinceGrading, type RiskEntry } from "./risk-scorecard.js";
@@ -5958,6 +5958,7 @@ function buildAlternativesPage(slug: string): string | null {
   const vendorChanges = allChanges
     .filter(c => c.vendor.toLowerCase() === vendorName.toLowerCase())
     .sort((a, b) => b.date.localeCompare(a.date));
+  const altChangesVendorMade = changesTheVendorMade(vendorChanges);
 
   const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
   const riskCause = enriched.risk_cause;
@@ -6024,9 +6025,10 @@ function buildAlternativesPage(slug: string): string | null {
     if (!offerRetired(primary)) {
       parts.push(`<div class="risk-row"><span class="risk-label">Pricing Page:</span> <a href="${escHtmlServer(primary.url)}" rel="noopener" target="_blank">${escHtmlServer(primary.url.replace(/^https?:\/\//, "").slice(0, 50))}${primary.url.replace(/^https?:\/\//, "").length > 50 ? "..." : ""}</a></div>`);
     }
-    if (vendorChanges.length > 0) {
-      parts.push(`<div class="changes-summary"><h3>Recent Pricing Changes (${vendorChanges.length})</h3>`);
-      parts.push(vendorChanges.slice(0, 5).map(c => {
+    if (altChangesVendorMade.length > 0) {
+      const shownChanges = altChangesVendorMade.slice(0, 5);
+      parts.push(`<div class="changes-summary"><h3>Recent Pricing Changes (${altChangesVendorMade.length})</h3>`);
+      parts.push(shownChanges.map(c => {
         const badge = changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
         return `<div class="change-item${isNoLongerInForce(c) ? " change-resolved" : ""}">
           <div class="change-head">
@@ -6037,8 +6039,8 @@ function buildAlternativesPage(slug: string): string | null {
           <div class="change-summary">${changeSummaryHtml(c, escHtmlServer)}</div>
         </div>`;
       }).join("\n"));
-      if (vendorChanges.length > 5) {
-        parts.push(`<p class="more-link"><a href="/vendor/${slug}">See all ${vendorChanges.length} changes &rarr;</a></p>`);
+      if (vendorChanges.length > shownChanges.length) {
+        parts.push(`<p class="more-link"><a href="/vendor/${slug}">See ${escHtmlServer(vendorName)}'s full history &rarr;</a></p>`);
       }
       parts.push("</div>");
     }
@@ -6136,7 +6138,6 @@ ${renderAuditBlock(altRanking.tie_break)}
     ? `${vendorName} has a free tier (${primary.tier}), but it's flagged as "caution" because of one specific recorded change${riskCause ? `, ${changeDateClause(riskCause)}: ${changeSummaryText(riskCause)}` : "."}`
     : `${vendorName}'s free tier (${primary.tier}) is considered risky because of one specific recorded change${riskCause ? `, ${changeDateClause(riskCause)}: ${changeSummaryText(riskCause)}` : "."} Consider migrating to a more stable alternative.`;
   const faqCountAnswer = `There are ${enrichedAlts.length} free alternatives to ${vendorName} tracked on AgentDeals across the ${listedCategories.join(", ")} categor${listedCategories.length > 1 ? "ies" : "y"}.`;
-  const altChangesVendorMade = changesTheVendorMade(vendorChanges);
   const altMostRecentChange = newestChangeInEffect(altChangesVendorMade, utcToday());
   const faqChangesAnswer = altChangesVendorMade.length > 0
     ? `${vendorName} has ${altChangesVendorMade.length} recorded pricing change${altChangesVendorMade.length !== 1 ? "s" : ""}.${altMostRecentChange ? ` The most recent was ${changeDateClause(altMostRecentChange)}: ${changeSummaryText(altMostRecentChange)}` : ""}`
@@ -26867,9 +26868,7 @@ function buildFreeTierTrackerPage(): string {
   const slug = "free-tier-tracker";
   const pubDate = "2026-03-27";
 
-  const q1Start = "2026-01-01";
-  const q1End = "2026-03-31";
-  const q1Changes = recordsStillInForce(changesInWindow(dealChanges, { start: q1Start, end: q1End }).dated);
+  const q1Changes = q1TrackedChanges;
 
   const negativeTypes = NEGATIVE_CHANGE_TYPES;
   const positiveTypes = POSITIVE_CHANGE_TYPES;
@@ -49555,7 +49554,7 @@ function buildChangesPage(): string {
     const altHtml = c.alternatives && c.alternatives.length > 0
       ? `<div class="chg-alts"><span class="chg-alts-label">Alternatives:</span> ${c.alternatives.map(a => changeVendorLinkHtml(a)).join(", ")}</div>`
       : "";
-    return `      <div class="chg-entry${isUpcoming ? " chg-upcoming" : ""}${dated ? "" : " chg-undated"}${isNoLongerInForce(c) ? " chg-resolved" : ""}${changeIsUncited(c) ? " chg-unsourced" : ""}${housekeeping ? ` ${INDEX_HOUSEKEEPING_CLASS}` : ""}"${anchorAttr}>
+    return `      <div class="chg-entry${isUpcoming ? " chg-upcoming" : ""}${dated ? "" : " chg-undated"}${isNoLongerInForce(c) ? " chg-resolved" : ""}${changeIsUncited(c) ? " chg-unsourced" : ""}${housekeeping ? ` ${INDEX_HOUSEKEEPING_CLASS}` : ""}${isACorrectionToOurOwnRecord(c) ? ` ${CORRECTION_TO_OUR_OWN_RECORD_CLASS}` : ""}"${anchorAttr}>
         <div class="chg-left">
           <div class="chg-date${dated ? "" : " chg-date-unknown"}">${changeEntryDateLabel(c)}</div>
           ${isUpcoming ? `<div class="chg-upcoming-badge">upcoming</div>` : ""}

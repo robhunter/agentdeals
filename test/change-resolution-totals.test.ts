@@ -7,7 +7,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { directionRatioLabel, RATIO_ROUNDING_TOLERANCE } from "../dist/change-direction.js";
-import { recordsStillInForce, isNoLongerInForce, resolutionTag } from "../dist/change-resolution.js";
+import { recordsStillInForce, isNoLongerInForce, isACorrectionToOurOwnRecord, resolutionTag } from "../dist/change-resolution.js";
 import { trackedChanges, isIndexHousekeeping } from "../dist/change-census.js";
 import { countsAsANegativeChange } from "../dist/product-deprecation.js";
 import { statesWhenItTookEffect } from "./effective-date-rule.ts";
@@ -321,8 +321,8 @@ describe("the population a page counts", () => {
     );
     assert.strictEqual(
       recordsStillInForce(stored as never[]).length - trackedChanges(stored as never[]).length,
-      stored.filter((c) => isIndexHousekeeping(c as never)).length,
-      "the gap between the two populations is not the index housekeeping the rule leaves out"
+      recordsStillInForce(stored as never[]).filter((c) => isIndexHousekeeping(c) || isACorrectionToOurOwnRecord(c)).length,
+      "the gap between the two populations is not the bookkeeping of our own the rule leaves out"
     );
   });
 

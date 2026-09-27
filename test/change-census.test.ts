@@ -20,6 +20,7 @@ const {
   trackedChanges,
 } = await import("../dist/change-census.js");
 const { whyNotEvidence } = await import("../dist/risk-scorecard.js");
+const { isACorrectionToOurOwnRecord } = await import("../dist/change-resolution.js");
 const { loadDealChanges, partitionByDateProvenance } = await import("../dist/data.js");
 
 const dealChanges = loadDealChanges() as any[];
@@ -117,13 +118,17 @@ describe("the change census separates four totals and names each", () => {
     }
   });
 
-  it("excludes from the tracked count exactly what the rating engine already refuses as evidence", () => {
+  it("excludes from the tracked count what the rating engine refuses as evidence, and our corrections to our own records", () => {
     const refusedByRatings = dealChanges.filter(
       (c) => whyNotEvidence(c) === "no_longer_in_force" || whyNotEvidence(c) === "index_sweep",
     );
+    const ourCorrections = dealChanges.filter((c) => !refusedByRatings.includes(c) && isACorrectionToOurOwnRecord(c));
     assert.ok(refusedByRatings.length > 0, "nothing is refused, so the agreement proves nothing");
-    assert.strictEqual(trackedChanges(dealChanges).length, dealChanges.length - refusedByRatings.length);
-    for (const change of refusedByRatings) assert.strictEqual(isTrackedChange(change), false);
+    assert.strictEqual(
+      trackedChanges(dealChanges).length,
+      dealChanges.length - refusedByRatings.length - ourCorrections.length,
+    );
+    for (const change of [...refusedByRatings, ...ourCorrections]) assert.strictEqual(isTrackedChange(change), false);
   });
 
   it("counts index housekeeping as held but not as a tracked change", () => {
@@ -132,7 +137,19 @@ describe("the change census separates four totals and names each", () => {
     for (const change of housekeeping) {
       assert.strictEqual(isTrackedChange(change), false, `${change.vendor} counts as a tracked change`);
     }
-    assert.strictEqual(census.changes_still_in_force - trackedCount, housekeeping.filter((c) => !c.resolution).length);
+  });
+
+  it("counts a correction to our own record as still in force but not as a tracked change", () => {
+    const correction = { vendor: "Acme", change_type: "record_corrected", date: "2026-09-26", current_state: "Our corrected entry" };
+    assert.strictEqual(isTrackedChange(correction), false);
+    assert.strictEqual(sliceById("in_force").of([correction]).length, 1);
+  });
+
+  it("adds to the tracked count only our own bookkeeping to reach the changes still in force", () => {
+    const ourBookkeeping = sliceById("in_force")
+      .of(dealChanges)
+      .filter((c: any) => isIndexHousekeeping(c) || isACorrectionToOurOwnRecord(c));
+    assert.strictEqual(census.changes_still_in_force - trackedCount, ourBookkeeping.length);
   });
 });
 

@@ -7,10 +7,10 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { monthlyChangeSeries, groupByMonth, discoveryMonthSeriesHeading } from "../dist/change-dates.js";
-import { INDEX_HOUSEKEEPING_CLASS } from "../dist/change-census.js";
+import { CORRECTION_TO_OUR_OWN_RECORD_CLASS, INDEX_HOUSEKEEPING_CLASS, isTrackedChange } from "../dist/change-census.js";
 import { statesWhenItTookEffect } from "./effective-date-rule.ts";
 
-const NOT_A_TRACKED_CHANGE = ["chg-resolved", INDEX_HOUSEKEEPING_CLASS];
+const NOT_A_TRACKED_CHANGE = ["chg-resolved", INDEX_HOUSEKEEPING_CLASS, CORRECTION_TO_OUR_OWN_RECORD_CLASS];
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -273,7 +273,7 @@ describe("every surface that bins changes by month", () => {
   });
 
   it("states a period comparison in figures taken from the records", async () => {
-    const eventDated = storedChanges().filter(c => statesWhenItTookEffect(c) && !c.resolution);
+    const eventDated = storedChanges().filter(c => statesWhenItTookEffect(c) && isTrackedChange(c));
     const inWindow = (start: string, end: string) =>
       eventDated.filter(c => c.date >= start && c.date <= end).length;
     const quarter = inWindow("2026-01-01", "2026-03-31");
