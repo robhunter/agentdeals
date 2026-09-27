@@ -4074,7 +4074,7 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("canonical"), "Should have canonical link");
     assert.ok(html.includes("global-nav"), "Should have global nav");
     assert.ok(html.includes("August 26, 2026"), "Should have shutdown date");
-    assert.ok(html.includes("days"), "Should have days countdown");
+    assert.ok(html.includes("Shut down"), "Should say the API has shut down");
     assert.ok(html.includes("Responses API"), "Should mention Responses API");
     assert.ok(html.includes("Azure OpenAI"), "Should mention Azure");
     assert.ok(html.includes("Anthropic Claude"), "Should mention Anthropic");
