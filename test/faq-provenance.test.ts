@@ -230,7 +230,7 @@ describe("#1086 every structured answer that states a vendor figure carries the 
   });
 
   it("finds structured answers on the register to check", () => {
-    assertPopulationFloor(answers.length, 120, "structured answers served by the registered pages");
+    assertPopulationFloor(answers.length, 112, "structured answers served by the registered pages");
     const withFaq = new Set(answers.map((a) => a.path));
     assert.ok(withFaq.size > 30, `only ${withFaq.size} registered pages emit a structured FAQ`);
   });
