@@ -702,6 +702,14 @@ export function supersededTermsHoldTheDirection(recorded: number): string {
     : `Of the ${recorded} changes we have recorded, at least one ${STORED_TERMS_NAMED_AS_PREVIOUS}.`;
 }
 
+function aNarrowingLaterReversed(change: VendorVerdictInput["changes"][number]): boolean {
+  return CHANGE_DIRECTION[change.change_type] === "negative" && change.resolution?.state === "reversed";
+}
+
+function oneReversedNarrowingSentence(change: VendorVerdictInput["changes"][number], reversedOn: string): string {
+  return `The one change we have recorded, a ${changeKindNoun(change.change_type)} ${changeDateClause(change)}, was reversed on ${reversedOn}.`;
+}
+
 export function narrowingSentence(
   changes: VendorVerdictInput["changes"],
   offer: GradedOffer | null = null,
@@ -718,6 +726,8 @@ export function narrowingSentence(
   const narrowing = narrowingChanges(byTheVendor, offer);
   if (narrowing.length === 0) {
     if (termsSuperseded) return supersededTermsHoldTheDirection(total);
+    const only = byTheVendor[0]!;
+    if (total === 1 && aNarrowingLaterReversed(only)) return oneReversedNarrowingSentence(only, only.resolution!.date);
     return total === 1
       ? `The one change we have recorded did not narrow the terms.`
       : `None of the ${total} recorded changes narrowed the terms.`;
