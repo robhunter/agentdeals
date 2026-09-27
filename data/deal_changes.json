@@ -12094,6 +12094,25 @@
       "alternatives": [],
       "recorded_date": "2026-09-27",
       "date_source": "hand_written"
+    },
+    {
+      "vendor": "Neptune.ai",
+      "change_type": "product_deprecated",
+      "date": "2025-12-03",
+      "summary": "Neptune shut down its hosted app and API on March 5, 2026, after agreeing to be acquired by OpenAI; new sign-ups and trials had closed on December 3, 2025.",
+      "previous_state": "Hosted ML experiment tracker with a free plan for individuals and researchers",
+      "current_state": "Neptune's transition hub (read 2026-09-27) gives 10 am PST on March 5, 2026 as the time the hosted app and API would be turned off and remaining hosted data deleted, and says new sign-ups and trials are closed.",
+      "impact": "high",
+      "source_url": "https://docs.neptune.ai/transition_hub",
+      "category": "AI / ML",
+      "alternatives": [
+        "Weights & Biases",
+        "Comet ML",
+        "MLflow"
+      ],
+      "recorded_date": "2026-09-27",
+      "date_source": "vendor_page",
+      "discontinued_date": "2026-03-05"
     }
   ]
 }
