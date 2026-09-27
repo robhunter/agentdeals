@@ -130,10 +130,12 @@ function stripTags(html: string): string {
   return decodeEntities(html.replace(/<[^>]*>/g, "")).replace(/\s+/g, " ").trim();
 }
 
+const A_CHANGED_MARKER = /<a\b[^>]*href="\/(?:vendor\/[a-z0-9-]+#changes|changes#vendor-[a-z0-9-]+)"[^>]*>CHANGED [A-Z]{3} \d{1,2}<\/a>/g;
+
 function headingsOf(html: string): { at: number; text: string; level: number }[] {
   return [...html.matchAll(/<h([1-4])[^>]*>([\s\S]*?)<\/h[1-4]>/g)].map(m => ({
     at: m.index!,
-    text: stripTags(m[2]!),
+    text: stripTags(m[2]!.replace(A_CHANGED_MARKER, "")),
     level: Number(m[1]!),
   }));
 }
