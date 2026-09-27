@@ -10,6 +10,7 @@ import { NAMED_SUBSET_RULE, NAMED_SUBSET_FIELD_RULE, CRITERIA_PATH, wholeRankedO
 import { toSlug } from "../dist/slug.js";
 import {
   loadOffers,
+  changesTheVendorMade,
   loadDealChanges,
   enrichOffers,
   getOfferDetails,
@@ -1115,7 +1116,7 @@ describe("the rule that decides it is published where a reader can find it", () 
     const dated = (daysAgo: number) =>
       new Date(Date.now() - daysAgo * A_DAY_IN_MS).toISOString().slice(0, 10);
     const newestChangeFor = new Map<string, string>();
-    for (const change of loadDealChanges()) {
+    for (const change of changesTheVendorMade(loadDealChanges())) {
       const key = change.vendor.toLowerCase();
       if (change.date > (newestChangeFor.get(key) ?? "")) newestChangeFor.set(key, change.date);
     }

@@ -161,8 +161,8 @@ describe("enrichOffers", () => {
   });
 
   it("recent_change includes date and summary for vendor with changes", async () => {
-    const { enrichOffers, loadOffers, loadDealChanges } = await import("../dist/data.js");
-    const changes = loadDealChanges();
+    const { enrichOffers, loadOffers, loadDealChanges, changesTheVendorMade } = await import("../dist/data.js");
+    const changes = changesTheVendorMade(loadDealChanges());
     const offers = loadOffers();
 
     if (changes.length === 0) return;
