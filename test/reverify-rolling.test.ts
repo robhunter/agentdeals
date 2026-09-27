@@ -1,5 +1,13 @@
 import { describe, it } from "node:test";
 import assert from "node:assert";
+import { mkdtempSync } from "node:fs";
+import { tmpdir } from "node:os";
+import path from "node:path";
+
+process.env.AGENTDEALS_CORROBORATION_PATH = path.join(
+  mkdtempSync(path.join(tmpdir(), "corroboration-rolling-")),
+  "change_corroboration.json"
+);
 
 const {
   pickOldestEntries,
