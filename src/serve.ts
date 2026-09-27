@@ -39,7 +39,7 @@ import { changesByVendor } from "./superseded-census.js";
 import { buildComparisonMap, comparisonSlug } from "./comparison-pairs.js";
 import { comparisonVerdictText, freeTierFaqAnswer, stabilityFaqAnswer, type ComparisonSide, type FreeTierSide, type SideFreeTier, type StabilityRating } from "./comparison-verdict.js";
 import { publishedVendorLevel, vendorVerdictSentence, vendorBadge, freeTierClaim, endingStatedInPlaceOfARating, endingShutsTheProductDown, endedClaimReliabilityAnswer, statesRiskCause, withholdingThatDoesNotLapse, demotionTheVerdictNames, narrowingSentence, ourOwnRecordsSentence, changeKindNoun, isOurOwnBookkeeping, emptyHistoryCaveatSentence, refusedReadOurConfirmationSupersedes, refusedReadWeHold, refusedReadWithholdingSentence, nothingWeReadDescribesTheTerms, unconfirmedThresholdSentence, unconfirmedTermsOpening, whyWeCannotConfirmTheseTerms, withheldForARefusedRead, withUnconfirmedTerms, refusalWithholdsStability, termsUnconfirmedBySource, termsTheVerdictWithholds, closingTerms, termsWithTheReasonWeCannotConfirmThem, termsNotVerifiedMetaSentence, termsWithheldLabel, theReadConfirmedThePrice, unconfirmedTermsSentence, whereTheDoubtSits, withheldBadgeLabel, type BadgeWithholding, type UnconfirmedTerms, type FreeTierClaim, type VendorVerdictInput, type WhereTheDoubtSits } from "./vendor-verdict.js";
-import { descriptionDeniesAFreeTier, tierRecordsAFreeTier } from "./free-tier-record.js";
+import { descriptionDeniesAFreeTier, listingOffersAFreeTier, tierRecordsAFreeTier } from "./free-tier-record.js";
 import { PAGE_HEAD_OPEN, withLedeBeforeNav } from "./page-lede.js";
 import { withReviewByline } from "./page-byline.js";
 import { freshnessClaimFor, withFreshnessClaim } from "./page-freshness.js";
@@ -13095,7 +13095,7 @@ ${mcpCtaCss()}
   <h1>Best Free AI &amp; ML Tools for Developers</h1>
 
   <div class="context">
-    <p>AI infrastructure is evolving faster than any other developer tooling category. The good news: competition has driven generous free tiers. <strong>Groq</strong> offers blazing-fast gpt-oss-120b inference at 30 RPM free. <strong>Cerebras</strong> gives <strong>1M tokens/day</strong> free. <strong>Mistral</strong> offers access to all models including Large and Codestral with $10 a month in free API credits. And open-source tools like <strong>Cline</strong>, <strong>Aider</strong>, and <strong>Gemini CLI</strong> are completely free \u2014 just bring your own API key.</p>
+    <p>AI infrastructure is evolving faster than any other developer tooling category. The good news: competition has driven generous free tiers. <strong>Groq</strong> offers blazing-fast gpt-oss-120b inference at 30 RPM free. <strong>Mistral</strong> offers access to all models including Large and Codestral with $10 a month in free API credits. And open-source tools like <strong>Cline</strong>, <strong>Aider</strong>, and <strong>Gemini CLI</strong> are completely free \u2014 just bring your own API key.</p>
     <p>This page compares every free AI and ML tool in our index \u2014 <strong>${aiOffers.length} tools</strong> across LLM APIs, AI coding assistants, ML platforms, observability, and specialized services. Whether you need an OpenAI alternative or a free AI coding assistant, we have the comparison with exact free tier limits.</p>
   </div>
 
@@ -13147,13 +13147,6 @@ ${buildCards(other)}
         <td>~30 RPM, gpt-oss-120b</td>
         <td>No</td>
         <td>Fastest free LLM inference (LPU hardware)</td>
-      </tr>
-      <tr>
-        <td style="font-weight:600"><a href="/vendor/cerebras" style="color:var(--text)">Cerebras</a></td>
-        <td>LLM API</td>
-        <td>1M tokens/day, 30 RPM</td>
-        <td>No</td>
-        <td>High-volume free inference, Llama &amp; Qwen</td>
       </tr>
       <tr>
         <td style="font-weight:600"><a href="/vendor/mistral-ai" style="color:var(--text)">Mistral AI</a></td>
@@ -13228,13 +13221,13 @@ ${buildCards(other)}
     </tbody>
   </table>
   </div>
-  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Groq and Cerebras lead on free LLM inference volume \u2014 Groq for speed (LPU), Cerebras for daily token quota (1M/day). Mistral offers the broadest model access on free tier (all models including Large). For AI coding, GitHub Copilot and Cursor both offer 2,000 free completions/month, while Gemini CLI is completely free and open-source. Langfuse is the standout for LLM observability (open-source, 50K observations free). [[freshness]]</p>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Mistral offers the broadest model access on free tier (all models including Large). For AI coding, GitHub Copilot and Cursor both offer 2,000 free completions/month, while Gemini CLI is completely free and open-source. Langfuse is the standout for LLM observability (open-source, 50K observations free). [[freshness]]</p>
 
   <h2>Which Free AI Tool Should I Use?</h2>
   <div class="decision-guide">
     <dl>
       <dt>Need fast, free LLM API access?</dt>
-      <dd><a href="/vendor/groq">Groq</a> \u2014 ultra-fast inference on LPU hardware with gpt-oss-120b, 30 RPM free. <a href="/vendor/cerebras">Cerebras</a> \u2014 1M tokens/day free, great for batch workloads. <a href="/vendor/openrouter">OpenRouter</a> for access to 25+ free models through one API.</dd>
+      <dd><a href="/vendor/groq">Groq</a> \u2014 ultra-fast inference on LPU hardware with gpt-oss-120b, 30 RPM free. <a href="/vendor/openrouter">OpenRouter</a> for access to 25+ free models through one API.</dd>
 
       <dt>Want access to all frontier models?</dt>
       <dd><a href="/vendor/mistral-ai">Mistral AI</a> \u2014 $10 a month in free API credits across its models, including Large and Codestral. Best free access to frontier-class models without credit card.</dd>
@@ -14766,7 +14759,7 @@ ${mcpCtaCss()}
   <h1>Best Free LLM APIs for Developers</h1>
 
   <div class="context">
-    <p>Free LLM API access has never been better. <strong>Groq</strong> delivers gpt-oss-120b at 30 RPM on custom LPU hardware \u2014 the fastest free inference available. <strong>Cerebras</strong> offers <strong>1M tokens/day</strong> free. <strong>Mistral</strong> gives access to all models including Large and Codestral with $10 a month in free API credits. <strong>OpenRouter</strong> aggregates 25+ free models through one OpenAI-compatible API. ${ledeClause}</p>
+    <p>Free LLM API access has never been better. <strong>Groq</strong> delivers gpt-oss-120b at 30 RPM on custom LPU hardware \u2014 the fastest free inference available. <strong>Mistral</strong> gives access to all models including Large and Codestral with $10 a month in free API credits. <strong>OpenRouter</strong> aggregates 25+ free models through one OpenAI-compatible API. ${ledeClause}</p>
     <p>This page compares <strong>${allLlmOffers.length} free LLM API providers</strong> \u2014 from proprietary model APIs (OpenAI, Anthropic, Gemini) to open-model inference platforms (Groq, Cerebras, NVIDIA NIM) and AI gateways (OpenRouter, Portkey). The rate limit comparison table below has the data developers actually need when choosing a provider.</p>
   </div>
 
@@ -14801,7 +14794,7 @@ ${buildCards(aiGateways)}
     </tbody>
   </table>
   </div>
-  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Groq and Cerebras lead on free inference \u2014 Groq for speed (custom LPU silicon), Cerebras for daily token volume (1M/day). Mistral offers the broadest model access on free tier (all models, with $10 a month in API credits). OpenRouter gives one API key for 25+ free models. ${summaryClause} Of the proprietary frontier APIs, xAI and Anthropic are pay-as-you-go (Anthropic gives new users a small amount of free credits to test the API), and OpenAI prices no GPT model free. [[freshness]]</p>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Mistral offers the broadest model access on free tier (all models, with $10 a month in API credits). OpenRouter gives one API key for 25+ free models. ${summaryClause} Of the proprietary frontier APIs, xAI and Anthropic are pay-as-you-go (Anthropic gives new users a small amount of free credits to test the API), and OpenAI prices no GPT model free. [[freshness]]</p>
 
   <h2>Which Free LLM API Should I Use?</h2>
   <div class="decision-guide">
@@ -14810,7 +14803,7 @@ ${buildCards(aiGateways)}
       <dd><a href="/vendor/groq">Groq</a> \u2014 custom LPU hardware delivers the fastest token generation, 30 RPM free with gpt-oss-120b. No credit card required.</dd>
 
       <dt>Need maximum free token volume?</dt>
-      <dd><a href="/vendor/cerebras">Cerebras</a> \u2014 1M tokens/day free, ideal for batch processing. <a href="/vendor/mistral-ai">Mistral AI</a> \u2014 $10 a month in free API credits across all models, including Large and Codestral.</dd>
+      <dd><a href="/vendor/mistral-ai">Mistral AI</a> \u2014 $10 a month in free API credits across all models, including Large and Codestral.</dd>
 
       <dt>Want one API key for many models?</dt>
       <dd><a href="/vendor/openrouter">OpenRouter</a> \u2014 25+ free models through one OpenAI-compatible API; free models are capped at 20 requests a minute and 50 a day, or 1,000 a day once you have bought at least $10 of credits. ${manyModelsAnswer}</dd>
@@ -19927,7 +19920,6 @@ function buildGoogleDeveloperProgram2026Page(): string {
   const llmAlternatives = [
     { vendor: "Groq", free: "30 RPM; 1K requests and 200K tokens/day per model", models: "gpt-oss-120b, gpt-oss-20b, Qwen3.8 27B", link: "/vendor/groq" },
     { vendor: "OpenRouter", free: "Free models available", models: "500+ models aggregated", link: "/vendor/openrouter" },
-    { vendor: "Cerebras", free: "Free tier available", models: "Llama 3, fast inference", link: "/vendor/cerebras" },
     { vendor: "Mistral AI", free: "Free plan, $10/mo API credits", models: "Mistral Large, Medium 3.5, Small 4, Devstral", link: "/vendor/mistral-ai" },
     { vendor: "Cohere", free: "Trial key available", models: "Command, Embed, Rerank", link: "/vendor/cohere" },
   ];
@@ -23000,10 +22992,9 @@ ${mcpCtaCss()}
     <h3>If you're evaluating alternatives</h3>
     <p class="impact-desc">
       <strong>1. For maximum free requests:</strong> <a href="/vendor/groq">Groq</a> — 30 RPM, no credit card, ultra-fast inference.<br>
-      <strong>2. For maximum free tokens:</strong> <a href="/vendor/cerebras">Cerebras</a> (1M tokens/day).<br>
-      <strong>3. For model variety:</strong> <a href="/vendor/openrouter">OpenRouter</a> — 25+ free models through one OpenAI-compatible API.<br>
-      <strong>4. For long context:</strong> Gemini's 1M context window is still the largest free option. If context is your key requirement, stay on Gemini and manage the rate limits.<br>
-      <strong>5. For production workloads:</strong> <a href="/vendor/anthropic-api">Anthropic</a> and <a href="/vendor/openai">OpenAI</a> also cap monthly spend by usage tier. Anthropic pauses API usage at its tier's cap ($500 a month on Start) until the next month, and OpenAI sets each organization a monthly usage limit ($100 on Tier 1).
+      <strong>2. For model variety:</strong> <a href="/vendor/openrouter">OpenRouter</a> — 25+ free models through one OpenAI-compatible API.<br>
+      <strong>3. For long context:</strong> Gemini's 1M context window is still the largest free option. If context is your key requirement, stay on Gemini and manage the rate limits.<br>
+      <strong>4. For production workloads:</strong> <a href="/vendor/anthropic-api">Anthropic</a> and <a href="/vendor/openai">OpenAI</a> also cap monthly spend by usage tier. Anthropic pauses API usage at its tier's cap ($500 a month on Start) until the next month, and OpenAI sets each organization a monthly usage limit ($100 on Tier 1).
     </p>
   </div>
 
@@ -24373,7 +24364,7 @@ ${mcpCtaCss()}
     </div>
     <div class="verdict-item">
       <strong>Fastest inference:</strong>
-      <p>Groq or Cerebras \u2014 free rate-limited tiers with ultra-fast inference on open-source models. Best for latency-sensitive applications.</p>
+      <p>Groq or Cerebras \u2014 ultra-fast inference on open-source models. Best for latency-sensitive applications.</p>
     </div>
     <div class="verdict-item">
       <strong>No vendor lock-in:</strong>
@@ -32009,29 +32000,50 @@ function buildLlmApiPricingPage(): string {
   const cellsOf = new Map(providers.map(p => [p.slug, listingCells(p.slug)]));
   const recordCells = (p: LlmProvider): ListingCells => cellsOf.get(p.slug)!;
 
-  const generousCount = providers.filter(p => p.freeType === "generous").length;
-  const creditsCount = providers.filter(p => p.freeType === "credits" || p.freeType === "limited" || p.freeType === "trial").length;
+  const freeByItsListing = (p: LlmProvider): boolean => listingOffersAFreeTier(offerForSlug(p.slug));
+  const timeLimitedByItsListing = (p: LlmProvider): boolean => {
+    const offer = offerForSlug(p.slug);
+    return offer !== null && !offerRetired(offer) && classifyTier(offer.tier).class === "time_limited";
+  };
+  const generousCount = providers.filter(p => p.freeType === "generous" && freeByItsListing(p)).length;
+  const creditsCount = providers.filter(p =>
+    timeLimitedByItsListing(p)
+    || (freeByItsListing(p) && (p.freeType === "credits" || p.freeType === "limited" || p.freeType === "trial"))
+  ).length;
 
   const stillOffered = (slugs: string[]): LlmProvider[] =>
     slugs
       .map(slug => providers.find(p => p.slug === slug))
       .filter((p): p is LlmProvider => p !== undefined && !offerRetired(offerForSlug(p.slug)));
 
+  const withAFreeTier = (slugs: string[]): LlmProvider[] =>
+    stillOffered(slugs).filter(p => listingOffersAFreeTier(offerForSlug(p.slug)));
+
   const namedWithTheirFreeTier = (slugs: string[]): string =>
-    stillOffered(slugs)
+    withAFreeTier(slugs)
       .map(p => escHtmlServer(p.name) + " &mdash; " + escHtmlServer(p.freeTier))
       .join(" &middot; ");
 
-  const namedPlainly = (slugs: string[]): string =>
-    stillOffered(slugs).map(p => escHtmlServer(p.name)).join(", ");
+  const namedAsFree = (slugs: string[]): string =>
+    withAFreeTier(slugs).map(p => escHtmlServer(p.name)).join(", ");
+
+  const inParentheses = (names: string): string => names === "" ? "" : " (" + names + ")";
+
+  const sentenceNamingTheFree = (slugs: string[], verbForOne: string, verbForMany: string, rest: string): string => {
+    const named = withAFreeTier(slugs);
+    if (named.length === 0) return "";
+    return joinWithAnd(named.map(p => escHtmlServer(p.name))) + " " + (named.length === 1 ? verbForOne : verbForMany) + " " + rest;
+  };
+
+  const freeInferenceLeaders = sentenceNamingTheFree(["groq", "cerebras"], "offers", "offer", "genuinely free inference at thousands of tokens/second.");
 
   const freeTiersThisPageStandsBehind = "The other free tiers on this page are "
-    + stillOffered(["openrouter", "cerebras", "cloudflare-workers-ai", "llm7-io"])
+    + stillOffered(["openrouter", "cloudflare-workers-ai", "llm7-io"])
       .map(p => p.name + " (" + p.freeTier + ")")
       .join(", ")
     + ".";
 
-  const thirdChoiceForPrototyping = stillOffered(["cerebras", "cloudflare-workers-ai", "llm7-io"])[0] ?? null;
+  const thirdChoiceForPrototyping = withAFreeTier(["cerebras", "cloudflare-workers-ai", "llm7-io"])[0] ?? null;
   const thirdForPrototyping = thirdChoiceForPrototyping === null
     ? ""
     : ' ' + handwrittenVendorLinkHtml(thirdChoiceForPrototyping.slug, thirdChoiceForPrototyping.name)
@@ -32091,7 +32103,7 @@ function buildLlmApiPricingPage(): string {
     { q: "Which LLM API has the best free tier in 2026?", a: "Groq's free plan allows 30 RPM, 1,000 requests and 200K tokens a day per model, no credit card required, with fast LPU-accelerated inference. " + freeTiersThisPageStandsBehind + " For frontier models specifically, Mistral's Free plan includes $10 a month in API credits." },
     { q: "How much does GPT-4o cost per token?", a: "GPT-4o costs $2.50 per million input tokens and $10 per million output tokens. For reference, 1 million tokens is roughly 750,000 words. The batch API offers 50% discount ($1.25/$5 per M tokens). GPT-4o-mini is significantly cheaper at $0.15/$0.60 per M tokens." },
     { q: "How much does Claude cost per token?", a: "Claude Fable 5.1 costs $10/M input and $50/M output tokens. Opus 5.5 is $4/$20 per M tokens, Sonnet 5 is $2/$10, and Haiku 4.5 is the budget option at $1/$5. The Batch API offers 50% discount on all models." },
-    { q: "What is the cheapest LLM API for production use?", a: "DeepSeek's deepseek-flash is $0.30/M input and $1.20/M output at peak hours, half that off-peak, with cached input at $0.006/M. Groq and Cerebras offer free tiers that can handle moderate production traffic. Google Gemini Flash models are free with rate limits." },
+    { q: "What is the cheapest LLM API for production use?", a: "DeepSeek's deepseek-flash is $0.30/M input and $1.20/M output at peak hours, half that off-peak, with cached input at $0.006/M. Groq offers free tiers that can handle moderate production traffic. Google Gemini Flash models are free with rate limits." },
     { q: "Should I use a frontier lab API or an inference provider?", a: "Use frontier lab APIs (OpenAI, Anthropic, Google) when you need their proprietary models (GPT-4o, Claude, Gemini Pro) or specific features (function calling, vision, extended thinking). Use inference providers (Groq, Cerebras, OpenRouter) when running open-source models — they're 5-10x cheaper and often faster. Many apps work well with Llama 3.3 70B or DeepSeek R1 at a fraction of frontier pricing." },
   ];
 
@@ -32217,8 +32229,8 @@ function buildLlmApiPricingPage(): string {
     '  </div>\n' +
     '\n' +
     '  <div class="executive-summary">\n' +
-    '    <p><strong>LLM API pricing:</strong> ' + providers.length + ' providers across four categories — frontier labs, inference providers, open-source hosts, and specialized services. OpenAI and Anthropic price their top model identically: GPT-6 Astra and Claude Fable 5.1 are both $10/$50 per M tokens. Gemini 3.8 Flash is $0.75/$3.75 through December 31, 2026 and $1.50/$7.50 after it. Mistral Medium 3.5 is $1.50/$7.50. Google\'s Gemini free tier covers the 3.x Flash and Flash-Lite models; 3.1 Pro Preview is paid-only. DeepSeek\'s deepseek-flash offers 1M context at $0.30/M input at peak and $0.15/M off-peak. Groq and Cerebras offer genuinely free inference at thousands of tokens/second.</p>\n' +
-    '    <p><strong>Key trends:</strong> Inference providers (Groq, Cerebras, OpenRouter) are commoditizing open-source model access — free tiers with no credit card required. xAI retired Grok 4.1 Fast on 2026-05-15; requests to its model names now go to grok-4.3 at $1.25/M input and $2.50/M output (under 200k prompt tokens). The gap between frontier and open-source quality is narrowing, making the price delta harder to justify for many use cases.</p>\n' +
+    '    <p><strong>LLM API pricing:</strong> ' + providers.length + ' providers across four categories — frontier labs, inference providers, open-source hosts, and specialized services. OpenAI and Anthropic price their top model identically: GPT-6 Astra and Claude Fable 5.1 are both $10/$50 per M tokens. Gemini 3.8 Flash is $0.75/$3.75 through December 31, 2026 and $1.50/$7.50 after it. Mistral Medium 3.5 is $1.50/$7.50. Google\'s Gemini free tier covers the 3.x Flash and Flash-Lite models; 3.1 Pro Preview is paid-only. DeepSeek\'s deepseek-flash offers 1M context at $0.30/M input at peak and $0.15/M off-peak.' + (freeInferenceLeaders === "" ? '' : ' ' + freeInferenceLeaders) + '</p>\n' +
+    '    <p><strong>Key trends:</strong> Inference providers (' + namedAsFree(["groq", "cerebras", "openrouter"]) + ') are commoditizing open-source model access — free tiers with no credit card required. xAI retired Grok 4.1 Fast on 2026-05-15; requests to its model names now go to grok-4.3 at $1.25/M input and $2.50/M output (under 200k prompt tokens). The gap between frontier and open-source quality is narrowing, making the price delta harder to justify for many use cases.</p>\n' +
     '    <p><strong>This guide covers:</strong> pricing tables, provider breakdowns, free tier analysis, cheapest-per-token rankings, pricing gotchas, recent changes, and best-for-use-case recommendations.</p>\n' +
     '  </div>\n' +
     '\n' +
@@ -32273,7 +32285,7 @@ function buildLlmApiPricingPage(): string {
     '  ' + categorySections + '\n' +
     '\n' +
     '  <h2 id="free-tiers">What You Actually Get for Free</h2>\n' +
-    '  <p class="section-intro">Free tiers range from genuinely production-viable (' + namedPlainly(["groq", "cerebras"]) + ') to token giveaways that run out in hours. Here\'s the honest breakdown.</p>\n' +
+    '  <p class="section-intro">Free tiers range from genuinely production-viable' + inParentheses(namedAsFree(["groq", "cerebras"])) + ' to token giveaways that run out in hours. Here\'s the honest breakdown.</p>\n' +
     '\n' +
     '  <div style="overflow-x:auto">\n' +
     '  <table class="pricing-table" data-figures="index">\n' +

@@ -2033,7 +2033,6 @@
         "appwrite-cloud",
         "aws",
         "azure",
-        "cerebras",
         "digitalocean",
         "firebase",
         "google-ai-pro-ultra",
@@ -2319,7 +2318,6 @@
       "vendors_asserted": [
         "anthropic-api",
         "baseten",
-        "cerebras",
         "cloudflare-workers-ai",
         "deepseek-api",
         "groq",

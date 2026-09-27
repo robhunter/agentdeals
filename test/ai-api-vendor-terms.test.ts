@@ -236,7 +236,7 @@ const STATED: Record<string, string[]> = {
   "/gemini-api-pricing-2026": [
     "OpenRouter (25+ free models).",
     "OpenRouter — 25+ free models through one OpenAI-compatible API.",
-    "5. For production workloads: Anthropic and OpenAI also cap monthly spend by usage tier. Anthropic pauses API usage at its tier's cap ($500 a month on Start) until the next month, and OpenAI sets each organization a monthly usage limit ($100 on Tier 1).",
+    "4. For production workloads: Anthropic and OpenAI also cap monthly spend by usage tier. Anthropic pauses API usage at its tier's cap ($500 a month on Start) until the next month, and OpenAI sets each organization a monthly usage limit ($100 on Tier 1).",
   ],
   "/ai-free-tiers": [
     "OpenAI removed the Assistants API on 2026-08-26.",

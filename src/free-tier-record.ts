@@ -1,10 +1,12 @@
 import { classifyTier } from "./ranking.js";
+import { offerRetired } from "./retirement.js";
 import {
   A_PRICE_OF_NOTHING,
   namesAFreePlan,
   offeredOutrightAndNotDenied,
   sentencesOf,
 } from "./superseding-reading.js";
+import type { Offer } from "./types.js";
 
 export const RECORDED_FREE_TIER_LABELS = new Set([
   "hobby",
@@ -19,6 +21,10 @@ export function tierRecordsAFreeTier(tier: string): boolean {
   if (classifyTier(tier).class !== "free") return false;
   const label = tier.toLowerCase();
   return label.includes("free") || RECORDED_FREE_TIER_LABELS.has(label);
+}
+
+export function listingOffersAFreeTier(offer: Pick<Offer, "tier"> | null | undefined): boolean {
+  return offer != null && !offerRetired(offer) && classifyTier(offer.tier).class === "free";
 }
 
 export const A_SELF_HOSTED_EDITION = /\boss\b|\bopen[\s-]?source\b|\bself[\s-]?hosted\b/i;
