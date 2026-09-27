@@ -2258,7 +2258,7 @@ function buildCategoryPage(slug: string): string | null {
   const catMapping = categoryComparisonMap[categoryName];
 
   const catVendors = new Set(catOffers.map(o => o.vendor.toLowerCase()));
-  const catChanges = dealChanges.filter(c => catVendors.has(c.vendor.toLowerCase()));
+  const catChanges = changesTheVendorMade(dealChanges).filter(c => catVendors.has(c.vendor.toLowerCase()));
   const catChangeCount = catChanges.length;
   const stabilitySummary = catChangeCount === 0
     ? "This category has been stable &mdash; no pricing changes recorded across any vendor."
@@ -3752,8 +3752,10 @@ function buildComparisonPage(slug: string): string | null {
       unconfirmableSince: levelWithheldSince(risk, risk.link_unreachable),
     };
   };
-  const sideA = comparisonSide(a.vendor, riskA, a.deal_changes.length);
-  const sideB = comparisonSide(b.vendor, riskB, b.deal_changes.length);
+  const vendorMadeA = changesTheVendorMade(a.deal_changes);
+  const vendorMadeB = changesTheVendorMade(b.deal_changes);
+  const sideA = comparisonSide(a.vendor, riskA, vendorMadeA.length);
+  const sideB = comparisonSide(b.vendor, riskB, vendorMadeB.length);
 
   const verdictText = comparisonVerdictText(freeSideA, freeSideB, sideA, sideB);
 
@@ -3904,7 +3906,7 @@ ${verdictHtml}
       <div class="detail-row"><span class="detail-label">Tier</span><span class="detail-value" style="color:var(--accent)">${escHtmlServer(a.tier)}</span></div>
       <div class="detail-row"><span class="detail-label">Verified</span><span class="detail-value">${escHtmlServer(a.verifiedDate)}</span></div>
       <div class="detail-row"><span class="detail-label">${LAST_READ_LABEL}</span><span class="detail-value">${escHtmlServer(lastReadDate(a))}</span></div>
-      <div class="detail-row"><span class="detail-label">Changes</span><span class="detail-value">${a.deal_changes.length} recorded</span></div>
+      <div class="detail-row"><span class="detail-label">Changes</span><span class="detail-value">${vendorMadeA.length} recorded</span></div>
       ${descBlockHtml(a, supersededA)}
       ${a.referral ? `<div style="margin-top:.75rem;padding:.5rem .75rem;border:1px solid #3fb95040;border-left:3px solid #3fb950;border-radius:0 6px 6px 0;background:#3fb95010;font-size:.8rem">\ud83d\udd17 <a href="${escHtmlServer(a.referral.url)}" rel="noopener sponsored" target="_blank">Referral link</a>: ${escHtmlServer(a.referral.referee_value ?? "Save with our referral link")} <a href="/disclosure" style="font-size:.7rem;color:var(--text-dim)">(disclosure)</a></div>` : ""}
     </div>
@@ -3915,7 +3917,7 @@ ${verdictHtml}
       <div class="detail-row"><span class="detail-label">Tier</span><span class="detail-value" style="color:var(--accent)">${escHtmlServer(b.tier)}</span></div>
       <div class="detail-row"><span class="detail-label">Verified</span><span class="detail-value">${escHtmlServer(b.verifiedDate)}</span></div>
       <div class="detail-row"><span class="detail-label">${LAST_READ_LABEL}</span><span class="detail-value">${escHtmlServer(lastReadDate(b))}</span></div>
-      <div class="detail-row"><span class="detail-label">Changes</span><span class="detail-value">${b.deal_changes.length} recorded</span></div>
+      <div class="detail-row"><span class="detail-label">Changes</span><span class="detail-value">${vendorMadeB.length} recorded</span></div>
       ${descBlockHtml(b, supersededB)}
       ${b.referral ? `<div style="margin-top:.75rem;padding:.5rem .75rem;border:1px solid #3fb95040;border-left:3px solid #3fb950;border-radius:0 6px 6px 0;background:#3fb95010;font-size:.8rem">\ud83d\udd17 <a href="${escHtmlServer(b.referral.url)}" rel="noopener sponsored" target="_blank">Referral link</a>: ${escHtmlServer(b.referral.referee_value ?? "Save with our referral link")} <a href="/disclosure" style="font-size:.7rem;color:var(--text-dim)">(disclosure)</a></div>` : ""}
     </div>
@@ -3926,11 +3928,11 @@ ${verdictHtml}
     <div class="changes-cols">
       <div class="changes-col">
         <h3>${escHtmlServer(a.vendor)}</h3>
-        ${changesHtml(a.deal_changes, a.vendor)}
+        ${changesHtml(vendorMadeA, a.vendor)}
       </div>
       <div class="changes-col">
         <h3>${escHtmlServer(b.vendor)}</h3>
-        ${changesHtml(b.deal_changes, b.vendor)}
+        ${changesHtml(vendorMadeB, b.vendor)}
       </div>
     </div>
   </div>
@@ -4217,6 +4219,8 @@ function buildVsPage(slug: string): string | null {
 
   const riskA = enrichOffers([offers.find(o => o.vendor === a.vendor)!])[0];
   const riskB = enrichOffers([offers.find(o => o.vendor === b.vendor)!])[0];
+  const vendorMadeA = changesTheVendorMade(a.deal_changes);
+  const vendorMadeB = changesTheVendorMade(b.deal_changes);
 
   const riskBadge = (o: { risk_level: string | null; risk_cause: RiskCause | null }) => riskBadgeHtml(o.risk_level, o.risk_cause, { margin: false });
 
@@ -4380,7 +4384,7 @@ ${globalNavCss()}
       <div class="detail-row"><span class="detail-label">Verified</span><span class="detail-value">${escHtmlServer(a.verifiedDate)}</span></div>
       <div class="detail-row"><span class="detail-label">${LAST_READ_LABEL}</span><span class="detail-value">${escHtmlServer(lastReadDate(a))}</span></div>
       <div class="detail-row"><span class="detail-label">Stability</span><span class="detail-value">${escHtmlServer(riskA.stability ?? "stable")}</span></div>
-      <div class="detail-row"><span class="detail-label">Changes</span><span class="detail-value">${a.deal_changes.length} recorded</span></div>
+      <div class="detail-row"><span class="detail-label">Changes</span><span class="detail-value">${vendorMadeA.length} recorded</span></div>
       <div class="desc-block">${publishedTermsHtml(a)}</div>
     </div>
     <div class="vendor-col">
@@ -4390,7 +4394,7 @@ ${globalNavCss()}
       <div class="detail-row"><span class="detail-label">Verified</span><span class="detail-value">${escHtmlServer(b.verifiedDate)}</span></div>
       <div class="detail-row"><span class="detail-label">${LAST_READ_LABEL}</span><span class="detail-value">${escHtmlServer(lastReadDate(b))}</span></div>
       <div class="detail-row"><span class="detail-label">Stability</span><span class="detail-value">${escHtmlServer(riskB.stability ?? "stable")}</span></div>
-      <div class="detail-row"><span class="detail-label">Changes</span><span class="detail-value">${b.deal_changes.length} recorded</span></div>
+      <div class="detail-row"><span class="detail-label">Changes</span><span class="detail-value">${vendorMadeB.length} recorded</span></div>
       <div class="desc-block">${publishedTermsHtml(b)}</div>
     </div>
   </div>
@@ -4405,11 +4409,11 @@ ${globalNavCss()}
     <div class="changes-cols">
       <div class="changes-col">
         <h3>${escHtmlServer(a.vendor)}</h3>
-        ${changesHtml(a.deal_changes, a.vendor)}
+        ${changesHtml(vendorMadeA, a.vendor)}
       </div>
       <div class="changes-col">
         <h3>${escHtmlServer(b.vendor)}</h3>
-        ${changesHtml(b.deal_changes, b.vendor)}
+        ${changesHtml(vendorMadeB, b.vendor)}
       </div>
     </div>
   </div>
@@ -8395,7 +8399,7 @@ function buildTimelyAlternativesPage(slug: string): string | null {
 
   const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
 
-  const primaryChange = dealChanges.find(c => c.vendor === config.primaryVendor);
+  const primaryChange = changesTheVendorMade(dealChanges).find(c => c.vendor === config.primaryVendor);
 
   const taggedOffers = offers.filter(o => o.tags?.includes(config.tag) && o.vendor !== config.primaryVendor);
   const enriched = enrichOffers(taggedOffers);
@@ -10167,7 +10171,7 @@ function buildAiFreeTiersPage(): string {
   const mlOfferedToday = enrichedMl.filter(o => !listingHasEnded(o));
 
   const aiChangeVendors = ["Google Gemini", "OpenAI", "Cursor", "GitHub Copilot", "Google Gemini 2.0 Flash", "Cloudflare Workers AI"];
-  const aiChanges = dealChanges.filter(c => aiChangeVendors.some(v => c.vendor.includes(v)));
+  const aiChanges = changesTheVendorMade(dealChanges).filter(c => aiChangeVendors.some(v => c.vendor.includes(v)));
   const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
 
   const llmInference = mlOfferedToday.filter(o =>
@@ -10422,7 +10426,7 @@ function buildHostingAlternativesPage(): string {
   }).join("\n");
 
   const hostingChangeVendors = ["Railway", "Render", "Fly.io", "Heroku", "Vercel", "Hetzner", "Netlify", "Cloudflare", "Koyeb", "Oracle Cloud", "DigitalOcean"];
-  const hostingChanges = dealChanges.filter(c => hostingChangeVendors.some(v => c.vendor.includes(v)));
+  const hostingChanges = changesTheVendorMade(dealChanges).filter(c => hostingChangeVendors.some(v => c.vendor.includes(v)));
   const changesHtml = hostingChanges.length > 0 ? `
   <div class="context-box" style="border-left:3px solid ${riskColors.caution}">
     <div style="font-weight:600;color:${riskColors.caution};margin-bottom:.5rem">Recent Hosting Pricing Changes</div>
@@ -10766,7 +10770,7 @@ function buildDatabaseAlternativesPage(): string {
   }).join("\n");
 
   const dbChangeVendors = ["MongoDB Atlas", "Redis Cloud", "Firebase", "Supabase", "Neon", "Turso", "Upstash", "CockroachDB"];
-  const dbChanges = dealChanges.filter(c => dbChangeVendors.some(v => c.vendor.includes(v)));
+  const dbChanges = changesTheVendorMade(dealChanges).filter(c => dbChangeVendors.some(v => c.vendor.includes(v)));
   const changesHtml = dbChanges.length > 0 ? `
   <div class="context-box" style="border-left:3px solid ${riskColors.caution}">
     <div style="font-weight:600;color:${riskColors.caution};margin-bottom:.5rem">Recent Database Pricing Changes</div>
@@ -11100,7 +11104,7 @@ function buildMonitoringAlternativesPage(): string {
   }).join("\n");
 
   const monitoringChangeVendors = ["Datadog", "New Relic", "Sentry", "Freshping", "Grafana", "BetterStack", "Rollbar", "Bugsnag", "PagerDuty"];
-  const monitoringChanges = dealChanges.filter(c => monitoringChangeVendors.some(v => c.vendor.includes(v)));
+  const monitoringChanges = changesTheVendorMade(dealChanges).filter(c => monitoringChangeVendors.some(v => c.vendor.includes(v)));
   const changesHtml = monitoringChanges.length > 0 ? `
   <div class="context-box" style="border-left:3px solid ${riskColors.caution}">
     <div style="font-weight:600;color:${riskColors.caution};margin-bottom:.5rem">Recent Monitoring Pricing Changes</div>
@@ -11429,7 +11433,7 @@ function buildCiCdAlternativesPage(): string {
   }).join("\n");
 
   const cicdChangeVendors = ["GitHub Actions", "GitLab", "CircleCI", "Buildkite", "Harness", "Bitrise", "Codefresh"];
-  const cicdChanges = dealChanges.filter(c => cicdChangeVendors.some(v => c.vendor.includes(v)));
+  const cicdChanges = changesTheVendorMade(dealChanges).filter(c => cicdChangeVendors.some(v => c.vendor.includes(v)));
   const changesHtml = cicdChanges.length > 0 ? `
   <div class="context-box" style="border-left:3px solid ${riskColors.caution}">
     <div style="font-weight:600;color:${riskColors.caution};margin-bottom:.5rem">Recent CI/CD Pricing Changes</div>
@@ -12412,7 +12416,7 @@ function buildStorageAlternativesPage(): string {
   }).join("\n");
 
   const storageChangeVendors = ["Cloudflare", "Backblaze", "Cloudinary", "ImageKit", "Google Cloud", "Tigris", "Fastly"];
-  const storageChanges = dealChanges.filter(c => storageChangeVendors.some(v => c.vendor.includes(v)));
+  const storageChanges = changesTheVendorMade(dealChanges).filter(c => storageChangeVendors.some(v => c.vendor.includes(v)));
   const changesHtml = storageChanges.length > 0 ? `
   <div class="context-box" style="border-left:3px solid ${riskColors.caution}">
     <div style="font-weight:600;color:${riskColors.caution};margin-bottom:.5rem">Recent Storage Pricing Changes</div>
@@ -13043,7 +13047,7 @@ function buildAiMlAlternativesPage(): string {
   }).join("\n");
 
   const aiChangeVendors = ["OpenAI", "Anthropic", "Google Gemini", "Mistral", "Groq", "GitHub Copilot", "Cursor", "Windsurf", "Cerebras"];
-  const aiChanges = dealChanges.filter(c => aiChangeVendors.some(v => c.vendor.includes(v)));
+  const aiChanges = changesTheVendorMade(dealChanges).filter(c => aiChangeVendors.some(v => c.vendor.includes(v)));
   const changesHtml = aiChanges.length > 0 ? `
   <div class="context-box" style="border-left:3px solid ${riskColors.caution}">
     <div style="font-weight:600;color:${riskColors.caution};margin-bottom:.5rem">Recent AI/ML Pricing Changes</div>
@@ -14360,7 +14364,7 @@ function buildIdeCodeEditorsAlternativesPage(): string {
   }).join("\n");
 
   const ideChangeVendors = ["GitHub Copilot", "Cursor", "Windsurf", "Devin", "Replit", "JetBrains", "VS Code"];
-  const ideChanges = dealChanges.filter(c => ideChangeVendors.some(v => c.vendor.includes(v)));
+  const ideChanges = changesTheVendorMade(dealChanges).filter(c => ideChangeVendors.some(v => c.vendor.includes(v)));
   const changesHtml = ideChanges.length > 0 ? `
   <div class="context-box" style="border-left:3px solid ${riskColors.caution}">
     <div style="font-weight:600;color:${riskColors.caution};margin-bottom:.5rem">Recent IDE & AI Coding Pricing Changes</div>
@@ -19908,7 +19912,7 @@ function buildGoogleDeveloperProgram2026Page(): string {
   const gdpChanges = changesTheVendorMade(dealChanges)
     .filter(c => c.vendor === "Google" && c.date >= "2026-03-30")
     .sort((a, b) => a.date.localeCompare(b.date));
-  const geminiChange = dealChanges.find(c => c.vendor === "Google Gemini" && c.change_type === "limits_reduced");
+  const geminiChange = changesTheVendorMade(dealChanges).find(c => c.vendor === "Google Gemini" && c.change_type === "limits_reduced");
 
   const cloudOffers = offers.filter(o =>
     o.category === "Cloud IaaS" && o.tier !== "Credits" && o.tier !== "Portfolio" &&
@@ -20332,9 +20336,9 @@ function buildSupabaseVsFirebasePage(): string {
   const supabaseOffer = offers.find(o => o.vendor === "Supabase" && o.category === "Databases");
   const firebaseOffer = offers.find(o => o.vendor === "Firebase" && o.category === "Databases");
 
-  const supabasePause = dealChanges.find(c => c.vendor === "Supabase" && c.change_type === "limits_reduced");
-  const firebaseStorage = dealChanges.find(c => c.vendor === "Firebase" && c.change_type === "limits_reduced");
-  const firebaseStudio = dealChanges.find(c => c.vendor === "Firebase" && c.change_type === "product_deprecated");
+  const supabasePause = changesTheVendorMade(dealChanges).find(c => c.vendor === "Supabase" && c.change_type === "limits_reduced");
+  const firebaseStorage = changesTheVendorMade(dealChanges).find(c => c.vendor === "Firebase" && c.change_type === "limits_reduced");
+  const firebaseStudio = changesTheVendorMade(dealChanges).find(c => c.vendor === "Firebase" && c.change_type === "product_deprecated");
 
   const baasAlts = offers.filter(o =>
     ["Appwrite Cloud", "PocketBase", "Nhost", "Convex"].includes(o.vendor) && o.category === "Databases"
@@ -20655,8 +20659,8 @@ function buildVercelVsNetlifyPage(): string {
   const vercelOffer = offers.find(o => o.vendor === "Vercel" && o.category === "Cloud Hosting");
   const netlifyOffer = offers.find(o => o.vendor === "Netlify" && o.category === "Cloud Hosting");
 
-  const vercelChange = dealChanges.find(c => c.vendor === "Vercel" && c.change_type === "pricing_restructured");
-  const netlifyChange = dealChanges.find(c => c.vendor === "Netlify" && c.change_type === "pricing_restructured");
+  const vercelChange = changesTheVendorMade(dealChanges).find(c => c.vendor === "Vercel" && c.change_type === "pricing_restructured");
+  const netlifyChange = changesTheVendorMade(dealChanges).find(c => c.vendor === "Netlify" && c.change_type === "pricing_restructured");
 
   const hostingAlts = offers.filter(o =>
     ["Cloudflare Pages", "Railway", "Render", "Fly.io", "Coolify", "Deno Deploy"].includes(o.vendor) && o.category === "Cloud Hosting"
@@ -20972,8 +20976,8 @@ function buildNeonVsSupabasePage(): string {
   const neonOffer = offers.find(o => o.vendor === "Neon" && o.category === "Databases");
   const supabaseOffer = offers.find(o => o.vendor === "Supabase" && o.category === "Databases");
 
-  const neonChange = dealChanges.find(c => c.vendor === "Neon" && c.change_type === "pricing_restructured");
-  const supabaseChange = dealChanges.find(c => c.vendor === "Supabase" && c.change_type === "limits_reduced");
+  const neonChange = changesTheVendorMade(dealChanges).find(c => c.vendor === "Neon" && c.change_type === "pricing_restructured");
+  const supabaseChange = changesTheVendorMade(dealChanges).find(c => c.vendor === "Supabase" && c.change_type === "limits_reduced");
 
   const dbAlts = offers.filter(o =>
     ["CockroachDB", "Turso", "Railway", "Xata Lite", "Convex"].includes(o.vendor) && o.category === "Databases"
@@ -21286,8 +21290,8 @@ function buildRailwayVsRenderPage(): string {
   const railwayOffer = offers.find(o => o.vendor === "Railway" && o.category === "Cloud Hosting");
   const renderOffer = offers.find(o => o.vendor === "Render" && o.category === "Cloud Hosting");
 
-  const railwayChange = dealChanges.find(c => c.vendor === "Railway" && c.change_type === "limits_increased");
-  const renderChange = dealChanges.find(c => c.vendor === "Render" && c.change_type === "limits_reduced");
+  const railwayChange = changesTheVendorMade(dealChanges).find(c => c.vendor === "Railway" && c.change_type === "limits_increased");
+  const renderChange = changesTheVendorMade(dealChanges).find(c => c.vendor === "Render" && c.change_type === "limits_reduced");
 
   const hostingAlts = offers.filter(o =>
     ["Fly.io", "Vercel", "Netlify", "Coolify", "DigitalOcean App Platform", "Koyeb"].includes(o.vendor) && o.category === "Cloud Hosting"
@@ -21607,8 +21611,8 @@ function buildDatadogVsNewRelicPage(): string {
   const datadogOffer = offers.find(o => o.vendor === "Datadog" && o.category === "Monitoring");
   const newRelicOffer = offers.find(o => o.vendor === "New Relic" && o.category === "Monitoring");
 
-  const datadogChanges = dealChanges.filter(c => c.vendor === "Datadog");
-  const newRelicChanges = dealChanges.filter(c => c.vendor === "New Relic");
+  const datadogChanges = changesTheVendorMade(dealChanges).filter(c => c.vendor === "Datadog");
+  const newRelicChanges = changesTheVendorMade(dealChanges).filter(c => c.vendor === "New Relic");
   const relatedChanges = [...datadogChanges, ...newRelicChanges];
 
   const monitoringAlts = offers.filter(o =>
@@ -21920,9 +21924,9 @@ function buildHcpTerraformMigrationPage(): string {
   const slug = "hcp-terraform-migration";
   const pubDate = "2026-03-26";
 
-  const hcpChange = dealChanges.find(c => c.vendor === "HCP Terraform" && c.change_type === "pricing_restructured");
+  const hcpChange = changesTheVendorMade(dealChanges).find(c => c.vendor === "HCP Terraform" && c.change_type === "pricing_restructured");
   const hcpLicense = dealChanges.find(c => c.vendor === "HCP Terraform" && c.summary?.includes("BSL"));
-  const terragruntLaunch = dealChanges.find(c => c.vendor === "Terragrunt Scale");
+  const terragruntLaunch = changesTheVendorMade(dealChanges).find(c => c.vendor === "Terragrunt Scale");
 
   const altOffers = offers.filter(o => (o.tags ?? []).includes("terraform-alternative"));
 
@@ -22749,8 +22753,8 @@ function buildGeminiApiPricing2026Page(): string {
   const slug = "gemini-api-pricing-2026";
   const pubDate = "2026-03-26";
 
-  const rateLimitChange = dealChanges.find(c => c.vendor === "Google Gemini" && c.change_type === "limits_reduced");
-  const spendCapChange = dealChanges.find(c => c.vendor === "Google Gemini API" && c.change_type === "restriction");
+  const rateLimitChange = changesTheVendorMade(dealChanges).find(c => c.vendor === "Google Gemini" && c.change_type === "limits_reduced");
+  const spendCapChange = changesTheVendorMade(dealChanges).find(c => c.vendor === "Google Gemini API" && c.change_type === "restriction");
 
   const llmProviders = [
     { name: "Google Gemini API", slug: "google-gemini-api" },
@@ -48410,7 +48414,7 @@ function buildEmbedVendorWidget(slug: string, theme: "dark" | "light"): string |
   if (vendorOffers.length === 0) return null;
 
   const { status, label: statusLabel } = getBadgeStatus(slug);
-  const vendorChanges = dealChanges
+  const vendorChanges = changesTheVendorMade(dealChanges)
     .filter(c => toSlug(c.vendor) === slug)
     .sort((a, b) => b.date.localeCompare(a.date))
     .slice(0, 3);
@@ -48474,7 +48478,7 @@ function buildEmbedCategoryWidget(slug: string, theme: "dark" | "light"): string
 }
 
 function buildEmbedChangesWidget(theme: "dark" | "light"): string {
-  const recent = [...dealChanges]
+  const recent = changesTheVendorMade(dealChanges)
     .sort((a, b) => b.date.localeCompare(a.date))
     .slice(0, 10);
 
@@ -50230,7 +50234,7 @@ function buildDeadlinesPage(): string {
   const today = new Date().toISOString().slice(0, 10);
   const todayMs = new Date(today + "T00:00:00Z").getTime();
 
-  const deadlines = allChanges
+  const deadlines = changesTheVendorMade(allChanges)
     .filter(c => c.date > today)
     .sort((a, b) => a.date.localeCompare(b.date));
 

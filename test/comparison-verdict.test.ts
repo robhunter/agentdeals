@@ -17,7 +17,7 @@ import {
   type FreeTierSide,
 } from "../dist/comparison-verdict.js";
 import { buildComparisonMap } from "../dist/comparison-pairs.js";
-import { enrichOffers, loadDealChanges, loadOffers } from "../dist/data.js";
+import { changesTheVendorMade, enrichOffers, loadDealChanges, loadOffers } from "../dist/data.js";
 import { levelWithheldReason, levelWithheldSince, type LevelWithheldReason } from "../dist/source-check.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -259,12 +259,12 @@ describe("comparison verdict — the prose and the structured data carry the sam
 });
 
 const offers = loadOffers();
-const changes = loadDealChanges();
+const changesTheVendorsMade = changesTheVendorMade(loadDealChanges());
 const enriched = new Map<string, ReturnType<typeof enrichOffers>[number]>();
 for (const e of enrichOffers(offers)) if (!enriched.has(e.vendor)) enriched.set(e.vendor, e);
 
 function countFor(vendor: string): number {
-  return changes.filter(c => c.vendor.toLowerCase() === vendor.toLowerCase()).length;
+  return changesTheVendorsMade.filter(c => c.vendor.toLowerCase() === vendor.toLowerCase()).length;
 }
 
 function sideFor(vendor: string): ComparisonSide | null {
