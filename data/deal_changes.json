@@ -12381,6 +12381,21 @@
       "alternatives": [],
       "recorded_date": "2026-09-27",
       "date_source": "hand_written"
+    },
+    {
+      "vendor": "Svix",
+      "change_type": "limits_reduced",
+      "date": "2026-09-27",
+      "summary": "Svix cut its Free plan from 200 to 50 messages a second and from 30-day to 7-day payload retention, and moved the 99.9% uptime SLA to a new Basic plan from $20 a month. Its pricing page changed between the Internet Archive's 2026-09-14 capture and our read on 2026-09-27.",
+      "tier": "Free",
+      "previous_state": "Free: 200 messages a second, 30-day payload retention, 99.9% uptime SLA, 50,000 messages a month included",
+      "current_state": "Free: up to 50,000 messages a month, 50 messages a second, 7-day payload retention; the 99.9% SLA, 200 messages a second and 30-day retention are on Basic, from $20 a month",
+      "impact": "medium",
+      "source_url": "https://www.svix.com/pricing/",
+      "category": "Messaging",
+      "alternatives": [],
+      "recorded_date": "2026-09-27",
+      "date_source": "hand_written"
     }
   ]
 }

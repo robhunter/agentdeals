@@ -328,7 +328,8 @@
       "source_url": "https://www.svix.com/pricing/",
       "record_date": "2026-09-09",
       "change_type": "limits_increased",
-      "summary": "The free tier now has a limit of 200 messages/second instead of 50 messages/second."
+      "summary": "The free tier now has a limit of 200 messages/second instead of 50 messages/second.",
+      "reverted_on": "2026-09-27"
     },
     {
       "vendor": "Mintlify",
