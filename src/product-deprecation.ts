@@ -139,6 +139,10 @@ export function deprecationTouchesTheListing(change: DeprecationSubject): boolea
   return deprecationCall(change) !== "none";
 }
 
+export function changeTouchesTheListing(change: DeprecationSubject): boolean {
+  return change.change_type !== PRODUCT_DEPRECATED || deprecationTouchesTheListing(change);
+}
+
 export function countsAsANegativeChange(change: DeprecationSubject): boolean {
   if (!NEGATIVE_CHANGE_TYPES.has(change.change_type)) return false;
   return change.change_type !== PRODUCT_DEPRECATED || deprecationTouchesTheListing(change);

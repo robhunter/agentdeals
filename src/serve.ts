@@ -100,7 +100,7 @@ import {
 import { changeAnchor, changeRecordHref } from "./change-anchor.js";
 import { SSE_KEEPALIVE_FRAME, keepaliveIntervalMs, sessionRecoveryBody } from "./mcp-stream.js";
 import { ASSISTANTS_API_SHUTDOWN } from "./assistants-shutdown.js";
-import { countsAsANegativeChange, discontinuedClause, discontinuedOnOrBefore, endsAFreeTier } from "./product-deprecation.js";
+import { changeTouchesTheListing, countsAsANegativeChange, discontinuedClause, discontinuedOnOrBefore, endsAFreeTier } from "./product-deprecation.js";
 import { rankOffers, rankForListing, rotateListing, utcDate, gateFor, notAFreeOfferGateFor, descriptionDeniesFreeTier, classifyTier, CRITERIA_PATH, DEMOTE_ONLY_POLICY, DISCLOSURE_RATIONALE, TIE_BREAK_ALGORITHM, NAMED_SUBSET_RULE, NAMED_SUBSET_FIELD_RULE, wholeRankedOrderClause, GATE_TABLE, gateTableRowText, DEMERIT_TABLE, demeritTableRowText, NOT_FREE_TIER_RULES, TIME_LIMITED_TIER_RULES, type TieBreak, type Gate } from "./ranking.js";
 import type { RankedEntry, RankingResult } from "./ranking.js";
 import { eligibilityGateAsPublished, gatedShareDescriptionClause, gatedShareLede, publishableEligibilityConditions } from "./eligibility.js";
@@ -948,11 +948,13 @@ const hasAlreadyTakenEffect = (c: { date: string }) => c.date <= today;
 const recentChanges = changesTheVendorMade(dealChanges)
   .filter(isEventDated)
   .filter(hasAlreadyTakenEffect)
+  .filter(changeTouchesTheListing)
   .sort((a, b) => b.date.localeCompare(a.date))
   .slice(0, RECENT_CHANGES_ON_THE_HOME_PAGE);
 
 const upcomingDeadlines = changesTheVendorMade(dealChanges)
   .filter((c) => !hasAlreadyTakenEffect(c))
+  .filter(changeTouchesTheListing)
   .sort((a, b) => a.date.localeCompare(b.date))
   .slice(0, UPCOMING_DEADLINES_ON_THE_HOME_PAGE);
 
