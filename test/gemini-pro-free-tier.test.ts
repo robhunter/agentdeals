@@ -216,6 +216,7 @@ const S3 = "On 2025-12-06 Google cut 2.5 Flash's free tier from 250 requests a d
 
 const STATED: Record<string, string[]> = {
   "/gcp-free-tier-2026": [
+    "Gemini API free tier (AI Studio) + Cloud Functions + Cloud Storage.",
     "$300 credit for 90 days, credit card required. Accounts opened after 2026-03-02 cannot spend it on the Gemini API.",
     "Free tier on the Gemini 3.x Flash and Flash-Lite models; limits shown per project in AI Studio",
     "The $300 trial is credit for Google Cloud products over 90 days; accounts opened after 2026-03-02 cannot spend it on the Gemini API. The Gemini API has its own free tier, with limits shown per project in AI Studio.",
@@ -242,14 +243,15 @@ const STATED: Record<string, string[]> = {
   "/openai-assistants-migration": [
     "Free on Gemini 3.x Flash models",
     "Google Gemini API has a free tier on its 3.x Flash models.",
+    "Switching providers can reduce or increase costs, depending on the models you move to.",
   ],
   "/gemini-api-pricing-2026": [
     "Gemini API billing changes in March and April 2026: spend caps by tier ($250 to $100K+ a month, enforced from April 1), prepay for some new users, and Gemini 3.1 Pro Preview paid only. The free tier covers the Gemini 3.x Flash and Flash-Lite models.",
-    "Google began enforcing monthly spend caps on the Gemini API on April 1, 2026 (Tier 1: $250, Tier 2: $2,000, Tier 3: $20,000 to $100,000+). When a billing account reaches its cap, requests pause until the next billing month. Since March 23, 2026, AI Studio may ask new users to prepay at least $10 to set up billing. Gemini 3.1 Pro Preview is paid only.",
+    "Google began enforcing monthly spend caps on the Gemini API on April 1, 2026 (Tier 1: $250, Tier 2: $2,000, Tier 3: $20,000 to $100,000+). When a billing account reaches its cap, requests pause until the next billing month. Since March 23, 2026, AI Studio may ask new users to prepay to set up billing (minimum $5). Gemini 3.1 Pro Preview is paid only.",
     "What Changed on April 1",
     "Since April 1, 2026, billing-account spend caps pause API requests when an account reaches its tier's cap.",
     "Prepay may be required for new users (from March 23, 2026)",
-    "Minimum $10 prepayment",
+    "Minimum $5 prepayment",
     "Dated changes to the Gemini API's free tier and billing.",
     "Google added project-level spend caps on March 12, 2026.",
     "Free Tier Cut",
@@ -264,7 +266,7 @@ const STATED: Record<string, string[]> = {
     "Gemini 3.1 Pro Preview has no free tier. The free tier covers the 3.x Flash and Flash-Lite models, including 3.8 Flash.",
     "3. Move to the 3.x models — Gemini 2.0 Flash shut down on 2026-06-01, and new projects cannot use the 2.5 models. Google points new projects to gemini-3.5-flash-lite or gemini-3.8-flash.",
     "Stay on Gemini Flash. Set budget alerts, and use 3.5 Flash-Lite or 3.8 Flash for new work.",
-    "Since March 23, 2026, AI Studio may ask a new user to prepay at least $10 to set up billing; others choose between Prepay and Postpay.",
+    "Since March 23, 2026, AI Studio may ask a new user to prepay to set up billing (minimum $5); others choose between Prepay and Postpay.",
     "The Gemini 3.x Flash and Flash-Lite models are free. Google publishes no free-tier limits; AI Studio shows each project's. For lightweight tasks such as classification, extraction and simple Q&A, 3.5 Flash-Lite or 3.1 Flash-Lite costs nothing.",
     "1. Set project-level spend caps in AI Studio (available since March 12, 2026; Google marks them experimental).",
     "every project on a billing account shares its tier spend cap",
@@ -273,7 +275,24 @@ const STATED: Record<string, string[]> = {
     "All GPT models paid",
     "Small free credit for new users",
     "Fable 5.1, Opus 5.5, Sonnet 5, Haiku 4.5",
-    "Groq's free plan allows 30 requests a minute and 1,000 a day per model. Mistral AI includes $10 a month in API credits. OpenRouter serves about 30 free models through one API.",
+    "Groq's free plan allows 30 requests a minute and 1,000 a day per model. Mistral AI includes $10 a month in API credits. OpenRouter serves 25+ free models through one API.",
+    "How Gemini's free tier compares to alternatives.",
+    "Groq and OpenRouter publish their free limits, which Google no longer does: Groq's free plan allows 30 requests a minute and 1,000 a day per model; OpenRouter's free models allow 20 a minute and 50 a day.",
+    "This guide covers Gemini API pricing changes through September 2026.",
+  ],
+};
+
+const WITHDRAWN: Record<string, string[]> = {
+  "/gcp-free-tier-2026": ["Vertex AI Gemini (free tier)"],
+  "/llm-api-pricing": ["$1.25/M for Gemini Pro"],
+  "/openai-assistants-migration": ["30–70% (Gemini's free tier)"],
+  "/gemini-api-pricing-2026": [
+    "prepay at least $10",
+    "Minimum $10 prepayment",
+    "about 30 free models",
+    "Sorted by free tier generosity",
+    "more generous free tiers than Gemini",
+    "pricing changes through April 2026",
   ],
 };
 
@@ -286,7 +305,7 @@ describe("Gemini free tier claims", () => {
     server = await startServer();
     routes = await everyPublishedRoute();
     found = await crawl(routes);
-    for (const page of [...Object.keys(STATED), "/shutdowns"]) {
+    for (const page of new Set([...Object.keys(STATED), ...Object.keys(WITHDRAWN), "/shutdowns"])) {
       served.set(page, await (await fetch(`${base}${page}`)).text());
     }
   });
@@ -334,6 +353,15 @@ describe("Gemini free tier claims", () => {
       return lines.filter((line) => !text.includes(line)).map((line) => `${page}: ${line}`);
     });
     assert.deepStrictEqual(missing, []);
+  });
+
+  it("renders none of the text those replacements withdrew", () => {
+    const remaining = Object.entries(WITHDRAWN).flatMap(([page, lines]) => {
+      const html = served.get(page)!;
+      const text = `${readableText(html)} ${structuredStrings(html).join(" ")}`;
+      return lines.filter((line) => text.includes(line)).map((line) => `${page}: ${line}`);
+    });
+    assert.deepStrictEqual(remaining, []);
   });
 
   it("keeps saying Gemini 3.1 Pro is paid-only", () => {
