@@ -18,7 +18,6 @@ type LoggedChange = { vendor: string; change_type: string; date: string; resolut
 const liveLog = JSON.parse(readFileSync(path.join(REPO, "data", "deal_changes.json"), "utf8"));
 const catalogue = JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf8"));
 const everyVendor: string[] = [...new Set<string>(catalogue.offers.map((o: { vendor: string }) => o.vendor))];
-const madeByTheVendor = (c: LoggedChange) => c.change_type !== "record_corrected" && !c.resolution;
 
 const fixtureRow = {
   previous_state: "Our earlier entry",
@@ -53,8 +52,10 @@ const aRetractedRemovalBesideEveryVendor = everyVendor.map(vendor => ({
   ...retraction(vendor),
 }));
 
-const logWithARetractedCopyAheadOfEachVendorChange: LoggedChange[] = liveLog.changes.flatMap((c: LoggedChange) =>
-  madeByTheVendor(c) ? [{ ...c, date: dayBefore(c.date), ...retraction(c.vendor) }, c] : [c],
+const isOurCorrection = (c: LoggedChange) => c.change_type === "record_corrected";
+
+const logWithARetractedCopyAheadOfEachRecord: LoggedChange[] = liveLog.changes.flatMap((c: LoggedChange) =>
+  isOurCorrection(c) ? [c] : [{ ...c, date: dayBefore(c.date), ...retraction(c.vendor) }, c],
 );
 
 const LOGS_THAT_LIST_EVERY_RECORD = new Set(["/changes", "/pricing-changes"]);
@@ -65,7 +66,7 @@ const scratch = mkdtempSync(path.join(tmpdir(), "vendor-made-pages-"));
 const changesPath = path.join(scratch, "deal_changes.json");
 writeFileSync(changesPath, JSON.stringify({
   ...liveLog,
-  changes: [...logWithARetractedCopyAheadOfEachVendorChange, ...ourCorrectionBesideEveryVendor, ...aRetractedRemovalBesideEveryVendor],
+  changes: [...logWithARetractedCopyAheadOfEachRecord, ...ourCorrectionBesideEveryVendor, ...aRetractedRemovalBesideEveryVendor],
 }));
 
 function serve(env: Record<string, string>): Promise<{ child: ChildProcess; port: number }> {
@@ -131,7 +132,7 @@ async function routesPrintingOurRows(routes: string[]): Promise<{ printing: stri
 describe("a page that lists pricing changes lists only the changes the vendor made", () => {
   it("prints none of our own corrections or retractions outside the logs and the vendor's own history", async () => {
     assert.ok(everyVendor.length > 0, "the catalogue holds no vendor, so no correction can be placed beside one");
-    assert.ok(liveLog.changes.some(madeByTheVendor), "the log holds no vendor change, so no retracted copy can be placed ahead of one");
+    assert.ok(liveLog.changes.some((c: LoggedChange) => !isOurCorrection(c)), "the log holds no record a retracted copy can be placed ahead of");
     const sitemapRoutes = await routesInEverySitemap();
     for (const route of ["/deadlines", "/ai-free-tiers", "/railway-vs-render", "/datadog-alternatives"]) {
       assert.ok(sitemapRoutes.includes(route), `${route} is missing from the sitemaps this sweep reads`);
@@ -185,7 +186,7 @@ describe("a page that lists pricing changes lists only the changes the vendor ma
     }
   });
 
-  it("keeps our corrections and retractions, labelled, in the vendor's own history", async () => {
+  it("keeps our corrections and retractions in the vendor's own history", async () => {
     const [vendorPage] = (await routesIn("/sitemap-vendors.xml")).filter(listsAVendorsOwnHistory);
     assert.ok(vendorPage, "the vendor sitemap lists no vendor page");
     const html = await (await fetch(`http://localhost:${port}${vendorPage}`)).text();
