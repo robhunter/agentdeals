@@ -6696,8 +6696,8 @@
     {
       "vendor": "Cohere",
       "category": "AI / ML",
-      "description": "AI model API. Trial key: 1,000 API calls/month across all endpoints (Chat, Embed, Rerank). Access to Command R+, Rerank 3.5, Embed 4. Non-commercial use only",
-      "tier": "Trial Key",
+      "description": "AI model API for Command chat models, Embed, Rerank, Transcribe and Parse. Every account starts with a Trial API key: calls made with it are free, limited to 1,000 API calls a month, and may not be used for production or commercial purposes. Trial rate limits: 20 requests a minute per Chat model, 2,000 Embed inputs a minute and 10 Rerank requests a minute. Trial keys can use all of Cohere's models and APIs. Production keys are pay-as-you-go. Prices per 1M tokens: Command R7B $0.0375/$0.15; Command R $0.15/$0.60. The pricing page lists Command A+ (Apache 2.0) at $0 through an API key and as a model download.",
+      "tier": "Free",
       "url": "https://cohere.com/pricing",
       "tags": [
         "ai",
@@ -34337,17 +34337,16 @@
     {
       "vendor": "Cloudflare Dynamic Workers",
       "category": "Cloud Hosting",
-      "description": "Runtime sandbox for executing AI-generated code using V8 isolates — starts in milliseconds (vs hundreds of ms for containers). Dynamic Worker Loader API enables Workers to instantiate new Workers at runtime with code specified on-the-fly. Beta pricing: $0.002/unique worker/day (currently waived during beta) + standard CPU/invocation costs. Requires Workers Paid plan ($5/mo). Use cases: AI agent code execution, user-submitted code sandboxing, dynamic API generation",
-      "tier": "Beta",
-      "url": "https://developers.cloudflare.com/workers/runtime-apis/dynamic-workers/",
+      "description": "Runtime sandbox for executing AI-generated code in V8 isolates: a Worker can create new Workers at runtime from code supplied on the fly. Only available on the Workers Paid plan (minimum $5 a month per account). Included each month: 1,000 unique Dynamic Workers, 10 million requests and 30 million CPU milliseconds; beyond that, $0.002 per Dynamic Worker per day, $0.30 per million requests and $0.02 per million CPU milliseconds. Dynamic Workers created daily have been billed since May 26, 2026.",
+      "tier": "Paid",
+      "url": "https://developers.cloudflare.com/dynamic-workers/pricing/",
       "tags": [
         "serverless",
         "sandbox",
         "ai-agents",
         "code-execution",
         "isolates",
-        "cloudflare",
-        "beta"
+        "cloudflare"
       ],
       "verifiedDate": "2026-04-14",
       "referral_program": {
@@ -35117,7 +35116,7 @@
       "vendor": "Modal",
       "category": "AI / ML",
       "description": "Serverless platform for running CPU and GPU workloads. The Starter plan has no monthly fee and includes $30 of compute per month (GPU, CPU and memory), 3 workspace seats, 100 containers and 10 GPU concurrency. Usage beyond the $30 is billed per second: T4 $0.000164 per second; H100 $0.001097 per second. Since 2026-09-01, Shared Endpoints are billed per token from the first request and are not covered by the $30. Team is $250 per month with $100 of compute included.",
-      "tier": "Free Credits",
+      "tier": "Free",
       "url": "https://modal.com/pricing",
       "tags": [
         "ai",

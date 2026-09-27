@@ -789,6 +789,9 @@
     "/best": {
       "daily": true
     },
+    "/best/free-agent-sandbox": {
+      "daily": true
+    },
     "/best/free-ai-coding": {
       "daily": true
     },
