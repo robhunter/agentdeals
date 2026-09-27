@@ -16,6 +16,10 @@ process.env.AGENTDEALS_REFUSALS_PATH = path.join(
   mkdtempSync(path.join(tmpdir(), "refusals-gate-")),
   "change_refusals.json"
 );
+process.env.AGENTDEALS_CORROBORATION_PATH = path.join(
+  mkdtempSync(path.join(tmpdir(), "corroboration-gate-")),
+  "change_corroboration.json"
+);
 
 const {
   describesChange,

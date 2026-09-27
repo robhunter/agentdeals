@@ -132,8 +132,17 @@ take_mains_copy_of_what_this_run_derives() {
   echo "── Replayed over a conflict in $(tr '\n' ' ' <<<"$conflicted" | sed 's/ *$//'), which this run regenerates from the tree it replayed onto. Took main's copy and left the derivation below to overwrite it, rather than holding the batch for a merge whose result is discarded either way ──"
 }
 
+put_back_what_this_run_does_not_commit() {
+  local stray
+  stray="$(git diff --name-only HEAD --)" || return 1
+  [ -n "$stray" ] || return 0
+  echo "── The workspace holds changes this run's commit does not, in $(tr '\n' ' ' <<<"$stray" | sed 's/ *$//'). Only the commit reaches main and a rebase will not start over them, so they are put back as the commit has them ──"
+  git reset -q --hard HEAD
+}
+
 replay_onto_main() {
   READINGS_THE_REPLAY_COULD_NOT_MERGE=""
+  put_back_what_this_run_does_not_commit || return 1
   git fetch origin main || return 1
   if git rebase FETCH_HEAD; then
     COMMIT="$(git rev-parse --short HEAD)"
