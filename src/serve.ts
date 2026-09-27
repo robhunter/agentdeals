@@ -23609,7 +23609,8 @@ function buildStabilityDashboardPage(): string {
   const slug = "stability";
 
   const stabilityMap = publishedStabilityIndex();
-  const allChanges = changesTheVendorMade(loadDealChanges());
+  const everyRecord = loadDealChanges();
+  const allChanges = changesTheVendorMade(everyRecord);
 
   const vendorChangesMap = new Map<string, typeof allChanges>();
   for (const c of allChanges) {
@@ -23716,7 +23717,7 @@ function buildStabilityDashboardPage(): string {
     name: title,
     description: metaDesc,
     creator: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
-    dateModified: latestChangeDate(allChanges) ?? "2026-04-02",
+    dateModified: latestChangeDate(everyRecord) ?? "2026-04-02",
     url: `${BASE_URL}/${slug}`,
     variableMeasured: [
       { "@type": "PropertyValue", name: "Volatile Offers", value: publishedOffers.volatile },
@@ -23808,7 +23809,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("changes")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternatives">Guides</a> &rsaquo; Stability Dashboard</div>
   <h1>${escHtmlServer(title)}</h1>
-  <p class="subtitle">Real-time risk ratings based on <strong>${trackedChanges(allChanges).length}</strong> <a href="${TRACKED_CHANGE_RULE_PATH}">${TRACKED_CHANGE_NOUN}</a> across <strong>${vendorsClassified}</strong> vendors.${dataChangesSegment(allChanges)}</p>
+  <p class="subtitle">Real-time risk ratings based on <strong>${trackedChanges(everyRecord).length}</strong> <a href="${TRACKED_CHANGE_RULE_PATH}">${TRACKED_CHANGE_NOUN}</a> across <strong>${vendorsClassified}</strong> vendors.${dataChangesSegment(allChanges)}</p>
 
   <div class="summary-stats">
     <div class="stat-card">
@@ -23874,11 +23875,11 @@ ${mcpCtaCss()}
     }).join("\n    ")}
   </div>
   <div class="context-box">
-    <strong>What &ldquo;stable&rdquo; rests on:</strong> An offer is rated stable when we have tracked no negative pricing change for it and nothing is withholding our reading of its pricing page. Absence of bad news is only a signal where we could look &mdash; so an offer whose page we cannot reach or cannot read, whose last read we refused, or whose listing is gated is unrated rather than stable. Our tracking covers ${changeCountPhrase("tracked", allChanges)} since 2022, by the rule at <a href="${TRACKED_CHANGE_RULE_PATH}">what counts as a change</a>, so &ldquo;stable&rdquo; means no negative movement in our observation window.
+    <strong>What &ldquo;stable&rdquo; rests on:</strong> An offer is rated stable when we have tracked no negative pricing change for it and nothing is withholding our reading of its pricing page. Absence of bad news is only a signal where we could look &mdash; so an offer whose page we cannot reach or cannot read, whose last read we refused, or whose listing is gated is unrated rather than stable. Our tracking covers ${changeCountPhrase("tracked", everyRecord)} since 2022, by the rule at <a href="${TRACKED_CHANGE_RULE_PATH}">what counts as a change</a>, so &ldquo;stable&rdquo; means no negative movement in our observation window.
   </div>
 
   <h2>Methodology</h2>
-  <p class="section-intro">Stability classifications are computed automatically from our <a href="/changes">deal changes dataset</a> of ${changeCountPhrase("tracked", allChanges)}, by the rule at <a href="${TRACKED_CHANGE_RULE_PATH}">what counts as a change</a>.</p>
+  <p class="section-intro">Stability classifications are computed automatically from our <a href="/changes">deal changes dataset</a> of ${changeCountPhrase("tracked", everyRecord)}, by the rule at <a href="${TRACKED_CHANGE_RULE_PATH}">what counts as a change</a>.</p>
   <div class="method-grid">
     <div class="method-col">
       <h3 style="color:${stabilityColors.volatile}">Negative Change Types</h3>
@@ -23900,7 +23901,7 @@ ${mcpCtaCss()}
     &bull; <strong style="color:${stabilityColors.improving}">Improving:</strong> Only positive changes (no negative)<br>
     &bull; <strong style="color:${stabilityColors.stable}">Stable:</strong> No negative changes, on a listing nothing is withholding<br>
     &bull; <strong style="color:${stabilityColors.unrated}">Unrated:</strong> We withhold the class &mdash; pricing page unreachable or unreadable, read refused, or the listing is gated<br><br>
-    <strong>Data freshness:</strong> Classifications update automatically as new pricing changes are tracked. Source data: <code>deal_changes.json</code> with ${changeCountPhrase("held", allChanges)} covering 2022 to present, of which ${changeCountPhrase("tracked", allChanges)}.
+    <strong>Data freshness:</strong> Classifications update automatically as new pricing changes are tracked. Source data: <code>deal_changes.json</code> with ${changeCountPhrase("held", everyRecord)} covering 2022 to present, of which ${changeCountPhrase("tracked", everyRecord)}.
   </div>
 
   <h2>Cross-References</h2>
@@ -23908,7 +23909,7 @@ ${mcpCtaCss()}
   <div class="related-pages">
     <a href="/changes" class="related-page-link">
       <div class="link-title">All Pricing Changes Timeline</div>
-      <div class="link-desc">Full timeline of all ${trackedChanges(allChanges).length} tracked developer tool pricing changes</div>
+      <div class="link-desc">Full timeline of all ${trackedChanges(everyRecord).length} tracked developer tool pricing changes</div>
     </a>
     <a href="/state-of-free-tiers" class="related-page-link">
       <div class="link-title">State of Free Tiers 2026</div>
