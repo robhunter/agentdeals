@@ -291,13 +291,13 @@
       ]
     },
     {
-      "name": "Gemini 2.5 Flash",
+      "name": "Gemini 3.5 Flash-Lite",
       "named_by": [
         "Google Gemini API"
       ]
     },
     {
-      "name": "Gemini 3.0 Flash",
+      "name": "Gemini 3.8 Flash",
       "named_by": [
         "Google Gemini API"
       ]
