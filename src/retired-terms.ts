@@ -129,14 +129,45 @@ function rowCells(rowHtml: string): string[] {
 }
 
 function sentences(text: string): string[] {
-  return text.split(/(?<=[.!?])\s+(?=[A-Z0-9"'(])|;\s+/).filter(s => s.trim().length > 0);
+  return text.split(/(?<=[.!?])\s+(?=[A-Z0-9"'(])/).filter(s => s.trim().length > 0);
 }
 
-function names(vendor: string): RegExp {
+function clauses(sentence: string): string[] {
+  return sentence.split(/;\s+/).filter(c => c.trim().length > 0);
+}
+
+function names(vendor: string, flags = "i"): RegExp {
   const escaped = vendor.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   const lead = /^[a-z0-9]/i.test(vendor) ? "\\b" : "";
   const tail = /[a-z0-9]$/i.test(vendor) ? "\\b" : "";
-  return new RegExp(`${lead}${escaped}${tail}`, "i");
+  return new RegExp(`${lead}${escaped}${tail}`, flags);
+}
+
+let catalogueVendorMatchers: RegExp[] | null = null;
+
+function namesAVendorInTheCatalogue(clause: string): boolean {
+  catalogueVendorMatchers ??= [...new Set(loadOffers().map(o => o.vendor))].map(vendor => names(vendor, ""));
+  return catalogueVendorMatchers.some(matcher => matcher.test(clause));
+}
+
+function unitsAbout(text: string, matcher: RegExp): string[] {
+  const units: string[] = [];
+  for (const sentence of sentences(text)) {
+    let run: string[] | null = null;
+    for (const clause of clauses(sentence)) {
+      if (matcher.test(clause)) {
+        if (run) units.push(run.join("; "));
+        run = [clause];
+      } else if (run && !namesAVendorInTheCatalogue(clause)) {
+        run.push(clause);
+      } else if (run) {
+        units.push(run.join("; "));
+        run = null;
+      }
+    }
+    if (run) units.push(run.join("; "));
+  }
+  return units;
 }
 
 function claimIn(unit: string): StatedTerms["reason"] | null {
@@ -160,7 +191,7 @@ function attributionUnits(tag: string, blockHtml: string, blockText: string, mat
     if (matcher.test(cells[0])) return [blockText];
     return cells.filter(c => matcher.test(c));
   }
-  return sentences(blockText).filter(s => matcher.test(s));
+  return unitsAbout(blockText, matcher);
 }
 
 export function endedOffersStatedAsAvailable(
@@ -179,7 +210,7 @@ export function endedOffersStatedAsAvailable(
     for (const offer of candidates) {
       const matcher = names(offer.vendor);
       if (!matcher.test(meta)) continue;
-      for (const unit of sentences(meta).filter(s => matcher.test(s))) {
+      for (const unit of unitsAbout(meta, matcher)) {
         const reason = claimIn(unit);
         if (reason) found.push({ vendor: offer.vendor, where: "meta description", unit, reason });
       }

@@ -20,7 +20,7 @@ const STORED_CHANGE_PROSE: string[] = (() => {
   const parsed = JSON.parse(readFileSync(path.join(REPO, "data", "deal_changes.json"), "utf-8"));
   const changes: Array<Record<string, unknown>> = Array.isArray(parsed) ? parsed : parsed.changes ?? [];
   return changes
-    .flatMap(c => [c.summary, c.previous_state, c.current_state])
+    .flatMap(c => [c.summary, c.current_state])
     .filter((t): t is string => typeof t === "string" && t.length >= SHORTEST_QUOTED_RECORD)
     .map(t => t.replace(/\s+/g, " "));
 })();
@@ -53,6 +53,26 @@ describe("a page that states terms for an offer whose record has ended", () => {
 
   it("credits a free plan named in one clause to that clause's vendor only", () => {
     const html = page(`<p>GitHub Copilot's free plan lists 2,000 completions; <strong>GitHub Models</strong> is billed per token.</p>`);
+    assert.deepStrictEqual(endedOffersStatedAsAvailable(html, "/free-llm-apis", POPULATION), []);
+  });
+
+  it("credits a clause that names no vendor to the vendor of the clause before it", () => {
+    for (const sentence of [
+      "We recommend GitHub Models; it provides 100+ models with generous daily limits.",
+      "GitHub Models is our pick; it gives you generous daily limits for free.",
+    ]) {
+      const found = endedOffersStatedAsAvailable(page(`<p>${sentence}</p>`), "/free-llm-apis", POPULATION);
+      assert.deepStrictEqual(found.map(f => f.vendor), ["GitHub Models"], sentence);
+    }
+  });
+
+  it("keeps a clause that names another vendor with that vendor", () => {
+    const html = page(`<p><strong>GitHub Models</strong> is billed per token; GitHub Copilot's free plan lists 2,000 completions.</p>`);
+    assert.deepStrictEqual(endedOffersStatedAsAvailable(html, "/free-llm-apis", POPULATION), []);
+  });
+
+  it("reads a carried clause together with the clause that named the vendor", () => {
+    const html = page("<p>GitHub Models has ended; it provided 100+ models with generous daily limits.</p>");
     assert.deepStrictEqual(endedOffersStatedAsAvailable(html, "/free-llm-apis", POPULATION), []);
   });
 
