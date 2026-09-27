@@ -11,6 +11,7 @@ const {
   READINGS_HELD_BACK_BY_NAME,
   READING_SAYS_WHAT_WE_ALREADY_STORE,
   READING_STATES_NO_FIGURE_WHERE_OUR_TERMS_DO,
+  READING_STATES_ONLY_PRICES_WHERE_OUR_TERMS_STATE_ALLOWANCES,
   RESTATEMENT_REFUSALS,
   THIS_READING_IS_HELD_BACK_BY_NAME,
   TIER_IS_NOT_ONE_WE_RECORD_AS_FREE,
@@ -18,6 +19,7 @@ const {
   readingDropsTheCapOnWhoMayUseIt,
   readingSaysTheListedTierIsGone,
   readingStatesNoFigureWhereOurTermsDo,
+  readingStatesOnlyPricesWhereOurTermsStateAllowances,
   restatementCensus,
   restatementRulings,
   ruleOnRestating,
@@ -188,6 +190,49 @@ const GITHUB_ACTIONS = {
   }),
 };
 
+function readingOf(vendor: string, url: string, description: string, reading: string) {
+  return {
+    offer: offer({ vendor, tier: "Free", url, description }),
+    change: change({
+      vendor,
+      change_type: "pricing_restructured",
+      date: "2026-09-13",
+      recorded_date: "2026-09-13",
+      previous_state: description,
+      current_state: reading,
+      source_url: url,
+    }),
+  };
+}
+
+const CLOUDFLARE_WORKERS = readingOf(
+  "Cloudflare Workers",
+  "https://developers.cloudflare.example/workers/platform/pricing/",
+  "Edge compute with 100K requests/day, 10ms CPU time per invocation. KV: 1 GB storage, 100K reads/day, 1K writes/day.",
+  "By default, users have access to the Workers Free plan. The Workers Free plan includes limited usage of Workers, Pages Functions, Workers KV and Hyperdrive. The Workers Paid plan includes Workers, Pages Functions, Workers KV, Hyperdrive, and Durable Objects usage for a minimum charge of $5 USD per month for an account.",
+);
+
+const AIRTABLE = readingOf(
+  "Airtable",
+  "https://airtable.example/pricing",
+  "Database and collaboration platform. Unlimited bases. Up to 1,000 records per base. 1 GB attachment space per base.",
+  "Airtable has a Free plan available to teams for no charge. Paid plans start at $20/user/month when billed annually.",
+);
+
+const CLOUDFLARE_KV = readingOf(
+  "Cloudflare KV",
+  "https://developers.cloudflare.example/kv/platform/pricing/",
+  "Key-value store at the edge — 100K reads/day, 1K writes/day, 1 GB storage. Eventually consistent with global replication",
+  "Free plan includes 100,000 keys read/day, 1,000 keys written/day, 1,000 keys deleted/day, 1,000 list requests/day, and 1 GB stored data. All limits reset daily at 00:00 UTC.",
+);
+
+const PANDASTACK = readingOf(
+  "PandaStack",
+  "https://www.pandastack.example/",
+  "One free web hosting (static or containered) and one free database with 100GB Bandwidth and 300 Build mins/month.",
+  "Free tier with $5.40/mo usage credit. No card.",
+);
+
 const POSTMAN = {
   offer: offer({
     vendor: "Postman",
@@ -301,6 +346,42 @@ describe("restating a withheld description from the reading the page already sho
       readingStatesNoFigureWhereOurTermsDo(PAGURE.offer.description, PAGURE.change.current_state),
       false,
     );
+  });
+
+  it("refuses a reading whose only figure is a price where the terms it would replace state allowances", () => {
+    assert.ok(RESTATEMENT_REFUSALS.includes(READING_STATES_ONLY_PRICES_WHERE_OUR_TERMS_STATE_ALLOWANCES));
+    for (const subject of [CLOUDFLARE_WORKERS, AIRTABLE]) {
+      assert.strictEqual(
+        readingStatesNoFigureWhereOurTermsDo(subject.offer.description, subject.change.current_state),
+        false,
+        `${subject.offer.vendor}'s reading states no figure at all, so the older refusal already covers it`,
+      );
+      assert.strictEqual(
+        ruleOnRestating(subject.offer, subject.change, TODAY)?.refusal,
+        READING_STATES_ONLY_PRICES_WHERE_OUR_TERMS_STATE_ALLOWANCES,
+        subject.offer.vendor,
+      );
+    }
+  });
+
+  it("restates a reading that states the same allowances in other words", () => {
+    const ruling = ruleOnRestating(CLOUDFLARE_KV.offer, CLOUDFLARE_KV.change, TODAY);
+    assert.strictEqual(ruling?.refusal, null);
+    assert.ok(ruling?.restatement, "the reading was ruled on but not restated");
+  });
+
+  it("counts a monthly usage credit as an allowance, not a price", () => {
+    assert.strictEqual(
+      readingStatesOnlyPricesWhereOurTermsStateAllowances(PANDASTACK.offer.description, PANDASTACK.change.current_state),
+      false,
+    );
+    assert.strictEqual(ruleOnRestating(PANDASTACK.offer, PANDASTACK.change, TODAY)?.refusal, null);
+  });
+
+  it("does not take a credit card for a credit", () => {
+    const allowances = "Free plan: 1,000 requests a month and 1 GB of storage.";
+    assert.strictEqual(readingStatesOnlyPricesWhereOurTermsStateAllowances(allowances, "Pro costs $20 a month with no credit card on file."), true);
+    assert.strictEqual(readingStatesOnlyPricesWhereOurTermsStateAllowances(allowances, "The Free plan comes with $5 of credit a month."), false);
   });
 
   it("refuses a reading that drops how many people may use the free tier", () => {

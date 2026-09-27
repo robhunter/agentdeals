@@ -7,6 +7,12 @@ const A_WORD_STATING_TERMS =
 
 const A_CLAUSE_ENDING = /\s[—–]\s|\s-\s|(?<=[^\s.])\.\s+|:\s/;
 
+const A_CLAUSE_OR_LIST_ENDING = new RegExp(`${A_CLAUSE_ENDING.source}|[;,]\\s`);
+
+const A_SUM_OF_MONEY = /[$€£¥]\s?\d[\d,]*(?:\.\d+)?|\b\d[\d,]*(?:\.\d+)?\s?(?:USD|EUR|GBP|dollars?|euros?)\b/gi;
+
+const A_CREDIT = /\bcredits?\b(?!\s*cards?\b)/i;
+
 const AN_INITIALISM = /^[A-Za-z](\.[A-Za-z])+$/;
 
 const LONGEST_OPENING_A_HUMAN_WROTE_ABOUT_A_PRODUCT = 120;
@@ -20,6 +26,14 @@ function endsOnAnInitialism(clause: string): boolean {
 
 export function statesAFigure(text: string): boolean {
   return A_FIGURE.test(text);
+}
+
+function withoutItsPrices(clause: string): string {
+  return A_CREDIT.test(clause) ? clause : clause.replace(A_SUM_OF_MONEY, " ");
+}
+
+export function statesAnAllowanceFigure(text: string): boolean {
+  return text.split(A_CLAUSE_OR_LIST_ENDING).some((clause) => statesAFigure(withoutItsPrices(clause)));
 }
 
 export function statesTerms(text: string): boolean {
