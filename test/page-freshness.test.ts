@@ -46,6 +46,24 @@ function jsonLdOf(html: string): any {
   return block ? JSON.parse(block[1]) : null;
 }
 
+const A_PAGE_DATE_FIELD = /^date(?:Published|Modified|Created)$/;
+
+function datesAPageStatesAsItsOwn(html: string): string[] {
+  const line = html.match(/<p class="pub-date">([\s\S]*?)<\/p>|<div class="pub-date">([\s\S]*?)<\/div>/);
+  const dates = [...(line?.[1] ?? line?.[2] ?? "").matchAll(/\d{4}-\d{2}-\d{2}/g)].map(m => m[0]);
+  const walk = (value: unknown, field: string | null): void => {
+    if (typeof value === "string") {
+      if (field !== null && A_PAGE_DATE_FIELD.test(field)) dates.push(...[...value.matchAll(/\d{4}-\d{2}-\d{2}/g)].map(m => m[0]));
+    } else if (Array.isArray(value)) {
+      value.forEach(item => walk(item, field));
+    } else if (value && typeof value === "object") {
+      for (const [key, item] of Object.entries(value)) walk(item, key);
+    }
+  };
+  walk(jsonLdOf(html), null);
+  return dates;
+}
+
 function record(over: Partial<PageReviewRecord> = {}): PageReviewRecord {
   return {
     path: "/p", published: "2026-01-01", tier: "A", vendors_asserted: [], badge_subjects_unresolved: [],
@@ -363,15 +381,19 @@ describe("#1061 no page tells a reader or a crawler that it changed today", () =
     assert.deepStrictEqual(offenders, []);
   });
 
+  it("reads a page's own dates from its pub-date line and its date fields, not from what it says about a future event", () => {
+    const html = '<p class="pub-date">Published 2026-04-01</p>'
+      + '<script type="application/ld+json">{"@type":"WebPage","datePublished":"2026-04-01","mainEntity":{"dateModified":"2030-01-02"},'
+      + '"about":{"@type":"ItemList","itemListElement":[{"description":"The old model shuts down on 2031-05-06."}]}}</script>';
+    assert.deepStrictEqual(datesAPageStatesAsItsOwn(html), ["2026-04-01", "2026-04-01", "2030-01-02"]);
+  });
+
   it("never renders a date later than today as its own", async () => {
     const today = new Date().toISOString().slice(0, 10);
     const offenders: string[] = [];
     for (const page of REGISTRY.pages) {
-      const html = await get(page.path);
-      const line = html.match(/<p class="pub-date">([\s\S]*?)<\/p>|<div class="pub-date">([\s\S]*?)<\/div>/);
-      const rendered = [line?.[1] ?? line?.[2] ?? "", JSON.stringify(jsonLdOf(html) ?? {})].join(" ");
-      for (const m of rendered.matchAll(/\d{4}-\d{2}-\d{2}/g)) {
-        if (m[0] > today) offenders.push(`${page.path}: ${m[0]}`);
+      for (const date of datesAPageStatesAsItsOwn(await get(page.path))) {
+        if (date > today) offenders.push(`${page.path}: ${date}`);
       }
     }
     assert.deepStrictEqual(offenders, []);

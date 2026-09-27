@@ -25,7 +25,7 @@ const STATED: Record<string, string[]> = {
   ],
   "/free-ai-stack": [
     "Ultra-fast inference on LPU hardware — 30 RPM, 1,000 requests and 200K tokens a day per model, free. Serves gpt-oss-120b, gpt-oss-20b and Qwen3.8 27B. Best balance of speed, limits, and model quality for prototyping.",
-    "When you exceed 30 RPM or 200K tokens a day on a model. At that point, OpenRouter (~30 free models) extends the free runway.",
+    "When you exceed 30 RPM or 200K tokens a day on a model. At that point, OpenRouter (25+ free models) extends the free runway.",
   ],
   "/ai-ml-alternatives": [
     "offers blazing-fast gpt-oss-120b inference at 30 RPM free",

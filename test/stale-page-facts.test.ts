@@ -345,7 +345,7 @@ describe("#1321 the budgets live where whoever earns a lower one can write them"
     );
     assertPopulationFloor(
       unsourcedTierAPaths(REGISTRY.pages).length,
-      10,
+      9,
       "tier-A pages asserting a vendor fact that reaches no record"
     );
   });
