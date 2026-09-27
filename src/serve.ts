@@ -23609,7 +23609,7 @@ function buildStabilityDashboardPage(): string {
   const slug = "stability";
 
   const stabilityMap = publishedStabilityIndex();
-  const allChanges = loadDealChanges();
+  const allChanges = changesTheVendorMade(loadDealChanges());
 
   const vendorChangesMap = new Map<string, typeof allChanges>();
   for (const c of allChanges) {
