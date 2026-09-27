@@ -426,7 +426,10 @@ function vendorsThatChangeHeading(before: Surfaces, after: Surfaces): string[] {
 
 function headingsWhoseMembershipIsAVerdict(surfaces: Surfaces, vendor: string): string[] {
   return Object.entries(surfaces.regions)
-    .filter(([heading, vendors]) => vendors.includes(vendor) && !surfaces.completeLogHeadings.includes(heading))
+    .filter(([heading, vendors]) =>
+      vendors.includes(vendor) &&
+      !surfaces.completeLogHeadings.includes(heading) &&
+      !surfaces.datedHeadings.includes(heading))
     .map(([heading]) => heading);
 }
 
