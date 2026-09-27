@@ -5410,10 +5410,10 @@ function buildVendorPage(slug: string): string | null {
     ? `<p class="no-changes">No recorded pricing changes for ${escHtmlServer(vendorName)}.</p>`
     : `<p class="no-changes">No recorded pricing changes for ${escHtmlServer(vendorName)}. This is a good sign — stable pricing.</p>`;
 
-  const latestChange = citedChanges(vendorChanges)[0];
+  const latestChange = citedChanges(changesTheVendorMade(vendorChanges))[0];
   const causeAlreadyShown = riskCause !== null && latestChange !== undefined && latestChange !== null
     && latestChange.date === riskCause.date && latestChange.change_type === riskCause.change_type;
-  const changeNoticeHtml = latestChange && !causeAlreadyShown && NEGATIVE_CHANGE_TYPES.has(latestChange.change_type) ? (() => {
+  const changeNoticeHtml = latestChange && !causeAlreadyShown && !isNoLongerInForce(latestChange) && NEGATIVE_CHANGE_TYPES.has(latestChange.change_type) ? (() => {
     const badge = changeTypeBadge[latestChange.change_type] ?? { label: latestChange.change_type, color: "#8b949e" };
     const anchor = `${toSlug(latestChange.vendor)}-${latestChange.date}`;
     return `<div class="change-notice" style="margin:1rem 0;padding:.75rem 1rem;border:1px solid ${badge.color}40;border-left:3px solid ${badge.color};border-radius:0 8px 8px 0;background:${badge.color}10">
