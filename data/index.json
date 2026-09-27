@@ -18718,7 +18718,7 @@
     {
       "vendor": "MailerSend.com",
       "category": "Email",
-      "description": "Email API, SMTP, 500 emails/month free for transactional emails",
+      "description": "Email API and SMTP. Free plan: 500 emails/month, at most 100 a day, for transactional email.",
       "tier": "Free",
       "url": "https://www.mailersend.com",
       "tags": [
