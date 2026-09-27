@@ -7538,7 +7538,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "ai-free-tiers",
     title: "Best Free AI APIs and Coding Tools in 2026",
-    metaDesc: "Compare free AI APIs, LLM inference, and coding tools — exact rate limits and free tier details for Groq, Cerebras, Mistral, OpenAI, Gemini, Cursor, GitHub Copilot, and 50+ more. [[freshness]]",
+    metaDesc: "Compare free AI APIs, LLM inference, and coding tools — exact rate limits and free tier details for Groq, Mistral, Gemini, Cursor, GitHub Copilot, and 50+ more. [[freshness]]",
     contextHtml: "",
     tag: "ai-free-tier",
     primaryVendor: "OpenAI",
@@ -7722,11 +7722,11 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "ai-ml-alternatives",
     title: "Best Free AI & ML Tools for Developers in 2026 — LLM APIs, AI Coding, Training & Observability Compared",
-    metaDesc: "Compare 65+ free AI/ML tools — Groq, Cerebras, OpenAI, Hugging Face, GitHub Copilot, Cursor, Langfuse, and more. Exact free tier limits by AI domain. [[freshness]]",
+    metaDesc: "Compare 65+ AI/ML tools and their free tiers — Groq, Hugging Face, GitHub Copilot, Cursor, Langfuse, and more. Exact free tier limits by AI domain. [[freshness]]",
     contextHtml: "",
     tag: "ai-ml-hub",
     primaryVendor: "OpenAI",
-    hubDesc: "65+ free AI/ML tools compared — LLM APIs, AI coding assistants, ML platforms, observability, and specialized AI services",
+    hubDesc: "65+ AI/ML tools and their free tiers compared — LLM APIs, AI coding assistants, ML platforms, observability, and specialized AI services",
   },
   {
     slug: "design-alternatives",
@@ -7767,11 +7767,11 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "free-llm-apis",
     title: "Best Free LLM APIs in 2026 — Compare Free Inference Tiers, Rate Limits & Models",
-    metaDesc: "Compare 25+ free LLM API providers — Groq, Cerebras, OpenRouter, Gemini, Mistral, OpenAI, Anthropic, NVIDIA NIM, and more. Exact rate limits and token quotas. [[freshness]]",
+    metaDesc: "Compare 25+ LLM API providers and their free tiers — Groq, OpenRouter, Gemini, Mistral, NVIDIA NIM, and more, beside paid APIs from OpenAI, Anthropic and Cerebras. Exact rate limits and token quotas. [[freshness]]",
     contextHtml: "",
     tag: "llm-api-hub",
     primaryVendor: "OpenAI",
-    hubDesc: "25+ free LLM API providers compared — proprietary model APIs, open-model inference platforms, and AI gateways with exact rate limits",
+    hubDesc: "25+ LLM API providers and their free tiers compared — proprietary model APIs, open-model inference platforms, and AI gateways with exact rate limits",
   },
   {
     slug: "api-development-alternatives",
@@ -10118,7 +10118,7 @@ ${mcpCtaCss()}
 
 function buildAiFreeTiersPage(): string {
   const title = "Best Free AI APIs and Coding Tools in 2026";
-  const metaDesc = "Compare free AI APIs, LLM inference, and coding tools — exact rate limits and free tier details for Groq, Cerebras, Mistral, OpenAI, Gemini, Cursor, GitHub Copilot, and 50+ more. [[freshness]]";
+  const metaDesc = "Compare free AI APIs, LLM inference, and coding tools — exact rate limits and free tier details for Groq, Mistral, Gemini, Cursor, GitHub Copilot, and 50+ more. [[freshness]]";
   const slug = "ai-free-tiers";
 
   const aiMlOffers = offers.filter(o => o.category === "AI / ML");
@@ -10268,8 +10268,8 @@ ${mcpCtaCss()}
   <h1>Best Free AI APIs and Coding Tools</h1>
 
   <div class="context">
-    <p>The AI pricing landscape is volatile. On 2025-12-06 Google cut 2.5 Flash's free tier from 250 requests a day to about 20, and 2.5 Pro's to none. <strong>OpenAI removed the Assistants API</strong> on 2026-08-26. But new players are offering generous free tiers to win developer mindshare — <strong>Groq</strong> and <strong>Cerebras</strong> provide blazing-fast inference, <strong>Mistral</strong> includes $10 a month in API credits, and <strong>Google Antigravity</strong> has a free individual plan with weekly limits.</p>
-    <p>This page compares <strong>${allAiOffers.length} free AI offers</strong> across our index — exact rate limits, not marketing copy. We track ${enrichedMl.length} AI/ML tools and ${enrichedCoding.length} AI coding tools. ${escHtmlServer(confirmationCoverageSentence(confirmationCoverage(allAiOffers), "AI"))}</p>
+    <p>The AI pricing landscape is volatile. On 2025-12-06 Google cut 2.5 Flash's free tier from 250 requests a day to about 20, and 2.5 Pro's to none. <strong>OpenAI removed the Assistants API</strong> on 2026-08-26. But new players are offering generous free tiers to win developer mindshare — <strong>Groq</strong> serves fast inference on a free plan, <strong>Mistral</strong> includes $10 a month in API credits, and <strong>Google Antigravity</strong> has a free individual plan with weekly limits.</p>
+    <p>This page compares <strong>${allAiOffers.length} AI offers</strong> across our index — exact rate limits, not marketing copy. We track ${enrichedMl.length} AI/ML tools and ${enrichedCoding.length} AI coding tools. ${escHtmlServer(confirmationCoverageSentence(confirmationCoverage(allAiOffers), "AI"))}</p>
   </div>
 
   ${changesHtml}
@@ -12958,7 +12958,7 @@ ${buildCards(other)}
 
 function buildAiMlAlternativesPage(): string {
   const title = "Best Free AI & ML Tools for Developers in 2026 — LLM APIs, AI Coding, Training & Observability Compared";
-  const metaDesc = "Compare 65+ free AI/ML tools — Groq, Cerebras, OpenAI, Hugging Face, GitHub Copilot, Cursor, Langfuse, and more. Exact free tier limits by AI domain. [[freshness]]";
+  const metaDesc = "Compare 65+ AI/ML tools and their free tiers — Groq, Hugging Face, GitHub Copilot, Cursor, Langfuse, and more. Exact free tier limits by AI domain. [[freshness]]";
   const slug = "ai-ml-alternatives";
 
   const aiOffers = offers.filter(o => o.category === "AI / ML" || o.category === "AI Coding");
@@ -13096,7 +13096,7 @@ ${mcpCtaCss()}
 
   <div class="context">
     <p>AI infrastructure is evolving faster than any other developer tooling category. The good news: competition has driven generous free tiers. <strong>Groq</strong> offers blazing-fast gpt-oss-120b inference at 30 RPM free. <strong>Mistral</strong> offers access to all models including Large and Codestral with $10 a month in free API credits. And open-source tools like <strong>Cline</strong>, <strong>Aider</strong>, and <strong>Gemini CLI</strong> are completely free \u2014 just bring your own API key.</p>
-    <p>This page compares every free AI and ML tool in our index \u2014 <strong>${aiOffers.length} tools</strong> across LLM APIs, AI coding assistants, ML platforms, observability, and specialized services. Whether you need an OpenAI alternative or a free AI coding assistant, we have the comparison with exact free tier limits.</p>
+    <p>This page compares every AI and ML tool in our index \u2014 <strong>${aiOffers.length} tools</strong> across LLM APIs, AI coding assistants, ML platforms, observability, and specialized services. Whether you need an OpenAI alternative or a free AI coding assistant, we have the comparison with exact free tier limits.</p>
   </div>
 
   ${changesHtml}
@@ -13123,7 +13123,7 @@ ${buildCards(specializedAi)}
 
 ${other.length > 0 ? `
   <h2>Other AI &amp; ML Tools</h2>
-  <p style="color:var(--text-muted);margin-bottom:1rem">Additional AI and ML tools with free tiers.</p>
+  <p style="color:var(--text-muted);margin-bottom:1rem">Additional AI and ML tools in our index. Some have no free tier.</p>
 ${buildCards(other)}
 ` : ""}
 
@@ -14592,7 +14592,7 @@ ${buildCards(other)}
 
 function buildFreeLlmApisPage(): string {
   const title = "Best Free LLM APIs in 2026 — Compare Free Inference Tiers, Rate Limits & Models";
-  const metaDesc = "Compare 25+ free LLM API providers — Groq, Cerebras, OpenRouter, Gemini, Mistral, OpenAI, Anthropic, NVIDIA NIM, and more. Exact rate limits and token quotas. [[freshness]]";
+  const metaDesc = "Compare 25+ LLM API providers and their free tiers — Groq, OpenRouter, Gemini, Mistral, NVIDIA NIM, and more, beside paid APIs from OpenAI, Anthropic and Cerebras. Exact rate limits and token quotas. [[freshness]]";
   const slug = "free-llm-apis";
 
   const aiOffers = offers.filter(o => o.category === "AI / ML");
@@ -14760,7 +14760,7 @@ ${mcpCtaCss()}
 
   <div class="context">
     <p>Free LLM API access has never been better. <strong>Groq</strong> delivers gpt-oss-120b at 30 RPM on custom LPU hardware \u2014 the fastest free inference available. <strong>Mistral</strong> gives access to all models including Large and Codestral with $10 a month in free API credits. <strong>OpenRouter</strong> aggregates 25+ free models through one OpenAI-compatible API. ${ledeClause}</p>
-    <p>This page compares <strong>${allLlmOffers.length} free LLM API providers</strong> \u2014 from proprietary model APIs (OpenAI, Anthropic, Gemini) to open-model inference platforms (Groq, Cerebras, NVIDIA NIM) and AI gateways (OpenRouter, Portkey). The rate limit comparison table below has the data developers actually need when choosing a provider.</p>
+    <p>This page compares <strong>${allLlmOffers.length} LLM API providers</strong> \u2014 from proprietary model APIs (OpenAI, Anthropic, Gemini) to open-model inference platforms (Groq, Cerebras, NVIDIA NIM) and AI gateways (OpenRouter, Portkey). The rate limit comparison table below has the data developers actually need when choosing a provider.</p>
   </div>
 
   ${changesHtml}
