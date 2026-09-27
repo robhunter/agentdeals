@@ -34982,8 +34982,8 @@
     {
       "vendor": "Alibaba Cloud Qwen Code",
       "category": "AI / ML",
-      "description": "Qwen Code free tier reduced to 100 requests/day (from 1,000). Full access requires Coding Plan Pro ($50/month). AI coding assistant based on Qwen LLM family.",
-      "tier": "Free (Reduced)",
+      "description": "Open-source AI coding agent for the terminal, editors, desktop, browser and chat, formerly with a free Qwen OAuth tier. No free tier: Qwen Code's documentation says \"The Qwen OAuth free tier was discontinued on 2026-04-15\" and points users to Alibaba Cloud Coding Plan, OpenRouter, Fireworks AI or another provider. Coding Plan Pro is $50 a month; a Model Studio API key is billed pay-as-you-go.",
+      "tier": "Pay-as-you-go",
       "url": "https://qwen.ai",
       "tags": [
         "ai",
