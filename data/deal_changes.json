@@ -2048,11 +2048,11 @@
       "vendor": "Google Maps",
       "change_type": "product_deprecated",
       "date": "2026-05-31",
-      "summary": "Google Maps Platform Client ID authentication sunset. All Client ID-based authentication will stop working. Migration to API key authentication required.",
-      "previous_state": "Google Maps Platform: supported both Client ID and API key authentication methods",
-      "current_state": "Google Maps Platform: Client ID auth removed May 31, API key authentication only",
+      "summary": "Google Maps Platform client ID authentication reached its announced end date on May 31, 2026 and is being phased out: Google periodically blocks client ID requests ahead of a final termination date it has not published. API keys replace it.",
+      "previous_state": "Former Premium Plan customers could authenticate Maps Platform requests with a client ID and URL-signing secret instead of an API key.",
+      "current_state": "Client IDs are past Google's stated end date; access is restricted periodically, can be restored by unpausing or a temporary exemption, and Google requires migration to API keys.",
       "impact": "high",
-      "source_url": "https://developers.google.com/maps/documentation/javascript/get-api-key",
+      "source_url": "https://developers.google.com/maps/premium/migrate-client-id",
       "category": "APIs",
       "alternatives": [
         "Google Maps API key authentication"
@@ -2065,11 +2065,11 @@
       "vendor": "AWS",
       "change_type": "product_deprecated",
       "date": "2026-06-30",
-      "summary": "AWS Fargate Platform Version 1.3.0 end of support. Tasks on PV 1.3.0 will stop running. Migration to Platform Version 1.4.0+ required.",
-      "previous_state": "Fargate PV 1.3.0: supported platform version for ECS tasks",
-      "current_state": "Fargate PV 1.3.0: end of support June 30, tasks will fail to launch",
+      "summary": "Fargate platform version 1.3.0 reached end of support on June 30, 2026. AWS blocked new tasks and services on it from June 15 and said it would terminate the tasks still running on it on June 30. Platform version 1.4.0 replaces it.",
+      "previous_state": "Fargate platform version 1.3.0 was a supported Linux platform version for ECS tasks and services.",
+      "current_state": "Fargate platform version 1.3.0 is retired and gets no security updates; new tasks and services cannot use it, and 1.4.0 is the supported Linux version.",
       "impact": "medium",
-      "source_url": "https://docs.aws.amazon.com/AmazonECS/latest/developerguide/platform-versions.html",
+      "source_url": "http://web.archive.org/web/20260702093328/https://docs.aws.amazon.com/AmazonECS/latest/developerguide/platform-versions-retired.html",
       "category": "Cloud Hosting",
       "alternatives": [
         "Fargate Platform Version 1.4.0+"
