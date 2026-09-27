@@ -35724,6 +35724,142 @@
         "open-source"
       ],
       "verifiedDate": "2026-09-27"
+    },
+    {
+      "vendor": "Serper",
+      "category": "AI / ML",
+      "description": "Google Search API returning real-time results as JSON. 2,500 free queries when you sign up, no credit card required; no Serper page says they renew or expire, and the terms bar registering more than one account. Successful queries deduct credits, and Serper stops accepting queries when the balance reaches zero. Paid credits are prepaid packs with no subscription: Starter is $50 for 50,000 queries ($1.00 per 1,000) at 50 queries per second, valid for 6 months; the largest pack falls to $0.30 per 1,000.",
+      "tier": "Free Credits",
+      "url": "https://serper.dev/",
+      "tags": [
+        "ai",
+        "search",
+        "api",
+        "web-search",
+        "serp"
+      ],
+      "verifiedDate": "2026-09-27",
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "web_search_api",
+            "source_url": "https://serper.dev/",
+            "source_quote": "Empower your next AI chatbot, SEO analytics, and fintech projects with lightning-fast access to real-time search results."
+          }
+        ],
+        "reviewed": "2026-09-27"
+      }
+    },
+    {
+      "vendor": "Linkup",
+      "category": "AI / ML",
+      "description": "Web search API for AI agents. Accounts created with a professional email address get $20 of credit, topped back up to $20 each month (Linkup's docs); the pricing page calls this 4,000 free queries and states no period. Linkup's app asks other sign-ups to add a card, with no charge, to unlock the credit. Rate limit: 10 queries a second per organization. Then pay as you go from a prepaid balance: search $0.005 a call ($0.006 with a sourced answer or structured output), deep search $0.05 to $0.055, fetch from $0.001. Top-ups of $1,000 or more earn 10-20% bonus credit.",
+      "tier": "Free",
+      "url": "https://www.linkup.so/pricing",
+      "tags": [
+        "ai",
+        "search",
+        "api",
+        "web-search",
+        "agents",
+        "free tier"
+      ],
+      "verifiedDate": "2026-09-27",
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "web_search_api",
+            "source_url": "https://www.linkup.so/llms.txt",
+            "source_quote": "Linkup is a web search API that gives AI applications and agents real-time, grounded access to the web through a single API call"
+          }
+        ],
+        "reviewed": "2026-09-27"
+      }
+    },
+    {
+      "vendor": "Parallel",
+      "category": "AI / ML",
+      "description": "Web search and research APIs for AI agents. Organizations with a credit card on file get $5 of free credit each month, and unused credit expires at month end. $5 covers up to 5,000 Search requests in Turbo or Fast mode, or 1,000 in Basic or Advanced, the API default. One monthly credit per organization and per card; marketplace and postpaid organizations are not eligible. The pricing page also offers \"up to $80 at signup\" without stating its terms. A hosted Search MCP is free without an account or API key, at lower rate limits, for personal and hobby use. Then pay as you go: Search $1 per 1,000 requests (Turbo, Fast) or $5 (Basic, Advanced) with 10 results, at 600 requests a minute.",
+      "tier": "Free",
+      "url": "https://parallel.ai/pricing",
+      "tags": [
+        "ai",
+        "search",
+        "api",
+        "web-search",
+        "agents",
+        "mcp",
+        "free tier"
+      ],
+      "verifiedDate": "2026-09-27",
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "web_search_api",
+            "source_url": "https://parallel.ai/products/search",
+            "source_quote": "The highest accuracy web search API, built from the ground up for AIs"
+          }
+        ],
+        "reviewed": "2026-09-27"
+      }
+    },
+    {
+      "vendor": "Jina AI",
+      "category": "AI / ML",
+      "description": "Search, Reader, embeddings and reranker APIs. Each new API key comes with 10M free tokens, for non-commercial use only (CC-BY-NC); no page says they renew. Search (s.jina.ai) needs a key and costs at least 10,000 tokens a request, so the free tokens cover at most 1,000 searches, at 100 requests a minute. Reader (r.jina.ai), which converts a URL to LLM-friendly text, also works without a key at 20 requests a minute. Paid tokens are prepaid: 1 billion for $50 ($0.05 per million), or 11 billion for $500 with a premium key. Jina AI has been part of Elastic since October 2025.",
+      "tier": "Free Credits",
+      "url": "https://jina.ai/reader/",
+      "tags": [
+        "ai",
+        "search",
+        "api",
+        "web-search",
+        "reader",
+        "embeddings"
+      ],
+      "verifiedDate": "2026-09-27",
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "web_search_api",
+            "source_url": "https://docs.jina.ai/",
+            "source_quote": "Given a search term, get an LLM-friendly version of all websites in the search results."
+          }
+        ],
+        "reviewed": "2026-09-27"
+      }
+    },
+    {
+      "vendor": "You.com",
+      "category": "AI / ML",
+      "description": "Web Search API for AI agents. 100 free queries a day with no API key or account through the keyless MCP profile (api.you.com/mcp?profile=free), limited to the you-search and you-discover tools. New API accounts also get a $100 sign-up credit with no credit card required; no page says it renews or expires. Then pay as you go with no minimums: Web Search API $5.00 per 1,000 calls with up to 100 results per call, live page extraction $1.00 per 1,000 pages, at 10 requests a second on self-serve accounts.",
+      "tier": "Free",
+      "url": "https://you.com/pricing",
+      "tags": [
+        "ai",
+        "search",
+        "api",
+        "web-search",
+        "agents",
+        "mcp",
+        "free tier"
+      ],
+      "verifiedDate": "2026-09-27",
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "web_search_api",
+            "source_url": "https://you.com/llms.txt",
+            "source_quote": "Returns real-time web and news results as LLM-ready JSON."
+          }
+        ],
+        "reviewed": "2026-09-27"
+      }
     }
   ],
   "changes": []
