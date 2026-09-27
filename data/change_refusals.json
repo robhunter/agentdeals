@@ -10,7 +10,7 @@
       "current_state": "1,000 Events / month 1 A/B Test 3 Feature Flags / Remote Configs 5 Environments",
       "source_url": "https://www.tryabby.com",
       "category": "Feature Flags",
-      "refused_date": "2026-09-11"
+      "refused_date": "2026-09-27"
     },
     {
       "vendor": "Ably",
@@ -176,12 +176,12 @@
       "change_type": "free_tier_removed",
       "reason": "no_removal_evidence",
       "detail": "a free tier was recorded as removed on the evidence that the page did not mention it, and the summary states no price, ending or replacement where the free tier was",
-      "summary": "The Kiro Pro+ free tier is no longer mentioned as a specific benefit. The AWS Startups program now offers up to $200,000 in AWS Activate Credits.",
+      "summary": "The AWS Startups program now offers up to $200,000 in AWS Activate Credits, rather than up to 1 year of free Kiro Pro+. Kiro is mentioned as having credits 'designed for startups', but details are not provided.",
       "previous_state": "Up to 1 year of free Kiro Pro+ (worth $480/year) through AWS Startups program. Three tiers: Starter (up to 2 users), Growth (up to 50 users), Scale (up to 100 users). Eligible: early-stage to Series B companies. Application via AWS Startups portal.",
-      "current_state": "AWS for Startups offers up to $200,000 in AWS Activate Credits and expert support. Credits are redeemable on third-party models on Amazon Bedrock. AI startups may be eligible for additional credits.",
+      "current_state": "AWS Startups offers up to $200,000 in AWS Activate Credits. Startups can apply for credits redeemable on infrastructure, data services, and AI/ML models, including third-party models on Amazon Bedrock. Kiro credits are available, but details are not provided.",
       "source_url": "https://aws.amazon.com/startups/",
-      "category": "Startup Programs",
-      "refused_date": "2026-08-29"
+      "category": "Startup Perks",
+      "refused_date": "2026-09-27"
     },
     {
       "vendor": "Amazon Q Developer",
@@ -992,6 +992,18 @@
     {
       "vendor": "Circum Icons",
       "change_type": "free_tier_removed",
+      "reason": "removal_does_not_reach_the_licence",
+      "detail": "Circum Icons is free because its licence grants the use, and https://circumicons.com is a hosted-pricing surface that states what the vendor sells rather than what the licence permits. A record that ends a licence needs a source that carries one — the repository, its licence file or a self-hosting document — or must say which hosted plan went away and leave the licence standing",
+      "summary": "The vendor no longer offers a free tier. The pricing page states access to 1600+ icons costs $9.",
+      "previous_state": "Consistent open-source icons such as SVG for React, Vue, and Svelte.",
+      "current_state": "Access 1600+ Unique Icons for Just $9",
+      "source_url": "https://circumicons.com",
+      "category": "Design",
+      "refused_date": "2026-09-27"
+    },
+    {
+      "vendor": "Circum Icons",
+      "change_type": "free_tier_removed",
       "reason": "same_transition_graded_differently",
       "detail": "same vendor, source_url and previous_state as Circum Icons|free_tier_removed|2026-08-28|https://circumicons.com",
       "summary": "The vendor no longer offers a free tier. They now charge $9 for access to 1600+ icons.",
@@ -1019,12 +1031,12 @@
       "change_type": "restriction",
       "reason": "no_terms_to_narrow",
       "detail": "a restriction was measured against \"Free for public GitHub repositories\", a stored description that states no price, named tier or allowance, so there is nothing for the terms to have narrowed from",
-      "summary": "The free tier is now specifically for open source projects. It includes unlimited public repositories, unlimited runners, ARM-based runners, and GPU runners. Previously, the stored information stated it was simply 'Free for public GitHub repositories'.",
+      "summary": "The free tier is now specifically for open source projects. It offers unlimited public repositories and runners, ARM-based runners, and GPU runners. There are also paid tiers: Startup ($29/month), Business ($79/month), and Enterprise (custom pricing).",
       "previous_state": "Free for public GitHub repositories",
-      "current_state": "Cirun.io is free for Open source projects. Open Source $0 forever Install cirun on unlimited public repositories Unlimited runners ARM-based runners GPU runners All supported cloud providers",
+      "current_state": "Free for Open source projects. Install cirun on unlimited public repositories. Unlimited runners. ARM-based runners. GPU runners. All supported cloud providers.",
       "source_url": "https://cirun.io",
       "category": "CI/CD",
-      "refused_date": "2026-09-10"
+      "refused_date": "2026-09-27"
     },
     {
       "vendor": "Clear Channel Outdoor",
@@ -1401,6 +1413,18 @@
       "source_url": "https://www.coupler.io/",
       "category": "Notebooks & Data Science",
       "refused_date": "2026-09-12"
+    },
+    {
+      "vendor": "Coupler",
+      "change_type": "limits_reduced",
+      "reason": "states_no_terms",
+      "detail": "every clause of the summary states absence or bookkeeping rather than a term the page carries, so it reports the reading rather than a change",
+      "summary": "The page promotes a 'Start for free' option but does not explicitly detail the limitations of a free plan. It highlights a wide range of integrations and features without specifying limits on users, data connections, or refresh frequency. The page focuses on a broader platform with AI integrations and various data destinations, suggesting the original free tier description is no longer fully representative.",
+      "previous_state": "Data integration tool that syncs between apps. It can create live dashboards and reports, transform and manipulate values, and collect and back up insights. The free plan is limited to one user, data connection, data source, and data destination. Also requires manual data refresh.",
+      "current_state": "The page offers a 'Start for free' option with access to 400+ data sources and AI integrations, but does not detail specific limitations of the free tier.",
+      "source_url": "https://www.coupler.io/",
+      "category": "Notebooks & Data Science",
+      "refused_date": "2026-09-27"
     },
     {
       "vendor": "CraftMyPDF",
@@ -1907,13 +1931,13 @@
       "vendor": "duo.com",
       "change_type": "pricing_restructured",
       "reason": "confirmed_unchanged",
-      "detail": "Both descriptions limit the free tier to 10 users/teams.",
-      "summary": "The free tier is now limited to teams of 10 or less.",
+      "detail": "Stored description already limited to ten users.",
+      "summary": "The free tier is now limited to teams of 10 or less. Paid tiers start at $3/user/month.",
       "previous_state": "Two-factor authentication (2FA) for website or app. Free for ten users, all authentication methods, unlimited, integrations, hardware tokens.",
       "current_state": "Duo Free for teams of 10 or less",
       "source_url": "https://duo.com/",
       "category": "Auth",
-      "refused_date": "2026-09-10"
+      "refused_date": "2026-09-27"
     },
     {
       "vendor": "Duolingo",
@@ -1949,7 +1973,7 @@
       "current_state": "Create documents from $0.062 per PDF.",
       "source_url": "https://advicement.io",
       "category": "Dev Utilities",
-      "refused_date": "2026-09-10",
+      "refused_date": "2026-09-27",
       "collided_with": "DynamicDocs|free_tier_removed|2026-08-28|https://advicement.io"
     },
     {
@@ -1982,12 +2006,12 @@
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
       "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (2,500 subscriber, 10,000 email)",
-      "summary": "The free tier is still offered, but the stored information about limits is not found on the page. The page does not explicitly state the subscriber or email limits for the free tier. Multiple customer testimonials mention using the free service, and one mentions migrating *to* EmailOctopus from Mailchimp due to restrictions on Mailchimp's free tier.",
+      "summary": "The page does not explicitly state the free tier limits of 2,500 subscribers and 10,000 emails per month. It only mentions a 'free' option to 'start for free' with no credit card required, and customer testimonials indicate users are on the free plan with varying subscriber counts (e.g., 75k+).",
       "previous_state": "Up to 2,500 subscribers and 10,000 emails per month free",
-      "current_state": "The page offers a 'GET STARTED FOR FREE' option with no credit card required. It does not specify subscriber or email limits for the free tier.",
+      "current_state": "The page offers a 'free' plan with no stated subscriber or email limits, but testimonials suggest it supports a large number of subscribers.",
       "source_url": "https://emailoctopus.com",
       "category": "Email",
-      "refused_date": "2026-09-10"
+      "refused_date": "2026-09-27"
     },
     {
       "vendor": "Emailvalidation.io",
@@ -1996,10 +2020,10 @@
       "detail": "limits_increased claimed, but the current state names no quantity for anything the stored state measured (100 email)",
       "summary": "The free tier now offers 150 monthly credits instead of a one-time 100 credits.",
       "previous_state": "100 free email verifications total (one-time, not monthly)",
-      "current_state": "Get started for free with 150 free monthly credits. No payment details needed.",
+      "current_state": "The free plan includes 150 free monthly credits. No payment details needed.",
       "source_url": "https://emailvalidation.io",
       "category": "Email",
-      "refused_date": "2026-09-11"
+      "refused_date": "2026-09-27"
     },
     {
       "vendor": "Exa",
@@ -3063,7 +3087,7 @@
       "current_state": "A small \"image-charts.com\" text watermark will appear at the top right hand corner.",
       "source_url": "https://www.image-charts.com/",
       "category": "Storage",
-      "refused_date": "2026-09-11"
+      "refused_date": "2026-09-27"
     },
     {
       "vendor": "ImgBB",
@@ -3951,6 +3975,18 @@
     {
       "vendor": "Mergify",
       "change_type": "free_tier_removed",
+      "reason": "removal_read_from_root",
+      "detail": "a free tier was recorded as removed from https://mergify.com, a domain root that states no price, ending or replacement where the free tier was — a homepage's silence is not evidence that one ended",
+      "summary": "The free tier for public repositories is no longer explicitly mentioned. The page focuses on paid plans and features like Merge Queue, CI Insights, and Test Insights. While the core functionality of merge queue is still present, the free access for public repositories is not highlighted or confirmed.",
+      "previous_state": "workflow automation and merge queue for GitHub — Free for public GitHub repositories",
+      "current_state": "The page details features like Merge Queue, CI Insights, Test Insights, and Merge Protections, and encourages users to 'Get started' or 'Talk to our team', implying a paid service. It showcases customer testimonials and ROI calculators.",
+      "source_url": "https://mergify.com",
+      "category": "CI/CD",
+      "refused_date": "2026-09-27"
+    },
+    {
+      "vendor": "Mergify",
+      "change_type": "free_tier_removed",
       "reason": "states_no_terms",
       "detail": "every clause of the summary states absence or narration rather than a term the page carries, so it reports the reading rather than a change",
       "summary": "The free tier for public repositories is no longer explicitly mentioned. The pricing page focuses on features and benefits without detailing a free tier. It highlights paid features like CI Insights, Test Insights, Merge Protections, and Stacks.",
@@ -4366,15 +4402,15 @@
     },
     {
       "vendor": "Outlook.com",
-      "change_type": "limits_reduced",
+      "change_type": "pricing_restructured",
       "reason": "confirmed_unchanged",
-      "detail": "The current page only confirms the 15GB email storage, which was already stated in the stored description. The report highlights a Microsoft 365 Personal subscription, which wasn't part of the stored free tier description.",
-      "summary": "The free tier still exists. The storage limits have changed. Previously 15 GB email storage and 5 GB OneDrive. The current pricing page states 15 GB of mailbox storage for the free tier. A Microsoft 365 Personal subscription offers 100 GB of mailbox storage and 100 GB of OneDrive storage.",
+      "detail": "The report restates the stored description; 'mailbox storage' is equivalent to 'email storage' and 'cloud storage' is equivalent to 'OneDrive'. The promotion of paid subscriptions is new information but doesn't change the free tier's features.",
+      "summary": "The free tier now includes 15 GB of mailbox storage and 5 GB of OneDrive storage. The page also prominently promotes paid Microsoft 365 subscriptions with increased storage and features like Copilot. The free tier is still available.",
       "previous_state": "15 GB email storage. 5 GB OneDrive included. Calendar, contacts, tasks integrated. Focused Inbox. Office for the web access. Custom email aliases. Sweep rules. Ad-supported.",
-      "current_state": "The free tier includes 15 GB of mailbox storage.",
+      "current_state": "The free tier includes 15 GB of mailbox storage and 5 GB of cloud storage.",
       "source_url": "https://outlook.live.com",
       "category": "Consumer Email",
-      "refused_date": "2026-09-10"
+      "refused_date": "2026-09-27"
     },
     {
       "vendor": "OVHcloud",
@@ -4822,10 +4858,10 @@
       "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (1 million)",
       "summary": "The free tier now offers up to 200 Monthly Active Users (MAUs) instead of 1 million transactions.",
       "previous_state": "Swift, Kotlin, and React messaging at 1 million transactions each month. Transactions may contain multiple messages.",
-      "current_state": "Always free for up to 200 MAUs No Credit Card Required Every PubNub SDK available Complete Feature Access to 100+ Integrations",
+      "current_state": "Always free for up to 200 MAUs. No Credit Card Required. Every PubNub SDK available. Complete Feature Access to 100+ Integrations.",
       "source_url": "https://www.pubnub.com/",
       "category": "Messaging",
-      "refused_date": "2026-09-11"
+      "refused_date": "2026-09-27"
     },
     {
       "vendor": "Pullflow",
@@ -5406,6 +5442,19 @@
       "refused_date": "2026-09-16"
     },
     {
+      "vendor": "SigNoz",
+      "change_type": "pricing_restructured",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as SigNoz|pricing_restructured|2026-09-09|https://signoz.io/pricing/",
+      "summary": "The free OSS tier is still mentioned as Self-Hosted SigNoz (Community). The pricing for SigNoz Cloud has significantly changed. The $49/month option with $49 of usage credit still exists. Is now specifically for the 'Teams' plan, and a startup program offers $19/month for the first 12 months.",
+      "previous_state": "OpenTelemetry-native observability with logs, metrics and traces in one tool. The community edition is free to self-host. SigNoz Cloud starts at $49/month including $49 of usage credit, then $0.3/GB ingested for logs and traces (15-day retention) and $0.1 per million metric samples; eligible startups pay $19/month for the first 12 months.",
+      "current_state": "SigNoz Cloud starts at $199/month. The Teams plan starts at $49/month, including $49 of usage. Eligible startups get SigNoz Cloud for $19/month for the first 12 months, including $19 of telemetry usage.",
+      "source_url": "https://signoz.io/pricing/",
+      "category": "Monitoring",
+      "refused_date": "2026-09-27",
+      "collided_with": "SigNoz|pricing_restructured|2026-09-09|https://signoz.io/pricing/"
+    },
+    {
       "vendor": "SiliconFlow",
       "change_type": "free_tier_removed",
       "reason": "no_removal_evidence",
@@ -5551,6 +5600,18 @@
       "source_url": "https://spacelift.io/pricing",
       "category": "Infrastructure",
       "refused_date": "2026-09-18"
+    },
+    {
+      "vendor": "Squash Labs",
+      "change_type": "product_deprecated",
+      "reason": "no_price_signal",
+      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 883 characters, so it states no terms to have changed",
+      "summary": "Squash is no longer operational and the service has been shut down.",
+      "previous_state": "Creates a VM for each branch and makes your app available from a unique URL. Free tier: 2 concurrent environments, 30 hours/month (15 hours at 2GB or 30 hours at 1GB VM), 1GB assets storage, 30GB cache.",
+      "current_state": "Squash is no longer operational.",
+      "source_url": "https://www.squash.io/",
+      "category": "CI/CD",
+      "refused_date": "2026-09-27"
     },
     {
       "vendor": "Squash Labs",
@@ -6083,25 +6144,25 @@
       "vendor": "Tyk",
       "change_type": "pricing_restructured",
       "reason": "confirmed_unchanged",
-      "detail": "The stored description already stated a 48-hour free trial for Tyk Cloud.",
-      "summary": "The free trial is now 48 hours for Tyk Cloud. The open-source offering is still available.",
+      "detail": "The stored description already stated a 48-hour free trial for the cloud offering and that it would transition to paid plans.",
+      "summary": "The open source offering is still mentioned. The free trial for Tyk Cloud is now 48 hours, and there are now three paid tiers: Core, Professional, and Enterprise.",
       "previous_state": "Open-source API gateway — self-hosted: free forever under MPL-2.0, includes rate limiting, auth, analytics. Cloud: 48-hour free trial only, paid plans usage-based. Dashboard and developer portal included",
-      "current_state": "Tyk provides a free version of its open source API gateway via GitHub. A fully featured, free, 48-hour trial of Tyk Cloud is also available.",
+      "current_state": "Tyk offers a 48-hour free trial of Tyk Cloud. There are three pricing tiers: Core (usage-based), Professional (flat-rate), and Enterprise (custom).",
       "source_url": "https://tyk.io/pricing/",
       "category": "API Gateway",
-      "refused_date": "2026-09-10"
+      "refused_date": "2026-09-27"
     },
     {
       "vendor": "Typeform.com",
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
       "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (100 respons)",
-      "summary": "The free plan is still offered, but the description of its limits is no longer present on the pricing page. The page highlights new paid plans (Core, Growth, Research, Talent, Enterprise) and focuses on AI-powered features.",
+      "summary": "The free plan is still offered, but the description of limits is no longer present on the pricing page. The page highlights AI features and multiple paid plans (Core, Growth, Research, Talent, Enterprise) but does not explicitly state the 100 monthly responses limit for the free plan.",
       "previous_state": "Include beautifully designed forms on websites. The free plan allows unlimited questions per form and 100 monthly responses.",
-      "current_state": "The page states you can 'Get started—it’s free' but does not specify any limits on questions or monthly responses.",
+      "current_state": "The page states that you can 'Get started—it’s free' and build forms with AI automation, but does not specify any limits on responses or features within the free plan.",
       "source_url": "https://www.typeform.com/",
       "category": "Forms",
-      "refused_date": "2026-09-11"
+      "refused_date": "2026-09-27"
     },
     {
       "vendor": "Umami",
@@ -6387,6 +6448,18 @@
       "collided_with": "webhook.site|limits_reduced|2026-08-28|https://webhook.site"
     },
     {
+      "vendor": "webhook.site",
+      "change_type": "limits_increased",
+      "reason": "unquantified_limit",
+      "detail": "limits_increased claimed, but the current state names no quantity for anything the stored state measured (50 request)",
+      "summary": "The free tier is limited to 50 requests, but the page indicates a maximum of {{ appConfig.MaxRequests }} requests are allowed. The page also mentions upgrading to remove request limits and keep URLs forever.",
+      "previous_state": "Verify webhooks, outbound HTTP requests, or emails with a custom URL — The free tier allows a maximum of 50 requests. URLs expire.",
+      "current_state": "The URL is not associated with an account, can accept a maximum of {{ appConfig.MaxRequests }} requests, and expires.",
+      "source_url": "https://webhook.site",
+      "category": "Testing",
+      "refused_date": "2026-09-27"
+    },
+    {
       "vendor": "Webvizio",
       "change_type": "free_tier_removed",
       "reason": "same_transition_graded_differently",
@@ -6522,6 +6595,18 @@
       "source_url": "https://xata.io/pricing",
       "category": "Databases",
       "refused_date": "2026-09-21"
+    },
+    {
+      "vendor": "xcloud.host",
+      "change_type": "limits_increased",
+      "reason": "measures_no_change",
+      "detail": "limits_increased claimed, and every quantity the record compares holds the same value once notation and period are normalised — 1 server against 1 server, 10 sit against 10 sit",
+      "summary": "The free tier now offers 1 server and 10 sites, but is now associated with 'Self-Managed Hosting' and requires users to 'Connect Your Own Server'. The original description implied a fully hosted free tier.",
+      "previous_state": "Server management and deployment platform with a user-friendly interface — Free: 1 server and 10 sites included",
+      "current_state": "Free: 1 server and 10 sites included Connect any VPS to the xCloud panel Every feature under one dashboard Unlimited apps and databases",
+      "source_url": "https://xcloud.host",
+      "category": "Server Management",
+      "refused_date": "2026-09-27"
     },
     {
       "vendor": "xcloud.host",

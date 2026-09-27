@@ -2635,6 +2635,71 @@
       "record_date": "2026-09-26",
       "change_type": "limits_reduced",
       "summary": "The free tier is limited to 25,000 MAUs."
+    },
+    {
+      "vendor": "Stoplight",
+      "url": "https://stoplight.io/pricing",
+      "restated_on": "2026-09-27",
+      "previous_description": "API design and documentation platform — There is a 'Basic' plan that is free and includes the first 3 users, OpenAPI/JSON schema visual designer, interactive docs, and instant mock servers.",
+      "description": "API design and documentation platform — The Basic plan costs $44 / month (annually) or $56 / month (monthly) and includes the first 3 users free. It includes OpenAPI/JSON schema visual designer, interactive docs, and instant mock servers.",
+      "reading_date": "2026-09-27",
+      "reading_terms": "The Basic plan costs $44 / month (annually) or $56 / month (monthly) and includes the first 3 users free. It includes OpenAPI/JSON schema visual designer, interactive docs, and instant mock servers.",
+      "source_url": "https://stoplight.io/pricing",
+      "record_date": "2026-09-27",
+      "change_type": "free_tier_removed",
+      "summary": "The Basic plan is now a paid plan at $44/month or $56/month, and includes the first 3 users free."
+    },
+    {
+      "vendor": "houndci.com",
+      "url": "https://houndci.com/",
+      "restated_on": "2026-09-27",
+      "previous_description": "Comments on GitHub commits about code quality, free for Open Source",
+      "description": "Hound is free for public repos! Chihuahua Up to 50 private reviews $29 month",
+      "reading_date": "2026-09-27",
+      "reading_terms": "Hound is free for public repos! Chihuahua Up to 50 private reviews $29 month",
+      "source_url": "https://houndci.com/",
+      "record_date": "2026-09-27",
+      "change_type": "free_tier_removed",
+      "summary": "Hound is free for public repos, but private repos require a paid plan."
+    },
+    {
+      "vendor": "BugBug",
+      "url": "https://bugbug.io/",
+      "restated_on": "2026-09-27",
+      "previous_description": "Lightweight test automation tool for web applications — The Free plan includes: Unlimited local test runs, 15 tests, 4 test suites, 1 user, 1 project, AI Test recorder, Components, Edit & rewind, Screenshots, 7 days of tests history.",
+      "description": "Lightweight test automation tool for web applications — The Free plan includes: Unlimited local test runs, unlimited tests, unlimited test suites, 1 user, 1 project, AI Test recorder, Components, Edit & rewind, Screenshots, 7 days of tests history.",
+      "reading_date": "2026-09-27",
+      "reading_terms": "The Free plan includes: Unlimited local test runs, unlimited tests, unlimited test suites, 1 user, 1 project, AI Test recorder, Components, Edit & rewind, Screenshots, 7 days of tests history.",
+      "source_url": "https://bugbug.io/",
+      "record_date": "2026-09-27",
+      "change_type": "limits_increased",
+      "summary": "The free plan now offers unlimited tests, unlimited test suites, 1 user, 1 project, AI Test recorder, Components, Edit & rewind, Screenshots, and 7 days of tests history. Previously 15 tests and 4 test suites."
+    },
+    {
+      "vendor": "forwardemail.net",
+      "url": "https://forwardemail.net",
+      "restated_on": "2026-09-27",
+      "previous_description": "Free Only supports email forwarding $0 /month for unlimited domains Forward your domain's mail Unlimited inbound email Spam protection 50 MB attachment limit",
+      "description": "Free forwarding; paid hosting from $3/mo. Supports SPF, DKIM, DMARC, BIMI, MTA-STS, and DANE. Works with Gmail, Outlook, Apple Mail, Thunderbird, and any standard email client. 10 GB pooled storage",
+      "reading_date": "2026-09-27",
+      "reading_terms": "Free forwarding; paid hosting from $3/mo. Supports SPF, DKIM, DMARC, BIMI, MTA-STS, and DANE. Works with Gmail, Outlook, Apple Mail, Thunderbird, and any standard email client. 10 GB pooled storage",
+      "source_url": "https://forwardemail.net",
+      "record_date": "2026-09-27",
+      "change_type": "limits_increased",
+      "summary": "The free tier now includes 10GB of pooled storage, whereas previously it only offered 50MB of attachment limit. The free tier also now includes features like IMAP, POP3, and SMTP access."
+    },
+    {
+      "vendor": "Hotjar",
+      "url": "https://hotjar.com",
+      "restated_on": "2026-09-27",
+      "previous_description": "Website Analytics and Reports — The Contentsquare Free plan includes 200k sessions per month, heatmaps, session replay, surveys, error monitoring, funnels, and 10+ integrations. It also includes a 15-day trial of the Growth plan.",
+      "description": "Website Analytics and Reports — Contentsquare Free includes 200k sessions per month, heatmaps, session replay, surveys, error monitoring, funnels, and 10+ integrations.",
+      "reading_date": "2026-09-27",
+      "reading_terms": "Contentsquare Free includes 200k sessions per month, heatmaps, session replay, surveys, error monitoring, funnels, and 10+ integrations.",
+      "source_url": "https://hotjar.com",
+      "record_date": "2026-09-27",
+      "change_type": "rebranded",
+      "summary": "Hotjar's own page now redirects to contentsquare.com. Hotjar has been rebranded to Contentsquare. The free plan still exists and offers 200k sessions per month, heatmaps, session replay, surveys, error monitoring, funnels, and 10+ integrations. The free plan now captures 200k sessions *per month* instead of 35/day as Hotjar's free plan did."
     }
   ]
 }
