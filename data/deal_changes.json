@@ -10600,7 +10600,13 @@
       "category": "AI / ML",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-13"
+      "recorded_date": "2026-09-13",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-27",
+        "detail": "Retracted 2026-09-27: nothing changed on 2026-09-13. The Internet Archive's captures of lumenfall.ai/pricing on 2026-03-11, 2026-06-09 and 2026-08-28 carry the same terms this record reports, \"Start Free with $1 Credit\" with zero markup, and none mentions FLUX.1 [schnell]. The free-forever FLUX.1 [schnell] FP8 line was in our listing text, and Lumenfall's model catalogue still lists that model as free on 2026-09-27. The record compared the pricing page with our own listing text.",
+        "source_url": "https://web.archive.org/web/20260828131241/https://lumenfall.ai/pricing"
+      }
     },
     {
       "vendor": "ToolJet",
