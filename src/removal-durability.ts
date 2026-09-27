@@ -1,6 +1,7 @@
 import type { DealChange } from "./types.js";
 import { CHANGE_DIRECTION } from "./change-direction.js";
 import { theEventNeverHappened } from "./change-resolution.js";
+import { changesTheVendorMade } from "./data.js";
 
 export const FREE_TIER_REMOVED = "free_tier_removed";
 
@@ -35,7 +36,7 @@ function laterPositiveRecordForTheSameVendor<T extends RemovalCandidate>(
   log: readonly T[],
 ): T | null {
   return (
-    log
+    changesTheVendorMade(log)
       .filter(
         (c) =>
           c.vendor === removal.vendor &&
