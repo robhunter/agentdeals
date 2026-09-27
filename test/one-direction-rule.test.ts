@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 import { CHANGE_DIRECTION, CHANGE_TYPE_MEANING, NEGATIVE_CHANGE_TYPES, POSITIVE_CHANGE_TYPES, changeDirectionTable } from "../dist/change-direction.js";
 import { trackedChanges } from "../dist/change-census.js";
 import { loadDealChanges } from "../dist/data.js";
+import { countsAsANegativeChange } from "../dist/product-deprecation.js";
 import { directionCopiesIn, describeCopy } from "./direction-sets.ts";
 import { assertPopulationFloor } from "./population-floor.ts";
 
@@ -84,7 +85,7 @@ describe("one direction rule decides every split we publish", () => {
 
   it("publishes the same two numbers on every page that splits the change log", async () => {
     const tracked = trackedChanges(loadDealChanges());
-    const negative = tracked.filter(c => NEGATIVE_CHANGE_TYPES.has(c.change_type)).length;
+    const negative = tracked.filter(countsAsANegativeChange).length;
     const positive = tracked.filter(c => POSITIVE_CHANGE_TYPES.has(c.change_type)).length;
     const published: string[] = [];
     for (const page of PAGES_THAT_SPLIT_THE_LOG) {
