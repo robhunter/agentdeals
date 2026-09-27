@@ -563,7 +563,6 @@ export function newestChangeBySlug(
 export type FactSurface = "verdict" | "table";
 
 export const HETZNER_PLAN_TABLE_READ_ON = "2026-09-04";
-export const FRONTIER_PRICES_READ_ON = "2026-09-05";
 export const STORAGE_RATE_CARD_READ_ON = "2026-09-07";
 
 export interface DeclaredFigureRead {
@@ -581,13 +580,6 @@ export const DECLARED_FIGURE_READS: readonly DeclaredFigureRead[] = [
     vendors: ["hetzner"],
     cited_from: "hetzner.com",
     covers: "the plan table in section 1",
-  },
-  {
-    path: "/llm-api-pricing",
-    read_on: FRONTIER_PRICES_READ_ON,
-    vendors: ["openai", "anthropic-api", "google-gemini-api", "mistral-ai"],
-    cited_from: "each vendor's own pricing page",
-    covers: "the frontier rows of the pricing table",
   },
   {
     path: "/storage-comparison-2026",

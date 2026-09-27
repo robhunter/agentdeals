@@ -18,9 +18,6 @@ const STATED: Record<string, string[]> = {
     "Mistral Large, Medium 3.5, Small 4, Devstral",
   ],
   "/gemini-api-pricing-2026": [
-    "30 RPM; 1K requests and 200K tokens/day per model",
-    "gpt-oss-120b, gpt-oss-20b, Qwen3.8 27B, Whisper",
-    "$10/month in API credits",
     "Mistral AI includes $10 a month in API credits.",
   ],
   "/free-ai-stack": [
@@ -43,7 +40,6 @@ const STATED: Record<string, string[]> = {
   "/llm-api-pricing": [
     "Groq's free plan allows 30 RPM, 1,000 requests and 200K tokens a day per model",
     "Groq gpt-oss-20b ($0.075/M input)",
-    "Free plan: $10 a month in API credits.",
     "Mistral's Free plan includes $10 a month in API credits",
     "For open-source, SiliconFlow serves Llama and DeepSeek models at $0.10–0.15/M.",
     "Open-weight inference is cheap: Groq's free plan allows 200K tokens a day on each of its free chat models.",

@@ -4,7 +4,7 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import {
-  DECLARED_FIGURE_READS, FRONTIER_PRICES_READ_ON, HETZNER_PLAN_TABLE_READ_ON,
+  DECLARED_FIGURE_READS, HETZNER_PLAN_TABLE_READ_ON,
   READ_DATES_THAT_ARE_NOT_FIGURE_READS, STORAGE_RATE_CARD_READ_ON, TABLE_STALENESS_DISCLOSURES,
   declaredFigureReadsFor, factsOutdatedBy, newestChangeBySlug, parsePageReviews, referenceDateFor,
   reviewStatus, staleFactPages, utcToday,
