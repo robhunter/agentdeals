@@ -443,7 +443,8 @@
       "source_url": "https://www.mapbox.com/pricing",
       "record_date": "2026-08-28",
       "change_type": "pricing_restructured",
-      "summary": "The free tier for Navigation SDK now has limits on monthly active users and trips. There are two options: one with metered trips and one with unlimited trips, both with associated costs beyond the free tier."
+      "summary": "The free tier for Navigation SDK now has limits on monthly active users and trips. There are two options: one with metered trips and one with unlimited trips, both with associated costs beyond the free tier.",
+      "reverted_on": "2026-09-27"
     },
     {
       "vendor": "Formbricks",
@@ -495,7 +496,8 @@
       "source_url": "https://www.tawk.to/pricing/",
       "record_date": "2026-09-12",
       "change_type": "pricing_restructured",
-      "summary": "A free tier still exists, the description is no longer entirely accurate. The page details options to remove branding for $29/month, AI assist starting at $29/month, and human agents for $1/hour."
+      "summary": "A free tier still exists, the description is no longer entirely accurate. The page details options to remove branding for $29/month, AI assist starting at $29/month, and human agents for $1/hour.",
+      "reverted_on": "2026-09-27"
     },
     {
       "vendor": "Uploadcare",
@@ -651,7 +653,8 @@
       "source_url": "https://grafana.com/pricing/",
       "record_date": "2026-08-28",
       "change_type": "limits_reduced",
-      "summary": "The free tier no longer offers 500 VUh. It now offers limited usage of all Grafana Cloud services, with limits of 10k active series per month for metrics, and 50 GB ingested per month for logs, traces, and profiles."
+      "summary": "The free tier no longer offers 500 VUh. It now offers limited usage of all Grafana Cloud services, with limits of 10k active series per month for metrics, and 50 GB ingested per month for logs, traces, and profiles.",
+      "reverted_on": "2026-09-27"
     },
     {
       "vendor": "Twingate",
@@ -838,7 +841,8 @@
       "source_url": "https://www.thunderclient.com/pricing",
       "record_date": "2026-09-10",
       "change_type": "limits_reduced",
-      "summary": "The free plan now includes unlimited collection runs, and previously 1 local collection run per month is removed. The Starter plan is now billed annually."
+      "summary": "The free plan now includes unlimited collection runs, and previously 1 local collection run per month is removed. The Starter plan is now billed annually.",
+      "reverted_on": "2026-09-27"
     },
     {
       "vendor": "Gel",
@@ -1007,7 +1011,8 @@
       "source_url": "https://ipwho.org/",
       "record_date": "2026-08-28",
       "change_type": "pricing_restructured",
-      "summary": "The free tier now has no stated request limit, but is described as 'Free forever for side projects, learning and non-profits'. A paid tier at $2.50/month lifts the cap and allows for business use."
+      "summary": "The free tier now has no stated request limit, but is described as 'Free forever for side projects, learning and non-profits'. A paid tier at $2.50/month lifts the cap and allows for business use.",
+      "reverted_on": "2026-09-27"
     },
     {
       "vendor": "MockAPI",
@@ -1046,7 +1051,8 @@
       "source_url": "https://ocr.space/",
       "record_date": "2026-08-28",
       "change_type": "pricing_restructured",
-      "summary": "The file size limit for the free tier is now 5MB, up from 1MB."
+      "summary": "The file size limit for the free tier is now 5MB, up from 1MB.",
+      "reverted_on": "2026-09-27"
     },
     {
       "vendor": "TinyMCE",
@@ -1177,7 +1183,8 @@
       "source_url": "https://www.teamcamp.app/pricing",
       "record_date": "2026-09-03",
       "change_type": "pricing_restructured",
-      "summary": "The free tier now has a per-user/per-month cost of $8 when billed monthly, or is free per user/per month billed annually."
+      "summary": "The free tier now has a per-user/per-month cost of $8 when billed monthly, or is free per user/per month billed annually.",
+      "reverted_on": "2026-09-27"
     },
     {
       "vendor": "transfernow",
@@ -2321,7 +2328,8 @@
       "source_url": "https://airtable.com/pricing",
       "record_date": "2026-08-28",
       "change_type": "pricing_restructured",
-      "summary": "The free plan still exists. The details have changed. The page states the free plan is for individual users, very small teams, or those with lightweight needs. It also mentions paid plans start at $20/user/month."
+      "summary": "The free plan still exists. The details have changed. The page states the free plan is for individual users, very small teams, or those with lightweight needs. It also mentions paid plans start at $20/user/month.",
+      "reverted_on": "2026-09-27"
     },
     {
       "vendor": "Internxt",

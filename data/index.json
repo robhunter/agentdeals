@@ -5346,7 +5346,7 @@
     {
       "vendor": "Mapbox",
       "category": "Maps/Geolocation",
-      "description": "Navigation SDK v3.x offers a free tier up to 100 MAUs and 1,000 trips with a cost of $0.30/user and $0.08/trip beyond that. Another option is a flat fee per MAU (free up to 10, then contact sales). Navigation SDK v2.x also has similar tiered pricing.",
+      "description": "Maps, navigation and search APIs with monthly free tiers: 50,000 web map loads (GL JS), 25,000 mobile MAUs (Maps SDKs), 100,000 requests each for Temporary Geocoding, Directions and Tilequery, 200,000 vector tile requests, 50,000 Static Images requests; Navigation SDK v3.x up to 100 MAUs and 1,000 trips, then $0.30 per MAU and $0.08 per trip. Permanent Geocoding API is paid only.",
       "tier": "Free",
       "url": "https://www.mapbox.com/pricing",
       "tags": [
@@ -5363,12 +5363,9 @@
         "outcome": "ok",
         "detail": "the page names Mapbox as \"mapbox\" and states \"$0.30\" and \"$0.08\""
       },
-      "restated_from": {
-        "reading_date": "2026-08-28",
-        "source_url": "https://www.mapbox.com/pricing",
+      "restatement_reverted": {
         "record_date": "2026-08-28",
-        "change_type": "pricing_restructured",
-        "restated_on": "2026-09-20"
+        "reverted_on": "2026-09-27"
       }
     },
     {
@@ -5542,7 +5539,7 @@
     {
       "vendor": "Tawk.to",
       "category": "Communication",
-      "description": "The core software is free to use with tawk.to branding. Options exist to remove branding for $29/month, add AI assistance from $29/month, or hire live agents for $1/hour.",
+      "description": "Free live chat, ticketing, knowledge base and CRM. No limits on agents, simultaneous chats, conversations, contacts or chat history; 50+ languages; no credit card. Paid add-ons: branding removal $29/month, AI Assist from $29/month (forever-free tier for limited volume), Video + Voice + Screensharing (priced per property); hired chat agents $1/hour.",
       "tier": "Free",
       "url": "https://www.tawk.to/pricing/",
       "tags": [
@@ -5559,12 +5556,9 @@
         "outcome": "ok",
         "detail": "the page names Tawk.to as \"tawk to\" and states \"$29\""
       },
-      "restated_from": {
-        "reading_date": "2026-09-12",
-        "source_url": "https://www.tawk.to/pricing/",
+      "restatement_reverted": {
         "record_date": "2026-09-12",
-        "change_type": "pricing_restructured",
-        "restated_on": "2026-09-20"
+        "reverted_on": "2026-09-27"
       }
     },
     {
@@ -7509,7 +7503,7 @@
     {
       "vendor": "Grafana k6 Cloud",
       "category": "Testing",
-      "description": "Free tier includes all Grafana Cloud services with limited usage. Specifically, 10k active series per month for metrics, and 50 GB ingested per month for logs, traces, and profiles. 14 days retention. Community support.",
+      "description": "Grafana Cloud k6 load testing. Always free: 500 virtual user hours (VUh) per month, 14-day retention for k6 performance tests, community support, no credit card required. Minimum 1 VUh per test.",
       "tier": "Free",
       "url": "https://grafana.com/pricing/",
       "tags": [
@@ -7525,12 +7519,9 @@
         "outcome": "ok",
         "detail": "the page names Grafana k6 Cloud as \"grafana\" and states \"$0\""
       },
-      "restated_from": {
-        "reading_date": "2026-08-28",
-        "source_url": "https://grafana.com/pricing/",
+      "restatement_reverted": {
         "record_date": "2026-08-28",
-        "change_type": "limits_reduced",
-        "restated_on": "2026-09-20"
+        "reverted_on": "2026-09-27"
       }
     },
     {
@@ -9217,7 +9208,7 @@
     {
       "vendor": "Thunder Client",
       "category": "API Development",
-      "description": "Lightweight REST API client for VS Code and JetBrains — $0 Per user/month Billed monthly Includes: Extension VS Code",
+      "description": "Lightweight REST API client for VS Code and JetBrains. Free plan is $0 per user/month for the VS Code extension, with 1 local collection run per month. Paid plans are billed annually from Starter at $3 per user/month, which adds JetBrains, team features, CLI and CI/CD, WebSocket/SSE/gRPC and 250 collection runs; Business is $7 and Enterprise $16.",
       "tier": "Free",
       "url": "https://www.thunderclient.com/pricing",
       "tags": [
@@ -9233,12 +9224,9 @@
         "outcome": "ok",
         "detail": "the page names Thunder Client as \"thunder client\" and states \"$0\""
       },
-      "restated_from": {
-        "reading_date": "2026-09-10",
-        "source_url": "https://www.thunderclient.com/pricing",
+      "restatement_reverted": {
         "record_date": "2026-09-10",
-        "change_type": "limits_reduced",
-        "restated_on": "2026-09-20"
+        "reverted_on": "2026-09-27"
       }
     },
     {
@@ -11365,7 +11353,7 @@
     {
       "vendor": "IP Geolocation API by ipwho.org",
       "category": "Dev Utilities",
-      "description": "Free forever for side projects, learning and non-profits. $2.50/mo lifts the cap and clears you for business use.",
+      "description": "IP geolocation API. Free forever for side projects, learning and non-profits: 2,000 lookups/day, all features, 100 requests/second burst cap, no card, no support. Commercial use needs a paid plan: $2.50/mo clears you for business use. 16 global data centres.",
       "tier": "Free",
       "url": "https://ipwho.org/",
       "tags": [
@@ -11378,12 +11366,9 @@
         "outcome": "ok",
         "detail": "the page names IP Geolocation API by ipwho.org as \"geolocation\" and states \"$2.50\""
       },
-      "restated_from": {
-        "reading_date": "2026-08-28",
-        "source_url": "https://ipwho.org/",
+      "restatement_reverted": {
         "record_date": "2026-08-28",
-        "change_type": "pricing_restructured",
-        "restated_on": "2026-09-20"
+        "reverted_on": "2026-09-27"
       }
     },
     {
@@ -11913,7 +11898,7 @@
     {
       "vendor": "OCR.Space",
       "category": "AI / ML",
-      "description": "An OCR API parses image and pdf files that return the text results in JSON format — The free tier has a file size limit of 5MB per document.",
+      "description": "Free OCR API that parses image and PDF files and returns the text as JSON: 25,000 requests/month, 1 MB file size limit, 3-page PDF limit, 500 requests/day per IP address, plus 2,500 Engine 3 conversions/month. Free-tier searchable PDFs carry a watermark. The online OCR web form needs no registration and accepts files up to 5MB.",
       "tier": "Free",
       "url": "https://ocr.space/",
       "tags": [
@@ -11937,12 +11922,9 @@
         ],
         "reviewed": "2026-09-01"
       },
-      "restated_from": {
-        "reading_date": "2026-08-28",
-        "source_url": "https://ocr.space/",
+      "restatement_reverted": {
         "record_date": "2026-08-28",
-        "change_type": "pricing_restructured",
-        "restated_on": "2026-09-20"
+        "reverted_on": "2026-09-27"
       }
     },
     {
@@ -13530,7 +13512,7 @@
     {
       "vendor": "Teamcamp",
       "category": "Project Management",
-      "description": "All-in-one project management — Free per user / per month, billed annually $8 when billed monthly",
+      "description": "All-in-one project management. Free plan: up to 10 users, unlimited projects, 250 tasks, 1 GB storage, time tracking, docs & whiteboard, invoicing and payment, integrations, free support. Plus is $6 per user/month billed annually, $8 billed monthly.",
       "tier": "Free",
       "url": "https://www.teamcamp.app/pricing",
       "tags": [
@@ -13543,12 +13525,9 @@
         "outcome": "ok",
         "detail": "the page names Teamcamp as \"teamcamp\" and states \"$8\""
       },
-      "restated_from": {
-        "reading_date": "2026-09-03",
-        "source_url": "https://www.teamcamp.app/pricing",
+      "restatement_reverted": {
         "record_date": "2026-09-03",
-        "change_type": "pricing_restructured",
-        "restated_on": "2026-09-20"
+        "reverted_on": "2026-09-27"
       }
     },
     {
@@ -33542,7 +33521,7 @@
     {
       "vendor": "Airtable",
       "category": "Productivity & Notes",
-      "description": "Database and collaboration platform — Airtable has a Free plan available to teams for no charge. Paid plans start at $20/user/month when billed annually.",
+      "description": "Database and app-building platform. Free: unlimited bases, 1,000 records per base, 1 GB attachments per base, 1 workspace, up to 5 editors and 50 commenters, 500 AI credits per editor/month, 100 automation runs, 1,000 API calls/month, 2-week revision and snapshot history, Interface Designer. Extensions, synced tables, Gantt/timeline views and expanded color/formatting are paid only; Team is $20/user/month billed annually.",
       "tier": "Free",
       "url": "https://airtable.com/pricing",
       "tags": [
@@ -33560,12 +33539,9 @@
         "outcome": "ok",
         "detail": "the page names Airtable as \"airtable\" and states \"$20\""
       },
-      "restated_from": {
-        "reading_date": "2026-08-28",
-        "source_url": "https://airtable.com/pricing",
+      "restatement_reverted": {
         "record_date": "2026-08-28",
-        "change_type": "pricing_restructured",
-        "restated_on": "2026-09-20"
+        "reverted_on": "2026-09-27"
       }
     },
     {
