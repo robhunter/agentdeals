@@ -587,7 +587,7 @@ export function enrichOffers(offers: Offer[]): EnrichedOffer[] {
     .slice(0, 10);
 
   const vendorChanges = new Map<string, DealChange[]>();
-  for (const c of changes) {
+  for (const c of changesTheVendorMade(changes)) {
     if (c.date >= cutoffDate) {
       const key = c.vendor.toLowerCase();
       if (!vendorChanges.has(key)) vendorChanges.set(key, []);
