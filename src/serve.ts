@@ -49743,7 +49743,8 @@ ${monthsHtml}
 }
 
 function buildExpiringPage(): string {
-  const allChanges = changesTheVendorMade(loadDealChanges());
+  const everyRecord = loadDealChanges();
+  const allChanges = changesTheVendorMade(everyRecord);
   const { dated: eventDated, discovered: undatedChanges } = partitionByDateProvenance(allChanges);
   const today = new Date().toISOString().slice(0, 10);
   const todayMs = new Date(today + "T00:00:00Z").getTime();
@@ -49934,7 +49935,7 @@ ${globalNavCss()}
       <div class="stat-label">Recently Changed</div>
     </div>
     <div class="stat-card">
-      <div class="stat-value">${trackedChanges(allChanges).length}</div>
+      <div class="stat-value">${trackedChanges(everyRecord).length}</div>
       <div class="stat-label">Total Tracked</div>
     </div>
   </div>
