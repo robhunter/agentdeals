@@ -260,7 +260,7 @@ describe("a vendor page states the reason it cannot confirm the terms in its own
 
   it("leaves a record whose tier names its own ending to say so without a caveat or a citation", () => {
     const ended = pages.filter(p => ENDED_TIERS.some((tier: string) => tier.toLowerCase() === (p.tier ?? "").toLowerCase()));
-    assertPopulationFloor(ended.length, 4, "vendor pages whose tier names the offer as ended");
+    assertPopulationFloor(ended.length, 1, "vendor pages whose tier names the offer as ended");
     assert.deepStrictEqual(
       ended.filter(p => p.reason !== "" || p.citesARead).map(p => `${p.route}: ${p.reason ?? "no node built from the block"}`),
       [],

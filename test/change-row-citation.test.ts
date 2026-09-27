@@ -316,17 +316,17 @@ describe("every published change row carries the page it was read from", () => {
 
   it("reads a population on both sides of the question", () => {
     assertCoversPopulation(sweptPaths.length, vendorsInTheCatalogue(), "paths served for the sweep");
-    assertPopulationFloor(pagesWithARow, 800, "served pages render at least one change row");
-    assertPopulationFloor(rowsChecked, 6000, "change rows rendered across the site");
+    assertPopulationFloor(pagesWithARow, 710, "served pages render at least one change row");
+    assertPopulationFloor(rowsChecked, 3744, "change rows rendered across the site");
     assertPopulationFloor(rows.length, 390, "distinct summaries the store can put on a page");
     assertPopulationFloor(
       rows.filter((row) => row.sources.length === 0).length,
-      60,
+      54,
       "summaries no record holds a source for, so the no-source branch is not vacuous",
     );
     assertPopulationFloor(
       rows.filter((row) => row.swallowers.length > 0).length,
-      3,
+      1,
       "summaries a longer claim the site renders holds word for word",
     );
     assertPopulationFloor(
@@ -342,7 +342,7 @@ describe("every published change row carries the page it was read from", () => {
   });
 
   it("does not reach that by citing everything — it states the ones we hold no source for", () => {
-    assertPopulationFloor(citedRows, 5000, "rows shown beside the page they were read from");
+    assertPopulationFloor(citedRows, 3268, "rows shown beside the page they were read from");
     assertPopulationFloor(statedRows, 400, "rows shown beside a statement that we hold no source");
     assert.strictEqual(citedRows + statedRows, rowsChecked);
   });

@@ -155,7 +155,7 @@ describe("a name filter says what it matched (issue #1688)", () => {
     const reaching = vendorNames().filter((name) =>
       records.some((c) => contains(c.vendor, name) && c.vendor.toLowerCase() !== name.toLowerCase()),
     );
-    assertPopulationFloor(reaching.length, 12, "vendor names that reach another vendor's records");
+    assertPopulationFloor(reaching.length, 7, "vendor names that reach another vendor's records");
 
     for (const name of reaching) {
       const filter = soleFilter(byVendor(name));

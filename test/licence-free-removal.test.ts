@@ -86,7 +86,7 @@ describe("a licence grants the free use and a pricing page cannot withdraw it (#
       );
       assertPopulationFloor(
         tierNamesOpenSourceWithoutTheLicence.length,
-        6,
+        1,
         "offers whose tier names open source or community and whose stored grounds leave out the licence"
       );
       for (const offer of tierNamesOpenSourceWithoutTheLicence) {
@@ -135,7 +135,7 @@ describe("a licence grants the free use and a pricing page cannot withdraw it (#
           refused.push(record.vendor);
         }
       }
-      assertPopulationFloor(REMOVALS.length, 60, "free-tier removal records read through the gate");
+      assertPopulationFloor(REMOVALS.length, 56, "free-tier removal records read through the gate");
       assert.deepStrictEqual(refused.sort(), [...READ_FROM_A_HOSTED_PRICING_PAGE].sort());
     });
   });

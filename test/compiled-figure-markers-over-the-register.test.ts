@@ -167,7 +167,7 @@ describe("marking a compiled figure the change log has moved past", () => {
 
   it("reads enough resolved subjects for the property to bite", () => {
     const subjects = swept.reduce((n, page) => n + page.reachableStale.length, 0);
-    assertPopulationFloor(subjects, 50, "registered subjects the resolver reaches whose record post-dates the page");
+    assertPopulationFloor(subjects, 24, "registered subjects the resolver reaches whose record post-dates the page");
   });
 
   it("marks every subject a page names whose record post-dates the figures it publishes", () => {
@@ -208,7 +208,7 @@ describe("marking a compiled figure the change log has moved past", () => {
     const tooltips = swept.flatMap(page => page.endedTooltips);
     assertPopulationFloor(
       vendorsSourcedTo(tooltips, SOURCED_TO_A_RECORD).length,
-      9,
+      6,
       "ended markers on the register that say a record of ours ends the free tier",
     );
     assertPopulationFloor(

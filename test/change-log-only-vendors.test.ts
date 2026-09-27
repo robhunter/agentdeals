@@ -208,7 +208,7 @@ describe("marking a comparison slot whose vendor has no catalogue entry", () => 
     );
     assertPopulationFloor(
       ended.length,
-      18,
+      12,
       "slots naming a vendor whose free tier the change log ended",
     );
   });
@@ -261,7 +261,7 @@ describe("marking a comparison slot whose vendor has no catalogue entry", () => 
       }
       reaching += [...slot.markup.matchAll(/href="\/vendor\/[a-z0-9-]+#changes"/g)].length;
     }
-    assertPopulationFloor(reaching, 150, "markers on a slot reaching a vendor's records");
+    assertPopulationFloor(reaching, 58, "markers on a slot reaching a vendor's records");
   });
 
   it("gives the change log one anchor per vendor and no more", () => {

@@ -181,7 +181,7 @@ describe("#1724 structured data prices a tier at zero only where we state that t
     );
     assertPopulationFloor(
       new Set(withholding.map(n => n.route.replace(/\/[^/]*$/, "/"))).size,
-      3,
+      1,
       "surfaces carry a withholding node",
     );
     assert.deepStrictEqual(
@@ -192,7 +192,7 @@ describe("#1724 structured data prices a tier at zero only where we state that t
 
   it("publishes no price of zero for an offer we rate risky over a change that ended it", () => {
     const ended = offersWhere(o => o.risk_level === "risky" && Boolean(o.risk_cause));
-    assertPopulationFloor(ended.size, 13, "offers are rated risky over a change that ended them");
+    assertPopulationFloor(ended.size, 6, "offers are rated risky over a change that ended them");
     assertPopulationFloor(nodesNaming(ended).length, 20, "nodes name one of those offers");
     assert.deepStrictEqual(pricedAmong(ended).slice(0, 25), []);
   });

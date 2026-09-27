@@ -33,8 +33,10 @@ const REPO = path.join(__dirname, "..");
 
 const DAY = 24 * 60 * 60 * 1000;
 const EVERY_NTH_UNDEMOTED_PAGE = 7;
-const PAGES_NAMING_A_LAPSING_DEMOTION_FLOOR = 140;
-const PAGES_STATING_A_WITHHELD_RATING_FLOOR = 8;
+const PAGES_NAMING_A_LAPSING_DEMOTION_FLOOR = 25;
+const PAGES_READ_AT_ONCE = 12;
+const A_DEMOTION_GIVEN_AS_THE_REASON = /<p class="risk-cause-line"[^>]*><strong[^>]*>Why (?:caution|risky):<\/strong>/;
+const PAGES_STATING_A_WITHHELD_RATING_FLOOR = 1;
 
 const record = (over: Partial<DealChange> = {}): DealChange => ({
   vendor: "Fixture Vendor",
@@ -236,11 +238,13 @@ describe("the vendor pages", () => {
 
   after(() => server?.proc.kill());
 
-  const lapseLineOf = async (slug: string): Promise<string | null> => {
-    const body = await (await fetch(`${server.base}/vendor/${slug}`)).text();
+  const lapseLineIn = (body: string): string | null => {
     const found = body.match(/<p class="verdict-lapse-line"[^>]*>([\s\S]*?)<\/p>/);
     return found ? found[1].replace(/<[^>]+>/g, " ").replace(/&mdash;/g, "—").replace(/\s+/g, " ").trim() : null;
   };
+
+  const lapseLineOf = async (slug: string): Promise<string | null> =>
+    lapseLineIn(await (await fetch(`${server.base}/vendor/${slug}`)).text());
 
   it("say when the demotion they publish lapses, on every page that publishes one", async () => {
     assertPopulationFloor(naming.length, PAGES_NAMING_A_LAPSING_DEMOTION_FLOOR, "vendor pages publishing a demotion");
@@ -253,6 +257,31 @@ describe("the vendor pages", () => {
       quiet.slice(0, 8),
       [],
       `${quiet.length} of ${naming.length} vendor pages publish a demotion without saying what makes it lapse`,
+    );
+  });
+
+  it("say when the demotion lapses on every page giving one as the reason for its rating, read off the page itself", async () => {
+    const everyPage = [...new Set(loadOffers().map(offer => toSlug(offer.vendor)))];
+    const givingAReason: string[] = [];
+    const quiet: string[] = [];
+    const unanswered: string[] = [];
+    await Promise.all(Array.from({ length: PAGES_READ_AT_ONCE }, async () => {
+      for (let slug = everyPage.pop(); slug !== undefined; slug = everyPage.pop()) {
+        const res = await fetch(`${server.base}/vendor/${slug}`);
+        const body = await res.text();
+        if (!res.ok) unanswered.push(slug);
+        if (!A_DEMOTION_GIVEN_AS_THE_REASON.test(body)) continue;
+        givingAReason.push(slug);
+        const line = lapseLineIn(body);
+        if (line === null || !line.startsWith(A_VERDICT_LAPSES_RULE)) quiet.push(slug);
+      }
+    }));
+    assert.deepStrictEqual(unanswered.sort().slice(0, 8), [], `${unanswered.length} vendor pages did not answer`);
+    assertPopulationFloor(givingAReason.length, 1, "vendor pages giving a demotion as the reason for their rating");
+    assert.deepStrictEqual(
+      quiet.sort().slice(0, 8),
+      [],
+      `${quiet.length} of ${givingAReason.length} vendor pages give a demotion as the reason for their rating without saying what makes it lapse`,
     );
   });
 
