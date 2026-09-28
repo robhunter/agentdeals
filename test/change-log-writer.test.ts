@@ -528,12 +528,24 @@ describe("change log writer", () => {
         );
     };
 
+    const daysStoredRecordsCarry = new Set(
+      stored.flatMap(change => [change.date, change.recorded_date]).filter((day): day is string => Boolean(day))
+    );
+    const dayAfter = (day: string) => new Date(Date.parse(`${day}T00:00:00Z`) + 86_400_000).toISOString().slice(0, 10);
+    const A_DAY_NO_STORED_RECORD_CARRIES = dayAfter([...daysStoredRecordsCarry].sort().at(-1)!);
+
     const readAgainAs = (offer: Record<string, string>, changeType: string) =>
       buildChangeEntry(
         offer,
         { ...DETECTION, change_type: changeType, effective_date: null },
-        { now: new Date("2026-09-10T13:46:00Z") }
+        { now: new Date(`${A_DAY_NO_STORED_RECORD_CARRIES}T13:46:00Z`) }
       ).entry;
+
+    it("re-reads on a day no stored record carries, so a re-read cannot land on a stored record's own day", () => {
+      assert.ok(!daysStoredRecordsCarry.has(A_DAY_NO_STORED_RECORD_CARRIES));
+      const anyListing = { vendor: "Any", url: "https://example.com/pricing", description: "Free: 1 project", category: "Testing" };
+      assert.strictEqual(readAgainAs(anyListing, "limits_reduced")?.date, A_DAY_NO_STORED_RECORD_CARRIES);
+    });
 
     it("reads a page we have withdrawn a record about and refuses the reading we withdrew", () => {
       const withdrawn = withdrawnRecordsStillDescribingPublishedTerms();
