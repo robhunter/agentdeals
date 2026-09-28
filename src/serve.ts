@@ -7952,7 +7952,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "google-developer-program-2026",
     title: "Google Developer Program 2026 — What Replaced Premium, Prices & Alternatives",
-    metaDesc: "Standalone Google Developer Program Premium ($299/year) no longer takes sign-ups; its benefits now come with Google AI Pro ($19.99/mo) and AI Ultra (from $99.99/mo). Current plans, Cloud credits and free alternatives. [[freshness]]",
+    metaDesc: "Standalone Google Developer Program Premium ($299/year) no longer takes sign-ups. Current plans, Cloud credits and free alternatives. [[freshness]]",
     contextHtml: "",
     tag: "gdp-pricing-analysis",
     primaryVendor: "Google",
@@ -19934,10 +19934,10 @@ function buildGoogleDeveloperProgram2026Page(): string {
   );
 
   const planComparison = [
-    { plan: "GDP Premium (standalone, closed)", price: "$299/year or $24.99/mo", credits: "$500/year (~$41.67/mo)", gemini: "Gemini 3 Pro access, $50/yr GenAI credit", firebase: "30 Firebase Studio workspaces", status: "closed" as const },
-    { plan: "Google AI Pro", price: "$19.99/mo ($199.99/yr)", credits: "$10/mo ($120/yr)", gemini: "Expanded Gemini 3.1 Pro and Deep Research", firebase: "—", status: "current" as const },
-    { plan: "Google AI Ultra 5x (20 TB)", price: "$99.99/mo (monthly only)", credits: "$40/mo ($480/yr)", gemini: "5x AI Pro's usage limits", firebase: "—", status: "current" as const },
-    { plan: "Google AI Ultra 20x (30 TB)", price: "$199.99/mo (monthly only)", credits: "$100/mo ($1,200/yr)", gemini: "20x AI Pro's usage limits", firebase: "—", status: "current" as const },
+    { plan: "GDP Premium (standalone, closed)", price: "$299/year or $24.99/mo", credits: "$500/year (annual plan) or $45/mo (monthly plan)", gemini: "Gemini 3 Pro access; $50/yr GenAI credit (annual plan)", firebase: "30 Firebase Studio workspaces", status: "closed" as const },
+    { plan: "Google AI Pro", price: "$19.99/mo ($199.99/yr)", credits: "$10/mo ($120/yr)", gemini: "Expanded Gemini 3.1 Pro and Deep Research", firebase: "30 Firebase Studio workspaces", status: "current" as const },
+    { plan: "Google AI Ultra 5x (20 TB)", price: "$99.99/mo (monthly only)", credits: "$40/mo ($480/yr)", gemini: "5x AI Pro's usage limits", firebase: "30 Firebase Studio workspaces", status: "current" as const },
+    { plan: "Google AI Ultra 20x (30 TB)", price: "$199.99/mo (monthly only)", credits: "$100/mo ($1,200/yr)", gemini: "20x AI Pro's usage limits", firebase: "30 Firebase Studio workspaces", status: "current" as const },
   ];
 
   const statusColors: Record<string, string> = { closed: "#f85149", current: "#3fb950" };
@@ -19956,7 +19956,7 @@ function buildGoogleDeveloperProgram2026Page(): string {
 
   const creditAlternatives = [
     { vendor: "AWS Free Tier", credits: "Free plan: $100 credit at sign-up + up to $100 more, 6 months", highlight: "Always free: Lambda 1M requests/mo, DynamoDB 25 GB", link: "/vendor/aws" },
-    { vendor: "Azure Free Account", credits: "$200 credits (30 days) + 12 months free", highlight: "750h B1s VM, 5GB Blob Storage, 250GB SQL", link: "/vendor/azure" },
+    { vendor: "Azure Free Account", credits: "$200 credit (30 days) + 12 months of free services", highlight: "12 months: 750 hours each of B2pts v2 and B2ats v2 VMs, 5 GB Blob Storage. Always free: up to 10 SQL databases, 100,000 vCore seconds and 32 GB each a month", link: "/vendor/azure" },
     { vendor: "Oracle Cloud", credits: "Always Free — no expiry", highlight: oracleAlwaysFreeSpec(), link: "/vendor/oracle-cloud" },
     { vendor: "DigitalOcean", credits: "$5 credit (90 days)", highlight: "Then $4/mo Droplets; a payment method is required", link: "/vendor/digitalocean" },
     { vendor: "Google Cloud (direct)", credits: "$300 credits (90 days) + always-free tier", highlight: "Same GCP services, no subscription needed", link: "/vendor/google-cloud-run" },
@@ -19972,7 +19972,7 @@ function buildGoogleDeveloperProgram2026Page(): string {
   const llmAlternatives = [
     { vendor: "Groq", free: "30 RPM; 1K requests and 200K tokens/day per model", models: "gpt-oss-120b, gpt-oss-20b, Qwen3.8 27B", link: "/vendor/groq" },
     { vendor: "OpenRouter", free: "Free models available", models: "500+ models aggregated", link: "/vendor/openrouter" },
-    { vendor: "Mistral AI", free: "Free plan, $10/mo API credits", models: "Mistral Large, Medium 3.5, Small 4, Devstral", link: "/vendor/mistral-ai" },
+    { vendor: "Mistral AI", free: "Free plan, $10/mo API credits", models: "Mistral Large 3, Medium 3.5, Small 4", link: "/vendor/mistral-ai" },
     { vendor: "Cohere", free: "Trial key available", models: "Command, Embed, Rerank", link: "/vendor/cohere" },
   ];
 
@@ -19984,7 +19984,7 @@ function buildGoogleDeveloperProgram2026Page(): string {
 
   const firebaseAlternatives = [
     { vendor: "Supabase", free: "500MB DB, 1GB storage, 50K auth users", highlight: "Postgres-based, real-time, auth included", link: "/vendor/supabase" },
-    { vendor: "Appwrite Cloud", free: "75K+ requests, 10GB bandwidth", highlight: "Self-hostable, auth, DB, storage, functions", link: "/vendor/appwrite-cloud" },
+    { vendor: "Appwrite Cloud", free: "75K monthly active users, 5 GB bandwidth, 2 GB storage, 750K executions", highlight: "Self-hostable, auth, DB, storage, functions", link: "/vendor/appwrite-cloud" },
     { vendor: "Firebase (direct)", free: "Spark plan, no card", highlight: "1 GiB Firestore, 50K reads/day; Cloud Storage needs Blaze since Feb 2026", link: "/vendor/firebase" },
     { vendor: "PocketBase", free: "Self-hosted, unlimited", highlight: "Single binary, SQLite-based, auth+storage", link: "/search?q=pocketbase" },
   ];
@@ -20111,8 +20111,8 @@ ${mcpCtaCss()}
   </div>
 
   <div class="executive-summary">
-    <p><strong>Google no longer sells standalone Google Developer Program Premium ($299/year or $24.99/month).</strong> On personal (@gmail.com) accounts, annual plans stopped renewing after March 30, 2026 and monthly plans after June 30, 2026; Premium on Workspace accounts did not change. Its developer benefits now come with <strong>Google AI Pro</strong> ($19.99/mo) and <strong>Google AI Ultra</strong> (from $99.99/mo), which only personal Google Accounts can buy.</p>
-    <p><strong>The headline loss: Cloud credits drop 76%.</strong> GDP Premium included $500/year (~$41.67/mo) in GCP credits. AI Pro includes $10/mo ($120/yr). The closest match to the old credit is Ultra 5x at $99.99/mo with $40/mo ($480/yr), about 4x Premium's $299/year.</p>
+    <p><strong>Google no longer sells standalone Google Developer Program Premium ($299/year or $24.99/month).</strong> On personal (@gmail.com) accounts, annual plans stopped renewing after March 30, 2026 and monthly plans after June 30, 2026; Premium on Workspace accounts did not change. Its Google Cloud credits and Firebase Studio workspaces now come with <strong>Google AI Pro</strong> ($19.99/mo) and <strong>Google AI Ultra</strong> (from $99.99/mo) on personal Google Accounts. Premium's 1:1 consultations, certification voucher and unlimited Google Skills access did not carry over.</p>
+    <p><strong>The headline loss: Cloud credits drop 76% for annual subscribers who move to AI Pro.</strong> GDP Premium's annual plan included $500 a year in Google Cloud credits, and its monthly plan $45 a month. AI Pro includes $10/mo ($120/yr). The closest match to the old credit is Ultra 5x at $99.99/mo with $40/mo ($480/yr), about 4x Premium's $299/year.</p>
     <p><strong>Who's most affected:</strong> Indie developers, students, and small teams who relied on GDP Premium for cheap GCP access and Gemini API usage. The AI Pro tier is adequate for light Gemini users, but the Cloud credits reduction is significant for anyone running workloads on GCP.</p>
     <p><strong>The silver lining:</strong> Most per-service free tiers still apply: Cloud Run, BigQuery, Cloud Build (2,500 build-minutes a month) and Firestore on Firebase's Spark plan. Cloud Storage for Firebase is the exception: since February 3, 2026 it needs the Blaze plan. You can replace most GDP Premium benefits by combining free tiers directly — no subscription needed.</p>
   </div>
@@ -20170,6 +20170,7 @@ ${gdpChanges.map(c => `      <li><strong>${escHtmlServer(changeEntryLongDateLabe
       </tbody>
     </table>
   </div>
+  <p class="section-intro">Firebase Studio has taken no new workspaces since 2026-06-22 and shuts down on 2027-03-22.</p>
   <div class="context-box">
     <strong>Key takeaway:</strong> GDP Premium gave you $500/year in Cloud credits for $299/year — effectively a 40% discount on GCP. AI Pro gives you $120/year in credits for $199.99/year — you're paying more than you get back in credits. The value proposition has shifted from "cheap Cloud access" to "expanded Gemini access with a small credit bonus."
   </div>
@@ -20178,7 +20179,7 @@ ${gdpChanges.map(c => `      <li><strong>${escHtmlServer(changeEntryLongDateLabe
   <p class="section-intro">The impact varies significantly by use case.</p>
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.75rem;margin:1rem 0">
     <div class="impact-card" style="border-left-color:#f85149"><h3>Heavy GCP Users</h3><p class="impact-desc">Anyone using the full $500/year credits for Cloud Run, Compute Engine, or GKE loses the most. AI Pro's $120/yr covers a fraction of the same workloads.</p></div>
-    <div class="impact-card" style="border-left-color:#f85149"><h3>Students &amp; Learners</h3><p class="impact-desc">Eligible students get Google AI Pro free for a year. Otherwise, Oracle's Always Free tier and AWS's free plan cost nothing.</p></div>
+    <div class="impact-card" style="border-left-color:#f85149"><h3>Students &amp; Learners</h3><p class="impact-desc">Eligible U.S. college students aged 18+ get Google AI Pro free for a year (redeem by December 31, 2026; a payment method is required, and it then renews at $19.99/month). Otherwise, Oracle's Always Free tier and AWS's free plan cost nothing.</p></div>
     <div class="impact-card" style="border-left-color:#d29922"><h3>Gemini API Users</h3><p class="impact-desc">AI Pro gives expanded access to Gemini 3.1 Pro and Deep Research in the Gemini app. The Gemini API keeps a free tier of its own; check Google's pricing page for your model.</p></div>
     <div class="impact-card" style="border-left-color:#3fb950"><h3>Firebase-Only Devs</h3><p class="impact-desc">Spark (free) still covers Auth, Firestore and Hosting, but not Cloud Storage since February 3, 2026. If you only used GDP Premium for Firebase, you don't need AI Pro.</p></div>
   </div>
@@ -20235,11 +20236,11 @@ ${gdpChanges.map(c => `      <li><strong>${escHtmlServer(changeEntryLongDateLabe
     </table>
   </div>
   <div class="context-box">
-    <strong>Best strategy:</strong> Oracle Cloud's Always Free tier (${escHtmlServer(oracleArmAllowance())}) never expires, so it outlasts any credit grant GDP Premium ever made. Combine with AWS and Azure free tiers for a multi-cloud setup that costs $0/month. See our <a href="/free-startup-stack">Free Startup Stack</a> guide for a complete infrastructure setup.
+    <strong>Best strategy:</strong> Oracle Cloud's Always Free tier (${escHtmlServer(oracleArmAllowance())}) never expires, so it outlasts any credit grant GDP Premium ever made. AWS's free plan and Azure's free account add more, but AWS's plan closes within 6 months, sooner if its credits run out, and Azure's 12 months of free services need a move to pay-as-you-go within 30 days. See our <a href="/free-startup-stack">Free Startup Stack</a> guide for a complete infrastructure setup.
   </div>
 
   <h2 id="ai-alts">6. Free AI/LLM API Alternatives</h2>
-  <p class="section-intro">GDP Premium included a $50 annual credit for Google AI Studio and Vertex AI. These providers offer free API tiers of their own.</p>
+  <p class="section-intro">GDP Premium's annual plan included a $50 credit a year for Google AI Studio and Vertex AI. These providers offer free API tiers of their own.</p>
   <div style="overflow-x:auto">
     <table class="pricing-table">
       <thead>
@@ -20270,7 +20271,7 @@ ${gdpChanges.map(c => `      <li><strong>${escHtmlServer(changeEntryLongDateLabe
   <div style="display:grid;gap:.75rem;margin:1rem 0">
     <div class="impact-card" style="border-left-color:#d29922">
       <h3>AI Pro ($19.99/mo) — Break-Even Analysis</h3>
-      <p class="impact-desc">You pay $19.99 and get $10 in Cloud credits. Net cost for non-credit benefits: <strong>$9.99/mo</strong>. You're essentially paying $9.99/mo for expanded Gemini 3.1 Pro access. Worth it only if you actively use Gemini beyond the free tier limits. Most developers can use Groq or OpenRouter free tiers instead.</p>
+      <p class="impact-desc">You pay $19.99 and get $10 in Cloud credits. Net cost for non-credit benefits: <strong>$9.99/mo</strong>. The other $9.99 buys expanded Gemini 3.1 Pro access and the rest of the AI Pro bundle, including 5 TB of storage. Worth it only if you actively use Gemini beyond the free tier limits. Most developers can use Groq or OpenRouter free tiers instead.</p>
     </div>
     <div class="impact-card" style="border-left-color:#f85149">
       <h3>AI Ultra (from $99.99/mo) — Break-Even Analysis</h3>
@@ -20278,7 +20279,7 @@ ${gdpChanges.map(c => `      <li><strong>${escHtmlServer(changeEntryLongDateLabe
     </div>
     <div class="impact-card" style="border-left-color:#3fb950">
       <h3>$0/mo Alternative — Free Tier Stack</h3>
-      <p class="impact-desc">Oracle Cloud (compute) + AWS (services) + Groq (LLM API) + Firebase Spark (BaaS) + GitHub Actions (CI/CD) = $0/month. Covers 90%+ of what GDP Premium provided. See our <a href="/free-startup-stack">Free Startup Stack</a> guide.</p>
+      <p class="impact-desc">Oracle Cloud (compute) + AWS (services) + Groq (LLM API) + Firebase Spark (BaaS) + GitHub Actions (CI/CD) = $0/month within free limits. AWS's free plan closes within 6 months, but its always-free services, such as Lambda's 1M requests a month, continue on a Paid plan. See our <a href="/free-startup-stack">Free Startup Stack</a> guide.</p>
     </div>
   </div>
 
@@ -20291,7 +20292,7 @@ ${gdpChanges.map(c => `      <li><strong>${escHtmlServer(changeEntryLongDateLabe
     </div>
     <div class="verdict-item">
       <strong>If you relied on the full $500/year credits:</strong>
-      <p>Switch to a multi-cloud free tier strategy (Oracle + AWS + Azure). You'll get more compute for $0 than GDP Premium provided for $299. See our <a href="/free-startup-stack">Free Startup Stack</a> guide.</p>
+      <p>Switch to always-free tiers (Oracle Cloud, Firebase Spark, free LLM APIs), and use AWS's and Azure's free offers while they last. See our <a href="/free-startup-stack">Free Startup Stack</a> guide.</p>
     </div>
     <div class="verdict-item">
       <strong>If you used GDP Premium primarily for Gemini API:</strong>
@@ -20299,7 +20300,7 @@ ${gdpChanges.map(c => `      <li><strong>${escHtmlServer(changeEntryLongDateLabe
     </div>
     <div class="verdict-item">
       <strong>If you're a student or learning:</strong>
-      <p>Eligible students get AI Pro free for a year. Otherwise use <a href="/vendor/oracle-cloud">Oracle Cloud Always Free</a> (${escHtmlServer(oracleArmAllowance())}, and it never expires), <a href="/vendor/firebase">Firebase Spark</a>, and free LLM APIs. Total cost: $0.</p>
+      <p>Eligible U.S. college students aged 18+ get Google AI Pro free for a year (redeem by December 31, 2026; a payment method is required, and it then renews at $19.99/month). Otherwise use <a href="/vendor/oracle-cloud">Oracle Cloud Always Free</a> (${escHtmlServer(oracleArmAllowance())}, and it never expires), <a href="/vendor/firebase">Firebase Spark</a>, and free LLM APIs. Total cost: $0.</p>
     </div>
   </div>
 
