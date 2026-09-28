@@ -8419,7 +8419,13 @@
       "category": "Cloud Hosting",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-02"
+      "recorded_date": "2026-09-02",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-28",
+        "detail": "Retracted 2026-09-28: nothing changed on the Workers Free plan. Cloudflare's Durable Objects pricing page read \"Workers Free plan : Only Durable Objects with SQLite storage backend are available\", with 100,000 requests and 13,000 GB-s of duration a day, in the Internet Archive's captures of 2025-04-08, 2025-10-07 and 2026-08-18. The reading compared the page with our catalogue text, which did not state the storage backend or the duration limit.",
+        "source_url": "http://web.archive.org/web/20250408173400/https://developers.cloudflare.com/durable-objects/platform/pricing/"
+      }
     },
     {
       "vendor": "Doppler",
