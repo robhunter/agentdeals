@@ -5,12 +5,12 @@
       "change_type": "limits_reduced",
       "reason": "null_comparison",
       "detail": "summary states \"instead of\" between two values of 1 and no stored quantity is absent from the current state",
-      "summary": "The free tier now includes 1 A/B test instead of the previously stated 1 A/B test.",
+      "summary": "The free plan now has 1 A/B test instead of the previously stated 1 A/B test.",
       "previous_state": "Open-Source feature flags & A/B testing. Configuration as Code & Fully Typed Typescript SDKs. Strong integration with Frameworks such as Next.js & React. Free plan: 1,000 events/month, 3 feature flags/remote configs, 1 A/B test, 5 environments.",
-      "current_state": "1,000 Events / month 1 A/B Test 3 Feature Flags / Remote Configs 5 Environments",
+      "current_state": "Free plan: 1,000 Events / month, 1 A/B Test, 3 Feature Flags / Remote Configs, 5 Environments",
       "source_url": "https://www.tryabby.com",
       "category": "Feature Flags",
-      "refused_date": "2026-09-11"
+      "refused_date": "2026-09-28"
     },
     {
       "vendor": "Ably",
@@ -499,6 +499,18 @@
       "category": "Cloud Hosting",
       "refused_date": "2026-09-11",
       "collided_with": "Awardspace.com|limits_increased|2026-08-28|https://www.awardspace.com"
+    },
+    {
+      "vendor": "Awardspace.com",
+      "change_type": "limits_reduced",
+      "reason": "states_no_difference",
+      "detail": "the summary states that the page agrees with what we hold, and names no figure the stored description did not already carry",
+      "summary": "The free tier still exists, but the description is incomplete. The page states the free tier includes 5GB Bandwidth, 1000MB Disk Space, is 100% ad-free, offers instant account activation, a CMS auto installer, a free website builder, 99.9% Uptime, and full PHP & MySQL database support, but does not explicitly mention 24/7 support.",
+      "previous_state": "AwardSpace's free hosting includes 5GB Bandwidth, 1000MB Disk Space, is 100% ad-free, offers instant account activation, a CMS auto installer, a free website builder, 99.9% Uptime, 24/7 support, and full PHP & MySQL database support. It's suitable for small blog websites, news media, and idea launching with approximate monthly visits of ~5000.",
+      "current_state": "The Free Web Hosting Service is suitable for small blog websites, news media, and idea launching. Approximate monthly visits: ~5000/month. It includes 5GB Bandwidth, 1000MB Disk Space, is 100% ad-free, offers instant account activation, a CMS auto installer, a free website builder, 99.9% Uptime and full PHP & MySQL database support.",
+      "source_url": "https://www.awardspace.com",
+      "category": "Cloud Hosting",
+      "refused_date": "2026-09-28"
     },
     {
       "vendor": "AWS",
@@ -992,6 +1004,18 @@
     {
       "vendor": "Circum Icons",
       "change_type": "free_tier_removed",
+      "reason": "removal_does_not_reach_the_licence",
+      "detail": "Circum Icons is free because its licence grants the use, and https://circumicons.com is a hosted-pricing surface that states what the vendor sells rather than what the licence permits. A record that ends a licence needs a source that carries one — the repository, its licence file or a self-hosting document — or must say which hosted plan went away and leave the licence standing",
+      "summary": "The vendor no longer offers a free tier. They now charge $9 for access to 1600+ icons.",
+      "previous_state": "Consistent open-source icons such as SVG for React, Vue, and Svelte.",
+      "current_state": "Access 1600+ Unique Icons for Just $9",
+      "source_url": "https://circumicons.com",
+      "category": "Design",
+      "refused_date": "2026-09-28"
+    },
+    {
+      "vendor": "Circum Icons",
+      "change_type": "free_tier_removed",
       "reason": "same_transition_graded_differently",
       "detail": "same vendor, source_url and previous_state as Circum Icons|free_tier_removed|2026-08-28|https://circumicons.com",
       "summary": "The vendor no longer offers a free tier. They now charge $9 for access to 1600+ icons.",
@@ -1004,15 +1028,15 @@
     },
     {
       "vendor": "cirun.io",
-      "change_type": "restriction",
+      "change_type": "limits_increased",
       "reason": "confirmed_unchanged",
-      "detail": "'Public GitHub repositories' implies open source repositories.",
-      "summary": "The free tier is now specifically for open source projects. It allows unlimited public repositories and runners. Previously, the stored information stated it was free for *public* GitHub repositories, implying any public repository.",
+      "detail": "The current page expands on the 'free for public GitHub repositories' statement, detailing what 'open source' means and adding features (runners, GPU support) that weren't explicitly excluded before. This is more detail, not a limitation.",
+      "summary": "The free tier now has limitations. It is free for open source projects with unlimited public repositories, unlimited runners, ARM-based runners, and GPU runners.",
       "previous_state": "Free for public GitHub repositories",
       "current_state": "Open Source $0 forever Install cirun on unlimited public repositories Unlimited runners ARM-based runners GPU runners All supported cloud providers",
       "source_url": "https://cirun.io",
       "category": "CI/CD",
-      "refused_date": "2026-08-28"
+      "refused_date": "2026-09-28"
     },
     {
       "vendor": "cirun.io",
@@ -1907,13 +1931,13 @@
       "vendor": "duo.com",
       "change_type": "pricing_restructured",
       "reason": "confirmed_unchanged",
-      "detail": "Both descriptions limit the free tier to 10 users/teams.",
-      "summary": "The free tier is now limited to teams of 10 or less.",
+      "detail": "Both descriptions state a limit of 10 users.",
+      "summary": "The free tier is now limited to teams of 10 or less. Paid tiers (Essentials, Advantage, Premier) are available starting at $3/user/month.",
       "previous_state": "Two-factor authentication (2FA) for website or app. Free for ten users, all authentication methods, unlimited, integrations, hardware tokens.",
       "current_state": "Duo Free for teams of 10 or less",
       "source_url": "https://duo.com/",
       "category": "Auth",
-      "refused_date": "2026-09-10"
+      "refused_date": "2026-09-28"
     },
     {
       "vendor": "Duolingo",
@@ -1944,12 +1968,12 @@
       "change_type": "free_tier_removed",
       "reason": "same_transition_graded_differently",
       "detail": "graded as DynamicDocs|free_tier_removed|2026-08-28|https://advicement.io, a record we withdrew",
-      "summary": "The page states that PDFs can be created from $0.062 per PDF.",
+      "summary": "The page states that PDFs can be created for $0.062 each, indicating the free tier is no longer available.",
       "previous_state": "Generate PDF documents with JSON to PDF API based on LaTeX templates. The free plan allows 50 API calls per month and access to a library of templates.",
       "current_state": "Create documents from $0.062 per PDF.",
       "source_url": "https://advicement.io",
       "category": "Dev Utilities",
-      "refused_date": "2026-09-10",
+      "refused_date": "2026-09-28",
       "collided_with": "DynamicDocs|free_tier_removed|2026-08-28|https://advicement.io"
     },
     {
@@ -1994,12 +2018,12 @@
       "change_type": "limits_increased",
       "reason": "unquantified_limit",
       "detail": "limits_increased claimed, but the current state names no quantity for anything the stored state measured (100 email)",
-      "summary": "The free tier now offers 150 monthly credits instead of a one-time 100 credits.",
+      "summary": "The free tier now offers 150 monthly credits instead of a one-time 100 verifications.",
       "previous_state": "100 free email verifications total (one-time, not monthly)",
-      "current_state": "Get started for free with 150 free monthly credits. No payment details needed.",
+      "current_state": "The free plan includes 150 free monthly credits. No payment details needed.",
       "source_url": "https://emailvalidation.io",
       "category": "Email",
-      "refused_date": "2026-09-11"
+      "refused_date": "2026-09-28"
     },
     {
       "vendor": "Exa",
@@ -2872,6 +2896,18 @@
     },
     {
       "vendor": "HeroUI",
+      "change_type": "free_tier_removed",
+      "reason": "removal_read_from_root",
+      "detail": "a free tier was recorded as removed from https://heroui.com/, a domain root that states no price, ending or replacement where the free tier was — a homepage's silence is not evidence that one ended",
+      "summary": "The page mentions a free 7-day trial, but also indicates a paid plan is required for more than 2 credits. It also lists components available in a 'Pro' plan.",
+      "previous_state": "Free. Beautiful, fast, and modern React & Next.js UI library. Rebranded from NextUI to HeroUI.",
+      "current_state": "Users have 2 credits and can start a free 7-day trial. A paid plan is required for more credits. Some components are only available in the Pro plan.",
+      "source_url": "https://heroui.com/",
+      "category": "Design",
+      "refused_date": "2026-09-28"
+    },
+    {
+      "vendor": "HeroUI",
       "change_type": "limits_reduced",
       "reason": "same_transition_graded_differently",
       "detail": "same vendor, source_url and previous_state as HeroUI|new_tier|2026-08-28|https://heroui.com/",
@@ -3063,7 +3099,7 @@
       "current_state": "A small \"image-charts.com\" text watermark will appear at the top right hand corner.",
       "source_url": "https://www.image-charts.com/",
       "category": "Storage",
-      "refused_date": "2026-09-11"
+      "refused_date": "2026-09-28"
     },
     {
       "vendor": "ImgBB",
@@ -5371,6 +5407,18 @@
     {
       "vendor": "Shadcn Studio",
       "change_type": "pricing_model_change",
+      "reason": "no_terms_to_narrow",
+      "detail": "pricing_model_change claimed against \"Preview your theme changes across different components and layouts.\", a stored description that states no price, no allowance and nothing free, so there is nothing for the terms to have narrowed from",
+      "summary": "The page details a variety of paid plans and features, including AI-powered theme generation, theme sharing, and database undo/redo, which are not mentioned in the stored deal information. The free tier described in the stored information (previewing theme changes) is not explicitly mentioned as a continuing free offering.",
+      "previous_state": "Preview your theme changes across different components and layouts.",
+      "current_state": "The page offers various paid plans (Branding $60, Marketing $120, Web Development $250, App Development $320) and highlights pro features like AI-powered theme generation and theme sharing, which are not available without a subscription.",
+      "source_url": "https://shadcnstudio.com/theme-editor",
+      "category": "Design",
+      "refused_date": "2026-09-28"
+    },
+    {
+      "vendor": "Shadcn Studio",
+      "change_type": "pricing_model_change",
       "reason": "same_transition_graded_differently",
       "detail": "same vendor, source_url and previous_state as Shadcn Studio|pricing_model_change|2026-08-28|https://shadcnstudio.com/theme-editor",
       "summary": "The page details a variety of features and plans, including paid options like Branding ($60), Marketing ($120), etc. Are not free.",
@@ -5404,6 +5452,19 @@
       "source_url": "https://brex.com/rewards/",
       "category": "Startup Perks",
       "refused_date": "2026-09-16"
+    },
+    {
+      "vendor": "SigNoz",
+      "change_type": "pricing_restructured",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as SigNoz|pricing_restructured|2026-09-09|https://signoz.io/pricing/",
+      "summary": "The free OSS tier is still mentioned. The pricing for SigNoz Cloud has significantly changed. The $49/month option with $49 usage credit still exists. Is now specifically for the 'Teams' plan. The startup program now offers $19/month with $19 of telemetry usage, and has eligibility requirements.",
+      "previous_state": "OpenTelemetry-native observability with logs, metrics and traces in one tool. The community edition is free to self-host. SigNoz Cloud starts at $49/month including $49 of usage credit, then $0.3/GB ingested for logs and traces (15-day retention) and $0.1 per million metric samples; eligible startups pay $19/month for the first 12 months.",
+      "current_state": "SigNoz Cloud starts at $199/month. The Teams plan starts at $49/month, including $49 of usage. Eligible startups get SigNoz Cloud for $19/month for the first 12 months instead of $49/month. This includes $19 of telemetry usage.",
+      "source_url": "https://signoz.io/pricing/",
+      "category": "Monitoring",
+      "refused_date": "2026-09-28",
+      "collided_with": "SigNoz|pricing_restructured|2026-09-09|https://signoz.io/pricing/"
     },
     {
       "vendor": "SiliconFlow",
@@ -5551,6 +5612,18 @@
       "source_url": "https://spacelift.io/pricing",
       "category": "Infrastructure",
       "refused_date": "2026-09-18"
+    },
+    {
+      "vendor": "Squash Labs",
+      "change_type": "product_deprecated",
+      "reason": "no_price_signal",
+      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 883 characters, so it states no terms to have changed",
+      "summary": "Squash is no longer operational and the service has been shut down.",
+      "previous_state": "Creates a VM for each branch and makes your app available from a unique URL. Free tier: 2 concurrent environments, 30 hours/month (15 hours at 2GB or 30 hours at 1GB VM), 1GB assets storage, 30GB cache.",
+      "current_state": "Squash is no longer operational.",
+      "source_url": "https://www.squash.io/",
+      "category": "CI/CD",
+      "refused_date": "2026-09-28"
     },
     {
       "vendor": "Squash Labs",
@@ -6092,16 +6165,29 @@
       "refused_date": "2026-09-10"
     },
     {
+      "vendor": "Tyk",
+      "change_type": "pricing_restructured",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as Tyk|pricing_restructured|2026-08-28|https://tyk.io/pricing/",
+      "summary": "The open source offering is still mentioned. The free trial for Tyk Cloud is now 48-hours. The current page details Core, Professional, and Enterprise plans for Cloud, Hybrid, and Self-managed deployments.",
+      "previous_state": "Open-source API gateway — self-hosted: free forever under MPL-2.0, includes rate limiting, auth, analytics. Cloud: 48-hour free trial only, paid plans usage-based. Dashboard and developer portal included",
+      "current_state": "Start a 48-hour free trial of Tyk Cloud, our fully featured SaaS product. With this trial, you get full access to all Tyk features and capabilities – no installation, no credit card, and no calls required. Just sign up and start building.",
+      "source_url": "https://tyk.io/pricing/",
+      "category": "API Gateway",
+      "refused_date": "2026-09-28",
+      "collided_with": "Tyk|pricing_restructured|2026-08-28|https://tyk.io/pricing/"
+    },
+    {
       "vendor": "Typeform.com",
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
       "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (100 respons)",
-      "summary": "The free plan is still offered, but the description of its limits is no longer present on the pricing page. The page highlights new paid plans (Core, Growth, Research, Talent, Enterprise) and focuses on AI-powered features.",
+      "summary": "The free plan is still offered, but the description of its limits is not explicitly stated on the pricing page. The page highlights AI features and various paid plans (Core, Growth, Research, Talent, Enterprise). It mentions 'Get started—it’s free' but doesn't detail the response limit of 100 monthly responses.",
       "previous_state": "Include beautifully designed forms on websites. The free plan allows unlimited questions per form and 100 monthly responses.",
-      "current_state": "The page states you can 'Get started—it’s free' but does not specify any limits on questions or monthly responses.",
+      "current_state": "The page states you can 'Get started—it’s free' and build forms with AI automation, but does not specify any limits on questions or responses.",
       "source_url": "https://www.typeform.com/",
       "category": "Forms",
-      "refused_date": "2026-09-11"
+      "refused_date": "2026-09-28"
     },
     {
       "vendor": "Umami",
@@ -6385,6 +6471,18 @@
       "category": "Testing",
       "refused_date": "2026-09-10",
       "collided_with": "webhook.site|limits_reduced|2026-08-28|https://webhook.site"
+    },
+    {
+      "vendor": "webhook.site",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (50 request)",
+      "summary": "The free tier is limited to the number of requests allowed by appConfig.MaxRequests, which is stated as 50 in the page text. The page also states that URLs expire and encourages users to upgrade for endless requests and permanent URLs.",
+      "previous_state": "Verify webhooks, outbound HTTP requests, or emails with a custom URL — The free tier allows a maximum of 50 requests. URLs expire.",
+      "current_state": "URLs can accept a maximum of {{ appConfig.MaxRequests }} requests, expire, and upgraded features are not available.",
+      "source_url": "https://webhook.site",
+      "category": "Testing",
+      "refused_date": "2026-09-28"
     },
     {
       "vendor": "Webvizio",

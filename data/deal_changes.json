@@ -12784,6 +12784,57 @@
       "alternatives": [],
       "recorded_date": "2026-09-28",
       "date_source": "hand_written"
+    },
+    {
+      "vendor": "BugBug",
+      "change_type": "limits_increased",
+      "date": "2026-09-28",
+      "date_source": "discovered",
+      "summary": "The free plan now offers unlimited tests, test suites, users, and projects, and includes AI Test recorder, Components, Edit & rewind, Screenshots, and 7 days of tests history. Previously limits of 15 tests, 4 test suites, 1 user, and 1 project.",
+      "tier": "Free plan",
+      "tier_direction": "widened",
+      "previous_state": "Lightweight test automation tool for web applications — The Free plan includes: Unlimited local test runs, 15 tests, 4 test suites, 1 user, 1 project, AI Test recorder, Components, Edit & rewind, Screenshots, 7 days of tests history.",
+      "current_state": "The Free plan includes: Unlimited local test runs, unlimited tests, unlimited test suites, unlimited users, unlimited projects, AI Test recorder, Components, Edit & rewind, Screenshots, 7 days of tests history.",
+      "impact": "high",
+      "source_url": "https://bugbug.io/",
+      "category": "Testing",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-09-28"
+    },
+    {
+      "vendor": "houndci.com",
+      "change_type": "free_tier_removed",
+      "date": "2026-09-28",
+      "date_source": "discovered",
+      "summary": "Hound is free for public repos, but private repos require a paid plan.",
+      "tier": "Free",
+      "tier_direction": "narrowed",
+      "previous_state": "Comments on GitHub commits about code quality, free for Open Source",
+      "current_state": "Hound is free for public repos! Chihuahua Up to 50 private reviews $29 month",
+      "impact": "high",
+      "source_url": "https://houndci.com/",
+      "category": "Code Quality",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-09-28"
+    },
+    {
+      "vendor": "Stoplight",
+      "change_type": "free_tier_removed",
+      "date": "2026-09-28",
+      "date_source": "discovered",
+      "summary": "The Basic plan is now a paid plan at $44/month or $56/month, and includes the first 3 users free.",
+      "tier": "Basic",
+      "tier_direction": "narrowed",
+      "previous_state": "API design and documentation platform — There is a 'Basic' plan that is free and includes the first 3 users, OpenAPI/JSON schema visual designer, interactive docs, and instant mock servers.",
+      "current_state": "The Basic plan costs $44 / month (annually) or $56 / month (monthly) and includes the first 3 users free. It includes OpenAPI/JSON schema visual designer, interactive docs, and instant mock servers.",
+      "impact": "high",
+      "source_url": "https://stoplight.io/pricing",
+      "category": "API Development",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-09-28"
     }
   ]
 }

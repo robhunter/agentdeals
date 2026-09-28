@@ -1,37 +1,92 @@
 {
   "held": [
     {
-      "vendor": "Bitrise",
-      "change_type": "free_tier_removed",
-      "impact": "high",
-      "summary": "The Hobby plan is now a paid tier called 'Starter' starting at $89/month. The free Hobby plan is no longer available.",
-      "previous_state": "Mobile CI/CD platform — free Hobby plan: 300 credits/month, 1 private app (unlimited public apps), 1 user, 5 concurrent builds, 90-minute build timeout. Supports iOS, Android, Flutter, React Native",
-      "current_state": "Explore our new starter package options. Hobby Build and distribute your passion project without the extra cost. ‍ Free Forever Get started Access for a team of one (that's you!) Enough build credits for you to build your small project a few times per month Support from the Bitrise Community via Slack or Discuss forum Starter Designed for indie developers and small teams to get up and running. Recommended up to 100 builds/month. From $89 per month when billed annually, or $99 per month when billed monthly",
-      "source_url": "https://bitrise.io/pricing",
-      "category": "CI/CD",
-      "first_read_date": "2026-09-26"
+      "vendor": "Aionda Mail",
+      "change_type": "pricing_restructured",
+      "impact": "medium",
+      "summary": "The Plus tier pricing has changed from €1.99/month to €18.49/year. The Plus tier also now includes 5 GB of encrypted drive space. The free tier still includes up to 25 disposable addresses, encrypted mailbox, calendar & contacts.",
+      "previous_state": "Free tier includes up to 25 disposable addresses, encrypted mailbox, calendar & contacts. Plus tier is €1.99/month for up to 10,000 disposable addresses, unlimited forwarding, custom domains, calendar invitations, and 1 GB encrypted drive. Enterprise tier starts at €1.49/employee/month.",
+      "current_state": "Unlock Plus €18.49 (~$21.08 USD)/year 90,000+ users. Includes encrypted mailbox, unlimited addresses, custom domains, 5 GB encrypted drive.",
+      "source_url": "https://mail.aionda.com/",
+      "category": "Email",
+      "first_read_date": "2026-09-28"
     },
     {
-      "vendor": "DynamicDocs",
-      "change_type": "free_tier_removed",
+      "vendor": "DNSExit",
+      "change_type": "pricing_restructured",
       "impact": "high",
-      "summary": "The page states that PDFs can be created from $0.062 per PDF, indicating a paid model.",
-      "previous_state": "Generate PDF documents with JSON to PDF API based on LaTeX templates. The free plan allows 50 API calls per month and access to a library of templates.",
-      "current_state": "Create documents from $0.062 per PDF.",
-      "source_url": "https://advicement.io",
-      "category": "Dev Utilities",
-      "first_read_date": "2026-09-26"
+      "summary": "The free tier for email now offers unlimited email addresses.",
+      "previous_state": "Up to 2 Email addresses under your domain for free with 100MB of storage space. IMAP, POP3, SMTP, SPF/DKIM support.",
+      "current_state": "Unlimited email addresses. Access mail through Webmail, POP, or IMAP.",
+      "source_url": "https://dnsexit.com/",
+      "category": "Email",
+      "first_read_date": "2026-09-28"
     },
     {
-      "vendor": "houndci.com",
+      "vendor": "EmailOctopus",
       "change_type": "free_tier_removed",
       "impact": "high",
-      "summary": "Hound is free for public repos, but private repos now require a paid plan.",
-      "previous_state": "Comments on GitHub commits about code quality, free for Open Source",
-      "current_state": "Hound is free for public repos! Chihuahua Up to 50 private reviews $29 month",
-      "source_url": "https://houndci.com/",
-      "category": "Code Quality",
-      "first_read_date": "2026-09-26"
+      "summary": "The page focuses on paid plans starting at $480/year for 100,000 subscribers. Multiple customer testimonials mention using the free service.",
+      "previous_state": "Up to 2,500 subscribers and 10,000 emails per month free",
+      "current_state": "The page does not detail a free tier with specific limits, but mentions users utilizing a free service. Paid plans start at $480/year for 100,000 subscribers.",
+      "source_url": "https://emailoctopus.com",
+      "category": "Email",
+      "first_read_date": "2026-09-28"
+    },
+    {
+      "vendor": "ImgBB",
+      "change_type": "pricing_restructured",
+      "impact": "medium",
+      "summary": "A free tier still exists, ImgBB now prominently advertises paid 'Pro' plans with features like unlimited space and larger file sizes (64MB vs 32MB). The free tier is still available.",
+      "previous_state": "ImgBB is an unlimited image hosting servce. Drag and drop your image anywhere on the screen. 32 MB / image limit. Receive Direct image links, BBCode and HTML thumbnails after uploading image. Login to see the upload history.",
+      "current_state": "ImgBB is a free image hosting service. Upgrade to unlock all the features. 3 Year Pro $ 3.99 Billed $143.64 UPGRADE No Ads Direct Linking Unlimited space Replace image feature 64 MB file size per image API Access 69% OFF Annual Plan $ 7.99 Billed $95.88 UPGRADE No Ads Direct Linking Unlimited space Replace image feature 64 MB file size per image API Access 38% OFF Monthly Plan $ 12.99 UPGRADE No Ads Direct Linking Unlimited space Replace image feature 64 MB file size per image API Access",
+      "source_url": "https://imgbb.com/",
+      "category": "Storage",
+      "first_read_date": "2026-09-28"
+    },
+    {
+      "vendor": "linkok.com",
+      "change_type": "pricing_restructured",
+      "impact": "high",
+      "summary": "The free tier now offers weekly and daily scans at $4/month and $8/month respectively, billed annually at $50 and $100.",
+      "previous_state": "Free forever for small sites (up to 100 pages) with monthly scans and email reports. Paid tiers available for weekly and daily scans, ranging from $4/month to $400/month depending on the number of pages scanned.",
+      "current_state": "Free forever for small sites. No credit card required. Weekly scans cost $4 /month Billed annually at $50 + local taxes*. Daily scans cost $8 /month Billed annually at $100 + local taxes*.",
+      "source_url": "https://linkok.com",
+      "category": "Monitoring",
+      "first_read_date": "2026-09-28"
+    },
+    {
+      "vendor": "MDBootstrap",
+      "change_type": "pricing_restructured",
+      "impact": "medium",
+      "summary": "A free offering exists, the description is significantly broader. The free tier is now more focused on components and less on a complete UI kit with templates. MDB GO, a free hosting and deployment tool, is also offered.",
+      "previous_state": "Free for personal & commercial use Bootstrap, Angular, React, and Vue UI Kits with over 700 components, stunning templates, 1-min installation, extensive tutorials & colossal community.",
+      "current_state": "MDB offers MDB Standard with a MIT License and a collection of free components. MDB Pro is a paid option with advanced components. MDB GO provides free hosting and deployment.",
+      "source_url": "https://mdbootstrap.com/",
+      "category": "Design",
+      "first_read_date": "2026-09-28"
+    },
+    {
+      "vendor": "serveravatar.com",
+      "change_type": "pricing_restructured",
+      "impact": "high",
+      "summary": "The 'Lite' plan is still offered as a free plan.",
+      "previous_state": "Manage and monitor PHP-based web servers with automated configurations — ServerAvatar Lite is a free cloud server management platform designed to help developers and businesses deploy, manage, and scale unlimited websites and applications with ease.",
+      "current_state": "The 'Newbie' plan is normally $12/month or $120/year, but is offered at $10/month for the first month. It includes 5 servers, unlimited apps and databases, all management and security features, AI Bot Blocker, Team Management, Log Monitoring Suite, White-Label Suite, and Hosting Reseller Panel.",
+      "source_url": "https://serveravatar.com",
+      "category": "Server Management",
+      "first_read_date": "2026-09-28"
+    },
+    {
+      "vendor": "xcloud.host",
+      "change_type": "pricing_restructured",
+      "impact": "medium",
+      "summary": "The free tier now offers 1 server and 10 sites. Is associated with 'Self-Managed Hosting' rather than being a standalone 'Free' tier.",
+      "previous_state": "Server management and deployment platform with a user-friendly interface — Free: 1 server and 10 sites included",
+      "current_state": "Bring your own server and connect it to the xCloud panel for easier server management, with every feature you need available under a single, unified dashboard. Free: 1 server and 10 sites included Connect any VPS to the xCloud panel Every feature under one dashboard Unlimited apps and databases Connect Your Own Server",
+      "source_url": "https://xcloud.host",
+      "category": "Server Management",
+      "first_read_date": "2026-09-28"
     },
     {
       "vendor": "Mockerito",
@@ -53,39 +108,6 @@
       "current_state": "Start collecting data with our 7-day trial and 5,000 API credits. No credit card required.",
       "source_url": "https://www.scraperapi.com/pricing/",
       "category": "Web Scraping",
-      "first_read_date": "2026-09-26"
-    },
-    {
-      "vendor": "SigNoz",
-      "change_type": "pricing_restructured",
-      "impact": "high",
-      "summary": "The free OSS tier is still mentioned. The pricing for SigNoz Cloud has significantly changed. The $49/month option with $49 usage credit still exists. Is now specifically for the 'Teams' plan. The startup program now offers $19/month with $19 of telemetry usage, and has eligibility requirements.",
-      "previous_state": "OpenTelemetry-native observability with logs, metrics and traces in one tool. The community edition is free to self-host. SigNoz Cloud starts at $49/month including $49 of usage credit, then $0.3/GB ingested for logs and traces (15-day retention) and $0.1 per million metric samples; eligible startups pay $19/month for the first 12 months.",
-      "current_state": "SigNoz Cloud starts at $199/month. The Teams plan starts at $49/month, including $49 of usage. Eligible startups get SigNoz Cloud for $19/month for the first 12 months instead of $49/month. This includes $19 of telemetry usage.",
-      "source_url": "https://signoz.io/pricing/",
-      "category": "Monitoring",
-      "first_read_date": "2026-09-26"
-    },
-    {
-      "vendor": "Stoplight",
-      "change_type": "free_tier_removed",
-      "impact": "high",
-      "summary": "The Basic plan is no longer free. It now costs $44/month billed annually or $56/month billed monthly. It includes the first 3 users free, and charges $11-$14 per additional user depending on billing frequency.",
-      "previous_state": "API design and documentation platform — There is a 'Basic' plan that is free and includes the first 3 users, OpenAPI/JSON schema visual designer, interactive docs, and instant mock servers.",
-      "current_state": "The Basic plan costs $44 / month (billed annually) or $56 / month (billed monthly) and includes the first 3 users free, with $11-$14 per additional user. It includes OpenAPI/JSON schema visual designer, interactive docs, and instant mock servers.",
-      "source_url": "https://stoplight.io/pricing",
-      "category": "API Development",
-      "first_read_date": "2026-09-26"
-    },
-    {
-      "vendor": "Tyk",
-      "change_type": "pricing_restructured",
-      "impact": "high",
-      "summary": "The open source offering is still mentioned. The free trial for Tyk Cloud is now 48 hours, and there are now Core, Professional, and Enterprise paid plans with varying features and pricing.",
-      "previous_state": "Open-source API gateway — self-hosted: free forever under MPL-2.0, includes rate limiting, auth, analytics. Cloud: 48-hour free trial only, paid plans usage-based. Dashboard and developer portal included",
-      "current_state": "Core: A flexible, usage-based pricing model available for Cloud, Self-managed, and Hybrid deployments. Professional: A flat-rate option with no consumption limits for organizations adopting API platforms at scale. Enterprise: Customized pricing for high-traffic, multi-cloud, and multi-region environments.",
-      "source_url": "https://tyk.io/pricing/",
-      "category": "API Gateway",
       "first_read_date": "2026-09-26"
     }
   ],
@@ -1421,6 +1443,78 @@
       "outcome": "baseline_moved",
       "detail": "the terms it was read against are no longer the terms we publish",
       "resolved_date": "2026-09-27"
+    },
+    {
+      "vendor": "Bitrise",
+      "change_type": "free_tier_removed",
+      "impact": "high",
+      "summary": "The Hobby plan is now a paid tier called 'Starter' starting at $89/month. The free Hobby plan is no longer available.",
+      "previous_state": "Mobile CI/CD platform — free Hobby plan: 300 credits/month, 1 private app (unlimited public apps), 1 user, 5 concurrent builds, 90-minute build timeout. Supports iOS, Android, Flutter, React Native",
+      "source_url": "https://bitrise.io/pricing",
+      "first_read_date": "2026-09-26",
+      "outcome": "contradicted",
+      "detail": "a reading on 2026-09-28 read it as pricing_restructured",
+      "resolved_date": "2026-09-28"
+    },
+    {
+      "vendor": "DynamicDocs",
+      "change_type": "free_tier_removed",
+      "impact": "high",
+      "summary": "The page states that PDFs can be created from $0.062 per PDF, indicating a paid model.",
+      "previous_state": "Generate PDF documents with JSON to PDF API based on LaTeX templates. The free plan allows 50 API calls per month and access to a library of templates.",
+      "source_url": "https://advicement.io",
+      "first_read_date": "2026-09-26",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-09-28 read it as free_tier_removed too",
+      "resolved_date": "2026-09-28"
+    },
+    {
+      "vendor": "houndci.com",
+      "change_type": "free_tier_removed",
+      "impact": "high",
+      "summary": "Hound is free for public repos, but private repos now require a paid plan.",
+      "previous_state": "Comments on GitHub commits about code quality, free for Open Source",
+      "source_url": "https://houndci.com/",
+      "first_read_date": "2026-09-26",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-09-28 read it as free_tier_removed too",
+      "resolved_date": "2026-09-28"
+    },
+    {
+      "vendor": "SigNoz",
+      "change_type": "pricing_restructured",
+      "impact": "high",
+      "summary": "The free OSS tier is still mentioned. The pricing for SigNoz Cloud has significantly changed. The $49/month option with $49 usage credit still exists. Is now specifically for the 'Teams' plan. The startup program now offers $19/month with $19 of telemetry usage, and has eligibility requirements.",
+      "previous_state": "OpenTelemetry-native observability with logs, metrics and traces in one tool. The community edition is free to self-host. SigNoz Cloud starts at $49/month including $49 of usage credit, then $0.3/GB ingested for logs and traces (15-day retention) and $0.1 per million metric samples; eligible startups pay $19/month for the first 12 months.",
+      "source_url": "https://signoz.io/pricing/",
+      "first_read_date": "2026-09-26",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-09-28 read it as pricing_restructured too",
+      "resolved_date": "2026-09-28"
+    },
+    {
+      "vendor": "Stoplight",
+      "change_type": "free_tier_removed",
+      "impact": "high",
+      "summary": "The Basic plan is no longer free. It now costs $44/month billed annually or $56/month billed monthly. It includes the first 3 users free, and charges $11-$14 per additional user depending on billing frequency.",
+      "previous_state": "API design and documentation platform — There is a 'Basic' plan that is free and includes the first 3 users, OpenAPI/JSON schema visual designer, interactive docs, and instant mock servers.",
+      "source_url": "https://stoplight.io/pricing",
+      "first_read_date": "2026-09-26",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-09-28 read it as free_tier_removed too",
+      "resolved_date": "2026-09-28"
+    },
+    {
+      "vendor": "Tyk",
+      "change_type": "pricing_restructured",
+      "impact": "high",
+      "summary": "The open source offering is still mentioned. The free trial for Tyk Cloud is now 48 hours, and there are now Core, Professional, and Enterprise paid plans with varying features and pricing.",
+      "previous_state": "Open-source API gateway — self-hosted: free forever under MPL-2.0, includes rate limiting, auth, analytics. Cloud: 48-hour free trial only, paid plans usage-based. Dashboard and developer portal included",
+      "source_url": "https://tyk.io/pricing/",
+      "first_read_date": "2026-09-26",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-09-28 read it as pricing_restructured too",
+      "resolved_date": "2026-09-28"
     }
   ]
 }
