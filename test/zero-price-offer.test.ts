@@ -7,15 +7,20 @@ import { fileURLToPath } from "node:url";
 import { assertCoversPopulation, assertPopulationFloor, assertSharesPopulation, type Population } from "./population-floor.ts";
 import { everyRouteTheSitemapPublishes } from "./sitemap-routes.ts";
 
-const { descriptionDeniesAFreeTier } = await import("../dist/free-tier-record.js");
+const { descriptionDeniesAFreeTier, DENIES_A_FREE_TIER, listingOffersAFreeTier } = await import("../dist/free-tier-record.js");
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
 
-const storedDescriptions = new Map<string, string>(
-  (JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf-8")).offers as
-    { vendor: string; tier: string; description: string }[])
-    .map(o => [`${o.vendor}|${o.tier}`, o.description ?? ""]),
+const storedListings = JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf-8")).offers as
+  { vendor: string; tier: string; description: string }[];
+
+const storedDescriptions = new Map<string, string>(storedListings.map(o => [`${o.vendor}|${o.tier}`, o.description ?? ""]));
+
+const namingAFreePlanAndDenyingAnother = new Set(
+  storedListings
+    .filter(o => listingOffersAFreeTier(o) && DENIES_A_FREE_TIER.test(o.description ?? "") && !descriptionDeniesAFreeTier(o.description ?? ""))
+    .map(o => `${o.vendor}|${o.tier}`),
 );
 
 interface PublishedOffer {
@@ -291,10 +296,14 @@ describe("#1724 structured data prices a tier at zero only where we state that t
   });
 
   it("still prices a tier whose description denies a free tier of another kind", () => {
-    for (const vendor of ["Koyeb", "Crowdin"]) {
-      const priced = nodes.filter(n => n.vendor === vendor && n.pricedAtZero);
-      assert.ok(priced.length > 0, `no surface prices ${vendor}, whose description names a free plan of its own`);
-    }
+    const priceable = offersWhere(o => !o.terms_superseded && !o.gate && !(o.risk_level === "risky" && Boolean(o.risk_cause)));
+    const ofAnotherKind = [...namingAFreePlanAndDenyingAnother].filter(key => priceable.has(key));
+    assertPopulationFloor(ofAnotherKind.length, 1, "free listings we price whose description denies a free tier of another kind");
+    assert.deepStrictEqual(
+      ofAnotherKind.filter(key => !nodes.some(n => n.pricedAtZero && `${n.vendor}|${n.tier}` === key)),
+      [],
+      "a listing that names a free plan of its own and denies another kind is priced on no surface",
+    );
   });
 
   it("still prices the tiers we do state are free", () => {
