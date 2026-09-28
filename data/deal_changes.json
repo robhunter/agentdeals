@@ -7561,7 +7561,13 @@
       "category": "Code Quality",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-28",
+        "detail": "Retracted 2026-09-28: nothing changed. Pullflow's pricing page lists the same Free plan, \"Unlimited public repos / Public users unlimited / Unlimited private repo / 5 private-repo users\", in the Internet Archive's captures of 2024-09-18 and 2026-08-14. The reading compared the page with our catalogue text, which did not state those limits.",
+        "source_url": "http://web.archive.org/web/20260814140044/https://www.pullflow.com/pricing"
+      }
     },
     {
       "vendor": "Apollo GraphOS",
@@ -7642,7 +7648,13 @@
       "category": "Team Collaboration",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-28",
+        "detail": "Retracted 2026-09-28: nothing changed. trtc.io says \"Start Free Trial / No credit card required | 10,000 free minutes\" and \"We provide a free monthly quota to every developer for a whole year\" in the Internet Archive's captures of 2025-12-07, 2026-07-28 and 2026-08-28, as it does today.",
+        "source_url": "http://web.archive.org/web/20260728152456/https://trtc.io/"
+      }
     },
     {
       "vendor": "DhiWise",
@@ -7830,7 +7842,13 @@
       "category": "Forms",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-28",
+        "detail": "Retracted 2026-09-28: the free plan did not become a trial, and a signup was already required in the Internet Archive's capture of 2025-10-11; the 7-day trial belongs to the paid plans. The free plan did narrow earlier: it lost its 3 submissions per document in October 2025, which a separate record describes.",
+        "source_url": "http://web.archive.org/web/20251011025251/https://simplepdf.com/embed"
+      }
     },
     {
       "vendor": "Vaadin",
@@ -9463,7 +9481,13 @@
       "category": "Education",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-05"
+      "recorded_date": "2026-09-05",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-28",
+        "detail": "Retracted 2026-09-28: Coursera's homepage does not mention a free audit option; it has offered a free preview of each course's first module since Coursera replaced audit on 2025-08-08, which a separate record describes. Captures of the homepage from 2026-01-11 to 2026-08-20 carry the same wording as today.",
+        "source_url": "https://blog.coursera.org/introducing-courseras-new-course-preview-experience/"
+      }
     },
     {
       "vendor": "Proton Mail",
@@ -10564,7 +10588,13 @@
       "category": "Error Tracking",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-13"
+      "recorded_date": "2026-09-13",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-28",
+        "detail": "Retracted 2026-09-28: nothing changed. Bugsnag's pricing page says \"7.5K events and 1M spans per month\" and \"Our Free tier includes 7 days of data retention\" in the Internet Archive's captures of 2025-09-18 and 2026-08-28, as it does today.",
+        "source_url": "http://web.archive.org/web/20260828130321/https://www.bugsnag.com/pricing/"
+      }
     },
     {
       "vendor": "Cal.com",
@@ -12634,6 +12664,34 @@
       "alternatives": [],
       "recorded_date": "2026-09-28",
       "date_source": "vendor_page"
+    },
+    {
+      "vendor": "Coursera",
+      "change_type": "limits_reduced",
+      "date": "2025-08-08",
+      "summary": "Coursera replaced its free audit option with a free preview of each course's first module. Coursera's announcement of 2025-08-08: \"This new model replaces our audit experience and gives learners the ability to preview the first module of nearly every course on Coursera for free.\" Full course access and certificates need Coursera Plus or a subscription, with a 7-day free trial.",
+      "previous_state": "Free: audit most courses, with video lectures, readings and quizzes, and no certificate",
+      "current_state": "Free: preview the first module of nearly every course; full access and certificates through Coursera Plus or a subscription, with a 7-day free trial",
+      "impact": "high",
+      "source_url": "https://blog.coursera.org/introducing-courseras-new-course-preview-experience/",
+      "category": "Education",
+      "alternatives": [],
+      "recorded_date": "2026-09-28",
+      "date_source": "vendor_page"
+    },
+    {
+      "vendor": "SimplePDF.eu",
+      "change_type": "limits_reduced",
+      "date": "2025-10-28",
+      "summary": "SimplePDF's Free plan stopped including form submissions: its embed page listed \"3 submissions per document\" on the Free plan in the Internet Archive's capture of 2025-10-11 and no longer did on 2025-10-28. The Free plan still embeds the editor on your site, with unlimited PDFs and end users.",
+      "previous_state": "Free: \"Unlimited number of users / Unlimited number of documents / 3 submissions per document / 1 admin\" (embed page, capture of 2025-10-11)",
+      "current_state": "Free: embedding, unlimited PDFs and end users, and simple electronic signatures; no monthly quota of documents or submissions, which starts with the $99-a-month Basic plan (pricing page, read 2026-09-28)",
+      "impact": "medium",
+      "source_url": "http://web.archive.org/web/20251028161300/https://simplepdf.com/embed",
+      "category": "Forms",
+      "alternatives": [],
+      "recorded_date": "2026-09-28",
+      "date_source": "hand_written"
     }
   ]
 }

@@ -19341,7 +19341,7 @@
     {
       "vendor": "SimplePDF.eu",
       "category": "Forms",
-      "description": "Embed a PDF editor on your website and turn any PDF into a fillable form. The free plan allows unlimited PDFs with three submissions per PDF.",
+      "description": "Embed a PDF editor on your website and turn any PDF into a fillable form. The Free plan, for individuals editing PDFs, includes embedding on your site, unlimited PDFs and end users, and simple electronic signatures, but does not collect submissions: collecting and managing submissions starts on the Basic plan at $99 a month, with 2,500 documents and submissions a month.",
       "tier": "Free",
       "url": "https://simplepdf.eu/embed",
       "tags": [
@@ -34391,8 +34391,8 @@
     {
       "vendor": "Coursera",
       "category": "Education",
-      "description": "Free audit mode for most courses. Video lectures, readings, quizzes. No certificates, no graded assignments, no peer reviews on audit. Some courses have free certificates via financial aid. 7-day free trial for specializations.",
-      "tier": "Free (Audit)",
+      "description": "Free preview of the first module of nearly every course; Coursera replaced its free audit option with this preview on 2025-08-08. Full course access and certificates need Coursera Plus or a subscription, with a 7-day free trial.",
+      "tier": "Free",
       "url": "https://www.coursera.org",
       "tags": [
         "education",
