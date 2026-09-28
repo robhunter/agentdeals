@@ -10287,7 +10287,13 @@
       "category": "API Development",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-10"
+      "recorded_date": "2026-09-10",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-28",
+        "detail": "Retracted 2026-09-28: nothing changed. Apidog's Free plan is still $0 for individuals or small teams of up to 4 users; the 14-day free trial belongs to its paid plans, and the page already carried that heading in the Internet Archive's capture of 2026-08-02. Apidog's plan feed lists the Free plan's cloud mock server at \"10K calls / month\" in captures of 2025-02-02 and 2026-09-03.",
+        "source_url": "http://web.archive.org/web/20260903024728/https://api.apidog.com/api/v1/payment/plans?locale=en-us"
+      }
     },
     {
       "vendor": "MockAPI",
