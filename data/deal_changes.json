@@ -1952,14 +1952,14 @@
       "vendor": "OpenAI",
       "change_type": "product_deprecated",
       "date": "2026-05-12",
-      "summary": "DALL-E 2 and DALL-E 3 API access discontinued. Developers must migrate to gpt-image-1 (different pricing model, quality tiers changed from standard/hd to low/medium/high) or switch to free alternatives like Pollinations.AI or Lumenfall.ai",
+      "summary": "dall-e-2 and dall-e-3 were removed from the OpenAI API on 2026-05-12. OpenAI names gpt-image-2, gpt-image-1 or gpt-image-1-mini as substitutes, and gpt-image-1 itself shuts down on 2026-10-23.",
       "previous_state": "DALL-E 3 API: $0.040-$0.120/image (1024x1024), paid via API credits",
-      "current_state": "DALL-E 2 & 3 API shut down. Replacement: gpt-image-1 at $0.011-$0.167/image with new quality tiers",
+      "current_state": "dall-e-2 and dall-e-3 removed from the API. OpenAI lists gpt-image-2, gpt-image-1 or gpt-image-1-mini as substitutes.",
       "impact": "high",
-      "source_url": "https://platform.openai.com/docs/deprecations",
+      "source_url": "https://developers.openai.com/api/docs/deprecations",
       "category": "AI / ML",
       "alternatives": [
-        "gpt-image-1",
+        "gpt-image-2",
         "Pollinations.AI",
         "Lumenfall.ai",
         "Cloudflare Workers AI",
@@ -2409,7 +2409,13 @@
       "category": "CI/CD",
       "alternatives": [],
       "recorded_date": "2026-04-12",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-28",
+        "detail": "Retracted 2026-09-28: no change. DeployHQ's pricing page read the same on 2025-10-11: the Free plan is 1 project and 3 deployments a day; 3 projects with unlimited deployments is the $9 Solo plan.",
+        "source_url": "http://web.archive.org/web/20251011000000/https://www.deployhq.com/pricing"
+      }
     },
     {
       "vendor": "Commerce Layer",
@@ -4306,7 +4312,13 @@
       "category": "Maps/Geolocation",
       "alternatives": [],
       "recorded_date": "2026-04-13",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-28",
+        "detail": "Retracted 2026-09-28: misdated. Google made this change on 2025-03-01; the record dated 2025-03-01 replaces this one.",
+        "source_url": "https://developers.google.com/maps/billing-and-pricing/march-2025"
+      }
     },
     {
       "vendor": "PubNub",
@@ -5613,7 +5625,13 @@
       "category": "CI/CD",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-28",
+        "detail": "Retracted 2026-09-28: no change. Harness's pricing page showed the same figures on 2026-07-22: up to 60 concurrent pipeline executions, 250GB of storage and up to 1 organization are Essentials plan limits, not the Free plan's.",
+        "source_url": "http://web.archive.org/web/20260722100312/https://www.harness.io/pricing"
+      }
     },
     {
       "vendor": "DB-IP",
@@ -5951,7 +5969,13 @@
       "category": "CI/CD",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-28",
+        "detail": "Retracted 2026-09-28: no change. squash.io read \"Start with a free credit of $40\" on every capture from 2024-11-27 to 2026-08-28. The Squash service has since shut down, and its listing is retired.",
+        "source_url": "http://web.archive.org/web/20241127010322/https://www.squash.io/"
+      }
     },
     {
       "vendor": "Virgil Security",
@@ -8584,7 +8608,13 @@
       "category": "CI/CD",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-02"
+      "recorded_date": "2026-09-02",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-28",
+        "detail": "Retracted 2026-09-28: no change. GitHub's Actions billing page read the same on 2026-08-28 and 2026-09-03: GitHub Free includes 2,000 minutes, 500 MB of artifact storage and 10 GB of cache per repository, and the storage price table ($0.25 per GB a month shared storage, $0.07 Actions cache) has been on the page since June 2026.",
+        "source_url": "http://web.archive.org/web/20260828012011/https://docs.github.com/en/billing/concepts/product-billing/github-actions"
+      }
     },
     {
       "vendor": "Grafana Cloud",
@@ -8975,7 +9005,13 @@
       "category": "Messaging",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-03"
+      "recorded_date": "2026-09-03",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-28",
+        "detail": "Retracted 2026-09-28: no change. Google's Pub/Sub pricing page said the same on 2025-01-18: the first 10 GiB a month of Message Delivery Basic throughput is free, and BigQuery subscriptions and import topics are priced separately.",
+        "source_url": "http://web.archive.org/web/20250118102028/https://cloud.google.com/pubsub/pricing"
+      }
     },
     {
       "vendor": "Google Gemini API",
@@ -9086,7 +9122,13 @@
       "category": "CI/CD",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-03"
+      "recorded_date": "2026-09-03",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-28",
+        "detail": "Retracted 2026-09-28: no change. Codemagic's pricing page read the same on 2026-07-10: the Free plan keeps build history and artifacts for 30 days and 3GB of cache per build; 60 days and 10GB are the Pay as you go plan's.",
+        "source_url": "http://web.archive.org/web/20260710113642/https://codemagic.io/pricing/"
+      }
     },
     {
       "vendor": "Teamcamp",
@@ -9365,7 +9407,13 @@
       "category": "Communication & Messaging",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-05"
+      "recorded_date": "2026-09-05",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-28",
+        "detail": "Retracted 2026-09-28: no change. Google's Meet page read the same on 2026-07-17: 1080p video, studio look or lighting and background noise reduction on certain paid plans, and free meetings of up to 100 participants and 60 minutes.",
+        "source_url": "http://web.archive.org/web/20260717005215/https://workspace.google.com/products/meet/"
+      }
     },
     {
       "vendor": "WorkOS",
@@ -12835,6 +12883,20 @@
       "alternatives": [],
       "detected_by": "reverify-ai",
       "recorded_date": "2026-09-28"
+    },
+    {
+      "vendor": "Google Maps Platform",
+      "change_type": "pricing_restructured",
+      "date": "2025-03-01",
+      "summary": "On 2025-03-01 Google Maps Platform replaced its $200 monthly recurring credit with a free monthly usage cap for each Core Services SKU, set by category (Essentials, Pro or Enterprise); Dynamic Maps, an Essentials SKU, gets 10,000 free loads a month.",
+      "previous_state": "A $200 monthly recurring credit across Google Maps Platform usage.",
+      "current_state": "A free monthly usage cap per Core Services SKU, set by category: Essentials, Pro or Enterprise. Dynamic Maps (Essentials): 10,000 free loads a month.",
+      "impact": "low",
+      "source_url": "https://developers.google.com/maps/billing-and-pricing/march-2025",
+      "category": "Maps/Geolocation",
+      "alternatives": [],
+      "recorded_date": "2026-09-28",
+      "date_source": "vendor_page"
     }
   ]
 }
