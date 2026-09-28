@@ -42,6 +42,9 @@ jobs:
       - name: Name the rendering client a page that comes back too short is read with
         run: node -e "import('./scripts/rendered-page.js').then((m) => console.log(m.findRenderer() ?? 'none found on this runner'))"
 
+      - name: Compile, so the gate and the restatement pass read the predicates the site reads
+        run: npm run build
+
       - name: Run rolling re-verification
         id: reverify
         env:
@@ -68,9 +71,6 @@ jobs:
           echo "quarantined=$QUARANTINED" >> "$GITHUB_OUTPUT"
           echo "retried=$RETRIED" >> "$GITHUB_OUTPUT"
           echo "repicked=$REPICKED" >> "$GITHUB_OUTPUT"
-
-      - name: Compile, so the restatement pass reads the predicates the site reads
-        run: npm run build
 
       - name: Store the readings the withheld entries already show, and count the ones no reading answers
         id: restate

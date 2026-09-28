@@ -367,7 +367,7 @@ export async function runAiMode(picked, data, dryRun, now, options = {}) {
     await sleep(rateLimitMs);
   }
 
-  const { accepted, rejected, unchecked, reclassified, rewritten, overruled } = await gateCandidates(changes, {
+  const { accepted, rejected, unchecked, reclassified, rewritten, overruled, untiered } = await gateCandidates(changes, {
     confirmFn,
     offers: data.offers,
     pageTextFor: (candidate) => pageTexts.get(candidate),
@@ -379,6 +379,9 @@ export async function runAiMode(picked, data, dryRun, now, options = {}) {
   }
   for (const { candidate, from, to, detail } of reclassified) {
     console.log(`  ↻ ${candidate.vendor} recorded as ${to} rather than ${from}: ${detail}`);
+  }
+  for (const { candidate, detail } of untiered) {
+    console.log(`  ↔ ${candidate.vendor} (${candidate.change_type}) recorded without a verdict on the tier we list: ${detail}`);
   }
   for (const { candidate, opinion, detail } of overruled) {
     console.log(`  ↑ ${candidate.vendor} (${candidate.change_type}) kept over a second opinion — ${detail}. The second opinion said: ${opinion}`);
@@ -440,6 +443,7 @@ export async function runAiMode(picked, data, dryRun, now, options = {}) {
     reclassified,
     rewritten,
     overruled,
+    untiered,
     sourceChecks,
     challengeRenders: challengeRendersThisRun(),
     attempts: recorder.attempts,

@@ -1,6 +1,9 @@
 import { pageNamesVendor, statesAnAmount } from "./vendor-naming.js";
 import { definedEquivalences } from "./unit-aliases.js";
 import { readPeriod, renderPeriod } from "../src/growth-limits.ts";
+import { sentencesOf } from "../dist/superseding-reading.js";
+import { A_SELF_HOSTED_EDITION, sentenceOffersSomethingFree, tierRecordsAFreeTier } from "../dist/free-tier-record.js";
+import { classifyTier } from "../dist/ranking.js";
 
 export const REJECT_NULL_COMPARISON = "null_comparison";
 export const REJECT_STATES_NO_DIFFERENCE = "states_no_difference";
@@ -415,10 +418,17 @@ function labelFor(text, quantity) {
   return from.slice(0, quantity.value.length + ends).trim();
 }
 
+const OPENS_A_RANGE = /^\s*(?:-|–|to)\s*\d/i;
+
+function opensARange(text, quantity) {
+  return OPENS_A_RANGE.test(text.slice(quantity.at + quantity.value.length));
+}
+
 export function zeroedAllowances(text) {
   if (typeof text !== "string") return [];
   return quantifiedAttributes(text)
     .filter((quantity) => Number(String(quantity.value).replace(/,/g, "")) === 0)
+    .filter((quantity) => !opensARange(text, quantity))
     .filter((quantity) => namedAllowance(quantity) !== null)
     .map((quantity) => ({ ...quantity, label: labelFor(text, quantity) }));
 }
@@ -1137,7 +1147,288 @@ export function redirectedOffDomain(requestedUrl, finalUrl) {
   return !from.endsWith(`.${to}`) && !to.endsWith(`.${from}`);
 }
 
+const NEEDS_TERMS_TO_NARROW = ["limits_reduced", "pricing_restructured", "pricing_model_change"];
+const ENDS_THE_OFFER = [FREE_TIER_REMOVED, "open_source_killed", "product_deprecated"];
+const NEW_FREE_TIER = "new_free_tier";
+const LIMITS_REDUCED = "limits_reduced";
+const LIMITS_INCREASED = "limits_increased";
+const PRICING_MODEL_CHANGE = "pricing_model_change";
+
+const A_TIME_LIMITED_OFFER = [
+  String.raw`\btrials?\b`,
+  String.raw`\b\d+[-\s]?(?:day|week|month)s?\s+(?:free\s+)?(?:sandbox|evaluation|pilot)\b`,
+  String.raw`\bfree\s+(?:[\w-]+\s+){0,2}for\s+(?:the\s+first\s+)?\d+\s+(?:days?|weeks?|months?)\b`,
+  String.raw`[$€£]\s?[\d,.]+\s*[km]?\s*(?:in\s+)?(?:free\s+)?credits?\b`,
+  String.raw`\bfree\s+credits?\b`,
+  String.raw`\bcredits?\s+(?:of|worth)\s+[$€£]`,
+].join("|");
+
+export function namesATimeLimitedOffer(text) {
+  return new RegExp(A_TIME_LIMITED_OFFER, "i").test(String(text ?? ""));
+}
+
+function withEveryTimeLimitedOfferCalledATrial(text) {
+  return String(text ?? "").replace(new RegExp(A_TIME_LIMITED_OFFER, "gi"), "trial");
+}
+
+const SAYS_IT_IS_SELF_HOSTED = /\bself[\s-]?host(?:ed|ing)?\b|\bon[\s-]?prem(?:ise|ises)?\b/i;
+
+function sentencesOfferingSomethingFree(text, setAside) {
+  return sentencesOf(withEveryTimeLimitedOfferCalledATrial(text))
+    .map(({ text: sentence }) => sentence)
+    .filter((sentence) => !setAside.test(sentence) && sentenceOffersSomethingFree(sentence));
+}
+
+export function offersAHostedFreePlan(text) {
+  return sentencesOfferingSomethingFree(text, A_SELF_HOSTED_EDITION).length > 0;
+}
+
+export function offersAnythingFreeBesidesASelfHostedEdition(text) {
+  return sentencesOfferingSomethingFree(text, SAYS_IT_IS_SELF_HOSTED).length > 0;
+}
+
+const A_FREE_PLAN_NAMED = /\bfree\s+(?:[\w-]+\s+)?(?:plan|tier)\b|\b(?:always|forever)\s+free\b|\bfree\s+forever\b/i;
+
+function namesAFreePlanWithTerms(sentence) {
+  return A_FREE_PLAN_NAMED.test(sentence) || quantifiedAttributes(sentence).length > 0;
+}
+
+export function statesAHostedFreePlanWithTerms(text) {
+  return sentencesOfferingSomethingFree(text, A_SELF_HOSTED_EDITION).some(namesAFreePlanWithTerms);
+}
+
+function countsWhatTheProductCovers(description, quantity) {
+  return description.charAt(quantity.at + quantity.value.length) === "+";
+}
+
+export function statesTermsToNarrow(description) {
+  const read = String(description ?? "");
+  if (priceSignals(read).length > 0) return true;
+  if (/\bunlimited\b/i.test(read)) return true;
+  if (sentencesOf(read).some(({ text }) => sentenceOffersSomethingFree(text))) return true;
+  return quantifiedAttributes(read).some((quantity) => !countsWhatTheProductCovers(read, quantity));
+}
+
+export function narrowsTermsWeNeverStated(record) {
+  if (!NEEDS_TERMS_TO_NARROW.includes(record?.change_type)) return false;
+  if (!baselineIsAStoredDescription(record)) return false;
+  return !statesTermsToNarrow(record?.previous_state);
+}
+
+function listsAFreeTier(listedTier) {
+  return listedTier === undefined || classifyTier(listedTier).class === "free";
+}
+
+export function readsAsARemoval(record, listedTier) {
+  if (ENDS_THE_OFFER.includes(record?.change_type)) return false;
+  if (!listsAFreeTier(listedTier)) return false;
+  if (!statesAHostedFreePlanWithTerms(record?.previous_state)) return false;
+  if (!namesATimeLimitedOffer(record?.current_state)) return false;
+  return !offersAHostedFreePlan(record?.current_state) && !offersAHostedFreePlan(record?.summary);
+}
+
+const A_CLAUSE_OF_TERMS = /(?<=[.;:])\s+|,\s+|\s+[—–]\s+|\s+-\s+/;
+
+export function statesAllowancesBesidesTheTrial(text) {
+  return String(text ?? "")
+    .split(A_CLAUSE_OF_TERMS)
+    .filter((clause) => !SAYS_IT_IS_SELF_HOSTED.test(clause) && !namesATimeLimitedOffer(clause))
+    .some((clause) => amountsStatedIn(clause).some(namesAnAllowance));
+}
+
+export function readsAsANewFreeTier(record) {
+  if (record?.change_type === NEW_FREE_TIER) return false;
+  if (!namesATimeLimitedOffer(record?.previous_state)) return false;
+  if (offersAnythingFreeBesidesASelfHostedEdition(record?.previous_state)) return false;
+  if (statesAllowancesBesidesTheTrial(record?.previous_state)) return false;
+  if (namesATimeLimitedOffer(record?.current_state)) return false;
+  return offersAHostedFreePlan(record?.current_state);
+}
+
+const A_FREE_COUNT = /(\d[\d,]*)\s+free\s+([a-z][a-z-]*)(?:\s*(?:\/|per\s+)\s*(day|month|mo))?/gi;
+const A_FREE_BAND =
+  /\b0\s*(?:-|–|to)\s*(\d[\d,]*)\s+([a-z][a-z-]*)(?:\s*(?:\/|per\s+)\s*(day|month|mo))?\s*[:=]?\s*[$€£]\s?0(?:\.0+)?(?![\d.,])/gi;
+
+function periodOfAnAllowance(spelled) {
+  if (!spelled) return null;
+  return spelled.toLowerCase() === "day" ? "day" : "month";
+}
+
+export function freeAllowancesStated(text) {
+  const stated = [];
+  for (const pattern of [A_FREE_COUNT, A_FREE_BAND]) {
+    for (const match of String(text ?? "").matchAll(pattern)) {
+      stated.push({
+        amount: Number(match[1].replace(/,/g, "")),
+        measures: singular(match[2].toLowerCase()),
+        period: periodOfAnAllowance(match[3]),
+      });
+    }
+  }
+  return stated;
+}
+
+function onTheSamePeriod(before, after) {
+  return before.period === null || after.period === null || before.period === after.period;
+}
+
+export function freeAllowanceMovements(record) {
+  const before = freeAllowancesStated(record?.previous_state);
+  const after = freeAllowancesStated(record?.current_state);
+  const movements = [];
+  for (const was of before) {
+    for (const now of after) {
+      if (now.measures !== was.measures || !onTheSamePeriod(was, now)) continue;
+      if (now.amount !== was.amount) movements.push(now.amount > was.amount ? "increase" : "decrease");
+    }
+  }
+  return movements;
+}
+
+export function retypedByTheFreeAllowance(record) {
+  if (![RECLASSIFIED_AS_RESTRUCTURE, PRICING_MODEL_CHANGE].includes(record?.change_type)) return null;
+  const movements = freeAllowanceMovements(record);
+  if (movements.length === 0) return null;
+  if (movements.every((movement) => movement === "decrease")) return LIMITS_REDUCED;
+  if (movements.every((movement) => movement === "increase")) return LIMITS_INCREASED;
+  return null;
+}
+
+function namesAnAllowance(quantity) {
+  if (namedAllowance(quantity) !== null) return true;
+  return quantity.words.some((word) => ALLOWANCE_NOUNS.has(`${word}e`));
+}
+
+function countsBytes(quantity) {
+  return Boolean(quantity?.unit) && BYTE_UNITS.has(quantity.unit);
+}
+
+function tally(counts, key) {
+  counts.set(key, (counts.get(key) ?? 0) + 1);
+}
+
+const A_FRACTION_AROUND = /\d\/$/;
+const A_FRACTION_AFTER = /^\/\d/;
+
+function statesAnAmountOfItsOwn(text, quantity) {
+  const after = text.slice(quantity.at + quantity.value.length);
+  if (after.startsWith("+") || A_FRACTION_AFTER.test(after)) return false;
+  return !A_FRACTION_AROUND.test(text.slice(0, quantity.at));
+}
+
+function amountsStatedIn(text) {
+  const read = String(text ?? "");
+  return quantifiedAttributes(read)
+    .filter(measuresAnAmount)
+    .filter((quantity) => statesAnAmountOfItsOwn(read, quantity));
+}
+
+export function commensurableMovements(record) {
+  const previous = amountsStatedIn(record?.previous_state);
+  const current = amountsStatedIn(record?.current_state);
+  const compared = [];
+  const pairings = new Map();
+  for (const before of previous) {
+    for (const after of current) {
+      if (countsBytes(before) !== countsBytes(after)) continue;
+      const quantity = comparedQuantity(before, after);
+      if (!quantity) continue;
+      compared.push(quantity);
+      tally(pairings, before);
+      tally(pairings, after);
+    }
+  }
+  const pairedOnce = compared.filter(({ before, after }) => pairings.get(before) === 1 && pairings.get(after) === 1);
+  return {
+    increases: pairedOnce.filter(({ direction }) => direction === "increase"),
+    decreases: pairedOnce.filter(({ direction }) => direction === "decrease"),
+    newlyCapped: current.filter((after) => !pairings.has(after) && namesAnAllowance(after)),
+    everyStoredFigureRestated: previous.every((before) => pairings.get(before) === 1),
+  };
+}
+
+export function retypedByWhatMoved(record) {
+  if (record?.change_type !== LIMITS_REDUCED) return null;
+  const { increases, decreases, newlyCapped, everyStoredFigureRestated } = commensurableMovements(record);
+  if (increases.length === 0) return null;
+  if (decreases.length > 0 || newlyCapped.length > 0) return RECLASSIFIED_AS_RESTRUCTURE;
+  return everyStoredFigureRestated ? LIMITS_INCREASED : null;
+}
+
+export function typeTheTwoStatesSupport(record, listedTier) {
+  if (readsAsARemoval(record, listedTier)) {
+    return {
+      type: FREE_TIER_REMOVED,
+      detail: "the stored description states a free plan, and the page now states only a trial or credit and nothing free",
+    };
+  }
+  if (readsAsANewFreeTier(record)) {
+    return {
+      type: NEW_FREE_TIER,
+      detail: "the stored description states only a trial, and the page now states a free plan and no trial",
+    };
+  }
+  const byTheFreeAllowance = retypedByTheFreeAllowance(record);
+  if (byTheFreeAllowance) {
+    return {
+      type: byTheFreeAllowance,
+      detail: `every free allowance both states name moved the same way, so the change is ${byTheFreeAllowance === LIMITS_REDUCED ? "a reduction" : "an increase"} of the free tier`,
+    };
+  }
+  const byWhatMoved = retypedByWhatMoved(record);
+  if (byWhatMoved) {
+    return {
+      type: byWhatMoved,
+      detail:
+        byWhatMoved === LIMITS_INCREASED
+          ? "every stored allowance the page restates went up, and the page caps nothing new"
+          : "a stored allowance went up while the page caps or cuts another, so the change moved both ways",
+    };
+  }
+  return null;
+}
+
+const CAN_BE_CONFINED_TO_PAID_PLANS = [RECLASSIFIED_AS_RESTRUCTURE, PRICING_MODEL_CHANGE, LIMITS_REDUCED, RESTRICTION];
+export const THE_LISTED_TIER_STOOD = "unchanged";
+
+export function namesOnlyPaidPlans(text) {
+  const read = String(text ?? "");
+  if (namesATimeLimitedOffer(read)) return false;
+  if (sentencesOf(read).some(({ text: sentence }) => sentenceOffersSomethingFree(sentence))) return false;
+  return (read.match(CURRENCY_AMOUNT) ?? []).some((amount) => Number(amount.replace(/[^\d.]/g, "")) > 0);
+}
+
+export function confinedToPaidPlans(record, listedTier) {
+  if (!CAN_BE_CONFINED_TO_PAID_PLANS.includes(record?.change_type)) return false;
+  if (record?.tier_direction) return false;
+  if (listedTier === undefined || !tierRecordsAFreeTier(listedTier)) return false;
+  return namesOnlyPaidPlans(record?.summary) && namesOnlyPaidPlans(record?.current_state);
+}
+
+function typedVerdict(entry, context) {
+  const asRecorded = judgedAsRecorded(entry, context);
+  if (!asRecorded.ok) return asRecorded;
+  const recordedAs = asRecorded.reclassifyAs ?? entry?.change_type;
+  const retyped = typeTheTwoStatesSupport({ ...entry, change_type: recordedAs }, context.listedTier);
+  if (retyped === null) return asRecorded;
+  const asRetyped = judgedAsRecorded({ ...entry, change_type: retyped.type }, context);
+  if (!asRetyped.ok || asRetyped.reclassifyAs) return asRecorded;
+  return { ...asRetyped, reclassifyAs: retyped.type, detail: retyped.detail };
+}
+
 export function describesChange(entry, context = {}) {
+  const verdict = typedVerdict(entry, context);
+  if (!verdict.ok) return verdict;
+  const typed = { ...entry, change_type: verdict.reclassifyAs ?? entry?.change_type };
+  if (!confinedToPaidPlans(typed, context.listedTier)) return verdict;
+  return {
+    ...verdict,
+    tierDirection: THE_LISTED_TIER_STOOD,
+    tierDetail: "the summary and the page name only paid plans and nothing free, so the change leaves the free tier we list where it was",
+  };
+}
+
+function judgedAsRecorded(entry, context) {
   const previous = quantities(entry?.previous_state);
   const current = quantities(entry?.current_state);
 
@@ -1222,6 +1513,14 @@ export function describesChange(entry, context = {}) {
   if (!restriction.ok) return restriction;
   if (restriction.reclassifyAs) {
     return { ok: true, reclassifyAs: restriction.reclassifyAs, detail: restriction.detail };
+  }
+
+  if (narrowsTermsWeNeverStated(entry)) {
+    return {
+      ok: false,
+      reason: REJECT_NO_TERMS_TO_NARROW,
+      detail: `${entry.change_type} claimed against "${entry.previous_state}", a stored description that states no price, no allowance and nothing free, so there is nothing for the terms to have narrowed from`,
+    };
   }
 
   if (refusedByAudit) return refusedByAudit;
@@ -1315,11 +1614,19 @@ export function describesQuantifiedDifference(entry) {
   return measuredDifferences(entry)[0] ?? null;
 }
 
+export function listedTierOf(offers, candidate) {
+  const listing = (offers ?? []).find(
+    (offer) => offer.vendor === candidate?.vendor && offer.url === candidate?.source_url
+  );
+  return typeof listing?.tier === "string" ? listing.tier : undefined;
+}
+
 export async function gateCandidates(candidates, options = {}) {
   const confirmFn = options.confirmFn;
   const pageTextFor = options.pageTextFor ?? (() => undefined);
   const pageCompleteFor = options.pageCompleteFor ?? (() => false);
   const finalUrlFor = options.finalUrlFor ?? (() => undefined);
+  const listedTierFor = (candidate) => listedTierOf(options.offers, candidate);
   const productIsTheFreeTier = vendorsWhoseFreeTierIsTheProduct(options.offers);
   const freeByLicence = vendorsFreeByLicence(options.offers);
   const accepted = [];
@@ -1328,6 +1635,7 @@ export async function gateCandidates(candidates, options = {}) {
   const reclassified = [];
   const rewritten = [];
   const overruled = [];
+  const untiered = [];
 
   for (const original of candidates) {
     const verdict = describesChange(original, {
@@ -1336,6 +1644,7 @@ export async function gateCandidates(candidates, options = {}) {
       finalUrl: finalUrlFor(original),
       freeTierIsTheProduct: productIsTheFreeTier.has(original?.vendor),
       freeByLicence: namesAVendorIn(freeByLicence, original?.vendor),
+      listedTier: listedTierFor(original),
     });
     if (!verdict.ok) {
       rejected.push({ candidate: original, reason: verdict.reason, detail: verdict.detail });
@@ -1350,6 +1659,10 @@ export async function gateCandidates(candidates, options = {}) {
         to: verdict.reclassifyAs,
         detail: verdict.detail,
       });
+    }
+    if (verdict.tierDirection) {
+      candidate = { ...candidate, tier_direction: verdict.tierDirection };
+      untiered.push({ candidate, detail: verdict.tierDetail });
     }
     if (verdict.rewriteSummary) {
       const was = candidate.summary;
@@ -1393,7 +1706,7 @@ export async function gateCandidates(candidates, options = {}) {
     accepted.push(candidate);
   }
 
-  return { accepted, rejected, unchecked, reclassified, rewritten, overruled };
+  return { accepted, rejected, unchecked, reclassified, rewritten, overruled, untiered };
 }
 
 
