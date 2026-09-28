@@ -1,15 +1,3 @@
-import { getCategories, loadDealChanges, loadOffers } from "./data.js";
-import { trackedChanges } from "./change-census.js";
-import { changesInWindow } from "./change-dates.js";
-import { riskEntries } from "./risk-scorecard.js";
-import type { DealChange } from "./types.js";
-
-const Q1_2026 = { start: "2026-01-01", end: "2026-03-31" };
-
-export function trackedChangesInQ1_2026<T extends DealChange>(changes: T[]): T[] {
-  return trackedChanges(changesInWindow(changes, Q1_2026).dated);
-}
-
 const WRITTEN_BLURBS: Readonly<Record<string, string>> = {
   "localstack-alternatives": "LocalStack CE shuts down March 23, 2026 — compare 9 free open-source AWS emulators",
   "postman-alternatives": "Postman killed free team collaboration March 1, 2026 — 5 free API testing alternatives",
@@ -103,20 +91,12 @@ const WRITTEN_BLURBS: Readonly<Record<string, string>> = {
   "guides/n8n": "Connect AgentDeals to n8n via MCP Server Trigger node — no-code pricing monitoring and vendor comparison workflows",
   "guides/vercel-ai-sdk": "Connect AgentDeals to Vercel AI SDK via experimental_createMCPClient() — React/Next.js code examples",
   "developers": "REST API landing page — 18 endpoints, quick start examples in curl/Python/JavaScript, endpoint reference, use cases, no auth required",
-};
-
-const COUNTED_BLURBS: Readonly<Record<string, () => string>> = {
-  "q1-2026-developer-pricing-report": () => {
-    const q1 = trackedChangesInQ1_2026(loadDealChanges());
-    return `${q1.length} pricing changes in Q1 2026 — ${q1.filter(change => change.change_type === "free_tier_removed").length} free tiers removed, narrative analysis, category breakdown, monthly timeline, Cloudflare counter-trend, Q2 outlook`;
-  },
-  "free-tier-risk": () => `Predictive risk analysis for ${riskEntries.length} developer free tiers — grades dated and scored against what happened next, category heatmap, pattern analysis, counter-trends`,
-  "state-of-free-tiers": () => `Data-driven analysis of ${loadOffers().length.toLocaleString()} developer tool free tiers across ${getCategories().length} categories — trends, risks, and recommendations`,
+  "q1-2026-developer-pricing-report": "Pricing changes in Q1 2026 — free tiers removed, narrative analysis, category breakdown, monthly timeline, Cloudflare counter-trend, Q2 outlook",
+  "free-tier-risk": "Predictive risk analysis for developer free tiers — grades dated and scored against what happened next, category heatmap, pattern analysis, counter-trends",
+  "state-of-free-tiers": "Data-driven analysis of developer tool free tiers by category — trends, risks, and recommendations",
 };
 
 export function guideBlurb(slug: string): string {
-  const counted = COUNTED_BLURBS[slug];
-  if (counted) return counted();
   const written = WRITTEN_BLURBS[slug];
   if (written === undefined) throw new Error(`No blurb is written for the guide ${slug}`);
   return written;

@@ -59,12 +59,17 @@ describe("the MCP guide list describes each guide with the blurb the web guide l
     assert.deepStrictEqual(differing, []);
   });
 
-  it("reads the counted blurbs from the catalogue on both lists", async () => {
+  it("describes the three reports on both lists with no count that moves when the catalogue does", async () => {
     const { getGuideBySlug } = await import("../dist/guides.js");
-    for (const slug of ["q1-2026-developer-pricing-report", "free-tier-risk", "state-of-free-tiers"]) {
-      const web = webBlurbs.get(slug);
-      assert.ok(web && /\d/.test(web), `${slug} has no counted blurb on the web list`);
-      assert.strictEqual(getGuideBySlug(slug)?.description, web);
-    }
+    const expected: Record<string, string> = {
+      "q1-2026-developer-pricing-report": "Pricing changes in Q1 2026 — free tiers removed, narrative analysis, category breakdown, monthly timeline, Cloudflare counter-trend, Q2 outlook",
+      "free-tier-risk": "Predictive risk analysis for developer free tiers — grades dated and scored against what happened next, category heatmap, pattern analysis, counter-trends",
+      "state-of-free-tiers": "Data-driven analysis of developer tool free tiers by category — trends, risks, and recommendations",
+    };
+    const wrong = Object.entries(expected).flatMap(([slug, blurb]) => [
+      webBlurbs.get(slug) === blurb ? null : `${slug} web: "${webBlurbs.get(slug)}"`,
+      getGuideBySlug(slug)?.description === blurb ? null : `${slug} MCP: "${getGuideBySlug(slug)?.description}"`,
+    ]).filter((line): line is string => line !== null);
+    assert.deepStrictEqual(wrong, []);
   });
 });
