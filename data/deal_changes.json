@@ -9406,7 +9406,13 @@
       "category": "Infrastructure",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-05"
+      "recorded_date": "2026-09-05",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-28",
+        "detail": "Retracted 2026-09-28: nothing narrowed. Scalr's pricing page in the Internet Archive's capture of 2026-08-28 says \"You get started free with 50 runs per month, and there are no charges for users, workspaces, resources under management, private agents, or SAML\" and \"Free Plan: 2 concurrent runs\", the terms our catalogue text stated. The page says the same today, except that concurrency rose to five runs, which the 2026-09-21 record describes. The reading compared the page with our catalogue text, which listed features the new text did not restate.",
+        "source_url": "http://web.archive.org/web/20260828130540/https://scalr.com/pricing"
+      }
     },
     {
       "vendor": "Hex",
