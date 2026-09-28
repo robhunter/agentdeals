@@ -61,6 +61,7 @@ export async function settleFirstReadings({ changes, offers, today, archive, rea
     const settled = page.ok
       ? await settleAgainstCaptures({
           url: record.source_url,
+          finalUrl: page.finalUrl,
           ourText: record.previous_state,
           textDay: textDayOf(record.previous_state),
           todayText: page.text,
