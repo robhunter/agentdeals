@@ -1,4 +1,5 @@
 import { execFileSync } from "node:child_process";
+import { stripHtml, verifyOfferAgainstPage } from "./verify-freshness.js";
 
 const CDX_ENDPOINT = "https://web.archive.org/cdx/search/cdx";
 const WAYBACK = "https://web.archive.org/web";
@@ -130,4 +131,8 @@ export function commitDaysTouching(text, file = "data/index.json") {
 export function dayOurTextEntered(text, { commitDays = commitDaysTouching } = {}) {
   if (!String(text ?? "").trim()) return null;
   return commitDays(text)[0] ?? null;
+}
+
+export async function readCapture(client, offer, html) {
+  return verifyOfferAgainstPage(client, offer, stripHtml(html));
 }
