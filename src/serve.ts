@@ -33548,7 +33548,7 @@ function buildAwsFreeTier2026Page(): string {
     { name: "Render", slug: "render", freeTier: "Free web services (512 MB RAM), free PostgreSQL (30 days)", strength: "Simple PaaS with generous free tier", bestFor: "Replacing Heroku for small apps" },
     { name: "Supabase", slug: "supabase", freeTier: "500 MB database, 50K MAU auth, 1 GB storage", strength: "Full BaaS with PostgreSQL + auth + storage", bestFor: "Firebase alternative with SQL" },
     { name: "Neon", slug: "neon", freeTier: "100 CU-hours and 0.5 GB storage per project, auth up to 60k MAU, branching", strength: "Serverless PostgreSQL with scale-to-zero", bestFor: "Serverless Postgres with branching and scale-to-zero" },
-    { name: "Cloudflare", slug: "cloudflare", freeTier: "Workers 100K req/day, R2 10 GB, D1 5 GB, Pages unlimited", strength: "Edge-first with zero egress fees on R2", bestFor: "Global edge apps, static sites, storage" },
+    { name: "Cloudflare", slug: "cloudflare-workers", freeTier: "Workers 100K req/day, R2 10 GB, D1 5 GB, Pages unlimited", strength: "Edge-first with zero egress fees on R2", bestFor: "Global edge apps, static sites, storage" },
     { name: "Vercel", slug: "vercel", freeTier: "Unlimited deploys (hobby), 100 GB bandwidth, serverless functions", strength: "Best Next.js hosting, instant previews", bestFor: "Frontend apps and Jamstack sites" },
   ];
 
@@ -33809,7 +33809,7 @@ ${mcpCtaCss()}
 
     <div class="verdict-item">
       <strong>Static website with CDN</strong>
-      <p>S3 (5 GB) + CloudFront (1 TB transfer/month) + Route 53 (not free — $0.50/hosted zone). Or use <a href="/vendor/cloudflare">Cloudflare Pages</a> (unlimited, always free) as an alternative.</p>
+      <p>S3 (5 GB) + CloudFront (1 TB transfer/month) + Route 53 (not free — $0.50/hosted zone). Or use <a href="/vendor/cloudflare-pages">Cloudflare Pages</a> (unlimited, always free) as an alternative.</p>
     </div>
   </div>
 
@@ -33988,7 +33988,7 @@ function buildGcpFreeTier2026Page(): string {
   const cloudAlts: CloudAlt[] = [
     { name: "AWS", slug: "aws", freeTier: "Always Free: Lambda 1M req/mo, DynamoDB 25 GB, 12-month EC2/RDS", strength: "Broadest service catalog, most enterprise adoption", bestFor: "Enterprise workloads, serverless (Lambda)" },
     { name: "Azure", slug: "azure", freeTier: "12-month: VMs, SQL, Cosmos DB (1K RU/s + 25 GB). $200 credit", strength: "Best .NET/Windows integration, hybrid cloud", bestFor: "Microsoft stack teams, enterprise" },
-    { name: "Cloudflare", slug: "cloudflare", freeTier: "Workers 100K req/day, R2 10 GB (zero egress), D1 5 GB, Pages unlimited", strength: "Zero egress on R2, global edge network", bestFor: "Edge computing, static sites, storage" },
+    { name: "Cloudflare", slug: "cloudflare-workers", freeTier: "Workers 100K req/day, R2 10 GB (zero egress), D1 5 GB, Pages unlimited", strength: "Zero egress on R2, global edge network", bestFor: "Edge computing, static sites, storage" },
     { name: "Railway", slug: "railway", freeTier: "$5 free trial credit, usage-based pricing", strength: "Best developer experience, instant deploys", bestFor: "Quick prototypes, hobby projects" },
     { name: "Render", slug: "render", freeTier: "Free web services (512 MB RAM), free PostgreSQL (30 days)", strength: "Simple PaaS, Heroku replacement", bestFor: "Small web apps, side projects" },
     { name: "Supabase", slug: "supabase", freeTier: "500 MB database, 50K MAU auth, 1 GB storage", strength: "Full BaaS with PostgreSQL + auth + storage", bestFor: "Firebase alternative with SQL" },
@@ -34227,7 +34227,7 @@ ${mcpCtaCss()}
 
     <div class="verdict-item">
       <strong>Static site with Firebase</strong>
-      <p>Firebase Hosting (10 GiB storage, custom domain + SSL) + Firebase Auth + Firestore. Or use <a href="/vendor/cloudflare">Cloudflare Pages</a> (unlimited bandwidth, always free) as an alternative. See our <a href="/firebase-alternatives">Firebase alternatives</a> comparison.</p>
+      <p>Firebase Hosting (10 GiB storage, custom domain + SSL) + Firebase Auth + Firestore. Or use <a href="/vendor/cloudflare-pages">Cloudflare Pages</a> (unlimited bandwidth, always free) as an alternative. See our <a href="/firebase-alternatives">Firebase alternatives</a> comparison.</p>
     </div>
   </div>
 
@@ -34405,7 +34405,7 @@ function buildAzureFreeTier2026Page(): string {
     { name: "Render", slug: "render", freeTier: "Free web services (512 MB RAM), free PostgreSQL (30 days)", strength: "Simple PaaS with generous free tier", bestFor: "Replacing Heroku for small apps" },
     { name: "Supabase", slug: "supabase", freeTier: "500 MB database, 50K MAU auth, 1 GB storage", strength: "Full BaaS with PostgreSQL + auth + storage", bestFor: "Firebase alternative with SQL" },
     { name: "Neon", slug: "neon", freeTier: "100 CU-hours and 0.5 GB storage per project, auth up to 60k MAU, branching", strength: "Serverless PostgreSQL with scale-to-zero", bestFor: "Serverless Postgres with branching and scale-to-zero" },
-    { name: "Cloudflare", slug: "cloudflare", freeTier: "Workers 100K req/day, R2 10 GB, D1 5 GB, Pages unlimited", strength: "Edge-first with zero egress fees on R2", bestFor: "Global edge apps, static sites, storage" },
+    { name: "Cloudflare", slug: "cloudflare-workers", freeTier: "Workers 100K req/day, R2 10 GB, D1 5 GB, Pages unlimited", strength: "Edge-first with zero egress fees on R2", bestFor: "Global edge apps, static sites, storage" },
     { name: "Vercel", slug: "vercel", freeTier: "Unlimited deploys (hobby), 100 GB bandwidth, serverless functions", strength: "Best Next.js hosting, instant previews", bestFor: "Frontend apps and Jamstack sites" },
   ];
 
@@ -34856,7 +34856,7 @@ function buildDigitalOceanFreeTier2026Page(): string {
     { name: "Vultr", slug: "vultr", freeTier: "Free DNS hosting on any account, cheapest VPS at $2.50/mo", strength: "Global locations, competitive pricing", bestFor: "Low-cost VPS, multiple regions" },
     { name: "Railway", slug: "railway", freeTier: "$5 free trial credit, usage-based pricing", strength: "Best DX, instant deploys from Git", bestFor: "Quick prototypes, hobby projects" },
     { name: "Render", slug: "render", freeTier: "Free web services (512 MB RAM), free PostgreSQL (30 days)", strength: "Simple PaaS, free hobby tier", bestFor: "Heroku replacement, small apps" },
-    { name: "Cloudflare", slug: "cloudflare", freeTier: "Workers 100K req/day, R2 10 GB, D1 5 GB, Pages unlimited", strength: "Edge-first, zero egress on R2", bestFor: "Edge computing, static sites, storage" },
+    { name: "Cloudflare", slug: "cloudflare-workers", freeTier: "Workers 100K req/day, R2 10 GB, D1 5 GB, Pages unlimited", strength: "Edge-first, zero egress on R2", bestFor: "Edge computing, static sites, storage" },
   ];
 
   const freeRows = freeServices.map(s => `<tr${s.highlight ? ' style="background:rgba(59,130,246,0.1)"' : ""}>
@@ -35773,7 +35773,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="context-box">
-    <strong>For free storage, consider alternatives:</strong> <a href="/vendor/cloudflare">Cloudflare R2</a> (10 GB, zero egress fees) and <a href="/vendor/supabase">Supabase</a> (1 GB storage) often beat the Big Four for developer-scale storage. AWS's S3 + CloudFront is the most complete free CDN package but expires after 12 months.
+    <strong>For free storage, consider alternatives:</strong> <a href="/vendor/cloudflare-r2">Cloudflare R2</a> (10 GB, zero egress fees) and <a href="/vendor/supabase">Supabase</a> (1 GB storage) often beat the Big Four for developer-scale storage. AWS's S3 + CloudFront is the most complete free CDN package but expires after 12 months.
   </div>
 
   <h2 id="startup-credits">Startup Credit Programs</h2>

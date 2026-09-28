@@ -529,6 +529,7 @@
         "aws",
         "azure",
         "cloudflare",
+        "cloudflare-pages",
         "dynamodb-local",
         "neon",
         "supabase"
@@ -539,7 +540,7 @@
         "amazon-ses",
         "aws",
         "azure",
-        "cloudflare",
+        "cloudflare-workers",
         "google-cloud",
         "neon",
         "railway",
@@ -599,7 +600,7 @@
       "vendors_tabulated": [
         "aws",
         "azure",
-        "cloudflare",
+        "cloudflare-workers",
         "google-cloud",
         "neon",
         "railway",
@@ -1139,14 +1140,14 @@
       "vendors_asserted": [
         "aws",
         "azure",
-        "cloudflare",
+        "cloudflare-workers",
         "railway",
         "render"
       ],
       "vendors_tabulated": [
         "aws",
         "azure",
-        "cloudflare",
+        "cloudflare-workers",
         "google-cloud",
         "hetzner",
         "railway",
@@ -1913,14 +1914,14 @@
       "vendors_asserted": [
         "aws",
         "azure",
-        "cloudflare",
+        "cloudflare-pages",
         "firebase",
         "google-colab"
       ],
       "vendors_tabulated": [
         "aws",
         "azure",
-        "cloudflare",
+        "cloudflare-workers",
         "firebase",
         "google-colab",
         "neon",
