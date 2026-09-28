@@ -6843,8 +6843,8 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     slug: "github-actions-alternatives",
     title: "GitHub Actions Alternatives \u2014 Free CI/CD Tools for 2026",
     metaDesc: "GitHub Actions self-hosted runners now cost $0.002/min for private repos. Compare free CI/CD alternatives: GitLab CI, CircleCI, Buildkite, Harness, Drone CI, Google Cloud Build, and more. [[freshness]]",
-    contextHtml: `<p><strong>GitHub Actions</strong> introduced <strong>self-hosted runner charges ($0.002/min) for private repos on March 1, 2026</strong>. While the GitHub-hosted runner free tier (2,000 min/mo for private repos, unlimited for public) remains unchanged, teams running self-hosted runners for private repository builds now face per-minute costs.</p>
-      <p>For public repositories, GitHub Actions remains the best free CI/CD option \u2014 unlimited minutes with no restrictions. But if you\u2019re running private repo pipelines on self-hosted infrastructure, these alternatives offer generous free tiers without per-minute runner fees.</p>
+    contextHtml: `<p>GitHub announced a $0.002/min charge for self-hosted runners in private repos from March 1, 2026, then postponed it, so self-hosted runners are still free. The GitHub-hosted free tier (2,000 minutes a month for private repos; standard runners are free in public repos) is unchanged.</p>
+      <p>For public repositories, GitHub Actions remains the best free CI/CD option \u2014 unlimited minutes with no restrictions. But if you\u2019re running private repo pipelines on self-hosted infrastructure, these alternatives offer generous free tiers.</p>
       <p>Below are the best free CI/CD alternatives, compared by <strong>exact free tier limits</strong> \u2014 build minutes, concurrent jobs, storage, and platform support. For the full picture, see our <a href="/ci-cd-pricing">definitive CI/CD pricing comparison</a> covering 17+ tools across general, cloud-native, mobile, and self-hosted categories.</p>`,
     tag: "github-actions-alternative",
     primaryVendor: "GitHub Actions",
