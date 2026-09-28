@@ -229,7 +229,21 @@ async function capturesOfEither(archive, urls, fromDay, toDay) {
   return { captures: [...byTimestamp.values()].sort((a, b) => a.timestamp.localeCompare(b.timestamp)) };
 }
 
-export async function settleAgainstCaptures({ url, finalUrl, ourText, textDay, todayText, today, archive, read, windowDays = CAPTURE_WINDOW_DAYS }) {
+export async function settleAgainstCaptures({ url, finalUrl, ourText, recordTerms, textDay, todayText, today, archive, read, windowDays = CAPTURE_WINDOW_DAYS }) {
+  const settled = await settleWithCaptures({ url, finalUrl, ourText, textDay, todayText, today, archive, read, windowDays });
+  if (!recordTerms || !settled.capture || !settled.captureUsed) return withoutCaptureUsed(settled);
+  const page = await archive.captureHtml(settled.captureUsed);
+  const text = page.unavailable ? "" : stripHtml(page.html);
+  const readable = text.length >= MIN_PAGE_TEXT_LENGTH;
+  const reading = readable ? await read(recordTerms, text) : { status: "unclear" };
+  return { ...withoutCaptureUsed(settled), record_terms_on_capture: reading.status, reads: settled.reads + (readable ? 1 : 0) };
+}
+
+function withoutCaptureUsed({ captureUsed, ...settled }) {
+  return settled;
+}
+
+async function settleWithCaptures({ url, finalUrl, ourText, textDay, todayText, today, archive, read, windowDays }) {
   let reads = 0;
   if (!textDay) return { outcome: "text_day_unknown", reads };
   const urls = finalUrl && !samePage(url, finalUrl) ? [url, finalUrl] : [url];
@@ -262,14 +276,14 @@ export async function settleAgainstCaptures({ url, finalUrl, ourText, textDay, t
     const now = await readToday(termsThen);
     if (now.status === "changed") {
       const moves = await bracketMoves({ start: capture, oldTerms: termsThen, later: captures, todayText, readCaptureAgainst, readToday });
-      return { outcome: "vendor_changed", text_day: textDay, capture: at, previous_state: termsThen, ...moves, date: datedBy(moves), reads };
+      return { outcome: "vendor_changed", text_day: textDay, capture: at, captureUsed: capture, previous_state: termsThen, ...moves, date: datedBy(moves), reads };
     }
     if (now.status !== "confirmed") {
       tried.push({ ...at, why: "the reader could not compare today's page with the capture's terms" });
       continue;
     }
-    if (termsThen === ourText) return { outcome: "not_reproduced", text_day: textDay, capture: at, reads };
-    if (side === "before") return { outcome: "ours", text_day: textDay, capture: at, terms_then: termsThen, reads };
+    if (termsThen === ourText) return { outcome: "not_reproduced", text_day: textDay, capture: at, captureUsed: capture, reads };
+    if (side === "before") return { outcome: "ours", text_day: textDay, capture: at, captureUsed: capture, terms_then: termsThen, reads };
     tried.push({ ...at, why: "today's page states the capture's terms, but a capture after our text's day cannot show the difference was ours" });
   }
   return { outcome: "no_usable_capture", text_day: textDay, reads, tried, why: tried.length ? "no capture settled it" : `no capture within ${windowDays} days of our text's day` };

@@ -66,6 +66,7 @@ export async function settleFirstReadings({ changes, offers, today, archive, rea
           url: record.source_url,
           finalUrl: page.finalUrl,
           ourText: record.previous_state,
+          recordTerms: record.current_state,
           textDay: textDayOf(record.previous_state),
           todayText: page.text,
           today,
