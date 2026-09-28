@@ -91,6 +91,20 @@ describe("rebuilding the register from a job that read no page", () => {
     }
   });
 
+  it("writes the vendors a table puts a number beside, as the render measured them", () => {
+    const run = rebuiltFrom({ "/llm-api-pricing": { vendors_tabulated: [] } });
+    try {
+      const after = run.written.get("/llm-api-pricing")!;
+      const onTheRegister = onRecord().find((p) => p.path === "/llm-api-pricing")!;
+      assert.ok(onTheRegister.vendors_tabulated.length > 0, "the page tabulates no vendor, so nothing is exercised");
+      assert.deepStrictEqual(after.vendors_tabulated, onTheRegister.vendors_tabulated);
+      assert.match(run.stdout, /~ \/llm-api-pricing tabulated vendors 0 -> \d+/);
+      assert.doesNotMatch(run.stdout.split("measured and not written")[1] ?? "", /tabulated vendors/);
+    } finally {
+      run.cleanup();
+    }
+  });
+
   it("carries a tier and an asserted vendor the render disagrees with, and says it measured them", () => {
     const run = rebuiltFrom({ "/llm-api-pricing": { tier: "B", vendors_asserted: [] } });
     try {

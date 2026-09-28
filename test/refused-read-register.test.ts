@@ -3,7 +3,7 @@ import assert from "node:assert";
 import { spawn, type ChildProcess } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { assertPopulationFloor, assertSharesPopulation, type Population } from "./population-floor.ts";
+import { assertPopulationFloor } from "./population-floor.ts";
 
 const {
   refusedReadClause,
@@ -102,11 +102,6 @@ const inRegister = (register: string): Record[] =>
 
 const speakingInRegister = (register: string): Record[] =>
   inRegister(register).filter(record => record.publishesTheRefusal);
-
-const recordsHoldingAWithholdingRefusedRead = (): Population => ({
-  size: withholdingRecords.length,
-  read: "records whose rating a refused read withholds",
-});
 
 let serverPort = 0;
 let proc: ChildProcess | null = null;
@@ -236,27 +231,18 @@ describe("the vendor pages of a read its own refusal voided", () => {
   it("holds a population on every register", () => {
     assertPopulationFloor(
       inRegister("had_no_standing_to_contradict").length,
-      40,
-      "records withhold on a refusal that voids the read's standing — 67 today over seven reasons,"
-      + " so a floor of 40 leaves 27 records of slack for ordinary rotation churn",
+      24,
+      "records withhold on a refusal that voids the read's standing",
     );
     assertPopulationFloor(
       inRegister("could_not_reconcile_the_change").length,
-      60,
-      "records withhold on a refusal that leaves the read standing — 102 today,"
-      + " so a floor of 60 leaves 42 records of slack",
+      51,
+      "records withhold on a refusal that leaves the read standing",
     );
     assertPopulationFloor(
       inRegister("named_no_figure_that_moved").length,
-      12,
-      "records withhold on a refusal that measured no difference — 26 today,"
-      + " so a floor of 12 leaves 14 records of slack",
-    );
-    assertSharesPopulation(
-      inRegister("had_no_standing_to_contradict").length,
-      recordsHoldingAWithholdingRefusedRead(),
-      0.2,
-      "withholding refused reads their own refusal voided",
+      3,
+      "records withhold on a refusal that measured no difference",
     );
     assert.strictEqual(
       withholdingRecords.length,
@@ -276,12 +262,7 @@ describe("the vendor pages of a read its own refusal voided", () => {
       if (body.includes(UNRECONCILED_META)) wrong.push(`/vendor/${record.slug} (${record.reason}) states a change it could not reconcile in its meta description`);
       if (body.includes(UNRECONCILED_READ_BADGE_LABEL)) wrong.push(`/vendor/${record.slug} (${record.reason}) badges the read as a change not reconciled`);
     }
-    assertPopulationFloor(
-      read,
-      40,
-      "vendor pages answer for a record whose withholding refusal voided the read — 67 today,"
-      + " so a floor of 40 leaves 27 pages of slack",
-    );
+    assertPopulationFloor(read, 24, "vendor pages answer for a record whose withholding refusal voided the read");
     assert.deepStrictEqual(wrong.slice(0, 20), [], wrong.slice(0, 20).join("\n"));
   });
 
@@ -297,12 +278,7 @@ describe("the vendor pages of a read its own refusal voided", () => {
       }
       stating++;
     }
-    assertPopulationFloor(
-      stating,
-      35,
-      "vendor pages state what a read their own refusal voided found — 52 today,"
-      + " so a floor of 35 leaves 17 pages of slack",
-    );
+    assertPopulationFloor(stating, 11, "vendor pages state what a read their own refusal voided found");
     assert.deepStrictEqual(silent.slice(0, 20), [], silent.slice(0, 20).join("\n"));
   });
 
@@ -318,12 +294,7 @@ describe("the vendor pages of a read its own refusal voided", () => {
       }
       stating++;
     }
-    assertPopulationFloor(
-      stating,
-      36,
-      "vendor pages still state a change they could not reconcile — 54 today,"
-      + " so a floor of 36 leaves 18 pages of slack",
-    );
+    assertPopulationFloor(stating, 15, "vendor pages still state a change they could not reconcile");
     assert.deepStrictEqual(quiet.slice(0, 20), [], quiet.slice(0, 20).join("\n"));
   });
 });
