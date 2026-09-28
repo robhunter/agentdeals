@@ -1,6 +1,7 @@
+import { builtAmong, listingsBuiltToHoldARefusedRead } from "./refused-read-subjects.ts";
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
-import { assertPopulationFloor } from "./population-floor.ts";
+import { assertCoversPopulation, assertPopulationFloor } from "./population-floor.ts";
 import { spawn, type ChildProcess } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -228,7 +229,7 @@ describe("#1412 the meta description withholds wherever the source check failed"
     const pages = await everyVendorPage();
     const population = subjects.filter(s =>
       s.outcome === "ok" && !s.termsSuperseded && s.termsWithheld && s.withheldBecause !== "link_unreachable");
-    assertPopulationFloor(population.length, 40, "records whose terms are withheld over a source check that passed");
+    assertCoversPopulation(builtAmong(population), listingsBuiltToHoldARefusedRead(), "built listings whose terms are withheld over a source check that passed");
 
     const asserting: string[] = [];
     for (const subject of population) {

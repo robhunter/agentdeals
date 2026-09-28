@@ -2,6 +2,7 @@ import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import type { Population } from "./population-floor.ts";
 import {
   REFUSAL_REASONS_THAT_LEAVE_THE_READ_STANDING,
   REFUSAL_REASONS_THAT_MEASURED_NO_DIFFERENCE,
@@ -41,6 +42,19 @@ export const REFUSED_READ_SUBJECTS: RefusedReadSubject[] = REASONS_BY_FAMILY.fla
 
 export const isRefusedReadSubject = (vendor: string): boolean =>
   REFUSED_READ_SUBJECTS.some((subject) => subject.vendor === vendor);
+
+export const builtAmong = (vendors: Array<{ vendor: string }>): number =>
+  vendors.filter((subject) => isRefusedReadSubject(subject.vendor)).length;
+
+export const listingsBuiltToHoldARefusedRead = (): Population => ({
+  size: REFUSED_READ_SUBJECTS.length,
+  read: "listings built to withhold on a refused read alone",
+});
+
+export const listingsBuiltWithAnEqualityRefusal = (): Population => ({
+  size: REFUSED_READ_SUBJECTS.filter((subject) => subject.family === "measured_no_difference").length,
+  read: "listings built to withhold on a refusal that measured no difference",
+});
 
 const storePath = (variable: string, name: string): string =>
   process.env[variable] || path.join(REPO, "data", name);
