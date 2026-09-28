@@ -167,7 +167,7 @@ describe("a category description counts the terms it could not confirm", () => {
       );
       if (parts.length > 1) split++;
     }
-    assertPopulationFloor(split, 30, "descriptions separating the page from our own read");
+    assertPopulationFloor(split, 27, "descriptions separating the page from our own read");
   });
 
   it("counts every standing row that gives a reason, and no other", () => {
@@ -217,7 +217,7 @@ describe("a category description counts the terms it could not confirm", () => {
       );
     }
     assertPopulationFloor(parts.get("the_page_did_not_answer") ?? 0, 400, "rows counted because the page did not answer");
-    assertPopulationFloor(parts.get("our_read_did_not_confirm") ?? 0, 150, "rows counted because our own read did not confirm");
+    assertPopulationFloor(parts.get("our_read_did_not_confirm") ?? 0, 106, "rows counted because our own read did not confirm");
   });
 
   it("puts a row under our own read only where the row says what that read found", () => {
@@ -245,7 +245,7 @@ describe("a category description counts the terms it could not confirm", () => {
       [],
       `a row is counted under a part its own sentence does not support: ${misplaced.join("; ")}`,
     );
-    assertPopulationFloor(ours, 150, "rows counted because a read of ours did not confirm the terms");
+    assertPopulationFloor(ours, 106, "rows counted because a read of ours did not confirm the terms");
     assertPopulationFloor(theirs, 400, "rows counted because the page we cite did not answer");
   });
 

@@ -1,3 +1,4 @@
+import "./refused-read-subjects.ts";
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
 import { assertPopulationFloor } from "./population-floor.ts";
