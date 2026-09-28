@@ -32,7 +32,7 @@ const STATED: Record<string, string[]> = {
   "/cicd-free-tier-comparison-2026": [
     "2,500 min/mo (e2-standard-2)",
     "2,500 build-min/mo (e2-standard-2)",
-    "gives 2,500 min/month but",
+    "Google Cloud Build gives 2,500 build-minutes a month per billing account.",
   ],
 };
 

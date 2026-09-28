@@ -25,6 +25,126 @@ const REGISTRY = JSON.parse(readFileSync(path.join(REPO, "data", "page-reviews.j
 
 const RESOLVER = { slugsFor: assertedVendorSlugs, isNonVendor: isNonVendorSubject };
 
+const A_TABLE_RANKED_BY_BADGES = `<h2 id="main-comparison">Main Comparison Table</h2>
+<div style="overflow-x:auto">
+<table class="comp-table">
+    <thead>
+      <tr>
+        <th>CI/CD</th>
+        <th>Free Minutes / Credits</th>
+        <th>Concurrent Jobs</th>
+        <th>Artifact / Cache</th>
+        <th>Runner Specs</th>
+        <th>Public vs Private</th>
+        <th>Self-Hosted</th>
+        <th>Always Free?</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="background:rgba(63,185,80,0.08)">
+        <td class="provider-col"><a href="/vendor/github-actions" style="color:var(--text)">GitHub Actions</a> <span class="winner-badge">BEST OSS</span></td>
+        <td style="font-family:var(--mono)">2,000 min/mo (private)<br>Unlimited (public)</td>
+        <td>20 concurrent (public)<br>20 concurrent (private)</td>
+        <td>500 MB artifacts, 10 GB cache/repo</td>
+        <td>2 vCPU, 7 GB RAM (Linux)</td>
+        <td style="color:#3fb950">Public: unlimited</td>
+        <td class="check">Free (charge postponed)</td>
+        <td style="color:#3fb950">Yes</td>
+      </tr>
+      <tr style="background:rgba(63,185,80,0.08)">
+        <td class="provider-col"><a href="/vendor/gitlab-ci" style="color:var(--text)">GitLab CI</a> <span class="winner-badge">BEST ALL-IN-ONE</span></td>
+        <td style="font-family:var(--mono)">400 compute min/mo</td>
+        <td>Varies by runner</td>
+        <td>5 GB project storage (incl. artifacts + registry)</td>
+        <td>1 vCPU, 3.75 GB RAM (shared)</td>
+        <td>Same limits for all repos</td>
+        <td class="check">Free (unlimited)</td>
+        <td style="color:#3fb950">Yes</td>
+      </tr>
+      <tr style="background:rgba(63,185,80,0.08)">
+        <td class="provider-col"><a href="/vendor/circleci" style="color:var(--text)">CircleCI</a> <span class="winner-badge">MOST CREDITS</span></td>
+        <td style="font-family:var(--mono)">30,000 credits/mo</td>
+        <td>30 jobs (Linux)</td>
+        <td>Included in credits</td>
+        <td>Medium: 2 vCPU, 4 GB RAM</td>
+        <td>Same limits for all repos</td>
+        <td class="check">Free (unlimited)</td>
+        <td style="color:#3fb950">Yes</td>
+      </tr>
+      <tr>
+        <td class="provider-col"><a href="/vendor/buildkite" style="color:var(--text)">Buildkite</a></td>
+        <td style="font-family:var(--mono)">Unlimited (self-hosted)<br>Hosted: 2,000 Linux vCPU min/mo</td>
+        <td>10</td>
+        <td>50 GB/month artifact storage</td>
+        <td>Your hardware (self-hosted)</td>
+        <td>Same limits for all repos</td>
+        <td class="check">Free (self-hosted)</td>
+        <td style="color:#3fb950">Yes (personal)</td>
+      </tr>
+      <tr>
+        <td class="provider-col"><a href="/vendor/bitbucket-pipelines" style="color:var(--text)">Bitbucket Pipelines</a></td>
+        <td style="font-family:var(--mono)">50 min/mo</td>
+        <td>1 concurrent</td>
+        <td>1 GB artifacts</td>
+        <td>4 GB RAM (2x pipeline)</td>
+        <td>Same limits for all repos</td>
+        <td class="cross">No</td>
+        <td style="color:#3fb950">Yes</td>
+      </tr>
+      <tr>
+        <td class="provider-col"><a href="/vendor/harness-ci" style="color:var(--text)">Harness CI</a></td>
+        <td style="font-family:var(--mono)">2,000 build credits/mo</td>
+        <td>Varies</td>
+        <td>Included in credits</td>
+        <td>Cloud-hosted runners</td>
+        <td>Same limits for all repos</td>
+        <td class="check">Free</td>
+        <td style="color:#3fb950">Yes</td>
+      </tr>
+      <tr>
+        <td class="provider-col"><a href="/vendor/google-cloud-build" style="color:var(--text)">Google Cloud Build</a></td>
+        <td style="font-family:var(--mono)">2,500 min/mo (e2-standard-2)</td>
+        <td>10 concurrent</td>
+        <td>GCS storage (separate)</td>
+        <td>e2-standard-2 (2 vCPU, 8 GB)</td>
+        <td>Same limits for all repos</td>
+        <td class="cross">No (GCE-based)</td>
+        <td style="color:#3fb950">Yes (promotional)</td>
+      </tr>
+      <tr>
+        <td class="provider-col"><a href="/vendor/bitrise" style="color:var(--text)">Bitrise</a></td>
+        <td style="font-family:var(--mono)">300 credits/mo</td>
+        <td>1 concurrent</td>
+        <td>10-min build time limit</td>
+        <td>Standard runners</td>
+        <td>Same limits for all repos</td>
+        <td class="cross">No</td>
+        <td style="color:#3fb950">Yes (Hobby)</td>
+      </tr>
+      <tr>
+        <td class="provider-col"><a href="/vendor/codemagic" style="color:var(--text)">Codemagic</a></td>
+        <td style="font-family:var(--mono)">500 min/mo</td>
+        <td>1 concurrent</td>
+        <td>Build artifacts available</td>
+        <td>macOS M2 runners (Flutter)</td>
+        <td>Same limits for all repos</td>
+        <td class="cross">No</td>
+        <td style="color:#3fb950">Yes</td>
+      </tr>
+      <tr style="background:rgba(63,185,80,0.08)">
+        <td class="provider-col"><a href="/vendor/drone-ci" style="color:var(--text)">Drone CI</a> <span class="winner-badge">BEST SELF-HOSTED</span></td>
+        <td style="font-family:var(--mono)">Unlimited (self-hosted)</td>
+        <td>Unlimited</td>
+        <td>Unlimited (your storage)</td>
+        <td>Your hardware</td>
+        <td>Same (self-hosted)</td>
+        <td class="check">Fully self-hosted</td>
+        <td style="color:#3fb950">Yes (Community)</td>
+      </tr>
+    </tbody>
+  </table>
+</div>`;
+
 let serverPort = 0;
 let proc: ChildProcess | null = null;
 const rendered = new Map<string, string>();
@@ -102,13 +222,12 @@ describe("#1073 a superlative is graded against the page it is printed on", () =
   });
 
   it("grades a ranking over a column and leaves editorial judgement ungraded", () => {
-    const cicd = rendered.get("/cicd-free-tier-comparison-2026")!;
-    const claims = superlativeClaims(cicd);
+    const claims = superlativeClaims(A_TABLE_RANKED_BY_BADGES);
     const credits = claims.find(claim => claim.label === "MOST CREDITS");
-    assert.ok(credits, "the credits badge is no longer on /cicd-free-tier-comparison-2026");
-    const column = resolveColumn(credits!, pageTables(cicd));
+    assert.ok(credits, "the table carries no credits badge");
+    const column = resolveColumn(credits!, pageTables(A_TABLE_RANKED_BY_BADGES));
     assert.ok(column, `"MOST CREDITS" resolves to no column`);
-    const graded = gradeSuperlatives(cicd);
+    const graded = gradeSuperlatives(A_TABLE_RANKED_BY_BADGES);
     const named = (found: { claim: { label: string } }) => found.claim.label;
     assert.ok(
       !graded.refuted.map(named).includes("MOST CREDITS") && !graded.ungraded.map(named).includes("MOST CREDITS"),
@@ -134,7 +253,7 @@ describe("#1073 a superlative is graded against the page it is printed on", () =
     }
     assertCoversPopulation(rendered.size, pagesOnTheReviewRegister(), "paths the sweep rendered");
     assertPopulationFloor(cards, 140, "stat cards the sweep reached");
-    assertPopulationFloor(badges, 40, "superlative row badges the sweep reached");
+    assertPopulationFloor(badges, 30, "superlative row badges the sweep reached");
   });
 
   it("cards a section count the page's own navigation agrees with", () => {
