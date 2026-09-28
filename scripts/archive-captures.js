@@ -78,14 +78,16 @@ export function createArchiveClient({
   fetchImpl = fetch,
   sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms)),
   clock = () => Date.now(),
-  minIntervalMs = 2000,
+  minIntervalMs = 5000,
   maxAttempts = 4,
   firstBackoffMs = 10_000,
+  refusedBackoffMs = 60_000,
 } = {}) {
   let lastRequestAt = -Infinity;
 
   async function paced(url) {
     let backoff = firstBackoffMs;
+    let refusedBackoff = refusedBackoffMs;
     let lastProblem = "";
     for (let attempt = 1; attempt <= maxAttempts; attempt++) {
       const wait = lastRequestAt + minIntervalMs - clock();
@@ -96,8 +98,8 @@ export function createArchiveClient({
         response = await fetchImpl(url, { redirect: "follow" });
       } catch (err) {
         lastProblem = `network error: ${err?.message ?? err}`;
-        if (attempt < maxAttempts) await sleep(backoff);
-        backoff *= 2;
+        if (attempt < maxAttempts) await sleep(refusedBackoff);
+        refusedBackoff *= 2;
         continue;
       }
       if (response.ok) return { ok: true, body: await response.text() };

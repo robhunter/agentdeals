@@ -122,6 +122,24 @@ describe("reading the Archive at a pace it accepts", () => {
     assert.strictEqual(calls.length, 2);
   });
 
+  it("leaves five seconds between requests unless told otherwise", async () => {
+    const time = fakeTime();
+    const { fetchImpl } = scriptedFetch([{ status: 200, body: cdxBody([]) }, { status: 200, body: "<html></html>" }]);
+    const archive = createArchiveClient({ fetchImpl, sleep: time.sleep, clock: time.clock });
+    await archive.captures("https://example.com/pricing", "2025-05-01", "2025-07-31");
+    await archive.captureHtml(capture("20250530101500"));
+    assert.deepStrictEqual(time.waits, [5000]);
+  });
+
+  it("waits minutes, not seconds, after the Archive refuses the connection, doubling each time", async () => {
+    const time = fakeTime();
+    const { fetchImpl, calls } = scriptedFetch([new Error("fetch failed"), new Error("fetch failed"), new Error("fetch failed"), new Error("fetch failed")]);
+    const archive = createArchiveClient({ fetchImpl, sleep: time.sleep, clock: time.clock, minIntervalMs: 0 });
+    assert.deepStrictEqual(await archive.captures("https://example.com/pricing", "2025-05-01", "2025-07-31"), { unavailable: "network error: fetch failed after 4 attempts" });
+    assert.strictEqual(calls.length, 4);
+    assert.deepStrictEqual(time.waits, [60_000, 120_000, 240_000]);
+  });
+
   it("does not ask again for a page the Archive does not hold", async () => {
     const time = fakeTime();
     const { fetchImpl, calls } = scriptedFetch([{ status: 404 }]);
