@@ -1,7 +1,7 @@
 import { describe, it } from "node:test";
 import assert from "node:assert";
 
-const { cdxUrl, parseCdxRows, nearestCapture, captureUrl, createArchiveClient, dayOurTextEntered } = await import("../scripts/archive-captures.js");
+const { cdxUrl, parseCdxRows, nearestCapture, captureUrl, createArchiveClient, dayOurTextEntered, readCapture } = await import("../scripts/archive-captures.js");
 
 const HEADER = ["timestamp", "original", "statuscode", "mimetype"];
 
@@ -139,5 +139,27 @@ describe("the day our text entered the catalogue", () => {
   it("is unknown when no commit carries the text, or there is no text", () => {
     assert.strictEqual(dayOurTextEntered("never written", { commitDays: () => [] }), null);
     assert.strictEqual(dayOurTextEntered("  ", { commitDays: () => ["2025-04-02"] }), null);
+  });
+});
+
+describe("reading a capture with the re-read's own reader", () => {
+  const OFFER = { vendor: "Example", category: "Databases", tier: "Free", description: "Free plan: 500 MB database, 50,000 monthly active users" };
+  const CAPTURE = "<html><head><style>.x{}</style><script>track()</script></head><body><h2>Free</h2><p>500 MB database &amp; 50,000 MAUs</p></body></html>";
+
+  it("gives the reader the capture as text, with the stored terms beside it", async () => {
+    const prompts: string[] = [];
+    const client = { complete: async (prompt: string) => { prompts.push(prompt); return '{"status":"confirmed"}'; } };
+    assert.deepStrictEqual(await readCapture(client, OFFER, CAPTURE), { status: "confirmed" });
+    assert.strictEqual(prompts.length, 1);
+    assert.ok(prompts[0].includes("Free 500 MB database & 50,000 MAUs"), prompts[0]);
+    assert.ok(prompts[0].includes(OFFER.description));
+    assert.ok(!/<|track\(\)|\.x\{\}/.test(prompts[0].split("CURRENT PRICING PAGE TEXT (truncated):")[1].split("Compare the stored")[0]));
+  });
+
+  it("returns the reader's changed reading, with the terms it found on the capture", async () => {
+    const client = { complete: async () => '{"status":"changed","summary":"lower cap","change_type":"limits_reduced","tier":"Free","tier_direction":"narrowed","current_state":"Free plan: 250 MB database","impact":"medium"}' };
+    const reading = await readCapture(client, OFFER, CAPTURE);
+    assert.strictEqual(reading.status, "changed");
+    assert.strictEqual(reading.current_state, "Free plan: 250 MB database");
   });
 });

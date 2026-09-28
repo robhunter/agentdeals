@@ -46,7 +46,7 @@ export function findStaleOffers(offers, thresholdDays, now = new Date()) {
   return { stale, freshCount: fresh.length };
 }
 
-function stripHtml(html) {
+export function stripHtml(html) {
   return html
     .replace(/<script[\s\S]*?<\/script>/gi, "")
     .replace(/<style[\s\S]*?<\/style>/gi, "")
