@@ -4201,7 +4201,7 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("DigitalOcean vs Alternatives"), "Should have alternatives comparison");
     assert.ok(html.includes("Best Use Cases"), "Should have stacks section");
     assert.ok(html.includes("For Startups"), "Should have startups section");
-    assert.ok(html.includes("Hatch"), "Should include Hatch program");
+    assert.ok(html.includes("DigitalOcean Startups"), "Should include the DigitalOcean Startups program");
     assert.ok(html.includes("mcp-cta"), "Should have MCP CTA");
     assert.ok(html.includes("/changes"), "Should cross-link to changes timeline");
     assert.ok(html.includes("/setup"), "Should cross-link to setup guide");

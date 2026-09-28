@@ -27231,7 +27231,7 @@ function buildStartupCreditsPage(): string {
     { name: "AWS Activate", slug: "aws-activate", category: "cloud-infrastructure", creditValue: "$1K–$5K (Founders), up to $200K (Portfolio)", eligibility: "Pre-Series B, founded in the last 10 years, AWS account on a paid plan. Founders: self-funded. Portfolio: needs an Activate Provider Org ID.", duration: "Usually 1–2 years, by package", applicationDifficulty: "open", whatsIncluded: "AWS credits, which can also pay for AWS Support. Technical guidance, mentoring and go-to-market resources.", hiddenConstraints: "Founders tier is self-serve \u2014 easy to get but only $1K. Portfolio tier requires VC/accelerator letter. Credits expire in 12 months (Founders) or 24 months (Portfolio). Cannot combine with other AWS promotional credits.", vestingSchedule: "One award per approved application; a later, larger award pays only the difference" },
     { name: "Google Cloud for Startups", slug: "google-cloud-for-startups", category: "cloud-infrastructure", creditValue: "$2K (Start), up to $200K (Scale), up to $350K (Scale AI)", eligibility: "Start: no funding yet but plans to raise venture funding soon, founded within 24 months, working MVP; Scale: VC funding from pre-seed to Series A (Series A within the last 12 months; angel money does not count), founded within 5 years.", duration: "12 months (Start), 2 years (Scale)", applicationDifficulty: "open", whatsIncluded: "Google Cloud and Firebase credits, 12 months of Google Workspace Business Plus, technical training and business support. The AI tier adds $150K of credits.", hiddenConstraints: "Equity funding required \u2014 bootstrapped startups don\u2019t qualify for Scale tier. $200K is split $100K/year. Must use within Google Cloud (not transferable). 24-month expiry. Requires application review.", vestingSchedule: "Scale: year 1 covers usage up to $100K ($250K for AI); year 2 covers 20% of spend, up to $100K more" },
     { name: "Microsoft for Startups (formerly Founders Hub)", slug: "microsoft-founders-hub", category: "cloud-infrastructure", creditValue: "$200 on sign-up; up to $150K as Azure usage grows or with an Investor Network partner", eligibility: "B2B software, AI or tech startups, pre-seed to Series C, privately held; no investor needed. Business verification and sustained Azure usage unlock more credits, and Investor Network backing starts most startups at $100K.", duration: "Activate within 90 days; the first $200 lasts 90 days, the verification credit 180 days, and credits from the $25K milestone up to 2 years", applicationDifficulty: "open", whatsIncluded: "Azure credits and Azure AI models. GitHub Enterprise, Microsoft 365 Business Premium, Visual Studio Enterprise and LinkedIn Premium offers are for Investor Network-backed startups only.", hiddenConstraints: "Basic path gives only $5K without investor connection. Premium path up to $150K requires investor network verification. Credits expire in 12 months. Azure-only (not applicable to M365 or other Microsoft products).", vestingSchedule: "Released in milestones as you verify the business and use more Azure" },
-    { name: "DigitalOcean Hatch", slug: "digitalocean-hatch", category: "cloud-infrastructure", creditValue: "Up to $100K compute credits", eligibility: "Startups affiliated with VC/accelerator partners", duration: "12 months", applicationDifficulty: "accelerator-only", whatsIncluded: "Compute credits, GPU Droplets at $1.90/GPU/hr (H100 equivalent), dedicated support, technical architecture review.", hiddenConstraints: "Must be affiliated with a partner VC or accelerator \u2014 not open application. GPU pricing is discounted but still significant at scale. Credits expire in 12 months. Cannot transfer between accounts.", vestingSchedule: "Lump sum per partner agreement" },
+    { name: "DigitalOcean Startups", slug: "digitalocean-hatch", category: "cloud-infrastructure", creditValue: "Credits for 12 months; amount varies, up to $10,000 a month", eligibility: "Raised $10M or less; apply through a partner or directly", duration: "12 months", applicationDifficulty: "open", whatsIncluded: "Compute credits for most DigitalOcean services, 15 months of free Standard-tier support; GPU credits are a separate benefit for selected startups", hiddenConstraints: "Credits exclude GPU Droplets, H100 GPU products, inference, third-party AI models, Paperspace and Cloudways. Use over $10,000 in a month is charged. Only for startups that have not used DigitalOcean credits before.", vestingSchedule: "Lump sum per partner agreement" },
     { name: "Cloudflare Startup Program", slug: "cloudflare-startup-program", category: "cloud-infrastructure", creditValue: "$10K, $100K or $350K by tier", eligibility: "Tier 3 ($10K): bootstrapped or self-funded, under $1M raised; Tiers 2 ($100K) and 1 ($350K): funded by an affiliated partner, Tier 1 with $5M+ raised.", duration: "1 year or until used up", applicationDifficulty: "open", whatsIncluded: "Credits for usage-based services such as Workers and R2 (R2 up to $10K; Workers AI up to $2.5K, $10K or $50K by tier). AI Gateway is not covered. Core security and networking features are free at every tier.", hiddenConstraints: "Tier is based on funding stage \u2014 bootstrapped startups get only $5K. Higher tiers require more funding documentation. Credits are Cloudflare-only. Limited time window to use credits.", vestingSchedule: "Lump sum per tier" },
     { name: "Stripe Atlas", slug: "stripe-atlas", category: "fintech-banking", creditValue: "Over $50K in partner discounts, plus $2.5K of Stripe credits", eligibility: "Companies incorporated through Atlas ($500, then $100 a year after the first year)", duration: "Varies by perk; Stripe credits last the first year", applicationDifficulty: "open", whatsIncluded: "$2.5K of Stripe product credits for the first year, $5K of AWS Activate credits (new AWS users), $100K of Cloudflare credits through the Cloudflare Startup Program, Microsoft for Startups Azure credits, a 30-minute immigration attorney consult (Ellis), and banking through Stripe Treasury.", hiddenConstraints: "Requires Stripe Atlas incorporation ($500 one-time fee). Perks are from third parties \u2014 each has own eligibility requirements. Processing credits only apply to Stripe payments. Some perks expire 90 days after incorporation.", vestingSchedule: "Available once the Atlas application is approved" },
     { name: "Brex", slug: "brex", category: "fintech-banking", creditValue: "Over $350K in partner discounts and credits", eligibility: "Brex customers", duration: "Varies by partner", applicationDifficulty: "open", whatsIncluded: "Up to $5K of AWS credits for new Brex customers (subject to Activate eligibility), $1K of OpenAI credits for a year, up to $200K of Google Cloud and Firebase credits over 2 years, 6 months of Notion Plus, 30% off Slack for 12 months.", hiddenConstraints: "Must be a Brex cardholder. Individual perks have separate eligibility and expiry. Some require minimum card spend. Google Cloud $200K requires separate Google for Startups qualification. Partner perks change frequently.", vestingSchedule: "Per-partner activation" },
@@ -35061,29 +35061,24 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="startups">For Startups</h2>
-  <p class="section-intro">DigitalOcean's Hatch startup program is one of the most accessible cloud startup programs available.</p>
+  <p class="section-intro">DigitalOcean's startup program is one of the most accessible cloud startup programs available.</p>
 
   <div class="verdict-box">
-    <h3>DigitalOcean Hatch</h3>
+    <h3>DigitalOcean Startups</h3>
 
     <div class="verdict-item">
-      <strong>Up to $100K in compute credits</strong>
-      <p>12-month credit allocation for eligible startups. Plus up to 3 months free GPU access (H100 at ~$1.90/hr vs $3.39 standard) for AI/ML workloads. 15 months of Standard support included.</p>
-    </div>
-
-    <div class="verdict-item">
-      <strong>Partner perks</strong>
-      <p>Additional credits and discounts from Cloudflare, Stripe, Retool, HubSpot, and other partner companies. Combined value can exceed the compute credits alone.</p>
+      <strong>Credits</strong>
+      <p>Credits for 12 months in an amount that varies by startup, usable up to $10,000 a month. They do not cover GPU Droplets, H100 GPU products, inference or third-party AI models; GPU credits are a separate benefit for selected startups. 15 months of free Standard-tier support.</p>
     </div>
 
     <div class="verdict-item">
       <strong>Eligibility</strong>
-      <p>Series A or less (max $10M raised), new DigitalOcean customer, affiliated with an approved accelerator, incubator, or VC. Product startup (not service-based). More accessible than AWS Activate's higher tiers but still requires VC/accelerator affiliation. See our <a href="/startup-credits">Startup Credits guide</a> for a full comparison of all programs.</p>
+      <p>Raised $10M or less, not a service business, and new to DigitalOcean credits. Apply through a partner accelerator, incubator or VC, or directly. See our <a href="/startup-credits">Startup Credits guide</a> for a full comparison of all programs.</p>
     </div>
 
     <div class="verdict-item">
       <strong>How it compares</strong>
-      <p>AWS Activate: up to $100K (requires VC backing for higher tiers). GCP for Startups: up to $100K + $2K AI credits. Azure Founders Hub: up to $150K (no funding required). DigitalOcean Hatch: up to $100K + GPU access. Microsoft's program is the easiest to qualify for; DigitalOcean's GPU perk is unique.</p>
+      <p>AWS Activate: up to $200K (Portfolio needs an Activate Provider Org ID). Google for Startups: up to $200K, or $350K for AI-first startups; a $2K Start tier needs no funding. Microsoft for Startups: up to $150K (no investor needed). Microsoft's program is the easiest to qualify for.</p>
     </div>
   </div>
 
@@ -35741,17 +35736,17 @@ ${mcpCtaCss()}
       </tr>
       <tr>
         <td class="provider-col">DigitalOcean</td>
-        <td>Hatch</td>
-        <td style="font-family:var(--mono)">Up to $100K</td>
+        <td>DigitalOcean Startups</td>
+        <td style="font-family:var(--mono)">Amount varies (up to $10,000 a month)</td>
         <td>12 months</td>
-        <td>Series A or less + accelerator/incubator</td>
+        <td>$10M raised or less; partner or direct application</td>
       </tr>
     </tbody>
   </table>
   </div>
 
   <div class="context-box">
-    <strong>Microsoft for Startups needs no investor:</strong> B2B tech startups start at $200 and can reach $150K with Azure usage. GCP offers up to $350K to AI-first startups and needs VC funding. AWS Activate Portfolio needs an Activate Provider Org ID. DigitalOcean Hatch adds unique GPU credits (H100 access) for AI/ML startups.
+    <strong>Microsoft for Startups needs no investor:</strong> B2B tech startups start at $200 and can reach $150K with Azure usage. GCP offers up to $350K to AI-first startups and needs VC funding. AWS Activate Portfolio needs an Activate Provider Org ID.
   </div>
 
   <h2 id="best-for">Best for Each Use Case</h2>
@@ -45235,7 +45230,7 @@ ${globalNavCss()}
       <tr><td><a href="/vendor/google-cloud">Google for Startups</a></td><td style="color:#3fb950;font-weight:600">Up to $350K</td><td>AI-first startups</td><td>GCP credits, technical support</td></tr>
       <tr><td><a href="/vendor/cloudflare-for-startups">Cloudflare Startup Program</a></td><td style="color:#3fb950;font-weight:600">Up to $350K</td><td>3 tiers; upper two via affiliated partners</td><td>Workers, R2, CDN, security</td></tr>
       <tr><td><a href="/vendor/microsoft-azure">Microsoft for Startups</a></td><td style="color:#3fb950;font-weight:600">Up to $150K</td><td>B2B tech startups, pre-seed to Series C</td><td>Azure credits, Foundry models</td></tr>
-      <tr><td><a href="/vendor/digitalocean">DigitalOcean Hatch</a></td><td style="color:#3fb950;font-weight:600">Up to $100K</td><td>Early-stage</td><td>Compute + support credits</td></tr>
+      <tr><td><a href="/vendor/digitalocean">DigitalOcean Startups</a></td><td style="color:#3fb950;font-weight:600">Amount varies</td><td>Early-stage</td><td>Compute + support credits</td></tr>
       <tr><td><a href="/vendor/aws">AWS Activate</a></td><td style="color:#3fb950;font-weight:600">Up to $200K</td><td>Portfolio needs an Activate Provider Org ID</td><td>AWS credits, technical support</td></tr>
       <tr><td><a href="/vendor/railway">Railway</a></td><td style="color:#3fb950;font-weight:600">$5 free/month</td><td>Everyone</td><td>No credit card, usage-based</td></tr>
       <tr><td><a href="/vendor/vercel">Vercel</a></td><td style="color:#3fb950;font-weight:600">Hobby plan free</td><td>Non-commercial</td><td>Edge functions, serverless</td></tr>
