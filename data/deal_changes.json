@@ -58,7 +58,13 @@
         "CockroachDB"
       ],
       "recorded_date": "2026-04-19",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-28",
+        "detail": "Retracted 2026-09-28: Xata's managed platform had no free tier to end in April 2026. Its pricing page showed pay-as-you-go plans and a free trial from the Internet Archive's 2025-06-11 capture on; the 15 GB free plan this record names was on the page in the 2025-05-01 capture and belonged to the old platform, which became Xata Lite and was retired on 2026-02-28 (our Xata Lite record). Xata's April 2026 change was the Apache 2.0 open-source release of 2026-04-15, which added a free self-hosted edition.",
+        "source_url": "http://web.archive.org/web/20250611072123/https://xata.io/pricing"
+      }
     },
     {
       "vendor": "Hasura Cloud",
