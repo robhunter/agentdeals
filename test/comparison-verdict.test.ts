@@ -39,6 +39,10 @@ function side(over: Partial<ComparisonSide> = {}): ComparisonSide {
 const offering = (vendor: string, tier: string): FreeTierSide => ({ vendor, free: { states: "offered", tier } });
 const ended = (vendor: string): FreeTierSide => ({ vendor, free: { states: "ended" } });
 const unconfirmed = (vendor: string, why: string): FreeTierSide => ({ vendor, free: { states: "unconfirmed", why } });
+const runningOut = (vendor: string, tier: string, note: string): FreeTierSide => ({ vendor, free: { states: "time_limited", tier, note } });
+
+const CREDIT = "a credit grant that runs out";
+const TRIAL = "a trial that expires";
 
 describe("comparison verdict — the free-tier claim carries its own reservation", () => {
   it("states both free tiers only when both sides are rated", () => {
@@ -111,6 +115,69 @@ describe("comparison verdict — the free-tier claim carries its own reservation
       comparisonVerdictText(offering("Neon", "Free"), offering("Supabase", "Free"), a, b),
       `Both Neon and Supabase offer free tiers. Neon provides "Free" while Supabase offers "Free". ${stabilityVerdictClause(a, b)}`,
     );
+  });
+});
+
+describe("comparison verdict — a side that only runs out has no ongoing free tier", () => {
+  it("says so after the side that offers a free tier, whichever side it sits on", () => {
+    const expected = `Google Compute Engine offers a free tier ("Always Free"). DigitalOcean has no ongoing free tier; what it offers is ${CREDIT} ("Credits").`;
+    const credits = runningOut("DigitalOcean", "Credits", CREDIT);
+    const free = offering("Google Compute Engine", "Always Free");
+    assert.strictEqual(freeTierVerdictSentence(credits, free), expected);
+    assert.strictEqual(freeTierVerdictSentence(free, credits), expected);
+    assert.strictEqual(freeTierFaqAnswer(credits, free), expected);
+  });
+
+  it("says neither has one when both sides only run out, and what each offers", () => {
+    const a = runningOut("Steel", "Free Credits", CREDIT);
+    const b = runningOut("Cerebras", "Trial", TRIAL);
+    const offers = `Steel offers ${CREDIT} ("Free Credits"); Cerebras offers ${TRIAL} ("Trial").`;
+    assert.strictEqual(freeTierVerdictSentence(a, b), `Neither Steel nor Cerebras has an ongoing free tier. ${offers}`);
+    assert.strictEqual(freeTierFaqAnswer(a, b), `Neither has an ongoing free tier. ${offers}`);
+  });
+
+  it("says neither has one beside a side that has ended, and what the other offers", () => {
+    const credits = runningOut("DigitalOcean", "Credits", CREDIT);
+    const offers = `What DigitalOcean offers is ${CREDIT} ("Credits").`;
+    assert.strictEqual(
+      freeTierVerdictSentence(credits, ended("Hypertune")),
+      `Neither DigitalOcean nor Hypertune has an ongoing free tier. ${offers}`,
+    );
+    assert.strictEqual(
+      freeTierVerdictSentence(ended("Hypertune"), credits),
+      `Neither Hypertune nor DigitalOcean has an ongoing free tier. ${offers}`,
+    );
+    assert.strictEqual(freeTierFaqAnswer(credits, ended("Hypertune")), `Neither has an ongoing free tier. ${offers}`);
+  });
+
+  it("opens with the side that runs out, then withholds as before for a side with no verdict", () => {
+    const why = "The page we cite for Puppeteer states no amount, tier or rate we can read.";
+    const expected = `Steel has no ongoing free tier; what it offers is ${CREDIT} ("Free Credits"). We are not publishing a free-tier verdict for Puppeteer. ${why}`;
+    const credits = runningOut("Steel", "Free Credits", CREDIT);
+    assert.strictEqual(freeTierVerdictSentence(unconfirmed("Puppeteer", why), credits), expected);
+    assert.strictEqual(freeTierFaqAnswer(unconfirmed("Puppeteer", why), credits), expected);
+  });
+
+  it("never says a side that only runs out offers a free tier, and adds no advice to compare limits", () => {
+    const credits = runningOut("Steel", "Free Credits", CREDIT);
+    const others = [
+      offering("Browserbase", "Free"),
+      runningOut("Cerebras", "Trial", TRIAL),
+      ended("Hypertune"),
+      unconfirmed("Puppeteer", "The page we cite for Puppeteer states no amount, tier or rate we can read."),
+    ];
+    for (const other of others) {
+      for (const text of [
+        freeTierVerdictSentence(credits, other),
+        freeTierVerdictSentence(other, credits),
+        freeTierFaqAnswer(credits, other),
+        freeTierFaqAnswer(other, credits),
+      ]) {
+        assert.ok(!text.includes("Steel offers a free tier"), text);
+        assert.ok(!text.includes("offer free tiers"), text);
+        assert.ok(!text.includes("Compare the specific limits"), text);
+      }
+    }
   });
 });
 

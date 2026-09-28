@@ -102,7 +102,7 @@ import { changeAnchor, changeRecordHref } from "./change-anchor.js";
 import { SSE_KEEPALIVE_FRAME, keepaliveIntervalMs, sessionRecoveryBody } from "./mcp-stream.js";
 import { ASSISTANTS_API_SHUTDOWN } from "./assistants-shutdown.js";
 import { changeTouchesTheListing, countsAsANegativeChange, discontinuedClause, discontinuedOnOrBefore, endsAFreeTier } from "./product-deprecation.js";
-import { rankOffers, rankForListing, rotateListing, utcDate, gateFor, notAFreeOfferGateFor, descriptionDeniesFreeTier, classifyTier, CRITERIA_PATH, DEMOTE_ONLY_POLICY, DISCLOSURE_RATIONALE, TIE_BREAK_ALGORITHM, NAMED_SUBSET_RULE, NAMED_SUBSET_FIELD_RULE, wholeRankedOrderClause, GATE_TABLE, gateTableRowText, DEMERIT_TABLE, demeritTableRowText, NOT_FREE_TIER_RULES, TIME_LIMITED_TIER_RULES, type TieBreak, type Gate } from "./ranking.js";
+import { rankOffers, rankForListing, rotateListing, utcDate, gateFor, notAFreeOfferGateFor, descriptionDeniesFreeTier, classifyTier, timeLimitedTierRule, CRITERIA_PATH, DEMOTE_ONLY_POLICY, DISCLOSURE_RATIONALE, TIE_BREAK_ALGORITHM, NAMED_SUBSET_RULE, NAMED_SUBSET_FIELD_RULE, wholeRankedOrderClause, GATE_TABLE, gateTableRowText, DEMERIT_TABLE, demeritTableRowText, NOT_FREE_TIER_RULES, TIME_LIMITED_TIER_RULES, type TieBreak, type Gate } from "./ranking.js";
 import type { RankedEntry, RankingResult } from "./ranking.js";
 import { eligibilityGateAsPublished, gatedShareDescriptionClause, gatedShareLede, publishableEligibilityConditions } from "./eligibility.js";
 import { gateDisclosureFor, gateDisclosureSentence, matchingSubject } from "./gate-disclosure.js";
@@ -1258,7 +1258,7 @@ function offerPricingLink(offer: OfferTierAndUrl, label: string): string {
   return `<a href="${escHtmlServer(offer.url)}" target="_blank" rel="noopener">${label}</a>`;
 }
 
-type BadgeStatus = "active" | "at-risk" | "stale" | "removed" | "retired" | "withheld" | "unknown";
+type BadgeStatus = "active" | "at-risk" | "stale" | "time-limited" | "removed" | "retired" | "withheld" | "unknown";
 
 interface BadgeReading {
   status: BadgeStatus;
@@ -1582,10 +1582,12 @@ function unconfirmedFreeTierSentence(vendor: string, because: BadgeWithholding, 
 
 function freeTierSideOf(vendor: string, tier: string, context: VendorVerdictContext): FreeTierSide {
   const claim = freeTierClaim(context.input);
+  const timeLimited = timeLimitedTierRule(context.primary.tier);
   const free: SideFreeTier =
-    claim.states === "offered" ? { states: "offered", tier }
+    claim.states === "unconfirmed" ? { states: "unconfirmed", why: unconfirmedFreeTierSentence(vendor, claim.because, context) }
     : claim.states === "ended" ? { states: "ended" }
-    : { states: "unconfirmed", why: unconfirmedFreeTierSentence(vendor, claim.because, context) };
+    : timeLimited ? { states: "time_limited", tier, note: timeLimited.note }
+    : { states: "offered", tier };
   return { vendor, free };
 }
 
@@ -1642,6 +1644,11 @@ function readBadgeStatus(vendorSlug: string, servedOn: string): BadgeReading {
     };
   }
 
+  const timeLimited = timeLimitedTierRule(primary.tier);
+  if (timeLimited) {
+    return { status: "time-limited", label: timeLimited.badgeLabel, verifiedDate: latestVerified };
+  }
+
   if (claim.level === "caution") {
     return { status: "at-risk", label: "at risk", verifiedDate: latestVerified };
   }
@@ -1659,6 +1666,7 @@ const BADGE_COLORS: Record<BadgeStatus, string> = {
   "removed": "#f85149",
   "retired": "#f85149",
   "stale": "#58a6ff",
+  "time-limited": "#8b949e",
   "withheld": "#8b949e",
   "unknown": "#8b949e",
 };
@@ -48192,7 +48200,7 @@ function buildBadgesPage(): string {
     .map(([slug, name]) => ({ slug, name, ...getBadgeStatus(slug) }))
     .sort((a, b) => a.name.localeCompare(b.name));
 
-  const statusCounts: Record<BadgeStatus, number> = { active: 0, "at-risk": 0, stale: 0, removed: 0, retired: 0, withheld: 0, unknown: 0 };
+  const statusCounts: Record<BadgeStatus, number> = { active: 0, "at-risk": 0, stale: 0, "time-limited": 0, removed: 0, retired: 0, withheld: 0, unknown: 0 };
   for (const v of allVendors) statusCounts[v.status]++;
   const endedCount = statusCounts.removed + statusCounts.retired;
   const staleAfter = badgeStaleAfterDays();
@@ -48281,6 +48289,7 @@ function buildBadgesPage(): string {
       <div class="stat"><div class="stat-num green">${statusCounts.active}</div><div class="stat-label">Active</div></div>
       <div class="stat"><div class="stat-num yellow">${statusCounts["at-risk"]}</div><div class="stat-label">At Risk</div></div>
       <div class="stat"><div class="stat-num red">${endedCount}</div><div class="stat-label">Ended</div></div>
+      <div class="stat"><div class="stat-num grey">${statusCounts["time-limited"]}</div><div class="stat-label">Time-Limited</div></div>
       <div class="stat"><div class="stat-num blue">${statusCounts.stale}</div><div class="stat-label">Stale</div></div>
       <div class="stat"><div class="stat-num grey">${statusCounts.withheld}</div><div class="stat-label">Unrated</div></div>
     </div>
@@ -48290,6 +48299,7 @@ function buildBadgesPage(): string {
       <li><span class="status-dot" style="background:${BADGE_COLORS.active}"></span> <strong>active</strong> — we rate the vendor stable, on a reading we can attribute to the page we cite.</li>
       <li><span class="status-dot" style="background:${BADGE_COLORS["at-risk"]}"></span> <strong>at risk</strong> — a recorded pricing change narrowed this vendor's terms.</li>
       <li><span class="status-dot" style="background:${BADGE_COLORS.removed}"></span> <strong>free tier removed</strong>, <strong>deprecated</strong>, <strong>retired</strong> — the offer we listed has ended.</li>
+      <li><span class="status-dot" style="background:${BADGE_COLORS["time-limited"]}"></span> ${TIME_LIMITED_TIER_RULES.map(rule => `<strong>${rule.badgeLabel}</strong>`).join(", ")} — the listing has no ongoing free tier; the free part runs out.</li>
       <li><span class="status-dot" style="background:${BADGE_COLORS.stale}"></span> <strong>stale</strong> — a statement about us, not the vendor: we have not re-read the page within ${staleAfter} days, one full pass of our re-verification loop.</li>
       <li><span class="status-dot" style="background:${BADGE_COLORS.withheld}"></span> <strong>unrated</strong> — we publish no verdict, and the badge says why: the page we cite was unreachable, unreadable, stated no terms, or did not name the vendor; or the offer is restricted, expired or not free. ${statusCounts.withheld} of ${allVendors.length} vendors read this way, the same as on their vendor page.</li>
     </ul>
@@ -48399,6 +48409,7 @@ const EMBED_STATUS_COLORS: Record<BadgeStatus, string> = {
   "removed": "var(--badge-removed)",
   "retired": "var(--badge-removed)",
   "stale": "var(--badge-new)",
+  "time-limited": "var(--text-m)",
   "withheld": "var(--text-m)",
   "unknown": "var(--text-m)",
 };

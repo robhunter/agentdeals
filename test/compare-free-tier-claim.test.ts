@@ -26,12 +26,16 @@ function startHttpServer(): Promise<{ child: ChildProcess; port: number }> {
   });
 }
 
-type SiteVerdict = "offered" | "ended" | "unconfirmed";
+type SiteVerdict = "offered" | "time_limited" | "ended" | "unconfirmed";
 
 const BADGE_VERDICT: Record<string, SiteVerdict> = {
   "active": "offered",
   "at risk": "offered",
   "stale": "offered",
+  "credits only": "time_limited",
+  "trial only": "time_limited",
+  "preview only": "time_limited",
+  "award only": "time_limited",
   "free tier removed": "ended",
   "deprecated": "ended",
   "retired": "ended",
