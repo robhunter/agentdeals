@@ -9080,7 +9080,7 @@
     {
       "vendor": "Stoplight",
       "category": "API Development",
-      "description": "API design and documentation platform — The Basic plan costs $44 / month (annually) or $56 / month (monthly) and includes the first 3 users free. It includes OpenAPI/JSON schema visual designer, interactive docs, and instant mock servers.",
+      "description": "API design and documentation platform — free tier: 1 user, 1 project. Includes OpenAPI visual designer, API editor, interactive docs, API console, code generation, Git sync, automatic SSL",
       "tier": "Free",
       "url": "https://stoplight.io/pricing",
       "tags": [
@@ -9096,12 +9096,9 @@
         "outcome": "ok",
         "detail": "the page names Stoplight as \"stoplight\" and states amounts, none of which we matched to the terms we publish"
       },
-      "restated_from": {
-        "reading_date": "2026-09-28",
-        "source_url": "https://stoplight.io/pricing",
-        "record_date": "2026-09-28",
-        "change_type": "free_tier_removed",
-        "restated_on": "2026-09-28"
+      "restatement_reverted": {
+        "record_date": "2026-08-28",
+        "reverted_on": "2026-09-28"
       }
     },
     {
@@ -14385,7 +14382,7 @@
     {
       "vendor": "houndci.com",
       "category": "Code Quality",
-      "description": "Hound is free for public repos! Chihuahua Up to 50 private reviews $29 month",
+      "description": "Comments on GitHub commits about code quality, free for Open Source",
       "tier": "Free",
       "url": "https://houndci.com/",
       "tags": [
@@ -14398,12 +14395,9 @@
         "outcome": "ok",
         "detail": "the page names houndci.com as \"houndci\" and states amounts, none of which we matched to the terms we publish"
       },
-      "restated_from": {
-        "reading_date": "2026-09-28",
-        "source_url": "https://houndci.com/",
+      "restatement_reverted": {
         "record_date": "2026-09-28",
-        "change_type": "free_tier_removed",
-        "restated_on": "2026-09-28"
+        "reverted_on": "2026-09-28"
       }
     },
     {

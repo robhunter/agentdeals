@@ -833,7 +833,8 @@
       "source_url": "https://stoplight.io/pricing",
       "record_date": "2026-08-28",
       "change_type": "limits_increased",
-      "summary": "The free tier now includes 3 users and has a limited set of features. Previously 1 user and included all features listed."
+      "summary": "The free tier now includes 3 users and has a limited set of features. Previously 1 user and included all features listed.",
+      "reverted_on": "2026-09-28"
     },
     {
       "vendor": "Thunder Client",
@@ -2667,7 +2668,8 @@
       "source_url": "https://stoplight.io/pricing",
       "record_date": "2026-09-28",
       "change_type": "free_tier_removed",
-      "summary": "The Basic plan is now a paid plan at $44/month or $56/month, and includes the first 3 users free."
+      "summary": "The Basic plan is now a paid plan at $44/month or $56/month, and includes the first 3 users free.",
+      "reverted_on": "2026-09-28"
     },
     {
       "vendor": "houndci.com",
@@ -2680,7 +2682,8 @@
       "source_url": "https://houndci.com/",
       "record_date": "2026-09-28",
       "change_type": "free_tier_removed",
-      "summary": "Hound is free for public repos, but private repos require a paid plan."
+      "summary": "Hound is free for public repos, but private repos require a paid plan.",
+      "reverted_on": "2026-09-28"
     },
     {
       "vendor": "BugBug",
