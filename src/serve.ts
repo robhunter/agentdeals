@@ -18375,7 +18375,7 @@ function buildFreeSaasStackPage(): string {
       recommended: { vendor: "Clerk", why: "50,000 monthly retained users free \u2014 the most generous managed auth for SaaS. Drop-in React/Next.js components for login, signup, user profile, and organization management. Social login, MFA, and RBAC included. Organizations feature (multi-tenant SaaS) available on free tier. Webhooks for syncing user data to your database." },
       alternatives: ["Auth0", "Supabase", "Kinde"],
       outgrow: "When you exceed 50K retained users. Auth0 offers 25,000 MAU with enterprise features (M2M tokens, SSO). Kinde gives 10,500 MAU with feature flags bundled. Supabase Auth provides 50,000 MAU if you're already using Supabase for your database. At 100K users: Clerk ~$175/mo, Supabase ~$25/mo (cheapest at scale).",
-      whyNot: "Why not Firebase Auth: 50K MAU free, but Firebase is a full BaaS \u2014 using just auth means importing the entire SDK. Supabase Auth is a better \u00e0 la carte option. Why not rolling your own: Auth is the #1 source of security vulnerabilities in SaaS. Password reset, email verification, rate limiting, session management, CSRF \u2014 auth providers handle all of this. Only roll your own if you have dedicated security expertise.",
+      whyNot: "Why not Firebase Auth: email and social sign-in are free, but SMS needs the pay-as-you-go Blaze plan, and MFA, SAML and multi-tenancy need the Identity Platform upgrade. Supabase Auth is a better \u00e0 la carte option. Why not rolling your own: Auth is the #1 source of security vulnerabilities in SaaS. Password reset, email verification, rate limiting, session management, CSRF \u2014 auth providers handle all of this. Only roll your own if you have dedicated security expertise.",
       relatedPage: "/auth-comparison-2026",
       isFrameworkSection: false,
     },
@@ -20265,7 +20265,7 @@ function buildSupabaseVsFirebasePage(): string {
 
   const comparisonRows = [
     { feature: "Database", supabase: "500 MB PostgreSQL", firebase: "1 GiB Firestore", notes: "Supabase: SQL + joins. Firebase: NoSQL document model" },
-    { feature: "Auth", supabase: "50K MAU", firebase: "50K MAU", notes: "Equivalent. Both include email, OAuth, social login" },
+    { feature: "Auth", supabase: "50K MAU", firebase: "No cost; SMS on Blaze only. 50K MAU with Identity Platform", notes: "Both include email, OAuth and social login. Supabase Free: 50K MAU. Firebase: no user limit, SMS on Blaze only; Identity Platform: 50K MAU free." },
     { feature: "Storage", supabase: "1 GB file storage", firebase: "None on Spark (Blaze only)", notes: "Firebase removed Cloud Storage from the Spark plan on February 3, 2026. Blaze includes 5 GB at no cost in us-central1, us-east1 and us-west1." },
     { feature: "Functions", supabase: "500K Edge Function invocations", firebase: "None on Spark (Blaze only)", notes: "Cloud Functions need the Blaze plan, which includes 2M invocations a month at no cost." },
     { feature: "Bandwidth", supabase: "10 GB total (5 GB cached + 5 GB uncached)", firebase: "360 MB/day Hosting, 10 GiB/mo Firestore egress", notes: "Supabase: database egress limited. Firebase: per-service bandwidth" },
@@ -33487,7 +33487,7 @@ function buildAwsFreeTier2026Page(): string {
     { name: "Amazon CloudWatch", slug: "aws", limits: "10 custom metrics, 10 alarms, 1M API requests/month", category: "Monitoring" },
     { name: "Amazon ECR Public", slug: "amazon-ecr-public", limits: "50 GB storage, unlimited public image pulls", category: "Containers" },
     { name: "AWS CloudFormation", slug: "aws", limits: "Unlimited for AWS resources (third-party charges may apply)", category: "IaC" },
-    { name: "Amazon Cognito", slug: "aws", limits: "50K MAUs (Monthly Active Users)", category: "Auth" },
+    { name: "Amazon Cognito", slug: "aws", limits: "10,000 MAUs a month (Lite or Essentials tier, direct or social sign-in); 50 MAUs for SAML/OIDC. User pools created by November 22, 2024 keep 50,000 on Lite.", category: "Auth" },
     { name: "AWS CodeCommit", slug: "aws", limits: "5 active users, 50 GB storage, 10K Git requests/month", category: "DevOps" },
     { name: "AWS CodePipeline", slug: "aws", limits: "1 free active pipeline/month", category: "DevOps" },
     { name: "AWS CodeBuild", slug: "aws", limits: "100 build minutes/month (general1.small)", category: "DevOps" },
@@ -34662,7 +34662,7 @@ ${mcpCtaCss()}
 
     <div class="verdict-item">
       <strong>Enterprise identity &amp; auth</strong>
-      <p>Azure Active Directory / Entra ID (50K objects) + App Service for SSO. Azure AD's free tier is the most generous managed identity service among cloud providers — compare with AWS Cognito (50K MAUs) and Firebase Auth (50K MAUs). Includes SAML, OIDC, and MFA.</p>
+      <p>Azure Active Directory / Entra ID (50K objects) + App Service for SSO. Includes SAML, OIDC, and MFA. For comparison, Amazon Cognito's free tier is 10,000 MAUs (50,000 for user pools created by November 22, 2024). Firebase Authentication includes email, social and anonymous sign-in at no cost; SMS needs the pay-as-you-go Blaze plan.</p>
     </div>
 
     <div class="verdict-item">
@@ -38221,8 +38221,8 @@ ${mcpCtaCss()}
       </tr>
       <tr>
         <td class="provider-col"><a href="/vendor/firebase" style="color:var(--text)">Firebase Auth</a></td>
-        <td style="font-family:var(--mono)">50K MAU</td>
-        <td style="font-family:var(--mono)">$0.0055</td>
+        <td style="font-family:var(--mono)">No cost; SMS on Blaze only</td>
+        <td style="font-family:var(--mono)">$0.0055 (Identity Platform, 50K-100K MAU)</td>
         <td class="check">Google, Apple, etc.</td>
         <td class="check">Phone + TOTP</td>
         <td>Identity Platform</td>
@@ -38232,7 +38232,7 @@ ${mcpCtaCss()}
       </tr>
       <tr>
         <td class="provider-col">AWS Cognito</td>
-        <td style="font-family:var(--mono)">50K MAU</td>
+        <td style="font-family:var(--mono)">10K MAU (50K for pools created by Nov 22, 2024)</td>
         <td style="font-family:var(--mono)">$0.0055</td>
         <td class="check">OIDC + SAML</td>
         <td class="check">SMS + TOTP</td>
@@ -38454,7 +38454,7 @@ ${mcpCtaCss()}
       </tr>
       <tr>
         <td class="provider-col">Firebase Auth</td>
-        <td style="font-family:var(--mono)">50,000</td>
+        <td style="font-family:var(--mono)">No cost; SMS on Blaze only</td>
         <td style="font-family:var(--mono)">$0.0055/MAU</td>
         <td>Firebase (Firestore, Hosting, Functions)</td>
         <td class="check">Phone + TOTP (Identity Platform)</td>
@@ -38463,7 +38463,7 @@ ${mcpCtaCss()}
       </tr>
       <tr>
         <td class="provider-col">AWS Cognito</td>
-        <td style="font-family:var(--mono)">50,000</td>
+        <td style="font-family:var(--mono)">10,000</td>
         <td style="font-family:var(--mono)">$0.0055/MAU</td>
         <td>AWS (Lambda, DynamoDB, S3, etc.)</td>
         <td class="check">SMS + TOTP</td>
@@ -45947,7 +45947,7 @@ const STACK_TEMPLATES: StackTemplate[] = [
     services: [
       { category: "Database", vendor: "Turso", slug: "turso", estimatorCategory: "database", freeTier: "100 DBs, 5 GB storage", whyChosen: "Most generous free database tier. 5 GB storage, edge SQLite, no inactivity pausing.", starter: 0, growth: 29, scale: 29 },
       { category: "Hosting", vendor: "Render", slug: "render", estimatorCategory: "hosting", freeTier: "512 MB RAM, 0.1 CPU", whyChosen: "Free web services with auto-deploy from GitHub. Spins down after inactivity but restarts on request.", starter: 7, growth: 25, scale: 85 },
-      { category: "Auth", vendor: "Firebase Auth", slug: "firebase", estimatorCategory: "auth", freeTier: "50K MAU", whyChosen: "Completely free auth up to 50K MAU. No platform lock-in required — use just the auth.", starter: 0, growth: 0, scale: 5 },
+      { category: "Auth", vendor: "Firebase Auth", slug: "firebase", estimatorCategory: "auth", freeTier: "No cost; SMS on Blaze only", whyChosen: "Email, social and anonymous sign-in at no cost; SMS needs the pay-as-you-go Blaze plan. The modular SDK lets you use just the auth.", starter: 0, growth: 0, scale: 5 },
       { category: "Monitoring", vendor: "BetterStack", slug: "betterstack", estimatorCategory: "monitoring", freeTier: "10 monitors, 3 GB logs", whyChosen: "Free uptime monitoring with 10 monitors and status pages. Know when your side project goes down.", starter: 0, growth: 25, scale: 85 },
       { category: "Email", vendor: "Brevo", slug: "brevo", estimatorCategory: "email", freeTier: "300 emails/day", whyChosen: "300 emails/day free — more than enough for side project transactional email.", starter: 0, growth: 25, scale: 65 },
       { category: "CI/CD", vendor: "GitHub Actions", slug: "github-actions", estimatorCategory: "cicd", freeTier: "2K minutes/mo (private repos)", whyChosen: "Already where your code lives. Free tier covers any side project CI needs.", starter: 0, growth: 4, scale: 21 },
@@ -46484,7 +46484,7 @@ function buildEstimatorData(): EstimatorCategory[] {
         { slug: "kinde", name: "Kinde", free: "10.5K MAU", starter: 0, growth: 25, scale: 100, notes: "Pro $25/mo (10K-50K MAU)" },
         { slug: "workos", name: "WorkOS", free: "1M MAU (AuthKit)", starter: 0, growth: 0, scale: 0, notes: "Free up to 1M MAU for user management" },
         { slug: "supabase", name: "Supabase Auth", free: "50K MAU", starter: 0, growth: 0, scale: 25, notes: "Included with Supabase Pro" },
-        { slug: "firebase", name: "Firebase Auth", free: "50K MAU", starter: 0, growth: 0, scale: 5, notes: "Blaze: $0.0055/MAU after 50K" },
+        { slug: "firebase", name: "Firebase Auth", free: "No cost; SMS on Blaze only", starter: 0, growth: 0, scale: 5, notes: "SMS billed per message. Identity Platform: 50K MAU free, then $0.0025-$0.0055/MAU." },
       ],
     },
     {
