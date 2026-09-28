@@ -12,6 +12,7 @@ export const SPLIT = {
   noCapture: "no usable capture",
   textDayUnknown: "text day unknown",
   pageUnreadable: "page unreadable today",
+  readerFailed: "reader failed",
 };
 
 export function firstReadingsInForce(changes, { includeResolved = false } = {}) {
@@ -38,6 +39,7 @@ export function splitOf(settled, today) {
   if (settled.outcome === "not_reproduced") return SPLIT.notReproduced;
   if (settled.outcome === "text_day_unknown") return SPLIT.textDayUnknown;
   if (settled.outcome === "page_unreadable_today") return SPLIT.pageUnreadable;
+  if (settled.outcome === "reader_failed") return SPLIT.readerFailed;
   if (settled.outcome !== "vendor_changed") return SPLIT.noCapture;
   const latest = settled.brackets[settled.brackets.length - 1];
   const movedOnOrAfter = latest.first_new ?? latest.last_old;
@@ -52,8 +54,16 @@ export function listingFor(record, offers) {
   );
 }
 
-function archiveDidNotAnswer(result) {
-  return String(result.why ?? "").startsWith("the Archive did not answer");
+function worthAskingAgain(result) {
+  return result.outcome === "reader_failed" || String(result.why ?? "").startsWith("the Archive did not answer");
+}
+
+async function settleOrSayTheReaderFailed(settle, readings) {
+  try {
+    return await settle();
+  } catch (err) {
+    return { outcome: "reader_failed", why: `the reader failed: ${err?.message ?? err}`, reads: readings.length };
+  }
 }
 
 export async function settleFirstReadings({ changes, offers, today, archive, readerForListing, fetchToday, textDayOf, limit = Infinity, vendors, includeResolved = false, logReads = false, onSettled = () => {} }) {
@@ -63,7 +73,7 @@ export async function settleFirstReadings({ changes, offers, today, archive, rea
     const page = await fetchToday(record.source_url);
     const readings = [];
     const settled = page.ok
-      ? await settleAgainstCaptures({
+      ? await settleOrSayTheReaderFailed(() => settleAgainstCaptures({
           url: record.source_url,
           finalUrl: page.finalUrl,
           ourText: record.previous_state,
@@ -74,7 +84,7 @@ export async function settleFirstReadings({ changes, offers, today, archive, rea
           archive,
           read: readerForListing(listingFor(record, offers)),
           onRead: (reading) => readings.push(reading),
-        })
+        }), readings)
       : { outcome: "page_unreadable_today", why: page.error, reads: 0 };
     const result = { ...subject, ...settled, split: splitOf(settled, today), ...(logReads ? { readings } : {}) };
     onSettled(result);
@@ -83,7 +93,7 @@ export async function settleFirstReadings({ changes, offers, today, archive, rea
   const results = [];
   for (const record of backlog) results.push(await settleOne(record));
   for (const [at, record] of backlog.entries()) {
-    if (archiveDidNotAnswer(results[at])) results[at] = await settleOne(record);
+    if (worthAskingAgain(results[at])) results[at] = await settleOne(record);
   }
   const split = Object.fromEntries(Object.values(SPLIT).map((name) => [name, results.filter((result) => result.split === name).length]));
   return { today, records: backlog.length, split, results };

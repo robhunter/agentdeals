@@ -54,6 +54,7 @@ describe("the split posted on the issue", () => {
     assert.strictEqual(splitOf({ outcome: "no_usable_capture" }, TODAY), SPLIT.noCapture);
     assert.strictEqual(splitOf({ outcome: "text_day_unknown" }, TODAY), SPLIT.textDayUnknown);
     assert.strictEqual(splitOf({ outcome: "page_unreadable_today" }, TODAY), SPLIT.pageUnreadable);
+    assert.strictEqual(splitOf({ outcome: "reader_failed" }, TODAY), SPLIT.readerFailed);
   });
 });
 
@@ -205,5 +206,56 @@ describe("the readings behind each outcome", () => {
       logged.results[0].readings.map((r: { page: string; against: string; verdict: { status: string } }) => `${r.page} ${r.against} ${r.verdict.status}`),
       ["capture 2026-02-05 A changed", "today B confirmed", "capture 2026-02-05 B confirmed"],
     );
+  });
+});
+
+describe("a reader that fails on one record", () => {
+  it("does not stop the others, and that record is asked again once the rest have settled", async () => {
+    const changes = [
+      change({ vendor: "Alpha", date: "2026-09-01", date_source: "discovered", previous_state: "A", current_state: "B", source_url: "https://alpha.example/pricing" }),
+      change({ vendor: "Beta", date: "2026-09-02", date_source: "discovered", previous_state: "A", current_state: "B", source_url: "https://beta.example/pricing" }),
+    ];
+    let alphaCalls = 0;
+    const readerForListing = (listing: { vendor: string }) => async (stored: string, text: string) => {
+      if (listing.vendor === "Alpha" && alphaCalls++ === 0) throw new Error("google/gemma-3-27b-it request failed: HTTP 504");
+      return text.includes(`TERMS=${stored}`) ? { status: "confirmed" } : { status: "changed", current_state: text.match(/TERMS=(\w+)/)![1] };
+    };
+    const settledInTurn: string[] = [];
+    const report = await settleFirstReadings({
+      changes,
+      offers: [{ vendor: "Alpha", tier: "Free", category: "Databases" }],
+      today: "2026-09-28",
+      archive: {
+        captures: async (url: string) => ({ captures: [{ timestamp: "20260205120000", original: url, statuscode: "200", mimetype: "text/html" }] }),
+        captureHtml: async () => ({ html: `<html><body><p>TERMS=B</p><p>${"Plans and limits. ".repeat(40)}</p></body></html>` }),
+      },
+      readerForListing,
+      fetchToday: async () => ({ ok: true, text: "TERMS=B" }),
+      textDayOf: () => "2026-02-10",
+      onSettled: (result: { vendor: string; outcome: string }) => settledInTurn.push(`${result.vendor} ${result.outcome}`),
+    });
+    assert.deepStrictEqual(settledInTurn, ["Alpha reader_failed", "Beta ours", "Alpha ours"]);
+    assert.deepStrictEqual(report.results.map((r: { vendor: string; outcome: string }) => `${r.vendor} ${r.outcome}`), ["Alpha ours", "Beta ours"]);
+    assert.strictEqual(report.split[SPLIT.readerFailed], 0);
+  });
+
+  it("is reported as a reader failure, with the reader's error, when the second ask fails too", async () => {
+    const report = await settleFirstReadings({
+      changes: [change({ vendor: "Alpha", date: "2026-09-01", date_source: "discovered", previous_state: "A", current_state: "B" })],
+      offers: [],
+      today: "2026-09-28",
+      archive: {
+        captures: async (url: string) => ({ captures: [{ timestamp: "20260205120000", original: url, statuscode: "200", mimetype: "text/html" }] }),
+        captureHtml: async () => ({ html: `<html><body><p>TERMS=B</p><p>${"Plans and limits. ".repeat(40)}</p></body></html>` }),
+      },
+      readerForListing: () => async () => {
+        throw new Error("google/gemma-3-27b-it request failed: HTTP 504");
+      },
+      fetchToday: async () => ({ ok: true, text: "TERMS=B" }),
+      textDayOf: () => "2026-02-10",
+    });
+    assert.strictEqual(report.results[0].outcome, "reader_failed");
+    assert.match(report.results[0].why, /HTTP 504/);
+    assert.strictEqual(report.split[SPLIT.readerFailed], 1);
   });
 });
