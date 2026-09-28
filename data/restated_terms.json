@@ -554,7 +554,8 @@
       "source_url": "https://www.permit.io/pricing",
       "record_date": "2026-08-28",
       "change_type": "limits_reduced",
-      "summary": "The free tier now has limits of 1000 MAU, 20 Tenants, No Limit Authorization Queries, 25 Roles, 50 Resource Types, 5 Role Assignments, 2,000 Groups, 2,000 Resource Instances, 2,000 Relationship Tuples. There is also a free tier for OSS projects, requiring contact for qualification."
+      "summary": "The free tier now has limits of 1000 MAU, 20 Tenants, No Limit Authorization Queries, 25 Roles, 50 Resource Types, 5 Role Assignments, 2,000 Groups, 2,000 Resource Instances, 2,000 Relationship Tuples. There is also a free tier for OSS projects, requiring contact for qualification.",
+      "reverted_on": "2026-09-28"
     },
     {
       "vendor": "Liveblocks",
@@ -619,7 +620,8 @@
       "source_url": "https://fusionauth.io/pricing",
       "record_date": "2026-09-01",
       "change_type": "pricing_restructured",
-      "summary": "The Community tier is still offered. It now has a limit of 1,000 monthly active users."
+      "summary": "The Community tier is still offered. It now has a limit of 1,000 monthly active users.",
+      "reverted_on": "2026-09-28"
     },
     {
       "vendor": "Grafana Loki",

@@ -5787,7 +5787,7 @@
     {
       "vendor": "Permit.io",
       "category": "Auth",
-      "description": "Authorization-as-a-service — Community: Free Forever, 1000 MAU, 20 Tenants, No Limit Authorization Queries, 25 Roles, 50 Resource Types, 5 Role Assignments, 2,000 Groups, 2,000 Resource Instances, 2,000 Relationship Tuples. Free for OSS Projects - Contact Us.",
+      "description": "Authorization-as-a-service — Community plan, free forever: 1,000 MAU, 20 tenants, no limit on authorization queries, 25 roles, 50 resource types, 5 condition sets, 2,000 role assignments, 20 groups, 2,000 resource instances and 2,000 relationship tuples, with 3 environments and no limit on projects. All features are open to all tiers. Open-source projects can get the Startup tier free.",
       "tier": "Free",
       "url": "https://www.permit.io/pricing",
       "tags": [
@@ -5804,12 +5804,9 @@
         "outcome": "states_a_free_price",
         "detail": "the page names Permit.io and states its price in words as \"Free Forever\", and the 2 structured-data blocks in its markup state no price"
       },
-      "restated_from": {
-        "reading_date": "2026-08-28",
-        "source_url": "https://www.permit.io/pricing",
+      "restatement_reverted": {
         "record_date": "2026-08-28",
-        "change_type": "limits_reduced",
-        "restated_on": "2026-09-20"
+        "reverted_on": "2026-09-28"
       }
     },
     {
@@ -6601,7 +6598,7 @@
     {
       "vendor": "FusionAuth",
       "category": "Auth",
-      "description": "Full-featured identity platform — Community: 1,000 MAUs Self-hosted: Free Download FusionAuth Community is free and unlimited. It has the core authentication features. Core authentication standards & features most apps need Community support (forums, Slack, Github) Self-host FusionAuth on your own infrastructure for free.",
+      "description": "Identity platform — \"FusionAuth Community is free and unlimited\": self-host it on your own infrastructure, with the core authentication features and community support (forums, Slack, GitHub). Hosting by FusionAuth starts with the paid Starter plan at $162 a month, billed annually.",
       "tier": "Community",
       "url": "https://fusionauth.io/pricing",
       "tags": [
@@ -6609,7 +6606,6 @@
         "authentication",
         "identity",
         "sso",
-        "open-source",
         "self-hosted",
         "auth0-alternative"
       ],
@@ -6622,12 +6618,9 @@
       "free_grounds": [
         "licence"
       ],
-      "restated_from": {
-        "reading_date": "2026-09-01",
-        "source_url": "https://fusionauth.io/pricing",
+      "restatement_reverted": {
         "record_date": "2026-09-01",
-        "change_type": "pricing_restructured",
-        "restated_on": "2026-09-20"
+        "reverted_on": "2026-09-28"
       }
     },
     {
