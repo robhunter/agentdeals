@@ -7485,9 +7485,9 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "redis-alternatives",
     title: "Redis Alternatives — Best Free Caching and Key-Value Stores for 2026",
-    metaDesc: "Redis switched to BSL? Compare free alternatives: Upstash, Valkey, DragonflyDB, KeyDB, Momento, Garnet, Memcached, Aiven. Protocol-compatible options. [[freshness]]",
-    contextHtml: `<p><strong>Redis</strong> changed everything in March 2024 when it switched from BSD to the <strong>Business Source License (BSL)</strong>. The move restricts cloud providers from offering Redis-as-a-service without a commercial agreement — and triggered the Linux Foundation to fork Redis as <strong>Valkey</strong>, backed by AWS, Google Cloud, Oracle, and Ericsson.</p>
-    <p>For developers, the practical impact depends on your use case. If you're using Redis Cloud's free tier, you get just <strong>30 MB of memory</strong> on a single shared database — barely enough for a cache layer. Self-hosting Redis is still free under BSL for non-competitive use, but the license uncertainty has pushed many teams toward truly open-source alternatives.</p>
+    metaDesc: "Redis changed its licence? Compare free alternatives: Upstash, Valkey, DragonflyDB, KeyDB, Momento, Garnet, Memcached, Aiven. Protocol-compatible options. [[freshness]]",
+    contextHtml: `<p><strong>Redis</strong> changed everything in March 2024 when it switched from BSD to a <strong>dual RSALv2/SSPLv1 licence</strong> (Redis 8 added AGPLv3 as a third option). The move restricts cloud providers from offering Redis-as-a-service without a commercial agreement — and triggered the Linux Foundation to fork Redis as <strong>Valkey</strong>, backed by AWS, Google Cloud, Oracle, and Ericsson.</p>
+    <p>For developers, the practical impact depends on your use case. If you're using Redis Cloud's free tier, you get just <strong>30 MB of memory</strong> on a single shared database — barely enough for a cache layer. Self-hosting Redis is still free. RSALv2 bars offering it as a managed service; SSPLv1 allows that only if you publish your service's source code under SSPL, but the license uncertainty has pushed many teams toward truly open-source alternatives.</p>
     <p>The 2026 landscape offers strong options: <strong>Upstash</strong> provides serverless Redis-compatible caching with 500K commands/month free. <strong>Valkey</strong> is a drop-in BSD-3 fork maintained by the Linux Foundation. <strong>DragonflyDB</strong> claims 25x better throughput. <strong>Momento</strong> offers zero-infrastructure serverless caching. And established options like <strong>Memcached</strong> and <strong>KeyDB</strong> remain fully open-source.</p>`,
     tag: "redis-alternative",
     primaryVendor: "Redis Cloud",
@@ -7512,8 +7512,8 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
         <td style="font-weight:600;color:var(--text-dim)">Redis Cloud</td>
         <td>30 MB</td>
         <td>Yes (is Redis)</td>
-        <td>BSL restrictions</td>
-        <td>BSL 1.1</td>
+        <td>RSALv2/SSPLv1 or AGPLv3 (Redis 8+)</td>
+        <td>RSALv2/SSPLv1 or AGPLv3 (Redis 8+)</td>
         <td style="color:var(--text-dim)">Existing Redis workloads</td>
       </tr>
       <tr>
@@ -19565,7 +19565,7 @@ mcpCtaCss() + "\n" +
   "<div class=\"story-card\">\n" +
     "<h3>MinIO Open Source Killed</h3>\n" +
     "<span class=\"story-impact\" style=\"background:#f8514922;color:#f85149\">OSS Killed &middot; High Impact</span>\n" +
-    "<p>MinIO, the most popular S3-compatible object storage server, switched from Apache 2.0 to a proprietary license in February 2026. Self-hosted users now need a commercial license for production use. This followed a pattern seen with Redis (BSL), Elasticsearch (SSPL), and MongoDB (SSPL), but hit particularly hard because MinIO was foundational infrastructure for thousands of self-hosted deployments.</p>\n" +
+    "<p>MinIO, the most popular S3-compatible object storage server, switched from Apache 2.0 to a proprietary license in February 2026. Self-hosted users now need a commercial license for production use. This followed a pattern seen with Redis (RSALv2/SSPLv1), Elasticsearch (SSPL), and MongoDB (SSPL), but hit particularly hard because MinIO was foundational infrastructure for thousands of self-hosted deployments.</p>\n" +
     "<p><a href=\"/vendor/minio\">View vendor profile</a> &middot; <a href=\"/storage-alternatives\">Storage alternatives</a></p>\n" +
   "</div>\n" +
 
