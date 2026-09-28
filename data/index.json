@@ -1042,7 +1042,7 @@
     {
       "vendor": "Appwrite Cloud",
       "category": "Databases",
-      "description": "Open-source BaaS — 75K MAU, 2 GB storage, 750K function executions/month, 5 GB bandwidth, 1 database, 1 bucket and 2 functions per project. Limit of 2 projects. Projects pause after 1 week of inactivity",
+      "description": "Open-source BaaS — 75K MAU, 2 GB storage, 750K function executions/month, 5 GB bandwidth, 1 database, 1 bucket and 2 functions per project. Limit of 2 projects. Projects pause after 1 week of inactivity and are deleted after 90 days paused",
       "tier": "Free",
       "url": "https://appwrite.io/pricing",
       "tags": [

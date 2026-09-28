@@ -12550,6 +12550,76 @@
       "alternatives": [],
       "recorded_date": "2026-09-28",
       "date_source": "hand_written"
+    },
+    {
+      "vendor": "Appwrite Cloud",
+      "change_type": "limits_reduced",
+      "date": "2025-07-23",
+      "summary": "Appwrite limited its Free plan to two projects per organization, down from unlimited. It announced the limit on 2025-07-23, and organizations with more projects kept them until 2025-09-01.",
+      "previous_state": "Free: unlimited projects (pricing table, \"Number of projects: Unlimited\")",
+      "current_state": "Free: \"limited to two projects per organization\" from 2025-09-01",
+      "impact": "high",
+      "source_url": "https://appwrite.io/changelog/entry/2025-07-23",
+      "category": "Databases",
+      "alternatives": [],
+      "recorded_date": "2026-09-28",
+      "date_source": "vendor_page"
+    },
+    {
+      "vendor": "Appwrite Cloud",
+      "change_type": "limits_reduced",
+      "date": "2026-01-08",
+      "summary": "Appwrite cut its Free plan from five functions per project to two. Projects that already had more keep them, but cannot create new functions until they are under the limit.",
+      "previous_state": "Free: 5 functions per project",
+      "current_state": "Free: 2 functions per project",
+      "impact": "medium",
+      "source_url": "https://appwrite.io/changelog/entry/2026-01-08",
+      "category": "Databases",
+      "alternatives": [],
+      "recorded_date": "2026-09-28",
+      "date_source": "vendor_page"
+    },
+    {
+      "vendor": "Appwrite Cloud",
+      "change_type": "limits_reduced",
+      "date": "2026-02-20",
+      "summary": "Appwrite began pausing Free projects after 7 consecutive days with no development activity. Its pricing page had said Free projects were \"Never paused\" until January 2026, and users reported pauses from 2026-03-09.",
+      "previous_state": "Free: \"Never paused.\" (pricing page, 2025-07-20 to 2025-12-24)",
+      "current_state": "Free: projects with no development activity for 7 consecutive days are paused automatically and can be resumed from the Console",
+      "impact": "high",
+      "source_url": "https://appwrite.io/changelog/entry/2026-02-20-1",
+      "category": "Databases",
+      "alternatives": [],
+      "recorded_date": "2026-09-28",
+      "date_source": "vendor_page"
+    },
+    {
+      "vendor": "Appwrite Cloud",
+      "change_type": "limits_reduced",
+      "date": "2026-04-30",
+      "summary": "Appwrite began enforcing Realtime limits on 2026-04-30, with the Free plan at 2 million messages a month, down from the 3 million its pricing page had listed, and a new 256 KB maximum message size. It announced the enforcement on 2026-03-23.",
+      "previous_state": "Free: 3M Realtime messages a month on the pricing page, not enforced; no maximum message size stated",
+      "current_state": "Free: 2M Realtime messages a month, enforced from 2026-04-30; 256 KB maximum message size",
+      "impact": "medium",
+      "source_url": "https://appwrite.io/changelog/entry/2026-03-19",
+      "category": "Databases",
+      "alternatives": [],
+      "recorded_date": "2026-09-28",
+      "date_source": "vendor_page"
+    },
+    {
+      "vendor": "Appwrite Cloud",
+      "change_type": "limits_reduced",
+      "date": "2026-06-29",
+      "summary": "Appwrite began deleting Free projects that stay paused for 90 days, with all their resources. Owners get email alerts before anything is deleted.",
+      "previous_state": "Free: paused projects kept their data until resumed",
+      "current_state": "Free: projects paused for 90 days are deleted with all their resources, after email alerts",
+      "impact": "high",
+      "source_url": "https://appwrite.io/changelog/entry/2026-06-29",
+      "category": "Databases",
+      "alternatives": [],
+      "recorded_date": "2026-09-28",
+      "date_source": "vendor_page"
     }
   ]
 }
