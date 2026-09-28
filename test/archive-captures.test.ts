@@ -302,6 +302,12 @@ describe("settling a first reading's difference against the page as the Archive 
     assert.deepStrictEqual(settled.brackets.map((b: { last_old: string; first_new: string }) => [b.last_old, b.first_new]), [["2026-04-09", "2026-04-11"]]);
   });
 
+  it("does not call it a vendor change when the capture on our text's day and today's page both state our text", async () => {
+    const { result, reader } = settle({ todayTerms: "A", days: everyDay("2026-02-01", "2026-08-31"), termsOn: () => "A" });
+    assert.deepStrictEqual(await result, { outcome: "not_reproduced", text_day: "2026-02-15", capture: { day: "2026-02-15", gap_days: 0, side: "before" }, reads: 2 });
+    assert.deepStrictEqual(reader.calls, ["A", "A"]);
+  });
+
   it("dates the move after the last capture when no capture shows the new terms", async () => {
     const { result } = settle({ todayTerms: "B", days: everyDay("2026-02-01", "2026-08-31"), termsOn: () => "A" });
     const settled = await result;

@@ -48,8 +48,9 @@ describe("the split posted on the issue", () => {
     assert.strictEqual(splitOf(settled, TODAY), SPLIT.recentVendorChange);
   });
 
-  it("names our own difference, a missing capture, an unknown text day and an unreadable page apart", () => {
+  it("names our own difference, a difference today's page does not show, a missing capture, an unknown text day and an unreadable page apart", () => {
     assert.strictEqual(splitOf({ outcome: "ours" }, TODAY), SPLIT.ours);
+    assert.strictEqual(splitOf({ outcome: "not_reproduced" }, TODAY), SPLIT.notReproduced);
     assert.strictEqual(splitOf({ outcome: "no_usable_capture" }, TODAY), SPLIT.noCapture);
     assert.strictEqual(splitOf({ outcome: "text_day_unknown" }, TODAY), SPLIT.textDayUnknown);
     assert.strictEqual(splitOf({ outcome: "page_unreadable_today" }, TODAY), SPLIT.pageUnreadable);
@@ -92,6 +93,7 @@ describe("settling the backlog", () => {
         return found[1] === stored ? { status: "confirmed" } : { status: "changed", current_state: found[1] };
       };
     };
+    const settledInTurn: string[] = [];
     const report = await settleFirstReadings({
       changes,
       offers,
@@ -100,7 +102,9 @@ describe("settling the backlog", () => {
       readerForListing,
       fetchToday: async (url: string) => (url.includes("gamma") ? { ok: false, error: "HTTP 403" } : { ok: true, text: "TERMS=B" }),
       textDayOf: () => "2026-02-10",
+      onSettled: (result: { vendor: string; split: string }) => settledInTurn.push(`${result.vendor} ${result.split}`),
     });
+    assert.deepStrictEqual(settledInTurn, report.results.map((r: { vendor: string; split: string }) => `${r.vendor} ${r.split}`));
     assert.deepStrictEqual(report.results.map((r: { vendor: string; outcome: string }) => `${r.vendor} ${r.outcome}`), [
       "Alpha vendor_changed",
       "Beta ours",
