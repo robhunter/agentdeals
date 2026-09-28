@@ -6908,12 +6908,6 @@ const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
         <td>Apache-2.0</td>
       </tr>
       <tr>
-        <td style="font-weight:600"><a href="/vendor/codefresh" style="color:var(--text)">Codefresh</a></td>
-        <td>120 builds/mo</td><td>1 concurrent</td><td>Included</td>
-        <td>\u2014</td><td>\u2705 (Argo)</td>
-        <td>Proprietary</td>
-      </tr>
-      <tr>
         <td style="font-weight:600"><a href="/vendor/semaphore-ci" style="color:var(--text)">Semaphore CI</a></td>
         <td>Unlimited (self-hosted)</td><td>Unlimited</td><td>Unlimited</td>
         <td>\u2705 Self-hosted only</td><td>\u2705</td>
@@ -35151,13 +35145,12 @@ interface ComparisonPageMeta {
   relatedSlugs: string[];
   whatTheTableGives?: string;
   costSectionName?: string;
-  mostGenerousAnswer?: string;
 }
 
 const comparisonPagesMeta: ComparisonPageMeta[] = [
   { slug: "cloud-free-tier-comparison-2026", subject: "Cloud IaaS", questionNoun: "cloud IaaS", catalogueCategory: "Cloud IaaS", shortName: "Cloud", relatedSlugs: ["hosting-free-tier-comparison-2026", "serverless-free-tier-comparison-2026", "storage-comparison-2026"] },
   { slug: "database-free-tier-comparison-2026", subject: "Databases", questionNoun: "database", catalogueCategory: "Databases", shortName: "Database", relatedSlugs: ["serverless-free-tier-comparison-2026", "storage-comparison-2026", "auth-comparison-2026"] },
-  { slug: "cicd-free-tier-comparison-2026", subject: "CI/CD", questionNoun: "CI/CD", catalogueCategory: "CI/CD", shortName: "CI/CD", costSectionName: "Hidden Costs and Gotchas", mostGenerousAnswer: "The one column on this page we can rank is Free Minutes / Credits. For private repositories, CircleCI's 30,000 credits (up to 6,000 small-Docker minutes) are the largest allowance; for public repositories, GitHub's standard runners are unlimited.", relatedSlugs: ["testing-free-tier-comparison-2026", "security-free-tier-comparison-2026", "hosting-free-tier-comparison-2026"] },
+  { slug: "cicd-free-tier-comparison-2026", subject: "CI/CD", questionNoun: "CI/CD", catalogueCategory: "CI/CD", shortName: "CI/CD", costSectionName: "Hidden Costs and Gotchas", relatedSlugs: ["testing-free-tier-comparison-2026", "security-free-tier-comparison-2026", "hosting-free-tier-comparison-2026"] },
   { slug: "serverless-free-tier-comparison-2026", subject: "Serverless", questionNoun: "serverless", catalogueCategory: null, shortName: "Serverless", relatedSlugs: ["cloud-free-tier-comparison-2026", "hosting-free-tier-comparison-2026", "database-free-tier-comparison-2026"] },
   { slug: "auth-comparison-2026", subject: "Auth", questionNoun: "auth", catalogueCategory: "Auth", shortName: "Auth & Identity", relatedSlugs: ["security-free-tier-comparison-2026", "database-free-tier-comparison-2026", "monitoring-comparison-2026"] },
   { slug: "email-comparison-2026", subject: "Email", questionNoun: "email", catalogueCategory: "Email", shortName: "Email", relatedSlugs: ["monitoring-comparison-2026", "analytics-free-tier-comparison-2026", "api-development-free-tier-comparison-2026"] },
@@ -35229,7 +35222,7 @@ export function comparisonFaqItems(slug: string, forJsonLd = false): FaqItem[] {
     }]),
     {
       q: `Which ${noun} free tier is most generous?`,
-      a: meta.mostGenerousAnswer ?? (forJsonLd ? GENEROSITY_JSON_TOKEN : GENEROSITY_PROSE_TOKEN),
+      a: forJsonLd ? GENEROSITY_JSON_TOKEN : GENEROSITY_PROSE_TOKEN,
     },
     {
       q: `How do ${noun} free tiers compare on limits?`,

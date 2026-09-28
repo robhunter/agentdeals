@@ -9,6 +9,7 @@ const REPO = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const PAGE = "/cicd-free-tier-comparison-2026";
 const PRICING = "/ci-cd-pricing";
 const ALTERNATIVES = "/ci-cd-alternatives";
+const GITHUB_ACTIONS_ALTERNATIVES = "/github-actions-alternatives";
 const SITEMAPS_OF_GUIDES_AND_REPORTS = ["/sitemap-pages.xml", "/sitemap-reports.xml", "/sitemap-misc.xml"];
 
 const MAIN_TABLE_ROWS: Record<string, string[]> = {
@@ -252,7 +253,6 @@ const STATED_ON_THE_PAGE: string[] = [
   "350+ pre-built steps for mobile workflows.",
   "skips tasks that already ran with the same inputs",
   "Drone's Community Edition runs on one machine; Woodpecker is an Apache 2.0 community fork of Drone.",
-  "The one column on this page we can rank is Free Minutes / Credits. For private repositories, CircleCI's 30,000 credits (up to 6,000 small-Docker minutes) are the largest allowance; for public repositories, GitHub's standard runners are unlimited.",
   "See Hidden Costs and Gotchas for what you pay past the free limits."
 ];
 
@@ -356,7 +356,7 @@ describe("the CI/CD free tier comparison states each service's terms as the vend
         reject(err);
       });
     });
-    const routes = new Set<string>([PAGE, PRICING, ALTERNATIVES]);
+    const routes = new Set<string>([PAGE, PRICING, ALTERNATIVES, GITHUB_ACTIONS_ALTERNATIVES]);
     for (const sitemap of SITEMAPS_OF_GUIDES_AND_REPORTS) for (const route of await routesIn(sitemap)) routes.add(route);
     for (const route of routes) {
       const response = await fetch(`${base}${route}`);
@@ -367,9 +367,9 @@ describe("the CI/CD free tier comparison states each service's terms as the vend
     server?.kill();
   });
 
-  it("reads the page, the two pages that repeat its claims, and the rest of the guides and reports", () => {
+  it("reads the page, the three pages that repeat its claims, and the rest of the guides and reports", () => {
     assert.ok(served.size > 60, `read ${served.size} routes`);
-    for (const route of [PAGE, PRICING, ALTERNATIVES]) assert.ok(served.has(route), `${route} renders`);
+    for (const route of [PAGE, PRICING, ALTERNATIVES, GITHUB_ACTIONS_ALTERNATIVES]) assert.ok(served.has(route), `${route} renders`);
   });
 
   it("sets each main table cell as the vendor's own pages state it", () => {
@@ -415,12 +415,15 @@ describe("the CI/CD free tier comparison states each service's terms as the vend
     assert.deepStrictEqual(found, []);
   });
 
-  it("gives GitHub's per-minute rates on the pricing page, and sells no Codefresh free plan there or on the alternatives page", () => {
+  it("gives GitHub's per-minute rates on the pricing page, and sells no Codefresh free plan there or on either alternatives page", () => {
     assert.ok(textOf(served.get(PRICING)!).includes(GITHUB_RATES_ON_THE_PRICING_PAGE));
     for (const route of [PRICING, ALTERNATIVES]) {
       const rows = rowsOf(served.get(route)!).filter((cells) => cells[0].startsWith("Codefresh"));
       assert.deepStrictEqual(rows, [], route);
     }
+    const handTyped = rowsOf(served.get(GITHUB_ACTIONS_ALTERNATIVES)!)
+      .filter((cells) => cells[0].startsWith("Codefresh") && cells.includes("120 builds/mo"));
+    assert.deepStrictEqual(handTyped, [], GITHUB_ACTIONS_ALTERNATIVES);
   });
 
   it("keeps GitHub's and CircleCI's free allowances and Google Cloud Build's minutes", () => {
