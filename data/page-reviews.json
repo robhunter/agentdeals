@@ -2216,17 +2216,17 @@
       "review_note": "Two readers checked about 390 of the page's clauses against Vercel's, Netlify's, Cloudflare's, Render's, Railway's, Fly.io's, Koyeb's and nine other vendors' own pages on 2026-09-28; about 100 are wrong or out of date. They include Koyeb's free tier (none for new users since February 2026), Netlify's seat price and credit costs, Railway's egress costs and PythonAnywhere's internet access. Copy for every line is on https://github.com/robhunter/agentdeals/issues/2182.",
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 70,
+      "table_figures": 89,
       "table_figures_from_records": 12,
       "tables": [
         {
           "label": "Main Comparison Table",
-          "figures": 23,
+          "figures": 37,
           "from_records": 0
         },
         {
           "label": "The Hosting Cost Trap",
-          "figures": 35,
+          "figures": 40,
           "from_records": 0
         },
         {

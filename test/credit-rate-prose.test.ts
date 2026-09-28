@@ -82,6 +82,7 @@ describe("prose that quotes a credit rate agrees with the record that holds it (
     const stated = [
       ...serve.matchAll(/[~≈] ?([\d.]+) GB \((?:at )?(?:\d+ credits\/GB|credit-based)\)/g),
       ...serve.matchAll(/roughly ([\d.]+) GB bandwidth/g),
+      ...serve.matchAll(/credits cover about ([\d.]+) GB/g),
     ].map(m => ({ value: Number(m[1]), text: m[0] }));
     assert.ok(stated.length >= 4, `only ${stated.length} derived bandwidth figures were found`);
     const wrong = stated
