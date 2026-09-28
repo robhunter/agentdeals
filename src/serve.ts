@@ -19735,7 +19735,6 @@ function buildQ2PricingPreview2026Page(): string {
   const uniqueVendors = new Set(timelineChanges.map(c => c.vendor)).size;
 
   const watchItems = [
-    { vendor: "GitHub Actions", signal: "Self-hosted runners now $0.002/min in private repos (started March 1). Q2 is the first full quarter of impact — watch for community migration patterns to alternatives like GitLab CI or Dagger.", impact: "medium" as const },
     { vendor: "Microsoft 365", signal: "E3 price increase to $39.60/user/mo announced March 24. Takes effect in Q2. Not a developer tool per se, but signals broader Microsoft pricing trends that could affect Azure and GitHub.", impact: "medium" as const },
     { vendor: "OpenAI", signal: "Assistants API deprecated with full shutdown August 26, 2026. Q2 is the migration window — developers must move to Responses API + Conversations API before the deadline.", impact: "high" as const },
     { vendor: "AI API Providers", signal: "Competition intensifying: Groq, Cerebras, and OpenRouter offering generous free tiers while incumbents (OpenAI, Anthropic) focus on paid plans. Expect more free tier launches from challengers in Q2.", impact: "low" as const },
@@ -39099,7 +39098,7 @@ ${mcpCtaCss()}
 
   <div class="executive-summary">
     <p><strong>Quick verdict:</strong> <strong>Amazon SES</strong> is the cheapest at volume at $0.10 per 1,000 emails, but it no longer has a free tier &mdash; AWS replaced the old 62,000/month-from-EC2 allowance with $200 of Free Tier credits that expire, so budget for it from the first email. <strong>Resend</strong> has the best developer experience with a modern API, React Email integration, and 3,000 emails/month free. <strong>Brevo</strong> is ideal for daily drip sending with 300 emails/day permanent free (no monthly cap concern). <strong>Mailtrap</strong> is best for email testing with 4,000 emails/month production plus a separate sandbox for inbox simulation. <strong>Maileroo</strong> is the hidden gem with 3,000 emails/month free and no daily cap.</p>
-    <p><strong>The SendGrid exodus:</strong> SendGrid &mdash; the most widely-used transactional email API &mdash; permanently removed its free tier on May 27, 2025. The perpetual 100 emails/day plan is gone, replaced by a 60-day trial only, then $19.95/month minimum. Mailgun removed its 10,000/month free tier after Sinch acquisition. Thousands of side projects and startups were forced to migrate. The email API market is now split: pure-play transactional APIs (Resend, Postmark, MailerSend), all-in-one platforms (Brevo, Loops), and infrastructure (SES). This guide covers all paths.</p>
+    <p><strong>The SendGrid exodus:</strong> SendGrid &mdash; the most widely-used transactional email API &mdash; permanently removed its free tier on May 27, 2025. The perpetual 100 emails/day plan is gone, replaced by a 60-day trial only, then $19.95/month minimum. Thousands of side projects and startups were forced to migrate. The email API market is now split: pure-play transactional APIs (Resend, Postmark, MailerSend), all-in-one platforms (Brevo, Loops), and infrastructure (SES). This guide covers all paths.</p>
     <p><strong>Pricing is confusing:</strong> Per-email vs per-contact vs per-day caps. Transactional vs marketing distinctions. Overage charges that 10x your bill. Deliverability reputation that takes months to build, making switching costly. This comparison cuts through the confusion with concrete numbers.</p>
   </div>
 
@@ -39498,7 +39497,7 @@ ${mcpCtaCss()}
   <p class="section-intro">The most impactful free tier removal in developer tooling history &mdash; and the migration paths forward.</p>
 
   <div class="context-box">
-    <strong>What happened:</strong> On May 27, 2025, SendGrid permanently eliminated its free tier (100 emails/day, no credit card, no expiration). It was replaced with a 60-day trial only, after which the minimum is $19.95/month (Essentials plan). SendGrid was the default email API for a generation of developers &mdash; referenced in thousands of tutorials, starter templates, and boilerplates. Mailgun had already removed its free tier (10,000 emails/month) after acquisition by Sinch.
+    <strong>What happened:</strong> On May 27, 2025, SendGrid permanently eliminated its free tier (100 emails/day, no credit card, no expiration). It was replaced with a 60-day trial only, after which the minimum is $19.95/month (Essentials plan). SendGrid was the default email API for a generation of developers &mdash; referenced in thousands of tutorials, starter templates, and boilerplates.
   </div>
 
   <div class="context-box">

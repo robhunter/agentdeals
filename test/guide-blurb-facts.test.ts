@@ -10,7 +10,7 @@ const SITEMAPS_OF_GUIDES_AND_REPORTS = ["/sitemap-pages.xml", "/sitemap-reports.
 
 const WITHDRAWN: Record<string, RegExp> = {
   "a self-hosted runner fee GitHub charges": /self-hosted runners? (?:now )?costs?\b|self-hosted runner (?:charges|costs) introduced|introduced self-hosted runner charges|private repos pay \$0\.002|private: \$0\.002|\$0\.002\/min \(private\)|runners now \$0\.002/i,
-  "Mailgun's free tier removed": /Mailgun (?:killed|eliminated|removed)|Mailgun free tier gone|Why not Mailgun: Free tier removed|Sinch 2021, free tier removed|Mailgun<span class="removed-badge">/i,
+  "Mailgun's free tier removed": /Mailgun (?:had already |has )?(?:killed|eliminated|removed|dropped)|Mailgun and [^.;]{0,40} (?:have|has) (?:since )?dropped their free tiers|Mailgun free tier gone|Why not Mailgun: Free tier removed|Sinch 2021, free tier removed|Mailgun<span class="removed-badge">/i,
   "a SendGrid free tier of 100 a day": /SendGrid (?:restricted|down) to 100\/day|SendGrid gives you 100 emails\/day|SendGrid<\/strong> (?:cut|slashed) its free tier|SendGrid slashed its free tier/i,
   "Redis under the BSL": /Redis switched to BSL|Business Source License \(BSL\)|Redis \(BSL\)|free under BSL|<td>BSL restrictions<\/td>/i,
   "Auth0's Essentials at $240": /Essential plan starting at|\$240\/month for just 500/i,
