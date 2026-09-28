@@ -1887,13 +1887,13 @@
       "review_note": null,
       "reads_index": false,
       "tables_read_index": false,
-      "table_figures": 33,
-      "table_figures_from_records": 32,
+      "table_figures": 35,
+      "table_figures_from_records": 34,
       "tables": [
         {
           "label": "All Q1 2026 Changes",
-          "figures": 33,
-          "from_records": 32
+          "figures": 35,
+          "from_records": 34
         }
       ],
       "reads_changes": true,

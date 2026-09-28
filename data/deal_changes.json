@@ -349,7 +349,7 @@
       "date_source": "hand_written"
     },
     {
-      "vendor": "Cloudflare",
+      "vendor": "Cloudflare Queues",
       "change_type": "new_free_tier",
       "date": "2026-02-04",
       "summary": "Queues added to Workers free plan — message queuing now free",
@@ -5126,7 +5126,13 @@
       ],
       "recorded_date": "2026-04-15",
       "date_source": "hand_written",
-      "listing_effect": "ends"
+      "listing_effect": "ends",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-28",
+        "detail": "Retracted 2026-09-28: misdated, and it cited a third-party site. Google sunset the API on 2026-08-18; the record dated 2026-08-18 replaces this one.",
+        "source_url": "https://developers.google.com/merchant/api/latest-updates"
+      }
     },
     {
       "vendor": "DeepSeek",
@@ -13165,6 +13171,26 @@
       "alternatives": [],
       "detected_by": "reverify-ai",
       "recorded_date": "2026-09-30"
+    },
+    {
+      "vendor": "Google Content API for Shopping",
+      "change_type": "product_deprecated",
+      "date": "2026-08-18",
+      "discontinued_date": "2026-08-18",
+      "summary": "Google Content API for Shopping was sunset on 2026-08-18, and its requests have returned progressive errors since 2026-09-01. Google names the Merchant API, generally available since July 2025, as its successor; developers who need more time can apply for extended access.",
+      "previous_state": "Active API for Google Merchant Center product data management",
+      "current_state": "Sunset on 2026-08-18; progressive errors since 2026-09-01. Successor: Merchant API (v1, generally available since July 2025).",
+      "impact": "high",
+      "source_url": "https://developers.google.com/merchant/api/latest-updates",
+      "category": "API Development",
+      "alternatives": [
+        "Google Merchant API",
+        "Shopify API",
+        "BigCommerce API"
+      ],
+      "recorded_date": "2026-09-28",
+      "date_source": "vendor_page",
+      "listing_effect": "ends"
     }
   ]
 }
