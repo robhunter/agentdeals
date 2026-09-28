@@ -704,6 +704,7 @@
     {
       "vendor": "DigitalOcean",
       "change_type": "restriction",
+      "tier": "Hatch",
       "date": "2026-05-13",
       "date_source": "vendor_page",
       "summary": "As of 2026-05-13, DigitalOcean's startup credits exclude Dedicated and Serverless Inference, third-party AI models, Paperspace Machines, Cloudways and Bare Metal GPUs as well as GPU Droplets and H100 GPU products, the two exclusions its page stated before. The page also now puts the monthly credit limit at $10,000; its April capture mentioned a monthly limit without an amount.",
