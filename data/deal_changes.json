@@ -663,7 +663,8 @@
         "Azure for Startups"
       ],
       "recorded_date": "2026-02-26",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "tier": "Hatch"
     },
     {
       "vendor": "DigitalOcean",
@@ -1183,7 +1184,7 @@
       "vendor": "Google",
       "change_type": "pricing_restructured",
       "date": "2026-03-30",
-      "summary": "Google folded Developer Program Premium into Google AI Pro and AI Ultra for personal accounts. Annual Premium stopped auto-renewing on 2026-03-30 (monthly on 2026-06-30). AI Pro includes $10 a month and AI Ultra $100 a month in Google Cloud credits.",
+      "summary": "Standalone Google Developer Program Premium stopped renewing on personal (@gmail.com) accounts: annual plans after 2026-03-30, monthly plans after 2026-06-30. Google had moved its developer benefits into Google AI Pro and AI Ultra on 2026-01-27. Premium on Workspace accounts did not change.",
       "previous_state": "Developer Program Premium: $299 a year (a monthly option also existed) with a $500 annual Google Cloud credit, Skills Boost access and a certification voucher",
       "current_state": "Google AI Pro \"$19.99 / month\" with $10 a month in Cloud credits; Google AI Ultra \"$249.99 / month\" with $100 a month. 1:1 consultations, certification vouchers and unlimited Google Skills access are no longer included. Workspace Premium subscriptions are not changing.",
       "impact": "high",
@@ -5463,7 +5464,13 @@
       "category": "Analytics",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-28",
+        "detail": "Retracted 2026-09-28: the Startup Program ended a year earlier, between the Internet Archive's captures of 2025-07-09 and 2025-09-04, which a separate record describes. The $120-a-month non-profit discount is not a replacement: Segment offered it alongside the Startup Program.",
+        "source_url": "http://web.archive.org/web/20250904201737/https://www.twilio.com/en-us/solutions/startups"
+      }
     },
     {
       "vendor": "AppFit",
@@ -5645,7 +5652,13 @@
       "category": "Startup Programs",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-28",
+        "detail": "Retracted 2026-09-28: nothing changed. stripe.com/atlas never listed $5K of AWS credits, $5K of DigitalOcean credits or a year of GitHub; the reading compared the page with our catalogue text. In the Internet Archive's capture of 2026-03-24 it already said \"over $50,000 in discounts on tools such as Mercury, Xero, and AWS\", \"$500 one-time setup fee\", \"$100 annually after your first year\" and \"$2,500 in Stripe product credits\". Only the example partner names have changed since. Atlas's perks list still offers 5,000 USD in AWS Activate credits.",
+        "source_url": "http://web.archive.org/web/20260324110524/https://stripe.com/atlas"
+      }
     },
     {
       "vendor": "Financial Data",
@@ -7036,7 +7049,13 @@
       "category": "Startup Programs",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-28",
+        "detail": "Retracted 2026-09-28: three of its four clauses are wrong. The Datadog perk is still listed (\"1 year free (up to $100k in credits)\", also in the Internet Archive's capture of 2026-02-12); the AWS perk was already \"up to $5,000 AWS Activate credits\"; and QuickBooks Online rose from 30% off, not fell. The Google Cloud perk was paused months earlier, which a separate record describes.",
+        "source_url": "https://mercury.com/perks/datadog"
+      }
     },
     {
       "vendor": "ScaleGrid Startup Program",
@@ -7450,7 +7469,13 @@
       "category": "Cloud IaaS",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-28",
+        "detail": "Retracted 2026-09-28: nothing changed. microsoft.com/startups already said \"up to $150,000 in Azure credits, available to startups with pre-seed to Series A funding\" in the Internet Archive's capture of 2025-07-31.",
+        "source_url": "http://web.archive.org/web/20250731160354/https://www.microsoft.com/en-us/startups"
+      }
     },
     {
       "vendor": "Grafana k6 Cloud",
@@ -9647,9 +9672,9 @@
       "change_type": "pricing_restructured",
       "date": "2026-09-05",
       "date_source": "discovered",
-      "summary": "The AWS credit offer is now through the AWS Activate program, and the amount is up to $2,500 for OpenAI and $350 for Google Cloud Platform. There are many other partner rewards available, including discounts and free trials for a wide variety of tools.",
-      "previous_state": "Up to $5,000 in AWS credits plus partner discounts on Notion, and other tools. Part of $350K+ total partner rewards program",
-      "current_state": "Ramp customers have access to a partner rewards program with discounts and credits for numerous tools, including AWS (through Activate), OpenAI ($2,500 credits), and Google Cloud Platform ($350 credits).",
+      "summary": "Ramp's AWS perk no longer states an amount. It now says \"Redeem AWS credits through the AWS Activate program.\"; in the Internet Archive's capture of 2026-05-21 it said \"New to AWS? Get $5,000 in AWS credits to get started\".",
+      "previous_state": "New to AWS? Get $5,000 in AWS credits to get started",
+      "current_state": "Redeem AWS credits through the AWS Activate program.",
       "impact": "high",
       "source_url": "https://ramp.com/rewards/aws",
       "category": "Startup Programs",
@@ -9715,7 +9740,13 @@
       "category": "Startup Perks",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-07"
+      "recorded_date": "2026-09-07",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-28",
+        "detail": "Retracted 2026-09-28: the rise to $200,000 is real but happened between the Internet Archive's captures of 2026-05-31 and 2026-06-14, which a separate record describes. The Trainium and Inferentia credit line it calls no longer present is absent from both 2026 captures too.",
+        "source_url": "http://web.archive.org/web/20260614230951/https://aws.amazon.com/startups/credits/"
+      }
     },
     {
       "vendor": "ipapi",
@@ -10169,7 +10200,7 @@
       "change_type": "pricing_restructured",
       "date": "2026-09-09",
       "date_source": "discovered",
-      "summary": "The Startup Scholarship has been replaced with a general 'Early Stage Startup Pricing' offer. The limits are the same (100M events/month), but the description of included features is broader (includes MCP and agents). Year two is now 40% off the annual Plus plan, or the option to drop to a free 2M events/month plan.",
+      "summary": "Amplitude renamed its Startup Scholarship \"Early Stage Startup Pricing\". The first year is still the full Growth plan free for startups with under 20 employees and under $10M raised; year 2 is now 40% off the annual Plus plan, or the free plan.",
       "previous_state": "1 year free Growth plan — 200K MTUs or 100M events/month. All Growth features including Behavioral Cohorts, Pathfinder, experimentation, and predictive audiences. 96%+ approval rate",
       "current_state": "Early Stage Startup Pricing offers the full Growth plan free for the first year, up to 100M events a month. Year two is 40% off the annual Plus plan, or the option to drop to a free 2M-events/month plan.",
       "impact": "medium",
@@ -10177,7 +10208,8 @@
       "category": "Startup Perks",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-09"
+      "recorded_date": "2026-09-09",
+      "tier": "Startup Scholarship"
     },
     {
       "vendor": "GitHub",
@@ -10526,7 +10558,13 @@
       "category": "Startup Perks",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-12"
+      "recorded_date": "2026-09-12",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-28",
+        "detail": "Retracted 2026-09-28: AWS did not replace the Kiro offer. aws.amazon.com/startups lists \"Kiro credits designed for startups\" beside \"up to $200,000 in AWS Activate Credits\" in the Internet Archive's capture of 2026-09-09, as it does today, and kiro.dev/startups still offers \"up to 1-year's worth of free Kiro Pro+\".",
+        "source_url": "http://web.archive.org/web/20260909002539/https://aws.amazon.com/startups/"
+      }
     },
     {
       "vendor": "Stream",
@@ -12695,6 +12733,48 @@
       "impact": "medium",
       "source_url": "http://web.archive.org/web/20251028161300/https://simplepdf.com/embed",
       "category": "Forms",
+      "alternatives": [],
+      "recorded_date": "2026-09-28",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Mercury",
+      "change_type": "limits_reduced",
+      "date": "2026-07-02",
+      "summary": "Mercury paused its Google Cloud perk. mercury.com/perks/google-cloud offered \"Google Cloud and Firebase costs covered up to $200,000 USD over 2 years\" in the Internet Archive's capture of 2026-02-10 and said \"Offer temporarily unavailable. New offer coming later this year\" in the capture of 2026-07-02, as it does today.",
+      "previous_state": "Google Cloud and Firebase costs covered up to $200,000 USD over 2 years",
+      "current_state": "Offer temporarily unavailable. New offer coming later this year",
+      "impact": "medium",
+      "source_url": "http://web.archive.org/web/20260702134555/https://mercury.com/perks/google-cloud",
+      "category": "Startup Programs",
+      "alternatives": [],
+      "recorded_date": "2026-09-28",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Segment",
+      "change_type": "free_tier_removed",
+      "date": "2025-09-04",
+      "summary": "Segment ended its Startup Program, which gave early-stage startups Segment free for up to two years. segment.com/industry/startups described it in the Internet Archive's capture of 2025-07-09; by the capture of 2025-09-04 the address redirected to Twilio's startups page, which says \"We do not offer additional credits to startups at this time.\"",
+      "previous_state": "Startup Program: \"we're giving early-stage startups Segment for free for up to two years when you join our Startup Program\"",
+      "current_state": "\"We do not offer additional credits to startups at this time.\"",
+      "impact": "high",
+      "source_url": "http://web.archive.org/web/20250904201737/https://www.twilio.com/en-us/solutions/startups",
+      "category": "Analytics",
+      "alternatives": [],
+      "recorded_date": "2026-09-28",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "AWS Activate",
+      "change_type": "limits_increased",
+      "date": "2026-06-14",
+      "summary": "AWS raised Activate Portfolio from up to $100,000 to up to $200,000 in credits. aws.amazon.com/startups/credits/ said \"Up to $100,000 USD AWS Activate Credits\" in the Internet Archive's capture of 2026-05-31 and \"Up to $200,000 USD in Activate Credits\" in the capture of 2026-06-14.",
+      "previous_state": "Activate Portfolio: up to $100,000 USD in AWS Activate credits, with an Activate Provider Org ID",
+      "current_state": "Activate Portfolio: up to $200,000 USD in Activate Credits, with an Activate Provider Org ID; pre-Series B",
+      "impact": "medium",
+      "source_url": "http://web.archive.org/web/20260614230951/https://aws.amazon.com/startups/credits/",
+      "category": "Startup Perks",
       "alternatives": [],
       "recorded_date": "2026-09-28",
       "date_source": "hand_written"
