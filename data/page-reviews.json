@@ -529,6 +529,7 @@
         "aws",
         "azure",
         "cloudflare",
+        "cloudflare-pages",
         "dynamodb-local",
         "neon",
         "supabase"
@@ -539,7 +540,7 @@
         "amazon-ses",
         "aws",
         "azure",
-        "cloudflare",
+        "cloudflare-workers",
         "google-cloud",
         "neon",
         "railway",
@@ -555,7 +556,7 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 47,
+      "table_figures": 52,
       "table_figures_from_records": 9,
       "tables": [
         {
@@ -575,7 +576,7 @@
         },
         {
           "label": "AWS vs Alternatives",
-          "figures": 12,
+          "figures": 17,
           "from_records": 0
         },
         {
@@ -599,7 +600,7 @@
       "vendors_tabulated": [
         "aws",
         "azure",
-        "cloudflare",
+        "cloudflare-workers",
         "google-cloud",
         "neon",
         "railway",
@@ -1139,14 +1140,14 @@
       "vendors_asserted": [
         "aws",
         "azure",
-        "cloudflare",
+        "cloudflare-workers",
         "railway",
         "render"
       ],
       "vendors_tabulated": [
         "aws",
         "azure",
-        "cloudflare",
+        "cloudflare-workers",
         "google-cloud",
         "hetzner",
         "railway",
@@ -1913,14 +1914,14 @@
       "vendors_asserted": [
         "aws",
         "azure",
-        "cloudflare",
+        "cloudflare-pages",
         "firebase",
         "google-colab"
       ],
       "vendors_tabulated": [
         "aws",
         "azure",
-        "cloudflare",
+        "cloudflare-workers",
         "firebase",
         "google-colab",
         "neon",
@@ -1937,22 +1938,22 @@
       "review_note": "Two readers checked the page's 125 claims against Google's, AWS's, Microsoft's and Vercel's own pages on 2026-09-28; 45 no longer hold. They include the tier that carries the 200 GiB of free egress (Standard, not Premium), how the $300 Free Trial ends, Cloud Source Repositories (closed to new customers) and Firebase Auth's 50K MAUs (Identity Platform only). Copy for every line is on https://github.com/robhunter/agentdeals/issues/2168.",
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 44,
+      "table_figures": 59,
       "table_figures_from_records": 8,
       "tables": [
         {
           "label": "Always Free Products",
-          "figures": 20,
+          "figures": 27,
           "from_records": 0
         },
         {
           "label": "Free Trial & AI/ML Tools",
-          "figures": 3,
+          "figures": 6,
           "from_records": 0
         },
         {
           "label": "GCP vs AWS vs Others",
-          "figures": 12,
+          "figures": 17,
           "from_records": 0
         },
         {

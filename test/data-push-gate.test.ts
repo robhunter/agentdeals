@@ -266,6 +266,7 @@ const FAILING_BY_MODE: Record<string, Array<{ file: string; drifted?: typeof A_G
   "vendor-one-at-a-time": [],
   "budget-against-the-tree": [],
   "green-and-rewrites-a-committed-file": [],
+  "vendor-and-rewrites-a-committed-file": [],
 };
 
 const WHAT_A_TEST_REWROTE = `${JSON.stringify({ checked: "rewritten by a test" })}\n`;
@@ -294,7 +295,7 @@ if (mode.startsWith("vendor")) {
   if (mode === "vendor-one-at-a-time") blamed = blamed.slice(0, 1);
   failing = blamed.length > 0 ? [{ file: "test/the-data-this-run-wrote-is-wrong.test.ts" }] : [];
 }
-if (mode === "green-and-rewrites-a-committed-file") {
+if (mode.endsWith("-and-rewrites-a-committed-file")) {
   writeFileSync("data/health.json", ${JSON.stringify(WHAT_A_TEST_REWROTE)});
 }
 const red = mode === "crashed" || failing.length > 0;
@@ -1642,6 +1643,44 @@ describe("#2057 a replay starts from the run's own commit, whatever else the wor
       "main carries what a test wrote, not what the run committed",
     );
     assert.strictEqual(suiteRuns(run.stdout), 2);
+  });
+
+  it("holds a vendor back from the run's own commit, not from a committed file a test rewrote while the suite ran", () => {
+    const { work, origin } = fixtureRepo();
+    writeFileSync(join(work, "data", "health.json"), '{"checked":43}\n');
+    writeFileSync(
+      join(work, "data", "deal_changes.json"),
+      changesFile([
+        { vendor: "Steadyvendor", summary: "a reading this run stands behind" },
+        { vendor: "Blamedvendor", summary: "a reading the suite refuses", reading: "wrong" },
+      ]),
+    );
+
+    const run = runGate(
+      work,
+      "vendor-and-rewrites-a-committed-file",
+      "data-quarantine/fixture",
+      "data(auto): fixture",
+      "data/deal_changes.json",
+      "data/health.json",
+    );
+
+    assert.strictEqual(run.status, 0, `${run.stdout}${run.stderr}`);
+    assert.match(run.outputs, /held_back_vendors=Blamedvendor/);
+    assert.deepStrictEqual(changesOn(origin, "main"), [
+      { vendor: "Steadyvendor", summary: "a reading this run stands behind" },
+      { vendor: "Blamedvendor", summary: AS_MAIN_HAS_IT },
+    ]);
+    assert.strictEqual(
+      git(origin, "show", "main:data/health.json"),
+      '{"checked":43}',
+      "the hold-back committed what a test wrote, not what the run committed",
+    );
+    assert.match(
+      run.stdout,
+      /in data\/health\.json\. Only the commit reaches main and a hold-back amends every path this run commits/,
+      "the log does not name the file the hold-back put back",
+    );
   });
 });
 

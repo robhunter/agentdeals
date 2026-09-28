@@ -115,6 +115,16 @@ async function digestForWeekStarting(weekStart: string) {
   return digest;
 }
 
+async function latestArchivedWeekWithChangesAndNoDiscoveryBatch(): Promise<string> {
+  const thisWeek = isoWeekWindow(new Date()).start;
+  for (let weeksAgo = 1; weeksAgo <= 26; weeksAgo++) {
+    const weekStart = new Date(Date.parse(thisWeek) - weeksAgo * 7 * 86400000).toISOString().slice(0, 10);
+    const digest = await digestForWeekStarting(weekStart);
+    if (digest.changes_in_week > 0 && digest.discovered_in_week === 0) return weekStart;
+  }
+  assert.fail("no archived week in the last 26 holds changes without a discovery batch");
+}
+
 function combinedCountPhrase(digest: { changes_in_week: number; discovered_in_week: number }): string {
   return `across ${digest.changes_in_week + digest.discovered_in_week} developer tool pricing change`;
 }
@@ -660,8 +670,12 @@ describe("every weekly surface reports the same week", () => {
   it("leaves an archived week with no discovery batch alone", async () => {
     proc = await startHttpServer();
     const base = `http://127.0.0.1:${serverPort}`;
-    const week = await (await fetch(`${base}/digest/2026-w34`)).text();
-    assert.ok(week.includes("1 change tracked in week 34, 2026."), "week 34 should count one change");
-    assert.ok(!week.includes("no known effective date"), "week 34 has no batch without a known effective date to report");
+    const weekStart = await latestArchivedWeekWithChangesAndNoDiscoveryBatch();
+    const digest = await digestForWeekStarting(weekStart);
+    const slug = isoWeekSlug(weekStart);
+    const week = await (await fetch(`${base}/digest/${slug}`)).text();
+    const stated = `${changeCount(digest.changes_in_week)} tracked in week ${Number(slug.slice(6))}, ${slug.slice(0, 4)}.`;
+    assert.ok(week.includes(stated), `/digest/${slug} should say "${stated}"`);
+    assert.ok(!week.includes("no known effective date"), `/digest/${slug} has no batch without a known effective date to report`);
   });
 });
