@@ -6842,7 +6842,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "github-actions-alternatives",
     title: "GitHub Actions Alternatives \u2014 Free CI/CD Tools for 2026",
-    metaDesc: "GitHub Actions self-hosted runners now cost $0.002/min for private repos. Compare free CI/CD alternatives: GitLab CI, CircleCI, Buildkite, Harness, Drone CI, Google Cloud Build, and more. [[freshness]]",
+    metaDesc: "Compare free CI/CD alternatives: GitLab CI, CircleCI, Buildkite, Harness, Drone CI, Google Cloud Build, and more. [[freshness]]",
     contextHtml: `<p>GitHub announced a $0.002/min charge for self-hosted runners in private repos from March 1, 2026, then postponed it, so self-hosted runners are still free. The GitHub-hosted free tier (2,000 minutes a month for private repos; standard runners are free in public repos) is unchanged.</p>
       <p>For public repositories, GitHub Actions remains the best free CI/CD option \u2014 unlimited minutes with no restrictions. But if you\u2019re running private repo pipelines on self-hosted infrastructure, these alternatives offer generous free tiers.</p>
       <p>Below are the best free CI/CD alternatives, compared by <strong>exact free tier limits</strong> \u2014 build minutes, concurrent jobs, storage, and platform support. For the full picture, see our <a href="/ci-cd-pricing">definitive CI/CD pricing comparison</a> covering 17+ tools across general, cloud-native, mobile, and self-hosted categories.</p>`,
@@ -6869,7 +6869,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
       <tr>
         <td style="font-weight:600;color:var(--text-dim)">GitHub Actions</td>
         <td>2,000 min/mo (private)</td><td>20 concurrent</td><td>Unlimited</td>
-        <td style="color:var(--text-dim)">$0.002/min (private)</td><td>\u2705</td>
+        <td style="color:var(--text-dim)">Free</td><td>\u2705</td>
         <td style="color:var(--text-dim)">Proprietary</td>
       </tr>
       <tr>
@@ -15579,7 +15579,7 @@ function buildFreeStartupStackPage(): string {
       icon: "🔄",
       recommended: { vendor: "GitHub Actions", why: "2K minutes/month for private repos, unlimited for open source. Deep GitHub integration, massive marketplace of community actions, and matrix builds." },
       alternatives: ["GitLab CI"],
-      outgrow: "When you exceed 2K minutes/month on private repos. Self-hosted runners are free (but now cost $0.002/min for private repos as of March 2026).",
+      outgrow: "When you exceed 2K minutes/month on private repos. Self-hosted runners are free.",
       relatedPage: "/ci-cd-alternatives",
     },
     {
@@ -18513,7 +18513,7 @@ function buildFreeSaasStackPage(): string {
       icon: "\u2699\uFE0F",
       recommended: { vendor: "GitHub Actions", why: "2,000 minutes/month for private repos, unlimited for public. Deep GitHub integration \u2014 trigger on push, PR, schedule, or manual dispatch. Massive marketplace of community actions for testing, linting, deploying, and security scanning. Matrix testing across Node/Python/Go versions. Cache dependencies to cut build times by 50-80%." },
       alternatives: ["GitLab CI"] as string[],
-      outgrow: "When you exceed 2,000 minutes/month on private repos. Self-hosted runners are free (but now cost $0.002/min for private repos as of March 2026). Railway and Vercel auto-deploy from git \u2014 combine with GitHub Actions for tests only to conserve minutes.",
+      outgrow: "When you exceed 2,000 minutes/month on private repos. Self-hosted runners are free. Railway and Vercel auto-deploy from git \u2014 combine with GitHub Actions for tests only to conserve minutes.",
       whyNot: null,
       relatedPage: "/cicd-free-tier-comparison-2026",
       isFrameworkSection: false,
@@ -28883,10 +28883,10 @@ function buildCiCdPricingPage(): string {
       category: "general",
       freeMinutes: "2,000 min/mo (private)",
       concurrency: "20 concurrent jobs",
-      selfHosted: "Free (private: $0.002/min)",
+      selfHosted: "Free",
       paidFrom: "$4/seat (Team)",
       pricingModel: "Per-seat + usage",
-      freeDetails: "Unlimited minutes for public repos. Private repos: 2,000 min/mo on GitHub-hosted runners, 500 MB artifact storage, 10 GB cache. Self-hosted runners are free for public repos; private repos pay $0.002/min for managed self-hosted runners (introduced March 2026). By far the most popular CI/CD platform for open-source.",
+      freeDetails: "Unlimited minutes for public repos. Private repos: 2,000 min/mo on GitHub-hosted runners, 500 MB artifact storage, 10 GB cache. Self-hosted runners are free. By far the most popular CI/CD platform for open-source.",
       freeType: "generous",
       monthlyCostSmall: "$0",
       monthlyCostTeam: "$4/seat + overages",
@@ -38857,7 +38857,7 @@ ${mcpCtaCss()}
 
   <div class="diff-card" style="border-left-color:#f85149">
     <h3>Auth0: No middle ground between free and paid</h3>
-    <p class="diff-desc"><strong>Auth0&rsquo;s Essential plan starts at $23+/mo</strong> &mdash; there&rsquo;s no intermediate tier. You&rsquo;re on the generous free tier (25K MAU) or jumping to paid. For teams that outgrow 25K MAU but don&rsquo;t need all Essential features, this cliff can be jarring. <strong>Clerk</strong> and <strong>Kinde</strong> have more gradual pricing curves.</p>
+    <p class="diff-desc"><strong>Auth0&rsquo;s Essential plan starts at $35/mo</strong> &mdash; there&rsquo;s no intermediate tier. You&rsquo;re on the generous free tier (25K MAU) or jumping to paid. For teams that outgrow 25K MAU but don&rsquo;t need all Essential features, this cliff can be jarring. <strong>Clerk</strong> and <strong>Kinde</strong> have more gradual pricing curves.</p>
   </div>
 
   <div class="diff-card" style="border-left-color:#d29922">
