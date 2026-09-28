@@ -959,8 +959,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 50,
-      "table_figures_from_records": 17,
+      "table_figures": 49,
+      "table_figures_from_records": 16,
       "tables": [
         {
           "label": "Main Comparison Table",
@@ -994,8 +994,8 @@
         },
         {
           "label": "Pricing Change Timeline",
-          "figures": 17,
-          "from_records": 17
+          "figures": 16,
+          "from_records": 16
         }
       ],
       "reads_changes": true,
@@ -1258,8 +1258,8 @@
       "review_note": "Read against resend.com/pricing, mailersend.com/pricing and mailerlite.com/pricing on 2026-09-05, after a Resend record dated 2026-09-05 moved under the 2026-09-04 review. Resend: 3,000 emails/month and the 100/day cap hold; custom domains on Free is 3, not the 1 the page published, and the catalogue record carried the same 1. MailerSend: the Free plan is 500 emails/month with 1 domain, 10 templates, 5 seats, 1,000 daily API requests and 1-day activity retention, and the 14-day Professional trial carries the same 500 — so the 3,000 the page published on three surfaces was not the trial figure either. Hobby is $7.00/month monthly, $5.60 billed yearly, for 5,000 emails. MailerLite: the Free plan is 250 subscribers and 2,500 monthly emails, below both the 1,000/12,000 the page published and the 500/12,000 in our own record; the record is the stale side and no change record holds 250. Corrected on this page: the MailerSend table row, section and 3K cost-trap cell, the MailerLite table row and section, the Resend section, and the transactional-email answer on /email-service-alternatives. Not verified in this pass: Amazon SES, Brevo, Mailtrap, Loops, Mailjet, Postmark, Maileroo, EmailOctopus, Buttondown, Substack, SMTP2GO, EmailLabs.io and the 10K/50K/100K/500K rows of the cost-trap table.",
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 54,
-      "table_figures_from_records": 5,
+      "table_figures": 55,
+      "table_figures_from_records": 6,
       "tables": [
         {
           "label": "Main Comparison Table",
@@ -1283,8 +1283,8 @@
         },
         {
           "label": "Pricing Change Timeline",
-          "figures": 5,
-          "from_records": 5
+          "figures": 6,
+          "from_records": 6
         }
       ],
       "reads_changes": true,
@@ -1853,6 +1853,7 @@
       "vendors_tabulated": [
         "amazon-aurora-postgresql",
         "amazon-sp-api",
+        "appwrite-cloud",
         "atlassian",
         "aws",
         "brave-search-api",
@@ -3307,8 +3308,8 @@
       "review_note": "Read against nhost.io/pricing on 2026-09-07, after an Nhost record dated 2026-09-07 moved under the 2026-09-05 review. The Starter plan reads $0/month, a limit of 1 project, the project paused after 1 week of inactivity, 1 GB database, 1 GB storage and 5 GB egress. The comparison table gave Nhost 5 GB File Storage and the catalogue description said the same; the vendor gives 1 GB, so both were corrected. Database (1 GB) and Bandwidth (5 GB) already matched. The one-project limit and the inactivity pause are stated by neither surface and the table has no column for either. The Appwrite Cloud, Supabase, Firebase, PocketBase and Convex claims are unchanged since the 2026-09-05 reading and were not re-fetched.",
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 34,
-      "table_figures_from_records": 13,
+      "table_figures": 35,
+      "table_figures_from_records": 14,
       "tables": [
         {
           "label": "1. Free Tier Comparison Table",
@@ -3322,8 +3323,8 @@
         },
         {
           "label": "5. Other BaaS Alternatives",
-          "figures": 13,
-          "from_records": 13
+          "figures": 14,
+          "from_records": 14
         }
       ],
       "reads_changes": true,
