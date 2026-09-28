@@ -1696,6 +1696,7 @@
     {
       "vendor": "Google Gemini API",
       "change_type": "restriction",
+      "tier": "Paid tiers",
       "date": "2026-04-01",
       "summary": "Billing-account-level spend caps enforced starting April 1, 2026. When a tier's spend cap is reached, API requests pause until the next billing month. Affects pay-as-you-go developers who may see unexpected request pausing.",
       "previous_state": "No hard spend caps — usage billed without automatic pausing",
