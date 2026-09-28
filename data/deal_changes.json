@@ -1508,7 +1508,13 @@
         "Koyeb"
       ],
       "recorded_date": "2026-03-19",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-28",
+        "detail": "Retracted 2026-09-28: no change. Render's free-tier docs already said it spins down a free web service after 15 minutes without inbound traffic, and that spinning up takes up to a minute, on 2024-11-23 and 2025-08-10.",
+        "source_url": "http://web.archive.org/web/20250810145839/https://render.com/docs/free"
+      }
     },
     {
       "vendor": "Render",
