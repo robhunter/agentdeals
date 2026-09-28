@@ -31626,7 +31626,7 @@ function buildHostingPricingPage(): string {
     '  </div>\n' +
     '    <div class="hidden-cost-card">\n' +
     '    <h4>Render Free Tier Spin-Down</h4>\n' +
-    '    <p>Free web services on Render spin down after 15 minutes of inactivity (tightened from 30 minutes in Sep 2025). Cold starts take 30\u201360 seconds. Not viable for APIs that need to respond quickly. The workaround costs $7/month (Individual plan, always-on).</p>\n' +
+    '    <p>Free web services on Render spin down after 15 minutes without traffic and take about one minute to spin back up. Not viable for APIs that need to respond quickly. The workaround costs $7/month (Individual plan, always-on).</p>\n' +
     '  </div>\n' +
     '  <div class="hidden-cost-card">\n' +
     '    <h4>Railway Credit Exhaustion</h4>\n' +
