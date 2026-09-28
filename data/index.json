@@ -3769,7 +3769,7 @@
     {
       "vendor": "Google Cloud",
       "category": "Startup Perks",
-      "description": "Start tier: $2,000 in Google Cloud credits for 12 months, for pre-funded startups. Scale tier: up to $200,000 over 2 years for startups with equity funding from pre-seed to Series A (year 1 covers usage up to $100,000; year 2 covers 20% of spend, up to $100,000 more). AI-first startups get $150,000 more, up to $350,000. Includes 12 months of Google Workspace Business Plus.",
+      "description": "Start tier: up to $2,000 in Google Cloud credits, valid for one year, for pre-funded startups. Scale tier: up to $200,000 over 2 years for startups with equity funding from pre-seed to Series A (year 1 covers usage up to $100,000; year 2 covers 20% of spend, up to $100,000 more). AI-first startups get $150,000 more, up to $350,000. Includes 12 months of Google Workspace Business Plus.",
       "tier": "Startup Program",
       "url": "https://cloud.google.com/startup",
       "tags": [
