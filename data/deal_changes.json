@@ -8783,7 +8783,13 @@
       "category": "Databases",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-03"
+      "recorded_date": "2026-09-03",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-27",
+        "detail": "Retracted 2026-09-27: nothing changed on 2026-09-03. The Internet Archive's captures of Supabase's pricing page on 2025-05-30, 2026-08-02 and 2026-09-08 all say \"Free projects are paused after 1 week of inactivity. Limit of 2 active projects.\" and give the Pro plan $10 of compute credits a month, and the spend cap they describe is the Pro plan's (\"The Pro Plan has a spend cap enabled by default\"), not the Free plan's. The 2025-05-30 capture also says \"Compute instances are billed hourly\", and the closest capture before the record, 2026-08-22, shows the same Free plan. The record compared the page with our own listing text.",
+        "source_url": "https://web.archive.org/web/20250530055814/https://supabase.com/pricing"
+      }
     },
     {
       "vendor": "n8n",
@@ -9482,7 +9488,13 @@
       "category": "Databases",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-05"
+      "recorded_date": "2026-09-05",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-27",
+        "detail": "Retracted 2026-09-27: nothing changed on 2026-09-05. The Internet Archive's capture of Appwrite's pricing page on 2026-08-09 shows the same Free plan this record reports: 5GB bandwidth, 2GB storage, 750K executions, 75K monthly active users, 1 Database and 1 Bucket per project, \"Free projects are paused after 1 week of inactivity. Limit of 2 projects.\" The record compared the page with our own listing text, which left the project limit out.",
+        "source_url": "https://web.archive.org/web/20260809130905/https://appwrite.io/pricing"
+      }
     },
     {
       "vendor": "Buildkite",
@@ -9728,7 +9740,13 @@
       "category": "Databases",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-07"
+      "recorded_date": "2026-09-07",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-27",
+        "detail": "Retracted 2026-09-27: nothing changed on 2026-09-07. The Internet Archive's capture of Nhost's pricing page on 2026-08-28 shows the same Starter plan this record reports: \"$0 / month Limit of 1 project. Project paused after 1 week of inactivity. 1 GB database 1 GB storage 5 GB egress\". The record compared the page with our own listing text.",
+        "source_url": "https://web.archive.org/web/20260828130405/https://nhost.io/pricing"
+      }
     },
     {
       "vendor": "OpenRouter",
@@ -9863,7 +9881,13 @@
       "category": "Cloud Hosting",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-07"
+      "recorded_date": "2026-09-07",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-27",
+        "detail": "Retracted 2026-09-27: nothing changed on 2026-09-07. The record's Before and After state the same Free plan, 300 credits a month with production deploys at 15 credits, bandwidth at 20 credits per GB, compute at 10 credits per GB-hour and web requests at 2 credits per 10,000, and the Internet Archive's capture of Netlify's pricing page on 2026-08-15 shows the same \"300 credit limit / month\" and the same rates. The record compared the page with our own listing text.",
+        "source_url": "https://web.archive.org/web/20260815105511/https://www.netlify.com/pricing/"
+      }
     },
     {
       "vendor": "Socket.dev",
@@ -10576,7 +10600,13 @@
       "category": "AI / ML",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-13"
+      "recorded_date": "2026-09-13",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-27",
+        "detail": "Retracted 2026-09-27: nothing changed on 2026-09-13. The Internet Archive's captures of lumenfall.ai/pricing on 2026-03-11, 2026-06-09 and 2026-08-28 carry the same terms this record reports, \"Start Free with $1 Credit\" with zero markup, and none mentions FLUX.1 [schnell]. The free-forever FLUX.1 [schnell] FP8 line was in our listing text, and Lumenfall's model catalogue still lists that model as free on 2026-09-27. The record compared the pricing page with our own listing text.",
+        "source_url": "https://web.archive.org/web/20260828131241/https://lumenfall.ai/pricing"
+      }
     },
     {
       "vendor": "ToolJet",

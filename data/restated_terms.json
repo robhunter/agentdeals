@@ -38,7 +38,8 @@
       "source_url": "https://www.netlify.com/pricing/",
       "record_date": "2026-09-07",
       "change_type": "pricing_restructured",
-      "summary": "The free tier now offers 300 credits/month."
+      "summary": "The free tier now offers 300 credits/month.",
+      "reverted_on": "2026-09-27"
     },
     {
       "vendor": "Railway",
@@ -64,7 +65,8 @@
       "source_url": "https://supabase.com/pricing",
       "record_date": "2026-09-03",
       "change_type": "pricing_restructured",
-      "summary": "The free tier now has a 1 week inactivity pause, and compute is now a separate cost with a $10/month credit on paid plans. The free tier also has a spend cap."
+      "summary": "The free tier now has a 1 week inactivity pause, and compute is now a separate cost with a $10/month credit on paid plans. The free tier also has a spend cap.",
+      "reverted_on": "2026-09-27"
     },
     {
       "vendor": "CircleCI",

@@ -180,7 +180,7 @@
     {
       "vendor": "Netlify",
       "category": "Cloud Hosting",
-      "description": "The Free plan offers 300 credit limit / month, including production deploys (15 credits each), compute (10 credits per GB-hour), bandwidth (20 credits per GB), and web requests (2 credits per 10k requests). Additional credits can be purchased.",
+      "description": "The Free plan is $0 with a limit of 300 credits per month, covering production deploys (15 credits each), compute (10 credits per GB-hour), bandwidth (20 credits per GB) and web requests (2 credits per 10k requests). Netlify says the Free plan is always free, with hard monthly limits that cannot be exceeded or incur costs; extra credits need a paid plan. Personal is $9 a month with 1,000 credits.",
       "tier": "Free",
       "url": "https://www.netlify.com/pricing/",
       "tags": [
@@ -223,12 +223,9 @@
         ],
         "reviewed": "2026-08-31"
       },
-      "restated_from": {
-        "reading_date": "2026-09-07",
-        "source_url": "https://www.netlify.com/pricing/",
+      "restatement_reverted": {
         "record_date": "2026-09-07",
-        "change_type": "pricing_restructured",
-        "restated_on": "2026-09-20"
+        "reverted_on": "2026-09-27"
       }
     },
     {
@@ -661,7 +658,7 @@
     {
       "vendor": "Supabase",
       "category": "Databases",
-      "description": "Open source Firebase alternative — The free tier includes unlimited API requests, 50,000 monthly active users, 500 MB database size, 5 GB egress, 1 GB file storage. Free projects are paused after 1 week of inactivity. Paid plans include $10/mo in compute credits.",
+      "description": "Postgres development platform: database, Auth, Storage, Realtime and Edge Functions. The Free plan is $0: unlimited API requests, 50,000 monthly active users, a 500 MB database on a shared CPU with 500 MB RAM, 5 GB egress plus 5 GB cached egress, 1 GB file storage, 500,000 Edge Function invocations, and Realtime with 200 concurrent connections and 2 million messages a month. Free projects are paused after 1 week of inactivity, with a limit of 2 active projects. Pro starts at $25 a month for the first project and includes $10 a month of compute credits, enough for one Micro instance.",
       "tier": "Free",
       "url": "https://supabase.com/pricing",
       "tags": [
@@ -726,12 +723,9 @@
         ],
         "reviewed": "2026-08-31"
       },
-      "restated_from": {
-        "reading_date": "2026-09-03",
-        "source_url": "https://supabase.com/pricing",
+      "restatement_reverted": {
         "record_date": "2026-09-03",
-        "change_type": "pricing_restructured",
-        "restated_on": "2026-09-20"
+        "reverted_on": "2026-09-27"
       }
     },
     {
@@ -1202,7 +1196,7 @@
     {
       "vendor": "Nhost",
       "category": "Databases",
-      "description": "Open-source Firebase alternative with Postgres + Hasura GraphQL — 1 GB database, 1 GB storage, 5 GB bandwidth free",
+      "description": "Open-source backend with Postgres and Hasura GraphQL, plus Auth, Storage and Functions. The Starter plan is $0 a month: 1 GB database, 1 GB storage and 5 GB egress, with functions, realtime APIs and unlimited users. It is limited to 1 project, and the project is paused after 1 week of inactivity. Pro starts at $25 a month with $15 of compute credits, a 10 GB database, 50 GB storage and 50 GB egress.",
       "tier": "Free",
       "url": "https://nhost.io/pricing",
       "tags": [
