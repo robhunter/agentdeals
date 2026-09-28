@@ -1,0 +1,123 @@
+import { getCategories, loadDealChanges, loadOffers } from "./data.js";
+import { trackedChanges } from "./change-census.js";
+import { changesInWindow } from "./change-dates.js";
+import { riskEntries } from "./risk-scorecard.js";
+import type { DealChange } from "./types.js";
+
+const Q1_2026 = { start: "2026-01-01", end: "2026-03-31" };
+
+export function trackedChangesInQ1_2026<T extends DealChange>(changes: T[]): T[] {
+  return trackedChanges(changesInWindow(changes, Q1_2026).dated);
+}
+
+const WRITTEN_BLURBS: Readonly<Record<string, string>> = {
+  "localstack-alternatives": "LocalStack CE shuts down March 23, 2026 — compare 9 free open-source AWS emulators",
+  "postman-alternatives": "Postman killed free team collaboration March 1, 2026 — 5 free API testing alternatives",
+  "terraform-alternatives": "HCP Terraform legacy plan ends March 31, 2026 — free IaC alternatives compared",
+  "hetzner-alternatives": "Hetzner raised prices twice in 2026 and its Cost-Optimized line is unavailable — cloud hosting alternatives with free tiers",
+  "freshping-alternatives": "Freshping shut down March 6, 2026 — 13 free uptime monitoring alternatives",
+  "heroku-alternatives": "Heroku removed free tier Nov 2022, entered sustaining mode Feb 2026 — 8 free PaaS options",
+  "firebase-alternatives": "Firebase Studio is closing (no new workspaces since June 22, 2026; shutdown March 22, 2027) + Spark forced Blaze migration — 7 BaaS alternatives",
+  "github-actions-alternatives": "GitHub postponed its self-hosted runner fee, so self-hosted runners stay free \u2014 10 free CI/CD alternatives compared",
+  "cursor-alternatives": "Cursor credit-based pricing drives alternatives search — 8 free AI coding tools compared",
+  "datadog-alternatives": "Unpredictable pricing drives developer search — 12 free monitoring and observability alternatives compared",
+  "vercel-alternatives": "Hobby plan limits and $20/seat Pro pricing drive alternatives search — 10 free deployment platforms compared",
+  "auth0-alternatives": "B2C paid plans start at $35/mo (Essentials) and $240/mo (Professional) — 9 free authentication platforms compared",
+  "mongodb-alternatives": "512 MB free tier + SSPL license drive alternatives search — 10 free databases compared",
+  "redis-alternatives": "Redis's move to RSALv2/SSPLv1 (AGPLv3 added in Redis 8) + 30 MB free tier — 8 open-source and managed alternatives compared",
+  "ai-free-tiers": "Compare 65 free AI APIs, LLM inference, vector databases, and coding tools — exact limits and rate caps",
+  "database-alternatives": "Compare 30+ free databases by type — Postgres, document, key-value, edge, graph, vector, and time-series",
+  "hosting-alternatives": "Compare 30+ free hosting options by type — PaaS, static/JAMstack, serverless, containers, VPS, and edge/CDN",
+  "monitoring-alternatives": "Compare 70+ free monitoring tools by type — APM, uptime, logs, error tracking, and infrastructure",
+  "email-service-alternatives": "SendGrid retired its free plan in 2025 — 8 free transactional email alternatives compared",
+  "ci-cd-alternatives": "35+ free CI/CD tools compared — build minutes, runners, and pipelines by type (general, cloud-native, mobile, IaC)",
+  "security-alternatives": "100+ free security tools compared — SAST/DAST, secret scanning, dependency analysis, container security, and identity/auth",
+  "storage-alternatives": "55+ free cloud storage tools compared — object storage, media/image CDN, file hosting, and general-purpose storage",
+  "testing-alternatives": "45+ free testing tools compared — browser, visual regression, load, E2E, API, and code coverage",
+  "analytics-alternatives": "45+ free analytics tools compared — product analytics, web analytics, event tracking, and data infrastructure",
+  "ai-ml-alternatives": "65+ AI/ML tools and their free tiers compared — LLM APIs, AI coding assistants, ML platforms, observability, and specialized AI services",
+  "design-alternatives": "100+ free design tools compared — UI design, prototyping, component libraries, icons, stock assets, and color tools",
+  "email-alternatives": "59+ free email tools compared — transactional APIs, marketing platforms, verification services, forwarding, and email infrastructure",
+  "project-management-alternatives": "93+ free project management tools compared — issue tracking, kanban boards, team chat, video conferencing, scheduling, and knowledge management",
+  "ide-code-editors-alternatives": "59+ free IDEs and coding tools compared — desktop editors, cloud IDEs, AI coding assistants, AI app builders, and specialized development environments",
+  "free-llm-apis": "25+ LLM API providers and their free tiers compared — proprietary model APIs, open-model inference platforms, and AI gateways with exact rate limits",
+  "api-development-alternatives": "39+ free API development tools compared — REST/GraphQL clients, mocking, documentation, marketplaces, and integration platforms",
+  "hetzner-pricing-2026": "Hetzner's 2026 price increases analysed — every cloud plan priced and its availability, impact assessment, 8+ alternatives compared",
+  "team-collaboration-alternatives": "60+ free team collaboration tools compared — chat, video conferencing, documentation, scheduling, and async communication",
+  "free-startup-stack": "Complete free SaaS infrastructure stack — 10 categories with recommended picks, scaling guidance, and stability ratings",
+  "free-ai-stack": "Complete free AI/ML development stack — 10 categories with recommended picks, scaling guidance, and stability ratings",
+  "free-devops-stack": "Complete free DevOps infrastructure stack — 10 categories with recommended picks, scaling guidance, and stability ratings",
+  "free-frontend-stack": "Complete free frontend/Jamstack development stack — 10 categories with recommended picks, scaling guidance, and stability ratings",
+  "free-nextjs-stack": "Complete free Next.js full-stack infrastructure — 10 layers with recommended picks, growth cost analysis, and stability ratings",
+  "free-django-stack": "Complete free Django/Python infrastructure — 10 layers with recommended picks, growth cost analysis, and stability ratings",
+  "free-fastapi-stack": "Complete free FastAPI/Python infrastructure — 10 layers with recommended picks, growth cost analysis, and stability ratings",
+  "free-go-stack": "Complete free Go/Golang infrastructure — 10 layers with recommended picks, growth cost analysis, and stability ratings",
+  "free-saas-stack": "Complete free SaaS infrastructure stack — 11 categories with opinionated picks, growth cost analysis at 4 scale points, and Stripe payments integration",
+  "q2-pricing-preview-2026": "Q2 2026 pricing preview — upcoming changes, deadlines, impact analysis, and what to watch",
+  "google-developer-program-2026": "Standalone Google Developer Program Premium no longer takes sign-ups — current plans, Cloud credits and free alternatives",
+  "supabase-vs-firebase": "Deep comparison of Supabase and Firebase free tiers — database, auth, storage, functions, and scaling costs",
+  "vercel-vs-netlify": "Deep comparison of Vercel and Netlify free tiers — bandwidth, functions, builds, commercial use, and scaling costs",
+  "neon-vs-supabase": "Deep comparison of Neon and Supabase free tiers — branching, auth, storage, functions and scaling costs",
+  "railway-vs-render": "Deep comparison of Railway and Render free tiers — usage-based vs fixed pricing, databases, sleep behavior, and scaling costs",
+  "datadog-vs-new-relic": "Deep comparison of Datadog and New Relic free tiers — per-host vs per-GB pricing, APM, logs, synthetics, and scaling costs",
+  "stability": "Visual stability dashboard — which developer free tiers are safe, watched, volatile, or improving",
+  "hcp-terraform-migration": "Step-by-step HCP Terraform migration guide — decision matrix, 5 migration paths, March 31 deadline",
+  "terraform-cloud-free-tier-removed": "Terraform Cloud free tier removal guide — cost analysis, 8 alternatives compared, migration paths for affected teams",
+  "gemini-api-pricing-2026": "Gemini API billing guide — spend caps ($250-$100K+/mo), prepaid billing, 3.1 Pro paid-only, free tier changes, 8-provider comparison",
+  "free-tier-tracker": "Q1 2026 free tier erosion report — which developer free tiers were removed, reduced, or expanded",
+  "startup-credits": "The definitive startup credits comparison — 15+ programs across cloud infrastructure, fintech, and developer tools with eligibility requirements, vesting schedules, and stacking strategies",
+  "ai-coding-pricing-2026": "AI coding tools pricing comparison — free tiers, pro plans, power tiers, and recent March 2026 pricing changes",
+  "ai-coding-tools-pricing": "The definitive AI coding tools comparison — 17 tools across IDE, CLI, cloud agent, and app builder categories with free tier analysis and cost breakdowns",
+  "ci-cd-pricing": "The definitive CI/CD pricing comparison — 17+ tools across general, cloud-native, mobile, and self-hosted categories with free tier analysis and cost breakdowns",
+  "database-pricing": "The definitive database pricing comparison — 25+ services across managed Postgres, serverless/edge, document/NoSQL, cloud provider, and specialized categories with free tier analysis and cost breakdowns",
+  "vector-database-pricing": "The definitive vector database pricing comparison — 11 services across dedicated cloud, open-source, pgvector, embedded, and serverless categories with free tier analysis for RAG/AI",
+  "hosting-pricing": "The definitive cloud hosting pricing comparison — 15 platforms across PaaS, edge/serverless, full-featured, and static categories with free tier analysis, pricing gotchas, and Railway referral",
+  "llm-api-pricing": "Which LLM APIs have a genuinely free tier or free credits — frontier labs, inference providers, open-source hosts, and specialized services with free tier analysis and token cost breakdowns",
+  "aws-free-tier-2026": "Complete AWS free tier guide — every free service, real limits, hidden costs, and Aurora PostgreSQL Serverless (new March 2026)",
+  "gcp-free-tier-2026": "Complete GCP free tier guide — 20+ always-free products, $300 trial, hidden costs, and comparison with AWS and Azure",
+  "azure-free-tier-2026": "Complete Azure free tier guide — 65+ always-free services, $200 trial, Cosmos DB lifetime free tier, and comparison with AWS and GCP",
+  "digitalocean-free-tier-2026": "Complete DigitalOcean guide — $5 free credits, App Platform free tier, per-second billing, and Big Three comparison",
+  "cloud-free-tier-comparison-2026": "Side-by-side comparison of AWS, GCP, Azure, and DigitalOcean free tiers — compute, databases, serverless, storage, startup credits, and hidden costs",
+  "database-free-tier-comparison-2026": "Side-by-side comparison of 10+ database free tiers — Postgres, BaaS, edge, key-value, and vector databases compared",
+  "cicd-free-tier-comparison-2026": "Side-by-side comparison of 10+ CI/CD free tiers — build minutes, concurrency, runners, storage, and hidden costs compared",
+  "serverless-free-tier-comparison-2026": "Side-by-side comparison of 10+ serverless free tiers — invocations, compute time, cold starts, billing models, and hidden costs compared",
+  "auth-comparison-2026": "Side-by-side comparison of 20+ auth free tiers — MAU/MRU limits, SSO, M2M tokens, agentic AI auth, self-hosted options, and growth cost traps",
+  "monitoring-comparison-2026": "Side-by-side comparison of 25+ monitoring free tiers — data ingest, retention, APM, error tracking, uptime, and the observability cost trap at 10 to 500 hosts",
+  "email-comparison-2026": "Side-by-side comparison of 20+ email free tiers — SendGrid exodus migration guide, transactional vs marketing breakdown, growth cost at 10K-1M emails/month, deliverability traps",
+  "storage-comparison-2026": "Side-by-side comparison of 15+ storage and CDN free tiers — S3 egress tax breakdown, zero-egress providers, media CDN, self-hosted options, and scaling costs at 100GB/1TB/10TB/100TB",
+  "analytics-free-tier-comparison-2026": "Side-by-side comparison of 15+ analytics free tiers — event limits, session replays, feature flags, data retention, and the analytics cost trap at scale",
+  "testing-free-tier-comparison-2026": "Side-by-side comparison of 15+ testing tool free tiers — E2E, visual regression, load testing, API testing, local dev, and the testing cost trap at scale",
+  "api-development-free-tier-comparison-2026": "Side-by-side comparison of 12+ API development tool free tiers — users, collections, requests, mock servers, local-first vs cloud, and the API tool migration trap",
+  "hosting-free-tier-comparison-2026": "Side-by-side comparison of 12+ hosting free tiers — bandwidth, compute, build minutes, cold starts, commercial use restrictions, and the hosting cost trap at scale",
+  "security-free-tier-comparison-2026": "Side-by-side comparison of 20+ developer security tool free tiers — SAST, SCA, DAST, secrets detection, container security, and the DevSecOps cost trap at scale",
+  "openai-assistants-alternatives": "OpenAI Assistants API sunset August 2026 — migration paths, free AI API alternatives, and cost comparison",
+  "openai-assistants-migration-2026": "Comprehensive Assistants API migration guide — feature map, complexity assessment, decision framework, agent frameworks, wire-compatible bridges, cost comparison",
+  "openai-assistants-migration": "OpenAI Assistants API shutdown guide — migration cost comparison for Responses API, Azure, Anthropic, Gemini, and open-source alternatives",
+  "firebase-studio-shutdown": "Firebase Studio shutdown guide — free cloud IDE alternatives with compute hours, storage, and collaboration limits compared",
+  "tenor-alternatives": "Tenor API shutdown June 2026 — GIF API alternatives with free tier limits, migration code examples, and platform impact analysis",
+  "shutdowns": "Living tracker of developer tool shutdowns, API sunsets, and deprecation deadlines in 2026 — with migration paths and alternatives",
+  "agent-payments": "Directory of developer services accepting AI agent payments via x402 and Stripe MPP — per-call pricing, free tiers, and protocol comparison",
+  "aws-app-runner-migration": "AWS App Runner closed to new customers April 30, 2026 — migration guide to ECS Express Mode and container deployment alternatives with pricing comparison",
+  "guides/langchain": "Connect AgentDeals to LangChain agents via langchain-mcp-adapters — Python code examples and multi-agent workflows",
+  "guides/crewai": "Connect AgentDeals to CrewAI agents via native mcps configuration — multi-agent pricing research workflows",
+  "guides/n8n": "Connect AgentDeals to n8n via MCP Server Trigger node — no-code pricing monitoring and vendor comparison workflows",
+  "guides/vercel-ai-sdk": "Connect AgentDeals to Vercel AI SDK via experimental_createMCPClient() — React/Next.js code examples",
+  "developers": "REST API landing page — 18 endpoints, quick start examples in curl/Python/JavaScript, endpoint reference, use cases, no auth required",
+};
+
+const COUNTED_BLURBS: Readonly<Record<string, () => string>> = {
+  "q1-2026-developer-pricing-report": () => {
+    const q1 = trackedChangesInQ1_2026(loadDealChanges());
+    return `${q1.length} pricing changes in Q1 2026 — ${q1.filter(change => change.change_type === "free_tier_removed").length} free tiers removed, narrative analysis, category breakdown, monthly timeline, Cloudflare counter-trend, Q2 outlook`;
+  },
+  "free-tier-risk": () => `Predictive risk analysis for ${riskEntries.length} developer free tiers — grades dated and scored against what happened next, category heatmap, pattern analysis, counter-trends`,
+  "state-of-free-tiers": () => `Data-driven analysis of ${loadOffers().length.toLocaleString()} developer tool free tiers across ${getCategories().length} categories — trends, risks, and recommendations`,
+};
+
+export function guideBlurb(slug: string): string {
+  const counted = COUNTED_BLURBS[slug];
+  if (counted) return counted();
+  const written = WRITTEN_BLURBS[slug];
+  if (written === undefined) throw new Error(`No blurb is written for the guide ${slug}`);
+  return written;
+}
