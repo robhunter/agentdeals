@@ -5817,7 +5817,13 @@
       "category": "Feature Flags",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-28",
+        "detail": "Retracted 2026-09-28: no change. toggled.dev listed unlimited clients, role based access control, realtime notifications, release calendar (beta), Google & GitHub SSO and 2F authentication on its FREE plan on 2025-06-02.",
+        "source_url": "http://web.archive.org/web/20250602164329/https://www.toggled.dev/"
+      }
     },
     {
       "vendor": "IPTrace",
@@ -5921,7 +5927,13 @@
       "category": "Auth",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-28",
+        "detail": "Retracted 2026-09-28: misdated, and it swapped three limits. permit.io/pricing gave Community the same limits on 2025-06-26 except relationship tuples, a row first shown between captures of 2026-05-23 and 2026-06-09; the record dated 2026-06-09 replaces this one.",
+        "source_url": "http://web.archive.org/web/20260609121550/https://www.permit.io/pricing"
+      }
     },
     {
       "vendor": "UniRateAPI",
@@ -8344,7 +8356,13 @@
       "category": "Auth",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-01"
+      "recorded_date": "2026-09-01",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-28",
+        "detail": "Retracted 2026-09-28: no change. The 1,000 MAUs this reading took as a limit is the pricing calculator's default answer to \"How many monthly active users?\"; the same page says \"FusionAuth Community is free and unlimited\", as it did on 2025-09-03.",
+        "source_url": "http://web.archive.org/web/20250903230812/https://fusionauth.io/pricing"
+      }
     },
     {
       "vendor": "Wufoo",
@@ -9464,7 +9482,13 @@
       "category": "Auth",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-05"
+      "recorded_date": "2026-09-05",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-28",
+        "detail": "Retracted 2026-09-28: no change. workos.com/pricing stated \"First 1 million active users free\", $125 per Single Sign-On connection and \"First 1,000 checks Free\" for Radar on 2025-09-05.",
+        "source_url": "http://web.archive.org/web/20250905015116/https://workos.com/pricing"
+      }
     },
     {
       "vendor": "Resend",
@@ -9704,7 +9728,13 @@
       "category": "Auth",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-05"
+      "recorded_date": "2026-09-05",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-28",
+        "detail": "Retracted 2026-09-28: no change. hanko.io/pricing gave the free Starter tier 10,000 free monthly active users on 2025-01-13, and offered startups 1 million active users for free on 2025-09-06.",
+        "source_url": "http://web.archive.org/web/20250906223829/https://www.hanko.io/pricing"
+      }
     },
     {
       "vendor": "SuperTokens",
@@ -9719,7 +9749,13 @@
       "category": "Auth",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-05"
+      "recorded_date": "2026-09-05",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-28",
+        "detail": "Retracted 2026-09-28: no change. supertokens.com/pricing stated \"Self hosting the open source features is free without any limits!\", free cloud use under 5K monthly active users, and multi-factor authentication at $0.01 per MAU with a $100 monthly minimum on 2025-01-30.",
+        "source_url": "http://web.archive.org/web/20250130111828/https://supertokens.com/pricing"
+      }
     },
     {
       "vendor": "bonsai.io",
@@ -10546,7 +10582,13 @@
       "category": "Auth",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-10"
+      "recorded_date": "2026-09-10",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-28",
+        "detail": "Retracted 2026-09-28: no change. authress.io stated \"First 1000 billable calls are free\" and \"0.0012 USD per call, billed monthly\" on 2025-04-04.",
+        "source_url": "http://web.archive.org/web/20250404130324/https://authress.io/"
+      }
     },
     {
       "vendor": "uptimetoolbox.com",
@@ -10603,7 +10645,13 @@
       "category": "Feature Flags",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-12"
+      "recorded_date": "2026-09-12",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-28",
+        "detail": "Retracted 2026-09-28: no change. launchdarkly.com/pricing listed the Developer plan's 100k experimentation MAU, 10M logs and traces, and 5K session replays and errors on 2026-01-08, and 5,000 AI runs a month on 2026-06-06.",
+        "source_url": "http://web.archive.org/web/20260108042720/https://launchdarkly.com/pricing/"
+      }
     },
     {
       "vendor": "Mux",
@@ -11065,7 +11113,13 @@
       "category": "Auth",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-18"
+      "recorded_date": "2026-09-18",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-28",
+        "detail": "Retracted 2026-09-28: no change. ory.sh/pricing listed the free Developer plan with 1 member, 0 production environments, 0 staging environments, 2 development environments and no included monthly credit on 2024-10-05.",
+        "source_url": "http://web.archive.org/web/20241005040731/https://www.ory.sh/pricing"
+      }
     },
     {
       "vendor": "Zoho Projects",
@@ -12053,7 +12107,13 @@
       "category": "Auth",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-26"
+      "recorded_date": "2026-09-26",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-28",
+        "detail": "Retracted 2026-09-28: no change. mojoauth.com/pricing offered the Free plan with 25,000 MAUs on 2025-11-12: \"Free Basic features with 25,000 MAUs. No credit card required.\"",
+        "source_url": "http://web.archive.org/web/20251112131456/https://mojoauth.com/pricing/"
+      }
     },
     {
       "vendor": "Nango",
@@ -12074,14 +12134,13 @@
     },
     {
       "vendor": "Pulumi",
-      "change_type": "pricing_restructured",
+      "change_type": "limits_reduced",
       "date": "2026-09-26",
       "date_source": "discovered",
-      "summary": "The free tier still exists. The details have changed. The page now lists a 'Free' tier that includes 1 user, unlimited projects/stacks/updates, 500 workflow minutes, and 25 secrets with 10K secret API calls/month.",
+      "summary": "Pulumi dropped Pulumi Neo's 5M free tokens a month from its free plan, which it renamed from Individual to Free, between the Internet Archive's capture of its pricing page on 2026-09-13 and our reading of 2026-09-26. The free plan's other terms (1 user, unlimited projects and stacks, up to 500 workflow minutes) are unchanged; Neo now costs $3 per 1M tokens on paid plans only.",
       "tier": "Free",
-      "tier_direction": "unchanged",
-      "previous_state": "Infrastructure as Code platform — free for individuals with 1 user, unlimited projects/stacks/updates, 500 deployment minutes/mo, 25 secrets, 10K secret API calls/mo",
-      "current_state": "The Free tier includes 1 user, IaC state management, Pulumi Deployments, Basic Pulumi ESC, unlimited projects, stacks, and environments, unlimited updates and history, up to 500 workflow minutes, and 25 secrets.",
+      "previous_state": "Individual: \"Free forever for individuals ... Includes: 1 user IaC state management Unlimited projects, stacks, and environments Unlimited updates and history Up to 500 workflow minutes Pulumi Neo with 5M free tokens/month\" (pricing page, capture of 2026-09-13)",
+      "current_state": "Free: \"Includes: 1 user IaC state management Pulumi Deployments Basic Pulumi ESC Unlimited projects, stacks, and environments Unlimited updates and history Up to 500 workflow minutes\"; the feature table marks Pulumi Neo as not included on Free and \"$3/M tokens\" on Essentials, Pro and Enterprise (pricing page, read 2026-09-28)",
       "impact": "medium",
       "source_url": "https://www.pulumi.com/pricing/",
       "category": "Infrastructure",
@@ -12975,6 +13034,34 @@
       "alternatives": [],
       "recorded_date": "2026-09-28",
       "date_source": "vendor_page"
+    },
+    {
+      "vendor": "Permit.io",
+      "change_type": "limits_reduced",
+      "date": "2026-06-09",
+      "summary": "Permit.io's pricing page added a limit of 2,000 relationship tuples to its free Community plan. The row first appears between the Internet Archive's captures of 2026-05-23 and 2026-06-09; the plan's other limits were unchanged.",
+      "previous_state": "Community: \"MAU 1000 Tenants 20 Authorization Queries No Limit Roles 25 Resource Types 50 Condition Sets 5 Role Assignments 2,000 Groups 20 Resource Instances 2,000\", with no relationship tuple row (pricing page, capture of 2026-05-23)",
+      "current_state": "Community: \"Resource Instances 2,000 Relationship Tuples 2,000\" (pricing page, capture of 2026-06-09)",
+      "impact": "low",
+      "source_url": "http://web.archive.org/web/20260609121550/https://www.permit.io/pricing",
+      "category": "Auth",
+      "alternatives": [],
+      "recorded_date": "2026-09-28",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Pulumi",
+      "change_type": "record_corrected",
+      "date": "2026-09-28",
+      "summary": "Data correction - Pulumi's change read on 2026-09-26 removed Pulumi Neo's free tokens from the free plan. Our re-read recorded it as a restructure that left the free tier unchanged.",
+      "previous_state": "Recorded 2026-09-26 as pricing_restructured, free tier unchanged",
+      "current_state": "limits_reduced, dated 2026-09-26, from the 2026-09-13 capture and today's pricing page",
+      "impact": "low",
+      "source_url": "http://web.archive.org/web/20260913021942/https://www.pulumi.com/pricing/",
+      "category": "Infrastructure",
+      "alternatives": [],
+      "recorded_date": "2026-09-28",
+      "date_source": "hand_written"
     }
   ]
 }
