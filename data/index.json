@@ -69,7 +69,7 @@
     {
       "vendor": "Render",
       "category": "Cloud Hosting",
-      "description": "Free web services (512 MB RAM, less than 1 CPU), free PostgreSQL (256 MB RAM, 30-day expiry), free Redis (25 MB). 5 GB bandwidth/month included then $0.15/GB, 500 build minutes/month. Up to 25 services, 2 environments per project. Auto-deploy from Git",
+      "description": "Hobby plan, $0 a month plus compute. Free web services (512 MB RAM, 0.1 CPU) spin down after 15 minutes without traffic, with 750 free instance hours per workspace a month. One free Postgres database (256 MB RAM, 1 GB storage, 30-day expiry) and one free Key Value instance (25 MB, not continuously persisted to disk) per workspace. 5 GB bandwidth/month included then $0.15/GB; without a payment method on file, Render suspends Free services for the rest of the month instead. 500 build minutes/month. Up to 25 services, unlimited projects with 2 environments each. Pro is $25 a month plus compute.",
       "tier": "Hobby",
       "url": "https://render.com/pricing",
       "tags": [
@@ -1996,8 +1996,8 @@
     {
       "vendor": "Algolia",
       "category": "Search",
-      "description": "Search-as-a-service — 10K search requests/month, 1M records, AI recommendations included",
-      "tier": "Build",
+      "description": "Search-as-a-service. The Free plan needs no credit card and includes 10K search requests/month, 50K records, 5K recommendation requests/month, 5K crawls/month and 1 application, with some features reserved for paid plans. Grow is pay as you go: 10K search requests and 100K records a month included, then $0.50 per 1K search requests and $0.40 per 1K records.",
+      "tier": "Free",
       "url": "https://www.algolia.com/pricing",
       "tags": [
         "search",

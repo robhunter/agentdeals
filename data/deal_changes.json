@@ -1505,13 +1505,13 @@
     {
       "vendor": "Render",
       "change_type": "pricing_restructured",
-      "date": "2026-09-02",
-      "date_source": "discovered",
-      "summary": "The free tier now includes compute options with varying RAM and CPU, and the limits for PostgreSQL and Key Value stores have been updated. Bandwidth for the Hobby tier is now 5GB included per month, then $0.15 per GB.",
-      "previous_state": "Free web services (512 MB RAM, 0.1 CPU), free PostgreSQL (256 MB RAM, 30-day expiry), free Redis (25 MB). 100 GB bandwidth/month, 500 build minutes/month. 1 project with 2 environments. Auto-deploy from Git",
-      "current_state": "Hobby tier is $0/mo + compute. It includes up to 25 services, 5 GB of bandwidth included per month then $0.15 per GB, single-service previews, global regions & CDN, custom domains, firewall & DDoS mitigation.  Postgres offers options starting at 256 MB RAM and Key Value starts free with 25 MB RAM.",
+      "date": "2026-04-23",
+      "date_source": "vendor_page",
+      "summary": "Render replaced its workspace plans. Bandwidth for the Hobby tier went from 100 GB to 5 GB included per month, then $0.15 per GB, and Hobby workspaces are now capped at 25 services, while projects went from 1 to unlimited. New workspaces got the new plans on 2026-04-23 and existing workspaces moved on 2026-08-01. Free web services, Postgres and Key Value kept their terms.",
+      "previous_state": "Hobby: \"$ 0 USD per user/month plus compute costs\", \"Included bandwidth 100 GB / month\", \"Projects & environments 1 project with 2 environments\" (pricing page, capture of 2026-04-22)",
+      "current_state": "Hobby: \"$ 0 /mo + compute\", \"Deploy up to 25 services 5 GB of bandwidth included\", \"Bandwidth 5 GB included per month then $0.15 per GB\", \"Projects Unlimited\", \"Environments 2 per project\" (pricing page, read 2026-09-28)",
       "impact": "high",
-      "source_url": "https://render.com/pricing",
+      "source_url": "https://render.com/changelog/updated-plans-for-render-workspaces",
       "category": "Cloud Hosting",
       "alternatives": [],
       "detected_by": "reverify-ai",
@@ -5801,13 +5801,13 @@
     {
       "vendor": "Algolia",
       "change_type": "limits_reduced",
-      "date": "2026-08-28",
-      "date_source": "discovered",
-      "summary": "The 'Build' tier is no longer explicitly listed. The free tier now includes 10K search requests/month and 50K records. Previously 10K search requests/month and 1M records. The 'Grow' plan includes 10K search requests/month and 100K records.",
-      "previous_state": "Search-as-a-service — 10K search requests/month, 1M records, AI recommendations included",
-      "current_state": "There is a free tier with 10K search requests/month and 50K records. The 'Grow' plan includes 10K search requests /month and 100K records.",
+      "date": "2026-08-12",
+      "date_source": "hand_written",
+      "summary": "Algolia replaced its Build plan with a Free plan between the pricing-page captures of 2026-08-10 and 2026-08-13; its Free Plan terms carry a new version from 2026-08-12. The free plan went from 1M records to 50K, and from 10K to 5K recommendation requests and 5K crawls a month; search requests stay at 10K a month.",
+      "previous_state": "Build: \"10K search requests/month 1M records included 10K AI Recommendation requests/month 10K crawls/month 1 Generative Experience Guide included\" (pricing page, capture of 2026-08-10)",
+      "current_state": "Free: \"10K search requests/month 50K records included 5K recommendation requests/month 5K crawls/month\", with \"access to some of our features\" and no credit card required (pricing page, capture of 2026-08-13)",
       "impact": "high",
-      "source_url": "https://www.algolia.com/pricing",
+      "source_url": "https://web.archive.org/web/20260813114144/https://www.algolia.com/pricing",
       "category": "Search",
       "alternatives": [],
       "detected_by": "reverify-ai",
@@ -9761,7 +9761,13 @@
       "category": "AI / ML",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-07"
+      "recorded_date": "2026-09-07",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-28",
+        "detail": "Retracted 2026-09-28: OpenRouter did not narrow its free tier on 2026-09-07. Its rate-limits documentation has capped free-model use at 20 requests a minute and 50 a day since April 2025: the 2025-04-08 archive capture says \"you can make up to 20 requests per minute. If your account has less than 10 credits, you're limited to 50 requests per day\", and the 2026-02-22 and 2026-09-01 captures state the same limits. The pricing page listed the Free plan as \"25+ free models\", \"4 free providers\" and \"Rate limits 50 reqs/day\" on the 2025-10-31, 2026-02-24 and 2026-09-06 captures. The $25,000 allowance is the Pay-as-you-go plan's bring-your-own-key allowance; the Free plan has none. The record compared the page with our earlier description, which had left out the daily cap.",
+        "source_url": "https://web.archive.org/web/20250408060656/https://openrouter.ai/docs/api-reference/limits"
+      }
     },
     {
       "vendor": "Tinybird",
@@ -12425,6 +12431,34 @@
       "category": "Messaging",
       "alternatives": [],
       "recorded_date": "2026-09-27",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Render",
+      "change_type": "record_corrected",
+      "date": "2026-09-28",
+      "summary": "Data correction - Render's plan change took effect on 2026-04-23 for new workspaces and on 2026-08-01 for existing ones, not on 2026-09-02, and it left the free web service, Postgres and Key Value terms as they were. Render's changelog dates it. Our re-read of 2026-09-02 recorded it as a change dated the day it read the page.",
+      "previous_state": "Recorded 2026-09-02 as pricing_restructured, dated 2026-09-02",
+      "current_state": "pricing_restructured, dated 2026-04-23 from Render's changelog",
+      "impact": "low",
+      "source_url": "https://render.com/changelog/updated-plans-for-render-workspaces",
+      "category": "Cloud Hosting",
+      "alternatives": [],
+      "recorded_date": "2026-09-28",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Algolia",
+      "change_type": "record_corrected",
+      "date": "2026-09-28",
+      "summary": "Data correction - Algolia's free plan change happened between 2026-08-10 and 2026-08-13, and Algolia dates a new version of its Free Plan terms 2026-08-12. Our re-read of 2026-08-28 recorded it as a change dated the day it read the page.",
+      "previous_state": "Recorded 2026-08-28 as limits_reduced, dated 2026-08-28",
+      "current_state": "limits_reduced, dated 2026-08-12 from pricing-page captures and Algolia's archived Free Plan terms (\"before August 12, 2026\")",
+      "impact": "low",
+      "source_url": "https://www.algolia.com/policies/old/free-plan-specific-terms-2026-08-12",
+      "category": "Search",
+      "alternatives": [],
+      "recorded_date": "2026-09-28",
       "date_source": "hand_written"
     }
   ]
