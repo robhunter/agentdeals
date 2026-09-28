@@ -1375,6 +1375,14 @@
       "hash": "a5ad8e1af283350d",
       "changed": "2026-09-27"
     },
+    "/compare/airtop-vs-hyperbrowser": {
+      "hash": "4aeb56f35867efd2",
+      "changed": "2026-09-27"
+    },
+    "/compare/airtop-vs-puppeteer": {
+      "hash": "0f6630e3e037ce0f",
+      "changed": "2026-09-27"
+    },
     "/compare/amazon-ecr-public-vs-container-registry-service": {
       "hash": "32886232a22c1601",
       "changed": "2026-09-20"
@@ -1514,22 +1522,6 @@
     "/compare/bright-data-mcp-server-vs-webscraping-ai": {
       "hash": "ab2e09885be75cf5",
       "changed": "2026-09-26"
-    },
-    "/compare/browserbase-vs-browserless": {
-      "hash": "9fc664279f441fef",
-      "changed": "2026-09-25"
-    },
-    "/compare/browserbase-vs-hyperbrowser": {
-      "hash": "702013c4bc345def",
-      "changed": "2026-09-20"
-    },
-    "/compare/browserbase-vs-playwright": {
-      "hash": "014a008b24a62d50",
-      "changed": "2026-09-20"
-    },
-    "/compare/browserless-vs-playwright": {
-      "hash": "d359f625c3fc9790",
-      "changed": "2026-09-25"
     },
     "/compare/browserstack-vs-everystep-automation-com": {
       "hash": "46c3ab4b6f937b50",
@@ -2198,9 +2190,13 @@
       "hash": "efd422da00abfd6c",
       "changed": "2026-09-18"
     },
-    "/compare/hyperbrowser-vs-playwright": {
-      "hash": "e7d5829e15e415f8",
-      "changed": "2026-09-18"
+    "/compare/hyperbrowser-vs-puppeteer": {
+      "hash": "c235147bc10afeaf",
+      "changed": "2026-09-27"
+    },
+    "/compare/hyperbrowser-vs-steel": {
+      "hash": "43fdefa0febfb2d6",
+      "changed": "2026-09-27"
     },
     "/compare/hypertune-vs-toggled-dev": {
       "hash": "2d3a9a35e834825b",
@@ -2506,6 +2502,10 @@
     },
     "/compare/proton-vpn-vs-windscribe": {
       "hash": "38fb5e55d947a4cd",
+      "changed": "2026-09-27"
+    },
+    "/compare/puppeteer-vs-steel": {
+      "hash": "9cb3713239036ad5",
       "changed": "2026-09-27"
     },
     "/compare/qstash-vs-courier-com": {
@@ -3831,6 +3831,10 @@
       "hash": "63a139b23760d9b9",
       "changed": "2026-09-28"
     },
+    "/vendor/airtop": {
+      "hash": "6b030d50eacfd0a1",
+      "changed": "2026-09-27"
+    },
     "/vendor/aiven": {
       "daily": true
     },
@@ -3886,6 +3890,10 @@
     },
     "/vendor/ampt-dev": {
       "daily": true
+    },
+    "/vendor/anchor-browser": {
+      "hash": "46d5a05597c819ae",
+      "changed": "2026-09-27"
     },
     "/vendor/android-studio": {
       "hash": "310b5760fd022bf8",
@@ -4305,6 +4313,10 @@
     "/vendor/browse-ai": {
       "hash": "49cf53e0b53b404a",
       "changed": "2026-09-28"
+    },
+    "/vendor/browser-use": {
+      "hash": "f6be0a00fc6ec0b5",
+      "changed": "2026-09-27"
     },
     "/vendor/browserbase": {
       "hash": "b7fde409eb7b4d70",
@@ -6565,6 +6577,10 @@
       "hash": "f816aa4ddce69475",
       "changed": "2026-09-28"
     },
+    "/vendor/kernel": {
+      "hash": "d15739177957e157",
+      "changed": "2026-09-27"
+    },
     "/vendor/ketch": {
       "hash": "d9ab313c7355fdae",
       "changed": "2026-09-28"
@@ -8648,6 +8664,10 @@
     },
     "/vendor/statuspile": {
       "daily": true
+    },
+    "/vendor/steel": {
+      "hash": "d5eab4654f6f06b9",
+      "changed": "2026-09-27"
     },
     "/vendor/stellate": {
       "hash": "227f57eb3b6c164d",

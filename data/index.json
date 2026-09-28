@@ -35860,6 +35860,79 @@
         ],
         "reviewed": "2026-09-27"
       }
+    },
+    {
+      "vendor": "Steel",
+      "category": "Browser Automation",
+      "description": "Cloud browser API for AI agents. The Launch plan is $0 a month plus usage and comes with a one-time $30 credit, valid for 90 days, which Steel puts at about 300 browser hours at $0.10 an hour. Launch allows 10 concurrent sessions, 15-minute sessions, 60 requests a minute and 7-day data retention; CAPTCHA solving and Steel's proxies need a $10 deposit first. Scale is $250 a month plus usage, with $100 of credit each month.",
+      "tier": "Free Credits",
+      "url": "https://docs.steel.dev/overview/pricinglimits",
+      "tags": [
+        "browser",
+        "headless",
+        "automation",
+        "ai-agent",
+        "credits"
+      ],
+      "verifiedDate": "2026-09-27"
+    },
+    {
+      "vendor": "Browser Use",
+      "category": "Browser Automation",
+      "description": "Cloud browsers and an agent API for browser automation. Eligible new accounts that sign up with Google, GitHub or Microsoft get a one-time $15 credit, once per person and with no card, and Browser Use says it does not renew. Until a first top-up, free accounts can use only the cheaper models. Browsers cost $0.02 per browser-hour, and the residential proxy is on by default at $5 per GB ($0.20 per GB direct or through your own proxy), so 3 GB of proxied traffic uses the whole credit. There are no subscriptions; top-ups start at $5.",
+      "tier": "Free Credits",
+      "url": "https://browser-use.com/pricing",
+      "tags": [
+        "browser",
+        "automation",
+        "ai-agent",
+        "credits"
+      ],
+      "verifiedDate": "2026-09-27"
+    },
+    {
+      "vendor": "Anchor Browser",
+      "category": "Browser Automation",
+      "description": "Cloud browsers for AI agents. The Free plan gives $5 of credit each month, 5 concurrent browsers, 5 new sessions a minute, the US region only and 7-day data retention (Anchor's docs), without CAPTCHA solving, full stealth or a choice of location. Usage costs $0.01 per browser created and $0.05 per browser-hour. Anchor's proxy costs $8 per GB and proxyless egress $0.20 per GB, and Free cannot use its own proxy. Starter is $50 a month.",
+      "tier": "Free",
+      "url": "https://docs.anchorbrowser.io/pricing",
+      "tags": [
+        "browser",
+        "headless",
+        "automation",
+        "ai-agent",
+        "free tier"
+      ],
+      "verifiedDate": "2026-09-27"
+    },
+    {
+      "vendor": "Kernel",
+      "category": "Browser Automation",
+      "description": "Browsers as a service for AI agents. The free Developer plan gives $5 of usage credit each month, 5 concurrent browsers in the US, stealth mode with a Kernel-managed proxy and CAPTCHA solver, and 1-day session replays; other proxies cannot be configured. Browsers are headful by default at about $0.48 an hour, so $5 covers about 10 browser-hours (about 83 headless). Kernel says sign-up needs no credit card, but its acceptable use policy lets it require a verified payment method before granting free credit. Hobbyist is $30 a month plus usage, with $10 of credit each month.",
+      "tier": "Free",
+      "url": "https://www.kernel.sh/pricing",
+      "tags": [
+        "browser",
+        "headless",
+        "automation",
+        "ai-agent",
+        "free tier"
+      ],
+      "verifiedDate": "2026-09-27"
+    },
+    {
+      "vendor": "Airtop",
+      "category": "Browser Automation",
+      "description": "Cloud browsers that AI agents control in plain language. The Free plan gives 1,000 credits a month, which reset and do not roll over; new accounts also get a sign-up bonus for their first billing cycle only (10,000 credits on the pricing page, 30,000 in Airtop's billing help). Free allows 3 simultaneous sessions and 1 deployed agent, with no integrated proxy. Airtop does not publish what a credit buys in browser time, and more credits need a subscription. Starter is $29 a month for 30,000 credits.",
+      "tier": "Free",
+      "url": "https://www.airtop.ai/pricing",
+      "tags": [
+        "browser",
+        "automation",
+        "ai-agent",
+        "free tier"
+      ],
+      "verifiedDate": "2026-09-27"
     }
   ],
   "changes": []
