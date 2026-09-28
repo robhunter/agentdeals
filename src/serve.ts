@@ -11533,13 +11533,6 @@ ${buildCards(specialized)}
         <td>GCP ecosystem, serverless builds</td>
       </tr>
       <tr>
-        <td style="font-weight:600"><a href="/vendor/codefresh" style="color:var(--text)">Codefresh</a></td>
-        <td>Container</td>
-        <td>120 builds/mo</td>
-        <td>1 pipeline</td>
-        <td>Docker/K8s native, GitOps with Argo CD</td>
-      </tr>
-      <tr>
         <td style="font-weight:600"><a href="/vendor/drone-ci" style="color:var(--text)">Drone CI</a></td>
         <td>Container</td>
         <td>\u221e (self-hosted)</td>
@@ -28858,21 +28851,6 @@ function buildCiCdPricingPage(): string {
       hiddenCosts: "120 minutes is extremely limited. Pro plan at $35/mo is per-workspace, not per-user, which can be cost-effective for small teams but expensive at scale.",
     },
     {
-      name: "Codefresh",
-      slug: "codefresh",
-      category: "general",
-      freeMinutes: "1,200 min/mo",
-      concurrency: "1 concurrent",
-      selfHosted: "Paid only",
-      paidFrom: "Custom pricing",
-      pricingModel: "Per-user",
-      freeDetails: "1,200 build minutes/month, 1 concurrent build, 1 user. Kubernetes-native CI/CD — every build runs in a Docker container. Includes built-in Docker registry (500 MB), Helm dashboard, and GitOps support. Strong for container-based workflows.",
-      freeType: "limited",
-      monthlyCostSmall: "$0",
-      monthlyCostTeam: "Custom",
-      hiddenCosts: "Free plan limited to 1 user. Kubernetes-native approach is powerful but has a learning curve. Enterprise pricing is opaque — requires sales call.",
-    },
-    {
       name: "AWS CodeBuild",
       slug: "aws",
       category: "cloud-native",
@@ -29347,7 +29325,7 @@ function buildCiCdPricingPage(): string {
     '\n' +
     '  <div class="hidden-cost-card">\n' +
     '    <h4>macOS Build Minute Multipliers</h4>\n' +
-    '    <p>GitHub Actions charges macOS minutes at 10x the Linux rate. Your 2,000 free minutes become 200 macOS minutes. CircleCI\'s macOS builds cost 100 credits/min vs 5 for Linux. If you build iOS apps, budget 5\u201310x what you\'d expect from Linux-only CI.</p>\n' +
+    '    <p>GitHub charges a per-minute rate for each runner type past the free quota: $0.006 for Linux 2-core, $0.010 for Windows 2-core and $0.062 for macOS. CircleCI\'s macOS builds cost 100 credits/min vs 5 for Linux. If you build iOS apps, budget 5\u201310x what you\'d expect from Linux-only CI.</p>\n' +
     '  </div>\n' +
     '  <div class="hidden-cost-card">\n' +
     '    <h4>Storage and Artifact Costs</h4>\n' +
@@ -29423,7 +29401,7 @@ function buildCiCdPricingPage(): string {
     '\n' +
     '    <div class="verdict-item">\n' +
     '      <strong>Best for Kubernetes-native workflows</strong>\n' +
-    '      <p><a href="/vendor/codefresh">Codefresh</a> (1,200 free min) with built-in Helm and ArgoCD integration. <a href="/vendor/drone-ci">Drone CI</a> for lightweight container-native pipelines on your own K8s cluster.</p>\n' +
+    '      <p><a href="/vendor/drone-ci">Drone CI</a> for lightweight container-native pipelines on your own K8s cluster.</p>\n' +
     '    </div>\n' +
     '\n' +
     '    <div class="verdict-item">\n' +
