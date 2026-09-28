@@ -44476,12 +44476,12 @@ ${mcpCtaCss()}
         <td>Hobby (free)</td>
         <td>100 GB Fast Data Transfer</td>
         <td>4 hrs Active CPU</td>
-        <td>6,000/mo</td>
-        <td>Unlimited</td>
+        <td>Included (45 min per build)</td>
+        <td>200</td>
         <td class="check">&#10003;</td>
         <td>1M invocations</td>
-        <td class="cross">&#10007;</td>
-        <td>~250ms (cold)</td>
+        <td class="check">&#10003; (beta)</td>
+        <td>Can cold-start; prevention on Pro</td>
         <td class="check">&#10003;</td>
       </tr>
       <tr>
@@ -44489,20 +44489,20 @@ ${mcpCtaCss()}
         <td>Free (300 credits/mo)</td>
         <td>~15 GB (at 20 credits/GB)</td>
         <td>Serverless only</td>
-        <td>~20 (at 15 credits/build)</td>
-        <td>Unlimited</td>
+        <td>15 credits per production deploy</td>
+        <td>500</td>
         <td class="check">&#10003;</td>
-        <td>125K/mo (Level 0)</td>
+        <td>10 credits/GB-hr + 2 credits/10K requests</td>
         <td class="cross">&#10007;</td>
-        <td>~500ms</td>
+        <td>No figure in Netlify docs</td>
         <td class="check">&#10003;</td>
       </tr>
       <tr>
-        <td class="provider-col"><a href="/vendor/cloudflare-pages">Cloudflare Pages</a><span class="winner-badge">BEST STATIC</span></td>
+        <td class="provider-col"><a href="/vendor/cloudflare-pages">Cloudflare Pages</a></td>
         <td>Free</td>
         <td class="cheapest">Unlimited</td>
         <td>Workers (100K req/day)</td>
-        <td>500/mo</td>
+        <td>500 builds/mo (20-min timeout)</td>
         <td>100 sites</td>
         <td class="check">&#10003; (100/project)</td>
         <td>Workers Functions</td>
@@ -44511,51 +44511,51 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
       </tr>
       <tr>
-        <td class="provider-col"><a href="/vendor/render">Render</a><span class="winner-badge">BEST BACKEND</span></td>
+        <td class="provider-col"><a href="/vendor/render">Render</a></td>
         <td>Free web services</td>
         <td>5 GB/mo, then $0.15/GB</td>
-        <td>512 MB RAM, &lt;1 CPU</td>
+        <td>512 MB RAM, 0.1 CPU</td>
         <td>500/mo</td>
-        <td>Unlimited</td>
+        <td>Unlimited (25 services)</td>
         <td class="check">&#10003;</td>
         <td class="cross">&#10007;</td>
-        <td class="cross">&#10007;</td>
-        <td>30&ndash;60s (spins down)</td>
+        <td class="check">&#10003; Docker</td>
+        <td>~1 min (spins down after 15 min idle)</td>
         <td class="check">&#10003;</td>
       </tr>
       <tr>
         <td class="provider-col"><a href="/vendor/railway">Railway</a></td>
-        <td>$5 one-time credit</td>
+        <td>30-day trial ($5 credit), then $1/mo credit</td>
         <td>Included in credit</td>
-        <td>1 vCPU, 0.5 GB RAM</td>
-        <td>N/A (usage-based)</td>
-        <td>1 project, 3 services</td>
-        <td class="check">&#10003;</td>
-        <td class="cross">&#10007;</td>
+        <td>1 vCPU, 0.5 GB RAM (2 vCPU, 1 GB on trial)</td>
+        <td>Free</td>
+        <td>5 services per project (trial)</td>
+        <td>1 on trial</td>
+        <td class="check">&#10003; Functions (Bun)</td>
         <td class="check">&#10003; Docker</td>
         <td>None (always on)</td>
-        <td class="cross">&#10007; 30-day trial</td>
+        <td class="check">&#10003; $1/mo credit after trial</td>
       </tr>
       <tr>
         <td class="provider-col"><a href="/vendor/fly-io">Fly.io</a><span class="caution-badge">LIMITED TRIAL</span></td>
         <td>Trial: 2 hrs runtime OR 7 days</td>
-        <td>Included</td>
-        <td>Shared 1x CPU, 256 MB</td>
+        <td>From $0.02/GB</td>
+        <td>Trial: up to 2 vCPU, 4 GB per machine</td>
         <td>N/A</td>
         <td>Limited</td>
         <td class="check">&#10003;</td>
         <td class="cross">&#10007;</td>
         <td class="check">&#10003; Docker</td>
-        <td>None (always on)</td>
+        <td>Trial machines stop after 5 min</td>
         <td class="cross">&#10007; Legacy only (no free tier for new accounts)</td>
       </tr>
       <tr>
         <td class="provider-col"><a href="/vendor/koyeb">Koyeb</a></td>
-        <td>Free Postgres DB only</td>
+        <td>None for new users (Pro from $29/mo)</td>
         <td>—</td>
         <td>No free compute</td>
         <td>N/A</td>
-        <td>1 DB (5 hr/mo)</td>
+        <td>N/A</td>
         <td class="cross">&#10007;</td>
         <td class="cross">&#10007;</td>
         <td class="cross">&#10007; Paid only</td>
@@ -44567,12 +44567,12 @@ ${mcpCtaCss()}
         <td>Free</td>
         <td>20 GiB egress</td>
         <td>10 hrs CPU/mo</td>
-        <td>N/A</td>
-        <td>Unlimited</td>
+        <td>15 builds/hr, one at a time</td>
+        <td>10 apps</td>
         <td class="check">&#10003;</td>
-        <td>Edge functions (native)</td>
+        <td>Serverless JS/TS apps (2 regions)</td>
         <td class="cross">&#10007;</td>
-        <td>~0ms (edge)</td>
+        <td>≤100 ms (hello world)</td>
         <td class="check">&#10003;</td>
       </tr>
       <tr>
@@ -44580,8 +44580,8 @@ ${mcpCtaCss()}
         <td>Free</td>
         <td>Unlimited</td>
         <td>100K req/day, 10ms CPU</td>
-        <td>N/A</td>
-        <td>Unlimited</td>
+        <td>3,000 min/mo (Workers Builds)</td>
+        <td>100 Workers</td>
         <td class="check">&#10003;</td>
         <td>Native edge compute</td>
         <td class="cross">&#10007;</td>
@@ -44590,11 +44590,11 @@ ${mcpCtaCss()}
       </tr>
       <tr>
         <td class="provider-col"><a href="/vendor/github-pages">GitHub Pages</a></td>
-        <td>Free (all accounts)</td>
+        <td>Free (public repos on GitHub Free)</td>
         <td>100 GB/mo</td>
         <td class="cross">&#10007; Static only</td>
         <td>10 builds/hr</td>
-        <td>Unlimited</td>
+        <td>1 site per repo</td>
         <td class="check">&#10003;</td>
         <td class="cross">&#10007;</td>
         <td class="cross">&#10007;</td>
@@ -44635,7 +44635,7 @@ ${mcpCtaCss()}
   <p class="section-intro">Best platforms for deploying Next.js, Remix, Astro, and static sites. These platforms specialize in frontend frameworks with serverless function support.</p>
 
   <div class="diff-card">
-    <h3><a href="/vendor/vercel">Vercel</a> &mdash; Best for Next.js</h3>
+    <h3><a href="/vendor/vercel">Vercel</a></h3>
     <div class="diff-desc"><strong>Free tier:</strong> Hobby plan with 100 GB/month Fast Data Transfer, 1M function invocations, 4 hrs Active CPU, 360 GB-hrs Provisioned Memory, 1M edge requests, 1 GB Blob Storage. The gold standard for Next.js deployment &mdash; built by the same team. Automatic preview deployments, edge middleware, ISR, and image optimization. <strong>Key limitation:</strong> Hobby plan prohibits commercial use. Any production app generating revenue needs the $20/seat/mo Pro plan. <a href="/vercel-vs-netlify">See Vercel vs Netlify comparison &rarr;</a></div>
   </div>
 
@@ -44645,7 +44645,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="diff-card">
-    <h3><a href="/vendor/cloudflare-pages">Cloudflare Pages</a> <span class="winner-badge">BEST STATIC</span></h3>
+    <h3><a href="/vendor/cloudflare-pages">Cloudflare Pages</a></h3>
     <div class="diff-desc"><strong>Free tier:</strong> Up to 100 sites, unlimited bandwidth, 500 builds/month, 100 custom domains per project. No build time limits per build. Pages Functions run on Cloudflare Workers (100K requests/day free). Supports Next.js, Astro, SvelteKit, Remix via adapter. <strong>The standout:</strong> Unlimited bandwidth is unique among hosting platforms. No cold starts since Pages Functions run on Workers edge. Best for static sites, Jamstack apps, and projects where bandwidth usage is unpredictable.</div>
   </div>
 
@@ -44653,7 +44653,7 @@ ${mcpCtaCss()}
   <p class="section-intro">Full-stack PaaS platforms for backend services, APIs, and Docker containers. These give you actual compute resources, not just static file serving.</p>
 
   <div class="diff-card">
-    <h3><a href="/vendor/render">Render</a> <span class="winner-badge">BEST FREE BACKEND</span></h3>
+    <h3><a href="/vendor/render">Render</a></h3>
     <div class="diff-desc"><strong>Free tier:</strong> Free web services with 512 MB RAM, less than 1 CPU, 5 GB bandwidth/month included then $0.15/GB, 500 build minutes/month. Free PostgreSQL database (256 MB RAM, expires 30 days after creation). Free Redis (25 MB). Custom domains with automatic SSL. <strong>Key limitation:</strong> Free services spin down after 15 minutes of inactivity with 30&ndash;60 second cold starts. A free PostgreSQL database expires 30 days after it is created, in use or not, and Render deletes it 14 days later unless you upgrade it. Best for side projects, staging environments, and apps that can tolerate cold starts. <a href="/railway-vs-render">See Railway vs Render comparison &rarr;</a></div>
   </div>
 
@@ -44668,7 +44668,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="diff-card">
-    <h3><a href="/vendor/koyeb">Koyeb</a> <span class="caution-badge">DB ONLY</span></h3>
+    <h3><a href="/vendor/koyeb">Koyeb</a> <span class="caution-badge">NO FREE TIER</span></h3>
     <div class="diff-desc"><strong>Free tier:</strong> Free Postgres database only (0.25 vCPU, 1 GB RAM, 1 GB storage, 5 hr/month runtime). No free compute or web service tier &mdash; the free web service was removed. Pro plan starts at $29/month with $10 included compute. Docker, buildpack, and pre-built image support on paid plans. <strong>Key change:</strong> Koyeb no longer offers a free compute tier. The free Postgres database is useful for development, but you'll need the Pro plan ($29/mo) for hosting web services.</div>
   </div>
 
