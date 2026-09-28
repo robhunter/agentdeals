@@ -11,6 +11,7 @@ import {
   demotionTheVerdictNames,
   freeTierClaim,
   gateStatesAnEnding,
+  narrowingChanges,
   narrowingSentence,
   publishedVendorLevel,
   refusedReadWeHold,
@@ -23,6 +24,8 @@ import {
 import { CHANGE_DIRECTION, gateForOffer, loadDealChanges, loadOffers, refusalsForVendor, vendorRiskAssessment, classifyStability } from "../dist/data.js";
 import { vendorSlugMap } from "../dist/vendor-slug.js";
 import { isNoLongerInForce } from "../dist/change-resolution.js";
+import { changeCitesASource } from "../dist/change-citation.js";
+import { changeDateClause } from "../dist/change-dates.js";
 import { levelWithheldReason } from "../dist/source-check.js";
 import { vendorVerdictContextFrom } from "../dist/vendor-verdict-input.js";
 import { offerEnded, endedVerdictSentence, ENDED_BADGE_LABEL } from "../dist/retirement.js";
@@ -58,6 +61,15 @@ const CLAIMS_A_NARROWING = /(?:One recorded [^.]*|(?<!None of the )\d+ recorded 
 
 const establishesANarrowing = (c: DealChange): boolean =>
   CHANGE_DIRECTION[c.change_type] === "negative" && !isNoLongerInForce(c);
+
+const isARepairToOurOwnEntry = (c: DealChange): boolean => c.change_type === "record_corrected";
+
+function namesTheRecord(verdict: string, record: DealChange): boolean {
+  const noun = CHANGE_KIND_NOUN[record.change_type];
+  const when = changeDateClause(record);
+  return verdict.includes(`one recorded ${noun}, ${when}`)
+    || verdict.includes(`One recorded ${noun} narrowed the terms, ${when}`);
+}
 
 function change(over: Partial<DealChange> = {}): DealChange {
   return {
@@ -686,13 +698,43 @@ describe("vendor verdict — as rendered", () => {
   });
 
   it("counts one narrowing where a repair to our own entry sits beside it", async () => {
-    const digitalocean = vendorRows().find(r => r.slug === "digitalocean")!;
-    const stated = digitalocean.gate
-      ? narrowingSentence(digitalocean.changes, digitalocean)
-      : verdictParagraph(await get("/vendor/digitalocean"));
-    assert.match(stated, /one recorded restriction/i);
-    assert.doesNotMatch(stated, /2 recorded changes narrowed the terms/);
-    assert.doesNotMatch(stated, /corrects our own earlier entry/);
+    const besideARepair = vendorRows()
+      .filter(row => row.changes.some(isARepairToOurOwnEntry))
+      .map(row => ({
+        row,
+        narrowing: narrowingChanges(row.changes.filter(c => !isARepairToOurOwnEntry(c) && changeCitesASource(c)), row),
+      }))
+      .filter(({ narrowing }) => narrowing.length === 1)
+      .map(({ row, narrowing: [only] }) => ({ row, only }));
+    assert.ok(
+      besideARepair.length > 0,
+      "no vendor holds a repair to our own entry beside exactly one narrowing record in force, so nothing here is checked",
+    );
+
+    for (const { row, only } of besideARepair) {
+      assert.strictEqual(
+        narrowingSentence(row.changes, row, row.termsSuperseded),
+        `One recorded ${CHANGE_KIND_NOUN[only.change_type]} narrowed the terms, ${changeDateClause(only)}.`,
+        `${row.slug}: the repair beside its one narrowing changes what the verdict counts`,
+      );
+    }
+
+    let pagesNamingARecord = 0;
+    let pagesStatingTheCount = 0;
+    for (const { row, only } of besideARepair.filter(({ row }) => !row.gate)) {
+      const verdict = verdictParagraph(await get(`/vendor/${row.slug}`));
+      if (!/\bone recorded /i.test(verdict)) continue;
+      pagesNamingARecord += 1;
+      if (/narrowed the terms/.test(verdict)) pagesStatingTheCount += 1;
+      assert.ok(namesTheRecord(verdict, only), `/vendor/${row.slug} names a record other than its one narrowing: ${verdict}`);
+      assert.doesNotMatch(verdict, /\b\d+ recorded changes narrowed the terms/, `/vendor/${row.slug}`);
+      assert.doesNotMatch(verdict, /corrects our own earlier entry/, `/vendor/${row.slug}`);
+    }
+    assert.ok(pagesNamingARecord > 0, "no vendor page under test names a record in its verdict, so no page is checked");
+    assert.ok(
+      pagesStatingTheCount > 0,
+      "no vendor page under test says how many records narrowed the terms, so the count a reader sees is unchecked",
+    );
 
     const neo4j = verdictParagraph(await get("/vendor/neo4j-auradb"));
     assert.match(neo4j, /The one record we hold corrects our own earlier entry rather than reporting a change the vendor made\./);
