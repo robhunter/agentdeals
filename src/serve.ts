@@ -25662,7 +25662,7 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="cloud-ide-comparison">Cloud IDE Free Tier Comparison</h2>
-  <p class="section-intro">Free terms of 8 alternatives: 6 cloud IDEs (GitHub Codespaces, Ona, Replit, CodeSandbox, StackBlitz, Coder) and 2 local AI editors (Cursor, Devin Desktop). Click provider names for full vendor profiles with the limits we hold.</p>
+  <p class="section-intro">Free terms of 7 alternatives: 5 cloud IDEs (GitHub Codespaces, Replit, CodeSandbox, StackBlitz, Coder) and 2 local AI editors (Cursor, Devin Desktop). Ona (formerly Gitpod) has no free plan. Click provider names for full vendor profiles with the limits we hold.</p>
 
   <div style="overflow-x:auto">
   <table class="pricing-table">
