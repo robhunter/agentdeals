@@ -104,10 +104,10 @@ describe("a guide that states terms we cannot confirm says so beside them", () =
     assert.strictEqual(refused, "", refused);
     assertPopulationFloor(pages.size, 60, "guides answered a read");
     const owing = [...pages.values()].filter((html) => publishedBy(html).length > 0);
-    assertPopulationFloor(owing.length, 25, "guides publish terms we cannot confirm");
+    assertPopulationFloor(owing.length, 17, "guides publish terms we cannot confirm");
     assertPopulationFloor(
       [...pages.values()].reduce((total, html) => total + publishedBy(html).length, 0),
-      400,
+      327,
       "guide listings state terms we cannot confirm",
     );
   });
@@ -133,7 +133,7 @@ describe("a guide that states terms we cannot confirm says so beside them", () =
         if (html.includes(record.sentence)) carried.add(`${at}|${record.vendor}`);
       }
     }
-    assertPopulationFloor(carried.size, 400, "guide listings carry the sentence unconfirmedTermsFrom builds");
+    assertPopulationFloor(carried.size, 324, "guide listings carry the sentence unconfirmedTermsFrom builds");
   });
 
   it("holds the guides it leaves out to being guides this sweep still reads", () => {

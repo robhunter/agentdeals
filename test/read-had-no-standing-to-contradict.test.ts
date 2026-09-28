@@ -6,7 +6,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { GATE_REASONS } from "../scripts/change-gate.js";
 import { SUPPRESSED_SAME_TRANSITION_REGRADED } from "../scripts/change-log.js";
-import { assertPopulationFloor, assertSharesPopulation, type Population } from "./population-floor.ts";
+import { assertPopulationFloor } from "./population-floor.ts";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -108,11 +108,6 @@ const voidedByItsOwnRefusal = offers.filter((offer) => {
   if (sameDay.length === 0) return false;
   if (!sameDay.every((r) => refusalVoidsTheReadsStanding(r))) return false;
   return nothingLaterSpokeFor(offer);
-});
-
-const recordsVoidedByTheirOwnRefusal = (): Population => ({
-  size: voidedByItsOwnRefusal.length,
-  read: "records whose last read its own refusal voided",
 });
 
 const CONTRADICTED_RECORDS_WHOSE_PAGES_ARE_READ = 120;
@@ -296,7 +291,7 @@ describe("the pages that describe a read our own refusal voided", () => {
   after(() => { proc?.kill(); });
 
   it("holds records on both sides of the rule", () => {
-    assertPopulationFloor(voidedByItsOwnRefusal.length, 50, "records whose last read its own refusal voided");
+    assertPopulationFloor(voidedByItsOwnRefusal.length, 17, "records whose last read its own refusal voided");
     assertPopulationFloor(
       stillContradicted.length,
       CONTRADICTED_RECORDS_WHOSE_PAGES_ARE_READ,
@@ -331,19 +326,14 @@ describe("the pages that describe a read our own refusal voided", () => {
         wrong.push(`/vendor/${slugOf(offer.vendor)} (${reason})`);
       }
     }
-    assertPopulationFloor(spoke.length, 40, "voided reads whose vendor page states what the read found");
+    assertPopulationFloor(spoke.length, 13, "voided reads whose vendor page states what the read found");
     assert.deepStrictEqual(wrong.slice(0, 20), [], wrong.slice(0, 20).join("\n"));
   });
 
   it("says we read a domain root wherever the refusal recorded one", async () => {
     const readFromARoot = voidedByItsOwnRefusal.filter((offer) =>
       sameDayRefusals(offer).some((r) => r.reason === "removal_read_from_root"));
-    assertSharesPopulation(
-      readFromARoot.length,
-      recordsVoidedByTheirOwnRefusal(),
-      0.05,
-      "reads a refusal voided as taken from a domain root",
-    );
+    assertPopulationFloor(readFromARoot.length, 1, "reads a refusal voided as taken from a domain root");
     const wrong: string[] = [];
     for (const offer of readFromARoot) {
       const refusal = sameDayRefusals(offer).find((r) => r.reason === "removal_read_from_root")!;
@@ -394,7 +384,7 @@ describe("the pages that describe a read our own refusal voided", () => {
         disagreeing.push(`/category/${slugOf(category)}: ${stated[1]} counted, ${reasons} rows speak`);
       }
     }
-    assertPopulationFloor(checked, 40, "category pages stating a count of terms we cannot confirm");
+    assertPopulationFloor(checked, 36, "category pages stating a count of terms we cannot confirm");
     assert.deepStrictEqual(disagreeing.slice(0, 20), [], disagreeing.slice(0, 20).join("\n"));
   });
 

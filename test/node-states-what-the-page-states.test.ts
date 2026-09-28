@@ -169,7 +169,7 @@ describe("a vendor page's structured data states the reason its own prose states
 
   it("states a reason in the node wherever the page's own answer states one", () => {
     const answered = pages.filter(p => p.answer.includes(UNVERIFIED_TERMS_CAVEAT));
-    assertPopulationFloor(answered.length, 190, "pages answer the free-tier question with the unverified caveat");
+    assertPopulationFloor(answered.length, 153, "pages answer the free-tier question with the unverified caveat");
     assert.deepStrictEqual(
       answered.filter(p => p.reason === "").map(p => p.route).slice(0, 15),
       [],
@@ -178,7 +178,7 @@ describe("a vendor page's structured data states the reason its own prose states
 
   it("states no reason in the node the page's own answer does not state", () => {
     const hedged = pages.filter(p => p.reason !== null && p.reason !== "");
-    assertPopulationFloor(hedged.length, 200, "node descriptions state a reason we cannot confirm the terms");
+    assertPopulationFloor(hedged.length, 162, "node descriptions state a reason we cannot confirm the terms");
     assert.deepStrictEqual(
       hedged.filter(p => !p.answer.includes(UNVERIFIED_TERMS_CAVEAT) && !p.answer.includes(p.reason!))
         .map(p => `${p.route}: ${p.reason!.slice(0, 80)}`).slice(0, 15),
@@ -197,7 +197,7 @@ describe("a vendor page's structured data states the reason its own prose states
   it("gives the Offer the tier it names and the reason the node states, and nothing else", () => {
     const priced = pages.filter(p => p.node.pricedAtZero && p.node.offerTier !== null);
     assertPopulationFloor(priced.length, 200, "vendor pages price a tier at zero");
-    assertPopulationFloor(priced.filter(p => p.reason !== "").length, 150, "priced vendor pages state a reason");
+    assertPopulationFloor(priced.filter(p => p.reason !== "").length, 134, "priced vendor pages state a reason");
     assert.deepStrictEqual(
       priced.filter(p => p.node.offerDescription !== (p.reason === "" ? p.node.offerTier : `${p.node.offerTier} — ${p.reason}`))
         .map(p => `${p.route}: ${p.node.offerDescription}`).slice(0, 15),

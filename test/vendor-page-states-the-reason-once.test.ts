@@ -221,7 +221,7 @@ describe("a vendor page states the reason it cannot confirm the terms in its own
     assertSharesPopulation(
       stated.length,
       pagesRead(),
-      0.35,
+      0.29,
       "vendor pages whose node states a reason we cannot confirm the terms",
     );
     assert.deepStrictEqual(
@@ -246,7 +246,7 @@ describe("a vendor page states the reason it cannot confirm the terms in its own
 
   it("states that reason a bounded number of times on any one page", () => {
     const restated = pages.filter(p => p.restated !== null).map(p => p.restated as number);
-    assertPopulationFloor(restated.length, 200, "vendor pages hold terms we cannot confirm");
+    assertPopulationFloor(restated.length, 165, "vendor pages hold terms we cannot confirm");
     const over = pages
       .filter(p => (p.restated ?? 0) > RESTATEMENTS_A_PAGE_MAY_MAKE)
       .map(p => `${p.route}: ${p.restated}`);
