@@ -216,8 +216,8 @@ const S3 = "On 2025-12-06 Google cut 2.5 Flash's free tier from 250 requests a d
 
 const STATED: Record<string, string[]> = {
   "/gcp-free-tier-2026": [
-    "Gemini API free tier (AI Studio) + Cloud Functions + Cloud Storage.",
-    "$300 credit for 90 days, credit card required. Accounts opened after 2026-03-02 cannot spend it on the Gemini API.",
+    "Gemini API free tier (AI Studio) + Cloud Run functions + Cloud Storage.",
+    "$300 credit for 90 days. Credit card or other payment method required. Accounts opened after 2026-03-02 cannot spend it on the Gemini API.",
     "Free tier on the Gemini 3.x Flash and Flash-Lite models; limits shown per project in AI Studio",
     "The $300 trial is credit for Google Cloud products over 90 days; accounts opened after 2026-03-02 cannot spend it on the Gemini API. The Gemini API has its own free tier, with limits shown per project in AI Studio.",
   ],

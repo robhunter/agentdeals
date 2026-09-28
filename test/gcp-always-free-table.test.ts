@@ -12,7 +12,10 @@ const root = path.join(__dirname, "..");
 
 const PAGE = "/gcp-free-tier-2026";
 const CITED_ON_THE_VENDOR_PRICING_PAGE = ["Cloud Scheduler", "Cloud Translation API"];
-const SERVICES_THE_HERO_NAMES = ["Cloud Run", "BigQuery"];
+const SERVICES_THE_HERO_NAMES: Record<string, { inIntro: string; inRow: RegExp }> = {
+  "Cloud Run": { inIntro: "2 million requests a month", inRow: /^2M requests\/month\b/ },
+  BigQuery: { inIntro: "1 TiB of querying a month", inRow: /^1 TiB queries\/month\b/ },
+};
 const RANKED_OR_CALLED_FOREVER = /most generous|the only major cloud|GCP wins|free forever|24\/7 forever|stay free forever/gi;
 const STATED_BY_NEITHER_SOURCE: Array<{ row: string; phrase: RegExp }> = [
   { row: "BigQuery", phrase: /ML model creation/i },
@@ -101,11 +104,11 @@ describe(`${PAGE} publishes Google's Always Free quotas (#1623)`, () => {
 
   it("states Cloud Build's quota per month, and the callout repeats the table's figure", () => {
     const { limits } = rowNamed("Cloud Build");
-    const quota = limits.match(/^[\d,]+ build-minutes\/month/);
+    const quota = limits.match(/^([\d,]+) build-minutes\/month/);
     assert.ok(quota, `the Cloud Build row states no monthly build-minute quota: ${limits}`);
     assert.doesNotMatch(limits, /\/day/);
     const callout = text(html.slice(html.indexOf("Add Cloud Build") - 400, html.indexOf("Add Cloud Build") + 200));
-    assert.ok(callout.includes(`Add Cloud Build (${quota[0]})`), `the callout does not repeat ${quota[0]}: ${callout}`);
+    assert.match(callout, new RegExp(`Add Cloud Build \\(${quota[1]} build-minutes(?:/| a )month\\)`), `the callout does not repeat ${quota[0]}: ${callout}`);
   });
 
   it("calls no metered service free", () => {
@@ -134,7 +137,7 @@ describe(`${PAGE} publishes Google's Always Free quotas (#1623)`, () => {
   });
 
   it("names each product as Google's free-tier list names it", () => {
-    rowNamed("Cloud Run functions");
+    rowNamed("Cloud Run functions (1st gen)");
     assert.ok(!alwaysFreeRows().some((r) => r.name === "Cloud Functions"), "Google lists the product as Cloud Run functions");
   });
 
@@ -153,10 +156,11 @@ describe(`${PAGE} publishes Google's Always Free quotas (#1623)`, () => {
     assert.deepStrictEqual(claims, []);
   });
 
-  it("counts the other services in the introduction from the table", () => {
-    const stated = html.match(new RegExp(`${SERVICES_THE_HERO_NAMES[1]} \\([^)]*\\), and (\\d+) other services`));
-    assert.ok(stated, "the introduction no longer counts the other Always Free services");
-    for (const named of SERVICES_THE_HERO_NAMES) rowNamed(named);
-    assert.strictEqual(Number(stated[1]), alwaysFreeRows().length - SERVICES_THE_HERO_NAMES.length);
+  it("quotes Cloud Run's and BigQuery's quotas in the introduction as their rows state them", () => {
+    const intro = text(html.slice(html.indexOf('class="executive-summary"'), html.indexOf('class="toc"')));
+    for (const [named, { inIntro, inRow }] of Object.entries(SERVICES_THE_HERO_NAMES)) {
+      assert.ok(intro.includes(`${named} (${inIntro})`), `the introduction does not quote ${named} as "${inIntro}": ${intro}`);
+      assert.match(rowNamed(named).limits, inRow);
+    }
   });
 });

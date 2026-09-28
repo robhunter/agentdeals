@@ -33523,7 +33523,7 @@ function buildAwsFreeTier2026Page(): string {
   }
 
   const gotchas: GotchaItem[] = [
-    { title: "Data transfer out", desc: "First 100 GB/month free to internet, then $0.09/GB. Transfers between regions always charged. This is the #1 surprise cost.", cost: "$0.09/GB" },
+    { title: "Data transfer out", desc: "First 100 GB/month free to internet, then $0.09/GB. Transfers between regions always charged.", cost: "$0.09/GB" },
     { title: "NAT Gateway", desc: "If your Lambda/ECS needs internet access in a VPC, NAT Gateway costs $0.045/hr + $0.045/GB. Running 24/7 = $32/month before data.", cost: "$32+/mo" },
     { title: "Elastic IP addresses", desc: "Free when attached to a running instance. Charged $0.005/hr (~$3.60/month) when idle or unattached. Easy to forget.", cost: "$3.60/mo idle" },
     { title: "CloudWatch detailed monitoring", desc: "Basic monitoring is free (5-minute intervals). Detailed monitoring (1-minute) costs $2.10/metric/month. EC2 auto-enables it in some launch configs.", cost: "$2.10/metric" },
@@ -33543,13 +33543,13 @@ function buildAwsFreeTier2026Page(): string {
 
   const cloudAlts: CloudAlt[] = [
     { name: "GCP (Google Cloud)", slug: "google-cloud", freeTier: "Always Free: e2-micro VM, 1 TiB BigQuery, Cloud Run 2M req/mo", strength: "Most generous always-free compute", bestFor: "Side projects needing a persistent VM" },
-    { name: "Azure", slug: "azure", freeTier: "12-month: VMs, SQL, Cosmos DB (1K RU/s + 25 GB). $200 credit", strength: "Enterprise integration, .NET ecosystem", bestFor: "Teams already on Microsoft stack" },
+    { name: "Azure", slug: "azure", freeTier: "12 months: 750 hours each of B2pts v2 and B2ats v2 VMs. Always free: SQL Database (100K vCore seconds/mo, 32 GB), Cosmos DB (1K RU/s, 25 GB). $200 credit for 30 days, then pay-as-you-go to keep the free services.", strength: "Enterprise integration, .NET ecosystem", bestFor: "Teams already on Microsoft stack" },
     { name: "Railway", slug: "railway", freeTier: "$5 free trial credit, usage-based pricing after", strength: "Best developer experience, instant deploys", bestFor: "Quick prototypes, hobby projects" },
     { name: "Render", slug: "render", freeTier: "Free web services (512 MB RAM), free PostgreSQL (30 days)", strength: "Simple PaaS with generous free tier", bestFor: "Replacing Heroku for small apps" },
     { name: "Supabase", slug: "supabase", freeTier: "500 MB database, 50K MAU auth, 1 GB storage", strength: "Full BaaS with PostgreSQL + auth + storage", bestFor: "Firebase alternative with SQL" },
     { name: "Neon", slug: "neon", freeTier: "100 CU-hours and 0.5 GB storage per project, auth up to 60k MAU, branching", strength: "Serverless PostgreSQL with scale-to-zero", bestFor: "Serverless Postgres with branching and scale-to-zero" },
     { name: "Cloudflare", slug: "cloudflare-workers", freeTier: "Workers 100K req/day, R2 10 GB, D1 5 GB, Pages unlimited", strength: "Edge-first with zero egress fees on R2", bestFor: "Global edge apps, static sites, storage" },
-    { name: "Vercel", slug: "vercel", freeTier: "Unlimited deploys (hobby), 100 GB bandwidth, serverless functions", strength: "Best Next.js hosting, instant previews", bestFor: "Frontend apps and Jamstack sites" },
+    { name: "Vercel", slug: "vercel", freeTier: "Hobby plan (personal, non-commercial use only): 100 deployments/day, 100 GB Fast Data Transfer/month, 1M function invocations/month.", strength: "Best Next.js hosting, instant previews", bestFor: "Frontend apps and Jamstack sites" },
   ];
 
   const alwaysFreeRows = alwaysFreeServices.map(s => `<tr>
@@ -33699,7 +33699,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="executive-summary">
-    <p><strong>Three tiers, very different rules.</strong> AWS bundles "free tier" into three categories that work completely differently. <strong>Always Free</strong> services never expire — Lambda, DynamoDB, and SNS stay free forever within limits. <strong>12-Month Free</strong> services (EC2, RDS, S3) expire silently after your first year and start billing. <strong>Short-Term Trials</strong> give limited access to premium services. Most "AWS free tier" guides conflate these. We don't.</p>
+    <p><strong>Three tiers, very different rules.</strong> AWS bundles "free tier" into three categories that work completely differently. <strong>Always Free</strong> services never expire — Lambda, DynamoDB, and SNS stay free forever within limits. <strong>12-Month Free</strong> services (EC2, RDS, S3) expire silently after your first year and start billing. <strong>Short-Term Trials</strong> give limited access to premium services.</p>
     <p><strong>What's new:</strong> Aurora PostgreSQL Serverless was added to the AWS Free Tier in March 2026 — the first time AWS's flagship managed PostgreSQL has been available at no cost. New accounts also get $100&ndash;$200 in credits.</p>
     <p><strong>The hidden costs:</strong> AWS's free tier is generous but has well-known traps — data transfer charges, NAT Gateway fees, idle Elastic IPs, and EBS volumes on stopped instances. We cover all of them below.</p>
     <p><strong>Comparing clouds?</strong> See our <a href="/cloud-free-tier-comparison-2026">Cloud Free Tier Comparison</a> for a side-by-side matrix of AWS vs GCP vs Azure vs DigitalOcean.</p>
@@ -33923,41 +33923,47 @@ function buildGcpFreeTier2026Page(): string {
   const alwaysFreeServices: GcpService[] = [
     { name: "Compute Engine (e2-micro)", slug: "google-compute-engine", limits: "1 e2-micro VM/month (us-west1, us-central1, us-east1), 30 GB standard persistent disk", category: "Compute", source: GOOGLE_FREE_TIER_LIST },
     { name: "Cloud Run", slug: "google-cloud-run", limits: "2M requests/month, 360K GiB-seconds memory, 180K vCPU-seconds", category: "Compute", source: GOOGLE_FREE_TIER_LIST },
-    { name: "Cloud Run functions", slug: "google-cloud", limits: "2M invocations/month, 400K GB-seconds, 200K GHz-seconds", category: "Compute", source: GOOGLE_FREE_TIER_LIST },
+    { name: "Cloud Run functions (1st gen)", slug: "google-cloud", limits: "2M invocations, 400K GB-seconds, 200K GHz-seconds, 5 GB egress/month. Current Cloud Run functions are billed on Cloud Run pricing.", category: "Compute", source: GOOGLE_FREE_TIER_LIST },
     { name: "App Engine", slug: "google-cloud", limits: "28 instance-hours/day (F1 instances), 1 GB egress/day", category: "Compute", source: GOOGLE_FREE_TIER_LIST },
-    { name: "GKE Autopilot", slug: "google-cloud", limits: "1 free zonal cluster (no cluster management fee, pay for pods only)", category: "Containers", source: GOOGLE_FREE_TIER_LIST },
+    { name: "GKE", slug: "google-cloud", limits: "$74.40/month credit per billing account. Covers the cluster management fee for one Autopilot or zonal Standard cluster; not compute, networking or other resources.", category: "Containers", source: GOOGLE_FREE_TIER_LIST },
     { name: "Cloud Shell", slug: "google-cloud-shell", limits: "5 GB persistent home directory, web-based terminal with built-in tools", category: "Dev Tools", source: GOOGLE_FREE_TIER_LIST },
     { name: "BigQuery", slug: "google-cloud-bigquery", limits: "1 TiB queries/month, 10 GiB storage", category: "Analytics", source: GOOGLE_FREE_TIER_LIST },
     { name: "Firestore", slug: "firebase", limits: "1 GiB storage, 50K reads/day, 20K writes/day, 20K deletes/day", category: "Database", source: GOOGLE_FREE_TIER_LIST },
     { name: "Cloud Storage", slug: "google-cloud-storage", limits: "5 GB-months Standard (us-west1, us-central1, us-east1), 5K Class A ops, 50K Class B ops", category: "Storage", source: GOOGLE_FREE_TIER_LIST },
     { name: "Pub/Sub", slug: "google-cloud-pub-sub", limits: "10 GiB messages/month", category: "Messaging", source: GOOGLE_FREE_TIER_LIST },
+    { name: "Datastream", slug: "google-cloud", limits: "100 GiB of change data capture a month per billing account (AlloyDB or Spanner to BigQuery)", category: "Data", source: GOOGLE_FREE_TIER_LIST },
     { name: "Cloud Build", slug: "google-cloud-build", limits: "2,500 build-minutes/month (e2-standard-2)", category: "CI/CD", source: GOOGLE_FREE_TIER_LIST },
+    { name: "Cloud Deploy", slug: "google-cloud", limits: "First active delivery pipeline per billing account", category: "CI/CD", source: GOOGLE_FREE_TIER_LIST },
     { name: "Artifact Registry", slug: "google-artifact-registry", limits: "500 MB storage", category: "Containers", source: GOOGLE_FREE_TIER_LIST },
     { name: "Cloud Logging", slug: "google-cloud-logging", limits: "50 GiB logs ingestion/month, 30-day retention", category: "Logging", source: GOOGLE_FREE_TIER_LIST },
     { name: "Cloud Monitoring", slug: "google-cloud-monitoring", limits: "All non-chargeable Google Cloud metrics; the first 1 million time series read through the Monitoring API per billing account", category: "Monitoring", source: GOOGLE_FREE_TIER_LIST },
+    { name: "Workload Manager", slug: "google-cloud", limits: "5,000 resource evaluations a month", category: "Management", source: GOOGLE_FREE_TIER_LIST },
     { name: "Secret Manager", slug: "google-secret-manager", limits: "6 active secret versions, 10K access operations/month", category: "Security", source: GOOGLE_FREE_TIER_LIST },
-    { name: "Cloud Source Repositories", slug: "google-cloud", limits: "Up to 5 users, 50 GiB storage, 50 GiB egress", category: "Source Control", source: GOOGLE_FREE_TIER_LIST },
+    { name: "Cloud Source Repositories", slug: "google-cloud", limits: "Not available to new customers since June 17, 2024. Existing customers keep up to 5 project-users, 50 GB storage and 50 GB egress/month free.", category: "Source Control", source: GOOGLE_FREE_TIER_LIST },
     { name: "Cloud Vision API", slug: "google-cloud", limits: "1,000 units/month (label detection, face detection, OCR, etc.)", category: "AI/ML", source: GOOGLE_FREE_TIER_LIST },
     { name: "Cloud Natural Language API", slug: "google-cloud", limits: "5,000 units/month (sentiment analysis, entity extraction)", category: "AI/ML", source: GOOGLE_FREE_TIER_LIST },
-    { name: "Cloud Speech-to-Text", slug: "google-cloud", limits: "60 minutes/month audio transcription", category: "AI/ML", source: GOOGLE_FREE_TIER_LIST },
+    { name: "Cloud Speech-to-Text", slug: "google-cloud", limits: "60 minutes/month per account on the V1 API. The V2 API has no free minutes.", category: "AI/ML", source: GOOGLE_FREE_TIER_LIST },
     { name: "Cloud Video Intelligence API", slug: "google-cloud", limits: "1,000 units/month (label detection, shot detection)", category: "AI/ML", source: GOOGLE_FREE_TIER_LIST },
     { name: "Cloud Translation API", slug: "google-cloud", limits: "500,000 characters/month (applied as a $10 monthly credit)", category: "AI/ML", source: "https://cloud.google.com/translate/pricing" },
+    { name: "Agent Runtime (Gemini Enterprise Agent Platform)", slug: "google-cloud", limits: "First 180,000 vCPU-seconds (50 hours) and 360,000 GiB-seconds of memory a month", category: "AI/ML", source: GOOGLE_FREE_TIER_LIST },
     { name: "Workflows", slug: "google-cloud", limits: "5,000 internal steps and 2,000 external HTTP calls per month", category: "Integration", source: GOOGLE_FREE_TIER_LIST },
     { name: "Application Integration", slug: "google-cloud", limits: "400 executions/month, first 2 connection nodes for Google services; up to 20 GiB of data processed per month", category: "Integration", source: GOOGLE_FREE_TIER_LIST },
-    { name: "reCAPTCHA Enterprise", slug: "google-cloud", limits: "10,000 assessments/month", category: "Security", source: GOOGLE_FREE_TIER_LIST },
+    { name: "reCAPTCHA", slug: "google-cloud", limits: "10,000 assessments/month free on the Essentials and Premium tiers, counted per organization. Enterprise tier: $1 per 1,000 assessments on a 12-month commitment.", category: "Security", source: GOOGLE_FREE_TIER_LIST },
     { name: "Cloud KMS", slug: "google-cloud", limits: "100 active key versions and 10,000 cryptographic operations per month, for keys created with Cloud KMS Autokey", category: "Security", source: GOOGLE_FREE_TIER_LIST },
+    { name: "Security Command Center", slug: "google-cloud", limits: "Standard tier", category: "Security", source: GOOGLE_FREE_TIER_LIST },
+    { name: "Web Risk", slug: "google-cloud", limits: "100,000 uris.search calls a month", category: "Security", source: GOOGLE_FREE_TIER_LIST },
     { name: "Cloud Scheduler", slug: "google-cloud", limits: "3 jobs per billing account per month", category: "Scheduling", source: "https://cloud.google.com/scheduler/pricing" },
-    { name: "Firebase Auth", slug: "firebase", limits: "50,000 MAUs", category: "Auth" },
-    { name: "Firebase Hosting", slug: "firebase", limits: "10 GiB storage, 360 MB/day transfer, custom domain + SSL", category: "Hosting" },
+    { name: "Firebase Auth", slug: "firebase", limits: "Included at no cost on the Spark plan, except SMS phone sign-in. The 50K-MAU tier requires Identity Platform; Spark projects that upgrade are limited to 3,000 DAU. SAML/OIDC: 50 MAUs on Blaze, 2 DAU on Spark.", category: "Auth" },
+    { name: "Firebase Hosting", slug: "firebase", limits: "10 GB storage, 360 MB/day transfer, custom domain + SSL", category: "Hosting" },
     { name: "Firebase Realtime Database", slug: "firebase", limits: "1 GB storage, 10 GB/month transfer, 100 simultaneous connections", category: "Database" },
   ];
 
   const trialServices: GcpService[] = [
-    { name: "$300 Free Trial Credit", slug: "google-cloud", limits: "$300 credit for 90 days, credit card required. Accounts opened after 2026-03-02 cannot spend it on the Gemini API.", category: "Trial" },
+    { name: "$300 Free Trial Credit", slug: "google-cloud", limits: "$300 credit for 90 days. Credit card or other payment method required. Accounts opened after 2026-03-02 cannot spend it on the Gemini API.", category: "Trial" },
     { name: "Gemini API (AI Studio)", slug: "google-gemini-api", limits: "Free tier on the Gemini 3.x Flash and Flash-Lite models; limits shown per project in AI Studio", category: "AI/ML", highlight: true },
-    { name: "Google Colab", slug: "google-colab", limits: "Free tier: T4 GPU (limited), standard RAM, 12-hour session limit", category: "AI/ML" },
-    { name: "AlloyDB Omni", slug: "google-cloud", limits: "Free to download and run locally (PostgreSQL-compatible, columnar engine)", category: "Database" },
-    { name: "Looker Studio", slug: "google-cloud", limits: "Free for individual use (unlimited reports, 10 data sources)", category: "Analytics" },
+    { name: "Google Colab", slug: "google-colab", limits: "Free notebooks run for at most 12 hours. GPU access is heavily restricted and GPU types vary.", category: "AI/ML" },
+    { name: "AlloyDB Omni", slug: "google-cloud", limits: "Free to download and use for development, testing, prototyping and demos; production or data-processing use is paid ($40 per vCPU a month).", category: "Database" },
+    { name: "Data Studio (formerly Looker Studio)", slug: "google-cloud", limits: "Free for report creators and viewers. Connects to 1,400+ data sources. Data Studio Pro: $9/user/project/month.", category: "Analytics" },
   ];
 
   interface GotchaItem {
@@ -33967,13 +33973,13 @@ function buildGcpFreeTier2026Page(): string {
   }
 
   const gotchas: GotchaItem[] = [
-    { title: "Egress charges", desc: "All GCP services charge for data leaving Google's network. First 200 GiB/month to worldwide destinations (excl. China/Australia) free on Premium Tier. After that, $0.12/GiB for Americas/EMEA. Internal cross-region transfers also charged.", cost: "$0.12/GiB" },
+    { title: "Egress charges", desc: "Premium Tier is the default. From us-central1 it costs $0.12 per GiB (up to 1,024 GiB) to North America, Europe and Asia (excluding Korea and Indonesia), and up to $0.23 elsewhere. The Free Tier covers 1 GB a month from North America to every destination except China and Australia, on Premium Tier only; Cloud Storage's Free Tier adds 100 GB. Standard Tier's first 200 GiB a month are free, per account. Cross-region transfer is also billed.", cost: "$0.12–0.23/GiB" },
     { title: "e2-micro region restriction", desc: "The free e2-micro VM is only free in us-west1, us-central1, and us-east1. Launching in any other region (including Europe, Asia) will incur standard Compute Engine charges.", cost: "~$7/mo wrong region" },
     { title: "Cloud Storage class operations", desc: "Class A operations (writes, lists) cost more than Class B (reads). The free tier covers 5K Class A and 50K Class B/month. Heavy write workloads (logging, backups) can exceed this quickly.", cost: "$0.05/10K Class A" },
-    { title: "Firestore daily limits", desc: "Firestore free tier is generous on storage (1 GiB) but tight on operations: 50K reads, 20K writes, 20K deletes per day. A moderately active app can hit read limits easily.", cost: "$0.06/100K reads" },
-    { title: "Free trial credit expiration", desc: "The $300 credit expires after 90 days, regardless of balance. When it expires or is exhausted, your account pauses and requires upgrade to paid. No automatic billing (but you lose access).", cost: "Service pause" },
-    { title: "Load balancer costs", desc: "Google Cloud load balancers are never free. Minimum ~$18/month for a global external load balancer + $0.008-0.012/GB processed. Cloud Run and App Engine include their own load balancing for free.", cost: "$18+/mo" },
-    { title: "Persistent disk snapshots", desc: "Persistent disk storage is free (30 GB), but snapshots are not. Each snapshot costs $0.026/GB/month. Automatic snapshot schedules can accumulate costs quietly.", cost: "$0.026/GB/mo" },
+    { title: "Firestore daily limits", desc: "The free quota covers the default database only; named databases get none. Free: 1 GiB of storage, plus 50,000 reads, 20,000 writes and 20,000 deletes a day. Past the quota, reads cost $0.03 per 100,000 in us-central1 and $0.06 in the nam5, nam7 and eur3 multi-regions.", cost: "$0.03–0.06/100K reads" },
+    { title: "Free trial credit expiration", desc: "The $300 credit lasts 90 days. When it is spent or 90 days pass, the Free Trial billing account closes unless you upgrade to a Paid billing account: resources stop, and data in services such as Compute Engine is marked for deletion. After a 30-day grace period without an upgrade, the resources are permanently deleted. The trial account is not billed, but a billing account set up through AI Studio is billed automatically once its credits are used up or expire.", cost: "Not billed" },
+    { title: "Load balancer costs", desc: "The first 5 forwarding rules cost $0.025 an hour (about $18.25 for a 730-hour month). Data processed costs $0.008 per GiB in us-central1 and up to $0.0128 per GiB in other regions. Cloud Run and App Engine include their own load balancing for free.", cost: "$18+/mo" },
+    { title: "Persistent disk snapshots", desc: "The Free Tier includes 30 GB-months of standard persistent disk and no snapshot storage. Standard snapshot storage costs $0.05 per GB a month in us-central1. Snapshots are incremental and billed on the compressed size of the data changed since the previous snapshot.", cost: "$0.05/GB/mo" },
     { title: "BigQuery streaming inserts", desc: "BigQuery queries are free up to 1 TiB/month, but streaming inserts cost $0.01/200 MB. Batch loading is free. If your app streams data in real-time, costs can add up.", cost: "$0.05/GB streamed" },
   ];
 
@@ -33987,12 +33993,12 @@ function buildGcpFreeTier2026Page(): string {
 
   const cloudAlts: CloudAlt[] = [
     { name: "AWS", slug: "aws", freeTier: "Always Free: Lambda 1M req/mo, DynamoDB 25 GB, 12-month EC2/RDS", strength: "Broadest service catalog, most enterprise adoption", bestFor: "Enterprise workloads, serverless (Lambda)" },
-    { name: "Azure", slug: "azure", freeTier: "12-month: VMs, SQL, Cosmos DB (1K RU/s + 25 GB). $200 credit", strength: "Best .NET/Windows integration, hybrid cloud", bestFor: "Microsoft stack teams, enterprise" },
+    { name: "Azure", slug: "azure", freeTier: "12 months: 750 hours each of B2pts v2 and B2ats v2 VMs. Always free: SQL Database (100K vCore seconds/mo, 32 GB), Cosmos DB (1K RU/s, 25 GB). $200 credit for 30 days, then pay-as-you-go to keep the free services.", strength: "Best .NET/Windows integration, hybrid cloud", bestFor: "Microsoft stack teams, enterprise" },
     { name: "Cloudflare", slug: "cloudflare-workers", freeTier: "Workers 100K req/day, R2 10 GB (zero egress), D1 5 GB, Pages unlimited", strength: "Zero egress on R2, global edge network", bestFor: "Edge computing, static sites, storage" },
     { name: "Railway", slug: "railway", freeTier: "$5 free trial credit, usage-based pricing", strength: "Best developer experience, instant deploys", bestFor: "Quick prototypes, hobby projects" },
     { name: "Render", slug: "render", freeTier: "Free web services (512 MB RAM), free PostgreSQL (30 days)", strength: "Simple PaaS, Heroku replacement", bestFor: "Small web apps, side projects" },
     { name: "Supabase", slug: "supabase", freeTier: "500 MB database, 50K MAU auth, 1 GB storage", strength: "Full BaaS with PostgreSQL + auth + storage", bestFor: "Firebase alternative with SQL" },
-    { name: "Vercel", slug: "vercel", freeTier: "Unlimited deploys (hobby), 100 GB bandwidth, serverless functions", strength: "Best Next.js hosting, instant previews", bestFor: "Frontend apps and Jamstack sites" },
+    { name: "Vercel", slug: "vercel", freeTier: "Hobby plan (personal, non-commercial use only): 100 deployments/day, 100 GB Fast Data Transfer/month, 1M function invocations/month.", strength: "Best Next.js hosting, instant previews", bestFor: "Frontend apps and Jamstack sites" },
     { name: "Neon", slug: "neon", freeTier: "100 CU-hours and 0.5 GB storage per project, auth up to 60k MAU, branching", strength: "Serverless PostgreSQL with scale-to-zero", bestFor: "Serverless Postgres with branching and scale-to-zero" },
   ];
 
@@ -34126,7 +34132,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; GCP Free Tier 2026</div>
   <h1>GCP Free Tier Complete Guide 2026</h1>
-  <p class="pub-date">Published ${pubDate} &middot; ${pageDataProvenance("/gcp-free-tier-2026", offers.length)} &middot; ${gcpOffers.length} GCP entries tracked</p>
+  <p class="pub-date">Published ${pubDate} &middot; ${pageDataProvenance("/gcp-free-tier-2026", offers.length)} &middot; ${gcpOffers.length} Google and Firebase entries tracked</p>
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number">${alwaysFreeServices.length}</div><div class="stat-label">Always Free</div></div>
@@ -34136,9 +34142,9 @@ ${mcpCtaCss()}
   </div>
 
   <div class="executive-summary">
-    <p><strong>Three tiers, different rules.</strong> GCP bundles its free offerings into three categories. <strong>Always Free</strong> products have permanent monthly quotas — Cloud Run (2M requests), BigQuery (1 TiB), and ${alwaysFreeServices.length - 2} other services are free within monthly limits. The <strong>$300 Free Trial</strong> gives $300 of credit to spend on Google Cloud products over 90 days (credit card required, but won't auto-charge; accounts opened after 2026-03-02 cannot spend it on the Gemini API). <strong>AI &amp; ML tools</strong> have their own free tiers with daily rate limits. Most "GCP free tier" guides conflate these. We separate them.</p>
+    <p><strong>Three ways to start free.</strong> Google offers the Free Tier, the $300 Free Trial and product-specific free offers such as the Gemini API free tier in Google AI Studio. Google's <strong>Free Tier</strong> table lists 29 products, including Cloud Run (2 million requests a month) and BigQuery (1 TiB of querying a month). It has no end date, but Google can change or remove its limits with 30 days' notice. Most limits are monthly; App Engine's limits and Firestore's operation limits are daily. The <strong>$300 Free Trial</strong> runs for 90 days and needs a credit card or other payment method; the trial billing account is not billed. Accounts opened after 2026-03-02 cannot spend the credit on the Gemini API. The Gemini API free tier has per-minute and per-day limits; the Cloud AI APIs in the Free Tier have monthly limits.</p>
     <p><strong>The free VM:</strong> Always Free includes one e2-micro VM a month in us-west1, us-central1 or us-east1, with 30 GB of standard persistent disk.</p>
-    <p><strong>The hidden costs:</strong> GCP's free tier has traps — the free VM is region-restricted, egress charges apply everywhere, Firestore daily operation limits are tight, and load balancers are never free. We cover all gotchas below.</p>
+    <p><strong>The hidden costs:</strong> the e2-micro VM is free only in us-west1, us-central1 and us-east1. Outbound data transfer beyond each product's free allowance is billed. Firestore's free operations are counted per day. Load balancers are billed (forwarding rules and data processed).</p>
     <p><strong>Comparing clouds?</strong> See our <a href="/cloud-free-tier-comparison-2026">Cloud Free Tier Comparison</a> for a side-by-side matrix of AWS vs GCP vs Azure vs DigitalOcean.</p>
   </div>
 
@@ -34174,7 +34180,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="context-box">
-    <strong>Cloud Run and Firestore together cover a small serverless backend within Always Free limits.</strong> 2M requests/month on Cloud Run, 1 GiB of Firestore storage and Firebase Auth (50K MAUs) give you an API, a database and auth at no charge. Add Cloud Build (2,500 build-minutes/month) for CI/CD and Cloud Logging (50 GiB/month) for observability.
+    <strong>Cloud Run and Firestore together cover a small serverless backend within Free Tier limits.</strong> Cloud Run gives 2 million requests a month and Firestore 1 GiB of storage. Firebase Authentication, except SMS phone sign-in, is included at no cost on the Spark plan; its 50,000-MAU no-cost tier needs Identity Platform, and Spark projects that upgrade are limited to 3,000 daily active users. Add Cloud Build (2,500 build-minutes a month) for CI/CD and Cloud Logging (50 GiB a month) for observability.
   </div>
 
   <h2 id="trial-ai">Free Trial &amp; AI/ML Tools</h2>
@@ -34207,7 +34213,7 @@ ${mcpCtaCss()}
 
     <div class="verdict-item">
       <strong>Hobby API backend</strong>
-      <p>Cloud Run (2M req/mo) + Firestore (1 GiB) + Firebase Auth (50K MAUs) + Cloud Logging. Serverless, auto-scales to zero, always free. Best for REST/GraphQL APIs with moderate traffic.</p>
+      <p>Cloud Run (2M req/mo) + Firestore (1 GiB) + Firebase Auth + Cloud Logging. Serverless, auto-scales to zero, always free. Best for REST/GraphQL APIs with moderate traffic.</p>
     </div>
 
     <div class="verdict-item">
@@ -34217,27 +34223,27 @@ ${mcpCtaCss()}
 
     <div class="verdict-item">
       <strong>Data analytics</strong>
-      <p>BigQuery (1 TiB queries/mo + 10 GiB storage) + Looker Studio (unlimited reports). Query terabytes of public datasets or your own data — completely free. Use Cloud Functions to load data on a schedule.</p>
+      <p>BigQuery (1 TiB of queries and 10 GiB of storage a month) + Data Studio (formerly Looker Studio, free for report creators and viewers). Queries past the first 1 TiB a month are billed, including queries on public datasets. Use Cloud Run functions to load data on a schedule.</p>
     </div>
 
     <div class="verdict-item">
       <strong>AI/ML prototyping</strong>
-      <p>Gemini API free tier (AI Studio) + Cloud Functions + Cloud Storage. Or use Google Colab for notebook-based experimentation with T4 GPU access. For speech, vision, or NLP, the AI APIs have generous monthly free quotas. See our <a href="/ai-ml-alternatives">AI/ML tools guide</a> for more options.</p>
+      <p>Gemini API free tier (AI Studio) + Cloud Run functions + Cloud Storage. Or use Google Colab's free notebooks, where GPU access is heavily restricted. The Vision, Natural Language and Speech-to-Text APIs have monthly free quotas. See our <a href="/ai-ml-alternatives">AI/ML tools guide</a> for more options.</p>
     </div>
 
     <div class="verdict-item">
       <strong>Static site with Firebase</strong>
-      <p>Firebase Hosting (10 GiB storage, custom domain + SSL) + Firebase Auth + Firestore. Or use <a href="/vendor/cloudflare-pages">Cloudflare Pages</a> (unlimited bandwidth, always free) as an alternative. See our <a href="/firebase-alternatives">Firebase alternatives</a> comparison.</p>
+      <p>Firebase Hosting (10 GB storage, custom domain + SSL) + Firebase Auth + Firestore. Or use <a href="/vendor/cloudflare-pages">Cloudflare Pages</a> (unlimited bandwidth, always free) as an alternative. See our <a href="/firebase-alternatives">Firebase alternatives</a> comparison.</p>
     </div>
   </div>
 
   <h2 id="gotchas">Hidden Costs &amp; Gotchas</h2>
-  <p class="section-intro">GCP's free tier is generous, but these costs catch developers off guard. The #1 surprise is region restrictions on the free VM, followed by egress charges across all services.</p>
+  <p class="section-intro">GCP's free tier is generous, but these costs catch developers off guard.</p>
 
     ${gotchaCards}
 
   <div class="context-box">
-    <strong>Pro tip:</strong> Set up budget alerts immediately. Go to Billing &rarr; Budgets &amp; alerts &rarr; Create Budget &rarr; set target to $1. You'll get notified at 50%, 90%, and 100% of the threshold. Also enable <strong>Recommender</strong> for cost optimization suggestions. Unlike AWS, GCP's $300 trial won't auto-charge when exhausted — your account pauses instead.
+    <strong>Pro tip:</strong> Set up budget alerts immediately. Go to Billing &rarr; Budgets &amp; alerts &rarr; Create Budget &rarr; set target to $1. You'll get notified at 50%, 90%, and 100% of the threshold. Also enable <strong>Recommender</strong> for cost optimization suggestions. A Google Cloud Free Trial billing account is not billed. New AWS accounts on the Free plan are not charged either; they close after 6 months or when their credits run out, unless upgraded to a Paid plan.
   </div>
 
   <h2 id="alternatives">GCP vs AWS vs Others</h2>
@@ -34406,7 +34412,7 @@ function buildAzureFreeTier2026Page(): string {
     { name: "Supabase", slug: "supabase", freeTier: "500 MB database, 50K MAU auth, 1 GB storage", strength: "Full BaaS with PostgreSQL + auth + storage", bestFor: "Firebase alternative with SQL" },
     { name: "Neon", slug: "neon", freeTier: "100 CU-hours and 0.5 GB storage per project, auth up to 60k MAU, branching", strength: "Serverless PostgreSQL with scale-to-zero", bestFor: "Serverless Postgres with branching and scale-to-zero" },
     { name: "Cloudflare", slug: "cloudflare-workers", freeTier: "Workers 100K req/day, R2 10 GB, D1 5 GB, Pages unlimited", strength: "Edge-first with zero egress fees on R2", bestFor: "Global edge apps, static sites, storage" },
-    { name: "Vercel", slug: "vercel", freeTier: "Unlimited deploys (hobby), 100 GB bandwidth, serverless functions", strength: "Best Next.js hosting, instant previews", bestFor: "Frontend apps and Jamstack sites" },
+    { name: "Vercel", slug: "vercel", freeTier: "Hobby plan (personal, non-commercial use only): 100 deployments/day, 100 GB Fast Data Transfer/month, 1M function invocations/month.", strength: "Best Next.js hosting, instant previews", bestFor: "Frontend apps and Jamstack sites" },
   ];
 
   const alwaysFreeRows = alwaysFreeServices.map(s => `<tr${s.highlight ? ' style="background:rgba(59,130,246,0.1)"' : ""}>
