@@ -718,12 +718,12 @@
       "review_note": null,
       "reads_index": false,
       "tables_read_index": false,
-      "table_figures": 108,
+      "table_figures": 107,
       "table_figures_from_records": 15,
       "tables": [
         {
           "label": "Pricing Comparison Table",
-          "figures": 31,
+          "figures": 30,
           "from_records": 0
         },
         {
