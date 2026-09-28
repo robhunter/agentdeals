@@ -44819,27 +44819,27 @@ ${mcpCtaCss()}
 
   <div class="diff-card">
     <h3>Vercel Hobby plan bans commercial use</h3>
-    <div class="diff-desc">The most common gotcha in developer hosting. Vercel's Hobby plan terms prohibit commercial use &mdash; any project generating revenue, displaying ads, or serving a business needs Pro ($20/seat/month). This restriction is unique among hosting platforms. Cloudflare Pages, Netlify, Render, and Railway all allow commercial use on free/entry tiers. Many developers build on Vercel Hobby and only discover this when they launch.</div>
+    <div class="diff-desc">Vercel Hobby is for non-commercial personal use only. Commercial use, including ads, requires Pro at $20 a month with one deploying seat. GitHub Pages also bars sites run as an online business, shop or SaaS. Cloudflare Pages, Netlify, Render and Railway allow commercial use on their free or entry tiers.</div>
   </div>
 
   <div class="diff-card">
-    <h3>Render free tier cold starts (30&ndash;60 seconds)</h3>
-    <div class="diff-desc">Free web services spin down after 15 minutes of inactivity. The next request triggers a full restart: pull image, start process, wait for health check. This takes 30&ndash;60 seconds. For an API, this means the first user after any idle period waits a full minute. Acceptable for personal projects and dashboards, but not for production APIs or services with intermittent traffic.</div>
+    <h3>Render free tier spin-up (about one minute)</h3>
+    <div class="diff-desc">Render spins down a free web service after 15 minutes without inbound traffic. The next HTTP request or WebSocket connection spins it back up, which takes about one minute; browsers see a loading page meanwhile. Render says free instances are not for production applications.</div>
   </div>
 
   <div class="diff-card">
     <h3>Fly.io free tier is effectively gone for new accounts</h3>
-    <div class="diff-desc">New Fly.io accounts get a trial of 2 hours runtime OR 7 days, whichever comes first. The generous legacy free tier (3 shared VMs, 3 GB persistent storage) is only for pre-2025 accounts. Fly.io requires a credit card at signup. For new users, treat Fly.io as a paid platform with a brief demo mode.</div>
+    <div class="diff-desc">New Fly.io accounts get a trial of 2 machine hours or 7 days, whichever comes first, before adding a payment method. Trial Machines stop after 5 minutes of running. The legacy free allowance is only for organizations that were on the Hobby, Launch or Scale plans before 2024-10-07. Apps stop at the end of the trial unless a payment method is added.</div>
   </div>
 
   <div class="diff-card">
     <h3>Netlify credit math is tricky</h3>
-    <div class="diff-desc">300 credits/month sounds generous, but credits are consumed by multiple actions: builds (15 credits each), bandwidth (20 credits/GB), compute (10 credits/GB-hour), and web requests (2 credits/10K). A site with 10 builds/day and 20 GB bandwidth uses ~4,500 + 400 = 4,900 credits &mdash; well over the 300 limit. Sites pause on credit exhaustion.</div>
+    <div class="diff-desc">Netlify's Free plan gives 300 credits a month. Production deploys cost 15 credits each, bandwidth 20 credits per GB, compute 10 credits per GB-hour, and web requests 2 credits per 10,000; deploy previews and branch deploys are free. Ten production deploys a day use about 4,500 credits a month, and 20 GB of bandwidth adds 400. That is about 4,900 credits, well over the 300 limit, and every project on the account pauses.</div>
   </div>
 
   <div class="diff-card">
-    <h3>PythonAnywhere blocks outbound internet</h3>
-    <div class="diff-desc">The free Beginner plan has no outbound internet access. Your web app cannot call external APIs, fetch data from other services, or make any HTTP requests to external hosts. This is a hard block, not a rate limit. Upgrade to the Hacker plan ($10/mo, was $5 before the tier restructuring in Jan 2026) for outbound access.</div>
+    <h3>PythonAnywhere limits outbound internet</h3>
+    <div class="diff-desc">PythonAnywhere free accounts reach only allowlisted sites over HTTP(S), about 6,500 of them, including api.openai.com and api.stripe.com; other hosts are blocked. The Developer plan, which replaced the $5 Hacker plan in January 2026, costs $10 a month and has unrestricted internet access.</div>
   </div>
 
   <h2 id="changes">Pricing Change Timeline</h2>
