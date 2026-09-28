@@ -4013,7 +4013,7 @@ const VS_PAGES: VsPageConfig[] = [
       <li><strong>Specialization:</strong> Netlify is frontend-focused (static sites, serverless functions, edge). Render is full-stack (web services, databases, Redis, cron jobs, Docker containers).</li>
       <li><strong>Free tier model:</strong> Netlify uses 300 credits/month (deploys cost 15 credits, bandwidth costs 20 credits/GB). Render offers free web services with 512 MB RAM plus free PostgreSQL and Redis instances.</li>
       <li><strong>Backend support:</strong> Render provides persistent containers with 512 MB RAM, managed Postgres (256 MB), and Redis (25 MB). Netlify's backend is limited to serverless functions with execution limits.</li>
-      <li><strong>Cold starts:</strong> Render free services spin down after 15 minutes of inactivity (30-60s cold start). Netlify's serverless functions have typical cold start latency but no spin-down.</li>
+      <li><strong>Cold starts:</strong> Render free services spin down after 15 minutes of inactivity (a cold start of about one minute). Netlify's serverless functions have typical cold start latency but no spin-down.</li>
     </ul>`,
     recommendation: `<p><strong>Choose Netlify if</strong> you're building a frontend/Jamstack site, need form handling and identity built-in, or want preview deploys for every PR.</p>
     <p><strong>Choose Render if</strong> you need a free backend (API server, database, Redis), want to run Docker containers, or need a full-stack hosting solution beyond just static sites.</p>`,
@@ -7211,10 +7211,10 @@ const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
       </tr>
       <tr>
         <td style="font-weight:600"><a href="/vendor/koyeb" style="color:var(--text)">Koyeb</a></td>
-        <td>Free (DB only)</td>
+        <td>None for new users</td>
         <td>—</td>
         <td>—</td>
-        <td>Free Postgres DB (5 hr/mo compute)</td>
+        <td>No free plan for new users since Feb 2026 (Pro from $29/mo)</td>
       </tr>
       <tr>
         <td style="font-weight:600"><a href="/vendor/coolify" style="color:var(--text)">Coolify</a></td>
@@ -16729,7 +16729,7 @@ function buildFreeNextjsStackPage(): string {
       recommended: { vendor: "Vercel", why: "The creators of Next.js. Zero-config deployments with automatic edge optimization, ISR, middleware, and server components. Hobby plan: 100 GB bandwidth, 100 hours serverless function execution, 6,000 build minutes. Preview deploys on every PR. The only platform with day-one support for every Next.js feature." },
       alternatives: ["Railway", "Netlify", "Cloudflare Pages"],
       outgrow: "When you exceed 100 GB bandwidth/month or need commercial use (Hobby plan is non-commercial). Railway's Hobby plan is $5/month including $5 of usage, with no commercial restriction. Netlify gives 100 GB bandwidth with serverless functions. Cloudflare Pages has unlimited bandwidth but limited Next.js feature support.",
-      whyNot: "Why not Heroku: No free tier since November 2022. Why not Render: Free tier spins down after 15 minutes of inactivity — cold starts of 30-60 seconds kill the Next.js experience.",
+      whyNot: "Why not Heroku: No free tier since November 2022. Why not Render: Free tier spins down after 15 minutes of inactivity — cold starts of about one minute kill the Next.js experience.",
       relatedPage: "/hosting-free-tier-comparison-2026",
     },
     {
@@ -17091,7 +17091,7 @@ function buildFreeDjangoStackPage(): string {
       icon: "🚀",
       recommended: { vendor: "Railway", why: "Its Free plan opens with a 30-day trial carrying $5 of credits, then $1 of free credit a month, with WSGI/ASGI support, managed Postgres add-on, and auto-deploy from GitHub. Supports Gunicorn, Uvicorn, and Daphne out of the box. No sleep timer — your app stays warm. Nixpacks auto-detects Django projects and installs dependencies from requirements.txt or pyproject.toml." },
       alternatives: ["Render", "Fly.io", "PythonAnywhere"],
-      outgrow: "When you exceed the $5 of usage that Hobby's $5/month includes (usually 1-2 services). Render's free tier spins down after 15 minutes of inactivity — cold starts of 30-60 seconds hurt Django apps. Fly.io has no free tier for new accounts — new signups get a trial of 2 hours runtime or 7 days, whichever comes first. PythonAnywhere offers a free tier with WSGI support but only one web app and no custom domain.",
+      outgrow: "When you exceed the $5 of usage that Hobby's $5/month includes (usually 1-2 services). Render's free tier spins down after 15 minutes of inactivity — cold starts of about one minute hurt Django apps. Fly.io has no free tier for new accounts — new signups get a trial of 2 hours runtime or 7 days, whichever comes first. PythonAnywhere offers a free tier with WSGI support but only one web app and no custom domain.",
       whyNot: "Why not Heroku: No free tier since November 2022 — Eco dynos start at $5/month with mandatory credit card. Why not AWS Elastic Beanstalk: No free tier for the EB service itself, only the underlying EC2 instances (12-month trial). Overkill for a Django side project.",
       relatedPage: "/hosting-free-tier-comparison-2026",
     },
@@ -17210,10 +17210,10 @@ function buildFreeDjangoStackPage(): string {
   };
 
   const faqJsonLd = faqPageJsonLd("/free-django-stack", [
-    { q: "Can I host Django for free in 2026?", a: "Yes. Railway's Free plan starts with a 30-day trial carrying $5 of credits, then $1 of free credit a month, with Gunicorn, auto-deploy from GitHub, and managed Postgres; its Hobby plan is $5/month and includes $5 of usage. Render has a free tier but spins down after 15 minutes of inactivity (30-60 second cold starts). PythonAnywhere offers free WSGI hosting but limits you to one web app with no custom domain. Fly.io has no free tier for new accounts — new signups get a trial of 2 hours runtime or 7 days, whichever comes first." },
+    { q: "Can I host Django for free in 2026?", a: "Yes. Railway's Free plan starts with a 30-day trial carrying $5 of credits, then $1 of free credit a month, with Gunicorn, auto-deploy from GitHub, and managed Postgres; its Hobby plan is $5/month and includes $5 of usage. Render has a free tier but spins down after 15 minutes of inactivity (cold starts of about one minute). PythonAnywhere offers free WSGI hosting but limits you to one web app with no custom domain. Fly.io has no free tier for new accounts — new signups get a trial of 2 hours runtime or 7 days, whichever comes first." },
     { q: "Which free databases work with Django?", a: "Any Postgres host works. Django's ORM supports Postgres, and django.contrib.postgres adds JSONField, ArrayField, full-text search and range types. Neon's Free plan gives 0.5 GB of storage and 100 CU-hours per project and scales to zero after 5 minutes idle. Supabase's gives a 500 MB database per project with built-in auth, and pauses free projects after a week of inactivity. We publish no ranking of these." },
     { q: "Does Django need Redis?", a: "Not strictly, but practically yes for production. Redis powers Django's cache framework (fast page/fragment caching), session storage (faster than database sessions), and Celery (the standard Django task queue for background jobs). Upstash offers 10,000 Redis commands/day free. Without Redis, you can use Django's built-in database cache and in-process task runners, but you'll hit performance ceilings sooner." },
-    { q: "PythonAnywhere vs Railway vs Render for Django?", a: "Railway gives you a 30-day $5 trial credit then $1 of free credit a month, with no sleep timer, managed Postgres, and auto-deploy from GitHub. PythonAnywhere is great for learning (free WSGI hosting, built-in console) but limits you to one web app with no custom domain on free tier. Render has a free tier but your app sleeps after 15 minutes, causing 30-60 second cold starts that hurt user experience. For production Django apps, Railway or Fly.io." },
+    { q: "PythonAnywhere vs Railway vs Render for Django?", a: "Railway gives you a 30-day $5 trial credit then $1 of free credit a month, with no sleep timer, managed Postgres, and auto-deploy from GitHub. PythonAnywhere is great for learning (free WSGI hosting, built-in console) but limits you to one web app with no custom domain on free tier. Render has a free tier but your app sleeps after 15 minutes, causing cold starts of about one minute that hurt user experience. For production Django apps, Railway or Fly.io." },
   ]);
 
   const pageReadings = stackPrimaryReadings(stackCategories);
@@ -17501,7 +17501,7 @@ function buildFreeFastapiStackPage(): string {
       icon: "🚀",
       recommended: { vendor: "Railway", why: "Its Free plan opens with a 30-day trial carrying $5 of credits, then $1 of free credit a month, with uvicorn ASGI server, auto-deploy from GitHub, and managed add-ons. Nixpacks auto-detects Python projects — just add a Procfile with `web: uvicorn main:app --host 0.0.0.0 --port $PORT`. No sleep timer — your API stays warm for consistent response times." },
       alternatives: ["Render", "Fly.io", "Koyeb"],
-      outgrow: "When you exceed the $5 of usage that Hobby's $5/month includes (usually 1-2 services). Render's free tier spins down after 15 minutes of inactivity — cold starts of 30-60 seconds kill API latency. Fly.io has no free tier for new accounts (legacy accounts retain 3 shared VMs). Koyeb has no free compute — only a free Postgres database.",
+      outgrow: "When you exceed the $5 of usage that Hobby's $5/month includes (usually 1-2 services). Render's free tier spins down after 15 minutes of inactivity — cold starts of about one minute kill API latency. Fly.io has no free tier for new accounts (legacy accounts retain 3 shared VMs). Koyeb has no free compute — only a free Postgres database.",
       whyNot: "Why not Vercel: Vercel supports FastAPI via serverless functions (Mangum adapter), but loses WebSocket support, background tasks, and startup events — core FastAPI features. Why not Deta Space: Deta shut down Space in 2024. Many FastAPI tutorials still reference it — those guides are outdated.",
       relatedPage: "/hosting-free-tier-comparison-2026",
     },
@@ -17618,7 +17618,7 @@ function buildFreeFastapiStackPage(): string {
   };
 
   const faqJsonLd = faqPageJsonLd("/free-fastapi-stack", [
-    { q: "Can I host FastAPI for free in 2026?", a: "Yes. Railway's Free plan starts with a 30-day trial carrying $5 of credits, then $1 of free credit a month, with uvicorn, auto-deploy from GitHub, and no sleep timer; its Hobby plan is $5/month and includes $5 of usage. Render has a free tier but spins down after 15 minutes of inactivity (30-60 second cold starts). Fly.io has no free tier for new accounts — new signups get a trial of 2 hours runtime or 7 days, whichever comes first. Koyeb has no free compute tier, only a free Postgres database. Avoid Vercel for FastAPI — it requires a serverless adapter and loses WebSocket/background task support." },
+    { q: "Can I host FastAPI for free in 2026?", a: "Yes. Railway's Free plan starts with a 30-day trial carrying $5 of credits, then $1 of free credit a month, with uvicorn, auto-deploy from GitHub, and no sleep timer; its Hobby plan is $5/month and includes $5 of usage. Render has a free tier but spins down after 15 minutes of inactivity (cold starts of about one minute). Fly.io has no free tier for new accounts — new signups get a trial of 2 hours runtime or 7 days, whichever comes first. Koyeb has no free compute tier, only a free Postgres database. Avoid Vercel for FastAPI — it requires a serverless adapter and loses WebSocket/background task support." },
     { q: "What database should I use with FastAPI?", a: "FastAPI has no built-in ORM, so you choose your own. SQLAlchemy 2.0's async engine with asyncpg is the most popular choice for Postgres, and Tortoise ORM is an async-native alternative. Neon's Free plan gives 0.5 GB of storage and 100 CU-hours per project and scales to zero after 5 minutes idle. Supabase's gives a 500 MB database per project with built-in auth and realtime. We publish no ranking of these." },
     { q: "Does Vercel support FastAPI?", a: "Technically yes, via the Mangum adapter that wraps ASGI apps for AWS Lambda-style serverless functions. But you lose WebSocket support, FastAPI's startup/shutdown lifespan events, background tasks, and long-running connections. For API-only services, this may be acceptable. For anything using FastAPI's async features fully, use Railway, Render, or Fly.io instead." },
     { q: "FastAPI vs Django for free hosting?", a: "FastAPI is lighter weight and async-native — ideal for APIs, microservices, and AI/ML serving. Django is batteries-included with built-in ORM, admin, auth, and forms — better for full web applications. Both run on Railway's Free plan ($1 of free credit a month after a 30-day trial with a one-time $5 credit) or Render's free tier. FastAPI needs you to choose every component (ORM, auth, admin) separately. Django includes them. If you're building a REST/GraphQL API or serving ML models, FastAPI. If you're building a web app with admin panel and user accounts, Django." },
@@ -21225,7 +21225,7 @@ function buildRailwayVsRenderPage(): string {
     { feature: "Managed Database", railway: "None (containers only)", render: "PostgreSQL 256 MB (30-day expiry)", notes: "Render includes managed Postgres but it expires after 30 days. Railway requires self-managing a DB container" },
     { feature: "Managed Redis", railway: "None (containers only)", render: "25 MB Key Value store", notes: "Render includes managed Redis. Railway requires a Redis container counting toward service limit" },
     { feature: "Custom Domains", railway: "None on Free tier", render: "Yes", notes: "Railway requires Hobby ($5/mo) for custom domains. Render includes them free" },
-    { feature: "Sleep Behavior", railway: "No sleep (always on)", render: "Spins down after 15 min inactivity", notes: "Railway stays awake. Render's free services sleep and have 30-60s cold starts" },
+    { feature: "Sleep Behavior", railway: "No sleep (always on)", render: "Spins down after 15 min inactivity", notes: "Railway stays awake. Render's free services sleep and have cold starts of about one minute" },
     { feature: "Cron Jobs", railway: "None on Free tier", render: "From $1/mo (paid only)", notes: "Neither offers free cron jobs" },
     { feature: "Static Sites", railway: "Paid only", render: "Completely free (unlimited)", notes: "Render offers unlimited free static site hosting. Railway charges for all deployments" },
     { feature: "Bandwidth", railway: "Egress $0.05/GB (usage-based)", render: "5 GB/mo included, then $0.15/GB", notes: "Both meter egress. Render includes 5 GB on Hobby and 25 GB on Pro; Railway charges per-GB from the first GB" },
@@ -21241,7 +21241,7 @@ function buildRailwayVsRenderPage(): string {
   const differences = [
     { title: "Pricing Philosophy: Usage-Based vs. Fixed-Rate", desc: "Railway charges per-second for CPU, RAM, and egress — you pay exactly what you use. Render charges fixed monthly rates per instance ($7/mo Starter). Railway is cheaper for variable-traffic apps (idle = near-zero cost). Render is predictable — you know the bill before the month starts." },
     { title: "Databases: Managed vs. DIY", desc: "Render includes managed PostgreSQL (256 MB, 30-day free expiry) and Redis (25 MB) — no setup required. Railway treats databases as containers — you can run Postgres or Redis, but they count toward your service limit and you manage backups yourself. For quick prototypes needing a database, Render wins on convenience." },
-    { title: "Sleep Behavior: Always-On vs. Spin-Down", desc: "Railway's free services stay running 24/7 (no cold starts). Render's free web services spin down after 15 minutes of inactivity, causing 30-60 second cold starts on the next request. For always-on APIs or bots, Railway is better. For low-traffic sites where cold starts are acceptable, Render works fine." },
+    { title: "Sleep Behavior: Always-On vs. Spin-Down", desc: "Railway's free services stay running 24/7 (no cold starts). Render's free web services spin down after 15 minutes of inactivity, causing cold starts of about one minute on the next request. For always-on APIs or bots, Railway is better. For low-traffic sites where cold starts are acceptable, Render works fine." },
     { title: "Developer Experience: Fast Iteration vs. Full Platform", desc: "Railway is widely praised for developer experience — fast deploys (often under 30 seconds), intuitive dashboard, and nixpacks auto-detection. Render offers a broader platform (managed DBs, Redis, cron, static sites) but deploys are slower. Railway optimizes for speed; Render optimizes for completeness." },
   ];
 
@@ -31062,7 +31062,7 @@ function buildHostingPricingPage(): string {
       freeDetails: "Free plan: $0/month, opening with a 30-day trial carrying $5 of credits, then $1 of free credit a month. Up to 1 vCPU and 0.5 GB RAM per service, 0.5 GB volume storage, 1 project, 3 services. Hobby plan ($5/mo minimum usage) includes $5 of monthly usage credits, not a free allowance. Supports Docker, Node, Python, Go, Rust, and more. Built-in Postgres, Redis, MySQL.",
       freeType: "credits",
       monthlyCostSolo: "$0–5",
-      monthlyCostTeam: "$20/seat",
+      monthlyCostTeam: "$20/mo minimum (Pro, unlimited seats)",
       hiddenCosts: "The $5 trial credit is one-time — once the 30 days end the Free plan provides $1 of free credit per month. Hobby's $5 credit resets monthly but is what the $5 subscription buys, not a free allowance, and usage can exceed it. Service egress is billed at $0.05/GB from the first GB on every plan.",
     },
     {
@@ -31077,8 +31077,8 @@ function buildHostingPricingPage(): string {
       freeDetails: "Free web services with less than 1 CPU, 512 MB RAM, auto-sleep after 15 minutes of inactivity. 750 build hours/month, 5 GB bandwidth/month included then $0.15/GB. Free PostgreSQL (30-day expiry, 256 MB). Free Redis (25 MB, 50 connections). Supports Docker, Node, Python, Go, Ruby, Rust.",
       freeType: "limited",
       monthlyCostSolo: "$0–7",
-      monthlyCostTeam: "$19/seat + usage",
-      hiddenCosts: "Free web services spin down after 15 minutes (was 30, tightened Sep 2025). Free Postgres expires after 30 days. Cold starts add 30–60 seconds on free tier.",
+      monthlyCostTeam: "$25/mo flat (Pro) + usage",
+      hiddenCosts: "Free web services spin down after 15 minutes without traffic and take about one minute to spin back up. Free Postgres expires after 30 days.",
     },
     {
       name: "Fly.io",
@@ -31089,7 +31089,7 @@ function buildHostingPricingPage(): string {
       freeBandwidth: "100 GB (legacy)",
       freeBuildMinutes: "N/A (Docker)",
       freeCompute: "None (legacy: 3 shared VMs)",
-      freeDetails: "No free tier for new accounts since October 2024. Pay-as-you-go only, credit card required. Legacy accounts (Hobby/Launch/Scale plans) retain: 3 shared-cpu-1x VMs (256 MB RAM), 3 GB volume storage, 100 GB transfer/month. Volume snapshots: first 10 GB free, then $0.08/GB/month.",
+      freeDetails: "No free tier for new accounts since October 2024. New accounts get a trial of 2 machine hours or 7 days, whichever comes first, before adding a payment method; apps stop at the end of the trial unless one is added. Legacy accounts (Hobby/Launch/Scale plans) retain: 3 shared-cpu-1x VMs (256 MB RAM), 3 GB volume storage, 100 GB transfer/month. Volume snapshots: first 10 GB free, then $0.08/GB/month.",
       freeType: "removed",
       monthlyCostSolo: "Usage-based",
       monthlyCostTeam: "$29/mo (Scale) + usage",
@@ -31160,14 +31160,14 @@ function buildHostingPricingPage(): string {
       slug: "netlify",
       category: "edge-serverless",
       freeTier: "300 credits/mo (~15 GB)",
-      paidFrom: "$19/mo (Pro)",
+      paidFrom: "$20/mo (Pro)",
       freeBandwidth: "~15 GB (300 credits at 20/GB)",
       freeBuildMinutes: "~20 deploys (15 credits each)",
       freeCompute: "10 credits/GB-hour",
       freeDetails: "300 credits/month, spent across deploys (15 credits each), bandwidth (20 credits/GB), compute (10 credits/GB-hour) and web requests (2 credits/10K) — about 15 GB of bandwidth if you spend the whole allowance on it. Legacy accounts opened before September 2025 keep 100 GB bandwidth and 300 build minutes. Deploy from Git. Instant rollbacks, preview deploys, custom domains, SSL. Edge Functions (Deno-based) included.",
       freeType: "limited",
       monthlyCostSolo: "$0–19",
-      monthlyCostTeam: "$19/seat",
+      monthlyCostTeam: "$20/mo flat (Pro, no seat fees)",
       hiddenCosts: "Every action draws on one credit pool, so builds and traffic compete — and sites pause when the 300 credits run out. A site doing 10 builds a day and 20 GB of traffic burns roughly 4,900 credits.",
     },
     {
@@ -31179,7 +31179,7 @@ function buildHostingPricingPage(): string {
       freeBandwidth: "20 GiB",
       freeBuildMinutes: "N/A (instant)",
       freeCompute: "1M requests/mo, 10 hrs active CPU",
-      freeDetails: "1 million requests/month, 20 GiB outbound bandwidth, 10 hours of active CPU per month, 1 GiB KV storage, 1M KV read units/month. Runs on 35+ edge locations globally. Zero cold starts. Built-in KV storage (Deno KV). Instant deployments from Git.",
+      freeDetails: "1 million requests/month, 20 GiB outbound bandwidth, 10 hours of active CPU per month, 1 GiB KV storage, 1M KV read units/month. Runs in 2 regions. Cold starts complete within 100 ms for a hello-world app. Built-in KV storage (Deno KV). Instant deployments from Git.",
       freeType: "generous",
       monthlyCostSolo: "$0",
       monthlyCostTeam: "$20+",
@@ -31689,7 +31689,7 @@ function buildHostingPricingPage(): string {
     '\n' +
     '    <div class="verdict-item">\n' +
     '      <strong>Best for teams on a budget</strong>\n' +
-    '      <p><a href="/vendor/railway">Railway</a> ($20/seat) or <a href="/vendor/render">Render</a> ($19/seat). <a href="/vendor/google-cloud-run">Google Cloud Run</a> has no per-seat pricing \u2014 purely usage-based.</p>\n' +
+    '      <p><a href="/vendor/railway">Railway</a> Pro ($20 monthly minimum) and <a href="/vendor/render">Render</a> Pro ($25 a month flat) include unlimited team members. <a href="/vendor/google-cloud-run">Google Cloud Run</a> has no per-seat pricing \u2014 purely usage-based.</p>\n' +
     '    </div>\n' +
     '\n' +
     '    <div class="verdict-item">\n' +
