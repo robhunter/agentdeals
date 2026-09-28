@@ -6842,13 +6842,13 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "github-actions-alternatives",
     title: "GitHub Actions Alternatives \u2014 Free CI/CD Tools for 2026",
-    metaDesc: "GitHub Actions self-hosted runners now cost $0.002/min for private repos. Compare free CI/CD alternatives: GitLab CI, CircleCI, Buildkite, Harness, Drone CI, Google Cloud Build, and more. [[freshness]]",
-    contextHtml: `<p><strong>GitHub Actions</strong> introduced <strong>self-hosted runner charges ($0.002/min) for private repos on March 1, 2026</strong>. While the GitHub-hosted runner free tier (2,000 min/mo for private repos, unlimited for public) remains unchanged, teams running self-hosted runners for private repository builds now face per-minute costs.</p>
-      <p>For public repositories, GitHub Actions remains the best free CI/CD option \u2014 unlimited minutes with no restrictions. But if you\u2019re running private repo pipelines on self-hosted infrastructure, these alternatives offer generous free tiers without per-minute runner fees.</p>
+    metaDesc: "Compare free CI/CD alternatives: GitLab CI, CircleCI, Buildkite, Harness, Drone CI, Google Cloud Build, and more. [[freshness]]",
+    contextHtml: `<p>GitHub announced a $0.002/min charge for self-hosted runners in private repos from March 1, 2026, then postponed it, so self-hosted runners are still free. The GitHub-hosted free tier (2,000 minutes a month for private repos; standard runners are free in public repos) is unchanged.</p>
+      <p>For public repositories, GitHub Actions remains the best free CI/CD option \u2014 unlimited minutes with no restrictions. But if you\u2019re running private repo pipelines on self-hosted infrastructure, these alternatives offer generous free tiers.</p>
       <p>Below are the best free CI/CD alternatives, compared by <strong>exact free tier limits</strong> \u2014 build minutes, concurrent jobs, storage, and platform support. For the full picture, see our <a href="/ci-cd-pricing">definitive CI/CD pricing comparison</a> covering 17+ tools across general, cloud-native, mobile, and self-hosted categories.</p>`,
     tag: "github-actions-alternative",
     primaryVendor: "GitHub Actions",
-    hubDesc: "Self-hosted runner costs introduced March 2026 \u2014 10 free CI/CD alternatives compared",
+    hubDesc: "GitHub postponed its self-hosted runner fee, so self-hosted runners stay free \u2014 10 free CI/CD alternatives compared",
     serviceMatrixHtml: `
   <h2>Free Tier Comparison</h2>
   <p style="color:var(--text-muted);margin-bottom:1rem">How each CI/CD platform\u2019s free tier compares. GitHub Actions\u2019 2,000 min/mo for private repos remains strong for GitHub-hosted runners \u2014 the new cost only applies to self-hosted runners.</p>
@@ -6869,7 +6869,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
       <tr>
         <td style="font-weight:600;color:var(--text-dim)">GitHub Actions</td>
         <td>2,000 min/mo (private)</td><td>20 concurrent</td><td>Unlimited</td>
-        <td style="color:var(--text-dim)">$0.002/min (private)</td><td>\u2705</td>
+        <td style="color:var(--text-dim)">Free</td><td>\u2705</td>
         <td style="color:var(--text-dim)">Proprietary</td>
       </tr>
       <tr>
@@ -7256,12 +7256,12 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     slug: "auth0-alternatives",
     title: "Auth0 Alternatives — Best Free Authentication Platforms for 2026",
     metaDesc: "Auth0 free tier too limited? Compare free authentication alternatives: Clerk, WorkOS, Supabase Auth, Firebase Auth, Logto, FusionAuth, Keycloak, and more. [[freshness]]",
-    contextHtml: `<p><strong>Auth0</strong> is a powerful identity platform, but its pricing is one of the steepest cliffs in developer tools. The free tier gives you <strong>25K MAU</strong> — generous for prototyping. But the moment you outgrow it, you're looking at the Essential plan starting at <strong>$240/month for just 500 external MAU</strong>. That's a jump from $0 to nearly $3,000/year with no middle ground.</p>
+    contextHtml: `<p><strong>Auth0</strong> is a powerful identity platform, but its pricing is one of the steepest cliffs in developer tools. The free tier gives you <strong>25K MAU</strong> — generous for prototyping. But the moment you outgrow it, B2C paid plans start with Essentials at $35 a month for 500 MAU, and Professional at $240 a month; B2B plans start at $150.</p>
     <p>The pricing pain is compounded by complexity. Auth0's tenant model, rule/action system, and connection limits create billing surprises. Teams regularly discover they need features (SSO, MFA customization, branding removal) that are locked behind higher tiers. "Auth0 alternatives" remains one of the most consistently searched developer queries.</p>
     <p>The authentication landscape in 2026 offers real competition. Managed platforms (Clerk, WorkOS, Stytch) provide modern DX with generous free tiers. Open-source solutions (Keycloak, FusionAuth, Ory, Logto) give you unlimited users when self-hosted. And BaaS platforms (Supabase, Firebase) include auth as part of a broader free tier. The right choice depends on whether you prioritize DX, cost, or control.</p>`,
     tag: "auth0-alternative",
     primaryVendor: "Auth0",
-    hubDesc: "$0 to $240/mo pricing cliff drives alternatives search — 9 free authentication platforms compared",
+    hubDesc: "B2C paid plans start at $35/mo (Essentials) and $240/mo (Professional) — 9 free authentication platforms compared",
     serviceMatrixHtml: `
   <h2>Free Tier Comparison</h2>
   <p style="color:var(--text-muted);margin-bottom:1rem">What you actually get for free on each platform. Auth0's 25K MAU free tier is competitive, but the jump to paid is the steepest in the industry.</p>
@@ -7485,13 +7485,13 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "redis-alternatives",
     title: "Redis Alternatives — Best Free Caching and Key-Value Stores for 2026",
-    metaDesc: "Redis switched to BSL? Compare free alternatives: Upstash, Valkey, DragonflyDB, KeyDB, Momento, Garnet, Memcached, Aiven. Protocol-compatible options. [[freshness]]",
-    contextHtml: `<p><strong>Redis</strong> changed everything in March 2024 when it switched from BSD to the <strong>Business Source License (BSL)</strong>. The move restricts cloud providers from offering Redis-as-a-service without a commercial agreement — and triggered the Linux Foundation to fork Redis as <strong>Valkey</strong>, backed by AWS, Google Cloud, Oracle, and Ericsson.</p>
-    <p>For developers, the practical impact depends on your use case. If you're using Redis Cloud's free tier, you get just <strong>30 MB of memory</strong> on a single shared database — barely enough for a cache layer. Self-hosting Redis is still free under BSL for non-competitive use, but the license uncertainty has pushed many teams toward truly open-source alternatives.</p>
+    metaDesc: "Redis changed its licence? Compare free alternatives: Upstash, Valkey, DragonflyDB, KeyDB, Momento, Garnet, Memcached, Aiven. Protocol-compatible options. [[freshness]]",
+    contextHtml: `<p><strong>Redis</strong> changed everything in March 2024 when it switched from BSD to a <strong>dual RSALv2/SSPLv1 licence</strong> (Redis 8 added AGPLv3 as a third option). The move restricts cloud providers from offering Redis-as-a-service without a commercial agreement — and triggered the Linux Foundation to fork Redis as <strong>Valkey</strong>, backed by AWS, Google Cloud, Oracle, and Ericsson.</p>
+    <p>For developers, the practical impact depends on your use case. If you're using Redis Cloud's free tier, you get just <strong>30 MB of memory</strong> on a single shared database — barely enough for a cache layer. Self-hosting Redis is still free. RSALv2 bars offering it as a managed service; SSPLv1 allows that only if you publish your service's source code under SSPL, but the license uncertainty has pushed many teams toward truly open-source alternatives.</p>
     <p>The 2026 landscape offers strong options: <strong>Upstash</strong> provides serverless Redis-compatible caching with 500K commands/month free. <strong>Valkey</strong> is a drop-in BSD-3 fork maintained by the Linux Foundation. <strong>DragonflyDB</strong> claims 25x better throughput. <strong>Momento</strong> offers zero-infrastructure serverless caching. And established options like <strong>Memcached</strong> and <strong>KeyDB</strong> remain fully open-source.</p>`,
     tag: "redis-alternative",
     primaryVendor: "Redis Cloud",
-    hubDesc: "BSL license change + 30 MB free tier — 8 open-source and managed alternatives compared",
+    hubDesc: "Redis's move to RSALv2/SSPLv1 (AGPLv3 added in Redis 8) + 30 MB free tier — 8 open-source and managed alternatives compared",
     serviceMatrixHtml: `
   <h2>Free Tier Comparison</h2>
   <p style="color:var(--text-muted);margin-bottom:1rem">What you actually get for free on each caching/key-value platform. Redis Cloud gives you 30 MB on a shared instance — most alternatives offer dramatically more.</p>
@@ -7512,8 +7512,8 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
         <td style="font-weight:600;color:var(--text-dim)">Redis Cloud</td>
         <td>30 MB</td>
         <td>Yes (is Redis)</td>
-        <td>BSL restrictions</td>
-        <td>BSL 1.1</td>
+        <td>RSALv2/SSPLv1 or AGPLv3 (Redis 8+)</td>
+        <td>RSALv2/SSPLv1 or AGPLv3 (Redis 8+)</td>
         <td style="color:var(--text-dim)">Existing Redis workloads</td>
       </tr>
       <tr>
@@ -7624,16 +7624,16 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "email-service-alternatives",
     title: "Email Service Alternatives — Best Free Transactional Email APIs for 2026",
-    metaDesc: "SendGrid restricted to 100/day, Mailgun killed its free tier. Compare free alternatives: Resend (3K/mo), Mailjet (6K/mo), Brevo (300/day), Postmark, Loops, AhaSend. [[freshness]]",
-    contextHtml: `<p><strong>Transactional email</strong> — password resets, order confirmations, verification codes — is non-negotiable infrastructure for any app. But the landscape has shifted dramatically: <strong>SendGrid</strong> cut its free tier to just <strong>100 emails/day</strong> with mandatory phone verification, and <strong>Mailgun</strong> eliminated its free tier entirely (now a 30-day trial).</p>
+    metaDesc: "SendGrid retired its free plan in 2025. Compare free alternatives: Resend (3K/mo), Mailjet (6K/mo), Brevo (300/day), Postmark, Loops, AhaSend. [[freshness]]",
+    contextHtml: `<p><strong>Transactional email</strong> — password resets, order confirmations, verification codes — is non-negotiable infrastructure for any app. SendGrid retired its free plan in 2025; new accounts get a 60-day trial at 100 emails a day. Mailgun still has a free plan with 100 emails a day.</p>
     <p>The good news: several developer-focused alternatives now offer generous free tiers. <strong>Resend</strong> gives you 3,000 emails/month with a modern React Email integration. <strong>Mailjet</strong> offers 6,000/month (200/day cap). <strong>Brevo</strong> provides 300/day with unlimited contacts. And newer entrants like <strong>Loops</strong> and <strong>AhaSend</strong> are competing hard on developer experience and pricing.</p>
     <p>Below are the best free email services for developers in 2026, compared by volume limits, API quality, and what you actually get for free.</p>`,
     tag: "email-service-alternative",
     primaryVendor: "SendGrid",
-    hubDesc: "SendGrid down to 100/day, Mailgun free tier gone — 8 free transactional email alternatives compared",
+    hubDesc: "SendGrid retired its free plan in 2025 — 8 free transactional email alternatives compared",
     serviceMatrixHtml: `
   <h2>Free Tier Comparison</h2>
-  <p style="color:var(--text-muted);margin-bottom:1rem">What you actually get for free on each email platform. SendGrid gives you 100 emails/day with phone verification required — most alternatives offer dramatically more.</p>
+  <p style="color:var(--text-muted);margin-bottom:1rem">What you actually get for free on each email platform. SendGrid has no free plan, only a 60-day trial at 100 emails a day — most alternatives offer dramatically more.</p>
   <div style="overflow-x:auto">
   <table class="compare-table">
     <thead>
@@ -7649,11 +7649,11 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     <tbody>
       <tr>
         <td style="font-weight:600;color:var(--text-dim)">SendGrid</td>
-        <td>~3K/mo (100/day)</td>
+        <td>60-day trial (100/day)</td>
         <td>2K</td>
         <td>Both</td>
         <td>\u2705 / \u2705</td>
-        <td style="color:var(--text-dim)">Legacy — phone verification required</td>
+        <td style="color:var(--text-dim)">No free plan since 2025</td>
       </tr>
       <tr>
         <td style="font-weight:600"><a href="/vendor/resend" style="color:var(--text)">Resend</a></td>
@@ -8145,7 +8145,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "gcp-free-tier-2026",
     primaryVendor: "Google Cloud",
-    hubDesc: "Complete GCP free tier guide — 30+ always-free products, $300 trial, hidden costs, and comparison with AWS and Azure",
+    hubDesc: "Complete GCP free tier guide — 20+ always-free products, $300 trial, hidden costs, and comparison with AWS and Azure",
   },
   {
     slug: "azure-free-tier-2026",
@@ -11533,7 +11533,7 @@ ${mcpCtaCss()}
   <h1>Best Free CI/CD Tools for Developers</h1>
 
   <div class="context">
-    <p>Every software team needs CI/CD, but build minutes add up fast. <strong>GitHub Actions</strong> is the default choice with <strong>2,000 free minutes/month</strong> for private repos and unlimited for public, but it introduced <strong>self-hosted runner charges ($0.002/min) in March 2026</strong>. <strong>GitLab CI</strong> cut its free tier to <strong>400 minutes/month</strong>. <strong>CircleCI</strong> offers <strong>30K credits/month</strong> (~6K minutes) but requires a credit card for some features.</p>
+    <p>Every software team needs CI/CD, but build minutes add up fast. <strong>GitHub Actions</strong> is the default choice with <strong>2,000 free minutes/month</strong> for private repos and unlimited for public, and self-hosted runners stay free after GitHub postponed a planned $0.002/min charge. <strong>GitLab CI</strong> cut its free tier to <strong>400 minutes/month</strong>. <strong>CircleCI</strong> offers <strong>30K credits/month</strong> (~6K minutes) but requires a credit card for some features.</p>
     <p>This page compares every free CI/CD option in our index \u2014 <strong>${cicdOffers.length} tools</strong> across general-purpose platforms, container-native pipelines, mobile CI/CD, and infrastructure automation. Whether you need cloud-hosted runners or self-hosted pipelines, we have the comparison with exact free tier limits.</p>
   </div>
 
@@ -13463,7 +13463,7 @@ ${mcpCtaCss()}
   <h1>Best Free Email Tools for Developers</h1>
 
   <div class="context">
-    <p>Email infrastructure is one of the most fragmented developer tool categories. <strong>SendGrid</strong> slashed its free tier to just 100 emails/day. <strong>Mailgun</strong> eliminated free access entirely. But the alternatives have never been better — <strong>Resend</strong> offers 3,000 emails/month with a modern developer experience, <strong>Brevo</strong> provides 300/day with unlimited contacts, and <strong>Mailjet</strong> gives you 6,000/month.</p>
+    <p>Email infrastructure is one of the most fragmented developer tool categories. SendGrid retired its free plan in 2025, and its trial allows 100 emails a day for 60 days. Mailgun's free plan allows 100 emails a day. But the alternatives have never been better — <strong>Resend</strong> offers 3,000 emails/month with a modern developer experience, <strong>Brevo</strong> provides 300/day with unlimited contacts, and <strong>Mailjet</strong> gives you 6,000/month.</p>
     <p>This page compares every free email tool in our index — <strong>${emailOffers.length} tools</strong> across transactional APIs, marketing platforms, verification services, forwarding/alias tools, and more. Whether you need a SendGrid alternative or free email aliases for privacy, we have the comparison with exact free tier limits.</p>
   </div>
 
@@ -15579,7 +15579,7 @@ function buildFreeStartupStackPage(): string {
       icon: "🔄",
       recommended: { vendor: "GitHub Actions", why: "2K minutes/month for private repos, unlimited for open source. Deep GitHub integration, massive marketplace of community actions, and matrix builds." },
       alternatives: ["GitLab CI"],
-      outgrow: "When you exceed 2K minutes/month on private repos. Self-hosted runners are free (but now cost $0.002/min for private repos as of March 2026).",
+      outgrow: "When you exceed 2K minutes/month on private repos. Self-hosted runners are free.",
       relatedPage: "/ci-cd-alternatives",
     },
     {
@@ -18484,7 +18484,7 @@ function buildFreeSaasStackPage(): string {
       recommended: { vendor: "Resend", why: "3,000 emails/month free with a modern, developer-first API. React Email for templates \u2014 write email templates in JSX. Clean SDK, excellent deliverability, and webhook notifications for bounces and complaints. The new standard for SaaS transactional email (welcome emails, password resets, invoice notifications, team invitations)." },
       alternatives: ["Brevo", "Amazon SES"],
       outgrow: "When you exceed 3,000 emails/month or 100/day. Brevo gives 300 emails/day (9,000/month) with marketing automation included \u2014 good for SaaS that needs both transactional and newsletter email. Amazon SES no longer has a free tier \u2014 cheapest at scale ($0.10/1K emails) but requires more setup.",
-      whyNot: "Why not SendGrid: Free tier removed May 2025. Many tutorials still reference it \u2014 those are outdated. Why not Mailgun: Free tier removed. Why not Postmark: No free production tier (test mode only). Postmark has the best deliverability but costs $15/mo for 10K emails.",
+      whyNot: "Why not SendGrid: Free tier removed May 2025. Many tutorials still reference it \u2014 those are outdated. Postmark has the best deliverability but costs $15/mo for 10K emails.",
       relatedPage: "/email-comparison-2026",
       isFrameworkSection: false,
     },
@@ -18513,7 +18513,7 @@ function buildFreeSaasStackPage(): string {
       icon: "\u2699\uFE0F",
       recommended: { vendor: "GitHub Actions", why: "2,000 minutes/month for private repos, unlimited for public. Deep GitHub integration \u2014 trigger on push, PR, schedule, or manual dispatch. Massive marketplace of community actions for testing, linting, deploying, and security scanning. Matrix testing across Node/Python/Go versions. Cache dependencies to cut build times by 50-80%." },
       alternatives: ["GitLab CI"] as string[],
-      outgrow: "When you exceed 2,000 minutes/month on private repos. Self-hosted runners are free (but now cost $0.002/min for private repos as of March 2026). Railway and Vercel auto-deploy from git \u2014 combine with GitHub Actions for tests only to conserve minutes.",
+      outgrow: "When you exceed 2,000 minutes/month on private repos. Self-hosted runners are free. Railway and Vercel auto-deploy from git \u2014 combine with GitHub Actions for tests only to conserve minutes.",
       whyNot: null,
       relatedPage: "/cicd-free-tier-comparison-2026",
       isFrameworkSection: false,
@@ -19565,7 +19565,7 @@ mcpCtaCss() + "\n" +
   "<div class=\"story-card\">\n" +
     "<h3>MinIO Open Source Killed</h3>\n" +
     "<span class=\"story-impact\" style=\"background:#f8514922;color:#f85149\">OSS Killed &middot; High Impact</span>\n" +
-    "<p>MinIO, the most popular S3-compatible object storage server, switched from Apache 2.0 to a proprietary license in February 2026. Self-hosted users now need a commercial license for production use. This followed a pattern seen with Redis (BSL), Elasticsearch (SSPL), and MongoDB (SSPL), but hit particularly hard because MinIO was foundational infrastructure for thousands of self-hosted deployments.</p>\n" +
+    "<p>MinIO, the most popular S3-compatible object storage server, switched from Apache 2.0 to a proprietary license in February 2026. Self-hosted users now need a commercial license for production use. This followed a pattern seen with Redis (RSALv2/SSPLv1), Elasticsearch (SSPL), and MongoDB (SSPL), but hit particularly hard because MinIO was foundational infrastructure for thousands of self-hosted deployments.</p>\n" +
     "<p><a href=\"/vendor/minio\">View vendor profile</a> &middot; <a href=\"/storage-alternatives\">Storage alternatives</a></p>\n" +
   "</div>\n" +
 
@@ -19735,7 +19735,6 @@ function buildQ2PricingPreview2026Page(): string {
   const uniqueVendors = new Set(timelineChanges.map(c => c.vendor)).size;
 
   const watchItems = [
-    { vendor: "GitHub Actions", signal: "Self-hosted runners now $0.002/min in private repos (started March 1). Q2 is the first full quarter of impact — watch for community migration patterns to alternatives like GitLab CI or Dagger.", impact: "medium" as const },
     { vendor: "Microsoft 365", signal: "E3 price increase to $39.60/user/mo announced March 24. Takes effect in Q2. Not a developer tool per se, but signals broader Microsoft pricing trends that could affect Azure and GitHub.", impact: "medium" as const },
     { vendor: "OpenAI", signal: "Assistants API deprecated with full shutdown August 26, 2026. Q2 is the migration window — developers must move to Responses API + Conversations API before the deadline.", impact: "high" as const },
     { vendor: "AI API Providers", signal: "Competition intensifying: Groq, Cerebras, and OpenRouter offering generous free tiers while incumbents (OpenAI, Anthropic) focus on paid plans. Expect more free tier launches from challengers in Q2.", impact: "low" as const },
@@ -28876,10 +28875,10 @@ function buildCiCdPricingPage(): string {
       category: "general",
       freeMinutes: "2,000 min/mo (private)",
       concurrency: "20 concurrent jobs",
-      selfHosted: "Free (private: $0.002/min)",
+      selfHosted: "Free",
       paidFrom: "$4/seat (Team)",
       pricingModel: "Per-seat + usage",
-      freeDetails: "Unlimited minutes for public repos. Private repos: 2,000 min/mo on GitHub-hosted runners, 500 MB artifact storage, 10 GB cache. Self-hosted runners are free for public repos; private repos pay $0.002/min for managed self-hosted runners (introduced March 2026). By far the most popular CI/CD platform for open-source.",
+      freeDetails: "Unlimited minutes for public repos. Private repos: 2,000 min/mo on GitHub-hosted runners, 500 MB artifact storage, 10 GB cache. Self-hosted runners are free. By far the most popular CI/CD platform for open-source.",
       freeType: "generous",
       monthlyCostSmall: "$0",
       monthlyCostTeam: "$4/seat + overages",
@@ -38850,7 +38849,7 @@ ${mcpCtaCss()}
 
   <div class="diff-card" style="border-left-color:#f85149">
     <h3>Auth0: No middle ground between free and paid</h3>
-    <p class="diff-desc"><strong>Auth0&rsquo;s Essential plan starts at $23+/mo</strong> &mdash; there&rsquo;s no intermediate tier. You&rsquo;re on the generous free tier (25K MAU) or jumping to paid. For teams that outgrow 25K MAU but don&rsquo;t need all Essential features, this cliff can be jarring. <strong>Clerk</strong> and <strong>Kinde</strong> have more gradual pricing curves.</p>
+    <p class="diff-desc"><strong>Auth0&rsquo;s Essential plan starts at $35/mo</strong> &mdash; there&rsquo;s no intermediate tier. You&rsquo;re on the generous free tier (25K MAU) or jumping to paid. For teams that outgrow 25K MAU but don&rsquo;t need all Essential features, this cliff can be jarring. <strong>Clerk</strong> and <strong>Kinde</strong> have more gradual pricing curves.</p>
   </div>
 
   <div class="diff-card" style="border-left-color:#d29922">
@@ -39092,7 +39091,7 @@ ${mcpCtaCss()}
 
   <div class="executive-summary">
     <p><strong>Quick verdict:</strong> <strong>Amazon SES</strong> is the cheapest at volume at $0.10 per 1,000 emails, but it no longer has a free tier &mdash; AWS replaced the old 62,000/month-from-EC2 allowance with $200 of Free Tier credits that expire, so budget for it from the first email. <strong>Resend</strong> has the best developer experience with a modern API, React Email integration, and 3,000 emails/month free. <strong>Brevo</strong> is ideal for daily drip sending with 300 emails/day permanent free (no monthly cap concern). <strong>Mailtrap</strong> is best for email testing with 4,000 emails/month production plus a separate sandbox for inbox simulation. <strong>Maileroo</strong> is the hidden gem with 3,000 emails/month free and no daily cap.</p>
-    <p><strong>The SendGrid exodus:</strong> SendGrid &mdash; the most widely-used transactional email API &mdash; permanently removed its free tier on May 27, 2025. The perpetual 100 emails/day plan is gone, replaced by a 60-day trial only, then $19.95/month minimum. Mailgun removed its 10,000/month free tier after Sinch acquisition. Thousands of side projects and startups were forced to migrate. The email API market is now split: pure-play transactional APIs (Resend, Postmark, MailerSend), all-in-one platforms (Brevo, Loops), and infrastructure (SES). This guide covers all paths.</p>
+    <p><strong>The SendGrid exodus:</strong> SendGrid &mdash; the most widely-used transactional email API &mdash; permanently removed its free tier on May 27, 2025. The perpetual 100 emails/day plan is gone, replaced by a 60-day trial only, then $19.95/month minimum. Thousands of side projects and startups were forced to migrate. The email API market is now split: pure-play transactional APIs (Resend, Postmark, MailerSend), all-in-one platforms (Brevo, Loops), and infrastructure (SES). This guide covers all paths.</p>
     <p><strong>Pricing is confusing:</strong> Per-email vs per-contact vs per-day caps. Transactional vs marketing distinctions. Overage charges that 10x your bill. Deliverability reputation that takes months to build, making switching costly. This comparison cuts through the confusion with concrete numbers.</p>
   </div>
 
@@ -39378,10 +39377,10 @@ ${mcpCtaCss()}
         <td><span style="color:#f85149">Volatile</span></td>
       </tr>
       <tr>
-        <td class="provider-col">Mailgun<span class="removed-badge">FREE REMOVED</span></td>
+        <td class="provider-col">Mailgun</td>
         <td>Transactional</td>
-        <td>30-day trial only</td>
-        <td>100/day (trial)</td>
+        <td>Free</td>
+        <td>100/day</td>
         <td>N/A</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003; Both</td>
@@ -39491,7 +39490,7 @@ ${mcpCtaCss()}
   <p class="section-intro">The most impactful free tier removal in developer tooling history &mdash; and the migration paths forward.</p>
 
   <div class="context-box">
-    <strong>What happened:</strong> On May 27, 2025, SendGrid permanently eliminated its free tier (100 emails/day, no credit card, no expiration). It was replaced with a 60-day trial only, after which the minimum is $19.95/month (Essentials plan). SendGrid was the default email API for a generation of developers &mdash; referenced in thousands of tutorials, starter templates, and boilerplates. Mailgun had already removed its free tier (10,000 emails/month) after acquisition by Sinch.
+    <strong>What happened:</strong> On May 27, 2025, SendGrid permanently eliminated its free tier (100 emails/day, no credit card, no expiration). It was replaced with a 60-day trial only, after which the minimum is $19.95/month (Essentials plan). SendGrid was the default email API for a generation of developers &mdash; referenced in thousands of tutorials, starter templates, and boilerplates.
   </div>
 
   <div class="context-box">
@@ -39499,7 +39498,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="context-box">
-    <strong>The pattern:</strong> VC-backed email APIs eliminate free tiers after acquisition. SendGrid (acquired by Twilio 2019, free tier removed 2025). Mailgun (acquired by Sinch 2021, free tier removed 2023). SparkPost (acquired by MessageBird, rebranded to Bird). The lesson: if your email provider has been acquired, plan your migration before the free tier disappears.
+    <strong>The pattern:</strong> VC-backed email APIs eliminate free tiers after acquisition. SendGrid (acquired by Twilio 2019, free tier removed 2025). SparkPost (acquired by MessageBird, rebranded to Bird). The lesson: if your email provider has been acquired, plan your migration before the free tier disappears.
   </div>
 
   <h3>Migration Paths by Use Case</h3>
@@ -45426,7 +45425,7 @@ ${globalNavCss()}
 
   <h3>Email: Post-Acquisition Squeeze</h3>
   <div class="callout callout-warn">
-    At 1M emails/month, <strong>Amazon SES costs ~$100/mo</strong> while <strong>SendGrid costs ~$750/mo</strong>. SendGrid and Mailgun both removed free tiers after acquisition. The pattern: VC-backed email APIs eliminate free tiers once acquired.
+    At 1M emails/month, <strong>Amazon SES costs ~$100/mo</strong> while <strong>SendGrid costs ~$750/mo</strong>. SendGrid removed its free plan in 2025.
     <span style="display:block;margin-top:.5rem;font-size:.85rem"><a href="/email-comparison-2026">Full email comparison &rarr;</a></span>
   </div>
 
