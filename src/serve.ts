@@ -35173,12 +35173,13 @@ interface ComparisonPageMeta {
   relatedSlugs: string[];
   whatTheTableGives?: string;
   costSectionName?: string;
+  mostGenerousAnswer?: string;
 }
 
 const comparisonPagesMeta: ComparisonPageMeta[] = [
   { slug: "cloud-free-tier-comparison-2026", subject: "Cloud IaaS", questionNoun: "cloud IaaS", catalogueCategory: "Cloud IaaS", shortName: "Cloud", relatedSlugs: ["hosting-free-tier-comparison-2026", "serverless-free-tier-comparison-2026", "storage-comparison-2026"] },
   { slug: "database-free-tier-comparison-2026", subject: "Databases", questionNoun: "database", catalogueCategory: "Databases", shortName: "Database", relatedSlugs: ["serverless-free-tier-comparison-2026", "storage-comparison-2026", "auth-comparison-2026"] },
-  { slug: "cicd-free-tier-comparison-2026", subject: "CI/CD", questionNoun: "CI/CD", catalogueCategory: "CI/CD", shortName: "CI/CD", relatedSlugs: ["testing-free-tier-comparison-2026", "security-free-tier-comparison-2026", "hosting-free-tier-comparison-2026"] },
+  { slug: "cicd-free-tier-comparison-2026", subject: "CI/CD", questionNoun: "CI/CD", catalogueCategory: "CI/CD", shortName: "CI/CD", costSectionName: "Hidden Costs and Gotchas", mostGenerousAnswer: "The one column on this page we can rank is Free Minutes / Credits. For private repositories, CircleCI's 30,000 credits (up to 6,000 small-Docker minutes) are the largest allowance; for public repositories, GitHub's standard runners are unlimited.", relatedSlugs: ["testing-free-tier-comparison-2026", "security-free-tier-comparison-2026", "hosting-free-tier-comparison-2026"] },
   { slug: "serverless-free-tier-comparison-2026", subject: "Serverless", questionNoun: "serverless", catalogueCategory: null, shortName: "Serverless", relatedSlugs: ["cloud-free-tier-comparison-2026", "hosting-free-tier-comparison-2026", "database-free-tier-comparison-2026"] },
   { slug: "auth-comparison-2026", subject: "Auth", questionNoun: "auth", catalogueCategory: "Auth", shortName: "Auth & Identity", relatedSlugs: ["security-free-tier-comparison-2026", "database-free-tier-comparison-2026", "monitoring-comparison-2026"] },
   { slug: "email-comparison-2026", subject: "Email", questionNoun: "email", catalogueCategory: "Email", shortName: "Email", relatedSlugs: ["monitoring-comparison-2026", "analytics-free-tier-comparison-2026", "api-development-free-tier-comparison-2026"] },
@@ -35250,7 +35251,7 @@ export function comparisonFaqItems(slug: string, forJsonLd = false): FaqItem[] {
     }]),
     {
       q: `Which ${noun} free tier is most generous?`,
-      a: forJsonLd ? GENEROSITY_JSON_TOKEN : GENEROSITY_PROSE_TOKEN,
+      a: meta.mostGenerousAnswer ?? (forJsonLd ? GENEROSITY_JSON_TOKEN : GENEROSITY_PROSE_TOKEN),
     },
     {
       q: `How do ${noun} free tiers compare on limits?`,
@@ -36715,14 +36716,11 @@ ${mcpCtaCss()}
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number">37</div><div class="stat-label">CI/CD Services</div></div>
-    <div class="stat-card"><div class="stat-number green">GitHub Actions</div><div class="stat-label">Best for Open Source</div></div>
-    <div class="stat-card"><div class="stat-number green">CircleCI</div><div class="stat-label">Most Generous Credits</div></div>
-    <div class="stat-card"><div class="stat-number green">Drone CI</div><div class="stat-label">Best Self-Hosted</div></div>
   </div>
 
   <div class="executive-summary">
-    <p><strong>Quick verdict:</strong> <strong>GitHub Actions</strong> dominates for open source projects with unlimited free minutes on public repos. <strong>GitLab CI</strong> is the strongest all-in-one DevOps platform with 400 compute minutes/month and built-in container registry. <strong>CircleCI</strong> offers the most generous credit-based free tier (30,000 credits/month) with powerful parallelism. <strong>Buildkite</strong> is the developer favorite for fast, scalable pipelines with unlimited self-hosted agents on the free plan.</p>
-    <p><strong>The CI/CD landscape in 2026:</strong> GitHub Actions remains the default choice for most developers, but its planned self-hosted runner charge was <strong>postponed indefinitely</strong> after community backlash. GitLab CI continues to tighten limits (down from 400 to 400 compute minutes). Self-hosted options like Drone CI and Woodpecker CI offer truly unlimited free CI/CD. Mobile CI/CD is a distinct niche where Bitrise and Codemagic compete on iOS/Android build minutes.</p>
+    <p><strong>Quick verdict:</strong> On public repositories, GitHub Actions' standard runners are free with no minute limit. For private repositories, GitHub Free includes 2,000 minutes a month. GitLab Free includes 400 compute minutes a month and a container registry. CircleCI Free gives 30,000 credits a month (up to 6,000 minutes on a small Docker resource class) and 30 concurrent jobs. Buildkite's Free plan includes 5 users, 10 concurrent jobs and 2,000 Linux vCPU minutes a month (1,000 minutes on its 2-vCPU agent).</p>
+    <p><strong>The CI/CD landscape in 2026:</strong> GitHub announced a charge for self-hosted runners on 2025-12-16 and postponed it the next day, with no new date. GitLab Free has included 400 compute minutes a month since October 2020. Drone's free open-source edition runs on a single machine; Woodpecker CI is a community fork of Drone. For mobile CI, Bitrise's free Hobby plan gives 300 credits a month and Codemagic 500 macOS M2 build minutes.</p>
   </div>
 
   <div class="toc">
@@ -36760,33 +36758,33 @@ ${mcpCtaCss()}
     </thead>
     <tbody>
       <tr style="background:rgba(63,185,80,0.08)">
-        <td class="provider-col"><a href="/vendor/github-actions" style="color:var(--text)">GitHub Actions</a> <span class="winner-badge">BEST OSS</span></td>
+        <td class="provider-col"><a href="/vendor/github-actions" style="color:var(--text)">GitHub Actions</a></td>
         <td style="font-family:var(--mono)">2,000 min/mo (private)<br>Unlimited (public)</td>
         <td>20 concurrent (public)<br>20 concurrent (private)</td>
         <td>500 MB artifacts, 10 GB cache/repo</td>
-        <td>2 vCPU, 7 GB RAM (Linux)</td>
+        <td>2 vCPU, 8 GB RAM (Linux, private repos); 4 vCPU, 16 GB (public)</td>
         <td style="color:#3fb950">Public: unlimited</td>
         <td class="check">Free (charge postponed)</td>
         <td style="color:#3fb950">Yes</td>
       </tr>
       <tr style="background:rgba(63,185,80,0.08)">
-        <td class="provider-col"><a href="/vendor/gitlab-ci" style="color:var(--text)">GitLab CI</a> <span class="winner-badge">BEST ALL-IN-ONE</span></td>
+        <td class="provider-col"><a href="/vendor/gitlab-ci" style="color:var(--text)">GitLab CI</a></td>
         <td style="font-family:var(--mono)">400 compute min/mo</td>
-        <td>Varies by runner</td>
-        <td>5 GB project storage (incl. artifacts + registry)</td>
-        <td>1 vCPU, 3.75 GB RAM (shared)</td>
-        <td>Same limits for all repos</td>
+        <td>500 jobs in active pipelines</td>
+        <td>10 GiB per project (repo + LFS only); artifacts up to 1 GB each, 30 days</td>
+        <td>2 vCPU, 8 GB RAM (default Linux runner)</td>
+        <td>Same rate; GitLab for Open Source projects get 50K minutes</td>
         <td class="check">Free (unlimited)</td>
         <td style="color:#3fb950">Yes</td>
       </tr>
       <tr style="background:rgba(63,185,80,0.08)">
-        <td class="provider-col"><a href="/vendor/circleci" style="color:var(--text)">CircleCI</a> <span class="winner-badge">MOST CREDITS</span></td>
+        <td class="provider-col"><a href="/vendor/circleci" style="color:var(--text)">CircleCI</a></td>
         <td style="font-family:var(--mono)">30,000 credits/mo</td>
         <td>30 jobs (Linux)</td>
-        <td>Included in credits</td>
+        <td>2 GB-months storage + 1 GB transfer, then credits</td>
         <td>Medium: 2 vCPU, 4 GB RAM</td>
-        <td>Same limits for all repos</td>
-        <td class="check">Free (unlimited)</td>
+        <td>Open source: up to 400,000 credits/mo (Linux, Arm, Docker)</td>
+        <td class="check">Free runner time; 5 concurrent self-hosted tasks</td>
         <td style="color:#3fb950">Yes</td>
       </tr>
       <tr>
@@ -36794,26 +36792,26 @@ ${mcpCtaCss()}
         <td style="font-family:var(--mono)">Unlimited (self-hosted)<br>Hosted: 2,000 Linux vCPU min/mo</td>
         <td>10</td>
         <td>50 GB/month artifact storage</td>
-        <td>Your hardware (self-hosted)</td>
+        <td>Hosted Linux Small (2 vCPU, 4 GB) or your hardware</td>
         <td>Same limits for all repos</td>
         <td class="check">Free (self-hosted)</td>
-        <td style="color:#3fb950">Yes (personal)</td>
+        <td style="color:#3fb950">Yes (Free plan, up to 5 users)</td>
       </tr>
       <tr>
         <td class="provider-col"><a href="/vendor/bitbucket-pipelines" style="color:var(--text)">Bitbucket Pipelines</a></td>
         <td style="font-family:var(--mono)">50 min/mo</td>
-        <td>1 concurrent</td>
+        <td>10 steps at once (100 self-hosted)</td>
         <td>1 GB artifacts</td>
-        <td>4 GB RAM (2x pipeline)</td>
+        <td>4 GB (1x step); 8 GB (2x, double minutes)</td>
         <td>Same limits for all repos</td>
-        <td class="cross">No</td>
+        <td class="check">Yes (no build minutes used)</td>
         <td style="color:#3fb950">Yes</td>
       </tr>
       <tr>
         <td class="provider-col"><a href="/vendor/harness-ci" style="color:var(--text)">Harness CI</a></td>
         <td style="font-family:var(--mono)">2,000 build credits/mo</td>
         <td>Varies</td>
-        <td>Included in credits</td>
+        <td>2 GB cache; 1 GB transfer</td>
         <td>Cloud-hosted runners</td>
         <td>Same limits for all repos</td>
         <td class="check">Free</td>
@@ -36822,7 +36820,7 @@ ${mcpCtaCss()}
       <tr>
         <td class="provider-col"><a href="/vendor/google-cloud-build" style="color:var(--text)">Google Cloud Build</a></td>
         <td style="font-family:var(--mono)">2,500 min/mo (e2-standard-2)</td>
-        <td>10 concurrent</td>
+        <td>10-30 concurrent builds (default pool)</td>
         <td>GCS storage (separate)</td>
         <td>e2-standard-2 (2 vCPU, 8 GB)</td>
         <td>Same limits for all repos</td>
@@ -36832,11 +36830,11 @@ ${mcpCtaCss()}
       <tr>
         <td class="provider-col"><a href="/vendor/bitrise" style="color:var(--text)">Bitrise</a></td>
         <td style="font-family:var(--mono)">300 credits/mo</td>
-        <td>1 concurrent</td>
-        <td>10-min build time limit</td>
-        <td>Standard runners</td>
-        <td>Same limits for all repos</td>
-        <td class="cross">No</td>
+        <td>5 concurrent</td>
+        <td>90-min build timeout</td>
+        <td>macOS Medium/Large, Linux Medium</td>
+        <td>1 private app; unlimited public apps</td>
+        <td class="cross">Paid plans only</td>
         <td style="color:#3fb950">Yes (Hobby)</td>
       </tr>
       <tr>
@@ -36850,9 +36848,9 @@ ${mcpCtaCss()}
         <td style="color:#3fb950">Yes</td>
       </tr>
       <tr style="background:rgba(63,185,80,0.08)">
-        <td class="provider-col"><a href="/vendor/drone-ci" style="color:var(--text)">Drone CI</a> <span class="winner-badge">BEST SELF-HOSTED</span></td>
+        <td class="provider-col"><a href="/vendor/drone-ci" style="color:var(--text)">Drone CI</a></td>
         <td style="font-family:var(--mono)">Unlimited (self-hosted)</td>
-        <td>Unlimited</td>
+        <td>One machine (Community Edition)</td>
         <td>Unlimited (your storage)</td>
         <td>Your hardware</td>
         <td>Same (self-hosted)</td>
@@ -36864,11 +36862,11 @@ ${mcpCtaCss()}
   </div>
 
   <div class="context-box">
-    <strong>Minutes vs credits:</strong> GitHub Actions and GitLab CI use minutes directly. CircleCI uses credits (10 credits = 1 minute on medium Linux). Bitrise uses its own credit system. <strong>GitHub Actions</strong> is the clear winner for open source with unlimited public repo minutes. <strong>CircleCI</strong> leads for private repos with 30,000 credits/month. <strong>Self-hosted</strong> options (Drone CI, Woodpecker CI, Buildkite) offer truly unlimited CI/CD at the cost of managing your own infrastructure.
+    <strong>Minutes vs credits:</strong> GitHub charges each runner type its own per-minute rate. GitLab multiplies job time by a cost factor. CircleCI and Bitrise use their own credits, which do not compare across vendors. On public repositories, GitHub Actions' standard runners have no minute limit. For private repositories, CircleCI's 30,000 monthly credits cover up to 6,000 minutes on a small Docker resource class.
   </div>
 
   <h2 id="general-purpose">General-Purpose CI/CD</h2>
-  <p class="section-intro">The big four CI/CD platforms that handle most workloads — from simple test-and-deploy to complex multi-stage pipelines.</p>
+  <p class="section-intro">Four hosted CI/CD services with free tiers: GitHub Actions, GitLab CI, CircleCI and Bitbucket Pipelines.</p>
 
   <div style="overflow-x:auto">
   <table class="comp-table">
@@ -36884,19 +36882,19 @@ ${mcpCtaCss()}
     </thead>
     <tbody>
       <tr style="background:rgba(63,185,80,0.08)">
-        <td class="provider-col">GitHub Actions <span class="winner-badge">ECOSYSTEM LEADER</span></td>
+        <td class="provider-col">GitHub Actions</td>
         <td>2,000 min/mo + unlimited public</td>
         <td>YAML (workflows)</td>
-        <td class="check">17,000+ marketplace actions</td>
+        <td class="check">33,000+ marketplace actions</td>
         <td class="check">GitHub Packages (500 MB free)</td>
         <td>Open source, GitHub-native projects</td>
       </tr>
       <tr style="background:rgba(63,185,80,0.08)">
-        <td class="provider-col">GitLab CI <span class="winner-badge">BEST ALL-IN-ONE</span></td>
+        <td class="provider-col">GitLab CI</td>
         <td>400 compute min/mo</td>
         <td>YAML (.gitlab-ci.yml)</td>
         <td class="partial">CI/CD catalog (growing)</td>
-        <td class="check">Built-in (5 GB total)</td>
+        <td class="check">Built-in (outside the 10 GiB limit)</td>
         <td>All-in-one DevOps (code, CI, registry, deploy)</td>
       </tr>
       <tr>
@@ -36920,7 +36918,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="context-box">
-    <strong>GitHub Actions vs GitLab CI:</strong> GitHub Actions wins on ecosystem (17,000+ marketplace actions) and open source support (unlimited minutes). GitLab CI wins as an all-in-one platform — CI/CD, container registry, issue tracking, and deployments in one tool. <strong>CircleCI</strong> offers the most compute for free (30K credits) and has the best parallelism support. <strong>Bitbucket Pipelines</strong> is only worth considering if you&rsquo;re already in the Atlassian ecosystem — 50 min/mo is the stingiest free tier in this category.
+    <strong>GitHub Actions vs GitLab CI:</strong> GitHub Marketplace lists more than 33,000 actions. GitLab puts CI/CD, a container registry and issue tracking in one platform. CircleCI Free runs 30 concurrent Linux jobs, against GitHub Free's 20. Bitbucket Pipelines Free gives 50 build minutes a month on cloud runners, the smallest of these four, and does not charge build minutes for self-hosted runners.
   </div>
 
   <h2 id="developer-focused">Developer-Focused CI/CD</h2>
@@ -36940,21 +36938,21 @@ ${mcpCtaCss()}
     <tbody>
       <tr>
         <td class="provider-col">Buildkite</td>
-        <td>Free for personal use (unlimited self-hosted agents)</td>
-        <td class="check">Unlimited, first-class</td>
-        <td class="check">Unlimited (your hardware)</td>
+        <td>Free plan: 5 users, 10 concurrent jobs, 2,000 hosted minutes/mo</td>
+        <td class="check">Up to 10 concurrent jobs on Free</td>
+        <td class="check">10 concurrent jobs</td>
         <td>Fast builds, own infrastructure</td>
       </tr>
       <tr>
         <td class="provider-col">Semaphore CI</td>
         <td>Community plan (self-hosted, unlimited)</td>
-        <td class="check">Unlimited</td>
+        <td class="check">Unlimited (Community Edition); $0.0025/min on Cloud</td>
         <td class="check">Configurable</td>
-        <td>Self-hosted, Ruby/Elixir communities</td>
+        <td>Self-hosted teams</td>
       </tr>
       <tr>
         <td class="provider-col">Buddy</td>
-        <td>5 projects, 500 executions/mo</td>
+        <td>1 seat, 1 concurrent run, 300 pipeline GB-minutes/mo</td>
         <td class="cross">Paid only</td>
         <td class="partial">Limited</td>
         <td>Visual pipeline builder, simple deploys</td>
@@ -36971,7 +36969,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="context-box">
-    <strong>Buildkite stands out</strong> by offering unlimited self-hosted agents on the free personal plan. You bring your own compute (a spare laptop, a VM, a Kubernetes cluster) and Buildkite orchestrates the pipelines. <strong>Semaphore CI</strong> offers a similar self-hosted-first approach. <strong>Harness CI</strong> is enterprise-grade with ML-powered test intelligence that can automatically split and parallelize tests.
+    Buildkite's Free plan supports up to 5 users and 10 concurrent jobs, with 2,000 Linux vCPU minutes a month on Buildkite-hosted agents, which is 1,000 minutes on its 2-vCPU Small agent. Jobs can also run on your own agents. You bring your own compute (a spare laptop, a VM, a Kubernetes cluster) and Buildkite orchestrates the pipelines. Semaphore is a hosted cloud service with $15 of free credits a month. Its free, self-hosted Community Edition has unlimited users and concurrency. <strong>Harness CI</strong> is enterprise-grade with ML-powered test intelligence that can automatically split and parallelize tests.
   </div>
 
   <h2 id="mobile">Mobile CI/CD</h2>
@@ -36992,23 +36990,23 @@ ${mcpCtaCss()}
     <tbody>
       <tr>
         <td class="provider-col">Bitrise</td>
-        <td>300 credits/mo, 1 concurrent</td>
+        <td>300 credits/mo, 5 concurrent</td>
         <td class="check">macOS runners</td>
         <td class="check">Linux runners</td>
         <td class="check">Supported</td>
-        <td>Broadest mobile platform support</td>
+        <td>iOS, Android and cross-platform apps</td>
       </tr>
       <tr style="background:rgba(63,185,80,0.08)">
-        <td class="provider-col">Codemagic <span class="winner-badge">BEST FLUTTER</span></td>
+        <td class="provider-col">Codemagic</td>
         <td>500 min/mo, 1 concurrent</td>
         <td class="check">macOS M2 runners</td>
-        <td class="check">Linux runners</td>
-        <td class="check">First-class (by Flutter team)</td>
-        <td>Flutter apps (built by Flutter team)</td>
+        <td class="check">macOS M2 (Linux builds billed)</td>
+        <td class="check">First-class (built by Nevercode)</td>
+        <td>Flutter apps</td>
       </tr>
       <tr>
         <td class="provider-col">Appcircle</td>
-        <td>25 min/build, limited builds</td>
+        <td>20 builds/mo, 30 min/build, 1 concurrent</td>
         <td class="check">macOS runners</td>
         <td class="check">Linux runners</td>
         <td class="check">Supported</td>
@@ -37019,7 +37017,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="context-box">
-    <strong>Codemagic leads for Flutter</strong> — it was built by the Flutter community and offers 500 free minutes/month with macOS M2 runners (critical for iOS builds). <strong>Bitrise</strong> has the broadest integration ecosystem for native iOS/Android. <strong>Tip:</strong> GitHub Actions can build mobile apps too (including macOS runners for iOS), but mobile-specific platforms handle code signing, App Store deployment, and device testing much better.
+    Codemagic is built by Nevercode Ltd and launched for Flutter apps at Flutter Live 2018. Its free plan gives 500 macOS M2 build minutes a month. Bitrise's Step Library has 400+ pre-built steps for iOS, Android, React Native and Flutter workflows. <strong>Tip:</strong> GitHub Actions can build mobile apps too (including macOS runners for iOS), but mobile-specific platforms handle code signing, App Store deployment, and device testing much better.
   </div>
 
   <h2 id="specialized">Specialized CI/CD</h2>
@@ -37050,18 +37048,18 @@ ${mcpCtaCss()}
       </tr>
       <tr>
         <td class="provider-col">Codefresh</td>
-        <td>3 users, 1 concurrent, unlimited builds</td>
+        <td>No published free plan (now part of Octopus Deploy)</td>
         <td>GitOps + Argo CD native</td>
         <td>Kubernetes deployments, GitOps workflows</td>
       </tr>
       <tr>
         <td class="provider-col">Terramate</td>
-        <td>Free for open source</td>
+        <td>Free up to 2 users, 1,000 resources</td>
         <td>IaC orchestration (Terraform, OpenTofu)</td>
-        <td>Infrastructure-as-code CI/CD</td>
+        <td>IaC orchestration inside your CI/CD</td>
       </tr>
       <tr>
-        <td class="provider-col">RunMyJob</td>
+        <td class="provider-col">RunJob (formerly RunMyJob)</td>
         <td>400 vCPU-min, 800 GB-min, 10 concurrent</td>
         <td>Smart scaling for GitHub Actions/GitLab CI</td>
         <td>Cost optimization for existing CI pipelines</td>
@@ -37071,11 +37069,11 @@ ${mcpCtaCss()}
   </div>
 
   <div class="context-box">
-    <strong>Nx Cloud</strong> can dramatically speed up monorepo builds by caching task results across CI runs. <strong>Codefresh</strong> is the best free option for Kubernetes/GitOps workflows with native Argo CD support. <strong>Google Cloud Build</strong> gives 2,500 min/month but only makes sense if you&rsquo;re already on GCP. <strong>RunMyJob</strong> is a newer entrant that optimizes runner costs for existing GitHub Actions/GitLab CI pipelines.
+    <strong>Nx Cloud</strong> can dramatically speed up monorepo builds by caching task results across CI runs. Codefresh publishes no free plan: its pricing page redirects to Octopus Deploy, which acquired Codefresh in February 2024 and directs Codefresh CI inquiries to its team. Google Cloud Build gives 2,500 build-minutes a month per billing account. RunJob, formerly RunMyJob, offers cloud runners for GitHub Actions and GitLab CI, with a free plan.
   </div>
 
   <h2 id="self-hosted">Self-Hosted CI/CD (Unlimited Free)</h2>
-  <p class="section-intro">Fully free, open-source CI/CD that runs on your own infrastructure. Zero build-minute limits, complete control, but you manage the servers.</p>
+  <p class="section-intro">Woodpecker CI and Drone's Apache 2.0 Community Edition are open source and run on your own servers with no build-minute limits. Drone's Community Edition runs on one machine.</p>
 
   <div style="overflow-x:auto">
   <table class="comp-table">
@@ -37091,11 +37089,11 @@ ${mcpCtaCss()}
     </thead>
     <tbody>
       <tr style="background:rgba(63,185,80,0.08)">
-        <td class="provider-col">Drone CI <span class="winner-badge">MOST MATURE</span></td>
+        <td class="provider-col">Drone CI</td>
         <td>Community (Apache 2.0)</td>
         <td>YAML (.drone.yml)</td>
         <td class="check">Docker-native</td>
-        <td class="check">Kubernetes runner</td>
+        <td class="partial">Kubernetes runner (Beta; not in the Community Edition)</td>
         <td>Docker-native CI, simple YAML config</td>
       </tr>
       <tr>
@@ -37111,7 +37109,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="context-box">
-    <strong>Drone CI</strong> is the most mature self-hosted option — Docker-native, simple YAML configuration, and a large plugin ecosystem. <strong>Woodpecker CI</strong> is a community-driven fork of Drone that continues active development under the Apache 2.0 license. Both are truly free and unlimited — your only cost is the compute to run them. Ideal for teams with spare infrastructure or homelab setups.
+    Drone's open-source edition runs on one machine. Its Enterprise edition is free for individuals and small companies; larger ones get a trial. Woodpecker CI is an Apache 2.0 community fork of Drone. You pay for the machines that run them.
   </div>
 
   <h2 id="best-for">Best for Each Use Case</h2>
@@ -37121,12 +37119,12 @@ ${mcpCtaCss()}
 
     <div class="verdict-item">
       <strong>Open source projects &rarr; GitHub Actions</strong>
-      <p>Unlimited free minutes for public repos, 17,000+ marketplace actions, native GitHub integration. The default choice for every open source project. <a href="/vendor/github-actions">View GitHub Actions details &rarr;</a></p>
+      <p>Unlimited free minutes for public repos on standard runners, 33,000+ marketplace actions, native GitHub integration. <a href="/vendor/github-actions">View GitHub Actions details &rarr;</a></p>
     </div>
 
     <div class="verdict-item">
       <strong>Private repos on a budget &rarr; GitLab CI or CircleCI</strong>
-      <p>GitLab CI: 400 min/mo + unlimited self-hosted runners + built-in container registry. CircleCI: 30,000 credits/mo with powerful parallelism. GitLab wins on all-in-one; CircleCI wins on raw compute. <a href="/ci-cd-alternatives">CI/CD alternatives guide &rarr;</a></p>
+      <p>GitLab CI: 400 min/mo, unlimited minutes on your own runners (up to 50 per project) and a built-in container registry. CircleCI: 30,000 credits/mo with powerful parallelism. GitLab wins on all-in-one; CircleCI wins on raw compute. <a href="/ci-cd-alternatives">CI/CD alternatives guide &rarr;</a></p>
     </div>
 
     <div class="verdict-item">
@@ -37136,27 +37134,22 @@ ${mcpCtaCss()}
 
     <div class="verdict-item">
       <strong>Mobile apps (Flutter) &rarr; Codemagic</strong>
-      <p>500 free minutes/month with macOS M2 runners. Built by the Flutter team with first-class Flutter, iOS, and Android support including code signing and App Store deployment. <a href="/vendor/codemagic">View Codemagic details &rarr;</a></p>
+      <p>500 free minutes/month with macOS M2 runners. First-class Flutter, iOS and Android support including code signing and App Store deployment. <a href="/vendor/codemagic">View Codemagic details &rarr;</a></p>
     </div>
 
     <div class="verdict-item">
       <strong>Mobile apps (native iOS/Android) &rarr; Bitrise</strong>
-      <p>Broadest integration ecosystem for native mobile development. 300 credits/month, macOS runners for iOS builds, pre-configured steps for common mobile workflows. <a href="/vendor/bitrise">View Bitrise details &rarr;</a></p>
+      <p>350+ pre-built steps for mobile workflows. 300 credits/month, macOS runners for iOS builds, pre-configured steps for common mobile workflows. <a href="/vendor/bitrise">View Bitrise details &rarr;</a></p>
     </div>
 
     <div class="verdict-item">
       <strong>Monorepos &rarr; Nx Cloud</strong>
-      <p>Remote caching and distributed task execution for Nx-based monorepos. Free hobby plan dramatically reduces CI times by skipping unchanged projects. Pairs with any CI provider (GitHub Actions, GitLab CI, etc.).</p>
+      <p>Remote caching and distributed task execution for Nx-based monorepos. Free hobby plan skips tasks that already ran with the same inputs. Pairs with any CI provider (GitHub Actions, GitLab CI, etc.).</p>
     </div>
 
     <div class="verdict-item">
       <strong>Self-hosted / unlimited &rarr; Drone CI or Woodpecker CI</strong>
-      <p>Truly free and unlimited CI/CD on your own infrastructure. Docker-native, simple YAML config, no build-minute limits. Drone CI is more mature; Woodpecker CI has a more active community fork.</p>
-    </div>
-
-    <div class="verdict-item">
-      <strong>Kubernetes / GitOps &rarr; Codefresh</strong>
-      <p>Native Argo CD integration, GitOps-first workflows, Kubernetes dashboard. Free for 3 users with unlimited builds. The best free option for teams deploying to Kubernetes.</p>
+      <p>Truly free and unlimited CI/CD on your own infrastructure. Docker-native, simple YAML config, no build-minute limits. Drone's Community Edition runs on one machine; Woodpecker is an Apache 2.0 community fork of Drone.</p>
     </div>
   </div>
 
@@ -37165,27 +37158,27 @@ ${mcpCtaCss()}
 
   <div class="diff-card" style="border-left-color:#f85149">
     <h3>macOS/Windows minute multipliers</h3>
-    <p class="diff-desc"><strong>GitHub Actions</strong> counts macOS minutes at 10x and Windows at 2x the Linux rate. Your 2,000 free minutes becomes just 200 macOS minutes or 1,000 Windows minutes. <strong>CircleCI</strong> similarly charges more credits for macOS and Windows runners. Always check the minute multiplier before running iOS builds on general-purpose CI.</p>
+    <p class="diff-desc">Past the free quota, GitHub charges $0.006 a minute for Linux 2-core, $0.010 for Windows 2-core and $0.062 for macOS 3- or 4-core. Its docs no longer list multipliers but say usage totals include them. GitLab's cost factor multiplies job time: 1 on small Linux, 2 on medium, 6 on macOS M1 (paid tiers only).</p>
   </div>
 
   <div class="diff-card" style="border-left-color:#d29922">
     <h3>Artifact storage fees</h3>
-    <p class="diff-desc"><strong>GitHub Actions:</strong> 500 MB free artifact storage (shared with GitHub Packages). Artifacts auto-expire after 90 days (configurable). <strong>GitLab:</strong> Artifacts count toward the 5 GB project storage limit alongside the container registry. <strong>CircleCI:</strong> Artifacts stored for 30 days on free plan. Build caching across CI providers is often unlimited but only persists for 7-30 days.</p>
+    <p class="diff-desc"><strong>GitHub Actions:</strong> 500 MB free artifact storage (shared with GitHub Packages). Artifacts auto-expire after 90 days (configurable). <strong>GitLab:</strong> each project's 10 GiB covers its Git repository and LFS only. Artifacts can be up to 1 GB each and expire after 30 days unless set otherwise. <strong>CircleCI:</strong> Artifacts stored for 30 days on free plan. No cache is unlimited: GitHub includes 10 GB per repository and drops entries unused for 7 days; GitLab-hosted runners drop caches not updated in 14 days; CircleCI keeps caches 15 days; Bitbucket caches are 1 GB each, kept 7 days.</p>
   </div>
 
   <div class="diff-card" style="border-left-color:#d29922">
     <h3>Concurrent job limits</h3>
-    <p class="diff-desc">Free tiers typically limit concurrent jobs: <strong>Bitbucket Pipelines</strong> allows only 1 concurrent build. <strong>Bitrise</strong> and <strong>Codemagic</strong> also limit to 1 concurrent. Even GitHub Actions can queue builds if you exceed 20 concurrent jobs. For teams with multiple developers pushing frequently, concurrent job limits matter more than total minutes.</p>
+    <p class="diff-desc">Free tiers typically limit concurrent jobs: Bitbucket Pipelines Free runs up to 10 steps at once on cloud runners and 100 on self-hosted runners. Codemagic's free plan runs one build at a time; Bitrise Hobby allows 5. GitHub Free allows 20 concurrent jobs on standard runners (5 for macOS). For teams with multiple developers pushing frequently, concurrent job limits matter more than total minutes.</p>
   </div>
 
   <div class="diff-card" style="border-left-color:#d29922">
     <h3>Data transfer and egress</h3>
-    <p class="diff-desc">Most CI providers don&rsquo;t charge for data transfer on free tiers, but <strong>Google Cloud Build</strong> egress follows standard GCP pricing outside the Always Free bucket. <strong>GitLab</strong> counts data transfer toward project limits. If you&rsquo;re pulling large Docker images or datasets in CI, check whether data transfer counts against your free allocation.</p>
+    <p class="diff-desc">Google Cloud Build charges network egress at standard rates; its pricing page names no free allowance. CircleCI meters network transfer only to self-hosted runners: Free includes 1 GB, then draws from credits. GitLab publishes no data-transfer allowance for its Free tier. If you&rsquo;re pulling large Docker images or datasets in CI, check whether data transfer counts against your free allocation.</p>
   </div>
 
   <div class="diff-card" style="border-left-color:#3fb950">
     <h3>Self-hosted runner economics</h3>
-    <p class="diff-desc">Self-hosted runners on <strong>GitHub Actions</strong>, <strong>GitLab CI</strong>, <strong>Buildkite</strong>, and <strong>CircleCI</strong> are free — you pay only for your own infrastructure. A $5/mo VPS can serve as a CI runner with unlimited minutes. For teams exceeding free tier limits, self-hosted runners are almost always cheaper than buying more cloud minutes.</p>
+    <p class="diff-desc">GitHub and GitLab charge nothing for jobs on your own runners. Buildkite's Free plan allows up to 10 concurrent jobs on self-hosted agents. CircleCI Free runs at most 5 self-hosted tasks at once and draws credits for storage and network use past its allotments. You pay for the machines that host the runners.</p>
   </div>
 
   <h2 id="changes">Pricing Change Timeline</h2>
