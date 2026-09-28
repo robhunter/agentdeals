@@ -5969,7 +5969,13 @@
       "category": "CI/CD",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-28",
+        "detail": "Retracted 2026-09-28: no change. squash.io read \"Start with a free credit of $40\" on every capture from 2024-11-27 to 2026-08-28. The Squash service has since shut down, and its listing is retired.",
+        "source_url": "http://web.archive.org/web/20241127010322/https://www.squash.io/"
+      }
     },
     {
       "vendor": "Virgil Security",
