@@ -13,13 +13,13 @@ export const SPLIT = {
   pageUnreadable: "page unreadable today",
 };
 
-export function firstReadingsInForce(changes) {
+export function firstReadingsInForce(changes, { includeResolved = false } = {}) {
   const readingsSoFar = new Map();
   const byDay = [...changes].sort((a, b) => String(a.date).localeCompare(String(b.date)) || String(a.recorded_date).localeCompare(String(b.recorded_date)));
   const backlog = [];
   for (const change of byDay) {
     const earlierReadings = readingsSoFar.get(change.vendor) ?? new Set();
-    if (change.date_source === "discovered" && !change.resolution && !earlierReadings.has(change.previous_state)) backlog.push(change);
+    if (change.date_source === "discovered" && (includeResolved || !change.resolution) && !earlierReadings.has(change.previous_state)) backlog.push(change);
     if (change.date_source === "discovered") {
       earlierReadings.add(change.current_state);
       readingsSoFar.set(change.vendor, earlierReadings);
@@ -50,11 +50,11 @@ export function listingFor(record, offers) {
   );
 }
 
-export async function settleFirstReadings({ changes, offers, today, archive, readerForListing, fetchToday, textDayOf, limit = Infinity, vendor }) {
-  const backlog = firstReadingsInForce(changes).filter((record) => !vendor || record.vendor === vendor).slice(0, limit);
+export async function settleFirstReadings({ changes, offers, today, archive, readerForListing, fetchToday, textDayOf, limit = Infinity, vendors, includeResolved = false }) {
+  const backlog = firstReadingsInForce(changes, { includeResolved }).filter((record) => !vendors || vendors.includes(record.vendor)).slice(0, limit);
   const results = [];
   for (const record of backlog) {
-    const subject = { vendor: record.vendor, date: record.date, change_type: record.change_type, source_url: record.source_url };
+    const subject = { vendor: record.vendor, date: record.date, change_type: record.change_type, source_url: record.source_url, resolution: record.resolution?.state ?? null };
     const page = await fetchToday(record.source_url);
     const settled = page.ok
       ? await settleAgainstCaptures({
@@ -91,7 +91,8 @@ async function main() {
     fetchToday: (url) => fetchPageText(url),
     textDayOf: (text) => dayOurTextEntered(text),
     limit: option("--limit") ? Number(option("--limit")) : Infinity,
-    vendor: option("--vendor"),
+    vendors: option("--vendors")?.split(",").map((name) => name.trim()),
+    includeResolved: args.includes("--include-resolved"),
   });
   const out = option("--out") ?? "settled-first-readings.json";
   writeFileSync(out, `${JSON.stringify(report, null, 2)}\n`);

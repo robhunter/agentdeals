@@ -119,3 +119,26 @@ describe("settling the backlog", () => {
     assert.deepStrictEqual(listingFor({ vendor: "Gone", category: "CDN", tier: "Free" }, []), { vendor: "Gone", category: "CDN", tier: "Free" });
   });
 });
+
+describe("checking the method on records whose outcome is already known", () => {
+  it("can include resolved first readings, and names the resolution each one carries", async () => {
+    const changes = [
+      change({ vendor: "Alpha", date: "2026-09-01", date_source: "discovered", previous_state: "A", current_state: "B", resolution: { state: "retracted" } }),
+      change({ vendor: "Beta", date: "2026-09-02", date_source: "discovered", previous_state: "A", current_state: "B" }),
+    ];
+    assert.deepStrictEqual(firstReadingsInForce(changes).map((c: Change) => c.vendor), ["Beta"]);
+    assert.deepStrictEqual(firstReadingsInForce(changes, { includeResolved: true }).map((c: Change) => c.vendor), ["Alpha", "Beta"]);
+    const report = await settleFirstReadings({
+      changes,
+      offers: [],
+      today: "2026-09-28",
+      archive: { captures: async () => ({ captures: [] }), captureHtml: async () => ({ unavailable: "unused" }) },
+      readerForListing: () => async () => ({ status: "unclear" }),
+      fetchToday: async () => ({ ok: true, text: "TERMS=B" }),
+      textDayOf: () => "2026-02-10",
+      vendors: ["Alpha"],
+      includeResolved: true,
+    });
+    assert.deepStrictEqual(report.results.map((r: { vendor: string; resolution: string | null; outcome: string }) => [r.vendor, r.resolution, r.outcome]), [["Alpha", "retracted", "no_usable_capture"]]);
+  });
+});
