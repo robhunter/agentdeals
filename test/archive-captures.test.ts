@@ -366,6 +366,16 @@ describe("settling a first reading's difference against the page as the Archive 
     assert.deepStrictEqual(asked, ["https://example.com/pricing"]);
   });
 
+  it("says whether the capture it settled on already states the record's own new terms, without changing the outcome", async () => {
+    const settleWith = (recordTerms: string, termsOn: (day: string) => string) =>
+      settleAgainstCaptures({ url: "https://example.com/pricing", ourText: "A", recordTerms, textDay: "2026-02-15", todayText: "Free plan TERMS=B", today: TODAY, archive: archiveOf(ALL_YEAR, termsOn), read: termsReader().read });
+    const ours = await settleWith("B", () => "B");
+    assert.deepStrictEqual([ours.outcome, ours.record_terms_on_capture, ours.reads], ["ours", "confirmed", 3]);
+    const moved = await settleWith("B", (day) => (day <= "2026-04-10" ? "A" : "B"));
+    assert.deepStrictEqual([moved.outcome, moved.record_terms_on_capture], ["vendor_changed", "changed"]);
+    assert.ok(!("captureUsed" in moved));
+  });
+
   it("says the Archive did not answer, rather than that no capture exists", async () => {
     const archive = { captures: async () => ({ unavailable: "HTTP 503 after 4 attempts" }), captureHtml: async () => ({ unavailable: "unused" }) };
     const settled = await settle({ todayTerms: "B", termsOn: () => "A", archive }).result;
