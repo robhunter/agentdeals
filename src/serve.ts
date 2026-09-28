@@ -47,6 +47,7 @@ import { UNGRADED_IMPACT_COLOR, changeImpactColor, changeImpactLabel, changeImpa
 import { COMPARED_SERVICES_PLACEHOLDER, appendToCompiledFigureSlots, fillComparedServicesCount, markCompiledFigures, recordsSinceCompiled, replaceTimelineRows, staticHalfOf, timelineRecordsFor, vendorForSubject, vendorSubjectsOnCompiledPage, type CompiledFigureSubject, type CompiledFigureVendor, type CompiledFigureVerdict, type CompiledPageRecord } from "./compiled-figures.js";
 import { CHECK_ESTABLISHES, CHECK_SCOPE_CLASS, NO_CATALOGUE_RECORD_SOURCE, citedSourcesListHtml, figureSourceLinkHtml, freeTierSourceOf, freeTierSourceWeMayCite, pageQuoteHtml, readClauseHtml, serviceSourceMarkerHtml, uncitedSourceTagHtml, withCitedSources, type CitedService, type FreeTierSource } from "./source-citation.js";
 import { vendorHistorySentence } from "./vendor-history.js";
+import { guideBlurb, trackedChangesInQ1_2026 } from "./guide-blurbs.js";
 import { HETZNER_APRIL_CHANGES, HETZNER_CLOUD_PLANS, HETZNER_PRICES_READ, HETZNER_PRICE_SOURCE, HETZNER_SINGAPORE_EXAMPLE, cheapestOrderableHetznerPlan, hetznerEntryPriceClause, unorderableHetznerPlans } from "./hetzner-pricing.js";
 import { HUNDRED_GB_SCENARIO, HUNDRED_TB_SCENARIO, ONE_TO_ONE_SCENARIO, STORAGE_RATES_READ, STORAGE_SCALE_WORKLOADS, TEN_TO_ONE_SCENARIO, cheapestProviderAt, costAfterMonthlyEgressGrantFor, costliestProviderAt, egressAllowanceSentence, egressBillAfterMonthlyGrantFor, egressBillOnceOverAllowance, egressRatioWhereCostsMatch, fixedMonthlyGrantsSentence, monthlyEgressGrantGb, monthlyEgressGrantSentence, monthlyStorageCost, providersWithScalingEgressAllowance, rateCardFor, scaleCostFor } from "./storage-cost-model.js";
 import { changeTimelineDate, supersededLineups, supersessionNote } from "./change-lineup.js";
@@ -111,7 +112,7 @@ import { partitionAlternatives, partitionSubstitutes, type SubstitutesPartition,
 import { buildProductFunctions, functionMembers, functionDefinitions, functionMeaningSentence, admissionFor, splitByFunction, labelsNaming, FUNCTION_RESIDUE_COPY, type ProductFunction, FUNCTION_MEMBERSHIP_RULE, FUNCTION_SPLIT_RULE, FUNCTION_NAMING_RULE, FUNCTION_TITLE_RULE, FUNCTION_PICK_RULE } from "./product-function.js";
 import { resolveCuratedAlternatives, curatedAlternativesFor, addCuratedToPool } from "./curated-alternatives.js";
 import type { Agent, ChangeDateSource, DealChange, RiskCause, RatingWithheld, LinkUnreachable, Offer, StabilityClass, SubtypeLabel } from "./types.js";
-import { A_DATED_HEADING_MARKER, A_DATED_SECTION_MARKER, datedHeadingNoticeHtml, datedSectionNoticeHtml, namedOnceItsDateArrived, namedWhileAheadOf, namedWhileNotBefore, ANNOUNCED_BADGE, ANNOUNCED_HEADING, announcedIntro, changeDateLabel, changeEntryDateLabel, changeEntryLongDateLabel, changeDateClause, changeDatePublished, changeEventStartDate, capListSections, latestEventDate, offerExpiryAfter, feedEntryUpdated, undatedGroupHeading, UNDATED_TILE_LABEL, firstReadHeading, discoveryBatchNote, isoWeekOf, monthlyChangeSeries, changesInWindow, discoveryMonthSeriesHeading, periodComparisonSentence, DISCOVERED_DATE_PREFIX, EFFECTIVE_DATE_PREFIX, UNDATED_GROUP_NOTE, UNKNOWN_EFFECTIVE_DATE_MARKER, EFFECTIVE_MONTH_SERIES_NOTE, DISCOVERY_MONTH_SERIES_NOTE, weekRangeLabel, newestChangeInEffect, vendorPageLastUpdated } from "./change-dates.js";
+import { A_DATED_HEADING_MARKER, A_DATED_SECTION_MARKER, datedHeadingNoticeHtml, datedSectionNoticeHtml, namedOnceItsDateArrived, namedWhileAheadOf, namedWhileNotBefore, ANNOUNCED_BADGE, ANNOUNCED_HEADING, announcedIntro, changeDateLabel, changeEntryDateLabel, changeEntryLongDateLabel, changeDateClause, changeDatePublished, changeEventStartDate, capListSections, latestEventDate, offerExpiryAfter, feedEntryUpdated, undatedGroupHeading, UNDATED_TILE_LABEL, firstReadHeading, discoveryBatchNote, isoWeekOf, monthlyChangeSeries, discoveryMonthSeriesHeading, periodComparisonSentence, DISCOVERED_DATE_PREFIX, EFFECTIVE_DATE_PREFIX, UNDATED_GROUP_NOTE, UNKNOWN_EFFECTIVE_DATE_MARKER, EFFECTIVE_MONTH_SERIES_NOTE, DISCOVERY_MONTH_SERIES_NOTE, weekRangeLabel, newestChangeInEffect, vendorPageLastUpdated } from "./change-dates.js";
 import { changeFeedEntries, feedEntryFields, feedUpdatedTimestamp, changeFeedProvenanceNote, CHANGE_FEED_ENTRY_LIMIT, CHANGE_FEED_DESCRIPTION, CHANGE_FEED_NAMESPACE, CHANGE_FEED_NAMESPACE_PREFIX, channelUpdatedTimestamp, WEEKLY_FEED_POPULATION_NOTE, feedLinkTag, feedEntrySourceXml, digestSourceXml, PER_CHANGE_FEED, WEEKLY_DIGEST_FEED } from "./change-feed.js";
 import { FEED_CORRECTIONS, correctionEntriesXml } from "./feed-corrections.js";
 import { buildDay, emptyPageLastmod, entryDay, fallbackDay, httpDate, lastmodFor, newestLastmod, readPageLastmod, type PageLastmodLedger } from "./page-lastmod.js";
@@ -543,7 +544,7 @@ const dealChanges = loadDealChanges();
 const trackedChangeRecords = trackedChanges(dealChanges);
 const trackedChangeCount = trackedChangeRecords.length;
 
-const q1TrackedChanges = trackedChanges(changesInWindow(dealChanges, { start: "2026-01-01", end: "2026-03-31" }).dated);
+const q1TrackedChanges = trackedChangesInQ1_2026(dealChanges);
 const q1ChangeCount = q1TrackedChanges.length;
 const q1FreeTierRemovalCount = q1TrackedChanges.filter(c => c.change_type === "free_tier_removed").length;
 const q1LimitsReducedCount = q1TrackedChanges.filter(c => c.change_type === "limits_reduced").length;
@@ -6413,7 +6414,7 @@ interface AlternativesPageConfig {
   hubDesc: string;
 }
 
-const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
+const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
   {
     slug: "localstack-alternatives",
     title: "LocalStack CE Alternatives — Free and Open Source Options for 2026",
@@ -6422,7 +6423,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
       <p><strong>Floci</strong> has emerged as the primary community-recommended replacement — an MIT-licensed emulator supporting 20+ AWS services in a 90 MB Docker image with 24ms startup. For more specialized needs, there are also service-specific tools. Below are the best free and open-source alternatives, organized by which AWS services they replace.</p>`,
     tag: "localstack-alternative",
     primaryVendor: "LocalStack",
-    hubDesc: "LocalStack CE shuts down March 23, 2026 — compare 9 free open-source AWS emulators",
     serviceMatrixHtml: `
   <h2>AWS Service Coverage Comparison</h2>
   <p style="color:var(--text-muted);margin-bottom:1rem">Which AWS services each alternative covers. LocalStack CE supported 30+ services in a single tool — migration typically means combining 2-3 specialized alternatives.</p>
@@ -6501,7 +6501,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
       <p>This is one of the most impactful free tier removals in 2026 — Postman has millions of developer users. If your team relied on Postman's free plan for API development, here are the best free alternatives with collaboration and team-friendly features.</p>`,
     tag: "postman-alternative",
     primaryVendor: "Postman",
-    hubDesc: "Postman killed free team collaboration March 1, 2026 — 5 free API testing alternatives",
     serviceMatrixHtml: `
   <h2>Free Tier Comparison</h2>
   <p style="color:var(--text-muted);margin-bottom:1rem">How each alternative's free tier compares to what Postman offered. Postman's free plan previously supported 3 users with shared workspaces and collection sharing.</p>
@@ -6612,7 +6611,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">\u2705 = included in free tier &nbsp; \u2014 = not specified or requires paid plan. Scalr charges only for qualifying runs — users, workspaces, and resources are free.</p>`,
     tag: "terraform-alternative",
     primaryVendor: "HCP Terraform",
-    hubDesc: "HCP Terraform legacy plan ends March 31, 2026 — free IaC alternatives compared",
   },
   {
     slug: "hetzner-alternatives",
@@ -6622,7 +6620,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
       <p>If you're looking for budget-friendly alternatives with generous free tiers or credits, here are the best options across VPS/cloud providers, managed platforms, and serverless offerings.</p>`,
     tag: "hetzner-alternative",
     primaryVendor: "Hetzner",
-    hubDesc: "Hetzner raised prices twice in 2026 and its Cost-Optimized line is unavailable — cloud hosting alternatives with free tiers",
   },
   {
     slug: "freshping-alternatives",
@@ -6632,7 +6629,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
       <p>If you relied on Freshping for uptime monitoring, here are the best free alternatives — several match or exceed Freshping's 50-monitor free tier.</p>`,
     tag: "freshping-alternative",
     primaryVendor: "Freshping",
-    hubDesc: "Freshping shut down March 6, 2026 — 13 free uptime monitoring alternatives",
     serviceMatrixHtml: `
   <h2>Free Tier Comparison</h2>
   <p style="color:var(--text-muted);margin-bottom:1rem">How each alternative's free tier compares to what Freshping offered. Freshping's free plan included 50 monitors, 1-minute intervals, and public status pages.</p>
@@ -6703,7 +6699,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
       <p>If you're looking for a Heroku replacement with a generous free tier and similar git-push deployment experience, here are the best alternatives — all with the pricing data we hold in our index.</p>`,
     tag: "heroku-alternative",
     primaryVendor: "Heroku",
-    hubDesc: "Heroku removed free tier Nov 2022, entered sustaining mode Feb 2026 — 8 free PaaS options",
     serviceMatrixHtml: `
   <h2>Free Tier Comparison</h2>
   <p style="color:var(--text-muted);margin-bottom:1rem">How each alternative's free tier compares to what Heroku offered. Heroku's free dyno included 550 hours/month with automatic sleep after 30 minutes of inactivity.</p>
@@ -6775,7 +6770,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
       <p>Below are the best free Firebase alternatives, compared by <strong>what you actually get for free</strong> \u2014 exact storage, MAU, bandwidth, and function limits. Not marketing copy.</p>`,
     tag: "firebase-alternative",
     primaryVendor: "Firebase",
-    hubDesc: "Firebase Studio is closing (no new workspaces since June 22, 2026; shutdown March 22, 2027) + Spark forced Blaze migration — 7 BaaS alternatives",
     serviceMatrixHtml: `
   <h2>Free Tier Comparison</h2>
   <p style="color:var(--text-muted);margin-bottom:1rem">What you actually get for free on each platform. Firebase Spark is generous on paper but lacks billing caps on Blaze \u2014 one misconfigured query can cost hundreds.</p>
@@ -6848,7 +6842,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
       <p>Below are the best free CI/CD alternatives, compared by <strong>exact free tier limits</strong> \u2014 build minutes, concurrent jobs, storage, and platform support. For the full picture, see our <a href="/ci-cd-pricing">definitive CI/CD pricing comparison</a> covering 17+ tools across general, cloud-native, mobile, and self-hosted categories.</p>`,
     tag: "github-actions-alternative",
     primaryVendor: "GitHub Actions",
-    hubDesc: "GitHub postponed its self-hosted runner fee, so self-hosted runners stay free \u2014 10 free CI/CD alternatives compared",
     serviceMatrixHtml: `
   <h2>Free Tier Comparison</h2>
   <p style="color:var(--text-muted);margin-bottom:1rem">How each CI/CD platform\u2019s free tier compares. GitHub Actions\u2019 2,000 min/mo for private repos remains strong for GitHub-hosted runners \u2014 the new cost only applies to self-hosted runners.</p>
@@ -6940,7 +6933,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
       <p>Below are the best free alternatives to Cursor, compared by <strong>what you actually get for free</strong> — exact limits, open-source status, and what each tool is best at.</p>`,
     tag: "cursor-alternative",
     primaryVendor: "Cursor",
-    hubDesc: "Cursor credit-based pricing drives alternatives search — 8 free AI coding tools compared",
     serviceMatrixHtml: `
   <h2>Free Tier Comparison</h2>
   <p style="color:var(--text-muted);margin-bottom:1rem">What you actually get for free on each AI coding tool. Open-source tools (Cline, Aider) have no vendor limits — you pay only for the LLM API you choose.</p>
@@ -7033,7 +7025,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     <p>The good news: the monitoring landscape in 2026 offers strong free tiers across every observability need. Full-platform alternatives (Grafana Cloud, New Relic, Middleware.io), specialized tools (Sentry for errors, Axiom for logs), and battle-tested open-source options (Prometheus, Jaeger) can replace parts or all of a Datadog setup — often at zero cost for small-to-medium workloads.</p>`,
     tag: "datadog-alternative",
     primaryVendor: "Datadog",
-    hubDesc: "Unpredictable pricing drives developer search — 12 free monitoring and observability alternatives compared",
     serviceMatrixHtml: `
   <h2>Free Tier Comparison</h2>
   <p style="color:var(--text-muted);margin-bottom:1rem">What you actually get for free on each platform. Datadog's free tier is one of the most restrictive in the category — most alternatives offer significantly more.</p>
@@ -7154,7 +7145,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     <p>The good news: the deployment landscape in 2026 is competitive. Full-featured platforms (Cloudflare Pages, Netlify) offer unlimited bandwidth or generous credits. Container-based platforms (Railway, Render, Fly.io) give you more control. Edge-first options (Deno Deploy, Cloudflare Workers) optimize for performance. And self-hosted tools (Coolify) eliminate hosting costs entirely if you have your own server.</p>`,
     tag: "vercel-alternative",
     primaryVendor: "Vercel",
-    hubDesc: "Hobby plan limits and $20/seat Pro pricing drive alternatives search — 10 free deployment platforms compared",
     serviceMatrixHtml: `
   <h2>Free Tier Comparison</h2>
   <p style="color:var(--text-muted);margin-bottom:1rem">What you actually get for free on each platform. Vercel's hobby tier is competitive but limited — several alternatives offer more bandwidth, builds, or compute for free.</p>
@@ -7261,7 +7251,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     <p>The authentication landscape in 2026 offers real competition. Managed platforms (Clerk, WorkOS, Stytch) provide modern DX with generous free tiers. Open-source solutions (Keycloak, FusionAuth, Ory, Logto) give you unlimited users when self-hosted. And BaaS platforms (Supabase, Firebase) include auth as part of a broader free tier. The right choice depends on whether you prioritize DX, cost, or control.</p>`,
     tag: "auth0-alternative",
     primaryVendor: "Auth0",
-    hubDesc: "B2C paid plans start at $35/mo (Essentials) and $240/mo (Professional) — 9 free authentication platforms compared",
     serviceMatrixHtml: `
   <h2>Free Tier Comparison</h2>
   <p style="color:var(--text-muted);margin-bottom:1rem">What you actually get for free on each platform. Auth0's 25K MAU free tier is competitive, but the jump to paid is the steepest in the industry.</p>
@@ -7380,7 +7369,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     <p>The database landscape in 2026 offers compelling alternatives across every use case: serverless Postgres with branching (Neon), distributed SQL (CockroachDB), edge SQLite (Turso, D1), reactive backends (Convex), and full BaaS platforms (Supabase, Firebase, Appwrite). Most offer significantly more free storage than MongoDB Atlas.</p>`,
     tag: "mongodb-alternative",
     primaryVendor: "MongoDB Atlas",
-    hubDesc: "512 MB free tier + SSPL license drive alternatives search — 10 free databases compared",
     serviceMatrixHtml: `
   <h2>Free Tier Comparison</h2>
   <p style="color:var(--text-muted);margin-bottom:1rem">What you actually get for free on each database. MongoDB Atlas gives you 512 MB on a shared cluster — most alternatives offer 5-15x more storage.</p>
@@ -7491,7 +7479,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     <p>The 2026 landscape offers strong options: <strong>Upstash</strong> provides serverless Redis-compatible caching with 500K commands/month free. <strong>Valkey</strong> is a drop-in BSD-3 fork maintained by the Linux Foundation. <strong>DragonflyDB</strong> claims 25x better throughput. <strong>Momento</strong> offers zero-infrastructure serverless caching. And established options like <strong>Memcached</strong> and <strong>KeyDB</strong> remain fully open-source.</p>`,
     tag: "redis-alternative",
     primaryVendor: "Redis Cloud",
-    hubDesc: "Redis's move to RSALv2/SSPLv1 (AGPLv3 added in Redis 8) + 30 MB free tier — 8 open-source and managed alternatives compared",
     serviceMatrixHtml: `
   <h2>Free Tier Comparison</h2>
   <p style="color:var(--text-muted);margin-bottom:1rem">What you actually get for free on each caching/key-value platform. Redis Cloud gives you 30 MB on a shared instance — most alternatives offer dramatically more.</p>
@@ -7592,7 +7579,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "ai-free-tier",
     primaryVendor: "OpenAI",
-    hubDesc: "Compare 65 free AI APIs, LLM inference, vector databases, and coding tools — exact limits and rate caps",
   },
   {
     slug: "database-alternatives",
@@ -7601,7 +7587,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "database-alternative",
     primaryVendor: "Supabase",
-    hubDesc: "Compare 30+ free databases by type — Postgres, document, key-value, edge, graph, vector, and time-series",
   },
   {
     slug: "hosting-alternatives",
@@ -7610,7 +7595,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "hosting-alternative",
     primaryVendor: "Heroku",
-    hubDesc: "Compare 30+ free hosting options by type — PaaS, static/JAMstack, serverless, containers, VPS, and edge/CDN",
   },
   {
     slug: "monitoring-alternatives",
@@ -7619,7 +7603,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "monitoring-alternative",
     primaryVendor: "Datadog",
-    hubDesc: "Compare 70+ free monitoring tools by type — APM, uptime, logs, error tracking, and infrastructure",
   },
   {
     slug: "email-service-alternatives",
@@ -7630,7 +7613,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     <p>Below are the best free email services for developers in 2026, compared by volume limits, API quality, and what you actually get for free.</p>`,
     tag: "email-service-alternative",
     primaryVendor: "SendGrid",
-    hubDesc: "SendGrid retired its free plan in 2025 — 8 free transactional email alternatives compared",
     serviceMatrixHtml: `
   <h2>Free Tier Comparison</h2>
   <p style="color:var(--text-muted);margin-bottom:1rem">What you actually get for free on each email platform. SendGrid has no free plan, only a 60-day trial at 100 emails a day — most alternatives offer dramatically more.</p>
@@ -7731,7 +7713,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "ci-cd-hub",
     primaryVendor: "GitHub Actions",
-    hubDesc: "35+ free CI/CD tools compared — build minutes, runners, and pipelines by type (general, cloud-native, mobile, IaC)",
   },
   {
     slug: "security-alternatives",
@@ -7740,7 +7721,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "security-hub",
     primaryVendor: "Snyk",
-    hubDesc: "100+ free security tools compared — SAST/DAST, secret scanning, dependency analysis, container security, and identity/auth",
   },
   {
     slug: "storage-alternatives",
@@ -7749,7 +7729,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "storage-hub",
     primaryVendor: "Cloudflare R2",
-    hubDesc: "55+ free cloud storage tools compared — object storage, media/image CDN, file hosting, and general-purpose storage",
   },
   {
     slug: "testing-alternatives",
@@ -7758,7 +7737,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "testing-hub",
     primaryVendor: "Cypress Cloud",
-    hubDesc: "45+ free testing tools compared — browser, visual regression, load, E2E, API, and code coverage",
   },
   {
     slug: "analytics-alternatives",
@@ -7767,7 +7745,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "analytics-hub",
     primaryVendor: "PostHog",
-    hubDesc: "45+ free analytics tools compared — product analytics, web analytics, event tracking, and data infrastructure",
   },
   {
     slug: "ai-ml-alternatives",
@@ -7776,7 +7753,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "ai-ml-hub",
     primaryVendor: "OpenAI",
-    hubDesc: "65+ AI/ML tools and their free tiers compared — LLM APIs, AI coding assistants, ML platforms, observability, and specialized AI services",
   },
   {
     slug: "design-alternatives",
@@ -7785,7 +7761,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "design-hub",
     primaryVendor: "Figma",
-    hubDesc: "100+ free design tools compared — UI design, prototyping, component libraries, icons, stock assets, and color tools",
   },
   {
     slug: "email-alternatives",
@@ -7794,7 +7769,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "email-hub",
     primaryVendor: "Resend",
-    hubDesc: "59+ free email tools compared — transactional APIs, marketing platforms, verification services, forwarding, and email infrastructure",
   },
   {
     slug: "project-management-alternatives",
@@ -7803,7 +7777,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "pm-hub",
     primaryVendor: "Linear",
-    hubDesc: "93+ free project management tools compared — issue tracking, kanban boards, team chat, video conferencing, scheduling, and knowledge management",
   },
   {
     slug: "ide-code-editors-alternatives",
@@ -7812,7 +7785,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "ide-hub",
     primaryVendor: "Visual Studio Code",
-    hubDesc: "59+ free IDEs and coding tools compared — desktop editors, cloud IDEs, AI coding assistants, AI app builders, and specialized development environments",
   },
   {
     slug: "free-llm-apis",
@@ -7821,7 +7793,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "llm-api-hub",
     primaryVendor: "OpenAI",
-    hubDesc: "25+ LLM API providers and their free tiers compared — proprietary model APIs, open-model inference platforms, and AI gateways with exact rate limits",
   },
   {
     slug: "api-development-alternatives",
@@ -7830,7 +7801,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "api-dev-hub",
     primaryVendor: "Postman",
-    hubDesc: "39+ free API development tools compared — REST/GraphQL clients, mocking, documentation, marketplaces, and integration platforms",
   },
   {
     slug: "q1-2026-developer-pricing-report",
@@ -7839,7 +7809,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "q1-report",
     primaryVendor: "AgentDeals",
-    hubDesc: `${q1ChangeCount} pricing changes in Q1 2026 — ${q1FreeTierRemovalCount} free tiers removed, narrative analysis, category breakdown, monthly timeline, Cloudflare counter-trend, Q2 outlook`,
   },
   {
     slug: "hetzner-pricing-2026",
@@ -7848,7 +7817,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "hetzner-pricing-analysis",
     primaryVendor: "Hetzner",
-    hubDesc: "Hetzner's 2026 price increases analysed — every cloud plan priced and its availability, impact assessment, 8+ alternatives compared",
   },
   {
     slug: "team-collaboration-alternatives",
@@ -7857,7 +7825,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "collab-hub",
     primaryVendor: "Slack",
-    hubDesc: "60+ free team collaboration tools compared — chat, video conferencing, documentation, scheduling, and async communication",
   },
   {
     slug: "free-startup-stack",
@@ -7866,7 +7833,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "startup-stack-guide",
     primaryVendor: "Vercel",
-    hubDesc: "Complete free SaaS infrastructure stack — 10 categories with recommended picks, scaling guidance, and stability ratings",
   },
   {
     slug: "free-ai-stack",
@@ -7875,7 +7841,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "ai-stack-guide",
     primaryVendor: "Groq",
-    hubDesc: "Complete free AI/ML development stack — 10 categories with recommended picks, scaling guidance, and stability ratings",
   },
   {
     slug: "free-devops-stack",
@@ -7884,7 +7849,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "devops-stack-guide",
     primaryVendor: "GitHub Actions",
-    hubDesc: "Complete free DevOps infrastructure stack — 10 categories with recommended picks, scaling guidance, and stability ratings",
   },
   {
     slug: "free-frontend-stack",
@@ -7893,7 +7857,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "frontend-stack-guide",
     primaryVendor: "Cloudflare Pages",
-    hubDesc: "Complete free frontend/Jamstack development stack — 10 categories with recommended picks, scaling guidance, and stability ratings",
   },
   {
     slug: "free-nextjs-stack",
@@ -7902,7 +7865,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "nextjs-stack-guide",
     primaryVendor: "Vercel",
-    hubDesc: "Complete free Next.js full-stack infrastructure — 10 layers with recommended picks, growth cost analysis, and stability ratings",
   },
   {
     slug: "free-django-stack",
@@ -7911,7 +7873,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "django-stack-guide",
     primaryVendor: "Railway",
-    hubDesc: "Complete free Django/Python infrastructure — 10 layers with recommended picks, growth cost analysis, and stability ratings",
   },
   {
     slug: "free-fastapi-stack",
@@ -7920,7 +7881,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "fastapi-stack-guide",
     primaryVendor: "Railway",
-    hubDesc: "Complete free FastAPI/Python infrastructure — 10 layers with recommended picks, growth cost analysis, and stability ratings",
   },
   {
     slug: "free-go-stack",
@@ -7929,7 +7889,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "go-stack-guide",
     primaryVendor: "Railway",
-    hubDesc: "Complete free Go/Golang infrastructure — 10 layers with recommended picks, growth cost analysis, and stability ratings",
   },
   {
     slug: "free-saas-stack",
@@ -7938,7 +7897,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "saas-stack-guide",
     primaryVendor: "Neon",
-    hubDesc: "Complete free SaaS infrastructure stack — 11 categories with opinionated picks, growth cost analysis at 4 scale points, and Stripe payments integration",
   },
   {
     slug: "q2-pricing-preview-2026",
@@ -7947,7 +7905,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "q2-preview",
     primaryVendor: "Hetzner",
-    hubDesc: "Q2 2026 pricing preview — upcoming changes, deadlines, impact analysis, and what to watch",
   },
   {
     slug: "google-developer-program-2026",
@@ -7956,7 +7913,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "gdp-pricing-analysis",
     primaryVendor: "Google",
-    hubDesc: "Google Developer Program Premium was folded into Google AI Pro and AI Ultra — current prices, Cloud credits and free alternatives",
   },
   {
     slug: "supabase-vs-firebase",
@@ -7965,7 +7921,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "supabase-vs-firebase",
     primaryVendor: "Supabase",
-    hubDesc: "Deep comparison of Supabase and Firebase free tiers — database, auth, storage, functions, and scaling costs",
   },
   {
     slug: "vercel-vs-netlify",
@@ -7974,7 +7929,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "vercel-vs-netlify",
     primaryVendor: "Vercel",
-    hubDesc: "Deep comparison of Vercel and Netlify free tiers — bandwidth, functions, builds, commercial use, and scaling costs",
   },
   {
     slug: "neon-vs-supabase",
@@ -7983,7 +7937,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "neon-vs-supabase",
     primaryVendor: "Neon",
-    hubDesc: "Deep comparison of Neon and Supabase free tiers — branching, auth, storage, functions and scaling costs",
   },
   {
     slug: "railway-vs-render",
@@ -7992,7 +7945,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "railway-vs-render",
     primaryVendor: "Railway",
-    hubDesc: "Deep comparison of Railway and Render free tiers — usage-based vs fixed pricing, databases, sleep behavior, and scaling costs",
   },
   {
     slug: "datadog-vs-new-relic",
@@ -8001,7 +7953,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "datadog-vs-new-relic",
     primaryVendor: "Datadog",
-    hubDesc: "Deep comparison of Datadog and New Relic free tiers — per-host vs per-GB pricing, APM, logs, synthetics, and scaling costs",
   },
   {
     slug: "free-tier-risk",
@@ -8010,7 +7961,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "free-tier-risk",
     primaryVendor: "AgentDeals",
-    hubDesc: `Predictive risk analysis for ${riskEntries.length} developer free tiers — grades dated and scored against what happened next, category heatmap, pattern analysis, counter-trends`,
   },
   {
     slug: "stability",
@@ -8019,7 +7969,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "stability",
     primaryVendor: "AgentDeals",
-    hubDesc: "Visual stability dashboard — which developer free tiers are safe, watched, volatile, or improving",
   },
   {
     slug: "hcp-terraform-migration",
@@ -8028,7 +7977,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "hcp-terraform-migration",
     primaryVendor: "HCP Terraform",
-    hubDesc: "Step-by-step HCP Terraform migration guide — decision matrix, 5 migration paths, March 31 deadline",
   },
   {
     slug: "terraform-cloud-free-tier-removed",
@@ -8037,7 +7985,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "terraform-free-tier-removed",
     primaryVendor: "HCP Terraform",
-    hubDesc: "Terraform Cloud free tier removal guide — cost analysis, 8 alternatives compared, migration paths for affected teams",
   },
   {
     slug: "gemini-api-pricing-2026",
@@ -8046,7 +7993,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "gemini-api-pricing-2026",
     primaryVendor: "Google Gemini API",
-    hubDesc: "Gemini API billing guide — spend caps ($250-$100K+/mo), prepaid billing, 3.1 Pro paid-only, free tier changes, 8-provider comparison",
   },
   {
     slug: "free-tier-tracker",
@@ -8055,7 +8001,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "free-tier-tracker",
     primaryVendor: "LocalStack",
-    hubDesc: "Q1 2026 free tier erosion report — which developer free tiers were removed, reduced, or expanded",
   },
   {
     slug: "startup-credits",
@@ -8064,7 +8009,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "startup-credits",
     primaryVendor: "AWS Activate",
-    hubDesc: "The definitive startup credits comparison — 15+ programs across cloud infrastructure, fintech, and developer tools with eligibility requirements, vesting schedules, and stacking strategies",
   },
   {
     slug: "ai-coding-pricing-2026",
@@ -8073,7 +8017,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "ai-coding-pricing-2026",
     primaryVendor: "Cursor",
-    hubDesc: "AI coding tools pricing comparison — free tiers, pro plans, power tiers, and recent March 2026 pricing changes",
   },
   {
     slug: "ai-coding-tools-pricing",
@@ -8082,7 +8025,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "ai-coding-tools-pricing",
     primaryVendor: "Cursor",
-    hubDesc: "The definitive AI coding tools comparison — 17 tools across IDE, CLI, cloud agent, and app builder categories with free tier analysis and cost breakdowns",
   },
   {
     slug: "ci-cd-pricing",
@@ -8091,7 +8033,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "ci-cd-pricing",
     primaryVendor: "GitHub Actions",
-    hubDesc: "The definitive CI/CD pricing comparison — 17+ tools across general, cloud-native, mobile, and self-hosted categories with free tier analysis and cost breakdowns",
   },
   {
     slug: "database-pricing",
@@ -8100,7 +8041,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "database-pricing",
     primaryVendor: "Supabase",
-    hubDesc: "The definitive database pricing comparison — 25+ services across managed Postgres, serverless/edge, document/NoSQL, cloud provider, and specialized categories with free tier analysis and cost breakdowns",
   },
   {
     slug: "vector-database-pricing",
@@ -8109,7 +8049,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "vector-database-pricing",
     primaryVendor: "Pinecone",
-    hubDesc: "The definitive vector database pricing comparison — 11 services across dedicated cloud, open-source, pgvector, embedded, and serverless categories with free tier analysis for RAG/AI",
   },
   {
     slug: "hosting-pricing",
@@ -8118,7 +8057,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "hosting-pricing",
     primaryVendor: "Railway",
-    hubDesc: "The definitive cloud hosting pricing comparison — 15 platforms across PaaS, edge/serverless, full-featured, and static categories with free tier analysis, pricing gotchas, and Railway referral",
   },
   {
     slug: "llm-api-pricing",
@@ -8127,7 +8065,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "llm-api-pricing",
     primaryVendor: "OpenAI",
-    hubDesc: "Which LLM APIs have a genuinely free tier or free credits — frontier labs, inference providers, open-source hosts, and specialized services with free tier analysis and token cost breakdowns",
   },
   {
     slug: "aws-free-tier-2026",
@@ -8136,7 +8073,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "aws-free-tier-2026",
     primaryVendor: "AWS",
-    hubDesc: "Complete AWS free tier guide — every free service, real limits, hidden costs, and Aurora PostgreSQL Serverless (new March 2026)",
   },
   {
     slug: "gcp-free-tier-2026",
@@ -8145,7 +8081,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "gcp-free-tier-2026",
     primaryVendor: "Google Cloud",
-    hubDesc: "Complete GCP free tier guide — 20+ always-free products, $300 trial, hidden costs, and comparison with AWS and Azure",
   },
   {
     slug: "azure-free-tier-2026",
@@ -8154,7 +8089,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "azure-free-tier-2026",
     primaryVendor: "Azure",
-    hubDesc: "Complete Azure free tier guide — 65+ always-free services, $200 trial, Cosmos DB lifetime free tier, and comparison with AWS and GCP",
   },
   {
     slug: "digitalocean-free-tier-2026",
@@ -8163,7 +8097,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "digitalocean-free-tier-2026",
     primaryVendor: "DigitalOcean",
-    hubDesc: "Complete DigitalOcean guide — $5 free credits, App Platform free tier, per-second billing, and Big Three comparison",
   },
   {
     slug: "cloud-free-tier-comparison-2026",
@@ -8172,7 +8105,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "cloud-free-tier-comparison-2026",
     primaryVendor: "AWS",
-    hubDesc: "Side-by-side comparison of AWS, GCP, Azure, and DigitalOcean free tiers — compute, databases, serverless, storage, startup credits, and hidden costs",
   },
   {
     slug: "database-free-tier-comparison-2026",
@@ -8181,7 +8113,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "database-free-tier-comparison-2026",
     primaryVendor: "Supabase",
-    hubDesc: "Side-by-side comparison of 10+ database free tiers — Postgres, BaaS, edge, key-value, and vector databases compared",
   },
   {
     slug: "cicd-free-tier-comparison-2026",
@@ -8190,7 +8121,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "cicd-free-tier-comparison-2026",
     primaryVendor: "GitHub Actions",
-    hubDesc: "Side-by-side comparison of 10+ CI/CD free tiers — build minutes, concurrency, runners, storage, and hidden costs compared",
   },
   {
     slug: "serverless-free-tier-comparison-2026",
@@ -8199,7 +8129,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "serverless-free-tier-comparison-2026",
     primaryVendor: "Cloudflare Workers",
-    hubDesc: "Side-by-side comparison of 10+ serverless free tiers — invocations, compute time, cold starts, billing models, and hidden costs compared",
   },
   {
     slug: "auth-comparison-2026",
@@ -8208,7 +8137,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "auth-comparison-2026",
     primaryVendor: "Auth0",
-    hubDesc: "Side-by-side comparison of 20+ auth free tiers — MAU/MRU limits, SSO, M2M tokens, agentic AI auth, self-hosted options, and growth cost traps",
   },
   {
     slug: "monitoring-comparison-2026",
@@ -8217,7 +8145,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "monitoring-comparison-2026",
     primaryVendor: "Datadog",
-    hubDesc: "Side-by-side comparison of 25+ monitoring free tiers — data ingest, retention, APM, error tracking, uptime, and the observability cost trap at 10 to 500 hosts",
   },
   {
     slug: "email-comparison-2026",
@@ -8226,7 +8153,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "email-comparison-2026",
     primaryVendor: "SendGrid",
-    hubDesc: "Side-by-side comparison of 20+ email free tiers — SendGrid exodus migration guide, transactional vs marketing breakdown, growth cost at 10K-1M emails/month, deliverability traps",
   },
   {
     slug: "storage-comparison-2026",
@@ -8235,7 +8161,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "storage-comparison-2026",
     primaryVendor: "Cloudflare R2",
-    hubDesc: "Side-by-side comparison of 15+ storage and CDN free tiers — S3 egress tax breakdown, zero-egress providers, media CDN, self-hosted options, and scaling costs at 100GB/1TB/10TB/100TB",
   },
   {
     slug: "analytics-free-tier-comparison-2026",
@@ -8244,7 +8169,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "analytics-free-tier-comparison-2026",
     primaryVendor: "PostHog",
-    hubDesc: "Side-by-side comparison of 15+ analytics free tiers — event limits, session replays, feature flags, data retention, and the analytics cost trap at scale",
   },
   {
     slug: "testing-free-tier-comparison-2026",
@@ -8253,7 +8177,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "testing-free-tier-comparison-2026",
     primaryVendor: "Playwright",
-    hubDesc: "Side-by-side comparison of 15+ testing tool free tiers — E2E, visual regression, load testing, API testing, local dev, and the testing cost trap at scale",
   },
   {
     slug: "api-development-free-tier-comparison-2026",
@@ -8262,7 +8185,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "api-development-free-tier-comparison-2026",
     primaryVendor: "Postman",
-    hubDesc: "Side-by-side comparison of 12+ API development tool free tiers — users, collections, requests, mock servers, local-first vs cloud, and the API tool migration trap",
   },
   {
     slug: "hosting-free-tier-comparison-2026",
@@ -8271,7 +8193,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "hosting-free-tier-comparison-2026",
     primaryVendor: "Vercel",
-    hubDesc: "Side-by-side comparison of 12+ hosting free tiers — bandwidth, compute, build minutes, cold starts, commercial use restrictions, and the hosting cost trap at scale",
   },
   {
     slug: "security-free-tier-comparison-2026",
@@ -8280,7 +8201,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "security-free-tier-comparison-2026",
     primaryVendor: "Snyk",
-    hubDesc: "Side-by-side comparison of 20+ developer security tool free tiers — SAST, SCA, DAST, secrets detection, container security, and the DevSecOps cost trap at scale",
   },
   {
     slug: "state-of-free-tiers",
@@ -8289,7 +8209,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "state-of-free-tiers",
     primaryVendor: "AgentDeals",
-    hubDesc: `Data-driven analysis of ${offers.length.toLocaleString()} developer tool free tiers across ${categories.length} categories — trends, risks, and recommendations`,
   },
   {
     slug: "openai-assistants-alternatives",
@@ -8298,7 +8217,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "openai-assistants-alternative",
     primaryVendor: "OpenAI",
-    hubDesc: "OpenAI Assistants API sunset August 2026 — migration paths, free AI API alternatives, and cost comparison",
   },
   {
     slug: "openai-assistants-migration-2026",
@@ -8307,7 +8225,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "openai-assistants-migration-2026",
     primaryVendor: "OpenAI Assistants",
-    hubDesc: "Comprehensive Assistants API migration guide — feature map, complexity assessment, decision framework, agent frameworks, wire-compatible bridges, cost comparison",
   },
   {
     slug: "openai-assistants-migration",
@@ -8316,7 +8233,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "openai-assistants-alternative",
     primaryVendor: "OpenAI",
-    hubDesc: "OpenAI Assistants API shutdown guide — migration cost comparison for Responses API, Azure, Anthropic, Gemini, and open-source alternatives",
   },
   {
     slug: "firebase-studio-shutdown",
@@ -8325,7 +8241,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "firebase-studio-alternative",
     primaryVendor: "Firebase Studio",
-    hubDesc: "Firebase Studio shutdown guide — free cloud IDE alternatives with compute hours, storage, and collaboration limits compared",
   },
   {
     slug: "tenor-alternatives",
@@ -8334,7 +8249,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "tenor-alternative",
     primaryVendor: "Google Tenor API",
-    hubDesc: "Tenor API shutdown June 2026 — GIF API alternatives with free tier limits, migration code examples, and platform impact analysis",
   },
   {
     slug: "shutdowns",
@@ -8343,7 +8257,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "shutdown-tracker",
     primaryVendor: "AgentDeals",
-    hubDesc: "Living tracker of developer tool shutdowns, API sunsets, and deprecation deadlines in 2026 — with migration paths and alternatives",
   },
   {
     slug: "agent-payments",
@@ -8352,7 +8265,6 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "agent-payments",
     primaryVendor: "Cloudflare",
-    hubDesc: "Directory of developer services accepting AI agent payments via x402 and Stripe MPP — per-call pricing, free tiers, and protocol comparison",
   },
   {
     slug: "aws-app-runner-migration",
@@ -8361,9 +8273,10 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "app-runner-shutdown",
     primaryVendor: "AWS",
-    hubDesc: "AWS App Runner closed to new customers April 30, 2026 — migration guide to ECS Express Mode and container deployment alternatives with pricing comparison",
   },
 ];
+
+const ALTERNATIVES_PAGES: AlternativesPageConfig[] = ALTERNATIVES_PAGE_CONTENT.map(page => ({ ...page, hubDesc: guideBlurb(page.slug) }));
 
 const alternativesPageMap = new Map<string, AlternativesPageConfig>();
 const editorialByVendor = new Map<string, AlternativesPageConfig>();
@@ -8780,12 +8693,11 @@ interface IntegrationGuide {
   crossLinks: { href: string; label: string }[];
 }
 
-const INTEGRATION_GUIDES: IntegrationGuide[] = [
+const INTEGRATION_GUIDE_CONTENT: Omit<IntegrationGuide, "hubDesc">[] = [
   {
     slug: "langchain",
     title: "Using AgentDeals with LangChain — MCP Integration Guide",
     metaDesc: "Connect AgentDeals MCP tools to LangChain agents via langchain-mcp-adapters. Search 1,600+ developer deals, compare vendors, and track pricing changes from Python.",
-    hubDesc: "Connect AgentDeals to LangChain agents via langchain-mcp-adapters — Python code examples and multi-agent workflows",
     framework: "LangChain",
     intro: `<p><strong>LangChain</strong> is the most popular Python framework for building LLM-powered applications. With <code>langchain-mcp-adapters</code>, you can connect any MCP server — including AgentDeals — as a tool provider for your LangChain agents.</p>
 <p>AgentDeals provides <strong>${MCP_TOOL_COUNT} MCP tools</strong> with data on <strong>${offers.length.toLocaleString()}+ developer deals</strong> across <strong>${categories.length} categories</strong>: ${mcpToolNameList().replace(/`([a-z_]+)`/g, "<code>$1</code>")}.</p>`,
@@ -8868,7 +8780,6 @@ print(result["messages"][-1].content)`,
     slug: "crewai",
     title: "Using AgentDeals with CrewAI — MCP Integration Guide",
     metaDesc: "Connect AgentDeals MCP tools to CrewAI agents via native mcps field. Multi-agent pricing research workflows with search, compare, and track capabilities.",
-    hubDesc: "Connect AgentDeals to CrewAI agents via native mcps configuration — multi-agent pricing research workflows",
     framework: "CrewAI",
     intro: `<p><strong>CrewAI</strong> is a popular framework for orchestrating multi-agent AI workflows. It has <strong>native MCP support</strong> via the <code>mcps</code> field on agents, making it easy to give your crew access to AgentDeals tools.</p>
 <p>AgentDeals provides <strong>${MCP_TOOL_COUNT} MCP tools</strong> with data on <strong>${offers.length.toLocaleString()}+ developer deals</strong> across <strong>${categories.length} categories</strong>: ${mcpToolNameList().replace(/`([a-z_]+)`/g, "<code>$1</code>")}.</p>`,
@@ -8983,7 +8894,6 @@ print(result)`,
     slug: "n8n",
     title: "Using AgentDeals with n8n — MCP Integration Guide",
     metaDesc: "Connect AgentDeals MCP tools to n8n workflows via the MCP Server Trigger node. No-code pricing monitoring, vendor comparison, and stack planning automation.",
-    hubDesc: "Connect AgentDeals to n8n via MCP Server Trigger node — no-code pricing monitoring and vendor comparison workflows",
     framework: "n8n",
     intro: `<p><strong>n8n</strong> is a popular open-source workflow automation platform. With its <strong>MCP Server Trigger</strong> node, you can connect AgentDeals tools to n8n workflows — combining pricing intelligence with 400+ other integrations (Slack, email, databases, CRMs).</p>
 <p>AgentDeals provides <strong>${MCP_TOOL_COUNT} MCP tools</strong> with data on <strong>${offers.length.toLocaleString()}+ developer deals</strong> across <strong>${categories.length} categories</strong>: ${mcpToolNameList().replace(/`([a-z_]+)`/g, "<code>$1</code>")}.</p>`,
@@ -9066,7 +8976,6 @@ Email node:
     slug: "vercel-ai-sdk",
     title: "Using AgentDeals with Vercel AI SDK — MCP Integration Guide",
     metaDesc: "Connect AgentDeals MCP tools to Vercel AI SDK via experimental_createMCPClient(). Build React/Next.js apps with pricing intelligence and vendor comparison.",
-    hubDesc: "Connect AgentDeals to Vercel AI SDK via experimental_createMCPClient() — React/Next.js code examples",
     framework: "Vercel AI SDK",
     intro: `<p>The <strong>Vercel AI SDK</strong> is the leading JavaScript/TypeScript framework for building AI-powered applications, especially in the React and Next.js ecosystem. It supports MCP via <code>experimental_createMCPClient()</code>, allowing you to use AgentDeals tools in your AI applications.</p>
 <p>AgentDeals provides <strong>${MCP_TOOL_COUNT} MCP tools</strong> with data on <strong>${offers.length.toLocaleString()}+ developer deals</strong> across <strong>${categories.length} categories</strong>: ${mcpToolNameList().replace(/`([a-z_]+)`/g, "<code>$1</code>")}.</p>`,
@@ -9193,6 +9102,8 @@ await mcpClient.close();`,
     ],
   },
 ];
+
+const INTEGRATION_GUIDES: IntegrationGuide[] = INTEGRATION_GUIDE_CONTENT.map(guide => ({ ...guide, hubDesc: guideBlurb(`guides/${guide.slug}`) }));
 
 const integrationGuideMap = new Map<string, IntegrationGuide>();
 for (const guide of INTEGRATION_GUIDES) {
