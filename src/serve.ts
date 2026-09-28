@@ -35171,6 +35171,8 @@ interface ComparisonPageMeta {
   catalogueCategory: string | null;
   shortName: string;
   relatedSlugs: string[];
+  whatTheTableGives?: string;
+  costSectionName?: string;
 }
 
 const comparisonPagesMeta: ComparisonPageMeta[] = [
@@ -35186,7 +35188,7 @@ const comparisonPagesMeta: ComparisonPageMeta[] = [
   { slug: "analytics-free-tier-comparison-2026", subject: "Analytics", questionNoun: "analytics", catalogueCategory: "Analytics", shortName: "Analytics", relatedSlugs: ["monitoring-comparison-2026", "email-comparison-2026", "testing-free-tier-comparison-2026"] },
   { slug: "api-development-free-tier-comparison-2026", subject: "API Development", questionNoun: "API development", catalogueCategory: "API Development", shortName: "API Development", relatedSlugs: ["testing-free-tier-comparison-2026", "monitoring-comparison-2026", "cicd-free-tier-comparison-2026"] },
   { slug: "security-free-tier-comparison-2026", subject: "Security", questionNoun: "security", catalogueCategory: "Security", shortName: "Security", relatedSlugs: ["auth-comparison-2026", "monitoring-comparison-2026", "cicd-free-tier-comparison-2026"] },
-  { slug: "hosting-free-tier-comparison-2026", subject: "Cloud Hosting", questionNoun: "cloud hosting", catalogueCategory: "Cloud Hosting", shortName: "Hosting", relatedSlugs: ["cloud-free-tier-comparison-2026", "serverless-free-tier-comparison-2026", "cicd-free-tier-comparison-2026"] },
+  { slug: "hosting-free-tier-comparison-2026", subject: "Cloud Hosting", questionNoun: "cloud hosting", catalogueCategory: "Cloud Hosting", shortName: "Hosting", whatTheTableGives: "Our comparison table gives each provider's published limits; figures marked ~ are estimates.", costSectionName: "The Hosting Cost Trap", relatedSlugs: ["cloud-free-tier-comparison-2026", "serverless-free-tier-comparison-2026", "cicd-free-tier-comparison-2026"] },
 ];
 
 const comparisonMetaBySlug = new Map(comparisonPagesMeta.map(m => [m.slug, m]));
@@ -35252,7 +35254,7 @@ export function comparisonFaqItems(slug: string, forJsonLd = false): FaqItem[] {
     },
     {
       q: `How do ${noun} free tiers compare on limits?`,
-      a: `Each provider structures free tier limits differently — some cap storage, others cap requests or compute hours. Our comparison table provides exact numbers for each provider. Check the growth cost analysis section to understand what you'll pay when you exceed free tier limits.`,
+      a: `Each provider structures free tier limits differently — some cap storage, others cap requests or compute hours. ${meta.whatTheTableGives ?? "Our comparison table provides exact numbers for each provider."} ${meta.costSectionName ? `See ${meta.costSectionName} for what you pay past the free limits.` : "Check the growth cost analysis section to understand what you'll pay when you exceed free tier limits."}`,
     },
   ];
 }
