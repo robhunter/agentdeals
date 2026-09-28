@@ -180,3 +180,30 @@ describe("checking the method on records whose outcome is already known", () => 
     assert.deepStrictEqual(report.results.map((r: { vendor: string; resolution: string | null; outcome: string }) => [r.vendor, r.resolution, r.outcome]), [["Alpha", "retracted", "no_usable_capture"]]);
   });
 });
+
+describe("the readings behind each outcome", () => {
+  it("are kept in each record's result only when asked for", async () => {
+    const changes = [change({ vendor: "Alpha", date: "2026-09-01", date_source: "discovered", previous_state: "A", current_state: "B" })];
+    const run = (logReads: boolean) =>
+      settleFirstReadings({
+        changes,
+        offers: [],
+        today: "2026-09-28",
+        archive: {
+          captures: async (url: string) => ({ captures: [{ timestamp: "20260205120000", original: url, statuscode: "200", mimetype: "text/html" }] }),
+          captureHtml: async () => ({ html: `<html><body><p>TERMS=B</p><p>${"Plans and limits. ".repeat(40)}</p></body></html>` }),
+        },
+        readerForListing: () => async (stored: string, text: string) => (text.includes(`TERMS=${stored}`) ? { status: "confirmed" } : { status: "changed", current_state: text.match(/TERMS=(\w+)/)![1] }),
+        fetchToday: async () => ({ ok: true, text: "TERMS=B" }),
+        textDayOf: () => "2026-02-10",
+        logReads,
+      });
+    const quiet = await run(false);
+    assert.ok(!("readings" in quiet.results[0]));
+    const logged = await run(true);
+    assert.deepStrictEqual(
+      logged.results[0].readings.map((r: { page: string; against: string; verdict: { status: string } }) => `${r.page} ${r.against} ${r.verdict.status}`),
+      ["capture 2026-02-05 A changed", "today B confirmed", "capture 2026-02-05 B confirmed"],
+    );
+  });
+});

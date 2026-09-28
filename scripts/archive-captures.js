@@ -229,13 +229,18 @@ async function capturesOfEither(archive, urls, fromDay, toDay) {
   return { captures: [...byTimestamp.values()].sort((a, b) => a.timestamp.localeCompare(b.timestamp)) };
 }
 
-export async function settleAgainstCaptures({ url, finalUrl, ourText, recordTerms, textDay, todayText, today, archive, read, windowDays = CAPTURE_WINDOW_DAYS }) {
-  const settled = await settleWithCaptures({ url, finalUrl, ourText, textDay, todayText, today, archive, read, windowDays });
+export async function settleAgainstCaptures({ url, finalUrl, ourText, recordTerms, textDay, todayText, today, archive, read, onRead = () => {}, windowDays = CAPTURE_WINDOW_DAYS }) {
+  const readPage = async (page, terms, text) => {
+    const verdict = await read(terms, text);
+    onRead({ page, against: terms, verdict });
+    return verdict;
+  };
+  const settled = await settleWithCaptures({ url, finalUrl, ourText, textDay, todayText, today, archive, readPage, windowDays });
   if (!recordTerms || !settled.capture || !settled.captureUsed) return withoutCaptureUsed(settled);
   const page = await archive.captureHtml(settled.captureUsed);
   const text = page.unavailable ? "" : stripHtml(page.html);
   const readable = text.length >= MIN_PAGE_TEXT_LENGTH;
-  const reading = readable ? await read(recordTerms, text) : { status: "unclear" };
+  const reading = readable ? await readPage(`capture ${dayOfTimestamp(settled.captureUsed.timestamp)}`, recordTerms, text) : { status: "unclear" };
   return { ...withoutCaptureUsed(settled), record_terms_on_capture: reading.status, reads: settled.reads + (readable ? 1 : 0) };
 }
 
@@ -243,7 +248,7 @@ function withoutCaptureUsed({ captureUsed, ...settled }) {
   return settled;
 }
 
-async function settleWithCaptures({ url, finalUrl, ourText, textDay, todayText, today, archive, read, windowDays }) {
+async function settleWithCaptures({ url, finalUrl, ourText, textDay, todayText, today, archive, readPage, windowDays }) {
   let reads = 0;
   if (!textDay) return { outcome: "text_day_unknown", reads };
   const urls = finalUrl && !samePage(url, finalUrl) ? [url, finalUrl] : [url];
@@ -256,11 +261,11 @@ async function settleWithCaptures({ url, finalUrl, ourText, textDay, todayText, 
     const text = stripHtml(page.html);
     if (text.length < MIN_PAGE_TEXT_LENGTH) return { status: "unclear", summary: "the capture is too short to read" };
     reads++;
-    return read(terms, text);
+    return readPage(`capture ${dayOfTimestamp(capture.timestamp)}`, terms, text);
   };
   const readToday = async (terms) => {
     reads++;
-    return read(terms, todayText);
+    return readPage("today", terms, todayText);
   };
   const { before, after } = capturesBesideTextDay(captures, textDay, windowDays);
   const tried = [];

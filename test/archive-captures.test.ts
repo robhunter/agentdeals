@@ -376,6 +376,25 @@ describe("settling a first reading's difference against the page as the Archive 
     assert.ok(!("captureUsed" in moved));
   });
 
+  it("hands each reading to a listener with the page it read, the terms it was given and the reader's verdict", async () => {
+    const readings: Array<{ page: string; against: string; verdict: { status: string } }> = [];
+    const settled = await settleAgainstCaptures({
+      url: "https://example.com/pricing",
+      ourText: "A",
+      recordTerms: "B",
+      textDay: "2026-02-15",
+      todayText: "Free plan TERMS=B",
+      today: TODAY,
+      archive: archiveOf(ALL_YEAR, (day) => (day <= "2026-04-10" ? "A" : "B")),
+      read: termsReader().read,
+      onRead: (reading: { page: string; against: string; verdict: { status: string } }) => readings.push(reading),
+    });
+    assert.strictEqual(readings.length, settled.reads);
+    assert.deepStrictEqual(readings.slice(0, 2).map((r) => `${r.page} ${r.against} ${r.verdict.status}`), ["capture 2026-02-15 A confirmed", "today A changed"]);
+    assert.deepStrictEqual(readings.at(-1)!.page, "capture 2026-02-15");
+    assert.deepStrictEqual([readings.at(-1)!.against, readings.at(-1)!.verdict.status], ["B", "changed"]);
+  });
+
   it("says the Archive did not answer, rather than that no capture exists", async () => {
     const archive = { captures: async () => ({ unavailable: "HTTP 503 after 4 attempts" }), captureHtml: async () => ({ unavailable: "unused" }) };
     const settled = await settle({ todayTerms: "B", termsOn: () => "A", archive }).result;
