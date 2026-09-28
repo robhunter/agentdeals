@@ -109,7 +109,9 @@ const GCP_TIMELINE_VENDORS = (change: ChangeRecord) =>
   change.current_state !== "Removed from index" &&
   (change.vendor === "Google Cloud" || change.vendor.startsWith("Google") || change.vendor === "Firebase" || change.vendor.includes("Gemini"));
 
-const PAGES = [...new Set([...PAGES_DATING_THE_STUDIO_SHUTDOWN, ...Object.keys(STATED), "/gcp-free-tier-2026"])];
+const PAGES = [...new Set([...PAGES_DATING_THE_STUDIO_SHUTDOWN, ...Object.keys(STATED), "/gcp-free-tier-2026", "/guides"])];
+
+const STUDIO_GUIDE_BLURB = "Firebase Studio shuts down March 22, 2027 — free cloud IDE alternatives with compute, storage, and collaboration limits compared";
 
 const SPARK_CELLS_THAT_NEED_BLAZE: Record<string, { row: string; columns: number[] }[]> = {
   "/supabase-vs-firebase": [
@@ -224,13 +226,11 @@ describe("Firebase Studio's shutdown and the Spark plan, as Google states them",
     }
   });
 
-  it("describes the Firebase Studio shutdown guide with the date it closes", () => {
+  it("describes the Firebase Studio shutdown guide with the date it closes, on the MCP guide list and on /guides", () => {
     const guide = getGuideBySlug("firebase-studio-shutdown");
     assert.ok(guide, "the guide list carries the Firebase Studio shutdown guide");
-    assert.strictEqual(
-      guide!.description,
-      "Firebase Studio shuts down March 22, 2027 — free cloud IDE alternatives with compute, storage, and collaboration limits compared",
-    );
+    assert.strictEqual(guide!.description, STUDIO_GUIDE_BLURB);
+    assert.ok(textOf(served.get("/guides")!).includes(STUDIO_GUIDE_BLURB), "/guides");
   });
 
   it("renders every replacement where it belongs", () => {

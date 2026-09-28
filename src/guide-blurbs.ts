@@ -81,7 +81,7 @@ const WRITTEN_BLURBS: Readonly<Record<string, string>> = {
   "openai-assistants-alternatives": "OpenAI Assistants API sunset August 2026 — migration paths, free AI API alternatives, and cost comparison",
   "openai-assistants-migration-2026": "Comprehensive Assistants API migration guide — feature map, complexity assessment, decision framework, agent frameworks, wire-compatible bridges, cost comparison",
   "openai-assistants-migration": "OpenAI Assistants API shutdown guide — migration cost comparison for Responses API, Azure, Anthropic, Gemini, and open-source alternatives",
-  "firebase-studio-shutdown": "Firebase Studio shutdown guide — free cloud IDE alternatives with compute hours, storage, and collaboration limits compared",
+  "firebase-studio-shutdown": "Firebase Studio shuts down March 22, 2027 — free cloud IDE alternatives with compute, storage, and collaboration limits compared",
   "tenor-alternatives": "Tenor API shutdown June 2026 — GIF API alternatives with free tier limits, migration code examples, and platform impact analysis",
   "shutdowns": "Living tracker of developer tool shutdowns, API sunsets, and deprecation deadlines in 2026 — with migration paths and alternatives",
   "agent-payments": "Directory of developer services accepting AI agent payments via x402 and Stripe MPP — per-call pricing, free tiers, and protocol comparison",
