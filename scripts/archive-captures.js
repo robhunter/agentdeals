@@ -213,10 +213,27 @@ async function bracketMoves({ start, oldTerms, later, todayText, readCaptureAgai
   return { brackets, later_moves: "more than bracketed" };
 }
 
-export async function settleAgainstCaptures({ url, ourText, textDay, todayText, today, archive, read, windowDays = CAPTURE_WINDOW_DAYS }) {
+function samePage(a, b) {
+  const bare = (url) => String(url).replace(/^https?:\/\/(www\.)?/, "").replace(/\/+$/, "");
+  return bare(a) === bare(b);
+}
+
+async function capturesOfEither(archive, urls, fromDay, toDay) {
+  const captures = [];
+  for (const url of urls) {
+    const listed = await archive.captures(url, fromDay, toDay);
+    if (listed.unavailable) return listed;
+    captures.push(...listed.captures);
+  }
+  const byTimestamp = new Map(captures.map((capture) => [capture.timestamp, capture]));
+  return { captures: [...byTimestamp.values()].sort((a, b) => a.timestamp.localeCompare(b.timestamp)) };
+}
+
+export async function settleAgainstCaptures({ url, finalUrl, ourText, textDay, todayText, today, archive, read, windowDays = CAPTURE_WINDOW_DAYS }) {
   let reads = 0;
   if (!textDay) return { outcome: "text_day_unknown", reads };
-  const listed = await archive.captures(url, shiftDay(textDay, -windowDays), today);
+  const urls = finalUrl && !samePage(url, finalUrl) ? [url, finalUrl] : [url];
+  const listed = await capturesOfEither(archive, urls, shiftDay(textDay, -windowDays), today);
   if (listed.unavailable) return { outcome: "no_usable_capture", text_day: textDay, reads, tried: [], why: `the Archive did not answer: ${listed.unavailable}` };
   const captures = listed.captures;
   const readCaptureAgainst = async (capture, terms) => {
