@@ -350,6 +350,9 @@
     "/alternative-to/jaeger": {
       "daily": true
     },
+    "/alternative-to/jina-ai": {
+      "daily": true
+    },
     "/alternative-to/kaggle": {
       "daily": true
     },
@@ -378,6 +381,9 @@
       "daily": true
     },
     "/alternative-to/leapcell": {
+      "daily": true
+    },
+    "/alternative-to/linkup": {
       "daily": true
     },
     "/alternative-to/llm7-io": {
@@ -500,6 +506,9 @@
     "/alternative-to/paraio-com": {
       "daily": true
     },
+    "/alternative-to/parallel": {
+      "daily": true
+    },
     "/alternative-to/parseur": {
       "daily": true
     },
@@ -591,6 +600,9 @@
       "daily": true
     },
     "/alternative-to/sentry": {
+      "daily": true
+    },
+    "/alternative-to/serper": {
       "daily": true
     },
     "/alternative-to/serv00-com": {
@@ -726,6 +738,9 @@
       "daily": true
     },
     "/alternative-to/xitoring-com": {
+      "daily": true
+    },
+    "/alternative-to/you-com": {
       "daily": true
     },
     "/alternative-to/zhipu-ai": {
@@ -1033,6 +1048,9 @@
       "daily": true
     },
     "/best/free-web-scraping": {
+      "daily": true
+    },
+    "/best/free-web-search-api": {
       "daily": true
     },
     "/best/free-workflow-automation": {
@@ -1545,6 +1563,14 @@
       "hash": "faf2b12d3199dec6",
       "changed": "2026-09-18"
     },
+    "/compare/cerebras-vs-elevenlabs": {
+      "hash": "d3845369ddb7078f",
+      "changed": "2026-09-27"
+    },
+    "/compare/cerebras-vs-maxim-ai": {
+      "hash": "441e7eb0c981da50",
+      "changed": "2026-09-27"
+    },
     "/compare/circleci-vs-github-actions": {
       "hash": "812a305319c311d9",
       "changed": "2026-09-20"
@@ -1591,14 +1617,6 @@
     },
     "/compare/cloudflare-warp-vs-windscribe": {
       "hash": "c070352458dd2983",
-      "changed": "2026-09-27"
-    },
-    "/compare/cloudflare-workers-ai-vs-labelbox": {
-      "hash": "397b575c2a4cc86d",
-      "changed": "2026-09-27"
-    },
-    "/compare/cloudflare-workers-ai-vs-openai": {
-      "hash": "9340a3161817e408",
       "changed": "2026-09-27"
     },
     "/compare/cloudflare-workers-vs-duolingo": {
@@ -1876,6 +1894,14 @@
     "/compare/element-io-vs-talky-io": {
       "hash": "956688134259550b",
       "changed": "2026-09-18"
+    },
+    "/compare/elevenlabs-vs-maxim-ai": {
+      "hash": "ed0d6b73c7207758",
+      "changed": "2026-09-27"
+    },
+    "/compare/elevenlabs-vs-together-ai": {
+      "hash": "5d75b3f64b029188",
+      "changed": "2026-09-27"
     },
     "/compare/emaillabs-io-vs-mail-tester-com": {
       "hash": "013a148d6cb204ba",
@@ -2254,14 +2280,6 @@
       "hash": "5562b352c92ecd9a",
       "changed": "2026-09-18"
     },
-    "/compare/labelbox-vs-openai": {
-      "hash": "8077bab1043508b6",
-      "changed": "2026-09-27"
-    },
-    "/compare/labelbox-vs-pinecone": {
-      "hash": "b02392af9f2e44cb",
-      "changed": "2026-09-27"
-    },
     "/compare/lastpass-vs-proton-pass": {
       "hash": "ac8fc2b739b77ebf",
       "changed": "2026-09-27"
@@ -2305,6 +2323,10 @@
     "/compare/make-vs-zoho-sign": {
       "hash": "33b5897b476bb4d6",
       "changed": "2026-09-26"
+    },
+    "/compare/maxim-ai-vs-together-ai": {
+      "hash": "67ef42c106bb6764",
+      "changed": "2026-09-27"
     },
     "/compare/microsoft-ajax-vs-bootstrapcdn-com": {
       "hash": "b591dfe98f6ad350",
@@ -2396,10 +2418,6 @@
     },
     "/compare/openai-codex-vs-windsurf": {
       "hash": "6eb5fd4a34a88309",
-      "changed": "2026-09-27"
-    },
-    "/compare/openai-vs-pinecone": {
-      "hash": "be8507e381e9300f",
       "changed": "2026-09-27"
     },
     "/compare/opencagedata-com-vs-osmnames": {
@@ -6471,6 +6489,9 @@
       "hash": "6ee8d5a846accefc",
       "changed": "2026-09-27"
     },
+    "/vendor/jina-ai": {
+      "daily": true
+    },
     "/vendor/jitpack-io": {
       "hash": "da22d2788eba206e",
       "changed": "2026-09-27"
@@ -6708,6 +6729,9 @@
     "/vendor/linkok-com": {
       "hash": "0d599835f6fe29c6",
       "changed": "2026-09-27"
+    },
+    "/vendor/linkup": {
+      "daily": true
     },
     "/vendor/liveblocks": {
       "hash": "b2da9b7893f72a7d",
@@ -7533,6 +7557,9 @@
     "/vendor/paraio-com": {
       "daily": true
     },
+    "/vendor/parallel": {
+      "daily": true
+    },
     "/vendor/pareto-security": {
       "hash": "4bf71cf5c00cb184",
       "changed": "2026-09-27"
@@ -8297,6 +8324,9 @@
     "/vendor/serpapi": {
       "hash": "d86b5a4f77bd5cfb",
       "changed": "2026-09-27"
+    },
+    "/vendor/serper": {
+      "daily": true
     },
     "/vendor/serv00-com": {
       "daily": true
@@ -9548,6 +9578,9 @@
     "/vendor/yodiz": {
       "hash": "3576c6a6ffbb2c3c",
       "changed": "2026-09-27"
+    },
+    "/vendor/you-com": {
+      "daily": true
     },
     "/vendor/yousign": {
       "hash": "694dd09bfa2edf5d",
