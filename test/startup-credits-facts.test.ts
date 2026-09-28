@@ -15,6 +15,12 @@ const PAGES_THIS_GUIDE_STATES_PROGRAMMES_ON = [
   "/free-tier-risk",
   "/q1-2026-developer-pricing-report",
   "/hosting-alternatives",
+  "/free-tier-tracker",
+];
+
+const CLOUDFLARE_PROGRAMME_LINKS: [string, string][] = [
+  ["/free-tier-tracker", "Cloudflare $350K"],
+  ["/state-of-free-tiers", "Cloudflare Startup Program"],
 ];
 
 const WITHDRAWN = [
@@ -34,6 +40,9 @@ const WITHDRAWN = [
   "15+ startup programs",
   "$1.90/GPU/hr",
   "H100 at ~$1.90/hr",
+  "Cloudflare $250K",
+  "DigitalOcean $100K",
+  "expanded its startup program to $250K",
 ];
 
 const PROGRAMMES: Record<string, [string, string, string, string]> = {
@@ -92,6 +101,10 @@ const FAQ_ANSWERS = [
 ];
 
 const STATED_ELSEWHERE: Record<string, string[]> = {
+  "/free-tier-tracker": [
+    "Take advantage of expanded startup programs: Cloudflare $350K, Google Cloud $350K. These are more reliable than consumer free tiers.",
+    "But it’s not all erosion. Terragrunt Scale launched a free tier specifically to capture HCP Terraform refugees",
+  ],
   "/cloud-free-tier-comparison-2026": [
     "Up to $350K Startup Program Credits",
     "Microsoft for Startups needs no investor: B2B tech startups start at $200 and can reach $150K with Azure usage. GCP offers up to $350K to AI-first startups and needs VC funding. AWS Activate Portfolio needs an Activate Provider Org ID.",
@@ -184,6 +197,7 @@ function programmeCards(html: string): Map<string, Record<string, string>> {
 
 let server: ChildProcess;
 const served = new Map<string, string>();
+let cloudflareProgrammePageStatus = 0;
 
 describe("the startup credits guide states each programme's terms as the programme does, and so do the pages that repeat them", () => {
   before(async () => {
@@ -210,6 +224,7 @@ describe("the startup credits guide states each programme's terms as the program
       assert.strictEqual(response.status, 200, `${page} answered ${response.status}`);
       served.set(page, await response.text());
     }
+    cloudflareProgrammePageStatus = (await fetch(`${base}/vendor/cloudflare-for-startups`)).status;
   });
   after(() => {
     server?.kill();
@@ -260,6 +275,14 @@ describe("the startup credits guide states each programme's terms as the program
 
   it("lists each cloud's startup programme on the cloud comparison as the programme states it", () => {
     assert.deepStrictEqual(startupTableRows(served.get("/cloud-free-tier-comparison-2026")!), CLOUD_STARTUP_ROWS);
+  });
+
+  it("links Cloudflare's programme to the programme's own vendor page, which answers", () => {
+    const unlinked = CLOUDFLARE_PROGRAMME_LINKS
+      .filter(([page, text]) => !served.get(page)!.includes(`<a href="/vendor/cloudflare-for-startups">${text}</a>`))
+      .map(([page, text]) => `${page}: ${text}`);
+    assert.deepStrictEqual(unlinked, []);
+    assert.strictEqual(cloudflareProgrammePageStatus, 200);
   });
 
   it("states the same programme terms on the pages that repeat them", () => {

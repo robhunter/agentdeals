@@ -3776,7 +3776,6 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("Brave Search API"), "Should include Brave Search");
     assert.ok(html.includes("HCP Terraform"), "Should include HCP Terraform");
     assert.ok(html.includes("Windsurf"), "Should include Windsurf");
-    assert.ok(html.includes("Cloudflare Startup Program"), "Should include Cloudflare expansion");
     assert.ok(html.includes("Terragrunt Scale"), "Should include Terragrunt Scale");
     assert.ok(html.includes("Open-core"), "Should have trend pattern");
     assert.ok(html.includes("/free-tier-risk"), "Should cross-link to risk index");
@@ -3799,7 +3798,7 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("Google Cloud"), "Should include Google Cloud");
     assert.ok(html.includes("$350K"), "Should include Google credit amount");
     assert.ok(html.includes("Cloudflare"), "Should include Cloudflare");
-    assert.ok(html.includes("$250K"), "Should include Cloudflare credit amount");
+    assert.ok(html.includes("$10K, $100K or $350K by tier"), "Should include Cloudflare credit amount");
     assert.ok(html.includes("Microsoft for Startups"), "Should include Microsoft");
     assert.ok(html.includes("AWS Activate"), "Should include AWS");
     assert.ok(html.includes("DigitalOcean"), "Should include DigitalOcean");

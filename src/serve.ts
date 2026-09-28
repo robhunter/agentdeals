@@ -48,6 +48,7 @@ import { COMPARED_SERVICES_PLACEHOLDER, appendToCompiledFigureSlots, fillCompare
 import { CHECK_ESTABLISHES, CHECK_SCOPE_CLASS, NO_CATALOGUE_RECORD_SOURCE, citedSourcesListHtml, figureSourceLinkHtml, freeTierSourceOf, freeTierSourceWeMayCite, pageQuoteHtml, readClauseHtml, readSourceOf, serviceSourceMarkerHtml, uncitedSourceTagHtml, withCitedSources, type CitedService, type FreeTierSource } from "./source-citation.js";
 import { vendorHistorySentence } from "./vendor-history.js";
 import { guideBlurb } from "./guide-blurbs.js";
+import { changesToStartupProgrammes } from "./startup-programme-changes.js";
 import { HETZNER_APRIL_CHANGES, HETZNER_CLOUD_PLANS, HETZNER_PRICES_READ, HETZNER_PRICE_SOURCE, HETZNER_SINGAPORE_EXAMPLE, cheapestOrderableHetznerPlan, hetznerEntryPriceClause, unorderableHetznerPlans } from "./hetzner-pricing.js";
 import { HUNDRED_GB_SCENARIO, HUNDRED_TB_SCENARIO, ONE_TO_ONE_SCENARIO, STORAGE_RATES_READ, STORAGE_SCALE_WORKLOADS, TEN_TO_ONE_SCENARIO, cheapestProviderAt, costAfterMonthlyEgressGrantFor, costliestProviderAt, egressAllowanceSentence, egressBillAfterMonthlyGrantFor, egressBillOnceOverAllowance, egressRatioWhereCostsMatch, fixedMonthlyGrantsSentence, monthlyEgressGrantGb, monthlyEgressGrantSentence, monthlyStorageCost, providersWithScalingEgressAllowance, rateCardFor, scaleCostFor } from "./storage-cost-model.js";
 import { changeTimelineDate, supersededLineups, supersessionNote } from "./change-lineup.js";
@@ -26867,16 +26868,6 @@ function buildFreeTierTrackerPage(): string {
 
   const featuredExpansions: ErosionEntry[] = [
     {
-      vendor: "Cloudflare Startup Program",
-      slug: "cloudflare-for-startups",
-      date: "2026-02-01",
-      oneLiner: "Expanded to $250K in credits across 4 tiers",
-      changeType: "startup_program_expanded",
-      impact: "high",
-      detail: "Cloudflare revamped its startup program to 4 tiers with up to $250,000 in credits. Tiers: Bootstrapped $5K, Up-and-Coming $25K, Seed-Funded $100K, High Growth $250K. Credits cover Workers, R2, Workers AI, and Stream.",
-      alternatives: ["AWS Activate", "Google for Startups", "Azure for Startups"],
-    },
-    {
       vendor: "Terragrunt Scale",
       slug: "terragrunt-scale",
       date: "2025-12-15",
@@ -27088,7 +27079,7 @@ ${mcpCtaCss()}
   <div class="executive-summary">
     <p><strong>${removedOrReduced.length} developer tool free tiers were removed in Q1 2026. ${limitsReduced.length + restructured.length} more were reduced or restructured. Here&rsquo;s what changed and what&rsquo;s still free.</strong></p>
     <p>March 2026 saw an unprecedented wave of free tier removals in a single month: <strong>Postman</strong> killed team collaboration on its free plan, <strong>LocalStack</strong> discontinued its open-source Community Edition (212 points on Hacker News), <strong>Brave Search API</strong> replaced its free tier with metered billing, <strong>HCP Terraform</strong> is ending its legacy free plan March 31, and <strong>Windsurf</strong> replaced credits with hard quotas while raising prices 33%.</p>
-    <p>But it&rsquo;s not all erosion. <strong>Cloudflare</strong> expanded its startup program to $250K, <strong>Terragrunt Scale</strong> launched a free tier specifically to capture HCP Terraform refugees, and <strong>GitHub Copilot</strong> went free. The pattern: some vendors are removing free tiers, while competitors swoop in to capture displaced developers.</p>
+    <p>But it&rsquo;s not all erosion. <strong>Terragrunt Scale</strong> launched a free tier specifically to capture HCP Terraform refugees, and <strong>GitHub Copilot</strong> went free. The pattern: some vendors are removing free tiers, while competitors swoop in to capture displaced developers.</p>
   </div>
 
   <div class="toc">
@@ -27134,7 +27125,7 @@ ${mcpCtaCss()}
     </div>
     <div class="verdict-item">
       <strong>For startups:</strong>
-      <p>Take advantage of expanded startup programs: <a href="/vendor/cloudflare-for-startups">Cloudflare $250K</a>, <a href="/vendor/google-cloud">Google Cloud $350K</a>, <a href="/vendor/digitalocean">DigitalOcean $100K</a>. These are more reliable than consumer free tiers. See our <a href="/free-startup-stack">Free Startup Stack Guide</a>.</p>
+      <p>Take advantage of expanded startup programs: <a href="/vendor/cloudflare-for-startups">Cloudflare $350K</a>, <a href="/vendor/google-cloud">Google Cloud $350K</a>. These are more reliable than consumer free tiers. See our <a href="/free-startup-stack">Free Startup Stack Guide</a>.</p>
     </div>
   </div>
 
@@ -27244,10 +27235,8 @@ function buildStartupCreditsPage(): string {
     { name: "Amplitude Early Stage Startup Pricing", slug: "amplitude-startup-scholarship", category: "ai-tools", creditValue: "1 year of the Growth plan free", eligibility: "Under 20 employees and under $10M raised", duration: "1 year; year 2 at 40% off the annual Plus plan, or move to the free plan", applicationDifficulty: "open", whatsIncluded: "The full Growth plan for 200K monthly tracked users or 100M events a month.", hiddenConstraints: "Growth plan converts to paid ($49+/mo) after 1 year. Application review required. MTU/event limits are soft \u2014 overage may be billed. Plan features may change during the free year.", vestingSchedule: "Full plan for 12 months" },
   ];
 
-  const startupVendorNames = programs.map(p => p.name);
-  const startupChanges = changesTheVendorMade(dealChanges).filter(c =>
-    startupVendorNames.some(v => c.vendor.includes(v) || v.includes(c.vendor))
-  ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  const startupChanges = changesToStartupProgrammes(changesTheVendorMade(dealChanges), offers)
+    .sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   const openCount = programs.filter(p => p.applicationDifficulty === "open").length;
   const categories: Array<"cloud-infrastructure" | "fintech-banking" | "developer-tools" | "ai-tools"> = ["cloud-infrastructure", "fintech-banking", "developer-tools", "ai-tools"];
@@ -53828,12 +53817,10 @@ const dispatchRequest = async (req: IncomingMessage, res: ServerResponse) => {
       "developer-tools": ["PostHog", "Segment", "Amplitude"],
       "ai-tools": ["Amazon Kiro (AWS Startups)"],
     };
-    const startupVendorNames = Object.values(startupCategoryMap).flat();
     const startupTypeFilter = url.searchParams.get("type") || undefined;
     const validStartupTypes = ["cloud-infrastructure", "fintech-banking", "developer-tools", "ai-tools"];
-    const startupApiChanges = dealChanges.filter(c =>
-      startupVendorNames.some(v => c.vendor.includes(v) || v.includes(c.vendor))
-    ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    const startupApiChanges = changesToStartupProgrammes(dealChanges, offers)
+      .sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
     const startupPrograms = startupOffers.map(o => {
       const progCat = Object.entries(startupCategoryMap).find(([, vendors]) =>
         vendors.some(v => o.vendor.includes(v) || v.includes(o.vendor))
