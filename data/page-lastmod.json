@@ -3085,15 +3085,15 @@
       "changed": "2026-09-28"
     },
     "/free-django-stack": {
-      "hash": "feddaeab053bd128",
+      "hash": "ef9560c6f4c1c06a",
       "changed": "2026-09-28"
     },
     "/free-fastapi-stack": {
-      "hash": "e5ff68a178a52675",
+      "hash": "96e2089c6c403842",
       "changed": "2026-09-28"
     },
     "/free-frontend-stack": {
-      "hash": "cf5dc39f1ab68ec2",
+      "hash": "487e08e3be1fe43b",
       "changed": "2026-09-28"
     },
     "/free-go-stack": {
@@ -3105,7 +3105,7 @@
       "changed": "2026-09-28"
     },
     "/free-nextjs-stack": {
-      "hash": "9c39c292b52da3e4",
+      "hash": "574234f8564aa2cb",
       "changed": "2026-09-28"
     },
     "/free-saas-stack": {
@@ -3121,7 +3121,7 @@
       "changed": "2026-09-28"
     },
     "/free-tier-tracker": {
-      "hash": "ed1d9ade3ec80b53",
+      "hash": "3874b6ee446e0621",
       "changed": "2026-09-28"
     },
     "/freshness": {
@@ -3200,11 +3200,11 @@
       "changed": "2026-09-28"
     },
     "/hosting-free-tier-comparison-2026": {
-      "hash": "053eb92b9103d0e8",
+      "hash": "b96776e3fc458c60",
       "changed": "2026-09-28"
     },
     "/hosting-pricing": {
-      "hash": "e4c35a6b936f8153",
+      "hash": "c86f94aa3e53b2f9",
       "changed": "2026-09-28"
     },
     "/ide-code-editors-alternatives": {
@@ -3239,7 +3239,7 @@
       "changed": "2026-09-27"
     },
     "/netlify-vs-render": {
-      "hash": "d61b77cc586a72f5",
+      "hash": "5ddd70df3301fbcd",
       "changed": "2026-09-28"
     },
     "/openai-assistants-alternatives": {
@@ -3286,7 +3286,7 @@
       "changed": "2026-09-28"
     },
     "/railway-vs-render": {
-      "hash": "cd2b1a63849fec47",
+      "hash": "1d69759cc3c34954",
       "changed": "2026-09-28"
     },
     "/redis-alternatives": {
@@ -3471,7 +3471,7 @@
       "changed": "2026-09-28"
     },
     "/state-of-free-tiers": {
-      "hash": "8b417dd6479f1cd9",
+      "hash": "d9a611c2eeb5203a",
       "changed": "2026-09-28"
     },
     "/storage-alternatives": {
@@ -9784,7 +9784,7 @@
       "changed": "2026-09-28"
     },
     "/vercel-alternatives": {
-      "hash": "2c1e2814104fd224",
+      "hash": "25d53631a33ba0c5",
       "changed": "2026-09-28"
     },
     "/vercel-vs-netlify": {
