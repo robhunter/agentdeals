@@ -20,10 +20,18 @@ const NOT_ON_ANY_PAGE = [
   "days to weeks",
   "Gfycat (via Snap)",
   "Tenor API shuts down",
+  "Different API Structure",
+  "different endpoint patterns",
+  "all different from Tenor",
+  "requires API approval",
+  "Easiest migration",
+  "strongest brand recognition",
+  "actively migrating",
+  "High-traffic apps on a deadline",
 ];
 
 const ROWS: Record<string, [string, string, string, string]> = {
-  Klipy: ["No published price; test key 100 calls/hour, production key on request; attribution required", "10M+ items (Klipy's figure)", "", "Minimal"],
+  Klipy: ["No published price; test key 100 calls/hour, production key on request; attribution required", "10M+ items (Klipy's figure)", "Tenor-compatible v2 endpoints", "Minimal"],
   "Giphy API": ["Beta key free (100 calls/hour); production key has a fee", "GIPHY says it has the largest GIF library", "Tenor-compatible v2 endpoints, or its own REST API", "Minimal"],
   "Giphy SDK": ["Free on the beta key; 'Powered By GIPHY' attribution required", "", "", ""],
   "Imgur API": ["Free for non-commercial use (1,250 uploads or 12,500 requests a day); not available in the UK", "", "", ""],
@@ -37,6 +45,19 @@ const STATED_ON_THE_GUIDE = [
   "Klipy’s API compatibility was read from Klipy’s and GIPHY’s migration guides on 2026-09-28.",
   "What happened: Google shut down the Tenor GIF API on June 30, 2026. New API key sign-ups stopped on January 13, 2026, and Google says any API request after June 30 fails with an error.",
   'Google says the decision is part of "an ongoing effort to focus resources on enhancing our core products."',
+];
+
+const BOTH_PROVIDERS_TERMS = [
+  "Key insight: Klipy and GIPHY both offer Tenor-compatible endpoints. You migrate by changing the API host and key. Both start with a key limited to 100 calls per hour. Both require requests to originate from the user’s app or browser.",
+  "Client-side requests only: Klipy and GIPHY both prohibit routing API calls or media loads through your servers. This applies to bots and server-side integrations. Requests must come directly from the user’s app or browser. Klipy makes exceptions only with its prior written approval.",
+  "Production keys: Klipy offers a production key providing limitless requests, requested through its Partner Panel; it publishes no price. GIPHY production keys require an application and incur a fee; the GIPHY team will discuss pricing if your application meets their criteria.",
+  "Three paths depending on your constraints.",
+  "Path 1: Migrate to Klipy Replace tenor.googleapis.com with api.klipy.com and use your Klipy API key; Klipy’s endpoints are Tenor-compatible. A test key allows 100 calls per hour; a production key, requested through Klipy’s Partner Panel, removes the limit. Requests must come from the user’s app or browser, with Klipy attribution. Discord and Bluesky use Klipy. Best for: Teams needing a direct Tenor replacement.",
+  "Path 2: Migrate to GIPHY Change the host to api.giphy.com; the search endpoint keeps Tenor’s request and response shape. GIPHY also has its own /v1 API and native SDKs with a picker UI. Beta keys allow 100 calls per hour; a production key needs an approved application and has a fee. Requests must come from the user’s app or browser. Best for: Apps that need a native SDK.",
+  "Tenor → GIPHY (Tenor-compatible endpoints) Change the host to api.giphy.com and use a GIPHY key; the search endpoint keeps Tenor’s request and response shape. /v2/registershare is not implemented; use the analytics URLs GIPHY returns on each item.",
+  "The Tenor API is now shut down. Discord and Bluesky have switched to Klipy. WhatsApp’s provider is unconfirmed.",
+  "Apps that call the API from the user’s device: Klipy and GIPHY both offer Tenor-compatible endpoints; switching takes a host change and a new key. Klipy provides a production key on request via its Partner Panel and publishes no price. GIPHY requires an application for a production key and charges a fee. Discord and Bluesky use Klipy.",
+  "Bots and server-side integrations: Klipy and GIPHY both require client-side calls; Klipy makes exceptions only with written approval. For bots, consider a self-hosted search index.",
 ];
 
 const META_DESCRIPTION =
@@ -136,6 +157,14 @@ describe("the Tenor alternatives guide states each provider's terms as the provi
     assert.ok(html.includes("https://api.klipy.com/v2/search?q="), "the Klipy sample does not call /v2/search");
   });
 
+  it("points the GIPHY sample at GIPHY's Tenor-compatible v2 search and parses it like the Tenor sample", () => {
+    const text = readable(served.get("/tenor-alternatives")!);
+    const sample = text.split("// After: GIPHY's Tenor-compatible API (change host and key)")[1]?.split("Who’s Affected")[0] ?? "";
+    assert.ok(sample.includes("https://api.giphy.com/v2/search?q=${query}&key=${GIPHY_KEY}&client_key=my_app&limit=20"), sample);
+    assert.ok(sample.includes("const { results } = await response.json(); const gifUrl = results[0].media_formats.gif.url;"), sample);
+    assert.ok(!text.includes("api.giphy.com/v1/gifs/search"));
+  });
+
   it("compares five providers, and every count on the page says five", () => {
     const html = served.get("/tenor-alternatives")!;
     const rows = comparisonRows(html);
@@ -161,6 +190,11 @@ describe("the Tenor alternatives guide states each provider's terms as the provi
   it("states the platform cards, the method and the Tenor facts as checked", () => {
     const text = readable(served.get("/tenor-alternatives")!);
     assert.deepStrictEqual(STATED_ON_THE_GUIDE.filter((line) => !text.includes(line)), []);
+  });
+
+  it("states Klipy's and GIPHY's client-side rule and production-key terms as the providers do", () => {
+    const text = readable(served.get("/tenor-alternatives")!);
+    assert.deepStrictEqual(BOTH_PROVIDERS_TERMS.filter((line) => !text.includes(line)), []);
   });
 
   it("describes the guide and the shutdown card the same way", () => {
