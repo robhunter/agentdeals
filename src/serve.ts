@@ -7624,8 +7624,8 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "email-service-alternatives",
     title: "Email Service Alternatives — Best Free Transactional Email APIs for 2026",
-    metaDesc: "SendGrid restricted to 100/day, Mailgun killed its free tier. Compare free alternatives: Resend (3K/mo), Mailjet (6K/mo), Brevo (300/day), Postmark, Loops, AhaSend. [[freshness]]",
-    contextHtml: `<p><strong>Transactional email</strong> — password resets, order confirmations, verification codes — is non-negotiable infrastructure for any app. But the landscape has shifted dramatically: <strong>SendGrid</strong> cut its free tier to just <strong>100 emails/day</strong> with mandatory phone verification, and <strong>Mailgun</strong> eliminated its free tier entirely (now a 30-day trial).</p>
+    metaDesc: "SendGrid retired its free plan in 2025. Compare free alternatives: Resend (3K/mo), Mailjet (6K/mo), Brevo (300/day), Postmark, Loops, AhaSend. [[freshness]]",
+    contextHtml: `<p><strong>Transactional email</strong> — password resets, order confirmations, verification codes — is non-negotiable infrastructure for any app. SendGrid retired its free plan in 2025; new accounts get a 60-day trial at 100 emails a day. Mailgun still has a free plan with 100 emails a day.</p>
     <p>The good news: several developer-focused alternatives now offer generous free tiers. <strong>Resend</strong> gives you 3,000 emails/month with a modern React Email integration. <strong>Mailjet</strong> offers 6,000/month (200/day cap). <strong>Brevo</strong> provides 300/day with unlimited contacts. And newer entrants like <strong>Loops</strong> and <strong>AhaSend</strong> are competing hard on developer experience and pricing.</p>
     <p>Below are the best free email services for developers in 2026, compared by volume limits, API quality, and what you actually get for free.</p>`,
     tag: "email-service-alternative",
@@ -7633,7 +7633,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     hubDesc: "SendGrid retired its free plan in 2025 — 8 free transactional email alternatives compared",
     serviceMatrixHtml: `
   <h2>Free Tier Comparison</h2>
-  <p style="color:var(--text-muted);margin-bottom:1rem">What you actually get for free on each email platform. SendGrid gives you 100 emails/day with phone verification required — most alternatives offer dramatically more.</p>
+  <p style="color:var(--text-muted);margin-bottom:1rem">What you actually get for free on each email platform. SendGrid has no free plan, only a 60-day trial at 100 emails a day — most alternatives offer dramatically more.</p>
   <div style="overflow-x:auto">
   <table class="compare-table">
     <thead>
@@ -7649,11 +7649,11 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     <tbody>
       <tr>
         <td style="font-weight:600;color:var(--text-dim)">SendGrid</td>
-        <td>~3K/mo (100/day)</td>
+        <td>60-day trial (100/day)</td>
         <td>2K</td>
         <td>Both</td>
         <td>\u2705 / \u2705</td>
-        <td style="color:var(--text-dim)">Legacy — phone verification required</td>
+        <td style="color:var(--text-dim)">No free plan since 2025</td>
       </tr>
       <tr>
         <td style="font-weight:600"><a href="/vendor/resend" style="color:var(--text)">Resend</a></td>
@@ -13463,7 +13463,7 @@ ${mcpCtaCss()}
   <h1>Best Free Email Tools for Developers</h1>
 
   <div class="context">
-    <p>Email infrastructure is one of the most fragmented developer tool categories. <strong>SendGrid</strong> slashed its free tier to just 100 emails/day. <strong>Mailgun</strong> eliminated free access entirely. But the alternatives have never been better — <strong>Resend</strong> offers 3,000 emails/month with a modern developer experience, <strong>Brevo</strong> provides 300/day with unlimited contacts, and <strong>Mailjet</strong> gives you 6,000/month.</p>
+    <p>Email infrastructure is one of the most fragmented developer tool categories. SendGrid retired its free plan in 2025, and its trial allows 100 emails a day for 60 days. Mailgun's free plan allows 100 emails a day. But the alternatives have never been better — <strong>Resend</strong> offers 3,000 emails/month with a modern developer experience, <strong>Brevo</strong> provides 300/day with unlimited contacts, and <strong>Mailjet</strong> gives you 6,000/month.</p>
     <p>This page compares every free email tool in our index — <strong>${emailOffers.length} tools</strong> across transactional APIs, marketing platforms, verification services, forwarding/alias tools, and more. Whether you need a SendGrid alternative or free email aliases for privacy, we have the comparison with exact free tier limits.</p>
   </div>
 
@@ -18484,7 +18484,7 @@ function buildFreeSaasStackPage(): string {
       recommended: { vendor: "Resend", why: "3,000 emails/month free with a modern, developer-first API. React Email for templates \u2014 write email templates in JSX. Clean SDK, excellent deliverability, and webhook notifications for bounces and complaints. The new standard for SaaS transactional email (welcome emails, password resets, invoice notifications, team invitations)." },
       alternatives: ["Brevo", "Amazon SES"],
       outgrow: "When you exceed 3,000 emails/month or 100/day. Brevo gives 300 emails/day (9,000/month) with marketing automation included \u2014 good for SaaS that needs both transactional and newsletter email. Amazon SES no longer has a free tier \u2014 cheapest at scale ($0.10/1K emails) but requires more setup.",
-      whyNot: "Why not SendGrid: Free tier removed May 2025. Many tutorials still reference it \u2014 those are outdated. Why not Mailgun: Free tier removed. Why not Postmark: No free production tier (test mode only). Postmark has the best deliverability but costs $15/mo for 10K emails.",
+      whyNot: "Why not SendGrid: Free tier removed May 2025. Many tutorials still reference it \u2014 those are outdated. Postmark has the best deliverability but costs $15/mo for 10K emails.",
       relatedPage: "/email-comparison-2026",
       isFrameworkSection: false,
     },
@@ -39385,10 +39385,10 @@ ${mcpCtaCss()}
         <td><span style="color:#f85149">Volatile</span></td>
       </tr>
       <tr>
-        <td class="provider-col">Mailgun<span class="removed-badge">FREE REMOVED</span></td>
+        <td class="provider-col">Mailgun</td>
         <td>Transactional</td>
-        <td>30-day trial only</td>
-        <td>100/day (trial)</td>
+        <td>Free</td>
+        <td>100/day</td>
         <td>N/A</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003; Both</td>
@@ -39506,7 +39506,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="context-box">
-    <strong>The pattern:</strong> VC-backed email APIs eliminate free tiers after acquisition. SendGrid (acquired by Twilio 2019, free tier removed 2025). Mailgun (acquired by Sinch 2021, free tier removed 2023). SparkPost (acquired by MessageBird, rebranded to Bird). The lesson: if your email provider has been acquired, plan your migration before the free tier disappears.
+    <strong>The pattern:</strong> VC-backed email APIs eliminate free tiers after acquisition. SendGrid (acquired by Twilio 2019, free tier removed 2025). SparkPost (acquired by MessageBird, rebranded to Bird). The lesson: if your email provider has been acquired, plan your migration before the free tier disappears.
   </div>
 
   <h3>Migration Paths by Use Case</h3>
@@ -45433,7 +45433,7 @@ ${globalNavCss()}
 
   <h3>Email: Post-Acquisition Squeeze</h3>
   <div class="callout callout-warn">
-    At 1M emails/month, <strong>Amazon SES costs ~$100/mo</strong> while <strong>SendGrid costs ~$750/mo</strong>. SendGrid and Mailgun both removed free tiers after acquisition. The pattern: VC-backed email APIs eliminate free tiers once acquired.
+    At 1M emails/month, <strong>Amazon SES costs ~$100/mo</strong> while <strong>SendGrid costs ~$750/mo</strong>. SendGrid removed its free plan in 2025.
     <span style="display:block;margin-top:.5rem;font-size:.85rem"><a href="/email-comparison-2026">Full email comparison &rarr;</a></span>
   </div>
 
