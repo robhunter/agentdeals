@@ -235,24 +235,22 @@ export async function settleAgainstCaptures({ url, ourText, textDay, todayText, 
     if (!capture) continue;
     const at = describeCapture(capture, textDay, side);
     const then = await readCaptureAgainst(capture, ourText);
-    if (then.status === "confirmed") {
-      const moves = await bracketMoves({ start: capture, oldTerms: ourText, later: captures, todayText, readCaptureAgainst, readToday });
-      return { outcome: "vendor_changed", text_day: textDay, capture: at, previous_state: ourText, ...moves, date: datedBy(moves), reads };
-    }
-    if (then.status !== "changed" || !then.current_state) {
+    const termsThen = then.status === "confirmed" ? ourText : then.status === "changed" ? then.current_state : null;
+    if (!termsThen) {
       tried.push({ ...at, why: "the reader could not compare the capture with our text" });
       continue;
     }
-    const now = await readToday(then.current_state);
+    const now = await readToday(termsThen);
     if (now.status === "changed") {
-      const moves = await bracketMoves({ start: capture, oldTerms: then.current_state, later: captures, todayText, readCaptureAgainst, readToday });
-      return { outcome: "vendor_changed", text_day: textDay, capture: at, previous_state: then.current_state, ...moves, date: datedBy(moves), reads };
+      const moves = await bracketMoves({ start: capture, oldTerms: termsThen, later: captures, todayText, readCaptureAgainst, readToday });
+      return { outcome: "vendor_changed", text_day: textDay, capture: at, previous_state: termsThen, ...moves, date: datedBy(moves), reads };
     }
     if (now.status !== "confirmed") {
       tried.push({ ...at, why: "the reader could not compare today's page with the capture's terms" });
       continue;
     }
-    if (side === "before") return { outcome: "ours", text_day: textDay, capture: at, terms_then: then.current_state, reads };
+    if (termsThen === ourText) return { outcome: "not_reproduced", text_day: textDay, capture: at, reads };
+    if (side === "before") return { outcome: "ours", text_day: textDay, capture: at, terms_then: termsThen, reads };
     tried.push({ ...at, why: "today's page states the capture's terms, but a capture after our text's day cannot show the difference was ours" });
   }
   return { outcome: "no_usable_capture", text_day: textDay, reads, tried, why: tried.length ? "no capture settled it" : `no capture within ${windowDays} days of our text's day` };
