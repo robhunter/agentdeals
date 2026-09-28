@@ -34,6 +34,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Compile, so the gate reads the predicates the site reads
+        run: npm run build
+
       - name: Report what the gate would do
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}

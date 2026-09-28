@@ -299,7 +299,7 @@ describe("#1640 AC-4 — a reduction both readings see still reaches a reader", 
     await runOver(SYNADIA, REAL_REDUCTION, "2026-09-14", paths, { fetchFn: page });
     assert.deepStrictEqual(
       published(paths).map((c) => `${c.change_type}/${c.impact}`),
-      ["limits_reduced/high"],
+      ["pricing_restructured/high"],
       "a reduction with new quantities on both sides, read twice, still did not publish",
     );
   });

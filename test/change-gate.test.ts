@@ -524,10 +524,10 @@ describe("a recorded change must describe a change", () => {
       assert.ok(!absent.some((a: any) => a.measured === "currency"));
     });
 
-    it("records the trial-replaced record as a restructure rather than dropping it", () => {
+    it("records the trial-replaced record as a new free tier rather than dropping it", () => {
       const verdict = describesChange(A_TRIAL_REPLACED_BY_A_FREE_PLAN_STATING_NO_PRICE, WHOLE_PAGE);
       assert.strictEqual(verdict.ok, true, `refused as ${verdict.reason}`);
-      assert.strictEqual(verdict.reclassifyAs, RECLASSIFIED_AS_RESTRUCTURE);
+      assert.strictEqual(verdict.reclassifyAs, "new_free_tier");
     });
 
     it("keeps refusing when only part of the page was read", () => {
@@ -559,9 +559,9 @@ describe("a recorded change must describe a change", () => {
         }
       );
       assert.strictEqual(rejected.length, 0);
-      assert.strictEqual(accepted[0].change_type, "pricing_restructured");
+      assert.strictEqual(accepted[0].change_type, "new_free_tier");
       assert.strictEqual(reclassified[0].from, "limits_reduced");
-      assert.strictEqual(reclassified[0].to, "pricing_restructured");
+      assert.strictEqual(reclassified[0].to, "new_free_tier");
     });
 
     it("reclassifies to a type that is not the one the record already had", () => {
@@ -1457,12 +1457,12 @@ describe("the run does not write a change the gate refused", () => {
       return result;
     }
 
-    it("grades it a restructure when it read the page in full", async () => {
+    it("grades it a new free tier when it read the page in full", async () => {
       const result = await runReading(false);
       assert.strictEqual(result.rejected.length, 0, JSON.stringify(result.rejected));
       const taken = [...result.recorded, ...result.held];
       assert.strictEqual(taken.length, 1);
-      assert.strictEqual(taken[0].change_type, "pricing_restructured");
+      assert.strictEqual(taken[0].change_type, "new_free_tier");
     });
 
     it("refuses the same reading when the page was cut at the fetch limit", async () => {
