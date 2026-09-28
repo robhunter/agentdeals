@@ -16,6 +16,7 @@ const daysFromToday = (days: number): string => new Date(Date.now() + days * DAY
 
 export const SUBJECTS_CONFIRMED_ON = daysFromToday(-10);
 export const SUBJECTS_REFUSED_ON = daysFromToday(-3);
+export const SUBJECTS_READ_AGAIN_ON = daysFromToday(-1);
 
 export type RefusalFamily = "voids_the_read" | "measured_no_difference" | "leaves_the_read_standing";
 
@@ -24,6 +25,7 @@ export interface RefusedReadSubject {
   reason: string;
   family: RefusalFamily;
   url: string;
+  readAgainOn: string | null;
 }
 
 const REASONS_BY_FAMILY: Array<[RefusalFamily, readonly string[]]> = [
@@ -32,13 +34,21 @@ const REASONS_BY_FAMILY: Array<[RefusalFamily, readonly string[]]> = [
   ["leaves_the_read_standing", REFUSAL_REASONS_THAT_LEAVE_THE_READ_STANDING],
 ];
 
-export const REFUSED_READ_SUBJECTS: RefusedReadSubject[] = REASONS_BY_FAMILY.flatMap(([family, reasons]) =>
-  reasons.map((reason) => ({
-    vendor: `Refused Read Subject ${reason.replace(/_/g, " ")}`,
+const builtListing = (family: RefusalFamily, reason: string, readAgainOn: string | null): RefusedReadSubject => {
+  const name = readAgainOn ? `${reason} read again` : reason;
+  return {
+    vendor: `Refused Read Subject ${name.replace(/_/g, " ")}`,
     reason,
     family,
-    url: `https://${reason.replace(/_/g, "-")}.refused-read-subject.example/pricing`,
-  })));
+    url: `https://${name.replace(/[_ ]/g, "-")}.refused-read-subject.example/pricing`,
+    readAgainOn,
+  };
+};
+
+export const REFUSED_READ_SUBJECTS: RefusedReadSubject[] = REASONS_BY_FAMILY.flatMap(([family, reasons]) => [
+  ...reasons.map((reason) => builtListing(family, reason, null)),
+  builtListing(family, reasons[0]!, SUBJECTS_READ_AGAIN_ON),
+]);
 
 export const isRefusedReadSubject = (vendor: string): boolean =>
   REFUSED_READ_SUBJECTS.some((subject) => subject.vendor === vendor);
@@ -96,7 +106,7 @@ for (const subject of REFUSED_READ_SUBJECTS) {
   readings.records.push({
     vendor: subject.vendor,
     url: subject.url,
-    last_attempt_at: SUBJECTS_REFUSED_ON,
+    last_attempt_at: subject.readAgainOn ?? SUBJECTS_REFUSED_ON,
     last_outcome: "changed",
     last_error: null,
     failure_category: null,
