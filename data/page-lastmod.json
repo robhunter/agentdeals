@@ -782,7 +782,7 @@
       "changed": "2026-09-05"
     },
     "/auth-comparison-2026": {
-      "hash": "e92fe150b2a06edb",
+      "hash": "cd92021550a5448e",
       "changed": "2026-09-28"
     },
     "/auth0-alternatives": {
@@ -802,11 +802,11 @@
       "changed": "2026-09-28"
     },
     "/aws-free-tier-2026": {
-      "hash": "e0400c20cd05d8ad",
+      "hash": "68a5ecfe424f6dc8",
       "changed": "2026-09-28"
     },
     "/azure-free-tier-2026": {
-      "hash": "05bcf3dc59ce1a9a",
+      "hash": "153bece6c97cc163",
       "changed": "2026-09-28"
     },
     "/backblaze-b2-vs-cloudflare-r2": {
@@ -1061,7 +1061,7 @@
       "changed": "2026-09-22"
     },
     "/budget-builder": {
-      "hash": "ed4ae1a0cf8ba6ad",
+      "hash": "b858a969558fdede",
       "changed": "2026-09-28"
     },
     "/category": {
@@ -3043,7 +3043,7 @@
       "changed": "2026-09-12"
     },
     "/estimate": {
-      "hash": "b0fff3f519676f22",
+      "hash": "721d9b55e905dbc8",
       "changed": "2026-09-28"
     },
     "/events": {
@@ -3109,7 +3109,7 @@
       "changed": "2026-09-28"
     },
     "/free-saas-stack": {
-      "hash": "ab25c0ec74d58d16",
+      "hash": "13f9eff0fa30d2d5",
       "changed": "2026-09-28"
     },
     "/free-startup-stack": {
@@ -3463,7 +3463,7 @@
       "changed": "2026-09-28"
     },
     "/stacks/side-project": {
-      "hash": "326ab0c6bf7f8d6f",
+      "hash": "074b48ec7d3499a2",
       "changed": "2026-09-28"
     },
     "/startup-credits": {
@@ -3482,7 +3482,7 @@
       "changed": "2026-09-28"
     },
     "/supabase-vs-firebase": {
-      "hash": "98ac192be51a7ac0",
+      "hash": "b0a0b9b2d0f0137c",
       "changed": "2026-09-28"
     },
     "/team-collaboration-alternatives": {
