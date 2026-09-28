@@ -17,6 +17,7 @@ import {
   theEventNeverHappened,
   withResolutionInSummary,
 } from "../dist/change-resolution.js";
+import { toSlug } from "../dist/slug.js";
 import {
   classifyStability,
   demotionForChange,
@@ -378,6 +379,16 @@ async function vendorEvents(get: (p: string) => Promise<string>, page: string): 
   return events;
 }
 
+const recordsInForce = (vendor: string) => stored.filter((c) => c.vendor === vendor && !isNoLongerInForce(c));
+
+function anchorsOnlyStandingRecordsCarry(vendor: string): Set<string> {
+  const anchor = (c: DealChange) => `${toSlug(c.vendor)}-${c.date}`;
+  const withdrawn = new Set(stored.filter((c) => c.vendor === vendor && isNoLongerInForce(c)).map(anchor));
+  return new Set(recordsInForce(vendor).map(anchor).filter((a) => !withdrawn.has(a)));
+}
+
+const changeLogAnchor = (item: string) => item.match(/href="\/pricing-changes#([^"]+)"/)?.[1] ?? "";
+
 describe("what a reader and an agent are told about a resolved change", () => {
   before(async () => { proc = await startServer(); });
   after(() => { proc?.kill(); });
@@ -392,8 +403,12 @@ describe("what a reader and an agent are told about a resolved change", () => {
     assert.ok(pause, "the vendor page renders the April 20 record");
     assert.ok(pause!.startsWith(" change-resolved"), "the reversed record is marked as no longer in force");
     assert.ok(pause!.includes("marked Retired"), "the reversal travels with the claim");
-    const standing = items.find((i) => i.includes("#github-copilot-2026-08-28"));
-    assert.ok(standing && !standing.startsWith(" change-resolved"), "a standing record is not marked");
+    const standingAnchors = anchorsOnlyStandingRecordsCarry("GitHub Copilot");
+    const standing = items.filter((i) => standingAnchors.has(changeLogAnchor(i)));
+    assert.ok(standing.length > 0, "the vendor page renders a GitHub Copilot record still in force");
+    for (const item of standing) {
+      assert.ok(!item.startsWith(" change-resolved"), `a standing record is not marked: ${changeLogAnchor(item)}`);
+    }
   });
 
   it("does not lead the vendor page with a pause GitHub lifted", async () => {
@@ -456,8 +471,12 @@ describe("what a reader and an agent are told about a resolved change", () => {
     const march = events.find((e) => e.startDate === "2026-03-01");
     assert.ok(march, "the vendor page publishes the March record as an Event");
     assert.strictEqual(march.endDate, "2026-04-14", "the event ends on the date it stopped being in force");
-    const standing = events.find((e) => e.startDate === "2026-04-17");
-    assert.ok(standing && !("endDate" in standing), "a standing record has no end");
+    const standingSummaries = recordsInForce("Netlify").map((c) => c.summary);
+    const standing = events.filter((e) => standingSummaries.includes(e.description));
+    assert.ok(standing.length > 0, "the vendor page publishes a Netlify record still in force as an Event");
+    for (const event of standing) {
+      assert.ok(!("endDate" in event), `a standing record has no end: ${event.description}`);
+    }
   });
 
   it("cancels the structured event for a record we withdrew", async () => {
