@@ -6132,7 +6132,13 @@
       "category": "Monitoring",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-28",
+        "detail": "Retracted 2026-09-28: nothing changed. Pingmeter's homepage carried the same sentence, \"Free account is limited to accounts with 1 category and less than 5 uptime monitors. It exclude pro features such as sms/voice notification, scheduling and recovery actions.\", in the Internet Archive's captures of 2024-02-10 and 2026-08-16. The reading compared the page with our catalogue text, which did not state those limits.",
+        "source_url": "http://web.archive.org/web/20240210033903/https://pingmeter.com/"
+      }
     },
     {
       "vendor": "Simple Observability",
