@@ -282,8 +282,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 32,
-      "table_figures_from_records": 4,
+      "table_figures": 31,
+      "table_figures_from_records": 3,
       "tables": [
         {
           "label": "Main Comparison Table",
@@ -302,8 +302,8 @@
         },
         {
           "label": "Pricing Change Timeline",
-          "figures": 4,
-          "from_records": 4
+          "figures": 3,
+          "from_records": 3
         }
       ],
       "reads_changes": true,
@@ -555,8 +555,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 54,
-      "table_figures_from_records": 16,
+      "table_figures": 52,
+      "table_figures_from_records": 14,
       "tables": [
         {
           "label": "Always Free Services",
@@ -580,8 +580,8 @@
         },
         {
           "label": "Recent AWS Changes",
-          "figures": 16,
-          "from_records": 16
+          "figures": 14,
+          "from_records": 14
         }
       ],
       "reads_changes": true,
@@ -615,8 +615,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 35,
-      "table_figures_from_records": 2,
+      "table_figures": 34,
+      "table_figures_from_records": 1,
       "tables": [
         {
           "label": "Always Free Services",
@@ -640,8 +640,8 @@
         },
         {
           "label": "Recent Azure Changes",
-          "figures": 2,
-          "from_records": 2
+          "figures": 1,
+          "from_records": 1
         }
       ],
       "reads_changes": true,
@@ -853,8 +853,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 67,
-      "table_figures_from_records": 13,
+      "table_figures": 65,
+      "table_figures_from_records": 11,
       "tables": [
         {
           "label": "Free Trial Credits",
@@ -888,8 +888,8 @@
         },
         {
           "label": "Pricing Change Timeline",
-          "figures": 13,
-          "from_records": 13
+          "figures": 11,
+          "from_records": 11
         }
       ],
       "reads_changes": true,
@@ -2895,8 +2895,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 65,
-      "table_figures_from_records": 28,
+      "table_figures": 63,
+      "table_figures_from_records": 26,
       "tables": [
         {
           "label": "Main Comparison Table",
@@ -2925,8 +2925,8 @@
         },
         {
           "label": "Pricing Change Timeline",
-          "figures": 28,
-          "from_records": 28
+          "figures": 26,
+          "from_records": 26
         }
       ],
       "reads_changes": true,
@@ -3155,8 +3155,8 @@
       "review_note": null,
       "reads_index": false,
       "tables_read_index": false,
-      "table_figures": 96,
-      "table_figures_from_records": 60,
+      "table_figures": 86,
+      "table_figures_from_records": 50,
       "tables": [
         {
           "label": "Comparison Table",
@@ -3165,8 +3165,8 @@
         },
         {
           "label": "Recent Changes",
-          "figures": 61,
-          "from_records": 60
+          "figures": 51,
+          "from_records": 50
         }
       ],
       "reads_changes": true,
