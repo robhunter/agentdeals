@@ -1311,6 +1311,7 @@
         "gitpod",
         "lovable",
         "replit",
+        "stackblitz",
         "v0"
       ],
       "badge_subjects_unresolved": [],
@@ -1321,7 +1322,7 @@
       "review_note": null,
       "reads_index": false,
       "tables_read_index": false,
-      "table_figures": 27,
+      "table_figures": 20,
       "table_figures_from_records": 7,
       "tables": [
         {
@@ -1331,17 +1332,12 @@
         },
         {
           "label": "Cloud IDE Free Tier Comparison",
-          "figures": 6,
+          "figures": 10,
           "from_records": 0
         },
         {
           "label": "AI Full-Stack Builder Alternatives",
-          "figures": 0,
-          "from_records": 0
-        },
-        {
-          "label": "Hidden Costs of Migration",
-          "figures": 13,
+          "figures": 2,
           "from_records": 0
         },
         {
