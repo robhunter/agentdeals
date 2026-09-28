@@ -8237,7 +8237,7 @@ const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
   {
     slug: "firebase-studio-shutdown",
     title: "Firebase Studio Shutdown Guide — Free Cloud IDE Alternatives & Migration Paths",
-    metaDesc: "Firebase Studio has taken no new workspaces since June 22, 2026 and shuts down on March 22, 2027. Compare free cloud IDE alternatives: GitHub Codespaces, Gitpod, Replit, StackBlitz, CodeSandbox, Coder. Migration paths and free tier comparison.",
+    metaDesc: "Firebase Studio has taken no new workspaces since June 22, 2026 and shuts down on March 22, 2027. Compare cloud IDE alternatives' free terms: GitHub Codespaces, Replit, StackBlitz, CodeSandbox, Coder; Ona (formerly Gitpod) has no free plan. Migration paths and free tier comparison.",
     contextHtml: "",
     tag: "firebase-studio-alternative",
     primaryVendor: "Firebase Studio",
@@ -25381,8 +25381,8 @@ ${mcpCtaCss()}
 }
 
 function buildFirebaseStudioShutdownPage(): string {
-  const title = "Firebase Studio Shutdown: Migration Cost Guide & Free IDE Alternatives";
-  const metaDesc = "Firebase Studio has taken no new workspaces since June 22, 2026 and shuts down on March 22, 2027. Compare migration costs for GitHub Codespaces, Gitpod, Replit, StackBlitz, CodeSandbox, Coder. Hidden costs of switching, free tier comparison, and step-by-step migration checklist.";
+  const title = "Firebase Studio Shutdown: Migration Paths & Free IDE Alternatives";
+  const metaDesc = "Firebase Studio has taken no new workspaces since June 22, 2026 and shuts down on March 22, 2027. Compare Google's two recommended paths (Antigravity and Google AI Studio) with the free terms of GitHub Codespaces, Replit, CodeSandbox, StackBlitz and Coder, plus a migration checklist.";
   const slug = "firebase-studio-shutdown";
   const pubDate = "2026-04-02";
 

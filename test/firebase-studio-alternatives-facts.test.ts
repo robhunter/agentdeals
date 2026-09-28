@@ -57,6 +57,10 @@ const STATED_ON_THE_PAGE = [
 
 const WITHDRAWN_FROM_THE_PAGE = ["Best for open-source projects", "productivity loss", "retraining cost", "Hidden Costs of Migration", "Team retraining"];
 
+const TITLE = "Firebase Studio Shutdown: Migration Paths & Free IDE Alternatives";
+const META_DESCRIPTION = "Firebase Studio has taken no new workspaces since June 22, 2026 and shuts down on March 22, 2027. Compare Google's two recommended paths (Antigravity and Google AI Studio) with the free terms of GitHub Codespaces, Replit, CodeSandbox, StackBlitz and Coder, plus a migration checklist.";
+const WITHDRAWN_FROM_THE_HEAD = /Migration Cost Guide|Compare migration costs|Hidden costs of switching/;
+
 const STATED_ON_THE_IDE_GUIDE: Record<string, string> = {
   Replit: "2 GB storage on the free Starter plan; no collaboration seats",
   Windsurf: "Devin Desktop (formerly Windsurf): light agent quota, unlimited Tab completions and inline edits",
@@ -156,6 +160,19 @@ describe("the Firebase Studio shutdown guide states each alternative's free term
     const text = textOf(served.get(PAGE)!);
     assert.deepStrictEqual(STATED_ON_THE_PAGE.filter((line) => !text.includes(line)), []);
     assert.deepStrictEqual(WITHDRAWN_FROM_THE_PAGE.filter((line) => text.includes(line)), []);
+  });
+
+  it("titles the guide by its migration paths and describes it without Gitpod or the deleted cost section, in meta, Open Graph and structured data", () => {
+    const html = served.get(PAGE)!;
+    assert.strictEqual(decode(html.match(/<title>([^<]*)<\/title>/)?.[1] ?? ""), `${TITLE} — AgentDeals`);
+    const descriptions = [
+      ...html.matchAll(/<meta (?:name|property)="(?:og:)?description" content="([^"]*)"/g),
+      ...html.matchAll(/"description":"([^"]*)"/g),
+    ].map(([, description]) => decode(description));
+    assert.ok(descriptions.length >= 3, `found ${descriptions.length} descriptions`);
+    assert.deepStrictEqual(descriptions.filter((description) => description !== META_DESCRIPTION && description.startsWith("Firebase Studio has taken")), []);
+    assert.ok(descriptions.slice(0, 2).every((description) => description === META_DESCRIPTION));
+    assert.deepStrictEqual(html.slice(0, html.indexOf("</head>")).match(WITHDRAWN_FROM_THE_HEAD)?.[0], undefined);
   });
 
   it("states Replit's and Windsurf's free terms on the IDE guide as the Firebase Studio guide does", () => {
