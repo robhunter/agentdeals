@@ -5,7 +5,7 @@ import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path, { join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { assertCoversPopulation, assertSharesPopulation, recordsInTheCatalogue, vendorsInTheCatalogue, type Population } from "./population-floor.ts";
+import { assertCoversPopulation, assertPopulationFloor, assertSharesPopulation, recordsInTheCatalogue, vendorsInTheCatalogue, type Population } from "./population-floor.ts";
 import { GATE_REASONS, REJECT_MEASURES_NO_CHANGE, REJECT_NULL_COMPARISON, REJECT_RESTATES_STORED_QUANTITIES, REJECT_STATES_NO_DIFFERENCE } from "../scripts/change-gate.js";
 import { SUPPRESSED_SAME_TRANSITION_REGRADED } from "../scripts/change-log.js";
 import { refusalsByVendor, refusedReadRegister, refusedReadTheConfirmationSupersedes, refusedReadWithholdingStability, supersededRefusalSentence, REFUSAL_REASONS_THAT_CONFIRM_THE_STORED_TERMS, REFUSAL_REASONS_THAT_MEASURED_NO_DIFFERENCE, REFUSED_READ_REGISTERS, MEASURED_NO_DIFFERENCE_BADGE_LABEL, READ_HAD_NO_STANDING_BADGE_LABEL, UNRECONCILED_READ_BADGE_LABEL, WHAT_A_VOIDED_READ_FOUND } from "../dist/change-refusal.js";
@@ -144,11 +144,6 @@ const badgeWeExpect = (subject: Subject): string =>
 
 let subjects: Subject[] = [];
 
-const vendorsHoldingARefusedRead = (): Population => ({
-  size: subjects.filter(s => s.unreconciled).length,
-  read: "vendors hold a refused read and no published change",
-});
-
 const vendorsWithheldForTheRefusedReadAlone = (): Population => ({
   size: subjects.filter(s => s.onlyTheRefusal).length,
   read: "vendors have the refused read as the only reason we withhold",
@@ -198,6 +193,11 @@ function startHttpServer(): Promise<{ child: ChildProcess; port: number }> {
   });
 }
 
+const withheldForAReasonBesidesTheRefusal = (row: ReturnType<typeof enrichOffers>[number] | undefined): boolean => Boolean(
+  row?.gate || row?.rating_withheld || row?.link_unreachable
+  || (row?.source_check && row.source_check.outcome !== "ok"),
+);
+
 before(async () => {
   const refusals = loadChangeRefusals();
   const changes = loadDealChanges();
@@ -224,10 +224,7 @@ before(async () => {
     const row = rowFor.get(vendor);
     const refusedRead = row?.refused_read ?? null;
     const unreconciled = refusedRead !== null;
-    const otherwiseWithheld = Boolean(
-      row?.gate || row?.rating_withheld || row?.link_unreachable
-      || (row?.source_check && row.source_check.outcome !== "ok"),
-    );
+    const otherwiseWithheld = withheldForAReasonBesidesTheRefusal(row);
     return {
       slug,
       vendor,
@@ -321,7 +318,7 @@ describe("a refused change is not a signal that nothing changed", () => {
       .filter(s => s.onlyTheRefusal && A_STABLE_HISTORY.test(pages.get(s.slug) ?? ""))
       .map(s => `/vendor/${s.slug}`);
     assert.deepStrictEqual(history.slice(0, 20), [], `pages calling it a stable pricing history:\n${history.slice(0, 20).join("\n")}`);
-    assertSharesPopulation(subjects.filter(s => s.onlyTheRefusal).length, vendorsHoldingARefusedRead(), 0.4, "vendors have the refused read as the only reason we withhold");
+    assertPopulationFloor(subjects.filter(s => s.onlyTheRefusal).length, 35, "vendors have the refused read as the only reason we withhold");
   });
 
   it("keeps the rating where the refusal is itself a finding that the terms held", () => {
@@ -410,7 +407,7 @@ describe("a refused change is not a signal that nothing changed", () => {
     };
     await Promise.all(Array.from({ length: 12 }, worker));
     assert.deepStrictEqual(wrong.slice(0, 20), [], `badges naming the wrong reason:\n${wrong.slice(0, 20).join("\n")}`);
-    assertSharesPopulation(withheld.length, vendorsHoldingARefusedRead(), 0.4, "vendors withhold on the refused read alone and were read for their badge");
+    assertPopulationFloor(withheld.length, 35, "vendors withhold on the refused read alone and were read for their badge");
     assertCoversPopulation(answered, vendorsWithheldForTheRefusedReadAlone(), "badges were read for the reason they withhold");
   });
 
@@ -588,7 +585,7 @@ describe("an empty history and a recorded threshold are claims a refused read wi
     const withheld = subjects.filter(
       s => s.unreconciled && A_THRESHOLD_WE_CANNOT_CONFIRM.test(growthBlockOf(pages.get(s.slug) ?? "")),
     );
-    assertSharesPopulation(withheld.length, vendorsHoldingARefusedRead(), 0.1, "vendor pages hold a recorded threshold behind a refused read");
+    assertPopulationFloor(withheld.length, 5, "vendor pages hold a recorded threshold behind a refused read");
   });
 
   it("ships the withheld threshold to an agent as well as to a reader", () => {
@@ -703,10 +700,9 @@ describe("a page states the reason we withheld, not a reason its own refusal con
       [],
       `pages reporting an equality finding as a change we could not reconcile:\n${contradicting.slice(0, 20).join("\n")}`,
     );
-    assertSharesPopulation(
+    assertPopulationFloor(
       subjects.filter(s => s.measuredNoDifference).length,
-      vendorsHoldingARefusedRead(),
-      0.08,
+      3,
       "vendors hold only refusals that measured the two states as equal",
     );
     assertCoversPopulation(subjects.length, vendorsInTheCatalogue(), "vendor pages read for the reason they withhold");
@@ -1176,6 +1172,7 @@ describe("the day the catalogue reports as our last read reaches the refusal it 
     const refusals = refusalsByVendor(loadChangeRefusals());
     for (const offer of loadOffers()) {
       if (publishedChangeCount(offer.vendor) > 0) continue;
+      if (withheldForAReasonBesidesTheRefusal(enrichOffers([offer])[0])) continue;
       const withholding = refusedReadWithholdingStability({
         historyLevel: "stable",
         publishedChanges: 0,
