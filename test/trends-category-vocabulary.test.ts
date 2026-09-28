@@ -176,10 +176,11 @@ describe("every trends row lands on the page it promised", () => {
       const slug = toSlug(resolveChangeCategory((change as { category: string }).category));
       const html = await (await fetch(`${base}/trends/${slug}`)).text();
       const history = (html.split("<h2>Pricing Change Timeline</h2>")[1] ?? "").split("<h2")[0];
-      assert.ok(history.includes('class="timeline-item'), `/trends/${slug} lists no record in its Pricing Change Timeline`);
+      const itemDates = [...history.matchAll(/<span class="timeline-date">([^<]*)<\/span>/g)].map(([, dated]) => dated);
+      assert.ok(itemDates.length > 0, `/trends/${slug} lists no record in its Pricing Change Timeline`);
       assert.ok(
-        !history.includes((change as { date: string }).date),
-        `/trends/${slug} renders ${(change as { date: string }).date} inside its history`,
+        !itemDates.some((dated) => dated.includes((change as { date: string }).date)),
+        `/trends/${slug} dates a record ${(change as { date: string }).date} inside its history`,
       );
       assert.match(html, /Announced, not yet in effect/);
     }
