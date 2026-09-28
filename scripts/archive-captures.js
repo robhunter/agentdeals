@@ -1,3 +1,5 @@
+import { execFileSync } from "node:child_process";
+
 const CDX_ENDPOINT = "https://web.archive.org/cdx/search/cdx";
 const WAYBACK = "https://web.archive.org/web";
 const RETRYABLE_STATUSES = new Set([429, 502, 503, 504]);
@@ -116,4 +118,16 @@ export function createArchiveClient({
       return result.ok ? { html: result.body } : { unavailable: result.problem };
     },
   };
+}
+
+export function commitDaysTouching(text, file = "data/index.json") {
+  return execFileSync("git", ["log", "--reverse", "--format=%cs", `-S${text}`, "--", file], { encoding: "utf-8", maxBuffer: 16 * 1024 * 1024 })
+    .split("\n")
+    .map((line) => line.trim())
+    .filter((line) => /^\d{4}-\d{2}-\d{2}$/.test(line));
+}
+
+export function dayOurTextEntered(text, { commitDays = commitDaysTouching } = {}) {
+  if (!String(text ?? "").trim()) return null;
+  return commitDays(text)[0] ?? null;
 }

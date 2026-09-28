@@ -1,7 +1,7 @@
 import { describe, it } from "node:test";
 import assert from "node:assert";
 
-const { cdxUrl, parseCdxRows, nearestCapture, captureUrl, createArchiveClient } = await import("../scripts/archive-captures.js");
+const { cdxUrl, parseCdxRows, nearestCapture, captureUrl, createArchiveClient, dayOurTextEntered } = await import("../scripts/archive-captures.js");
 
 const HEADER = ["timestamp", "original", "statuscode", "mimetype"];
 
@@ -128,5 +128,16 @@ describe("reading the Archive at a pace it accepts", () => {
     const archive = createArchiveClient({ fetchImpl, sleep: time.sleep, clock: time.clock, minIntervalMs: 0 });
     assert.deepStrictEqual(await archive.captureHtml(capture("20250530101500")), { unavailable: "HTTP 404" });
     assert.strictEqual(calls.length, 1);
+  });
+});
+
+describe("the day our text entered the catalogue", () => {
+  it("is the first day a commit added or removed the text, from the history's first commit on", () => {
+    assert.strictEqual(dayOurTextEntered("500 MB database", { commitDays: () => ["2025-04-02", "2025-11-20", "2026-09-27"] }), "2025-04-02");
+  });
+
+  it("is unknown when no commit carries the text, or there is no text", () => {
+    assert.strictEqual(dayOurTextEntered("never written", { commitDays: () => [] }), null);
+    assert.strictEqual(dayOurTextEntered("  ", { commitDays: () => ["2025-04-02"] }), null);
   });
 });
