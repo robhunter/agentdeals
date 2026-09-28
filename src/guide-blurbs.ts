@@ -53,7 +53,7 @@ const WRITTEN_BLURBS: Readonly<Record<string, string>> = {
   "terraform-cloud-free-tier-removed": "Terraform Cloud free tier removal guide — cost analysis, 8 alternatives compared, migration paths for affected teams",
   "gemini-api-pricing-2026": "Gemini API billing guide — spend caps ($250-$100K+/mo), prepaid billing, 3.1 Pro paid-only, free tier changes, 8-provider comparison",
   "free-tier-tracker": "Q1 2026 free tier erosion report — which developer free tiers were removed, reduced, or expanded",
-  "startup-credits": "The definitive startup credits comparison — 15+ programs across cloud infrastructure, fintech, and developer tools with eligibility requirements, vesting schedules, and stacking strategies",
+  "startup-credits": "The definitive startup credits comparison — 13 programs across cloud infrastructure, fintech, and developer tools with eligibility requirements, vesting schedules, and stacking strategies",
   "ai-coding-pricing-2026": "AI coding tools pricing comparison — free tiers, pro plans, power tiers, and recent March 2026 pricing changes",
   "ai-coding-tools-pricing": "The definitive AI coding tools comparison — 17 tools across IDE, CLI, cloud agent, and app builder categories with free tier analysis and cost breakdowns",
   "ci-cd-pricing": "The definitive CI/CD pricing comparison — 17+ tools across general, cloud-native, mobile, and self-hosted categories with free tier analysis and cost breakdowns",
