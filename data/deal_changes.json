@@ -698,11 +698,11 @@
     {
       "vendor": "DigitalOcean",
       "change_type": "restriction",
-      "date": "2026-08-28",
-      "date_source": "discovered",
-      "summary": "The description of credits has been updated. GPU Droplets are now explicitly excluded from core credits, and a separate application process is required for GPU credits. The program now has a $10,000 monthly credit limit.",
-      "previous_state": "Hatch startup program — up to $100K compute credits over 12 months. GPU Droplets at $1.90/GPU/hour for 12 months (H100 excluded from credits). 15 months Standard support. Partner perks from Cloudflare, Stripe, Retool, HubSpot. Must have raised $10M or less",
-      "current_state": "DigitalOcean Startups core credits do not cover GPU Droplet usage. Participants generally are entitled to a $10,000 monthly limit. As of May 13, 2026, you may use your credits on any DigitalOcean services, except NVIDIA H100 GPU Droplets, Kubernetes Bare Metal GPUs, Dedicated Inference, Serverless Inference, Third-party AI models hosted outside of DigitalOcean Infrastructure.",
+      "date": "2026-05-13",
+      "date_source": "vendor_page",
+      "summary": "As of 2026-05-13, DigitalOcean's startup credits exclude Dedicated and Serverless Inference, third-party AI models, Paperspace Machines, Cloudways and Bare Metal GPUs as well as GPU Droplets and H100 GPU products, the two exclusions its page stated before. The page also now puts the monthly credit limit at $10,000; its April capture mentioned a monthly limit without an amount.",
+      "previous_state": "Credits came as a fixed amount each month over the 1-year programme, with a monthly credit limit of unstated amount, and could not be used on GPU Droplets or H100 GPU products (Internet Archive capture of 2026-04-11)",
+      "current_state": "Credits cannot be used on GPU Droplets, NVIDIA H100 GPU Kubernetes, Bare Metal GPUs, Dedicated Inference, Serverless Inference, third-party AI models hosted outside DigitalOcean, Paperspace Machines or Cloudways services; participants generally have a $10,000 monthly limit",
       "impact": "medium",
       "source_url": "https://www.digitalocean.com/startups",
       "category": "Startup Programs",
@@ -5110,12 +5110,12 @@
     {
       "vendor": "Netlify",
       "change_type": "pricing_model_change",
-      "date": "2026-04-17",
-      "summary": "Netlify credits-based pricing updated: bandwidth now 20 credits/GB (was 10), compute now 10 credits/GB-hour (was 5), web requests 2 credits/10K (new). Same 300 credits/month allocation but each credit buys less bandwidth and compute.",
-      "previous_state": "300 credits/month: deploys 15/each, bandwidth 10/GB, compute 5/GB-hr",
-      "current_state": "300 credits/month: deploys 15/each, bandwidth 20/GB, compute 10/GB-hr, web requests 2/10K",
+      "date": "2026-04-14",
+      "summary": "Netlify changed its credit rates: bandwidth went from 10 to 20 credits per GB and compute from 5 to 10 credits per GB-hour, while web requests went from 3 to 2 credits per 10,000. The Free plan keeps 300 credits a month, so each credit buys half as much bandwidth and compute.",
+      "previous_state": "300 credits a month: bandwidth 10 credits per GB, compute 5 credits per GB-hour, web requests 3 credits per 10,000 requests",
+      "current_state": "300 credits a month: bandwidth 20 credits per GB, compute 10 credits per GB-hour, web requests 2 credits per 10,000 requests (Netlify changelog, 2026-04-14)",
       "impact": "medium",
-      "source_url": "https://www.netlify.com/pricing/",
+      "source_url": "https://www.netlify.com/changelog/2026-04-14-pricing-updates-april-2026/",
       "category": "Cloud Hosting",
       "alternatives": [
         "Vercel",
@@ -5123,7 +5123,7 @@
         "Railway"
       ],
       "recorded_date": "2026-04-16",
-      "date_source": "hand_written"
+      "date_source": "vendor_page"
     },
     {
       "vendor": "Alibaba Cloud Qwen Code",
@@ -5477,9 +5477,9 @@
       "change_type": "limits_reduced",
       "date": "2026-08-28",
       "date_source": "discovered",
-      "summary": "Egress bandwidth for the free tier is now 20GiB, down from 100 GB. KV storage remains at 1 GiB, but the free tier now includes 1,000,000 KV read units and 500,000 KV write units. CPU time is now 10 hours, down from 15 hours. Revision storage is 10 GiB.",
-      "previous_state": "Edge runtime — 1M requests/month, 100 GB egress, 1 GiB KV storage, 450K KV reads/month, 15 hours CPU time/month",
-      "current_state": "Free tier includes 1M requests/month, 20GiB egress, 1 GiB KV storage, 1,000,000 KV read units/month, 500,000 KV write units/month, and 10 hr CPU time.",
+      "summary": "Deno Deploy cut its Free plan's CPU time from 15 to 10 hours a month, memory time from 350 GB-hours to 150 GiB-hours, custom domains from 50 to 5, apps from 20 to 10 and team members from 5 to 3; 60 deployments an hour became 15 builds an hour, one at a time. KV read units went up from 450,000 to 1,000,000 a month and write units from 300,000 to 500,000. The pricing page changed between a Common Crawl capture of 2026-08-07 and our read on 2026-08-28.",
+      "previous_state": "Free: CPU time 15 hours a month, memory time 350 GB-hours, 50 custom domains, 20 apps, 5 team members, 60 deployments an hour, 450,000 KV read units and 300,000 KV write units a month",
+      "current_state": "Free: 10 hours of active CPU a month, 150 GiB-hours of memory time, 5 custom domains, 10 apps, 3 team members, 15 builds an hour with 1 concurrent build, 1,000,000 KV read units and 500,000 KV write units a month",
       "impact": "high",
       "source_url": "https://deno.com/deploy/pricing",
       "category": "Cloud Hosting",
@@ -8419,7 +8419,13 @@
       "category": "Cloud Hosting",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-02"
+      "recorded_date": "2026-09-02",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-28",
+        "detail": "Retracted 2026-09-28: nothing changed on the Workers Free plan. Cloudflare's Durable Objects pricing page read \"Workers Free plan : Only Durable Objects with SQLite storage backend are available\", with 100,000 requests and 13,000 GB-s of duration a day, in the Internet Archive's captures of 2025-04-08, 2025-10-07 and 2026-08-18. The reading compared the page with our catalogue text, which did not state the storage backend or the duration limit.",
+        "source_url": "http://web.archive.org/web/20250408173400/https://developers.cloudflare.com/durable-objects/platform/pricing/"
+      }
     },
     {
       "vendor": "Doppler",
@@ -12493,6 +12499,48 @@
       "impact": "low",
       "source_url": "https://github.blog/changelog/2026-06-01-updates-to-github-copilot-billing-and-plans/",
       "category": "AI Coding",
+      "alternatives": [],
+      "recorded_date": "2026-09-28",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Netlify",
+      "change_type": "record_corrected",
+      "date": "2026-09-28",
+      "summary": "Data correction - Netlify's credit-rate change took effect on 2026-04-14, not 2026-04-17, and web requests became cheaper rather than newly billed. Netlify's changelog dates it.",
+      "previous_state": "Recorded 2026-04-16 as pricing_model_change, dated 2026-04-17",
+      "current_state": "pricing_model_change, dated 2026-04-14 from Netlify's changelog",
+      "impact": "low",
+      "source_url": "https://www.netlify.com/changelog/2026-04-14-pricing-updates-april-2026/",
+      "category": "Cloud Hosting",
+      "alternatives": [],
+      "recorded_date": "2026-09-28",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Deno Deploy",
+      "change_type": "limits_reduced",
+      "date": "2026-04-12",
+      "summary": "Egress on the Free plan fell from 100 GB to 20 GB a month. Deno Deploy's pricing page changed between Common Crawl captures of 2026-03-15 and 2026-04-12.",
+      "previous_state": "Free: 100 GB of egress a month",
+      "current_state": "Free: 20 GB of egress a month, shown as 20 GiB since August 2026",
+      "impact": "medium",
+      "source_url": "https://deno.com/deploy/pricing",
+      "category": "Cloud Hosting",
+      "alternatives": [],
+      "recorded_date": "2026-09-28",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "DigitalOcean",
+      "change_type": "record_corrected",
+      "date": "2026-09-28",
+      "summary": "Data correction - DigitalOcean's startup programme changed which services its credits cover on 2026-05-13, the date its page gives, not on 2026-08-28, and GPU Droplets were excluded before that. Our re-read of 2026-08-28 recorded it as a change dated the day it read the page.",
+      "previous_state": "Recorded 2026-08-28 as restriction, dated 2026-08-28",
+      "current_state": "restriction, dated 2026-05-13 from the programme page (\"As of May 13, 2026\")",
+      "impact": "low",
+      "source_url": "https://www.digitalocean.com/startups",
+      "category": "Startup Programs",
       "alternatives": [],
       "recorded_date": "2026-09-28",
       "date_source": "hand_written"
