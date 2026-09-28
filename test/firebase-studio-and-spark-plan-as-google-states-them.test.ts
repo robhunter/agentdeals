@@ -38,7 +38,7 @@ const STATED: Record<string, string[]> = {
     "Existing workspaces keep working and can be migrated.",
     "New ones cannot be created.",
     "Generally available, with a $0 plan for individuals.",
-    "Google Antigravity or AI Studio for Gemini prototyping.",
+    "Google Antigravity (a local, code-first desktop app) or Google AI Studio (full-stack apps in the browser), Google's two recommended paths.",
     "Verify everything works before March 22, 2027.",
     "June 22, 2026 (new workspaces and sign-ups disabled) and March 22, 2027 (data deletion)",
   ],

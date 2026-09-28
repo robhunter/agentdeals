@@ -8237,7 +8237,7 @@ const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
   {
     slug: "firebase-studio-shutdown",
     title: "Firebase Studio Shutdown Guide — Free Cloud IDE Alternatives & Migration Paths",
-    metaDesc: "Firebase Studio has taken no new workspaces since June 22, 2026 and shuts down on March 22, 2027. Compare free cloud IDE alternatives: GitHub Codespaces, Gitpod, Replit, StackBlitz, CodeSandbox, Coder. Migration paths and free tier comparison.",
+    metaDesc: "Firebase Studio has taken no new workspaces since June 22, 2026 and shuts down on March 22, 2027. Compare cloud IDE alternatives' free terms: GitHub Codespaces, Replit, StackBlitz, CodeSandbox, Coder; Ona (formerly Gitpod) has no free plan. Migration paths and free tier comparison.",
     contextHtml: "",
     tag: "firebase-studio-alternative",
     primaryVendor: "Firebase Studio",
@@ -14452,7 +14452,7 @@ ${buildCards(other)}
       <tr>
         <td style="font-weight:600"><a href="/vendor/windsurf" style="color:var(--text)">Windsurf</a></td>
         <td>AI IDE</td>
-        <td>Basic Cascade AI flows</td>
+        <td>Devin Desktop (formerly Windsurf): light agent quota, unlimited Tab completions and inline edits</td>
         <td>No</td>
         <td>AI-powered IDE with agentic coding workflows</td>
       </tr>
@@ -14466,7 +14466,7 @@ ${buildCards(other)}
       <tr>
         <td style="font-weight:600"><a href="/vendor/replit" style="color:var(--text)">Replit</a></td>
         <td>Cloud IDE</td>
-        <td>10 GiB storage, multiplayer</td>
+        <td>2 GB storage on the free Starter plan; no collaboration seats</td>
         <td>No</td>
         <td>Browser-based IDE with AI assistant and deployment</td>
       </tr>
@@ -25381,8 +25381,8 @@ ${mcpCtaCss()}
 }
 
 function buildFirebaseStudioShutdownPage(): string {
-  const title = "Firebase Studio Shutdown: Migration Cost Guide & Free IDE Alternatives";
-  const metaDesc = "Firebase Studio has taken no new workspaces since June 22, 2026 and shuts down on March 22, 2027. Compare migration costs for GitHub Codespaces, Gitpod, Replit, StackBlitz, CodeSandbox, Coder. Hidden costs of switching, free tier comparison, and step-by-step migration checklist.";
+  const title = "Firebase Studio Shutdown: Migration Paths & Free IDE Alternatives";
+  const metaDesc = "Firebase Studio has taken no new workspaces since June 22, 2026 and shuts down on March 22, 2027. Compare Google's two recommended paths (Antigravity and Google AI Studio) with the free terms of GitHub Codespaces, Replit, CodeSandbox, StackBlitz and Coder, plus a migration checklist.";
   const slug = "firebase-studio-shutdown";
   const pubDate = "2026-04-02";
 
@@ -25416,17 +25416,17 @@ function buildFirebaseStudioShutdownPage(): string {
   const alternatives: CloudIDE[] = [
     { name: "Google Antigravity", slug: "", freeCompute: "TBA (launching 2026)", freeStorage: "TBA", collaboration: "TBA", aiFeatures: "Agentic local workflows, code-first IDE", bestFor: "Google ecosystem developers, agentic coding", type: "google-path" },
     { name: "Google AI Studio", slug: "google-gemini-api", freeCompute: "Web-based (no compute needed)", freeStorage: "N/A", collaboration: "N/A", aiFeatures: "Gemini API prototyping, prompt testing", bestFor: "Quick AI prototyping, Gemini API testing", type: "google-path" },
-    { name: "GitHub Codespaces", slug: "github-codespaces", freeCompute: "120 core-hours/month (2-core)", freeStorage: "15 GB/month", collaboration: "Live Share built-in", aiFeatures: "Copilot integration", bestFor: "Full dev environment, GitHub-native workflows", type: "cloud-ide" },
-    { name: "Gitpod", slug: "gitpod", freeCompute: "50 hours/month", freeStorage: "Workspace snapshots", collaboration: "Shared workspaces", aiFeatures: "AI code completions", bestFor: "Pre-configured dev environments, open-source projects", type: "cloud-ide" },
-    { name: "Replit", slug: "replit", freeCompute: "Limited (shared vCPU)", freeStorage: "10 GiB per Repl", collaboration: "Real-time multiplayer", aiFeatures: "Replit AI, Ghostwriter", bestFor: "Rapid prototyping, learning, pair programming", type: "cloud-ide" },
-    { name: "CodeSandbox", slug: "codesandbox", freeCompute: "400 VM credits/month", freeStorage: "20 GB", collaboration: "Real-time collaboration", aiFeatures: "AI code suggestions", bestFor: "Web development, React/Vue/Angular projects", type: "cloud-ide" },
-    { name: "StackBlitz", slug: "stackblitz", freeCompute: "Unlimited (WebContainer, runs in browser)", freeStorage: "Browser-based", collaboration: "Share via URL", aiFeatures: "Bolt.new integration", bestFor: "Instant startup, frontend frameworks, no server needed", type: "cloud-ide" },
+    { name: "GitHub Codespaces", slug: "github-codespaces", freeCompute: "120 core hours/month on GitHub Free personal accounts (60 hours on 2 cores)", freeStorage: "15 GB/month", collaboration: "Live Share (VS Code extension)", aiFeatures: "Copilot integration", bestFor: "Full dev environment, GitHub-native workflows", type: "cloud-ide" },
+    { name: "Ona (formerly Gitpod)", slug: "gitpod", freeCompute: "No free plan; $100 in starting credits (Core from $20/month)", freeStorage: "None free", collaboration: "Core plan", aiFeatures: "Core plan", bestFor: "Pre-configured dev environments, open-source projects", type: "cloud-ide" },
+    { name: "Replit", slug: "replit", freeCompute: "Not published for Starter", freeStorage: "2 GB (Starter)", collaboration: "None on Starter (0 seats)", aiFeatures: "Replit Agent (daily credits, monthly cap)", bestFor: "Rapid prototyping, learning, pair programming", type: "cloud-ide" },
+    { name: "CodeSandbox", slug: "codesandbox", freeCompute: "No VM credits on the free plan", freeStorage: "20 GB", collaboration: "Live sessions (VM Sandboxes only; need VM credits)", aiFeatures: "AI code suggestions", bestFor: "Web development, React/Vue/Angular projects", type: "cloud-ide" },
+    { name: "StackBlitz", slug: "stackblitz", freeCompute: "Runs in the browser; unlimited public projects", freeStorage: "1 MB uploads per project", collaboration: "Share via URL", aiFeatures: "Bolt.new integration", bestFor: "Instant startup, frontend frameworks, no server needed", type: "cloud-ide" },
     { name: "Coder", slug: "coder", freeCompute: "Unlimited (self-hosted OSS)", freeStorage: "Your infrastructure", collaboration: "Team workspaces", aiFeatures: "AI assistant integration", bestFor: "Enterprise, self-hosted, full control", type: "cloud-ide" },
     { name: "Cursor", slug: "cursor", freeCompute: "Local (limited Agent requests)", freeStorage: "Local", collaboration: "N/A", aiFeatures: "AI-first: chat, edit, compose, multi-file", bestFor: "AI-assisted coding, VS Code users wanting AI superpowers", type: "cloud-ide" },
-    { name: "Windsurf", slug: "windsurf", freeCompute: "Local (free tier with quotas)", freeStorage: "Local", collaboration: "N/A", aiFeatures: "Cascade flows, AI agents, multi-file edits", bestFor: "Agentic coding, AI-driven development", type: "cloud-ide" },
+    { name: "Devin Desktop (formerly Windsurf)", slug: "windsurf", freeCompute: "Local (light agent quota)", freeStorage: "Local", collaboration: "N/A", aiFeatures: "Agents, unlimited Tab completions and inline edits", bestFor: "Agentic coding, AI-driven development", type: "cloud-ide" },
     { name: "Bolt.new", slug: "bolt-new", freeCompute: "Limited free tokens", freeStorage: "Project-based", collaboration: "Share via URL", aiFeatures: "Full-stack AI builder from prompts", bestFor: "Non-coders building full apps, rapid prototyping", type: "ai-builder" },
-    { name: "Lovable", slug: "lovable", freeCompute: "5 free generations/day", freeStorage: "Project-based", collaboration: "Team sharing", aiFeatures: "AI app builder, Supabase integration", bestFor: "MVPs, startup prototyping, design-to-code", type: "ai-builder" },
-    { name: "v0 (Vercel)", slug: "v0", freeCompute: "200 free generations/month", freeStorage: "N/A", collaboration: "Share via URL", aiFeatures: "UI generation from prompts", bestFor: "UI/component generation, React/Next.js projects", type: "ai-builder" },
+    { name: "Lovable", slug: "lovable", freeCompute: "5 build credits/day (up to 30/month)", freeStorage: "Project-based", collaboration: "Team sharing", aiFeatures: "AI app builder, Supabase integration", bestFor: "MVPs, startup prototyping, design-to-code", type: "ai-builder" },
+    { name: "v0 (Vercel)", slug: "v0", freeCompute: "$5 of monthly credits, 7 messages/day", freeStorage: "N/A", collaboration: "Share via URL", aiFeatures: "UI generation from prompts", bestFor: "UI/component generation, React/Next.js projects", type: "ai-builder" },
   ];
 
   const cloudIdes = alternatives.filter(a => a.type === "cloud-ide");
@@ -25587,7 +25587,7 @@ ${mcpCtaCss()}
   <div class="executive-summary">
     <p><strong>What\u2019s happening:</strong> Google is shutting down Firebase Studio (formerly Project IDX), its cloud-based IDE. <strong>New workspace creation has been disabled since June 22, 2026.</strong> Existing workspaces remain accessible until <strong>March 22, 2027</strong>, when all data will be permanently deleted. Developers must export their projects before this date.</p>
     <p><strong>What\u2019s NOT affected:</strong> Core Firebase services \u2014 Firestore, Authentication, Cloud Functions, App Hosting, Realtime Database, Cloud Storage, Hosting \u2014 are <strong>not affected</strong> by this shutdown. This only impacts the cloud IDE/development environment.</p>
-    <p><strong>Google\u2019s official paths:</strong> Google is directing developers to <strong>Antigravity</strong> (a new agentic code-first IDE) and <strong>AI Studio</strong> (web-based prototyping for Gemini API). Neither is a 1:1 replacement for Firebase Studio\u2019s full cloud IDE experience.</p>
+    <p><strong>Google\u2019s official paths:</strong> Google recommends migrating to Antigravity or Google AI Studio. Antigravity is a desktop app; Google AI Studio runs in the browser. Google recommends Antigravity, which runs locally, if you mainly used Firebase Studio's Code View.</p>
     <p><strong>Our data says:</strong> Firebase\u2019s stability rating is <strong style="color:${stabilityColor}">${firebaseStability}</strong> based on ${firebaseChanges.length} tracked changes \u2014 including Studio shutdown, Spark plan forced Blaze migration, and storage bucket access restrictions. Developers should evaluate independent cloud IDEs for long-term stability.</p>
   </div>
 
@@ -25600,14 +25600,13 @@ ${mcpCtaCss()}
       <li><a href="#ai-builders">AI Full-Stack Builder Alternatives</a></li>
       <li><a href="#recommendations">Best For Each Use Case</a></li>
       <li><a href="#migration-checklist">Migration Checklist</a></li>
-      <li><a href="#hidden-costs">Hidden Costs of Migration</a></li>
       <li><a href="#firebase-timeline">Firebase Pricing Change Timeline</a></li>
       <li><a href="#methodology">Methodology</a></li>
     </ol>
   </div>
 
   <h2 id="timeline">Shutdown Timeline</h2>
-  <p class="section-intro">Firebase Studio (rebranded from Project IDX in early 2025) is being wound down in two phases. Understanding the timeline is critical for planning your migration.</p>
+  <p class="section-intro">Firebase Studio (launched in preview in April 2025, taking over Project IDX) is being wound down in two phases. Understanding the timeline is critical for planning your migration.</p>
 
   <div style="overflow-x:auto">
   <table class="pricing-table">
@@ -25652,18 +25651,18 @@ ${mcpCtaCss()}
       <p class="best-for">Best for: Google ecosystem developers who want AI-assisted local development rather than a cloud IDE</p>
     </div>
     <div class="decision-path" style="border-left:3px solid #34a853">
-      <h3>AI Studio \u2014 Web-Based Prototyping</h3>
-      <p>Google\u2019s web-based interface for <strong>Gemini API prototyping</strong> and testing. Not a general-purpose IDE \u2014 focused on prompt engineering, model evaluation, and API experimentation. <a href="/vendor/google-gemini-api">Free tier available</a> with rate limits.</p>
-      <p class="best-for">Best for: AI/ML developers prototyping with Gemini API, prompt testing, quick API experiments</p>
+      <h3>AI Studio \u2014 Full-Stack Apps in the Browser</h3>
+      <p>Google AI Studio builds full-stack web apps from prompts in the browser, with Cloud Firestore and Firebase Authentication built in. Google recommends it if you built your app with Firebase Studio's App Prototyping agent and value rapid, prompt-based prototyping.</p>
+      <p class="best-for">Best for: apps built with Firebase Studio's App Prototyping agent, if you value rapid, prompt-based prototyping</p>
     </div>
   </div>
 
   <div class="context-box">
-    <strong>Gap analysis:</strong> Neither Antigravity nor AI Studio replicates Firebase Studio\u2019s full cloud IDE experience: browser-based editing, cloud compute, integrated deploy-to-Firebase, Nix environment configuration, and team collaboration. For a true cloud IDE replacement, evaluate the independent alternatives below.
+    <strong>Gap analysis:</strong> Both can keep your existing Firebase App Hosting URL: Antigravity's agent publishes to it, and Google AI Studio reaches it through GitHub sync. AI Studio's own Publish button deploys to Cloud Run at a new URL. Antigravity is a desktop application, while Google AI Studio runs in the browser.
   </div>
 
   <h2 id="cloud-ide-comparison">Cloud IDE Free Tier Comparison</h2>
-  <p class="section-intro">Free tier details for ${cloudIdes.length} cloud IDE alternatives. Compute hours, storage, collaboration features, and AI capabilities compared. Click provider names for full vendor profiles with the limits we hold.</p>
+  <p class="section-intro">Free terms of 7 alternatives: 5 cloud IDEs (GitHub Codespaces, Replit, CodeSandbox, StackBlitz, Coder) and 2 local AI editors (Cursor, Devin Desktop). Ona (formerly Gitpod) has no free plan. Click provider names for full vendor profiles with the limits we hold.</p>
 
   <div style="overflow-x:auto">
   <table class="pricing-table">
@@ -25684,7 +25683,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="context-box">
-    <strong>Compute model differences:</strong> GitHub Codespaces and Gitpod run full VMs with CPU/RAM quotas (billed per hour). StackBlitz runs entirely in the browser via WebContainers \u2014 no server needed, instant startup, unlimited free usage. Replit and CodeSandbox use shared infrastructure with credits. Coder is self-hosted and free as OSS, but you provide the infrastructure. Cursor and Windsurf are local editors with cloud AI features.
+    <strong>Compute model differences:</strong> GitHub Codespaces runs VMs, with 120 core hours a month on a GitHub Free personal account. Ona has no free plan. StackBlitz runs Node.js in the browser. Replit's free plan has daily Agent credits; CodeSandbox's no longer includes VM time. Coder is self-hosted. Cursor and Devin Desktop are local editors.
   </div>
 
   <h2 id="ai-builders">AI Full-Stack Builder Alternatives</h2>
@@ -25714,19 +25713,15 @@ ${mcpCtaCss()}
     <h3>Recommendations by Use Case</h3>
     <div class="verdict-item">
       <strong>Closest to Firebase Studio experience:</strong>
-      <p>GitHub Codespaces \u2014 full cloud VM, VS Code in browser, 120 core-hours/month free, integrated with GitHub. Nearest 1:1 replacement for Firebase Studio\u2019s cloud IDE workflow.</p>
+      <p>GitHub Codespaces: cloud VMs with VS Code in the browser. A GitHub Free personal account includes 120 core hours a month (60 hours on a 2-core machine); organization plans include no free quota. Live Share works through the VS Code extension.</p>
     </div>
     <div class="verdict-item">
-      <strong>Best for open-source projects:</strong>
-      <p>Gitpod \u2014 50 hours/month free, pre-configured dev environments via .gitpod.yml, great for maintainers who want contributors to spin up instantly.</p>
+      <strong>Browser-only Node.js projects:</strong>
+      <p>StackBlitz: the free Personal plan includes unlimited public projects and up to 1MB of file uploads per project. Localhost backends and CORS-protected APIs need Pro.</p>
     </div>
     <div class="verdict-item">
-      <strong>No compute limits:</strong>
-      <p>StackBlitz \u2014 runs in the browser via WebContainers. No server, no quotas, instant startup. Limited to Node.js/frontend stacks but unbeatable for those use cases.</p>
-    </div>
-    <div class="verdict-item">
-      <strong>Best for learning &amp; pair programming:</strong>
-      <p>Replit \u2014 real-time multiplayer editing, built-in AI assistant, supports 50+ languages. Lower compute limits but great collaboration features.</p>
+      <strong>Replit's free Starter plan:</strong>
+      <p>Replit: the free Starter plan includes 2GB of file storage, 1 published app (taken down after 30 days) and daily Agent credits up to a monthly cap, with Lite builds only. It has no collaboration seats; Core ($20 a month) has 5.</p>
     </div>
     <div class="verdict-item">
       <strong>Enterprise / self-hosted:</strong>
@@ -25734,7 +25729,7 @@ ${mcpCtaCss()}
     </div>
     <div class="verdict-item">
       <strong>AI-assisted coding (local):</strong>
-      <p>Cursor or Windsurf \u2014 not cloud IDEs, but if you\u2019re switching away from the cloud anyway, these offer superior AI coding features. Both have free tiers with generous completions.</p>
+      <p>Cursor or Devin Desktop (formerly Windsurf): local editors, not cloud IDEs. Cursor's free Hobby plan includes limited Agent requests. Devin Desktop's free plan includes a light agent quota, limited models, and unlimited Tab completions and inline edits.</p>
     </div>
     <div class="verdict-item">
       <strong>Non-coders building apps:</strong>
@@ -25742,7 +25737,7 @@ ${mcpCtaCss()}
     </div>
     <div class="verdict-item">
       <strong>Staying in Google ecosystem:</strong>
-      <p>Google Antigravity or AI Studio for Gemini prototyping. Note: Antigravity is local-first, not a cloud IDE \u2014 it\u2019s a different paradigm than Firebase Studio.</p>
+      <p>Google Antigravity (a local, code-first desktop app) or Google AI Studio (full-stack apps in the browser), Google's two recommended paths.</p>
     </div>
   </div>
 
@@ -25754,63 +25749,15 @@ ${mcpCtaCss()}
     <li><strong>Save environment configuration</strong> \u2014 copy your Nix config, .idx files, environment variables, and secrets. These won\u2019t transfer automatically.</li>
     <li><strong>Inventory Firebase service dependencies</strong> \u2014 list which Firebase services your project uses (Firestore, Auth, Hosting, etc.). These are NOT shutting down \u2014 only the IDE is.</li>
     <li><strong>Choose your replacement IDE</strong> \u2014 use the comparison table above. Test with a small project first before migrating everything.</li>
-    <li><strong>Recreate dev environment</strong> \u2014 set up equivalent config in your new IDE (devcontainer.json for Codespaces, .gitpod.yml for Gitpod, etc.).</li>
+    <li><strong>Recreate dev environment</strong> \u2014 set up equivalent config in your new IDE (for example devcontainer.json for Codespaces).</li>
     <li><strong>Update CI/CD pipelines</strong> \u2014 if you used Firebase Studio\u2019s integrated deploy, set up Firebase CLI deployment in your new workflow.</li>
     <li><strong>Test the full workflow</strong> \u2014 edit, build, test, and deploy from your new environment. Verify everything works before March 22, 2027.</li>
     <li><strong>Notify team members</strong> \u2014 share the new environment setup. Update README and onboarding docs.</li>
     <li><strong>Set a calendar reminder</strong> \u2014 March 2027 for final data deletion. Even if you\u2019ve migrated, verify nothing was left behind.</li>
   </ul>
 
-  <h2 id="hidden-costs">Hidden Costs of Migration</h2>
-  <p class="section-intro">Subscription pricing is only part of the cost. The real expense of switching cloud IDEs is the invisible productivity hit during the transition.</p>
-
-  <div style="overflow-x:auto">
-  <table class="pricing-table">
-    <thead>
-      <tr>
-        <th>Cost Category</th>
-        <th>Solo Developer</th>
-        <th>Small Team (3\u20135)</th>
-        <th>Enterprise (10+)</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><strong>Environment setup</strong><br><span class="text-muted">Replicating devcontainer, Nix config, extensions</span></td>
-        <td>2\u20134 hours</td>
-        <td>1\u20132 days</td>
-        <td>1\u20132 weeks</td>
-      </tr>
-      <tr>
-        <td><strong>Learning curve</strong><br><span class="text-muted">New keybindings, UI, debugging workflows</span></td>
-        <td>1\u20132 days</td>
-        <td>3\u20135 days</td>
-        <td>1\u20133 weeks</td>
-      </tr>
-      <tr>
-        <td><strong>Workflow disruption</strong><br><span class="text-muted">CI/CD reconfig, deploy pipeline updates</span></td>
-        <td>1\u20132 hours</td>
-        <td>0.5\u20131 day</td>
-        <td>1\u20132 weeks</td>
-      </tr>
-      <tr>
-        <td><strong>Team retraining</strong><br><span class="text-muted">Onboarding docs, pairing sessions, support</span></td>
-        <td>N/A</td>
-        <td>2\u20133 days</td>
-        <td>2\u20134 weeks</td>
-      </tr>
-      <tr>
-        <td><strong>Direct cost (annual)</strong><br><span class="text-muted">Subscription pricing for equivalent features</span></td>
-        <td>$0\u2013$120</td>
-        <td>$0\u2013$600</td>
-        <td>$500\u2013$5,000+</td>
-      </tr>
-    </tbody>
-  </table>
-  </div>
-
   <div class="cost-insight">
-    <p><strong>Key insight:</strong> For solo developers, most alternatives have free tiers that match or exceed what Firebase Studio offered \u2014 the real cost is 1\u20132 days of productivity loss. For teams, the retraining cost often exceeds a full year of subscription pricing. Start the migration early to spread the disruption across multiple sprints rather than a single painful week.</p>
+    <p><strong>Key insight:</strong> Firebase Studio offered free access to 3 workspaces per user, or 10 with a Google Developer Program profile. Ona has no free plan (it offers $100 in credits to start), and CodeSandbox's free plan no longer includes VM time.</p>
     <p>See our <a href="/ide-code-editors-alternatives">IDE &amp; Code Editors guide</a> for detailed free tier comparisons across all ${ideAlternativesCount} alternatives.</p>
   </div>
 
