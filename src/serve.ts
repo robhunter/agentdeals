@@ -26435,20 +26435,20 @@ function buildShutdownTrackerPage(): string {
       what: "Legacy Contact Lists API v1 sunset \u2014 replaced by Lists API v3",
       deadline: "2026-04-30",
       dateSource: "https://developers.hubspot.com/changelog/extension-contact-lists-api-v1-sunset-moved-to-april-30-2026",
-      impact: "CRM integrations using v1 endpoints will stop working",
-      whoAffected: "Developers with HubSpot CRM integrations using Contact Lists API v1",
-      migrationPath: "Migrate to Lists API v3 \u2014 new filtering syntax, pagination changes",
+      impact: "Contact Lists API v1 endpoints return HTTP 404. HubSpot's changelog said three endpoints listing all, recently updated or recently created contacts would keep working, but its current migration guide lists them as returning 404 too. Six Contacts API v1 read endpoints (a contact or a batch of contacts by visitor ID, email address or user token) still work but no longer return list memberships.",
+      whoAffected: "Developers using the Contact Lists API v1 endpoints, or reading list memberships from Contacts API v1 endpoints.",
+      migrationPath: "Move to the Lists v3 API or a date-versioned Lists API (/crm/lists/2026-03 in HubSpot's migration guide; 2026-09 is the latest version). Map each v1 list ID (legacyListId) to its listId first: HubSpot warns that a v1 ID used on the new endpoints may update or delete the wrong list.",
       status: "active",
     },
     {
       service: "OpenAI Realtime API Beta",
       vendorSlug: "openai",
-      what: "Realtime API beta endpoints deprecated \u2014 replaced by stable Realtime API",
+      what: "The Realtime API Beta (requests with the OpenAI-Beta: realtime=v1 header) was removed from the API on May 12, 2026.",
       deadline: "2026-05-12",
       dateSource: "https://developers.openai.com/api/docs/deprecations",
-      impact: "Voice and streaming AI applications using beta endpoints",
-      whoAffected: "Developers building voice assistants, real-time transcription, or streaming AI apps with OpenAI",
-      migrationPath: "Switch to stable Realtime API endpoints \u2014 mostly compatible, some parameter changes",
+      impact: "Calls to the beta interface no longer work.",
+      whoAffected: "Integrations still on the beta interface. The GA Realtime API was not affected.",
+      migrationPath: "Move to the GA Realtime API: remove the OpenAI-Beta: realtime=v1 header, create ephemeral credentials for browser or mobile clients with POST /v1/realtime/client_secrets, use /v1/realtime/calls for WebRTC sessions, set session.type, move output audio settings under session.audio.output, and use the GA response event names, such as response.output_text.delta, response.output_audio.delta and response.output_audio_transcript.delta.",
       status: "active",
     },
     {
@@ -26458,30 +26458,30 @@ function buildShutdownTrackerPage(): string {
       deadline: "2026-05-12",
       dateSource: "https://developers.openai.com/api/docs/deprecations",
       impact: "Image generation apps calling dall-e-2 or dall-e-3",
-      whoAffected: "Developers using the dall-e-2 or dall-e-3 model IDs in API calls",
-      migrationPath: "Update the model parameter to gpt-image-2 \u2014 test output quality differences",
+      whoAffected: "Developers calling dall-e-2 or dall-e-3, including image generation calls (POST /v1/images/generations) that leave out the model parameter, which OpenAI's reference says default to dall-e-2 unless a parameter specific to the GPT image models is used, and any use of the image variations endpoint, which supports only dall-e-2.",
+      migrationPath: "OpenAI's substitutes are gpt-image-2, gpt-image-1 or gpt-image-1-mini, and its DALL\u00b7E model pages now recommend GPT-Image-2.5 Sunburst. The GPT image models return base64-encoded images only (response_format is not supported), do not take style, and take quality low, medium or high instead of standard or hd; GPT-Image-2.5 Sunburst also takes xhigh and max. OpenAI may require API Organization Verification.",
       status: "active",
     },
     {
       service: "OpenAI legacy model snapshots",
       vendorSlug: "openai",
-      what: "gpt-3.5-turbo, gpt-4, gpt-4-1106-preview, gpt-4-turbo, gpt-4.1-nano, gpt-4o-2024-05-13, o1, o1-pro, o3-mini, o4-mini and gpt-image-1 shut down, with fine-tuned versions of gpt-3.5-turbo, gpt-4, gpt-4.1-nano, o4-mini, babbage-002 and davinci-002",
+      what: "gpt-3.5-turbo (gpt-3.5-turbo-0125, gpt-3.5-turbo-completions), gpt-4 (gpt-4-0613, gpt-4-0613-completions, gpt-4-completions), gpt-4-turbo (gpt-4-turbo-2024-04-09, gpt-4-turbo-completions), gpt-4.1-nano (gpt-4.1-nano-2025-04-14), gpt-4o-2024-05-13, o1 (o1-2024-12-17), o1-pro (o1-pro-2025-03-19), o3-mini (o3-mini-2025-01-31), o4-mini (o4-mini-2025-04-16) and gpt-image-1 shut down in the OpenAI API on October 23, 2026, with fine-tuned versions of gpt-3.5-turbo, gpt-4, gpt-4.1-nano, o4-mini, babbage-002 and davinci-002. OpenAI lists gpt-4-1106-preview for October 23, 2026, and also says access to it ended on March 26, 2026.",
       deadline: "2026-10-23",
       dateSource: "https://developers.openai.com/api/docs/deprecations",
       impact: "Apps and fine-tunes pinned to these model IDs stop working",
       whoAffected: "Developers calling any of these model IDs or their fine-tuned versions",
-      migrationPath: "OpenAI's substitutes: gpt-5.6-terra for gpt-3.5-turbo and o4-mini; gpt-5.6-sol for gpt-4, gpt-4-turbo, gpt-4o-2024-05-13, o1, o1-pro and o3-mini; gpt-5.6-luna for gpt-4.1-nano; gpt-image-2 for gpt-image-1",
+      migrationPath: "OpenAI's substitutes: gpt-5.6-terra for gpt-3.5-turbo and o4-mini; gpt-5.6-sol for gpt-4, gpt-4-turbo, gpt-4-1106-preview, gpt-4o-2024-05-13, o1 and o3-mini; gpt-5.6-sol with reasoning.mode: pro for o1-pro; gpt-5.6-luna for gpt-4.1-nano; gpt-image-2 for gpt-image-1. Replacement base models for fine-tunes: gpt-5.6-terra for gpt-3.5-turbo, o4-mini, babbage-002 and davinci-002; gpt-5.6-sol for gpt-4; gpt-5.6-luna for gpt-4.1-nano. The gpt-5.6 models do not support fine-tuning or the legacy /v1/completions endpoint.",
       status: "active",
     },
     {
       service: "Firebase Studio (New Workspaces)",
       vendorSlug: "firebase",
-      what: "New Firebase Studio workspace creation disabled",
+      what: "New workspace creation and user signup for Firebase Studio are disabled.",
       deadline: "2026-06-22",
       dateSource: "https://firebase.google.com/docs/studio/migrating-project",
       impact: "Cannot create new cloud IDE workspaces",
-      whoAffected: "Developers starting new projects on Firebase Studio",
-      migrationPath: "Export projects to local dev or alternative cloud IDEs (GitHub Codespaces, Gitpod, Replit)",
+      whoAffected: "New users and developers creating new Firebase Studio workspaces. Existing workspaces keep working until March 22, 2027.",
+      migrationPath: "Google recommends migrating existing workspaces to Google AI Studio or Google Antigravity. GitHub Codespaces (120 free core hours a month on a GitHub Free personal account) and Replit's free Starter plan are other options.",
       status: "active",
     },
     {
@@ -26514,9 +26514,9 @@ function buildShutdownTrackerPage(): string {
       what: "Complete API shutdown \u2014 Assistants, Threads, Runs, and Messages endpoints removed",
       deadline: "2026-08-26",
       dateSource: "https://developers.openai.com/api/docs/deprecations",
-      impact: "All AI agent applications built on Assistants API will break",
+      impact: "The Assistants API shut down. The call that retrieves thread messages no longer works.",
       whoAffected: "AI agent builders using Assistants API for threads, code interpreter, file search, and persistent assistants",
-      migrationPath: "Migrate to Responses API, or switch to Claude/Gemini/open-source frameworks",
+      migrationPath: "OpenAI names the Responses API and the Conversations API as replacements. Its migration guide turns assistants into reusable prompts, but the v1/prompts API and reusable prompt objects are scheduled to shut down November 30, 2026; OpenAI's advice for prompts is to move their content into your application code.",
       migrationLink: "/openai-assistants-migration-2026",
       status: "active",
     },
@@ -26526,9 +26526,20 @@ function buildShutdownTrackerPage(): string {
       what: "Videos API (Sora) deprecated March 24, 2026 \u2014 complete removal September 24, 2026. No direct OpenAI replacement for video generation.",
       deadline: "2026-09-24",
       dateSource: "https://developers.openai.com/api/docs/deprecations",
-      impact: "All video generation applications using the Videos API will stop working with no OpenAI replacement",
-      whoAffected: "Developers using POST /v1/videos/generations and the Sora 2 model for AI video generation",
+      impact: "Calls to the Videos API and the Sora 2 models no longer work. OpenAI says there is no one-to-one replacement API.",
+      whoAffected: "Developers using the Videos API (POST /v1/videos and the other /v1/videos endpoints) and the sora-2 and sora-2-pro models, including their dated snapshots.",
       migrationPath: "No direct OpenAI replacement \u2014 evaluate third-party video generation APIs (Runway, Pika, Luma)",
+      status: "active",
+    },
+    {
+      service: "OpenAI legacy GPT models (September 2026)",
+      vendorSlug: "openai",
+      what: "gpt-3.5-turbo-instruct, babbage-002, davinci-002 and gpt-3.5-turbo-1106 shut down in the OpenAI API on September 28, 2026. Fine-tuned babbage-002 and davinci-002 models (ft-babbage-002, ft-davinci-002) are listed separately, for October 23, 2026.",
+      deadline: "2026-09-28",
+      dateSource: "https://developers.openai.com/api/docs/deprecations",
+      impact: "Calls to these model IDs stop working.",
+      whoAffected: "Developers calling these model IDs. gpt-3.5-turbo-instruct, babbage-002 and davinci-002 run on the legacy Completions endpoint (/v1/completions).",
+      migrationPath: "OpenAI names gpt-5.6-terra as the replacement for all four. gpt-5.6-terra does not support /v1/completions, so calls on that endpoint must move to the Chat Completions or Responses API.",
       status: "active",
     },
     {
@@ -26539,7 +26550,7 @@ function buildShutdownTrackerPage(): string {
       dateSource: "https://firebase.google.com/docs/studio/migrating-project",
       impact: "All remaining Firebase Studio data permanently deleted",
       whoAffected: "Anyone with data still in Firebase Studio workspaces",
-      migrationPath: "Export all workspace data before deadline \u2014 move to GitHub Codespaces, Gitpod, or local development",
+      migrationPath: "Google recommends Antigravity or Google AI Studio. Code can also be downloaded as a zip or pushed to GitHub. Apps already deployed to Firebase keep running.",
       status: "active",
     },
     {
@@ -26567,10 +26578,10 @@ function buildShutdownTrackerPage(): string {
     {
       service: "Google Maps Platform Client IDs",
       vendorSlug: "google-maps",
-      what: "Client ID authentication sunset \u2014 all Client ID auth will stop working",
+      what: "Google Maps Platform client IDs have been deprecated since May 26, 2025. Google says they can no longer be used after May 31, 2026. Since May 2026, Google has restricted access periodically as a phased deprecation, and it has published no final termination date.",
       deadline: "2026-05-31",
       dateSource: "https://developers.google.com/maps/premium/migrate-client-id",
-      impact: "Maps API requests using Client ID authentication will be rejected",
+      impact: "Client ID requests fail during Google's periodic restrictions, which Google says will increase in frequency and duration. Service usually returns within a few hours; project Owners or Editors can restore it sooner by unpausing the client ID in the Cloud Console, and developers who cannot migrate quickly can ask Google Maps Platform Support for a temporary exemption.",
       whoAffected: "Any application using Client ID (not API key) authentication for Google Maps APIs",
       migrationPath: "Switch to API key authentication \u2014 generate key in Google Cloud Console, update all API calls",
       status: "active",
@@ -26719,6 +26730,18 @@ function buildShutdownTrackerPage(): string {
     })),
   };
 
+  const articleJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description: metaDesc,
+    datePublished: pubDate,
+    dateModified: pageDateModified("/shutdowns", pubDate),
+    author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
+  };
+
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26736,6 +26759,7 @@ ${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" hre
 ${feedLinkTag(PER_CHANGE_FEED)}
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<script type="application/ld+json">${JSON.stringify(articleJsonLd)}</script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}

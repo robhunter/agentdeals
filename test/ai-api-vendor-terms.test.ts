@@ -203,8 +203,8 @@ const STATED: Record<string, string[]> = {
   "/shutdowns": [
     "dall-e-2 and dall-e-3 removed from the API — OpenAI lists gpt-image-2, gpt-image-1 or gpt-image-1-mini as substitutes, and gpt-image-1 itself shuts down on 2026-10-23 (gpt-image-1-mini on 2026-12-01)",
     "Image generation apps calling dall-e-2 or dall-e-3",
-    "Developers using the dall-e-2 or dall-e-3 model IDs in API calls",
-    "Update the model parameter to gpt-image-2 — test output quality differences",
+    "Developers calling dall-e-2 or dall-e-3, including image generation calls (POST /v1/images/generations) that leave out the model parameter, which OpenAI's reference says default to dall-e-2 unless a parameter specific to the GPT image models is used, and any use of the image variations endpoint, which supports only dall-e-2.",
+    "OpenAI's substitutes are gpt-image-2, gpt-image-1 or gpt-image-1-mini, and its DALL·E model pages now recommend GPT-Image-2.5 Sunburst.",
   ],
   "/llm-api-pricing": [
     "25+ free models",
