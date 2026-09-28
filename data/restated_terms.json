@@ -2295,7 +2295,8 @@
       "source_url": "https://github.com/features/copilot",
       "record_date": "2026-09-12",
       "change_type": "limits_increased",
-      "summary": "The free tier now includes access to Haiku 4.5, GPT-5 mini, and more, and access to the Copilot CLI. The pricing for Pro is $10/month with $15 monthly total credits, Pro+ is $39/month with $70 monthly total credits, and Max is $100/month with $200 monthly total credits. The page also mentions Business and Enterprise plans with different pricing and features."
+      "summary": "The free tier now includes access to Haiku 4.5, GPT-5 mini, and more, and access to the Copilot CLI. The pricing for Pro is $10/month with $15 monthly total credits, Pro+ is $39/month with $70 monthly total credits, and Max is $100/month with $200 monthly total credits. The page also mentions Business and Enterprise plans with different pricing and features.",
+      "reverted_on": "2026-09-28"
     },
     {
       "vendor": "Google Cloud Pub/Sub",
