@@ -44443,7 +44443,7 @@ ${mcpCtaCss()}
       <li><a href="#edge-serverless">Edge &amp; Serverless</a></li>
       <li><a href="#static-sites">Static Site Hosting</a></li>
       <li><a href="#cost-trap">The Hosting Cost Trap</a></li>
-      <li><a href="#best-for">Best for Each Use Case</a></li>
+      <li><a href="#best-for">By Use Case</a></li>
       <li><a href="#hidden-costs">Hidden Costs and Gotchas</a></li>
       <li><a href="#changes">Pricing Change Timeline</a></li>
       <li><a href="#data-source">Data Source</a></li>
@@ -44770,49 +44770,48 @@ ${mcpCtaCss()}
     <strong>Cold starts:</strong> Render's free web services spin down after 15 idle minutes and take about one minute to spin back up. Railway services are always on by default. Cloudflare states that Workers have no cold starts. Vercel functions can cold-start, and Vercel lists cold start prevention as a Pro feature. Koyeb and Fly.io offer new accounts no ongoing free compute.
   </div>
 
-  <h2 id="best-for">Best for Each Use Case</h2>
+  <h2 id="best-for">By Use Case</h2>
 
   <div class="verdict-box">
-    <h3>Recommendations by Use Case</h3>
 
     <div class="verdict-item">
-      <strong>Best for Next.js &rarr; Vercel</strong>
-      <p>Built by the Next.js team. Automatic ISR, edge middleware, image optimization, and preview deployments. The tightest integration of any framework-hosting pair. Just connect your repo. If you outgrow Hobby, Cloudflare Pages with the Next.js adapter is the best free alternative.</p>
+      <strong>Next.js &rarr; Vercel</strong>
+      <p>Vercel is made by the creators of Next.js. Hobby includes ISR, Routing Middleware, image optimization and preview deployments, for non-commercial personal use. For full-stack Next.js on Cloudflare, Cloudflare recommends vinext, a beta reimplementation of the Next.js API, on Workers; Pages takes only a static export.</p>
     </div>
 
     <div class="verdict-item">
-      <strong>Best for backend APIs &rarr; Render</strong>
-      <p>512 MB RAM web services with free PostgreSQL and Redis. Custom domains, automatic SSL. The most complete free backend package. Accept the 30&ndash;60s cold starts for side projects, or pay $7/mo for always-on. <a href="/railway-vs-render">Compare with Railway &rarr;</a></p>
+      <strong>Backend APIs &rarr; Render</strong>
+      <p>Render's free web services have 512 MB RAM and 0.1 CPU, with custom domains and TLS. Its free Postgres database expires after 30 days, and its free Key Value instance keeps data in memory only. Free services spin down after 15 idle minutes and take about a minute to return; a paid instance from $7 a month stays on. <a href="/railway-vs-render">Compare with Railway &rarr;</a></p>
     </div>
 
     <div class="verdict-item">
-      <strong>Best for side projects &rarr; Cloudflare Pages + Workers</strong>
-      <p>Unlimited bandwidth, 100K Workers requests/day, built-in KV/D1 storage. No cold starts, no spending surprises, no commercial use restrictions. The closest thing to truly unlimited free hosting.</p>
+      <strong>Side projects &rarr; Cloudflare Pages + Workers</strong>
+      <p>Unlimited static bandwidth, 100,000 Workers requests a day, KV and D1 storage, no cold starts, and no commercial-use restriction in Cloudflare's terms. Past 100,000 Worker requests in a day, Cloudflare returns an error for them until the limit resets at midnight UTC; static assets stay free and unlimited. Workers Paid starts at $5 a month.</p>
     </div>
 
     <div class="verdict-item">
-      <strong>Best for startups graduating from free tier &rarr; Railway</strong>
-      <p>Usage-based pricing with no per-seat charges. The $5 trial lets you validate before committing. Excellent DX with instant deploys, managed databases, and Docker support. Costs scale linearly with usage, not team size.</p>
+      <strong>Usage-based billing &rarr; Railway</strong>
+      <p>Railway bills the greater of a plan's monthly minimum and your usage, with no seat charges: Pro has a $20 minimum that includes $20 of usage, and unlimited seats. New accounts get a 30-day trial with a one-time $5 credit. Builds are free, and Docker is supported. Railway's one-click database templates are unmanaged.</p>
     </div>
 
     <div class="verdict-item">
-      <strong>Best for Docker containers &rarr; Google Cloud Run</strong>
-      <p>2M requests/month free with automatic scale-to-zero. Supports any Docker container. No cold start penalty for lightweight images. Koyeb removed its free compute tier and Fly.io has no free tier for new accounts.</p>
+      <strong>Docker containers &rarr; Google Cloud Run</strong>
+      <p>Google Cloud Run's free tier, per billing account each month on request-based billing, is 2 million requests, 180,000 vCPU-seconds and 360,000 GiB-seconds at us-central1 prices. Services scale to zero by default. It runs any container that meets its contract (Linux x86_64 executables, listening on the configured port). After a scale to zero, a request can wait for a new instance to start, whatever the image size. Koyeb and Fly.io offer new accounts no ongoing free compute.</p>
     </div>
 
     <div class="verdict-item">
-      <strong>Most generous free bandwidth &rarr; Cloudflare Pages</strong>
-      <p>Unlimited bandwidth, no asterisks. Vercel offers 100 GB, GitHub Pages 100 GB, Netlify ~15 GB (credit-based). For bandwidth-intensive sites (media, downloads, high-traffic blogs), Cloudflare Pages has no equal.</p>
+      <strong>Unlimited static bandwidth &rarr; Cloudflare Pages</strong>
+      <p>Cloudflare Pages serves static bandwidth without limit, as does Workers for static assets. The Free plan allows 20,000 files per site, each up to 25 MiB; Cloudflare says to put larger files in R2. Vercel Hobby includes 100 GB a month, GitHub Pages has a soft limit of 100 GB a month, and Netlify's 300 monthly credits cover about 15 GB if nothing else uses them.</p>
     </div>
 
     <div class="verdict-item">
-      <strong>Best for edge/low-latency &rarr; Cloudflare Workers</strong>
-      <p>300+ global locations, ~0ms cold starts, CPU-time billing (not wall-clock). For latency-sensitive APIs and edge compute, Workers is the clear winner. Deno Deploy is the runner-up with 35+ locations and more generous CPU time.</p>
+      <strong>Edge compute &rarr; Cloudflare Workers</strong>
+      <p>Cloudflare Workers runs in 330+ cities with no cold starts, and time spent waiting on the network does not count toward CPU time. The Free plan includes 100,000 requests a day and 10 ms of CPU per invocation. Deno Deploy runs in 2 regions, and its Free plan includes 10 CPU-hours a month.</p>
     </div>
 
     <div class="verdict-item">
-      <strong>Simplest static hosting &rarr; GitHub Pages</strong>
-      <p>If you have a GitHub account, you already have hosting. Push HTML to a repo, enable Pages, done. 100 GB bandwidth, custom domains, HTTPS. Zero signup friction for documentation, personal sites, and project pages.</p>
+      <strong>Static sites from a repository &rarr; GitHub Pages</strong>
+      <p>GitHub Pages hosts static sites from a repository; on GitHub Free it works only from public repositories. It has a soft bandwidth limit of 100 GB a month, custom domains and HTTPS. GitHub bars using it to run an online business, shop or SaaS.</p>
     </div>
   </div>
 
