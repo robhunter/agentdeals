@@ -6851,7 +6851,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     hubDesc: "GitHub postponed its self-hosted runner fee, so self-hosted runners stay free \u2014 10 free CI/CD alternatives compared",
     serviceMatrixHtml: `
   <h2>Free Tier Comparison</h2>
-  <p style="color:var(--text-muted);margin-bottom:1rem">How each CI/CD platform\u2019s free tier compares. GitHub Actions\u2019 2,000 min/mo for private repos remains strong for GitHub-hosted runners \u2014 the new cost only applies to self-hosted runners.</p>
+  <p style="color:var(--text-muted);margin-bottom:1rem">How each CI/CD platform\u2019s free tier compares. GitHub Actions\u2019 2,000 min/mo for private repos remains strong for GitHub-hosted runners.</p>
   <div style="overflow-x:auto">
   <table class="compare-table">
     <thead>
@@ -7943,7 +7943,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "q2-pricing-preview-2026",
     title: "Q2 2026 Developer Pricing Preview — What's Changing April–June",
-    metaDesc: "Upcoming developer tool pricing changes for Q2 2026. Hetzner +30-50%, Google Tenor shutdown, GitHub Actions runner fees, odrive removal, and more. Timeline, impact analysis, and alternatives.",
+    metaDesc: "Upcoming developer tool pricing changes for Q2 2026. Hetzner +30-50%, Google Tenor shutdown, odrive removal, and more. Timeline, impact analysis, and alternatives.",
     contextHtml: "",
     tag: "q2-preview",
     primaryVendor: "Hetzner",
@@ -8141,7 +8141,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "gcp-free-tier-2026",
     title: "GCP Free Tier Complete Guide 2026 — Every Free Service, Real Limits, and Hidden Costs",
-    metaDesc: "Comprehensive guide to every Google Cloud free tier service in 2026. 30+ Always Free products, $300 trial credit, and hidden costs explained. BigQuery 1 TiB, Cloud Run 2M req/mo, e2-micro VM, and more.",
+    metaDesc: "Comprehensive guide to every Google Cloud free tier service in 2026. 20+ free products, $300 trial credit, and hidden costs explained. BigQuery 1 TiB, Cloud Run 2M req/mo, e2-micro VM, and more.",
     contextHtml: "",
     tag: "gcp-free-tier-2026",
     primaryVendor: "Google Cloud",
@@ -13541,7 +13541,7 @@ ${buildCards(other)}
       <tr>
         <td style="font-weight:600"><a href="/vendor/sendgrid" style="color:var(--text)">SendGrid</a></td>
         <td>Transactional API</td>
-        <td>100 emails/day</td>
+        <td>None (60-day trial)</td>
         <td>No</td>
         <td>Industry standard, extensive integrations</td>
       </tr>
@@ -16854,7 +16854,7 @@ function buildFreeNextjsStackPage(): string {
       recommended: { vendor: "Resend", why: "Modern developer-first email API built for React. 3,000 emails/month, 100/day on free tier. The react-email library lets you build email templates with JSX — same component model as your Next.js app. TypeScript SDK, webhook delivery tracking, and domain verification." },
       alternatives: ["Amazon SES", "Brevo", "Mailtrap"],
       outgrow: "When you exceed 3,000 emails/month or 100/day. Amazon SES has no free tier since AWS restructured its Free Tier on July 16, 2025, but at $0.10/1K it is the cheapest at scale. Brevo gives 300 emails/day (9,000/month) with no monthly cap and includes marketing automation. Mailtrap is best for testing with virtual inboxes.",
-      whyNot: "Why not SendGrid: Free tier removed May 2025. Existing free plans reduced to 100 emails/day. The Twilio acquisition killed the developer-first positioning. Resend is the spiritual successor.",
+      whyNot: "Why not SendGrid: Free tier removed May 2025. The Twilio acquisition killed the developer-first positioning. Resend is the spiritual successor.",
       relatedPage: "/email-comparison-2026",
     },
     {
@@ -17226,7 +17226,7 @@ function buildFreeDjangoStackPage(): string {
       recommended: { vendor: "Resend", why: "Modern developer-first email API. 3,000 emails/month, 100/day on free tier. Works with Django's send_mail() via django-anymail or a simple custom backend. TypeScript SDK is unnecessary — Resend's REST API is clean enough to call with requests or the official Python SDK. Domain verification, webhook delivery tracking." },
       alternatives: ["Postmark", "Brevo", "Amazon SES"],
       outgrow: "When you exceed 3,000 emails/month or 100/day. Postmark offers 100 emails/month free but exceptional deliverability. Brevo gives 300 emails/day (9,000/month) with marketing automation. Amazon SES has no free tier since AWS restructured its Free Tier on July 16, 2025, but at $0.10/1K it is the cheapest at scale.",
-      whyNot: "Why not SendGrid: Free tier removed May 2025. Existing free plans reduced to 100 emails/day. Many Django tutorials still reference SendGrid — those guides are outdated.",
+      whyNot: "Why not SendGrid: Free tier removed May 2025. Many Django tutorials still reference SendGrid — those guides are outdated.",
       relatedPage: "/email-comparison-2026",
     },
     {
@@ -18463,7 +18463,7 @@ function buildFreeSaasStackPage(): string {
       icon: "\u{1F510}",
       recommended: { vendor: "Clerk", why: "50,000 monthly retained users free \u2014 the most generous managed auth for SaaS. Drop-in React/Next.js components for login, signup, user profile, and organization management. Social login, MFA, and RBAC included. Organizations feature (multi-tenant SaaS) available on free tier. Webhooks for syncing user data to your database." },
       alternatives: ["Auth0", "Supabase", "Kinde"],
-      outgrow: "When you exceed 50K retained users. Auth0 offers 25,000 MAU with enterprise features (M2M tokens, SSO). Kinde gives 10,500 MAU with feature flags bundled. Supabase Auth provides 50,000 MAU if you're already using Supabase for your database. At 100K users: Clerk ~$175/mo, Auth0 ~$240/mo, Supabase ~$25/mo (cheapest at scale).",
+      outgrow: "When you exceed 50K retained users. Auth0 offers 25,000 MAU with enterprise features (M2M tokens, SSO). Kinde gives 10,500 MAU with feature flags bundled. Supabase Auth provides 50,000 MAU if you're already using Supabase for your database. At 100K users: Clerk ~$175/mo, Supabase ~$25/mo (cheapest at scale).",
       whyNot: "Why not Firebase Auth: 50K MAU free, but Firebase is a full BaaS \u2014 using just auth means importing the entire SDK. Supabase Auth is a better \u00e0 la carte option. Why not rolling your own: Auth is the #1 source of security vulnerabilities in SaaS. Password reset, email verification, rate limiting, session management, CSRF \u2014 auth providers handle all of this. Only roll your own if you have dedicated security expertise.",
       relatedPage: "/auth-comparison-2026",
       isFrameworkSection: false,
@@ -19683,7 +19683,7 @@ mcpCtaCss() + "\n" +
 
 function buildQ2PricingPreview2026Page(): string {
   const title = "Q2 2026 Developer Pricing Preview — What's Changing April–June";
-  const metaDesc = "Upcoming developer tool pricing changes for Q2 2026. Hetzner +30-50%, Google Tenor shutdown, GitHub Actions runner fees, odrive removal, and more. Timeline, impact analysis, and alternatives.";
+  const metaDesc = "Upcoming developer tool pricing changes for Q2 2026. Hetzner +30-50%, Google Tenor shutdown, odrive removal, and more. Timeline, impact analysis, and alternatives.";
   const slug = "q2-pricing-preview-2026";
   const pubDate = "2026-03-25";
 
@@ -28906,7 +28906,7 @@ function buildCiCdPricingPage(): string {
       freeType: "generous",
       monthlyCostSmall: "$0",
       monthlyCostTeam: "$4/seat + overages",
-      hiddenCosts: "Linux minutes are 1x, macOS minutes are 10x, Windows are 2x. A 2,000-minute budget on macOS is really 200 minutes. Self-hosted runner per-minute fees add up at scale.",
+      hiddenCosts: "Linux minutes are 1x, macOS minutes are 10x, Windows are 2x. A 2,000-minute budget on macOS is really 200 minutes.",
     },
     {
       name: "GitLab CI",
@@ -29529,7 +29529,7 @@ function buildCiCdPricingPage(): string {
     ) : '  <p class="section-intro">No CI/CD-specific pricing changes tracked recently. This category has been relatively stable.</p>\n') +
     '\n' +
     '  <div class="context-box">\n' +
-    '    <strong>The trend:</strong> Free CI/CD minutes are shrinking while self-hosted runner support is expanding. GitHub Actions introduced per-minute fees for private self-hosted runners in March 2026 \u2014 previously free. The counter-trend: Buildkite continues to offer unlimited free self-hosted agents.\n' +
+    '    <strong>The trend:</strong> Free CI/CD minutes are shrinking while self-hosted runner support is expanding. The counter-trend: Buildkite continues to offer unlimited free self-hosted agents.\n' +
     '  </div>\n' +
     '\n' +
     '  <h2 id="recommendations">Best-for-Use-Case Recommendations</h2>\n' +
@@ -33983,7 +33983,7 @@ ${mcpCtaCss()}
 
 function buildGcpFreeTier2026Page(): string {
   const title = "GCP Free Tier Complete Guide 2026 — Every Free Service, Real Limits, and Hidden Costs";
-  const metaDescGcp = "Comprehensive guide to every Google Cloud free tier service in 2026. 30+ Always Free products, $300 trial credit, and hidden costs explained. BigQuery 1 TiB, Cloud Run 2M req/mo, e2-micro VM, and more.";
+  const metaDescGcp = "Comprehensive guide to every Google Cloud free tier service in 2026. 20+ free products, $300 trial credit, and hidden costs explained. BigQuery 1 TiB, Cloud Run 2M req/mo, e2-micro VM, and more.";
   const slug = "gcp-free-tier-2026";
   const pubDate = "2026-03-27";
 
@@ -36542,7 +36542,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="context-box">
-    <strong>Upstash is the standout</strong> for serverless Redis — 256 MB data and 500K commands/month with true pay-per-request pricing beyond the free tier. Cloudflare KV has more storage (1 GB) but very low write limits (1K/day) making it best for read-heavy config data. Redis Cloud's 30 MB free tier is tiny but useful for development. <strong>Note:</strong> Redis switched to a non-open-source license (SSPL/RSALv2) in March 2024 — Valkey and Dragonfly are now the leading open-source alternatives.
+    <strong>Upstash is the standout</strong> for serverless Redis — 256 MB data and 500K commands/month with true pay-per-request pricing beyond the free tier. Cloudflare KV has more storage (1 GB) but very low write limits (1K/day) making it best for read-heavy config data. Redis Cloud's 30 MB free tier is tiny but useful for development. <strong>Note:</strong> Redis switched to a non-open-source license (SSPL/RSALv2) in March 2024 — Valkey is now the leading open-source alternative, and Dragonfly a source-available one.
   </div>
 
   <h2 id="vector">Vector Databases</h2>
@@ -42286,7 +42286,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="context-box">
-    <strong>CI compute is the real cost of &ldquo;free&rdquo; frameworks.</strong> Playwright and Selenium are free, but they still need CI minutes to run. A typical Playwright suite takes 5&ndash;15 minutes on GitHub Actions. At $0.008/min (Linux), running tests 50 times/month costs ~$2&ndash;6. That's still dramatically cheaper than cloud testing platforms, but it's not literally zero. For larger suites, self-hosted runners or caching strategies reduce costs further.
+    <strong>CI compute is the real cost of &ldquo;free&rdquo; frameworks.</strong> Playwright and Selenium are free, but they still need CI minutes to run. A typical Playwright suite takes 5&ndash;15 minutes on GitHub Actions. At $0.006/min (Linux), running tests 50 times/month costs ~$1.50&ndash;4.50. That's still dramatically cheaper than cloud testing platforms, but it's not literally zero. For larger suites, self-hosted runners or caching strategies reduce costs further.
   </div>
 
   <div class="context-box">
@@ -42363,7 +42363,7 @@ ${mcpCtaCss()}
 
   <div class="diff-card">
     <h3>Free E2E frameworks still need CI compute</h3>
-    <div class="diff-desc">Playwright and Selenium are free, but they need a CI runner to execute. GitHub Actions charges $0.008/min (Linux) beyond the free tier (2,000 min/month for free accounts, 3,000 for Pro). A 15-minute E2E suite running 100 times/month = 1,500 minutes. On a free GitHub account, that's 75% of your monthly CI budget consumed by tests alone. Factor CI costs into your total testing budget.</div>
+    <div class="diff-desc">Playwright and Selenium are free, but they need a CI runner to execute. GitHub Actions charges $0.006/min (Linux) beyond the free tier (2,000 min/month for free accounts, 3,000 for Pro). A 15-minute E2E suite running 100 times/month = 1,500 minutes. On a free GitHub account, that's 75% of your monthly CI budget consumed by tests alone. Factor CI costs into your total testing budget.</div>
   </div>
 
   <h2 id="changes">Pricing Change Timeline</h2>
@@ -46598,7 +46598,7 @@ function buildEstimatorData(): EstimatorCategory[] {
       vendors: [
         { slug: "resend", name: "Resend", free: "3K emails/mo", starter: 0, growth: 20, scale: 90, notes: "Pro $20/mo (50K emails)" },
         { slug: "postmark", name: "Postmark", free: "100 emails/mo", starter: 15, growth: 50, scale: 215, notes: "$15/mo for 10K emails" },
-        { slug: "sendgrid", name: "SendGrid", free: "100 emails/day", starter: 0, growth: 20, scale: 50, notes: "Essentials $20/mo (50K emails)" },
+        { slug: "sendgrid", name: "SendGrid", free: "None (60-day trial)", starter: 0, growth: 20, scale: 50, notes: "Essentials $20/mo (50K emails)" },
         { slug: "mailgun", name: "Mailgun", free: "100 emails/day", starter: 0, growth: 35, scale: 90, notes: "Foundation $35/mo (50K emails)" },
         { slug: "brevo", name: "Brevo", free: "300 emails/day", starter: 0, growth: 25, scale: 65, notes: "Starter $25/mo (20K emails)" },
         { slug: "amazon-ses", name: "Amazon SES", free: "None — $200 in expiring credits", starter: 0, growth: 10, scale: 100, notes: "$0.10/1K emails; credits expire 12 months after signup" },
