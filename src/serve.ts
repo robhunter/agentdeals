@@ -6851,7 +6851,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     hubDesc: "GitHub postponed its self-hosted runner fee, so self-hosted runners stay free \u2014 10 free CI/CD alternatives compared",
     serviceMatrixHtml: `
   <h2>Free Tier Comparison</h2>
-  <p style="color:var(--text-muted);margin-bottom:1rem">How each CI/CD platform\u2019s free tier compares. GitHub Actions\u2019 2,000 min/mo for private repos remains strong for GitHub-hosted runners \u2014 the new cost only applies to self-hosted runners.</p>
+  <p style="color:var(--text-muted);margin-bottom:1rem">How each CI/CD platform\u2019s free tier compares. GitHub Actions\u2019 2,000 min/mo for private repos remains strong for GitHub-hosted runners.</p>
   <div style="overflow-x:auto">
   <table class="compare-table">
     <thead>
@@ -7943,7 +7943,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "q2-pricing-preview-2026",
     title: "Q2 2026 Developer Pricing Preview — What's Changing April–June",
-    metaDesc: "Upcoming developer tool pricing changes for Q2 2026. Hetzner +30-50%, Google Tenor shutdown, GitHub Actions runner fees, odrive removal, and more. Timeline, impact analysis, and alternatives.",
+    metaDesc: "Upcoming developer tool pricing changes for Q2 2026. Hetzner +30-50%, Google Tenor shutdown, odrive removal, and more. Timeline, impact analysis, and alternatives.",
     contextHtml: "",
     tag: "q2-preview",
     primaryVendor: "Hetzner",
@@ -7952,11 +7952,11 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "google-developer-program-2026",
     title: "Google Developer Program 2026 — What Replaced Premium, Prices & Alternatives",
-    metaDesc: "Standalone Google Developer Program Premium ($299/year) no longer takes sign-ups; its benefits now come with Google AI Pro ($19.99/mo) and AI Ultra (from $99.99/mo). Current plans, Cloud credits and free alternatives. [[freshness]]",
+    metaDesc: "Standalone Google Developer Program Premium ($299/year) no longer takes sign-ups. Current plans, Cloud credits and free alternatives. [[freshness]]",
     contextHtml: "",
     tag: "gdp-pricing-analysis",
     primaryVendor: "Google",
-    hubDesc: "Google Developer Program Premium was folded into Google AI Pro and AI Ultra — current prices, Cloud credits and free alternatives",
+    hubDesc: "Standalone Google Developer Program Premium no longer takes sign-ups — current plans, Cloud credits and free alternatives",
   },
   {
     slug: "supabase-vs-firebase",
@@ -8141,7 +8141,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "gcp-free-tier-2026",
     title: "GCP Free Tier Complete Guide 2026 — Every Free Service, Real Limits, and Hidden Costs",
-    metaDesc: "Comprehensive guide to every Google Cloud free tier service in 2026. 30+ Always Free products, $300 trial credit, and hidden costs explained. BigQuery 1 TiB, Cloud Run 2M req/mo, e2-micro VM, and more.",
+    metaDesc: "Comprehensive guide to every Google Cloud free tier service in 2026. 20+ free products, $300 trial credit, and hidden costs explained. BigQuery 1 TiB, Cloud Run 2M req/mo, e2-micro VM, and more.",
     contextHtml: "",
     tag: "gcp-free-tier-2026",
     primaryVendor: "Google Cloud",
@@ -13541,7 +13541,7 @@ ${buildCards(other)}
       <tr>
         <td style="font-weight:600"><a href="/vendor/sendgrid" style="color:var(--text)">SendGrid</a></td>
         <td>Transactional API</td>
-        <td>100 emails/day</td>
+        <td>None (60-day trial)</td>
         <td>No</td>
         <td>Industry standard, extensive integrations</td>
       </tr>
@@ -16854,7 +16854,7 @@ function buildFreeNextjsStackPage(): string {
       recommended: { vendor: "Resend", why: "Modern developer-first email API built for React. 3,000 emails/month, 100/day on free tier. The react-email library lets you build email templates with JSX — same component model as your Next.js app. TypeScript SDK, webhook delivery tracking, and domain verification." },
       alternatives: ["Amazon SES", "Brevo", "Mailtrap"],
       outgrow: "When you exceed 3,000 emails/month or 100/day. Amazon SES has no free tier since AWS restructured its Free Tier on July 16, 2025, but at $0.10/1K it is the cheapest at scale. Brevo gives 300 emails/day (9,000/month) with no monthly cap and includes marketing automation. Mailtrap is best for testing with virtual inboxes.",
-      whyNot: "Why not SendGrid: Free tier removed May 2025. Existing free plans reduced to 100 emails/day. The Twilio acquisition killed the developer-first positioning. Resend is the spiritual successor.",
+      whyNot: "Why not SendGrid: Free tier removed May 2025. The Twilio acquisition killed the developer-first positioning. Resend is the spiritual successor.",
       relatedPage: "/email-comparison-2026",
     },
     {
@@ -17226,7 +17226,7 @@ function buildFreeDjangoStackPage(): string {
       recommended: { vendor: "Resend", why: "Modern developer-first email API. 3,000 emails/month, 100/day on free tier. Works with Django's send_mail() via django-anymail or a simple custom backend. TypeScript SDK is unnecessary — Resend's REST API is clean enough to call with requests or the official Python SDK. Domain verification, webhook delivery tracking." },
       alternatives: ["Postmark", "Brevo", "Amazon SES"],
       outgrow: "When you exceed 3,000 emails/month or 100/day. Postmark offers 100 emails/month free but exceptional deliverability. Brevo gives 300 emails/day (9,000/month) with marketing automation. Amazon SES has no free tier since AWS restructured its Free Tier on July 16, 2025, but at $0.10/1K it is the cheapest at scale.",
-      whyNot: "Why not SendGrid: Free tier removed May 2025. Existing free plans reduced to 100 emails/day. Many Django tutorials still reference SendGrid — those guides are outdated.",
+      whyNot: "Why not SendGrid: Free tier removed May 2025. Many Django tutorials still reference SendGrid — those guides are outdated.",
       relatedPage: "/email-comparison-2026",
     },
     {
@@ -18463,7 +18463,7 @@ function buildFreeSaasStackPage(): string {
       icon: "\u{1F510}",
       recommended: { vendor: "Clerk", why: "50,000 monthly retained users free \u2014 the most generous managed auth for SaaS. Drop-in React/Next.js components for login, signup, user profile, and organization management. Social login, MFA, and RBAC included. Organizations feature (multi-tenant SaaS) available on free tier. Webhooks for syncing user data to your database." },
       alternatives: ["Auth0", "Supabase", "Kinde"],
-      outgrow: "When you exceed 50K retained users. Auth0 offers 25,000 MAU with enterprise features (M2M tokens, SSO). Kinde gives 10,500 MAU with feature flags bundled. Supabase Auth provides 50,000 MAU if you're already using Supabase for your database. At 100K users: Clerk ~$175/mo, Auth0 ~$240/mo, Supabase ~$25/mo (cheapest at scale).",
+      outgrow: "When you exceed 50K retained users. Auth0 offers 25,000 MAU with enterprise features (M2M tokens, SSO). Kinde gives 10,500 MAU with feature flags bundled. Supabase Auth provides 50,000 MAU if you're already using Supabase for your database. At 100K users: Clerk ~$175/mo, Supabase ~$25/mo (cheapest at scale).",
       whyNot: "Why not Firebase Auth: 50K MAU free, but Firebase is a full BaaS \u2014 using just auth means importing the entire SDK. Supabase Auth is a better \u00e0 la carte option. Why not rolling your own: Auth is the #1 source of security vulnerabilities in SaaS. Password reset, email verification, rate limiting, session management, CSRF \u2014 auth providers handle all of this. Only roll your own if you have dedicated security expertise.",
       relatedPage: "/auth-comparison-2026",
       isFrameworkSection: false,
@@ -19683,7 +19683,7 @@ mcpCtaCss() + "\n" +
 
 function buildQ2PricingPreview2026Page(): string {
   const title = "Q2 2026 Developer Pricing Preview — What's Changing April–June";
-  const metaDesc = "Upcoming developer tool pricing changes for Q2 2026. Hetzner +30-50%, Google Tenor shutdown, GitHub Actions runner fees, odrive removal, and more. Timeline, impact analysis, and alternatives.";
+  const metaDesc = "Upcoming developer tool pricing changes for Q2 2026. Hetzner +30-50%, Google Tenor shutdown, odrive removal, and more. Timeline, impact analysis, and alternatives.";
   const slug = "q2-pricing-preview-2026";
   const pubDate = "2026-03-25";
 
@@ -19912,7 +19912,7 @@ ${mcpCtaCss()}
 
 function buildGoogleDeveloperProgram2026Page(): string {
   const title = "Google Developer Program 2026 — What Replaced Premium, Prices & Alternatives";
-  const metaDesc = "Standalone Google Developer Program Premium ($299/year) no longer takes sign-ups; its benefits now come with Google AI Pro ($19.99/mo) and AI Ultra (from $99.99/mo). Current plans, Cloud credits and free alternatives. [[freshness]]";
+  const metaDesc = "Standalone Google Developer Program Premium ($299/year) no longer takes sign-ups. Current plans, Cloud credits and free alternatives. [[freshness]]";
   const slug = "google-developer-program-2026";
   const pubDate = "2026-03-26";
 
@@ -19934,10 +19934,10 @@ function buildGoogleDeveloperProgram2026Page(): string {
   );
 
   const planComparison = [
-    { plan: "GDP Premium (standalone, closed)", price: "$299/year or $24.99/mo", credits: "$500/year (~$41.67/mo)", gemini: "Gemini 3 Pro access, $50/yr GenAI credit", firebase: "30 Firebase Studio workspaces", status: "closed" as const },
-    { plan: "Google AI Pro", price: "$19.99/mo ($199.99/yr)", credits: "$10/mo ($120/yr)", gemini: "Expanded Gemini 3.1 Pro and Deep Research", firebase: "—", status: "current" as const },
-    { plan: "Google AI Ultra 5x (20 TB)", price: "$99.99/mo (monthly only)", credits: "$40/mo ($480/yr)", gemini: "5x AI Pro's usage limits", firebase: "—", status: "current" as const },
-    { plan: "Google AI Ultra 20x (30 TB)", price: "$199.99/mo (monthly only)", credits: "$100/mo ($1,200/yr)", gemini: "20x AI Pro's usage limits", firebase: "—", status: "current" as const },
+    { plan: "GDP Premium (standalone, closed)", price: "$299/year or $24.99/mo", credits: "$500/year (annual plan) or $45/mo (monthly plan)", gemini: "Gemini 3 Pro access; $50/yr GenAI credit (annual plan)", firebase: "30 Firebase Studio workspaces", status: "closed" as const },
+    { plan: "Google AI Pro", price: "$19.99/mo ($199.99/yr)", credits: "$10/mo ($120/yr)", gemini: "Expanded Gemini 3.1 Pro and Deep Research", firebase: "30 Firebase Studio workspaces", status: "current" as const },
+    { plan: "Google AI Ultra 5x (20 TB)", price: "$99.99/mo (monthly only)", credits: "$40/mo ($480/yr)", gemini: "5x AI Pro's usage limits", firebase: "30 Firebase Studio workspaces", status: "current" as const },
+    { plan: "Google AI Ultra 20x (30 TB)", price: "$199.99/mo (monthly only)", credits: "$100/mo ($1,200/yr)", gemini: "20x AI Pro's usage limits", firebase: "30 Firebase Studio workspaces", status: "current" as const },
   ];
 
   const statusColors: Record<string, string> = { closed: "#f85149", current: "#3fb950" };
@@ -19956,7 +19956,7 @@ function buildGoogleDeveloperProgram2026Page(): string {
 
   const creditAlternatives = [
     { vendor: "AWS Free Tier", credits: "Free plan: $100 credit at sign-up + up to $100 more, 6 months", highlight: "Always free: Lambda 1M requests/mo, DynamoDB 25 GB", link: "/vendor/aws" },
-    { vendor: "Azure Free Account", credits: "$200 credits (30 days) + 12 months free", highlight: "750h B1s VM, 5GB Blob Storage, 250GB SQL", link: "/vendor/azure" },
+    { vendor: "Azure Free Account", credits: "$200 credit (30 days) + 12 months of free services", highlight: "12 months: 750 hours each of B2pts v2 and B2ats v2 VMs, 5 GB Blob Storage. Always free: up to 10 SQL databases, 100,000 vCore seconds and 32 GB each a month", link: "/vendor/azure" },
     { vendor: "Oracle Cloud", credits: "Always Free — no expiry", highlight: oracleAlwaysFreeSpec(), link: "/vendor/oracle-cloud" },
     { vendor: "DigitalOcean", credits: "$5 credit (90 days)", highlight: "Then $4/mo Droplets; a payment method is required", link: "/vendor/digitalocean" },
     { vendor: "Google Cloud (direct)", credits: "$300 credits (90 days) + always-free tier", highlight: "Same GCP services, no subscription needed", link: "/vendor/google-cloud-run" },
@@ -19972,7 +19972,7 @@ function buildGoogleDeveloperProgram2026Page(): string {
   const llmAlternatives = [
     { vendor: "Groq", free: "30 RPM; 1K requests and 200K tokens/day per model", models: "gpt-oss-120b, gpt-oss-20b, Qwen3.8 27B", link: "/vendor/groq" },
     { vendor: "OpenRouter", free: "Free models available", models: "500+ models aggregated", link: "/vendor/openrouter" },
-    { vendor: "Mistral AI", free: "Free plan, $10/mo API credits", models: "Mistral Large, Medium 3.5, Small 4, Devstral", link: "/vendor/mistral-ai" },
+    { vendor: "Mistral AI", free: "Free plan, $10/mo API credits", models: "Mistral Large 3, Medium 3.5, Small 4", link: "/vendor/mistral-ai" },
     { vendor: "Cohere", free: "Trial key available", models: "Command, Embed, Rerank", link: "/vendor/cohere" },
   ];
 
@@ -19984,7 +19984,7 @@ function buildGoogleDeveloperProgram2026Page(): string {
 
   const firebaseAlternatives = [
     { vendor: "Supabase", free: "500MB DB, 1GB storage, 50K auth users", highlight: "Postgres-based, real-time, auth included", link: "/vendor/supabase" },
-    { vendor: "Appwrite Cloud", free: "75K+ requests, 10GB bandwidth", highlight: "Self-hostable, auth, DB, storage, functions", link: "/vendor/appwrite-cloud" },
+    { vendor: "Appwrite Cloud", free: "75K monthly active users, 5 GB bandwidth, 2 GB storage, 750K executions", highlight: "Self-hostable, auth, DB, storage, functions", link: "/vendor/appwrite-cloud" },
     { vendor: "Firebase (direct)", free: "Spark plan, no card", highlight: "1 GiB Firestore, 50K reads/day; Cloud Storage needs Blaze since Feb 2026", link: "/vendor/firebase" },
     { vendor: "PocketBase", free: "Self-hosted, unlimited", highlight: "Single binary, SQLite-based, auth+storage", link: "/search?q=pocketbase" },
   ];
@@ -20111,10 +20111,10 @@ ${mcpCtaCss()}
   </div>
 
   <div class="executive-summary">
-    <p><strong>Google no longer sells standalone Google Developer Program Premium ($299/year or $24.99/month).</strong> On personal (@gmail.com) accounts, annual plans stopped renewing after March 30, 2026 and monthly plans after June 30, 2026; Premium on Workspace accounts did not change. Its developer benefits now come with <strong>Google AI Pro</strong> ($19.99/mo) and <strong>Google AI Ultra</strong> (from $99.99/mo), which only personal Google Accounts can buy.</p>
-    <p><strong>The headline loss: Cloud credits drop 76%.</strong> GDP Premium included $500/year (~$41.67/mo) in GCP credits. AI Pro includes $10/mo ($120/yr). The closest match to the old credit is Ultra 5x at $99.99/mo with $40/mo ($480/yr), about 4x Premium's $299/year.</p>
+    <p><strong>Google no longer sells standalone Google Developer Program Premium ($299/year or $24.99/month).</strong> On personal (@gmail.com) accounts, annual plans stopped renewing after March 30, 2026 and monthly plans after June 30, 2026; Premium on Workspace accounts did not change. Its Google Cloud credits and Firebase Studio workspaces now come with <strong>Google AI Pro</strong> ($19.99/mo) and <strong>Google AI Ultra</strong> (from $99.99/mo) on personal Google Accounts. Premium's 1:1 consultations, certification voucher and unlimited Google Skills access did not carry over.</p>
+    <p><strong>The headline loss: Cloud credits drop 76% for annual subscribers who move to AI Pro.</strong> GDP Premium's annual plan included $500 a year in Google Cloud credits, and its monthly plan $45 a month. AI Pro includes $10/mo ($120/yr). The closest match to the old credit is Ultra 5x at $99.99/mo with $40/mo ($480/yr), about 4x Premium's $299/year.</p>
     <p><strong>Who's most affected:</strong> Indie developers, students, and small teams who relied on GDP Premium for cheap GCP access and Gemini API usage. The AI Pro tier is adequate for light Gemini users, but the Cloud credits reduction is significant for anyone running workloads on GCP.</p>
-    <p><strong>The silver lining:</strong> Most per-service free tiers still apply: Cloud Run, BigQuery, Cloud Build (2,500 build-minutes a month) and Firestore on Firebase's Spark plan. Cloud Storage for Firebase is the exception: since February 3, 2026 it needs the Blaze plan. You can replace most GDP Premium benefits by combining free tiers directly — no subscription needed.</p>
+    <p><strong>The silver lining:</strong> Most per-service free tiers still apply: Cloud Run, BigQuery, Cloud Build (2,500 build-minutes a month) and Firestore on Firebase's Spark plan. Cloud Storage for Firebase is the exception: since February 3, 2026 it needs the Blaze plan.</p>
   </div>
 
   <div class="toc">
@@ -20170,6 +20170,7 @@ ${gdpChanges.map(c => `      <li><strong>${escHtmlServer(changeEntryLongDateLabe
       </tbody>
     </table>
   </div>
+  <p class="section-intro">Firebase Studio has taken no new workspaces since 2026-06-22 and shuts down on 2027-03-22.</p>
   <div class="context-box">
     <strong>Key takeaway:</strong> GDP Premium gave you $500/year in Cloud credits for $299/year — effectively a 40% discount on GCP. AI Pro gives you $120/year in credits for $199.99/year — you're paying more than you get back in credits. The value proposition has shifted from "cheap Cloud access" to "expanded Gemini access with a small credit bonus."
   </div>
@@ -20178,7 +20179,7 @@ ${gdpChanges.map(c => `      <li><strong>${escHtmlServer(changeEntryLongDateLabe
   <p class="section-intro">The impact varies significantly by use case.</p>
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.75rem;margin:1rem 0">
     <div class="impact-card" style="border-left-color:#f85149"><h3>Heavy GCP Users</h3><p class="impact-desc">Anyone using the full $500/year credits for Cloud Run, Compute Engine, or GKE loses the most. AI Pro's $120/yr covers a fraction of the same workloads.</p></div>
-    <div class="impact-card" style="border-left-color:#f85149"><h3>Students &amp; Learners</h3><p class="impact-desc">Eligible students get Google AI Pro free for a year. Otherwise, Oracle's Always Free tier and AWS's free plan cost nothing.</p></div>
+    <div class="impact-card" style="border-left-color:#f85149"><h3>Students &amp; Learners</h3><p class="impact-desc">Eligible U.S. college students aged 18+ get Google AI Pro free for a year (redeem by December 31, 2026; a payment method is required, and it then renews at $19.99/month). Otherwise, Oracle's Always Free tier and AWS's free plan cost nothing.</p></div>
     <div class="impact-card" style="border-left-color:#d29922"><h3>Gemini API Users</h3><p class="impact-desc">AI Pro gives expanded access to Gemini 3.1 Pro and Deep Research in the Gemini app. The Gemini API keeps a free tier of its own; check Google's pricing page for your model.</p></div>
     <div class="impact-card" style="border-left-color:#3fb950"><h3>Firebase-Only Devs</h3><p class="impact-desc">Spark (free) still covers Auth, Firestore and Hosting, but not Cloud Storage since February 3, 2026. If you only used GDP Premium for Firebase, you don't need AI Pro.</p></div>
   </div>
@@ -20235,11 +20236,11 @@ ${gdpChanges.map(c => `      <li><strong>${escHtmlServer(changeEntryLongDateLabe
     </table>
   </div>
   <div class="context-box">
-    <strong>Best strategy:</strong> Oracle Cloud's Always Free tier (${escHtmlServer(oracleArmAllowance())}) never expires, so it outlasts any credit grant GDP Premium ever made. Combine with AWS and Azure free tiers for a multi-cloud setup that costs $0/month. See our <a href="/free-startup-stack">Free Startup Stack</a> guide for a complete infrastructure setup.
+    <strong>Best strategy:</strong> Oracle Cloud's Always Free tier (${escHtmlServer(oracleArmAllowance())}) never expires, so it outlasts any credit grant GDP Premium ever made. AWS's free plan and Azure's free account add more, but AWS's plan closes within 6 months, sooner if its credits run out, and Azure's 12 months of free services need a move to pay-as-you-go within 30 days. See our <a href="/free-startup-stack">Free Startup Stack</a> guide for a complete infrastructure setup.
   </div>
 
   <h2 id="ai-alts">6. Free AI/LLM API Alternatives</h2>
-  <p class="section-intro">GDP Premium included a $50 annual credit for Google AI Studio and Vertex AI. These providers offer free API tiers of their own.</p>
+  <p class="section-intro">GDP Premium's annual plan included a $50 credit a year for Google AI Studio and Vertex AI. These providers offer free API tiers of their own.</p>
   <div style="overflow-x:auto">
     <table class="pricing-table">
       <thead>
@@ -20270,7 +20271,7 @@ ${gdpChanges.map(c => `      <li><strong>${escHtmlServer(changeEntryLongDateLabe
   <div style="display:grid;gap:.75rem;margin:1rem 0">
     <div class="impact-card" style="border-left-color:#d29922">
       <h3>AI Pro ($19.99/mo) — Break-Even Analysis</h3>
-      <p class="impact-desc">You pay $19.99 and get $10 in Cloud credits. Net cost for non-credit benefits: <strong>$9.99/mo</strong>. You're essentially paying $9.99/mo for expanded Gemini 3.1 Pro access. Worth it only if you actively use Gemini beyond the free tier limits. Most developers can use Groq or OpenRouter free tiers instead.</p>
+      <p class="impact-desc">You pay $19.99 and get $10 in Cloud credits. Net cost for non-credit benefits: <strong>$9.99/mo</strong>. The other $9.99 buys expanded Gemini 3.1 Pro access and the rest of the AI Pro bundle, including 5 TB of storage. Worth it only if you actively use Gemini beyond the free tier limits. Most developers can use Groq or OpenRouter free tiers instead.</p>
     </div>
     <div class="impact-card" style="border-left-color:#f85149">
       <h3>AI Ultra (from $99.99/mo) — Break-Even Analysis</h3>
@@ -20278,7 +20279,7 @@ ${gdpChanges.map(c => `      <li><strong>${escHtmlServer(changeEntryLongDateLabe
     </div>
     <div class="impact-card" style="border-left-color:#3fb950">
       <h3>$0/mo Alternative — Free Tier Stack</h3>
-      <p class="impact-desc">Oracle Cloud (compute) + AWS (services) + Groq (LLM API) + Firebase Spark (BaaS) + GitHub Actions (CI/CD) = $0/month. Covers 90%+ of what GDP Premium provided. See our <a href="/free-startup-stack">Free Startup Stack</a> guide.</p>
+      <p class="impact-desc">Oracle Cloud (compute) + AWS (services) + Groq (LLM API) + Firebase Spark (BaaS) + GitHub Actions (CI/CD) = $0/month within free limits. AWS's free plan closes within 6 months, but its always-free services, such as Lambda's 1M requests a month, continue on a Paid plan. See our <a href="/free-startup-stack">Free Startup Stack</a> guide.</p>
     </div>
   </div>
 
@@ -20291,7 +20292,7 @@ ${gdpChanges.map(c => `      <li><strong>${escHtmlServer(changeEntryLongDateLabe
     </div>
     <div class="verdict-item">
       <strong>If you relied on the full $500/year credits:</strong>
-      <p>Switch to a multi-cloud free tier strategy (Oracle + AWS + Azure). You'll get more compute for $0 than GDP Premium provided for $299. See our <a href="/free-startup-stack">Free Startup Stack</a> guide.</p>
+      <p>Switch to always-free tiers (Oracle Cloud, Firebase Spark, free LLM APIs), and use AWS's and Azure's free offers while they last. See our <a href="/free-startup-stack">Free Startup Stack</a> guide.</p>
     </div>
     <div class="verdict-item">
       <strong>If you used GDP Premium primarily for Gemini API:</strong>
@@ -20299,7 +20300,7 @@ ${gdpChanges.map(c => `      <li><strong>${escHtmlServer(changeEntryLongDateLabe
     </div>
     <div class="verdict-item">
       <strong>If you're a student or learning:</strong>
-      <p>Eligible students get AI Pro free for a year. Otherwise use <a href="/vendor/oracle-cloud">Oracle Cloud Always Free</a> (${escHtmlServer(oracleArmAllowance())}, and it never expires), <a href="/vendor/firebase">Firebase Spark</a>, and free LLM APIs. Total cost: $0.</p>
+      <p>Eligible U.S. college students aged 18+ get Google AI Pro free for a year (redeem by December 31, 2026; a payment method is required, and it then renews at $19.99/month). Otherwise use <a href="/vendor/oracle-cloud">Oracle Cloud Always Free</a> (${escHtmlServer(oracleArmAllowance())}, and it never expires), <a href="/vendor/firebase">Firebase Spark</a>, and free LLM APIs. Total cost: $0.</p>
     </div>
   </div>
 
@@ -26435,20 +26436,20 @@ function buildShutdownTrackerPage(): string {
       what: "Legacy Contact Lists API v1 sunset \u2014 replaced by Lists API v3",
       deadline: "2026-04-30",
       dateSource: "https://developers.hubspot.com/changelog/extension-contact-lists-api-v1-sunset-moved-to-april-30-2026",
-      impact: "CRM integrations using v1 endpoints will stop working",
-      whoAffected: "Developers with HubSpot CRM integrations using Contact Lists API v1",
-      migrationPath: "Migrate to Lists API v3 \u2014 new filtering syntax, pagination changes",
+      impact: "Contact Lists API v1 endpoints return HTTP 404. HubSpot's changelog said three endpoints listing all, recently updated or recently created contacts would keep working, but its current migration guide lists them as returning 404 too. Six Contacts API v1 read endpoints (a contact or a batch of contacts by visitor ID, email address or user token) still work but no longer return list memberships.",
+      whoAffected: "Developers using the Contact Lists API v1 endpoints, or reading list memberships from Contacts API v1 endpoints.",
+      migrationPath: "Move to the Lists v3 API or a date-versioned Lists API (/crm/lists/2026-03 in HubSpot's migration guide; 2026-09 is the latest version). Map each v1 list ID (legacyListId) to its listId first: HubSpot warns that a v1 ID used on the new endpoints may update or delete the wrong list.",
       status: "active",
     },
     {
       service: "OpenAI Realtime API Beta",
       vendorSlug: "openai",
-      what: "Realtime API beta endpoints deprecated \u2014 replaced by stable Realtime API",
+      what: "The Realtime API Beta (requests with the OpenAI-Beta: realtime=v1 header) was removed from the API on May 12, 2026.",
       deadline: "2026-05-12",
       dateSource: "https://developers.openai.com/api/docs/deprecations",
-      impact: "Voice and streaming AI applications using beta endpoints",
-      whoAffected: "Developers building voice assistants, real-time transcription, or streaming AI apps with OpenAI",
-      migrationPath: "Switch to stable Realtime API endpoints \u2014 mostly compatible, some parameter changes",
+      impact: "Calls to the beta interface no longer work.",
+      whoAffected: "Integrations still on the beta interface. The GA Realtime API was not affected.",
+      migrationPath: "Move to the GA Realtime API: remove the OpenAI-Beta: realtime=v1 header, create ephemeral credentials for browser or mobile clients with POST /v1/realtime/client_secrets, use /v1/realtime/calls for WebRTC sessions, set session.type, move output audio settings under session.audio.output, and use the GA response event names, such as response.output_text.delta, response.output_audio.delta and response.output_audio_transcript.delta.",
       status: "active",
     },
     {
@@ -26458,30 +26459,30 @@ function buildShutdownTrackerPage(): string {
       deadline: "2026-05-12",
       dateSource: "https://developers.openai.com/api/docs/deprecations",
       impact: "Image generation apps calling dall-e-2 or dall-e-3",
-      whoAffected: "Developers using the dall-e-2 or dall-e-3 model IDs in API calls",
-      migrationPath: "Update the model parameter to gpt-image-2 \u2014 test output quality differences",
+      whoAffected: "Developers calling dall-e-2 or dall-e-3, including image generation calls (POST /v1/images/generations) that leave out the model parameter, which OpenAI's reference says default to dall-e-2 unless a parameter specific to the GPT image models is used, and any use of the image variations endpoint, which supports only dall-e-2.",
+      migrationPath: "OpenAI's substitutes are gpt-image-2, gpt-image-1 or gpt-image-1-mini, and its DALL\u00b7E model pages now recommend GPT-Image-2.5 Sunburst. The GPT image models return base64-encoded images only (response_format is not supported), do not take style, and take quality low, medium or high instead of standard or hd; GPT-Image-2.5 Sunburst also takes xhigh and max. OpenAI may require API Organization Verification.",
       status: "active",
     },
     {
       service: "OpenAI legacy model snapshots",
       vendorSlug: "openai",
-      what: "gpt-3.5-turbo, gpt-4, gpt-4-1106-preview, gpt-4-turbo, gpt-4.1-nano, gpt-4o-2024-05-13, o1, o1-pro, o3-mini, o4-mini and gpt-image-1 shut down, with fine-tuned versions of gpt-3.5-turbo, gpt-4, gpt-4.1-nano, o4-mini, babbage-002 and davinci-002",
+      what: "gpt-3.5-turbo (gpt-3.5-turbo-0125, gpt-3.5-turbo-completions), gpt-4 (gpt-4-0613, gpt-4-0613-completions, gpt-4-completions), gpt-4-turbo (gpt-4-turbo-2024-04-09, gpt-4-turbo-completions), gpt-4.1-nano (gpt-4.1-nano-2025-04-14), gpt-4o-2024-05-13, o1 (o1-2024-12-17), o1-pro (o1-pro-2025-03-19), o3-mini (o3-mini-2025-01-31), o4-mini (o4-mini-2025-04-16) and gpt-image-1 shut down in the OpenAI API on October 23, 2026, with fine-tuned versions of gpt-3.5-turbo, gpt-4, gpt-4.1-nano, o4-mini, babbage-002 and davinci-002. OpenAI lists gpt-4-1106-preview for October 23, 2026, and also says access to it ended on March 26, 2026.",
       deadline: "2026-10-23",
       dateSource: "https://developers.openai.com/api/docs/deprecations",
       impact: "Apps and fine-tunes pinned to these model IDs stop working",
       whoAffected: "Developers calling any of these model IDs or their fine-tuned versions",
-      migrationPath: "OpenAI's substitutes: gpt-5.6-terra for gpt-3.5-turbo and o4-mini; gpt-5.6-sol for gpt-4, gpt-4-turbo, gpt-4o-2024-05-13, o1, o1-pro and o3-mini; gpt-5.6-luna for gpt-4.1-nano; gpt-image-2 for gpt-image-1",
+      migrationPath: "OpenAI's substitutes: gpt-5.6-terra for gpt-3.5-turbo and o4-mini; gpt-5.6-sol for gpt-4, gpt-4-turbo, gpt-4-1106-preview, gpt-4o-2024-05-13, o1 and o3-mini; gpt-5.6-sol with reasoning.mode: pro for o1-pro; gpt-5.6-luna for gpt-4.1-nano; gpt-image-2 for gpt-image-1. Replacement base models for fine-tunes: gpt-5.6-terra for gpt-3.5-turbo, o4-mini, babbage-002 and davinci-002; gpt-5.6-sol for gpt-4; gpt-5.6-luna for gpt-4.1-nano. The gpt-5.6 models do not support fine-tuning or the legacy /v1/completions endpoint.",
       status: "active",
     },
     {
       service: "Firebase Studio (New Workspaces)",
       vendorSlug: "firebase",
-      what: "New Firebase Studio workspace creation disabled",
+      what: "New workspace creation and user signup for Firebase Studio are disabled.",
       deadline: "2026-06-22",
       dateSource: "https://firebase.google.com/docs/studio/migrating-project",
       impact: "Cannot create new cloud IDE workspaces",
-      whoAffected: "Developers starting new projects on Firebase Studio",
-      migrationPath: "Export projects to local dev or alternative cloud IDEs (GitHub Codespaces, Gitpod, Replit)",
+      whoAffected: "New users and developers creating new Firebase Studio workspaces. Existing workspaces keep working until March 22, 2027.",
+      migrationPath: "Google recommends migrating existing workspaces to Google AI Studio or Google Antigravity. GitHub Codespaces (120 free core hours a month on a GitHub Free personal account) and Replit's free Starter plan are other options.",
       status: "active",
     },
     {
@@ -26514,9 +26515,9 @@ function buildShutdownTrackerPage(): string {
       what: "Complete API shutdown \u2014 Assistants, Threads, Runs, and Messages endpoints removed",
       deadline: "2026-08-26",
       dateSource: "https://developers.openai.com/api/docs/deprecations",
-      impact: "All AI agent applications built on Assistants API will break",
+      impact: "The Assistants API shut down. The call that retrieves thread messages no longer works.",
       whoAffected: "AI agent builders using Assistants API for threads, code interpreter, file search, and persistent assistants",
-      migrationPath: "Migrate to Responses API, or switch to Claude/Gemini/open-source frameworks",
+      migrationPath: "OpenAI names the Responses API and the Conversations API as replacements. Its migration guide turns assistants into reusable prompts, but the v1/prompts API and reusable prompt objects are scheduled to shut down November 30, 2026; OpenAI's advice for prompts is to move their content into your application code.",
       migrationLink: "/openai-assistants-migration-2026",
       status: "active",
     },
@@ -26526,9 +26527,20 @@ function buildShutdownTrackerPage(): string {
       what: "Videos API (Sora) deprecated March 24, 2026 \u2014 complete removal September 24, 2026. No direct OpenAI replacement for video generation.",
       deadline: "2026-09-24",
       dateSource: "https://developers.openai.com/api/docs/deprecations",
-      impact: "All video generation applications using the Videos API will stop working with no OpenAI replacement",
-      whoAffected: "Developers using POST /v1/videos/generations and the Sora 2 model for AI video generation",
+      impact: "Calls to the Videos API and the Sora 2 models no longer work. OpenAI says there is no one-to-one replacement API.",
+      whoAffected: "Developers using the Videos API (POST /v1/videos and the other /v1/videos endpoints) and the sora-2 and sora-2-pro models, including their dated snapshots.",
       migrationPath: "No direct OpenAI replacement \u2014 evaluate third-party video generation APIs (Runway, Pika, Luma)",
+      status: "active",
+    },
+    {
+      service: "OpenAI legacy GPT models (September 2026)",
+      vendorSlug: "openai",
+      what: "gpt-3.5-turbo-instruct, babbage-002, davinci-002 and gpt-3.5-turbo-1106 shut down in the OpenAI API on September 28, 2026. Fine-tuned babbage-002 and davinci-002 models (ft-babbage-002, ft-davinci-002) are listed separately, for October 23, 2026.",
+      deadline: "2026-09-28",
+      dateSource: "https://developers.openai.com/api/docs/deprecations",
+      impact: "Calls to these model IDs stop working.",
+      whoAffected: "Developers calling these model IDs. gpt-3.5-turbo-instruct, babbage-002 and davinci-002 run on the legacy Completions endpoint (/v1/completions).",
+      migrationPath: "OpenAI names gpt-5.6-terra as the replacement for all four. gpt-5.6-terra does not support /v1/completions, so calls on that endpoint must move to the Chat Completions or Responses API.",
       status: "active",
     },
     {
@@ -26539,7 +26551,7 @@ function buildShutdownTrackerPage(): string {
       dateSource: "https://firebase.google.com/docs/studio/migrating-project",
       impact: "All remaining Firebase Studio data permanently deleted",
       whoAffected: "Anyone with data still in Firebase Studio workspaces",
-      migrationPath: "Export all workspace data before deadline \u2014 move to GitHub Codespaces, Gitpod, or local development",
+      migrationPath: "Google recommends Antigravity or Google AI Studio. Code can also be downloaded as a zip or pushed to GitHub. Apps already deployed to Firebase keep running.",
       status: "active",
     },
     {
@@ -26567,10 +26579,10 @@ function buildShutdownTrackerPage(): string {
     {
       service: "Google Maps Platform Client IDs",
       vendorSlug: "google-maps",
-      what: "Client ID authentication sunset \u2014 all Client ID auth will stop working",
+      what: "Google Maps Platform client IDs have been deprecated since May 26, 2025. Google says they can no longer be used after May 31, 2026. Since May 2026, Google has restricted access periodically as a phased deprecation, and it has published no final termination date.",
       deadline: "2026-05-31",
       dateSource: "https://developers.google.com/maps/premium/migrate-client-id",
-      impact: "Maps API requests using Client ID authentication will be rejected",
+      impact: "Client ID requests fail during Google's periodic restrictions, which Google says will increase in frequency and duration. Service usually returns within a few hours; project Owners or Editors can restore it sooner by unpausing the client ID in the Cloud Console, and developers who cannot migrate quickly can ask Google Maps Platform Support for a temporary exemption.",
       whoAffected: "Any application using Client ID (not API key) authentication for Google Maps APIs",
       migrationPath: "Switch to API key authentication \u2014 generate key in Google Cloud Console, update all API calls",
       status: "active",
@@ -26719,6 +26731,18 @@ function buildShutdownTrackerPage(): string {
     })),
   };
 
+  const articleJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description: metaDesc,
+    datePublished: pubDate,
+    dateModified: pageDateModified("/shutdowns", pubDate),
+    author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
+  };
+
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26736,6 +26760,7 @@ ${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" hre
 ${feedLinkTag(PER_CHANGE_FEED)}
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<script type="application/ld+json">${JSON.stringify(articleJsonLd)}</script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
@@ -28882,7 +28907,7 @@ function buildCiCdPricingPage(): string {
       freeType: "generous",
       monthlyCostSmall: "$0",
       monthlyCostTeam: "$4/seat + overages",
-      hiddenCosts: "Linux minutes are 1x, macOS minutes are 10x, Windows are 2x. A 2,000-minute budget on macOS is really 200 minutes. Self-hosted runner per-minute fees add up at scale.",
+      hiddenCosts: "Linux minutes are 1x, macOS minutes are 10x, Windows are 2x. A 2,000-minute budget on macOS is really 200 minutes.",
     },
     {
       name: "GitLab CI",
@@ -29505,7 +29530,7 @@ function buildCiCdPricingPage(): string {
     ) : '  <p class="section-intro">No CI/CD-specific pricing changes tracked recently. This category has been relatively stable.</p>\n') +
     '\n' +
     '  <div class="context-box">\n' +
-    '    <strong>The trend:</strong> Free CI/CD minutes are shrinking while self-hosted runner support is expanding. GitHub Actions introduced per-minute fees for private self-hosted runners in March 2026 \u2014 previously free. The counter-trend: Buildkite continues to offer unlimited free self-hosted agents.\n' +
+    '    <strong>The trend:</strong> Free CI/CD minutes are shrinking while self-hosted runner support is expanding. The counter-trend: Buildkite continues to offer unlimited free self-hosted agents.\n' +
     '  </div>\n' +
     '\n' +
     '  <h2 id="recommendations">Best-for-Use-Case Recommendations</h2>\n' +
@@ -33959,7 +33984,7 @@ ${mcpCtaCss()}
 
 function buildGcpFreeTier2026Page(): string {
   const title = "GCP Free Tier Complete Guide 2026 — Every Free Service, Real Limits, and Hidden Costs";
-  const metaDescGcp = "Comprehensive guide to every Google Cloud free tier service in 2026. 30+ Always Free products, $300 trial credit, and hidden costs explained. BigQuery 1 TiB, Cloud Run 2M req/mo, e2-micro VM, and more.";
+  const metaDescGcp = "Comprehensive guide to every Google Cloud free tier service in 2026. 20+ free products, $300 trial credit, and hidden costs explained. BigQuery 1 TiB, Cloud Run 2M req/mo, e2-micro VM, and more.";
   const slug = "gcp-free-tier-2026";
   const pubDate = "2026-03-27";
 
@@ -36518,7 +36543,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="context-box">
-    <strong>Upstash is the standout</strong> for serverless Redis — 256 MB data and 500K commands/month with true pay-per-request pricing beyond the free tier. Cloudflare KV has more storage (1 GB) but very low write limits (1K/day) making it best for read-heavy config data. Redis Cloud's 30 MB free tier is tiny but useful for development. <strong>Note:</strong> Redis switched to a non-open-source license (SSPL/RSALv2) in March 2024 — Valkey and Dragonfly are now the leading open-source alternatives.
+    <strong>Upstash is the standout</strong> for serverless Redis — 256 MB data and 500K commands/month with true pay-per-request pricing beyond the free tier. Cloudflare KV has more storage (1 GB) but very low write limits (1K/day) making it best for read-heavy config data. Redis Cloud's 30 MB free tier is tiny but useful for development. <strong>Note:</strong> Redis switched to a non-open-source license (SSPL/RSALv2) in March 2024 — Valkey is now the leading open-source alternative, and Dragonfly a source-available one.
   </div>
 
   <h2 id="vector">Vector Databases</h2>
@@ -42262,7 +42287,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="context-box">
-    <strong>CI compute is the real cost of &ldquo;free&rdquo; frameworks.</strong> Playwright and Selenium are free, but they still need CI minutes to run. A typical Playwright suite takes 5&ndash;15 minutes on GitHub Actions. At $0.008/min (Linux), running tests 50 times/month costs ~$2&ndash;6. That's still dramatically cheaper than cloud testing platforms, but it's not literally zero. For larger suites, self-hosted runners or caching strategies reduce costs further.
+    <strong>CI minutes are where free frameworks can start to cost money.</strong> Public repositories run free on standard GitHub-hosted runners. A GitHub Free account gets 2,000 free minutes a month for private repositories, so 50 runs of a 5&ndash;15 minute suite (250&ndash;750 minutes) cost $0. A 10-minute suite run 20 times a day for 30 days uses 6,000 minutes: 4,000 past the quota, or $24 a month at $0.006 a minute on Linux. Self-hosted runners are free to use on GitHub Actions; you pay for the machine.
   </div>
 
   <div class="context-box">
@@ -42339,7 +42364,7 @@ ${mcpCtaCss()}
 
   <div class="diff-card">
     <h3>Free E2E frameworks still need CI compute</h3>
-    <div class="diff-desc">Playwright and Selenium are free, but they need a CI runner to execute. GitHub Actions charges $0.008/min (Linux) beyond the free tier (2,000 min/month for free accounts, 3,000 for Pro). A 15-minute E2E suite running 100 times/month = 1,500 minutes. On a free GitHub account, that's 75% of your monthly CI budget consumed by tests alone. Factor CI costs into your total testing budget.</div>
+    <div class="diff-desc">Playwright and Selenium are free, but they need a CI runner to execute. GitHub Actions charges $0.006/min (Linux) beyond the free tier (2,000 min/month for free accounts, 3,000 for Pro). A 15-minute E2E suite running 100 times/month = 1,500 minutes. On a free GitHub account, that's 75% of your monthly CI budget consumed by tests alone. Factor CI costs into your total testing budget.</div>
   </div>
 
   <h2 id="changes">Pricing Change Timeline</h2>
@@ -46574,7 +46599,7 @@ function buildEstimatorData(): EstimatorCategory[] {
       vendors: [
         { slug: "resend", name: "Resend", free: "3K emails/mo", starter: 0, growth: 20, scale: 90, notes: "Pro $20/mo (50K emails)" },
         { slug: "postmark", name: "Postmark", free: "100 emails/mo", starter: 15, growth: 50, scale: 215, notes: "$15/mo for 10K emails" },
-        { slug: "sendgrid", name: "SendGrid", free: "100 emails/day", starter: 0, growth: 20, scale: 50, notes: "Essentials $20/mo (50K emails)" },
+        { slug: "sendgrid", name: "SendGrid", free: "None (60-day trial)", starter: 0, growth: 20, scale: 50, notes: "Essentials $20/mo (50K emails)" },
         { slug: "mailgun", name: "Mailgun", free: "100 emails/day", starter: 0, growth: 35, scale: 90, notes: "Foundation $35/mo (50K emails)" },
         { slug: "brevo", name: "Brevo", free: "300 emails/day", starter: 0, growth: 25, scale: 65, notes: "Starter $25/mo (20K emails)" },
         { slug: "amazon-ses", name: "Amazon SES", free: "None — $200 in expiring credits", starter: 0, growth: 10, scale: 100, notes: "$0.10/1K emails; credits expire 12 months after signup" },
