@@ -1,5 +1,5 @@
 import { execFileSync } from "node:child_process";
-import { stripHtml, verifyOfferAgainstPage } from "./verify-freshness.js";
+import { MIN_PAGE_TEXT_LENGTH, stripHtml, verifyOfferAgainstPage } from "./verify-freshness.js";
 
 const CDX_ENDPOINT = "https://web.archive.org/cdx/search/cdx";
 const WAYBACK = "https://web.archive.org/web";
@@ -135,4 +135,129 @@ export function dayOurTextEntered(text, { commitDays = commitDaysTouching } = {}
 
 export async function readCapture(client, offer, html) {
   return verifyOfferAgainstPage(client, offer, stripHtml(html));
+}
+
+export const CAPTURE_WINDOW_DAYS = 60;
+export const MAX_READS_PER_BRACKET = 12;
+export const MAX_MOVES_BRACKETED = 3;
+
+export function readerFor(client, offer) {
+  return (storedTerms, pageText) => verifyOfferAgainstPage(client, { ...offer, description: storedTerms }, pageText);
+}
+
+function shiftDay(day, days) {
+  return new Date(Date.parse(`${day}T00:00:00Z`) + days * 86_400_000).toISOString().slice(0, 10);
+}
+
+export function capturesBesideTextDay(captures, textDay, windowDays = CAPTURE_WINDOW_DAYS) {
+  let before = null;
+  let after = null;
+  for (const capture of captures) {
+    const day = dayOfTimestamp(capture.timestamp);
+    if (daysBetween(day, textDay) > windowDays) continue;
+    if (day <= textDay) {
+      if (!before || capture.timestamp > before.timestamp) before = capture;
+    } else if (!after || capture.timestamp < after.timestamp) {
+      after = capture;
+    }
+  }
+  return { before, after };
+}
+
+function describeCapture(capture, textDay, side) {
+  const day = dayOfTimestamp(capture.timestamp);
+  return { day, gap_days: daysBetween(day, textDay), side };
+}
+
+async function bracketMoves({ start, oldTerms, later, todayText, readCaptureAgainst, readToday }) {
+  const brackets = [];
+  let from = start;
+  let terms = oldTerms;
+  let pool = later.filter((capture) => capture.timestamp > from.timestamp);
+  while (brackets.length < MAX_MOVES_BRACKETED) {
+    let lo = -1;
+    let hi = pool.length;
+    let reads = 0;
+    const termsAt = new Map();
+    while (hi - lo > 1 && reads < MAX_READS_PER_BRACKET) {
+      const mid = Math.floor((lo + hi) / 2);
+      const reading = await readCaptureAgainst(pool[mid], terms);
+      reads++;
+      if (reading.status === "confirmed") lo = mid;
+      else if (reading.status === "changed" && reading.current_state) {
+        hi = mid;
+        termsAt.set(pool[mid].timestamp, reading.current_state);
+      } else {
+        pool = [...pool.slice(0, mid), ...pool.slice(mid + 1)];
+        hi--;
+      }
+    }
+    const lastOld = lo === -1 ? from : pool[lo];
+    const firstNew = hi === pool.length ? null : pool[hi];
+    brackets.push({
+      last_old: dayOfTimestamp(lastOld.timestamp),
+      first_new: firstNew ? dayOfTimestamp(firstNew.timestamp) : null,
+      narrowed_to_adjacent_captures: hi - lo <= 1,
+    });
+    if (!firstNew) return { brackets, later_moves: "none" };
+    const newTerms = termsAt.get(firstNew.timestamp);
+    const today = await readToday(newTerms);
+    if (today.status === "confirmed") return { brackets, later_moves: "none" };
+    if (today.status !== "changed") return { brackets, later_moves: "unknown" };
+    from = firstNew;
+    terms = newTerms;
+    pool = pool.slice(hi + 1);
+  }
+  return { brackets, later_moves: "more than bracketed" };
+}
+
+export async function settleAgainstCaptures({ url, ourText, textDay, todayText, today, archive, read, windowDays = CAPTURE_WINDOW_DAYS }) {
+  let reads = 0;
+  if (!textDay) return { outcome: "text_day_unknown", reads };
+  const listed = await archive.captures(url, shiftDay(textDay, -windowDays), today);
+  if (listed.unavailable) return { outcome: "no_usable_capture", text_day: textDay, reads, tried: [], why: `the Archive did not answer: ${listed.unavailable}` };
+  const captures = listed.captures;
+  const readCaptureAgainst = async (capture, terms) => {
+    const page = await archive.captureHtml(capture);
+    if (page.unavailable) return { status: "unclear", summary: page.unavailable };
+    const text = stripHtml(page.html);
+    if (text.length < MIN_PAGE_TEXT_LENGTH) return { status: "unclear", summary: "the capture is too short to read" };
+    reads++;
+    return read(terms, text);
+  };
+  const readToday = async (terms) => {
+    reads++;
+    return read(terms, todayText);
+  };
+  const { before, after } = capturesBesideTextDay(captures, textDay, windowDays);
+  const tried = [];
+  for (const [capture, side] of [[before, "before"], [after, "after"]]) {
+    if (!capture) continue;
+    const at = describeCapture(capture, textDay, side);
+    const then = await readCaptureAgainst(capture, ourText);
+    if (then.status === "confirmed") {
+      const moves = await bracketMoves({ start: capture, oldTerms: ourText, later: captures, todayText, readCaptureAgainst, readToday });
+      return { outcome: "vendor_changed", text_day: textDay, capture: at, previous_state: ourText, ...moves, date: datedBy(moves), reads };
+    }
+    if (then.status !== "changed" || !then.current_state) {
+      tried.push({ ...at, why: "the reader could not compare the capture with our text" });
+      continue;
+    }
+    const now = await readToday(then.current_state);
+    if (now.status === "changed") {
+      const moves = await bracketMoves({ start: capture, oldTerms: then.current_state, later: captures, todayText, readCaptureAgainst, readToday });
+      return { outcome: "vendor_changed", text_day: textDay, capture: at, previous_state: then.current_state, ...moves, date: datedBy(moves), reads };
+    }
+    if (now.status !== "confirmed") {
+      tried.push({ ...at, why: "the reader could not compare today's page with the capture's terms" });
+      continue;
+    }
+    if (side === "before") return { outcome: "ours", text_day: textDay, capture: at, terms_then: then.current_state, reads };
+    tried.push({ ...at, why: "today's page states the capture's terms, but a capture after our text's day cannot show the difference was ours" });
+  }
+  return { outcome: "no_usable_capture", text_day: textDay, reads, tried, why: tried.length ? "no capture settled it" : `no capture within ${windowDays} days of our text's day` };
+}
+
+function datedBy({ brackets, later_moves }) {
+  return brackets.length === 1 && later_moves === "none" ? brackets[0].first_new : null;
 }
