@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 import {
   CANNOT_CONFIRM_THESE_TERMS,
   CHANGE_KIND_NOUN,
+  demotionTheVerdictNames,
   freeTierClaim,
   gateStatesAnEnding,
   narrowingSentence,
@@ -349,6 +350,7 @@ interface VendorRow {
   changes: DealChange[];
   gate: Gate | null;
   cause: RiskCause | null;
+  demotionNamed: RiskCause | null;
 }
 
 function vendorRows(): VendorRow[] {
@@ -398,10 +400,19 @@ function vendorRows(): VendorRow[] {
       changes: vendorChanges,
       gate,
       cause: enriched.risk_cause ?? null,
+      demotionNamed: demotionTheVerdictNames(context.input),
     });
   }
   return rows;
 }
+
+const verdictRestsOnANarrowingInForce = (row: VendorRow): boolean => {
+  const named = row.demotionNamed;
+  return named !== null && row.changes.some(c => establishesANarrowing(c)
+    && c.date === named.date && c.change_type === named.change_type && c.summary === named.summary);
+};
+
+const publishesALevelRatherThanAnEnding = (row: VendorRow): boolean => row.endingLabel === null && !row.badgeEnded;
 
 describe("vendor verdict — corpus invariant, computed offline", () => {
   it("gives every vendor we hold records for one rating word and no second scale", () => {
@@ -687,34 +698,39 @@ describe("vendor verdict — as rendered", () => {
     assert.doesNotMatch(neo4j, /narrowed the terms/);
   });
 
-  it("resolves the four routes that rendered a green badge over a negative verdict", async () => {
+  it("renders no green badge over a negative verdict on a route whose verdict rests on a narrowing record in force", async () => {
+    const routes = vendorRows().filter(r => verdictRestsOnANarrowingInForce(r) && publishesALevelRatherThanAnEnding(r));
     let cellsChecked = 0;
-    for (const slug of ["digitalocean", "google-gemini-api", "postman", "xata"]) {
-      const row = vendorRows().find(r => r.slug === slug);
-      assert.ok(row, `/vendor/${slug} is a rendered route`);
-      const html = await get(`/vendor/${slug}`);
-      assert.strictEqual(
-        badgeWord(html),
-        row.gate ? null : row.expected,
-        `/vendor/${slug} badge, over a ${row.gate?.code ?? "listed"} record`,
-      );
-      const cell = comparisonCell(html);
-      if (cell.rendered) {
-        cellsChecked += 1;
-        assert.strictEqual(cell.word, row.expected, `/vendor/${slug} comparison cell`);
+    let index = 0;
+    const worker = async () => {
+      while (index < routes.length) {
+        const row = routes[index++];
+        const slug = row.slug;
+        const html = await get(`/vendor/${slug}`);
+        assert.strictEqual(
+          badgeWord(html),
+          row.gate ? null : row.expected,
+          `/vendor/${slug} badge, over a ${row.gate?.code ?? "listed"} record`,
+        );
+        const cell = comparisonCell(html);
+        if (cell.rendered) {
+          cellsChecked += 1;
+          assert.strictEqual(cell.word, row.expected, `/vendor/${slug} comparison cell`);
+        }
+        const verdict = verdictParagraph(html);
+        assert.doesNotMatch(verdict, STABILITY_SCALE_WORDS, `/vendor/${slug} verdict`);
+        assert.ok(verdict.includes(row.sentence), `/vendor/${slug} verdict does not render "${row.sentence}"`);
+        assert.notStrictEqual(row.expected, "stable", `/vendor/${slug} still reads stable over a record that points down`);
+        assert.ok(
+          row.gate ? row.sentence.includes(row.cause!.summary) : /one recorded /.test(row.sentence),
+          `/vendor/${slug} still names no record behind its level`,
+        );
       }
-      const verdict = verdictParagraph(html);
-      assert.doesNotMatch(verdict, STABILITY_SCALE_WORDS, `/vendor/${slug} verdict`);
-      assert.ok(verdict.includes(row.sentence), `/vendor/${slug} verdict does not render "${row.sentence}"`);
-      assert.notStrictEqual(row.expected, "stable", `/vendor/${slug} still reads stable over a record that points down`);
-      assert.ok(
-        row.gate ? row.sentence.includes(row.cause!.summary) : /one recorded /.test(row.sentence),
-        `/vendor/${slug} still names no record behind its level`,
-      );
-    }
+    };
+    await Promise.all(Array.from({ length: 12 }, worker));
     assert.ok(cellsChecked > 0, "no route under test rendered a comparison cell, so the badge agreement is unchecked");
     assert.ok(
-      vendorRows().some(r => ["digitalocean", "google-gemini-api", "postman", "xata"].includes(r.slug) && !r.gate),
+      routes.some(r => !r.gate),
       "every route under test is now gated, so no rendered badge is checked against its verdict here",
     );
   });
