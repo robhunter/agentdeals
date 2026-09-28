@@ -8330,7 +8330,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "tenor-alternatives",
     title: "Tenor API Shutdown: GIF API Alternatives & Migration Guide",
-    metaDesc: "Google Tenor API shuts down June 30, 2026. Compare GIF API alternatives: Klipy (ex-Tenor team, same API structure), Giphy, Imgur, self-hosted options. Migration code examples and free tier comparison.",
+    metaDesc: "Google's Tenor API shut down on June 30, 2026. Compare GIF API alternatives: Klipy and GIPHY (both Tenor-compatible), Imgur, self-hosted options. Migration code examples and free tier comparison.",
     contextHtml: "",
     tag: "tenor-alternative",
     primaryVendor: "Google Tenor API",
@@ -25043,7 +25043,7 @@ ${mcpCtaCss()}
 
 function buildTenorAlternativesPage(): string {
   const title = "Tenor API Shutdown: GIF API Alternatives & Migration Guide";
-  const metaDesc = "Google Tenor API shuts down June 30, 2026. Compare GIF API alternatives: Klipy (ex-Tenor team, same API structure), Giphy, Imgur, self-hosted options. Migration code examples and free tier comparison.";
+  const metaDesc = "Google's Tenor API shut down on June 30, 2026. Compare GIF API alternatives: Klipy and GIPHY (both Tenor-compatible), Imgur, self-hosted options. Migration code examples and free tier comparison.";
   const slug = "tenor-alternatives";
   const pubDate = "2026-04-02";
 
@@ -25064,11 +25064,10 @@ function buildTenorAlternativesPage(): string {
   }
 
   const providers: GifApiProvider[] = [
-    { name: "Klipy", slug: "klipy", freeTier: "Free tier available", library: "Large (growing, multi-source)", apiStyle: "Near-identical to Tenor API", migrationEffort: "Minimal — change base URL", bestFor: "Easiest migration, ex-Tenor team" },
-    { name: "Giphy API", slug: "giphy-api", freeTier: "Free (API key required, rate-limited)", library: "Largest GIF library", apiStyle: "REST API, different structure", migrationEffort: "Moderate — different endpoints/params", bestFor: "Largest library, strongest brand" },
-    { name: "Giphy SDK", slug: "giphy-sdk", freeTier: "Free with attribution", library: "Same as Giphy API", apiStyle: "Native SDKs (iOS, Android, Web)", migrationEffort: "Moderate — SDK integration", bestFor: "Mobile apps, native GIF pickers" },
-    { name: "Imgur API", slug: "imgur-api", freeTier: "Free (1,250 uploads/day, 12,500 requests/day)", library: "Large (user-uploaded)", apiStyle: "REST API", migrationEffort: "Moderate — different data model", bestFor: "Image + GIF hosting combined" },
-    { name: "Gfycat (via Snap)", slug: "gfycat", freeTier: "Uncertain — acquired by Snap", library: "Short-form video/GIF", apiStyle: "REST API (limited)", migrationEffort: "High — platform instability", bestFor: "Not recommended — uncertain future" },
+    { name: "Klipy", slug: "klipy", freeTier: "No published price; test key 100 calls/hour, production key on request; attribution required", library: "10M+ items (Klipy's figure)", apiStyle: "Near-identical to Tenor API", migrationEffort: "Minimal — change base URL", bestFor: "Easiest migration, ex-Tenor team" },
+    { name: "Giphy API", slug: "giphy-api", freeTier: "Beta key free (100 calls/hour); production key has a fee", library: "GIPHY says it has the largest GIF library", apiStyle: "Tenor-compatible v2 endpoints, or its own REST API", migrationEffort: "Minimal", bestFor: "Largest library, strongest brand" },
+    { name: "Giphy SDK", slug: "giphy-sdk", freeTier: "Free on the beta key; 'Powered By GIPHY' attribution required", library: "Same as Giphy API", apiStyle: "Native SDKs (iOS, Android, Web)", migrationEffort: "Moderate — SDK integration", bestFor: "Mobile apps, native GIF pickers" },
+    { name: "Imgur API", slug: "imgur-api", freeTier: "Free for non-commercial use (1,250 uploads or 12,500 requests a day); not available in the UK", library: "Large (user-uploaded)", apiStyle: "REST API", migrationEffort: "Moderate — different data model", bestFor: "Image + GIF hosting combined" },
     { name: "Self-hosted (Meilisearch + media)", slug: "meilisearch", freeTier: "Free (open source)", library: "Your own curated library", apiStyle: "Custom API", migrationEffort: "High — build from scratch", bestFor: "Full control, no vendor dependency" },
   ];
 
@@ -25218,7 +25217,7 @@ ${mcpCtaCss()}
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number red">Shut down</div><div class="stat-label">June 30, 2026</div></div>
     <div class="stat-card"><div class="stat-number">${providers.length}</div><div class="stat-label">Alternatives Compared</div></div>
-    <div class="stat-card"><div class="stat-number green">1</div><div class="stat-label">Drop-In Replacement</div></div>
+    <div class="stat-card"><div class="stat-number green">2</div><div class="stat-label">Drop-In Replacement</div></div>
     <div class="stat-card"><div class="stat-number">3</div><div class="stat-label">Migration Paths</div></div>
   </div>
 
@@ -25349,7 +25348,7 @@ ${mcpCtaCss()}
 <span class="comment">// After: Klipy API (change base URL and key)</span>
 <span class="keyword">const</span> KLIPY_API_KEY = <span class="string">"YOUR_KLIPY_KEY"</span>;
 <span class="keyword">const</span> response = <span class="keyword">await</span> fetch(
-  <span class="string">\`https://api.klipy.com/v1/search?q=\${query}&amp;key=\${KLIPY_API_KEY}&amp;limit=20\`</span>
+  <span class="string">\`https://api.klipy.com/v2/search?q=\${query}&amp;key=\${KLIPY_API_KEY}&amp;limit=20\`</span>
 );
 <span class="keyword">const</span> data = <span class="keyword">await</span> response.json();
 <span class="keyword">const</span> gifs = data.results; <span class="comment">// Same response structure</span>
@@ -25382,15 +25381,15 @@ ${mcpCtaCss()}
   <div class="decision-tree">
     <div class="diff-card">
       <h3>Discord</h3>
-      <div class="diff-desc">One of Tenor\u2019s largest API consumers for inline GIF search. Actively testing both Giphy and Klipy as replacements. Millions of GIF searches per day across the platform.</div>
+      <div class="diff-desc">Discord\u2019s GIF picker now uses Klipy.</div>
     </div>
     <div class="diff-card">
       <h3>WhatsApp</h3>
-      <div class="diff-desc">Has switched GIF search from Tenor to Klipy. One of the first major platforms to complete migration, validating Klipy\u2019s API compatibility and scale.</div>
+      <div class="diff-desc">WhatsApp has not said which provider replaced Tenor.</div>
     </div>
     <div class="diff-card">
       <h3>Bluesky</h3>
-      <div class="diff-desc">Actively working on Tenor API replacement (GitHub issue #9728). Community discussing Giphy, Klipy, and open-source alternatives as options.</div>
+      <div class="diff-desc">Switched to Klipy in app version 1.121.0 (April 2026), using Klipy\u2019s Tenor-compatible endpoints.</div>
     </div>
     <div class="diff-card">
       <h3>Thousands of Apps, Bots &amp; Forums</h3>
@@ -25446,7 +25445,7 @@ ${mcpCtaCss()}
     </div>
     <div class="verdict-item">
       <strong>High-traffic apps on a deadline:</strong>
-      <p>Start with Klipy for immediate migration (days, not weeks), then evaluate Giphy for long-term if library size matters more. Don\u2019t wait for Giphy API approval with June 30 approaching.</p>
+      <p>Start with Klipy for immediate migration (days, not weeks), then evaluate Giphy for long-term if library size matters more.</p>
     </div>
   </div>
 
@@ -25454,7 +25453,7 @@ ${mcpCtaCss()}
 
   <div class="methodology">
     <p><strong>How we track this data:</strong> AgentDeals monitors free tier changes across ${offers.length.toLocaleString()} developer tools in ${categories.length} categories. The Tenor API shutdown is tracked in our <a href="/shutdowns">shutdown tracker</a> and <a href="/stability">stability dashboard</a>.</p>
-    <p><strong>Migration recommendations:</strong> Based on API documentation review, community reports (Discord, Bluesky GitHub issues), and platform migration announcements. Klipy\u2019s API compatibility was read from Tenor\u2019s v2 API documentation on ${pubDate}.</p>
+    <p><strong>Migration recommendations:</strong> Based on API documentation review, community reports (Discord, Bluesky GitHub issues), and platform migration announcements. Klipy\u2019s API compatibility was read from Klipy\u2019s and GIPHY\u2019s migration guides on 2026-09-28.</p>
     <p>For real-time data, use our <a href="/stability">stability dashboard</a>, <a href="/feed.xml">Atom feed</a>, or <a href="/setup">MCP server</a>. Full dataset available via <a href="/api/offers">REST API</a>.</p>
   </div>
 
@@ -26500,7 +26499,7 @@ function buildShutdownTrackerPage(): string {
       dateSource: "https://support.google.com/tenor/answer/10455265",
       impact: "Every Tenor API request fails with an error after 2026-06-30, so apps, bots and sites that searched GIFs through it need another source.",
       whoAffected: "Apps, bots, forums, and messaging integrations using Tenor for GIF search",
-      migrationPath: "Migrate to Klipy (ex-Tenor team, same API structure) or Giphy API",
+      migrationPath: "Migrate to Klipy or GIPHY; both offer Tenor-compatible v2 endpoints",
       migrationLink: "/tenor-alternatives",
       status: "active",
     },
