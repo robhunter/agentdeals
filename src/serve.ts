@@ -7956,7 +7956,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     contextHtml: "",
     tag: "gdp-pricing-analysis",
     primaryVendor: "Google",
-    hubDesc: "Google Developer Program Premium was folded into Google AI Pro and AI Ultra — current prices, Cloud credits and free alternatives",
+    hubDesc: "Standalone Google Developer Program Premium no longer takes sign-ups — current plans, Cloud credits and free alternatives",
   },
   {
     slug: "supabase-vs-firebase",
@@ -19912,7 +19912,7 @@ ${mcpCtaCss()}
 
 function buildGoogleDeveloperProgram2026Page(): string {
   const title = "Google Developer Program 2026 — What Replaced Premium, Prices & Alternatives";
-  const metaDesc = "Standalone Google Developer Program Premium ($299/year) no longer takes sign-ups; its benefits now come with Google AI Pro ($19.99/mo) and AI Ultra (from $99.99/mo). Current plans, Cloud credits and free alternatives. [[freshness]]";
+  const metaDesc = "Standalone Google Developer Program Premium ($299/year) no longer takes sign-ups. Current plans, Cloud credits and free alternatives. [[freshness]]";
   const slug = "google-developer-program-2026";
   const pubDate = "2026-03-26";
 
@@ -20114,7 +20114,7 @@ ${mcpCtaCss()}
     <p><strong>Google no longer sells standalone Google Developer Program Premium ($299/year or $24.99/month).</strong> On personal (@gmail.com) accounts, annual plans stopped renewing after March 30, 2026 and monthly plans after June 30, 2026; Premium on Workspace accounts did not change. Its Google Cloud credits and Firebase Studio workspaces now come with <strong>Google AI Pro</strong> ($19.99/mo) and <strong>Google AI Ultra</strong> (from $99.99/mo) on personal Google Accounts. Premium's 1:1 consultations, certification voucher and unlimited Google Skills access did not carry over.</p>
     <p><strong>The headline loss: Cloud credits drop 76% for annual subscribers who move to AI Pro.</strong> GDP Premium's annual plan included $500 a year in Google Cloud credits, and its monthly plan $45 a month. AI Pro includes $10/mo ($120/yr). The closest match to the old credit is Ultra 5x at $99.99/mo with $40/mo ($480/yr), about 4x Premium's $299/year.</p>
     <p><strong>Who's most affected:</strong> Indie developers, students, and small teams who relied on GDP Premium for cheap GCP access and Gemini API usage. The AI Pro tier is adequate for light Gemini users, but the Cloud credits reduction is significant for anyone running workloads on GCP.</p>
-    <p><strong>The silver lining:</strong> Most per-service free tiers still apply: Cloud Run, BigQuery, Cloud Build (2,500 build-minutes a month) and Firestore on Firebase's Spark plan. Cloud Storage for Firebase is the exception: since February 3, 2026 it needs the Blaze plan. You can replace most GDP Premium benefits by combining free tiers directly — no subscription needed.</p>
+    <p><strong>The silver lining:</strong> Most per-service free tiers still apply: Cloud Run, BigQuery, Cloud Build (2,500 build-minutes a month) and Firestore on Firebase's Spark plan. Cloud Storage for Firebase is the exception: since February 3, 2026 it needs the Blaze plan.</p>
   </div>
 
   <div class="toc">

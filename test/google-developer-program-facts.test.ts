@@ -16,8 +16,12 @@ const WITHDRAWN = [
   "Covers 90%+",
   "more compute for $0",
   "multi-cloud setup that costs $0/month",
-  "Its developer benefits now come with",
+  "benefits now come with",
+  "Premium was folded into",
+  "replace most GDP Premium benefits",
 ];
+
+const GUIDE_BLURB = "Standalone Google Developer Program Premium no longer takes sign-ups — current plans, Cloud credits and free alternatives";
 
 const STATED = [
   "Its Google Cloud credits and Firebase Studio workspaces now come with Google AI Pro ($19.99/mo) and Google AI Ultra (from $99.99/mo) on personal Google Accounts. Premium's 1:1 consultations, certification voucher and unlimited Google Skills access did not carry over.",
@@ -144,12 +148,20 @@ describe("the Google Developer Program guide states Google's, Microsoft's, Appwr
     assert.ok(served.size > 60, `read ${served.size} routes`);
   });
 
-  it("states none of the withdrawn claims on any guide or report, in body, meta or structured data", () => {
+  it("states none of the withdrawn claims on any guide or report, in body, meta or structured data, in any case", () => {
     const found = [...served].flatMap(([route, html]) => {
-      const text = `${readable(html)} ${structuredStrings(html).join(" ")}`;
-      return WITHDRAWN.filter((claim) => text.includes(claim)).map((claim) => `${route}: "${claim}"`);
+      const text = `${readable(html)} ${structuredStrings(html).join(" ")}`.toLowerCase();
+      return WITHDRAWN.filter((claim) => text.includes(claim.toLowerCase())).map((claim) => `${route}: "${claim}"`);
     });
     assert.deepStrictEqual(found, []);
+  });
+
+  it("describes the guide in every guide list as a programme that stopped taking sign-ups", () => {
+    const listing = [...served]
+      .filter(([, html]) => `${readable(html)} ${structuredStrings(html).join(" ")}`.includes(GUIDE_BLURB))
+      .map(([route]) => route);
+    assert.deepStrictEqual(["/hetzner-pricing-2026", "/guides"].filter((route) => !listing.includes(route)), []);
+    assert.ok(listing.length > 60, `the blurb is on ${listing.length} routes`);
   });
 
   it("states each corrected line as written", () => {
