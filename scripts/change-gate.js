@@ -1187,6 +1187,8 @@ export function offersAnythingFreeBesidesASelfHostedEdition(text) {
   return sentencesOfferingSomethingFree(text, SAYS_IT_IS_SELF_HOSTED).length > 0;
 }
 
+const A_FREE_PLAN_NAMED = /\bfree\s+(?:[\w-]+\s+)?(?:plan|tier)\b|\b(?:always|forever)\s+free\b|\bfree\s+forever\b/i;
+
 function namesAFreePlanWithTerms(sentence) {
   return A_FREE_PLAN_NAMED.test(sentence) || quantifiedAttributes(sentence).length > 0;
 }
@@ -1194,8 +1196,6 @@ function namesAFreePlanWithTerms(sentence) {
 export function statesAHostedFreePlanWithTerms(text) {
   return sentencesOfferingSomethingFree(text, A_SELF_HOSTED_EDITION).some(namesAFreePlanWithTerms);
 }
-
-const A_FREE_PLAN_NAMED = /\bfree\s+(?:[\w-]+\s+)?(?:plan|tier)\b|\b(?:always|forever)\s+free\b|\bfree\s+forever\b/i;
 
 function countsWhatTheProductCovers(description, quantity) {
   return description.charAt(quantity.at + quantity.value.length) === "+";
