@@ -6598,7 +6598,7 @@
     {
       "vendor": "FusionAuth",
       "category": "Auth",
-      "description": "Identity platform — \"FusionAuth Community is free and unlimited\": self-host it on your own infrastructure, with the core authentication features and community support (forums, Slack, GitHub). Hosting by FusionAuth starts with the paid Starter plan at $162 a month, billed annually.",
+      "description": "Identity platform — \"FusionAuth Community is free and unlimited\": self-host it on your own infrastructure, with the core authentication features and community support (forums, Slack, GitHub).",
       "tier": "Community",
       "url": "https://fusionauth.io/pricing",
       "tags": [
