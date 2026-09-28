@@ -4,6 +4,7 @@ const VERDICT_BY_BADGE_STATUS: Record<string, SiteFreeTierVerdict> = {
   "active": "offered",
   "at-risk": "offered",
   "stale": "offered",
+  "time-limited": "offered",
   "removed": "ended",
   "retired": "ended",
   "withheld": "unconfirmed",

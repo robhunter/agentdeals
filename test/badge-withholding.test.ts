@@ -57,7 +57,7 @@ type Withholding = { reason: string; gate?: string };
 interface Subject {
   slug: string;
   vendor: string;
-  kind: "rating" | "ended" | "none";
+  kind: "rating" | "time_limited" | "ended" | "none";
   word?: string;
   because?: Withholding;
   reasonKey: string | null;
@@ -94,7 +94,7 @@ before(async () => {
   const { vendorBadge, freeTierClaim } = await import("../dist/vendor-verdict.js");
   const { endingTheListingConfirms } = await import("../dist/vendor-verdict-input.js");
   const { offerEnded } = await import("../dist/retirement.js");
-  const { gateFor, utcDate } = await import("../dist/ranking.js");
+  const { gateFor, utcDate, classifyTier } = await import("../dist/ranking.js");
   const { reverificationIntervalDays, verificationAgeDays } = await import("../dist/badge-staleness.js");
 
   const offers = loadOffers();
@@ -133,7 +133,10 @@ before(async () => {
     };
     const rated = vendorBadge(input) as { kind: "rating" | "ended" | "none"; word?: string; because?: Withholding };
     const endedByTheListing = rated.kind === "rating" && rated.word !== "risky" && freeTierClaim(input).states === "ended";
-    const badge = endedByTheListing ? { kind: "ended" as const, word: undefined, because: undefined } : rated;
+    const runsOut = rated.kind === "rating" && freeTierClaim(input).states === "offered" && classifyTier(primary.tier).class === "time_limited";
+    const badge = endedByTheListing ? { kind: "ended" as const, word: undefined, because: undefined }
+      : runsOut ? { kind: "time_limited" as const, word: undefined, because: undefined }
+      : rated;
     const verifiedDate = own.reduce(
       (max: string, o: { verifiedDate: string }) => (o.verifiedDate > max ? o.verifiedDate : max),
       primary.verifiedDate,
@@ -410,10 +413,12 @@ describe("#1389 /badges counts at risk over vendors we make a claim about", () =
     const cautioned = subjects.filter(s => s.kind === "rating" && s.word === "caution").length;
     const withheld = subjects.filter(s => s.kind === "none").length;
     const stale = subjects.filter(s => s.kind === "rating" && s.word === "stable" && s.ageDays > staleAfter).length;
+    const runsOut = subjects.filter(s => s.kind === "time_limited").length;
 
     assert.strictEqual(counts.get("At Risk"), cautioned, "the at-risk tile counts vendors we publish no claim about");
     assert.strictEqual(counts.get("Unrated"), withheld, "the unrated tile does not match the badges that withhold");
     assert.strictEqual(counts.get("Stale"), stale, "the stale tile does not match the badges that read stale");
+    assert.strictEqual(counts.get("Time-Limited"), runsOut, "the time-limited tile does not match the badges for a listing that runs out");
     assert.strictEqual(counts.get("Vendors"), subjects.length);
   });
 
@@ -421,7 +426,7 @@ describe("#1389 /badges counts at risk over vendors we make a claim about", () =
     const { text } = await get("/badges");
     const tiles = new Map([...text.matchAll(/<div class="stat-num[^"]*">(\d+)<\/div><div class="stat-label">([^<]+)<\/div>/g)]
       .map(m => [m[2], parseInt(m[1], 10)] as const));
-    const total = ["Active", "At Risk", "Ended", "Stale", "Unrated"].reduce((sum, k) => sum + (tiles.get(k) ?? 0), 0);
+    const total = ["Active", "At Risk", "Ended", "Time-Limited", "Stale", "Unrated"].reduce((sum, k) => sum + (tiles.get(k) ?? 0), 0);
     assert.strictEqual(total, tiles.get("Vendors"), "the tiles do not partition the catalogue");
   });
 });

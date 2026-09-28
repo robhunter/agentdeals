@@ -55,8 +55,11 @@ export function stabilityVerdictClause(a: ComparisonSide, b: ComparisonSide): st
 
 export type SideFreeTier =
   | { states: "offered"; tier: string }
+  | { states: "time_limited"; tier: string; note: string }
   | { states: "ended" }
   | { states: "unconfirmed"; why: string };
+
+type TimeLimitedSide = FreeTierSide & { free: Extract<SideFreeTier, { states: "time_limited" }> };
 
 export interface FreeTierSide {
   vendor: string;
@@ -84,7 +87,42 @@ function neitherOffersSentence(a: FreeTierSide, b: FreeTierSide, forFaq: boolean
     : `Neither ${a.vendor} nor ${b.vendor} currently offers a free tier.`;
 }
 
+function isTimeLimited(side: FreeTierSide): side is TimeLimitedSide {
+  return side.free.states === "time_limited";
+}
+
+function whatItOffers(side: TimeLimitedSide): string {
+  return `${side.free.note} ("${side.free.tier}")`;
+}
+
+function noOngoingFreeTierSentence(side: TimeLimitedSide): string {
+  return `${side.vendor} has no ongoing free tier; what it offers is ${whatItOffers(side)}.`;
+}
+
+function neitherHasAnOngoingFreeTierSentence(a: FreeTierSide, b: FreeTierSide, forFaq: boolean): string {
+  return forFaq
+    ? `Neither has an ongoing free tier.`
+    : `Neither ${a.vendor} nor ${b.vendor} has an ongoing free tier.`;
+}
+
+function timeLimitedSentences(a: FreeTierSide, b: FreeTierSide, forFaq: boolean): string[] | null {
+  if (isTimeLimited(a) && isTimeLimited(b)) {
+    return [
+      neitherHasAnOngoingFreeTierSentence(a, b, forFaq),
+      `${a.vendor} offers ${whatItOffers(a)}; ${b.vendor} offers ${whatItOffers(b)}.`,
+    ];
+  }
+  const timeLimited = isTimeLimited(a) ? a : isTimeLimited(b) ? b : null;
+  if (!timeLimited) return null;
+  const other = timeLimited === a ? b : a;
+  if (other.free.states === "ended") {
+    return [neitherHasAnOngoingFreeTierSentence(a, b, forFaq), `What ${timeLimited.vendor} offers is ${whatItOffers(timeLimited)}.`];
+  }
+  return [settledSideOpening(other), settledSideOpening(timeLimited)];
+}
+
 function settledSideOpening(side: FreeTierSide): string {
+  if (isTimeLimited(side)) return noOngoingFreeTierSentence(side);
   return side.free.states === "offered"
     ? `${side.vendor} offers a free tier ("${side.free.tier}").`
     : `${side.vendor} does not currently have a free tier.`;
@@ -114,6 +152,8 @@ function freeTierSentences(a: FreeTierSide, b: FreeTierSide, forFaq: boolean): s
       whyUnconfirmed(unsettled),
     ];
   }
+  const timeLimited = timeLimitedSentences(a, b, forFaq);
+  if (timeLimited) return timeLimited;
   if (a.free.states === "offered" && b.free.states === "offered") return [bothOfferSentence(a, b, forFaq)];
   if (a.free.states === "offered") return [oneOffersSentence(a, b, forFaq)];
   if (b.free.states === "offered") return [oneOffersSentence(b, a, forFaq)];

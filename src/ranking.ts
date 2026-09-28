@@ -42,12 +42,23 @@ export const NOT_FREE_TIER_RULES: { pattern: RegExp; note: string }[] = [
   { pattern: /^exempt\s*\/\s*paid$/i, note: "free only by case-by-case exemption" },
 ];
 
-export const TIME_LIMITED_TIER_RULES: { pattern: RegExp; note: string }[] = [
-  { pattern: /credit/i, note: "a credit grant that runs out" },
-  { pattern: /\btrial\b/i, note: "a trial that expires" },
-  { pattern: /scholarship/i, note: "a scholarship award, not an ongoing tier" },
-  { pattern: /\bbeta\b|preview|sandbox/i, note: "a beta/preview/sandbox allowance that may end without notice" },
+export interface TimeLimitedTierRule {
+  pattern: RegExp;
+  note: string;
+  badgeLabel: string;
+}
+
+export const TIME_LIMITED_TIER_RULES: TimeLimitedTierRule[] = [
+  { pattern: /credit/i, note: "a credit grant that runs out", badgeLabel: "credits only" },
+  { pattern: /\btrial\b/i, note: "a trial that expires", badgeLabel: "trial only" },
+  { pattern: /scholarship/i, note: "a scholarship award, not an ongoing tier", badgeLabel: "award only" },
+  { pattern: /\bbeta\b|preview|sandbox/i, note: "a beta/preview/sandbox allowance that may end without notice", badgeLabel: "preview only" },
 ];
+
+export function timeLimitedTierRule(tier: string): TimeLimitedTierRule | null {
+  if (offerEnded({ tier })) return null;
+  return TIME_LIMITED_TIER_RULES.find(rule => rule.pattern.test(tier)) ?? null;
+}
 
 export const NO_FREE_TIER_IN_DESCRIPTION = /no free tier/i;
 
@@ -57,9 +68,8 @@ export function descriptionDeniesFreeTier(description: string | undefined): bool
 
 export function classifyTier(tier: string): { class: TierClass; note: string } {
   if (offerEnded({ tier })) return { class: "retired", note: RETIRED_TIER_NOTE };
-  for (const rule of TIME_LIMITED_TIER_RULES) {
-    if (rule.pattern.test(tier)) return { class: "time_limited", note: rule.note };
-  }
+  const timeLimited = timeLimitedTierRule(tier);
+  if (timeLimited) return { class: "time_limited", note: timeLimited.note };
   for (const rule of NOT_FREE_TIER_RULES) {
     if (rule.pattern.test(tier)) return { class: "not_free", note: rule.note };
   }

@@ -184,6 +184,7 @@ export type StackBadgeStatus =
   | "active"
   | "at-risk"
   | "stale"
+  | "time-limited"
   | "removed"
   | "retired"
   | "withheld"
