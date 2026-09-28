@@ -11533,7 +11533,7 @@ ${mcpCtaCss()}
   <h1>Best Free CI/CD Tools for Developers</h1>
 
   <div class="context">
-    <p>Every software team needs CI/CD, but build minutes add up fast. <strong>GitHub Actions</strong> is the default choice with <strong>2,000 free minutes/month</strong> for private repos and unlimited for public, but it introduced <strong>self-hosted runner charges ($0.002/min) in March 2026</strong>. <strong>GitLab CI</strong> cut its free tier to <strong>400 minutes/month</strong>. <strong>CircleCI</strong> offers <strong>30K credits/month</strong> (~6K minutes) but requires a credit card for some features.</p>
+    <p>Every software team needs CI/CD, but build minutes add up fast. <strong>GitHub Actions</strong> is the default choice with <strong>2,000 free minutes/month</strong> for private repos and unlimited for public, and self-hosted runners stay free after GitHub postponed a planned $0.002/min charge. <strong>GitLab CI</strong> cut its free tier to <strong>400 minutes/month</strong>. <strong>CircleCI</strong> offers <strong>30K credits/month</strong> (~6K minutes) but requires a credit card for some features.</p>
     <p>This page compares every free CI/CD option in our index \u2014 <strong>${cicdOffers.length} tools</strong> across general-purpose platforms, container-native pipelines, mobile CI/CD, and infrastructure automation. Whether you need cloud-hosted runners or self-hosted pipelines, we have the comparison with exact free tier limits.</p>
   </div>
 
