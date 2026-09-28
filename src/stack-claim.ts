@@ -1,3 +1,5 @@
+import { TIME_LIMITED_TIER_RULES } from "./ranking.js";
+
 export type StackVerdictConfidence = 0 | 1 | 2 | 3;
 
 export interface PublishedPick {
@@ -42,6 +44,7 @@ const QUALIFIED_PHRASES = [
   "stale",
   "caution",
   "watch",
+  ...TIME_LIMITED_TIER_RULES.map(rule => rule.badgeLabel),
 ];
 
 const CONFIDENT_PHRASES = [
