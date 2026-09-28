@@ -9761,7 +9761,13 @@
       "category": "AI / ML",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-07"
+      "recorded_date": "2026-09-07",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-28",
+        "detail": "Retracted 2026-09-28: OpenRouter did not narrow its free tier on 2026-09-07. Its rate-limits documentation has capped free-model use at 20 requests a minute and 50 a day since April 2025: the 2025-04-08 archive capture says \"you can make up to 20 requests per minute. If your account has less than 10 credits, you're limited to 50 requests per day\", and the 2026-02-22 and 2026-09-01 captures state the same limits. The pricing page listed the Free plan as \"25+ free models\", \"4 free providers\" and \"Rate limits 50 reqs/day\" on the 2025-10-31, 2026-02-24 and 2026-09-06 captures. The $25,000 allowance is the Pay-as-you-go plan's bring-your-own-key allowance; the Free plan has none. The record compared the page with our earlier description, which had left out the daily cap.",
+        "source_url": "https://web.archive.org/web/20250408060656/https://openrouter.ai/docs/api-reference/limits"
+      }
     },
     {
       "vendor": "Tinybird",
