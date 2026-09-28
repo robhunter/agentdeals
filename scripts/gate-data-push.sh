@@ -136,13 +136,13 @@ put_back_what_this_run_does_not_commit() {
   local stray
   stray="$(git diff --name-only HEAD --)" || return 1
   [ -n "$stray" ] || return 0
-  echo "── The workspace holds changes this run's commit does not, in $(tr '\n' ' ' <<<"$stray" | sed 's/ *$//'). Only the commit reaches main and a rebase will not start over them, so they are put back as the commit has them ──"
+  echo "── The workspace holds changes this run's commit does not, in $(tr '\n' ' ' <<<"$stray" | sed 's/ *$//'). Only the commit reaches main and $1, so they are put back as the commit has them ──"
   git reset -q --hard HEAD
 }
 
 replay_onto_main() {
   READINGS_THE_REPLAY_COULD_NOT_MERGE=""
-  put_back_what_this_run_does_not_commit || return 1
+  put_back_what_this_run_does_not_commit "a rebase will not start over them" || return 1
   git fetch origin main || return 1
   if git rebase FETCH_HEAD; then
     COMMIT="$(git rev-parse --short HEAD)"
@@ -232,6 +232,7 @@ hold_back_the_vendors_a_failing_test_named() {
     echo "── A set of vendors has already been held back on this run and the suite is still red, so the batch stands or falls as one ──"
     return 1
   fi
+  put_back_what_this_run_does_not_commit "a hold-back amends every path this run commits" || return 1
   local baseline named
   baseline="$(git rev-parse HEAD^)" || return 1
   : >"$HELD_BACK_LIST"
