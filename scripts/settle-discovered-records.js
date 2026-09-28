@@ -56,11 +56,12 @@ function archiveDidNotAnswer(result) {
   return String(result.why ?? "").startsWith("the Archive did not answer");
 }
 
-export async function settleFirstReadings({ changes, offers, today, archive, readerForListing, fetchToday, textDayOf, limit = Infinity, vendors, includeResolved = false, onSettled = () => {} }) {
+export async function settleFirstReadings({ changes, offers, today, archive, readerForListing, fetchToday, textDayOf, limit = Infinity, vendors, includeResolved = false, logReads = false, onSettled = () => {} }) {
   const backlog = firstReadingsInForce(changes, { includeResolved }).filter((record) => !vendors || vendors.includes(record.vendor)).slice(0, limit);
   const settleOne = async (record) => {
     const subject = { vendor: record.vendor, date: record.date, change_type: record.change_type, source_url: record.source_url, resolution: record.resolution?.state ?? null };
     const page = await fetchToday(record.source_url);
+    const readings = [];
     const settled = page.ok
       ? await settleAgainstCaptures({
           url: record.source_url,
@@ -72,9 +73,10 @@ export async function settleFirstReadings({ changes, offers, today, archive, rea
           today,
           archive,
           read: readerForListing(listingFor(record, offers)),
+          onRead: (reading) => readings.push(reading),
         })
       : { outcome: "page_unreadable_today", why: page.error, reads: 0 };
-    const result = { ...subject, ...settled, split: splitOf(settled, today) };
+    const result = { ...subject, ...settled, split: splitOf(settled, today), ...(logReads ? { readings } : {}) };
     onSettled(result);
     return result;
   };
@@ -110,6 +112,7 @@ async function main() {
     limit: option("--limit") ? Number(option("--limit")) : Infinity,
     vendors: option("--vendors")?.split(",").map((name) => name.trim()),
     includeResolved: args.includes("--include-resolved"),
+    logReads: args.includes("--log-reads"),
     onSettled: (result) => appendFileSync(progress, `${JSON.stringify(result)}\n`),
   });
   writeFileSync(out, `${JSON.stringify(report, null, 2)}\n`);
