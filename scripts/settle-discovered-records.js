@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync } from "node:fs";
+import { appendFileSync, readFileSync, writeFileSync } from "node:fs";
 import { createArchiveClient, dayOurTextEntered, readerFor, settleAgainstCaptures } from "./archive-captures.js";
 import { createVerifierClient, fetchPageText } from "./verify-freshness.js";
 
@@ -8,6 +8,7 @@ export const SPLIT = {
   recentVendorChange: "vendor change inside 180 days",
   olderVendorChange: "vendor change before that",
   ours: "our correction",
+  notReproduced: "difference not reproduced",
   noCapture: "no usable capture",
   textDayUnknown: "text day unknown",
   pageUnreadable: "page unreadable today",
@@ -34,6 +35,7 @@ function daysBefore(day, days) {
 
 export function splitOf(settled, today) {
   if (settled.outcome === "ours") return SPLIT.ours;
+  if (settled.outcome === "not_reproduced") return SPLIT.notReproduced;
   if (settled.outcome === "text_day_unknown") return SPLIT.textDayUnknown;
   if (settled.outcome === "page_unreadable_today") return SPLIT.pageUnreadable;
   if (settled.outcome !== "vendor_changed") return SPLIT.noCapture;
@@ -50,7 +52,7 @@ export function listingFor(record, offers) {
   );
 }
 
-export async function settleFirstReadings({ changes, offers, today, archive, readerForListing, fetchToday, textDayOf, limit = Infinity, vendors, includeResolved = false }) {
+export async function settleFirstReadings({ changes, offers, today, archive, readerForListing, fetchToday, textDayOf, limit = Infinity, vendors, includeResolved = false, onSettled = () => {} }) {
   const backlog = firstReadingsInForce(changes, { includeResolved }).filter((record) => !vendors || vendors.includes(record.vendor)).slice(0, limit);
   const results = [];
   for (const record of backlog) {
@@ -67,7 +69,9 @@ export async function settleFirstReadings({ changes, offers, today, archive, rea
           read: readerForListing(listingFor(record, offers)),
         })
       : { outcome: "page_unreadable_today", why: page.error, reads: 0 };
-    results.push({ ...subject, ...settled, split: splitOf(settled, today) });
+    const result = { ...subject, ...settled, split: splitOf(settled, today) };
+    results.push(result);
+    onSettled(result);
   }
   const split = Object.fromEntries(Object.values(SPLIT).map((name) => [name, results.filter((result) => result.split === name).length]));
   return { today, records: backlog.length, split, results };
@@ -82,6 +86,9 @@ async function main() {
   const changes = JSON.parse(readFileSync("data/deal_changes.json", "utf-8")).changes;
   const offers = JSON.parse(readFileSync("data/index.json", "utf-8")).offers;
   const client = createVerifierClient();
+  const out = option("--out") ?? "settled-first-readings.json";
+  const progress = out.replace(/\.json$/, "") + ".jsonl";
+  writeFileSync(progress, "");
   const report = await settleFirstReadings({
     changes,
     offers,
@@ -93,8 +100,8 @@ async function main() {
     limit: option("--limit") ? Number(option("--limit")) : Infinity,
     vendors: option("--vendors")?.split(",").map((name) => name.trim()),
     includeResolved: args.includes("--include-resolved"),
+    onSettled: (result) => appendFileSync(progress, `${JSON.stringify(result)}\n`),
   });
-  const out = option("--out") ?? "settled-first-readings.json";
   writeFileSync(out, `${JSON.stringify(report, null, 2)}\n`);
   console.log(`Settled ${report.results.length} of ${report.records} first readings in force; report in ${out}`);
   for (const [name, count] of Object.entries(report.split)) console.log(`  ${name}: ${count}`);
