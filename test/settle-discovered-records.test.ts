@@ -124,6 +124,40 @@ describe("settling the backlog", () => {
   });
 });
 
+describe("records the Archive did not answer", () => {
+  it("are asked again once every other record has settled, and the second answer is the one reported", async () => {
+    const changes = [
+      change({ vendor: "Alpha", date: "2026-09-01", date_source: "discovered", previous_state: "A", current_state: "B", source_url: "https://alpha.example/pricing" }),
+      change({ vendor: "Beta", date: "2026-09-02", date_source: "discovered", previous_state: "A", current_state: "B", source_url: "https://beta.example/pricing" }),
+    ];
+    const asked: string[] = [];
+    const archive = {
+      captures: async (url: string) => {
+        asked.push(url);
+        if (url.includes("alpha") && asked.filter((u) => u === url).length === 1) return { unavailable: "network error: fetch failed after 4 attempts" };
+        return { captures: [{ timestamp: "20260205120000", original: url, statuscode: "200", mimetype: "text/html" }] };
+      },
+      captureHtml: async () => ({ html: `<html><body><p>TERMS=B</p><p>${"Plans and limits. ".repeat(40)}</p></body></html>` }),
+    };
+    const reader = () => async (stored: string, text: string) => (text.includes(`TERMS=${stored}`) ? { status: "confirmed" } : { status: "changed", current_state: text.match(/TERMS=(\w+)/)![1] });
+    const settledInTurn: string[] = [];
+    const report = await settleFirstReadings({
+      changes,
+      offers: [],
+      today: "2026-09-28",
+      archive,
+      readerForListing: reader,
+      fetchToday: async () => ({ ok: true, text: "TERMS=B" }),
+      textDayOf: () => "2026-02-10",
+      onSettled: (result: { vendor: string; outcome: string }) => settledInTurn.push(`${result.vendor} ${result.outcome}`),
+    });
+    assert.deepStrictEqual(asked, ["https://alpha.example/pricing", "https://beta.example/pricing", "https://alpha.example/pricing"]);
+    assert.deepStrictEqual(settledInTurn, ["Alpha no_usable_capture", "Beta ours", "Alpha ours"]);
+    assert.deepStrictEqual(report.results.map((r: { vendor: string; outcome: string }) => `${r.vendor} ${r.outcome}`), ["Alpha ours", "Beta ours"]);
+    assert.strictEqual(report.split[SPLIT.noCapture], 0);
+  });
+});
+
 describe("checking the method on records whose outcome is already known", () => {
   it("can include resolved first readings, and names the resolution each one carries", async () => {
     const changes = [
