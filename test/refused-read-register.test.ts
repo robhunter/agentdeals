@@ -1,9 +1,10 @@
+import { REFUSED_READ_SUBJECTS, isRefusedReadSubject, type RefusalFamily } from "./refused-read-subjects.ts";
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
 import { spawn, type ChildProcess } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { assertPopulationFloor } from "./population-floor.ts";
+import { assertCoversPopulation, type Population } from "./population-floor.ts";
 
 const {
   refusedReadClause,
@@ -102,6 +103,24 @@ const inRegister = (register: string): Record[] =>
 
 const speakingInRegister = (register: string): Record[] =>
   inRegister(register).filter(record => record.publishesTheRefusal);
+
+const listingsBuiltWithARefusalThat = (family: RefusalFamily): number =>
+  REFUSED_READ_SUBJECTS.filter(subject => subject.family === family).length;
+
+const listingsBuiltToVoidTheirRead = (): Population => ({
+  size: listingsBuiltWithARefusalThat("voids_the_read"),
+  read: "listings built to withhold on a refusal that voids the read's standing",
+});
+
+const listingsBuiltToLeaveTheirReadStanding = (): Population => ({
+  size: listingsBuiltWithARefusalThat("leaves_the_read_standing"),
+  read: "listings built to withhold on a refusal that leaves the read standing",
+});
+
+const listingsBuiltToMeasureNoDifference = (): Population => ({
+  size: listingsBuiltWithARefusalThat("measured_no_difference"),
+  read: "listings built to withhold on a refusal that measured no difference",
+});
 
 let serverPort = 0;
 let proc: ChildProcess | null = null;
@@ -229,20 +248,22 @@ describe("the vendor pages of a read its own refusal voided", () => {
   after(() => { proc?.kill(); });
 
   it("holds a population on every register", () => {
-    assertPopulationFloor(
-      inRegister("had_no_standing_to_contradict").length,
-      24,
-      "records withhold on a refusal that voids the read's standing",
+    const built = (register: string): number =>
+      inRegister(register).filter((record) => isRefusedReadSubject(record.vendor)).length;
+    assertCoversPopulation(
+      built("had_no_standing_to_contradict"),
+      listingsBuiltToVoidTheirRead(),
+      "built listings withhold on a refusal that voids the read's standing",
     );
-    assertPopulationFloor(
-      inRegister("could_not_reconcile_the_change").length,
-      51,
-      "records withhold on a refusal that leaves the read standing",
+    assertCoversPopulation(
+      built("could_not_reconcile_the_change"),
+      listingsBuiltToLeaveTheirReadStanding(),
+      "built listings withhold on a refusal that leaves the read standing",
     );
-    assertPopulationFloor(
-      inRegister("named_no_figure_that_moved").length,
-      3,
-      "records withhold on a refusal that measured no difference",
+    assertCoversPopulation(
+      built("named_no_figure_that_moved"),
+      listingsBuiltToMeasureNoDifference(),
+      "built listings withhold on a refusal that measured no difference",
     );
     assert.strictEqual(
       withholdingRecords.length,
@@ -253,22 +274,22 @@ describe("the vendor pages of a read its own refusal voided", () => {
 
   it("publishes no unreconciled change over a refusal that established none", async () => {
     const wrong: string[] = [];
-    let read = 0;
+    let builtRead = 0;
     for (const record of inRegister("had_no_standing_to_contradict")) {
       const { status, body } = await get(`/vendor/${record.slug}`);
       if (status !== 200) continue;
-      read++;
+      if (isRefusedReadSubject(record.vendor)) builtRead++;
       if (body.includes(UNRECONCILED_CLAUSE)) wrong.push(`/vendor/${record.slug} (${record.reason}) states a change it could not reconcile`);
       if (body.includes(UNRECONCILED_META)) wrong.push(`/vendor/${record.slug} (${record.reason}) states a change it could not reconcile in its meta description`);
       if (body.includes(UNRECONCILED_READ_BADGE_LABEL)) wrong.push(`/vendor/${record.slug} (${record.reason}) badges the read as a change not reconciled`);
     }
-    assertPopulationFloor(read, 24, "vendor pages answer for a record whose withholding refusal voided the read");
+    assertCoversPopulation(builtRead, listingsBuiltToVoidTheirRead(), "vendor pages answer for a built listing whose refusal voided the read");
     assert.deepStrictEqual(wrong.slice(0, 20), [], wrong.slice(0, 20).join("\n"));
   });
 
   it("states what its own refusal found in place of the change", async () => {
     const silent: string[] = [];
-    let stating = 0;
+    let builtStating = 0;
     for (const record of speakingInRegister("had_no_standing_to_contradict")) {
       const { status, body } = await get(`/vendor/${record.slug}`);
       if (status !== 200) continue;
@@ -276,15 +297,15 @@ describe("the vendor pages of a read its own refusal voided", () => {
         silent.push(`/vendor/${record.slug} (${record.reason}) states neither the change nor what the read found`);
         continue;
       }
-      stating++;
+      if (isRefusedReadSubject(record.vendor)) builtStating++;
     }
-    assertPopulationFloor(stating, 11, "vendor pages state what a read their own refusal voided found");
+    assertCoversPopulation(builtStating, listingsBuiltToVoidTheirRead(), "built listings' pages state what a read their own refusal voided found");
     assert.deepStrictEqual(silent.slice(0, 20), [], silent.slice(0, 20).join("\n"));
   });
 
   it("leaves the pages of the other two registers saying what they said before", async () => {
     const quiet: string[] = [];
-    let stating = 0;
+    let builtStating = 0;
     for (const record of speakingInRegister("could_not_reconcile_the_change")) {
       const { status, body } = await get(`/vendor/${record.slug}`);
       if (status !== 200) continue;
@@ -292,9 +313,9 @@ describe("the vendor pages of a read its own refusal voided", () => {
         quiet.push(`/vendor/${record.slug} (${record.reason}) no longer states the change it could not reconcile`);
         continue;
       }
-      stating++;
+      if (isRefusedReadSubject(record.vendor)) builtStating++;
     }
-    assertPopulationFloor(stating, 15, "vendor pages still state a change they could not reconcile");
+    assertCoversPopulation(builtStating, listingsBuiltToLeaveTheirReadStanding(), "built listings' pages still state a change they could not reconcile");
     assert.deepStrictEqual(quiet.slice(0, 20), [], quiet.slice(0, 20).join("\n"));
   });
 });
