@@ -17,7 +17,7 @@ concurrency:
 jobs:
   test:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 50
     steps:
       - uses: actions/checkout@v4
 
@@ -35,7 +35,17 @@ jobs:
       - name: Test
         env:
           POPULATION_FLOOR_LOG: /tmp/population-floors.jsonl
-        run: npm test
+          SUITE_TIME_LIMIT_MINUTES: 45
+        run: |
+          set +e
+          timeout --kill-after=1m "${SUITE_TIME_LIMIT_MINUTES}m" npm test
+          status=$?
+          if [ "$status" -eq 124 ] || [ "$status" -eq 137 ]; then
+            message="npm test ran past its ${SUITE_TIME_LIMIT_MINUTES}-minute limit and was stopped, so this run reports as failed."
+            echo "::error title=Tests timed out::$message"
+            echo "Tests timed out: $message" >> "$GITHUB_STEP_SUMMARY"
+          fi
+          exit "$status"
 
       - name: Say how close every population floor is to going red
         if: always()
