@@ -12921,6 +12921,20 @@
       "alternatives": [],
       "recorded_date": "2026-09-28",
       "date_source": "vendor_page"
+    },
+    {
+      "vendor": "Koyeb",
+      "change_type": "free_tier_removed",
+      "date": "2026-02-26",
+      "summary": "Koyeb withdrew its free Starter plan from new users after announcing on 2026-02-17 that it is joining Mistral AI: new users \"must subscribe to one of our paid plans to get started\", from Pro at $29 a month plus compute. Starter was on koyeb.com/pricing in the Internet Archive's capture of 2026-02-19 and gone by 2026-02-26. Organizations already on Starter keep it.",
+      "previous_state": "\"Starter $ 0 /mo +compute For individuals. Pay-per-use by the second after the free tier, perfect for small apps. Features Generous Free Tier 1x Web Service, 1x Postgres, 5x custom domains\" (pricing page, capture of 2026-02-19)",
+      "current_state": "\"Pro $ 29 /mo +compute The best way to start, including team and support features for production apps.\" New users \"must subscribe to one of our paid plans to get started.\"",
+      "impact": "high",
+      "source_url": "https://www.koyeb.com/blog/koyeb-is-joining-mistral-ai-to-build-the-future-of-ai-infrastructure",
+      "category": "Databases",
+      "alternatives": [],
+      "recorded_date": "2026-09-28",
+      "date_source": "hand_written"
     }
   ]
 }

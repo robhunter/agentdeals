@@ -1870,6 +1870,7 @@
         "google-cloud",
         "hcp-terraform",
         "incidenthub-cloud",
+        "koyeb",
         "localstack",
         "minio",
         "neon",
@@ -2218,7 +2219,7 @@
       "review_outcome": null,
       "review_note": null,
       "reads_index": true,
-      "tables_read_index": false,
+      "tables_read_index": true,
       "table_figures": 80,
       "table_figures_from_records": 22,
       "tables": [
@@ -2280,10 +2281,10 @@
       "reviewer": null,
       "review_outcome": null,
       "review_note": null,
-      "reads_index": false,
+      "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 142,
-      "table_figures_from_records": 54,
+      "table_figures": 143,
+      "table_figures_from_records": 55,
       "tables": [
         {
           "label": "Pricing Comparison Table",
@@ -2302,12 +2303,12 @@
         },
         {
           "label": "Recent Pricing Changes",
-          "figures": 55,
-          "from_records": 54
+          "figures": 56,
+          "from_records": 55
         }
       ],
       "reads_changes": true,
-      "data_source": "unsourced",
+      "data_source": "catalogue",
       "data_source_reason": null
     },
     {

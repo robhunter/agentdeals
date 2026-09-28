@@ -485,8 +485,8 @@
     {
       "vendor": "Koyeb",
       "category": "Databases",
-      "description": "Free Postgres database (0.25 vCPU, 1 GB RAM, 1 GB storage, 5 hr/month runtime). No free compute tier — Pro plan starts at $29/month with $10 included compute.",
-      "tier": "Free (Database Only)",
+      "description": "Serverless platform for web services, workers and Postgres databases. No free plan for new users since February 2026: new organizations must subscribe to Pro ($29 a month plus compute, with $10 of compute included) or a higher plan. Every plan can run one small Postgres instance (0.25 vCPU, 1 GB RAM, 1 GB storage, 5 hours of compute a month) at no extra charge. Organizations already on the Starter plan keep it.",
+      "tier": "Legacy Free",
       "url": "https://www.koyeb.com/pricing",
       "tags": [
         "free tier",
