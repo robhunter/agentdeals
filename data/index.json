@@ -1996,8 +1996,8 @@
     {
       "vendor": "Algolia",
       "category": "Search",
-      "description": "Search-as-a-service — 10K search requests/month, 1M records, AI recommendations included",
-      "tier": "Build",
+      "description": "Search-as-a-service. The Free plan needs no credit card and includes 10K search requests/month, 50K records, 5K recommendation requests/month, 5K crawls/month and 1 application, with some features reserved for paid plans. Grow is pay as you go: 10K search requests and 100K records a month included, then $0.50 per 1K search requests and $0.40 per 1K records.",
+      "tier": "Free",
       "url": "https://www.algolia.com/pricing",
       "tags": [
         "search",
