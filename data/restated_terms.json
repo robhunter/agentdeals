@@ -2246,7 +2246,8 @@
       "source_url": "https://www.testmuai.com/pricing/",
       "record_date": "2026-09-03",
       "change_type": "pricing_restructured",
-      "summary": "The pricing for Test Manager Premium has changed to $49/month billed annually. KaneAI Starter is now $17/month billed annually."
+      "summary": "The pricing for Test Manager Premium has changed to $49/month billed annually. KaneAI Starter is now $17/month billed annually.",
+      "reverted_on": "2026-09-28"
     },
     {
       "vendor": "Artillery",

@@ -8849,7 +8849,13 @@
       "category": "Testing",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-03"
+      "recorded_date": "2026-09-03",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-28",
+        "detail": "Retracted 2026-09-28: no change. Our listing, checked against the pricing page on 2026-09-02, already gave Test Manager Premium and KaneAI Starter at the prices this reading states.",
+        "source_url": "https://www.testmuai.com/pricing/"
+      }
     },
     {
       "vendor": "Exa",
@@ -10676,7 +10682,13 @@
       "category": "Monitoring",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-12"
+      "recorded_date": "2026-09-12",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-28",
+        "detail": "Retracted 2026-09-28: no change. onlineornot.com/pricing listed Hobby as free with up to 2 users, a 3-minute check interval, a limited status page and basic alerting on 2026-06-14, 2026-08-23 and 2026-09-22, with SMS, webhooks and on-call integrations on Pro.",
+        "source_url": "http://web.archive.org/web/20260823030705/https://onlineornot.com/pricing"
+      }
     },
     {
       "vendor": "snappify",
@@ -11325,7 +11337,13 @@
       "category": "AI / ML",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-22"
+      "recorded_date": "2026-09-22",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-28",
+        "detail": "Retracted 2026-09-28: no change. It states the same four model prices as the 2026-09-02 record and our listing.",
+        "source_url": "https://docs.anthropic.com/en/docs/about-claude/models"
+      }
     },
     {
       "vendor": "Apple Notes",
