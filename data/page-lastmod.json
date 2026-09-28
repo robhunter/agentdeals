@@ -1808,15 +1808,15 @@
       "changed": "2026-09-21"
     },
     "/compare/digitalocean-vs-google-compute-engine": {
-      "hash": "c4e10dcc7308e268",
+      "hash": "a34d4a84f28c94fd",
       "changed": "2026-09-28"
     },
     "/compare/digitalocean-vs-heroku-for-startups-program": {
-      "hash": "6774304fcf1c4f1a",
+      "hash": "c29e0e14a9a56be0",
       "changed": "2026-09-28"
     },
     "/compare/digitalocean-vs-startup-with-ibm": {
-      "hash": "590385cf3df5caab",
+      "hash": "c1ed9573ffd60f2e",
       "changed": "2026-09-28"
     },
     "/compare/digitalplat-vs-hurricane-electric-dns": {
@@ -3175,11 +3175,11 @@
       "changed": "2026-09-28"
     },
     "/heroku-alternatives": {
-      "hash": "952119534e15c192",
+      "hash": "00f6ce5b3b66c14b",
       "changed": "2026-09-28"
     },
     "/hetzner-alternatives": {
-      "hash": "992aace2ce08920f",
+      "hash": "58fa284da57b7fad",
       "changed": "2026-09-28"
     },
     "/hetzner-pricing-2026": {
@@ -3187,7 +3187,7 @@
       "changed": "2026-09-28"
     },
     "/hosting-alternatives": {
-      "hash": "eceed33f4266ce9e",
+      "hash": "5dcdbb75b8ee5285",
       "changed": "2026-09-28"
     },
     "/hosting-free-tier-comparison-2026": {
@@ -3548,7 +3548,7 @@
       "daily": true
     },
     "/trends/cloud-iaas": {
-      "hash": "3ee7144e041bea89",
+      "hash": "c3bc3212ffeb94fc",
       "changed": "2026-09-28"
     },
     "/trends/cloud-storage": {
