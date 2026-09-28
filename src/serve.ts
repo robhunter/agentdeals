@@ -10615,7 +10615,7 @@ ${buildCards(startupCredits)}
       <dd><a href="/vendor/google-cloud-run">Google Cloud Run</a> (scale to zero, 2M req/mo free) or <a href="/vendor/fly-io">Fly.io</a> (legacy accounts: 3 shared VMs). <a href="/vendor/railway">Railway</a> and <a href="/vendor/koyeb">Koyeb</a> (paid, from $29/mo) also run containers natively.</dd>
 
       <dt>Need hosting for a startup?</dt>
-      <dd>Check the startup credit programs above. <a href="/vendor/aws-activate">AWS Activate</a> and <a href="/vendor/microsoft-founders-hub">Microsoft Founders Hub</a> offer the largest credit packages. <a href="/vendor/railway">Railway</a> and <a href="/vendor/render">Render</a> are popular for early-stage startups.</dd>
+      <dd>See our <a href="/startup-credits">startup credits guide</a>: Google for Startups and Cloudflare offer the largest published packages, up to $350K each. <a href="/vendor/railway">Railway</a> and <a href="/vendor/render">Render</a> are popular for early-stage startups.</dd>
 
       <dt>Coming from Heroku?</dt>
       <dd>See our dedicated <a href="/heroku-alternatives">Heroku Alternatives</a> guide. TL;DR: <a href="/vendor/railway">Railway</a> is the closest experience, <a href="/vendor/render">Render</a> is the most popular alternative, and <a href="/vendor/fly-io">Fly.io</a> offers the most control.</dd>
@@ -19504,11 +19504,9 @@ mcpCtaCss() + "\n" +
 
   "<h2>The Counter-Trend: Cloudflare</h2>\n" +
   "<div class=\"callout callout-green\">\n" +
-    "<p><strong>While most vendors contracted, Cloudflare expanded.</strong> In Q1 2026, Cloudflare made 3 developer-positive moves:</p>\n" +
+    "<p><strong>While most vendors contracted, Cloudflare expanded.</strong> In Q1 2026, Cloudflare added a free tier for Queues:</p>\n" +
     "<ul style=\"margin:.75rem 0 .75rem 1.5rem;color:var(--text-muted)\">\n" +
       "<li><strong>Free Queues</strong> (February) &mdash; added a free tier for Cloudflare Queues (message queue service), further building out their serverless platform</li>\n" +
-      "<li><strong>Durable Objects pricing reduction</strong> (January) &mdash; restructured pricing to be more developer-friendly, lowering the barrier to real-time stateful applications</li>\n" +
-      "<li><strong>$250K Startup Program</strong> (February) &mdash; expanded startup credits to $250K, one of the most generous programs in the industry</li>\n" +
     "</ul>\n" +
     "<p><strong>Why the difference?</strong> Cloudflare&rsquo;s business model is built on network effects &mdash; every developer using Workers, R2, or Queues drives traffic through Cloudflare&rsquo;s edge network. Free tiers are a customer acquisition channel, not a cost center. This stands in contrast to companies like HashiCorp or LocalStack, where free tiers are a direct cost with no infrastructure flywheel to offset them.</p>\n" +
   "</div>\n" +
@@ -23430,7 +23428,7 @@ ${mcpCtaCss()}
     <h3 style="color:#3fb950">The Cloudflare Model</h3>
     <div class="verdict-item">
       <strong>What they did:</strong>
-      <p>Added free Queues, expanded Workers, Durable Objects pricing reduction, launched $250K startup program — all in Q1 2026. More free, not less.</p>
+      <p>Added free Queues and expanded Workers in Q1 2026. More free, not less.</p>
     </div>
     <div class="verdict-item">
       <strong>Why it works:</strong>
@@ -23449,7 +23447,7 @@ ${mcpCtaCss()}
     </div>
     <div class="diff-card" style="border-left-color:#3fb950">
       <h3>Cloud Providers</h3>
-      <p class="diff-desc">AWS restructured and expanded free tier (Jan 2026). Google Always Free stable for years. Azure Founders Hub offers $150K credits. Big cloud free tiers are acquisition funnels that drive billions in enterprise spend.</p>
+      <p class="diff-desc">AWS restructured and expanded free tier (Jan 2026). Google Always Free stable for years. Microsoft for Startups offers up to $150K in credits. Big cloud free tiers are acquisition funnels that drive billions in enterprise spend.</p>
     </div>
     <div class="diff-card" style="border-left-color:#3fb950">
       <h3>Open-Source First</h3>
@@ -34632,21 +34630,21 @@ ${mcpCtaCss()}
   <p class="section-intro">Microsoft offers some of the most generous startup programs in the industry.</p>
 
   <div class="verdict-box">
-    <h3>Microsoft Founders Hub</h3>
+    <h3>Microsoft for Startups</h3>
 
     <div class="verdict-item">
       <strong>Up to $150K in Azure credits</strong>
-      <p>Free to join, no funding required. Startups get $1K&ndash;$150K in Azure credits (tiered by stage), plus access to OpenAI models, GitHub Enterprise, and Microsoft 365. The most accessible startup program among cloud providers — no pitch deck, no revenue requirements.</p>
+      <p>Free to join, no funding required. B2B tech startups get $200 on sign-up and up to $150K as they verify the business and use Azure. GitHub Enterprise and Microsoft 365 offers are for startups backed by Microsoft's Investor Network.</p>
     </div>
 
     <div class="verdict-item">
       <strong>GitHub &amp; developer tools</strong>
-      <p>Includes GitHub Enterprise, Visual Studio Enterprise subscriptions, and Azure DevOps. Combined with the free tier services above, this gives startups a complete development platform at zero cost.</p>
+      <p>Investor Network-backed startups also get GitHub Enterprise and Visual Studio Enterprise offers. Combined with the free tier services above, this gives startups a complete development platform at zero cost.</p>
     </div>
 
     <div class="verdict-item">
       <strong>How it compares</strong>
-      <p>AWS Activate: up to $100K credits (requires VC backing for higher tiers). GCP for Startups: up to $100K credits (requires accelerator or VC affiliation). Microsoft Founders Hub: up to $150K with no funding requirements. See our <a href="/startup-credits">Startup Credits guide</a> for a full comparison of all programs.</p>
+      <p>AWS Activate: up to $200K credits (Portfolio needs an Activate Provider Org ID). Google for Startups: up to $200K, or $350K for AI-first startups (VC funding, pre-seed to Series A). Microsoft for Startups: up to $150K with no investor needed. See our <a href="/startup-credits">Startup Credits guide</a> for a full comparison of all programs.</p>
     </div>
   </div>
 
@@ -35404,7 +35402,7 @@ ${mcpCtaCss()}
     <div class="stat-card"><div class="stat-number">4</div><div class="stat-label">Clouds Compared</div></div>
     <div class="stat-card"><div class="stat-number green">GCP</div><div class="stat-label">Most Free Services</div></div>
     <div class="stat-card"><div class="stat-number amber">$5&ndash;300</div><div class="stat-label">Trial Credits Range</div></div>
-    <div class="stat-card"><div class="stat-number">$100K&ndash;200K</div><div class="stat-label">Startup Program Credits</div></div>
+    <div class="stat-card"><div class="stat-number">Up to $350K</div><div class="stat-label">Startup Program Credits</div></div>
   </div>
 
   <div class="executive-summary">
@@ -35723,22 +35721,22 @@ ${mcpCtaCss()}
       <tr>
         <td class="provider-col">AWS</td>
         <td>Activate</td>
-        <td style="font-family:var(--mono)">Up to $100K</td>
+        <td style="font-family:var(--mono)">Up to $200K</td>
         <td>1&ndash;2 years</td>
-        <td>VC-backed or accelerator member (higher tiers)</td>
+        <td>Activate Provider Org ID (Portfolio)</td>
       </tr>
       <tr style="background:rgba(63,185,80,0.08)">
-        <td class="provider-col">GCP <span class="winner-badge">LARGEST CREDITS</span></td>
+        <td class="provider-col">GCP</td>
         <td>Google for Startups</td>
-        <td style="font-family:var(--mono);color:#3fb950">Up to $200K</td>
+        <td style="font-family:var(--mono);color:#3fb950">Up to $350K</td>
         <td>1&ndash;2 years</td>
-        <td>Series A or earlier + approved partner</td>
+        <td>VC funding, pre-seed to Series A</td>
       </tr>
       <tr>
         <td class="provider-col">Azure</td>
-        <td>Founders Hub</td>
+        <td>Microsoft for Startups</td>
         <td style="font-family:var(--mono)">Up to $150K</td>
-        <td>1 year</td>
+        <td>90 days to 2 years</td>
         <td>No funding requirement (easiest to qualify)</td>
       </tr>
       <tr>
@@ -35753,7 +35751,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="context-box">
-    <strong>Azure Founders Hub is the easiest to qualify for</strong> — no funding requirement, up to $150K in credits plus OpenAI API access. GCP offers the largest credits ($200K) but requires an approved partner. AWS Activate's higher tiers need VC backing. DigitalOcean Hatch adds unique GPU credits (H100 access) for AI/ML startups.
+    <strong>Microsoft for Startups needs no investor:</strong> B2B tech startups start at $200 and can reach $150K with Azure usage. GCP offers up to $350K to AI-first startups and needs VC funding. AWS Activate Portfolio needs an Activate Provider Org ID. DigitalOcean Hatch adds unique GPU credits (H100 access) for AI/ML startups.
   </div>
 
   <h2 id="best-for">Best for Each Use Case</h2>
@@ -35773,12 +35771,12 @@ ${mcpCtaCss()}
 
     <div class="verdict-item">
       <strong>Startup (easiest qualification) &rarr; Azure</strong>
-      <p>Founders Hub requires no funding — just a startup idea. Up to $150K credits, OpenAI API access, and the only lifetime-free managed database (Cosmos DB). <a href="/azure-free-tier-2026">Read the full Azure guide &rarr;</a></p>
+      <p>Microsoft for Startups needs no investor. B2B tech startups can reach $150K in credits with Azure usage, and the only lifetime-free managed database (Cosmos DB). <a href="/azure-free-tier-2026">Read the full Azure guide &rarr;</a></p>
     </div>
 
     <div class="verdict-item">
       <strong>Startup (largest credits) &rarr; GCP</strong>
-      <p>Google for Startups offers up to $200K — the biggest credit pool. Plus $2K in AI/ML credits (Vertex AI, BigQuery ML). Requires an approved partner though.</p>
+      <p>Google for Startups offers up to $350K to AI-first startups. Its Scale tier needs VC funding; its $2K Start tier needs none.</p>
     </div>
 
     <div class="verdict-item">
@@ -45235,16 +45233,16 @@ ${globalNavCss()}
     <thead><tr><th>Program</th><th>Credits</th><th>Eligibility</th><th>Notable Benefits</th></tr></thead>
     <tbody>
       <tr><td><a href="/vendor/google-cloud">Google for Startups</a></td><td style="color:#3fb950;font-weight:600">Up to $350K</td><td>AI-first startups</td><td>GCP credits, technical support</td></tr>
-      <tr><td><a href="/vendor/cloudflare-for-startups">Cloudflare Startup Program</a></td><td style="color:#3fb950;font-weight:600">Up to $250K</td><td>4 tiers by stage</td><td>Workers, R2, CDN, security</td></tr>
-      <tr><td><a href="/vendor/microsoft-azure">Microsoft for Startups</a></td><td style="color:#3fb950;font-weight:600">Up to $150K</td><td>Founders Hub</td><td>Azure + OpenAI credits</td></tr>
+      <tr><td><a href="/vendor/cloudflare-for-startups">Cloudflare Startup Program</a></td><td style="color:#3fb950;font-weight:600">Up to $350K</td><td>3 tiers; upper two via affiliated partners</td><td>Workers, R2, CDN, security</td></tr>
+      <tr><td><a href="/vendor/microsoft-azure">Microsoft for Startups</a></td><td style="color:#3fb950;font-weight:600">Up to $150K</td><td>B2B tech startups, pre-seed to Series C</td><td>Azure credits, Foundry models</td></tr>
       <tr><td><a href="/vendor/digitalocean">DigitalOcean Hatch</a></td><td style="color:#3fb950;font-weight:600">Up to $100K</td><td>Early-stage</td><td>Compute + support credits</td></tr>
-      <tr><td><a href="/vendor/aws">AWS Activate</a></td><td style="color:#3fb950;font-weight:600">Up to $100K</td><td>Accelerator-backed</td><td>AWS credits, technical support</td></tr>
+      <tr><td><a href="/vendor/aws">AWS Activate</a></td><td style="color:#3fb950;font-weight:600">Up to $200K</td><td>Portfolio needs an Activate Provider Org ID</td><td>AWS credits, technical support</td></tr>
       <tr><td><a href="/vendor/railway">Railway</a></td><td style="color:#3fb950;font-weight:600">$5 free/month</td><td>Everyone</td><td>No credit card, usage-based</td></tr>
       <tr><td><a href="/vendor/vercel">Vercel</a></td><td style="color:#3fb950;font-weight:600">Hobby plan free</td><td>Non-commercial</td><td>Edge functions, serverless</td></tr>
     </tbody>
   </table>
   </div>
-  <p style="color:var(--text-dim);font-size:.85rem;margin-top:.5rem">See our full <a href="/startup-credits">startup credits directory</a> for 19 programs across 3 tiers.</p>
+  <p style="color:var(--text-dim);font-size:.85rem;margin-top:.5rem">See our full <a href="/startup-credits">startup credits directory</a> for 13 programs.</p>
 
   <h2>Category Landscape</h2>
   <p class="section-desc">Which categories have the most free tier options? The table below shows our top 20 categories ranked by the share we can vouch for today. <strong>Recorded</strong> counts the free tiers our offers describe; <strong>Vouched</strong> counts the ones whose vendor page still states a verdict rather than withholding one. ${categoryShares.filter(c => c.recordedPct === 100).length} of ${categoryShares.length} categories record a free tier for every service they list, which is why the recorded share cannot rank them. The two shares diverge most in ${escHtmlServer(widestGap.category)}: ${widestGap.census.recorded} of ${widestGap.census.total} recorded, ${widestGap.census.vouched} vouched.</p>
@@ -45349,7 +45347,7 @@ ${globalNavCss()}
     <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:.5rem">
       <li><a href="/free-tier-risk">Free Tier Risk Index</a> <span style="color:var(--text-muted);font-size:.85rem">&mdash; sustainability risk scores for ${riskEntries.length} vendors</span></li>
       <li><a href="/free-tier-tracker">Q1 2026 Free Tier Tracker</a> <span style="color:var(--text-muted);font-size:.85rem">&mdash; removals, expansions, and trends</span></li>
-      <li><a href="/startup-credits">Startup Credits Directory</a> <span style="color:var(--text-muted);font-size:.85rem">&mdash; 19 programs, $1M+ combined credits</span></li>
+      <li><a href="/startup-credits">Startup Credits Directory</a> <span style="color:var(--text-muted);font-size:.85rem">&mdash; 13 programs</span></li>
       <li><a href="/free-startup-stack">Free Startup Stack</a> <span style="color:var(--text-muted);font-size:.85rem">&mdash; complete infrastructure on $0/month</span></li>
       <li><a href="/q1-2026-developer-pricing-report">Q1 2026 Pricing Report</a> <span style="color:var(--text-muted);font-size:.85rem">&mdash; quarterly pricing analysis</span></li>
     </ul>

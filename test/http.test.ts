@@ -2913,7 +2913,6 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("Spotify API Lockdown"), "Should have Spotify story");
     assert.ok(html.includes("Counter-Trend: Cloudflare"), "Should have Cloudflare counter-trend section");
     assert.ok(html.includes("Free Queues"), "Should mention Cloudflare Queues");
-    assert.ok(html.includes("Startup Program"), "Should mention startup program");
     assert.ok(html.includes("Category Breakdown"), "Should have category breakdown");
     assert.ok(html.includes("Monthly Timeline"), "Should have monthly timeline");
     assert.ok(html.includes("January"), "Should show January data");
