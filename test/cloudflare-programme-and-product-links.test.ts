@@ -79,4 +79,13 @@ describe("links that name Cloudflare land on the listing they name, before and a
     assert.ok(html.includes("Cloudflare R2"));
     assert.deepStrictEqual([...html.matchAll(/class="alt-chip">([^<]+)<span class="chip-tier">Startup Program</g)].map(([, name]) => name.trim()), []);
   });
+
+  it("picks Cloudflare's Free plan for the frontend stack's CDN, and claims no bandwidth or request allowance Cloudflare does not state", async () => {
+    const html = await page("/free-frontend-stack");
+    const cdn = html.slice(html.indexOf('id="cdn-edge-network"'), html.indexOf('id="headless-cms"'));
+    assert.match(cdn, /<a href="\/vendor\/cloudflare-dns" class="pick-name">Cloudflare DNS<\/a>\s*<span class="pick-tier">Free<\/span>/);
+    assert.match(cdn, /<a href="https:\/\/www\.cloudflare\.com\/plans\/free\/"/);
+    assert.doesNotMatch(cdn, /Startup Program|forstartups|Unlimited bandwidth/);
+    assert.doesNotMatch(html, /No bandwidth caps|no request limits|industry default|offer unlimited bandwidth on free tiers/);
+  });
 });

@@ -16405,7 +16405,7 @@ function buildFreeFrontendStackPage(): string {
     {
       name: "CDN & Edge Network",
       icon: "⚡",
-      recommended: { vendor: "Cloudflare", why: "Unlimited bandwidth, global CDN across 300+ locations, DDoS protection, SSL, and caching — all free. No bandwidth caps, no request limits. The industry default for frontend delivery." },
+      recommended: { vendor: "Cloudflare DNS", why: "Cloudflare's Free plan costs $0 and includes a CDN, DDoS protection and a Universal SSL certificate. Cloudflare's network is in more than 300 cities. The CDN caches and serves web pages; video and other large files need a paid Cloudflare service, and Cloudflare may limit a site that serves them without one." },
       alternatives: ["Fastly", "KeyCDN", "BunnyCDN"],
       outgrow: "When you need advanced features like image optimization, video delivery, or custom caching rules beyond the free tier. Fastly offers free CDN for open-source projects. BunnyCDN starts at $0.01/GB with a 14-day trial.",
       relatedPage: "/storage-alternatives",
@@ -16700,7 +16700,7 @@ ${ossAlternatives.map(oss => `      <tr>
       <li><strong>Error volume</strong> (Sentry 5K/month) — production apps with noisy error reporting</li>
       <li><strong>Image transformations</strong> (Cloudinary 25 credits) — media-heavy sites with many image variants</li>
     </ol>
-    <p style="color:var(--text-dim);font-size:.85rem;margin-top:1rem">The good news: bandwidth is rarely the bottleneck. Cloudflare Pages and Cloudflare CDN offer unlimited bandwidth on free tiers. The self-hosted alternatives above have no limits at all.</p>
+    <p style="color:var(--text-dim);font-size:.85rem;margin-top:1rem">The good news: bandwidth is rarely the bottleneck. Cloudflare's Free plan lists no bandwidth or request quota, and Cloudflare Pages' docs say requests to static assets are free and unlimited on every plan. Video and other large files need a paid Cloudflare service to be served through the CDN. The self-hosted alternatives above have no limits at all.</p>
   </div>
 
   <div class="search-cta">
