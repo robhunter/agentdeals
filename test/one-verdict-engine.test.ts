@@ -24,6 +24,7 @@ import { isNoLongerInForce } from "../dist/change-resolution.js";
 import { PRODUCT_DEPRECATED, deprecationEndsTheListedProduct } from "../dist/product-deprecation.js";
 import { vendorSlugMap } from "../dist/vendor-slug.js";
 import { ENDED_BADGE_LABEL } from "../dist/retirement.js";
+import { classifyTier, TIME_LIMITED_TIER_RULES } from "../dist/ranking.js";
 import { endingTheListingConfirms } from "../dist/vendor-verdict-input.js";
 import type { DealChange } from "../src/types.ts";
 
@@ -182,6 +183,7 @@ describe("#1206 the badge and the vendor page read the same scale", () => {
   after(() => { if (proc) proc.kill(); });
 
   const UNRATED_BADGE_LABEL = "unrated \u2014 no source";
+  const RUNS_OUT_LABELS = new Set(TIME_LIMITED_TIER_RULES.map(rule => rule.badgeLabel));
   const WITHHELD_BADGE_PREFIX = "unrated \u2014 ";
 
   const LEVEL_FOR_BADGE: Record<string, string> = {
@@ -238,6 +240,13 @@ describe("#1206 the badge and the vendor page read the same scale", () => {
           continue;
         }
         if (label.startsWith(WITHHELD_BADGE_PREFIX)) continue;
+        if (RUNS_OUT_LABELS.has(label)) {
+          const tier = offers.find(o => o.vendor === vendor)?.tier ?? "";
+          if (classifyTier(tier).class !== "time_limited") {
+            disagreeing.push(`/badge/${slug}.svg reads "${label}" over the tier "${tier}", which does not run out`);
+          }
+          continue;
+        }
         const level = LEVEL_FOR_BADGE[label];
         if (level === undefined) { disagreeing.push(`/badge/${slug}.svg reads "${label}"`); continue; }
         const expected = scaleFor(vendor).level;
