@@ -1,3 +1,4 @@
+import { REFUSED_READ_SUBJECTS, isRefusedReadSubject } from "./refused-read-subjects.ts";
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
 import { spawn, type ChildProcess } from "node:child_process";
@@ -5,7 +6,7 @@ import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path, { join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { assertCoversPopulation, assertPopulationFloor, assertSharesPopulation, recordsInTheCatalogue, vendorsInTheCatalogue, type Population } from "./population-floor.ts";
+import { assertCoversPopulation, assertSharesPopulation, recordsInTheCatalogue, vendorsInTheCatalogue, type Population } from "./population-floor.ts";
 import { GATE_REASONS, REJECT_MEASURES_NO_CHANGE, REJECT_NULL_COMPARISON, REJECT_RESTATES_STORED_QUANTITIES, REJECT_STATES_NO_DIFFERENCE } from "../scripts/change-gate.js";
 import { SUPPRESSED_SAME_TRANSITION_REGRADED } from "../scripts/change-log.js";
 import { refusalsByVendor, refusedReadRegister, refusedReadTheConfirmationSupersedes, refusedReadWithholdingStability, supersededRefusalSentence, REFUSAL_REASONS_THAT_CONFIRM_THE_STORED_TERMS, REFUSAL_REASONS_THAT_MEASURED_NO_DIFFERENCE, REFUSED_READ_REGISTERS, MEASURED_NO_DIFFERENCE_BADGE_LABEL, READ_HAD_NO_STANDING_BADGE_LABEL, UNRECONCILED_READ_BADGE_LABEL, WHAT_A_VOIDED_READ_FOUND } from "../dist/change-refusal.js";
@@ -143,6 +144,19 @@ const badgeWeExpect = (subject: Subject): string =>
   REGISTER_BADGE[subject.register ?? "could_not_reconcile_the_change"];
 
 let subjects: Subject[] = [];
+
+const listingsBuiltToHoldARefusedRead = (): Population => ({
+  size: REFUSED_READ_SUBJECTS.length,
+  read: "listings built to withhold on a refused read alone",
+});
+
+const listingsBuiltWithAnEqualityRefusal = (): Population => ({
+  size: REFUSED_READ_SUBJECTS.filter(subject => subject.family === "measured_no_difference").length,
+  read: "listings built to withhold on a refusal that measured no difference",
+});
+
+const built = (vendors: Array<{ vendor: string }>): number =>
+  vendors.filter(subject => isRefusedReadSubject(subject.vendor)).length;
 
 const vendorsWithheldForTheRefusedReadAlone = (): Population => ({
   size: subjects.filter(s => s.onlyTheRefusal).length,
@@ -318,7 +332,7 @@ describe("a refused change is not a signal that nothing changed", () => {
       .filter(s => s.onlyTheRefusal && A_STABLE_HISTORY.test(pages.get(s.slug) ?? ""))
       .map(s => `/vendor/${s.slug}`);
     assert.deepStrictEqual(history.slice(0, 20), [], `pages calling it a stable pricing history:\n${history.slice(0, 20).join("\n")}`);
-    assertPopulationFloor(subjects.filter(s => s.onlyTheRefusal).length, 35, "vendors have the refused read as the only reason we withhold");
+    assertCoversPopulation(built(subjects.filter(s => s.onlyTheRefusal)), listingsBuiltToHoldARefusedRead(), "built listings have the refused read as the only reason we withhold");
   });
 
   it("keeps the rating where the refusal is itself a finding that the terms held", () => {
@@ -407,7 +421,7 @@ describe("a refused change is not a signal that nothing changed", () => {
     };
     await Promise.all(Array.from({ length: 12 }, worker));
     assert.deepStrictEqual(wrong.slice(0, 20), [], `badges naming the wrong reason:\n${wrong.slice(0, 20).join("\n")}`);
-    assertPopulationFloor(withheld.length, 35, "vendors withhold on the refused read alone and were read for their badge");
+    assertCoversPopulation(built(withheld), listingsBuiltToHoldARefusedRead(), "built listings withhold on the refused read alone and were read for their badge");
     assertCoversPopulation(answered, vendorsWithheldForTheRefusedReadAlone(), "badges were read for the reason they withhold");
   });
 
@@ -585,7 +599,7 @@ describe("an empty history and a recorded threshold are claims a refused read wi
     const withheld = subjects.filter(
       s => s.unreconciled && A_THRESHOLD_WE_CANNOT_CONFIRM.test(growthBlockOf(pages.get(s.slug) ?? "")),
     );
-    assertPopulationFloor(withheld.length, 5, "vendor pages hold a recorded threshold behind a refused read");
+    assertCoversPopulation(built(withheld), listingsBuiltToHoldARefusedRead(), "built listings' pages hold a recorded threshold behind a refused read");
   });
 
   it("ships the withheld threshold to an agent as well as to a reader", () => {
@@ -700,10 +714,10 @@ describe("a page states the reason we withheld, not a reason its own refusal con
       [],
       `pages reporting an equality finding as a change we could not reconcile:\n${contradicting.slice(0, 20).join("\n")}`,
     );
-    assertPopulationFloor(
-      subjects.filter(s => s.measuredNoDifference).length,
-      3,
-      "vendors hold only refusals that measured the two states as equal",
+    assertCoversPopulation(
+      built(subjects.filter(s => s.measuredNoDifference)),
+      listingsBuiltWithAnEqualityRefusal(),
+      "built listings hold only refusals that measured the two states as equal",
     );
     assertCoversPopulation(subjects.length, vendorsInTheCatalogue(), "vendor pages read for the reason they withhold");
   });
