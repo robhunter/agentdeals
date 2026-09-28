@@ -10323,7 +10323,7 @@ function buildHostingAlternativesPage(): string {
     ["Cloudflare Workers", "Cloudflare Pages", "4EVERLAND"].includes(o.vendor) && !staticJamstack.some(s => s.vendor === o.vendor) && !serverless.some(s => s.vendor === o.vendor)
   );
   const startupCredits = enrichedAll.filter(o =>
-    ["AWS Activate", "Microsoft Founders Hub", "Cloudflare Startup Program", "Heroku for Startups Program", "Scaleway Startup Program", "Microsoft for Startups", "Startup with IBM", "Create@Alibaba Cloud", "Clever Bootstrap Program", "Google Cloud"].includes(o.vendor)
+    ["AWS Activate", "Microsoft Founders Hub", "Cloudflare for Startups", "Heroku for Startups Program", "Scaleway Startup Program", "Microsoft for Startups", "Startup with IBM", "Create@Alibaba Cloud", "Clever Bootstrap Program", "Google Cloud"].includes(o.vendor)
   );
 
   const buildCards = (items: ReturnType<typeof enrichOffers>) => items.map(o => {

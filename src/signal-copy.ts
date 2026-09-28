@@ -1,7 +1,7 @@
 import { SIGNAL_PATH, SIGNAL_DOC_PATH } from "./signal.js";
 import { rotateListing, utcDate } from "./ranking.js";
 
-export const SIGNAL_EXAMPLE_SLUGS = ["supabase", "sentry", "cloudflare", "grafana"];
+export const SIGNAL_EXAMPLE_SLUGS = ["supabase", "sentry", "cloudflare-workers", "grafana"];
 
 export function signalExampleSlug(date: string = utcDate()): string {
   return rotateListing(SIGNAL_EXAMPLE_SLUGS, "signal-example", date)[0] ?? SIGNAL_EXAMPLE_SLUGS[0];
