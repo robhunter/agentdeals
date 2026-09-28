@@ -2051,7 +2051,7 @@
       "review_note": "Two readers checked the page's 44 claims against Google's, Microsoft's, AWS's, Appwrite's and Mistral's own pages on 2026-09-28; 35 hold. The wrong ones are hand-typed: Appwrite's bandwidth, Azure's free SQL, Devstral, the monthly plan's credit, the 90% coverage line and a $0 multi-cloud setup that stops being free after 30 days on Azure and 6 months on AWS. Copy for the corrections is on https://github.com/robhunter/agentdeals/issues/2144.",
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 42,
+      "table_figures": 45,
       "table_figures_from_records": 4,
       "tables": [
         {
@@ -2061,7 +2061,7 @@
         },
         {
           "label": "5. Free Cloud Credit Alternatives",
-          "figures": 20,
+          "figures": 22,
           "from_records": 4
         },
         {
@@ -2071,7 +2071,7 @@
         },
         {
           "label": "7. Firebase Alternatives",
-          "figures": 4,
+          "figures": 5,
           "from_records": 0
         }
       ],
