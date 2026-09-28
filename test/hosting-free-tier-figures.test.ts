@@ -115,7 +115,7 @@ const RETIRED_FIGURES: Retired[] = [
   {
     what: "a Koyeb free web service",
     pattern: /Koyeb[^.]{0,120}(?:free web service|nano service free|1 vCPU, 512)/i,
-    replacedBy: /Koyeb[^.]{0,160}(?:no free (?:web service|compute)|database.only|only a free Postgres)/i,
+    replacedBy: /Koyeb[^.]{0,160}(?:no free (?:web service|compute|plan for new users)|none for new users|database.only|only a free Postgres)/i,
     vendorRecord: () => recordFor("Koyeb", "Databases").description,
   },
   {
@@ -193,7 +193,7 @@ const RETIRED_FIGURES: Retired[] = [
   {
     what: "Railway's Free plan as a $1 monthly minimum charge",
     pattern: /\$1\/mo(?:nth)? min(?:imum)?|\$1\/month minimum|\$1 (?:a|per) month minimum/i,
-    replacedBy: /\$1 of free credit/i,
+    replacedBy: /\$1 of (?:free )?credit/i,
     vendorRecord: () => recordFor("Railway", "Cloud Hosting").description,
   },
   {

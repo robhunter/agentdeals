@@ -102,7 +102,7 @@ describe("the AI coding guides state the plans the vendors' own pricing pages li
       "$500/mo (250 credits)",
       "Team plan $500",
       "ACUs at $2.25",
-      "$20/mo minimum",
+      "Devin: $20/mo minimum",
       "100% free (preview)",
       "no paid tiers yet",
       "Pricing has not been announced",

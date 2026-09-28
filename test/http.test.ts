@@ -4710,7 +4710,7 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("Edge"), "Should have edge section");
     assert.ok(html.includes("Static Site"), "Should have static sites section");
     assert.ok(html.includes("Hosting Cost Trap"), "Should have cost trap section");
-    assert.ok(html.includes("Best for Each Use Case"), "Should have best-for section");
+    assert.ok(html.includes("By Use Case"), "Should have the use-case section");
     assert.ok(html.includes("Hidden Costs and Gotchas"), "Should have hidden costs section");
     assert.ok(html.includes("Pricing Change Timeline"), "Should have timeline section");
     assert.ok(html.includes("mcp-cta"), "Should have MCP CTA");
