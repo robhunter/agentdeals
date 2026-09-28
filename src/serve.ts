@@ -44430,8 +44430,8 @@ ${mcpCtaCss()}
   </div>
 
   <div class="executive-summary">
-    <p><strong>Quick verdict:</strong> <strong>Cloudflare Pages</strong> is the most generous free hosting for static/Jamstack sites &mdash; unlimited bandwidth, 500 builds/month, 100 sites. For full-stack apps, <strong>Render</strong> offers free web services with 512 MB RAM, free PostgreSQL, and custom domains. <strong>Vercel</strong> remains the best Next.js host with 100 GB bandwidth and 1M serverless invocations, but the Hobby plan bans commercial use. <strong>Koyeb</strong> is database-only now &mdash; a free Postgres instance (0.25 vCPU, 1 GB RAM, 5 hrs/month) with scale-to-zero, but no free web service since that tier was removed. Hosting on Koyeb starts at $29/month.</p>
-    <p><strong>The hosting landscape has shifted:</strong> Netlify moved to credit-based pricing (300 credits/month). Railway offers a $5 trial credit (not unlimited free). Fly.io reduced its free tier to a 2-hour trial for new accounts. Heroku&rsquo;s free tier is gone since 2022. The era of unlimited free PaaS hosting is over &mdash; but static hosting remains genuinely free thanks to Cloudflare, GitHub Pages, and Vercel.</p>
+    <p><strong>Quick verdict:</strong> Cloudflare Pages Free offers unlimited static bandwidth, 500 builds a month and 100 projects; Cloudflare now tells new projects to start on Workers. Render has free web services (512 MB RAM, 0.1 CPU) that spin down after 15 idle minutes, and a free Postgres database that expires after 30 days. Vercel, made by the creators of Next.js, includes 100 GB of Fast Data Transfer and 1M function invocations a month on Hobby, for non-commercial personal use only. Koyeb has had no free plan for new users since February 2026; Pro starts at $29 a month.</p>
+    <p><strong>The hosting landscape has shifted:</strong> Netlify has used credit plans for accounts created since 2025-09-04, with 300 credits a month on Free. Railway gives new accounts a 30-day trial with a $5 credit, then $1 of credit a month. Fly.io has offered no plans to new customers since October 2024; new accounts get a trial of 2 machine hours or 7 days, whichever comes first. Heroku's free plans ended in November 2022. Koyeb closed its free plan to new users in February 2026. Static hosting is still free on Cloudflare Pages, on GitHub Pages from public repositories on GitHub Free, and on Vercel Hobby for non-commercial personal use.</p>
   </div>
 
   <div class="toc">
@@ -44632,21 +44632,21 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="frontend-jamstack">Frontend &amp; Jamstack</h2>
-  <p class="section-intro">Best platforms for deploying Next.js, Remix, Astro, and static sites. These platforms specialize in frontend frameworks with serverless function support.</p>
+  <p class="section-intro">Platforms for deploying frontend frameworks such as Next.js and Astro, and static sites, with serverless functions.</p>
 
   <div class="diff-card">
     <h3><a href="/vendor/vercel">Vercel</a></h3>
-    <div class="diff-desc"><strong>Free tier:</strong> Hobby plan with 100 GB/month Fast Data Transfer, 1M function invocations, 4 hrs Active CPU, 360 GB-hrs Provisioned Memory, 1M edge requests, 1 GB Blob Storage. The gold standard for Next.js deployment &mdash; built by the same team. Automatic preview deployments, edge middleware, ISR, and image optimization. <strong>Key limitation:</strong> Hobby plan prohibits commercial use. Any production app generating revenue needs the $20/seat/mo Pro plan. <a href="/vercel-vs-netlify">See Vercel vs Netlify comparison &rarr;</a></div>
+    <div class="diff-desc"><strong>Free tier:</strong> Hobby includes 100 GB of Fast Data Transfer, 1M Edge Requests, 1M Function Invocations, 4 hours of Fluid Active CPU, 360 GB-hrs of Provisioned Memory, 1 GB of Blob Storage and 5K image transformations a month. Vercel is made by the creators of Next.js. Hobby includes preview deployments, Routing Middleware, ISR and image optimization. <strong>Key limitation:</strong> Hobby is for non-commercial personal use only. Commercial use needs Pro or Enterprise; Pro is $20 a month with one deploying seat and $20 for each additional deploying seat. <a href="/vercel-vs-netlify">See Vercel vs Netlify comparison &rarr;</a></div>
   </div>
 
   <div class="diff-card">
     <h3><a href="/vendor/netlify">Netlify</a> &mdash; Credit-Based Free Tier</h3>
-    <div class="diff-desc"><strong>Free tier:</strong> 300 credits/month. Bandwidth costs 20 credits/GB (~15 GB), builds cost 15 credits each (~20 builds). Sites pause on credit exhaustion &mdash; no overages. Serverless functions at Level 0 (125K invocations). Legacy accounts (pre-Sep 2025) keep the old model: 100 GB bandwidth + 300 build minutes. <strong>Key limitation:</strong> The credit system is less predictable than flat limits. Heavy builders or bandwidth-intensive sites can exhaust credits quickly.</div>
+    <div class="diff-desc"><strong>Free tier:</strong> 300 credits a month. Bandwidth costs 20 credits per GB, about 15 GB a month if nothing else uses credits. Production deploys cost 15 credits each; deploy previews, branch deploys and failed deploys are free. Function compute costs 10 credits per GB-hour, and web requests 2 credits per 10,000. All projects pause when credits run out, with no overage charges. Accounts created before 2025-09-04 keep their legacy plans; legacy Free includes 100 GB of bandwidth and 300 build minutes a month, and 125,000 function invocations per site a month. <strong>Key limitation:</strong> bandwidth, deploys, compute and requests all draw on the one 300-credit pool.</div>
   </div>
 
   <div class="diff-card">
     <h3><a href="/vendor/cloudflare-pages">Cloudflare Pages</a></h3>
-    <div class="diff-desc"><strong>Free tier:</strong> Up to 100 sites, unlimited bandwidth, 500 builds/month, 100 custom domains per project. No build time limits per build. Pages Functions run on Cloudflare Workers (100K requests/day free). Supports Next.js, Astro, SvelteKit, Remix via adapter. <strong>The standout:</strong> Unlimited bandwidth is unique among hosting platforms. No cold starts since Pages Functions run on Workers edge. Best for static sites, Jamstack apps, and projects where bandwidth usage is unpredictable.</div>
+    <div class="diff-desc"><strong>Free tier:</strong> 100 projects per account, unlimited static bandwidth, 500 builds a month with a 20-minute timeout each, 100 custom domains per project, and 20,000 files per site, each up to 25 MiB. Pages Functions count toward the Workers Free limit of 100,000 requests a day and run with no cold starts. Cloudflare publishes Pages guides for Astro and SvelteKit. Pages takes only a static export of Next.js; for full-stack Next.js, Cloudflare recommends vinext, a beta reimplementation of the Next.js API, on Workers. Remix's successor is React Router. Cloudflare Workers also serves static assets free and without limit, and Cloudflare now tells new projects to start on Workers.</div>
   </div>
 
   <h2 id="backend-api">Backend &amp; API Hosting</h2>
@@ -44654,48 +44654,48 @@ ${mcpCtaCss()}
 
   <div class="diff-card">
     <h3><a href="/vendor/render">Render</a></h3>
-    <div class="diff-desc"><strong>Free tier:</strong> Free web services with 512 MB RAM, less than 1 CPU, 5 GB bandwidth/month included then $0.15/GB, 500 build minutes/month. Free PostgreSQL database (256 MB RAM, expires 30 days after creation). Free Redis (25 MB). Custom domains with automatic SSL. <strong>Key limitation:</strong> Free services spin down after 15 minutes of inactivity with 30&ndash;60 second cold starts. A free PostgreSQL database expires 30 days after it is created, in use or not, and Render deletes it 14 days later unless you upgrade it. Best for side projects, staging environments, and apps that can tolerate cold starts. <a href="/railway-vs-render">See Railway vs Render comparison &rarr;</a></div>
+    <div class="diff-desc"><strong>Free tier:</strong> free web services with 512 MB RAM and 0.1 CPU, and 750 free instance hours per workspace a month. They draw on a Hobby workspace's 5 GB of bandwidth and 500 build minutes a month. With a payment method on file, extra bandwidth is $0.15 per GB; without one, Render suspends free services for the rest of the month. One free Postgres database per workspace (256 MB RAM, 1 GB storage) expires 30 days after creation and is deleted 14 days later unless upgraded. One free Key Value instance per workspace (Redis-compatible, 25 MB) keeps its data in memory only. Hobby includes 2 custom domains with managed TLS, then $0.25 per domain a month. Docker images run on free web services. <strong>Key limitation:</strong> a free web service spins down after 15 minutes with no inbound traffic, and spinning it back up takes about one minute. Render says free instances are not for production.</div>
   </div>
 
   <div class="diff-card">
     <h3><a href="/vendor/railway">Railway</a></h3>
-    <div class="diff-desc"><strong>Free tier:</strong> $0, a 30-day trial with a one-time $5 credit, then $1 of free credit a month. 1 vCPU, 0.5 GB RAM per service, 0.5 GB volume storage, 1 project, 3 services max. No credit card required. Supports Docker, Node.js, Python, Go, Rust, and more. Managed PostgreSQL, MySQL, Redis, and MongoDB. The DX is exceptional &mdash; the best deploy experience of any PaaS.</div>
+    <div class="diff-desc"><strong>Free tier:</strong> new accounts get a 30-day trial with a one-time $5 credit and no credit card, allowing up to 2 vCPU and 1 GB RAM per service, 5 services per project and 1 custom domain. After the trial, the Free plan gives $1 of credit a month and allows up to 1 vCPU and 0.5 GB RAM per service and 0.5 GB of volume storage. Builds are free. Docker and many languages are supported. Railway's one-click PostgreSQL, MySQL, Redis and MongoDB templates are unmanaged: you handle backups, tuning, security and maintenance.</div>
   </div>
 
   <div class="diff-card">
     <h3><a href="/vendor/fly-io">Fly.io</a> <span class="caution-badge">NO FREE TIER</span></h3>
-    <div class="diff-desc"><strong>Free tier:</strong> No free tier for new accounts since October 2024. Pay-as-you-go only, credit card required. Legacy accounts on deprecated Hobby/Launch/Scale plans retain: 3 shared-cpu-1x VMs (256 MB RAM), 3 GB volume storage, 100 GB transfer/month. Volume snapshots: first 10 GB free, then $0.08/GB/month. <strong>Key limitation:</strong> Fly.io is a paid platform with no trial or free tier for new signups. The legacy free allowance was generous, but is only available to existing accounts on deprecated plans.</div>
+    <div class="diff-desc"><strong>Free tier:</strong> Fly.io stopped offering plans to new customers on 2024-10-07. New accounts get a trial of 2 hours of machine runtime or 7 days, whichever comes first, before adding a payment method; after it, billing is pay-as-you-go with a payment method on file. Organizations on the Hobby, Launch or Scale plans before 2024-10-07 keep a legacy allowance: up to 3 shared-cpu-1x 256 MB VMs, 3 GB of volume storage, and 100 GB of outbound transfer a month in North America and Europe (30 GB in other regions). Volume snapshots: first 10 GB free each month, then $0.08 per GB-month.</div>
   </div>
 
   <div class="diff-card">
     <h3><a href="/vendor/koyeb">Koyeb</a> <span class="caution-badge">NO FREE TIER</span></h3>
-    <div class="diff-desc"><strong>Free tier:</strong> Free Postgres database only (0.25 vCPU, 1 GB RAM, 1 GB storage, 5 hr/month runtime). No free compute or web service tier &mdash; the free web service was removed. Pro plan starts at $29/month with $10 included compute. Docker, buildpack, and pre-built image support on paid plans. <strong>Key change:</strong> Koyeb no longer offers a free compute tier. The free Postgres database is useful for development, but you'll need the Pro plan ($29/mo) for hosting web services.</div>
-  </div>
-
-  <h2 id="edge-serverless">Edge &amp; Serverless</h2>
-  <p class="section-intro">Edge compute and serverless platforms &mdash; no containers to manage, globally distributed, near-zero cold starts.</p>
-
-  <div class="diff-card">
-    <h3><a href="/vendor/cloudflare-workers">Cloudflare Workers</a></h3>
-    <div class="diff-desc"><strong>Free tier:</strong> 100K requests/day, 10ms CPU time per invocation. KV: 1 GB storage, 100K reads/day, 1K writes/day. D1 (SQLite): 5 GB storage, 5M rows read/day, 100K rows written/day. Queues, Cron Triggers, and Durable Objects all included. <strong>The edge advantage:</strong> Workers run in 300+ global locations with ~0ms cold start. CPU-time billing (not wall-clock) makes I/O-heavy workloads 10&ndash;50x cheaper than traditional serverless. See our <a href="/serverless-free-tier-comparison-2026">serverless comparison</a> for details.</div>
-  </div>
-
-  <div class="diff-card">
-    <h3><a href="/vendor/deno-deploy">Deno Deploy</a></h3>
-    <div class="diff-desc"><strong>Free tier:</strong> 1M requests/month, 20 GiB egress, 1 GiB KV storage, 1M KV read units/month, 10 hours active CPU time/month. Runs in 35+ edge locations. Native TypeScript/JavaScript. Built-in KV database with strong consistency. <strong>Key advantage:</strong> The most generous edge compute free tier by CPU time. Best for TypeScript-first projects, API servers, and apps that need a built-in database without external dependencies.</div>
-  </div>
-
-  <h2 id="static-sites">Static Site Hosting</h2>
-  <p class="section-intro">The simplest free hosting &mdash; just HTML, CSS, and JS. No server-side compute, no cold starts, no complexity.</p>
-
-  <div class="diff-card">
-    <h3><a href="/vendor/github-pages">GitHub Pages</a></h3>
-    <div class="diff-desc"><strong>Free tier:</strong> Included with all GitHub accounts (free and paid). 1 GB published site size, 100 GB bandwidth/month, 10 builds/hour. Custom domains with automatic HTTPS via Let's Encrypt. Jekyll built-in, or use GitHub Actions for any static site generator. <strong>Best for:</strong> Documentation, personal sites, open-source project pages. The simplest path from repo to website. No signup beyond GitHub. Limitation: no server-side processing, and sites must be public on free GitHub accounts.</div>
+    <div class="diff-desc"><strong>Free tier:</strong> none for new users. Since February 2026, new users must subscribe to Pro ($29 a month plus compute, with $10 of compute included) or a higher plan. Every plan can run one free-type Postgres instance with 0.25 vCPU, 1 GB RAM, 1 GB storage and 5 hours of compute a month. Organizations already on the Starter plan keep it. Paid plans deploy containers from any registry or build from Docker.</div>
   </div>
 
   <div class="diff-card">
     <h3><a href="/vendor/pythonanywhere">PythonAnywhere</a></h3>
-    <div class="diff-desc"><strong>Free tier:</strong> Beginner plan &mdash; 1 web app (username.pythonanywhere.com), 512 MB disk, 100 CPU-seconds/day, 2 consoles. Python/Django/Flask hosting with pre-installed packages. <strong>Key limitation:</strong> No custom domain on free tier (subdomain only). No outbound internet access (can't call external APIs). The 100 CPU-seconds/day cap is very restrictive. Best for learning Python web development and prototyping.</div>
+    <div class="diff-desc"><strong>Free tier:</strong> Beginner gives one web app at your-username.pythonanywhere.com, 512 MiB of disk, 100 CPU-seconds a day for consoles and tasks (not the web app), and 2 consoles. Free web apps stop after one month unless you log in and extend them. Accounts created since 2026-01-15 (2026-01-08 in the EU) get no MySQL and no scheduled tasks. Hosts server-side Python web apps (Django, Flask and others) with many libraries preinstalled. <strong>Key limitation:</strong> custom domains are paid only. Free accounts reach the internet only over HTTP(S) and only to allowlisted sites, about 6,500 of them, including api.openai.com and api.stripe.com.</div>
+  </div>
+
+  <h2 id="edge-serverless">Edge &amp; Serverless</h2>
+  <p class="section-intro">Serverless platforms that run your code on request with no containers to manage.</p>
+
+  <div class="diff-card">
+    <h3><a href="/vendor/cloudflare-workers">Cloudflare Workers</a></h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 100,000 requests a day and 10 milliseconds of CPU time per invocation. KV: 1 GB storage, 100,000 reads and 1,000 writes a day. D1: 5 GB storage, 5 million rows read and 100,000 rows written a day. Queues: 10,000 operations a day. 5 Cron Triggers per account, and SQLite-backed Durable Objects. 100 Workers per account. Workers Builds: 3,000 build minutes a month. <strong>How it runs:</strong> no cold starts, in 330+ cities. Time spent waiting on network requests does not count toward CPU time, and duration is not charged. Workers Paid starts at $5 a month. See our <a href="/serverless-free-tier-comparison-2026">serverless comparison</a> for details.</div>
+  </div>
+
+  <div class="diff-card">
+    <h3><a href="/vendor/deno-deploy">Deno Deploy</a></h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 1M requests a month, 20 GiB of egress a month, 10 hours of active CPU a month, 1 GiB KV storage, 1,000,000 KV read units and 500,000 KV write units a month, 10 apps, 5 custom domains, and 15 builds an hour, one at a time. Runs in 2 regions. Cold starts complete within 100 ms for a hello-world app and within a few hundred ms for larger apps. Native TypeScript and JavaScript. Built-in KV with strongly consistent writes.</div>
+  </div>
+
+  <h2 id="static-sites">Static Site Hosting</h2>
+  <p class="section-intro">Hosts that serve static files (HTML, CSS, JavaScript) with no server-side code.</p>
+
+  <div class="diff-card">
+    <h3><a href="/vendor/github-pages">GitHub Pages</a></h3>
+    <div class="diff-desc"><strong>Free tier:</strong> every GitHub plan includes Pages; on GitHub Free it works only from public repositories. Published sites up to 1 GB, a soft limit of 100 GB of bandwidth a month, and a soft limit of 10 builds an hour that does not apply when you publish with a custom GitHub Actions workflow. Custom domains with HTTPS via Let's Encrypt. Jekyll is built in; other static site generators work through a GitHub Actions workflow or your own build. <strong>Limitations:</strong> static files only. Sites are public on every plan except Enterprise Cloud. GitHub bars using Pages to run an online business, e-commerce site or SaaS.</div>
   </div>
 
   <h2 id="cost-trap">The Hosting Cost Trap</h2>
