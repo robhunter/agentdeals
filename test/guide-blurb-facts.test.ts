@@ -17,6 +17,7 @@ const WITHDRAWN: Record<string, RegExp> = {
   "an Auth0 price at 100K users that no Auth0 plan charges": /Auth0 ~\$240/i,
   "30+ always-free GCP products": /30\+ always[- ]free products/i,
   "GitHub's Linux runner minute at $0.008": /\$0\.008\/min \(Linux\)/i,
+  "a charge for 50 test runs a month that GitHub's free minutes cover": /running tests 50 times\/month costs/i,
   "Dragonfly as open source": /Dragonfly (?:is|are) (?:now )?(?:the |an? )?(?:leading )?open[- ]source/i,
 };
 
@@ -30,7 +31,8 @@ const CORRECTED: [string, string][] = [
   ["/email-alternatives", ">SendGrid</a></td>\n        <td>Transactional API</td>\n        <td>None (60-day trial)</td>"],
   ["/estimate", '"name":"SendGrid","free":"None (60-day trial)"'],
   ["/testing-free-tier-comparison-2026", "GitHub Actions charges $0.006/min (Linux) beyond the free tier"],
-  ["/testing-free-tier-comparison-2026", "At $0.006/min (Linux), running tests 50 times/month costs ~$1.50&ndash;4.50."],
+  ["/testing-free-tier-comparison-2026", "A GitHub Free account gets 2,000 free minutes a month for private repositories, so 50 runs of a 5&ndash;15 minute suite (250&ndash;750 minutes) cost $0."],
+  ["/testing-free-tier-comparison-2026", "uses 6,000 minutes: 4,000 past the quota, or $24 a month at $0.006 a minute on Linux. Self-hosted runners are free to use on GitHub Actions; you pay for the machine."],
   ["/gcp-free-tier-2026", '<meta name="description" content="Comprehensive guide to every Google Cloud free tier service in 2026. 20+ free products, $300 trial credit, and hidden costs explained.'],
   ["/q2-pricing-preview-2026", '<meta name="description" content="Upcoming developer tool pricing changes for Q2 2026. Hetzner +30-50%, Google Tenor shutdown, odrive removal, and more.'],
   ["/github-actions-alternatives", "remains strong for GitHub-hosted runners.</p>"],
@@ -101,7 +103,7 @@ describe("guides and their blurbs state the vendor facts the vendors' pages stat
     assert.deepStrictEqual(missing, []);
   });
 
-  it("states SendGrid's trial, GitHub's $0.006 Linux minute, GCP's 20+ free products and Dragonfly's licence where the withdrawn text stood", () => {
+  it("states SendGrid's trial, GitHub's free minutes and $0.006 Linux minute, GCP's 20+ free products and Dragonfly's licence where the withdrawn text stood", () => {
     const missing = CORRECTED
       .filter(([route, text]) => !served.get(route)?.includes(text))
       .map(([route, text]) => `${route}: ${text}`);

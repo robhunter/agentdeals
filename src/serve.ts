@@ -42286,7 +42286,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="context-box">
-    <strong>CI compute is the real cost of &ldquo;free&rdquo; frameworks.</strong> Playwright and Selenium are free, but they still need CI minutes to run. A typical Playwright suite takes 5&ndash;15 minutes on GitHub Actions. At $0.006/min (Linux), running tests 50 times/month costs ~$1.50&ndash;4.50. That's still dramatically cheaper than cloud testing platforms, but it's not literally zero. For larger suites, self-hosted runners or caching strategies reduce costs further.
+    <strong>CI minutes are where free frameworks can start to cost money.</strong> Public repositories run free on standard GitHub-hosted runners. A GitHub Free account gets 2,000 free minutes a month for private repositories, so 50 runs of a 5&ndash;15 minute suite (250&ndash;750 minutes) cost $0. A 10-minute suite run 20 times a day for 30 days uses 6,000 minutes: 4,000 past the quota, or $24 a month at $0.006 a minute on Linux. Self-hosted runners are free to use on GitHub Actions; you pay for the machine.
   </div>
 
   <div class="context-box">
