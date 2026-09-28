@@ -82,6 +82,7 @@ const STATED_ON_THE_GUIDE = [
   "YC / Accelerator company (up to $350K) AWS Activate Portfolio (up to $200K) + Google Scale (up to $100K in the first year) + PostHog ($50K) = up to $350K in the first year.",
   "AI-focused startup (up to $550K, plus Kiro) Google Scale AI (up to $350K) + Kiro (up to one year of Kiro Pro+, $40 per user a month) + AWS Activate Portfolio (up to $200K). Apply for Kiro first: it excludes startups with active Activate credits.",
   "Careful: their AWS credits don't add up; a later Activate award pays only the difference.",
+  "All credit values were read by hand from the programmes' own pages on 2026-09-28.",
 ];
 
 const FAQ_ANSWERS = [

@@ -3800,7 +3800,7 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("$350K"), "Should include Google credit amount");
     assert.ok(html.includes("Cloudflare"), "Should include Cloudflare");
     assert.ok(html.includes("$250K"), "Should include Cloudflare credit amount");
-    assert.ok(html.includes("Microsoft Founders Hub"), "Should include Microsoft");
+    assert.ok(html.includes("Microsoft for Startups"), "Should include Microsoft");
     assert.ok(html.includes("AWS Activate"), "Should include AWS");
     assert.ok(html.includes("DigitalOcean"), "Should include DigitalOcean");
     assert.ok(html.includes("Category Breakdown"), "Should have category breakdown");
@@ -4170,7 +4170,7 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("Azure vs Alternatives"), "Should have alternatives comparison");
     assert.ok(html.includes("Best Picks by Use Case"), "Should have stacks section");
     assert.ok(html.includes("Azure for Startups"), "Should have startups section");
-    assert.ok(html.includes("Founders Hub"), "Should include Founders Hub");
+    assert.ok(html.includes("Microsoft for Startups"), "Should include Microsoft for Startups");
     assert.ok(html.includes("mcp-cta"), "Should have MCP CTA");
     assert.ok(html.includes("/changes"), "Should cross-link to changes timeline");
     assert.ok(html.includes("/setup"), "Should cross-link to setup guide");
@@ -6204,7 +6204,7 @@ describe("startup credits comparison page", () => {
     assert.ok(html.includes("global-nav"), "Should have global nav");
     assert.ok(html.includes("AWS Activate"), "Should include AWS Activate");
     assert.ok(html.includes("Google Cloud"), "Should include Google Cloud");
-    assert.ok(html.includes("Microsoft Founders Hub"), "Should include Microsoft Founders Hub");
+    assert.ok(html.includes("Microsoft for Startups"), "Should include Microsoft for Startups");
     assert.ok(html.includes("DigitalOcean"), "Should include DigitalOcean");
     assert.ok(html.includes("Cloudflare"), "Should include Cloudflare");
     assert.ok(html.includes("Stripe Atlas"), "Should include Stripe Atlas");

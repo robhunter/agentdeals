@@ -27187,6 +27187,7 @@ function buildStartupCreditsPage(): string {
   const metaDesc = "Compare 13 startup programs: AWS Activate, Google for Startups, Microsoft for Startups, Cloudflare, DigitalOcean Startups, Stripe Atlas, Brex, Mercury, and more. Credit values, eligibility, vesting, and stacking strategies. [[freshness]]";
   const slug = "startup-credits";
   const pubDate = "2026-03-27";
+  const STARTUP_CREDIT_FIGURES_READ = "2026-09-28";
 
   interface StartupProgram {
     name: string;
@@ -27546,7 +27547,7 @@ function buildStartupCreditsPage(): string {
     '\n' +
     '  <h2>Data Source &amp; Methodology</h2>\n' +
     '  <div class="methodology">\n' +
-    '    <strong>Powered by AgentDeals.</strong> All credit values were read by hand from official vendor program pages when this page was compiled on ' + pubDate + '. Changes are tracked via our <a href="/pricing-changes">deal changes timeline</a> (' + trackedChangeCount + ' total changes tracked). The pricing changes we track are updated continuously; the tables above are not.<br><br>\n' +
+    '    <strong>Powered by AgentDeals.</strong> All credit values were read by hand from the programmes\' own pages on ' + STARTUP_CREDIT_FIGURES_READ + '. Changes are tracked via our <a href="/pricing-changes">deal changes timeline</a> (' + trackedChangeCount + ' total changes tracked). The pricing changes we track are updated continuously; the tables above are not.<br><br>\n' +
     '    <strong>Query this data programmatically</strong> via <a href="/api/startup-credits">/api/startup-credits</a> (JSON), our <a href="/setup">MCP tools</a>, or <a href="/developers">REST API</a> \u2014 search for startup programs, compare eligibility, or track changes from your AI coding assistant.\n' +
     '  </div>\n' +
     '\n' +
