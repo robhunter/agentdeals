@@ -52,10 +52,13 @@ export function listingFor(record, offers) {
   );
 }
 
+function archiveDidNotAnswer(result) {
+  return String(result.why ?? "").startsWith("the Archive did not answer");
+}
+
 export async function settleFirstReadings({ changes, offers, today, archive, readerForListing, fetchToday, textDayOf, limit = Infinity, vendors, includeResolved = false, onSettled = () => {} }) {
   const backlog = firstReadingsInForce(changes, { includeResolved }).filter((record) => !vendors || vendors.includes(record.vendor)).slice(0, limit);
-  const results = [];
-  for (const record of backlog) {
+  const settleOne = async (record) => {
     const subject = { vendor: record.vendor, date: record.date, change_type: record.change_type, source_url: record.source_url, resolution: record.resolution?.state ?? null };
     const page = await fetchToday(record.source_url);
     const settled = page.ok
@@ -71,8 +74,13 @@ export async function settleFirstReadings({ changes, offers, today, archive, rea
         })
       : { outcome: "page_unreadable_today", why: page.error, reads: 0 };
     const result = { ...subject, ...settled, split: splitOf(settled, today) };
-    results.push(result);
     onSettled(result);
+    return result;
+  };
+  const results = [];
+  for (const record of backlog) results.push(await settleOne(record));
+  for (const [at, record] of backlog.entries()) {
+    if (archiveDidNotAnswer(results[at])) results[at] = await settleOne(record);
   }
   const split = Object.fromEntries(Object.values(SPLIT).map((name) => [name, results.filter((result) => result.split === name).length]));
   return { today, records: backlog.length, split, results };
