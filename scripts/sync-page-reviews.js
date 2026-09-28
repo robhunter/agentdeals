@@ -16,6 +16,7 @@ const REPO = join(dirname(fileURLToPath(import.meta.url)), "..");
 
 const MEASURED_BY_THE_RENDER = [
   "reads_index", "tables_read_index", "table_figures", "table_figures_from_records", "tables", "reads_changes",
+  "vendors_tabulated",
 ];
 
 const HELP = `Rebuild the editorial page review registry.
@@ -256,7 +257,7 @@ async function main() {
         const before = prior.vendors_asserted.join(","), after = record.vendors_asserted.join(",");
         if (before !== after) note(`~ ${route} vendors ${prior.vendors_asserted.length} -> ${record.vendors_asserted.length}`, false);
         const tabulatedBefore = prior.vendors_tabulated.join(","), tabulatedAfter = record.vendors_tabulated.join(",");
-        if (tabulatedBefore !== tabulatedAfter) note(`~ ${route} tabulated vendors ${prior.vendors_tabulated.length} -> ${record.vendors_tabulated.length}`, false);
+        if (tabulatedBefore !== tabulatedAfter) note(`~ ${route} tabulated vendors ${prior.vendors_tabulated.length} -> ${record.vendors_tabulated.length}`, true);
         const unresolvedBefore = prior.badge_subjects_unresolved.join(","), unresolvedAfter = record.badge_subjects_unresolved.join(",");
         if (unresolvedBefore !== unresolvedAfter) note(`~ ${route} unresolved badge subjects [${unresolvedBefore}] -> [${unresolvedAfter}]`, false);
         const cardsBefore = (prior.stat_card_subjects_unresolved ?? []).join(","), cardsAfter = record.stat_card_subjects_unresolved.join(",");
