@@ -5110,12 +5110,12 @@
     {
       "vendor": "Netlify",
       "change_type": "pricing_model_change",
-      "date": "2026-04-17",
-      "summary": "Netlify credits-based pricing updated: bandwidth now 20 credits/GB (was 10), compute now 10 credits/GB-hour (was 5), web requests 2 credits/10K (new). Same 300 credits/month allocation but each credit buys less bandwidth and compute.",
-      "previous_state": "300 credits/month: deploys 15/each, bandwidth 10/GB, compute 5/GB-hr",
-      "current_state": "300 credits/month: deploys 15/each, bandwidth 20/GB, compute 10/GB-hr, web requests 2/10K",
+      "date": "2026-04-14",
+      "summary": "Netlify changed its credit rates: bandwidth went from 10 to 20 credits per GB and compute from 5 to 10 credits per GB-hour, while web requests went from 3 to 2 credits per 10,000. The Free plan keeps 300 credits a month, so each credit buys half as much bandwidth and compute.",
+      "previous_state": "300 credits a month: bandwidth 10 credits per GB, compute 5 credits per GB-hour, web requests 3 credits per 10,000 requests",
+      "current_state": "300 credits a month: bandwidth 20 credits per GB, compute 10 credits per GB-hour, web requests 2 credits per 10,000 requests (Netlify changelog, 2026-04-14)",
       "impact": "medium",
-      "source_url": "https://www.netlify.com/pricing/",
+      "source_url": "https://www.netlify.com/changelog/2026-04-14-pricing-updates-april-2026/",
       "category": "Cloud Hosting",
       "alternatives": [
         "Vercel",
@@ -5123,7 +5123,7 @@
         "Railway"
       ],
       "recorded_date": "2026-04-16",
-      "date_source": "hand_written"
+      "date_source": "vendor_page"
     },
     {
       "vendor": "Alibaba Cloud Qwen Code",
@@ -12493,6 +12493,20 @@
       "impact": "low",
       "source_url": "https://github.blog/changelog/2026-06-01-updates-to-github-copilot-billing-and-plans/",
       "category": "AI Coding",
+      "alternatives": [],
+      "recorded_date": "2026-09-28",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Netlify",
+      "change_type": "record_corrected",
+      "date": "2026-09-28",
+      "summary": "Data correction - Netlify's credit-rate change took effect on 2026-04-14, not 2026-04-17, and web requests became cheaper rather than newly billed. Netlify's changelog dates it.",
+      "previous_state": "Recorded 2026-04-16 as pricing_model_change, dated 2026-04-17",
+      "current_state": "pricing_model_change, dated 2026-04-14 from Netlify's changelog",
+      "impact": "low",
+      "source_url": "https://www.netlify.com/changelog/2026-04-14-pricing-updates-april-2026/",
+      "category": "Cloud Hosting",
       "alternatives": [],
       "recorded_date": "2026-09-28",
       "date_source": "hand_written"
