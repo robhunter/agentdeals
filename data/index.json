@@ -32287,7 +32287,7 @@
     {
       "vendor": "GitHub Copilot",
       "category": "AI Coding",
-      "description": "AI coding assistant by GitHub/Microsoft — Free: $0 USD per user / month. Includes 2,000 completions per month, access to Haiku 4.5, GPT-5 mini, and more, Copilot CLI, and Community Support. No credit card required.",
+      "description": "AI coding assistant by GitHub. Copilot Free is $0 with no credit card: 2,000 code completions a month, a limited monthly allowance of GitHub AI Credits for chat and agent features, and models through auto model selection only. Copilot Student is free for verified students. Paid plans include a monthly allowance of AI credits: Pro $10 (1,500 credits), Pro+ $39 (7,000) and Max $100 (20,000); Business $19 (1,900) and Enterprise $39 (3,900) per seat. Code completions are unlimited on paid plans, and usage beyond an allowance costs $0.01 per AI credit.",
       "tier": "Free",
       "url": "https://github.com/features/copilot",
       "tags": [
@@ -32297,8 +32297,7 @@
         "ide",
         "developer tools",
         "cursor-alternative",
-        "deal-change",
-        "signup-paused"
+        "deal-change"
       ],
       "verifiedDate": "2026-07-10",
       "referral_program": {
@@ -32314,12 +32313,9 @@
         "outcome": "ok",
         "detail": "the page names GitHub Copilot as \"github copilot\" and states \"$ 0\""
       },
-      "restated_from": {
-        "reading_date": "2026-09-12",
-        "source_url": "https://github.com/features/copilot",
+      "restatement_reverted": {
         "record_date": "2026-09-12",
-        "change_type": "limits_increased",
-        "restated_on": "2026-09-20"
+        "reverted_on": "2026-09-28"
       }
     },
     {
