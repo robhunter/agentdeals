@@ -11,7 +11,8 @@
       "source_url": "https://vercel.com/pricing",
       "record_date": "2026-09-07",
       "change_type": "limits_reduced",
-      "summary": "The Hobby plan still exists, but several limits have been adjusted or are now pay-as-you-go. Edge Requests are now 1M included / month, then starting at $2 per 1M. Fast Data Transfer is 100 GB / month included, then starting at $0.15 per GB. Blob Storage is 1 GB / month included, then $0.023 per GB. Image Transformations are 5K / month included, then starting at $0.05 per 1K. Function Invocations are 1M / month included, then starting at $0.60 per 1M. Active CPU is 4 hours / month included, then starting at $0.128 per hour. Provisioned Memory is 360 GB-hrs / month included, then starting at $0.0106 per GB-hr."
+      "summary": "The Hobby plan still exists, but several limits have been adjusted or are now pay-as-you-go. Edge Requests are now 1M included / month, then starting at $2 per 1M. Fast Data Transfer is 100 GB / month included, then starting at $0.15 per GB. Blob Storage is 1 GB / month included, then $0.023 per GB. Image Transformations are 5K / month included, then starting at $0.05 per 1K. Function Invocations are 1M / month included, then starting at $0.60 per 1M. Active CPU is 4 hours / month included, then starting at $0.128 per hour. Provisioned Memory is 360 GB-hrs / month included, then starting at $0.0106 per GB-hr.",
+      "reverted_on": "2026-09-28"
     },
     {
       "vendor": "Cloudflare Workers",
@@ -1802,7 +1803,8 @@
       "source_url": "https://readthedocs.org/",
       "record_date": "2026-08-28",
       "change_type": "pricing_restructured",
-      "summary": "Read the Docs now offers two tiers: a free 'Community' plan for open-source projects and a paid 'Business' plan starting at $50/month for commercial projects. The free tier is specifically for open-source software and supports public documentation with ads. Private repository support and SSO are now paid features."
+      "summary": "Read the Docs now offers two tiers: a free 'Community' plan for open-source projects and a paid 'Business' plan starting at $50/month for commercial projects. The free tier is specifically for open-source software and supports public documentation with ads. Private repository support and SSO are now paid features.",
+      "reverted_on": "2026-09-28"
     },
     {
       "vendor": "dnspod.com",
