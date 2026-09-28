@@ -333,6 +333,39 @@ describe("settling a first reading's difference against the page as the Archive 
     assert.strictEqual(settled.date, null);
   });
 
+  it("also reads the captures of the page a redirect lands on, since the Archive files a redirect's captures under its own address", async () => {
+    const reader = termsReader();
+    const asked: string[] = [];
+    const moved = archiveOf(ALL_YEAR, (day) => (day <= "2026-04-10" ? "A" : "B"));
+    const archive = {
+      captures: async (url: string, from: string, to: string) => {
+        asked.push(url);
+        return url === "https://example.com/en/pricing" ? moved.captures(url, from, to) : { captures: [] };
+      },
+      captureHtml: moved.captureHtml,
+    };
+    const settled = await settleAgainstCaptures({
+      url: "https://example.com/pricing",
+      finalUrl: "https://example.com/en/pricing",
+      ourText: "A",
+      textDay: "2026-02-15",
+      todayText: "Free plan TERMS=B",
+      today: TODAY,
+      archive,
+      read: reader.read,
+    });
+    assert.deepStrictEqual(asked, ["https://example.com/pricing", "https://example.com/en/pricing"]);
+    assert.strictEqual(settled.outcome, "vendor_changed");
+    assert.strictEqual(settled.date, "2026-04-11");
+  });
+
+  it("asks once when the page lands where it was listed, give or take www and a trailing slash", async () => {
+    const asked: string[] = [];
+    const archive = { captures: async (url: string) => { asked.push(url); return { captures: [] }; }, captureHtml: async () => ({ unavailable: "unused" }) };
+    await settleAgainstCaptures({ url: "https://example.com/pricing", finalUrl: "https://www.example.com/pricing/", ourText: "A", textDay: "2026-02-15", todayText: "", today: TODAY, archive, read: termsReader().read });
+    assert.deepStrictEqual(asked, ["https://example.com/pricing"]);
+  });
+
   it("says the Archive did not answer, rather than that no capture exists", async () => {
     const archive = { captures: async () => ({ unavailable: "HTTP 503 after 4 attempts" }), captureHtml: async () => ({ unavailable: "unused" }) };
     const settled = await settle({ todayTerms: "B", termsOn: () => "A", archive }).result;
