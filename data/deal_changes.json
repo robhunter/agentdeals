@@ -8948,7 +8948,13 @@
       "category": "Design",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-03"
+      "recorded_date": "2026-09-03",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-28",
+        "detail": "Retracted 2026-09-28: no change. figma.com/pricing listed Starter with unlimited drafts, UI kits and templates, and 150 AI credits a day up to 500 a month on 2026-07-07, 2026-09-02 and 2026-09-04.",
+        "source_url": "http://web.archive.org/web/20260902173400/https://www.figma.com/pricing/"
+      }
     },
     {
       "vendor": "Weights & Biases",
