@@ -44717,34 +44717,34 @@ ${mcpCtaCss()}
       <tr>
         <td><strong>Side project (1 GB/mo bandwidth)</strong></td>
         <td class="cheapest">$0</td>
+        <td>$0 (Hobby, non-commercial)</td>
+        <td>$0 (Free)</td>
         <td>$0</td>
-        <td>$0</td>
-        <td>$0</td>
-        <td>$0 (trial credit)</td>
+        <td>$0 on trial; then $1/mo credit or $5 Hobby</td>
       </tr>
       <tr>
         <td><strong>Growing app (50 GB/mo, 100 builds)</strong></td>
         <td class="cheapest">$0</td>
-        <td>$0 (Hobby)</td>
-        <td>$0 (if credits last)</td>
+        <td>$0 (Hobby, ≤1M requests, non-commercial)</td>
+        <td>$20/mo (Pro; ~2,500 credits)</td>
         <td>~$7/mo (Hobby: 45 GB over the 5 GB included)</td>
-        <td>~$5&ndash;10/mo</td>
+        <td>Greater of $5 or usage (egress: $2.50)</td>
       </tr>
       <tr>
         <td><strong>Production (500 GB/mo, team of 3)</strong></td>
         <td class="cheapest">$0</td>
-        <td class="expensive">$60/mo (Pro, $20/seat)</td>
-        <td>$57/mo (Pro, $19/seat)</td>
-        <td class="expensive">~$96/mo (Pro $25 + 475 GB at $0.15)</td>
-        <td>~$15&ndash;30/mo</td>
+        <td class="expensive">From $60/mo (3 seats; $80 over 1M requests)</td>
+        <td>$63/mo+ (10,000-credit tier; no seat fees)</td>
+        <td class="expensive">~$96/mo + compute (Pro $25 + 475 GB at $0.15)</td>
+        <td>$25/mo egress + compute (Pro, $20 minimum)</td>
       </tr>
       <tr>
         <td><strong>Scale (2 TB/mo, team of 5)</strong></td>
         <td class="cheapest">$0 (bandwidth)</td>
-        <td class="expensive">$100/mo + overages</td>
-        <td>$95/mo + overages</td>
-        <td class="expensive">~$321/mo (Pro $25 + 1,975 GB at $0.15)</td>
-        <td>~$30&ndash;60/mo</td>
+        <td class="expensive">From $120/mo + compute (5 seats + CDN tier)</td>
+        <td>~$266/mo (bandwidth credits alone)</td>
+        <td class="expensive">~$321/mo + compute (Pro $25 + 1,975 GB at $0.15)</td>
+        <td>$100/mo egress + compute (Pro)</td>
       </tr>
       <tr>
         <td><strong>Commercial use allowed?</strong></td>
@@ -44759,15 +44759,15 @@ ${mcpCtaCss()}
   </div>
 
   <div class="context-box">
-    <strong>Vercel's commercial use restriction:</strong> The Hobby plan explicitly prohibits commercial use. Any app generating revenue, displaying ads, or serving a business purpose requires the $20/seat/month Pro plan. This is the biggest gotcha in developer hosting &mdash; you can build and deploy for free, but the moment your project succeeds, you owe $20/seat/month minimum. Cloudflare Pages, Netlify, and Render all allow commercial use on their free tiers.
+    <strong>Vercel's commercial use restriction:</strong> Hobby is for non-commercial personal use only. Payments, ads, or being paid to build or host the site count as commercial use and need Pro at $20 a month with one deploying seat, and $20 for each additional deploying seat. Cloudflare Pages, Netlify and Render allow commercial use on their free tiers. GitHub Pages bars running an online business, shop or SaaS.
   </div>
 
   <div class="context-box">
-    <strong>Per-seat pricing at scale:</strong> Vercel ($20/seat) and Netlify ($19/seat) charge per team member. A team of 10 developers costs $200/mo on Vercel before any compute charges. Railway and Render use usage-based pricing &mdash; you pay for compute consumed, not team size. For growing teams, usage-based platforms often cost less than per-seat platforms.
+    <strong>Per-seat pricing at scale:</strong> Vercel Pro charges $20 per deploying seat, so 10 deploying developers cost $200 a month before usage. Netlify's credit-based Pro plan has charged no seat fee since 2026-04-14; $19 a month per member is the Legacy Pro price. Render Pro is $25 a month flat and Railway Pro has a $20 monthly minimum that counts toward usage; both include unlimited team members and bill compute by usage.
   </div>
 
   <div class="context-box">
-    <strong>The cold start tax:</strong> Render's free web services spin down after 15 minutes of inactivity, causing 30&ndash;60 second cold starts for the next request. This makes Render's free tier unsuitable for production APIs where response time matters. Railway keeps services always-on during your trial. Koyeb and Fly.io no longer offer free compute tiers for new accounts. Vercel and Cloudflare use serverless/edge models that avoid traditional cold starts entirely.
+    <strong>Cold starts:</strong> Render's free web services spin down after 15 idle minutes and take about one minute to spin back up. Railway services are always on by default. Cloudflare states that Workers have no cold starts. Vercel functions can cold-start, and Vercel lists cold start prevention as a Pro feature. Koyeb and Fly.io offer new accounts no ongoing free compute.
   </div>
 
   <h2 id="best-for">Best for Each Use Case</h2>
