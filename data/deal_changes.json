@@ -758,9 +758,9 @@
       "vendor": "Google",
       "change_type": "pricing_restructured",
       "date": "2026-01-27",
-      "summary": "Google Developer Program Premium merged into Google One AI Pro ($19.99/mo, includes $10 Cloud credits) and AI Ultra ($100 Cloud credits). Developer benefits now bundled into consumer AI subscriptions",
+      "summary": "Google began including Google Cloud credits in its consumer AI plans: Google AI Pro ($19.99 a month) with $10 a month and AI Ultra with $100 a month, and began phasing out standalone Google Developer Program Premium on personal (@gmail.com) accounts.",
       "previous_state": "Separate Developer Program Premium subscription ($299/year) with dev tools and perks",
-      "current_state": "Developer benefits folded into AI Pro ($19.99/mo, $10 Cloud credits for Vertex AI/Cloud Run/Gemini API) and AI Ultra ($100 Cloud credits). Developer Program Premium being phased out for @gmail.com accounts",
+      "current_state": "Google AI Pro ($19.99 a month) includes $10 a month in Google Cloud credits and AI Ultra $100 a month; standalone Developer Program Premium is being phased out for @gmail.com accounts.",
       "impact": "medium",
       "source_url": "https://blog.google/innovation-and-ai/technology/developers-tools/gdp-premium-ai-pro-ultra/",
       "category": "Developer Tools",
@@ -1184,7 +1184,7 @@
       "vendor": "Google",
       "change_type": "pricing_restructured",
       "date": "2026-03-30",
-      "summary": "Standalone Google Developer Program Premium stopped renewing on personal (@gmail.com) accounts: annual plans after 2026-03-30, monthly plans after 2026-06-30. Google had moved its developer benefits into Google AI Pro and AI Ultra on 2026-01-27. Premium on Workspace accounts did not change.",
+      "summary": "Standalone Google Developer Program Premium stopped renewing on personal (@gmail.com) accounts: annual plans after 2026-03-30, monthly plans after 2026-06-30. Google had added Google Cloud credits to Google AI Pro and AI Ultra on 2026-01-27. Premium on Workspace accounts did not change.",
       "previous_state": "Developer Program Premium: $299 a year (a monthly option also existed) with a $500 annual Google Cloud credit, Skills Boost access and a certification voucher",
       "current_state": "Google AI Pro \"$19.99 / month\" with $10 a month in Cloud credits; Google AI Ultra \"$249.99 / month\" with $100 a month. 1:1 consultations, certification vouchers and unlimited Google Skills access are no longer included. Workspace Premium subscriptions are not changing.",
       "impact": "high",
@@ -8739,7 +8739,7 @@
       "recorded_date": "2026-09-02"
     },
     {
-      "vendor": "Cloudflare",
+      "vendor": "Cloudflare for Startups",
       "change_type": "limits_increased",
       "date": "2026-09-02",
       "date_source": "discovered",
@@ -8748,10 +8748,11 @@
       "current_state": "The program offers up to $350k in credits across tiers. Tier 3: $10k, Tier 2: $100k, Tier 1: $350k. Workers AI is covered up to $2,500 (Tier 3), $10,000 (Tier 2), and $50,000 (Tier 1). AI Gateway is temporarily not covered. R2 is covered up to $10,000.",
       "impact": "high",
       "source_url": "https://www.cloudflare.com/forstartups/",
-      "category": "Startup Programs",
+      "category": "Startup Perks",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-02"
+      "recorded_date": "2026-09-02",
+      "tier": "Startup Program"
     },
     {
       "vendor": "Codecov",

@@ -153,6 +153,9 @@
     "/alternative-to/cloudflare-dynamic-workers": {
       "daily": true
     },
+    "/alternative-to/cloudflare-for-startups": {
+      "daily": true
+    },
     "/alternative-to/cloudflare-kv": {
       "daily": true
     },
@@ -4652,10 +4655,6 @@
       "hash": "f96cd6c51fbb8514",
       "changed": "2026-09-30"
     },
-    "/vendor/cloudflare": {
-      "hash": "ba53ff64150809e0",
-      "changed": "2026-09-30"
-    },
     "/vendor/cloudflare-d1": {
       "daily": true
     },
@@ -4667,6 +4666,9 @@
       "daily": true
     },
     "/vendor/cloudflare-dynamic-workers": {
+      "daily": true
+    },
+    "/vendor/cloudflare-for-startups": {
       "daily": true
     },
     "/vendor/cloudflare-kv": {
