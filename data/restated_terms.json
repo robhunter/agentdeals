@@ -2551,7 +2551,8 @@
       "source_url": "https://www.progress.com/podio/pricing",
       "record_date": "2026-09-25",
       "change_type": "limits_reduced",
-      "summary": "The free plan now has a limit of 100 items per organization, whereas previously it had 100 items max across the organization. The free plan also no longer includes unlimited items on paid plans. API calls are 1000 calls per hour, not daily."
+      "summary": "The free plan now has a limit of 100 items per organization, whereas previously it had 100 items max across the organization. The free plan also no longer includes unlimited items on paid plans. API calls are 1000 calls per hour, not daily.",
+      "reverted_on": "2026-09-28"
     },
     {
       "vendor": "Code Time",

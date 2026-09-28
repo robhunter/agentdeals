@@ -11571,7 +11571,13 @@
       "category": "Storage",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-25"
+      "recorded_date": "2026-09-25",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-28",
+        "detail": "Retracted 2026-09-28: no change. progress.com/podio/pricing already listed the Free plan with 100 items per organization and 1000 API calls per hour on 2025-11-16 (items) and 2026-07-12 (both). Our old text said 1,000 API calls a day.",
+        "source_url": "http://web.archive.org/web/20260712042730/https://www.progress.com/podio/pricing"
+      }
     },
     {
       "vendor": "PDFMonkey",

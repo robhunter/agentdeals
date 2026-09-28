@@ -23878,7 +23878,7 @@
     {
       "vendor": "podio.com",
       "category": "Storage",
-      "description": "Work management platform owned by Progress Software — The Free plan includes up to 5 users, unlimited workspaces and apps, 1000 API calls per hour, and a limit of 100 items per organization.",
+      "description": "Work management platform owned by Progress Software. The Free plan is $0 for up to 5 users, with unlimited workspaces and apps, 100 items per organization and 1000 API calls per hour.",
       "tier": "Free",
       "url": "https://www.progress.com/podio/pricing",
       "tags": [
@@ -23892,12 +23892,9 @@
         "outcome": "ok",
         "detail": "the page names podio.com as \"podio\" and states \"1000 calls per hour\""
       },
-      "restated_from": {
-        "reading_date": "2026-09-25",
-        "source_url": "https://www.progress.com/podio/pricing",
+      "restatement_reverted": {
         "record_date": "2026-09-25",
-        "change_type": "limits_reduced",
-        "restated_on": "2026-09-25"
+        "reverted_on": "2026-09-28"
       }
     },
     {
