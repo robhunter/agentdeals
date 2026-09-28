@@ -151,6 +151,15 @@ function startServer(): Promise<{ proc: ChildProcess; port: number }> {
   });
 }
 
+async function fetchJsonRetryingOnceOnAClosedSocket(url: string): Promise<any> {
+  try {
+    return await (await fetch(url)).json();
+  } catch (err) {
+    if ((err as { cause?: { code?: string } }).cause?.code !== "UND_ERR_SOCKET") throw err;
+    return (await fetch(url)).json();
+  }
+}
+
 describe("#1395 the listing surfaces answer the stored-terms question the way the vendor page answers it", () => {
   let server: { proc: ChildProcess; port: number } | null = null;
   const pages = new Map<string, string>();
@@ -323,7 +332,7 @@ describe("#1395 the listing surfaces answer the stored-terms question the way th
   });
 
   it("marks the superseded record on every offer the API returns", async () => {
-    const payload = await (await fetch(`${base}/api/offers?limit=2000`)).json();
+    const payload = await fetchJsonRetryingOnceOnAClosedSocket(`${base}/api/offers?limit=2000`);
     const rows: Record<string, any>[] = payload.offers;
     assert.strictEqual(rows.length, offers.length);
 
@@ -347,7 +356,7 @@ describe("#1395 the listing surfaces answer the stored-terms question the way th
     })!;
     assert.ok(offer, "no record the vendor name resolves to holds a sourced reading for this endpoint to be read against");
     const change = supersedingFor(offer)!;
-    const payload = await (await fetch(`${base}/api/details/${encodeURIComponent(offer.vendor)}`)).json();
+    const payload = await fetchJsonRetryingOnceOnAClosedSocket(`${base}/api/details/${encodeURIComponent(offer.vendor)}`);
     const marked = payload.offer.terms_superseded;
     assert.deepStrictEqual(marked, supersededTermsRecord(offer.vendor, change));
     assert.strictEqual(marked.change_date, change.date);
@@ -359,7 +368,7 @@ describe("#1395 the listing surfaces answer the stored-terms question the way th
   });
 
   it("counts a reading on nearly every marked record, so the field above is not an exception", async () => {
-    const payload = await (await fetch(`${base}/api/offers?limit=2000`)).json();
+    const payload = await fetchJsonRetryingOnceOnAClosedSocket(`${base}/api/offers?limit=2000`);
     const marked: Record<string, any>[] = payload.offers.filter((row: any) => row.terms_superseded);
     const withAReading = marked.filter((row) => row.terms_superseded.reading);
     assert.ok(
@@ -385,7 +394,7 @@ describe("#1395 the listing surfaces answer the stored-terms question the way th
     const fields = ["risk_level", "risk_cause", "rating_withheld", "recent_change", "stability", "terms_superseded"];
     const missing: string[] = [];
     for (const offer of offers.slice(0, 40)) {
-      const payload = await (await fetch(`${base}/api/details/${encodeURIComponent(offer.vendor)}`)).json();
+      const payload = await fetchJsonRetryingOnceOnAClosedSocket(`${base}/api/details/${encodeURIComponent(offer.vendor)}`);
       if (!payload.offer) continue;
       for (const field of fields) {
         if (!(field in payload.offer)) missing.push(`${offer.vendor}.${field}`);
@@ -421,7 +430,7 @@ describe("#1395 the listing surfaces answer the stored-terms question the way th
   });
 
   it("counts fewer records as verified than it holds, on the endpoint that returns them all", async () => {
-    const payload = await (await fetch(`${base}/api/offers?limit=2000`)).json();
+    const payload = await fetchJsonRetryingOnceOnAClosedSocket(`${base}/api/offers?limit=2000`);
     const provenance = payload._provenance;
     const rows: Record<string, any>[] = payload.offers;
     const withheld = rows.filter(
