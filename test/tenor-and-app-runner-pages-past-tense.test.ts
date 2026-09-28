@@ -14,7 +14,6 @@ const STATED: Record<string, string[]> = {
     "What happened: Google shut down the Tenor GIF API on June 30, 2026. New API key sign-ups stopped on January 13, 2026, and Google says any API request after June 30 fails with an error. Only the API was discontinued: Tenor content stays available in Google's own apps, including Gboard, Tenor.com and the GIF Keyboard app.",
     "Who was affected: apps, bots and forums that used the Tenor API for inline GIF search, including Discord, WhatsApp and Bluesky.",
     "Complete API shutdown. Existing API keys stopped working; Google says every API request now fails with an error.",
-    "apply for Giphy's production approval before you switch.",
     "that used the Tenor API for GIF search.",
     'Why Google shut it down: Google says the decision is part of "an ongoing effort to focus resources on enhancing our core products."',
   ],
