@@ -3865,7 +3865,13 @@
       "category": "Analytics",
       "alternatives": [],
       "recorded_date": "2026-04-12",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-28",
+        "detail": "Retracted 2026-09-28: a duplicate. The Segment record dated 2025-09-04 describes the same end of the Startup Program under the listing's vendor, Segment.",
+        "source_url": "http://web.archive.org/web/20250904201737/https://www.twilio.com/en-us/solutions/startups"
+      }
     },
     {
       "vendor": "Segment Startups",
@@ -5156,7 +5162,7 @@
       "vendor": "Google Gemini API",
       "change_type": "product_deprecated",
       "date": "2026-06-01",
-      "summary": "Gemini 2.0 Flash and 2.0 Flash-Lite were shut down on 2026-06-01, as Google announced on 2026-02-18. Google points new projects to Gemini 3.5 Flash-Lite or 3.8 Flash.",
+      "summary": "Gemini 2.0 Flash and 2.0 Flash-Lite were shut down on 2026-06-01, as Google announced on 2026-02-18. Google names gemini-3.6-flash as the replacement for 2.0 Flash and gemini-3.1-flash-lite for 2.0 Flash-Lite.",
       "previous_state": "Gemini 2.0 Flash and 2.0 Flash-Lite available on free and paid tiers",
       "current_state": "Gemini 2.0 Flash and 2.0 Flash-Lite shut down on 2026-06-01.",
       "impact": "high",
