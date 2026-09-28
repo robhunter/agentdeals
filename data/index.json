@@ -8806,8 +8806,8 @@
     {
       "vendor": "Replicate",
       "category": "AI / ML",
-      "description": "ML model hosting and inference platform — free runs on curated model collection without billing. Pay-per-second billing by hardware type (CPU/GPU) after free allowance. No credit card required to start",
-      "tier": "Free",
+      "description": "ML model hosting and inference. A new account can run the models in Replicate's Try for Free collection without buying credit, for a limited number of runs that Replicate does not state; after that you add billing and buy credit. Replicate says these models are not free forever. Most models bill by the second for the hardware they run on, such as $0.000025/sec on CPU Small and $0.001525/sec on one H100. Official models bill per output instead, such as FLUX 1.1 Pro at $0.04 per image; per million input/output tokens: DeepSeek-R1 $3.75/$10.",
+      "tier": "Trial",
       "url": "https://replicate.com/pricing",
       "tags": [
         "ai",
@@ -33049,7 +33049,7 @@
     {
       "vendor": "SiliconFlow",
       "category": "AI / ML",
-      "description": "Pay-as-you-go model inference. siliconflow.cn, run by a Beijing company, lists these models at no charge: the chat models Qwen3-8B, Qwen2.5-7B-Instruct (Free), Qwen3.5-4B, GLM-4-9B-0414, GLM-Z1-9B-0414, DeepSeek-R1-0528-Qwen3-8B (Free) and Xing4.0-29B; the translation model Hunyuan-MT-7B; the OCR models PaddleOCR-VL-1.5 and DeepSeek-OCR; the embedding models bge-m3, bge-large-zh-v1.5 and bge-large-en-v1.5; the reranker bge-reranker-v2-m3; Kolors image generation; and six speech recognition models. The Pro versions are paid: Qwen2.5-7B-Instruct (Pro), bge-m3 (Pro) and bge-reranker-v2-m3 (Pro). All other models are paid too, including DeepSeek-V4-Flash, DeepSeek-V4-Pro and GLM-5.3. Using all the free models requires real-name verification, and online personal verification accepts only Chinese-issued documents, such as a resident ID card or a Foreign Permanent Resident ID Card. The international site, siliconflow.com, is run by SiliconFlow Labs Pte. Ltd. under Singapore law, is not offered in mainland China, and gives $1 in free credits to start.",
+      "description": "Pay-as-you-go model inference. siliconflow.cn, run by a Beijing company, lists these models at no charge: the chat models Qwen3-8B, Qwen2.5-7B-Instruct (Free), Qwen3.5-4B, GLM-4-9B-0414, GLM-Z1-9B-0414, DeepSeek-R1-0528-Qwen3-8B (Free) and Xing4.0-29B; the translation model Hunyuan-MT-7B; the OCR models PaddleOCR-VL-1.5 and DeepSeek-OCR; the embedding models bge-m3, bge-large-zh-v1.5 and bge-large-en-v1.5; the reranker bge-reranker-v2-m3; Kolors image generation; and six speech recognition models. The Pro versions are paid: Qwen2.5-7B-Instruct (Pro), bge-m3 (Pro) and bge-reranker-v2-m3 (Pro). All other models are paid too, including DeepSeek-V4-Flash, DeepSeek-V4-Pro and GLM-5.3. Using all the free models requires real-name verification, and online personal verification accepts only Chinese-issued documents, such as a resident ID card or a Foreign Permanent Resident ID Card. The international site, siliconflow.com, is run by SiliconFlow Labs Pte. Ltd. under Singapore law, is not offered in mainland China, and gives $1 in free credits to start. Its paid rates per million input/output tokens: gpt-oss-120b $0.05/$0.45; DeepSeek-V4.1-Flash $0.15/$0.60.",
       "tier": "Free",
       "url": "https://siliconflow.cn/pricing",
       "tags": [
