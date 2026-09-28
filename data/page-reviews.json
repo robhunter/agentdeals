@@ -1442,7 +1442,6 @@
       "tier": "A",
       "vendors_asserted": [
         "algolia",
-        "cloudflare",
         "cloudflare-r2",
         "github-actions",
         "neon",
@@ -1836,6 +1835,7 @@
       "vendors_asserted": [
         "brave-search-api",
         "cloudflare",
+        "cloudflare-for-startups",
         "digitalocean",
         "github",
         "github-copilot",
@@ -3177,7 +3177,7 @@
       "vendors_asserted": [],
       "vendors_tabulated": [
         "aws",
-        "cloudflare",
+        "cloudflare-for-startups",
         "digitalocean",
         "google-cloud",
         "microsoft-azure",

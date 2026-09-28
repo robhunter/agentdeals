@@ -17126,7 +17126,7 @@ function buildFreeDjangoStackPage(): string {
       name: "Object Storage",
       icon: "📦",
       recommended: { vendor: "Cloudflare R2", why: "Zero egress fees — the standout differentiator. 10 GB storage, 1 million Class A operations, 10 million Class B operations per month. S3-compatible API means django-storages works out of the box with the S3Boto3Storage backend. Perfect for Django file uploads (ImageField, FileField), static file hosting (collectstatic), and media storage." },
-      alternatives: ["Backblaze B2", "Supabase", "Cloudflare"],
+      alternatives: ["Backblaze B2", "Supabase"],
       outgrow: "When you exceed 10 GB storage. At scale, R2 saves dramatically vs S3: 1 TB stored + 10 TB egress costs ~$15/month on R2 vs ~$925/month on S3. Backblaze B2 offers 10 GB free and free egress up to 3x what you store, no CDN required — also works with django-storages. Supabase Storage gives 1 GB free with image transformations.",
       whyNot: `Why not AWS S3: the 5 GB storage free tier expires after 12 months, then storage costs ${rateCardFor("AWS S3").publishedStorageRate}. Bandwidth is the part that does not expire — ${monthlyEgressGrantSentence(rateCardFor("AWS S3"))} — so a Django app serving under ${monthlyEgressGrantGb("AWS S3")} GB of media a month pays nothing for egress on S3 either. Past that S3 charges $0.09/GB and R2 still charges $0.`,
       relatedPage: "/storage-comparison-2026",
@@ -26875,7 +26875,7 @@ function buildFreeTierTrackerPage(): string {
   const featuredExpansions: ErosionEntry[] = [
     {
       vendor: "Cloudflare Startup Program",
-      slug: "cloudflare",
+      slug: "cloudflare-for-startups",
       date: "2026-02-01",
       oneLiner: "Expanded to $250K in credits across 4 tiers",
       changeType: "startup_program_expanded",
@@ -27141,7 +27141,7 @@ ${mcpCtaCss()}
     </div>
     <div class="verdict-item">
       <strong>For startups:</strong>
-      <p>Take advantage of expanded startup programs: <a href="/vendor/cloudflare">Cloudflare $250K</a>, <a href="/vendor/google-cloud">Google Cloud $350K</a>, <a href="/vendor/digitalocean">DigitalOcean $100K</a>. These are more reliable than consumer free tiers. See our <a href="/free-startup-stack">Free Startup Stack Guide</a>.</p>
+      <p>Take advantage of expanded startup programs: <a href="/vendor/cloudflare-for-startups">Cloudflare $250K</a>, <a href="/vendor/google-cloud">Google Cloud $350K</a>, <a href="/vendor/digitalocean">DigitalOcean $100K</a>. These are more reliable than consumer free tiers. See our <a href="/free-startup-stack">Free Startup Stack Guide</a>.</p>
     </div>
   </div>
 
@@ -44885,7 +44885,7 @@ const STRUCTURALLY_FREE_CARDS = [
   {
     heading: "Cloud Provider Loss Leaders",
     blurb: "Free tiers subsidized by the larger platform &mdash; they exist to acquire users into the paid ecosystem.",
-    vendors: ["Cloudflare", "Vercel", "Netlify", "Railway", "AWS", "Google Cloud", "Azure"],
+    vendors: ["Cloudflare Workers", "Vercel", "Netlify", "Railway", "AWS", "Google Cloud", "Azure"],
   },
   {
     heading: "Developer-First Companies",
@@ -45268,7 +45268,7 @@ ${globalNavCss()}
     <thead><tr><th>Program</th><th>Credits</th><th>Eligibility</th><th>Notable Benefits</th></tr></thead>
     <tbody>
       <tr><td><a href="/vendor/google-cloud">Google for Startups</a></td><td style="color:#3fb950;font-weight:600">Up to $350K</td><td>AI-first startups</td><td>GCP credits, technical support</td></tr>
-      <tr><td><a href="/vendor/cloudflare">Cloudflare Startup Program</a></td><td style="color:#3fb950;font-weight:600">Up to $250K</td><td>4 tiers by stage</td><td>Workers, R2, CDN, security</td></tr>
+      <tr><td><a href="/vendor/cloudflare-for-startups">Cloudflare Startup Program</a></td><td style="color:#3fb950;font-weight:600">Up to $250K</td><td>4 tiers by stage</td><td>Workers, R2, CDN, security</td></tr>
       <tr><td><a href="/vendor/microsoft-azure">Microsoft for Startups</a></td><td style="color:#3fb950;font-weight:600">Up to $150K</td><td>Founders Hub</td><td>Azure + OpenAI credits</td></tr>
       <tr><td><a href="/vendor/digitalocean">DigitalOcean Hatch</a></td><td style="color:#3fb950;font-weight:600">Up to $100K</td><td>Early-stage</td><td>Compute + support credits</td></tr>
       <tr><td><a href="/vendor/aws">AWS Activate</a></td><td style="color:#3fb950;font-weight:600">Up to $100K</td><td>Accelerator-backed</td><td>AWS credits, technical support</td></tr>
@@ -48068,7 +48068,7 @@ function buildBudgetBuilderPage(): string {
 }
 
 function buildBadgesPage(): string {
-  const previewVendors = ["vercel", "supabase", "cloudflare", "neon", "railway", "sentry", "auth0", "stripe", "github", "netlify", "heroku", "render", "clerk", "postmark", "datadog"];
+  const previewVendors = ["vercel", "supabase", "cloudflare-workers", "neon", "railway", "sentry", "auth0", "stripe", "github", "netlify", "heroku", "render", "clerk", "postmark", "datadog"];
   const previewBadges = previewVendors
     .filter(slug => vendorSlugMap.has(slug))
     .map(slug => {
