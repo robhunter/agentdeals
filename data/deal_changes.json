@@ -1184,7 +1184,7 @@
       "vendor": "Google",
       "change_type": "pricing_restructured",
       "date": "2026-03-30",
-      "summary": "Google folded Developer Program Premium into Google AI Pro and AI Ultra for personal accounts. Annual Premium stopped auto-renewing on 2026-03-30 (monthly on 2026-06-30). AI Pro includes $10 a month and AI Ultra $100 a month in Google Cloud credits.",
+      "summary": "Standalone Google Developer Program Premium stopped renewing on personal (@gmail.com) accounts: annual plans after 2026-03-30, monthly plans after 2026-06-30. Google had moved its developer benefits into Google AI Pro and AI Ultra on 2026-01-27. Premium on Workspace accounts did not change.",
       "previous_state": "Developer Program Premium: $299 a year (a monthly option also existed) with a $500 annual Google Cloud credit, Skills Boost access and a certification voucher",
       "current_state": "Google AI Pro \"$19.99 / month\" with $10 a month in Cloud credits; Google AI Ultra \"$249.99 / month\" with $100 a month. 1:1 consultations, certification vouchers and unlimited Google Skills access are no longer included. Workspace Premium subscriptions are not changing.",
       "impact": "high",
