@@ -11,6 +11,7 @@ const {
   evaluate,
   gateFor,
   classifyTier,
+  timeLimitedTierRule,
   changesByVendor,
   seededShuffle,
   tieBreakSeed,
@@ -141,6 +142,23 @@ describe("tier classification", () => {
     assert.strictEqual(classifyTier("Free ($30/mo credits)").class, "time_limited");
     assert.strictEqual(classifyTier("Trial Key").class, "time_limited");
     assert.strictEqual(classifyTier("Experimental Preview").class, "time_limited");
+  });
+
+  it("names what a listing that runs out is, by the rule its tier matched", () => {
+    const labelled = (tier: string) => timeLimitedTierRule(tier)?.badgeLabel ?? null;
+    assert.strictEqual(labelled("Credits"), "credits only");
+    assert.strictEqual(labelled("Free Credits + Pay-as-you-go"), "credits only");
+    assert.strictEqual(labelled("Trial"), "trial only");
+    assert.strictEqual(labelled("Trial Key"), "trial only");
+    assert.strictEqual(labelled("Experimental Preview"), "preview only");
+    assert.strictEqual(labelled("Beta"), "preview only");
+    assert.strictEqual(labelled("Sandbox"), "preview only");
+    assert.strictEqual(labelled("Scholarship"), "award only");
+    assert.strictEqual(labelled("Free"), null);
+    assert.strictEqual(labelled("Paid"), null);
+    for (const tier of ["Credits", "Trial", "Beta", "Scholarship", "Free", "Paid"]) {
+      assert.strictEqual(labelled(tier) !== null, classifyTier(tier).class === "time_limited", `${tier} is labelled apart from its class`);
+    }
   });
 
   it("excludes tiers that are not a free offer at all", () => {
