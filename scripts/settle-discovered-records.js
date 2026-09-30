@@ -1,5 +1,5 @@
 import { appendFileSync, readFileSync, writeFileSync } from "node:fs";
-import { createArchiveClient, dayOurTextEntered, readerFor, settleAgainstCaptures } from "./archive-captures.js";
+import { createArchiveClient, dayOurTextEntered, pairedReaderFor, PAIRED_READER_MAX_TOKENS, settleAgainstCaptures } from "./archive-captures.js";
 import { createVerifierClient, fetchPageText } from "./verify-freshness.js";
 
 export const DEMOTION_WINDOW_DAYS = 180;
@@ -8,7 +8,6 @@ export const SPLIT = {
   recentVendorChange: "vendor change inside 180 days",
   olderVendorChange: "vendor change before that",
   ours: "our correction",
-  notReproduced: "difference not reproduced",
   noCapture: "no usable capture",
   textDayUnknown: "text day unknown",
   pageUnreadable: "page unreadable today",
@@ -36,7 +35,6 @@ function daysBefore(day, days) {
 
 export function splitOf(settled, today) {
   if (settled.outcome === "ours") return SPLIT.ours;
-  if (settled.outcome === "not_reproduced") return SPLIT.notReproduced;
   if (settled.outcome === "text_day_unknown") return SPLIT.textDayUnknown;
   if (settled.outcome === "page_unreadable_today") return SPLIT.pageUnreadable;
   if (settled.outcome === "reader_failed") return SPLIT.readerFailed;
@@ -66,7 +64,7 @@ async function settleOrSayTheReaderFailed(settle, readings) {
   }
 }
 
-export async function settleFirstReadings({ changes, offers, today, archive, readerForListing, fetchToday, textDayOf, limit = Infinity, vendors, includeResolved = false, logReads = false, onSettled = () => {} }) {
+export async function settleFirstReadings({ changes, offers, today, archive, pairReaderForListing, fetchToday, textDayOf, limit = Infinity, vendors, includeResolved = false, logReads = false, onSettled = () => {} }) {
   const backlog = firstReadingsInForce(changes, { includeResolved }).filter((record) => !vendors || vendors.includes(record.vendor)).slice(0, limit);
   const settleOne = async (record) => {
     const subject = { vendor: record.vendor, date: record.date, change_type: record.change_type, source_url: record.source_url, resolution: record.resolution?.state ?? null };
@@ -76,13 +74,12 @@ export async function settleFirstReadings({ changes, offers, today, archive, rea
       ? await settleOrSayTheReaderFailed(() => settleAgainstCaptures({
           url: record.source_url,
           finalUrl: page.finalUrl,
-          ourText: record.previous_state,
-          recordTerms: record.current_state,
           textDay: textDayOf(record.previous_state),
+          recordDay: record.date,
           todayText: page.text,
           today,
           archive,
-          read: readerForListing(listingFor(record, offers)),
+          readPair: pairReaderForListing(listingFor(record, offers)),
           onRead: (reading) => readings.push(reading),
         }), readings)
       : { outcome: "page_unreadable_today", why: page.error, reads: 0 };
@@ -107,7 +104,7 @@ async function main() {
   };
   const changes = JSON.parse(readFileSync("data/deal_changes.json", "utf-8")).changes;
   const offers = JSON.parse(readFileSync("data/index.json", "utf-8")).offers;
-  const client = createVerifierClient();
+  const client = createVerifierClient({ maxTokens: PAIRED_READER_MAX_TOKENS });
   const out = option("--out") ?? "settled-first-readings.json";
   const progress = out.replace(/\.json$/, "") + ".jsonl";
   writeFileSync(progress, "");
@@ -116,7 +113,7 @@ async function main() {
     offers,
     today: new Date().toISOString().slice(0, 10),
     archive: createArchiveClient(),
-    readerForListing: (listing) => readerFor(client, listing),
+    pairReaderForListing: (listing) => pairedReaderFor(client, listing),
     fetchToday: (url) => fetchPageText(url),
     textDayOf: (text) => dayOurTextEntered(text),
     limit: option("--limit") ? Number(option("--limit")) : Infinity,

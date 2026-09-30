@@ -211,12 +211,21 @@ describe("the character limit belongs to the verifier prompt alone", () => {
     });
   }
 
-  it("names the limit only where the prompt is built and where the old cut is measured", () => {
+  it("names the limit only where a prompt is built and where the old cut is measured", () => {
     const files = readdirSync(SCRIPTS).filter((f) => f.endsWith(".js"));
     const naming = files
       .filter((f) => readFileSync(path.join(SCRIPTS, f), "utf-8").includes("MAX_PAGE_TEXT_LENGTH"))
       .sort();
-    assert.deepStrictEqual(naming, ["verify-freshness.js", "whole-page-census.js"]);
+    assert.deepStrictEqual(naming, ["archive-captures.js", "verify-freshness.js", "whole-page-census.js"]);
+  });
+
+  it("applies the limit to the two pages of a paired reading only inside the function that builds its prompt", () => {
+    const source = readFileSync(path.join(SCRIPTS, "archive-captures.js"), "utf-8");
+    const from = source.indexOf("export function pairedPrompt");
+    const to = source.indexOf("\n}\n", from);
+    assert.ok(from !== -1 && to > from);
+    assert.match(source.slice(from, to), /maxLength = MAX_PAGE_TEXT_LENGTH/);
+    assert.strictEqual(source.split("MAX_PAGE_TEXT_LENGTH").length - 1, 2);
   });
 
   it("applies the limit inside the function that builds the prompt", () => {
