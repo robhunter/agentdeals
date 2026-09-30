@@ -22,6 +22,7 @@ const {
   staticHalfOf,
   subjectOfCardHeading,
   timelineRecordsFor,
+  labelNamesAProductOfItsVendor,
   vendorForSubject,
   vendorSlugForSubject,
 } = await import("../dist/compiled-figures.js");
@@ -242,6 +243,21 @@ describe("resolving the vendor a compiled figure is about", () => {
 
   it("names nothing for a subject that is not a vendor", () => {
     assert.strictEqual(vendorForSubject({ kind: "row", label: "Go Goroutines", linkedSlug: null }), null);
+  });
+});
+
+describe("a label naming one product of a vendor the catalogue holds as a whole", () => {
+  it("is a product of that vendor when the label is the vendor's name and more", () => {
+    assert.strictEqual(labelNamesAProductOfItsVendor({ kind: "row", label: "Acme Queues", linkedSlug: null }, "acme"), true);
+  });
+
+  it("is the vendor itself when the label is the vendor's name or a shorter form of it", () => {
+    assert.strictEqual(labelNamesAProductOfItsVendor({ kind: "row", label: "Acme", linkedSlug: null }, "acme"), false);
+    assert.strictEqual(labelNamesAProductOfItsVendor({ kind: "card", label: "Acme", linkedSlug: null }, "acme-cloud"), false);
+  });
+
+  it("leaves a row the page links to the vendor as the page links it", () => {
+    assert.strictEqual(labelNamesAProductOfItsVendor({ kind: "row", label: "Acme Queues", linkedSlug: "acme" }, "acme"), false);
   });
 });
 
@@ -642,6 +658,7 @@ describe("the nine compiled comparison pages against the site's own verdicts", (
       for (const slot of compiledFigureSlots(html)) {
         const vendorSlug = subjectSlug(slot);
         if (!vendorSlug || verdicts.get(vendorSlug) !== "ended") continue;
+        if (labelNamesAProductOfItsVendor(slot, vendorSlug)) continue;
         ended++;
         if (!slot.markup.includes("FREE REMOVED")) stating.push(`${slug}: ${slot.label}`);
         if (slot.kind === "card" && FREE_TIER_FIGURE.test(cardBody(html, slot.markup))) {
@@ -661,6 +678,7 @@ describe("the nine compiled comparison pages against the site's own verdicts", (
       for (const slot of compiledFigureSlots(html)) {
         const vendorSlug = subjectSlug(slot);
         if (!vendorSlug) continue;
+        if (labelNamesAProductOfItsVendor(slot, vendorSlug)) continue;
         const since = recordsSinceCompiled(changesForSlug(vendorSlug), COMPILED_ON[slug]!, TODAY);
         if (since.length === 0) continue;
         marked++;

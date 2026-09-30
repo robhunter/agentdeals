@@ -990,6 +990,14 @@ describe("the auth comparison states each service's terms as the vendor does", (
     assert.match(textOf(html), /Supabase[^.]*pause/i);
   });
 
+  it("gives Cognito's rows no badge from a record about another product", () => {
+    const rows = [...served.get(PAGE)!.matchAll(/<tr[^>]*>\s*<td[^>]*>(?:<a [^>]*>)?AWS Cognito[\s\S]*?<\/tr>/g)].map(([row]) => row);
+    assert.ok(rows.length >= 3, `found ${rows.length} Cognito rows`);
+    const borrowed = rows.flatMap((row) => [...row.matchAll(/title="([^"]*)"[^>]*>CHANGED /g)].map(([, title]) => title))
+      .filter((title) => !/for (?:AWS|Amazon) Cognito\b/.test(title));
+    assert.deepStrictEqual(borrowed, []);
+  });
+
   it("lists in its timeline only services the page tabulates", () => {
     const html = served.get(PAGE)!;
     const timeline = tableWithHeader(html, "Impact");
