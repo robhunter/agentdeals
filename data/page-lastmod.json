@@ -3081,11 +3081,11 @@
       "daily": true
     },
     "/free-ai-stack": {
-      "hash": "6f6119b5443da82f",
+      "hash": "155bdc1aac9f6a8f",
       "changed": "2026-09-30"
     },
     "/free-devops-stack": {
-      "hash": "75a66505cb689ab9",
+      "hash": "fdc6fc688e44655e",
       "changed": "2026-09-30"
     },
     "/free-django-stack": {
@@ -3097,11 +3097,11 @@
       "changed": "2026-09-30"
     },
     "/free-frontend-stack": {
-      "hash": "a7a419e567463d02",
+      "hash": "c162857f88248ee3",
       "changed": "2026-09-30"
     },
     "/free-go-stack": {
-      "hash": "a6e38e3ebbe07b62",
+      "hash": "5813a390e06e9887",
       "changed": "2026-09-30"
     },
     "/free-llm-apis": {
@@ -3470,8 +3470,8 @@
       "changed": "2026-09-28"
     },
     "/stacks/side-project": {
-      "hash": "074b48ec7d3499a2",
-      "changed": "2026-09-28"
+      "hash": "447961385244e54a",
+      "changed": "2026-09-30"
     },
     "/startup-credits": {
       "hash": "64cd30b83f873c9e",
@@ -5786,7 +5786,7 @@
       "changed": "2026-09-30"
     },
     "/vendor/gemini-cli": {
-      "hash": "b28a7bf2d37d55c2",
+      "hash": "3fda3cd2c7214994",
       "changed": "2026-09-30"
     },
     "/vendor/geoapify-com": {
