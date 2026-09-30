@@ -1313,15 +1313,15 @@
       "daily": true
     },
     "/ci-cd-alternatives": {
-      "hash": "dc81fa773b2bdef4",
+      "hash": "dced05267c9c1b9b",
       "changed": "2026-09-30"
     },
     "/ci-cd-pricing": {
-      "hash": "f52177a814670d49",
+      "hash": "da79c08b61f94133",
       "changed": "2026-09-30"
     },
     "/cicd-free-tier-comparison-2026": {
-      "hash": "8d07c8dd2af83bf9",
+      "hash": "aef73586be70d8fc",
       "changed": "2026-09-30"
     },
     "/circleci-vs-github-actions": {
@@ -3144,8 +3144,8 @@
       "changed": "2026-09-30"
     },
     "/github-actions-alternatives": {
-      "hash": "e6292d9500a9aecf",
-      "changed": "2026-09-28"
+      "hash": "0f05a0db67db87d6",
+      "changed": "2026-09-30"
     },
     "/github-actions-vs-gitlab-ci": {
       "hash": "223c957ea4449063",
