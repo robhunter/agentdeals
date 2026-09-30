@@ -45,7 +45,7 @@ import { withReviewByline } from "./page-byline.js";
 import { freshnessClaimFor, withFreshnessClaim } from "./page-freshness.js";
 import { UNGRADED_IMPACT_COLOR, changeImpactColor, changeImpactLabel, changeImpactWord, isChangeImpactLevel } from "./change-impact.js";
 import { COMPARED_SERVICES_PLACEHOLDER, appendToCompiledFigureSlots, fillComparedServicesCount, markCompiledFigures, recordsSinceCompiled, replaceTimelineRows, staticHalfOf, timelineRecordsFor, vendorForSubject, vendorSubjectsOnCompiledPage, type CompiledFigureSubject, type CompiledFigureVendor, type CompiledFigureVerdict, type CompiledPageRecord } from "./compiled-figures.js";
-import { CHECK_ESTABLISHES, CHECK_SCOPE_CLASS, NO_CATALOGUE_RECORD_SOURCE, citedSourcesListHtml, figureSourceLinkHtml, freeTierSourceOf, freeTierSourceWeMayCite, pageQuoteHtml, readClauseHtml, serviceSourceMarkerHtml, uncitedSourceTagHtml, withCitedSources, type CitedService, type FreeTierSource } from "./source-citation.js";
+import { CHECK_ESTABLISHES, CHECK_SCOPE_CLASS, NO_CATALOGUE_RECORD_SOURCE, citedSourcesListHtml, figureSourceLinkHtml, freeTierSourceOf, freeTierSourceWeMayCite, pageQuoteHtml, readClauseHtml, readSourceOf, serviceSourceMarkerHtml, uncitedSourceTagHtml, withCitedSources, type CitedService, type FreeTierSource } from "./source-citation.js";
 import { vendorHistorySentence } from "./vendor-history.js";
 import { guideBlurb } from "./guide-blurbs.js";
 import { HETZNER_APRIL_CHANGES, HETZNER_CLOUD_PLANS, HETZNER_PRICES_READ, HETZNER_PRICE_SOURCE, HETZNER_SINGAPORE_EXAMPLE, cheapestOrderableHetznerPlan, hetznerEntryPriceClause, unorderableHetznerPlans } from "./hetzner-pricing.js";
@@ -1458,8 +1458,9 @@ function termsCameFromClause(offer: Offer | null | undefined, source: FreeTierSo
 }
 
 function citedServiceFor(vendorName: string, slug: string | null, servedOn: string): CitedService {
-  const primary = vendorVerdictContext(vendorName, servedOn)?.primary;
-  const source = freeTierSourceOf(primary);
+  const context = vendorVerdictContext(vendorName, servedOn);
+  const primary = context?.primary;
+  const source = freeTierSourceOf(primary, context ? { changes: context.vendorChanges, servedOn } : null);
   return { vendor: vendorName, slug, source, termsCameFrom: termsCameFromClause(primary, source) };
 }
 
@@ -5293,11 +5294,11 @@ function buildVendorPage(slug: string): string | null {
   })();
 
   const freeTierSourceLine = (() => {
-    const source = freeTierSourceWeMayCite(primary, reasonWeCannotConfirmFor(primary));
+    const source = freeTierSourceWeMayCite(primary, reasonWeCannotConfirmFor(primary), { changes: vendorChanges, servedOn });
     if (!source.cited) return "";
     const read = readClauseHtml(
       source.readOn,
-      [{ url: source.url, finding: source.finding }],
+      [readSourceOf(source)],
       escHtmlServer,
       { dateClass: SOURCE_READ_DATE_CLASS },
     );
