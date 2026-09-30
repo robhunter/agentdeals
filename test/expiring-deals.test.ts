@@ -1,6 +1,8 @@
-import { describe, it, afterEach } from "node:test";
+import { describe, it, afterEach, before, after } from "node:test";
 import assert from "node:assert";
 import { spawn, type ChildProcess } from "node:child_process";
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -162,4 +164,58 @@ describe("get_expiring_deals REST endpoint", () => {
       assert.ok(deal.days_until_expiry <= 30, `Deal ${deal.vendor} should expire within 30 days`);
     }
   });
+});
+
+describe("/api/expiring cites the expiring page whatever the window holds", () => {
+  const DAY_MS = 24 * 60 * 60 * 1000;
+  const dateIn = (days: number) => new Date(Date.now() + days * DAY_MS).toISOString().slice(0, 10);
+  let scratch = "";
+  let serverPort = 0;
+  let proc: ChildProcess | null = null;
+
+  before(async () => {
+    const catalogue = JSON.parse(readFileSync(path.join(__dirname, "..", "data", "index.json"), "utf-8"));
+    for (const offer of catalogue.offers) delete offer.expires_date;
+    const subjects: { expires_date?: string }[] = [];
+    const seen = new Set<string>();
+    for (const offer of catalogue.offers) {
+      if (subjects.length === 3) break;
+      if (seen.has(offer.vendor)) continue;
+      seen.add(offer.vendor);
+      subjects.push(offer);
+    }
+    subjects[0].expires_date = dateIn(3);
+    subjects[1].expires_date = dateIn(8);
+    subjects[2].expires_date = dateIn(8);
+    scratch = mkdtempSync(path.join(tmpdir(), "expiring-citation-"));
+    writeFileSync(path.join(scratch, "index.json"), JSON.stringify(catalogue));
+    proc = await new Promise<ChildProcess>((resolve, reject) => {
+      const p = spawn("node", [path.join(__dirname, "..", "dist", "serve.js")], {
+        stdio: ["pipe", "pipe", "pipe"],
+        env: { ...process.env, PORT: "0", AGENTDEALS_INDEX_PATH: path.join(scratch, "index.json") },
+      });
+      const timeout = setTimeout(() => { p.kill(); reject(new Error("Server startup timeout")); }, 60000);
+      p.stderr!.on("data", (data: Buffer) => {
+        const match = data.toString().match(/running on http:\/\/localhost:(\d+)/);
+        if (match) { serverPort = parseInt(match[1], 10); clearTimeout(timeout); resolve(p); }
+      });
+      p.on("error", (err) => { clearTimeout(timeout); reject(err); });
+    });
+  });
+
+  after(() => {
+    proc?.kill();
+    if (scratch) rmSync(scratch, { recursive: true, force: true });
+  });
+
+  for (const [withinDays, holds] of [[1, 0], [5, 1], [20, 3]] as const) {
+    it(`cites /expiring when the window holds ${holds} record${holds === 1 ? "" : "s"}`, async () => {
+      const body = await fetch(`http://localhost:${serverPort}/api/expiring?within_days=${withinDays}`).then((r) => r.json()) as {
+        total: number;
+        _provenance: { url: string; cite_as: string };
+      };
+      assert.strictEqual(body.total, holds);
+      assert.strictEqual(new URL(body._provenance.url).pathname, "/expiring", body._provenance.cite_as);
+    });
+  }
 });

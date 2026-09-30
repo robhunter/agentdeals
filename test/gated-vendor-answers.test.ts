@@ -13,6 +13,7 @@ const { offerEnded, offerRetired } = await import("../dist/retirement.js");
 const { STORED_TERMS_WITHHELD_PHRASE, supersedingChange } = await import("../dist/superseded-description.js");
 const { qualityBudget } = await import("../dist/page-reviews.js");
 const { descriptionDeniesAFreeTier } = await import("../dist/free-tier-record.js");
+const { unreachableNoticeForUrl } = await import("../dist/link-health.js");
 
 type Offer = import("../src/types.ts").Offer;
 type DealChange = import("../src/types.ts").DealChange;
@@ -323,6 +324,7 @@ describe("the ungated pages keep the answer they had", () => {
     const plainlyFree = publishingItsTerms().filter(
       p => p.primary.source_check?.outcome === "ok"
         && !p.termsWithheld
+        && unreachableNoticeForUrl(p.primary.url) === null
         && p.primary.tier.toLowerCase() !== "none"
         && !p.primary.description.toLowerCase().includes("no free tier"),
     );

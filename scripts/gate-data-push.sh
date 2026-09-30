@@ -168,11 +168,11 @@ quarantine() {
   local ref="${QUARANTINE_PREFIX}-$(date -u +%Y%m%dT%H%M%SZ)-${shown}"
   {
     echo "quarantined=true"
-    echo "quarantine_ref=$ref"
     echo "quarantined_commit=$shown"
     echo "quarantine_reason=$why"
   } >>"$OUTPUT"
   if git push origin "$refused:refs/heads/$ref"; then
+    echo "quarantine_ref=$ref" >>"$OUTPUT"
     echo "Held back because $why — $shown is on $ref and main is unchanged."
   else
     echo "Held back because $why — $shown could not be pushed to $ref and main is unchanged. This run's data exists only in its own workspace."

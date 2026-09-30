@@ -595,6 +595,24 @@ describe("#1317 the gate, run against a repository", () => {
     assert.match(run.outputs, new RegExp(`quarantine_ref=${refs[0]}`));
   });
 
+  it("names no quarantine ref when the refused commit could not be pushed to one", () => {
+    const { work, origin } = fixtureRepo();
+    writeFileSync(
+      join(origin, "hooks", "pre-receive"),
+      "#!/usr/bin/env bash\nwhile read -r _old _new ref; do\n  case \"$ref\" in refs/heads/data-quarantine/*) exit 1 ;; esac\ndone\nexit 0\n",
+      { mode: 0o755 },
+    );
+    writeFileSync(join(work, "data", "health.json"), '{"checked":2}\n');
+
+    const run = runGate(work, "red", "data-quarantine/fixture", "data(auto): fixture", "data/health.json");
+
+    assert.strictEqual(run.status, 1, `the gate let a red suite through: ${run.stdout}${run.stderr}`);
+    assert.deepStrictEqual(quarantineRefs(origin, "data-quarantine/fixture"), [], "the fixture's origin accepted the quarantine push it should refuse");
+    assert.match(run.stdout, /could not be pushed/);
+    assert.match(run.outputs, /quarantined=true/);
+    assert.doesNotMatch(run.outputs, /quarantine_ref=/, "the outputs name a ref that holds nothing, so the alarm links to a branch that does not exist");
+  });
+
   it("pushes a data change the suite accepts", () => {
     const { work, origin } = fixtureRepo();
     const before = mainSha(origin);
@@ -2115,6 +2133,18 @@ describe("#1764 a refusal alarm belongs to one job, and the job that reaches mai
       t.open().map((issue) => issue.number),
       [1, 2],
     );
+  });
+
+  it("links the ref holding the refused commit, and links none when the gate could not push one", () => {
+    const held = tracker();
+    held.report(ROTATION, "refused", "data-quarantine/fixture-20260930T000000Z-abc1234");
+    assert.match(held.open()[0]!.body, /is held on \[`data-quarantine\/fixture-20260930T000000Z-abc1234`\]/);
+
+    const unpushed = tracker();
+    unpushed.report(ROTATION, "refused", "");
+    const body = unpushed.open()[0]!.body;
+    assert.match(body, /could not be pushed anywhere/);
+    assert.doesNotMatch(body, /is held on|\/tree\//);
   });
 
   it("names the job in the title, which is the only part of an alarm a list of issues shows", () => {

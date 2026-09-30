@@ -13,6 +13,7 @@ const { loadDealChanges, refusalsForVendor, gateForOffer } = await import("../di
 const { badgeWithholding, withholdsTheTerms } = await import("../dist/vendor-verdict.js");
 const { supersedingChange } = await import("../dist/superseded-description.js");
 const { vendorVerdictContextFrom } = await import("../dist/vendor-verdict-input.js");
+const { unreachableNoticeForUrl } = await import("../dist/link-health.js");
 
 type Offer = import("../src/types.ts").Offer;
 
@@ -265,6 +266,7 @@ describe("a record that is not retired keeps everything the gate would take away
       p => !offerRetired(p.offer) && !p.offer.eligibility && p.offer.source_check?.outcome === "ok"
         && !gateForOffer(p.offer, utcDate())
         && !termsWithheldFor(p.offer.vendor)
+        && unreachableNoticeForUrl(p.offer.url) === null
         && supersedingChange(p.offer, changesFor(p.offer.vendor)) === null
         && p.offer.tier.toLowerCase() !== "none"
         && !p.offer.description.toLowerCase().includes("no free tier"),
