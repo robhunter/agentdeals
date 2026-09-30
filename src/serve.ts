@@ -35141,6 +35141,8 @@ interface ComparisonPageMeta {
   relatedSlugs: string[];
   whatTheTableGives?: string;
   costSectionName?: string;
+  comparisonBasis?: string;
+  limitsAnswer?: string;
 }
 
 const comparisonPagesMeta: ComparisonPageMeta[] = [
@@ -35148,7 +35150,7 @@ const comparisonPagesMeta: ComparisonPageMeta[] = [
   { slug: "database-free-tier-comparison-2026", subject: "Databases", questionNoun: "database", catalogueCategory: "Databases", shortName: "Database", relatedSlugs: ["serverless-free-tier-comparison-2026", "storage-comparison-2026", "auth-comparison-2026"] },
   { slug: "cicd-free-tier-comparison-2026", subject: "CI/CD", questionNoun: "CI/CD", catalogueCategory: "CI/CD", shortName: "CI/CD", costSectionName: "Hidden Costs and Gotchas", relatedSlugs: ["testing-free-tier-comparison-2026", "security-free-tier-comparison-2026", "hosting-free-tier-comparison-2026"] },
   { slug: "serverless-free-tier-comparison-2026", subject: "Serverless", questionNoun: "serverless", catalogueCategory: null, shortName: "Serverless", relatedSlugs: ["cloud-free-tier-comparison-2026", "hosting-free-tier-comparison-2026", "database-free-tier-comparison-2026"] },
-  { slug: "auth-comparison-2026", subject: "Auth", questionNoun: "auth", catalogueCategory: "Auth", shortName: "Auth & Identity", relatedSlugs: ["security-free-tier-comparison-2026", "database-free-tier-comparison-2026", "monitoring-comparison-2026"] },
+  { slug: "auth-comparison-2026", subject: "Auth", questionNoun: "auth", catalogueCategory: "Auth", shortName: "Auth & Identity", comparisonBasis: "This page compares them on free tier limits and what each charges past them; the tables above carry the figures side by side.", limitsAnswer: "The free tiers cap monthly users (Auth0, Kinde, PropelAuth, Stytch, Descope, WorkOS, Supabase, Appwrite, Cognito) or retained users (Clerk), and some also cap SSO connections or M2M tokens. The growth-cost table shows what most of them charge past their free tier.", relatedSlugs: ["security-free-tier-comparison-2026", "database-free-tier-comparison-2026", "monitoring-comparison-2026"] },
   { slug: "email-comparison-2026", subject: "Email", questionNoun: "email", catalogueCategory: "Email", shortName: "Email", relatedSlugs: ["monitoring-comparison-2026", "analytics-free-tier-comparison-2026", "api-development-free-tier-comparison-2026"] },
   { slug: "monitoring-comparison-2026", subject: "Monitoring", questionNoun: "monitoring", catalogueCategory: "Monitoring", shortName: "Monitoring", relatedSlugs: ["security-free-tier-comparison-2026", "hosting-free-tier-comparison-2026", "analytics-free-tier-comparison-2026"] },
   { slug: "storage-comparison-2026", subject: "Storage", questionNoun: "storage", catalogueCategory: "Storage", shortName: "Storage & CDN", relatedSlugs: ["cloud-free-tier-comparison-2026", "hosting-free-tier-comparison-2026", "database-free-tier-comparison-2026"] },
@@ -35207,7 +35209,7 @@ export function comparisonFaqItems(slug: string, forJsonLd = false): FaqItem[] {
     noun: `${meta.catalogueCategory ?? catName} services in our catalogue`,
     size: catOffers.length,
     whereToLook: "each with the free tier terms",
-    basis: "This page compares them on free tier limits, what each charges past them, and lock-in risk; the table above carries the figures side by side.",
+    basis: meta.comparisonBasis ?? "This page compares them on free tier limits, what each charges past them, and lock-in risk; the table above carries the figures side by side.",
   });
 
   const noun = meta.questionNoun;
@@ -35222,7 +35224,7 @@ export function comparisonFaqItems(slug: string, forJsonLd = false): FaqItem[] {
     },
     {
       q: `How do ${noun} free tiers compare on limits?`,
-      a: `Each provider structures free tier limits differently — some cap storage, others cap requests or compute hours. ${meta.whatTheTableGives ?? "Our comparison table provides exact numbers for each provider."} ${meta.costSectionName ? `See ${meta.costSectionName} for what you pay past the free limits.` : "Check the growth cost analysis section to understand what you'll pay when you exceed free tier limits."}`,
+      a: meta.limitsAnswer ?? `Each provider structures free tier limits differently — some cap storage, others cap requests or compute hours. ${meta.whatTheTableGives ?? "Our comparison table provides exact numbers for each provider."} ${meta.costSectionName ? `See ${meta.costSectionName} for what you pay past the free limits.` : "Check the growth cost analysis section to understand what you'll pay when you exceed free tier limits."}`,
     },
   ];
 }
