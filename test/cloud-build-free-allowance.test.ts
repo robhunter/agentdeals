@@ -26,13 +26,12 @@ const STATED: Record<string, string[]> = {
     "Google Cloud Build offers 2,500 build-minutes a month on e2-standard-2 machines for free.",
     "Google Cloud Build's 2,500 min/month",
     "(2,500 min/month free)",
-    "The counter-trend: Buildkite continues to offer unlimited free self-hosted agents.",
   ],
   "/hosting-pricing": ["2,500/mo (Cloud Build)"],
   "/cicd-free-tier-comparison-2026": [
     "2,500 min/mo (e2-standard-2)",
     "2,500 build-min/mo (e2-standard-2)",
-    "gives 2,500 min/month but",
+    "Google Cloud Build gives 2,500 build-minutes a month per billing account.",
   ],
 };
 
