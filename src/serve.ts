@@ -7335,7 +7335,7 @@ const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
       </tr>
       <tr>
         <td style="font-weight:600"><a href="/vendor/ory" style="color:var(--text)">Ory</a></td>
-        <td>25K (cloud)</td>
+        <td>Self-hosted; cloud Developer plan has no production use</td>
         <td>Yes</td>
         <td>Yes</td>
         <td>Yes (Apache 2.0)</td>
@@ -18361,7 +18361,7 @@ function buildFreeSaasStackPage(): string {
       icon: "\u{1F510}",
       recommended: { vendor: "Clerk", why: "50,000 monthly retained users free \u2014 the most generous managed auth for SaaS. Drop-in React/Next.js components for login, signup, user profile, and organization management. Social login, MFA, and RBAC included. Organizations feature (multi-tenant SaaS) available on free tier. Webhooks for syncing user data to your database." },
       alternatives: ["Auth0", "Supabase", "Kinde"],
-      outgrow: "When you exceed 50K retained users. Auth0 offers 25,000 MAU with enterprise features (M2M tokens, SSO). Kinde gives 10,500 MAU with feature flags bundled. Supabase Auth provides 50,000 MAU if you're already using Supabase for your database. At 100K users: Clerk ~$175/mo, Supabase ~$25/mo (cheapest at scale).",
+      outgrow: "When you exceed 50K retained users. Auth0 offers 25,000 MAU with enterprise features (M2M tokens, SSO). Kinde gives 10,500 MAU with feature flags bundled. Supabase Auth provides 50,000 MAU if you're already using Supabase for your database. At 100,000 users: Clerk costs $1,025 a month; Supabase costs $25 a month on Pro.",
       whyNot: "Why not Firebase Auth: email and social sign-in are free, but SMS needs the pay-as-you-go Blaze plan, and MFA, SAML and multi-tenancy need the Identity Platform upgrade. Supabase Auth is a better \u00e0 la carte option. Why not rolling your own: Auth is the #1 source of security vulnerabilities in SaaS. Password reset, email verification, rate limiting, session management, CSRF \u2014 auth providers handle all of this. Only roll your own if you have dedicated security expertise.",
       relatedPage: "/auth-comparison-2026",
       isFrameworkSection: false,
@@ -45154,7 +45154,7 @@ ${globalNavCss()}
 
   <h3>Auth: The Growth Tax</h3>
   <div class="callout callout-warn">
-    At 100K MAU, <strong>Clerk costs ~$1,800/mo</strong> while <strong>Supabase Auth costs ~$162/mo</strong> &mdash; an 11x difference. WorkOS AuthKit is free up to 1M MAU for authentication.
+    At 100,000 users, Clerk costs $1,025 a month and Supabase $25 a month on Pro. WorkOS AuthKit is free up to 1M MAU for authentication.
     <span style="display:block;margin-top:.5rem;font-size:.85rem"><a href="/auth-comparison-2026">Full auth comparison &rarr;</a></span>
   </div>
 
