@@ -31038,7 +31038,7 @@ function buildHostingPricingPage(): string {
       slug: "render",
       category: "traditional-paas",
       freeTier: "Free web services",
-      paidFrom: "$7/mo (Individual)",
+      paidFrom: "$7/mo (Starter instance)",
       freeBandwidth: "5 GB (then $0.15/GB)",
       freeBuildMinutes: "750 hrs/mo",
       freeCompute: "Less than 1 CPU, 512 MB RAM (spins down)",
@@ -31061,7 +31061,7 @@ function buildHostingPricingPage(): string {
       freeType: "removed",
       monthlyCostSolo: "Usage-based",
       monthlyCostTeam: "$29/mo (Scale) + usage",
-      hiddenCosts: "No free tier for new accounts — pay-as-you-go from day one. Legacy free allowances only for pre-Oct-2024 accounts on deprecated plans. Volume snapshots billed at $0.08/GB-month (first 10 GB free). Credit card required.",
+      hiddenCosts: "No free plan for new accounts: a trial of 2 machine hours or 7 days, whichever comes first, then pay-as-you-go. Legacy free allowances only for pre-Oct-2024 accounts on deprecated plans. Volume snapshots billed at $0.08/GB-month (first 10 GB free).",
     },
     {
       name: "Koyeb",
@@ -31337,7 +31337,7 @@ function buildHostingPricingPage(): string {
     { q: "Is Heroku still worth it without a free tier?", a: "Heroku removed its free tier in November 2022. The cheapest option is now Eco dynos at $5/month (shared compute, sleeps after 30 min). For most use cases, Railway ($5/mo with $5 credit), Render (free tier with spin-down), or Fly.io provide better value." },
     { q: "What are the hidden costs of Vercel?", a: "New Pro projects default to Turbo build machines at $0.126/min — 9x the cost of Standard builds ($0.014/min). The Pro plan moved to a credit-based model ($20/mo credit pool) in January 2026. Image Optimization has separate quotas. The Hobby plan is restricted to personal, non-commercial use." },
     { q: "Which PaaS is best for side projects?", a: "For static sites: Cloudflare Pages (unlimited free bandwidth) or GitHub Pages. For full-stack: Railway ($5 trial credit for 30 days, no card required), Render (free tier with 15-min spin-down), or Vercel Hobby. For serverless APIs: Cloudflare Workers (100K req/day free) or Deno Deploy (1M req/month)." },
-    { q: "Which hosting platform is best for production apps?", a: "Vercel for Next.js/React apps ($20/seat). Railway for general-purpose apps ($5/mo hobby, $20/seat team). Google Cloud Run for container workloads with auto-scaling. Fly.io for latency-sensitive apps needing multi-region deployment." },
+    { q: "Which hosting platform is best for production apps?", a: "Vercel for Next.js/React apps ($20/seat). Railway for general-purpose apps ($5/mo Hobby; Pro is a $20 monthly minimum with unlimited seats). Google Cloud Run for container workloads with auto-scaling. Fly.io for latency-sensitive apps needing multi-region deployment." },
   ];
 
   const jsonLd = {
@@ -31594,7 +31594,7 @@ function buildHostingPricingPage(): string {
     '  </div>\n' +
     '    <div class="hidden-cost-card">\n' +
     '    <h4>Render Free Tier Spin-Down</h4>\n' +
-    '    <p>Free web services on Render spin down after 15 minutes without traffic and take about one minute to spin back up. Not viable for APIs that need to respond quickly. The workaround costs $7/month (Individual plan, always-on).</p>\n' +
+    '    <p>Free web services on Render spin down after 15 minutes without traffic and take about one minute to spin back up. Not viable for APIs that need to respond quickly. The workaround costs $7/month (Starter instance, always-on).</p>\n' +
     '  </div>\n' +
     '  <div class="hidden-cost-card">\n' +
     '    <h4>Railway Credit Exhaustion</h4>\n' +
@@ -31637,12 +31637,12 @@ function buildHostingPricingPage(): string {
     '\n' +
     '    <div class="verdict-item">\n' +
     '      <strong>Best for side projects</strong>\n' +
-    '      <p><a href="/vendor/cloudflare-pages">Cloudflare Pages</a> for static/JAMstack (unlimited free bandwidth). <a href="/vendor/railway">Railway</a> for full-stack apps ($5 trial credit for 30 days, no credit card). <a href="/vendor/vercel">Vercel Hobby</a> for Next.js (100 GB bandwidth, 6K build min).</p>\n' +
+    '      <p><a href="/vendor/cloudflare-pages">Cloudflare Pages</a> for static/JAMstack (unlimited free bandwidth). <a href="/vendor/railway">Railway</a> for full-stack apps ($5 trial credit for 30 days, no credit card). <a href="/vendor/vercel">Vercel Hobby</a> for Next.js (100 GB of Fast Data Transfer, builds included; non-commercial use only).</p>\n' +
     '    </div>\n' +
     '\n' +
     '    <div class="verdict-item">\n' +
     '      <strong>Best for production apps</strong>\n' +
-    '      <p><a href="/vendor/vercel">Vercel Pro</a> ($20/seat) for frontend/Next.js. <a href="/vendor/railway">Railway</a> ($20/seat) for general-purpose backends. <a href="/vendor/google-cloud-run">Google Cloud Run</a> for container workloads with auto-scale-to-zero and generous always-free tier.</p>\n' +
+    '      <p><a href="/vendor/vercel">Vercel Pro</a> ($20/seat) for frontend/Next.js. <a href="/vendor/railway">Railway Pro</a> ($20 monthly minimum, unlimited seats) for general-purpose backends. <a href="/vendor/google-cloud-run">Google Cloud Run</a> for container workloads with auto-scale-to-zero and generous always-free tier.</p>\n' +
     '    </div>\n' +
     '\n' +
     '    <div class="verdict-item">\n' +

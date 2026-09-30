@@ -158,22 +158,37 @@ const WITHDRAWN_NEAR_A_HOST: string[] = [
   "Free Postgres DB",
   "No cold start penalty for lightweight images",
   "gold standard for Next.js",
-  "Next.js adapter is the best free alternative"
+  "Next.js adapter is the best free alternative",
+  "$20/seat team",
+  "Railway ($20/seat)",
+  "6K build min",
+  "pay-as-you-go from day one",
+  "(Individual)",
+  "Individual plan"
 ];
 
 const RENDER_HIDDEN_COSTS = "Free web services spin down after 15 minutes without traffic and take about one minute to spin back up. Free Postgres expires after 30 days.";
+const FLY_HIDDEN_COSTS = "No free plan for new accounts: a trial of 2 machine hours or 7 days, whichever comes first, then pay-as-you-go.";
 const HIDDEN_COST_CHARACTERS_SHOWN = 80;
+const RAILWAY_FOR_GENERAL_PURPOSE_APPS = "Railway for general-purpose apps ($5/mo Hobby; Pro is a $20 monthly minimum with unlimited seats).";
 
 const STATED_ON_OTHER_PAGES: Record<string, string[]> = {
   "/hosting-pricing": [
     "$20/mo minimum (Pro, unlimited seats)",
     "$25/mo flat (Pro) + usage",
     RENDER_HIDDEN_COSTS.slice(0, HIDDEN_COST_CHARACTERS_SHOWN).trim(),
+    FLY_HIDDEN_COSTS.slice(0, HIDDEN_COST_CHARACTERS_SHOWN).trim(),
     "New accounts get a trial of 2 machine hours or 7 days, whichever comes first, before adding a payment method; apps stop at the end of the trial unless one is added.",
     "$20/mo (Pro)",
     "$20/mo flat (Pro, no seat fees)",
     "Runs in 2 regions. Cold starts complete within 100 ms for a hello-world app.",
-    "Railway Pro ($20 monthly minimum) and Render Pro ($25 a month flat) include unlimited team members. Google Cloud Run has no per-seat pricing"
+    "Railway Pro ($20 monthly minimum) and Render Pro ($25 a month flat) include unlimited team members. Google Cloud Run has no per-seat pricing",
+    RAILWAY_FOR_GENERAL_PURPOSE_APPS,
+    "Railway Pro ($20 monthly minimum, unlimited seats) for general-purpose backends.",
+    "Vercel Hobby for Next.js (100 GB of Fast Data Transfer, builds included; non-commercial use only).",
+    "Vercel Pro ($20/seat) for frontend/Next.js.",
+    "$7/mo (Starter instance)",
+    "The workaround costs $7/month (Starter instance, always-on)."
   ],
   "/vercel-alternatives": [
     "None for new users",
@@ -228,6 +243,24 @@ function tableAfter(html: string, heading: string): string {
   assert.ok(at >= 0, `the page has a section headed ${heading}`);
   const start = html.indexOf("<table", at);
   return html.slice(start, html.indexOf("</table>", start));
+}
+
+function faqAnswersOf(html: string): string[] {
+  return [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/gi)]
+    .flatMap(([, raw]) => {
+      try {
+        return [JSON.parse(raw)];
+      } catch {
+        return [];
+      }
+    })
+    .flatMap((entry) => (Array.isArray(entry) ? entry : [entry]))
+    .filter((entry) => entry?.["@type"] === "FAQPage")
+    .flatMap((entry) => (entry.mainEntity ?? []).map((q: { acceptedAnswer?: { text?: string } }) => q.acceptedAnswer?.text ?? ""));
+}
+
+function metaContentsOf(html: string): string[] {
+  return [...html.matchAll(/<meta\s[^>]*content="([^"]*)"/g)].map(([, content]) => decode(content));
 }
 
 async function routesIn(sitemap: string): Promise<string[]> {
@@ -320,6 +353,12 @@ describe("the hosting free tier comparison states each host's terms as the host 
       sentences.filter((sentence) => !textOf(served.get(route)!).includes(sentence)).map((sentence) => `${route}: ${sentence}`));
     assert.deepStrictEqual(missing, []);
     assert.deepStrictEqual(PAGES_GIVING_RENDERS_SPIN_UP.filter((route) => !/about one minute/.test(textOf(served.get(route)!))), []);
+  });
+
+  it("gives /hosting-pricing's structured data Railway's minimum and its meta none of the withdrawn claims", () => {
+    const html = served.get("/hosting-pricing")!;
+    assert.ok(faqAnswersOf(html).some((answer) => answer.includes(RAILWAY_FOR_GENERAL_PURPOSE_APPS)));
+    assert.deepStrictEqual(metaContentsOf(html).filter((content) => WITHDRAWN_NEAR_A_HOST.some((claim) => content.includes(claim))), []);
   });
 
   it("keeps Cloudflare Pages' builds, Vercel's transfer and Heroku's removed badge", () => {
