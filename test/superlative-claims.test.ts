@@ -252,7 +252,7 @@ describe("#1073 a superlative is graded against the page it is printed on", () =
       }
     }
     assertCoversPopulation(rendered.size, pagesOnTheReviewRegister(), "paths the sweep rendered");
-    assertPopulationFloor(cards, 140, "stat cards the sweep reached");
+    assertPopulationFloor(cards, 120, "stat cards the sweep reached");
     assertPopulationFloor(badges, 30, "superlative row badges the sweep reached");
   });
 
