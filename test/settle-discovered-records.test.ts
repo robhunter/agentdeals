@@ -48,15 +48,30 @@ describe("the split posted on the issue", () => {
     assert.strictEqual(splitOf(settled, TODAY), SPLIT.recentVendorChange);
   });
 
-  it("names our own difference, a difference today's page does not show, a missing capture, an unknown text day and an unreadable page apart", () => {
+  it("names our own difference, a missing capture, an unknown text day, an unreadable page and a failed reader apart", () => {
     assert.strictEqual(splitOf({ outcome: "ours" }, TODAY), SPLIT.ours);
-    assert.strictEqual(splitOf({ outcome: "not_reproduced" }, TODAY), SPLIT.notReproduced);
     assert.strictEqual(splitOf({ outcome: "no_usable_capture" }, TODAY), SPLIT.noCapture);
     assert.strictEqual(splitOf({ outcome: "text_day_unknown" }, TODAY), SPLIT.textDayUnknown);
     assert.strictEqual(splitOf({ outcome: "page_unreadable_today" }, TODAY), SPLIT.pageUnreadable);
     assert.strictEqual(splitOf({ outcome: "reader_failed" }, TODAY), SPLIT.readerFailed);
   });
 });
+
+type Page = { text: string };
+
+function termsOf(page: Page) {
+  return page.text.match(/TERMS=(\w+)/)?.[1];
+}
+
+function termsPairReader() {
+  return async (older: Page, newer: Page) => {
+    const was = termsOf(older);
+    const now = termsOf(newer);
+    if (!was || !now) return { status: "unquotable", side: "both", why: "no terms on the page" };
+    const quoted = { old_terms: [`TERMS=${was}`], new_terms: [`TERMS=${now}`] };
+    return was === now ? { status: "same", ...quoted } : { status: "differ", ...quoted, differences: [{ old: `TERMS=${was}`, new: `TERMS=${now}` }] };
+  };
+}
 
 describe("settling the backlog", () => {
   it("reads each record's own page with the listing it names, and tallies the split", async () => {
@@ -86,13 +101,9 @@ describe("settling the backlog", () => {
       }),
     };
     const listings: string[] = [];
-    const readerForListing = (listing: { vendor: string; tier: string }) => {
+    const pairReaderForListing = (listing: { vendor: string; tier: string }) => {
       listings.push(`${listing.vendor}/${listing.tier}`);
-      return async (stored: string, text: string) => {
-        const found = text.match(/TERMS=(\w+)/);
-        if (!found) return { status: "unclear" };
-        return found[1] === stored ? { status: "confirmed" } : { status: "changed", current_state: found[1] };
-      };
+      return termsPairReader();
     };
     const settledInTurn: string[] = [];
     const report = await settleFirstReadings({
@@ -100,7 +111,7 @@ describe("settling the backlog", () => {
       offers,
       today: "2026-09-28",
       archive,
-      readerForListing,
+      pairReaderForListing,
       fetchToday: async (url: string) => (url.includes("gamma") ? { ok: false, error: "HTTP 403" } : { ok: true, text: "TERMS=B" }),
       textDayOf: () => "2026-02-10",
       onSettled: (result: { vendor: string; split: string }) => settledInTurn.push(`${result.vendor} ${result.split}`),
@@ -111,7 +122,8 @@ describe("settling the backlog", () => {
       "Beta ours",
       "Gamma page_unreadable_today",
     ]);
-    assert.deepStrictEqual(report.results[0].brackets, [{ last_old: "2026-05-01", first_new: "2026-05-02", narrowed_to_adjacent_captures: true }]);
+    assert.deepStrictEqual(report.results[0].brackets, [{ last_old: "2026-05-01", first_new: "2026-05-02", narrowed_to_adjacent_captures: true, relative_to_record: "before" }]);
+    assert.strictEqual(report.results[0].record_day, "2026-09-01");
     assert.deepStrictEqual(listings, ["Alpha/Hobby", "Beta/Free"]);
     assert.deepStrictEqual(asked, ["https://alpha.example/pricing", "https://beta.example/pricing"]);
     assert.strictEqual(report.records, 3);
@@ -140,14 +152,13 @@ describe("records the Archive did not answer", () => {
       },
       captureHtml: async () => ({ html: `<html><body><p>TERMS=B</p><p>${"Plans and limits. ".repeat(40)}</p></body></html>` }),
     };
-    const reader = () => async (stored: string, text: string) => (text.includes(`TERMS=${stored}`) ? { status: "confirmed" } : { status: "changed", current_state: text.match(/TERMS=(\w+)/)![1] });
     const settledInTurn: string[] = [];
     const report = await settleFirstReadings({
       changes,
       offers: [],
       today: "2026-09-28",
       archive,
-      readerForListing: reader,
+      pairReaderForListing: termsPairReader,
       fetchToday: async () => ({ ok: true, text: "TERMS=B" }),
       textDayOf: () => "2026-02-10",
       onSettled: (result: { vendor: string; outcome: string }) => settledInTurn.push(`${result.vendor} ${result.outcome}`),
@@ -172,7 +183,7 @@ describe("checking the method on records whose outcome is already known", () => 
       offers: [],
       today: "2026-09-28",
       archive: { captures: async () => ({ captures: [] }), captureHtml: async () => ({ unavailable: "unused" }) },
-      readerForListing: () => async () => ({ status: "unclear" }),
+      pairReaderForListing: () => async () => ({ status: "unquotable", side: "both", why: "no terms on the page" }),
       fetchToday: async () => ({ ok: true, text: "TERMS=B" }),
       textDayOf: () => "2026-02-10",
       vendors: ["Alpha"],
@@ -194,7 +205,7 @@ describe("the readings behind each outcome", () => {
           captures: async (url: string) => ({ captures: [{ timestamp: "20260205120000", original: url, statuscode: "200", mimetype: "text/html" }] }),
           captureHtml: async () => ({ html: `<html><body><p>TERMS=B</p><p>${"Plans and limits. ".repeat(40)}</p></body></html>` }),
         },
-        readerForListing: () => async (stored: string, text: string) => (text.includes(`TERMS=${stored}`) ? { status: "confirmed" } : { status: "changed", current_state: text.match(/TERMS=(\w+)/)![1] }),
+        pairReaderForListing: termsPairReader,
         fetchToday: async () => ({ ok: true, text: "TERMS=B" }),
         textDayOf: () => "2026-02-10",
         logReads,
@@ -203,8 +214,8 @@ describe("the readings behind each outcome", () => {
     assert.ok(!("readings" in quiet.results[0]));
     const logged = await run(true);
     assert.deepStrictEqual(
-      logged.results[0].readings.map((r: { page: string; against: string; verdict: { status: string } }) => `${r.page} ${r.against} ${r.verdict.status}`),
-      ["capture 2026-02-05 A changed", "today B confirmed", "capture 2026-02-05 B confirmed"],
+      logged.results[0].readings.map((r: { older: string; newer: string; verdict: { status: string } }) => `${r.older} | ${r.newer} ${r.verdict.status}`),
+      ["capture 2026-02-05 | today same"],
     );
   });
 });
@@ -216,9 +227,9 @@ describe("a reader that fails on one record", () => {
       change({ vendor: "Beta", date: "2026-09-02", date_source: "discovered", previous_state: "A", current_state: "B", source_url: "https://beta.example/pricing" }),
     ];
     let alphaCalls = 0;
-    const readerForListing = (listing: { vendor: string }) => async (stored: string, text: string) => {
+    const pairReaderForListing = (listing: { vendor: string }) => async (older: Page, newer: Page) => {
       if (listing.vendor === "Alpha" && alphaCalls++ === 0) throw new Error("google/gemma-3-27b-it request failed: HTTP 504");
-      return text.includes(`TERMS=${stored}`) ? { status: "confirmed" } : { status: "changed", current_state: text.match(/TERMS=(\w+)/)![1] };
+      return termsPairReader()(older, newer);
     };
     const settledInTurn: string[] = [];
     const report = await settleFirstReadings({
@@ -229,7 +240,7 @@ describe("a reader that fails on one record", () => {
         captures: async (url: string) => ({ captures: [{ timestamp: "20260205120000", original: url, statuscode: "200", mimetype: "text/html" }] }),
         captureHtml: async () => ({ html: `<html><body><p>TERMS=B</p><p>${"Plans and limits. ".repeat(40)}</p></body></html>` }),
       },
-      readerForListing,
+      pairReaderForListing,
       fetchToday: async () => ({ ok: true, text: "TERMS=B" }),
       textDayOf: () => "2026-02-10",
       onSettled: (result: { vendor: string; outcome: string }) => settledInTurn.push(`${result.vendor} ${result.outcome}`),
@@ -248,7 +259,7 @@ describe("a reader that fails on one record", () => {
         captures: async (url: string) => ({ captures: [{ timestamp: "20260205120000", original: url, statuscode: "200", mimetype: "text/html" }] }),
         captureHtml: async () => ({ html: `<html><body><p>TERMS=B</p><p>${"Plans and limits. ".repeat(40)}</p></body></html>` }),
       },
-      readerForListing: () => async () => {
+      pairReaderForListing: () => async () => {
         throw new Error("google/gemma-3-27b-it request failed: HTTP 504");
       },
       fetchToday: async () => ({ ok: true, text: "TERMS=B" }),
