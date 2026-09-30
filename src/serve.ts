@@ -1097,13 +1097,17 @@ function durabilityCellHtml(offer: EnrichedOfferRow): string {
   return `<span style="color:${color}">${escHtmlServer(stability)}</span>${record}`;
 }
 
+function unconfirmedTermsMarkerHtml(unconfirmed: UnconfirmedTerms): string {
+  const on = unconfirmed.on ? ` &middot; ${escHtmlServer(unconfirmed.on)}` : "";
+  return `<span class="listing-terms-unconfirmed" title="${escHtmlServer(unconfirmedTermsSentence(unconfirmed))}"`
+    + ` style="font-size:.7rem;color:#d29922;white-space:nowrap">not confirmed &middot; ${escHtmlServer(termsWithheldLabel(unconfirmed))}${on}</span>`;
+}
+
 function quickComparisonTermsCellHtml(offer: EnrichedOfferRow): string {
   const terms = escHtmlServer(publishedTermsSummary(offer, 120));
   const unconfirmed = unconfirmedTermsFor(offer);
   if (!unconfirmed || !offer.stability) return terms + contradictedTermsMarkerHtml(offer);
-  const on = unconfirmed.on ? ` &middot; ${escHtmlServer(unconfirmed.on)}` : "";
-  return `${terms} <span class="listing-terms-unconfirmed" title="${escHtmlServer(unconfirmedTermsSentence(unconfirmed))}"`
-    + ` style="font-size:.7rem;color:#d29922;white-space:nowrap">not confirmed &middot; ${escHtmlServer(termsWithheldLabel(unconfirmed))}${on}</span>`;
+  return `${terms} ${unconfirmedTermsMarkerHtml(unconfirmed)}`;
 }
 
 function riskCellHtml(level: string | null | undefined, cause: RiskCause | null | undefined): string {
@@ -1721,7 +1725,10 @@ function stackKeyLimitHtml(reading: StackPickReading, cap: number): string {
   }
   const superseded = supersedingChangeFor(reading.primary);
   const source = superseded ? readingBehindTheChange(superseded) : null;
-  if (!source) return escHtmlServer(limit);
+  if (!source) {
+    const unconfirmed = unconfirmedTermsFor(reading.primary);
+    return unconfirmed ? `${escHtmlServer(limit)} ${unconfirmedTermsMarkerHtml(unconfirmed)}` : escHtmlServer(limit);
+  }
   return `<span class="stack-limit-read" title="${escHtmlServer(`Our stored ${reading.vendor} terms are superseded. This is what ${source.label} read on ${source.date}.`)}">${escHtmlServer(limit)}</span>` +
     ` <a href="/vendor/${reading.slug}#changes" class="stack-limit-source" style="font-size:.7rem;color:var(--text-dim)">read ${escHtmlServer(source.date)}</a>`;
 }
