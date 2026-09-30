@@ -37995,14 +37995,11 @@ ${mcpCtaCss()}
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number">20+</div><div class="stat-label">Auth Services Compared</div></div>
     <div class="stat-card"><div class="stat-number green">1M</div><div class="stat-label">WorkOS Free MAU</div></div>
-    <div class="stat-card"><div class="stat-number green">Auth0</div><div class="stat-label">Best Enterprise Free Tier</div></div>
-    <div class="stat-card"><div class="stat-number green">Clerk</div><div class="stat-label">Best Developer Experience</div></div>
   </div>
 
   <div class="executive-summary">
     <p><strong>Quick verdict:</strong> <strong>Auth0</strong> just expanded its free tier to 25,000 MAU with enterprise connections, SSO, SCIM, and new AI Features (token vaults, agentic AI workflow support) included free &mdash; the strongest managed auth free tier. <strong>Clerk</strong> leads on developer experience with 50,000 free MRU (monthly returning users) and drop-in React components. <strong>Firebase Auth</strong> and <strong>Supabase Auth</strong> offer 50K free MAU each as part of their BaaS platforms. <strong>WorkOS AuthKit</strong> is the outlier at 1M free MAU for authentication.</p>
     <p><strong>The critical growth cost trap:</strong> Auth services look free at small scale, but overage costs vary wildly. At 100K MAU, Clerk costs ~$1,000/mo while Supabase Auth costs ~$162/mo. <strong>WorkOS</strong> remains free up to 1M MAU for basic auth. Self-hosted options like <strong>Keycloak</strong>, <strong>Authentik</strong>, and <strong>Authelia</strong> have zero per-MAU costs at any scale, trading operational complexity for cost predictability.</p>
-    <p><strong>Industry signal:</strong> Auth is top-of-mind for developers in 2026. Auth0 added agentic AI support (token vaults for agent-to-service auth). MCP Dev Summit featured 6 dedicated auth sessions. The rise of AI agents is making machine-to-machine auth as important as user auth.</p>
   </div>
 
   <div class="toc">
@@ -38014,7 +38011,6 @@ ${mcpCtaCss()}
       <li><a href="#self-hosted">Self-Hosted / Open Source (Keycloak, Authentik, Authelia, FusionAuth, SuperTokens, Hanko, Ory)</a></li>
       <li><a href="#specialized">Specialized (Authgear, MojoAuth, Stack Auth, Permit.io, Cerbos, Authress)</a></li>
       <li><a href="#growth-trap">The Growth Cost Trap: Free to 100K MAU</a></li>
-      <li><a href="#best-for">Best for Each Use Case</a></li>
       <li><a href="#hidden-costs">Hidden Costs and Gotchas</a></li>
       <li><a href="#changes">Pricing Change Timeline</a></li>
       <li><a href="#data-source">Data Source</a></li>
@@ -38036,12 +38032,11 @@ ${mcpCtaCss()}
         <th>SSO/SAML</th>
         <th>M2M / Agents</th>
         <th>Self-Hosted?</th>
-        <th>Lock-in Risk</th>
       </tr>
     </thead>
     <tbody>
       <tr style="background:rgba(63,185,80,0.08)">
-        <td class="provider-col"><a href="/vendor/auth0" style="color:var(--text)">Auth0</a> <span class="winner-badge">BEST ENTERPRISE</span></td>
+        <td class="provider-col"><a href="/vendor/auth0" style="color:var(--text)">Auth0</a></td>
         <td style="font-family:var(--mono)">25K MAU</td>
         <td style="font-family:var(--mono)">~$0.07</td>
         <td class="check">Unlimited social</td>
@@ -38049,10 +38044,9 @@ ${mcpCtaCss()}
         <td class="check">Enterprise + SCIM free</td>
         <td style="font-family:var(--mono)">1,000 M2M + AI token vaults</td>
         <td class="cross">No</td>
-        <td class="partial">Medium</td>
       </tr>
       <tr style="background:rgba(63,185,80,0.08)">
-        <td class="provider-col"><a href="/vendor/clerk" style="color:var(--text)">Clerk</a> <span class="winner-badge">BEST DX</span></td>
+        <td class="provider-col"><a href="/vendor/clerk" style="color:var(--text)">Clerk</a></td>
         <td style="font-family:var(--mono)">50K MRU</td>
         <td style="font-family:var(--mono)">$0.02/MRU</td>
         <td class="check">5+ providers</td>
@@ -38060,7 +38054,6 @@ ${mcpCtaCss()}
         <td>Pro plan ($25/mo)</td>
         <td>&mdash;</td>
         <td class="cross">No</td>
-        <td class="partial">Medium</td>
       </tr>
       <tr>
         <td class="provider-col"><a href="/vendor/kinde" style="color:var(--text)">Kinde</a></td>
@@ -38071,7 +38064,6 @@ ${mcpCtaCss()}
         <td>Paid plan</td>
         <td style="font-family:var(--mono)">200</td>
         <td class="cross">No</td>
-        <td>Low</td>
       </tr>
       <tr>
         <td class="provider-col">PropelAuth</td>
@@ -38082,7 +38074,6 @@ ${mcpCtaCss()}
         <td>Growth plan</td>
         <td>&mdash;</td>
         <td class="cross">No</td>
-        <td class="partial">Medium</td>
       </tr>
       <tr>
         <td class="provider-col"><a href="/vendor/stytch" style="color:var(--text)">Stytch</a></td>
@@ -38093,7 +38084,6 @@ ${mcpCtaCss()}
         <td>B2B SDK</td>
         <td style="font-family:var(--mono)">1,000 M2M</td>
         <td class="cross">No</td>
-        <td class="partial">Medium</td>
       </tr>
       <tr>
         <td class="provider-col"><a href="/vendor/descope" style="color:var(--text)">Descope</a></td>
@@ -38104,7 +38094,6 @@ ${mcpCtaCss()}
         <td>50 tenants</td>
         <td style="font-family:var(--mono)">50 M2M</td>
         <td class="cross">No</td>
-        <td class="partial">Medium</td>
       </tr>
       <tr style="background:rgba(63,185,80,0.08)">
         <td class="provider-col"><a href="/vendor/workos" style="color:var(--text)">WorkOS</a> <span class="winner-badge">1M FREE</span></td>
@@ -38115,10 +38104,9 @@ ${mcpCtaCss()}
         <td>SSO paid add-on</td>
         <td>&mdash;</td>
         <td class="cross">No</td>
-        <td>Low</td>
       </tr>
       <tr style="background:rgba(63,185,80,0.08)">
-        <td class="provider-col"><a href="/vendor/supabase" style="color:var(--text)">Supabase Auth</a> <span class="winner-badge">CHEAPEST AT SCALE</span></td>
+        <td class="provider-col"><a href="/vendor/supabase" style="color:var(--text)">Supabase Auth</a></td>
         <td style="font-family:var(--mono)">50K MAU</td>
         <td style="font-family:var(--mono)">$0.00325</td>
         <td class="check">20+ providers</td>
@@ -38126,7 +38114,6 @@ ${mcpCtaCss()}
         <td>&mdash;</td>
         <td>&mdash;</td>
         <td class="cross">BaaS-integrated</td>
-        <td>Low (open source)</td>
       </tr>
       <tr>
         <td class="provider-col"><a href="/vendor/firebase" style="color:var(--text)">Firebase Auth</a></td>
@@ -38137,7 +38124,6 @@ ${mcpCtaCss()}
         <td>Identity Platform</td>
         <td>&mdash;</td>
         <td class="cross">BaaS-integrated</td>
-        <td class="partial">Medium</td>
       </tr>
       <tr>
         <td class="provider-col">AWS Cognito</td>
@@ -38148,7 +38134,6 @@ ${mcpCtaCss()}
         <td class="check">Included</td>
         <td style="font-family:var(--mono)">Included</td>
         <td class="cross">AWS-only</td>
-        <td class="partial">Medium</td>
       </tr>
       <tr>
         <td class="provider-col">Appwrite Auth</td>
@@ -38159,7 +38144,6 @@ ${mcpCtaCss()}
         <td>&mdash;</td>
         <td>&mdash;</td>
         <td class="check">Yes (Docker)</td>
-        <td>Low (open source)</td>
       </tr>
       <tr>
         <td class="provider-col"><a href="/vendor/keycloak" style="color:var(--text)">Keycloak</a></td>
@@ -38170,7 +38154,6 @@ ${mcpCtaCss()}
         <td class="check">Full SAML/OIDC</td>
         <td class="check">Unlimited</td>
         <td class="check">Yes (Java)</td>
-        <td style="color:#3fb950">None</td>
       </tr>
       <tr>
         <td class="provider-col">Authentik</td>
@@ -38181,7 +38164,6 @@ ${mcpCtaCss()}
         <td class="check">Full SAML/OIDC</td>
         <td class="check">Unlimited</td>
         <td class="check">Yes (Python/Django)</td>
-        <td style="color:#3fb950">None</td>
       </tr>
       <tr>
         <td class="provider-col">Authelia</td>
@@ -38192,7 +38174,6 @@ ${mcpCtaCss()}
         <td class="check">OIDC provider</td>
         <td>&mdash;</td>
         <td class="check">Yes (Go)</td>
-        <td style="color:#3fb950">None</td>
       </tr>
       <tr>
         <td class="provider-col"><a href="/vendor/fusionauth" style="color:var(--text)">FusionAuth</a></td>
@@ -38203,7 +38184,6 @@ ${mcpCtaCss()}
         <td class="check">SAML + OIDC</td>
         <td class="check">Unlimited</td>
         <td class="check">Yes (Docker)</td>
-        <td style="color:#3fb950">None</td>
       </tr>
       <tr>
         <td class="provider-col"><a href="/vendor/supertokens" style="color:var(--text)">SuperTokens</a></td>
@@ -38214,7 +38194,6 @@ ${mcpCtaCss()}
         <td>Multi-tenancy (paid)</td>
         <td>&mdash;</td>
         <td class="check">Yes (unlimited)</td>
-        <td style="color:#3fb950">Low</td>
       </tr>
       <tr>
         <td class="provider-col"><a href="/vendor/hanko" style="color:var(--text)">Hanko</a></td>
@@ -38225,7 +38204,6 @@ ${mcpCtaCss()}
         <td>&mdash;</td>
         <td>&mdash;</td>
         <td class="check">Yes (unlimited)</td>
-        <td style="color:#3fb950">Low</td>
       </tr>
       <tr>
         <td class="provider-col"><a href="/vendor/ory" style="color:var(--text)">Ory</a></td>
@@ -38236,7 +38214,6 @@ ${mcpCtaCss()}
         <td class="check">Full OIDC</td>
         <td class="check">Included</td>
         <td class="check">Yes (unlimited)</td>
-        <td style="color:#3fb950">None</td>
       </tr>
     </tbody>
   </table>
@@ -38257,73 +38234,57 @@ ${mcpCtaCss()}
         <th>Free Limit</th>
         <th>Overage</th>
         <th>Best Feature</th>
-        <th>DX Quality</th>
-        <th>Best For</th>
       </tr>
     </thead>
     <tbody>
       <tr style="background:rgba(63,185,80,0.08)">
-        <td class="provider-col">Auth0 <span class="winner-badge">BEST ENTERPRISE</span></td>
+        <td class="provider-col">Auth0</td>
         <td style="font-family:var(--mono)">25K MAU</td>
         <td style="font-family:var(--mono)">~$0.07/MAU</td>
         <td>Actions, SSO/SCIM free, AI token vaults</td>
-        <td>Excellent docs, Universal Login</td>
-        <td>Enterprise + agentic AI auth</td>
       </tr>
       <tr style="background:rgba(63,185,80,0.08)">
-        <td class="provider-col">Clerk <span class="winner-badge">BEST DX</span></td>
+        <td class="provider-col">Clerk</td>
         <td style="font-family:var(--mono)">50K MRU</td>
         <td style="font-family:var(--mono)">$0.02/MRU</td>
         <td>React components, org management</td>
-        <td>Best-in-class React/Next.js DX</td>
-        <td>Next.js/React apps needing fast auth setup</td>
       </tr>
       <tr>
         <td class="provider-col">Kinde</td>
         <td style="font-family:var(--mono)">10.5K MAU</td>
         <td style="font-family:var(--mono)">Tiered pricing</td>
         <td>Feature flags + auth combined</td>
-        <td>Good multi-framework SDKs</td>
-        <td>Teams wanting auth + feature flags in one</td>
       </tr>
       <tr>
         <td class="provider-col">PropelAuth</td>
         <td style="font-family:var(--mono)">10K MAU</td>
         <td style="font-family:var(--mono)">$0.05/MAU</td>
         <td>B2B-first: org management, roles, RBAC</td>
-        <td>Good React/Next.js/Python SDKs</td>
-        <td>B2B SaaS with multi-tenant auth</td>
       </tr>
       <tr>
         <td class="provider-col">Stytch</td>
         <td style="font-family:var(--mono)">25K MAU</td>
         <td style="font-family:var(--mono)">$0.05/MAU</td>
         <td>Passwordless-first, B2B SDK</td>
-        <td>Strong API-first approach</td>
-        <td>B2B SaaS with SSO requirements</td>
       </tr>
       <tr>
         <td class="provider-col">Descope</td>
         <td style="font-family:var(--mono)">7.5K MAU</td>
         <td style="font-family:var(--mono)">Custom pricing</td>
         <td>Visual flow builder for auth</td>
-        <td>No-code flow designer</td>
-        <td>Complex auth flows without custom code</td>
       </tr>
       <tr style="background:rgba(63,185,80,0.08)">
         <td class="provider-col">WorkOS <span class="winner-badge">1M FREE</span></td>
         <td style="font-family:var(--mono)">1M MAU</td>
         <td style="font-family:var(--mono)">Free (auth only)</td>
         <td>Enterprise SSO ready (SAML/OIDC)</td>
-        <td>Clean API, good docs</td>
-        <td>Apps that will need enterprise SSO later</td>
       </tr>
     </tbody>
   </table>
   </div>
 
   <div class="context-box">
-    <strong>Auth0 vs Clerk (2026 update):</strong> <strong>Auth0</strong> now includes enterprise connections, SSO, SCIM, and AI Features (token vaults for agentic workflows) on the free tier &mdash; 25K MAU with the deepest enterprise feature set. <strong>Clerk</strong> recently expanded to 50K free MRU (monthly returning users, not MAU) with superior React DX. At scale, Clerk costs ~$0.02/MRU while Auth0 is ~$0.07/MAU. <strong>Important:</strong> Clerk counts returning users (MRU), not all active users (MAU) &mdash; your effective free limit may be higher if many users sign up but don&rsquo;t return monthly. <strong>PropelAuth</strong> is the B2B specialist &mdash; 10K free MAU with built-in org management, roles, and RBAC. <strong>WorkOS</strong> remains the budget outlier at 1M free MAU for auth with enterprise SSO as a paid add-on.
+    <strong>Auth0 and Clerk:</strong> <strong>Auth0</strong> now includes enterprise connections, SSO, SCIM, and AI Features (token vaults for agentic workflows) on the free tier &mdash; 25K MAU with the deepest enterprise feature set. <strong>Clerk</strong> recently expanded to 50K free MRU (monthly returning users, not MAU) with superior React DX. At scale, Clerk costs ~$0.02/MRU while Auth0 is ~$0.07/MAU. <strong>Important:</strong> Clerk counts returning users (MRU), not all active users (MAU) &mdash; your effective free limit may be higher if many users sign up but don&rsquo;t return monthly. <strong>PropelAuth</strong> is the B2B specialist &mdash; 10K free MAU with built-in org management, roles, and RBAC. <strong>WorkOS</strong> remains the budget outlier at 1M free MAU for auth with enterprise SSO as a paid add-on.
   </div>
 
   <h2 id="baas-auth">BaaS-Integrated Auth</h2>
@@ -38339,7 +38300,6 @@ ${mcpCtaCss()}
         <th>Platform</th>
         <th>MFA</th>
         <th>Self-Hosted?</th>
-        <th>Best For</th>
       </tr>
     </thead>
     <tbody>
@@ -38350,16 +38310,14 @@ ${mcpCtaCss()}
         <td>Appwrite (DB, Storage, Functions, Messaging)</td>
         <td class="check">Phone + TOTP</td>
         <td class="check">Yes (Docker)</td>
-        <td>Open-source BaaS with highest cloud free tier</td>
       </tr>
       <tr style="background:rgba(63,185,80,0.08)">
-        <td class="provider-col">Supabase Auth <span class="winner-badge">CHEAPEST AT SCALE</span></td>
+        <td class="provider-col">Supabase Auth</td>
         <td style="font-family:var(--mono)">50,000</td>
         <td style="font-family:var(--mono)">$0.00325/MAU</td>
         <td>Supabase (Postgres, Realtime, Storage)</td>
         <td class="check">TOTP + Phone</td>
         <td class="check">Yes (open source)</td>
-        <td>Full-stack apps on Postgres</td>
       </tr>
       <tr>
         <td class="provider-col">Firebase Auth</td>
@@ -38368,7 +38326,6 @@ ${mcpCtaCss()}
         <td>Firebase (Firestore, Hosting, Functions)</td>
         <td class="check">Phone + TOTP (Identity Platform)</td>
         <td class="cross">No</td>
-        <td>Mobile-first apps on Firebase</td>
       </tr>
       <tr>
         <td class="provider-col">AWS Cognito</td>
@@ -38377,7 +38334,6 @@ ${mcpCtaCss()}
         <td>AWS (Lambda, DynamoDB, S3, etc.)</td>
         <td class="check">SMS + TOTP</td>
         <td class="cross">No</td>
-        <td>AWS-native applications</td>
       </tr>
     </tbody>
   </table>
@@ -38399,25 +38355,22 @@ ${mcpCtaCss()}
         <th>License</th>
         <th>Language</th>
         <th>Cloud Option</th>
-        <th>Best For</th>
       </tr>
     </thead>
     <tbody>
       <tr style="background:rgba(63,185,80,0.08)">
-        <td class="provider-col">Keycloak <span class="winner-badge">MOST MATURE</span></td>
+        <td class="provider-col">Keycloak</td>
         <td style="font-family:var(--mono)">Unlimited</td>
         <td>Apache 2.0</td>
         <td>Java (Quarkus)</td>
         <td>Red Hat SSO (paid)</td>
-        <td>Enterprise SSO, SAML/OIDC federation</td>
       </tr>
       <tr style="background:rgba(63,185,80,0.08)">
-        <td class="provider-col">Authentik <span class="winner-badge">BEST UI</span></td>
+        <td class="provider-col">Authentik</td>
         <td style="font-family:var(--mono)">Unlimited</td>
         <td>MIT (open core)</td>
         <td>Python (Django)</td>
         <td>Authentik Enterprise (paid)</td>
-        <td>Modern IdP with best admin UI, LDAP/SCIM bridge</td>
       </tr>
       <tr>
         <td class="provider-col">Authelia</td>
@@ -38425,7 +38378,6 @@ ${mcpCtaCss()}
         <td>Apache 2.0</td>
         <td>Go</td>
         <td>None (self-hosted only)</td>
-        <td>Reverse proxy auth gateway (Nginx, Traefik, HAProxy)</td>
       </tr>
       <tr>
         <td class="provider-col">FusionAuth</td>
@@ -38433,7 +38385,6 @@ ${mcpCtaCss()}
         <td>Apache 2.0 (Community)</td>
         <td>Java</td>
         <td>FusionAuth Cloud (from $37/mo)</td>
-        <td>Full-featured auth with multi-tenancy</td>
       </tr>
       <tr>
         <td class="provider-col">SuperTokens</td>
@@ -38441,7 +38392,6 @@ ${mcpCtaCss()}
         <td>Apache 2.0 (core)</td>
         <td>Node.js / Go (core)</td>
         <td>SuperTokens Managed (5K free MAU)</td>
-        <td>Node.js apps wanting open-source auth</td>
       </tr>
       <tr>
         <td class="provider-col">Hanko</td>
@@ -38449,7 +38399,6 @@ ${mcpCtaCss()}
         <td>AGPL-3.0</td>
         <td>Go</td>
         <td>Hanko Cloud (10K free MAU)</td>
-        <td>Passkey-first authentication</td>
       </tr>
       <tr>
         <td class="provider-col">Ory</td>
@@ -38457,7 +38406,6 @@ ${mcpCtaCss()}
         <td>Apache 2.0</td>
         <td>Go</td>
         <td>Ory Network (25K free MAU)</td>
-        <td>Microservice-native identity (Kratos, Hydra, Keto)</td>
       </tr>
     </tbody>
   </table>
@@ -38478,7 +38426,6 @@ ${mcpCtaCss()}
         <th>Provider</th>
         <th>Free Tier</th>
         <th>Specialty</th>
-        <th>Best For</th>
       </tr>
     </thead>
     <tbody>
@@ -38486,19 +38433,16 @@ ${mcpCtaCss()}
         <td class="provider-col">Authgear</td>
         <td>5K MAU (cloud)</td>
         <td>Passkeys + biometric auth, pre-built login UI</td>
-        <td>Mobile apps needing biometric + passkey auth</td>
       </tr>
       <tr>
         <td class="provider-col">MojoAuth</td>
         <td>1K MAU</td>
         <td>Passwordless-only: magic links, WebAuthn, biometric</td>
-        <td>Apps going fully passwordless from day one</td>
       </tr>
       <tr>
         <td class="provider-col">Stack Auth</td>
         <td>Unlimited (open source)</td>
         <td>Developer-first, open-source managed auth</td>
-        <td>Teams wanting Clerk-like DX with self-host option</td>
       </tr>
     </tbody>
   </table>
@@ -38514,7 +38458,6 @@ ${mcpCtaCss()}
         <th>Provider</th>
         <th>Free Tier</th>
         <th>Model</th>
-        <th>Best For</th>
       </tr>
     </thead>
     <tbody>
@@ -38522,19 +38465,16 @@ ${mcpCtaCss()}
         <td class="provider-col"><a href="/vendor/permit-io" style="color:var(--text)">Permit.io</a></td>
         <td>1,000 MAU, RBAC + ABAC</td>
         <td>Policy-as-a-service (OPA-based)</td>
-        <td>Fine-grained permissions with visual policy editor</td>
       </tr>
       <tr>
         <td class="provider-col">Cerbos Hub</td>
         <td>100 principals, unlimited policies</td>
         <td>Open-source policy engine (self-hosted or cloud)</td>
-        <td>Context-aware access control for microservices</td>
       </tr>
       <tr>
         <td class="provider-col"><a href="/vendor/authress" style="color:var(--text)">Authress</a></td>
         <td>1,000 MAU, unlimited resources</td>
         <td>API-first permission management</td>
-        <td>Complex B2B permission hierarchies</td>
       </tr>
     </tbody>
   </table>
@@ -38642,57 +38582,6 @@ ${mcpCtaCss()}
 
   <div class="context-box">
     <strong>The growth penalty is real.</strong> At 100K MAU, PropelAuth costs <strong>~$4,500/mo</strong> while Supabase Auth costs <strong>~$162/mo</strong>. <strong>Clerk&rsquo;s MRU model</strong> can be deceptive &mdash; 50K free MRU sounds generous, but MRU counts returning users only, not total active users. If most of your users return monthly, MRU ≈ MAU. <strong>WorkOS AuthKit</strong> is free up to 1M MAU for basic auth. <strong>Appwrite</strong> is the cheapest BaaS at scale (~$100/mo Pro plan covers auth + database + storage). Self-hosted solutions cost $0 per user but require $20-100/mo in server infrastructure. <strong>The key decision:</strong> do you value developer experience (Clerk, Auth0, PropelAuth) or cost efficiency (Supabase, Appwrite, self-hosted)? For AI agent architectures specifically, Auth0&rsquo;s new token vault and M2M features may justify the premium.
-  </div>
-
-  <h2 id="best-for">Best for Each Use Case</h2>
-
-  <div class="verdict-box">
-    <h3>When to Pick Each Auth Service</h3>
-
-    <div class="verdict-item">
-      <strong>Next.js / React apps &rarr; Clerk</strong>
-      <p>Best-in-class React components, built-in user management UI, and organization support. 50K free MRU. The fastest path from zero to production auth for React developers. <a href="/vendor/clerk">Clerk details &rarr;</a></p>
-    </div>
-
-    <div class="verdict-item">
-      <strong>Most generous free tier &rarr; WorkOS AuthKit (1M free MAU)</strong>
-      <p>1M free MAU for authentication with enterprise SSO as a paid add-on. If you don&rsquo;t need SSO/SAML today, WorkOS is the clear winner on generosity. For BaaS-integrated: Appwrite (75K), Supabase/Firebase (50K each).</p>
-    </div>
-
-    <div class="verdict-item">
-      <strong>Enterprise / compliance &rarr; Auth0 (25K free MAU)</strong>
-      <p>SOC 2, HIPAA, and PCI-DSS ready. 25K free MAU with MFA, SSO, SCIM, Actions, AI token vaults, and 5 organizations &mdash; all free. The safest choice for regulated industries. <a href="/vendor/auth0">Auth0 details &rarr;</a></p>
-    </div>
-
-    <div class="verdict-item">
-      <strong>B2B SaaS with multi-tenancy &rarr; PropelAuth or Clerk</strong>
-      <p><strong>PropelAuth</strong> is purpose-built for B2B with org management, roles, and RBAC from day one. <strong>Clerk</strong> has broader DX but PropelAuth&rsquo;s B2B features are deeper. Both have 10K+ free users.</p>
-    </div>
-
-    <div class="verdict-item">
-      <strong>Self-hosted / data sovereignty &rarr; Keycloak, Authentik, or Authelia</strong>
-      <p><strong>Keycloak</strong> for enterprise federation. <strong>Authentik</strong> for the best admin UI and modern stack. <strong>Authelia</strong> if you just need an auth gateway for reverse proxies. All unlimited, all free.</p>
-    </div>
-
-    <div class="verdict-item">
-      <strong>Cheapest at scale &rarr; Supabase Auth or Appwrite</strong>
-      <p>Supabase Auth: $0.00325/MAU after 50K ($162/mo at 100K). Appwrite: ~$100/mo Pro plan covers auth + full BaaS. Both are open source with self-host escape hatch. <a href="/supabase-vs-firebase">Supabase vs Firebase &rarr;</a></p>
-    </div>
-
-    <div class="verdict-item">
-      <strong>Agentic AI / machine-to-machine &rarr; Auth0</strong>
-      <p>Auth0&rsquo;s new AI Features include token vaults for agent-to-service auth and agentic AI workflow support. 1,000 free M2M tokens. The only managed auth provider with first-class AI agent support in 2026. For self-hosted M2M, Keycloak and Ory have unlimited M2M tokens.</p>
-    </div>
-
-    <div class="verdict-item">
-      <strong>Passkey-first / passwordless &rarr; Hanko</strong>
-      <p>Purpose-built for passkeys and WebAuthn. Open-source self-hosted option with 10K free MAU on cloud. The best choice if you want to go passwordless from day one.</p>
-    </div>
-
-    <div class="verdict-item">
-      <strong>Enterprise SSO (SAML + directory sync) &rarr; WorkOS or Auth0</strong>
-      <p>WorkOS: 1M free auth MAU + paid SSO/directory sync. Auth0: SSO + SCIM now free on all tiers. Both battle-tested. Auth0 is the complete package; WorkOS if you want to defer SSO costs until you have enterprise customers.</p>
-    </div>
   </div>
 
   <h2 id="hidden-costs">Hidden Costs and Gotchas</h2>
