@@ -38038,37 +38038,37 @@ ${mcpCtaCss()}
       <tr style="background:rgba(63,185,80,0.08)">
         <td class="provider-col"><a href="/vendor/auth0" style="color:var(--text)">Auth0</a></td>
         <td style="font-family:var(--mono)">25K MAU</td>
-        <td style="font-family:var(--mono)">~$0.07</td>
+        <td style="font-family:var(--mono)">None: a paid plan sized to all users</td>
         <td class="check">Unlimited social</td>
-        <td class="check">Included</td>
-        <td class="check">Enterprise + SCIM free</td>
-        <td style="font-family:var(--mono)">1,000 M2M + AI token vaults</td>
+        <td class="cross">Not listed on Free</td>
+        <td class="check">1 enterprise connection + SCIM</td>
+        <td style="font-family:var(--mono)">1,000 M2M tokens/mo; Token Vault (2 apps)</td>
         <td class="cross">No</td>
       </tr>
       <tr style="background:rgba(63,185,80,0.08)">
         <td class="provider-col"><a href="/vendor/clerk" style="color:var(--text)">Clerk</a></td>
         <td style="font-family:var(--mono)">50K MRU</td>
         <td style="font-family:var(--mono)">$0.02/MRU</td>
-        <td class="check">5+ providers</td>
-        <td class="check">Included</td>
+        <td class="check">Up to 3 (Hobby)</td>
         <td>Pro plan ($25/mo)</td>
-        <td>&mdash;</td>
+        <td>Pro plan ($25/mo)</td>
+        <td>2,500 token creations/mo</td>
         <td class="cross">No</td>
       </tr>
       <tr>
         <td class="provider-col"><a href="/vendor/kinde" style="color:var(--text)">Kinde</a></td>
         <td style="font-family:var(--mono)">10.5K MAU</td>
-        <td style="font-family:var(--mono)">Tiered ($0.035&ndash;$0.0275)</td>
+        <td style="font-family:var(--mono)">$0.0175 (Pro, $25/mo)</td>
         <td class="check">Unlimited social</td>
         <td class="check">Included</td>
-        <td>Paid plan</td>
-        <td style="font-family:var(--mono)">200</td>
+        <td>1 enterprise SSO connection</td>
+        <td style="font-family:var(--mono)">2,000 tokens</td>
         <td class="cross">No</td>
       </tr>
       <tr>
         <td class="provider-col">PropelAuth</td>
         <td style="font-family:var(--mono)">10K MAU</td>
-        <td style="font-family:var(--mono)">$0.05/MAU</td>
+        <td style="font-family:var(--mono)">$0.05 (Growth, $150/mo)</td>
         <td class="check">Google, GitHub, etc.</td>
         <td class="check">Included</td>
         <td>Growth plan</td>
@@ -38077,70 +38077,70 @@ ${mcpCtaCss()}
       </tr>
       <tr>
         <td class="provider-col"><a href="/vendor/stytch" style="color:var(--text)">Stytch</a></td>
-        <td style="font-family:var(--mono)">25K MAU</td>
-        <td style="font-family:var(--mono)">$0.05</td>
+        <td style="font-family:var(--mono)">10K MAU</td>
+        <td style="font-family:var(--mono)">$0.20</td>
         <td class="check">OAuth providers</td>
         <td class="check">Included</td>
-        <td>B2B SDK</td>
+        <td>5 SSO or SCIM connections (B2B), then $125/mo each</td>
         <td style="font-family:var(--mono)">1,000 M2M</td>
         <td class="cross">No</td>
       </tr>
       <tr>
         <td class="provider-col"><a href="/vendor/descope" style="color:var(--text)">Descope</a></td>
         <td style="font-family:var(--mono)">7.5K MAU</td>
-        <td style="font-family:var(--mono)">Custom</td>
+        <td style="font-family:var(--mono)">None on Free; $0.05 on Pro and Growth</td>
         <td class="check">6+ providers</td>
         <td class="check">Included</td>
-        <td>50 tenants</td>
-        <td style="font-family:var(--mono)">50 M2M</td>
+        <td>3 connections, 10 active tenants</td>
+        <td style="font-family:var(--mono)">10,000 exchanges</td>
         <td class="cross">No</td>
       </tr>
       <tr style="background:rgba(63,185,80,0.08)">
         <td class="provider-col"><a href="/vendor/workos" style="color:var(--text)">WorkOS</a> <span class="winner-badge">1M FREE</span></td>
         <td style="font-family:var(--mono)">1M MAU</td>
-        <td style="font-family:var(--mono)">Free (auth only)</td>
-        <td class="check">Social + enterprise</td>
+        <td style="font-family:var(--mono)">$2,500/mo per extra 1M</td>
+        <td class="check">Social free; SSO $125/connection/mo</td>
         <td class="check">Included</td>
         <td>SSO paid add-on</td>
-        <td>&mdash;</td>
+        <td>M2M apps (price not listed)</td>
         <td class="cross">No</td>
       </tr>
       <tr style="background:rgba(63,185,80,0.08)">
         <td class="provider-col"><a href="/vendor/supabase" style="color:var(--text)">Supabase Auth</a></td>
         <td style="font-family:var(--mono)">50K MAU</td>
-        <td style="font-family:var(--mono)">$0.00325</td>
-        <td class="check">20+ providers</td>
-        <td class="check">TOTP + Phone</td>
+        <td style="font-family:var(--mono)">$0.00325 above 100K (Pro, $25/mo)</td>
+        <td class="check">19 + custom OAuth/OIDC</td>
+        <td class="check">TOTP (phone MFA paid, Pro)</td>
+        <td>SAML on Pro (50 SSO MAU, then $0.015)</td>
         <td>&mdash;</td>
-        <td>&mdash;</td>
-        <td class="cross">BaaS-integrated</td>
+        <td class="check">Yes (Docker)</td>
       </tr>
       <tr>
         <td class="provider-col"><a href="/vendor/firebase" style="color:var(--text)">Firebase Auth</a></td>
         <td style="font-family:var(--mono)">No cost; SMS on Blaze only</td>
         <td style="font-family:var(--mono)">$0.0055 (Identity Platform, 50K-100K MAU)</td>
         <td class="check">Google, Apple, etc.</td>
-        <td class="check">Phone + TOTP</td>
+        <td class="check">SMS + TOTP (Identity Platform)</td>
         <td>Identity Platform</td>
         <td>&mdash;</td>
         <td class="cross">BaaS-integrated</td>
       </tr>
       <tr>
         <td class="provider-col">AWS Cognito</td>
-        <td style="font-family:var(--mono)">10K MAU (50K for pools created by Nov 22, 2024)</td>
-        <td style="font-family:var(--mono)">$0.0055</td>
-        <td class="check">OIDC + SAML</td>
+        <td style="font-family:var(--mono)">10K MAU (50K for Lite pools created by Nov 22, 2024)</td>
+        <td style="font-family:var(--mono)">$0.0055 Lite / $0.015 Essentials</td>
+        <td class="check">Social, SAML, OIDC</td>
         <td class="check">SMS + TOTP</td>
-        <td class="check">Included</td>
-        <td style="font-family:var(--mono)">Included</td>
+        <td class="partial">50 federated MAU free, then $0.015</td>
+        <td style="font-family:var(--mono)">Paid add-on ($0.00225/token request)</td>
         <td class="cross">AWS-only</td>
       </tr>
       <tr>
         <td class="provider-col">Appwrite Auth</td>
         <td style="font-family:var(--mono)">75K MAU</td>
-        <td style="font-family:var(--mono)">$0 (self-hosted unlimited)</td>
+        <td style="font-family:var(--mono)">$3 per 1,000 above 200K (Pro, $25/mo)</td>
         <td class="check">30+ providers</td>
-        <td class="check">Phone + TOTP</td>
+        <td class="check">Email, phone, TOTP (no phone on Cloud Free)</td>
         <td>&mdash;</td>
         <td>&mdash;</td>
         <td class="check">Yes (Docker)</td>
@@ -38169,10 +38169,10 @@ ${mcpCtaCss()}
         <td class="provider-col">Authelia</td>
         <td style="font-family:var(--mono)">Unlimited</td>
         <td style="font-family:var(--mono)">$0 (self-hosted)</td>
-        <td class="partial">Via OIDC proxy</td>
+        <td class="cross">None</td>
         <td class="check">TOTP + WebAuthn + Duo</td>
         <td class="check">OIDC provider</td>
-        <td>&mdash;</td>
+        <td>Client credentials</td>
         <td class="check">Yes (Go)</td>
       </tr>
       <tr>
@@ -38182,7 +38182,7 @@ ${mcpCtaCss()}
         <td class="check">Any OIDC/SAML</td>
         <td class="check">TOTP</td>
         <td class="check">SAML + OIDC</td>
-        <td class="check">Unlimited</td>
+        <td>Starter plan and up</td>
         <td class="check">Yes (Docker)</td>
       </tr>
       <tr>
@@ -38190,29 +38190,29 @@ ${mcpCtaCss()}
         <td style="font-family:var(--mono)">5K (managed)</td>
         <td style="font-family:var(--mono)">$0.02 (managed)</td>
         <td class="check">Social + passwordless</td>
-        <td class="check">Included</td>
+        <td>Paid ($0.01/MAU managed, $0.02 self-hosted; $100/mo min)</td>
         <td>Multi-tenancy (paid)</td>
-        <td>&mdash;</td>
-        <td class="check">Yes (unlimited)</td>
+        <td>Paid add-on (managed service only)</td>
+        <td class="check">Yes (open-source features free)</td>
       </tr>
       <tr>
         <td class="provider-col"><a href="/vendor/hanko" style="color:var(--text)">Hanko</a></td>
         <td style="font-family:var(--mono)">10K (cloud)</td>
-        <td style="font-family:var(--mono)">Contact sales</td>
+        <td style="font-family:var(--mono)">$0.01 above 10K (Pro, $29/mo)</td>
         <td class="check">Passkeys + social</td>
-        <td class="check">Passkeys (built-in)</td>
-        <td>&mdash;</td>
+        <td class="check">TOTP, security keys</td>
+        <td>SAML on Pro ($49/mo per connection)</td>
         <td>&mdash;</td>
         <td class="check">Yes (unlimited)</td>
       </tr>
       <tr>
         <td class="provider-col"><a href="/vendor/ory" style="color:var(--text)">Ory</a></td>
-        <td style="font-family:var(--mono)">25K (cloud)</td>
-        <td style="font-family:var(--mono)">$0.07 (cloud)</td>
+        <td style="font-family:var(--mono)">Self-hosted; cloud Developer plan has no production use</td>
+        <td style="font-family:var(--mono)">$0.14/aDAU (Production, $70/mo or $770/yr)</td>
         <td class="check">OIDC + social</td>
         <td class="check">TOTP + WebAuthn</td>
         <td class="check">Full OIDC</td>
-        <td class="check">Included</td>
+        <td class="partial">Self-hosted Hydra; billed on Ory Network</td>
         <td class="check">Yes (unlimited)</td>
       </tr>
     </tbody>
@@ -38240,8 +38240,8 @@ ${mcpCtaCss()}
       <tr style="background:rgba(63,185,80,0.08)">
         <td class="provider-col">Auth0</td>
         <td style="font-family:var(--mono)">25K MAU</td>
-        <td style="font-family:var(--mono)">~$0.07/MAU</td>
-        <td>Actions, SSO/SCIM free, AI token vaults</td>
+        <td style="font-family:var(--mono)">None: a paid plan sized to all users</td>
+        <td>Actions, SCIM and 1 enterprise connection on Free; Token Vault</td>
       </tr>
       <tr style="background:rgba(63,185,80,0.08)">
         <td class="provider-col">Clerk</td>
@@ -38252,31 +38252,31 @@ ${mcpCtaCss()}
       <tr>
         <td class="provider-col">Kinde</td>
         <td style="font-family:var(--mono)">10.5K MAU</td>
-        <td style="font-family:var(--mono)">Tiered pricing</td>
+        <td style="font-family:var(--mono)">$0.0175 (Pro)</td>
         <td>Feature flags + auth combined</td>
       </tr>
       <tr>
         <td class="provider-col">PropelAuth</td>
         <td style="font-family:var(--mono)">10K MAU</td>
-        <td style="font-family:var(--mono)">$0.05/MAU</td>
+        <td style="font-family:var(--mono)">$0.05 (Growth, $150/mo)</td>
         <td>B2B-first: org management, roles, RBAC</td>
       </tr>
       <tr>
         <td class="provider-col">Stytch</td>
-        <td style="font-family:var(--mono)">25K MAU</td>
-        <td style="font-family:var(--mono)">$0.05/MAU</td>
-        <td>Passwordless-first, B2B SDK</td>
+        <td style="font-family:var(--mono)">10K MAU</td>
+        <td style="font-family:var(--mono)">$0.20/MAU</td>
+        <td>Passwordless and password login, B2B, AI-agent auth</td>
       </tr>
       <tr>
         <td class="provider-col">Descope</td>
         <td style="font-family:var(--mono)">7.5K MAU</td>
-        <td style="font-family:var(--mono)">Custom pricing</td>
+        <td style="font-family:var(--mono)">None on Free; $0.05 on Pro and Growth</td>
         <td>Visual flow builder for auth</td>
       </tr>
       <tr style="background:rgba(63,185,80,0.08)">
         <td class="provider-col">WorkOS <span class="winner-badge">1M FREE</span></td>
         <td style="font-family:var(--mono)">1M MAU</td>
-        <td style="font-family:var(--mono)">Free (auth only)</td>
+        <td style="font-family:var(--mono)">$2,500/mo per extra 1M</td>
         <td>Enterprise SSO ready (SAML/OIDC)</td>
       </tr>
     </tbody>
@@ -38306,23 +38306,23 @@ ${mcpCtaCss()}
       <tr style="background:rgba(63,185,80,0.08)">
         <td class="provider-col">Appwrite Auth <span class="winner-badge">75K FREE</span></td>
         <td style="font-family:var(--mono)">75,000</td>
-        <td style="font-family:var(--mono)">$0 (self-hosted unlimited)</td>
+        <td style="font-family:var(--mono)">$3 per 1,000 above 200K (Pro, $25/mo)</td>
         <td>Appwrite (DB, Storage, Functions, Messaging)</td>
-        <td class="check">Phone + TOTP</td>
+        <td class="check">Email, phone, TOTP (no phone on Cloud Free)</td>
         <td class="check">Yes (Docker)</td>
       </tr>
       <tr style="background:rgba(63,185,80,0.08)">
         <td class="provider-col">Supabase Auth</td>
         <td style="font-family:var(--mono)">50,000</td>
-        <td style="font-family:var(--mono)">$0.00325/MAU</td>
+        <td style="font-family:var(--mono)">$0.00325/MAU above 100K (Pro)</td>
         <td>Supabase (Postgres, Realtime, Storage)</td>
-        <td class="check">TOTP + Phone</td>
+        <td class="check">TOTP (phone MFA paid)</td>
         <td class="check">Yes (open source)</td>
       </tr>
       <tr>
         <td class="provider-col">Firebase Auth</td>
         <td style="font-family:var(--mono)">No cost; SMS on Blaze only</td>
-        <td style="font-family:var(--mono)">$0.0055/MAU</td>
+        <td style="font-family:var(--mono)">$0 ($0.0055/MAU from 50K to 100K with Identity Platform)</td>
         <td>Firebase (Firestore, Hosting, Functions)</td>
         <td class="check">Phone + TOTP (Identity Platform)</td>
         <td class="cross">No</td>
@@ -38330,7 +38330,7 @@ ${mcpCtaCss()}
       <tr>
         <td class="provider-col">AWS Cognito</td>
         <td style="font-family:var(--mono)">10,000</td>
-        <td style="font-family:var(--mono)">$0.0055/MAU</td>
+        <td style="font-family:var(--mono)">$0.0055 Lite / $0.015 Essentials</td>
         <td>AWS (Lambda, DynamoDB, S3, etc.)</td>
         <td class="check">SMS + TOTP</td>
         <td class="cross">No</td>
@@ -38363,14 +38363,14 @@ ${mcpCtaCss()}
         <td style="font-family:var(--mono)">Unlimited</td>
         <td>Apache 2.0</td>
         <td>Java (Quarkus)</td>
-        <td>Red Hat SSO (paid)</td>
+        <td>None from the project (Red Hat's build is self-run); third parties host it</td>
       </tr>
       <tr style="background:rgba(63,185,80,0.08)">
         <td class="provider-col">Authentik</td>
         <td style="font-family:var(--mono)">Unlimited</td>
         <td>MIT (open core)</td>
         <td>Python (Django)</td>
-        <td>Authentik Enterprise (paid)</td>
+        <td>None from authentik (Enterprise is self-hosted); third parties host it</td>
       </tr>
       <tr>
         <td class="provider-col">Authelia</td>
@@ -38382,7 +38382,7 @@ ${mcpCtaCss()}
       <tr>
         <td class="provider-col">FusionAuth</td>
         <td style="font-family:var(--mono)">Unlimited</td>
-        <td>Apache 2.0 (Community)</td>
+        <td>Proprietary (free Community edition)</td>
         <td>Java</td>
         <td>FusionAuth Cloud (from $37/mo)</td>
       </tr>
@@ -38390,7 +38390,7 @@ ${mcpCtaCss()}
         <td class="provider-col">SuperTokens</td>
         <td style="font-family:var(--mono)">Unlimited (self-hosted)</td>
         <td>Apache 2.0 (core)</td>
-        <td>Node.js / Go (core)</td>
+        <td>Java (core)</td>
         <td>SuperTokens Managed (5K free MAU)</td>
       </tr>
       <tr>
@@ -38405,7 +38405,7 @@ ${mcpCtaCss()}
         <td style="font-family:var(--mono)">Unlimited (self-hosted)</td>
         <td>Apache 2.0</td>
         <td>Go</td>
-        <td>Ory Network (25K free MAU)</td>
+        <td>Ory Network (Production $70/mo or $770/yr)</td>
       </tr>
     </tbody>
   </table>
@@ -38431,18 +38431,18 @@ ${mcpCtaCss()}
     <tbody>
       <tr>
         <td class="provider-col">Authgear</td>
-        <td>5K MAU (cloud)</td>
+        <td>No MAU limit (cloud Free)</td>
         <td>Passkeys + biometric auth, pre-built login UI</td>
       </tr>
       <tr>
         <td class="provider-col">MojoAuth</td>
-        <td>1K MAU</td>
-        <td>Passwordless-only: magic links, WebAuthn, biometric</td>
+        <td>25K MAU</td>
+        <td>Passwordless-first: magic links, email OTP, social (passkeys on Business Pro)</td>
       </tr>
       <tr>
-        <td class="provider-col">Stack Auth</td>
-        <td>Unlimited (open source)</td>
-        <td>Developer-first, open-source managed auth</td>
+        <td class="provider-col">Hexclave (formerly Stack Auth)</td>
+        <td>Self-hosting free; managed 10K user accounts</td>
+        <td>Open-source auth, managed or self-hosted</td>
       </tr>
     </tbody>
   </table>
@@ -38468,13 +38468,13 @@ ${mcpCtaCss()}
       </tr>
       <tr>
         <td class="provider-col">Cerbos Hub</td>
-        <td>100 principals, unlimited policies</td>
+        <td>100 monthly active principals, 2 PDPs</td>
         <td>Open-source policy engine (self-hosted or cloud)</td>
       </tr>
       <tr>
         <td class="provider-col"><a href="/vendor/authress" style="color:var(--text)">Authress</a></td>
-        <td>1,000 MAU, unlimited resources</td>
-        <td>API-first permission management</td>
+        <td>First 1,000 billable calls free, then $0.0012/call</td>
+        <td>Login and permissions API</td>
       </tr>
     </tbody>
   </table>
@@ -38503,36 +38503,36 @@ ${mcpCtaCss()}
         <td style="font-weight:600">Auth0</td>
         <td class="cheapest">$0 (free)</td>
         <td class="cheapest">$0 (free)</td>
-        <td>~$175/mo</td>
-        <td>~$525/mo</td>
+        <td>No published price</td>
+        <td>No published price</td>
       </tr>
       <tr>
         <td style="font-weight:600">Clerk (MRU)</td>
         <td class="cheapest">$0 (free)</td>
         <td class="cheapest">$0 (free)</td>
         <td class="cheapest">$0 (free)</td>
-        <td>~$1,000/mo</td>
+        <td>$1,025/mo</td>
       </tr>
       <tr>
         <td style="font-weight:600">Kinde</td>
         <td class="cheapest">$0 (free)</td>
-        <td>~$508/mo</td>
-        <td>~$1,383/mo</td>
-        <td>~$2,758/mo</td>
+        <td>$278.75/mo (Pro)</td>
+        <td>$716.25/mo (Pro)</td>
+        <td>$1,533.85/mo (Plus)</td>
       </tr>
       <tr>
         <td style="font-weight:600">PropelAuth</td>
         <td class="cheapest">$0 (free)</td>
-        <td>~$750/mo</td>
-        <td>~$2,000/mo</td>
-        <td class="expensive">~$4,500/mo</td>
+        <td>$900/mo (Growth)</td>
+        <td>$2,150/mo (Growth)</td>
+        <td class="expensive">$4,650/mo (Growth)</td>
       </tr>
       <tr>
         <td style="font-weight:600">Stytch</td>
         <td class="cheapest">$0 (free)</td>
-        <td class="cheapest">$0 (free)</td>
-        <td>~$1,250/mo</td>
-        <td>~$3,750/mo</td>
+        <td>~$3,000/mo</td>
+        <td>~$8,000/mo</td>
+        <td>~$18,000/mo</td>
       </tr>
       <tr>
         <td style="font-weight:600">WorkOS AuthKit</td>
@@ -38546,35 +38546,35 @@ ${mcpCtaCss()}
         <td class="cheapest">$0 (free)</td>
         <td class="cheapest">$0 (free)</td>
         <td class="cheapest">$0 (free)</td>
-        <td>~$100/mo (Pro plan)</td>
+        <td>$25/mo (Pro)</td>
       </tr>
       <tr>
         <td style="font-weight:600">Supabase Auth</td>
         <td class="cheapest">$0 (free)</td>
         <td class="cheapest">$0 (free)</td>
         <td class="cheapest">$0 (free)</td>
-        <td>~$162/mo</td>
+        <td>$25/mo (Pro)</td>
       </tr>
       <tr>
         <td style="font-weight:600">Firebase Auth</td>
         <td class="cheapest">$0 (free)</td>
         <td class="cheapest">$0 (free)</td>
         <td class="cheapest">$0 (free)</td>
-        <td>~$275/mo</td>
+        <td>$0 ($275 with Identity Platform)</td>
       </tr>
       <tr>
         <td style="font-weight:600">AWS Cognito</td>
         <td class="cheapest">$0 (free)</td>
-        <td class="cheapest">$0 (free)</td>
-        <td class="cheapest">$0 (free)</td>
-        <td>~$275/mo</td>
+        <td>$82.50 Lite / $225 Essentials</td>
+        <td>$220 / $600</td>
+        <td>$495 / $1,350</td>
       </tr>
       <tr>
         <td style="font-weight:600">Self-hosted (Keycloak / Authentik / Authelia / Ory)</td>
-        <td class="cheapest">$0</td>
-        <td class="cheapest">$0</td>
-        <td class="cheapest">$0</td>
-        <td class="cheapest">$0 (+ $20-100/mo server)</td>
+        <td class="cheapest">$0 licence</td>
+        <td class="cheapest">$0 licence</td>
+        <td class="cheapest">$0 licence</td>
+        <td class="cheapest">$0 licence</td>
       </tr>
     </tbody>
   </table>
