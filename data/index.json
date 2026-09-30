@@ -9722,9 +9722,9 @@
     {
       "vendor": "Codefresh",
       "category": "CI/CD",
-      "description": "CI/CD and GitOps platform — free plan: 120 builds/month, 1 concurrent pipeline. Docker-native build engine with built-in Docker registry",
-      "tier": "Free",
-      "url": "https://codefresh.io/pricing/",
+      "description": "There is no free tier: codefresh.io and its pricing page redirect to Octopus Deploy, which acquired Codefresh in February 2024. Checked 2026-09-30, Octopus offers Codefresh CI through its sales team and names no free plan or price for it.",
+      "tier": "Retired",
+      "url": "https://octopus.com/codefresh/continuous-integration",
       "tags": [
         "ci",
         "cd",
@@ -9734,7 +9734,7 @@
         "kubernetes",
         "github-actions-alternative"
       ],
-      "verifiedDate": "2026-07-08",
+      "verifiedDate": "2026-09-30",
       "source_check": {
         "checked": "2026-09-05",
         "outcome": "does_not_name_vendor",
@@ -11721,9 +11721,9 @@
     {
       "vendor": "Mockerito",
       "category": "API Development",
-      "description": "The 'Developer' plan costs $15/month and includes 50,000 API calls/month and 20 projects. A free tier with 200+ endpoints across 9 domains is available with no signup required.",
+      "description": "Free public mock REST APIs: 200+ endpoints across 9 domains (e-commerce, finance, recruitment, education, healthcare, socials, markets, meteorology and aviation) with full CRUD, filtering and pagination. No signup and no API keys. Custom mock APIs are the paid Developer plan: $10/month after a 7-day free trial, with 50,000 API calls a month and 20 projects.",
       "tier": "Free",
-      "url": "https://mockerito.com/",
+      "url": "https://mockerito.com/free-apis",
       "tags": [
         "developer-tools",
         "free-for-dev"
@@ -11734,12 +11734,9 @@
         "outcome": "ok",
         "detail": "the page names Mockerito as \"mockerito\" and states \"$ 10\" and \"$10\" and \"50,000 API calls/month\""
       },
-      "restated_from": {
-        "reading_date": "2026-09-30",
-        "source_url": "https://mockerito.com/",
-        "record_date": "2026-09-30",
-        "change_type": "pricing_restructured",
-        "restated_on": "2026-09-30"
+      "restatement_reverted": {
+        "record_date": "2026-08-28",
+        "reverted_on": "2026-09-30"
       }
     },
     {
@@ -15991,7 +15988,7 @@
     {
       "vendor": "Phase Two",
       "category": "Auth",
-      "description": "Managed Keycloak hosting with Phase Two's Organization extension. No free tier since 2026-07-30, when Phase Two shut down its free shared realms. The Starter cluster is $149/month with a 30-day free trial, for up to 15K monthly active users.",
+      "description": "Managed Keycloak hosting with Phase Two's Organization extension. No free tier since 2026-07-30, when Phase Two shut down its free shared realms. The Starter cluster is $149/month after a 30-day free trial; users are unlimited, and it is sized for 5,000 active users a month.",
       "tier": "Trial",
       "url": "https://phasetwo.io/pricing/hosting/",
       "tags": [
@@ -18864,7 +18861,7 @@
     {
       "vendor": "Aionda Mail",
       "category": "Email",
-      "description": "Free tier includes up to 25 disposable addresses, encrypted mailbox, calendar & contacts. Plus tier is €1.99/month for up to 10,000 disposable addresses, unlimited forwarding, custom domains, calendar invitations, and 1 GB encrypted drive. Enterprise tier starts at €1.49/employee/month.",
+      "description": "Free tier includes up to 25 disposable addresses, encrypted mailbox, calendar & contacts. Plus tier is €1.99/month for up to 10,000 disposable addresses, unlimited forwarding, custom domains, calendar invitations, and 5 GB encrypted drive. Enterprise tier starts at €1.49/employee/month.",
       "tier": "Free",
       "url": "https://mail.aionda.com/",
       "tags": [

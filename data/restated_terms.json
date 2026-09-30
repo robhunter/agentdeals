@@ -1047,7 +1047,8 @@
       "source_url": "https://mockerito.com/",
       "record_date": "2026-08-28",
       "change_type": "pricing_model_change",
-      "summary": "The free tier now requires a 7-day trial and then costs $10/month. The current page also mentions a 'Developer' plan at $10/month with 50,000 API calls/month and 20 projects."
+      "summary": "The free tier now requires a 7-day trial and then costs $10/month. The current page also mentions a 'Developer' plan at $10/month with 50,000 API calls/month and 20 projects.",
+      "reverted_on": "2026-09-30"
     },
     {
       "vendor": "OCR.Space",
@@ -2715,7 +2716,8 @@
       "source_url": "https://mockerito.com/",
       "record_date": "2026-09-30",
       "change_type": "pricing_restructured",
-      "summary": "The 'Developer' plan is now $15/month instead of $10/month, and includes 50,000 API calls/month and 20 projects. A free tier with 200+ endpoints across 9 domains is still available with no signup required."
+      "summary": "The 'Developer' plan is now $15/month instead of $10/month, and includes 50,000 API calls/month and 20 projects. A free tier with 200+ endpoints across 9 domains is still available with no signup required.",
+      "reverted_on": "2026-09-30"
     },
     {
       "vendor": "TraceLog",
