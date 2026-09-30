@@ -29359,10 +29359,6 @@ function buildCiCdPricingPage(): string {
     '  </div>\n'
     ) : '  <p class="section-intro">No CI/CD-specific pricing changes tracked recently. This category has been relatively stable.</p>\n') +
     '\n' +
-    '  <div class="context-box">\n' +
-    '    <strong>The trend:</strong> Free CI/CD minutes are shrinking while self-hosted runner support is expanding. The counter-trend: Buildkite continues to offer unlimited free self-hosted agents.\n' +
-    '  </div>\n' +
-    '\n' +
     '  <h2 id="recommendations">Best-for-Use-Case Recommendations</h2>\n' +
     '\n' +
     '  <div class="verdict-box">\n' +
@@ -37110,7 +37106,7 @@ ${mcpCtaCss()}
 
     <div class="verdict-item">
       <strong>Mobile apps (native iOS/Android) &rarr; Bitrise</strong>
-      <p>350+ pre-built steps for mobile workflows. 300 credits/month, macOS runners for iOS builds, pre-configured steps for common mobile workflows. <a href="/vendor/bitrise">View Bitrise details &rarr;</a></p>
+      <p>400+ pre-built steps for mobile workflows. 300 credits/month, macOS runners for iOS builds, pre-configured steps for common mobile workflows. <a href="/vendor/bitrise">View Bitrise details &rarr;</a></p>
     </div>
 
     <div class="verdict-item">

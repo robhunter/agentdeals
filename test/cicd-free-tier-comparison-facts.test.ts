@@ -220,12 +220,6 @@ const SECTION_TABLE_ROWS: Array<{ section: string; vendor: string; cells: string
     "withdrawn": [
       "Kubernetes runner"
     ]
-  },
-  {
-    "section": "specialized",
-    "vendor": "RunJob (formerly RunMyJob)",
-    "cells": [],
-    "withdrawn": []
   }
 ];
 
@@ -239,7 +233,7 @@ const STATED_ON_THE_PAGE: string[] = [
   "Semaphore is a hosted cloud service with $15 of free credits a month. Its free, self-hosted Community Edition has unlimited users and concurrency.",
   "Codemagic is built by Nevercode Ltd and launched for Flutter apps at Flutter Live 2018. Its free plan gives 500 macOS M2 build minutes a month.",
   "Bitrise's Step Library has 400+ pre-built steps for iOS, Android, React Native and Flutter workflows.",
-  "Codefresh publishes no free plan: its pricing page redirects to Octopus Deploy, which acquired Codefresh in February 2024 and directs Codefresh CI inquiries to its team. Google Cloud Build gives 2,500 build-minutes a month per billing account. RunJob, formerly RunMyJob, offers cloud runners for GitHub Actions and GitLab CI, with a free plan.",
+  "Codefresh publishes no free plan: its pricing page redirects to Octopus Deploy, which acquired Codefresh in February 2024 and directs Codefresh CI inquiries to its team. Google Cloud Build gives 2,500 build-minutes a month per billing account.",
   "Woodpecker CI and Drone's Apache 2.0 Community Edition are open source and run on your own servers with no build-minute limits. Drone's Community Edition runs on one machine.",
   "Drone's open-source edition runs on one machine. Its Enterprise edition is free for individuals and small companies; larger ones get a trial. Woodpecker CI is an Apache 2.0 community fork of Drone. You pay for the machines that run them.",
   "Past the free quota, GitHub charges $0.006 a minute for Linux 2-core, $0.010 for Windows 2-core and $0.062 for macOS 3- or 4-core. Its docs no longer list multipliers but say usage totals include them. GitLab's cost factor multiplies job time: 1 on small Linux, 2 on medium, 6 on macOS M1 (paid tiers only).",
@@ -250,7 +244,7 @@ const STATED_ON_THE_PAGE: string[] = [
   "Unlimited free minutes for public repos on standard runners, 33,000+ marketplace actions, native GitHub integration.",
   "GitLab CI: 400 min/mo, unlimited minutes on your own runners (up to 50 per project) and a built-in container registry.",
   "First-class Flutter, iOS and Android support",
-  "350+ pre-built steps for mobile workflows.",
+  "400+ pre-built steps for mobile workflows.",
   "skips tasks that already ran with the same inputs",
   "Drone's Community Edition runs on one machine; Woodpecker is an Apache 2.0 community fork of Drone.",
   "See Hidden Costs and Gotchas for what you pay past the free limits."
@@ -265,6 +259,7 @@ const WITHDRAWN_FROM_EVERY_GUIDE: string[] = [
   "macOS minutes at 10x",
   "17,000+ marketplace",
   "unlimited self-hosted agents",
+  "unlimited free self-hosted",
   "Codefresh (1,200 free min)",
   "built by the Flutter",
   "Built by the Flutter"
@@ -283,7 +278,12 @@ const RANKING_BADGES: string[] = [
   "Best Self-Hosted"
 ];
 
-const GITHUB_RATES_ON_THE_PRICING_PAGE = "GitHub charges a per-minute rate for each runner type past the free quota: $0.006 for Linux 2-core, $0.010 for Windows 2-core and $0.062 for macOS.";
+const UNSOURCED_TREND_ON_THE_PRICING_PAGE: string[] = [
+  "Free CI/CD minutes are shrinking while self-hosted runner support is expanding.",
+  "Buildkite continues to offer unlimited free self-hosted agents.",
+];
+
+const GITHUB_RATES_ON_THE_PRICING_PAGE ="GitHub charges a per-minute rate for each runner type past the free quota: $0.006 for Linux 2-core, $0.010 for Windows 2-core and $0.062 for macOS.";
 
 let server: ChildProcess;
 let base = "";
@@ -424,6 +424,13 @@ describe("the CI/CD free tier comparison states each service's terms as the vend
     const handTyped = rowsOf(served.get(GITHUB_ACTIONS_ALTERNATIVES)!)
       .filter((cells) => cells[0].startsWith("Codefresh") && cells.includes("120 builds/mo"));
     assert.deepStrictEqual(handTyped, [], GITHUB_ACTIONS_ALTERNATIVES);
+  });
+
+  it("states no trend on the pricing page that no source gives", () => {
+    const text = textOf(served.get(PRICING)!);
+    for (const sentence of UNSOURCED_TREND_ON_THE_PRICING_PAGE) {
+      assert.ok(!text.includes(sentence), `${PRICING} still says: ${sentence}`);
+    }
   });
 
   it("keeps GitHub's and CircleCI's free allowances and Google Cloud Build's minutes", () => {
