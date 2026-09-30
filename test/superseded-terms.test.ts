@@ -83,6 +83,12 @@ function supersededPagesRender(): { offer: Offer; change: DealChange }[] {
   return supersededRecords().filter(({ offer }) => firstRecordFor(offer.vendor) === offer);
 }
 
+function withheldBehindTheRecordItWasRestatedFrom(offer: Offer, vendorChanges: readonly DealChange[]): boolean {
+  if (!offer.restated_from) return false;
+  const superseding = supersedingChange(offer, vendorChanges);
+  return superseding !== null && superseding.date <= offer.restated_from.record_date;
+}
+
 const A_RECORD = {
   vendor: "Quotacorp",
   category: "Cloud Hosting",
@@ -1009,6 +1015,44 @@ describe("#1103 a page whose stored terms its own change log quotes as previous"
   });
 });
 
+describe("#1744 a restated entry and the records that may still withhold it", () => {
+  const restated = {
+    ...A_RECORD,
+    description: A_CHANGE_QUOTING_IT.current_state,
+    restated_from: {
+      reading_date: A_CHANGE_QUOTING_IT.date,
+      source_url: A_CHANGE_QUOTING_IT.source_url,
+      record_date: A_CHANGE_QUOTING_IT.date,
+      change_type: A_CHANGE_QUOTING_IT.change_type,
+      restated_on: "2026-09-20",
+    },
+  } as Offer;
+  const aNewerRecordQuotingTheRestatement = {
+    ...A_CHANGE_QUOTING_IT,
+    date: "2026-09-30",
+    summary: "Egress on the free plan is now 10 GiB, down from 20 GiB.",
+    previous_state: A_CHANGE_QUOTING_IT.current_state,
+    current_state: "Free plan: 10 GiB egress, 1 GiB storage, 5 projects",
+  } as DealChange;
+  const theRecordItWasTakenFrom = A_CHANGE_QUOTING_IT as DealChange;
+
+  it("counts a restatement that never reached the stored terms as withheld behind the record it was taken from", () => {
+    const neverReachedTheTerms = { ...restated, description: A_RECORD.description };
+    assert.strictEqual(withheldBehindTheRecordItWasRestatedFrom(neverReachedTheTerms, [theRecordItWasTakenFrom]), true);
+  });
+
+  it("does not count the record it was taken from once the stored terms are the reading", () => {
+    assert.strictEqual(supersedingChange(restated, [theRecordItWasTakenFrom]), null);
+    assert.strictEqual(withheldBehindTheRecordItWasRestatedFrom(restated, [theRecordItWasTakenFrom]), false);
+  });
+
+  it("lets a newer record contradicting the restated terms withhold them again, without counting it against the restatement", () => {
+    const vendorChanges = [theRecordItWasTakenFrom, aNewerRecordQuotingTheRestatement];
+    assert.strictEqual(supersedingChange(restated, vendorChanges)?.date, aNewerRecordQuotingTheRestatement.date);
+    assert.strictEqual(withheldBehindTheRecordItWasRestatedFrom(restated, vendorChanges), false);
+  });
+});
+
 describe("#1103 every catalogue record whose stored terms are superseded", () => {
   let server: { proc: ChildProcess; port: number } | null = null;
   const bodies = new Map<string, string>();
@@ -1063,12 +1107,14 @@ describe("#1103 every catalogue record whose stored terms are superseded", () =>
       published.newest_reading_we_publish_as_our_terms,
       restated.map((o) => o.restated_from!.reading_date).sort().pop() ?? null,
     );
-    for (const offer of restated) {
-      assert.ok(
-        !records.some(({ offer: withholding }) => withholding === offer),
-        `${offer.vendor} is counted as restated and as still withholding behind a record it has already answered`,
-      );
-    }
+    const answeredYetWithheld = restated
+      .filter((offer) => withheldBehindTheRecordItWasRestatedFrom(offer, changesFor(offer.vendor)))
+      .map((offer) => offer.vendor);
+    assert.deepStrictEqual(
+      answeredYetWithheld,
+      [],
+      `counted as restated and as still withholding behind a record they have already answered: ${answeredYetWithheld.join(", ")}`,
+    );
 
     const rendering = population.filter(({ offer }) =>
       bodies.get(`/vendor/${toSlug(offer.vendor)}`)!.includes(STORED_TERMS_WITHHELD_PHRASE),

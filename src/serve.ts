@@ -54015,7 +54015,7 @@ const dispatchRequest = async (req: IncomingMessage, res: ServerResponse) => {
     const result = getExpiringDeals(withinDays);
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/expiring", params: { within_days: withinDays }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: result.total });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-    res.end(JSON.stringify(cited(result)));
+    res.end(JSON.stringify(citedAt(result, "/expiring")));
   } else if (url.pathname === "/api/freshness" && isGetOrHead) {
     recordApiHit("/api/freshness");
     const result = getFreshnessMetrics();
