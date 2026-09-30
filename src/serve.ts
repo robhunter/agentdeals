@@ -37835,16 +37835,17 @@ ${mcpCtaCss()}
 </html>`, pubDate, serverlessChanges);
 }
 
+export const AUTH_COMPARISON_LISTINGS = ["Auth0", "Clerk", "Kinde", "PropelAuth", "Stytch", "Descope", "WorkOS", "Keycloak", "authentik", "FusionAuth", "SuperTokens", "Hanko", "Ory", "Authgear", "MojoAuth", "Stack Auth", "Permit.io", "Cerbos Hub", "Authress"];
+
 function buildAuthComparison2026Page(): string {
   const title = "Auth & Identity Comparison 2026 — Auth0 vs Clerk vs Supabase Auth vs Firebase Auth";
   const metaDescAuth = "Comprehensive comparison of 20+ auth free tiers in 2026. Compare Auth0, Clerk, Supabase Auth, Firebase Auth, PropelAuth, Kinde, Keycloak, Authentik, Authelia, Appwrite, and more — MAU/MRU limits, overage costs, MFA, SSO, agentic AI support, and growth pricing.";
   const slug = "auth-comparison-2026";
   const pubDate = "2026-04-03";
 
-  const authVendorKeywords = ["Auth0", "Clerk", "Kinde", "Stytch", "Descope", "WorkOS", "Supabase", "Firebase", "Cognito", "Keycloak", "FusionAuth", "SuperTokens", "Hanko", "Ory", "Okta", "Permit.io", "Cerbos", "Authress", "Logto", "PropelAuth", "Authentik", "Authelia", "Appwrite", "Authgear", "MojoAuth", "Stack Auth"];
+  const tabulatedListings = new Set(AUTH_COMPARISON_LISTINGS.map(v => v.toLowerCase()));
   const authChanges = changesTheVendorMade(dealChanges).filter((c: any) =>
-    authVendorKeywords.some(v => c.vendor === v || c.vendor.startsWith(v + " ") || c.vendor.includes(v)) ||
-    (c.summary && (c.summary.toLowerCase().includes("auth") || c.summary.toLowerCase().includes("mau") || c.summary.toLowerCase().includes("identity") || c.summary.toLowerCase().includes("login")))
+    tabulatedListings.has(c.vendor.toLowerCase())
   ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   const changeTimelineRows = authChanges.slice(0, 12).map((c: any) => {
