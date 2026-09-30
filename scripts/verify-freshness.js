@@ -260,6 +260,7 @@ export function createVerifierClient(options = {}) {
   }
   const baseUrl = (options.baseUrl ?? process.env.OPENROUTER_BASE_URL ?? VERIFIER_BASE_URL).replace(/\/$/, "");
   const model = options.model ?? VERIFIER_MODEL;
+  const maxTokens = options.maxTokens ?? MAX_RESPONSE_TOKENS;
   const fetchImpl = options.fetchImpl ?? fetch;
   return {
     model,
@@ -275,7 +276,7 @@ export function createVerifierClient(options = {}) {
         },
         body: JSON.stringify({
           model,
-          max_tokens: MAX_RESPONSE_TOKENS,
+          max_tokens: maxTokens,
           temperature: 0,
           messages: [{ role: "user", content: prompt }],
         }),
