@@ -26440,7 +26440,7 @@
     {
       "vendor": "mockaroo",
       "category": "API Development",
-      "description": "Mockaroo lets you generate realistic test data in CSV, JSON, SQL, and Excel formats. You can also create mocks for back-end API.",
+      "description": "Mockaroo generates up to 1,000 rows of realistic test data for free, in CSV, JSON, SQL, and Excel formats. It also lets you design mock back-end APIs. Paid plans start at $60 a year.",
       "tier": "Free",
       "url": "https://mockaroo.com/",
       "tags": [

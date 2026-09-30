@@ -7616,7 +7616,13 @@
       "category": "API Development",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-30",
+        "detail": "Retracted 2026-09-30: no change. tiny.cloud already listed the Free Plan with \"1,000 editor loads per month\" on the Internet Archive's captures of 2026-01-27 (pricing page) and 2026-02-01 (home page), before our listing was imported on 2026-03-02 saying core features were free for unlimited usage.",
+        "source_url": "http://web.archive.org/web/20260201234802/https://www.tiny.cloud/"
+      }
     },
     {
       "vendor": "Docs",
@@ -8254,7 +8260,13 @@
       "category": "API Development",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-01"
+      "recorded_date": "2026-09-01",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-30",
+        "detail": "Retracted 2026-09-30: no change. mockaroo.com said \"generate up to 1,000 rows of realistic test data\" and \"Plans start at just $60/year\" on the Internet Archive's captures of 2025-06-03 and 2026-01-28, as it does today. Our listing never stated the row limit.",
+        "source_url": "http://web.archive.org/web/20260128024249/https://www.mockaroo.com/"
+      }
     },
     {
       "vendor": "Liveblocks",
@@ -8446,7 +8458,13 @@
       "category": "API Development",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-01"
+      "recorded_date": "2026-09-01",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-30",
+        "detail": "Retracted 2026-09-30: no change. mocklets.com listed the same Basic Free plan (1 Collection, 10 Apis / Collection, 5 Files / Collection, 2 Members / Collection) on the Internet Archive's captures of 2025-06-02 and 2026-02-02, as it does today. Our listing did not state the limits.",
+        "source_url": "http://web.archive.org/web/20260202160603/https://mocklets.com/"
+      }
     },
     {
       "vendor": "Currencyapi",
