@@ -37998,8 +37998,8 @@ ${mcpCtaCss()}
   </div>
 
   <div class="executive-summary">
-    <p><strong>Quick verdict:</strong> <strong>Auth0</strong> just expanded its free tier to 25,000 MAU with enterprise connections, SSO, SCIM, and new AI Features (token vaults, agentic AI workflow support) included free &mdash; the strongest managed auth free tier. <strong>Clerk</strong> leads on developer experience with 50,000 free MRU (monthly returning users) and drop-in React components. <strong>Firebase Auth</strong> and <strong>Supabase Auth</strong> offer 50K free MAU each as part of their BaaS platforms. <strong>WorkOS AuthKit</strong> is the outlier at 1M free MAU for authentication.</p>
-    <p><strong>The critical growth cost trap:</strong> Auth services look free at small scale, but overage costs vary wildly. At 100K MAU, Clerk costs ~$1,000/mo while Supabase Auth costs ~$162/mo. <strong>WorkOS</strong> remains free up to 1M MAU for basic auth. Self-hosted options like <strong>Keycloak</strong>, <strong>Authentik</strong>, and <strong>Authelia</strong> have zero per-MAU costs at any scale, trading operational complexity for cost predictability.</p>
+    <p><strong>Quick verdict:</strong> Auth0's free plan covers 25,000 monthly active users (MAU). Clerk's free Hobby plan covers 50,000 monthly retained users (MRU) per application. Supabase's Free plan covers 50,000 MAU. Firebase Authentication without Identity Platform has no MAU cap. Identity Platform is free up to 50,000 MAU (3,000 daily active users on the no-cost Spark plan). WorkOS User Management is free for up to 1 million MAU. Stytch's free tier covers 10,000 MAU. Amazon Cognito's free tier is 10,000 MAU per AWS account or organization on the Lite and Essentials tiers; on Lite, user pools created on or before 22 November 2024 keep 50,000.</p>
+    <p><strong>Growth costs:</strong> At 100,000 users: Clerk costs $1,025 a month; Supabase costs $25 a month; Appwrite costs $25 a month; WorkOS costs $0; Firebase Authentication without Identity Platform costs $0; Kinde costs $1,533.85 a month on its Plus plan; PropelAuth costs $4,650 a month on its Growth plan; Stytch's rate gives $18,000 a month before any volume discount it does not publish. On its B2C Essentials plan, Auth0 charges $2,100 a month for 30,000 MAU and publishes no price above that. The free editions of the self-hosted servers charge no licence fee per user.</p>
   </div>
 
   <div class="toc">
@@ -38018,7 +38018,7 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="main-comparison">Main Comparison Table</h2>
-  <p class="section-intro">Side-by-side comparison of 20+ auth service free tiers.</p>
+  <p class="section-intro">Side-by-side comparison of 18 auth services.</p>
 
   <div style="overflow-x:auto">
   <table class="comp-table">
@@ -38220,7 +38220,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="context-box">
-    <strong>Key takeaway:</strong> The auth market splits into four tiers. <strong>Managed auth</strong> (Auth0, Clerk, PropelAuth) offers the best DX with per-MAU/MRU costs at scale. <strong>BaaS-integrated</strong> (Supabase, Firebase, Cognito, Appwrite) bundles auth with a full backend. <strong>Self-hosted</strong> (Keycloak, Authentik, Authelia, FusionAuth, Ory) has unlimited free users at the cost of operational overhead. <strong>WorkOS</strong> is the outlier &mdash; 1M free MAU for authentication, with enterprise SSO as a paid add-on. <strong>New in 2026:</strong> Auth0&rsquo;s AI Features add token vaults and agentic AI workflow support, making M2M auth a first-class feature for AI agent architectures.
+    <strong>Key takeaway:</strong> Managed services charge by the number of users past their free tier. Supabase, Firebase and Appwrite bundle auth with a database and other backend services; AWS sells Cognito as a standalone identity service. The free editions of self-hosted servers charge no licence fee per user, and you run them yourself. WorkOS is free for up to 1 million MAU.
   </div>
 
   <h2 id="managed-auth">Managed Auth Platforms</h2>
@@ -38284,7 +38284,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="context-box">
-    <strong>Auth0 and Clerk:</strong> <strong>Auth0</strong> now includes enterprise connections, SSO, SCIM, and AI Features (token vaults for agentic workflows) on the free tier &mdash; 25K MAU with the deepest enterprise feature set. <strong>Clerk</strong> recently expanded to 50K free MRU (monthly returning users, not MAU) with superior React DX. At scale, Clerk costs ~$0.02/MRU while Auth0 is ~$0.07/MAU. <strong>Important:</strong> Clerk counts returning users (MRU), not all active users (MAU) &mdash; your effective free limit may be higher if many users sign up but don&rsquo;t return monthly. <strong>PropelAuth</strong> is the B2B specialist &mdash; 10K free MAU with built-in org management, roles, and RBAC. <strong>WorkOS</strong> remains the budget outlier at 1M free MAU for auth with enterprise SSO as a paid add-on.
+    <strong>Auth0 and Clerk:</strong> Auth0's free plan covers 25,000 MAU and includes one enterprise connection, Self-Service SSO, SCIM, 5 organizations, Token Vault for 2 connected apps, and 1,000 machine-to-machine (M2M) tokens a month. Its pricing page lists no MFA factors on the free plan. Auth0 has no per-user overage rate: past 25,000 MAU you must buy a paid plan sized to all your users, and 30,000 MAU on B2C Essentials costs $2,100 a month. Clerk's free Hobby plan covers 50,000 MRU per application, with up to 3 social connections and no MFA. On Pro ($25 a month), users from 50,001 to 100,000 MRU cost $0.02 each.
   </div>
 
   <h2 id="baas-auth">BaaS-Integrated Auth</h2>
@@ -38340,7 +38340,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="context-box">
-    <strong>BaaS auth comparison:</strong> <strong>Appwrite</strong> leads with 75K free MAU on cloud and unlimited self-hosted &mdash; plus it&rsquo;s fully open source (MIT), so you can migrate to self-hosted with zero user disruption. <strong>Supabase</strong> offers 50K free MAU with the lowest overage cost ($0.00325/MAU) &mdash; at 100K MAU, auth adds just $162.50/mo. <strong>Firebase Auth</strong> costs $0.0055/MAU but integrates deeply with Firestore and Firebase Hosting. <strong>AWS Cognito</strong> matches at 50K free MAU, ideal if you&rsquo;re already on AWS. <strong>The trade-off:</strong> BaaS auth is cheapest but ties your auth to a specific platform. Migrating away means moving users, tokens, and password hashes. <a href="/supabase-vs-firebase">Supabase vs Firebase comparison &rarr;</a>
+    <strong>Backend platforms and Cognito:</strong> Supabase Free covers 50,000 MAU; Pro is $25 a month for 100,000 MAU, then $0.00325 per MAU. Firebase Authentication without Identity Platform has no MAU cap; Identity Platform is free to 50,000 MAU, then $0.0055 per MAU up to 100,000. Cognito's free tier is 10,000 MAU per AWS account or organization (50,000 on Lite for user pools created on or before 22 November 2024); above it, Lite costs $0.0055 per MAU up to 100,000 and Essentials, the default for new user pools, $0.015. Appwrite Free covers 75,000 MAU; Pro is $25 a month for 200,000 MAU, then $3 per 1,000 users. Appwrite is open source under the BSD 3-Clause licence. Its migration from Appwrite Cloud to self-hosted Appwrite moves users, databases, files, functions and sites; Appwrite warns that some fields do not transfer. <a href="/supabase-vs-firebase">Supabase vs Firebase comparison &rarr;</a>
   </div>
 
   <h2 id="self-hosted">Self-Hosted / Open Source</h2>
@@ -38412,7 +38412,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="context-box">
-    <strong>Self-hosted trade-off:</strong> Zero per-MAU costs vs operational overhead. <strong>Keycloak</strong> is the industry standard &mdash; battle-tested at massive scale, with SAML/OIDC federation, but requires Java expertise and 512 MB+ RAM. <strong>Authentik</strong> is the modern alternative with the best admin UI &mdash; Python/Django-based, with built-in LDAP/SCIM bridge and visual flow designer. Growing fast in the homelab and self-hosted community. <strong>Authelia</strong> is the lightest option &mdash; a single Go binary that acts as an auth gateway for reverse proxies (Nginx, Traefik, HAProxy). No user management UI, but dead simple for SSO across self-hosted services. <strong>FusionAuth</strong> is the most feature-complete with better APIs. <strong>Ory</strong> is the most modern &mdash; Go-based microservices (Kratos, Hydra, Keto) that compose into any architecture. <strong>Hanko</strong> is passkey-first. <strong>SuperTokens</strong> is easiest for Node.js.
+    <strong>Self-hosted servers:</strong> Keycloak is an open-source identity server under the Apache 2.0 licence. It supports OIDC, OAuth 2.0 and SAML. Keycloak's sizing guide starts at 1,250 MB of RAM per pod. authentik is an open-source identity provider. Its Docker Compose install needs PostgreSQL and a host with at least 2 CPU cores and 2 GB of RAM. authentik offers no hosted version. Authelia is under 20 MB compressed and normally uses under 30 MB of memory. It provides single sign-on through a session cookie, OpenID Connect or trusted headers. It has no social login. FusionAuth Community is free to self-host with no user limit, but FusionAuth says it is not open source. Its free edition has no machine-to-machine (client credentials) support. Ory's servers (Kratos, Hydra, Keto) are open source under Apache 2.0 and written in Go. Self-hosted Ory Hydra supports machine-to-machine clients at no licence cost. Hanko supports passkeys, passwords and passwordless codes. Its free cloud plan covers 10,000 MAU. The SuperTokens core is written in Java, with backend SDKs for Node.js, Go and Python. SuperTokens charges for MFA even when self-hosted: $0.02 per MAU, with a $100 minimum a month.
   </div>
 
   <h2 id="specialized">Specialized Auth &amp; Authorization</h2>
@@ -38449,7 +38449,7 @@ ${mcpCtaCss()}
   </div>
 
   <h3>Authorization &amp; Permissions</h3>
-  <p class="section-intro">These handle <strong>authorization</strong> (what users can do) rather than authentication (who users are). They complement any auth provider above.</p>
+  <p class="section-intro">Permit.io and Cerbos handle authorization (what a user may do), not sign-in. Authress handles both sign-in and permissions.</p>
 
   <div style="overflow-x:auto">
   <table class="comp-table">
@@ -38481,7 +38481,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="context-box">
-    <strong>Specialized picks:</strong> <strong>Stack Auth</strong> is worth watching &mdash; an open-source alternative to Clerk with similar DX but self-hostable. <strong>Authgear</strong> excels at biometric/passkey auth for mobile. <strong>MojoAuth</strong> is the purest passwordless option. For authorization, <strong>Permit.io</strong> provides a visual policy editor with OPA under the hood, <strong>Cerbos</strong> runs as a sidecar alongside your services, and <strong>Authress</strong> specializes in complex B2B permission hierarchies. If your app needs RBAC beyond basic roles, pair your auth provider with a dedicated authorization service.
+    <strong>Specialized services:</strong> Stack Auth now operates as Hexclave. Self-hosting is free (server under AGPLv3, SDKs under MIT). Its managed Free plan allows 10,000 user accounts. Authgear's free cloud plan has no MAU limit and includes 2 applications and 2 admin seats. Passkeys and biometric login are on every plan. MojoAuth's free plan covers 25,000 MAU with magic links, email one-time codes and Google and Facebook login; passkeys and TOTP need its Business Pro plan ($120 a month for 25,000 MAU). Permit.io and Cerbos handle authorization (what a user may do), not sign-in. Authress handles both sign-in and permissions. Permit.io's free Community plan covers 1,000 MAU. Cerbos Hub's free plan covers 100 monthly active principals; the open-source Cerbos policy decision point is free with no principal limit and can run as a sidecar or as a central service. Authress bills per API call: the first 1,000 billable calls are free, then $0.0012 per call.
   </div>
 
   <h2 id="growth-trap">The Growth Cost Trap: Free to 100K MAU</h2>
@@ -38581,40 +38581,40 @@ ${mcpCtaCss()}
   </div>
 
   <div class="context-box">
-    <strong>The growth penalty is real.</strong> At 100K MAU, PropelAuth costs <strong>~$4,500/mo</strong> while Supabase Auth costs <strong>~$162/mo</strong>. <strong>Clerk&rsquo;s MRU model</strong> can be deceptive &mdash; 50K free MRU sounds generous, but MRU counts returning users only, not total active users. If most of your users return monthly, MRU ≈ MAU. <strong>WorkOS AuthKit</strong> is free up to 1M MAU for basic auth. <strong>Appwrite</strong> is the cheapest BaaS at scale (~$100/mo Pro plan covers auth + database + storage). Self-hosted solutions cost $0 per user but require $20-100/mo in server infrastructure. <strong>The key decision:</strong> do you value developer experience (Clerk, Auth0, PropelAuth) or cost efficiency (Supabase, Appwrite, self-hosted)? For AI agent architectures specifically, Auth0&rsquo;s new token vault and M2M features may justify the premium.
+    Clerk defines a monthly retained user as a user who visits the app in a given month at least one day after signing up. Clerk says MRU is often lower than raw MAU, especially for apps with many one-time signups or trial users. Auth0 publishes no price above 30,000 MAU. Stytch's estimator shows "Contact us" above 20,000 MAU. Cognito Lite costs $0.0055 per MAU above the free tier, up to 100,000 MAU. Cognito Essentials, the default tier for new user pools, costs $0.015 per MAU. The free editions of the self-hosted servers charge no licence fee per user.
   </div>
 
   <h2 id="hidden-costs">Hidden Costs and Gotchas</h2>
   <p class="section-intro">Auth pricing has several non-obvious costs beyond the headline MAU number. Here&rsquo;s what to watch for.</p>
 
   <div class="diff-card" style="border-left-color:#f85149">
-    <h3>Auth0: No middle ground between free and paid</h3>
-    <p class="diff-desc"><strong>Auth0&rsquo;s Essential plan starts at $35/mo</strong> &mdash; there&rsquo;s no intermediate tier. You&rsquo;re on the generous free tier (25K MAU) or jumping to paid. For teams that outgrow 25K MAU but don&rsquo;t need all Essential features, this cliff can be jarring. <strong>Clerk</strong> and <strong>Kinde</strong> have more gradual pricing curves.</p>
+    <h3>Auth0: the step from free to paid</h3>
+    <p class="diff-desc">Auth0 has no per-user overage rate. Past 25,000 MAU you must buy a paid plan sized to all your users. Auth0's B2C Essentials plan starts at $35 a month for 500 MAU. Auth0's B2B Essentials plan starts at $150 a month for 500 MAU. On B2C Essentials, 30,000 MAU costs $2,100 a month. B2C Essentials and B2C Professional include no enterprise connections, no Self-Service SSO and no SCIM.</p>
   </div>
 
   <div class="diff-card" style="border-left-color:#d29922">
-    <h3>Clerk: MRU vs MAU counting differences</h3>
-    <p class="diff-desc"><strong>Clerk counts Monthly Returning Users (MRU), not MAU.</strong> A user who signs up but doesn&rsquo;t return that month doesn&rsquo;t count. This sounds generous, but for apps with high retention (which is the goal), MRU ≈ MAU. The 50K MRU free tier is effectively 50K MAU for most production apps. Don&rsquo;t assume the MRU metric gives you meaningfully more headroom.</p>
+    <h3>Clerk counts retained users</h3>
+    <p class="diff-desc">Clerk's free Hobby plan covers 50,000 monthly retained users (MRU) per application. Clerk defines a monthly retained user as a user who visits the app in a given month at least one day after signing up. Clerk says MRU is often lower than raw MAU, especially for apps with many one-time signups or trial users.</p>
   </div>
 
   <div class="diff-card" style="border-left-color:#f85149">
-    <h3>M2M token limits</h3>
-    <p class="diff-desc"><strong>Auth0</strong> includes 1,000 M2M tokens on the free tier, but enterprise apps and AI agent architectures can burn through these fast. Each agent-to-service call that needs a token counts. Exceeding the limit requires upgrading. <strong>Keycloak, FusionAuth, and Ory</strong> have no M2M limits since you control the infrastructure.</p>
+    <h3>Machine-to-machine tokens</h3>
+    <p class="diff-desc">Auth0's free plan includes 1,000 M2M tokens a month. Auth0 counts the access tokens it issues, not API calls: one cached token can serve many calls until it expires. Clerk's free plan includes 2,500 M2M token creations a month. Kinde's free plan includes 2,000 M2M tokens. Descope's free plan includes 10,000 M2M exchanges. Cognito's M2M authentication is a paid add-on with no free tier. FusionAuth Community has no M2M support. Self-hosted Ory Hydra supports M2M clients at no licence cost; Ory's hosted service bills M2M tokens.</p>
   </div>
 
   <div class="diff-card" style="border-left-color:#d29922">
-    <h3>Firebase Auth: SMS verification costs extra</h3>
-    <p class="diff-desc"><strong>Firebase Auth</strong> SMS-based MFA charges $0.01&ndash;$0.06 per SMS depending on country. Phone verification for signup also costs per SMS. <strong>AWS Cognito</strong> charges for SMS MFA via SNS. TOTP-based MFA is free on all providers. Budget for SMS costs if you rely on phone-based verification.</p>
+    <h3>SMS and MFA charges</h3>
+    <p class="diff-desc">Firebase bills SMS for phone sign-in and SMS MFA at $0.01 to $0.50 per message, depending on the country. The first 10 messages a day are free. SMS MFA and TOTP MFA both require the Identity Platform upgrade on Firebase. SuperTokens charges for MFA even when self-hosted: $0.02 per MAU, with a $100 minimum a month. MojoAuth's Business Pro plan is required for passkeys and TOTP.</p>
   </div>
 
   <div class="diff-card" style="border-left-color:#f85149">
-    <h3>Self-hosted: hidden ops cost</h3>
-    <p class="diff-desc">Self-hosted auth is $0 per user but not $0 total. <strong>Keycloak</strong> needs 512 MB+ RAM and Java expertise. <strong>Authentik</strong> needs Python/Django skills and a Postgres database. You own security patches, upgrades, and scaling. Budget $20-100/mo for infrastructure and 2-4 hours/month for maintenance. The total cost is still far less than managed providers at scale, but it&rsquo;s not free.</p>
+    <h3>Running your own server</h3>
+    <p class="diff-desc">Keycloak's sizing guide starts at 1,250 MB of RAM per pod. authentik's Docker Compose install needs PostgreSQL and a host with at least 2 CPU cores and 2 GB of RAM. Their free editions charge no licence fee per user. You run the servers and apply security patches and upgrades yourself.</p>
   </div>
 
   <div class="diff-card" style="border-left-color:#d29922">
-    <h3>Vendor lock-in: session/token format portability</h3>
-    <p class="diff-desc">Migrating between auth providers is painful. Password hashes are provider-specific &mdash; users may need to reset passwords. <strong>Clerk</strong> and <strong>Auth0</strong> use proprietary SDKs that require significant refactoring. <strong>Standards-based providers</strong> (Keycloak, Ory, Authentik, Kinde) use OIDC/SAML, making migration easier. Your auth provider is one of the hardest services to switch.</p>
+    <h3>Moving to another provider</h3>
+    <p class="diff-desc">Clerk exports password hashes from its dashboard. Auth0 exports password hashes through a support case, which only paying and trial customers can open, and not every request qualifies. Users do not need to reset their passwords if the new provider accepts the hash format. Auth0, Keycloak, Ory, authentik and Kinde support OpenID Connect (OIDC).</p>
   </div>
 
   <div class="diff-card" style="border-left-color:#3fb950">
