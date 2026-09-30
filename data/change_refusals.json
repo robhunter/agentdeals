@@ -525,6 +525,18 @@
       "refused_date": "2026-09-21"
     },
     {
+      "vendor": "Axiom",
+      "change_type": "limits_increased",
+      "reason": "states_no_difference",
+      "detail": "limits_increased claimed, and every figure the summary carried sat in a clause about our own record rather than about the vendor's terms",
+      "summary": "The Personal tier is still offered, but the Always Free allowance for Axiom Cloud is now 1 TB / 100 GB-hrs / 100 GB, up from the stored value of 500 GB ingest/month, 25 GB storage, 30-day retention, 256 fields/dataset, 10 GB-hrs/mo query compute, 3 monitors.",
+      "previous_state": "Observability platform — 500 GB ingest/month, 25 GB storage, 30-day retention, 2 datasets, 1 user, 10 GB-hrs/mo query compute, 256 fields/dataset, 3 monitors, Email/Discord notifiers only",
+      "current_state": "Personal is $0 / month, permanent. It includes 500 GB/mo data loading compute, 10 GB-hours query compute, 25 GB storage, 30-day retention, Full APL access, All integrations, and Community support.",
+      "source_url": "https://axiom.co/pricing",
+      "category": "Monitoring",
+      "refused_date": "2026-09-30"
+    },
+    {
       "vendor": "Basecamp",
       "change_type": "limits_reduced",
       "reason": "same_transition_graded_differently",
@@ -726,12 +738,12 @@
       "change_type": "limits_reduced",
       "reason": "restates_stored_quantities",
       "detail": "narrowing claimed, and every quantity the current state names is one the stored description already held at the same value (350 currency), and drops 7 the stored description carried",
-      "summary": "The page mentions \"Over $350K in discounts and credits on AI and SaaS\", which aligns with the stored deal info's $350,000+ in aggregate perks. However, the specific credits for AWS, OpenAI, Google Cloud, GitHub, Notion, and Anthropic are not explicitly listed.",
+      "summary": "The page mentions \"Over $350K in discounts and credits on AI and SaaS\", which aligns with the stored deal info. However, the specific credits for AWS, OpenAI, Google Cloud, GitHub, Notion, and Anthropic are no longer explicitly listed.",
       "previous_state": "$350,000+ in aggregate partner perks for Brex cardholders — includes $5K AWS credits, $2.5K OpenAI credits, $200K Google Cloud, 20 free GitHub Enterprise seats, 6mo free Notion, $500 Anthropic credits, and 30+ more partner discounts",
       "current_state": "The page states \"Over $350K in discounts and credits on AI and SaaS\" without detailing the specific partner perks previously mentioned.",
       "source_url": "https://www.brex.com/solutions/startups",
       "category": "Startup Perks",
-      "refused_date": "2026-09-13"
+      "refused_date": "2026-09-30"
     },
     {
       "vendor": "Brex",
@@ -797,6 +809,18 @@
     {
       "vendor": "BudiBase",
       "change_type": "free_tier_removed",
+      "reason": "free_tier_still_offered",
+      "detail": "a free tier was recorded as removed by a summary that reports the page still offering one",
+      "summary": "The page focuses on a product with agents, automations, and apps, and offers a 'Try it free' option, but doesn't explicitly detail a permanently free tier with the features described in the stored information (PostgreSQL, MySQL, MSSQL, MongoDB, Rest API, Docker, K8s). It highlights Budibase Cloud and self-hosting options, but doesn't confirm a free, fully-featured tier.",
+      "previous_state": "Budibase is an open-source low-code platform for creating internal apps in minutes. Supports PostgreSQL, MySQL, MSSQL, MongoDB, Rest API, Docker, K8s",
+      "current_state": "The page offers a 'Try it free' option and mentions Budibase Cloud for managed hosting, but doesn't detail a free tier with specific database support or deployment options.",
+      "source_url": "https://budibase.com/",
+      "category": "Low-Code Platforms",
+      "refused_date": "2026-09-30"
+    },
+    {
+      "vendor": "BudiBase",
+      "change_type": "free_tier_removed",
       "reason": "states_no_terms",
       "detail": "every clause of the summary states absence or narration rather than a term the page carries, so it reports the reading rather than a change",
       "summary": "The page focuses on a 'Try it free' option and highlights features like Agents and Automations, but does not explicitly mention a permanently free tier with the described capabilities. It emphasizes a paid model with options to 'Contact sales' and 'Sign up'. The page also mentions Budibase Cloud as a managed hosting option.",
@@ -824,12 +848,12 @@
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
       "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (5,000 error)",
-      "summary": "The free tier now only includes 15K monthly events, down from 5,000. A self-hosted option remains free with unlimited users and all features.",
+      "summary": "The free tier now has a limit of 15,000 monthly events, and includes a single user. The stored information stated 5,000 errors/month or unlimited self-hosted.",
       "previous_state": "Error-tracking with Sentry-SDK compatability. Free for up to 5,000 errors/month, or unlimited use when self-hosted.",
-      "current_state": "The free tier includes 15K monthly events for a single user, with 5K events retained, and chat/email alerts.",
+      "current_state": "The free plan includes 15K monthly events, a single user, 5K events retained, and chat/email alerts.",
       "source_url": "https://www.bugsink.com/",
       "category": "Error Tracking",
-      "refused_date": "2026-09-13"
+      "refused_date": "2026-09-30"
     },
     {
       "vendor": "Bugsnag",
@@ -958,12 +982,12 @@
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
       "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (50 seo)",
-      "summary": "The free tier still exists, but the description is less clear. The page details a 'Basic' plan which is free and allows 100 URLs per crawl with unlimited crawls and sites, and is ad-supported. The stored description mentioned a free tier for 'smaller websites' without specifying a URL limit.",
+      "summary": "The free tier still exists, but the description is less clear. The page details a 'Basic' free plan that allows 100 URLs per crawl, unlimited crawls, and unlimited sites, with ads. The stored description mentioned a free tier for 'smaller websites' without specifying a URL limit.",
       "previous_state": "Browser extension that tests if your website follows 50+ SEO, speed and security best practices. Free tier for smaller websites.",
-      "current_state": "The 'Basic' plan is free and includes 100 URLs per crawl, unlimited crawls, unlimited sites, and is ad-supported.",
+      "current_state": "The 'Basic' plan is free and includes 100 URLs per crawl, unlimited crawls, and unlimited sites, and is ad supported.",
       "source_url": "https://www.checkbot.io/",
       "category": "Testing",
-      "refused_date": "2026-09-13"
+      "refused_date": "2026-09-30"
     },
     {
       "vendor": "Checkout",
@@ -1335,12 +1359,12 @@
       "change_type": "limits_increased",
       "reason": "unquantified_limit",
       "detail": "limits_increased claimed, but the current state names no quantity for anything the stored state measured (10 call)",
-      "summary": "The free tier now offers 15K monthly call credits and 50 requests per minute, instead of the previously stated 10K call credits.",
+      "summary": "The free tier now offers 15K monthly call credits and 50 requests per minute, an increase from the previously stated 10K call credits.",
       "previous_state": "Provides cryptocurrency market data including the latest crypto and fiat currency exchange rates. The free tier offers 10K call credits/month.",
       "current_state": "Basic Plan 15K monthly call credits, 50 requests per minute, historical data, commercial use. Just sign up for a free Developer Portal account.",
       "source_url": "https://coinmarketcap.com/api/",
       "category": "Payments",
-      "refused_date": "2026-09-13"
+      "refused_date": "2026-09-30"
     },
     {
       "vendor": "Comet ML",
@@ -1425,6 +1449,18 @@
       "source_url": "https://www.coupler.io/",
       "category": "Notebooks & Data Science",
       "refused_date": "2026-09-12"
+    },
+    {
+      "vendor": "Coupler",
+      "change_type": "limits_reduced",
+      "reason": "states_no_terms",
+      "detail": "every clause of the summary states absence or bookkeeping rather than a term the page carries, so it reports the reading rather than a change",
+      "summary": "The page promotes a 'Start for free' option but does not explicitly detail the limitations of a free plan. It highlights a wide range of integrations and features without specifying limits on users, data connections, or refresh frequency. The page focuses on a broader platform with AI integrations and various data destinations, suggesting the original free tier description is no longer fully representative.",
+      "previous_state": "Data integration tool that syncs between apps. It can create live dashboards and reports, transform and manipulate values, and collect and back up insights. The free plan is limited to one user, data connection, data source, and data destination. Also requires manual data refresh.",
+      "current_state": "The page offers a 'Start for free' option with access to 400+ data sources and AI integrations, but does not specify the limitations of the free plan beyond it being a starting point.",
+      "source_url": "https://www.coupler.io/",
+      "category": "Notebooks & Data Science",
+      "refused_date": "2026-09-30"
     },
     {
       "vendor": "CraftMyPDF",
@@ -1832,6 +1868,18 @@
       "collided_with": "DNSExit|pricing_restructured|2026-08-28|https://dnsexit.com/"
     },
     {
+      "vendor": "DNSExit",
+      "change_type": "limits_increased",
+      "reason": "states_no_terms",
+      "detail": "every clause of the summary states absence or bookkeeping rather than a term the page carries, so it reports the reading rather than a change",
+      "summary": "The free tier now offers unlimited email addresses, a significant increase from the original limit of 2. The storage limit is no longer explicitly mentioned.",
+      "previous_state": "Up to 2 Email addresses under your domain for free with 100MB of storage space. IMAP, POP3, SMTP, SPF/DKIM support.",
+      "current_state": "Unlimited email addresses. Access mail through Webmail, POP, or IMAP.",
+      "source_url": "https://dnsexit.com/",
+      "category": "Email",
+      "refused_date": "2026-09-30"
+    },
+    {
       "vendor": "Docker Hub",
       "change_type": "limits_reduced",
       "reason": "confirmed_unchanged",
@@ -2003,6 +2051,18 @@
     },
     {
       "vendor": "EmailOctopus",
+      "change_type": "free_tier_removed",
+      "reason": "removal_read_from_root",
+      "detail": "a free tier was recorded as removed from https://emailoctopus.com, a domain root that states no price, ending or replacement where the free tier was — a homepage's silence is not evidence that one ended",
+      "summary": "The free tier is not explicitly mentioned with specific limits. The page highlights starting for free with no credit card required, but focuses on paid plans with subscriber/email limits (e.g., 100,000 subscribers for $480/year). Multiple customer testimonials mention using the free service, but the page does not detail its limits.",
+      "previous_state": "Up to 2,500 subscribers and 10,000 emails per month free",
+      "current_state": "The page promotes starting for free without a credit card, but details pricing for plans starting at 100,000 subscribers for $480/year. It does not explicitly state the limits of the free tier.",
+      "source_url": "https://emailoctopus.com",
+      "category": "Email",
+      "refused_date": "2026-09-30"
+    },
+    {
+      "vendor": "EmailOctopus",
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
       "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (2,500 subscriber, 10,000 email)",
@@ -2125,15 +2185,15 @@
     },
     {
       "vendor": "Filebase",
-      "change_type": "pricing_model_change",
+      "change_type": "limits_increased",
       "reason": "same_transition_graded_differently",
       "detail": "same vendor, source_url and previous_state as Filebase|limits_increased|2026-09-01|https://filebase.com/",
-      "summary": "The free tier is now 500GB for $7.50/month.",
+      "summary": "The free tier is now 500GB, not 5GB. The page states storage is priced at $7.50 for 500GB and $15/TB.",
       "previous_state": "S3 Compatible Object Storage Powered by Blockchain. 5 GB free storage for an unlimited duration.",
-      "current_state": "Start at $7.50 for up to 500 GB. Pricing shown is storage-only. Object egress stays free across plans.",
+      "current_state": "Start at $7.50 for up to 500 GB. Object egress stays free across plans.",
       "source_url": "https://filebase.com/",
       "category": "Storage",
-      "refused_date": "2026-09-13",
+      "refused_date": "2026-09-30",
       "collided_with": "Filebase|limits_increased|2026-09-01|https://filebase.com/"
     },
     {
@@ -2418,6 +2478,18 @@
       "source_url": "https://gcore.com/pricing/edge-network",
       "category": "DNS & Domain Management",
       "refused_date": "2026-09-21"
+    },
+    {
+      "vendor": "Gemini CLI",
+      "change_type": "restriction",
+      "reason": "states_no_narrowing",
+      "detail": "a restriction was recorded by a summary that reports the free tier still standing and names no term that moved",
+      "summary": "The page details two authentication options: signing in with Google and using a Gemini API key. Signing in with Google still offers a free tier of 60 requests/min and 1,000 requests/day. However, the stored information mentions that as of 2026-06-18, Google login will no longer work for personal accounts, which is not reflected on the current page. The page also details a Gemini API Key option with a free tier of 1000 requests/day with Gemini 3.",
+      "previous_state": "Open-source terminal AI coding agent by Google, Apache 2.0 licensed. Since 2026-06-18, Login with Google no longer works for personal accounts, according to Google's Gemini Code Assist deprecation notice; the README still advertises 60 requests a minute and 1,000 a day with a personal Google account. With a Gemini API key, use counts against the Gemini API's own free tier and pricing. A Gemini Code Assist Standard or Enterprise licence is unaffected. Supports MCP tools, shell commands and file editing.",
+      "current_state": "Free tier : 60 requests/min and 1,000 requests/day with personal Google account.",
+      "source_url": "https://github.com/google-gemini/gemini-cli",
+      "category": "AI Coding",
+      "refused_date": "2026-09-30"
     },
     {
       "vendor": "geocodify.com",
@@ -2860,6 +2932,18 @@
     {
       "vendor": "heap.io",
       "change_type": "free_tier_removed",
+      "reason": "removal_read_from_root",
+      "detail": "a free tier was recorded as removed from https://heap.io, a domain root that states no price, ending or replacement where the free tier was — a homepage's silence is not evidence that one ended",
+      "summary": "The page does not explicitly mention a free tier with a 10K monthly sessions limit. It highlights a free trial and emphasizes a paid platform with features like automatic data capture and advanced analytics. Heap has joined forces with Contentsquare.",
+      "previous_state": "Automatically captures every user action in iOS or web apps. Free for up to 10K monthly sessions.",
+      "current_state": "The page promotes a free trial and a paid platform with features like automatic data capture, session replay, and AI-powered analytics. It does not mention a perpetually free tier with a 10K monthly sessions limit.",
+      "source_url": "https://heap.io",
+      "category": "Analytics",
+      "refused_date": "2026-09-30"
+    },
+    {
+      "vendor": "heap.io",
+      "change_type": "free_tier_removed",
       "reason": "states_no_terms",
       "detail": "every clause of the summary states absence or narration rather than a term the page carries, so it reports the reading rather than a change",
       "summary": "The page does not mention a free tier with a 10K monthly sessions limit. It highlights a partnership with Contentsquare and focuses on a trial and paid plans.",
@@ -2930,6 +3014,18 @@
       "source_url": "https://github.com/highlight/highlight",
       "category": "Logging",
       "refused_date": "2026-09-13"
+    },
+    {
+      "vendor": "Hotjar",
+      "change_type": "rebranded",
+      "reason": "confirmed_unchanged",
+      "detail": "The report highlights a rebranding and a clarification of the session limit (monthly vs. daily) but the core features and session count (200k) remain consistent with the stored description.",
+      "summary": "Hotjar's own page now redirects to contentsquare.com. Hotjar has been rebranded to Contentsquare. The free plan still exists and offers 200k sessions per month, heatmaps, session replay, surveys, error monitoring, funnels, and 10+ integrations. The free plan now captures 200k sessions *per month* instead of 35/day as Hotjar's free plan did.",
+      "previous_state": "Website Analytics and Reports — The Contentsquare Free plan includes 200k sessions per month, heatmaps, session replay, surveys, error monitoring, funnels, and 10+ integrations. It also includes a 15-day trial of the Growth plan.",
+      "current_state": "Contentsquare has a free plan that includes 200k sessions per month, heatmaps, session replay, surveys, error monitoring, funnels, and 10+ integrations. You'll also start with a 15-day trial of the Growth plan — no credit card required.",
+      "source_url": "https://hotjar.com",
+      "category": "Analytics",
+      "refused_date": "2026-09-30"
     },
     {
       "vendor": "Hotjar",
@@ -3106,12 +3202,12 @@
       "change_type": "new_tier",
       "reason": "same_transition_graded_differently",
       "detail": "same vendor, source_url and previous_state as ImgBB|limits_increased|2026-08-28|https://imgbb.com/",
-      "summary": "While a free tier still exists, ImgBB now offers paid plans (Pro) with increased limits and features like unlimited space and a 64MB file size limit per image. The free tier still has a 32MB limit.",
+      "summary": "While a free tier still exists, ImgBB now offers paid plans (ImgBB Pro) with increased limits and features like unlimited space and a 64MB file size limit per image. The free tier still has a 32MB limit.",
       "previous_state": "ImgBB is an unlimited image hosting servce. Drag and drop your image anywhere on the screen. 32 MB / image limit. Receive Direct image links, BBCode and HTML thumbnails after uploading image. Login to see the upload history.",
       "current_state": "ImgBB is a free image hosting service. Upgrade to unlock all the features. 3 Year Pro $ 3.99 Billed $143.64 UPGRADE No Ads Direct Linking Unlimited space Replace image feature 64 MB file size per image API Access 69% OFF Annual Plan $ 7.99 Billed $95.88 UPGRADE No Ads Direct Linking Unlimited space Replace image feature 64 MB file size per image API Access 38% OFF Monthly Plan $ 12.99 UPGRADE No Ads Direct Linking Unlimited space Replace image feature 64 MB file size per image API Access",
       "source_url": "https://imgbb.com/",
       "category": "Storage",
-      "refused_date": "2026-09-11",
+      "refused_date": "2026-09-30",
       "collided_with": "ImgBB|limits_increased|2026-08-28|https://imgbb.com/"
     },
     {
@@ -3124,7 +3220,7 @@
       "current_state": "Get started with 450 test emails a month, free forever",
       "source_url": "https://imitate.email",
       "category": "Email",
-      "refused_date": "2026-09-12"
+      "refused_date": "2026-09-30"
     },
     {
       "vendor": "incidenthub.cloud",
@@ -3136,7 +3232,7 @@
       "current_state": "We also have a free tier with 5 monitors, Discord and Slack integration, and no status page.",
       "source_url": "https://incidenthub.cloud/",
       "category": "Monitoring",
-      "refused_date": "2026-09-12"
+      "refused_date": "2026-09-30"
     },
     {
       "vendor": "InfluxDB Cloud",
@@ -3222,7 +3318,7 @@
       "current_state": "Premium plans are available for $5 for the first month. A 'Free' signup option with Google is available, but its limits are not specified.",
       "source_url": "https://integrately.com",
       "category": "Cloud Hosting",
-      "refused_date": "2026-09-12"
+      "refused_date": "2026-09-30"
     },
     {
       "vendor": "Intercom",
@@ -3870,10 +3966,10 @@
       "detail": "limits_reduced claimed, and every quantity that moved between the two states moved the other way — 72 inactivity against 30 inactivity, 72 inactivity against 90 inactivity",
       "summary": "The free tier now has a 64KB per entry limit and a 10,000 requests/24h rate limit. Unclaimed namespaces are purged after 30 days of inactivity, while claimed namespaces are purged after 90 days of inactivity. The free tier previously had a 1MB limit and a 72h inactivity scavenger policy.",
       "previous_state": "Anonymous JSON storage for scripts and tiny apps. No signup required; uses Master AID for updates and Read-Only RID for public fetching. Free tier includes 1 bucket (1MB limit) with a 72h inactivity scavenger policy.",
-      "current_state": "Unclaimed namespaces have a limit of 100 entries, 64 KB per entry, and are rate-limited above 10,000 requests/24h, purged after 30 days of inactivity. Claimed namespaces have the same entry and rate limits, but are purged after 90 days of inactivity.",
+      "current_state": "Unclaimed namespaces have a limit of 100 entries, 64 KB per entry, and are rate-limited above 10,000 requests/24h, purged after 30 days of inactivity. Claimed namespaces have a limit of 100 entries, 64 KB per entry, are rate-limited above 10,000 requests/24h, and are purged after 90 days of inactivity.",
       "source_url": "https://mantledb.sh",
       "category": "Storage",
-      "refused_date": "2026-09-12"
+      "refused_date": "2026-09-30"
     },
     {
       "vendor": "Mapbox",
@@ -3904,12 +4000,12 @@
       "change_type": "pricing_restructured",
       "reason": "states_no_difference",
       "detail": "the summary states that the page agrees with what we hold, and names no figure the stored description did not already carry",
-      "summary": "While MDB still offers components for free under the MIT License, the page heavily promotes 'MDB Pro' and other paid options. The free tier appears to be more focused on the core components, and the description of extensive tutorials and a colossal community is not explicitly highlighted as part of the free offering. They also offer a free hosting tool, MDB GO, which wasn't mentioned in the original description.",
+      "summary": "While a free tier still exists, the description is significantly broader. The page details MDB Standard (with a MIT License) as offering a collection of components for free, but also heavily promotes MDB Pro with advanced components and support. The page also introduces MDB GO for free hosting and deployment, and mentions various integrations and tools. The original description focused solely on the UI kits for different frameworks.",
       "previous_state": "Free for personal & commercial use Bootstrap, Angular, React, and Vue UI Kits with over 700 components, stunning templates, 1-min installation, extensive tutorials & colossal community.",
-      "current_state": "MDB offers a collection of components for free under the MIT License. They also offer MDB Pro with advanced components and support, and MDB GO for free hosting and deployment.",
+      "current_state": "MDB Standard offers a collection of stunning components made with attention to the smallest details, available under the MIT License.",
       "source_url": "https://mdbootstrap.com/",
       "category": "Design",
-      "refused_date": "2026-09-11"
+      "refused_date": "2026-09-30"
     },
     {
       "vendor": "MDBootstrap",
@@ -3983,6 +4079,18 @@
       "category": "Startup Perks",
       "refused_date": "2026-09-25",
       "collided_with": "Mercury|limits_reduced|2026-08-28|https://mercury.com/perks"
+    },
+    {
+      "vendor": "Mergify",
+      "change_type": "free_tier_removed",
+      "reason": "removal_read_from_root",
+      "detail": "a free tier was recorded as removed from https://mergify.com, a domain root that states no price, ending or replacement where the free tier was — a homepage's silence is not evidence that one ended",
+      "summary": "The free tier for public repositories is no longer explicitly mentioned. The page focuses on paid plans and features like CI Insights, Test Insights, and Merge Protections. While a merge queue is still a core feature, the free availability for public repos is not highlighted.",
+      "previous_state": "workflow automation and merge queue for GitHub — Free for public GitHub repositories",
+      "current_state": "The page details features like Merge Queue, CI Insights, Test Insights, and Merge Protections, and provides options to 'Get started' or 'Talk to our team', but does not explicitly mention a free tier for public repositories.",
+      "source_url": "https://mergify.com",
+      "category": "CI/CD",
+      "refused_date": "2026-09-30"
     },
     {
       "vendor": "Mergify",
@@ -4073,6 +4181,18 @@
     {
       "vendor": "mockaroo",
       "change_type": "limits_reduced",
+      "reason": "no_terms_to_narrow",
+      "detail": "limits_reduced claimed against \"Mockaroo lets you generate realistic test data in CSV, JSON, SQL, and Excel formats. You can also create mocks for back-end API.\", a stored description that states no price, no allowance and nothing free, so there is nothing for the terms to have narrowed from",
+      "summary": "The free tier is limited to 1,000 rows.",
+      "previous_state": "Mockaroo lets you generate realistic test data in CSV, JSON, SQL, and Excel formats. You can also create mocks for back-end API.",
+      "current_state": "Mockaroo lets you generate up to 1,000 rows of realistic test data in CSV, JSON, SQL, and Excel formats. Need more data? Plans start at just $60/year.",
+      "source_url": "https://mockaroo.com/",
+      "category": "API Development",
+      "refused_date": "2026-09-30"
+    },
+    {
+      "vendor": "mockaroo",
+      "change_type": "limits_reduced",
       "reason": "same_transition_graded_differently",
       "detail": "same vendor, source_url and previous_state as mockaroo|limits_reduced|2026-09-01|https://mockaroo.com/",
       "summary": "The free tier now limits data generation to 1,000 rows.",
@@ -4144,6 +4264,18 @@
       "source_url": "https://mouseflow.com/",
       "category": "Analytics",
       "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "Mux",
+      "change_type": "pricing_restructured",
+      "reason": "confirmed_unchanged",
+      "detail": "The report simply restates information already present in the stored description, and adds a detail about usage-based billing which was not previously claimed.",
+      "summary": "The Free plan now includes 100K delivery minutes and 100K Mux Robots units monthly. Also states that after the free allowance, usage-based billing applies.",
+      "previous_state": "The Free plan offers 100K free monthly delivery minutes, up to 10 stored videos, on-demand video only, 100K free monthly Mux Robots units, and 6k free monthly live caption minutes. No credit card required.",
+      "current_state": "The Free plan offers 100K free monthly delivery minutes, 100K free monthly Mux Robots units, up to 10 videos stored, on-demand videos only. After the free allowance, usage-based billing applies.",
+      "source_url": "https://www.mux.com/pricing",
+      "category": "Video",
+      "refused_date": "2026-09-30"
     },
     {
       "vendor": "Mux",
@@ -5059,6 +5191,18 @@
     },
     {
       "vendor": "Replit",
+      "change_type": "limits_reduced",
+      "reason": "measures_the_opposite",
+      "detail": "limits_reduced claimed, and every quantity that moved between the two states moved the other way — 1 live against 60 project",
+      "summary": "The free plan now has limits of up to 30 hours of chat on Free Mode and up to 60 projects. The stored information stated daily agent credits and the ability to publish 1 live project, which are not mentioned on the current pricing page.",
+      "previous_state": "Cloud IDE with AI code assistant — The Starter (Free) plan includes daily agent credits, the ability to create anything from slides to apps, a built-in database, and the ability to publish 1 live project.",
+      "current_state": "Up to 30 hours of chat on Free Mode and up to 60 projects on Free Mode.",
+      "source_url": "https://replit.com/pricing",
+      "category": "IDE & Code Editors",
+      "refused_date": "2026-09-30"
+    },
+    {
+      "vendor": "Replit",
       "change_type": "pricing_restructured",
       "reason": "same_transition_graded_differently",
       "detail": "same vendor, source_url and previous_state as Replit|pricing_restructured|2026-09-01|https://replit.com/pricing",
@@ -5087,12 +5231,12 @@
       "change_type": "free_tier_removed",
       "reason": "removal_read_from_root",
       "detail": "a free tier was recorded as removed from https://ReportGPT.app, a domain root that states no price, ending or replacement where the free tier was — a homepage's silence is not evidence that one ended",
-      "summary": "The platform is no longer entirely free with your own API key. While a 'Free Demo Document' is available, it's a one-time use. There are also paid one-time purchase options for generating more documents.",
+      "summary": "The platform is no longer entirely free with your own API key. While a 'Free Demo Document' is available, full access requires a one-time payment for a limited number of reports. The original deal of 'entire platform free as long as you bring your own API key' is no longer offered.",
       "previous_state": "AI Powered Writing Assistant. The entire platform is free as long as you bring your own API key.",
-      "current_state": "ReportGPT offers a 'Free Demo Document' (0$) for one-time use. Other options include 1 AI-Report for 5$, 3 AI-Reports for 10$, and 10 AI-Reports for 25$.",
+      "current_state": "The platform offers a 'Free Demo Document' for 0$ which allows you to generate document structures, chapters, and run AI-Plagiarism Checks. Beyond that, one-time payments are required for additional reports (1 AI-Report for 5$, 3 AI-Reports for 10$, 10 AI-Reports for 25$).",
       "source_url": "https://ReportGPT.app",
       "category": "AI / ML",
-      "refused_date": "2026-09-13"
+      "refused_date": "2026-09-30"
     },
     {
       "vendor": "repsy.io",
@@ -5158,15 +5302,15 @@
     },
     {
       "vendor": "robusta.dev",
-      "change_type": "free_tier_removed",
+      "change_type": "pricing_model_change",
       "reason": "states_no_terms",
       "detail": "every clause of the summary states absence or narration rather than a term the page carries, so it reports the reading rather than a change",
-      "summary": "The page does not mention a free tier with up to 20 Kubernetes nodes. It focuses on a paid model based on incident investigations and LLM usage.",
+      "summary": "The free tier with up to 20 Kubernetes nodes is no longer explicitly mentioned. The pricing page focuses on a usage-based model where you pay per incident and investigation, with options to bring your own LLM.",
       "previous_state": "Powerful Kubernetes monitoring based on Prometheus. Bring your own Prometheus or install the all-in-one bundle. The free tier includes up to 20 Kubernetes nodes. Alerts via Slack, Microsoft Teams, Discord, and more. Integrations with PagerDuty, OpsGenie, VictorOps, DataDog, and many other tools.",
-      "current_state": "Robusta offers pricing based on the number of alerts investigated by its AI SRE, with options for different LLM usage levels (500 alerts/5 incidents or 500 alerts/5 investigations). Pricing starts at $3,500/year for 5 incidents.",
+      "current_state": "The pricing is based on the number of unique incidents investigated, with costs determined by the number of alerts and the price per investigation (e.g., $2.50/investigation). There is no mention of a free tier with a node limit.",
       "source_url": "https://home.robusta.dev/",
       "category": "Monitoring",
-      "refused_date": "2026-09-12"
+      "refused_date": "2026-09-30"
     },
     {
       "vendor": "ruttl.com",
@@ -6452,12 +6596,12 @@
       "change_type": "restriction",
       "reason": "no_terms_to_narrow",
       "detail": "a restriction was measured against \"Fully-featured IDE with thousands of extensions, cross-platform app development (Microsoft extensions available for download for iOS and Android), desktop, web and cloud development, multi-language support (C#, C++, JavaScript, Python, PHP and more).\", a stored description that states no price, named tier or allowance, so there is nothing for the terms to have narrowed from",
-      "summary": "The Visual Studio Community license has restrictions based on organization size and revenue. It's free for individuals, students, open-source contributors, and small organizations (up to 5 users). Larger enterprises (over 250 PCs or $1M USD revenue) are limited to academic research, classroom learning, or open-source contributions.",
+      "summary": "The Visual Studio Community edition has usage restrictions based on organization size and revenue. It's free for individuals, students, and open-source contributors. For organizations, it's limited to 5 users in non-enterprise organizations (under 250 PCs or $1M USD revenue). Enterprise organizations (over 250 PCs or $1M USD revenue) are limited to academic research, classroom learning, or open-source contributions.",
       "previous_state": "Fully-featured IDE with thousands of extensions, cross-platform app development (Microsoft extensions available for download for iOS and Android), desktop, web and cloud development, multi-language support (C#, C++, JavaScript, Python, PHP and more).",
       "current_state": "For individuals Any individual developer can use Visual Studio Community to create their own free or paid apps. For organizations An unlimited number of users within an organization can use Visual Studio Community for the following scenarios: in a classroom learning environment, for academic research, or for contributing to open source projects. For all other usage scenarios: In non-enterprise organizations, up to five users can use Visual Studio Community. In enterprise organizations (meaning those with >250 PCs or >$1 Million US Dollars in annual revenue), no use is permitted beyond the open source, academic research, and classroom learning environment scenarios described above.",
       "source_url": "https://visualstudio.microsoft.com/vs/community/",
       "category": "IDE & Code Editors",
-      "refused_date": "2026-09-13"
+      "refused_date": "2026-09-30"
     },
     {
       "vendor": "webhook.site",
@@ -6623,6 +6767,18 @@
     },
     {
       "vendor": "xcloud.host",
+      "change_type": "limits_reduced",
+      "reason": "measures_no_change",
+      "detail": "limits_reduced claimed, and every quantity the record compares holds the same value once notation and period are normalised — 1 server against 1 server, 10 sit against 10 sit",
+      "summary": "The free tier now offers 1 server and 10 sites, but is associated with 'Self-Managed Hosting' which requires bringing your own server or connecting an existing one. The original description implied a fully managed free tier.",
+      "previous_state": "Server management and deployment platform with a user-friendly interface — Free: 1 server and 10 sites included",
+      "current_state": "Free: 1 server and 10 sites included. Connect any VPS to the xCloud panel. Every feature under one dashboard. Unlimited apps and databases",
+      "source_url": "https://xcloud.host",
+      "category": "Server Management",
+      "refused_date": "2026-09-30"
+    },
+    {
+      "vendor": "xcloud.host",
       "change_type": "free_tier_removed",
       "reason": "removal_read_from_root",
       "detail": "a free tier was recorded as removed from https://xcloud.host, a domain root that states no price, ending or replacement where the free tier was — a homepage's silence is not evidence that one ended",
@@ -6685,13 +6841,13 @@
       "vendor": "Zenable",
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
-      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (100 tool, 25 automated)",
-      "summary": "The free tier now includes 5,000 Zenable Credits/seat/week, and offers access to PR code review, IDE integrations, and the CLI. The stored information stated 100 tool calls per day to the MCP server and 25 free automated pull request reviews per day via the GitHub App.",
-      "previous_state": "Instantly auto-fix outputs from tools like Cursor, Windsurf, and Copilot to meet your company's quality and compliance standards using guardrails built with Policy as Code. The free tier includes 100 tools calls per day to the MCP server and 25 free automated pull request reviews per day via the GitHub App.",
-      "current_state": "Free accounts get 5,000 credits/seat/week.",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (15 review, 100 agentic)",
+      "summary": "The free tier now offers 5,000 Zenable Credits/seat/week, which can be used for PR/MR bot reviews, agentic code reviews, and chat tools. AI reviews consume 10-25 credits per reviewed file, while deterministic Guardrails are free. The original stored information stated 15 PR reviews/week and 100 agentic reviews/day.",
+      "previous_state": "Free accounts get 15 PR reviews/week and 100 agentic reviews/day.",
+      "current_state": "Free accounts get 5,000 Zenable Credits/seat/week. AI reviews consume 10-25 credits per reviewed file; deterministic Guardrails are free.",
       "source_url": "https://zenable.io",
       "category": "AI / ML",
-      "refused_date": "2026-09-13"
+      "refused_date": "2026-09-30"
     },
     {
       "vendor": "Zendesk for Startups",
@@ -6903,12 +7059,12 @@
       "change_type": "restriction",
       "reason": "no_terms_to_narrow",
       "detail": "a restriction was measured against \"Free DNS hosting with Dynamic DNS Support.\", a stored description that states no price, named tier or allowance, so there is nothing for the terms to have narrowed from",
-      "summary": "The free tier is intended for personal, non-commercial use only and has a limit of 100,000 DNS queries per month and 5 email forwarders. It does not include an SLA. Paid plans are recommended for business or high-traffic use.",
+      "summary": "The free tier is now explicitly for non-commercial use only, and includes a limit of 100,000 DNS queries per month and 5 email forwarders. The description now states production and business use should choose a paid plan.",
       "previous_state": "Free DNS hosting with Dynamic DNS Support.",
-      "current_state": "Free DNS is for a single personal domain for non-commercial use, with 100,000 DNS queries per month, 5 email forwarders, and Dynamic DNS support. It does not include an SLA.",
+      "current_state": "Free DNS is for a single personal domain for non-commercial or academic use, with 100,000 DNS queries per month, 5 email forwarders, and Dynamic DNS support. It does not include a service-level agreement.",
       "source_url": "https://www.zoneedit.com/free-dns/",
       "category": "DNS & Domain Management",
-      "refused_date": "2026-09-13"
+      "refused_date": "2026-09-30"
     },
     {
       "vendor": "Zonomi",

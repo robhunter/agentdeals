@@ -2703,6 +2703,19 @@
       "record_date": "2026-09-28",
       "change_type": "limits_increased",
       "summary": "The free plan now offers unlimited tests, test suites, users, and projects, and includes AI Test recorder, Components, Edit & rewind, Screenshots, and 7 days of tests history. Previously limits of 15 tests, 4 test suites, 1 user, and 1 project."
+    },
+    {
+      "vendor": "TraceLog",
+      "url": "https://tracelog.io/",
+      "restated_on": "2026-09-30",
+      "previous_description": "AI Analytics for E-commerce — Free plan: Up to 5k sessions/mo, 10 AI queries/mo, 1 report/mo.",
+      "description": "AI Analytics for E-commerce — Free up to 10,000 sessions a month. No card, no sales call.",
+      "reading_date": "2026-09-30",
+      "reading_terms": "Free up to 10,000 sessions a month. No card, no sales call.",
+      "source_url": "https://tracelog.io/",
+      "record_date": "2026-09-30",
+      "change_type": "limits_increased",
+      "summary": "The free plan now offers 10,000 sessions per month, an increase from 5,000 sessions."
     }
   ]
 }
