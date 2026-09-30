@@ -167,6 +167,20 @@ const WITHDRAWN_NEAR_A_HOST: string[] = [
   "Individual plan"
 ];
 
+const VERCEL = /Vercel/;
+
+const WITHDRAWN_NEAR_VERCEL: string[] = [
+  "6,000 build minutes",
+  "100 hours serverless function execution",
+  "$20/month per team member"
+];
+
+const VERCEL_HOBBY_ON_HOSTING_PRICING = "Vercel's Hobby plan (100 GB of Fast Data Transfer, builds included; non-commercial use only)";
+const VERCEL_HOBBY_ON_THE_NEXTJS_STACK = "Vercel's Hobby plan is free, with 100 GB of Fast Data Transfer, 1M function invocations and 4 hours of Fluid Active CPU a month, and builds included.";
+const VERCEL_PRO_ON_THE_NEXTJS_STACK = "Vercel Pro is $20 a month with one deploying seat, and $20 for each additional deploying seat.";
+
+const CIRCLECI_BUILD_MINUTES = "(up to 6,000 build minutes on small Docker)";
+
 const RENDER_HIDDEN_COSTS = "Free web services spin down after 15 minutes without traffic and take about one minute to spin back up. Free Postgres expires after 30 days.";
 const FLY_HIDDEN_COSTS = "No free plan for new accounts: a trial of 2 machine hours or 7 days, whichever comes first, then pay-as-you-go.";
 const HIDDEN_COST_CHARACTERS_SHOWN = 80;
@@ -188,11 +202,21 @@ const STATED_ON_OTHER_PAGES: Record<string, string[]> = {
     "Vercel Hobby for Next.js (100 GB of Fast Data Transfer, builds included; non-commercial use only).",
     "Vercel Pro ($20/seat) for frontend/Next.js.",
     "$7/mo (Starter instance)",
-    "The workaround costs $7/month (Starter instance, always-on)."
+    "The workaround costs $7/month (Starter instance, always-on).",
+    "Hobby plan: 100 GB Fast Data Transfer, 1M Function Invocations and 4 hours Fluid Active CPU a month; builds included, up to 45 minutes each; non-commercial personal use only.",
+    VERCEL_HOBBY_ON_HOSTING_PRICING
   ],
   "/vercel-alternatives": [
     "None for new users",
     "No free plan for new users since Feb 2026 (Pro from $29/mo)"
+  ],
+  "/free-nextjs-stack": [
+    "Hobby plan: 100 GB Fast Data Transfer, 1M function invocations and 4 hours Fluid Active CPU a month; builds included.",
+    VERCEL_HOBBY_ON_THE_NEXTJS_STACK,
+    VERCEL_PRO_ON_THE_NEXTJS_STACK
+  ],
+  "/cloudflare-pages-vs-vercel": [
+    "Vercel Hobby includes builds, up to 45 minutes each."
   ]
 };
 
@@ -359,6 +383,30 @@ describe("the hosting free tier comparison states each host's terms as the host 
     const html = served.get("/hosting-pricing")!;
     assert.ok(faqAnswersOf(html).some((answer) => answer.includes(RAILWAY_FOR_GENERAL_PURPOSE_APPS)));
     assert.deepStrictEqual(metaContentsOf(html).filter((content) => WITHDRAWN_NEAR_A_HOST.some((claim) => content.includes(claim))), []);
+  });
+
+  it("gives Vercel Hobby no build-minute allowance or function hours near Vercel's name on any guide or report, in text, meta or structured data", () => {
+    const found: string[] = [];
+    for (const [route, html] of served) {
+      for (const text of [textOf(html), ...metaContentsOf(html)]) {
+        for (const claim of WITHDRAWN_NEAR_VERCEL) {
+          for (let at = text.indexOf(claim); at >= 0; at = text.indexOf(claim, at + 1)) {
+            if (VERCEL.test(text.slice(Math.max(0, at - NEARBY), at + claim.length + NEARBY))) found.push(`${route}: ${claim}`);
+          }
+        }
+      }
+    }
+    assert.deepStrictEqual([...new Set(found)], []);
+    const answers = [
+      ["/hosting-pricing", VERCEL_HOBBY_ON_HOSTING_PRICING],
+      ["/free-nextjs-stack", VERCEL_HOBBY_ON_THE_NEXTJS_STACK],
+      ["/free-nextjs-stack", VERCEL_PRO_ON_THE_NEXTJS_STACK],
+    ];
+    assert.deepStrictEqual(answers.filter(([route, answer]) => !faqAnswersOf(served.get(route)!).some((text) => text.includes(answer))), []);
+  });
+
+  it("keeps CircleCI's build minutes, which are CircleCI's own figure", () => {
+    assert.ok(textOf(served.get("/ci-cd-pricing")!).includes(CIRCLECI_BUILD_MINUTES));
   });
 
   it("keeps Cloudflare Pages' builds, Vercel's transfer and Heroku's removed badge", () => {

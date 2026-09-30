@@ -4000,7 +4000,7 @@ const VS_PAGES: VsPageConfig[] = [
       <li><strong>Bandwidth:</strong> Cloudflare Pages has unlimited bandwidth (truly free). Vercel caps at 100 GB/month on the free plan — and the $20/seat Pro plan is required for commercial use.</li>
       <li><strong>Framework support:</strong> Vercel is the creator of Next.js and has first-class support for ISR, middleware, and edge functions. Cloudflare Pages supports most frameworks but Next.js features may lag.</li>
       <li><strong>Commercial use:</strong> Vercel's Hobby plan explicitly bans commercial use, forcing the $20/seat Pro upgrade. Cloudflare Pages has no such restriction on the free tier.</li>
-      <li><strong>Build limits:</strong> Cloudflare Pages allows 500 builds/month. Vercel gives 6,000 build minutes/month but with concurrency limits.</li>
+      <li><strong>Build limits:</strong> Cloudflare Pages allows 500 builds/month. Vercel Hobby includes builds, up to 45 minutes each.</li>
     </ul>`,
     recommendation: `<p><strong>Choose Cloudflare Pages if</strong> you want truly free hosting with unlimited bandwidth, no commercial use restrictions, or you're building static/Jamstack sites.</p>
     <p><strong>Choose Vercel if</strong> you're building with Next.js and want the best possible developer experience, including ISR, preview deployments, and edge middleware — just budget for the $20/seat Pro plan.</p>`,
@@ -16713,7 +16713,7 @@ function buildFreeNextjsStackPage(): string {
     {
       name: "Hosting & Deployment",
       icon: "🚀",
-      recommended: { vendor: "Vercel", why: "The creators of Next.js. Zero-config deployments with automatic edge optimization, ISR, middleware, and server components. Hobby plan: 100 GB bandwidth, 100 hours serverless function execution, 6,000 build minutes. Preview deploys on every PR. The only platform with day-one support for every Next.js feature." },
+      recommended: { vendor: "Vercel", why: "The creators of Next.js. Zero-config deployments with automatic edge optimization, ISR, middleware, and server components. Hobby plan: 100 GB Fast Data Transfer, 1M function invocations and 4 hours Fluid Active CPU a month; builds included. Preview deploys on every PR. The only platform with day-one support for every Next.js feature." },
       alternatives: ["Railway", "Netlify", "Cloudflare Pages"],
       outgrow: "When you exceed 100 GB bandwidth/month or need commercial use (Hobby plan is non-commercial). Railway's Hobby plan is $5/month including $5 of usage, with no commercial restriction. Netlify gives 100 GB bandwidth with serverless functions. Cloudflare Pages has unlimited bandwidth but limited Next.js feature support.",
       whyNot: "Why not Heroku: No free tier since November 2022. Why not Render: Free tier spins down after 15 minutes of inactivity — cold starts of about one minute kill the Next.js experience.",
@@ -16823,7 +16823,7 @@ function buildFreeNextjsStackPage(): string {
   };
 
   const faqJsonLd = faqPageJsonLd("/free-nextjs-stack", [
-    { q: "Is Vercel free for Next.js?", a: "Yes. Vercel's Hobby plan is free with 100 GB bandwidth, 100 hours serverless function execution, and 6,000 build minutes per month. However, it's limited to non-commercial, personal use. For commercial projects, Vercel Pro starts at $20/month per team member. Alternatives like Railway ($5 trial credit for 30 days, then $1 of free credit a month) and Cloudflare Pages (unlimited bandwidth) allow commercial use on free tiers." },
+    { q: "Is Vercel free for Next.js?", a: "Yes. Vercel's Hobby plan is free, with 100 GB of Fast Data Transfer, 1M function invocations and 4 hours of Fluid Active CPU a month, and builds included. However, it's limited to non-commercial, personal use. For commercial projects, Vercel Pro is $20 a month with one deploying seat, and $20 for each additional deploying seat. Alternatives like Railway ($5 trial credit for 30 days, then $1 of free credit a month) and Cloudflare Pages (unlimited bandwidth) allow commercial use on free tiers." },
     { q: "What's the best free database for Next.js?", a: "Neon (serverless Postgres) has a serverless driver that works in Vercel Edge Functions, it scales to zero when not in use, and offers 0.5 GiB storage free. Supabase (500 MB, includes auth and realtime) is great if you need a full BaaS. Turso (5 GB, edge SQLite) is ideal for read-heavy apps. PlanetScale removed its free tier in April 2024." },
     { q: "Can I build a SaaS for free with Next.js?", a: "Yes — with limits. This guide covers 10 infrastructure layers that cost $0/month total: hosting (Vercel), database (Neon), auth (Clerk 10K MAU), storage (R2), email (Resend 3K/mo), monitoring (Sentry), CI/CD (GitHub Actions), analytics (PostHog 1M events), search (Algolia 10K records), and background jobs (Inngest 25K runs). Most projects can run their entire stack on free tiers until they hit significant traction." },
     { q: "What's the first thing to spend money on when scaling a Next.js app?", a: "Database. Neon's 0.5 GiB free storage is the tightest limit in the stack. Neon's Launch plan is usage-based with no monthly minimum: $0.106 per CU-hour of compute and $0.35 per GB-month of storage. After that, hosting: Vercel Pro at $20/month unlocks commercial use, 1 TB bandwidth, and faster builds. Everything else (auth, email, monitoring, analytics) scales to meaningful traffic on free tiers." },
@@ -28752,7 +28752,7 @@ function buildCiCdPricingPage(): string {
       freeType: "generous",
       monthlyCostSmall: "$0",
       monthlyCostTeam: "$4/seat + overages",
-      hiddenCosts: "Linux minutes are 1x, macOS minutes are 10x, Windows are 2x. A 2,000-minute budget on macOS is really 200 minutes.",
+      hiddenCosts: "Past the free quota GitHub charges per minute: $0.006 Linux 2-core, $0.010 Windows 2-core, $0.062 macOS.",
     },
     {
       name: "GitLab CI",
@@ -31177,7 +31177,7 @@ function buildHostingPricingPage(): string {
       freeBandwidth: "100 GB",
       freeBuildMinutes: "6000/mo",
       freeCompute: "100 GB bandwidth, serverless functions",
-      freeDetails: "Hobby plan: 100 GB bandwidth/month, 6,000 build minutes/month, 100K function invocations/day, 10s function duration, 1 concurrent build. Deploy from Git with preview deployments. Optimized for Next.js, supports all frameworks. Edge Functions, Image Optimization, Analytics (limited).",
+      freeDetails: "Hobby plan: 100 GB Fast Data Transfer, 1M Function Invocations and 4 hours Fluid Active CPU a month; builds included, up to 45 minutes each; non-commercial personal use only. Deploy from Git with preview deployments. Optimized for Next.js, supports all frameworks. Edge Functions, Image Optimization, Analytics (limited).",
       freeType: "generous",
       monthlyCostSolo: "$0",
       monthlyCostTeam: "$20/seat",
@@ -31333,7 +31333,7 @@ function buildHostingPricingPage(): string {
   );
 
   const faqEntries = [
-    { q: "What is the best free cloud hosting platform in 2026?", a: "Cloudflare Pages offers unlimited sites, unlimited bandwidth, and 500 builds/month. For full-stack apps, Vercel's Hobby plan (100 GB bandwidth, 6,000 build minutes) and Deno Deploy (1M requests/month) are strong free options. Railway offers $5 in free credits to get started." },
+    { q: "What is the best free cloud hosting platform in 2026?", a: "Cloudflare Pages offers unlimited sites, unlimited bandwidth, and 500 builds/month. For full-stack apps, Vercel's Hobby plan (100 GB of Fast Data Transfer, builds included; non-commercial use only) and Deno Deploy (1M requests/month) are strong free options. Railway offers $5 in free credits to get started." },
     { q: "Is Heroku still worth it without a free tier?", a: "Heroku removed its free tier in November 2022. The cheapest option is now Eco dynos at $5/month (shared compute, sleeps after 30 min). For most use cases, Railway ($5/mo with $5 credit), Render (free tier with spin-down), or Fly.io provide better value." },
     { q: "What are the hidden costs of Vercel?", a: "New Pro projects default to Turbo build machines at $0.126/min — 9x the cost of Standard builds ($0.014/min). The Pro plan moved to a credit-based model ($20/mo credit pool) in January 2026. Image Optimization has separate quotas. The Hobby plan is restricted to personal, non-commercial use." },
     { q: "Which PaaS is best for side projects?", a: "For static sites: Cloudflare Pages (unlimited free bandwidth) or GitHub Pages. For full-stack: Railway ($5 trial credit for 30 days, no card required), Render (free tier with 15-min spin-down), or Vercel Hobby. For serverless APIs: Cloudflare Workers (100K req/day free) or Deno Deploy (1M req/month)." },

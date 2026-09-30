@@ -257,6 +257,8 @@ const WITHDRAWN_FROM_EVERY_GUIDE: string[] = [
   "Free for 3 users with unlimited builds",
   "allows only 1 concurrent build",
   "macOS minutes at 10x",
+  "macOS minutes are 10x",
+  "Windows are 2x",
   "17,000+ marketplace",
   "unlimited self-hosted agents",
   "unlimited free self-hosted",
@@ -284,6 +286,8 @@ const UNSOURCED_TREND_ON_THE_PRICING_PAGE: string[] = [
 ];
 
 const GITHUB_RATES_ON_THE_PRICING_PAGE ="GitHub charges a per-minute rate for each runner type past the free quota: $0.006 for Linux 2-core, $0.010 for Windows 2-core and $0.062 for macOS.";
+
+const GITHUB_COST_FACTOR_ON_THE_PRICING_PAGE = "Past the free quota GitHub charges per minute: $0.006 Linux 2-core";
 
 let server: ChildProcess;
 let base = "";
@@ -417,6 +421,8 @@ describe("the CI/CD free tier comparison states each service's terms as the vend
 
   it("gives GitHub's per-minute rates on the pricing page, and sells no Codefresh free plan there or on either alternatives page", () => {
     assert.ok(textOf(served.get(PRICING)!).includes(GITHUB_RATES_ON_THE_PRICING_PAGE));
+    const gitHubActions = rowOf(rowsOf(tableAfter(served.get(PRICING)!, 'id="cost-analysis"')), "GitHub Actions");
+    assert.ok(gitHubActions?.at(-1)?.startsWith(GITHUB_COST_FACTOR_ON_THE_PRICING_PAGE), gitHubActions?.join(" | "));
     for (const route of [PRICING, ALTERNATIVES]) {
       const rows = rowsOf(served.get(route)!).filter((cells) => cells[0].startsWith("Codefresh"));
       assert.deepStrictEqual(rows, [], route);
