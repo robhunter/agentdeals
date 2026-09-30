@@ -1584,7 +1584,8 @@
       "source_url": "https://mail.aionda.com/",
       "record_date": "2026-08-28",
       "change_type": "limits_reduced",
-      "summary": "The free tier now has limits of up to 25 disposable addresses, and includes an encrypted mailbox and calendar & contacts. There are also paid tiers available now."
+      "summary": "The free tier now has limits of up to 25 disposable addresses, and includes an encrypted mailbox and calendar & contacts. There are also paid tiers available now.",
+      "reverted_on": "2026-09-30"
     },
     {
       "vendor": "Wraps",
