@@ -152,6 +152,7 @@ describe("what a record says about its source, without loading the catalogue", (
       url: "https://example.com/pricing",
       readOn: "2026-09-05",
       finding: 'the page names Example and states "$0"',
+      findingEnded: [],
     });
   });
 
@@ -167,6 +168,7 @@ describe("what a record says about its source, without loading the catalogue", (
       url: "https://example.com/pricing",
       readOn: "2026-09-05",
       finding: null,
+      findingEnded: [],
     });
   });
 

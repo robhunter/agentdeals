@@ -6,6 +6,12 @@ import {
   unconfirmedTermsClause,
 } from "./source-check.js";
 import { ENDED_OFFER_CLAUSE, offerRetired } from "./retirement.js";
+import { changeEntryDateLabel } from "./change-dates.js";
+import {
+  quotedFiguresWhoseTermsEnded,
+  type EndingRecord,
+  type FiguresWhoseTermsEnded,
+} from "./check-figures-ended.js";
 import type { Offer } from "./types.js";
 
 export type Escaper = (text: string) => string;
@@ -35,10 +41,25 @@ export function checkFindingHtml(finding: string, esc: Escaper): string {
   return `<span class="${CHECK_FINDING_CLASS}">${CHECK_FINDING_LEAD}: ${esc(finding)}</span>`;
 }
 
+export const CHECK_FIGURES_ENDED_CLASS = "check-figures-ended";
+
+export function checkFiguresEndedSentence({ figures, record }: FiguresWhoseTermsEnded): string {
+  const quoted = figures.map(figure => `"${figure}"`).join(" and ");
+  return `Our change log records the terms behind ${quoted} as ended (${changeEntryDateLabel(record)})`;
+}
+
+function checkFiguresEndedHtml(sources: readonly ReadSource[], esc: Escaper): string {
+  return sources
+    .flatMap(source => (source.quote || !source.finding ? [] : source.findingEnded ?? []))
+    .map(ended => `. <span class="${CHECK_FIGURES_ENDED_CLASS}">${esc(checkFiguresEndedSentence(ended))}</span>`)
+    .join("");
+}
+
 export interface ReadSource {
   url: string;
   quote?: string | null;
   finding?: string | null;
+  findingEnded?: readonly FiguresWhoseTermsEnded[];
 }
 
 export interface ReadClauseOptions {
@@ -70,7 +91,7 @@ export function readClauseHtml(
     .join(" and from ");
   return (
     `We read that on <span class="${options.dateClass}" style="font-family:var(--mono)">${esc(readOn)}</span>` +
-    ` from ${provenance}`
+    ` from ${provenance}${checkFiguresEndedHtml(sources, esc)}`
   );
 }
 
@@ -79,6 +100,16 @@ export interface SourceRead {
   url: string;
   readOn: string;
   finding: string | null;
+  findingEnded: FiguresWhoseTermsEnded[];
+}
+
+export function readSourceOf(read: SourceRead): ReadSource {
+  return { url: read.url, finding: read.finding, findingEnded: read.findingEnded };
+}
+
+export interface ChangesOnRecord {
+  changes: readonly EndingRecord[];
+  servedOn: string;
 }
 
 export type MissingSourceKind = "ended" | "unconfirmed" | "no_record";
@@ -111,7 +142,10 @@ export const NO_CATALOGUE_RECORD_SOURCE: SourceMissing = {
 
 export type SourcedOffer = Pick<Offer, "url" | "tier" | "source_check" | "verifiedDate">;
 
-export function freeTierSourceOf(offer: SourcedOffer | null | undefined): FreeTierSource {
+export function freeTierSourceOf(
+  offer: SourcedOffer | null | undefined,
+  onRecord: ChangesOnRecord | null = null,
+): FreeTierSource {
   if (!offer) return NO_CATALOGUE_RECORD_SOURCE;
   if (offerRetired(offer)) return { cited: false, kind: "ended", clause: ENDED_OFFER_CLAUSE };
   const check = offer.source_check;
@@ -121,19 +155,24 @@ export function freeTierSourceOf(offer: SourcedOffer | null | undefined): FreeTi
   }
   const url = (offer.url ?? "").trim();
   if (!check || !url) return NO_CATALOGUE_RECORD_SOURCE;
+  const finding = checkFinding(offer);
   return {
     cited: true,
     url,
     readOn: check.checked,
-    finding: checkFinding(offer),
+    finding,
+    findingEnded: finding && onRecord
+      ? quotedFiguresWhoseTermsEnded(finding, onRecord.changes, onRecord.servedOn)
+      : [],
   };
 }
 
 export function freeTierSourceWeMayCite(
   offer: SourcedOffer | null | undefined,
   termsWeCannotConfirm: { clause: string } | null,
+  onRecord: ChangesOnRecord | null = null,
 ): FreeTierSource {
-  const source = freeTierSourceOf(offer);
+  const source = freeTierSourceOf(offer, onRecord);
   if (!source.cited || !termsWeCannotConfirm) return source;
   return { cited: false, kind: "unconfirmed", clause: termsWeCannotConfirm.clause };
 }
@@ -229,7 +268,7 @@ export function citedSourcesListHtml(
       const body = service.source.cited
         ? readClauseHtml(
             service.source.readOn,
-            [{ url: service.source.url, finding: service.source.finding }],
+            [readSourceOf(service.source)],
             esc,
             { dateClass, linkText: citationLabel },
           )

@@ -364,6 +364,14 @@ describe("the verdict comparison itself", () => {
     assert.deepStrictEqual(verdictsPublishedOn(html), [{ slug: "github-actions", verdict: "Stable" }]);
   });
 
+  it("reads a limit without the not-confirmed marker printed beside it", () => {
+    const pick = `<div class="stack-pick"><a href="/vendor/axiom" class="pick-name">Axiom</a>`
+      + `<p class="pick-limits">500 GB ingest/month <span class="listing-terms-unconfirmed" title="We cannot confirm these terms today." style="font-size:.7rem">not confirmed &middot; no difference measured &middot; 2026-09-30</span></p></div>`;
+    assert.deepStrictEqual(limitsPublishedOn(pick), [{ slug: "axiom", limit: "500 GB ingest/month" }]);
+    const bare = pick.replace(/ <span class="listing-terms-unconfirmed"[\s\S]*?<\/span>/, "");
+    assert.deepStrictEqual(limitsPublishedOn(bare), [{ slug: "axiom", limit: "500 GB ingest/month" }]);
+  });
+
   it("names a recommendation slot that states no verdict", () => {
     const row = `<tr><td><a href="/vendor/turso">Turso</a></td><td>5 GB</td></tr>`;
     assert.deepStrictEqual(slotsMissingAVerdict(row), ["turso"]);
