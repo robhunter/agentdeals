@@ -1,114 +1,103 @@
 {
   "held": [
     {
-      "vendor": "Aionda Mail",
-      "change_type": "pricing_restructured",
-      "impact": "medium",
-      "summary": "The Plus tier pricing has changed from €1.99/month to €18.49/year. The Plus tier also now includes 5 GB of encrypted drive space. The free tier still includes up to 25 disposable addresses, encrypted mailbox, calendar & contacts.",
-      "previous_state": "Free tier includes up to 25 disposable addresses, encrypted mailbox, calendar & contacts. Plus tier is €1.99/month for up to 10,000 disposable addresses, unlimited forwarding, custom domains, calendar invitations, and 1 GB encrypted drive. Enterprise tier starts at €1.49/employee/month.",
-      "current_state": "Unlock Plus €18.49 (~$21.08 USD)/year 90,000+ users. Includes encrypted mailbox, unlimited addresses, custom domains, 5 GB encrypted drive.",
-      "source_url": "https://mail.aionda.com/",
-      "category": "Email",
-      "first_read_date": "2026-09-28"
-    },
-    {
-      "vendor": "DNSExit",
+      "vendor": "Amazon Kiro (AWS Startups)",
       "change_type": "pricing_restructured",
       "impact": "high",
-      "summary": "The free tier for email now offers unlimited email addresses.",
-      "previous_state": "Up to 2 Email addresses under your domain for free with 100MB of storage space. IMAP, POP3, SMTP, SPF/DKIM support.",
-      "current_state": "Unlimited email addresses. Access mail through Webmail, POP, or IMAP.",
-      "source_url": "https://dnsexit.com/",
-      "category": "Email",
-      "first_read_date": "2026-09-28"
+      "summary": "The AWS Startups program now offers up to $200,000 in AWS Activate Credits, a change from $480/year of Kiro Pro+.",
+      "previous_state": "Up to 1 year of free Kiro Pro+ (worth $480/year) through AWS Startups program. Three tiers: Starter (up to 2 users), Growth (up to 50 users), Scale (up to 100 users). Eligible: early-stage to Series B companies. Application via AWS Startups portal.",
+      "current_state": "AWS Startups offers up to $200,000 in AWS Activate Credits. Credits are redeemable on third-party models on Amazon Bedrock. AI startups may be eligible for additional credits.",
+      "source_url": "https://aws.amazon.com/startups/",
+      "category": "Startup Perks",
+      "first_read_date": "2026-09-30"
     },
     {
-      "vendor": "EmailOctopus",
-      "change_type": "free_tier_removed",
-      "impact": "high",
-      "summary": "The page focuses on paid plans starting at $480/year for 100,000 subscribers. Multiple customer testimonials mention using the free service.",
-      "previous_state": "Up to 2,500 subscribers and 10,000 emails per month free",
-      "current_state": "The page does not detail a free tier with specific limits, but mentions users utilizing a free service. Paid plans start at $480/year for 100,000 subscribers.",
-      "source_url": "https://emailoctopus.com",
-      "category": "Email",
-      "first_read_date": "2026-09-28"
-    },
-    {
-      "vendor": "ImgBB",
+      "vendor": "Bench",
       "change_type": "pricing_restructured",
       "impact": "medium",
-      "summary": "A free tier still exists, ImgBB now prominently advertises paid 'Pro' plans with features like unlimited space and larger file sizes (64MB vs 32MB). The free tier is still available.",
-      "previous_state": "ImgBB is an unlimited image hosting servce. Drag and drop your image anywhere on the screen. 32 MB / image limit. Receive Direct image links, BBCode and HTML thumbnails after uploading image. Login to see the upload history.",
-      "current_state": "ImgBB is a free image hosting service. Upgrade to unlock all the features. 3 Year Pro $ 3.99 Billed $143.64 UPGRADE No Ads Direct Linking Unlimited space Replace image feature 64 MB file size per image API Access 69% OFF Annual Plan $ 7.99 Billed $95.88 UPGRADE No Ads Direct Linking Unlimited space Replace image feature 64 MB file size per image API Access 38% OFF Monthly Plan $ 12.99 UPGRADE No Ads Direct Linking Unlimited space Replace image feature 64 MB file size per image API Access",
-      "source_url": "https://imgbb.com/",
+      "summary": "The deal is no longer 20% off for 6 months. Stripe referrals now get 50% off their first 6 months with Bench.",
+      "previous_state": "20% off your first 6 months of bookkeeping with Bench. Access via: Free for Stripe users",
+      "current_state": "Stripe referrals get 50% off their first 6 months with Bench.",
+      "source_url": "https://bench.co/integrations/stripe/",
+      "category": "Startup Perks",
+      "first_read_date": "2026-09-30"
+    },
+    {
+      "vendor": "Filebase",
+      "change_type": "pricing_model_change",
+      "impact": "high",
+      "summary": "The free tier is now 500GB for $7.50/month.",
+      "previous_state": "S3 Compatible Object Storage Powered by Blockchain. 5 GB free storage for an unlimited duration.",
+      "current_state": "Start at $7.50 for up to 500 GB",
+      "source_url": "https://filebase.com/",
       "category": "Storage",
-      "first_read_date": "2026-09-28"
+      "first_read_date": "2026-09-30"
     },
     {
-      "vendor": "linkok.com",
-      "change_type": "pricing_restructured",
-      "impact": "high",
-      "summary": "The free tier now offers weekly and daily scans at $4/month and $8/month respectively, billed annually at $50 and $100.",
-      "previous_state": "Free forever for small sites (up to 100 pages) with monthly scans and email reports. Paid tiers available for weekly and daily scans, ranging from $4/month to $400/month depending on the number of pages scanned.",
-      "current_state": "Free forever for small sites. No credit card required. Weekly scans cost $4 /month Billed annually at $50 + local taxes*. Daily scans cost $8 /month Billed annually at $100 + local taxes*.",
-      "source_url": "https://linkok.com",
-      "category": "Monitoring",
-      "first_read_date": "2026-09-28"
-    },
-    {
-      "vendor": "MDBootstrap",
-      "change_type": "pricing_restructured",
-      "impact": "medium",
-      "summary": "A free offering exists, the description is significantly broader. The free tier is now more focused on components and less on a complete UI kit with templates. MDB GO, a free hosting and deployment tool, is also offered.",
-      "previous_state": "Free for personal & commercial use Bootstrap, Angular, React, and Vue UI Kits with over 700 components, stunning templates, 1-min installation, extensive tutorials & colossal community.",
-      "current_state": "MDB offers MDB Standard with a MIT License and a collection of free components. MDB Pro is a paid option with advanced components. MDB GO provides free hosting and deployment.",
-      "source_url": "https://mdbootstrap.com/",
-      "category": "Design",
-      "first_read_date": "2026-09-28"
-    },
-    {
-      "vendor": "serveravatar.com",
-      "change_type": "pricing_restructured",
-      "impact": "high",
-      "summary": "The 'Lite' plan is still offered as a free plan.",
-      "previous_state": "Manage and monitor PHP-based web servers with automated configurations — ServerAvatar Lite is a free cloud server management platform designed to help developers and businesses deploy, manage, and scale unlimited websites and applications with ease.",
-      "current_state": "The 'Newbie' plan is normally $12/month or $120/year, but is offered at $10/month for the first month. It includes 5 servers, unlimited apps and databases, all management and security features, AI Bot Blocker, Team Management, Log Monitoring Suite, White-Label Suite, and Hosting Reseller Panel.",
-      "source_url": "https://serveravatar.com",
-      "category": "Server Management",
-      "first_read_date": "2026-09-28"
-    },
-    {
-      "vendor": "xcloud.host",
-      "change_type": "pricing_restructured",
-      "impact": "medium",
-      "summary": "The free tier now offers 1 server and 10 sites. Is associated with 'Self-Managed Hosting' rather than being a standalone 'Free' tier.",
-      "previous_state": "Server management and deployment platform with a user-friendly interface — Free: 1 server and 10 sites included",
-      "current_state": "Bring your own server and connect it to the xCloud panel for easier server management, with every feature you need available under a single, unified dashboard. Free: 1 server and 10 sites included Connect any VPS to the xCloud panel Every feature under one dashboard Unlimited apps and databases Connect Your Own Server",
-      "source_url": "https://xcloud.host",
-      "category": "Server Management",
-      "first_read_date": "2026-09-28"
-    },
-    {
-      "vendor": "Mockerito",
-      "change_type": "pricing_restructured",
-      "impact": "medium",
-      "summary": "The 'Developer' plan is now $15/month instead of $10/month.",
-      "previous_state": "There is a free 7-day trial, then $10/month for the 'Developer' plan which includes 50,000 API calls/month and 20 projects. A free tier with 200+ endpoints across 9 domains is also available with no signup required. API key authentication is used.",
-      "current_state": "The 'Developer' plan is $15/month and includes 20 projects and 50,000 API calls/month. A 7-day free trial is available, then $15/month.",
-      "source_url": "https://mockerito.com/",
-      "category": "API Development",
-      "first_read_date": "2026-09-26"
-    },
-    {
-      "vendor": "ScraperAPI",
+      "vendor": "InfluxDB Cloud",
       "change_type": "free_tier_removed",
       "impact": "high",
-      "summary": "The free tier is now a 7-day trial with 5,000 API credits instead of a permanent free tier with 1,000 API credits.",
-      "previous_state": "Web scraping API with proxy rotation and CAPTCHA handling. Free plan: 1,000 API credits/month, 5 concurrent connections. No credit card required",
-      "current_state": "Start collecting data with our 7-day trial and 5,000 API credits. No credit card required.",
-      "source_url": "https://www.scraperapi.com/pricing/",
-      "category": "Web Scraping",
-      "first_read_date": "2026-09-26"
+      "summary": "The free tier is now a $250 credit for Cloud Serverless, with usage-based pricing after that. InfluxDB 3 Core is now listed as a permanently free, open-source option.",
+      "previous_state": "Time-series database — free tier: 5 MB writes per 5 minutes, up to 10,000 data series, 30-day data retention. Auto-provisioned for new accounts. Ideal for IoT and monitoring workloads",
+      "current_state": "Cloud Serverless uses usage-based pricing across four dimensions: data in ($0.0025/MB), query count ($0.012 per 100 executions), storage ($0.002/GB-hour), and data out ($0.09/GB). There's no minimum commitment or long-term contract on the usage-based plan. New paid accounts receive $250 in credits applied to the first 30 days.",
+      "source_url": "https://www.influxdata.com/influxdb-pricing/",
+      "category": "Databases",
+      "first_read_date": "2026-09-30"
+    },
+    {
+      "vendor": "MantleDB",
+      "change_type": "limits_reduced",
+      "impact": "medium",
+      "summary": "The free tier now has a 10,000 requests/24h rate limit and a 64KB per entry limit. Unclaimed namespaces are purged after 30 days of inactivity, while claimed namespaces are purged after 90 days. The free tier now includes up to 100 entries.",
+      "previous_state": "Anonymous JSON storage for scripts and tiny apps. No signup required; uses Master AID for updates and Read-Only RID for public fetching. Free tier includes 1 bucket (1MB limit) with a 72h inactivity scavenger policy.",
+      "current_state": "Unclaimed namespaces allow anyone to read and write, up to 100 entries and 64KB per entry, but are rate-limited above 10,000 requests/24h and purged after 30 days of inactivity. Claimed namespaces require a key for writes, have private reads by default, also have up to 100 entries and 64KB per entry, are rate-limited above 10,000 requests/24h, and are purged after 90 days of inactivity.",
+      "source_url": "https://mantledb.sh",
+      "category": "Storage",
+      "first_read_date": "2026-09-30"
+    },
+    {
+      "vendor": "OnlineOrNot",
+      "change_type": "limits_reduced",
+      "impact": "medium",
+      "summary": "The free tier (Hobby) now only includes up to 2 users instead of 2 team members. The free tier also only includes 1 status page, and SMS alerts are not included.",
+      "previous_state": "Uptime and status page monitoring — free plan: 3 monitors (uptime, keyword, heartbeat), 3-minute check interval, 2 team members, 1 status page, SSL monitoring, multi-location checks, email/Slack/Discord alerts",
+      "current_state": "Hobby: Up to 2 users, 3 minute check interval, Limited status page, Basic alerting.",
+      "source_url": "https://onlineornot.com/pricing",
+      "category": "Monitoring",
+      "first_read_date": "2026-09-30"
+    },
+    {
+      "vendor": "Sendinblue",
+      "change_type": "free_tier_removed",
+      "impact": "high",
+      "summary": "Sendinblue (now Brevo) offers 50% off Starter and Standard Plans, not 12 months free on the Premium plan.",
+      "previous_state": "12 months free on the Premium plan. Access via: First deal free, then 99€/year or invite friends",
+      "current_state": "50% off Starter and Standard Plans",
+      "source_url": "https://www.joinsecret.com/offers",
+      "category": "Startup Perks",
+      "first_read_date": "2026-09-30"
+    },
+    {
+      "vendor": "Stream",
+      "change_type": "pricing_restructured",
+      "impact": "medium",
+      "summary": "The Maker Account now has a limit of 2,000 monthly active users and 100 concurrent connections for Chat. The Maker Account also has requirements of five or less team members, less than $100k in funding, and less than $10k/mo revenue. Video & Audio is now on the Build Plan, and AI Moderation is Pay-as-You-Go with a $100 monthly credit.",
+      "previous_state": "Chat, Activity Feeds, and Video APIs. Maker Account (free): 2,000 MAU chat, 125K API calls/month feeds, 333K participant-minutes/month video. Hard limits, no surprise overages",
+      "current_state": "If your company has five or less team members, less than $100k in funding and has taken less than $10k in monthly revenue, Stream is free/gratis/complimentary. Chat Start Plan with a limit of 2,000 monthly active users and 100 concurrent connections. Vision Agents Open Source. Activity Feeds Start Plan. AI Moderation Pay-as-You-Go w/$100 Monthly Credit. Video & Audio Build Plan.",
+      "source_url": "https://getstream.io/maker-account/",
+      "category": "Communication",
+      "first_read_date": "2026-09-30"
+    },
+    {
+      "vendor": "Survicate",
+      "change_type": "free_tier_removed",
+      "impact": "high",
+      "summary": "The free plan is now a 10-day trial with limited features (25 responses, 100 data points, 25 integrations). The original free plan offered 25 responses/month, up to 1,000 stored responses, and up to 3 collaborators with no data export restrictions. The current page does not offer a perpetual free plan.",
+      "previous_state": "Email, website, in-product, and mobile surveys with AI survey creator. Free plan: 25 responses/month, up to 1,000 stored responses across all active surveys (300/survey cap), up to 3 collaborators. After the initial 10-day trial, surveys created during trial are disabled. No data export and no premium integrations on Free.",
+      "current_state": "Free 10-day trial No card required Explore all features: Collect up to 25 survey responses Research Hub with 100 data points 25+ integrations available Full access to Growth features Human support - talk with us in less than 5 minutes",
+      "source_url": "https://survicate.com/pricing/",
+      "category": "Forms",
+      "first_read_date": "2026-09-30"
     }
   ],
   "resolved": [
@@ -1515,6 +1504,126 @@
       "outcome": "corroborated",
       "detail": "a reading on 2026-09-28 read it as pricing_restructured too",
       "resolved_date": "2026-09-28"
+    },
+    {
+      "vendor": "Aionda Mail",
+      "change_type": "pricing_restructured",
+      "impact": "medium",
+      "summary": "The Plus tier pricing has changed from €1.99/month to €18.49/year. The Plus tier also now includes 5 GB of encrypted drive space. The free tier still includes up to 25 disposable addresses, encrypted mailbox, calendar & contacts.",
+      "previous_state": "Free tier includes up to 25 disposable addresses, encrypted mailbox, calendar & contacts. Plus tier is €1.99/month for up to 10,000 disposable addresses, unlimited forwarding, custom domains, calendar invitations, and 1 GB encrypted drive. Enterprise tier starts at €1.49/employee/month.",
+      "source_url": "https://mail.aionda.com/",
+      "first_read_date": "2026-09-28",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-09-30 read it as pricing_restructured too",
+      "resolved_date": "2026-09-30"
+    },
+    {
+      "vendor": "DNSExit",
+      "change_type": "pricing_restructured",
+      "impact": "high",
+      "summary": "The free tier for email now offers unlimited email addresses.",
+      "previous_state": "Up to 2 Email addresses under your domain for free with 100MB of storage space. IMAP, POP3, SMTP, SPF/DKIM support.",
+      "source_url": "https://dnsexit.com/",
+      "first_read_date": "2026-09-28",
+      "outcome": "contradicted",
+      "detail": "a reading on 2026-09-30 read a change the gate refused as states_no_terms",
+      "resolved_date": "2026-09-30"
+    },
+    {
+      "vendor": "EmailOctopus",
+      "change_type": "free_tier_removed",
+      "impact": "high",
+      "summary": "The page focuses on paid plans starting at $480/year for 100,000 subscribers. Multiple customer testimonials mention using the free service.",
+      "previous_state": "Up to 2,500 subscribers and 10,000 emails per month free",
+      "source_url": "https://emailoctopus.com",
+      "first_read_date": "2026-09-28",
+      "outcome": "contradicted",
+      "detail": "a reading on 2026-09-30 read a change the gate refused as unquantified_limit",
+      "resolved_date": "2026-09-30"
+    },
+    {
+      "vendor": "ImgBB",
+      "change_type": "pricing_restructured",
+      "impact": "medium",
+      "summary": "A free tier still exists, ImgBB now prominently advertises paid 'Pro' plans with features like unlimited space and larger file sizes (64MB vs 32MB). The free tier is still available.",
+      "previous_state": "ImgBB is an unlimited image hosting servce. Drag and drop your image anywhere on the screen. 32 MB / image limit. Receive Direct image links, BBCode and HTML thumbnails after uploading image. Login to see the upload history.",
+      "source_url": "https://imgbb.com/",
+      "first_read_date": "2026-09-28",
+      "outcome": "contradicted",
+      "detail": "a reading on 2026-09-30 read it as new_tier",
+      "resolved_date": "2026-09-30"
+    },
+    {
+      "vendor": "linkok.com",
+      "change_type": "pricing_restructured",
+      "impact": "high",
+      "summary": "The free tier now offers weekly and daily scans at $4/month and $8/month respectively, billed annually at $50 and $100.",
+      "previous_state": "Free forever for small sites (up to 100 pages) with monthly scans and email reports. Paid tiers available for weekly and daily scans, ranging from $4/month to $400/month depending on the number of pages scanned.",
+      "source_url": "https://linkok.com",
+      "first_read_date": "2026-09-28",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-09-30 read it as pricing_restructured too",
+      "resolved_date": "2026-09-30"
+    },
+    {
+      "vendor": "MDBootstrap",
+      "change_type": "pricing_restructured",
+      "impact": "medium",
+      "summary": "A free offering exists, the description is significantly broader. The free tier is now more focused on components and less on a complete UI kit with templates. MDB GO, a free hosting and deployment tool, is also offered.",
+      "previous_state": "Free for personal & commercial use Bootstrap, Angular, React, and Vue UI Kits with over 700 components, stunning templates, 1-min installation, extensive tutorials & colossal community.",
+      "source_url": "https://mdbootstrap.com/",
+      "first_read_date": "2026-09-28",
+      "outcome": "contradicted",
+      "detail": "a reading on 2026-09-30 read a change the gate refused as states_no_difference",
+      "resolved_date": "2026-09-30"
+    },
+    {
+      "vendor": "serveravatar.com",
+      "change_type": "pricing_restructured",
+      "impact": "high",
+      "summary": "The 'Lite' plan is still offered as a free plan.",
+      "previous_state": "Manage and monitor PHP-based web servers with automated configurations — ServerAvatar Lite is a free cloud server management platform designed to help developers and businesses deploy, manage, and scale unlimited websites and applications with ease.",
+      "source_url": "https://serveravatar.com",
+      "first_read_date": "2026-09-28",
+      "outcome": "contradicted",
+      "detail": "a reading on 2026-09-30 read a change the gate refused as confirmed_unchanged",
+      "resolved_date": "2026-09-30"
+    },
+    {
+      "vendor": "xcloud.host",
+      "change_type": "pricing_restructured",
+      "impact": "medium",
+      "summary": "The free tier now offers 1 server and 10 sites. Is associated with 'Self-Managed Hosting' rather than being a standalone 'Free' tier.",
+      "previous_state": "Server management and deployment platform with a user-friendly interface — Free: 1 server and 10 sites included",
+      "source_url": "https://xcloud.host",
+      "first_read_date": "2026-09-28",
+      "outcome": "contradicted",
+      "detail": "a reading on 2026-09-30 read a change the gate refused as confirmed_unchanged",
+      "resolved_date": "2026-09-30"
+    },
+    {
+      "vendor": "Mockerito",
+      "change_type": "pricing_restructured",
+      "impact": "medium",
+      "summary": "The 'Developer' plan is now $15/month instead of $10/month.",
+      "previous_state": "There is a free 7-day trial, then $10/month for the 'Developer' plan which includes 50,000 API calls/month and 20 projects. A free tier with 200+ endpoints across 9 domains is also available with no signup required. API key authentication is used.",
+      "source_url": "https://mockerito.com/",
+      "first_read_date": "2026-09-26",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-09-30 read it as pricing_restructured too",
+      "resolved_date": "2026-09-30"
+    },
+    {
+      "vendor": "ScraperAPI",
+      "change_type": "free_tier_removed",
+      "impact": "high",
+      "summary": "The free tier is now a 7-day trial with 5,000 API credits instead of a permanent free tier with 1,000 API credits.",
+      "previous_state": "Web scraping API with proxy rotation and CAPTCHA handling. Free plan: 1,000 API credits/month, 5 concurrent connections. No credit card required",
+      "source_url": "https://www.scraperapi.com/pricing/",
+      "first_read_date": "2026-09-26",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-09-30 read it as free_tier_removed too",
+      "resolved_date": "2026-09-30"
     }
   ]
 }
