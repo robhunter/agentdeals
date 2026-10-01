@@ -423,27 +423,38 @@ function sharesAWord(line, other) {
   return line.words.length === 0 || line.words.some((word) => other.words.includes(word));
 }
 
-function linesOnlyThisSideStates(lines, otherLines, otherPage) {
-  const unmatched = otherLines.map((line) => termsOfLine(decodedText(line)));
-  return lines.filter((line) => {
+function matchCopiedLines(lines, otherLines, otherPage) {
+  const unmatched = otherLines.map((line) => ({ line, terms: termsOfLine(decodedText(line)) }));
+  const onlyThisSide = [];
+  const matched = [];
+  for (const line of lines) {
     const terms = termsOfLine(decodedText(line));
-    if (terms.values.length === 0 && terms.negations.length === 0) return false;
-    const at = unmatched.findIndex((other) => sameTerms(other, terms) && sharesAWord(terms, other));
+    if (terms.values.length === 0 && terms.negations.length === 0) continue;
+    const at = unmatched.findIndex((other) => sameTerms(other.terms, terms) && sharesAWord(terms, other.terms));
     if (at >= 0) {
-      unmatched.splice(at, 1);
-      return false;
+      const [other] = unmatched.splice(at, 1);
+      matched.push({ line, other: other.line, shared: terms.words.filter((word) => other.terms.words.includes(word)) });
+    } else if (!occursOnce(otherPage, comparableText(line))) {
+      onlyThisSide.push(line);
     }
-    return !occursOnce(otherPage, comparableText(line));
-  });
+  }
+  return { onlyThisSide, matched };
+}
+
+export function wordsOfTierName(tier) {
+  return termsOfLine(decodedText(tier)).words;
 }
 
 function judgeSameAnswer(quoted, older, newer) {
+  const fromOld = matchCopiedLines(quoted.old_terms, quoted.new_terms, newer);
+  const fromNew = matchCopiedLines(quoted.new_terms, quoted.old_terms, older);
+  const matched = fromOld.matched.map(({ line, other, shared }) => ({ old: line, new: other, shared }));
   const review = [
-    ...linesOnlyThisSideStates(quoted.old_terms, quoted.new_terms, newer).map((line) => ({ old: line, new: "", why: "the reader called the terms the same, but only the old page states this line" })),
-    ...linesOnlyThisSideStates(quoted.new_terms, quoted.old_terms, older).map((line) => ({ old: "", new: line, why: "the reader called the terms the same, but only the new page states this line" })),
+    ...fromOld.onlyThisSide.map((line) => ({ old: line, new: "", why: "the reader called the terms the same, but only the old page states this line" })),
+    ...fromNew.onlyThisSide.map((line) => ({ old: "", new: line, why: "the reader called the terms the same, but only the new page states this line" })),
   ];
-  if (review.length === 0) return { status: "same", ...quoted };
-  return { status: "review", ...quoted, review, why: "the reader called the terms the same, but a line stating a value or a negation is on one page only, so the lines go to review" };
+  if (review.length === 0) return { status: "same", ...quoted, matched };
+  return { status: "review", ...quoted, review, matched, why: "the reader called the terms the same, but a line stating a value or a negation is on one page only, so the lines go to review" };
 }
 
 export function judgePair(answer, olderText, newerText) {

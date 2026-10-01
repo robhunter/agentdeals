@@ -246,6 +246,48 @@ describe("settling the backlog", () => {
     assert.strictEqual(Object.values(report.split).reduce((sum: number, n) => sum + (n as number), 0), report.records);
   });
 
+  it("lists every same-answer match whose only shared words are words of the listing's tier name, with its record, and no other match", async () => {
+    const record = (vendor: string, date: string) =>
+      change({ vendor, tier: "Free Developer", date, date_source: "discovered", previous_state: "A", current_state: "B", source_url: `https://${vendor.toLowerCase()}.example/pricing` });
+    const changes = [record("Zeta", "2026-09-01"), record("Eta", "2026-09-02")];
+    const offers = [
+      { vendor: "Zeta", tier: "Free Developer", category: "Databases" },
+      { vendor: "Eta", tier: "Free Developer", category: "Databases" },
+    ];
+    const archive = {
+      captures: async (url: string) => ({ captures: ["20260201120000", "20260901120000"].map((timestamp) => ({ timestamp, original: url, statuscode: "200", mimetype: "text/html" })) }),
+      captureHtml: async () => ({ html: `<html><body><p>TERMS=A</p><p>${"Plans and limits. ".repeat(40)}</p></body></html>` }),
+    };
+    const matched: Record<string, { old: string; new: string; shared: string[] }[]> = {
+      Zeta: [
+        { old: "Free developer: 3 projects", new: "Free developer: 3 users", shared: ["developer", "free"] },
+        { old: "1 GB of storage", new: "Storage: 1 GB", shared: ["storage"] },
+      ],
+      Eta: [
+        { old: "Free storage: 1 GB", new: "1 GB of free storage", shared: ["free", "storage"] },
+        { old: "$0/mo", new: "$0 per month", shared: [] },
+      ],
+    };
+    const report = await settleFirstReadings({
+      changes,
+      offers,
+      today: "2026-09-28",
+      archive,
+      pairReaderForListing: (listing: { vendor: string }) => async () => ({ status: "same", old_terms: ["TERMS=A"], new_terms: ["TERMS=A"], matched: matched[listing.vendor] }),
+      fetchToday: async () => ({ ok: true, text: "TERMS=A" }),
+      textDayOf: () => "2026-02-10",
+    });
+    assert.deepStrictEqual(report.matches_sharing_only_the_tier_name, [{
+      vendor: "Zeta",
+      date: "2026-09-01",
+      change_type: "limits_reduced",
+      tier: "Free Developer",
+      split: SPLIT.ours,
+      matches: [{ older: "capture 2026-02-01", newer: "capture 2026-09-01", old: "Free developer: 3 projects", new: "Free developer: 3 users", shared: ["developer", "free"] }],
+    }]);
+    assert.strictEqual(report.results.find((r: { vendor: string }) => r.vendor === "Eta").matches_sharing_only_the_tier_name, undefined);
+  });
+
   it("falls back to a listing named for the record when the catalogue holds none for its vendor", () => {
     assert.deepStrictEqual(listingFor({ vendor: "Gone", category: "CDN", tier: "Free" }, []), { vendor: "Gone", category: "CDN", tier: "Free" });
   });

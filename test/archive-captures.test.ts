@@ -304,6 +304,19 @@ describe("judging a paired reading by the words it copied from each page", () =>
     assert.strictEqual(verdict.status, "review", verdict.why);
   });
 
+  it("names the words each matched pair of lines shares, in a same answer and in one sent to review", () => {
+    const same = sameAnswered(["Free: 3 projects", "1 GB of storage", "$0/mo"], ["Free: 3 users", "Storage: 1 GB", "$0 per month"]);
+    assert.strictEqual(same.status, "same", same.why);
+    assert.deepStrictEqual(same.matched, [
+      { old: "Free: 3 projects", new: "Free: 3 users", shared: ["free"] },
+      { old: "1 GB of storage", new: "Storage: 1 GB", shared: ["storage"] },
+      { old: "$0/mo", new: "$0 per month", shared: [] },
+    ]);
+    const review = sameAnswered(["Free: 3 projects", "7-day history"], ["Free: 3 users"]);
+    assert.strictEqual(review.status, "review", review.why);
+    assert.deepStrictEqual(review.matched, [{ old: "Free: 3 projects", new: "Free: 3 users", shared: ["free"] }]);
+  });
+
   it("keeps a same answer when a reworded line shares a word with its match in any case or number, or states nothing besides its terms", () => {
     const reworded = [
       [["1 GB of storage"], ["Storage: 1 GB"]],
