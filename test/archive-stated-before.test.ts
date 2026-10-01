@@ -4,12 +4,13 @@ import assert from "node:assert";
 const { judgeStatedBefore, parseStatedBeforeAnswer, statedBeforePrompt, statedBeforeReaderFor, settleAgainstCaptures } = await import("../scripts/archive-captures.js");
 
 type Change = { record: string; old_page: string };
-type ChangeRecord = { date: string; summary: string; current_state: string };
+type ChangeRecord = { date: string; change_type: string; summary: string; current_state: string };
 
 const FILLER = "Compare plans and features for teams of every size. ".repeat(30);
 
 const ONESIGNAL: ChangeRecord = {
   date: "2026-09-25",
+  change_type: "limits_reduced",
   summary: "The free tier now has limits on monthly active users for mobile push notifications (up to 1,000) and web push notifications (max 10,000 subscribers per send). Email sends are limited to 10,000/month.",
   current_state: "Free $0/mo. Access to: All channels, Basic automation & analytics, OneSignal AI & MCP, Basic personalization. Mobile Push Notifications for organizations with up to 1,000 monthly active users. Web Push Notifications Max 10,000 subscribers per send. Email 10,000 sends / month.",
 };
@@ -22,6 +23,7 @@ const ONESIGNAL_ANSWER: Change[] = [
 
 const LOST_PIXEL: ChangeRecord = {
   date: "2026-08-28",
+  change_type: "product_deprecated",
   summary: "Lost Pixel is being sunset as they are joining Figma. While a free tier still exists, it's now listed as 'Hobby Free' and offers 7,000 snapshots/month. There are also paid tiers: Startup ($100/mo), Business ($250/mo), and Scale ($670/mo).",
   current_state: "Lost Pixel is sunsetting the product and building what's next. A 'Hobby Free' tier is available with 7,000 shots per month. Paid tiers include Startup ($100/mo, 40,000 shots), Business ($250/mo, 100,000 shots), and Scale ($670/mo, 300,000 shots).",
 };
@@ -34,6 +36,7 @@ const LOST_PIXEL_ANSWER: Change[] = [
 
 const IPWHO: ChangeRecord = {
   date: "2026-08-28",
+  change_type: "pricing_restructured",
   summary: "The free tier now has no stated request limit, but is described as 'Free forever for side projects, learning and non-profits'. A paid tier at $2.50/month lifts the cap and allows for business use.",
   current_state: "Free forever for side projects, learning and non-profits. $2.50/mo lifts the cap and clears you for business use.",
 };
@@ -105,6 +108,7 @@ describe("a line on the old capture that already states what the record calls ne
   it("need not state a figure the record gives only as the earlier one", () => {
     const record = {
       date: "2026-08-28",
+      change_type: "limits_increased",
       summary: "Email is now 10,000 free sends/month (previously 100/day).",
       current_state: "Free access to: 10,000/mo Free Email Sends.",
     };
@@ -117,6 +121,57 @@ describe("a line on the old capture that already states what the record calls ne
     assert.strictEqual(judgeStatedBefore(null, ONESIGNAL, ONESIGNAL_CAPTURE).status, "unstated");
     assert.strictEqual(statusOf(ONESIGNAL, [], ONESIGNAL_CAPTURE).status, "unstated");
   });
+});
+
+const LOST_PIXEL_PLAN_LINES_ONLY = LOST_PIXEL_ANSWER.slice(1);
+const LOST_PIXEL_SUNSET_CAPTURE = `Lost Pixel is joining Figma. We are sunsetting the product and building what's next. ${LOST_PIXEL_CAPTURE}`;
+
+const WEBVIZIO: ChangeRecord = {
+  date: "2026-08-28",
+  change_type: "free_tier_removed",
+  summary: "The deal is no longer a permanently free tier. It is now a 7-day free trial.",
+  current_state: "Offers a 7-day free trial, no credit card required.",
+};
+const WEBVIZIO_TRIAL_LINES: Change[] = [
+  { record: "The deal is no longer a permanently free tier.", old_page: "Start Free" },
+  { record: "It is now a 7-day free trial.", old_page: "7-day free trial" },
+];
+
+describe("the change a record's type names, when it is not a figure", () => {
+  it("is missing for lost-pixel.com when the reader leaves its sunset out and copies only its plan lines", () => {
+    assert.strictEqual(statusOf({ ...LOST_PIXEL, change_type: "limits_reduced" }, LOST_PIXEL_PLAN_LINES_ONLY, LOST_PIXEL_CAPTURE).status, "stated");
+    const verdict = statusOf(LOST_PIXEL, LOST_PIXEL_PLAN_LINES_ONLY, LOST_PIXEL_CAPTURE);
+    assert.strictEqual(verdict.status, "unstated");
+    assert.strictEqual(verdict.why, "no line copied from it reads as a deprecation");
+    assert.deepStrictEqual(verdict.review, []);
+  });
+
+  it("is found for a product_deprecated record whose older capture already carries the shutdown line", () => {
+    const answer = [{ record: "Lost Pixel is being sunset as they are joining Figma", old_page: "We are sunsetting the product and building what's next." }, ...LOST_PIXEL_PLAN_LINES_ONLY];
+    assert.strictEqual(statusOf(LOST_PIXEL, answer, LOST_PIXEL_SUNSET_CAPTURE).status, "stated");
+  });
+
+  it("is missing for a free_tier_removed record whose copied lines offer a trial but never say there is no free tier", () => {
+    const capture = `Website feedback for teams. Start Free 7-day free trial Cancel anytime No credit card required. ${FILLER}`;
+    assert.strictEqual(statusOf({ ...WEBVIZIO, change_type: "pricing_restructured" }, WEBVIZIO_TRIAL_LINES, capture).status, "stated");
+    const verdict = statusOf(WEBVIZIO, WEBVIZIO_TRIAL_LINES, capture);
+    assert.strictEqual(verdict.status, "unstated");
+    assert.strictEqual(verdict.why, "no line copied from it says there is no free tier");
+  });
+
+  it("is found for a free_tier_removed record whose older capture already says there is no free tier", () => {
+    const capture = `Website feedback for teams. No free tier. 7-day free trial Cancel anytime No credit card required. ${FILLER}`;
+    const answer = [{ record: "The deal is no longer a permanently free tier.", old_page: "No free tier." }, WEBVIZIO_TRIAL_LINES[1]];
+    assert.strictEqual(statusOf(WEBVIZIO, answer, capture).status, "stated");
+  });
+
+  for (const changeType of ["restriction", "open_source_killed"]) {
+    it(`is never found for ${changeType} records, which have no line to check`, () => {
+      const verdict = statusOf({ ...ONESIGNAL, change_type: changeType }, ONESIGNAL_ANSWER, ONESIGNAL_CAPTURE);
+      assert.strictEqual(verdict.status, "unstated");
+      assert.strictEqual(verdict.why, `${changeType} records always go to review`);
+    });
+  }
 });
 
 describe("the reader asked for that line", () => {
@@ -183,6 +238,14 @@ describe("settling a record whose terms the capture and the record's day agree o
     assert.strictEqual(result.outcome, "no_usable_capture");
     assert.deepStrictEqual(result.review.map((change: { record: string }) => change.record), ["Lost Pixel is being sunset as they are joining Figma"]);
     assert.match(result.why, /^the capture 2026-02-09 states the plan's terms as the page did on the record's day, but no line already states "Lost Pixel is being sunset as they are joining Figma"$/);
+  });
+
+  it("sends lost-pixel.com to review when the reader leaves its sunset out, as a record with no usable capture", async () => {
+    const { settled } = settleWithOneCapture(LOST_PIXEL, LOST_PIXEL_CAPTURE, statedBeforeReaderFor(clientAnswering(LOST_PIXEL_PLAN_LINES_ONLY), LOST_PIXEL));
+    const result = await settled;
+    assert.strictEqual(result.outcome, "no_usable_capture");
+    assert.deepStrictEqual(result.review, []);
+    assert.strictEqual(result.why, "the capture 2026-02-09 states the plan's terms as the page did on the record's day, but no line copied from it reads as a deprecation");
   });
 
   it("never calls it ours when no reader is asked for the line", async () => {

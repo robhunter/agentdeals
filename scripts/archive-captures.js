@@ -1,4 +1,6 @@
 import { execFileSync } from "node:child_process";
+import { readDeprecation } from "../dist/product-deprecation.js";
+import { descriptionDeniesFreeTier } from "../dist/ranking.js";
 import { MAX_PAGE_TEXT_LENGTH, MIN_PAGE_TEXT_LENGTH, stripHtml } from "./verify-freshness.js";
 
 const CDX_ENDPOINT = "https://web.archive.org/cdx/search/cdx";
@@ -537,6 +539,20 @@ function figuresStated(words) {
   return new Set(valuesStated(words).filter((value) => !VALUE_WORDS.includes(value)));
 }
 
+const LINE_STATING_A_CHANGE_WITHOUT_FIGURES = {
+  product_deprecated: { states: (line) => readDeprecation(line) !== null, missing: "no line copied from it reads as a deprecation" },
+  free_tier_removed: { states: (line) => descriptionDeniesFreeTier(line), missing: "no line copied from it says there is no free tier" },
+  restriction: null,
+  open_source_killed: null,
+};
+
+function changeOfItsTypeUnstated(changeType, changes) {
+  if (!Object.hasOwn(LINE_STATING_A_CHANGE_WITHOUT_FIGURES, changeType)) return null;
+  const rule = LINE_STATING_A_CHANGE_WITHOUT_FIGURES[changeType];
+  if (!rule) return `${changeType} records always go to review`;
+  return changes.some((change) => rule.states(change.old)) ? null : rule.missing;
+}
+
 export function judgeStatedBefore(answer, record, olderText) {
   if (!Array.isArray(answer?.changes)) return { status: "unstated", why: "the reader's answer could not be parsed", review: [] };
   const changes = answer.changes
@@ -559,7 +575,10 @@ export function judgeStatedBefore(answer, record, olderText) {
     return missing.length > 0 ? `the capture's words do not state ${quoteAll(missing)}` : null;
   };
   const unstated = changes.map((change) => ({ ...change, why: whyUnstated(change) })).filter((change) => change.why);
-  if (unstated.length === 0) return { status: "stated", stated_then: changes };
+  if (unstated.length === 0) {
+    const ofItsType = changeOfItsTypeUnstated(record.change_type, changes);
+    return ofItsType ? { status: "unstated", why: ofItsType, review: [] } : { status: "stated", stated_then: changes };
+  }
   return {
     status: "unstated",
     why: `no line already states ${quoteAll(unstated.map((change) => change.record))}`,
