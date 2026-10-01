@@ -30,7 +30,7 @@
       "changed": "2026-10-01"
     },
     "/alternative-to": {
-      "hash": "e8f2be931e2d8985",
+      "hash": "f3472411004e0e92",
       "changed": "2026-10-01"
     },
     "/alternative-to/360-monitoring": {
@@ -1256,7 +1256,7 @@
       "changed": "2026-10-01"
     },
     "/category/search": {
-      "hash": "1f797ba0b19e5763",
+      "hash": "5542d4844fddc870",
       "changed": "2026-10-01"
     },
     "/category/secrets-management": {
@@ -1519,16 +1519,16 @@
       "changed": "2026-09-20"
     },
     "/compare/brave-search-api-vs-bonsai-io": {
-      "hash": "8f83e155aeb700bd",
-      "changed": "2026-09-27"
+      "hash": "18461c641582e85a",
+      "changed": "2026-10-01"
     },
     "/compare/brave-search-api-vs-orama": {
-      "hash": "cb2a5c1b3ee4682f",
-      "changed": "2026-09-27"
+      "hash": "e4368d28343b8e8c",
+      "changed": "2026-10-01"
     },
     "/compare/brave-search-api-vs-typesense-cloud": {
-      "hash": "9ac7720d3cf8ec8b",
-      "changed": "2026-09-27"
+      "hash": "e38daaf1a6797921",
+      "changed": "2026-10-01"
     },
     "/compare/bright-data-mcp-server-vs-geekflare-api": {
       "hash": "b6d5bcf7e36389ba",
@@ -2897,8 +2897,8 @@
       "changed": "2026-10-01"
     },
     "/digest/2026-w07": {
-      "hash": "6fd1e74764c91abe",
-      "changed": "2026-09-27"
+      "hash": "62abd9b8aa83f42f",
+      "changed": "2026-10-01"
     },
     "/digest/2026-w08": {
       "hash": "3c540c8eb9beaae4",
@@ -3147,11 +3147,11 @@
       "changed": "2026-10-01"
     },
     "/free-tier-risk": {
-      "hash": "ccc743b1495df17c",
+      "hash": "2ab85d56eeccd5d3",
       "changed": "2026-10-01"
     },
     "/free-tier-tracker": {
-      "hash": "b27f8d17f63bde70",
+      "hash": "7b22dea1a4cd1982",
       "changed": "2026-10-01"
     },
     "/freshness": {
@@ -3309,7 +3309,7 @@
       "changed": "2026-10-01"
     },
     "/q1-2026-developer-pricing-report": {
-      "hash": "1be9d036e079f8fa",
+      "hash": "ebde121421ffb420",
       "changed": "2026-10-01"
     },
     "/q2-pricing-preview-2026": {
@@ -3413,7 +3413,7 @@
       "changed": "2026-10-01"
     },
     "/reports/2026-02": {
-      "hash": "38701fb97d174cc3",
+      "hash": "a15833931b0d2146",
       "changed": "2026-10-01"
     },
     "/reports/2026-03": {
@@ -3468,11 +3468,11 @@
       "daily": true
     },
     "/stability": {
-      "hash": "3f27332676e865de",
+      "hash": "1213fd81a5d736ab",
       "changed": "2026-10-01"
     },
     "/stack-check": {
-      "hash": "2995d6a5b9398806",
+      "hash": "df5df4ea60fe18b5",
       "changed": "2026-10-01"
     },
     "/stacks": {
@@ -3504,7 +3504,7 @@
       "changed": "2026-10-01"
     },
     "/state-of-free-tiers": {
-      "hash": "cebc775399e5d95c",
+      "hash": "3a62716eff7f575c",
       "changed": "2026-10-01"
     },
     "/storage-alternatives": {
@@ -3728,8 +3728,8 @@
       "changed": "2026-09-27"
     },
     "/trends/search": {
-      "hash": "cc8aa1ee80002637",
-      "changed": "2026-09-28"
+      "hash": "15406901359a595c",
+      "changed": "2026-10-01"
     },
     "/trends/secrets-management": {
       "hash": "f25dc091c4007985",
@@ -4345,7 +4345,7 @@
       "daily": true
     },
     "/vendor/brave-search-api": {
-      "hash": "83fbbe2f834eddce",
+      "hash": "bfee18ed243cdb47",
       "changed": "2026-10-01"
     },
     "/vendor/brevo": {
