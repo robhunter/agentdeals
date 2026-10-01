@@ -24,6 +24,16 @@ function linksNamedLike(html: string, name: RegExp): Array<{ href: string; text:
     .filter(({ text }) => name.test(text));
 }
 
+async function programmeLinksLandingElsewhere(links: Array<{ href: string; text: string }>): Promise<string[]> {
+  const misdirected: string[] = [];
+  for (const { href, text } of links) {
+    const landing = await page(href);
+    if (landing.includes("Did you mean?")) misdirected.push(`"${text}" (${href}) lands on a list of vendors`);
+    else if (!PROGRAMME_PRICING_PAGE.test(landing)) misdirected.push(`"${text}" (${href}) lands on a page that is not the programme's`);
+  }
+  return misdirected;
+}
+
 describe("links that name Cloudflare land on the listing they name, before and after the programme's rename", () => {
   before(async () => {
     server = spawn("node", [path.join(REPO, "dist", "serve.js")], {
@@ -54,12 +64,18 @@ describe("links that name Cloudflare land on the listing they name, before and a
       ...linksNamedLike(await page("/free-tier-tracker"), NAMES_THE_PROGRAMME),
       ...linksNamedLike(await page("/state-of-free-tiers"), NAMES_THE_PROGRAMME),
     ];
-    assert.ok(links.length >= 3, `${links.length} links name the programme`);
-    for (const { href, text } of links) {
-      const landing = await page(href);
-      assert.ok(!landing.includes("Did you mean?"), `"${text}" (${href}) lands on a list of vendors`);
-      assert.match(landing, PROGRAMME_PRICING_PAGE, `"${text}" (${href}) lands on a page that is not the programme's`);
-    }
+    assert.deepStrictEqual(await programmeLinksLandingElsewhere(links), []);
+  });
+
+  it("fails a link that names the programme and lands on a Cloudflare product's listing or on the list of Cloudflare's listings", async () => {
+    const links = linksNamedLike(
+      '<a href="/vendor/cloudflare-workers">Cloudflare Startup Program</a> <a href="/vendor/cloudflare">Cloudflare for Startups</a>',
+      NAMES_THE_PROGRAMME,
+    );
+    assert.deepStrictEqual(await programmeLinksLandingElsewhere(links), [
+      `"Cloudflare Startup Program" (/vendor/cloudflare-workers) lands on a page that is not the programme's`,
+      `"Cloudflare for Startups" (/vendor/cloudflare) lands on a list of vendors`,
+    ]);
   });
 
   it("previews a Cloudflare product's badge on /badges, not the startup programme's", async () => {

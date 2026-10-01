@@ -447,8 +447,8 @@ describe("membership is derived from the record, not written down per page", () 
         ? { ...o, product_subtypes: { ...o.product_subtypes, labels: o.product_subtypes.labels.filter(l => l.subtype !== "error_tracking") } }
         : o,
     );
-    movedIn = rewritten.find(o => o.category === "Databases" && (o.product_subtypes?.labels ?? []).length > 0 && !o.eligibility);
-    assert.ok(movedIn, "no Databases record carries a label, so this test cannot move one");
+    movedIn = rewritten.find(o => o.category === "Databases" && (o.product_subtypes?.labels ?? []).length > 0 && reachesAPage(o));
+    assert.ok(movedIn, "no Databases record a page can list carries a label, so this test cannot move one");
     const withNewLabel = rewritten.map(o =>
       o === movedIn
         ? { ...o, product_subtypes: { ...o.product_subtypes!, labels: [...o.product_subtypes!.labels, { subtype: "error_tracking", source_url: o.url, source_quote: "moved for this test" }] } }
