@@ -90,8 +90,19 @@ async function settleOrSayTheReaderFailed(settle, readings) {
   }
 }
 
-export async function settleFirstReadings({ changes, offers, today, archive, pairReaderForListing, fetchToday, textDayOf, badgeSetBy = () => null, limit = Infinity, vendors, includeResolved = false, logReads = false, onSettled = () => {} }) {
-  const backlog = firstReadingsInForce(changes, { includeResolved }).filter((record) => !vendors || vendors.includes(record.vendor)).slice(0, limit);
+export function inShard(records, shard) {
+  return shard ? records.filter((record, at) => at % shard.count === shard.index) : records;
+}
+
+export function parseShard(text) {
+  const found = /^(\d+)\/(\d+)$/.exec(String(text ?? ""));
+  if (!found) return null;
+  const [index, count] = [Number(found[1]), Number(found[2])];
+  return count > 0 && index < count ? { index, count } : null;
+}
+
+export async function settleFirstReadings({ changes, offers, today, archive, pairReaderForListing, fetchToday, textDayOf, badgeSetBy = () => null, limit = Infinity, vendors, shard = null, includeResolved = false, logReads = false, onSettled = () => {} }) {
+  const backlog = inShard(firstReadingsInForce(changes, { includeResolved }).filter((record) => !vendors || vendors.includes(record.vendor)), shard).slice(0, limit);
   const settleOne = async (record) => {
     const badge = badgeSetBy(record);
     const subject = { vendor: record.vendor, date: record.date, change_type: record.change_type, source_url: record.source_url, resolution: record.resolution?.state ?? null, badge };
@@ -171,6 +182,8 @@ async function main() {
     const at = args.indexOf(name);
     return at >= 0 ? args[at + 1] : undefined;
   };
+  const shardAsked = option("--shard") === undefined ? null : parseShard(option("--shard"));
+  if (option("--shard") !== undefined && !shardAsked) throw new Error(`--shard takes k/n with k below n, as 0/8; got ${option("--shard")}`);
   const changes = JSON.parse(readFileSync("data/deal_changes.json", "utf-8")).changes;
   const offers = JSON.parse(readFileSync("data/index.json", "utf-8")).offers;
   const client = createVerifierClient({ maxTokens: PAIRED_READER_MAX_TOKENS });
@@ -189,6 +202,7 @@ async function main() {
     badgeSetBy: (record) => badges.get(recordKey(record)) ?? null,
     limit: option("--limit") ? Number(option("--limit")) : Infinity,
     vendors: option("--vendors")?.split(",").map((name) => name.trim()),
+    shard: shardAsked,
     includeResolved: args.includes("--include-resolved"),
     logReads: args.includes("--log-reads"),
     onSettled: (result) => appendFileSync(progress, `${JSON.stringify(result)}\n`),
