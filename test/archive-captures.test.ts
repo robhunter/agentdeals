@@ -20,6 +20,8 @@ const {
   CAPTURE_WINDOW_DAYS,
 } = await import("../scripts/archive-captures.js");
 
+const statesItAlready = async () => ({ status: "stated", stated_then: [{ record: "the change", old: "the line" }] });
+
 const HEADER = ["timestamp", "original", "statuscode", "mimetype"];
 
 function cdxBody(rows: string[][]): string {
@@ -739,6 +741,7 @@ function settle(options: { textDay?: string | null; recordDay?: string; todayTer
       today: TODAY,
       archive,
       readPair: reader.readPair,
+      readStatedBefore: statesItAlready,
     }),
   };
 }
@@ -770,6 +773,7 @@ function settlePlanPages(options: { plan: string; instead: string; offeredOn: (d
     today: TODAY,
     archive,
     readPair: pairedReaderFor(client, { vendor: "Example", category: "Databases", tier: "Free" }),
+    readStatedBefore: statesItAlready,
   });
 }
 
@@ -991,6 +995,7 @@ describe("settling a first reading's difference against the page as the Archive 
       today: TODAY,
       archive,
       readPair: pairedReaderFor(client, { vendor: "Example", category: "APIs", tier: "Free" }),
+      readStatedBefore: statesItAlready,
     });
     assert.strictEqual(settled.outcome, "no_usable_capture");
     assert.deepStrictEqual(settled.tried, [{ day: "2026-02-10", gap_days: 5, side: "before", why: 'the capture settles nothing: "10,000 calls a month" occurs more than once on the old page, so it cannot refute the difference' }]);
@@ -1106,6 +1111,7 @@ describe("settling a first reading's difference against the page as the Archive 
       today: TODAY,
       archive,
       readPair: reader.readPair,
+      readStatedBefore: statesItAlready,
     });
     assert.deepStrictEqual(asked, ["https://example.com/pricing", "https://example.com/en/pricing"]);
     assert.strictEqual(settled.outcome, "vendor_changed");
@@ -1129,6 +1135,7 @@ describe("settling a first reading's difference against the page as the Archive 
       today: TODAY,
       archive: archiveOf(ALL_YEAR, (day) => (day <= "2026-04-10" ? "A" : "B")),
       readPair: termsPairReader().readPair,
+      readStatedBefore: statesItAlready,
       onRead: (reading: { older: string; newer: string; verdict: { status: string } }) => readings.push(reading),
     });
     const described = readings.map((reading) => `${reading.older} | ${reading.newer} ${reading.verdict.status}`);

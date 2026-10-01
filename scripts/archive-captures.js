@@ -206,7 +206,7 @@ Respond with exactly one JSON object and no other text:
 If a page does not state this plan's terms, give an empty list for that page's terms. If both pages offer the plan, give an empty list for offered_instead. If the terms are the same, give an empty list of differences.`;
 }
 
-export function parsePairedAnswer(raw) {
+function parseAnswerHolding(raw, key) {
   const text = typeof raw === "string" ? raw.trim().replace(/^```(?:json)?\s*/i, "").replace(/```\s*$/, "").trim() : "";
   const first = text.indexOf("{");
   const last = text.lastIndexOf("}");
@@ -214,10 +214,18 @@ export function parsePairedAnswer(raw) {
   for (const candidate of candidates) {
     try {
       const parsed = JSON.parse(candidate);
-      if (parsed && typeof parsed === "object" && "same" in parsed) return parsed;
+      if (parsed && typeof parsed === "object" && key in parsed) return parsed;
     } catch {}
   }
   return null;
+}
+
+export function parsePairedAnswer(raw) {
+  return parseAnswerHolding(raw, "same");
+}
+
+export function parseStatedBeforeAnswer(raw) {
+  return parseAnswerHolding(raw, "changes");
 }
 
 function fragmentsOf(value) {
@@ -508,6 +516,61 @@ export function pairedReaderFor(client, listing) {
   return async (older, newer) => judgePair(parsePairedAnswer(await client.complete(pairedPrompt(listing, older, newer))), older.text, newer.text);
 }
 
+export function statedBeforePrompt(record, older, maxLength = MAX_PAGE_TEXT_LENGTH) {
+  const clip = (text) => String(text ?? "").slice(0, maxLength);
+  return `You are checking whether an old copy of a web page already said what a change record calls new.
+
+THE RECORD (written from a reading of this page on ${record.date}):
+${record.summary}
+
+OLD PAGE (saved ${older.day}, truncated):
+${clip(older.text)}
+
+Step 1. List every change THE RECORD names: each price, limit, included feature or condition it calls new or different, any change to who can get the plan, and any product or plan it says has ended or is ending. For each, copy the words of THE RECORD that name it.
+Step 2. For each change, copy the words on OLD PAGE that already state the same thing, exactly as they appear on that page, as one short fragment. Never reword the fragment, and never join words that are apart on the page. If OLD PAGE does not state it, leave it empty.
+
+Respond with exactly one JSON object and no other text:
+{"changes":[{"record":"<words copied from THE RECORD>","old_page":"<words copied from OLD PAGE, or empty>"}]}`;
+}
+
+function figuresStated(words) {
+  return new Set(valuesStated(words).filter((value) => !VALUE_WORDS.includes(value)));
+}
+
+export function judgeStatedBefore(answer, record, olderText) {
+  if (!Array.isArray(answer?.changes)) return { status: "unstated", why: "the reader's answer could not be parsed", review: [] };
+  const changes = answer.changes
+    .map((change) => ({ record: String(change?.record ?? "").trim(), old: String(change?.old_page ?? "").trim() }))
+    .filter((change) => comparableText(change.record));
+  if (changes.length === 0) return { status: "unstated", why: "the reader named no change in the record", review: [] };
+  const summary = comparableText(record.summary);
+  const notInRecord = changes.filter((change) => !summary.includes(comparableText(change.record)));
+  if (notInRecord.length > 0) return { status: "unstated", why: `the reader named changes that are not the record's words: ${quoteAll(notInRecord.map((change) => change.record))}`, review: [] };
+  const named = new Set(changes.flatMap((change) => [...figuresStated(change.record)]));
+  const reading = figuresStated(record.current_state);
+  const leftOut = [...figuresStated(record.summary)].filter((figure) => reading.has(figure) && !named.has(figure));
+  if (leftOut.length > 0) return { status: "unstated", why: `the reader named no change stating ${quoteAll(leftOut)}, which the record's summary and its reading both state`, review: [] };
+  const page = comparableText(olderText);
+  const whyUnstated = (change) => {
+    if (!comparableText(change.old)) return "the capture does not state it";
+    if (!page.includes(comparableText(change.old))) return "these words are not on the capture";
+    const onTheLine = figuresStated(change.old);
+    const missing = [...figuresStated(change.record)].filter((figure) => reading.has(figure) && !onTheLine.has(figure));
+    return missing.length > 0 ? `the capture's words do not state ${quoteAll(missing)}` : null;
+  };
+  const unstated = changes.map((change) => ({ ...change, why: whyUnstated(change) })).filter((change) => change.why);
+  if (unstated.length === 0) return { status: "stated", stated_then: changes };
+  return {
+    status: "unstated",
+    why: `no line already states ${quoteAll(unstated.map((change) => change.record))}`,
+    review: unstated,
+  };
+}
+
+export function statedBeforeReaderFor(client, record) {
+  return async (older) => judgeStatedBefore(parseStatedBeforeAnswer(await client.complete(statedBeforePrompt(record, older))), record, older.text);
+}
+
 export const CAPTURE_WINDOW_DAYS = 60;
 export const MAX_READS_PER_BRACKET = 12;
 export const MAX_MOVES_BRACKETED = 3;
@@ -602,7 +665,7 @@ function sideOfRecordDay(day, recordDay) {
   return day < recordDay ? "before" : day > recordDay ? "after" : "on";
 }
 
-export async function settleAgainstCaptures({ url, finalUrl, textDay, recordDay, todayText, today, archive, readPair, onRead = () => {}, windowDays = CAPTURE_WINDOW_DAYS }) {
+export async function settleAgainstCaptures({ url, finalUrl, textDay, recordDay, todayText, today, archive, readPair, readStatedBefore, onRead = () => {}, windowDays = CAPTURE_WINDOW_DAYS }) {
   let reads = 0;
   if (!textDay) return { outcome: "text_day_unknown", reads };
   const judgedOn = recordDay && recordDay < today ? recordDay : today;
@@ -629,6 +692,14 @@ export async function settleAgainstCaptures({ url, finalUrl, textDay, recordDay,
     const verdict = await readPair(older, newer);
     onRead({ older: older.page, newer: newer.page, verdict });
     if (!unsettledPlan && verdict?.status === "unquotable" && verdict.review) unsettledPlan = { page: newer, verdict };
+    return verdict;
+  };
+
+  const statedBefore = async (older) => {
+    if (!readStatedBefore) return { status: "unstated", why: "no reader was asked for a line that already states what the record calls new", review: [] };
+    reads++;
+    const verdict = await readStatedBefore(older);
+    onRead({ older: older.page, newer: "the record", verdict });
     return verdict;
   };
 
@@ -660,10 +731,12 @@ export async function settleAgainstCaptures({ url, finalUrl, textDay, recordDay,
     }
     if (!end) return unsettled({ outcome: "no_usable_capture", why: `no reading of the page on the record's day settles it (${unreadable.join("; ")})` });
     const comparedWith = describePage(end);
-    const agreed = (verdict, laterMoves = []) =>
-      side === "before"
-        ? { outcome: "ours", compared_with: comparedWith, terms_then: verdict.old_terms, later_moves: laterMoves }
-        : { next: true, why: "the capture states the terms the page stated on the record's day, but a capture after our text's day cannot show the difference was ours" };
+    const agreed = async (verdict, laterMoves = []) => {
+      if (side !== "before") return { next: true, why: "the capture states the terms the page stated on the record's day, but a capture after our text's day cannot show the difference was ours" };
+      const before = await statedBefore(old);
+      if (before.status !== "stated") return { outcome: "no_usable_capture", compared_with: comparedWith, review: before.review, why: `the ${old.page} states the plan's terms as the page did on the record's day, but ${before.why}` };
+      return { outcome: "ours", compared_with: comparedWith, terms_then: verdict.old_terms, stated_then: before.stated_then, later_moves: laterMoves };
+    };
 
     let deciding = first;
     let moves;

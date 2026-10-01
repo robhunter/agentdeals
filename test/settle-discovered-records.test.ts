@@ -5,6 +5,8 @@ const { firstReadingsInForce, splitOf, listingFor, settleFirstReadings, SPLIT, b
 
 type Change = Record<string, unknown>;
 
+const statesItAlready = async () => ({ status: "stated", stated_then: [{ record: "the change", old: "the line" }] });
+
 function change(fields: Change): Change {
   return { change_type: "limits_reduced", impact: "medium", category: "Databases", source_url: "https://example.com/pricing", recorded_date: fields.date, ...fields };
 }
@@ -159,6 +161,7 @@ describe("settling the backlog", () => {
     };
     const settledInTurn: string[] = [];
     const report = await settleFirstReadings({
+      statedReaderForRecord: () => statesItAlready,
       changes,
       offers,
       today: "2026-09-28",
@@ -200,6 +203,7 @@ describe("settling the backlog", () => {
       captureHtml: async () => ({ html: `<html><body><p>TERMS=A</p><p>${"Plans and limits. ".repeat(40)}</p></body></html>` }),
     };
     const report = await settleFirstReadings({
+      statedReaderForRecord: () => statesItAlready,
       changes,
       offers: [],
       today: "2026-09-28",
@@ -240,6 +244,7 @@ describe("settling the backlog", () => {
       captureHtml: async ({ original }: { original: string }) => ({ html: original.includes("unreadable") ? "<html><body><p>Loading</p></body></html>" : fullPage }),
     };
     const report = await settleFirstReadings({
+      statedReaderForRecord: () => statesItAlready,
       changes,
       offers: [],
       today: "2026-09-28",
@@ -293,6 +298,7 @@ describe("settling the backlog", () => {
       ],
     };
     const report = await settleFirstReadings({
+      statedReaderForRecord: () => statesItAlready,
       changes,
       offers,
       today: "2026-09-28",
@@ -334,6 +340,7 @@ describe("records the Archive did not answer", () => {
     };
     const settledInTurn: string[] = [];
     const report = await settleFirstReadings({
+      statedReaderForRecord: () => statesItAlready,
       changes,
       offers: [],
       today: "2026-09-28",
@@ -359,6 +366,7 @@ describe("checking the method on records whose outcome is already known", () => 
     assert.deepStrictEqual(firstReadingsInForce(changes).map((c: Change) => c.vendor), ["Beta"]);
     assert.deepStrictEqual(firstReadingsInForce(changes, { includeResolved: true }).map((c: Change) => c.vendor), ["Alpha", "Beta"]);
     const report = await settleFirstReadings({
+      statedReaderForRecord: () => statesItAlready,
       changes,
       offers: [],
       today: "2026-09-28",
@@ -378,6 +386,7 @@ describe("the readings behind each outcome", () => {
     const changes = [change({ vendor: "Alpha", date: "2026-09-01", date_source: "discovered", previous_state: "A", current_state: "B" })];
     const run = (logReads: boolean) =>
       settleFirstReadings({
+        statedReaderForRecord: () => statesItAlready,
         changes,
         offers: [],
         today: "2026-09-28",
@@ -395,7 +404,7 @@ describe("the readings behind each outcome", () => {
     const logged = await run(true);
     assert.deepStrictEqual(
       logged.results[0].readings.map((r: { older: string; newer: string; verdict: { status: string } }) => `${r.older} | ${r.newer} ${r.verdict.status}`),
-      ["capture 2026-02-05 | today same"],
+      ["capture 2026-02-05 | today same", "capture 2026-02-05 | the record stated"],
     );
   });
 });
@@ -413,6 +422,7 @@ describe("a reader that fails on one record", () => {
     };
     const settledInTurn: string[] = [];
     const report = await settleFirstReadings({
+      statedReaderForRecord: () => statesItAlready,
       changes,
       offers: [{ vendor: "Alpha", tier: "Free", category: "Databases" }],
       today: "2026-09-28",
@@ -432,6 +442,7 @@ describe("a reader that fails on one record", () => {
 
   it("is reported as a reader failure, with the reader's error, when the second ask fails too", async () => {
     const report = await settleFirstReadings({
+      statedReaderForRecord: () => statesItAlready,
       changes: [change({ vendor: "Alpha", date: "2026-09-01", date_source: "discovered", previous_state: "A", current_state: "B" })],
       offers: [],
       today: "2026-09-28",

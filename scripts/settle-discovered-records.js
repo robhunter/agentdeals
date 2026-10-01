@@ -1,5 +1,5 @@
 import { appendFileSync, readFileSync, writeFileSync } from "node:fs";
-import { createArchiveClient, dayOurTextEntered, pairedReaderFor, PAIRED_READER_MAX_TOKENS, settleAgainstCaptures, wordsOfTierName } from "./archive-captures.js";
+import { createArchiveClient, dayOurTextEntered, pairedReaderFor, PAIRED_READER_MAX_TOKENS, settleAgainstCaptures, statedBeforeReaderFor, wordsOfTierName } from "./archive-captures.js";
 import { createVerifierClient, fetchPageText } from "./verify-freshness.js";
 
 export const DEMOTION_WINDOW_DAYS = 180;
@@ -101,7 +101,7 @@ export function parseShard(text) {
   return count > 0 && index < count ? { index, count } : null;
 }
 
-export async function settleFirstReadings({ changes, offers, today, archive, pairReaderForListing, fetchToday, textDayOf, badgeSetBy = () => null, limit = Infinity, vendors, shard = null, includeResolved = false, logReads = false, onSettled = () => {} }) {
+export async function settleFirstReadings({ changes, offers, today, archive, pairReaderForListing, statedReaderForRecord, fetchToday, textDayOf, badgeSetBy = () => null, limit = Infinity, vendors, shard = null, includeResolved = false, logReads = false, onSettled = () => {} }) {
   const backlog = inShard(firstReadingsInForce(changes, { includeResolved }).filter((record) => !vendors || vendors.includes(record.vendor)), shard).slice(0, limit);
   const settleOne = async (record) => {
     const badge = badgeSetBy(record);
@@ -119,6 +119,7 @@ export async function settleFirstReadings({ changes, offers, today, archive, pai
           today,
           archive,
           readPair: pairReaderForListing(listing),
+          readStatedBefore: statedReaderForRecord?.(record),
           onRead: (reading) => readings.push(reading),
         }), readings)
       : { outcome: "page_unreadable_today", why: page.error, reads: 0 };
@@ -199,6 +200,7 @@ async function main() {
     today: new Date().toISOString().slice(0, 10),
     archive: createArchiveClient(),
     pairReaderForListing: (listing) => pairedReaderFor(client, listing),
+    statedReaderForRecord: (record) => statedBeforeReaderFor(client, record),
     fetchToday: (url) => fetchPageText(url),
     textDayOf: (text) => dayOurTextEntered(text),
     badgeSetBy: (record) => badges.get(recordKey(record)) ?? null,
