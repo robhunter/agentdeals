@@ -1,7 +1,7 @@
 import { describe, it } from "node:test";
 import assert from "node:assert";
 
-const { firstReadingsInForce, splitOf, listingFor, settleFirstReadings, SPLIT, badgesByRecord, recordKey } = await import("../scripts/settle-discovered-records.js");
+const { firstReadingsInForce, splitOf, listingFor, settleFirstReadings, SPLIT, badgesByRecord, recordKey, inShard, parseShard } = await import("../scripts/settle-discovered-records.js");
 
 type Change = Record<string, unknown>;
 
@@ -30,6 +30,22 @@ describe("the first readings the archive check settles", () => {
       change({ vendor: "Alpha", date: "2026-09-10", date_source: "discovered", previous_state: "Alpha read once", current_state: "Alpha read twice" }),
     ];
     assert.deepStrictEqual(firstReadingsInForce(changes), []);
+  });
+});
+
+describe("a backlog settled in shards", () => {
+  it("gives every record to exactly one of the shards, and every shard its share", () => {
+    const backlog = Array.from({ length: 23 }, (_, at) => ({ vendor: `Vendor ${at}` }));
+    const shards = Array.from({ length: 8 }, (_, index) => inShard(backlog, { index, count: 8 }));
+    assert.deepStrictEqual(shards.flat().map((record) => record.vendor).sort(), backlog.map((record) => record.vendor).sort());
+    assert.deepStrictEqual(shards.map((shard) => shard.length), [3, 3, 3, 3, 3, 3, 3, 2]);
+    assert.strictEqual(inShard(backlog, null), backlog);
+  });
+
+  it("reads a shard as k/n with k below n, and refuses anything else", () => {
+    assert.deepStrictEqual(parseShard("0/8"), { index: 0, count: 8 });
+    assert.deepStrictEqual(parseShard("7/8"), { index: 7, count: 8 });
+    for (const refused of ["8/8", "1/0", "1", "a/8", "-1/8", "", undefined]) assert.strictEqual(parseShard(refused), null, String(refused));
   });
 });
 
