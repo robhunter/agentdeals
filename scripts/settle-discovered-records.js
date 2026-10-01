@@ -146,7 +146,7 @@ export async function settleFirstReadings({ changes, offers, today, archive, pai
 
 export function reviewList(results) {
   return results
-    .filter((result) => result.review?.length > 0 || result.split === SPLIT.noCaptureBadgeToReview)
+    .filter((result) => result.split === SPLIT.noCaptureBadgeToReview)
     .map((result) => ({
       vendor: result.vendor,
       date: result.date,

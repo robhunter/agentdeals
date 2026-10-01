@@ -188,10 +188,11 @@ describe("settling the backlog", () => {
     assert.strictEqual(report.split[SPLIT.pageUnreadable], 1);
   });
 
-  it("lists the records left for review because only lines one page states differ, and counts them as no usable capture", async () => {
+  it("lists the lines left for review on a record that set a badge, counts it as no usable capture, and leaves a record that set none off the list", async () => {
     const changes = [
       change({ vendor: "Delta", date: "2026-09-01", change_type: "limits_reduced", date_source: "discovered", previous_state: "A", current_state: "B", source_url: "https://delta.example/pricing" }),
       change({ vendor: "Epsilon", date: "2026-09-02", change_type: "limits_reduced", date_source: "discovered", previous_state: "A", current_state: "B", source_url: "https://epsilon.example/pricing" }),
+      change({ vendor: "Zeta", date: "2026-09-03", change_type: "limits_reduced", date_source: "discovered", previous_state: "A", current_state: "B", source_url: "https://zeta.example/pricing" }),
     ];
     const line = { old: "7-day history", new: "", why: "only the old page states it" };
     const archive = {
@@ -204,22 +205,25 @@ describe("settling the backlog", () => {
       today: "2026-09-28",
       archive,
       pairReaderForListing: (listing: { vendor: string }) => async () =>
-        listing.vendor === "Delta"
-          ? { status: "review", old_terms: ["TERMS=A"], new_terms: ["TERMS=A"], review: [line], why: "no difference is a value both pages state moving, so the lines go to review" }
-          : { status: "same", old_terms: ["TERMS=A"], new_terms: ["TERMS=A"] },
+        listing.vendor === "Epsilon"
+          ? { status: "same", old_terms: ["TERMS=A"], new_terms: ["TERMS=A"] }
+          : { status: "review", old_terms: ["TERMS=A"], new_terms: ["TERMS=A"], review: [line], why: "no difference is a value both pages state moving, so the lines go to review" },
       fetchToday: async () => ({ ok: true, text: "TERMS=A" }),
       textDayOf: () => "2026-02-10",
+      badgeSetBy: (r: { vendor: string }) => (r.vendor === "Delta" ? "caution" : null),
     });
     assert.deepStrictEqual(report.review, [{
       vendor: "Delta",
       date: "2026-09-01",
       change_type: "limits_reduced",
-      badge: null,
+      badge: "caution",
       compared_with: { page: "capture 2026-09-01", day: "2026-09-01", gap_days: 0, side: "on" },
       why: "no difference is a value both pages state moving, so the lines go to review",
       lines: [line],
     }]);
+    assert.strictEqual(report.split[SPLIT.noCaptureBadgeToReview], 1);
     assert.strictEqual(report.split[SPLIT.noCapture], 1);
+    assert.strictEqual(report.results.find((r: { vendor: string }) => r.vendor === "Zeta").review.length, 1);
     assert.strictEqual(report.split[SPLIT.ours], 1);
   });
 
