@@ -16,6 +16,7 @@
     { "retired": "NextUI", "survivor": "HeroUI" },
     { "retired": "Slack API", "survivor": "Slack" },
     { "retired": "SonarCloud", "survivor": "SonarQube Cloud" },
+    { "retired": "Stack Auth", "survivor": "Hexclave" },
     { "retired": "Synadia NGS", "survivor": "synadia.com" },
     { "retired": "X API (Twitter)", "survivor": "X (Twitter)" },
     { "retired": "flightcontrol.dev", "survivor": "Ravion" },
