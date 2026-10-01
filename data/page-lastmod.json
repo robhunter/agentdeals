@@ -1559,6 +1559,18 @@
       "hash": "faf2b12d3199dec6",
       "changed": "2026-09-18"
     },
+    "/compare/cerbos-hub-vs-clerk": {
+      "hash": "b420461e7f3f18db",
+      "changed": "2026-10-01"
+    },
+    "/compare/cerbos-hub-vs-fusionauth": {
+      "hash": "8251ae9a864e794a",
+      "changed": "2026-10-01"
+    },
+    "/compare/cerbos-hub-vs-zitadel-cloud": {
+      "hash": "e69de29a2fbbba57",
+      "changed": "2026-10-01"
+    },
     "/compare/cerebras-vs-elevenlabs": {
       "hash": "06678a79d11635a1",
       "changed": "2026-10-01"
@@ -1581,10 +1593,6 @@
     },
     "/compare/claude-code-vs-openai-codex": {
       "hash": "d53f1a30e8a9c90f",
-      "changed": "2026-09-27"
-    },
-    "/compare/clerk-vs-propelauth": {
-      "hash": "aed89ae79eedf615",
       "changed": "2026-09-27"
     },
     "/compare/clerk-vs-zitadel-cloud": {
@@ -2002,6 +2010,10 @@
     "/compare/freeflarum-vs-encore-dev": {
       "hash": "443617c8d7dce482",
       "changed": "2026-09-27"
+    },
+    "/compare/fusionauth-vs-zitadel-cloud": {
+      "hash": "6b4bfedf5248fc38",
+      "changed": "2026-10-01"
     },
     "/compare/geekflare-api-vs-snapapi": {
       "hash": "815e3238e11158f7",
@@ -2491,14 +2503,6 @@
       "hash": "258533fa7d64bc02",
       "changed": "2026-09-26"
     },
-    "/compare/propelauth-vs-supertokens": {
-      "hash": "d539786231b50cd8",
-      "changed": "2026-09-28"
-    },
-    "/compare/propelauth-vs-zitadel-cloud": {
-      "hash": "cd6d75fc3a50be95",
-      "changed": "2026-09-18"
-    },
     "/compare/proton-mail-vs-tutanota": {
       "hash": "950ead3d85831077",
       "changed": "2026-09-22"
@@ -2594,10 +2598,6 @@
     "/compare/storyblok-vs-wpjack": {
       "hash": "b14b47978bd195f9",
       "changed": "2026-09-27"
-    },
-    "/compare/supertokens-vs-zitadel-cloud": {
-      "hash": "eda54ba377a32ae3",
-      "changed": "2026-09-28"
     },
     "/compare/tawk-to-vs-the-gosquared-early-stage-plan": {
       "hash": "84e088d0f7ff21e2",
@@ -3892,6 +3892,10 @@
     },
     "/vendor/amazon-aws": {
       "hash": "284ebe071edfb3f2",
+      "changed": "2026-10-01"
+    },
+    "/vendor/amazon-cognito": {
+      "hash": "356d5ff46ac0a7c7",
       "changed": "2026-10-01"
     },
     "/vendor/amazon-ecr-public": {
@@ -6195,6 +6199,10 @@
     },
     "/vendor/hex": {
       "hash": "7a9e581d9af9115b",
+      "changed": "2026-10-01"
+    },
+    "/vendor/hexclave": {
+      "hash": "ff47231f0bfaeffd",
       "changed": "2026-10-01"
     },
     "/vendor/highlight-io": {
@@ -8640,10 +8648,6 @@
     },
     "/vendor/stability-ai": {
       "hash": "1c381ec956bd8a20",
-      "changed": "2026-10-01"
-    },
-    "/vendor/stack-auth": {
-      "hash": "451bef7150b0a63d",
       "changed": "2026-10-01"
     },
     "/vendor/stackblitz-com": {
