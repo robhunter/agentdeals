@@ -5,6 +5,37 @@ export function collapseWhitespace(text) {
   return String(text ?? "").replace(/\s+/g, " ").trim();
 }
 
+export function excerptPrompt(offer, pageText) {
+  return `You are copying, word for word, the part of a vendor's pricing page that states the terms of its free plan.
+
+THE PLAN:
+- Vendor: ${offer.vendor}
+- Category: ${offer.category}
+- Plan: ${offer.tier}
+
+PAGE TEXT (truncated):
+${pageText}
+
+Find the words on this page that state the terms of this vendor's free plan: its price, its limits, what it includes and who can get it. Copy them exactly as they appear, as one contiguous stretch of the page of at most ${MAX_FREE_PLAN_EXCERPT_LENGTH} characters. Never reword, never leave out words inside the stretch, and never join words that are apart on the page. If the page does not state a free plan for this vendor, give an empty string.
+
+Respond with exactly one JSON object and no other text:
+{"excerpt":"<the words copied from the page, or an empty string>"}`;
+}
+
+export function parseExcerptAnswer(raw) {
+  const text = typeof raw === "string" ? raw.trim().replace(/^```(?:json)?\s*/i, "").replace(/```\s*$/, "").trim() : "";
+  const first = text.indexOf("{");
+  const last = text.lastIndexOf("}");
+  const candidates = first >= 0 && last > first ? [text, text.slice(first, last + 1)] : [text];
+  for (const candidate of candidates) {
+    try {
+      const parsed = JSON.parse(candidate);
+      if (parsed && typeof parsed === "object" && typeof parsed.excerpt === "string") return { copied: parsed.excerpt };
+    } catch {}
+  }
+  return { copied: null, why: "the reader's answer could not be parsed" };
+}
+
 export function verbatimExcerpt(copied, pageText) {
   const text = collapseWhitespace(copied);
   if (!text) return { found: false, excerpt: null };
@@ -45,6 +76,7 @@ export function excerptsDisagreeingWithTheirCitation(offers) {
 }
 
 export function writeFreePlanExcerpt(offer, { copied, pageText, url, readOn }) {
+  if (typeof copied !== "string") return { outcome: "unread" };
   const verdict = verbatimExcerpt(copied, pageText);
   if (verdict.excerpt) {
     offer[FREE_PLAN_EXCERPT] = { text: verdict.excerpt, url, read_on: readOn };
