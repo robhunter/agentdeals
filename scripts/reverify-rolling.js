@@ -302,7 +302,7 @@ export async function runAiMode(picked, data, dryRun, now, options = {}) {
   const sourceChecks = emptySourceCounters();
   const recorder = attemptRecorder();
   const confirmedThisRun = new Set();
-  const excerpts = { written: 0, removed: 0, none: 0, not_a_free_plan: 0, on_hold: 0, refused: [], unread: [] };
+  const excerpts = { written: 0, kept: 0, removed: 0, none: 0, not_a_free_plan: 0, on_hold: 0, refused: [], unread: [] };
 
   for (const entry of picked) {
     const { offer, index } = entry;
@@ -467,6 +467,7 @@ async function keepFreePlanExcerpt(excerptFn, offer, pageText, record, now, exce
   if (result.outcome === "refused") excerpts.refused.push({ vendor: offer.vendor, url: offer.url, why: result.why });
   else if (result.outcome === "unread") excerpts.unread.push({ vendor: offer.vendor, url: offer.url, why: result.why });
   else excerpts[result.outcome]++;
+  if (result.held_excerpt) excerpts[result.held_excerpt]++;
 }
 
 export function repickWindowDays(total, batchSize) {

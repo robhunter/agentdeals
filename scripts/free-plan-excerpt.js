@@ -200,22 +200,37 @@ export function excerptsDisagreeingWithTheirCitation(offers) {
   return problems;
 }
 
-export function writeFreePlanExcerpt(offer, { copied, terms, otherPlans, pageText, url, readOn }) {
+function answerToWrite(offer, { copied, terms, otherPlans, pageText }) {
   if (typeof copied !== "string") return { outcome: "unread" };
   const verdict = verbatimExcerpt(copied, pageText);
   if (verdict.excerpt) {
     const neighbours = otherPlansTheCopyHolds(verdict.excerpt, otherPlans, offer);
     if (neighbours.length > 0) return { outcome: "refused", why: `${COPY_HOLDS_ANOTHER_PLAN}: ${neighbours.join(", ")}` };
     if (termsTheCopyStates(verdict.excerpt, terms, offer).length === 0) return { outcome: "refused", why: COPY_STATES_NO_TERMS };
-    offer[FREE_PLAN_EXCERPT] = { text: verdict.excerpt, url, read_on: readOn };
-    return { outcome: "written" };
+    return { outcome: "written", excerpt: verdict.excerpt };
   }
-  if (!verdict.found) {
-    const held = FREE_PLAN_EXCERPT in offer;
-    delete offer[FREE_PLAN_EXCERPT];
-    return { outcome: held ? "removed" : "none" };
-  }
+  if (!verdict.found) return { outcome: "none" };
   return { outcome: "refused", why: verdict.why };
+}
+
+function keepTheHeldExcerptOnlyIfThePageStillSaysIt(offer, { pageText, url, readOn }) {
+  const held = offer[FREE_PLAN_EXCERPT];
+  if (verbatimExcerpt(held?.text, pageText).excerpt) {
+    offer[FREE_PLAN_EXCERPT] = { ...held, url, read_on: readOn };
+    return "kept";
+  }
+  delete offer[FREE_PLAN_EXCERPT];
+  return "removed";
+}
+
+export function writeFreePlanExcerpt(offer, { copied, terms, otherPlans, pageText, url, readOn }) {
+  const { excerpt, ...answer } = answerToWrite(offer, { copied, terms, otherPlans, pageText });
+  if (excerpt) {
+    offer[FREE_PLAN_EXCERPT] = { text: excerpt, url, read_on: readOn };
+    return answer;
+  }
+  if (!(FREE_PLAN_EXCERPT in offer)) return answer;
+  return { ...answer, held_excerpt: keepTheHeldExcerptOnlyIfThePageStillSaysIt(offer, { pageText, url, readOn }) };
 }
 
 export const TIER_WITH_NO_FREE_PLAN = "the listed tier is not a free plan";
