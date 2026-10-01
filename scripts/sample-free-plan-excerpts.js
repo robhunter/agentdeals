@@ -39,7 +39,7 @@ async function sampleOne(client, offer, today) {
     refused: `refused, ${written.why}`,
     unread: `the reader gave no usable answer: ${written.why ?? "none"}`,
   }[written.outcome];
-  return { ...row, outcome: written.outcome, excerpt: record.free_plan_excerpt?.text ?? null, copied: written.copied ?? null, terms: answer?.terms ?? null, why };
+  return { ...row, outcome: written.outcome, excerpt: record.free_plan_excerpt?.text ?? null, copied: written.copied ?? null, terms: answer?.terms ?? null, other_plans: answer?.otherPlans ?? null, why };
 }
 
 function tableOf(rows) {
