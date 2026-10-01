@@ -1,5 +1,15 @@
+import { MAX_PAGE_TEXT_LENGTH } from "./verify-freshness.js";
+
 export const FREE_PLAN_EXCERPT = "free_plan_excerpt";
 export const MAX_FREE_PLAN_EXCERPT_LENGTH = 400;
+
+export function textTheReaderSees(pageText) {
+  return String(pageText ?? "").slice(0, MAX_PAGE_TEXT_LENGTH);
+}
+
+export async function readFreePlanExcerpt(client, offer, pageText) {
+  return parseExcerptAnswer(await client.complete(excerptPrompt(offer, textTheReaderSees(pageText))));
+}
 
 export function collapseWhitespace(text) {
   return String(text ?? "").replace(/\s+/g, " ").trim();
