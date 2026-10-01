@@ -28752,7 +28752,7 @@ function buildCiCdPricingPage(): string {
       freeType: "generous",
       monthlyCostSmall: "$0",
       monthlyCostTeam: "$4/seat + overages",
-      hiddenCosts: "Past the free quota GitHub charges per minute: $0.006 Linux 2-core, $0.010 Windows 2-core, $0.062 macOS.",
+      hiddenCosts: "Per minute: $0.006 Linux 2-core, $0.010 Windows 2-core, $0.062 macOS",
     },
     {
       name: "GitLab CI",
