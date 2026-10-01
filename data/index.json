@@ -20676,7 +20676,7 @@
       "category": "Cloud Hosting",
       "description": "Build and deploy microservices, jobs, and managed databases with a powerful UI, API & CLI. Seamlessly scale containers from version control and external Docker registries. The free tier includes two services, two cron jobs and 1 database.",
       "tier": "Free",
-      "url": "https://northflank.com",
+      "url": "https://northflank.com/pricing",
       "tags": [
         "hosting",
         "paas",
@@ -20684,9 +20684,9 @@
       ],
       "verifiedDate": "2026-07-16",
       "source_check": {
-        "checked": "2026-09-26",
+        "checked": "2026-10-01",
         "outcome": "ok",
-        "detail": "the page names Northflank as \"northflank\" and states amounts, none of which we matched to the terms we publish"
+        "detail": "the page names Northflank as \"northflank\" and states \"$ 0.00\""
       },
       "product_subtypes": {
         "taxonomy": "Cloud Hosting",
