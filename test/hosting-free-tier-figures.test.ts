@@ -115,7 +115,13 @@ const RETIRED_FIGURES: Retired[] = [
   {
     what: "a Koyeb free web service",
     pattern: /Koyeb[^.]{0,120}(?:free web service|nano service free|1 vCPU, 512)/i,
-    replacedBy: /Koyeb[^.]{0,160}(?:no free (?:web service|compute|plan for new users)|none for new users|database.only|only a free Postgres)/i,
+    replacedBy: /Koyeb[^.]{0,160}(?:no free (?:web service|compute|plan for new users)|none for new users)/i,
+    vendorRecord: () => recordFor("Koyeb", "Databases").description,
+  },
+  {
+    what: "a Koyeb free Postgres database offered to new users as its free tier",
+    pattern: /Koyeb[^.]{0,160}(?:DB only|free Postgres|1 GB Postgres)|(?:DB only|free Postgres)[^.]{0,60}Koyeb/i,
+    replacedBy: /Koyeb[^.]{0,160}(?:no free plan for new users|none for new users)/i,
     vendorRecord: () => recordFor("Koyeb", "Databases").description,
   },
   {
@@ -444,6 +450,7 @@ describe("hosting pages publish the free-tier figures our records hold (#1183)",
       "Deno Deploy free egress of 100 GB": ["/hosting-free-tier-comparison-2026", "/serverless-free-tier-comparison-2026", "/hosting-pricing", "/vercel-alternatives"],
       "Deno Deploy free CPU allowance of 15 hours": ["/hosting-free-tier-comparison-2026", "/serverless-free-tier-comparison-2026", "/heroku-alternatives"],
       "a Koyeb free web service": ["/hosting-free-tier-comparison-2026", "/free-fastapi-stack"],
+      "a Koyeb free Postgres database offered to new users as its free tier": ["/heroku-alternatives", "/hosting-alternatives", "/hosting-pricing"],
       "Supabase free egress of 2 GB": ["/database-free-tier-comparison-2026"],
       "Gemini Code Assist listed among Google Cloud's free AI coding options": ["/gcp-free-tier-2026"],
       "Gemini Code Assist Standard's annual-commitment price given as its monthly price": ["/ai-coding-tools-pricing", "/ai-coding-pricing-2026"],
