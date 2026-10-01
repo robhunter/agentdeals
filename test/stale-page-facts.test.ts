@@ -5,7 +5,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { assertPopulationFloor } from "./population-floor.ts";
 import {
-  QUALITY_BUDGET_NAMES, STALE_FACT_PAGES_BASELINE, UNSOURCED_TIER_A_BASELINE, daysBetween, factsOutdatedBy,
+  DECLARED_FIGURE_READS, QUALITY_BUDGET_NAMES, STALE_FACT_PAGES_BASELINE, UNSOURCED_TIER_A_BASELINE, daysBetween, factsOutdatedBy,
   newestChangeBySlug, parsePageReviews, parseQualityBudgets, qualityBudgetsPath, readQualityBudgets,
   dateModifiedFor, reviewStatus, serializeQualityBudgets, staleFactPages, staleFactViolations,
   unsourcedTierAPaths,
@@ -22,7 +22,9 @@ import {
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
 
-const REGISTRY = parsePageReviews(readFileSync(path.join(REPO, "data", "page-reviews.json"), "utf-8"));
+const REGISTER_FILE = readFileSync(path.join(REPO, "data", "page-reviews.json"), "utf-8");
+const REGISTRY = parsePageReviews(REGISTER_FILE);
+const REGISTERED = JSON.parse(REGISTER_FILE).pages as Array<{ path: string; reviewed_at?: string | null; review_outcome?: string | null }>;
 const CHANGES = JSON.parse(readFileSync(path.join(REPO, "data", "deal_changes.json"), "utf-8")).changes as Array<{ vendor?: string; date?: string }>;
 
 const TODAY = utcToday();
@@ -51,6 +53,14 @@ function page(over: Partial<PageReviewRecord> & { path: string }): PageReviewRec
 function statusOf(over: Partial<PageReviewRecord> = {}) {
   return reviewStatus(page({ path: "/p", ...over }), "2026-09-02");
 }
+
+const BEFORE_ANY_RECORD = "2000-01-01";
+
+function unread(record: PageReviewRecord): PageReviewRecord {
+  return { ...record, published: BEFORE_ANY_RECORD, reviewed_at: null, reviewer: null, review_outcome: null, review_note: null };
+}
+
+const recorded = (slug: string) => CHANGE_DATE.has(slug);
 
 describe("what a page states a fact about is more than what its verdict awards", () => {
   it("unions both surfaces, dedupes and sorts", () => {
@@ -169,14 +179,6 @@ describe("the number of pages resting on a record that has moved under them only
 });
 
 describe("the register the site ships", () => {
-  it("names a cohort large enough for the checks below to read", () => {
-    assertPopulationFloor(
-      staleFactPages(REGISTRY.pages, TODAY, changeDateFor).length,
-      20,
-      "registered pages stating a vendor fact recorded since the page was last read"
-    );
-  });
-
   it("states every flagged fact from a record dated after the page was last read", () => {
     for (const p of staleFactPages(REGISTRY.pages, TODAY, changeDateFor)) {
       for (const fact of p.facts) {
@@ -185,12 +187,22 @@ describe("the register the site ships", () => {
     }
   });
 
-  it("finds facts on the table surface that the verdict surface never sees", () => {
-    const stale = staleFactPages(REGISTRY.pages, TODAY, changeDateFor);
-    const tableOnly = stale.flatMap(p => p.facts.filter(f => f.surface === "table").map(f => `${p.path}/${f.slug}`));
-    const pagesOnlyTable = stale.filter(p => p.facts.every(f => f.surface === "table"));
-    assert.ok(tableOnly.length > 0, "no page states a stale fact in a table its verdict blocks do not also name");
-    assert.ok(pagesOnlyTable.length > 0, "no page is in the cohort on its table alone");
+  it("finds facts on the table surface that the verdict surface never sees, on a page from the register nobody has read", () => {
+    const tabulatedOnly = (p: PageReviewRecord) => p.vendors_tabulated.filter(slug => recorded(slug) && !p.vendors_asserted.includes(slug));
+    const subject = REGISTRY.pages.find(p =>
+      tabulatedOnly(p).length > 0 && !DECLARED_FIGURE_READS.some(read => read.path === p.path)
+    );
+    assert.ok(subject, "no page on the register tabulates a vendor the change log records that its verdict blocks leave out");
+
+    const [entered] = staleFactPages([unread(subject)], TODAY, changeDateFor);
+    assert.deepStrictEqual(
+      entered?.facts.filter(f => f.surface === "table").map(f => f.slug).sort(),
+      tabulatedOnly(subject).sort()
+    );
+
+    const onItsTableAlone = staleFactPages([{ ...unread(subject), vendors_asserted: [] }], TODAY, changeDateFor);
+    assert.strictEqual(onItsTableAlone.length, 1, `${subject.path} with no verdict vendors left the cohort`);
+    assert.ok(onItsTableAlone[0]!.facts.every(f => f.surface === "table"), JSON.stringify(onItsTableAlone[0]!.facts));
   });
 
   it("counts a vendor a comparison table prices but no verdict awards", () => {
@@ -285,9 +297,13 @@ describe("#1327 a review that found defects does not restart the staleness clock
     assert.deepStrictEqual(staleFactPages([reviewed("pass")], "2026-09-02", recordedBeforeTheReview), []);
   });
 
-  it("puts the six pages the shipped register records a failed review on into the cohort", () => {
+  it("starts the clock at publication on every page the shipped register records a failed review on", () => {
     const failed = REGISTRY.pages.filter(p => p.reviewed_at !== null && p.review_outcome === "fail");
-    assert.ok(failed.length >= 5, `only ${failed.length} pages on the register record a failed review`);
+    assert.deepStrictEqual(
+      failed.map(p => p.path).sort(),
+      REGISTERED.filter(p => p.reviewed_at && p.review_outcome === "fail").map(p => p.path).sort(),
+      "the parsed register lost a failed review the file records"
+    );
     for (const p of failed) {
       assert.strictEqual(reviewStatus(p, TODAY).clock_starts, p.published, `${p.path} restarted its clock on a failed review`);
     }
@@ -337,17 +353,33 @@ describe("#1321 the budgets live where whoever earns a lower one can write them"
     assert.strictEqual(serializeQualityBudgets(shipped), readFileSync(BUDGETS, "utf-8"));
   });
 
-  it("measures both budgets against the register the site ships", () => {
-    assertPopulationFloor(
-      staleFactPages(REGISTRY.pages, TODAY, changeDateFor).length,
-      20,
-      "pages in the stale-fact cohort measured from the shipped register"
+  it("measures both budgets against the register the site ships, and either may fall to zero", () => {
+    const subject = REGISTRY.pages.find(p => p.vendors_asserted.some(recorded));
+    assert.ok(subject, "no page on the register names a vendor the change log records in its verdict blocks");
+    const others = REGISTRY.pages.filter(p => p !== subject);
+
+    const cohortWith = (p: PageReviewRecord) => staleFactPages([...others, p], TODAY, changeDateFor).map(s => s.path).sort();
+    const cohortWithout = staleFactPages(others, TODAY, changeDateFor).map(s => s.path).sort();
+    assert.deepStrictEqual(
+      cohortWith(unread(subject)),
+      [...cohortWithout, subject.path].sort(),
+      `${subject.path}, unread since before its vendors' records, is not counted once in the stale-fact cohort`
     );
-    assertPopulationFloor(
-      unsourcedTierAPaths(REGISTRY.pages).length,
-      9,
-      "tier-A pages asserting a vendor fact that reaches no record"
+    assert.deepStrictEqual(
+      cohortWith({ ...subject, reviewed_at: TODAY, review_outcome: "pass" }),
+      cohortWithout,
+      `${subject.path}, read today, is still counted in the stale-fact cohort`
     );
+
+    const unsourcedWith = (p: PageReviewRecord) => unsourcedTierAPaths([...others, p]);
+    const unsourcedWithout = unsourcedTierAPaths(others);
+    assert.deepStrictEqual(
+      unsourcedWith({ ...subject, tier: "A", data_source: "unsourced" }),
+      [...unsourcedWithout, subject.path].sort(),
+      `${subject.path}, tier A and reaching no record, is not counted once among the unsourced tier-A pages`
+    );
+    assert.deepStrictEqual(unsourcedWith({ ...subject, tier: "A", data_source: "catalogue" }), unsourcedWithout);
+    assert.deepStrictEqual(unsourcedWith({ ...subject, tier: "B", data_source: "unsourced" }), unsourcedWithout);
   });
 });
 
