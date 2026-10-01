@@ -8,11 +8,28 @@ export const SPLIT = {
   recentVendorChange: "vendor change inside 180 days",
   olderVendorChange: "vendor change before that",
   ours: "our correction",
-  noCapture: "no usable capture",
+  noCaptureBadgeToReview: "no usable capture, set a badge: to review",
+  noCapture: "no usable capture, set no badge",
   textDayUnknown: "text day unknown",
   pageUnreadable: "page unreadable today",
   readerFailed: "reader failed",
 };
+
+const BADGE_LEVELS = ["caution", "risky"];
+
+export function recordKey(record) {
+  return JSON.stringify([record.date, record.change_type, record.recorded_date ?? null, record.summary]);
+}
+
+export function badgesByRecord(listingRisks) {
+  const badges = new Map();
+  for (const { risk_level, cause } of listingRisks) {
+    if (!cause || !BADGE_LEVELS.includes(risk_level)) continue;
+    const key = recordKey(cause);
+    if (badges.get(key) !== "risky") badges.set(key, risk_level);
+  }
+  return badges;
+}
 
 export function firstReadingsInForce(changes, { includeResolved = false } = {}) {
   const readingsSoFar = new Map();
@@ -33,12 +50,12 @@ function daysBefore(day, days) {
   return new Date(Date.parse(`${day}T00:00:00Z`) - days * 86_400_000).toISOString().slice(0, 10);
 }
 
-export function splitOf(settled, today) {
+export function splitOf(settled, today, badge = null) {
   if (settled.outcome === "ours") return SPLIT.ours;
   if (settled.outcome === "text_day_unknown") return SPLIT.textDayUnknown;
   if (settled.outcome === "page_unreadable_today") return SPLIT.pageUnreadable;
   if (settled.outcome === "reader_failed") return SPLIT.readerFailed;
-  if (settled.outcome !== "vendor_changed") return SPLIT.noCapture;
+  if (settled.outcome !== "vendor_changed") return BADGE_LEVELS.includes(badge) ? SPLIT.noCaptureBadgeToReview : SPLIT.noCapture;
   const latest = settled.brackets[settled.brackets.length - 1];
   const movedOnOrAfter = latest.first_new ?? latest.last_old;
   return movedOnOrAfter >= daysBefore(today, DEMOTION_WINDOW_DAYS) ? SPLIT.recentVendorChange : SPLIT.olderVendorChange;
@@ -64,10 +81,11 @@ async function settleOrSayTheReaderFailed(settle, readings) {
   }
 }
 
-export async function settleFirstReadings({ changes, offers, today, archive, pairReaderForListing, fetchToday, textDayOf, limit = Infinity, vendors, includeResolved = false, logReads = false, onSettled = () => {} }) {
+export async function settleFirstReadings({ changes, offers, today, archive, pairReaderForListing, fetchToday, textDayOf, badgeSetBy = () => null, limit = Infinity, vendors, includeResolved = false, logReads = false, onSettled = () => {} }) {
   const backlog = firstReadingsInForce(changes, { includeResolved }).filter((record) => !vendors || vendors.includes(record.vendor)).slice(0, limit);
   const settleOne = async (record) => {
-    const subject = { vendor: record.vendor, date: record.date, change_type: record.change_type, source_url: record.source_url, resolution: record.resolution?.state ?? null };
+    const badge = badgeSetBy(record);
+    const subject = { vendor: record.vendor, date: record.date, change_type: record.change_type, source_url: record.source_url, resolution: record.resolution?.state ?? null, badge };
     const page = await fetchToday(record.source_url);
     const readings = [];
     const settled = page.ok
@@ -83,7 +101,7 @@ export async function settleFirstReadings({ changes, offers, today, archive, pai
           onRead: (reading) => readings.push(reading),
         }), readings)
       : { outcome: "page_unreadable_today", why: page.error, reads: 0 };
-    const result = { ...subject, ...settled, split: splitOf(settled, today), ...(logReads ? { readings } : {}) };
+    const result = { ...subject, ...settled, split: splitOf(settled, today, badge), ...(logReads ? { readings } : {}) };
     onSettled(result);
     return result;
   };
@@ -98,8 +116,23 @@ export async function settleFirstReadings({ changes, offers, today, archive, pai
 
 export function reviewList(results) {
   return results
-    .filter((result) => result.review?.length > 0)
-    .map((result) => ({ vendor: result.vendor, date: result.date, change_type: result.change_type, compared_with: result.compared_with, lines: result.review }));
+    .filter((result) => result.review?.length > 0 || result.split === SPLIT.noCaptureBadgeToReview)
+    .map((result) => ({
+      vendor: result.vendor,
+      date: result.date,
+      change_type: result.change_type,
+      badge: result.badge ?? null,
+      ...(result.compared_with ? { compared_with: result.compared_with } : {}),
+      why: result.why ?? null,
+      ...(result.tried ? { tried: result.tried } : {}),
+      lines: result.review ?? [],
+    }));
+}
+
+async function badgesPublishedToday() {
+  const { changesByVendor, loadOffers, publishedRisk } = await import("../dist/data.js");
+  const changesOf = changesByVendor();
+  return badgesByRecord(loadOffers().map((offer) => publishedRisk(offer, changesOf.get(offer.vendor.toLowerCase()) ?? [])));
 }
 
 async function main() {
@@ -114,6 +147,7 @@ async function main() {
   const out = option("--out") ?? "settled-first-readings.json";
   const progress = out.replace(/\.json$/, "") + ".jsonl";
   writeFileSync(progress, "");
+  const badges = await badgesPublishedToday();
   const report = await settleFirstReadings({
     changes,
     offers,
@@ -122,6 +156,7 @@ async function main() {
     pairReaderForListing: (listing) => pairedReaderFor(client, listing),
     fetchToday: (url) => fetchPageText(url),
     textDayOf: (text) => dayOurTextEntered(text),
+    badgeSetBy: (record) => badges.get(recordKey(record)) ?? null,
     limit: option("--limit") ? Number(option("--limit")) : Infinity,
     vendors: option("--vendors")?.split(",").map((name) => name.trim()),
     includeResolved: args.includes("--include-resolved"),
