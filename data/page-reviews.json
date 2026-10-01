@@ -850,7 +850,7 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 66,
+      "table_figures": 68,
       "table_figures_from_records": 12,
       "tables": [
         {
@@ -880,7 +880,7 @@
         },
         {
           "label": "Startup Credit Programs",
-          "figures": 8,
+          "figures": 10,
           "from_records": 0
         },
         {
@@ -3129,11 +3129,9 @@
         "cloudflare-for-startups",
         "digitalocean",
         "google-cloud",
-        "ibm-cloud",
-        "microsoft-founders-hub",
+        "microsoft-for-startups",
         "posthog",
         "ramp",
-        "segment",
         "stripe-atlas",
         "svb-silicon-valley-bank"
       ],
@@ -3145,18 +3143,18 @@
       "review_note": "Two readers checked the page's 85 claims against the programmes' own pages on 2026-09-28; about 54 no longer hold. It lists Segment's startup programme, which ended in 2025, and IBM credit tiers IBM does not publish, gives AWS Activate's top credit as $100K (now $200K) and Cloudflare's as $250K in four tiers (now $350K in three), and its Recent Changes table lists records about other products of the same companies. Copy for the corrections is on https://github.com/robhunter/agentdeals/issues/2152.",
       "reads_index": false,
       "tables_read_index": false,
-      "table_figures": 71,
-      "table_figures_from_records": 35,
+      "table_figures": 80,
+      "table_figures_from_records": 30,
       "tables": [
         {
           "label": "Comparison Table",
-          "figures": 35,
+          "figures": 50,
           "from_records": 0
         },
         {
           "label": "Recent Changes",
-          "figures": 36,
-          "from_records": 35
+          "figures": 30,
+          "from_records": 30
         }
       ],
       "reads_changes": true,
@@ -3171,7 +3169,6 @@
       "vendors_tabulated": [
         "aws",
         "cloudflare-for-startups",
-        "digitalocean",
         "google-cloud",
         "microsoft-azure",
         "railway"
@@ -3184,7 +3181,7 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 6,
+      "table_figures": 5,
       "table_figures_from_records": 0,
       "tables": [
         {
@@ -3194,7 +3191,7 @@
         },
         {
           "label": "Startup Credit Programs: The Hidden Goldmine",
-          "figures": 6,
+          "figures": 5,
           "from_records": 0
         },
         {
