@@ -83,7 +83,6 @@ export const REMOVALS_PAGES_NAME_AS_LASTING: readonly RemovalNamedAsLasting[] = 
   { vendor: "Heroku", route: "/state-of-free-tiers" },
   { vendor: "PlanetScale", route: "/state-of-free-tiers" },
   { vendor: "SendGrid", route: "/state-of-free-tiers" },
-  { vendor: "Brave Search API", route: "/state-of-free-tiers" },
   { vendor: "X API (Twitter)", route: "/state-of-free-tiers" },
   { vendor: "SendGrid", route: "/email-comparison-2026" },
 ];
