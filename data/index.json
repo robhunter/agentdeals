@@ -9896,10 +9896,10 @@
     },
     {
       "vendor": "Google Colab",
-      "category": "Notebooks & Data Science",
-      "description": "Free Jupyter notebooks with GPU access (T4 when available). Sessions up to 12 hours. Python with pre-installed ML libraries (TensorFlow, PyTorch, scikit-learn). Dynamic resource limits based on availability",
+      "category": "AI / ML",
+      "description": "Hosted Jupyter notebooks with free access to GPUs and TPUs. In the free version, notebooks run for at most 12 hours, depending on availability and usage, and idle runtimes time out. GPU access is heavily restricted, GPU and TPU types vary over time, and usage limits fluctuate. Colab Pro, Pro+ and Pay As You Go offer more compute, based on a balance of compute units.",
       "tier": "Free",
-      "url": "https://colab.research.google.com/",
+      "url": "https://research.google.com/colaboratory/faq.html",
       "tags": [
         "data-science",
         "notebooks",
@@ -9908,10 +9908,20 @@
       ],
       "verifiedDate": "2026-08-13",
       "source_check": {
-        "checked": "2026-09-10",
-        "outcome": "unreadable",
-        "detail": "page content too short (likely JS-rendered SPA); a rendering client read 32 characters",
-        "rendered": true
+        "checked": "2026-10-01",
+        "outcome": "states_no_terms",
+        "detail": "the page names Google Colab but states no amount, tier or rate we can read, and its markup carries no structured data"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "gpu_compute",
+            "source_url": "https://research.google.com/colaboratory/faq.html",
+            "source_quote": "provides free of charge access to computing resources, including GPUs and TPUs"
+          }
+        ],
+        "reviewed": "2026-10-01"
       }
     },
     {

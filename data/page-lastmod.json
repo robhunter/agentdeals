@@ -300,6 +300,9 @@
     "/alternative-to/google-cloud-run": {
       "daily": true
     },
+    "/alternative-to/google-colab": {
+      "daily": true
+    },
     "/alternative-to/google-gemini-api": {
       "daily": true
     },
@@ -1475,6 +1478,18 @@
       "hash": "8967eda712905213",
       "changed": "2026-10-01"
     },
+    "/compare/blaxel-vs-deepseek-api": {
+      "hash": "33879d06bf00b650",
+      "changed": "2026-10-01"
+    },
+    "/compare/blaxel-vs-google-vector-search-2-0": {
+      "hash": "0a62cf160191e381",
+      "changed": "2026-10-01"
+    },
+    "/compare/blaxel-vs-neptune-ai": {
+      "hash": "694edbd37423745b",
+      "changed": "2026-10-01"
+    },
     "/compare/blender-vs-gimp": {
       "hash": "cd9bedd71beb1f69",
       "changed": "2026-09-18"
@@ -1569,14 +1584,6 @@
     },
     "/compare/cerbos-hub-vs-zitadel-cloud": {
       "hash": "e69de29a2fbbba57",
-      "changed": "2026-10-01"
-    },
-    "/compare/cerebras-vs-elevenlabs": {
-      "hash": "06678a79d11635a1",
-      "changed": "2026-10-01"
-    },
-    "/compare/cerebras-vs-maxim-ai": {
-      "hash": "3ac809cb0db9743a",
       "changed": "2026-10-01"
     },
     "/compare/circleci-vs-github-actions": {
@@ -1759,6 +1766,10 @@
       "hash": "0432459e26bb0077",
       "changed": "2026-09-27"
     },
+    "/compare/cube-vs-hex": {
+      "hash": "e623503e2570273c",
+      "changed": "2026-10-01"
+    },
     "/compare/cursor-vs-devin": {
       "hash": "7261490b8b502b19",
       "changed": "2026-09-27"
@@ -1807,9 +1818,9 @@
       "hash": "444b637354cd131c",
       "changed": "2026-09-27"
     },
-    "/compare/deepnote-vs-hex": {
-      "hash": "911e29d234d47ad4",
-      "changed": "2026-09-27"
+    "/compare/deepseek-api-vs-google-vector-search-2-0": {
+      "hash": "5553446fd566f3b2",
+      "changed": "2026-10-01"
     },
     "/compare/diawi-vs-expo": {
       "hash": "617f16efdfbe10f0",
@@ -1898,14 +1909,6 @@
     "/compare/element-io-vs-talky-io": {
       "hash": "956688134259550b",
       "changed": "2026-09-18"
-    },
-    "/compare/elevenlabs-vs-maxim-ai": {
-      "hash": "ed0d6b73c7207758",
-      "changed": "2026-09-27"
-    },
-    "/compare/elevenlabs-vs-together-ai": {
-      "hash": "5d75b3f64b029188",
-      "changed": "2026-09-27"
     },
     "/compare/emaillabs-io-vs-mail-tester-com": {
       "hash": "013a148d6cb204ba",
@@ -2118,6 +2121,10 @@
     "/compare/google-secret-manager-vs-infisical": {
       "hash": "23e4e53c44bd96eb",
       "changed": "2026-09-27"
+    },
+    "/compare/google-vector-search-2-0-vs-neptune-ai": {
+      "hash": "0686085bf1862140",
+      "changed": "2026-10-01"
     },
     "/compare/gorgias-vs-hubspot-for-startups": {
       "hash": "f30d70d84ad6a2f4",
@@ -2338,10 +2345,6 @@
     "/compare/make-vs-zoho-sign": {
       "hash": "33b5897b476bb4d6",
       "changed": "2026-09-26"
-    },
-    "/compare/maxim-ai-vs-together-ai": {
-      "hash": "67ef42c106bb6764",
-      "changed": "2026-09-27"
     },
     "/compare/microsoft-ajax-vs-bootstrapcdn-com": {
       "hash": "b591dfe98f6ad350",
