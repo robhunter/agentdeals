@@ -1,0 +1,47 @@
+name: Settle the backlog of first readings against the Archive, in eight shards
+
+on:
+  push:
+    branches:
+      - settle-backlog-1952
+
+permissions:
+  contents: read
+
+jobs:
+  settle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 330
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3, 4, 5, 6, 7]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24.20.0"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Settle shard ${{ matrix.shard }} of 8
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+        run: node scripts/settle-discovered-records.js --shard ${{ matrix.shard }}/8 --log-reads --out settled-backlog-${{ matrix.shard }}.json
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: settled-backlog-${{ matrix.shard }}
+          path: |
+            settled-backlog-${{ matrix.shard }}.json
+            settled-backlog-${{ matrix.shard }}.jsonl
+          if-no-files-found: warn
