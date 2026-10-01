@@ -19462,9 +19462,9 @@ mcpCtaCss() + "\n" +
   "</div>\n" +
 
   "<div class=\"story-card\">\n" +
-    "<h3>Brave Search API Removal</h3>\n" +
-    "<span class=\"story-impact\" style=\"background:#f8514922;color:#f85149\">Free Tier Removed &middot; High Impact</span>\n" +
-    "<p>Brave eliminated its free search API plan (5,000 queries/month) in February, replacing it with metered billing at $5/1,000 requests. For developers building search-powered tools and AI agents, this was a blow &mdash; Brave was one of the last independent search APIs with meaningful free access. The timing coincided with Google further restricting Programmable Search Engine queries.</p>\n" +
+    "<h3>Brave Search API: Free Plan Becomes a Monthly Credit</h3>\n" +
+    "<span class=\"story-impact\" style=\"background:#d2992222;color:#d29922\">Limits Reduced &middot; Medium Impact</span>\n" +
+    "<p>On 12 February Brave replaced its free plan's 2,000 queries a month with $5 of free credit a month on each plan. Search costs $5 per 1,000 requests, so the credit covers 1,000 Search requests. It requires attributing Brave on the project's website.</p>\n" +
     "<p><a href=\"/vendor/brave-search-api\">View vendor profile</a></p>\n" +
   "</div>\n" +
 
@@ -26817,10 +26817,10 @@ function buildFreeTierTrackerPage(): string {
       vendor: "Brave Search API",
       slug: "brave-search-api",
       date: "2026-02-12",
-      oneLiner: "Free plan (5,000 queries/mo) replaced with metered billing",
-      changeType: "free_tier_removed",
-      impact: "high",
-      detail: "Brave Search API's free plan (5,000 queries/month) was replaced with metered billing at $5/1,000 requests. A $5 monthly credit offsets ~1,000 queries, but credit cards are now actively charged with no spending cap.",
+      oneLiner: "Free plan (2,000 queries/mo) became $5 of free credit a month",
+      changeType: "limits_reduced",
+      impact: "medium",
+      detail: "Brave Search API's free plan (2,000 queries a month) became $5 of free credit a month, which covers 1,000 Search requests at $5 per 1,000. The credit requires attribution.",
       alternatives: ["SerpAPI", "Google Custom Search"],
     },
     {
@@ -27077,7 +27077,7 @@ ${mcpCtaCss()}
 
   <div class="executive-summary">
     <p><strong>${removedOrReduced.length} developer tool free tiers were removed in Q1 2026. ${limitsReduced.length + restructured.length} more were reduced or restructured. Here&rsquo;s what changed and what&rsquo;s still free.</strong></p>
-    <p>March 2026 saw an unprecedented wave of free tier removals in a single month: <strong>Postman</strong> killed team collaboration on its free plan, <strong>LocalStack</strong> discontinued its open-source Community Edition (212 points on Hacker News), <strong>Brave Search API</strong> replaced its free tier with metered billing, <strong>HCP Terraform</strong> is ending its legacy free plan March 31, and <strong>Windsurf</strong> replaced credits with hard quotas while raising prices 33%.</p>
+    <p>March 2026 saw an unprecedented wave of free tier removals in a single month: <strong>Postman</strong> killed team collaboration on its free plan, <strong>LocalStack</strong> discontinued its open-source Community Edition (212 points on Hacker News), <strong>HCP Terraform</strong> is ending its legacy free plan March 31, and <strong>Windsurf</strong> replaced credits with hard quotas while raising prices 33%.</p>
     <p>But it&rsquo;s not all erosion. <strong>Terragrunt Scale</strong> launched a free tier specifically to capture HCP Terraform refugees, and <strong>GitHub Copilot</strong> went free. The pattern: some vendors are removing free tiers, while competitors swoop in to capture displaced developers.</p>
   </div>
 

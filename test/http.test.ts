@@ -2908,7 +2908,7 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("X (Twitter) API Paywall"), "Should have X API story");
     assert.ok(html.includes("MinIO Open Source Killed"), "Should have MinIO story");
     assert.ok(html.includes("LocalStack Community Edition"), "Should have LocalStack story");
-    assert.ok(html.includes("Brave Search API Removal"), "Should have Brave story");
+    assert.ok(html.includes("Brave Search API: Free Plan Becomes a Monthly Credit"), "Should have Brave story");
     assert.ok(html.includes("Firebase Restrictions"), "Should have Firebase story");
     assert.ok(html.includes("HCP Terraform"), "Should have Terraform story");
     assert.ok(html.includes("Spotify API Lockdown"), "Should have Spotify story");
