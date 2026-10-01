@@ -1,7 +1,7 @@
 import { describe, it } from "node:test";
 import assert from "node:assert";
 
-const { firstReadingsInForce, splitOf, listingFor, settleFirstReadings, SPLIT } = await import("../scripts/settle-discovered-records.js");
+const { firstReadingsInForce, splitOf, listingFor, settleFirstReadings, SPLIT, badgesByRecord, recordKey } = await import("../scripts/settle-discovered-records.js");
 
 type Change = Record<string, unknown>;
 
@@ -54,6 +54,42 @@ describe("the split posted on the issue", () => {
     assert.strictEqual(splitOf({ outcome: "text_day_unknown" }, TODAY), SPLIT.textDayUnknown);
     assert.strictEqual(splitOf({ outcome: "page_unreadable_today" }, TODAY), SPLIT.pageUnreadable);
     assert.strictEqual(splitOf({ outcome: "reader_failed" }, TODAY), SPLIT.readerFailed);
+  });
+
+  it("gives a record that set a caution or risky badge and found no usable capture its own row", () => {
+    assert.strictEqual(splitOf({ outcome: "no_usable_capture" }, TODAY, "caution"), SPLIT.noCaptureBadgeToReview);
+    assert.strictEqual(splitOf({ outcome: "no_usable_capture" }, TODAY, "risky"), SPLIT.noCaptureBadgeToReview);
+    assert.strictEqual(splitOf({ outcome: "no_usable_capture" }, TODAY, "stable"), SPLIT.noCapture);
+    assert.strictEqual(splitOf({ outcome: "no_usable_capture" }, TODAY, null), SPLIT.noCapture);
+    assert.strictEqual(splitOf({ outcome: "ours" }, TODAY, "risky"), SPLIT.ours);
+    assert.strictEqual(splitOf({ outcome: "text_day_unknown" }, TODAY, "risky"), SPLIT.textDayUnknown);
+    assert.strictEqual(splitOf({ outcome: "vendor_changed", brackets: [{ last_old: "2026-09-01", first_new: "2026-09-02" }] }, TODAY, "risky"), SPLIT.recentVendorChange);
+  });
+});
+
+describe("the badge a record sets", () => {
+  const record = (date: string, summary: string) => ({ vendor: "Alpha", date, change_type: "limits_reduced", recorded_date: date, summary });
+
+  it("is the caution or risky level a listing publishes citing that record, and the higher one where two listings cite it", () => {
+    const cut = record("2026-09-01", "Alpha cut its free plan");
+    const moved = record("2026-09-02", "Alpha moved a limit");
+    const trimmed = record("2026-09-03", "Alpha trimmed a quota");
+    const withheld = record("2026-09-04", "Alpha renamed a plan");
+    const badges = badgesByRecord([
+      { risk_level: "caution", cause: cut },
+      { risk_level: "risky", cause: { ...cut, vendor: "Alpha, as published after a rename" } },
+      { risk_level: "risky", cause: moved },
+      { risk_level: "caution", cause: moved },
+      { risk_level: "caution", cause: trimmed },
+      { risk_level: null, cause: withheld },
+      { risk_level: "stable", cause: withheld },
+      { risk_level: "risky", cause: null },
+    ]);
+    assert.deepStrictEqual(
+      [cut, moved, trimmed, withheld].map((r) => badges.get(recordKey(r)) ?? null),
+      ["risky", "risky", "caution", null],
+    );
+    assert.strictEqual(badges.size, 3);
   });
 });
 
@@ -154,9 +190,60 @@ describe("settling the backlog", () => {
       fetchToday: async () => ({ ok: true, text: "TERMS=A" }),
       textDayOf: () => "2026-02-10",
     });
-    assert.deepStrictEqual(report.review, [{ vendor: "Delta", date: "2026-09-01", change_type: "limits_reduced", compared_with: { page: "capture 2026-09-01", day: "2026-09-01", gap_days: 0, side: "on" }, lines: [line] }]);
+    assert.deepStrictEqual(report.review, [{
+      vendor: "Delta",
+      date: "2026-09-01",
+      change_type: "limits_reduced",
+      badge: null,
+      compared_with: { page: "capture 2026-09-01", day: "2026-09-01", gap_days: 0, side: "on" },
+      why: "no difference is a value both pages state moving, so the lines go to review",
+      lines: [line],
+    }]);
     assert.strictEqual(report.split[SPLIT.noCapture], 1);
     assert.strictEqual(report.split[SPLIT.ours], 1);
+  });
+
+  it("puts every record that set a badge and found no usable capture on the review list with its why, whatever stopped it, and no other record", async () => {
+    const record = (vendor: string) =>
+      change({ vendor, date: "2026-09-01", date_source: "discovered", previous_state: "A", current_state: "B", source_url: `https://${vendor.toLowerCase()}.example/pricing`, summary: `${vendor} cut its free plan` });
+    const changes = ["Misquoted", "Uncaptured", "Unreadable", "Unbadged", "Settled"].map(record);
+    const badges: Record<string, string | null> = { Misquoted: "risky", Uncaptured: "caution", Unreadable: "risky", Unbadged: null, Settled: "risky" };
+    const fullPage = `<html><body><p>TERMS=A</p><p>${"Plans and limits. ".repeat(40)}</p></body></html>`;
+    const archive = {
+      captures: async (url: string) => ({
+        captures: url.includes("uncaptured") ? [] : ["20260201120000", "20260901120000"].map((timestamp) => ({ timestamp, original: url, statuscode: "200", mimetype: "text/html" })),
+      }),
+      captureHtml: async ({ original }: { original: string }) => ({ html: original.includes("unreadable") ? "<html><body><p>Loading</p></body></html>" : fullPage }),
+    };
+    const report = await settleFirstReadings({
+      changes,
+      offers: [],
+      today: "2026-09-28",
+      archive,
+      pairReaderForListing: (listing: { vendor: string }) =>
+        listing.vendor === "Misquoted" || listing.vendor === "Unbadged"
+          ? async () => ({ status: "unquotable", side: "old", why: "not on the old page: \"2 user seats\"" })
+          : termsPairReader(),
+      fetchToday: async () => ({ ok: true, text: "TERMS=A" }),
+      textDayOf: () => "2026-02-10",
+      badgeSetBy: (r: { vendor: string }) => badges[r.vendor],
+    });
+    assert.deepStrictEqual(
+      report.results.map((r: { vendor: string; outcome: string; badge: string | null }) => `${r.vendor} ${r.outcome} ${r.badge}`),
+      ["Misquoted no_usable_capture risky", "Uncaptured no_usable_capture caution", "Unreadable no_usable_capture risky", "Unbadged no_usable_capture null", "Settled ours risky"],
+    );
+    assert.deepStrictEqual(
+      report.review.map((entry: { vendor: string; badge: string; why: string; tried?: Array<{ why: string }>; lines: unknown[] }) => [entry.vendor, entry.badge, entry.why, (entry.tried ?? []).map((t) => t.why), entry.lines]),
+      [
+        ["Misquoted", "risky", "no capture settled it", ["the capture settles nothing: not on the old page: \"2 user seats\""], []],
+        ["Uncaptured", "caution", "no capture on or before our text's day, nor within 60 days after it", [], []],
+        ["Unreadable", "risky", "no capture settled it", ["the capture could not be read"], []],
+      ],
+    );
+    assert.strictEqual(report.split[SPLIT.noCaptureBadgeToReview], 3);
+    assert.strictEqual(report.split[SPLIT.noCapture], 1);
+    assert.strictEqual(report.split[SPLIT.ours], 1);
+    assert.strictEqual(Object.values(report.split).reduce((sum: number, n) => sum + (n as number), 0), report.records);
   });
 
   it("falls back to a listing named for the record when the catalogue holds none for its vendor", () => {
