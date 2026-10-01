@@ -278,6 +278,45 @@ describe("judging a paired reading by the words it copied from each page", () =>
     assert.deepStrictEqual(verdict.review.map((line: { old: string; new: string }) => [line.old, line.new]), [["No credit card required", ""]]);
   });
 
+  const sameAnswered = (oldTerms: string[], newTerms: string[]) =>
+    judgePair(answer({ old_terms: oldTerms, new_terms: newTerms, same: true, direction: "unchanged" }), `${oldTerms.join(". ")}.`, `${newTerms.join(". ")}.`);
+
+  it("sends a same answer to review when a copied line shares its terms but none of its other words with the lines on the other side", () => {
+    const changes: [string[], string[], string[][]][] = [
+      [["No credit card required", "Commercial use allowed"], ["Credit card required", "No commercial use"], [["No credit card required", ""], ["", "No commercial use"]]],
+      [["3 projects", "Unlimited users"], ["3 users", "Unlimited projects"], [["3 projects", ""], ["Unlimited users", ""], ["", "3 users"], ["", "Unlimited projects"]]],
+      [["10K requests/mo"], ["10K events/mo"], [["10K requests/mo", ""], ["", "10K events/mo"]]],
+    ];
+    for (const [oldTerms, newTerms, review] of changes) {
+      const verdict = sameAnswered(oldTerms, newTerms);
+      assert.strictEqual(verdict.status, "review", `${oldTerms.join(" / ")}: ${verdict.why}`);
+      assert.deepStrictEqual(verdict.review.map((line: { old: string; new: string }) => [line.old, line.new]), review);
+    }
+  });
+
+  it("does not count a unit as a word two lines share, so \"5 GB storage\" does not match \"5 GB bandwidth\"", () => {
+    const verdict = sameAnswered(["5 GB storage"], ["5 GB bandwidth"]);
+    assert.strictEqual(verdict.status, "review", verdict.why);
+  });
+
+  it("does not count a function word as a word two lines share, so \"Up to 3 projects\" does not match \"Up to 3 users\"", () => {
+    const verdict = sameAnswered(["Up to 3 projects"], ["Up to 3 users"]);
+    assert.strictEqual(verdict.status, "review", verdict.why);
+  });
+
+  it("keeps a same answer when a reworded line shares a word with its match in any case or number, or states nothing besides its terms", () => {
+    const reworded = [
+      [["1 GB of storage"], ["Storage: 1 GB"]],
+      [["No credit card required"], ["No credit card needed"]],
+      [["Unlimited Projects"], ["unlimited project"]],
+      [["$0/mo"], ["$0 per month"]],
+    ];
+    for (const [oldTerms, newTerms] of reworded) {
+      const verdict = sameAnswered(oldTerms, newTerms);
+      assert.strictEqual(verdict.status, "same", `${oldTerms[0]} / ${newTerms[0]}: ${verdict.why}`);
+    }
+  });
+
   it("does not count an added term whose words were already on the old page, so a limit our text never stated is not a change", () => {
     const page = "Free hosting: 1000 MB disk space, 5 GB bandwidth, up to 5,000 visits a month, no ads.";
     const verdict = judgePair(answer({ old_terms: ["1000 MB disk space, 5 GB bandwidth"], new_terms: ["1000 MB disk space, 5 GB bandwidth"], differences: [{ old: "", new: "up to 5,000 visits a month" }] }), page, page);
