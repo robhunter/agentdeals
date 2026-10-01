@@ -153,8 +153,10 @@ describe("a free-plan excerpt is published only where the vendor page publishes 
       assert.strictEqual(res.status, 200, `${door} answered ${res.status}, so it says nothing about the excerpt`);
       assert.ok((await res.text()).includes(QUOTED.vendor), `${door} does not answer for ${QUOTED.vendor}`);
     }
+    const serving: string[] = [];
     for (const door of doors) {
-      assert.ok(!(await (await fetch(`${base}${door}`)).text()).includes("quoted-excerpt-marker"), `${door} serves the excerpt`);
+      if ((await (await fetch(`${base}${door}`)).text()).includes("quoted-excerpt-marker")) serving.push(door);
     }
+    assert.deepStrictEqual(serving, [], "doors that serve the excerpt");
   });
 });
