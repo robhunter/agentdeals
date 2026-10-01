@@ -7616,7 +7616,13 @@
       "category": "API Development",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-30",
+        "detail": "Retracted 2026-09-30: no change. tiny.cloud already listed the Free Plan with \"1,000 editor loads per month\" on the Internet Archive's captures of 2026-01-27 (pricing page) and 2026-02-01 (home page), before our listing was imported on 2026-03-02 saying core features were free for unlimited usage.",
+        "source_url": "http://web.archive.org/web/20260201234802/https://www.tiny.cloud/"
+      }
     },
     {
       "vendor": "Docs",
@@ -8254,7 +8260,13 @@
       "category": "API Development",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-01"
+      "recorded_date": "2026-09-01",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-30",
+        "detail": "Retracted 2026-09-30: no change. mockaroo.com said \"generate up to 1,000 rows of realistic test data\" and \"Plans start at just $60/year\" on the Internet Archive's captures of 2025-06-03 and 2026-01-28, as it does today. Our listing never stated the row limit.",
+        "source_url": "http://web.archive.org/web/20260128024249/https://www.mockaroo.com/"
+      }
     },
     {
       "vendor": "Liveblocks",
@@ -8446,7 +8458,13 @@
       "category": "API Development",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-01"
+      "recorded_date": "2026-09-01",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-30",
+        "detail": "Retracted 2026-09-30: no change. mocklets.com listed the same Basic Free plan (1 Collection, 10 Apis / Collection, 5 Files / Collection, 2 Members / Collection) on the Internet Archive's captures of 2025-06-02 and 2026-02-02, as it does today. Our listing did not state the limits.",
+        "source_url": "http://web.archive.org/web/20260202160603/https://mocklets.com/"
+      }
     },
     {
       "vendor": "Currencyapi",
@@ -8821,7 +8839,13 @@
       "category": "Testing",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-02"
+      "recorded_date": "2026-09-02",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-10-01",
+        "detail": "Retracted 2026-10-01: no change. Every term this record gives as new (50 AI credits, 1,000 API monitoring requests a month, and the Free card's wording) is on the Internet Archive's capture of postman.com/pricing of 2026-08-19, whose comparison table still gave Free unlimited performance testing runs and unlimited cloud and local mock servers. The narrowing that came after it, Free losing cloud performance testing, is recorded separately, dated 2026-09-18.",
+        "source_url": "http://web.archive.org/web/20260819010644/https://www.postman.com/pricing/"
+      }
     },
     {
       "vendor": "Logto",
@@ -9286,9 +9310,9 @@
       "change_type": "pricing_restructured",
       "date": "2026-08-14",
       "date_source": "hand_written",
-      "summary": "Mistral's Free plan now includes $10 a month in API credits for Studio and the API, alongside limited messages, web searches and image generations in Vibe.",
-      "previous_state": "Free plan with no API credit line: \"Access to Mistral's SOTA models.\" (mistral.ai/pricing, Internet Archive capture of 2026-08-11)",
-      "current_state": "Free plan: \"Test out Vibe's capabilities. Access on web and mobile. Limited messages and web searches. Limited coding sessions. State-of-the-art image generation. Test Mistral models in Studio. $10 /mo in API credits.\" The credit first appears between the Internet Archive's 2026-08-11 and 2026-08-14 captures of mistral.ai/pricing.",
+      "summary": "Mistral's free API moved to a $10 monthly allowance shared across Studio, the API and Vibe Code; when it is used up, usage can stop unless pay-as-you-go is on. Before, the docs described a free API tier with restrictive rate limits, and the Free plan listed no API credit.",
+      "previous_state": "Free plan with no API credit line: \"Access to Mistral's SOTA models.\" (mistral.ai/pricing, Internet Archive capture of 2026-08-11). Mistral's docs, capture of 2026-04-07: \"a free API tier with restrictive rate limits\".",
+      "current_state": "Free plan: \"Test out Vibe's capabilities. Access on web and mobile. Limited messages and web searches. Limited coding sessions. State-of-the-art image generation. Test Mistral models in Studio. $10 /mo in API credits.\" The credit first appears between the Internet Archive's 2026-08-11 and 2026-08-14 captures of mistral.ai/pricing. Mistral's docs (Subscriptions, read 2026-10-01): \"Each Mistral plan includes monthly usage that is shared across Studio, the API, and Vibe Code.\" Without pay-as-you-go, \"usage can stop until the next billing period\".",
       "impact": "high",
       "source_url": "https://web.archive.org/web/20260814151405/https://mistral.ai/pricing/",
       "category": "AI / ML",
@@ -13259,6 +13283,34 @@
       "category": "CI/CD",
       "alternatives": [],
       "recorded_date": "2026-09-30",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Postman",
+      "change_type": "limits_reduced",
+      "date": "2026-09-18",
+      "summary": "Postman's Free plan no longer includes cloud performance testing. Its pricing table gave Free \"Performance testing (unlimited runs)\" on the Internet Archive's capture of 2026-08-20, cloud runs at $0.04 per virtual-user hour on 2026-09-09, and marks cloud performance testing unavailable on Free from the capture of 2026-09-18; local performance testing stays unlimited. In the same window the table stopped calling Free's mock servers unlimited, and it states no limit for them.",
+      "previous_state": "Free: \"Performance testing (unlimited runs)\" and \"Unlimited cloud & local mock servers\" (postman.com/pricing comparison table, capture of 2026-08-20)",
+      "current_state": "Free: \"Unlimited local performance testing\"; \"Cloud performance testing\" unavailable, \"$0.04 / VuH\" on the paid plans; \"Mock Servers\" (capture of 2026-09-18)",
+      "impact": "medium",
+      "source_url": "http://web.archive.org/web/20260918150023/https://www.postman.com/pricing/",
+      "category": "Testing",
+      "alternatives": [],
+      "recorded_date": "2026-10-01",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Mistral AI",
+      "change_type": "record_corrected",
+      "date": "2026-10-01",
+      "summary": "Data correction - The record described Mistral's $10 monthly API credit as an addition to the Free plan. Mistral's docs show free API use now draws on that credit, shared with Studio and Vibe Code, and can stop when it is used up.",
+      "previous_state": "pricing_restructured dated 2026-08-14, summarised as the Free plan gaining a monthly API credit",
+      "current_state": "Same record and date, summarised as the free API moving to a monthly allowance shared across Studio, the API and Vibe Code",
+      "impact": "medium",
+      "source_url": "https://docs.mistral.ai/admin/billing-usage/subscriptions",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-10-01",
       "date_source": "hand_written"
     }
   ]
