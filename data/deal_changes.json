@@ -13542,6 +13542,20 @@
       "alternatives": [],
       "recorded_date": "2026-10-01",
       "date_source": "hand_written"
+    },
+    {
+      "vendor": "Neon",
+      "change_type": "limits_increased",
+      "date": "2026-10-01",
+      "summary": "Neon raised the Free plan's Postgres storage from 0.5 GB to 1 GB per project and added a limit of 20 GB across all of an account's projects.",
+      "previous_state": "Free: 0.5 GB of storage per project, up to 100 projects. \"The Free plan is limited to 0.5 GB per project.\" (Neon's plans docs, Internet Archive capture of 2026-09-26)",
+      "current_state": "\"The Free plan is limited to 1 GB of Postgres storage per project, and to 20 GB in total across all your projects.\" (neon.com/docs/introduction/plans). Neon's docs change \"update Free plan storage limit\" merged on 2026-10-01.",
+      "source_url": "https://github.com/neondatabase/website/pull/5981",
+      "impact": "medium",
+      "category": "Databases",
+      "alternatives": [],
+      "recorded_date": "2026-10-01",
+      "date_source": "vendor_page"
     }
   ]
 }

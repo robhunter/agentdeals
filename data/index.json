@@ -728,7 +728,7 @@
     {
       "vendor": "Neon",
       "category": "Databases",
-      "description": "Serverless Postgres with branching — free tier includes 100 CU-hours/month per project, 0.5 GB storage per project, up to 100 projects, 10 branches per project, Neon Auth (60K MAU), auto-scaling up to 2 CU, scale-to-zero, 5 GB of Object Storage, and Functions (10 active capacity-hours, 400 waiting capacity-hours, 1M invocations)",
+      "description": "Serverless Postgres with branching — free tier includes 100 CU-hours/month per project, 1 GB of Postgres storage per project (20 GB total across all projects), up to 100 projects, 10 branches per project, Neon Auth (60K MAU), auto-scaling up to 2 CU, scale-to-zero, 5 GB of Object Storage, and Functions (10 active capacity-hours, 400 waiting capacity-hours, 1M invocations)",
       "tier": "Free",
       "url": "https://neon.com/pricing",
       "tags": [
