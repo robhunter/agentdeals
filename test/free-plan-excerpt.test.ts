@@ -8,6 +8,7 @@ import {
   MAX_FREE_PLAN_EXCERPT_LENGTH,
   assignmentsOfTheExcerpt,
   excerptsDisagreeingWithTheirCitation,
+  parseExcerptAnswer,
   verbatimExcerpt,
   writeFreePlanExcerpt,
 } from "../scripts/free-plan-excerpt.js";
@@ -65,6 +66,20 @@ describe("writing the excerpt onto a record", () => {
     assert.deepStrictEqual(writeFreePlanExcerpt(offer, { ...READ, copied: "" }), { outcome: "removed" });
     assert.ok(!(FREE_PLAN_EXCERPT in offer));
     assert.deepStrictEqual(writeFreePlanExcerpt(offer, { ...READ, copied: "" }), { outcome: "none" });
+  });
+
+  it("leaves a held excerpt untouched when the reader gave no answer it could parse", () => {
+    const held = { text: RENDER_EXCERPT, url: READ.url, read_on: "2026-08-28" };
+    const offer: Record<string, unknown> = { vendor: "Render", [FREE_PLAN_EXCERPT]: held };
+    const unparsed = parseExcerptAnswer("I could not find it.");
+    assert.strictEqual(unparsed.copied, null);
+    assert.deepStrictEqual(writeFreePlanExcerpt(offer, { ...READ, copied: unparsed.copied }), { outcome: "unread" });
+    assert.deepStrictEqual(offer[FREE_PLAN_EXCERPT], held);
+  });
+
+  it("reads the copy out of the reader's answer, fenced or not, and an empty copy as no free plan", () => {
+    assert.deepStrictEqual(parseExcerptAnswer("```json\n{\"excerpt\":\"Deploy up to 25 services\"}\n```"), { copied: "Deploy up to 25 services" });
+    assert.deepStrictEqual(parseExcerptAnswer("Here it is: {\"excerpt\":\"\"}"), { copied: "" });
   });
 
   it("leaves a held excerpt under its own read date when the new copy is refused", () => {
