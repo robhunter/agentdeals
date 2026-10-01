@@ -93,7 +93,13 @@ export async function settleFirstReadings({ changes, offers, today, archive, pai
     if (worthAskingAgain(results[at])) results[at] = await settleOne(record);
   }
   const split = Object.fromEntries(Object.values(SPLIT).map((name) => [name, results.filter((result) => result.split === name).length]));
-  return { today, records: backlog.length, split, results };
+  return { today, records: backlog.length, split, review: reviewList(results), results };
+}
+
+export function reviewList(results) {
+  return results
+    .filter((result) => result.review?.length > 0)
+    .map((result) => ({ vendor: result.vendor, date: result.date, change_type: result.change_type, compared_with: result.compared_with, lines: result.review }));
 }
 
 async function main() {
@@ -125,6 +131,7 @@ async function main() {
   writeFileSync(out, `${JSON.stringify(report, null, 2)}\n`);
   console.log(`Settled ${report.results.length} of ${report.records} first readings in force; report in ${out}`);
   for (const [name, count] of Object.entries(report.split)) console.log(`  ${name}: ${count}`);
+  console.log(`  for review (only lines one page states differ): ${report.review.length}`);
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
