@@ -44,7 +44,7 @@ import { PAGE_HEAD_OPEN, withLedeBeforeNav } from "./page-lede.js";
 import { withReviewByline } from "./page-byline.js";
 import { freshnessClaimFor, withFreshnessClaim } from "./page-freshness.js";
 import { UNGRADED_IMPACT_COLOR, changeImpactColor, changeImpactLabel, changeImpactWord, isChangeImpactLevel } from "./change-impact.js";
-import { COMPARED_SERVICES_PLACEHOLDER, appendToCompiledFigureSlots, fillComparedServicesCount, markCompiledFigures, recordsSinceCompiled, replaceTimelineRows, staticHalfOf, timelineRecordsFor, vendorForSubject, vendorSubjectsOnCompiledPage, type CompiledFigureSubject, type CompiledFigureVendor, type CompiledFigureVerdict, type CompiledPageRecord } from "./compiled-figures.js";
+import { COMPARED_SERVICES_PLACEHOLDER, appendToCompiledFigureSlots, fillComparedServicesCount, labelNamesAProductOfItsVendor, markCompiledFigures, recordsSinceCompiled, replaceTimelineRows, staticHalfOf, timelineRecordsFor, vendorForSubject, vendorSubjectsOnCompiledPage, type CompiledFigureSubject, type CompiledFigureVendor, type CompiledFigureVerdict, type CompiledPageRecord } from "./compiled-figures.js";
 import { CHECK_ESTABLISHES, CHECK_SCOPE_CLASS, NO_CATALOGUE_RECORD_SOURCE, citedSourcesListHtml, figureSourceLinkHtml, freeTierSourceOf, freeTierSourceWeMayCite, pageQuoteHtml, readClauseHtml, readSourceOf, serviceSourceMarkerHtml, uncitedSourceTagHtml, withCitedSources, type CitedService, type FreeTierSource } from "./source-citation.js";
 import { vendorHistorySentence } from "./vendor-history.js";
 import { guideBlurb } from "./guide-blurbs.js";
@@ -1372,7 +1372,7 @@ function compiledFigureVerdictFor(
   compiledOn: string,
 ): CompiledFigureVerdict | null {
   const named = vendorForSubject(subject);
-  if (!named) return null;
+  if (!named || labelNamesAProductOfItsVendor(subject, named.slug)) return null;
   const { ended, endedBy, endedTier } = freeTierForSubject(named);
   return {
     slug: named.slug,
@@ -4008,7 +4008,7 @@ const VS_PAGES: VsPageConfig[] = [
       <li><strong>Bandwidth:</strong> Cloudflare Pages has unlimited bandwidth (truly free). Vercel caps at 100 GB/month on the free plan — and the $20/seat Pro plan is required for commercial use.</li>
       <li><strong>Framework support:</strong> Vercel is the creator of Next.js and has first-class support for ISR, middleware, and edge functions. Cloudflare Pages supports most frameworks but Next.js features may lag.</li>
       <li><strong>Commercial use:</strong> Vercel's Hobby plan explicitly bans commercial use, forcing the $20/seat Pro upgrade. Cloudflare Pages has no such restriction on the free tier.</li>
-      <li><strong>Build limits:</strong> Cloudflare Pages allows 500 builds/month. Vercel gives 6,000 build minutes/month but with concurrency limits.</li>
+      <li><strong>Build limits:</strong> Cloudflare Pages allows 500 builds/month. Vercel Hobby includes builds, up to 45 minutes each.</li>
     </ul>`,
     recommendation: `<p><strong>Choose Cloudflare Pages if</strong> you want truly free hosting with unlimited bandwidth, no commercial use restrictions, or you're building static/Jamstack sites.</p>
     <p><strong>Choose Vercel if</strong> you're building with Next.js and want the best possible developer experience, including ISR, preview deployments, and edge middleware — just budget for the $20/seat Pro plan.</p>`,
@@ -7343,7 +7343,7 @@ const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
       </tr>
       <tr>
         <td style="font-weight:600"><a href="/vendor/ory" style="color:var(--text)">Ory</a></td>
-        <td>25K (cloud)</td>
+        <td>Self-hosted; cloud Developer plan has no production use</td>
         <td>Yes</td>
         <td>Yes</td>
         <td>Yes (Apache 2.0)</td>
@@ -16721,7 +16721,7 @@ function buildFreeNextjsStackPage(): string {
     {
       name: "Hosting & Deployment",
       icon: "🚀",
-      recommended: { vendor: "Vercel", why: "The creators of Next.js. Zero-config deployments with automatic edge optimization, ISR, middleware, and server components. Hobby plan: 100 GB bandwidth, 100 hours serverless function execution, 6,000 build minutes. Preview deploys on every PR. The only platform with day-one support for every Next.js feature." },
+      recommended: { vendor: "Vercel", why: "The creators of Next.js. Zero-config deployments with automatic edge optimization, ISR, middleware, and server components. Hobby plan: 100 GB Fast Data Transfer, 1M function invocations and 4 hours Fluid Active CPU a month; builds included. Preview deploys on every PR. The only platform with day-one support for every Next.js feature." },
       alternatives: ["Railway", "Netlify", "Cloudflare Pages"],
       outgrow: "When you exceed 100 GB bandwidth/month or need commercial use (Hobby plan is non-commercial). Railway's Hobby plan is $5/month including $5 of usage, with no commercial restriction. Netlify gives 100 GB bandwidth with serverless functions. Cloudflare Pages has unlimited bandwidth but limited Next.js feature support.",
       whyNot: "Why not Heroku: No free tier since November 2022. Why not Render: Free tier spins down after 15 minutes of inactivity — cold starts of about one minute kill the Next.js experience.",
@@ -16831,7 +16831,7 @@ function buildFreeNextjsStackPage(): string {
   };
 
   const faqJsonLd = faqPageJsonLd("/free-nextjs-stack", [
-    { q: "Is Vercel free for Next.js?", a: "Yes. Vercel's Hobby plan is free with 100 GB bandwidth, 100 hours serverless function execution, and 6,000 build minutes per month. However, it's limited to non-commercial, personal use. For commercial projects, Vercel Pro starts at $20/month per team member. Alternatives like Railway ($5 trial credit for 30 days, then $1 of free credit a month) and Cloudflare Pages (unlimited bandwidth) allow commercial use on free tiers." },
+    { q: "Is Vercel free for Next.js?", a: "Yes. Vercel's Hobby plan is free, with 100 GB of Fast Data Transfer, 1M function invocations and 4 hours of Fluid Active CPU a month, and builds included. However, it's limited to non-commercial, personal use. For commercial projects, Vercel Pro is $20 a month with one deploying seat, and $20 for each additional deploying seat. Alternatives like Railway ($5 trial credit for 30 days, then $1 of free credit a month) and Cloudflare Pages (unlimited bandwidth) allow commercial use on free tiers." },
     { q: "What's the best free database for Next.js?", a: "Neon (serverless Postgres) has a serverless driver that works in Vercel Edge Functions, it scales to zero when not in use, and offers 0.5 GiB storage free. Supabase (500 MB, includes auth and realtime) is great if you need a full BaaS. Turso (5 GB, edge SQLite) is ideal for read-heavy apps. PlanetScale removed its free tier in April 2024." },
     { q: "Can I build a SaaS for free with Next.js?", a: "Yes — with limits. This guide covers 10 infrastructure layers that cost $0/month total: hosting (Vercel), database (Neon), auth (Clerk 10K MAU), storage (R2), email (Resend 3K/mo), monitoring (Sentry), CI/CD (GitHub Actions), analytics (PostHog 1M events), search (Algolia 10K records), and background jobs (Inngest 25K runs). Most projects can run their entire stack on free tiers until they hit significant traction." },
     { q: "What's the first thing to spend money on when scaling a Next.js app?", a: "Database. Neon's 0.5 GiB free storage is the tightest limit in the stack. Neon's Launch plan is usage-based with no monthly minimum: $0.106 per CU-hour of compute and $0.35 per GB-month of storage. After that, hosting: Vercel Pro at $20/month unlocks commercial use, 1 TB bandwidth, and faster builds. Everything else (auth, email, monitoring, analytics) scales to meaningful traffic on free tiers." },
@@ -18369,7 +18369,7 @@ function buildFreeSaasStackPage(): string {
       icon: "\u{1F510}",
       recommended: { vendor: "Clerk", why: "50,000 monthly retained users free \u2014 the most generous managed auth for SaaS. Drop-in React/Next.js components for login, signup, user profile, and organization management. Social login, MFA, and RBAC included. Organizations feature (multi-tenant SaaS) available on free tier. Webhooks for syncing user data to your database." },
       alternatives: ["Auth0", "Supabase", "Kinde"],
-      outgrow: "When you exceed 50K retained users. Auth0 offers 25,000 MAU with enterprise features (M2M tokens, SSO). Kinde gives 10,500 MAU with feature flags bundled. Supabase Auth provides 50,000 MAU if you're already using Supabase for your database. At 100K users: Clerk ~$175/mo, Supabase ~$25/mo (cheapest at scale).",
+      outgrow: "When you exceed 50K retained users. Auth0 offers 25,000 MAU with enterprise features (M2M tokens, SSO). Kinde gives 10,500 MAU with feature flags bundled. Supabase Auth provides 50,000 MAU if you're already using Supabase for your database. At 100,000 users: Clerk costs $1,025 a month; Supabase costs $25 a month on Pro.",
       whyNot: "Why not Firebase Auth: email and social sign-in are free, but SMS needs the pay-as-you-go Blaze plan, and MFA, SAML and multi-tenancy need the Identity Platform upgrade. Supabase Auth is a better \u00e0 la carte option. Why not rolling your own: Auth is the #1 source of security vulnerabilities in SaaS. Password reset, email verification, rate limiting, session management, CSRF \u2014 auth providers handle all of this. Only roll your own if you have dedicated security expertise.",
       relatedPage: "/auth-comparison-2026",
       isFrameworkSection: false,
@@ -28760,7 +28760,7 @@ function buildCiCdPricingPage(): string {
       freeType: "generous",
       monthlyCostSmall: "$0",
       monthlyCostTeam: "$4/seat + overages",
-      hiddenCosts: "Linux minutes are 1x, macOS minutes are 10x, Windows are 2x. A 2,000-minute budget on macOS is really 200 minutes.",
+      hiddenCosts: "Per minute: $0.006 Linux 2-core, $0.010 Windows 2-core, $0.062 macOS",
     },
     {
       name: "GitLab CI",
@@ -31046,7 +31046,7 @@ function buildHostingPricingPage(): string {
       slug: "render",
       category: "traditional-paas",
       freeTier: "Free web services",
-      paidFrom: "$7/mo (Individual)",
+      paidFrom: "$7/mo (Starter instance)",
       freeBandwidth: "5 GB (then $0.15/GB)",
       freeBuildMinutes: "750 hrs/mo",
       freeCompute: "Less than 1 CPU, 512 MB RAM (spins down)",
@@ -31069,7 +31069,7 @@ function buildHostingPricingPage(): string {
       freeType: "removed",
       monthlyCostSolo: "Usage-based",
       monthlyCostTeam: "$29/mo (Scale) + usage",
-      hiddenCosts: "No free tier for new accounts — pay-as-you-go from day one. Legacy free allowances only for pre-Oct-2024 accounts on deprecated plans. Volume snapshots billed at $0.08/GB-month (first 10 GB free). Credit card required.",
+      hiddenCosts: "No free plan for new accounts: a trial of 2 machine hours or 7 days, whichever comes first, then pay-as-you-go. Legacy free allowances only for pre-Oct-2024 accounts on deprecated plans. Volume snapshots billed at $0.08/GB-month (first 10 GB free).",
     },
     {
       name: "Koyeb",
@@ -31185,7 +31185,7 @@ function buildHostingPricingPage(): string {
       freeBandwidth: "100 GB",
       freeBuildMinutes: "6000/mo",
       freeCompute: "100 GB bandwidth, serverless functions",
-      freeDetails: "Hobby plan: 100 GB bandwidth/month, 6,000 build minutes/month, 100K function invocations/day, 10s function duration, 1 concurrent build. Deploy from Git with preview deployments. Optimized for Next.js, supports all frameworks. Edge Functions, Image Optimization, Analytics (limited).",
+      freeDetails: "Hobby plan: 100 GB Fast Data Transfer, 1M Function Invocations and 4 hours Fluid Active CPU a month; builds included, up to 45 minutes each; non-commercial personal use only. Deploy from Git with preview deployments. Optimized for Next.js, supports all frameworks. Edge Functions, Image Optimization, Analytics (limited).",
       freeType: "generous",
       monthlyCostSolo: "$0",
       monthlyCostTeam: "$20/seat",
@@ -31341,11 +31341,11 @@ function buildHostingPricingPage(): string {
   );
 
   const faqEntries = [
-    { q: "What is the best free cloud hosting platform in 2026?", a: "Cloudflare Pages offers unlimited sites, unlimited bandwidth, and 500 builds/month. For full-stack apps, Vercel's Hobby plan (100 GB bandwidth, 6,000 build minutes) and Deno Deploy (1M requests/month) are strong free options. Railway offers $5 in free credits to get started." },
+    { q: "What is the best free cloud hosting platform in 2026?", a: "Cloudflare Pages offers unlimited sites, unlimited bandwidth, and 500 builds/month. For full-stack apps, Vercel's Hobby plan (100 GB of Fast Data Transfer, builds included; non-commercial use only) and Deno Deploy (1M requests/month) are strong free options. Railway offers $5 in free credits to get started." },
     { q: "Is Heroku still worth it without a free tier?", a: "Heroku removed its free tier in November 2022. The cheapest option is now Eco dynos at $5/month (shared compute, sleeps after 30 min). For most use cases, Railway ($5/mo with $5 credit), Render (free tier with spin-down), or Fly.io provide better value." },
     { q: "What are the hidden costs of Vercel?", a: "New Pro projects default to Turbo build machines at $0.126/min — 9x the cost of Standard builds ($0.014/min). The Pro plan moved to a credit-based model ($20/mo credit pool) in January 2026. Image Optimization has separate quotas. The Hobby plan is restricted to personal, non-commercial use." },
     { q: "Which PaaS is best for side projects?", a: "For static sites: Cloudflare Pages (unlimited free bandwidth) or GitHub Pages. For full-stack: Railway ($5 trial credit for 30 days, no card required), Render (free tier with 15-min spin-down), or Vercel Hobby. For serverless APIs: Cloudflare Workers (100K req/day free) or Deno Deploy (1M req/month)." },
-    { q: "Which hosting platform is best for production apps?", a: "Vercel for Next.js/React apps ($20/seat). Railway for general-purpose apps ($5/mo hobby, $20/seat team). Google Cloud Run for container workloads with auto-scaling. Fly.io for latency-sensitive apps needing multi-region deployment." },
+    { q: "Which hosting platform is best for production apps?", a: "Vercel for Next.js/React apps ($20/seat). Railway for general-purpose apps ($5/mo Hobby; Pro is a $20 monthly minimum with unlimited seats). Google Cloud Run for container workloads with auto-scaling. Fly.io for latency-sensitive apps needing multi-region deployment." },
   ];
 
   const jsonLd = {
@@ -31602,7 +31602,7 @@ function buildHostingPricingPage(): string {
     '  </div>\n' +
     '    <div class="hidden-cost-card">\n' +
     '    <h4>Render Free Tier Spin-Down</h4>\n' +
-    '    <p>Free web services on Render spin down after 15 minutes without traffic and take about one minute to spin back up. Not viable for APIs that need to respond quickly. The workaround costs $7/month (Individual plan, always-on).</p>\n' +
+    '    <p>Free web services on Render spin down after 15 minutes without traffic and take about one minute to spin back up. Not viable for APIs that need to respond quickly. The workaround costs $7/month (Starter instance, always-on).</p>\n' +
     '  </div>\n' +
     '  <div class="hidden-cost-card">\n' +
     '    <h4>Railway Credit Exhaustion</h4>\n' +
@@ -31645,12 +31645,12 @@ function buildHostingPricingPage(): string {
     '\n' +
     '    <div class="verdict-item">\n' +
     '      <strong>Best for side projects</strong>\n' +
-    '      <p><a href="/vendor/cloudflare-pages">Cloudflare Pages</a> for static/JAMstack (unlimited free bandwidth). <a href="/vendor/railway">Railway</a> for full-stack apps ($5 trial credit for 30 days, no credit card). <a href="/vendor/vercel">Vercel Hobby</a> for Next.js (100 GB bandwidth, 6K build min).</p>\n' +
+    '      <p><a href="/vendor/cloudflare-pages">Cloudflare Pages</a> for static/JAMstack (unlimited free bandwidth). <a href="/vendor/railway">Railway</a> for full-stack apps ($5 trial credit for 30 days, no credit card). <a href="/vendor/vercel">Vercel Hobby</a> for Next.js (100 GB of Fast Data Transfer, builds included; non-commercial use only).</p>\n' +
     '    </div>\n' +
     '\n' +
     '    <div class="verdict-item">\n' +
     '      <strong>Best for production apps</strong>\n' +
-    '      <p><a href="/vendor/vercel">Vercel Pro</a> ($20/seat) for frontend/Next.js. <a href="/vendor/railway">Railway</a> ($20/seat) for general-purpose backends. <a href="/vendor/google-cloud-run">Google Cloud Run</a> for container workloads with auto-scale-to-zero and generous always-free tier.</p>\n' +
+    '      <p><a href="/vendor/vercel">Vercel Pro</a> ($20/seat) for frontend/Next.js. <a href="/vendor/railway">Railway Pro</a> ($20 monthly minimum, unlimited seats) for general-purpose backends. <a href="/vendor/google-cloud-run">Google Cloud Run</a> for container workloads with auto-scale-to-zero and generous always-free tier.</p>\n' +
     '    </div>\n' +
     '\n' +
     '    <div class="verdict-item">\n' +
@@ -35149,6 +35149,8 @@ interface ComparisonPageMeta {
   relatedSlugs: string[];
   whatTheTableGives?: string;
   costSectionName?: string;
+  comparisonBasis?: string;
+  limitsAnswer?: string;
 }
 
 const comparisonPagesMeta: ComparisonPageMeta[] = [
@@ -35156,7 +35158,7 @@ const comparisonPagesMeta: ComparisonPageMeta[] = [
   { slug: "database-free-tier-comparison-2026", subject: "Databases", questionNoun: "database", catalogueCategory: "Databases", shortName: "Database", relatedSlugs: ["serverless-free-tier-comparison-2026", "storage-comparison-2026", "auth-comparison-2026"] },
   { slug: "cicd-free-tier-comparison-2026", subject: "CI/CD", questionNoun: "CI/CD", catalogueCategory: "CI/CD", shortName: "CI/CD", costSectionName: "Hidden Costs and Gotchas", relatedSlugs: ["testing-free-tier-comparison-2026", "security-free-tier-comparison-2026", "hosting-free-tier-comparison-2026"] },
   { slug: "serverless-free-tier-comparison-2026", subject: "Serverless", questionNoun: "serverless", catalogueCategory: null, shortName: "Serverless", relatedSlugs: ["cloud-free-tier-comparison-2026", "hosting-free-tier-comparison-2026", "database-free-tier-comparison-2026"] },
-  { slug: "auth-comparison-2026", subject: "Auth", questionNoun: "auth", catalogueCategory: "Auth", shortName: "Auth & Identity", relatedSlugs: ["security-free-tier-comparison-2026", "database-free-tier-comparison-2026", "monitoring-comparison-2026"] },
+  { slug: "auth-comparison-2026", subject: "Auth", questionNoun: "auth", catalogueCategory: "Auth", shortName: "Auth & Identity", comparisonBasis: "This page compares them on free tier limits and what each charges past them; the tables above carry the figures side by side.", limitsAnswer: "The free tiers cap monthly users (Auth0, Kinde, PropelAuth, Stytch, Descope, WorkOS, Supabase, Appwrite, Cognito) or retained users (Clerk), and some also cap SSO connections or M2M tokens. The growth-cost table shows what most of them charge past their free tier.", relatedSlugs: ["security-free-tier-comparison-2026", "database-free-tier-comparison-2026", "monitoring-comparison-2026"] },
   { slug: "email-comparison-2026", subject: "Email", questionNoun: "email", catalogueCategory: "Email", shortName: "Email", relatedSlugs: ["monitoring-comparison-2026", "analytics-free-tier-comparison-2026", "api-development-free-tier-comparison-2026"] },
   { slug: "monitoring-comparison-2026", subject: "Monitoring", questionNoun: "monitoring", catalogueCategory: "Monitoring", shortName: "Monitoring", relatedSlugs: ["security-free-tier-comparison-2026", "hosting-free-tier-comparison-2026", "analytics-free-tier-comparison-2026"] },
   { slug: "storage-comparison-2026", subject: "Storage", questionNoun: "storage", catalogueCategory: "Storage", shortName: "Storage & CDN", relatedSlugs: ["cloud-free-tier-comparison-2026", "hosting-free-tier-comparison-2026", "database-free-tier-comparison-2026"] },
@@ -35215,7 +35217,7 @@ export function comparisonFaqItems(slug: string, forJsonLd = false): FaqItem[] {
     noun: `${meta.catalogueCategory ?? catName} services in our catalogue`,
     size: catOffers.length,
     whereToLook: "each with the free tier terms",
-    basis: "This page compares them on free tier limits, what each charges past them, and lock-in risk; the table above carries the figures side by side.",
+    basis: meta.comparisonBasis ?? "This page compares them on free tier limits, what each charges past them, and lock-in risk; the table above carries the figures side by side.",
   });
 
   const noun = meta.questionNoun;
@@ -35230,7 +35232,7 @@ export function comparisonFaqItems(slug: string, forJsonLd = false): FaqItem[] {
     },
     {
       q: `How do ${noun} free tiers compare on limits?`,
-      a: `Each provider structures free tier limits differently — some cap storage, others cap requests or compute hours. ${meta.whatTheTableGives ?? "Our comparison table provides exact numbers for each provider."} ${meta.costSectionName ? `See ${meta.costSectionName} for what you pay past the free limits.` : "Check the growth cost analysis section to understand what you'll pay when you exceed free tier limits."}`,
+      a: meta.limitsAnswer ?? `Each provider structures free tier limits differently — some cap storage, others cap requests or compute hours. ${meta.whatTheTableGives ?? "Our comparison table provides exact numbers for each provider."} ${meta.costSectionName ? `See ${meta.costSectionName} for what you pay past the free limits.` : "Check the growth cost analysis section to understand what you'll pay when you exceed free tier limits."}`,
     },
   ];
 }
@@ -37841,16 +37843,17 @@ ${mcpCtaCss()}
 </html>`, pubDate, serverlessChanges);
 }
 
+export const AUTH_COMPARISON_LISTINGS = ["Auth0", "Clerk", "Kinde", "PropelAuth", "Stytch", "Descope", "WorkOS", "Keycloak", "authentik", "FusionAuth", "SuperTokens", "Hanko", "Ory", "Authgear", "MojoAuth", "Stack Auth", "Permit.io", "Cerbos Hub", "Authress"];
+
 function buildAuthComparison2026Page(): string {
   const title = "Auth & Identity Comparison 2026 — Auth0 vs Clerk vs Supabase Auth vs Firebase Auth";
   const metaDescAuth = "Comprehensive comparison of 20+ auth free tiers in 2026. Compare Auth0, Clerk, Supabase Auth, Firebase Auth, PropelAuth, Kinde, Keycloak, Authentik, Authelia, Appwrite, and more — MAU/MRU limits, overage costs, MFA, SSO, agentic AI support, and growth pricing.";
   const slug = "auth-comparison-2026";
   const pubDate = "2026-04-03";
 
-  const authVendorKeywords = ["Auth0", "Clerk", "Kinde", "Stytch", "Descope", "WorkOS", "Supabase", "Firebase", "Cognito", "Keycloak", "FusionAuth", "SuperTokens", "Hanko", "Ory", "Okta", "Permit.io", "Cerbos", "Authress", "Logto", "PropelAuth", "Authentik", "Authelia", "Appwrite", "Authgear", "MojoAuth", "Stack Auth"];
+  const tabulatedListings = new Set(AUTH_COMPARISON_LISTINGS.map(v => vendorNameAsPublished(v).toLowerCase()));
   const authChanges = changesTheVendorMade(dealChanges).filter((c: any) =>
-    authVendorKeywords.some(v => c.vendor === v || c.vendor.startsWith(v + " ") || c.vendor.includes(v)) ||
-    (c.summary && (c.summary.toLowerCase().includes("auth") || c.summary.toLowerCase().includes("mau") || c.summary.toLowerCase().includes("identity") || c.summary.toLowerCase().includes("login")))
+    tabulatedListings.has(c.vendor.toLowerCase())
   ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   const changeTimelineRows = authChanges.slice(0, 12).map((c: any) => {
@@ -38003,14 +38006,11 @@ ${mcpCtaCss()}
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number">20+</div><div class="stat-label">Auth Services Compared</div></div>
     <div class="stat-card"><div class="stat-number green">1M</div><div class="stat-label">WorkOS Free MAU</div></div>
-    <div class="stat-card"><div class="stat-number green">Auth0</div><div class="stat-label">Best Enterprise Free Tier</div></div>
-    <div class="stat-card"><div class="stat-number green">Clerk</div><div class="stat-label">Best Developer Experience</div></div>
   </div>
 
   <div class="executive-summary">
-    <p><strong>Quick verdict:</strong> <strong>Auth0</strong> just expanded its free tier to 25,000 MAU with enterprise connections, SSO, SCIM, and new AI Features (token vaults, agentic AI workflow support) included free &mdash; the strongest managed auth free tier. <strong>Clerk</strong> leads on developer experience with 50,000 free MRU (monthly returning users) and drop-in React components. <strong>Firebase Auth</strong> and <strong>Supabase Auth</strong> offer 50K free MAU each as part of their BaaS platforms. <strong>WorkOS AuthKit</strong> is the outlier at 1M free MAU for authentication.</p>
-    <p><strong>The critical growth cost trap:</strong> Auth services look free at small scale, but overage costs vary wildly. At 100K MAU, Clerk costs ~$1,000/mo while Supabase Auth costs ~$162/mo. <strong>WorkOS</strong> remains free up to 1M MAU for basic auth. Self-hosted options like <strong>Keycloak</strong>, <strong>Authentik</strong>, and <strong>Authelia</strong> have zero per-MAU costs at any scale, trading operational complexity for cost predictability.</p>
-    <p><strong>Industry signal:</strong> Auth is top-of-mind for developers in 2026. Auth0 added agentic AI support (token vaults for agent-to-service auth). MCP Dev Summit featured 6 dedicated auth sessions. The rise of AI agents is making machine-to-machine auth as important as user auth.</p>
+    <p><strong>Quick verdict:</strong> Auth0's free plan covers 25,000 monthly active users (MAU). Clerk's free Hobby plan covers 50,000 monthly retained users (MRU) per application. Supabase's Free plan covers 50,000 MAU. Firebase Authentication without Identity Platform has no MAU cap. Identity Platform is free up to 50,000 MAU (3,000 daily active users on the no-cost Spark plan). WorkOS User Management is free for up to 1 million MAU. Stytch's free tier covers 10,000 MAU. Amazon Cognito's free tier is 10,000 MAU per AWS account or organization on the Lite and Essentials tiers; on Lite, user pools created on or before 22 November 2024 keep 50,000.</p>
+    <p><strong>Growth costs:</strong> At 100,000 users: Clerk costs $1,025 a month; Supabase costs $25 a month; Appwrite costs $25 a month; WorkOS costs $0; Firebase Authentication without Identity Platform costs $0; Kinde costs $1,533.85 a month on its Plus plan; PropelAuth costs $4,650 a month on its Growth plan; Stytch's rate gives $18,000 a month before any volume discount it does not publish. On its B2C Essentials plan, Auth0 charges $2,100 a month for 30,000 MAU and publishes no price above that. The free editions of the self-hosted servers charge no licence fee per user.</p>
   </div>
 
   <div class="toc">
@@ -38020,9 +38020,8 @@ ${mcpCtaCss()}
       <li><a href="#managed-auth">Managed Auth (Auth0, Clerk, Kinde, PropelAuth, Stytch, Descope, WorkOS)</a></li>
       <li><a href="#baas-auth">BaaS-Integrated Auth (Supabase, Firebase, Cognito, Appwrite)</a></li>
       <li><a href="#self-hosted">Self-Hosted / Open Source (Keycloak, Authentik, Authelia, FusionAuth, SuperTokens, Hanko, Ory)</a></li>
-      <li><a href="#specialized">Specialized (Authgear, MojoAuth, Stack Auth, Permit.io, Cerbos, Authress)</a></li>
+      <li><a href="#specialized">Specialized (Authgear, MojoAuth, Hexclave, Permit.io, Cerbos, Authress)</a></li>
       <li><a href="#growth-trap">The Growth Cost Trap: Free to 100K MAU</a></li>
-      <li><a href="#best-for">Best for Each Use Case</a></li>
       <li><a href="#hidden-costs">Hidden Costs and Gotchas</a></li>
       <li><a href="#changes">Pricing Change Timeline</a></li>
       <li><a href="#data-source">Data Source</a></li>
@@ -38030,7 +38029,7 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="main-comparison">Main Comparison Table</h2>
-  <p class="section-intro">Side-by-side comparison of 20+ auth service free tiers.</p>
+  <p class="section-intro">Side-by-side comparison of 18 auth services.</p>
 
   <div style="overflow-x:auto">
   <table class="comp-table">
@@ -38044,130 +38043,118 @@ ${mcpCtaCss()}
         <th>SSO/SAML</th>
         <th>M2M / Agents</th>
         <th>Self-Hosted?</th>
-        <th>Lock-in Risk</th>
       </tr>
     </thead>
     <tbody>
       <tr style="background:rgba(63,185,80,0.08)">
-        <td class="provider-col"><a href="/vendor/auth0" style="color:var(--text)">Auth0</a> <span class="winner-badge">BEST ENTERPRISE</span></td>
+        <td class="provider-col"><a href="/vendor/auth0" style="color:var(--text)">Auth0</a></td>
         <td style="font-family:var(--mono)">25K MAU</td>
-        <td style="font-family:var(--mono)">~$0.07</td>
+        <td style="font-family:var(--mono)">None: a paid plan sized to all users</td>
         <td class="check">Unlimited social</td>
-        <td class="check">Included</td>
-        <td class="check">Enterprise + SCIM free</td>
-        <td style="font-family:var(--mono)">1,000 M2M + AI token vaults</td>
+        <td class="cross">Not listed on Free</td>
+        <td class="check">1 enterprise connection + SCIM</td>
+        <td style="font-family:var(--mono)">1,000 M2M tokens/mo; Token Vault (2 apps)</td>
         <td class="cross">No</td>
-        <td class="partial">Medium</td>
       </tr>
       <tr style="background:rgba(63,185,80,0.08)">
-        <td class="provider-col"><a href="/vendor/clerk" style="color:var(--text)">Clerk</a> <span class="winner-badge">BEST DX</span></td>
+        <td class="provider-col"><a href="/vendor/clerk" style="color:var(--text)">Clerk</a></td>
         <td style="font-family:var(--mono)">50K MRU</td>
         <td style="font-family:var(--mono)">$0.02/MRU</td>
-        <td class="check">5+ providers</td>
-        <td class="check">Included</td>
+        <td class="check">Up to 3 (Hobby)</td>
         <td>Pro plan ($25/mo)</td>
-        <td>&mdash;</td>
+        <td>Pro plan ($25/mo)</td>
+        <td>2,500 token creations/mo</td>
         <td class="cross">No</td>
-        <td class="partial">Medium</td>
       </tr>
       <tr>
         <td class="provider-col"><a href="/vendor/kinde" style="color:var(--text)">Kinde</a></td>
         <td style="font-family:var(--mono)">10.5K MAU</td>
-        <td style="font-family:var(--mono)">Tiered ($0.035&ndash;$0.0275)</td>
+        <td style="font-family:var(--mono)">$0.0175 (Pro, $25/mo)</td>
         <td class="check">Unlimited social</td>
         <td class="check">Included</td>
-        <td>Paid plan</td>
-        <td style="font-family:var(--mono)">200</td>
+        <td>1 enterprise SSO connection</td>
+        <td style="font-family:var(--mono)">2,000 tokens</td>
         <td class="cross">No</td>
-        <td>Low</td>
       </tr>
       <tr>
         <td class="provider-col">PropelAuth</td>
         <td style="font-family:var(--mono)">10K MAU</td>
-        <td style="font-family:var(--mono)">$0.05/MAU</td>
+        <td style="font-family:var(--mono)">$0.05 (Growth, $150/mo)</td>
         <td class="check">Google, GitHub, etc.</td>
         <td class="check">Included</td>
         <td>Growth plan</td>
         <td>&mdash;</td>
         <td class="cross">No</td>
-        <td class="partial">Medium</td>
       </tr>
       <tr>
         <td class="provider-col"><a href="/vendor/stytch" style="color:var(--text)">Stytch</a></td>
-        <td style="font-family:var(--mono)">25K MAU</td>
-        <td style="font-family:var(--mono)">$0.05</td>
+        <td style="font-family:var(--mono)">10K MAU</td>
+        <td style="font-family:var(--mono)">$0.20</td>
         <td class="check">OAuth providers</td>
         <td class="check">Included</td>
-        <td>B2B SDK</td>
+        <td>5 SSO or SCIM connections (B2B), then $125/mo each</td>
         <td style="font-family:var(--mono)">1,000 M2M</td>
         <td class="cross">No</td>
-        <td class="partial">Medium</td>
       </tr>
       <tr>
         <td class="provider-col"><a href="/vendor/descope" style="color:var(--text)">Descope</a></td>
         <td style="font-family:var(--mono)">7.5K MAU</td>
-        <td style="font-family:var(--mono)">Custom</td>
+        <td style="font-family:var(--mono)">None on Free; $0.05 on Pro and Growth</td>
         <td class="check">6+ providers</td>
         <td class="check">Included</td>
-        <td>50 tenants</td>
-        <td style="font-family:var(--mono)">50 M2M</td>
+        <td>3 connections, 10 active tenants</td>
+        <td style="font-family:var(--mono)">10,000 exchanges</td>
         <td class="cross">No</td>
-        <td class="partial">Medium</td>
       </tr>
       <tr style="background:rgba(63,185,80,0.08)">
         <td class="provider-col"><a href="/vendor/workos" style="color:var(--text)">WorkOS</a> <span class="winner-badge">1M FREE</span></td>
         <td style="font-family:var(--mono)">1M MAU</td>
-        <td style="font-family:var(--mono)">Free (auth only)</td>
-        <td class="check">Social + enterprise</td>
+        <td style="font-family:var(--mono)">$2,500/mo per extra 1M</td>
+        <td class="check">Social free; SSO $125/connection/mo</td>
         <td class="check">Included</td>
         <td>SSO paid add-on</td>
-        <td>&mdash;</td>
+        <td>M2M apps (price not listed)</td>
         <td class="cross">No</td>
-        <td>Low</td>
       </tr>
       <tr style="background:rgba(63,185,80,0.08)">
-        <td class="provider-col"><a href="/vendor/supabase" style="color:var(--text)">Supabase Auth</a> <span class="winner-badge">CHEAPEST AT SCALE</span></td>
+        <td class="provider-col"><a href="/vendor/supabase" style="color:var(--text)">Supabase Auth</a></td>
         <td style="font-family:var(--mono)">50K MAU</td>
-        <td style="font-family:var(--mono)">$0.00325</td>
-        <td class="check">20+ providers</td>
-        <td class="check">TOTP + Phone</td>
+        <td style="font-family:var(--mono)">$0.00325 above 100K (Pro, $25/mo)</td>
+        <td class="check">19 + custom OAuth/OIDC</td>
+        <td class="check">TOTP (phone MFA paid, Pro)</td>
+        <td>SAML on Pro (50 SSO MAU, then $0.015)</td>
         <td>&mdash;</td>
-        <td>&mdash;</td>
-        <td class="cross">BaaS-integrated</td>
-        <td>Low (open source)</td>
+        <td class="check">Yes (Docker)</td>
       </tr>
       <tr>
         <td class="provider-col"><a href="/vendor/firebase" style="color:var(--text)">Firebase Auth</a></td>
         <td style="font-family:var(--mono)">No cost; SMS on Blaze only</td>
         <td style="font-family:var(--mono)">$0.0055 (Identity Platform, 50K-100K MAU)</td>
         <td class="check">Google, Apple, etc.</td>
-        <td class="check">Phone + TOTP</td>
+        <td class="check">SMS + TOTP (Identity Platform)</td>
         <td>Identity Platform</td>
         <td>&mdash;</td>
         <td class="cross">BaaS-integrated</td>
-        <td class="partial">Medium</td>
       </tr>
       <tr>
         <td class="provider-col">AWS Cognito</td>
-        <td style="font-family:var(--mono)">10K MAU (50K for pools created by Nov 22, 2024)</td>
-        <td style="font-family:var(--mono)">$0.0055</td>
-        <td class="check">OIDC + SAML</td>
+        <td style="font-family:var(--mono)">10K MAU (50K for Lite pools created by Nov 22, 2024)</td>
+        <td style="font-family:var(--mono)">$0.0055 Lite / $0.015 Essentials</td>
+        <td class="check">Social, SAML, OIDC</td>
         <td class="check">SMS + TOTP</td>
-        <td class="check">Included</td>
-        <td style="font-family:var(--mono)">Included</td>
+        <td class="partial">50 federated MAU free, then $0.015</td>
+        <td style="font-family:var(--mono)">Paid add-on ($0.00225/token request)</td>
         <td class="cross">AWS-only</td>
-        <td class="partial">Medium</td>
       </tr>
       <tr>
         <td class="provider-col">Appwrite Auth</td>
         <td style="font-family:var(--mono)">75K MAU</td>
-        <td style="font-family:var(--mono)">$0 (self-hosted unlimited)</td>
+        <td style="font-family:var(--mono)">$3 per 1,000 above 200K (Pro, $25/mo)</td>
         <td class="check">30+ providers</td>
-        <td class="check">Phone + TOTP</td>
+        <td class="check">Email, phone, TOTP (no phone on Cloud Free)</td>
         <td>&mdash;</td>
         <td>&mdash;</td>
         <td class="check">Yes (Docker)</td>
-        <td>Low (open source)</td>
       </tr>
       <tr>
         <td class="provider-col"><a href="/vendor/keycloak" style="color:var(--text)">Keycloak</a></td>
@@ -38178,7 +38165,6 @@ ${mcpCtaCss()}
         <td class="check">Full SAML/OIDC</td>
         <td class="check">Unlimited</td>
         <td class="check">Yes (Java)</td>
-        <td style="color:#3fb950">None</td>
       </tr>
       <tr>
         <td class="provider-col">Authentik</td>
@@ -38189,18 +38175,16 @@ ${mcpCtaCss()}
         <td class="check">Full SAML/OIDC</td>
         <td class="check">Unlimited</td>
         <td class="check">Yes (Python/Django)</td>
-        <td style="color:#3fb950">None</td>
       </tr>
       <tr>
         <td class="provider-col">Authelia</td>
         <td style="font-family:var(--mono)">Unlimited</td>
         <td style="font-family:var(--mono)">$0 (self-hosted)</td>
-        <td class="partial">Via OIDC proxy</td>
+        <td class="cross">None</td>
         <td class="check">TOTP + WebAuthn + Duo</td>
         <td class="check">OIDC provider</td>
-        <td>&mdash;</td>
+        <td>Client credentials</td>
         <td class="check">Yes (Go)</td>
-        <td style="color:#3fb950">None</td>
       </tr>
       <tr>
         <td class="provider-col"><a href="/vendor/fusionauth" style="color:var(--text)">FusionAuth</a></td>
@@ -38209,49 +38193,45 @@ ${mcpCtaCss()}
         <td class="check">Any OIDC/SAML</td>
         <td class="check">TOTP</td>
         <td class="check">SAML + OIDC</td>
-        <td class="check">Unlimited</td>
+        <td>Starter plan and up</td>
         <td class="check">Yes (Docker)</td>
-        <td style="color:#3fb950">None</td>
       </tr>
       <tr>
         <td class="provider-col"><a href="/vendor/supertokens" style="color:var(--text)">SuperTokens</a></td>
         <td style="font-family:var(--mono)">5K (managed)</td>
         <td style="font-family:var(--mono)">$0.02 (managed)</td>
         <td class="check">Social + passwordless</td>
-        <td class="check">Included</td>
+        <td>Paid ($0.01/MAU managed, $0.02 self-hosted; $100/mo min)</td>
         <td>Multi-tenancy (paid)</td>
-        <td>&mdash;</td>
-        <td class="check">Yes (unlimited)</td>
-        <td style="color:#3fb950">Low</td>
+        <td>Paid add-on (managed service only)</td>
+        <td class="check">Yes (open-source features free)</td>
       </tr>
       <tr>
         <td class="provider-col"><a href="/vendor/hanko" style="color:var(--text)">Hanko</a></td>
         <td style="font-family:var(--mono)">10K (cloud)</td>
-        <td style="font-family:var(--mono)">Contact sales</td>
+        <td style="font-family:var(--mono)">$0.01 above 10K (Pro, $29/mo)</td>
         <td class="check">Passkeys + social</td>
-        <td class="check">Passkeys (built-in)</td>
-        <td>&mdash;</td>
+        <td class="check">TOTP, security keys</td>
+        <td>SAML on Pro ($49/mo per connection)</td>
         <td>&mdash;</td>
         <td class="check">Yes (unlimited)</td>
-        <td style="color:#3fb950">Low</td>
       </tr>
       <tr>
         <td class="provider-col"><a href="/vendor/ory" style="color:var(--text)">Ory</a></td>
-        <td style="font-family:var(--mono)">25K (cloud)</td>
-        <td style="font-family:var(--mono)">$0.07 (cloud)</td>
+        <td style="font-family:var(--mono)">Self-hosted; cloud Developer plan has no production use</td>
+        <td style="font-family:var(--mono)">$0.14/aDAU (Production, $70/mo or $770/yr)</td>
         <td class="check">OIDC + social</td>
         <td class="check">TOTP + WebAuthn</td>
         <td class="check">Full OIDC</td>
-        <td class="check">Included</td>
+        <td class="partial">Self-hosted Hydra; billed on Ory Network</td>
         <td class="check">Yes (unlimited)</td>
-        <td style="color:#3fb950">None</td>
       </tr>
     </tbody>
   </table>
   </div>
 
   <div class="context-box">
-    <strong>Key takeaway:</strong> The auth market splits into four tiers. <strong>Managed auth</strong> (Auth0, Clerk, PropelAuth) offers the best DX with per-MAU/MRU costs at scale. <strong>BaaS-integrated</strong> (Supabase, Firebase, Cognito, Appwrite) bundles auth with a full backend. <strong>Self-hosted</strong> (Keycloak, Authentik, Authelia, FusionAuth, Ory) has unlimited free users at the cost of operational overhead. <strong>WorkOS</strong> is the outlier &mdash; 1M free MAU for authentication, with enterprise SSO as a paid add-on. <strong>New in 2026:</strong> Auth0&rsquo;s AI Features add token vaults and agentic AI workflow support, making M2M auth a first-class feature for AI agent architectures.
+    <strong>Key takeaway:</strong> Managed services charge by the number of users past their free tier. Supabase, Firebase and Appwrite bundle auth with a database and other backend services; AWS sells Cognito as a standalone identity service. The free editions of self-hosted servers charge no licence fee per user, and you run them yourself. WorkOS is free for up to 1 million MAU.
   </div>
 
   <h2 id="managed-auth">Managed Auth Platforms</h2>
@@ -38265,73 +38245,57 @@ ${mcpCtaCss()}
         <th>Free Limit</th>
         <th>Overage</th>
         <th>Best Feature</th>
-        <th>DX Quality</th>
-        <th>Best For</th>
       </tr>
     </thead>
     <tbody>
       <tr style="background:rgba(63,185,80,0.08)">
-        <td class="provider-col">Auth0 <span class="winner-badge">BEST ENTERPRISE</span></td>
+        <td class="provider-col">Auth0</td>
         <td style="font-family:var(--mono)">25K MAU</td>
-        <td style="font-family:var(--mono)">~$0.07/MAU</td>
-        <td>Actions, SSO/SCIM free, AI token vaults</td>
-        <td>Excellent docs, Universal Login</td>
-        <td>Enterprise + agentic AI auth</td>
+        <td style="font-family:var(--mono)">None: a paid plan sized to all users</td>
+        <td>Actions, SCIM and 1 enterprise connection on Free; Token Vault</td>
       </tr>
       <tr style="background:rgba(63,185,80,0.08)">
-        <td class="provider-col">Clerk <span class="winner-badge">BEST DX</span></td>
+        <td class="provider-col">Clerk</td>
         <td style="font-family:var(--mono)">50K MRU</td>
         <td style="font-family:var(--mono)">$0.02/MRU</td>
         <td>React components, org management</td>
-        <td>Best-in-class React/Next.js DX</td>
-        <td>Next.js/React apps needing fast auth setup</td>
       </tr>
       <tr>
         <td class="provider-col">Kinde</td>
         <td style="font-family:var(--mono)">10.5K MAU</td>
-        <td style="font-family:var(--mono)">Tiered pricing</td>
+        <td style="font-family:var(--mono)">$0.0175 (Pro)</td>
         <td>Feature flags + auth combined</td>
-        <td>Good multi-framework SDKs</td>
-        <td>Teams wanting auth + feature flags in one</td>
       </tr>
       <tr>
         <td class="provider-col">PropelAuth</td>
         <td style="font-family:var(--mono)">10K MAU</td>
-        <td style="font-family:var(--mono)">$0.05/MAU</td>
+        <td style="font-family:var(--mono)">$0.05 (Growth, $150/mo)</td>
         <td>B2B-first: org management, roles, RBAC</td>
-        <td>Good React/Next.js/Python SDKs</td>
-        <td>B2B SaaS with multi-tenant auth</td>
       </tr>
       <tr>
         <td class="provider-col">Stytch</td>
-        <td style="font-family:var(--mono)">25K MAU</td>
-        <td style="font-family:var(--mono)">$0.05/MAU</td>
-        <td>Passwordless-first, B2B SDK</td>
-        <td>Strong API-first approach</td>
-        <td>B2B SaaS with SSO requirements</td>
+        <td style="font-family:var(--mono)">10K MAU</td>
+        <td style="font-family:var(--mono)">$0.20/MAU</td>
+        <td>Passwordless and password login, B2B, AI-agent auth</td>
       </tr>
       <tr>
         <td class="provider-col">Descope</td>
         <td style="font-family:var(--mono)">7.5K MAU</td>
-        <td style="font-family:var(--mono)">Custom pricing</td>
+        <td style="font-family:var(--mono)">None on Free; $0.05 on Pro and Growth</td>
         <td>Visual flow builder for auth</td>
-        <td>No-code flow designer</td>
-        <td>Complex auth flows without custom code</td>
       </tr>
       <tr style="background:rgba(63,185,80,0.08)">
         <td class="provider-col">WorkOS <span class="winner-badge">1M FREE</span></td>
         <td style="font-family:var(--mono)">1M MAU</td>
-        <td style="font-family:var(--mono)">Free (auth only)</td>
+        <td style="font-family:var(--mono)">$2,500/mo per extra 1M</td>
         <td>Enterprise SSO ready (SAML/OIDC)</td>
-        <td>Clean API, good docs</td>
-        <td>Apps that will need enterprise SSO later</td>
       </tr>
     </tbody>
   </table>
   </div>
 
   <div class="context-box">
-    <strong>Auth0 vs Clerk (2026 update):</strong> <strong>Auth0</strong> now includes enterprise connections, SSO, SCIM, and AI Features (token vaults for agentic workflows) on the free tier &mdash; 25K MAU with the deepest enterprise feature set. <strong>Clerk</strong> recently expanded to 50K free MRU (monthly returning users, not MAU) with superior React DX. At scale, Clerk costs ~$0.02/MRU while Auth0 is ~$0.07/MAU. <strong>Important:</strong> Clerk counts returning users (MRU), not all active users (MAU) &mdash; your effective free limit may be higher if many users sign up but don&rsquo;t return monthly. <strong>PropelAuth</strong> is the B2B specialist &mdash; 10K free MAU with built-in org management, roles, and RBAC. <strong>WorkOS</strong> remains the budget outlier at 1M free MAU for auth with enterprise SSO as a paid add-on.
+    <strong>Auth0 and Clerk:</strong> Auth0's free plan covers 25,000 MAU and includes one enterprise connection, Self-Service SSO, SCIM, 5 organizations, Token Vault for 2 connected apps, and 1,000 machine-to-machine (M2M) tokens a month. Its pricing page lists no MFA factors on the free plan. Auth0 has no per-user overage rate: past 25,000 MAU you must buy a paid plan sized to all your users, and 30,000 MAU on B2C Essentials costs $2,100 a month. Clerk's free Hobby plan covers 50,000 MRU per application, with up to 3 social connections and no MFA. On Pro ($25 a month), users from 50,001 to 100,000 MRU cost $0.02 each.
   </div>
 
   <h2 id="baas-auth">BaaS-Integrated Auth</h2>
@@ -38347,52 +38311,47 @@ ${mcpCtaCss()}
         <th>Platform</th>
         <th>MFA</th>
         <th>Self-Hosted?</th>
-        <th>Best For</th>
       </tr>
     </thead>
     <tbody>
       <tr style="background:rgba(63,185,80,0.08)">
         <td class="provider-col">Appwrite Auth <span class="winner-badge">75K FREE</span></td>
         <td style="font-family:var(--mono)">75,000</td>
-        <td style="font-family:var(--mono)">$0 (self-hosted unlimited)</td>
+        <td style="font-family:var(--mono)">$3 per 1,000 above 200K (Pro, $25/mo)</td>
         <td>Appwrite (DB, Storage, Functions, Messaging)</td>
-        <td class="check">Phone + TOTP</td>
+        <td class="check">Email, phone, TOTP (no phone on Cloud Free)</td>
         <td class="check">Yes (Docker)</td>
-        <td>Open-source BaaS with highest cloud free tier</td>
       </tr>
       <tr style="background:rgba(63,185,80,0.08)">
-        <td class="provider-col">Supabase Auth <span class="winner-badge">CHEAPEST AT SCALE</span></td>
+        <td class="provider-col">Supabase Auth</td>
         <td style="font-family:var(--mono)">50,000</td>
-        <td style="font-family:var(--mono)">$0.00325/MAU</td>
+        <td style="font-family:var(--mono)">$0.00325/MAU above 100K (Pro)</td>
         <td>Supabase (Postgres, Realtime, Storage)</td>
-        <td class="check">TOTP + Phone</td>
+        <td class="check">TOTP (phone MFA paid)</td>
         <td class="check">Yes (open source)</td>
-        <td>Full-stack apps on Postgres</td>
       </tr>
       <tr>
         <td class="provider-col">Firebase Auth</td>
         <td style="font-family:var(--mono)">No cost; SMS on Blaze only</td>
-        <td style="font-family:var(--mono)">$0.0055/MAU</td>
+        <td style="font-family:var(--mono)">$0 ($0.0055/MAU from 50K to 100K with Identity Platform)</td>
         <td>Firebase (Firestore, Hosting, Functions)</td>
         <td class="check">Phone + TOTP (Identity Platform)</td>
         <td class="cross">No</td>
-        <td>Mobile-first apps on Firebase</td>
       </tr>
       <tr>
         <td class="provider-col">AWS Cognito</td>
         <td style="font-family:var(--mono)">10,000</td>
-        <td style="font-family:var(--mono)">$0.0055/MAU</td>
+        <td style="font-family:var(--mono)">$0.0055 Lite / $0.015 Essentials</td>
         <td>AWS (Lambda, DynamoDB, S3, etc.)</td>
         <td class="check">SMS + TOTP</td>
         <td class="cross">No</td>
-        <td>AWS-native applications</td>
       </tr>
     </tbody>
   </table>
   </div>
 
   <div class="context-box">
-    <strong>BaaS auth comparison:</strong> <strong>Appwrite</strong> leads with 75K free MAU on cloud and unlimited self-hosted &mdash; plus it&rsquo;s fully open source (MIT), so you can migrate to self-hosted with zero user disruption. <strong>Supabase</strong> offers 50K free MAU with the lowest overage cost ($0.00325/MAU) &mdash; at 100K MAU, auth adds just $162.50/mo. <strong>Firebase Auth</strong> costs $0.0055/MAU but integrates deeply with Firestore and Firebase Hosting. <strong>AWS Cognito</strong> matches at 50K free MAU, ideal if you&rsquo;re already on AWS. <strong>The trade-off:</strong> BaaS auth is cheapest but ties your auth to a specific platform. Migrating away means moving users, tokens, and password hashes. <a href="/supabase-vs-firebase">Supabase vs Firebase comparison &rarr;</a>
+    <strong>Backend platforms and Cognito:</strong> Supabase Free covers 50,000 MAU; Pro is $25 a month for 100,000 MAU, then $0.00325 per MAU. Firebase Authentication without Identity Platform has no MAU cap; Identity Platform is free to 50,000 MAU, then $0.0055 per MAU up to 100,000. Cognito's free tier is 10,000 MAU per AWS account or organization (50,000 on Lite for user pools created on or before 22 November 2024); above it, Lite costs $0.0055 per MAU up to 100,000 and Essentials, the default for new user pools, $0.015. Appwrite Free covers 75,000 MAU; Pro is $25 a month for 200,000 MAU, then $3 per 1,000 users. Appwrite is open source under the BSD 3-Clause licence. Its migration from Appwrite Cloud to self-hosted Appwrite moves users, databases, files, functions and sites; Appwrite warns that some fields do not transfer. <a href="/supabase-vs-firebase">Supabase vs Firebase comparison &rarr;</a>
   </div>
 
   <h2 id="self-hosted">Self-Hosted / Open Source</h2>
@@ -38407,25 +38366,22 @@ ${mcpCtaCss()}
         <th>License</th>
         <th>Language</th>
         <th>Cloud Option</th>
-        <th>Best For</th>
       </tr>
     </thead>
     <tbody>
       <tr style="background:rgba(63,185,80,0.08)">
-        <td class="provider-col">Keycloak <span class="winner-badge">MOST MATURE</span></td>
+        <td class="provider-col">Keycloak</td>
         <td style="font-family:var(--mono)">Unlimited</td>
         <td>Apache 2.0</td>
         <td>Java (Quarkus)</td>
-        <td>Red Hat SSO (paid)</td>
-        <td>Enterprise SSO, SAML/OIDC federation</td>
+        <td>None from the project (Red Hat's build is self-run); third parties host it</td>
       </tr>
       <tr style="background:rgba(63,185,80,0.08)">
-        <td class="provider-col">Authentik <span class="winner-badge">BEST UI</span></td>
+        <td class="provider-col">Authentik</td>
         <td style="font-family:var(--mono)">Unlimited</td>
         <td>MIT (open core)</td>
         <td>Python (Django)</td>
-        <td>Authentik Enterprise (paid)</td>
-        <td>Modern IdP with best admin UI, LDAP/SCIM bridge</td>
+        <td>None from authentik (Enterprise is self-hosted); third parties host it</td>
       </tr>
       <tr>
         <td class="provider-col">Authelia</td>
@@ -38433,23 +38389,20 @@ ${mcpCtaCss()}
         <td>Apache 2.0</td>
         <td>Go</td>
         <td>None (self-hosted only)</td>
-        <td>Reverse proxy auth gateway (Nginx, Traefik, HAProxy)</td>
       </tr>
       <tr>
         <td class="provider-col">FusionAuth</td>
         <td style="font-family:var(--mono)">Unlimited</td>
-        <td>Apache 2.0 (Community)</td>
+        <td>Proprietary (free Community edition)</td>
         <td>Java</td>
         <td>FusionAuth Cloud (from $37/mo)</td>
-        <td>Full-featured auth with multi-tenancy</td>
       </tr>
       <tr>
         <td class="provider-col">SuperTokens</td>
         <td style="font-family:var(--mono)">Unlimited (self-hosted)</td>
         <td>Apache 2.0 (core)</td>
-        <td>Node.js / Go (core)</td>
+        <td>Java (core)</td>
         <td>SuperTokens Managed (5K free MAU)</td>
-        <td>Node.js apps wanting open-source auth</td>
       </tr>
       <tr>
         <td class="provider-col">Hanko</td>
@@ -38457,22 +38410,20 @@ ${mcpCtaCss()}
         <td>AGPL-3.0</td>
         <td>Go</td>
         <td>Hanko Cloud (10K free MAU)</td>
-        <td>Passkey-first authentication</td>
       </tr>
       <tr>
         <td class="provider-col">Ory</td>
         <td style="font-family:var(--mono)">Unlimited (self-hosted)</td>
         <td>Apache 2.0</td>
         <td>Go</td>
-        <td>Ory Network (25K free MAU)</td>
-        <td>Microservice-native identity (Kratos, Hydra, Keto)</td>
+        <td>Ory Network (Production $70/mo or $770/yr)</td>
       </tr>
     </tbody>
   </table>
   </div>
 
   <div class="context-box">
-    <strong>Self-hosted trade-off:</strong> Zero per-MAU costs vs operational overhead. <strong>Keycloak</strong> is the industry standard &mdash; battle-tested at massive scale, with SAML/OIDC federation, but requires Java expertise and 512 MB+ RAM. <strong>Authentik</strong> is the modern alternative with the best admin UI &mdash; Python/Django-based, with built-in LDAP/SCIM bridge and visual flow designer. Growing fast in the homelab and self-hosted community. <strong>Authelia</strong> is the lightest option &mdash; a single Go binary that acts as an auth gateway for reverse proxies (Nginx, Traefik, HAProxy). No user management UI, but dead simple for SSO across self-hosted services. <strong>FusionAuth</strong> is the most feature-complete with better APIs. <strong>Ory</strong> is the most modern &mdash; Go-based microservices (Kratos, Hydra, Keto) that compose into any architecture. <strong>Hanko</strong> is passkey-first. <strong>SuperTokens</strong> is easiest for Node.js.
+    <strong>Self-hosted servers:</strong> Keycloak is an open-source identity server under the Apache 2.0 licence. It supports OIDC, OAuth 2.0 and SAML. Keycloak's sizing guide starts at 1,250 MB of RAM per pod. authentik is an open-source identity provider. Its Docker Compose install needs PostgreSQL and a host with at least 2 CPU cores and 2 GB of RAM. authentik offers no hosted version. Authelia is under 20 MB compressed and normally uses under 30 MB of memory. It provides single sign-on through a session cookie, OpenID Connect or trusted headers. It has no social login. FusionAuth Community is free to self-host with no user limit, but FusionAuth says it is not open source. Its free edition has no machine-to-machine (client credentials) support. Ory's servers (Kratos, Hydra, Keto) are open source under Apache 2.0 and written in Go. Self-hosted Ory Hydra supports machine-to-machine clients at no licence cost. Hanko supports passkeys, passwords and passwordless codes. Its free cloud plan covers 10,000 MAU. The SuperTokens core is written in Java, with backend SDKs for Node.js, Go and Python. SuperTokens charges for MFA even when self-hosted: $0.02 per MAU, with a $100 minimum a month.
   </div>
 
   <h2 id="specialized">Specialized Auth &amp; Authorization</h2>
@@ -38486,34 +38437,30 @@ ${mcpCtaCss()}
         <th>Provider</th>
         <th>Free Tier</th>
         <th>Specialty</th>
-        <th>Best For</th>
       </tr>
     </thead>
     <tbody>
       <tr>
         <td class="provider-col">Authgear</td>
-        <td>5K MAU (cloud)</td>
+        <td>No MAU limit (cloud Free)</td>
         <td>Passkeys + biometric auth, pre-built login UI</td>
-        <td>Mobile apps needing biometric + passkey auth</td>
       </tr>
       <tr>
         <td class="provider-col">MojoAuth</td>
-        <td>1K MAU</td>
-        <td>Passwordless-only: magic links, WebAuthn, biometric</td>
-        <td>Apps going fully passwordless from day one</td>
+        <td>25K MAU</td>
+        <td>Passwordless-first: magic links, email OTP, social (passkeys on Business Pro)</td>
       </tr>
       <tr>
-        <td class="provider-col">Stack Auth</td>
-        <td>Unlimited (open source)</td>
-        <td>Developer-first, open-source managed auth</td>
-        <td>Teams wanting Clerk-like DX with self-host option</td>
+        <td class="provider-col">Hexclave (formerly Stack Auth)</td>
+        <td>Self-hosting free; managed 10K user accounts</td>
+        <td>Open-source auth, managed or self-hosted</td>
       </tr>
     </tbody>
   </table>
   </div>
 
   <h3>Authorization &amp; Permissions</h3>
-  <p class="section-intro">These handle <strong>authorization</strong> (what users can do) rather than authentication (who users are). They complement any auth provider above.</p>
+  <p class="section-intro">Permit.io and Cerbos handle authorization (what a user may do), not sign-in. Authress handles both sign-in and permissions.</p>
 
   <div style="overflow-x:auto">
   <table class="comp-table">
@@ -38522,7 +38469,6 @@ ${mcpCtaCss()}
         <th>Provider</th>
         <th>Free Tier</th>
         <th>Model</th>
-        <th>Best For</th>
       </tr>
     </thead>
     <tbody>
@@ -38530,26 +38476,23 @@ ${mcpCtaCss()}
         <td class="provider-col"><a href="/vendor/permit-io" style="color:var(--text)">Permit.io</a></td>
         <td>1,000 MAU, RBAC + ABAC</td>
         <td>Policy-as-a-service (OPA-based)</td>
-        <td>Fine-grained permissions with visual policy editor</td>
       </tr>
       <tr>
         <td class="provider-col">Cerbos Hub</td>
-        <td>100 principals, unlimited policies</td>
+        <td>100 monthly active principals, 2 PDPs</td>
         <td>Open-source policy engine (self-hosted or cloud)</td>
-        <td>Context-aware access control for microservices</td>
       </tr>
       <tr>
         <td class="provider-col"><a href="/vendor/authress" style="color:var(--text)">Authress</a></td>
-        <td>1,000 MAU, unlimited resources</td>
-        <td>API-first permission management</td>
-        <td>Complex B2B permission hierarchies</td>
+        <td>First 1,000 billable calls free, then $0.0012/call</td>
+        <td>Login and permissions API</td>
       </tr>
     </tbody>
   </table>
   </div>
 
   <div class="context-box">
-    <strong>Specialized picks:</strong> <strong>Stack Auth</strong> is worth watching &mdash; an open-source alternative to Clerk with similar DX but self-hostable. <strong>Authgear</strong> excels at biometric/passkey auth for mobile. <strong>MojoAuth</strong> is the purest passwordless option. For authorization, <strong>Permit.io</strong> provides a visual policy editor with OPA under the hood, <strong>Cerbos</strong> runs as a sidecar alongside your services, and <strong>Authress</strong> specializes in complex B2B permission hierarchies. If your app needs RBAC beyond basic roles, pair your auth provider with a dedicated authorization service.
+    <strong>Specialized services:</strong> Stack Auth now operates as Hexclave. Self-hosting is free (server under AGPLv3, SDKs under MIT). Its managed Free plan allows 10,000 user accounts. Authgear's free cloud plan has no MAU limit and includes 2 applications and 2 admin seats. Passkeys and biometric login are on every plan. MojoAuth's free plan covers 25,000 MAU with magic links, email one-time codes and Google and Facebook login; passkeys and TOTP need its Business Pro plan ($120 a month for 25,000 MAU). Permit.io and Cerbos handle authorization (what a user may do), not sign-in. Authress handles both sign-in and permissions. Permit.io's free Community plan covers 1,000 MAU. Cerbos Hub's free plan covers 100 monthly active principals; the open-source Cerbos policy decision point is free with no principal limit and can run as a sidecar or as a central service. Authress bills per API call: the first 1,000 billable calls are free, then $0.0012 per call.
   </div>
 
   <h2 id="growth-trap">The Growth Cost Trap: Free to 100K MAU</h2>
@@ -38571,36 +38514,36 @@ ${mcpCtaCss()}
         <td style="font-weight:600">Auth0</td>
         <td class="cheapest">$0 (free)</td>
         <td class="cheapest">$0 (free)</td>
-        <td>~$175/mo</td>
-        <td>~$525/mo</td>
+        <td>No published price</td>
+        <td>No published price</td>
       </tr>
       <tr>
         <td style="font-weight:600">Clerk (MRU)</td>
         <td class="cheapest">$0 (free)</td>
         <td class="cheapest">$0 (free)</td>
         <td class="cheapest">$0 (free)</td>
-        <td>~$1,000/mo</td>
+        <td>$1,025/mo</td>
       </tr>
       <tr>
         <td style="font-weight:600">Kinde</td>
         <td class="cheapest">$0 (free)</td>
-        <td>~$508/mo</td>
-        <td>~$1,383/mo</td>
-        <td>~$2,758/mo</td>
+        <td>$278.75/mo (Pro)</td>
+        <td>$716.25/mo (Pro)</td>
+        <td>$1,533.85/mo (Plus)</td>
       </tr>
       <tr>
         <td style="font-weight:600">PropelAuth</td>
         <td class="cheapest">$0 (free)</td>
-        <td>~$750/mo</td>
-        <td>~$2,000/mo</td>
-        <td class="expensive">~$4,500/mo</td>
+        <td>$900/mo (Growth)</td>
+        <td>$2,150/mo (Growth)</td>
+        <td class="expensive">$4,650/mo (Growth)</td>
       </tr>
       <tr>
         <td style="font-weight:600">Stytch</td>
         <td class="cheapest">$0 (free)</td>
-        <td class="cheapest">$0 (free)</td>
-        <td>~$1,250/mo</td>
-        <td>~$3,750/mo</td>
+        <td>~$3,000/mo</td>
+        <td>~$8,000/mo</td>
+        <td>~$18,000/mo</td>
       </tr>
       <tr>
         <td style="font-weight:600">WorkOS AuthKit</td>
@@ -38614,126 +38557,75 @@ ${mcpCtaCss()}
         <td class="cheapest">$0 (free)</td>
         <td class="cheapest">$0 (free)</td>
         <td class="cheapest">$0 (free)</td>
-        <td>~$100/mo (Pro plan)</td>
+        <td>$25/mo (Pro)</td>
       </tr>
       <tr>
         <td style="font-weight:600">Supabase Auth</td>
         <td class="cheapest">$0 (free)</td>
         <td class="cheapest">$0 (free)</td>
         <td class="cheapest">$0 (free)</td>
-        <td>~$162/mo</td>
+        <td>$25/mo (Pro)</td>
       </tr>
       <tr>
         <td style="font-weight:600">Firebase Auth</td>
         <td class="cheapest">$0 (free)</td>
         <td class="cheapest">$0 (free)</td>
         <td class="cheapest">$0 (free)</td>
-        <td>~$275/mo</td>
+        <td>$0 ($275 with Identity Platform)</td>
       </tr>
       <tr>
         <td style="font-weight:600">AWS Cognito</td>
         <td class="cheapest">$0 (free)</td>
-        <td class="cheapest">$0 (free)</td>
-        <td class="cheapest">$0 (free)</td>
-        <td>~$275/mo</td>
+        <td>$82.50 Lite / $225 Essentials</td>
+        <td>$220 / $600</td>
+        <td>$495 / $1,350</td>
       </tr>
       <tr>
         <td style="font-weight:600">Self-hosted (Keycloak / Authentik / Authelia / Ory)</td>
-        <td class="cheapest">$0</td>
-        <td class="cheapest">$0</td>
-        <td class="cheapest">$0</td>
-        <td class="cheapest">$0 (+ $20-100/mo server)</td>
+        <td class="cheapest">$0 licence</td>
+        <td class="cheapest">$0 licence</td>
+        <td class="cheapest">$0 licence</td>
+        <td class="cheapest">$0 licence</td>
       </tr>
     </tbody>
   </table>
   </div>
 
   <div class="context-box">
-    <strong>The growth penalty is real.</strong> At 100K MAU, PropelAuth costs <strong>~$4,500/mo</strong> while Supabase Auth costs <strong>~$162/mo</strong>. <strong>Clerk&rsquo;s MRU model</strong> can be deceptive &mdash; 50K free MRU sounds generous, but MRU counts returning users only, not total active users. If most of your users return monthly, MRU ≈ MAU. <strong>WorkOS AuthKit</strong> is free up to 1M MAU for basic auth. <strong>Appwrite</strong> is the cheapest BaaS at scale (~$100/mo Pro plan covers auth + database + storage). Self-hosted solutions cost $0 per user but require $20-100/mo in server infrastructure. <strong>The key decision:</strong> do you value developer experience (Clerk, Auth0, PropelAuth) or cost efficiency (Supabase, Appwrite, self-hosted)? For AI agent architectures specifically, Auth0&rsquo;s new token vault and M2M features may justify the premium.
-  </div>
-
-  <h2 id="best-for">Best for Each Use Case</h2>
-
-  <div class="verdict-box">
-    <h3>When to Pick Each Auth Service</h3>
-
-    <div class="verdict-item">
-      <strong>Next.js / React apps &rarr; Clerk</strong>
-      <p>Best-in-class React components, built-in user management UI, and organization support. 50K free MRU. The fastest path from zero to production auth for React developers. <a href="/vendor/clerk">Clerk details &rarr;</a></p>
-    </div>
-
-    <div class="verdict-item">
-      <strong>Most generous free tier &rarr; WorkOS AuthKit (1M free MAU)</strong>
-      <p>1M free MAU for authentication with enterprise SSO as a paid add-on. If you don&rsquo;t need SSO/SAML today, WorkOS is the clear winner on generosity. For BaaS-integrated: Appwrite (75K), Supabase/Firebase (50K each).</p>
-    </div>
-
-    <div class="verdict-item">
-      <strong>Enterprise / compliance &rarr; Auth0 (25K free MAU)</strong>
-      <p>SOC 2, HIPAA, and PCI-DSS ready. 25K free MAU with MFA, SSO, SCIM, Actions, AI token vaults, and 5 organizations &mdash; all free. The safest choice for regulated industries. <a href="/vendor/auth0">Auth0 details &rarr;</a></p>
-    </div>
-
-    <div class="verdict-item">
-      <strong>B2B SaaS with multi-tenancy &rarr; PropelAuth or Clerk</strong>
-      <p><strong>PropelAuth</strong> is purpose-built for B2B with org management, roles, and RBAC from day one. <strong>Clerk</strong> has broader DX but PropelAuth&rsquo;s B2B features are deeper. Both have 10K+ free users.</p>
-    </div>
-
-    <div class="verdict-item">
-      <strong>Self-hosted / data sovereignty &rarr; Keycloak, Authentik, or Authelia</strong>
-      <p><strong>Keycloak</strong> for enterprise federation. <strong>Authentik</strong> for the best admin UI and modern stack. <strong>Authelia</strong> if you just need an auth gateway for reverse proxies. All unlimited, all free.</p>
-    </div>
-
-    <div class="verdict-item">
-      <strong>Cheapest at scale &rarr; Supabase Auth or Appwrite</strong>
-      <p>Supabase Auth: $0.00325/MAU after 50K ($162/mo at 100K). Appwrite: ~$100/mo Pro plan covers auth + full BaaS. Both are open source with self-host escape hatch. <a href="/supabase-vs-firebase">Supabase vs Firebase &rarr;</a></p>
-    </div>
-
-    <div class="verdict-item">
-      <strong>Agentic AI / machine-to-machine &rarr; Auth0</strong>
-      <p>Auth0&rsquo;s new AI Features include token vaults for agent-to-service auth and agentic AI workflow support. 1,000 free M2M tokens. The only managed auth provider with first-class AI agent support in 2026. For self-hosted M2M, Keycloak and Ory have unlimited M2M tokens.</p>
-    </div>
-
-    <div class="verdict-item">
-      <strong>Passkey-first / passwordless &rarr; Hanko</strong>
-      <p>Purpose-built for passkeys and WebAuthn. Open-source self-hosted option with 10K free MAU on cloud. The best choice if you want to go passwordless from day one.</p>
-    </div>
-
-    <div class="verdict-item">
-      <strong>Enterprise SSO (SAML + directory sync) &rarr; WorkOS or Auth0</strong>
-      <p>WorkOS: 1M free auth MAU + paid SSO/directory sync. Auth0: SSO + SCIM now free on all tiers. Both battle-tested. Auth0 is the complete package; WorkOS if you want to defer SSO costs until you have enterprise customers.</p>
-    </div>
+    Clerk defines a monthly retained user as a user who visits the app in a given month at least one day after signing up. Clerk says MRU is often lower than raw MAU, especially for apps with many one-time signups or trial users. Auth0 publishes no price above 30,000 MAU. Stytch's estimator shows "Contact us" above 20,000 MAU. Cognito Lite costs $0.0055 per MAU above the free tier, up to 100,000 MAU. Cognito Essentials, the default tier for new user pools, costs $0.015 per MAU. The free editions of the self-hosted servers charge no licence fee per user.
   </div>
 
   <h2 id="hidden-costs">Hidden Costs and Gotchas</h2>
   <p class="section-intro">Auth pricing has several non-obvious costs beyond the headline MAU number. Here&rsquo;s what to watch for.</p>
 
   <div class="diff-card" style="border-left-color:#f85149">
-    <h3>Auth0: No middle ground between free and paid</h3>
-    <p class="diff-desc"><strong>Auth0&rsquo;s Essential plan starts at $35/mo</strong> &mdash; there&rsquo;s no intermediate tier. You&rsquo;re on the generous free tier (25K MAU) or jumping to paid. For teams that outgrow 25K MAU but don&rsquo;t need all Essential features, this cliff can be jarring. <strong>Clerk</strong> and <strong>Kinde</strong> have more gradual pricing curves.</p>
+    <h3>Auth0: the step from free to paid</h3>
+    <p class="diff-desc">Auth0 has no per-user overage rate. Past 25,000 MAU you must buy a paid plan sized to all your users. Auth0's B2C Essentials plan starts at $35 a month for 500 MAU. Auth0's B2B Essentials plan starts at $150 a month for 500 MAU. On B2C Essentials, 30,000 MAU costs $2,100 a month. B2C Essentials and B2C Professional include no enterprise connections, no Self-Service SSO and no SCIM.</p>
   </div>
 
   <div class="diff-card" style="border-left-color:#d29922">
-    <h3>Clerk: MRU vs MAU counting differences</h3>
-    <p class="diff-desc"><strong>Clerk counts Monthly Returning Users (MRU), not MAU.</strong> A user who signs up but doesn&rsquo;t return that month doesn&rsquo;t count. This sounds generous, but for apps with high retention (which is the goal), MRU ≈ MAU. The 50K MRU free tier is effectively 50K MAU for most production apps. Don&rsquo;t assume the MRU metric gives you meaningfully more headroom.</p>
+    <h3>Clerk counts retained users</h3>
+    <p class="diff-desc">Clerk's free Hobby plan covers 50,000 monthly retained users (MRU) per application. Clerk defines a monthly retained user as a user who visits the app in a given month at least one day after signing up. Clerk says MRU is often lower than raw MAU, especially for apps with many one-time signups or trial users.</p>
   </div>
 
   <div class="diff-card" style="border-left-color:#f85149">
-    <h3>M2M token limits</h3>
-    <p class="diff-desc"><strong>Auth0</strong> includes 1,000 M2M tokens on the free tier, but enterprise apps and AI agent architectures can burn through these fast. Each agent-to-service call that needs a token counts. Exceeding the limit requires upgrading. <strong>Keycloak, FusionAuth, and Ory</strong> have no M2M limits since you control the infrastructure.</p>
+    <h3>Machine-to-machine tokens</h3>
+    <p class="diff-desc">Auth0's free plan includes 1,000 M2M tokens a month. Auth0 counts the access tokens it issues, not API calls: one cached token can serve many calls until it expires. Clerk's free plan includes 2,500 M2M token creations a month. Kinde's free plan includes 2,000 M2M tokens. Descope's free plan includes 10,000 M2M exchanges. Cognito's M2M authentication is a paid add-on with no free tier. FusionAuth Community has no M2M support. Self-hosted Ory Hydra supports M2M clients at no licence cost; Ory's hosted service bills M2M tokens.</p>
   </div>
 
   <div class="diff-card" style="border-left-color:#d29922">
-    <h3>Firebase Auth: SMS verification costs extra</h3>
-    <p class="diff-desc"><strong>Firebase Auth</strong> SMS-based MFA charges $0.01&ndash;$0.06 per SMS depending on country. Phone verification for signup also costs per SMS. <strong>AWS Cognito</strong> charges for SMS MFA via SNS. TOTP-based MFA is free on all providers. Budget for SMS costs if you rely on phone-based verification.</p>
+    <h3>SMS and MFA charges</h3>
+    <p class="diff-desc">Firebase bills SMS for phone sign-in and SMS MFA at $0.01 to $0.50 per message, depending on the country. The first 10 messages a day are free. SMS MFA and TOTP MFA both require the Identity Platform upgrade on Firebase. SuperTokens charges for MFA even when self-hosted: $0.02 per MAU, with a $100 minimum a month. MojoAuth's Business Pro plan is required for passkeys and TOTP.</p>
   </div>
 
   <div class="diff-card" style="border-left-color:#f85149">
-    <h3>Self-hosted: hidden ops cost</h3>
-    <p class="diff-desc">Self-hosted auth is $0 per user but not $0 total. <strong>Keycloak</strong> needs 512 MB+ RAM and Java expertise. <strong>Authentik</strong> needs Python/Django skills and a Postgres database. You own security patches, upgrades, and scaling. Budget $20-100/mo for infrastructure and 2-4 hours/month for maintenance. The total cost is still far less than managed providers at scale, but it&rsquo;s not free.</p>
+    <h3>Running your own server</h3>
+    <p class="diff-desc">Keycloak's sizing guide starts at 1,250 MB of RAM per pod. authentik's Docker Compose install needs PostgreSQL and a host with at least 2 CPU cores and 2 GB of RAM. Their free editions charge no licence fee per user. You run the servers and apply security patches and upgrades yourself.</p>
   </div>
 
   <div class="diff-card" style="border-left-color:#d29922">
-    <h3>Vendor lock-in: session/token format portability</h3>
-    <p class="diff-desc">Migrating between auth providers is painful. Password hashes are provider-specific &mdash; users may need to reset passwords. <strong>Clerk</strong> and <strong>Auth0</strong> use proprietary SDKs that require significant refactoring. <strong>Standards-based providers</strong> (Keycloak, Ory, Authentik, Kinde) use OIDC/SAML, making migration easier. Your auth provider is one of the hardest services to switch.</p>
+    <h3>Moving to another provider</h3>
+    <p class="diff-desc">Clerk exports password hashes from its dashboard. Auth0 exports password hashes through a support case, which only paying and trial customers can open, and not every request qualifies. Users do not need to reset their passwords if the new provider accepts the hash format. Auth0, Keycloak, Ory, authentik and Kinde support OpenID Connect (OIDC).</p>
   </div>
 
   <div class="diff-card" style="border-left-color:#3fb950">
@@ -45271,7 +45163,7 @@ ${globalNavCss()}
 
   <h3>Auth: The Growth Tax</h3>
   <div class="callout callout-warn">
-    At 100K MAU, <strong>Clerk costs ~$1,800/mo</strong> while <strong>Supabase Auth costs ~$162/mo</strong> &mdash; an 11x difference. WorkOS AuthKit is free up to 1M MAU for authentication.
+    At 100,000 users, Clerk costs $1,025 a month and Supabase $25 a month on Pro. WorkOS AuthKit is free up to 1M MAU for authentication.
     <span style="display:block;margin-top:.5rem;font-size:.85rem"><a href="/auth-comparison-2026">Full auth comparison &rarr;</a></span>
   </div>
 

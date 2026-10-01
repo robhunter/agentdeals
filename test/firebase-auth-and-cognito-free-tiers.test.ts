@@ -37,7 +37,7 @@ const STATED: Record<string, string[]> = {
 const ROWS: [string, string, string[]][] = [
   ["/aws-free-tier-2026", "Amazon Cognito", ["10,000 MAUs a month (Lite or Essentials tier, direct or social sign-in); 50 MAUs for SAML/OIDC. User pools created by November 22, 2024 keep 50,000 on Lite."]],
   ["/auth-comparison-2026", "Firebase Auth", ["No cost; SMS on Blaze only", "$0.0055 (Identity Platform, 50K-100K MAU)"]],
-  ["/auth-comparison-2026", "AWS Cognito", ["10K MAU (50K for pools created by Nov 22, 2024)", "$0.0055"]],
+  ["/auth-comparison-2026", "AWS Cognito", ["10K MAU (50K for Lite pools created by Nov 22, 2024)", "$0.0055 Lite / $0.015 Essentials"]],
 ];
 
 const BAAS_ROWS: [string, string][] = [

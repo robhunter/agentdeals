@@ -393,6 +393,11 @@ export function vendorNameForSubject(subject: CompiledFigureSubject): string | n
   return vendorForSubject(subject)?.vendor ?? null;
 }
 
+export function labelNamesAProductOfItsVendor(subject: CompiledFigureSubject, vendorSlug: string | null): boolean {
+  if (subject.linkedSlug || !vendorSlug) return false;
+  return toSlug(subject.label).startsWith(vendorSlug + "-");
+}
+
 export function timelineRecordsFor<T extends { date: string }>(
   declaredScope: readonly T[],
   subjects: readonly CompiledFigureSubject[],

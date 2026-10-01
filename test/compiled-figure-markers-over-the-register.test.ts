@@ -10,7 +10,7 @@ import {
 } from "../src/page-reviews.ts";
 
 const { toSlug } = await import("../dist/vendor-slug.js");
-const { vendorSlugForSubject, vendorSubjectsOnCompiledPage } = await import("../dist/compiled-figures.js");
+const { labelNamesAProductOfItsVendor, vendorSlugForSubject, vendorSubjectsOnCompiledPage } = await import("../dist/compiled-figures.js");
 const { isOurOwnBookkeeping } = await import("../dist/vendor-verdict.js");
 const { isTrackedChange } = await import("../dist/change-census.js");
 const { freeTierEndingRecord } = await import("../dist/data.js");
@@ -74,7 +74,7 @@ function subjectsTheResolverReaches(html: string): Set<string> {
   const reached = new Set<string>();
   for (const subject of vendorSubjectsOnCompiledPage(html)) {
     const slug = vendorSlugForSubject(subject);
-    if (slug) reached.add(slug);
+    if (slug && !labelNamesAProductOfItsVendor(subject, slug)) reached.add(slug);
   }
   return reached;
 }

@@ -372,20 +372,18 @@
       "vendors_asserted": [
         "appwrite-cloud",
         "auth0",
-        "authentik",
+        "aws",
         "clerk",
         "firebase",
-        "hanko",
-        "keycloak",
-        "ory",
+        "kinde",
         "propelauth",
+        "stytch",
         "supabase",
         "workos"
       ],
       "vendors_tabulated": [
         "auth0",
         "authentik",
-        "authgear",
         "authress",
         "aws",
         "cerbos-hub",
@@ -413,27 +411,27 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 78,
-      "table_figures_from_records": 7,
+      "table_figures": 100,
+      "table_figures_from_records": 0,
       "tables": [
         {
           "label": "Main Comparison Table",
-          "figures": 17,
+          "figures": 36,
           "from_records": 0
         },
         {
           "label": "Managed Auth Platforms",
-          "figures": 4,
+          "figures": 7,
           "from_records": 0
         },
         {
           "label": "BaaS-Integrated Auth",
-          "figures": 4,
+          "figures": 7,
           "from_records": 0
         },
         {
           "label": "Self-Hosted / Open Source",
-          "figures": 1,
+          "figures": 3,
           "from_records": 0
         },
         {
@@ -443,18 +441,18 @@
         },
         {
           "label": "Authorization & Permissions",
-          "figures": 0,
+          "figures": 1,
           "from_records": 0
         },
         {
           "label": "The Growth Cost Trap: Free to 100K MAU",
-          "figures": 45,
+          "figures": 46,
           "from_records": 0
         },
         {
           "label": "Pricing Change Timeline",
-          "figures": 7,
-          "from_records": 7
+          "figures": 0,
+          "from_records": 0
         }
       ],
       "reads_changes": true,
@@ -716,7 +714,7 @@
       "review_note": null,
       "reads_index": false,
       "tables_read_index": false,
-      "table_figures": 92,
+      "table_figures": 95,
       "table_figures_from_records": 4,
       "tables": [
         {
@@ -731,7 +729,7 @@
         },
         {
           "label": "Cost Comparison by Team Size",
-          "figures": 47,
+          "figures": 50,
           "from_records": 0
         },
         {
@@ -2274,7 +2272,7 @@
       "review_note": null,
       "reads_index": false,
       "tables_read_index": false,
-      "table_figures": 122,
+      "table_figures": 123,
       "table_figures_from_records": 34,
       "tables": [
         {
@@ -2289,7 +2287,7 @@
         },
         {
           "label": "Cost Comparison by Use Case",
-          "figures": 39,
+          "figures": 40,
           "from_records": 0
         },
         {
