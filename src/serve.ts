@@ -1275,6 +1275,11 @@ function escHtmlServer(s: string): string {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
 
+function linkToPublishedVendor(vendor: string, attributes = ""): string {
+  const name = vendorNameAsPublished(vendor);
+  return `<a href="/vendor/${toSlug(name)}"${attributes}>${escHtmlServer(name)}</a>`;
+}
+
 function offerPricingLink(offer: OfferTierAndUrl, label: string): string {
   if (offerRetired(offer)) return "";
   return `<a href="${escHtmlServer(offer.url)}" target="_blank" rel="noopener">${label}</a>`;
@@ -6642,7 +6647,7 @@ const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
         <td>2</td><td>\u2014</td><td>\u2014</td><td>\u2705</td><td>\u2705</td><td>\u2014</td>
       </tr>
       <tr>
-        <td style="font-weight:600"><a href="/vendor/terrateam" style="color:var(--text)">Terrateam</a></td>
+        <td style="font-weight:600">${linkToPublishedVendor("Terrateam", ' style="color:var(--text)"')}</td>
         <td>3</td><td>\u2014</td><td>\u2014</td><td>\u2705 PR-driven</td><td>\u2014</td><td>\u2014</td>
       </tr>
     </tbody>
@@ -11361,7 +11366,7 @@ function buildCiCdAlternativesPage(): string {
     ["Bitrise", "Codemagic", "Appcircle"].includes(o.vendor)
   );
   const iacAutomation = enrichedAll.filter(o =>
-    ["Terramate", "Terrateam", "Mergify", "Nx Cloud", "LocalOps"].includes(o.vendor)
+    ["Terramate", "Terrateam", "Mergify", "Nx Cloud", "LocalOps"].map(vendorNameAsPublished).includes(o.vendor)
   );
   const specialized = enrichedAll.filter(o =>
     ["Unity DevOps", "bytebase.com", "cirun.io", "deployhq.com", "RunMyJob", "Squash Labs", "Tugboat"].includes(o.vendor)
@@ -11628,7 +11633,7 @@ ${buildCards(specialized)}
       <dd><a href="/vendor/drone-ci">Drone CI</a> (Apache 2.0) or <a href="/vendor/woodpecker-ci">Woodpecker CI</a> (community fork) \u2014 both are container-native, lightweight, and free with no build limits. <a href="/vendor/semaphore-ci">Semaphore CI</a> also has a free self-hosted edition.</dd>
 
       <dt>Managing Infrastructure as Code?</dt>
-      <dd><a href="/vendor/terramate">Terramate</a> and <a href="/vendor/terrateam">Terrateam</a> specialize in Terraform/OpenTofu CI/CD with PR-driven workflows. <a href="/vendor/nx-cloud">Nx Cloud</a> accelerates monorepo builds with remote caching.</dd>
+      <dd><a href="/vendor/terramate">Terramate</a> and ${linkToPublishedVendor("Terrateam")} specialize in Terraform/OpenTofu CI/CD with PR-driven workflows. <a href="/vendor/nx-cloud">Nx Cloud</a> accelerates monorepo builds with remote caching.</dd>
 
       <dt>Windows-only builds?</dt>
       <dd><a href="/vendor/appveyor-com">AppVeyor</a> specializes in Windows CI/CD, free for open-source projects. GitHub Actions also supports Windows runners.</dd>
