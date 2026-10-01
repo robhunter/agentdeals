@@ -72,16 +72,16 @@ ${pageText}
 
 Find the words on this page that state the terms of this plan: its price, an allowance or limit, a credit amount, a duration, or who can get it. Copy them exactly as they appear, as one contiguous stretch of the page of at most ${MAX_FREE_PLAN_EXCERPT_LENGTH} characters. Never reword, never leave out words inside the stretch, and never join words that are apart on the page.
 
-The stretch must state at least one of those terms. Words that only say the product is free or invite the reader to start, such as "Get started for free", words that point to another page, and lists of models or products state no terms. Where the page states the plan's figures, copy those rather than a sentence about the plan.
+The stretch must state at least one of those terms. Words that only say the product is free or invite the reader to start, such as "Get started for free", words that point to another page, and lists of models or products state no terms.
 
 Copy only this plan's own words: end the stretch before the next plan's name or terms begin. If this plan's words cannot be copied without another plan's, as when a table comparing plans is read row by row, give an empty string.
 
 If the page states no terms for this plan, give an empty string.
 
-Then list each term the stretch states, copied exactly from the stretch.
+Then list each term the stretch states, copied exactly from the stretch, and name every other plan whose words the stretch holds, as the page names it.
 
 Respond with exactly one JSON object and no other text:
-{"excerpt":"<the words copied from the page, or an empty string>","terms":["<each term the excerpt states, copied from it>"]}`;
+{"excerpt":"<the words copied from the page, or an empty string>","terms":["<each term the excerpt states, copied from it>"],"other_plans":["<each other plan whose words the excerpt holds>"]}`;
 }
 
 function termsListed(terms) {
@@ -96,7 +96,9 @@ export function parseExcerptAnswer(raw) {
   for (const candidate of candidates) {
     try {
       const parsed = JSON.parse(candidate);
-      if (parsed && typeof parsed === "object" && typeof parsed.excerpt === "string") return { copied: parsed.excerpt, terms: termsListed(parsed.terms) };
+      if (parsed && typeof parsed === "object" && typeof parsed.excerpt === "string") {
+        return { copied: parsed.excerpt, terms: termsListed(parsed.terms), otherPlans: termsListed(parsed.other_plans) };
+      }
     } catch {}
   }
   return { copied: null, why: "the reader's answer could not be parsed" };
@@ -118,23 +120,55 @@ export function verbatimExcerpt(copied, pageText) {
 
 export const COPY_STATES_NO_TERMS = "the copy states none of the plan's terms";
 
-const WORDS_THAT_ONLY_SAY_IT_IS_FREE = new Set([
-  "free", "for", "get", "started", "start", "starting", "sign", "signup", "up", "try", "it", "now", "today",
-  "deploy", "build", "use", "create", "join", "begin", "launch", "download", "install", "register",
-  "no", "cost", "charge", "of", "at", "the", "a", "an", "and", "to", "you", "your", "with", "is", "plan",
+export const COPY_HOLDS_ANOTHER_PLAN = "the copy holds another plan's words";
+
+const A_FIGURE = /(?:^|[^\p{L}\p{N}])\d/u;
+
+const WORDS_THAT_STATE_A_TERM = new Set([
+  "unlimited", "limited", "limit", "limits", "forever", "lifetime",
+  "team", "teams", "user", "users", "member", "members", "seat", "seats", "project", "projects", "collaborator", "collaborators",
+  "credit", "credits", "card", "payment", "registration", "signup", "account", "accounts", "verification", "verified",
+  "personal", "hobby", "individual", "individuals", "commercial", "noncommercial", "student", "students", "education", "educational",
+  "academic", "nonprofit", "nonprofits", "startup", "startups", "eligible", "eligibility",
+  "month", "months", "monthly", "day", "days", "daily", "week", "weeks", "weekly", "year", "years", "yearly", "annual", "annually",
+  "hour", "hours", "minute", "minutes",
 ]);
 
-function lowerWordsOf(text) {
-  return withPlainMarks(wordsAsThePageRendersThem(text)).toLowerCase().match(/[\p{L}\p{N}]+/gu) ?? [];
+function asTheCheckReadsIt(text) {
+  return withPlainMarks(wordsAsThePageRendersThem(text)).toLowerCase();
+}
+
+function withoutTheNamesOf(text, plan) {
+  return [plan?.vendor, plan?.tier]
+    .map(asTheCheckReadsIt)
+    .filter(Boolean)
+    .reduce((rest, name) => rest.split(name).join(" "), text);
+}
+
+function statesATerm(term, plan) {
+  const rest = withoutTheNamesOf(term, plan);
+  return A_FIGURE.test(rest) || (rest.match(/[\p{L}\p{N}]+/gu) ?? []).some((word) => WORDS_THAT_STATE_A_TERM.has(word));
 }
 
 export function termsTheCopyStates(copy, terms, plan) {
-  const copied = withPlainMarks(wordsAsThePageRendersThem(copy)).toLowerCase();
-  const namesOfThePlan = new Set([...lowerWordsOf(plan?.vendor), ...lowerWordsOf(plan?.tier)]);
+  const copied = asTheCheckReadsIt(copy);
   return (terms ?? []).filter((term) => {
-    const named = withPlainMarks(wordsAsThePageRendersThem(term)).toLowerCase();
-    if (!named || !copied.includes(named)) return false;
-    return lowerWordsOf(named).some((word) => !WORDS_THAT_ONLY_SAY_IT_IS_FREE.has(word) && !namesOfThePlan.has(word));
+    const named = asTheCheckReadsIt(term);
+    return Boolean(named) && copied.includes(named) && statesATerm(named, plan);
+  });
+}
+
+function escapedForARegExp(text) {
+  return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+export function otherPlansTheCopyHolds(copy, otherPlans, plan) {
+  const copied = asTheCheckReadsIt(copy);
+  const ownName = asTheCheckReadsIt(plan?.tier);
+  return (otherPlans ?? []).filter((name) => {
+    const named = asTheCheckReadsIt(name);
+    if (!named || named === ownName) return false;
+    return new RegExp(`(?<![\\p{L}\\p{N}])${escapedForARegExp(named)}(?![\\p{L}\\p{N}])`, "u").test(copied);
   });
 }
 
@@ -165,10 +199,12 @@ export function excerptsDisagreeingWithTheirCitation(offers) {
   return problems;
 }
 
-export function writeFreePlanExcerpt(offer, { copied, terms, pageText, url, readOn }) {
+export function writeFreePlanExcerpt(offer, { copied, terms, otherPlans, pageText, url, readOn }) {
   if (typeof copied !== "string") return { outcome: "unread" };
   const verdict = verbatimExcerpt(copied, pageText);
   if (verdict.excerpt) {
+    const neighbours = otherPlansTheCopyHolds(verdict.excerpt, otherPlans, offer);
+    if (neighbours.length > 0) return { outcome: "refused", why: `${COPY_HOLDS_ANOTHER_PLAN}: ${neighbours.join(", ")}` };
     if (termsTheCopyStates(verdict.excerpt, terms, offer).length === 0) return { outcome: "refused", why: COPY_STATES_NO_TERMS };
     offer[FREE_PLAN_EXCERPT] = { text: verdict.excerpt, url, read_on: readOn };
     return { outcome: "written" };
@@ -197,7 +233,7 @@ export async function excerptTheFreePlan(record, { offer, pageText, read, readOn
   } catch (err) {
     answer = { copied: null, why: err?.message ?? String(err) };
   }
-  const result = writeFreePlanExcerpt(record, { copied: answer?.copied, terms: answer?.terms, pageText: textTheReaderSees(pageText), url: offer.url, readOn });
+  const result = writeFreePlanExcerpt(record, { copied: answer?.copied, terms: answer?.terms, otherPlans: answer?.otherPlans, pageText: textTheReaderSees(pageText), url: offer.url, readOn });
   const copied = typeof answer?.copied === "string" ? answer.copied : null;
   return result.outcome === "unread" ? { ...result, why: answer?.why ?? "no answer", copied } : { ...result, copied };
 }
