@@ -2976,7 +2976,7 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("CPX11"), "Should have specific pricing data");
     assert.ok(html.includes("CPX12"), "Should name the cheapest orderable plan");
     assert.ok(html.includes("not available"), "Should mark the unorderable line");
-    assert.ok(html.includes("+575%"), "Should mention memory add-on increase");
+    assert.ok(html.includes("€111 a month, up from €22"), "Should give the February memory upgrade price from Hetzner's add-on list");
     assert.ok(html.includes("OVHcloud"), "Should mention OVH in industry context");
     assert.ok(html.includes("DigitalOcean"), "Should include alternatives");
     assert.ok(html.includes("Methodology"), "Should have methodology section");

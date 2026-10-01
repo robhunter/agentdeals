@@ -45,11 +45,11 @@ export const HETZNER_SINGAPORE_EXAMPLE = { sku: "CCX13", eur: 54.49 };
 export const HETZNER_APRIL_CHANGES = [
   { product: "CX23 (2 vCPU, 4 GB) — entry cloud server", before: "€2.99", after: "€3.99", pctChange: 33 },
   { product: "LB11 (Load Balancer)", before: "€5.39", after: "€7.49", pctChange: 39 },
-  { product: "Object Storage (1 TB), EU", before: "€4.99", after: "€6.49", pctChange: 30 },
-  { product: "Object Storage (1 TB), US", before: "€6.49", after: "€9.99", pctChange: 53 },
-  { product: "128 GB RAM add-on", before: "€45.88", after: "€264.00", pctChange: 575 },
-  { product: "AX41 dedicated server", before: "€49.73", after: "€51.22", pctChange: 3 },
+  { product: "Object Storage (base price)", before: "€4.99", after: "€6.49", pctChange: 30 },
+  { product: "AX41-NVMe dedicated server, Germany", before: "€41.10", after: "€42.30", pctChange: 3 },
 ];
+
+export const HETZNER_AX102_GERMANY = { beforeApril: 107.3, afterApril: 122.3 };
 
 export function cheapestOrderableHetznerPlan(): HetznerPlan {
   const orderable = HETZNER_CLOUD_PLANS.filter(p => p.available);

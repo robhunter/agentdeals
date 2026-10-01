@@ -6,6 +6,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import {
   HETZNER_APRIL_CHANGES,
+  HETZNER_AX102_GERMANY,
   HETZNER_CLOUD_PLANS,
   HETZNER_PRICES_READ,
   HETZNER_SINGAPORE_EXAMPLE,
@@ -136,6 +137,8 @@ describe("the pricing page prices what Hetzner sells today", () => {
       ...HETZNER_CLOUD_PLANS.map(p => `€${p.eur.toFixed(2)}`),
       ...HETZNER_APRIL_CHANGES.flatMap(c => [c.before, c.after]),
       `€${HETZNER_SINGAPORE_EXAMPLE.eur.toFixed(2)}`,
+      `€${HETZNER_AX102_GERMANY.beforeApril.toFixed(2)}`,
+      `€${HETZNER_AX102_GERMANY.afterApril.toFixed(2)}`,
     ]);
     const quoted = new Set(visible(withoutItemsOrRowsHeadedByAnotherVendor(body)).match(/€\d+\.\d{2}/g) ?? []);
     const strays = [...quoted].filter(price => !allowed.has(price));
@@ -178,6 +181,46 @@ describe("every page that states a Hetzner entry price states the same one", () 
   it("composes that price from the plan table rather than from a literal", () => {
     const cheapest = cheapestOrderableHetznerPlan();
     assert.equal(hetznerEntryPriceClause(), `${cheapest.sku} at €${cheapest.eur.toFixed(2)}/mo (${cheapest.vcpu} vCPU, ${cheapest.ram} GB)`);
+  });
+});
+
+const aprilTableRows = (body: string) =>
+  [...body.slice(body.indexOf('<h2 id="april">'), body.indexOf('<h2 id="why">')).matchAll(/<tr>([\s\S]*?)<\/tr>/g)]
+    .map(row => visible(row[1]).trim())
+    .filter(row => row.includes("€"));
+
+describe("the April 1 table holds only rows from Hetzner's April price list", () => {
+  it("gives every row the rise its own two prices make", () => {
+    for (const change of HETZNER_APRIL_CHANGES) {
+      const [before, after] = [change.before, change.after].map(price => Number(price.replace("€", "")));
+      assert.equal(change.pctChange, Math.round((after / before - 1) * 100), change.product);
+    }
+  });
+
+  it("prices the AX41-NVMe at Hetzner's April figures for Germany", async () => {
+    const rows = aprilTableRows((await get("/hetzner-pricing-2026")).body);
+    assert.ok(rows.includes("AX41-NVMe dedicated server, Germany €41.10 €42.30 +3%"), rows.join(" | "));
+  });
+
+  it("has no Object Storage row for the US, where Hetzner sells none, and no memory row, which April did not change", async () => {
+    const rows = aprilTableRows((await get("/hetzner-pricing-2026")).body);
+    assert.equal(rows.length, HETZNER_APRIL_CHANGES.length);
+    for (const row of rows) {
+      assert.doesNotMatch(row, /\bUS\b/);
+      assert.doesNotMatch(row, /\bRAM\b|memory/i);
+    }
+  });
+
+  it("dates the memory upgrade rise to February, at the prices Hetzner's add-on list gives", async () => {
+    const text = visible((await get("/hetzner-pricing-2026")).body);
+    assert.ok(text.includes("Hetzner raised them in February: its add-on price list, last changed 2026-02-17, put a 64 GB DDR5 ECC step at €111 a month, up from €22, and a 32 GB step at €66, up from €14."));
+    assert.ok(text.includes("128 GB as two 64 GB DDR5 ECC steps went from €44 to €222 a month"));
+    assert.ok(text.includes(`an AX102 with 128 GB built in cost €${HETZNER_AX102_GERMANY.afterApril.toFixed(2)} a month in Germany`));
+  });
+
+  it("states none of the figures that were not Hetzner's", async () => {
+    const text = visible((await get("/hetzner-pricing-2026")).body);
+    assert.doesNotMatch(text, /575%|€45\.88|€264\.00|€49\.73|€51\.22|US\/SG object storage|cost €124/);
   });
 });
 
