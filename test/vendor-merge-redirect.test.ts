@@ -16,6 +16,7 @@ import {
 import { toSlug } from "../dist/slug.js";
 import { vendorSelectionsWrittenByHand } from "./hardcoded-vendor-rows.ts";
 import { assertPopulationFloor } from "./population-floor.ts";
+import { isWithdrawn } from "./withdrawn-change-records.ts";
 
 type Offer = import("../src/types.ts").Offer;
 type DealChange = import("../src/types.ts").DealChange;
@@ -38,6 +39,8 @@ const key = (name: string) => name.trim().toLowerCase();
 const listing = (...names: string[]) => new Set([...liveNames, ...names.map(key)]);
 const unlisting = (absent: string, ...present: string[]) =>
   new Set([...listing(...present)].filter((n) => n !== key(absent)));
+const historyRecordedUnder = (name: string) =>
+  changes.filter((c) => key(c.vendor) === key(name) && !isWithdrawn(c));
 
 function startServer(env: NodeJS.ProcessEnv = {}): Promise<{ child: ChildProcess; port: number }> {
   return new Promise((resolve, reject) => {
@@ -197,7 +200,7 @@ describe("the catalogue as it stands", () => {
 
   it("leaves the history of a retiring name on its own page until the record goes, and on the survivor after", async () => {
     for (const merge of merges) {
-      const carried = changes.filter((c) => c.vendor.trim().toLowerCase() === merge.retired.trim().toLowerCase());
+      const carried = historyRecordedUnder(merge.retired);
       if (carried.length === 0) continue;
       const holder = stillListed.includes(merge) ? merge.retired : merge.survivor;
       const res = await fetch(`http://localhost:${port}/api/changes?vendor=${encodeURIComponent(holder)}&since=2000-01-01&limit=1000`);
@@ -299,13 +302,13 @@ describe("the catalogue once every merge is made", () => {
   });
 
   it("has history recorded under a retiring name, so the carry-over here is under test", () => {
-    const carried = merges.filter((m) => changes.some((c) => c.vendor.trim().toLowerCase() === m.retired.trim().toLowerCase()));
+    const carried = merges.filter((m) => historyRecordedUnder(m.retired).length > 0);
     assert.ok(carried.length > 0, "no change is recorded under a retiring name, so nothing here is under test");
   });
 
   it("publishes every change recorded under a retiring name on the record that survives it", async () => {
     for (const merge of merges) {
-      const carried = changes.filter((c) => c.vendor.trim().toLowerCase() === merge.retired.trim().toLowerCase());
+      const carried = historyRecordedUnder(merge.retired);
       if (carried.length === 0) continue;
       const res = await fetch(`http://localhost:${port}/api/changes?vendor=${encodeURIComponent(merge.survivor)}&since=2000-01-01&limit=1000`);
       const published: DealChange[] = (await res.json()).changes;
@@ -320,7 +323,7 @@ describe("the catalogue once every merge is made", () => {
 
   it("answers no free-tier history question with an empty history the merge filled", async () => {
     for (const merge of merges) {
-      if (!changes.some((c) => c.vendor.trim().toLowerCase() === merge.retired.trim().toLowerCase())) continue;
+      if (historyRecordedUnder(merge.retired).length === 0) continue;
       const html = await (await fetch(`http://localhost:${port}/vendor/${toSlug(merge.survivor)}`)).text();
       assert.ok(
         !/no recorded pricing changes/i.test(textOf(html)),
