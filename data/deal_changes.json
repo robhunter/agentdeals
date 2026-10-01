@@ -13491,6 +13491,23 @@
       "recorded_date": "2026-10-01",
       "date_source": "hand_written",
       "listing_effect": "ends"
+    },
+    {
+      "vendor": "InfluxDB Cloud",
+      "change_type": "free_tier_removed",
+      "date": "2026-10-01",
+      "date_source": "discovered",
+      "summary": "The free tier is now a $250 credit for Cloud Serverless, with usage-based pricing after that. InfluxDB 3 Core is now listed as a free, open-source option.",
+      "tier": "InfluxDB Cloud Serverless",
+      "tier_direction": "narrowed",
+      "previous_state": "Time-series database — free tier: 5 MB writes per 5 minutes, up to 10,000 data series, 30-day data retention. Auto-provisioned for new accounts. Ideal for IoT and monitoring workloads",
+      "current_state": "Cloud Serverless has a $250 free credit, then usage-based pricing: $0.0025 per MB written, $0.012 per 100 query executions, $0.002 per GB-hour storage, and $0.09 per GB transferred out.",
+      "impact": "high",
+      "source_url": "https://www.influxdata.com/influxdb-pricing/",
+      "category": "Databases",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-10-01"
     }
   ]
 }
