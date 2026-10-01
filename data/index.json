@@ -3360,7 +3360,7 @@
     {
       "vendor": "PostHog",
       "category": "Startup Perks",
-      "description": "$50,000 a year in PostHog credits for Y Combinator companies in any batch, renewing automatically while the company has raised less than $25M. Apply through Bookface from a PostHog account on the company's email domain. Not open to YC alumni who started another company, or to a YC company acquired by a non-YC parent. Since 2026-09-14 the credits don't pay for AI tools (PostHog AI, PostHog Desktop, the Slack app, Replay Vision, Inbox). It doesn't stack with PostHog for Startups.",
+      "description": "$50,000 a year in PostHog credits for Y Combinator companies in any batch, renewing automatically while the company has raised less than $25M. Apply through PostHog's YC page, linked from Bookface, from a PostHog account on the company's email domain. Not open to YC alumni who started another company, or to a YC company acquired by a non-YC parent. Since 2026-09-14 the credits don't pay for AI tools (PostHog AI, PostHog Desktop, the Slack app, Replay Vision, Inbox). It doesn't stack with PostHog for Startups.",
       "tier": "YC Deal",
       "url": "https://posthog.com/handbook/marketing/startups",
       "tags": [
@@ -3383,9 +3383,9 @@
         "program": "PostHog for Y Combinator"
       },
       "source_check": {
-        "checked": "2026-09-30",
+        "checked": "2026-10-01",
         "outcome": "ok",
-        "detail": "the page names PostHog as \"posthog\" and states \"$0\""
+        "detail": "the page names PostHog as \"posthog\" and states \"$50,000\""
       }
     },
     {
@@ -3410,6 +3410,11 @@
           "PostHog account on a paid plan, on the company's email domain, signed up on or after 2023-01-01"
         ],
         "program": "PostHog for Startups"
+      },
+      "source_check": {
+        "checked": "2026-10-01",
+        "outcome": "ok",
+        "detail": "the page names PostHog as \"posthog\" and states \"$50,000\" and \"$12,000\""
       }
     },
     {
@@ -4241,7 +4246,7 @@
     {
       "vendor": "Postman",
       "category": "Testing",
-      "description": "Free for single user only (since March 2026). Unlimited collections, environments, mock servers, basic monitoring. Team collaboration (shared workspaces, collection sharing) removed — requires Team plan ($19/user/mo). Postman-alternative tag: see Bruno, Hoppscotch, Insomnia, Thunder Client",
+      "description": "Free plan for one user: 50 Postman AI credits a month, the API client and core tools, specs and mock servers, native Git, unlimited manual Flows, automated API testing with the Collection Runner (without data files), unlimited local performance testing and 1,000 API monitoring requests a month. Cloud performance testing is on paid plans only, at $0.04 per virtual-user hour. Team collaboration needs the Team plan ($19 per user a month, billed annually).",
       "tier": "Free",
       "url": "https://www.postman.com/pricing/",
       "tags": [
@@ -4252,7 +4257,7 @@
         "deal-change",
         "postman-alternative"
       ],
-      "verifiedDate": "2026-08-16",
+      "verifiedDate": "2026-10-01",
       "source_check": {
         "checked": "2026-09-18",
         "outcome": "ok",
@@ -14809,7 +14814,7 @@
       "category": "CI/CD",
       "description": "Now Stategraph: terrateam.io redirects to stategraph.com. Infrastructure-as-code orchestration for GitHub and GitLab, with Terraform, OpenTofu, Terragrunt, Pulumi, CDKTF or any CLI. Free hosted plan: 3 users, 50 runs (plans or applies) a month, 1 concurrent worker, 30-day audit retention and community support, with every Orchestration feature, including SSO, RBAC, drift detection, cost estimation and OPA, Conftest and Checkov policies. No credit card. The self-hosted open-source edition (MPL-2.0) is free for up to 3 active users a month per GitHub or GitLab installation, with unlimited runs and concurrent workers.",
       "tier": "Free",
-      "url": "https://stategraph.com/pricing",
+      "url": "https://terrateam.io/pricing",
       "tags": [
         "ci",
         "cd",
@@ -20562,9 +20567,9 @@
       ],
       "verifiedDate": "2026-10-01",
       "source_check": {
-        "checked": "2026-09-20",
+        "checked": "2026-10-01",
         "outcome": "ok",
-        "detail": "the page names flightcontrol.dev as \"flightcontrol\" and states \"$0\""
+        "detail": "the page names Ravion as \"ravion\" and states \"$0\" and \"$20\" and \"$0.00\" and \"$0,\""
       },
       "product_subtypes": {
         "taxonomy": "Cloud Hosting",

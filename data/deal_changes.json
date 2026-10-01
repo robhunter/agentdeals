@@ -8839,7 +8839,13 @@
       "category": "Testing",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-02"
+      "recorded_date": "2026-09-02",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-10-01",
+        "detail": "Retracted 2026-10-01: no change. Every term this record gives as new (50 AI credits, 1,000 API monitoring requests a month, and the Free card's wording) is on the Internet Archive's capture of postman.com/pricing of 2026-08-19, whose comparison table still gave Free unlimited performance testing runs and unlimited cloud and local mock servers. The narrowing that came after it, Free losing cloud performance testing, is recorded separately, dated 2026-09-18.",
+        "source_url": "http://web.archive.org/web/20260819010644/https://www.postman.com/pricing/"
+      }
     },
     {
       "vendor": "Logto",
@@ -13277,6 +13283,20 @@
       "category": "CI/CD",
       "alternatives": [],
       "recorded_date": "2026-09-30",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Postman",
+      "change_type": "limits_reduced",
+      "date": "2026-09-18",
+      "summary": "Postman's Free plan no longer includes cloud performance testing. Its pricing table gave Free \"Performance testing (unlimited runs)\" on the Internet Archive's capture of 2026-08-20, cloud runs at $0.04 per virtual-user hour on 2026-09-09, and marks cloud performance testing unavailable on Free from the capture of 2026-09-18; local performance testing stays unlimited. In the same window the table stopped calling Free's mock servers unlimited, and it states no limit for them.",
+      "previous_state": "Free: \"Performance testing (unlimited runs)\" and \"Unlimited cloud & local mock servers\" (postman.com/pricing comparison table, capture of 2026-08-20)",
+      "current_state": "Free: \"Unlimited local performance testing\"; \"Cloud performance testing\" unavailable, \"$0.04 / VuH\" on the paid plans; \"Mock Servers\" (capture of 2026-09-18)",
+      "impact": "medium",
+      "source_url": "http://web.archive.org/web/20260918150023/https://www.postman.com/pricing/",
+      "category": "Testing",
+      "alternatives": [],
+      "recorded_date": "2026-10-01",
       "date_source": "hand_written"
     }
   ]
