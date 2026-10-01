@@ -165,7 +165,7 @@ function codePointOr(code, original) {
   return Number.isInteger(code) && code > 0 && code <= 0x10ffff ? String.fromCodePoint(code) : original;
 }
 
-export function comparableText(text) {
+export function decodedText(text) {
   return String(text ?? "")
     .replace(/&#x([0-9a-f]+);/gi, (original, hex) => codePointOr(parseInt(hex, 16), original))
     .replace(/&#(\d+);/g, (original, decimal) => codePointOr(Number(decimal), original))
@@ -173,8 +173,11 @@ export function comparableText(text) {
     .replace(/[\u2018\u2019\u201A\u201B\u2032]/g, "'")
     .replace(/[\u201C\u201D\u201E\u201F\u2033]/g, '"')
     .replace(/[\u2010-\u2015\u2212]/g, "-")
-    .replace(/\u2026/g, "...")
-    .replace(/[\s\u200B-\u200D\u2060\uFEFF]+/g, "");
+    .replace(/\u2026/g, "...");
+}
+
+export function comparableText(text) {
+  return decodedText(text).replace(/[\s\u200B-\u200D\u2060\uFEFF]+/g, "");
 }
 
 export function pairedPrompt(listing, older, newer, maxLength = MAX_PAGE_TEXT_LENGTH) {
@@ -401,6 +404,37 @@ function judgePlanOnNeitherPage(instead, older, newer) {
   return { status: "absent", side: "both", why: "neither page offers the plan", ...quoted };
 }
 
+function sameTerms(a, b) {
+  return sameList([...a.values].sort(), [...b.values].sort()) && QUALIFIERS.every((name) => sameList(a[name], b[name]));
+}
+
+function occursOnce(text, words) {
+  return text.includes(words) && !occursMoreThanOnce(text, words);
+}
+
+function linesOnlyThisSideStates(lines, otherLines, otherPage) {
+  const unmatched = otherLines.map((line) => termsOfLine(decodedText(line)));
+  return lines.filter((line) => {
+    const terms = termsOfLine(decodedText(line));
+    if (terms.values.length === 0 && terms.negations.length === 0) return false;
+    const at = unmatched.findIndex((other) => sameTerms(other, terms));
+    if (at >= 0) {
+      unmatched.splice(at, 1);
+      return false;
+    }
+    return !occursOnce(otherPage, comparableText(line));
+  });
+}
+
+function judgeSameAnswer(quoted, older, newer) {
+  const review = [
+    ...linesOnlyThisSideStates(quoted.old_terms, quoted.new_terms, newer).map((line) => ({ old: line, new: "", why: "the reader called the terms the same, but only the old page states this line" })),
+    ...linesOnlyThisSideStates(quoted.new_terms, quoted.old_terms, older).map((line) => ({ old: "", new: line, why: "the reader called the terms the same, but only the new page states this line" })),
+  ];
+  if (review.length === 0) return { status: "same", ...quoted };
+  return { status: "review", ...quoted, review, why: "the reader called the terms the same, but a line stating a value or a negation is on one page only, so the lines go to review" };
+}
+
 export function judgePair(answer, olderText, newerText) {
   if (!answer) return { status: "unquotable", side: "both", why: "the reader's answer could not be parsed" };
   const older = comparableText(olderText);
@@ -420,7 +454,7 @@ export function judgePair(answer, olderText, newerText) {
     return { status: "unquotable", side: sideOfBoth(Boolean(oldProblem), Boolean(newProblem)), why: [oldProblem, newProblem].filter(Boolean).join("; "), old_terms: oldTerms, new_terms: newTerms };
   }
   const quoted = { old_terms: oldTerms, new_terms: newTerms, direction };
-  if (saysSame) return { status: "same", ...quoted };
+  if (saysSame) return judgeSameAnswer(quoted, older, newer);
   const differences = [];
   const refuted = [];
   const reworded = [];

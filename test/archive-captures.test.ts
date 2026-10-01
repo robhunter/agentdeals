@@ -232,6 +232,52 @@ describe("judging a paired reading by the words it copied from each page", () =>
     assert.strictEqual(verdict.status, "same", verdict.why);
   });
 
+  it("sends a same answer to review when a line stating a value is copied from one page only and the other page does not state it, as Wraps' pair was", () => {
+    const oldTerms = ["Free", "Get started - no credit card required", "$ 0 /mo", "Hosted dashboard", "5K tracked events /mo", "1 workflow", "7-day history", "Unlimited contacts", "CLI & SDK access", "10 AI generations/mo", "Community support"];
+    const newTerms = ["Free forever", "Free", "Get started - no credit card required", "$0", "Dashboard + AI template editor", "5K tracked events/mo", "1 workflow", "Unlimited contacts", "CLI + TypeScript SDK", "10 AI template generations/mo"];
+    const verdict = judgePair(answer({ old_terms: oldTerms, new_terms: newTerms, same: true, direction: "unchanged" }), oldTerms.join(". "), newTerms.join(". "));
+    assert.strictEqual(verdict.status, "review", verdict.why);
+    assert.deepStrictEqual(verdict.review.map((line: { old: string; new: string }) => [line.old, line.new]), [["$ 0 /mo", ""], ["7-day history", ""]]);
+    assert.deepStrictEqual([verdict.old_terms, verdict.new_terms], [oldTerms, newTerms]);
+  });
+
+  it("keeps a same answer when the copies state the same values in other formats, a line without a value is reworded, or a line one copy left out is on the other page once", () => {
+    const oldPage = "Free: $0 per month. 5 GB storage. 10,000 requests per month. 7-day history. Community support.";
+    const newPage = "Free: $0/mo. 5GB storage. 10K requests monthly. 7-day history. Forum support.";
+    const verdict = judgePair(answer({
+      old_terms: ["Free: $0 per month", "5 GB storage", "10,000 requests per month", "7-day history", "Community support"],
+      new_terms: ["Free: $0/mo", "5GB storage", "10K requests monthly", "Forum support"],
+      same: true,
+    }), oldPage, newPage);
+    assert.strictEqual(verdict.status, "same", verdict.why);
+  });
+
+  it("sends a same answer to review when the line one copy left out is on the other page more than once, since it may belong to another plan there", () => {
+    const oldPage = "Free plan. 7-day history. Pro plan. 30-day history.";
+    const answered = (newPage: string) => judgePair(answer({ old_terms: ["Free plan", "7-day history"], new_terms: ["Free plan"], same: true }), oldPage, newPage);
+    const twice = answered("Free plan. Pro plan. 7-day history. Team plan. 7-day history.");
+    assert.strictEqual(twice.status, "review", twice.why);
+    assert.deepStrictEqual(twice.review.map((line: { old: string; new: string }) => [line.old, line.new]), [["7-day history", ""]]);
+    assert.strictEqual(answered("Free plan. 7-day history. Pro plan. 30-day history.").status, "same");
+  });
+
+  it("matches each copied line with one line on the other side, so two lines stating the same figure need two there", () => {
+    const verdict = judgePair(answer({ old_terms: ["1 workflow", "1 team member"], new_terms: ["1 workflow"], same: true }), "1 workflow. 1 team member.", "1 workflow. Unlimited team members.");
+    assert.strictEqual(verdict.status, "review", verdict.why);
+    assert.deepStrictEqual(verdict.review.map((line: { old: string; new: string }) => [line.old, line.new]), [["1 team member", ""]]);
+  });
+
+  it("reads a copied line's figures after decoding its HTML entities, so an apostrophe written as &#8217; is not a figure", () => {
+    const verdict = judgePair(answer({ old_terms: ["Free: 3 apps, it's free"], new_terms: ["Free: it&#8217;s free with 3 apps"], same: true }), "Free: 3 apps, it's free.", "Free: it&#8217;s free with 3 apps.");
+    assert.strictEqual(verdict.status, "same", verdict.why);
+  });
+
+  it("sends a same answer to review when a negation is on one page only, though the line states no figure", () => {
+    const verdict = judgePair(answer({ old_terms: ["Hobby: $0", "No credit card required"], new_terms: ["Hobby: $0", "Credit card required"], same: true }), "Hobby: $0. No credit card required.", "Hobby: $0. Credit card required.");
+    assert.strictEqual(verdict.status, "review", verdict.why);
+    assert.deepStrictEqual(verdict.review.map((line: { old: string; new: string }) => [line.old, line.new]), [["No credit card required", ""]]);
+  });
+
   it("does not count an added term whose words were already on the old page, so a limit our text never stated is not a change", () => {
     const page = "Free hosting: 1000 MB disk space, 5 GB bandwidth, up to 5,000 visits a month, no ads.";
     const verdict = judgePair(answer({ old_terms: ["1000 MB disk space, 5 GB bandwidth"], new_terms: ["1000 MB disk space, 5 GB bandwidth"], differences: [{ old: "", new: "up to 5,000 visits a month" }] }), page, page);
