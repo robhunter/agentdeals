@@ -99,6 +99,14 @@ describe("the infrastructure-as-code pages after a listing is renamed", () => {
     assert.deepStrictEqual(linksTo(html, RETIRED), []);
   });
 
+  it("gives the listing's free plan in the Terraform alternatives table: 3 users, 50 runs a month, drift detection, and OPA, Conftest and Checkov policies", () => {
+    const html = pages.get("/terraform-alternatives")!;
+    const row = [...html.matchAll(/<tr>([\s\S]*?)<\/tr>/g)].map(([, cells]) => cells).find((cells) => linksTo(cells, SURVIVOR).length > 0);
+    assert.ok(row, `the table has a row for ${SURVIVOR}`);
+    const cells = [...row.matchAll(/<td[^>]*>([\s\S]*?)<\/td>/g)].map(([, cell]) => cell.replace(/<[^>]+>/g, "").trim());
+    assert.deepStrictEqual(cells, [SURVIVOR, "3", "—", "50/month", "✅ PR-driven", "✅", "✅ OPA + Conftest + Checkov"]);
+  });
+
   it("keeps the listing in the CI/CD alternatives' infrastructure group", () => {
     const group = sectionAfter(pages.get("/ci-cd-alternatives")!, "Infrastructure &amp; Automation");
     const names = [...group.matchAll(/class="alt-card-name">([^<]*)</g)].map(([, name]) => name);

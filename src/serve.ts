@@ -6648,7 +6648,7 @@ const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
       </tr>
       <tr>
         <td style="font-weight:600">${linkToPublishedVendor("Terrateam", ' style="color:var(--text)"')}</td>
-        <td>3</td><td>\u2014</td><td>\u2014</td><td>\u2705 PR-driven</td><td>\u2014</td><td>\u2014</td>
+        <td>3</td><td>\u2014</td><td>50/month</td><td>\u2705 PR-driven</td><td>\u2705</td><td>\u2705 OPA + Conftest + Checkov</td>
       </tr>
     </tbody>
   </table>
