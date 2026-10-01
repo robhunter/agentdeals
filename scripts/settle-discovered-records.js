@@ -131,7 +131,7 @@ async function main() {
   writeFileSync(out, `${JSON.stringify(report, null, 2)}\n`);
   console.log(`Settled ${report.results.length} of ${report.records} first readings in force; report in ${out}`);
   for (const [name, count] of Object.entries(report.split)) console.log(`  ${name}: ${count}`);
-  console.log(`  for review (only lines one page states differ): ${report.review.length}`);
+  console.log(`  for review: ${report.review.length}`);
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
