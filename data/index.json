@@ -3449,7 +3449,7 @@
     {
       "vendor": "Amplitude",
       "category": "Startup Perks",
-      "description": "1 year free Growth plan — 200K MTUs or 100M events/month. All Growth features including Behavioral Cohorts, Pathfinder, experimentation, and predictive audiences. 96%+ approval rate",
+      "description": "Amplitude's Early Stage Startup Pricing (formerly the Startup Scholarship): 1 year of the full Growth plan free, for 200K monthly tracked users or 100M events a month, for startups with under 20 employees and under $10M raised. In year 2, 40% off the annual Plus plan, or move to the free plan.",
       "tier": "Startup Scholarship",
       "url": "https://amplitude.com/startups",
       "tags": [
@@ -3476,7 +3476,7 @@
     {
       "vendor": "AWS Activate",
       "category": "Startup Perks",
-      "description": "Founders: $1,000 credits (self-funded startups). Portfolio: up to $200,000 credits (VC/accelerator-backed). Additional up to $300,000 in Trainium/Inferentia credits for AI startups building on AWS custom silicon (requires provider nomination). All credits usable on Bedrock models",
+      "description": "Founders: $1,000 to $5,000 in AWS credits for self-funded startups. Portfolio: up to $200,000 for startups with an Activate Provider Org ID. Both are for startups before Series B, founded in the last 10 years, with an AWS account on a paid plan. Credits usually expire within 1-2 years, depending on the package, and can also pay for AWS Support. One award per approved application; a later, larger award pays only the difference.",
       "tier": "Portfolio",
       "url": "https://aws.amazon.com/activate/",
       "tags": [
@@ -3642,7 +3642,7 @@
     {
       "vendor": "Mercury",
       "category": "Startup Perks",
-      "description": "1 year free Datadog (up to $100K value), $5K AWS credits, up to $200K Google Cloud credits, and 30% off QuickBooks Online for Mercury banking customers",
+      "description": "Perks for Mercury banking customers: 1 year of Datadog free (up to $100K in credits, for new Datadog customers at Series A or earlier), up to $5K of AWS Activate credits, and 50% off QuickBooks Online for 3 months. Mercury's Google Cloud offer is paused.",
       "tier": "Banking Perks",
       "url": "https://mercury.com/perks",
       "tags": [
@@ -3672,7 +3672,7 @@
     {
       "vendor": "Ramp",
       "category": "Startup Perks",
-      "description": "Up to $5,000 in AWS credits plus partner discounts on Notion, and other tools. Part of $350K+ total partner rewards program",
+      "description": "Over $350K in partner rewards for Ramp customers, including AWS credits through AWS Activate and OpenAI API credits (Ramp states no amount for either), $350 of Google Cloud credits, and 6 months of Notion Business with Notion AI.",
       "tier": "Partner Rewards",
       "url": "https://ramp.com/rewards/aws",
       "tags": [
@@ -3694,7 +3694,7 @@
       "source_check": {
         "checked": "2026-09-21",
         "outcome": "ok",
-        "detail": "the page names Ramp as \"ramp\" and states \"$350,000\" and \"$5,000\""
+        "detail": "the page names Ramp as \"ramp\" and states \"$350,000\""
       }
     },
     {
@@ -3733,7 +3733,7 @@
     {
       "vendor": "SVB (Silicon Valley Bank)",
       "category": "Startup Perks",
-      "description": "$5K AWS credits, up to $100K Google Cloud credits (usage-based annual cap), $5K MongoDB credits, $9K off Slack, and $50K Segment credits for SVB startup banking customers. Now a division of First Citizens BancShares",
+      "description": "Offers for SVB clients (SVB is a division of First Citizens Bank): $5K of AWS Activate credits (with an Activate Provider Org ID, before Series B), $5K of MongoDB credits for 12 months, and 25% off Slack upgrades (up to $9K), among 79 offers from 58 vendors. There is no Google Cloud offer.",
       "tier": "Banking Offers",
       "url": "https://www.svb.com/startup-banking/",
       "tags": [
@@ -3754,9 +3754,9 @@
       },
       "expires_date": "2026-08-31",
       "source_check": {
-        "checked": "2026-09-24",
+        "checked": "2026-10-01",
         "outcome": "ok",
-        "detail": "the page names SVB (Silicon Valley Bank) as \"silicon\" and states \"$50,000.00\""
+        "detail": "the page names SVB (Silicon Valley Bank) as \"silicon\" and states amounts, none of which we matched to the terms we publish"
       }
     },
     {
