@@ -1,0 +1,45 @@
+name: Read free-plan excerpts on a sample of listings, with no data push
+
+on:
+  push:
+    branches:
+      - excerpt-sample-1899
+
+permissions:
+  contents: read
+
+jobs:
+  sample:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24.20.0"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Name the rendering client a page that comes back too short is read with
+        run: node -e "import('./scripts/rendered-page.js').then((m) => console.log(m.findRenderer() ?? 'none found on this runner'))"
+
+      - name: Build
+        run: npm run build
+
+      - name: Read the excerpts
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+        run: node scripts/sample-free-plan-excerpts.js --out excerpt-sample.json --vendors "mistral-ai,cerebras,hetzner,brave-search-api,kaggle,appwrite-cloud,northflank,ngrok,pipedream,neon,google-compute-engine,render,cloudflare-r2,exa,minimax,bitrise,tailscale,openai,livekit,xai,formsubmit-co,cloudconvert-com,nvidia-nim,firebase,supabase,cloudflare-workers,windmill-dev,fireworks-ai,stripe,hetzner-dns,fastly,mockerito,linkok-com,aionda-mail,airtable,posthog,digitalocean,oracle-cloud,azure,fly-io,koyeb,gemini-cli,permit-io,instatus,google-cloud"
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: excerpt-sample
+          path: |
+            excerpt-sample.json
+            excerpt-sample.jsonl
+            excerpt-sample.md
+          if-no-files-found: warn
