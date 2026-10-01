@@ -267,9 +267,6 @@
     "/alternative-to/fivenines-io": {
       "daily": true
     },
-    "/alternative-to/flightcontrol-dev": {
-      "daily": true
-    },
     "/alternative-to/fly-io": {
       "daily": true
     },
@@ -565,6 +562,9 @@
       "daily": true
     },
     "/alternative-to/railway": {
+      "daily": true
+    },
+    "/alternative-to/ravion": {
       "daily": true
     },
     "/alternative-to/readthedocs-org": {
@@ -5594,9 +5594,6 @@
       "hash": "5638f5d60472ba9d",
       "changed": "2026-09-30"
     },
-    "/vendor/flightcontrol-dev": {
-      "daily": true
-    },
     "/vendor/float-ui": {
       "hash": "8e334faca020fdb5",
       "changed": "2026-09-30"
@@ -8021,6 +8018,9 @@
     "/vendor/rapidapi": {
       "hash": "888d470762f772eb",
       "changed": "2026-09-30"
+    },
+    "/vendor/ravion": {
+      "daily": true
     },
     "/vendor/raw-githack-com": {
       "hash": "944c5a590232cdd2",

@@ -18,6 +18,7 @@
     { "retired": "SonarCloud", "survivor": "SonarQube Cloud" },
     { "retired": "Synadia NGS", "survivor": "synadia.com" },
     { "retired": "X API (Twitter)", "survivor": "X (Twitter)" },
+    { "retired": "flightcontrol.dev", "survivor": "Ravion" },
     { "retired": "v0", "survivor": "v0.dev" }
   ],
   "shared_pricing_pages": [

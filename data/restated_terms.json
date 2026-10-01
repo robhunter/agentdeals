@@ -1272,7 +1272,8 @@
       "source_url": "https://terrateam.io",
       "record_date": "2026-08-28",
       "change_type": "limits_reduced",
-      "summary": "Doesn't confirm the original unlimited usage claim."
+      "summary": "Doesn't confirm the original unlimited usage claim.",
+      "reverted_on": "2026-10-01"
     },
     {
       "vendor": "BugBug",
