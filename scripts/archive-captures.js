@@ -258,6 +258,7 @@ function refutationOf(claim, olderHas, newerHas) {
 
 const VALUE_WORDS = ["not included", "unlimited", "included", "none"];
 const MULTIPLIERS = { k: 1_000, m: 1_000_000, b: 1_000_000_000 };
+const FIGURE = /(\d[\d,]*(?:\.\d+)?)(?:([kmb])(?![a-z]))?/g;
 
 export function valuesStated(words) {
   let rest = String(words ?? "").toLowerCase();
@@ -268,7 +269,7 @@ export function valuesStated(words) {
       return " ";
     });
   }
-  for (const [, figure, multiplier] of rest.matchAll(/(\d[\d,]*(?:\.\d+)?)(?:([kmb])(?![a-z]))?/g)) {
+  for (const [, figure, multiplier] of rest.matchAll(FIGURE)) {
     values.push(String(Number(figure.replaceAll(",", "")) * (MULTIPLIERS[multiplier] ?? 1)));
   }
   return values;
@@ -296,6 +297,12 @@ const DATA_UNITS = /(?<![a-z])([kmgtp])i?b\b/g;
 const TIME_UNITS = { second: "second", sec: "second", minute: "minute", min: "minute", hour: "hour", hr: "hour", day: "day", week: "week", wk: "week", month: "month", mo: "month", year: "year", yr: "year" };
 const TIME_UNIT = /\b(second|sec|minute|min|hour|hr|day|week|wk|month|mo|year|yr)s?\b/g;
 const NEGATION = /\b(no|not|without)\b/g;
+const FUNCTION_WORDS = new Set(["a", "an", "the", "of", "to", "up", "for", "and", "or", "in", "on", "at", "by", "with", "per", "plus", "from", "your", "you", "each", "every", "all", "any", "is", "are", "it"]);
+
+function wordsBesidesTerms(rest) {
+  const found = (rest.replace(FIGURE, " ").match(/\p{L}+/gu) ?? []).map((word) => word.replace(/s$/, ""));
+  return [...new Set(found.filter((word) => word && !FUNCTION_WORDS.has(word)))].sort();
+}
 
 function takeAll(text, pattern, name) {
   const taken = [];
@@ -320,9 +327,9 @@ export function termsOfLine(words) {
   }
   const data = takeAll(rest, DATA_UNITS, (prefix) => `${prefix}b`);
   const time = takeAll(data.rest, TIME_UNIT, (name) => TIME_UNITS[name]);
-  const negations = takeAll(time.rest, NEGATION, (word) => word).taken;
+  const negations = takeAll(time.rest, NEGATION, (word) => word);
   const sorted = (list) => [...list].sort();
-  return { values, units: sorted([...data.taken, ...time.taken]), periods: sorted(periods), seats: seats.taken, negations: sorted(negations) };
+  return { values, units: sorted([...data.taken, ...time.taken]), periods: sorted(periods), seats: seats.taken, negations: sorted(negations.taken), words: wordsBesidesTerms(negations.rest) };
 }
 
 const QUALIFIERS = ["units", "periods", "seats", "negations"];
@@ -412,12 +419,16 @@ function occursOnce(text, words) {
   return text.includes(words) && !occursMoreThanOnce(text, words);
 }
 
+function sharesAWord(line, other) {
+  return line.words.length === 0 || line.words.some((word) => other.words.includes(word));
+}
+
 function linesOnlyThisSideStates(lines, otherLines, otherPage) {
   const unmatched = otherLines.map((line) => termsOfLine(decodedText(line)));
   return lines.filter((line) => {
     const terms = termsOfLine(decodedText(line));
     if (terms.values.length === 0 && terms.negations.length === 0) return false;
-    const at = unmatched.findIndex((other) => sameTerms(other, terms));
+    const at = unmatched.findIndex((other) => sameTerms(other, terms) && sharesAWord(terms, other));
     if (at >= 0) {
       unmatched.splice(at, 1);
       return false;
