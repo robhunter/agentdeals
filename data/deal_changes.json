@@ -734,7 +734,13 @@
         "DigitalOcean Hatch"
       ],
       "recorded_date": "2026-02-26",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-10-01",
+        "detail": "Retracted 2026-10-01: misdated. cloud.google.com/startup/ai offered AI startups up to $350,000 over 2 years in the Internet Archive's capture of 2024-05-27, more than a year and a half before this record's date.",
+        "source_url": "http://web.archive.org/web/20240527000000/https://cloud.google.com/startup/ai"
+      }
     },
     {
       "vendor": "AWS",
@@ -4944,7 +4950,13 @@
         "Windsurf"
       ],
       "recorded_date": "2026-04-13",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-10-01",
+        "detail": "Retracted 2026-10-01: misdated. The terms it describes (Starter up to 2 users, Growth up to 50, Scale up to 100, early stage to Series B) are the launch terms Kiro announced on 2025-11-17. Separate records date the launch and the 2026-04-07 relaunch with smaller tiers.",
+        "source_url": "https://kiro.dev/blog/one-year-free-for-startups-2025/"
+      }
     },
     {
       "vendor": "Windsurf",
@@ -8794,7 +8806,13 @@
       "alternatives": [],
       "detected_by": "reverify-ai",
       "recorded_date": "2026-09-02",
-      "tier": "Startup Program"
+      "tier": "Startup Program",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-10-01",
+        "detail": "Retracted 2026-10-01: true of the page when read, but it bundles changes Cloudflare made on different dates, each now its own record: four tiers became three between the Internet Archive's captures of 2026-05-11 and 2026-05-12, AI Gateway stopped being covered between 2026-05-25 and 2026-05-28, Workers AI caps were set by tier between 2026-07-01 and 2026-07-02, and Tier 2's cap fell to $10,000 between 2026-08-06 and 2026-08-07.",
+        "source_url": "http://web.archive.org/web/20260512220759/https://www.cloudflare.com/startups/"
+      }
     },
     {
       "vendor": "Codecov",
@@ -13309,6 +13327,111 @@
       "impact": "medium",
       "source_url": "https://docs.mistral.ai/admin/billing-usage/subscriptions",
       "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-10-01",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Cloudflare for Startups",
+      "change_type": "limits_reduced",
+      "date": "2025-06-04",
+      "summary": "Cloudflare capped its startup programme's Workers AI credits at $50,000. The Internet Archive's capture of cloudflare.com/forstartups on 2025-05-23 capped only R2 and Cache Reserve; the capture of 2025-06-04 adds \"$50,000 of Credits for any Workers AI services\".",
+      "tier": "Startup Program",
+      "previous_state": "Credits up to the tier's amount for usage-based services, with a cap on R2 and Cache Reserve only",
+      "current_state": "$50,000 of Credits for any Workers AI services",
+      "impact": "medium",
+      "source_url": "http://web.archive.org/web/20250604172803/https://www.cloudflare.com/forstartups/",
+      "category": "Startup Perks",
+      "alternatives": [],
+      "recorded_date": "2026-10-01",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Cloudflare for Startups",
+      "change_type": "pricing_restructured",
+      "date": "2026-05-12",
+      "summary": "Cloudflare replaced its four startup tiers with three. In the Internet Archive's capture of 2026-05-11, cloudflare.com/forstartups offered $5K, $25K, $100K and $250K tiers. In the capture of 2026-05-12, cloudflare.com/startups offers Tier 3 at $10k (bootstrapped or self-funded, under $1M raised), Tier 2 at $100k ($1M+ raised, funded by an affiliated partner) and Tier 1 at $350k ($5M+ raised, funded by an affiliated partner), to startups founded within the last 10 years whose most recent round was within the last 12 months.",
+      "tier": "Startup Program",
+      "previous_state": "$5K Bootstrapped / Stealth, $25K Up-and-coming, $100K Seed-funded, $250K High Growth; founded within the last 5 years",
+      "current_state": "Tier 3 $10k (under $1M raised), Tier 2 $100k ($1M+ raised, affiliated partner), Tier 1 $350k ($5M+ raised, affiliated partner); founded within the last 10 years; latest round within the last 12 months",
+      "impact": "medium",
+      "source_url": "http://web.archive.org/web/20260512220759/https://www.cloudflare.com/startups/",
+      "category": "Startup Perks",
+      "alternatives": [],
+      "recorded_date": "2026-10-01",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Cloudflare for Startups",
+      "change_type": "limits_reduced",
+      "date": "2026-05-28",
+      "summary": "Cloudflare's startup programme stopped covering AI Gateway. The Internet Archive's capture of cloudflare.com/startups on 2026-05-25 lists \"$250 on AI Gateway\"; the capture of 2026-05-28 says \"AI Gateway: Temporarily not covered by credits\". The same capture changed Tier 2's criterion from \"$1M+ raised\" to \"Under $5M raised\".",
+      "tier": "Startup Program",
+      "previous_state": "$50,000 on Workers AI and $250 on AI Gateway; Tier 2 for startups with $1M+ raised",
+      "current_state": "AI Gateway: Temporarily not covered by credits; Tier 2 for startups with under $5M raised",
+      "impact": "medium",
+      "source_url": "http://web.archive.org/web/20260528033156/https://www.cloudflare.com/startups/",
+      "category": "Startup Perks",
+      "alternatives": [],
+      "recorded_date": "2026-10-01",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Cloudflare for Startups",
+      "change_type": "limits_reduced",
+      "date": "2026-07-02",
+      "summary": "Cloudflare replaced its startup programme's single Workers AI cap with caps by tier. The Internet Archive's capture of cloudflare.com/startups on 2026-07-01 says Workers AI is \"Covered up to a $50,000 cap\"; the capture of 2026-07-02 says \"Covered up to a $2,500 cap for Tier 3, $25,000 for Tier 2, and $50,000 for Tier 1\".",
+      "tier": "Startup Program",
+      "previous_state": "Workers AI: Covered up to a $50,000 cap",
+      "current_state": "Workers AI: Covered up to a $2,500 cap for Tier 3, $25,000 for Tier 2, and $50,000 for Tier 1",
+      "impact": "medium",
+      "source_url": "http://web.archive.org/web/20260702192354/https://www.cloudflare.com/startups/",
+      "category": "Startup Perks",
+      "alternatives": [],
+      "recorded_date": "2026-10-01",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Cloudflare for Startups",
+      "change_type": "limits_reduced",
+      "date": "2026-08-07",
+      "summary": "Cloudflare cut Tier 2's Workers AI credit cap from $25,000 to $10,000. The Internet Archive's capture of cloudflare.com/startups on 2026-08-06 says \"$25,000 for Tier 2\"; the capture of 2026-08-07 says \"$10,000 for Tier 2\". Tier 3 kept $2,500 and Tier 1 kept $50,000.",
+      "tier": "Startup Program",
+      "previous_state": "Workers AI: Covered up to a $2,500 cap for Tier 3, $25,000 for Tier 2, and $50,000 for Tier 1",
+      "current_state": "Workers AI: Covered up to a $2,500 cap for Tier 3, $10,000 for Tier 2, and $50,000 for Tier 1",
+      "impact": "medium",
+      "source_url": "http://web.archive.org/web/20260807105059/https://www.cloudflare.com/startups/",
+      "category": "Startup Perks",
+      "alternatives": [],
+      "recorded_date": "2026-10-01",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Amazon Kiro (AWS Startups)",
+      "change_type": "new_free_tier",
+      "date": "2025-11-17",
+      "summary": "Kiro launched startup credits: up to one year of Kiro Pro+ for startups between \"we have an idea and some funding\" and Series B VC-backed, in three tiers of up to 2, 50 and 100 users, for applications until 2025-12-31. Kiro announced it on its blog on 2025-11-17.",
+      "tier": "Startup Program",
+      "previous_state": "No Kiro startup credits",
+      "current_state": "Up to one year of Kiro Pro+ for startups up to Series B; Starter up to 2 users, Growth up to 50, Scale up to 100",
+      "impact": "medium",
+      "source_url": "https://kiro.dev/blog/one-year-free-for-startups-2025/",
+      "category": "Startup Perks",
+      "alternatives": [],
+      "recorded_date": "2026-10-01",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Amazon Kiro (AWS Startups)",
+      "change_type": "limits_reduced",
+      "date": "2026-04-07",
+      "summary": "Kiro reopened its startup credits with smaller tiers and a lower funding ceiling. Its post of 2026-04-07 offers up to one year of Kiro Pro+ to \"early-stage to Series A\" startups in tiers of up to 2, 10 and 30 users, and says \"Startups who currently participate in AWS Activate are not eligible\". The 2025 offer covered startups up to Series B in tiers of up to 2, 50 and 100 users; Kiro had closed its applications in December 2025 \"due to high demand\".",
+      "tier": "Startup Program",
+      "previous_state": "Up to one year of Kiro Pro+ for startups up to Series B; Starter up to 2 users, Growth up to 50, Scale up to 100",
+      "current_state": "Up to one year of Kiro Pro+ for early-stage to Series A startups; Starter up to 2 users, Growth up to 10, Scale up to 30; startups in AWS Activate not eligible",
+      "impact": "medium",
+      "source_url": "https://kiro.dev/blog/bringing-back-startup-credits/",
+      "category": "Startup Perks",
       "alternatives": [],
       "recorded_date": "2026-10-01",
       "date_source": "hand_written"

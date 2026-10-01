@@ -9815,6 +9815,18 @@
     "/x402-services": {
       "hash": "b1ba5a0eadae8a45",
       "changed": "2026-10-01"
+    },
+    "/digest/2025-w23": {
+      "hash": "24130494d62330e9",
+      "changed": "2026-10-01"
+    },
+    "/digest/2025-w47": {
+      "hash": "dab38699821f1a8e",
+      "changed": "2026-10-01"
+    },
+    "/digest/2026-w32": {
+      "hash": "82aca084431c0da7",
+      "changed": "2026-10-01"
     }
   }
 }
