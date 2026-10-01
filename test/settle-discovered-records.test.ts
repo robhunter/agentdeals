@@ -176,6 +176,10 @@ describe("settling the backlog", () => {
     ]);
     assert.deepStrictEqual(report.results[0].brackets, [{ last_old: "2026-05-01", first_new: "2026-05-02", narrowed_to_adjacent_captures: true, relative_to_record: "before" }]);
     assert.strictEqual(report.results[0].record_day, "2026-09-01");
+    assert.strictEqual(report.results[0].date, "2026-09-01");
+    assert.strictEqual(report.results[0].date_from_captures, "2026-05-02");
+    assert.strictEqual(report.results[1].date, "2026-09-02");
+    assert.strictEqual("date_from_captures" in report.results[1], false);
     assert.deepStrictEqual(listings, ["Alpha/Hobby", "Beta/Free"]);
     assert.deepStrictEqual(asked, ["https://alpha.example/pricing", "https://beta.example/pricing"]);
     assert.strictEqual(report.records, 3);

@@ -123,9 +123,11 @@ export async function settleFirstReadings({ changes, offers, today, archive, pai
         }), readings)
       : { outcome: "page_unreadable_today", why: page.error, reads: 0 };
     const onTheTierName = matchesSharingOnlyTheTierName(readings, listing.tier);
+    const { date: dateFromCaptures, ...settledWithoutItsDate } = settled;
     const result = {
       ...subject,
-      ...settled,
+      ...settledWithoutItsDate,
+      ...(dateFromCaptures !== undefined ? { date_from_captures: dateFromCaptures } : {}),
       split: splitOf(settled, today, badge),
       ...(onTheTierName.length > 0 ? { tier: listing.tier, matches_sharing_only_the_tier_name: onTheTierName } : {}),
       ...(logReads ? { readings } : {}),
