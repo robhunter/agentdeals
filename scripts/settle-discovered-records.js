@@ -1,5 +1,5 @@
 import { appendFileSync, readFileSync, writeFileSync } from "node:fs";
-import { createArchiveClient, dayOurTextEntered, pairedReaderFor, PAIRED_READER_MAX_TOKENS, settleAgainstCaptures } from "./archive-captures.js";
+import { createArchiveClient, dayOurTextEntered, pairedReaderFor, PAIRED_READER_MAX_TOKENS, settleAgainstCaptures, wordsOfTierName } from "./archive-captures.js";
 import { createVerifierClient, fetchPageText } from "./verify-freshness.js";
 
 export const DEMOTION_WINDOW_DAYS = 180;
@@ -69,6 +69,15 @@ export function listingFor(record, offers) {
   );
 }
 
+export function matchesSharingOnlyTheTierName(readings, tier) {
+  const tierWords = wordsOfTierName(tier);
+  return readings.flatMap(({ older, newer, verdict }) =>
+    (verdict?.matched ?? [])
+      .filter(({ shared }) => shared.length > 0 && shared.every((word) => tierWords.includes(word)))
+      .map(({ old, new: newLine, shared }) => ({ older, newer, old, new: newLine, shared })),
+  );
+}
+
 function worthAskingAgain(result) {
   return result.outcome === "reader_failed" || String(result.why ?? "").startsWith("the Archive did not answer");
 }
@@ -86,6 +95,7 @@ export async function settleFirstReadings({ changes, offers, today, archive, pai
   const settleOne = async (record) => {
     const badge = badgeSetBy(record);
     const subject = { vendor: record.vendor, date: record.date, change_type: record.change_type, source_url: record.source_url, resolution: record.resolution?.state ?? null, badge };
+    const listing = listingFor(record, offers);
     const page = await fetchToday(record.source_url);
     const readings = [];
     const settled = page.ok
@@ -97,11 +107,18 @@ export async function settleFirstReadings({ changes, offers, today, archive, pai
           todayText: page.text,
           today,
           archive,
-          readPair: pairReaderForListing(listingFor(record, offers)),
+          readPair: pairReaderForListing(listing),
           onRead: (reading) => readings.push(reading),
         }), readings)
       : { outcome: "page_unreadable_today", why: page.error, reads: 0 };
-    const result = { ...subject, ...settled, split: splitOf(settled, today, badge), ...(logReads ? { readings } : {}) };
+    const onTheTierName = matchesSharingOnlyTheTierName(readings, listing.tier);
+    const result = {
+      ...subject,
+      ...settled,
+      split: splitOf(settled, today, badge),
+      ...(onTheTierName.length > 0 ? { tier: listing.tier, matches_sharing_only_the_tier_name: onTheTierName } : {}),
+      ...(logReads ? { readings } : {}),
+    };
     onSettled(result);
     return result;
   };
@@ -111,7 +128,7 @@ export async function settleFirstReadings({ changes, offers, today, archive, pai
     if (worthAskingAgain(results[at])) results[at] = await settleOne(record);
   }
   const split = Object.fromEntries(Object.values(SPLIT).map((name) => [name, results.filter((result) => result.split === name).length]));
-  return { today, records: backlog.length, split, review: reviewList(results), results };
+  return { today, records: backlog.length, split, review: reviewList(results), matches_sharing_only_the_tier_name: tierNameMatchList(results), results };
 }
 
 export function reviewList(results) {
@@ -126,6 +143,19 @@ export function reviewList(results) {
       why: result.why ?? null,
       ...(result.tried ? { tried: result.tried } : {}),
       lines: result.review ?? [],
+    }));
+}
+
+export function tierNameMatchList(results) {
+  return results
+    .filter((result) => result.matches_sharing_only_the_tier_name?.length > 0)
+    .map((result) => ({
+      vendor: result.vendor,
+      date: result.date,
+      change_type: result.change_type,
+      tier: result.tier,
+      split: result.split,
+      matches: result.matches_sharing_only_the_tier_name,
     }));
 }
 
@@ -167,6 +197,7 @@ async function main() {
   console.log(`Settled ${report.results.length} of ${report.records} first readings in force; report in ${out}`);
   for (const [name, count] of Object.entries(report.split)) console.log(`  ${name}: ${count}`);
   console.log(`  for review: ${report.review.length}`);
+  console.log(`  same-answer matches sharing only a word of the tier name: ${report.matches_sharing_only_the_tier_name.length} records`);
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
