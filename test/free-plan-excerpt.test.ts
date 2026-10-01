@@ -143,3 +143,52 @@ describe("every excerpt the catalogue holds agrees with the record that cites it
     ]);
   });
 });
+
+describe("the rotation keeps the excerpt of a page it read", async () => {
+  const { runAiMode } = await import("../scripts/reverify-rolling.js");
+  const NOW = new Date("2026-09-16T06:30:00Z");
+  const acme = { vendor: "Acme", url: "https://acme.example/pricing", description: "Free tier: 10 GB", category: "Storage", tier: "Free", verifiedDate: "2026-08-01" };
+  const ACME_PAGE = "Acme pricing. Free tier: 10 GB per month for $0. Pro: $20 per month.";
+  const run = async (options: Record<string, unknown>, dryRun = false, held?: unknown) => {
+    const data = { offers: [{ ...acme, ...(held ? { [FREE_PLAN_EXCERPT]: held } : {}) }] };
+    const asked: string[] = [];
+    const result = await runAiMode([{ index: 0, offer: acme }], data, dryRun, NOW, {
+      fetchFn: async () => ({ ok: true, text: ACME_PAGE, truncated: false }),
+      verifyFn: async () => ({ status: "confirmed" }),
+      confirmFn: async () => ({ describes_change: true }),
+      excerptFn: async (offer: { vendor: string }) => {
+        asked.push(offer.vendor);
+        return { copied: "Free tier: 10 GB per month for $0." };
+      },
+      rateLimitMs: 0,
+      ...options,
+    });
+    return { record: data.offers[0] as Record<string, unknown>, result, asked };
+  };
+
+  it("stores the words a read it accepted copied, dated the day of the read", async () => {
+    const { record, result, asked } = await run({});
+    assert.deepStrictEqual(asked, ["Acme"]);
+    assert.deepStrictEqual(record[FREE_PLAN_EXCERPT], { text: "Free tier: 10 GB per month for $0.", url: acme.url, read_on: "2026-09-16" });
+    assert.strictEqual(result.excerpts.written, 1);
+  });
+
+  it("asks for no excerpt from a page the source check refused, or one it could not fetch, and leaves the held one", async () => {
+    const held = { text: "Free tier: 10 GB", url: acme.url, read_on: "2026-08-01" };
+    const elsewhere = await run({ fetchFn: async () => ({ ok: true, text: "An about page naming nobody and pricing nothing.", truncated: false }) }, false, held);
+    assert.deepStrictEqual([elsewhere.asked, elsewhere.record[FREE_PLAN_EXCERPT]], [[], held]);
+    const unreachable = await run({ fetchFn: async () => ({ ok: false, error: "HTTP 503" }) }, false, held);
+    assert.deepStrictEqual([unreachable.asked, unreachable.record[FREE_PLAN_EXCERPT]], [[], held]);
+  });
+
+  it("counts a refused copy and an unanswered read with their reasons, and writes nothing on a dry run", async () => {
+    const paraphrased = await run({ excerptFn: async () => ({ copied: "Ten gigabytes free" }) });
+    assert.deepStrictEqual(paraphrased.result.excerpts.refused, [{ vendor: "Acme", url: acme.url, why: "the copy is not on the page as the page words it" }]);
+    assert.ok(!(FREE_PLAN_EXCERPT in paraphrased.record));
+    const failing = await run({ excerptFn: async () => { throw new Error("HTTP 429"); } });
+    assert.deepStrictEqual(failing.result.excerpts.unread, [{ vendor: "Acme", url: acme.url, why: "HTTP 429" }]);
+    const dry = await run({}, true);
+    assert.strictEqual(dry.result.excerpts.written, 1);
+    assert.ok(!(FREE_PLAN_EXCERPT in dry.record));
+  });
+});
