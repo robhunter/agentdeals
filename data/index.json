@@ -32672,7 +32672,7 @@
       "category": "Cloud IaaS",
       "description": "Always Free: 1 non-preemptible e2-micro VM (us-west1, us-central1, or us-east1), 30 GB standard persistent disk, 1 GB North America egress. GPUs/TPUs excluded",
       "tier": "Always Free",
-      "url": "https://cloud.google.com/compute/pricing",
+      "url": "https://docs.cloud.google.com/free/docs/free-cloud-features",
       "tags": [
         "compute",
         "vm",
@@ -32682,9 +32682,9 @@
       ],
       "verifiedDate": "2026-09-16",
       "source_check": {
-        "checked": "2026-09-16",
+        "checked": "2026-10-01",
         "outcome": "ok",
-        "detail": "the page names Google Compute Engine as \"compute\""
+        "detail": "the page names Google Compute Engine as \"compute\" and states \"1 non-preemptible e2-micro VM instance per month\""
       }
     },
     {
