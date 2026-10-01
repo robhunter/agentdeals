@@ -6773,8 +6773,8 @@ const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
       </tr>
       <tr>
         <td style="font-weight:600"><a href="/vendor/koyeb" style="color:var(--text)">Koyeb</a></td>
-        <td>DB only (no free compute)</td><td>1 GB Postgres</td><td>\u2705</td><td>\u274c</td>
-        <td>Pro from $29/mo</td><td>$29/mo</td>
+        <td>None for new users</td><td>None for new users</td><td>\u2705</td><td>\u2705</td>
+        <td>Only with scale-to-zero (1-5 s)</td><td>$29/mo</td>
       </tr>
       <tr>
         <td style="font-weight:600"><a href="/vendor/digitalocean" style="color:var(--text)">DigitalOcean</a></td>
@@ -10538,9 +10538,9 @@ ${buildCards(startupCredits)}
       <tr>
         <td style="font-weight:600"><a href="/vendor/koyeb" style="color:var(--text)">Koyeb</a></td>
         <td>PaaS</td>
-        <td>DB only (no free compute)</td>
+        <td>None for new users</td>
         <td>—</td>
-        <td>Free Postgres, paid compute from $29/mo</td>
+        <td>No free plan for new users since Feb 2026 (Pro from $29/mo)</td>
       </tr>
       <tr>
         <td style="font-weight:600"><a href="/vendor/deno-deploy" style="color:var(--text)">Deno Deploy</a></td>
@@ -10634,7 +10634,7 @@ ${buildCards(startupCredits)}
       <dd><a href="/vendor/oracle-cloud">Oracle Cloud</a> is unmatched — ${escHtmlServer(oracleAlwaysFreeSpec())}, permanently free. <a href="/vendor/aws">AWS</a> and <a href="/vendor/azure">Azure</a> offer 12-month free tiers with t2.micro/B1 instances.</dd>
 
       <dt>Running Docker containers?</dt>
-      <dd><a href="/vendor/google-cloud-run">Google Cloud Run</a> (scale to zero, 2M req/mo free) or <a href="/vendor/fly-io">Fly.io</a> (legacy accounts: 3 shared VMs). <a href="/vendor/railway">Railway</a> and <a href="/vendor/koyeb">Koyeb</a> (paid, from $29/mo) also run containers natively.</dd>
+      <dd><a href="/vendor/google-cloud-run">Google Cloud Run</a> (scale to zero, 2M req/mo free) or <a href="/vendor/fly-io">Fly.io</a> (legacy accounts: 3 shared VMs). <a href="/vendor/railway">Railway</a> ($1 of free credit a month after a 30-day trial) and <a href="/vendor/koyeb">Koyeb</a> (no free plan for new users; Pro from $29/mo) also run containers natively.</dd>
 
       <dt>Need hosting for a startup?</dt>
       <dd>See our <a href="/startup-credits">startup credits guide</a>: Google for Startups and Cloudflare offer the largest published packages, up to $350K each. <a href="/vendor/railway">Railway</a> and <a href="/vendor/render">Render</a> are popular for early-stage startups.</dd>
@@ -17518,7 +17518,7 @@ function buildFreeFastapiStackPage(): string {
       icon: "🚀",
       recommended: { vendor: "Railway", why: "Its Free plan opens with a 30-day trial carrying $5 of credits, then $1 of free credit a month, with uvicorn ASGI server, auto-deploy from GitHub, and managed add-ons. Nixpacks auto-detects Python projects — just add a Procfile with `web: uvicorn main:app --host 0.0.0.0 --port $PORT`. No sleep timer — your API stays warm for consistent response times." },
       alternatives: ["Render", "Fly.io", "Koyeb"],
-      outgrow: "When you exceed the $5 of usage that Hobby's $5/month includes (usually 1-2 services). Render's free tier spins down after 15 minutes of inactivity — cold starts of about one minute kill API latency. Fly.io has no free tier for new accounts (legacy accounts retain 3 shared VMs). Koyeb has no free compute — only a free Postgres database.",
+      outgrow: "When you exceed the $5 of usage that Hobby's $5/month includes (usually 1-2 services). Render's free tier spins down after 15 minutes of inactivity — cold starts of about one minute kill API latency. Fly.io has no free tier for new accounts (legacy accounts retain 3 shared VMs). Koyeb has had no free plan for new users since February 2026 (Pro from $29/mo).",
       whyNot: "Why not Vercel: Vercel supports FastAPI via serverless functions (Mangum adapter), but loses WebSocket support, background tasks, and startup events — core FastAPI features. Why not Deta Space: Deta shut down Space in 2024. Many FastAPI tutorials still reference it — those guides are outdated.",
       relatedPage: "/hosting-free-tier-comparison-2026",
     },
@@ -17635,7 +17635,7 @@ function buildFreeFastapiStackPage(): string {
   };
 
   const faqJsonLd = faqPageJsonLd("/free-fastapi-stack", [
-    { q: "Can I host FastAPI for free in 2026?", a: "Yes. Railway's Free plan starts with a 30-day trial carrying $5 of credits, then $1 of free credit a month, with uvicorn, auto-deploy from GitHub, and no sleep timer; its Hobby plan is $5/month and includes $5 of usage. Render has a free tier but spins down after 15 minutes of inactivity (cold starts of about one minute). Fly.io has no free tier for new accounts — new signups get a trial of 2 hours runtime or 7 days, whichever comes first. Koyeb has no free compute tier, only a free Postgres database. Avoid Vercel for FastAPI — it requires a serverless adapter and loses WebSocket/background task support." },
+    { q: "Can I host FastAPI for free in 2026?", a: "Yes. Railway's Free plan starts with a 30-day trial carrying $5 of credits, then $1 of free credit a month, with uvicorn, auto-deploy from GitHub, and no sleep timer; its Hobby plan is $5/month and includes $5 of usage. Render has a free tier but spins down after 15 minutes of inactivity (cold starts of about one minute). Fly.io has no free tier for new accounts — new signups get a trial of 2 hours runtime or 7 days, whichever comes first. Koyeb has had no free plan for new users since February 2026 (Pro from $29/mo). Avoid Vercel for FastAPI — it requires a serverless adapter and loses WebSocket/background task support." },
     { q: "What database should I use with FastAPI?", a: "FastAPI has no built-in ORM, so you choose your own. SQLAlchemy 2.0's async engine with asyncpg is the most popular choice for Postgres, and Tortoise ORM is an async-native alternative. Neon's Free plan gives 0.5 GB of storage and 100 CU-hours per project and scales to zero after 5 minutes idle. Supabase's gives a 500 MB database per project with built-in auth and realtime. We publish no ranking of these." },
     { q: "Does Vercel support FastAPI?", a: "Technically yes, via the Mangum adapter that wraps ASGI apps for AWS Lambda-style serverless functions. But you lose WebSocket support, FastAPI's startup/shutdown lifespan events, background tasks, and long-running connections. For API-only services, this may be acceptable. For anything using FastAPI's async features fully, use Railway, Render, or Fly.io instead." },
     { q: "FastAPI vs Django for free hosting?", a: "FastAPI is lighter weight and async-native — ideal for APIs, microservices, and AI/ML serving. Django is batteries-included with built-in ORM, admin, auth, and forms — better for full web applications. Both run on Railway's Free plan ($1 of free credit a month after a 30-day trial with a one-time $5 credit) or Render's free tier. FastAPI needs you to choose every component (ORM, auth, admin) separately. Django includes them. If you're building a REST/GraphQL API or serving ML models, FastAPI. If you're building a web app with admin panel and user accounts, Django." },
@@ -21486,7 +21486,7 @@ ${mcpCtaCss()}
     </table>
   </div>
   <div class="context-box">
-    <strong>Notable mentions:</strong> <a href="/vendor/fly-io">Fly.io</a> offers edge deployment (legacy accounts retain 3 free VMs; no free tier for new accounts). <a href="/vendor/coolify">Coolify</a> is an open-source, self-hosted PaaS (your own Railway/Render). <a href="/vendor/koyeb">Koyeb</a> offers a free Postgres database but no free compute tier. See our <a href="/hosting-alternatives">full hosting comparison</a> for 30+ options.
+    <strong>Notable mentions:</strong> <a href="/vendor/fly-io">Fly.io</a> offers edge deployment (legacy accounts retain 3 free VMs; no free tier for new accounts). <a href="/vendor/coolify">Coolify</a> is an open-source, self-hosted PaaS (your own Railway/Render). <a href="/vendor/koyeb">Koyeb</a> has had no free plan for new users since February 2026 (Pro from $29/mo). See our <a href="/hosting-alternatives">full hosting comparison</a> for 30+ options.
   </div>
 
   <h2 id="changes">6. Recent Deal Changes</h2>
@@ -31081,16 +31081,16 @@ function buildHostingPricingPage(): string {
       name: "Koyeb",
       slug: "koyeb",
       category: "traditional-paas",
-      freeTier: "DB only",
+      freeTier: "None for new users",
       paidFrom: "$29/mo (Pro)",
       freeBandwidth: "—",
       freeBuildMinutes: "—",
-      freeCompute: "None (free Postgres DB only)",
-      freeDetails: "Free Postgres database (0.25 vCPU, 1 GB RAM, 1 GB storage, 5 hr/month runtime). No free compute/web service tier — Pro plan starts at $29/month with $10 included compute.",
-      freeType: "limited",
+      freeCompute: "None",
+      freeDetails: "None for new users. Since February 2026, new users must subscribe to Pro ($29 a month plus compute, with $10 of compute included) or a higher plan. Organizations already on the Starter plan keep it.",
+      freeType: "removed",
       monthlyCostSolo: "$29+",
       monthlyCostTeam: "Usage-based",
-      hiddenCosts: "No free compute tier — the free plan only includes a Postgres database with 5 hr/month runtime. Pro plan required for web services ($29/mo).",
+      hiddenCosts: "No free plan for new users since February 2026; Pro is $29 a month plus compute.",
     },
     {
       name: "Northflank",

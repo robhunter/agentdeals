@@ -2272,7 +2272,7 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 122,
+      "table_figures": 123,
       "table_figures_from_records": 33,
       "tables": [
         {
@@ -2282,7 +2282,7 @@
         },
         {
           "label": "What You Actually Get for Free",
-          "figures": 12,
+          "figures": 13,
           "from_records": 0
         },
         {
