@@ -3,7 +3,7 @@ import { createVerifierClient, fetchPageText } from "./verify-freshness.js";
 import { priceSignals } from "./change-gate.js";
 import { holdsVerifiedDate, sourceCheckRecord } from "./vendor-naming.js";
 import { pageStatesNoPrice } from "./verification-state.js";
-import { readFreePlanExcerpt, textTheReaderSees, writeFreePlanExcerpt } from "./free-plan-excerpt.js";
+import { excerptTheFreePlan, readFreePlanExcerpt } from "./free-plan-excerpt.js";
 
 const slugOf = (name) => String(name).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
@@ -27,22 +27,19 @@ async function sampleOne(client, offer, today) {
   if (holdsVerifiedDate(check.outcome) && !pageStatesNoPrice(check.outcome)) {
     return { ...row, outcome: "not_asked", excerpt: null, why: `not asked, because the read found ${check.outcome}: ${check.detail ?? ""}`.trim() };
   }
-  let answer;
-  try {
-    answer = await readFreePlanExcerpt(client, offer, page.text);
-  } catch (err) {
-    answer = { copied: null, why: err?.message ?? String(err) };
-  }
+  let answer = null;
+  const read = async (asked, text) => (answer = await readFreePlanExcerpt(client, asked, text));
   const record = { ...offer };
-  const written = writeFreePlanExcerpt(record, { copied: answer.copied, pageText: textTheReaderSees(page.text), url: offer.url, readOn: today });
+  const written = await excerptTheFreePlan(record, { offer, pageText: page.text, read, readOn: today });
   const why = {
     written: null,
     none: "the reader found no words on the page stating this free plan",
     removed: "the reader found no words on the page stating this free plan",
+    not_a_free_plan: `not asked: ${written.why}`,
     refused: `refused, ${written.why}`,
-    unread: `the reader gave no usable answer: ${answer.why ?? "none"}`,
+    unread: `the reader gave no usable answer: ${written.why ?? "none"}`,
   }[written.outcome];
-  return { ...row, outcome: written.outcome, excerpt: record.free_plan_excerpt?.text ?? null, copied: answer.copied ?? null, why };
+  return { ...row, outcome: written.outcome, excerpt: record.free_plan_excerpt?.text ?? null, copied: written.copied ?? null, terms: answer?.terms ?? null, why };
 }
 
 function tableOf(rows) {
