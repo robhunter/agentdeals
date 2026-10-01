@@ -48,6 +48,7 @@ import { COMPARED_SERVICES_PLACEHOLDER, appendToCompiledFigureSlots, fillCompare
 import { CHECK_ESTABLISHES, CHECK_SCOPE_CLASS, NO_CATALOGUE_RECORD_SOURCE, citedSourcesListHtml, figureSourceLinkHtml, freeTierSourceOf, freeTierSourceWeMayCite, pageQuoteHtml, readClauseHtml, readSourceOf, serviceSourceMarkerHtml, uncitedSourceTagHtml, withCitedSources, type CitedService, type FreeTierSource } from "./source-citation.js";
 import { vendorHistorySentence } from "./vendor-history.js";
 import { guideBlurb } from "./guide-blurbs.js";
+import { changesToStartupProgrammes } from "./startup-programme-changes.js";
 import { HETZNER_APRIL_CHANGES, HETZNER_CLOUD_PLANS, HETZNER_PRICES_READ, HETZNER_PRICE_SOURCE, HETZNER_SINGAPORE_EXAMPLE, cheapestOrderableHetznerPlan, hetznerEntryPriceClause, unorderableHetznerPlans } from "./hetzner-pricing.js";
 import { HUNDRED_GB_SCENARIO, HUNDRED_TB_SCENARIO, ONE_TO_ONE_SCENARIO, STORAGE_RATES_READ, STORAGE_SCALE_WORKLOADS, TEN_TO_ONE_SCENARIO, cheapestProviderAt, costAfterMonthlyEgressGrantFor, costliestProviderAt, egressAllowanceSentence, egressBillAfterMonthlyGrantFor, egressBillOnceOverAllowance, egressRatioWhereCostsMatch, fixedMonthlyGrantsSentence, monthlyEgressGrantGb, monthlyEgressGrantSentence, monthlyStorageCost, providersWithScalingEgressAllowance, rateCardFor, scaleCostFor } from "./storage-cost-model.js";
 import { changeTimelineDate, supersededLineups, supersessionNote } from "./change-lineup.js";
@@ -8007,7 +8008,7 @@ const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
   {
     slug: "startup-credits",
     title: "Startup Credits Comparison 2026 — Cloud Credits, Eligibility & Hidden Constraints",
-    metaDesc: "Compare 15+ startup programs: AWS Activate, Google for Startups, Microsoft Founders Hub, Cloudflare, DigitalOcean Hatch, Stripe Atlas, Brex, Mercury, and more. Credit values, eligibility, vesting, and stacking strategies. [[freshness]]",
+    metaDesc: "Compare 13 startup programs: AWS Activate, Google for Startups, Microsoft for Startups, Cloudflare, DigitalOcean Startups, Stripe Atlas, Brex, Mercury, and more. Credit values, eligibility, vesting, and stacking strategies. [[freshness]]",
     contextHtml: "",
     tag: "startup-credits",
     primaryVendor: "AWS Activate",
@@ -10615,7 +10616,7 @@ ${buildCards(startupCredits)}
       <dd><a href="/vendor/google-cloud-run">Google Cloud Run</a> (scale to zero, 2M req/mo free) or <a href="/vendor/fly-io">Fly.io</a> (legacy accounts: 3 shared VMs). <a href="/vendor/railway">Railway</a> and <a href="/vendor/koyeb">Koyeb</a> (paid, from $29/mo) also run containers natively.</dd>
 
       <dt>Need hosting for a startup?</dt>
-      <dd>Check the startup credit programs above. <a href="/vendor/aws-activate">AWS Activate</a> and <a href="/vendor/microsoft-founders-hub">Microsoft Founders Hub</a> offer the largest credit packages. <a href="/vendor/railway">Railway</a> and <a href="/vendor/render">Render</a> are popular for early-stage startups.</dd>
+      <dd>See our <a href="/startup-credits">startup credits guide</a>: Google for Startups and Cloudflare offer the largest published packages, up to $350K each. <a href="/vendor/railway">Railway</a> and <a href="/vendor/render">Render</a> are popular for early-stage startups.</dd>
 
       <dt>Coming from Heroku?</dt>
       <dd>See our dedicated <a href="/heroku-alternatives">Heroku Alternatives</a> guide. TL;DR: <a href="/vendor/railway">Railway</a> is the closest experience, <a href="/vendor/render">Render</a> is the most popular alternative, and <a href="/vendor/fly-io">Fly.io</a> offers the most control.</dd>
@@ -19504,11 +19505,9 @@ mcpCtaCss() + "\n" +
 
   "<h2>The Counter-Trend: Cloudflare</h2>\n" +
   "<div class=\"callout callout-green\">\n" +
-    "<p><strong>While most vendors contracted, Cloudflare expanded.</strong> In Q1 2026, Cloudflare made 3 developer-positive moves:</p>\n" +
+    "<p><strong>While most vendors contracted, Cloudflare expanded.</strong> In Q1 2026, Cloudflare added a free tier for Queues:</p>\n" +
     "<ul style=\"margin:.75rem 0 .75rem 1.5rem;color:var(--text-muted)\">\n" +
       "<li><strong>Free Queues</strong> (February) &mdash; added a free tier for Cloudflare Queues (message queue service), further building out their serverless platform</li>\n" +
-      "<li><strong>Durable Objects pricing reduction</strong> (January) &mdash; restructured pricing to be more developer-friendly, lowering the barrier to real-time stateful applications</li>\n" +
-      "<li><strong>$250K Startup Program</strong> (February) &mdash; expanded startup credits to $250K, one of the most generous programs in the industry</li>\n" +
     "</ul>\n" +
     "<p><strong>Why the difference?</strong> Cloudflare&rsquo;s business model is built on network effects &mdash; every developer using Workers, R2, or Queues drives traffic through Cloudflare&rsquo;s edge network. Free tiers are a customer acquisition channel, not a cost center. This stands in contrast to companies like HashiCorp or LocalStack, where free tiers are a direct cost with no infrastructure flywheel to offset them.</p>\n" +
   "</div>\n" +
@@ -23430,7 +23429,7 @@ ${mcpCtaCss()}
     <h3 style="color:#3fb950">The Cloudflare Model</h3>
     <div class="verdict-item">
       <strong>What they did:</strong>
-      <p>Added free Queues, expanded Workers, Durable Objects pricing reduction, launched $250K startup program — all in Q1 2026. More free, not less.</p>
+      <p>Added free Queues and expanded Workers in Q1 2026. More free, not less.</p>
     </div>
     <div class="verdict-item">
       <strong>Why it works:</strong>
@@ -23449,7 +23448,7 @@ ${mcpCtaCss()}
     </div>
     <div class="diff-card" style="border-left-color:#3fb950">
       <h3>Cloud Providers</h3>
-      <p class="diff-desc">AWS restructured and expanded free tier (Jan 2026). Google Always Free stable for years. Azure Founders Hub offers $150K credits. Big cloud free tiers are acquisition funnels that drive billions in enterprise spend.</p>
+      <p class="diff-desc">AWS restructured and expanded free tier (Jan 2026). Google Always Free stable for years. Microsoft for Startups offers up to $150K in credits. Big cloud free tiers are acquisition funnels that drive billions in enterprise spend.</p>
     </div>
     <div class="diff-card" style="border-left-color:#3fb950">
       <h3>Open-Source First</h3>
@@ -26869,16 +26868,6 @@ function buildFreeTierTrackerPage(): string {
 
   const featuredExpansions: ErosionEntry[] = [
     {
-      vendor: "Cloudflare Startup Program",
-      slug: "cloudflare-for-startups",
-      date: "2026-02-01",
-      oneLiner: "Expanded to $250K in credits across 4 tiers",
-      changeType: "startup_program_expanded",
-      impact: "high",
-      detail: "Cloudflare revamped its startup program to 4 tiers with up to $250,000 in credits. Tiers: Bootstrapped $5K, Up-and-Coming $25K, Seed-Funded $100K, High Growth $250K. Credits cover Workers, R2, Workers AI, and Stream.",
-      alternatives: ["AWS Activate", "Google for Startups", "Azure for Startups"],
-    },
-    {
       vendor: "Terragrunt Scale",
       slug: "terragrunt-scale",
       date: "2025-12-15",
@@ -27090,7 +27079,7 @@ ${mcpCtaCss()}
   <div class="executive-summary">
     <p><strong>${removedOrReduced.length} developer tool free tiers were removed in Q1 2026. ${limitsReduced.length + restructured.length} more were reduced or restructured. Here&rsquo;s what changed and what&rsquo;s still free.</strong></p>
     <p>March 2026 saw an unprecedented wave of free tier removals in a single month: <strong>Postman</strong> killed team collaboration on its free plan, <strong>LocalStack</strong> discontinued its open-source Community Edition (212 points on Hacker News), <strong>Brave Search API</strong> replaced its free tier with metered billing, <strong>HCP Terraform</strong> is ending its legacy free plan March 31, and <strong>Windsurf</strong> replaced credits with hard quotas while raising prices 33%.</p>
-    <p>But it&rsquo;s not all erosion. <strong>Cloudflare</strong> expanded its startup program to $250K, <strong>Terragrunt Scale</strong> launched a free tier specifically to capture HCP Terraform refugees, and <strong>GitHub Copilot</strong> went free. The pattern: some vendors are removing free tiers, while competitors swoop in to capture displaced developers.</p>
+    <p>But it&rsquo;s not all erosion. <strong>Terragrunt Scale</strong> launched a free tier specifically to capture HCP Terraform refugees, and <strong>GitHub Copilot</strong> went free. The pattern: some vendors are removing free tiers, while competitors swoop in to capture displaced developers.</p>
   </div>
 
   <div class="toc">
@@ -27136,7 +27125,7 @@ ${mcpCtaCss()}
     </div>
     <div class="verdict-item">
       <strong>For startups:</strong>
-      <p>Take advantage of expanded startup programs: <a href="/vendor/cloudflare-for-startups">Cloudflare $250K</a>, <a href="/vendor/google-cloud">Google Cloud $350K</a>, <a href="/vendor/digitalocean">DigitalOcean $100K</a>. These are more reliable than consumer free tiers. See our <a href="/free-startup-stack">Free Startup Stack Guide</a>.</p>
+      <p>Take advantage of expanded startup programs: <a href="/vendor/cloudflare-for-startups">Cloudflare $350K</a>, <a href="/vendor/google-cloud">Google Cloud $350K</a>. These are more reliable than consumer free tiers. See our <a href="/free-startup-stack">Free Startup Stack Guide</a>.</p>
     </div>
   </div>
 
@@ -27186,9 +27175,10 @@ ${mcpCtaCss()}
 
 function buildStartupCreditsPage(): string {
   const title = "Startup Credits Comparison 2026 — Cloud Credits, Eligibility & Hidden Constraints";
-  const metaDesc = "Compare 15+ startup programs: AWS Activate, Google for Startups, Microsoft Founders Hub, Cloudflare, DigitalOcean Hatch, Stripe Atlas, Brex, Mercury, and more. Credit values, eligibility, vesting, and stacking strategies. [[freshness]]";
+  const metaDesc = "Compare 13 startup programs: AWS Activate, Google for Startups, Microsoft for Startups, Cloudflare, DigitalOcean Startups, Stripe Atlas, Brex, Mercury, and more. Credit values, eligibility, vesting, and stacking strategies. [[freshness]]";
   const slug = "startup-credits";
   const pubDate = "2026-03-27";
+  const STARTUP_CREDIT_FIGURES_READ = "2026-09-28";
 
   interface StartupProgram {
     name: string;
@@ -27223,34 +27213,30 @@ function buildStartupCreditsPage(): string {
     "ai-tools": "AI Tool Credits",
   };
   const categoryDescs: Record<string, string> = {
-    "cloud-infrastructure": "Major cloud providers offering $5K\u2013$350K in compute, storage, and AI credits. These are the highest-value programs \u2014 anchor your startup\u2019s infrastructure budget here.",
+    "cloud-infrastructure": "Major cloud providers offering $200\u2013$350K in compute, storage, and AI credits. These are the highest-value programs \u2014 anchor your startup\u2019s infrastructure budget here.",
     "fintech-banking": "Startup-focused banks and financial platforms bundling cloud credits and SaaS perks with their banking products. Often the easiest way to unlock credits from multiple providers at once.",
     "developer-tools": "SaaS companies offering generous startup plans for analytics, data, and developer infrastructure. Smaller individual values but stack well with cloud credits.",
     "ai-tools": "AI coding tools and ML platforms offering startup-specific credit programs. A newer category driven by the AI tool boom.",
   };
 
   const programs: StartupProgram[] = [
-    { name: "AWS Activate", slug: "aws-activate", category: "cloud-infrastructure", creditValue: "$1K (self-funded), $100K (VC-backed)", eligibility: "Any startup (Founders) / VC/accelerator-backed (Portfolio)", duration: "1-2 years", applicationDifficulty: "open", whatsIncluded: "AWS credits, technical support, training. Business Support (1yr) for Portfolio tier. Separate program for each funding stage.", hiddenConstraints: "Founders tier is self-serve \u2014 easy to get but only $1K. Portfolio tier requires VC/accelerator letter. Credits expire in 12 months (Founders) or 24 months (Portfolio). Cannot combine with other AWS promotional credits.", vestingSchedule: "Founders: lump sum. Portfolio: annual tranches" },
-    { name: "Google Cloud for Startups", slug: "google-cloud-for-startups", category: "cloud-infrastructure", creditValue: "$200K (Scale) / $350K (Scale AI)", eligibility: "Equity-funded startups, Series A or earlier", duration: "2 years", applicationDifficulty: "vc-backed", whatsIncluded: "Google Cloud credits, Firebase, Google Workspace, technical training, partner perks. Scale AI includes $100K extra for AI/ML workloads.", hiddenConstraints: "Equity funding required \u2014 bootstrapped startups don\u2019t qualify for Scale tier. $200K is split $100K/year. Must use within Google Cloud (not transferable). 24-month expiry. Requires application review.", vestingSchedule: "$100K Y1 + $100K Y2 (Scale); $250K Y1 + $100K Y2 (Scale AI)" },
-    { name: "Microsoft Founders Hub", slug: "microsoft-founders-hub", category: "cloud-infrastructure", creditValue: "$5K-$150K Azure credits", eligibility: "Any startup (basic) / investor-backed (premium)", duration: "1 year", applicationDifficulty: "open", whatsIncluded: "Azure credits, M365 Business Premium, GitHub Enterprise, LinkedIn Premium, technical mentoring, Visual Studio Enterprise.", hiddenConstraints: "Basic path gives only $5K without investor connection. Premium path up to $150K requires investor network verification. Credits expire in 12 months. Azure-only (not applicable to M365 or other Microsoft products).", vestingSchedule: "Lump sum on approval" },
-    { name: "DigitalOcean Hatch", slug: "digitalocean-hatch", category: "cloud-infrastructure", creditValue: "Up to $100K compute credits", eligibility: "Startups affiliated with VC/accelerator partners", duration: "12 months", applicationDifficulty: "accelerator-only", whatsIncluded: "Compute credits, GPU Droplets at $1.90/GPU/hr (H100 equivalent), dedicated support, technical architecture review.", hiddenConstraints: "Must be affiliated with a partner VC or accelerator \u2014 not open application. GPU pricing is discounted but still significant at scale. Credits expire in 12 months. Cannot transfer between accounts.", vestingSchedule: "Lump sum per partner agreement" },
-    { name: "IBM Cloud Startup", slug: "ibm-cloud-startup", category: "cloud-infrastructure", creditValue: "$12K (Builder) / $120K (Premium)", eligibility: "Builder: any startup. Premium: VC/accelerator-backed", duration: "12 months", applicationDifficulty: "open", whatsIncluded: "IBM Cloud credits ($1K/mo Builder, $10K/mo Premium), Watson AI services, Red Hat OpenShift, technical mentoring.", hiddenConstraints: "Builder is $1K/month for 12 months \u2014 use-it-or-lose-it monthly. Premium requires VC letter and formal application. IBM Cloud has smaller ecosystem than AWS/GCP/Azure. Some Watson services have separate quotas.", vestingSchedule: "$1K/mo (Builder) or $10K/mo (Premium)" },
-    { name: "Cloudflare Startup Program", slug: "cloudflare-startup-program", category: "cloud-infrastructure", creditValue: "$5K-$250K credits", eligibility: "4 tiers based on funding: Bootstrapped ($5K), Up-and-Coming ($25K), Seed-Funded ($100K), High Growth ($250K)", duration: "1 year", applicationDifficulty: "open", whatsIncluded: "Cloudflare credits covering Workers, R2, CDN, security, analytics. Access to startup community and events.", hiddenConstraints: "Tier is based on funding stage \u2014 bootstrapped startups get only $5K. Higher tiers require more funding documentation. Credits are Cloudflare-only. Limited time window to use credits.", vestingSchedule: "Lump sum per tier" },
-    { name: "Stripe Atlas", slug: "stripe-atlas", category: "fintech-banking", creditValue: "$50K+ in founder perks", eligibility: "Atlas customers (incorporation via Stripe)", duration: "Varies by perk", applicationDifficulty: "open", whatsIncluded: "$5K AWS credits, $5K DigitalOcean credits, 1yr GitHub, $2.5K Stripe processing credits, legal perks, banking setup.", hiddenConstraints: "Requires Stripe Atlas incorporation ($500 one-time fee). Perks are from third parties \u2014 each has own eligibility requirements. Processing credits only apply to Stripe payments. Some perks expire 90 days after incorporation.", vestingSchedule: "Available on Atlas completion" },
-    { name: "Brex", slug: "brex", category: "fintech-banking", creditValue: "$350K+ in partner perks", eligibility: "Brex cardholders (startups)", duration: "Varies by partner", applicationDifficulty: "open", whatsIncluded: "$5K AWS credits, $2.5K OpenAI credits, $200K Google Cloud credits, partner discounts on Notion, Slack, and 50+ tools.", hiddenConstraints: "Must be a Brex cardholder. Individual perks have separate eligibility and expiry. Some require minimum card spend. Google Cloud $200K requires separate Google for Startups qualification. Partner perks change frequently.", vestingSchedule: "Per-partner activation" },
-    { name: "Mercury", slug: "mercury", category: "fintech-banking", creditValue: "Banking perks bundle", eligibility: "Mercury banking customers", duration: "Varies by perk", applicationDifficulty: "open", whatsIncluded: "1 year free Datadog (up to $100K value), $5K AWS credits, up to $200K Google Cloud credits, 30% off QuickBooks Online.", hiddenConstraints: "Must have Mercury business account. Datadog credit is usage-based cap \u2014 may not reach full $100K value. Google Cloud credits require separate application to Google for Startups. Perks are subject to partner availability.", vestingSchedule: "Per-partner activation" },
-    { name: "Ramp", slug: "ramp", category: "fintech-banking", creditValue: "$5K AWS + partner discounts", eligibility: "Ramp cardholders", duration: "Varies", applicationDifficulty: "open", whatsIncluded: "Up to $5K AWS credits, partner discounts on Notion, and other tools. Part of $350K+ total partner rewards program.", hiddenConstraints: "Must be Ramp cardholder. AWS credits are a subset of what AWS Activate offers separately. Partner perks overlap with Brex offerings. Some discounts require annual commitments.", vestingSchedule: "Per-partner activation" },
-    { name: "SVB (Silicon Valley Bank)", slug: "svb-silicon-valley-bank", category: "fintech-banking", creditValue: "$5K AWS + $100K Google Cloud", eligibility: "SVB banking customers (startups)", duration: "Varies", applicationDifficulty: "open", whatsIncluded: "$5K AWS credits, up to $100K Google Cloud credits (annual cap), $5K MongoDB credits, $9K off Slack, $50K+ in total partner value.", hiddenConstraints: "SVB was acquired by First Citizens Bank (2023) \u2014 program continuity uncertain for new applicants. Google Cloud credits are usage-based annual cap (not guaranteed full amount). Partner perks change over time.", vestingSchedule: "Annual cap on cloud credits" },
-    { name: "PostHog YC Deal", slug: "posthog-yc-deal", category: "developer-tools", creditValue: "$50K/year credits", eligibility: "Y Combinator companies (raised less than $25M)", duration: "Renews annually", applicationDifficulty: "accelerator-only", whatsIncluded: "Full PostHog platform: product analytics, session replay, feature flags, experimentation. Auto-renews each year.", hiddenConstraints: "YC companies only \u2014 not open to general startups. $25M fundraising cap. Must maintain active YC alumni status. Covers PostHog only \u2014 not transferable.", vestingSchedule: "Annual renewal" },
-    { name: "Segment Startup Program", slug: "segment-startup-program", category: "developer-tools", creditValue: "$50K in Team plan credits", eligibility: "Early-stage startups (application required)", duration: "Up to 2 years", applicationDifficulty: "open", whatsIncluded: "$50K toward monthly Team plan. Access to $1M+ in partner deals (AWS, Google, Intercom). Analytics Academy training.", hiddenConstraints: "Credits apply to Team plan pricing only. Application requires company details and growth metrics. Partner deals are separate programs with their own eligibility. 2-year maximum regardless of credit usage.", vestingSchedule: "Monthly against Team plan" },
-    { name: "Amazon Kiro (AWS Startups)", slug: "amazon-kiro-aws-startups", category: "ai-tools", creditValue: "1 year free Pro+ ($480/yr value)", eligibility: "AWS Startups program members", duration: "1 year", applicationDifficulty: "accelerator-only", whatsIncluded: "Kiro Pro+ with expanded credits. Three tiers: Starter (2 users), Growth (50 users), Scale (100 users). Includes SWE-1.5 model access.", hiddenConstraints: "Requires existing AWS Startups membership (not standalone). Pro+ credit allocation is model-dependent (Sonnet 4 costs 1.3x). Free tier duration is exactly 12 months. Not combinable with other Kiro promotions.", vestingSchedule: "Monthly credit allocation" },
-    { name: "Amplitude Startup Scholarship", slug: "amplitude-startup-scholarship", category: "ai-tools", creditValue: "1 year free Growth plan", eligibility: "Startups building digital products", duration: "1 year", applicationDifficulty: "open", whatsIncluded: "Growth plan with 200K MTUs or 100M events/month. Behavioral Cohorts, Pathfinder, and all Growth features.", hiddenConstraints: "Growth plan converts to paid ($49+/mo) after 1 year. Application review required. MTU/event limits are soft \u2014 overage may be billed. Plan features may change during the free year.", vestingSchedule: "Full plan for 12 months" },
+    { name: "AWS Activate", slug: "aws-activate", category: "cloud-infrastructure", creditValue: "$1K–$5K (Founders), up to $200K (Portfolio)", eligibility: "Pre-Series B, founded in the last 10 years, AWS account on a paid plan. Founders: self-funded. Portfolio: needs an Activate Provider Org ID.", duration: "Usually 1–2 years, by package", applicationDifficulty: "open", whatsIncluded: "AWS credits, which can also pay for AWS Support. Technical guidance, mentoring and go-to-market resources.", hiddenConstraints: "Founders tier is self-serve \u2014 easy to get but only $1K. Portfolio tier requires VC/accelerator letter. Credits expire in 12 months (Founders) or 24 months (Portfolio). Cannot combine with other AWS promotional credits.", vestingSchedule: "One award per approved application; a later, larger award pays only the difference" },
+    { name: "Google Cloud for Startups", slug: "google-cloud-for-startups", category: "cloud-infrastructure", creditValue: "$2K (Start), up to $200K (Scale), up to $350K (Scale AI)", eligibility: "Start: no funding yet but plans to raise venture funding soon, founded within 24 months, working MVP; Scale: VC funding from pre-seed to Series A (Series A within the last 12 months; angel money does not count), founded within 5 years.", duration: "12 months (Start), 2 years (Scale)", applicationDifficulty: "open", whatsIncluded: "Google Cloud and Firebase credits, 12 months of Google Workspace Business Plus, technical training and business support. The AI tier adds $150K of credits.", hiddenConstraints: "Equity funding required \u2014 bootstrapped startups don\u2019t qualify for Scale tier. $200K is split $100K/year. Must use within Google Cloud (not transferable). 24-month expiry. Requires application review.", vestingSchedule: "Scale: year 1 covers usage up to $100K ($250K for AI); year 2 covers 20% of spend, up to $100K more" },
+    { name: "Microsoft for Startups (formerly Founders Hub)", slug: "microsoft-founders-hub", category: "cloud-infrastructure", creditValue: "$200 on sign-up; up to $150K as Azure usage grows or with an Investor Network partner", eligibility: "B2B software, AI or tech startups, pre-seed to Series C, privately held; no investor needed. Business verification and sustained Azure usage unlock more credits, and Investor Network backing starts most startups at $100K.", duration: "Activate within 90 days; the first $200 lasts 90 days, the verification credit 180 days, and credits from the $25K milestone up to 2 years", applicationDifficulty: "open", whatsIncluded: "Azure credits and Azure AI models. GitHub Enterprise, Microsoft 365 Business Premium, Visual Studio Enterprise and LinkedIn Premium offers are for Investor Network-backed startups only.", hiddenConstraints: "Basic path gives only $5K without investor connection. Premium path up to $150K requires investor network verification. Credits expire in 12 months. Azure-only (not applicable to M365 or other Microsoft products).", vestingSchedule: "Released in milestones as you verify the business and use more Azure" },
+    { name: "DigitalOcean Startups", slug: "digitalocean-hatch", category: "cloud-infrastructure", creditValue: "Credits for 12 months; amount varies, up to $10,000 a month", eligibility: "Raised $10M or less; apply through a partner or directly", duration: "12 months", applicationDifficulty: "open", whatsIncluded: "Compute credits for most DigitalOcean services, 15 months of free Standard-tier support; GPU credits are a separate benefit for selected startups", hiddenConstraints: "Credits exclude GPU Droplets, H100 GPU products, inference, third-party AI models, Paperspace and Cloudways. Use over $10,000 in a month is charged. Only for startups that have not used DigitalOcean credits before.", vestingSchedule: "Lump sum per partner agreement" },
+    { name: "Cloudflare Startup Program", slug: "cloudflare-startup-program", category: "cloud-infrastructure", creditValue: "$10K, $100K or $350K by tier", eligibility: "Tier 3 ($10K): bootstrapped or self-funded, under $1M raised; Tiers 2 ($100K) and 1 ($350K): funded by an affiliated partner, Tier 1 with $5M+ raised.", duration: "1 year or until used up", applicationDifficulty: "open", whatsIncluded: "Credits for usage-based services such as Workers and R2 (R2 up to $10K; Workers AI up to $2.5K, $10K or $50K by tier). AI Gateway is not covered. Core security and networking features are free at every tier.", hiddenConstraints: "Tier is based on funding stage \u2014 bootstrapped startups get only $5K. Higher tiers require more funding documentation. Credits are Cloudflare-only. Limited time window to use credits.", vestingSchedule: "Lump sum per tier" },
+    { name: "Stripe Atlas", slug: "stripe-atlas", category: "fintech-banking", creditValue: "Over $50K in partner discounts, plus $2.5K of Stripe credits", eligibility: "Companies incorporated through Atlas ($500, then $100 a year after the first year)", duration: "Varies by perk; Stripe credits last the first year", applicationDifficulty: "open", whatsIncluded: "$2.5K of Stripe product credits for the first year, $5K of AWS Activate credits (new AWS users), $100K of Cloudflare credits through the Cloudflare Startup Program, Microsoft for Startups Azure credits, a 30-minute immigration attorney consult (Ellis), and banking through Stripe Treasury.", hiddenConstraints: "Requires Stripe Atlas incorporation ($500 one-time fee). Perks are from third parties \u2014 each has own eligibility requirements. Processing credits only apply to Stripe payments. Some perks expire 90 days after incorporation.", vestingSchedule: "Available once the Atlas application is approved" },
+    { name: "Brex", slug: "brex", category: "fintech-banking", creditValue: "Over $350K in partner discounts and credits", eligibility: "Brex customers", duration: "Varies by partner", applicationDifficulty: "open", whatsIncluded: "Up to $5K of AWS credits for new Brex customers (subject to Activate eligibility), $1K of OpenAI credits for a year, up to $200K of Google Cloud and Firebase credits over 2 years, 6 months of Notion Plus, 30% off Slack for 12 months.", hiddenConstraints: "Must be a Brex cardholder. Individual perks have separate eligibility and expiry. Some require minimum card spend. Google Cloud $200K requires separate Google for Startups qualification. Partner perks change frequently.", vestingSchedule: "Per-partner activation" },
+    { name: "Mercury", slug: "mercury", category: "fintech-banking", creditValue: "Banking perks bundle", eligibility: "Mercury banking customers", duration: "Varies by perk", applicationDifficulty: "open", whatsIncluded: "1 year of Datadog free (up to $100K in credits; Series A or earlier, new Datadog customers), up to $5K of AWS Activate credits, 50% off QuickBooks Online for 3 months. Mercury's Google Cloud offer is paused.", hiddenConstraints: "Must have Mercury business account. Datadog credit is usage-based cap \u2014 may not reach full $100K value. Google Cloud credits require separate application to Google for Startups. Perks are subject to partner availability.", vestingSchedule: "Per-partner activation" },
+    { name: "Ramp", slug: "ramp", category: "fintech-banking", creditValue: "Over $350K in partner rewards", eligibility: "Ramp customers", duration: "Varies", applicationDifficulty: "open", whatsIncluded: "AWS credits through AWS Activate and OpenAI API credits (Ramp states no amount for either), $350 of Google Cloud credits, 6 months of Notion Business with Notion AI.", hiddenConstraints: "Must be Ramp cardholder. AWS credits are a subset of what AWS Activate offers separately. Partner perks overlap with Brex offerings. Some discounts require annual commitments.", vestingSchedule: "Per-partner activation" },
+    { name: "SVB (Silicon Valley Bank)", slug: "svb-silicon-valley-bank", category: "fintech-banking", creditValue: "$5K AWS + partner offers", eligibility: "SVB clients (SVB is a division of First Citizens Bank)", duration: "Varies", applicationDifficulty: "open", whatsIncluded: "$5K of AWS Activate credits (with an Activate Provider Org ID, pre-Series B), $5K of MongoDB credits for 12 months, 25% off Slack upgrades (up to $9K). 79 offers from 58 vendors; no Google Cloud offer.", hiddenConstraints: "SVB was acquired by First Citizens Bank (2023) \u2014 program continuity uncertain for new applicants. Google Cloud credits are usage-based annual cap (not guaranteed full amount). Partner perks change over time.", vestingSchedule: "Per-partner activation" },
+    { name: "PostHog for Startups", slug: "posthog-yc-deal", category: "developer-tools", creditValue: "$50K in credits (YC: $50K a year)", eligibility: "Under 2 years old and under $5M raised. YC companies under $25M raised get $50K a year instead.", duration: "12 months (YC: renews yearly while eligible)", applicationDifficulty: "open", whatsIncluded: "Credits for product analytics, session replay, feature flags and experiments, plus about $12K of partner perks. Since 2026-09-14, credits don't cover PostHog AI, Desktop, the Slack app, Replay Vision or Inbox.", hiddenConstraints: "YC companies only \u2014 not open to general startups. $25M fundraising cap. Must maintain active YC alumni status. Covers PostHog only \u2014 not transferable.", vestingSchedule: "Credits for 12 months; the YC deal renews yearly" },
+    { name: "Amazon Kiro (AWS Startups)", slug: "amazon-kiro-aws-startups", category: "ai-tools", creditValue: "Up to 1 year of Kiro Pro+ ($40 per user a month)", eligibility: "Early stage to Series A, without active AWS Activate credits; Kiro's startup page asks for VC backing and its terms do not; not available in France, Germany, Italy, Spain, Poland, Brazil, Mexico, Argentina, the UAE, China or sanctioned regions; apply by 2026-12-31.", duration: "Credits expire 1 year after they are issued", applicationDifficulty: "open", whatsIncluded: "Kiro Pro+ for up to 2, 10 or 30 users (Starter, Growth and Scale tiers).", hiddenConstraints: "Requires existing AWS Startups membership (not standalone). Pro+ credit allocation is model-dependent (Sonnet 4 costs 1.3x). Free tier duration is exactly 12 months. Not combinable with other Kiro promotions.", vestingSchedule: "Deposited once to your AWS account" },
+    { name: "Amplitude Early Stage Startup Pricing", slug: "amplitude-startup-scholarship", category: "ai-tools", creditValue: "1 year of the Growth plan free", eligibility: "Under 20 employees and under $10M raised", duration: "1 year; year 2 at 40% off the annual Plus plan, or move to the free plan", applicationDifficulty: "open", whatsIncluded: "The full Growth plan for 200K monthly tracked users or 100M events a month.", hiddenConstraints: "Growth plan converts to paid ($49+/mo) after 1 year. Application review required. MTU/event limits are soft \u2014 overage may be billed. Plan features may change during the free year.", vestingSchedule: "Full plan for 12 months" },
   ];
 
-  const startupVendorNames = programs.map(p => p.name);
-  const startupChanges = changesTheVendorMade(dealChanges).filter(c =>
-    startupVendorNames.some(v => c.vendor.includes(v) || v.includes(c.vendor))
-  ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  const startupChanges = changesToStartupProgrammes(changesTheVendorMade(dealChanges), offers)
+    .sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   const openCount = programs.filter(p => p.applicationDifficulty === "open").length;
   const categories: Array<"cloud-infrastructure" | "fintech-banking" | "developer-tools" | "ai-tools"> = ["cloud-infrastructure", "fintech-banking", "developer-tools", "ai-tools"];
@@ -27286,11 +27272,11 @@ function buildStartupCreditsPage(): string {
   }).join("\n\n  ");
 
   const hiddenConstraintCards = [
-    { title: "Credit Expiry Timelines", desc: "Most credits expire 12\u201324 months from activation, not application. Unused credits are lost \u2014 no extensions. Google splits $200K into $100K/year; AWS Founders gives all $1K at once but expires in 12 months." },
-    { title: "Vesting Schedules", desc: "Google, IBM, and some others release credits in monthly or annual tranches. You can\u2019t front-load usage. IBM Builder gives $1K/month \u2014 if you need $12K in month 1, you only get $1K." },
-    { title: "Revenue & Funding Caps", desc: "Google Scale requires equity funding. PostHog YC Deal has a $25M fundraising cap. Programs may retroactively check if you still qualify when renewing." },
+    { title: "Credit Expiry Timelines", desc: "AWS Activate credits usually expire within 1-2 years. Google's Start tier credits last 12 months; Scale tier credits last two years. Microsoft for Startups credits must be activated within 90 days; the first $200 lasts 90 days and the business-verification credit 180 days, and from the $25K milestone credits last up to two years. Cloudflare credits last one year or until used up. PostHog credits last 12 months from application. Kiro credits expire one year after they are issued." },
+    { title: "Vesting Schedules", desc: "AWS Activate gives one award per approved application. Google's Scale tier covers 100% of usage up to $100,000 in year 1, then 20% of spend, up to $100,000 more, in year 2. Microsoft for Startups releases credits in milestones." },
+    { title: "Revenue & Funding Caps", desc: "Google Scale requires VC funding; angel money doesn't count. PostHog's YC deal has a $25M fundraising cap and renews only while you stay under it." },
     { title: "Platform Lock-in After Credits", desc: "Credits only work on the issuing platform. After credits expire, you\u2019re on production pricing with established data gravity. Migration costs can exceed the original credit value." },
-    { title: "Overlapping Perks Problem", desc: "Brex, Mercury, SVB, and Stripe Atlas all offer AWS credits \u2014 but you can\u2019t stack them. The $5K AWS credit from Brex and the $5K from Stripe Atlas may be the same underlying AWS Activate program." },
+    { title: "Overlapping Perks Problem", desc: "Brex, Mercury, Ramp, SVB and Stripe Atlas all offer AWS Activate credits. A later AWS Activate award pays only the difference, so several $5,000 perks give $5,000 in total. Mercury states that credits are not added on." },
   ];
 
   const changeTimelineRows = startupChanges.map(c => {
@@ -27305,10 +27291,10 @@ function buildStartupCreditsPage(): string {
   }).join("\n        ");
 
   const faqEntries = [
-    { q: "What are the highest-value startup credit programs?", a: "The top programs by credit value are: Google Cloud for Startups Scale AI ($350K), Cloudflare High Growth ($250K), Google Cloud Scale ($200K), Microsoft Founders Hub Premium ($150K), IBM Cloud Premium ($120K), AWS Activate Portfolio ($100K), and DigitalOcean Hatch ($100K). Most of these require VC backing or accelerator affiliation." },
-    { q: "Can I stack multiple startup programs?", a: "Yes, most programs are compatible since they apply to different platforms. For example: Google for Startups ($200K) + AWS Activate ($100K) + DigitalOcean Hatch ($100K) = $400K+ across three clouds. Banking programs (Brex, Mercury) layer additional perks on top. However, AWS credits from different sources (Brex, Stripe Atlas, SVB) typically don't stack \u2014 they're often the same underlying AWS Activate allocation." },
-    { q: "Do startup credits expire?", a: "Most credits expire 12\u201324 months after activation. AWS Activate Founders: 12 months. Google Scale: 24 months (split $100K/year). Microsoft Founders Hub: 12 months. IBM Builder: monthly use-it-or-lose-it ($1K/month). Always check the vesting schedule \u2014 some programs release credits in tranches rather than all at once." },
-    { q: "What do I need to qualify for startup credits?", a: "Requirements range from nothing (AWS Activate Founders $1K, Microsoft Founders Hub basic $5K, Cloudflare Bootstrapped $5K) to VC backing (Google Scale, DigitalOcean Hatch) to accelerator membership (PostHog YC Deal, Amazon Kiro). Banking programs (Brex, Mercury, Ramp) require opening an account. The highest-value programs generally require equity funding." },
+    { q: "What are the highest-value startup credit programs?", a: "The largest published offers are Google Scale AI and Cloudflare Tier 1, each up to $350,000. Then Google Scale and AWS Activate Portfolio, up to $200,000 each. Then Microsoft for Startups, up to $150,000. Most require VC funding or an affiliated partner." },
+    { q: "Can I stack multiple startup programs?", a: "Yes. Programs on different platforms stack: Google Scale (up to $200K), AWS Activate Portfolio (up to $200K) and Cloudflare Tier 2 ($100K) can combine to $500K. Credits from fintech platforms come from the same programmes: a later AWS Activate award pays only the difference, and Stripe Atlas's Cloudflare and Azure credits are Cloudflare's and Microsoft's own programmes." },
+    { q: "Do startup credits expire?", a: "Yes, startup credits expire. AWS Activate credits usually expire within 1-2 years. Google's Start tier credits last 12 months; Scale tier credits last two years. Microsoft for Startups credits must be activated within 90 days; the first $200 lasts 90 days and the business-verification credit 180 days, and from the $25K milestone credits last up to two years. Cloudflare credits last one year or until used up. PostHog credits last 12 months from application. Kiro credits expire one year after they are issued." },
+    { q: "What do I need to qualify for startup credits?", a: "Programmes that need no funding: AWS Founders, Google Start, Microsoft, Cloudflare Tier 3, PostHog, Amplitude and DigitalOcean Startups. Programmes that need VC backing or an affiliated partner: Google Scale, AWS Portfolio, Cloudflare Tiers 1 and 2. Kiro's page asks for VC backing; its terms do not. Banking programs (Brex, Mercury, Ramp, SVB) need an account; Stripe Atlas needs incorporation through Atlas." },
     { q: "Are startup credits worth the lock-in?", a: "Credits significantly lower early-stage cloud costs but create platform dependency. After credits expire, you're on full production pricing with established data gravity. Mitigate this by using credits for experimentation and development rather than production architecture. A multi-cloud strategy with credits from 2\u20133 providers reduces single-vendor risk." },
   ];
 
@@ -27429,14 +27415,14 @@ function buildStartupCreditsPage(): string {
     '\n' +
     '  <div class="summary-stats">\n' +
     '    <div class="stat-card"><div class="stat-number">' + programs.length + '</div><div class="stat-label">Programs Compared</div></div>\n' +
-    '    <div class="stat-card"><div class="stat-number green">$500K+</div><div class="stat-label">Total Credit Value</div></div>\n' +
+    '    <div class="stat-card"><div class="stat-number green">$350K</div><div class="stat-label">Largest Published Offer</div></div>\n' +
     '    <div class="stat-card"><div class="stat-number">' + categories.length + '</div><div class="stat-label">Categories</div></div>\n' +
     '    <div class="stat-card"><div class="stat-number yellow">' + openCount + '</div><div class="stat-label">Open Application</div></div>\n' +
     '  </div>\n' +
     '\n' +
     '  <div class="executive-summary">\n' +
-    '    <p><strong>Startup credits in April 2026:</strong> ' + programs.length + ' programs across cloud infrastructure, fintech perks, developer tools, and AI \u2014 from $1K self-serve credits to $350K VC-backed packages. The cloud providers (AWS, Google, Microsoft, Cloudflare) offer the highest individual values, while fintech platforms (Brex, Mercury, Stripe Atlas) bundle credits from multiple providers into single sign-ups.</p>\n' +
-    '    <p><strong>Key insight:</strong> A well-planned stacking strategy can unlock $500K+ in combined credits across platforms. The highest-value approach: apply to cloud providers directly (Google $200K, AWS $100K, Cloudflare $100K) then layer fintech banking perks for additional tool credits. Watch for overlapping perks \u2014 AWS credits from Brex and Stripe Atlas may be the same underlying allocation.</p>\n' +
+    '    <p><strong>Startup credits in 2026:</strong> ' + programs.length + ' programs across cloud infrastructure, fintech perks, developer tools and AI. The largest published offers are up to $350,000. Cloud providers offer the highest individual values. Fintech platforms pass partner credits on to their customers; each perk is claimed separately.</p>\n' +
+    '    <p><strong>Key insight:</strong> Stacking Google Scale (up to $200K) + AWS Activate Portfolio (up to $200K) + Cloudflare Tier 2 ($100K) can reach $500K; each needs VC funding or an affiliated partner. AWS credits from Brex and Stripe Atlas overlap: a later award pays only the difference.</p>\n' +
     '    <p><strong>This guide covers:</strong> credit values, eligibility requirements, vesting schedules, hidden constraints, application difficulty, and optimal stacking strategies \u2014 compiled by hand from vendor pricing pages.</p>\n' +
     '  </div>\n' +
     '\n' +
@@ -27494,28 +27480,28 @@ function buildStartupCreditsPage(): string {
     '    <h3>Recommended Stacking Combinations</h3>\n' +
     '\n' +
     '    <div class="verdict-item">\n' +
-    '      <strong>Maximum cloud credits ($500K+)</strong>\n' +
-    '      <p>Google for Startups ($200K) + AWS Activate Portfolio ($100K) + Cloudflare Seed-Funded ($100K) + DigitalOcean Hatch ($100K) = $500K+ across 4 platforms. Requires VC backing for most.</p>\n' +
+    '      <strong>Funded startup, three clouds (up to $500K)</strong>\n' +
+    '      <p>Google Scale (up to $200K) + AWS Activate Portfolio (up to $200K) + Cloudflare Tier 2 ($100K). Requires VC funding and an affiliated partner. Google Scale AI adds $150K for AI-first startups; Cloudflare Tier 1 ($350K) replaces Tier 2 after $5M raised.</p>\n' +
     '    </div>\n' +
     '\n' +
     '    <div class="verdict-item">\n' +
-    '      <strong>Bootstrapped founder ($15K+)</strong>\n' +
-    '      <p>AWS Activate Founders ($1K) + Microsoft Founders Hub Basic ($5K) + Cloudflare Bootstrapped ($5K) + Stripe Atlas perks = $15K+ with zero funding requirement.</p>\n' +
+    '      <strong>Bootstrapped founder ($63K+)</strong>\n' +
+    '      <p>AWS Activate Founders offers $1,000. Google Start offers $2,000. Microsoft offers $200 on sign-up, with more after verification. Cloudflare Tier 3 offers $10,000. PostHog offers $50,000 for startups under 2 years old. None needs funding.</p>\n' +
     '    </div>\n' +
     '\n' +
     '    <div class="verdict-item">\n' +
-    '      <strong>YC / Accelerator company ($400K+)</strong>\n' +
-    '      <p>Full AWS Portfolio ($100K) + Google Scale ($200K) + PostHog ($50K/yr) + banking perks via Brex/Mercury = $400K+ first year.</p>\n' +
+    '      <strong>YC / Accelerator company (up to $350K)</strong>\n' +
+    '      <p>AWS Activate Portfolio (up to $200K) + Google Scale (up to $100K in the first year) + PostHog ($50K) = up to $350K in the first year.</p>\n' +
     '    </div>\n' +
     '\n' +
     '    <div class="verdict-item">\n' +
-    '      <strong>AI-focused startup ($450K+)</strong>\n' +
-    '      <p>Google Scale AI ($350K with AI credits) + Amazon Kiro free year + AWS Activate = $450K+ with dedicated AI/ML credits.</p>\n' +
+    '      <strong>AI-focused startup (up to $550K, plus Kiro)</strong>\n' +
+    '      <p>Google Scale AI (up to $350K) + Kiro (up to one year of Kiro Pro+, $40 per user a month) + AWS Activate Portfolio (up to $200K). Apply for Kiro first: it excludes startups with active Activate credits.</p>\n' +
     '    </div>\n' +
     '\n' +
     '    <div class="verdict-item">\n' +
     '      <strong>Financial platform layering</strong>\n' +
-    '      <p>Sign up for Brex + Mercury + Stripe Atlas to unlock overlapping cloud perks. Careful: some AWS credits from different programs don\'t stack.</p>\n' +
+    '      <p>Sign up for Brex + Mercury + Stripe Atlas to unlock overlapping cloud perks. Careful: their AWS credits don\'t add up; a later Activate award pays only the difference.</p>\n' +
     '    </div>\n' +
     '  </div>\n' +
     '\n' +
@@ -27550,7 +27536,7 @@ function buildStartupCreditsPage(): string {
     '\n' +
     '  <h2>Data Source &amp; Methodology</h2>\n' +
     '  <div class="methodology">\n' +
-    '    <strong>Powered by AgentDeals.</strong> All credit values were read by hand from official vendor program pages when this page was compiled on ' + pubDate + '. Changes are tracked via our <a href="/pricing-changes">deal changes timeline</a> (' + trackedChangeCount + ' total changes tracked). The pricing changes we track are updated continuously; the tables above are not.<br><br>\n' +
+    '    <strong>Powered by AgentDeals.</strong> All credit values were read by hand from the programmes\' own pages on ' + STARTUP_CREDIT_FIGURES_READ + '. Changes are tracked via our <a href="/pricing-changes">deal changes timeline</a> (' + trackedChangeCount + ' total changes tracked). The pricing changes we track are updated continuously; the tables above are not.<br><br>\n' +
     '    <strong>Query this data programmatically</strong> via <a href="/api/startup-credits">/api/startup-credits</a> (JSON), our <a href="/setup">MCP tools</a>, or <a href="/developers">REST API</a> \u2014 search for startup programs, compare eligibility, or track changes from your AI coding assistant.\n' +
     '  </div>\n' +
     '\n' +
@@ -34634,21 +34620,21 @@ ${mcpCtaCss()}
   <p class="section-intro">Microsoft offers some of the most generous startup programs in the industry.</p>
 
   <div class="verdict-box">
-    <h3>Microsoft Founders Hub</h3>
+    <h3>Microsoft for Startups</h3>
 
     <div class="verdict-item">
       <strong>Up to $150K in Azure credits</strong>
-      <p>Free to join, no funding required. Startups get $1K&ndash;$150K in Azure credits (tiered by stage), plus access to OpenAI models, GitHub Enterprise, and Microsoft 365. The most accessible startup program among cloud providers — no pitch deck, no revenue requirements.</p>
+      <p>Free to join, no funding required. B2B tech startups get $200 on sign-up and up to $150K as they verify the business and use Azure. GitHub Enterprise and Microsoft 365 offers are for startups backed by Microsoft's Investor Network.</p>
     </div>
 
     <div class="verdict-item">
       <strong>GitHub &amp; developer tools</strong>
-      <p>Includes GitHub Enterprise, Visual Studio Enterprise subscriptions, and Azure DevOps. Combined with the free tier services above, this gives startups a complete development platform at zero cost.</p>
+      <p>Investor Network-backed startups also get GitHub Enterprise and Visual Studio Enterprise offers. Combined with the free tier services above, this gives startups a complete development platform at zero cost.</p>
     </div>
 
     <div class="verdict-item">
       <strong>How it compares</strong>
-      <p>AWS Activate: up to $100K credits (requires VC backing for higher tiers). GCP for Startups: up to $100K credits (requires accelerator or VC affiliation). Microsoft Founders Hub: up to $150K with no funding requirements. See our <a href="/startup-credits">Startup Credits guide</a> for a full comparison of all programs.</p>
+      <p>AWS Activate: up to $200K credits (Portfolio needs an Activate Provider Org ID). Google for Startups: up to $200K, or $350K for AI-first startups (VC funding, pre-seed to Series A). Microsoft for Startups: up to $150K with no investor needed. See our <a href="/startup-credits">Startup Credits guide</a> for a full comparison of all programs.</p>
     </div>
   </div>
 
@@ -35065,29 +35051,24 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="startups">For Startups</h2>
-  <p class="section-intro">DigitalOcean's Hatch startup program is one of the most accessible cloud startup programs available.</p>
+  <p class="section-intro">DigitalOcean's startup program is one of the most accessible cloud startup programs available.</p>
 
   <div class="verdict-box">
-    <h3>DigitalOcean Hatch</h3>
+    <h3>DigitalOcean Startups</h3>
 
     <div class="verdict-item">
-      <strong>Up to $100K in compute credits</strong>
-      <p>12-month credit allocation for eligible startups. Plus up to 3 months free GPU access (H100 at ~$1.90/hr vs $3.39 standard) for AI/ML workloads. 15 months of Standard support included.</p>
-    </div>
-
-    <div class="verdict-item">
-      <strong>Partner perks</strong>
-      <p>Additional credits and discounts from Cloudflare, Stripe, Retool, HubSpot, and other partner companies. Combined value can exceed the compute credits alone.</p>
+      <strong>Credits</strong>
+      <p>Credits for 12 months in an amount that varies by startup, usable up to $10,000 a month. They do not cover GPU Droplets, H100 GPU products, inference or third-party AI models; GPU credits are a separate benefit for selected startups. 15 months of free Standard-tier support.</p>
     </div>
 
     <div class="verdict-item">
       <strong>Eligibility</strong>
-      <p>Series A or less (max $10M raised), new DigitalOcean customer, affiliated with an approved accelerator, incubator, or VC. Product startup (not service-based). More accessible than AWS Activate's higher tiers but still requires VC/accelerator affiliation. See our <a href="/startup-credits">Startup Credits guide</a> for a full comparison of all programs.</p>
+      <p>Raised $10M or less, not a service business, and new to DigitalOcean credits. Apply through a partner accelerator, incubator or VC, or directly. See our <a href="/startup-credits">Startup Credits guide</a> for a full comparison of all programs.</p>
     </div>
 
     <div class="verdict-item">
       <strong>How it compares</strong>
-      <p>AWS Activate: up to $100K (requires VC backing for higher tiers). GCP for Startups: up to $100K + $2K AI credits. Azure Founders Hub: up to $150K (no funding required). DigitalOcean Hatch: up to $100K + GPU access. Microsoft's program is the easiest to qualify for; DigitalOcean's GPU perk is unique.</p>
+      <p>AWS Activate: up to $200K (Portfolio needs an Activate Provider Org ID). Google for Startups: up to $200K, or $350K for AI-first startups; a $2K Start tier needs no funding. Microsoft for Startups: up to $150K (no investor needed). Microsoft's program is the easiest to qualify for.</p>
     </div>
   </div>
 
@@ -35408,7 +35389,7 @@ ${mcpCtaCss()}
     <div class="stat-card"><div class="stat-number">4</div><div class="stat-label">Clouds Compared</div></div>
     <div class="stat-card"><div class="stat-number green">GCP</div><div class="stat-label">Most Free Services</div></div>
     <div class="stat-card"><div class="stat-number amber">$5&ndash;300</div><div class="stat-label">Trial Credits Range</div></div>
-    <div class="stat-card"><div class="stat-number">$100K&ndash;200K</div><div class="stat-label">Startup Program Credits</div></div>
+    <div class="stat-card"><div class="stat-number">Up to $350K</div><div class="stat-label">Startup Program Credits</div></div>
   </div>
 
   <div class="executive-summary">
@@ -35727,37 +35708,37 @@ ${mcpCtaCss()}
       <tr>
         <td class="provider-col">AWS</td>
         <td>Activate</td>
-        <td style="font-family:var(--mono)">Up to $100K</td>
+        <td style="font-family:var(--mono)">Up to $200K</td>
         <td>1&ndash;2 years</td>
-        <td>VC-backed or accelerator member (higher tiers)</td>
+        <td>Activate Provider Org ID (Portfolio)</td>
       </tr>
       <tr style="background:rgba(63,185,80,0.08)">
-        <td class="provider-col">GCP <span class="winner-badge">LARGEST CREDITS</span></td>
+        <td class="provider-col">GCP</td>
         <td>Google for Startups</td>
-        <td style="font-family:var(--mono);color:#3fb950">Up to $200K</td>
+        <td style="font-family:var(--mono);color:#3fb950">Up to $350K</td>
         <td>1&ndash;2 years</td>
-        <td>Series A or earlier + approved partner</td>
+        <td>VC funding, pre-seed to Series A</td>
       </tr>
       <tr>
         <td class="provider-col">Azure</td>
-        <td>Founders Hub</td>
+        <td>Microsoft for Startups</td>
         <td style="font-family:var(--mono)">Up to $150K</td>
-        <td>1 year</td>
+        <td>90 days to 2 years</td>
         <td>No funding requirement (easiest to qualify)</td>
       </tr>
       <tr>
         <td class="provider-col">DigitalOcean</td>
-        <td>Hatch</td>
-        <td style="font-family:var(--mono)">Up to $100K</td>
+        <td>DigitalOcean Startups</td>
+        <td style="font-family:var(--mono)">Amount varies (up to $10,000 a month)</td>
         <td>12 months</td>
-        <td>Series A or less + accelerator/incubator</td>
+        <td>$10M raised or less; partner or direct application</td>
       </tr>
     </tbody>
   </table>
   </div>
 
   <div class="context-box">
-    <strong>Azure Founders Hub is the easiest to qualify for</strong> — no funding requirement, up to $150K in credits plus OpenAI API access. GCP offers the largest credits ($200K) but requires an approved partner. AWS Activate's higher tiers need VC backing. DigitalOcean Hatch adds unique GPU credits (H100 access) for AI/ML startups.
+    <strong>Microsoft for Startups needs no investor:</strong> B2B tech startups start at $200 and can reach $150K with Azure usage. GCP offers up to $350K to AI-first startups and needs VC funding. AWS Activate Portfolio needs an Activate Provider Org ID.
   </div>
 
   <h2 id="best-for">Best for Each Use Case</h2>
@@ -35777,12 +35758,12 @@ ${mcpCtaCss()}
 
     <div class="verdict-item">
       <strong>Startup (easiest qualification) &rarr; Azure</strong>
-      <p>Founders Hub requires no funding — just a startup idea. Up to $150K credits, OpenAI API access, and the only lifetime-free managed database (Cosmos DB). <a href="/azure-free-tier-2026">Read the full Azure guide &rarr;</a></p>
+      <p>Microsoft for Startups needs no investor. B2B tech startups can reach $150K in credits with Azure usage, and the only lifetime-free managed database (Cosmos DB). <a href="/azure-free-tier-2026">Read the full Azure guide &rarr;</a></p>
     </div>
 
     <div class="verdict-item">
       <strong>Startup (largest credits) &rarr; GCP</strong>
-      <p>Google for Startups offers up to $200K — the biggest credit pool. Plus $2K in AI/ML credits (Vertex AI, BigQuery ML). Requires an approved partner though.</p>
+      <p>Google for Startups offers up to $350K to AI-first startups. Its Scale tier needs VC funding; its $2K Start tier needs none.</p>
     </div>
 
     <div class="verdict-item">
@@ -45129,16 +45110,16 @@ ${globalNavCss()}
     <thead><tr><th>Program</th><th>Credits</th><th>Eligibility</th><th>Notable Benefits</th></tr></thead>
     <tbody>
       <tr><td><a href="/vendor/google-cloud">Google for Startups</a></td><td style="color:#3fb950;font-weight:600">Up to $350K</td><td>AI-first startups</td><td>GCP credits, technical support</td></tr>
-      <tr><td><a href="/vendor/cloudflare-for-startups">Cloudflare Startup Program</a></td><td style="color:#3fb950;font-weight:600">Up to $250K</td><td>4 tiers by stage</td><td>Workers, R2, CDN, security</td></tr>
-      <tr><td><a href="/vendor/microsoft-azure">Microsoft for Startups</a></td><td style="color:#3fb950;font-weight:600">Up to $150K</td><td>Founders Hub</td><td>Azure + OpenAI credits</td></tr>
-      <tr><td><a href="/vendor/digitalocean">DigitalOcean Hatch</a></td><td style="color:#3fb950;font-weight:600">Up to $100K</td><td>Early-stage</td><td>Compute + support credits</td></tr>
-      <tr><td><a href="/vendor/aws">AWS Activate</a></td><td style="color:#3fb950;font-weight:600">Up to $100K</td><td>Accelerator-backed</td><td>AWS credits, technical support</td></tr>
+      <tr><td><a href="/vendor/cloudflare-for-startups">Cloudflare Startup Program</a></td><td style="color:#3fb950;font-weight:600">Up to $350K</td><td>3 tiers; upper two via affiliated partners</td><td>Workers, R2, CDN, security</td></tr>
+      <tr><td><a href="/vendor/microsoft-azure">Microsoft for Startups</a></td><td style="color:#3fb950;font-weight:600">Up to $150K</td><td>B2B tech startups, pre-seed to Series C</td><td>Azure credits, Foundry models</td></tr>
+      <tr><td><a href="/vendor/digitalocean">DigitalOcean Startups</a></td><td style="color:#3fb950;font-weight:600">Amount varies</td><td>Early-stage</td><td>Compute + support credits</td></tr>
+      <tr><td><a href="/vendor/aws">AWS Activate</a></td><td style="color:#3fb950;font-weight:600">Up to $200K</td><td>Portfolio needs an Activate Provider Org ID</td><td>AWS credits, technical support</td></tr>
       <tr><td><a href="/vendor/railway">Railway</a></td><td style="color:#3fb950;font-weight:600">$5 free/month</td><td>Everyone</td><td>No credit card, usage-based</td></tr>
       <tr><td><a href="/vendor/vercel">Vercel</a></td><td style="color:#3fb950;font-weight:600">Hobby plan free</td><td>Non-commercial</td><td>Edge functions, serverless</td></tr>
     </tbody>
   </table>
   </div>
-  <p style="color:var(--text-dim);font-size:.85rem;margin-top:.5rem">See our full <a href="/startup-credits">startup credits directory</a> for 19 programs across 3 tiers.</p>
+  <p style="color:var(--text-dim);font-size:.85rem;margin-top:.5rem">See our full <a href="/startup-credits">startup credits directory</a> for 13 programs.</p>
 
   <h2>Category Landscape</h2>
   <p class="section-desc">Which categories have the most free tier options? The table below shows our top 20 categories ranked by the share we can vouch for today. <strong>Recorded</strong> counts the free tiers our offers describe; <strong>Vouched</strong> counts the ones whose vendor page still states a verdict rather than withholding one. ${categoryShares.filter(c => c.recordedPct === 100).length} of ${categoryShares.length} categories record a free tier for every service they list, which is why the recorded share cannot rank them. The two shares diverge most in ${escHtmlServer(widestGap.category)}: ${widestGap.census.recorded} of ${widestGap.census.total} recorded, ${widestGap.census.vouched} vouched.</p>
@@ -45243,7 +45224,7 @@ ${globalNavCss()}
     <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:.5rem">
       <li><a href="/free-tier-risk">Free Tier Risk Index</a> <span style="color:var(--text-muted);font-size:.85rem">&mdash; sustainability risk scores for ${riskEntries.length} vendors</span></li>
       <li><a href="/free-tier-tracker">Q1 2026 Free Tier Tracker</a> <span style="color:var(--text-muted);font-size:.85rem">&mdash; removals, expansions, and trends</span></li>
-      <li><a href="/startup-credits">Startup Credits Directory</a> <span style="color:var(--text-muted);font-size:.85rem">&mdash; 19 programs, $1M+ combined credits</span></li>
+      <li><a href="/startup-credits">Startup Credits Directory</a> <span style="color:var(--text-muted);font-size:.85rem">&mdash; 13 programs</span></li>
       <li><a href="/free-startup-stack">Free Startup Stack</a> <span style="color:var(--text-muted);font-size:.85rem">&mdash; complete infrastructure on $0/month</span></li>
       <li><a href="/q1-2026-developer-pricing-report">Q1 2026 Pricing Report</a> <span style="color:var(--text-muted);font-size:.85rem">&mdash; quarterly pricing analysis</span></li>
     </ul>
@@ -53728,12 +53709,10 @@ const dispatchRequest = async (req: IncomingMessage, res: ServerResponse) => {
       "developer-tools": ["PostHog", "Segment", "Amplitude"],
       "ai-tools": ["Amazon Kiro (AWS Startups)"],
     };
-    const startupVendorNames = Object.values(startupCategoryMap).flat();
     const startupTypeFilter = url.searchParams.get("type") || undefined;
     const validStartupTypes = ["cloud-infrastructure", "fintech-banking", "developer-tools", "ai-tools"];
-    const startupApiChanges = dealChanges.filter(c =>
-      startupVendorNames.some(v => c.vendor.includes(v) || v.includes(c.vendor))
-    ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    const startupApiChanges = changesToStartupProgrammes(dealChanges, offers)
+      .sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
     const startupPrograms = startupOffers.map(o => {
       const progCat = Object.entries(startupCategoryMap).find(([, vendors]) =>
         vendors.some(v => o.vendor.includes(v) || v.includes(o.vendor))
