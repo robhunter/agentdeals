@@ -22,11 +22,11 @@
       "changed": "2026-10-01"
     },
     "/ai-free-tiers": {
-      "hash": "2c93e78cf58fdf06",
+      "hash": "8640559e35e73834",
       "changed": "2026-10-01"
     },
     "/ai-ml-alternatives": {
-      "hash": "357f18c381d05412",
+      "hash": "242a83ccc1822504",
       "changed": "2026-10-01"
     },
     "/alternative-to": {
@@ -1076,11 +1076,11 @@
       "changed": "2026-10-01"
     },
     "/category/ai-coding": {
-      "hash": "f5d82062686ca496",
+      "hash": "62f0281f1ad63029",
       "changed": "2026-10-01"
     },
     "/category/ai-ml": {
-      "hash": "ec26349366152cb8",
+      "hash": "de0c5f4733505e7d",
       "changed": "2026-10-01"
     },
     "/category/analytics": {
@@ -1216,7 +1216,7 @@
       "changed": "2026-10-01"
     },
     "/category/low-code-platforms": {
-      "hash": "d30479695de4c4b1",
+      "hash": "e84d04c985c2f218",
       "changed": "2026-10-01"
     },
     "/category/maps-geolocation": {
@@ -1447,8 +1447,8 @@
       "changed": "2026-09-26"
     },
     "/compare/appsmith-vs-windmill-dev": {
-      "hash": "89a07b054f5bdfcf",
-      "changed": "2026-09-26"
+      "hash": "901f3d5812ede656",
+      "changed": "2026-10-01"
     },
     "/compare/atlassian-statuspage-vs-instatus": {
       "hash": "06adc02b1f77cdc5",
@@ -1927,8 +1927,8 @@
       "changed": "2026-09-27"
     },
     "/compare/export-sdk-vs-windmill-dev": {
-      "hash": "d3ba3e291ee2a8a9",
-      "changed": "2026-09-26"
+      "hash": "344df5da40a9a7db",
+      "changed": "2026-10-01"
     },
     "/compare/expose-vs-localtunnel": {
       "hash": "01858f490f375de0",
@@ -2682,7 +2682,7 @@
       "daily": true
     },
     "/cursor-alternatives": {
-      "hash": "e16f283d222de494",
+      "hash": "8f16194dd6cbe27a",
       "changed": "2026-10-01"
     },
     "/database-alternatives": {
@@ -2925,7 +2925,7 @@
       "changed": "2026-09-26"
     },
     "/digest/2026-w14": {
-      "hash": "1573012fc0e839f5",
+      "hash": "7d2b9f22e700f1b9",
       "changed": "2026-10-01"
     },
     "/digest/2026-w15": {
@@ -3147,7 +3147,7 @@
       "changed": "2026-10-01"
     },
     "/free-tier-risk": {
-      "hash": "45ba8b6cc509c153",
+      "hash": "ccc743b1495df17c",
       "changed": "2026-10-01"
     },
     "/free-tier-tracker": {
@@ -3218,11 +3218,11 @@
       "changed": "2026-10-01"
     },
     "/hetzner-alternatives": {
-      "hash": "d29766d52b8acd7b",
+      "hash": "712233d13233d24c",
       "changed": "2026-10-01"
     },
     "/hetzner-pricing-2026": {
-      "hash": "2bb43cef18fddf25",
+      "hash": "61f8de8334b45890",
       "changed": "2026-10-01"
     },
     "/hosting-alternatives": {
@@ -3238,7 +3238,7 @@
       "changed": "2026-10-01"
     },
     "/ide-code-editors-alternatives": {
-      "hash": "336b704843832747",
+      "hash": "13c68f6c9e04e5d9",
       "changed": "2026-10-01"
     },
     "/llm-api-pricing": {
@@ -3309,11 +3309,11 @@
       "changed": "2026-10-01"
     },
     "/q1-2026-developer-pricing-report": {
-      "hash": "1ffed369b7364293",
+      "hash": "1be9d036e079f8fa",
       "changed": "2026-10-01"
     },
     "/q2-pricing-preview-2026": {
-      "hash": "7e987512bd6d47f1",
+      "hash": "b2c7bb038aefe966",
       "changed": "2026-10-01"
     },
     "/railway-vs-render": {
@@ -3421,7 +3421,7 @@
       "changed": "2026-10-01"
     },
     "/reports/2026-04": {
-      "hash": "31c731fddd5af1f8",
+      "hash": "5e6a72d08b6f673e",
       "changed": "2026-10-01"
     },
     "/reports/2026-05": {
@@ -3468,11 +3468,11 @@
       "daily": true
     },
     "/stability": {
-      "hash": "10bc5a7b2bb3ac2c",
+      "hash": "3f27332676e865de",
       "changed": "2026-10-01"
     },
     "/stack-check": {
-      "hash": "8bf7665565e6f6ce",
+      "hash": "2995d6a5b9398806",
       "changed": "2026-10-01"
     },
     "/stacks": {
@@ -3504,7 +3504,7 @@
       "changed": "2026-10-01"
     },
     "/state-of-free-tiers": {
-      "hash": "a4fe2207ce70c33d",
+      "hash": "cebc775399e5d95c",
       "changed": "2026-10-01"
     },
     "/storage-alternatives": {
@@ -3589,7 +3589,7 @@
       "changed": "2026-10-01"
     },
     "/trends/cloud-hosting": {
-      "hash": "69f723c80e0070d8",
+      "hash": "421954a6ceec43e2",
       "changed": "2026-10-01"
     },
     "/trends/cloud-iaas": {
@@ -3688,8 +3688,8 @@
       "changed": "2026-09-26"
     },
     "/trends/low-code-platforms": {
-      "hash": "7bdc5a293b40ebc3",
-      "changed": "2026-09-21"
+      "hash": "0f78ff2515853052",
+      "changed": "2026-10-01"
     },
     "/trends/maps-geolocation": {
       "hash": "6e2cc6fbf60e67d6",
@@ -5812,7 +5812,7 @@
       "changed": "2026-10-01"
     },
     "/vendor/gemini-cli": {
-      "hash": "22b75c81c4425e6a",
+      "hash": "b2e720201549996c",
       "changed": "2026-10-01"
     },
     "/vendor/geoapify-com": {
@@ -9558,7 +9558,7 @@
       "changed": "2026-10-01"
     },
     "/vendor/windmill-dev": {
-      "hash": "0a41eb2e663eac9c",
+      "hash": "d37837082026ebf2",
       "changed": "2026-10-01"
     },
     "/vendor/windscribe": {
