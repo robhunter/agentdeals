@@ -281,17 +281,74 @@ function valuesMissingFrom(values, others) {
   });
 }
 
+const SEATS = /(?:\bper[\s-]+|\/\s*)(?:active\s+)?(?:user|seat|member|editor|developer|person)s?\b/g;
+const PERIOD_NAMES = { second: "second", sec: "second", s: "second", minute: "minute", min: "minute", hour: "hour", hr: "hour", h: "hour", day: "day", week: "week", wk: "week", month: "month", mon: "month", mo: "month", year: "year", yr: "year", hourly: "hour", daily: "day", weekly: "week", monthly: "month", yearly: "year", annually: "year", annual: "year" };
+const PERIODS = [
+  /\bper[\s-]+(second|sec|minute|min|hour|hr|day|week|wk|month|mo|year|yr)s?\b/g,
+  /\b(?:a|an|each|every)\s+(second|minute|hour|day|week|month|year)\b/g,
+  /\/\s*(second|sec|s|minute|min|hour|hr|h|day|week|wk|month|mon|mo|year|yr)s?\b/g,
+  /\b(hourly|daily|weekly|monthly|yearly|annually|annual)\b/g,
+];
+const DATA_UNITS = /(?<![a-z])([kmgtp])i?b\b/g;
+const TIME_UNITS = { second: "second", sec: "second", minute: "minute", min: "minute", hour: "hour", hr: "hour", day: "day", week: "week", wk: "week", month: "month", mo: "month", year: "year", yr: "year" };
+const TIME_UNIT = /\b(second|sec|minute|min|hour|hr|day|week|wk|month|mo|year|yr)s?\b/g;
+const NEGATION = /\b(no|not|without)\b/g;
+
+function takeAll(text, pattern, name) {
+  const taken = [];
+  const rest = text.replace(pattern, (...match) => {
+    taken.push(name(match[1]));
+    return " ";
+  });
+  return { taken, rest };
+}
+
+export function termsOfLine(words) {
+  const values = valuesStated(words);
+  let rest = String(words ?? "").toLowerCase();
+  for (const word of VALUE_WORDS) rest = rest.replace(new RegExp(`\\b${word.replace(" ", "\\s+")}\\b`, "g"), " ");
+  const seats = takeAll(rest, SEATS, () => "per seat");
+  rest = seats.rest;
+  const periods = [];
+  for (const pattern of PERIODS) {
+    const found = takeAll(rest, pattern, (name) => `per ${PERIOD_NAMES[name]}`);
+    periods.push(...found.taken);
+    rest = found.rest;
+  }
+  const data = takeAll(rest, DATA_UNITS, (prefix) => `${prefix}b`);
+  const time = takeAll(data.rest, TIME_UNIT, (name) => TIME_UNITS[name]);
+  const negations = takeAll(time.rest, NEGATION, (word) => word).taken;
+  const sorted = (list) => [...list].sort();
+  return { values, units: sorted([...data.taken, ...time.taken]), periods: sorted(periods), seats: seats.taken, negations: sorted(negations) };
+}
+
+const QUALIFIERS = ["units", "periods", "seats", "negations"];
+const QUALIFIERS_A_CHANGE_CAN_MOVE = ["units", "periods"];
+
+function sameList(a, b) {
+  return a.length === b.length && a.every((item, i) => item === b[i]);
+}
+
+const quoteAll = (values) => values.map((value) => `"${value}"`).join(", ");
+
 function valueRuleFor(claim) {
   if (!claim.old) return { kind: "one_sided", why: "only the new page states it" };
   if (!claim.new) return { kind: "one_sided", why: "only the old page states it" };
-  const oldValues = valuesStated(claim.old);
-  const newValues = valuesStated(claim.new);
-  const gone = valuesMissingFrom(oldValues, newValues);
-  const added = valuesMissingFrom(newValues, oldValues);
+  const was = termsOfLine(claim.old);
+  const now = termsOfLine(claim.new);
+  const gone = valuesMissingFrom(was.values, now.values);
+  const added = valuesMissingFrom(now.values, was.values);
   if (gone.length > 0 && added.length > 0) return { kind: "counts" };
-  if (gone.length > 0) return { kind: "one_sided", why: `only the old words state ${gone.map((value) => `"${value}"`).join(", ")}` };
-  if (added.length > 0) return { kind: "one_sided", why: `only the new words state ${added.map((value) => `"${value}"`).join(", ")}` };
-  return { kind: "reworded", why: oldValues.length > 0 ? "the old and the new words state the same values" : "neither the old nor the new words state a value" };
+  if (gone.length > 0) return { kind: "one_sided", why: `only the old words state ${quoteAll(gone)}` };
+  if (added.length > 0) return { kind: "one_sided", why: `only the new words state ${quoteAll(added)}` };
+  if (was.values.length === 0) return { kind: "unmatched", why: "neither the old nor the new words state a value" };
+  if (QUALIFIERS_A_CHANGE_CAN_MOVE.some((name) => was[name].length > 0 && now[name].length > 0 && !sameList(was[name], now[name]))) return { kind: "counts" };
+  const differing = QUALIFIERS.find((name) => !sameList(was[name], now[name]));
+  if (!differing) return { kind: "reworded", why: "the old and the new words state the same values" };
+  const onlyOld = valuesMissingFrom(was[differing], now[differing]);
+  const onlyNew = valuesMissingFrom(now[differing], was[differing]);
+  const sides = [onlyOld.length ? `the old words say ${quoteAll(onlyOld)}` : null, onlyNew.length ? `the new words say ${quoteAll(onlyNew)}` : null].filter(Boolean);
+  return { kind: "unmatched", why: `the figures match, but only ${sides.join(" and only ")}` };
 }
 
 function classifyClaim(claim, older, newer) {
@@ -326,9 +383,11 @@ function judgePlanOnOnePage({ oldTerms, newTerms, instead, older, newer, directi
     const failed = { [planSide]: planMisquoted.length > 0, [otherSide]: insteadMisquoted.length > 0 };
     return { status: "unquotable", side: sideOfBoth(failed.old, failed.new), why, ...quoted };
   }
-  const lingering = planTerms.filter((fragment) => otherPage.includes(comparableText(fragment)));
+  const lingering = planTerms.filter((fragment) => valuesStated(fragment).length > 0 && otherPage.includes(comparableText(fragment)));
   if (lingering.length > 0) {
-    return { status: "unquotable", side: otherSide, why: `the plan's words are still on the ${otherSide} page: ${lingering.map((f) => `"${f}"`).join(", ")}`, ...quoted };
+    const why = `the plan's words are still on the ${otherSide} page: ${lingering.map((f) => `"${f}"`).join(", ")}`;
+    const claim = disappeared ? { old: oldTerms.join(" \u00B7 "), new: instead.join(" \u00B7 ") } : { old: instead.join(" \u00B7 "), new: newTerms.join(" \u00B7 ") };
+    return { status: "unquotable", side: otherSide, why, ...quoted, plan_claimed: disappeared ? "disappeared" : "appeared", review: [{ ...claim, why }] };
   }
   return { status: "differ", ...quoted, plan: disappeared ? "disappeared" : "appeared", differences: [{ old: oldTerms.join(" \u00B7 "), new: newTerms.join(" \u00B7 ") }] };
 }
@@ -366,22 +425,25 @@ export function judgePair(answer, olderText, newerText) {
   const refuted = [];
   const reworded = [];
   const oneSided = [];
+  const unmatched = [];
   const unverifiable = [];
   for (const claim of claimsOf(answer.differences)) {
     const verdict = classifyClaim(claim, older, newer);
     if (verdict.kind === "counts") differences.push(claim);
     else if (verdict.kind === "unverifiable") unverifiable.push({ ...claim, side: verdict.side, why: verdict.why });
     else if (verdict.kind === "one_sided") oneSided.push({ ...claim, why: verdict.why });
+    else if (verdict.kind === "unmatched") unmatched.push({ ...claim, why: verdict.why });
     else if (verdict.kind === "reworded") reworded.push({ ...claim, why: verdict.why });
     else refuted.push({ ...claim, why: verdict.why });
   }
-  const set = { refuted, reworded, one_sided: oneSided };
+  const set = { refuted, reworded, one_sided: oneSided, unmatched };
   if (differences.length > 0) return { status: "differ", ...quoted, differences, ...set, unverifiable };
   if (unverifiable.length > 0) {
     const side = sideOfBoth(unverifiable.some((c) => c.side !== "new"), unverifiable.some((c) => c.side !== "old"));
     return { status: "unquotable", side, why: unverifiable.map((claim) => claim.why).join("; "), ...quoted, ...set, unverifiable };
   }
-  if (oneSided.length > 0) return { status: "one_sided", ...quoted, ...set, why: "the only differences are lines one page states and the other does not" };
+  const review = [...oneSided, ...unmatched];
+  if (review.length > 0) return { status: "review", ...quoted, ...set, review, why: "no difference is a value both pages state moving, so the lines go to review" };
   if (refuted.length > 0 || reworded.length > 0) return { status: "same", ...quoted, ...set };
   return { status: "unquotable", side: "both", why: "the reader said the terms differ but quoted no difference", ...quoted, ...set, unverifiable };
 }
@@ -420,7 +482,7 @@ function placeBesideRecord(bracket, recordDay, today) {
 }
 
 function showsNoMove(verdict) {
-  return verdict?.status === "same" || verdict?.status === "one_sided" || verdict?.status === "absent";
+  return verdict?.status === "same" || verdict?.status === "review" || verdict?.status === "absent";
 }
 
 async function bracketMoves({ from, until, pool, compare, pageOf }) {
@@ -505,15 +567,18 @@ export async function settleAgainstCaptures({ url, finalUrl, textDay, recordDay,
     return text === null ? null : { page: `capture ${day}`, day, text, capture };
   };
   const todayPage = { page: "today", day: today, text: todayText };
+  let unsettledPlan = null;
   const compare = async (older, newer) => {
     reads++;
     const verdict = await readPair(older, newer);
     onRead({ older: older.page, newer: newer.page, verdict });
+    if (!unsettledPlan && verdict?.status === "unquotable" && verdict.review) unsettledPlan = { page: newer, verdict };
     return verdict;
   };
 
   const describePage = (page) => ({ page: page.page, ...describeDay(page.day, judgedOn, sideOfRecordDay(page.day, judgedOn)) });
-  const forReview = (page, verdict) => ({ outcome: "no_usable_capture", compared_with: describePage(page), review: verdict.one_sided, why: verdict.why });
+  const forReview = (page, verdict) => ({ outcome: "no_usable_capture", compared_with: describePage(page), review: verdict.review, why: verdict.why });
+  const unsettled = (result) => (unsettledPlan ? { ...result, ...forReview(unsettledPlan.page, unsettledPlan.verdict), why: `${result.why}; ${unsettledPlan.verdict.why}` } : result);
 
   const settleFrom = async (old, side) => {
     const nearRecord = judgedOn < today ? recordDayCapture(captures, judgedOn, old.capture, windowDays) : null;
@@ -528,7 +593,7 @@ export async function settleAgainstCaptures({ url, finalUrl, textDay, recordDay,
         continue;
       }
       const verdict = await compare(old, page);
-      if (verdict.status === "one_sided") return forReview(page, verdict);
+      if (verdict.status === "review") return forReview(page, verdict);
       if (verdict.status === "same" || verdict.status === "differ") {
         end = page;
         first = verdict;
@@ -537,7 +602,7 @@ export async function settleAgainstCaptures({ url, finalUrl, textDay, recordDay,
       if (verdict.side === "old" || verdict.side === "both") return { next: true, why: `the capture settles nothing: ${verdict.why}` };
       unreadable.push(`${page.page}: ${verdict.why}`);
     }
-    if (!end) return { outcome: "no_usable_capture", why: `no reading of the page on the record's day settles it (${unreadable.join("; ")})` };
+    if (!end) return unsettled({ outcome: "no_usable_capture", why: `no reading of the page on the record's day settles it (${unreadable.join("; ")})` });
     const comparedWith = describePage(end);
     const agreed = (verdict, laterMoves = []) =>
       side === "before"
@@ -550,8 +615,8 @@ export async function settleAgainstCaptures({ url, finalUrl, textDay, recordDay,
       if (!(end.capture && end.day < judgedOn)) return agreed(first);
       const now = await compare(old, todayPage);
       if (now.status === "same") return agreed(first);
-      if (now.status === "one_sided") return forReview(todayPage, now);
-      if (now.status !== "differ") return { outcome: "no_usable_capture", compared_with: comparedWith, why: `the capture before the record's day states the old capture's terms, but the reader could not compare today's page: ${now.why}` };
+      if (now.status === "review") return forReview(todayPage, now);
+      if (now.status !== "differ") return unsettled({ outcome: "no_usable_capture", compared_with: comparedWith, why: `the capture before the record's day states the old capture's terms, but the reader could not compare today's page: ${now.why}` });
       deciding = now;
       moves = await bracketMoves({ from: end, until: todayPage, pool: captures.filter((capture) => capture.timestamp > end.capture.timestamp), compare, pageOf });
     } else {
@@ -595,12 +660,12 @@ export async function settleAgainstCaptures({ url, finalUrl, textDay, recordDay,
     }
     return { ...settled, text_day: textDay, record_day: judgedOn, capture: at, reads, ...(tried.length ? { tried } : {}) };
   }
-  return {
+  return unsettled({
     outcome: "no_usable_capture",
     text_day: textDay,
     record_day: judgedOn,
     reads,
     tried,
     why: tried.length ? "no capture settled it" : `no capture on or before our text's day, nor within ${windowDays} days after it`,
-  };
+  });
 }
