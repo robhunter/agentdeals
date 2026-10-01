@@ -3061,7 +3061,7 @@
     {
       "vendor": "Mistral AI",
       "category": "AI / ML",
-      "description": "Mistral's Free plan includes $10 per month in API credits and lets you test Mistral models in Studio, alongside limited messages, web searches and coding sessions in Vibe. API keys work in Free mode with no credit card, within usage and rate limits. In Free mode, Mistral may use your inputs and outputs to train its models unless you opt out. API prices: Ministral 3 (3B) $0.1/$0.1 (per 1M tokens); Mistral Small 4 $0.15/$0.6 (per 1M tokens); Mistral Large 3 $0.5/$1.5 (per 1M tokens); Mistral Medium 3.5 $1.5/$7.5 (per 1M tokens). Batch processing is half price, and cached input tokens cost up to 90% less.",
+      "description": "Mistral's Free plan includes $10 a month in API credits, shared across Studio, the API and Vibe Code. When it is used up, usage can stop until the next month unless pay-as-you-go is turned on. API keys work with no credit card, within rate limits. The plan also has limited messages, web searches and coding sessions in Vibe. Mistral may use inputs and outputs for training unless you opt out. API prices: Ministral 3 (3B) $0.1/$0.1 (per 1M tokens); Mistral Small 4 $0.15/$0.6 (per 1M tokens); Mistral Large 3 $0.5/$1.5 (per 1M tokens); Mistral Medium 3.5 $1.5/$7.5 (per 1M tokens). Batch processing is half price, and cached input tokens cost up to 90% less.",
       "tier": "Free",
       "url": "https://mistral.ai/pricing",
       "tags": [
@@ -3072,7 +3072,7 @@
         "code",
         "free tier"
       ],
-      "verifiedDate": "2026-09-05",
+      "verifiedDate": "2026-10-01",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -3391,7 +3391,7 @@
     {
       "vendor": "PostHog",
       "category": "Startup Perks",
-      "description": "$50,000 in PostHog credits for 12 months, plus about $12,000 of partner perks, for companies less than 2 years old that have raised less than $5M. Apply from a PostHog account on a paid plan (billed for usage only) that uses the company's email domain and signed up on or after 2023-01-01. Since 2026-09-14 the credits don't pay for AI tools (PostHog AI, PostHog Desktop, the Slack app, Replay Vision, Inbox). Y Combinator companies get a separate deal instead; the two don't stack.",
+      "description": "$50,000 in PostHog credits for 12 months, plus $12,000 in partner perks, for companies less than 2 years old that have raised less than $5M. Apply from a PostHog account on a paid plan (billed for usage only) that uses the company's email domain and signed up on or after 2023-01-01. Since 2026-09-14 the credits don't pay for AI tools (PostHog AI, PostHog Desktop, the Slack app, Replay Vision, Inbox). Y Combinator companies get a separate deal instead; the two don't stack.",
       "tier": "Startup Program",
       "url": "https://posthog.com/startups",
       "tags": [
