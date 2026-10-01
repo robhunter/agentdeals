@@ -349,7 +349,7 @@
       "date_source": "hand_written"
     },
     {
-      "vendor": "Cloudflare",
+      "vendor": "Cloudflare Queues",
       "change_type": "new_free_tier",
       "date": "2026-02-04",
       "summary": "Queues added to Workers free plan — message queuing now free",
@@ -758,9 +758,9 @@
       "vendor": "Google",
       "change_type": "pricing_restructured",
       "date": "2026-01-27",
-      "summary": "Google Developer Program Premium merged into Google One AI Pro ($19.99/mo, includes $10 Cloud credits) and AI Ultra ($100 Cloud credits). Developer benefits now bundled into consumer AI subscriptions",
+      "summary": "Google began folding Google Developer Program Premium's benefits, including Google Cloud credits, into Google AI Pro ($19.99 a month, $10 a month in credits) and AI Ultra ($100 a month in credits) for personal (@gmail.com) accounts. 1:1 consultations, certification vouchers and unlimited Google Skills access are not included.",
       "previous_state": "Separate Developer Program Premium subscription ($299/year) with dev tools and perks",
-      "current_state": "Developer benefits folded into AI Pro ($19.99/mo, $10 Cloud credits for Vertex AI/Cloud Run/Gemini API) and AI Ultra ($100 Cloud credits). Developer Program Premium being phased out for @gmail.com accounts",
+      "current_state": "Premium benefits for personal accounts come with Google AI Pro ($10 a month in Google Cloud credits) or AI Ultra ($100 a month), without 1:1 consultations, certification vouchers or unlimited Google Skills access; standalone Premium is being phased out for @gmail.com accounts.",
       "impact": "medium",
       "source_url": "https://blog.google/innovation-and-ai/technology/developers-tools/gdp-premium-ai-pro-ultra/",
       "category": "Developer Tools",
@@ -1184,7 +1184,7 @@
       "vendor": "Google",
       "change_type": "pricing_restructured",
       "date": "2026-03-30",
-      "summary": "Standalone Google Developer Program Premium stopped renewing on personal (@gmail.com) accounts: annual plans after 2026-03-30, monthly plans after 2026-06-30. Google had moved its developer benefits into Google AI Pro and AI Ultra on 2026-01-27. Premium on Workspace accounts did not change.",
+      "summary": "Standalone Google Developer Program Premium stopped renewing on personal (@gmail.com) accounts: annual plans after 2026-03-30, monthly plans after 2026-06-30. Google had begun folding its benefits, including Cloud credits, into Google AI Pro and AI Ultra on 2026-01-27. Premium on Workspace accounts did not change.",
       "previous_state": "Developer Program Premium: $299 a year (a monthly option also existed) with a $500 annual Google Cloud credit, Skills Boost access and a certification voucher",
       "current_state": "Google AI Pro \"$19.99 / month\" with $10 a month in Cloud credits; Google AI Ultra \"$249.99 / month\" with $100 a month. 1:1 consultations, certification vouchers and unlimited Google Skills access are no longer included. Workspace Premium subscriptions are not changing.",
       "impact": "high",
@@ -5126,7 +5126,13 @@
       ],
       "recorded_date": "2026-04-15",
       "date_source": "hand_written",
-      "listing_effect": "ends"
+      "listing_effect": "ends",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-28",
+        "detail": "Retracted 2026-09-28: misdated, and it cited a third-party site. Google sunset the API on 2026-08-18; the record dated 2026-08-18 replaces this one.",
+        "source_url": "https://developers.google.com/merchant/api/latest-updates"
+      }
     },
     {
       "vendor": "DeepSeek",
@@ -6192,7 +6198,13 @@
       "category": "Monitoring",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-30",
+        "detail": "Retracted 2026-09-30: no change. linkok.com's pricing is the same on the Internet Archive's captures of 2025-08-04, 2025-12-10 and 2026-07-24: free monthly scans for a site of up to 100 pages, and paid weekly and daily scans. None of them offers open-source projects anything free; that line came from the free-for-dev list we imported on 2026-03-02.",
+        "source_url": "http://web.archive.org/web/20251210081334/https://linkok.com/"
+      }
     },
     {
       "vendor": "Pingmeter.com",
@@ -6402,7 +6414,13 @@
       "category": "Email",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-30",
+        "detail": "Retracted 2026-09-30: no change. mail.aionda.com already limited the Free plan to 25 disposable addresses on 2026-04-12, the day our listing was written, and on 2026-06-12. Our listing did not state the limit.",
+        "source_url": "http://web.archive.org/web/20260412103422/https://mail.aionda.com/"
+      }
     },
     {
       "vendor": "flightcontrol.dev",
@@ -7505,7 +7523,13 @@
       "category": "API Development",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-30",
+        "detail": "Retracted 2026-09-30: the free tier did not change. Mockerito's free public APIs (200+ endpoints across 9 domains, no signup, no API keys) are on the Internet Archive's capture of 2026-01-17 and at mockerito.com/free-apis today. The Developer plan, custom mock APIs at $10 a month after a 7-day free trial, is a paid product added between the captures of 2026-01-17 and 2026-08-28.",
+        "source_url": "https://mockerito.com/free-apis"
+      }
     },
     {
       "vendor": "OneSignal",
@@ -8739,7 +8763,7 @@
       "recorded_date": "2026-09-02"
     },
     {
-      "vendor": "Cloudflare",
+      "vendor": "Cloudflare for Startups",
       "change_type": "limits_increased",
       "date": "2026-09-02",
       "date_source": "discovered",
@@ -8748,10 +8772,11 @@
       "current_state": "The program offers up to $350k in credits across tiers. Tier 3: $10k, Tier 2: $100k, Tier 1: $350k. Workers AI is covered up to $2,500 (Tier 3), $10,000 (Tier 2), and $50,000 (Tier 1). AI Gateway is temporarily not covered. R2 is covered up to $10,000.",
       "impact": "high",
       "source_url": "https://www.cloudflare.com/forstartups/",
-      "category": "Startup Programs",
+      "category": "Startup Perks",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-02"
+      "recorded_date": "2026-09-02",
+      "tier": "Startup Program"
     },
     {
       "vendor": "Codecov",
@@ -11806,12 +11831,12 @@
     {
       "vendor": "Nx Cloud",
       "change_type": "limits_reduced",
-      "date": "2026-05-13",
-      "summary": "Between captures of 2026-04-13 and 2026-05-13, Nx Cloud's free Hobby plan began listing \"5 complimentary contributors\". Its 50,000 monthly credits did not change. Its FAQ had said the plan was limited only by credits, whatever the team size.",
-      "previous_state": "Hobby: 50,000 credits a month, no contributor limit",
-      "current_state": "Hobby: 50,000 credits a month (resets monthly), 5 complimentary contributors, 10 concurrent CI connections",
+      "date": "2026-05-04",
+      "summary": "Between the Internet Archive's captures of nx.dev/nx-cloud of 2026-04-23 and 2026-05-04, Nx Cloud's free Hobby plan began listing \"5 complimentary contributors\"; on 2026-04-23 the contributor allowance was listed on the Team plan only. Its 50,000 monthly credits did not change.",
+      "previous_state": "Hobby: \"$0 ... Included for free / 50,000 monthly credits / AI integrations / Remote caching with Nx Replay / Distributed task execution with Nx Agents\"; \"5 free active contributors\" was listed under Team (nx.dev/nx-cloud, capture of 2026-04-23)",
+      "current_state": "Hobby: \"Free forever ... 5 complimentary contributors / 50,000 credits/month (resets monthly)\" (nx.dev/nx-cloud, capture of 2026-05-04)",
       "impact": "medium",
-      "source_url": "https://nx.dev/pricing",
+      "source_url": "http://web.archive.org/web/20260504045907/https://nx.dev/nx-cloud",
       "category": "CI/CD",
       "alternatives": [],
       "recorded_date": "2026-09-26",
@@ -13078,19 +13103,24 @@
       "category": "Startup Perks",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-30"
+      "recorded_date": "2026-09-30",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-30",
+        "detail": "Retracted 2026-09-30: no change. This record compared posthog.com/pricing, which states PostHog's monthly free allowances (1M analytics events, 5K session replays, 1M feature flag requests), with our listing of PostHog's deal for Y Combinator companies. The pricing page does not describe that deal; posthog.com/startups says YC companies get a separate deal through Bookface. The free allowances belong to PostHog's free tier, which our PostHog Free listing already states.",
+        "source_url": "https://posthog.com/startups"
+      }
     },
     {
       "vendor": "Phase Two",
-      "change_type": "new_free_tier",
+      "change_type": "pricing_restructured",
       "date": "2026-09-30",
       "date_source": "discovered",
-      "summary": "The current pricing page offers a 30-day free trial for the Starter plan.",
+      "summary": "Phase Two now sizes its Starter cluster ($149 a month after a 30-day free trial) for 5,000 active users, where its pricing page said \"Up to 15K monthly active users\" on the Internet Archive's capture of 2026-08-28. Users are unlimited on every tier; an active user is one who logs in 30 times and refreshes a token 1,000 times a month.",
       "tier": "Starter",
-      "tier_direction": "widened",
-      "previous_state": "Managed Keycloak hosting with Phase Two's Organization extension. No free tier since 2026-07-30, when Phase Two shut down its free shared realms. The Starter cluster is $149/month with a 30-day free trial, for up to 15K monthly active users.",
-      "current_state": "The Starter plan is $149/month with a 30-day free trial, for up to 5K monthly active users.",
-      "impact": "high",
+      "previous_state": "Starter: \"30-day free trial ... $149/month ... Up to 15K monthly active users\" (pricing page, capture of 2026-08-28)",
+      "current_state": "Starter: \"30-day free trial ... $149/month ... Unlimited users · sized for 5K active users\" (pricing page, read 2026-09-30)",
+      "impact": "low",
       "source_url": "https://phasetwo.io/pricing/hosting/",
       "category": "Auth",
       "alternatives": [],
@@ -13129,7 +13159,13 @@
       "category": "Email",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-30"
+      "recorded_date": "2026-09-30",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-30",
+        "detail": "Retracted 2026-09-30: no change to the Plus price. mail.aionda.com listed Plus at 1.99 € a month beside an offer of €18.49 a year on the Internet Archive's captures of 2026-04-12, 2026-06-12 and 2026-08-28, as it does today. The one difference is Plus's encrypted drive, 1 GB on 2026-08-28 and 5 GB on 2026-09-23, a larger paid allowance.",
+        "source_url": "http://web.archive.org/web/20260828130230/https://mail.aionda.com/"
+      }
     },
     {
       "vendor": "linkok.com",
@@ -13146,7 +13182,13 @@
       "category": "Monitoring",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-30"
+      "recorded_date": "2026-09-30",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-30",
+        "detail": "Retracted 2026-09-30: no change. The $4 and $8 a month are linkok.com's weekly and daily scan plans billed yearly ($50 and $100 a year), not free-plan terms. The free plan, monthly scans for a site of up to 100 pages, is the same on the Internet Archive's captures of 2025-08-04, 2026-07-24 and 2026-08-28 and on today's page.",
+        "source_url": "http://web.archive.org/web/20260828130329/https://linkok.com/"
+      }
     },
     {
       "vendor": "Mockerito",
@@ -13163,7 +13205,61 @@
       "category": "API Development",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-30"
+      "recorded_date": "2026-09-30",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-30",
+        "detail": "Retracted 2026-09-30: no change. mockerito.com shows the Developer plan's $15 struck through beside its price of $10 a month, as it did on the Internet Archive's capture of 2026-08-28.",
+        "source_url": "http://web.archive.org/web/20260828130300/https://mockerito.com/"
+      }
+    },
+    {
+      "vendor": "Google Content API for Shopping",
+      "change_type": "product_deprecated",
+      "date": "2026-08-18",
+      "discontinued_date": "2026-08-18",
+      "summary": "Google Content API for Shopping was sunset on 2026-08-18, and its requests have returned progressive errors since 2026-09-01. Google names the Merchant API, generally available since July 2025, as its successor; developers who need more time can apply for extended access.",
+      "previous_state": "Active API for Google Merchant Center product data management",
+      "current_state": "Sunset on 2026-08-18; progressive errors since 2026-09-01. Successor: Merchant API (v1, generally available since July 2025).",
+      "impact": "high",
+      "source_url": "https://developers.google.com/merchant/api/latest-updates",
+      "category": "API Development",
+      "alternatives": [
+        "Google Merchant API",
+        "Shopify API",
+        "BigCommerce API"
+      ],
+      "recorded_date": "2026-09-28",
+      "date_source": "vendor_page",
+      "listing_effect": "ends"
+    },
+    {
+      "vendor": "Phase Two",
+      "change_type": "record_corrected",
+      "date": "2026-09-30",
+      "summary": "Data correction - Phase Two's change read on 2026-09-30 was recorded as a new free tier. Phase Two has had no free tier since 2026-07-30, and the trial of its Starter cluster was already offered; the change is the Starter cluster's sizing.",
+      "previous_state": "Recorded 2026-09-30 as new_free_tier, tier widened",
+      "current_state": "pricing_restructured on the Starter cluster, dated 2026-09-30, from the 2026-08-28 capture and today's pricing page",
+      "impact": "low",
+      "source_url": "http://web.archive.org/web/20260828130738/https://phasetwo.io/pricing/hosting/",
+      "category": "Auth",
+      "alternatives": [],
+      "recorded_date": "2026-09-30",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Nx Cloud",
+      "change_type": "record_corrected",
+      "date": "2026-09-30",
+      "summary": "Data correction - The contributor allowance on Nx Cloud's free Hobby plan appeared between the Internet Archive's captures of 2026-04-23 and 2026-05-04, so the record is dated 2026-05-04, not 2026-05-13.",
+      "previous_state": "Dated 2026-05-13, from captures of 2026-04-13 and 2026-05-13",
+      "current_state": "Dated 2026-05-04, from the captures of nx.dev/nx-cloud of 2026-04-23 and 2026-05-04",
+      "impact": "low",
+      "source_url": "http://web.archive.org/web/20260423081419/https://nx.dev/nx-cloud",
+      "category": "CI/CD",
+      "alternatives": [],
+      "recorded_date": "2026-09-30",
+      "date_source": "hand_written"
     }
   ]
 }

@@ -4,6 +4,7 @@
     { "retired": "Anthropic Claude API", "survivor": "Anthropic API" },
     { "retired": "Arize AI", "survivor": "Arize AX" },
     { "retired": "Census", "survivor": "Fivetran Activations" },
+    { "retired": "Cloudflare Startup Program", "survivor": "Cloudflare for Startups" },
     { "retired": "Colaboratory", "survivor": "Google Colab" },
     { "retired": "Components.studio", "survivor": "WebComponents.dev" },
     { "retired": "DiffJSON", "survivor": "Compare JSON" },
