@@ -2320,7 +2320,8 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("canonical"), "Should have canonical link");
     assert.ok(html.includes("global-nav"), "Should have global nav");
     assert.ok(html.includes("Top Alternatives"), "Should have alternatives section");
-    assert.ok(html.includes("30-50%"), "Should mention the price increase");
+    assert.ok(html.includes("dedicated servers by 2-21%"), "Should mention the price increase");
+    assert.ok(!html.includes("prices increasing 30-50%"), "Should not state the April 2026 increase as 30-50%");
   });
 
   it("GET /freshping-alternatives renders alternatives page", async () => {
