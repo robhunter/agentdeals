@@ -149,7 +149,7 @@ describe("settling the backlog", () => {
       archive,
       pairReaderForListing: (listing: { vendor: string }) => async () =>
         listing.vendor === "Delta"
-          ? { status: "one_sided", old_terms: ["TERMS=A"], new_terms: ["TERMS=A"], one_sided: [line], why: "the only differences are lines one page states and the other does not" }
+          ? { status: "review", old_terms: ["TERMS=A"], new_terms: ["TERMS=A"], review: [line], why: "no difference is a value both pages state moving, so the lines go to review" }
           : { status: "same", old_terms: ["TERMS=A"], new_terms: ["TERMS=A"] },
       fetchToday: async () => ({ ok: true, text: "TERMS=A" }),
       textDayOf: () => "2026-02-10",
