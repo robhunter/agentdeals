@@ -330,7 +330,7 @@ function judgePlanOnOnePage({ oldTerms, newTerms, instead, older, newer, directi
   if (lingering.length > 0) {
     return { status: "unquotable", side: otherSide, why: `the plan's words are still on the ${otherSide} page: ${lingering.map((f) => `"${f}"`).join(", ")}`, ...quoted };
   }
-  return { status: "differ", ...quoted, plan: disappeared ? "disappeared" : "appeared", differences: [{ old: oldTerms.join(" · "), new: newTerms.join(" · ") }] };
+  return { status: "differ", ...quoted, plan: disappeared ? "disappeared" : "appeared", differences: [{ old: oldTerms.join(" \u00B7 "), new: newTerms.join(" \u00B7 ") }] };
 }
 
 function judgePlanOnNeitherPage(instead, older, newer) {
