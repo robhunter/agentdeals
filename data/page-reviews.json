@@ -1054,17 +1054,17 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 135,
+      "table_figures": 137,
       "table_figures_from_records": 31,
       "tables": [
         {
           "label": "Pricing Comparison Table",
-          "figures": 38,
+          "figures": 39,
           "from_records": 0
         },
         {
           "label": "What You Actually Get for Free",
-          "figures": 15,
+          "figures": 16,
           "from_records": 0
         },
         {
@@ -1785,7 +1785,7 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 50,
+      "table_figures": 52,
       "table_figures_from_records": 0,
       "tables": [
         {
@@ -1795,7 +1795,7 @@
         },
         {
           "label": "3. 🟡 Medium Risk — Use with Caution",
-          "figures": 11,
+          "figures": 12,
           "from_records": 0
         },
         {
@@ -1815,7 +1815,7 @@
         },
         {
           "label": "7. Full Scoring Table",
-          "figures": 25,
+          "figures": 26,
           "from_records": 0
         }
       ],
@@ -2484,12 +2484,12 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 25,
+      "table_figures": 26,
       "table_figures_from_records": 5,
       "tables": [
         {
           "label": "1. Free Tier Comparison Table",
-          "figures": 9,
+          "figures": 10,
           "from_records": 0
         },
         {
