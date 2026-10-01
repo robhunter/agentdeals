@@ -729,11 +729,18 @@ function reasonWeCannotConfirmFor(offer: Offer): UnconfirmedTerms | null {
   return reasonWeCannotConfirmTheTerms(offer, unconfirmedTermsFor(offer));
 }
 
+const READS_THAT_PUT_AN_EXCERPT_IN_DOUBT: ReadonlySet<LevelWithheldReason> = new Set<LevelWithheldReason>([
+  "link_unreachable",
+  "does_not_name_vendor",
+  "does_not_name_product",
+]);
+
 function freePlanExcerptWeMayPublish(offer: Offer): FreePlanExcerpt | null {
   const excerpt = freePlanExcerptHeldFor(offer);
   if (!excerpt || excerpt.url !== offer.url) return null;
-  if (supersedingChangeFor(offer) !== null) return null;
-  return freeTierSourceWeMayCite(offer, reasonWeCannotConfirmFor(offer)).cited ? excerpt : null;
+  if (offerRetired(offer) || supersedingChangeFor(offer) !== null) return null;
+  const lastRead = levelWithheldReason(offer, unreachableNoticeForUrl(offer.url));
+  return lastRead !== null && READS_THAT_PUT_AN_EXCERPT_IN_DOUBT.has(lastRead) ? null : excerpt;
 }
 
 function termsUnconfirmedNoticeHtml(offer: Offer): string {
