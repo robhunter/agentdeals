@@ -15,6 +15,49 @@ export function collapseWhitespace(text) {
   return String(text ?? "").replace(/\s+/g, " ").trim();
 }
 
+const NAMED_ENTITIES = {
+  amp: "&",
+  lt: "<",
+  gt: ">",
+  quot: "\"",
+  apos: "'",
+  nbsp: " ",
+  lsquo: String.fromCharCode(0x2018),
+  rsquo: String.fromCharCode(0x2019),
+  ldquo: String.fromCharCode(0x201c),
+  rdquo: String.fromCharCode(0x201d),
+  ndash: String.fromCharCode(0x2013),
+  mdash: String.fromCharCode(0x2014),
+  hellip: String.fromCharCode(0x2026),
+  middot: String.fromCharCode(0x00b7),
+  euro: String.fromCharCode(0x20ac),
+};
+
+function characterOr(codePoint, original) {
+  return Number.isInteger(codePoint) && codePoint > 0 && codePoint <= 0x10ffff ? String.fromCodePoint(codePoint) : original;
+}
+
+export function decodeEntities(text) {
+  return String(text ?? "")
+    .replace(/&#x([0-9a-f]+);/gi, (original, hex) => characterOr(parseInt(hex, 16), original))
+    .replace(/&#(\d+);/g, (original, decimal) => characterOr(Number(decimal), original))
+    .replace(/&([a-z]+);/gi, (original, name) => NAMED_ENTITIES[name.toLowerCase()] ?? original);
+}
+
+export function wordsAsThePageRendersThem(text) {
+  return collapseWhitespace(decodeEntities(text));
+}
+
+const TYPOGRAPHIC_MARKS = new Map([
+  ...[0x2018, 0x2019, 0x201a, 0x201b, 0x2032].map((code) => [String.fromCharCode(code), "'"]),
+  ...[0x201c, 0x201d, 0x201e, 0x201f, 0x2033].map((code) => [String.fromCharCode(code), "\""]),
+  ...[0x2010, 0x2011, 0x2012, 0x2013, 0x2014, 0x2015, 0x2212].map((code) => [String.fromCharCode(code), "-"]),
+]);
+
+export function withPlainMarks(text) {
+  return Array.from(text, (character) => TYPOGRAPHIC_MARKS.get(character) ?? character).join("");
+}
+
 export function excerptPrompt(offer, pageText) {
   return `You are copying, word for word, the part of a vendor's pricing page that states the terms of its free plan.
 
@@ -47,15 +90,17 @@ export function parseExcerptAnswer(raw) {
 }
 
 export function verbatimExcerpt(copied, pageText) {
-  const text = collapseWhitespace(copied);
-  if (!text) return { found: false, excerpt: null };
-  if (text.length > MAX_FREE_PLAN_EXCERPT_LENGTH) {
-    return { found: true, excerpt: null, why: `the copy runs to ${text.length} characters, over the ${MAX_FREE_PLAN_EXCERPT_LENGTH} an excerpt may hold` };
+  const copy = wordsAsThePageRendersThem(copied);
+  if (!copy) return { found: false, excerpt: null };
+  if (copy.length > MAX_FREE_PLAN_EXCERPT_LENGTH) {
+    return { found: true, excerpt: null, why: `the copy runs to ${copy.length} characters, over the ${MAX_FREE_PLAN_EXCERPT_LENGTH} an excerpt may hold` };
   }
-  if (!collapseWhitespace(pageText).includes(text)) {
+  const page = wordsAsThePageRendersThem(pageText);
+  const at = withPlainMarks(page).indexOf(withPlainMarks(copy));
+  if (at < 0) {
     return { found: true, excerpt: null, why: "the copy is not on the page as the page words it" };
   }
-  return { found: true, excerpt: text };
+  return { found: true, excerpt: page.slice(at, at + copy.length) };
 }
 
 const ASSIGNS_THE_FIELD = new RegExp(`(?:\\b${FREE_PLAN_EXCERPT}\\b|\\[\\s*FREE_PLAN_EXCERPT\\s*\\])\\s*(?:=(?!=)|:)`, "g");

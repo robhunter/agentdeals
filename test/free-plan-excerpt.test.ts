@@ -41,6 +41,27 @@ describe("an excerpt is the page's own words or nothing", () => {
     assert.strictEqual(verbatimExcerpt("deploy up to 25 services", RENDER_PAGE).excerpt, null);
   });
 
+  it("keeps a copy that writes out an entity the page text still carries, or a curly mark for a straight one, and stores the page's own characters", () => {
+    const curlyApostrophe = String.fromCharCode(0x2019);
+    const enDash = String.fromCharCode(0x2013);
+    const kept: [string, string, string][] = [
+      ["Hobby Access for a team of one (that&#x27;s you!) Enough build credits", "Access for a team of one (that's you!)", "Access for a team of one (that's you!)"],
+      ["[*] 65&#43; always-free services with an Azure account", "65+ always-free services", "65+ always-free services"],
+      ["the public API, and Grok Build&#x27;s free tier does not include it. Pro", `Grok Build${curlyApostrophe}s free tier does not include it.`, "Grok Build's free tier does not include it."],
+      ["Starter &ndash; free forever, 3 monitors", "Starter - free forever, 3 monitors", `Starter ${enDash} free forever, 3 monitors`],
+    ];
+    for (const [page, copy, stored] of kept) {
+      assert.deepStrictEqual(verbatimExcerpt(copy, page), { found: true, excerpt: stored }, copy);
+    }
+  });
+
+  it("still refuses a copy whose words differ once entities and marks read alike", () => {
+    const page = "the public API, and Grok Build&#x27;s free tier does not include it. Pro";
+    for (const copy of ["Grok Build's free tier does not include them.", "Grok Build's free plan does not include it.", "Grok Builds free tier does not include it."]) {
+      assert.strictEqual(verbatimExcerpt(copy, page).excerpt, null, copy);
+    }
+  });
+
   it(`refuses a copy longer than ${MAX_FREE_PLAN_EXCERPT_LENGTH} characters, even one the page carries`, () => {
     const page = `Free plan: ${"x".repeat(MAX_FREE_PLAN_EXCERPT_LENGTH)}`;
     const verdict = verbatimExcerpt(page, page);
