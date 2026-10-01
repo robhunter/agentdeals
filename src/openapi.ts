@@ -1484,7 +1484,7 @@ export const openapiSpec = {
           free_plan_excerpt: {
             type: "object",
             nullable: true,
-            description: "The vendor's own words stating the free plan's terms, copied verbatim from the page this record cites on read_on (at most 400 characters), and published beside our figures rather than in place of them. Null where we hold none, or where the vendor page withholds it: the listing has ended, a recorded change has superseded the terms, the excerpt was read from a page the record no longer cites, the cited page is unreachable, or our last read found that the page does not name the vendor or the product. Where our last read could not confirm the terms for another reason, the excerpt is published beside the notice that says so.",
+            description: "The vendor's own words stating the free plan's terms, copied verbatim from the page this record cites on read_on (at most 400 characters), and published beside our figures rather than in place of them. Null where we hold none, where the listed tier is not a free plan, or where the vendor page withholds it: the listing has ended, a recorded change has superseded the terms, the excerpt was read from a page the record no longer cites, the cited page is unreachable, or our last read found that the page does not name the vendor or the product. Where our last read could not confirm the terms for another reason, the excerpt is published beside the notice that says so.",
             properties: {
               text: { type: "string" },
               url: { type: "string", format: "uri" },

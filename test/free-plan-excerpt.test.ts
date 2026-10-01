@@ -4,9 +4,12 @@ import { readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import {
+  COPY_STATES_NO_TERMS,
   FREE_PLAN_EXCERPT,
   MAX_FREE_PLAN_EXCERPT_LENGTH,
+  TIER_WITH_NO_FREE_PLAN,
   assignmentsOfTheExcerpt,
+  excerptTheFreePlan,
   excerptsDisagreeingWithTheirCitation,
   parseExcerptAnswer,
   verbatimExcerpt,
@@ -19,7 +22,7 @@ const WRITER = path.join("scripts", "free-plan-excerpt.js");
 const RENDER_PAGE =
   "Hobby Pro Scale Enterprise For individuals building personal projects and prototypes. $ 0 /mo + compute For teams deploying production-grade apps and agents. $ 25 /mo + compute Deploy for free Start with Pro Connect your repo, and go Deploy up to 25 services\n5 GB of bandwidth included Single-service previews Global regions & CDN Custom domains";
 const RENDER_EXCERPT = "Deploy up to 25 services 5 GB of bandwidth included Single-service previews";
-const READ = { pageText: RENDER_PAGE, url: "https://render.com/pricing", readOn: "2026-09-16" };
+const READ = { pageText: RENDER_PAGE, url: "https://render.com/pricing", readOn: "2026-09-16", terms: ["Deploy up to 25 services", "5 GB of bandwidth included"] };
 
 describe("an excerpt is the page's own words or nothing", () => {
   it("keeps a copy that is on the page once runs of whitespace are collapsed on both sides", () => {
@@ -98,9 +101,10 @@ describe("writing the excerpt onto a record", () => {
     assert.deepStrictEqual(offer[FREE_PLAN_EXCERPT], held);
   });
 
-  it("reads the copy out of the reader's answer, fenced or not, and an empty copy as no free plan", () => {
-    assert.deepStrictEqual(parseExcerptAnswer("```json\n{\"excerpt\":\"Deploy up to 25 services\"}\n```"), { copied: "Deploy up to 25 services" });
-    assert.deepStrictEqual(parseExcerptAnswer("Here it is: {\"excerpt\":\"\"}"), { copied: "" });
+  it("reads the copy and the terms it states out of the reader's answer, fenced or not, and an empty copy as no free plan", () => {
+    assert.deepStrictEqual(parseExcerptAnswer("```json\n{\"excerpt\":\"Deploy up to 25 services\",\"terms\":[\"up to 25 services\"]}\n```"), { copied: "Deploy up to 25 services", terms: ["up to 25 services"] });
+    assert.deepStrictEqual(parseExcerptAnswer("Here it is: {\"excerpt\":\"\"}"), { copied: "", terms: [] });
+    assert.deepStrictEqual(parseExcerptAnswer("{\"excerpt\":\"Deploy up to 25 services\",\"terms\":\"up to 25 services\"}"), { copied: "Deploy up to 25 services", terms: [] });
   });
 
   it("leaves a held excerpt under its own read date when the new copy is refused", () => {
@@ -109,6 +113,88 @@ describe("writing the excerpt onto a record", () => {
     const result = writeFreePlanExcerpt(offer, { ...READ, readOn: "2026-09-16", copied: "Deploy up to 25 services with 5 GB bandwidth included" });
     assert.strictEqual(result.outcome, "refused");
     assert.deepStrictEqual(offer[FREE_PLAN_EXCERPT], held);
+  });
+});
+
+describe("an excerpt states at least one of the plan's terms", () => {
+  const FORMSUBMIT_PAGE = "Setup is easy and free. Design a form for your site, and be sure to name all the fields. Then, just point the action to us and confirm your email address! NO REGISTRATION REQUIRED";
+  const BITRISE_PAGE = "Hobby Build and distribute your passion project without the extra cost. Free Forever Get started Access for a team of one (that's you!) Enough build credits";
+  const NORTHFLANK_PAGE = "Deploy anything, anywhere. Get started for free Book a demo";
+  const FIREBASE_PAGE = "No-cost (Spark plan) Generous no-cost usage limits No payment method needed Get started";
+  const write = (plan: { vendor: string; tier: string }, pageText: string, copied: string, terms: unknown) => {
+    const record: Record<string, unknown> = { ...plan };
+    const result = writeFreePlanExcerpt(record, { copied, terms, pageText, url: "https://vendor.example/pricing", readOn: "2026-10-01" });
+    return { result, stored: (record[FREE_PLAN_EXCERPT] as { text: string } | undefined)?.text ?? null };
+  };
+
+  it("keeps a copy whose terms state a price, an allowance, a limit or who can get the plan, with or without a figure", () => {
+    assert.deepStrictEqual(write({ vendor: "Render", tier: "Hobby" }, RENDER_PAGE, RENDER_EXCERPT, ["Deploy up to 25 services"]).result, { outcome: "written" });
+    assert.deepStrictEqual(write({ vendor: "Formsubmit.co", tier: "Free" }, FORMSUBMIT_PAGE, FORMSUBMIT_PAGE, ["NO REGISTRATION REQUIRED"]).result, { outcome: "written" });
+    assert.deepStrictEqual(write({ vendor: "Bitrise", tier: "Hobby" }, BITRISE_PAGE, "Free Forever Get started Access for a team of one (that's you!)", ["Access for a team of one"]).result, { outcome: "written" });
+    assert.deepStrictEqual(write({ vendor: "Firebase", tier: "Spark" }, FIREBASE_PAGE, FIREBASE_PAGE, ["No payment method needed"]).result, { outcome: "written" });
+  });
+
+  it("refuses a copy that only says the product is free or invites the reader to start, whatever the reader names as its terms", () => {
+    for (const [copy, terms] of [
+      ["Get started for free", ["Get started for free"]],
+      ["Get started for free", ["for free"]],
+      ["Deploy anything, anywhere. Get started for free", ["Get started for free"]],
+    ] as [string, string[]][]) {
+      assert.deepStrictEqual(write({ vendor: "Northflank", tier: "Free" }, NORTHFLANK_PAGE, copy, terms), { result: { outcome: "refused", why: COPY_STATES_NO_TERMS }, stored: null }, `${copy} / ${terms}`);
+    }
+  });
+
+  it("does not count the vendor's or the plan's own name as a term", () => {
+    assert.deepStrictEqual(write({ vendor: "Firebase", tier: "Spark" }, FIREBASE_PAGE, "No-cost (Spark plan)", ["No-cost (Spark plan)"]).result, { outcome: "refused", why: COPY_STATES_NO_TERMS });
+    assert.deepStrictEqual(write({ vendor: "Northflank", tier: "Free" }, "Northflank Free Get started", "Northflank Free", ["Northflank Free"]).result, { outcome: "refused", why: COPY_STATES_NO_TERMS });
+  });
+
+  it("refuses a copy when the reader names no term, or no term the copy holds", () => {
+    assert.deepStrictEqual(write({ vendor: "Render", tier: "Hobby" }, RENDER_PAGE, RENDER_EXCERPT, []).result, { outcome: "refused", why: COPY_STATES_NO_TERMS });
+    assert.deepStrictEqual(write({ vendor: "Render", tier: "Hobby" }, RENDER_PAGE, RENDER_EXCERPT, undefined).result, { outcome: "refused", why: COPY_STATES_NO_TERMS });
+    assert.deepStrictEqual(write({ vendor: "Render", tier: "Hobby" }, RENDER_PAGE, RENDER_EXCERPT, ["Deploy up to 50 services", "100 GB of bandwidth"]).result, { outcome: "refused", why: COPY_STATES_NO_TERMS });
+  });
+
+  it("leaves a held excerpt under its own read date when the new copy states no terms", () => {
+    const held = { text: RENDER_EXCERPT, url: READ.url, read_on: "2026-08-28" };
+    const record: Record<string, unknown> = { vendor: "Render", tier: "Hobby", [FREE_PLAN_EXCERPT]: held };
+    assert.deepStrictEqual(writeFreePlanExcerpt(record, { ...READ, copied: "Deploy for free", terms: ["Deploy for free"] }), { outcome: "refused", why: COPY_STATES_NO_TERMS });
+    assert.deepStrictEqual(record[FREE_PLAN_EXCERPT], held);
+  });
+});
+
+describe("only a tier that may be a free plan is quoted", () => {
+  const PAGE = "Acme pricing. Free tier: 10 GB per month for $0. Pro: $20 per month.";
+  const excerpt = async (tier: string, held?: unknown) => {
+    const offer = { vendor: "Acme", category: "Storage", tier, url: "https://acme.example/pricing" };
+    const record: Record<string, unknown> = { ...offer, ...(held ? { [FREE_PLAN_EXCERPT]: held } : {}) };
+    const asked: string[] = [];
+    const result = await excerptTheFreePlan(record, {
+      offer,
+      pageText: PAGE,
+      read: async () => {
+        asked.push(tier);
+        return { copied: "Free tier: 10 GB per month for $0.", terms: ["10 GB per month"] };
+      },
+      readOn: "2026-10-01",
+    });
+    return { result, asked, record };
+  };
+
+  it("never asks the reader about a paid, usage-billed, closed or ended tier, and removes an excerpt such a tier still holds", async () => {
+    for (const tier of ["Paid", "Pay-as-you-go", "Legacy Free", "Freemium", "Retired"]) {
+      const fresh = await excerpt(tier);
+      assert.deepStrictEqual([fresh.asked, fresh.result.outcome, fresh.result.why, FREE_PLAN_EXCERPT in fresh.record], [[], "not_a_free_plan", TIER_WITH_NO_FREE_PLAN, false], tier);
+      const holding = await excerpt(tier, { text: "Free tier: 10 GB", url: "https://acme.example/pricing", read_on: "2026-09-01" });
+      assert.deepStrictEqual([holding.asked, holding.result.outcome, FREE_PLAN_EXCERPT in holding.record], [[], "removed", false], tier);
+    }
+  });
+
+  it("asks about a free, trial, credit or programme tier, and writes what the reader copied", async () => {
+    for (const tier of ["Free", "Hobby", "Free Trial", "Free Credits", "Startup Program"]) {
+      const { result, asked, record } = await excerpt(tier);
+      assert.deepStrictEqual([asked, result.outcome, (record[FREE_PLAN_EXCERPT] as { text: string }).text], [[tier], "written", "Free tier: 10 GB per month for $0."], tier);
+    }
   });
 });
 
@@ -179,7 +265,7 @@ describe("the rotation keeps the excerpt of a page it read", async () => {
       confirmFn: async () => ({ describes_change: true }),
       excerptFn: async (offer: { vendor: string }) => {
         asked.push(offer.vendor);
-        return { copied: "Free tier: 10 GB per month for $0." };
+        return { copied: "Free tier: 10 GB per month for $0.", terms: ["10 GB per month"] };
       },
       rateLimitMs: 0,
       ...options,
@@ -200,6 +286,33 @@ describe("the rotation keeps the excerpt of a page it read", async () => {
     assert.deepStrictEqual([elsewhere.asked, elsewhere.record[FREE_PLAN_EXCERPT]], [[], held]);
     const unreachable = await run({ fetchFn: async () => ({ ok: false, error: "HTTP 503" }) }, false, held);
     assert.deepStrictEqual([unreachable.asked, unreachable.record[FREE_PLAN_EXCERPT]], [[], held]);
+  });
+
+  it("asks nothing for a listing whose tier is not a free plan, counts it, and removes the excerpt it held", async () => {
+    const paid = { ...acme, tier: "Paid" };
+    const data = { offers: [{ ...paid, [FREE_PLAN_EXCERPT]: { text: "Free tier: 10 GB", url: acme.url, read_on: "2026-08-01" } }] };
+    const asked: string[] = [];
+    const result = await runAiMode([{ index: 0, offer: paid }], data, false, NOW, {
+      fetchFn: async () => ({ ok: true, text: ACME_PAGE, truncated: false }),
+      verifyFn: async () => ({ status: "confirmed" }),
+      confirmFn: async () => ({ describes_change: true }),
+      excerptFn: async (offer: { vendor: string }) => {
+        asked.push(offer.vendor);
+        return { copied: "Free tier: 10 GB per month for $0.", terms: ["10 GB per month"] };
+      },
+      rateLimitMs: 0,
+    });
+    assert.deepStrictEqual(asked, []);
+    assert.ok(!(FREE_PLAN_EXCERPT in data.offers[0]));
+    assert.strictEqual(result.excerpts.removed, 1);
+    const unheld = await runAiMode([{ index: 0, offer: paid }], { offers: [{ ...paid }] }, false, NOW, {
+      fetchFn: async () => ({ ok: true, text: ACME_PAGE, truncated: false }),
+      verifyFn: async () => ({ status: "confirmed" }),
+      confirmFn: async () => ({ describes_change: true }),
+      excerptFn: async () => ({ copied: "Free tier: 10 GB per month for $0.", terms: ["10 GB per month"] }),
+      rateLimitMs: 0,
+    });
+    assert.strictEqual(unheld.excerpts.not_a_free_plan, 1);
   });
 
   it("counts a refused copy and an unanswered read with their reasons, and writes nothing on a dry run", async () => {

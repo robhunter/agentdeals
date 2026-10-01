@@ -46,10 +46,24 @@ export function findStaleOffers(offers, thresholdDays, now = new Date()) {
   return { stale, freshCount: fresh.length };
 }
 
-function stripHtml(html) {
-  return html
+const ICON_FONT_CLASS = /(?:^|\s)(?:material-icons|material-symbols|google-symbols|google-material-icons)(?:-[a-z]+)*(?=\s|$)/i;
+const ELEMENT_HOLDING_ONLY_TEXT = /<([a-z][a-z0-9-]*)\b([^>]*)>([^<]*)<\/\1\s*>/gi;
+const CLASS_ATTRIBUTE = /(?:^|\s)class\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/i;
+
+function drawnByAnIconFont(tag, attributes) {
+  if (tag.toLowerCase() === "mat-icon") return true;
+  const classes = CLASS_ATTRIBUTE.exec(attributes);
+  return classes !== null && ICON_FONT_CLASS.test(classes[1] ?? classes[2] ?? classes[3] ?? "");
+}
+
+export function withoutIconFontText(html) {
+  return html.replace(ELEMENT_HOLDING_ONLY_TEXT, (element, tag, attributes) => (drawnByAnIconFont(tag, attributes) ? " " : element));
+}
+
+export function stripHtml(html) {
+  return withoutIconFontText(html
     .replace(/<script[\s\S]*?<\/script>/gi, "")
-    .replace(/<style[\s\S]*?<\/style>/gi, "")
+    .replace(/<style[\s\S]*?<\/style>/gi, ""))
     .replace(/<[^>]+>/g, " ")
     .replace(/&nbsp;/g, " ")
     .replace(/&amp;/g, "&")

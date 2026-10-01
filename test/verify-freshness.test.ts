@@ -7,6 +7,7 @@ import { tmpdir } from "node:os";
 const {
   findStaleOffers,
   fetchPageText,
+  stripHtml,
   verifyOfferAgainstPage,
   parseVerifierResponse,
   createVerifierClient,
@@ -296,5 +297,23 @@ describe("verify-freshness", () => {
       assert.strictEqual(result.skipped, 7);
       assert.ok(result.failed <= 3);
     });
+  });
+});
+
+describe("the text a reader sees of a page", () => {
+  it("leaves out the names an icon font draws as symbols, so a tick reads as nothing rather than as the word check", () => {
+    const firebase = '<div class="pricing-table__header__cell__plan-description"> <i class="material-icons" aria-hidden="true" translate="no"> check </i> Generous no-cost usage limits <br> <i class="material-icons" aria-hidden="true" translate="no"> check </i> No payment method needed </br> </div>';
+    assert.strictEqual(stripHtml(firebase), "Generous no-cost usage limits No payment method needed");
+    assert.strictEqual(stripHtml('<li><span class="icon material-symbols-outlined">close</span> Custom domains</li>'), "Custom domains");
+    assert.strictEqual(stripHtml("<li><span class='material-icons-round'>done</span>SSO</li>"), "SSO");
+    assert.strictEqual(stripHtml("<li><mat-icon>check_circle</mat-icon> 3 projects</li>"), "3 projects");
+    assert.strictEqual(stripHtml('<p><span class="google-symbols">arrow_forward</span> Start</p>'), "Start");
+  });
+
+  it("keeps words in any other element, including one whose class only mentions an icon", () => {
+    assert.strictEqual(stripHtml("<p>Every plan comes with a <i>check</i> on usage</p>"), "Every plan comes with a check on usage");
+    assert.strictEqual(stripHtml('<p><span class="icon-label">Unlimited</span> seats</p>'), "Unlimited seats");
+    assert.strictEqual(stripHtml('<p><span class="not-material-icons">Free</span> plan</p>'), "Free plan");
+    assert.strictEqual(stripHtml('<p><span data-class="material-icons">Free</span> plan</p>'), "Free plan");
   });
 });

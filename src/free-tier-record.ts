@@ -27,6 +27,11 @@ export function listingOffersAFreeTier(offer: Pick<Offer, "tier"> | null | undef
   return offer != null && !offerRetired(offer) && classifyTier(offer.tier).class === "free";
 }
 
+export function tierMayCarryAFreePlanExcerpt(tier: string): boolean {
+  const tierClass = classifyTier(tier).class;
+  return tierClass !== "not_free" && tierClass !== "retired";
+}
+
 export const A_SELF_HOSTED_EDITION = /\boss\b|\bopen[\s-]?source\b|\bself[\s-]?hosted\b/i;
 
 export function tierRecordsASelfHostedEdition(tier: string): boolean {

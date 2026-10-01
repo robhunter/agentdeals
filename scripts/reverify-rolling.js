@@ -35,7 +35,7 @@ import {
   SOURCE_CHECK_UNREADABLE,
 } from "./vendor-naming.js";
 import { findRenderer } from "./rendered-page.js";
-import { readFreePlanExcerpt, textTheReaderSees, writeFreePlanExcerpt } from "./free-plan-excerpt.js";
+import { excerptTheFreePlan, readFreePlanExcerpt } from "./free-plan-excerpt.js";
 import { isoDay } from "./change-log.js";
 import { recordRefusals, readRefusals, refusalHolds, offerKey } from "./change-refusals.js";
 import {
@@ -302,7 +302,7 @@ export async function runAiMode(picked, data, dryRun, now, options = {}) {
   const sourceChecks = emptySourceCounters();
   const recorder = attemptRecorder();
   const confirmedThisRun = new Set();
-  const excerpts = { written: 0, removed: 0, none: 0, refused: [], unread: [] };
+  const excerpts = { written: 0, removed: 0, none: 0, not_a_free_plan: 0, refused: [], unread: [] };
 
   for (const entry of picked) {
     const { offer, index } = entry;
@@ -463,15 +463,9 @@ export async function runAiMode(picked, data, dryRun, now, options = {}) {
 }
 
 async function keepFreePlanExcerpt(excerptFn, offer, pageText, record, now, excerpts) {
-  let answer;
-  try {
-    answer = await excerptFn(offer, pageText);
-  } catch (err) {
-    answer = { copied: null, why: err.message };
-  }
-  const result = writeFreePlanExcerpt(record, { copied: answer?.copied, pageText: textTheReaderSees(pageText), url: offer.url, readOn: isoDay(now) });
+  const result = await excerptTheFreePlan(record, { offer, pageText, read: excerptFn, readOn: isoDay(now) });
   if (result.outcome === "refused") excerpts.refused.push({ vendor: offer.vendor, url: offer.url, why: result.why });
-  else if (result.outcome === "unread") excerpts.unread.push({ vendor: offer.vendor, url: offer.url, why: answer?.why ?? "no answer" });
+  else if (result.outcome === "unread") excerpts.unread.push({ vendor: offer.vendor, url: offer.url, why: result.why });
   else excerpts[result.outcome]++;
 }
 
