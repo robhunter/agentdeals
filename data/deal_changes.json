@@ -13507,7 +13507,13 @@
       "category": "Databases",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-10-01"
+      "recorded_date": "2026-10-01",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-10-01",
+        "detail": "Retracted 2026-10-01: InfluxDB Cloud's free plan did not end. InfluxData's pricing page says Cloud Serverless \"also has a free tier with limited data ingestion rates and 30-day retention\", and the $250 credit it shows is for new paid accounts (\"New paid accounts receive $250 in credits applied to the first 30 days\"). Its docs say new accounts start on the Free Plan: 5 MB of writes per 5 minutes and 30-day retention. The page said the same in its 2026-07-05 and 2026-08-28 archived copies.",
+        "source_url": "https://www.influxdata.com/influxdb-pricing/"
+      }
     }
   ]
 }

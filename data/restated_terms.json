@@ -2745,7 +2745,8 @@
       "source_url": "https://www.influxdata.com/influxdb-pricing/",
       "record_date": "2026-10-01",
       "change_type": "free_tier_removed",
-      "summary": "The free tier is now a $250 credit for Cloud Serverless, with usage-based pricing after that. InfluxDB 3 Core is now listed as a free, open-source option."
+      "summary": "The free tier is now a $250 credit for Cloud Serverless, with usage-based pricing after that. InfluxDB 3 Core is now listed as a free, open-source option.",
+      "reverted_on": "2026-10-01"
     }
   ]
 }
