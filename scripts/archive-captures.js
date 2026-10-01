@@ -227,15 +227,39 @@ function claimsOf(value) {
     .filter((claim) => comparableText(claim.old) || comparableText(claim.new));
 }
 
+function occursMoreThanOnce(text, words) {
+  const first = text.indexOf(words);
+  return first >= 0 && text.indexOf(words, first + 1) >= 0;
+}
+
+function wordsTooCommonToRefute(claim, older, newer) {
+  const repeatedOn = (text) => [claim.old, claim.new].filter((words) => words && occursMoreThanOnce(text, comparableText(words)));
+  const onOld = repeatedOn(older);
+  const onNew = repeatedOn(newer);
+  if (onOld.length === 0 && onNew.length === 0) return null;
+  const side = sideOfBoth(onOld.length > 0, onNew.length > 0);
+  const repeated = [...new Set([...onOld, ...onNew])];
+  const quoted = repeated.map((words) => `"${words}"`).join(" and ");
+  const [verb, pronoun] = repeated.length > 1 ? ["occur", "they"] : ["occurs", "it"];
+  const pages = side === "both" ? "old and the new pages" : `${side} page`;
+  return { unverifiable: side, why: `${quoted} ${verb} more than once on the ${pages}, so ${pronoun} cannot refute the difference` };
+}
+
+function refutationOf(claim, olderHas, newerHas) {
+  if (!claim.old && olderHas(claim.new)) return { why: "the new words were already on the old page" };
+  if (!claim.new && newerHas(claim.old)) return { why: "the old words are still on the new page" };
+  if (claim.old && claim.new && newerHas(claim.old) && olderHas(claim.new)) return { why: "each page carries both the old and the new words" };
+  return null;
+}
+
 function whyAClaimFails(claim, older, newer) {
   const olderHas = (words) => older.includes(comparableText(words));
   const newerHas = (words) => newer.includes(comparableText(words));
   if (claim.old && !olderHas(claim.old)) return { unverifiable: "old", why: "the old words are not on the old page" };
   if (claim.new && !newerHas(claim.new)) return { unverifiable: "new", why: "the new words are not on the new page" };
-  if (!claim.old && olderHas(claim.new)) return { why: "the new words were already on the old page" };
-  if (!claim.new && newerHas(claim.old)) return { why: "the old words are still on the new page" };
-  if (claim.old && claim.new && newerHas(claim.old) && olderHas(claim.new)) return { why: "each page carries both the old and the new words" };
-  return null;
+  if (comparableText(claim.old) === comparableText(claim.new)) return { why: "the old and the new words are the same" };
+  const refutation = refutationOf(claim, olderHas, newerHas);
+  return refutation && (wordsTooCommonToRefute(claim, older, newer) ?? refutation);
 }
 
 function sideOfBoth(oldFailed, newFailed) {
@@ -268,7 +292,7 @@ export function judgePair(answer, olderText, newerText) {
   if (differences.length > 0) return { status: "differ", ...quoted, differences, refuted, unverifiable };
   if (refuted.length > 0 && unverifiable.length === 0) return { status: "same", ...quoted, refuted };
   const why = unverifiable.length > 0 ? unverifiable.map((claim) => claim.why).join("; ") : "the reader said the terms differ but quoted no difference";
-  return { status: "unquotable", side: unverifiable.length > 0 ? sideOfBoth(unverifiable.some((c) => c.side === "old"), unverifiable.some((c) => c.side === "new")) : "both", why, ...quoted, refuted, unverifiable };
+  return { status: "unquotable", side: unverifiable.length > 0 ? sideOfBoth(unverifiable.some((c) => c.side !== "new"), unverifiable.some((c) => c.side !== "old")) : "both", why, ...quoted, refuted, unverifiable };
 }
 
 export function pairedReaderFor(client, listing) {
@@ -411,10 +435,10 @@ export async function settleAgainstCaptures({ url, finalUrl, textDay, recordDay,
         first = verdict;
         break;
       }
-      if (verdict.side === "old" || verdict.side === "both") return { next: true, why: `the reader could not quote the plan's terms from the capture: ${verdict.why}` };
+      if (verdict.side === "old" || verdict.side === "both") return { next: true, why: `the capture settles nothing: ${verdict.why}` };
       unreadable.push(`${page.page}: ${verdict.why}`);
     }
-    if (!end) return { outcome: "no_usable_capture", why: `the reader could not quote the plan's terms from the page on the record's day (${unreadable.join("; ")})` };
+    if (!end) return { outcome: "no_usable_capture", why: `no reading of the page on the record's day settles it (${unreadable.join("; ")})` };
     const comparedWith = { page: end.page, ...describeDay(end.day, judgedOn, sideOfRecordDay(end.day, judgedOn)) };
     const agreed = (verdict, laterMoves = []) =>
       side === "before"
