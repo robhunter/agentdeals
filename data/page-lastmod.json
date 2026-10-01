@@ -786,11 +786,11 @@
       "changed": "2026-09-05"
     },
     "/auth-comparison-2026": {
-      "hash": "1c2a945afe9be967",
+      "hash": "8957733ed2dde0e4",
       "changed": "2026-10-01"
     },
     "/auth0-alternatives": {
-      "hash": "330e0f7129f08979",
+      "hash": "250ffdc7ba73d976",
       "changed": "2026-10-01"
     },
     "/auth0-vs-clerk": {
@@ -1320,7 +1320,7 @@
       "changed": "2026-10-01"
     },
     "/ci-cd-pricing": {
-      "hash": "8186cdb58ac7234b",
+      "hash": "3a4a052f886b2df8",
       "changed": "2026-10-01"
     },
     "/cicd-free-tier-comparison-2026": {
@@ -1336,8 +1336,8 @@
       "changed": "2026-10-01"
     },
     "/cloudflare-pages-vs-vercel": {
-      "hash": "de3fd2260fc43aef",
-      "changed": "2026-09-28"
+      "hash": "1d3c337264ca5fca",
+      "changed": "2026-10-01"
     },
     "/cloudinary-vs-imagekit": {
       "hash": "055aaf57a7d5a3de",
@@ -3116,11 +3116,11 @@
       "changed": "2026-10-01"
     },
     "/free-nextjs-stack": {
-      "hash": "3e76247dec74ce9d",
+      "hash": "987e865d86f7fdc8",
       "changed": "2026-10-01"
     },
     "/free-saas-stack": {
-      "hash": "ae17f4ccbf14e9b9",
+      "hash": "9c7f07b5fa7fef41",
       "changed": "2026-10-01"
     },
     "/free-startup-stack": {
@@ -3215,7 +3215,7 @@
       "changed": "2026-10-01"
     },
     "/hosting-pricing": {
-      "hash": "6a8affa053c3be10",
+      "hash": "cc04339b527ede57",
       "changed": "2026-10-01"
     },
     "/ide-code-editors-alternatives": {
@@ -3438,7 +3438,7 @@
       "changed": "2026-10-01"
     },
     "/serverless-free-tier-comparison-2026": {
-      "hash": "ad3dccde1cb1a0b5",
+      "hash": "38ae22f835ec27f2",
       "changed": "2026-10-01"
     },
     "/setup": {
@@ -3485,7 +3485,7 @@
       "changed": "2026-10-01"
     },
     "/state-of-free-tiers": {
-      "hash": "9091fb777280d994",
+      "hash": "a8e00857e207dc24",
       "changed": "2026-10-01"
     },
     "/storage-alternatives": {
@@ -3493,7 +3493,7 @@
       "changed": "2026-10-01"
     },
     "/storage-comparison-2026": {
-      "hash": "899d0edbe5765cc2",
+      "hash": "f932aa5de6c20832",
       "changed": "2026-10-01"
     },
     "/supabase-vs-firebase": {
