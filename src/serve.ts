@@ -6625,7 +6625,7 @@ const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
     slug: "hetzner-alternatives",
     title: "Hetzner Alternatives After April 2026 Price Increase — Budget Cloud Options",
     metaDesc: "Hetzner raised prices twice in 2026 and its whole Cost-Optimized line is unavailable. Compare free-tier alternatives: DigitalOcean, Oracle Cloud, Render, Railway, Fly.io, Cloudflare Workers, Google Cloud.",
-    contextHtml: `<p><strong>Hetzner</strong> raised cloud and dedicated server prices twice in 2026, driven by surging DRAM costs (+171% YoY) from AI infrastructure demand. The April 1 round applied to <strong>all regions and all customers</strong>; the June 15 round applies to <strong>new orders and rescales only</strong>, and renamed the lineup. All ${unorderableHetznerPlans().length} Cost-Optimized plans are now listed as not available, so the cheapest plan you can order is ${hetznerEntryPriceClause()}, read from hetzner.com on ${HETZNER_PRICES_READ}. See our <a href="/hetzner-pricing-2026">full pricing analysis</a>.</p>
+    contextHtml: `<p>Hetzner raised prices twice in 2026. The April 1 round applied to <strong>all regions and all customers</strong>; the June 15 round applies to <strong>new orders and rescales only</strong>, and renamed the lineup. All ${unorderableHetznerPlans().length} Cost-Optimized plans are now listed as not available, so the cheapest plan you can order is ${hetznerEntryPriceClause()}, read from hetzner.com on ${HETZNER_PRICES_READ}. See our <a href="/hetzner-pricing-2026">full pricing analysis</a>.</p>
       <p>If you're looking for budget-friendly alternatives with generous free tiers or credits, here are the best options across VPS/cloud providers, managed platforms, and serverless offerings.</p>`,
     tag: "hetzner-alternative",
     primaryVendor: "Hetzner",
@@ -7904,7 +7904,7 @@ const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
   {
     slug: "q2-pricing-preview-2026",
     title: "Q2 2026 Developer Pricing Preview — What's Changing April–June",
-    metaDesc: "Upcoming developer tool pricing changes for Q2 2026. Hetzner +30-50%, Google Tenor shutdown, odrive removal, and more. Timeline, impact analysis, and alternatives.",
+    metaDesc: "Upcoming developer tool pricing changes for Q2 2026. Hetzner prices rose, Google Tenor shutdown, odrive removal, and more. Timeline, impact analysis, and alternatives.",
     contextHtml: "",
     tag: "q2-preview",
     primaryVendor: "Hetzner",
@@ -19003,7 +19003,7 @@ ${mcpCtaCss()}
   <div class="executive-summary">
     <p><strong>Hetzner raised cloud prices twice in 2026, and the second round changed the lineup as well as the numbers.</strong> The April 1 adjustment applied to all regions and all customers, new and existing. The June 15 adjustment applies only to new orders and rescales — existing server contracts keep their terms — and it came with a standardization that renamed the plans.</p>
     <p><strong>Every Cost-Optimized plan is currently unavailable.</strong> All ${unorderable.length} plans in the Cost-Optimized line, Intel and Arm alike, are listed on hetzner.com with a price and marked not available. The cheapest plan a reader can actually order is <strong>${escHtmlServer(cheapestOrderable.sku)} at ${eur(cheapestOrderable.eur)}/mo</strong> (${cheapestOrderable.vcpu} vCPU, ${cheapestOrderable.ram} GB). A price for a plan nobody can buy is not an entry price.</p>
-    <p><strong>The root cause is hardware costs.</strong> DRAM prices surged 171% year-over-year, NAND flash roughly doubled, and AI infrastructure buildout consumed the supply that smaller operators depend on. Hetzner's own statements cite increased procurement costs for key hardware components. The same pressure moved OVHcloud and Netcup.</p>
+    <p><strong>Hardware costs increased.</strong> Hetzner cited increased costs to operate infrastructure and buy new hardware.</p>
   </div>
 
   <div class="toc">
@@ -19052,12 +19052,11 @@ ${mcpCtaCss()}
   <div class="context-box">
     <strong>The short answer: AI is eating the world's memory supply.</strong>
     <ul>
-      <li><strong>DRAM prices surged 171% YoY</strong> — AI training and inference clusters consume massive amounts of HBM and DDR5, driving up prices for everyone</li>
       <li><strong>NAND flash prices roughly doubled</strong> — NVMe SSDs used in cloud servers were hit by the same AI-driven supply crunch</li>
       <li><strong>Hard drives sold out for the year</strong> — AI data storage demand consumed available supply</li>
       <li><strong>EU lacks domestic DRAM manufacturing</strong> — European providers like Hetzner are fully dependent on Asian semiconductor supply chains, with no buffer against global price shocks</li>
     </ul>
-    <p style="margin-top:.75rem">Hetzner's official statement cites "significantly increased procurement costs for key hardware components" as the driver. This is an industry-wide phenomenon, not a Hetzner-specific decision.</p>
+    <p style="margin-top:.75rem">Hetzner's official statement cites "The costs to operate our infrastructure and to buy new hardware have both increased dramatically." This is an industry-wide phenomenon, not a Hetzner-specific decision.</p>
     <p style="margin-top:.5rem">Source: <a href="https://www.hetzner.com/pressroom/statement-price-adjustment/" target="_blank" rel="noopener">Hetzner Press Room</a>, <a href="https://www.theregister.com/2026/02/24/ai_isnt_done_yet_memoryrelated/" target="_blank" rel="noopener">The Register</a></p>
   </div>
 
@@ -19554,7 +19553,7 @@ mcpCtaCss() + "\n" +
       "<li><strong>Google Tenor API shutdown</strong> (June 30, 2026) &mdash; GIF API going offline. <a href=\"/tenor-alternatives\">Alternatives guide</a></li>\n" +
       "<li><strong>Firebase Studio shutdown</strong> (no new workspaces from June 22, 2026; closes March 22, 2027) &mdash; cloud IDE going offline. <a href=\"/firebase-studio-shutdown\">Migration guide</a></li>\n" +
       "<li><strong>Gemini API billing overhaul</strong> &mdash; spend caps ($250&ndash;$100K+/mo), prepaid billing, 3.1 Pro paid-only. <a href=\"/gemini-api-pricing-2026\">Full analysis</a></li>\n" +
-      "<li><strong>DRAM price surge</strong> &mdash; 171% YoY increase driving hosting costs up. Hetzner already raised prices 30&ndash;50%. Other hosting providers may follow in Q2.</li>\n" +
+      "<li><strong>Price increases</strong> &mdash; Hetzner raised cloud server prices 30-37% in April 2026 and again in June for new orders.</li>\n" +
       "<li><strong>AI API price war continues</strong> &mdash; Groq, Cerebras, and OpenRouter offering generous free tiers. Expect more free tier launches from challengers while incumbents focus on paid plans.</li>\n" +
     "</ul>\n" +
     "<p style=\"margin-top:.75rem\"><a href=\"/q2-pricing-preview-2026\">Read the full Q2 2026 Pricing Preview &rarr;</a></p>\n" +
@@ -19588,7 +19587,7 @@ mcpCtaCss() + "\n" +
 
 function buildQ2PricingPreview2026Page(): string {
   const title = "Q2 2026 Developer Pricing Preview — What's Changing April–June";
-  const metaDesc = "Upcoming developer tool pricing changes for Q2 2026. Hetzner +30-50%, Google Tenor shutdown, odrive removal, and more. Timeline, impact analysis, and alternatives.";
+  const metaDesc = "Upcoming developer tool pricing changes for Q2 2026. Hetzner prices rose, Google Tenor shutdown, odrive removal, and more. Timeline, impact analysis, and alternatives.";
   const slug = "q2-pricing-preview-2026";
   const pubDate = "2026-03-25";
 
@@ -19643,7 +19642,7 @@ function buildQ2PricingPreview2026Page(): string {
     { vendor: "Microsoft 365", signal: "E3 price increase to $39.60/user/mo announced March 24. Takes effect in Q2. Not a developer tool per se, but signals broader Microsoft pricing trends that could affect Azure and GitHub.", impact: "medium" as const },
     { vendor: "OpenAI", signal: "Assistants API deprecated with full shutdown August 26, 2026. Q2 is the migration window — developers must move to Responses API + Conversations API before the deadline.", impact: "high" as const },
     { vendor: "AI API Providers", signal: "Competition intensifying: Groq, Cerebras, and OpenRouter offering generous free tiers while incumbents (OpenAI, Anthropic) focus on paid plans. Expect more free tier launches from challengers in Q2.", impact: "low" as const },
-    { vendor: "Cloud Providers", signal: "DRAM prices up 171% YoY driving Hetzner's increase. OVHcloud, Netcup also raising prices. AWS, GCP, Azure haven't announced increases yet, but memory-heavy instances may follow.", impact: "medium" as const },
+    { vendor: "Cloud Providers", signal: "Hetzner raised prices twice in 2026, citing increased infrastructure and hardware costs. OVHcloud, Netcup also raising prices. AWS, GCP, Azure haven't announced increases yet, but memory-heavy instances may follow.", impact: "medium" as const },
   ];
 
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
@@ -19756,7 +19755,7 @@ ${mcpCtaCss()}
   ${uncountedLine}
 
   <div class="executive-summary">
-    <p><strong>Q2 2026 brings infrastructure cost pressure.</strong> The biggest confirmed change is Hetzner's 30-50% price increase on April 1 — driven by DRAM costs up 171% YoY and AI-fueled chip demand. Google shuts down the Tenor GIF API on June 30. Several Q1-end changes (odrive removal, HCP Terraform migration, Google Developer Program restructuring) take full effect as Q2 begins.</p>
+    <p><strong>Q2 2026 brings infrastructure cost pressure.</strong> Hetzner raised cloud server prices 30-37% on April 1, 2026, and again on June 15 for new orders and rescales. Google shuts down the Tenor GIF API on June 30. Several Q1-end changes (odrive removal, HCP Terraform migration, Google Developer Program restructuring) take full effect as Q2 begins.</p>
     <p><strong>The broader trend:</strong> Cloud infrastructure costs are rising across Europe (OVHcloud, Netcup also raising prices). Meanwhile, AI API challengers (Groq, Cerebras, OpenRouter) are expanding free tiers to compete with incumbents. The gap between "cheap to prototype" and "expensive to scale" continues to widen.</p>
     <p><strong>Since this preview was published:</strong> Hetzner's price changes took effect on April 1, 2026, for new orders and existing products. Google shut down the Tenor API on June 30, 2026, and OpenAI shut down the Assistants API on August 26, 2026.</p>
   </div>

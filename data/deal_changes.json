@@ -800,11 +800,11 @@
       "vendor": "Hetzner",
       "change_type": "pricing_restructured",
       "date": "2026-04-01",
-      "summary": "Cloud & dedicated server prices increasing 30-50%. Entry-level CX23: €2.99→€3.99/mo (+33%). Applies to new and existing customers. Driven by DRAM (+171% YoY) and NVMe SSD cost surges from AI infrastructure demand. Superseded 2026-06-15: Hetzner ran a second adjustment across all cloud and dedicated lines, applying to new orders and rescales only. Read from hetzner.com on 2026-09-03: CX23 is €5.99 and is marked \"not available\", as is every other Cost-Optimized plan, and the cheapest orderable plan is CPX12 at €11.99/mo.",
+      "summary": "Hetzner raised prices on 2026-04-01 for new orders and existing products: cloud servers by 30-37% (CX23 €2.99 to €3.99 a month in Germany and Finland), load balancers by 31-39%, Object Storage's base price by 30%, dedicated servers by 2-21% and Server Auction servers by 3%. Superseded 2026-06-15: Hetzner ran a second adjustment across all cloud and dedicated lines, applying to new orders and rescales only. Read from hetzner.com on 2026-09-03: CX23 is €5.99 and is marked \"not available\", as is every other Cost-Optimized plan, and the cheapest orderable plan is CPX12 at €11.99/mo.",
       "previous_state": "Lower cloud server pricing across Germany, Finland, US, and Singapore data centers (e.g., CX23 at €2.99/mo)",
-      "current_state": "30-37% increase on cloud servers, up to 50% on select dedicated/storage products. All regions and all customers (new and existing) affected. Announced Feb 23, 2026",
+      "current_state": "Hetzner's table for 1 April 2026, in euros excluding VAT: cloud servers +30% to +37% (CX23 €2.99 to €3.99 a month and CAX11 €3.29 to €4.49 in Germany and Finland), load balancers +31% to +39%, Object Storage base price +30%, dedicated servers +2% to +21% (AX42 €44.30 to €52.30 in Finland) and Server Auction servers +3%, \"for both new orders and existing products\" (docs.hetzner.com, archived 2026-05-13)",
       "impact": "high",
-      "source_url": "https://www.hetzner.com/pressroom/statement-price-adjustment/",
+      "source_url": "https://web.archive.org/web/20260513201413/https://docs.hetzner.com/general/infrastructure-and-availability/price-adjustment/",
       "category": "Cloud Hosting",
       "alternatives": [
         "DigitalOcean",
@@ -13514,6 +13514,20 @@
         "detail": "Retracted 2026-10-01: InfluxDB Cloud's free plan did not end. InfluxData's pricing page says Cloud Serverless \"also has a free tier with limited data ingestion rates and 30-day retention\", and the $250 credit it shows is for new paid accounts (\"New paid accounts receive $250 in credits applied to the first 30 days\"). Its docs say new accounts start on the Free Plan: 5 MB of writes per 5 minutes and 30-day retention. The page said the same in its 2026-07-05 and 2026-08-28 archived copies.",
         "source_url": "https://www.influxdata.com/influxdb-pricing/"
       }
+    },
+    {
+      "vendor": "Hetzner",
+      "change_type": "record_corrected",
+      "date": "2026-10-01",
+      "summary": "Data correction - We had said Hetzner's April 2026 increase was 30-50% for cloud and dedicated servers and given a DRAM figure as Hetzner's reason. Hetzner's table shows cloud servers up 30-37% and dedicated servers up 2-21%, and its statement gives no percentage and no memory price.",
+      "previous_state": "pricing_restructured dated 2026-04-01, summarised as a 30-50% rise on cloud and dedicated servers, with a DRAM figure given as Hetzner's reason",
+      "current_state": "Same record and date, summarised from Hetzner's table: cloud servers +30-37%, load balancers +31-39%, Object Storage base price +30%, dedicated servers +2-21%, Server Auction servers +3%",
+      "impact": "medium",
+      "source_url": "https://web.archive.org/web/20260513201413/https://docs.hetzner.com/general/infrastructure-and-availability/price-adjustment/",
+      "category": "Cloud Hosting",
+      "alternatives": [],
+      "recorded_date": "2026-10-01",
+      "date_source": "hand_written"
     }
   ]
 }

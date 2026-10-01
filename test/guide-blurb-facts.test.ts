@@ -19,6 +19,9 @@ const WITHDRAWN: Record<string, RegExp> = {
   "GitHub's Linux runner minute at $0.008": /\$0\.008\/min \(Linux\)/i,
   "a charge for 50 test runs a month that GitHub's free minutes cover": /running tests 50 times\/month costs/i,
   "Dragonfly as open source": /Dragonfly (?:is|are) (?:now )?(?:the |an? )?(?:leading )?open[- ]source/i,
+  "a 30-50% Hetzner increase in April 2026": /Hetzner (?:\+|already raised prices )30(?:-|–|&ndash;)50%|Hetzner(?:'|&#39;|&#x27;|’)s 30(?:-|–|&ndash;)50%|prices increasing 30(?:-|–|&ndash;)50%/i,
+  "DRAM prices up 171%": /DRAM[^.]{0,60}171%/i,
+  "procurement costs for key hardware components, which Hetzner's statement does not say": /procurement costs for key hardware components/i,
 };
 
 const CONTROLS: [string, string][] = [
@@ -34,7 +37,10 @@ const CORRECTED: [string, string][] = [
   ["/testing-free-tier-comparison-2026", "A GitHub Free account gets 2,000 free minutes a month for private repositories, so 50 runs of a 5&ndash;15 minute suite (250&ndash;750 minutes) cost $0."],
   ["/testing-free-tier-comparison-2026", "uses 6,000 minutes: 4,000 past the quota, or $24 a month at $0.006 a minute on Linux. Self-hosted runners are free to use on GitHub Actions; you pay for the machine."],
   ["/gcp-free-tier-2026", '<meta name="description" content="Comprehensive guide to every Google Cloud free tier service in 2026. 20+ free products, $300 trial credit, and hidden costs explained.'],
-  ["/q2-pricing-preview-2026", '<meta name="description" content="Upcoming developer tool pricing changes for Q2 2026. Hetzner +30-50%, Google Tenor shutdown, odrive removal, and more.'],
+  ["/q2-pricing-preview-2026", '<meta name="description" content="Upcoming developer tool pricing changes for Q2 2026. Hetzner prices rose, Google Tenor shutdown, odrive removal, and more.'],
+  ["/hetzner-pricing-2026", 'Hetzner\'s official statement cites "The costs to operate our infrastructure and to buy new hardware have both increased dramatically."'],
+  ["/vendor/hetzner", "dedicated servers by 2-21%"],
+  ["/hetzner-alternatives", "dedicated servers by 2-21%"],
   ["/github-actions-alternatives", "remains strong for GitHub-hosted runners.</p>"],
   ["/database-free-tier-comparison-2026", "Valkey is now the leading open-source alternative, and Dragonfly a source-available one."],
   ["/free-saas-stack", "At 100,000 users: Clerk costs $1,025 a month; Supabase costs $25 a month on Pro."],
