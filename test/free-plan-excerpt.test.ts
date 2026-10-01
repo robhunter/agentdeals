@@ -89,20 +89,29 @@ describe("writing the excerpt onto a record", () => {
     assert.deepStrictEqual(offer[FREE_PLAN_EXCERPT], { text: RENDER_EXCERPT, url: "https://render.com/pricing", read_on: "2026-09-16" });
   });
 
-  it("removes a held excerpt when a read finds no free-plan wording", () => {
+  it("keeps a held excerpt the day's page still carries when the read finds no free-plan wording, dated that read", () => {
     const offer: Record<string, unknown> = { vendor: "Render", [FREE_PLAN_EXCERPT]: { text: RENDER_EXCERPT, url: READ.url, read_on: "2026-08-28" } };
-    assert.deepStrictEqual(writeFreePlanExcerpt(offer, { ...READ, copied: "" }), { outcome: "removed" });
-    assert.ok(!(FREE_PLAN_EXCERPT in offer));
-    assert.deepStrictEqual(writeFreePlanExcerpt(offer, { ...READ, copied: "" }), { outcome: "none" });
+    assert.deepStrictEqual(writeFreePlanExcerpt(offer, { ...READ, copied: "" }), { outcome: "none", held_excerpt: "kept" });
+    assert.deepStrictEqual(offer[FREE_PLAN_EXCERPT], { text: RENDER_EXCERPT, url: READ.url, read_on: "2026-09-16" });
   });
 
-  it("leaves a held excerpt untouched when the reader gave no answer it could parse", () => {
-    const held = { text: RENDER_EXCERPT, url: READ.url, read_on: "2026-08-28" };
-    const offer: Record<string, unknown> = { vendor: "Render", [FREE_PLAN_EXCERPT]: held };
+  it("removes a held excerpt the day's page no longer carries", () => {
+    const offer: Record<string, unknown> = { vendor: "Render", [FREE_PLAN_EXCERPT]: { text: RENDER_EXCERPT, url: READ.url, read_on: "2026-08-28" } };
+    const pageText = RENDER_PAGE.replace("5 GB of bandwidth", "10 GB of bandwidth");
+    assert.deepStrictEqual(writeFreePlanExcerpt(offer, { ...READ, pageText, copied: "" }), { outcome: "none", held_excerpt: "removed" });
+    assert.ok(!(FREE_PLAN_EXCERPT in offer));
+    assert.deepStrictEqual(writeFreePlanExcerpt(offer, { ...READ, pageText, copied: "" }), { outcome: "none" });
+  });
+
+  it("checks a held excerpt against the day's page even when the reader gave no answer it could parse", () => {
     const unparsed = parseExcerptAnswer("I could not find it.");
     assert.strictEqual(unparsed.copied, null);
-    assert.deepStrictEqual(writeFreePlanExcerpt(offer, { ...READ, copied: unparsed.copied }), { outcome: "unread" });
-    assert.deepStrictEqual(offer[FREE_PLAN_EXCERPT], held);
+    const offer: Record<string, unknown> = { vendor: "Render", [FREE_PLAN_EXCERPT]: { text: RENDER_EXCERPT, url: READ.url, read_on: "2026-08-28" } };
+    assert.deepStrictEqual(writeFreePlanExcerpt(offer, { ...READ, copied: unparsed.copied }), { outcome: "unread", held_excerpt: "kept" });
+    assert.deepStrictEqual(offer[FREE_PLAN_EXCERPT], { text: RENDER_EXCERPT, url: READ.url, read_on: "2026-09-16" });
+    const pageText = RENDER_PAGE.replace("Single-service previews", "Preview environments");
+    assert.deepStrictEqual(writeFreePlanExcerpt(offer, { ...READ, pageText, copied: unparsed.copied }), { outcome: "unread", held_excerpt: "removed" });
+    assert.ok(!(FREE_PLAN_EXCERPT in offer));
   });
 
   it("reads the copy and the terms it states out of the reader's answer, fenced or not, and an empty copy as no free plan", () => {
@@ -111,12 +120,28 @@ describe("writing the excerpt onto a record", () => {
     assert.deepStrictEqual(parseExcerptAnswer("{\"excerpt\":\"Deploy up to 25 services\",\"terms\":\"up to 25 services\",\"other_plans\":\"Pro\"}"), { copied: "Deploy up to 25 services", terms: [], otherPlans: [] });
   });
 
-  it("leaves a held excerpt under its own read date when the new copy is refused", () => {
-    const held = { text: RENDER_EXCERPT, url: READ.url, read_on: "2026-08-28" };
-    const offer: Record<string, unknown> = { vendor: "Render", [FREE_PLAN_EXCERPT]: held };
-    const result = writeFreePlanExcerpt(offer, { ...READ, readOn: "2026-09-16", copied: "Deploy up to 25 services with 5 GB bandwidth included" });
-    assert.strictEqual(result.outcome, "refused");
-    assert.deepStrictEqual(offer[FREE_PLAN_EXCERPT], held);
+  it("keeps a held excerpt the day's page still carries when the new copy is refused, dated that read, and removes it once the page drops it", () => {
+    const offer: Record<string, unknown> = { vendor: "Render", [FREE_PLAN_EXCERPT]: { text: RENDER_EXCERPT, url: READ.url, read_on: "2026-08-28" } };
+    const paraphrase = "Deploy up to 25 services with 5 GB bandwidth included";
+    const refused = { outcome: "refused", why: "the copy is not on the page as the page words it" };
+    assert.deepStrictEqual(writeFreePlanExcerpt(offer, { ...READ, copied: paraphrase }), { ...refused, held_excerpt: "kept" });
+    assert.deepStrictEqual(offer[FREE_PLAN_EXCERPT], { text: RENDER_EXCERPT, url: READ.url, read_on: "2026-09-16" });
+    const pageText = RENDER_PAGE.replace("Deploy up to 25 services", "Deploy up to 10 services");
+    assert.deepStrictEqual(writeFreePlanExcerpt(offer, { ...READ, pageText, readOn: "2026-10-05", copied: paraphrase }), { ...refused, held_excerpt: "removed" });
+    assert.ok(!(FREE_PLAN_EXCERPT in offer));
+  });
+
+  it("replaces a held excerpt only with an excerpt the read writes", () => {
+    const pageText = `${RENDER_PAGE} Hobby includes 750 free instance hours`;
+    const offer: Record<string, unknown> = { vendor: "Render", [FREE_PLAN_EXCERPT]: { text: RENDER_EXCERPT, url: READ.url, read_on: "2026-08-28" } };
+    assert.deepStrictEqual(writeFreePlanExcerpt(offer, { ...READ, pageText, copied: "Hobby includes 750 free instance hours", terms: ["750 free instance hours"] }), { outcome: "written" });
+    assert.deepStrictEqual(offer[FREE_PLAN_EXCERPT], { text: "Hobby includes 750 free instance hours", url: READ.url, read_on: "2026-09-16" });
+  });
+
+  it("cites the page that carries a held excerpt on the day of the read", () => {
+    const offer: Record<string, unknown> = { vendor: "Render", [FREE_PLAN_EXCERPT]: { text: RENDER_EXCERPT, url: "https://render.com/", read_on: "2026-08-28" } };
+    assert.deepStrictEqual(writeFreePlanExcerpt(offer, { ...READ, copied: "" }), { outcome: "none", held_excerpt: "kept" });
+    assert.deepStrictEqual(offer[FREE_PLAN_EXCERPT], { text: RENDER_EXCERPT, url: READ.url, read_on: "2026-09-16" });
   });
 });
 
@@ -184,11 +209,10 @@ describe("an excerpt states at least one of the plan's terms", () => {
     assert.deepStrictEqual(write({ vendor: "Render", tier: "Hobby" }, RENDER_PAGE, RENDER_EXCERPT, ["Deploy up to 50 services", "100 GB of bandwidth"]).result, { outcome: "refused", why: COPY_STATES_NO_TERMS });
   });
 
-  it("leaves a held excerpt under its own read date when the new copy states no terms", () => {
-    const held = { text: RENDER_EXCERPT, url: READ.url, read_on: "2026-08-28" };
-    const record: Record<string, unknown> = { vendor: "Render", tier: "Hobby", [FREE_PLAN_EXCERPT]: held };
-    assert.deepStrictEqual(writeFreePlanExcerpt(record, { ...READ, copied: "Deploy for free", terms: ["Deploy for free"] }), { outcome: "refused", why: COPY_STATES_NO_TERMS });
-    assert.deepStrictEqual(record[FREE_PLAN_EXCERPT], held);
+  it("keeps a held excerpt the day's page still carries when the new copy states no terms, dated that read", () => {
+    const record: Record<string, unknown> = { vendor: "Render", tier: "Hobby", [FREE_PLAN_EXCERPT]: { text: RENDER_EXCERPT, url: READ.url, read_on: "2026-08-28" } };
+    assert.deepStrictEqual(writeFreePlanExcerpt(record, { ...READ, copied: "Deploy for free", terms: ["Deploy for free"] }), { outcome: "refused", why: COPY_STATES_NO_TERMS, held_excerpt: "kept" });
+    assert.deepStrictEqual(record[FREE_PLAN_EXCERPT], { text: RENDER_EXCERPT, url: READ.url, read_on: "2026-09-16" });
   });
 });
 
@@ -451,6 +475,19 @@ describe("the rotation keeps the excerpt of a page it read", async () => {
       rateLimitMs: 0,
     });
     assert.deepStrictEqual([asked, result.excerpts.on_hold, (data.offers[0] as Record<string, unknown>)[FREE_PLAN_EXCERPT_HOLD], FREE_PLAN_EXCERPT in data.offers[0]], [[], 1, hold, false]);
+  });
+
+  it("keeps a held excerpt the day's page still carries when the reader writes none, dated the read, counts it, and changes nothing on a dry run", async () => {
+    const empty = { excerptFn: async () => ({ copied: "", terms: [] }) };
+    const onThePage = () => ({ text: "Free tier: 10 GB per month for $0.", url: acme.url, read_on: "2026-08-01" });
+    const kept = await run(empty, false, onThePage());
+    assert.deepStrictEqual(kept.record[FREE_PLAN_EXCERPT], { ...onThePage(), read_on: "2026-09-16" });
+    assert.deepStrictEqual([kept.result.excerpts.none, kept.result.excerpts.kept, kept.result.excerpts.removed], [1, 1, 0]);
+    const dropped = await run(empty, false, { ...onThePage(), text: "Free tier: 20 GB per month for $0." });
+    assert.ok(!(FREE_PLAN_EXCERPT in dropped.record));
+    assert.deepStrictEqual([dropped.result.excerpts.none, dropped.result.excerpts.kept, dropped.result.excerpts.removed], [1, 0, 1]);
+    const dry = await run(empty, true, onThePage());
+    assert.deepStrictEqual([dry.record[FREE_PLAN_EXCERPT], dry.result.excerpts.kept], [onThePage(), 1]);
   });
 
   it("counts a refused copy and an unanswered read with their reasons, and writes nothing on a dry run", async () => {
