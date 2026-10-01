@@ -12,11 +12,23 @@ import {
   type EndingRecord,
   type FiguresWhoseTermsEnded,
 } from "./check-figures-ended.js";
-import type { Offer } from "./types.js";
+import type { FreePlanExcerpt, Offer } from "./types.js";
 
 export type Escaper = (text: string) => string;
 
 export const PAGE_QUOTE_CLASS = "page-quote";
+
+export const FREE_PLAN_EXCERPT_CLASS = "free-plan-excerpt";
+
+export function freePlanExcerptAttribution(excerpt: Pick<FreePlanExcerpt, "url" | "read_on">): string {
+  return `From ${citationLabel(excerpt.url)}, read ${excerpt.read_on}:`;
+}
+
+export function freePlanExcerptHtml(excerpt: FreePlanExcerpt, esc: Escaper): string {
+  return `<figure class="${FREE_PLAN_EXCERPT_CLASS}" style="margin:.75rem 0 0;padding:.5rem .9rem;border-left:3px solid var(--border)">`
+    + `<figcaption style="font-size:.8rem;color:var(--text-dim)">${esc(freePlanExcerptAttribution(excerpt))}</figcaption>`
+    + `<blockquote cite="${esc(excerpt.url)}" style="margin:.3rem 0 0">${esc(excerpt.text)}</blockquote></figure>`;
+}
 
 export const CHECK_FINDING_CLASS = "check-finding";
 
