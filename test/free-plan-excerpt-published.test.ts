@@ -41,6 +41,10 @@ const UNREADABLE = listing("Unreadable Excerpt Co", "unreadable-excerpt-marker",
 });
 UNREADABLE.free_plan_excerpt = { ...UNREADABLE.free_plan_excerpt!, read_on: EARLIER_READ };
 const ENDED = listing("Ended Excerpt Co", "ended-excerpt-marker", { tier: "Retired" });
+const PAID = listing("Paid Excerpt Co", "paid-excerpt-marker", { tier: "Paid" });
+const USAGE_BILLED = listing("Usage Billed Excerpt Co", "usage-billed-excerpt-marker", { tier: "Pay-as-you-go" });
+const CLOSED_TO_NEW_ACCOUNTS = listing("Closed Tier Excerpt Co", "closed-tier-excerpt-marker", { tier: "Legacy Free" });
+const TRIAL = listing("Trial Excerpt Co", "trial-excerpt-marker", { tier: "Free Trial" });
 const SUPERSEDED = listing("Superseded Excerpt Co", "superseded-excerpt-marker");
 const REPOINTED = listing("Repointed Excerpt Co", "repointed-excerpt-marker");
 REPOINTED.free_plan_excerpt = { ...REPOINTED.free_plan_excerpt!, url: "https://old-address.example/pricing" };
@@ -52,6 +56,10 @@ const NAMES_NO_PRODUCT = listing("Names No Product Excerpt Co", "names-no-produc
   source_check: { checked: TODAY, outcome: "does_not_name_product", detail: "the page names another of the vendor's products" },
 });
 
+const QUOTED_ON_A_TIER_THAT_RUNS_OUT: [string, Offer, string][] = [
+  ["the listed tier is a trial", TRIAL, "trial-excerpt-marker"],
+];
+
 const PUBLISHED_THOUGH_UNCONFIRMED: [string, Offer, string][] = [
   ["our last read found no plan terms on the page", STATES_NO_TERMS, "states-no-terms-excerpt-marker"],
   ["our last read could not read the page", UNREADABLE, "unreadable-excerpt-marker"],
@@ -59,6 +67,9 @@ const PUBLISHED_THOUGH_UNCONFIRMED: [string, Offer, string][] = [
 
 const WITHHELD: [string, Offer, string][] = [
   ["the listing has ended", ENDED, "ended-excerpt-marker"],
+  ["the listed tier is paid", PAID, "paid-excerpt-marker"],
+  ["the listed tier is billed by use from the first request", USAGE_BILLED, "usage-billed-excerpt-marker"],
+  ["the listed tier is closed to new accounts", CLOSED_TO_NEW_ACCOUNTS, "closed-tier-excerpt-marker"],
   ["a recorded change has superseded the terms", SUPERSEDED, "superseded-excerpt-marker"],
   ["the excerpt was read from a page the record no longer cites", REPOINTED, "repointed-excerpt-marker"],
   ["the cited page is unreachable", UNREACHABLE, "unreachable-excerpt-marker"],
@@ -97,7 +108,7 @@ const indexPath = path.join(dir, "index.json");
 const changesPath = path.join(dir, "deal_changes.json");
 const linkHealthPath = path.join(dir, "link_health.json");
 const catalogue = JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf-8"));
-const SYNTHETIC = [QUOTED, STATES_NO_TERMS, UNREADABLE, ENDED, SUPERSEDED, REPOINTED, UNREACHABLE, NAMES_NO_VENDOR, NAMES_NO_PRODUCT];
+const SYNTHETIC = [QUOTED, STATES_NO_TERMS, UNREADABLE, ENDED, PAID, USAGE_BILLED, CLOSED_TO_NEW_ACCOUNTS, TRIAL, SUPERSEDED, REPOINTED, UNREACHABLE, NAMES_NO_VENDOR, NAMES_NO_PRODUCT];
 writeFileSync(indexPath, JSON.stringify({ ...catalogue, offers: [...catalogue.offers, ...SYNTHETIC] }));
 const log = JSON.parse(readFileSync(path.join(REPO, "data", "deal_changes.json"), "utf-8"));
 writeFileSync(changesPath, JSON.stringify({ ...log, changes: [...log.changes, SUPERSEDING_CHANGE] }));
@@ -176,6 +187,13 @@ describe("a free-plan excerpt is published only where the vendor page publishes 
   it("carries the excerpt as a field on the offer in /api/offers", async () => {
     assert.deepStrictEqual((await offered(QUOTED)).free_plan_excerpt, QUOTED.free_plan_excerpt);
   });
+
+  for (const [reason, offer, marker] of QUOTED_ON_A_TIER_THAT_RUNS_OUT) {
+    it(`quotes the excerpt where ${reason}`, async () => {
+      assert.ok((await page(offer)).includes(`&lt;${marker}&gt;`), `/vendor/${slugOf(offer)} withholds the excerpt where ${reason}`);
+      assert.deepStrictEqual((await offered(offer)).free_plan_excerpt, offer.free_plan_excerpt);
+    });
+  }
 
   for (const [reason, offer, marker] of PUBLISHED_THOUGH_UNCONFIRMED) {
     it(`quotes the excerpt under the day it was read where ${reason}, and leaves our own figures uncited`, async () => {

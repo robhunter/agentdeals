@@ -39,7 +39,7 @@ import { changesByVendor } from "./superseded-census.js";
 import { buildComparisonMap, comparisonSlug } from "./comparison-pairs.js";
 import { comparisonVerdictText, freeTierFaqAnswer, stabilityFaqAnswer, type ComparisonSide, type FreeTierSide, type SideFreeTier, type StabilityRating } from "./comparison-verdict.js";
 import { gateStatesAnEnding, publishedVendorLevel, vendorVerdictSentence, vendorBadge, freeTierClaim, endingStatedInPlaceOfARating, endingShutsTheProductDown, endedClaimReliabilityAnswer, statesRiskCause, withholdingThatDoesNotLapse, demotionTheVerdictNames, narrowingSentence, ourOwnRecordsSentence, changeKindNoun, isOurOwnBookkeeping, emptyHistoryCaveatSentence, refusedReadOurConfirmationSupersedes, refusedReadWeHold, refusedReadWithholdingSentence, nothingWeReadDescribesTheTerms, unconfirmedThresholdSentence, unconfirmedTermsOpening, whyWeCannotConfirmTheseTerms, withheldForARefusedRead, withUnconfirmedTerms, refusalWithholdsStability, termsUnconfirmedBySource, termsTheVerdictWithholds, closingTerms, termsWithTheReasonWeCannotConfirmThem, termsNotVerifiedMetaSentence, termsWithheldLabel, theReadConfirmedThePrice, unconfirmedTermsSentence, whereTheDoubtSits, withheldBadgeLabel, type BadgeWithholding, type UnconfirmedTerms, type FreeTierClaim, type VendorVerdictInput, type WhereTheDoubtSits } from "./vendor-verdict.js";
-import { descriptionDeniesAFreeTier, listingOffersAFreeTier, tierRecordsAFreeTier } from "./free-tier-record.js";
+import { descriptionDeniesAFreeTier, listingOffersAFreeTier, tierMayCarryAFreePlanExcerpt, tierRecordsAFreeTier } from "./free-tier-record.js";
 import { PAGE_HEAD_OPEN, withLedeBeforeNav } from "./page-lede.js";
 import { withReviewByline } from "./page-byline.js";
 import { freshnessClaimFor, withFreshnessClaim } from "./page-freshness.js";
@@ -738,6 +738,7 @@ const READS_THAT_PUT_AN_EXCERPT_IN_DOUBT: ReadonlySet<LevelWithheldReason> = new
 function freePlanExcerptWeMayPublish(offer: Offer): FreePlanExcerpt | null {
   const excerpt = freePlanExcerptHeldFor(offer);
   if (!excerpt || excerpt.url !== offer.url) return null;
+  if (!tierMayCarryAFreePlanExcerpt(offer.tier)) return null;
   if (offerRetired(offer) || supersedingChangeFor(offer) !== null) return null;
   const lastRead = levelWithheldReason(offer, unreachableNoticeForUrl(offer.url));
   return lastRead !== null && READS_THAT_PUT_AN_EXCERPT_IN_DOUBT.has(lastRead) ? null : excerpt;
