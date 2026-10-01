@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import type { Offer, EnrichedOffer, OfferIndex, DealChange, DateMeaning, PublishedDealChange, DealChangesIndex, ChangeDateSource, StabilityClass, Referral, RiskCause, RatingWithheld, LinkUnreachable, SourceCheck } from "./types.js";
+import type { Offer, EnrichedOffer, OfferIndex, DealChange, DateMeaning, PublishedDealChange, DealChangesIndex, ChangeDateSource, StabilityClass, Referral, RiskCause, RatingWithheld, LinkUnreachable, SourceCheck, FreePlanExcerpt } from "./types.js";
 import { isUrlSuspended } from "./referral-health.js";
 import { CHANGE_DIRECTION, NEGATIVE_CHANGE_TYPES, POSITIVE_CHANGE_TYPES } from "./change-direction.js";
 import { changeRatesTheListedTier } from "./change-tier.js";
@@ -109,7 +109,7 @@ export function loadOffers(): Offer[] {
     return cachedOffers;
   }
 
-  cachedOffers = data.offers.map(withoutGateInput);
+  cachedOffers = data.offers.map(withoutGateInput).map(withFreePlanExcerptHeldAside);
   return cachedOffers;
 }
 
@@ -119,7 +119,26 @@ export function withoutGateInput(offer: Offer): Offer {
   return rest;
 }
 
+const freePlanExcerptsHeldAside = new Map<string, FreePlanExcerpt>();
+
+function heldExcerptKey(offer: Pick<Offer, "vendor" | "url" | "tier">): string {
+  return `${offer.vendor}|${offer.url}|${offer.tier}`;
+}
+
+function withFreePlanExcerptHeldAside(offer: Offer): Offer {
+  if (!("free_plan_excerpt" in offer)) return offer;
+  const { free_plan_excerpt: excerpt, ...rest } = offer;
+  if (excerpt) freePlanExcerptsHeldAside.set(heldExcerptKey(rest), excerpt);
+  return rest;
+}
+
+export function freePlanExcerptHeldFor(offer: Pick<Offer, "vendor" | "url" | "tier">): FreePlanExcerpt | null {
+  loadOffers();
+  return freePlanExcerptsHeldAside.get(heldExcerptKey(offer)) ?? null;
+}
+
 export function resetCache(): void {
+  freePlanExcerptsHeldAside.clear();
   cachedOffers = null;
   cachedLiveVendorNames = null;
   cachedChanges = null;
