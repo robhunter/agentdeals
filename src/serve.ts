@@ -37851,7 +37851,7 @@ function buildAuthComparison2026Page(): string {
   const slug = "auth-comparison-2026";
   const pubDate = "2026-04-03";
 
-  const tabulatedListings = new Set(AUTH_COMPARISON_LISTINGS.map(v => v.toLowerCase()));
+  const tabulatedListings = new Set(AUTH_COMPARISON_LISTINGS.map(v => vendorNameAsPublished(v).toLowerCase()));
   const authChanges = changesTheVendorMade(dealChanges).filter((c: any) =>
     tabulatedListings.has(c.vendor.toLowerCase())
   ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
@@ -38020,7 +38020,7 @@ ${mcpCtaCss()}
       <li><a href="#managed-auth">Managed Auth (Auth0, Clerk, Kinde, PropelAuth, Stytch, Descope, WorkOS)</a></li>
       <li><a href="#baas-auth">BaaS-Integrated Auth (Supabase, Firebase, Cognito, Appwrite)</a></li>
       <li><a href="#self-hosted">Self-Hosted / Open Source (Keycloak, Authentik, Authelia, FusionAuth, SuperTokens, Hanko, Ory)</a></li>
-      <li><a href="#specialized">Specialized (Authgear, MojoAuth, Stack Auth, Permit.io, Cerbos, Authress)</a></li>
+      <li><a href="#specialized">Specialized (Authgear, MojoAuth, Hexclave, Permit.io, Cerbos, Authress)</a></li>
       <li><a href="#growth-trap">The Growth Cost Trap: Free to 100K MAU</a></li>
       <li><a href="#hidden-costs">Hidden Costs and Gotchas</a></li>
       <li><a href="#changes">Pricing Change Timeline</a></li>

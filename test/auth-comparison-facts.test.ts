@@ -1002,7 +1002,7 @@ describe("the auth comparison states each service's terms as the vendor does", (
     const html = served.get(PAGE)!;
     const timeline = tableWithHeader(html, "Impact");
     const names = [...html.matchAll(/<td class="provider-col"[^>]*>([\s\S]*?)<\/td>/g)].map(([, cell]) => nameOf(cell));
-    const formerly = names.flatMap((name) => name.match(/\(formerly (.+)\)$/)?.slice(1) ?? []);
+    const formerly = names.flatMap((name) => name.match(/^(.+) \(formerly (.+)\)$/)?.slice(1) ?? []);
     const tabulated = new Set([...names, ...formerly].map((name) => name.toLowerCase()));
     const strangers = rowsOf(timeline).map((cells) => textOf(cells[1])).filter((vendor) => !tabulated.has(vendor.toLowerCase()));
     assert.deepStrictEqual(strangers, []);
