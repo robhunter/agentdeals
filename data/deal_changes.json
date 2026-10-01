@@ -13470,6 +13470,21 @@
       "alternatives": [],
       "recorded_date": "2026-10-01",
       "date_source": "hand_written"
+    },
+    {
+      "vendor": "Pipedream",
+      "change_type": "product_deprecated",
+      "date": "2026-09-30",
+      "summary": "Pipedream stopped taking new signups and subscriptions for Workflows on 2026-09-30 and said Workflows and String will shut down on 2027-03-31. Existing workflows keep running until then. Pipedream Connect is not affected; its Free plan covers development only.",
+      "previous_state": "Pipedream Workflows took new signups, with a Free plan on pipedream.com/pricing (read 2026-09-24: \"100 credits/mo\").",
+      "current_state": "\"Workflows are now in maintenance mode. Your existing workflows will keep running normally through March 31, 2027, but we're no longer accepting signups or subscriptions\"; \"All Workflows data will be permanently deleted by April 30, 2027\" (pipedream.com/docs/workflows, modified 2026-09-30).",
+      "impact": "high",
+      "source_url": "https://pipedream.com/docs/workflows",
+      "category": "Workflow Automation",
+      "alternatives": [],
+      "recorded_date": "2026-10-01",
+      "date_source": "hand_written",
+      "listing_effect": "ends"
     }
   ]
 }
