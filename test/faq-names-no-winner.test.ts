@@ -175,20 +175,25 @@ describe("no served FAQ answer crowns a vendor we hold no ranking for", () => {
 
   it("keeps the surviving superlatives to catalogue prose and rules the reader can apply", () => {
     let fromCatalogueProse = 0;
-    let ordered = 0;
     for (const answer of answers) {
       for (const sentence of faqSentences(answer.a)) {
         if (!namesASuperlative(sentence)) continue;
         if (vendorsNamedIn(sentence).length === 0) continue;
-        if (ordersByAPrintedQuantity(sentence)) ordered++;
-        else fromCatalogueProse++;
+        if (!ordersByAPrintedQuantity(sentence)) fromCatalogueProse++;
       }
     }
     assert.ok(
       fromCatalogueProse <= CATALOGUE_PROSE_CROWNS,
       `superlatives carried in from a catalogue record's own description: ${fromCatalogueProse}, allowed ${CATALOGUE_PROSE_CROWNS}`,
     );
-    assert.ok(ordered >= 1, "no answer demonstrates a superlative backed by the quantity it ranks by");
+    assert.ok(
+      ordersByAPrintedQuantity("The top programs by credit value are: Alpha ($350K), Beta ($250K) and Gamma ($100K)."),
+      "a superlative ranked by the quantities it prints is not read as ranked",
+    );
+    assert.ok(
+      !ordersByAPrintedQuantity("The top programs by credit value are: Alpha ($100K), Beta ($250K) and Gamma ($350K)."),
+      "a superlative whose printed quantities are out of order is read as ranked by them",
+    );
   });
 
   it("publishes no answer built on a population of nothing", () => {
