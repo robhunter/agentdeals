@@ -9325,9 +9325,9 @@
     {
       "vendor": "InfluxDB Cloud",
       "category": "Databases",
-      "description": "Time-series database — Cloud Serverless has a $250 free credit, then usage-based pricing: $0.0025 per MB written, $0.012 per 100 query executions, $0.002 per GB-hour storage, and $0.09 per GB transferred out.",
+      "description": "Time-series database — Cloud Serverless Free Plan: 5 MB of writes and 300 MB of query responses per 5 minutes, 2 buckets, 30-day data retention. New accounts start on the Free Plan.",
       "tier": "Free",
-      "url": "https://www.influxdata.com/influxdb-pricing/",
+      "url": "https://docs.influxdata.com/influxdb3/cloud-serverless/admin/billing/limits/",
       "tags": [
         "database",
         "time-series",
@@ -9352,12 +9352,9 @@
         ],
         "reviewed": "2026-08-31"
       },
-      "restated_from": {
-        "reading_date": "2026-10-01",
-        "source_url": "https://www.influxdata.com/influxdb-pricing/",
+      "restatement_reverted": {
         "record_date": "2026-10-01",
-        "change_type": "free_tier_removed",
-        "restated_on": "2026-10-01"
+        "reverted_on": "2026-10-01"
       }
     },
     {
