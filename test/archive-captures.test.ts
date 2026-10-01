@@ -257,6 +257,35 @@ describe("judging a paired reading by the words it copied from each page", () =>
     assert.strictEqual(verdict.refuted[0].why, "each page carries both the old and the new words");
   });
 
+  it("cannot refute a difference with words that occur more than once on either page, so a figure the page repeats elsewhere cannot hide a cut", () => {
+    const before = "Free plan: 10,000 calls a month. Launch offer: 10,000 calls a month for new sign-ups.";
+    const after = "Free plan: 500 calls a month. Launch offer: 10,000 calls a month for new sign-ups.";
+    const cut = judgePair(answer({ old_terms: ["Free plan: 10,000 calls a month"], new_terms: ["Free plan: 500 calls a month"], differences: [{ old: "10,000 calls a month", new: "" }] }), before, after);
+    assert.deepStrictEqual([cut.status, cut.side, cut.refuted], ["unquotable", "old", []]);
+    assert.strictEqual(cut.why, '"10,000 calls a month" occurs more than once on the old page, so it cannot refute the difference');
+
+    const seats = { old: "Free plan: 3 seats, unlimited projects.", new: "Free plan: unlimited seats, unlimited projects." };
+    const added = judgePair(answer({ old_terms: ["3 seats, unlimited projects"], new_terms: ["unlimited seats, unlimited projects"], differences: [{ old: "", new: "unlimited" }] }), seats.old, seats.new);
+    assert.deepStrictEqual([added.status, added.side], ["unquotable", "new"]);
+    const everywhere = "Free plan and Pro plan compared. Free plan: 1 project. Pro plan: 10 projects.";
+    const both = judgePair(answer({ old_terms: ["Free plan: 1 project"], new_terms: ["Free plan: 1 project"], differences: [{ old: "Free plan", new: "Pro plan" }] }), everywhere, everywhere);
+    assert.deepStrictEqual([both.status, both.side], ["unquotable", "both"]);
+    assert.match(both.why, /"Free plan" and "Pro plan" occur more than once on the old and the new pages, so they cannot refute the difference/);
+  });
+
+  it("still refutes a difference with words that occur once on each page", () => {
+    const verdict = judgePair(answer({ differences: [{ old: "community support", new: "" }, { old: "Free plan", new: "Pro plan" }] }), OLD_PAGE, NEW_PAGE);
+    assert.strictEqual(verdict.status, "same");
+    assert.deepStrictEqual(verdict.refuted.map((claim: { why: string }) => claim.why), ["the old words are still on the new page", "each page carries both the old and the new words"]);
+  });
+
+  it("does not count a claimed difference whose old and new words are the same, however often the pages repeat them", () => {
+    const page = "Free: extra checkpoints $50 per million. Pro: extra checkpoints $50 per million.";
+    const verdict = judgePair(answer({ old_terms: ["Free: extra checkpoints"], new_terms: ["Free: extra checkpoints"], differences: [{ old: "extra checkpoints $50 per million", new: "extra checkpoints $50 per million" }] }), page, page);
+    assert.strictEqual(verdict.status, "same");
+    assert.strictEqual(verdict.refuted[0].why, "the old and the new words are the same");
+  });
+
   it("cannot settle a difference whose words are not on the page they were copied from, rather than calling the terms the same", () => {
     const verdict = judgePair(answer({ differences: [{ old: "500 MB database", new: "250 MB of database storage" }] }), OLD_PAGE, NEW_PAGE);
     assert.deepStrictEqual([verdict.status, verdict.side], ["unquotable", "new"]);
@@ -572,7 +601,7 @@ describe("settling a first reading's difference against the page as the Archive 
     const settled = await result;
     assert.strictEqual(settled.outcome, "no_usable_capture");
     assert.deepStrictEqual(settled.tried.map((t: { day: string; side: string; why: string }) => [t.day, t.side]), [["2026-02-14", "before"], ["2026-02-20", "after"]]);
-    assert.match(settled.tried[0].why, /could not quote the plan's terms from the capture/);
+    assert.strictEqual(settled.tried[0].why, "the capture settles nothing: no terms on the page");
   });
 
   it("stands today's page in for the record's day when the reader cannot copy the plan's terms from the capture nearest it", async () => {
@@ -594,6 +623,29 @@ describe("settling a first reading's difference against the page as the Archive 
     const settled = await result;
     assert.strictEqual(settled.outcome, "no_usable_capture");
     assert.match(settled.why, /could not compare today's page/);
+  });
+
+  it("leaves a record unsettled, never ours, when the only difference the reader claims is refuted by a figure a page repeats", async () => {
+    const promo = "Launch offer: 10,000 calls a month for new sign-ups.";
+    const planPage = (calls: string) => `<html><body><h2>Free plan</h2><p>${calls} calls a month.</p><p>${promo}</p><p>${FILLER}</p></body></html>`;
+    const archive = {
+      captures: async () => ({ captures: [capture("20260210120000"), capture("20260825120000")] }),
+      captureHtml: async ({ timestamp }: { timestamp: string }) => ({ html: planPage(timestamp.startsWith("202602") ? "10,000" : "500") }),
+    };
+    const client = {
+      complete: async () => JSON.stringify({ old_terms: ["10,000 calls a month"], new_terms: ["500 calls a month"], same: false, differences: [{ old: "10,000 calls a month", new: "" }], direction: "narrowed" }),
+    };
+    const settled = await settleAgainstCaptures({
+      url: "https://example.com/pricing",
+      textDay: "2026-02-15",
+      recordDay: RECORD_DAY,
+      todayText: `Free plan 500 calls a month. ${promo} ${FILLER}`,
+      today: TODAY,
+      archive,
+      readPair: pairedReaderFor(client, { vendor: "Example", category: "APIs", tier: "Free" }),
+    });
+    assert.strictEqual(settled.outcome, "no_usable_capture");
+    assert.deepStrictEqual(settled.tried, [{ day: "2026-02-10", gap_days: 5, side: "before", why: 'the capture settles nothing: "10,000 calls a month" occurs more than once on the old page, so it cannot refute the difference' }]);
   });
 
   it("brackets each move when the terms moved more than once, and leaves the record's date to be split by hand", async () => {
