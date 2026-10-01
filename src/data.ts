@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import type { Offer, EnrichedOffer, OfferIndex, DealChange, DateMeaning, PublishedDealChange, DealChangesIndex, ChangeDateSource, StabilityClass, Referral, RiskCause, RatingWithheld, LinkUnreachable, SourceCheck, FreePlanExcerpt } from "./types.js";
+import type { Offer, EnrichedOffer, OfferIndex, DealChange, DateMeaning, PublishedDealChange, DealChangesIndex, ChangeDateSource, StabilityClass, Referral, RiskCause, RatingWithheld, LinkUnreachable, SourceCheck, FreePlanExcerpt, FreePlanExcerptHold } from "./types.js";
 import { isUrlSuspended } from "./referral-health.js";
 import { CHANGE_DIRECTION, NEGATIVE_CHANGE_TYPES, POSITIVE_CHANGE_TYPES } from "./change-direction.js";
 import { changeRatesTheListedTier } from "./change-tier.js";
@@ -120,15 +120,17 @@ export function withoutGateInput(offer: Offer): Offer {
 }
 
 const freePlanExcerptsHeldAside = new Map<string, FreePlanExcerpt>();
+const freePlanExcerptHolds = new Map<string, FreePlanExcerptHold>();
 
 function heldExcerptKey(offer: Pick<Offer, "vendor" | "url" | "tier">): string {
   return `${offer.vendor}|${offer.url}|${offer.tier}`;
 }
 
 function withFreePlanExcerptHeldAside(offer: Offer): Offer {
-  if (!("free_plan_excerpt" in offer)) return offer;
-  const { free_plan_excerpt: excerpt, ...rest } = offer;
+  if (!("free_plan_excerpt" in offer) && !("free_plan_excerpt_hold" in offer)) return offer;
+  const { free_plan_excerpt: excerpt, free_plan_excerpt_hold: hold, ...rest } = offer;
   if (excerpt) freePlanExcerptsHeldAside.set(heldExcerptKey(rest), excerpt);
+  if (hold) freePlanExcerptHolds.set(heldExcerptKey(rest), hold);
   return rest;
 }
 
@@ -137,8 +139,14 @@ export function freePlanExcerptHeldFor(offer: Pick<Offer, "vendor" | "url" | "ti
   return freePlanExcerptsHeldAside.get(heldExcerptKey(offer)) ?? null;
 }
 
+export function freePlanExcerptHoldOn(offer: Pick<Offer, "vendor" | "url" | "tier">): FreePlanExcerptHold | null {
+  loadOffers();
+  return freePlanExcerptHolds.get(heldExcerptKey(offer)) ?? null;
+}
+
 export function resetCache(): void {
   freePlanExcerptsHeldAside.clear();
+  freePlanExcerptHolds.clear();
   cachedOffers = null;
   cachedLiveVendorNames = null;
   cachedChanges = null;

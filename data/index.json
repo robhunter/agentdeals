@@ -32505,6 +32505,11 @@
         "checked": "2026-09-30",
         "outcome": "ok",
         "detail": "the page names Gemini CLI as \"gemini cli\" and states \"60 requests/min\""
+      },
+      "free_plan_excerpt_hold": {
+        "record_date": "2026-06-18",
+        "change_type": "restriction",
+        "reason": "Gemini CLI's README still states the free quota for personal Google accounts that this record says ended on 2026-06-18."
       }
     },
     {

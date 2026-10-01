@@ -55,6 +55,9 @@ const NAMES_NO_VENDOR = listing("Names No Vendor Excerpt Co", "names-no-vendor-e
 const NAMES_NO_PRODUCT = listing("Names No Product Excerpt Co", "names-no-product-excerpt-marker", {
   source_check: { checked: TODAY, outcome: "does_not_name_product", detail: "the page names another of the vendor's products" },
 });
+const HELD_BY_HAND = listing("Held By Hand Excerpt Co", "held-by-hand-excerpt-marker", {
+  free_plan_excerpt_hold: { record_date: TODAY, change_type: "restriction", reason: "The page still states the quota this record says ended." },
+});
 
 const QUOTED_ON_A_TIER_THAT_RUNS_OUT: [string, Offer, string][] = [
   ["the listed tier is a trial", TRIAL, "trial-excerpt-marker"],
@@ -75,6 +78,7 @@ const WITHHELD: [string, Offer, string][] = [
   ["the cited page is unreachable", UNREACHABLE, "unreachable-excerpt-marker"],
   ["our last read found the page does not name the vendor", NAMES_NO_VENDOR, "names-no-vendor-excerpt-marker"],
   ["our last read found the page does not name the product", NAMES_NO_PRODUCT, "names-no-product-excerpt-marker"],
+  ["a hold on the listing names a record the page has outlived", HELD_BY_HAND, "held-by-hand-excerpt-marker"],
 ];
 
 const SUPERSEDING_CHANGE = {
@@ -108,7 +112,7 @@ const indexPath = path.join(dir, "index.json");
 const changesPath = path.join(dir, "deal_changes.json");
 const linkHealthPath = path.join(dir, "link_health.json");
 const catalogue = JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf-8"));
-const SYNTHETIC = [QUOTED, STATES_NO_TERMS, UNREADABLE, ENDED, PAID, USAGE_BILLED, CLOSED_TO_NEW_ACCOUNTS, TRIAL, SUPERSEDED, REPOINTED, UNREACHABLE, NAMES_NO_VENDOR, NAMES_NO_PRODUCT];
+const SYNTHETIC = [QUOTED, STATES_NO_TERMS, UNREADABLE, ENDED, PAID, USAGE_BILLED, CLOSED_TO_NEW_ACCOUNTS, TRIAL, SUPERSEDED, REPOINTED, UNREACHABLE, NAMES_NO_VENDOR, NAMES_NO_PRODUCT, HELD_BY_HAND];
 writeFileSync(indexPath, JSON.stringify({ ...catalogue, offers: [...catalogue.offers, ...SYNTHETIC] }));
 const log = JSON.parse(readFileSync(path.join(REPO, "data", "deal_changes.json"), "utf-8"));
 writeFileSync(changesPath, JSON.stringify({ ...log, changes: [...log.changes, SUPERSEDING_CHANGE] }));
@@ -118,7 +122,7 @@ writeFileSync(linkHealthPath, JSON.stringify({ ...linkHealth, links: [...linkHea
 process.env.AGENTDEALS_INDEX_PATH = indexPath;
 process.env.AGENTDEALS_CHANGES_PATH = changesPath;
 process.env.AGENTDEALS_LINK_HEALTH_PATH = linkHealthPath;
-const { loadOffers, freePlanExcerptHeldFor } = await import("../dist/data.js");
+const { loadOffers, freePlanExcerptHeldFor, freePlanExcerptHoldOn } = await import("../dist/data.js");
 
 function startServer(): Promise<{ proc: ChildProcess; port: number }> {
   return new Promise((resolve, reject) => {
@@ -164,10 +168,16 @@ describe("a free-plan excerpt is published only where the vendor page publishes 
     return found;
   };
 
-  it("holds every excerpt aside when the catalogue loads, so no door serves one unless it asks", () => {
+  it("holds every excerpt and every hold aside when the catalogue loads, so no door serves one unless it asks", () => {
     const loaded = loadOffers() as Offer[];
-    assert.deepStrictEqual(loaded.filter((offer) => "free_plan_excerpt" in offer).map((offer) => offer.vendor), []);
+    assert.deepStrictEqual(loaded.filter((offer) => "free_plan_excerpt" in offer || "free_plan_excerpt_hold" in offer).map((offer) => offer.vendor), []);
     assert.deepStrictEqual(freePlanExcerptHeldFor(QUOTED), QUOTED.free_plan_excerpt);
+    assert.deepStrictEqual(freePlanExcerptHoldOn(HELD_BY_HAND), HELD_BY_HAND.free_plan_excerpt_hold);
+    assert.strictEqual(freePlanExcerptHoldOn(QUOTED), null);
+  });
+
+  it("serves no hold in /api/offers", async () => {
+    assert.ok(!("free_plan_excerpt_hold" in await offered(HELD_BY_HAND)), "/api/offers serves the hold");
   });
 
   it("quotes the vendor's own words on its page, attributed to the page and the day we read it", async () => {

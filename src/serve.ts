@@ -6,7 +6,7 @@ import { dirname, join } from "node:path";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { createServer, getServerCard } from "./server.js";
 import { changesForVendor, oldestVerifiedDateForSlug, vendorRiskAssessment, publishedRisk, levelWithheldStatement, vendorNotIndexedSentence, riskCauseOf, freeTierEndingRecord, NEGATIVE_CHANGE_TYPES, POSITIVE_CHANGE_TYPES, SEVERE_CHANGE_TYPES, loadOffers, getCategories, getNewOffers, getNewestDeals, searchOffers, enrichOffers, gateForOffer, loadDealChanges, getDealChanges, changeContext, DEFAULT_CHANGE_WINDOW_DAYS, getOfferDetails, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, getFormattedWeeklyDigest, getFreshnessMetrics, publishedStabilityIndex, stabilityWithheldDisclosure, UNRATED_STABILITY, type StabilityIndex, type PublishedStabilityClass, getVendorReferral, sanitizeQuery, getChangeLogFreshness, isEventDated, partitionByDateProvenance } from "./data.js";
-import { loadChangeRefusals, changesRatingTheListedTier, changesTheVendorMade, stabilityDeciders, vendorNameAsPublished, freePlanExcerptHeldFor } from "./data.js";
+import { loadChangeRefusals, changesRatingTheListedTier, changesTheVendorMade, stabilityDeciders, vendorNameAsPublished, freePlanExcerptHeldFor, freePlanExcerptHoldOn } from "./data.js";
 import { A_DEMOTION_IN_FORCE_RULE, NO_DEMOTION_IN_FORCE_RULE, A_COMPLETE_LOG_NOTICE, A_VERDICT_ROLLS_NOTICE, A_WITHHELD_RATING_DOES_NOT_LAPSE, lapsingDemotionStated, VOLATILE_WHILE_A_DEMOTION_COUNTS_RULE, WATCH_RECEIVES_FROM_VOLATILE_RULE , confirmationCoverage, confirmationCoverageSentence, HOW_THE_CATALOGUE_IS_MAINTAINED, NOTHING_CONTRADICTS_OUR_TERMS_FOR, THE_DATES_WE_HOLD } from "./data.js";
 import { confirmingRead, confirmingReadSentence, refusalsByVendor, refusedReadSentence, supersededRefusalSentence, type ChangeRefusal } from "./change-refusal.js";
 import { getStackRecommendation } from "./stacks.js";
@@ -738,6 +738,7 @@ const READS_THAT_PUT_AN_EXCERPT_IN_DOUBT: ReadonlySet<LevelWithheldReason> = new
 function freePlanExcerptWeMayPublish(offer: Offer): FreePlanExcerpt | null {
   const excerpt = freePlanExcerptHeldFor(offer);
   if (!excerpt || excerpt.url !== offer.url) return null;
+  if (freePlanExcerptHoldOn(offer) !== null) return null;
   if (!tierMayCarryAFreePlanExcerpt(offer.tier)) return null;
   if (offerRetired(offer) || supersedingChangeFor(offer) !== null) return null;
   const lastRead = levelWithheldReason(offer, unreachableNoticeForUrl(offer.url));

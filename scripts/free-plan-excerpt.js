@@ -1,7 +1,9 @@
 import { tierMayCarryAFreePlanExcerpt } from "../dist/free-tier-record.js";
+import { isNoLongerInForce } from "../dist/change-resolution.js";
 import { MAX_PAGE_TEXT_LENGTH } from "./verify-freshness.js";
 
 export const FREE_PLAN_EXCERPT = "free_plan_excerpt";
+export const FREE_PLAN_EXCERPT_HOLD = "free_plan_excerpt_hold";
 export const MAX_FREE_PLAN_EXCERPT_LENGTH = 400;
 
 export function textTheReaderSees(pageText) {
@@ -126,9 +128,8 @@ const A_FIGURE = /(?:^|[^\p{L}\p{N}])\d/u;
 
 const WORDS_THAT_STATE_A_TERM = new Set([
   "unlimited", "limited", "limit", "limits", "forever", "lifetime",
-  "team", "teams", "user", "users", "member", "members", "seat", "seats", "project", "projects", "collaborator", "collaborators",
-  "credit", "credits", "card", "payment", "registration", "signup", "account", "accounts", "verification", "verified",
-  "personal", "hobby", "individual", "individuals", "commercial", "noncommercial", "student", "students", "education", "educational",
+  "credit", "credits", "card", "payment", "registration", "signup", "verification", "verified",
+  "personal", "individual", "individuals", "commercial", "noncommercial", "student", "students", "education", "educational",
   "academic", "nonprofit", "nonprofits", "startup", "startups", "eligible", "eligibility",
   "month", "months", "monthly", "day", "days", "daily", "week", "weeks", "weekly", "year", "years", "yearly", "annual", "annually",
   "hour", "hours", "minute", "minutes",
@@ -225,7 +226,32 @@ function withNoExcerptForTheTier(record) {
   return { outcome: held ? "removed" : "not_a_free_plan", why: TIER_WITH_NO_FREE_PLAN };
 }
 
+export function holdOnTheExcerpt(hold) {
+  return `a hold names the ${hold.change_type} record of ${hold.record_date}: ${hold.reason}`;
+}
+
+function withNoExcerptWhileHeld(record) {
+  const held = FREE_PLAN_EXCERPT in record;
+  delete record[FREE_PLAN_EXCERPT];
+  return { outcome: held ? "removed" : "on_hold", why: holdOnTheExcerpt(record[FREE_PLAN_EXCERPT_HOLD]) };
+}
+
+export function excerptHoldsNamingNoRecordInForce(offers, changes) {
+  const problems = [];
+  for (const offer of offers) {
+    const hold = offer?.[FREE_PLAN_EXCERPT_HOLD];
+    if (hold === undefined) continue;
+    const name = `${offer.vendor} (${offer.tier})`;
+    if (!hold || typeof hold.reason !== "string" || !collapseWhitespace(hold.reason)) problems.push(`${name}: the hold gives no reason`);
+    const named = changes.filter((change) => change.vendor === offer.vendor && change.change_type === hold?.change_type && change.date === hold?.record_date);
+    if (named.length === 0) problems.push(`${name}: the hold names no ${hold?.change_type} record of ${hold?.record_date}`);
+    else if (named.every(isNoLongerInForce)) problems.push(`${name}: the ${hold.change_type} record of ${hold.record_date} that the hold names is no longer in force`);
+  }
+  return problems;
+}
+
 export async function excerptTheFreePlan(record, { offer, pageText, read, readOn }) {
+  if (record[FREE_PLAN_EXCERPT_HOLD]) return withNoExcerptWhileHeld(record);
   if (!tierMayCarryAFreePlanExcerpt(offer.tier)) return withNoExcerptForTheTier(record);
   let answer;
   try {

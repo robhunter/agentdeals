@@ -7,11 +7,14 @@ import {
   COPY_HOLDS_ANOTHER_PLAN,
   COPY_STATES_NO_TERMS,
   FREE_PLAN_EXCERPT,
+  FREE_PLAN_EXCERPT_HOLD,
   MAX_FREE_PLAN_EXCERPT_LENGTH,
   TIER_WITH_NO_FREE_PLAN,
   assignmentsOfTheExcerpt,
+  excerptHoldsNamingNoRecordInForce,
   excerptTheFreePlan,
   excerptsDisagreeingWithTheirCitation,
+  holdOnTheExcerpt,
   parseExcerptAnswer,
   verbatimExcerpt,
   writeFreePlanExcerpt,
@@ -131,7 +134,7 @@ describe("an excerpt states at least one of the plan's terms", () => {
   it("keeps a copy whose terms state a price, an allowance, a limit or who can get the plan, with or without a figure", () => {
     assert.deepStrictEqual(write({ vendor: "Render", tier: "Hobby" }, RENDER_PAGE, RENDER_EXCERPT, ["Deploy up to 25 services"]).result, { outcome: "written" });
     assert.deepStrictEqual(write({ vendor: "Formsubmit.co", tier: "Free" }, FORMSUBMIT_PAGE, FORMSUBMIT_PAGE, ["NO REGISTRATION REQUIRED"]).result, { outcome: "written" });
-    assert.deepStrictEqual(write({ vendor: "Bitrise", tier: "Hobby" }, BITRISE_PAGE, "Free Forever Get started Access for a team of one (that's you!)", ["Access for a team of one"]).result, { outcome: "written" });
+    assert.deepStrictEqual(write({ vendor: "Bitrise", tier: "Hobby" }, BITRISE_PAGE, "Free Forever Get started Access for a team of one (that's you!)", ["Free Forever", "Access for a team of one"]).result, { outcome: "written" });
     assert.deepStrictEqual(write({ vendor: "Firebase", tier: "Spark" }, FIREBASE_PAGE, FIREBASE_PAGE, ["No payment method needed"]).result, { outcome: "written" });
   });
 
@@ -158,7 +161,21 @@ describe("an excerpt states at least one of the plan's terms", () => {
     assert.deepStrictEqual(write({ vendor: "1Password", tier: "Free" }, "1Password Free Sign up", "1Password Free", ["1Password Free"]).result, { outcome: "refused", why: COPY_STATES_NO_TERMS });
     assert.deepStrictEqual(write({ vendor: "Render", tier: "Hobby" }, RENDER_PAGE, "Hobby Pro Scale", ["Hobby"]).result, { outcome: "refused", why: COPY_STATES_NO_TERMS });
     assert.deepStrictEqual(write({ vendor: "Mistral AI", tier: "Free" }, "Free Limited messages and web searches.", "Free Limited messages and web searches.", ["Limited messages"]).result, { outcome: "written" });
-    assert.deepStrictEqual(write({ vendor: "Airtable", tier: "Free" }, "Our Free plan is available to teams for no charge", "Our Free plan is available to teams for no charge", ["no charge", "teams"]).result, { outcome: "written" });
+  });
+
+  it("counts no word for who uses the plan or what it holds, such as teams, users, seats, projects or accounts, unless a figure or another term word stands beside it", () => {
+    for (const word of ["team", "teams", "user", "users", "member", "members", "seat", "seats", "project", "projects", "collaborator", "collaborators", "account", "accounts", "hobby"]) {
+      const copy = `Made for the ${word} that matters`;
+      assert.deepStrictEqual(write({ vendor: "Acme", tier: "Free" }, copy, copy, [`the ${word} that matters`]).result, { outcome: "refused", why: COPY_STATES_NO_TERMS }, word);
+    }
+    const PASSION_PROJECT = "Build and distribute your passion project without the extra cost.";
+    assert.deepStrictEqual(write({ vendor: "Bitrise", tier: "Hobby" }, BITRISE_PAGE, PASSION_PROJECT, [PASSION_PROJECT]).result, { outcome: "refused", why: COPY_STATES_NO_TERMS });
+    const AIRTABLE_PAGE = "Our Free plan is available to teams for no charge";
+    assert.deepStrictEqual(write({ vendor: "Airtable", tier: "Free" }, AIRTABLE_PAGE, AIRTABLE_PAGE, ["no charge", "teams"]).result, { outcome: "refused", why: COPY_STATES_NO_TERMS });
+    assert.deepStrictEqual(write({ vendor: "Acme", tier: "Free" }, "Create a free account", "Create a free account", ["Create a free account"]).result, { outcome: "refused", why: COPY_STATES_NO_TERMS });
+    for (const term of ["Up to 3 projects", "Unlimited team members", "5 seats", "50,000 monthly active users"]) {
+      assert.deepStrictEqual(write({ vendor: "Acme", tier: "Free" }, term, term, [term]).result, { outcome: "written" }, term);
+    }
   });
 
   it("refuses a copy when the reader names no term, or no term the copy holds", () => {
@@ -235,6 +252,70 @@ describe("only a tier that may be a free plan is quoted", () => {
       const { result, asked, record } = await excerpt(tier);
       assert.deepStrictEqual([asked, result.outcome, (record[FREE_PLAN_EXCERPT] as { text: string }).text], [[tier], "written", "Free tier: 10 GB per month for $0."], tier);
     }
+  });
+});
+
+describe("a hold on the listing keeps the reader from being asked and the excerpt from being kept", () => {
+  const PAGE = "Acme pricing. Free tier: 60 requests a minute for $0.";
+  const HOLD = { record_date: "2026-06-18", change_type: "restriction", reason: "The page still states the quota this record says ended." };
+  const excerpt = async (tier: string, held?: unknown) => {
+    const offer = { vendor: "Acme", category: "AI Coding", tier, url: "https://acme.example/pricing" };
+    const record: Record<string, unknown> = { ...offer, [FREE_PLAN_EXCERPT_HOLD]: HOLD, ...(held ? { [FREE_PLAN_EXCERPT]: held } : {}) };
+    const asked: string[] = [];
+    const result = await excerptTheFreePlan(record, {
+      offer,
+      pageText: PAGE,
+      read: async () => {
+        asked.push(tier);
+        return { copied: "Free tier: 60 requests a minute for $0.", terms: ["60 requests a minute"] };
+      },
+      readOn: "2026-10-01",
+    });
+    return { result, asked, record };
+  };
+
+  it("never asks the reader about a held listing, whatever its tier, and names the record that holds it", async () => {
+    for (const tier of ["Free", "Paid"]) {
+      const { result, asked, record } = await excerpt(tier);
+      assert.deepStrictEqual([asked, result.outcome, result.why, FREE_PLAN_EXCERPT in record], [[], "on_hold", holdOnTheExcerpt(HOLD), false], tier);
+    }
+    assert.ok(holdOnTheExcerpt(HOLD).includes("restriction record of 2026-06-18"), holdOnTheExcerpt(HOLD));
+  });
+
+  it("removes an excerpt the held listing still carries, and leaves the hold in place", async () => {
+    const { result, asked, record } = await excerpt("Free", { text: "Free tier: 60 requests a minute", url: "https://acme.example/pricing", read_on: "2026-09-01" });
+    assert.deepStrictEqual([asked, result.outcome, FREE_PLAN_EXCERPT in record, record[FREE_PLAN_EXCERPT_HOLD]], [[], "removed", false, HOLD]);
+  });
+});
+
+describe("every hold the catalogue carries names a record in force", () => {
+  const RECORD = { vendor: "Acme", change_type: "restriction", date: "2026-06-18" };
+  const held = (hold: Record<string, unknown>) => ({
+    vendor: "Acme",
+    tier: "Free",
+    url: "https://acme.example/pricing",
+    [FREE_PLAN_EXCERPT_HOLD]: { record_date: "2026-06-18", change_type: "restriction", reason: "The page still states the quota this record says ended.", ...hold },
+  });
+
+  it("names a record of the listing's own vendor that is in force, and gives a reason", () => {
+    const offers = JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf-8")).offers;
+    const changes = JSON.parse(readFileSync(path.join(REPO, "data", "deal_changes.json"), "utf-8")).changes;
+    assert.deepStrictEqual(excerptHoldsNamingNoRecordInForce(offers, changes), []);
+  });
+
+  it("refuses a hold that names no such record, names one no longer in force, or gives no reason", () => {
+    assert.deepStrictEqual(excerptHoldsNamingNoRecordInForce([held({})], [RECORD]), []);
+    assert.deepStrictEqual(excerptHoldsNamingNoRecordInForce([held({ record_date: "2026-06-19" })], [RECORD]), ["Acme (Free): the hold names no restriction record of 2026-06-19"]);
+    assert.deepStrictEqual(excerptHoldsNamingNoRecordInForce([held({ change_type: "limits_reduced" })], [RECORD]), ["Acme (Free): the hold names no limits_reduced record of 2026-06-18"]);
+    assert.deepStrictEqual(excerptHoldsNamingNoRecordInForce([held({})], [{ ...RECORD, vendor: "Another Co" }]), ["Acme (Free): the hold names no restriction record of 2026-06-18"]);
+    for (const state of ["retracted", "reversed"]) {
+      assert.deepStrictEqual(
+        excerptHoldsNamingNoRecordInForce([held({})], [{ ...RECORD, resolution: { state, date: "2026-07-01", detail: "withdrawn" } }]),
+        ["Acme (Free): the restriction record of 2026-06-18 that the hold names is no longer in force"],
+        state,
+      );
+    }
+    assert.deepStrictEqual(excerptHoldsNamingNoRecordInForce([held({ reason: "  " })], [RECORD]), ["Acme (Free): the hold gives no reason"]);
   });
 });
 
@@ -353,6 +434,23 @@ describe("the rotation keeps the excerpt of a page it read", async () => {
       rateLimitMs: 0,
     });
     assert.strictEqual(unheld.excerpts.not_a_free_plan, 1);
+  });
+
+  it("asks nothing for a listing under a hold, counts it, and keeps the hold", async () => {
+    const hold = { record_date: "2026-06-18", change_type: "restriction", reason: "The page still states the quota this record says ended." };
+    const data = { offers: [{ ...acme, [FREE_PLAN_EXCERPT_HOLD]: hold }] };
+    const asked: string[] = [];
+    const result = await runAiMode([{ index: 0, offer: acme }], data, false, NOW, {
+      fetchFn: async () => ({ ok: true, text: ACME_PAGE, truncated: false }),
+      verifyFn: async () => ({ status: "confirmed" }),
+      confirmFn: async () => ({ describes_change: true }),
+      excerptFn: async (offer: { vendor: string }) => {
+        asked.push(offer.vendor);
+        return { copied: "Free tier: 10 GB per month for $0.", terms: ["10 GB per month"] };
+      },
+      rateLimitMs: 0,
+    });
+    assert.deepStrictEqual([asked, result.excerpts.on_hold, (data.offers[0] as Record<string, unknown>)[FREE_PLAN_EXCERPT_HOLD], FREE_PLAN_EXCERPT in data.offers[0]], [[], 1, hold, false]);
   });
 
   it("counts a refused copy and an unanswered read with their reasons, and writes nothing on a dry run", async () => {
