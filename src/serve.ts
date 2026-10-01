@@ -49,7 +49,7 @@ import { CHECK_ESTABLISHES, CHECK_SCOPE_CLASS, NO_CATALOGUE_RECORD_SOURCE, cited
 import { vendorHistorySentence } from "./vendor-history.js";
 import { guideBlurb } from "./guide-blurbs.js";
 import { changesToStartupProgrammes } from "./startup-programme-changes.js";
-import { HETZNER_APRIL_CHANGES, HETZNER_CLOUD_PLANS, HETZNER_PRICES_READ, HETZNER_PRICE_SOURCE, HETZNER_SINGAPORE_EXAMPLE, cheapestOrderableHetznerPlan, hetznerEntryPriceClause, unorderableHetznerPlans } from "./hetzner-pricing.js";
+import { HETZNER_APRIL_CHANGES, HETZNER_AX102_GERMANY, HETZNER_CLOUD_PLANS, HETZNER_PRICES_READ, HETZNER_PRICE_SOURCE, HETZNER_SINGAPORE_EXAMPLE, cheapestOrderableHetznerPlan, hetznerEntryPriceClause, unorderableHetznerPlans } from "./hetzner-pricing.js";
 import { HUNDRED_GB_SCENARIO, HUNDRED_TB_SCENARIO, ONE_TO_ONE_SCENARIO, STORAGE_RATES_READ, STORAGE_SCALE_WORKLOADS, TEN_TO_ONE_SCENARIO, cheapestProviderAt, costAfterMonthlyEgressGrantFor, costliestProviderAt, egressAllowanceSentence, egressBillAfterMonthlyGrantFor, egressBillOnceOverAllowance, egressRatioWhereCostsMatch, fixedMonthlyGrantsSentence, monthlyEgressGrantGb, monthlyEgressGrantSentence, monthlyStorageCost, providersWithScalingEgressAllowance, rateCardFor, scaleCostFor } from "./storage-cost-model.js";
 import { changeTimelineDate, supersededLineups, supersessionNote } from "./change-lineup.js";
 import { isACorrectionToOurOwnRecord, isNoLongerInForce, eventResolutionFields, recordsStillInForce, recordsWeStandBehind, INCLUDE_RETRACTED_REJECTED } from "./change-resolution.js";
@@ -19067,7 +19067,7 @@ ${mcpCtaCss()}
       </tbody>
     </table>
   </div>
-  <p class="section-intro" style="margin-top:0"><strong>The 128 GB RAM add-on at +575% was the largest single move</strong> — from €45.88 to €264.00 — driven directly by the DRAM shortage. An AX102 dedicated server with 128 GB built in cost €124 at the time, so the add-on cost more than twice the bundled memory. Of the products in this table, the load balancer is the one we have re-read since: LB11 is still €7.49, and load balancers were explicitly excluded from the June round.</p>
+  <p class="section-intro" style="margin-top:0">Hetzner's table also gives dollar prices, which moved by different amounts: cloud servers rose 28-43% in dollars (CX23 from $3.49 to $4.99), against 30-37% in euros. Memory upgrades for dedicated servers are not in the April table. Hetzner raised them in February: its add-on price list, last changed 2026-02-17, put a 64 GB DDR5 ECC step at €111 a month, up from €22, and a 32 GB step at €66, up from €14. Adding 128 GB of memory that way cost more than a whole AX102 server with 128 GB built in (${eur(HETZNER_AX102_GERMANY.beforeApril)} a month before April, ${eur(HETZNER_AX102_GERMANY.afterApril)} after, in Germany). Of the products in this table, the load balancer is the one we have re-read since: LB11 is still €7.49, and load balancers were explicitly excluded from the June round.</p>
 
   <h2 id="why">3. Why Prices Rose</h2>
   <div class="context-box">
@@ -19102,7 +19102,7 @@ ${mcpCtaCss()}
   </div>
   <div class="impact-card" style="border-left-color:#f85149">
     <h3><span style="display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;background:#f8514922;color:#f85149;font-weight:600;margin-right:.5rem">HIGH</span>Production Workloads &amp; Memory-Heavy Apps</h3>
-    <p class="impact-desc">Dedicated servers with RAM add-ons, US/SG object storage, large server fleets: +€50-200/mo or more. The 575% memory add-on increase alone can add €200+/mo for memory-intensive workloads. Consider dedicated servers (where RAM is bundled) or auction servers.</p>
+    <p class="impact-desc">Dedicated servers with RAM add-ons and large server fleets: +€50-200/mo or more. Memory upgrades rose separately in February: 128 GB as two 64 GB DDR5 ECC steps went from €44 to €222 a month. Consider dedicated servers (where RAM is bundled) or auction servers.</p>
   </div>
 
   <h2 id="alternatives">6. Alternatives Comparison</h2>
@@ -19147,7 +19147,7 @@ ${mcpCtaCss()}
     </div>
     <div class="impact-card" style="border-left-color:#3fb950">
       <h3>Bundle RAM in Dedicated Servers</h3>
-      <p class="impact-desc">After April, an AX102 with 128 GB RAM cost €124/mo while the same RAM as an add-on cost €264/mo. Choose servers with the memory you need built in.</p>
+      <p class="impact-desc">After April, an AX102 with 128 GB built in cost ${eur(HETZNER_AX102_GERMANY.afterApril)} a month in Germany, while adding 128 GB of DDR5 ECC memory to a server cost €222-264 a month. Choose servers with the memory you need built in.</p>
     </div>
     <div class="impact-card" style="border-left-color:#d29922">
       <h3>The Arm line is not an escape route</h3>

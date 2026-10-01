@@ -2149,7 +2149,7 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 98,
+      "table_figures": 91,
       "table_figures_from_records": 3,
       "tables": [
         {
@@ -2159,7 +2159,7 @@
         },
         {
           "label": "2. What the April 1 Adjustment Did",
-          "figures": 17,
+          "figures": 10,
           "from_records": 0
         },
         {
