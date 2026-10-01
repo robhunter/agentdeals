@@ -3360,9 +3360,9 @@
     {
       "vendor": "PostHog",
       "category": "Startup Perks",
-      "description": "$50,000/year in credits for Y Combinator companies — auto-renews annually. Covers product analytics, session replay, feature flags, and experimentation. Must have raised less than $25M",
+      "description": "$50,000 a year in PostHog credits for Y Combinator companies in any batch, renewing automatically while the company has raised less than $25M. Apply through PostHog's YC page, linked from Bookface, from a PostHog account on the company's email domain. Not open to YC alumni who started another company, or to a YC company acquired by a non-YC parent. Since 2026-09-14 the credits don't pay for AI tools (PostHog AI, PostHog Desktop, the Slack app, Replay Vision, Inbox). It doesn't stack with PostHog for Startups.",
       "tier": "YC Deal",
-      "url": "https://posthog.com/pricing",
+      "url": "https://posthog.com/handbook/marketing/startups",
       "tags": [
         "analytics",
         "product analytics",
@@ -3371,20 +3371,50 @@
         "yc",
         "startup credits"
       ],
-      "verifiedDate": "2026-07-25",
+      "verifiedDate": "2026-10-01",
       "eligibility": {
         "type": "accelerator",
         "conditions": [
-          "Y Combinator batch company",
-          "Raised less than $25M"
+          "Y Combinator company, any batch",
+          "Raised less than $25M",
+          "PostHog account on the company's email domain",
+          "Not acquired by a non-YC parent"
         ],
         "program": "PostHog for Y Combinator"
       },
-      "expires_date": "2027-01-31",
       "source_check": {
-        "checked": "2026-09-30",
+        "checked": "2026-10-01",
         "outcome": "ok",
-        "detail": "the page names PostHog as \"posthog\" and states \"$0\""
+        "detail": "the page names PostHog as \"posthog\" and states \"$50,000\""
+      }
+    },
+    {
+      "vendor": "PostHog",
+      "category": "Startup Perks",
+      "description": "$50,000 in PostHog credits for 12 months, plus about $12,000 of partner perks, for companies less than 2 years old that have raised less than $5M. Apply from a PostHog account on a paid plan (billed for usage only) that uses the company's email domain and signed up on or after 2023-01-01. Since 2026-09-14 the credits don't pay for AI tools (PostHog AI, PostHog Desktop, the Slack app, Replay Vision, Inbox). Y Combinator companies get a separate deal instead; the two don't stack.",
+      "tier": "Startup Program",
+      "url": "https://posthog.com/startups",
+      "tags": [
+        "analytics",
+        "product analytics",
+        "session replay",
+        "feature flags",
+        "startup credits"
+      ],
+      "verifiedDate": "2026-10-01",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Company less than 2 years old",
+          "Raised less than $5M",
+          "PostHog account on a paid plan, on the company's email domain, signed up on or after 2023-01-01"
+        ],
+        "program": "PostHog for Startups"
+      },
+      "source_check": {
+        "checked": "2026-10-01",
+        "outcome": "ok",
+        "detail": "the page names PostHog as \"posthog\" and states \"$50,000\" and \"$12,000\""
       }
     },
     {
@@ -4216,7 +4246,7 @@
     {
       "vendor": "Postman",
       "category": "Testing",
-      "description": "Free for single user only (since March 2026). Unlimited collections, environments, mock servers, basic monitoring. Team collaboration (shared workspaces, collection sharing) removed — requires Team plan ($19/user/mo). Postman-alternative tag: see Bruno, Hoppscotch, Insomnia, Thunder Client",
+      "description": "Free plan for one user: 50 Postman AI credits a month, the API client and core tools, specs and mock servers, native Git, unlimited manual Flows, automated API testing with the Collection Runner (without data files), unlimited local performance testing and 1,000 API monitoring requests a month. Cloud performance testing is on paid plans only, at $0.04 per virtual-user hour. Team collaboration needs the Team plan ($19 per user a month, billed annually).",
       "tier": "Free",
       "url": "https://www.postman.com/pricing/",
       "tags": [
@@ -4227,7 +4257,7 @@
         "deal-change",
         "postman-alternative"
       ],
-      "verifiedDate": "2026-08-16",
+      "verifiedDate": "2026-10-01",
       "source_check": {
         "checked": "2026-09-18",
         "outcome": "ok",
@@ -14782,7 +14812,7 @@
     {
       "vendor": "Terrateam",
       "category": "CI/CD",
-      "description": "Terrateam offers a free start with no credit card required. Features include cost estimation, policy enforcement, and self-service.",
+      "description": "Now Stategraph: terrateam.io redirects to stategraph.com. Infrastructure-as-code orchestration for GitHub and GitLab, with Terraform, OpenTofu, Terragrunt, Pulumi, CDKTF or any CLI. Free hosted plan: 3 users, 50 runs (plans or applies) a month, 1 concurrent worker, 30-day audit retention and community support, with every Orchestration feature, including SSO, RBAC, drift detection, cost estimation and OPA, Conftest and Checkov policies. No credit card. The self-hosted open-source edition (MPL-2.0) is free for up to 3 active users a month per GitHub or GitLab installation, with unlimited runs and concurrent workers.",
       "tier": "Free",
       "url": "https://terrateam.io/pricing",
       "tags": [
@@ -14792,18 +14822,15 @@
         "free-for-dev",
         "terraform-alternative"
       ],
-      "verifiedDate": "2026-09-22",
+      "verifiedDate": "2026-10-01",
       "source_check": {
         "checked": "2026-09-22",
         "outcome": "ok",
         "detail": "the page names Terrateam as \"terrateam\" and states \"$0\""
       },
-      "restated_from": {
-        "reading_date": "2026-08-28",
-        "source_url": "https://terrateam.io",
+      "restatement_reverted": {
         "record_date": "2026-08-28",
-        "change_type": "limits_reduced",
-        "restated_on": "2026-09-20"
+        "reverted_on": "2026-10-01"
       }
     },
     {
@@ -20528,9 +20555,9 @@
       }
     },
     {
-      "vendor": "flightcontrol.dev",
+      "vendor": "Ravion",
       "category": "Cloud Hosting",
-      "description": "Now Ravion — flightcontrol.dev redirects to ravion.com, which states \"Ravion is the successor to Flightcontrol. Nothing changes for existing customers.\" Deploy and operate applications in your own AWS account. Free plan for individuals: 1 user, up to 50 modules of any type, 2,000 pipeline minutes, $20 of AI tokens, preview environments, multiple GitHub collaborators, community support. AWS bills compute directly at $0 markup.",
+      "description": "Formerly Flightcontrol: flightcontrol.dev redirects to ravion.com, which states \"Ravion is the successor to Flightcontrol.\" Deploy and operate applications in your own AWS account. Free plan for individuals: 1 user, up to 50 modules of any type, 2,000 pipeline minutes, $20 of AI tokens, preview environments, multiple GitHub collaborators, community support. AWS bills compute directly at $0 markup.",
       "tier": "Free",
       "url": "https://www.ravion.com/pricing",
       "tags": [
@@ -20538,11 +20565,11 @@
         "paas",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-13",
+      "verifiedDate": "2026-10-01",
       "source_check": {
-        "checked": "2026-09-20",
+        "checked": "2026-10-01",
         "outcome": "ok",
-        "detail": "the page names flightcontrol.dev as \"flightcontrol\" and states \"$0\""
+        "detail": "the page names Ravion as \"ravion\" and states \"$0\" and \"$20\" and \"$0.00\" and \"$0,\""
       },
       "product_subtypes": {
         "taxonomy": "Cloud Hosting",
@@ -26440,7 +26467,7 @@
     {
       "vendor": "mockaroo",
       "category": "API Development",
-      "description": "Mockaroo lets you generate realistic test data in CSV, JSON, SQL, and Excel formats. You can also create mocks for back-end API.",
+      "description": "Mockaroo generates up to 1,000 rows of realistic test data for free, in CSV, JSON, SQL, and Excel formats. It also lets you design mock back-end APIs. Paid plans start at $60 a year.",
       "tier": "Free",
       "url": "https://mockaroo.com/",
       "tags": [
