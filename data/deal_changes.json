@@ -969,7 +969,13 @@
         "Azure for Startups"
       ],
       "recorded_date": "2026-02-26",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-10-01",
+        "detail": "Retracted 2026-10-01: wrong date and direction. Cloudflare announced its $250,000 programme on 2024-09-26 (blog.cloudflare.com/startup-program-250k-credits), and the four funding tiers, which cut bootstrapped startups to $5,000, appeared between the Internet Archive's captures of 2025-04-08 and 2025-04-17, which a separate record describes.",
+        "source_url": "http://web.archive.org/web/20250417204508/https://www.cloudflare.com/forstartups/"
+      }
     },
     {
       "vendor": "Google Gemini 2.0 Flash",
@@ -13431,6 +13437,35 @@
       "current_state": "Up to one year of Kiro Pro+ for early-stage to Series A startups; Starter up to 2 users, Growth up to 10, Scale up to 30; startups in AWS Activate not eligible",
       "impact": "medium",
       "source_url": "https://kiro.dev/blog/bringing-back-startup-credits/",
+      "category": "Startup Perks",
+      "alternatives": [],
+      "recorded_date": "2026-10-01",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Koyeb",
+      "change_type": "free_tier_removed",
+      "date": "2026-02-26",
+      "summary": "Koyeb withdrew its free Starter plan from new users after announcing on 2026-02-17 that it is joining Mistral AI: new users \"must subscribe to one of our paid plans to get started\", from Pro at $29 a month plus compute. Starter was on koyeb.com/pricing in the Internet Archive's capture of 2026-02-19 and gone by 2026-02-26. Organizations already on Starter keep it.",
+      "previous_state": "\"Starter $ 0 /mo +compute For individuals. Pay-per-use by the second after the free tier, perfect for small apps. Features Generous Free Tier 1x Web Service, 1x Postgres, 5x custom domains\" (pricing page, capture of 2026-02-19)",
+      "current_state": "\"Pro $ 29 /mo +compute The best way to start, including team and support features for production apps.\" New users \"must subscribe to one of our paid plans to get started.\"",
+      "impact": "high",
+      "source_url": "https://www.koyeb.com/blog/koyeb-is-joining-mistral-ai-to-build-the-future-of-ai-infrastructure",
+      "category": "Databases",
+      "alternatives": [],
+      "recorded_date": "2026-10-01",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Cloudflare for Startups",
+      "change_type": "pricing_restructured",
+      "date": "2025-04-17",
+      "summary": "Cloudflare split its startup programme into four funding tiers and capped bootstrapped startups at $5K. In the Internet Archive's capture of 2025-04-08, cloudflare.com/forstartups credited \"up to $250,000 worth of service\" to startups meeting one of its criteria. In the capture of 2025-04-17 a startup had to meet all of them, including \"Funded up to series B\", and the tiers were \"$5K: Bootstrapped / Stealth Startups\", \"$25K: Up-and-coming Startups\", \"$100K: Seed-funded Startups\" and \"$250K: High Growth Startups\".",
+      "tier": "Startup Program",
+      "previous_state": "Up to $250,000 worth of service for startups meeting one of the criteria (software product, founded within the last 5 years, valid website and email)",
+      "current_state": "Four tiers: $5K Bootstrapped / Stealth, $25K Up-and-coming, $100K Seed-funded, $250K High Growth; funded up to Series B",
+      "impact": "high",
+      "source_url": "http://web.archive.org/web/20250417204508/https://www.cloudflare.com/forstartups/",
       "category": "Startup Perks",
       "alternatives": [],
       "recorded_date": "2026-10-01",

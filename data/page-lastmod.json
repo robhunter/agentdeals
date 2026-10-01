@@ -9827,6 +9827,10 @@
     "/x402-services": {
       "hash": "b1ba5a0eadae8a45",
       "changed": "2026-10-01"
+    },
+    "/digest/2025-w16": {
+      "hash": "f5ba32e1eaf9f555",
+      "changed": "2026-10-01"
     }
   }
 }
