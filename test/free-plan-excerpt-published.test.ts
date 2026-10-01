@@ -29,18 +29,41 @@ function listing(vendor: string, marker: string, fields: Partial<Offer> = {}): O
   } as Offer;
 }
 
+const EARLIER_READ = new Date(Date.now() - 20 * 86_400_000).toISOString().slice(0, 10);
+const LONG_REACHABLE_AGO = new Date(Date.now() - 60 * 86_400_000).toISOString().slice(0, 10);
+
 const QUOTED = listing("Quoted Excerpt Co", "quoted-excerpt-marker");
-const UNCONFIRMED = listing("Unconfirmed Excerpt Co", "unconfirmed-excerpt-marker", {
+const STATES_NO_TERMS = listing("States No Terms Excerpt Co", "states-no-terms-excerpt-marker", {
   source_check: { checked: TODAY, outcome: "states_no_terms", detail: "the page states no plan terms" },
 });
+const UNREADABLE = listing("Unreadable Excerpt Co", "unreadable-excerpt-marker", {
+  source_check: { checked: TODAY, outcome: "unreadable", detail: "the page rendered no text we could read" },
+});
+UNREADABLE.free_plan_excerpt = { ...UNREADABLE.free_plan_excerpt!, read_on: EARLIER_READ };
+const ENDED = listing("Ended Excerpt Co", "ended-excerpt-marker", { tier: "Retired" });
 const SUPERSEDED = listing("Superseded Excerpt Co", "superseded-excerpt-marker");
 const REPOINTED = listing("Repointed Excerpt Co", "repointed-excerpt-marker");
 REPOINTED.free_plan_excerpt = { ...REPOINTED.free_plan_excerpt!, url: "https://old-address.example/pricing" };
+const UNREACHABLE = listing("Unreachable Excerpt Co", "unreachable-excerpt-marker");
+const NAMES_NO_VENDOR = listing("Names No Vendor Excerpt Co", "names-no-vendor-excerpt-marker", {
+  source_check: { checked: TODAY, outcome: "does_not_name_vendor", detail: "the page names another company" },
+});
+const NAMES_NO_PRODUCT = listing("Names No Product Excerpt Co", "names-no-product-excerpt-marker", {
+  source_check: { checked: TODAY, outcome: "does_not_name_product", detail: "the page names another of the vendor's products" },
+});
+
+const PUBLISHED_THOUGH_UNCONFIRMED: [string, Offer, string][] = [
+  ["our last read found no plan terms on the page", STATES_NO_TERMS, "states-no-terms-excerpt-marker"],
+  ["our last read could not read the page", UNREADABLE, "unreadable-excerpt-marker"],
+];
 
 const WITHHELD: [string, Offer, string][] = [
-  ["our last read could not confirm the terms", UNCONFIRMED, "unconfirmed-excerpt-marker"],
+  ["the listing has ended", ENDED, "ended-excerpt-marker"],
   ["a recorded change has superseded the terms", SUPERSEDED, "superseded-excerpt-marker"],
   ["the excerpt was read from a page the record no longer cites", REPOINTED, "repointed-excerpt-marker"],
+  ["the cited page is unreachable", UNREACHABLE, "unreachable-excerpt-marker"],
+  ["our last read found the page does not name the vendor", NAMES_NO_VENDOR, "names-no-vendor-excerpt-marker"],
+  ["our last read found the page does not name the product", NAMES_NO_PRODUCT, "names-no-product-excerpt-marker"],
 ];
 
 const SUPERSEDING_CHANGE = {
@@ -59,16 +82,31 @@ const SUPERSEDING_CHANGE = {
   date_source: "vendor_page",
 };
 
+const UNREACHABLE_LINK = {
+  url: UNREACHABLE.url,
+  checked: TODAY,
+  outcome: "unreachable",
+  detail: "GET ENOTFOUND",
+  terminal: false,
+  last_reachable: LONG_REACHABLE_AGO,
+  consecutive_unreachable: 3,
+};
+
 const dir = mkdtempSync(path.join(tmpdir(), "free-plan-excerpt-"));
 const indexPath = path.join(dir, "index.json");
 const changesPath = path.join(dir, "deal_changes.json");
+const linkHealthPath = path.join(dir, "link_health.json");
 const catalogue = JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf-8"));
-writeFileSync(indexPath, JSON.stringify({ ...catalogue, offers: [...catalogue.offers, QUOTED, UNCONFIRMED, SUPERSEDED, REPOINTED] }));
+const SYNTHETIC = [QUOTED, STATES_NO_TERMS, UNREADABLE, ENDED, SUPERSEDED, REPOINTED, UNREACHABLE, NAMES_NO_VENDOR, NAMES_NO_PRODUCT];
+writeFileSync(indexPath, JSON.stringify({ ...catalogue, offers: [...catalogue.offers, ...SYNTHETIC] }));
 const log = JSON.parse(readFileSync(path.join(REPO, "data", "deal_changes.json"), "utf-8"));
 writeFileSync(changesPath, JSON.stringify({ ...log, changes: [...log.changes, SUPERSEDING_CHANGE] }));
+const linkHealth = JSON.parse(readFileSync(path.join(REPO, "data", "link_health.json"), "utf-8"));
+writeFileSync(linkHealthPath, JSON.stringify({ ...linkHealth, links: [...linkHealth.links, UNREACHABLE_LINK] }));
 
 process.env.AGENTDEALS_INDEX_PATH = indexPath;
 process.env.AGENTDEALS_CHANGES_PATH = changesPath;
+process.env.AGENTDEALS_LINK_HEALTH_PATH = linkHealthPath;
 const { loadOffers, freePlanExcerptHeldFor } = await import("../dist/data.js");
 
 function startServer(): Promise<{ proc: ChildProcess; port: number }> {
@@ -103,7 +141,11 @@ describe("a free-plan excerpt is published only where the vendor page publishes 
     rmSync(dir, { recursive: true, force: true });
   });
 
-  const page = async (offer: Offer) => await (await fetch(`${base}/vendor/${slugOf(offer)}`)).text();
+  const page = async (offer: Offer) => {
+    const res = await fetch(`${base}/vendor/${slugOf(offer)}`);
+    assert.strictEqual(res.status, 200, `/vendor/${slugOf(offer)} answered ${res.status}, so it says nothing about the excerpt`);
+    return await res.text();
+  };
   const offered = async (offer: Offer) => {
     const body = await (await fetch(`${base}/api/offers?q=${encodeURIComponent(offer.vendor)}&limit=50`)).json() as { offers: (Offer & { free_plan_excerpt: FreePlanExcerpt | null })[] };
     const found = body.offers.find((o) => o.vendor === offer.vendor);
@@ -134,6 +176,17 @@ describe("a free-plan excerpt is published only where the vendor page publishes 
   it("carries the excerpt as a field on the offer in /api/offers", async () => {
     assert.deepStrictEqual((await offered(QUOTED)).free_plan_excerpt, QUOTED.free_plan_excerpt);
   });
+
+  for (const [reason, offer, marker] of PUBLISHED_THOUGH_UNCONFIRMED) {
+    it(`quotes the excerpt under the day it was read where ${reason}, and leaves our own figures uncited`, async () => {
+      const html = await page(offer);
+      const excerpt = offer.free_plan_excerpt!;
+      assert.ok(html.includes(`&lt;${marker}&gt;`), `/vendor/${slugOf(offer)} withholds the excerpt where ${reason}`);
+      assert.ok(html.includes(`, read ${excerpt.read_on}:`), `/vendor/${slugOf(offer)} does not attribute the excerpt to the day it was read`);
+      assert.ok(!html.includes('class="free-tier-source-line"'), `/vendor/${slugOf(offer)} cites a source for terms its last read could not confirm`);
+      assert.deepStrictEqual((await offered(offer)).free_plan_excerpt, excerpt);
+    });
+  }
 
   for (const [reason, offer, marker] of WITHHELD) {
     it(`withholds the excerpt from the page and from /api/offers where ${reason}`, async () => {
