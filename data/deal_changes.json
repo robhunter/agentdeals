@@ -13470,6 +13470,57 @@
       "alternatives": [],
       "recorded_date": "2026-10-01",
       "date_source": "hand_written"
+    },
+    {
+      "vendor": "DatoCMS",
+      "change_type": "limits_increased",
+      "date": "2026-10-01",
+      "date_source": "discovered",
+      "summary": "The page mentions a free plan but also states that agency partners get a 30% discount starting from €39/month. The page details monthly API calls and traffic for users (5M API calls and 2TB traffic monthly). Is a significant increase from the stored 100k/month calls.",
+      "tier": "Free",
+      "tier_direction": "widened",
+      "previous_state": "Offers free tier for small projects. DatoCMS is a GraphQL-based CMS. On the lower tier, you have 100k/month calls.",
+      "current_state": "The page states that users get 5M API calls and 2TB traffic monthly on the free plan. It also mentions features for developers, digital marketers, and content editors.",
+      "impact": "high",
+      "source_url": "https://www.datocms.com/",
+      "category": "Headless CMS",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-10-01"
+    },
+    {
+      "vendor": "Nuclei",
+      "change_type": "new_tier",
+      "date": "2026-10-01",
+      "date_source": "discovered",
+      "summary": "Nuclei offers a free cloud tier with generous monthly free limits, and also offers Pro and Enterprise Editions with paid features like faster scans, larger scale scanning, and integrations.",
+      "tier": "Pro and Enterprise Editions",
+      "tier_direction": "widened",
+      "previous_state": "Open source (MIT) vulnerability scanner with YAML-based template system. 9,000+ community templates for web apps, APIs, networks, DNS, SSL. No usage limits.",
+      "current_state": "For security teams and enterprises, we provide a cloud-hosted service built on top of Nuclei OSS, fine-tuned to help you continuously run vulnerability scans at scale with your team and existing workflows: 50x faster scans, Large scale scanning with high accuracy, Integrations with cloud services (AWS, GCP, Azure, Cloudflare, Fastly, Terraform, Kubernetes), Jira, Slack, Linear, APIs and Webhooks, Executive and compliance reporting.",
+      "impact": "medium",
+      "source_url": "https://github.com/projectdiscovery/nuclei",
+      "category": "Security",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-10-01"
+    },
+    {
+      "vendor": "InfluxDB Cloud",
+      "change_type": "free_tier_removed",
+      "date": "2026-10-01",
+      "date_source": "discovered",
+      "summary": "The free tier is now a $250 free credit for Cloud Serverless with usage-based pricing after that. InfluxDB 3 Core is now listed as a permanently free, open-source option.",
+      "tier": "InfluxDB Cloud Serverless",
+      "tier_direction": "narrowed",
+      "previous_state": "Time-series database — free tier: 5 MB writes per 5 minutes, up to 10,000 data series, 30-day data retention. Auto-provisioned for new accounts. Ideal for IoT and monitoring workloads",
+      "current_state": "Cloud Serverless uses usage-based pricing across four dimensions: data in ($0.0025/MB), query count ($0.012 per 100 executions), storage ($0.002/GB-hour), and data out ($0.09/GB). There's no minimum commitment or long-term contract on the usage-based plan. New paid accounts receive $250 in credits applied to the first 30 days.",
+      "impact": "high",
+      "source_url": "https://www.influxdata.com/influxdb-pricing/",
+      "category": "Databases",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-10-01"
     }
   ]
 }

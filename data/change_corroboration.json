@@ -1,92 +1,125 @@
 {
   "held": [
     {
-      "vendor": "Bench",
+      "vendor": "Chanty.com",
       "change_type": "pricing_restructured",
-      "impact": "medium",
-      "summary": "The deal is no longer 20% off for 6 months. Stripe referrals now get 50% off their first 6 months with Bench.",
-      "previous_state": "20% off your first 6 months of bookkeeping with Bench. Access via: Free for Stripe users",
-      "current_state": "Stripe referrals get 50% off their first 6 months with Bench.",
-      "source_url": "https://bench.co/integrations/stripe/",
-      "category": "Startup Perks",
-      "first_read_date": "2026-09-30"
-    },
-    {
-      "vendor": "Filebase",
-      "change_type": "pricing_model_change",
       "impact": "high",
-      "summary": "The free tier is now 500GB for $7.50/month.",
-      "previous_state": "S3 Compatible Object Storage Powered by Blockchain. 5 GB free storage for an unlimited duration.",
-      "current_state": "Start at $7.50 for up to 500 GB",
-      "source_url": "https://filebase.com/",
-      "category": "Storage",
-      "first_read_date": "2026-09-30"
+      "summary": "The free plan is still mentioned. The details are significantly different.",
+      "previous_state": "Chanty is another alternative to Slack. It has a free forever plan for small teams (up to 5) with unlimited public and private conversations, searchable history, unlimited 1:1 audio calls, unlimited voice messages, ten integrations, and 20 GB storage per team.",
+      "current_state": "The page mentions a 'Free plan' but details focus on AI agents and collaboration features, with no specific limits on users, storage, or integrations. It emphasizes security and compliance.",
+      "source_url": "https://chanty.com/",
+      "category": "Team Collaboration",
+      "first_read_date": "2026-10-01"
     },
     {
-      "vendor": "InfluxDB Cloud",
+      "vendor": "Cloudflare Durable Objects",
+      "change_type": "limits_reduced",
+      "impact": "medium",
+      "summary": "The free tier for Durable Objects now has different limits for rows read and written with SQLite storage.  Storage billing is now enabled for SQLite-backed Durable Objects starting January 7, 2026.",
+      "previous_state": "Stateful serverless compute — Workers Free plan : Only Durable Objects with SQLite storage backend are available. Free plan requests are limited to 100,000 / day and duration is limited to 13,000 GB-s / day.",
+      "current_state": "On Workers Free plan: Requests are limited to 100,000 / day and duration is limited to 13,000 GB-s / day. Rows reads are limited to 5 million / day and rows written are limited to 100,000 / day. SQL Stored data is limited to 5 GB (total).",
+      "source_url": "https://developers.cloudflare.com/durable-objects/platform/pricing/",
+      "category": "Cloud Hosting",
+      "first_read_date": "2026-10-01"
+    },
+    {
+      "vendor": "Cohere",
       "change_type": "free_tier_removed",
       "impact": "high",
-      "summary": "The free tier is now a $250 credit for Cloud Serverless, with usage-based pricing after that. InfluxDB 3 Core is now listed as a permanently free, open-source option.",
-      "previous_state": "Time-series database — free tier: 5 MB writes per 5 minutes, up to 10,000 data series, 30-day data retention. Auto-provisioned for new accounts. Ideal for IoT and monitoring workloads",
-      "current_state": "Cloud Serverless uses usage-based pricing across four dimensions: data in ($0.0025/MB), query count ($0.012 per 100 executions), storage ($0.002/GB-hour), and data out ($0.09/GB). There's no minimum commitment or long-term contract on the usage-based plan. New paid accounts receive $250 in credits applied to the first 30 days.",
-      "source_url": "https://www.influxdata.com/influxdb-pricing/",
+      "summary": "The free trial API key still exists. The pricing for models has changed significantly. Previously Command R7B at $0.0375/$0.15 per 1M tokens. The current pricing page lists different models (Embed 5, Rerank 4, Parse 5) with different pricing structures (hourly/monthly instance rates). Legacy Command pricing is also listed, with different rates than previously stored.",
+      "previous_state": "AI model API for Command chat models, Embed, Rerank, Transcribe and Parse. Every account starts with a Trial API key: calls made with it are free, limited to 1,000 API calls a month, and may not be used for production or commercial purposes. Trial rate limits: 20 requests a minute per Chat model, 2,000 Embed inputs a minute and 10 Rerank requests a minute. Trial keys can use all of Cohere's models and APIs. Production keys are pay-as-you-go. Prices per 1M tokens: Command R7B $0.0375/$0.15; Command R $0.15/$0.60. The pricing page lists Command A+ (Apache 2.0) at $0 through an API key and as a model download.",
+      "current_state": "API calls made from a Trial API key are free. API calls made from a Production key will be charged on a pay-as-you-go basis. Legacy Command pricing is $1.00/1M tokens for input and $2.00/1M tokens for output. Command-light pricing is $0.30/1M tokens for input and $0.60/1M tokens for output. Command R 03-2024 pricing is $0.50/1M tokens for input and $1.50/1M tokens for output. Command R+ 04-2024 pricing is $3.00/1M tokens for input and $15.00/1M tokens for output. Command R+ 08-2024 pricing is $2.50/1M tokens for input and $10.00/1M tokens for output. Aya Expanse models are $0.50/1M tokens for input and $1.50/1M tokens for output.",
+      "source_url": "https://cohere.com/pricing",
+      "category": "AI / ML",
+      "first_read_date": "2026-10-01"
+    },
+    {
+      "vendor": "Conversion Tools",
+      "change_type": "limits_reduced",
+      "impact": "medium",
+      "summary": "The free tier now allows for files up to 10 MB, a reduction from 20 MB. The free tier also now offers 100 free API calls/month + 100 AI credits/month.",
+      "previous_state": "Online File Converter for documents, images, video, audio, and eBooks. REST API is available. Libraries for Node.js, PHP, Python. Support files up to 50 GB (for paid plans). Registered free users get 10 conversions a day (100 a month) and a 20 MB file size limit.",
+      "current_state": "Free users can convert files up to 10 MB. 100 free API calls/month + 100 AI credits/month are also available.",
+      "source_url": "https://conversiontools.io/",
+      "category": "Dev Utilities",
+      "first_read_date": "2026-10-01"
+    },
+    {
+      "vendor": "Crystallize",
+      "change_type": "limits_reduced",
+      "impact": "high",
+      "summary": "The Particle plan is now a metered free tier with limits on orders, items, bandwidth, and API calls. It also includes a cost per extra order, item, GB of bandwidth, and 25k API calls.",
+      "previous_state": "Headless PIM with ecommerce support. Built-in GraphQL API. Particle plan (free): unlimited users, 100 catalog items, 25 orders/month, 5 GB bandwidth/month, 25K API calls/month.",
+      "current_state": "✓ One tenant per project ✓ Unlimited users ✓ Full feature set ✓ Unlimited languages\nMetering: Orders 25, Items 100, Bandwidth 5 GB, API calls 25000\nCost per extra order $2.50, Cost per extra item $0.10, Cost per extra GB $0.50, Cost per extra 25k API calls $10.00",
+      "source_url": "https://crystallize.com/pricing",
+      "category": "Headless CMS",
+      "first_read_date": "2026-10-01"
+    },
+    {
+      "vendor": "Doppler",
+      "change_type": "limits_reduced",
+      "impact": "high",
+      "summary": "The free tier now has a 14-day trial for the Team plan, and the limits for projects, environments, and configs have changed.",
+      "previous_state": "Secrets management — up to 3 users, 10 projects, 4 environments per project. CLI, SDKs, and integrations included",
+      "current_state": "Free for 3 users. Projects: 10. Environments: 4. Configs per environment: 10. Config sync limits: 5. Webhook limits: 5. CLI tokens per user: 5.",
+      "source_url": "https://www.doppler.com/pricing",
+      "category": "Secrets Management",
+      "first_read_date": "2026-10-01"
+    },
+    {
+      "vendor": "Fly.io",
+      "change_type": "pricing_restructured",
+      "impact": "high",
+      "summary": "The Legacy Free tier is mentioned as 'Discontinued Plans' and volume snapshots will now be charged starting January 1st, 2026.",
+      "previous_state": "Pay-as-you-go only — no free tier for new accounts (since Oct 2024). Legacy accounts (Hobby/Launch/Scale plans) retain: 3 shared-cpu-1x VMs (256 MB RAM), 3 GB volume storage, 100 GB transfer/month. Volume snapshots: first 10 GB free, then $0.08/GB/month.",
+      "current_state": "The page references 'Discontinued Plans' and states volume snapshots will have charges starting January 1st 2026, at $0.08/GB per month after the first 10GB free each month.",
+      "source_url": "https://fly.io/docs/about/pricing/",
+      "category": "Cloud Hosting",
+      "first_read_date": "2026-10-01"
+    },
+    {
+      "vendor": "Hex",
+      "change_type": "limits_reduced",
+      "impact": "medium",
+      "summary": "The free Community plan now has restrictions on compute profiles. It only includes access to Extra Small and Small compute profiles. Previously 'Small compute (4 GB RAM, 0.5 CPU)'. Previously 'unlimited users' which is still true, and 'up to 5 notebooks, up to 5 published apps'.",
+      "previous_state": "Collaborative data platform for notebooks, data apps, and knowledge libraries. Community plan: up to 5 notebooks, up to 5 published apps, Small compute (4 GB RAM, 0.5 CPU), unlimited users, connect any data source, notebook agent trial (limited AI agent access).",
+      "current_state": "The Community plan includes Extra small (2 GB RAM, 0.25 CPU) and Small (4 GB RAM, 0.5 CPU) compute profiles.",
+      "source_url": "https://hex.tech/pricing",
+      "category": "Notebooks & Data Science",
+      "first_read_date": "2026-10-01"
+    },
+    {
+      "vendor": "Koyeb",
+      "change_type": "free_tier_removed",
+      "impact": "high",
+      "summary": "The Legacy Free tier is no longer available. The Pro plan is now $29/month + compute, and there are several other paid plans available.",
+      "previous_state": "Serverless platform for web services, workers and Postgres databases. No free plan for new users since February 2026: new organizations must subscribe to Pro ($29 a month plus compute, with $10 of compute included) or a higher plan. Every plan can run one small Postgres instance (0.25 vCPU, 1 GB RAM, 1 GB storage, 5 hours of compute a month) at no extra charge. Organizations already on the Starter plan keep it.",
+      "current_state": "The Pro plan costs $29/month plus compute, including $10 of compute. Serverless Postgres has a free tier with 5 hours of compute and 1GB of storage.",
+      "source_url": "https://www.koyeb.com/pricing",
       "category": "Databases",
-      "first_read_date": "2026-09-30"
+      "first_read_date": "2026-10-01"
     },
     {
-      "vendor": "MantleDB",
-      "change_type": "limits_reduced",
-      "impact": "medium",
-      "summary": "The free tier now has a 10,000 requests/24h rate limit and a 64KB per entry limit. Unclaimed namespaces are purged after 30 days of inactivity, while claimed namespaces are purged after 90 days. The free tier now includes up to 100 entries.",
-      "previous_state": "Anonymous JSON storage for scripts and tiny apps. No signup required; uses Master AID for updates and Read-Only RID for public fetching. Free tier includes 1 bucket (1MB limit) with a 72h inactivity scavenger policy.",
-      "current_state": "Unclaimed namespaces allow anyone to read and write, up to 100 entries and 64KB per entry, but are rate-limited above 10,000 requests/24h and purged after 30 days of inactivity. Claimed namespaces require a key for writes, have private reads by default, also have up to 100 entries and 64KB per entry, are rate-limited above 10,000 requests/24h, and are purged after 90 days of inactivity.",
-      "source_url": "https://mantledb.sh",
-      "category": "Storage",
-      "first_read_date": "2026-09-30"
-    },
-    {
-      "vendor": "OnlineOrNot",
-      "change_type": "limits_reduced",
-      "impact": "medium",
-      "summary": "The free tier (Hobby) now only includes up to 2 users instead of 2 team members. The free tier also only includes 1 status page, and SMS alerts are not included.",
-      "previous_state": "Uptime and status page monitoring — free plan: 3 monitors (uptime, keyword, heartbeat), 3-minute check interval, 2 team members, 1 status page, SSL monitoring, multi-location checks, email/Slack/Discord alerts",
-      "current_state": "Hobby: Up to 2 users, 3 minute check interval, Limited status page, Basic alerting.",
-      "source_url": "https://onlineornot.com/pricing",
-      "category": "Monitoring",
-      "first_read_date": "2026-09-30"
-    },
-    {
-      "vendor": "Sendinblue",
+      "vendor": "SiliconFlow",
       "change_type": "free_tier_removed",
       "impact": "high",
-      "summary": "Sendinblue (now Brevo) offers 50% off Starter and Standard Plans, not 12 months free on the Premium plan.",
-      "previous_state": "12 months free on the Premium plan. Access via: First deal free, then 99€/year or invite friends",
-      "current_state": "50% off Starter and Standard Plans",
-      "source_url": "https://www.joinsecret.com/offers",
-      "category": "Startup Perks",
-      "first_read_date": "2026-09-30"
+      "summary": "Specifically, GLM models (GLM-5.3, GLM-5.2, GLM-4.5V, GLM-4.5-Air, GLM-4-32B-0414) and DeepSeek models (DeepSeek-V4-Flash, DeepSeek-V4-Pro, DeepSeek-V3.2, DeepSeek-V3.2 (Pro), DeepSeek-V3.1-Terminus, DeepSeek-V3.1-Terminus (Pro)) are no longer free. Additionally, Kimi K2.6 is now a Pro version. Some models like Hunyuan-MT-7B remain free.",
+      "previous_state": "Pay-as-you-go model inference. siliconflow.cn, run by a Beijing company, lists these models at no charge: the chat models Qwen3-8B, Qwen2.5-7B-Instruct (Free), Qwen3.5-4B, GLM-4-9B-0414, GLM-Z1-9B-0414, DeepSeek-R1-0528-Qwen3-8B (Free) and Xing4.0-29B; the translation model Hunyuan-MT-7B; the OCR models PaddleOCR-VL-1.5 and DeepSeek-OCR; the embedding models bge-m3, bge-large-zh-v1.5 and bge-large-en-v1.5; the reranker bge-reranker-v2-m3; Kolors image generation; and six speech recognition models. The Pro versions are paid: Qwen2.5-7B-Instruct (Pro), bge-m3 (Pro) and bge-reranker-v2-m3 (Pro). All other models are paid too, including DeepSeek-V4-Flash, DeepSeek-V4-Pro and GLM-5.3. Using all the free models requires real-name verification, and online personal verification accepts only Chinese-issued documents, such as a resident ID card or a Foreign Permanent Resident ID Card. The international site, siliconflow.com, is run by SiliconFlow Labs Pte. Ltd. under Singapore law, is not offered in mainland China, and gives $1 in free credits to start. Its paid rates per million input/output tokens: gpt-oss-120b $0.05/$0.45; DeepSeek-V4.1-Flash $0.15/$0.60.",
+      "current_state": "Hunyuan-MT-7B is free. Xing4.0-29B is free. PaddleOCR-VL-1.5 is free. bge-m3 is free. bge-reranker-v2-m3 is free. bge-large-zh-v1.5 is free. bge-large-en-v1.5 is free. Kolors is free. Several speech recognition models are free. Other models have associated costs as listed on the page.",
+      "source_url": "https://siliconflow.cn/pricing",
+      "category": "AI / ML",
+      "first_read_date": "2026-10-01"
     },
     {
-      "vendor": "Stream",
-      "change_type": "pricing_restructured",
-      "impact": "medium",
-      "summary": "The Maker Account now has a limit of 2,000 monthly active users and 100 concurrent connections for Chat. The Maker Account also has requirements of five or less team members, less than $100k in funding, and less than $10k/mo revenue. Video & Audio is now on the Build Plan, and AI Moderation is Pay-as-You-Go with a $100 monthly credit.",
-      "previous_state": "Chat, Activity Feeds, and Video APIs. Maker Account (free): 2,000 MAU chat, 125K API calls/month feeds, 333K participant-minutes/month video. Hard limits, no surprise overages",
-      "current_state": "If your company has five or less team members, less than $100k in funding and has taken less than $10k in monthly revenue, Stream is free/gratis/complimentary. Chat Start Plan with a limit of 2,000 monthly active users and 100 concurrent connections. Vision Agents Open Source. Activity Feeds Start Plan. AI Moderation Pay-as-You-Go w/$100 Monthly Credit. Video & Audio Build Plan.",
-      "source_url": "https://getstream.io/maker-account/",
-      "category": "Communication",
-      "first_read_date": "2026-09-30"
-    },
-    {
-      "vendor": "Survicate",
-      "change_type": "free_tier_removed",
+      "vendor": "Snyk",
+      "change_type": "limits_reduced",
       "impact": "high",
-      "summary": "The free plan is now a 10-day trial with limited features (25 responses, 100 data points, 25 integrations). The original free plan offered 25 responses/month, up to 1,000 stored responses, and up to 3 collaborators with no data export restrictions. The current page does not offer a perpetual free plan.",
-      "previous_state": "Email, website, in-product, and mobile surveys with AI survey creator. Free plan: 25 responses/month, up to 1,000 stored responses across all active surveys (300/survey cap), up to 3 collaborators. After the initial 10-day trial, surveys created during trial are disabled. No data export and no premium integrations on Free.",
-      "current_state": "Free 10-day trial No card required Explore all features: Collect up to 25 survey responses Research Hub with 100 data points 25+ integrations available Full access to Growth features Human support - talk with us in less than 5 minutes",
-      "source_url": "https://survicate.com/pricing/",
-      "category": "Forms",
-      "first_read_date": "2026-09-30"
+      "summary": "The free plan now has limits of 5 Snyk Code (SAST) tests/month, 100 Snyk Open Source (SCA) tests/month, and no limits are stated for IaC or Container tests.",
+      "previous_state": "Developer security — 200 open-source SCA tests/month, 100 SAST (Snyk Code) tests/month, 100 container tests/month, 300 IaC tests/month. Unlimited contributing developers. Code and dependency scanning across all products.",
+      "current_state": "The Free plan includes 5 Snyk Code (SAST) tests / month, 100 Snyk Open Source (SCA) tests / month.",
+      "source_url": "https://snyk.io/plans/",
+      "category": "Security",
+      "first_read_date": "2026-10-01"
     }
   ],
   "resolved": [
@@ -1625,6 +1658,102 @@
       "outcome": "baseline_moved",
       "detail": "the terms it was read against are no longer the terms we publish",
       "resolved_date": "2026-09-30"
+    },
+    {
+      "vendor": "Bench",
+      "change_type": "pricing_restructured",
+      "impact": "medium",
+      "summary": "The deal is no longer 20% off for 6 months. Stripe referrals now get 50% off their first 6 months with Bench.",
+      "previous_state": "20% off your first 6 months of bookkeeping with Bench. Access via: Free for Stripe users",
+      "source_url": "https://bench.co/integrations/stripe/",
+      "first_read_date": "2026-09-30",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-10-01 read it as pricing_restructured too",
+      "resolved_date": "2026-10-01"
+    },
+    {
+      "vendor": "Filebase",
+      "change_type": "pricing_model_change",
+      "impact": "high",
+      "summary": "The free tier is now 500GB for $7.50/month.",
+      "previous_state": "S3 Compatible Object Storage Powered by Blockchain. 5 GB free storage for an unlimited duration.",
+      "source_url": "https://filebase.com/",
+      "first_read_date": "2026-09-30",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-10-01 read it as pricing_model_change too",
+      "resolved_date": "2026-10-01"
+    },
+    {
+      "vendor": "InfluxDB Cloud",
+      "change_type": "free_tier_removed",
+      "impact": "high",
+      "summary": "The free tier is now a $250 credit for Cloud Serverless, with usage-based pricing after that. InfluxDB 3 Core is now listed as a permanently free, open-source option.",
+      "previous_state": "Time-series database — free tier: 5 MB writes per 5 minutes, up to 10,000 data series, 30-day data retention. Auto-provisioned for new accounts. Ideal for IoT and monitoring workloads",
+      "source_url": "https://www.influxdata.com/influxdb-pricing/",
+      "first_read_date": "2026-09-30",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-10-01 read it as free_tier_removed too",
+      "resolved_date": "2026-10-01"
+    },
+    {
+      "vendor": "MantleDB",
+      "change_type": "limits_reduced",
+      "impact": "medium",
+      "summary": "The free tier now has a 10,000 requests/24h rate limit and a 64KB per entry limit. Unclaimed namespaces are purged after 30 days of inactivity, while claimed namespaces are purged after 90 days. The free tier now includes up to 100 entries.",
+      "previous_state": "Anonymous JSON storage for scripts and tiny apps. No signup required; uses Master AID for updates and Read-Only RID for public fetching. Free tier includes 1 bucket (1MB limit) with a 72h inactivity scavenger policy.",
+      "source_url": "https://mantledb.sh",
+      "first_read_date": "2026-09-30",
+      "outcome": "contradicted",
+      "detail": "a reading on 2026-10-01 read a change the gate refused as measures_the_opposite",
+      "resolved_date": "2026-10-01"
+    },
+    {
+      "vendor": "OnlineOrNot",
+      "change_type": "limits_reduced",
+      "impact": "medium",
+      "summary": "The free tier (Hobby) now only includes up to 2 users instead of 2 team members. The free tier also only includes 1 status page, and SMS alerts are not included.",
+      "previous_state": "Uptime and status page monitoring — free plan: 3 monitors (uptime, keyword, heartbeat), 3-minute check interval, 2 team members, 1 status page, SSL monitoring, multi-location checks, email/Slack/Discord alerts",
+      "source_url": "https://onlineornot.com/pricing",
+      "first_read_date": "2026-09-30",
+      "outcome": "contradicted",
+      "detail": "a reading on 2026-10-01 read a change the gate refused as measures_no_change",
+      "resolved_date": "2026-10-01"
+    },
+    {
+      "vendor": "Sendinblue",
+      "change_type": "free_tier_removed",
+      "impact": "high",
+      "summary": "Sendinblue (now Brevo) offers 50% off Starter and Standard Plans, not 12 months free on the Premium plan.",
+      "previous_state": "12 months free on the Premium plan. Access via: First deal free, then 99€/year or invite friends",
+      "source_url": "https://www.joinsecret.com/offers",
+      "first_read_date": "2026-09-30",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-10-01 read it as free_tier_removed too",
+      "resolved_date": "2026-10-01"
+    },
+    {
+      "vendor": "Stream",
+      "change_type": "pricing_restructured",
+      "impact": "medium",
+      "summary": "The Maker Account now has a limit of 2,000 monthly active users and 100 concurrent connections for Chat. The Maker Account also has requirements of five or less team members, less than $100k in funding, and less than $10k/mo revenue. Video & Audio is now on the Build Plan, and AI Moderation is Pay-as-You-Go with a $100 monthly credit.",
+      "previous_state": "Chat, Activity Feeds, and Video APIs. Maker Account (free): 2,000 MAU chat, 125K API calls/month feeds, 333K participant-minutes/month video. Hard limits, no surprise overages",
+      "source_url": "https://getstream.io/maker-account/",
+      "first_read_date": "2026-09-30",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-10-01 read it as pricing_restructured too",
+      "resolved_date": "2026-10-01"
+    },
+    {
+      "vendor": "Survicate",
+      "change_type": "free_tier_removed",
+      "impact": "high",
+      "summary": "The free plan is now a 10-day trial with limited features (25 responses, 100 data points, 25 integrations). The original free plan offered 25 responses/month, up to 1,000 stored responses, and up to 3 collaborators with no data export restrictions. The current page does not offer a perpetual free plan.",
+      "previous_state": "Email, website, in-product, and mobile surveys with AI survey creator. Free plan: 25 responses/month, up to 1,000 stored responses across all active surveys (300/survey cap), up to 3 collaborators. After the initial 10-day trial, surveys created during trial are disabled. No data export and no premium integrations on Free.",
+      "source_url": "https://survicate.com/pricing/",
+      "first_read_date": "2026-09-30",
+      "outcome": "contradicted",
+      "detail": "a reading on 2026-10-01 read it as limits_reduced",
+      "resolved_date": "2026-10-01"
     }
   ]
 }

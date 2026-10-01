@@ -571,7 +571,7 @@
       "current_state": "Stripe referrals get 50% off their first 6 months with Bench.",
       "source_url": "https://bench.co/integrations/stripe/",
       "category": "Startup Perks",
-      "refused_date": "2026-09-12",
+      "refused_date": "2026-10-01",
       "collided_with": "Bench|limits_increased|2026-08-28|https://bench.co/integrations/stripe/"
     },
     {
@@ -767,7 +767,7 @@
       "current_state": "Extract data from your first website for free",
       "source_url": "https://www.browse.ai",
       "category": "Web Scraping",
-      "refused_date": "2026-09-18"
+      "refused_date": "2026-10-01"
     },
     {
       "vendor": "Browserbase",
@@ -952,6 +952,18 @@
       "source_url": "https://cerebras.ai/",
       "category": "AI / ML",
       "refused_date": "2026-09-17"
+    },
+    {
+      "vendor": "CertKit",
+      "change_type": "free_tier_removed",
+      "reason": "no_baseline",
+      "detail": "free_tier_removed claimed, and the clause that named the terms the change was measured on was dropped — what is left states no earlier figure and nothing the stored description measured",
+      "summary": "The free tier is now called 'Homelab' and is for personal, non-commercial use. It appears the previous free tier offering of 3 certificates and 1 user after beta is no longer available.",
+      "previous_state": "Manage SSL Certificate issuance, renewal, and monitoring. Search the Certificate Transparency Logs. Free for 3 certificates and 1 user after the beta.",
+      "current_state": "Homelab: Personal, non-commercial use.",
+      "source_url": "https://www.certkit.io/certificate-management",
+      "category": "Security",
+      "refused_date": "2026-10-01"
     },
     {
       "vendor": "Chanty.com",
@@ -1173,6 +1185,18 @@
     },
     {
       "vendor": "Cloudflare KV",
+      "change_type": "limits_reduced",
+      "reason": "restates_stored_quantities",
+      "detail": "narrowing claimed, and every quantity the current state names is one the stored description already held at the same value (100,000 key/day, 1,000 key/day, 1,000 key/day, 1,000 list/day, 1 GB stored), and drops 2 the stored description carried",
+      "summary": "The free plan limits for keys read, written, and deleted have been changed to 100,000/day, 1,000/day, and 1,000/day respectively. The stored data limit remains at 1 GB.",
+      "previous_state": "Key-value store at the edge — Free plan includes 100,000 keys read/day, 1,000 keys written/day, 1,000 keys deleted/day, 1,000 list requests/day, and 1 GB stored data. All limits reset daily at 00:00 UTC.",
+      "current_state": "Free plan includes 100,000 / day keys read, 1,000 / day keys written, 1,000 / day keys deleted, 1,000 list requests/day, and 1 GB stored data.",
+      "source_url": "https://developers.cloudflare.com/kv/platform/pricing/",
+      "category": "Databases",
+      "refused_date": "2026-10-01"
+    },
+    {
+      "vendor": "Cloudflare KV",
       "change_type": "restriction",
       "reason": "same_transition_graded_differently",
       "detail": "same vendor, source_url and previous_state as Cloudflare KV|limits_reduced|2026-09-02|https://developers.cloudflare.com/kv/platform/pricing/",
@@ -1189,12 +1213,12 @@
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
       "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (100 sit, 500 build, 100 custom)",
-      "summary": "The number of projects allowed on the Free plan has been reduced from 'up to 100 sites' to '100 projects 2 per account'.",
+      "summary": "The number of projects allowed on the Free plan has been reduced from 'up to 100 sites' to 2 per account.",
       "previous_state": "Up to 100 sites (soft limit), unlimited bandwidth, 500 builds/month, 100 custom domains per project",
       "current_state": "Cloudflare Pages has a limit of 100 projects 2 per account.",
       "source_url": "https://developers.cloudflare.com/pages/platform/limits/",
       "category": "Cloud Hosting",
-      "refused_date": "2026-09-17"
+      "refused_date": "2026-10-01"
     },
     {
       "vendor": "Cloudflare Workers AI",
@@ -1257,6 +1281,18 @@
       "source_url": "https://cocalc.com/",
       "category": "Notebooks & Data Science",
       "refused_date": "2026-09-10"
+    },
+    {
+      "vendor": "CockroachDB",
+      "change_type": "pricing_restructured",
+      "reason": "confirmed_unchanged",
+      "detail": "The report details information about Mission Critical that was not present in the stored description, but doesn't contradict anything in the stored description.",
+      "summary": "The page states that the 30-day free trial with $400 in credit is for new Cloud organizations and applies to both Standard and Mission Critical (though Mission Critical requires a credit card).",
+      "previous_state": "Distributed SQL database. No free plan for new deployments since 2026-09-15, when CockroachDB moved new clusters to Cockroach Continuum pricing. New Cloud organizations get a 30-day free trial with $400 in credit; Standard is $0.092 per vCPU-hour. Clusters created before 2026-09-15 stay on their existing plans during their current term.",
+      "current_state": "New Cloud organizations get a 30-day free trial with $400 in credit. Standard is $0.092 per vCPU-hour.",
+      "source_url": "https://www.cockroachlabs.com/pricing/",
+      "category": "Databases",
+      "refused_date": "2026-10-01"
     },
     {
       "vendor": "Coda",
@@ -1602,12 +1638,12 @@
       "change_type": "limits_reduced",
       "reason": "measures_no_change",
       "detail": "limits_reduced claimed, and every quantity the record compares holds the same value once notation and period are normalised — 100 api/mo against 100 api",
-      "summary": "The free plan now has limitations on support and commercial use. It also has a limit of 100 API calls per day.",
+      "summary": "The free plan now has limitations on usage (100 API calls daily) and does not include commercial use or support.",
       "previous_state": "Reliable Exchange Rates and Currency Conversion for your Business, 100 API requests/month free.",
-      "current_state": "The Free plan is $0.00 with 100 API Calls, Daily Updates, Historical Rates, HTTPS Encryption, No Support, and Non-Commercial Use.",
+      "current_state": "The Free plan is $0.00 with 100 API Calls, Daily Updates, Historical Rates, and HTTPS Encryption. It does not include support and is for non-commercial use only.",
       "source_url": "https://currencylayer.com/",
       "category": "Payments",
-      "refused_date": "2026-09-18"
+      "refused_date": "2026-10-01"
     },
     {
       "vendor": "Dareboost",
@@ -2164,12 +2200,12 @@
       "change_type": "pricing_model_change",
       "reason": "same_transition_graded_differently",
       "detail": "same vendor, source_url and previous_state as Filebase|limits_increased|2026-09-01|https://filebase.com/",
-      "summary": "The free tier is now 500GB for $7.50/month.",
+      "summary": "The free tier is still mentioned, but the page details paid plans starting at $7.50 for 500GB. Egress is free across all plans.",
       "previous_state": "S3 Compatible Object Storage Powered by Blockchain. 5 GB free storage for an unlimited duration.",
-      "current_state": "Start at $7.50 for up to 500 GB. Pricing shown is storage-only. Object egress stays free across plans.",
+      "current_state": "Storage is priced at $7.50 for up to 500 GB, with free egress.",
       "source_url": "https://filebase.com/",
       "category": "Storage",
-      "refused_date": "2026-09-13",
+      "refused_date": "2026-10-01",
       "collided_with": "Filebase|limits_increased|2026-09-01|https://filebase.com/"
     },
     {
@@ -2731,6 +2767,18 @@
       "source_url": "https://one.google.com/about/plans",
       "category": "Cloud Storage",
       "refused_date": "2026-09-22"
+    },
+    {
+      "vendor": "Google Gemini Embedding 2",
+      "change_type": "pricing_model_change",
+      "reason": "no_terms_to_narrow",
+      "detail": "pricing_model_change claimed against \"First natively multimodal embedding model — text, images, video, audio, and documents in a single embedding space. Enables cross-modal similarity search and retrieval. Available via Vertex AI and Gemini API.\", a stored description that states no price, no allowance and nothing free, so there is nothing for the terms to have narrowed from",
+      "summary": "The page details multiple embedding models, including Gemini Embedding 2, but does not explicitly mention a free tier or pay-as-you-go pricing. It lists various models with different capabilities and pricing structures, including provisioned throughput and pay-go options, but the original 'pay-as-you-go' tier is not directly confirmed.",
+      "previous_state": "First natively multimodal embedding model — text, images, video, audio, and documents in a single embedding space. Enables cross-modal similarity search and retrieval. Available via Vertex AI and Gemini API.",
+      "current_state": "The page lists Gemini Embedding 2 as an available model with options for batch inferences and integration with other services, but does not specify a free tier or pay-as-you-go pricing. It mentions PayGo Standard, PayGo Priority, and PayGo Flex as pricing options for other models.",
+      "source_url": "https://cloud.google.com/vertex-ai/docs/generative-ai/embeddings/get-text-embeddings",
+      "category": "AI / ML",
+      "refused_date": "2026-10-01"
     },
     {
       "vendor": "Google Gemini Embedding 2",
@@ -3546,12 +3594,12 @@
       "change_type": "limits_increased",
       "reason": "unquantified_limit",
       "detail": "limits_increased claimed, but the current state names no quantity for anything the stored state measured (1 trac, 1 workflow)",
-      "summary": "The free tier now includes 50k events/month and 14-day data access, instead of 1k traces/month as previously stated. The free tier is now called 'Developer' and includes more features than previously described.",
+      "summary": "The free tier now includes 50k events/month and 14-day data access, instead of 1k traces/month. The free tier is now called 'Developer' and includes 2 users and 3 scenarios/simulations/custom evals.",
       "previous_state": "A LLMOps platform helping AI teams measure, monitor, and optimize LLM applications for reliability, cost-efficiency, and performance. With a powerful DSPy component, we enable seamless collaboration between engineers and non-technical teams to fine-tune and productionize GenAI products. Free plan includes all platform features, 1k traces/month and 1 workflow DSPy optimizers. [#opensource](https://github.com/langwatch/langwatch)",
       "current_state": "The Developer plan is free forever and includes 50k events / month, 14-day data access, 2 users, 3 scenarios, 3 simulations, 3 custom evals, and Community support (GitHub & Discord).",
       "source_url": "https://langwatch.ai/pricing",
       "category": "AI / ML",
-      "refused_date": "2026-09-14"
+      "refused_date": "2026-10-01"
     },
     {
       "vendor": "LastPass",
@@ -3978,10 +4026,10 @@
       "detail": "limits_reduced claimed, and every quantity that moved between the two states moved the other way — 72 inactivity against 30 inactivity, 72 inactivity against 90 inactivity",
       "summary": "The free tier now has a 64KB per entry limit and a 10,000 requests/24h rate limit. Unclaimed namespaces are purged after 30 days of inactivity, while claimed namespaces are purged after 90 days of inactivity. The free tier previously had a 1MB limit and a 72h inactivity scavenger policy.",
       "previous_state": "Anonymous JSON storage for scripts and tiny apps. No signup required; uses Master AID for updates and Read-Only RID for public fetching. Free tier includes 1 bucket (1MB limit) with a 72h inactivity scavenger policy.",
-      "current_state": "Unclaimed namespaces have a limit of 100 entries, 64 KB per entry, and are rate-limited above 10,000 requests/24h, purged after 30 days of inactivity. Claimed namespaces have the same entry and rate limits, but are purged after 90 days of inactivity.",
+      "current_state": "Unclaimed namespaces have up to 100 entries, 64 KB per entry, and are rate-limited above 10,000 requests/24h, purged after 30 days of inactivity. Claimed namespaces have up to 100 entries, 64 KB per entry, are rate-limited above 10,000 requests/24h, and are purged after 90 days of inactivity.",
       "source_url": "https://mantledb.sh",
       "category": "Storage",
-      "refused_date": "2026-09-12"
+      "refused_date": "2026-10-01"
     },
     {
       "vendor": "Mapbox",
@@ -4030,6 +4078,18 @@
       "source_url": "https://mdbootstrap.com/",
       "category": "Design",
       "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "Mediaworkbench.ai",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (0 currency)",
+      "summary": "The free plan exists but has limited features. The stored information stated all plans had identical features, but the current pricing page details specific features for each tier (Free, Starter, Pro, Agency).",
+      "previous_state": "Social media scheduling, publishing and analytics. Free plan at $0/month. The pricing page states no per-plan entitlements: the feature list shown is identical for all four plans.",
+      "current_state": "The Free plan includes Analytics, Publishing Calendar, Publishing, AI Publishing, Bulk Post, RSS Schedules, AI Contents, URL Shortener, Team member, and Watermark.",
+      "source_url": "https://mediaworkbench.ai",
+      "category": "AI / ML",
+      "refused_date": "2026-10-01"
     },
     {
       "vendor": "Meeting",
@@ -4338,6 +4398,18 @@
       "refused_date": "2026-09-17"
     },
     {
+      "vendor": "netdata.cloud",
+      "change_type": "pricing_restructured",
+      "reason": "no_terms_to_narrow",
+      "detail": "pricing_restructured claimed against \"Netdata is an open-source tool to collect real-time metrics. It's a growing product and can also be found on GitHub!\", a stored description that states no price, no allowance and nothing free, so there is nothing for the terms to have narrowed from",
+      "summary": "The free tier is no longer explicitly mentioned as a standalone offering. Netdata Cloud offers a SaaS platform with features like unlimited metrics & logs, machine learning, and AI, but pricing details are not readily available on this page. The page focuses on Netdata Cloud SaaS, Netdata Cloud On-Premises, and Netdata Agents.",
+      "previous_state": "Netdata is an open-source tool to collect real-time metrics. It's a growing product and can also be found on GitHub!",
+      "current_state": "Netdata Cloud is a fully managed platform with features like zero infrastructure management, 99.9% uptime SLA, and global data centers. It requires a sign-in to view pricing plans.",
+      "source_url": "https://www.netdata.cloud/",
+      "category": "Monitoring",
+      "refused_date": "2026-10-01"
+    },
+    {
       "vendor": "Nile",
       "change_type": "limits_reduced",
       "reason": "null_comparison",
@@ -4501,12 +4573,12 @@
       "change_type": "limits_reduced",
       "reason": "measures_no_change",
       "detail": "limits_reduced claimed, and every quantity the record compares holds the same value once notation and period are normalised — 3 check against 3 check, 2 \"instead of\" 2",
-      "summary": "The free tier now only includes up to 2 users instead of 2 team members. The free tier also no longer includes SSL monitoring, multi-location checks, or Discord alerts.",
+      "summary": "The free tier (Hobby) now only includes up to 2 users instead of 2 team members. The free tier also includes an included status page, but it is limited.",
       "previous_state": "Uptime and status page monitoring — free plan: 3 monitors (uptime, keyword, heartbeat), 3-minute check interval, 2 team members, 1 status page, SSL monitoring, multi-location checks, email/Slack/Discord alerts",
-      "current_state": "Hobby (Free) includes up to 2 users, a 3-minute check interval, a limited status page, and basic alerting.",
+      "current_state": "Up to 2 users, 3 minute check interval, Limited status page, Basic alerting",
       "source_url": "https://onlineornot.com/pricing",
       "category": "Monitoring",
-      "refused_date": "2026-08-29"
+      "refused_date": "2026-10-01"
     },
     {
       "vendor": "OpenStatus",
@@ -4519,6 +4591,18 @@
       "source_url": "https://www.openstatus.dev/",
       "category": "Status Pages",
       "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "Ory",
+      "change_type": "pricing_restructured",
+      "reason": "confirmed_unchanged",
+      "detail": "The stored description already states 'no included monthly credit' and doesn't claim any included aDAU, M2M tokens, or permission checks. The current page simply clarifies pricing details that weren't previously defined.",
+      "summary": "Ory's own page now redirects to ory.com. The 'Developer' tier is no longer a completely free tier. It now has limits on aDAU, M2M tokens, and permission checks, and no included monthly credit.",
+      "previous_state": "Open-source identity infrastructure — The 'Developer' tier is free, includes 1 member, 0 production environments, 2 development environments, and no included monthly credit.",
+      "current_state": "Developer: 1 Members, 0 Production Environments, 2 Development Environments. No Included Monthly Credit. Price per aDAU: No Price per aDAU. Price per M2M Token: No Price per M2M Token. Price per Permission Check: No Price per Permission Check",
+      "source_url": "https://www.ory.sh/pricing/",
+      "category": "Auth",
+      "refused_date": "2026-10-01"
     },
     {
       "vendor": "Ory",
@@ -4543,6 +4627,18 @@
       "source_url": "https://outlook.live.com",
       "category": "Consumer Email",
       "refused_date": "2026-09-10"
+    },
+    {
+      "vendor": "OVHcloud",
+      "change_type": "product_deprecated",
+      "reason": "confirmed_unchanged",
+      "detail": "The report simply restates information already present in the stored description.",
+      "summary": "The Kimsufi budget line is discontinued and replaced by the Eco range.",
+      "previous_state": "Dedicated servers starting from ~€55/mo (Rise line: Intel Xeon, 32 GB RAM, 2×480 GB SSD). Kimsufi budget line discontinued, replaced by Eco range from ~€30/mo. Game line with DDoS protection and high-frequency CPU. Storage line for NAS/backup from ~€40/mo. All include unmetered bandwidth (500 Mbps-1 Gbps depending on range). Post-April 2026: Bare Metal prices increased 9-11% for new deployments",
+      "current_state": "The page mentions an 'Eco' range for accessible prices.",
+      "source_url": "https://www.ovhcloud.com/en/bare-metal/",
+      "category": "Infrastructure",
+      "refused_date": "2026-10-01"
     },
     {
       "vendor": "OVHcloud",
@@ -4627,6 +4723,18 @@
       "source_url": "https://pagertree.com/",
       "category": "Monitoring",
       "refused_date": "2026-09-11"
+    },
+    {
+      "vendor": "Pagure.io",
+      "change_type": "product_deprecated",
+      "reason": "restates_stored_quantities",
+      "detail": "narrowing claimed, and every quantity the current state names is one the stored description already held at the same value (2026 read)",
+      "summary": "Pagure.io was sunset in 2026 and is now a read-only snapshot.",
+      "previous_state": "Pagure.io was sunset in 2026; this is a read-only snapshot.",
+      "current_state": "Pagure.io was sunset in 2026; this is a read-only snapshot.",
+      "source_url": "https://pagure.io",
+      "category": "Source Control",
+      "refused_date": "2026-10-01"
     },
     {
       "vendor": "PandaStack",
@@ -4865,12 +4973,12 @@
       "change_type": "free_tier_removed",
       "reason": "states_no_terms",
       "detail": "every clause of the summary states absence or narration rather than a term the page carries, so it reports the reading rather than a change",
-      "summary": "The page does not mention a free tier with 10,000 requests per month. It focuses on PRISMA AIRS AI Gateway as a generally available product for enterprises and highlights features like observability, governance, and prompt management. The page does not mention any free usage limits.",
+      "summary": "The pricing page does not mention a free tier with 10,000 requests per month. It focuses on PRISMA AIRS AI Gateway as a generally available product for enterprises and highlights features like observability, governance, and prompt management. The page does not detail any free usage limits.",
       "previous_state": "Control panel for Gen AI apps featuring an observability suite & an AI gateway. Send & log up to 10,000 requests for free every month.",
-      "current_state": "PRISMA AIRS AI Gateway is generally available for all enterprises. It offers observability, governance, and prompt management features.",
+      "current_state": "The page does not mention a free tier. It focuses on PRISMA AIRS AI Gateway, a generally available product for enterprises, with features like observability, governance, and prompt management.",
       "source_url": "https://portkey.ai/",
       "category": "AI / ML",
-      "refused_date": "2026-09-18"
+      "refused_date": "2026-10-01"
     },
     {
       "vendor": "PostHog",
@@ -5502,12 +5610,12 @@
       "change_type": "free_tier_removed",
       "reason": "same_transition_graded_differently",
       "detail": "same vendor, source_url and previous_state as Sendinblue|pricing_model_change|2026-08-28|https://www.joinsecret.com/offers",
-      "summary": "Sendinblue (now Brevo) is offering 50% off Starter and Standard Plans, not 12 months free on the Premium plan.",
+      "summary": "Sendinblue (now Brevo) offers 50% off Starter and Standard Plans, not 12 months free on the Premium plan.",
       "previous_state": "12 months free on the Premium plan. Access via: First deal free, then 99€/year or invite friends",
       "current_state": "50% off Starter and Standard Plans",
       "source_url": "https://www.joinsecret.com/offers",
       "category": "Startup Perks",
-      "refused_date": "2026-09-12",
+      "refused_date": "2026-10-01",
       "collided_with": "Sendinblue|pricing_model_change|2026-08-28|https://www.joinsecret.com/offers"
     },
     {
@@ -5674,15 +5782,15 @@
     },
     {
       "vendor": "Simplescraper",
-      "change_type": "pricing_restructured",
+      "change_type": "limits_increased",
       "reason": "confirmed_unchanged",
-      "detail": "The stored description mentions 'cloud scrape credits' while the current page mentions 'starter credits for automated scraping'. These are likely the same, and the additional features listed on the current page (browser scraping, recipes, export, API access) are *additional* benefits not claimed to be absent in the original description.",
-      "summary": "The free tier now offers 100 cloud credits. The free tier is described as including browser scraping, 3 saved recipes, and CSV/JSON export.",
+      "detail": "The stored description mentions 'cloud scrape credits' while the current page mentions 'starter credits for automated scraping'. These are likely the same thing, just described differently. The report doesn't indicate a *new* feature, just a rephrasing of an existing one.",
+      "summary": "The free plan now includes 100 cloud credits. Also offers browser scraping, 3 saved recipes, and CSV/JSON export.",
       "previous_state": "Trigger your webhook after each operation. The free plan includes 100 cloud scrape credits.",
-      "current_state": "Free to use in the browser, plus 100 free starter credits for automated scraping. Includes browser scraping, 3 saved recipes, CSV/JSON export, and scrape via API.",
+      "current_state": "Free to use in the browser, plus 100 free starter credits for automated scraping. Browser scraping, 3 saved recipes, CSV/JSON export, Scrape via API.",
       "source_url": "https://simplescraper.io",
       "category": "Web Scraping",
-      "refused_date": "2026-09-14"
+      "refused_date": "2026-10-01"
     },
     {
       "vendor": "smartlook.com",
@@ -5773,13 +5881,13 @@
       "vendor": "Spacelift",
       "change_type": "record_corrected",
       "reason": "confirmed_unchanged",
-      "detail": "The current page simply restates information already in the stored description.",
-      "summary": "The free plan now includes 2 users and 1 public worker. The page clarifies the limits of the free plan.",
+      "detail": "Report restates stored description",
+      "summary": "The free plan now includes 2 users and 1 public worker.",
       "previous_state": "IaC orchestration platform — 2 users, 1 API key, 1 public worker, OIDC integration, credential-less cloud provider integration, cost estimation",
       "current_state": "The Free plan includes 2 users and 1 public worker",
       "source_url": "https://spacelift.io/pricing",
       "category": "Infrastructure",
-      "refused_date": "2026-09-18"
+      "refused_date": "2026-10-01"
     },
     {
       "vendor": "Squash Labs",
@@ -5903,6 +6011,19 @@
       "source_url": "https://getstream.io/maker-account/",
       "category": "Communication",
       "refused_date": "2026-08-29"
+    },
+    {
+      "vendor": "Stream",
+      "change_type": "pricing_restructured",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as Stream|pricing_restructured|2026-09-12|https://getstream.io/maker-account/",
+      "summary": "The Maker Account now has a limit of 2,000 monthly active users and 100 concurrent connections for Chat. The Maker Account also now has requirements of five or less team members, less than $100k in funding, and less than $10k/mo revenue to qualify.",
+      "previous_state": "Chat, Activity Feeds, and Video APIs. Maker Account (free): 2,000 MAU chat, 125K API calls/month feeds, 333K participant-minutes/month video. Hard limits, no surprise overages",
+      "current_state": "If your company has five or less team members, less than $100k in funding and has taken less than $10k in monthly revenue, Stream is free/gratis/complimentary. The Maker Account for Chat offers a modified Chat Start Plan with all the same capabilities, but with a limit of 2,000 monthly active users and 100 concurrent connections.",
+      "source_url": "https://getstream.io/maker-account/",
+      "category": "Communication",
+      "refused_date": "2026-10-01",
+      "collided_with": "Stream|pricing_restructured|2026-09-12|https://getstream.io/maker-account/"
     },
     {
       "vendor": "Supabase",
@@ -6184,6 +6305,18 @@
       "source_url": "https://www.tickgit.com/",
       "category": "Code Quality",
       "refused_date": "2026-09-26"
+    },
+    {
+      "vendor": "TimeCamp",
+      "change_type": "free_tier_removed",
+      "reason": "free_tier_still_offered",
+      "detail": "a free tier was recorded as removed by a summary that reports the page still offering one",
+      "summary": "The page does not explicitly mention a completely free tier for unlimited users. It prominently features a 'Start for free' option, but this leads to a trial or limited free plan, and the page focuses on paid plans and features.",
+      "previous_state": "Free time tracking software for unlimited users. Easily integrates with PM tools like Jira, Trello, Asana, etc.",
+      "current_state": "The page offers a 'Start for free' option, but details focus on paid plans with features like AI-powered time tracking, workforce analytics, and time and attendance tracking. It does not state unlimited users on a free plan.",
+      "source_url": "https://www.timecamp.com/",
+      "category": "Project Management",
+      "refused_date": "2026-10-01"
     },
     {
       "vendor": "TimeCamp",
@@ -6817,13 +6950,13 @@
       "vendor": "Xirsys",
       "change_type": "limits_reduced",
       "reason": "confirmed_unchanged",
-      "detail": "The current page clarifies the terms (30-day trial, channels, WebSocket connections) but doesn't fundamentally alter the core offering of unlimited STUN and 500MB TURN bandwidth in a single region, which was already implied in the stored description.",
-      "summary": "The free tier now has a 30-day trial with full production features, then reverts to one region, 2 channels, 25 concurrent WebSocket connections, and 500 MB/mo TURN.",
+      "detail": "The stored description already stated a 500MB TURN bandwidth limit and single region. The report just adds detail about it happening after a 30-day trial.",
+      "summary": "The free tier now has a hard cap of 500MB/month of TURN bandwidth and is limited to one testing region after the 30-day trial. Previously, previously unlimited STUN and 500MB of TURN bandwidth.",
       "previous_state": "Unlimited STUN usage + 500 MB monthly TURN bandwidth, capped bandwidth, single geographic region.",
-      "current_state": "Free accounts include up to 2 channels for separate usage reports. After day 30, your account stays active for free forever with one region, 2 channels, 25 concurrent WebSocket connections, unlimited STUN, and 500 MB/mo TURN.",
+      "current_state": "After day 30 your account remains active but will be limited to one region, 2 channels, unlimited STUN, and 500 MB/mo TURN. The 500 MB monthly TURN allowance is a hard cap.",
       "source_url": "https://www.xirsys.com/pricing/",
       "category": "Tunneling & Networking",
-      "refused_date": "2026-09-14"
+      "refused_date": "2026-10-01"
     },
     {
       "vendor": "Xitoring.com",
@@ -7068,15 +7201,15 @@
     },
     {
       "vendor": "Zoho Vault",
-      "change_type": "limits_reduced",
+      "change_type": "limits_increased",
       "reason": "unquantified_limit",
-      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (1 user)",
-      "summary": "The free plan now has limitations not previously mentioned. While it still offers unlimited passwords, notes, and documents, features like identity and access management, multi-factor authentication, exhaustive integrations, and audit trails are no longer included in the free tier.",
+      "detail": "limits_increased claimed, but the current state names no quantity for anything the stored state measured (1 user)",
+      "summary": "The free plan now has limitations not previously mentioned. While it still offers unlimited passwords, notes, and documents, it's now explicitly stated that it's a 'free plan with access from unlimited devices', which wasn't previously noted. The page also details paid tiers with varying features and pricing.",
       "previous_state": "Password manager (Zoho) — unlimited passwords for 1 user, password generator, browser extensions (Chrome/Firefox/Safari/Edge), mobile apps, secure sharing, offline access",
-      "current_state": "The free plan includes unlimited passwords, notes, and documents. Other features like identity and access management, multi-factor authentication, exhaustive integrations, and audit trails are not included in the free plan.",
+      "current_state": "Free plan with access from unlimited devices.",
       "source_url": "https://zoho.com/vault",
       "category": "Password Managers",
-      "refused_date": "2026-09-17"
+      "refused_date": "2026-10-01"
     },
     {
       "vendor": "zoneedit.com",
