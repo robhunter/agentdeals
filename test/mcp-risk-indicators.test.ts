@@ -64,39 +64,53 @@ describe("MCP risk_level/stability indicators (issue #969)", () => {
 
   afterEach(() => { if (proc) { proc.kill(); proc = null; } });
 
-  it("search_deals concise mode includes risk_level and stability", async () => {
+  const RISK_LEVELS = ["stable", "caution", "risky"];
+  const STABILITY_CLASSES = ["stable", "watch", "volatile", "improving"];
+
+  type SearchResult = { vendor: string; risk_level?: string | null; stability?: string | null; gate?: { code: string; reason?: string } | null; deal_changes?: unknown };
+
+  async function everyDatabasesResult(format: Record<string, unknown> = {}): Promise<SearchResult[]> {
     proc = await startHttpServer();
     const sessionId = await initSession();
-    const result = await callTool(sessionId, 2, "search_deals", {
-      category: "Databases", limit: 3, response_format: "concise",
-    });
+    const result = await callTool(sessionId, 2, "search_deals", { category: "Databases", limit: 1000, ...format });
     const body = JSON.parse(result.content[0].text);
     assert.ok(Array.isArray(body.results) && body.results.length > 0, "should return results");
-    for (const r of body.results) {
-      assert.ok(
-        ["stable", "caution", "risky"].includes(r.risk_level),
-        `concise result for ${r.vendor} should have risk_level, got ${r.risk_level}`
-      );
-      assert.ok(
-        ["stable", "watch", "volatile", "improving"].includes(r.stability),
-        `concise result for ${r.vendor} should have stability, got ${r.stability}`
-      );
+    assert.strictEqual(body.results.length, body.total, "the request should cover the whole category");
+    return body.results;
+  }
+
+  function assertCarriesThePublishedFields(results: SearchResult[], mode: string): void {
+    const withoutTheFields = results.filter(r => !("risk_level" in r) || !("stability" in r));
+    assert.deepStrictEqual(withoutTheFields.map(r => r.vendor), [], `${mode} results with no risk_level or stability field`);
+
+    const rated = results.filter(r => r.risk_level !== null);
+    assert.ok(rated.length > 0, `no ${mode} Databases result publishes a level, so no level is checked`);
+    for (const r of rated) {
+      assert.ok(RISK_LEVELS.includes(r.risk_level!), `${mode} result for ${r.vendor} should have risk_level, got ${r.risk_level}`);
+    }
+
+    const classified = results.filter(r => r.stability !== null);
+    assert.ok(classified.length > 0, `no ${mode} Databases result publishes a stability class, so no class is checked`);
+    for (const r of classified) {
+      assert.ok(STABILITY_CLASSES.includes(r.stability!), `${mode} result for ${r.vendor} should have stability, got ${r.stability}`);
+    }
+
+    for (const r of results.filter(r => r.gate)) {
+      assert.strictEqual(r.risk_level, null, `${mode} result for ${r.vendor} is gated (${r.gate!.code}) and still publishes a level`);
+      assert.ok(typeof r.gate!.reason === "string" && r.gate!.reason.trim() !== "", `${mode} result for ${r.vendor} is gated (${r.gate!.code}) with no reason`);
+    }
+  }
+
+  it("search_deals concise mode includes risk_level and stability", async () => {
+    const results = await everyDatabasesResult({ response_format: "concise" });
+    assertCarriesThePublishedFields(results, "concise");
+    for (const r of results) {
       assert.strictEqual(r.deal_changes, undefined, "concise should not include deal_changes");
     }
   });
 
   it("search_deals detailed mode still includes risk_level and stability (no regression)", async () => {
-    proc = await startHttpServer();
-    const sessionId = await initSession();
-    const result = await callTool(sessionId, 2, "search_deals", {
-      category: "Databases", limit: 3,
-    });
-    const body = JSON.parse(result.content[0].text);
-    assert.ok(Array.isArray(body.results) && body.results.length > 0);
-    for (const r of body.results) {
-      assert.ok(["stable", "caution", "risky"].includes(r.risk_level));
-      assert.ok(["stable", "watch", "volatile", "improving"].includes(r.stability));
-    }
+    assertCarriesThePublishedFields(await everyDatabasesResult(), "detailed");
   });
 
   it("compare_vendors (two vendors) surfaces risk_level and stability at top level", async () => {
