@@ -13751,18 +13751,18 @@
     {
       "vendor": "windmill.dev",
       "category": "Low-Code Platforms",
-      "description": "Windmill is an open-source developer platform to quickly build production-grade multi-step automation and internal apps from minimal Python and Typescript scripts. As a free user, you can create and be a member of at most three non-premium workspaces.",
+      "description": "Windmill is an open-source developer platform for building multi-step automations and internal apps from Python and TypeScript scripts. Windmill Cloud's Free plan is $0 with no credit card: 1,000 executions a month, unlimited scripts, flows, apps, variables and resources, Google, GitHub and GitLab sign-in, and community support on Discord. A free user can create and be a member of at most three non-premium workspaces. Cloud's Team plan is $10 a month per developer, with 10,000 executions a month per seat and at most 10 seats. The self-hosted open-source edition is free with unlimited executions and at most 10 users with SSO.",
       "tier": "Free",
-      "url": "https://windmill.dev/",
+      "url": "https://www.windmill.dev/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
       "verifiedDate": "2026-08-04",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names windmill.dev but states no amount, tier or rate we can read"
+        "checked": "2026-10-01",
+        "outcome": "ok",
+        "detail": "the page names windmill.dev as \"windmill\" and states \"$ 0\" and \"$ 10\""
       }
     },
     {
@@ -32487,7 +32487,7 @@
     {
       "vendor": "Gemini CLI",
       "category": "AI Coding",
-      "description": "Open-source terminal AI coding agent by Google, Apache 2.0 licensed. Since 2026-06-18, Login with Google no longer works for personal accounts, according to Google's Gemini Code Assist deprecation notice; the README still advertises 60 requests a minute and 1,000 a day with a personal Google account. With a Gemini API key, use counts against the Gemini API's own free tier and pricing. A Gemini Code Assist Standard or Enterprise licence is unaffected. Supports MCP tools, shell commands and file editing.",
+      "description": "Open-source terminal AI coding agent by Google, Apache 2.0 licensed. Since 2026-06-18, Login with Google no longer works for personal accounts, according to Google's Gemini Code Assist deprecation notice; the README still advertises 60 requests a minute and 1,000 a day with a personal Google account. With a Gemini API key, use counts against the Gemini API's own free tier and pricing. A Gemini Code Assist Standard or Enterprise licence is unaffected. Google points personal users to its Antigravity products, including Antigravity CLI. Supports MCP tools, shell commands and file editing.",
       "tier": "Free",
       "url": "https://github.com/google-gemini/gemini-cli",
       "tags": [
@@ -34633,7 +34633,7 @@
     {
       "vendor": "Exa",
       "category": "AI / ML",
-      "description": "Web search API for AI agents with Search, Contents, Answer, Monitors and Agent endpoints. The free tier gives $10 in credits each month, about 1,400 searches, resetting on the first of the month without rollover, plus a one-time $10 onboarding bonus; no payment method required. Free teams get 10 QPS on search. Search costs $7 per 1,000 requests; Contents $1 per 1,000 pages per content type; Deep Search $12 to $15 per 1,000 requests. Search and Contents can also be paid per request over x402 in USDC on Base or Solana, with no API key.",
+      "description": "Web search API for AI agents with Search, Contents, Answer, Monitors and Agent endpoints. The free tier gives $10 in credits each month, up to 2,500 Instant searches, resetting on the first of the month without rollover, plus a one-time $10 onboarding bonus; no payment method required. Only a user's first team gets the free credits. Free teams get 10 QPS on search. Search costs $4 per 1,000 requests for Instant and $7 for Fast and Auto; Contents $1 per 1,000 pages per content type; Deep Search $12 to $15 per 1,000 requests. Search and Contents can also be paid per request over x402 in USDC on Base or Solana, with no API key.",
       "tier": "Free",
       "url": "https://exa.ai/docs/admin/pricing",
       "tags": [
@@ -34656,9 +34656,9 @@
         }
       ],
       "source_check": {
-        "checked": "2026-09-22",
+        "checked": "2026-10-01",
         "outcome": "ok",
-        "detail": "the page names Exa as \"exa\" and states amounts, none of which we matched to the terms we publish"
+        "detail": "the page names Exa as \"exa\" and states \"$10\" and \"$4\" and \"$12\" and \"$1\""
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
