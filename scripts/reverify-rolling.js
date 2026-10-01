@@ -35,6 +35,7 @@ import {
   SOURCE_CHECK_UNREADABLE,
 } from "./vendor-naming.js";
 import { findRenderer } from "./rendered-page.js";
+import { excerptTheFreePlan, readFreePlanExcerpt } from "./free-plan-excerpt.js";
 import { isoDay } from "./change-log.js";
 import { recordRefusals, readRefusals, refusalHolds, offerKey } from "./change-refusals.js";
 import {
@@ -282,10 +283,12 @@ export async function runAiMode(picked, data, dryRun, now, options = {}) {
   const rateLimitMs = options.rateLimitMs ?? AI_RATE_LIMIT_MS;
   let verifyFn = options.verifyFn;
   let confirmFn = options.confirmFn ?? null;
+  let excerptFn = options.excerptFn ?? null;
   if (!verifyFn) {
     const client = createVerifierClient();
     verifyFn = (offer, pageText) => verifyOfferAgainstPage(client, offer, pageText);
     if (!confirmFn) confirmFn = (entry) => confirmDescribesChange(client, entry);
+    if (!excerptFn) excerptFn = (offer, pageText) => readFreePlanExcerpt(client, offer, pageText);
   }
 
   let verified = 0;
@@ -299,6 +302,7 @@ export async function runAiMode(picked, data, dryRun, now, options = {}) {
   const sourceChecks = emptySourceCounters();
   const recorder = attemptRecorder();
   const confirmedThisRun = new Set();
+  const excerpts = { written: 0, removed: 0, none: 0, not_a_free_plan: 0, on_hold: 0, refused: [], unread: [] };
 
   for (const entry of picked) {
     const { offer, index } = entry;
@@ -335,6 +339,9 @@ export async function runAiMode(picked, data, dryRun, now, options = {}) {
       recorder.note(offer, ATTEMPT_STATES_NO_PRICE, check.detail);
     } else {
       recorder.note(offer, ATTEMPT_UNCLEAR, result.summary ?? null, FAILURE_AI_UNDECIDED);
+    }
+    if (readAPageAboutThisOffer && excerptFn) {
+      await keepFreePlanExcerpt(excerptFn, offer, page.text, dryRun ? { ...data.offers[index] } : data.offers[index], now, excerpts);
     }
     if (confirms) {
       if (!dryRun) {
@@ -451,7 +458,15 @@ export async function runAiMode(picked, data, dryRun, now, options = {}) {
     corroborated: published,
     resolutions,
     awaitingCorroboration: corroboration.document.held,
+    excerpts,
   };
+}
+
+async function keepFreePlanExcerpt(excerptFn, offer, pageText, record, now, excerpts) {
+  const result = await excerptTheFreePlan(record, { offer, pageText, read: excerptFn, readOn: isoDay(now) });
+  if (result.outcome === "refused") excerpts.refused.push({ vendor: offer.vendor, url: offer.url, why: result.why });
+  else if (result.outcome === "unread") excerpts.unread.push({ vendor: offer.vendor, url: offer.url, why: result.why });
+  else excerpts[result.outcome]++;
 }
 
 export function repickWindowDays(total, batchSize) {

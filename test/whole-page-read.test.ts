@@ -211,12 +211,12 @@ describe("the character limit belongs to the verifier prompt alone", () => {
     });
   }
 
-  it("names the limit only where the prompt is built and where the old cut is measured", () => {
+  it("names the limit only where a reader's prompt is built and where the old cut is measured", () => {
     const files = readdirSync(SCRIPTS).filter((f) => f.endsWith(".js"));
     const naming = files
       .filter((f) => readFileSync(path.join(SCRIPTS, f), "utf-8").includes("MAX_PAGE_TEXT_LENGTH"))
       .sort();
-    assert.deepStrictEqual(naming, ["verify-freshness.js", "whole-page-census.js"]);
+    assert.deepStrictEqual(naming, ["free-plan-excerpt.js", "verify-freshness.js", "whole-page-census.js"]);
   });
 
   it("applies the limit inside the function that builds the prompt", () => {

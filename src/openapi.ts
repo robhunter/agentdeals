@@ -1480,7 +1480,18 @@ export const openapiSpec = {
           eligibility: { $ref: "#/components/schemas/Eligibility" },
           gate: { $ref: "#/components/schemas/Gate" },
           risk_level: { type: "string", enum: ["stable", "caution", "risky"], nullable: true, description: "Our published pricing-risk verdict, or null where a rule withholds it: gate is non-null (#1241, #1260), rating_withheld is non-null (#1352), or the page we cite could not confirm the record — link_unreachable, or a source_check outcome of does_not_name_vendor, does_not_name_product, states_no_terms or unreadable (#1046, #1500). One function applies all three rules and every surface that publishes a level calls it, so /api/audit-stack, /api/stack, /stack-check and MCP plan_stack answer the same as this field for the same record on the same day (#1486)." },
-          source_check: { $ref: "#/components/schemas/SourceCheck" }
+          source_check: { $ref: "#/components/schemas/SourceCheck" },
+          free_plan_excerpt: {
+            type: "object",
+            nullable: true,
+            description: "The vendor's own words stating the free plan's terms, copied verbatim from the page this record cites on read_on (at most 400 characters), and published beside our figures rather than in place of them. Null where we hold none, where the listed tier is not a free plan, or where the vendor page withholds it: the listing has ended, a recorded change has superseded the terms, the excerpt was read from a page the record no longer cites, the cited page is unreachable, or our last read found that the page does not name the vendor or the product. Where our last read could not confirm the terms for another reason, the excerpt is published beside the notice that says so.",
+            properties: {
+              text: { type: "string" },
+              url: { type: "string", format: "uri" },
+              read_on: { type: "string", format: "date" }
+            },
+            required: ["text", "url", "read_on"]
+          }
         },
         required: ["vendor", "category", "description", "tier", "url", "tags", "verifiedDate"]
       },

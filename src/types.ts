@@ -79,9 +79,23 @@ export interface Offer {
   restated_from?: import("./restatement.js").Restatement;
   free_tier_is_the_product?: true;
   free_grounds?: FreeGround[];
+  free_plan_excerpt?: FreePlanExcerpt;
+  free_plan_excerpt_hold?: FreePlanExcerptHold;
 }
 
 export type FreeGround = "licence" | "plan";
+
+export interface FreePlanExcerpt {
+  text: string;
+  url: string;
+  read_on: string;
+}
+
+export interface FreePlanExcerptHold {
+  record_date: string;
+  change_type: DealChange["change_type"];
+  reason: string;
+}
 
 export type SourceCheckOutcome =
   | "ok"
