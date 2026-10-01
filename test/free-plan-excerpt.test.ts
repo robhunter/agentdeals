@@ -4,6 +4,7 @@ import { readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import {
+  COPY_HOLDS_ANOTHER_PLAN,
   COPY_STATES_NO_TERMS,
   FREE_PLAN_EXCERPT,
   MAX_FREE_PLAN_EXCERPT_LENGTH,
@@ -102,9 +103,9 @@ describe("writing the excerpt onto a record", () => {
   });
 
   it("reads the copy and the terms it states out of the reader's answer, fenced or not, and an empty copy as no free plan", () => {
-    assert.deepStrictEqual(parseExcerptAnswer("```json\n{\"excerpt\":\"Deploy up to 25 services\",\"terms\":[\"up to 25 services\"]}\n```"), { copied: "Deploy up to 25 services", terms: ["up to 25 services"] });
-    assert.deepStrictEqual(parseExcerptAnswer("Here it is: {\"excerpt\":\"\"}"), { copied: "", terms: [] });
-    assert.deepStrictEqual(parseExcerptAnswer("{\"excerpt\":\"Deploy up to 25 services\",\"terms\":\"up to 25 services\"}"), { copied: "Deploy up to 25 services", terms: [] });
+    assert.deepStrictEqual(parseExcerptAnswer("```json\n{\"excerpt\":\"Deploy up to 25 services\",\"terms\":[\"up to 25 services\"],\"other_plans\":[\"Pro\"]}\n```"), { copied: "Deploy up to 25 services", terms: ["up to 25 services"], otherPlans: ["Pro"] });
+    assert.deepStrictEqual(parseExcerptAnswer("Here it is: {\"excerpt\":\"\"}"), { copied: "", terms: [], otherPlans: [] });
+    assert.deepStrictEqual(parseExcerptAnswer("{\"excerpt\":\"Deploy up to 25 services\",\"terms\":\"up to 25 services\",\"other_plans\":\"Pro\"}"), { copied: "Deploy up to 25 services", terms: [], otherPlans: [] });
   });
 
   it("leaves a held excerpt under its own read date when the new copy is refused", () => {
@@ -149,6 +150,17 @@ describe("an excerpt states at least one of the plan's terms", () => {
     assert.deepStrictEqual(write({ vendor: "Northflank", tier: "Free" }, "Northflank Free Get started", "Northflank Free", ["Northflank Free"]).result, { outcome: "refused", why: COPY_STATES_NO_TERMS });
   });
 
+  it("counts a term only when it holds a figure, or a word that states a limit, a duration or who can get the plan", () => {
+    const NVIDIA_PAGE = "Free inference with leading models moonshotai kimi-k3 deepseek-ai deepseek-v4-pro-0813 More Models";
+    assert.deepStrictEqual(write({ vendor: "NVIDIA NIM", tier: "Free" }, NVIDIA_PAGE, NVIDIA_PAGE, ["Free inference"]).result, { outcome: "refused", why: COPY_STATES_NO_TERMS });
+    const GCE_PAGE = "Learn more about Google Cloud free VM program for e2-micro VM instance.";
+    assert.deepStrictEqual(write({ vendor: "Google Compute Engine", tier: "Always Free" }, GCE_PAGE, GCE_PAGE, ["free VM program for e2-micro VM instance"]).result, { outcome: "refused", why: COPY_STATES_NO_TERMS });
+    assert.deepStrictEqual(write({ vendor: "1Password", tier: "Free" }, "1Password Free Sign up", "1Password Free", ["1Password Free"]).result, { outcome: "refused", why: COPY_STATES_NO_TERMS });
+    assert.deepStrictEqual(write({ vendor: "Render", tier: "Hobby" }, RENDER_PAGE, "Hobby Pro Scale", ["Hobby"]).result, { outcome: "refused", why: COPY_STATES_NO_TERMS });
+    assert.deepStrictEqual(write({ vendor: "Mistral AI", tier: "Free" }, "Free Limited messages and web searches.", "Free Limited messages and web searches.", ["Limited messages"]).result, { outcome: "written" });
+    assert.deepStrictEqual(write({ vendor: "Airtable", tier: "Free" }, "Our Free plan is available to teams for no charge", "Our Free plan is available to teams for no charge", ["no charge", "teams"]).result, { outcome: "written" });
+  });
+
   it("refuses a copy when the reader names no term, or no term the copy holds", () => {
     assert.deepStrictEqual(write({ vendor: "Render", tier: "Hobby" }, RENDER_PAGE, RENDER_EXCERPT, []).result, { outcome: "refused", why: COPY_STATES_NO_TERMS });
     assert.deepStrictEqual(write({ vendor: "Render", tier: "Hobby" }, RENDER_PAGE, RENDER_EXCERPT, undefined).result, { outcome: "refused", why: COPY_STATES_NO_TERMS });
@@ -160,6 +172,34 @@ describe("an excerpt states at least one of the plan's terms", () => {
     const record: Record<string, unknown> = { vendor: "Render", tier: "Hobby", [FREE_PLAN_EXCERPT]: held };
     assert.deepStrictEqual(writeFreePlanExcerpt(record, { ...READ, copied: "Deploy for free", terms: ["Deploy for free"] }), { outcome: "refused", why: COPY_STATES_NO_TERMS });
     assert.deepStrictEqual(record[FREE_PLAN_EXCERPT], held);
+  });
+});
+
+describe("an excerpt stays inside the listed plan's own words", () => {
+  const NEON_PAGE = "Free $0 Build and learn free with no time limits 100 projects 0.5 GB of storage per project Functions Launch Usage-based Typical spend: $ 15 /mo";
+  const POSTHOG_PAGE = "Feature Startups Y Combinator Eligibility <2 years old, <$5M raised Must be in YC Credit $50,000 for 12 months $50k per year, whilst eligible";
+  const write = (plan: { vendor: string; tier: string }, pageText: string, copied: string, terms: string[], otherPlans: unknown) => {
+    const record: Record<string, unknown> = { ...plan };
+    return writeFreePlanExcerpt(record, { copied, terms, otherPlans, pageText, url: "https://vendor.example/pricing", readOn: "2026-10-01" });
+  };
+
+  it("refuses a copy that holds the words of another plan the reader names, as the page names it", () => {
+    assert.deepStrictEqual(write({ vendor: "Neon", tier: "Free" }, NEON_PAGE, NEON_PAGE, ["100 projects"], ["Launch"]), { outcome: "refused", why: `${COPY_HOLDS_ANOTHER_PLAN}: Launch` });
+    assert.deepStrictEqual(write({ vendor: "PostHog", tier: "YC Deal" }, POSTHOG_PAGE, POSTHOG_PAGE, ["$50k per year, whilst eligible"], ["Startups"]), { outcome: "refused", why: `${COPY_HOLDS_ANOTHER_PLAN}: Startups` });
+  });
+
+  it("applies to the answer the rotation's reader gives", async () => {
+    const offer = { vendor: "Neon", category: "Databases", tier: "Free", url: "https://neon.example/pricing" };
+    const record: Record<string, unknown> = { ...offer };
+    const result = await excerptTheFreePlan(record, { offer, pageText: NEON_PAGE, read: async () => ({ copied: NEON_PAGE, terms: ["100 projects"], otherPlans: ["Launch"] }), readOn: "2026-10-01" });
+    assert.deepStrictEqual([result.outcome, FREE_PLAN_EXCERPT in record], ["refused", false]);
+  });
+
+  it("keeps a copy whose other named plans it does not hold, or that names only the listed plan itself", () => {
+    const ownWords = "Free $0 Build and learn free with no time limits 100 projects 0.5 GB of storage per project Functions";
+    assert.deepStrictEqual(write({ vendor: "Neon", tier: "Free" }, NEON_PAGE, ownWords, ["100 projects"], ["Launch", "Free", "Scale"]), { outcome: "written" });
+    assert.deepStrictEqual(write({ vendor: "Neon", tier: "Free" }, NEON_PAGE, ownWords, ["100 projects"], ["Fun"]), { outcome: "written" });
+    assert.deepStrictEqual(write({ vendor: "Neon", tier: "Free" }, NEON_PAGE, ownWords, ["100 projects"], undefined), { outcome: "written" });
   });
 });
 
