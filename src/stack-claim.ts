@@ -146,6 +146,10 @@ function textOf(html: string): string {
     .trim();
 }
 
+function withoutTheUnconfirmedTermsMarker(html: string): string {
+  return html.replace(/<span class="listing-terms-unconfirmed"[^>]*>[\s\S]*?(?:<\/span>|$)/g, " ");
+}
+
 export function limitsPublishedOn(html: string): PublishedLimit[] {
   const published: PublishedLimit[] = [];
   const scan = new RegExp(LIMIT_SCAN.source, "g");
@@ -161,7 +165,7 @@ export function limitsPublishedOn(html: string): PublishedLimit[] {
       continue;
     }
     if (subject === null) continue;
-    const limit = textOf(m[3] ?? m[4] ?? "");
+    const limit = textOf(withoutTheUnconfirmedTermsMarker(m[3] ?? m[4] ?? ""));
     if (limit !== "") published.push({ slug: subject, limit });
   }
   return published;

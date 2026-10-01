@@ -3769,7 +3769,7 @@
     {
       "vendor": "Google Cloud",
       "category": "Startup Perks",
-      "description": "Scale: up to $200,000 over 2 years for equity-funded startups. Scale AI: up to $350,000 over 2 years ($250K Y1 + $100K Y2) for AI-first startups (pre-seed to Series A). Includes $10K Model Garden credits, $12K support credits, Google Workspace, and dedicated Startup Success Manager",
+      "description": "Start tier: up to $2,000 in Google Cloud credits, valid for one year, for pre-funded startups. Scale tier: up to $200,000 over 2 years for startups with equity funding from pre-seed to Series A (year 1 covers usage up to $100,000; year 2 covers 20% of spend, up to $100,000 more). AI-first startups get $150,000 more, up to $350,000. Includes 12 months of Google Workspace Business Plus.",
       "tier": "Startup Program",
       "url": "https://cloud.google.com/startup",
       "tags": [
@@ -3783,10 +3783,10 @@
       ],
       "verifiedDate": "2026-09-22",
       "eligibility": {
-        "type": "accelerator",
+        "type": "startup",
         "conditions": [
-          "Backed by approved VC, accelerator, or incubator",
-          "Applied through approved referral partner (e.g. SVB, Stripe)"
+          "Start: pre-funded, founded within 24 months, working MVP",
+          "Scale: equity funding from pre-seed to Series A, founded within 5 years"
         ],
         "program": "Google for Startups Cloud Program"
       },
@@ -5602,11 +5602,11 @@
       }
     },
     {
-      "vendor": "Cloudflare",
+      "vendor": "Cloudflare for Startups",
       "category": "Startup Perks",
-      "description": "Up to $250K in Cloudflare credits across 4 tiers: Bootstrapped ($5K), Up-and-Coming ($25K), Seed-Funded ($100K), High Growth ($250K). Covers Workers, R2, Workers AI, Stream, Durable Objects, and more. Credits expire within 1 year. Max $10K toward R2/Cache Reserve, up to $50K for Workers AI",
+      "description": "Credits for one year or until used up, in three tiers: Tier 3 gives $10K to bootstrapped or self-funded startups with under $1M raised; Tier 2 ($100K) and Tier 1 ($350K) are for startups funded by an affiliated partner, Tier 1 with $5M+ raised. Credits cover usage-based services such as Workers and R2 (R2 up to $10K; Workers AI up to $2.5K, $10K or $50K by tier). AI Gateway is not covered. Core security and networking features are free at every tier.",
       "tier": "Startup Program",
-      "url": "https://www.cloudflare.com/forstartups/",
+      "url": "https://www.cloudflare.com/startups/",
       "tags": [
         "cloud",
         "startup credits",
@@ -5617,18 +5617,14 @@
       ],
       "verifiedDate": "2026-08-15",
       "eligibility": {
-        "type": "accelerator",
+        "type": "startup",
         "conditions": [
-          "Software-based product",
-          "Founded within 5 years",
-          "Bootstrapped: valid matching email",
-          "Up-and-Coming: funding up to $1M, active LinkedIn",
-          "Seed-Funded: $1M-$5M raised, approved VC/accelerator partner",
-          "High Growth: Tier 1 VC/accelerator, or mission-critical AI app, or Workers Launchpad participant"
+          "Tier 3 ($10K): bootstrapped or self-funded, under $1M raised",
+          "Tier 2 ($100K): funded by an affiliated partner",
+          "Tier 1 ($350K): funded by an affiliated partner, $5M+ raised"
         ],
         "program": "Cloudflare for Startups"
       },
-      "expires_date": "2026-08-31",
       "source_check": {
         "checked": "2026-09-17",
         "outcome": "ok",
@@ -5638,9 +5634,9 @@
     {
       "vendor": "Amazon Kiro (AWS Startups)",
       "category": "Startup Perks",
-      "description": "Up to 1 year of free Kiro Pro+ (worth $480/year) through AWS Startups program. Three tiers: Starter (up to 2 users), Growth (up to 50 users), Scale (up to 100 users). Eligible: early-stage to Series B companies. Application via AWS Startups portal.",
+      "description": "Up to 1 year of Kiro Pro+ ($40 per user a month) for early-stage to Series A startups, in three tiers: Starter up to 2 users, Growth up to 10, Scale up to 30. Startups with active AWS Activate credits are not eligible. Credits are deposited to your AWS account and expire one year after they are issued.",
       "tier": "Startup Program",
-      "url": "https://aws.amazon.com/startups/",
+      "url": "https://kiro.dev/startups/",
       "tags": [
         "ai",
         "coding",
@@ -5653,10 +5649,11 @@
       "eligibility": {
         "type": "startup",
         "conditions": [
-          "Early-stage to Series B company",
+          "Early stage to Series A",
+          "No active AWS Activate credits",
           "Starter tier: up to 2 users",
-          "Growth tier: up to 50 users",
-          "Scale tier: up to 100 users"
+          "Growth tier: up to 10 users",
+          "Scale tier: up to 30 users"
         ],
         "program": "AWS Startups — Kiro Pro+"
       },
@@ -9725,9 +9722,9 @@
     {
       "vendor": "Codefresh",
       "category": "CI/CD",
-      "description": "CI/CD and GitOps platform — free plan: 120 builds/month, 1 concurrent pipeline. Docker-native build engine with built-in Docker registry",
-      "tier": "Free",
-      "url": "https://codefresh.io/pricing/",
+      "description": "There is no free tier: codefresh.io and its pricing page redirect to Octopus Deploy, which acquired Codefresh in February 2024. Checked 2026-09-30, Octopus offers Codefresh CI through its sales team and names no free plan or price for it.",
+      "tier": "Retired",
+      "url": "https://octopus.com/codefresh/continuous-integration",
       "tags": [
         "ci",
         "cd",
@@ -9737,7 +9734,7 @@
         "kubernetes",
         "github-actions-alternative"
       ],
-      "verifiedDate": "2026-07-08",
+      "verifiedDate": "2026-09-30",
       "source_check": {
         "checked": "2026-09-05",
         "outcome": "does_not_name_vendor",
@@ -11724,9 +11721,9 @@
     {
       "vendor": "Mockerito",
       "category": "API Development",
-      "description": "The 'Developer' plan costs $15/month and includes 50,000 API calls/month and 20 projects. A free tier with 200+ endpoints across 9 domains is available with no signup required.",
+      "description": "Free public mock REST APIs: 200+ endpoints across 9 domains (e-commerce, finance, recruitment, education, healthcare, socials, markets, meteorology and aviation) with full CRUD, filtering and pagination. No signup and no API keys. Custom mock APIs are the paid Developer plan: $10/month after a 7-day free trial, with 50,000 API calls a month and 20 projects.",
       "tier": "Free",
-      "url": "https://mockerito.com/",
+      "url": "https://mockerito.com/free-apis",
       "tags": [
         "developer-tools",
         "free-for-dev"
@@ -11737,12 +11734,9 @@
         "outcome": "ok",
         "detail": "the page names Mockerito as \"mockerito\" and states \"$ 10\" and \"$10\" and \"50,000 API calls/month\""
       },
-      "restated_from": {
-        "reading_date": "2026-09-30",
-        "source_url": "https://mockerito.com/",
-        "record_date": "2026-09-30",
-        "change_type": "pricing_restructured",
-        "restated_on": "2026-09-30"
+      "restatement_reverted": {
+        "record_date": "2026-08-28",
+        "reverted_on": "2026-09-30"
       }
     },
     {
@@ -15994,7 +15988,7 @@
     {
       "vendor": "Phase Two",
       "category": "Auth",
-      "description": "Managed Keycloak hosting with Phase Two's Organization extension. No free tier since 2026-07-30, when Phase Two shut down its free shared realms. The Starter cluster is $149/month with a 30-day free trial, for up to 15K monthly active users.",
+      "description": "Managed Keycloak hosting with Phase Two's Organization extension. No free tier since 2026-07-30, when Phase Two shut down its free shared realms. The Starter cluster is $149/month after a 30-day free trial; users are unlimited, and it is sized for 5,000 active users a month.",
       "tier": "Trial",
       "url": "https://phasetwo.io/pricing/hosting/",
       "tags": [
@@ -18867,7 +18861,7 @@
     {
       "vendor": "Aionda Mail",
       "category": "Email",
-      "description": "Free tier includes up to 25 disposable addresses, encrypted mailbox, calendar & contacts. Plus tier is €1.99/month for up to 10,000 disposable addresses, unlimited forwarding, custom domains, calendar invitations, and 1 GB encrypted drive. Enterprise tier starts at €1.49/employee/month.",
+      "description": "Free tier includes up to 25 disposable addresses, encrypted mailbox, calendar & contacts. Plus tier is €1.99/month for up to 10,000 disposable addresses, unlimited forwarding, custom domains, calendar invitations, and 5 GB encrypted drive. Enterprise tier starts at €1.49/employee/month.",
       "tier": "Free",
       "url": "https://mail.aionda.com/",
       "tags": [
@@ -18880,12 +18874,9 @@
         "outcome": "ok",
         "detail": "the page names Aionda Mail as \"aionda mail\" and states amounts, none of which we matched to the terms we publish"
       },
-      "restated_from": {
-        "reading_date": "2026-08-28",
-        "source_url": "https://mail.aionda.com/",
+      "restatement_reverted": {
         "record_date": "2026-08-28",
-        "change_type": "limits_reduced",
-        "restated_on": "2026-09-20"
+        "reverted_on": "2026-09-30"
       }
     },
     {

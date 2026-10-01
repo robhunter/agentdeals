@@ -153,6 +153,9 @@
     "/alternative-to/cloudflare-dynamic-workers": {
       "daily": true
     },
+    "/alternative-to/cloudflare-for-startups": {
+      "daily": true
+    },
     "/alternative-to/cloudflare-kv": {
       "daily": true
     },
@@ -1313,15 +1316,15 @@
       "daily": true
     },
     "/ci-cd-alternatives": {
-      "hash": "dc81fa773b2bdef4",
+      "hash": "dced05267c9c1b9b",
       "changed": "2026-09-30"
     },
     "/ci-cd-pricing": {
-      "hash": "f52177a814670d49",
+      "hash": "da79c08b61f94133",
       "changed": "2026-09-30"
     },
     "/cicd-free-tier-comparison-2026": {
-      "hash": "8d07c8dd2af83bf9",
+      "hash": "aef73586be70d8fc",
       "changed": "2026-09-30"
     },
     "/circleci-vs-github-actions": {
@@ -2926,6 +2929,10 @@
       "hash": "db974fb61b68fc03",
       "changed": "2026-09-28"
     },
+    "/digest/2026-w19": {
+      "hash": "e0102b9ba4d8c1db",
+      "changed": "2026-09-30"
+    },
     "/digest/2026-w20": {
       "hash": "9b2c033bf94384ce",
       "changed": "2026-09-28"
@@ -3081,11 +3088,11 @@
       "daily": true
     },
     "/free-ai-stack": {
-      "hash": "6f6119b5443da82f",
+      "hash": "155bdc1aac9f6a8f",
       "changed": "2026-09-30"
     },
     "/free-devops-stack": {
-      "hash": "75a66505cb689ab9",
+      "hash": "fdc6fc688e44655e",
       "changed": "2026-09-30"
     },
     "/free-django-stack": {
@@ -3097,11 +3104,11 @@
       "changed": "2026-09-30"
     },
     "/free-frontend-stack": {
-      "hash": "a7a419e567463d02",
+      "hash": "c162857f88248ee3",
       "changed": "2026-09-30"
     },
     "/free-go-stack": {
-      "hash": "a6e38e3ebbe07b62",
+      "hash": "5813a390e06e9887",
       "changed": "2026-09-30"
     },
     "/free-llm-apis": {
@@ -3144,8 +3151,8 @@
       "changed": "2026-09-30"
     },
     "/github-actions-alternatives": {
-      "hash": "e6292d9500a9aecf",
-      "changed": "2026-09-28"
+      "hash": "0f05a0db67db87d6",
+      "changed": "2026-09-30"
     },
     "/github-actions-vs-gitlab-ci": {
       "hash": "223c957ea4449063",
@@ -3470,8 +3477,8 @@
       "changed": "2026-09-28"
     },
     "/stacks/side-project": {
-      "hash": "074b48ec7d3499a2",
-      "changed": "2026-09-28"
+      "hash": "447961385244e54a",
+      "changed": "2026-09-30"
     },
     "/startup-credits": {
       "hash": "64cd30b83f873c9e",
@@ -4652,10 +4659,6 @@
       "hash": "f96cd6c51fbb8514",
       "changed": "2026-09-30"
     },
-    "/vendor/cloudflare": {
-      "hash": "ba53ff64150809e0",
-      "changed": "2026-09-30"
-    },
     "/vendor/cloudflare-d1": {
       "daily": true
     },
@@ -4667,6 +4670,9 @@
       "daily": true
     },
     "/vendor/cloudflare-dynamic-workers": {
+      "daily": true
+    },
+    "/vendor/cloudflare-for-startups": {
       "daily": true
     },
     "/vendor/cloudflare-kv": {
@@ -5786,7 +5792,7 @@
       "changed": "2026-09-30"
     },
     "/vendor/gemini-cli": {
-      "hash": "b28a7bf2d37d55c2",
+      "hash": "3fda3cd2c7214994",
       "changed": "2026-09-30"
     },
     "/vendor/geoapify-com": {
