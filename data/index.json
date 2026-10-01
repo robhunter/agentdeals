@@ -5028,8 +5028,8 @@
     {
       "vendor": "Pipedream",
       "category": "Workflow Automation",
-      "description": "Developer-focused workflow automation — 100 credits/month, 3 active workflows, 3 connected accounts. Building/testing workflows in the editor is free",
-      "tier": "Free",
+      "description": "Pipedream Workflows stopped taking new signups and subscriptions on 2026-09-30 and shuts down on 2027-03-31; Workflows data is deleted by 2027-04-30. Workspaces that already exist keep running workflows until then, the free ones within a daily credit limit and limits on active workflows and connected accounts. Pipedream Connect, its API for adding integrations and MCP tools to apps and AI agents, is not affected: its Free plan is $0 with no credit card for development only, and production needs the Startup plan at $99 a month billed annually or $150 billed monthly, with 100 users and 10,000 usage credits included.",
+      "tier": "Legacy Free",
       "url": "https://pipedream.com/pricing",
       "tags": [
         "automation",
@@ -5040,10 +5040,9 @@
       ],
       "verifiedDate": "2026-09-24",
       "source_check": {
-        "checked": "2026-09-24",
+        "checked": "2026-10-01",
         "outcome": "ok",
-        "detail": "the page names Pipedream as \"pipedream\" and states \"100 credits/mo\"",
-        "rendered": true
+        "detail": "the page names Pipedream as \"pipedream\" and states \"$0\" and \"$99\" and \"$150\" and \"$ 0\""
       }
     },
     {
@@ -32683,7 +32682,7 @@
       "category": "Cloud IaaS",
       "description": "Always Free: 1 non-preemptible e2-micro VM (us-west1, us-central1, or us-east1), 30 GB standard persistent disk, 1 GB North America egress. GPUs/TPUs excluded",
       "tier": "Always Free",
-      "url": "https://cloud.google.com/compute/pricing",
+      "url": "https://docs.cloud.google.com/free/docs/free-cloud-features",
       "tags": [
         "compute",
         "vm",
@@ -32693,9 +32692,9 @@
       ],
       "verifiedDate": "2026-09-16",
       "source_check": {
-        "checked": "2026-09-16",
+        "checked": "2026-10-01",
         "outcome": "ok",
-        "detail": "the page names Google Compute Engine as \"compute\""
+        "detail": "the page names Google Compute Engine as \"compute\" and states \"1 non-preemptible e2-micro VM instance per month\""
       }
     },
     {
