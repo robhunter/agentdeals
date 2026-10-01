@@ -132,6 +132,33 @@ describe("settling the backlog", () => {
     assert.strictEqual(report.split[SPLIT.pageUnreadable], 1);
   });
 
+  it("lists the records left for review because only lines one page states differ, and counts them as no usable capture", async () => {
+    const changes = [
+      change({ vendor: "Delta", date: "2026-09-01", change_type: "limits_reduced", date_source: "discovered", previous_state: "A", current_state: "B", source_url: "https://delta.example/pricing" }),
+      change({ vendor: "Epsilon", date: "2026-09-02", change_type: "limits_reduced", date_source: "discovered", previous_state: "A", current_state: "B", source_url: "https://epsilon.example/pricing" }),
+    ];
+    const line = { old: "7-day history", new: "", why: "only the old page states it" };
+    const archive = {
+      captures: async (url: string) => ({ captures: ["20260201120000", "20260901120000"].map((timestamp) => ({ timestamp, original: url, statuscode: "200", mimetype: "text/html" })) }),
+      captureHtml: async () => ({ html: `<html><body><p>TERMS=A</p><p>${"Plans and limits. ".repeat(40)}</p></body></html>` }),
+    };
+    const report = await settleFirstReadings({
+      changes,
+      offers: [],
+      today: "2026-09-28",
+      archive,
+      pairReaderForListing: (listing: { vendor: string }) => async () =>
+        listing.vendor === "Delta"
+          ? { status: "one_sided", old_terms: ["TERMS=A"], new_terms: ["TERMS=A"], one_sided: [line], why: "the only differences are lines one page states and the other does not" }
+          : { status: "same", old_terms: ["TERMS=A"], new_terms: ["TERMS=A"] },
+      fetchToday: async () => ({ ok: true, text: "TERMS=A" }),
+      textDayOf: () => "2026-02-10",
+    });
+    assert.deepStrictEqual(report.review, [{ vendor: "Delta", date: "2026-09-01", change_type: "limits_reduced", compared_with: { page: "capture 2026-09-01", day: "2026-09-01", gap_days: 0, side: "on" }, lines: [line] }]);
+    assert.strictEqual(report.split[SPLIT.noCapture], 1);
+    assert.strictEqual(report.split[SPLIT.ours], 1);
+  });
+
   it("falls back to a listing named for the record when the catalogue holds none for its vendor", () => {
     assert.deepStrictEqual(listingFor({ vendor: "Gone", category: "CDN", tier: "Free" }, []), { vendor: "Gone", category: "CDN", tier: "Free" });
   });

@@ -193,13 +193,14 @@ NEW PAGE (saved ${newer.day}, truncated):
 ${clip(newer.text)}
 
 Step 1. On each page, find the words that state this plan's terms: its price, its limits, what it includes and who can get it. Copy them exactly as they appear on that page, as one or more short fragments. Never reword a fragment, and never join words that are apart on the page into one fragment.
-Step 2. Decide whether the plan's terms are the same on both pages. Ignore changes of wording, order or layout, renamed features, and other plans. The terms differ only if a price, a limit, an included feature or who can get the plan is different.
+Step 2. Decide whether the plan's terms are the same on both pages. Ignore changes of wording, order or layout, renamed features, and other plans. The terms differ only if a price, a limit, an included feature or who can get the plan is different, or the plan is offered on only one of the pages.
 Step 3. For each term that differs, copy the words that state it from OLD PAGE and from NEW PAGE. Include the words that say what a figure counts ("500 MB database", not "500 MB"). If the term is on only one of the pages, leave the other side empty.
+Step 4. If one page does not offer this plan at all, give an empty list for that page's terms, and copy into offered_instead the words on that page that show what it offers in the plan's place: other plans, a trial, or a line saying the plan ended.
 
 Respond with exactly one JSON object and no other text:
-{"old_terms":["<fragment copied from OLD PAGE>"],"new_terms":["<fragment copied from NEW PAGE>"],"same":<true or false>,"differences":[{"old":"<words copied from OLD PAGE, or empty>","new":"<words copied from NEW PAGE, or empty>"}],"direction":"<narrowed, unchanged or widened: is the plan worse, the same or better for a user on NEW PAGE than on OLD PAGE>"}
+{"old_terms":["<fragment copied from OLD PAGE>"],"new_terms":["<fragment copied from NEW PAGE>"],"offered_instead":["<fragment copied from the page that does not offer the plan>"],"same":<true or false>,"differences":[{"old":"<words copied from OLD PAGE, or empty>","new":"<words copied from NEW PAGE, or empty>"}],"direction":"<narrowed, unchanged or widened: is the plan worse, the same or better for a user on NEW PAGE than on OLD PAGE>"}
 
-If a page does not state this plan's terms, give an empty list for that page's terms. If the terms are the same, give an empty list of differences.`;
+If a page does not state this plan's terms, give an empty list for that page's terms. If both pages offer the plan, give an empty list for offered_instead. If the terms are the same, give an empty list of differences.`;
 }
 
 export function parsePairedAnswer(raw) {
@@ -252,18 +253,93 @@ function refutationOf(claim, olderHas, newerHas) {
   return null;
 }
 
-function whyAClaimFails(claim, older, newer) {
+const VALUE_WORDS = ["not included", "unlimited", "included", "none"];
+const MULTIPLIERS = { k: 1_000, m: 1_000_000, b: 1_000_000_000 };
+
+export function valuesStated(words) {
+  let rest = String(words ?? "").toLowerCase();
+  const values = [];
+  for (const word of VALUE_WORDS) {
+    rest = rest.replace(new RegExp(`\\b${word.replace(" ", "\\s+")}\\b`, "g"), () => {
+      values.push(word);
+      return " ";
+    });
+  }
+  for (const [, figure, multiplier] of rest.matchAll(/(\d[\d,]*(?:\.\d+)?)(?:([kmb])(?![a-z]))?/g)) {
+    values.push(String(Number(figure.replaceAll(",", "")) * (MULTIPLIERS[multiplier] ?? 1)));
+  }
+  return values;
+}
+
+function valuesMissingFrom(values, others) {
+  const unmatched = [...others];
+  return values.filter((value) => {
+    const at = unmatched.indexOf(value);
+    if (at < 0) return true;
+    unmatched.splice(at, 1);
+    return false;
+  });
+}
+
+function valueRuleFor(claim) {
+  if (!claim.old) return { kind: "one_sided", why: "only the new page states it" };
+  if (!claim.new) return { kind: "one_sided", why: "only the old page states it" };
+  const oldValues = valuesStated(claim.old);
+  const newValues = valuesStated(claim.new);
+  const gone = valuesMissingFrom(oldValues, newValues);
+  const added = valuesMissingFrom(newValues, oldValues);
+  if (gone.length > 0 && added.length > 0) return { kind: "counts" };
+  if (gone.length > 0) return { kind: "one_sided", why: `only the old words state ${gone.map((value) => `"${value}"`).join(", ")}` };
+  if (added.length > 0) return { kind: "one_sided", why: `only the new words state ${added.map((value) => `"${value}"`).join(", ")}` };
+  return { kind: "reworded", why: oldValues.length > 0 ? "the old and the new words state the same values" : "neither the old nor the new words state a value" };
+}
+
+function classifyClaim(claim, older, newer) {
   const olderHas = (words) => older.includes(comparableText(words));
   const newerHas = (words) => newer.includes(comparableText(words));
-  if (claim.old && !olderHas(claim.old)) return { unverifiable: "old", why: "the old words are not on the old page" };
-  if (claim.new && !newerHas(claim.new)) return { unverifiable: "new", why: "the new words are not on the new page" };
-  if (comparableText(claim.old) === comparableText(claim.new)) return { why: "the old and the new words are the same" };
+  if (claim.old && !olderHas(claim.old)) return { kind: "unverifiable", side: "old", why: "the old words are not on the old page" };
+  if (claim.new && !newerHas(claim.new)) return { kind: "unverifiable", side: "new", why: "the new words are not on the new page" };
+  if (comparableText(claim.old) === comparableText(claim.new)) return { kind: "refuted", why: "the old and the new words are the same" };
   const refutation = refutationOf(claim, olderHas, newerHas);
-  return refutation && (wordsTooCommonToRefute(claim, older, newer) ?? refutation);
+  if (!refutation) return valueRuleFor(claim);
+  const tooCommon = wordsTooCommonToRefute(claim, older, newer);
+  return tooCommon ? { kind: "unverifiable", side: tooCommon.unverifiable, why: tooCommon.why } : { kind: "refuted", why: refutation.why };
 }
 
 function sideOfBoth(oldFailed, newFailed) {
   return oldFailed && newFailed ? "both" : oldFailed ? "old" : "new";
+}
+
+function notOnPage(fragments, text) {
+  return fragments.filter((fragment) => !text.includes(comparableText(fragment)));
+}
+
+function judgePlanOnOnePage({ oldTerms, newTerms, instead, older, newer, direction }) {
+  const disappeared = newTerms.length === 0;
+  const [planSide, otherSide] = disappeared ? ["old", "new"] : ["new", "old"];
+  const [planTerms, planPage, otherPage] = disappeared ? [oldTerms, older, newer] : [newTerms, newer, older];
+  const quoted = { old_terms: oldTerms, new_terms: newTerms, offered_instead: instead, direction };
+  const planMisquoted = notOnPage(planTerms, planPage);
+  const insteadMisquoted = notOnPage(instead, otherPage);
+  if (planMisquoted.length > 0 || insteadMisquoted.length > 0) {
+    const why = [...planMisquoted.map((f) => `not on the ${planSide} page: "${f}"`), ...insteadMisquoted.map((f) => `not on the ${otherSide} page: "${f}"`)].join("; ");
+    const failed = { [planSide]: planMisquoted.length > 0, [otherSide]: insteadMisquoted.length > 0 };
+    return { status: "unquotable", side: sideOfBoth(failed.old, failed.new), why, ...quoted };
+  }
+  const lingering = planTerms.filter((fragment) => otherPage.includes(comparableText(fragment)));
+  if (lingering.length > 0) {
+    return { status: "unquotable", side: otherSide, why: `the plan's words are still on the ${otherSide} page: ${lingering.map((f) => `"${f}"`).join(", ")}`, ...quoted };
+  }
+  return { status: "differ", ...quoted, plan: disappeared ? "disappeared" : "appeared", differences: [{ old: oldTerms.join(" · "), new: newTerms.join(" · ") }] };
+}
+
+function judgePlanOnNeitherPage(instead, older, newer) {
+  const quoted = { old_terms: [], new_terms: [], offered_instead: instead };
+  const onPage = (text) => instead.filter((fragment) => text.includes(comparableText(fragment)));
+  const misquoted = instead.filter((fragment) => !onPage(older).includes(fragment) && !onPage(newer).includes(fragment));
+  if (misquoted.length > 0) return { status: "unquotable", side: "both", why: misquoted.map((f) => `on neither page: "${f}"`).join("; "), ...quoted };
+  if (onPage(older).length === 0 || onPage(newer).length === 0) return { status: "unquotable", side: "both", why: "no words copied from each page to show what it offers instead of the plan", ...quoted };
+  return { status: "absent", side: "both", why: "neither page offers the plan", ...quoted };
 }
 
 export function judgePair(answer, olderText, newerText) {
@@ -272,27 +348,42 @@ export function judgePair(answer, olderText, newerText) {
   const newer = comparableText(newerText);
   const oldTerms = fragmentsOf(answer.old_terms);
   const newTerms = fragmentsOf(answer.new_terms);
-  const notOn = (fragments, text) => fragments.filter((fragment) => !text.includes(comparableText(fragment)));
-  const oldProblem = oldTerms.length === 0 ? "no terms quoted from the old page" : notOn(oldTerms, older).map((f) => `not on the old page: "${f}"`).join("; ");
-  const newProblem = newTerms.length === 0 ? "no terms quoted from the new page" : notOn(newTerms, newer).map((f) => `not on the new page: "${f}"`).join("; ");
+  const instead = fragmentsOf(answer.offered_instead);
+  const direction = typeof answer.direction === "string" ? answer.direction : null;
+  const saysSame = answer.same === true || answer.same === "true";
+  if (instead.length > 0 && oldTerms.length === 0 && newTerms.length === 0) return judgePlanOnNeitherPage(instead, older, newer);
+  if (!saysSame && instead.length > 0 && (oldTerms.length === 0) !== (newTerms.length === 0)) {
+    return judgePlanOnOnePage({ oldTerms, newTerms, instead, older, newer, direction });
+  }
+  const oldProblem = oldTerms.length === 0 ? "no terms quoted from the old page" : notOnPage(oldTerms, older).map((f) => `not on the old page: "${f}"`).join("; ");
+  const newProblem = newTerms.length === 0 ? "no terms quoted from the new page" : notOnPage(newTerms, newer).map((f) => `not on the new page: "${f}"`).join("; ");
   if (oldProblem || newProblem) {
     return { status: "unquotable", side: sideOfBoth(Boolean(oldProblem), Boolean(newProblem)), why: [oldProblem, newProblem].filter(Boolean).join("; "), old_terms: oldTerms, new_terms: newTerms };
   }
-  const quoted = { old_terms: oldTerms, new_terms: newTerms, direction: typeof answer.direction === "string" ? answer.direction : null };
-  if (answer.same === true || answer.same === "true") return { status: "same", ...quoted };
+  const quoted = { old_terms: oldTerms, new_terms: newTerms, direction };
+  if (saysSame) return { status: "same", ...quoted };
   const differences = [];
   const refuted = [];
+  const reworded = [];
+  const oneSided = [];
   const unverifiable = [];
   for (const claim of claimsOf(answer.differences)) {
-    const failure = whyAClaimFails(claim, older, newer);
-    if (!failure) differences.push(claim);
-    else if (failure.unverifiable) unverifiable.push({ ...claim, side: failure.unverifiable, why: failure.why });
-    else refuted.push({ ...claim, why: failure.why });
+    const verdict = classifyClaim(claim, older, newer);
+    if (verdict.kind === "counts") differences.push(claim);
+    else if (verdict.kind === "unverifiable") unverifiable.push({ ...claim, side: verdict.side, why: verdict.why });
+    else if (verdict.kind === "one_sided") oneSided.push({ ...claim, why: verdict.why });
+    else if (verdict.kind === "reworded") reworded.push({ ...claim, why: verdict.why });
+    else refuted.push({ ...claim, why: verdict.why });
   }
-  if (differences.length > 0) return { status: "differ", ...quoted, differences, refuted, unverifiable };
-  if (refuted.length > 0 && unverifiable.length === 0) return { status: "same", ...quoted, refuted };
-  const why = unverifiable.length > 0 ? unverifiable.map((claim) => claim.why).join("; ") : "the reader said the terms differ but quoted no difference";
-  return { status: "unquotable", side: unverifiable.length > 0 ? sideOfBoth(unverifiable.some((c) => c.side !== "new"), unverifiable.some((c) => c.side !== "old")) : "both", why, ...quoted, refuted, unverifiable };
+  const set = { refuted, reworded, one_sided: oneSided };
+  if (differences.length > 0) return { status: "differ", ...quoted, differences, ...set, unverifiable };
+  if (unverifiable.length > 0) {
+    const side = sideOfBoth(unverifiable.some((c) => c.side !== "new"), unverifiable.some((c) => c.side !== "old"));
+    return { status: "unquotable", side, why: unverifiable.map((claim) => claim.why).join("; "), ...quoted, ...set, unverifiable };
+  }
+  if (oneSided.length > 0) return { status: "one_sided", ...quoted, ...set, why: "the only differences are lines one page states and the other does not" };
+  if (refuted.length > 0 || reworded.length > 0) return { status: "same", ...quoted, ...set };
+  return { status: "unquotable", side: "both", why: "the reader said the terms differ but quoted no difference", ...quoted, ...set, unverifiable };
 }
 
 export function pairedReaderFor(client, listing) {
@@ -328,6 +419,10 @@ function placeBesideRecord(bracket, recordDay, today) {
   return "spans";
 }
 
+function showsNoMove(verdict) {
+  return verdict?.status === "same" || verdict?.status === "one_sided" || verdict?.status === "absent";
+}
+
 async function bracketMoves({ from, until, pool, compare, pageOf }) {
   const brackets = [];
   let start = from;
@@ -341,7 +436,7 @@ async function bracketMoves({ from, until, pool, compare, pageOf }) {
       const page = await pageOf(candidates[mid]);
       const verdict = page ? await compare(start, page) : null;
       if (page) reads++;
-      if (verdict?.status === "same") lo = mid;
+      if (showsNoMove(verdict)) lo = mid;
       else if (verdict?.status === "differ") hi = mid;
       else {
         candidates = [...candidates.slice(0, mid), ...candidates.slice(mid + 1)];
@@ -357,7 +452,7 @@ async function bracketMoves({ from, until, pool, compare, pageOf }) {
     });
     if (hi === candidates.length) return { brackets, moves_complete: true };
     const onward = await compare(firstNew, until);
-    if (onward.status === "same") return { brackets, moves_complete: true };
+    if (showsNoMove(onward)) return { brackets, moves_complete: true };
     if (onward.status !== "differ") return { brackets, moves_complete: false };
     start = firstNew;
     candidates = candidates.slice(hi + 1);
@@ -417,6 +512,9 @@ export async function settleAgainstCaptures({ url, finalUrl, textDay, recordDay,
     return verdict;
   };
 
+  const describePage = (page) => ({ page: page.page, ...describeDay(page.day, judgedOn, sideOfRecordDay(page.day, judgedOn)) });
+  const forReview = (page, verdict) => ({ outcome: "no_usable_capture", compared_with: describePage(page), review: verdict.one_sided, why: verdict.why });
+
   const settleFrom = async (old, side) => {
     const nearRecord = judgedOn < today ? recordDayCapture(captures, judgedOn, old.capture, windowDays) : null;
     const unreadable = [];
@@ -430,6 +528,7 @@ export async function settleAgainstCaptures({ url, finalUrl, textDay, recordDay,
         continue;
       }
       const verdict = await compare(old, page);
+      if (verdict.status === "one_sided") return forReview(page, verdict);
       if (verdict.status === "same" || verdict.status === "differ") {
         end = page;
         first = verdict;
@@ -439,7 +538,7 @@ export async function settleAgainstCaptures({ url, finalUrl, textDay, recordDay,
       unreadable.push(`${page.page}: ${verdict.why}`);
     }
     if (!end) return { outcome: "no_usable_capture", why: `no reading of the page on the record's day settles it (${unreadable.join("; ")})` };
-    const comparedWith = { page: end.page, ...describeDay(end.day, judgedOn, sideOfRecordDay(end.day, judgedOn)) };
+    const comparedWith = describePage(end);
     const agreed = (verdict, laterMoves = []) =>
       side === "before"
         ? { outcome: "ours", compared_with: comparedWith, terms_then: verdict.old_terms, later_moves: laterMoves }
@@ -451,6 +550,7 @@ export async function settleAgainstCaptures({ url, finalUrl, textDay, recordDay,
       if (!(end.capture && end.day < judgedOn)) return agreed(first);
       const now = await compare(old, todayPage);
       if (now.status === "same") return agreed(first);
+      if (now.status === "one_sided") return forReview(todayPage, now);
       if (now.status !== "differ") return { outcome: "no_usable_capture", compared_with: comparedWith, why: `the capture before the record's day states the old capture's terms, but the reader could not compare today's page: ${now.why}` };
       deciding = now;
       moves = await bracketMoves({ from: end, until: todayPage, pool: captures.filter((capture) => capture.timestamp > end.capture.timestamp), compare, pageOf });
@@ -465,9 +565,10 @@ export async function settleAgainstCaptures({ url, finalUrl, textDay, recordDay,
     return {
       outcome: "vendor_changed",
       compared_with: comparedWith,
-      previous_state: deciding.old_terms.join(" \u00B7 "),
+      previous_state: (deciding.plan === "appeared" ? deciding.offered_instead : deciding.old_terms).join(" \u00B7 "),
       terms_then: deciding.old_terms,
       terms_on_record_day: deciding.new_terms,
+      ...(deciding.plan ? { plan: deciding.plan, offered_instead: deciding.offered_instead } : {}),
       differences: deciding.differences,
       direction: deciding.direction,
       brackets: recordMoves,

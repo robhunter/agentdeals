@@ -12,6 +12,7 @@ const {
   pairedPrompt,
   parsePairedAnswer,
   judgePair,
+  valuesStated,
   pairedReaderFor,
   oldCaptureCandidates,
   recordDayCapture,
@@ -238,11 +239,132 @@ describe("judging a paired reading by the words it copied from each page", () =>
     assert.deepStrictEqual(verdict.refuted, [{ old: "", new: "up to 5,000 visits a month", why: "the new words were already on the old page" }]);
   });
 
-  it("counts an added term whose words are new to the page", () => {
+  it("does not count a line only the new page states, and leaves the pair for review", () => {
     const before = "Free hosting: 1000 MB disk space, 5 GB bandwidth, no ads.";
     const after = "Free hosting: 1000 MB disk space, 5 GB bandwidth, up to 5,000 visits a month, no ads.";
     const verdict = judgePair(answer({ old_terms: ["1000 MB disk space, 5 GB bandwidth"], new_terms: ["1000 MB disk space, 5 GB bandwidth"], differences: [{ old: "", new: "up to 5,000 visits a month" }] }), before, after);
+    assert.strictEqual(verdict.status, "one_sided");
+    assert.deepStrictEqual(verdict.one_sided, [{ old: "", new: "up to 5,000 visits a month", why: "only the new page states it" }]);
+  });
+
+  it("does not count a line only the old page states, such as a feature dropped from the plan's list", () => {
+    const before = "Free: $0 /mo. Hosted dashboard. 7-day history. Community support. 10 AI generations/mo.";
+    const after = "Free: $0 /mo. Hosted dashboard. Community support. 10 AI generations/mo.";
+    const verdict = judgePair(answer({ old_terms: ["Free: $0 /mo"], new_terms: ["Free: $0 /mo"], differences: [{ old: "7-day history", new: "" }] }), before, after);
+    assert.strictEqual(verdict.status, "one_sided");
+    assert.strictEqual(verdict.one_sided[0].why, "only the old page states it");
+  });
+
+  it("counts a term both pages state when its value differs, with 'Unlimited', 'none' and 'not included' as values", () => {
+    const before = "Free plan: up to 500 monthly active rooms, 1 GB storage. Comments: none. Version history: included.";
+    const after = "Free plan: Unlimited monthly active rooms, 1 GB storage. Comments: 100. Version history: not included.";
+    const rooms = judgePair(answer({ old_terms: ["Free plan: up to 500 monthly active rooms"], new_terms: ["Free plan: Unlimited monthly active rooms"], differences: [{ old: "up to 500 monthly active rooms", new: "Unlimited monthly active rooms" }] }), before, after);
+    assert.strictEqual(rooms.status, "differ", rooms.why);
+    const comments = judgePair(answer({ old_terms: ["Free plan: up to 500 monthly active rooms"], new_terms: ["Free plan: Unlimited monthly active rooms"], differences: [{ old: "Comments: none", new: "Comments: 100" }] }), before, after);
+    assert.strictEqual(comments.status, "differ", comments.why);
+    const history = judgePair(answer({ old_terms: ["Free plan: up to 500 monthly active rooms"], new_terms: ["Free plan: Unlimited monthly active rooms"], differences: [{ old: "Version history: included", new: "Version history: not included" }] }), before, after);
+    assert.strictEqual(history.status, "differ", history.why);
+  });
+
+  it("counts a figure that moved on a line that repeats another figure", () => {
+    const before = "Free: 1 project, 1 member.";
+    const after = "Free: 1 project, 2 members.";
+    const verdict = judgePair(answer({ old_terms: ["Free: 1 project, 1 member"], new_terms: ["Free: 1 project, 2 members"], differences: [{ old: "1 project, 1 member", new: "1 project, 2 members" }] }), before, after);
+    assert.strictEqual(verdict.status, "differ", verdict.why);
+  });
+
+  it("cannot settle a pair with a claimed difference it cannot verify, even beside lines one page states", () => {
+    const before = "Free: 3 user seats. SOC 2 compliant.";
+    const after = "Free: 2 user seats. SOC 2 compliant. MCP Server.";
+    const verdict = judgePair(answer({ old_terms: ["Free: 3 user seats"], new_terms: ["Free: 2 user seats"], differences: [{ old: "3 seats", new: "2 seats" }, { old: "", new: "MCP Server" }] }), before, after);
+    assert.deepStrictEqual([verdict.status, verdict.side], ["unquotable", "old"]);
+    assert.strictEqual(verdict.one_sided.length, 1);
+  });
+
+  it("never counts a reworded line, whether it states no value or the same values", () => {
+    const before = "Free: $ 0 /mo. Hosted dashboard. 10,000 events a month.";
+    const after = "Free: $0 you pay AWS directly. Dashboard + AI template editor. 10K events a month.";
+    const verdict = judgePair(
+      answer({
+        old_terms: ["Free: $ 0 /mo"],
+        new_terms: ["Free: $0 you pay AWS directly"],
+        differences: [
+          { old: "Hosted dashboard", new: "Dashboard + AI template editor" },
+          { old: "$ 0 /mo", new: "$0 you pay AWS directly" },
+          { old: "10,000 events a month", new: "10K events a month" },
+        ],
+      }),
+      before,
+      after,
+    );
+    assert.strictEqual(verdict.status, "same", verdict.why);
+    assert.deepStrictEqual(verdict.reworded.map((claim: { why: string }) => claim.why), [
+      "neither the old nor the new words state a value",
+      "the old and the new words state the same values",
+      "the old and the new words state the same values",
+    ]);
+  });
+
+  it("treats a value that only one side of a changed line states as a line only one page states", () => {
+    const before = "Free: 1,000 build minutes.";
+    const after = "Free: 1,000 build minutes, 100 GB bandwidth.";
+    const verdict = judgePair(answer({ old_terms: ["Free: 1,000 build minutes"], new_terms: ["Free: 1,000 build minutes, 100 GB bandwidth"], differences: [{ old: "1,000 build minutes", new: "1,000 build minutes, 100 GB bandwidth" }] }), before, after);
+    assert.strictEqual(verdict.status, "one_sided");
+    assert.strictEqual(verdict.one_sided[0].why, 'only the new words state "100"');
+  });
+
+  it("keeps a counted difference beside lines only one page states, and lists both", () => {
+    const before = "Free: 3 user seats, 5 apps. SOC 2 compliant.";
+    const after = "Free: 2 user seats, 5 apps. SOC 2 compliant. MCP Server.";
+    const verdict = judgePair(answer({ old_terms: ["Free: 3 user seats, 5 apps"], new_terms: ["Free: 2 user seats, 5 apps"], differences: [{ old: "3 user seats", new: "2 user seats" }, { old: "", new: "MCP Server" }] }), before, after);
     assert.strictEqual(verdict.status, "differ");
+    assert.deepStrictEqual(verdict.differences, [{ old: "3 user seats", new: "2 user seats" }]);
+    assert.strictEqual(verdict.one_sided.length, 1);
+  });
+
+  it("counts a plan that the new page no longer offers, from what that page offers in its place", () => {
+    const before = "Pricing. Basic plan: free, 10 GiB storage, 50M request units. Standard plan: from $0.18/hour.";
+    const after = "Pricing. Start with a 30-day trial and $400 of credits. Standard plan: from $0.18/hour.";
+    const verdict = judgePair(answer({ old_terms: ["Basic plan: free, 10 GiB storage, 50M request units"], new_terms: [], offered_instead: ["Start with a 30-day trial and $400 of credits"], differences: [], direction: "narrowed" }), before, after);
+    assert.strictEqual(verdict.status, "differ", verdict.why);
+    assert.strictEqual(verdict.plan, "disappeared");
+    assert.deepStrictEqual(verdict.differences, [{ old: "Basic plan: free, 10 GiB storage, 50M request units", new: "" }]);
+    assert.deepStrictEqual(verdict.offered_instead, ["Start with a 30-day trial and $400 of credits"]);
+    const contradicted = judgePair(answer({ old_terms: ["Basic plan: free, 10 GiB storage, 50M request units"], new_terms: [], offered_instead: ["Start with a 30-day trial and $400 of credits"], same: true }), before, after);
+    assert.deepStrictEqual([contradicted.status, contradicted.side], ["unquotable", "new"]);
+  });
+
+  it("counts a plan that the old page did not offer, from what that page offered in its place", () => {
+    const before = "Pricing. Try the cloud free for 14 days. Serverless: from $25/month.";
+    const after = "Pricing. Free sandbox: a permanent cluster with 1 million vectors. Serverless: from $25/month.";
+    const verdict = judgePair(answer({ old_terms: [], new_terms: ["Free sandbox: a permanent cluster with 1 million vectors"], offered_instead: ["Try the cloud free for 14 days"], direction: "widened" }), before, after);
+    assert.strictEqual(verdict.status, "differ", verdict.why);
+    assert.strictEqual(verdict.plan, "appeared");
+  });
+
+  it("finds no move of a plan that neither page offers, once the reader copies from each page what it offers instead", () => {
+    const before = "Pricing. Start with a 14-day trial. Pro: $25/month.";
+    const after = "Pricing. Start with a 30-day trial. Pro: $25/month.";
+    const absent = judgePair(answer({ old_terms: [], new_terms: [], offered_instead: ["Start with a 14-day trial", "Start with a 30-day trial"] }), before, after);
+    assert.deepStrictEqual([absent.status, absent.why], ["absent", "neither page offers the plan"]);
+    const fromOnePage = judgePair(answer({ old_terms: [], new_terms: [], offered_instead: ["Start with a 14-day trial"] }), before, after);
+    assert.deepStrictEqual([fromOnePage.status, fromOnePage.side], ["unquotable", "both"]);
+    const invented = judgePair(answer({ old_terms: [], new_terms: [], offered_instead: ["Start with a 14-day trial", "Enterprise only"] }), before, after);
+    assert.match(invented.why, /on neither page: "Enterprise only"/);
+  });
+
+  it("does not take a plan for gone while its words are still on the page, or without copying what that page offers instead", () => {
+    const before = "Pricing. Basic plan: free, 10 GiB storage. Standard plan: from $0.18/hour.";
+    const truncated = `Pricing. Standard plan: from $0.18/hour. ${"Features. ".repeat(30)} Basic plan: free, 10 GiB storage.`;
+    const still = judgePair(answer({ old_terms: ["Basic plan: free, 10 GiB storage"], new_terms: [], offered_instead: ["Standard plan: from $0.18/hour"] }), before, truncated);
+    assert.deepStrictEqual([still.status, still.side], ["unquotable", "new"]);
+    assert.strictEqual(still.why, 'the plan\'s words are still on the new page: "Basic plan: free, 10 GiB storage"');
+    const after = "Pricing. Standard plan: from $0.18/hour.";
+    const invented = judgePair(answer({ old_terms: ["Basic plan: free, 10 GiB storage"], new_terms: [], offered_instead: ["Basic plan retired"] }), before, after);
+    assert.deepStrictEqual([invented.status, invented.side], ["unquotable", "new"]);
+    assert.match(invented.why, /not on the new page: "Basic plan retired"/);
+    const unsaid = judgePair(answer({ old_terms: ["Basic plan: free, 10 GiB storage"], new_terms: [] }), before, after);
+    assert.deepStrictEqual([unsaid.status, unsaid.side, unsaid.why], ["unquotable", "new", "no terms quoted from the new page"]);
   });
 
   it("does not count a removed term whose words are still on the new page", () => {
@@ -309,6 +431,25 @@ describe("judging a paired reading by the words it copied from each page", () =>
   });
 });
 
+describe("the values a line of terms states", () => {
+  it("reads each figure once, without its separators, and scales a K, M or B written against it", () => {
+    assert.deepStrictEqual(valuesStated("10,000 calls, 10K triggers, 1.5M rows, 1B tokens, $5.40/mo"), ["10000", "10000", "1500000", "1000000000", "5.4"]);
+  });
+
+  it("does not take a unit for a multiplier", () => {
+    assert.deepStrictEqual(valuesStated("5MB file size, 50GB storage, 2 members, 100 kb"), ["5", "50", "2", "100"]);
+  });
+
+  it("reads 'Unlimited', 'none', 'not included' and 'included' as values, and 'not included' as one value", () => {
+    assert.deepStrictEqual(valuesStated("Unlimited rooms; comments: None; SSO not included; backups included").sort(), ["included", "none", "not included", "unlimited"]);
+    assert.deepStrictEqual(valuesStated("SSO: Not  included"), ["not included"]);
+  });
+
+  it("finds no value in a line that states none", () => {
+    assert.deepStrictEqual(valuesStated("Hosted dashboard and community support"), []);
+  });
+});
+
 describe("parsing the paired reader's answer", () => {
   it("reads a JSON answer, fenced or not, with lists and objects inside it", () => {
     const body = '{"old_terms":["a"],"new_terms":["b"],"same":false,"differences":[{"old":"a","new":"b"}],"direction":"narrowed"}';
@@ -334,6 +475,12 @@ describe("asking the paired reader", () => {
     assert.ok(prompt.includes(`OLD PAGE (saved 2026-02-15, truncated):\n${OLD_PAGE}`));
     assert.ok(prompt.includes(`NEW PAGE (saved 2026-08-28, truncated):\n${NEW_PAGE}`));
     assert.ok(!prompt.includes("our catalogue text"));
+  });
+
+  it("asks the reader, when one page does not offer the plan, for the words that page offers in its place", () => {
+    const prompt = pairedPrompt(LISTING, { day: "2026-02-15", text: OLD_PAGE }, { day: "2026-08-28", text: NEW_PAGE });
+    assert.match(prompt, /If one page does not offer this plan at all, give an empty list for that page's terms, and copy into offered_instead/);
+    assert.ok(prompt.includes('"offered_instead":["<fragment copied from the page that does not offer the plan>"]'), prompt);
   });
 
   it("shows each page up to the re-read's length", () => {
@@ -403,12 +550,27 @@ function termsPairReader() {
   return { readPair, calls };
 }
 
+function linesPairReader() {
+  const calls: string[] = [];
+  const readPair = async (older: Page, newer: Page) => {
+    calls.push(`${older.page} | ${newer.page}`);
+    const [was, wasLine = ""] = (older.text.match(/TERMS=(\w+)/)?.[1] ?? "").split("_");
+    const [now, nowLine = ""] = (newer.text.match(/TERMS=(\w+)/)?.[1] ?? "").split("_");
+    if (!was || !now) return { status: "unquotable", side: !was && !now ? "both" : !was ? "old" : "new", why: "no terms on the page" };
+    const quoted = { old_terms: [`TERMS=${was}`], new_terms: [`TERMS=${now}`] };
+    if (was !== now) return { status: "differ", ...quoted, differences: [{ old: `TERMS=${was}`, new: `TERMS=${now}` }] };
+    if (wasLine !== nowLine) return { status: "one_sided", ...quoted, one_sided: [{ old: wasLine, new: nowLine, why: "one page states it" }], why: "the only differences are lines one page states and the other does not" };
+    return { status: "same", ...quoted };
+  };
+  return { readPair, calls };
+}
+
 const TODAY = "2026-09-27";
 const RECORD_DAY = "2026-08-28";
 const ALL_YEAR = everyDay("2025-10-01", TODAY);
 
-function settle(options: { textDay?: string | null; recordDay?: string; todayTerms: string | null; days?: string[]; termsOn: (day: string) => string | null; archive?: unknown }) {
-  const reader = termsPairReader();
+function settle(options: { textDay?: string | null; recordDay?: string; todayTerms: string | null; days?: string[]; termsOn: (day: string) => string | null; archive?: unknown; reader?: ReturnType<typeof termsPairReader> }) {
+  const reader = options.reader ?? termsPairReader();
   const archive = options.archive ?? archiveOf(options.days ?? ALL_YEAR, options.termsOn);
   return {
     reader,
@@ -423,6 +585,36 @@ function settle(options: { textDay?: string | null; recordDay?: string; todayTer
       readPair: reader.readPair,
     }),
   };
+}
+
+function settlePlanPages(options: { plan: string; instead: string; offeredOn: (day: string) => boolean; offeredToday: boolean }) {
+  const offer = (offered: boolean) => (offered ? options.plan : options.instead);
+  const archive = {
+    captures: async () => ({ captures: everyDay("2026-01-01", TODAY).map((day) => capture(`${day.replaceAll("-", "")}120000`)) }),
+    captureHtml: async ({ timestamp }: { timestamp: string }) => {
+      const day = `${timestamp.slice(0, 4)}-${timestamp.slice(4, 6)}-${timestamp.slice(6, 8)}`;
+      return { html: `<html><body><p>${offer(options.offeredOn(day))}.</p><p>Standard plan: from $0.18/hour.</p><p>${FILLER}</p></body></html>` };
+    },
+  };
+  const client = {
+    complete: async (prompt: string) => {
+      const [, oldPage, newPage] = prompt.split(/(?:OLD|NEW) PAGE \(saved [^)]*\):\n/);
+      const read = (page: string) => (page.includes(options.plan) ? { terms: [options.plan], instead: [] } : { terms: [], instead: [options.instead] });
+      const before = read(oldPage);
+      const after = read(newPage);
+      const same = before.terms.length === after.terms.length;
+      return JSON.stringify({ old_terms: before.terms, new_terms: after.terms, offered_instead: [...before.instead, ...after.instead], same, differences: [], direction: same ? "unchanged" : "changed" });
+    },
+  };
+  return settleAgainstCaptures({
+    url: "https://example.com/pricing",
+    textDay: "2026-02-15",
+    recordDay: RECORD_DAY,
+    todayText: `${offer(options.offeredToday)}. Standard plan: from $0.18/hour. ${FILLER}`,
+    today: TODAY,
+    archive,
+    readPair: pairedReaderFor(client, { vendor: "Example", category: "Databases", tier: "Free" }),
+  });
 }
 
 type Bracket = { last_old: string; first_new: string | null; relative_to_record: string };
@@ -646,6 +838,66 @@ describe("settling a first reading's difference against the page as the Archive 
     });
     assert.strictEqual(settled.outcome, "no_usable_capture");
     assert.deepStrictEqual(settled.tried, [{ day: "2026-02-10", gap_days: 5, side: "before", why: 'the capture settles nothing: "10,000 calls a month" occurs more than once on the old page, so it cannot refute the difference' }]);
+  });
+
+  it("puts a record on the review list, never ours, when the only differences on the record's day are lines one page states", async () => {
+    const { result } = settle({ todayTerms: "A_bandwidth", termsOn: (day) => (day <= "2026-06-09" ? "A" : "A_bandwidth"), reader: linesPairReader() });
+    const settled = await result;
+    assert.strictEqual(settled.outcome, "no_usable_capture");
+    assert.deepStrictEqual(settled.review, [{ old: "", new: "bandwidth", why: "one page states it" }]);
+    assert.deepStrictEqual(settled.compared_with, { page: "capture 2026-08-28", day: "2026-08-28", gap_days: 0, side: "on" });
+    assert.deepStrictEqual(settled.capture, { day: "2026-02-15", gap_days: 0, side: "before" });
+  });
+
+  it("puts a record on the review list when the capture before the record's day agrees but today's page differs only by lines one page states", async () => {
+    const { result } = settle({ todayTerms: "A_bandwidth", days: everyDay("2026-01-01", "2026-08-20"), termsOn: () => "A", reader: linesPairReader() });
+    const settled = await result;
+    assert.strictEqual(settled.outcome, "no_usable_capture");
+    assert.strictEqual(settled.compared_with.page, "today");
+    assert.strictEqual(settled.review.length, 1);
+  });
+
+  it("bisects past captures that differ only by lines one page states, to the capture where a value moved", async () => {
+    const termsOn = (day: string) => (day <= "2026-06-09" ? "A" : day <= "2026-08-05" ? "A_bandwidth" : "B_bandwidth");
+    const { result } = settle({ todayTerms: "B_bandwidth", termsOn, reader: linesPairReader() });
+    const settled = await result;
+    assert.strictEqual(settled.outcome, "vendor_changed");
+    assert.deepStrictEqual(spans(settled.brackets), [["2026-08-05", "2026-08-06", "before"]]);
+    assert.strictEqual(settled.date, "2026-08-06");
+  });
+
+  it("finds no further move when the pages after a move differ only by lines one page states", async () => {
+    const termsOn = (day: string) => (day <= "2026-05-15" ? "A" : day <= "2026-07-15" ? "B" : "B_collections");
+    const { result } = settle({ todayTerms: "B_collections", termsOn, reader: linesPairReader() });
+    const settled = await result;
+    assert.strictEqual(settled.outcome, "vendor_changed");
+    assert.deepStrictEqual(spans(settled.brackets), [["2026-05-15", "2026-05-16", "before"]]);
+    assert.strictEqual(settled.moves_complete, true);
+    assert.strictEqual(settled.date, "2026-05-16");
+  });
+
+  it("dates a plan the page stopped offering, and keeps what it offers instead as the terms on the record's day", async () => {
+    const plan = "Basic plan: free, 10 GiB storage, 50M request units";
+    const instead = "Start with a 30-day trial and $400 of credits";
+    const settled = await settlePlanPages({ plan, instead, offeredOn: (day) => day <= "2026-04-10", offeredToday: false });
+    assert.strictEqual(settled.outcome, "vendor_changed", settled.why);
+    assert.strictEqual(settled.plan, "disappeared");
+    assert.strictEqual(settled.previous_state, "Basic plan: free, 10 GiB storage, 50M request units");
+    assert.deepStrictEqual(settled.offered_instead, ["Start with a 30-day trial and $400 of credits"]);
+    assert.deepStrictEqual(spans(settled.brackets), [["2026-04-10", "2026-04-11", "before"]]);
+    assert.strictEqual(settled.moves_complete, true);
+    assert.strictEqual(settled.date, "2026-04-11");
+  });
+
+  it("dates a plan the page began offering, bisecting past captures that offer something else in its place", async () => {
+    const plan = "Free sandbox: a permanent cluster with 1 million vectors";
+    const instead = "Try the cloud free for 14 days";
+    const settled = await settlePlanPages({ plan, instead, offeredOn: (day) => day >= "2026-06-01", offeredToday: true });
+    assert.strictEqual(settled.outcome, "vendor_changed", settled.why);
+    assert.strictEqual(settled.plan, "appeared");
+    assert.strictEqual(settled.previous_state, instead);
+    assert.deepStrictEqual(spans(settled.brackets), [["2026-05-31", "2026-06-01", "before"]]);
+    assert.strictEqual(settled.date, "2026-06-01");
   });
 
   it("brackets each move when the terms moved more than once, and leaves the record's date to be split by hand", async () => {
