@@ -4468,7 +4468,7 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("Self-Hosted"), "Should have self-hosted section");
     assert.ok(html.includes("Specialized"), "Should have specialized section");
     assert.ok(html.includes("Growth Cost Trap"), "Should have growth cost trap section");
-    assert.ok(html.includes("Best for Each Use Case"), "Should have best-for section");
+    assert.ok(!html.includes("Best for Each Use Case"), "Should rank no service in a best-for section");
     assert.ok(html.includes("Hidden Costs and Gotchas"), "Should have hidden costs section");
     assert.ok(html.includes("Pricing Change Timeline"), "Should have timeline section");
     assert.ok(html.includes("mcp-cta"), "Should have MCP CTA");

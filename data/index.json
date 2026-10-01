@@ -3612,7 +3612,7 @@
     {
       "vendor": "Brex",
       "category": "Startup Perks",
-      "description": "$350,000+ in aggregate partner perks for Brex cardholders — includes $5K AWS credits, $2.5K OpenAI credits, $200K Google Cloud, 20 free GitHub Enterprise seats, 6mo free Notion, $500 Anthropic credits, and 30+ more partner discounts",
+      "description": "Over $350K in partner discounts and credits for Brex customers, including up to $5K of AWS credits for new Brex customers (subject to AWS Activate eligibility), $1K of OpenAI credits for a year, up to $200K of Google Cloud and Firebase credits over 2 years, 6 months of Notion Plus and 30% off Slack for 12 months.",
       "tier": "Partner Perks",
       "url": "https://www.brex.com/solutions/startups",
       "tags": [
@@ -15764,9 +15764,9 @@
     {
       "vendor": "Authgear",
       "category": "Auth",
-      "description": "Bring Passwordless, OTPs, 2FA, SSO to your apps in minutes. All Front-end included. Free tier: unlimited MAUs, up to 2 applications, 100 SMS/month.",
+      "description": "Bring Passwordless, OTPs, 2FA, SSO to your apps in minutes. All Front-end included. Free tier: unlimited MAUs, up to 2 applications, 2 admin seats, 100 SMS/WhatsApp messages.",
       "tier": "Free",
-      "url": "https://www.authgear.com",
+      "url": "https://www.authgear.com/pricing",
       "tags": [
         "auth",
         "authentication",
@@ -15775,9 +15775,9 @@
       ],
       "verifiedDate": "2026-07-13",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Authgear but states no amount, tier or rate we can read"
+        "checked": "2026-10-01",
+        "outcome": "ok",
+        "detail": "the page names Authgear as \"authgear\" and states \"$ 0\""
       }
     },
     {
@@ -15830,7 +15830,7 @@
       "category": "Auth",
       "description": "A complete authorization management system for authoring, testing, and deploying access policies. Fine-grained authorization and access control, free up to 100 monthly active principals.",
       "tier": "Free",
-      "url": "https://www.cerbos.dev/product-cerbos-hub",
+      "url": "https://www.cerbos.dev/pricing",
       "tags": [
         "auth",
         "authentication",
@@ -15839,9 +15839,9 @@
       ],
       "verifiedDate": "2026-07-13",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Cerbos Hub but states no amount, tier or rate we can read"
+        "checked": "2026-10-01",
+        "outcome": "ok",
+        "detail": "the page names Cerbos Hub as \"cerbos hub\" and states \"$0\""
       }
     },
     {
@@ -16036,7 +16036,7 @@
       "category": "Auth",
       "description": "Authentication for B2B SaaS — free up to 10,000 MAUs and 10K Transactional Emails (with a watermark branding: \"Powered by PropelAuth\").",
       "tier": "Free",
-      "url": "https://propelauth.com",
+      "url": "https://www.propelauth.com/pricing",
       "tags": [
         "auth",
         "authentication",
@@ -16045,15 +16045,15 @@
       ],
       "verifiedDate": "2026-07-11",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names PropelAuth but states no amount, tier or rate we can read"
+        "checked": "2026-10-01",
+        "outcome": "ok",
+        "detail": "the page names PropelAuth as \"propelauth\" and states amounts, none of which we matched to the terms we publish"
       }
     },
     {
-      "vendor": "Stack Auth",
+      "vendor": "Hexclave",
       "category": "Auth",
-      "description": "Now Hexclave — stack-auth.com redirects to hexclave.com, and the GitHub org stack-auth/stack-auth redirects to hexclave/hexclave (same repository). Open-source user infrastructure: auth, teams, RBAC, API keys, emails. Free tier is $0 forever: up to 10,000 auth users, 1 dashboard admin, 1,000 emails per month, email/OAuth/magic links, community support. Also self-hostable for free.",
+      "description": "Open-source user infrastructure, formerly Stack Auth: auth, teams, RBAC, API keys, emails. Free tier is $0 forever: up to 10,000 auth users, 1 dashboard admin, 1,000 emails per month, email/OAuth/magic links, community support. Also self-hostable for free.",
       "tier": "Free",
       "url": "https://www.hexclave.com/pricing",
       "tags": [
@@ -16064,9 +16064,28 @@
       ],
       "verifiedDate": "2026-07-09",
       "source_check": {
-        "checked": "2026-09-14",
-        "outcome": "does_not_name_vendor",
-        "detail": "the page never names Stack Auth and is not served from its domain"
+        "checked": "2026-10-01",
+        "outcome": "ok",
+        "detail": "the page names Hexclave as \"hexclave\" and states \"$0,\" and \"$0\" and \"1,000 emails per month\""
+      }
+    },
+    {
+      "vendor": "Amazon Cognito",
+      "category": "Auth",
+      "description": "User sign-up and sign-in for web and mobile apps. Free tier: 10,000 monthly active users per account on the Lite and Essentials tiers, with no 12-month limit; user pools created on or before November 22, 2024 keep 50,000. Users who sign in through SAML or OIDC federation: 50 MAU free. The Plus tier and machine-to-machine token requests are paid only.",
+      "tier": "Free",
+      "url": "https://aws.amazon.com/cognito/pricing/",
+      "tags": [
+        "auth",
+        "authentication",
+        "identity",
+        "aws"
+      ],
+      "verifiedDate": "2026-10-01",
+      "source_check": {
+        "checked": "2026-10-01",
+        "outcome": "ok",
+        "detail": "the page names Amazon Cognito as \"amazon cognito\" and states \"50 MAUs per month\""
       }
     },
     {

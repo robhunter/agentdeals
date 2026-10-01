@@ -37,7 +37,7 @@ const CORRECTED: [string, string][] = [
   ["/q2-pricing-preview-2026", '<meta name="description" content="Upcoming developer tool pricing changes for Q2 2026. Hetzner +30-50%, Google Tenor shutdown, odrive removal, and more.'],
   ["/github-actions-alternatives", "remains strong for GitHub-hosted runners.</p>"],
   ["/database-free-tier-comparison-2026", "Valkey is now the leading open-source alternative, and Dragonfly a source-available one."],
-  ["/free-saas-stack", "At 100K users: Clerk ~$175/mo, Supabase ~$25/mo (cheapest at scale)."],
+  ["/free-saas-stack", "At 100,000 users: Clerk costs $1,025 a month; Supabase costs $25 a month on Pro."],
 ];
 
 let server: ChildProcess;
