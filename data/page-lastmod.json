@@ -26,7 +26,7 @@
       "changed": "2026-10-01"
     },
     "/ai-ml-alternatives": {
-      "hash": "ad9e3f0b297559db",
+      "hash": "20e6217970e5f7ff",
       "changed": "2026-10-01"
     },
     "/alternative-to": {
@@ -802,11 +802,11 @@
       "changed": "2026-09-19"
     },
     "/aws-app-runner-migration": {
-      "hash": "fec58b2c585d2d0a",
+      "hash": "8f98409f40883be4",
       "changed": "2026-10-01"
     },
     "/aws-free-tier-2026": {
-      "hash": "770688a17d864165",
+      "hash": "02c44dfd9808f3d3",
       "changed": "2026-10-01"
     },
     "/azure-free-tier-2026": {
@@ -1320,7 +1320,7 @@
       "changed": "2026-10-01"
     },
     "/ci-cd-pricing": {
-      "hash": "a569966515c1785b",
+      "hash": "60b140b33ebc2c8f",
       "changed": "2026-10-01"
     },
     "/cicd-free-tier-comparison-2026": {
@@ -1332,7 +1332,7 @@
       "changed": "2026-09-28"
     },
     "/cloud-free-tier-comparison-2026": {
-      "hash": "66a5ecc3e5c5b73c",
+      "hash": "f692c6c43153dedb",
       "changed": "2026-10-01"
     },
     "/cloudflare-pages-vs-vercel": {
@@ -1688,8 +1688,8 @@
       "changed": "2026-09-27"
     },
     "/compare/configcat-vs-hypertune": {
-      "hash": "13adbe33c5d45951",
-      "changed": "2026-09-27"
+      "hash": "bfcc05de698eed77",
+      "changed": "2026-10-01"
     },
     "/compare/container-registry-service-vs-docker-hub": {
       "hash": "9892d4b2cde822a3",
@@ -2156,24 +2156,24 @@
       "changed": "2026-09-20"
     },
     "/compare/harness-feature-flags-vs-hypertune": {
-      "hash": "4dc0f8aff17b0dea",
-      "changed": "2026-09-27"
+      "hash": "f3edfe4f18f695a0",
+      "changed": "2026-10-01"
     },
     "/compare/harness-feature-flags-vs-toggled-dev": {
       "hash": "dcf82f0c8480c57c",
       "changed": "2026-09-28"
     },
     "/compare/hcp-terraform-vs-deployment-io": {
-      "hash": "fbdfe460626b9e7b",
-      "changed": "2026-09-28"
+      "hash": "f42bae942f3139cd",
+      "changed": "2026-10-01"
     },
     "/compare/hcp-terraform-vs-ovhcloud": {
-      "hash": "fc9003c8d258a76a",
-      "changed": "2026-09-30"
+      "hash": "803865ad43b48909",
+      "changed": "2026-10-01"
     },
     "/compare/hcp-terraform-vs-spacelift": {
-      "hash": "66f5f8bb0370d6e8",
-      "changed": "2026-09-28"
+      "hash": "73f575934ffc70d8",
+      "changed": "2026-10-01"
     },
     "/compare/healthchecks-io-vs-inspector-dev": {
       "hash": "1bba7e69fcea985e",
@@ -2216,8 +2216,8 @@
       "changed": "2026-09-28"
     },
     "/compare/hypertune-vs-toggled-dev": {
-      "hash": "228351f9f8024c14",
-      "changed": "2026-09-28"
+      "hash": "7d9f73f126ffd03c",
+      "changed": "2026-10-01"
     },
     "/compare/influxdb-cloud-vs-nhost": {
       "hash": "6a4c3ccb0508a1b4",
@@ -2922,7 +2922,7 @@
       "changed": "2026-09-26"
     },
     "/digest/2026-w14": {
-      "hash": "479545148402d977",
+      "hash": "1573012fc0e839f5",
       "changed": "2026-10-01"
     },
     "/digest/2026-w15": {
@@ -3002,7 +3002,7 @@
       "changed": "2026-10-01"
     },
     "/digest/2026-w35": {
-      "hash": "0c9f9e290c382116",
+      "hash": "e370bbce28434c80",
       "changed": "2026-10-01"
     },
     "/digest/2026-w36": {
@@ -3022,7 +3022,7 @@
       "changed": "2026-09-28"
     },
     "/digest/2026-w40": {
-      "hash": "015473413a89ac1b",
+      "hash": "ae9545f9fd083f01",
       "changed": "2026-10-01"
     },
     "/digest/2026-w41": {
@@ -3078,11 +3078,11 @@
       "changed": "2026-09-12"
     },
     "/events/google-cloud-next-2026": {
-      "hash": "b72a3c940250a19e",
+      "hash": "8e760cb55e9e4b27",
       "changed": "2026-10-01"
     },
     "/events/google-io-2026": {
-      "hash": "a273755c35f3882e",
+      "hash": "49d2e4f60a9b0f7e",
       "changed": "2026-10-01"
     },
     "/events/microsoft-build-2026": {
@@ -3093,7 +3093,7 @@
       "daily": true
     },
     "/feed.xml": {
-      "hash": "8ecef2daa13e064d",
+      "hash": "8cb555cf0160d18b",
       "changed": "2026-10-01"
     },
     "/firebase-alternatives": {
@@ -3104,11 +3104,11 @@
       "daily": true
     },
     "/free-ai-stack": {
-      "hash": "5846ddfc72735e73",
+      "hash": "96ed8139e9e543f7",
       "changed": "2026-10-01"
     },
     "/free-devops-stack": {
-      "hash": "f1bdb4e3b6f095ec",
+      "hash": "2c3e7063fd3f3bfc",
       "changed": "2026-10-01"
     },
     "/free-django-stack": {
@@ -3128,7 +3128,7 @@
       "changed": "2026-10-01"
     },
     "/free-llm-apis": {
-      "hash": "17195f4dbd11bfde",
+      "hash": "574054350ef108ba",
       "changed": "2026-10-01"
     },
     "/free-nextjs-stack": {
@@ -3148,7 +3148,7 @@
       "changed": "2026-10-01"
     },
     "/free-tier-tracker": {
-      "hash": "0adee4b372251729",
+      "hash": "b27f8d17f63bde70",
       "changed": "2026-10-01"
     },
     "/freshness": {
@@ -3159,11 +3159,11 @@
       "changed": "2026-10-01"
     },
     "/gcp-free-tier-2026": {
-      "hash": "eb61faf17d623427",
+      "hash": "6021f9025a3e2e19",
       "changed": "2026-10-01"
     },
     "/gemini-api-pricing-2026": {
-      "hash": "20c665d2f498fded",
+      "hash": "a867fe689f793fd6",
       "changed": "2026-10-01"
     },
     "/github-actions-alternatives": {
@@ -3207,7 +3207,7 @@
       "changed": "2026-10-01"
     },
     "/hcp-terraform-migration": {
-      "hash": "a1241ae68a08657b",
+      "hash": "52ee6a04e37f9171",
       "changed": "2026-10-01"
     },
     "/heroku-alternatives": {
@@ -3227,7 +3227,7 @@
       "changed": "2026-10-01"
     },
     "/hosting-free-tier-comparison-2026": {
-      "hash": "376cc25af4e92f10",
+      "hash": "e1234d13e15f7e1b",
       "changed": "2026-10-01"
     },
     "/hosting-pricing": {
@@ -3239,7 +3239,7 @@
       "changed": "2026-10-01"
     },
     "/llm-api-pricing": {
-      "hash": "22249f726be1b5f0",
+      "hash": "347b9ba9123add11",
       "changed": "2026-10-01"
     },
     "/localstack-alternatives": {
@@ -3306,11 +3306,11 @@
       "changed": "2026-10-01"
     },
     "/q1-2026-developer-pricing-report": {
-      "hash": "1d8c047ac42127d0",
+      "hash": "1ffed369b7364293",
       "changed": "2026-10-01"
     },
     "/q2-pricing-preview-2026": {
-      "hash": "6bc0671c90de3f03",
+      "hash": "e35dd1d74e7a19b0",
       "changed": "2026-10-01"
     },
     "/railway-vs-render": {
@@ -3414,11 +3414,11 @@
       "changed": "2026-10-01"
     },
     "/reports/2026-03": {
-      "hash": "7c8cf5e343256456",
+      "hash": "0d2fabf704de2dd5",
       "changed": "2026-10-01"
     },
     "/reports/2026-04": {
-      "hash": "8752638f0dbd0f6c",
+      "hash": "31c731fddd5af1f8",
       "changed": "2026-10-01"
     },
     "/reports/2026-05": {
@@ -3454,7 +3454,7 @@
       "changed": "2026-10-01"
     },
     "/serverless-free-tier-comparison-2026": {
-      "hash": "3005229f78a114e2",
+      "hash": "afd456bf3c6afcd2",
       "changed": "2026-10-01"
     },
     "/setup": {
@@ -3465,11 +3465,11 @@
       "daily": true
     },
     "/stability": {
-      "hash": "92304f88bdbf8275",
+      "hash": "e45a4cda461d2b8d",
       "changed": "2026-10-01"
     },
     "/stack-check": {
-      "hash": "b110bcd68185fc72",
+      "hash": "edb69ccc71844c68",
       "changed": "2026-10-01"
     },
     "/stacks": {
@@ -3509,7 +3509,7 @@
       "changed": "2026-10-01"
     },
     "/storage-comparison-2026": {
-      "hash": "e8034de7532490da",
+      "hash": "17fb4239c7711281",
       "changed": "2026-10-01"
     },
     "/supabase-vs-firebase": {
@@ -3525,7 +3525,7 @@
       "changed": "2026-10-01"
     },
     "/terraform-alternatives": {
-      "hash": "70cfb3facd379bc6",
+      "hash": "b682fee368c892f0",
       "changed": "2026-10-01"
     },
     "/terraform-cloud-free-tier-removed": {
@@ -3541,7 +3541,7 @@
       "changed": "2026-10-01"
     },
     "/this-week": {
-      "hash": "df41a21c464db8f2",
+      "hash": "7b561b848faff070",
       "changed": "2026-10-01"
     },
     "/trends": {
@@ -3586,7 +3586,7 @@
       "changed": "2026-10-01"
     },
     "/trends/cloud-hosting": {
-      "hash": "9d9ad8563aaeb2e3",
+      "hash": "69f723c80e0070d8",
       "changed": "2026-10-01"
     },
     "/trends/cloud-iaas": {
@@ -3658,8 +3658,8 @@
       "changed": "2026-09-28"
     },
     "/trends/feature-flags": {
-      "hash": "05590745e1ee7a68",
-      "changed": "2026-09-28"
+      "hash": "8b4de4a6714c63b4",
+      "changed": "2026-10-01"
     },
     "/trends/forms": {
       "hash": "e4757fb694554b7d",
@@ -6316,7 +6316,7 @@
       "daily": true
     },
     "/vendor/hypertune": {
-      "hash": "749d258a8213bbe8",
+      "hash": "afb3797b9af8e965",
       "changed": "2026-10-01"
     },
     "/vendor/hyperui": {
