@@ -1,0 +1,43 @@
+name: Settle first readings against the Archive (sample of known outcomes)
+
+on:
+  push:
+    branches:
+      - settle-sample-1952
+
+permissions:
+  contents: read
+
+jobs:
+  settle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24.20.0"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Settle the sample
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+        run: node scripts/settle-discovered-records.js --include-resolved --vendors "Terrateam,Foursquare,Liveblocks,PandaStack,DBOS,Directus,Awardspace.com,DNSExit,dnspod.com,forwardemail.net,Deepnote,Wraps,lost-pixel.com,IP Geolocation API by ipwho.org,OneSignal,InfluxDB Cloud,IPTrace,Webvizio,MEGA,Storj,Penpot,Wufoo" --log-reads --out settled-sample.json
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: settled-sample
+          path: |
+            settled-sample.json
+            settled-sample.jsonl
+          if-no-files-found: warn
