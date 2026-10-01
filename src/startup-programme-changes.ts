@@ -18,6 +18,7 @@ export const STARTUP_PROGRAMME_LISTINGS: readonly ProgrammeListing[] = [
   { vendor: "Ramp", tier: "Partner Rewards" },
   { vendor: "SVB (Silicon Valley Bank)", tier: "Banking Offers" },
   { vendor: "PostHog", tier: "YC Deal" },
+  { vendor: "PostHog", tier: "Startup Program" },
   { vendor: "Amazon Kiro (AWS Startups)", tier: "Startup Program" },
   { vendor: "Amplitude", tier: "Startup Scholarship" },
   { vendor: "Segment", tier: "Startup Program" },

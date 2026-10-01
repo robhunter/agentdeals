@@ -17,6 +17,7 @@ const CATALOGUE = [
   "Stripe Atlas", "Stripe",
   "Amazon Kiro (AWS Startups)", "Kiro",
   "Segment", "IBM Cloud",
+  "PostHog", "PostHog", "PostHog",
 ].map((vendor) => ({ vendor }));
 
 function kept(changes: { vendor: string; tier?: string | null }[]): string[] {
@@ -42,6 +43,10 @@ describe("a startup programme's changes are the records about its own catalogue 
 
   it("keeps the records of programmes the page no longer lists, so their ending shows", () => {
     assert.deepStrictEqual(kept([{ vendor: "Segment" }, { vendor: "IBM Cloud" }]), ["Segment/-", "IBM Cloud/-"]);
+  });
+
+  it("keeps the records of both PostHog programme listings, and none of its free tier's", () => {
+    assert.deepStrictEqual(kept([{ vendor: "PostHog", tier: "YC Deal" }, { vendor: "PostHog", tier: "Startup Program" }, { vendor: "PostHog", tier: "Free" }]), ["PostHog/YC Deal", "PostHog/Startup Program"]);
   });
 
   it("keeps the records of both Microsoft programme listings", () => {
