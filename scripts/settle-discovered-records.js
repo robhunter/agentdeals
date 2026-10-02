@@ -80,7 +80,7 @@ export function matchesSharingOnlyTheTierName(readings, tier) {
   );
 }
 
-function worthAskingAgain(result) {
+export function worthAskingAgain(result) {
   return result.outcome === "reader_failed" || String(result.why ?? "").startsWith("the Archive did not answer");
 }
 
