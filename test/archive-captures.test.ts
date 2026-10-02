@@ -6,6 +6,7 @@ const {
   parseCdxRows,
   nearestCapture,
   captureUrl,
+  archivedCopyUrl,
   createArchiveClient,
   dayOurTextEntered,
   comparableText,
@@ -795,6 +796,14 @@ describe("the captures a record is judged on", () => {
   });
 });
 
+describe("the two addresses of an archived copy", () => {
+  it("reads a copy's raw page from one address, and gives readers the Archive's own address for the copy", () => {
+    const copy = capture("20260215120000");
+    assert.strictEqual(captureUrl(copy), "https://web.archive.org/web/20260215120000id_/https://example.com/pricing");
+    assert.strictEqual(archivedCopyUrl(copy), "https://web.archive.org/web/20260215120000/https://example.com/pricing");
+  });
+});
+
 describe("settling a first reading's difference against the page as the Archive stored it", () => {
   it("is unsettled when our text's day is unknown, and asks the Archive nothing", async () => {
     const { result, archive, reader } = settle({ textDay: null, todayTerms: "B", termsOn: () => "A" });
@@ -807,7 +816,7 @@ describe("settling a first reading's difference against the page as the Archive 
     const { result } = settle({ todayTerms: "B", termsOn: (day) => (day <= "2026-04-10" ? "A" : "B") });
     const settled = await result;
     assert.strictEqual(settled.outcome, "vendor_changed");
-    assert.deepStrictEqual(settled.capture, { day: "2026-02-15", gap_days: 0, side: "before" });
+    assert.deepStrictEqual(settled.capture, { day: "2026-02-15", gap_days: 0, side: "before", url: "https://web.archive.org/web/20260215120000/https://example.com/pricing" });
     assert.deepStrictEqual(settled.compared_with, { page: "capture 2026-08-28", day: "2026-08-28", gap_days: 0, side: "on" });
     assert.strictEqual(settled.previous_state, "TERMS=A");
     assert.deepStrictEqual(settled.terms_on_record_day, ["TERMS=B"]);
@@ -830,7 +839,7 @@ describe("settling a first reading's difference against the page as the Archive 
     const { result, archive } = settle({ todayTerms: "B", days: ["2024-03-01", "2026-08-28"], termsOn: () => "B" });
     const settled = await result;
     assert.strictEqual(settled.outcome, "ours");
-    assert.deepStrictEqual(settled.capture, { day: "2024-03-01", gap_days: 716, side: "before" });
+    assert.deepStrictEqual(settled.capture, { day: "2024-03-01", gap_days: 716, side: "before", url: "https://web.archive.org/web/20240301120000/https://example.com/pricing" });
     assert.deepStrictEqual((archive as { listed: Array<{ from: string | null }> }).listed.map((ask) => ask.from), [null]);
   });
 
@@ -924,13 +933,13 @@ describe("settling a first reading's difference against the page as the Archive 
     const { result } = settle({ todayTerms: "B", days: everyDay("2026-03-01", TODAY), termsOn: (day) => (day <= "2026-05-20" ? "A" : "B") });
     const settled = await result;
     assert.strictEqual(settled.outcome, "vendor_changed");
-    assert.deepStrictEqual(settled.capture, { day: "2026-03-01", gap_days: 14, side: "after" });
+    assert.deepStrictEqual(settled.capture, { day: "2026-03-01", gap_days: 14, side: "after", url: "https://web.archive.org/web/20260301120000/https://example.com/pricing" });
     assert.strictEqual(settled.date, "2026-05-21");
   });
 
   it(`uses a capture after our text's day only within ${CAPTURE_WINDOW_DAYS} days of it`, async () => {
     const inside = await settle({ todayTerms: "B", days: ["2026-04-16", "2026-08-28"], termsOn: (day) => (day <= "2026-04-16" ? "A" : "B") }).result;
-    assert.deepStrictEqual(inside.capture, { day: "2026-04-16", gap_days: 60, side: "after" });
+    assert.deepStrictEqual(inside.capture, { day: "2026-04-16", gap_days: 60, side: "after", url: "https://web.archive.org/web/20260416120000/https://example.com/pricing" });
     const outside = await settle({ todayTerms: "B", days: ["2026-04-17", "2026-08-28"], termsOn: (day) => (day <= "2026-04-17" ? "A" : "B") }).result;
     assert.strictEqual(outside.outcome, "no_usable_capture");
     assert.deepStrictEqual(outside.tried, []);
@@ -1007,7 +1016,7 @@ describe("settling a first reading's difference against the page as the Archive 
     assert.strictEqual(settled.outcome, "no_usable_capture");
     assert.deepStrictEqual(settled.review, [{ old: "", new: "bandwidth", why: "one page states it" }]);
     assert.deepStrictEqual(settled.compared_with, { page: "capture 2026-08-28", day: "2026-08-28", gap_days: 0, side: "on" });
-    assert.deepStrictEqual(settled.capture, { day: "2026-02-15", gap_days: 0, side: "before" });
+    assert.deepStrictEqual(settled.capture, { day: "2026-02-15", gap_days: 0, side: "before", url: "https://web.archive.org/web/20260215120000/https://example.com/pricing" });
   });
 
   it("puts a record on the review list when the capture before the record's day agrees but today's page differs only by lines one page states", async () => {

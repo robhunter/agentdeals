@@ -107,7 +107,7 @@ export async function settleFirstReadings({ changes, offers, today, archive, pai
   const backlog = inShard(firstReadingsInForce(changes, { includeResolved }).filter((record) => !vendors || vendors.includes(record.vendor)), shard).slice(0, limit);
   const settleOne = async (record) => {
     const badge = badgeSetBy(record);
-    const subject = { vendor: record.vendor, date: record.date, change_type: record.change_type, source_url: record.source_url, resolution: record.resolution?.state ?? null, badge };
+    const subject = { record_key: recordKey(record), vendor: record.vendor, date: record.date, change_type: record.change_type, source_url: record.source_url, resolution: record.resolution?.state ?? null, badge };
     const listing = listingFor(record, offers);
     const page = await fetchToday(record.source_url);
     const readings = [];

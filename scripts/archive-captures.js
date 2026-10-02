@@ -70,6 +70,10 @@ export function captureUrl(capture) {
   return `${WAYBACK}/${capture.timestamp}id_/${capture.original}`;
 }
 
+export function archivedCopyUrl(capture) {
+  return `${WAYBACK}/${capture.timestamp}/${capture.original}`;
+}
+
 function retryAfterMs(response, fallbackMs) {
   const header = response.headers?.get?.("retry-after");
   const seconds = header ? Number(header) : NaN;
@@ -807,7 +811,7 @@ export async function settleAgainstCaptures({ url, finalUrl, textDay, recordDay,
       tried.push({ ...at, why: settled.why });
       continue;
     }
-    return { ...settled, text_day: textDay, record_day: judgedOn, capture: at, reads, ...(tried.length ? { tried } : {}) };
+    return { ...settled, text_day: textDay, record_day: judgedOn, capture: { ...at, url: archivedCopyUrl(capture) }, reads, ...(tried.length ? { tried } : {}) };
   }
   return unsettled({
     outcome: "no_usable_capture",
