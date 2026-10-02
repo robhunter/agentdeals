@@ -213,6 +213,22 @@ describe("every surface that dates a record the archive check settled as ours", 
     assert.deepStrictEqual(entry.archive_check, oursRecord().archive_check);
   });
 
+  it("documents every field of the check it serves on /api/changes", async () => {
+    const schema = JSON.parse(await (await get("/openapi.json")).text());
+    const documented = schema.components.schemas.PublishedDealChange.allOf[1].properties.archive_check.properties;
+    for (const field of Object.keys(oursRecord().archive_check)) assert.ok(documented[field]?.description, `archive_check.${field} is served but not documented`);
+    assert.deepStrictEqual(
+      Object.fromEntries(["capture_day", "capture", "stated_then", "recorded_as"].map((field) => [field, documented[field].description])),
+      {
+        capture_day: "Where outcome is ours or removal_stated_before: the day of the archived copy from when our listing text was written.",
+        capture: "That copy's address in the Internet Archive.",
+        stated_then: "The line in that copy that settled the check, as the copy prints it: the terms the record called new (ours), or the removal (removal_stated_before).",
+        recorded_as: "Where outcome is ours: the change type our re-read recorded. The record's change_type is record_corrected.",
+      },
+    );
+    assert.ok(documented.recorded_as.enum.includes(oursRecord().archive_check.recorded_as), JSON.stringify(documented.recorded_as.enum));
+  });
+
   it("labels the record in the compare tool's browser code as the server labels it", async () => {
     const tool = await (await get("/compare-tool")).text();
     const constants = [...tool.matchAll(COMPARE_TOOL_CONSTANTS)];
