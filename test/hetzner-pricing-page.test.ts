@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 import {
   HETZNER_APRIL_CHANGES,
   HETZNER_AX102_GERMANY,
+  HETZNER_AX42_GERMANY,
   HETZNER_CLOUD_PLANS,
   HETZNER_PRICES_READ,
   HETZNER_SINGAPORE_EXAMPLE,
@@ -137,12 +138,11 @@ describe("the pricing page prices what Hetzner sells today", () => {
       ...HETZNER_CLOUD_PLANS.map(p => `€${p.eur.toFixed(2)}`),
       ...HETZNER_APRIL_CHANGES.flatMap(c => [c.before, c.after]),
       `€${HETZNER_SINGAPORE_EXAMPLE.eur.toFixed(2)}`,
-      `€${HETZNER_AX102_GERMANY.beforeApril.toFixed(2)}`,
-      `€${HETZNER_AX102_GERMANY.afterApril.toFixed(2)}`,
+      ...[HETZNER_AX42_GERMANY, HETZNER_AX102_GERMANY].flatMap(server => Object.values(server)).map(price => `€${price.toFixed(2)}`),
     ]);
     const quoted = new Set(visible(withoutItemsOrRowsHeadedByAnotherVendor(body)).match(/€\d+\.\d{2}/g) ?? []);
     const strays = [...quoted].filter(price => !allowed.has(price));
-    assert.deepEqual(strays, [], `prices with no plan or April row behind them: ${strays.join(", ")}`);
+    assert.deepEqual(strays, [], `prices with no plan, April row or dedicated-server figure behind them: ${strays.join(", ")}`);
   });
 
   it("does not describe a completed price change as still to come", async () => {
@@ -213,14 +213,38 @@ describe("the April 1 table holds only rows from Hetzner's April price list", ()
 
   it("dates the memory upgrade rise to February, at the prices Hetzner's add-on list gives", async () => {
     const text = visible((await get("/hetzner-pricing-2026")).body);
-    assert.ok(text.includes("Hetzner raised them in February: its add-on price list, last changed 2026-02-17, put a 64 GB DDR5 ECC step at €111 a month, up from €22, and a 32 GB step at €66, up from €14."));
+    assert.ok(text.includes("Hetzner raised them in February: its add-on price list of 2026-02-17 put a 64 GB DDR5 ECC step at €111 a month, up from €22, and a 32 GB step at €66, up from €14."));
     assert.ok(text.includes("128 GB as two 64 GB DDR5 ECC steps went from €44 to €222 a month"));
-    assert.ok(text.includes(`an AX102 with 128 GB built in cost €${HETZNER_AX102_GERMANY.afterApril.toFixed(2)} a month in Germany`));
+    assert.ok(text.includes("Until 15 June, adding 128 GB of memory that way cost more than a whole AX102 server with 128 GB built in (€107.30 a month before April, €122.30 after, in Germany)."));
+  });
+
+  it("gives the range dedicated servers rose by in April, then what a new AX42 and AX102 cost, directly after the range for cloud servers", async () => {
+    const text = visible((await get("/hetzner-pricing-2026")).body);
+    assert.ok(text.includes(
+      "against 30-37% in euros. Dedicated servers rose 2-21% in euros and 3-26% in dollars on 1 April 2026. In Germany, the AX42 went from €47.30 to €57.30. A new AX42 now costs €97.30 and a new AX102 €257.30, excluding IPv4, up from €57.30 and €122.30 after April but down from the initial June prices of €187.30 and €452.30, cut on 30 June. Memory upgrades for dedicated servers are not in the April table.",
+    ));
+  });
+
+  it("no longer advises bundling memory in a dedicated server, which new orders pay the June price for", async () => {
+    const { body } = await get("/hetzner-pricing-2026");
+    for (const retired of ["last changed 2026-02-17", "Bundle RAM in Dedicated Servers", "where RAM is bundled"]) {
+      assert.ok(!body.includes(retired), retired);
+    }
+    assert.ok(visible(body).includes("128 GB as two 64 GB DDR5 ECC steps went from €44 to €222 a month. Consider auction servers."));
   });
 
   it("states none of the figures that were not Hetzner's", async () => {
     const text = visible((await get("/hetzner-pricing-2026")).body);
     assert.doesNotMatch(text, /575%|€45\.88|€264\.00|€49\.73|€51\.22|US\/SG object storage|cost €124/);
+  });
+});
+
+describe("what /hetzner-pricing-2026 says the June round did", () => {
+  it("ends its opening paragraph with the rise of each cloud line in Germany and Finland", async () => {
+    const { body } = await get("/hetzner-pricing-2026");
+    const summary = body.slice(body.indexOf('<div class="executive-summary">'));
+    const opening = visible(summary.slice(0, summary.indexOf("</p>"))).trim();
+    assert.ok(opening.endsWith("The June 15 adjustment raised Regular Performance (CPX) plans 144-175%, General Purpose (CCX) plans 113-173%, and Cost-Optimized (CX, CAX) plans 30-38% in Germany and Finland."), opening);
   });
 });
 
