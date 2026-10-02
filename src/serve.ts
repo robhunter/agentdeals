@@ -19523,8 +19523,8 @@ mcpCtaCss() + "\n" +
   "</div>\n" +
 
   "<div class=\"story-card\">\n" +
-    "<h3>HCP Terraform Free Tier Discontinued</h3>\n" +
-    "<span class=\"story-impact\" style=\"background:#f8514922;color:#f85149\">Free Tier Removed &middot; High Impact</span>\n" +
+    "<h3>HCP Terraform Legacy Free Plan Ended, 500 Resource Cap</h3>\n" +
+    "<span class=\"story-impact\" style=\"background:#8b5cf622;color:#8b5cf6\">Pricing Restructured &middot; High Impact</span>\n" +
     "<p>HashiCorp discontinued the legacy HCP Terraform free plan on March 31. While an &ldquo;enhanced free tier&rdquo; was introduced (with SSO and policy-as-code), it caps resources at 500 &mdash; a dealbreaker for growing teams. Combined with the BSL license switch, this completed HashiCorp&rsquo;s move away from the open-source-friendly model that built its community. OpenTofu emerged as the primary alternative.</p>\n" +
     "<p><a href=\"/vendor/hcp-terraform\">View vendor profile</a> &middot; <a href=\"/terraform-alternatives\">Migration guide</a></p>\n" +
   "</div>\n" +

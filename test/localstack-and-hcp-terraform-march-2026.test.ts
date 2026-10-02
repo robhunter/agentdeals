@@ -176,6 +176,8 @@ const REPLACEMENTS: Record<string, string[]> = {
   "/q1-2026-developer-pricing-report": [
     "LocalStack Community Edition Support Ended",
     "Restriction · High Impact",
+    "HCP Terraform Legacy Free Plan Ended, 500 Resource Cap",
+    "Pricing Restructured · High Impact",
     "LocalStack ended support for its Community edition on March 23, 2026. The latest image now requires an account and auth token. The Hobby plan remains free for non-commercial use with 30+ services and CI runs. Commercial use requires a paid plan.",
   ],
   "/testing-free-tier-comparison-2026": [
@@ -205,6 +207,10 @@ const GUIDE_HUBS = ["/guides", "/alternatives"];
 const LINKS_TO_A_RETIRED_ROUTE = /href="(?:https?:\/\/[^"/]+)?\/(?:hcp-terraform-migration|terraform-cloud-free-tier-removed)(?:["#?/])/;
 
 const TERRAGRUNT_SCALE_ROW = /<tr>\s*<td[^>]*>\s*<a href="\/vendor\/terragrunt-scale"[^>]*>Terragrunt Scale<\/a><\/td>([\s\S]*?)<\/tr>/;
+
+const HCP_TERRAFORM_STORY_CHIP =
+  /<div class="story-card">\s*<h3>HCP Terraform Legacy Free Plan Ended, 500 Resource Cap<\/h3>\s*<span class="story-impact" style="background:(#[0-9a-f]{6})22;color:(#[0-9a-f]{6})">([^<]*)<\/span>/;
+const PRICING_RESTRUCTURED_BADGE = /<span style="[^"]*background:(#[0-9a-f]{6});color:#fff;[^"]*">Pricing Restructured<\/span>/;
 
 type Finding = { route: string; sentence: string; wording: string };
 
@@ -289,6 +295,16 @@ describe("LocalStack's and HCP Terraform's March 2026 changes are told as past a
     const cells = [...row[1].matchAll(/<td>([^<]*)<\/td>/g)].map((cell) => cell[1]);
     assert.deepStrictEqual(cells.slice(1, 3), ["Unlimited (up to 25 infrastructure units)", "Unlimited"]);
     assert.ok(!row[1].includes("500+"));
+  });
+
+  it("chips the Q1 report's HCP Terraform story as a high-impact restructuring, in the colour the report gives its Pricing Restructured records", () => {
+    const html = served.get("/q1-2026-developer-pricing-report")!;
+    const chip = html.match(HCP_TERRAFORM_STORY_CHIP);
+    assert.ok(chip, "the Q1 report has no HCP Terraform story card under its new heading");
+    const badge = html.match(PRICING_RESTRUCTURED_BADGE);
+    assert.ok(badge, "the Q1 report shows no Pricing Restructured record badge");
+    assert.strictEqual(decode(chip[3]), "Pricing Restructured · High Impact");
+    assert.deepStrictEqual([chip[1], chip[2]], [badge[1], badge[1]]);
   });
 
   it("publishes neither retired guide in a sitemap and links to neither from a served page", () => {
