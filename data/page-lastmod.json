@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2026-10-01",
+  "generated": "2026-10-02",
   "pages": {
     "/": {
       "daily": true
@@ -809,12 +809,12 @@
       "changed": "2026-10-01"
     },
     "/aws-free-tier-2026": {
-      "hash": "eab11259634c4f14",
-      "changed": "2026-10-01"
+      "hash": "25ee923861f15876",
+      "changed": "2026-10-02"
     },
     "/azure-free-tier-2026": {
-      "hash": "4955ed716e4a116c",
-      "changed": "2026-10-01"
+      "hash": "cb24ac24361c765c",
+      "changed": "2026-10-02"
     },
     "/backblaze-b2-vs-cloudflare-r2": {
       "hash": "566ec41a3a2b94fe",
@@ -1068,8 +1068,8 @@
       "changed": "2026-09-22"
     },
     "/budget-builder": {
-      "hash": "f503a5acb88cb6ee",
-      "changed": "2026-10-01"
+      "hash": "1e39d34c9095d9e9",
+      "changed": "2026-10-02"
     },
     "/category": {
       "hash": "a2fd868c08b58b87",
@@ -1152,8 +1152,7 @@
       "changed": "2026-10-01"
     },
     "/category/design": {
-      "hash": "5c8a27d245732a55",
-      "changed": "2026-10-01"
+      "daily": true
     },
     "/category/design-creative": {
       "hash": "2daf2b08682d007f",
@@ -1260,8 +1259,7 @@
       "changed": "2026-10-01"
     },
     "/category/secrets-management": {
-      "hash": "3206575f83053754",
-      "changed": "2026-10-01"
+      "daily": true
     },
     "/category/security": {
       "hash": "4aa2ea1ce7263281",
@@ -2686,16 +2684,16 @@
       "changed": "2026-10-01"
     },
     "/database-alternatives": {
-      "hash": "7027747b35057e3c",
-      "changed": "2026-10-01"
+      "hash": "75a3bf3c293c6968",
+      "changed": "2026-10-02"
     },
     "/database-free-tier-comparison-2026": {
-      "hash": "d0ca677c27264f45",
-      "changed": "2026-10-01"
+      "hash": "868c171cd5a5986b",
+      "changed": "2026-10-02"
     },
     "/database-pricing": {
-      "hash": "77ffbf1f0f48ab47",
-      "changed": "2026-10-01"
+      "hash": "e5fac4d580000496",
+      "changed": "2026-10-02"
     },
     "/datadog-alternatives": {
       "hash": "dd0bbe381bb2638a",
@@ -3073,8 +3071,8 @@
       "changed": "2026-09-12"
     },
     "/estimate": {
-      "hash": "cfcf9d56e10da93e",
-      "changed": "2026-10-01"
+      "hash": "65ceeb14564fe093",
+      "changed": "2026-10-02"
     },
     "/events": {
       "hash": "1cd961743e560957",
@@ -3115,40 +3113,40 @@
       "changed": "2026-10-01"
     },
     "/free-django-stack": {
-      "hash": "e50a67a050224ae7",
-      "changed": "2026-10-01"
+      "hash": "df6192fa73fe79fc",
+      "changed": "2026-10-02"
     },
     "/free-fastapi-stack": {
-      "hash": "714b01eadfc1a566",
-      "changed": "2026-10-01"
+      "hash": "890e55e61d5bd643",
+      "changed": "2026-10-02"
     },
     "/free-frontend-stack": {
       "hash": "9d15080585434fc3",
       "changed": "2026-10-01"
     },
     "/free-go-stack": {
-      "hash": "c101461eb25452dd",
-      "changed": "2026-10-01"
+      "hash": "ee1baae236575f32",
+      "changed": "2026-10-02"
     },
     "/free-llm-apis": {
       "hash": "5d659067b51ee58b",
       "changed": "2026-10-01"
     },
     "/free-nextjs-stack": {
-      "hash": "5b6a4bc5860d3615",
-      "changed": "2026-10-01"
+      "hash": "6c912eb3572a3d01",
+      "changed": "2026-10-02"
     },
     "/free-saas-stack": {
-      "hash": "a2aad001f546952e",
-      "changed": "2026-10-01"
+      "hash": "cdade745ba8fe7f3",
+      "changed": "2026-10-02"
     },
     "/free-startup-stack": {
       "hash": "41adb088e49a39d5",
       "changed": "2026-10-01"
     },
     "/free-tier-risk": {
-      "hash": "0b1539ed04ee20d9",
-      "changed": "2026-10-01"
+      "hash": "b40e22a1ffd93e0a",
+      "changed": "2026-10-02"
     },
     "/free-tier-tracker": {
       "hash": "f619e0603ad3f75a",
@@ -3162,8 +3160,8 @@
       "changed": "2026-10-01"
     },
     "/gcp-free-tier-2026": {
-      "hash": "51b3b1a5e8dd0c6a",
-      "changed": "2026-10-01"
+      "hash": "72425f02a91a0760",
+      "changed": "2026-10-02"
     },
     "/gemini-api-pricing-2026": {
       "hash": "b407427a9ccf09e4",
@@ -3250,8 +3248,8 @@
       "changed": "2026-10-01"
     },
     "/mongodb-alternatives": {
-      "hash": "7df8fadd8b54049d",
-      "changed": "2026-10-01"
+      "hash": "f1c398fe793b79b4",
+      "changed": "2026-10-02"
     },
     "/monitoring-alternatives": {
       "hash": "fd51b11631a2bc1c",
@@ -3262,12 +3260,12 @@
       "changed": "2026-10-01"
     },
     "/neon-vs-supabase": {
-      "hash": "817fdbc2c7fef123",
-      "changed": "2026-10-01"
+      "hash": "c96151edecfb544c",
+      "changed": "2026-10-02"
     },
     "/neon-vs-turso": {
-      "hash": "d4aa949579fc9589",
-      "changed": "2026-10-01"
+      "hash": "93666719d8dda03e",
+      "changed": "2026-10-02"
     },
     "/netlify-vs-render": {
       "hash": "8016f6caa571247a",
@@ -3449,8 +3447,7 @@
       "changed": "2026-10-01"
     },
     "/security-alternatives": {
-      "hash": "6684afe0c179a32a",
-      "changed": "2026-10-01"
+      "daily": true
     },
     "/security-free-tier-comparison-2026": {
       "hash": "f357e38ab7ff970e",
@@ -3472,8 +3469,7 @@
       "changed": "2026-10-01"
     },
     "/stack-check": {
-      "hash": "cb60c399a186f89e",
-      "changed": "2026-10-01"
+      "daily": true
     },
     "/stacks": {
       "hash": "8d98b9355d845435",
@@ -3788,8 +3784,8 @@
       "changed": "2026-10-01"
     },
     "/vector-database-pricing": {
-      "hash": "ee954d0011e13aaf",
-      "changed": "2026-10-01"
+      "hash": "373a836776269996",
+      "changed": "2026-10-02"
     },
     "/vendor": {
       "hash": "ab46b9ac0d59baf4",
@@ -6163,8 +6159,7 @@
       "changed": "2026-10-01"
     },
     "/vendor/hashicorp-vault": {
-      "hash": "dc35f3c9e74d68b3",
-      "changed": "2026-10-01"
+      "daily": true
     },
     "/vendor/hasura": {
       "hash": "59caac52bac1ab50",
@@ -7683,8 +7678,7 @@
       "changed": "2026-10-01"
     },
     "/vendor/pexels-com": {
-      "hash": "94a5bac729cdea29",
-      "changed": "2026-10-01"
+      "daily": true
     },
     "/vendor/phantom-buster": {
       "hash": "25d4c45e0dd2b9c9",
@@ -8554,8 +8548,7 @@
       "changed": "2026-10-01"
     },
     "/vendor/smartmockups-com": {
-      "hash": "0ec50b14b3ac7b20",
-      "changed": "2026-10-01"
+      "daily": true
     },
     "/vendor/smartparse": {
       "hash": "d804f6c319f1d0d4",
