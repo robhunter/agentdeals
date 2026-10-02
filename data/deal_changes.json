@@ -7343,7 +7343,13 @@
       "category": "Forms",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-10-02",
+        "detail": "Retracted 2026-10-02: the Community Edition our listing describes did not narrow. formbricks.com/pricing still offers it self-hosted and free, with unlimited surveys and responses and commercial use under AGPLv3. The record compared it with Formbricks Cloud's free Hobby plan, a different product.",
+        "source_url": "https://formbricks.com/pricing"
+      }
     },
     {
       "vendor": "Roboflow",

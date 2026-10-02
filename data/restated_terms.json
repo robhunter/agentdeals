@@ -463,7 +463,8 @@
       "source_url": "https://formbricks.com/pricing",
       "record_date": "2026-08-28",
       "change_type": "limits_reduced",
-      "summary": "The free tier on Formbricks Cloud is now 'Hobby' — 1 Workspace and 250 responses per month, where the Community Edition carried unlimited seats, surveys and responses. Self-hosting is still offered free."
+      "summary": "The free tier on Formbricks Cloud is now 'Hobby' — 1 Workspace and 250 responses per month, where the Community Edition carried unlimited seats, surveys and responses. Self-hosting is still offered free.",
+      "reverted_on": "2026-10-02"
     },
     {
       "vendor": "Mux",
