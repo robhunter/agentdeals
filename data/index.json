@@ -2994,7 +2994,7 @@
       "category": "AI / ML",
       "description": "Fast LLM inference on Groq's LPU hardware. Free plan: gpt-oss-120b, gpt-oss-20b and Qwen3.8 27B, each at 30 requests a minute, 1,000 requests and 200,000 tokens a day, plus Whisper speech-to-text at 2,000 requests a day. Llama 3.3 70B and Llama 3.1 8B left the free and developer plans on 2026-08-16 and are Enterprise-only. Developer plan prices per 1M tokens: gpt-oss-120b $0.15/$0.60; gpt-oss-20b $0.075/$0.30.",
       "tier": "Free",
-      "url": "https://groq.com/pricing",
+      "url": "https://console.groq.com/docs/rate-limits",
       "tags": [
         "ai",
         "ml",
@@ -3020,7 +3020,7 @@
         }
       ],
       "source_check": {
-        "checked": "2026-09-30",
+        "checked": "2026-10-02",
         "outcome": "ok",
         "detail": "the page names Groq as \"groq\" and states amounts, none of which we matched to the terms we publish"
       },
