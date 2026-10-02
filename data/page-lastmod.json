@@ -805,8 +805,8 @@
       "changed": "2026-09-19"
     },
     "/aws-app-runner-migration": {
-      "hash": "8f98409f40883be4",
-      "changed": "2026-10-01"
+      "hash": "10957af4f1f2a225",
+      "changed": "2026-10-02"
     },
     "/aws-free-tier-2026": {
       "hash": "25ee923861f15876",
@@ -3220,7 +3220,7 @@
       "changed": "2026-10-01"
     },
     "/hetzner-pricing-2026": {
-      "hash": "c8a9664b925a4271",
+      "hash": "2ce3f084875db2fb",
       "changed": "2026-10-02"
     },
     "/hosting-alternatives": {
