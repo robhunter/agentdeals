@@ -2145,8 +2145,8 @@
       ],
       "reviewed_at": "2026-10-02",
       "reviewer": "pm",
-      "review_outcome": "fail",
-      "review_note": "Re-checked on 2026-10-02: section 1's prices against Hetzner's price API, section 4 against Hetzner's April and June statements, section 8's Server Auction figure against Hetzner's April table, section 3 against The Register's article of 2026-02-24, and section 6's DigitalOcean, Vultr, Linode, AWS Lightsail, Oracle Cloud, OVHcloud and Fly.io trial rows against those vendors' own pages, plan APIs or notices. The corrections in https://github.com/robhunter/agentdeals/issues/2238, https://github.com/robhunter/agentdeals/issues/2243 and https://github.com/robhunter/agentdeals/issues/2247 were read on production that day. Outstanding: section 2 gives the April range for cloud servers and none for dedicated servers, which rose 2-21% in Hetzner's table (https://github.com/robhunter/agentdeals/issues/2258).",
+      "review_outcome": "pass",
+      "review_note": "Re-checked on 2026-10-02: section 1's prices against Hetzner's price API, sections 2 and 4 against Hetzner's April and June tables and its price API's AX42 and AX102 prices, section 8's Server Auction figure against Hetzner's April table, section 3 against The Register's article of 2026-02-24, and section 6's DigitalOcean, Vultr, Linode, AWS Lightsail, Oracle Cloud, OVHcloud and Fly.io trial rows against those vendors' own pages, plan APIs or notices. The corrections in https://github.com/robhunter/agentdeals/issues/2238, https://github.com/robhunter/agentdeals/issues/2243, https://github.com/robhunter/agentdeals/issues/2247 and https://github.com/robhunter/agentdeals/issues/2258 were read on production that day.",
       "reads_index": true,
       "tables_read_index": true,
       "table_figures": 94,
@@ -2209,8 +2209,8 @@
       "review_note": "The corrections from https://github.com/robhunter/agentdeals/issues/2182 are live. Checked on production on 2026-09-30: 159 replacement strings, 90 of them cell by cell, and a census of 2,592 routes for the withdrawn claims.",
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 97,
-      "table_figures_from_records": 20,
+      "table_figures": 101,
+      "table_figures_from_records": 24,
       "tables": [
         {
           "label": "Main Comparison Table",
@@ -2224,8 +2224,8 @@
         },
         {
           "label": "Pricing Change Timeline",
-          "figures": 20,
-          "from_records": 20
+          "figures": 24,
+          "from_records": 24
         }
       ],
       "reads_changes": true,
