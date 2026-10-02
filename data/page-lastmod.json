@@ -1112,8 +1112,8 @@
       "changed": "2026-10-01"
     },
     "/category/ci-cd": {
-      "hash": "526b8109af601b31",
-      "changed": "2026-10-01"
+      "hash": "e3e9b0047cbca134",
+      "changed": "2026-10-02"
     },
     "/category/cloud-hosting": {
       "hash": "00f3a3b23b7a0226",
@@ -1317,7 +1317,7 @@
       "daily": true
     },
     "/ci-cd-alternatives": {
-      "hash": "7120d5fb6bfd0ed6",
+      "hash": "ecd24cdea228856b",
       "changed": "2026-10-02"
     },
     "/ci-cd-pricing": {
@@ -1325,7 +1325,7 @@
       "changed": "2026-10-02"
     },
     "/cicd-free-tier-comparison-2026": {
-      "hash": "941da41b1c6dd580",
+      "hash": "34ebafca839f38f9",
       "changed": "2026-10-02"
     },
     "/circleci-vs-github-actions": {
@@ -1353,7 +1353,7 @@
       "changed": "2026-10-01"
     },
     "/compare-tool": {
-      "hash": "55ce54d73ca25ad5",
+      "hash": "a4288afe78f60172",
       "changed": "2026-10-02"
     },
     "/compare/10minutemail-vs-emaillabs-io": {
@@ -3003,8 +3003,8 @@
       "changed": "2026-10-01"
     },
     "/digest/2026-w35": {
-      "hash": "e370bbce28434c80",
-      "changed": "2026-10-01"
+      "hash": "6a20f73f5e8b2b93",
+      "changed": "2026-10-02"
     },
     "/digest/2026-w36": {
       "hash": "690b1a956de6e0e3",
@@ -3208,7 +3208,7 @@
       "changed": "2026-10-01"
     },
     "/hcp-terraform-migration": {
-      "hash": "68caf2044d88c519",
+      "hash": "c286f9eea2f042db",
       "changed": "2026-10-02"
     },
     "/heroku-alternatives": {
@@ -3524,7 +3524,7 @@
       "changed": "2026-10-01"
     },
     "/terraform-alternatives": {
-      "hash": "66f881ffd3430eb2",
+      "hash": "9384f2c1a58a564a",
       "changed": "2026-10-02"
     },
     "/terraform-cloud-free-tier-removed": {
@@ -3581,8 +3581,8 @@
       "changed": "2026-09-30"
     },
     "/trends/ci-cd": {
-      "hash": "657edb2bc128df1f",
-      "changed": "2026-10-01"
+      "hash": "807ddbb0cfda46bc",
+      "changed": "2026-10-02"
     },
     "/trends/cloud-hosting": {
       "hash": "f9e0d12ea22596de",
@@ -3788,8 +3788,8 @@
       "changed": "2026-10-02"
     },
     "/vendor": {
-      "hash": "ab46b9ac0d59baf4",
-      "changed": "2026-10-01"
+      "hash": "5f99d403b951b276",
+      "changed": "2026-10-02"
     },
     "/vendor/10minutemail": {
       "hash": "664d25c6cb93be5d",
@@ -8690,7 +8690,7 @@
       "changed": "2026-10-02"
     },
     "/vendor/stategraph": {
-      "hash": "9a8849b0855a9811",
+      "hash": "b2fb2892b1e20d3d",
       "changed": "2026-10-02"
     },
     "/vendor/statically": {
