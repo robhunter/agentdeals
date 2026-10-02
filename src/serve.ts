@@ -115,7 +115,7 @@ import { partitionAlternatives, partitionSubstitutes, type SubstitutesPartition,
 import { buildProductFunctions, functionMembers, functionDefinitions, functionMeaningSentence, admissionFor, splitByFunction, labelsNaming, FUNCTION_RESIDUE_COPY, type ProductFunction, FUNCTION_MEMBERSHIP_RULE, FUNCTION_SPLIT_RULE, FUNCTION_NAMING_RULE, FUNCTION_TITLE_RULE, FUNCTION_PICK_RULE } from "./product-function.js";
 import { resolveCuratedAlternatives, curatedAlternativesFor, addCuratedToPool } from "./curated-alternatives.js";
 import type { Agent, ChangeDateSource, DealChange, FreePlanExcerpt, RiskCause, RatingWithheld, LinkUnreachable, Offer, StabilityClass, SubtypeLabel } from "./types.js";
-import { A_DATED_HEADING_MARKER, A_DATED_SECTION_MARKER, datedHeadingNoticeHtml, datedSectionNoticeHtml, namedOnceItsDateArrived, namedWhileAheadOf, namedWhileNotBefore, ANNOUNCED_BADGE, ANNOUNCED_HEADING, announcedIntro, changeDateLabel, changeEntryDateLabel, changeEntryLongDateLabel, changeDateClause, changeDatePublished, changeEventStartDate, capListSections, latestEventDate, offerExpiryAfter, feedEntryUpdated, undatedGroupHeading, UNDATED_TILE_LABEL, firstReadHeading, discoveryBatchNote, isoWeekOf, monthlyChangeSeries, changesInWindow, discoveryMonthSeriesHeading, periodComparisonSentence, DISCOVERED_DATE_PREFIX, EFFECTIVE_DATE_PREFIX, UNDATED_GROUP_NOTE, UNKNOWN_EFFECTIVE_DATE_MARKER, EFFECTIVE_MONTH_SERIES_NOTE, DISCOVERY_MONTH_SERIES_NOTE, weekRangeLabel, newestChangeInEffect, vendorPageLastUpdated } from "./change-dates.js";
+import { A_DATED_HEADING_MARKER, A_DATED_SECTION_MARKER, datedHeadingNoticeHtml, datedSectionNoticeHtml, namedOnceItsDateArrived, namedWhileAheadOf, namedWhileNotBefore, ANNOUNCED_BADGE, ANNOUNCED_HEADING, announcedIntro, changeDateLabel, changeEntryDateLabel, changeEntryLongDateLabel, changeDateClause, changeDatePublished, changeEventStartDate, capListSections, latestEventDate, offerExpiryAfter, feedEntryUpdated, undatedGroupHeading, UNDATED_TILE_LABEL, firstReadHeading, discoveryBatchNote, coveringBracketedChanges, changeEntryDateLabelHtml, isoWeekOf, monthlyChangeSeries, changesInWindow, discoveryMonthSeriesHeading, periodComparisonSentence, DISCOVERED_DATE_PREFIX, EFFECTIVE_DATE_PREFIX, UNDATED_GROUP_NOTE, UNKNOWN_EFFECTIVE_DATE_MARKER, EFFECTIVE_BY_DATE_MEANING, BRACKETED_DATE_PREFIX, EFFECTIVE_MONTH_SERIES_NOTE, DISCOVERY_MONTH_SERIES_NOTE, weekRangeLabel, newestChangeInEffect, vendorPageLastUpdated } from "./change-dates.js";
 import { changeFeedEntries, feedEntryFields, feedUpdatedTimestamp, changeFeedProvenanceNote, CHANGE_FEED_ENTRY_LIMIT, CHANGE_FEED_DESCRIPTION, CHANGE_FEED_NAMESPACE, CHANGE_FEED_NAMESPACE_PREFIX, channelUpdatedTimestamp, WEEKLY_FEED_POPULATION_NOTE, feedLinkTag, feedEntrySourceXml, digestSourceXml, PER_CHANGE_FEED, WEEKLY_DIGEST_FEED } from "./change-feed.js";
 import { FEED_CORRECTIONS, correctionEntriesXml } from "./feed-corrections.js";
 import { buildDay, emptyPageLastmod, entryDay, fallbackDay, httpDate, lastmodFor, newestLastmod, readPageLastmod, type PageLastmodLedger } from "./page-lastmod.js";
@@ -4584,7 +4584,7 @@ function buildDigestPage(weekKey: string): string | null {
   const weekRecords = vendorChangesAmong(byWeek.get(weekKey) ?? []);
   const { dated: changes, discovered } = partitionByDateProvenance(weekRecords);
   const dateRange = formatDateRange(year, week);
-  const discoveryNote = discovered.length > 0 ? discoveryBatchNote(discovered.length, `during ${dateRange}`) : "";
+  const discoveryNote = discovered.length > 0 ? coveringBracketedChanges(discoveryBatchNote(discovered.length, `during ${dateRange}`), discovered) : "";
   const discoveryClause = discovered.length > 0
     ? ` ${discovered.length} more recorded with no known effective date.`
     : "";
@@ -23449,7 +23449,7 @@ ${mcpCtaCss()}
   <div class="diff-card" style="border-left-color:#d29922">
     <h3>\u{1F4C8} Changes by Month</h3>
     <p class="diff-desc">${EFFECTIVE_MONTH_SERIES_NOTE} Monthly counts: ${sortedMonths.map(m => '<span class="ftr-month" data-series="effective" data-month="' + m + '" data-count="' + (monthlyChanges.get(m) ?? 0) + '"><strong>' + m + '</strong>: ' + (monthlyChanges.get(m) ?? 0) + '</span>').join(', ')}. ${quarterAgainstHalf}</p>
-    ${discoveredTotal > 0 ? `<p class="diff-desc"><strong>${discoveryMonthSeriesHeading(discoveredTotal)}.</strong> ${DISCOVERY_MONTH_SERIES_NOTE} Monthly counts: ${discoveryMonths.map(([m, count]) => '<span class="ftr-month" data-series="discovered" data-month="' + m + '" data-count="' + count + '"><strong>' + m + '</strong>: ' + count + '</span>').join(', ')}.</p>` : ""}
+    ${discoveredTotal > 0 ? `<p class="diff-desc"><strong>${discoveryMonthSeriesHeading(discoveredTotal)}.</strong> ${coveringBracketedChanges(DISCOVERY_MONTH_SERIES_NOTE, [...changeMonths.discovered.values()].flat())} Monthly counts: ${discoveryMonths.map(([m, count]) => '<span class="ftr-month" data-series="discovered" data-month="' + m + '" data-count="' + count + '"><strong>' + m + '</strong>: ' + count + '</span>').join(', ')}.</p>` : ""}
   </div>
 
   <div class="diff-card" style="border-left-color:#8b5cf6">
@@ -45077,7 +45077,7 @@ ${globalNavCss()}
   </div>
 
   ${discoveredTotal > 0 ? `<h3>${discoveryMonthSeriesHeading(discoveredTotal)}</h3>
-  <p class="section-desc">${DISCOVERY_MONTH_SERIES_NOTE} Bars are on the same scale as the trend above.</p>
+  <p class="section-desc">${coveringBracketedChanges(DISCOVERY_MONTH_SERIES_NOTE, [...changeMonths.discovered.values()].flat())} Bars are on the same scale as the trend above.</p>
   <div style="margin:1.5rem 0;overflow-x:auto">
     ${monthBarsHtml("discovered", discoveryMonths)}
     ${changeBarLegendHtml}
@@ -46996,9 +46996,12 @@ ${globalNavCss()}
   var EFFECTIVE_DATE_PREFIX = ${JSON.stringify(EFFECTIVE_DATE_PREFIX)};
   var DISCOVERED_DATE_PREFIX = ${JSON.stringify(DISCOVERED_DATE_PREFIX)};
   var UNKNOWN_EFFECTIVE_DATE_MARKER = ${JSON.stringify(UNKNOWN_EFFECTIVE_DATE_MARKER)};
+  var EFFECTIVE_BY_DATE_MEANING = ${JSON.stringify(EFFECTIVE_BY_DATE_MEANING)};
+  var BRACKETED_DATE_PREFIX = ${JSON.stringify(BRACKETED_DATE_PREFIX)};
 
   function changeEntryDateLabel(c) {
     if (c.date_meaning === EFFECTIVE_DATE_PREFIX) return EFFECTIVE_DATE_PREFIX + ' ' + c.date;
+    if (c.date_meaning === EFFECTIVE_BY_DATE_MEANING) return BRACKETED_DATE_PREFIX + ' ' + c.archive_check.brackets[0].last_old + ' and ' + c.date;
     return DISCOVERED_DATE_PREFIX + ' ' + c.date + ' \u00b7 ' + UNKNOWN_EFFECTIVE_DATE_MARKER;
   }
 
@@ -48866,7 +48869,7 @@ function buildPricingChangesPage(): string {
     const changeYear = dated ? c.date.slice(0, 4) : "";
     return `      <div class="pc-entry${isUpcoming ? " pc-upcoming" : ""}${dated ? "" : " pc-undated"}${isNoLongerInForce(c) ? " pc-resolved" : ""}${changeIsUncited(c) ? " pc-unsourced" : ""}${housekeeping ? ` ${INDEX_HOUSEKEEPING_CLASS}` : ""}" id="${changeAnchor(c)}" data-type="${escHtmlServer(c.change_type)}" data-impact="${escHtmlServer(c.impact)}" data-category="${category}" data-vendor-cat="${vendorCat}" data-year="${changeYear}">
         <div class="pc-left">
-          <div class="pc-date${dated ? "" : " pc-date-unknown"}">${changeEntryDateLabel(c)}</div>
+          <div class="pc-date${dated ? "" : " pc-date-unknown"}">${changeEntryDateLabelHtml(c, escHtmlServer)}</div>
           ${isUpcoming ? `<div class="pc-upcoming-badge">upcoming</div>` : ""}
           <a href="#${changeAnchor(c)}" class="pc-anchor" title="Link to this change">#</a>
         </div>
@@ -48962,7 +48965,7 @@ ${entriesHtml}
 
   const undatedHtml = undatedSorted.length === 0 ? "" : `    <div class="month-group month-group-undated">
       <h2 class="month-heading" id="month-undated">${undatedGroupHeading(undatedSorted.length, allChanges.length)}</h2>
-      <p class="month-note">${UNDATED_GROUP_NOTE}</p>
+      <p class="month-note">${coveringBracketedChanges(UNDATED_GROUP_NOTE, undatedSorted)}</p>
 ${undatedSorted.map(c => buildChangeEntry(c)).join("\n")}
     </div>`;
 
@@ -49354,7 +49357,7 @@ function buildChangesPage(): string {
       : "";
     return `      <div class="chg-entry${isUpcoming ? " chg-upcoming" : ""}${dated ? "" : " chg-undated"}${isNoLongerInForce(c) ? " chg-resolved" : ""}${changeIsUncited(c) ? " chg-unsourced" : ""}${housekeeping ? ` ${INDEX_HOUSEKEEPING_CLASS}` : ""}${isACorrectionToOurOwnRecord(c) ? ` ${CORRECTION_TO_OUR_OWN_RECORD_CLASS}` : ""}"${anchorAttr}>
         <div class="chg-left">
-          <div class="chg-date${dated ? "" : " chg-date-unknown"}">${changeEntryDateLabel(c)}</div>
+          <div class="chg-date${dated ? "" : " chg-date-unknown"}">${changeEntryDateLabelHtml(c, escHtmlServer)}</div>
           ${isUpcoming ? `<div class="chg-upcoming-badge">upcoming</div>` : ""}
         </div>
         <div class="chg-right">
@@ -49385,7 +49388,7 @@ ${entriesHtml}
 
   const undatedHtml = undatedSorted.length === 0 ? "" : `    <div class="month-group month-group-undated">
       <h2 class="month-heading">${undatedGroupHeading(undatedSorted.length, allChanges.length)}</h2>
-      <p class="month-note">${UNDATED_GROUP_NOTE}</p>
+      <p class="month-note">${coveringBracketedChanges(UNDATED_GROUP_NOTE, undatedSorted)}</p>
 ${undatedSorted.map(c => buildChangeEntry(c)).join("\n")}
     </div>`;
 
@@ -53593,7 +53596,7 @@ const dispatchRequest = async (req: IncomingMessage, res: ServerResponse) => {
     const dateProvenance = {
       event_dated: dated.length,
       discovered: discovered.length,
-      note: discovered.length > 0 ? discoveryBatchNote(discovered.length, "in this window") : "",
+      note: discovered.length > 0 ? coveringBracketedChanges(discoveryBatchNote(discovered.length, "in this window"), discovered) : "",
     };
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/changes", params: { since, type, vendor: vendorFilter, vendors: vendorsFilter, categories: categoriesFilter, limit, offset, include_retracted: includeRetracted, include_index_housekeeping: includeIndexHousekeeping }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: page.length });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });

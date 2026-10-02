@@ -1,4 +1,4 @@
-import type { DealChange, ChangeDateSource, DateMeaning } from "./types.js";
+import type { ArchiveCheck, DealChange, ChangeDateSource, DateMeaning } from "./types.js";
 import { PRODUCT_DEPRECATED, deprecationEndsTheListedProduct } from "./product-deprecation.js";
 import { sliceById } from "./change-census.js";
 import { isACorrectionToOurOwnRecord } from "./change-resolution.js";
@@ -10,6 +10,7 @@ export interface DatedChange {
   recorded_date?: string | null;
   change_type?: string;
   reports?: string | null;
+  archive_check?: Pick<ArchiveCheck, "outcome" | "brackets"> | null;
 }
 
 type ExpiringChange = DatedChange & Pick<DealChange, "change_type" | "vendor" | "summary">;
@@ -19,6 +20,10 @@ export const DISCOVERED_DATE_PREFIX = "discovered";
 export const EFFECTIVE_DATE_PREFIX = "effective";
 
 export const UNKNOWN_EFFECTIVE_DATE_MARKER = "effective date unknown";
+
+export const EFFECTIVE_BY_DATE_MEANING = "effective_by";
+
+export const BRACKETED_DATE_PREFIX = "effective between";
 
 export const DATE_SOURCES: ChangeDateSource[] = ["vendor_page", "hand_written", "discovered"];
 
@@ -37,8 +42,40 @@ export function isEventDated(change: DatedChange): boolean {
   return EVENT_DATED_SOURCES.includes(change.date_source as ChangeDateSource) && !carriesTheDayItWasTyped(change);
 }
 
+export interface DateBracket {
+  from: string;
+  to: string;
+  from_capture: string | null;
+  to_capture: string | null;
+}
+
+export function archiveBracketOf(change: DatedChange): DateBracket | null {
+  if (isEventDated(change)) return null;
+  const check = change.archive_check;
+  if (check?.outcome !== "vendor_changed" || check.brackets?.length !== 1) return null;
+  const [bracket] = check.brackets;
+  return {
+    from: bracket.last_old,
+    to: change.date,
+    from_capture: bracket.last_old_capture ?? null,
+    to_capture: bracket.first_new_capture ?? null,
+  };
+}
+
+export function bracketedDateLabel(bracket: DateBracket, render: (date: string) => string = (date) => date): string {
+  return `${BRACKETED_DATE_PREFIX} ${render(bracket.from)} and ${render(bracket.to)}`;
+}
+
+export const BRACKETED_CHANGE_DATING =
+  "Where archived copies of the vendor's page bracket a change, it is dated by the first copy that shows the new terms.";
+
+export function coveringBracketedChanges(note: string, changes: readonly DatedChange[]): string {
+  return changes.some((change) => archiveBracketOf(change) !== null) ? `${note} ${BRACKETED_CHANGE_DATING}` : note;
+}
+
 export function dateMeaningOf(change: DatedChange): DateMeaning {
-  return isEventDated(change) ? EFFECTIVE_DATE_PREFIX : DISCOVERED_DATE_PREFIX;
+  if (isEventDated(change)) return EFFECTIVE_DATE_PREFIX;
+  return archiveBracketOf(change) ? EFFECTIVE_BY_DATE_MEANING : DISCOVERED_DATE_PREFIX;
 }
 
 export function withDateMeaningDeclared<T extends DatedChange>(change: T): T & { date_meaning: DateMeaning } {
@@ -163,17 +200,32 @@ export function undatedGroupHeading(count: number, heldTotal: number): string {
 }
 
 export function changeDateLabel(c: DatedChange): string {
-  return isEventDated(c) ? c.date : `${DISCOVERED_DATE_PREFIX} ${c.date}`;
+  if (isEventDated(c)) return c.date;
+  const bracket = archiveBracketOf(c);
+  return bracket ? bracketedDateLabel(bracket) : `${DISCOVERED_DATE_PREFIX} ${c.date}`;
 }
 
-export function changeEntryDateLabelFor(c: DatedChange, rendered: string): string {
-  return isEventDated(c)
-    ? `${EFFECTIVE_DATE_PREFIX} ${rendered}`
-    : `${DISCOVERED_DATE_PREFIX} ${rendered} · ${UNKNOWN_EFFECTIVE_DATE_MARKER}`;
+export function changeEntryDateLabelFor(c: DatedChange, render: (date: string) => string): string {
+  if (isEventDated(c)) return `${EFFECTIVE_DATE_PREFIX} ${render(c.date)}`;
+  const bracket = archiveBracketOf(c);
+  if (bracket) return bracketedDateLabel(bracket, render);
+  return `${DISCOVERED_DATE_PREFIX} ${render(c.date)} · ${UNKNOWN_EFFECTIVE_DATE_MARKER}`;
 }
 
 export function changeEntryDateLabel(c: DatedChange): string {
-  return changeEntryDateLabelFor(c, c.date);
+  return changeEntryDateLabelFor(c, (date) => date);
+}
+
+export const ARCHIVE_CAPTURE_CLASS = "archive-capture";
+
+export function changeEntryDateLabelHtml(c: DatedChange, esc: (text: string) => string): string {
+  const bracket = archiveBracketOf(c);
+  if (!bracket) return esc(changeEntryDateLabel(c));
+  const linked = (date: string, capture: string | null) =>
+    capture
+      ? `<a href="${esc(capture)}" target="_blank" rel="noopener" class="${ARCHIVE_CAPTURE_CLASS}">${esc(date)}</a>`
+      : esc(date);
+  return `${BRACKETED_DATE_PREFIX} ${linked(bracket.from, bracket.from_capture)} and ${linked(bracket.to, bracket.to_capture)}`;
 }
 
 export function longDate(date: string): string {
@@ -183,11 +235,13 @@ export function longDate(date: string): string {
 }
 
 export function changeEntryLongDateLabel(c: DatedChange): string {
-  return changeEntryDateLabelFor(c, longDate(c.date));
+  return changeEntryDateLabelFor(c, longDate);
 }
 
 export function changeDateClause(c: DatedChange): string {
-  return isEventDated(c) ? `on ${c.date}` : `${DISCOVERED_DATE_PREFIX} ${c.date}`;
+  if (isEventDated(c)) return `on ${c.date}`;
+  const bracket = archiveBracketOf(c);
+  return bracket ? bracketedDateLabel(bracket) : `${DISCOVERED_DATE_PREFIX} ${c.date}`;
 }
 
 export function changeDatePublished(c: DatedChange): { datePublished: string } | Record<string, never> {

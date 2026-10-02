@@ -140,7 +140,7 @@ describe("/google-developer-program-2026 describes what replaced Premium, at tod
     assert.ok(since.length > 0, "no Google record dates from Premium's closing, so the box proves nothing");
     const servedOnUtc = (date: string) =>
       new Date(`${date}T00:00:00Z`).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" }).replace(/ /g, "\u00a0");
-    const at = since.map((c: { date: string; date_source?: string }) => box.indexOf(`<strong>${changeEntryDateLabelFor(c, servedOnUtc(c.date))}:</strong>`));
+    const at = since.map((c: { date: string; date_source?: string }) => box.indexOf(`<strong>${changeEntryDateLabelFor(c, servedOnUtc)}:</strong>`));
     assert.ok(at.every((i: number) => i >= 0), `each record's date is in the box: ${JSON.stringify(at)}`);
     assert.deepStrictEqual([...at].sort((a, b) => a - b), at);
   });
