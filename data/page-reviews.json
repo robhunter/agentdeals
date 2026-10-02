@@ -1629,12 +1629,12 @@
         {
           "label": "Stack Overview",
           "figures": 11,
-          "from_records": 8
+          "from_records": 7
         },
         {
           "label": "The First Paid Upgrade — What to Spend First",
           "figures": 18,
-          "from_records": 3
+          "from_records": 4
         }
       ],
       "reads_changes": true,
