@@ -32210,9 +32210,9 @@
         }
       ],
       "source_check": {
-        "checked": "2026-09-05",
-        "outcome": "does_not_name_vendor",
-        "detail": "the page never names xAI, on a domain that carries its name"
+        "checked": "2026-10-02",
+        "outcome": "ok",
+        "detail": "the page names xAI as \"xai\" and states \"$2.00\" and \"$6.00\" and \"$1.00\" and \"$1.25\""
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
