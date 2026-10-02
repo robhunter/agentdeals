@@ -3032,9 +3032,9 @@
       ],
       "verifiedDate": "2026-08-18",
       "source_check": {
-        "checked": "2026-09-22",
+        "checked": "2026-10-02",
         "outcome": "ok",
-        "detail": "the page names Google Gemini API as \"gemini api\" and states amounts, none of which we matched to the terms we publish"
+        "detail": "the page names Google Gemini API as \"gemini api\" and states \"$0.75\" and \"$1.50\" and \"$3.75\" and \"$9.00\""
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
