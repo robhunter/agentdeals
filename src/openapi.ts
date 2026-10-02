@@ -40,7 +40,11 @@ const ARCHIVE_CHECK_PROPERTY = {
         },
         required: ["last_old", "first_new"]
       }
-    }
+    },
+    capture_day: { type: "string", format: "date", nullable: true, description: "Where outcome is ours or removal_stated_before: the day of the archived copy from when our listing text was written." },
+    capture: { type: "string", format: "uri", nullable: true, description: "That copy's address in the Internet Archive." },
+    stated_then: { type: "string", nullable: true, description: "The line in that copy that settled the check, as the copy prints it: the terms the record called new (ours), or the removal (removal_stated_before)." },
+    recorded_as: { type: "string", nullable: true, enum: [...CHANGE_TYPES], description: "Where outcome is ours: the change type our re-read recorded. The record's change_type is record_corrected." }
   },
   required: ["checked", "outcome"]
 };

@@ -3,6 +3,7 @@ import { PRODUCT_DEPRECATED, deprecationEndsTheListedProduct } from "./product-d
 import { sliceById } from "./change-census.js";
 import { isACorrectionToOurOwnRecord } from "./change-resolution.js";
 import { reportsOurIndex } from "./change-reporting.js";
+import { OURS_ARCHIVE_OUTCOME } from "./change-confirmation.js";
 
 export interface DatedChange {
   date: string;
@@ -10,7 +11,7 @@ export interface DatedChange {
   recorded_date?: string | null;
   change_type?: string;
   reports?: string | null;
-  archive_check?: Pick<ArchiveCheck, "outcome" | "brackets"> | null;
+  archive_check?: Pick<ArchiveCheck, "checked" | "outcome" | "brackets"> | null;
 }
 
 type ExpiringChange = DatedChange & Pick<DealChange, "change_type" | "vendor" | "summary">;
@@ -24,6 +25,10 @@ export const UNKNOWN_EFFECTIVE_DATE_MARKER = "effective date unknown";
 export const EFFECTIVE_BY_DATE_MEANING = "effective_by";
 
 export const BRACKETED_DATE_PREFIX = "effective between";
+
+export const RECORDED_DATE_PREFIX = "recorded";
+
+export const CORRECTED_DATE_PREFIX = "corrected";
 
 export const DATE_SOURCES: ChangeDateSource[] = ["vendor_page", "hand_written", "discovered"];
 
@@ -64,6 +69,16 @@ export function archiveBracketOf(change: DatedChange): DateBracket | null {
 
 export function bracketedDateLabel(bracket: DateBracket, render: (date: string) => string = (date) => date): string {
   return `${BRACKETED_DATE_PREFIX} ${render(bracket.from)} and ${render(bracket.to)}`;
+}
+
+export function dayWeCorrectedIt(change: DatedChange): string | null {
+  if (isEventDated(change) || !isACorrectionToOurOwnRecord(change)) return null;
+  const check = change.archive_check;
+  return check?.outcome === OURS_ARCHIVE_OUTCOME ? check.checked : null;
+}
+
+export function correctedDateLabel(recorded: string, corrected: string, render: (date: string) => string = (date) => date): string {
+  return `${RECORDED_DATE_PREFIX} ${render(recorded)} · ${CORRECTED_DATE_PREFIX} ${render(corrected)}`;
 }
 
 export const BRACKETED_CHANGE_DATING =
@@ -207,6 +222,8 @@ export function changeDateLabel(c: DatedChange): string {
 
 export function changeEntryDateLabelFor(c: DatedChange, render: (date: string) => string): string {
   if (isEventDated(c)) return `${EFFECTIVE_DATE_PREFIX} ${render(c.date)}`;
+  const corrected = dayWeCorrectedIt(c);
+  if (corrected) return correctedDateLabel(c.recorded_date ?? c.date, corrected, render);
   const bracket = archiveBracketOf(c);
   if (bracket) return bracketedDateLabel(bracket, render);
   return `${DISCOVERED_DATE_PREFIX} ${render(c.date)} · ${UNKNOWN_EFFECTIVE_DATE_MARKER}`;

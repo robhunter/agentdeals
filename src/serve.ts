@@ -53,7 +53,7 @@ import { changesToStartupProgrammes } from "./startup-programme-changes.js";
 import { HETZNER_APRIL_CHANGES, HETZNER_AX102_GERMANY, HETZNER_AX42_GERMANY, HETZNER_CLOUD_PLANS, HETZNER_PRICES_READ, HETZNER_PRICE_SOURCE, HETZNER_SINGAPORE_EXAMPLE, cheapestOrderableHetznerPlan, hetznerEntryPriceClause, unorderableHetznerPlans } from "./hetzner-pricing.js";
 import { HUNDRED_GB_SCENARIO, HUNDRED_TB_SCENARIO, ONE_TO_ONE_SCENARIO, STORAGE_RATES_READ, STORAGE_SCALE_WORKLOADS, TEN_TO_ONE_SCENARIO, cheapestProviderAt, costAfterMonthlyEgressGrantFor, costliestProviderAt, egressAllowanceSentence, egressBillAfterMonthlyGrantFor, egressBillOnceOverAllowance, egressRatioWhereCostsMatch, fixedMonthlyGrantsSentence, monthlyEgressGrantGb, monthlyEgressGrantSentence, monthlyStorageCost, providersWithScalingEgressAllowance, rateCardFor, scaleCostFor } from "./storage-cost-model.js";
 import { changeTimelineDate, supersededLineups, supersessionNote } from "./change-lineup.js";
-import { isACorrectionToOurOwnRecord, isNoLongerInForce, eventResolutionFields, recordsStillInForce, recordsWeStandBehind, INCLUDE_RETRACTED_REJECTED } from "./change-resolution.js";
+import { CORRECTION_TO_OUR_OWN_RECORD, isACorrectionToOurOwnRecord, isNoLongerInForce, eventResolutionFields, recordsStillInForce, recordsWeStandBehind, INCLUDE_RETRACTED_REJECTED } from "./change-resolution.js";
 import { trackedChanges, howEachRecordWasRead, isTrackedChange, isIndexHousekeeping, recordsOtherThanOurOwnIndexHousekeeping, changeCensus, changeCountPhrase, recordsNotCountedSentence, sliceById, CHANGE_SLICES, CENSUS_NOTE, TRACKED_CHANGE_RULE_ANCHOR, TRACKED_CHANGE_RULE_PATH, TRACKED_CHANGE_NOUN, INDEX_HOUSEKEEPING_CLASS, CORRECTION_TO_OUR_OWN_RECORD_CLASS, INDEX_HOUSEKEEPING_BADGE, INDEX_HOUSEKEEPING_BADGE_COLOR, INDEX_HOUSEKEEPING_NOTE, INCLUDE_INDEX_HOUSEKEEPING_REJECTED, indexHousekeepingHeadline } from "./change-census.js";
 import { SINCE_DEFAULT_SENTENCE } from "./change-window.js";
 import { NAME_MATCH_SENTENCE } from "./name-match.js";
@@ -79,7 +79,7 @@ import { configureDurableBackend, hydrateDurableStores, persistDurableStores, id
 import { addFriend, removeFriend, getFriends, getFriendCodesForVendors } from "./friends.js";
 import { changeLogAnchorFor, changeLogVendorMap, toSlug, vendorSlugMap, resolveVendorSlug, namedVendorSlug, comparisonOfOneRecord, recordNamedBySlug, servedVendorSlug, servedVendorSlugForName } from "./vendor-slug.js";
 import { NO_PUSH_NOTICE, watchCommandBlock, watchRequestsFor } from "./change-watching.js";
-import { AN_UNCONFIRMED_CHANGE_SETS_NO_LABEL } from "./change-confirmation.js";
+import { AN_UNCONFIRMED_CHANGE_SETS_NO_LABEL, OURS_ARCHIVE_OUTCOME } from "./change-confirmation.js";
 import { clauseNaming } from "./quoted-figures.js";
 import { figureProvenanceAgainst, statementsWeHold } from "./figure-provenance.js";
 import { statesNoFreeTier } from "./retired-terms.js";
@@ -116,7 +116,7 @@ import { partitionAlternatives, partitionSubstitutes, type SubstitutesPartition,
 import { buildProductFunctions, functionMembers, functionDefinitions, functionMeaningSentence, admissionFor, splitByFunction, labelsNaming, FUNCTION_RESIDUE_COPY, type ProductFunction, FUNCTION_MEMBERSHIP_RULE, FUNCTION_SPLIT_RULE, FUNCTION_NAMING_RULE, FUNCTION_TITLE_RULE, FUNCTION_PICK_RULE } from "./product-function.js";
 import { resolveCuratedAlternatives, curatedAlternativesFor, addCuratedToPool } from "./curated-alternatives.js";
 import type { Agent, ChangeDateSource, DealChange, FreePlanExcerpt, RiskCause, RatingWithheld, LinkUnreachable, Offer, StabilityClass, SubtypeLabel } from "./types.js";
-import { A_DATED_HEADING_MARKER, A_DATED_SECTION_MARKER, datedHeadingNoticeHtml, datedSectionNoticeHtml, namedOnceItsDateArrived, namedWhileAheadOf, namedWhileNotBefore, ANNOUNCED_BADGE, ANNOUNCED_HEADING, announcedIntro, changeDateLabel, changeEntryDateLabel, changeEntryLongDateLabel, changeDateClause, changeDatePublished, changeEventStartDate, capListSections, latestEventDate, offerExpiryAfter, feedEntryUpdated, undatedGroupHeading, UNDATED_TILE_LABEL, firstReadHeading, discoveryBatchNote, coveringBracketedChanges, changeEntryDateLabelHtml, isoWeekOf, monthlyChangeSeries, changesInWindow, discoveryMonthSeriesHeading, periodComparisonSentence, DISCOVERED_DATE_PREFIX, EFFECTIVE_DATE_PREFIX, UNDATED_GROUP_NOTE, UNKNOWN_EFFECTIVE_DATE_MARKER, EFFECTIVE_BY_DATE_MEANING, BRACKETED_DATE_PREFIX, EFFECTIVE_MONTH_SERIES_NOTE, DISCOVERY_MONTH_SERIES_NOTE, weekRangeLabel, newestChangeInEffect, vendorPageLastUpdated } from "./change-dates.js";
+import { A_DATED_HEADING_MARKER, A_DATED_SECTION_MARKER, datedHeadingNoticeHtml, datedSectionNoticeHtml, namedOnceItsDateArrived, namedWhileAheadOf, namedWhileNotBefore, ANNOUNCED_BADGE, ANNOUNCED_HEADING, announcedIntro, changeDateLabel, changeEntryDateLabel, changeEntryLongDateLabel, changeDateClause, changeDatePublished, changeEventStartDate, capListSections, latestEventDate, offerExpiryAfter, feedEntryUpdated, undatedGroupHeading, UNDATED_TILE_LABEL, firstReadHeading, discoveryBatchNote, coveringBracketedChanges, changeEntryDateLabelHtml, isoWeekOf, monthlyChangeSeries, changesInWindow, discoveryMonthSeriesHeading, periodComparisonSentence, DISCOVERED_DATE_PREFIX, EFFECTIVE_DATE_PREFIX, UNDATED_GROUP_NOTE, UNKNOWN_EFFECTIVE_DATE_MARKER, EFFECTIVE_BY_DATE_MEANING, BRACKETED_DATE_PREFIX, RECORDED_DATE_PREFIX, CORRECTED_DATE_PREFIX, EFFECTIVE_MONTH_SERIES_NOTE, DISCOVERY_MONTH_SERIES_NOTE, weekRangeLabel, newestChangeInEffect, vendorPageLastUpdated } from "./change-dates.js";
 import { changeFeedEntries, feedEntryFields, feedUpdatedTimestamp, changeFeedProvenanceNote, CHANGE_FEED_ENTRY_LIMIT, CHANGE_FEED_DESCRIPTION, CHANGE_FEED_NAMESPACE, CHANGE_FEED_NAMESPACE_PREFIX, channelUpdatedTimestamp, WEEKLY_FEED_POPULATION_NOTE, feedLinkTag, feedEntrySourceXml, digestSourceXml, PER_CHANGE_FEED, WEEKLY_DIGEST_FEED } from "./change-feed.js";
 import { changeLogSections, ourRecordsSectionHeading, OUR_RECORDS_SECTION_NOTE, type MonthGroup } from "./change-log-sections.js";
 import { FEED_CORRECTIONS, correctionEntriesXml } from "./feed-corrections.js";
@@ -46997,9 +46997,14 @@ ${globalNavCss()}
   var UNKNOWN_EFFECTIVE_DATE_MARKER = ${JSON.stringify(UNKNOWN_EFFECTIVE_DATE_MARKER)};
   var EFFECTIVE_BY_DATE_MEANING = ${JSON.stringify(EFFECTIVE_BY_DATE_MEANING)};
   var BRACKETED_DATE_PREFIX = ${JSON.stringify(BRACKETED_DATE_PREFIX)};
+  var RECORDED_DATE_PREFIX = ${JSON.stringify(RECORDED_DATE_PREFIX)};
+  var CORRECTED_DATE_PREFIX = ${JSON.stringify(CORRECTED_DATE_PREFIX)};
+  var CORRECTION_TO_OUR_OWN_RECORD = ${JSON.stringify(CORRECTION_TO_OUR_OWN_RECORD)};
+  var OURS_ARCHIVE_OUTCOME = ${JSON.stringify(OURS_ARCHIVE_OUTCOME)};
 
   function changeEntryDateLabel(c) {
     if (c.date_meaning === EFFECTIVE_DATE_PREFIX) return EFFECTIVE_DATE_PREFIX + ' ' + c.date;
+    if (c.change_type === CORRECTION_TO_OUR_OWN_RECORD && c.archive_check && c.archive_check.outcome === OURS_ARCHIVE_OUTCOME) return RECORDED_DATE_PREFIX + ' ' + (c.recorded_date || c.date) + ' \u00b7 ' + CORRECTED_DATE_PREFIX + ' ' + c.archive_check.checked;
     if (c.date_meaning === EFFECTIVE_BY_DATE_MEANING) return BRACKETED_DATE_PREFIX + ' ' + c.archive_check.brackets[0].last_old + ' and ' + c.date;
     return DISCOVERED_DATE_PREFIX + ' ' + c.date + ' \u00b7 ' + UNKNOWN_EFFECTIVE_DATE_MARKER;
   }

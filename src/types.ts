@@ -232,6 +232,9 @@ export interface ArchiveCheck {
   outcome: ArchiveCheckOutcome;
   capture_day?: string | null;
   brackets?: ArchiveBracket[];
+  recorded_as?: DealChange["change_type"] | null;
+  capture?: string | null;
+  stated_then?: string | null;
 }
 
 export type PublishedChangeImpact = DealChange["impact"] | "none";

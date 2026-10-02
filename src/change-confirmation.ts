@@ -2,9 +2,11 @@ import type { ArchiveCheck, ArchiveCheckOutcome } from "./types.js";
 
 export const UNCONFIRMED_ARCHIVE_OUTCOME = "no_usable_capture";
 
+export const OURS_ARCHIVE_OUTCOME = "ours";
+
 export const ARCHIVE_CHECK_OUTCOMES: ArchiveCheckOutcome[] = [
   "vendor_changed",
-  "ours",
+  OURS_ARCHIVE_OUTCOME,
   "removal_stated_before",
   UNCONFIRMED_ARCHIVE_OUTCOME,
   "text_day_unknown",
@@ -19,6 +21,17 @@ export function changeIsUnconfirmed(change: ConfirmableChange): boolean {
 
 export function changeIsConfirmed(change: ConfirmableChange): boolean {
   return !changeIsUnconfirmed(change);
+}
+
+export interface DifferenceInOurText {
+  vendor: string;
+  capture_day: string;
+  text_day: string;
+  record_date: string;
+}
+
+export function differenceInOurTextSummary({ vendor, capture_day, text_day, record_date }: DifferenceInOurText): string {
+  return `Data correction - Not a change by ${vendor}. An Internet Archive copy of its page from ${capture_day} already states the terms this record called new, and our listing of ${text_day} did not match them. Our re-read of ${record_date} recorded the difference as a change.`;
 }
 
 export const AN_UNCONFIRMED_CHANGE_SETS_NO_LABEL =

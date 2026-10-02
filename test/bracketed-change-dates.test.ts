@@ -280,9 +280,9 @@ describe("every surface that dates a bracketed change", () => {
 
   it("labels the change in the compare tool's browser code as the server labels it", async () => {
     const tool = await (await get("/compare-tool")).text();
-    const constants = [...tool.matchAll(/var (?:EFFECTIVE_DATE_PREFIX|DISCOVERED_DATE_PREFIX|UNKNOWN_EFFECTIVE_DATE_MARKER|EFFECTIVE_BY_DATE_MEANING|BRACKETED_DATE_PREFIX) = [^;]+;/g)];
+    const constants = [...tool.matchAll(/var (?:EFFECTIVE_DATE_PREFIX|DISCOVERED_DATE_PREFIX|UNKNOWN_EFFECTIVE_DATE_MARKER|EFFECTIVE_BY_DATE_MEANING|BRACKETED_DATE_PREFIX|RECORDED_DATE_PREFIX|CORRECTED_DATE_PREFIX|CORRECTION_TO_OUR_OWN_RECORD|OURS_ARCHIVE_OUTCOME) = [^;]+;/g)];
     const labeller = tool.match(/function changeEntryDateLabel\(c\) \{[\s\S]*?\n  \}/);
-    assert.ok(labeller && constants.length === 5, "the compare tool no longer labels dates in the browser");
+    assert.ok(labeller && constants.length === 9, "the compare tool no longer labels dates in the browser");
     const label = new Function(`${constants.map((m) => m[0]).join("\n")}\n${labeller![0]}\nreturn changeEntryDateLabel;`)();
     const compared = await (await get(`/api/compare?a=${encodeURIComponent(BRACKETED)}&b=${encodeURIComponent(CONTROL)}`)).json();
     const served = compared.vendor_a.deal_changes.find((c: { date: string }) => c.date === FIRST_NEW);
