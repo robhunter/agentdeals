@@ -23802,7 +23802,7 @@ ${mcpCtaCss()}
       <div class="stat-bar"><div class="stat-bar-fill" style="width:${Math.round(publishedOffers.unrated / offers.length * 100)}%;background:${stabilityColors.unrated}"></div></div>
     </div>
   </div>
-  <p class="section-intro">Every count above is a count of listed offers, out of ${offers.length.toLocaleString()}. An offer is unrated where we withhold its stability class &mdash; a pricing page we could not reach or could not read, a read we refused, or a gated listing. ${unratedVendors.length} of the ${vendorsClassified} vendors we hold a change history for are unrated on that basis, so their records below carry no class.</p>
+  <p class="section-intro">Every count above is a count of listed offers, out of ${offers.length.toLocaleString()}. An offer is unrated where we withhold its stability class &mdash; a pricing page we could not reach or could not read, a read we refused, a gated listing, or a narrowing in our records that cites no source or that no archived copy of the vendor's page has confirmed. ${unratedVendors.length} of the ${vendorsClassified} vendors we hold a change history for are unrated on that basis, so their records below carry no class.</p>
 
   <h2>${stabilityEmoji.volatile} Volatile — High Risk</h2>
   <p class="section-intro">These vendor free tiers have been removed, severely cut, or show multiple negative changes. If you depend on these, plan a migration.</p>

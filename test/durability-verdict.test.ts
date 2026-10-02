@@ -10,6 +10,7 @@ const {
   durabilityVerdictText,
   durabilityBriefText,
   DURABILITY_NOT_A_SIZE_RANKING,
+  STABILITY_CLASS_WITHHOLDING_RULE,
 } = await import("../dist/durability-verdict.js");
 const { NO_RANKING_HELD } = await import("../dist/unranked.js");
 const { superlativeClaims } = await import("../dist/superlative-claims.js");
@@ -271,6 +272,11 @@ describe("#1492 the verdict holds where the data is at an edge", () => {
     const text = durabilityVerdictText(durabilitySplit(["stable", "watch", null]), scope);
     assert.match(text, /1 carries no recorded change to the terms we publish, 1 a recorded narrowing, and we publish no durability signal for 1\./);
     assert.ok(!/recorded widening/.test(text), `a page with nothing widened names a widening: ${text}`);
+  });
+
+  it("gives the grounds the class is withheld on wherever it publishes no signal for an offer", () => {
+    assert.ok(durabilityVerdictText(durabilitySplit(["stable", null]), scope).includes(STABILITY_CLASS_WITHHOLDING_RULE));
+    assert.ok(!durabilityVerdictText(durabilitySplit(["stable", "watch"]), scope).includes(STABILITY_CLASS_WITHHOLDING_RULE));
   });
 
   it("counts an improving offer as a widening and a volatile one as a narrowing", () => {

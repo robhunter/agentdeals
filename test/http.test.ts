@@ -3594,6 +3594,10 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("/state-of-free-tiers"), "Should cross-link to state of free tiers");
     assert.ok(html.includes("/vendor/"), "Should have vendor detail links");
     assert.ok(html.includes("vendor-card"), "Should have vendor cards");
+    assert.ok(
+      html.includes("a read we refused, a gated listing, or a narrowing in our records that cites no source or that no archived copy of the vendor's page has confirmed."),
+      "Should name every ground a stability class is withheld on",
+    );
   });
 
   it("GET /openai-assistants-alternatives renders sunset guide page", async () => {
