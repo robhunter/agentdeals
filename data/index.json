@@ -8116,7 +8116,7 @@
       "vendor": "Semaphore CI",
       "category": "CI/CD",
       "description": "CI/CD platform — free cloud plan: $15 credits/month (~2,000 Ubuntu build minutes), 20 concurrent jobs, YAML pipelines, secrets management. Self-hosted available at $0.0025/min. Cloud starts at $0.0075/min for Ubuntu",
-      "tier": "Community (Self-hosted)",
+      "tier": "Free",
       "url": "https://semaphore.io/pricing",
       "tags": [
         "ci",
@@ -15411,9 +15411,9 @@
     {
       "vendor": "CertKit",
       "category": "Security",
-      "description": "Manage SSL Certificate issuance, renewal, and monitoring. Search the Certificate Transparency Logs. Free for 3 certificates and 1 user after the beta.",
+      "description": "CertKit automates SSL/TLS certificate issuance and renewal, deploys certificates through an agent, monitors domains' SSL certificates, and searches Certificate Transparency logs. The Homelab plan is free for personal, non-commercial use only, with 2 certificates, 1 agent, 1 seat and 3 domain SSL monitors. Businesses get a 90-day free trial instead.",
       "tier": "Free",
-      "url": "https://www.certkit.io/certificate-management",
+      "url": "https://www.certkit.io/pricing",
       "tags": [
         "security",
         "free-for-dev"
@@ -15422,13 +15422,7 @@
       "source_check": {
         "checked": "2026-10-02",
         "outcome": "ok",
-        "detail": "the page names CertKit as \"certkit\" and states amounts, none of which we matched to the terms we publish",
-        "rendered": true
-      },
-      "free_plan_excerpt": {
-        "text": "Homelab Free Personal, non-commercial use.",
-        "url": "https://www.certkit.io/certificate-management",
-        "read_on": "2026-10-02"
+        "detail": "the page names CertKit as \"certkit\" and states amounts, none of which we matched to the terms we publish"
       }
     },
     {
@@ -32198,9 +32192,9 @@
     {
       "vendor": "NS1 Connect",
       "category": "DNS & Domain Management",
-      "description": "Free Developer tier: 5 million queries/month, 500 DNS records, 1 filter chain, 1 monitor. Full API access and traffic steering. No time limit.",
+      "description": "NS1 Connect is a managed DNS and traffic steering service. Sign-up starts a 30-day free trial. An account that does not subscribe then moves to the Free Edition with 5 million DNS queries a month, 500 DNS records, 1 filter chain, 2 monitors and 1 HTTPS redirect.",
       "tier": "Free",
-      "url": "https://www.ibm.com/products/ns1-connect/pricing",
+      "url": "https://community.ibm.com/community/user/blogs/claire-odonovan/2025/11/07/ibm-ns1connect-trial-free-30days",
       "tags": [
         "dns",
         "traffic-management",
@@ -32210,12 +32204,7 @@
       "source_check": {
         "checked": "2026-10-02",
         "outcome": "ok",
-        "detail": "the page names NS1 Connect as \"ns1 connect\" and states amounts, none of which we matched to the terms we publish"
-      },
-      "free_plan_excerpt": {
-        "text": "Plan Name: Trial 30 day Free Trial Pricing: Free trial Features 50M DNS queries/month 500 DNS records 20 health check monitor 10 traffic steering chains 50 HTTPS redirects",
-        "url": "https://www.ibm.com/products/ns1-connect/pricing",
-        "read_on": "2026-10-02"
+        "detail": "the page names NS1 Connect as \"ns1 connect\" and states \"5 million DNS Queries per month\""
       }
     },
     {
