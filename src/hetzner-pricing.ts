@@ -49,7 +49,9 @@ export const HETZNER_APRIL_CHANGES = [
   { product: "AX41-NVMe dedicated server, Germany", before: "€41.10", after: "€42.30", pctChange: 3 },
 ];
 
-export const HETZNER_AX102_GERMANY = { beforeApril: 107.3, afterApril: 122.3 };
+export const HETZNER_AX102_GERMANY = { beforeApril: 107.3, afterApril: 122.3, initialJune: 452.3, newOrder: 257.3 };
+
+export const HETZNER_AX42_GERMANY = { beforeApril: 47.3, afterApril: 57.3, initialJune: 187.3, newOrder: 97.3 };
 
 export function cheapestOrderableHetznerPlan(): HetznerPlan {
   const orderable = HETZNER_CLOUD_PLANS.filter(p => p.available);

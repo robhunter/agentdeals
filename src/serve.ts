@@ -49,7 +49,7 @@ import { CHECK_ESTABLISHES, CHECK_SCOPE_CLASS, NO_CATALOGUE_RECORD_SOURCE, cited
 import { vendorHistorySentence } from "./vendor-history.js";
 import { guideBlurb } from "./guide-blurbs.js";
 import { changesToStartupProgrammes } from "./startup-programme-changes.js";
-import { HETZNER_APRIL_CHANGES, HETZNER_AX102_GERMANY, HETZNER_CLOUD_PLANS, HETZNER_PRICES_READ, HETZNER_PRICE_SOURCE, HETZNER_SINGAPORE_EXAMPLE, cheapestOrderableHetznerPlan, hetznerEntryPriceClause, unorderableHetznerPlans } from "./hetzner-pricing.js";
+import { HETZNER_APRIL_CHANGES, HETZNER_AX102_GERMANY, HETZNER_AX42_GERMANY, HETZNER_CLOUD_PLANS, HETZNER_PRICES_READ, HETZNER_PRICE_SOURCE, HETZNER_SINGAPORE_EXAMPLE, cheapestOrderableHetznerPlan, hetznerEntryPriceClause, unorderableHetznerPlans } from "./hetzner-pricing.js";
 import { HUNDRED_GB_SCENARIO, HUNDRED_TB_SCENARIO, ONE_TO_ONE_SCENARIO, STORAGE_RATES_READ, STORAGE_SCALE_WORKLOADS, TEN_TO_ONE_SCENARIO, cheapestProviderAt, costAfterMonthlyEgressGrantFor, costliestProviderAt, egressAllowanceSentence, egressBillAfterMonthlyGrantFor, egressBillOnceOverAllowance, egressRatioWhereCostsMatch, fixedMonthlyGrantsSentence, monthlyEgressGrantGb, monthlyEgressGrantSentence, monthlyStorageCost, providersWithScalingEgressAllowance, rateCardFor, scaleCostFor } from "./storage-cost-model.js";
 import { changeTimelineDate, supersededLineups, supersessionNote } from "./change-lineup.js";
 import { isACorrectionToOurOwnRecord, isNoLongerInForce, eventResolutionFields, recordsStillInForce, recordsWeStandBehind, INCLUDE_RETRACTED_REJECTED } from "./change-resolution.js";
@@ -19046,7 +19046,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="executive-summary">
-    <p><strong>Hetzner raised cloud prices twice in 2026, and the second round changed the lineup as well as the numbers.</strong> The April 1 adjustment applied to all regions and all customers, new and existing. The June 15 adjustment applies only to new orders and rescales — existing server contracts keep their terms — and it came with a standardization that renamed the plans.</p>
+    <p><strong>Hetzner raised cloud prices twice in 2026, and the second round changed the lineup as well as the numbers.</strong> The April 1 adjustment applied to all regions and all customers, new and existing. The June 15 adjustment applies only to new orders and rescales — existing server contracts keep their terms — and it came with a standardization that renamed the plans. The June 15 adjustment raised Regular Performance (CPX) plans 144-175%, General Purpose (CCX) plans 113-173%, and Cost-Optimized (CX, CAX) plans 30-38% in Germany and Finland.</p>
     <p><strong>Every Cost-Optimized plan is currently unavailable.</strong> All ${unorderable.length} plans in the Cost-Optimized line, Intel and Arm alike, are listed on hetzner.com with a price and marked not available. The cheapest plan a reader can actually order is <strong>${escHtmlServer(cheapestOrderable.sku)} at ${eur(cheapestOrderable.eur)}/mo</strong> (${cheapestOrderable.vcpu} vCPU, ${cheapestOrderable.ram} GB). A price for a plan nobody can buy is not an entry price.</p>
     <p><strong>Hardware costs increased.</strong> Hetzner cited increased costs to operate infrastructure and buy new hardware.</p>
   </div>
@@ -19091,7 +19091,7 @@ ${mcpCtaCss()}
       </tbody>
     </table>
   </div>
-  <p class="section-intro" style="margin-top:0">Hetzner's table also gives dollar prices, which moved by different amounts: cloud servers rose 28-43% in dollars (CX23 from $3.49 to $4.99), against 30-37% in euros. Memory upgrades for dedicated servers are not in the April table. Hetzner raised them in February: its add-on price list, last changed 2026-02-17, put a 64 GB DDR5 ECC step at €111 a month, up from €22, and a 32 GB step at €66, up from €14. Adding 128 GB of memory that way cost more than a whole AX102 server with 128 GB built in (${eur(HETZNER_AX102_GERMANY.beforeApril)} a month before April, ${eur(HETZNER_AX102_GERMANY.afterApril)} after, in Germany). Of the products in this table, the load balancer is the one we have re-read since: LB11 is still €7.49, and load balancers were explicitly excluded from the June round.</p>
+  <p class="section-intro" style="margin-top:0">Hetzner's table also gives dollar prices, which moved by different amounts: cloud servers rose 28-43% in dollars (CX23 from $3.49 to $4.99), against 30-37% in euros. Dedicated servers rose 2-21% in euros and 3-26% in dollars on 1 April 2026. In Germany, the AX42 went from ${eur(HETZNER_AX42_GERMANY.beforeApril)} to ${eur(HETZNER_AX42_GERMANY.afterApril)}. A new AX42 now costs ${eur(HETZNER_AX42_GERMANY.newOrder)} and a new AX102 ${eur(HETZNER_AX102_GERMANY.newOrder)}, excluding IPv4, up from ${eur(HETZNER_AX42_GERMANY.afterApril)} and ${eur(HETZNER_AX102_GERMANY.afterApril)} after April but down from the initial June prices of ${eur(HETZNER_AX42_GERMANY.initialJune)} and ${eur(HETZNER_AX102_GERMANY.initialJune)}, cut on 30 June. Memory upgrades for dedicated servers are not in the April table. Hetzner raised them in February: its add-on price list of 2026-02-17 put a 64 GB DDR5 ECC step at €111 a month, up from €22, and a 32 GB step at €66, up from €14. Until 15 June, adding 128 GB of memory that way cost more than a whole AX102 server with 128 GB built in (${eur(HETZNER_AX102_GERMANY.beforeApril)} a month before April, ${eur(HETZNER_AX102_GERMANY.afterApril)} after, in Germany). Of the products in this table, the load balancer is the one we have re-read since: LB11 is still €7.49, and load balancers were explicitly excluded from the June round.</p>
 
   <h2 id="why">3. Why Prices Rose</h2>
   <div class="context-box">
@@ -19126,7 +19126,7 @@ ${mcpCtaCss()}
   </div>
   <div class="impact-card" style="border-left-color:#f85149">
     <h3><span style="display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;background:#f8514922;color:#f85149;font-weight:600;margin-right:.5rem">HIGH</span>Production Workloads &amp; Memory-Heavy Apps</h3>
-    <p class="impact-desc">Dedicated servers with RAM add-ons and large server fleets: +€50-200/mo or more. Memory upgrades rose separately in February: 128 GB as two 64 GB DDR5 ECC steps went from €44 to €222 a month. Consider dedicated servers (where RAM is bundled) or auction servers.</p>
+    <p class="impact-desc">Dedicated servers with RAM add-ons and large server fleets: +€50-200/mo or more. Memory upgrades rose separately in February: 128 GB as two 64 GB DDR5 ECC steps went from €44 to €222 a month. Consider auction servers.</p>
   </div>
 
   <h2 id="alternatives">6. Alternatives Comparison</h2>
@@ -19167,10 +19167,6 @@ ${mcpCtaCss()}
     <div class="impact-card" style="border-left-color:#3fb950">
       <h3>Use Auction Servers</h3>
       <p class="impact-desc">The Server Auction was excluded from the June round and rose about 3% in April. It offers dedicated hardware at discounted rates, and it is the line least moved by either adjustment.</p>
-    </div>
-    <div class="impact-card" style="border-left-color:#3fb950">
-      <h3>Bundle RAM in Dedicated Servers</h3>
-      <p class="impact-desc">After April, an AX102 with 128 GB built in cost ${eur(HETZNER_AX102_GERMANY.afterApril)} a month in Germany, while adding 128 GB of DDR5 ECC memory to a server cost €222-264 a month. Choose servers with the memory you need built in.</p>
     </div>
     <div class="impact-card" style="border-left-color:#d29922">
       <h3>The Arm line is not an escape route</h3>

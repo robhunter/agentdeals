@@ -114,6 +114,8 @@ function constructedStatus(over: Partial<PageReviewRecord> = {}) {
   }, "2026-09-20");
 }
 
+const dayAfter = (day: string) => new Date(Date.parse(`${day}T00:00:00Z`) + 86_400_000).toISOString().slice(0, 10);
+
 const A_READ_AFTER_THE_PAGE_WAS_PUBLISHED: DeclaredFigureRead[] = [
   { path: "/p", read_on: "2026-06-01", vendors: ["hetzner"], cited_from: "example.test", covers: "section 1" },
 ];
@@ -150,10 +152,11 @@ describe("a flag left standing by a declared read names that read as its referen
 
 describe("a fact names the date it was measured against and where that date came from", () => {
   it("carries the page clock on a flag no declared read reaches", () => {
-    const flag = flagsOn("/hetzner-pricing-2026").find(f => f.slug === "render");
-    assert.ok(flag, "render is no longer flagged on /hetzner-pricing-2026");
+    const status = constructedStatus({ path: "/hetzner-pricing-2026", vendors_tabulated: ["hetzner", "render"] });
+    const flag = factsOutdatedBy(status, () => dayAfter(HETZNER_PLAN_TABLE_READ_ON)).find(f => f.slug === "render");
+    assert.ok(flag, "render is not flagged on /hetzner-pricing-2026 though its record is newer than the page clock");
     assert.strictEqual(flag!.compared_against_source, "page_clock");
-    assert.strictEqual(flag!.compared_against, statusFor("/hetzner-pricing-2026").clock_starts);
+    assert.strictEqual(flag!.compared_against, status.clock_starts);
   });
 
   it("every flag on every page names a reference date the registry can account for", () => {
@@ -171,33 +174,39 @@ describe("a fact names the date it was measured against and where that date came
 
 describe("the hetzner plan table is dated by the read that produced it", () => {
   const PAGE = "/hetzner-pricing-2026";
+  const page = constructedStatus({ path: PAGE, vendors_tabulated: ["fly-io", "hetzner", "railway", "render", "vultr"] });
+  const declared = declaredFigureReadsFor(PAGE);
+  const tableFlags = (changed: string, reads: readonly DeclaredFigureRead[] = DECLARED_FIGURE_READS) =>
+    factsOutdatedBy(page, () => changed, reads).filter(f => f.surface === "table").map(f => f.slug).sort();
 
   it("flags the vendor its plan table states a read for only where the record is newer than the read", () => {
-    const declared = declaredFigureReadsFor(PAGE).find(read => read.vendors.includes("hetzner"));
-    assert.ok(declared);
-    const moved = changeDateFor("hetzner");
-    assert.ok(moved, "the change log holds nothing for hetzner");
-    assert.strictEqual(tableFlagSlugs(PAGE).includes("hetzner"), moved! > declared!.read_on);
-    assert.ok(tableFlagSlugs(PAGE, []).includes("hetzner"));
+    const read = declared.find(entry => entry.vendors.includes("hetzner"));
+    assert.ok(read);
+    assert.ok(read!.read_on > page.clock_starts, "the read is no newer than the page clock, so it dates nothing");
+    assert.ok(!tableFlags(read!.read_on).includes("hetzner"));
+    assert.ok(tableFlags(dayAfter(read!.read_on)).includes("hetzner"));
+    assert.ok(tableFlags(read!.read_on, []).includes("hetzner"));
   });
 
   it("moves no flag on the page except one a declared read names", () => {
-    const named = new Set(declaredFigureReadsFor(PAGE).flatMap(read => read.vendors));
-    const before = tableFlagSlugs(PAGE, []);
-    const after = tableFlagSlugs(PAGE);
-    assert.deepStrictEqual(after.filter(slug => !before.includes(slug)), []);
-    assert.deepStrictEqual(
-      before.filter(slug => !after.includes(slug) && !named.has(slug)),
-      [],
-    );
+    const named = new Set(declared.flatMap(read => read.vendors));
+    for (const changed of [dayAfter(page.clock_starts), ...declared.map(read => read.read_on)]) {
+      const before = tableFlags(changed, []);
+      const after = tableFlags(changed);
+      assert.deepStrictEqual(after.filter(slug => !before.includes(slug)), []);
+      assert.deepStrictEqual(
+        before.filter(slug => !after.includes(slug) && !named.has(slug)),
+        [],
+      );
+    }
   });
 
   it("keeps the four rows the section-one read does not cover", () => {
-    const declared = declaredFigureReadsFor(PAGE);
     assert.strictEqual(declared.length, 1);
-    const uncovered = tableFlagSlugs(PAGE, []).filter(slug => !declared[0]!.vendors.includes(slug));
+    const changed = declared[0]!.read_on;
+    const uncovered = tableFlags(changed, []).filter(slug => !declared[0]!.vendors.includes(slug));
     assert.ok(uncovered.length >= 4);
-    for (const slug of uncovered) assert.ok(tableFlagSlugs(PAGE).includes(slug));
+    for (const slug of uncovered) assert.ok(tableFlags(changed).includes(slug));
   });
 });
 
