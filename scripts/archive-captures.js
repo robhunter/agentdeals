@@ -539,16 +539,15 @@ function figuresStated(words) {
   return new Set(valuesStated(words).filter((value) => !VALUE_WORDS.includes(value)));
 }
 
-const LINE_STATING_A_CHANGE_WITHOUT_FIGURES = {
+const LINE_STATING_THE_REMOVAL = {
   product_deprecated: { states: (line) => readDeprecation(line) !== null, missing: "no line copied from it reads as a deprecation" },
   free_tier_removed: { states: (line) => descriptionDeniesFreeTier(line), missing: "no line copied from it says there is no free tier" },
   restriction: null,
   open_source_killed: null,
 };
 
-function changeOfItsTypeUnstated(changeType, changes) {
-  if (!Object.hasOwn(LINE_STATING_A_CHANGE_WITHOUT_FIGURES, changeType)) return null;
-  const rule = LINE_STATING_A_CHANGE_WITHOUT_FIGURES[changeType];
+function removalUnstatedBecause(changeType, changes) {
+  const rule = LINE_STATING_THE_REMOVAL[changeType];
   if (!rule) return `${changeType} records always go to review`;
   return changes.some((change) => rule.states(change.old)) ? null : rule.missing;
 }
@@ -576,8 +575,9 @@ export function judgeStatedBefore(answer, record, olderText) {
   };
   const unstated = changes.map((change) => ({ ...change, why: whyUnstated(change) })).filter((change) => change.why);
   if (unstated.length === 0) {
-    const ofItsType = changeOfItsTypeUnstated(record.change_type, changes);
-    return ofItsType ? { status: "unstated", why: ofItsType, review: [] } : { status: "stated", stated_then: changes };
+    if (!Object.hasOwn(LINE_STATING_THE_REMOVAL, record.change_type)) return { status: "stated", stated_then: changes };
+    const removalUnstated = removalUnstatedBecause(record.change_type, changes);
+    return removalUnstated ? { status: "unstated", why: removalUnstated, review: [] } : { status: "removal_stated", stated_then: changes };
   }
   return {
     status: "unstated",
@@ -753,6 +753,7 @@ export async function settleAgainstCaptures({ url, finalUrl, textDay, recordDay,
     const agreed = async (verdict, laterMoves = []) => {
       if (side !== "before") return { next: true, why: "the capture states the terms the page stated on the record's day, but a capture after our text's day cannot show the difference was ours" };
       const before = await statedBefore(old);
+      if (before.status === "removal_stated") return { outcome: "removal_stated_before", compared_with: comparedWith, stated_then: before.stated_then, why: `the ${old.page} already states the removal, so it predates our text: to be dated` };
       if (before.status !== "stated") return { outcome: "no_usable_capture", compared_with: comparedWith, review: before.review, why: `the ${old.page} states the plan's terms as the page did on the record's day, but ${before.why}` };
       return { outcome: "ours", compared_with: comparedWith, terms_then: verdict.old_terms, stated_then: before.stated_then, later_moves: laterMoves };
     };

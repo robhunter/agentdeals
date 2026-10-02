@@ -8,6 +8,7 @@ export const SPLIT = {
   recentVendorChange: "vendor change inside 180 days",
   olderVendorChange: "vendor change before that",
   ours: "our correction",
+  removalStatedBefore: "removal stated before our text, keeps its badge: to review",
   noCaptureBadgeToReview: "no usable capture, set a badge: to review",
   noCapture: "no usable capture, set no badge",
   textDayUnknown: "text day unknown",
@@ -52,6 +53,7 @@ function daysBefore(day, days) {
 
 export function splitOf(settled, today, badge = null) {
   if (settled.outcome === "ours") return SPLIT.ours;
+  if (settled.outcome === "removal_stated_before") return SPLIT.removalStatedBefore;
   if (settled.outcome === "text_day_unknown") return SPLIT.textDayUnknown;
   if (settled.outcome === "page_unreadable_today") return SPLIT.pageUnreadable;
   if (settled.outcome === "reader_failed") return SPLIT.readerFailed;
@@ -147,7 +149,7 @@ export async function settleFirstReadings({ changes, offers, today, archive, pai
 
 export function reviewList(results) {
   return results
-    .filter((result) => result.split === SPLIT.noCaptureBadgeToReview)
+    .filter((result) => result.split === SPLIT.noCaptureBadgeToReview || result.split === SPLIT.removalStatedBefore)
     .map((result) => ({
       vendor: result.vendor,
       date: result.date,
@@ -157,6 +159,7 @@ export function reviewList(results) {
       why: result.why ?? null,
       ...(result.tried ? { tried: result.tried } : {}),
       lines: result.review ?? [],
+      ...(result.split === SPLIT.removalStatedBefore ? { stated_then: result.stated_then ?? [] } : {}),
     }));
 }
 

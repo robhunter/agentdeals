@@ -146,9 +146,9 @@ describe("the change a record's type names, when it is not a figure", () => {
     assert.deepStrictEqual(verdict.review, []);
   });
 
-  it("is found for a product_deprecated record whose older capture already carries the shutdown line", () => {
+  it("is found for a product_deprecated record whose older capture already carries the shutdown line, as a removal older than our text", () => {
     const answer = [{ record: "Lost Pixel is being sunset as they are joining Figma", old_page: "We are sunsetting the product and building what's next." }, ...LOST_PIXEL_PLAN_LINES_ONLY];
-    assert.strictEqual(statusOf(LOST_PIXEL, answer, LOST_PIXEL_SUNSET_CAPTURE).status, "stated");
+    assert.strictEqual(statusOf(LOST_PIXEL, answer, LOST_PIXEL_SUNSET_CAPTURE).status, "removal_stated");
   });
 
   it("is missing for a free_tier_removed record whose copied lines offer a trial but never say there is no free tier", () => {
@@ -159,10 +159,10 @@ describe("the change a record's type names, when it is not a figure", () => {
     assert.strictEqual(verdict.why, "no line copied from it says there is no free tier");
   });
 
-  it("is found for a free_tier_removed record whose older capture already says there is no free tier", () => {
+  it("is found for a free_tier_removed record whose older capture already says there is no free tier, as a removal older than our text", () => {
     const capture = `Website feedback for teams. No free tier. 7-day free trial Cancel anytime No credit card required. ${FILLER}`;
     const answer = [{ record: "The deal is no longer a permanently free tier.", old_page: "No free tier." }, WEBVIZIO_TRIAL_LINES[1]];
-    assert.strictEqual(statusOf(WEBVIZIO, answer, capture).status, "stated");
+    assert.strictEqual(statusOf(WEBVIZIO, answer, capture).status, "removal_stated");
   });
 
   for (const changeType of ["restriction", "open_source_killed"]) {
@@ -246,6 +246,15 @@ describe("settling a record whose terms the capture and the record's day agree o
     assert.strictEqual(result.outcome, "no_usable_capture");
     assert.deepStrictEqual(result.review, []);
     assert.strictEqual(result.why, "the capture 2026-02-09 states the plan's terms as the page did on the record's day, but no line copied from it reads as a deprecation");
+  });
+
+  it("never calls a removal ours: one the older capture already states keeps its type and goes to review, to be dated", async () => {
+    const answer = [{ record: "Lost Pixel is being sunset as they are joining Figma", old_page: "We are sunsetting the product and building what's next." }, ...LOST_PIXEL_PLAN_LINES_ONLY];
+    const { settled } = settleWithOneCapture(LOST_PIXEL, LOST_PIXEL_SUNSET_CAPTURE, statedBeforeReaderFor(clientAnswering(answer), LOST_PIXEL));
+    const result = await settled;
+    assert.strictEqual(result.outcome, "removal_stated_before");
+    assert.strictEqual(result.why, "the capture 2026-02-09 already states the removal, so it predates our text: to be dated");
+    assert.deepStrictEqual(result.stated_then.map((change: { old: string }) => change.old), answer.map((change) => change.old_page));
   });
 
   it("never calls it ours when no reader is asked for the line", async () => {

@@ -1,7 +1,7 @@
 import { describe, it } from "node:test";
 import assert from "node:assert";
 
-const { firstReadingsInForce, splitOf, listingFor, settleFirstReadings, SPLIT, badgesByRecord, recordKey, inShard, parseShard } = await import("../scripts/settle-discovered-records.js");
+const { firstReadingsInForce, splitOf, listingFor, settleFirstReadings, SPLIT, badgesByRecord, recordKey, inShard, parseShard, reviewList } = await import("../scripts/settle-discovered-records.js");
 
 type Change = Record<string, unknown>;
 
@@ -82,6 +82,24 @@ describe("the split posted on the issue", () => {
     assert.strictEqual(splitOf({ outcome: "ours" }, TODAY, "risky"), SPLIT.ours);
     assert.strictEqual(splitOf({ outcome: "text_day_unknown" }, TODAY, "risky"), SPLIT.textDayUnknown);
     assert.strictEqual(splitOf({ outcome: "vendor_changed", brackets: [{ last_old: "2026-09-01", first_new: "2026-09-02" }] }, TODAY, "risky"), SPLIT.recentVendorChange);
+  });
+
+  it("gives a removal the older capture already states its own row, whatever badge it set", () => {
+    for (const badge of ["risky", "caution", null]) assert.strictEqual(splitOf({ outcome: "removal_stated_before" }, TODAY, badge), SPLIT.removalStatedBefore);
+  });
+});
+
+describe("the review list", () => {
+  it("carries a removal the older capture already states, with its badge and the lines that state it, and leaves our own differences off", () => {
+    const statedThen = [{ record: "Sunset is shutting down", old: "We are sunsetting the product" }];
+    const review = reviewList([
+      { vendor: "Sunset", date: "2026-08-28", change_type: "product_deprecated", badge: "risky", split: SPLIT.removalStatedBefore, why: "the capture 2026-02-09 already states the removal, so it predates our text: to be dated", stated_then: statedThen },
+      { vendor: "Ours", date: "2026-08-28", change_type: "limits_reduced", badge: "caution", split: SPLIT.ours, stated_then: statedThen },
+    ]);
+    assert.deepStrictEqual(
+      review.map((entry: { vendor: string; badge: string; why: string; stated_then?: unknown }) => [entry.vendor, entry.badge, entry.why, entry.stated_then]),
+      [["Sunset", "risky", "the capture 2026-02-09 already states the removal, so it predates our text: to be dated", statedThen]],
+    );
   });
 });
 
