@@ -13556,6 +13556,20 @@
       "alternatives": [],
       "recorded_date": "2026-10-01",
       "date_source": "vendor_page"
+    },
+    {
+      "vendor": "Fly.io",
+      "change_type": "pricing_restructured",
+      "date": "2026-10-01",
+      "summary": "Fly.io raised the price of memory on Machines to $6.00 per GB a month, from about $5, and left CPU prices unchanged. Every preset includes memory, so every preset costs more: shared-cpu-2x with 512 MB went from $3.89 to $4.39 a month in Ashburn and Secaucus, and performance-1x with 2 GB from $31.00 to $33.00. The smallest, shared-cpu-1x with 256 MB, is now $2.19.",
+      "previous_state": "Machines in Ashburn (iad) and Secaucus (ewr): shared-cpu-2x 512MB $3.89/month, performance-1x 2GB $31.00/month, each preset's price \"plus about $5 per 30 days per GB of additional RAM\" (fly.io/docs/about/pricing, Internet Archive capture of 2026-09-17)",
+      "current_state": "\"Effective October 1, 2026\": shared-cpu-1x 256MB $2.19/month, shared-cpu-2x 512MB $4.39, performance-1x 2GB $33.00; \"every one takes more RAM at $6.00 per GB per month, up to 128GB\"; \"Machine CPU pricing is unchanged.\" (fly.io/pricing-update)",
+      "impact": "medium",
+      "source_url": "https://fly.io/pricing-update/",
+      "category": "Cloud Hosting",
+      "alternatives": [],
+      "recorded_date": "2026-10-02",
+      "date_source": "vendor_page"
     }
   ]
 }
