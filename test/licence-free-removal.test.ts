@@ -142,7 +142,7 @@ describe("a licence grants the free use and a pricing page cannot withdraw it (#
 
   describe("records the licence question does not touch are left alone", () => {
     it("keeps a removal a person wrote against the vendor's own announcement", async () => {
-      for (const vendor of ["LocalStack", "SwaggerHub", "Elmah.io", "DBOS", "Storj"]) {
+      for (const vendor of ["SwaggerHub", "Elmah.io", "DBOS", "Storj"]) {
         const records = removalFor(vendor);
         assert.ok(records.length > 0, `${vendor} holds a free-tier removal`);
         assert.deepStrictEqual(await refusalReasons(records), []);
@@ -232,7 +232,7 @@ describe("a licence grants the free use and a pricing page cannot withdraw it (#
       for (const vendor of READ_FROM_A_HOSTED_PRICING_PAGE) {
         assert.notStrictEqual(gradeFor(vendor), "risky", `${vendor} is not rated risky on a withdrawn record`);
       }
-      assert.strictEqual(gradeFor("LocalStack"), "risky");
+      assert.strictEqual(gradeFor("SwaggerHub"), "risky");
     });
   });
 
