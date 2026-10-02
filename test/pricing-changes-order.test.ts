@@ -30,6 +30,7 @@ describe("the order of the change log", () => {
   const reversed = { resolution: { state: "reversed", date: "2026-10-02" } };
   const log = [
     logged("Undated older", "limits_reduced", "2026-06-01", "discovered"),
+    logged("Early September", "limits_increased", "2026-09-02", "vendor_page"),
     logged("Older", "limits_reduced", "2026-07-31", "vendor_page"),
     logged("Retracted undated", "limits_reduced", "2026-09-01", "discovered", retracted),
     logged("Undated", "pricing_restructured", "2026-09-15", "discovered"),
@@ -48,7 +49,7 @@ describe("the order of the change log", () => {
     assert.deepStrictEqual(months(sections.recentMonths), [
       "2026-11: Announced",
       "2026-10: This month",
-      "2026-09: Reversed",
+      "2026-09: Reversed, Early September",
       "2026-08: Two months back",
     ]);
   });
