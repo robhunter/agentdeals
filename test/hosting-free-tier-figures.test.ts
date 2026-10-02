@@ -307,7 +307,7 @@ const RETIRED_FIGURES: Retired[] = [
   {
     what: "Neon ranked the best SaaS database, or said to be used internally by named companies",
     pattern: /best SaaS database|Vercel, Replit, and Retool use internally/i,
-    replacedBy: /Free plan: 0\.5 GB of storage and 100 CU-hours per project/,
+    replacedBy: /Free plan: 1 GB of storage and 100 CU-hours per project/,
     vendorRecord: () => recordFor("Neon", "Databases").description,
   },
   {

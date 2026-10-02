@@ -4010,7 +4010,7 @@ const VS_PAGES: VsPageConfig[] = [
     verdict: "Neon is serverless Postgres with branching and scale-to-zero. Turso is edge-native SQLite with global replication. Both are modern, developer-friendly databases — Neon for Postgres compatibility, Turso for ultra-low-latency edge reads.",
     keyDifferences: `<ul>
       <li><strong>Database engine:</strong> Neon runs PostgreSQL (full compatibility, extensions, SQL ecosystem). Turso runs libSQL (SQLite fork with server mode and replication).</li>
-      <li><strong>Free tier:</strong> Neon offers 0.5 GB storage per project, 100 CU-hours/month, up to 100 projects. Turso offers 5 GB storage, 100 databases, 500M rows read/month — significantly more storage.</li>
+      <li><strong>Free tier:</strong> Neon offers 1 GB of storage per project (20 GB in total), 100 CU-hours/month, up to 100 projects. Turso offers 5 GB storage, 100 databases, 500M rows read/month — significantly more storage.</li>
       <li><strong>Edge story:</strong> Turso replicates data to edge locations for sub-millisecond reads. Neon runs in a single region but offers a serverless driver for edge function compatibility.</li>
       <li><strong>Branching:</strong> Neon's killer feature is instant database branching — create full copies for CI/CD preview environments in seconds. Turso doesn't have an equivalent.</li>
     </ul>`,
@@ -7427,7 +7427,7 @@ const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
       </tr>
       <tr>
         <td style="font-weight:600"><a href="/vendor/neon" style="color:var(--text)">Neon</a></td>
-        <td>512 MB</td>
+        <td>1 GB per project</td>
         <td>Serverless Postgres</td>
         <td>7-day history</td>
         <td>Yes (Apache 2.0)</td>
@@ -10868,7 +10868,7 @@ ${buildCards(timeSeries)}
       <tr>
         <td style="font-weight:600"><a href="/vendor/neon" style="color:var(--text)">Neon</a></td>
         <td>Postgres</td>
-        <td>0.5 GB</td>
+        <td>1 GB per project</td>
         <td>Serverless Postgres with branching</td>
       </tr>
       <tr>
@@ -16752,9 +16752,9 @@ function buildFreeNextjsStackPage(): string {
     {
       name: "Database",
       icon: "🗄️",
-      recommended: { vendor: "Neon", why: "Serverless Postgres with branching — perfect for Next.js server components and API routes. Free plan: 0.5 GB of storage and 100 CU-hours per project, up to 100 projects, scales to zero after 5 minutes idle. Neon's serverless driver (@neondatabase/serverless) works in Vercel Edge Functions where traditional Postgres clients cannot." },
+      recommended: { vendor: "Neon", why: "Serverless Postgres with branching — perfect for Next.js server components and API routes. Free plan: 1 GB of storage and 100 CU-hours per project, up to 100 projects and 20 GB of storage in total, scales to zero after 5 minutes idle. Neon's serverless driver (@neondatabase/serverless) works in Vercel Edge Functions where traditional Postgres clients cannot." },
       alternatives: ["Supabase", "Turso", "PlanetScale"],
-      outgrow: "When you exceed 0.5 GiB storage or need always-on connections. Supabase offers 500 MB storage with built-in auth and realtime but pauses after 7 days inactive. Turso gives 5 GB total storage across edge locations. PlanetScale's free tier was removed in April 2024.",
+      outgrow: "When you exceed 1 GB of storage or need always-on connections. Supabase offers 500 MB storage with built-in auth and realtime but pauses after 7 days inactive. Turso gives 5 GB total storage across edge locations. PlanetScale's free tier was removed in April 2024.",
       whyNot: "Why not PlanetScale: Free tier removed April 2024 — now starts at $39/month. Why not MongoDB Atlas: 512 MB storage is workable, but Postgres is the better fit for Next.js's server-side patterns (Prisma, Drizzle, raw SQL in server components).",
       relatedPage: "/database-free-tier-comparison-2026",
     },
@@ -16854,9 +16854,9 @@ function buildFreeNextjsStackPage(): string {
 
   const faqJsonLd = faqPageJsonLd("/free-nextjs-stack", [
     { q: "Is Vercel free for Next.js?", a: "Yes. Vercel's Hobby plan is free, with 100 GB of Fast Data Transfer, 1M function invocations and 4 hours of Fluid Active CPU a month, and builds included. However, it's limited to non-commercial, personal use. For commercial projects, Vercel Pro is $20 a month with one deploying seat, and $20 for each additional deploying seat. Alternatives like Railway ($5 trial credit for 30 days, then $1 of free credit a month) and Cloudflare Pages (unlimited bandwidth) allow commercial use on free tiers." },
-    { q: "What's the best free database for Next.js?", a: "Neon (serverless Postgres) has a serverless driver that works in Vercel Edge Functions, it scales to zero when not in use, and offers 0.5 GiB storage free. Supabase (500 MB, includes auth and realtime) is great if you need a full BaaS. Turso (5 GB, edge SQLite) is ideal for read-heavy apps. PlanetScale removed its free tier in April 2024." },
+    { q: "What's the best free database for Next.js?", a: "Neon (serverless Postgres) has a serverless driver that works in Vercel Edge Functions, it scales to zero when not in use, and offers 1 GB of storage per project free. Supabase (500 MB, includes auth and realtime) is great if you need a full BaaS. Turso (5 GB, edge SQLite) is ideal for read-heavy apps. PlanetScale removed its free tier in April 2024." },
     { q: "Can I build a SaaS for free with Next.js?", a: "Yes — with limits. This guide covers 10 infrastructure layers that cost $0/month total: hosting (Vercel), database (Neon), auth (Clerk 10K MAU), storage (R2), email (Resend 3K/mo), monitoring (Sentry), CI/CD (GitHub Actions), analytics (PostHog 1M events), search (Algolia 10K records), and background jobs (Inngest 25K runs). Most projects can run their entire stack on free tiers until they hit significant traction." },
-    { q: "What's the first thing to spend money on when scaling a Next.js app?", a: "Database. Neon's 0.5 GiB free storage is the tightest limit in the stack. Neon's Launch plan is usage-based with no monthly minimum: $0.106 per CU-hour of compute and $0.35 per GB-month of storage. After that, hosting: Vercel Pro at $20/month unlocks commercial use, 1 TB bandwidth, and faster builds. Everything else (auth, email, monitoring, analytics) scales to meaningful traffic on free tiers." },
+    { q: "What's the first thing to spend money on when scaling a Next.js app?", a: "Database. Neon's 1 GB of free storage per project is the tightest limit in the stack. Neon's Launch plan is usage-based with no monthly minimum: $0.106 per CU-hour of compute and $0.35 per GB-month of storage. After that, hosting: Vercel Pro at $20/month unlocks commercial use, 1 TB bandwidth, and faster builds. Everything else (auth, email, monitoring, analytics) scales to meaningful traffic on free tiers." },
   ]);
 
   const pageReadings = stackPrimaryReadings(stackCategories);
@@ -17065,7 +17065,7 @@ ${growthCosts.map(g => `      <tr>
   </table>
   </div>
   <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1rem 0">
-    <p style="color:var(--text-muted);font-size:.9rem;line-height:1.7"><strong style="color:var(--text)">The first paid upgrade:</strong> Database (Neon Launch, usage-based, no monthly minimum) + Hosting (Vercel Pro $20/mo) unlocks commercial use, Postgres beyond 0.5 GB at $0.35/GB-month, 1 TB bandwidth, and faster builds. Everything else — auth (10K MAU), email (3K/mo), monitoring (5K errors), analytics (1M events), storage (10 GB R2), search (10K records), jobs (25K runs), CI (2,000 min) — stays free well past your first 1,000 users.</p>
+    <p style="color:var(--text-muted);font-size:.9rem;line-height:1.7"><strong style="color:var(--text)">The first paid upgrade:</strong> Database (Neon Launch, usage-based, no monthly minimum) + Hosting (Vercel Pro $20/mo) unlocks commercial use, Postgres beyond 1 GB at $0.35/GB-month, 1 TB bandwidth, and faster builds. Everything else — auth (10K MAU), email (3K/mo), monitoring (5K errors), analytics (1M events), storage (10 GB R2), search (10K records), jobs (25K runs), CI (2,000 min) — stays free well past your first 1,000 users.</p>
   </div>
 
   <h2>Architecture: How It Fits Together</h2>
@@ -17115,9 +17115,9 @@ function buildFreeDjangoStackPage(): string {
     {
       name: "Database",
       icon: "🗄️",
-      recommended: { vendor: "Neon", why: "Serverless Postgres — Django's recommended database. Free plan: 0.5 GB of storage and 100 CU-hours per project, up to 100 projects, scales to zero after 5 minutes idle. Django's ORM, migrations, and django.contrib.postgres module all work perfectly. Neon's connection pooler handles Django's synchronous database connections efficiently. Branching lets you test migrations safely before applying to production." },
+      recommended: { vendor: "Neon", why: "Serverless Postgres — Django's recommended database. Free plan: 1 GB of storage and 100 CU-hours per project, up to 100 projects and 20 GB of storage in total, scales to zero after 5 minutes idle. Django's ORM, migrations, and django.contrib.postgres module all work perfectly. Neon's connection pooler handles Django's synchronous database connections efficiently. Branching lets you test migrations safely before applying to production." },
       alternatives: ["Supabase", "CockroachDB", "Railway"],
-      outgrow: "When you exceed 0.5 GiB storage. Supabase offers 500 MB Postgres with built-in auth and realtime, but pauses after 7 days inactive.",
+      outgrow: "When you exceed 1 GB of storage. Supabase offers 500 MB Postgres with built-in auth and realtime, but pauses after 7 days inactive.",
       whyNot: "Why not SQLite: Fine for local development, but most free hosting platforms use ephemeral filesystems — your database would be wiped on every deploy. Why not MySQL: Django supports it, but Postgres-specific features (JSONField, ArrayField, full-text search, range types) are too valuable to leave on the table.",
       relatedPage: "/database-free-tier-comparison-2026",
     },
@@ -17228,7 +17228,7 @@ function buildFreeDjangoStackPage(): string {
 
   const faqJsonLd = faqPageJsonLd("/free-django-stack", [
     { q: "Can I host Django for free in 2026?", a: "Yes. Railway's Free plan starts with a 30-day trial carrying $5 of credits, then $1 of free credit a month, with Gunicorn, auto-deploy from GitHub, and managed Postgres; its Hobby plan is $5/month and includes $5 of usage. Render has a free tier but spins down after 15 minutes of inactivity (cold starts of about one minute). PythonAnywhere offers free WSGI hosting but limits you to one web app with no custom domain. Fly.io has no free tier for new accounts — new signups get a trial of 2 hours runtime or 7 days, whichever comes first." },
-    { q: "Which free databases work with Django?", a: "Any Postgres host works. Django's ORM supports Postgres, and django.contrib.postgres adds JSONField, ArrayField, full-text search and range types. Neon's Free plan gives 0.5 GB of storage and 100 CU-hours per project and scales to zero after 5 minutes idle. Supabase's gives a 500 MB database per project with built-in auth, and pauses free projects after a week of inactivity. We publish no ranking of these." },
+    { q: "Which free databases work with Django?", a: "Any Postgres host works. Django's ORM supports Postgres, and django.contrib.postgres adds JSONField, ArrayField, full-text search and range types. Neon's Free plan gives 1 GB of storage and 100 CU-hours per project and scales to zero after 5 minutes idle. Supabase's gives a 500 MB database per project with built-in auth, and pauses free projects after a week of inactivity. We publish no ranking of these." },
     { q: "Does Django need Redis?", a: "Not strictly, but practically yes for production. Redis powers Django's cache framework (fast page/fragment caching), session storage (faster than database sessions), and Celery (the standard Django task queue for background jobs). Upstash offers 10,000 Redis commands/day free. Without Redis, you can use Django's built-in database cache and in-process task runners, but you'll hit performance ceilings sooner." },
     { q: "PythonAnywhere vs Railway vs Render for Django?", a: "Railway gives you a 30-day $5 trial credit then $1 of free credit a month, with no sleep timer, managed Postgres, and auto-deploy from GitHub. PythonAnywhere is great for learning (free WSGI hosting, built-in console) but limits you to one web app with no custom domain on free tier. Render has a free tier but your app sleeps after 15 minutes, causing cold starts of about one minute that hurt user experience. For production Django apps, Railway or Fly.io." },
   ]);
@@ -17475,7 +17475,7 @@ ${growthCosts.map(g => `      <tr>
   </table>
   </div>
   <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1rem 0">
-    <p style="color:var(--text-muted);font-size:.9rem;line-height:1.7"><strong style="color:var(--text)">The first paid upgrade:</strong> Database (Neon Launch, usage-based, no monthly minimum) + Hosting (Railway Hobby $5/mo) gives you Postgres beyond 0.5 GB at $0.35/GB-month, no sleep timers. Everything else — auth (unlimited with Django), email (3K/mo), monitoring (5K errors), cache/Redis (10K cmds/day), storage (10 GB R2), search (10K records), CI (2,000 min) — stays free well past your first 1,000 users. Django's built-in auth means you never pay for authentication.</p>
+    <p style="color:var(--text-muted);font-size:.9rem;line-height:1.7"><strong style="color:var(--text)">The first paid upgrade:</strong> Database (Neon Launch, usage-based, no monthly minimum) + Hosting (Railway Hobby $5/mo) gives you Postgres beyond 1 GB at $0.35/GB-month, no sleep timers. Everything else — auth (unlimited with Django), email (3K/mo), monitoring (5K errors), cache/Redis (10K cmds/day), storage (10 GB R2), search (10K records), CI (2,000 min) — stays free well past your first 1,000 users. Django's built-in auth means you never pay for authentication.</p>
   </div>
 
   <h2>Architecture: How It Fits Together</h2>
@@ -17525,9 +17525,9 @@ function buildFreeFastapiStackPage(): string {
     {
       name: "Database",
       icon: "🗄️",
-      recommended: { vendor: "Neon", why: "Serverless Postgres with native async support. Free plan: 0.5 GB of storage and 100 CU-hours per project, up to 100 projects, scales to zero after 5 minutes idle. Use with asyncpg for async queries or SQLAlchemy 2.0's async engine. Neon's connection pooler handles FastAPI's concurrent async connections efficiently. Branching lets you test schema changes safely." },
+      recommended: { vendor: "Neon", why: "Serverless Postgres with native async support. Free plan: 1 GB of storage and 100 CU-hours per project, up to 100 projects and 20 GB of storage in total, scales to zero after 5 minutes idle. Use with asyncpg for async queries or SQLAlchemy 2.0's async engine. Neon's connection pooler handles FastAPI's concurrent async connections efficiently. Branching lets you test schema changes safely." },
       alternatives: ["Supabase", "CockroachDB"],
-      outgrow: "When you exceed 0.5 GiB storage. Supabase offers 500 MB Postgres with built-in auth and realtime subscriptions, but pauses after 7 days inactive.",
+      outgrow: "When you exceed 1 GB of storage. Supabase offers 500 MB Postgres with built-in auth and realtime subscriptions, but pauses after 7 days inactive.",
       whyNot: "Why not MongoDB Atlas: FastAPI works with MongoDB (via Motor or Beanie ODM), but most FastAPI tutorials and the ecosystem assume relational data with Pydantic models mapping to SQL tables. Postgres + SQLAlchemy is the mainstream path. Why not SQLite: Most free hosting uses ephemeral filesystems — your database would be wiped on every deploy.",
       relatedPage: "/database-free-tier-comparison-2026",
     },
@@ -17636,7 +17636,7 @@ function buildFreeFastapiStackPage(): string {
 
   const faqJsonLd = faqPageJsonLd("/free-fastapi-stack", [
     { q: "Can I host FastAPI for free in 2026?", a: "Yes. Railway's Free plan starts with a 30-day trial carrying $5 of credits, then $1 of free credit a month, with uvicorn, auto-deploy from GitHub, and no sleep timer; its Hobby plan is $5/month and includes $5 of usage. Render has a free tier but spins down after 15 minutes of inactivity (cold starts of about one minute). Fly.io has no free tier for new accounts — new signups get a trial of 2 hours runtime or 7 days, whichever comes first. Koyeb has had no free plan for new users since February 2026 (Pro from $29/mo). Avoid Vercel for FastAPI — it requires a serverless adapter and loses WebSocket/background task support." },
-    { q: "What database should I use with FastAPI?", a: "FastAPI has no built-in ORM, so you choose your own. SQLAlchemy 2.0's async engine with asyncpg is the most popular choice for Postgres, and Tortoise ORM is an async-native alternative. Neon's Free plan gives 0.5 GB of storage and 100 CU-hours per project and scales to zero after 5 minutes idle. Supabase's gives a 500 MB database per project with built-in auth and realtime. We publish no ranking of these." },
+    { q: "What database should I use with FastAPI?", a: "FastAPI has no built-in ORM, so you choose your own. SQLAlchemy 2.0's async engine with asyncpg is the most popular choice for Postgres, and Tortoise ORM is an async-native alternative. Neon's Free plan gives 1 GB of storage and 100 CU-hours per project and scales to zero after 5 minutes idle. Supabase's gives a 500 MB database per project with built-in auth and realtime. We publish no ranking of these." },
     { q: "Does Vercel support FastAPI?", a: "Technically yes, via the Mangum adapter that wraps ASGI apps for AWS Lambda-style serverless functions. But you lose WebSocket support, FastAPI's startup/shutdown lifespan events, background tasks, and long-running connections. For API-only services, this may be acceptable. For anything using FastAPI's async features fully, use Railway, Render, or Fly.io instead." },
     { q: "FastAPI vs Django for free hosting?", a: "FastAPI is lighter weight and async-native — ideal for APIs, microservices, and AI/ML serving. Django is batteries-included with built-in ORM, admin, auth, and forms — better for full web applications. Both run on Railway's Free plan ($1 of free credit a month after a 30-day trial with a one-time $5 credit) or Render's free tier. FastAPI needs you to choose every component (ORM, auth, admin) separately. Django includes them. If you're building a REST/GraphQL API or serving ML models, FastAPI. If you're building a web app with admin panel and user accounts, Django." },
   ]);
@@ -17900,7 +17900,7 @@ ${growthCosts.map(g => `      <tr>
   </table>
   </div>
   <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1rem 0">
-    <p style="color:var(--text-muted);font-size:.9rem;line-height:1.7"><strong style="color:var(--text)">The first paid upgrade:</strong> Database (Neon Launch, usage-based, no monthly minimum) is the first upgrade that matters — storage beyond 0.5 GB at $0.35/GB-month and autoscaling up to 16 CU. Everything else — auth (25K MAU on Auth0), email (3K/mo), monitoring (5K errors), cache/Redis (10K cmds/day), storage (10 GB R2), API docs (unlimited built-in), CI (2,000 min) — stays free well past your first 1,000 users. FastAPI's lightweight footprint means hosting costs stay lower than Django for the same traffic.</p>
+    <p style="color:var(--text-muted);font-size:.9rem;line-height:1.7"><strong style="color:var(--text)">The first paid upgrade:</strong> Database (Neon Launch, usage-based, no monthly minimum) is the first upgrade that matters — storage beyond 1 GB at $0.35/GB-month and autoscaling up to 16 CU. Everything else — auth (25K MAU on Auth0), email (3K/mo), monitoring (5K errors), cache/Redis (10K cmds/day), storage (10 GB R2), API docs (unlimited built-in), CI (2,000 min) — stays free well past your first 1,000 users. FastAPI's lightweight footprint means hosting costs stay lower than Django for the same traffic.</p>
   </div>
 
   <h2>Architecture: How It Fits Together</h2>
@@ -17950,9 +17950,9 @@ function buildFreeGoStackPage(): string {
     {
       name: "Database",
       icon: "🗄️",
-      recommended: { vendor: "Neon", why: "Serverless Postgres with the fastest Go driver. Free plan: 0.5 GB of storage and 100 CU-hours per project, up to 100 projects, scales to zero after 5 minutes idle. Use with pgx — the fastest Go Postgres driver, written in pure Go with zero CGo dependencies. pgx supports connection pooling, prepared statements, COPY protocol, and native Go types (time.Time, net.IP, uuid.UUID). Neon's connection pooler handles high-concurrency goroutine access efficiently." },
+      recommended: { vendor: "Neon", why: "Serverless Postgres with the fastest Go driver. Free plan: 1 GB of storage and 100 CU-hours per project, up to 100 projects and 20 GB of storage in total, scales to zero after 5 minutes idle. Use with pgx — the fastest Go Postgres driver, written in pure Go with zero CGo dependencies. pgx supports connection pooling, prepared statements, COPY protocol, and native Go types (time.Time, net.IP, uuid.UUID). Neon's connection pooler handles high-concurrency goroutine access efficiently." },
       alternatives: ["Supabase", "CockroachDB", "Turso"],
-      outgrow: "When you exceed 0.5 GiB storage. Supabase offers 500 MB Postgres with built-in auth. Turso offers 5 GB of edge SQLite via libsql-go — great for read-heavy, globally distributed Go APIs.",
+      outgrow: "When you exceed 1 GB of storage. Supabase offers 500 MB Postgres with built-in auth. Turso offers 5 GB of edge SQLite via libsql-go — great for read-heavy, globally distributed Go APIs.",
       whyNot: "Why not SQLite (embedded): Go has excellent SQLite support via modernc.org/sqlite (pure Go, no CGo), but most free hosting uses ephemeral filesystems — your database is wiped on every deploy. Only viable on persistent VMs or with Litestream replication. Why not MySQL: Go's database/sql works with MySQL, but the Postgres ecosystem (pgx, sqlc, migrations) is stronger in Go. Most Go ORMs default to Postgres.",
       relatedPage: "/database-free-tier-comparison-2026",
     },
@@ -18061,7 +18061,7 @@ function buildFreeGoStackPage(): string {
 
   const faqJsonLd = faqPageJsonLd("/free-go-stack", [
     { q: "Can I host Go for free in 2026?", a: "Yes. Railway's Free plan starts with a 30-day trial carrying $5 of credits, then $1 of free credit a month — Go's tiny memory footprint (~10 MB Docker images from scratch) stretches that furthest; its Hobby plan is $5/month and includes $5 of usage. Render has a free tier but spins down after 15 minutes; Go's instant cold starts (~50ms) make this tolerable. Fly.io has no free tier for new accounts — new signups get a trial of 2 hours runtime or 7 days, whichever comes first. Google Cloud Run's free tier (2M requests/month) is excellent for Go — near-instant cold starts and true scale-to-zero." },
-    { q: "What database should I use with Go?", a: "Use pgx, a pure-Go Postgres driver (no CGo), or sqlc, which generates Go code from SQL queries at compile time. Go developers typically prefer raw SQL with pgx or sqlc over ORMs like GORM. Neon's Free plan gives 0.5 GB of storage and 100 CU-hours per project and scales to zero after 5 minutes idle. Supabase's gives a 500 MB database per project with built-in auth. We publish no ranking of these." },
+    { q: "What database should I use with Go?", a: "Use pgx, a pure-Go Postgres driver (no CGo), or sqlc, which generates Go code from SQL queries at compile time. Go developers typically prefer raw SQL with pgx or sqlc over ORMs like GORM. Neon's Free plan gives 1 GB of storage and 100 CU-hours per project and scales to zero after 5 minutes idle. Supabase's gives a 500 MB database per project with built-in auth. We publish no ranking of these." },
     { q: "Go vs Node.js for free hosting?", a: "Go compiles to a single binary with no runtime dependencies — Docker images are 5-15 MB vs 100+ MB for Node.js. This means lower memory usage (more headroom on free tiers), instant cold starts (better for serverless), and simpler deploys (no node_modules, no npm install). Go's goroutines handle concurrency without async/await complexity. Trade-off: Go's ecosystem for web frameworks is smaller, and there's no equivalent to npm's package breadth." },
     { q: "Do I need a framework for Go web apps?", a: "No. Go's net/http standard library is production-ready — it powers many of the world's largest services. Add a router (chi or gorilla/mux) for path parameters and middleware chaining. Frameworks like Gin, Echo, and Fiber add convenience (binding, validation, structured logging) but aren't required. The stdlib-first approach means fewer dependencies, smaller binaries, and no framework lock-in." },
   ]);
@@ -18316,7 +18316,7 @@ ${growthCosts.map(g => `      <tr>
   </table>
   </div>
   <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1rem 0">
-    <p style="color:var(--text-muted);font-size:.9rem;line-height:1.7"><strong style="color:var(--text)">The first paid upgrade:</strong> Database (Neon Launch, usage-based, no monthly minimum) is the first upgrade that matters — storage beyond 0.5 GB at $0.35/GB-month and autoscaling up to 16 CU. Two layers — background jobs (goroutines) and API docs (swaggo) — are free forever with no external service. Everything else — auth (25K MAU on Auth0), email (3K/mo), monitoring (5K errors), cache/Redis (10K cmds/day), storage (10 GB R2), CI (2,000 min) — stays free well past your first 1,000 users. Go's minimal resource footprint means you get more out of every free tier.</p>
+    <p style="color:var(--text-muted);font-size:.9rem;line-height:1.7"><strong style="color:var(--text)">The first paid upgrade:</strong> Database (Neon Launch, usage-based, no monthly minimum) is the first upgrade that matters — storage beyond 1 GB at $0.35/GB-month and autoscaling up to 16 CU. Two layers — background jobs (goroutines) and API docs (swaggo) — are free forever with no external service. Everything else — auth (25K MAU on Auth0), email (3K/mo), monitoring (5K errors), cache/Redis (10K cmds/day), storage (10 GB R2), CI (2,000 min) — stays free well past your first 1,000 users. Go's minimal resource footprint means you get more out of every free tier.</p>
   </div>
 
   <h2>Architecture: How It Fits Together</h2>
@@ -18379,9 +18379,9 @@ function buildFreeSaasStackPage(): string {
     {
       name: "Database",
       icon: "\u{1F5C4}\u{FE0F}",
-      recommended: { vendor: "Neon", why: "Serverless Postgres. Free plan: 0.5 GB of storage and 100 CU-hours per project, up to 100 projects, scales to zero after 5 minutes idle. Branching for preview environments. Works with every ORM (Prisma, Drizzle, TypeORM, SQLAlchemy, pgx). Connection pooling handles concurrent users efficiently." },
+      recommended: { vendor: "Neon", why: "Serverless Postgres. Free plan: 1 GB of storage and 100 CU-hours per project, up to 100 projects and 20 GB of storage in total, scales to zero after 5 minutes idle. Branching for preview environments. Works with every ORM (Prisma, Drizzle, TypeORM, SQLAlchemy, pgx). Connection pooling handles concurrent users efficiently." },
       alternatives: ["Supabase", "CockroachDB", "Turso"],
-      outgrow: "When you exceed 0.5 GiB storage or need always-on compute. Supabase gives 500 MB Postgres with auth + storage + realtime bundled (pauses after 1 week inactive). Turso provides 5 GB edge SQLite \u2014 great for read-heavy, globally distributed apps.",
+      outgrow: "When you exceed 1 GB of storage or need always-on compute. Supabase gives 500 MB Postgres with auth + storage + realtime bundled (pauses after 1 week inactive). Turso provides 5 GB edge SQLite \u2014 great for read-heavy, globally distributed apps.",
       whyNot: "Why not MongoDB Atlas: 512 MB free, but document databases add complexity for SaaS (no joins, denormalized data, eventual consistency). Why not PlanetScale: Removed free tier in April 2024.",
       relatedPage: "/database-free-tier-comparison-2026",
       isFrameworkSection: false,
@@ -18495,8 +18495,8 @@ function buildFreeSaasStackPage(): string {
   const faqJsonLd = faqPageJsonLd("/free-saas-stack", [
     { q: "What's the cheapest way to launch a SaaS in 2026?", a: "You can launch a complete SaaS for $0/month using free tiers: Railway or Render (hosting), Neon (Postgres database), Clerk (auth with 50K users free), Stripe (payments \u2014 no monthly fee, only per-transaction), Resend (3K emails/month), Cloudflare R2 (10 GB storage, zero egress), Sentry (error tracking), GitHub Actions (CI/CD), PostHog (1M analytics events), and Inngest (25K background job runs). Total monthly cost at launch: $0. You'll hit your first paid tier around 1,000-5,000 users." },
     { q: "Can I build a SaaS for free?", a: "Yes. Every layer of SaaS infrastructure \u2014 hosting, database, authentication, email, storage, monitoring, CI/CD, and analytics \u2014 has a viable free tier in 2026. The only category without a free option is payment processing (Stripe charges 2.9% + 30\u00a2 per transaction but has no monthly fee). Most free tiers support 1,000-5,000 active users before you need to upgrade." },
-    { q: "Which free databases can a SaaS start on?", a: "Neon's Free plan gives 0.5 GB of storage and 100 CU-hours per project and scales to zero after 5 minutes idle. Supabase's gives a 500 MB database per project with auth, storage and realtime, and pauses free projects after a week of inactivity. For edge SQLite, Turso's Free plan gives 5 GB of storage across up to 100 databases. We publish no ranking of these." },
-    { q: "When should I start paying for infrastructure?", a: "Most SaaS products can run entirely on free tiers through their first 1,000-5,000 users. Database storage (Neon 0.5 GiB) is typically the first limit you'll hit, followed by email volume (Resend 3K/month) and hosting compute. By the time you need to pay, you should have paying customers. Plan your growth path: at 10K users expect ~$150-300/month total infrastructure, at 100K users ~$1,500-3,000/month." },
+    { q: "Which free databases can a SaaS start on?", a: "Neon's Free plan gives 1 GB of storage and 100 CU-hours per project and scales to zero after 5 minutes idle. Supabase's gives a 500 MB database per project with auth, storage and realtime, and pauses free projects after a week of inactivity. For edge SQLite, Turso's Free plan gives 5 GB of storage across up to 100 databases. We publish no ranking of these." },
+    { q: "When should I start paying for infrastructure?", a: "Most SaaS products can run entirely on free tiers through their first 1,000-5,000 users. Database storage (Neon 1 GB per project) is typically the first limit you'll hit, followed by email volume (Resend 3K/month) and hosting compute. By the time you need to pay, you should have paying customers. Plan your growth path: at 10K users expect ~$150-300/month total infrastructure, at 100K users ~$1,500-3,000/month." },
   ]);
 
   const pageReadings = stackPrimaryReadings(stackCategories);
@@ -18656,7 +18656,7 @@ function buildFreeSaasStackPage(): string {
   </div>
 
   <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1rem 0">
-    <p style="color:var(--text-muted);font-size:.9rem;line-height:1.7"><strong style="color:var(--text)">The first paid upgrade:</strong> Database (Neon Launch, usage-based, no monthly minimum) is the first upgrade most SaaS products need \u2014 0.5 GiB fills up fast with user data, session logs, and analytics tables. Everything else stays free much longer. Auth (Clerk 50K free) and analytics (PostHog 1M events) typically last until 10K+ active users. <strong style="color:var(--text)">Key insight:</strong> at every scale point, your infrastructure cost should be &lt;10% of revenue. If you're charging $10/user/month, 100 users = $1,000 MRR \u2014 more than enough to cover $40-80/month in infrastructure.</p>
+    <p style="color:var(--text-muted);font-size:.9rem;line-height:1.7"><strong style="color:var(--text)">The first paid upgrade:</strong> Database (Neon Launch, usage-based, no monthly minimum) is the first upgrade most SaaS products need \u2014 1 GB fills up fast with user data, session logs, and analytics tables. Everything else stays free much longer. Auth (Clerk 50K free) and analytics (PostHog 1M events) typically last until 10K+ active users. <strong style="color:var(--text)">Key insight:</strong> at every scale point, your infrastructure cost should be &lt;10% of revenue. If you're charging $10/user/month, 100 users = $1,000 MRR \u2014 more than enough to cover $40-80/month in infrastructure.</p>
   </div>`;
 
   const upgradeTable = `
@@ -20917,7 +20917,7 @@ function buildNeonVsSupabasePage(): string {
   );
 
   const comparisonRows = [
-    { feature: "Database Storage", neon: "0.5 GB per project", supabase: "500 MB", notes: "Similar raw limits. Neon is per-project (up to 100 projects = potential 50 GB total), Supabase is total across 2 projects" },
+    { feature: "Database Storage", neon: "1 GB per project, 20 GB in total", supabase: "500 MB", notes: "Neon allows 1 GB per project and 20 GB across all projects. Supabase's Free plan lists a 500 MB database size and a limit of 2 active projects." },
     { feature: "Projects", neon: "100", supabase: "2", notes: "Neon allows 50× more projects — ideal for microservices, multi-tenant apps, or per-client databases" },
     { feature: "Compute", neon: "100 CU-hours/month, up to 2 CU (8 GB RAM)", supabase: "Shared compute (limited resources)", notes: "Neon offers explicit compute hours with auto-scaling. Supabase shared compute has no published limits" },
     { feature: "Branching", neon: "10 branches per project", supabase: "Paid only (Pro+)", notes: "Neon includes branching on the free plan; Supabase requires a paid plan." },
@@ -20938,7 +20938,7 @@ function buildNeonVsSupabasePage(): string {
 
   const differences = [
     { title: "Both Are Backend Platforms Now", desc: "Both free plans bundle Postgres with auth, file storage and functions. Neon made Object Storage, Functions and Managed Better Auth generally available on 2026-09-17 (neon.com/blog/neon-backend-is-ga). Supabase also includes realtime subscriptions, which Neon's pricing page does not list." },
-    { title: "Project Limits: 100 vs. 2", desc: "Neon's 100 free projects is the standout difference. Each project gets its own 0.5 GB storage and 100 CU-hours/month. This makes Neon ideal for per-client databases, microservices architectures, or agencies managing multiple sites. Supabase's 2-project limit means you'll hit the paid tier quickly if you need more than a couple apps." },
+    { title: "Project Limits: 100 vs. 2", desc: "Neon's 100 free projects is the standout difference. Each project gets its own 1 GB of storage (20 GB across all projects) and 100 CU-hours/month. This makes Neon ideal for per-client databases, microservices architectures, or agencies managing multiple sites. Supabase's 2-project limit means you'll hit the paid tier quickly if you need more than a couple apps." },
     { title: "Branching: Dev Workflows vs. Production-First", desc: "Neon's database branching (10 branches per project) lets you create instant copy-on-write database copies for development, testing, and previews. This is transformative for CI/CD — branch your database like you branch your code. Supabase doesn't offer branching on the free tier (it's a Pro feature), so testing against production-like data requires manual setup." },
     { title: "Scale-to-Zero vs. Inactivity Pausing", desc: "Neon scales to zero after 5 minutes of idle and resumes in ~1 second — designed for intermittent workloads. Supabase pauses projects entirely after 1 week of inactivity, requiring manual unpause from the dashboard. For always-on projects this doesn't matter, but for side projects you check weekly, Neon's approach is significantly better." },
   ];
@@ -21080,7 +21080,7 @@ ${mcpCtaCss()}
 
   <div class="executive-summary">
     <p><strong>Quick verdict:</strong> Both free plans include Postgres, auth, file storage and functions. Choose <strong>Neon</strong> for database branching on the free plan, scale-to-zero after 5 minutes idle, and up to 100 free projects. Choose <strong>Supabase</strong> for realtime subscriptions, which Neon's pricing page does not list.</p>
-    <p><strong>What each free plan includes:</strong> Neon's Free plan gives 100 CU-hours and 0.5 GB of Postgres storage per project, auth up to 60k MAU, 5 GB of object storage and Functions, across up to 100 projects. Supabase's Free plan gives a 500 MB database, 50,000 MAU, 1 GB of file storage, 500,000 Edge Function invocations and realtime, across 2 active projects that pause after a week of inactivity.</p>
+    <p><strong>What each free plan includes:</strong> Neon's Free plan gives 100 CU-hours and 1 GB of Postgres storage per project (20 GB in total), auth up to 60k MAU, 5 GB of object storage and Functions, across up to 100 projects. Supabase's Free plan gives a 500 MB database, 50,000 MAU, 1 GB of file storage, 500,000 Edge Function invocations and realtime, across 2 active projects that pause after a week of inactivity.</p>
   </div>
 
   <div class="toc">
@@ -29507,12 +29507,12 @@ function buildDatabasePricingPage(): string {
       slug: "neon",
       category: "managed-postgres",
       dbType: "PostgreSQL (Serverless)",
-      freeStorage: "0.5 GB per project",
+      freeStorage: "1 GB per project (20 GB in total)",
       freeConnections: "Unlimited (pooled)",
       freeCompute: "100 CU-hours per project, up to 2 CU",
       paidFrom: "$0.106/CU-hour (Launch, no monthly minimum)",
       pricingModel: "Usage-based",
-      freeDetails: "0.5 GB storage and 100 CU-hours per project, autoscaling up to 2 CU, scale to zero after 5 minutes, up to 100 projects with 10 branches each, auth up to 60k MAU, 5 GB object storage per project. Paid plans are usage-based with no monthly minimum. Branching and connection pooling on all plans.",
+      freeDetails: "1 GB storage and 100 CU-hours per project, autoscaling up to 2 CU, scale to zero after 5 minutes, up to 100 projects with 10 branches each, auth up to 60k MAU, 5 GB object storage per project. Paid plans are usage-based with no monthly minimum. Branching and connection pooling on all plans.",
       freeType: "generous",
       monthlyCostSmall: "$0",
       monthlyCostTeam: "Usage-based, no minimum",
@@ -29991,11 +29991,11 @@ function buildDatabasePricingPage(): string {
   const faqEntries = [
     { q: "Which database has the best free tier in 2026?", a: "We publish no ranking of database free tiers. Supabase gives you 500 MB Postgres with Auth, Storage, Edge Functions, and Realtime included. For edge/serverless, Turso (5 GB, 100 databases) and Cloudflare D1 (5 GB) are standouts." },
     { q: "Is Supabase really free?", a: "Yes, but with caveats. Supabase free tier includes 500 MB Postgres, Auth, Storage, Edge Functions, and Realtime. However, free projects pause after 1 week of inactivity, you are limited to 2 projects, and egress is capped at 5 GB total across all services. For active projects, it is genuinely free." },
-    { q: "What happened to PlanetScale's free tier?", a: "PlanetScale removed its free Hobby plan entirely in April 2024. All free databases were deleted after a 30-day grace period. The minimum plan is now Scaler at $39/month. This was one of the most impactful free tier removals in developer tools. Alternatives: Neon (0.5 GB free), Turso (5 GB free)." },
-    { q: "Neon vs Supabase: which is cheaper?", a: "Both have a free plan. Neon's gives 0.5 GB of storage and 100 CU-hours per project across up to 100 projects, with auth up to 60k MAU, 5 GB of object storage per project and Functions. Supabase's gives a 500 MB database per project across 2 active projects, with 50,000 MAU, 1 GB of file storage and 500,000 Edge Function invocations. On paid plans, Neon's Launch plan is usage-based with no monthly minimum; Supabase Pro starts at $25 a month, with the first project and $10 a month of compute credits included. Which costs less depends on your compute and storage use." },
+    { q: "What happened to PlanetScale's free tier?", a: "PlanetScale removed its free Hobby plan entirely in April 2024. All free databases were deleted after a 30-day grace period. The minimum plan is now Scaler at $39/month. This was one of the most impactful free tier removals in developer tools. Alternatives: Neon (1 GB free per project), Turso (5 GB free)." },
+    { q: "Neon vs Supabase: which is cheaper?", a: "Both have a free plan. Neon's gives 1 GB of storage and 100 CU-hours per project across up to 100 projects, with auth up to 60k MAU, 5 GB of object storage per project and Functions. Supabase's gives a 500 MB database per project across 2 active projects, with 50,000 MAU, 1 GB of file storage and 500,000 Edge Function invocations. On paid plans, Neon's Launch plan is usage-based with no monthly minimum; Supabase Pro starts at $25 a month, with the first project and $10 a month of compute credits included. Which costs less depends on your compute and storage use." },
     { q: "Should I use a managed database or self-host?", a: "Managed databases (Supabase, Neon, MongoDB Atlas) are better for small teams — zero ops overhead, automatic backups, and scaling. Self-hosting (PostgreSQL, MongoDB, Redis) makes sense when you need full control, have strict data residency requirements, or are optimizing costs at scale. The break-even point is typically around $200-500/month in managed database costs." },
     { q: "Which database is best for AI/ML applications?", a: "For vector search: Weaviate, Zilliz Cloud (Milvus), or Supabase (pgvector). Weaviate offers the richest AI integrations but only has a trial sandbox. Supabase and Neon both include pgvector on their free plans. For RAG applications, Turso (edge) + any vector store gives low-latency retrieval." },
-    { q: "What are the hidden costs of database free tiers?", a: "The biggest gotchas: connection limits (MongoDB Atlas: 500, Redis Cloud: 30), storage caps that force upgrades (Supabase: 500 MB, Neon: 512 MB), operation-based pricing that spikes unpredictably (Firestore, DynamoDB), project pausing on inactivity (Supabase), and egress charges not included in free tier marketing." },
+    { q: "What are the hidden costs of database free tiers?", a: "The biggest gotchas: connection limits (MongoDB Atlas: 500, Redis Cloud: 30), storage caps that force upgrades (Supabase: 500 MB, Neon: 1 GB per project), operation-based pricing that spikes unpredictably (Firestore, DynamoDB), project pausing on inactivity (Supabase), and egress charges not included in free tier marketing." },
     { q: "How do I migrate away from a database if pricing changes?", a: "PostgreSQL-compatible databases (Supabase, Neon, CockroachDB, Aurora) offer the easiest migration path — pg_dump works across all of them. MongoDB Atlas data can be exported via mongodump. For serverless databases (Turso, D1, Convex), migration is harder due to proprietary APIs. Choose PostgreSQL-compatible databases to minimize lock-in risk." },
   ];
 
@@ -30207,7 +30207,7 @@ function buildDatabasePricingPage(): string {
     '  </div>\n' +
     '\n' +
     '  <div class="context-box">\n' +
-    '    <strong>Best value picks:</strong> For most projects, <a href="/vendor/supabase">Supabase</a> (500 MB + Auth + Storage + Functions) or <a href="/vendor/neon">Neon</a> (512 MB, scales to zero) offer the best free-to-paid journey. For serverless edge use cases, <a href="/vendor/cloudflare-d1">Cloudflare D1</a> pairs naturally with Workers.\n' +
+    '    <strong>Best value picks:</strong> For most projects, <a href="/vendor/supabase">Supabase</a> (500 MB + Auth + Storage + Functions) or <a href="/vendor/neon">Neon</a> (1 GB per project, scales to zero) offer the best free-to-paid journey. For serverless edge use cases, <a href="/vendor/cloudflare-d1">Cloudflare D1</a> pairs naturally with Workers.\n' +
     '  </div>\n' +
     '\n' +
     '  <h2 id="hidden-costs">Hidden Costs</h2>\n' +
@@ -30541,13 +30541,13 @@ function buildVectorDatabasePricingPage(): string {
       slug: "neon",
       category: "pgvector",
       vectorType: "PostgreSQL + pgvector (Serverless)",
-      freeVectors: "~50K (within 512 MB)",
-      freeStorage: "512 MB (shared with all data)",
+      freeVectors: "~100K (within 1 GB)",
+      freeStorage: "1 GB per project (shared with all data)",
       freeDimensions: "Up to 2,000",
       freeQueries: "Unlimited",
       paidFrom: "$0.106/CU-hour (Launch, no monthly minimum)",
       pricingModel: "Usage-based",
-      freeDetails: "pgvector included on all Neon plans. 512 MB storage per project, up to 100 projects. Scales to zero after 5 minutes idle. Branching included (great for testing different index strategies). Paid plans are usage-based with no monthly minimum.",
+      freeDetails: "pgvector included on all Neon plans. 1 GB of storage per project (20 GB in total), up to 100 projects. Scales to zero after 5 minutes idle. Branching included (great for testing different index strategies). Paid plans are usage-based with no monthly minimum.",
       freeType: "generous",
       monthlyCostSmall: "$0",
       monthlyCostTeam: "Usage-based, no minimum",
@@ -30637,7 +30637,7 @@ function buildVectorDatabasePricingPage(): string {
   const faqEntries = [
     { q: "What is a vector database and why do I need one?", a: "A vector database stores high-dimensional numerical representations (embeddings) of data like text, images, or audio, and enables fast similarity search. You need one if you're building RAG (Retrieval-Augmented Generation) pipelines, semantic search, recommendation systems, or any AI application that needs to find similar items. Traditional databases can't efficiently search across hundreds of dimensions." },
     { q: "Should I use a dedicated vector database or pgvector?", a: "For prototypes and small-to-medium workloads (under 1M vectors), pgvector in Supabase or Neon is the simplest choice — no extra infrastructure, SQL queries, and your vectors live alongside your relational data. For production RAG at scale (1M+ vectors), dedicated solutions like Pinecone, Qdrant, or Weaviate offer better query performance, more indexing options, and purpose-built features like hybrid search and reranking." },
-    { q: "Which vector database has the best free tier?", a: "For managed cloud: Pinecone offers 2 GB (~1M vectors) free and Zilliz Cloud 5 GB (~5M vectors). For self-hosted: Qdrant, Chroma, Milvus, and LanceDB are all fully open-source with no limits. For the simplest setup: Supabase pgvector (500 MB, included with Postgres) or Neon pgvector (512 MB) require zero extra infrastructure." },
+    { q: "Which vector database has the best free tier?", a: "For managed cloud: Pinecone offers 2 GB (~1M vectors) free and Zilliz Cloud 5 GB (~5M vectors). For self-hosted: Qdrant, Chroma, Milvus, and LanceDB are all fully open-source with no limits. For the simplest setup: Supabase pgvector (500 MB, included with Postgres) or Neon pgvector (1 GB per project) require zero extra infrastructure." },
     { q: "What is the cheapest vector database for production RAG?", a: "Self-hosted Qdrant or Milvus on a $5-10/month VPS is the absolute cheapest for small-to-medium scale. For managed services, Turbopuffer's pay-per-use model ($0.30/M vectors/month) is cheapest for workloads under ~10M vectors. Qdrant Cloud ($10/month) and Upstash Vector (150K queries/day free) are also cost-effective. Supabase pgvector is free if your total database is under 500 MB." },
     { q: "How many vectors can I store in 1 GB?", a: "It depends on dimensions. With 1,536 dimensions (OpenAI text-embedding-3-small): ~170K vectors per GB raw, but with indexing overhead expect ~100K-150K. With 768 dimensions (many open-source models): ~340K vectors per GB raw, ~200K-250K with indexes. With 3,072 dimensions (OpenAI text-embedding-3-large): ~85K vectors per GB. Lower-dimension models are more cost-effective for storage." },
   ];
@@ -33476,7 +33476,7 @@ function buildAwsFreeTier2026Page(): string {
     { name: "Railway", slug: "railway", freeTier: "$5 free trial credit, usage-based pricing after", strength: "Best developer experience, instant deploys", bestFor: "Quick prototypes, hobby projects" },
     { name: "Render", slug: "render", freeTier: "Free web services (512 MB RAM), free PostgreSQL (30 days)", strength: "Simple PaaS with generous free tier", bestFor: "Replacing Heroku for small apps" },
     { name: "Supabase", slug: "supabase", freeTier: "500 MB database, 50K MAU auth, 1 GB storage", strength: "Full BaaS with PostgreSQL + auth + storage", bestFor: "Firebase alternative with SQL" },
-    { name: "Neon", slug: "neon", freeTier: "100 CU-hours and 0.5 GB storage per project, auth up to 60k MAU, branching", strength: "Serverless PostgreSQL with scale-to-zero", bestFor: "Serverless Postgres with branching and scale-to-zero" },
+    { name: "Neon", slug: "neon", freeTier: "100 CU-hours and 1 GB of storage per project, auth up to 60k MAU, branching", strength: "Serverless PostgreSQL with scale-to-zero", bestFor: "Serverless Postgres with branching and scale-to-zero" },
     { name: "Cloudflare", slug: "cloudflare-workers", freeTier: "Workers 100K req/day, R2 10 GB, D1 5 GB, Pages unlimited", strength: "Edge-first with zero egress fees on R2", bestFor: "Global edge apps, static sites, storage" },
     { name: "Vercel", slug: "vercel", freeTier: "Hobby plan (personal, non-commercial use only): 100 deployments/day, 100 GB Fast Data Transfer/month, 1M function invocations/month.", strength: "Best Next.js hosting, instant previews", bestFor: "Frontend apps and Jamstack sites" },
   ];
@@ -33928,7 +33928,7 @@ function buildGcpFreeTier2026Page(): string {
     { name: "Render", slug: "render", freeTier: "Free web services (512 MB RAM), free PostgreSQL (30 days)", strength: "Simple PaaS, Heroku replacement", bestFor: "Small web apps, side projects" },
     { name: "Supabase", slug: "supabase", freeTier: "500 MB database, 50K MAU auth, 1 GB storage", strength: "Full BaaS with PostgreSQL + auth + storage", bestFor: "Firebase alternative with SQL" },
     { name: "Vercel", slug: "vercel", freeTier: "Hobby plan (personal, non-commercial use only): 100 deployments/day, 100 GB Fast Data Transfer/month, 1M function invocations/month.", strength: "Best Next.js hosting, instant previews", bestFor: "Frontend apps and Jamstack sites" },
-    { name: "Neon", slug: "neon", freeTier: "100 CU-hours and 0.5 GB storage per project, auth up to 60k MAU, branching", strength: "Serverless PostgreSQL with scale-to-zero", bestFor: "Serverless Postgres with branching and scale-to-zero" },
+    { name: "Neon", slug: "neon", freeTier: "100 CU-hours and 1 GB of storage per project, auth up to 60k MAU, branching", strength: "Serverless PostgreSQL with scale-to-zero", bestFor: "Serverless Postgres with branching and scale-to-zero" },
   ];
 
   const alwaysFreeRows = alwaysFreeServices.map(s => `<tr>
@@ -34339,7 +34339,7 @@ function buildAzureFreeTier2026Page(): string {
     { name: "Railway", slug: "railway", freeTier: "$5 free trial credit, usage-based pricing after", strength: "Best developer experience, instant deploys", bestFor: "Quick prototypes, hobby projects" },
     { name: "Render", slug: "render", freeTier: "Free web services (512 MB RAM), free PostgreSQL (30 days)", strength: "Simple PaaS with generous free tier", bestFor: "Replacing Heroku for small apps" },
     { name: "Supabase", slug: "supabase", freeTier: "500 MB database, 50K MAU auth, 1 GB storage", strength: "Full BaaS with PostgreSQL + auth + storage", bestFor: "Firebase alternative with SQL" },
-    { name: "Neon", slug: "neon", freeTier: "100 CU-hours and 0.5 GB storage per project, auth up to 60k MAU, branching", strength: "Serverless PostgreSQL with scale-to-zero", bestFor: "Serverless Postgres with branching and scale-to-zero" },
+    { name: "Neon", slug: "neon", freeTier: "100 CU-hours and 1 GB of storage per project, auth up to 60k MAU, branching", strength: "Serverless PostgreSQL with scale-to-zero", bestFor: "Serverless Postgres with branching and scale-to-zero" },
     { name: "Cloudflare", slug: "cloudflare-workers", freeTier: "Workers 100K req/day, R2 10 GB, D1 5 GB, Pages unlimited", strength: "Edge-first with zero egress fees on R2", bestFor: "Global edge apps, static sites, storage" },
     { name: "Vercel", slug: "vercel", freeTier: "Hobby plan (personal, non-commercial use only): 100 deployments/day, 100 GB Fast Data Transfer/month, 1M function invocations/month.", strength: "Best Next.js hosting, instant previews", bestFor: "Frontend apps and Jamstack sites" },
   ];
@@ -36089,7 +36089,7 @@ ${mcpCtaCss()}
       <tr style="background:rgba(63,185,80,0.08)">
         <td class="provider-col"><a href="/vendor/neon" style="color:var(--text)">Neon</a> <span class="winner-badge">BEST POSTGRES</span></td>
         <td>Serverless Postgres</td>
-        <td style="font-family:var(--mono)">0.5 GB/project</td>
+        <td style="font-family:var(--mono)">1 GB/project</td>
         <td>100 CU-hours/mo, scale-to-zero</td>
         <td>100 projects, 10 branches/project</td>
         <td class="check">Yes (10/project)</td>
@@ -36171,7 +36171,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="context-box">
-    Turso and Cloudflare D1 give 5 GB of free storage each. <strong>Supabase</strong>'s free plan bundles Postgres with auth, file storage, edge functions and realtime; <strong>Neon</strong>'s bundles Postgres with auth, object storage and Functions. <strong>Neon</strong> lets you create up to 100 projects with 0.5 GB each — ideal for microservices or per-client databases. PlanetScale's free tier removal in April 2024 was one of the most impactful such changes in developer tooling history.
+    Turso and Cloudflare D1 give 5 GB of free storage each. <strong>Supabase</strong>'s free plan bundles Postgres with auth, file storage, edge functions and realtime; <strong>Neon</strong>'s bundles Postgres with auth, object storage and Functions. <strong>Neon</strong> lets you create up to 100 projects with 1 GB each, 20 GB in total — ideal for microservices or per-client databases. PlanetScale's free tier removal in April 2024 was one of the most impactful such changes in developer tooling history.
   </div>
 
   <h2 id="postgres">Postgres-Compatible Databases</h2>
@@ -36202,7 +36202,7 @@ ${mcpCtaCss()}
       </tr>
       <tr style="background:rgba(63,185,80,0.08)">
         <td class="provider-col">Neon <span class="winner-badge">BEST DX</span></td>
-        <td style="font-family:var(--mono)">0.5 GB/project</td>
+        <td style="font-family:var(--mono)">1 GB/project</td>
         <td>100 CU-hours/mo, auto-scales</td>
         <td class="check">10 branches/project</td>
         <td class="check">Yes (instant resume)</td>
@@ -45781,7 +45781,7 @@ const STACK_TEMPLATES: StackTemplate[] = [
     heroSubtitle: "Infrastructure for AI startups that need fast iteration and reliable observability.",
     description: "AI startups burn through compute budgets fast — save infrastructure costs by using free tiers for everything except your model API. This stack pairs a serverless Postgres database (great for embeddings and vector search via pgvector) with Railway for flexible container hosting and Grafana Cloud for the observability you need when debugging model behavior.",
     services: [
-      { category: "Database", vendor: "Neon", slug: "neon", estimatorCategory: "database", freeTier: "0.5 GB storage, 100 CU-hours", whyChosen: "Serverless Postgres with pgvector for embeddings. Branching for A/B testing different schemas.", starter: 0, growth: 19, scale: 162 },
+      { category: "Database", vendor: "Neon", slug: "neon", estimatorCategory: "database", freeTier: "1 GB storage per project, 100 CU-hours", whyChosen: "Serverless Postgres with pgvector for embeddings. Branching for A/B testing different schemas.", starter: 0, growth: 19, scale: 162 },
       { category: "Hosting", vendor: "Railway", slug: "railway", estimatorCategory: "hosting", freeTier: "$5 one-time credit", whyChosen: "Container-native hosting that handles GPU-adjacent workloads. No cold starts, great for API servers.", starter: 5, growth: 20, scale: 100 },
       { category: "Auth", vendor: "Supabase Auth", slug: "supabase", estimatorCategory: "auth", freeTier: "50K MAU", whyChosen: "50K MAU free with social login and JWT tokens. Lightweight and API-first.", starter: 0, growth: 0, scale: 25 },
       { category: "Monitoring", vendor: "Grafana Cloud", slug: "grafana-cloud", estimatorCategory: "monitoring", freeTier: "10K metrics, 50 GB logs", whyChosen: "Generous free logs (50 GB) — critical for debugging AI pipelines and model behavior.", starter: 0, growth: 29, scale: 299 },
@@ -45834,7 +45834,7 @@ const STACK_TEMPLATES: StackTemplate[] = [
     heroSubtitle: "Purpose-built for API products. Low latency, strong auth, and excellent observability.",
     description: "API-first products need low-latency hosting, robust authentication with API keys and OAuth, and deep observability into request patterns. This stack pairs Cloudflare Workers' edge compute with Auth0's enterprise-grade auth and New Relic's generous free APM — giving you production-ready API infrastructure at $0/month. Fly.io held this row until September 2026 and was replaced because it has had no free tier for new accounts since October 2024.",
     services: [
-      { category: "Database", vendor: "Neon", slug: "neon", estimatorCategory: "database", freeTier: "0.5 GB storage, 100 CU-hours", whyChosen: "Serverless Postgres scales to zero between requests. Connection pooling handles concurrent API clients.", starter: 0, growth: 19, scale: 162 },
+      { category: "Database", vendor: "Neon", slug: "neon", estimatorCategory: "database", freeTier: "1 GB storage per project, 100 CU-hours", whyChosen: "Serverless Postgres scales to zero between requests. Connection pooling handles concurrent API clients.", starter: 0, growth: 19, scale: 162 },
       { category: "Hosting", vendor: "Cloudflare Workers", slug: "cloudflare-workers", estimatorCategory: "hosting", freeTier: "100K requests/day", whyChosen: "Edge compute in 300+ locations with 10 ms CPU time per invocation. Low latency for API consumers worldwide, and the free allowance is permanent.", starter: 5, growth: 5, scale: 5 },
       { category: "Auth", vendor: "Auth0", slug: "auth0", estimatorCategory: "auth", freeTier: "25K MAU", whyChosen: "Enterprise-grade OAuth2/OIDC. API key management, rate limiting, and machine-to-machine tokens.", starter: 0, growth: 35, scale: 240 },
       { category: "Monitoring", vendor: "New Relic", slug: "new-relic", estimatorCategory: "monitoring", freeTier: "100 GB ingest/mo", whyChosen: "100 GB free ingest with APM — see every API request, latency distribution, and error rate.", starter: 0, growth: 0, scale: 49 },
@@ -46262,7 +46262,7 @@ function buildEstimatorData(): EstimatorCategory[] {
       label: "Database",
       vendors: [
         { slug: "supabase", name: "Supabase", free: "500 MB storage, 50K MAU", starter: 25, growth: 25, scale: 75, notes: "Pro $25/mo, usage-based after limits" },
-        { slug: "neon", name: "Neon", free: "0.5 GB storage, 100 CU-hours", starter: 0, growth: 19, scale: 162, notes: "Usage-priced. Growth is 0.25 CU running all month on Launch ($0.106/CU-hour); scale is 1 CU all month on Scale ($0.222/CU-hour). Storage is extra at $0.35/GB-month." },
+        { slug: "neon", name: "Neon", free: "1 GB storage per project, 100 CU-hours", starter: 0, growth: 19, scale: 162, notes: "Usage-priced. Growth is 0.25 CU running all month on Launch ($0.106/CU-hour); scale is 1 CU all month on Scale ($0.222/CU-hour). Storage is extra at $0.35/GB-month." },
         { slug: "planetscale", name: "PlanetScale", free: "No free tier", starter: 39, growth: 39, scale: 99, notes: "Free Hobby plan removed April 2024; every plan is paid" },
         { slug: "turso", name: "Turso", free: "100 DBs, 5 GB storage", starter: 0, growth: 29, scale: 29, notes: "Generous free tier, Scaler $29/mo" },
         { slug: "upstash", name: "Upstash", free: "256 MB Redis, 500K cmd/mo", starter: 0, growth: 10, scale: 50, notes: "Pay-per-request, $0.2/100K commands" },
