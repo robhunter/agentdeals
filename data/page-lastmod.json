@@ -22,11 +22,11 @@
       "changed": "2026-10-02"
     },
     "/ai-free-tiers": {
-      "hash": "40fe627a9d20b5ab",
+      "hash": "f7a118cf93be2f6a",
       "changed": "2026-10-02"
     },
     "/ai-ml-alternatives": {
-      "hash": "8ce17a6e048dd044",
+      "hash": "53d3b33d5b01f5f8",
       "changed": "2026-10-02"
     },
     "/alternative-to": {
@@ -1080,8 +1080,8 @@
       "changed": "2026-10-01"
     },
     "/category/ai-ml": {
-      "hash": "de0c5f4733505e7d",
-      "changed": "2026-10-01"
+      "hash": "d489cf00c57c8700",
+      "changed": "2026-10-02"
     },
     "/category/analytics": {
       "hash": "ac31819b465c8e22",
@@ -3129,7 +3129,7 @@
       "changed": "2026-10-02"
     },
     "/free-llm-apis": {
-      "hash": "0fca27bbff3e88bb",
+      "hash": "c9aa6c3a42811acd",
       "changed": "2026-10-02"
     },
     "/free-nextjs-stack": {
@@ -3164,7 +3164,7 @@
       "changed": "2026-10-02"
     },
     "/gemini-api-pricing-2026": {
-      "hash": "4f161d4a8493d0ba",
+      "hash": "2627ad057eb4eb51",
       "changed": "2026-10-02"
     },
     "/github-actions-alternatives": {
@@ -3240,7 +3240,7 @@
       "changed": "2026-10-02"
     },
     "/llm-api-pricing": {
-      "hash": "01c3c091a8114c61",
+      "hash": "60484fc7f2a14aee",
       "changed": "2026-10-02"
     },
     "/localstack-alternatives": {
