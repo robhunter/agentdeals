@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 import { assertPopulationFloor } from "./population-floor.ts";
 
 const { statedQuantities, quantitiesNotIn } = await import("../dist/quoted-figures.js");
+const { statementsWeHold } = await import("../dist/figure-provenance.js");
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -31,7 +32,7 @@ function offers(): Array<{ vendor: string; tier: string; description: string }> 
   return JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf-8")).offers;
 }
 
-function changes(): Array<{ vendor: string; previous_state?: string; current_state?: string }> {
+function changes(): Array<{ vendor: string; previous_state?: string; current_state?: string; resolution?: { state: string } | null }> {
   return JSON.parse(readFileSync(path.join(REPO, "data", "deal_changes.json"), "utf-8")).changes;
 }
 
@@ -49,12 +50,10 @@ function statesWeHaveSuperseded(): string[] {
 }
 
 function whatWeHoldAbout(vendorName: string): string[] {
-  const stored = offers().filter(offer => offer.vendor === vendorName).map(offer => offer.description);
-  const recorded = changes()
-    .filter(change => change.vendor === vendorName)
-    .flatMap(change => [(change as { summary?: string }).summary, change.previous_state, change.current_state])
-    .filter((text): text is string => typeof text === "string");
-  return [...stored, ...recorded];
+  return statementsWeHold(
+    offers().filter(offer => offer.vendor === vendorName).map(offer => offer.description),
+    changes().filter(change => change.vendor === vendorName),
+  );
 }
 
 function unescapeServed(html: string): string {
