@@ -199,6 +199,10 @@ describe("the tool description describes the filter that ships", () => {
       const source = readFileSync(path, "utf-8");
       assert.ok(!source.includes("stable=no negative changes,"), `${path} still describes the default this filter no longer applies`);
       assert.match(source, /Offers whose class we withhold/, `${path} does not tell the caller that withheld records match no value`);
+      assert.ok(
+        source.includes("last read refused, listing gated, or a narrowing in our records that cites no source or that no archived copy of the vendor's page has confirmed \\u2014 match no value"),
+        `${path} does not name every ground the class is withheld on`,
+      );
     }
   });
 });

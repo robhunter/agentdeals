@@ -23864,7 +23864,7 @@ ${mcpCtaCss()}
     &bull; <strong style="color:${stabilityColors.watch}">Watch:</strong> Exactly one negative change<br>
     &bull; <strong style="color:${stabilityColors.improving}">Improving:</strong> Only positive changes (no negative)<br>
     &bull; <strong style="color:${stabilityColors.stable}">Stable:</strong> No negative changes, on a listing nothing is withholding<br>
-    &bull; <strong style="color:${stabilityColors.unrated}">Unrated:</strong> We withhold the class &mdash; pricing page unreachable or unreadable, read refused, or the listing is gated<br><br>
+    &bull; <strong style="color:${stabilityColors.unrated}">Unrated:</strong> We withhold the class &mdash; pricing page unreachable or unreadable, read refused, listing gated, or a narrowing in our records that cites no source or that no archived copy of the vendor's page has confirmed<br><br>
     <strong>Data freshness:</strong> Classifications update automatically as new pricing changes are tracked. Source data: <code>deal_changes.json</code> with ${changeCountPhrase("held", everyRecord)} covering 2022 to present, of which ${changeCountPhrase("tracked", everyRecord)}.
   </div>
 

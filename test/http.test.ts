@@ -3598,6 +3598,10 @@ describe("HTTP transport", () => {
       html.includes("a read we refused, a gated listing, or a narrowing in our records that cites no source or that no archived copy of the vendor's page has confirmed."),
       "Should name every ground a stability class is withheld on",
     );
+    assert.ok(
+      html.includes("We withhold the class &mdash; pricing page unreachable or unreadable, read refused, listing gated, or a narrowing in our records that cites no source or that no archived copy of the vendor's page has confirmed<br>"),
+      "Should name every ground in the methodology's Unrated rule",
+    );
   });
 
   it("GET /openai-assistants-alternatives renders sunset guide page", async () => {
