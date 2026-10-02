@@ -18,6 +18,7 @@
     { "retired": "SonarCloud", "survivor": "SonarQube Cloud" },
     { "retired": "Stack Auth", "survivor": "Hexclave" },
     { "retired": "Synadia NGS", "survivor": "synadia.com" },
+    { "retired": "Terrateam", "survivor": "Stategraph" },
     { "retired": "X API (Twitter)", "survivor": "X (Twitter)" },
     { "retired": "flightcontrol.dev", "survivor": "Ravion" },
     { "retired": "v0", "survivor": "v0.dev" }

@@ -8689,6 +8689,10 @@
       "hash": "fcfd4e668f8b2ae5",
       "changed": "2026-10-02"
     },
+    "/vendor/stategraph": {
+      "hash": "9a8849b0855a9811",
+      "changed": "2026-10-02"
+    },
     "/vendor/statically": {
       "hash": "a46d56ec8f55c2ca",
       "changed": "2026-10-02"
@@ -8962,10 +8966,6 @@
     },
     "/vendor/terramate": {
       "hash": "1f244a78526accbb",
-      "changed": "2026-10-02"
-    },
-    "/vendor/terrateam": {
-      "hash": "27ebf772f7051e48",
       "changed": "2026-10-02"
     },
     "/vendor/testcontainers": {
