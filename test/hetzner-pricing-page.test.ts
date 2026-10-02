@@ -242,7 +242,58 @@ describe("what /hetzner-pricing-2026 says costs nothing", () => {
 
   it("gives Vultr's free instance in Vultr's row", async () => {
     const text = visible((await get("/hetzner-pricing-2026")).body);
-    assert.ok(text.includes("$5/mo Global Not re-read since March 2026. Free instance (1 vCPU, 512 MB, 10 GB SSD) for accepted applicants, in Miami, Seattle and Frankfurt"));
+    assert.ok(text.includes("Vultr Cloud — 1 vCPU, 1 GB $5/mo Global Free instance (1 vCPU, 512 MB, 10 GB SSD) for accepted applicants, in Miami, Seattle and Frankfurt Hand-typed — we hold no record"));
+  });
+});
+
+describe("the notes in /hetzner-pricing-2026's alternatives table", () => {
+  it("gives the Linode row no note beside its hand-typed figures", async () => {
+    const text = visible((await get("/hetzner-pricing-2026")).body);
+    assert.ok(text.includes("Linode/Akamai Nanode — 1 vCPU, 1 GB $5/mo Global Hand-typed — we hold no record"));
+  });
+
+  it("says of no row that it has not been re-read since March 2026", async () => {
+    const text = visible((await get("/hetzner-pricing-2026")).body);
+    assert.doesNotMatch(text, /Not re-read since March 2026/);
+  });
+});
+
+describe("why /hetzner-pricing-2026 says prices rose", () => {
+  it("gives the doubling of memory prices The Register reported as the forecast it was", async () => {
+    const text = visible((await get("/hetzner-pricing-2026")).body);
+    assert.ok(text.includes("Memory prices were forecast to double — in February 2026 The Register reported that DRAM and NAND flash prices were expected to double that quarter; NVMe SSDs in cloud servers use NAND flash"));
+    assert.doesNotMatch(text, /NAND flash prices roughly doubled/);
+  });
+});
+
+const QUOTED_HACKER_NEWS_COMMENT = {
+  url: "https://news.ycombinator.com/item?id=47122482",
+  text: [
+    "Running a small project on Hetzner from Germany. Got the email this morning. Honestly, even after the increase their dedicated boxes are still absurdly cheap compared to what you'd pay at AWS or GCP for equivalent specs.",
+    "The real story here isn't Hetzner being greedy. It's that AI companies are vacuuming up every DRAM chip on the planet and the rest of us get to pay the tax. I priced out a RAM upgrade for my home server last week. Same kit I bought 8 months ago for 90 EUR is now 400+. That's not normal market dynamics.",
+    "What worries me more is the second-order effects. Startups that would normally spin up cheap VPS instances to prototype and iterate now face meaningfully higher costs at the exact stage where every euro matters. The \"just deploy it\" culture that made European indie dev scene so productive was built on sub-10 EUR/month boxes. Those days might be over for a while.",
+  ].join(" "),
+  excerpt: "Honestly, even after the increase their dedicated boxes are still absurdly cheap compared to what you'd pay at AWS or GCP for equivalent specs. The real story here isn't Hetzner being greedy. It's that AI companies are vacuuming up every DRAM chip on the planet and the rest of us get to pay the tax.",
+};
+
+const communityReaction = (body: string) =>
+  body.match(/<p[^>]*><strong>Community reaction<\/strong>[\s\S]*?<\/p>/)?.[0] ?? "";
+
+describe("the Hacker News comment /hetzner-pricing-2026 quotes", () => {
+  it("is quoted as a run of the comment's own words", () => {
+    assert.ok(QUOTED_HACKER_NEWS_COMMENT.text.includes(QUOTED_HACKER_NEWS_COMMENT.excerpt));
+  });
+
+  it("is printed word for word and linked to the comment itself", async () => {
+    const paragraph = communityReaction((await get("/hetzner-pricing-2026")).body);
+    assert.equal(paragraph.match(/<a href="([^"]+)"[^>]*>Hacker News comment<\/a>/)?.[1], QUOTED_HACKER_NEWS_COMMENT.url);
+    assert.equal(visible(paragraph).match(/\): "([^"]*)"/)?.[1], QUOTED_HACKER_NEWS_COMMENT.excerpt);
+  });
+
+  it("is the only text the page attributes to Hacker News", async () => {
+    const { body } = await get("/hetzner-pricing-2026");
+    assert.deepEqual([...body.matchAll(/href="(https:\/\/news\.ycombinator\.com\/[^"]*)"/g)].map(([, url]) => url), [QUOTED_HACKER_NEWS_COMMENT.url]);
+    assert.doesNotMatch(visible(body), /HN commenter|pricing out smaller operations|still the cheapest option|Even after \+30-50%/);
   });
 });
 

@@ -18899,8 +18899,8 @@ function buildHetznerPricing2026Page(): string {
   const competitorPricing = [
     { vendor: "Hetzner (cheapest orderable)", spec: `${cheapestOrderable.sku} — ${cheapestOrderable.vcpu} vCPU, ${cheapestOrderable.ram} GB`, price: `${eur(cheapestOrderable.eur)}/mo`, region: cheapestOrderable.region, note: "Cost-Optimized line unavailable" },
     { vendor: "DigitalOcean", spec: "Basic — 1 vCPU, 512 MB", price: "$4/mo", region: "Global", note: "" },
-    { vendor: "Vultr", spec: "Cloud — 1 vCPU, 1 GB", price: "$5/mo", region: "Global", note: "Not re-read since March 2026. Free instance (1 vCPU, 512 MB, 10 GB SSD) for accepted applicants, in Miami, Seattle and Frankfurt" },
-    { vendor: "Linode/Akamai", spec: "Nanode — 1 vCPU, 1 GB", price: "$5/mo", region: "Global", note: "Not re-read since March 2026" },
+    { vendor: "Vultr", spec: "Cloud — 1 vCPU, 1 GB", price: "$5/mo", region: "Global", note: "Free instance (1 vCPU, 512 MB, 10 GB SSD) for accepted applicants, in Miami, Seattle and Frankfurt" },
+    { vendor: "Linode/Akamai", spec: "Nanode — 1 vCPU, 1 GB", price: "$5/mo", region: "Global", note: "" },
     { vendor: "OVHcloud", spec: "VPS-1 — 2 vCores, 4 GB", price: "€4.49/mo", region: "EU", note: "VPS 2027 range, ex-VAT, without commitment (€3.81/mo on 12 months). $5.35/mo in the US. The 2026 range rose 36-49% from April 2026" },
     { vendor: "AWS Lightsail", spec: "2 vCPUs, 512 MB", price: "$5/mo", region: "US", note: "The $3.50 bundle is IPv6-only; every other row here has a public IPv4 address" },
     { vendor: "Oracle Cloud", spec: oracleArmAllowance(), price: "Free (Always Free)", region: "Global", note: "Best free tier for VMs" },
@@ -19083,7 +19083,7 @@ ${mcpCtaCss()}
   <div class="context-box">
     <strong>The short answer: AI is eating the world's memory supply.</strong>
     <ul>
-      <li><strong>NAND flash prices roughly doubled</strong> — NVMe SSDs used in cloud servers were hit by the same AI-driven supply crunch</li>
+      <li><strong>Memory prices were forecast to double</strong> — in February 2026 The Register reported that DRAM and NAND flash prices were expected to double that quarter; NVMe SSDs in cloud servers use NAND flash</li>
       <li><strong>Hard drives sold out for the year</strong> — AI data storage demand consumed available supply</li>
       <li><strong>EU lacks domestic DRAM manufacturing</strong> — European providers like Hetzner are fully dependent on Asian semiconductor supply chains, with no buffer against global price shocks</li>
     </ul>
@@ -19138,9 +19138,9 @@ ${mcpCtaCss()}
     <ul>
       <li><strong>OVHcloud:</strong> raised prices on its VPS 2026 range from 1 April 2026, with euro list prices up 36-49% (VPS-1 from €4.49 to €6.49 a month). It has since launched a VPS 2027 range, whose VPS-1 (2 vCores, 4 GB RAM) is €4.49 a month ex-VAT without commitment in Europe ($5.35 in the US). Public Cloud, Private Cloud and Bare Metal rose 9-11% on average for new deployments.</li>
       <li><strong>Netcup:</strong> Also raised prices. Community reports increases across VPS and dedicated server lines.</li>
-      <li><strong>The AI paradox:</strong> AI infrastructure buildout is making hardware more expensive for everyone. The companies building AI consume the supply that smaller operations depend on. As one HN commenter put it: "The AI bubble is pricing out smaller operations."</li>
+      <li><strong>The AI paradox:</strong> AI infrastructure buildout is making hardware more expensive for everyone. The companies building AI consume the supply that smaller operations depend on.</li>
     </ul>
-    <p style="margin-top:.75rem"><strong>Community reaction</strong> at the time of the April round (from <a href="https://news.ycombinator.com/item?id=47120145" target="_blank" rel="noopener">Hacker News discussion</a>): "Even after +30-50%, Hetzner is still the cheapest option. The real story is the entire hosting market repricing due to AI-driven hardware costs." That was written before the June round and before the Cost-Optimized line went unavailable; the table in section 1 is what to check it against.</p>
+    <p style="margin-top:.75rem"><strong>Community reaction</strong> at the time of the April round (from a <a href="https://news.ycombinator.com/item?id=47122482" target="_blank" rel="noopener">Hacker News comment</a>): "Honestly, even after the increase their dedicated boxes are still absurdly cheap compared to what you'd pay at AWS or GCP for equivalent specs. The real story here isn't Hetzner being greedy. It's that AI companies are vacuuming up every DRAM chip on the planet and the rest of us get to pay the tax." That was written before the June round and before the Cost-Optimized line went unavailable; the table in section 1 is what to check it against.</p>
   </div>
 
   <h2 id="optimize">8. Optimization Strategies</h2>
