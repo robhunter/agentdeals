@@ -26,7 +26,7 @@ import { restatementCensus, restatementRulings, withheldTermsMeasure, type Resta
 import { isSubSlug, toSlug } from "./slug.js";
 export { sanitizeQuery } from "./search-query.js";
 import { matchingSubject } from "./gate-disclosure.js";
-import { DATE_SOURCES, isEventDated, withDateMeaningDeclared, type DatedChange, changeDateClause, changeEntryDateLabel, isoWeekWindow, changesInWindow, discoveryBatchNote, firstReadHeading, type DateWindow } from "./change-dates.js";
+import { DATE_SOURCES, isEventDated, withDateMeaningDeclared, type DatedChange, changeDateClause, changeEntryDateLabel, isoWeekWindow, changesInWindow, discoveryBatchNote, coveringBracketedChanges, firstReadHeading, type DateWindow } from "./change-dates.js";
 import { PRODUCT_DEPRECATED, deprecationCall, withListingEffectDeclared } from "./product-deprecation.js";
 import { DEMOTION_FOR_A_DEPRECATION, RISK_DEMOTION } from "./change-demotion.js";
 import { sinceFilterDay } from "./since-parameter.js";
@@ -1312,6 +1312,7 @@ export function riskCauseOf(cause: DealChange | null | undefined): RiskCause | n
     source_url: cause.source_url?.trim() ? cause.source_url.trim() : null,
     current_state: cause.current_state,
     resolution: cause.resolution ?? null,
+    ...(cause.archive_check ? { archive_check: cause.archive_check } : {}),
   };
 }
 
@@ -1913,7 +1914,7 @@ export function getWeeklyDigest(): {
     b.date.localeCompare(a.date)
   );
   const discovered = [...inWeek.discovered].sort((a, b) => b.date.localeCompare(a.date));
-  const discoveryNote = discovered.length > 0 ? discoveryBatchNote(discovered.length, "this week") : "";
+  const discoveryNote = discovered.length > 0 ? coveringBracketedChanges(discoveryBatchNote(discovered.length, "this week"), discovered) : "";
 
   const newOffers = getNewOffers(7).offers.slice(0, 10).map((o) => ({
     vendor: o.vendor,
@@ -2045,7 +2046,7 @@ export function getFormattedWeeklyDigest(weeksAgo: number = 0, limit: number = 2
 
   const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
   const dateLabel = `${months[weekStart.getUTCMonth()]} ${weekStart.getUTCDate()}\u2013${weekEnd.getUTCDate()}, ${weekStart.getUTCFullYear()}`;
-  const discoveryNote = weekDiscovered.length > 0 ? discoveryBatchNote(weekDiscovered.length, `during ${dateLabel}`) : "";
+  const discoveryNote = weekDiscovered.length > 0 ? coveringBracketedChanges(discoveryBatchNote(weekDiscovered.length, `during ${dateLabel}`), weekDiscovered) : "";
 
   const headlineParts: string[] = [];
   if (summary.free_tiers_removed > 0) headlineParts.push(`${summary.free_tiers_removed} free tier${summary.free_tiers_removed !== 1 ? "s" : ""} removed`);

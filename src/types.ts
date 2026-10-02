@@ -146,6 +146,7 @@ export interface RiskCause {
   source_url: string | null;
   current_state?: string;
   resolution?: ChangeResolution | null;
+  archive_check?: ArchiveCheck | null;
 }
 
 export interface LinkUnreachable {
@@ -235,7 +236,7 @@ export interface ArchiveCheck {
 
 export type PublishedChangeImpact = DealChange["impact"] | "none";
 
-export type DateMeaning = "effective" | "discovered";
+export type DateMeaning = "effective" | "discovered" | "effective_by";
 
 export type PublishedDealChange = Omit<DealChange, "impact"> & {
   impact: PublishedChangeImpact;

@@ -4,6 +4,8 @@ import {
   DISCOVERED_DATE_PREFIX,
   EFFECTIVE_DATE_PREFIX,
   UNKNOWN_EFFECTIVE_DATE_MARKER,
+  archiveBracketOf,
+  bracketedDateLabel,
   feedEntryUpdated,
   isEventDated,
   partitionByDateProvenance,
@@ -63,7 +65,7 @@ export function changeTypeFeedLabel(changeType: string): string {
   );
 }
 
-type FeedChange = Pick<DealChange, "date" | "date_source" | "recorded_date">;
+type FeedChange = Pick<DealChange, "date" | "date_source" | "recorded_date" | "archive_check">;
 
 export function recordedOn(change: FeedChange): string {
   return change.recorded_date ?? change.date;
@@ -83,9 +85,10 @@ export function effectiveDateOf(change: FeedChange): string | null {
 
 export function feedEntryDateSentence(change: FeedChange): string {
   const recorded = recordedOn(change);
-  return isEventDated(change)
-    ? `${EFFECTIVE_DATE_PREFIX} ${change.date} · recorded ${recorded}.`
-    : `${DISCOVERED_DATE_PREFIX} ${change.date} · ${UNKNOWN_EFFECTIVE_DATE_MARKER} — this is the day we recorded the change. We do not know when it took effect.`;
+  if (isEventDated(change)) return `${EFFECTIVE_DATE_PREFIX} ${change.date} · recorded ${recorded}.`;
+  const bracket = archiveBracketOf(change);
+  if (bracket) return `${bracketedDateLabel(bracket)} · recorded ${recorded}.`;
+  return `${DISCOVERED_DATE_PREFIX} ${change.date} · ${UNKNOWN_EFFECTIVE_DATE_MARKER} — this is the day we recorded the change. We do not know when it took effect.`;
 }
 
 export function feedEntrySummary(change: DealChange): string {
