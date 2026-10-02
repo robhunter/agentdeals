@@ -5471,7 +5471,7 @@
     {
       "vendor": "Formbricks",
       "category": "Forms",
-      "description": "Open-source survey platform — The Hobby plan is free and includes 1 Workspace, 250 responses per month, and core survey features like all question types, conditional logic, and full API access.",
+      "description": "Open-source survey platform. Self-hosted Community Edition is free under AGPLv3, including for commercial use, with unlimited surveys and responses and no branding. Features include all question types, advanced logic, API access, SDKs, webhooks, and integrations. Enterprise features such as team roles and SSO require a license key. Formbricks Cloud's free Hobby plan allows 250 responses a month in 1 workspace.",
       "tier": "Community",
       "url": "https://formbricks.com/pricing",
       "tags": [
@@ -5484,19 +5484,16 @@
       ],
       "verifiedDate": "2026-09-25",
       "source_check": {
-        "checked": "2026-09-25",
+        "checked": "2026-10-02",
         "outcome": "ok",
         "detail": "the page names Formbricks as \"formbricks\" and states amounts, none of which we matched to the terms we publish"
       },
       "free_grounds": [
         "licence"
       ],
-      "restated_from": {
-        "reading_date": "2026-08-28",
-        "source_url": "https://formbricks.com/pricing",
+      "restatement_reverted": {
         "record_date": "2026-08-28",
-        "change_type": "limits_reduced",
-        "restated_on": "2026-09-20"
+        "reverted_on": "2026-10-02"
       }
     },
     {
