@@ -195,7 +195,14 @@ describe("settling the backlog", () => {
       "Beta ours",
       "Gamma page_unreadable_today",
     ]);
-    assert.deepStrictEqual(report.results[0].brackets, [{ last_old: "2026-05-01", first_new: "2026-05-02", narrowed_to_adjacent_captures: true, relative_to_record: "before" }]);
+    assert.deepStrictEqual(report.results[0].brackets, [{
+      last_old: "2026-05-01",
+      first_new: "2026-05-02",
+      last_old_capture: "https://web.archive.org/web/20260501120000/https://alpha.example/pricing",
+      first_new_capture: "https://web.archive.org/web/20260502120000/https://alpha.example/pricing",
+      narrowed_to_adjacent_captures: true,
+      relative_to_record: "before",
+    }]);
     assert.strictEqual(report.results[0].record_day, "2026-09-01");
     assert.strictEqual(report.results[0].date, "2026-09-01");
     assert.strictEqual(report.results[0].date_from_captures, "2026-05-02");
@@ -477,5 +484,32 @@ describe("a reader that fails on one record", () => {
     assert.strictEqual(report.results[0].outcome, "reader_failed");
     assert.match(report.results[0].why, /HTTP 504/);
     assert.strictEqual(report.split[SPLIT.readerFailed], 1);
+  });
+});
+
+describe("each result names its record and the archived copy that settled it", () => {
+  it("carries the key a writer finds the record by, distinct for two records that differ only in their summary, and the copy's address in the Archive", async () => {
+    const changes = ["Alpha cut its free plan to 1 project", "Alpha cut its free plan to 2 projects"].map((summary) =>
+      change({ vendor: "Alpha", date: "2026-09-01", date_source: "discovered", previous_state: "A", current_state: "B", source_url: "https://alpha.example/pricing", summary }));
+    const archive = {
+      captures: async (url: string) => ({ captures: [{ timestamp: "20260205120000", original: url, statuscode: "200", mimetype: "text/html" }] }),
+      captureHtml: async () => ({ html: `<html><body><p>TERMS=B</p><p>${"Plans and limits. ".repeat(40)}</p></body></html>` }),
+    };
+    const report = await settleFirstReadings({
+      statedReaderForRecord: () => statesItAlready,
+      changes,
+      offers: [],
+      today: "2026-09-28",
+      archive,
+      pairReaderForListing: termsPairReader,
+      fetchToday: async () => ({ ok: true, text: "TERMS=B" }),
+      textDayOf: () => "2026-02-10",
+    });
+    assert.deepStrictEqual(report.results.map((r: { record_key: string }) => r.record_key), changes.map(recordKey));
+    assert.strictEqual(new Set(report.results.map((r: { record_key: string }) => r.record_key)).size, 2);
+    for (const result of report.results) {
+      assert.strictEqual(result.outcome, "ours");
+      assert.deepStrictEqual(result.capture, { day: "2026-02-05", gap_days: 5, side: "before", url: "https://web.archive.org/web/20260205120000/https://alpha.example/pricing" });
+    }
   });
 });

@@ -70,6 +70,10 @@ export function captureUrl(capture) {
   return `${WAYBACK}/${capture.timestamp}id_/${capture.original}`;
 }
 
+export function archivedCopyUrl(capture) {
+  return `${WAYBACK}/${capture.timestamp}/${capture.original}`;
+}
+
 function retryAfterMs(response, fallbackMs) {
   const header = response.headers?.get?.("retry-after");
   const seconds = header ? Number(header) : NaN;
@@ -648,6 +652,8 @@ async function bracketMoves({ from, until, pool, compare, pageOf }) {
     brackets.push({
       last_old: lastOld.day,
       first_new: firstNew.capture ? firstNew.day : null,
+      last_old_capture: lastOld.capture ? archivedCopyUrl(lastOld.capture) : null,
+      first_new_capture: firstNew.capture ? archivedCopyUrl(firstNew.capture) : null,
       narrowed_to_adjacent_captures: hi - lo <= 1,
     });
     if (hi === candidates.length) return { brackets, moves_complete: true };
@@ -807,7 +813,7 @@ export async function settleAgainstCaptures({ url, finalUrl, textDay, recordDay,
       tried.push({ ...at, why: settled.why });
       continue;
     }
-    return { ...settled, text_day: textDay, record_day: judgedOn, capture: at, reads, ...(tried.length ? { tried } : {}) };
+    return { ...settled, text_day: textDay, record_day: judgedOn, capture: { ...at, url: archivedCopyUrl(capture) }, reads, ...(tried.length ? { tried } : {}) };
   }
   return unsettled({
     outcome: "no_usable_capture",
