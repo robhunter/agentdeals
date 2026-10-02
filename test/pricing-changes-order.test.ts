@@ -29,12 +29,13 @@ describe("the order of the change log", () => {
   const retracted = { resolution: { state: "retracted", date: "2026-10-02" } };
   const reversed = { resolution: { state: "reversed", date: "2026-10-02" } };
   const log = [
+    logged("Undated older", "limits_reduced", "2026-06-01", "discovered"),
     logged("Older", "limits_reduced", "2026-07-31", "vendor_page"),
+    logged("Retracted undated", "limits_reduced", "2026-09-01", "discovered", retracted),
     logged("Undated", "pricing_restructured", "2026-09-15", "discovered"),
     logged("This month", "limits_increased", "2026-10-01", "vendor_page"),
     logged("Correction", "record_corrected", "2026-10-02", "hand_written"),
     logged("Retracted dated", "free_tier_removed", "2026-10-01", "vendor_page", retracted),
-    logged("Retracted undated", "limits_reduced", "2026-09-01", "discovered", retracted),
     logged("Two months back", "new_free_tier", "2026-08-01", "vendor_page"),
     logged("Announced", "limits_reduced", "2026-11-15", "vendor_page"),
     logged("Reversed", "free_tier_removed", "2026-09-20", "vendor_page", reversed),
@@ -53,7 +54,7 @@ describe("the order of the change log", () => {
   });
 
   it("lists the changes with no known effective date next, then the older months", () => {
-    assert.deepStrictEqual(vendors(sections.undated), ["Undated"]);
+    assert.deepStrictEqual(vendors(sections.undated), ["Undated", "Undated older"]);
     assert.deepStrictEqual(months(sections.olderMonths), ["2026-07: Older"]);
   });
 
