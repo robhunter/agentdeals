@@ -1,5 +1,6 @@
 import type { DealChange } from "./types.js";
 import { changeCitesASource, type CitableChange } from "./change-citation.js";
+import { resolutionTag, theEventNeverHappened } from "./change-resolution.js";
 import {
   DISCOVERED_DATE_PREFIX,
   EFFECTIVE_DATE_PREFIX,
@@ -130,13 +131,21 @@ export function changeFeedProvenanceNote(entries: FeedChange[], weeklyFeedUrl: s
 }
 
 interface FeedEntryFields {
+  title: string;
   updated: string;
   dateSource: string;
   effectiveDate: string | null;
   recordedDate: string;
-  label: string;
+  category: FeedCategory;
   summary: string;
 }
+
+export interface FeedCategory {
+  term: string;
+  label: string;
+}
+
+export const RETRACTED_FEED_CATEGORY: FeedCategory = { term: "retracted", label: "Retracted" };
 
 export const VIA_LINK_REL = "via";
 
@@ -168,13 +177,28 @@ export function digestSourceXml(
   return sources.map((url) => `${indent}<link href="${esc(url)}" rel="${VIA_LINK_REL}"/>`).join("\n");
 }
 
+export function feedEntryTitle(change: Pick<DealChange, "vendor" | "change_type" | "resolution">): string {
+  const { resolution } = change;
+  const label = resolution && theEventNeverHappened(change)
+    ? resolutionTag(resolution)
+    : changeTypeFeedLabel(change.change_type);
+  return `${change.vendor}: ${label}`;
+}
+
+export function feedEntryCategory(change: Pick<DealChange, "change_type" | "resolution">): FeedCategory {
+  return theEventNeverHappened(change)
+    ? RETRACTED_FEED_CATEGORY
+    : { term: change.change_type, label: changeTypeFeedLabel(change.change_type) };
+}
+
 export function feedEntryFields(change: DealChange, now: Date = new Date()): FeedEntryFields {
   return {
+    title: feedEntryTitle(change),
     updated: feedEntryUpdatedTimestamp(change, now),
     dateSource: change.date_source ?? "discovered",
     effectiveDate: effectiveDateOf(change),
     recordedDate: recordedOn(change),
-    label: changeTypeFeedLabel(change.change_type),
+    category: feedEntryCategory(change),
     summary: feedEntrySummary(change),
   };
 }

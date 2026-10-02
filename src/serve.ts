@@ -117,6 +117,7 @@ import { resolveCuratedAlternatives, curatedAlternativesFor, addCuratedToPool } 
 import type { Agent, ChangeDateSource, DealChange, FreePlanExcerpt, RiskCause, RatingWithheld, LinkUnreachable, Offer, StabilityClass, SubtypeLabel } from "./types.js";
 import { A_DATED_HEADING_MARKER, A_DATED_SECTION_MARKER, datedHeadingNoticeHtml, datedSectionNoticeHtml, namedOnceItsDateArrived, namedWhileAheadOf, namedWhileNotBefore, ANNOUNCED_BADGE, ANNOUNCED_HEADING, announcedIntro, changeDateLabel, changeEntryDateLabel, changeEntryLongDateLabel, changeDateClause, changeDatePublished, changeEventStartDate, capListSections, latestEventDate, offerExpiryAfter, feedEntryUpdated, undatedGroupHeading, UNDATED_TILE_LABEL, firstReadHeading, discoveryBatchNote, coveringBracketedChanges, changeEntryDateLabelHtml, isoWeekOf, monthlyChangeSeries, changesInWindow, discoveryMonthSeriesHeading, periodComparisonSentence, DISCOVERED_DATE_PREFIX, EFFECTIVE_DATE_PREFIX, UNDATED_GROUP_NOTE, UNKNOWN_EFFECTIVE_DATE_MARKER, EFFECTIVE_BY_DATE_MEANING, BRACKETED_DATE_PREFIX, EFFECTIVE_MONTH_SERIES_NOTE, DISCOVERY_MONTH_SERIES_NOTE, weekRangeLabel, newestChangeInEffect, vendorPageLastUpdated } from "./change-dates.js";
 import { changeFeedEntries, feedEntryFields, feedUpdatedTimestamp, changeFeedProvenanceNote, CHANGE_FEED_ENTRY_LIMIT, CHANGE_FEED_DESCRIPTION, CHANGE_FEED_NAMESPACE, CHANGE_FEED_NAMESPACE_PREFIX, channelUpdatedTimestamp, WEEKLY_FEED_POPULATION_NOTE, feedLinkTag, feedEntrySourceXml, digestSourceXml, PER_CHANGE_FEED, WEEKLY_DIGEST_FEED } from "./change-feed.js";
+import { changeLogSections, ourRecordsSectionHeading, OUR_RECORDS_SECTION_NOTE, type MonthGroup } from "./change-log-sections.js";
 import { FEED_CORRECTIONS, correctionEntriesXml } from "./feed-corrections.js";
 import { buildDay, emptyPageLastmod, entryDay, fallbackDay, httpDate, lastmodFor, newestLastmod, readPageLastmod, type PageLastmodLedger } from "./page-lastmod.js";
 import { bestOfPathResolves, readBestOfPublished } from "./best-of-publication.js";
@@ -48830,14 +48831,7 @@ function buildPricingChangesPage(): string {
   const currentYear = new Date().getFullYear();
 
   const sorted = [...eventDated].sort((a, b) => b.date.localeCompare(a.date));
-  const undatedSorted = [...undatedChanges].sort((a, b) => b.date.localeCompare(a.date));
-
-  const byMonth = new Map<string, typeof sorted>();
-  for (const c of sorted) {
-    const monthKey = c.date.slice(0, 7);
-    if (!byMonth.has(monthKey)) byMonth.set(monthKey, []);
-    byMonth.get(monthKey)!.push(c);
-  }
+  const sections = changeLogSections(allChanges, today);
 
   const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
   function formatMonth(key: string): string {
@@ -48955,7 +48949,7 @@ ${altHtml}
       <div class="pc-filter-count"><span id="pc-visible-count">${sorted.length}</span> of ${sorted.length} changes shown</div>
     </div>`;
 
-  const monthsHtml = Array.from(byMonth.entries()).map(([month, changes]) => {
+  const monthGroupsHtml = (groups: MonthGroup<typeof allChanges[0]>[]) => groups.map(({ month, changes }) => {
     const entriesHtml = changes.map(c => buildChangeEntry(c)).join("\n");
     return `    <div class="month-group">
       <h2 class="month-heading" id="month-${month}">${formatMonth(month)}</h2>
@@ -48963,10 +48957,16 @@ ${entriesHtml}
     </div>`;
   }).join("\n");
 
-  const undatedHtml = undatedSorted.length === 0 ? "" : `    <div class="month-group month-group-undated">
-      <h2 class="month-heading" id="month-undated">${undatedGroupHeading(undatedSorted.length, allChanges.length)}</h2>
-      <p class="month-note">${coveringBracketedChanges(UNDATED_GROUP_NOTE, undatedSorted)}</p>
-${undatedSorted.map(c => buildChangeEntry(c)).join("\n")}
+  const undatedHtml = sections.undated.length === 0 ? "" : `    <div class="month-group month-group-undated">
+      <h2 class="month-heading" id="month-undated">${undatedGroupHeading(sections.undated.length, allChanges.length)}</h2>
+      <p class="month-note">${coveringBracketedChanges(UNDATED_GROUP_NOTE, sections.undated)}</p>
+${sections.undated.map(c => buildChangeEntry(c)).join("\n")}
+    </div>`;
+
+  const ourRecordsHtml = sections.ours.length === 0 ? "" : `    <div class="month-group month-group-ours">
+      <h2 class="month-heading" id="month-ours">${escHtmlServer(ourRecordsSectionHeading(sections.ours.length))}</h2>
+      <p class="month-note">${escHtmlServer(OUR_RECORDS_SECTION_NOTE)}</p>
+${sections.ours.map(c => buildChangeEntry(c)).join("\n")}
     </div>`;
 
   const title = "Developer Tool Pricing Changes \u2014 Free Tier Tracker";
@@ -49230,8 +49230,10 @@ ${upcomingChanges.map(c => buildChangeEntry(c)).join("\n")}
 ` : ""}
 ${filterButtonsHtml}
 
+${monthGroupsHtml(sections.recentMonths)}
 ${undatedHtml}
-${monthsHtml}
+${monthGroupsHtml(sections.olderMonths)}
+${ourRecordsHtml}
 
   <div class="cross-links">
     <h2>Related</h2>
@@ -49273,14 +49275,14 @@ function buildPricingChangesFeed(servedAt: Date = new Date(), vendorName: string
       ? `\n    <${ns}:effective_date>${fields.effectiveDate}</${ns}:effective_date>`
       : "";
     return `  <entry>
-    <title>${escXml(c.vendor)}: ${escXml(fields.label)}</title>
+    <title>${escXml(fields.title)}</title>
     <link href="${BASE_URL}/pricing-changes#${anchor}" rel="alternate"/>
     <id>urn:agentdeals:${escXml(id)}</id>
     <updated>${fields.updated}</updated>
     <author><name>AgentDeals</name></author>
 ${feedEntrySourceXml(c, escXml, ns)}
     <summary>${escXml(fields.summary)}</summary>
-    <category term="${escXml(c.change_type)}" label="${escXml(fields.label)}"/>
+    <category term="${escXml(fields.category.term)}" label="${escXml(fields.category.label)}"/>
     <${ns}:date_source>${escXml(fields.dateSource)}</${ns}:date_source>
     <${ns}:recorded_date>${fields.recordedDate}</${ns}:recorded_date>${effective}
   </entry>`;
