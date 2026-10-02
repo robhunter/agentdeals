@@ -1,7 +1,7 @@
 const WRITTEN_BLURBS: Readonly<Record<string, string>> = {
-  "localstack-alternatives": "LocalStack CE shuts down March 23, 2026 — compare 9 free open-source AWS emulators",
+  "localstack-alternatives": "In March 2026, LocalStack merged Community and Pro images, requiring an auth token for the latest image — compare 9 free open-source AWS emulators",
   "postman-alternatives": "Postman killed free team collaboration March 1, 2026 — 5 free API testing alternatives",
-  "terraform-alternatives": "HCP Terraform legacy plan ends March 31, 2026 — free IaC alternatives compared",
+  "terraform-alternatives": "HCP Terraform legacy free plan ended March 31, 2026; free tier now caps managed resources at 500 — free IaC alternatives compared",
   "hetzner-alternatives": "Hetzner raised prices twice in 2026 and its Cost-Optimized line is unavailable — cloud hosting alternatives with free tiers",
   "freshping-alternatives": "Freshping shut down March 6, 2026 — 13 free uptime monitoring alternatives",
   "heroku-alternatives": "Heroku removed free tier Nov 2022, entered sustaining mode Feb 2026 — 8 free PaaS options",
@@ -49,8 +49,6 @@ const WRITTEN_BLURBS: Readonly<Record<string, string>> = {
   "railway-vs-render": "Deep comparison of Railway and Render free tiers — usage-based vs fixed pricing, databases, sleep behavior, and scaling costs",
   "datadog-vs-new-relic": "Deep comparison of Datadog and New Relic free tiers — per-host vs per-GB pricing, APM, logs, synthetics, and scaling costs",
   "stability": "Visual stability dashboard — which developer free tiers are safe, watched, volatile, or improving",
-  "hcp-terraform-migration": "Step-by-step HCP Terraform migration guide — decision matrix, 5 migration paths, March 31 deadline",
-  "terraform-cloud-free-tier-removed": "Terraform Cloud free tier removal guide — cost analysis, 8 alternatives compared, migration paths for affected teams",
   "gemini-api-pricing-2026": "Gemini API billing guide — spend caps ($250-$100K+/mo), prepaid billing, 3.1 Pro paid-only, free tier changes, 8-provider comparison",
   "free-tier-tracker": "Q1 2026 free tier erosion report — which developer free tiers were removed, reduced, or expanded",
   "startup-credits": "The definitive startup credits comparison — 13 programs across cloud infrastructure, fintech, and developer tools with eligibility requirements, vesting schedules, and stacking strategies",

@@ -3207,10 +3207,6 @@
       "hash": "6240a8702b6bbb06",
       "changed": "2026-10-01"
     },
-    "/hcp-terraform-migration": {
-      "hash": "6f2ea36899f89630",
-      "changed": "2026-10-02"
-    },
     "/heroku-alternatives": {
       "hash": "852edea9bfe7f289",
       "changed": "2026-10-02"
@@ -3525,10 +3521,6 @@
     },
     "/terraform-alternatives": {
       "hash": "9384f2c1a58a564a",
-      "changed": "2026-10-02"
-    },
-    "/terraform-cloud-free-tier-removed": {
-      "hash": "a5bf9dc0d036874f",
       "changed": "2026-10-02"
     },
     "/testing-alternatives": {

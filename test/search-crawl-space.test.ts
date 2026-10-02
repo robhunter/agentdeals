@@ -60,8 +60,6 @@ const SEARCH_VARIANTS = [
 ];
 
 const PAGES_LINKING_INTO_SEARCH = [
-  "/terraform-cloud-free-tier-removed",
-  "/hcp-terraform-migration",
   "/firebase-alternatives",
   "/postman-alternatives",
   "/google-developer-program-2026",

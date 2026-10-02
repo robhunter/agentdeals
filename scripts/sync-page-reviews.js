@@ -94,7 +94,7 @@ const EDITORIAL_PAGES = [
   "/free-fastapi-stack", "/free-frontend-stack", "/free-go-stack", "/free-nextjs-stack",
   "/free-saas-stack", "/free-startup-stack", "/free-tier-risk", "/free-tier-tracker",
   "/gcp-free-tier-2026", "/gemini-api-pricing-2026",
-  "/google-developer-program-2026", "/hcp-terraform-migration", "/hetzner-pricing-2026",
+  "/google-developer-program-2026", "/hetzner-pricing-2026",
   "/hosting-free-tier-comparison-2026", "/hosting-pricing", "/llm-api-pricing",
   "/monitoring-comparison-2026", "/neon-vs-supabase",
   "/openai-assistants-alternatives",
@@ -105,7 +105,7 @@ const EDITORIAL_PAGES = [
   "/stacks/ai-startup", "/stacks/api-first", "/stacks/open-source", "/stacks/saas-mvp",
   "/stacks/side-project", "/startup-credits",
   "/state-of-free-tiers", "/storage-comparison-2026", "/supabase-vs-firebase",
-  "/tenor-alternatives", "/terraform-cloud-free-tier-removed",
+  "/tenor-alternatives",
   "/testing-free-tier-comparison-2026", "/vector-database-pricing", "/vercel-vs-netlify",
   "/x402-services",
 ];
