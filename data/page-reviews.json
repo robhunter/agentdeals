@@ -2071,57 +2071,6 @@
       "data_source_reason": null
     },
     {
-      "path": "/hcp-terraform-migration",
-      "published": "2026-03-26",
-      "tier": "A",
-      "vendors_asserted": [
-        "hcp-terraform",
-        "scalr",
-        "spacelift"
-      ],
-      "vendors_tabulated": [
-        "brainboard",
-        "checkov",
-        "hcp-terraform",
-        "pulumi",
-        "scalr",
-        "spacelift",
-        "stategraph",
-        "terragrunt-scale",
-        "terramate"
-      ],
-      "badge_subjects_unresolved": [],
-      "stat_card_subjects_unresolved": [],
-      "reviewed_at": "2026-09-12",
-      "reviewer": "pm",
-      "review_outcome": "fail",
-      "review_note": null,
-      "reads_index": true,
-      "tables_read_index": true,
-      "table_figures": 0,
-      "table_figures_from_records": 0,
-      "tables": [
-        {
-          "label": "1. What's Changing on March 31",
-          "figures": 0,
-          "from_records": 0
-        },
-        {
-          "label": "4. Decision Matrix",
-          "figures": 0,
-          "from_records": 0
-        },
-        {
-          "label": "6. Free IaC Alternatives Comparison",
-          "figures": 0,
-          "from_records": 0
-        }
-      ],
-      "reads_changes": true,
-      "data_source": "catalogue",
-      "data_source_reason": null
-    },
-    {
       "path": "/hetzner-pricing-2026",
       "published": "2026-03-25",
       "tier": "A",
@@ -3347,59 +3296,6 @@
         {
           "label": "Tenor Pricing Change Timeline",
           "figures": 0,
-          "from_records": 0
-        }
-      ],
-      "reads_changes": true,
-      "data_source": "unsourced",
-      "data_source_reason": null
-    },
-    {
-      "path": "/terraform-cloud-free-tier-removed",
-      "published": "2026-04-08",
-      "tier": "A",
-      "vendors_asserted": [
-        "hcp-terraform",
-        "scalr",
-        "spacelift",
-        "terragrunt-scale"
-      ],
-      "vendors_tabulated": [
-        "hcp-terraform",
-        "scalr",
-        "spacelift",
-        "terragrunt-scale",
-        "terramate"
-      ],
-      "badge_subjects_unresolved": [],
-      "stat_card_subjects_unresolved": [],
-      "reviewed_at": "2026-09-12",
-      "reviewer": "pm",
-      "review_outcome": "fail",
-      "review_note": null,
-      "reads_index": false,
-      "tables_read_index": false,
-      "table_figures": 38,
-      "table_figures_from_records": 0,
-      "tables": [
-        {
-          "label": "1. What Changed — Before vs After",
-          "figures": 0,
-          "from_records": 0
-        },
-        {
-          "label": "3. Migration Cost Analysis",
-          "figures": 32,
-          "from_records": 0
-        },
-        {
-          "label": "4. Alternative Platforms Comparison",
-          "figures": 0,
-          "from_records": 0
-        },
-        {
-          "label": "5. Free Alternatives Table",
-          "figures": 6,
           "from_records": 0
         }
       ],

@@ -38,12 +38,6 @@ const A_BADGE_AND_A_FREE_CLAIM_CAN_STAND_TOGETHER: AnExemption[] = [
     vendors: ["Amazon SES", "SendGrid"],
     unit: /growth cost analysis at 10K\/50K\/100K\/500K emails/,
   },
-  {
-    why: "#1835 — LocalStack's badge stands on a March 2026 ending that two later records reverse, so the page copy is right and the badge is what has to change",
-    route: /^\/testing-free-tier-comparison-2026$/,
-    vendors: ["LocalStack"],
-    unit: /are all free with no usage limits when self-hosted|While the free tier still covers 30\+ services/,
-  },
 ];
 
 describe("reading the vendor a page badges as having lost its free tier", () => {

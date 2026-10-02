@@ -68,8 +68,6 @@ const GUIDE_ENTRIES: Array<{ slug: string; title: string }> = [
   { slug: "railway-vs-render", title: "Railway vs Render" },
   { slug: "datadog-vs-new-relic", title: "Datadog vs New Relic" },
   { slug: "free-tier-risk", title: "Free Tier Risk Index" },
-  { slug: "hcp-terraform-migration", title: "HCP Terraform Migration Guide" },
-  { slug: "terraform-cloud-free-tier-removed", title: "Terraform Cloud Free Tier Removed" },
   { slug: "gemini-api-pricing-2026", title: "Gemini API Pricing 2026" },
   { slug: "free-tier-tracker", title: "Free Tier Tracker Q1 2026" },
   { slug: "startup-credits", title: "Startup Credits Directory" },

@@ -2273,7 +2273,7 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("canonical"), "Should have canonical link");
     assert.ok(html.includes("global-nav"), "Should have global nav");
     assert.ok(html.includes("Top Alternatives"), "Should have alternatives section");
-    assert.ok(html.includes("March 23, 2026"), "Should mention shutdown date");
+    assert.ok(html.includes("In March 2026, LocalStack merged its Community and Pro images"), "Should say what changed in March 2026");
   });
 
   it("GET /postman-alternatives renders alternatives page", async () => {
@@ -3655,64 +3655,20 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("Methodology"), "Should have methodology section");
   });
 
-  it("GET /hcp-terraform-migration renders migration guide page", async () => {
+  it("GET /hcp-terraform-migration redirects to /terraform-alternatives", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${serverPort}/hcp-terraform-migration`);
-    assert.strictEqual(response.status, 200);
-    assert.ok(response.headers.get("content-type")?.includes("text/html"));
-    const html = await response.text();
-    assert.ok(html.includes("HCP Terraform Migration Guide"), "Should have title");
-    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
-    assert.ok(html.includes('"Article"'), "Should use Article schema");
-    assert.ok(html.includes("canonical"), "Should have canonical link");
-    assert.ok(html.includes("global-nav"), "Should have global nav");
-    assert.ok(html.includes("What's Changing on March 31"), "Should have what's changing section");
-    assert.ok(html.includes("Who's Affected"), "Should have who's affected section");
-    assert.ok(html.includes("Migration Paths"), "Should have migration paths section");
-    assert.ok(html.includes("Decision Matrix"), "Should have decision matrix section");
-    assert.ok(html.includes("Step-by-Step Migration"), "Should have migration steps section");
-    assert.ok(html.includes("Spacelift"), "Should include Spacelift as alternative");
-    assert.ok(html.includes("Scalr"), "Should include Scalr as alternative");
-    assert.ok(html.includes("OpenTofu"), "Should include OpenTofu as alternative");
-    assert.ok(html.includes("Terragrunt Scale"), "Should include Terragrunt Scale");
-    assert.ok(html.includes("500"), "Should mention 500 resource cap");
-    assert.ok(html.includes("/terraform-alternatives"), "Should cross-link to terraform alternatives");
-    assert.ok(html.includes("Methodology"), "Should have methodology section");
-    assert.ok(html.includes("March 31"), "Should mention the deadline");
+    const response = await fetch(`http://localhost:${serverPort}/hcp-terraform-migration`, { redirect: "manual" });
+    assert.strictEqual(response.status, 301);
+    assert.strictEqual(response.headers.get("location"), "/terraform-alternatives");
   });
 
-  it("GET /terraform-cloud-free-tier-removed renders Terraform free tier removal guide", async () => {
+  it("GET /terraform-cloud-free-tier-removed redirects to /terraform-alternatives", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${serverPort}/terraform-cloud-free-tier-removed`);
-    assert.strictEqual(response.status, 200);
-    assert.ok(response.headers.get("content-type")?.includes("text/html"));
-    const html = await response.text();
-    assert.ok(html.includes("Terraform Cloud Free Tier Removed"), "Should have title");
-    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
-    assert.ok(html.includes('"Article"'), "Should use Article schema");
-    assert.ok(html.includes('"FAQPage"'), "Should use FAQPage schema");
-    assert.ok(html.includes("canonical"), "Should have canonical link");
-    assert.ok(html.includes("global-nav"), "Should have global nav");
-    assert.ok(html.includes("What Changed"), "Should have what changed section");
-    assert.ok(html.includes("Who"), "Should have who's affected section");
-    assert.ok(html.includes("Migration Cost Analysis"), "Should have cost analysis section");
-    assert.ok(html.includes("Alternative Platforms"), "Should have alternatives section");
-    assert.ok(html.includes("Free Alternatives Table"), "Should have free alternatives table");
-    assert.ok(html.includes("Migration Recommendations"), "Should have migration guide section");
-    assert.ok(html.includes("FAQ"), "Should have FAQ section");
-    assert.ok(html.includes("OpenTofu"), "Should include OpenTofu");
-    assert.ok(html.includes("Spacelift"), "Should include Spacelift");
-    assert.ok(html.includes("Scalr"), "Should include Scalr");
-    assert.ok(html.includes("env0"), "Should include env0");
-    assert.ok(html.includes("Atlantis"), "Should include Atlantis");
-    assert.ok(html.includes("Terraform CE"), "Should include Terraform CE");
-    assert.ok(html.includes("500"), "Should mention 500 resource cap");
-    assert.ok(html.includes("/hcp-terraform-migration"), "Should cross-link to migration guide");
-    assert.ok(html.includes("/terraform-alternatives"), "Should cross-link to terraform alternatives");
-    assert.ok(html.includes("Methodology"), "Should have methodology section");
-    assert.ok(html.includes("March 31"), "Should mention the effective date");
+    const response = await fetch(`http://localhost:${serverPort}/terraform-cloud-free-tier-removed`, { redirect: "manual" });
+    assert.strictEqual(response.status, 301);
+    assert.strictEqual(response.headers.get("location"), "/terraform-alternatives");
   });
 
   it("GET /gemini-api-pricing-2026 renders Gemini API pricing analysis page", async () => {
@@ -4056,7 +4012,6 @@ describe("HTTP transport", () => {
     proc = await startHttpServer();
     const pages = [
       "/openai-assistants-migration",
-      "/hcp-terraform-migration",
       "/openai-assistants-migration-2026",
     ];
     for (const page of pages) {
