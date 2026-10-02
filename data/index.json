@@ -26189,9 +26189,9 @@
     {
       "vendor": "stadiamaps.com",
       "category": "Maps/Geolocation",
-      "description": "Map tiles, routing, navigation, and other geospatial APIs. Two thousand five hundred free map views and API requests/day for non-commercial usage and testing.",
+      "description": "Stadia Maps offers map tiles, routing, navigation, geocoding and other geospatial APIs. The Free plan includes 200,000 credits a month with standard basemaps and basic APIs. Commercial use is not allowed on the Free plan. Starter at $20 a month allows commercial use.",
       "tier": "Free",
-      "url": "https://stadiamaps.com/",
+      "url": "https://stadiamaps.com/pricing/",
       "tags": [
         "maps",
         "geolocation",
@@ -26199,10 +26199,9 @@
       ],
       "verifiedDate": "2026-08-08",
       "source_check": {
-        "checked": "2026-09-20",
+        "checked": "2026-10-02",
         "outcome": "ok",
-        "detail": "the page names stadiamaps.com, renders no terms we can read, and its markup states 1 typed price (USD 0)",
-        "read": "markup"
+        "detail": "the page writes \"stadiamaps\", the domain we cite stadiamaps.com from, and states \"$20\" and \"200,000 credits/month\""
       }
     },
     {
@@ -33503,7 +33502,7 @@
     {
       "vendor": "Obsidian",
       "category": "Productivity & Notes",
-      "description": "Fully free for personal use. Local-only markdown notes. Unlimited vaults, notes, and community plugins. No cloud sync on free (Obsidian Sync is $8/mo). No publish on free. Commercial use requires paid license ($50/user/year).",
+      "description": "Obsidian is a local-first markdown notes app. It is free with no limits or sign-up. Commercial use does not require a paid license; a Commercial license is optional at $50 per user per year. Sync is $4 per user per month billed annually. Publish is $8 per site per month billed annually.",
       "tier": "Free",
       "url": "https://obsidian.md/pricing",
       "tags": [
@@ -33518,7 +33517,7 @@
       "source_check": {
         "checked": "2026-10-02",
         "outcome": "ok",
-        "detail": "the page names Obsidian as \"obsidian\" and states \"$8\" and \"$50\""
+        "detail": "the page names Obsidian as \"obsidian\" and states \"$4\" and \"$8\" and \"$50\""
       }
     },
     {
