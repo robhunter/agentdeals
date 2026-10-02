@@ -11,6 +11,7 @@ export const NOT_WRITTEN = {
   noSuchRecord: "no record of this vendor has this key",
   severalRecords: "more than one record of this vendor has this key",
   alreadyChecked: "the record already carries an archive check",
+  noLongerInForce: "the record is retracted or reversed",
 };
 
 const ISO_DAY = /^\d{4}-\d{2}-\d{2}$/;
@@ -81,6 +82,7 @@ function whyNotWritten(result, matches, changes) {
   if (matches.length === 0) return NOT_WRITTEN.noSuchRecord;
   if (matches.length > 1) return NOT_WRITTEN.severalRecords;
   if (changes[matches[0]].archive_check) return NOT_WRITTEN.alreadyChecked;
+  if (changes[matches[0]].resolution) return NOT_WRITTEN.noLongerInForce;
   return null;
 }
 

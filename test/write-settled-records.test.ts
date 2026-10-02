@@ -220,13 +220,15 @@ describe("finding the record a result settles", () => {
     assert.strictEqual(changes[1].archive_check.outcome, "no_usable_capture");
   });
 
-  it("writes nothing where no record or more than one has the vendor and key, or the result names no key", () => {
+  it("writes nothing where no record or more than one has the vendor and key, the record is no longer in force, or the result names no key", () => {
     const record = reading();
     const twin = reading({ source_url: "https://alpha.example/plans" });
     const other = reading({ summary: "A different reading." });
+    const retractedSinceTheRun = reading({ resolution: { state: "retracted", date: "2026-10-02", detail: "describes no change" } });
     const cases: Array<[Change[], Change, string]> = [
       [[other], resultFor(record, unconfirmed), NOT_WRITTEN.noSuchRecord],
       [[record, twin], resultFor(record, unconfirmed), NOT_WRITTEN.severalRecords],
+      [[retractedSinceTheRun], resultFor(record, unconfirmed), NOT_WRITTEN.noLongerInForce],
       [[record], { ...resultFor(record, unconfirmed), record_key: undefined }, NOT_WRITTEN.noRecordKey],
     ];
     for (const [changes, result, why] of cases) {
