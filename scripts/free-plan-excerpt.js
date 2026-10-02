@@ -270,6 +270,12 @@ export function excerptHoldsNamingNoRecordInForce(offers, changes) {
   return problems;
 }
 
+export function anExcerptMayBeWritten(offer) {
+  return !offer?.[FREE_PLAN_EXCERPT_HOLD]
+    && !tierWhoseFreeOfferIsTheLicence(offer?.tier ?? "")
+    && tierMayCarryAFreePlanExcerpt(offer?.tier ?? "");
+}
+
 export async function excerptTheFreePlan(record, { offer, pageText, read, readOn }) {
   if (record[FREE_PLAN_EXCERPT_HOLD]) return withNoExcerptWhileHeld(record);
   if (tierWhoseFreeOfferIsTheLicence(offer.tier)) return withNoExcerptForTheTier(record, { outcome: "free_offer_is_the_licence", why: TIER_WHOSE_FREE_OFFER_IS_THE_LICENCE });

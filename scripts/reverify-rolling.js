@@ -35,7 +35,15 @@ import {
   SOURCE_CHECK_UNREADABLE,
 } from "./vendor-naming.js";
 import { findRenderer } from "./rendered-page.js";
-import { excerptTheFreePlan, readFreePlanExcerpt } from "./free-plan-excerpt.js";
+import { anExcerptMayBeWritten, excerptTheFreePlan, readFreePlanExcerpt } from "./free-plan-excerpt.js";
+import {
+  IN_QUARANTINE,
+  TAKES_NO_QUOTE,
+  drawnFirstForAQuote,
+  placesOnTheReadFirstList,
+  readFirstLines,
+  readReadFirstList,
+} from "./read-first.js";
 import { isoDay } from "./change-log.js";
 import { recordRefusals, readRefusals, refusalHolds, offerKey } from "./change-refusals.js";
 import {
@@ -114,12 +122,14 @@ export function pickOldestEntries(offers, limit, now = new Date(), options = {})
   const holds = options.refusalHolds ?? new Map();
   const state = options.verificationState ?? new Map();
   const awaiting = options.awaitingCorroboration ?? new Set();
+  const places = options.readFirst ?? new Map();
   const today = isoDay(now);
   const entries = offers.map((offer, index) => {
     const key = offerKey(offer?.vendor, offer?.url);
     const record = state.get(key) ?? null;
     const attempted = lastAttemptedDate(offer, holds.get(key), record);
     const ts = attempted ? new Date(attempted).getTime() : 0;
+    const place = places.get(key);
     return {
       index,
       offer,
@@ -129,6 +139,8 @@ export function pickOldestEntries(offers, limit, now = new Date(), options = {})
       readFailed: lastReadFailed(record),
       awaitingCorroboration: awaiting.has(key),
       keptOnlyTheName: checkKeptOnlyTheName(offer),
+      place,
+      readFirst: drawnFirstForAQuote(offer, place),
     };
   });
   const byAge = (a, b) =>
@@ -140,8 +152,10 @@ export function pickOldestEntries(offers, limit, now = new Date(), options = {})
   ).length;
   const turnDays = oneTurnOfTheQueue(liveQueueLength, limit);
   const drawAge = (entry) => entry.ts + (entry.deferred ? deferralMs(turnDays) : 0);
+  const listPlace = (entry) => (entry.readFirst ? entry.place : Number.MAX_SAFE_INTEGER);
   const byDrawAge = (a, b) =>
     Number(b.awaitingCorroboration) - Number(a.awaitingCorroboration) ||
+    listPlace(a) - listPlace(b) ||
     Number(b.keptOnlyTheName) - Number(a.keptOnlyTheName) ||
     drawAge(a) - drawAge(b) ||
     Number(b.readFailed) - Number(a.readFailed);
@@ -169,6 +183,9 @@ export function pickOldestEntries(offers, limit, now = new Date(), options = {})
     pickedForASecondReading: secondReadings.length,
     pickedBecauseTheCheckKeptOnlyTheName: fromQueue.filter((entry) => entry.keptOnlyTheName).length,
     queuedWithACheckThatKeptOnlyTheName: queue.filter((entry) => entry.keptOnlyTheName).length,
+    pickedFromTheReadFirstList: fromQueue.filter((entry) => entry.readFirst).length,
+    queuedOnTheReadFirstList: queue.filter((entry) => entry.readFirst).length,
+    listedButNotDrawnFirst: listingsNotDrawnFirstForAQuote(entries),
     drawnFromQueue: retries.length + extraRetries.length + fromQueue.length,
     oldestRemaining,
     retriedFromQuarantine: retries.length + extraRetries.length,
@@ -178,6 +195,21 @@ export function pickOldestEntries(offers, limit, now = new Date(), options = {})
     liveQueueLength,
     turnDays,
   };
+}
+
+function listingsNotDrawnFirstForAQuote(entries) {
+  return entries
+    .filter((entry) => entry.place !== undefined)
+    .map((entry) => ({ entry, why: whyNotDrawnFirst(entry) }))
+    .filter(({ why }) => why !== null)
+    .sort((a, b) => a.entry.place - b.entry.place)
+    .map(({ entry, why }) => ({ vendor: entry.offer.vendor, tier: entry.offer.tier, why }));
+}
+
+function whyNotDrawnFirst(entry) {
+  if (!anExcerptMayBeWritten(entry.offer)) return TAKES_NO_QUOTE;
+  if (entry.readFirst && isQuarantined(entry.record)) return IN_QUARANTINE;
+  return null;
 }
 
 export function repickedNextRun(picked, offers, limit, now, options = {}) {
@@ -532,10 +564,13 @@ export function failedReadingLines(census) {
   ];
 }
 
-export function summaryLines(result, { useAi, checked, drawnFromQueue, oldestRemaining, total, quarantine, repicked, pickedAfterAFailedRead, pickedForASecondReading, failedReadings, turnDays, deferredATurn, liveQueueLength, pickedBecauseTheCheckKeptOnlyTheName, queuedWithACheckThatKeptOnlyTheName }) {
+export function summaryLines(result, { useAi, checked, drawnFromQueue, oldestRemaining, total, quarantine, repicked, pickedAfterAFailedRead, pickedForASecondReading, failedReadings, turnDays, deferredATurn, liveQueueLength, pickedBecauseTheCheckKeptOnlyTheName, queuedWithACheckThatKeptOnlyTheName, pickedFromTheReadFirstList, queuedOnTheReadFirstList, notDrawnFirstFromTheReadFirstList }) {
   const lines = ["", "── Summary ──", `Checked: ${checked}`];
   if (drawnFromQueue !== undefined) {
     lines.push(`Drawn from the queue, so pages this run advances: ${drawnFromQueue}`);
+  }
+  for (const line of readFirstLines(pickedFromTheReadFirstList, queuedOnTheReadFirstList, notDrawnFirstFromTheReadFirstList)) {
+    lines.push(line);
   }
   if (queuedWithACheckThatKeptOnlyTheName !== undefined) {
     lines.push(
@@ -656,8 +691,13 @@ async function main() {
   }
 
   const awaitingCorroboration = pagesAwaitingCorroboration(readHeldReadings().held);
-  const selection = { refusalHolds: holds, verificationState: state, awaitingCorroboration };
-  const { picked, oldestRemaining, retriedFromQuarantine, pickedAfterAFailedRead, pickedForASecondReading, drawnFromQueue, deferredATurn, liveQueueLength, turnDays, pickedBecauseTheCheckKeptOnlyTheName, queuedWithACheckThatKeptOnlyTheName } =
+  const readFirstList = readReadFirstList();
+  if (readFirstList.problem) {
+    console.log(`The read-first list could not be read, so no listing is drawn first from it: ${readFirstList.problem}`);
+  }
+  const { places: readFirst, unmatched: readFirstUnmatched } = placesOnTheReadFirstList(readFirstList.listings, offers);
+  const selection = { refusalHolds: holds, verificationState: state, awaitingCorroboration, readFirst };
+  const { picked, oldestRemaining, retriedFromQuarantine, pickedAfterAFailedRead, pickedForASecondReading, drawnFromQueue, deferredATurn, liveQueueLength, turnDays, pickedBecauseTheCheckKeptOnlyTheName, queuedWithACheckThatKeptOnlyTheName, pickedFromTheReadFirstList, queuedOnTheReadFirstList, listedButNotDrawnFirst } =
     pickOldestEntries(offers, limit, now, selection);
 
   const renderer = findRenderer();
@@ -729,6 +769,9 @@ async function main() {
     liveQueueLength,
     pickedBecauseTheCheckKeptOnlyTheName,
     queuedWithACheckThatKeptOnlyTheName,
+    pickedFromTheReadFirstList,
+    queuedOnTheReadFirstList,
+    notDrawnFirstFromTheReadFirstList: [...readFirstUnmatched, ...listedButNotDrawnFirst],
   })) {
     console.log(line);
   }
