@@ -16918,7 +16918,7 @@ function buildFreeNextjsStackPage(): string {
   }).join("\n");
 
   const growthCosts = [
-    { layer: "Database", vendor: "Neon", freeLimit: "0.5 GiB storage", firstPaid: "Launch, usage-based", gets: "$0.106/CU-hour, $0.35/GB-month, autoscaling up to 16 CU", hitFirst: true },
+    { layer: "Database", vendor: "Neon", freeLimit: "1 GB storage per project", firstPaid: "Launch, usage-based", gets: "$0.106/CU-hour, $0.35/GB-month, autoscaling up to 16 CU", hitFirst: true },
     { layer: "Hosting", vendor: "Vercel", freeLimit: "100 GB bandwidth", firstPaid: "Pro $20/mo/member", gets: "1 TB bandwidth, commercial use, faster builds", hitFirst: true },
     { layer: "Auth", vendor: "Clerk", freeLimit: "10,000 MAU", firstPaid: "Pro $25/mo + $0.02/MAU", gets: "Unlimited MAU, custom domains, premium support", hitFirst: false },
     { layer: "Email", vendor: "Resend", freeLimit: "3,000 emails/mo", firstPaid: "Pro $20/mo", gets: "50,000 emails/mo, custom domains, analytics", hitFirst: false },
@@ -17306,7 +17306,7 @@ function buildFreeDjangoStackPage(): string {
   }).join("\n");
 
   const growthCosts = [
-    { layer: "Database", vendor: "Neon", freeLimit: "0.5 GiB storage", firstPaid: "Launch, usage-based", gets: "$0.106/CU-hour, $0.35/GB-month, autoscaling up to 16 CU", hitFirst: true },
+    { layer: "Database", vendor: "Neon", freeLimit: "1 GB storage per project", firstPaid: "Launch, usage-based", gets: "$0.106/CU-hour, $0.35/GB-month, autoscaling up to 16 CU", hitFirst: true },
     { layer: "Hosting", vendor: "Railway", freeLimit: "$1 of free credit a month after 30-day $5 trial", firstPaid: "Hobby $5/mo", gets: "$5 of usage included, no sleep, more RAM", hitFirst: true },
     { layer: "Cache/Redis", vendor: "Upstash", freeLimit: "10K cmds/day", firstPaid: "Pay-as-you-go $0.2/100K", gets: "Unlimited commands, 1 GB storage", hitFirst: false },
     { layer: "Auth", vendor: "Django Built-in", freeLimit: "Unlimited", firstPaid: "Free forever", gets: "N/A — scales with your app", hitFirst: false },
@@ -17714,7 +17714,7 @@ function buildFreeFastapiStackPage(): string {
   }).join("\n");
 
   const growthCosts = [
-    { layer: "Database", vendor: "Neon", freeLimit: "0.5 GiB storage", firstPaid: "Launch, usage-based", gets: "$0.106/CU-hour, $0.35/GB-month, autoscaling up to 16 CU", hitFirst: true },
+    { layer: "Database", vendor: "Neon", freeLimit: "1 GB storage per project", firstPaid: "Launch, usage-based", gets: "$0.106/CU-hour, $0.35/GB-month, autoscaling up to 16 CU", hitFirst: true },
     { layer: "Hosting", vendor: "Railway", freeLimit: "$1 of free credit a month after 30-day $5 trial", firstPaid: "Hobby $5/mo", gets: "$5 of usage included, no sleep, more RAM", hitFirst: true },
     { layer: "Cache/Redis", vendor: "Upstash", freeLimit: "10K cmds/day", firstPaid: "Pay-as-you-go $0.2/100K", gets: "Unlimited commands, 1 GB storage", hitFirst: false },
     { layer: "Auth", vendor: "Auth0", freeLimit: "25,000 MAU", firstPaid: "Essential $35/mo", gets: "Custom domains, roles, MFA policies", hitFirst: false },
@@ -18139,7 +18139,7 @@ function buildFreeGoStackPage(): string {
   }).join("\n");
 
   const growthCosts = [
-    { layer: "Database", vendor: "Neon", freeLimit: "0.5 GiB storage", firstPaid: "Launch, usage-based", gets: "$0.106/CU-hour, $0.35/GB-month, autoscaling up to 16 CU", hitFirst: true },
+    { layer: "Database", vendor: "Neon", freeLimit: "1 GB storage per project", firstPaid: "Launch, usage-based", gets: "$0.106/CU-hour, $0.35/GB-month, autoscaling up to 16 CU", hitFirst: true },
     { layer: "Hosting", vendor: "Railway", freeLimit: "$1 of free credit a month after 30-day $5 trial", firstPaid: "Hobby $5/mo", gets: "$5 of usage included, no sleep, more RAM", hitFirst: true },
     { layer: "Cache/Redis", vendor: "Upstash", freeLimit: "10K cmds/day", firstPaid: "Pay-as-you-go $0.2/100K", gets: "Unlimited commands, 1 GB storage", hitFirst: false },
     { layer: "Auth", vendor: "Auth0", freeLimit: "25,000 MAU", firstPaid: "Essential $35/mo", gets: "Custom domains, roles, MFA policies", hitFirst: false },
@@ -18600,7 +18600,7 @@ function buildFreeSaasStackPage(): string {
   }).join("\n");
 
   const growthCosts = [
-    { layer: "Database", vendor: "Neon", freeLimit: "0.5 GiB", firstPaid: "Launch, usage-based", atScale: "Scale, $0.222/CU-hour", hitFirst: true },
+    { layer: "Database", vendor: "Neon", freeLimit: "1 GB per project", firstPaid: "Launch, usage-based", atScale: "Scale, $0.222/CU-hour", hitFirst: true },
     { layer: "Hosting", vendor: "Railway", freeLimit: "$1 of free credit a month after 30-day $5 trial", firstPaid: "Hobby $5/mo", atScale: "$20+/mo (usage)", hitFirst: true },
     { layer: "Email", vendor: "Resend", freeLimit: "3K/mo", firstPaid: "Pro $20/mo", atScale: "$100/mo (100K)", hitFirst: false },
     { layer: "Auth", vendor: "Clerk", freeLimit: "50K MRU", firstPaid: "$25/mo", atScale: "$175/mo (100K)", hitFirst: false },

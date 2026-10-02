@@ -57,6 +57,14 @@ const ROUTES_STATING_NEON_FREE_STORAGE = [
   "/free-tier-risk",
 ];
 
+const STACK_TABLE_DATABASE_FREE_LIMITS: Record<string, string> = {
+  "/free-nextjs-stack": "1 GB storage per project",
+  "/free-django-stack": "1 GB storage per project",
+  "/free-fastapi-stack": "1 GB storage per project",
+  "/free-go-stack": "1 GB storage per project",
+  "/free-saas-stack": "1 GB per project",
+};
+
 const SUPERSEDED_FREE_STORAGE = /0\.5 ?GiB|0\.5 ?GB|512 ?MB/g;
 const CURRENT_FREE_STORAGE = /\b1 GB\b/g;
 const REACH_OF_A_NEON_MENTION = 220;
@@ -130,14 +138,24 @@ function figuresNearNeon(text: string, figures: RegExp): Array<{ at: number; fig
   return found;
 }
 
+function growthTableRows(html: string): string[][] {
+  return [...html.matchAll(/<table class="growth-table">([\s\S]*?)<\/table>/g)]
+    .flatMap((table) => [...table[1].matchAll(/<tr>([\s\S]*?)<\/tr>/g)].map((row) => row[1]))
+    .filter((row) => row.includes("<td"))
+    .map((row) => [...row.matchAll(/<td[^>]*>([\s\S]*?)<\/td>/g)].map((cell) => decode(cell[1].replace(/<[^>]*>/g, " ")).trim()));
+}
+
 const pages = new Map<string, string>();
+const markup = new Map<string, string>();
 
 before(async () => {
   server = await startServer();
   for (const route of ROUTES_STATING_NEON_FREE_STORAGE) {
     const res = await fetch(base + route);
     assert.strictEqual(res.status, 200, route);
-    pages.set(route, servedText(await res.text()));
+    const html = await res.text();
+    markup.set(route, html);
+    pages.set(route, servedText(html));
   }
 });
 
@@ -160,6 +178,17 @@ describe("Neon's Free plan storage, 1 GB per project since 2026-10-01", () => {
   it("is given as 1 GB on every page that states it", () => {
     const silent = [...pages].filter(([, text]) => figuresNearNeon(text, CURRENT_FREE_STORAGE).length === 0).map(([route]) => route);
     assert.deepStrictEqual(silent, []);
+  });
+
+  it("is given as 1 GB per project in the Database row of each stack page's upgrade table, a row that never names Neon", () => {
+    const served = Object.fromEntries(
+      Object.keys(STACK_TABLE_DATABASE_FREE_LIMITS).map((route) => [
+        route,
+        growthTableRows(markup.get(route)!).filter((cells) => cells[0].startsWith("Database")).map((cells) => cells[1]),
+      ]),
+    );
+    const expected = Object.fromEntries(Object.entries(STACK_TABLE_DATABASE_FREE_LIMITS).map(([route, freeLimit]) => [route, [freeLimit]]));
+    assert.deepStrictEqual(served, expected);
   });
 
   it("is not called similar to Supabase's limit on /neon-vs-supabase", () => {
