@@ -821,6 +821,7 @@ describe("settling a first reading's difference against the page as the Archive 
     assert.strictEqual(settled.previous_state, "TERMS=A");
     assert.deepStrictEqual(settled.terms_on_record_day, ["TERMS=B"]);
     assert.deepStrictEqual(spans(settled.brackets), [["2026-04-10", "2026-04-11", "before"]]);
+    assert.deepStrictEqual([settled.brackets[0].last_old_capture, settled.brackets[0].first_new_capture], ["https://web.archive.org/web/20260410120000/https://example.com/pricing", "https://web.archive.org/web/20260411120000/https://example.com/pricing"]);
     assert.strictEqual(settled.brackets[0].narrowed_to_adjacent_captures, true);
     assert.deepStrictEqual(settled.later_moves, []);
     assert.strictEqual(settled.date, "2026-04-11");
@@ -919,6 +920,7 @@ describe("settling a first reading's difference against the page as the Archive 
     assert.strictEqual(settled.outcome, "vendor_changed");
     assert.strictEqual(settled.compared_with.page, "today");
     assert.deepStrictEqual(spans(settled.brackets), [[TODAY, null, "spans"]]);
+    assert.strictEqual(settled.brackets[0].first_new_capture, null);
   });
 
   it("does not call the difference ours from a capture after our text's day, since the vendor could have changed its terms in between", async () => {

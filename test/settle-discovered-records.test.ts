@@ -195,7 +195,14 @@ describe("settling the backlog", () => {
       "Beta ours",
       "Gamma page_unreadable_today",
     ]);
-    assert.deepStrictEqual(report.results[0].brackets, [{ last_old: "2026-05-01", first_new: "2026-05-02", narrowed_to_adjacent_captures: true, relative_to_record: "before" }]);
+    assert.deepStrictEqual(report.results[0].brackets, [{
+      last_old: "2026-05-01",
+      first_new: "2026-05-02",
+      last_old_capture: "https://web.archive.org/web/20260501120000/https://alpha.example/pricing",
+      first_new_capture: "https://web.archive.org/web/20260502120000/https://alpha.example/pricing",
+      narrowed_to_adjacent_captures: true,
+      relative_to_record: "before",
+    }]);
     assert.strictEqual(report.results[0].record_day, "2026-09-01");
     assert.strictEqual(report.results[0].date, "2026-09-01");
     assert.strictEqual(report.results[0].date_from_captures, "2026-05-02");

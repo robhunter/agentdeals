@@ -652,6 +652,8 @@ async function bracketMoves({ from, until, pool, compare, pageOf }) {
     brackets.push({
       last_old: lastOld.day,
       first_new: firstNew.capture ? firstNew.day : null,
+      last_old_capture: lastOld.capture ? archivedCopyUrl(lastOld.capture) : null,
+      first_new_capture: firstNew.capture ? archivedCopyUrl(firstNew.capture) : null,
       narrowed_to_adjacent_captures: hi - lo <= 1,
     });
     if (hi === candidates.length) return { brackets, moves_complete: true };
