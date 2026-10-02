@@ -159,6 +159,17 @@ describe("the response says how much it held back", () => {
     assert.match(disclosure.stability_withheld_summary ?? "", /publish no stability class/);
   });
 
+  it("names every ground the class is withheld on, a narrowing no archived copy has confirmed among them", async () => {
+    const { searchOffers, stabilityWithheldDisclosure } = await import("../dist/data.js");
+    const { STABILITY_CLASS_WITHHOLDING_RULE } = await import("../dist/durability-verdict.js");
+    const summary = stabilityWithheldDisclosure(searchOffers()).stability_withheld_summary ?? "";
+    assert.ok(summary.endsWith(` ${STABILITY_CLASS_WITHHOLDING_RULE}`), summary);
+    assert.strictEqual(
+      STABILITY_CLASS_WITHHOLDING_RULE,
+      "We withhold the class where the pricing page does not resolve or states no amount, tier or rate we can read, where we refused the last read, where the listing is gated, or where a narrowing in our records cites no source or no archived copy of the vendor's page has confirmed it.",
+    );
+  });
+
   it("holds nothing back on a query whose every match publishes a class", async () => {
     const { searchOffers, stabilityWithheldDisclosure } = await import("../dist/data.js");
     const rated = searchOffers(undefined, undefined, undefined, undefined, "watch");
@@ -188,6 +199,10 @@ describe("the tool description describes the filter that ships", () => {
       const source = readFileSync(path, "utf-8");
       assert.ok(!source.includes("stable=no negative changes,"), `${path} still describes the default this filter no longer applies`);
       assert.match(source, /Offers whose class we withhold/, `${path} does not tell the caller that withheld records match no value`);
+      assert.ok(
+        source.includes("last read refused, listing gated, or a narrowing in our records that cites no source or that no archived copy of the vendor's page has confirmed \\u2014 match no value"),
+        `${path} does not name every ground the class is withheld on`,
+      );
     }
   });
 });

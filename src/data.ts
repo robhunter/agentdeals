@@ -42,6 +42,7 @@ import { changeCitesASource, changeIsUncited, changeSummaryHtml, changeSummaryMa
 import { endedVerdictSentence } from "./retirement.js";
 import { resolveCategoryName } from "./category-scope.js";
 import { survivingVendorName } from "./vendor-merges.js";
+import { STABILITY_CLASS_WITHHOLDING_RULE } from "./durability-verdict.js";
 import {
   refusedReadSentence,
   refusedReadTheConfirmationSupersedes,
@@ -635,7 +636,7 @@ export function stabilityWithheldDisclosure(candidates: Offer[]): StabilityWithh
     stability_withheld: withheld,
     stability_withheld_summary:
       `${withheld} of ${subject} publish no stability class, so no value of this filter returns them. ` +
-      "We withhold the class where the pricing page does not resolve or states no amount, tier or rate we can read, where we refused the last read, or where the listing is gated.",
+      STABILITY_CLASS_WITHHOLDING_RULE,
   };
 }
 

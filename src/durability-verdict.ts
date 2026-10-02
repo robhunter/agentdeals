@@ -25,9 +25,10 @@ export function durabilitySplit(stabilities: readonly (string | null | undefined
   return split;
 }
 
-export const DURABILITY_WITHHOLDING_RULE =
+export const STABILITY_CLASS_WITHHOLDING_RULE =
   "We withhold the class where the pricing page does not resolve or states no amount, tier or rate we can read, " +
-  "where we refused the last read, or where the listing is gated.";
+  "where we refused the last read, where the listing is gated, or where a narrowing in our records cites no source " +
+  "or no archived copy of the vendor's page has confirmed it.";
 
 export const DURABILITY_NOT_A_SIZE_RANKING =
   "We do not rank these by how much you get, because the limits are not comparable without reading each vendor's page.";
@@ -93,7 +94,7 @@ function slottedSentences(split: DurabilitySplit, scope: DurabilityScope, brief:
   const sentences = [durabilityDenominatorSentence(split, scope.where), durabilitySplitSentence(split)];
   if (brief || split.total === 0) return sentences;
   if (split.total > split.unknown) sentences.push(WHERE_EACH_OFFER_SITS);
-  if (split.unknown > 0) sentences.push(DURABILITY_WITHHOLDING_RULE);
+  if (split.unknown > 0) sentences.push(STABILITY_CLASS_WITHHOLDING_RULE);
   sentences.push(DURABILITY_NOT_A_SIZE_RANKING);
   return sentences;
 }
