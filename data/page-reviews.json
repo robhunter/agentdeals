@@ -2085,9 +2085,9 @@
         "pulumi",
         "scalr",
         "spacelift",
+        "stategraph",
         "terragrunt-scale",
-        "terramate",
-        "terrateam"
+        "terramate"
       ],
       "badge_subjects_unresolved": [],
       "stat_card_subjects_unresolved": [],
@@ -2146,7 +2146,7 @@
       "reviewed_at": "2026-10-02",
       "reviewer": "pm",
       "review_outcome": "fail",
-      "review_note": "Re-checked on 2026-10-02: section 1's prices against Hetzner's price API, section 4 against Hetzner's April and June statements, section 8's Server Auction figure against Hetzner's April table, and section 6's DigitalOcean, Vultr, Linode, AWS Lightsail and Fly.io trial rows against those vendors' own pages or plan APIs. The corrections in https://github.com/robhunter/agentdeals/issues/2238 were read on production that day. Outstanding: section 7's two quotes are not Hacker News comments, and section 3 prints a forecast as a result (https://github.com/robhunter/agentdeals/issues/2243).",
+      "review_note": "Re-checked on 2026-10-02: section 1's prices against Hetzner's price API, section 4 against Hetzner's April and June statements, section 8's Server Auction figure against Hetzner's April table, section 3 against The Register's article of 2026-02-24, and section 6's DigitalOcean, Vultr, Linode, AWS Lightsail, Oracle Cloud, OVHcloud and Fly.io trial rows against those vendors' own pages, plan APIs or notices. The corrections in https://github.com/robhunter/agentdeals/issues/2238, https://github.com/robhunter/agentdeals/issues/2243 and https://github.com/robhunter/agentdeals/issues/2247 were read on production that day. Outstanding: section 2 gives the April range for cloud servers and none for dedicated servers, which rose 2-21% in Hetzner's table (https://github.com/robhunter/agentdeals/issues/2258).",
       "reads_index": true,
       "tables_read_index": true,
       "table_figures": 94,

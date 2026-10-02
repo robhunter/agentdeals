@@ -14823,11 +14823,11 @@
       }
     },
     {
-      "vendor": "Terrateam",
+      "vendor": "Stategraph",
       "category": "CI/CD",
-      "description": "Now Stategraph: terrateam.io redirects to stategraph.com. Infrastructure-as-code orchestration for GitHub and GitLab, with Terraform, OpenTofu, Terragrunt, Pulumi, CDKTF or any CLI. Free hosted plan: 3 users, 50 runs (plans or applies) a month, 1 concurrent worker, 30-day audit retention and community support, with every Orchestration feature, including SSO, RBAC, drift detection, cost estimation and OPA, Conftest and Checkov policies. No credit card. The self-hosted open-source edition (MPL-2.0) is free for up to 3 active users a month per GitHub or GitLab installation, with unlimited runs and concurrent workers.",
+      "description": "Stategraph, formerly Terrateam: terrateam.io redirects to stategraph.com. Infrastructure-as-code orchestration for GitHub and GitLab, with Terraform, OpenTofu, Terragrunt, Pulumi, CDKTF or any CLI. Free hosted plan: 3 users, 50 runs (plans or applies) a month, 1 concurrent worker, 30-day audit retention and community support, with every Orchestration feature, including SSO, RBAC, drift detection, cost estimation and OPA, Conftest and Checkov policies. No credit card. The self-hosted open-source edition (MPL-2.0) is free for up to 3 active users a month per GitHub or GitLab installation, with unlimited runs and concurrent workers.",
       "tier": "Free",
-      "url": "https://terrateam.io/pricing",
+      "url": "https://stategraph.com/pricing",
       "tags": [
         "ci",
         "cd",
@@ -14837,9 +14837,9 @@
       ],
       "verifiedDate": "2026-10-01",
       "source_check": {
-        "checked": "2026-09-22",
+        "checked": "2026-10-02",
         "outcome": "ok",
-        "detail": "the page names Terrateam as \"terrateam\" and states \"$0\""
+        "detail": "the page names Stategraph as \"stategraph\" and states \"50 runs a month\" and \"3 active users a month\""
       },
       "restatement_reverted": {
         "record_date": "2026-08-28",
