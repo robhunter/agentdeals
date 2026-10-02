@@ -20,7 +20,12 @@ export interface ChangeLogSections<T> {
 
 export const MONTHS_LISTED_AHEAD_OF_UNDATED_CHANGES = 3;
 
-export const OUR_RECORDS_SECTION_HEADING = "";
+export function ourRecordsSectionHeading(count: number): string {
+  return `Our errors and corrections (${count} ${count === 1 ? "record" : "records"})`;
+}
+
+export const OUR_RECORDS_SECTION_NOTE =
+  "This section lists our retracted records and data corrections. No entry here is a vendor pricing change.";
 
 export function earliestMonthListedAheadOfUndatedChanges(today: string): string {
   const year = Number(today.slice(0, 4));

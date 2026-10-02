@@ -136,9 +136,16 @@ interface FeedEntryFields {
   dateSource: string;
   effectiveDate: string | null;
   recordedDate: string;
-  label: string;
+  category: FeedCategory;
   summary: string;
 }
+
+export interface FeedCategory {
+  term: string;
+  label: string;
+}
+
+export const RETRACTED_FEED_CATEGORY: FeedCategory = { term: "retracted", label: "Retracted" };
 
 export const VIA_LINK_REL = "via";
 
@@ -178,6 +185,12 @@ export function feedEntryTitle(change: Pick<DealChange, "vendor" | "change_type"
   return `${change.vendor}: ${label}`;
 }
 
+export function feedEntryCategory(change: Pick<DealChange, "change_type" | "resolution">): FeedCategory {
+  return theEventNeverHappened(change)
+    ? RETRACTED_FEED_CATEGORY
+    : { term: change.change_type, label: changeTypeFeedLabel(change.change_type) };
+}
+
 export function feedEntryFields(change: DealChange, now: Date = new Date()): FeedEntryFields {
   return {
     title: feedEntryTitle(change),
@@ -185,7 +198,7 @@ export function feedEntryFields(change: DealChange, now: Date = new Date()): Fee
     dateSource: change.date_source ?? "discovered",
     effectiveDate: effectiveDateOf(change),
     recordedDate: recordedOn(change),
-    label: changeTypeFeedLabel(change.change_type),
+    category: feedEntryCategory(change),
     summary: feedEntrySummary(change),
   };
 }

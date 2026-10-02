@@ -5,8 +5,13 @@ import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { changeLogSections, earliestMonthListedAheadOfUndatedChanges } from "../dist/change-log-sections.js";
-import { changeTypeFeedLabel, feedEntryTitle } from "../dist/change-feed.js";
+import {
+  changeLogSections,
+  earliestMonthListedAheadOfUndatedChanges,
+  ourRecordsSectionHeading,
+  OUR_RECORDS_SECTION_NOTE,
+} from "../dist/change-log-sections.js";
+import { changeTypeFeedLabel, feedEntryCategory, feedEntryTitle } from "../dist/change-feed.js";
 import { isEventDated } from "../dist/change-dates.js";
 
 const REPO = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -93,6 +98,38 @@ describe("a change feed entry's title", () => {
       "Example: Free Tier Removed",
     );
     assert.strictEqual(feedEntryTitle({ vendor: "Example", change_type: "record_corrected" }), "Example: Record Corrected");
+  });
+});
+
+describe("a change feed entry's category", () => {
+  it("files a retracted record under retracted, whatever change it reported", () => {
+    assert.deepStrictEqual(
+      feedEntryCategory({ change_type: "free_tier_removed", resolution: { state: "retracted", date: "2026-10-01" } }),
+      { term: "retracted", label: "Retracted" },
+    );
+  });
+
+  it("files every other record under its change type, including our corrections and one the vendor reversed", () => {
+    assert.deepStrictEqual(feedEntryCategory({ change_type: "free_tier_removed" }), { term: "free_tier_removed", label: "Free Tier Removed" });
+    assert.deepStrictEqual(
+      feedEntryCategory({ change_type: "free_tier_removed", resolution: { state: "reversed", date: "2026-10-01" } }),
+      { term: "free_tier_removed", label: "Free Tier Removed" },
+    );
+    assert.deepStrictEqual(feedEntryCategory({ change_type: "record_corrected" }), { term: "record_corrected", label: "Record Corrected" });
+  });
+});
+
+describe("the heading of our records' section", () => {
+  it("counts the records listed under it", () => {
+    assert.strictEqual(ourRecordsSectionHeading(271), "Our errors and corrections (271 records)");
+    assert.strictEqual(ourRecordsSectionHeading(1), "Our errors and corrections (1 record)");
+  });
+
+  it("is followed by a note that no record under it is a vendor pricing change", () => {
+    assert.strictEqual(
+      OUR_RECORDS_SECTION_NOTE,
+      "This section lists our retracted records and data corrections. No entry here is a vendor pricing change.",
+    );
   });
 });
 
@@ -213,6 +250,14 @@ describe("/pricing-changes", () => {
     assert.strictEqual(entriesBetween(ours, afterTheLog), scratchLog.filter(isOurs).length);
   });
 
+  it("heads that section with the number of records listed under it, then the note", () => {
+    const section = html.slice(headingAt("month-ours"));
+    const [, heading, note] =
+      section.match(/^<h2 class="month-heading" id="month-ours">([^<]*)<\/h2>\s*<p class="month-note">([^<]*)<\/p>/) ?? [];
+    assert.strictEqual(heading, ourRecordsSectionHeading(scratchLog.filter(isOurs).length));
+    assert.strictEqual(note, OUR_RECORDS_SECTION_NOTE);
+  });
+
   it("prints no retraction and no correction of ours before that section", () => {
     const beforeOurs = html.slice(0, headingAt("month-ours"));
     assert.ok(!beforeOurs.includes("Retracted — this record was our error"), "a retracted record is listed among the vendor changes");
@@ -227,14 +272,34 @@ describe("/pricing-changes", () => {
     assert.match(html, new RegExp(`id="month-undated">Effective date unknown \\(${expected} changes?, of `));
   });
 
+  const vendorFeedEntries = async () => {
+    const res = await fetch(`http://localhost:${port}/pricing-changes/feed.xml?vendor=${encodeURIComponent(quietOffer!.vendor)}`);
+    assert.strictEqual(res.status, 200);
+    return [...(await res.text()).matchAll(/<entry>([\s\S]*?)<\/entry>/g)].map(([, entry]) => ({
+      title: entry.match(/<title>([^<]*)<\/title>/)?.[1] ?? "",
+      category: entry.match(/<category [^>]*\/>/)?.[0] ?? "",
+    }));
+  };
+
   it("titles the feed's entries for retracted records as our error", async () => {
     const vendor = quietOffer!.vendor;
-    const res = await fetch(`http://localhost:${port}/pricing-changes/feed.xml?vendor=${encodeURIComponent(vendor)}`);
-    assert.strictEqual(res.status, 200);
-    const titles = [...(await res.text()).matchAll(/<entry>\s*<title>([^<]*)<\/title>/g)].map(m => m[1]);
+    const titles = (await vendorFeedEntries()).map(e => e.title);
     const retractedTitle = `${vendor}: Retracted — this record was our error (${TODAY}).`;
     assert.strictEqual(titles.filter(t => t === retractedTitle).length, 2, titles.join(" | "));
     assert.ok(!titles.includes(`${vendor}: Free Tier Removed`), titles.join(" | "));
     assert.ok(titles.includes(`${vendor}: Limits Increased`), titles.join(" | "));
+  });
+
+  it("files the feed's entries for retracted records under retracted, and every other entry under its change type", async () => {
+    const vendor = quietOffer!.vendor;
+    const entries = await vendorFeedEntries();
+    const categoriesOf = (title: string) => entries.filter(e => e.title === title).map(e => e.category);
+    assert.deepStrictEqual(
+      categoriesOf(`${vendor}: Retracted — this record was our error (${TODAY}).`),
+      ['<category term="retracted" label="Retracted"/>', '<category term="retracted" label="Retracted"/>'],
+    );
+    assert.deepStrictEqual(categoriesOf(`${vendor}: Record Corrected`), ['<category term="record_corrected" label="Record Corrected"/>']);
+    assert.deepStrictEqual(categoriesOf(`${vendor}: Limits Increased`), ['<category term="limits_increased" label="Limits Increased"/>']);
+    assert.ok(!entries.some(e => e.category.includes('term="free_tier_removed"')), entries.map(e => e.category).join(" | "));
   });
 });
