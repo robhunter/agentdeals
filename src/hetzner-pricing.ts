@@ -1,4 +1,7 @@
-export const HETZNER_PRICES_READ = "2026-09-04";
+import { HETZNER_PLAN_AVAILABILITY_READ_ON, HETZNER_PLAN_TABLE_READ_ON } from "./page-reviews.js";
+
+export const HETZNER_PRICES_READ = HETZNER_PLAN_TABLE_READ_ON;
+export const HETZNER_AVAILABILITY_READ = HETZNER_PLAN_AVAILABILITY_READ_ON;
 export const HETZNER_PRICE_SOURCE = "https://www.hetzner.com/cloud/";
 
 export interface HetznerPlan {
@@ -49,9 +52,14 @@ export const HETZNER_APRIL_CHANGES = [
   { product: "AX41-NVMe dedicated server, Germany", before: "€41.10", after: "€42.30", pctChange: 3 },
 ];
 
-export const HETZNER_AX102_GERMANY = { beforeApril: 107.3, afterApril: 122.3, initialJune: 452.3, newOrder: 257.3 };
+export const HETZNER_AX102_GERMANY = { beforeApril: 107.3, afterApril: 122.3, initialJune: 452.3, newOrder: 257.3, setupFee: 129 };
 
-export const HETZNER_AX42_GERMANY = { beforeApril: 47.3, afterApril: 57.3, initialJune: 187.3, newOrder: 97.3 };
+export const HETZNER_AX42_GERMANY = { beforeApril: 47.3, afterApril: 57.3, initialJune: 187.3, newOrder: 97.3, setupFee: 49 };
+
+export const HETZNER_SETUP_FEE_STATEMENTS = [
+  { day: "2 February", url: "https://www.hetzner.com/pressroom/statement-setup-fees-adjustment/" },
+  { day: "29 April", url: "https://www.hetzner.com/pressroom/statement-on%20the-latest-adjustment-to%20setup-fees/" },
+];
 
 export function cheapestOrderableHetznerPlan(): HetznerPlan {
   const orderable = HETZNER_CLOUD_PLANS.filter(p => p.available);

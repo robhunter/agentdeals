@@ -44,8 +44,8 @@ const MUTANTS = [
     path: "/hetzner-pricing-2026",
     read_on: HETZNER_PLAN_TABLE_READ_ON,
     vendors: ["hetzner"],
-    cited_from: "hetzner.com",
-    covers: "the plan table in section 1",
+    cited_from: "Hetzner's price API",
+    covers: "the plan prices in section 1",
   },
 `,
     ""],
@@ -62,7 +62,7 @@ const MUTANTS = [
     ""],
 
   ["the-plan-table-read-is-dated-from-the-page-instead", "src/page-reviews.ts",
-    `export const HETZNER_PLAN_TABLE_READ_ON = "2026-09-04";`,
+    `export const HETZNER_PLAN_TABLE_READ_ON = readHetznerPricesRead();`,
     `export const HETZNER_PLAN_TABLE_READ_ON = "2026-03-25";`],
 
   ["the-source-check-shape-stops-being-classified", "src/page-reviews.ts",

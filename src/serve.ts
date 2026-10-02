@@ -50,7 +50,7 @@ import { CHECK_ESTABLISHES, CHECK_SCOPE_CLASS, NO_CATALOGUE_RECORD_SOURCE, cited
 import { vendorHistorySentence } from "./vendor-history.js";
 import { guideBlurb } from "./guide-blurbs.js";
 import { changesToStartupProgrammes } from "./startup-programme-changes.js";
-import { HETZNER_APRIL_CHANGES, HETZNER_AX102_GERMANY, HETZNER_AX42_GERMANY, HETZNER_CLOUD_PLANS, HETZNER_PRICES_READ, HETZNER_PRICE_SOURCE, HETZNER_SINGAPORE_EXAMPLE, cheapestOrderableHetznerPlan, hetznerEntryPriceClause, unorderableHetznerPlans } from "./hetzner-pricing.js";
+import { HETZNER_APRIL_CHANGES, HETZNER_AVAILABILITY_READ, HETZNER_AX102_GERMANY, HETZNER_AX42_GERMANY, HETZNER_CLOUD_PLANS, HETZNER_PRICES_READ, HETZNER_PRICE_SOURCE, HETZNER_SETUP_FEE_STATEMENTS, HETZNER_SINGAPORE_EXAMPLE, cheapestOrderableHetznerPlan, hetznerEntryPriceClause, unorderableHetznerPlans } from "./hetzner-pricing.js";
 import { HUNDRED_GB_SCENARIO, HUNDRED_TB_SCENARIO, ONE_TO_ONE_SCENARIO, STORAGE_RATES_READ, STORAGE_SCALE_WORKLOADS, TEN_TO_ONE_SCENARIO, cheapestProviderAt, costAfterMonthlyEgressGrantFor, costliestProviderAt, egressAllowanceSentence, egressBillAfterMonthlyGrantFor, egressBillOnceOverAllowance, egressRatioWhereCostsMatch, fixedMonthlyGrantsSentence, monthlyEgressGrantGb, monthlyEgressGrantSentence, monthlyStorageCost, providersWithScalingEgressAllowance, rateCardFor, scaleCostFor } from "./storage-cost-model.js";
 import { changeTimelineDate, supersededLineups, supersessionNote } from "./change-lineup.js";
 import { CORRECTION_TO_OUR_OWN_RECORD, isACorrectionToOurOwnRecord, isNoLongerInForce, eventResolutionFields, recordsStillInForce, recordsWeStandBehind, INCLUDE_RETRACTED_REJECTED } from "./change-resolution.js";
@@ -685,7 +685,7 @@ function figureProvenanceHtml(claim: string, vendorName: string, vendorSlug: str
 }
 
 function hetznerReadProvenanceHtml(): string {
-  return `<a href="${HETZNER_PRICE_SOURCE}" target="_blank" rel="noopener">hetzner.com</a>, read ${HETZNER_PRICES_READ}`;
+  return `Hetzner's price API, read ${HETZNER_PRICES_READ}`;
 }
 
 const unconfirmedTermsByOffer = new Map<string, { on: string; unconfirmed: UnconfirmedTerms | null }>();
@@ -18879,7 +18879,7 @@ ${upgradeTable}
 
 function buildHetznerPricing2026Page(): string {
   const title = "Hetzner Cloud Pricing After the April and June 2026 Adjustments";
-  const metaDesc = `Hetzner raised cloud prices twice in 2026 — April 1 for all customers, June 15 for new orders and rescales. Current prices for every CX, CAX, CPX and CCX plan, read from hetzner.com on ${HETZNER_PRICES_READ}, with the Cost-Optimized line marked unavailable.`;
+  const metaDesc = `Hetzner raised cloud prices twice in 2026 — April 1 for all customers, June 15 for new orders and rescales. Current prices for every CX, CAX, CPX and CCX plan, read from Hetzner's price API on ${HETZNER_PRICES_READ}, with the Cost-Optimized line marked unavailable.`;
   const slug = "hetzner-pricing-2026";
   const pubDate = "2026-03-25";
 
@@ -19039,7 +19039,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("changes")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/changes">Changes</a> &rsaquo; Hetzner 2026</div>
   <h1>Hetzner Cloud Pricing After the April and June 2026 Adjustments</h1>
-  <p class="pub-date">Published ${pubDate} &middot; ${pageDataProvenance("/hetzner-pricing-2026", offers.length)} &middot; Plan prices in section 1 read from <a href="${HETZNER_PRICE_SOURCE}" target="_blank" rel="noopener">hetzner.com</a> on ${HETZNER_PRICES_READ}</p>
+  <p class="pub-date">Published ${pubDate} &middot; ${pageDataProvenance("/hetzner-pricing-2026", offers.length)} &middot; Plan prices read from Hetzner's price API on ${HETZNER_PRICES_READ}</p>
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number">${eur(cheapestOrderable.eur)}</div><div class="stat-label">Cheapest plan you can order (${escHtmlServer(cheapestOrderable.sku)})</div></div>
@@ -19069,7 +19069,7 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="pricing">1. Every Cloud Plan, Priced Today</h2>
-  <p class="section-intro">All ${HETZNER_CLOUD_PLANS.length} Hetzner Cloud plans, with the monthly price and the availability hetzner.com showed on ${HETZNER_PRICES_READ}. EU prices are the Falkenstein, Helsinki and Nuremberg figure; the US rows are Ashburn and Hillsboro, which are the only datacentres those plans are offered in. Singapore is priced higher again and is not listed here.</p>
+  <p class="section-intro">All ${HETZNER_CLOUD_PLANS.length} Hetzner Cloud plans, with the monthly price read from Hetzner's price API on ${HETZNER_PRICES_READ} and the availability hetzner.com showed on ${HETZNER_AVAILABILITY_READ}. EU prices are the Falkenstein, Helsinki and Nuremberg figure; the US rows are Ashburn and Hillsboro, which are the only datacentres those plans are offered in. Singapore is priced higher again and is not listed here.</p>
   <div style="overflow-x:auto">
     <table class="pricing-table">
       <thead>
@@ -19094,7 +19094,7 @@ ${mcpCtaCss()}
       </tbody>
     </table>
   </div>
-  <p class="section-intro" style="margin-top:0">Hetzner's table also gives dollar prices, which moved by different amounts: cloud servers rose 28-43% in dollars (CX23 from $3.49 to $4.99), against 30-37% in euros. Dedicated servers rose 2-21% in euros and 3-26% in dollars on 1 April 2026. In Germany, the AX42 went from ${eur(HETZNER_AX42_GERMANY.beforeApril)} to ${eur(HETZNER_AX42_GERMANY.afterApril)}. A new AX42 now costs ${eur(HETZNER_AX42_GERMANY.newOrder)} and a new AX102 ${eur(HETZNER_AX102_GERMANY.newOrder)}, excluding IPv4, up from ${eur(HETZNER_AX42_GERMANY.afterApril)} and ${eur(HETZNER_AX102_GERMANY.afterApril)} after April but down from the initial June prices of ${eur(HETZNER_AX42_GERMANY.initialJune)} and ${eur(HETZNER_AX102_GERMANY.initialJune)}, cut on 30 June. Memory upgrades for dedicated servers are not in the April table. Hetzner raised them in February: its add-on price list of 2026-02-17 put a 64 GB DDR5 ECC step at €111 a month, up from €22, and a 32 GB step at €66, up from €14. Until 15 June, adding 128 GB of memory that way cost more than a whole AX102 server with 128 GB built in (${eur(HETZNER_AX102_GERMANY.beforeApril)} a month before April, ${eur(HETZNER_AX102_GERMANY.afterApril)} after, in Germany). Of the products in this table, the load balancer is the one we have re-read since: LB11 is still €7.49, and load balancers were explicitly excluded from the June round.</p>
+  <p class="section-intro" style="margin-top:0">Hetzner's table also gives dollar prices, which moved by different amounts: cloud servers rose 28-43% in dollars (CX23 from $3.49 to $4.99), against 30-37% in euros. Dedicated servers rose 2-21% in euros and 3-26% in dollars on 1 April 2026. In Germany, the AX42 went from ${eur(HETZNER_AX42_GERMANY.beforeApril)} to ${eur(HETZNER_AX42_GERMANY.afterApril)}. A new AX42 now costs ${eur(HETZNER_AX42_GERMANY.newOrder)} and a new AX102 ${eur(HETZNER_AX102_GERMANY.newOrder)}, excluding IPv4, up from ${eur(HETZNER_AX42_GERMANY.afterApril)} and ${eur(HETZNER_AX102_GERMANY.afterApril)} after April but down from the initial June prices of ${eur(HETZNER_AX42_GERMANY.initialJune)} and ${eur(HETZNER_AX102_GERMANY.initialJune)}, cut on 30 June. The one-off setup fee is €${HETZNER_AX42_GERMANY.setupFee} for an AX42 and €${HETZNER_AX102_GERMANY.setupFee} for an AX102. Hetzner adjusted setup fees for dedicated servers on ${HETZNER_SETUP_FEE_STATEMENTS.map(({ day, url }) => `<a href="${url}" target="_blank" rel="noopener">${day}</a>`).join(" and ")} 2026, citing RAM and NVMe SSD costs; its statements give no fee amounts. Memory upgrades for dedicated servers are not in the April table. Hetzner raised them in February: its add-on price list of 2026-02-17 put a 64 GB DDR5 ECC step at €111 a month, up from €22, and a 32 GB step at €66, up from €14. Until 15 June, adding 128 GB of memory that way cost more than a whole AX102 server with 128 GB built in (${eur(HETZNER_AX102_GERMANY.beforeApril)} a month before April, ${eur(HETZNER_AX102_GERMANY.afterApril)} after, in Germany). Of the products in this table, the load balancer is the one we have re-read since: LB11 is still €7.49, and load balancers were explicitly excluded from the June round.</p>
 
   <h2 id="why">3. Why Prices Rose</h2>
   <div class="context-box">
@@ -19191,7 +19191,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="methodology">
-    <strong>Methodology:</strong> The plan table in section 1 was read from <a href="${HETZNER_PRICE_SOURCE}" target="_blank" rel="noopener">hetzner.com</a> on ${HETZNER_PRICES_READ} — plan names, specs and availability from the three cloud family pages, monthly prices from the price API those pages draw from. The April figures come from <a href="https://www.hetzner.com/pressroom/statement-price-adjustment/" target="_blank" rel="noopener">Hetzner's April press statement</a> and our own change record; the June scope comes from <a href="https://www.hetzner.com/pressroom/standardization-and-price-adjustment-of-our-server-products/" target="_blank" rel="noopener">Hetzner's June statement</a>. Every competitor row in section 6 states its own provenance in the table's last column rather than in this paragraph, and ${handTypedAlternativeRowCount} of the ${competitorPricing.length} are hand-typed with nothing behind them that a re-read would correct. The competitors compared here were chosen by hand.
+    <strong>Methodology:</strong> Plan prices in section 1 were read from Hetzner's price API on ${HETZNER_PRICES_READ}, the API the three cloud family pages on <a href="${HETZNER_PRICE_SOURCE}" target="_blank" rel="noopener">hetzner.com</a> draw from; plan names, specs and availability were read from those pages on ${HETZNER_AVAILABILITY_READ}. The April figures come from <a href="https://www.hetzner.com/pressroom/statement-price-adjustment/" target="_blank" rel="noopener">Hetzner's April press statement</a> and our own change record; the June scope comes from <a href="https://www.hetzner.com/pressroom/standardization-and-price-adjustment-of-our-server-products/" target="_blank" rel="noopener">Hetzner's June statement</a>. Every competitor row in section 6 states its own provenance in the table's last column rather than in this paragraph, and ${handTypedAlternativeRowCount} of the ${competitorPricing.length} are hand-typed with nothing behind them that a re-read would correct. The competitors compared here were chosen by hand.
   </div>
 
   <div class="search-cta">
