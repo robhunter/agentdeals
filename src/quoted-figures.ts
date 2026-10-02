@@ -75,9 +75,34 @@ export function statedQuantities(text: string): string[] {
   return [...found];
 }
 
+const AMOUNT_THEN_WORDS = /(\d[\d,]*(?:\.\d+)?)(\s*[A-Za-z]+(?:\s+[A-Za-z]+){0,2})/g;
+
+const WORDS_THAT_END_A_QUANTITY = new Set([
+  "a", "an", "and", "at", "each", "for", "from", "in", "of", "on", "or", "per", "plus", "than", "the", "to", "up", "with",
+]);
+
+function unitAfterDescribingWords(words: readonly string[]): string | null {
+  for (const word of words) {
+    const lower = word.toLowerCase();
+    const unit = UNIT_ALIASES[lower];
+    if (unit) return unit;
+    if (WORDS_THAT_END_A_QUANTITY.has(lower)) return null;
+  }
+  return null;
+}
+
+export function quantitiesStatedThroughDescribingWords(text: string): string[] {
+  const found = new Set(statedQuantities(text));
+  for (const match of text.matchAll(AMOUNT_THEN_WORDS)) {
+    const unit = unitAfterDescribingWords(match[2]!.trim().split(/\s+/));
+    if (unit) found.add(`${amount(match[1]!)}${unit}`);
+  }
+  return [...found];
+}
+
 export function quantitiesNotIn(claim: string, backing: readonly string[]): string[] {
-  const held = new Set(backing.flatMap(statedQuantities));
-  return statedQuantities(claim).filter(quantity => !held.has(quantity));
+  const held = new Set(backing.flatMap(quantitiesStatedThroughDescribingWords));
+  return quantitiesStatedThroughDescribingWords(claim).filter(quantity => !held.has(quantity));
 }
 
 export function clausesOf(description: string): string[] {

@@ -1,5 +1,5 @@
 import { recordsWeStandBehind } from "./change-resolution.js";
-import { quantitiesNotIn, statedQuantities } from "./quoted-figures.js";
+import { quantitiesNotIn, quantitiesStatedThroughDescribingWords } from "./quoted-figures.js";
 import type { ChangeResolution } from "./types.js";
 
 export const NO_RECORD_BEHIND_THIS_FIGURE = "Hand-typed — we hold no record";
@@ -16,6 +16,6 @@ export function statementsWeHold(listingDescriptions: readonly string[], changes
 
 export function figureProvenanceAgainst(claim: string, held: readonly string[]): string | null {
   if (held.length === 0) return NO_RECORD_BEHIND_THIS_FIGURE;
-  if (statedQuantities(claim).length === 0) return FIGURE_NOT_IN_OUR_RECORD;
+  if (quantitiesStatedThroughDescribingWords(claim).length === 0) return FIGURE_NOT_IN_OUR_RECORD;
   return quantitiesNotIn(claim, held).length === 0 ? null : FIGURE_NOT_IN_OUR_RECORD;
 }
