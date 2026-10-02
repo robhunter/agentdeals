@@ -49,7 +49,7 @@ const settledAsOurs = (over: Partial<DealChange> = {}): DealChange => ({
 const esc = (text: string) => text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
 describe("a record the archive check settled as a difference in our own text", () => {
-  it("says so in a summary that names the copy, our listing and the re-read, with no figures", () => {
+  it("says so in a summary that names the copy, our listing and the re-read", () => {
     assert.strictEqual(
       differenceInOurTextSummary({ vendor: "Fixture Vendor", capture_day: "2026-04-12", text_day: "2026-05-02", record_date: "2026-08-28" }),
       "Data correction - Not a change by Fixture Vendor. An Internet Archive copy of its page from 2026-04-12 already states the terms this record called new, and our listing of 2026-05-02 did not match them. Our re-read of 2026-08-28 recorded the difference as a change.",
