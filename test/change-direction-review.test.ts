@@ -23,7 +23,7 @@ const {
 const { isNoLongerInForce } = await import("../dist/change-resolution.js");
 const { tierRecordsAFreeTier } = await import("../dist/free-tier-record.js");
 const { supersededCensus } = await import("../dist/superseded-census.js");
-const { changesRatingTheListedTier, publishedRisk, loadDealChanges, loadOffers } = await import("../dist/data.js");
+const { changesRatingTheListedTier, publishedRisk, loadDealChanges, loadOffers, vendorNameAsPublished } = await import("../dist/data.js");
 const { buildChangeEntry, TIER_DIRECTIONS } = await import("../scripts/change-log.js");
 
 type Offer = import("../src/types.ts").Offer;
@@ -287,8 +287,9 @@ describe("#1528 the review of the records already written", () => {
   it("reaches every record it reviews once the catalogue is loaded", () => {
     const live = new Map(liveChanges.map((change) => [reviewKey(change), change]));
     for (const entry of review.directions) {
+      const asPublished = { ...entry, vendor: vendorNameAsPublished(entry.vendor) };
       assert.strictEqual(
-        live.get(reviewKey(entry))?.tier_direction,
+        live.get(reviewKey(asPublished))?.tier_direction,
         entry.tier_direction,
         `${entry.vendor} does not carry its reviewed direction at load`,
       );
