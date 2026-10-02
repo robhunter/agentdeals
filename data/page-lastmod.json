@@ -10,8 +10,8 @@
       "changed": "2026-10-01"
     },
     "/agent-stack": {
-      "hash": "ee4807098dd02938",
-      "changed": "2026-10-01"
+      "hash": "8681421847a56b71",
+      "changed": "2026-10-02"
     },
     "/ai-coding-pricing-2026": {
       "hash": "dfb344c631cd015f",
@@ -22,11 +22,11 @@
       "changed": "2026-10-02"
     },
     "/ai-free-tiers": {
-      "hash": "1ff26cc6ca2bcc9c",
+      "hash": "b8d69eecabddf363",
       "changed": "2026-10-02"
     },
     "/ai-ml-alternatives": {
-      "hash": "cbe12958b9310b38",
+      "hash": "b48a4296c296a738",
       "changed": "2026-10-02"
     },
     "/alternative-to": {
@@ -1080,7 +1080,7 @@
       "changed": "2026-10-01"
     },
     "/category/ai-ml": {
-      "hash": "254fabdb140be4f3",
+      "hash": "506c355b6c347a7f",
       "changed": "2026-10-02"
     },
     "/category/analytics": {
@@ -3105,7 +3105,7 @@
       "daily": true
     },
     "/free-ai-stack": {
-      "hash": "a599f6ffc7b83187",
+      "hash": "45790cd390d76df2",
       "changed": "2026-10-02"
     },
     "/free-devops-stack": {
@@ -3129,7 +3129,7 @@
       "changed": "2026-10-02"
     },
     "/free-llm-apis": {
-      "hash": "95e70ecb2f89dcf2",
+      "hash": "82e12e22d7d200ac",
       "changed": "2026-10-02"
     },
     "/free-nextjs-stack": {
@@ -9824,8 +9824,8 @@
       "changed": "2026-10-02"
     },
     "/x402-services": {
-      "hash": "e2d0a149f4275de2",
-      "changed": "2026-10-01"
+      "hash": "850eb39ce7091efb",
+      "changed": "2026-10-02"
     }
   }
 }
