@@ -818,9 +818,9 @@
       "vendor": "Hetzner",
       "change_type": "pricing_restructured",
       "date": "2026-06-15",
-      "summary": "From 2026-06-15, for new orders and rescales, Hetzner's EU cloud prices excluding IPv4 rose 30-38% on Cost-Optimized CX/CAX, 144-175% on Regular Performance CPX (shared resources) and 113-173% on General Purpose CCX (dedicated vCPUs). Existing contracts kept their terms.",
+      "summary": "From 2026-06-15, for new orders and rescales, Hetzner's EU cloud prices excluding IPv4 rose 30-38% on Cost-Optimized CX/CAX, 144-175% on Regular Performance CPX (shared resources) and 113-173% on General Purpose CCX (dedicated vCPUs). Existing contracts kept their terms. New dedicated servers also rose: the AX42 and AX102 cost €97.30 and €257.30 from 30 June, up from €57.30 and €122.30 after April in Germany.",
       "previous_state": "EU prices excluding IPv4 after the April 2026 adjustment: CX23 €3.99/mo, CX33 €6.49, CX43 €11.99, CX53 €22.49, CAX11 €4.49, CPX22 €7.99, CPX62 €50.49, CCX13 €15.99, CCX63 €374.49. Cost-Optimized, Regular Performance and General Purpose plans all orderable.",
-      "current_state": "EU prices excluding IPv4 from 2026-06-15: CX23 €5.49 (+37.6%), CX33 €8.49 (+30.8%), CX43 €15.99 (+33.4%), CX53 €29.49 (+31.1%), CAX11 €5.99 (+33.4%), CPX22 €19.49 (+143.9%), CPX62 €129.99 (+157.5%), CCX13 €42.99 (+168.9%), CCX63 €853.49 (+127.9%). US prices rose 107-209% and Singapore 51-111%. Setup fees on most dedicated servers were cut. Read on 2026-09-04: every Cost-Optimized plan (CX23-CX53, CAX11-CAX41) is marked \"not available\".",
+      "current_state": "EU prices excluding IPv4 from 2026-06-15: CX23 €5.49 (+37.6%), CX33 €8.49 (+30.8%), CX43 €15.99 (+33.4%), CX53 €29.49 (+31.1%), CAX11 €5.99 (+33.4%), CPX22 €19.49 (+143.9%), CPX62 €129.99 (+157.5%), CCX13 €42.99 (+168.9%), CCX63 €853.49 (+127.9%). US prices rose 107-209% and Singapore 51-111%. From 15 June, new AX42 and AX102 cost €187.30 and €452.30 a month. On 30 June, Hetzner cut them to €97.30 and €257.30. Setup fees on most dedicated servers were cut. Read on 2026-09-04: every Cost-Optimized plan (CX23-CX53, CAX11-CAX41) is marked \"not available\".",
       "impact": "high",
       "source_url": "https://docs.hetzner.com/general/infrastructure-and-availability/price-adjustment/",
       "category": "Cloud Hosting",
@@ -13586,7 +13586,13 @@
       "category": "Headless CMS",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-10-02"
+      "recorded_date": "2026-10-02",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-10-02",
+        "detail": "Retracted 2026-10-02: nothing increased. \"5M API calls and 2TB traffic monthly\" is a customer figure on DatoCMS's homepage, there in the Internet Archive's capture of 2026-09-09. DatoCMS's pricing page gives the Free plan 2 editors, 300 records, 10GB of traffic and 100k API calls a month.",
+        "source_url": "https://www.datocms.com/pricing"
+      }
     },
     {
       "vendor": "UptimeRobot",
@@ -13603,7 +13609,13 @@
       "category": "Monitoring",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-10-02"
+      "recorded_date": "2026-10-02",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-10-02",
+        "detail": "Retracted 2026-10-02: nothing increased. The Free plan on UptimeRobot's pricing page lists the same 50 monitors, 5-minute interval and monitor types as the Internet Archive's capture of 2026-09-23. Our listing named fewer of the monitor types; the plan did not change.",
+        "source_url": "https://uptimerobot.com/pricing/"
+      }
     },
     {
       "vendor": "Figma",
@@ -13620,7 +13632,29 @@
       "category": "Design",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-10-02"
+      "recorded_date": "2026-10-02",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-10-02",
+        "detail": "Retracted 2026-10-02: nothing increased. Figma's pricing page is the same as the Internet Archive's capture of 2026-09-20. Both list the Starter plan with \"Unlimited drafts\", \"UI kits and templates\" and \"150 AI credits/day, up to 500 AI credits/mo\", which our listing already stated.",
+        "source_url": "https://www.figma.com/pricing/"
+      }
+    },
+    {
+      "vendor": "UptimeRobot",
+      "change_type": "limits_increased",
+      "date": "2026-06-11",
+      "summary": "UptimeRobot's terms stopped limiting the Free plan to personal, non-commercial use between 2026-06-08 and 2026-06-11. The terms now allow commercial and business use.",
+      "tier": "Free",
+      "tier_direction": "widened",
+      "previous_state": "The Free plan was for personal, non-commercial use only, and commercial use was prohibited.",
+      "current_state": "The terms allow any use, including commercial and business use, under a Fair Use Policy for all plans. The Free plan still has 50 monitors at a 5-minute interval.",
+      "impact": "medium",
+      "source_url": "https://uptimerobot.com/terms/",
+      "category": "Monitoring",
+      "alternatives": [],
+      "recorded_date": "2026-10-02",
+      "date_source": "hand_written"
     }
   ]
 }
