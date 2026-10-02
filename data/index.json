@@ -7432,7 +7432,7 @@
     {
       "vendor": "OpenAI",
       "category": "AI / ML",
-      "description": "AI API platform. One model is priced Free in OpenAI's own table: the moderation model omni-moderation-latest. No GPT model is priced free. GPT prices per 1M tokens (Standard, short context): gpt-6-astra $10.00/$50.00; gpt-6-sol $2.00/$10.00; gpt-6-luna $0.10/$0.50; gpt-5.6-sol $4.00/$20.00 (a promotional price, available at least through November 21, 2026); gpt-5.6-terra $2.00/$12.00; gpt-5.6-luna $0.20/$1.20. Batch and Flex processing halve these prices. Embeddings from $0.02 per 1M tokens. Three further free amounts are sub-quotas inside paid tools: 1 GB of File search storage (then $0.10/GB per day), 1 GB per account per month of ChatKit upload storage, and search content tokens from the web search preview tool on non-reasoning models.",
+      "description": "AI API platform. One model is priced Free in OpenAI's own table: the moderation model omni-moderation-latest. No GPT model is priced free. GPT prices per 1M tokens (Standard, short context): gpt-6-astra $10.00/$50.00; gpt-6.1-sol $2.00/$10.00; gpt-6-sol $2.00/$10.00; gpt-6-luna $0.10/$0.50; gpt-5.6-sol $4.00/$20.00 (a promotional price, available at least through November 21, 2026); gpt-5.6-terra $2.00/$12.00; gpt-5.6-luna $0.20/$1.20. Batch and Flex processing halve these prices. Embeddings from $0.02 per 1M tokens. Three further free amounts are sub-quotas inside paid tools: 1 GB of File search storage (then $0.10/GB per day), 1 GB per account per month of ChatKit upload storage, and search content tokens from the web search preview tool on non-reasoning models.",
       "tier": "Pay-as-you-go",
       "url": "https://developers.openai.com/api/docs/pricing",
       "tags": [
@@ -7463,9 +7463,9 @@
         "notes": "No public affiliate/referral program. Referral features reportedly in development but not launched."
       },
       "source_check": {
-        "checked": "2026-09-26",
+        "checked": "2026-10-02",
         "outcome": "ok",
-        "detail": "the page names OpenAI as \"openai\" and states \"$0.02\" and \"1 GB free per account per month\""
+        "detail": "the page names OpenAI as \"openai\" and states \"$10.00\" and \"$50.00\" and \"$20.00\" and \"$2.00\""
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -32572,7 +32572,7 @@
     {
       "vendor": "Anthropic API",
       "category": "AI / ML",
-      "description": "Claude API with usage-based pricing per million tokens (input/output). Claude Fable 5.1 $10/$50. Claude Opus 5.5 $4/$20. Claude Sonnet 5 $2/$10. Claude Haiku 4.5 $1/$5. The Batch API gives a 50% discount on input and output tokens. New users receive a small amount of free credits to test the API.",
+      "description": "Claude API with usage-based pricing per million tokens (input/output). Claude Fable 5.1 $10/$50. Claude Opus 5.5 $4/$20. Claude Sonnet 5.5 $2/$10. Claude Sonnet 5 $2/$10. Claude Haiku 4.5 $1/$5. The Batch API gives a 50% discount on input and output tokens. New users receive a small amount of free credits to test the API.",
       "tier": "Pay-as-you-go",
       "url": "https://platform.claude.com/docs/en/about-claude/pricing",
       "tags": [
@@ -32603,9 +32603,9 @@
         "notes": "Enterprise referral program. Must bring new enterprise customers. Commission negotiated per deal."
       },
       "source_check": {
-        "checked": "2026-09-22",
+        "checked": "2026-10-02",
         "outcome": "ok",
-        "detail": "the page names Anthropic API as \"anthropic\" and states \"$10\" and \"$50\" and \"$5\""
+        "detail": "the page names Anthropic API as \"anthropic\" and states \"$10\" and \"$50\" and \"$20\" and \"$4\""
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
