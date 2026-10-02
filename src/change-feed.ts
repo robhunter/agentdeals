@@ -1,5 +1,6 @@
 import type { DealChange } from "./types.js";
 import { changeCitesASource, type CitableChange } from "./change-citation.js";
+import { resolutionTag, theEventNeverHappened } from "./change-resolution.js";
 import {
   DISCOVERED_DATE_PREFIX,
   EFFECTIVE_DATE_PREFIX,
@@ -130,6 +131,7 @@ export function changeFeedProvenanceNote(entries: FeedChange[], weeklyFeedUrl: s
 }
 
 interface FeedEntryFields {
+  title: string;
   updated: string;
   dateSource: string;
   effectiveDate: string | null;
@@ -168,8 +170,17 @@ export function digestSourceXml(
   return sources.map((url) => `${indent}<link href="${esc(url)}" rel="${VIA_LINK_REL}"/>`).join("\n");
 }
 
+export function feedEntryTitle(change: Pick<DealChange, "vendor" | "change_type" | "resolution">): string {
+  const { resolution } = change;
+  const label = resolution && theEventNeverHappened(change)
+    ? resolutionTag(resolution)
+    : changeTypeFeedLabel(change.change_type);
+  return `${change.vendor}: ${label}`;
+}
+
 export function feedEntryFields(change: DealChange, now: Date = new Date()): FeedEntryFields {
   return {
+    title: feedEntryTitle(change),
     updated: feedEntryUpdatedTimestamp(change, now),
     dateSource: change.date_source ?? "discovered",
     effectiveDate: effectiveDateOf(change),
