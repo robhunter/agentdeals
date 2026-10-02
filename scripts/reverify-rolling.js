@@ -302,7 +302,7 @@ export async function runAiMode(picked, data, dryRun, now, options = {}) {
   const sourceChecks = emptySourceCounters();
   const recorder = attemptRecorder();
   const confirmedThisRun = new Set();
-  const excerpts = { written: 0, kept: 0, removed: 0, none: 0, not_a_free_plan: 0, on_hold: 0, refused: [], unread: [] };
+  const excerpts = { written: 0, kept: 0, removed: 0, none: 0, not_a_free_plan: 0, free_offer_is_the_licence: 0, on_hold: 0, refused: [], unread: [] };
 
   for (const entry of picked) {
     const { offer, index } = entry;

@@ -19,6 +19,7 @@ import {
   verbatimExcerpt,
   writeFreePlanExcerpt,
 } from "../scripts/free-plan-excerpt.js";
+import { EXCERPT_NAMES_NO_ALLOWANCE_LIMIT_OR_PRICE } from "../dist/free-plan-excerpt-rules.js";
 
 const REPO = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const WRITER = path.join("scripts", "free-plan-excerpt.js");
@@ -147,7 +148,7 @@ describe("writing the excerpt onto a record", () => {
 
 describe("an excerpt states at least one of the plan's terms", () => {
   const FORMSUBMIT_PAGE = "Setup is easy and free. Design a form for your site, and be sure to name all the fields. Then, just point the action to us and confirm your email address! NO REGISTRATION REQUIRED";
-  const BITRISE_PAGE = "Hobby Build and distribute your passion project without the extra cost. Free Forever Get started Access for a team of one (that's you!) Enough build credits";
+  const BITRISE_PAGE = "Hobby Build and distribute your passion project without the extra cost. Free Forever Get started Access for a team of one (that's you!) Enough build credits for you to build your small project a few times per month Support";
   const NORTHFLANK_PAGE = "Deploy anything, anywhere. Get started for free Book a demo";
   const FIREBASE_PAGE = "No-cost (Spark plan) Generous no-cost usage limits No payment method needed Get started";
   const write = (plan: { vendor: string; tier: string }, pageText: string, copied: string, terms: unknown) => {
@@ -156,11 +157,14 @@ describe("an excerpt states at least one of the plan's terms", () => {
     return { result, stored: (record[FREE_PLAN_EXCERPT] as { text: string } | undefined)?.text ?? null };
   };
 
-  it("keeps a copy whose terms state a price, an allowance, a limit or who can get the plan, with or without a figure", () => {
+  it("keeps a copy whose terms state a price, an allowance or a limit, with or without a figure", () => {
     assert.deepStrictEqual(write({ vendor: "Render", tier: "Hobby" }, RENDER_PAGE, RENDER_EXCERPT, ["Deploy up to 25 services"]).result, { outcome: "written" });
-    assert.deepStrictEqual(write({ vendor: "Formsubmit.co", tier: "Free" }, FORMSUBMIT_PAGE, FORMSUBMIT_PAGE, ["NO REGISTRATION REQUIRED"]).result, { outcome: "written" });
-    assert.deepStrictEqual(write({ vendor: "Bitrise", tier: "Hobby" }, BITRISE_PAGE, "Free Forever Get started Access for a team of one (that's you!)", ["Free Forever", "Access for a team of one"]).result, { outcome: "written" });
+    assert.deepStrictEqual(write({ vendor: "Bitrise", tier: "Hobby" }, BITRISE_PAGE, "Free Forever Get started Access for a team of one (that's you!) Enough build credits for you to build your small project a few times per month", ["Free Forever", "a few times per month"]).result, { outcome: "written" });
     assert.deepStrictEqual(write({ vendor: "Firebase", tier: "Spark" }, FIREBASE_PAGE, FIREBASE_PAGE, ["No payment method needed"]).result, { outcome: "written" });
+  });
+
+  it("refuses a copy whose only terms say how to sign up, as needing no registration does", () => {
+    assert.deepStrictEqual(write({ vendor: "Formsubmit.co", tier: "Free" }, FORMSUBMIT_PAGE, FORMSUBMIT_PAGE, ["NO REGISTRATION REQUIRED"]), { result: { outcome: "refused", why: EXCERPT_NAMES_NO_ALLOWANCE_LIMIT_OR_PRICE }, stored: null });
   });
 
   it("refuses a copy that only says the product is free or invites the reader to start, whatever the reader names as its terms", () => {

@@ -62,6 +62,19 @@ const HELD_WITHOUT_AN_EXCERPT = listing("Held Without An Excerpt Co", "held-with
   free_plan_excerpt_hold: { record_date: TODAY, change_type: "restriction", reason: "The page still states the quota this record says ended." },
 });
 delete HELD_WITHOUT_AN_EXCERPT.free_plan_excerpt;
+const FREE_OSS = listing("Free OSS Excerpt Co", "free-oss-excerpt-marker", { tier: "Free OSS" });
+
+function storingTheWords(vendor: string, text: string): Offer {
+  const offer = listing(vendor, "unused");
+  offer.free_plan_excerpt = { ...offer.free_plan_excerpt!, text };
+  return offer;
+}
+
+const UNFILLED_TEMPLATE = storingTheWords("Unfilled Template Excerpt Co", "Basic ${{ infrastructure_.price.basic }} /month per host <unfilled-template-excerpt-marker>");
+const UNDECODED_ENTITY = storingTheWords("Undecoded Entity Excerpt Co", "Free $0/month: 3 databases &emsp; 1 GB <undecoded-entity-excerpt-marker> storage");
+const REPEATED_RUN = storingTheWords("Repeated Run Excerpt Co", "Free $0/month: 3 databases <repeated-run-excerpt-marker> Free $0/month: 3 databases <repeated-run-excerpt-marker>");
+const DATE_COLUMN = storingTheWords("Date Column Excerpt Co", "First 50 GiB/project/month July 1, 2018 <date-column-excerpt-marker>");
+const SIGN_UP_ONLY = storingTheWords("Sign Up Only Excerpt Co", "No signup. No email. No credit card. <sign-up-only-excerpt-marker>");
 
 const QUOTED_ON_A_TIER_THAT_RUNS_OUT: [string, Offer, string][] = [
   ["the listed tier is a trial", TRIAL, "trial-excerpt-marker"],
@@ -83,6 +96,12 @@ const WITHHELD: [string, Offer, string][] = [
   ["our last read found the page does not name the vendor", NAMES_NO_VENDOR, "names-no-vendor-excerpt-marker"],
   ["our last read found the page does not name the product", NAMES_NO_PRODUCT, "names-no-product-excerpt-marker"],
   ["a hold on the listing names a record the page has outlived", HELD_BY_HAND, "held-by-hand-excerpt-marker"],
+  ["the listing is Free OSS, whose free offer is the licence", FREE_OSS, "free-oss-excerpt-marker"],
+  ["the stored words hold template syntax the page never filled in", UNFILLED_TEMPLATE, "unfilled-template-excerpt-marker"],
+  ["the stored words hold an HTML entity left after decoding", UNDECODED_ENTITY, "undecoded-entity-excerpt-marker"],
+  ["the stored words repeat a run of their own", REPEATED_RUN, "repeated-run-excerpt-marker"],
+  ["the stored words hold a date no word ties to the terms", DATE_COLUMN, "date-column-excerpt-marker"],
+  ["the stored words name no allowance, limit or price", SIGN_UP_ONLY, "sign-up-only-excerpt-marker"],
 ];
 
 const SUPERSEDING_CHANGE = {
@@ -116,7 +135,7 @@ const indexPath = path.join(dir, "index.json");
 const changesPath = path.join(dir, "deal_changes.json");
 const linkHealthPath = path.join(dir, "link_health.json");
 const catalogue = JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf-8"));
-const SYNTHETIC = [QUOTED, STATES_NO_TERMS, UNREADABLE, ENDED, PAID, USAGE_BILLED, CLOSED_TO_NEW_ACCOUNTS, TRIAL, SUPERSEDED, REPOINTED, UNREACHABLE, NAMES_NO_VENDOR, NAMES_NO_PRODUCT, HELD_BY_HAND, HELD_WITHOUT_AN_EXCERPT];
+const SYNTHETIC = [QUOTED, STATES_NO_TERMS, UNREADABLE, ENDED, PAID, USAGE_BILLED, CLOSED_TO_NEW_ACCOUNTS, TRIAL, SUPERSEDED, REPOINTED, UNREACHABLE, NAMES_NO_VENDOR, NAMES_NO_PRODUCT, HELD_BY_HAND, HELD_WITHOUT_AN_EXCERPT, FREE_OSS, UNFILLED_TEMPLATE, UNDECODED_ENTITY, REPEATED_RUN, DATE_COLUMN, SIGN_UP_ONLY];
 writeFileSync(indexPath, JSON.stringify({ ...catalogue, offers: [...catalogue.offers, ...SYNTHETIC] }));
 const log = JSON.parse(readFileSync(path.join(REPO, "data", "deal_changes.json"), "utf-8"));
 writeFileSync(changesPath, JSON.stringify({ ...log, changes: [...log.changes, SUPERSEDING_CHANGE] }));

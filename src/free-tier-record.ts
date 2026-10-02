@@ -32,6 +32,10 @@ export function tierMayCarryAFreePlanExcerpt(tier: string): boolean {
   return tierClass !== "not_free" && tierClass !== "retired";
 }
 
+export function tierWhoseFreeOfferIsTheLicence(tier: string): boolean {
+  return tier.replace(/\s+/g, " ").trim().toLowerCase() === "free oss";
+}
+
 export const A_SELF_HOSTED_EDITION = /\boss\b|\bopen[\s-]?source\b|\bself[\s-]?hosted\b/i;
 
 export function tierRecordsASelfHostedEdition(tier: string): boolean {

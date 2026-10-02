@@ -1,4 +1,5 @@
-import { tierMayCarryAFreePlanExcerpt } from "../dist/free-tier-record.js";
+import { tierMayCarryAFreePlanExcerpt, tierWhoseFreeOfferIsTheLicence } from "../dist/free-tier-record.js";
+import { whyTheExcerptCannotStand } from "../dist/free-plan-excerpt-rules.js";
 import { isNoLongerInForce } from "../dist/change-resolution.js";
 import { MAX_PAGE_TEXT_LENGTH } from "./verify-freshness.js";
 
@@ -76,7 +77,7 @@ Find the words on this page that state the terms of this plan: its price, an all
 
 The stretch must state at least one of those terms. Words that only say the product is free or invite the reader to start, such as "Get started for free", words that point to another page, and lists of models or products state no terms.
 
-Copy only this plan's own words: end the stretch before the next plan's name or terms begin. If this plan's words cannot be copied without another plan's, as when a table comparing plans is read row by row, give an empty string.
+Copy only this plan's own words: end the stretch before the next plan's name or terms begin. Where the terms sit in a table, copy only the cell that states them: a column beside it, such as the date a price took effect, is not part of the terms. If this plan's words cannot be copied without another plan's, as when a table comparing plans is read row by row, give an empty string.
 
 If the page states no terms for this plan, give an empty string.
 
@@ -207,15 +208,17 @@ function answerToWrite(offer, { copied, terms, otherPlans, pageText }) {
     const neighbours = otherPlansTheCopyHolds(verdict.excerpt, otherPlans, offer);
     if (neighbours.length > 0) return { outcome: "refused", why: `${COPY_HOLDS_ANOTHER_PLAN}: ${neighbours.join(", ")}` };
     if (termsTheCopyStates(verdict.excerpt, terms, offer).length === 0) return { outcome: "refused", why: COPY_STATES_NO_TERMS };
+    const cannotStand = whyTheExcerptCannotStand(verdict.excerpt, offer);
+    if (cannotStand) return { outcome: "refused", why: cannotStand };
     return { outcome: "written", excerpt: verdict.excerpt };
   }
   if (!verdict.found) return { outcome: "none" };
   return { outcome: "refused", why: verdict.why };
 }
 
-function keepTheHeldExcerptOnlyIfThePageStillSaysIt(offer, { pageText, url, readOn }) {
+function keepTheHeldExcerptOnlyIfItStillStands(offer, { pageText, url, readOn }) {
   const held = offer[FREE_PLAN_EXCERPT];
-  if (verbatimExcerpt(held?.text, pageText).excerpt) {
+  if (verbatimExcerpt(held?.text, pageText).excerpt && whyTheExcerptCannotStand(held.text, offer) === null) {
     offer[FREE_PLAN_EXCERPT] = { ...held, url, read_on: readOn };
     return "kept";
   }
@@ -230,15 +233,17 @@ export function writeFreePlanExcerpt(offer, { copied, terms, otherPlans, pageTex
     return answer;
   }
   if (!(FREE_PLAN_EXCERPT in offer)) return answer;
-  return { ...answer, held_excerpt: keepTheHeldExcerptOnlyIfThePageStillSaysIt(offer, { pageText, url, readOn }) };
+  return { ...answer, held_excerpt: keepTheHeldExcerptOnlyIfItStillStands(offer, { pageText, url, readOn }) };
 }
 
 export const TIER_WITH_NO_FREE_PLAN = "the listed tier is not a free plan";
 
-function withNoExcerptForTheTier(record) {
+export const TIER_WHOSE_FREE_OFFER_IS_THE_LICENCE = "the listed tier is a Free OSS listing, whose free offer is the licence";
+
+function withNoExcerptForTheTier(record, { outcome, why }) {
   const held = FREE_PLAN_EXCERPT in record;
   delete record[FREE_PLAN_EXCERPT];
-  return { outcome: held ? "removed" : "not_a_free_plan", why: TIER_WITH_NO_FREE_PLAN };
+  return { outcome: held ? "removed" : outcome, why };
 }
 
 export function holdOnTheExcerpt(hold) {
@@ -267,7 +272,8 @@ export function excerptHoldsNamingNoRecordInForce(offers, changes) {
 
 export async function excerptTheFreePlan(record, { offer, pageText, read, readOn }) {
   if (record[FREE_PLAN_EXCERPT_HOLD]) return withNoExcerptWhileHeld(record);
-  if (!tierMayCarryAFreePlanExcerpt(offer.tier)) return withNoExcerptForTheTier(record);
+  if (tierWhoseFreeOfferIsTheLicence(offer.tier)) return withNoExcerptForTheTier(record, { outcome: "free_offer_is_the_licence", why: TIER_WHOSE_FREE_OFFER_IS_THE_LICENCE });
+  if (!tierMayCarryAFreePlanExcerpt(offer.tier)) return withNoExcerptForTheTier(record, { outcome: "not_a_free_plan", why: TIER_WITH_NO_FREE_PLAN });
   let answer;
   try {
     answer = await read(offer, pageText);
