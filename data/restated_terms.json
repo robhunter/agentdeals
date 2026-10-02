@@ -2747,6 +2747,19 @@
       "change_type": "free_tier_removed",
       "summary": "The free tier is now a $250 credit for Cloud Serverless, with usage-based pricing after that. InfluxDB 3 Core is now listed as a free, open-source option.",
       "reverted_on": "2026-10-01"
+    },
+    {
+      "vendor": "UptimeRobot",
+      "url": "https://uptimerobot.com/pricing/",
+      "restated_on": "2026-10-02",
+      "previous_description": "50 uptime monitors, 5-minute check intervals, 3-month log retention, email alerts. Personal/non-commercial use only on free tier",
+      "description": "Free $ 0 /month. 50 monitors, 5 min. monitoring interval, Dependency monitoring, HTTP, port & ping monitor, Keyword monitor, API monitoring, UDP monitoring, Location-specific monitoring, Slow response alerts, DNS monitoring, SSL & Domain exp. monitor, Only 5 integrations, Basic status pages",
+      "reading_date": "2026-10-02",
+      "reading_terms": "Free $ 0 /month. 50 monitors, 5 min. monitoring interval, Dependency monitoring, HTTP, port & ping monitor, Keyword monitor, API monitoring, UDP monitoring, Location-specific monitoring, Slow response alerts, DNS monitoring, SSL & Domain exp. monitor, Only 5 integrations, Basic status pages",
+      "source_url": "https://uptimerobot.com/pricing/",
+      "record_date": "2026-10-02",
+      "change_type": "limits_increased",
+      "summary": "The free tier now includes dependency monitoring, HTTP, port & ping monitor, keyword monitor, API monitoring, UDP monitoring, location-specific monitoring, slow response alerts, DNS monitoring, SSL & Domain exp. monitor, and basic status pages. It also includes a 3-month log retention."
     }
   ]
 }

@@ -13570,6 +13570,57 @@
       "alternatives": [],
       "recorded_date": "2026-10-02",
       "date_source": "vendor_page"
+    },
+    {
+      "vendor": "DatoCMS",
+      "change_type": "limits_increased",
+      "date": "2026-10-02",
+      "date_source": "discovered",
+      "summary": "The page mentions a free plan but also states that agency partners get a 30% discount starting from €39/month, indicating a paid component. It also highlights features like 5M API calls and 2TB traffic monthly, which is a significant increase from the stored 100k/month calls.",
+      "tier": "Free",
+      "tier_direction": "widened",
+      "previous_state": "Offers free tier for small projects. DatoCMS is a GraphQL-based CMS. On the lower tier, you have 100k/month calls.",
+      "current_state": "The page states that you can sign up for free, and highlights 5M API calls and 2TB traffic monthly. Agency partners can get a 30% discount starting from €39/month.",
+      "impact": "high",
+      "source_url": "https://www.datocms.com/",
+      "category": "Headless CMS",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-10-02"
+    },
+    {
+      "vendor": "UptimeRobot",
+      "change_type": "limits_increased",
+      "date": "2026-10-02",
+      "date_source": "discovered",
+      "summary": "The free tier now includes dependency monitoring, HTTP, port & ping monitor, keyword monitor, API monitoring, UDP monitoring, location-specific monitoring, slow response alerts, DNS monitoring, SSL & Domain exp. monitor, and basic status pages. It also includes a 3-month log retention.",
+      "tier": "Free",
+      "tier_direction": "widened",
+      "previous_state": "50 uptime monitors, 5-minute check intervals, 3-month log retention, email alerts. Personal/non-commercial use only on free tier",
+      "current_state": "Free $ 0 /month. 50 monitors, 5 min. monitoring interval, Dependency monitoring, HTTP, port & ping monitor, Keyword monitor, API monitoring, UDP monitoring, Location-specific monitoring, Slow response alerts, DNS monitoring, SSL & Domain exp. monitor, Only 5 integrations, Basic status pages",
+      "impact": "low",
+      "source_url": "https://uptimerobot.com/pricing/",
+      "category": "Monitoring",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-10-02"
+    },
+    {
+      "vendor": "Figma",
+      "change_type": "limits_increased",
+      "date": "2026-10-02",
+      "date_source": "discovered",
+      "summary": "The Starter plan now includes unlimited drafts, UI kits and templates, and 150 AI credits/day (up to 500/mo). Previously a limit of 3 Figma design files + 3 FigJam files for team projects, and no team libraries or branching on the free tier.",
+      "tier": "Starter",
+      "tier_direction": "widened",
+      "previous_state": "Collaborative design tool — free Starter plan with unlimited personal drafts, unlimited viewers/commenters, unlimited cloud storage, 30-day version history, 150 AI credits/day (500/mo). Team projects limited to 3 Figma design files + 3 FigJam files. No team libraries or branching on free.",
+      "current_state": "Includes: Unlimited drafts UI kits and templates 150 AI credits/day, up to 500 AI credits/mo",
+      "impact": "high",
+      "source_url": "https://www.figma.com/pricing/",
+      "category": "Design",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-10-02"
     }
   ]
 }

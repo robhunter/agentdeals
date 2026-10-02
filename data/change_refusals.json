@@ -605,12 +605,12 @@
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
       "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (2 email)",
-      "summary": "The free tier no longer includes unlimited devices and does not include TOTP code storage, emergency access, or Vault Health Reports. The free tier now shares vault items with one other user.",
+      "summary": "The free tier no longer includes unlimited devices and no longer includes TOTP code storage. It now includes sharing vault items with one other user. Premium now includes integrated authenticator (TOTP), file attachments, emergency access, and security reports.",
       "previous_state": "Unlimited vault items (passwords, notes, cards, identities). Unlimited devices. Password generator. Basic 2FA (email, authenticator app). No TOTP code storage, no emergency access, no Vault Health Reports on free. Open-source.",
-      "current_state": "Core features included in every Bitwarden account: Security and protection Open source security Zero-knowledge encryption Advanced two-step login Built-in phishing protection Credential Management Store notes, credit cards, identities Passkey management and usage Username and password generator Email alias integration Encrypted export Access and Sharing Unlimited devices, unlimited passwords Browser, Mobile, Desktop apps Free sharing with another user Bitwarden Send.",
+      "current_state": "Core features included in every Bitwarden account: Security and protection Open source security Zero-knowledge encryption Advanced two-step login Built-in phishing protection Credential Management Store notes, credit cards, identities Passkey management and usage Username and password generator Email alias integration Encrypted export Access and Sharing Unlimited devices, unlimited passwords Browser, Mobile, Desktop apps Free sharing with another user Bitwarden Send",
       "source_url": "https://bitwarden.com/pricing/",
       "category": "Password Managers",
-      "refused_date": "2026-09-20"
+      "refused_date": "2026-10-02"
     },
     {
       "vendor": "BlazeMeter",
@@ -629,12 +629,12 @@
       "change_type": "free_tier_removed",
       "reason": "no_removal_evidence",
       "detail": "a free tier was recorded as removed on the evidence that the page did not mention it, and the summary states no price, ending or replacement where the free tier was",
-      "summary": "The free tier is no longer explicitly mentioned. The lowest tier available is 'Basic Monthly' at $149/month with 1,000 concurrent users and 200 tests/year. The 'Free Starter' plan is not listed.",
+      "summary": "The free tier is no longer explicitly mentioned. The closest offering is the 'Basic' plan, which is paid. The 'Free Starter' plan details are not present on the pricing page.",
       "previous_state": "Free Starter plan: 50 max virtual users, 10 tests/month, 20-minute max test duration, 1-week data retention, 1,000 API monitoring requests/month.",
-      "current_state": "The lowest available plan is 'Basic Monthly' at $149/month, offering 1,000 concurrent users, 200 tests/year, 1 virtual service, and a 1-hour max test duration.",
+      "current_state": "The pricing page lists 'Basic' plans starting at $149/month or $99/year with 1,000 concurrent users, 200 tests/year, and a 1-hour max test duration.",
       "source_url": "https://www.blazemeter.com/pricing",
       "category": "Testing",
-      "refused_date": "2026-09-18"
+      "refused_date": "2026-10-02"
     },
     {
       "vendor": "bleemeo.com",
@@ -952,6 +952,19 @@
       "source_url": "https://cerebras.ai/",
       "category": "AI / ML",
       "refused_date": "2026-09-17"
+    },
+    {
+      "vendor": "CertKit",
+      "change_type": "new_free_tier",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as CertKit|pricing_restructured|2026-09-15|https://www.certkit.io/certificate-management",
+      "summary": "The free tier is now called 'Homelab' and is for personal, non-commercial use. It appears the original 'Free' tier after beta is no longer available as a general offering.",
+      "previous_state": "Manage SSL Certificate issuance, renewal, and monitoring. Search the Certificate Transparency Logs. Free for 3 certificates and 1 user after the beta.",
+      "current_state": "Homelab: Personal, non-commercial use.",
+      "source_url": "https://www.certkit.io/certificate-management",
+      "category": "Security",
+      "refused_date": "2026-10-02",
+      "collided_with": "CertKit|pricing_restructured|2026-09-15|https://www.certkit.io/certificate-management"
     },
     {
       "vendor": "Chanty.com",
@@ -1520,7 +1533,7 @@
       "current_state": "The AI Catalyst Program offers up to $120k cloud credits support and up to 2B free Model Studio tokens.",
       "source_url": "https://www.alibabacloud.com/startup",
       "category": "Startup Perks",
-      "refused_date": "2026-09-20",
+      "refused_date": "2026-10-02",
       "collided_with": "Create@Alibaba Cloud|rebranded|2026-09-03|https://www.alibabacloud.com/startup"
     },
     {
@@ -1807,6 +1820,18 @@
     {
       "vendor": "deployhq.com",
       "change_type": "free_tier_removed",
+      "reason": "restates_stored_quantities",
+      "detail": "narrowing claimed, and every quantity the current state names is one the stored description already held at the same value (9 currency/mo), and drops 7 the stored description carried",
+      "summary": "The free plan is no longer explicitly mentioned with the same limits. The page states 'Start deploying free' with no specific limits listed, but then immediately promotes paid plans starting at $9/month with more features. The page highlights unlimited deployments starting at $9/month, which was previously an option for open-source projects.",
+      "previous_state": "Automated deployment platform — free plan: 1 project, 3 deployments per day, 5 servers, 1 concurrent deployment, 30 build minutes, 1 user. Unlimited deployments and 3 projects start at $9/mo (Solo). Open-source projects can ask for a free account with unlimited deployments. Git-based workflow with support for FTP/SFTP/SSH deployment targets",
+      "current_state": "The page promotes starting to deploy for free, but then immediately directs users to paid plans starting at $9/month for more features and unlimited deployments.",
+      "source_url": "https://www.deployhq.com/",
+      "category": "CI/CD",
+      "refused_date": "2026-10-02"
+    },
+    {
+      "vendor": "deployhq.com",
+      "change_type": "free_tier_removed",
       "reason": "states_no_terms",
       "detail": "every clause of the summary states absence or hedge rather than a term the page carries, so it reports the reading rather than a change",
       "summary": "The free tier now appears to be limited to a trial and then requires a paid subscription starting at $9/month. The original deal of 3 projects with unlimited deployments is no longer explicitly stated as a free offering.",
@@ -1962,6 +1987,19 @@
       "source_url": "https://www.doczilla.app/",
       "category": "Dev Utilities",
       "refused_date": "2026-08-29"
+    },
+    {
+      "vendor": "Doppler",
+      "change_type": "limits_reduced",
+      "reason": "same_transition_graded_differently",
+      "detail": "graded as Doppler|limits_reduced|2026-09-02|https://www.doppler.com/pricing, a record we withdrew",
+      "summary": "The free tier now has a 14-day trial for the Team plan, and the limits for projects, environments, and config syncs have changed.",
+      "previous_state": "Secrets management — up to 3 users, 10 projects, 4 environments per project. CLI, SDKs, and integrations included",
+      "current_state": "Free for 3 users, 10 projects, 4 environments, 5 config syncs.",
+      "source_url": "https://www.doppler.com/pricing",
+      "category": "Secrets Management",
+      "refused_date": "2026-10-02",
+      "collided_with": "Doppler|limits_reduced|2026-09-02|https://www.doppler.com/pricing"
     },
     {
       "vendor": "drawDB",
@@ -2135,6 +2173,19 @@
       "refused_date": "2026-09-02"
     },
     {
+      "vendor": "Expensify",
+      "change_type": "new_tier",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as Expensify|new_tier|2026-09-19|https://www.expensify.com/",
+      "summary": "Expensify remains free for individuals, the page indicates paid plans for teams (starting at $5/member).",
+      "previous_state": "Expense management — unlimited receipt scanning (SmartScan OCR), expense reports, next-day reimbursement, corporate card program. Free for individuals",
+      "current_state": "For companies, plans start at $5 per member, but you can offset that cost with cash back from the Expensify Card.",
+      "source_url": "https://www.expensify.com/",
+      "category": "Analytics",
+      "refused_date": "2026-10-02",
+      "collided_with": "Expensify|new_tier|2026-09-19|https://www.expensify.com/"
+    },
+    {
       "vendor": "Expo",
       "change_type": "limits_reduced",
       "reason": "measures_no_change",
@@ -2271,6 +2322,18 @@
     },
     {
       "vendor": "fivenines.io",
+      "change_type": "free_tier_removed",
+      "reason": "restates_stored_quantities",
+      "detail": "narrowing claimed, and every quantity the current state names is one the stored description already held at the same value (14 trial, 19 currency/mo)",
+      "summary": "The page states a 14-day free trial is available with no credit card required, and paid plans start at €19/month. However, the page emphasizes a 'Start free trial' button and doesn't explicitly mention a permanent free tier, only a trial.",
+      "previous_state": "Linux server monitoring with real-time dashboards and alerting — no permanent free tier. 14-day free trial with no credit card required; paid plans from €19/month.",
+      "current_state": "A 14-day free trial is available with no credit card required; paid plans start at €19/month.",
+      "source_url": "https://fivenines.io/",
+      "category": "Monitoring",
+      "refused_date": "2026-10-02"
+    },
+    {
+      "vendor": "fivenines.io",
       "change_type": "new_tier",
       "reason": "same_transition_graded_differently",
       "detail": "same vendor, source_url and previous_state as fivenines.io|free_tier_removed|2026-08-28|https://fivenines.io/",
@@ -2334,13 +2397,13 @@
       "vendor": "Fly.io",
       "change_type": "free_tier_removed",
       "reason": "confirmed_unchanged",
-      "detail": "The stored description already stated no free tier for new accounts and that volume snapshots would be charged after the initial 10GB free.",
-      "summary": "The Legacy Free tier no longer exists for new accounts. Volume snapshots will be charged starting January 1st, 2026.",
+      "detail": "The stored description already stated the legacy free tier was being discontinued and snapshots would be charged after the initial 10GB. The report simply confirms this and adds a date for snapshot charges, which wasn't previously stated but doesn't alter the existing terms.",
+      "summary": "The Legacy Free tier is mentioned as 'Discontinued Plans' and the page details current pricing for resources like volumes and snapshots, indicating a shift to a pay-as-you-go model. The free tier for volume snapshots is now only for the first 10GB, and snapshots will be charged after January 1st, 2026.",
       "previous_state": "Pay-as-you-go only — no free tier for new accounts (since Oct 2024). Legacy accounts (Hobby/Launch/Scale plans) retain: 3 shared-cpu-1x VMs (256 MB RAM), 3 GB volume storage, 100 GB transfer/month. Volume snapshots: first 10 GB free, then $0.08/GB/month.",
-      "current_state": "Fly.io services are billed per organization based on usage. Compute is charged per started/stopped machine, with pricing varying by region and RAM. Volumes cost $0.15/GB per month. Volume snapshots will cost $0.08/GB per month starting January 1st, 2026, with the first 10GB free each month.",
+      "current_state": "The page references 'Discontinued Plans' and details pricing for resources like volumes ($0.15/GB per month) and volume snapshots ($0.08/GB per month after the first 10GB free). Snapshot charges begin January 1st, 2026.",
       "source_url": "https://fly.io/docs/about/pricing/",
       "category": "Cloud Hosting",
-      "refused_date": "2026-09-03"
+      "refused_date": "2026-10-02"
     },
     {
       "vendor": "Fly.io",
@@ -2737,12 +2800,12 @@
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
       "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (1 monitoring)",
-      "summary": "The free allotment for Monitoring API calls has changed from 1M to 150 MiB for metrics, with tiered pricing above that. The free allotment for Cloud Logging has changed from 'all non-chargeable Google Cloud metrics' to 50 GiB/project/month for logging storage and 2.5 million spans for trace ingestion.",
+      "summary": "The free allotment for Monitoring API calls has changed from 1M to 150 MiB for metrics, with tiered pricing above that. The free allotment for trace ingestion is 2.5 million spans.",
       "previous_state": "Always Free: all non-chargeable Google Cloud metrics, first 1M monitoring API calls/month. Dashboards, alerting, and uptime checks for GCP resources",
-      "current_state": "First 150 MiB per billing account for metrics charged by bytes ingested. Read API calls: First 1 million time series returned per billing account.",
+      "current_state": "All non-chargeable Google Cloud metrics. First 150 MiB per billing account for metrics charged by bytes ingested. Monitoring API calls: First 1 million time series returned per billing account.",
       "source_url": "https://cloud.google.com/monitoring/pricing",
       "category": "Monitoring",
-      "refused_date": "2026-09-20"
+      "refused_date": "2026-10-02"
     },
     {
       "vendor": "Google Cloud Run",
@@ -2778,7 +2841,7 @@
       "current_state": "Standard storage costs $0.000027397 / 1 gibibyte hour, per 1 month / account in the Iowa (us-central1) region. Other regions and storage classes have different pricing.",
       "source_url": "https://cloud.google.com/storage/pricing",
       "category": "Storage",
-      "refused_date": "2026-09-20"
+      "refused_date": "2026-10-02"
     },
     {
       "vendor": "Google Drive",
@@ -2888,6 +2951,18 @@
       "category": "Monitoring",
       "refused_date": "2026-09-17",
       "collided_with": "Grafana Cloud|pricing_restructured|2026-09-02|https://grafana.com/pricing/"
+    },
+    {
+      "vendor": "Grafana k6 Cloud",
+      "change_type": "pricing_restructured",
+      "reason": "restates_stored_quantities",
+      "detail": "narrowing claimed, and every quantity the current state names is one the stored description already held at the same value (14 retention), and drops 2 the stored description carried",
+      "summary": "The free tier for Performance Testing (k6) now includes access to all Grafana Cloud services with usage limits, rather than being specifically for k6 load testing. The 500 VUh/month limit is no longer mentioned.",
+      "previous_state": "Grafana Cloud k6 load testing. Always free: 500 virtual user hours (VUh) per month, 14-day retention for k6 performance tests, community support, no credit card required. Minimum 1 VUh per test.",
+      "current_state": "The free tier includes all Grafana Cloud services with usage limits. It offers 14-day retention for metrics, logs, traces, profiles, & k6 performance tests.",
+      "source_url": "https://grafana.com/pricing/",
+      "category": "Testing",
+      "refused_date": "2026-10-02"
     },
     {
       "vendor": "Grafana k6 Cloud",
@@ -3062,6 +3137,18 @@
       "category": "Design",
       "refused_date": "2026-09-11",
       "collided_with": "HeroUI|new_tier|2026-08-28|https://heroui.com/"
+    },
+    {
+      "vendor": "Hex",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (5 notebook, 5 published, 4 gb, 0.5 cpu)",
+      "summary": "The free Community plan now has limited credits and compute is limited to Small. The stored information stated unlimited users, up to 5 notebooks, up to 5 published apps, and Small compute (4 GB RAM, 0.5 CPU). The current page states the Community plan includes Hex agent trial, connect any data source, and Small compute, but does not explicitly state the number of notebooks or apps.",
+      "previous_state": "Collaborative data platform for notebooks, data apps, and knowledge libraries. Community plan: up to 5 notebooks, up to 5 published apps, Small compute (4 GB RAM, 0.5 CPU), unlimited users, connect any data source, notebook agent trial (limited AI agent access).",
+      "current_state": "The Community plan includes Hex agent trial, connect any data source, and Small compute. It also includes up to 3 shared collections and up to 3 shared components.",
+      "source_url": "https://hex.tech/pricing",
+      "category": "Notebooks & Data Science",
+      "refused_date": "2026-10-02"
     },
     {
       "vendor": "Highlight.io",
@@ -3918,7 +4005,7 @@
       "current_state": "The free plan includes unlimited contacts and up to 4,000 total emails to your 1,000 newest contacts in any rolling 30-day window, counting marketing and transactional sends together.",
       "source_url": "https://loops.so/pricing",
       "category": "Email",
-      "refused_date": "2026-09-19"
+      "refused_date": "2026-10-02"
     },
     {
       "vendor": "lost-pixel.com",
@@ -4218,12 +4305,12 @@
       "change_type": "limits_increased",
       "reason": "same_transition_graded_differently",
       "detail": "same vendor, source_url and previous_state as Microsoft for Startups|limits_increased|2026-09-02|https://startups.microsoft.com/en-us/",
-      "summary": "The program now offers up to $150,000 in Azure credits, a significant increase from previously.",
+      "summary": "The program now offers up to $150,000 in Azure credits.",
       "previous_state": "Get access to a wide range of benefits—from technical resources and free Azure cloud, to selling alongside Microsoft salespeople and partner channel.",
       "current_state": "Access cutting-edge AI models, developer tools, and up to $150,000 in credits , backed by Microsoft’s global customer network, enterprise-grade security, and privacy you can trust.",
       "source_url": "https://startups.microsoft.com/en-us/",
       "category": "Startup Perks",
-      "refused_date": "2026-09-18",
+      "refused_date": "2026-10-02",
       "collided_with": "Microsoft for Startups|limits_increased|2026-09-02|https://startups.microsoft.com/en-us/"
     },
     {
@@ -4401,13 +4488,13 @@
       "vendor": "n8n",
       "change_type": "free_tier_removed",
       "reason": "confirmed_unchanged",
-      "detail": "The report largely restates information already in the stored description. The 'Community Edition' name is a detail not previously claimed, and doesn't change the functionality.",
-      "summary": "The free self-hosted tier is now referred to as the 'Community Edition' and is available on GitHub. The cloud free plan has been removed. All cloud plans now require payment, with free trials available.",
+      "detail": "The stored description already stated the cloud free plan was removed and that a self-hosted version existed. The report just adds detail about 'Community Edition' and paid plans, which weren't previously described.",
+      "summary": "The free self-hosted tier is now referred to as the 'Community Edition' and is available on GitHub. The cloud free plan has been removed. Paid plans now exist (Starter, Pro, Business, Enterprise) based on workflow executions.",
       "previous_state": "Workflow automation — self-hosted free (Sustainable Use License). 400+ integrations, visual workflow builder. Cloud free plan removed; all Cloud plans require payment (14-day free trial available). Unlimited active workflows on all paid plans",
       "current_state": "A standard, self-hosted version of n8n is available on GitHub.",
       "source_url": "https://n8n.io/pricing/",
       "category": "Background Jobs",
-      "refused_date": "2026-09-19"
+      "refused_date": "2026-10-02"
     },
     {
       "vendor": "Namecheap Supersonic",
@@ -4517,6 +4604,19 @@
       "source_url": "https://www.ibm.com/products/ns1-connect/pricing",
       "category": "DNS & Domain Management",
       "refused_date": "2026-09-02"
+    },
+    {
+      "vendor": "NS1 Connect",
+      "change_type": "limits_increased",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as NS1 Connect|new_free_tier|2026-09-18|https://www.ibm.com/products/ns1-connect/pricing",
+      "summary": "The free tier now offers 50M queries/month, 500 DNS records, 20 health check monitors, and 10 traffic steering chains, a significant increase from previously 5 million queries, 500 DNS records, 1 monitor, and 1 filter chain.",
+      "previous_state": "Free Developer tier: 5 million queries/month, 500 DNS records, 1 filter chain, 1 monitor. Full API access and traffic steering. No time limit.",
+      "current_state": "The Trial plan is free and features 50M DNS queries/month, 500 DNS records, 20 health check monitor, 10 traffic steering chains.",
+      "source_url": "https://www.ibm.com/products/ns1-connect/pricing",
+      "category": "DNS & Domain Management",
+      "refused_date": "2026-10-02",
+      "collided_with": "NS1 Connect|new_free_tier|2026-09-18|https://www.ibm.com/products/ns1-connect/pricing"
     },
     {
       "vendor": "Nuclei",
@@ -4945,15 +5045,15 @@
     },
     {
       "vendor": "Pixlr",
-      "change_type": "limits_increased",
+      "change_type": "limits_reduced",
       "reason": "unquantified_limit",
-      "detail": "limits_increased claimed, but the current state names no quantity for anything the stored state measured (500 graphic, 5 sav)",
-      "summary": "The free tier still exists, but the description is significantly expanded to include many AI tools (AI Image Generator, AI Video Generator, AI Face Swap, etc.) that were not mentioned in the original description. The original description mentioned ~5 saves/day, which is no longer mentioned. The page also promotes paid plans starting at $1.99/month for ad-free editing and more features.",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (500 graphic, 5 sav)",
+      "summary": "The free tier still exists, but the description is significantly expanded to include a wide range of AI tools (AI Image Generator, AI Video Generator, AI Face Swap, etc.) beyond just a photo editor. The page also mentions paid plans starting at $1.99/month for ad-free editing and additional features. The ~5 saves/day limit is no longer mentioned.",
       "previous_state": "Free online photo editor and design tool. Basic and advanced editing modes, 500K+ free graphics. Ad-supported, ~5 saves/day on free plan",
-      "current_state": "Pixlr gives you a powerful AI photo editor, AI image generator, AI video maker, face swap, collage maker, and 20+ editing tools — 100% free, right in your browser.",
+      "current_state": "Pixlr gives a powerful AI photo editor, AI image generator, AI video maker, face swap, collage maker, and 20+ editing tools — 100% free, right in your browser.",
       "source_url": "https://pixlr.com",
       "category": "Design",
-      "refused_date": "2026-09-20"
+      "refused_date": "2026-10-02"
     },
     {
       "vendor": "Plane",
@@ -4966,6 +5066,18 @@
       "source_url": "https://plane.so/",
       "category": "Project Management",
       "refused_date": "2026-09-20"
+    },
+    {
+      "vendor": "Plausible Analytics",
+      "change_type": "free_tier_removed",
+      "reason": "removal_does_not_reach_the_licence",
+      "detail": "Plausible Analytics is free because its licence grants the use, and https://plausible.io/ is a hosted-pricing surface that states what the vendor sells rather than what the licence permits. A record that ends a licence needs a source that carries one — the repository, its licence file or a self-hosting document — or must say which hosted plan went away and leave the licence standing",
+      "summary": "The free tier is no longer explicitly mentioned as OSS. The page details paid plans starting at $9/month, with a free trial available. While the page highlights open source nature, it doesn't tie it to a free tier.",
+      "previous_state": "Free OSS (AGPLv3). Privacy-friendly web analytics. No cookies, GDPR/CCPA compliant, lightweight script (<1KB). Self-hosted with no limits. Cloud plans start at $9/mo",
+      "current_state": "The Starter plan costs $9/month or $96/year for up to 10k monthly pageviews, one site, and 3 years of data retention.",
+      "source_url": "https://plausible.io/",
+      "category": "Analytics",
+      "refused_date": "2026-10-02"
     },
     {
       "vendor": "Plausible Analytics",
@@ -5238,6 +5350,18 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "QRtracer",
+      "change_type": "limits_increased",
+      "reason": "no_price_signal",
+      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 5726 characters, so it states no terms to have changed",
+      "summary": "The free tier allows for unlimited QR codes and scan tracking, but advanced features like exporting scan data as CSV require a paid plan. The stored information stated a limit of 3 dynamic codes and 14 days of analytics access before requiring a Pro plan.",
+      "previous_state": "New Free accounts can create up to 3 dynamic codes and get 14 days of Analytics and QR Studio access. After that, Pro is required to use those premium areas. Existing codes keep redirecting and scans continue to be recorded.",
+      "current_state": "The free plan allows for unlimited QR code creation, editable links, and scan tracking. Reports & exports require a paid plan.",
+      "source_url": "https://qrtracer.io",
+      "category": "Storage",
+      "refused_date": "2026-10-02"
+    },
+    {
       "vendor": "Quartzy",
       "change_type": "startup_program_expanded",
       "reason": "page_does_not_name_vendor",
@@ -5302,13 +5426,13 @@
       "vendor": "Remote for Startups",
       "change_type": "restriction",
       "reason": "confirmed_unchanged",
-      "detail": "The current page clarifies the condition for the discount, but doesn't change the terms themselves. Both descriptions state a 20% discount with an additional 5% for introducing a partner investor.",
+      "detail": "The descriptions state the same terms – a base discount up to 20% and an additional 5% for a partner investor referral – just reordered.",
       "summary": "The page confirms a discount for referrals, offering an additional 5% off (up to a 20% discount) for introducing an investor who becomes a partner.",
       "previous_state": "A partner-referred discount on Remote's global payroll, benefits and compliance platform. The page states the discount reaches up to 20%, with an additional 5% for introducing an investor who becomes a partner. No headline rate is published for startups without a partner referral.",
-      "current_state": "The page states that if your investor is not a Remote for Startups partner, you can introduce them and receive an additional 5% off (up to a 20% discount).",
+      "current_state": "The page states an additional 5% discount is available for introducing a partner investor, up to a 20% discount.",
       "source_url": "https://remote.com/global-hr/startups",
       "category": "Startup Perks",
-      "refused_date": "2026-09-18"
+      "refused_date": "2026-10-02"
     },
     {
       "vendor": "Remote for Startups",
@@ -5553,6 +5677,18 @@
       "source_url": "https://saucelabs.com/pricing",
       "category": "Testing",
       "refused_date": "2026-09-20"
+    },
+    {
+      "vendor": "Sauce Labs",
+      "change_type": "free_tier_removed",
+      "reason": "free_tier_still_offered",
+      "detail": "a free tier was recorded as removed by a summary that reports the page still offering one",
+      "summary": "The open source offering is no longer described as 'unlimited testing minutes on 3 parallel sessions'. Instead, Sauce Labs offers a 'Try it free' option and paid plans starting at $39/month for 1 parallel test. There is a separate section mentioning support for open source projects with 'free accounts for qualifying initiatives', but details are limited.",
+      "previous_state": "Free for open source: unlimited testing minutes on 3 parallel sessions across 96+ OS/browser combinations. Test results are publicly accessible.",
+      "current_state": "Sauce Labs offers paid plans starting at $39/month for 1 parallel test. A 'Try it free' option is available. There is a mention of free accounts for qualifying open source projects, but details are limited.",
+      "source_url": "https://saucelabs.com/pricing",
+      "category": "Testing",
+      "refused_date": "2026-10-02"
     },
     {
       "vendor": "Science Exchange",
@@ -5912,7 +6048,7 @@
       "current_state": "As a Canva Free user, you can create and use up to 2,500 mockups for free. If you exceed this total number of uses, you will need a Canva Pro account to create and use more mockups.",
       "source_url": "https://smartmockups.com/",
       "category": "Design",
-      "refused_date": "2026-09-18"
+      "refused_date": "2026-10-02"
     },
     {
       "vendor": "SmartParse",
@@ -6417,6 +6553,18 @@
     },
     {
       "vendor": "TimeCamp",
+      "change_type": "limits_reduced",
+      "reason": "dangling_reference",
+      "detail": "the summary now opens on a reference to a clause that was dropped, so the sentence that travels alone has no subject",
+      "summary": "The page does not explicitly mention a completely free tier for unlimited users. It prominently features a 'Start free' option, but this appears to be a trial or limited free plan, as it's associated with booking a demo and doesn't specify unlimited users. The page focuses on paid plans and features like AI-powered time tracking, workforce analytics, and attendance tracking, which were not mentioned in the original description.",
+      "previous_state": "Free time tracking software for unlimited users. Easily integrates with PM tools like Jira, Trello, Asana, etc.",
+      "current_state": "The page offers a 'Start free' option, but details are limited and it's presented alongside a 'Book demo' call to action, suggesting it's not a fully featured, unlimited free plan.",
+      "source_url": "https://www.timecamp.com/",
+      "category": "Project Management",
+      "refused_date": "2026-10-02"
+    },
+    {
+      "vendor": "TimeCamp",
       "change_type": "free_tier_removed",
       "reason": "states_no_terms",
       "detail": "every clause of the summary states absence or narration rather than a term the page carries, so it reports the reading rather than a change",
@@ -6466,15 +6614,15 @@
     },
     {
       "vendor": "Toggl",
-      "change_type": "limits_reduced",
+      "change_type": "free_tier_removed",
       "reason": "states_no_terms",
-      "detail": "every clause of the summary states absence or narration rather than a term the page carries, so it reports the reading rather than a change",
-      "summary": "The page does not explicitly state a free tier for Toggl Track or Toggl Plan as described in the stored information. It mentions both remain available for existing users, but focuses heavily on paid features and doesn't detail the limits of the free versions. The page emphasizes features like AI-driven reports and capacity planning, which are not mentioned in the original description.",
+      "detail": "every clause of the summary states absence or hedge or narration rather than a term the page carries, so it reports the reading rather than a change",
+      "summary": "The page indicates Toggl Track and Toggl Plan are still available for existing users, but does not explicitly state a free tier is available for new users. The page focuses on features and benefits of the platform, including paid features like AI-driven reports and capacity planning, suggesting a shift towards a more comprehensive, potentially paid, service.",
       "previous_state": "Provides two free productivity tools. [Toggl Track](https://toggl.com/track/) for time management and tracking app with a free plan provides seamless time tracking and reporting designed with freelancers in mind. It has unlimited tracking records, projects, clients, tags, reporting, and more. And [Toggl Plan](https://toggl.com/plan/) for task planning with a free plan for solo developers with unlimited tasks, milestones, and timelines.",
-      "current_state": "Both Toggl Track and Toggl Plan remain available and supported for existing users. The page details numerous features, including automated time tracking, integrations, invoicing, and AI-driven reports, but does not specify the limits of the free plans.",
+      "current_state": "Both Toggl Track and Toggl Plan remain available and supported for existing users. The page details features like automated time tracking, integrations, and AI-driven reports, and promotes trying the service for free, but does not explicitly mention a free tier for new sign-ups.",
       "source_url": "https://toggl.com/",
       "category": "Project Management",
-      "refused_date": "2026-09-20"
+      "refused_date": "2026-10-02"
     },
     {
       "vendor": "Toggled.dev",
@@ -6540,15 +6688,15 @@
     },
     {
       "vendor": "Turbopuffer",
-      "change_type": "pricing_restructured",
+      "change_type": "limits_reduced",
       "reason": "states_no_terms",
       "detail": "every clause of the summary states bookkeeping rather than a term the page carries, so it reports the reading rather than a change",
-      "summary": "The pricing page indicates a $16/month minimum usage for all plans, contradicting the stored information stating 'no minimum'.",
+      "summary": "The pricing page shows a $16/month minimum usage for all plans, contradicting the stored information that stated 'no minimum'.",
       "previous_state": "Serverless vector database — pay-per-use with no minimum. $0.30/M vectors stored/month, $0.04/M vectors queried. No free tier but extremely low entry cost for small workloads",
-      "current_state": "Includes all database features with a $16/month minimum usage.",
+      "current_state": "$16/month minimum usage scale Includes all database features Deployment Multi-Tenancy Security & Compliance SOC2 report, GDPR-ready DPA Support Community Slack & Email",
       "source_url": "https://turbopuffer.com/pricing",
       "category": "Databases",
-      "refused_date": "2026-09-19"
+      "refused_date": "2026-10-02"
     },
     {
       "vendor": "Tyk",
@@ -7108,12 +7256,12 @@
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
       "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (2 agent, 50 agent)",
-      "summary": "The employee limit for the free tier has been split based on referral status. Startups referred by a partner can have up to 250 employees, while those not referred are limited to 50.",
+      "summary": "The employee limit for the free tier is now dependent on whether the startup has a partner referral. It's 250 employees with a referral, and 50 without.",
       "previous_state": "Qualified startups get the Zendesk Resolution Platform free for up to 2 years for up to 50 agents, with the length depending on funding profile and partner. The baseline program length for all accepted startups is 6 months.",
       "current_state": "Startups get up to 2 years free for qualified startups. This offer is available only to new Zendesk customers who have received outside funding (Angel, Pre-seed, Seed, Series A, or Series B rounds) and who have (i) 250 or fewer employees if referred by one of our partners, or (ii) 50 or fewer employees if not referred by our partners.",
       "source_url": "https://www.zendesk.com/business/startups/",
       "category": "Startup Perks",
-      "refused_date": "2026-09-18"
+      "refused_date": "2026-10-02"
     },
     {
       "vendor": "Zenscrape",
