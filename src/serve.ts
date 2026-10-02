@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { createServer, getServerCard } from "./server.js";
-import { changesForVendor, oldestVerifiedDateForSlug, vendorRiskAssessment, publishedRisk, levelWithheldStatement, vendorNotIndexedSentence, riskCauseOf, freeTierEndingRecord, NEGATIVE_CHANGE_TYPES, POSITIVE_CHANGE_TYPES, SEVERE_CHANGE_TYPES, loadOffers, getCategories, getNewOffers, getNewestDeals, searchOffers, enrichOffers, gateForOffer, loadDealChanges, getDealChanges, changeContext, DEFAULT_CHANGE_WINDOW_DAYS, getOfferDetails, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, getFormattedWeeklyDigest, getFreshnessMetrics, publishedStabilityIndex, stabilityWithheldDisclosure, UNRATED_STABILITY, type StabilityIndex, type PublishedStabilityClass, getVendorReferral, sanitizeQuery, getChangeLogFreshness, isEventDated, partitionByDateProvenance } from "./data.js";
+import { changesForVendor, oldestVerifiedDateForSlug, vendorRiskAssessment, withheldRecordCounts, publishedRisk, levelWithheldStatement, vendorNotIndexedSentence, riskCauseOf, freeTierEndingRecord, NEGATIVE_CHANGE_TYPES, POSITIVE_CHANGE_TYPES, SEVERE_CHANGE_TYPES, loadOffers, getCategories, getNewOffers, getNewestDeals, searchOffers, enrichOffers, gateForOffer, loadDealChanges, getDealChanges, changeContext, DEFAULT_CHANGE_WINDOW_DAYS, getOfferDetails, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, getFormattedWeeklyDigest, getFreshnessMetrics, publishedStabilityIndex, stabilityWithheldDisclosure, UNRATED_STABILITY, type StabilityIndex, type PublishedStabilityClass, getVendorReferral, sanitizeQuery, getChangeLogFreshness, isEventDated, partitionByDateProvenance } from "./data.js";
 import { loadChangeRefusals, changesRatingTheListedTier, changesTheVendorMade, stabilityDeciders, vendorNameAsPublished, freePlanExcerptHeldFor, freePlanExcerptHoldOn } from "./data.js";
 import { A_DEMOTION_IN_FORCE_RULE, NO_DEMOTION_IN_FORCE_RULE, A_COMPLETE_LOG_NOTICE, A_VERDICT_ROLLS_NOTICE, A_WITHHELD_RATING_DOES_NOT_LAPSE, lapsingDemotionStated, VOLATILE_WHILE_A_DEMOTION_COUNTS_RULE, WATCH_RECEIVES_FROM_VOLATILE_RULE , confirmationCoverage, confirmationCoverageSentence, HOW_THE_CATALOGUE_IS_MAINTAINED, NOTHING_CONTRADICTS_OUR_TERMS_FOR, THE_DATES_WE_HOLD } from "./data.js";
 import { confirmingRead, confirmingReadSentence, refusalsByVendor, refusedReadSentence, supersededRefusalSentence, type ChangeRefusal } from "./change-refusal.js";
@@ -38,7 +38,7 @@ import { NO_CURRENT_FIGURE, costHeadlineCaveat, limitCellText, mayRecommendAsFre
 import { changesByVendor } from "./superseded-census.js";
 import { buildComparisonMap, comparisonSlug } from "./comparison-pairs.js";
 import { comparisonVerdictText, freeTierFaqAnswer, stabilityFaqAnswer, type ComparisonSide, type FreeTierSide, type SideFreeTier, type StabilityRating } from "./comparison-verdict.js";
-import { gateStatesAnEnding, publishedVendorLevel, vendorVerdictSentence, vendorBadge, freeTierClaim, endingStatedInPlaceOfARating, endingShutsTheProductDown, endedClaimReliabilityAnswer, statesRiskCause, withholdingThatDoesNotLapse, demotionTheVerdictNames, narrowingSentence, ourOwnRecordsSentence, changeKindNoun, isOurOwnBookkeeping, emptyHistoryCaveatSentence, refusedReadOurConfirmationSupersedes, refusedReadWeHold, refusedReadWithholdingSentence, nothingWeReadDescribesTheTerms, unconfirmedThresholdSentence, unconfirmedTermsOpening, whyWeCannotConfirmTheseTerms, withheldForARefusedRead, withUnconfirmedTerms, refusalWithholdsStability, termsUnconfirmedBySource, termsTheVerdictWithholds, closingTerms, termsWithTheReasonWeCannotConfirmThem, termsNotVerifiedMetaSentence, termsWithheldLabel, theReadConfirmedThePrice, unconfirmedTermsSentence, whereTheDoubtSits, withheldBadgeLabel, type BadgeWithholding, type UnconfirmedTerms, type FreeTierClaim, type VendorVerdictInput, type WhereTheDoubtSits } from "./vendor-verdict.js";
+import { gateStatesAnEnding, publishedVendorLevel, vendorVerdictSentence, withheldRecordCountsOf, WITHHOLDING_BADGE_LABELS, vendorBadge, freeTierClaim, endingStatedInPlaceOfARating, endingShutsTheProductDown, endedClaimReliabilityAnswer, statesRiskCause, withholdingThatDoesNotLapse, demotionTheVerdictNames, narrowingSentence, ourOwnRecordsSentence, changeKindNoun, isOurOwnBookkeeping, emptyHistoryCaveatSentence, refusedReadOurConfirmationSupersedes, refusedReadWeHold, refusedReadWithholdingSentence, nothingWeReadDescribesTheTerms, unconfirmedThresholdSentence, unconfirmedTermsOpening, whyWeCannotConfirmTheseTerms, withheldForARefusedRead, withUnconfirmedTerms, refusalWithholdsStability, termsUnconfirmedBySource, termsTheVerdictWithholds, closingTerms, termsWithTheReasonWeCannotConfirmThem, termsNotVerifiedMetaSentence, termsWithheldLabel, theReadConfirmedThePrice, unconfirmedTermsSentence, whereTheDoubtSits, withheldBadgeLabel, type BadgeWithholding, type UnconfirmedTerms, type FreeTierClaim, type VendorVerdictInput, type WhereTheDoubtSits } from "./vendor-verdict.js";
 import { descriptionDeniesAFreeTier, listingOffersAFreeTier, tierMayCarryAFreePlanExcerpt, tierRecordsAFreeTier } from "./free-tier-record.js";
 import { PAGE_HEAD_OPEN, withLedeBeforeNav } from "./page-lede.js";
 import { withReviewByline } from "./page-byline.js";
@@ -59,7 +59,7 @@ import { NAME_MATCH_SENTENCE } from "./name-match.js";
 import { FREE_TIER_STANDING_LABELS, GRADE_FACTORS_WITHOUT_PRICING_HISTORY, NOT_EVIDENCE_LABELS, citesAChangeOlderThanTheGrade, freeTierStanding, gradesFirstSet, gradesLastSet, gradingDatesClause, neverTracked, pricingHistoryCoverageAnswer, pricingHistoryCoverageSentence, riskEntries, scorecard, splitByFreeTierStanding, trackedSinceGrading, type RiskEntry } from "./risk-scorecard.js";
 import { CHANGE_DIRECTION, changeDirectionTable, directionRatioLabel } from "./change-direction.js";
 import { removalDurability, removalReturnRateSentence, removalDurabilityPattern, lastingRemovalExamplesFor } from "./removal-durability.js";
-import { changeCitesASource, changeIsUncited, changeSourceCitation, changeSourceLinkHtml, changeCitationHtml, citedClaimHtml, changeSummaryHtml, changeSummaryText, citedChanges, uncitedChangeNotice, uncitedChangeNoticeHtml, ratingWithheldForNoSourceClause, ratingWithheldForNoSourceSentence, UNCITED_CHANGE_LABEL, type CitableChangeRow } from "./change-citation.js";
+import { changeCitesASource, changeIsUncited, changeSourceCitation, changeSourceLinkHtml, changeCitationHtml, citedClaimHtml, changeSummaryHtml, changeSummaryText, citedChanges, uncitedChangeNotice, uncitedChangeNoticeHtml, ratingWithheldForNoSourceClause, ratingWithheldForNoSourceSentence, ratingWithheldClause, ratingWithheldSentence, type WithheldRecordCounts, UNCITED_CHANGE_LABEL, type CitableChangeRow } from "./change-citation.js";
 import { growthLimitPhrases } from "./growth-limits.js";
 import { registerAgent, authenticateRequest, validateVestauthUrl, hashApiKey, updateAgentX402Address, getAgentById } from "./agents.js";
 import { attributeAuthenticatedRequest } from "./referral-attribution.js";
@@ -78,6 +78,7 @@ import { configureDurableBackend, hydrateDurableStores, persistDurableStores, id
 import { addFriend, removeFriend, getFriends, getFriendCodesForVendors } from "./friends.js";
 import { changeLogAnchorFor, changeLogVendorMap, toSlug, vendorSlugMap, resolveVendorSlug, namedVendorSlug, comparisonOfOneRecord, recordNamedBySlug, servedVendorSlug, servedVendorSlugForName } from "./vendor-slug.js";
 import { NO_PUSH_NOTICE, watchCommandBlock, watchRequestsFor } from "./change-watching.js";
+import { AN_UNCONFIRMED_CHANGE_SETS_NO_LABEL } from "./change-confirmation.js";
 import { clauseNaming } from "./quoted-figures.js";
 import { figureProvenanceAgainst, statementsWeHold } from "./figure-provenance.js";
 import { statesNoFreeTier } from "./retired-terms.js";
@@ -1041,11 +1042,21 @@ function unsourcedNoteHtml(vendor: string): string {
   return `<div class="unsourced-note" style="font-size:.75rem;color:var(--text-dim);margin-top:.25rem">${escHtmlServer(uncitedChangeNotice(vendor))}</div>`;
 }
 
+function withheldRecordsRatingTheListing(offer: Pick<Offer, "vendor" | "tier">): WithheldRecordCounts {
+  return withheldRecordCounts(changesRatingTheListedTier(offer, changesFor(offer.vendor)));
+}
+
+function withheldRecordsByReason(withheld: RatingWithheld): WithheldRecordCounts {
+  return withheld.reason === "unconfirmed"
+    ? { unsourced: 0, unconfirmed: withheld.records }
+    : { unsourced: withheld.records, unconfirmed: 0 };
+}
+
 function stabilityCellHtml(
   level: "stable" | "caution" | "risky" | null | undefined,
   cause: RiskCause | null | undefined,
   linkUnreachable: LinkUnreachable | null | undefined,
-  offer?: Pick<Offer, "source_check">,
+  offer?: Pick<Offer, "source_check" | "vendor" | "tier">,
   gate?: Gate | null,
   ratingWithheld?: RatingWithheld | null,
 ): string {
@@ -1053,7 +1064,10 @@ function stabilityCellHtml(
     return `<span class="stability-gate" style="color:var(--text-dim);font-family:var(--mono)" title="${escHtmlServer(gate.reason)}">${escHtmlServer(gate.code)}</span>`;
   }
   if (ratingWithheld) {
-    return `<span class="stability-unsourced" style="color:var(--text-dim)" title="${escHtmlServer(ratingWithheldForNoSourceClause())}">unrated &mdash; no source</span>`;
+    const why = escHtmlServer(ratingWithheldClause(offer ? withheldRecordsRatingTheListing(offer) : withheldRecordsByReason(ratingWithheld)));
+    return ratingWithheld.reason === "unconfirmed"
+      ? `<span class="stability-unconfirmed" style="color:var(--text-dim)" title="${why}">${escHtmlServer(WITHHOLDING_BADGE_LABELS.unconfirmed)}</span>`
+      : `<span class="stability-unsourced" style="color:var(--text-dim)" title="${why}">unrated &mdash; no source</span>`;
   }
   if (linkUnreachable) {
     const since = linkUnreachable.last_reachable ? LAST_RESOLVED(linkUnreachable.last_reachable) : "";
@@ -1595,7 +1609,9 @@ function endedFreeTiersIn(population: readonly Offer[], servedOn: string): Offer
 
 function unconfirmedFreeTierSentence(vendor: string, because: BadgeWithholding, context: VendorVerdictContext): string {
   if (because.reason === "gated") return context.gate?.reason ?? "";
-  if (because.reason === "no_source") return ratingWithheldForNoSourceSentence(vendor);
+  if (because.reason === "no_source" || because.reason === "unconfirmed") {
+    return ratingWithheldSentence(vendor, withheldRecordCountsOf(context.input));
+  }
   if (withheldForARefusedRead(because)) return refusedReadWithholdingSentence(vendor, because);
   return withheldLevelSentence(because.reason, vendor, context.unconfirmableSince);
 }
@@ -3429,6 +3445,7 @@ ${demeritRows}
   <h3>The risk label is not a rank, and it is never a count</h3>
   <p>Vendor pages carry a <code>stable</code> / <code>caution</code> / <code>risky</code> label. <strong style="color:var(--text)">It moves no order on this site</strong> &mdash; the ranking module cannot read it, and flipping every label leaves every listing we publish in the same order.</p>
   <p>It is decided by the <em>type</em> of a recorded change, never by how many records we hold. A vendor that expanded its free tier, postponed a fee, added a tier or changed its name cannot be labelled <code>caution</code> for any of those. <strong style="color:var(--text)">A <code>caution</code> or <code>risky</code> label always renders together with the single dated record that produced it, on the same page and next to the label. Where we cannot show the reason, we do not show the label.</strong></p>
+  <p>${escHtmlServer(AN_UNCONFIRMED_CHANGE_SETS_NO_LABEL)}</p>
   <p>The honest limit: <code>stable</code> means we hold no record of a free tier removal, a limit reduction or a pricing restructure for that vendor, and that no read of its pricing page since has turned up a change we refused to record without our having read the page again and confirmed the terms afterwards. A change we read and then refused to record is not evidence that nothing moved, so it takes the label off rather than leaving it on, and only a later read that confirms the terms puts it back. Each vendor page states the reason we refused the change we hold for it, or the day we confirmed the terms over it. It is a statement about our records, not a clean bill of health &mdash; a vendor we have never had cause to examine reads the same as one with a long clean history. Until August 2026 the label was derived from a count of records of any type, which inverted that: the vendors we watched most closely were the ones it flagged, and several were flagged for good news. That is fixed, and this paragraph is here so the next version of it is checkable.</p>
 
   <h3 id="change-direction">Which way a change counts</h3>
@@ -5286,7 +5303,7 @@ function buildVendorPage(slug: string): string | null {
     : "";
 
   const ratingWithheldLine = ratingWithheld
-    ? `\n  <p class="rating-withheld-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong style="color:#8b949e">No rating:</strong> ${escHtmlServer(ratingWithheldForNoSourceSentence(vendorName))} ${ratingWithheld.records === 1 ? "It is" : `All ${ratingWithheld.records} are`} listed below, marked. ${escHtmlServer(A_WITHHELD_RATING_DOES_NOT_LAPSE)} <a href="#changes" style="white-space:nowrap">Full history &darr;</a></p>`
+    ? `\n  <p class="rating-withheld-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong style="color:#8b949e">No rating:</strong> ${escHtmlServer(ratingWithheldSentence(vendorName, withheldRecordCountsOf(verdictInput)))} ${ratingWithheld.records === 1 ? "It is" : `All ${ratingWithheld.records} are`} listed below, marked. ${escHtmlServer(A_WITHHELD_RATING_DOES_NOT_LAPSE)} <a href="#changes" style="white-space:nowrap">Full history &darr;</a></p>`
     : "";
 
   const primaryEligibilityGate = eligibilityGateAsPublished(primary, servedOn, vendorChanges);

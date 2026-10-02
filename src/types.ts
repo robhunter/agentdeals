@@ -154,8 +154,10 @@ export interface LinkUnreachable {
   terminal: boolean;
 }
 
+export type RatingWithheldReason = "no_source" | "unconfirmed";
+
 export interface RatingWithheld {
-  reason: "no_source";
+  reason: RatingWithheldReason;
   records: number;
 }
 
@@ -206,6 +208,29 @@ export interface DealChange {
   source_check?: ChangeSourceCheck | null;
   discontinued_date?: string | null;
   listing_effect?: import("./product-deprecation.js").DeprecationCall | null;
+  archive_check?: ArchiveCheck | null;
+}
+
+export type ArchiveCheckOutcome =
+  | "vendor_changed"
+  | "ours"
+  | "removal_stated_before"
+  | "no_usable_capture"
+  | "text_day_unknown"
+  | "page_unreadable_today";
+
+export interface ArchiveBracket {
+  last_old: string;
+  first_new: string | null;
+  last_old_capture?: string | null;
+  first_new_capture?: string | null;
+}
+
+export interface ArchiveCheck {
+  checked: string;
+  outcome: ArchiveCheckOutcome;
+  capture_day?: string | null;
+  brackets?: ArchiveBracket[];
 }
 
 export type PublishedChangeImpact = DealChange["impact"] | "none";

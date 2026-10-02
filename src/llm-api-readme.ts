@@ -1,6 +1,6 @@
 import { BASE_URL } from "./base-url.js";
 import { readingIsBehindTheLoop } from "./badge-staleness.js";
-import { citationLabel, ratingWithheldForNoSourceSentence } from "./change-citation.js";
+import { citationLabel, ratingWithheldSentence, type WithheldRecordCounts } from "./change-citation.js";
 
 import { CHANGE_DIRECTION } from "./change-direction.js";
 import { gateRiskSummary, publishedRisk } from "./data.js";
@@ -30,6 +30,7 @@ import {
   withheldForARefusedRead,
   vendorBadge,
   vendorVerdictSentence,
+  withheldRecordCountsOf,
   type BadgeWithholding,
   type PublishedRiskLevel,
   type VendorVerdictInput,
@@ -144,9 +145,12 @@ function withheldSentence(
   because: BadgeWithholding,
   gate: Gate | null,
   since: string,
+  withheldRecords: WithheldRecordCounts,
 ): string {
   if (because.reason === "gated") return gate ? gateRiskSummary(gate) : `We do not rate an offer we do not list.`;
-  if (because.reason === "no_source") return ratingWithheldForNoSourceSentence(vendor);
+  if (because.reason === "no_source" || because.reason === "unconfirmed") {
+    return ratingWithheldSentence(vendor, withheldRecords);
+  }
   if (withheldForARefusedRead(because)) return refusedReadWithholdingSentence(vendor, because);
   return withheldLevelSentence(because.reason, vendor, since);
 }
@@ -244,7 +248,7 @@ export function readmeRow(offer: Offer, allChanges: DealChange[], context: RowCo
         : {
             kind: "withheld",
             reason: withheldReasonCode(badge.because),
-            sentence: withheldSentence(offer.vendor, badge.because, risk.gate, since),
+            sentence: withheldSentence(offer.vendor, badge.because, risk.gate, since, withheldRecordCountsOf(input)),
           };
 
   const caveats: RowCaveat[] = [];
