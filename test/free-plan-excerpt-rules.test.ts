@@ -142,6 +142,11 @@ describe("a quote repeats no run of its own words", () => {
     assert.strictEqual(repeatsARunOfItsOwnWords(`Free 5 GB ${longest} then 10 TB ${longest} more`), false);
   });
 
+  it("refuses a copy that holds two cards ending in the same eight words", () => {
+    const twoCards = "Get up to $350,000 in credits if you're Seed to Series A Build and grow with $200,000 in cloud credits (or up to $350,000 for AI-first startups) through the Google for Startups Cloud Program. Apply now Get $2,000 to build your MVP Ideate and iterate your MVP with $2,000 in credits with the Google for Startups Cloud Program. Apply now";
+    assert.strictEqual(whyTheExcerptCannotStand(twoCards, { vendor: "Google Cloud", tier: "Startup Program", eligibility: A_STARTUP_PROGRAMME }), EXCERPT_REPEATS_A_RUN_OF_ITS_WORDS);
+  });
+
   it("refuses a copy that is one stretch said twice, however short", () => {
     assert.strictEqual(repeatsARunOfItsOwnWords("Free 5 GB Free 5 GB"), true);
     assert.strictEqual(whyTheExcerptCannotStand("10GB free forever 10GB free forever", { vendor: "Acme", tier: "Free" }), EXCERPT_REPEATS_A_RUN_OF_ITS_WORDS);
