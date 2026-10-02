@@ -41,3 +41,28 @@ describe("reading the quantities a claim states", () => {
     assert.deepStrictEqual(quantitiesNotIn("1 vCPU", []), ["1vcpu"]);
   });
 });
+
+describe("matching a claim's quantities against what we hold", () => {
+  it("reads a quantity whose unit follows words describing it", () => {
+    const listing = "Free web services spin down after 15 minutes, with 750 free instance hours per workspace a month.";
+    assert.deepStrictEqual(quantitiesNotIn("Free (750h/mo)", [listing]), []);
+  });
+
+  it("checks a count the claim states through a describing word", () => {
+    const record = "Arm Ampere A1 at 2 OCPUs and 12 GB total across 1-2 VMs";
+    assert.deepStrictEqual(quantitiesNotIn("4 Arm VMs", [record]), ["4vm"]);
+    assert.deepStrictEqual(quantitiesNotIn("2 Arm VMs", [record]), []);
+  });
+
+  it("stops reading at a word that starts a rate or a new phrase", () => {
+    assert.deepStrictEqual(quantitiesNotIn("0.15 GB", ["$0.15 per GB of transfer"]), ["0.15gb"]);
+    assert.deepStrictEqual(quantitiesNotIn("5 months", ["$5 free credit a month"]), ["5month"]);
+  });
+
+  it("reads every quantity the stricter reading finds", () => {
+    const text = "Basic Droplets from $4/mo (1 vCPU, 512 MB RAM, 10 GB SSD), 500 build minutes";
+    for (const quantity of statedQuantities(text)) {
+      assert.deepStrictEqual(quantitiesNotIn(quantity.replace(/^(\d[\d.]*)(\D+)$/, "$1 $2"), [text]), [], quantity);
+    }
+  });
+});
