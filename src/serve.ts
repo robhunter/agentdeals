@@ -78,7 +78,8 @@ import { configureDurableBackend, hydrateDurableStores, persistDurableStores, id
 import { addFriend, removeFriend, getFriends, getFriendCodesForVendors } from "./friends.js";
 import { changeLogAnchorFor, changeLogVendorMap, toSlug, vendorSlugMap, resolveVendorSlug, namedVendorSlug, comparisonOfOneRecord, recordNamedBySlug, servedVendorSlug, servedVendorSlugForName } from "./vendor-slug.js";
 import { NO_PUSH_NOTICE, watchCommandBlock, watchRequestsFor } from "./change-watching.js";
-import { clauseNaming, quantitiesNotIn } from "./quoted-figures.js";
+import { clauseNaming } from "./quoted-figures.js";
+import { figureProvenanceAgainst, statementsWeHold } from "./figure-provenance.js";
 import { statesNoFreeTier } from "./retired-terms.js";
 import { countsDownTo, shutdownDeadlineHtml } from "./shutdown-deadline.js";
 import { createRegistrationLimiter, rateLimitHeaders } from "./rate-limit.js";
@@ -645,11 +646,7 @@ function refusalsFor(vendorName: string): ChangeRefusal[] {
 }
 
 export function whatWeHoldAbout(vendorName: string): string[] {
-  const stored = offers.filter(o => o.vendor === vendorName).map(o => o.description);
-  const recorded = changesFor(vendorName).flatMap(change =>
-    [change.summary, change.previous_state, change.current_state].filter((text): text is string => typeof text === "string"),
-  );
-  return [...stored, ...recorded];
+  return statementsWeHold(offers.filter(o => o.vendor === vendorName).map(o => o.description), changesFor(vendorName));
 }
 
 function recordedClause(vendorName: string, tier: string, subject: string): string | null {
@@ -673,13 +670,8 @@ function oracleAlwaysFreeSpec(): string {
   return block === "" ? oracleArmAllowance() : `${oracleArmAllowance()}, ${block}`;
 }
 
-export const NO_RECORD_BEHIND_THIS_FIGURE = "Hand-typed — we hold no record";
-export const FIGURE_NOT_IN_OUR_RECORD = "Hand-typed — not in our record";
-
 export function figureProvenance(claim: string, vendorName: string): string | null {
-  const held = whatWeHoldAbout(vendorName);
-  if (held.length === 0) return NO_RECORD_BEHIND_THIS_FIGURE;
-  return quantitiesNotIn(claim, held).length === 0 ? null : FIGURE_NOT_IN_OUR_RECORD;
+  return figureProvenanceAgainst(claim, whatWeHoldAbout(vendorName));
 }
 
 function figureProvenanceHtml(claim: string, vendorName: string, vendorSlug: string): string {
@@ -18911,7 +18903,7 @@ function buildHetznerPricing2026Page(): string {
     { vendor: "Oracle Cloud", spec: oracleArmAllowance(), price: "Free (Always Free)", region: "Global", note: "Best free tier for VMs" },
     { vendor: "Railway", spec: "Free Plan", price: "$0/mo", region: "US", note: "30-day trial with $5 credits, then $1 of free credit a month" },
     { vendor: "Render", spec: "Free Tier", price: "Free (750h/mo)", region: "US", note: "Auto-sleep on free tier" },
-    { vendor: "Fly.io", spec: "shared-cpu-1x, 256 MB", price: "$1.94/mo", region: "Global", note: "No free tier for new accounts — 2 hrs runtime or 7-day trial" },
+    { vendor: "Fly.io", spec: "shared-cpu-1x, 256 MB", price: "From $2.19/mo", region: "Global", note: "No free tier for new accounts — 2 hrs runtime or 7-day trial" },
   ];
 
   const altTableRows = competitorPricing.map(c => {
@@ -32874,7 +32866,7 @@ function buildAppRunnerMigrationPage(): string {
     { name: "Azure Container Apps", slug: "azure", freeTier: "180K vCPU-sec, 360K GiB-sec/mo free", startingPrice: "$0.000024/vCPU-sec", pricingModel: "Per-second (consumption) or dedicated", sourceCodeDeploy: "Yes — source code via buildpacks", autoScaling: "Yes (KEDA-based, scale to zero)", migrationEffort: "Moderate — different cloud, similar concepts", bestFor: "Azure ecosystem, event-driven scaling" },
     { name: "Railway", slug: "railway", freeTier: "$5 trial credit (30 days), then $1 of free credit a month", startingPrice: "$5/mo + usage ($0.000463/vCPU-min)", pricingModel: "Per-minute (vCPU + memory) + subscription", sourceCodeDeploy: "Yes — GitHub/GitLab auto-deploy", autoScaling: "Yes (horizontal + vertical)", migrationEffort: "Low — push to deploy, minimal config", bestFor: "Developer experience, fast deployment" },
     { name: "Render", slug: "render", freeTier: "Free tier (750 hrs/mo, sleeps after inactivity)", startingPrice: "$7/mo (Starter)", pricingModel: "Per-service fixed monthly", sourceCodeDeploy: "Yes — GitHub auto-deploy", autoScaling: "Yes (paid plans)", migrationEffort: "Low — similar DX to App Runner", bestFor: "Simple web services, closest App Runner experience" },
-    { name: "Fly.io", slug: "fly-io", freeTier: "None for new accounts — 2 hrs runtime or 7-day trial", startingPrice: "$1.94/mo (shared-cpu-1x)", pricingModel: "Per-VM + bandwidth", sourceCodeDeploy: "Yes — Dockerfiles + buildpacks", autoScaling: "Yes (scale to zero, multi-region)", migrationEffort: "Low-Moderate — CLI-driven, different paradigm", bestFor: "Multi-region, edge deployment" },
+    { name: "Fly.io", slug: "fly-io", freeTier: "None for new accounts — 2 hrs runtime or 7-day trial", startingPrice: "$2.19/mo (shared-cpu-1x)", pricingModel: "Per-VM + bandwidth", sourceCodeDeploy: "Yes — Dockerfiles + buildpacks", autoScaling: "Yes (scale to zero, multi-region)", migrationEffort: "Low-Moderate — CLI-driven, different paradigm", bestFor: "Multi-region, edge deployment" },
     { name: "DigitalOcean App Platform", slug: "digitalocean", freeTier: "3 static sites free, starter apps $5/mo", startingPrice: "$5/mo (Basic)", pricingModel: "Fixed monthly per app", sourceCodeDeploy: "Yes — GitHub/GitLab auto-deploy", autoScaling: "Yes (Pro+ plans)", migrationEffort: "Low — similar source code deploy model", bestFor: "Simple apps, predictable pricing" },
     { name: "Northflank", slug: "northflank", freeTier: "Free tier (2 services, 0.2 vCPU, 512MB RAM)", startingPrice: "$10/mo (Developer)", pricingModel: "Per-service + resource usage", sourceCodeDeploy: "Yes — buildpacks + Dockerfiles", autoScaling: "Yes", migrationEffort: "Low — designed as PaaS, similar concepts", bestFor: "Full PaaS with CI/CD built-in" },
   ];
@@ -32906,7 +32898,7 @@ function buildAppRunnerMigrationPage(): string {
     { name: "Azure Container Apps", free: "180K vCPU-sec/mo", monthly: "Pay-per-use (scale to zero)", scaling: "Per-second, KEDA events", color: "#3fb950" },
     { name: "Railway", free: "$5 trial credit (30 days), then $1 of free credit a month", monthly: "From $5/mo + usage", scaling: "Per-minute, horizontal", color: "#d29922" },
     { name: "Render", free: "750 hrs/mo (sleeps)", monthly: "From $7/mo (Starter)", scaling: "Fixed + auto-scaling (paid)", color: "#3fb950" },
-    { name: "Fly.io", free: "None (2 hrs or 7-day trial)", monthly: "From $1.94/mo per VM", scaling: "Per-VM, multi-region", color: "#3fb950" },
+    { name: "Fly.io", free: "None (2 hrs or 7-day trial)", monthly: "From $2.19/mo per VM", scaling: "Per-VM, multi-region", color: "#3fb950" },
     { name: "DigitalOcean App Platform", free: "Static sites free", monthly: "From $5/mo (Basic)", scaling: "Fixed monthly per app", color: "#d29922" },
   ].map(r => `<tr>
       <td style="font-weight:600">${escHtmlServer(r.name)}</td>
