@@ -4,7 +4,7 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import {
-  DECLARED_FIGURE_READS, HETZNER_PLAN_TABLE_READ_ON,
+  DECLARED_FIGURE_READS, HETZNER_PLAN_AVAILABILITY_READ_ON, HETZNER_PLAN_TABLE_READ_ON,
   READ_DATES_THAT_ARE_NOT_FIGURE_READS, STORAGE_RATE_CARD_READ_ON, TABLE_STALENESS_DISCLOSURES,
   declaredFigureReadsFor, factsOutdatedBy, newestChangeBySlug, parsePageReviews, referenceDateFor,
   reviewStatus, staleFactPages, utcToday,
@@ -201,12 +201,20 @@ describe("the hetzner plan table is dated by the read that produced it", () => {
     }
   });
 
-  it("keeps the four rows the section-one read does not cover", () => {
-    assert.strictEqual(declared.length, 1);
-    const changed = declared[0]!.read_on;
-    const uncovered = tableFlags(changed, []).filter(slug => !declared[0]!.vendors.includes(slug));
-    assert.ok(uncovered.length >= 4);
-    for (const slug of uncovered) assert.ok(tableFlags(changed).includes(slug));
+  it("keeps the four rows the section-one reads do not cover", () => {
+    assert.ok(declared.length > 0);
+    for (const read of declared) {
+      const uncovered = tableFlags(read.read_on, []).filter(slug => !read.vendors.includes(slug));
+      assert.ok(uncovered.length >= 4, read.covers);
+      for (const slug of uncovered) assert.ok(tableFlags(read.read_on).includes(slug), `${read.covers}: ${slug}`);
+    }
+  });
+
+  it("dates the hetzner row by the newer of its two reads, the prices' read", () => {
+    const [prices, availability] = [HETZNER_PLAN_TABLE_READ_ON, HETZNER_PLAN_AVAILABILITY_READ_ON];
+    assert.ok(prices > availability, "the prices were read after the availability");
+    assert.ok(!tableFlags(dayAfter(availability)).includes("hetzner"));
+    assert.ok(tableFlags(dayAfter(prices)).includes("hetzner"));
   });
 });
 

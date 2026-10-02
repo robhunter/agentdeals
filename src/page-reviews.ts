@@ -562,7 +562,34 @@ export function newestChangeBySlug(
 
 export type FactSurface = "verdict" | "table";
 
-export const HETZNER_PLAN_TABLE_READ_ON = "2026-09-04";
+export function hetznerPricesReadPath(): string {
+  return process.env.AGENTDEALS_HETZNER_PRICES_READ_PATH || path.join(__dirname, "..", "data", "hetzner_prices_read.json");
+}
+
+export function parseHetznerPricesRead(text: string, source: string): string {
+  let raw: unknown;
+  try {
+    raw = JSON.parse(text);
+  } catch (err) {
+    throw new Error(`${source} is not valid JSON: ${(err as Error).message}`);
+  }
+  const readOn = typeof raw === "object" && raw !== null ? (raw as { read_on?: unknown }).read_on : undefined;
+  if (!isReviewDate(readOn)) throw new Error(`${source} must give read_on as a calendar day, YYYY-MM-DD; got ${JSON.stringify(readOn)}`);
+  return readOn;
+}
+
+export function readHetznerPricesRead(file: string = hetznerPricesReadPath()): string {
+  let text: string;
+  try {
+    text = fs.readFileSync(file, "utf-8");
+  } catch (err) {
+    throw new Error(`Cannot read the day Hetzner's prices were read at ${file}: ${(err as Error).message}`);
+  }
+  return parseHetznerPricesRead(text, file);
+}
+
+export const HETZNER_PLAN_TABLE_READ_ON = readHetznerPricesRead();
+export const HETZNER_PLAN_AVAILABILITY_READ_ON = "2026-09-04";
 export const STORAGE_RATE_CARD_READ_ON = "2026-09-07";
 
 export interface DeclaredFigureRead {
@@ -578,8 +605,15 @@ export const DECLARED_FIGURE_READS: readonly DeclaredFigureRead[] = [
     path: "/hetzner-pricing-2026",
     read_on: HETZNER_PLAN_TABLE_READ_ON,
     vendors: ["hetzner"],
+    cited_from: "Hetzner's price API",
+    covers: "the plan prices in section 1",
+  },
+  {
+    path: "/hetzner-pricing-2026",
+    read_on: HETZNER_PLAN_AVAILABILITY_READ_ON,
+    vendors: ["hetzner"],
     cited_from: "hetzner.com",
-    covers: "the plan table in section 1",
+    covers: "the plan names, specs and availability in section 1",
   },
   {
     path: "/storage-comparison-2026",

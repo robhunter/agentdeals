@@ -1,11 +1,13 @@
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
 import { spawn, type ChildProcess } from "node:child_process";
-import { readFileSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import {
   HETZNER_APRIL_CHANGES,
+  HETZNER_AVAILABILITY_READ,
   HETZNER_AX102_GERMANY,
   HETZNER_AX42_GERMANY,
   HETZNER_CLOUD_PLANS,
@@ -15,6 +17,7 @@ import {
   hetznerEntryPriceClause,
   unorderableHetznerPlans,
 } from "../dist/hetzner-pricing.js";
+import { parseHetznerPricesRead } from "../dist/page-reviews.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -22,19 +25,25 @@ const REPO = path.join(__dirname, "..");
 let serverPort = 0;
 let proc: ChildProcess | null = null;
 
-function startServer(): Promise<ChildProcess> {
+function spawnServer(env: Record<string, string> = {}): Promise<{ child: ChildProcess; port: number }> {
   return new Promise((resolve, reject) => {
     const child = spawn("node", [path.join(REPO, "dist", "serve.js")], {
       stdio: ["pipe", "pipe", "pipe"],
-      env: { ...process.env, PORT: "0", BASE_URL: "http://localhost" },
+      env: { ...process.env, PORT: "0", BASE_URL: "http://localhost", ...env },
     });
     const timeout = setTimeout(() => { child.kill(); reject(new Error("Server startup timeout")); }, 30000);
     child.stderr!.on("data", (data: Buffer) => {
       const m = data.toString().match(/running on http:\/\/localhost:(\d+)/);
-      if (m) { serverPort = parseInt(m[1], 10); clearTimeout(timeout); resolve(child); }
+      if (m) { clearTimeout(timeout); resolve({ child, port: parseInt(m[1], 10) }); }
     });
     child.on("error", (err) => { clearTimeout(timeout); reject(err); });
   });
+}
+
+async function startServer(): Promise<ChildProcess> {
+  const { child, port } = await spawnServer();
+  serverPort = port;
+  return child;
 }
 
 const get = async (p: string) => {
@@ -108,9 +117,10 @@ describe("the pricing page prices what Hetzner sells today", () => {
     assert.equal(res.status, 200);
   });
 
-  it("names the date its prices were read", async () => {
+  it("names the date its prices were read, and where from", async () => {
     const { body } = await get("/hetzner-pricing-2026");
-    assert.match(visible(body), new RegExp(`read from hetzner\\.com on ${HETZNER_PRICES_READ}`));
+    assert.ok(visible(body).includes(`Plan prices read from Hetzner's price API on ${HETZNER_PRICES_READ}`));
+    assert.doesNotMatch(visible(body), /read from hetzner\.com on/i);
   });
 
   it("publishes every plan in the table with its price and its availability", async () => {
@@ -184,6 +194,11 @@ describe("every page that states a Hetzner entry price states the same one", () 
   });
 });
 
+const SETUP_FEE_STATEMENTS = {
+  "2 February": "https://www.hetzner.com/pressroom/statement-setup-fees-adjustment/",
+  "29 April": "https://www.hetzner.com/pressroom/statement-on%20the-latest-adjustment-to%20setup-fees/",
+};
+
 const aprilTableRows = (body: string) =>
   [...body.slice(body.indexOf('<h2 id="april">'), body.indexOf('<h2 id="why">')).matchAll(/<tr>([\s\S]*?)<\/tr>/g)]
     .map(row => visible(row[1]).trim())
@@ -221,8 +236,15 @@ describe("the April 1 table holds only rows from Hetzner's April price list", ()
   it("gives the range dedicated servers rose by in April, then what a new AX42 and AX102 cost, directly after the range for cloud servers", async () => {
     const text = visible((await get("/hetzner-pricing-2026")).body);
     assert.ok(text.includes(
-      "against 30-37% in euros. Dedicated servers rose 2-21% in euros and 3-26% in dollars on 1 April 2026. In Germany, the AX42 went from €47.30 to €57.30. A new AX42 now costs €97.30 and a new AX102 €257.30, excluding IPv4, up from €57.30 and €122.30 after April but down from the initial June prices of €187.30 and €452.30, cut on 30 June. Memory upgrades for dedicated servers are not in the April table.",
+      "against 30-37% in euros. Dedicated servers rose 2-21% in euros and 3-26% in dollars on 1 April 2026. In Germany, the AX42 went from €47.30 to €57.30. A new AX42 now costs €97.30 and a new AX102 €257.30, excluding IPv4, up from €57.30 and €122.30 after April but down from the initial June prices of €187.30 and €452.30, cut on 30 June. The one-off setup fee is €49 for an AX42 and €129 for an AX102. Hetzner adjusted setup fees for dedicated servers on 2 February and 29 April 2026, citing RAM and NVMe SSD costs; its statements give no fee amounts. Memory upgrades for dedicated servers are not in the April table.",
     ));
+  });
+
+  it("links each setup-fee adjustment's day to Hetzner's statement of it", async () => {
+    const { body } = await get("/hetzner-pricing-2026");
+    for (const [day, statement] of Object.entries(SETUP_FEE_STATEMENTS)) {
+      assert.ok(body.includes(`<a href="${statement}" target="_blank" rel="noopener">${day}</a>`), `${day} does not link ${statement}`);
+    }
   });
 
   it("no longer advises bundling memory in a dedicated server, which new orders pay the June price for", async () => {
@@ -329,4 +351,49 @@ describe("pages that compared US cloud providers' prices with Hetzner's on no so
       assert.doesNotMatch(visible(body), /3-6x higher|announced increases|US cloud providers:/);
     });
   }
+});
+
+describe("the day /hetzner-pricing-2026 says Hetzner's prices were read", () => {
+  const SCRATCH_DAY = "2026-10-09";
+  let scratch = "";
+  let scratchServer: ChildProcess | null = null;
+  let page = "";
+
+  before(async () => {
+    scratch = mkdtempSync(path.join(tmpdir(), "hetzner-prices-read-"));
+    const file = path.join(scratch, "hetzner_prices_read.json");
+    writeFileSync(file, JSON.stringify({ read_on: SCRATCH_DAY }));
+    const { child, port } = await spawnServer({ AGENTDEALS_HETZNER_PRICES_READ_PATH: file });
+    scratchServer = child;
+    page = await (await fetch(`http://localhost:${port}/hetzner-pricing-2026`)).text();
+  });
+
+  after(() => {
+    if (scratchServer) scratchServer.kill();
+    scratchServer = null;
+    rmSync(scratch, { recursive: true, force: true });
+  });
+
+  it("is the day data/hetzner_prices_read.json gives", () => {
+    const file = JSON.parse(readFileSync(path.join(REPO, "data", "hetzner_prices_read.json"), "utf8"));
+    assert.strictEqual(HETZNER_PRICES_READ, file.read_on);
+  });
+
+  it("is printed from that file in the byline, the meta description, section 1, the methodology and section 6's Hetzner row", () => {
+    const text = visible(page);
+    const description = page.match(/<meta name="description" content="([^"]*)"/)?.[1] ?? "";
+    assert.ok(text.includes(`Plan prices read from Hetzner's price API on ${SCRATCH_DAY}`), "byline");
+    assert.ok(description.includes(`read from Hetzner's price API on ${SCRATCH_DAY}`), description);
+    assert.ok(text.includes(`with the monthly price read from Hetzner's price API on ${SCRATCH_DAY} and the availability hetzner.com showed on ${HETZNER_AVAILABILITY_READ}.`), "section 1");
+    assert.ok(text.includes(`Plan prices in section 1 were read from Hetzner's price API on ${SCRATCH_DAY}`), "methodology");
+    assert.ok(text.includes(`Hetzner's price API, read ${SCRATCH_DAY}`), "section 6");
+    assert.doesNotMatch(text, /read from hetzner\.com on/i);
+  });
+
+  it("is refused unless the file gives a calendar day", () => {
+    assert.strictEqual(parseHetznerPricesRead('{"read_on":"2026-10-02"}', "scratch.json"), "2026-10-02");
+    for (const text of ["{", "null", "{}", '{"read_on":"2026-02-30"}', '{"read_on":"2026-10-2"}', '{"read_on":20261002}']) {
+      assert.throws(() => parseHetznerPricesRead(text, "scratch.json"), /^Error: scratch\.json /, text);
+    }
+  });
 });
