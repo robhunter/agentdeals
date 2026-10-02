@@ -10981,7 +10981,13 @@
       "category": "Security",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-15"
+      "recorded_date": "2026-09-15",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-10-02",
+        "detail": "Retracted 2026-10-02: misdated. The Internet Archive's capture of certkit.io/pricing on 2026-08-18 already names the free plan Homelab, for personal, non-commercial use, and the capture of 2026-07-15 shows the Free plan with no use restriction. The change is recorded as of 2026-08-18.",
+        "source_url": "https://web.archive.org/web/20260818100641/https://www.certkit.io/pricing"
+      }
     },
     {
       "vendor": "Othor AI",
@@ -11118,7 +11124,13 @@
       "category": "DNS & Domain Management",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-18"
+      "recorded_date": "2026-09-18",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-10-02",
+        "detail": "Retracted 2026-10-02: nothing changed on 2026-09-18. IBM launched the 30-day trial on 2025-11-07, and its announcement says an account that does not subscribe when the trial ends moves to a Free Edition with 5 million DNS queries a month, 500 DNS records, 1 filter chain, 2 monitors and 1 HTTPS redirect. The reading compared the pricing page's trial with our listing.",
+        "source_url": "https://community.ibm.com/community/user/blogs/claire-odonovan/2025/11/07/ibm-ns1connect-trial-free-30days"
+      }
     },
     {
       "vendor": "Chanty.com",
@@ -13652,6 +13664,54 @@
       "impact": "medium",
       "source_url": "https://uptimerobot.com/terms/",
       "category": "Monitoring",
+      "alternatives": [],
+      "recorded_date": "2026-10-02",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "CertKit",
+      "change_type": "limits_reduced",
+      "date": "2026-03-21",
+      "summary": "CertKit cut its Free plan from 3 host agents to 1 between 2026-02-19 and 2026-03-21.",
+      "tier": "Free",
+      "tier_direction": "narrowed",
+      "previous_state": "The Free plan had 1 user, 3 certificates and 3 host agents.",
+      "current_state": "The Free plan had 3 certificates, 1 agent and 1 user.",
+      "impact": "medium",
+      "source_url": "https://web.archive.org/web/20260321164409/https://www.certkit.io/pricing",
+      "category": "Security",
+      "alternatives": [],
+      "recorded_date": "2026-10-02",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "CertKit",
+      "change_type": "limits_reduced",
+      "date": "2026-04-08",
+      "summary": "CertKit cut its Free plan from 3 certificates to 2 between 2026-03-21 and 2026-04-08.",
+      "tier": "Free",
+      "tier_direction": "narrowed",
+      "previous_state": "The Free plan had 3 certificates, 1 agent and 1 user.",
+      "current_state": "The Free plan had 2 certificates, 1 agent, 1 user and 3 domain SSL monitors.",
+      "impact": "medium",
+      "source_url": "https://web.archive.org/web/20260408134333/https://www.certkit.io/pricing",
+      "category": "Security",
+      "alternatives": [],
+      "recorded_date": "2026-10-02",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "CertKit",
+      "change_type": "restriction",
+      "date": "2026-08-18",
+      "summary": "CertKit renamed its free plan Homelab and limited it to personal, non-commercial use between 2026-07-15 and 2026-08-18. Its limits stayed at 2 certificates, 1 agent and 1 seat.",
+      "tier": "Free",
+      "tier_direction": "narrowed",
+      "previous_state": "The Free plan had 2 certificates, 1 agent and 1 user, with no use restriction.",
+      "current_state": "Homelab is free for personal, non-commercial use only (homelab, personal projects and personal systems), with 2 certificates, 1 agent, 1 seat and 3 domain SSL monitors. Businesses get a 90-day trial.",
+      "impact": "medium",
+      "source_url": "https://www.certkit.io/pricing",
+      "category": "Security",
       "alternatives": [],
       "recorded_date": "2026-10-02",
       "date_source": "hand_written"
