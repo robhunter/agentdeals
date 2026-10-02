@@ -216,7 +216,19 @@ describe("the character limit belongs to the verifier prompt alone", () => {
     const naming = files
       .filter((f) => readFileSync(path.join(SCRIPTS, f), "utf-8").includes("MAX_PAGE_TEXT_LENGTH"))
       .sort();
-    assert.deepStrictEqual(naming, ["free-plan-excerpt.js", "verify-freshness.js", "whole-page-census.js"]);
+    assert.deepStrictEqual(naming, ["archive-captures.js", "free-plan-excerpt.js", "verify-freshness.js", "whole-page-census.js"]);
+  });
+
+  it("applies the limit to the pages an archive reader is shown only inside the functions that build its prompts", () => {
+    const source = readFileSync(path.join(SCRIPTS, "archive-captures.js"), "utf-8");
+    const builders = ["export function pairedPrompt", "export function statedBeforePrompt"];
+    for (const builder of builders) {
+      const from = source.indexOf(builder);
+      const to = source.indexOf("\n}\n", from);
+      assert.ok(from !== -1 && to > from, builder);
+      assert.match(source.slice(from, to), /maxLength = MAX_PAGE_TEXT_LENGTH/, builder);
+    }
+    assert.strictEqual(source.split("MAX_PAGE_TEXT_LENGTH").length - 1, builders.length + 1);
   });
 
   it("applies the limit inside the function that builds the prompt", () => {

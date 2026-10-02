@@ -212,6 +212,17 @@ describe("verify-freshness", () => {
       assert.strictEqual(body.temperature, 0);
     });
 
+    it("caps the answer at 400 tokens unless the caller asks for more room", async () => {
+      const capsSent: number[] = [];
+      const fetchImpl = async (_url: string, init: any) => {
+        capsSent.push(JSON.parse(init.body).max_tokens);
+        return { ok: true, json: async () => ({ choices: [{ message: { content: "{}" } }] }) };
+      };
+      await createVerifierClient({ apiKey: "test-key", fetchImpl }).complete("one page");
+      await createVerifierClient({ apiKey: "test-key", fetchImpl, maxTokens: 1500 }).complete("two pages");
+      assert.deepStrictEqual(capsSent, [400, 1500]);
+    });
+
     it("defaults to the OpenRouter endpoint", () => {
       assert.strictEqual(createVerifierClient({ apiKey: "test-key" }).baseUrl, VERIFIER_BASE_URL);
       assert.match(VERIFIER_BASE_URL, /^https:\/\/openrouter\.ai\//);
