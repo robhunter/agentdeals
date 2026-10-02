@@ -240,9 +240,17 @@ describe("finding the record a result settles", () => {
 
   it("leaves a record that already carries an archive check as it is, including when two reports settle it", () => {
     const checkedBefore = reading({ archive_check: { checked: "2026-09-30", outcome: "vendor_changed", brackets: [] } });
-    const first = writeSettledRecords([checkedBefore], [{ today: CHECKED, results: [resultFor(checkedBefore, unconfirmed)] }]);
+    const removalStated = {
+      outcome: "removal_stated_before",
+      stated_then: [{ record: "shut down", old: "We are sunsetting the product" }],
+      capture: theCopyFromOurTextDay("2026-02-01"),
+      why: "the capture 2026-02-01 already states the removal, so it predates our text: to be dated",
+      split: SPLIT.removalStatedBefore,
+    };
+    const first = writeSettledRecords([checkedBefore], [{ today: CHECKED, results: [resultFor(checkedBefore, removalStated)] }]);
     assert.strictEqual(first.changes[0], checkedBefore);
     assert.deepStrictEqual(first.not_written.map((entry: Change) => entry.why), [NOT_WRITTEN.alreadyChecked]);
+    assert.deepStrictEqual(first.review, []);
 
     const record = reading();
     const twice = writeSettledRecords([record], [
@@ -305,6 +313,7 @@ describe("writing the report a settle run produced", () => {
       statedReaderForRecord,
       fetchToday: async (url: string) => (url === urlOf("Gamma") ? { ok: false, error: "HTTP 403" } : { ok: true, text: "TERMS=B" }),
       textDayOf: () => "2026-02-10",
+      badgeSetBy: (record: Change) => ({ Gamma: "risky", Delta: "caution", Zeta: "risky" } as Record<string, string>)[record.vendor] ?? null,
     });
     assert.deepStrictEqual(report.results.map((r: Change) => `${r.vendor} ${r.outcome}`), [
       "Alpha vendor_changed",
@@ -315,7 +324,8 @@ describe("writing the report a settle run produced", () => {
       "Zeta reader_failed",
     ]);
 
-    const { changes: written, not_written } = writeSettledRecords(changes, [JSON.parse(JSON.stringify(report))]);
+    const { changes: written, not_written, review } = writeSettledRecords(changes, [JSON.parse(JSON.stringify(report))]);
+    assert.deepStrictEqual(review.map((entry: Change) => `${entry.vendor} ${entry.badge}`), ["Gamma risky", "Delta caution", "Epsilon null"]);
     const byVendor = Object.fromEntries(written.map((change: Change) => [change.vendor, change]));
 
     assert.strictEqual(byVendor.Alpha.date, "2026-05-02");
@@ -375,6 +385,7 @@ describe("writing the report a settle run produced", () => {
       assert.match(run.stdout, /\n {2}vendor_changed: 1\n/);
       assert.match(run.stdout, /dated by the first copy showing the new terms: 1\n/);
       assert.match(run.stdout, /Not written: 0\n/);
+      assert.match(run.stdout, /For review: 0\n/);
     } finally {
       rmSync(dir, { recursive: true, force: true });
     }

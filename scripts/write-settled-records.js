@@ -1,6 +1,6 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { CHANGES_PATH, CORRECTION_TO_OUR_OWN_RECORD, readChangeLog } from "./change-log.js";
-import { recordKey, worthAskingAgain } from "./settle-discovered-records.js";
+import { recordKey, reviewList, worthAskingAgain } from "./settle-discovered-records.js";
 import { differenceInOurTextSummary, OURS_ARCHIVE_OUTCOME } from "../dist/change-confirmation.js";
 
 export const STATED_THEN_SEPARATOR = " · ";
@@ -90,6 +90,7 @@ export function writeSettledRecords(changes, reports) {
   const matching = recordsByVendorAndKey(changes);
   const settled = [...changes];
   const written = [];
+  const writtenResults = [];
   const notWritten = [];
   for (const report of reports) {
     if (!ISO_DAY.test(String(report.today))) throw new Error(`a settle report must give the day it ran as today; got ${report.today}`);
@@ -108,9 +109,10 @@ export function writeSettledRecords(changes, reports) {
         ...(settled[at].date !== result.date ? { dated: settled[at].date } : {}),
         ...(settled[at].change_type !== result.change_type ? { retyped: settled[at].change_type } : {}),
       });
+      writtenResults.push(result);
     }
   }
-  return { changes: settled, written, not_written: notWritten };
+  return { changes: settled, written, not_written: notWritten, review: reviewList(writtenResults) };
 }
 
 export function countsByOutcome(entries) {
@@ -124,7 +126,7 @@ function main() {
   if (reportFiles.length === 0) throw new Error("give one or more settle reports: node scripts/write-settled-records.js settled-first-readings.json");
   const log = readChangeLog(CHANGES_PATH);
   const reports = reportFiles.map((file) => JSON.parse(readFileSync(file, "utf-8")));
-  const { changes, written, not_written } = writeSettledRecords(log.changes, reports);
+  const { changes, written, not_written, review } = writeSettledRecords(log.changes, reports);
   writeFileSync(CHANGES_PATH, `${JSON.stringify({ ...log, changes }, null, 2)}\n`);
   console.log(`Wrote an archive check on ${written.length} records to ${CHANGES_PATH}`);
   for (const [outcome, count] of countsByOutcome(written)) console.log(`  ${outcome}: ${count}`);
@@ -132,6 +134,8 @@ function main() {
   console.log(`  re-typed as our correction: ${written.filter((entry) => entry.retyped).length}`);
   console.log(`Not written: ${not_written.length}`);
   for (const entry of not_written) console.log(`  ${entry.vendor} ${entry.date} ${entry.change_type} (${entry.outcome}): ${entry.why}`);
+  console.log(`For review: ${review.length}`);
+  for (const entry of review) console.log(`  ${entry.vendor} ${entry.date} ${entry.change_type}, badge ${entry.badge ?? "none"}: ${entry.why ?? "no reason given"}`);
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {

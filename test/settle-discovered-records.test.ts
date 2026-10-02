@@ -101,6 +101,19 @@ describe("the review list", () => {
       [["Sunset", "risky", "the capture 2026-02-09 already states the removal, so it predates our text: to be dated", statedThen]],
     );
   });
+
+  it("carries a record that set a badge and could not be checked, because our text's day or today's page could not be read, and leaves one that set none off", () => {
+    const review = reviewList([
+      { vendor: "Undated", date: "2026-08-28", change_type: "limits_reduced", badge: "caution", split: SPLIT.textDayUnknown, outcome: "text_day_unknown" },
+      { vendor: "Unreadable", date: "2026-08-29", change_type: "free_tier_removed", badge: "risky", split: SPLIT.pageUnreadable, outcome: "page_unreadable_today", why: "HTTP 403" },
+      { vendor: "Unbadged", date: "2026-08-30", change_type: "limits_reduced", badge: null, split: SPLIT.pageUnreadable, outcome: "page_unreadable_today", why: "HTTP 403" },
+      { vendor: "Stable", date: "2026-08-31", change_type: "limits_reduced", badge: "stable", split: SPLIT.textDayUnknown, outcome: "text_day_unknown" },
+    ]);
+    assert.deepStrictEqual(
+      review.map((entry: { vendor: string; badge: string; why: string | null }) => [entry.vendor, entry.badge, entry.why]),
+      [["Undated", "caution", null], ["Unreadable", "risky", "HTTP 403"]],
+    );
+  });
 });
 
 describe("the badge a record sets", () => {

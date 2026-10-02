@@ -147,9 +147,16 @@ export async function settleFirstReadings({ changes, offers, today, archive, pai
   return { today, records: backlog.length, split, review: reviewList(results), matches_sharing_only_the_tier_name: tierNameMatchList(results), results };
 }
 
+const UNCHECKED_KEEPING_ITS_BADGE = [SPLIT.textDayUnknown, SPLIT.pageUnreadable];
+
+function goesToReview(result) {
+  if (result.split === SPLIT.noCaptureBadgeToReview || result.split === SPLIT.removalStatedBefore) return true;
+  return UNCHECKED_KEEPING_ITS_BADGE.includes(result.split) && BADGE_LEVELS.includes(result.badge);
+}
+
 export function reviewList(results) {
   return results
-    .filter((result) => result.split === SPLIT.noCaptureBadgeToReview || result.split === SPLIT.removalStatedBefore)
+    .filter(goesToReview)
     .map((result) => ({
       vendor: result.vendor,
       date: result.date,
