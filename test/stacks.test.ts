@@ -116,7 +116,7 @@ describe("stack recommendation logic", () => {
 
   it("a candidate publishes the level its own record does, on every day of the rotation", async () => {
     const { getStackRecommendation } = await import("../dist/stacks.js");
-    const { loadOffers, loadDealChanges, publishedRisk, standingNarrowingsCitingNoSource, classifyStability, withheldStability } = await import("../dist/data.js");
+    const { loadOffers, loadDealChanges, publishedRisk, narrowingsWithholdingStability, classifyStability, withheldStability } = await import("../dist/data.js");
     const { unreachableNoticeForUrl } = await import("../dist/link-health.js");
     const offers = loadOffers();
     const changesByVendor = new Map<string, unknown[]>();
@@ -144,10 +144,9 @@ describe("stack recommendation logic", () => {
             `${date} ${c.vendor}: candidate level does not match the catalogue's`
           );
           const vendorChanges = changesByVendor.get(c.vendor.toLowerCase()) ?? [];
-          const uncited = standingNarrowingsCitingNoSource(vendorChanges);
-          assert.strictEqual(
-            c.stability_withheld === null,
-            uncited.length === 0,
+          assert.deepStrictEqual(
+            c.stability_withheld,
+            narrowingsWithholdingStability(vendorChanges),
             `${date} ${c.vendor}: candidate and catalogue disagree about whether stability is withheld`
           );
           const unreachable = unreachableNoticeForUrl(c.url);

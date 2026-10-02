@@ -1,4 +1,4 @@
-import { searchOffers, loadDealChanges, publishedRisk, levelWithheldStatement, classifyStability, withheldStability, standingNarrowingsCitingNoSource } from "./data.js";
+import { searchOffers, loadDealChanges, publishedRisk, levelWithheldStatement, classifyStability, withheldStability, narrowingsWithholdingStability } from "./data.js";
 import { rankOffers, utcDate, CRITERIA_PATH, DEMOTE_ONLY_POLICY, NOT_MODELLED_NOTICE } from "./ranking.js";
 import type { Demerit, Disclosure, Gate, TieBreak } from "./ranking.js";
 import { verificationLedger } from "./verification-state.js";
@@ -225,7 +225,6 @@ function toCandidate(
 ): StackCandidate {
   const published = publishedRisk(offer, vendorChanges);
   const linkUnreachable = published.link_unreachable;
-  const uncitedNarrowings = standingNarrowingsCitingNoSource(vendorChanges);
   return {
     vendor: offer.vendor,
     tier: offer.tier,
@@ -239,7 +238,7 @@ function toCandidate(
     gate: published.gate,
     level_withheld_because: levelWithheldStatement(offer.vendor, published),
     stability: published.stability,
-    stability_withheld: uncitedNarrowings.length > 0 ? { reason: "no_source", records: uncitedNarrowings.length } : null,
+    stability_withheld: narrowingsWithholdingStability(vendorChanges),
     stability_withheld_because: published.stability_withheld_because,
     link_unreachable: linkUnreachable,
     demerits,
