@@ -254,7 +254,7 @@ describe("the vendor page heading states the ending its badge states", () => {
       badge,
       badgeMonth,
       causeLabel: causeLine?.[1] ?? null,
-      causeDate: causeLine?.[2].match(/\d{4}-\d{2}-\d{2}/)?.[0] ?? null,
+      causeDate: [...(causeLine?.[2] ?? "").matchAll(/\d{4}-\d{2}-\d{2}/g)].at(-1)?.[0] ?? null,
       gate: page.match(/<p class="gate-line"[^>]*><strong[^>]*>([^<]*)<\/strong>/)?.[1] ?? null,
       lapseLine: lapseLine === null ? null : textOf(lapseLine),
       verdict: textOf(page.match(/<div class="quick-verdict">([\s\S]*?)<\/div>/)?.[1] ?? ""),

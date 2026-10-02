@@ -1278,6 +1278,34 @@ describe("#1103 every catalogue record whose stored terms are superseded", () =>
   });
 });
 
+const daysAgo = (days: number) => new Date(Date.now() - days * 86_400_000).toISOString().slice(0, 10);
+
+const A_LISTING_ALREADY_WITHHOLDING = {
+  vendor: "Fixture Workflow Cloud",
+  category: "Notebooks & Data Science",
+  description: "A workflow platform. Free plan includes 5 deployed workflows and 500 minutes of compute a month.",
+  tier: "Free",
+  url: "https://workflow.example/pricing",
+  tags: [],
+  verifiedDate: daysAgo(5),
+  source_check: { checked: daysAgo(5), outcome: "ok", detail: "the page names Fixture Workflow Cloud and states amounts" },
+} as unknown as Offer;
+
+const ITS_ONE_LIMIT_REDUCTION = {
+  vendor: A_LISTING_ALREADY_WITHHOLDING.vendor,
+  change_type: "limits_reduced",
+  date: daysAgo(30),
+  date_source: "discovered",
+  summary: "The free tier now includes 2 users and 5 workflows. Previously 5 deployed workflows and 500 minutes of compute a month.",
+  previous_state: A_LISTING_ALREADY_WITHHOLDING.description,
+  current_state: "Free Hobby tier: 2 users, 5 workflows, managed infrastructure.",
+  impact: "medium",
+  source_url: "https://workflow.example/cloud/",
+  category: "Notebooks & Data Science",
+  alternatives: [],
+  recorded_date: daysAgo(30),
+} as unknown as DealChange;
+
 describe("#1721 what the disclosure reads, and what it no longer reads", () => {
   const WITHHOLDING = supersededPagesRender();
   const NEEDED = new Map<string, string>();
@@ -1304,15 +1332,7 @@ describe("#1721 what the disclosure reads, and what it no longer reads", () => {
           STORED_TERMS_NAMED_AS_PREVIOUS,
         ),
     ),
-    already_withholding: aSubjectThat(
-      "is rated caution on exactly one recorded limit reduction",
-      ({ offer, change }) => {
-        if (change.change_type !== "limits_reduced") return false;
-        const rating = changesRatingTheListedTier(offer, changesFor(offer.vendor));
-        if (rating.length !== 1 || rating[0]!.change_type !== "limits_reduced") return false;
-        return publishedRisk(offer, changesFor(offer.vendor), "2026-09-11").risk_level === "caution";
-      },
-    ),
+    already_withholding: A_LISTING_ALREADY_WITHHOLDING.vendor,
     counted_positive: aSubjectThat(
       "holds a record our own classification counts as positive",
       ({ change }) => CHANGE_DIRECTION_OF[change.change_type] === "positive",
@@ -1340,18 +1360,32 @@ describe("#1721 what the disclosure reads, and what it no longer reads", () => {
   };
 
   const offerFor = (vendor: string): Offer => {
-    const found = offers.find((o) => o.vendor === vendor)!;
+    const found = [...offers, A_LISTING_ALREADY_WITHHOLDING].find((o) => o.vendor === vendor)!;
     assert.ok(found, `${vendor} has left the catalogue — pick another subject for this test`);
     return found;
   };
+  const changesOf = (vendor: string): DealChange[] =>
+    vendor === A_LISTING_ALREADY_WITHHOLDING.vendor ? [ITS_ONE_LIMIT_REDUCTION] : changesFor(vendor);
   const changeFor = (vendor: string): DealChange => {
-    const change = supersedingChange(offerFor(vendor), changesFor(vendor));
+    const change = supersedingChange(offerFor(vendor), changesOf(vendor));
     assert.ok(change, `${vendor} no longer ${NEEDED.get(vendor) ?? "holds a record naming its stored terms as the previous ones"}`);
     return change!;
   };
 
+  let scratch = "";
+
   before(async () => {
-    server = await startServer({});
+    scratch = mkdtempSync(path.join(tmpdir(), "superseded-1721-"));
+    const index = JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf-8"));
+    index.offers.push(A_LISTING_ALREADY_WITHHOLDING);
+    const log = JSON.parse(readFileSync(path.join(REPO, "data", "deal_changes.json"), "utf-8"));
+    log.changes.push(ITS_ONE_LIMIT_REDUCTION);
+    writeFileSync(path.join(scratch, "index.json"), JSON.stringify(index));
+    writeFileSync(path.join(scratch, "deal_changes.json"), JSON.stringify(log));
+    server = await startServer({
+      AGENTDEALS_INDEX_PATH: path.join(scratch, "index.json"),
+      AGENTDEALS_CHANGES_PATH: path.join(scratch, "deal_changes.json"),
+    });
     const at = async (pathname: string) =>
       fetch(`http://localhost:${server!.port}${pathname}`).then((r) => r.text());
     criteria = await at("/criteria");
@@ -1362,7 +1396,10 @@ describe("#1721 what the disclosure reads, and what it no longer reads", () => {
     }
   });
 
-  after(() => { server?.proc.kill(); });
+  after(() => {
+    server?.proc.kill();
+    if (scratch) rmSync(scratch, { recursive: true, force: true });
+  });
 
   it("takes each subject from the record its own vendor name resolves to", () => {
     const addressedElsewhere = WITHHOLDING
@@ -1432,6 +1469,9 @@ describe("#1721 what the disclosure reads, and what it no longer reads", () => {
     assert.ok(unescaped(descriptionBlockOf(page)).includes(STORED_TERMS_WITHHELD_PHRASE), descriptionBlockOf(page));
     assert.match(unescaped(quickVerdictOf(page)), /We rate it caution — one recorded limit reduction/);
     assert.ok(!unescaped(quickVerdictOf(page)).includes(STORED_TERMS_NAMED_AS_PREVIOUS));
+    const rating = changesRatingTheListedTier(offerFor(vendor), changesOf(vendor));
+    assert.deepStrictEqual(rating.map((c: DealChange) => c.change_type), ["limits_reduced"]);
+    assert.strictEqual(publishedRisk(offerFor(vendor), changesOf(vendor)).risk_level, "caution");
   });
 });
 

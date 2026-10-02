@@ -359,9 +359,10 @@ describe("the stdio proxy asks for what it means to return", () => {
     const meanings = (result: Record<string, unknown>) =>
       (result.changes as Record<string, unknown>[]).map((c) => `${c.vendor} ${c.date} ${c.date_meaning}`);
     assert.deepStrictEqual(meanings(concise), meanings(detailed));
-    assert.deepStrictEqual(
-      [...new Set((concise.changes as Record<string, unknown>[]).map((c) => c.date_meaning))].sort(),
-      ["discovered", "effective"],
-    );
+    const stated = [...new Set((concise.changes as Record<string, unknown>[]).map((c) => c.date_meaning))];
+    assert.deepStrictEqual(stated.filter((meaning) => !["discovered", "effective", "effective_by"].includes(meaning as string)), []);
+    for (const meaning of ["discovered", "effective"]) {
+      assert.ok(stated.includes(meaning), `no change in the concise shape has the date meaning ${meaning}`);
+    }
   });
 });

@@ -16,6 +16,7 @@ import {
   classifyStability,
   demotionForChange,
   demotionInForce,
+  demotionWithheld,
   demotionWithheldForNoSource,
   enrichOffers,
   loadDealChanges,
@@ -192,26 +193,25 @@ describe("the shipped catalogue", () => {
     );
   });
 
-  it("withholds a rating for exactly the vendors whose only demoting records cite no source", () => {
-    const expected = [...new Set(
-      loadOffers()
-        .filter((offer) => {
-          const rating = recordsRating(offer);
-          return rating.some(c => demotionWithheldForNoSource(c) !== null)
-            && rating.every(c => demotionInForce(c) === null);
-        })
-        .map(o => o.vendor),
-    )].sort();
-    assert.ok(expected.length > 0, "no vendor in the catalogue rests a rating on a record citing no source");
+  it("withholds a rating for exactly the vendors whose only demoting records cite no source or are unconfirmed", () => {
+    const withholding = loadOffers().filter((offer) => {
+      const rating = recordsRating(offer);
+      return rating.some(c => demotionWithheld(c) !== null)
+        && rating.every(c => demotionInForce(c) === null);
+    });
+    assert.ok(
+      withholding.some(offer => recordsRating(offer).some(c => demotionWithheldForNoSource(c) !== null)),
+      "no vendor in the catalogue rests a rating on a record citing no source",
+    );
     assert.deepStrictEqual(
       [...new Set(enriched.filter(o => o.rating_withheld !== null).map(o => o.vendor))].sort(),
-      expected,
+      [...new Set(withholding.map(o => o.vendor))].sort(),
     );
   });
 
   it("counts the withheld records for the vendor whose rating is withheld", () => {
     for (const offer of enriched.filter(o => o.rating_withheld !== null)) {
-      const expected = recordsRating(offer).filter(c => demotionWithheldForNoSource(c) !== null).length;
+      const expected = recordsRating(offer).filter(c => demotionWithheld(c) !== null).length;
       assert.strictEqual(offer.rating_withheld!.records, expected, offer.vendor);
       assert.ok(expected > 0, `${offer.vendor} withholds a rating on no record`);
     }

@@ -3,6 +3,8 @@ import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
 import { assertPopulationFloor } from "./population-floor.ts";
 import { spawn, type ChildProcess } from "node:child_process";
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import {
@@ -14,6 +16,7 @@ import {
   narrowingChanges,
   narrowingSentence,
   publishedVendorLevel,
+  ratingWithheldForNoSource,
   refusedReadWeHold,
   statesRiskCause,
   vendorBadge,
@@ -22,7 +25,7 @@ import {
   type VendorVerdictInput,
 } from "../dist/vendor-verdict.js";
 import { CHANGE_DIRECTION, gateForOffer, loadDealChanges, loadOffers, refusalsForVendor, vendorRiskAssessment, classifyStability } from "../dist/data.js";
-import { vendorSlugMap } from "../dist/vendor-slug.js";
+import { toSlug, vendorSlugMap } from "../dist/vendor-slug.js";
 import { isNoLongerInForce } from "../dist/change-resolution.js";
 import { changeCitesASource } from "../dist/change-citation.js";
 import { changeDateClause } from "../dist/change-dates.js";
@@ -355,6 +358,7 @@ interface VendorRow {
   ended: boolean;
   badgeEnded: boolean;
   withheld: ReturnType<typeof levelWithheldReason>;
+  ratingWithheld: boolean;
   badgeRendered: boolean;
   sentence: string;
   readAgainOn: string | null;
@@ -405,6 +409,7 @@ function vendorRows(): VendorRow[] {
       badge: endingLabel ?? (badgeEnded ? ENDED_BADGE_LABEL : expected),
       endingLabel,
       withheld,
+      ratingWithheld: ratingWithheldForNoSource(context.input),
       badgeRendered: endingLabel !== null || badgeEnded || !(gate || enriched.risk_level === null || (enriched.link_unreachable && expected === "stable")),
       sentence: vendorVerdictSentence(context.input),
       readAgainOn: refusedReadWeHold(context.input)?.read_again_on ?? null,
@@ -451,7 +456,7 @@ describe("vendor verdict — corpus invariant, computed offline", () => {
         }
         continue;
       }
-      if (row.expected === null && row.withheld) {
+      if (row.expected === null && (row.withheld || row.ratingWithheld)) {
         if (/\bWe rate it\b/.test(row.sentence)) wrong.push(`${row.slug}: rates a vendor whose level we withhold`);
         continue;
       }
@@ -797,12 +802,85 @@ describe("vendor verdict — as rendered", () => {
     );
     assert.match(html, /<div class="detail-label">Discontinued<\/div>\s*<div class="detail-value"[^>]*>2026-08-10<\/div>/);
   });
+});
+
+describe("vendor verdict — a product being sunset with no date past, as rendered", () => {
+  const SUNSETTING = "Fixture Sunsetting Studio";
+  let tmp = "";
+  let proc: ChildProcess | null = null;
+  let port = 0;
+
+  before(async () => {
+    tmp = mkdtempSync(path.join(tmpdir(), "vendor-verdict-sunset-"));
+    const index = JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf-8"));
+    const daysAgo = (days: number) => new Date(Date.now() - days * 86_400_000).toISOString().slice(0, 10);
+    const fiveDaysAgo = daysAgo(5);
+    index.offers.push({
+      vendor: SUNSETTING,
+      category: "Databases",
+      description: "Free plan: 3 projects",
+      tier: "Free",
+      url: "https://sunsetting.example/pricing",
+      tags: [],
+      verifiedDate: fiveDaysAgo,
+      source_check: { checked: fiveDaysAgo, outcome: "ok", detail: `the page names ${SUNSETTING} and states the terms we publish` },
+    });
+    const log = JSON.parse(readFileSync(path.join(REPO, "data", "deal_changes.json"), "utf-8"));
+    log.changes.push({
+      vendor: SUNSETTING,
+      change_type: "product_deprecated",
+      date: daysAgo(30),
+      date_source: "vendor_page",
+      summary: `${SUNSETTING} is being sunset and stops taking new sign-ups.`,
+      previous_state: "Available",
+      current_state: "Being sunset",
+      impact: "high",
+      source_url: "https://sunsetting.example/blog/sunset",
+      category: "Databases",
+      alternatives: [],
+      listing_effect: "ends",
+    });
+    writeFileSync(path.join(tmp, "index.json"), JSON.stringify(index));
+    writeFileSync(path.join(tmp, "deal_changes.json"), JSON.stringify(log));
+    const started = await new Promise<{ child: ChildProcess; port: number }>((resolve, reject) => {
+      const child = spawn("node", [path.join(REPO, "dist", "serve.js")], {
+        stdio: ["pipe", "pipe", "pipe"],
+        env: {
+          ...process.env,
+          PORT: "0",
+          BASE_URL: "http://localhost",
+          AGENTDEALS_INDEX_PATH: path.join(tmp, "index.json"),
+          AGENTDEALS_CHANGES_PATH: path.join(tmp, "deal_changes.json"),
+        },
+      });
+      const timeout = setTimeout(() => { child.kill(); reject(new Error("Server startup timeout")); }, 30000);
+      child.stderr!.on("data", (data: Buffer) => {
+        const m = data.toString().match(/running on http:\/\/localhost:(\d+)/);
+        if (m) { clearTimeout(timeout); resolve({ child, port: parseInt(m[1], 10) }); }
+      });
+      child.on("error", (err) => { clearTimeout(timeout); reject(err); });
+    });
+    proc = started.child;
+    port = started.port;
+  });
+
+  after(() => {
+    proc?.kill();
+    if (tmp) rmSync(tmp, { recursive: true, force: true });
+  });
 
   it("leaves the dated stamp on a product being sunset with no date past", async () => {
-    const html = await get("/vendor/lost-pixel-com");
+    const res = await fetch(`http://localhost:${port}/vendor/${toSlug(SUNSETTING)}`);
+    assert.strictEqual(res.status, 200, `/vendor/${toSlug(SUNSETTING)} responded ${res.status}`);
+    const html = await res.text();
     const pageMeta = html.match(/<p class="page-meta">([\s\S]*?)<\/p>/)?.[1] ?? "";
     assert.match(pageMeta, new RegExp(`(${CONFIRMED_DATE_LABEL}|${UNCONFIRMED_DATE_LABEL}) [A-Z][a-z]+ \\d{4}`));
     assert.doesNotMatch(pageMeta, /Discontinued/);
-    assert.strictEqual(badgeWord(html), "deprecated", "a product being sunset heads with the label its badge carries");
+    const h1 = html.match(/<h1>[\s\S]*?<\/h1>/)?.[0] ?? "";
+    assert.strictEqual(
+      h1.match(/<span class="risk-badge"[^>]*>([a-z ]+)<\/span>/)?.[1] ?? null,
+      "deprecated",
+      "a product being sunset heads with the label its badge carries",
+    );
   });
 });

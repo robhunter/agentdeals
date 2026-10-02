@@ -36,10 +36,18 @@ const OUR_OWN_BOOKKEEPING: Array<[string, (change: DealChange) => DealChange]> =
   ["retyped as a correction", retypedAsACorrection],
 ];
 
+function byVendor(changes: readonly DealChange[]): Map<string, DealChange[]> {
+  const grouped = new Map<string, DealChange[]>();
+  for (const change of changes) grouped.set(change.vendor, [...(grouped.get(change.vendor) ?? []), change]);
+  return grouped;
+}
+
 function storedByVendor(): Map<string, DealChange[]> {
-  const byVendor = new Map<string, DealChange[]>();
-  for (const change of stored) byVendor.set(change.vendor, [...(byVendor.get(change.vendor) ?? []), change]);
-  return byVendor;
+  return byVendor(stored);
+}
+
+function publishedByVendor(): Map<string, DealChange[]> {
+  return byVendor(loadDealChanges());
 }
 
 const slugForVendor = new Map<string, string>([...vendorSlugMap].map(([slug, vendor]) => [vendor, slug]));
@@ -237,7 +245,7 @@ describe("the vendor and alternatives FAQs as served (#1925)", () => {
 
   it("answers in the verdict's words, and counts no vendor change, where every record we hold is ours", async () => {
     const served = loadDealChanges();
-    const allOurs = [...storedByVendor()]
+    const allOurs = [...publishedByVendor()]
       .filter(([vendor, records]) => slugForVendor.has(vendor) && records.every(isOurOwnBookkeeping))
       .map(([vendor]) => vendor);
     assertPopulationFloor(allOurs.length, 1, "vendors whose every record is our own bookkeeping");
