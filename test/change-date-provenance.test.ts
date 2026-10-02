@@ -621,9 +621,9 @@ describe("no surface renders a discovery date as the date the vendor changed som
   it("labels a compared vendor's change in the browser as the server labels it", async () => {
     const browserLabeller = async (port: number) => {
       const page = await (await fetch(`http://localhost:${port}/compare-tool`)).text();
-      const constants = [...page.matchAll(/var (?:EFFECTIVE_DATE_PREFIX|DISCOVERED_DATE_PREFIX|UNKNOWN_EFFECTIVE_DATE_MARKER|EFFECTIVE_BY_DATE_MEANING|BRACKETED_DATE_PREFIX) = [^;]+;/g)];
+      const constants = [...page.matchAll(/var (?:EFFECTIVE_DATE_PREFIX|DISCOVERED_DATE_PREFIX|UNKNOWN_EFFECTIVE_DATE_MARKER|EFFECTIVE_BY_DATE_MEANING|BRACKETED_DATE_PREFIX|RECORDED_DATE_PREFIX|CORRECTED_DATE_PREFIX|CORRECTION_TO_OUR_OWN_RECORD|OURS_ARCHIVE_OUTCOME) = [^;]+;/g)];
       const labeller = page.match(/function changeEntryDateLabel\(c\) \{[\s\S]*?\n  \}/);
-      assert.strictEqual(constants.length, 5, "the compare tool no longer ships the words it labels dates with");
+      assert.strictEqual(constants.length, 9, "the compare tool no longer ships the words it labels dates with");
       assert.ok(labeller, "the compare tool no longer labels dates in the browser");
       return new Function(`${constants.map((m) => m[0]).join("\n")}\n${labeller![0]}\nreturn changeEntryDateLabel;`)();
     };
