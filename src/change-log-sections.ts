@@ -1,6 +1,6 @@
 import type { DealChange } from "./types.js";
 import { changesTheVendorMade, isOurOwnBookkeeping } from "./data.js";
-import { partitionByDateProvenance } from "./change-dates.js";
+import { groupByMonth, partitionByDateProvenance } from "./change-dates.js";
 
 type LoggedChange = Pick<DealChange, "date" | "date_source" | "recorded_date" | "change_type"> & {
   resolution?: DealChange["resolution"];
@@ -33,14 +33,7 @@ function newestFirst<T extends { date: string }>(changes: readonly T[]): T[] {
 }
 
 function monthGroupsNewestFirst<T extends { date: string }>(changes: readonly T[]): MonthGroup<T>[] {
-  const groups = new Map<string, T[]>();
-  for (const change of newestFirst(changes)) {
-    const month = change.date.slice(0, 7);
-    const group = groups.get(month);
-    if (group) group.push(change);
-    else groups.set(month, [change]);
-  }
-  return [...groups].map(([month, grouped]) => ({ month, changes: grouped }));
+  return [...groupByMonth(newestFirst(changes))].reverse().map(([month, grouped]) => ({ month, changes: grouped }));
 }
 
 export function changeLogSections<T extends LoggedChange>(changes: readonly T[], today: string): ChangeLogSections<T> {

@@ -478,7 +478,8 @@ describe("no surface renders a discovery date as the date the vendor changed som
   it("never puts the discovery inside a calendar month", async () => {
     for (const [route, prefix] of [["/changes", "chg"], ["/pricing-changes", "pc"]] as const) {
       const { dated, discovered } = await bodies(route);
-      const monthsOf = (html: string) => regionFrom(html, '<div class="month-group">');
+      const monthsOf = (html: string) =>
+        html.split('<div class="month-group').filter(group => group.startsWith('">')).join("");
       assert.ok(
         countEntriesFor(monthsOf(discovered), prefix, CONTROL) >= 1,
         `${route} rendered no dated entry in a month group, so the absence below proves nothing`
