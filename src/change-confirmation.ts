@@ -1,6 +1,15 @@
-import type { ArchiveCheck } from "./types.js";
+import type { ArchiveCheck, ArchiveCheckOutcome } from "./types.js";
 
 export const UNCONFIRMED_ARCHIVE_OUTCOME = "no_usable_capture";
+
+export const ARCHIVE_CHECK_OUTCOMES: ArchiveCheckOutcome[] = [
+  "vendor_changed",
+  "ours",
+  "removal_stated_before",
+  UNCONFIRMED_ARCHIVE_OUTCOME,
+  "text_day_unknown",
+  "page_unreadable_today",
+];
 
 export type ConfirmableChange = { archive_check?: ArchiveCheck | null };
 

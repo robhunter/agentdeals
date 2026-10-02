@@ -462,6 +462,23 @@ export function standingNarrowingsCitingNoSource(vendorChanges: readonly DealCha
   );
 }
 
+export function standingNarrowingsUnconfirmed(vendorChanges: readonly DealChange[]): DealChange[] {
+  return vendorChanges.filter(
+    (c) =>
+      changeCitesASource(c) &&
+      changeIsUnconfirmed(c) &&
+      !isNoLongerInForce(c) &&
+      NEGATIVE_STABILITY_TYPES.has(c.change_type),
+  );
+}
+
+export function narrowingsWithholdingStability(vendorChanges: readonly DealChange[]): RatingWithheld | null {
+  const uncited = standingNarrowingsCitingNoSource(vendorChanges).length;
+  const unconfirmed = standingNarrowingsUnconfirmed(vendorChanges).length;
+  if (unconfirmed > 0) return { reason: "unconfirmed", records: uncited + unconfirmed };
+  return uncited > 0 ? { reason: "no_source", records: uncited } : null;
+}
+
 export interface StabilityWithholding {
   link_unreachable: LinkUnreachable | null;
   refused_read: RefusedReadWeHold | null;
@@ -479,7 +496,8 @@ export function stabilityWithholdingReason(
   const sourceCheck = levelWithheldReason({ source_check: withholding.source_check ?? undefined }, null);
   if (sourceCheck) return sourceCheck;
   if (withholding.rating_withheld) return withholding.rating_withheld.reason;
-  if (standingNarrowingsCitingNoSource(vendorChanges).length > 0) return "no_source";
+  const narrowings = narrowingsWithholdingStability(vendorChanges);
+  if (narrowings) return narrowings.reason;
   if (withholding.gate) return withholding.gate.code;
   return null;
 }

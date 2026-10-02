@@ -1,15 +1,19 @@
 import { describe, it } from "node:test";
 import assert from "node:assert";
+import { readFileSync } from "node:fs";
 import {
   classifyStability,
   demotionForChange,
   demotionInForce,
   demotionWithheldUnconfirmed,
+  narrowingsWithholdingStability,
+  publishedRisk,
   stabilityWithholdingReason,
   vendorRiskAssessment,
   withheldRecordCounts,
+  withheldStability,
 } from "../dist/data.js";
-import { changeIsUnconfirmed } from "../dist/change-confirmation.js";
+import { ARCHIVE_CHECK_OUTCOMES, changeIsUnconfirmed } from "../dist/change-confirmation.js";
 import {
   changeSummaryHtml,
   changeSummaryMarkdown,
@@ -50,6 +54,18 @@ describe("a change no archived copy of the vendor's page could confirm", () => {
     for (const outcome of ["vendor_changed", "ours", "removal_stated_before", "text_day_unknown", "page_unreadable_today"] as const) {
       assert.strictEqual(changeIsUnconfirmed(record(checkedAs(outcome))), false, outcome);
     }
+  });
+
+  it("is one of the outcomes a finished archive check can write, each of which the schema lists", () => {
+    const written = new Set<string>();
+    for (const script of ["scripts/archive-captures.js", "scripts/settle-discovered-records.js"]) {
+      for (const [, outcome] of readFileSync(new URL(`../${script}`, import.meta.url), "utf-8").matchAll(/outcome: "([a-z_]+)"/g)) {
+        written.add(outcome!);
+      }
+    }
+    const askedAgain = "reader_failed";
+    assert.ok(written.delete(askedAgain), `${askedAgain} is no longer an outcome the settle script retries`);
+    assert.deepStrictEqual([...written].sort(), [...ARCHIVE_CHECK_OUTCOMES].sort());
   });
 
   it("carries no demotion, where the same record confirmed carries one", () => {
@@ -133,6 +149,63 @@ describe("a rating withheld for records of both kinds", () => {
   });
 });
 
+describe("a standing narrowing no archived copy could confirm, for the stability class", () => {
+  const uncited = (over: Partial<DealChange> = {}) => record({ source_url: "", ...over });
+  const narrowing = { change_type: "limits_reduced" } as const;
+  const nothingElseWithholds = { link_unreachable: null, refused_read: null, rating_withheld: null, source_check: null, gate: null };
+
+  it("withholds a favourable class, as an uncited narrowing does, and leaves an adverse one", () => {
+    const changes = [unconfirmed(narrowing)];
+    assert.strictEqual(stabilityWithholdingReason(nothingElseWithholds, changes), "unconfirmed");
+    assert.strictEqual(withheldStability(nothingElseWithholds, "stable", changes), null);
+    assert.strictEqual(withheldStability(nothingElseWithholds, "improving", changes), null);
+    assert.strictEqual(withheldStability(nothingElseWithholds, "watch", changes), "watch");
+    assert.strictEqual(stabilityWithholdingReason(nothingElseWithholds, [uncited(narrowing)]), "no_source");
+  });
+
+  it("names unconfirmed where both kinds stand, and counts both", () => {
+    assert.deepStrictEqual(narrowingsWithholdingStability([unconfirmed(narrowing)]), { reason: "unconfirmed", records: 1 });
+    assert.deepStrictEqual(narrowingsWithholdingStability([uncited(narrowing)]), { reason: "no_source", records: 1 });
+    assert.deepStrictEqual(
+      narrowingsWithholdingStability([uncited(narrowing), unconfirmed(narrowing), unconfirmed({ ...narrowing, date: "2026-08-02" })]),
+      { reason: "unconfirmed", records: 3 },
+    );
+    assert.strictEqual(stabilityWithholdingReason(nothingElseWithholds, [uncited(narrowing), unconfirmed(narrowing)]), "unconfirmed");
+  });
+
+  it("takes no account of a confirmed narrowing, a widening, a retracted record or a record that cites nothing", () => {
+    assert.strictEqual(narrowingsWithholdingStability([record({ ...narrowing, ...checkedAs("vendor_changed") })]), null);
+    assert.strictEqual(narrowingsWithholdingStability([unconfirmed({ change_type: "limits_increased" })]), null);
+    const retracted = unconfirmed({ ...narrowing, resolution: { state: "retracted", date: "2026-08-10" } });
+    assert.strictEqual(narrowingsWithholdingStability([retracted]), null);
+    assert.deepStrictEqual(narrowingsWithholdingStability([unconfirmed({ ...narrowing, source_url: "" })]), { reason: "no_source", records: 1 });
+  });
+
+  it("withholds the class of a listing whose only narrowing sets no label and could not be confirmed", () => {
+    const offer = {
+      vendor: "Fixture Vendor",
+      category: "Databases",
+      description: "Free plan: 5 GB.",
+      tier: "Free",
+      url: "https://example.com/pricing",
+      tags: [],
+      verifiedDate: "2026-09-01",
+      source_check: { checked: "2026-09-01", outcome: "ok", detail: "the page names Fixture Vendor and states the terms we publish" },
+    } as unknown as Parameters<typeof publishedRisk>[0];
+    const deprecation = { change_type: "product_deprecated", listing_effect: "none" } as Partial<DealChange>;
+
+    const unconfirmedOnly = publishedRisk(offer, [unconfirmed(deprecation)], "2026-09-05", NOW);
+    assert.strictEqual(unconfirmedOnly.rating_withheld, null);
+    assert.strictEqual(unconfirmedOnly.risk_level, "stable");
+    assert.strictEqual(unconfirmedOnly.stability, null);
+    assert.strictEqual(unconfirmedOnly.stability_withheld_because, "unconfirmed");
+
+    const confirmed = publishedRisk(offer, [record({ ...deprecation, ...checkedAs("vendor_changed") })], "2026-09-05", NOW);
+    assert.strictEqual(confirmed.stability, "watch");
+    assert.strictEqual(confirmed.stability_withheld_because, null);
+  });
+});
+
 describe("the sentence a vendor page gives for a withheld rating", () => {
   const vendor = "Fixture Vendor";
 
@@ -142,7 +215,11 @@ describe("the sentence a vendor page gives for a withheld rating", () => {
       ratingWithheldSentence(vendor, { unsourced: 2, unconfirmed: 0 }),
       "The only records that would rate Fixture Vendor cite no source, so we are not publishing a rating for it.",
     );
-    assert.strictEqual(ratingWithheldClause({ unsourced: 2, unconfirmed: 0 }), ratingWithheldForNoSourceClause());
+    assert.strictEqual(ratingWithheldClause({ unsourced: 1, unconfirmed: 0 }), ratingWithheldForNoSourceClause());
+    assert.strictEqual(
+      ratingWithheldClause({ unsourced: 2, unconfirmed: 0 }),
+      "the only records that would rate it cite no source",
+    );
   });
 
   it("says one unconfirmed record could not be checked against an archived copy", () => {

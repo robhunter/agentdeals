@@ -181,7 +181,9 @@ export function ratingWithheldSentence(vendor: string, withheld: WithheldRecordC
 }
 
 export function ratingWithheldClause(withheld: WithheldRecordCounts): string {
-  if (withheld.unconfirmed === 0) return ratingWithheldForNoSourceClause();
+  if (withheld.unconfirmed === 0) {
+    return withheld.unsourced > 1 ? "the only records that would rate it cite no source" : ratingWithheldForNoSourceClause();
+  }
   if (withheld.unsourced > 0) {
     return "the only records that would rate it either cite no source or are changes we could not check against an archived copy of its page";
   }

@@ -10,6 +10,7 @@ import { CHANGE_STANDINGS, INCLUDE_RETRACTED_ACCEPTS } from "./change-resolution
 import { CHANGE_SLICES, CENSUS_NOTE, INCLUDE_INDEX_HOUSEKEEPING_ACCEPTS, INDEX_HOUSEKEEPING_REPORTS, TRACKED_CHANGE_RULE_PATH, TRACKED_CHANGE_RULE_SENTENCE } from "./change-census.js";
 import { EFFECTIVE_DATE_PREFIX, DISCOVERED_DATE_PREFIX } from "./change-dates.js";
 import { DEPRECATION_CALLS } from "./product-deprecation.js";
+import { ARCHIVE_CHECK_OUTCOMES, UNCONFIRMED_ARCHIVE_OUTCOME } from "./change-confirmation.js";
 
 export const CHANGE_TYPES: readonly string[] = Object.keys(CHANGE_DIRECTION);
 
@@ -18,6 +19,17 @@ export const PROVENANCE_REF = "#/components/schemas/Provenance";
 const ENDS_A_FREE_TIER_PROPERTY = { type: "boolean" };
 
 const LISTING_EFFECT_PROPERTY = { type: "string", enum: [...DEPRECATION_CALLS] };
+
+const ARCHIVE_CHECK_PROPERTY = {
+  type: "object",
+  nullable: true,
+  description: `Our check of this record against archived copies of the vendor's page (#1952). Absent where we have not checked the record. Only the outcome ${UNCONFIRMED_ARCHIVE_OUTCOME} changes how the record counts: it sets no caution or risky label, and where it is the only record that would, the vendor's rating is withheld (rating_withheld, reason unconfirmed) rather than reported as stable; a standing narrowing with it also withholds a favourable stability class; and our pages mark the record unconfirmed. Every other outcome leaves the record counting as it did before the check.`,
+  properties: {
+    checked: { type: "string", format: "date", description: "The day we ran the check." },
+    outcome: { type: "string", enum: [...ARCHIVE_CHECK_OUTCOMES], description: "'vendor_changed' — archived copies show the vendor's page changing. 'ours' — the archived copy from when our listing text was written already states what the record calls new, so the difference was in our text, not on the vendor's page. 'removal_stated_before' — that archived copy already states the removal, so the removal predates our text. 'no_usable_capture' — no archived copy could settle the record either way. 'text_day_unknown' — we do not know when our listing text was written, so there was no capture to compare. 'page_unreadable_today' — we could not read the vendor's page when we ran the check, so no comparison ran." }
+  },
+  required: ["checked", "outcome"]
+};
 
 export const PATHS_OUTSIDE_THE_ENDPOINT_INVENTORY: Record<string, string> = {
   "/feed.xml": "The Atom alias every page's <link rel=\"alternate\"> points at. /api/feed serves the same body and is the name the endpoint inventory holds it under.",
@@ -765,8 +777,8 @@ const DOCUMENTED_OPERATIONS: Record<string, Record<string, any>> = {
                               gate: { type: "object", nullable: true, description: "Non-null for an offer we have decided not to list (#1241). A candidate set is drawn from ungated offers, so this is null in practice and is carried because the level's rules are one set." },
                               source_check: { type: "object", nullable: true, description: "Our last read of the page we cite. An outcome other than ok withholds a favourable level." },
                               level_withheld_because: { type: "string", nullable: true, description: "The sentence naming the rule that withheld the level, or null where a level is published." },
-                              stability: { type: "string", enum: ["stable", "watch", "volatile", "improving"], nullable: true, description: "Null where a favourable class would rest on records we cannot stand behind (#1561). Withheld by every reason that withholds risk_level: an unreachable pricing page, a page stating no amount, tier or rate we can read, a refused read, a narrowing citing no source, or a gated listing. A null always arrives with stability_withheld_because." },
-                              stability_withheld: { type: "object", nullable: true, description: "Non-null where a standing narrowing for this vendor cites no source, so a favourable stability class is withheld rather than published.", properties: { reason: { type: "string", enum: ["no_source"] }, records: { type: "number" } } },
+                              stability: { type: "string", enum: ["stable", "watch", "volatile", "improving"], nullable: true, description: "Null where a favourable class would rest on records we cannot stand behind (#1561). Withheld by every reason that withholds risk_level: an unreachable pricing page, a page stating no amount, tier or rate we can read, a refused read, a narrowing that cites no source or that no archived copy of the vendor's page has confirmed, or a gated listing. A null always arrives with stability_withheld_because." },
+                              stability_withheld: { type: "object", nullable: true, description: "Non-null where a standing narrowing for this vendor cites no source (no_source) or is a change our automatic re-read recorded that neither an archived copy of the vendor's page nor our own check has confirmed (unconfirmed, #1952), so a favourable stability class is withheld rather than published. Where both kinds stand, reason is unconfirmed; records counts both.", properties: { reason: { type: "string", enum: ["no_source", "unconfirmed"] }, records: { type: "number" } } },
                               stability_withheld_because: { type: "string", nullable: true, description: "The code naming the rule that withheld the stability class, or null where a class is published." },
                               link_unreachable: { type: "object", nullable: true, description: "Non-null where the offer's own link has not resolved for us (#1046).", properties: { last_reachable: { type: "string", nullable: true }, checked: { type: "string" }, terminal: { type: "boolean" } } },
                               demerits: { type: "array", description: "Empty when we hold nothing against the offer.", items: { type: "object", properties: { code: { type: "string" }, points: { type: "integer" }, reason: { type: "string" }, date: { type: "string" }, about_us: { type: "boolean", description: "True when the demerit describes a limit of ours rather than a fact about the vendor." } } } },
@@ -1610,7 +1622,8 @@ export const openapiSpec = {
               impact: { type: "string", enum: ["high", "medium", "low", "none"], description: "'none' whenever standing is 'retracted' — a record we have withdrawn describes no event, so it weighs nothing. Derived at the point of serving; the stored value is left alone." },
               date_meaning: { type: "string", enum: [EFFECTIVE_DATE_PREFIX, DISCOVERED_DATE_PREFIX], description: "What this record's date means. \"effective\": the day the change took effect. \"discovered\": the day we recorded the change; when it took effect is unknown. Read this field, not date_source: date_source says who wrote the record, not what its date means." },
               ends_a_free_tier: ENDS_A_FREE_TIER_PROPERTY,
-              listing_effect: LISTING_EFFECT_PROPERTY
+              listing_effect: LISTING_EFFECT_PROPERTY,
+              archive_check: ARCHIVE_CHECK_PROPERTY
             },
             required: ["standing", "date_meaning", "ends_a_free_tier"]
           }

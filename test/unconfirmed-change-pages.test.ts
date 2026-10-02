@@ -7,7 +7,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { toSlug } from "../dist/vendor-slug.js";
 import { unconfirmedChangeNotice, ratingWithheldSentence } from "../dist/change-citation.js";
-import { AN_UNCONFIRMED_CHANGE_SETS_NO_LABEL } from "../dist/change-confirmation.js";
+import { AN_UNCONFIRMED_CHANGE_SETS_NO_LABEL, ARCHIVE_CHECK_OUTCOMES } from "../dist/change-confirmation.js";
 import { WITHHOLDING_BADGE_LABELS } from "../dist/vendor-verdict.js";
 
 const REPO = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -16,6 +16,8 @@ const daysFromToday = (days: number): string => new Date(Date.now() + days * DAY
 
 const UNCONFIRMED = "Unconfirmed Change Fixture Hosting";
 const CONFIRMED = "Confirmed Change Fixture Hosting";
+const NARROWED = "Unconfirmed Narrowing Fixture Store";
+const NARROWED_CATEGORY = "Unconfirmed Narrowing Fixture Storage";
 const CONFIRMED_ON = daysFromToday(-5);
 const RECORDED_ON = daysFromToday(-20);
 
@@ -47,6 +49,22 @@ function removalRecordFor(vendor: string, outcome: string) {
     recorded_date: RECORDED_ON,
     date_source: "discovered",
     archive_check: { checked: CONFIRMED_ON, outcome },
+  };
+}
+
+function narrowedListing() {
+  return { ...listingFor(NARROWED), category: NARROWED_CATEGORY, description: "Free plan: 1 GB and 100 hours a month." };
+}
+
+function unconfirmedNarrowingRecord() {
+  return {
+    ...removalRecordFor(NARROWED, "no_usable_capture"),
+    change_type: "limits_reduced",
+    summary: "The free plan's storage fell from 2 GB to 1 GB.",
+    previous_state: "Free plan: 2 GB and 100 hours a month.",
+    current_state: "Free plan: 1 GB and 100 hours a month.",
+    impact: "medium",
+    category: NARROWED_CATEGORY,
   };
 }
 
@@ -84,9 +102,13 @@ describe("a vendor whose only label-setting change no archived copy could confir
   before(async () => {
     tmp = mkdtempSync(path.join(tmpdir(), "unconfirmed-change-pages-"));
     const index = JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf-8"));
-    index.offers.push(listingFor(UNCONFIRMED), listingFor(CONFIRMED));
+    index.offers.push(listingFor(UNCONFIRMED), listingFor(CONFIRMED), narrowedListing());
     const changes = JSON.parse(readFileSync(path.join(REPO, "data", "deal_changes.json"), "utf-8"));
-    changes.changes.push(removalRecordFor(UNCONFIRMED, "no_usable_capture"), removalRecordFor(CONFIRMED, "vendor_changed"));
+    changes.changes.push(
+      removalRecordFor(UNCONFIRMED, "no_usable_capture"),
+      removalRecordFor(CONFIRMED, "vendor_changed"),
+      unconfirmedNarrowingRecord(),
+    );
     writeFileSync(path.join(tmp, "index.json"), JSON.stringify(index));
     writeFileSync(path.join(tmp, "deal_changes.json"), JSON.stringify(changes));
     server = await startServer({
@@ -146,5 +168,32 @@ describe("a vendor whose only label-setting change no archived copy could confir
       vendorRisk.properties.risk_level.description,
       /rating_withheld is non-null \(#1352, #1952\): the only records that would rate this vendor cite no source or are changes no archived copy of its page has confirmed\./,
     );
+  });
+
+  it("withholds a stack candidate's favourable class for an unconfirmed narrowing and says so", async () => {
+    const body = await (await get(`/api/stack?use_case=fixture&requirements=${encodeURIComponent(NARROWED_CATEGORY)}`)).json();
+    const candidate = body.stack.flatMap((role: { candidates: unknown[] }) => role.candidates)
+      .find((c: { vendor: string }) => c.vendor === NARROWED) as Record<string, unknown> | undefined;
+    assert.ok(candidate, JSON.stringify(body).slice(0, 400));
+    assert.deepStrictEqual(candidate.stability_withheld, { reason: "unconfirmed", records: 1 });
+    assert.strictEqual(candidate.stability, null);
+    assert.strictEqual(candidate.stability_withheld_because, "unconfirmed");
+  });
+
+  it("documents the archive check that /api/changes serves on a record", async () => {
+    const served = await (await get(`/api/changes?vendor=${encodeURIComponent(UNCONFIRMED)}&since=2020-01-01`)).json();
+    const marked = served.changes.find((c: { vendor: string }) => c.vendor === UNCONFIRMED);
+    assert.strictEqual(marked?.archive_check?.outcome, "no_usable_capture", JSON.stringify(served).slice(0, 400));
+
+    const schema = JSON.parse(await (await get("/openapi.json")).text());
+    const published = schema.components.schemas.PublishedDealChange.allOf[1].properties;
+    assert.deepStrictEqual(published.archive_check.properties.outcome.enum, ARCHIVE_CHECK_OUTCOMES);
+    assert.match(published.archive_check.description, /Only the outcome no_usable_capture changes how the record counts/);
+
+    const stackCandidate = schema.paths["/api/stack"].get.responses["200"].content["application/json"].schema
+      .properties.stack.items.properties.candidates.items.properties;
+    assert.deepStrictEqual(stackCandidate.stability_withheld.properties.reason.enum, ["no_source", "unconfirmed"]);
+    assert.match(stackCandidate.stability_withheld.description, /\(unconfirmed, #1952\), so a favourable stability class is withheld rather than published\. Where both kinds stand, reason is unconfirmed; records counts both\./);
+    assert.match(stackCandidate.stability.description, /a narrowing that cites no source or that no archived copy of the vendor's page has confirmed, or a gated listing\./);
   });
 });
