@@ -141,5 +141,10 @@ describe("a vendor whose only label-setting change no archived copy could confir
     assert.ok(decoded(await (await get("/criteria")).text()).includes(AN_UNCONFIRMED_CHANGE_SETS_NO_LABEL));
     const schema = await (await get("/openapi.json")).text();
     assert.ok(schema.includes('"enum":["no_source","unconfirmed"]'), "the schema lists both withholding reasons");
+    const vendorRisk = JSON.parse(schema).paths["/api/vendor-risk/{vendor}"].get.responses["200"].content["application/json"].schema;
+    assert.match(
+      vendorRisk.properties.risk_level.description,
+      /rating_withheld is non-null \(#1352, #1952\): the only records that would rate this vendor cite no source or are changes no archived copy of its page has confirmed\./,
+    );
   });
 });
