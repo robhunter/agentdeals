@@ -1,3 +1,5 @@
+import { changeIsUnconfirmed, type ConfirmableChange } from "./change-confirmation.js";
+
 export interface CitableChange {
   source_url?: string | null;
 }
@@ -6,7 +8,7 @@ export interface SummarisedChange extends CitableChange {
   summary?: string | null;
 }
 
-export interface CitableChangeRow extends CitableChange {
+export interface CitableChangeRow extends CitableChange, ConfirmableChange {
   vendor: string;
   summary: string;
 }
@@ -91,6 +93,19 @@ export function uncitedChangeNoticeHtml(vendor: string, esc: (text: string) => s
   );
 }
 
+export const UNCONFIRMED_NOTE_CLASS = "unconfirmed-note";
+
+function unconfirmedChangeNoticeHtml(vendor: string, esc: (text: string) => string): string {
+  return (
+    `<span class="${UNCONFIRMED_NOTE_CLASS}" style="${UNCITED_NOTE_STYLE}">` +
+    `${esc(unconfirmedChangeNotice(vendor))}</span>`
+  );
+}
+
+function standsUnconfirmed(change: CitableChangeRow): boolean {
+  return changeCitesASource(change) && changeIsUnconfirmed(change);
+}
+
 export function changeCitationHtml(change: CitableChangeRow, esc: (text: string) => string): string {
   return changeCitesASource(change)
     ? changeSourceLinkHtml(change, esc)
@@ -105,7 +120,8 @@ export function changeSummaryHtml(
   const summary = change.summary ?? "";
   const shown =
     limit !== undefined && summary.length > limit ? `${summary.slice(0, limit - 3)}...` : summary;
-  return `${esc(shown)} ${changeCitationHtml(change, esc)}`;
+  const unconfirmed = standsUnconfirmed(change) ? `${unconfirmedChangeNoticeHtml(change.vendor, esc)} ` : "";
+  return `${esc(shown)} ${unconfirmed}${changeCitationHtml(change, esc)}`;
 }
 
 export function citedClaimHtml(
@@ -121,15 +137,19 @@ export function citedClaimHtml(
     : `<span class="${UNCITED_NOTE_CLASS}" style="${style}" title="${tip}">${esc(label)}</span>`;
 }
 
+function summaryThenConfirmation(change: CitableChangeRow): string {
+  return standsUnconfirmed(change) ? `${change.summary} ${unconfirmedChangeNotice(change.vendor)}` : change.summary;
+}
+
 export function changeSummaryText(change: CitableChangeRow): string {
   return changeCitesASource(change)
-    ? `${change.summary} Source: ${change.source_url!.trim()}`
+    ? `${summaryThenConfirmation(change)} Source: ${change.source_url!.trim()}`
     : `${change.summary} ${uncitedChangeNotice(change.vendor)}`;
 }
 
 export function changeSummaryMarkdown(change: CitableChangeRow): string {
   return changeCitesASource(change)
-    ? `${change.summary} [Source](${change.source_url!.trim()})`
+    ? `${summaryThenConfirmation(change)} [Source](${change.source_url!.trim()})`
     : `${change.summary} ${uncitedChangeNotice(change.vendor)}`;
 }
 
@@ -139,6 +159,39 @@ export function ratingWithheldForNoSourceSentence(vendor: string): string {
 
 export function ratingWithheldForNoSourceClause(): string {
   return "the only record that would rate it cites no source";
+}
+
+export interface WithheldRecordCounts {
+  unsourced: number;
+  unconfirmed: number;
+}
+
+export function ratingWithheldSentence(vendor: string, withheld: WithheldRecordCounts): string {
+  if (withheld.unconfirmed === 0) {
+    return withheld.unsourced > 1
+      ? `The only records that would rate ${vendor} cite no source, so we are not publishing a rating for it.`
+      : ratingWithheldForNoSourceSentence(vendor);
+  }
+  if (withheld.unsourced > 0) {
+    return `The only records that would rate ${vendor} either cite no source or are changes we could not check against an archived copy of ${vendor}'s page, so we are not publishing a rating for it.`;
+  }
+  return withheld.unconfirmed > 1
+    ? `The only records that would rate ${vendor} are changes we could not check against archived copies of ${vendor}'s page, so we are not publishing a rating for it.`
+    : `The only record that would rate ${vendor} is a change we could not check against an archived copy of ${vendor}'s page, so we are not publishing a rating for it.`;
+}
+
+export function ratingWithheldClause(withheld: WithheldRecordCounts): string {
+  if (withheld.unconfirmed === 0) return ratingWithheldForNoSourceClause();
+  if (withheld.unsourced > 0) {
+    return "the only records that would rate it either cite no source or are changes we could not check against an archived copy of its page";
+  }
+  return withheld.unconfirmed > 1
+    ? "the only records that would rate it are changes we could not check against archived copies of its page"
+    : "the only record that would rate it is a change we could not check against an archived copy of its page";
+}
+
+export function unconfirmedChangeNotice(vendor: string): string {
+  return `Unconfirmed. We could not check this change against an archived copy of ${vendor}'s page, so it does not count toward the rating.`;
 }
 
 const DOCUMENT_NOUN =

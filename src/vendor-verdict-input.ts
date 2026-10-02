@@ -1,5 +1,5 @@
 import type { DealChange, Offer, RiskCause } from "./types.js";
-import { changesByVendor, enrichOffers, freeTierEndingRecord, publishedRisk, refusalsForVendor, riskCauseOf } from "./data.js";
+import { changesByVendor, enrichOffers, freeTierEndingRecord, publishedRisk, refusalsForVendor, riskCauseOf, changesRatingTheListedTier, withheldRecordCounts } from "./data.js";
 
 type EnrichedOfferRow = ReturnType<typeof enrichOffers>[number];
 import { gateFor, utcDate, type Gate } from "./ranking.js";
@@ -70,6 +70,7 @@ export function vendorVerdictContextFrom(evidence: VendorVerdictEvidence): Vendo
       levelWithheld,
       unconfirmableSince,
       ratingWithheld: enriched.rating_withheld,
+      ratingWithheldCounts: withheldRecordCounts(changesRatingTheListedTier(primary, vendorChanges)),
       offerEnded: offerEnded(primary),
       gate: gate?.code ?? null,
       linkUnreachable: Boolean(linkUnreachable),

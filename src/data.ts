@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import type { Offer, EnrichedOffer, OfferIndex, DealChange, DateMeaning, PublishedDealChange, DealChangesIndex, ChangeDateSource, StabilityClass, Referral, RiskCause, RatingWithheld, LinkUnreachable, SourceCheck, FreePlanExcerpt, FreePlanExcerptHold } from "./types.js";
+import type { Offer, EnrichedOffer, OfferIndex, DealChange, DateMeaning, PublishedDealChange, DealChangesIndex, ChangeDateSource, StabilityClass, Referral, RiskCause, RatingWithheld, RatingWithheldReason, LinkUnreachable, SourceCheck, FreePlanExcerpt, FreePlanExcerptHold } from "./types.js";
 import { isUrlSuspended } from "./referral-health.js";
 import { CHANGE_DIRECTION, NEGATIVE_CHANGE_TYPES, POSITIVE_CHANGE_TYPES } from "./change-direction.js";
 import { changeRatesTheListedTier } from "./change-tier.js";
@@ -36,7 +36,9 @@ export { RISK_DEMOTION, SEVERE_TYPES_WITHOUT_FLAT_DEMOTION, changeTypeCanDemote 
 import { vendorHistorySentence } from "./vendor-history.js";
 import { isACorrectionToOurOwnRecord, isNoLongerInForce, recordsStillInForce, recordsWeStandBehind, theEventNeverHappened, withResolutionInSummary, withStandingDeclaredOnEach } from "./change-resolution.js";
 import { trackedChanges, recordsOtherThanOurOwnIndexHousekeeping } from "./change-census.js";
-import { changeCitesASource, changeIsUncited, changeSummaryHtml, changeSummaryMarkdown, changeSummaryText, ratingWithheldForNoSourceSentence, type CitableChange } from "./change-citation.js";
+import { changeIsConfirmed, changeIsUnconfirmed, type ConfirmableChange } from "./change-confirmation.js";
+import type { WithheldRecordCounts } from "./change-citation.js";
+import { changeCitesASource, changeIsUncited, changeSummaryHtml, changeSummaryMarkdown, changeSummaryText, ratingWithheldSentence, type CitableChange } from "./change-citation.js";
 import { endedVerdictSentence } from "./retirement.js";
 import { resolveCategoryName } from "./category-scope.js";
 import { survivingVendorName } from "./vendor-merges.js";
@@ -376,16 +378,30 @@ function demotionTheRecordCarries(
   return null;
 }
 
-export function demotionForChange(
-  change: Pick<DealChange, "change_type" | "vendor" | "summary" | "listing_effect"> & CitableChange & { resolution?: DealChange["resolution"] },
-): "risky" | "caution" | null {
-  return changeCitesASource(change) ? demotionTheRecordCarries(change) : null;
+type RateableChange = Pick<DealChange, "change_type" | "vendor" | "summary" | "listing_effect">
+  & CitableChange
+  & ConfirmableChange
+  & { resolution?: DealChange["resolution"] };
+
+export function demotionForChange(change: RateableChange): "risky" | "caution" | null {
+  return changeCitesASource(change) && changeIsConfirmed(change) ? demotionTheRecordCarries(change) : null;
 }
 
-export function demotionWithheldForNoSource(
-  change: Pick<DealChange, "change_type" | "vendor" | "summary" | "listing_effect"> & CitableChange & { resolution?: DealChange["resolution"] },
-): "risky" | "caution" | null {
+export function demotionWithheldForNoSource(change: RateableChange): "risky" | "caution" | null {
   return changeCitesASource(change) ? null : demotionTheRecordCarries(change);
+}
+
+export function demotionWithheldUnconfirmed(change: RateableChange): "risky" | "caution" | null {
+  return changeCitesASource(change) && changeIsUnconfirmed(change) ? demotionTheRecordCarries(change) : null;
+}
+
+export function demotionWithheld(
+  change: RateableChange,
+): { reason: RatingWithheldReason; level: "risky" | "caution" } | null {
+  const unsourced = demotionWithheldForNoSource(change);
+  if (unsourced) return { reason: "no_source", level: unsourced };
+  const unconfirmed = demotionWithheldUnconfirmed(change);
+  return unconfirmed ? { reason: "unconfirmed", level: unconfirmed } : null;
 }
 
 export function isSevereChange(
@@ -423,7 +439,7 @@ export function stabilityDeciders(vendorChanges: readonly DealChange[]): DealCha
 export function classifyStability(vendorChanges: DealChange[], nowMs: number = Date.now()): StabilityClass {
   if (vendorChanges.length === 0) return "stable";
 
-  const stillInForce = vendorChanges.filter((c) => !isNoLongerInForce(c) && changeCitesASource(c));
+  const stillInForce = vendorChanges.filter((c) => !isNoLongerInForce(c) && changeCitesASource(c) && changeIsConfirmed(c));
   const hasVolatile = stillInForce.some(isSevereChange);
   const negativeCount = stillInForce.filter(c => NEGATIVE_STABILITY_TYPES.has(c.change_type)).length;
   const positiveCount = stillInForce.filter(c => POSITIVE_STABILITY_TYPES.has(c.change_type)).length;
@@ -462,7 +478,7 @@ export function stabilityWithholdingReason(
   if (withholding.refused_read) return "refused_read";
   const sourceCheck = levelWithheldReason({ source_check: withholding.source_check ?? undefined }, null);
   if (sourceCheck) return sourceCheck;
-  if (withholding.rating_withheld) return "no_source";
+  if (withholding.rating_withheld) return withholding.rating_withheld.reason;
   if (standingNarrowingsCitingNoSource(vendorChanges).length > 0) return "no_source";
   if (withholding.gate) return withholding.gate.code;
   return null;
@@ -493,7 +509,7 @@ export function stabilityWithheldSentence(vendorName: string): string {
   const risk = publishedRisk(offer, vendorChanges);
   if (risk.refused_read) return refusedReadSentence(vendorName, risk.refused_read);
   if (risk.link_unreachable) return withheldLevelSentence("link_unreachable", vendorName, risk.link_unreachable.last_reachable ? LAST_RESOLVED(risk.link_unreachable.last_reachable) : "");
-  return ratingWithheldForNoSourceSentence(vendorName);
+  return ratingWithheldSentence(vendorName, risk.withheld_records);
 }
 
 export const UNRATED_STABILITY = "unrated";
@@ -1203,13 +1219,35 @@ export interface VendorRiskAssessment {
   rating_withheld: RatingWithheld | null;
 }
 
+export function withheldRecordCounts(vendorChanges: readonly RateableChange[]): WithheldRecordCounts {
+  const counts: WithheldRecordCounts = { unsourced: 0, unconfirmed: 0 };
+  for (const change of vendorChanges) {
+    const withheld = demotionWithheld(change);
+    if (withheld?.reason === "no_source") counts.unsourced += 1;
+    if (withheld?.reason === "unconfirmed") counts.unconfirmed += 1;
+  }
+  return counts;
+}
+
+function mostSevereWithholding(
+  unsourced: "caution" | "risky" | null,
+  unconfirmed: "caution" | "risky" | null,
+): RatingWithheldReason | null {
+  if (unconfirmed === null) return unsourced === null ? null : "no_source";
+  if (unsourced === null) return "unconfirmed";
+  return RISK_RANK[unsourced] > RISK_RANK[unconfirmed] ? "no_source" : "unconfirmed";
+}
+
 export function vendorRiskAssessment(vendorChanges: DealChange[], nowMs: number = Date.now()): VendorRiskAssessment {
   const twelveMonthsAgo = new Date(nowMs - 365 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
   const atTwelveMonths = (demotion: "risky" | "caution", date: string) =>
     demotion === "risky" && date < twelveMonthsAgo ? "caution" : demotion;
 
   let best: { level: "caution" | "risky"; cause: DealChange } | null = null;
-  let uncited: { level: "caution" | "risky"; cause: DealChange } | null = null;
+  const withheldAt: Record<RatingWithheldReason, { level: "caution" | "risky"; cause: DealChange } | null> = {
+    no_source: null,
+    unconfirmed: null,
+  };
   const better = (
     held: { level: "caution" | "risky"; cause: DealChange } | null,
     level: "caution" | "risky",
@@ -1223,20 +1261,21 @@ export function vendorRiskAssessment(vendorChanges: DealChange[], nowMs: number 
       if (better(best, level, c)) best = { level, cause: c };
       continue;
     }
-    const withheld = demotionWithheldForNoSource(c);
+    const withheld = demotionWithheld(c);
     if (!withheld) continue;
-    const level = atTwelveMonths(withheld, c.date);
-    if (better(uncited, level, c)) uncited = { level, cause: c };
+    const level = atTwelveMonths(withheld.level, c.date);
+    if (better(withheldAt[withheld.reason], level, c)) withheldAt[withheld.reason] = { level, cause: c };
   }
 
   if (best) return { level: best.level, cause: best.cause, rating_withheld: null };
-  if (uncited) {
+  const reason = mostSevereWithholding(withheldAt.no_source?.level ?? null, withheldAt.unconfirmed?.level ?? null);
+  if (reason) {
     return {
       level: "stable",
       cause: null,
       rating_withheld: {
-        reason: "no_source",
-        records: vendorChanges.filter(c => demotionWithheldForNoSource(c) !== null).length,
+        reason,
+        records: vendorChanges.filter(c => demotionWithheld(c) !== null).length,
       },
     };
   }
@@ -1264,6 +1303,7 @@ export interface PublishedRisk {
   risk_cause: RiskCause | null;
   cause: DealChange | null;
   rating_withheld: RatingWithheld | null;
+  withheld_records: WithheldRecordCounts;
   link_unreachable: LinkUnreachable | null;
   source_check: SourceCheck | null;
   gate: Gate | null;
@@ -1316,6 +1356,7 @@ export function publishedRisk(
     risk_cause: riskCauseOf(assessment.cause),
     cause: assessment.cause,
     rating_withheld: assessment.rating_withheld,
+    withheld_records: withheldRecordCounts(grading),
     link_unreachable,
     source_check: offer.source_check ?? null,
     gate,
@@ -1332,7 +1373,7 @@ export function vendorNotIndexedSentence(vendor: string): string {
 export function levelWithheldStatement(vendor: string, risk: PublishedRisk): string | null {
   if (risk.risk_level !== null) return null;
   if (risk.gate) return gateRiskSummary(risk.gate);
-  if (risk.rating_withheld) return ratingWithheldForNoSourceSentence(vendor);
+  if (risk.rating_withheld) return ratingWithheldSentence(vendor, risk.withheld_records);
   const reason = levelWithheldReason({ source_check: risk.source_check ?? undefined }, risk.link_unreachable);
   if (!reason) {
     return risk.refused_read ? refusedReadSentence(vendor, risk.refused_read) : null;
@@ -1414,7 +1455,7 @@ export function checkVendorRisk(
   } else if ((riskLevel === "risky" || riskLevel === "caution") && cause) {
     summary = `${vendorHistorySentence(offer.vendor, riskLevel, cause)}${unreachableClause}`;
   } else if (assessment.rating_withheld) {
-    summary = `${ratingWithheldForNoSourceSentence(offer.vendor)}${unreachableClause}`;
+    summary = `${ratingWithheldSentence(offer.vendor, published.withheld_records)}${unreachableClause}`;
   } else if (withheldReason) {
     summary = `${withheldLevelSentence(withheldReason, offer.vendor, withheldSince)} Nothing we have read describes this offer. Treat that as a statement about our records, not as a stable pricing history.`;
   } else if (published.refused_read) {

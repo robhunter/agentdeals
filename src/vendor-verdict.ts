@@ -1,9 +1,9 @@
-import type { DealChange, RatingWithheld, RiskCause, SourceCheck, SourceCheckOutcome } from "./types.js";
+import type { DealChange, RatingWithheld, RatingWithheldReason, RiskCause, SourceCheck, SourceCheckOutcome } from "./types.js";
 import { restatedReadingDate, type TermsWeCannotConfirm } from "./read-date.js";
 import { CHANGE_DIRECTION, isACorrectionToOurOwnRecord, isOurOwnBookkeeping } from "./data.js";
 import { changeRatesTheListedTier, type GradedOffer } from "./change-tier.js";
 import { isNoLongerInForce, reversedOn, theEventNeverHappened } from "./change-resolution.js";
-import { changeIsUncited, changeSummaryText, ratingWithheldForNoSourceSentence } from "./change-citation.js";
+import { changeIsUncited, changeSummaryText, ratingWithheldSentence, type WithheldRecordCounts } from "./change-citation.js";
 import { changeDateClause } from "./change-dates.js";
 import { PRODUCT_DEPRECATED, deprecationTouchesTheListing } from "./product-deprecation.js";
 import {
@@ -80,6 +80,7 @@ export interface VendorVerdictInput {
   levelWithheld: LevelWithheldReason | null;
   unconfirmableSince: string;
   ratingWithheld?: RatingWithheld | null;
+  ratingWithheldCounts?: WithheldRecordCounts | null;
   offerEnded?: boolean;
   gate?: GateCode | null;
   linkUnreachable?: boolean;
@@ -111,7 +112,7 @@ export interface RefusedReadWithholding extends RefusedReadAs {
 
 export type BadgeWithholding =
   | { reason: "gated"; gate: GateCode }
-  | { reason: "no_source" }
+  | { reason: RatingWithheldReason }
   | RefusedReadWithholding
   | { reason: LevelWithheldReason };
 
@@ -149,6 +150,7 @@ export const WITHHOLDING_SCOPE = {
   change_measured_no_difference: "the_terms",
   read_had_no_standing: "the_terms",
   no_source: "the_rating",
+  unconfirmed: "the_rating",
   eligibility_restricted: "the_rating",
   not_a_free_offer: "the_rating",
   offer_expired: "the_rating",
@@ -169,6 +171,7 @@ export function withholdsTheTerms(because: Withholding): because is TermsWithhol
 
 export const WITHHOLDING_BADGE_LABELS: Record<BadgeWithholdingTag, string> = {
   no_source: "unrated — no source",
+  unconfirmed: "unrated — change unconfirmed",
   link_unreachable: "unrated — page unreachable",
   unreadable: "unrated — page unreadable",
   states_no_terms: "unrated — page states no price",
@@ -579,14 +582,26 @@ export function unconfirmedThresholdSentence(phrase: string, unconfirmed: Unconf
     + ` so we cannot confirm that threshold today.`;
 }
 
+function ratingWithheldReasonOf(input: VendorVerdictInput): RatingWithheldReason {
+  return input.ratingWithheld?.reason ?? "no_source";
+}
+
+export function withheldRecordCountsOf(input: VendorVerdictInput): WithheldRecordCounts {
+  if (input.ratingWithheldCounts) return input.ratingWithheldCounts;
+  const records = input.ratingWithheld?.records ?? 1;
+  return ratingWithheldReasonOf(input) === "unconfirmed"
+    ? { unsourced: 0, unconfirmed: records }
+    : { unsourced: records, unconfirmed: 0 };
+}
+
 export function badgeWithholding(input: VendorVerdictInput): BadgeWithholding | null {
   if (withholdingDecides(input)) {
-    return { reason: input.levelWithheld ?? "no_source" };
+    return { reason: input.levelWithheld ?? ratingWithheldReasonOf(input) };
   }
   if (input.gate) return { reason: "gated", gate: input.gate };
   const refused = refusalWithholdsStability(input);
   if (refused) return refusedReadWithholding(refused);
-  if (input.level === null) return { reason: input.levelWithheld ?? "no_source" };
+  if (input.level === null) return { reason: input.levelWithheld ?? ratingWithheldReasonOf(input) };
   if (input.linkUnreachable && publishedVendorLevel(input.level, input.cause) === "stable") {
     return { reason: "link_unreachable" };
   }
@@ -604,7 +619,7 @@ export function vendorBadge(input: VendorVerdictInput): VendorBadge {
   const withheld = badgeWithholding(input);
   if (withheld) return { kind: "none", because: withheld };
   const word = publishedVendorLevel(input.level, input.cause);
-  if (word === null) return { kind: "none", because: { reason: input.levelWithheld ?? "no_source" } };
+  if (word === null) return { kind: "none", because: { reason: input.levelWithheld ?? ratingWithheldReasonOf(input) } };
   return { kind: "rating", word };
 }
 
@@ -746,7 +761,7 @@ function termsWeCannotConfirmToday(input: VendorVerdictInput): string {
 export function vendorVerdictSentence(input: VendorVerdictInput): string {
   if (input.offerEnded) return endedVerdictSentence();
   if (withholdingDecides(input)) {
-    if (input.levelWithheld === null) return ratingWithheldForNoSourceSentence(input.vendor);
+    if (input.levelWithheld === null) return ratingWithheldSentence(input.vendor, withheldRecordCountsOf(input));
     const unconfirmed = whyWeCannotConfirmTheseTerms(input);
     if (unconfirmed) return unconfirmedTermsSentence(unconfirmed);
     const clause = withheldLevelClause(input.levelWithheld, input.unconfirmableSince);
