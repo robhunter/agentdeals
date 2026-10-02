@@ -232,3 +232,26 @@ describe("OVHcloud's VPS-1 beside Hetzner on /hetzner-pricing-2026", () => {
     assert.doesNotMatch(text, /\$5\.35\/mo EU|is \$5\.35 a month without commitment/);
   });
 });
+
+describe("what /hetzner-pricing-2026 says costs nothing", () => {
+  it("names Oracle's Always Free tier as the only VM open to every new account at no cost, beside Vultr's free instance and Railway's and Render's app plans", async () => {
+    const text = visible((await get("/hetzner-pricing-2026")).body);
+    assert.ok(text.includes("Of the VMs here, only Oracle Cloud's Always Free tier is open to every new account at no cost. Vultr gives a free 1 vCPU, 512 MB instance to accepted applicants in Miami, Seattle and Frankfurt. Railway and Render have free plans for apps, not VMs."));
+    assert.doesNotMatch(text, /only option here that costs nothing/);
+  });
+
+  it("gives Vultr's free instance in Vultr's row", async () => {
+    const text = visible((await get("/hetzner-pricing-2026")).body);
+    assert.ok(text.includes("$5/mo Global Not re-read since March 2026. Free instance (1 vCPU, 512 MB, 10 GB SSD) for accepted applicants, in Miami, Seattle and Frankfurt"));
+  });
+});
+
+describe("pages that compared US cloud providers' prices with Hetzner's on no source", () => {
+  for (const route of ["/hetzner-pricing-2026", "/q2-pricing-preview-2026"]) {
+    it(`${route} no longer says they cost 3-6x more or have announced no increases`, async () => {
+      const { status, body } = await get(route);
+      assert.strictEqual(status, 200);
+      assert.doesNotMatch(visible(body), /3-6x higher|announced increases|US cloud providers:/);
+    });
+  }
+});

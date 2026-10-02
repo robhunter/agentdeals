@@ -5192,6 +5192,29 @@ function outgrowSentence(vendorName: string, phrase: string): string {
   return OUTGROW_SENTENCE_BY_VENDOR_AND_TEMPLATE_PHRASE[vendorName]?.[phrase] ?? `At ${phrase}, you'll need to upgrade.`;
 }
 
+function freeTierSourceLineHtml(offer: Offer, changes: readonly DealChange[], servedOn: string): string {
+  const source = freeTierSourceWeMayCite(offer, reasonWeCannotConfirmFor(offer), { changes, servedOn });
+  if (!source.cited) return "";
+  const read = readClauseHtml(
+    source.readOn,
+    [readSourceOf(source)],
+    escHtmlServer,
+    { dateClass: SOURCE_READ_DATE_CLASS },
+  );
+  const scope = whereOurTermsCameFrom(offer)
+    ? ""
+    : ` <span class="${CHECK_SCOPE_CLASS}">${escHtmlServer(CHECK_ESTABLISHES)}</span>`;
+  return `\n    <p class="free-tier-source-line" style="margin:.5rem 0 0;font-size:.8rem;color:var(--text-dim)">${read}.${scope}</p>`;
+}
+
+function listingInFullHtml(slug: string): string {
+  const record = offerForSlug(slug);
+  if (!record) return "";
+  return `<div class="context-box listing-in-full">
+    <strong>${handwrittenVendorLinkHtml(slug, record.vendor, ' style="color:var(--text)"')}</strong> &mdash; ${storedTermsHtml(record)}${freeTierSourceLineHtml(record, changesFor(record.vendor), utcDate())}
+  </div>`;
+}
+
 function buildVendorPage(slug: string): string | null {
   const vendorName = vendorSlugMap.get(slug);
   if (!vendorName) return null;
@@ -5310,20 +5333,7 @@ function buildVendorPage(slug: string): string | null {
     return `\n  <p class="product-subtypes-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong>Subtypes in ${escHtmlServer(classified.taxonomy)}:</strong> ${body}${clause} <a href="${CRITERIA_PATH}#subtypes">How we use this</a>.</p>`;
   })();
 
-  const freeTierSourceLine = (() => {
-    const source = freeTierSourceWeMayCite(primary, reasonWeCannotConfirmFor(primary), { changes: vendorChanges, servedOn });
-    if (!source.cited) return "";
-    const read = readClauseHtml(
-      source.readOn,
-      [readSourceOf(source)],
-      escHtmlServer,
-      { dateClass: SOURCE_READ_DATE_CLASS },
-    );
-    const scope = whereOurTermsCameFrom(primary)
-      ? ""
-      : ` <span class="${CHECK_SCOPE_CLASS}">${escHtmlServer(CHECK_ESTABLISHES)}</span>`;
-    return `\n    <p class="free-tier-source-line" style="margin:.5rem 0 0;font-size:.8rem;color:var(--text-dim)">${read}.${scope}</p>`;
-  })();
+  const freeTierSourceLine = freeTierSourceLineHtml(primary, vendorChanges, servedOn);
 
   const freePlanExcerptBlock = (() => {
     const excerpt = freePlanExcerptWeMayPublish(primary);
@@ -18889,7 +18899,7 @@ function buildHetznerPricing2026Page(): string {
   const competitorPricing = [
     { vendor: "Hetzner (cheapest orderable)", spec: `${cheapestOrderable.sku} — ${cheapestOrderable.vcpu} vCPU, ${cheapestOrderable.ram} GB`, price: `${eur(cheapestOrderable.eur)}/mo`, region: cheapestOrderable.region, note: "Cost-Optimized line unavailable" },
     { vendor: "DigitalOcean", spec: "Basic — 1 vCPU, 512 MB", price: "$4/mo", region: "Global", note: "" },
-    { vendor: "Vultr", spec: "Cloud — 1 vCPU, 1 GB", price: "$5/mo", region: "Global", note: "Not re-read since March 2026" },
+    { vendor: "Vultr", spec: "Cloud — 1 vCPU, 1 GB", price: "$5/mo", region: "Global", note: "Not re-read since March 2026. Free instance (1 vCPU, 512 MB, 10 GB SSD) for accepted applicants, in Miami, Seattle and Frankfurt" },
     { vendor: "Linode/Akamai", spec: "Nanode — 1 vCPU, 1 GB", price: "$5/mo", region: "Global", note: "Not re-read since March 2026" },
     { vendor: "OVHcloud", spec: "VPS-1 — 2 vCores, 4 GB", price: "€4.49/mo", region: "EU", note: "VPS 2027 range, ex-VAT, without commitment (€3.81/mo on 12 months). $5.35/mo in the US. The 2026 range rose 36-49% from April 2026" },
     { vendor: "AWS Lightsail", spec: "2 vCPUs, 512 MB", price: "$5/mo", region: "US", note: "The $3.50 bundle is IPv6-only; every other row here has a public IPv4 address" },
@@ -19118,7 +19128,7 @@ ${mcpCtaCss()}
     </table>
   </div>
   <div class="context-box">
-    <strong>Bottom line:</strong> On entry price, Hetzner is no longer the cheap option. ${escHtmlServer(cheapestOrderable.sku)} at ${eur(cheapestOrderable.eur)} is above DigitalOcean's $4 Basic Droplet and Vultr's and Linode's $5 tiers, and the plans that used to sit below them cannot be ordered. Hetzner's case now rests on what you get per euro further up the range — ${escHtmlServer(dedicatedExample.sku)} buys ${dedicatedExample.vcpu} dedicated vCPUs and ${dedicatedExample.ram} GB for ${eur(dedicatedExample.eur)}. Oracle Cloud's Always Free tier remains the only option here that costs nothing.
+    <strong>Bottom line:</strong> On entry price, Hetzner is no longer the cheap option. ${escHtmlServer(cheapestOrderable.sku)} at ${eur(cheapestOrderable.eur)} is above DigitalOcean's $4 Basic Droplet and Vultr's and Linode's $5 tiers, and the plans that used to sit below them cannot be ordered. Hetzner's case now rests on what you get per euro further up the range — ${escHtmlServer(dedicatedExample.sku)} buys ${dedicatedExample.vcpu} dedicated vCPUs and ${dedicatedExample.ram} GB for ${eur(dedicatedExample.eur)}. Of the VMs here, only Oracle Cloud's Always Free tier is open to every new account at no cost. Vultr gives a free 1 vCPU, 512 MB instance to accepted applicants in Miami, Seattle and Frankfurt. Railway and Render have free plans for apps, not VMs.
     <p style="margin-top:.75rem">For a full comparison of ${altOffers.length} free-tier hosting alternatives, see <a href="/hetzner-alternatives">Hetzner Alternatives</a>.</p>
   </div>
 
@@ -19128,7 +19138,6 @@ ${mcpCtaCss()}
     <ul>
       <li><strong>OVHcloud:</strong> raised prices on its VPS 2026 range from 1 April 2026, with euro list prices up 36-49% (VPS-1 from €4.49 to €6.49 a month). It has since launched a VPS 2027 range, whose VPS-1 (2 vCores, 4 GB RAM) is €4.49 a month ex-VAT without commitment in Europe ($5.35 in the US). Public Cloud, Private Cloud and Bare Metal rose 9-11% on average for new deployments.</li>
       <li><strong>Netcup:</strong> Also raised prices. Community reports increases across VPS and dedicated server lines.</li>
-      <li><strong>US cloud providers:</strong> Already priced 3-6x higher than Hetzner. AWS, GCP, and Azure haven't announced increases yet, but their hardware costs are rising too — they have more margin to absorb it.</li>
       <li><strong>The AI paradox:</strong> AI infrastructure buildout is making hardware more expensive for everyone. The companies building AI consume the supply that smaller operations depend on. As one HN commenter put it: "The AI bubble is pricing out smaller operations."</li>
     </ul>
     <p style="margin-top:.75rem"><strong>Community reaction</strong> at the time of the April round (from <a href="https://news.ycombinator.com/item?id=47120145" target="_blank" rel="noopener">Hacker News discussion</a>): "Even after +30-50%, Hetzner is still the cheapest option. The real story is the entire hosting market repricing due to AI-driven hardware costs." That was written before the June round and before the Cost-Optimized line went unavailable; the table in section 1 is what to check it against.</p>
@@ -19663,7 +19672,7 @@ function buildQ2PricingPreview2026Page(): string {
     { vendor: "Microsoft 365", signal: "E3 price increase to $39.60/user/mo announced March 24. Takes effect in Q2. Not a developer tool per se, but signals broader Microsoft pricing trends that could affect Azure and GitHub.", impact: "medium" as const },
     { vendor: "OpenAI", signal: "Assistants API deprecated with full shutdown August 26, 2026. Q2 is the migration window — developers must move to Responses API + Conversations API before the deadline.", impact: "high" as const },
     { vendor: "AI API Providers", signal: "Competition intensifying: Groq, Cerebras, and OpenRouter offering generous free tiers while incumbents (OpenAI, Anthropic) focus on paid plans. Expect more free tier launches from challengers in Q2.", impact: "low" as const },
-    { vendor: "Cloud Providers", signal: "Hetzner raised prices twice in 2026, citing increased infrastructure and hardware costs. OVHcloud, Netcup also raising prices. AWS, GCP, Azure haven't announced increases yet, but memory-heavy instances may follow.", impact: "medium" as const },
+    { vendor: "Cloud Providers", signal: "Hetzner raised prices twice in 2026, citing increased infrastructure and hardware costs. OVHcloud, Netcup also raising prices.", impact: "medium" as const },
   ];
 
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
@@ -22829,6 +22838,8 @@ ${mcpCtaCss()}
     ${rateLimitChange ? `<p><strong>From our tracker:</strong> ${changeSummaryHtml(rateLimitChange, escHtmlServer)}</p>` : ""}
   </div>
 
+  ${listingInFullHtml("google-gemini-api")}
+
   <div class="toc">
     <h3>In This Guide</h3>
     <ol>
@@ -22922,7 +22933,7 @@ ${mcpCtaCss()}
 
   <div class="impact-card" style="border-left-color:#d29922">
     <h3 style="color:#d29922">Prepaid billing for new users</h3>
-    <p class="impact-desc">Since March 23, 2026, AI Studio may ask a new user to prepay to set up billing (minimum $5); others choose between Prepay and Postpay.</p>
+    <p class="impact-desc">Since March 23, 2026, AI Studio may ask a new user to prepay to set up billing (minimum $5); others choose between Prepay and Postpay. Prepaid credits expire 12 months after purchase and are non-refundable. When the balance reaches $0, every API key on the billing account stops working until you add credits.</p>
   </div>
   <div class="impact-card" style="border-left-color:#f85149">
     <h3 style="color:#f85149">Gemini 3.1 Pro is paid-only</h3>
@@ -22971,7 +22982,7 @@ ${mcpCtaCss()}
     <p class="impact-desc">
       <strong>1. For maximum free requests:</strong> <a href="/vendor/groq">Groq</a> — 30 RPM, no credit card, ultra-fast inference.<br>
       <strong>2. For model variety:</strong> <a href="/vendor/openrouter">OpenRouter</a> — 25+ free models through one OpenAI-compatible API.<br>
-      <strong>3. For long context:</strong> Gemini's 1M context window is still the largest free option. If context is your key requirement, stay on Gemini and manage the rate limits.<br>
+      <strong>3. For long context:</strong> Gemini's Flash models accept up to 1,048,576 input tokens. Google no longer publishes free-tier token limits, so check your project's limits in AI Studio before relying on long prompts at no cost.<br>
       <strong>4. For production workloads:</strong> <a href="/vendor/anthropic-api">Anthropic</a> and <a href="/vendor/openai">OpenAI</a> also cap monthly spend by usage tier. Anthropic pauses API usage at its tier's cap ($500 a month on Start) until the next month, and OpenAI sets each organization a monthly usage limit ($100 on Tier 1).
     </p>
   </div>
