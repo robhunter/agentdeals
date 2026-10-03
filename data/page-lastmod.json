@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2026-10-02",
+  "generated": "2026-10-03",
   "pages": {
     "/": {
       "daily": true
@@ -1152,7 +1152,8 @@
       "changed": "2026-10-02"
     },
     "/category/design": {
-      "daily": true
+      "hash": "b955dcd1cd30ff3e",
+      "changed": "2026-10-03"
     },
     "/category/design-creative": {
       "hash": "2daf2b08682d007f",
@@ -1259,7 +1260,8 @@
       "changed": "2026-10-01"
     },
     "/category/secrets-management": {
-      "daily": true
+      "hash": "1e1ca765297c7e37",
+      "changed": "2026-10-03"
     },
     "/category/security": {
       "hash": "b633f2908d9c8872",
@@ -3212,16 +3214,16 @@
       "changed": "2026-10-02"
     },
     "/hetzner-alternatives": {
-      "hash": "8480f483f7a73687",
-      "changed": "2026-10-02"
+      "hash": "8075cac5bfa567f6",
+      "changed": "2026-10-03"
     },
     "/hetzner-pricing-2026": {
-      "hash": "328d811e8a9a59da",
-      "changed": "2026-10-02"
+      "hash": "68216cfd069d6bab",
+      "changed": "2026-10-03"
     },
     "/hosting-alternatives": {
-      "hash": "93f8a7f1e7f5639c",
-      "changed": "2026-10-02"
+      "hash": "919323af7efb96b4",
+      "changed": "2026-10-03"
     },
     "/hosting-free-tier-comparison-2026": {
       "hash": "ef0d83eecfa7f6e6",
@@ -3443,7 +3445,8 @@
       "changed": "2026-10-02"
     },
     "/security-alternatives": {
-      "daily": true
+      "hash": "15e9b45d16d1f8e7",
+      "changed": "2026-10-03"
     },
     "/security-free-tier-comparison-2026": {
       "hash": "5c3a7e339d73d4b3",
@@ -3465,7 +3468,8 @@
       "changed": "2026-10-02"
     },
     "/stack-check": {
-      "daily": true
+      "hash": "289e4ff0c0348bf2",
+      "changed": "2026-10-03"
     },
     "/stacks": {
       "hash": "053ce8cba4638640",
@@ -6151,7 +6155,8 @@
       "changed": "2026-10-02"
     },
     "/vendor/hashicorp-vault": {
-      "daily": true
+      "hash": "d10c3422cf49b1e2",
+      "changed": "2026-10-03"
     },
     "/vendor/hasura": {
       "hash": "cd4481fe9028afa3",
@@ -7670,7 +7675,8 @@
       "changed": "2026-10-02"
     },
     "/vendor/pexels-com": {
-      "daily": true
+      "hash": "8a66316813b22c07",
+      "changed": "2026-10-03"
     },
     "/vendor/phantom-buster": {
       "hash": "40eb90b198735b70",
@@ -8540,7 +8546,8 @@
       "changed": "2026-10-02"
     },
     "/vendor/smartmockups-com": {
-      "daily": true
+      "hash": "e5aa1459ad7f881d",
+      "changed": "2026-10-03"
     },
     "/vendor/smartparse": {
       "hash": "abd5b7f61dd9a27c",
