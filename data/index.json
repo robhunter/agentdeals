@@ -20857,7 +20857,7 @@
     {
       "vendor": "Northflank",
       "category": "Cloud Hosting",
-      "description": "Build and deploy microservices, jobs, and managed databases with a powerful UI, API & CLI. Seamlessly scale containers from version control and external Docker registries. The free tier includes two services, two cron jobs and 1 database.",
+      "description": "Build and deploy microservices, jobs, and managed databases with a powerful UI, API & CLI. Seamlessly scale containers from version control and external Docker registries. The free tier includes two services, two cron jobs and 1 database. Northflank requires every user to add a payment method before creating resources, on any plan, to verify identity and prevent abuse. It says the free Developer Sandbox is for exploring the platform, hobby projects and testing ideas, and should not be used for production applications.",
       "tier": "Free",
       "url": "https://northflank.com/pricing",
       "tags": [
@@ -32413,7 +32413,7 @@
     {
       "vendor": "xAI",
       "category": "AI / ML",
-      "description": "Grok API, pay as you go: sign up at console.x.ai, then load it with credits. grok-4.7 $2.00/$6.00 (per 1M tokens, under 200k prompt tokens). grok-4.3 $1.25/$2.50 (under 200k prompt tokens). grok-build-0.1 $1.00/$2.00 (under 200k prompt tokens). Grok 4.1 Fast was retired on 2026-05-15; its model names now route to grok-4.3 at grok-4.3 rates.",
+      "description": "Grok API, pay as you go: sign up at console.x.ai, then load it with credits. grok-4.7 $2.00/$6.00 (per 1M tokens, under 200k prompt tokens). grok-4.3 $1.25/$2.50 (under 200k prompt tokens). grok-build-0.1 $1.00/$2.00 (under 200k prompt tokens). Grok 4.1 Fast was retired on 2026-05-15; its model names now route to grok-4.3 at grok-4.3 rates. xAI's API FAQ says it never trains on API inputs or outputs without your explicit permission. It stores API requests and responses for 30 days to audit for abuse, then deletes them, and team admins can turn on Zero Data Retention.",
       "tier": "Pay-as-you-go",
       "url": "https://docs.x.ai/developers/pricing",
       "tags": [
