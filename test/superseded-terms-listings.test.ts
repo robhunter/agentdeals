@@ -166,7 +166,7 @@ describe("#1395 the listing surfaces answer the stored-terms question the way th
   let base = "";
 
   const categoryPaths = [...new Set(offers.map((o) => `/category/${toSlug(o.category)}`))];
-  const searchPaths = superseded.slice(0, 40).map((o) => `/search?q=${encodeURIComponent(o.vendor)}`);
+  const searchPaths = superseded.map((o) => `/search?q=${encodeURIComponent(o.vendor)}`);
   const alternativePaths = [...new Set(superseded.map((o) => `/alternative-to/${toSlug(o.vendor)}`))];
 
   before(async () => {
@@ -318,7 +318,7 @@ describe("#1395 the listing surfaces answer the stored-terms question the way th
 
   it("shortens the withholding rather than the stored terms in a search result", async () => {
     const withStoredTerms: string[] = [];
-    for (const offer of superseded.slice(0, 40)) {
+    for (const offer of superseded) {
       const html = pages.get(`/search?q=${encodeURIComponent(offer.vendor)}`);
       if (!html) continue;
       const slots = [...html.matchAll(/<div class="result-desc">([\s\S]*?)<\/div>/g)].map((m) => withoutTags(m[1]));
