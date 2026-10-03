@@ -2141,7 +2141,7 @@
     {
       "vendor": "CloudAMQP",
       "category": "Messaging",
-      "description": "Managed RabbitMQ — 1M messages/month, 20 connections, 100 queues free",
+      "description": "Managed RabbitMQ. The free Little Lemur plan runs on a shared RabbitMQ broker with a 1M message quota a month, 20 connections, 100 queues, up to 10,000 queued messages and a 28-day maximum idle queue time.",
       "tier": "Little Lemur",
       "url": "https://www.cloudamqp.com/plans.html",
       "tags": [
@@ -10084,7 +10084,7 @@
     {
       "vendor": "Zoho Projects",
       "category": "Project Management",
-      "description": "Free for 3 users, 2 projects & 10 MB attachment limit. The same plan applies to [Bugtracker](https://zoho.com/bugtracker).",
+      "description": "Free for up to 5 users: 3 projects, subtasks, whiteboard, 5 GB of storage and the iOS and Android apps. Zoho's [Bugtracker](https://zoho.com/bugtracker) has its own free plan: 3 users, 2 projects and 5 GB of attachments.",
       "tier": "Free",
       "url": "https://zoho.com/projects",
       "tags": [

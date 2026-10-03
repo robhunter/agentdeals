@@ -9111,6 +9111,12 @@
             "first_new_capture": "https://web.archive.org/web/20260602191124/https://filebase.com/"
           }
         ]
+      },
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-10-03",
+        "detail": "Retracted 2026-10-03: no change on 2026-09-01. Filebase's free plan still has 5 GB of storage: filebase.com/pricing lists Free at $0 a month with 5 GB, and its homepage says \"Test it on the 5 GB free tier\". The 500 GB in the reading is the Pro plan's, at $7.50 a month.",
+        "source_url": "https://filebase.com/pricing/"
       }
     },
     {
@@ -11543,6 +11549,12 @@
       "archive_check": {
         "checked": "2026-10-02",
         "outcome": "no_usable_capture"
+      },
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-10-03",
+        "detail": "Retracted 2026-10-03: no change on 2026-09-09. The Internet Archive's capture of cloudamqp.com/plans.html of 2026-09-01 and the page on 2026-10-03 state the same free Little Lemur plan: a 1M message quota a month, 20 connections and 100 queues, as we list. Its 10,000 is a separate cap on queued messages, not a monthly quota.",
+        "source_url": "https://web.archive.org/web/20260901030038/https://www.cloudamqp.com/plans.html"
       }
     },
     {
@@ -12559,6 +12571,12 @@
       "archive_check": {
         "checked": "2026-10-02",
         "outcome": "no_usable_capture"
+      },
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-10-03",
+        "detail": "Retracted 2026-10-03: no change on 2026-09-18. The reading quoted the page's description of the free version and stated no terms to compare with ours.",
+        "source_url": "https://www.zoho.com/projects/pricing.html"
       }
     },
     {
