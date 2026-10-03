@@ -5553,7 +5553,11 @@
       "category": "Analytics",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "page_unreadable_today"
+      }
     },
     {
       "vendor": "Deno Deploy",
@@ -5568,7 +5572,11 @@
       "category": "Cloud Hosting",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "text_day_unknown"
+      }
     },
     {
       "vendor": "Semgrep",
@@ -5583,7 +5591,19 @@
       "category": "Security",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2025-12-23",
+            "first_new": "2026-05-08",
+            "last_old_capture": "https://web.archive.org/web/20251223085605/https://semgrep.dev/pricing/",
+            "first_new_capture": "https://web.archive.org/web/20260508114645/https://semgrep.dev/pricing/"
+          }
+        ]
+      }
     },
     {
       "vendor": "Sematext",
@@ -5685,10 +5705,10 @@
     },
     {
       "vendor": "DB-IP",
-      "change_type": "limits_reduced",
+      "change_type": "record_corrected",
       "date": "2026-08-28",
       "date_source": "discovered",
-      "summary": "The free tier now has a limit of 500 daily requests, down from 1k.",
+      "summary": "Data correction - Not a change by DB-IP. An Internet Archive copy of its page from 2025-12-08 already states the terms this record called new, and our listing of 2026-03-02 did not match them. Our re-read of 2026-08-28 recorded the difference as a change.",
       "previous_state": "Free IP geolocation API with 1k request per IP per day.lite database under the CC-BY 4.0 License is free too.",
       "current_state": "The Free API is limited to 500 daily requests.",
       "impact": "medium",
@@ -5696,7 +5716,15 @@
       "category": "Dev Utilities",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "ours",
+        "capture_day": "2025-12-08",
+        "recorded_as": "limits_reduced",
+        "capture": "https://web.archive.org/web/20251208012414/https://db-ip.com/api/free",
+        "stated_then": "It provides a simple IP to country, state and city mapping and is limited to 500 daily requests."
+      }
     },
     {
       "vendor": "FreeIPAPI",
@@ -5711,7 +5739,11 @@
       "category": "Dev Utilities",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Stripe Atlas",
@@ -5768,7 +5800,11 @@
       "category": "Design",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Plausible Analytics",
@@ -5825,7 +5861,11 @@
       "category": "Dev Utilities",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "fivenines.io",
@@ -5876,7 +5916,11 @@
       "category": "Dev Utilities",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "StreamBackdrops",
@@ -5950,7 +5994,11 @@
       "alternatives": [],
       "detected_by": "reverify-ai",
       "recorded_date": "2026-08-28",
-      "listing_effect": "ends"
+      "listing_effect": "ends",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Permit.io",
@@ -6001,7 +6049,11 @@
       "category": "Dev Utilities",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "RightFeature",
@@ -6016,7 +6068,11 @@
       "category": "Project Management",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Squash Labs",
@@ -6041,10 +6097,10 @@
     },
     {
       "vendor": "Virgil Security",
-      "change_type": "pricing_restructured",
+      "change_type": "record_corrected",
       "date": "2026-08-28",
       "date_source": "discovered",
-      "summary": "The free tier is still offered, but the pricing beyond the free tier is $0.02/month per user beyond 250 users.",
+      "summary": "Data correction - Not a change by Virgil Security. An Internet Archive copy of its page from 2026-02-07 already states the terms this record called new, and our listing of 2026-03-02 did not match them. Our re-read of 2026-08-28 recorded the difference as a change.",
       "previous_state": "Tools and services for implementing end-to-end encryption, database protection, IoT security, and more in your digital solution. Free for applications with up to 250 users.",
       "current_state": "Start free , pay $0.02/month per user beyond 250 users.",
       "impact": "medium",
@@ -6052,7 +6108,15 @@
       "category": "Security",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "ours",
+        "capture_day": "2026-02-07",
+        "recorded_as": "pricing_restructured",
+        "capture": "https://web.archive.org/web/20260207044200/https://virgilsecurity.com/",
+        "stated_then": "Start free , pay $0.02/month per user beyond 250 users."
+      }
     },
     {
       "vendor": "Survicate",
@@ -6077,10 +6141,10 @@
     },
     {
       "vendor": "Zipcodestack",
-      "change_type": "limits_reduced",
+      "change_type": "record_corrected",
       "date": "2026-08-28",
       "date_source": "discovered",
-      "summary": "The free tier now offers 300 requests/month, down from 10,000. The free tier also has a daily limit of 100 requests and a rate limit of 10 requests per minute.",
+      "summary": "Data correction - Not a change by Zipcodestack. An Internet Archive copy of its page from 2026-02-25 already states the terms this record called new, and our listing of 2026-03-02 did not match them. Our re-read of 2026-08-28 recorded the difference as a change.",
       "previous_state": "Free Zip Code API and Postal Code Validation. Ten thousand free requests/month.",
       "current_state": "The free tier includes 300 requests / month. Free accounts have 100 requests per day with a maximum of 10 requests per minute.",
       "impact": "high",
@@ -6088,7 +6152,15 @@
       "category": "Dev Utilities",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "ours",
+        "capture_day": "2026-02-25",
+        "recorded_as": "limits_reduced",
+        "capture": "https://web.archive.org/web/20260225202111/https://zipcodestack.com/",
+        "stated_then": "300 Free Requests / month · 100 API calls per day · 10 requests per minute"
+      }
     },
     {
       "vendor": "Terrateam",
@@ -6103,7 +6175,11 @@
       "category": "CI/CD",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "text_day_unknown"
+      }
     },
     {
       "vendor": "MiniMax",
@@ -6134,7 +6210,11 @@
       "category": "Productivity & Notes",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "transfernow",
@@ -6149,7 +6229,11 @@
       "category": "Storage",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "GitHub Copilot",
@@ -6169,7 +6253,7 @@
     {
       "vendor": "userforge.com",
       "change_type": "limits_increased",
-      "date": "2026-08-28",
+      "date": "2026-04-19",
       "date_source": "discovered",
       "summary": "The free tier now allows unlimited personas and pages, with a limit of 3 persona reviews per month and 10 context sources. Previously 3 personas and 2 collaborators.",
       "previous_state": "Interconnected online personas, user stories and context mapping. Helps keep design and dev in sync free for up to 3 personas and two collaborators.",
@@ -6179,7 +6263,19 @@
       "category": "Design",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-03-12",
+            "first_new": "2026-04-19",
+            "last_old_capture": "https://web.archive.org/web/20260312201642/https://userforge.com/",
+            "first_new_capture": "https://web.archive.org/web/20260419145706/https://userforge.com/"
+          }
+        ]
+      }
     },
     {
       "vendor": "Bitrise",
@@ -6215,7 +6311,11 @@
       "category": "Productivity & Notes",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "linkok.com",
@@ -6282,10 +6382,10 @@
     },
     {
       "vendor": "SweetUptime",
-      "change_type": "limits_increased",
+      "change_type": "record_corrected",
       "date": "2026-08-28",
       "date_source": "discovered",
-      "summary": "The free tier now offers 20 uptime monitors, 20 domain & SSL checks, and 10 servers. Previously 10 of each.",
+      "summary": "Data correction - Not a change by SweetUptime. An Internet Archive copy of its page from 2026-01-20 already states the terms this record called new, and our listing of 2026-03-02 did not match them. Our re-read of 2026-08-28 recorded the difference as a change.",
       "previous_state": "Server monitoring, uptime monitoring, DNS & domain monitoring. Monitor 10 server, 10 uptime, and 10 domain for free.",
       "current_state": "The free plan is $0 and includes 20 uptime monitors, 20 domain & SSL, 10 servers, and 5 status pages with a 1-minute monitor interval.",
       "impact": "low",
@@ -6293,7 +6393,15 @@
       "category": "Monitoring",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "ours",
+        "capture_day": "2026-01-20",
+        "recorded_as": "limits_increased",
+        "capture": "https://web.archive.org/web/20260120154800/https://dicloud.net/sweetuptime-server-uptime-monitoring/",
+        "stated_then": "FREE $0 20 uptime monitor 20 domain & SSL 10 servers"
+      }
     },
     {
       "vendor": "addy.io",
@@ -6308,7 +6416,11 @@
       "category": "Email",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "DNSExit",
@@ -6365,7 +6477,11 @@
       "category": "Monitoring",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Xitoring.com",
@@ -6380,14 +6496,18 @@
       "category": "Monitoring",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "UserCheck",
-      "change_type": "limits_increased",
+      "change_type": "record_corrected",
       "date": "2026-08-28",
       "date_source": "discovered",
-      "summary": "The free tier now offers 1,000 credits per month (equivalent to 1 request per second) instead of 120 requests/hour.",
+      "summary": "Data correction - Not a change by UserCheck. An Internet Archive copy of its page from 2026-03-18 already states the terms this record called new, and our listing of 2026-04-12 did not match them. Our re-read of 2026-08-28 recorded the difference as a change.",
       "previous_state": "Prevent users from signing up with temporary email addresses, 120 requests/hour. Rebranded to UserCheck.",
       "current_state": "Start on our forever free plan Free Perfect for small projects or to try out our service. $0 /month Use for free 1,000 credits per month 1 request per second Limited request log Unlimited user seats Multiple API Keys",
       "impact": "low",
@@ -6395,7 +6515,15 @@
       "category": "Email",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "ours",
+        "capture_day": "2026-03-18",
+        "recorded_as": "limits_increased",
+        "capture": "https://web.archive.org/web/20260318001509/https://www.usercheck.com/",
+        "stated_then": "1,000 requests per month 1 request per second"
+      }
     },
     {
       "vendor": "MailerSend.com",
@@ -6431,7 +6559,11 @@
       "category": "Email",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Aionda Mail",
@@ -6467,7 +6599,11 @@
       "category": "Cloud Hosting",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Awardspace.com",
@@ -6492,10 +6628,10 @@
     },
     {
       "vendor": "leiga.com",
-      "change_type": "pricing_restructured",
+      "change_type": "record_corrected",
       "date": "2026-08-28",
       "date_source": "discovered",
-      "summary": "The pricing page states Leiga is \"Free forever. No credit card required.\".",
+      "summary": "Data correction - Not a change by leiga.com. An Internet Archive copy of its page from 2026-02-12 already states the terms this record called new, and our listing of 2026-03-02 did not match them. Our re-read of 2026-08-28 recorded the difference as a change.",
       "previous_state": "Leiga is a SaaS product that uses AI to automatically manage your projects, helping your team stay focused and unleash immense potential, ensuring your projects progress as planned. Free for up to 10 users, 20 custom fields, 2GB of storage space, Video Recording with AI limited to 5 mins/video, Automation Runs at 20/user/month.",
       "current_state": "Leiga is free forever with no credit card required.",
       "impact": "high",
@@ -6503,7 +6639,15 @@
       "category": "Project Management",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "ours",
+        "capture_day": "2026-02-12",
+        "recorded_as": "pricing_restructured",
+        "capture": "https://web.archive.org/web/20260212184646/https://www.leiga.com/",
+        "stated_then": "Try Leiga For Yourself Free forever. No credit card required."
+      }
     },
     {
       "vendor": "Burnermail",
@@ -6518,7 +6662,11 @@
       "category": "Email",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "PandaStack",
@@ -6533,7 +6681,11 @@
       "category": "Cloud Hosting",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "codehooks.io",
@@ -6548,7 +6700,19 @@
       "category": "Databases",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-07-11",
+            "first_new": "2026-08-28",
+            "last_old_capture": "https://web.archive.org/web/20260711102414/https://codehooks.io/",
+            "first_new_capture": "https://web.archive.org/web/20260828130330/https://codehooks.io/"
+          }
+        ]
+      }
     },
     {
       "vendor": "forwardemail.net",
@@ -6620,7 +6784,11 @@
       "category": "Storage",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "packagecloud.io",
@@ -6635,14 +6803,18 @@
       "category": "Storage",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "HeroUI",
-      "change_type": "new_tier",
+      "change_type": "record_corrected",
       "date": "2026-08-28",
       "date_source": "discovered",
-      "summary": "While HeroUI is still open-source and accessible, the page indicates a 7-day free trial for a paid plan with credits, and mentions upgrading for more credits. It also references a 'Pro' tier with components like 'Dashboard Mail Chat Finances' available as templates.",
+      "summary": "Data correction - Not a change by HeroUI. An Internet Archive copy of its page from 2026-04-10 already states the terms this record called new, and our listing of 2026-04-12 did not match them. Our re-read of 2026-08-28 recorded the difference as a change.",
       "previous_state": "Free. Beautiful, fast, and modern React & Next.js UI library. Rebranded from NextUI to HeroUI.",
       "current_state": "HeroUI offers a 7-day free trial with 2 credits. A paid plan is available for more credits. 'Pro' tier components are available as templates.",
       "impact": "high",
@@ -6650,7 +6822,15 @@
       "category": "Design",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "ours",
+        "capture_day": "2026-04-10",
+        "recorded_as": "new_tier",
+        "capture": "https://web.archive.org/web/20260410222423/https://heroui.com/",
+        "stated_then": "Start your free 7-day trial. No credit card required. · Get a paid plan for more credits · components dashboard mail chat finances Available in Pro as template"
+      }
     },
     {
       "vendor": "Circum Icons",
@@ -6675,10 +6855,10 @@
     },
     {
       "vendor": "Grapedrop",
-      "change_type": "limits_reduced",
+      "change_type": "record_corrected",
       "date": "2026-08-28",
       "date_source": "discovered",
-      "summary": "The free tier now limits users to 5 pages/sites and 100 form submissions.",
+      "summary": "Data correction - Not a change by Grapedrop. An Internet Archive copy of its page from 2026-02-13 already states the terms this record called new, and our listing of 2026-03-02 did not match them. Our re-read of 2026-08-28 recorded the difference as a change.",
       "previous_state": "Responsive, powerful, SEO-optimized web page builder based on GrapesJS Framework. Free for the first five pages, unlimited custom domains, all features, and simple usage.",
       "current_state": "The Starter (Free) plan includes 5 Pages/Sites, 100 Form Submissions, Unlimited Custom Domains, and the Full Feature Editor.",
       "impact": "medium",
@@ -6686,14 +6866,22 @@
       "category": "Design",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "ours",
+        "capture_day": "2026-02-13",
+        "recorded_as": "limits_reduced",
+        "capture": "https://web.archive.org/web/20260213005700/https://grapedrop.com/",
+        "stated_then": "Starter Free / forever --> 5 Pages/Sites 100 Form Submissions"
+      }
     },
     {
       "vendor": "Icon Horse",
-      "change_type": "limits_reduced",
+      "change_type": "record_corrected",
       "date": "2026-08-28",
       "date_source": "discovered",
-      "summary": "The free tier now has a limit of 1,000 icons/month and includes generic fallbacks.",
+      "summary": "Data correction - Not a change by Icon Horse. An Internet Archive copy of its page from 2026-02-16 already states the terms this record called new, and our listing of 2026-03-02 did not match them. Our re-read of 2026-08-28 recorded the difference as a change.",
       "previous_state": "Get the highest resolution favicon for any website from our simple API.",
       "current_state": "Hobby Free Up to 1,000 icons/month Generic fallbacks for sites with no icons No account needed",
       "impact": "medium",
@@ -6701,14 +6889,22 @@
       "category": "Design",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "ours",
+        "capture_day": "2026-02-16",
+        "recorded_as": "limits_reduced",
+        "capture": "https://web.archive.org/web/20260216110822/https://icon.horse/",
+        "stated_then": "Hobby Free Up to 1,000 icons/month · Generic fallbacks for sites with no icons"
+      }
     },
     {
       "vendor": "ScrumFast",
-      "change_type": "limits_increased",
+      "change_type": "record_corrected",
       "date": "2026-08-28",
       "date_source": "discovered",
-      "summary": "The user limit has increased from 5 to 15.",
+      "summary": "Data correction - Not a change by ScrumFast. An Internet Archive copy of its page from 2026-02-20 already states the terms this record called new, and our listing of 2026-03-02 did not match them. Our re-read of 2026-08-28 recorded the difference as a change.",
       "previous_state": "Scrum board with a very intuitive interface, free up to 5 users.",
       "current_state": "Up to 15 Users Free. No paid options.",
       "impact": "medium",
@@ -6716,7 +6912,15 @@
       "category": "Project Management",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "ours",
+        "capture_day": "2026-02-20",
+        "recorded_as": "limits_increased",
+        "capture": "https://web.archive.org/web/20260220195207/https://www.scrumfast.com/",
+        "stated_then": "Up to 15 Users"
+      }
     },
     {
       "vendor": "Pinata IPFS",
@@ -6731,14 +6935,18 @@
       "category": "Storage",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Umso",
-      "change_type": "limits_reduced",
+      "change_type": "record_corrected",
       "date": "2026-08-28",
       "date_source": "discovered",
-      "summary": "The free tier now includes a homepage only, Umso branding, a free subdomain, and basic analytics.",
+      "summary": "Data correction - Not a change by Umso. An Internet Archive copy of its page from 2026-04-01 already states the terms this record called new, and our listing of 2026-04-12 did not match them. Our re-read of 2026-08-28 recorded the difference as a change.",
       "previous_state": "AI website builder. Generate, edit, and publish beautiful websites and landing pages for your startup. One website for free. Formerly Landen.",
       "current_state": "The free plan is $0 / Site / Month and includes: Homepage Only, Blog, Umso Branding, Free Subdomain, Basic Analytics, Chat & Email Support.",
       "impact": "medium",
@@ -6746,14 +6954,22 @@
       "category": "Design",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "ours",
+        "capture_day": "2026-04-01",
+        "recorded_as": "limits_reduced",
+        "capture": "https://web.archive.org/web/20260401162753/https://www.umso.com/",
+        "stated_then": "Homepage Only · Umso Branding · Free Subdomain · Basic Analytics"
+      }
     },
     {
       "vendor": "TeleportHQ",
-      "change_type": "limits_reduced",
+      "change_type": "record_corrected",
       "date": "2026-08-28",
       "date_source": "discovered",
-      "summary": "The free tier no longer explicitly mentions a limit of 'three free projects'.",
+      "summary": "Data correction - Not a change by TeleportHQ. An Internet Archive copy of its page from 2026-03-02 already states the terms this record called new, and our listing of 2026-03-02 did not match them. Our re-read of 2026-08-28 recorded the difference as a change.",
       "previous_state": "Low-code Front-end Design & Development Platform. TeleportHQ is the collaborative front-end platform to instantly create and publish headless static websites. Three free projects, unlimited collaborators, and free code export.",
       "current_state": "The page promotes starting for free with no explicit project limits mentioned. It highlights features like AI website building, code export, and form creation (with paid tiers for more form submissions).",
       "impact": "medium",
@@ -6761,7 +6977,15 @@
       "category": "Design",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "ours",
+        "capture_day": "2026-03-02",
+        "recorded_as": "limits_reduced",
+        "capture": "https://web.archive.org/web/20260302180044/https://teleporthq.io/",
+        "stated_then": "Start for free"
+      }
     },
     {
       "vendor": "tabler-icons.io",
@@ -6776,7 +7000,31 @@
       "category": "Design",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-04-14",
+            "first_new": "2026-04-16",
+            "last_old_capture": "https://web.archive.org/web/20260414212920/https://tabler.io/icons",
+            "first_new_capture": "https://web.archive.org/web/20260416163551/https://tabler.io/icons"
+          },
+          {
+            "last_old": "2026-04-29",
+            "first_new": "2026-05-15",
+            "last_old_capture": "https://web.archive.org/web/20260429011134/https://tabler.io/icons",
+            "first_new_capture": "https://web.archive.org/web/20260515210713/https://tabler.io/icons"
+          },
+          {
+            "last_old": "2026-07-10",
+            "first_new": "2026-07-19",
+            "last_old_capture": "https://web.archive.org/web/20260710142335/https://tabler.io/icons",
+            "first_new_capture": "https://web.archive.org/web/20260719141323/https://tabler.io/icons"
+          }
+        ]
+      }
     },
     {
       "vendor": "numverify",
@@ -6791,7 +7039,11 @@
       "category": "Dev Utilities",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Ketch",
@@ -6806,7 +7058,11 @@
       "category": "Security",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Versionfeeds",
@@ -6821,14 +7077,18 @@
       "category": "Dev Utilities",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Shadcn Studio",
-      "change_type": "pricing_model_change",
+      "change_type": "record_corrected",
       "date": "2026-08-28",
       "date_source": "discovered",
-      "summary": "The service is no longer a simple free tier. It now offers a range of features, including AI-powered theme generation and theme sharing, that are likely part of paid plans.",
+      "summary": "Data correction - Not a change by Shadcn Studio. An Internet Archive copy of its page from 2026-02-17 already states the terms this record called new, and our listing of 2026-03-02 did not match them. Our re-read of 2026-08-28 recorded the difference as a change.",
       "previous_state": "Preview your theme changes across different components and layouts.",
       "current_state": "The page details several paid plans with prices ranging from $60 to $320. It also mentions a 'Pro Features' section with AI-powered theme generation, theme sharing, and database undo/redo, implying these are not available in a free tier.",
       "impact": "high",
@@ -6836,7 +7096,15 @@
       "category": "Design",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "ours",
+        "capture_day": "2026-02-17",
+        "recorded_as": "pricing_model_change",
+        "capture": "https://web.archive.org/web/20260217083843/https://shadcnstudio.com/theme-generator",
+        "stated_then": "AI-Powered Shadcn Theme Generation Harness cutting-edge AI to craft beautiful, well-balanced themes, enhanced with powerful features for PRO customization using our Shadcn theme provider."
+      }
     },
     {
       "vendor": "Hotjar",
@@ -6851,7 +7119,11 @@
       "category": "Analytics",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "TraceLog",
@@ -6883,7 +7155,11 @@
       "alternatives": [],
       "detected_by": "reverify-ai",
       "recorded_date": "2026-08-28",
-      "listing_effect": "ends"
+      "listing_effect": "ends",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "veriphone",
@@ -6898,7 +7174,11 @@
       "category": "Dev Utilities",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Rybbit",
@@ -6934,7 +7214,11 @@
       "category": "Startup Perks",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Bench",
@@ -6949,7 +7233,19 @@
       "category": "Startup Perks",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-03-12",
+            "first_new": null,
+            "last_old_capture": "https://web.archive.org/web/20260312100423/https://www.bench.co/integrations/stripe",
+            "first_new_capture": null
+          }
+        ]
+      }
     },
     {
       "vendor": "Cursor",
@@ -6985,7 +7281,11 @@
       "category": "Headless CMS",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Highlight.io",
@@ -7078,7 +7378,11 @@
       "category": "API Gateway",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Pareto Security",
@@ -7093,7 +7397,11 @@
       "category": "Security",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Polar",
@@ -7123,7 +7431,11 @@
       "category": "Documentation",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Amplitude",
@@ -7180,7 +7492,11 @@
       "category": "Databases",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Sendinblue",
@@ -7195,7 +7511,25 @@
       "category": "Startup Perks",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2025-11-20",
+            "first_new": "2026-05-02",
+            "last_old_capture": "https://web.archive.org/web/20251120003549/https://www.joinsecret.com/explore",
+            "first_new_capture": "https://web.archive.org/web/20260502140333/https://www.joinsecret.com/explore"
+          },
+          {
+            "last_old": "2026-05-02",
+            "first_new": "2026-09-04",
+            "last_old_capture": "https://web.archive.org/web/20260502140333/https://www.joinsecret.com/explore",
+            "first_new_capture": "https://web.archive.org/web/20260904223153/https://www.joinsecret.com/explore"
+          }
+        ]
+      }
     },
     {
       "vendor": "Nango",
@@ -7225,7 +7559,11 @@
       "category": "Logging",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Invantive Cloud",
@@ -7240,12 +7578,16 @@
       "category": "Dev Utilities",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Augment Code",
       "change_type": "free_tier_removed",
-      "date": "2026-08-28",
+      "date": "2026-06-17",
       "date_source": "discovered",
       "summary": "The free tier has been removed. The entry plan is Standard at $20/month flat, with Business at $100/month flat; each covers up to 50 seats and includes $20 and $100 of monthly usage respectively. Corrected 2026-09-02: this row previously stated the lowest tier was Business at $100/month.",
       "previous_state": "AI coding assistant with deep codebase understanding. No free tier. Indie plan $20/month (40K credits). Standard $60/dev/month (130K credits, up to 20 users). Credit-based consumption model. Supports VS Code, JetBrains, and CLI. SOC 2 Type II certified",
@@ -7255,7 +7597,19 @@
       "category": "AI Coding",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-03-12",
+            "first_new": "2026-06-17",
+            "last_old_capture": "https://web.archive.org/web/20260312065818/https://www.augmentcode.com/pricing",
+            "first_new_capture": "https://web.archive.org/web/20260617062541/https://www.augmentcode.com/pricing"
+          }
+        ]
+      }
     },
     {
       "vendor": "Kong",
@@ -7281,7 +7635,7 @@
     {
       "vendor": "Directus",
       "change_type": "new_free_tier",
-      "date": "2026-08-28",
+      "date": "2026-06-03",
       "date_source": "discovered",
       "summary": "The free tier information has been updated. While self-hosting remains free, the Open Innovation Grant now provides a free option for organizations under $5M revenue. The cloud free tier has been replaced with a $99/mo cloud hosting option for Grant recipients.",
       "previous_state": "Self-hosted free (BSL license, free for <$5M revenue). Cloud free tier discontinued Nov 2025 — Cloud starts at $15/mo",
@@ -7291,7 +7645,19 @@
       "category": "Headless CMS",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-05-15",
+            "first_new": "2026-06-03",
+            "last_old_capture": "https://web.archive.org/web/20260515081724/https://directus.io/pricing/",
+            "first_new_capture": "https://web.archive.org/web/20260603145640/https://directus.com/pricing"
+          }
+        ]
+      }
     },
     {
       "vendor": "Retool",
@@ -7321,7 +7687,11 @@
       "category": "Error Tracking",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "page_unreadable_today"
+      }
     },
     {
       "vendor": "Mapbox",
@@ -7336,7 +7706,11 @@
       "category": "Maps/Geolocation",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Formbricks",
@@ -7408,7 +7782,11 @@
       "category": "Container Registry",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Unkey",
@@ -7423,7 +7801,31 @@
       "category": "API Gateway",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-04-10",
+            "first_new": "2026-06-26",
+            "last_old_capture": "https://web.archive.org/web/20260410025929/https://www.unkey.com/pricing",
+            "first_new_capture": "https://web.archive.org/web/20260626122018/https://www.unkey.com/pricing"
+          },
+          {
+            "last_old": "2026-06-26",
+            "first_new": "2026-07-26",
+            "last_old_capture": "https://web.archive.org/web/20260626122018/https://www.unkey.com/pricing",
+            "first_new_capture": "https://web.archive.org/web/20260726212239/https://www.unkey.com/pricing"
+          },
+          {
+            "last_old": "2026-07-26",
+            "first_new": "2026-09-20",
+            "last_old_capture": "https://web.archive.org/web/20260726212239/https://www.unkey.com/pricing",
+            "first_new_capture": "https://web.archive.org/web/20260920152529/https://www.unkey.com/pricing"
+          }
+        ]
+      }
     },
     {
       "vendor": "Svix",
@@ -7449,7 +7851,7 @@
     {
       "vendor": "Svix",
       "change_type": "limits_increased",
-      "date": "2026-09-09",
+      "date": "2026-06-14",
       "date_source": "discovered",
       "summary": "The free tier now has a limit of 200 messages/second instead of 50 messages/second.",
       "previous_state": "Webhook delivery — 50K messages/month, 50 msg/sec throughput, 30-day payload retention, 3 team members. 99.9% SLA",
@@ -7459,7 +7861,19 @@
       "category": "Messaging",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-09"
+      "recorded_date": "2026-09-09",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-04-30",
+            "first_new": "2026-06-14",
+            "last_old_capture": "https://web.archive.org/web/20260430194523/https://www.svix.com/pricing/",
+            "first_new_capture": "https://web.archive.org/web/20260614101549/https://www.svix.com/pricing/"
+          }
+        ]
+      }
     },
     {
       "vendor": "Sendbird",
@@ -7500,7 +7914,7 @@
     {
       "vendor": "Deepgram",
       "change_type": "new_free_tier",
-      "date": "2026-08-28",
+      "date": "2026-08-27",
       "date_source": "discovered",
       "summary": "The $200 free credit is still offered, but the details have expanded. Text-to-Speech's Flux TTS is free until September 12, 2026, and Voice Agent API's Flux TTS is also free until September 12, 2026.",
       "previous_state": "Speech-to-text and text-to-speech API — $200 free credits on signup (no credit card required), ~43K minutes transcription with Nova model, credits never expire. Access to all model endpoints",
@@ -7510,7 +7924,19 @@
       "category": "AI / ML",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-03-18",
+            "first_new": "2026-08-27",
+            "last_old_capture": "https://web.archive.org/web/20260318190812/https://deepgram.com/pricing",
+            "first_new_capture": "https://web.archive.org/web/20260827232006/https://deepgram.com/pricing"
+          }
+        ]
+      }
     },
     {
       "vendor": "Tyk",
@@ -7525,7 +7951,11 @@
       "category": "API Gateway",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Stoplight",
@@ -7582,7 +8012,11 @@
       "category": "Messaging",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Microsoft Founders Hub",
@@ -7618,7 +8052,19 @@
       "category": "Testing",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-02-28",
+            "first_new": "2026-08-28",
+            "last_old_capture": "https://web.archive.org/web/20260228015933/https://grafana.com/pricing/",
+            "first_new_capture": "https://web.archive.org/web/20260828172412/https://grafana.com/pricing/"
+          }
+        ]
+      }
     },
     {
       "vendor": "Comet ML",
@@ -7675,7 +8121,11 @@
       "category": "Cloud IaaS",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "page_unreadable_today"
+      }
     },
     {
       "vendor": "microlink.io",
@@ -7694,10 +8144,10 @@
     },
     {
       "vendor": "OCR.Space",
-      "change_type": "pricing_restructured",
+      "change_type": "record_corrected",
       "date": "2026-08-28",
       "date_source": "discovered",
-      "summary": "The file size limit for the free tier is now 5MB, up from 1MB.",
+      "summary": "Data correction - Not a change by OCR.Space. An Internet Archive copy of its page from 2026-03-02 already states the terms this record called new, and our listing of 2026-03-02 did not match them. Our re-read of 2026-08-28 recorded the difference as a change.",
       "previous_state": "An OCR API parses image and pdf files that return the text results in JSON format. 25,000 requests per month are free and a 1MB file size limit.",
       "current_state": "The free tier has a file size limit of 5MB per document.",
       "impact": "low",
@@ -7705,7 +8155,15 @@
       "category": "AI / ML",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "ours",
+        "capture_day": "2026-03-02",
+        "recorded_as": "pricing_restructured",
+        "capture": "https://web.archive.org/web/20260302062449/http://ocr.space/",
+        "stated_then": "The free tier has a file size limit of 5MB per document."
+      }
     },
     {
       "vendor": "Pullflow",
@@ -7762,7 +8220,11 @@
       "category": "Notebooks & Data Science",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Webvizio",
@@ -7777,7 +8239,11 @@
       "category": "Communication",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "webhook.site",
@@ -7792,7 +8258,11 @@
       "category": "Testing",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Tencent RTC",
@@ -7817,10 +8287,10 @@
     },
     {
       "vendor": "DhiWise",
-      "change_type": "rebranded",
+      "change_type": "record_corrected",
       "date": "2026-08-28",
       "date_source": "discovered",
-      "summary": "The vendor is now called Rocket and the description has changed. As a no-code AI builder that generates full-stack apps from prompts.",
+      "summary": "Data correction - Not a change by DhiWise. An Internet Archive copy of its page from 2026-02-18 already states the terms this record called new, and our listing of 2026-03-02 did not match them. Our re-read of 2026-08-28 recorded the difference as a change.",
       "previous_state": "Converts Figma designs into dynamic Flutter and React applications. Its code generation technology is designed to optimize workflows for building production-ready mobile and web experiences.",
       "current_state": "The page describes Rocket as a no-code AI builder that generates full-stack apps from prompts, including backend and database setup. It offers features like one-shot app generation, UI/UX design, SEO-optimized copy, and deployment to platforms like Netlify and Github. The page asks 'Do you offer free plans?' but does not provide details.",
       "impact": "high",
@@ -7828,7 +8298,15 @@
       "category": "IDE & Code Editors",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "ours",
+        "capture_day": "2026-02-18",
+        "recorded_as": "rebranded",
+        "capture": "https://web.archive.org/web/20260218193218/https://www.dhiwise.com/",
+        "stated_then": "Rocket.new · Build Full Apps from Plain Text- No Coding Required."
+      }
     },
     {
       "vendor": "BugBug",
@@ -7843,7 +8321,11 @@
       "category": "Testing",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "InstallOnAir",
@@ -7858,7 +8340,11 @@
       "category": "Mobile Development",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "ploi.io",
@@ -7894,7 +8380,11 @@
       "category": "Logging",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Supermaven",
@@ -7909,7 +8399,11 @@
       "category": "IDE & Code Editors",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "lost-pixel.com",
@@ -7926,14 +8420,18 @@
       "alternatives": [],
       "detected_by": "reverify-ai",
       "recorded_date": "2026-08-28",
-      "listing_effect": "ends"
+      "listing_effect": "ends",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "bitnami.com",
-      "change_type": "pricing_restructured",
+      "change_type": "record_corrected",
       "date": "2026-08-28",
       "date_source": "discovered",
-      "summary": "The free tier is now limited to non-production use cases and only provides access to a portion of the images.",
+      "summary": "Data correction - Not a change by bitnami.com. An Internet Archive copy of its page from 2026-03-02 already states the terms this record called new, and our listing of 2026-03-02 did not match them. Our re-read of 2026-08-28 recorded the difference as a change.",
       "previous_state": "Deploy prepared apps on IaaS. Management of 1 AWS micro instance free",
       "current_state": "Developers can access a portion of Bitnami Secure Images for non-production use cases. Free images are only available in the latest tag. For access to all the images/applications in the catalog, along with many other benefits, you can purchase Bitnami Secure Images.",
       "impact": "high",
@@ -7941,14 +8439,22 @@
       "category": "Server Management",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "ours",
+        "capture_day": "2026-03-02",
+        "recorded_as": "pricing_restructured",
+        "capture": "https://web.archive.org/web/20260302041822/https://bitnami.com/",
+        "stated_then": "Developers can access a portion of Bitnami Secure Images for non-production use cases."
+      }
     },
     {
       "vendor": "serveravatar.com",
-      "change_type": "limits_increased",
+      "change_type": "record_corrected",
       "date": "2026-08-28",
       "date_source": "discovered",
-      "summary": "The free tier now allows for unlimited websites and applications, and no longer limits to one server. It's called 'ServerAvatar Lite'.",
+      "summary": "Data correction - Not a change by serveravatar.com. An Internet Archive copy of its page from 2026-02-17 already states the terms this record called new, and our listing of 2026-03-02 did not match them. Our re-read of 2026-08-28 recorded the difference as a change.",
       "previous_state": "Manage and monitor PHP-based web servers with automated configurations. Free for one server.",
       "current_state": "ServerAvatar Lite is a free cloud server management platform designed to help developers and businesses deploy, manage, and scale unlimited websites and applications with ease.",
       "impact": "high",
@@ -7956,7 +8462,15 @@
       "category": "Server Management",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "ours",
+        "capture_day": "2026-02-17",
+        "recorded_as": "limits_increased",
+        "capture": "https://web.archive.org/web/20260217030149/https://serveravatar.com/",
+        "stated_then": "ServerAvatar Lite Completely Free hosting control panel for Unlimited servers and sites."
+      }
     },
     {
       "vendor": "xcloud.host",
@@ -7971,7 +8485,11 @@
       "category": "Server Management",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "localazy.com",
@@ -7986,7 +8504,11 @@
       "category": "Localization",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "SimplePDF.eu",
@@ -8011,10 +8533,10 @@
     },
     {
       "vendor": "Vaadin",
-      "change_type": "limits_reduced",
+      "change_type": "record_corrected",
       "date": "2026-08-28",
       "date_source": "discovered",
-      "summary": "The page highlights that Vaadin Core is free & open source (Apache 2.0 licensed) and can be used even in commercial projects. It does mention maintenance up to 15 years *per version* as a paid service.",
+      "summary": "Data correction - Not a change by Vaadin. An Internet Archive copy of its page from 2026-02-26 already states the terms this record called new, and our listing of 2026-03-02 did not match them. Our re-read of 2026-08-28 recorded the difference as a change.",
       "previous_state": "Build scalable UIs in Java or TypeScript, and use the integrated tooling, components, and design system to iterate faster, design better, and simplify the development process. Unlimited Projects with five years of free maintenance.",
       "current_state": "Vaadin Core is free & open source, Apache 2.0 licensed. Maintenance is available as a paid service for up to 15 years per version.",
       "impact": "medium",
@@ -8022,14 +8544,22 @@
       "category": "Testing",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "ours",
+        "capture_day": "2026-02-26",
+        "recorded_as": "limits_reduced",
+        "capture": "https://web.archive.org/web/20260226193633/https://vaadin.com/",
+        "stated_then": "Open Source The core of the product is licensed under permissive Apache 2.0 license . Commercial features are available where we can add value beyond the fully functional core. · Up to 15 years of support is available for each version."
+      }
     },
     {
       "vendor": "Mockplus iDoc",
-      "change_type": "limits_increased",
+      "change_type": "record_corrected",
       "date": "2026-08-28",
       "date_source": "discovered",
-      "summary": "The free plan now includes up to 10 users and active projects, an increase from three users and five projects.",
+      "summary": "Data correction - Not a change by Mockplus iDoc. An Internet Archive copy of its page from 2026-02-16 already states the terms this record called new, and our listing of 2026-03-02 did not match them. Our re-read of 2026-08-28 recorded the difference as a change.",
       "previous_state": "Mockplus iDoc is a powerful design collaboration & handoff tool. Free Plan includes three users and five projects with all features available.",
       "current_state": "Everyone can register for an account to get the basic free plan for up to 10 users and active projects.",
       "impact": "low",
@@ -8037,7 +8567,15 @@
       "category": "Design",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "ours",
+        "capture_day": "2026-02-16",
+        "recorded_as": "limits_increased",
+        "capture": "https://web.archive.org/web/20260216064924/https://www.mockplus.com/cloud",
+        "stated_then": "Yes. Everyone can register for an account to get the basic free plan for up to 10 users and active projects."
+      }
     },
     {
       "vendor": "Zoho Docs",
@@ -8052,7 +8590,11 @@
       "category": "Productivity & Notes",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-31"
+      "recorded_date": "2026-08-31",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "page_unreadable_today"
+      }
     },
     {
       "vendor": "CatchJS.com",
@@ -8067,7 +8609,11 @@
       "category": "Error Tracking",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-01"
+      "recorded_date": "2026-09-01",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Whitespace",
@@ -8082,14 +8628,18 @@
       "category": "Error Tracking",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-01"
+      "recorded_date": "2026-09-01",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "page_unreadable_today"
+      }
     },
     {
       "vendor": "formlets.com",
-      "change_type": "pricing_restructured",
+      "change_type": "record_corrected",
       "date": "2026-09-01",
       "date_source": "discovered",
-      "summary": "The free tier now offers unlimited submissions, whereas previously it was limited to 100 submissions per month.",
+      "summary": "Data correction - Not a change by formlets.com. An Internet Archive copy of its page from 2026-02-23 already states the terms this record called new, and our listing of 2026-03-02 did not match them. Our re-read of 2026-09-01 recorded the difference as a change.",
       "previous_state": "Online forms, unlimited single page forms/month, 100 submissions/month, email notifications.",
       "current_state": "Unlimited submits & No signup/creditcard needed",
       "impact": "high",
@@ -8097,7 +8647,15 @@
       "category": "Forms",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-01"
+      "recorded_date": "2026-09-01",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "ours",
+        "capture_day": "2026-02-23",
+        "recorded_as": "pricing_restructured",
+        "capture": "https://web.archive.org/web/20260223060053/https://formlets.com/",
+        "stated_then": "Unlimited submits"
+      }
     },
     {
       "vendor": "staticforms.xyz",
@@ -8112,7 +8670,11 @@
       "category": "Forms",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-01"
+      "recorded_date": "2026-09-01",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "page_unreadable_today"
+      }
     },
     {
       "vendor": "Zonomi",
@@ -8127,7 +8689,11 @@
       "category": "DNS & Domain Management",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-01"
+      "recorded_date": "2026-09-01",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "page_unreadable_today"
+      }
     },
     {
       "vendor": "logflare.app",
@@ -8142,7 +8708,11 @@
       "category": "Logging",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-01"
+      "recorded_date": "2026-09-01",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "HeroTofu.com",
@@ -8157,7 +8727,11 @@
       "category": "Forms",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-01"
+      "recorded_date": "2026-09-01",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "webhookrelay.com",
@@ -8172,7 +8746,11 @@
       "category": "Tunneling & Networking",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-01"
+      "recorded_date": "2026-09-01",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Formcarry.com",
@@ -8187,7 +8765,11 @@
       "category": "Forms",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-01"
+      "recorded_date": "2026-09-01",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "LangSmith",
@@ -8202,7 +8784,11 @@
       "category": "AI / ML",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-01"
+      "recorded_date": "2026-09-01",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Zenable",
@@ -8217,7 +8803,11 @@
       "category": "AI / ML",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-01"
+      "recorded_date": "2026-09-01",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Replit",
@@ -8232,7 +8822,11 @@
       "category": "IDE & Code Editors",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-01"
+      "recorded_date": "2026-09-01",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Apify",
@@ -8272,10 +8866,10 @@
     },
     {
       "vendor": "geocodify.com",
-      "change_type": "pricing_restructured",
+      "change_type": "record_corrected",
       "date": "2026-09-01",
       "date_source": "discovered",
-      "summary": "The free tier now has 30,000 calls/month.",
+      "summary": "Data correction - Not a change by geocodify.com. An Internet Archive copy of its page from 2026-02-19 already states the terms this record called new, and our listing of 2026-03-02 did not match them. Our re-read of 2026-09-01 recorded the difference as a change.",
       "previous_state": "Geocoding and Geoparsing via API or CSV Upload. 10k free queries/month.",
       "current_state": "Free $0.00 /Month Save $0.00 on yearly plan 30,000 Calls/month 1 requests per/second Commercial use allowed Attribution Required Community Support Ecommerce Ready SLA Dedicated account manager",
       "impact": "low",
@@ -8283,7 +8877,15 @@
       "category": "Maps/Geolocation",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-01"
+      "recorded_date": "2026-09-01",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "ours",
+        "capture_day": "2026-02-19",
+        "recorded_as": "pricing_restructured",
+        "capture": "https://web.archive.org/web/20260219073010/https://geocodify.com/",
+        "stated_then": "30,000 Calls/month"
+      }
     },
     {
       "vendor": "mockaroo",
@@ -8319,14 +8921,26 @@
       "category": "Team Collaboration",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-01"
+      "recorded_date": "2026-09-01",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-04-24",
+            "first_new": "2026-06-07",
+            "last_old_capture": "https://web.archive.org/web/20260424072522/https://liveblocks.io/pricing",
+            "first_new_capture": "https://web.archive.org/web/20260607224546/https://liveblocks.io/pricing"
+          }
+        ]
+      }
     },
     {
       "vendor": "Mediaworkbench.ai",
-      "change_type": "pricing_restructured",
+      "change_type": "record_corrected",
       "date": "2026-09-01",
       "date_source": "discovered",
-      "summary": "The product at this domain changed. The previous state described 100,000 free words across Azure OpenAI, DeepSeek and Gemini; the page is now a social media scheduling tool and carries none of those terms. A free plan remains at $0/month.",
+      "summary": "Data correction - Not a change by Mediaworkbench.ai. An Internet Archive copy of its page from 2026-02-13 already states the terms this record called new, and our listing of 2026-03-02 did not match them. Our re-read of 2026-09-01 recorded the difference as a change.",
       "previous_state": "MediaWorkbench.ai offers 100,000 free words for Azure OpenAI, DeepSeek, and Google Gemini models, enabling users to access powerful tools for code generation, deep research, and image creation.",
       "current_state": "A free plan at $0/month. The only feature list on the page sits behind an Access Features tooltip and renders identically for all four plans ($49, $39, $29 and $0), so the page states no per-plan entitlement.",
       "impact": "high",
@@ -8334,12 +8948,20 @@
       "category": "AI / ML",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-01"
+      "recorded_date": "2026-09-01",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "ours",
+        "capture_day": "2026-02-13",
+        "recorded_as": "pricing_restructured",
+        "capture": "https://web.archive.org/web/20260213213927/https://mediaworkbench.ai/",
+        "stated_then": "Automate, analyze, and collaborate across all your channels. Unlock your team’s full creative potential with our Platform. · Free Free plan $0 /monthly Billed Monthly Start for Free"
+      }
     },
     {
       "vendor": "PromoProxy",
       "change_type": "limits_reduced",
-      "date": "2026-09-01",
+      "date": "2026-05-03",
       "date_source": "discovered",
       "summary": "The free tier now includes 3 GB of data per day, down from 1 GB.",
       "previous_state": "Free cloud Secure Web Gateway. Free plan includes up to 5 users and 1 GB per day.",
@@ -8349,7 +8971,19 @@
       "category": "CDN",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-01"
+      "recorded_date": "2026-09-01",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-03-09",
+            "first_new": "2026-05-03",
+            "last_old_capture": "https://web.archive.org/web/20260309204457/https://promoproxy.net/",
+            "first_new_capture": "https://web.archive.org/web/20260503154314/https://promoproxy.net/"
+          }
+        ]
+      }
     },
     {
       "vendor": "zilore.com",
@@ -8364,7 +8998,11 @@
       "category": "DNS & Domain Management",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-01"
+      "recorded_date": "2026-09-01",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Filebase",
@@ -8405,7 +9043,7 @@
     {
       "vendor": "Firecrawl",
       "change_type": "limits_increased",
-      "date": "2026-09-01",
+      "date": "2026-05-07",
       "date_source": "discovered",
       "summary": "The free tier now offers 1,000 credits/month instead of 500.",
       "previous_state": "Web scraping API — 500 credits (up to 500 pages), 2 concurrent requests, no credit card required",
@@ -8415,7 +9053,19 @@
       "category": "Web Scraping",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-01"
+      "recorded_date": "2026-09-01",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-04-28",
+            "first_new": "2026-05-07",
+            "last_old_capture": "https://web.archive.org/web/20260428211525/https://www.firecrawl.dev/pricing",
+            "first_new_capture": "https://web.archive.org/web/20260507114104/https://www.firecrawl.dev/pricing"
+          }
+        ]
+      }
     },
     {
       "vendor": "FusionAuth",
@@ -8440,10 +9090,10 @@
     },
     {
       "vendor": "Wufoo",
-      "change_type": "pricing_restructured",
+      "change_type": "record_corrected",
       "date": "2026-09-01",
       "date_source": "discovered",
-      "summary": "The free plan now allows up to 5 forms, not 100 submissions.",
+      "summary": "Data correction - Not a change by Wufoo. An Internet Archive copy of its page from 2026-03-02 already states the terms this record called new, and our listing of 2026-03-02 did not match them. Our re-read of 2026-09-01 recorded the difference as a change.",
       "previous_state": "Quick forms to use on websites. The free plan has a limit of 100 submissions each month.",
       "current_state": "Sign up for a FREE account and build up to 5 forms for free.",
       "impact": "medium",
@@ -8451,7 +9101,15 @@
       "category": "Forms",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-01"
+      "recorded_date": "2026-09-01",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "ours",
+        "capture_day": "2026-03-02",
+        "recorded_as": "pricing_restructured",
+        "capture": "https://web.archive.org/web/20260302171205/https://www.wufoo.com/",
+        "stated_then": "Sign up for a FREE account and build up to 5 forms for free."
+      }
     },
     {
       "vendor": "Glauca",
@@ -8466,14 +9124,18 @@
       "category": "DNS & Domain Management",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-01"
+      "recorded_date": "2026-09-01",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "positionstack",
-      "change_type": "limits_reduced",
+      "change_type": "record_corrected",
       "date": "2026-09-01",
       "date_source": "discovered",
-      "summary": "The free tier now offers 100 requests per month, down from 25,000.",
+      "summary": "Data correction - Not a change by positionstack. An Internet Archive copy of its page from 2026-02-23 already states the terms this record called new, and our listing of 2026-03-02 did not match them. Our re-read of 2026-09-01 recorded the difference as a change.",
       "previous_state": "Free geocoding for global places and coordinates. 25,000 Requests per month for personal use.",
       "current_state": "Send 100 monthly geocode requests for free — in case you ever need more, premium geocoding subscriptions start at just USD $9.99 per month.",
       "impact": "high",
@@ -8481,7 +9143,15 @@
       "category": "Maps/Geolocation",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-01"
+      "recorded_date": "2026-09-01",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "ours",
+        "capture_day": "2026-02-23",
+        "recorded_as": "limits_reduced",
+        "capture": "https://web.archive.org/web/20260223125007/https://positionstack.com/",
+        "stated_then": "Send 100 monthly geocode requests for free"
+      }
     },
     {
       "vendor": "Mocklets",
@@ -8517,12 +9187,24 @@
       "category": "Payments",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-02"
+      "recorded_date": "2026-09-02",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-08-28",
+            "first_new": null,
+            "last_old_capture": "https://web.archive.org/web/20260828130240/https://currencyapi.com/",
+            "first_new_capture": null
+          }
+        ]
+      }
     },
     {
       "vendor": "Browserbase",
       "change_type": "limits_increased",
-      "date": "2026-09-02",
+      "date": "2026-03-21",
       "date_source": "discovered",
       "summary": "The free tier now offers 3 concurrent browsers and 1 browser hour, with 3 agent runs, 1,000 search calls, 1,000 fetch calls, 15 minutes/session, and 7 days data retention. Previously 1 browser hour, 1 concurrent browser, 15-minute max session, 7-day data retention, and 1 project. The concurrent browser limit has increased, and the number of agent runs has increased.",
       "previous_state": "Headless browser infrastructure — 1 browser hour/mo, 1 concurrent browser, 15-minute max session, 7-day data retention, 1 project",
@@ -8532,12 +9214,24 @@
       "category": "Browser Automation",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-02"
+      "recorded_date": "2026-09-02",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-02-18",
+            "first_new": "2026-03-21",
+            "last_old_capture": "https://web.archive.org/web/20260218055546/https://www.browserbase.com/pricing",
+            "first_new_capture": "https://web.archive.org/web/20260321045842/https://www.browserbase.com/pricing"
+          }
+        ]
+      }
     },
     {
       "vendor": "Terragrunt Scale",
       "change_type": "pricing_restructured",
-      "date": "2026-09-02",
+      "date": "2026-05-21",
       "date_source": "discovered",
       "summary": "The free tier now has a limit of 25 infrastructure units, down from \"500+ managed resources\" or matching HCP Terraform's free tier.",
       "previous_state": "IaC orchestration platform by Gruntwork — free tier with GitOps from GitHub/GitLab, dependency-ordered plan/apply, drift detection, and module update automation. Limits match or exceed HCP Terraform free tier (500+ managed resources). Positioned as HCP Terraform alternative",
@@ -8547,7 +9241,19 @@
       "category": "Infrastructure",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-02"
+      "recorded_date": "2026-09-02",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-03-18",
+            "first_new": "2026-05-21",
+            "last_old_capture": "https://web.archive.org/web/20260318130400/https://terragrunt.com/terragrunt-scale",
+            "first_new_capture": "https://web.archive.org/web/20260521133609/https://terragrunt.com/terragrunt-scale"
+          }
+        ]
+      }
     },
     {
       "vendor": "Crystallize",
@@ -8572,10 +9278,10 @@
     },
     {
       "vendor": "serveo",
-      "change_type": "limits_reduced",
+      "change_type": "record_corrected",
       "date": "2026-09-02",
       "date_source": "discovered",
-      "summary": "The free tier now limits users to 3 active tunnels and requires a paid plan for unlimited tunnels.",
+      "summary": "Data correction - Not a change by serveo. An Internet Archive copy of its page from 2026-03-02 already states the terms this record called new, and our listing of 2026-03-02 did not match them. Our re-read of 2026-09-02 recorded the difference as a change.",
       "previous_state": "Expose local servers to the internet. No installation, no signup. Free subdomain, no limits.",
       "current_state": "Free Plan For hobbyists and testing. Get 3 active tunnels and custom subdomains for $0/month.",
       "impact": "medium",
@@ -8583,7 +9289,15 @@
       "category": "Tunneling & Networking",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-02"
+      "recorded_date": "2026-09-02",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "ours",
+        "capture_day": "2026-03-02",
+        "recorded_as": "limits_reduced",
+        "capture": "https://web.archive.org/web/20260302075200/https://serveo.net/",
+        "stated_then": "Free Plan For hobbyists and testing. Get 3 active tunnels · Unlimited active tunnels"
+      }
     },
     {
       "vendor": "BetterStack",
@@ -8598,14 +9312,18 @@
       "category": "Monitoring",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-02"
+      "recorded_date": "2026-09-02",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Cloudflare KV",
-      "change_type": "limits_reduced",
+      "change_type": "record_corrected",
       "date": "2026-09-02",
       "date_source": "discovered",
-      "summary": "The free tier still exists. The limits are daily instead of monthly. Previously limit remains at 1 GB.",
+      "summary": "Data correction - Not a change by Cloudflare KV. An Internet Archive copy of its page from 2026-03-08 already states the terms this record called new, and our listing of 2026-03-21 did not match them. Our re-read of 2026-09-02 recorded the difference as a change.",
       "previous_state": "Key-value store at the edge — 100K reads/day, 1K writes/day, 1 GB storage. Eventually consistent with global replication",
       "current_state": "Free plan includes 100,000 keys read/day, 1,000 keys written/day, 1,000 keys deleted/day, 1,000 list requests/day, and 1 GB stored data. All limits reset daily at 00:00 UTC.",
       "impact": "medium",
@@ -8613,7 +9331,15 @@
       "category": "Databases",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-02"
+      "recorded_date": "2026-09-02",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "ours",
+        "capture_day": "2026-03-08",
+        "recorded_as": "limits_reduced",
+        "capture": "https://web.archive.org/web/20260308203950/https://developers.cloudflare.com/kv/platform/pricing/",
+        "stated_then": "All limits reset daily at 00:00 UTC. · 1 GB"
+      }
     },
     {
       "vendor": "Cloudflare Durable Objects",
@@ -8659,10 +9385,10 @@
     },
     {
       "vendor": "StatusCake",
-      "change_type": "limits_increased",
+      "change_type": "record_corrected",
       "date": "2026-09-02",
       "date_source": "discovered",
-      "summary": "The free tier now includes server monitoring (3 tests) and SMS credits, but the test intervals for uptime monitoring are 5 minutes, and the page speed monitor is limited to 1. The free tier also includes alerts through integrations.",
+      "summary": "Data correction - Not a change by StatusCake. An Internet Archive copy of its page from 2026-04-12 already states the terms this record called new, and our listing of 2026-04-17 did not match them. Our re-read of 2026-09-02 recorded the difference as a change.",
       "previous_state": "Uptime monitoring — 10 monitors, 5-min intervals, 1 page speed monitor, 1 domain monitor, 1 SSL monitor, email alerts, basic integrations",
       "current_state": "The Free plan is $0/month and includes 10 Uptime Monitors, 5 Mins Test Intervals, 1 Page Speed Monitor, 1 Domain Monitor, 1 SSL Monitor, 3 Server Monitors, Alerts through Integrations.",
       "impact": "low",
@@ -8670,7 +9396,15 @@
       "category": "Monitoring",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-02"
+      "recorded_date": "2026-09-02",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "ours",
+        "capture_day": "2026-04-12",
+        "recorded_as": "limits_increased",
+        "capture": "https://web.archive.org/web/20260412111806/https://www.statuscake.com/pricing/",
+        "stated_then": "Server Monitors How many server tests you can set up 3 10 · Free SMS Credits Receive free SMS credits every month for alerts 75 400 · Uptime Monitors How many uptime tests you can set up 10 100 300 Test Interval How often we run your test 5 minutes 1 minute 30 seconds · Page Speed Monitors How many page speed tests you can set up 1 15 30 · Alerts through Integrations"
+      }
     },
     {
       "vendor": "Upstash Vector",
@@ -8685,7 +9419,11 @@
       "category": "Databases",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-02"
+      "recorded_date": "2026-09-02",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Microsoft for Startups",
@@ -8700,7 +9438,11 @@
       "category": "Cloud IaaS",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-02"
+      "recorded_date": "2026-09-02",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Artillery",
@@ -8715,7 +9457,11 @@
       "category": "Testing",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-02"
+      "recorded_date": "2026-09-02",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "GitHub Actions",
@@ -8741,7 +9487,7 @@
     {
       "vendor": "Grafana Cloud",
       "change_type": "pricing_restructured",
-      "date": "2026-09-02",
+      "date": "2026-04-10",
       "date_source": "discovered",
       "summary": "The free tier now includes access to all Grafana Cloud services with limited usage, 14-day retention for metrics, logs, traces, profiles, & k6 performance tests, and community support. The free tier includes 10k metric series, 50 GB logs, and 50 GB traces. A $19/month platform fee is now required for 10k active series, 50 GB ingested logs/traces, and 30 days retention.",
       "previous_state": "Free tier with 10K metric series, 50 GB logs, 50 GB traces, 14-day retention, 3 users",
@@ -8751,7 +9497,19 @@
       "category": "Monitoring",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-02"
+      "recorded_date": "2026-09-02",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-03-04",
+            "first_new": "2026-04-10",
+            "last_old_capture": "https://web.archive.org/web/20260304094709/https://grafana.com/pricing/",
+            "first_new_capture": "https://web.archive.org/web/20260410095355/https://grafana.com/pricing/"
+          }
+        ]
+      }
     },
     {
       "vendor": "Vast.ai",
@@ -8766,7 +9524,11 @@
       "category": "AI / ML",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-02"
+      "recorded_date": "2026-09-02",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "xAI",
@@ -8801,7 +9563,11 @@
       "category": "Cloud IaaS",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-02"
+      "recorded_date": "2026-09-02",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Fingerprint",
@@ -8816,7 +9582,11 @@
       "category": "Security",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-02"
+      "recorded_date": "2026-09-02",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Cloudflare for Startups",
@@ -8853,7 +9623,11 @@
       "category": "Testing",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-02"
+      "recorded_date": "2026-09-02",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Anthropic API",
@@ -8868,7 +9642,11 @@
       "category": "AI / ML",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-02"
+      "recorded_date": "2026-09-02",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "text_day_unknown"
+      }
     },
     {
       "vendor": "Postman",
@@ -8908,10 +9686,10 @@
     },
     {
       "vendor": "clickup.com",
-      "change_type": "limits_increased",
+      "change_type": "record_corrected",
       "date": "2026-09-02",
       "date_source": "discovered",
-      "summary": "The free tier still exists. The description of the free tier has expanded significantly to include AI features like Brain, Agents, and more.",
+      "summary": "Data correction - Not a change by clickup.com. An Internet Archive copy of its page from 2026-03-17 already states the terms this record called new, and our listing of 2026-03-18 did not match them. Our re-read of 2026-09-02 recorded the difference as a change.",
       "previous_state": "Project management — unlimited tasks, unlimited members, 60 MB storage, 1 form, kanban boards, sprint management, collaborative docs, calendar view, 24/7 support",
       "current_state": "The free tier includes unlimited tasks, unlimited members, AI features (Brain, Agents), projects, chat, sprints, time tracking, calendar, docs, whiteboards, automations, dashboards, scheduling, and 24/7 support.",
       "impact": "high",
@@ -8919,7 +9697,15 @@
       "category": "Project Management",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-02"
+      "recorded_date": "2026-09-02",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "ours",
+        "capture_day": "2026-03-17",
+        "recorded_as": "limits_increased",
+        "capture": "https://web.archive.org/web/20260317044039/https://clickup.com/",
+        "stated_then": "Brain (AI) · AI Agents & Workflows. · AI Company Intelligence™"
+      }
     },
     {
       "vendor": "Cursor",
@@ -8951,7 +9737,11 @@
       "category": "Forms",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-03"
+      "recorded_date": "2026-09-03",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "LambdaTest",
@@ -9107,7 +9897,11 @@
       "category": "Cloud IaaS",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-03"
+      "recorded_date": "2026-09-03",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Gcore DNS",
@@ -9122,7 +9916,25 @@
       "category": "DNS & Domain Management",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-03"
+      "recorded_date": "2026-09-03",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-02-13",
+            "first_new": "2026-03-06",
+            "last_old_capture": "https://web.archive.org/web/20260213083739/https://gcore.com/pricing/edge-network",
+            "first_new_capture": "https://web.archive.org/web/20260306075422/https://gcore.com/pricing/edge-network"
+          },
+          {
+            "last_old": "2026-08-29",
+            "first_new": "2026-09-24",
+            "last_old_capture": "https://web.archive.org/web/20260829023155/https://gcore.com/pricing/edge-network",
+            "first_new_capture": "https://web.archive.org/web/20260924174254/https://gcore.com/pricing/edge-network"
+          }
+        ]
+      }
     },
     {
       "vendor": "Lovable",
@@ -9137,7 +9949,11 @@
       "category": "AI Coding",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-03"
+      "recorded_date": "2026-09-03",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Google Cloud Pub/Sub",
@@ -9194,7 +10010,11 @@
       "category": "AI / ML",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-03"
+      "recorded_date": "2026-09-03",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Internxt",
@@ -9209,7 +10029,11 @@
       "category": "Cloud Storage",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-03"
+      "recorded_date": "2026-09-03",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Slack",
@@ -9224,7 +10048,11 @@
       "category": "Communication & Messaging",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-03"
+      "recorded_date": "2026-09-03",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Amazon Kiro",
@@ -9254,7 +10082,19 @@
       "category": "Databases",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-03"
+      "recorded_date": "2026-09-03",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-06-18",
+            "first_new": "2026-08-04",
+            "last_old_capture": "https://web.archive.org/web/20260618003632/https://turbopuffer.com/pricing",
+            "first_new_capture": "https://web.archive.org/web/20260804171845/https://turbopuffer.com/pricing"
+          }
+        ]
+      }
     },
     {
       "vendor": "Codemagic",
@@ -9279,10 +10119,10 @@
     },
     {
       "vendor": "Teamcamp",
-      "change_type": "pricing_restructured",
+      "change_type": "record_corrected",
       "date": "2026-09-03",
       "date_source": "discovered",
-      "summary": "The free tier now has a per-user/per-month cost of $8 when billed monthly, or is free per user/per month billed annually.",
+      "summary": "Data correction - Not a change by Teamcamp. An Internet Archive copy of its page from 2026-03-04 already states the terms this record called new, and our listing of 2026-04-19 did not match them. Our re-read of 2026-09-03 recorded the difference as a change.",
       "previous_state": "All-in-one project management — free for up to 10 users, unlimited projects, 250 tasks, 1 GB storage, time tracking, docs, invoicing.",
       "current_state": "Free per user / per month, billed annually $8 when billed monthly",
       "impact": "high",
@@ -9290,7 +10130,15 @@
       "category": "Project Management",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-03"
+      "recorded_date": "2026-09-03",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "ours",
+        "capture_day": "2026-03-04",
+        "recorded_as": "pricing_restructured",
+        "capture": "https://web.archive.org/web/20260304124554/https://www.teamcamp.app/pricing",
+        "stated_then": "Free per user / per month, billed annually $8 when billed monthly"
+      }
     },
     {
       "vendor": "Microsoft Teams",
@@ -9326,7 +10174,11 @@
       "category": "CI/CD",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-03"
+      "recorded_date": "2026-09-03",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "text_day_unknown"
+      }
     },
     {
       "vendor": "Clerk",
@@ -9367,7 +10219,7 @@
     {
       "vendor": "Uploadcare",
       "change_type": "limits_increased",
-      "date": "2026-09-03",
+      "date": "2026-05-17",
       "date_source": "discovered",
       "summary": "The free tier now includes 1,000 operations per month and a 500 MB max file size, instead of 100 MB. It also includes features like uploading widget, basic image transformations, and adaptive bitrate streaming.",
       "previous_state": "File uploading API and image CDN — free tier for small-scale projects with file upload widget, image transformations, adaptive delivery. 100 MB file size limit. Usage resets monthly",
@@ -9377,7 +10229,19 @@
       "category": "Storage",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-03"
+      "recorded_date": "2026-09-03",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-04-12",
+            "first_new": "2026-05-17",
+            "last_old_capture": "https://web.archive.org/web/20260412233947/https://uploadcare.com/pricing/",
+            "first_new_capture": "https://web.archive.org/web/20260517044833/https://uploadcare.com/pricing/"
+          }
+        ]
+      }
     },
     {
       "vendor": "DBOS",
@@ -9434,7 +10298,19 @@
       "category": "Testing",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-03"
+      "recorded_date": "2026-09-03",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-05-26",
+            "first_new": "2026-09-06",
+            "last_old_capture": "https://web.archive.org/web/20260526051118/https://applitools.com/platform-pricing/",
+            "first_new_capture": "https://web.archive.org/web/20260906053905/https://applitools.com/platform-pricing/"
+          }
+        ]
+      }
     },
     {
       "vendor": "LastPass",
@@ -9449,7 +10325,11 @@
       "category": "Password Managers",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-03"
+      "recorded_date": "2026-09-03",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Storyblok",
@@ -9482,7 +10362,11 @@
       "category": "Messaging",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-05"
+      "recorded_date": "2026-09-05",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "ipinfo.io",
@@ -9507,10 +10391,10 @@
     },
     {
       "vendor": "MEGA",
-      "change_type": "pricing_restructured",
+      "change_type": "record_corrected",
       "date": "2026-09-05",
       "date_source": "discovered",
-      "summary": "MEGA's free transfer quota is now stated as \"Limited\" where our record held a 1 GB quota that replenishes.",
+      "summary": "Data correction - Not a change by MEGA. An Internet Archive copy of its page from 2026-04-02 already states the terms this record called new, and our listing of 2026-04-02 did not match them. Our re-read of 2026-09-05 recorded the difference as a change.",
       "previous_state": "20 GB permanent storage. End-to-end encrypted. MEGA Chat. File sharing with encryption. Desktop and mobile sync. 1 GB transfer quota that replenishes. Up to 5 GB additional via achievements (temporary).",
       "current_state": "MEGA's pricing page, fetched 2026-09-05, renders its plan table as \"Transfer | Free: Limited | Pro plans: Up to 20 TB | Pro Flexi: Flexible starting at 3 TB | Business: Flexible starting at 3 TB\". The free storage figure is not readable from this page: it renders as the unresolved template variable !{freePlanStorage} in all three places the page states it, including the FAQ answer \"Yes, our free plan includes !{freePlanStorage} of storage.\" Our stored description's 20 GB was not re-verified here and is not contradicted.",
       "impact": "high",
@@ -9518,7 +10402,15 @@
       "category": "Cloud Storage",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-05"
+      "recorded_date": "2026-09-05",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "ours",
+        "capture_day": "2026-04-02",
+        "recorded_as": "pricing_restructured",
+        "capture": "https://web.archive.org/web/20260402070553/https://mega.io/pricing",
+        "stated_then": "Limited transfer"
+      }
     },
     {
       "vendor": "Proton Pass",
@@ -9596,7 +10488,11 @@
       "category": "Email",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-05"
+      "recorded_date": "2026-09-05",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Cypress Cloud",
@@ -9626,7 +10522,11 @@
       "category": "Storage",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-05"
+      "recorded_date": "2026-09-05",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Prisma Accelerate",
@@ -9641,7 +10541,25 @@
       "category": "Databases",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-05"
+      "recorded_date": "2026-09-05",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-04-18",
+            "first_new": "2026-06-22",
+            "last_old_capture": "https://web.archive.org/web/20260418051610/https://www.prisma.io/pricing",
+            "first_new_capture": "https://web.archive.org/web/20260622180731/https://www.prisma.io/pricing"
+          },
+          {
+            "last_old": "2026-07-31",
+            "first_new": "2026-08-27",
+            "last_old_capture": "https://web.archive.org/web/20260731203543/https://www.prisma.io/pricing",
+            "first_new_capture": "https://web.archive.org/web/20260827085630/https://www.prisma.io/pricing"
+          }
+        ]
+      }
     },
     {
       "vendor": "Scalr",
@@ -9677,7 +10595,11 @@
       "category": "Notebooks & Data Science",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-05"
+      "recorded_date": "2026-09-05",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "paperspace",
@@ -9734,7 +10656,11 @@
       "category": "Consumer Email",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-05"
+      "recorded_date": "2026-09-05",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "E2B",
@@ -9791,7 +10717,11 @@
       "category": "CI/CD",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-05"
+      "recorded_date": "2026-09-05",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "text_day_unknown"
+      }
     },
     {
       "vendor": "Momento",
@@ -9806,7 +10736,19 @@
       "category": "Databases",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-05"
+      "recorded_date": "2026-09-05",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-06-18",
+            "first_new": "2026-09-16",
+            "last_old_capture": "https://web.archive.org/web/20260618003639/https://www.gomomento.com/pricing/",
+            "first_new_capture": "https://web.archive.org/web/20260916165532/https://www.gomomento.com/pricing/"
+          }
+        ]
+      }
     },
     {
       "vendor": "Hanko",
@@ -9853,7 +10795,7 @@
     {
       "vendor": "bonsai.io",
       "change_type": "free_tier_removed",
-      "date": "2026-09-05",
+      "date": "2026-07-28",
       "date_source": "discovered",
       "summary": "The free tier no longer exists. The lowest tier is now a 'Staging' plan at $15/month with 1 GB storage and 256 MB memory.",
       "previous_state": "Free Sandbox plan: 125 MB memory, 125 MB storage, 35K documents. Free forever. Managed Elasticsearch.",
@@ -9863,7 +10805,19 @@
       "category": "Search",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-05"
+      "recorded_date": "2026-09-05",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-03-12",
+            "first_new": "2026-07-28",
+            "last_old_capture": "https://web.archive.org/web/20260312201004/https://bonsai.io/pricing",
+            "first_new_capture": "https://web.archive.org/web/20260728004819/https://bonsai.io/pricing"
+          }
+        ]
+      }
     },
     {
       "vendor": "Windscribe",
@@ -9899,7 +10853,11 @@
       "category": "Startup Programs",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-05"
+      "recorded_date": "2026-09-05",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "text_day_unknown"
+      }
     },
     {
       "vendor": "transfernow",
@@ -9914,7 +10872,11 @@
       "category": "Storage",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-07"
+      "recorded_date": "2026-09-07",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "ploi.io",
@@ -9929,7 +10891,11 @@
       "category": "Server Management",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-07"
+      "recorded_date": "2026-09-07",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "localazy.com",
@@ -9944,7 +10910,11 @@
       "category": "Localization",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-07"
+      "recorded_date": "2026-09-07",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "AWS Activate",
@@ -9995,7 +10965,11 @@
       "category": "Databases",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-07"
+      "recorded_date": "2026-09-07",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "SiteDots",
@@ -10010,7 +10984,19 @@
       "category": "Communication",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-07"
+      "recorded_date": "2026-09-07",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2025-11-14",
+            "first_new": null,
+            "last_old_capture": "https://web.archive.org/web/20251114025505/https://www.sitedots.com/pricing",
+            "first_new_capture": null
+          }
+        ]
+      }
     },
     {
       "vendor": "Storyblok",
@@ -10025,7 +11011,19 @@
       "category": "Headless CMS",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-07"
+      "recorded_date": "2026-09-07",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-08-29",
+            "first_new": null,
+            "last_old_capture": "https://web.archive.org/web/20260829025030/https://www.storyblok.com/pricing",
+            "first_new_capture": null
+          }
+        ]
+      }
     },
     {
       "vendor": "Nhost",
@@ -10072,7 +11070,7 @@
     {
       "vendor": "Tinybird",
       "change_type": "limits_reduced",
-      "date": "2026-09-07",
+      "date": "2026-05-21",
       "date_source": "discovered",
       "summary": "The free tier now has 1k requests per day instead of unlimited, and the description of the free tier has changed.",
       "previous_state": "Real-time analytics data platform — 10 GB storage, 10 QPS max, 0.25 vCPUs compute. Shared infrastructure, community support",
@@ -10082,7 +11080,19 @@
       "category": "Analytics",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-07"
+      "recorded_date": "2026-09-07",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-04-16",
+            "first_new": "2026-05-21",
+            "last_old_capture": "https://web.archive.org/web/20260416142549/https://www.tinybird.co/pricing",
+            "first_new_capture": "https://web.archive.org/web/20260521045219/https://www.tinybird.co/pricing"
+          }
+        ]
+      }
     },
     {
       "vendor": "LocalStack",
@@ -10097,7 +11107,11 @@
       "category": "Testing",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-07"
+      "recorded_date": "2026-09-07",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Twingate",
@@ -10116,10 +11130,10 @@
     },
     {
       "vendor": "Gel",
-      "change_type": "limits_reduced",
+      "change_type": "record_corrected",
       "date": "2026-09-07",
       "date_source": "discovered",
-      "summary": "RAM and vCPU limits have changed.",
+      "summary": "Data correction - Not a change by Gel. An Internet Archive copy of its page from 2026-02-15 already states the terms this record called new, and our listing of 2026-03-02 did not match them. Our re-read of 2026-09-07 recorded the difference as a change.",
       "previous_state": "Graph-relational database (formerly EdgeDB) — free cloud tier: 1/4 compute unit (0.5 GiB RAM), 1 GB storage. Also fully open-source for self-hosting. No credit card required",
       "current_state": "Free tier: 1/4 compute unit ( 1/2 GiB RAM, 1/16 vCPU ), Up to 1GB of disk space",
       "impact": "medium",
@@ -10127,7 +11141,15 @@
       "category": "Databases",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-07"
+      "recorded_date": "2026-09-07",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "ours",
+        "capture_day": "2026-02-15",
+        "recorded_as": "limits_reduced",
+        "capture": "https://web.archive.org/web/20260215111208/https://www.geldata.com/pricing",
+        "stated_then": "1/2 GiB RAM, 1/16 vCPU · 1 GiB RAM, 1/8 vCPU"
+      }
     },
     {
       "vendor": "Better Stack Logs",
@@ -10142,7 +11164,11 @@
       "category": "Logging",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-07"
+      "recorded_date": "2026-09-07",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Foursquare",
@@ -10214,7 +11240,11 @@
       "category": "Security",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-07"
+      "recorded_date": "2026-09-07",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Mintlify",
@@ -10229,7 +11259,11 @@
       "category": "API Development",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-07"
+      "recorded_date": "2026-09-07",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Deepnote",
@@ -10265,7 +11299,11 @@
       "category": "Mobile Development",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-09"
+      "recorded_date": "2026-09-09",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "SimpleLocalize",
@@ -10280,7 +11318,11 @@
       "category": "Localization",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-09"
+      "recorded_date": "2026-09-09",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Fivetran Activations",
@@ -10295,7 +11337,11 @@
       "category": "Analytics",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-09"
+      "recorded_date": "2026-09-09",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Storj",
@@ -10310,7 +11356,11 @@
       "category": "Storage",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-09"
+      "recorded_date": "2026-09-09",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "SigNoz",
@@ -10325,14 +11375,18 @@
       "category": "Monitoring",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-09"
+      "recorded_date": "2026-09-09",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Grafana",
-      "change_type": "pricing_restructured",
+      "change_type": "record_corrected",
       "date": "2026-09-09",
       "date_source": "discovered",
-      "summary": "The free tier now includes 10k metrics, 50GB logs, 50GB traces, 50GB profiles, 50k frontend sessions, and 500VUh of k6 testing for 3 users.",
+      "summary": "Data correction - Not a change by Grafana. An Internet Archive copy of its page from 2026-07-25 already states the terms this record called new, and our listing of 2026-08-26 did not match them. Our re-read of 2026-09-09 recorded the difference as a change.",
       "previous_state": "Grafana OSS — the self-hosted dashboarding and alerting front end, free under AGPL-3.0-only with Apache-2.0 exceptions. Unifies 150+ data sources into one dashboard and supports observability-as-code. You set up, administer and maintain the installation yourself; Grafana Cloud is the hosted product and is priced separately.",
       "current_state": "Grafana Cloud includes a robust free tier with access to 10k metrics, 50GB logs, 50GB traces, 50GB profiles, 50k frontend sessions, and 500VUh of k6 testing for 3 users.",
       "impact": "medium",
@@ -10340,7 +11394,15 @@
       "category": "Monitoring",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-09"
+      "recorded_date": "2026-09-09",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "ours",
+        "capture_day": "2026-07-25",
+        "recorded_as": "pricing_restructured",
+        "capture": "https://web.archive.org/web/20260725163807/https://grafana.com/oss/grafana/",
+        "stated_then": "Includes a robust free tier with access to 10k metrics, 50GB logs, 50GB traces, 50GB profiles, 50k frontend sessions, and 500VUh of k6 testing for 3 users."
+      }
     },
     {
       "vendor": "CloudAMQP",
@@ -10355,7 +11417,11 @@
       "category": "Messaging",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-09"
+      "recorded_date": "2026-09-09",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Fastly",
@@ -10434,7 +11500,11 @@
       "alternatives": [],
       "detected_by": "reverify-ai",
       "recorded_date": "2026-09-09",
-      "tier": "Startup Scholarship"
+      "tier": "Startup Scholarship",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "GitHub",
@@ -10449,7 +11519,11 @@
       "category": "Source Control",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-09"
+      "recorded_date": "2026-09-09",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Infisical",
@@ -10464,7 +11538,25 @@
       "category": "Secrets Management",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-09"
+      "recorded_date": "2026-09-09",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-07-16",
+            "first_new": "2026-07-25",
+            "last_old_capture": "https://web.archive.org/web/20260716200743/https://infisical.com/pricing",
+            "first_new_capture": "https://web.archive.org/web/20260725022640/https://infisical.com/pricing"
+          },
+          {
+            "last_old": "2026-07-25",
+            "first_new": "2026-07-29",
+            "last_old_capture": "https://web.archive.org/web/20260725022640/https://infisical.com/pricing",
+            "first_new_capture": "https://web.archive.org/web/20260729161636/https://infisical.com/pricing"
+          }
+        ]
+      }
     },
     {
       "vendor": "GrowthBook",
@@ -10479,7 +11571,11 @@
       "category": "Feature Flags",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-09"
+      "recorded_date": "2026-09-09",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Kong",
@@ -10515,7 +11611,11 @@
       "category": "Communication",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-09"
+      "recorded_date": "2026-09-09",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Google GLM 5",
@@ -10565,7 +11665,11 @@
       "category": "API Development",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-10"
+      "recorded_date": "2026-09-10",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "inboxkitten.com",
@@ -10580,7 +11684,11 @@
       "category": "Email",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-10"
+      "recorded_date": "2026-09-10",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "dnspod.com",
@@ -10659,7 +11767,11 @@
       "category": "API Development",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-10"
+      "recorded_date": "2026-09-10",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Authress",
@@ -10698,7 +11810,11 @@
       "category": "Monitoring",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-12"
+      "recorded_date": "2026-09-12",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "GitHub Copilot",
@@ -10761,7 +11877,11 @@
       "category": "Video",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-12"
+      "recorded_date": "2026-09-12",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Tawk.to",
@@ -10778,7 +11898,11 @@
       "category": "Communication",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-12"
+      "recorded_date": "2026-09-12",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Amazon Kiro (AWS Startups)",
@@ -10818,7 +11942,11 @@
       "category": "Communication",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-12"
+      "recorded_date": "2026-09-12",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "OnlineOrNot",
@@ -10845,10 +11973,10 @@
     },
     {
       "vendor": "snappify",
-      "change_type": "limits_reduced",
+      "change_type": "record_corrected",
       "date": "2026-09-12",
       "date_source": "discovered",
-      "summary": "The free plan now has a watermark on presentations and video exports, and limits the number of snaps to 3, slides per presentation to 5, and code editors per slide to 1. The free plan also has a 100MB image upload limit and 0 folder storage.",
+      "summary": "Data correction - Not a change by snappify. An Internet Archive copy of its page from 2026-03-01 already states the terms this record called new, and our listing of 2026-03-02 did not match them. Our re-read of 2026-09-12 recorded the difference as a change.",
       "tier": "Free",
       "tier_direction": "narrowed",
       "previous_state": "Enables developers to create stunning visuals. From beautiful code snippets to fully fletched technical presentations. The free plan includes up to 3 snaps at once with unlimited downloads and 5 AI-powered code explanations per month.",
@@ -10858,7 +11986,15 @@
       "category": "Dev Utilities",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-12"
+      "recorded_date": "2026-09-12",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "ours",
+        "capture_day": "2026-03-01",
+        "recorded_as": "limits_reduced",
+        "capture": "https://web.archive.org/web/20260301110418/https://snappify.com/",
+        "stated_then": "Experimental Frame rate 30fps (incl. watermark) · Snap Storage limit 3 · Presentations Slides per presentation 5 · Code editor per slide 1 · Image upload limit - 100 MB · Folder Storage limit 0"
+      }
     },
     {
       "vendor": "Bugsnag",
@@ -10886,7 +12022,7 @@
     {
       "vendor": "Cal.com",
       "change_type": "limits_reduced",
-      "date": "2026-09-13",
+      "date": "2026-04-13",
       "date_source": "discovered",
       "summary": "The free tier still exists. The description is incomplete. The free tier now explicitly lists features like '1 user', 'Unlimited event types & calendars', 'Email & SMS notifications', 'Integrate with 100+ apps', 'Mobile App', 'Browser Extension', 'Accept Stripe & PayPal payments', 'Two-way Salesforce & HubSpot sync', and '1-click import Calendly events'.",
       "tier": "Individuals",
@@ -10898,7 +12034,19 @@
       "category": "Team Collaboration",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-13"
+      "recorded_date": "2026-09-13",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-02-20",
+            "first_new": "2026-04-13",
+            "last_old_capture": "https://web.archive.org/web/20260220192518/https://cal.com/pricing",
+            "first_new_capture": "https://web.archive.org/web/20260413103330/https://cal.com/pricing"
+          }
+        ]
+      }
     },
     {
       "vendor": "Cloudflare Workers",
@@ -10938,7 +12086,11 @@
       "category": "Messaging",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-13"
+      "recorded_date": "2026-09-13",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Lumenfall.ai",
@@ -10978,7 +12130,11 @@
       "category": "Low-Code Platforms",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-13"
+      "recorded_date": "2026-09-13",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "CertKit",
@@ -11018,7 +12174,11 @@
       "category": "AI / ML",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-15"
+      "recorded_date": "2026-09-15",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Pagure.io",
@@ -11036,7 +12196,11 @@
       "alternatives": [],
       "detected_by": "reverify-ai",
       "recorded_date": "2026-09-15",
-      "listing_effect": "ends"
+      "listing_effect": "ends",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "CockroachDB",
@@ -11070,7 +12234,11 @@
       "category": "Design",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-16"
+      "recorded_date": "2026-09-16",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "JDoodle",
@@ -11087,14 +12255,18 @@
       "category": "IDE & Code Editors",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-16"
+      "recorded_date": "2026-09-16",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Braid",
-      "change_type": "new_tier",
+      "change_type": "record_corrected",
       "date": "2026-09-17",
       "date_source": "discovered",
-      "summary": "The free tier now has a name ('Community') and is explicitly an open group with public access. There is also a 'Team' plan with a 30-day free trial, then pay-what-you-can.",
+      "summary": "Data correction - Not a change by Braid. An Internet Archive copy of its page from 2026-02-18 already states the terms this record called new, and our listing of 2026-03-02 did not match them. Our re-read of 2026-09-17 recorded the difference as a change.",
       "tier": "Community",
       "tier_direction": "unchanged",
       "previous_state": "Chat app designed for teams. Free for public access group, unlimited users, history, and integrations. also, it provides a self-hostable open-source version.",
@@ -11104,14 +12276,22 @@
       "category": "Team Collaboration",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-17"
+      "recorded_date": "2026-09-17",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "ours",
+        "capture_day": "2026-02-18",
+        "recorded_as": "new_tier",
+        "capture": "https://web.archive.org/web/20260218003328/https://www.braidchat.com/",
+        "stated_then": "Community Open group with public access Free Forever · Team Private group with invite-only access 30 day free trial then pick your own price"
+      }
     },
     {
       "vendor": "file.io",
-      "change_type": "limits_increased",
+      "change_type": "record_corrected",
       "date": "2026-09-18",
       "date_source": "discovered",
-      "summary": "The free tier now offers 4 GB of storage instead of 2 GB.",
+      "summary": "Data correction - Not a change by file.io. An Internet Archive copy of its page from 2026-02-23 already states the terms this record called new, and our listing of 2026-03-02 did not match them. Our re-read of 2026-09-18 recorded the difference as a change.",
       "tier": "Free",
       "tier_direction": "widened",
       "previous_state": "2 GB storage of files. A file is auto-deleted after one download. REST API to interact with the storage. Rate limit one request/minute.",
@@ -11121,7 +12301,15 @@
       "category": "Storage",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-18"
+      "recorded_date": "2026-09-18",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "ours",
+        "capture_day": "2026-02-23",
+        "recorded_as": "limits_increased",
+        "capture": "https://web.archive.org/web/20260223103938/https://www.file.io/",
+        "stated_then": "file transfers are limited to a total of 4 GB."
+      }
     },
     {
       "vendor": "NS1 Connect",
@@ -11161,7 +12349,11 @@
       "category": "Team Collaboration",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-18"
+      "recorded_date": "2026-09-18",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Cohere",
@@ -11241,14 +12433,18 @@
       "category": "Project Management",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-18"
+      "recorded_date": "2026-09-18",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Expensify",
-      "change_type": "new_tier",
+      "change_type": "record_corrected",
       "date": "2026-09-19",
       "date_source": "discovered",
-      "summary": "Expensify remains free for individuals, the page indicates paid plans for teams (starting at $5/member).",
+      "summary": "Data correction - Not a change by Expensify. An Internet Archive copy of its page from 2026-03-18 already states the terms this record called new, and our listing of 2026-03-18 did not match them. Our re-read of 2026-09-19 recorded the difference as a change.",
       "tier": "Teams",
       "tier_direction": "narrowed",
       "previous_state": "Expense management — unlimited receipt scanning (SmartScan OCR), expense reports, next-day reimbursement, corporate card program. Free for individuals",
@@ -11258,7 +12454,15 @@
       "category": "Analytics",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-19"
+      "recorded_date": "2026-09-19",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "ours",
+        "capture_day": "2026-03-18",
+        "recorded_as": "new_tier",
+        "capture": "https://web.archive.org/web/20260318155138/https://www.expensify.com/",
+        "stated_then": "plans start at $5 per member"
+      }
     },
     {
       "vendor": "DigitalOcean",
@@ -11285,10 +12489,10 @@
     },
     {
       "vendor": "Hasura",
-      "change_type": "limits_increased",
+      "change_type": "record_corrected",
       "date": "2026-09-19",
       "date_source": "discovered",
-      "summary": "The free tier (DDN Free) still exists. The page details many more features included in the free tier than were originally listed, such as autoscaling, a global edge network, and various connectors.",
+      "summary": "Data correction - Not a change by Hasura. An Internet Archive copy of its page from 2026-03-25 already states the terms this record called new, and our listing of 2026-04-19 did not match them. Our re-read of 2026-09-19 recorded the difference as a change.",
       "tier": "DDN Free",
       "tier_direction": "widened",
       "previous_state": "Instant GraphQL API engine over any database — Hasura DDN Free plan: unlimited API requests and unlimited concurrent users, unlimited models at any scale. 1 supergraph developer, 15-minute observability retention. Auto-generates GraphQL APIs from Postgres, SQL Server, BigQuery via database/code/API connectors",
@@ -11298,7 +12502,15 @@
       "category": "Databases",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-19"
+      "recorded_date": "2026-09-19",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "ours",
+        "capture_day": "2026-03-25",
+        "recorded_as": "limits_increased",
+        "capture": "https://web.archive.org/web/20260325125504/https://hasura.io/pricing",
+        "stated_then": "Autoscaling Zero cold-start Global Edge network Intelligent geo routing DDoS protection Connectors Database connectors Code connectors API connectors DIY: build & connect your own connector"
+      }
     },
     {
       "vendor": "Qonversion",
@@ -11315,7 +12527,11 @@
       "category": "Payments",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-19"
+      "recorded_date": "2026-09-19",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "QRtracer",
@@ -11332,14 +12548,18 @@
       "category": "Storage",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-19"
+      "recorded_date": "2026-09-19",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "ScaleGrid Startup Program",
-      "change_type": "limits_reduced",
+      "change_type": "record_corrected",
       "date": "2026-09-19",
       "date_source": "discovered",
-      "summary": "The Startup Saver program now has eligibility criteria of less than $1.5M in revenue and less than $1.5M in funding. Small plan sizes receive 50% off BYOC and 25% off Dedicated Hosting plans for 3 months.",
+      "summary": "Data correction - Not a change by ScaleGrid Startup Program. An Internet Archive copy of its page from 2026-03-12 already states the terms this record called new, and our listing of 2026-09-01 did not match them. Our re-read of 2026-09-19 recorded the difference as a change.",
       "tier": "Startup Saver",
       "tier_direction": "narrowed",
       "previous_state": "ScaleGrid's startup offer is now called Startup Saver: up to 50% off for 12 months on managed MySQL, PostgreSQL, Redis and MongoDB. Bring Your Own Cloud plans get 50% off at medium size or larger; Dedicated Hosting gets 25% off at medium or larger. Small plan sizes get 50% off BYOC and 25% off Dedicated Hosting for 3 months.",
@@ -11349,14 +12569,22 @@
       "category": "Startup Perks",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-19"
+      "recorded_date": "2026-09-19",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "ours",
+        "capture_day": "2026-03-12",
+        "recorded_as": "limits_reduced",
+        "capture": "https://web.archive.org/web/20260312085846/https://scalegrid.io/pricing/offers/startup-saver/",
+        "stated_then": "Eligibility Criteria Less than $1.5M in revenue Less than $1.5M in funding · Small plan sizes receive 50% off BYOC and 25% off Dedicated Hosting plans for 3 months."
+      }
     },
     {
       "vendor": "The Intercom Early Stage Program",
-      "change_type": "limits_reduced",
+      "change_type": "record_corrected",
       "date": "2026-09-19",
       "date_source": "discovered",
-      "summary": "The number of Fin outcomes and qualifications available in Years 2 and 3 have been reduced.",
+      "summary": "Data correction - Not a change by The Intercom Early Stage Program. An Internet Archive copy of its page from 2026-08-18 already states the terms this record called new, and our listing of 2026-09-01 did not match them. Our re-read of 2026-09-19 recorded the difference as a change.",
       "tier": "Early Stage Program",
       "tier_direction": "narrowed",
       "previous_state": "Intercom Early Stage pricing starts at $33/month, with 93% off in the first year, 50% off in the second and 25% off in the third. The first year includes 300 Fin outcomes and 15 Fin qualifications per month. The discount does not apply to additional outcomes or qualifications; phone, SMS and WhatsApp are charged at list price.",
@@ -11366,7 +12594,15 @@
       "category": "Startup Perks",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-19"
+      "recorded_date": "2026-09-19",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "ours",
+        "capture_day": "2026-08-18",
+        "recorded_as": "limits_reduced",
+        "capture": "https://web.archive.org/web/20260818165825/https://www.intercom.com/early-stage",
+        "stated_then": "150 outcomes and 15 Fin qualifications in Year 2 75 outcomes and 15 Fin qualifications in Year 3"
+      }
     },
     {
       "vendor": "pagecrawl.io",
@@ -11383,7 +12619,11 @@
       "category": "Monitoring",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-20"
+      "recorded_date": "2026-09-20",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Scalr",
@@ -11400,14 +12640,26 @@
       "category": "Infrastructure",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-21"
+      "recorded_date": "2026-09-21",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-08-28",
+            "first_new": "2026-09-27",
+            "last_old_capture": "https://web.archive.org/web/20260828130540/https://scalr.com/pricing",
+            "first_new_capture": "https://web.archive.org/web/20260927062151/https://scalr.com/pricing"
+          }
+        ]
+      }
     },
     {
       "vendor": "Gatling",
-      "change_type": "pricing_restructured",
+      "change_type": "record_corrected",
       "date": "2026-09-21",
       "date_source": "discovered",
-      "summary": "The Community Edition is still available for download.",
+      "summary": "Data correction - Not a change by Gatling. An Internet Archive copy of its page from 2026-01-18 already states the terms this record called new, and our listing of 2026-03-02 did not match them. Our re-read of 2026-09-21 recorded the difference as a change.",
       "tier": "Community",
       "tier_direction": "unchanged",
       "previous_state": "Community Edition: open source load testing tool (Apache 2.0). Self-hosted local execution with multi-language SDKs (Java, Scala, Kotlin, JS, TS). No usage limits.",
@@ -11417,7 +12669,15 @@
       "category": "Testing",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-21"
+      "recorded_date": "2026-09-21",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "ours",
+        "capture_day": "2026-01-18",
+        "recorded_as": "pricing_restructured",
+        "capture": "https://web.archive.org/web/20260118070341/https://gatling.io/pricing",
+        "stated_then": "Download Community Edition"
+      }
     },
     {
       "vendor": "Mendix",
@@ -11434,7 +12694,11 @@
       "category": "Low-Code Platforms",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-21"
+      "recorded_date": "2026-09-21",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "taskade.com",
@@ -11451,7 +12715,11 @@
       "category": "Project Management",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-21"
+      "recorded_date": "2026-09-21",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Cloudflare Workers",
@@ -11478,10 +12746,10 @@
     },
     {
       "vendor": "Proton Pass",
-      "change_type": "limits_increased",
+      "change_type": "record_corrected",
       "date": "2026-09-22",
       "date_source": "discovered",
-      "summary": "The free plan now has unlimited credit cards, and secure sharing is no longer limited to '0 others'. The free plan also includes dark web monitoring.",
+      "summary": "Data correction - Not a change by Proton Pass. An Internet Archive copy of its page from 2026-04-22 already states the terms this record called new, and our listing of 2026-04-22 did not match them. Our re-read of 2026-09-22 recorded the difference as a change.",
       "tier": "Proton Free",
       "tier_direction": "widened",
       "previous_state": "Unlimited logins, notes, and devices. 10 hide-my-email aliases. Integrated 2FA/TOTP. Passkey support. Vault sharing. End-to-end encrypted. Web, browser extension, mobile, and desktop apps. No credit card storage or unlimited aliases on free.",
@@ -11491,7 +12759,15 @@
       "category": "Password Managers",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-22"
+      "recorded_date": "2026-09-22",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "ours",
+        "capture_day": "2026-04-22",
+        "recorded_as": "limits_increased",
+        "capture": "https://web.archive.org/web/20260422215425/https://proton.me/pass/pricing",
+        "stated_then": "Unlimited credit cards Create and save unlimited credit cards for easy access during check-out. Included Included Included Included · 0 others · Dark Web Monitoring Get alerts if your personal information is compromised by a data leak. Included Included Included"
+      }
     },
     {
       "vendor": "Anthropic API",
@@ -11531,7 +12807,11 @@
       "category": "Productivity & Notes",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-22"
+      "recorded_date": "2026-09-22",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Ollama Cloud",
@@ -11606,7 +12886,11 @@
       "category": "Communication & Messaging",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-24"
+      "recorded_date": "2026-09-24",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Qoddi",
@@ -11646,7 +12930,11 @@
       "category": "API Gateway",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-25"
+      "recorded_date": "2026-09-25",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "Penpot",
@@ -11663,7 +12951,11 @@
       "category": "Design",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-25"
+      "recorded_date": "2026-09-25",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "ConfigCat",
@@ -11690,10 +12982,10 @@
     },
     {
       "vendor": "Code Time",
-      "change_type": "pricing_restructured",
+      "change_type": "record_corrected",
       "date": "2026-09-25",
       "date_source": "discovered",
-      "summary": "While Code Time remains free for basic use, the offering now includes a 90-day data history limit and pushes users towards a paid antenna.dev account for advanced features and data visualizations.",
+      "summary": "Data correction - Not a change by Code Time. An Internet Archive copy of its page from 2026-05-19 already states the terms this record called new, and our listing of 2026-09-13 did not match them. Our re-read of 2026-09-25 recorded the difference as a change.",
       "tier": "Free",
       "tier_direction": "narrowed",
       "previous_state": "Now published only on the Visual Studio Marketplace. software.com/code-time returns 404 via antenna.dev, whose own pricing starts at $15/month per Git user and offers a trial rather than a free tier. Read 2026-09-13, the marketplace listing states Free — an open source plugin for automatic programming metrics and time tracking in Visual Studio Code.",
@@ -11703,7 +12995,15 @@
       "category": "IDE & Code Editors",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-25"
+      "recorded_date": "2026-09-25",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "ours",
+        "capture_day": "2026-05-19",
+        "recorded_as": "pricing_restructured",
+        "capture": "https://web.archive.org/web/20260519003259/https://marketplace.visualstudio.com/items?itemName=softwaredotcom.swdc-vscode",
+        "stated_then": "We provide 90 days of data history for free, forever. · You will need to create a free antenna.dev account to use the web app."
+      }
     },
     {
       "vendor": "Fastly",
@@ -11743,7 +13043,11 @@
       "category": "Messaging",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-25"
+      "recorded_date": "2026-09-25",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "podio.com",
@@ -12118,7 +13422,19 @@
       "category": "Monitoring",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-26"
+      "recorded_date": "2026-09-26",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-09-09",
+            "first_new": "2026-09-27",
+            "last_old_capture": "https://web.archive.org/web/20260909154759/https://www.appsignal.com/plans",
+            "first_new_capture": "https://web.archive.org/web/20260927220601/https://www.appsignal.com/plans"
+          }
+        ]
+      }
     },
     {
       "vendor": "coderabbit.ai",
@@ -12251,7 +13567,11 @@
       "category": "Infrastructure",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-26"
+      "recorded_date": "2026-09-26",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "text_day_unknown"
+      }
     },
     {
       "vendor": "CockroachDB",
@@ -13078,7 +14398,11 @@
       "category": "Testing",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-28"
+      "recorded_date": "2026-09-28",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "no_usable_capture"
+      }
     },
     {
       "vendor": "houndci.com",
@@ -13205,7 +14529,11 @@
       "category": "Auth",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-30"
+      "recorded_date": "2026-09-30",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "text_day_unknown"
+      }
     },
     {
       "vendor": "TraceLog",
@@ -13222,7 +14550,19 @@
       "category": "Analytics",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-30"
+      "recorded_date": "2026-09-30",
+      "archive_check": {
+        "checked": "2026-10-02",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-08-28",
+            "first_new": null,
+            "last_old_capture": "https://web.archive.org/web/20260828130347/https://www.tracelog.io/",
+            "first_new_capture": null
+          }
+        ]
+      }
     },
     {
       "vendor": "Aionda Mail",

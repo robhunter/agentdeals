@@ -51,14 +51,6 @@
       "finding": "1M message quota, 20 connections and 100 queues all match; \"10,000 queued messages\" is queue depth, a different axis"
     },
     {
-      "vendor": "Cloudflare KV",
-      "change_type": "limits_reduced",
-      "date": "2026-09-02",
-      "source_url": "https://developers.cloudflare.com/kv/platform/pricing/",
-      "tier_direction": "unchanged",
-      "finding": "100K reads/day, 1K writes/day and 1 GB all match; our stored terms already say /day"
-    },
-    {
       "vendor": "Cloudflare Queues",
       "change_type": "pricing_model_change",
       "date": "2026-09-05",
@@ -83,30 +75,6 @@
       "finding": "every figure matches; the claim is that the page no longer states the team-project limit"
     },
     {
-      "vendor": "formlets.com",
-      "change_type": "pricing_restructured",
-      "date": "2026-09-01",
-      "source_url": "https://formlets.com/",
-      "tier_direction": "widened",
-      "finding": "100 submissions per month -> unlimited"
-    },
-    {
-      "vendor": "Gel",
-      "change_type": "limits_reduced",
-      "date": "2026-09-07",
-      "source_url": "https://www.geldata.com/pricing",
-      "tier_direction": "unchanged",
-      "finding": "\"1/4 compute unit (0.5 GiB RAM)\" -> \"1/4 compute unit (1/2 GiB RAM, 1/16 vCPU)\""
-    },
-    {
-      "vendor": "geocodify.com",
-      "change_type": "pricing_restructured",
-      "date": "2026-09-01",
-      "source_url": "https://geocodify.com/",
-      "tier_direction": "widened",
-      "finding": "the reading says \"30,000 Calls/month\" against the stored 10k free queries/month, and the summary's own words are \"The free tier now has 30,000 calls/month\""
-    },
-    {
       "vendor": "GitHub Actions",
       "change_type": "pricing_restructured",
       "date": "2026-09-02",
@@ -117,18 +85,10 @@
     {
       "vendor": "Grafana Cloud",
       "change_type": "pricing_restructured",
-      "date": "2026-09-02",
+      "date": "2026-04-10",
       "source_url": "https://grafana.com/pricing/",
       "tier_direction": "unchanged",
       "finding": "every figure the stored terms state is repeated in the reading — \"10k metric series, 50 GB logs, and 50 GB traces are included\", 14-day retention; the $19/month platform fee it adds buys 30-day retention, which the free tier never had"
-    },
-    {
-      "vendor": "Grapedrop",
-      "change_type": "limits_reduced",
-      "date": "2026-08-28",
-      "source_url": "https://grapedrop.com/",
-      "tier_direction": "unchanged",
-      "finding": "5 pages and unlimited custom domains are both already ours; only 100 form submissions is new"
     },
     {
       "vendor": "Hex",
@@ -169,14 +129,6 @@
       "source_url": "https://www.lastpass.com/pricing",
       "tier_direction": "widened",
       "finding": "the device limit is the same one device type; the stored terms end \"no dark web monitoring on free\" and the reading lists dark web monitoring as included"
-    },
-    {
-      "vendor": "leiga.com",
-      "change_type": "pricing_restructured",
-      "date": "2026-08-28",
-      "source_url": "https://www.leiga.com/",
-      "tier_direction": "unchanged",
-      "finding": "the whole summary is \"The pricing page states Leiga is 'Free forever. No credit card required.'\""
     },
     {
       "vendor": "Liveblocks",
@@ -227,14 +179,6 @@
       "finding": "current_state states a free tier exists in the same record whose summary says the free tier now costs $10/month"
     },
     {
-      "vendor": "OCR.Space",
-      "change_type": "pricing_restructured",
-      "date": "2026-08-28",
-      "source_url": "https://ocr.space/",
-      "tier_direction": "widened",
-      "finding": "free-tier file size limit 1 MB -> 5 MB"
-    },
-    {
       "vendor": "OneSignal",
       "change_type": "limits_reduced",
       "date": "2026-08-28",
@@ -277,7 +221,7 @@
     {
       "vendor": "PromoProxy",
       "change_type": "limits_reduced",
-      "date": "2026-09-01",
+      "date": "2026-05-03",
       "source_url": "https://promoproxy.net/",
       "tier_direction": "widened",
       "finding": "1 GB -> 3 GB of data per day; the summary's \"down from\" contradicts its own figures"
@@ -315,14 +259,6 @@
       "finding": "the free tier now includes daily agent credits and allows publishing 1 live project"
     },
     {
-      "vendor": "Shadcn Studio",
-      "change_type": "pricing_model_change",
-      "date": "2026-08-28",
-      "source_url": "https://shadcnstudio.com/theme-editor",
-      "tier_direction": "unchanged",
-      "finding": "the summary ends \"features ... that are likely part of paid plans\""
-    },
-    {
       "vendor": "staticforms.xyz",
       "change_type": "limits_reduced",
       "date": "2026-09-01",
@@ -337,14 +273,6 @@
       "source_url": "https://supertokens.com/pricing",
       "tier_direction": "widened",
       "finding": "the self-hosted free tier is now unlimited where it was limited to the core features"
-    },
-    {
-      "vendor": "TeleportHQ",
-      "change_type": "limits_reduced",
-      "date": "2026-08-28",
-      "source_url": "https://teleporthq.io/",
-      "tier_direction": "unchanged",
-      "finding": "\"no longer explicitly mentions a limit of 'three free projects'\" - an absence, not a reduction"
     },
     {
       "vendor": "Terrateam",
@@ -385,14 +313,6 @@
       "source_url": "https://veriphone.io/",
       "tier_direction": "unchanged",
       "finding": "1,000 a month either way — the summary states the change as \"1,000 free validations per month, instead of 1,000 requests\", which renames the unit; what is new is the paid packs"
-    },
-    {
-      "vendor": "Virgil Security",
-      "change_type": "pricing_restructured",
-      "date": "2026-08-28",
-      "source_url": "https://virgilsecurity.com/",
-      "tier_direction": "unchanged",
-      "finding": "\"The free tier is still offered\"; what moved is the price beyond 250 users"
     },
     {
       "vendor": "WorkOS",
