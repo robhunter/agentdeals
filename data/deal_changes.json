@@ -11385,6 +11385,12 @@
       "archive_check": {
         "checked": "2026-10-02",
         "outcome": "no_usable_capture"
+      },
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-10-03",
+        "detail": "Retracted 2026-10-03: no change to our listing. \"Teams starts at $199/month\" is the struck-through price beside $49, on signoz.io/pricing since at least the Internet Archive's capture of 2026-08-22. Our listing has stated $49 a month with $49 of usage, and $19 a month for startups' first 12 months, since 2026-08-26.",
+        "source_url": "https://web.archive.org/web/20260822002358/https://signoz.io/pricing/"
       }
     },
     {
