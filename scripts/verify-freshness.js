@@ -60,10 +60,28 @@ export function withoutIconFontText(html) {
   return html.replace(ELEMENT_HOLDING_ONLY_TEXT, (element, tag, attributes) => (drawnByAnIconFont(tag, attributes) ? " " : element));
 }
 
+const STRUCK_THROUGH_ELEMENT = /<(s|del|strike)\b[^>]*>[\s\S]*?<\/\1\s*>/gi;
+const LINE_THROUGH_CLASS = /(?:^|\s)line-through(?=\s|$)/i;
+const STYLE_ATTRIBUTE = /(?:^|\s)style\s*=\s*(?:"([^"]*)"|'([^']*)')/i;
+const LINE_THROUGH_DECORATION = /text-decoration(?:-line)?\s*:[^;]*\bline-through\b/i;
+
+function drawnStruckThrough(attributes) {
+  const classes = CLASS_ATTRIBUTE.exec(attributes);
+  if (classes !== null && LINE_THROUGH_CLASS.test(classes[1] ?? classes[2] ?? classes[3] ?? "")) return true;
+  const style = STYLE_ATTRIBUTE.exec(attributes);
+  return style !== null && LINE_THROUGH_DECORATION.test(style[1] ?? style[2] ?? "");
+}
+
+export function withoutStruckThroughText(html) {
+  return html
+    .replace(STRUCK_THROUGH_ELEMENT, " ")
+    .replace(ELEMENT_HOLDING_ONLY_TEXT, (element, tag, attributes) => (drawnStruckThrough(attributes) ? " " : element));
+}
+
 export function stripHtml(html) {
-  return withoutIconFontText(html
+  return withoutStruckThroughText(withoutIconFontText(html
     .replace(/<script[\s\S]*?<\/script>/gi, "")
-    .replace(/<style[\s\S]*?<\/style>/gi, ""))
+    .replace(/<style[\s\S]*?<\/style>/gi, "")))
     .replace(/<[^>]+>/g, " ")
     .replace(/&nbsp;/g, " ")
     .replace(/&amp;/g, "&")

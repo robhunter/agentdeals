@@ -16,6 +16,7 @@ const {
   VERIFIER_API_KEY_ENV,
   VERIFIER_BASE_URL,
 } = await import("../scripts/verify-freshness.js");
+const { verbatimExcerpt } = await import("../scripts/free-plan-excerpt.js");
 
 function stubClient(text: string) {
   return { model: VERIFIER_MODEL, baseUrl: VERIFIER_BASE_URL, complete: async () => text };
@@ -326,5 +327,43 @@ describe("the text a reader sees of a page", () => {
     assert.strictEqual(stripHtml('<p><span class="icon-label">Unlimited</span> seats</p>'), "Unlimited seats");
     assert.strictEqual(stripHtml('<p><span class="not-material-icons">Free</span> plan</p>'), "Free plan");
     assert.strictEqual(stripHtml('<p><span data-class="material-icons">Free</span> plan</p>'), "Free plan");
+  });
+
+  it("leaves out a price the page strikes through, so an anchor price beside a discount does not read as the price", () => {
+    assert.strictEqual(stripHtml("<p>Teams <s>$199</s> $49/month</p>"), "Teams $49/month");
+    assert.strictEqual(stripHtml("<p>Teams <del>$199</del> $49/month</p>"), "Teams $49/month");
+    assert.strictEqual(stripHtml("<p>Teams <strike>$199</strike> $49/month</p>"), "Teams $49/month");
+    assert.strictEqual(stripHtml('<p>Teams <s class="was">$<b>199</b></s> $49/month</p>'), "Teams $49/month");
+    assert.strictEqual(stripHtml('<p>Teams <span style="color:#999; text-decoration: line-through">$199</span> $49/month</p>'), "Teams $49/month");
+    assert.strictEqual(stripHtml("<p>Teams <span style='text-decoration-line:line-through'>$199</span> $49/month</p>"), "Teams $49/month");
+    assert.strictEqual(stripHtml('<p>Starts at <span class="text-2xl text-signoz_vanilla-400 line-through">$199</span> $49/month</p>'), "Starts at $49/month");
+  });
+
+  it("keeps a price in an ordinary element, and in one whose class or style only resembles a strike or a fade", () => {
+    assert.strictEqual(stripHtml("<p>Teams <span>$199</span>/month</p>"), "Teams $199 /month");
+    assert.strictEqual(stripHtml('<p>Teams <span class="hover:line-through">$199</span>/month</p>'), "Teams $199 /month");
+    assert.strictEqual(stripHtml('<p>Teams <span class="is-faded">$199</span>/month</p>'), "Teams $199 /month");
+    assert.strictEqual(stripHtml('<p>Teams <span style="text-decoration: underline">$199</span>/month</p>'), "Teams $199 /month");
+    assert.strictEqual(stripHtml('<p>Teams <span data-style="text-decoration: line-through">$199</span>/month</p>'), "Teams $199 /month");
+    assert.strictEqual(stripHtml("<section><p>Teams $199/month</p></section><details>Billed monthly</details>"), "Teams $199/month Billed monthly");
+  });
+
+  describe("on trimmed copies of two pricing pages saved on 2026-10-03", () => {
+    const SIGNOZ_PRICING = "<div><p class=\"mb-1\">Starts at <span class=\"line-through\">$199</span> $49/month, including $49 of usage</p><p class=\"mb-0 text-xs opacity-75\"></p></div><div class=\"mb-4 flex flex-col md:flex-row md:justify-between\"><div class=\"w-full md:w-[60%]\"><h3 id=\"teams\" class=\"pinkish-gradient mb-1 text-2xl font-bold tracking-tight md:text-3xl\">Teams</h3><p class=\"text-base text-gray-400\">For fast-scaling teams that need observability to scale with them.</p></div><div class=\"mt-4 flex w-full flex-col items-start md:mt-0 md:w-[40%] md:items-end\"><span class=\"text-sm text-signoz_vanilla-400\">starts from</span><div class=\"flex items-baseline\"><span class=\"text-3xl font-bold text-signoz_vanilla-100 md:text-4xl\"><span class=\"text-2xl text-signoz_vanilla-400 line-through\">$199</span> $49</span><span class=\"ml-1 text-signoz_vanilla-400\">/month</span></div></div></div>";
+    const LOCALSTACK_PRICING = "<div class=\"pricing_indpackage_wrap is-aws\"><div class=\"pricing_info_wrapper\"><div class=\"pricing_div_info\"><h2 class=\"u-heading-lg-new\">Hobby</h2><p data-tippy-content=\"Hobby is permitted only for non-commercial use. Refer to our &lt;a href=&#x27;https://www.localstack.cloud/legal/terms-of-service&#x27;&gt;Terms &amp; Conditions &lt;/a&gt;for details.\" class=\"u-bodytext-base-new is-tooltip\">For hobbyists &amp; other non-commercial usage.</p></div></div><div id=\"w-node-_33f48fcf-0b84-7154-4879-d00c3f6c73dd-a79dbcdd\" class=\"pricing_div_price\"><div class=\"u-heading-2xl-new is-pricinglist\">Free</div></div></div><div class=\"pricing_indpackage_wrap is-aws\"><div class=\"pricing_info_wrapper\"><div class=\"pricing_div_info\"><h2 class=\"u-heading-lg-new\">Base</h2><p class=\"u-bodytext-base-new\">For teams building simple applications.</p></div></div><div id=\"w-node-_727c326e-5500-98b7-3569-1d611a1c0ea5-a79dbcdd\" class=\"pricing_div_price\"><div style=\"opacity:1;display:flex\" class=\"pricing-wrapper-switch is-annualy\"><div class=\"price-div-wrapper\"><div class=\"price-div-item\"><div class=\"u-heading-2xl-new is-price is-faded\">$39</div></div><div class=\"pricing-side-div-wrapper\"><div class=\"u-bodytext-sm-new is-descriptivetext\">per license/<br/></div><div class=\"u-bodytext-sm-new is-descriptivetext\">per month<br/></div></div></div><div class=\"pricing_text_pricesupport u-bodytext-sm\">billed annually</div></div><div style=\"opacity:0;display:none\" class=\"pricing-wrapper-switch is-monthly\"><div class=\"price-div-wrapper\"><div class=\"price-div-item\"><div class=\"u-heading-2xl-new is-price is-faded\">$45</div></div><div class=\"pricing-side-div-wrapper\"><div class=\"u-bodytext-sm-new\">per license/<br/></div><div class=\"u-bodytext-sm-new\">per month<br/></div></div></div><div class=\"pricing_text_pricesupport u-bodytext-sm\">billed monthly</div></div></div></div><div class=\"pricing_indpackage_wrap is-snowflake\"><div class=\"pricing_info_wrapper\"><div class=\"pricing_div_info\"><h2 class=\"u-heading-lg-new\">Base</h2><p class=\"u-bodytext-base-new\">Need to test your queries in an isolated sandbox without cloud dependencies? Built to mitigate expensive mistakes, for any engineer</p></div></div><div class=\"pricing_div_price\"><div style=\"opacity:1;display:flex\" class=\"pricing-wrapper-switch is-annualy\"><div class=\"price-div-wrapper\"><div class=\"price-div-item\"><div class=\"u-heading-2xl-new is-price\">$29</div></div><div class=\"pricing-side-div-wrapper\"><div class=\"u-bodytext-sm-new is-descriptivetext\">per license/<br/></div><div class=\"u-bodytext-sm-new is-descriptivetext\">per month<br/></div></div></div><div class=\"pricing_text_pricesupport u-bodytext-sm\">billed annually</div></div><div style=\"opacity:0;display:none\" class=\"pricing-wrapper-switch is-monthly\"><div class=\"price-div-wrapper\"><div class=\"price-div-item\"><div class=\"u-heading-2xl-new is-price\">$35</div></div><div class=\"pricing-side-div-wrapper\"><div class=\"u-bodytext-sm-new\">per license/<br/></div><div class=\"u-bodytext-sm-new\">per month<br/></div></div></div><div class=\"pricing_text_pricesupport u-bodytext-sm\">billed monthly</div></div></div></div>";
+
+    it("reads SigNoz's Teams plan at the $49 it charges, never at the $199 it strikes through", () => {
+      assert.strictEqual(stripHtml(SIGNOZ_PRICING), "Starts at $49/month, including $49 of usage Teams For fast-scaling teams that need observability to scale with them. starts from $49 /month");
+    });
+
+    it("keeps LocalStack for AWS's Base price, which its is-faded class draws in full, beside LocalStack for Snowflake's", () => {
+      assert.strictEqual(stripHtml(LOCALSTACK_PRICING), "Hobby For hobbyists & other non-commercial usage. Free Base For teams building simple applications. $39 per license/ per month billed annually $45 per license/ per month billed monthly Base Need to test your queries in an isolated sandbox without cloud dependencies? Built to mitigate expensive mistakes, for any engineer $29 per license/ per month billed annually $35 per license/ per month billed monthly");
+    });
+
+    it("still finds a quote of either page's own words, and refuses a copy holding the struck price", () => {
+      assert.strictEqual(verbatimExcerpt("Hobby For hobbyists & other non-commercial usage. Free", stripHtml(LOCALSTACK_PRICING)).excerpt, "Hobby For hobbyists & other non-commercial usage. Free");
+      assert.strictEqual(verbatimExcerpt("Starts at $49/month, including $49 of usage", stripHtml(SIGNOZ_PRICING)).excerpt, "Starts at $49/month, including $49 of usage");
+      assert.strictEqual(verbatimExcerpt("Starts at $199 $49/month", stripHtml(SIGNOZ_PRICING)).excerpt, null);
+    });
   });
 });
