@@ -764,6 +764,14 @@ function statesTheRecordWhere(statesIt: (terms: string) => boolean, status = "st
 
 const cannotReadTheRecord = async () => ({ status: "unstated", why: "the reader's answer could not be parsed", review: [] });
 
+function readingsOfTheRecordBy(readings: Record<string, "stated" | "missing" | "unread">) {
+  return async (older: Page) => {
+    const reading = readings[older.text.match(/TERMS=(\w+)/)?.[1] ?? ""];
+    assert.ok(reading, `no reading of the record is set for ${older.page}`);
+    return reading === "unread" ? cannotReadTheRecord() : statesTheRecordWhere(() => reading === "stated")(older);
+  };
+}
+
 function settle(options: { textDay?: string | null; recordDay?: string; todayTerms: string | null; days?: string[]; termsOn: (day: string) => string | null; archive?: unknown; reader?: ReturnType<typeof termsPairReader>; statedBefore?: (older: Page) => Promise<unknown> }) {
   const reader = options.reader ?? termsPairReader();
   const archive = options.archive ?? archiveOf(options.days ?? ALL_YEAR, options.termsOn);
@@ -1119,14 +1127,47 @@ describe("settling a first reading's difference against the page as the Archive 
     assert.deepStrictEqual(spans(settled.brackets), [["2026-04-08", "2026-04-11", "before"]]);
   });
 
-  it("finds no further move when the pages after a move differ only by lines one page states", async () => {
+  it("finds no further move when the pages after a move differ only by lines one page states, and the first new capture states what the record calls new", async () => {
     const termsOn = (day: string) => (day <= "2026-05-15" ? "A" : day <= "2026-07-15" ? "B" : "B_collections");
-    const { result } = settle({ todayTerms: "B_collections", termsOn, reader: linesPairReader() });
-    const settled = await result;
-    assert.strictEqual(settled.outcome, "vendor_changed");
-    assert.deepStrictEqual(spans(settled.brackets), [["2026-05-15", "2026-05-16", "before"]]);
-    assert.strictEqual(settled.moves_complete, true);
-    assert.strictEqual(settled.date, "2026-05-16");
+    for (const status of ["stated", "removal_stated"]) {
+      const statedBefore = statesTheRecordWhere((terms) => terms.startsWith("B"), status);
+      const settled = await settle({ todayTerms: "B_collections", termsOn, reader: linesPairReader(), statedBefore }).result;
+      assert.strictEqual(settled.outcome, "vendor_changed");
+      assert.deepStrictEqual(spans(settled.brackets), [["2026-05-15", "2026-05-16", "before"]], status);
+      assert.strictEqual(settled.moves_complete, true, status);
+      assert.strictEqual(settled.date, "2026-05-16", status);
+    }
+  });
+
+  it("leaves the moves incomplete and the record undated when the pages after a move differ only by lines one page states, and the first new capture lacks a change the record names, or the reader cannot say", async () => {
+    const termsOn = (day: string) => (day <= "2026-05-15" ? "A" : day <= "2026-07-15" ? "B" : "B_collections");
+    for (const firstNew of ["missing", "unread"] as const) {
+      const statedBefore = readingsOfTheRecordBy({ A: "missing", B: firstNew, B_collections: "stated" });
+      const settled = await settle({ todayTerms: "B_collections", termsOn, reader: linesPairReader(), statedBefore }).result;
+      assert.strictEqual(settled.outcome, "vendor_changed");
+      assert.deepStrictEqual(spans(settled.brackets), [["2026-05-15", "2026-05-16", "before"]], firstNew);
+      assert.strictEqual(settled.moves_complete, false, firstNew);
+      assert.strictEqual(settled.date, null, firstNew);
+    }
+  });
+
+  it("leaves the moves incomplete when the pages after a move differ only by lines one page states, and the bracket's first page already states what the record calls new, or the reader cannot say", async () => {
+    const termsOn = (day: string) => (day <= "2026-05-15" ? "A" : day <= "2026-07-15" ? "B" : "B_collections");
+    for (const start of ["stated", "unread"] as const) {
+      const statedBefore = readingsOfTheRecordBy({ A: start, B: "stated", B_collections: "stated" });
+      const settled = await settle({ todayTerms: "B_collections", termsOn, reader: linesPairReader(), statedBefore }).result;
+      assert.deepStrictEqual(spans(settled.brackets), [["2026-05-15", "2026-05-16", "before"]], start);
+      assert.strictEqual(settled.moves_complete, false, start);
+      assert.strictEqual(settled.date, null, start);
+    }
+  });
+
+  it("leaves the moves incomplete when the pages after a second move differ only by lines one page states, since the second bracket's first page already states what the record calls new", async () => {
+    const termsOn = (day: string) => (day <= "2026-04-10" ? "A" : day <= "2026-07-01" ? "B" : day <= "2026-08-01" ? "C" : "C_collections");
+    const statedBefore = readingsOfTheRecordBy({ A: "missing", B: "stated", C: "stated", C_collections: "stated" });
+    const settled = await settle({ todayTerms: "C_collections", termsOn, reader: linesPairReader(), statedBefore }).result;
+    assert.deepStrictEqual(spans(settled.brackets), [["2026-04-10", "2026-04-11", "before"], ["2026-07-01", "2026-07-02", "before"]]);
+    assert.strictEqual(settled.moves_complete, false);
   });
 
   it("dates a plan the page stopped offering, and keeps what it offers instead as the terms on the record's day", async () => {

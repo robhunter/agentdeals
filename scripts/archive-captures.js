@@ -624,7 +624,7 @@ function placeBesideRecord(bracket, recordDay, today) {
 }
 
 function showsNoMove(verdict) {
-  return verdict?.status === "same" || verdict?.status === "review" || verdict?.status === "absent";
+  return verdict?.status === "same" || verdict?.status === "absent";
 }
 
 async function bracketMoves({ from, until, pool, compare, pageOf, statesWhatTheRecordCallsNew = async () => null, planNotOfferedAtStart = false }) {
@@ -637,10 +637,12 @@ async function bracketMoves({ from, until, pool, compare, pageOf, statesWhatTheR
     let hi = candidates.length;
     let reads = 0;
     let startStatesIt;
-    const sideOfAReviewReading = async (page) => {
+    const statesItWhereTheStartDoesNot = async (page) => {
       if (startStatesIt === undefined) startStatesIt = await statesWhatTheRecordCallsNew(start);
-      if (startStatesIt !== false) return null;
-      const states = await statesWhatTheRecordCallsNew(page);
+      return startStatesIt === false ? statesWhatTheRecordCallsNew(page) : null;
+    };
+    const sideOfAReviewReading = async (page) => {
+      const states = await statesItWhereTheStartDoesNot(page);
       return states === true ? "new" : states === false ? "old" : null;
     };
     const sideOfTheMove = async (verdict, page) => {
@@ -674,6 +676,7 @@ async function bracketMoves({ from, until, pool, compare, pageOf, statesWhatTheR
     });
     if (hi === candidates.length) return { brackets, moves_complete: true };
     const onward = await compare(firstNew, until);
+    if (onward?.status === "review") return { brackets, moves_complete: (await statesItWhereTheStartDoesNot(firstNew)) === true };
     if (showsNoMove(onward)) return { brackets, moves_complete: true };
     if (onward.status !== "differ") return { brackets, moves_complete: false };
     start = firstNew;
