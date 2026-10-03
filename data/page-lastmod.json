@@ -22,11 +22,11 @@
       "changed": "2026-10-03"
     },
     "/ai-free-tiers": {
-      "hash": "36c8ef51f75b1227",
+      "hash": "0d45813d3572c734",
       "changed": "2026-10-03"
     },
     "/ai-ml-alternatives": {
-      "hash": "3ea62ac1323f722c",
+      "hash": "903146ea415532df",
       "changed": "2026-10-03"
     },
     "/alternative-to": {
@@ -1080,7 +1080,7 @@
       "changed": "2026-10-03"
     },
     "/category/ai-ml": {
-      "hash": "dccdddd420fe68c5",
+      "hash": "9f20f40cc06c06a1",
       "changed": "2026-10-03"
     },
     "/category/analytics": {
@@ -1204,7 +1204,7 @@
       "changed": "2026-10-03"
     },
     "/category/infrastructure": {
-      "hash": "b0c2699204c89816",
+      "hash": "1f6fc0dadbec79ba",
       "changed": "2026-10-03"
     },
     "/category/localization": {
@@ -3135,7 +3135,7 @@
       "changed": "2026-10-03"
     },
     "/free-llm-apis": {
-      "hash": "cccfa8d257a07cae",
+      "hash": "91907df5e758a2df",
       "changed": "2026-10-03"
     },
     "/free-nextjs-stack": {
@@ -3242,7 +3242,7 @@
       "changed": "2026-10-03"
     },
     "/llm-api-pricing": {
-      "hash": "23ed2914a8cee56f",
+      "hash": "86d3d106bd4ebac0",
       "changed": "2026-10-03"
     },
     "/localstack-alternatives": {
@@ -3472,7 +3472,7 @@
       "changed": "2026-10-03"
     },
     "/stack-check": {
-      "hash": "139997ede20f7c88",
+      "hash": "19c231e01bb8b439",
       "changed": "2026-10-03"
     },
     "/stacks": {
@@ -7356,7 +7356,7 @@
       "changed": "2026-10-03"
     },
     "/vendor/ngrok": {
-      "hash": "ecb934d44715c517",
+      "hash": "ac4fbef95a934ccb",
       "changed": "2026-10-03"
     },
     "/vendor/nhost": {
