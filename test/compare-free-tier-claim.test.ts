@@ -54,6 +54,7 @@ interface Side {
   tier: string;
   description: string;
   superseded: boolean;
+  supersededLabel: string | null;
   reasonsItCouldGive: string[];
 }
 
@@ -86,7 +87,7 @@ before(async () => {
   const { buildComparisonMap } = await import("../dist/comparison-pairs.js");
   const { enrichOffers, loadOffers, loadDealChanges, gateForOffer, withheldRecordCounts, changesRatingTheListedTier } = await import("../dist/data.js");
   const { toSlug } = await import("../dist/vendor-slug.js");
-  const { supersedingChange } = await import("../dist/superseded-description.js");
+  const { storedTermsLabel, supersedingChange } = await import("../dist/superseded-description.js");
   const { gateFor, utcDate } = await import("../dist/ranking.js");
   const { levelWithheldReason, levelWithheldSince, withheldLevelSentence } = await import("../dist/source-check.js");
   const { ratingWithheldSentence } = await import("../dist/change-citation.js");
@@ -130,16 +131,18 @@ before(async () => {
       ),
     ].filter((r): r is string => typeof r === "string" && r !== "");
 
+    const superseding = supersedingChange(
+      primary,
+      changes.filter((c: { vendor: string }) => c.vendor.toLowerCase() === vendor.toLowerCase()),
+    );
     sides.set(vendor, {
       vendor,
       slug,
       verdict,
       tier: primary.tier,
       description: primary.description,
-      superseded: supersedingChange(
-        primary,
-        changes.filter((c: { vendor: string }) => c.vendor.toLowerCase() === vendor.toLowerCase()),
-      ) !== null,
+      superseded: superseding !== null,
+      supersededLabel: superseding === null ? null : storedTermsLabel(superseding),
       reasonsItCouldGive,
     });
   });
@@ -257,7 +260,7 @@ describe("#1393 the comparison page answers the free-tier question the way the r
         if (!side.superseded) continue;
         withheld++;
         if (html.includes(escHtml(side.description))) republished.push(`/compare/${pair.slug} — ${vendor}`);
-        if (!html.includes("Superseded:")) republished.push(`/compare/${pair.slug} — ${vendor} states no supersession`);
+        if (!html.includes(`${side.supersededLabel}:`)) republished.push(`/compare/${pair.slug} — ${vendor} states no supersession`);
       }
     }
 

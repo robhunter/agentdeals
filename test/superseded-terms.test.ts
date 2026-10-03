@@ -19,6 +19,8 @@ const {
   supersedingChange,
   supersededTermsRecordFor,
   storedTermsAreSuperseded,
+  storedTermsWithheldMetaPhrase,
+  storedTermsWithheldPhrase,
 } = await import("../dist/superseded-description.js");
 const { STORED_TERMS_NAMED_AS_PREVIOUS, narrowingSentence } = await import("../dist/vendor-verdict.js");
 const { openingOfTerms } = await import("../dist/terms-opening.js");
@@ -841,7 +843,7 @@ function quickVerdictOf(html: string): string {
   return /<div class="quick-verdict">[\s\S]*?<\/div>/.exec(html)?.[0] ?? "";
 }
 
-function withholdingSurfacesOf(html: string): [string, string][] {
+function withholdingSurfacesOf(html: string, change: DealChange): [string, string][] {
   const page = jsonLdOfType(html, "WebPage");
   const surfaces: [string, string][] = [
     ["meta description", unescaped(metaDescriptionOf(html))],
@@ -851,7 +853,7 @@ function withholdingSurfacesOf(html: string): [string, string][] {
     ...faqAnswersOf(html).map(({ question, answer }) => [question, answer] as [string, string]),
   ];
   return surfaces.filter(
-    ([, text]) => text.includes(STORED_TERMS_WITHHELD_PHRASE) || text.includes(STORED_TERMS_WITHHELD_META_PHRASE),
+    ([, text]) => text.includes(storedTermsWithheldPhrase(change)) || text.includes(storedTermsWithheldMetaPhrase(change)),
   );
 }
 
@@ -1116,8 +1118,8 @@ describe("#1103 every catalogue record whose stored terms are superseded", () =>
       `counted as restated and as still withholding behind a record they have already answered: ${answeredYetWithheld.join(", ")}`,
     );
 
-    const rendering = population.filter(({ offer }) =>
-      bodies.get(`/vendor/${toSlug(offer.vendor)}`)!.includes(STORED_TERMS_WITHHELD_PHRASE),
+    const rendering = population.filter(({ offer, change }) =>
+      bodies.get(`/vendor/${toSlug(offer.vendor)}`)!.includes(storedTermsWithheldPhrase(change)),
     );
     assert.strictEqual(rendering.length, population.length);
   });
@@ -1137,7 +1139,7 @@ describe("#1103 every catalogue record whose stored terms are superseded", () =>
   it("says why it withholds on the rest, where there is no reading to publish instead", () => {
     const silent = population
       .filter(({ change }) => !readingBehindTheChange(change))
-      .filter(({ offer }) => withholdingSurfacesOf(bodies.get(`/vendor/${toSlug(offer.vendor)}`)!).length === 0)
+      .filter(({ offer, change }) => withholdingSurfacesOf(bodies.get(`/vendor/${toSlug(offer.vendor)}`)!, change).length === 0)
       .map(({ offer }) => offer.vendor);
     assert.deepStrictEqual(silent.slice(0, 20), []);
   });
@@ -1181,7 +1183,7 @@ describe("#1103 every catalogue record whose stored terms are superseded", () =>
 
   it("says in the meta description of every one why the terms are withheld", () => {
     const silent = population
-      .filter(({ offer }) => !metaDescriptionOf(bodies.get(`/vendor/${toSlug(offer.vendor)}`)!).includes(STORED_TERMS_WITHHELD_META_PHRASE))
+      .filter(({ offer, change }) => !metaDescriptionOf(bodies.get(`/vendor/${toSlug(offer.vendor)}`)!).includes(storedTermsWithheldMetaPhrase(change)))
       .map(({ offer }) => offer.vendor);
     assert.deepStrictEqual(silent.slice(0, 20), []);
   });
@@ -1204,7 +1206,7 @@ describe("#1103 every catalogue record whose stored terms are superseded", () =>
     const uncited: string[] = [];
     for (const { offer, change } of withARecordedReading()) {
       const reading = readingBehindTheChange(change)!;
-      for (const [surface, text] of withholdingSurfacesOf(bodies.get(`/vendor/${toSlug(offer.vendor)}`)!)) {
+      for (const [surface, text] of withholdingSurfacesOf(bodies.get(`/vendor/${toSlug(offer.vendor)}`)!, change)) {
         if (!text.includes(reading.label)) uncited.push(`${offer.vendor} :: ${surface} :: no source`);
         if (!text.includes(reading.date)) uncited.push(`${offer.vendor} :: ${surface} :: no date`);
       }
@@ -1214,7 +1216,7 @@ describe("#1103 every catalogue record whose stored terms are superseded", () =>
 
   it("finds those sentences on every page, so the assertion above has subjects", () => {
     const bare = withARecordedReading()
-      .filter(({ offer }) => withholdingSurfacesOf(bodies.get(`/vendor/${toSlug(offer.vendor)}`)!).length < 4)
+      .filter(({ offer, change }) => withholdingSurfacesOf(bodies.get(`/vendor/${toSlug(offer.vendor)}`)!, change).length < 4)
       .map(({ offer }) => offer.vendor);
     assert.deepStrictEqual(bare.slice(0, 20), []);
   });
@@ -1224,7 +1226,7 @@ describe("#1103 every catalogue record whose stored terms are superseded", () =>
     for (const { offer, change } of population) {
       const html = bodies.get(`/vendor/${toSlug(offer.vendor)}`)!;
       const withoutWhatTheChangeItselfSays = (text: string) => text.split(change.summary).join(" ");
-      for (const [surface, text] of withholdingSurfacesOf(html)) {
+      for (const [surface, text] of withholdingSurfacesOf(html, change)) {
         const found = unrenderedExpressionIn(withoutWhatTheChangeItselfSays(text));
         if (found) leaking.push(`${offer.vendor} :: ${surface} :: ${found}`);
       }

@@ -7,8 +7,8 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const {
-  STORED_TERMS_WITHHELD_PHRASE,
-  STORED_TERMS_WITHHELD_META_PHRASE,
+  storedTermsWithheldMetaPhrase,
+  storedTermsWithheldPhrase,
   supersedingChange,
   supersededTermsRecord,
 } = await import("../dist/superseded-description.js");
@@ -298,7 +298,7 @@ describe("#1395 the listing surfaces answer the stored-terms question the way th
       ).exec(html)?.[0];
       if (!row) continue;
       const text = withoutTags(row);
-      if (!text.includes(STORED_TERMS_WITHHELD_PHRASE)) silent.push(offer.vendor);
+      if (!text.includes(storedTermsWithheldPhrase(supersedingFor(offer)!))) silent.push(offer.vendor);
     }
     assert.deepStrictEqual(silent.slice(0, 25), []);
   });
@@ -324,7 +324,7 @@ describe("#1395 the listing surfaces answer the stored-terms question the way th
       const slots = [...html.matchAll(/<div class="result-desc">([\s\S]*?)<\/div>/g)].map((m) => withoutTags(m[1]));
       if (slots.some((slot) => publishesStoredTerms(slot, offer))) withStoredTerms.push(offer.vendor);
       assert.ok(
-        slots.some((slot) => slot.includes(STORED_TERMS_WITHHELD_META_PHRASE) || slot.includes(STORED_TERMS_WITHHELD_PHRASE)),
+        slots.some((slot) => slot.includes(storedTermsWithheldMetaPhrase(supersedingFor(offer)!)) || slot.includes(storedTermsWithheldPhrase(supersedingFor(offer)!))),
         `no search result for ${offer.vendor} says the stored terms are superseded`,
       );
     }
@@ -364,7 +364,7 @@ describe("#1395 the listing surfaces answer the stored-terms question the way th
     assert.strictEqual(marked.reading.url, change.source_url);
     assert.strictEqual(marked.reading.terms, change.current_state!.trim());
     assert.ok(marked.notice.includes(change.current_state!.trim().slice(0, 40)));
-    assert.ok(marked.notice.includes(STORED_TERMS_WITHHELD_PHRASE));
+    assert.ok(marked.notice.includes(storedTermsWithheldPhrase(change)));
   });
 
   it("counts a reading on nearly every marked record, so the field above is not an exception", async () => {

@@ -758,15 +758,27 @@ function termsWeCannotConfirmToday(input: VendorVerdictInput): string {
     : "";
 }
 
+export function holdsOnlyOurOwnRecordsWithACorrection(records: VendorVerdictInput["changes"]): boolean {
+  return records.length > 0
+    && records.every(isOurOwnBookkeeping)
+    && records.some(c => isACorrectionToOurOwnRecord(c) && !theEventNeverHappened(c));
+}
+
+function endingWithOurOwnCorrections(sentence: string, records: VendorVerdictInput["changes"]): string {
+  return holdsOnlyOurOwnRecordsWithACorrection(records) ? `${sentence} ${ourOwnRecordsSentence(records)}` : sentence;
+}
+
+function withheldVerdictSentence(input: VendorVerdictInput): string {
+  if (input.levelWithheld === null) return ratingWithheldSentence(input.vendor, withheldRecordCountsOf(input));
+  const unconfirmed = whyWeCannotConfirmTheseTerms(input);
+  if (unconfirmed) return unconfirmedTermsSentence(unconfirmed);
+  const clause = withheldLevelClause(input.levelWithheld, input.unconfirmableSince);
+  return `${capitalise(clause)}, ${CANNOT_CONFIRM_THESE_TERMS} today.`;
+}
+
 export function vendorVerdictSentence(input: VendorVerdictInput): string {
   if (input.offerEnded) return endedVerdictSentence();
-  if (withholdingDecides(input)) {
-    if (input.levelWithheld === null) return ratingWithheldSentence(input.vendor, withheldRecordCountsOf(input));
-    const unconfirmed = whyWeCannotConfirmTheseTerms(input);
-    if (unconfirmed) return unconfirmedTermsSentence(unconfirmed);
-    const clause = withheldLevelClause(input.levelWithheld, input.unconfirmableSince);
-    return `${capitalise(clause)}, ${CANNOT_CONFIRM_THESE_TERMS} today.`;
-  }
+  if (withholdingDecides(input)) return endingWithOurOwnCorrections(withheldVerdictSentence(input), input.changes);
   const refused = refusalWithholdsStability(input);
   if (refused) {
     return refusedReadVerdictSentence(refusedReadWithholding(refused));
@@ -776,7 +788,9 @@ export function vendorVerdictSentence(input: VendorVerdictInput): string {
   if (ending) return `${endedClaimVerdictSentence(ending)}${termsWeCannotConfirmToday(input)}`;
 
   const level = publishedVendorLevel(input.level, input.cause);
-  if (input.gate || level === null) return vendorHistorySentence(input.vendor, input.historyLevel, input.cause);
+  if (input.gate || level === null) {
+    return endingWithOurOwnCorrections(vendorHistorySentence(input.vendor, input.historyLevel, input.cause), input.changes);
+  }
 
   if (level !== "stable" && input.cause) {
     return `We rate it ${level} — one recorded ${changeKindNoun(input.cause.change_type)}, ${changeDateClause(input.cause)}.${termsWeCannotConfirmToday(input)}`;
