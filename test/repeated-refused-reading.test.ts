@@ -3,6 +3,7 @@ import assert from "node:assert";
 import { readFileSync, writeFileSync, mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
+import { execFileSync } from "node:child_process";
 
 process.env.AGENTDEALS_REFUSALS_PATH = path.join(
   mkdtempSync(path.join(tmpdir(), "refusals-repeat-")),
@@ -17,6 +18,7 @@ const { refusedReadingItRepeats, gateCandidates, REJECT_REPEATS_A_REFUSED_READIN
   "../scripts/change-gate.js"
 );
 const { runAiMode } = await import("../scripts/reverify-rolling.js");
+const { auditPublishedRecords } = await import("../scripts/gate-report.js");
 
 const FEEDBEAR_PAGE = "https://www.feedbear.com/pricing";
 
@@ -147,8 +149,14 @@ describe("a reading that states what a refused reading of the same page already 
     assert.strictEqual(refusedReadingItRepeats(FEEDBEAR_READ, [earlier, FEEDBEAR_REFUSED]), FEEDBEAR_REFUSED);
   });
 
-  it("leaves a correction to our own record alone, since its date is when we found our error and not when the vendor changed", () => {
-    assert.strictEqual(refusedReadingItRepeats({ ...FEEDBEAR_READ, change_type: "record_corrected" }, [FEEDBEAR_REFUSED]), null);
+  it("finds the repeat in a reading typed as a correction to our own record, which would publish the refused figures as the terms our listing missed", () => {
+    assert.strictEqual(refusedReadingItRepeats({ ...FEEDBEAR_READ, change_type: "record_corrected" }, [FEEDBEAR_REFUSED]), FEEDBEAR_REFUSED);
+  });
+
+  it("leaves a published correction to our own record alone in an audit of published records, since it already says the vendor did not change", () => {
+    const audit = { auditingPublishedRecords: true };
+    assert.strictEqual(refusedReadingItRepeats({ ...FEEDBEAR_READ, change_type: "record_corrected" }, [FEEDBEAR_REFUSED], audit), null);
+    assert.strictEqual(refusedReadingItRepeats(FEEDBEAR_READ, [FEEDBEAR_REFUSED], audit), FEEDBEAR_REFUSED);
   });
 });
 
@@ -194,12 +202,10 @@ describe("the gate refuses the repeat and names the refusal it repeats", () => {
     assert.deepStrictEqual(rejected.map((r: { reason: string }) => r.reason), [REJECT_REPEATS_A_REFUSED_READING]);
   });
 
-  it("does not refuse a correction to our own record as a repeat", async () => {
-    const { rejected } = await gateCandidates([{ ...FEEDBEAR_READ, change_type: "record_corrected" }], { refusals: [FEEDBEAR_REFUSED] });
-    assert.deepStrictEqual(
-      rejected.filter((r: { reason: string }) => r.reason === REJECT_REPEATS_A_REFUSED_READING),
-      [],
-    );
+  it("refuses a reading typed as a correction to our own record that repeats a refused reading", async () => {
+    const { accepted, rejected } = await gateCandidates([{ ...FEEDBEAR_READ, change_type: "record_corrected" }], { refusals: [FEEDBEAR_REFUSED] });
+    assert.deepStrictEqual(accepted, []);
+    assert.deepStrictEqual(rejected.map((r: { reason: string }) => r.reason), [REJECT_REPEATS_A_REFUSED_READING]);
   });
 
   it("refuses no repeat when it is handed no refusals", async () => {
@@ -211,44 +217,96 @@ describe("the gate refuses the repeat and names the refusal it repeats", () => {
   });
 });
 
-describe("the rolling re-read hands the gate the refusals it holds", () => {
-  it("refuses a reading that repeats a refusal in its store, and stores that refusal too", async () => {
-    const dir = mkdtempSync(path.join(tmpdir(), "repeat-run-"));
-    const changesPath = path.join(dir, "deal_changes.json");
-    const refusalsPath = path.join(dir, "change_refusals.json");
-    writeFileSync(changesPath, JSON.stringify({ changes: [] }, null, 2) + "\n");
-    writeFileSync(refusalsPath, JSON.stringify({ refusals: [{ ...FEEDBEAR_REFUSED, detail: null, summary: null, previous_state: null, category: "Feedback" }] }, null, 2) + "\n");
-    const offer = {
-      vendor: "FeedBear",
-      category: "Feedback",
-      tier: "Startup",
-      description: FEEDBEAR_READ.previous_state,
-      url: FEEDBEAR_PAGE,
-      verifiedDate: "2026-09-02",
-    };
+describe("an audit of published records", () => {
+  it("does not flag a published correction to our own record as a repeat", async () => {
+    const { rejected } = await auditPublishedRecords([{ ...FEEDBEAR_READ, change_type: "record_corrected" }], { refusals: [FEEDBEAR_REFUSED] });
+    assert.deepStrictEqual(
+      rejected.filter((r: { reason: string }) => r.reason === REJECT_REPEATS_A_REFUSED_READING),
+      [],
+    );
+  });
+
+  it("flags a published record that repeats a refused reading", async () => {
+    const { rejected } = await auditPublishedRecords([FEEDBEAR_READ], { refusals: [FEEDBEAR_REFUSED] });
+    assert.deepStrictEqual(rejected.map((r: { reason: string }) => r.reason), [REJECT_REPEATS_A_REFUSED_READING]);
+  });
+
+  it("is what the gate report runs over the change log", () => {
+    const dir = mkdtempSync(path.join(tmpdir(), "repeat-report-"));
+    const published = { ...FEEDBEAR_READ, detected_by: "reverify-ai" };
+    writeFileSync(path.join(dir, "changes.json"), JSON.stringify({ changes: [published, { ...published, change_type: "record_corrected" }] }));
+    writeFileSync(path.join(dir, "refusals.json"), JSON.stringify({ refusals: [FEEDBEAR_REFUSED] }));
+    writeFileSync(path.join(dir, "index.json"), JSON.stringify({ offers: [] }));
     try {
-      const result = await runAiMode([{ index: 0, offer }], { offers: [{ ...offer }] }, false, new Date("2026-10-03T09:00:00Z"), {
-        fetchFn: async () => ({ ok: true, text: `FeedBear pricing — ${FEEDBEAR_READ.current_state}` }),
-        verifyFn: async () => ({
-          status: "changed",
-          summary: FEEDBEAR_READ.summary,
-          change_type: FEEDBEAR_READ.change_type,
-          current_state: FEEDBEAR_READ.current_state,
-          impact: "medium",
-        }),
-        rateLimitMs: 0,
-        changesPath,
-        refusalsPath,
+      const report = execFileSync(process.execPath, ["scripts/gate-report.js"], {
+        env: {
+          ...process.env,
+          AGENTDEALS_CHANGES_PATH: path.join(dir, "changes.json"),
+          AGENTDEALS_REFUSALS_PATH: path.join(dir, "refusals.json"),
+          AGENTDEALS_INDEX_PATH: path.join(dir, "index.json"),
+        },
+        encoding: "utf-8",
       });
-      assert.strictEqual(result.recorded.length, 0);
-      assert.deepStrictEqual(result.rejected.map((r: { reason: string }) => r.reason), [REJECT_REPEATS_A_REFUSED_READING]);
-      const stored = JSON.parse(readFileSync(refusalsPath, "utf-8")).refusals;
-      const repeat = stored.find((r: { refused_date: string }) => r.refused_date === "2026-10-03");
-      assert.ok(repeat, "the run stored no refusal for the repeated reading");
-      assert.strictEqual(repeat.reason, REJECT_REPEATS_A_REFUSED_READING);
-      assert.match(repeat.detail, /2026-09-19/);
+      const verdictOn = (changeType: string) => report.split("\n").find((line) => line.includes(`FeedBear (${changeType})`));
+      assert.match(verdictOn("pricing_restructured") ?? "", new RegExp(`^DROP  FeedBear \\(pricing_restructured\\) — ${REJECT_REPEATS_A_REFUSED_READING}`));
+      assert.ok(verdictOn("record_corrected"));
+      assert.doesNotMatch(verdictOn("record_corrected") ?? "", new RegExp(REJECT_REPEATS_A_REFUSED_READING));
     } finally {
       rmSync(dir, { recursive: true, force: true });
     }
+  });
+});
+
+async function readFeedBearOnceAs(changeType: string) {
+  const dir = mkdtempSync(path.join(tmpdir(), "repeat-run-"));
+  const changesPath = path.join(dir, "deal_changes.json");
+  const refusalsPath = path.join(dir, "change_refusals.json");
+  writeFileSync(changesPath, JSON.stringify({ changes: [] }, null, 2) + "\n");
+  writeFileSync(refusalsPath, JSON.stringify({ refusals: [{ ...FEEDBEAR_REFUSED, detail: null, summary: null, previous_state: null, category: "Feedback" }] }, null, 2) + "\n");
+  const offer = {
+    vendor: "FeedBear",
+    category: "Feedback",
+    tier: "Startup",
+    description: FEEDBEAR_READ.previous_state,
+    url: FEEDBEAR_PAGE,
+    verifiedDate: "2026-09-02",
+  };
+  try {
+    const result = await runAiMode([{ index: 0, offer }], { offers: [{ ...offer }] }, false, new Date("2026-10-03T09:00:00Z"), {
+      fetchFn: async () => ({ ok: true, text: `FeedBear pricing — ${FEEDBEAR_READ.current_state}` }),
+      verifyFn: async () => ({
+        status: "changed",
+        summary: FEEDBEAR_READ.summary,
+        change_type: changeType,
+        current_state: FEEDBEAR_READ.current_state,
+        impact: "medium",
+      }),
+      rateLimitMs: 0,
+      changesPath,
+      refusalsPath,
+    });
+    const stored = JSON.parse(readFileSync(refusalsPath, "utf-8")).refusals;
+    return { result, stored };
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+}
+
+describe("the rolling re-read hands the gate the refusals it holds", () => {
+  it("refuses a reading that repeats a refusal in its store, and stores that refusal too", async () => {
+    const { result, stored } = await readFeedBearOnceAs(FEEDBEAR_READ.change_type);
+    assert.strictEqual(result.recorded.length, 0);
+    assert.deepStrictEqual(result.rejected.map((r: { reason: string }) => r.reason), [REJECT_REPEATS_A_REFUSED_READING]);
+    const repeat = stored.find((r: { refused_date: string }) => r.refused_date === "2026-10-03");
+    assert.ok(repeat, "the run stored no refusal for the repeated reading");
+    assert.strictEqual(repeat.reason, REJECT_REPEATS_A_REFUSED_READING);
+    assert.match(repeat.detail, /2026-09-19/);
+  });
+
+  it("refuses a reading it typed as a correction to our own record when that reading repeats a refusal in its store", async () => {
+    const { result, stored } = await readFeedBearOnceAs("record_corrected");
+    assert.strictEqual(result.recorded.length, 0);
+    assert.deepStrictEqual(result.rejected.map((r: { reason: string }) => r.reason), [REJECT_REPEATS_A_REFUSED_READING]);
+    assert.ok(stored.some((r: { refused_date: string; reason: string }) => r.refused_date === "2026-10-03" && r.reason === REJECT_REPEATS_A_REFUSED_READING));
   });
 });

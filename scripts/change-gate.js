@@ -637,8 +637,8 @@ function sameKeys(left, right) {
   return left.length === right.length && left.every((key, at) => key === right[at]);
 }
 
-export function refusedReadingItRepeats(candidate, refusals = []) {
-  if (isACorrectionToOurOwnRecord(candidate ?? {})) return null;
+export function refusedReadingItRepeats(candidate, refusals = [], { auditingPublishedRecords = false } = {}) {
+  if (auditingPublishedRecords && isACorrectionToOurOwnRecord(candidate ?? {})) return null;
   const stated = statedTermKeys(candidate?.current_state);
   if (stated.length === 0) return null;
   let repeated = null;
@@ -1670,6 +1670,7 @@ export async function gateCandidates(candidates, options = {}) {
   const productIsTheFreeTier = vendorsWhoseFreeTierIsTheProduct(options.offers);
   const freeByLicence = vendorsFreeByLicence(options.offers);
   const refusals = options.refusals ?? [];
+  const auditingPublishedRecords = options.auditingPublishedRecords === true;
   const accepted = [];
   const rejected = [];
   const unchecked = [];
@@ -1679,7 +1680,7 @@ export async function gateCandidates(candidates, options = {}) {
   const untiered = [];
 
   for (const original of candidates) {
-    const repeated = refusedReadingItRepeats(original, refusals);
+    const repeated = refusedReadingItRepeats(original, refusals, { auditingPublishedRecords });
     if (repeated) {
       rejected.push({
         candidate: original,

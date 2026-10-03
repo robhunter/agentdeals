@@ -36,6 +36,10 @@ export function machineDetected(changes, onDate) {
   );
 }
 
+export function auditPublishedRecords(candidates, options = {}) {
+  return gateCandidates(candidates, { ...options, auditingPublishedRecords: true });
+}
+
 export function reportLines({ candidates, accepted, rejected, unchecked }) {
   const verdictFor = new Map();
   for (const c of accepted) verdictFor.set(c, { mark: "keep", note: "" });
@@ -89,7 +93,7 @@ async function main() {
   }
 
   const pages = fetchPages ? await readSourcePages(candidates) : new Map();
-  const result = await gateCandidates(candidates, {
+  const result = await auditPublishedRecords(candidates, {
     confirmFn,
     offers: readOffers(),
     pageTextFor: (candidate) => pages.get(candidate),
