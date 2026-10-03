@@ -15095,6 +15095,34 @@
       "alternatives": [],
       "recorded_date": "2026-10-02",
       "date_source": "hand_written"
+    },
+    {
+      "vendor": "Cerebras",
+      "change_type": "limits_reduced",
+      "date": "2026-05-23",
+      "summary": "Between 2026-05-15 and 2026-05-23, Cerebras renamed its Free tier Free Trial and cut it from 30 to 5 requests a minute and from 60K-64K to 30K tokens a minute on gpt-oss-120b, Llama 3.1 8B and Qwen 3 235B. The 1M tokens a day did not change.",
+      "previous_state": "\"Free\" rate limits: gpt-oss-120b 30 requests a minute, 64K tokens a minute, 1M tokens a day; llama3.1-8b and qwen-3-235b-a22b-instruct-2507 30 requests a minute, 60K tokens a minute, 1M tokens a day; zai-glm-4.7 10 requests a minute and 100 a day (inference-docs.cerebras.ai/support/rate-limits, Internet Archive capture of 2026-05-15)",
+      "current_state": "\"Free Trial\" rate limits: gpt-oss-120b, llama3.1-8b, qwen-3-235b-a22b-instruct-2507 and zai-glm-4.7 each 5 requests a minute, 30K tokens a minute, 1M tokens an hour and 1M a day (Internet Archive capture of 2026-05-23)",
+      "impact": "medium",
+      "source_url": "https://web.archive.org/web/20260523024902/https://inference-docs.cerebras.ai/support/rate-limits",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-10-03",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Cerebras",
+      "change_type": "free_tier_removed",
+      "date": "2026-07-16",
+      "summary": "Cerebras's free access became a time- and credit-bounded trial for new accounts: $5 in credits after adding a verified payment method, expiring 30 days after they are granted. Cerebras says there is no permanently free tier; continued use needs a Pay as You Go purchase.",
+      "previous_state": "\"Free Trial\" rate limits with no credit amount, expiry or payment-method requirement stated: 5 requests a minute, 30K tokens a minute and 1M tokens a day per model (inference-docs.cerebras.ai/support/rate-limits, Internet Archive capture of 2026-06-03)",
+      "current_state": "\"New accounts now receive $5 in free credits after adding a verified payment method. Credits work across all models on public endpoints and expire 30 days after Cerebras grants them.\" (Cerebras change log, 2026-07-16). Rate-limits FAQ: \"Is there a permanently free tier? No. The Free Trial is time- and credit-bounded\".",
+      "impact": "high",
+      "source_url": "https://inference-docs.cerebras.ai/support/change-log",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-10-03",
+      "date_source": "vendor_page"
     }
   ]
 }
