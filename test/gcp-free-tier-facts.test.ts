@@ -67,7 +67,7 @@ const ROWS_AS_GOOGLE_STATES_THEM: [string, string][] = [
   ["reCAPTCHA", "10,000 assessments/month free on the Essentials and Premium tiers, counted per organization. Enterprise tier: $1 per 1,000 assessments on a 12-month commitment."],
   ["Firebase Auth", "Included at no cost on the Spark plan, except SMS phone sign-in. The 50K-MAU tier requires Identity Platform; Spark projects that upgrade are limited to 3,000 DAU. SAML/OIDC: 50 MAUs on Blaze, 2 DAU on Spark."],
   ["Firebase Hosting", "10 GB storage, 360 MB/day transfer, custom domain + SSL"],
-  ["$300 Free Trial Credit", "$300 credit for 90 days. Credit card or other payment method required. Accounts opened after 2026-03-02 cannot spend it on the Gemini API."],
+  ["$300 Free Trial Credit", "$300 credit for 90 days. Credit card or other payment method required. Accounts opened after 2026-03-02 cannot spend it on the Gemini API. During the trial you cannot add GPUs to VM instances, use Google Cloud Marketplace, request a quota increase or create Windows Server VMs, and the credit does not pay for partner generative AI models offered as a managed API (model as a service)."],
   ["Google Colab", "Free notebooks run for at most 12 hours. GPU access is heavily restricted and GPU types vary."],
   ["AlloyDB Omni", "Free to download and use for development, testing, prototyping and demos; production or data-processing use is paid ($40 per vCPU a month)."],
   ["Data Studio (formerly Looker Studio)", "Free for report creators and viewers. Connects to 1,400+ data sources. Data Studio Pro: $9/user/project/month."],
@@ -99,6 +99,9 @@ const GUIDE_BLURBS: Record<string, string> = {
   "firebase-alternatives": "Firebase Studio is closing (no new workspaces since June 22, 2026; shutdown March 22, 2027) + Cloud Storage for Firebase now requires Blaze — 7 BaaS alternatives",
   "aws-free-tier-2026": "Complete AWS free tier guide — every free service, real limits, hidden costs, and Aurora PostgreSQL on the Free Tier (March 2026)",
 };
+
+const FREE_TRIAL_LIMITS = "During the trial you cannot add GPUs to VM instances, use Google Cloud Marketplace, request a quota increase or create Windows Server VMs, and the credit does not pay for partner generative AI models offered as a managed API (model as a service).";
+const GOOGLE_FREE_FEATURES = "https://docs.cloud.google.com/free/docs/free-cloud-features";
 
 const CONTROLS = [
   "Always Free includes one e2-micro VM a month in us-west1, us-central1 or us-east1, with 30 GB of standard persistent disk.",
@@ -216,6 +219,17 @@ describe("the GCP free tier guide states Google's terms as Google's own pages st
       return row[1] === limits ? [] : [`${name}: ${row[1]}`];
     });
     assert.deepStrictEqual(wrong, []);
+  });
+
+  it("states Google's Free Trial limits in the trial row and in the section intro, each citing Google's free features page", () => {
+    const section = tableAfter(served.get(PAGE)!, 'id="trial-ai"');
+    const intro = section.match(/<p class="section-intro">([\s\S]*?)<\/p>/)![1];
+    const row = [...section.matchAll(/<tr[^>]*>([\s\S]*?)<\/tr>/g)].map(([, cells]) => cells).find((cells) => cells.includes("$300 Free Trial Credit"))!;
+    const citesTheFreeFeaturesPage = new RegExp(`<a href="${GOOGLE_FREE_FEATURES.replace(/\./g, "\\.")}" [^>]*class="${FIGURE_SOURCE_CLASS}"`);
+    for (const [place, html] of [["section intro", intro], ["trial row", row]]) {
+      assert.ok(textOf(html.replace(CITATION_ANCHOR, "")).includes(FREE_TRIAL_LIMITS), `${place}: ${textOf(html)}`);
+      assert.match(html, citesTheFreeFeaturesPage, place);
+    }
   });
 
   it("lists the six Free Tier products the Always Free table lacked, with the limits and category Google gives", () => {

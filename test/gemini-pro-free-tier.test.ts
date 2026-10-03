@@ -217,9 +217,10 @@ const S3 = "On 2025-12-06 Google cut 2.5 Flash's free tier from 250 requests a d
 const STATED: Record<string, string[]> = {
   "/gcp-free-tier-2026": [
     "Gemini API free tier (AI Studio) + Cloud Run functions + Cloud Storage.",
-    "$300 credit for 90 days. Credit card or other payment method required. Accounts opened after 2026-03-02 cannot spend it on the Gemini API.",
+    "$300 credit for 90 days. Credit card or other payment method required. Accounts opened after 2026-03-02 cannot spend it on the Gemini API. During the trial you cannot add GPUs to VM instances, use Google Cloud Marketplace, request a quota increase or create Windows Server VMs, and the credit does not pay for partner generative AI models offered as a managed API (model as a service).",
     "Free tier on the Gemini 3.x Flash and Flash-Lite models; limits shown per project in AI Studio",
-    "The $300 trial is credit for Google Cloud products over 90 days; accounts opened after 2026-03-02 cannot spend it on the Gemini API. The Gemini API has its own free tier, with limits shown per project in AI Studio.",
+    "The $300 trial is credit for Google Cloud products over 90 days; accounts opened after 2026-03-02 cannot spend it on the Gemini API. During the trial you cannot add GPUs to VM instances, use Google Cloud Marketplace, request a quota increase or create Windows Server VMs, and the credit does not pay for partner generative AI models offered as a managed API (model as a service).",
+    "The Gemini API has its own free tier, with limits shown per project in AI Studio.",
   ],
   "/shutdowns": [
     "Gemini 2.0 Flash and 2.0 Flash-Lite shut down on June 1, 2026. Image generation via 2.0 Flash shut down November 14, 2025.",
