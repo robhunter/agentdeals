@@ -6282,9 +6282,9 @@
         "brackets": [
           {
             "last_old": "2026-03-12",
-            "first_new": "2026-04-19",
+            "first_new": "2026-04-21",
             "last_old_capture": "https://web.archive.org/web/20260312201642/https://userforge.com/",
-            "first_new_capture": "https://web.archive.org/web/20260419145706/https://userforge.com/"
+            "first_new_capture": "https://web.archive.org/web/20260421153608/https://userforge.com/"
           },
           {
             "last_old": "2026-07-09",
@@ -7577,22 +7577,9 @@
       "detected_by": "reverify-ai",
       "recorded_date": "2026-08-28",
       "archive_check": {
-        "checked": "2026-10-02",
+        "checked": "2026-10-03",
         "outcome": "vendor_changed",
-        "brackets": [
-          {
-            "last_old": "2025-11-20",
-            "first_new": "2026-05-02",
-            "last_old_capture": "https://web.archive.org/web/20251120003549/https://www.joinsecret.com/explore",
-            "first_new_capture": "https://web.archive.org/web/20260502140333/https://www.joinsecret.com/explore"
-          },
-          {
-            "last_old": "2026-05-02",
-            "first_new": "2026-09-04",
-            "last_old_capture": "https://web.archive.org/web/20260502140333/https://www.joinsecret.com/explore",
-            "first_new_capture": "https://web.archive.org/web/20260904223153/https://www.joinsecret.com/explore"
-          }
-        ]
+        "brackets": []
       }
     },
     {
@@ -7655,7 +7642,7 @@
     {
       "vendor": "Augment Code",
       "change_type": "free_tier_removed",
-      "date": "2026-06-17",
+      "date": "2026-08-28",
       "date_source": "discovered",
       "summary": "The free tier has been removed. The entry plan is Standard at $20/month flat, with Business at $100/month flat; each covers up to 50 seats and includes $20 and $100 of monthly usage respectively. Corrected 2026-09-02: this row previously stated the lowest tier was Business at $100/month.",
       "previous_state": "AI coding assistant with deep codebase understanding. No free tier. Indie plan $20/month (40K credits). Standard $60/dev/month (130K credits, up to 20 users). Credit-based consumption model. Supports VS Code, JetBrains, and CLI. SOC 2 Type II certified",
@@ -7667,14 +7654,14 @@
       "detected_by": "reverify-ai",
       "recorded_date": "2026-08-28",
       "archive_check": {
-        "checked": "2026-10-02",
+        "checked": "2026-10-03",
         "outcome": "vendor_changed",
         "brackets": [
           {
             "last_old": "2026-03-12",
-            "first_new": "2026-06-17",
+            "first_new": "2026-07-21",
             "last_old_capture": "https://web.archive.org/web/20260312065818/https://www.augmentcode.com/pricing",
-            "first_new_capture": "https://web.archive.org/web/20260617062541/https://www.augmentcode.com/pricing"
+            "first_new_capture": "https://web.archive.org/web/20260721184802/https://www.augmentcode.com/pricing"
           }
         ]
       }
@@ -7703,7 +7690,7 @@
     {
       "vendor": "Directus",
       "change_type": "new_free_tier",
-      "date": "2026-06-03",
+      "date": "2026-08-28",
       "date_source": "discovered",
       "summary": "The free tier information has been updated. While self-hosting remains free, the Open Innovation Grant now provides a free option for organizations under $5M revenue. The cloud free tier has been replaced with a $99/mo cloud hosting option for Grant recipients.",
       "previous_state": "Self-hosted free (BSL license, free for <$5M revenue). Cloud free tier discontinued Nov 2025 — Cloud starts at $15/mo",
@@ -7715,7 +7702,7 @@
       "detected_by": "reverify-ai",
       "recorded_date": "2026-08-28",
       "archive_check": {
-        "checked": "2026-10-02",
+        "checked": "2026-10-03",
         "outcome": "vendor_changed",
         "brackets": [
           {
@@ -7883,28 +7870,9 @@
       "detected_by": "reverify-ai",
       "recorded_date": "2026-08-28",
       "archive_check": {
-        "checked": "2026-10-02",
+        "checked": "2026-10-03",
         "outcome": "vendor_changed",
-        "brackets": [
-          {
-            "last_old": "2026-04-10",
-            "first_new": "2026-06-26",
-            "last_old_capture": "https://web.archive.org/web/20260410025929/https://www.unkey.com/pricing",
-            "first_new_capture": "https://web.archive.org/web/20260626122018/https://www.unkey.com/pricing"
-          },
-          {
-            "last_old": "2026-06-26",
-            "first_new": "2026-07-26",
-            "last_old_capture": "https://web.archive.org/web/20260626122018/https://www.unkey.com/pricing",
-            "first_new_capture": "https://web.archive.org/web/20260726212239/https://www.unkey.com/pricing"
-          },
-          {
-            "last_old": "2026-07-26",
-            "first_new": "2026-09-20",
-            "last_old_capture": "https://web.archive.org/web/20260726212239/https://www.unkey.com/pricing",
-            "first_new_capture": "https://web.archive.org/web/20260920152529/https://www.unkey.com/pricing"
-          }
-        ]
+        "brackets": []
       }
     },
     {
@@ -7994,7 +7962,7 @@
     {
       "vendor": "Deepgram",
       "change_type": "new_free_tier",
-      "date": "2026-08-27",
+      "date": "2026-08-28",
       "date_source": "discovered",
       "summary": "The $200 free credit is still offered, but the details have expanded. Text-to-Speech's Flux TTS is free until September 12, 2026, and Voice Agent API's Flux TTS is also free until September 12, 2026.",
       "previous_state": "Speech-to-text and text-to-speech API — $200 free credits on signup (no credit card required), ~43K minutes transcription with Nova model, credits never expire. Access to all model endpoints",
@@ -8006,16 +7974,8 @@
       "detected_by": "reverify-ai",
       "recorded_date": "2026-08-28",
       "archive_check": {
-        "checked": "2026-10-02",
-        "outcome": "vendor_changed",
-        "brackets": [
-          {
-            "last_old": "2026-03-18",
-            "first_new": "2026-08-27",
-            "last_old_capture": "https://web.archive.org/web/20260318190812/https://deepgram.com/pricing",
-            "first_new_capture": "https://web.archive.org/web/20260827232006/https://deepgram.com/pricing"
-          }
-        ]
+        "checked": "2026-10-03",
+        "outcome": "no_usable_capture"
       }
     },
     {
@@ -9007,13 +8967,13 @@
       "detected_by": "reverify-ai",
       "recorded_date": "2026-09-01",
       "archive_check": {
-        "checked": "2026-10-02",
+        "checked": "2026-10-03",
         "outcome": "vendor_changed",
         "brackets": [
           {
-            "last_old": "2026-04-24",
+            "last_old": "2026-04-11",
             "first_new": "2026-06-07",
-            "last_old_capture": "https://web.archive.org/web/20260424072522/https://liveblocks.io/pricing",
+            "last_old_capture": "https://web.archive.org/web/20260411202240/https://liveblocks.io/pricing",
             "first_new_capture": "https://web.archive.org/web/20260607224546/https://liveblocks.io/pricing"
           }
         ]
@@ -9291,16 +9251,8 @@
       "detected_by": "reverify-ai",
       "recorded_date": "2026-09-02",
       "archive_check": {
-        "checked": "2026-10-02",
-        "outcome": "vendor_changed",
-        "brackets": [
-          {
-            "last_old": "2026-08-28",
-            "first_new": null,
-            "last_old_capture": "https://web.archive.org/web/20260828130240/https://currencyapi.com/",
-            "first_new_capture": null
-          }
-        ]
+        "checked": "2026-10-03",
+        "outcome": "no_usable_capture"
       }
     },
     {
@@ -11205,9 +11157,9 @@
         "brackets": [
           {
             "last_old": "2026-03-11",
-            "first_new": "2026-04-16",
+            "first_new": "2026-05-21",
             "last_old_capture": "https://web.archive.org/web/20260311161839/https://www.tinybird.co/pricing",
-            "first_new_capture": "https://web.archive.org/web/20260416142549/https://www.tinybird.co/pricing"
+            "first_new_capture": "https://web.archive.org/web/20260521045219/https://www.tinybird.co/pricing"
           }
         ]
       }
@@ -14694,16 +14646,8 @@
       "detected_by": "reverify-ai",
       "recorded_date": "2026-09-30",
       "archive_check": {
-        "checked": "2026-10-02",
-        "outcome": "vendor_changed",
-        "brackets": [
-          {
-            "last_old": "2026-08-28",
-            "first_new": null,
-            "last_old_capture": "https://web.archive.org/web/20260828130347/https://www.tracelog.io/",
-            "first_new_capture": null
-          }
-        ]
+        "checked": "2026-10-03",
+        "outcome": "no_usable_capture"
       }
     },
     {
