@@ -412,6 +412,7 @@ export async function runAiMode(picked, data, dryRun, now, options = {}) {
     pageTextFor: (candidate) => pageTexts.get(candidate),
     pageCompleteFor: (candidate) => wholePages.has(candidate),
     finalUrlFor: (candidate) => finalUrls.get(candidate),
+    refusals: readRefusals(options.refusalsPath),
   });
   for (const { candidate, was, now } of rewritten) {
     console.log(`  ✎ ${candidate.vendor} summary rewritten to state the vendor's terms\n      was: ${was}\n      now: ${now}`);

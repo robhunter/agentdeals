@@ -50,6 +50,7 @@ export const REFUSAL_REASONS_THAT_VOID_THE_READS_STANDING = [
   "no_terms_to_narrow",
   "no_baseline",
   "states_no_narrowing",
+  "repeats_a_refused_reading",
 ] as const;
 
 export type VoidingRefusalReason =
@@ -67,6 +68,7 @@ export const WHAT_A_VOIDED_READ_FOUND: Record<VoidingRefusalReason, string> = {
   no_terms_to_narrow: "found no earlier figure of ours for the page to have narrowed",
   no_baseline: "found no earlier figure of ours for the page to have narrowed",
   states_no_narrowing: "found the free tier still standing and no term that had moved",
+  repeats_a_refused_reading: "found the same terms as an earlier read we had declined to record",
 };
 
 export const REFUSAL_REASONS_THAT_LEAVE_THE_READ_STANDING = [

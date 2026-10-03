@@ -5,6 +5,7 @@ import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { readChangeLog, CHANGES_PATH, DETECTED_BY_AI } from "./change-log.js";
 import { gateCandidates, confirmDescribesChange } from "./change-gate.js";
+import { readRefusals } from "./change-refusals.js";
 import { createVerifierClient, VERIFIER_MODEL, fetchPageText } from "./verify-freshness.js";
 
 const INDEX_PATH =
@@ -92,6 +93,7 @@ async function main() {
     confirmFn,
     offers: readOffers(),
     pageTextFor: (candidate) => pages.get(candidate),
+    refusals: readRefusals(),
   });
   for (const line of reportLines({ candidates, ...result })) console.log(line);
 
