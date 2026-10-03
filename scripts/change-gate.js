@@ -4,6 +4,7 @@ import { readPeriod, renderPeriod } from "../src/growth-limits.ts";
 import { sentencesOf } from "../dist/superseding-reading.js";
 import { A_SELF_HOSTED_EDITION, sentenceOffersSomethingFree, tierRecordsAFreeTier } from "../dist/free-tier-record.js";
 import { classifyTier } from "../dist/ranking.js";
+import { isACorrectionToOurOwnRecord } from "../dist/change-resolution.js";
 
 export const REJECT_NULL_COMPARISON = "null_comparison";
 export const REJECT_STATES_NO_DIFFERENCE = "states_no_difference";
@@ -637,6 +638,7 @@ function sameKeys(left, right) {
 }
 
 export function refusedReadingItRepeats(candidate, refusals = []) {
+  if (isACorrectionToOurOwnRecord(candidate ?? {})) return null;
   const stated = statedTermKeys(candidate?.current_state);
   if (stated.length === 0) return null;
   let repeated = null;

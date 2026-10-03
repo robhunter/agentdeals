@@ -146,6 +146,10 @@ describe("a reading that states what a refused reading of the same page already 
     assert.strictEqual(refusedReadingItRepeats(FEEDBEAR_READ, [FEEDBEAR_REFUSED, earlier]), FEEDBEAR_REFUSED);
     assert.strictEqual(refusedReadingItRepeats(FEEDBEAR_READ, [earlier, FEEDBEAR_REFUSED]), FEEDBEAR_REFUSED);
   });
+
+  it("leaves a correction to our own record alone, since its date is when we found our error and not when the vendor changed", () => {
+    assert.strictEqual(refusedReadingItRepeats({ ...FEEDBEAR_READ, change_type: "record_corrected" }, [FEEDBEAR_REFUSED]), null);
+  });
 });
 
 describe("the gate refuses the repeat and names the refusal it repeats", () => {
@@ -171,6 +175,27 @@ describe("the gate refuses the repeat and names the refusal it repeats", () => {
 
   it("does not refuse Pulumi's reading as a repeat", async () => {
     const { rejected } = await gateCandidates([PULUMI_READ], { refusals: [PULUMI_REFUSED] });
+    assert.deepStrictEqual(
+      rejected.filter((r: { reason: string }) => r.reason === REJECT_REPEATS_A_REFUSED_READING),
+      [],
+    );
+  });
+
+  it("still refuses a repeat that it would otherwise have retyped as a correction to our own record", async () => {
+    const retypable = {
+      ...FEEDBEAR_READ,
+      change_type: "restriction",
+      summary: "Our entry stated the Startup plan's price incorrectly.",
+    };
+    const unrefused = await gateCandidates([retypable], {});
+    assert.deepStrictEqual(unrefused.reclassified.map((r: { to: string }) => r.to), ["record_corrected"]);
+    const { accepted, rejected } = await gateCandidates([retypable], { refusals: [FEEDBEAR_REFUSED] });
+    assert.deepStrictEqual(accepted, []);
+    assert.deepStrictEqual(rejected.map((r: { reason: string }) => r.reason), [REJECT_REPEATS_A_REFUSED_READING]);
+  });
+
+  it("does not refuse a correction to our own record as a repeat", async () => {
+    const { rejected } = await gateCandidates([{ ...FEEDBEAR_READ, change_type: "record_corrected" }], { refusals: [FEEDBEAR_REFUSED] });
     assert.deepStrictEqual(
       rejected.filter((r: { reason: string }) => r.reason === REJECT_REPEATS_A_REFUSED_READING),
       [],
