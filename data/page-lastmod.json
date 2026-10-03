@@ -22,15 +22,15 @@
       "changed": "2026-10-03"
     },
     "/ai-free-tiers": {
-      "hash": "d66005729a3d9db3",
+      "hash": "c203db50562b2d53",
       "changed": "2026-10-03"
     },
     "/ai-ml-alternatives": {
-      "hash": "c8a48d24cabf6801",
+      "hash": "f1bb4737b021a84b",
       "changed": "2026-10-03"
     },
     "/alternative-to": {
-      "hash": "247f58ad41e5044c",
+      "hash": "dfa8dc566ec2e413",
       "changed": "2026-10-03"
     },
     "/alternative-to/360-monitoring": {
@@ -1080,7 +1080,7 @@
       "changed": "2026-10-01"
     },
     "/category/ai-ml": {
-      "hash": "d98ba67b0ecb9b29",
+      "hash": "69ac7ae399e7ec79",
       "changed": "2026-10-03"
     },
     "/category/analytics": {
@@ -1232,7 +1232,7 @@
       "changed": "2026-10-01"
     },
     "/category/monitoring": {
-      "hash": "c254ea75dbe92704",
+      "hash": "a4ab78938e244503",
       "changed": "2026-10-03"
     },
     "/category/notebooks-data-science": {
@@ -1292,7 +1292,7 @@
       "changed": "2026-10-03"
     },
     "/category/testing": {
-      "hash": "aafdd2db9766655e",
+      "hash": "b36bf142a5c29f12",
       "changed": "2026-10-03"
     },
     "/category/tunneling-networking": {
@@ -2953,7 +2953,7 @@
       "changed": "2026-10-03"
     },
     "/digest/2026-w21": {
-      "hash": "5712e060df002473",
+      "hash": "c12442867c3482d7",
       "changed": "2026-10-03"
     },
     "/digest/2026-w22": {
@@ -2981,16 +2981,16 @@
       "changed": "2026-10-01"
     },
     "/digest/2026-w28": {
-      "hash": "cdfd18204525735b",
-      "changed": "2026-09-27"
+      "hash": "2b93555533b01dda",
+      "changed": "2026-10-03"
     },
     "/digest/2026-w29": {
       "hash": "41d892cedaf13798",
       "changed": "2026-10-03"
     },
     "/digest/2026-w30": {
-      "hash": "b7566c3ac8d6dcaf",
-      "changed": "2026-09-27"
+      "hash": "c329ff72f5e44af5",
+      "changed": "2026-10-03"
     },
     "/digest/2026-w31": {
       "hash": "43858239499576b8",
@@ -3017,7 +3017,7 @@
       "changed": "2026-10-03"
     },
     "/digest/2026-w37": {
-      "hash": "046020ca685bbce8",
+      "hash": "50fe98e51ebbe599",
       "changed": "2026-10-03"
     },
     "/digest/2026-w38": {
@@ -3049,7 +3049,7 @@
       "changed": "2026-09-27"
     },
     "/digest/archive": {
-      "hash": "699885a0ad5cce2f",
+      "hash": "0ef52ffc02cd86da",
       "changed": "2026-10-03"
     },
     "/digitalocean-free-tier-2026": {
@@ -3111,7 +3111,7 @@
       "daily": true
     },
     "/free-ai-stack": {
-      "hash": "943616fa2b93d769",
+      "hash": "a27b9f5498e74d0b",
       "changed": "2026-10-03"
     },
     "/free-devops-stack": {
@@ -3135,7 +3135,7 @@
       "changed": "2026-10-03"
     },
     "/free-llm-apis": {
-      "hash": "0ba194f27378ea34",
+      "hash": "ef6b0a3a4300faff",
       "changed": "2026-10-03"
     },
     "/free-nextjs-stack": {
@@ -3151,11 +3151,11 @@
       "changed": "2026-10-03"
     },
     "/free-tier-risk": {
-      "hash": "79d7ad88094f0598",
+      "hash": "771ef2f3f1d4e727",
       "changed": "2026-10-03"
     },
     "/free-tier-tracker": {
-      "hash": "f95151e73a5a1c8f",
+      "hash": "03c0cdf6b08ace35",
       "changed": "2026-10-03"
     },
     "/freshness": {
@@ -3170,7 +3170,7 @@
       "changed": "2026-10-03"
     },
     "/gemini-api-pricing-2026": {
-      "hash": "ff1d568f303bb80e",
+      "hash": "c7e4f7a3e864a0b8",
       "changed": "2026-10-03"
     },
     "/github-actions-alternatives": {
@@ -3242,7 +3242,7 @@
       "changed": "2026-10-03"
     },
     "/llm-api-pricing": {
-      "hash": "97f00bdbe92e2bc3",
+      "hash": "b1ccbb7eb9de1510",
       "changed": "2026-10-03"
     },
     "/localstack-alternatives": {
@@ -3258,7 +3258,7 @@
       "changed": "2026-10-03"
     },
     "/monitoring-comparison-2026": {
-      "hash": "9a62c693c2f2a343",
+      "hash": "eedddb806cef0a88",
       "changed": "2026-10-03"
     },
     "/neon-vs-supabase": {
@@ -3274,7 +3274,7 @@
       "changed": "2026-10-02"
     },
     "/openai-assistants-alternatives": {
-      "hash": "38616c2af0b6be31",
+      "hash": "43f36c4270e17c3d",
       "changed": "2026-10-03"
     },
     "/openai-assistants-migration": {
@@ -3313,7 +3313,7 @@
       "changed": "2026-10-03"
     },
     "/q2-pricing-preview-2026": {
-      "hash": "49ac497b749976e7",
+      "hash": "9c4eada71b71c70a",
       "changed": "2026-10-03"
     },
     "/railway-vs-render": {
@@ -3329,7 +3329,7 @@
       "changed": "2026-09-26"
     },
     "/reports": {
-      "hash": "c8b40e8a58e8f187",
+      "hash": "641c9b6f2aaef762",
       "changed": "2026-10-03"
     },
     "/reports/2022-11": {
@@ -3425,20 +3425,20 @@
       "changed": "2026-10-02"
     },
     "/reports/2026-05": {
-      "hash": "7b96f585f23810a3",
-      "changed": "2026-10-02"
+      "hash": "0f4c2cbf8f7a7a15",
+      "changed": "2026-10-03"
     },
     "/reports/2026-06": {
-      "hash": "4be4503c3c6ac697",
-      "changed": "2026-10-02"
+      "hash": "8a3b6d506e4d421e",
+      "changed": "2026-10-03"
     },
     "/reports/2026-07": {
-      "hash": "20a29de88b666b27",
-      "changed": "2026-10-02"
+      "hash": "13527e0b574e7c40",
+      "changed": "2026-10-03"
     },
     "/reports/2026-08": {
-      "hash": "ad05ab688aec7efa",
-      "changed": "2026-10-02"
+      "hash": "b78ebc3d7729e23b",
+      "changed": "2026-10-03"
     },
     "/reports/2026-09": {
       "hash": "df7c48970b5d7867",
@@ -3468,11 +3468,11 @@
       "daily": true
     },
     "/stability": {
-      "hash": "5276335df6f0ac7a",
+      "hash": "b110c2c7422e795a",
       "changed": "2026-10-03"
     },
     "/stack-check": {
-      "hash": "1369424c0a26469f",
+      "hash": "9dbffe50372ead3d",
       "changed": "2026-10-03"
     },
     "/stacks": {
@@ -3504,7 +3504,7 @@
       "changed": "2026-10-03"
     },
     "/state-of-free-tiers": {
-      "hash": "51ee2ec5e93389ba",
+      "hash": "6ffa1578503f8ee2",
       "changed": "2026-10-03"
     },
     "/storage-alternatives": {
@@ -3532,11 +3532,11 @@
       "changed": "2026-10-03"
     },
     "/testing-alternatives": {
-      "hash": "4b5c63016bbc3571",
+      "hash": "d793608e7e257d34",
       "changed": "2026-10-03"
     },
     "/testing-free-tier-comparison-2026": {
-      "hash": "de863ec0bbe9fc5e",
+      "hash": "2d0b9fdca77ff7f1",
       "changed": "2026-10-03"
     },
     "/this-week": {
@@ -3544,7 +3544,7 @@
       "changed": "2026-10-03"
     },
     "/trends": {
-      "hash": "64058a886bbc0d46",
+      "hash": "5d9ee8234b76c563",
       "changed": "2026-10-03"
     },
     "/trends/ai-coding": {
@@ -3700,7 +3700,7 @@
       "changed": "2026-10-03"
     },
     "/trends/monitoring": {
-      "hash": "6a082c4919efb30f",
+      "hash": "a33fa6d7f16f4c99",
       "changed": "2026-10-03"
     },
     "/trends/notebooks-data-science": {
@@ -3760,7 +3760,7 @@
       "changed": "2026-10-03"
     },
     "/trends/testing": {
-      "hash": "da4b4f4e79b7d992",
+      "hash": "37c8ccd16492cdb9",
       "changed": "2026-10-03"
     },
     "/trends/tunneling-networking": {
