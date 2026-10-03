@@ -14,19 +14,19 @@
       "changed": "2026-10-02"
     },
     "/ai-coding-pricing-2026": {
-      "hash": "8a77df9b3461898c",
+      "hash": "cd847cab788ff03b",
       "changed": "2026-10-03"
     },
     "/ai-coding-tools-pricing": {
-      "hash": "de9128a7fe73292d",
+      "hash": "4f6c48b1333ab992",
       "changed": "2026-10-03"
     },
     "/ai-free-tiers": {
-      "hash": "e4663493726ad126",
+      "hash": "673621887cfabb0a",
       "changed": "2026-10-03"
     },
     "/ai-ml-alternatives": {
-      "hash": "77a33e386ac0bb2e",
+      "hash": "07a29580012dc841",
       "changed": "2026-10-03"
     },
     "/alternative-to": {
@@ -773,7 +773,7 @@
       "changed": "2026-10-03"
     },
     "/analytics-free-tier-comparison-2026": {
-      "hash": "b760f3c6bb61099d",
+      "hash": "3e444fa5dd383ab3",
       "changed": "2026-10-03"
     },
     "/api-development-alternatives": {
@@ -1080,7 +1080,7 @@
       "changed": "2026-10-01"
     },
     "/category/ai-ml": {
-      "hash": "4ad70f3508518f45",
+      "hash": "7c983faa59f0a096",
       "changed": "2026-10-03"
     },
     "/category/analytics": {
@@ -1196,7 +1196,7 @@
       "changed": "2026-10-03"
     },
     "/category/headless-cms": {
-      "hash": "5a069946bba6c95b",
+      "hash": "6d4bf00fbba8ee22",
       "changed": "2026-10-03"
     },
     "/category/ide-code-editors": {
@@ -1463,7 +1463,7 @@
       "changed": "2026-09-25"
     },
     "/compare/augment-code-vs-cursor": {
-      "hash": "d6c040d9d9219ba4",
+      "hash": "b3254ea0bc014fa8",
       "changed": "2026-10-03"
     },
     "/compare/auth0-vs-clerk": {
@@ -2961,7 +2961,7 @@
       "changed": "2026-10-01"
     },
     "/digest/2026-w23": {
-      "hash": "0886e2987d84d58b",
+      "hash": "417fa048fbcce32e",
       "changed": "2026-10-03"
     },
     "/digest/2026-w24": {
@@ -2969,7 +2969,7 @@
       "changed": "2026-10-03"
     },
     "/digest/2026-w25": {
-      "hash": "d5201322f6245e3a",
+      "hash": "9d8ab0088a4ab418",
       "changed": "2026-10-03"
     },
     "/digest/2026-w26": {
@@ -3009,11 +3009,11 @@
       "changed": "2026-10-03"
     },
     "/digest/2026-w35": {
-      "hash": "3e682810efdba6df",
+      "hash": "49ce9834399ed717",
       "changed": "2026-10-03"
     },
     "/digest/2026-w36": {
-      "hash": "12aa854b8325934e",
+      "hash": "ea0a26b1fef6d4f2",
       "changed": "2026-10-03"
     },
     "/digest/2026-w37": {
@@ -3029,7 +3029,7 @@
       "changed": "2026-10-03"
     },
     "/digest/2026-w40": {
-      "hash": "55658bfdfeef82ff",
+      "hash": "f4368331bedc759c",
       "changed": "2026-10-03"
     },
     "/digest/2026-w41": {
@@ -3049,7 +3049,7 @@
       "changed": "2026-09-27"
     },
     "/digest/archive": {
-      "hash": "68b106a0dddebb6f",
+      "hash": "719f8a6f6c5d2157",
       "changed": "2026-10-03"
     },
     "/digitalocean-free-tier-2026": {
@@ -3100,7 +3100,7 @@
       "daily": true
     },
     "/feed.xml": {
-      "hash": "6b676e2f728fe208",
+      "hash": "4350b06d28a4ef29",
       "changed": "2026-10-03"
     },
     "/firebase-alternatives": {
@@ -3151,7 +3151,7 @@
       "changed": "2026-10-03"
     },
     "/free-tier-risk": {
-      "hash": "b5fd7bb1e9f11382",
+      "hash": "a0d629e3f8c9283a",
       "changed": "2026-10-03"
     },
     "/free-tier-tracker": {
@@ -3313,7 +3313,7 @@
       "changed": "2026-10-03"
     },
     "/q2-pricing-preview-2026": {
-      "hash": "1c2872851bf43a92",
+      "hash": "d4ae54a5356b9726",
       "changed": "2026-10-03"
     },
     "/railway-vs-render": {
@@ -3468,11 +3468,11 @@
       "daily": true
     },
     "/stability": {
-      "hash": "0fdef3ff2f36553c",
+      "hash": "3aa99d4f1d2253ca",
       "changed": "2026-10-03"
     },
     "/stack-check": {
-      "hash": "946baca64678ee41",
+      "hash": "1a27bb2f8f041add",
       "changed": "2026-10-03"
     },
     "/stacks": {
@@ -3504,7 +3504,7 @@
       "changed": "2026-10-03"
     },
     "/state-of-free-tiers": {
-      "hash": "f1dd994c09cd667d",
+      "hash": "a7934daa00b6754c",
       "changed": "2026-10-03"
     },
     "/storage-alternatives": {
@@ -3540,7 +3540,7 @@
       "changed": "2026-10-03"
     },
     "/this-week": {
-      "hash": "7e6f30b3ef3814c1",
+      "hash": "e1277ac63a457454",
       "changed": "2026-10-03"
     },
     "/trends": {
@@ -3554,7 +3554,7 @@
       "daily": true
     },
     "/trends/analytics": {
-      "hash": "4b37103db436e116",
+      "hash": "a72298519087e8af",
       "changed": "2026-10-03"
     },
     "/trends/api-development": {
@@ -3665,7 +3665,7 @@
       "changed": "2026-10-03"
     },
     "/trends/headless-cms": {
-      "hash": "94eebe60faea7d17",
+      "hash": "9cf7712a15090f93",
       "changed": "2026-10-03"
     },
     "/trends/ide-code-editors": {
@@ -3712,7 +3712,7 @@
       "changed": "2026-10-03"
     },
     "/trends/payments": {
-      "hash": "22544c3687322777",
+      "hash": "c10d50a1dd4688e3",
       "changed": "2026-10-03"
     },
     "/trends/productivity-notes": {
@@ -3756,7 +3756,7 @@
       "changed": "2026-10-03"
     },
     "/trends/team-collaboration": {
-      "hash": "af09e2f04da66f02",
+      "hash": "dc632528ad7c933a",
       "changed": "2026-10-03"
     },
     "/trends/testing": {
@@ -5038,7 +5038,7 @@
       "changed": "2026-10-03"
     },
     "/vendor/currencyapi": {
-      "hash": "bc8218bd077391dd",
+      "hash": "06c397f2ef2e29ed",
       "changed": "2026-10-03"
     },
     "/vendor/currencyfreaks": {
@@ -5242,7 +5242,7 @@
       "changed": "2026-10-03"
     },
     "/vendor/directus": {
-      "hash": "4c2d4dcf2768b2a8",
+      "hash": "714b222c8ac7dea5",
       "changed": "2026-10-03"
     },
     "/vendor/discord": {
@@ -6801,7 +6801,7 @@
       "daily": true
     },
     "/vendor/liveblocks": {
-      "hash": "d5edbb689293805c",
+      "hash": "8a61ab4495cb7424",
       "changed": "2026-10-03"
     },
     "/vendor/livekit": {
@@ -9098,7 +9098,7 @@
       "changed": "2026-10-03"
     },
     "/vendor/tracelog": {
-      "hash": "0fcaa9c5d1097dfd",
+      "hash": "fea95b00c13d6596",
       "changed": "2026-10-03"
     },
     "/vendor/trackingplan": {
