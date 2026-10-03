@@ -3049,7 +3049,7 @@
     {
       "vendor": "Google Gemini API",
       "category": "AI / ML",
-      "description": "Free tier: Gemini 3.8 Flash, 3.7 Flash, 3.6 Flash, 3.5 Flash, 3.5 Flash-Lite, 3.1 Flash-Lite, Gemini 3 Flash Preview, Gemini Embedding 2 and Gemma 4 are free of charge. Gemini 3.1 Pro Preview is paid only. Google publishes no free-tier rate limits; each project's limits are shown in Google AI Studio. Google's pricing table marks free-tier use as \"Used to improve our products\". Since 2026-09-18 Google serves the Gemini 2.5 models only to users who have used them before, and points new projects to 3.5 Flash-Lite or 3.8 Flash. Paid, per million tokens (input/output): Gemini 3.8 Flash $0.75/$3.75 until 2026-12-31, then $1.50 input and $7.50 output from 2027-01-01 (3.7 Flash and 3.6 Flash: the same prices and dates); Gemini 3.5 Flash $1.50/$9; Gemini 3.5 Flash-Lite $0.30/$2.50; Gemini 3.1 Flash-Lite $0.25/$1.50; Gemini 3.1 Pro Preview $2/$12 (prompts up to 200K tokens). Accounts opened after 2026-03-02 cannot spend the $300 Google Cloud welcome credit on the Gemini API.",
+      "description": "Free tier: Gemini 3.8 Flash, 3.7 Flash, 3.6 Flash, 3.5 Flash, 3.5 Flash-Lite, 3.1 Flash-Lite, Gemini 3 Flash Preview, Gemini Embedding 2 and Gemma 4 are free of charge. Gemini 3.1 Pro Preview is paid only. Google publishes no free-tier rate limits; each project's limits are shown in Google AI Studio. Google's pricing table marks free-tier use as \"Used to improve our products\". For developers outside the European Economic Area, Switzerland and the United Kingdom, Google's terms say human reviewers may read free-tier prompts and responses, and Google says not to send sensitive, confidential or personal information on the free tier. Apps that serve users in the European Economic Area, Switzerland or the United Kingdom may use only the paid tier. Since 2026-09-18 Google serves the Gemini 2.5 models only to users who have used them before, and points new projects to 3.5 Flash-Lite or 3.8 Flash. Paid, per million tokens (input/output): Gemini 3.8 Flash $0.75/$3.75 until 2026-12-31, then $1.50 input and $7.50 output from 2027-01-01 (3.7 Flash and 3.6 Flash: the same prices and dates); Gemini 3.5 Flash $1.50/$9; Gemini 3.5 Flash-Lite $0.30/$2.50; Gemini 3.1 Flash-Lite $0.25/$1.50; Gemini 3.1 Pro Preview $2/$12 (prompts up to 200K tokens). Accounts opened after 2026-03-02 cannot spend the $300 Google Cloud welcome credit on the Gemini API.",
       "tier": "Free (Reduced)",
       "url": "https://ai.google.dev/pricing",
       "tags": [
@@ -7467,7 +7467,7 @@
     {
       "vendor": "Brave Search API",
       "category": "Search",
-      "description": "$5 in free credits every month, applied automatically. Search is $5 per 1,000 requests; Answers is $4 per 1,000 requests plus $5 per million tokens. Web search, news, videos, images, LLM context endpoints. 50 queries/sec. Credit card required. The earlier free plan (2,000 queries/mo) ended Feb 2026",
+      "description": "$5 in free credits every month, applied automatically. Search is $5 per 1,000 requests; Answers is $4 per 1,000 requests plus $5 per million tokens. Web search, news, videos, images, LLM context endpoints. 50 queries/sec. Credit card required. Brave states that storing API results in whole or in part, for example to train or tune an LLM, requires a plan that explicitly grants storage rights, which are not covered in its general Terms of Service. The earlier free plan (2,000 queries/mo) ended Feb 2026",
       "tier": "Free",
       "url": "https://brave.com/search/api/",
       "tags": [
@@ -33629,7 +33629,7 @@
     {
       "vendor": "Apple Notes",
       "category": "Productivity & Notes",
-      "description": "The first 5GB of iCloud storage is free. Additional storage requires a paid iCloud+ subscription, with plans starting at $0.99/month for 50GB. Features like Private Relay and Hide My Email are also part of paid plans.",
+      "description": "Fully free on Apple devices. Unlimited notes with rich text, checklists, tables, sketches, document scanning. Shared notes. iCloud sync counts against 5 GB iCloud free storage. Locked notes with password/biometric.",
       "tier": "Free",
       "url": "https://www.apple.com/icloud/",
       "tags": [
@@ -33639,16 +33639,13 @@
       ],
       "verifiedDate": "2026-08-16",
       "source_check": {
-        "checked": "2026-09-22",
+        "checked": "2026-10-03",
         "outcome": "ok",
         "detail": "the page names Apple Notes as \"notes\" and states amounts, none of which we matched to the terms we publish"
       },
-      "restated_from": {
-        "reading_date": "2026-09-22",
-        "source_url": "https://www.apple.com/icloud/",
+      "restatement_reverted": {
         "record_date": "2026-09-22",
-        "change_type": "pricing_restructured",
-        "restated_on": "2026-09-22"
+        "reverted_on": "2026-10-03"
       }
     },
     {

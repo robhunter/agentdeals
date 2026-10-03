@@ -11976,6 +11976,12 @@
       "archive_check": {
         "checked": "2026-10-02",
         "outcome": "no_usable_capture"
+      },
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-10-03",
+        "detail": "Retracted 2026-10-03: no change on 2026-09-12. The Internet Archive's capture of tawk.to/pricing of 2025-05-22 already offers paid branding removal, AI Assist and hired chat agents at $1 an hour beside the free software, and our own reading of the page on 2026-08-29 stated the same $29 branding removal, AI Assist from $29 and $1 an hour agents.",
+        "source_url": "https://web.archive.org/web/20250522033453/https://www.tawk.to/pricing/"
       }
     },
     {
@@ -12889,6 +12895,12 @@
       "archive_check": {
         "checked": "2026-10-02",
         "outcome": "no_usable_capture"
+      },
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-10-03",
+        "detail": "Retracted 2026-10-03: no change on 2026-09-22. The Internet Archive's capture of apple.com/icloud of 2025-05-31 states the same terms: 5GB of iCloud storage free, and iCloud+ from $0.99 a month for 50GB, with Private Relay and Hide My Email in every iCloud+ plan. Notes itself stays free on Apple devices.",
+        "source_url": "https://web.archive.org/web/20250531045353/https://www.apple.com/icloud/"
       }
     },
     {
