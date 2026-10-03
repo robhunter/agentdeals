@@ -519,7 +519,14 @@ export function judgePair(answer, olderText, newerText) {
 }
 
 export function pairedReaderFor(client, listing) {
-  return async (older, newer) => judgePair(parsePairedAnswer(await client.complete(pairedPrompt(listing, older, newer))), older.text, newer.text);
+  const askOnce = async (older, newer) => judgePair(parsePairedAnswer(await client.complete(pairedPrompt(listing, older, newer))), older.text, newer.text);
+  return async (older, newer) => {
+    const first = await askOnce(older, newer);
+    if (first.status !== "unquotable") return first;
+    const again = await askOnce(older, newer);
+    if (again.status === "unquotable") return { ...first, unquotable_again: again.why };
+    return { ...again, unquotable_first: first.why };
+  };
 }
 
 export function statedBeforePrompt(record, older, maxLength = MAX_PAGE_TEXT_LENGTH) {

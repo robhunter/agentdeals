@@ -663,6 +663,53 @@ describe("asking the paired reader", () => {
     const swapped = await read({ page: "capture 2026-02-15", day: "2026-02-15", text: NEW_PAGE }, { page: "today", day: "2026-09-27", text: OLD_PAGE });
     assert.strictEqual(swapped.status, "unquotable");
   });
+
+  const OLD = { page: "capture 2026-02-15", day: "2026-02-15", text: OLD_PAGE };
+  const NEW = { page: "today", day: "2026-09-27", text: NEW_PAGE };
+  const MISQUOTED = answer({ old_terms: ["Free plan: $0 per month, 5 GB database"], differences: [{ old: "500 MB database", new: "250 MB database" }] });
+  const QUOTED = answer({ differences: [{ old: "500 MB database", new: "250 MB database" }] });
+
+  function scriptedClient(replies: string[]) {
+    const prompts: string[] = [];
+    return { prompts, complete: async (prompt: string) => (prompts.push(prompt), replies.shift() ?? "") };
+  }
+
+  it("asks the same question once more when a quote in the answer is not on its page, and keeps a second answer whose quotes are", async () => {
+    const client = scriptedClient([JSON.stringify(MISQUOTED), JSON.stringify(QUOTED)]);
+    const verdict = await pairedReaderFor(client, LISTING)(OLD, NEW);
+    assert.strictEqual(client.prompts.length, 2);
+    assert.strictEqual(client.prompts[1], client.prompts[0]);
+    assert.strictEqual(verdict.status, "differ");
+    assert.deepStrictEqual(verdict.old_terms, ["Free plan: $0 per month, 500 MB database"]);
+    assert.strictEqual(verdict.unquotable_first, 'not on the old page: "Free plan: $0 per month, 5 GB database"');
+  });
+
+  it("asks once more when the answer cannot be parsed", async () => {
+    const client = scriptedClient(["I could not compare these pages.", JSON.stringify(QUOTED)]);
+    const verdict = await pairedReaderFor(client, LISTING)(OLD, NEW);
+    assert.strictEqual(client.prompts.length, 2);
+    assert.strictEqual(verdict.status, "differ");
+    assert.strictEqual(verdict.unquotable_first, "the reader's answer could not be parsed");
+  });
+
+  it("keeps the first answer's verdict, and says why the second failed, when the second answer cannot be checked against the pages either", async () => {
+    const client = scriptedClient([JSON.stringify(MISQUOTED), "I could not compare these pages.", JSON.stringify(QUOTED)]);
+    const verdict = await pairedReaderFor(client, LISTING)(OLD, NEW);
+    assert.strictEqual(client.prompts.length, 2);
+    assert.strictEqual(verdict.status, "unquotable");
+    assert.strictEqual(verdict.side, "old");
+    assert.strictEqual(verdict.why, 'not on the old page: "Free plan: $0 per month, 5 GB database"');
+    assert.strictEqual(verdict.unquotable_again, "the reader's answer could not be parsed");
+  });
+
+  it("asks once when the first answer's quotes are on the page, whatever it found", async () => {
+    for (const reply of [QUOTED, answer({ old_terms: ["Free plan: $0 per month, 500 MB database"], new_terms: ["Free plan: $0 per month, 500 MB database"], same: true, direction: "unchanged" })]) {
+      const client = scriptedClient([JSON.stringify(reply), JSON.stringify(MISQUOTED)]);
+      const verdict = await pairedReaderFor(client, LISTING)(OLD, reply.same ? OLD : NEW);
+      assert.strictEqual(client.prompts.length, 1, verdict.status);
+      assert.strictEqual(verdict.unquotable_first, undefined);
+    }
+  });
 });
 
 function everyDay(from: string, to: string): string[] {
@@ -1054,6 +1101,44 @@ describe("settling a first reading's difference against the page as the Archive 
     });
     assert.strictEqual(settled.outcome, "no_usable_capture");
     assert.deepStrictEqual(settled.tried, [{ day: "2026-02-10", gap_days: 5, side: "before", why: 'the capture settles nothing: "10,000 calls a month" occurs more than once on the old page, so it cannot refute the difference' }]);
+  });
+
+  it("settles a record as it would have if the reader had quoted every pair correctly the first time, when it misquotes each pair once", async () => {
+    const callsOn = (day: string) => (day < "2026-06-10" ? "10,000" : "500");
+    const planPage = (calls: string) => `<html><body><h2>Free plan</h2><p>Free plan: ${calls} calls a month.</p><p>${FILLER}</p></body></html>`;
+    const archive = {
+      captures: async () => ({ captures: everyDay("2026-01-01", TODAY).map((day) => capture(`${day.replaceAll("-", "")}120000`)) }),
+      captureHtml: async ({ timestamp }: { timestamp: string }) => ({ html: planPage(callsOn(`${timestamp.slice(0, 4)}-${timestamp.slice(4, 6)}-${timestamp.slice(6, 8)}`)) }),
+    };
+    const answerFrom = (prompt: string) => {
+      const [, oldPage, newPage] = prompt.split(/(?:OLD|NEW) PAGE \(saved [^)]*\):\n/);
+      const terms = (page: string) => [page.match(/Free plan: [\d,]+ calls a month/)?.[0] ?? ""];
+      const [was, now] = [terms(oldPage), terms(newPage)];
+      const same = was[0] === now[0];
+      return JSON.stringify({ old_terms: was, new_terms: now, same, differences: same ? [] : [{ old: was[0], new: now[0] }], direction: same ? "unchanged" : "narrowed" });
+    };
+    const asked = new Set<string>();
+    const misquotingEachPairOnce = {
+      complete: async (prompt: string) => {
+        if (asked.has(prompt)) return answerFrom(prompt);
+        asked.add(prompt);
+        return JSON.stringify({ old_terms: ["Free plan: 7 calls a month"], new_terms: ["Free plan: 7 calls a month"], same: true, differences: [], direction: "unchanged" });
+      },
+    };
+    const settleWith = (client: { complete: (prompt: string) => Promise<string> }) => settleAgainstCaptures({
+      url: "https://example.com/pricing",
+      textDay: "2026-02-15",
+      recordDay: RECORD_DAY,
+      todayText: `Free plan: 500 calls a month. ${FILLER}`,
+      today: TODAY,
+      archive,
+      readPair: pairedReaderFor(client, { vendor: "Example", category: "APIs", tier: "Free" }),
+      readStatedBefore: statesItAlready,
+    });
+    const quotedFirstTime = await settleWith({ complete: async (prompt: string) => answerFrom(prompt) });
+    assert.strictEqual(quotedFirstTime.outcome, "vendor_changed");
+    assert.strictEqual(quotedFirstTime.date, "2026-06-10");
+    assert.deepStrictEqual(await settleWith(misquotingEachPairOnce), quotedFirstTime);
   });
 
   it("puts a record on the review list, never ours, when the only differences on the record's day are lines one page states", async () => {
