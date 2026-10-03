@@ -4,6 +4,7 @@ import { readPeriod, renderPeriod } from "../src/growth-limits.ts";
 import { sentencesOf } from "../dist/superseding-reading.js";
 import { A_SELF_HOSTED_EDITION, sentenceOffersSomethingFree, tierRecordsAFreeTier } from "../dist/free-tier-record.js";
 import { classifyTier } from "../dist/ranking.js";
+import { isACorrectionToOurOwnRecord } from "../dist/change-resolution.js";
 
 export const REJECT_NULL_COMPARISON = "null_comparison";
 export const REJECT_STATES_NO_DIFFERENCE = "states_no_difference";
@@ -27,6 +28,7 @@ export const REJECT_NO_TERMS_TO_NARROW = "no_terms_to_narrow";
 export const REJECT_ZERO_ALLOWANCE = "zero_allowance";
 export const REJECT_RESTATES_STORED_QUANTITIES = "restates_stored_quantities";
 export const REJECT_REMOVAL_DOES_NOT_REACH_THE_LICENCE = "removal_does_not_reach_the_licence";
+export const REJECT_REPEATS_A_REFUSED_READING = "repeats_a_refused_reading";
 
 export const GATE_REASONS = [
   REJECT_NULL_COMPARISON,
@@ -51,6 +53,7 @@ export const GATE_REASONS = [
   REJECT_ZERO_ALLOWANCE,
   REJECT_RESTATES_STORED_QUANTITIES,
   REJECT_REMOVAL_DOES_NOT_REACH_THE_LICENCE,
+  REJECT_REPEATS_A_REFUSED_READING,
 ];
 
 export const FREE_TIER_REMOVED = "free_tier_removed";
@@ -613,6 +616,43 @@ export function restatedStoredQuantities(entry) {
     restated.push(attribute);
   }
   return { restated, dropped: pool.length };
+}
+
+export function statedTermKey(attribute) {
+  const priced = (attribute?.words ?? []).includes(PRICE_ATTRIBUTE) ? PRICE_ATTRIBUTE : "";
+  const scope = attribute?.period ? attribute.period.unit : "flat";
+  return `${priced}|${attribute?.unit ?? ""}|${scope}|${measuredValue(attribute)}`;
+}
+
+export function statedTermKeys(text) {
+  return quantifiedAttributes(text).map(statedTermKey).sort();
+}
+
+function readsTheSamePage(refusal, candidate) {
+  return String(refusal?.vendor ?? "").toLowerCase() === String(candidate?.vendor ?? "").toLowerCase()
+    && String(refusal?.source_url ?? "").trim() === String(candidate?.source_url ?? "").trim();
+}
+
+function sameKeys(left, right) {
+  return left.length === right.length && left.every((key, at) => key === right[at]);
+}
+
+export function refusedReadingItRepeats(candidate, refusals = []) {
+  if (isACorrectionToOurOwnRecord(candidate ?? {})) return null;
+  const stated = statedTermKeys(candidate?.current_state);
+  if (stated.length === 0) return null;
+  let repeated = null;
+  for (const refusal of refusals) {
+    if (!readsTheSamePage(refusal, candidate)) continue;
+    if (!(String(refusal?.refused_date ?? "") < String(candidate?.date ?? ""))) continue;
+    if (!sameKeys(statedTermKeys(refusal.current_state), stated)) continue;
+    if (!repeated || refusal.refused_date > repeated.refused_date) repeated = refusal;
+  }
+  return repeated;
+}
+
+export function repeatedReadingDetail(refusal, figures) {
+  return `the reading of this page refused on ${refusal.refused_date} (${refusal.reason}) stated the same ${figures === 1 ? "figure" : `${figures} figures`}, so the page showed these terms before the date this record gives`;
 }
 
 export function unquantifiedInCurrentState(entry) {
@@ -1629,6 +1669,7 @@ export async function gateCandidates(candidates, options = {}) {
   const listedTierFor = (candidate) => listedTierOf(options.offers, candidate);
   const productIsTheFreeTier = vendorsWhoseFreeTierIsTheProduct(options.offers);
   const freeByLicence = vendorsFreeByLicence(options.offers);
+  const refusals = options.refusals ?? [];
   const accepted = [];
   const rejected = [];
   const unchecked = [];
@@ -1638,6 +1679,15 @@ export async function gateCandidates(candidates, options = {}) {
   const untiered = [];
 
   for (const original of candidates) {
+    const repeated = refusedReadingItRepeats(original, refusals);
+    if (repeated) {
+      rejected.push({
+        candidate: original,
+        reason: REJECT_REPEATS_A_REFUSED_READING,
+        detail: repeatedReadingDetail(repeated, statedTermKeys(original.current_state).length),
+      });
+      continue;
+    }
     const verdict = describesChange(original, {
       pageText: pageTextFor(original),
       pageComplete: pageCompleteFor(original),
