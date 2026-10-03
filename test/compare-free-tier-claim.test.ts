@@ -84,12 +84,12 @@ async function fetchAll<T>(items: T[], worker: (item: T) => Promise<void>, lanes
 
 before(async () => {
   const { buildComparisonMap } = await import("../dist/comparison-pairs.js");
-  const { enrichOffers, loadOffers, loadDealChanges, gateForOffer } = await import("../dist/data.js");
+  const { enrichOffers, loadOffers, loadDealChanges, gateForOffer, withheldRecordCounts, changesRatingTheListedTier } = await import("../dist/data.js");
   const { toSlug } = await import("../dist/vendor-slug.js");
   const { supersedingChange } = await import("../dist/superseded-description.js");
   const { gateFor, utcDate } = await import("../dist/ranking.js");
   const { levelWithheldReason, levelWithheldSince, withheldLevelSentence } = await import("../dist/source-check.js");
-  const { ratingWithheldForNoSourceSentence } = await import("../dist/change-citation.js");
+  const { ratingWithheldSentence } = await import("../dist/change-citation.js");
   const { refusedReadSentence } = await import("../dist/change-refusal.js");
 
   const offers = loadOffers();
@@ -122,7 +122,12 @@ before(async () => {
       gateForOffer(primary, servedOn)?.reason,
       withheld ? withheldLevelSentence(withheld, vendor, since) : null,
       refusedRead ? refusedReadSentence(vendor, refusedRead) : null,
-      ratingWithheldForNoSourceSentence(vendor),
+      ratingWithheldSentence(
+        vendor,
+        withheldRecordCounts(
+          changesRatingTheListedTier(primary, changes.filter((c: { vendor: string }) => c.vendor.toLowerCase() === vendor.toLowerCase())),
+        ),
+      ),
     ].filter((r): r is string => typeof r === "string" && r !== "");
 
     sides.set(vendor, {

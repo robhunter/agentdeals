@@ -28,6 +28,10 @@ const RECORDED = JSON.parse(
 
 const THE_BATCH_THAT_WAS_REVIEWED = "2026-09-05";
 
+const THE_BATCH_AS_REVIEWED = JSON.parse(
+  readFileSync(path.join(REPO, "test", "zero-allowance-batch.json"), "utf-8")
+).changes as Array<Record<string, any>>;
+
 const A_PLAN_CONFIGURATOR_AT_ITS_ZERO_POSITION = {
   vendor: "Windscribe",
   change_type: "limits_reduced",
@@ -184,7 +188,12 @@ describe("what the zero rule must not refuse", () => {
 });
 
 describe("the batch this rule was written against", () => {
-  const batch = RECORDED.filter((change) => change.date === THE_BATCH_THAT_WAS_REVIEWED);
+  const batch = THE_BATCH_AS_REVIEWED;
+
+  it("is the batch dated the day the rule was reviewed against", () => {
+    assert.ok(batch.length > 0, "the batch holds no record");
+    assert.deepStrictEqual(batch.filter((change) => change.date !== THE_BATCH_THAT_WAS_REVIEWED).map((change) => change.vendor), []);
+  });
 
   it("refuses the two read from a page that had not rendered and nothing else in the batch", () => {
     const refused = batch

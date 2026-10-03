@@ -6,7 +6,7 @@ import { readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-const { changeCitesASource, uncitedChangeNotice, CITATION_CLASS, UNCITED_NOTE_CLASS } = await import(
+const { changeCitesASource, uncitedChangeNotice, CITATION_CLASS, UNCITED_NOTE_CLASS, UNCONFIRMED_NOTE_CLASS } = await import(
   "../dist/change-citation.js"
 );
 const { feedEntrySourceXml, digestSourceXml, VIA_LINK_REL, NO_SOURCE_HELD_ELEMENT, CHANGE_FEED_NAMESPACE_PREFIX, CHANGE_FEED_ENTRY_LIMIT } =
@@ -199,9 +199,16 @@ function readsAsPartOfALongerClaim(page: string, at: number, row: RenderableRow)
   );
 }
 
+const UNCONFIRMED_NOTE = new RegExp(`^\\s*<span class="${UNCONFIRMED_NOTE_CLASS}"[^>]*>[^<]*</span>`);
+
+function pastAnUnconfirmedNote(page: string, from: number): number {
+  const note = page.slice(from, from + 1000).match(UNCONFIRMED_NOTE);
+  return note ? from + note[0].length : from;
+}
+
 function evidenceBeside(page: string, at: number, row: RenderableRow): "source" | "no-source" | null {
   const runEnd = page.indexOf("<", at);
-  const end = (runEnd < 0 ? at + row.summary.length : runEnd) + LOOKAHEAD;
+  const end = pastAnUnconfirmedNote(page, runEnd < 0 ? at + row.summary.length : runEnd) + LOOKAHEAD;
   const window = decode(page.slice(Math.max(0, at - LOOKBEHIND), end));
   if (row.sources.some((url) => window.includes(url))) return "source";
   if (row.notices.some((notice) => window.includes(notice))) return "no-source";

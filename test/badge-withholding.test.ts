@@ -34,6 +34,7 @@ const get = async (p: string) => {
 
 const WITHHELD_LABELS: Record<string, string> = {
   no_source: "unrated — no source",
+  unconfirmed: "unrated — change unconfirmed",
   link_unreachable: "unrated — page unreachable",
   unreadable: "unrated — page unreadable",
   states_no_terms: "unrated — page states no price",

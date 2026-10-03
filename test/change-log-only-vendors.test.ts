@@ -69,7 +69,8 @@ const changeLogAnchorAsPublished = (label: string) => changeLogAnchorFor(vendorN
 const CHANGE_LOG_ENTRY = /<div class="chg-entry[^"]*"[^>]*>([\s\S]*?)(?=\n      <div class="chg-entry|\n    <\/div>)/g;
 const changeLogEntries = (log: string) => [...log.matchAll(CHANGE_LOG_ENTRY)].map(m => m[1]!);
 const vendorNamedIn = (entry: string) => entry.match(/class="chg-vendor"[^>]*>([\s\S]*?)<\//)?.[1]?.trim() ?? "";
-const dateShownOn = (entry: string) => entry.match(/class="chg-date[^"]*">[^<]*?(\d{4}-\d{2}-\d{2})/)?.[1] ?? "";
+const dateCellOf = (entry: string) => (entry.match(/class="chg-date[^"]*">([\s\S]*?)<\/div>/)?.[1] ?? "").replace(/<[^>]+>/g, "");
+const dateShownOn = (entry: string) => [...dateCellOf(entry).matchAll(/\d{4}-\d{2}-\d{2}/g)].at(-1)?.[0] ?? "";
 
 let proc: ChildProcess | null = null;
 let base = "";

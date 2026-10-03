@@ -10,7 +10,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
 
 const { deprecationCall, deprecationCallIsRecorded, endsAFreeTier } = await import("../dist/product-deprecation.js");
-const { demotionForChange, demotionWithheldForNoSource, isSevereChange, loadDealChanges } = await import("../dist/data.js");
+const { demotionForChange, demotionWithheld, isSevereChange, loadDealChanges } = await import("../dist/data.js");
 const { narrowingChanges } = await import("../dist/vendor-verdict.js");
 const { isNoLongerInForce } = await import("../dist/change-resolution.js");
 const { toSlug } = await import("../dist/vendor-slug.js");
@@ -33,7 +33,7 @@ function deprecation(over: Partial<DealChange> = {}): DealChange {
 }
 
 function demotionOf(change: DealChange): "risky" | "caution" | null {
-  return demotionForChange(change) ?? demotionWithheldForNoSource(change);
+  return demotionForChange(change) ?? demotionWithheld(change)?.level ?? null;
 }
 
 describe("a deprecation's effect on the listing is one call, read the same way everywhere", () => {

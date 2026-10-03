@@ -283,15 +283,57 @@ describe("#1147 — a shutdown of the product we list demotes the vendor", () =>
   });
 
   it("a vendor whose own product is discontinued cannot publish stable", async () => {
-    const { enrichOffers, loadOffers } = await import("../dist/data.js");
-    const enriched = enrichOffers(loadOffers());
-    for (const vendor of ["Hypertune", "smartlook.com", "lost-pixel.com"]) {
-      const offer = enriched.find((o: { vendor: string }) => o.vendor === vendor);
-      assert.ok(offer, `${vendor} has no offer to rate`);
-      assert.notStrictEqual(offer.risk_level, "stable", `${vendor} still publishes stable`);
-      assert.ok(offer.risk_cause, `${vendor} carries a level with no record behind it`);
-      assert.strictEqual(offer.risk_cause.change_type, "product_deprecated");
-    }
+    const { publishedRisk } = await import("../dist/data.js");
+    const daysAgo = (days: number) => new Date(Date.now() - days * 86_400_000).toISOString().slice(0, 10);
+    const fiveDaysAgo = daysAgo(5);
+    const offer = {
+      vendor: "Fixture Sunset Cloud",
+      category: "Cloud Hosting",
+      tier: "Free",
+      description: "Free plan: 1 project",
+      url: "https://sunset.example/pricing",
+      verifiedDate: fiveDaysAgo,
+      tags: [],
+      source_check: { checked: fiveDaysAgo, outcome: "ok", detail: "the page names Fixture Sunset Cloud and states the terms we publish" },
+    };
+    const shutdown = {
+      vendor: offer.vendor,
+      change_type: "product_deprecated",
+      date: daysAgo(30),
+      date_source: "vendor_page",
+      summary: "Fixture Sunset Cloud is shutting down and stops taking new sign-ups.",
+      previous_state: "Available",
+      current_state: "Shutting down",
+      impact: "high",
+      source_url: "https://sunset.example/blog/sunset",
+      category: "Cloud Hosting",
+      alternatives: [],
+    };
+    const confirmed = publishedRisk(offer, [shutdown]);
+    assert.notStrictEqual(confirmed.risk_level, "stable", "a vendor shutting down its listed product still publishes stable");
+    assert.strictEqual(confirmed.risk_cause?.change_type, "product_deprecated", "the level names no shutdown behind it");
+    const unconfirmed = publishedRisk(offer, [
+      { ...shutdown, date_source: "discovered", archive_check: { checked: fiveDaysAgo, outcome: "no_usable_capture" } },
+    ]);
+    assert.notStrictEqual(unconfirmed.risk_level, "stable", "an unconfirmed shutdown publishes stable");
+    assert.strictEqual(unconfirmed.rating_withheld?.reason, "unconfirmed");
+  });
+
+  it("no vendor in the catalogue whose listed product is being shut down publishes stable", async () => {
+    const { enrichOffers, loadOffers, loadDealChanges } = await import("../dist/data.js");
+    const { deprecationTouchesTheListing } = await import("../dist/product-deprecation.js");
+    const { isNoLongerInForce } = await import("../dist/change-resolution.js");
+    const changes = loadDealChanges();
+    const shuttingDown = enrichOffers(loadOffers()).filter((offer: { vendor: string }) =>
+      changes.some((c: Change) =>
+        c.vendor.toLowerCase() === offer.vendor.toLowerCase()
+        && c.change_type === "product_deprecated"
+        && !isNoLongerInForce(c as never)
+        && deprecationTouchesTheListing(c as never)));
+    assert.deepStrictEqual(
+      shuttingDown.filter((offer: { risk_level: string | null }) => offer.risk_level === "stable").map((offer: { vendor: string }) => offer.vendor),
+      [],
+    );
   });
 
   it("a vendor that retired one of its other services keeps the level its own record earned", async () => {

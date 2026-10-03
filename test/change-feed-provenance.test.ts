@@ -16,7 +16,7 @@ import {
   feedEntrySummary,
   recordedOn,
 } from "../dist/change-feed.js";
-import { weekRangeLabel, changeEntryDateLabel, DISCOVERED_DATE_PREFIX, EFFECTIVE_DATE_PREFIX, UNKNOWN_EFFECTIVE_DATE_MARKER } from "../dist/change-dates.js";
+import { weekRangeLabel, archiveBracketOf, changeEntryDateLabel, dayWeCorrectedIt, DISCOVERED_DATE_PREFIX, EFFECTIVE_DATE_PREFIX, UNKNOWN_EFFECTIVE_DATE_MARKER } from "../dist/change-dates.js";
 import { statesWhenItTookEffect } from "./effective-date-rule.ts";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -218,7 +218,10 @@ describe("the change feeds date every entry by when we recorded it and say what 
   });
 
   it("tells an entry read on its own that a date with no known effective date is the day we recorded the change", () => {
-    const undated = entries.filter((e) => !statesWhenItTookEffect(recordFor(e)!));
+    const undated = entries.filter((e) => {
+      const record = recordFor(e)!;
+      return !statesWhenItTookEffect(record) && archiveBracketOf(record as never) === null && dayWeCorrectedIt(record as never) === null;
+    });
     assert.ok(undated.length > 0, "no entry without a known effective date in the feed to check");
     for (const entry of undated) {
       assert.match(entry.summary, /effective date unknown — this is the day we recorded the change\. We do not know when it took effect\./);
