@@ -615,17 +615,17 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 34,
+      "table_figures": 36,
       "table_figures_from_records": 1,
       "tables": [
         {
           "label": "Always Free Services",
-          "figures": 10,
+          "figures": 14,
           "from_records": 0
         },
         {
           "label": "12-Month Free Tier",
-          "figures": 8,
+          "figures": 6,
           "from_records": 0
         },
         {
