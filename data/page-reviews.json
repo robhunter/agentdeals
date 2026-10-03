@@ -271,6 +271,7 @@
         "amplitude",
         "google-analytics",
         "mixpanel",
+        "plausible-analytics",
         "posthog",
         "umami"
       ],
@@ -332,7 +333,8 @@
         "mockoon",
         "postman",
         "rapidapi",
-        "stoplight"
+        "stoplight",
+        "thunder-client"
       ],
       "badge_subjects_unresolved": [],
       "stat_card_subjects_unresolved": [],

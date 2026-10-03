@@ -4191,7 +4191,7 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("Always-Free Databases"), "Should have databases section");
     assert.ok(html.includes("Serverless Functions"), "Should have serverless section");
     assert.ok(html.includes("Startup Credit Programs"), "Should have startup credits section");
-    assert.ok(html.includes("Best for Each Use Case"), "Should have best-for section");
+    assert.ok(html.includes("By Use Case"), "Should have the use-case section");
     assert.ok(html.includes("Hidden Costs Comparison"), "Should have hidden costs section");
     assert.ok(html.includes("Lambda"), "Should mention AWS Lambda");
     assert.ok(html.includes("e2-micro"), "Should mention GCP e2-micro");
@@ -4228,7 +4228,7 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("Edge / Embedded"), "Should have edge section");
     assert.ok(html.includes("Key-Value / Cache"), "Should have KV section");
     assert.ok(html.includes("Vector Databases"), "Should have vector section");
-    assert.ok(html.includes("Best for Each Use Case"), "Should have best-for section");
+    assert.ok(html.includes("By Use Case"), "Should have the use-case section");
     assert.ok(html.includes("PlanetScale Cautionary Tale"), "Should have PlanetScale section");
     assert.ok(html.includes("Pricing Change Timeline"), "Should have timeline section");
     assert.ok(html.includes("mcp-cta"), "Should have MCP CTA");
@@ -4294,7 +4294,7 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("Full-Service Serverless"), "Should have full-service section");
     assert.ok(html.includes("Specialized Serverless"), "Should have specialized section");
     assert.ok(html.includes("CPU-Time vs Wall-Clock-Time"), "Should have billing gotcha section");
-    assert.ok(html.includes("Best for Each Use Case"), "Should have best-for section");
+    assert.ok(html.includes("By Use Case"), "Should have the use-case section");
     assert.ok(html.includes("Hidden Costs and Gotchas"), "Should have hidden costs section");
     assert.ok(html.includes("Pricing Change Timeline"), "Should have timeline section");
     assert.ok(html.includes("mcp-cta"), "Should have MCP CTA");
@@ -4335,7 +4335,7 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("SMTP Infrastructure"), "Should have infrastructure section");
     assert.ok(html.includes("Self-Hosted"), "Should have self-hosted section");
     assert.ok(html.includes("Growth Cost Trap"), "Should have cost trap section");
-    assert.ok(html.includes("Best for Each Use Case"), "Should have best-for section");
+    assert.ok(html.includes("By Use Case"), "Should have the use-case section");
     assert.ok(html.includes("Hidden Costs"), "Should have hidden costs section");
     assert.ok(html.includes("Pricing Change Timeline"), "Should have timeline section");
     assert.ok(html.includes("mcp-cta"), "Should have MCP CTA");
@@ -4386,7 +4386,7 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("Self-Hosted"), "Should have self-hosted section");
     assert.ok(html.includes("Observability Cost Trap"), "Should have cost trap section");
     assert.ok(html.includes("500 hosts"), "Should have 500-host scale in cost table");
-    assert.ok(html.includes("Best for Each Use Case"), "Should have best-for section");
+    assert.ok(html.includes("By Use Case"), "Should have the use-case section");
     assert.ok(html.includes("serverless"), "Should have serverless verdict");
     assert.ok(html.includes("Hidden Costs and Gotchas"), "Should have hidden costs section");
     assert.ok(html.includes("cardinality"), "Should mention cardinality cost trap");
@@ -4508,7 +4508,7 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("S3 Egress Tax"), "Should have S3 egress tax section");
     assert.ok(html.includes("100 TB"), "Should have 100TB scale in cost table");
     assert.ok(html.includes("NAT Gateway"), "Should explain NAT Gateway hidden charge");
-    assert.ok(html.includes("Best for Each Use Case"), "Should have best-for section");
+    assert.ok(html.includes("By Use Case"), "Should have the use-case section");
     assert.ok(html.includes("Hidden Costs and Gotchas"), "Should have hidden costs section");
     assert.ok(html.includes("Pricing Change Timeline"), "Should have timeline section");
     assert.ok(html.includes("mcp-cta"), "Should have MCP CTA");
@@ -4546,7 +4546,7 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("Privacy-Focused"), "Should have privacy section");
     assert.ok(html.includes("Self-Hosted"), "Should have self-hosted section");
     assert.ok(html.includes("Analytics Cost Trap"), "Should have cost trap section");
-    assert.ok(html.includes("Best for Each Use Case"), "Should have best-for section");
+    assert.ok(html.includes("By Use Case"), "Should have the use-case section");
     assert.ok(html.includes("Hidden Costs and Gotchas"), "Should have hidden costs section");
     assert.ok(html.includes("Pricing Change Timeline"), "Should have timeline section");
     assert.ok(html.includes("mcp-cta"), "Should have MCP CTA");
@@ -4576,7 +4576,7 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("Load"), "Should have load testing section");
     assert.ok(html.includes("Local Development"), "Should have local dev section");
     assert.ok(html.includes("Testing Cost Trap"), "Should have cost trap section");
-    assert.ok(html.includes("Best for Each Use Case"), "Should have best-for section");
+    assert.ok(html.includes("By Use Case"), "Should have the use-case section");
     assert.ok(html.includes("Hidden Costs and Gotchas"), "Should have hidden costs section");
     assert.ok(html.includes("Pricing Change Timeline"), "Should have timeline section");
     assert.ok(html.includes("mcp-cta"), "Should have MCP CTA");
@@ -4608,7 +4608,7 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("API Design"), "Should have API design section");
     assert.ok(html.includes("Mock Servers"), "Should have mock servers section");
     assert.ok(html.includes("API Tool Migration Trap"), "Should have migration trap section");
-    assert.ok(html.includes("Best for Each Use Case"), "Should have best-for section");
+    assert.ok(html.includes("By Use Case"), "Should have the use-case section");
     assert.ok(html.includes("Hidden Costs and Gotchas"), "Should have hidden costs section");
     assert.ok(html.includes("Pricing Change Timeline"), "Should have timeline section");
     assert.ok(html.includes("mcp-cta"), "Should have MCP CTA");
@@ -4639,7 +4639,7 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("Secrets Detection"), "Should have secrets detection section");
     assert.ok(html.includes("Container"), "Should have container section");
     assert.ok(html.includes("DevSecOps Cost Trap"), "Should have cost trap section");
-    assert.ok(html.includes("Best for Each Use Case"), "Should have best-for section");
+    assert.ok(html.includes("By Use Case"), "Should have the use-case section");
     assert.ok(html.includes("Hidden Costs and Gotchas"), "Should have hidden costs section");
     assert.ok(html.includes("Pricing Change Timeline"), "Should have timeline section");
     assert.ok(html.includes("mcp-cta"), "Should have MCP CTA");

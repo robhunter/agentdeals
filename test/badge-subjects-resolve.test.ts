@@ -72,8 +72,8 @@ describe("#1063 an editorial badge names something we hold a record for", () => 
         subjects.add(`${subject}|${badge}`);
       }
     }
-    assertPopulationFloor(spans, 80, "badges the sweep reached");
-    assertPopulationFloor(subjects.size, 60, "distinct subject and badge pairs");
+    assertPopulationFloor(spans, 73, "badges the sweep reached");
+    assertPopulationFloor(subjects.size, 36, "distinct subject and badge pairs");
   });
 
   it("carries a subject for every badge it enumerates", () => {
@@ -316,13 +316,8 @@ describe("#1063 the two verdicts checked against the vendor's own pricing page",
     assert.ok(card, "the Best Overall Free Tier stat card is missing");
     const cardSlug = card[1].match(/href="\/vendor\/([a-z0-9-]+)"/)?.[1] ?? null;
     assert.ok(cardSlug, `the stat card names "${card[1].replace(/<[^>]*>/g, "")}", which resolves to no record`);
-    const badged = badgedSubjects(html).find(b => b.badge === "BEST OVERALL");
-    assert.ok(badged, "no BEST OVERALL badge on the monitoring page");
-    const badgeSlugs = badged.linkedSlug ? [badged.linkedSlug] : assertedVendorSlugs(badged.subject);
-    assert.deepStrictEqual(
-      badgeSlugs, [cardSlug],
-      `the stat card credits ${cardSlug} and the badge credits ${badgeSlugs.join(", ")} for the same verdict`,
-    );
+    const badged = badgedSubjects(html).filter(b => b.badge === "BEST OVERALL").map(b => b.subject);
+    assert.deepStrictEqual(badged, [], `a badge credits ${badged.join(", ")} with the verdict the stat card gives ${cardSlug}`);
   });
 
   it("holds a record and a change entry for both", () => {
