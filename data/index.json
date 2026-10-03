@@ -7221,7 +7221,7 @@
       "source_check": {
         "checked": "2026-10-03",
         "outcome": "ok",
-        "detail": "the page names LocalStack as \"localstack\" and states \"$89\" and \"$29\" and \"$35\""
+        "detail": "the page names LocalStack as \"localstack\" and states \"$39\" and \"$45\" and \"$89\""
       },
       "free_plan_excerpt": {
         "text": "Hobby For hobbyists & other non-commercial usage. Free",
