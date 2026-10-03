@@ -2141,7 +2141,7 @@
     {
       "vendor": "CloudAMQP",
       "category": "Messaging",
-      "description": "Managed RabbitMQ — 1M messages/month, 20 connections, 100 queues free",
+      "description": "Managed RabbitMQ. The free Little Lemur plan runs on a shared RabbitMQ broker with a 1M message quota a month, 20 connections, 100 queues, up to 10,000 queued messages and a 28-day maximum idle queue time.",
       "tier": "Little Lemur",
       "url": "https://www.cloudamqp.com/plans.html",
       "tags": [
@@ -2153,7 +2153,7 @@
       ],
       "verifiedDate": "2026-07-24",
       "source_check": {
-        "checked": "2026-09-25",
+        "checked": "2026-10-03",
         "outcome": "ok",
         "detail": "the page names CloudAMQP as \"cloudamqp\" and states amounts, none of which we matched to the terms we publish"
       }
@@ -10081,7 +10081,7 @@
     {
       "vendor": "Zoho Projects",
       "category": "Project Management",
-      "description": "Free for 3 users, 2 projects & 10 MB attachment limit. The same plan applies to [Bugtracker](https://zoho.com/bugtracker).",
+      "description": "Free for up to 5 users: 3 projects, subtasks, whiteboard, 5 GB of storage and the iOS and Android apps. Zoho's [Bugtracker](https://zoho.com/bugtracker) has its own free plan: 3 users, 2 projects and 5 GB of attachments.",
       "tier": "Free",
       "url": "https://zoho.com/projects",
       "tags": [
@@ -10090,7 +10090,7 @@
       ],
       "verifiedDate": "2026-07-31",
       "source_check": {
-        "checked": "2026-09-18",
+        "checked": "2026-10-03",
         "outcome": "states_a_free_price",
         "detail": "the page names Zoho Projects and states its price in words as \"free version\", and the 1 structured-data block in its markup states no price"
       }
@@ -15733,7 +15733,7 @@
     {
       "vendor": "Safety",
       "category": "Security",
-      "description": "AI-powered development security platform (rebranded from PyUp). Free: 1 codebase, 100 scans/month, 1 user, non-commercial only. Uses public vulnerability databases (Safety's proprietary 4x database requires paid plan). Email support with 48-hour response.",
+      "description": "AI-powered development security platform (rebranded from PyUp). Free: 1 codebase, 100 scans/month, 1 user. Safety says the free plan is \"designed for non-commercial use, individual developers, and education use cases\". Uses public vulnerability databases (Safety's proprietary 4x database requires paid plan). Email support with 48-hour response.",
       "tier": "Free",
       "url": "https://getsafety.com/pricing",
       "tags": [
@@ -15742,7 +15742,7 @@
       ],
       "verifiedDate": "2026-08-16",
       "source_check": {
-        "checked": "2026-09-22",
+        "checked": "2026-10-03",
         "outcome": "ok",
         "detail": "the page names Safety as \"safety\" and states \"100 scans per month\""
       }
