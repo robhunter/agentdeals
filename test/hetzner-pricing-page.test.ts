@@ -233,11 +233,21 @@ describe("the April 1 table holds only rows from Hetzner's April price list", ()
     assert.ok(text.includes("Until 15 June, adding 128 GB of memory that way cost more than a whole AX102 server with 128 GB built in (€107.30 a month before April, €122.30 after, in Germany)."));
   });
 
-  it("gives the range dedicated servers rose by in April, then what a new AX42 and AX102 cost, directly after the range for cloud servers", async () => {
+  it("gives the range dedicated servers rose by in April, then what new orders cost after April and in June, directly after the range for cloud servers", async () => {
     const text = visible((await get("/hetzner-pricing-2026")).body);
     assert.ok(text.includes(
-      "against 30-37% in euros. Dedicated servers rose 2-21% in euros and 3-26% in dollars on 1 April 2026. In Germany, the AX42 went from €47.30 to €57.30. A new AX42 now costs €97.30 and a new AX102 €257.30, excluding IPv4, up from €57.30 and €122.30 after April but down from the initial June prices of €187.30 and €452.30, cut on 30 June. The one-off setup fee is €49 for an AX42 and €129 for an AX102. Hetzner adjusted setup fees for dedicated servers on 2 February and 29 April 2026, citing RAM and NVMe SSD costs; its statements give no fee amounts. Memory upgrades for dedicated servers are not in the April table.",
+      "against 30-37% in euros. Dedicated servers rose 2-21% in euros and 3-26% in dollars on 1 April 2026. In Germany, the AX42 went from €47.30 to €57.30. After the April 1 adjustment, new orders cost €57.30 for an AX42 and €122.30 for an AX102. On June 15, prices rose to €187.30 and €452.30, then fell on June 30 to the current prices. Hetzner adjusted setup fees for dedicated servers on 2 February and 29 April 2026, citing RAM and NVMe SSD costs; its statements give no fee amounts. Memory upgrades for dedicated servers are not in the April table.",
     ));
+  });
+
+  it("gives what a new AX42 and AX102 cost today in section 1, with the setup fee and the day the price was read, and not in section 2's history", async () => {
+    const { body } = await get("/hetzner-pricing-2026");
+    const sectionOne = visible(body.slice(body.indexOf('<h2 id="pricing">'), body.indexOf('<h2 id="april">'))).trim();
+    const sectionTwo = visible(body.slice(body.indexOf('<h2 id="april">'), body.indexOf('<h2 id="why">')));
+    assert.ok(sectionOne.endsWith(
+      `A new AX42 dedicated server in Germany costs €97.30 a month and a new AX102 €257.30, excluding IPv4. The one-off setup fee is €49 for an AX42 and €129 for an AX102. These prices were read from Hetzner's price API on ${HETZNER_PRICES_READ}.`,
+    ), sectionOne.slice(-400));
+    assert.doesNotMatch(sectionTwo, /now costs?|€97\.30|€257\.30|setup fee is/);
   });
 
   it("links each setup-fee adjustment's day to Hetzner's statement of it", async () => {
@@ -258,6 +268,24 @@ describe("the April 1 table holds only rows from Hetzner's April price list", ()
   it("states none of the figures that were not Hetzner's", async () => {
     const text = visible((await get("/hetzner-pricing-2026")).body);
     assert.doesNotMatch(text, /575%|€45\.88|€264\.00|€49\.73|€51\.22|US\/SG object storage|cost €124/);
+  });
+});
+
+describe("when /hetzner-pricing-2026 says each 2026 change happened", () => {
+  it("dates each change right after its bold opening sentence", async () => {
+    const { body } = await get("/hetzner-pricing-2026");
+    const summary = body.slice(body.indexOf('<div class="executive-summary">'));
+    const opening = visible(summary.slice(0, summary.indexOf("</p>"))).trim();
+    assert.ok(opening.startsWith(
+      "Hetzner raised cloud prices twice in 2026, and the second round changed the lineup as well as the numbers. Dedicated-server memory add-ons rose in February. Setup fees changed on 2 February and 29 April. Server prices rose on 1 April. New-order prices rose on 15 June. The April 1 adjustment",
+    ), opening);
+  });
+
+  it("counts cloud price adjustments, not every 2026 change, in its tile", async () => {
+    const { body } = await get("/hetzner-pricing-2026");
+    const labels = [...body.matchAll(/<div class="stat-label">([^<]*)<\/div>/g)].map((m) => m[1]);
+    assert.ok(labels.includes("Cloud price adjustments in 2026"), labels.join(" | "));
+    assert.ok(!labels.includes("Price adjustments in 2026"), labels.join(" | "));
   });
 });
 
@@ -379,12 +407,13 @@ describe("the day /hetzner-pricing-2026 says Hetzner's prices were read", () => 
     assert.strictEqual(HETZNER_PRICES_READ, file.read_on);
   });
 
-  it("is printed from that file in the byline, the meta description, section 1, the methodology and section 6's Hetzner row", () => {
+  it("is printed from that file in the byline, the meta description, section 1, its dedicated-server prices, the methodology and section 6's Hetzner row", () => {
     const text = visible(page);
     const description = page.match(/<meta name="description" content="([^"]*)"/)?.[1] ?? "";
     assert.ok(text.includes(`Plan prices read from Hetzner's price API on ${SCRATCH_DAY}`), "byline");
     assert.ok(description.includes(`read from Hetzner's price API on ${SCRATCH_DAY}`), description);
     assert.ok(text.includes(`with the monthly price read from Hetzner's price API on ${SCRATCH_DAY} and the availability hetzner.com showed on ${HETZNER_AVAILABILITY_READ}.`), "section 1");
+    assert.ok(text.includes(`These prices were read from Hetzner's price API on ${SCRATCH_DAY}.`), "section 1's dedicated-server prices");
     assert.ok(text.includes(`Plan prices in section 1 were read from Hetzner's price API on ${SCRATCH_DAY}`), "methodology");
     assert.ok(text.includes(`Hetzner's price API, read ${SCRATCH_DAY}`), "section 6");
     assert.doesNotMatch(text, /read from hetzner\.com on/i);
