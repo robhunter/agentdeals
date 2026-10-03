@@ -536,7 +536,6 @@
         "amazon-cognito",
         "amazon-ecr-public",
         "amazon-q-developer",
-        "amazon-ses",
         "aws",
         "azure",
         "cloudflare-workers",
@@ -555,17 +554,12 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 52,
+      "table_figures": 40,
       "table_figures_from_records": 9,
       "tables": [
         {
           "label": "Always Free Services",
           "figures": 7,
-          "from_records": 0
-        },
-        {
-          "label": "12-Month Free Tier",
-          "figures": 12,
           "from_records": 0
         },
         {

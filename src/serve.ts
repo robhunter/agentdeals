@@ -8111,7 +8111,7 @@ const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
   {
     slug: "aws-free-tier-2026",
     title: "AWS Free Tier Complete Guide 2026 — Every Free Service, Real Limits, and Hidden Costs",
-    metaDesc: "Comprehensive guide to every AWS free tier service in 2026. Always Free, 12-month, and trial tiers explained. Aurora PostgreSQL Serverless just added. Hidden costs, gotchas, and cheaper alternatives compared.",
+    metaDesc: "AWS Free plan: up to $200 in credits over 6 months, 30+ always-free services, short-term trials, hidden costs, cheaper alternatives.",
     contextHtml: "",
     tag: "aws-free-tier-2026",
     primaryVendor: "AWS",
@@ -32592,7 +32592,7 @@ railway up
 
 function buildAwsFreeTier2026Page(): string {
   const title = "AWS Free Tier Complete Guide 2026 — Every Free Service, Real Limits, and Hidden Costs";
-  const metaDesc = "Comprehensive guide to every AWS free tier service in 2026. Always Free, 12-month, and trial tiers explained. Aurora PostgreSQL Serverless just added. Hidden costs, gotchas, and cheaper alternatives compared.";
+  const metaDesc = "AWS Free plan: up to $200 in credits over 6 months, 30+ always-free services, short-term trials, hidden costs, cheaper alternatives.";
   const slug = "aws-free-tier-2026";
   const pubDate = "2026-03-27";
 
@@ -32611,17 +32611,16 @@ function buildAwsFreeTier2026Page(): string {
     slug: string;
     limits: string;
     category: string;
-    highlight?: boolean;
   }
 
   const alwaysFreeServices: AwsService[] = [
     { name: "AWS Lambda", slug: "aws", limits: "1M requests/month, 400K GB-seconds compute", category: "Compute" },
     { name: "Amazon DynamoDB", slug: "aws", limits: "25 GB storage, 25 WCU/RCU provisioned capacity", category: "Database" },
-    { name: "Amazon S3", slug: "aws", limits: "5 GB standard storage, 20K GET, 2K PUT requests/month (12-month)", category: "Storage" },
+    { name: "Amazon CloudFront", slug: "aws", limits: "1 TB data transfer out, 10M HTTP/HTTPS requests, 2M CloudFront Function invocations/month", category: "CDN" },
     { name: "Amazon SNS", slug: "aws", limits: "1M publishes, 100K HTTP deliveries, 1K email deliveries/month", category: "Messaging" },
     { name: "Amazon SQS", slug: "aws", limits: "1M requests/month", category: "Messaging" },
     { name: "Amazon CloudWatch", slug: "aws", limits: "10 custom metrics, 10 alarms, 1M API requests/month", category: "Monitoring" },
-    { name: "Amazon ECR Public", slug: "amazon-ecr-public", limits: "50 GB storage, unlimited public image pulls", category: "Containers" },
+    { name: "Amazon ECR Public", slug: "amazon-ecr-public", limits: "50 GB storage, 500 GB/month transfer out anonymously, 5 TB/month with an AWS account", category: "Containers" },
     { name: "AWS CloudFormation", slug: "aws", limits: "Unlimited for AWS resources (third-party charges may apply)", category: "IaC" },
     { name: "Amazon Cognito", slug: "aws", limits: "10,000 MAUs a month (Lite or Essentials tier, direct or social sign-in); 50 MAUs for SAML/OIDC. User pools created by November 22, 2024 keep 50,000 on Lite.", category: "Auth" },
     { name: "AWS CodeCommit", slug: "aws", limits: "5 active users, 50 GB storage, 10K Git requests/month", category: "DevOps" },
@@ -32629,25 +32628,12 @@ function buildAwsFreeTier2026Page(): string {
     { name: "AWS CodeBuild", slug: "aws", limits: "100 build minutes/month (general1.small)", category: "DevOps" },
     { name: "AWS X-Ray", slug: "aws", limits: "100K traces recorded, 1M traces scanned/month", category: "Monitoring" },
     { name: "AWS Step Functions", slug: "aws", limits: "4,000 state transitions/month", category: "Compute" },
-    { name: "Amazon SES", slug: "amazon-ses", limits: "No free tier — $200 in expiring AWS credits, then $0.10/1,000 emails", category: "Email" },
-  ];
-
-  const twelveMonthServices: AwsService[] = [
-    { name: "Amazon EC2", slug: "aws", limits: "750 hrs/month t2.micro or t3.micro (Linux/Windows)", category: "Compute" },
-    { name: "Amazon RDS", slug: "aws", limits: "750 hrs/month db.t2.micro or db.t3.micro, 20 GB storage", category: "Database" },
-    { name: "Aurora PostgreSQL Serverless", slug: "amazon-aurora-postgresql", limits: "Up to 4 ACUs per cluster, 1 GB storage (NEW — March 2026)", category: "Database", highlight: true },
-    { name: "Amazon S3", slug: "aws", limits: "5 GB standard storage, 20K GET, 2K PUT requests/month", category: "Storage" },
-    { name: "Amazon CloudFront", slug: "aws", limits: "1 TB data transfer out, 10M HTTP/HTTPS requests/month", category: "CDN" },
-    { name: "Amazon ElastiCache", slug: "aws", limits: "750 hrs/month cache.t2.micro or cache.t3.micro", category: "Database" },
-    { name: "Amazon OpenSearch", slug: "aws", limits: "750 hrs/month t2.small.search or t3.small.search", category: "Search" },
-    { name: "Amazon Redshift", slug: "amazon-redshift", limits: "750 hrs/month dc2.large node, 2 months free trial", category: "Data Warehouse" },
-    { name: "AWS Amplify Hosting", slug: "aws", limits: "1K build minutes/month, 15 GB served, 5 GB storage", category: "Hosting" },
+    { name: "Amazon Q Developer", slug: "amazon-q-developer", limits: "Inline suggestions, chat, 50 agent invocations/month (always free for individuals)", category: "AI Coding" },
   ];
 
   const trialServices: AwsService[] = [
     { name: "Amazon SageMaker", slug: "aws", limits: "250 hrs/month ml.t3.medium for Studio notebooks (2 months)", category: "AI/ML" },
     { name: "Amazon Bedrock", slug: "aws", limits: "Select foundation models with limited free inference (varies by model)", category: "AI/ML" },
-    { name: "Amazon Q Developer", slug: "amazon-q-developer", limits: "Inline suggestions, chat, 50 agent invocations/month (always free for individuals)", category: "AI Coding" },
     { name: "Amazon AppStream 2.0", slug: "aws", limits: "40 hrs/month stream.standard.small (first 12 months)", category: "Desktop" },
     { name: "Amazon Lightsail", slug: "aws", limits: "750 hrs/month of 512 MB instance (3 months free)", category: "Hosting" },
   ];
@@ -32664,7 +32650,7 @@ function buildAwsFreeTier2026Page(): string {
     { title: "Elastic IP addresses", desc: "Free when attached to a running instance. Charged $0.005/hr (~$3.60/month) when idle or unattached. Easy to forget.", cost: "$3.60/mo idle" },
     { title: "CloudWatch detailed monitoring", desc: "Basic monitoring is free (5-minute intervals). Detailed monitoring (1-minute) costs $2.10/metric/month. EC2 auto-enables it in some launch configs.", cost: "$2.10/metric" },
     { title: "EBS volumes on stopped instances", desc: "You pay for EBS storage even when EC2 instances are stopped. 30 GB gp3 = $2.40/month sitting idle.", cost: "$0.08/GB-mo" },
-    { title: "Free tier expiration", desc: "12-month services silently convert to paid after year one. No warning email by default. Set a billing alarm on day one.", cost: "Varies" },
+    { title: "Free tier expiration", desc: "On the Free plan nothing is billed: the account closes at 6 months or when credits run out, and content is deleted after 90 days unless you upgrade. On the Paid plan, usage past the credits is billed.", cost: "Varies" },
     { title: "S3 request costs", desc: "Storage is cheap but requests add up. PUT/COPY/POST at $0.005/1K requests. A deployment pipeline doing thousands of S3 operations can cost more in requests than storage.", cost: "$0.005/1K PUT" },
     { title: "Multi-AZ deployments", desc: "RDS Multi-AZ doubles your cost. The free tier only covers single-AZ. Some tutorials default to Multi-AZ.", cost: "2× RDS cost" },
   ];
@@ -32690,12 +32676,6 @@ function buildAwsFreeTier2026Page(): string {
 
   const alwaysFreeRows = alwaysFreeServices.map(s => `<tr>
       <td style="font-weight:600">${escHtmlServer(s.name)}</td>
-      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(s.limits)}</td>
-      <td style="color:var(--text-muted);font-size:.8rem">${escHtmlServer(s.category)}</td>
-    </tr>`).join("\n        ");
-
-  const twelveMonthRows = twelveMonthServices.map(s => `<tr${s.highlight ? ' style="background:rgba(59,130,246,0.1)"' : ""}>
-      <td style="font-weight:600">${s.highlight ? `<span style="color:var(--accent)">★</span> ` : ""}${escHtmlServer(s.name)}</td>
       <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(s.limits)}</td>
       <td style="color:var(--text-muted);font-size:.8rem">${escHtmlServer(s.category)}</td>
     </tr>`).join("\n        ");
@@ -32828,15 +32808,15 @@ ${mcpCtaCss()}
   <p class="pub-date">Published ${pubDate} &middot; ${pageDataProvenance("/aws-free-tier-2026", offers.length)} &middot; ${awsOffers.length} AWS entries tracked</p>
 
   <div class="summary-stats">
-    <div class="stat-card"><div class="stat-number">${alwaysFreeServices.length}</div><div class="stat-label">Always Free</div></div>
-    <div class="stat-card"><div class="stat-number">${twelveMonthServices.length}</div><div class="stat-label">12-Month Free</div></div>
-    <div class="stat-card"><div class="stat-number">${trialServices.length}</div><div class="stat-label">Trials</div></div>
-    <div class="stat-card"><div class="stat-number green">Aurora PG</div><div class="stat-label">New March 2026</div></div>
+    <div class="stat-card"><div class="stat-number">Up to $200</div><div class="stat-label">Credits</div></div>
+    <div class="stat-card"><div class="stat-number">6 months</div><div class="stat-label">Free plan</div></div>
+    <div class="stat-card"><div class="stat-number">30+</div><div class="stat-label">Always free</div></div>
+    <div class="stat-card"><div class="stat-number">90+</div><div class="stat-label">Services on the Free plan</div></div>
   </div>
 
   <div class="executive-summary">
-    <p><strong>Three tiers, very different rules.</strong> AWS bundles "free tier" into three categories that work completely differently. <strong>Always Free</strong> services never expire — Lambda, DynamoDB, and SNS stay free forever within limits. <strong>12-Month Free</strong> services (EC2, RDS, S3) expire silently after your first year and start billing. <strong>Short-Term Trials</strong> give limited access to premium services.</p>
-    <p><strong>What's new:</strong> Aurora PostgreSQL Serverless was added to the AWS Free Tier in March 2026 — the first time AWS's flagship managed PostgreSQL has been available at no cost. New accounts also get $100&ndash;$200 in credits.</p>
+    <p>New AWS accounts choose a Free plan or a Paid plan; both get $100 in credits at sign-up and can earn up to $100 more. The Free plan covers over 90 services, charges nothing, and closes at 6 months or when the credits run out. 30+ services stay always free on both plans. Short-term trials are for the Paid plan.</p>
+    <p><strong>What's new:</strong> Aurora PostgreSQL serverless joined the Free plan on 2026-03-25 with up to 4 ACUs and 1 GiB per cluster, paid from the credits. The 12-month free tier ended for the last eligible accounts in July 2026.</p>
     <p><strong>The hidden costs:</strong> AWS's free tier is generous but has well-known traps — data transfer charges, NAT Gateway fees, idle Elastic IPs, and EBS volumes on stopped instances. We cover all of them below.</p>
     <p><strong>Comparing clouds?</strong> See our <a href="/cloud-free-tier-comparison-2026">Cloud Free Tier Comparison</a> for a side-by-side matrix of AWS vs GCP vs Azure vs DigitalOcean.</p>
   </div>
@@ -32845,7 +32825,7 @@ ${mcpCtaCss()}
     <h3>Jump to section</h3>
     <ol>
       <li><a href="#always-free">Always Free Services</a></li>
-      <li><a href="#twelve-month">12-Month Free Tier</a></li>
+      <li><a href="#free-plan">Free plan</a></li>
       <li><a href="#trials">Short-Term Trials</a></li>
       <li><a href="#stacks">Developer-Focused Stacks</a></li>
       <li><a href="#gotchas">Hidden Costs &amp; Gotchas</a></li>
@@ -32856,7 +32836,7 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="always-free">Always Free Services</h2>
-  <p class="section-intro">These services remain free indefinitely within their monthly limits. No expiration, no credit card surprises after 12 months. This is the safest tier for long-running side projects.</p>
+  <p class="section-intro">30+ services are free within monthly limits on both plans. Usage beyond these limits is first covered by credits, then billed at standard pay-as-you-go rates on the Paid plan.</p>
 
   <div style="overflow-x:auto">
   <table class="pricing-table">
@@ -32877,30 +32857,16 @@ ${mcpCtaCss()}
     <strong>Lambda + DynamoDB is the killer combo.</strong> 1M Lambda invocations/month + 25 GB DynamoDB is enough to run a real API backend indefinitely at zero cost. Add SNS/SQS for async processing and CloudWatch for monitoring — all always free. This is why AWS dominates the serverless side project space.
   </div>
 
-  <h2 id="twelve-month">12-Month Free Tier</h2>
-  <p class="section-intro">Available for 12 months from account creation. After that, standard pricing applies with <strong>no automatic notification</strong>. Set a billing alarm on day one.</p>
-
-  <div style="overflow-x:auto">
-  <table class="pricing-table">
-    <thead>
-      <tr>
-        <th>Service</th>
-        <th>Free Limits</th>
-        <th>Category</th>
-      </tr>
-    </thead>
-    <tbody>
-        ${twelveMonthRows}
-    </tbody>
-  </table>
-  </div>
+  <h2 id="free-plan">Free plan</h2>
+  <p class="section-intro">When the Free plan ends, the account closes. AWS retains content for 90 days before permanent deletion. Upgrading to a Paid plan within 90 days restores access and applies remaining credits to future bills. The plan excludes Savings Plans, Reserved Instances, and some AWS Marketplace offers.</p>
+  <p class="section-intro">Joining AWS Organizations, setting up an AWS Control Tower landing zone, or joining the AWS Partner Network automatically upgrades a Free plan account to the Paid plan.</p>
 
   <div class="context-box">
-    <strong>Aurora PostgreSQL Serverless is the headline addition.</strong><span class="new-badge">NEW</span> Previously paid-only (starting ~$0.08/ACU-hour), Aurora PostgreSQL is now available on the AWS Free Tier with up to 4 ACUs per cluster and 1 GB storage. This gives you a managed, auto-scaling PostgreSQL database — the same engine that powers production workloads at scale — for free. Compare this to <a href="/vendor/neon">Neon</a> (512 MiB always-free) or <a href="/vendor/supabase">Supabase</a> (500 MB always-free but no expiration).
+    <strong>Aurora PostgreSQL serverless on the Free plan:</strong> up to 4 ACUs and 1 GiB per cluster, paid from the credits, for as long as the Free plan lasts. Upgrading to the Paid plan lifts the limits, and usage past the credits is billed. This gives you a managed, auto-scaling PostgreSQL database — the same engine that powers production workloads at scale. Compare this to <a href="/vendor/neon">Neon</a> (1 GB per project always-free) or <a href="/vendor/supabase">Supabase</a> (500 MB always-free but no expiration).
   </div>
 
   <h2 id="trials">Short-Term Trials</h2>
-  <p class="section-intro">Limited-time trials for premium services. Useful for evaluation, not for ongoing projects.</p>
+  <p class="section-intro">Trials are for Paid plan services and start when you activate the service; credits cover usage past the trial limits.</p>
 
   <div style="overflow-x:auto">
   <table class="pricing-table">
@@ -32918,19 +32884,19 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="stacks">Developer-Focused Stacks</h2>
-  <p class="section-intro">Common use cases and which free services to combine. All stacks below can run at zero cost within AWS free tier limits.</p>
+  <p class="section-intro">Common use cases and which free services to combine. Only the always-free services stay at zero cost after the Free plan; S3, EC2, RDS and Aurora draw on the credits.</p>
 
   <div class="verdict-box">
     <h3>Recommended Free Stacks</h3>
 
     <div class="verdict-item">
       <strong>Side project API backend</strong>
-      <p>Lambda + DynamoDB + API Gateway + S3 + CloudFront. Serverless, scales to zero, always free within limits. Best for REST/GraphQL APIs serving &lt;1M requests/month.</p>
+      <p>Lambda + DynamoDB + API Gateway + S3 + CloudFront. Serverless, scales to zero. Best for REST/GraphQL APIs serving &lt;1M requests/month.</p>
     </div>
 
     <div class="verdict-item">
       <strong>Testing a database</strong>
-      <p><strong>Aurora PostgreSQL Serverless</strong> (NEW) for managed PostgreSQL with auto-scaling. <strong>RDS PostgreSQL</strong> (750 hrs t3.micro) for traditional single-instance. <strong>DynamoDB</strong> (25 GB always free) for NoSQL. See our <a href="/neon-vs-supabase">Neon vs Supabase</a> comparison for PostgreSQL alternatives.</p>
+      <p><strong>Aurora PostgreSQL Serverless</strong> (NEW) for managed PostgreSQL with auto-scaling. <strong>RDS PostgreSQL</strong> for traditional single-instance. <strong>DynamoDB</strong> (25 GB always free) for NoSQL. See our <a href="/neon-vs-supabase">Neon vs Supabase</a> comparison for PostgreSQL alternatives.</p>
     </div>
 
     <div class="verdict-item">
@@ -32945,7 +32911,7 @@ ${mcpCtaCss()}
 
     <div class="verdict-item">
       <strong>Static website with CDN</strong>
-      <p>S3 (5 GB) + CloudFront (1 TB transfer/month) + Route 53 (not free — $0.50/hosted zone). Or use <a href="/vendor/cloudflare-pages">Cloudflare Pages</a> (unlimited, always free) as an alternative.</p>
+      <p>S3 + CloudFront (1 TB transfer/month) + Route 53 (not free — $0.50/hosted zone). Or use <a href="/vendor/cloudflare-pages">Cloudflare Pages</a> (unlimited, always free) as an alternative.</p>
     </div>
   </div>
 
