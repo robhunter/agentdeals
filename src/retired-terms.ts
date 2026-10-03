@@ -41,6 +41,8 @@ const FREE_AS_A_LICENCE = /\bfree (?:software|and open[- ]source)\b/gi;
 
 const FREE_AS_A_CREDENTIAL = /\bfree (?:auth(?:entication)?|access|api)?\s?(?:token|key|sign-?up|registration)\b/gi;
 
+const FREE_TIER_AS_A_TERM_COMPARED = /\bcompared\s*(?:[-—–:]|on\b)\s*free[- ]tier limits\b/gi;
+
 export function endedOfferPopulation(offers: Offer[]): EndedOffer[] {
   return offers
     .filter(o => offerRetired(o))
@@ -171,7 +173,7 @@ function unitsAbout(text: string, matcher: RegExp): string[] {
 }
 
 function claimIn(unit: string): StatedTerms["reason"] | null {
-  const text = unit.replace(FREE_AS_A_LICENCE, " ").replace(FREE_AS_A_CREDENTIAL, " ");
+  const text = unit.replace(FREE_AS_A_LICENCE, " ").replace(FREE_AS_A_CREDENTIAL, " ").replace(FREE_TIER_AS_A_TERM_COMPARED, " ");
   if (ENDED_WORD.test(text) || NO_OFFER_WORD.test(text) || statesATrialPeriod(text)) return null;
   if (AFFIRMATIVE_FREE.test(text)) return "names a free tier";
   if (ZERO_PRICE.test(text)) return "prices it at zero";

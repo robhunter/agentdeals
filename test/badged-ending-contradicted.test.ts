@@ -172,6 +172,30 @@ describe("a route that badges a vendor and then states terms for it", () => {
     assert.deepStrictEqual(contradictionsOn(html, "/testing-free-tier-comparison-2026"), []);
   });
 
+  const COMPARED_APIS = "OpenAI, Anthropic, Google Gemini, Mistral, Groq, DeepSeek, Cerebras, OpenRouter, Cohere and xAI compared — free tier limits, rate limits, context windows and per-token pricing.";
+  const CEREBRAS_BADGED = `<table><tr><td class="provider-col">Cerebras ${SWEPT_BADGE("Cerebras", "cerebras")}</td><td>Trial</td></tr></table>`;
+
+  it("does not read free tier limits as an offer where they are a term the page compares the vendors on", () => {
+    const html = page(`${CEREBRAS_BADGED}<p>${COMPARED_APIS}</p>`, COMPARED_APIS);
+    assert.deepStrictEqual(contradictionsOn(html, "/llm-api-pricing"), []);
+    const comparedOn = COMPARED_APIS.replace("compared — free tier limits", "compared on free-tier limits");
+    assert.deepStrictEqual(contradictionsOn(page(`${CEREBRAS_BADGED}<p>${comparedOn}</p>`), "/llm-api-pricing"), []);
+  });
+
+  it("still flags a free-tier claim for the badged vendor beside the list of what the page compares", () => {
+    const html = page(`${CEREBRAS_BADGED}<p>${COMPARED_APIS}</p>
+      <p>Cerebras&rsquo;s free tier gives 3,000 requests per month.</p>`, COMPARED_APIS);
+    const found = contradictionsOn(html, "/llm-api-pricing");
+    assert.deepStrictEqual(found.map(f => [f.where, f.reason, f.unit]), [["<p>", "names a free tier", "Cerebras's free tier gives 3,000 requests per month."]]);
+  });
+
+  it("still flags free tier limits or a free tier stated as the badged vendor's, inside or outside a list of compared vendors", () => {
+    for (const claim of ["Groq, DeepSeek and Cerebras compared — all three keep a free tier for prototyping.", "Cerebras&rsquo;s free tier limits are the highest of the ten."]) {
+      const found = contradictionsOn(page(`${CEREBRAS_BADGED}<p>${claim}</p>`), "/llm-api-pricing");
+      assert.deepStrictEqual(found.map(f => f.reason), ["names a free tier"], claim);
+    }
+  });
+
   it("does not read the change timeline, which reports rather than recommends", () => {
     const html = page(`<table><tr><td class="provider-col">LocalStack ${SWEPT_BADGE("LocalStack", "localstack")}</td><td>AWS emulation</td></tr></table>
       <h2 id="changes">What we recorded</h2>
