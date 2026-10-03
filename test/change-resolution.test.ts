@@ -10,6 +10,7 @@ import {
   RESOLUTION_STATES,
   fieldsAssertingAResolution,
   isNoLongerInForce,
+  printsBeforeAndAfter,
   prosePutsAResolutionIn,
   resolutionTag,
   resolvingRecord,
@@ -73,11 +74,32 @@ describe("a record can say its change is no longer in force", () => {
   });
 
   it("marks a record whose resolution carries no written detail", () => {
-    const bare = change({ resolution: { state: "retracted", date: "2026-09-02" } });
+    const bare = change({ resolution: { state: "reversed", date: "2026-09-02" } });
     assert.strictEqual(
       summaryWithResolution(bare),
-      "Retracted — this record was our error (2026-09-02). The vendor paused new signups."
+      "No longer in force (2026-09-02). The vendor paused new signups."
     );
+  });
+
+  it("states what was wrong with a record we withdrew, and not the claim we withdrew", () => {
+    const withdrawn = change({ resolution: { state: "retracted", date: "2026-09-02", detail: "Retracted 2026-09-02: the page never paused signups." } });
+    assert.strictEqual(
+      summaryWithResolution(withdrawn),
+      "Retracted — this record was our error (2026-09-02). Retracted 2026-09-02: the page never paused signups."
+    );
+    assert.strictEqual(summaryWithResolution(withResolutionInSummary(withdrawn)), summaryWithResolution(withdrawn));
+  });
+
+  it("states only that a record we withdrew was our error when its resolution carries no written detail", () => {
+    const bare = change({ resolution: { state: "retracted", date: "2026-09-02" } });
+    assert.strictEqual(summaryWithResolution(bare), "Retracted — this record was our error (2026-09-02).");
+  });
+
+  it("prints no before and after for a record we withdrew, and keeps them for a change the vendor reversed", () => {
+    assert.strictEqual(printsBeforeAndAfter(change({ resolution: { state: "retracted", date: "2026-09-02" } })), false);
+    assert.strictEqual(printsBeforeAndAfter(reversed()), true);
+    assert.strictEqual(printsBeforeAndAfter(change()), true);
+    assert.strictEqual(printsBeforeAndAfter(change({ previous_state: "" })), false);
   });
 
   it("derives a different tag for a change the vendor ended than for one we withdrew", () => {
@@ -481,9 +503,12 @@ describe("what a reader and an agent are told about a resolved change", () => {
 
   it("cancels the structured event for a record we withdrew", async () => {
     const events = await vendorEvents(get, "/vendor/cursor");
-    const hobby = events.find((e) => /Cursor now offers 6 plans/.test(e.description));
+    const withdrawn = stored.find((c) => c.vendor === "Cursor" && /Cursor now offers 6 plans/.test(c.summary));
+    assert.ok(withdrawn?.resolution?.detail, "the retracted Hobby record is no longer in the log");
+    const hobby = events.find((e) => e.description.includes(withdrawn.resolution!.detail!.slice(0, 60)));
     assert.ok(hobby, "the retracted Hobby record is not on the page");
     assert.strictEqual(hobby.eventStatus, EVENT_CANCELLED);
+    assert.doesNotMatch(hobby.description, /Cursor now offers 6 plans/);
     const standingSummaries = stored.filter((c) => c.vendor === "Cursor" && !c.resolution).map((c) => c.summary);
     const standing = events.filter((e) => standingSummaries.includes(e.description));
     assert.ok(standing.length > 0, "no standing Cursor record is on the page to control against");
