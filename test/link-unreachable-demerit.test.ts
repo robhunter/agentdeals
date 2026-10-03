@@ -8,9 +8,11 @@ import { fileURLToPath } from "node:url";
 
 const { rankOffers, evaluate, DEMERIT_TABLE } = await import("../dist/ranking.js");
 const { withheldStability } = await import("../dist/data.js");
+const { unreachableNotice } = await import("../dist/link-health.js");
 
 type Offer = import("../src/types.ts").Offer;
 type LinkUnreachable = import("../src/types.ts").LinkUnreachable;
+type LinkCheckRecord = import("../src/link-health.ts").LinkCheckRecord;
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -155,9 +157,12 @@ describe("a record whose pricing page does not resolve", () => {
   it("is out of the qualified band of its own category across the whole index", () => {
     const offers: Offer[] = JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf-8")).offers;
     const changes = JSON.parse(readFileSync(path.join(REPO, "data", "deal_changes.json"), "utf-8")).changes;
-    const health = JSON.parse(readFileSync(path.join(REPO, "data", "link_health.json"), "utf-8"));
+    const health: { generated_at: string; links: LinkCheckRecord[] } = JSON.parse(
+      readFileSync(path.join(REPO, "data", "link_health.json"), "utf-8"),
+    );
+    const checkedOn = health.generated_at.slice(0, 10);
     const dead = new Set<string>(
-      health.links.filter((l: { outcome: string }) => l.outcome === "unreachable").map((l: { url: string }) => l.url),
+      health.links.filter((l) => unreachableNotice(l, Date.parse(checkedOn)) !== null).map((l) => l.url),
     );
     const categories = [...new Set(offers.filter((o) => dead.has(o.url)).map((o) => o.category))];
 
@@ -166,7 +171,7 @@ describe("a record whose pricing page does not resolve", () => {
       const result = rankOffers(offers.filter((o) => o.category === category), {
         queryKey: `best-of:${category}`,
         changes,
-        date: "2026-09-01",
+        date: checkedOn,
       });
       for (const entry of result.qualified) {
         if (dead.has(entry.offer.url)) offending.push(`${entry.offer.vendor} (${category})`);
