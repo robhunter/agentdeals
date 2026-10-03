@@ -7868,7 +7868,7 @@
     {
       "vendor": "StatusCake",
       "category": "Monitoring",
-      "description": "Uptime monitoring — The Free plan is $0/month and includes 10 Uptime Monitors, 5 Mins Test Intervals, 1 Page Speed Monitor, 1 Domain Monitor, 1 SSL Monitor, 3 Server Monitors, Alerts through Integrations.",
+      "description": "Uptime monitoring — 10 monitors, 5-min intervals, 1 page speed monitor, 1 domain monitor, 1 SSL monitor, email alerts, basic integrations",
       "tier": "Free",
       "url": "https://www.statuscake.com/pricing/",
       "tags": [
@@ -7895,12 +7895,9 @@
         ],
         "reviewed": "2026-09-01"
       },
-      "restated_from": {
-        "reading_date": "2026-09-02",
-        "source_url": "https://www.statuscake.com/pricing/",
+      "restatement_reverted": {
         "record_date": "2026-09-02",
-        "change_type": "limits_increased",
-        "restated_on": "2026-09-20"
+        "reverted_on": "2026-10-03"
       }
     },
     {
