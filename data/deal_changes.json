@@ -9487,10 +9487,10 @@
     },
     {
       "vendor": "StatusCake",
-      "change_type": "record_corrected",
+      "change_type": "limits_increased",
       "date": "2026-09-02",
       "date_source": "discovered",
-      "summary": "Data correction - Not a change by StatusCake. An Internet Archive copy of its page from 2026-04-12 already states the terms this record called new, and our listing of 2026-04-17 did not match them. Our re-read of 2026-09-02 recorded the difference as a change.",
+      "summary": "The free tier now includes server monitoring (3 tests) and SMS credits, but the test intervals for uptime monitoring are 5 minutes, and the page speed monitor is limited to 1. The free tier also includes alerts through integrations.",
       "previous_state": "Uptime monitoring — 10 monitors, 5-min intervals, 1 page speed monitor, 1 domain monitor, 1 SSL monitor, email alerts, basic integrations",
       "current_state": "The Free plan is $0/month and includes 10 Uptime Monitors, 5 Mins Test Intervals, 1 Page Speed Monitor, 1 Domain Monitor, 1 SSL Monitor, 3 Server Monitors, Alerts through Integrations.",
       "impact": "low",
@@ -9499,13 +9499,11 @@
       "alternatives": [],
       "detected_by": "reverify-ai",
       "recorded_date": "2026-09-02",
-      "archive_check": {
-        "checked": "2026-10-02",
-        "outcome": "ours",
-        "capture_day": "2026-04-12",
-        "recorded_as": "limits_increased",
-        "capture": "https://web.archive.org/web/20260412111806/https://www.statuscake.com/pricing/",
-        "stated_then": "Server Monitors How many server tests you can set up 3 10 · Free SMS Credits Receive free SMS credits every month for alerts 75 400 · Uptime Monitors How many uptime tests you can set up 10 100 300 Test Interval How often we run your test 5 minutes 1 minute 30 seconds · Page Speed Monitors How many page speed tests you can set up 1 15 30 · Alerts through Integrations"
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-10-03",
+        "detail": "Retracted 2026-10-03: no change on 2026-09-02. StatusCake's free plan lists 10 uptime monitors at 5-minute intervals, 1 page speed monitor, 1 domain monitor, 1 SSL monitor and alerts through integrations, in the Internet Archive's capture of 2026-04-12 and on statuscake.com/pricing on 2026-10-03. The reading took the Superior plan's 3 server monitors and 75 SMS credits for the free plan's.",
+        "source_url": "https://web.archive.org/web/20260412111806/https://www.statuscake.com/pricing/"
       }
     },
     {

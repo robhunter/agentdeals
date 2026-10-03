@@ -730,7 +730,8 @@
       "source_url": "https://www.statuscake.com/pricing/",
       "record_date": "2026-09-02",
       "change_type": "limits_increased",
-      "summary": "The free tier now includes server monitoring (3 tests) and SMS credits, but the test intervals for uptime monitoring are 5 minutes, and the page speed monitor is limited to 1. The free tier also includes alerts through integrations."
+      "summary": "The free tier now includes server monitoring (3 tests) and SMS credits, but the test intervals for uptime monitoring are 5 minutes, and the page speed monitor is limited to 1. The free tier also includes alerts through integrations.",
+      "reverted_on": "2026-10-03"
     },
     {
       "vendor": "Semgrep",
