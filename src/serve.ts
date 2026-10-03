@@ -750,6 +750,13 @@ function termsUnconfirmedNoticeHtml(offer: Offer): string {
     : unconfirmedTermsSpanHtml(unconfirmed);
 }
 
+function termsNoticeWhereAChangeRepeatsAListing(vendor: string, stated: string): string {
+  return offers
+    .filter((offer) => offer.vendor === vendor && offer.description === stated)
+    .map((offer) => termsUnconfirmedNoticeHtml(offer))
+    .join("");
+}
+
 function alreadySpeaksForItself(offer: Offer): boolean {
   return offerEnded(offer)
     || supersedingChangeFor(offer) !== null
@@ -19253,7 +19260,7 @@ function buildQ1PricingReportPage(): string {
       "<p class=\"change-summary\">" + changeSummaryHtml(c, escHtmlServer) + "</p>" +
       "<div class=\"change-states\">" +
         "<div class=\"change-before\"><strong>Before:</strong> " + escHtmlServer(c.previous_state) + "</div>" +
-        "<div class=\"change-after\"><strong>After:</strong> " + escHtmlServer(c.current_state) + "</div>" +
+        "<div class=\"change-after\"><strong>After:</strong> " + escHtmlServer(c.current_state) + termsNoticeWhereAChangeRepeatsAListing(c.vendor, c.current_state) + "</div>" +
       "</div>" +
     "</div>";
   };
@@ -19657,7 +19664,7 @@ function buildQ2PricingPreview2026Page(): string {
       <p class="change-summary">${changeSummaryHtml(c, escHtmlServer)}</p>
       <div class="change-states">
         <div class="change-before"><strong>Before:</strong> ${escHtmlServer(c.previous_state)}</div>
-        <div class="change-after"><strong>After:</strong> ${escHtmlServer(c.current_state)}</div>
+        <div class="change-after"><strong>After:</strong> ${escHtmlServer(c.current_state)}${termsNoticeWhereAChangeRepeatsAListing(c.vendor, c.current_state)}</div>
       </div>
     </div>`;
   };

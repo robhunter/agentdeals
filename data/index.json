@@ -18370,9 +18370,9 @@
       ],
       "verifiedDate": "2026-07-15",
       "source_check": {
-        "checked": "2026-09-18",
-        "outcome": "states_a_free_price",
-        "detail": "the page names Burnermail and states its price in words as \"Free Plan\", and its markup carries no structured data"
+        "checked": "2026-10-03",
+        "outcome": "states_no_terms",
+        "detail": "the page names Burnermail but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
     },
     {
