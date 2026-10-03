@@ -1176,11 +1176,13 @@
     },
     {
       "vendor": "LocalStack",
-      "change_type": "free_tier_removed",
+      "change_type": "restriction",
       "date": "2026-03-23",
-      "summary": "LocalStack drops open-source Community Edition. Single unified image requires auth token. Free tier replaced with non-commercial-only tier requiring registration. Commercial use requires paid plan starting at $39/month",
-      "previous_state": "Open-source Community Edition: 30+ emulated AWS services (S3, Lambda, DynamoDB, etc.), no registration required, Docker image freely available",
-      "current_state": "Non-commercial free tier requires registration and auth token. Commercial use starts at $39/month. CI credits system introduced. OSS projects, students, and nonprofits get free access",
+      "summary": "On 2026-03-23 LocalStack ended support for its Community edition. From that date its latest image needed an account and an auth token, and its free plan, Hobby, was for non-commercial use. Commercial use needs a paid plan.",
+      "tier": "Free",
+      "tier_direction": "narrowed",
+      "previous_state": "Community edition: open source and free for anyone to use, with no account.",
+      "current_state": "Hobby, \"For hobbyists & other non-commercial usage\", free: 30+ emulated AWS services, 1 personal sandbox and test runs in CI, with a LocalStack account and auth token. Commercial use needs a paid plan.",
       "impact": "high",
       "source_url": "https://blog.localstack.cloud/the-road-ahead-for-localstack/",
       "category": "Testing",
@@ -2216,7 +2218,13 @@
       "category": "Testing",
       "alternatives": [],
       "recorded_date": "2026-04-12",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-10-02",
+        "detail": "Retracted 2026-10-02: no change on 2026-04-12. The Internet Archive's captures of localstack.cloud/pricing of 2026-03-23 and 2026-04-16 show the same free Hobby plan, for non-commercial use, and LocalStack said in March that the Community edition's source would stay on GitHub.",
+        "source_url": "https://web.archive.org/web/20260416133606/https://www.localstack.cloud/pricing"
+      }
     },
     {
       "vendor": "Xata Lite",
@@ -13718,6 +13726,20 @@
       "impact": "medium",
       "source_url": "https://www.certkit.io/pricing",
       "category": "Security",
+      "alternatives": [],
+      "recorded_date": "2026-10-02",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "LocalStack",
+      "change_type": "record_corrected",
+      "date": "2026-10-02",
+      "summary": "Data correction - LocalStack did not remove its free tier on 2026-03-23. It ended Community edition support and kept its free Hobby plan for non-commercial use. We had recorded a removal.",
+      "previous_state": "Recorded 2026-03-23 as a free tier removal, with commercial use from $39 a month",
+      "current_state": "Same date, recorded as a restriction: the latest image needs an account and an auth token, and the free Hobby plan is for non-commercial use",
+      "impact": "medium",
+      "source_url": "https://web.archive.org/web/20260323212006/https://www.localstack.cloud/pricing",
+      "category": "Testing",
       "alternatives": [],
       "recorded_date": "2026-10-02",
       "date_source": "hand_written"
