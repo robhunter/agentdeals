@@ -649,7 +649,8 @@
       "source_url": "https://www.localstack.cloud/pricing",
       "record_date": "2026-09-07",
       "change_type": "pricing_restructured",
-      "summary": "The Hobby plan is still available and free, but the details have been updated. The number of emulated services is still 30+, and it includes a personal sandbox and CI testing. However, the pricing for other tiers has changed (Base is now $39/month or $45/month, Ultimate is $89/month), and there are more detailed feature breakdowns for each tier. A 'Base' tier has been added at $29/month billed annually. There is also a LocalStack for Snowflake offering with its own tiers and pricing."
+      "summary": "The Hobby plan is still available and free, but the details have been updated. The number of emulated services is still 30+, and it includes a personal sandbox and CI testing. However, the pricing for other tiers has changed (Base is now $39/month or $45/month, Ultimate is $89/month), and there are more detailed feature breakdowns for each tier. A 'Base' tier has been added at $29/month billed annually. There is also a LocalStack for Snowflake offering with its own tiers and pricing.",
+      "reverted_on": "2026-10-03"
     },
     {
       "vendor": "Grafana k6 Cloud",
@@ -2452,7 +2453,8 @@
       "source_url": "https://www.apple.com/icloud/",
       "record_date": "2026-09-22",
       "change_type": "pricing_restructured",
-      "summary": "The page details iCloud+ with a free 5GB tier. Emphasizes paid plans for increased storage and features like Private Relay, Hide My Email, and HomeKit Secure Video. The free tier is now part of a broader iCloud+ ecosystem and is limited to 5GB of storage."
+      "summary": "The page details iCloud+ with a free 5GB tier. Emphasizes paid plans for increased storage and features like Private Relay, Hide My Email, and HomeKit Secure Video. The free tier is now part of a broader iCloud+ ecosystem and is limited to 5GB of storage.",
+      "reverted_on": "2026-10-03"
     },
     {
       "vendor": "Buildkite",

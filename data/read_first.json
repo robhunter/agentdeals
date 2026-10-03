@@ -47,6 +47,126 @@
     {
       "vendor": "Cursor",
       "tier": "Free"
+    },
+    {
+      "vendor": "LiveKit",
+      "tier": "Build"
+    },
+    {
+      "vendor": "Roboflow",
+      "tier": "Free"
+    },
+    {
+      "vendor": "Ollama Cloud",
+      "tier": "Free"
+    },
+    {
+      "vendor": "SerpApi",
+      "tier": "Free"
+    },
+    {
+      "vendor": "AWS Activate",
+      "tier": "Portfolio"
+    },
+    {
+      "vendor": "Qdrant",
+      "tier": "Free"
+    },
+    {
+      "vendor": "Unity DevOps",
+      "tier": "Free"
+    },
+    {
+      "vendor": "Upstash",
+      "tier": "Free"
+    },
+    {
+      "vendor": "Fizzy",
+      "tier": "Free"
+    },
+    {
+      "vendor": "Xata",
+      "tier": "Free"
+    },
+    {
+      "vendor": "Appetize",
+      "tier": "Free"
+    },
+    {
+      "vendor": "Netlify",
+      "tier": "Free"
+    },
+    {
+      "vendor": "Linear",
+      "tier": "Free"
+    },
+    {
+      "vendor": "TickTick",
+      "tier": "Free"
+    },
+    {
+      "vendor": "Sentry",
+      "tier": "Developer"
+    },
+    {
+      "vendor": "Sentry",
+      "tier": "OSS Sponsored"
+    },
+    {
+      "vendor": "Composio",
+      "tier": "Free"
+    },
+    {
+      "vendor": "Crowdin",
+      "tier": "Free"
+    },
+    {
+      "vendor": "Backblaze",
+      "tier": "Flamethrower"
+    },
+    {
+      "vendor": "Dub.co",
+      "tier": "Free"
+    },
+    {
+      "vendor": "DigitalPlat",
+      "tier": "Free"
+    },
+    {
+      "vendor": "GitHub Codespaces",
+      "tier": "Free"
+    },
+    {
+      "vendor": "Mintlify",
+      "tier": "Hobby"
+    },
+    {
+      "vendor": "Codemagic",
+      "tier": "Free"
+    },
+    {
+      "vendor": "Cron-job.org",
+      "tier": "Free"
+    },
+    {
+      "vendor": "Tally",
+      "tier": "Free"
+    },
+    {
+      "vendor": "Replit",
+      "tier": "Free"
+    },
+    {
+      "vendor": "Devin",
+      "tier": "Free"
+    },
+    {
+      "vendor": "PostHog",
+      "tier": "Free"
+    },
+    {
+      "vendor": "PostHog",
+      "tier": "YC Deal"
     }
   ]
 }
