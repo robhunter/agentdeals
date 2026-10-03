@@ -1,0 +1,48 @@
+name: Two runs of the 76 records the 2026-10-02 archive check dated, read as they were before it, with unquotable pairs asked twice
+
+on:
+  push:
+    branches:
+      - agree-2320
+
+permissions:
+  contents: read
+
+jobs:
+  settle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        run: [a, b]
+        shard: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24.20.0"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Settle run ${{ matrix.run }}, shard ${{ matrix.shard }} of 12
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+        run: node scripts/settle-discovered-records.js --vendors "Semgrep,DB-IP,Virgil Security,Zipcodestack,userforge.com,SweetUptime,UserCheck,leiga.com,codehooks.io,HeroUI,Grapedrop,Icon Horse,ScrumFast,Umso,TeleportHQ,tabler-icons.io,Shadcn Studio,Bench,Sendinblue,Augment Code,Directus,Unkey,Svix,Deepgram,Grafana k6 Cloud,OCR.Space,DhiWise,bitnami.com,serveravatar.com,Vaadin,Mockplus iDoc,formlets.com,geocodify.com,Liveblocks,Mediaworkbench.ai,PromoProxy,Firecrawl,Wufoo,positionstack,Currencyapi,Browserbase,Terragrunt Scale,serveo,Cloudflare KV,StatusCake,Grafana Cloud,clickup.com,Gcore DNS,Turbopuffer,Teamcamp,Uploadcare,Applitools Eyes,MEGA,Prisma Accelerate,Momento,bonsai.io,SiteDots,Storyblok,Tinybird,Gel,Grafana,Infisical,snappify,Cal.com,Braid,file.io,Expensify,Hasura,ScaleGrid Startup Program,The Intercom Early Stage Program,Scalr,Gatling,Proton Pass,Code Time,AppSignal,TraceLog" --shard ${{ matrix.shard }}/12 --log-reads --out settled-2320-${{ matrix.run }}-${{ matrix.shard }}.json
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: settled-2320-${{ matrix.run }}-${{ matrix.shard }}
+          path: |
+            settled-2320-${{ matrix.run }}-${{ matrix.shard }}.json
+            settled-2320-${{ matrix.run }}-${{ matrix.shard }}.jsonl
+          if-no-files-found: warn
