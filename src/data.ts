@@ -24,6 +24,8 @@ import { substitutesFor } from "./product-role.js";
 import { supersededTermsMeasure, supersededTermsRecordFor, type SupersededTermsMeasure, type SupersededTermsRecord } from "./superseded-description.js";
 import { restatementCensus, restatementRulings, withheldTermsMeasure, type RestatementCensus, type WithheldTermsMeasure } from "./restatement.js";
 import { isSubSlug, toSlug } from "./slug.js";
+import { vendorPhraseOfAnAlternativesQuery } from "./alternatives-query.js";
+import { substitutesListedFor } from "./vendor-substitutes.js";
 export { sanitizeQuery } from "./search-query.js";
 import { matchingSubject } from "./gate-disclosure.js";
 import { DATE_SOURCES, isEventDated, withDateMeaningDeclared, type DatedChange, changeDateClause, changeEntryDateLabel, isoWeekWindow, changesInWindow, discoveryBatchNote, coveringBracketedChanges, firstReadHeading, type DateWindow } from "./change-dates.js";
@@ -261,6 +263,13 @@ function scoreOffer(offer: Offer, terms: string[]): number {
   return score;
 }
 
+export function vendorWhoseAlternativesAQueryAsksFor(query: string): string | null {
+  const phrase = vendorPhraseOfAnAlternativesQuery(query);
+  if (!phrase) return null;
+  const slug = toSlug(phrase);
+  return loadOffers().find((offer) => toSlug(offer.vendor) === slug)?.vendor ?? null;
+}
+
 export function searchOffers(
   query?: string,
   category?: string,
@@ -300,6 +309,7 @@ export function searchOffers(
   }
 
   if (query) {
+    const filtered = results;
     const terms = query.toLowerCase().split(/\s+/);
     results = results.filter((offer) => {
       const searchable = [
@@ -319,6 +329,12 @@ export function searchOffers(
         scores.set(offer, scoreOffer(offer, terms));
       }
       results = [...results].sort((a, b) => scores.get(b)! - scores.get(a)!);
+    }
+
+    const askedAbout = vendorWhoseAlternativesAQueryAsksFor(query);
+    if (askedAbout) {
+      const listed = new Set(substitutesListedFor(askedAbout, loadDealChanges(), loadOffers()));
+      results = [...filtered.filter((offer) => listed.has(offer)), ...results.filter((offer) => !listed.has(offer))];
     }
   }
 
