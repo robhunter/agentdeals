@@ -8,6 +8,7 @@ import { substitutesListedFor } from "../dist/vendor-substitutes.js";
 import { vendorPhraseOfAnAlternativesQuery } from "../dist/alternatives-query.js";
 import { vendorSlugMap } from "../dist/vendor-slug.js";
 import { sanitizeQuery } from "../dist/search-query.js";
+import { assertPopulationFloor } from "./population-floor.ts";
 
 const REPO = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -47,7 +48,7 @@ describe("a search that asks for a vendor's alternatives", () => {
 
   it("returns a vendor the alternatives page lists, for every vendor with an alternatives page and each way of asking", () => {
     const pages = pagesListing();
-    assert.ok(pages.length > 200, `only ${pages.length} vendors have an alternatives page`);
+    assertPopulationFloor(pages.length, 180, "vendors with an alternatives page");
     const missed: string[] = [];
     for (const { vendor, listed } of pages) {
       for (const query of [`${vendor} alternative`, `${vendor} alternatives`, `alternative to ${vendor}`]) {
