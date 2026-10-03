@@ -15247,7 +15247,8 @@
       "category": "AI / ML",
       "alternatives": [],
       "recorded_date": "2026-10-03",
-      "date_source": "vendor_page"
+      "date_source": "vendor_page",
+      "tier": "Google Cloud $300 Welcome credit"
     },
     {
       "vendor": "Google Gemini API",
@@ -15261,7 +15262,8 @@
       "category": "AI / ML",
       "alternatives": [],
       "recorded_date": "2026-10-03",
-      "date_source": "vendor_page"
+      "date_source": "vendor_page",
+      "tier": "Gemini 2.5 models"
     }
   ]
 }
