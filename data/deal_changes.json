@@ -7464,14 +7464,7 @@
       "archive_check": {
         "checked": "2026-10-03",
         "outcome": "vendor_changed",
-        "brackets": [
-          {
-            "last_old": "2026-05-19",
-            "first_new": "2026-05-21",
-            "last_old_capture": "https://web.archive.org/web/20260519025153/https://polar.sh/",
-            "first_new_capture": "https://web.archive.org/web/20260521151410/https://polar.sh/"
-          }
-        ]
+        "brackets": []
       }
     },
     {
