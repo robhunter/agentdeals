@@ -244,16 +244,9 @@ describe("#1073 a superlative is graded against the page it is printed on", () =
 
   it("reads every superlative on the register out of rendered HTML", () => {
     let cards = 0;
-    let badges = 0;
-    for (const html of rendered.values()) {
-      cards += statCards(html).length;
-      for (const claim of superlativeClaims(html)) {
-        if (claim.kind === "badge") badges += 1;
-      }
-    }
+    for (const html of rendered.values()) cards += statCards(html).length;
     assertCoversPopulation(rendered.size, pagesOnTheReviewRegister(), "paths the sweep rendered");
     assertPopulationFloor(cards, 120, "stat cards the sweep reached");
-    assertPopulationFloor(badges, 30, "superlative row badges the sweep reached");
   });
 
   it("cards a section count the page's own navigation agrees with", () => {
@@ -390,7 +383,12 @@ describe("#1073 the check goes red on the cards this issue was filed for", () =>
   it("reports two winners when one column carries two superlatives", () => {
     const html = rendered.get("/serverless-free-tier-comparison-2026")!;
     const markup = `<td class="provider-col"><a href="/vendor/aws">AWS Lambda</a> <span class="winner-badge">MOST INVOCATIONS</span></td>`;
-    const found = contradictorySuperlatives(html.replace(`<a href="/vendor/aws" style="color:var(--text)">AWS Lambda</a>`, markup));
+    const unbadgedCell = `<td class="provider-col">Google Cloud Functions `;
+    assert.ok(html.includes(unbadgedCell), "the Traditional FaaS row for Google Cloud Functions is gone from the page");
+    const badgedCell = `${unbadgedCell}<span class="winner-badge">MOST FREE INVOCATIONS</span> `;
+    const found = contradictorySuperlatives(
+      html.replace(`<a href="/vendor/aws" style="color:var(--text)">AWS Lambda</a>`, markup).replace(unbadgedCell, badgedCell),
+    );
     assert.strictEqual(found.length, 1, `expected one contradicted column, got ${JSON.stringify(found)}`);
     assert.strictEqual(found[0]!.header, "Free Invocations");
     assert.deepStrictEqual(found[0]!.subjects, ["AWS Lambda", "Google Cloud Functions"]);

@@ -34621,7 +34621,7 @@ ${mcpCtaCss()}
       <li><a href="#serverless">Serverless Functions</a></li>
       <li><a href="#storage">Storage &amp; CDN</a></li>
       <li><a href="#startup-credits">Startup Credit Programs</a></li>
-      <li><a href="#best-for">Best for Each Use Case</a></li>
+      <li><a href="#best-for">By Use Case</a></li>
       <li><a href="#hidden-costs">Hidden Costs Comparison</a></li>
       <li><a href="#changes">Pricing Change Timeline</a></li>
       <li><a href="#data-source">Data Source</a></li>
@@ -34700,7 +34700,7 @@ ${mcpCtaCss()}
         <td style="color:#d29922">12 months only</td>
       </tr>
       <tr style="background:rgba(63,185,80,0.08)">
-        <td class="provider-col">GCP <span class="winner-badge">WINNER</span></td>
+        <td class="provider-col">GCP</td>
         <td>e2-micro VM</td>
         <td>2 shared vCPU, 1 GB RAM, 30 GB disk, us-* regions</td>
         <td style="color:#3fb950">Always free</td>
@@ -34776,7 +34776,7 @@ ${mcpCtaCss()}
         <td style="color:#3fb950">Always free</td>
       </tr>
       <tr style="background:rgba(63,185,80,0.08)">
-        <td class="provider-col">Azure <span class="winner-badge">BEST SQL</span></td>
+        <td class="provider-col">Azure</td>
         <td>Cosmos DB</td>
         <td>Multi-model NoSQL</td>
         <td>1,000 RU/s, 25 GB storage</td>
@@ -34817,14 +34817,14 @@ ${mcpCtaCss()}
     </thead>
     <tbody>
       <tr style="background:rgba(63,185,80,0.08)">
-        <td class="provider-col">AWS <span class="winner-badge">BEST ECOSYSTEM</span></td>
+        <td class="provider-col">AWS</td>
         <td>Lambda</td>
         <td>1M requests/mo</td>
         <td>400K GB-seconds</td>
         <td style="color:#3fb950">Always free</td>
       </tr>
       <tr style="background:rgba(63,185,80,0.08)">
-        <td class="provider-col">GCP <span class="winner-badge">MOST GENEROUS</span></td>
+        <td class="provider-col">GCP</td>
         <td>Cloud Functions</td>
         <td>2M invocations/mo</td>
         <td>400K GB-seconds, 200K GHz-seconds</td>
@@ -34956,7 +34956,7 @@ ${mcpCtaCss()}
     <strong>Microsoft for Startups needs no investor:</strong> B2B tech startups start at $200 and can reach $150K with Azure usage. GCP offers up to $350K to AI-first startups and needs VC funding. AWS Activate Portfolio needs an Activate Provider Org ID.
   </div>
 
-  <h2 id="best-for">Best for Each Use Case</h2>
+  <h2 id="best-for">By Use Case</h2>
 
   <div class="verdict-box">
     <h3>When to Pick Each Cloud</h3>
@@ -35246,7 +35246,7 @@ ${mcpCtaCss()}
       <li><a href="#edge">Edge / Embedded</a></li>
       <li><a href="#kv">Key-Value / Cache</a></li>
       <li><a href="#vector">Vector Databases</a></li>
-      <li><a href="#best-for">Best for Each Use Case</a></li>
+      <li><a href="#best-for">By Use Case</a></li>
       <li><a href="#planetscale">The PlanetScale Cautionary Tale</a></li>
       <li><a href="#changes">Pricing Change Timeline</a></li>
       <li><a href="#data-source">Data Source</a></li>
@@ -35272,7 +35272,7 @@ ${mcpCtaCss()}
     </thead>
     <tbody>
       <tr style="background:rgba(63,185,80,0.08)">
-        <td class="provider-col"><a href="/vendor/supabase" style="color:var(--text)">Supabase</a> <span class="winner-badge">BEST ALL-IN-ONE</span></td>
+        <td class="provider-col"><a href="/vendor/supabase" style="color:var(--text)">Supabase</a></td>
         <td>Postgres + BaaS</td>
         <td style="font-family:var(--mono)">500 MB</td>
         <td>Unlimited API requests, pooled connections</td>
@@ -35282,7 +35282,7 @@ ${mcpCtaCss()}
         <td style="color:#3fb950">Low (standard Postgres)</td>
       </tr>
       <tr style="background:rgba(63,185,80,0.08)">
-        <td class="provider-col"><a href="/vendor/neon" style="color:var(--text)">Neon</a> <span class="winner-badge">BEST POSTGRES</span></td>
+        <td class="provider-col"><a href="/vendor/neon" style="color:var(--text)">Neon</a></td>
         <td>Serverless Postgres</td>
         <td style="font-family:var(--mono)">1 GB/project</td>
         <td>100 CU-hours/mo, scale-to-zero</td>
@@ -35387,7 +35387,7 @@ ${mcpCtaCss()}
     </thead>
     <tbody>
       <tr style="background:rgba(63,185,80,0.08)">
-        <td class="provider-col">Supabase <span class="winner-badge">MOST COMPLETE</span></td>
+        <td class="provider-col">Supabase</td>
         <td style="font-family:var(--mono)">500 MB</td>
         <td>Shared instance, always-on</td>
         <td class="cross">No</td>
@@ -35396,7 +35396,7 @@ ${mcpCtaCss()}
         <td>Full-stack apps</td>
       </tr>
       <tr style="background:rgba(63,185,80,0.08)">
-        <td class="provider-col">Neon <span class="winner-badge">BEST DX</span></td>
+        <td class="provider-col">Neon</td>
         <td style="font-family:var(--mono)">1 GB/project</td>
         <td>100 CU-hours/mo, auto-scales</td>
         <td class="check">10 branches/project</td>
@@ -35499,7 +35499,7 @@ ${mcpCtaCss()}
     </thead>
     <tbody>
       <tr style="background:rgba(63,185,80,0.08)">
-        <td class="provider-col">Turso <span class="winner-badge">BEST EDGE DB</span></td>
+        <td class="provider-col">Turso</td>
         <td>libSQL (SQLite fork)</td>
         <td style="font-family:var(--mono)">5 GB</td>
         <td>500M rows/mo</td>
@@ -35547,7 +35547,7 @@ ${mcpCtaCss()}
     </thead>
     <tbody>
       <tr style="background:rgba(63,185,80,0.08)">
-        <td class="provider-col">Upstash <span class="winner-badge">BEST SERVERLESS</span></td>
+        <td class="provider-col">Upstash</td>
         <td>Redis-compatible</td>
         <td style="font-family:var(--mono)">256 MB</td>
         <td>500K commands/mo</td>
@@ -35637,7 +35637,7 @@ ${mcpCtaCss()}
     <strong>For self-hosted:</strong> Weaviate and LanceDB are both fully open-source with no limits when you run them yourself &mdash; Weaviate Cloud's Free Forever tier is a separate, bounded offer (1 cluster, 100,000 objects, 1 collection). <strong>For managed:</strong> Zilliz Cloud has the most generous free tier (5 GB storage, 5 collections). Upstash Vector is the simplest to set up (serverless, 200M vectors &times; dimensions free) but its 10K daily query and update cap is what limits it for production workloads. If you're building RAG pipelines, Zilliz or self-hosted Weaviate are the strongest options.
   </div>
 
-  <h2 id="best-for">Best for Each Use Case</h2>
+  <h2 id="best-for">By Use Case</h2>
 
   <div class="verdict-box">
     <h3>When to Pick Each Database</h3>
@@ -36567,7 +36567,7 @@ ${mcpCtaCss()}
       <li><a href="#full-service">Full-Service Serverless (Cloud Run, App Runner)</a></li>
       <li><a href="#specialized">Specialized Serverless (Val Town, DBOS, Inngest, Trigger.dev)</a></li>
       <li><a href="#billing-gotcha">The Billing Gotcha: CPU-Time vs Wall-Clock-Time</a></li>
-      <li><a href="#best-for">Best for Each Use Case</a></li>
+      <li><a href="#best-for">By Use Case</a></li>
       <li><a href="#hidden-costs">Hidden Costs and Gotchas</a></li>
       <li><a href="#changes">Pricing Change Timeline</a></li>
       <li><a href="#data-source">Data Source</a></li>
@@ -36623,7 +36623,7 @@ ${mcpCtaCss()}
         <td style="color:#3fb950">Yes (Always Free)</td>
       </tr>
       <tr style="background:rgba(63,185,80,0.08)">
-        <td class="provider-col"><a href="/vendor/google-cloud" style="color:var(--text)">Google Cloud Run</a> <span class="winner-badge">MOST GENEROUS</span></td>
+        <td class="provider-col"><a href="/vendor/google-cloud" style="color:var(--text)">Google Cloud Run</a></td>
         <td style="font-family:var(--mono)">2M / month</td>
         <td style="font-family:var(--mono)">360K GB-sec + 180K vCPU-sec</td>
         <td>Up to 32 GB / 8 vCPU</td>
@@ -36633,7 +36633,7 @@ ${mcpCtaCss()}
         <td style="color:#3fb950">Yes (Always Free)</td>
       </tr>
       <tr style="background:rgba(63,185,80,0.08)">
-        <td class="provider-col"><a href="/vendor/cloudflare-workers" style="color:var(--text)">Cloudflare Workers</a> <span class="winner-badge">BEST EDGE</span></td>
+        <td class="provider-col"><a href="/vendor/cloudflare-workers" style="color:var(--text)">Cloudflare Workers</a></td>
         <td style="font-family:var(--mono)">100K / day (~3M/mo)</td>
         <td style="font-family:var(--mono)">10ms CPU time / invocation</td>
         <td>128 MB RAM</td>
@@ -36727,7 +36727,7 @@ ${mcpCtaCss()}
     </thead>
     <tbody>
       <tr style="background:rgba(63,185,80,0.08)">
-        <td class="provider-col">AWS Lambda <span class="winner-badge">LARGEST ECOSYSTEM</span></td>
+        <td class="provider-col">AWS Lambda</td>
         <td style="font-family:var(--mono)">1M / month</td>
         <td style="font-family:var(--mono)">400K GB-sec</td>
         <td>API Gateway, DynamoDB, S3, SQS, SNS, EventBridge</td>
@@ -36735,7 +36735,7 @@ ${mcpCtaCss()}
         <td>AWS-native backends, event-driven architectures</td>
       </tr>
       <tr style="background:rgba(63,185,80,0.08)">
-        <td class="provider-col">Google Cloud Functions <span class="winner-badge">MOST FREE INVOCATIONS</span></td>
+        <td class="provider-col">Google Cloud Functions</td>
         <td style="font-family:var(--mono)">2M / month</td>
         <td style="font-family:var(--mono)">400K GB-sec + 200K GHz-sec</td>
         <td>Cloud Run, Firestore, Pub/Sub, Cloud Storage</td>
@@ -36775,7 +36775,7 @@ ${mcpCtaCss()}
     </thead>
     <tbody>
       <tr style="background:rgba(63,185,80,0.08)">
-        <td class="provider-col">Cloudflare Workers <span class="winner-badge">BEST EDGE</span></td>
+        <td class="provider-col">Cloudflare Workers</td>
         <td>100K req/day, 10ms CPU/req</td>
         <td>&lt;5ms</td>
         <td>V8 isolates (JS/TS/Wasm)</td>
@@ -36823,7 +36823,7 @@ ${mcpCtaCss()}
     </thead>
     <tbody>
       <tr style="background:rgba(63,185,80,0.08)">
-        <td class="provider-col">Google Cloud Run <span class="winner-badge">BEST CONTAINER SERVERLESS</span></td>
+        <td class="provider-col">Google Cloud Run</td>
         <td>2M req/mo, 360K GB-sec, 180K vCPU-sec</td>
         <td class="check">Any Docker image</td>
         <td>Up to 1000 concurrent per instance</td>
@@ -36924,7 +36924,7 @@ ${mcpCtaCss()}
     At scale (1M requests/month), this difference is significant. The Lambda function uses ~46 GB-seconds per million requests. The Workers function uses ~10,000ms (10 seconds) of total CPU per million requests — well within the free tier&rsquo;s 10ms-per-request limit. <strong>For I/O-heavy APIs, Workers can be effectively 10-50x cheaper than Lambda.</strong>
   </div>
 
-  <h2 id="best-for">Best for Each Use Case</h2>
+  <h2 id="best-for">By Use Case</h2>
 
   <div class="verdict-box">
     <h3>When to Pick Each Serverless Platform</h3>
@@ -38056,7 +38056,7 @@ ${mcpCtaCss()}
       <li><a href="#infrastructure">SMTP Infrastructure</a></li>
       <li><a href="#self-hosted">Self-Hosted Email</a></li>
       <li><a href="#cost-trap">Growth Cost Trap</a></li>
-      <li><a href="#best-for">Best for Each Use Case</a></li>
+      <li><a href="#best-for">By Use Case</a></li>
       <li><a href="#hidden-costs">Hidden Costs &amp; Gotchas</a></li>
       <li><a href="#changes">Pricing Change Timeline</a></li>
       <li><a href="#data-source">Data Source</a></li>
@@ -38096,7 +38096,7 @@ ${mcpCtaCss()}
         <td><span style="color:#f85149">Volatile</span></td>
       </tr>
       <tr>
-        <td class="provider-col">Resend<span class="winner-badge">BEST DX</span></td>
+        <td class="provider-col">Resend</td>
         <td>Transactional</td>
         <td>3,000/mo</td>
         <td>100/day</td>
@@ -38108,7 +38108,7 @@ ${mcpCtaCss()}
         <td><span style="color:#3fb950">Stable</span></td>
       </tr>
       <tr>
-        <td class="provider-col">Maileroo<span class="winner-badge">HIDDEN GEM</span></td>
+        <td class="provider-col">Maileroo</td>
         <td>Transactional</td>
         <td>3,000/mo</td>
         <td>None</td>
@@ -38120,7 +38120,7 @@ ${mcpCtaCss()}
         <td><span style="color:#3fb950">Stable</span></td>
       </tr>
       <tr>
-        <td class="provider-col">Mailtrap<span class="winner-badge">BEST TESTING</span></td>
+        <td class="provider-col">Mailtrap</td>
         <td>Transactional + Testing</td>
         <td>4,000/mo (sending)</td>
         <td>150/day</td>
@@ -38144,7 +38144,7 @@ ${mcpCtaCss()}
         <td><span style="color:#d29922">Watch</span></td>
       </tr>
       <tr>
-        <td class="provider-col">Brevo<span class="winner-badge">BEST ALL-IN-ONE</span></td>
+        <td class="provider-col">Brevo</td>
         <td>All-in-One</td>
         <td>300/day (~9K/mo)</td>
         <td>300/day</td>
@@ -38216,7 +38216,7 @@ ${mcpCtaCss()}
         <td><span style="color:#d29922">Watch</span></td>
       </tr>
       <tr>
-        <td class="provider-col">EmailOctopus<span class="winner-badge">BEST NEWSLETTER</span></td>
+        <td class="provider-col">EmailOctopus</td>
         <td>Marketing</td>
         <td>10,000/mo</td>
         <td>N/A</td>
@@ -38348,12 +38348,12 @@ ${mcpCtaCss()}
   </div>
 
   <div class="diff-card">
-    <h3>Resend <span class="winner-badge">BEST DX</span></h3>
+    <h3>Resend</h3>
     <div class="diff-desc"><strong>Free tier:</strong> 3,000 emails/month, 100/day cap, 3 custom domains. Created by the team behind React Email. Modern REST API with excellent TypeScript SDK, React component-based email templates, and real-time delivery webhooks. Batch sending support. The daily cap (100/day) is the main constraint &mdash; you can't burst-send a newsletter. Best for developers building modern web apps who want the cleanest API experience.</div>
   </div>
 
   <div class="diff-card">
-    <h3>Maileroo <span class="winner-badge">HIDDEN GEM</span></h3>
+    <h3>Maileroo</h3>
     <div class="diff-desc"><strong>Free tier:</strong> 3,000 emails/month with no daily cap. REST API and SMTP relay. Custom domain support, delivery tracking, and webhooks. Relatively new entrant matching Resend on monthly volume and clearing MailerSend's free plan six times over, with no daily sending limit. Worth evaluating for early-stage projects that need burst capacity. Good email verification built in.</div>
   </div>
 
@@ -38386,7 +38386,7 @@ ${mcpCtaCss()}
   <p class="section-intro">Platforms that combine marketing email (newsletters, campaigns) with transactional email (triggered messages) in one product. Ideal for startups that want one vendor for all email needs.</p>
 
   <div class="diff-card">
-    <h3>Brevo (formerly Sendinblue) <span class="winner-badge">BEST ALL-IN-ONE</span></h3>
+    <h3>Brevo (formerly Sendinblue)</h3>
     <div class="diff-desc"><strong>Free tier:</strong> 300 emails/day permanent free tier (no monthly cap). Marketing automation, transactional email, SMS, WhatsApp, and CRM in one platform. The daily cap works well for steady-state sending (welcome emails, password resets) but limits burst sending. At 300/day, you get ~9,000/month &mdash; more than enough for most early-stage projects. The most feature-complete free tier in this category.</div>
   </div>
 
@@ -38409,7 +38409,7 @@ ${mcpCtaCss()}
   <p class="section-intro">Platforms focused on subscriber management, campaigns, and newsletter delivery. Pricing based on contacts/subscribers rather than email volume.</p>
 
   <div class="diff-card">
-    <h3>EmailOctopus <span class="winner-badge">BEST NEWSLETTER</span></h3>
+    <h3>EmailOctopus</h3>
     <div class="diff-desc"><strong>Free tier:</strong> 2,500 subscribers, 10,000 emails/month. Simple, affordable email marketing. Uses Amazon SES under the hood for reliable delivery. Landing pages and forms included. The most generous subscriber-to-email ratio in the free tier category. Best for newsletters and content creators who want simplicity over features.</div>
   </div>
 
@@ -38509,7 +38509,7 @@ ${mcpCtaCss()}
   <p class="section-intro">Tools for testing email delivery, inspecting message content, and simulating inboxes without sending to real recipients.</p>
 
   <div class="diff-card">
-    <h3>Mailtrap <span class="winner-badge">BEST TESTING</span></h3>
+    <h3>Mailtrap</h3>
     <div class="diff-desc"><strong>Free tier:</strong> three separate free products. Email API/SMTP: 4,000 emails/month with a 150/day cap, 1 domain, 3-day log retention. Email Sandbox (testing): 50 test emails/month, 1 sandbox. Email Marketing: 1,500 emails/month, 500 contacts. The testing product captures emails in a virtual inbox, lets you inspect HTML/text/headers, check spam scores, and validate links. The sending product is a separate service for production delivery. Best for development teams who need proper email QA workflows.</div>
   </div>
 
@@ -38606,7 +38606,7 @@ ${mcpCtaCss()}
   <p class="section-intro">Run your own mail server for unlimited volume and full control. The free-forever option &mdash; but email deliverability is hard.</p>
 
   <div class="diff-card">
-    <h3>Postal <span class="winner-badge">BEST SELF-HOSTED</span></h3>
+    <h3>Postal</h3>
     <div class="diff-desc"><strong>Cost:</strong> Free, open-source. Full-featured mail delivery platform with web UI, click/open tracking, webhook notifications, IP pool management, and multi-organization support. Built for transactional email at scale. The most complete self-hosted alternative to SendGrid. Requires dedicated IP with clean reputation and proper DNS (SPF, DKIM, DMARC) setup.</div>
   </div>
 
@@ -38722,7 +38722,7 @@ ${mcpCtaCss()}
     <strong>Contact-based vs email-based pricing:</strong> Marketing platforms (Mailchimp, MailerLite, EmailOctopus) charge per <strong>subscriber count</strong>, not email volume. At 10,000 subscribers, Mailchimp costs $100/mo regardless of how many emails you send. MailerLite costs $50/mo. This model punishes large lists with low engagement. Clean your list regularly &mdash; inactive subscribers cost money without generating value.
   </div>
 
-  <h2 id="best-for">Best for Each Use Case</h2>
+  <h2 id="best-for">By Use Case</h2>
 
   <div class="verdict-box">
     <h3>Recommendations by Use Case</h3>
@@ -39025,7 +39025,7 @@ ${mcpCtaCss()}
       <li><a href="#cron-monitoring">Cron &amp; Job Monitoring</a></li>
       <li><a href="#self-hosted">Self-Hosted / Open Source</a></li>
       <li><a href="#cost-trap">The Observability Cost Trap</a></li>
-      <li><a href="#best-for">Best for Each Use Case</a></li>
+      <li><a href="#best-for">By Use Case</a></li>
       <li><a href="#hidden-costs">Hidden Costs and Gotchas</a></li>
       <li><a href="#changes">Pricing Change Timeline</a></li>
       <li><a href="#data-source">Data Source</a></li>
@@ -39067,7 +39067,7 @@ ${mcpCtaCss()}
         <td><span style="color:#f85149">High</span></td>
       </tr>
       <tr>
-        <td class="provider-col">Grafana Cloud<span class="winner-badge">BEST OVERALL</span></td>
+        <td class="provider-col">Grafana Cloud</td>
         <td>10K series + 50GB logs + 50GB traces</td>
         <td>14 days</td>
         <td>14 days</td>
@@ -39171,7 +39171,7 @@ ${mcpCtaCss()}
         <td><span style="color:#3fb950">Low</span></td>
       </tr>
       <tr>
-        <td class="provider-col">UptimeRobot<span class="winner-badge">SIMPLEST</span></td>
+        <td class="provider-col">UptimeRobot</td>
         <td>N/A</td>
         <td>N/A</td>
         <td>N/A</td>
@@ -39301,7 +39301,7 @@ ${mcpCtaCss()}
         <td><span style="color:#3fb950">None</span></td>
       </tr>
       <tr>
-        <td class="provider-col">SigNoz<span class="winner-badge">MODERN OSS</span></td>
+        <td class="provider-col">SigNoz</td>
         <td>Unlimited (self-hosted)</td>
         <td>Configurable</td>
         <td>Configurable</td>
@@ -39327,7 +39327,7 @@ ${mcpCtaCss()}
         <td><span style="color:#3fb950">None</span></td>
       </tr>
       <tr>
-        <td class="provider-col">Checkly<span class="winner-badge">BEST SYNTHETIC</span></td>
+        <td class="provider-col">Checkly</td>
         <td>N/A</td>
         <td>N/A</td>
         <td>N/A</td>
@@ -39378,7 +39378,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="diff-card">
-    <h3>Grafana Cloud <span class="winner-badge">BEST FREE TIER</span></h3>
+    <h3>Grafana Cloud</h3>
     <div class="diff-desc"><strong>Free tier:</strong> 10,000 metric series (Prometheus), 50GB logs (Loki), 50GB traces (Tempo), 14-day retention, 3 users, unlimited dashboards, alerting included. By far the most generous free tier in full-stack observability. Built on open-source Grafana, Prometheus, Loki, and Tempo &mdash; so your queries and dashboards are portable. 3-user limit is the main constraint for teams.</div>
   </div>
 
@@ -39398,7 +39398,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="diff-card">
-    <h3>Elastic (ELK Stack) <span class="winner-badge">ENTERPRISE OSS</span></h3>
+    <h3>Elastic (ELK Stack)</h3>
     <div class="diff-desc"><strong>Free tier:</strong> Unlimited (self-hosted, AGPL-licensed). Elasticsearch for search and analytics, Kibana for visualization, Elastic APM for application performance monitoring, Filebeat/Logstash for log ingestion. The most feature-complete open-source observability stack. Supports logs, metrics, traces, and APM in a single platform. Cloud (Elastic Cloud) has a 14-day free trial, then ~$95/mo for the cheapest tier. The self-hosted cost is pure infrastructure. Downside: resource-hungry &mdash; Elasticsearch needs significant RAM (16GB+ recommended for production).</div>
   </div>
 
@@ -39416,7 +39416,7 @@ ${mcpCtaCss()}
   <p class="section-intro">Specialized tools for catching application errors, performance issues, and user-facing problems.</p>
 
   <div class="diff-card">
-    <h3>Sentry <span class="winner-badge">BEST ERROR TRACKING</span></h3>
+    <h3>Sentry</h3>
     <div class="diff-desc"><strong>Free tier (Developer):</strong> 5,000 errors/month, 50 session replays, 5M spans/month, 5 GB logs, 1 user. 30 days retention &mdash; the 90-day lookback is the Team plan. Supports 30+ platforms. Source map support, breadcrumbs, and issue grouping included. The de facto standard for error tracking. Self-hosted option available for unlimited scale.</div>
   </div>
 
@@ -39452,7 +39452,7 @@ ${mcpCtaCss()}
     </thead>
     <tbody>
       <tr>
-        <td class="provider-col">UptimeRobot<span class="winner-badge">MOST MONITORS</span></td>
+        <td class="provider-col">UptimeRobot</td>
         <td>50</td>
         <td>5 min</td>
         <td>Email, webhook</td>
@@ -39508,7 +39508,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
       </tr>
       <tr>
-        <td class="provider-col">Checkly<span class="winner-badge">SYNTHETIC</span></td>
+        <td class="provider-col">Checkly</td>
         <td>5 browser + 10 API</td>
         <td>1 min</td>
         <td>Email, Slack, PagerDuty, OpsGenie</td>
@@ -39520,7 +39520,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="diff-card">
-    <h3>Checkly <span class="winner-badge">BEST SYNTHETIC</span></h3>
+    <h3>Checkly</h3>
     <div class="diff-desc"><strong>Free tier:</strong> 5 browser checks (Playwright-based), 10 API checks, 1-min check interval from 20+ global locations. Monitoring-as-code: define checks in JavaScript/TypeScript, version in git, deploy via CLI. Integrates with Vercel, GitHub Actions, and Terraform. The only free synthetic monitoring tool with full Playwright browser automation &mdash; test real user flows, not just pings.</div>
   </div>
 
@@ -39558,7 +39558,7 @@ ${mcpCtaCss()}
     </thead>
     <tbody>
       <tr>
-        <td class="provider-col">Healthchecks.io<span class="winner-badge">BEST VALUE</span></td>
+        <td class="provider-col">Healthchecks.io</td>
         <td>20</td>
         <td>3</td>
         <td>Email, Slack, webhooks, + 20 more</td>
@@ -39593,7 +39593,7 @@ ${mcpCtaCss()}
   <p class="section-intro">Zero vendor lock-in, unlimited scale, but you own the infrastructure and operations.</p>
 
   <div class="diff-card">
-    <h3>Prometheus + Grafana <span class="winner-badge">MOST MATURE</span></h3>
+    <h3>Prometheus + Grafana</h3>
     <div class="diff-desc"><strong>Cost:</strong> Free (infrastructure costs only). The industry-standard metrics pipeline. Prometheus scrapes and stores time-series metrics; Grafana visualizes them. Default 15-day retention (configurable). PromQL is the most widely supported query language in monitoring. Add Alertmanager for alerting. Operates at massive scale (millions of time series). Downside: no built-in log management &mdash; pair with Loki or ELK.</div>
   </div>
 
@@ -39603,7 +39603,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="diff-card">
-    <h3>SigNoz <span class="winner-badge">MODERN ALL-IN-ONE</span></h3>
+    <h3>SigNoz</h3>
     <div class="diff-desc"><strong>Cost:</strong> Free self-hosted (open-source, Apache 2.0 or AGPL depending on features). Single binary with metrics, logs, and traces powered by ClickHouse and OpenTelemetry. The closest open-source equivalent to Datadog &mdash; single pane of glass with correlated metrics/logs/traces, APM dashboards, and alerting. OpenTelemetry-native (no vendor SDK). Cloud tier starts at $199/mo. Best for teams wanting a Datadog-like experience without Datadog pricing.</div>
   </div>
 
@@ -39694,7 +39694,7 @@ ${mcpCtaCss()}
     <strong>The 1-day retention trap:</strong> Datadog's free tier retains metrics for only <strong>1 day</strong>. This means you literally cannot: look at last week's CPU trends, compare this Monday to last Monday, investigate an incident that happened yesterday afternoon, or do any capacity planning. Most serious monitoring requires at least 7-14 days of retention. Grafana Cloud offers 14 days free; New Relic offers 8 days for metrics and 30 days for logs; Axiom offers 30 days.
   </div>
 
-  <h2 id="best-for">Best for Each Use Case</h2>
+  <h2 id="best-for">By Use Case</h2>
 
   <div class="verdict-box">
     <h3>Recommendations by Use Case</h3>
@@ -40060,7 +40060,7 @@ ${mcpCtaCss()}
       <li><a href="#decentralized">Decentralized Storage</a></li>
       <li><a href="#cost-trap">Growth Cost Trap: Scaling from Free to Enterprise</a></li>
       <li><a href="#s3-egress-tax">The S3 Egress Tax</a></li>
-      <li><a href="#best-for">Best for Each Use Case</a></li>
+      <li><a href="#best-for">By Use Case</a></li>
       <li><a href="#hidden-costs">Hidden Costs and Gotchas</a></li>
       <li><a href="#changes">Pricing Change Timeline</a></li>
       <li><a href="#data-source">Data Source</a></li>
@@ -40196,7 +40196,7 @@ ${mcpCtaCss()}
         <td>Included</td>
       </tr>
       <tr>
-        <td class="provider-col">Cloudinary<span class="winner-badge">BEST MEDIA</span></td>
+        <td class="provider-col">Cloudinary</td>
         <td>Media CDN</td>
         <td>25 credits/mo</td>
         <td>25 credits/mo</td>
@@ -40256,7 +40256,7 @@ ${mcpCtaCss()}
         <td>Gateway</td>
       </tr>
       <tr>
-        <td class="provider-col">MinIO<span class="winner-badge">SELF-HOSTED</span></td>
+        <td class="provider-col">MinIO</td>
         <td>Self-hosted</td>
         <td>Unlimited</td>
         <td>Unlimited</td>
@@ -40343,7 +40343,7 @@ ${mcpCtaCss()}
     </thead>
     <tbody>
       <tr>
-        <td class="provider-col">Cloudinary<span class="winner-badge">BEST MEDIA</span></td>
+        <td class="provider-col">Cloudinary</td>
         <td>25 credits/mo (~25K transforms or 25 GB delivery)</td>
         <td class="check">&#10003; 100+ transforms</td>
         <td>Global</td>
@@ -40403,7 +40403,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="diff-card">
-    <h3>Cloudinary <span class="winner-badge">BEST MEDIA</span></h3>
+    <h3>Cloudinary</h3>
     <div class="diff-desc"><strong>Free tier:</strong> 25 credits/month. Credits are a unified currency: 1 credit = 1,000 transformations OR 1 GB managed storage OR 1 GB delivery bandwidth. Over 100 real-time image/video transformations: resize, crop, format conversion, face detection, background removal, AI tagging. Global CDN with automatic format optimization (WebP, AVIF). <strong>Gotcha:</strong> the credit system is confusing &mdash; 1 credit &ne; 1 GB in all cases, and some transformations cost more credits. Best for media-heavy apps that need on-the-fly optimization.</div>
   </div>
 
@@ -40444,7 +40444,7 @@ ${mcpCtaCss()}
   <p class="section-intro">Run your own object storage. Unlimited capacity, zero egress fees, full control &mdash; if you have the infrastructure and ops capability.</p>
 
   <div class="diff-card">
-    <h3>MinIO <span class="winner-badge">INDUSTRY STANDARD</span></h3>
+    <h3>MinIO</h3>
     <div class="diff-desc"><strong>Cost:</strong> Free, open-source (GNU AGPL v3). The most widely deployed S3-compatible object storage. Single binary, runs anywhere (Docker, Kubernetes, bare metal). Enterprise features: erasure coding, bitrot protection, encryption at rest, IAM policies, bucket versioning, cross-region replication. Active development with frequent releases. The default choice for any self-hosted S3-compatible storage need.</div>
   </div>
 
@@ -40533,7 +40533,7 @@ ${mcpCtaCss()}
     <strong>Minimum storage duration charges:</strong> S3 Infrequent Access: 30-day minimum. S3 Glacier: 90-day minimum. Upload a file, delete it next day &mdash; you still pay for the full period. Azure Cool tier: 30-day minimum. GCS Nearline: 30 days, Coldline: 90 days. This catches teams using tiered storage for build artifacts, temp uploads, or short-lived files.
   </div>
 
-  <h2 id="best-for">Best for Each Use Case</h2>
+  <h2 id="best-for">By Use Case</h2>
 
   <div class="verdict-box">
     <h3>Recommendations by Use Case</h3>
@@ -40840,7 +40840,7 @@ ${mcpCtaCss()}
       <li><a href="#local-dev">Local Development &amp; Emulation</a></li>
       <li><a href="#code-quality">Code Quality &amp; Coverage</a></li>
       <li><a href="#cost-trap">The Testing Cost Trap</a></li>
-      <li><a href="#best-for">Best for Each Use Case</a></li>
+      <li><a href="#best-for">By Use Case</a></li>
       <li><a href="#hidden-costs">Hidden Costs and Gotchas</a></li>
       <li><a href="#changes">Pricing Change Timeline</a></li>
       <li><a href="#data-source">Data Source</a></li>
@@ -40866,7 +40866,7 @@ ${mcpCtaCss()}
     </thead>
     <tbody>
       <tr>
-        <td class="provider-col">Playwright<span class="winner-badge">BEST FREE E2E</span></td>
+        <td class="provider-col">Playwright</td>
         <td>Unlimited (OSS)</td>
         <td class="check">&#10003; Apache 2.0</td>
         <td class="partial">&#9679; Via third-party</td>
@@ -40906,7 +40906,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
       </tr>
       <tr>
-        <td class="provider-col">Checkly<span class="winner-badge">BEST CLOUD FREE</span></td>
+        <td class="provider-col">Checkly</td>
         <td>50K API checks + 10 browser/mo</td>
         <td class="partial">&#9679; CLI OSS</td>
         <td class="check">&#10003;</td>
@@ -40916,7 +40916,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
       </tr>
       <tr>
-        <td class="provider-col">Chromatic<span class="winner-badge">BEST VISUAL</span></td>
+        <td class="provider-col">Chromatic</td>
         <td>5K snapshots/mo</td>
         <td class="cross">&#10007;</td>
         <td class="check">&#10003;</td>
@@ -40936,7 +40936,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
       </tr>
       <tr>
-        <td class="provider-col">Grafana k6 Cloud<span class="winner-badge">BEST LOAD TEST</span></td>
+        <td class="provider-col">Grafana k6 Cloud</td>
         <td>500 VU hours/mo</td>
         <td class="check">&#10003; AGPL (CLI)</td>
         <td class="check">&#10003;</td>
@@ -41033,7 +41033,7 @@ ${mcpCtaCss()}
   <p class="section-intro">End-to-end testing frameworks and cloud browser testing platforms. The frameworks are free; the cloud platforms charge for parallel execution and cross-browser coverage.</p>
 
   <div class="diff-card">
-    <h3>Playwright <span class="winner-badge">BEST FREE E2E</span></h3>
+    <h3>Playwright</h3>
     <div class="diff-desc"><strong>Free tier:</strong> Fully open-source (Apache 2.0), unlimited use. Microsoft-backed. Supports Chromium, Firefox, and WebKit. Built-in parallel execution, auto-waiting, codegen, trace viewer, and test generator. Native CI/CD integration with GitHub Actions, GitLab CI, and more. No cloud account required &mdash; everything runs locally or in your own CI. The only cost is your own CI compute minutes. Best for teams that want a modern, batteries-included E2E framework with zero vendor lock-in.</div>
   </div>
 
@@ -41066,7 +41066,7 @@ ${mcpCtaCss()}
   <p class="section-intro">Tools that detect unintended visual changes by comparing screenshots across builds. Critical for component libraries, design systems, and UI-heavy applications.</p>
 
   <div class="diff-card">
-    <h3>Chromatic <span class="winner-badge">BEST VISUAL</span></h3>
+    <h3>Chromatic</h3>
     <div class="diff-desc"><strong>Free tier:</strong> 5,000 snapshots/month, Chrome-only (Firefox/Safari on paid). Built by the Storybook team &mdash; the tightest integration with Storybook of any visual testing tool. Turbosnap optimization skips unchanged components, stretching the free tier further. Snapshots include interaction testing (click, type, hover) and accessibility checks. Best for teams using Storybook who want native visual regression without additional tooling.</div>
   </div>
 
@@ -41089,7 +41089,7 @@ ${mcpCtaCss()}
   <p class="section-intro">Tools for simulating concurrent users and measuring application performance under load. Open-source CLIs are fully free; cloud platforms charge for distributed execution.</p>
 
   <div class="diff-card">
-    <h3>Grafana k6 Cloud <span class="winner-badge">BEST LOAD TEST</span></h3>
+    <h3>Grafana k6 Cloud</h3>
     <div class="diff-desc"><strong>Free tier:</strong> 500 virtual user hours (VUh)/month on Grafana Cloud, 14-day test result retention. The k6 CLI is open-source (AGPL) with no limits when self-hosted. JavaScript-based scripting with built-in protocols (HTTP, WebSocket, gRPC, browser). Grafana Cloud integration for results visualization. VU hours can be consumed quickly with complex scenarios &mdash; 100 VUs for 5 hours = 500 VUh (entire monthly quota). Best for teams already in the Grafana ecosystem or wanting a developer-friendly load testing tool.</div>
   </div>
 
@@ -41127,7 +41127,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="diff-card">
-    <h3>Checkly <span class="winner-badge">BEST CLOUD FREE</span></h3>
+    <h3>Checkly</h3>
     <div class="diff-desc"><strong>Free tier:</strong> 50,000 API check runs/month + 10 browser check runs/month. The Checkly CLI is open-source. Monitoring-as-code approach &mdash; define checks in JavaScript/TypeScript and deploy via CI. Built-in Playwright support for browser-based API testing. Alerting via Slack, PagerDuty, and more. Best for teams that want synthetic monitoring alongside API testing, or those wanting a more generous free tier than Postman.</div>
   </div>
 
@@ -41216,7 +41216,7 @@ ${mcpCtaCss()}
     <strong>Visual regression scales linearly with components.</strong> A design system with 200 components &times; 3 viewports &times; 2 themes = 1,200 snapshots per build. Chromatic's free tier (5K) covers ~4 builds/month at that scale. Beyond that, costs are $149/mo for 35K snapshots. Percy and Argos have similar scaling dynamics. Turbosnap (Chromatic) and smart diffing (Percy) help by skipping unchanged components.
   </div>
 
-  <h2 id="best-for">Best for Each Use Case</h2>
+  <h2 id="best-for">By Use Case</h2>
 
   <div class="verdict-box">
     <h3>Recommendations by Use Case</h3>
@@ -41502,7 +41502,7 @@ ${mcpCtaCss()}
       <li><a href="#all-in-one">All-in-One Platforms</a></li>
       <li><a href="#self-hosted">Self-Hosted Analytics</a></li>
       <li><a href="#cost-trap">The Analytics Cost Trap</a></li>
-      <li><a href="#best-for">Best for Each Use Case</a></li>
+      <li><a href="#best-for">By Use Case</a></li>
       <li><a href="#hidden-costs">Hidden Costs and Gotchas</a></li>
       <li><a href="#changes">Pricing Change Timeline</a></li>
       <li><a href="#data-source">Data Source</a></li>
@@ -41529,7 +41529,7 @@ ${mcpCtaCss()}
     </thead>
     <tbody>
       <tr>
-        <td class="provider-col">PostHog<span class="winner-badge">MOST GENEROUS</span></td>
+        <td class="provider-col">PostHog</td>
         <td>1M events/mo</td>
         <td class="check">&#10003; 5K/mo</td>
         <td class="check">&#10003; 1M evals/mo</td>
@@ -41595,7 +41595,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
       </tr>
       <tr>
-        <td class="provider-col">Plausible<span class="winner-badge">BEST PRIVACY</span></td>
+        <td class="provider-col">Plausible</td>
         <td>Self-hosted: unlimited</td>
         <td class="cross">&#10007;</td>
         <td class="cross">&#10007;</td>
@@ -41606,7 +41606,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
       </tr>
       <tr>
-        <td class="provider-col">Umami<span class="winner-badge">BEST SELF-HOSTED</span></td>
+        <td class="provider-col">Umami</td>
         <td>Cloud: 100K events/mo</td>
         <td class="cross">&#10007;</td>
         <td class="cross">&#10007;</td>
@@ -41679,7 +41679,7 @@ ${mcpCtaCss()}
   <p class="section-intro">Behavioral analytics platforms for understanding user actions, funnels, retention, and product usage patterns.</p>
 
   <div class="diff-card">
-    <h3>PostHog <span class="winner-badge">MOST GENEROUS</span></h3>
+    <h3>PostHog</h3>
     <div class="diff-desc"><strong>Free tier:</strong> 1M events/month, 5K session replays, 1M feature flag evaluations, unlimited experiments and surveys. Open-source, self-hostable. The only platform that bundles analytics, session replay, feature flags, A/B testing, and surveys into a single free tier. EU and US cloud hosting. Transparent usage-based pricing beyond free tier ($0.00031/event). The free tier resets monthly and unused quota doesn't roll over. Best for teams that want a single platform for product analytics + experimentation.</div>
   </div>
 
@@ -41720,7 +41720,7 @@ ${mcpCtaCss()}
   <p class="section-intro">Analytics tools designed for GDPR/CCPA compliance without cookie consent banners. No personal data collection, no cross-site tracking.</p>
 
   <div class="diff-card">
-    <h3>Plausible <span class="winner-badge">BEST PRIVACY</span></h3>
+    <h3>Plausible</h3>
     <div class="diff-desc"><strong>Pricing:</strong> Cloud plans from $9/month (10K pageviews). Self-hosted Community Edition is free and open-source (AGPL). No cookies, no personal data, GDPR compliant without consent banners. Lightweight script (&lt;1KB). Dashboard is clean and intentionally simple. Built-in goal and event tracking. Revenue tracking available. EU-owned and operated (Estonia). Best for privacy-conscious teams that want simple, compliant analytics. Self-host for free or pay for the cloud convenience.</div>
   </div>
 
@@ -41763,7 +41763,7 @@ ${mcpCtaCss()}
     </thead>
     <tbody>
       <tr>
-        <td class="provider-col">Umami<span class="winner-badge">EASIEST</span></td>
+        <td class="provider-col">Umami</td>
         <td>MIT</td>
         <td>Web analytics</td>
         <td class="cross">&#10007;</td>
@@ -41807,7 +41807,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="diff-card">
-    <h3>Umami <span class="winner-badge">EASIEST SELF-HOSTED</span></h3>
+    <h3>Umami</h3>
     <div class="diff-desc"><strong>License:</strong> MIT (most permissive). A clean, fast, privacy-focused alternative to Google Analytics. Deploys in minutes via Docker or one-click to Vercel/Netlify/Railway. PostgreSQL or MySQL backend. Under 10KB tracking script. Cloud version available with 100K events/month free tier. The easiest self-hosted analytics setup available. Best for developers who want simple web analytics without complexity.</div>
   </div>
 
@@ -41893,7 +41893,7 @@ ${mcpCtaCss()}
     <strong>The Google Analytics "free" trap:</strong> GA is free in dollars but costs you in data quality and privacy. Data sampling begins at 500K sessions per property for ad-hoc queries. You don't own the data &mdash; Google uses it for advertising. EU regulators have ruled GA non-compliant. The real cost is the cookie consent banner (reducing opt-in rates by 20&ndash;40%), compliance risk, and data sampling at scale. "Free" analytics that samples your data isn't really free.
   </div>
 
-  <h2 id="best-for">Best for Each Use Case</h2>
+  <h2 id="best-for">By Use Case</h2>
 
   <div class="verdict-box">
     <h3>Recommendations by Use Case</h3>
@@ -42185,7 +42185,7 @@ ${mcpCtaCss()}
       <li><a href="#api-design">API Design &amp; Documentation</a></li>
       <li><a href="#mock-servers">Mock Servers</a></li>
       <li><a href="#migration-trap">The API Tool Migration Trap</a></li>
-      <li><a href="#best-for">Best for Each Use Case</a></li>
+      <li><a href="#best-for">By Use Case</a></li>
       <li><a href="#hidden-costs">Hidden Costs and Gotchas</a></li>
       <li><a href="#changes">Pricing Change Timeline</a></li>
       <li><a href="#data-source">Data Source</a></li>
@@ -42223,7 +42223,7 @@ ${mcpCtaCss()}
         <td class="cross">&#10007;</td>
       </tr>
       <tr>
-        <td class="provider-col">Bruno<span class="winner-badge">BEST FREE</span></td>
+        <td class="provider-col">Bruno</td>
         <td>Unlimited (OSS)</td>
         <td class="check">&#10003; MIT</td>
         <td class="check">&#10003; File-based</td>
@@ -42234,7 +42234,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
       </tr>
       <tr>
-        <td class="provider-col">Hoppscotch<span class="winner-badge">BEST WEB</span></td>
+        <td class="provider-col">Hoppscotch</td>
         <td>1 user cloud free, unlimited requests</td>
         <td class="check">&#10003; MIT</td>
         <td class="partial">&#9679; Web + desktop</td>
@@ -42256,7 +42256,7 @@ ${mcpCtaCss()}
         <td class="partial">&#9679; Via export</td>
       </tr>
       <tr>
-        <td class="provider-col">Thunder Client<span class="winner-badge">BEST VS CODE</span></td>
+        <td class="provider-col">Thunder Client</td>
         <td>Free tier with collection limits</td>
         <td class="cross">&#10007;</td>
         <td class="check">&#10003; File-based</td>
@@ -42322,7 +42322,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
       </tr>
       <tr>
-        <td class="provider-col">Mockoon<span class="winner-badge">BEST MOCK</span></td>
+        <td class="provider-col">Mockoon</td>
         <td>Unlimited (OSS)</td>
         <td class="check">&#10003; MIT</td>
         <td class="check">&#10003;</td>
@@ -42374,7 +42374,7 @@ ${mcpCtaCss()}
   <p class="section-intro">Tools that store collections as files on your filesystem, enabling Git-based versioning and collaboration with zero cloud dependency.</p>
 
   <div class="diff-card">
-    <h3>Bruno <span class="winner-badge">BEST FREE OVERALL</span></h3>
+    <h3>Bruno</h3>
     <div class="diff-desc"><strong>Free tier:</strong> Fully open-source (MIT), unlimited use, no cloud account required. Collections stored as plain-text files on your filesystem using the Bru markup language. Git-native &mdash; collections are versioned alongside your code. Supports REST, GraphQL, environments, scripting (JavaScript), and assertions. Desktop app for Mac, Windows, and Linux. No cloud sync (by design) &mdash; use Git for collaboration instead. The Golden Edition ($19 one-time) adds visual Git integration, OpenAPI designer, and advanced features, but the free version covers all essential API testing needs. Community is growing rapidly as developers migrate from Postman. Best for teams that want zero vendor lock-in and Git-native API workflows.</div>
   </div>
 
@@ -42392,7 +42392,7 @@ ${mcpCtaCss()}
   <p class="section-intro">Browser-based API clients that work without installing software. Best for quick testing, shared environments, and teams that prefer web apps.</p>
 
   <div class="diff-card">
-    <h3>Hoppscotch <span class="winner-badge">BEST WEB-BASED</span></h3>
+    <h3>Hoppscotch</h3>
     <div class="diff-desc"><strong>Free tier:</strong> 1 user on cloud (hoppscotch.io), unlimited requests. Open-source (MIT) with self-hosted option. Supports REST, GraphQL, WebSocket, SSE, Socket.IO, and MQTT. Real-time collaboration, environments, collections, and pre-request scripts. Hoppscotch CLI for CI/CD. Self-hosted version (via Docker) supports unlimited users and team workspaces at zero cost. The web-based interface means zero installation &mdash; open a browser and start testing. Best for teams that want free team collaboration via self-hosting, or individual developers who prefer browser-based tools.</div>
   </div>
 
@@ -42405,7 +42405,7 @@ ${mcpCtaCss()}
   <p class="section-intro">API testing tools that integrate directly into your code editor. No window switching &mdash; test APIs alongside your code.</p>
 
   <div class="diff-card">
-    <h3>Thunder Client <span class="winner-badge">BEST VS CODE</span></h3>
+    <h3>Thunder Client</h3>
     <div class="diff-desc"><strong>Free tier:</strong> Free tier with collection limits. Lightweight REST API client for VS Code. File-based storage option for Git-friendly workflows. Supports environments, variables, scripting, and test assertions. The VS Code sidebar integration means you never leave your editor. Recent versions have added collection limits on the free tier &mdash; check current limits as they have evolved. Best for developers who live in VS Code and want API testing without switching applications.</div>
   </div>
 
@@ -42426,7 +42426,7 @@ ${mcpCtaCss()}
   <p class="section-intro">Tools for creating mock API endpoints during development. Essential for frontend teams, integration testing, and API prototyping.</p>
 
   <div class="diff-card">
-    <h3>Mockoon <span class="winner-badge">BEST MOCK SERVER</span></h3>
+    <h3>Mockoon</h3>
     <div class="diff-desc"><strong>Free tier:</strong> Fully open-source (MIT), unlimited mock endpoints. Desktop app and CLI for creating local mock API servers. Supports dynamic responses, templating (Handlebars), proxy mode, OpenAPI import, and recording. No cloud account required. The CLI enables running mocks in CI/CD pipelines. File-based configuration &mdash; mocks can be versioned in Git. Best for teams that need realistic API mocks during development without cloud dependency or usage limits.</div>
   </div>
 
@@ -42494,7 +42494,7 @@ ${mcpCtaCss()}
     <strong>Cloud storage vs. Git: two collaboration models.</strong> Cloud-dependent tools (Postman, RapidAPI, Apidog) sync collections through their servers. Local-first tools (Bruno, Yaak, Thunder Client) store collections as files that you version with Git. Git-based collaboration is free, auditable, and integrates with your existing code review workflow. The trade-off: Git requires developer discipline, while cloud sync is more accessible to non-technical team members.
   </div>
 
-  <h2 id="best-for">Best for Each Use Case</h2>
+  <h2 id="best-for">By Use Case</h2>
 
   <div class="verdict-box">
     <h3>Recommendations by Use Case</h3>
@@ -42781,7 +42781,7 @@ ${mcpCtaCss()}
       <li><a href="#container">Container &amp; IaC Security</a></li>
       <li><a href="#network">SSL/TLS, Network &amp; Zero Trust</a></li>
       <li><a href="#cost-trap">The DevSecOps Cost Trap</a></li>
-      <li><a href="#best-for">Best for Each Use Case</a></li>
+      <li><a href="#best-for">By Use Case</a></li>
       <li><a href="#hidden-costs">Hidden Costs and Gotchas</a></li>
       <li><a href="#changes">Pricing Change Timeline</a></li>
       <li><a href="#data-source">Data Source</a></li>
@@ -42815,7 +42815,7 @@ ${mcpCtaCss()}
         <td class="cross">&#10007;</td>
       </tr>
       <tr>
-        <td class="provider-col">Semgrep<span class="winner-badge">BEST SAST</span></td>
+        <td class="provider-col">Semgrep</td>
         <td>SAST + SCA</td>
         <td>10 contributors, 50 private repos (unlimited public)</td>
         <td class="check">&#10003; LGPL-2.1</td>
@@ -42833,7 +42833,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003; SonarQube</td>
       </tr>
       <tr>
-        <td class="provider-col">CodeQL<span class="winner-badge">BEST FOR OSS</span></td>
+        <td class="provider-col">CodeQL</td>
         <td>SAST (Semantic)</td>
         <td>Free for all public repos, no scan limits</td>
         <td class="partial">&#9679; MIT (engine)</td>
@@ -42860,7 +42860,7 @@ ${mcpCtaCss()}
         <td class="cross">&#10007;</td>
       </tr>
       <tr>
-        <td class="provider-col">Gitleaks<span class="winner-badge">BEST FREE SECRETS</span></td>
+        <td class="provider-col">Gitleaks</td>
         <td>Secrets Detection</td>
         <td>Unlimited (OSS)</td>
         <td class="check">&#10003; MIT</td>
@@ -42878,7 +42878,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
       </tr>
       <tr>
-        <td class="provider-col">Trivy<span class="winner-badge">BEST CONTAINER</span></td>
+        <td class="provider-col">Trivy</td>
         <td>Container + FS + IaC + SBOM</td>
         <td>Unlimited (OSS)</td>
         <td class="check">&#10003; Apache-2.0</td>
@@ -42905,7 +42905,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
       </tr>
       <tr>
-        <td class="provider-col">OWASP ZAP<span class="winner-badge">BEST FREE DAST</span></td>
+        <td class="provider-col">OWASP ZAP</td>
         <td>DAST</td>
         <td>Unlimited (OSS)</td>
         <td class="check">&#10003; Apache-2.0</td>
@@ -43211,7 +43211,7 @@ ${mcpCtaCss()}
     <strong>Free for OSS, expensive for private repos:</strong> SonarCloud, CodeQL, and SOOS are unlimited for public repositories but require paid plans for private code. This is the most common pricing model in security tooling. If your code is open-source, you get enterprise-grade security for free. If it&rsquo;s private, the same tools cost thousands per year. Plan accordingly: use OSS-unlimited tools (Semgrep, Trivy, Gitleaks) for private repos, and take advantage of full platform features on your open-source projects.
   </div>
 
-  <h2 id="best-for">Best for Each Use Case</h2>
+  <h2 id="best-for">By Use Case</h2>
 
   <div class="verdict-box">
     <h3>Recommendations by use case</h3>
