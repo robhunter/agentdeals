@@ -7171,14 +7171,8 @@
         "brackets": [
           {
             "last_old": "2026-03-14",
-            "first_new": "2026-04-19",
-            "last_old_capture": "https://web.archive.org/web/20260314013613/https://www.tracelog.io/",
-            "first_new_capture": "https://web.archive.org/web/20260419105812/https://www.tracelog.io/"
-          },
-          {
-            "last_old": "2026-06-15",
             "first_new": "2026-08-28",
-            "last_old_capture": "https://web.archive.org/web/20260615012327/https://www.tracelog.io/",
+            "last_old_capture": "https://web.archive.org/web/20260314013613/https://www.tracelog.io/",
             "first_new_capture": "https://web.archive.org/web/20260828130347/https://www.tracelog.io/"
           }
         ]
@@ -11177,7 +11171,7 @@
       "resolution": {
         "state": "retracted",
         "date": "2026-10-03",
-        "detail": "Retracted 2026-10-03: no change on 2026-09-07. The Internet Archive's captures of localstack.cloud/pricing of 2026-08-19 and 2026-09-15 show the same plans and prices, including the free Hobby plan for non-commercial use. The reading took Base's faded $39 and $45 prices for new ones.",
+        "detail": "Retracted 2026-10-03: no change on 2026-09-07. The Internet Archive's captures of localstack.cloud/pricing of 2026-08-19 and 2026-09-15 show the same plans and prices, including the free Hobby plan for non-commercial use. The $29 and $35 Base prices in the reading are LocalStack for Snowflake's; LocalStack for AWS's Base is $39 a month billed annually, or $45 monthly, on both captures.",
         "source_url": "https://web.archive.org/web/20260819234557/https://www.localstack.cloud/pricing"
       }
     },
@@ -11888,6 +11882,12 @@
       "archive_check": {
         "checked": "2026-10-02",
         "outcome": "no_usable_capture"
+      },
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-10-03",
+        "detail": "Retracted 2026-10-03: no change on 2026-09-12. The Internet Archive's capture of uptimetoolbox.com of 2026-08-28 and the page on 2026-10-03 state the same free Basic plan: 5 monitors, 3-minute checks and 1 status page, as our listing did, plus 1 server, 7 days of high-resolution retention and 3 months of history.",
+        "source_url": "https://web.archive.org/web/20260828130634/https://uptimetoolbox.com/"
       }
     },
     {
@@ -12147,10 +12147,10 @@
     },
     {
       "vendor": "synadia.com",
-      "change_type": "limits_reduced",
+      "change_type": "record_corrected",
       "date": "2026-09-13",
       "date_source": "discovered",
-      "summary": "The free tier now has limits of 2 Accounts, 10 Connections, 2 Leaf Nodes, 1 MiB Message Size, 10 GiB Network Data, and 5 GiB Storage. Previously 50 active connections and 5GB of data per month.",
+      "summary": "Data correction - Not a change by Synadia. An Internet Archive copy of its NGS page from 2023-09-28 already states the free plan's 10 connections, 1 MiB message size, 10 GB of network data and 5 GB of storage, and our listing's 50 connections did not match them. Our re-read of 2026-09-13 recorded the difference as a change.",
       "tier": "Personal Plan",
       "tier_direction": "narrowed",
       "previous_state": "[NATS.io](https://nats.io) as a service. Global, AWS, GCP, and Azure. Free forever with 4k msg size, 50 active connections, and 5GB of data per month.",
@@ -12162,8 +12162,12 @@
       "detected_by": "reverify-ai",
       "recorded_date": "2026-09-13",
       "archive_check": {
-        "checked": "2026-10-02",
-        "outcome": "no_usable_capture"
+        "checked": "2026-10-03",
+        "outcome": "ours",
+        "capture_day": "2023-09-28",
+        "recorded_as": "limits_reduced",
+        "capture": "https://web.archive.org/web/20230928041407/https://www.synadia.com/ngs",
+        "stated_then": "Free $0 /month · 10 Connections · 2 NGS Extensions · 1MiB Message Size · 10GB Network · 5GB Storage"
       }
     },
     {
