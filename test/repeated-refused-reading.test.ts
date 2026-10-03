@@ -3,6 +3,7 @@ import assert from "node:assert";
 import { readFileSync, writeFileSync, mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
+import { execFileSync } from "node:child_process";
 
 process.env.AGENTDEALS_REFUSALS_PATH = path.join(
   mkdtempSync(path.join(tmpdir(), "refusals-repeat-")),
@@ -228,6 +229,31 @@ describe("an audit of published records", () => {
   it("flags a published record that repeats a refused reading", async () => {
     const { rejected } = await auditPublishedRecords([FEEDBEAR_READ], { refusals: [FEEDBEAR_REFUSED] });
     assert.deepStrictEqual(rejected.map((r: { reason: string }) => r.reason), [REJECT_REPEATS_A_REFUSED_READING]);
+  });
+
+  it("is what the gate report runs over the change log", () => {
+    const dir = mkdtempSync(path.join(tmpdir(), "repeat-report-"));
+    const published = { ...FEEDBEAR_READ, detected_by: "reverify-ai" };
+    writeFileSync(path.join(dir, "changes.json"), JSON.stringify({ changes: [published, { ...published, change_type: "record_corrected" }] }));
+    writeFileSync(path.join(dir, "refusals.json"), JSON.stringify({ refusals: [FEEDBEAR_REFUSED] }));
+    writeFileSync(path.join(dir, "index.json"), JSON.stringify({ offers: [] }));
+    try {
+      const report = execFileSync(process.execPath, ["scripts/gate-report.js"], {
+        env: {
+          ...process.env,
+          AGENTDEALS_CHANGES_PATH: path.join(dir, "changes.json"),
+          AGENTDEALS_REFUSALS_PATH: path.join(dir, "refusals.json"),
+          AGENTDEALS_INDEX_PATH: path.join(dir, "index.json"),
+        },
+        encoding: "utf-8",
+      });
+      const verdictOn = (changeType: string) => report.split("\n").find((line) => line.includes(`FeedBear (${changeType})`));
+      assert.match(verdictOn("pricing_restructured") ?? "", new RegExp(`^DROP  FeedBear \\(pricing_restructured\\) — ${REJECT_REPEATS_A_REFUSED_READING}`));
+      assert.ok(verdictOn("record_corrected"));
+      assert.doesNotMatch(verdictOn("record_corrected") ?? "", new RegExp(REJECT_REPEATS_A_REFUSED_READING));
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
   });
 });
 
