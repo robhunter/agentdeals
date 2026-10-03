@@ -13,48 +13,16 @@
       "tier": "Free"
     },
     {
-      "vendor": "Kaggle",
-      "tier": "Free"
-    },
-    {
       "vendor": "Northflank",
       "tier": "Free"
-    },
-    {
-      "vendor": "ngrok",
-      "tier": "Free"
-    },
-    {
-      "vendor": "Neon",
-      "tier": "Free"
-    },
-    {
-      "vendor": "Google Compute Engine",
-      "tier": "Always Free"
     },
     {
       "vendor": "LocalStack",
       "tier": "Free"
     },
     {
-      "vendor": "PythonAnywhere",
-      "tier": "Free"
-    },
-    {
-      "vendor": "Fireworks AI",
-      "tier": "Free Credits"
-    },
-    {
-      "vendor": "Cloudflare R2",
-      "tier": "Free"
-    },
-    {
       "vendor": "Exa",
       "tier": "Free"
-    },
-    {
-      "vendor": "Tailscale",
-      "tier": "Personal"
     },
     {
       "vendor": "Bitrise",
@@ -73,51 +41,11 @@
       "tier": "Free"
     },
     {
-      "vendor": "Cloudflare D1",
-      "tier": "Free"
-    },
-    {
-      "vendor": "Formsubmit.co",
-      "tier": "Free"
-    },
-    {
-      "vendor": "Hetzner DNS",
-      "tier": "Free"
-    },
-    {
       "vendor": "Google Cloud Build",
       "tier": "Always Free"
     },
     {
-      "vendor": "Pollinations.AI",
-      "tier": "Free"
-    },
-    {
-      "vendor": "Groq",
-      "tier": "Free"
-    },
-    {
-      "vendor": "BrowserStack Percy",
-      "tier": "Free"
-    },
-    {
-      "vendor": "cloudconvert.com",
-      "tier": "Free"
-    },
-    {
-      "vendor": "Have I been pwned?",
-      "tier": "Free"
-    },
-    {
-      "vendor": "Expo",
-      "tier": "Free"
-    },
-    {
       "vendor": "Cursor",
-      "tier": "Free"
-    },
-    {
-      "vendor": "Cloudflare Workers",
       "tier": "Free"
     }
   ]
