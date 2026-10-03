@@ -1,0 +1,47 @@
+name: Second run of the 11 records held out of the 2026-10-02 archive check, against the Archive, in twelve shards
+
+on:
+  push:
+    branches:
+      - agree-1952-held
+
+permissions:
+  contents: read
+
+jobs:
+  settle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24.20.0"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Settle shard ${{ matrix.shard }} of 12
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+        run: node scripts/settle-discovered-records.js --vendors "fivenines.io,Basecamp,TraceLog,Inngest,Polar,Nango,Retool,microlink.io,Filebase,Cypress Cloud,Ollama Cloud" --shard ${{ matrix.shard }}/12 --log-reads --out settled-agree-held-${{ matrix.shard }}.json
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: settled-agree-held-${{ matrix.shard }}
+          path: |
+            settled-agree-held-${{ matrix.shard }}.json
+            settled-agree-held-${{ matrix.shard }}.jsonl
+          if-no-files-found: warn

@@ -5880,19 +5880,7 @@
       "category": "Monitoring",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28",
-      "archive_check": {
-        "checked": "2026-10-03",
-        "outcome": "vendor_changed",
-        "brackets": [
-          {
-            "last_old": "2026-05-10",
-            "first_new": "2026-05-13",
-            "last_old_capture": "https://web.archive.org/web/20260510190024/https://fivenines.io/",
-            "first_new_capture": "https://web.archive.org/web/20260513093138/https://fivenines.io/"
-          }
-        ]
-      }
+      "recorded_date": "2026-08-28"
     },
     {
       "vendor": "Toggled.dev",
@@ -6777,7 +6765,7 @@
     {
       "vendor": "Basecamp",
       "change_type": "limits_reduced",
-      "date": "2026-08-19",
+      "date": "2026-08-28",
       "date_source": "discovered",
       "summary": "The free tier now allows only 1 project and a maximum of 5 users. Previously 3 projects and 20 users.",
       "previous_state": "To-do lists, milestone management, forum-like messaging, file sharing, and time tracking. Up to 3 projects, 20 users, and 1GB of storage space.",
@@ -6787,19 +6775,7 @@
       "category": "Project Management",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28",
-      "archive_check": {
-        "checked": "2026-10-03",
-        "outcome": "vendor_changed",
-        "brackets": [
-          {
-            "last_old": "2026-08-16",
-            "first_new": "2026-08-19",
-            "last_old_capture": "https://web.archive.org/web/20260816012047/https://basecamp.com/pricing",
-            "first_new_capture": "https://web.archive.org/web/20260819152122/https://basecamp.com/pricing"
-          }
-        ]
-      }
+      "recorded_date": "2026-08-28"
     },
     {
       "vendor": "ImgBB",
@@ -7168,25 +7144,7 @@
       "category": "Analytics",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28",
-      "archive_check": {
-        "checked": "2026-10-03",
-        "outcome": "vendor_changed",
-        "brackets": [
-          {
-            "last_old": "2026-03-14",
-            "first_new": "2026-04-19",
-            "last_old_capture": "https://web.archive.org/web/20260314013613/https://www.tracelog.io/",
-            "first_new_capture": "https://web.archive.org/web/20260419105812/https://www.tracelog.io/"
-          },
-          {
-            "last_old": "2026-06-15",
-            "first_new": "2026-08-28",
-            "last_old_capture": "https://web.archive.org/web/20260615012327/https://www.tracelog.io/",
-            "first_new_capture": "https://web.archive.org/web/20260828130347/https://www.tracelog.io/"
-          }
-        ]
-      }
+      "recorded_date": "2026-08-28"
     },
     {
       "vendor": "smartlook.com",
@@ -7390,11 +7348,7 @@
       "category": "Background Jobs",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28",
-      "archive_check": {
-        "checked": "2026-10-03",
-        "outcome": "no_usable_capture"
-      }
+      "recorded_date": "2026-08-28"
     },
     {
       "vendor": "Infisical",
@@ -7468,19 +7422,7 @@
       "category": "Payments",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28",
-      "archive_check": {
-        "checked": "2026-10-03",
-        "outcome": "vendor_changed",
-        "brackets": [
-          {
-            "last_old": "2026-05-19",
-            "first_new": "2026-05-21",
-            "last_old_capture": "https://web.archive.org/web/20260519025153/https://polar.sh/",
-            "first_new_capture": "https://web.archive.org/web/20260521151410/https://polar.sh/"
-          }
-        ]
-      }
+      "recorded_date": "2026-08-28"
     },
     {
       "vendor": "GitBook",
@@ -7608,11 +7550,7 @@
       "category": "API Development",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28",
-      "archive_check": {
-        "checked": "2026-10-03",
-        "outcome": "no_usable_capture"
-      }
+      "recorded_date": "2026-08-28"
     },
     {
       "vendor": "Grafana Loki",
@@ -7730,7 +7668,7 @@
     {
       "vendor": "Retool",
       "change_type": "limits_increased",
-      "date": "2026-06-17",
+      "date": "2026-08-28",
       "date_source": "discovered",
       "summary": "The free tier also includes up to 20 hours/month of Agents and 250 AI credits/month.",
       "previous_state": "Internal tools builder — free for up to 5 users, unlimited apps. Drag-and-drop UI, 100+ integrations, custom components",
@@ -7740,19 +7678,7 @@
       "category": "Low-Code Platforms",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28",
-      "archive_check": {
-        "checked": "2026-10-03",
-        "outcome": "vendor_changed",
-        "brackets": [
-          {
-            "last_old": "2026-05-21",
-            "first_new": "2026-06-17",
-            "last_old_capture": "https://web.archive.org/web/20260521140228/https://retool.com/pricing",
-            "first_new_capture": "https://web.archive.org/web/20260617004655/https://retool.com/pricing"
-          }
-        ]
-      }
+      "recorded_date": "2026-08-28"
     },
     {
       "vendor": "LogRocket",
@@ -8220,11 +8146,7 @@
       "category": "Web Scraping",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28",
-      "archive_check": {
-        "checked": "2026-10-03",
-        "outcome": "no_usable_capture"
-      }
+      "recorded_date": "2026-08-28"
     },
     {
       "vendor": "OCR.Space",
@@ -9101,25 +9023,7 @@
       "category": "Storage",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-01",
-      "archive_check": {
-        "checked": "2026-10-03",
-        "outcome": "vendor_changed",
-        "brackets": [
-          {
-            "last_old": "2026-02-21",
-            "first_new": "2026-03-04",
-            "last_old_capture": "https://web.archive.org/web/20260221231935/https://filebase.com/",
-            "first_new_capture": "https://web.archive.org/web/20260304142345/https://filebase.com/"
-          },
-          {
-            "last_old": "2026-05-08",
-            "first_new": "2026-06-02",
-            "last_old_capture": "https://web.archive.org/web/20260508084321/https://filebase.com/",
-            "first_new_capture": "https://web.archive.org/web/20260602191124/https://filebase.com/"
-          }
-        ]
-      }
+      "recorded_date": "2026-09-01"
     },
     {
       "vendor": "Turso",
@@ -10607,25 +10511,7 @@
       "category": "Testing",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-05",
-      "archive_check": {
-        "checked": "2026-10-03",
-        "outcome": "vendor_changed",
-        "brackets": [
-          {
-            "last_old": "2026-07-11",
-            "first_new": "2026-08-19",
-            "last_old_capture": "https://web.archive.org/web/20260711080112/https://www.cypress.io/pricing",
-            "first_new_capture": "https://web.archive.org/web/20260819234557/https://www.cypress.io/pricing"
-          },
-          {
-            "last_old": "2026-08-28",
-            "first_new": "2026-09-07",
-            "last_old_capture": "https://web.archive.org/web/20260828130755/https://www.cypress.io/pricing",
-            "first_new_capture": "https://web.archive.org/web/20260907081649/https://www.cypress.io/pricing"
-          }
-        ]
-      }
+      "recorded_date": "2026-09-05"
     },
     {
       "vendor": "ImageKit",
@@ -12946,7 +12832,7 @@
     {
       "vendor": "Ollama Cloud",
       "change_type": "pricing_model_change",
-      "date": "2026-09-01",
+      "date": "2026-09-22",
       "date_source": "discovered",
       "summary": "Ollama's Free plan now includes starter usage credits and starter models only; buying usage credits unlocks the other cloud models. Before, Free included cloud models with a usage limit.",
       "tier": "Free",
@@ -12958,19 +12844,7 @@
       "category": "AI / ML",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-22",
-      "archive_check": {
-        "checked": "2026-10-03",
-        "outcome": "vendor_changed",
-        "brackets": [
-          {
-            "last_old": "2026-08-27",
-            "first_new": "2026-09-01",
-            "last_old_capture": "https://web.archive.org/web/20260827004707/https://ollama.com/pricing",
-            "first_new_capture": "https://web.archive.org/web/20260901044407/https://ollama.com/pricing"
-          }
-        ]
-      }
+      "recorded_date": "2026-09-22"
     },
     {
       "vendor": "OpenAI Codex",
