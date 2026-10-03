@@ -1160,7 +1160,7 @@
       "changed": "2026-10-01"
     },
     "/category/dev-utilities": {
-      "hash": "19b55550ae4bf505",
+      "hash": "12432638e194f285",
       "changed": "2026-10-03"
     },
     "/category/diagramming": {
@@ -3468,11 +3468,11 @@
       "daily": true
     },
     "/stability": {
-      "hash": "ebfc3d974ba58575",
+      "hash": "0fdef3ff2f36553c",
       "changed": "2026-10-03"
     },
     "/stack-check": {
-      "hash": "2bfd1eaab0919598",
+      "hash": "946baca64678ee41",
       "changed": "2026-10-03"
     },
     "/stacks": {
@@ -3504,7 +3504,7 @@
       "changed": "2026-10-03"
     },
     "/state-of-free-tiers": {
-      "hash": "3af42ff74ac229ec",
+      "hash": "f1dd994c09cd667d",
       "changed": "2026-10-03"
     },
     "/storage-alternatives": {
@@ -3629,7 +3629,7 @@
       "changed": "2026-09-18"
     },
     "/trends/dev-utilities": {
-      "hash": "96770f8e8dd21faa",
+      "hash": "09c68aeb48d0df35",
       "changed": "2026-10-03"
     },
     "/trends/diagramming": {
@@ -4252,7 +4252,7 @@
       "changed": "2026-10-03"
     },
     "/vendor/bismuth-cloud": {
-      "hash": "d76af1f6b4904e64",
+      "hash": "92330ff5279904eb",
       "changed": "2026-10-03"
     },
     "/vendor/bitbucket-pipelines": {
@@ -4608,7 +4608,7 @@
       "daily": true
     },
     "/vendor/claw-cloud": {
-      "hash": "1bd07f5b0a7580bd",
+      "hash": "85618eb6f7ff262c",
       "changed": "2026-10-03"
     },
     "/vendor/clear-channel-outdoor": {
@@ -5026,7 +5026,7 @@
       "changed": "2026-10-03"
     },
     "/vendor/cstate": {
-      "hash": "1314e9901f7bc5d0",
+      "hash": "34b33ee4e81118e2",
       "changed": "2026-10-03"
     },
     "/vendor/cube": {
@@ -5151,7 +5151,7 @@
       "daily": true
     },
     "/vendor/debugmail-io": {
-      "hash": "29db2c220f67d50b",
+      "hash": "f2781e09f4090072",
       "changed": "2026-10-03"
     },
     "/vendor/deepar": {
@@ -5448,7 +5448,7 @@
       "changed": "2026-10-03"
     },
     "/vendor/engagespot-co": {
-      "hash": "2f06829bf1cb61aa",
+      "hash": "a4f10ede37c81320",
       "changed": "2026-10-03"
     },
     "/vendor/ente": {
@@ -5472,7 +5472,7 @@
       "changed": "2026-10-03"
     },
     "/vendor/evernote": {
-      "hash": "8a896e4d01230c6e",
+      "hash": "d08f65a252d3db3d",
       "changed": "2026-10-03"
     },
     "/vendor/everystep-automation-com": {
@@ -6058,7 +6058,7 @@
       "daily": true
     },
     "/vendor/google-vertex-ai-agent-engine": {
-      "hash": "e3a665b37e5f05f5",
+      "hash": "66a8890398a820f6",
       "changed": "2026-10-03"
     },
     "/vendor/goreportcard-com": {
@@ -6070,7 +6070,7 @@
       "changed": "2026-10-03"
     },
     "/vendor/gpu-bridge": {
-      "hash": "2cb5947b405965fa",
+      "hash": "22dde9217686bc70",
       "changed": "2026-10-03"
     },
     "/vendor/gradientos": {
@@ -6322,7 +6322,7 @@
       "changed": "2026-10-03"
     },
     "/vendor/ibm-cloud": {
-      "hash": "841dc4413fe3e52f",
+      "hash": "79176f1df3dd6bbc",
       "changed": "2026-10-03"
     },
     "/vendor/icedrive-net": {
@@ -6607,7 +6607,7 @@
       "changed": "2026-10-03"
     },
     "/vendor/karbon-sites": {
-      "hash": "4268fb01cc85f8f2",
+      "hash": "378e1b94264a292e",
       "changed": "2026-10-03"
     },
     "/vendor/kaspr": {
@@ -6725,7 +6725,7 @@
       "daily": true
     },
     "/vendor/langtrace": {
-      "hash": "51e26e416f6993ca",
+      "hash": "e75c9a19813182d4",
       "changed": "2026-10-03"
     },
     "/vendor/langwatch": {
@@ -8617,7 +8617,7 @@
       "daily": true
     },
     "/vendor/soos": {
-      "hash": "99abad7ac06d5c19",
+      "hash": "0f1c4af59263e40e",
       "changed": "2026-10-03"
     },
     "/vendor/sourceforge": {
@@ -8748,7 +8748,7 @@
       "changed": "2026-10-03"
     },
     "/vendor/strale": {
-      "hash": "3808b398bcfc50d2",
+      "hash": "6f5b847fee24c733",
       "changed": "2026-10-03"
     },
     "/vendor/strapi": {
@@ -9082,7 +9082,7 @@
       "changed": "2026-10-03"
     },
     "/vendor/tollbooth": {
-      "hash": "63f3e837ef33e741",
+      "hash": "364853264a9225af",
       "changed": "2026-10-03"
     },
     "/vendor/tomorrow-io-weather-api": {
@@ -9309,7 +9309,7 @@
       "changed": "2026-10-03"
     },
     "/vendor/uuid-generator": {
-      "hash": "a7c1cab24403543b",
+      "hash": "d2c6d795a2434ba0",
       "changed": "2026-10-03"
     },
     "/vendor/uxtweak-com": {
@@ -9417,7 +9417,7 @@
       "changed": "2026-10-03"
     },
     "/vendor/volaryddns": {
-      "hash": "9518b0dbfd418832",
+      "hash": "a13940751319ce4d",
       "changed": "2026-10-03"
     },
     "/vendor/volume": {
@@ -9456,7 +9456,7 @@
       "changed": "2026-10-03"
     },
     "/vendor/wdrfree-svg": {
-      "hash": "ec06403bf3336fc6",
+      "hash": "c579163b18f5d795",
       "changed": "2026-10-03"
     },
     "/vendor/we-team": {
@@ -9550,7 +9550,7 @@
       "changed": "2026-10-03"
     },
     "/vendor/whitespace": {
-      "hash": "9e2d1ed2fd755d77",
+      "hash": "e9f5738fc809a69f",
       "changed": "2026-10-03"
     },
     "/vendor/windmill-dev": {
@@ -9795,7 +9795,7 @@
       "changed": "2026-10-03"
     },
     "/vendor/zonomi": {
-      "hash": "e8d02568ed92e7f3",
+      "hash": "4d19cf60acaa56c5",
       "changed": "2026-10-03"
     },
     "/vendor/zoom": {
