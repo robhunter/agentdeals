@@ -18358,8 +18358,8 @@
     {
       "vendor": "Burnermail",
       "category": "Email",
-      "description": "Free 5 Burner Email Addresses, 1 Mailbox, 7-day Mailbox History",
-      "tier": "Free",
+      "description": "Burner Mail gives users burner email addresses that hide their personal email address. There has been no free plan for new users since 2026-06-27. Existing free users keep their current free limits.",
+      "tier": "Legacy Free",
       "url": "https://burnermail.io/",
       "tags": [
         "email",

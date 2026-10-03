@@ -6670,21 +6670,17 @@
     {
       "vendor": "Burnermail",
       "change_type": "free_tier_removed",
-      "date": "2026-08-28",
-      "date_source": "discovered",
-      "summary": "Burner Mail is removing its free plan. Explicitly states the free plan is being removed.",
-      "previous_state": "Free 5 Burner Email Addresses, 1 Mailbox, 7-day Mailbox History",
-      "current_state": "The page encourages users to sign up and use burner addresses, but does not detail any free tier offerings. It states \"Why We’re Removing Burner Mail’s Free Plan Read more →\".",
+      "date": "2026-06-27",
+      "date_source": "vendor_page",
+      "summary": "Burner Mail removed its public Free plan on 2026-06-27. New users must upgrade to a paid plan before creating burner addresses or mailboxes. Existing free users keep their current free limits.",
+      "previous_state": "\"Free 5 Burner Addresses 1 Mailbox 7 days Mailbox History\" (burnermail.io/premium, capture of 2026-06-13)",
+      "current_state": "\"Burner Mail is removing the public Free plan and moving forward with a paid-only offering.\" \"Existing free users will keep their current free limits.\" \"new users will need to upgrade before creating burners or mailboxes.\" (Burner Mail blog, 2026-06-27)",
       "impact": "high",
-      "source_url": "https://burnermail.io/",
+      "source_url": "https://blog.burnermail.io/blog/why-were-removing-burner-mails-free-plan/",
       "category": "Email",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28",
-      "archive_check": {
-        "checked": "2026-10-02",
-        "outcome": "no_usable_capture"
-      }
+      "recorded_date": "2026-08-28"
     },
     {
       "vendor": "PandaStack",
@@ -7191,23 +7187,19 @@
     {
       "vendor": "smartlook.com",
       "change_type": "product_deprecated",
-      "date": "2026-08-28",
+      "date": "2026-03-31",
       "discontinued_date": "2027-09-30",
-      "date_source": "discovered",
-      "summary": "Smartlook is being deprecated. A free plan will exist until September 30, 2027, new subscriptions are not being sold as of May 31, 2026, and renewals are ending August 31, 2026.",
+      "date_source": "vendor_page",
+      "summary": "Smartlook shuts down on 2027-09-30.",
       "previous_state": "Free plan: 3,000 sessions/month, three heatmaps, one funnel. Note: reaching End of Sale May 2026.",
       "current_state": "After 31 August 2027, the Smartlook platform will be available in free mode, providing access to some historical data before the account is fully deactivated on 30 September 2027. You may continue using Smartlook until your paid plan ends (after which you may use the free plan until 30 September 2027).",
       "impact": "high",
-      "source_url": "https://www.smartlook.com/",
+      "source_url": "https://www.cisco.com/c/en/us/products/collateral/software/smartlook-com-eol.html",
       "category": "Analytics",
       "alternatives": [],
       "detected_by": "reverify-ai",
       "recorded_date": "2026-08-28",
-      "listing_effect": "ends",
-      "archive_check": {
-        "checked": "2026-10-02",
-        "outcome": "no_usable_capture"
-      }
+      "listing_effect": "ends"
     },
     {
       "vendor": "veriphone",
@@ -15253,6 +15245,34 @@
       "alternatives": [],
       "recorded_date": "2026-10-03",
       "date_source": "vendor_page"
+    },
+    {
+      "vendor": "Burnermail",
+      "change_type": "record_corrected",
+      "date": "2026-10-03",
+      "summary": "Data correction - Burner Mail removed its public Free plan on 2026-06-27, not on 2026-08-28. Our re-read dated it the day it read the page.",
+      "previous_state": "Recorded 2026-08-28 from the banner on burnermail.io",
+      "current_state": "Dated 2026-06-27, the day of Burner Mail's blog post",
+      "impact": "low",
+      "source_url": "https://blog.burnermail.io/blog/why-were-removing-burner-mails-free-plan/",
+      "category": "Email",
+      "alternatives": [],
+      "recorded_date": "2026-10-03",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "smartlook.com",
+      "change_type": "record_corrected",
+      "date": "2026-10-03",
+      "summary": "Data correction - Smartlook's record is dated 2026-03-31, the day of Cisco's notice, not 2026-08-28, the day our re-read found it.",
+      "previous_state": "Recorded 2026-08-28 from smartlook.com",
+      "current_state": "Dated 2026-03-31 from Cisco's notice",
+      "impact": "low",
+      "source_url": "https://www.cisco.com/c/en/us/products/collateral/software/smartlook-com-eol.html",
+      "category": "Analytics",
+      "alternatives": [],
+      "recorded_date": "2026-10-03",
+      "date_source": "hand_written"
     }
   ]
 }
