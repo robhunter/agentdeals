@@ -13,6 +13,7 @@ const { confirmationDate, lastReadDate, lastReadNote, storedConfirmationClause, 
   await import("../dist/read-date.js");
 const { publishedTermsEvidence, termsTheVerdictWithholds, unconfirmedTermsFrom } = await import("../dist/vendor-verdict.js");
 const { refusalsForVendor } = await import("../dist/data.js");
+const { unreachableNoticeForUrl } = await import("../dist/link-health.js");
 const { ANSWERED_OUTCOMES } = await import("../scripts/verification-state.js");
 
 interface CatalogueOffer {
@@ -62,7 +63,10 @@ const detailNoteOf = (body: string): string =>
   body.match(/<div class="detail-note">([^<]*)<\/div>/)?.[1] ?? "";
 
 const THE_PAGE_WITHHOLDS = "Not verified — ";
-const pageWithholdsTheTerms = (body: string) => metaDescriptionOf(body).includes(THE_PAGE_WITHHOLDS);
+const metaSaysNotVerified = (body: string) => metaDescriptionOf(body).includes(THE_PAGE_WITHHOLDS);
+const pricingPageNoLongerResolves = (offer: CatalogueOffer) => unreachableNoticeForUrl(offer.url) !== null;
+const pageWithholdsTheTerms = (offer: CatalogueOffer, body: string) =>
+  metaSaysNotVerified(body) || pricingPageNoLongerResolves(offer);
 
 const widestGap = byGap(offers);
 const widestUnconfirmedGap = byGap(offers.filter((o) => confirmationDate(o) === null));
@@ -193,7 +197,7 @@ describe("every record publishes the day we last read its page", () => {
     let body = "";
     for (const candidate of confirmationsOlderThanTheirRead) {
       const answer = await get(`/vendor/${slugOf(candidate.offer.vendor)}`);
-      if (answer.status !== 200 || pageWithholdsTheTerms(answer.body)) continue;
+      if (answer.status !== 200 || pageWithholdsTheTerms(candidate.offer, answer.body)) continue;
       subject = candidate;
       body = answer.body;
       break;
@@ -243,7 +247,7 @@ describe("every record publishes the day we last read its page", () => {
       const { status, body } = await get(`/vendor/${slugOf(offer.vendor)}`);
       if (status !== 200) continue;
       const note = detailNoteOf(body);
-      if (!pageWithholdsTheTerms(body)) {
+      if (!pageWithholdsTheTerms(offer, body)) {
         standing.push(offer.vendor);
         if (!note.includes(escaped(lastReadNote(offer, null, refusalsForVendor(offer.vendor))))) silent.push(offer.vendor);
         continue;
