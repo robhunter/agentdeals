@@ -124,6 +124,7 @@ import { buildDay, emptyPageLastmod, entryDay, fallbackDay, httpDate, lastmodFor
 import { bestOfPathResolves, readBestOfPublished } from "./best-of-publication.js";
 import { datedUrl, entityTag, isNotModified, matchesEntityTag, revalidationHeaders } from "./conditional-request.js";
 import { dayNamedBySince, SINCE_REJECTED } from "./since-parameter.js";
+import { flashPriceStepEntry, flashPriceStepIn, GEMINI_2_5_MODELS_LIMITED, WELCOME_CREDIT_EXCLUDED, type GeminiTimelineEntry } from "./gemini-timeline.js";
 import type { AgentBalance } from "./ledger.js";
 import type { SubmittedReferralCode } from "./referral-codes.js";
 
@@ -21864,6 +21865,23 @@ ${mcpCtaCss()}
 </html>`;
 }
 
+function geminiTimelineEntryHtml(entry: GeminiTimelineEntry): string {
+  return `<div class="timeline-item">
+    <div class="timeline-date">${escHtmlServer(entry.dateLabel)}</div>
+    <div class="timeline-content">
+      <h3 style="color:#f85149">${escHtmlServer(entry.heading)}</h3>
+      <p>${escHtmlServer(entry.text)} ${changeSourceLinkHtml({ source_url: entry.source }, escHtmlServer)}</p>
+    </div>
+  </div>`;
+}
+
+function geminiFlashPriceStepEntry(servedOn: string): GeminiTimelineEntry | null {
+  const listing = offerForSlug("google-gemini-api");
+  if (!listing || supersedingChangeFor(listing)) return null;
+  const step = flashPriceStepIn(listing.description);
+  return step ? flashPriceStepEntry(step, servedOn) : null;
+}
+
 function buildGeminiApiPricing2026Page(): string {
   const title = "Gemini API Pricing 2026 — Free Tier Changes, Spend Caps & Alternatives";
   const metaDesc = "Gemini API billing changes in March and April 2026: spend caps by tier ($250 to $100K+ a month, enforced from April 1), prepay for some new users, and Gemini 3.1 Pro Preview paid only. The free tier covers the Gemini 3.x Flash and Flash-Lite models.";
@@ -21885,6 +21903,7 @@ function buildGeminiApiPricing2026Page(): string {
   ];
 
   const servedOn = new Date().toISOString().slice(0, 10);
+  const flashPriceStep = geminiFlashPriceStepEntry(servedOn);
   const servedRatingHtml = (name: string) => {
     const heading = vendorHeadingBadgeForName(name, servedOn);
     return heading
@@ -22060,6 +22079,7 @@ ${mcpCtaCss()}
       <p>${rateLimitChange ? changeSummaryHtml(rateLimitChange, escHtmlServer) : "On 2025-12-06 Google cut 2.5 Flash's free tier from 250 requests a day to about 20, and 2.5 Pro's to none."}</p>
     </div>
   </div>
+  ${geminiTimelineEntryHtml(WELCOME_CREDIT_EXCLUDED)}
   <div class="timeline-item">
     <div class="timeline-date">Apr 2026</div>
     <div class="timeline-content">
@@ -22067,6 +22087,8 @@ ${mcpCtaCss()}
       <p>${spendCapChange ? changeSummaryHtml(spendCapChange, escHtmlServer) : "Billing-account-level spend caps enforced. API requests pause when tier cap is reached until next billing month."}</p>
     </div>
   </div>
+  ${geminiTimelineEntryHtml(GEMINI_2_5_MODELS_LIMITED)}
+  ${flashPriceStep ? geminiTimelineEntryHtml(flashPriceStep) : ""}
 
   <h2 id="who-affected">3. Who's Affected</h2>
   <p class="section-intro">The impact depends on how you use the Gemini API and when you started building on it.</p>
