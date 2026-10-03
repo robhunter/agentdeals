@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 
 const { gradeSuperlatives, measuresTheFreeTier, outrankedElsewhere, pageTables } =
   await import("../dist/superlative-claims.js");
-const { NO_COLUMN_SETTLES_GENEROSITY, GENEROSITY_JSON_TOKEN, GENEROSITY_PROSE_TOKEN } =
+const { NO_COLUMN_SETTLES_GENEROSITY, GENEROSITY_JSON_TOKEN, GENEROSITY_PROSE_TOKEN, generosityAnswer } =
   await import("../dist/generosity-answer.js");
 const { NO_RANKING_HELD } = await import("../dist/unranked.js");
 const { statesVendorFigure } = await import("../dist/faq-provenance.js");
@@ -139,8 +139,24 @@ describe("#1492 the generosity answer resolves from the page it is printed on", 
     }
     assert.deepStrictEqual(contradictions, [], `answers that disagree with their own page:\n${contradictions.join("\n")}`);
     assert.strictEqual(naming + refusing, Object.keys(COMPARISON_QUESTION_NOUNS).length);
-    assert.ok(naming > 0, "no page names a graded leader, so this sweep proves nothing");
     assert.ok(refusing > 0, "no page keeps the refusal, so the negative control is not exercised");
+  });
+
+  it("names the leader of the one column a badge on the page grades", () => {
+    const html = served.get("monitoring-comparison-2026")!;
+    const section = html.indexOf('<h2 id="uptime-monitoring">');
+    assert.ok(section > 0, "the monitoring page has no uptime section");
+    const unbadged = '<td class="provider-col">UptimeRobot ';
+    const at = html.indexOf(unbadged, section);
+    assert.ok(at > 0, "the uptime table has no UptimeRobot row");
+    const badged = `${html.slice(0, at)}<td class="provider-col">UptimeRobot<span class="winner-badge">MOST MONITORS</span> ${html.slice(at + unbadged.length)}`;
+    assert.strictEqual(generosityAnswer(html).startsWith(NO_COLUMN_SETTLES_GENEROSITY), true);
+    assert.strictEqual(
+      generosityAnswer(badged),
+      "The one column on this page we can rank is Free Monitors, and UptimeRobot leads it — " +
+        "the figure is in that column, on the row this page prints for it. " +
+        "Generosity is not one quantity, so that settles Free Monitors and not the free tier as a whole.",
+    );
   });
 
   it("names no claim another table on the same page outranks", () => {
