@@ -19,11 +19,13 @@ const WITHDRAWN = [
   "benefits now come with",
   "Premium was folded into",
   "replace most GDP Premium benefits",
+  "Same GCP services",
 ];
 
 const GUIDE_BLURB = "Standalone Google Developer Program Premium no longer takes sign-ups — current plans, Cloud credits and free alternatives";
 
 const STATED = [
+  "$300 credits (90 days, no GPUs) + always-free tier",
   "Its Google Cloud credits and Firebase Studio workspaces now come with Google AI Pro ($19.99/mo) and Google AI Ultra (from $99.99/mo) on personal Google Accounts. Premium's 1:1 consultations, certification voucher and unlimited Google Skills access did not carry over.",
   "The headline loss: Cloud credits drop 76% for annual subscribers who move to AI Pro. GDP Premium's annual plan included $500 a year in Google Cloud credits, and its monthly plan $45 a month.",
   "GDP Premium's annual plan included a $50 credit a year for Google AI Studio and Vertex AI.",
@@ -57,7 +59,6 @@ const KEPT = [
   "Cloud Build (2,500 build-minutes a month)",
   "BigQuery 1 TiB of queries a month",
   "1 GiB Firestore, 50K reads/day; Cloud Storage needs Blaze since Feb 2026",
-  "$300 credits (90 days) + always-free tier",
 ];
 
 const ENTITIES: Record<string, string> = {
