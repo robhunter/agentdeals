@@ -117,6 +117,12 @@ describe("a reading that states what a refused reading of the same page already 
     assert.strictEqual(refusedReadingItRepeats(moved, [FEEDBEAR_REFUSED]), null);
   });
 
+  it("publishes a reading in which a price and a count traded values", () => {
+    const refused = { ...FEEDBEAR_REFUSED, current_state: "The Team plan costs $5 and includes 10 seats." };
+    const read = { ...FEEDBEAR_READ, current_state: "The Team plan costs $10 and includes 5 seats." };
+    assert.strictEqual(refusedReadingItRepeats(read, [refused]), null);
+  });
+
   it("compares only readings of the same page of the same vendor", () => {
     assert.strictEqual(refusedReadingItRepeats({ ...FEEDBEAR_READ, source_url: "https://www.feedbear.com/" }, [FEEDBEAR_REFUSED]), null);
     assert.strictEqual(refusedReadingItRepeats({ ...FEEDBEAR_READ, vendor: "Canny" }, [FEEDBEAR_REFUSED]), null);
