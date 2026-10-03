@@ -1244,7 +1244,7 @@
       "changed": "2026-10-03"
     },
     "/category/payments": {
-      "hash": "ce71d3fbe2197f0c",
+      "hash": "93a5a0e0c624cb8f",
       "changed": "2026-10-03"
     },
     "/category/productivity-notes": {
@@ -3009,7 +3009,7 @@
       "changed": "2026-10-03"
     },
     "/digest/2026-w35": {
-      "hash": "da98f21bdba82892",
+      "hash": "665110e19b8ae346",
       "changed": "2026-10-03"
     },
     "/digest/2026-w36": {
@@ -3468,11 +3468,11 @@
       "daily": true
     },
     "/stability": {
-      "hash": "5c7818627d3cf066",
+      "hash": "4dc8f732587f3095",
       "changed": "2026-10-03"
     },
     "/stack-check": {
-      "hash": "de6de1095af91f9f",
+      "hash": "3888082eeeba351c",
       "changed": "2026-10-03"
     },
     "/stacks": {
@@ -3712,7 +3712,7 @@
       "changed": "2026-10-03"
     },
     "/trends/payments": {
-      "hash": "c10d50a1dd4688e3",
+      "hash": "2315690b3d90f3b6",
       "changed": "2026-10-03"
     },
     "/trends/productivity-notes": {
@@ -7819,7 +7819,7 @@
       "changed": "2026-10-03"
     },
     "/vendor/polar": {
-      "hash": "46d966ee15416b6a",
+      "hash": "64a9fe7ba8123f41",
       "changed": "2026-10-03"
     },
     "/vendor/pollinations-ai": {
