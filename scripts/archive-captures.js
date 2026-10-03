@@ -627,21 +627,37 @@ function showsNoMove(verdict) {
   return verdict?.status === "same" || verdict?.status === "review" || verdict?.status === "absent";
 }
 
-async function bracketMoves({ from, until, pool, compare, pageOf }) {
+async function bracketMoves({ from, until, pool, compare, pageOf, statesWhatTheRecordCallsNew = async () => null, planNotOfferedAtStart = false }) {
   const brackets = [];
   let start = from;
   let candidates = pool;
+  let withoutThePlanIsOld = planNotOfferedAtStart;
   while (brackets.length < MAX_MOVES_BRACKETED) {
     let lo = -1;
     let hi = candidates.length;
     let reads = 0;
+    let startStatesIt;
+    const sideOfAReviewReading = async (page) => {
+      if (startStatesIt === undefined) startStatesIt = await statesWhatTheRecordCallsNew(start);
+      if (startStatesIt !== false) return null;
+      const states = await statesWhatTheRecordCallsNew(page);
+      return states === true ? "new" : states === false ? "old" : null;
+    };
+    const sideOfTheMove = async (verdict, page) => {
+      if (verdict?.status === "same") return "old";
+      if (verdict?.status === "differ") return "new";
+      if (verdict?.status === "absent") return withoutThePlanIsOld ? "old" : null;
+      if (verdict?.status === "review") return sideOfAReviewReading(page);
+      return null;
+    };
     while (hi - lo > 1 && reads < MAX_READS_PER_BRACKET) {
       const mid = Math.floor((lo + hi) / 2);
       const page = await pageOf(candidates[mid]);
       const verdict = page ? await compare(start, page) : null;
       if (page) reads++;
-      if (showsNoMove(verdict)) lo = mid;
-      else if (verdict?.status === "differ") hi = mid;
+      const side = page ? await sideOfTheMove(verdict, page) : null;
+      if (side === "old") lo = mid;
+      else if (side === "new") hi = mid;
       else {
         candidates = [...candidates.slice(0, mid), ...candidates.slice(mid + 1)];
         hi--;
@@ -662,6 +678,7 @@ async function bracketMoves({ from, until, pool, compare, pageOf }) {
     if (onward.status !== "differ") return { brackets, moves_complete: false };
     start = firstNew;
     candidates = candidates.slice(hi + 1);
+    withoutThePlanIsOld = false;
   }
   return { brackets, moves_complete: false };
 }
@@ -720,12 +737,22 @@ export async function settleAgainstCaptures({ url, finalUrl, textDay, recordDay,
     return verdict;
   };
 
+  const statedBeforeReadings = new Map();
   const statedBefore = async (older) => {
     if (!readStatedBefore) return { status: "unstated", why: "no reader was asked for a line that already states what the record calls new", review: [] };
-    reads++;
-    const verdict = await readStatedBefore(older);
-    onRead({ older: older.page, newer: "the record", verdict });
-    return verdict;
+    const key = older.capture?.timestamp ?? older.page;
+    if (!statedBeforeReadings.has(key)) {
+      reads++;
+      const verdict = await readStatedBefore(older);
+      onRead({ older: older.page, newer: "the record", verdict });
+      statedBeforeReadings.set(key, verdict);
+    }
+    return statedBeforeReadings.get(key);
+  };
+  const statesWhatTheRecordCallsNew = async (page) => {
+    const verdict = await statedBefore(page);
+    if (verdict.status === "stated" || verdict.status === "removal_stated") return true;
+    return verdict.status === "unstated" && verdict.review?.length > 0 ? false : null;
   };
 
   const describePage = (page) => ({ page: page.page, ...describeDay(page.day, judgedOn, sideOfRecordDay(page.day, judgedOn)) });
@@ -773,10 +800,10 @@ export async function settleAgainstCaptures({ url, finalUrl, textDay, recordDay,
       if (now.status === "review") return forReview(todayPage, now);
       if (now.status !== "differ") return unsettled({ outcome: "no_usable_capture", compared_with: comparedWith, why: `the capture before the record's day states the old capture's terms, but the reader could not compare today's page: ${now.why}` });
       deciding = now;
-      moves = await bracketMoves({ from: end, until: todayPage, pool: captures.filter((capture) => capture.timestamp > end.capture.timestamp), compare, pageOf });
+      moves = await bracketMoves({ from: end, until: todayPage, pool: captures.filter((capture) => capture.timestamp > end.capture.timestamp), compare, pageOf, statesWhatTheRecordCallsNew });
     } else {
       const pool = captures.filter((capture) => capture.timestamp > old.capture.timestamp && (!end.capture || capture.timestamp < end.capture.timestamp));
-      moves = await bracketMoves({ from: old, until: end, pool, compare, pageOf });
+      moves = await bracketMoves({ from: old, until: end, pool, compare, pageOf, statesWhatTheRecordCallsNew, planNotOfferedAtStart: first.plan === "appeared" });
     }
     const placed = moves.brackets.map((bracket) => ({ ...bracket, relative_to_record: placeBesideRecord(bracket, judgedOn, today) }));
     const recordMoves = placed.filter((bracket) => bracket.relative_to_record !== "after");

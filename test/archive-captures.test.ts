@@ -728,7 +728,43 @@ const TODAY = "2026-09-27";
 const RECORD_DAY = "2026-08-28";
 const ALL_YEAR = everyDay("2025-10-01", TODAY);
 
-function settle(options: { textDay?: string | null; recordDay?: string; todayTerms: string | null; days?: string[]; termsOn: (day: string) => string | null; archive?: unknown; reader?: ReturnType<typeof termsPairReader> }) {
+function moveQuotedOnlySometimesReader() {
+  const calls: string[] = [];
+  const readPair = async (older: Page, newer: Page) => {
+    calls.push(`${older.page} | ${newer.page}`);
+    const [was, wasQuoted = ""] = (older.text.match(/TERMS=(\w+)/)?.[1] ?? "").split("_");
+    const [now, nowQuoted = ""] = (newer.text.match(/TERMS=(\w+)/)?.[1] ?? "").split("_");
+    if (!was || !now) return { status: "unquotable", side: !was && !now ? "both" : !was ? "old" : "new", why: "no terms on the page" };
+    const quoted = { old_terms: [`TERMS=${was}`], new_terms: [`TERMS=${now}`] };
+    if (was === now) return { status: "same", ...quoted };
+    if (wasQuoted === "unquoted" || nowQuoted === "unquoted") return { status: "review", ...quoted, review: [{ old: `TERMS=${was}`, new: `TERMS=${now}`, why: "no value both pages state moved" }], why: "no difference is a value both pages state moving, so the lines go to review" };
+    return { status: "differ", ...quoted, differences: [{ old: `TERMS=${was}`, new: `TERMS=${now}` }] };
+  };
+  return { readPair, calls };
+}
+
+function readerFindingNoPlanOn(terms: string) {
+  const reader = termsPairReader();
+  const readPair = async (older: Page, newer: Page) => {
+    if (!newer.text.includes(`TERMS=${terms}`)) return reader.readPair(older, newer);
+    reader.calls.push(`${older.page} | ${newer.page}`);
+    return { status: "absent", side: "both", why: "neither page offers the plan", old_terms: [], new_terms: [], offered_instead: [] };
+  };
+  return { readPair, calls: reader.calls };
+}
+
+function statesTheRecordWhere(statesIt: (terms: string) => boolean, status = "stated") {
+  return async (older: Page) => {
+    const terms = older.text.match(/TERMS=(\w+)/)?.[1] ?? "";
+    return statesIt(terms)
+      ? { status, stated_then: [{ record: "the change", old: `TERMS=${terms}` }] }
+      : { status: "unstated", why: 'no line already states "the change"', review: [{ record: "the change", old: "", why: "the capture does not state it" }] };
+  };
+}
+
+const cannotReadTheRecord = async () => ({ status: "unstated", why: "the reader's answer could not be parsed", review: [] });
+
+function settle(options: { textDay?: string | null; recordDay?: string; todayTerms: string | null; days?: string[]; termsOn: (day: string) => string | null; archive?: unknown; reader?: ReturnType<typeof termsPairReader>; statedBefore?: (older: Page) => Promise<unknown> }) {
   const reader = options.reader ?? termsPairReader();
   const archive = options.archive ?? archiveOf(options.days ?? ALL_YEAR, options.termsOn);
   return {
@@ -742,7 +778,7 @@ function settle(options: { textDay?: string | null; recordDay?: string; todayTer
       today: TODAY,
       archive,
       readPair: reader.readPair,
-      readStatedBefore: statesItAlready,
+      readStatedBefore: options.statedBefore ?? statesItAlready,
     }),
   };
 }
@@ -1043,13 +1079,44 @@ describe("settling a first reading's difference against the page as the Archive 
     assert.strictEqual(unread.review, undefined);
   });
 
-  it("bisects past captures that differ only by lines one page states, to the capture where a value moved", async () => {
+  it("bisects past captures that differ only by lines one page states and do not state what the record calls new, to the capture where a value moved", async () => {
     const termsOn = (day: string) => (day <= "2026-06-09" ? "A" : day <= "2026-08-05" ? "A_bandwidth" : "B_bandwidth");
-    const { result } = settle({ todayTerms: "B_bandwidth", termsOn, reader: linesPairReader() });
+    const { result } = settle({ todayTerms: "B_bandwidth", termsOn, reader: linesPairReader(), statedBefore: statesTheRecordWhere((terms) => terms.startsWith("B")) });
     const settled = await result;
     assert.strictEqual(settled.outcome, "vendor_changed");
     assert.deepStrictEqual(spans(settled.brackets), [["2026-08-05", "2026-08-06", "before"]]);
     assert.strictEqual(settled.date, "2026-08-06");
+  });
+
+  it("dates a move by the first capture that states what the record calls new, though the reader could not quote the move on it", async () => {
+    const days = ["2026-02-15", ...everyDay("2026-07-01", "2026-08-10"), RECORD_DAY];
+    const termsOn = (day: string) => (day <= "2026-07-14" ? "A" : day <= "2026-08-03" ? "B_unquoted" : "B");
+    for (const status of ["stated", "removal_stated"]) {
+      const statedBefore = statesTheRecordWhere((terms) => terms.startsWith("B"), status);
+      const settled = await settle({ todayTerms: "B", days, termsOn, reader: moveQuotedOnlySometimesReader(), statedBefore }).result;
+      assert.strictEqual(settled.outcome, "vendor_changed");
+      assert.deepStrictEqual(spans(settled.brackets), [["2026-07-14", "2026-07-15", "before"]], status);
+      assert.strictEqual(settled.moves_complete, true);
+      assert.strictEqual(settled.date, "2026-07-15");
+    }
+  });
+
+  it("ends no bracket on a capture read for review when the bracket's first page already states what the record calls new, or the reader cannot say", async () => {
+    const days = ["2026-02-15", ...everyDay("2026-06-01", "2026-06-20"), RECORD_DAY];
+    const termsOn = (day: string) => (day <= "2026-06-09" ? "A" : day <= "2026-06-12" ? "A_bandwidth" : "B_bandwidth");
+    for (const statedBefore of [statesItAlready, cannotReadTheRecord]) {
+      const settled = await settle({ todayTerms: "B_bandwidth", days, termsOn, reader: linesPairReader(), statedBefore }).result;
+      assert.deepStrictEqual(spans(settled.brackets), [["2026-06-09", "2026-06-13", "before"]]);
+      assert.strictEqual(settled.brackets[0].narrowed_to_adjacent_captures, true);
+    }
+  });
+
+  it("ends no bracket on a capture where the reader found the plan on neither page, once the bracket began with the plan offered", async () => {
+    const days = ["2026-02-15", ...everyDay("2026-04-01", "2026-04-20"), RECORD_DAY];
+    const termsOn = (day: string) => (day <= "2026-04-08" ? "A" : day <= "2026-04-10" ? "GONE" : "B");
+    const settled = await settle({ todayTerms: "B", days, termsOn, reader: readerFindingNoPlanOn("GONE") }).result;
+    assert.strictEqual(settled.outcome, "vendor_changed");
+    assert.deepStrictEqual(spans(settled.brackets), [["2026-04-08", "2026-04-11", "before"]]);
   });
 
   it("finds no further move when the pages after a move differ only by lines one page states", async () => {
