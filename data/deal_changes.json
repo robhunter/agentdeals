@@ -12950,7 +12950,7 @@
       "change_type": "pricing_model_change",
       "date": "2026-09-01",
       "date_source": "discovered",
-      "summary": "The free tier now includes usage credits instead of unlimited access to a single model. It also requires purchasing credits to unlock all models.",
+      "summary": "Ollama's Free plan now includes starter usage credits and starter models only; buying usage credits unlocks the other cloud models. Before, Free included cloud models with a usage limit.",
       "tier": "Free",
       "tier_direction": "narrowed",
       "previous_state": "Cloud-hosted Ollama for running open-source LLMs — free tier for light usage with 1 concurrent model. Access Llama, Mistral, Gemma, and other open models via API",
