@@ -1,4 +1,4 @@
-import { figuresWeAlsoPublish } from "./change-gate.js";
+import { figuresWeAlsoPublish, TAKEN_AWAY } from "./change-gate.js";
 import { READ_BY_RENDERING } from "./rendered-page.js";
 import { priceLabel, structuredDetail, unrenderedPrices } from "./structured-prices.js";
 
@@ -54,6 +54,29 @@ const A_TIER_NAMED_FREE = /^free\s+(?:plans?|tiers?|package|api|forever|version)
 
 export function statesAPriceOfZero(signal) {
   return typeof signal === "string" && !statesAnAmount(signal) && A_TIER_NAMED_FREE.test(signal.trim());
+}
+
+const WORDS_READ_BEFORE_A_FREE_PLAN = 4;
+const WORDS_READ_AFTER_A_FREE_PLAN = 3;
+const A_SENTENCE_BREAK = /[.!?;](?:\s|$)/;
+
+function clauseAround(text, at, phrase) {
+  const before = text.slice(0, at).split(A_SENTENCE_BREAK).pop().split(/\s+/).filter(Boolean);
+  const after = text.slice(at + phrase.length).split(A_SENTENCE_BREAK)[0].split(/\s+/).filter(Boolean);
+  return [...before.slice(-WORDS_READ_BEFORE_A_FREE_PLAN), phrase, ...after.slice(0, WORDS_READ_AFTER_A_FREE_PLAN)].join(" ");
+}
+
+export function namesAFreePlanOnlyAsTakenAway(text, phrase) {
+  if (typeof text !== "string" || !phrase) return false;
+  const clauses = [];
+  for (let at = text.indexOf(phrase); at !== -1; at = text.indexOf(phrase, at + phrase.length)) {
+    clauses.push(clauseAround(text, at, phrase));
+  }
+  return clauses.length > 0 && clauses.every((clause) => TAKEN_AWAY.test(clause));
+}
+
+export function aFreePlanTakenAway(signal, text) {
+  return statesAPriceOfZero(signal) && namesAFreePlanOnlyAsTakenAway(text, signal);
 }
 
 export function normalizeForMatch(text) {
@@ -318,7 +341,7 @@ export function classifySource(offer, page, signals) {
     };
   }
   const structured = page.structured ?? null;
-  const found = Array.isArray(signals) ? signals : [];
+  const found = (Array.isArray(signals) ? signals : []).filter((signal) => !aFreePlanTakenAway(signal, page.text));
   const rendersAnAmount = found.some(statesAnAmount);
   if (!rendersAnAmount && structured && structured.prices.length > 0) {
     const rendered = found.length === 0 ? "renders no terms we can read" : `renders "${found[0]}" and no amount`;

@@ -18,7 +18,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const INDEX_PATH = path.join(__dirname, "..", "data", "index.json");
 
 const { priceSignals } = await import("../scripts/change-gate.js");
-const { classifySource, holdsVerifiedDate, statesAPriceOfZero, SOURCE_CHECK_FREE_PRICE, SOURCE_CHECK_NO_AMOUNT } =
+const { classifySource, holdsVerifiedDate, statesAPriceOfZero, SOURCE_CHECK_FREE_PRICE, SOURCE_CHECK_NO_AMOUNT, SOURCE_CHECK_NO_TERMS } =
   await import("../scripts/vendor-naming.js");
 const { attemptForSourceCheck, pageStatesNoPrice, ANSWERED_OUTCOMES } =
   await import("../scripts/verification-state.js");
@@ -103,6 +103,62 @@ describe("a price stated in words", () => {
     assert.ok(ANSWERED_OUTCOMES.has(attemptForSourceCheck(SOURCE_CHECK_FREE_PRICE)));
     assert.strictEqual(pageStatesNoPrice(SOURCE_CHECK_FREE_PRICE), false);
     assert.strictEqual(pageStatesNoPrice(SOURCE_CHECK_NO_AMOUNT), true);
+  });
+});
+
+describe("a free plan the page names only to take it away", () => {
+  const BANNER = "Why We&rsquo;re Removing Widgetson&rsquo;s Free Plan Read more &rarr; Take control of your inbox";
+
+  it("reads a banner announcing the free plan's removal as no terms, rather than as a free price or a plan", () => {
+    const graded = gradeOf(pageSaying(BANNER));
+    assert.strictEqual(graded.outcome, SOURCE_CHECK_NO_TERMS);
+    assert.doesNotMatch(graded.detail, /Free Plan/);
+  });
+
+  it("reads the other ways a page says the free plan is gone the same way", () => {
+    for (const claim of [
+      "We no longer offer a free plan.",
+      "Our free tier has been discontinued.",
+      "We are retiring the free plan.",
+      "This vendor does not offer a free plan.",
+    ]) {
+      assert.strictEqual(gradeOf(pageSaying(claim)).outcome, SOURCE_CHECK_NO_TERMS, claim);
+    }
+  });
+
+  it("drops only the free plan's name, never a figure, from a sentence that takes something away", () => {
+    assert.strictEqual(gradeOf(pageSaying("We removed the $5 plan.")).outcome, "ok");
+  });
+
+  it("still reads a paid plan the page names beside the removal", () => {
+    const graded = gradeOf(pageSaying(`${BANNER}. Ask about our business plan.`));
+    assert.strictEqual(graded.outcome, SOURCE_CHECK_NO_AMOUNT);
+    assert.match(graded.detail, /says "business plan"/);
+  });
+
+  it("still reads a free plan stated with its allowance as a free price", () => {
+    assert.strictEqual(gradeOf(pageSaying("Free plan: 1 GB storage")).outcome, SOURCE_CHECK_FREE_PRICE);
+  });
+
+  it("reads a free plan stated anywhere else on the page as a free price, banner or not", () => {
+    assert.strictEqual(gradeOf(pageSaying(`${BANNER}. Free Plan for every team.`)).outcome, SOURCE_CHECK_FREE_PRICE);
+    assert.strictEqual(gradeOf(pageSaying(`${BANNER}. Our free tier covers it.`)).outcome, SOURCE_CHECK_FREE_PRICE);
+  });
+
+  it("reads only the few words either side of the free plan's name", () => {
+    assert.strictEqual(
+      gradeOf(pageSaying("Removed ads, faster builds and the new dashboard ship with the Free plan")).outcome,
+      SOURCE_CHECK_FREE_PRICE,
+    );
+    assert.strictEqual(
+      gradeOf(pageSaying("Free plan with unlimited forms and branding removed on Pro")).outcome,
+      SOURCE_CHECK_FREE_PRICE,
+    );
+  });
+
+  it("does not carry a removal across the end of a sentence", () => {
+    assert.strictEqual(gradeOf(pageSaying("We removed the setup fee. Free plan for everyone.")).outcome, SOURCE_CHECK_FREE_PRICE);
+    assert.strictEqual(gradeOf(pageSaying("Free plan for everyone. Setup fees were removed in 2025.")).outcome, SOURCE_CHECK_FREE_PRICE);
   });
 });
 

@@ -1014,7 +1014,7 @@ const A_PLAN_ASSERTED_FREE = [
 
 const REPLACED_BY_SOMETHING_TEMPORARY =
   /(?:\b\d+[- ]?(?:day|days|week|weeks|month|months)\b[^.;]{0,20}\b(?:trial|free)\b|\bfree\s+trial\b|\btrial\b[^.;]{0,20}\b(?:with|of|includes?)\b)/i;
-const TAKEN_AWAY =
+export const TAKEN_AWAY =
   /\b(?:no\s+longer|removing|removed|discontinu\w*|retir\w*|does\s+not\s+(?:offer|include)|ended|eliminat\w*|is\s+gone)\b/i;
 const QUALIFIER_WINDOW = 40;
 
