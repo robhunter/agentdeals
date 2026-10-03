@@ -84,6 +84,10 @@ export type GateCode =
   | "product_discontinued"
   | "verification_lapsed";
 
+export const GATES_LEAVING_NO_FREE_TIER: readonly GateCode[] = ["not_a_free_offer", "offer_expired", "product_discontinued"];
+
+export const GATES_LEAVING_NOTHING_TO_RUN_IN_PRODUCTION: readonly GateCode[] = [...GATES_LEAVING_NO_FREE_TIER, "offer_retired"];
+
 export type VendorChangeLookup = (vendor: string) => readonly DealChange[];
 
 export interface Gate {

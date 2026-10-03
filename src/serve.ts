@@ -107,7 +107,7 @@ import { changeAnchor, changeRecordHref } from "./change-anchor.js";
 import { SSE_KEEPALIVE_FRAME, keepaliveIntervalMs, sessionRecoveryBody } from "./mcp-stream.js";
 import { ASSISTANTS_API_SHUTDOWN } from "./assistants-shutdown.js";
 import { changeTouchesTheListing, countsAsANegativeChange, discontinuedClause, discontinuedOnOrBefore, endsAFreeTier } from "./product-deprecation.js";
-import { rankOffers, rankForListing, rotateListing, utcDate, gateFor, notAFreeOfferGateFor, descriptionDeniesFreeTier, classifyTier, timeLimitedTierRule, CRITERIA_PATH, DEMOTE_ONLY_POLICY, DISCLOSURE_RATIONALE, TIE_BREAK_ALGORITHM, NAMED_SUBSET_RULE, NAMED_SUBSET_FIELD_RULE, wholeRankedOrderClause, GATE_TABLE, gateTableRowText, DEMERIT_TABLE, demeritTableRowText, NOT_FREE_TIER_RULES, TIME_LIMITED_TIER_RULES, type TieBreak, type Gate } from "./ranking.js";
+import { rankOffers, rankForListing, rotateListing, utcDate, gateFor, notAFreeOfferGateFor, GATES_LEAVING_NO_FREE_TIER, GATES_LEAVING_NOTHING_TO_RUN_IN_PRODUCTION, descriptionDeniesFreeTier, classifyTier, timeLimitedTierRule, CRITERIA_PATH, DEMOTE_ONLY_POLICY, DISCLOSURE_RATIONALE, TIE_BREAK_ALGORITHM, NAMED_SUBSET_RULE, NAMED_SUBSET_FIELD_RULE, wholeRankedOrderClause, GATE_TABLE, gateTableRowText, DEMERIT_TABLE, demeritTableRowText, NOT_FREE_TIER_RULES, TIME_LIMITED_TIER_RULES, type TieBreak, type Gate } from "./ranking.js";
 import type { RankedEntry, RankingResult } from "./ranking.js";
 import { eligibilityGateAsPublished, gatedShareDescriptionClause, gatedShareLede, publishableEligibilityConditions } from "./eligibility.js";
 import { gateDisclosureFor, gateDisclosureSentence, matchingSubject } from "./gate-disclosure.js";
@@ -5185,10 +5185,6 @@ const CURATED_ALTS_HEADING = "Recommended Migration Targets";
 
 const NO_FREE_TIER_FOR_PRODUCTION = "There is no free tier here to run in production.";
 
-const GATES_LEAVING_NO_FREE_TIER: readonly string[] = ["not_a_free_offer", "offer_expired", "product_discontinued"];
-
-const GATES_LEAVING_NOTHING_TO_RUN_IN_PRODUCTION: readonly string[] = [...GATES_LEAVING_NO_FREE_TIER, "offer_retired"];
-
 function curatedAltsNote(vendorName: string): string {
   return `These alternatives were identified from ${escHtmlServer(vendorName)}&rsquo;s pricing changes as recommended replacements.`;
 }
@@ -5315,6 +5311,9 @@ function buildVendorPage(slug: string): string | null {
   const primaryGateBeyondEligibility = primaryGate && primaryGate.code !== "eligibility_restricted" ? primaryGate : primaryNotAFreeOfferGate;
   const noFreeTierGate = primaryGate && GATES_LEAVING_NO_FREE_TIER.includes(primaryGate.code) ? primaryGate : primaryNotAFreeOfferGate;
   const productionGate = primaryGate && GATES_LEAVING_NOTHING_TO_RUN_IN_PRODUCTION.includes(primaryGate.code) ? primaryGate : null;
+  const gateSentenceOpeningTheProductionAnswer = primaryGate && primaryGate.code !== "eligibility_restricted" && !productionGate
+    ? `${primaryGate.reason} `
+    : "";
   const linedGate = primaryGate && primaryGate.code !== "offer_retired" ? primaryGate : null;
   const gateLine = linedGate
     ? `\n  <p class="gate-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong style="color:#d29922;font-family:var(--mono)">${escHtmlServer(linedGate.code)}</strong> ${escHtmlServer(linedGate.reason)} <a href="${CRITERIA_PATH}#gates">How we use this</a>.</p>${
@@ -5742,8 +5741,8 @@ ${allCompareLinks.join("\n")}
   const faqProductionAnswer = productionGate
     ? `${productionGate.reason} ${NO_FREE_TIER_FOR_PRODUCTION}`
     : termsSuperseded
-    ? `${eligibilityGateSentence}${supersededTermsVerdictSentence(vendorName, termsSuperseded)} Until we have re-read the page we cannot say what capacity ${vendorName} gives you, so we are not recommending it for production on figures we have already superseded.`
-    : eligibilityGateSentence + (levelWithheld
+    ? `${eligibilityGateSentence}${gateSentenceOpeningTheProductionAnswer}${supersededTermsVerdictSentence(vendorName, termsSuperseded)} Until we have re-read the page we cannot say what capacity ${vendorName} gives you, so we are not recommending it for production on figures we have already superseded.`
+    : eligibilityGateSentence + gateSentenceOpeningTheProductionAnswer + (levelWithheld
     ? `${withheldLevelSentence(levelWithheld, vendorName, unconfirmableSince)} We cannot confirm what this offer provides today, so we are not recommending it for production or for anything else until we can.`
     : hasFree
     ? (endedBy

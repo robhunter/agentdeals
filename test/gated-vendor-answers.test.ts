@@ -7,7 +7,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-const { gateFor, utcDate } = await import("../dist/ranking.js");
+const { GATES_LEAVING_NO_FREE_TIER, gateFor, utcDate } = await import("../dist/ranking.js");
 const { vendorSlugMap } = await import("../dist/vendor-slug.js");
 const { offerEnded, offerRetired } = await import("../dist/retirement.js");
 const { STORED_TERMS_WITHHELD_PHRASE, supersedingChange } = await import("../dist/superseded-description.js");
@@ -291,8 +291,8 @@ describe("the page a gated record renders does not answer the free-tier question
   });
 
   it("asks nothing about a free tier its own gate says is not there", () => {
-    const subjects = gated().filter(p => p.gate!.code !== "eligibility_restricted" && !offerEnded(p.primary));
-    assert.ok(subjects.length > 0, "no vendor page renders a record gated outside eligibility");
+    const subjects = gated().filter(p => GATES_LEAVING_NO_FREE_TIER.includes(p.gate!.code) && !offerEnded(p.primary));
+    assert.ok(subjects.length > 0, "no vendor page renders a record whose gate says it holds no free tier");
     const asking = subjects
       .filter(p => asks(p.html, `What is ${p.vendor}'s free tier?`))
       .map(p => `${p.slug} (${p.gate!.code})`);
@@ -398,6 +398,10 @@ describe("the production answer reads the same gate", () => {
       .filter(p => !productionAnswer(p).startsWith(p.gate!.reason))
       .map(p => `${p.slug} (${p.gate!.code}): ${productionAnswer(p).slice(0, 60)}`);
     assert.deepStrictEqual(contradicting, []);
+    const repeating = subjects
+      .filter(p => productionAnswer(p).startsWith(`${p.gate!.reason} ${p.gate!.reason}`))
+      .map(p => `${p.slug} (${p.gate!.code})`);
+    assert.deepStrictEqual(repeating.slice(0, 20), [], "production answers that open on their gate twice");
   });
 
   it("publishes that answer verbatim on the pages the issue names", () => {
