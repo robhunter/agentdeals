@@ -19897,7 +19897,7 @@ function buildGoogleDeveloperProgram2026Page(): string {
     { vendor: "Azure Free Account", credits: "$200 credit (30 days) + 12 months of free services", highlight: "12 months: 750 hours each of B2pts v2 and B2ats v2 VMs, 5 GB Blob Storage. Always free: up to 10 SQL databases, 100,000 vCore seconds and 32 GB each a month", link: "/vendor/azure" },
     { vendor: "Oracle Cloud", credits: "Always Free — no expiry", highlight: oracleAlwaysFreeSpec(), link: "/vendor/oracle-cloud" },
     { vendor: "DigitalOcean", credits: "$5 credit (90 days)", highlight: "Then $4/mo Droplets; a payment method is required", link: "/vendor/digitalocean" },
-    { vendor: "Google Cloud (direct)", credits: "$300 credits (90 days) + always-free tier", highlight: "Same GCP services, no subscription needed", link: "/vendor/google-cloud-run" },
+    { vendor: "Google Cloud (direct)", credits: "$300 credits (90 days, no GPUs) + always-free tier", highlight: "No subscription needed", link: "/vendor/google-cloud-run" },
     { vendor: "Railway", credits: "$5 trial credit, then $1 of free credit a month", highlight: "No sleep, GitHub deploy, usage-based", link: "/vendor/railway" },
   ];
 
@@ -33033,6 +33033,8 @@ function buildGcpFreeTier2026Page(): string {
   }
 
   const GOOGLE_FREE_TIER_LIST = "https://docs.cloud.google.com/free/docs/free-cloud-features#free-tier-usage-limits";
+  const GOOGLE_FREE_TRIAL_LIMITS = "https://docs.cloud.google.com/free/docs/free-cloud-features";
+  const FREE_TRIAL_LIMITS = "During the trial you cannot add GPUs to VM instances, use Google Cloud Marketplace, request a quota increase or create Windows Server VMs, and the credit does not pay for partner generative AI models offered as a managed API (model as a service).";
 
   const alwaysFreeServices: GcpService[] = [
     { name: "Compute Engine (e2-micro)", slug: "google-compute-engine", limits: "1 e2-micro VM/month (us-west1, us-central1, us-east1), 30 GB standard persistent disk", category: "Compute", source: GOOGLE_FREE_TIER_LIST },
@@ -33073,7 +33075,7 @@ function buildGcpFreeTier2026Page(): string {
   ];
 
   const trialServices: GcpService[] = [
-    { name: "$300 Free Trial Credit", slug: "google-cloud", limits: "$300 credit for 90 days. Credit card or other payment method required. Accounts opened after 2026-03-02 cannot spend it on the Gemini API.", category: "Trial" },
+    { name: "$300 Free Trial Credit", slug: "google-cloud", limits: `$300 credit for 90 days. Credit card or other payment method required. Accounts opened after 2026-03-02 cannot spend it on the Gemini API. ${FREE_TRIAL_LIMITS}`, category: "Trial", source: GOOGLE_FREE_TRIAL_LIMITS },
     { name: "Gemini API (AI Studio)", slug: "google-gemini-api", limits: "Free tier on the Gemini 3.x Flash and Flash-Lite models; limits shown per project in AI Studio", category: "AI/ML", highlight: true },
     { name: "Google Colab", slug: "google-colab", limits: "Free notebooks run for at most 12 hours. GPU access is heavily restricted and GPU types vary.", category: "AI/ML" },
     { name: "AlloyDB Omni", slug: "google-cloud", limits: "Free to download and use for development, testing, prototyping and demos; production or data-processing use is paid ($40 per vCPU a month).", category: "Database" },
@@ -33124,7 +33126,7 @@ function buildGcpFreeTier2026Page(): string {
 
   const trialRows = trialServices.map(s => `<tr${s.highlight ? ' style="background:rgba(59,130,246,0.1)"' : ""}>
       <td style="font-weight:600">${s.highlight ? `<span style="color:var(--accent)">★</span> ` : ""}${escHtmlServer(s.name)}</td>
-      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(s.limits)}</td>
+      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(s.limits)}${s.source ? figureSourceLinkHtml(s.source, escHtmlServer) : ""}</td>
       <td style="color:var(--text-muted);font-size:.8rem">${escHtmlServer(s.category)}</td>
     </tr>`).join("\n        ");
 
@@ -33298,7 +33300,7 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="trial-ai">Free Trial &amp; AI/ML Tools</h2>
-  <p class="section-intro">The $300 trial is credit for Google Cloud products over 90 days; accounts opened after 2026-03-02 cannot spend it on the Gemini API. The Gemini API has its own free tier, with limits shown per project in AI Studio.</p>
+  <p class="section-intro">The $300 trial is credit for Google Cloud products over 90 days; accounts opened after 2026-03-02 cannot spend it on the Gemini API. ${escHtmlServer(FREE_TRIAL_LIMITS)}${figureSourceLinkHtml(GOOGLE_FREE_TRIAL_LIMITS, escHtmlServer)} The Gemini API has its own free tier, with limits shown per project in AI Studio.</p>
 
   <div style="overflow-x:auto">
   <table class="pricing-table">
