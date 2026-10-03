@@ -327,4 +327,30 @@ describe("the text a reader sees of a page", () => {
     assert.strictEqual(stripHtml('<p><span class="not-material-icons">Free</span> plan</p>'), "Free plan");
     assert.strictEqual(stripHtml('<p><span data-class="material-icons">Free</span> plan</p>'), "Free plan");
   });
+
+  it("leaves out a price the page strikes through, so an anchor price beside a discount does not read as the price", () => {
+    assert.strictEqual(stripHtml("<p>Teams <s>$199</s> $49/month</p>"), "Teams $49/month");
+    assert.strictEqual(stripHtml("<p>Teams <del>$199</del> $49/month</p>"), "Teams $49/month");
+    assert.strictEqual(stripHtml("<p>Teams <strike>$199</strike> $49/month</p>"), "Teams $49/month");
+    assert.strictEqual(stripHtml('<p>Teams <s class="was">$<b>199</b></s> $49/month</p>'), "Teams $49/month");
+    assert.strictEqual(stripHtml('<p>Teams <span style="color:#999; text-decoration: line-through">$199</span> $49/month</p>'), "Teams $49/month");
+    assert.strictEqual(stripHtml("<p>Teams <span style='text-decoration-line:line-through'>$199</span> $49/month</p>"), "Teams $49/month");
+    assert.strictEqual(stripHtml('<p>Starts at <span class="text-2xl text-signoz_vanilla-400 line-through">$199</span> $49/month</p>'), "Starts at $49/month");
+  });
+
+  it("leaves out a price the page fades, and keeps the live price beside it", () => {
+    assert.strictEqual(
+      stripHtml('<div class="price-div-item"><div class="u-heading-2xl-new is-price is-faded">$39</div></div><div class="price-div-item"><div class="u-heading-2xl-new is-price">$29</div></div>'),
+      "$29",
+    );
+  });
+
+  it("keeps a price in an ordinary element, and in one whose class or style only resembles a strike or a fade", () => {
+    assert.strictEqual(stripHtml("<p>Teams <span>$199</span>/month</p>"), "Teams $199 /month");
+    assert.strictEqual(stripHtml('<p>Teams <span class="hover:line-through">$199</span>/month</p>'), "Teams $199 /month");
+    assert.strictEqual(stripHtml('<p>Teams <span class="is-faded-in">$199</span>/month</p>'), "Teams $199 /month");
+    assert.strictEqual(stripHtml('<p>Teams <span style="text-decoration: underline">$199</span>/month</p>'), "Teams $199 /month");
+    assert.strictEqual(stripHtml('<p>Teams <span data-style="text-decoration: line-through">$199</span>/month</p>'), "Teams $199 /month");
+    assert.strictEqual(stripHtml("<section><p>Teams $199/month</p></section><details>Billed monthly</details>"), "Teams $199/month Billed monthly");
+  });
 });
