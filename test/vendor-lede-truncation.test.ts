@@ -11,7 +11,8 @@ const REPO = path.join(__dirname, "..");
 
 const { openingOfTerms, punctuatedOpeningOfTerms, termsWereClipped, unclosedBrackets } =
   await import("../dist/terms-opening.js");
-const { readingBehindTheChange, supersedingChange } = await import("../dist/superseded-description.js");
+const { CORRECTED_TERMS_WITHHELD_META_PHRASE, STORED_TERMS_WITHHELD_META_PHRASE, readingBehindTheChange, supersedingChange } =
+  await import("../dist/superseded-description.js");
 const { toSlug } = await import("../dist/slug.js");
 
 interface Offer { vendor: string; description: string }
@@ -74,7 +75,7 @@ function startServer(): Promise<ChildProcess> {
 }
 
 const SWEPT_PAGES_VACUITY_GUARD = 200;
-const WITHHOLDING_PHRASE = "terms are superseded and withheld";
+const WITHHOLDING_PHRASES: readonly string[] = [STORED_TERMS_WITHHELD_META_PHRASE, CORRECTED_TERMS_WITHHELD_META_PHRASE];
 const INCLUDES_PHRASE = " free tier includes ";
 const READING_PHRASE = " reads: ";
 const CLIP_MARKER = "…";
@@ -149,7 +150,7 @@ async function sweepVendorPages(): Promise<void> {
       if (response.status !== 200) { unreachable.push(route); continue; }
       const description = metaDescriptionOf(await response.text());
       if (description === null) { unreachable.push(route); continue; }
-      const withheld = description.includes(WITHHOLDING_PHRASE);
+      const withheld = WITHHOLDING_PHRASES.some(phrase => description.includes(phrase));
       const includesAt = description.indexOf(INCLUDES_PHRASE);
       const readsAt = description.indexOf(READING_PHRASE);
       swept.push({

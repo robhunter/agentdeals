@@ -22,7 +22,8 @@ const {
   somethingLaterSettledTheRead,
 } = await import("../dist/read-date.js");
 const { offerEnded } = await import("../dist/retirement.js");
-const { SUPERSEDED_TERMS_LABEL } = await import("../dist/superseded-description.js");
+const { STORED_TERMS_LABELS } = await import("../dist/superseded-description.js");
+const carriesAStoredTermsLabel = (row: string): boolean => STORED_TERMS_LABELS.some((label: string) => row.includes(`<strong>${label}:</strong>`));
 const {
   REFUSAL_REASONS_THAT_CONFIRM_THE_STORED_TERMS,
   REFUSAL_REASONS_THAT_LEAVE_THE_READ_STANDING,
@@ -261,7 +262,7 @@ describe("the two surfaces that describe one read", () => {
         checked++;
         const speaks = REASON_CLASSES.some((c) => row.includes(c))
           || row.includes("listing-eligibility-restricted")
-          || row.includes(SUPERSEDED_TERMS_LABEL);
+          || carriesAStoredTermsLabel(row);
         if (!speaks) silent.push(`/category/${slug} ${offer.vendor}`);
       }
     }
@@ -307,7 +308,7 @@ describe("the two surfaces that describe one read", () => {
       for (const row of body.split("<tr").filter((r) => r.includes("/vendor/"))) {
         const vendorSlug = row.match(/\/vendor\/([a-z0-9-]+)"/)?.[1];
         if (!vendorSlug) continue;
-        if (row.includes(SUPERSEDED_TERMS_LABEL)) {
+        if (carriesAStoredTermsLabel(row)) {
           supersededRows++;
           const superseded = offers.find((o) => slugOf(o.vendor) === vendorSlug && slugOf(o.category) === slug);
           if (superseded && readThatContradictsOurTerms(superseded)) supersededHoldingARead++;

@@ -10,7 +10,7 @@ import { fileURLToPath } from "node:url";
 const { GATES_LEAVING_NO_FREE_TIER, gateFor, utcDate } = await import("../dist/ranking.js");
 const { vendorSlugMap } = await import("../dist/vendor-slug.js");
 const { offerEnded, offerRetired } = await import("../dist/retirement.js");
-const { STORED_TERMS_WITHHELD_PHRASE, supersedingChange } = await import("../dist/superseded-description.js");
+const { storedTermsWithheldPhrase, supersedingChange } = await import("../dist/superseded-description.js");
 const { qualityBudget } = await import("../dist/page-reviews.js");
 const { descriptionDeniesAFreeTier } = await import("../dist/free-tier-record.js");
 const { unreachableNoticeForUrl } = await import("../dist/link-health.js");
@@ -202,6 +202,7 @@ const restrictedPages = (): Population => ({
   read: "gated pages whose gate is the restriction rather than the tier",
 });
 const supersededTerms = (p: VendorPage) => supersededBy.has(p.primary);
+const withheldPhraseOf = (p: VendorPage) => storedTermsWithheldPhrase(supersededBy.get(p.primary)!);
 const publishingItsTerms = () => ungated().filter(p => !supersededTerms(p));
 const freeAnswer = (p: VendorPage) => faqAnswer(p.html, `Is ${p.vendor} free?`);
 const productionAnswer = (p: VendorPage) => faqAnswer(p.html, `Is ${p.vendor}'s free tier good for production?`);
@@ -277,7 +278,7 @@ describe("the page a gated record renders does not answer the free-tier question
     for (const p of subjects) {
       const answer = freeAnswer(p);
       assert.ok(!answer.includes(p.primary.description.slice(0, 60)), `/vendor/${p.slug} still states them: ${answer.slice(0, 120)}`);
-      assert.ok(answer.includes(STORED_TERMS_WITHHELD_PHRASE), `/vendor/${p.slug}: ${answer.slice(0, 160)}`);
+      assert.ok(answer.includes(withheldPhraseOf(p)), `/vendor/${p.slug}: ${answer.slice(0, 160)}`);
     }
   });
 
@@ -722,7 +723,7 @@ describe("the same page an ungated record renders is unchanged", () => {
     const opening = subjects.filter(p => pageProse(p).includes(`${p.vendor}'s free tier offers `)).map(p => p.slug);
     assert.deepStrictEqual(opening.slice(0, 20), [], "verdicts still opening on figures the change log supersedes");
     const silent = subjects
-      .filter(p => !pageProse(p).includes(STORED_TERMS_WITHHELD_PHRASE))
+      .filter(p => !pageProse(p).includes(withheldPhraseOf(p)))
       .map(p => p.slug);
     assert.deepStrictEqual(silent.slice(0, 20), [], "verdicts that withhold the figures without saying why");
   });

@@ -1,6 +1,6 @@
 import { changeCitesASource, changeSummaryText, citationLabel } from "./change-citation.js";
 import { changeDateClause } from "./change-dates.js";
-import { isNoLongerInForce } from "./change-resolution.js";
+import { isACorrectionToOurOwnRecord, isNoLongerInForce } from "./change-resolution.js";
 import { changeGradesTheListedTier, comparableTerms } from "./change-tier.js";
 import { tierRecordsAFreeTier } from "./free-tier-record.js";
 import { describesOnlyATrial, openingOfAReading } from "./superseding-reading.js";
@@ -98,6 +98,14 @@ function readingSentence(date: string, source: string, terms: string): string {
 
 export const SUPERSEDED_TERMS_LABEL = "Superseded";
 
+export const CORRECTED_TERMS_LABEL = "Withheld";
+
+export const STORED_TERMS_LABELS: readonly string[] = [SUPERSEDED_TERMS_LABEL, CORRECTED_TERMS_LABEL];
+
+export function storedTermsLabel(change: QuotingChange): string {
+  return isACorrectionToOurOwnRecord(change) ? CORRECTED_TERMS_LABEL : SUPERSEDED_TERMS_LABEL;
+}
+
 export const SUPERSEDED_TERMS_RULE =
   "Whether we go on publishing a stored figure does not read this classification: where one of our own " +
   "records names those terms as the previous ones we withhold them whatever the change counts as, because " +
@@ -105,12 +113,34 @@ export const SUPERSEDED_TERMS_RULE =
 
 export const STORED_TERMS_WITHHELD_PHRASE = "names them as the previous ones";
 
+export const CORRECTED_TERMS_WITHHELD_PHRASE = "our own correction record says they did not match";
+
+export function storedTermsWithheldPhrase(change: QuotingChange): string {
+  return isACorrectionToOurOwnRecord(change) ? CORRECTED_TERMS_WITHHELD_PHRASE : STORED_TERMS_WITHHELD_PHRASE;
+}
+
 export const STORED_TERMS_WITHHELD_META_PHRASE = "terms are superseded and withheld";
+
+export const CORRECTED_TERMS_WITHHELD_META_PHRASE = "terms are withheld";
+
+export function storedTermsWithheldMetaPhrase(change: QuotingChange): string {
+  return isACorrectionToOurOwnRecord(change) ? CORRECTED_TERMS_WITHHELD_META_PHRASE : STORED_TERMS_WITHHELD_META_PHRASE;
+}
+
+export const CORRECTION_RECORD_STATES = "Our correction record states:";
+
+export const WHAT_OUR_RECORD_SAYS_CHANGED = "What our record says changed:";
+
+function whyWeWithholdTheStoredTerms(vendor: string, change: QuotingChange): string {
+  return isACorrectionToOurOwnRecord(change)
+    ? `${CORRECTED_TERMS_WITHHELD_PHRASE} ${vendor}'s page`
+    : `our own pricing change record, ${changeDateClause(change)}, ${STORED_TERMS_WITHHELD_PHRASE}`;
+}
 
 function withheldTail(vendor: string, change: QuotingChange, besideAReading: boolean): string {
   return (
     `We are not publishing our stored ${vendor} terms${besideAReading ? " beside it" : ""} — ` +
-    `our own pricing change record, ${changeDateClause(change)}, ${STORED_TERMS_WITHHELD_PHRASE}.`
+    `${whyWeWithholdTheStoredTerms(vendor, change)}.`
   );
 }
 
@@ -148,14 +178,15 @@ export function supersededTermsAnswer(vendor: string, change: QuotingChange): st
   const opening =
     readingWithTail(vendor, change) ??
     `We are not answering that from our stored terms today. ${withheldTail(vendor, change, false)}`;
-  return `${opening} What our record says changed: ${changeSummaryText({ ...change, vendor })}`;
+  const leadIn = isACorrectionToOurOwnRecord(change) ? CORRECTION_RECORD_STATES : WHAT_OUR_RECORD_SAYS_CHANGED;
+  return `${opening} ${leadIn} ${changeSummaryText({ ...change, vendor })}`;
 }
 
 export function supersededTermsMetaSentence(vendor: string, change: QuotingChange): string {
-  const withheld = `Our stored ${vendor} ${STORED_TERMS_WITHHELD_META_PHRASE}`;
+  const withheld = `Our stored ${vendor} ${storedTermsWithheldMetaPhrase(change)}`;
   const reading = readingBehindTheChange(change);
   if (!reading) {
-    return `${withheld}: our own pricing change record, ${changeDateClause(change)}, ${STORED_TERMS_WITHHELD_PHRASE}.`;
+    return `${withheld}: ${whyWeWithholdTheStoredTerms(vendor, change)}.`;
   }
   const opening = punctuated(openingOfAReading(reading.terms, 90));
   return `${readingSentence(reading.date, reading.label, opening)} ${withheld}.`;

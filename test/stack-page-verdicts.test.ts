@@ -194,10 +194,10 @@ describe("stack pages do not out-claim the badge", () => {
     for (const route of STACK_PAGES) {
       const html = pages.get(route)!;
       for (const cell of html.match(/<td[^>]*color:var\(--accent\)[^>]*>([^<]*)</g) ?? []) {
-        if (/terms are superseded and withheld|names them as the previous ones/.test(cell)) misplaced.push(`${route}: ${cell}`);
+        if (/terms are (superseded and )?withheld|names them as the previous ones|correction record says they did not match/.test(cell)) misplaced.push(`${route}: ${cell}`);
       }
       for (const cell of html.match(/class="(pick-limits|limits-cell)"[^>]*>([^<]*)</g) ?? []) {
-        if (/terms are superseded and withheld|names them as the previous ones/.test(cell)) misplaced.push(`${route}: ${cell}`);
+        if (/terms are (superseded and )?withheld|names them as the previous ones|correction record says they did not match/.test(cell)) misplaced.push(`${route}: ${cell}`);
       }
     }
     assert.deepStrictEqual(misplaced, [], `withholding notices in a limit slot:\n${misplaced.join("\n")}`);

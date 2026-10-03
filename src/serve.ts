@@ -32,7 +32,7 @@ import { amountUnstatedSentence, freePriceConfirmedSentence, freePriceOnlySenten
 import { offerVerdictInput, reasonWeCannotConfirmTheTerms, vendorVerdictContextFrom, type VendorVerdictContext } from "./vendor-verdict-input.js";
 import { readingIsBehindTheLoop, reverificationIntervalDays } from "./badge-staleness.js";
 import { LAST_READ_LABEL, READ_CONTRADICTS_LABEL, RESTATED_DATE_LABEL, UNCONFIRMED_DATE_LABEL, VERIFICATION_DATES_HEADING, contradictedTermsSentence, lastReadDate, lastReadNote, publishedDateLabel, publishedDateValue, readThatContradictsOurTerms, restatedReadingDate, verificationDatesCell, verificationDatesSentence, whereOurTermsCameFrom, whereOurTermsCameFromClause, type LastReading } from "./read-date.js";
-import { SUPERSEDED_TERMS_LABEL, SUPERSEDED_TERMS_RULE, readingBehindTheChange, supersededTermsAnswer, supersededTermsMetaSentence, supersededTermsNotice, supersededTermsNoticeHtml, supersededTermsRecord, supersededTermsVerdictSentence, supersedingChange, type SupersededTermsRecord } from "./superseded-description.js";
+import { SUPERSEDED_TERMS_LABEL, SUPERSEDED_TERMS_RULE, readingBehindTheChange, storedTermsLabel, supersededTermsAnswer, supersededTermsMetaSentence, supersededTermsNotice, supersededTermsNoticeHtml, supersededTermsRecord, supersededTermsVerdictSentence, supersedingChange, type SupersededTermsRecord } from "./superseded-description.js";
 import { openingOfTerms, punctuated, punctuatedOpeningOfTerms } from "./terms-opening.js";
 import { NO_CURRENT_FIGURE, costHeadlineCaveat, limitCellText, mayRecommendAsFree, proseWithoutNames, readsActive, stackFreshnessStatement } from "./stack-claim.js";
 import { changesByVendor } from "./superseded-census.js";
@@ -921,7 +921,7 @@ function uncontradictedVendorClause(vendors: readonly string[], room: number): s
 }
 
 function supersededTermsListingHtml(vendor: string, change: DealChange): string {
-  return `<strong>${SUPERSEDED_TERMS_LABEL}:</strong> ${supersededTermsNoticeHtml(vendor, change, escHtmlServer)}` +
+  return `<strong>${storedTermsLabel(change)}:</strong> ${supersededTermsNoticeHtml(vendor, change, escHtmlServer)}` +
     ` <a href="/vendor/${toSlug(vendor)}#changes">Read what we recorded &darr;</a>`;
 }
 
@@ -3753,7 +3753,7 @@ function buildComparisonPage(slug: string): string | null {
 
   const descBlockHtml = (offer: Offer, superseded: typeof supersededA) =>
     superseded
-      ? `<div class="desc-block terms-superseded-text"><strong>${SUPERSEDED_TERMS_LABEL}:</strong> ${supersededTermsNoticeHtml(offer.vendor, superseded, escHtmlServer)} <a href="#changes">Read what we recorded &darr;</a></div>`
+      ? `<div class="desc-block terms-superseded-text"><strong>${storedTermsLabel(superseded)}:</strong> ${supersededTermsNoticeHtml(offer.vendor, superseded, escHtmlServer)} <a href="#changes">Read what we recorded &darr;</a></div>`
       : `<div class="desc-block">${publishedTermsHtml(offer)}</div>`;
 
   const changesHtml = (changes: typeof a.deal_changes, vendor: string) => {
@@ -5741,7 +5741,7 @@ ${allCompareLinks.join("\n")}
   const faqProductionAnswer = productionGate
     ? `${productionGate.reason} ${NO_FREE_TIER_FOR_PRODUCTION}`
     : termsSuperseded
-    ? `${eligibilityGateSentence}${gateSentenceOpeningTheProductionAnswer}${supersededTermsVerdictSentence(vendorName, termsSuperseded)} Until we have re-read the page we cannot say what capacity ${vendorName} gives you, so we are not recommending it for production on figures we have already superseded.`
+    ? `${eligibilityGateSentence}${gateSentenceOpeningTheProductionAnswer}${supersededTermsVerdictSentence(vendorName, termsSuperseded)} Until we have re-read the page we cannot say what capacity ${vendorName} gives you, so we are not recommending it for production${isACorrectionToOurOwnRecord(termsSuperseded) ? "" : " on figures we have already superseded"}.`
     : eligibilityGateSentence + gateSentenceOpeningTheProductionAnswer + (levelWithheld
     ? `${withheldLevelSentence(levelWithheld, vendorName, unconfirmableSince)} We cannot confirm what this offer provides today, so we are not recommending it for production or for anything else until we can.`
     : hasFree
@@ -5952,7 +5952,7 @@ ${referralCalloutHtml}
   <div class="desc-block">
     <h2>Free Tier Details</h2>
     ${termsSuperseded
-      ? `<p class="terms-superseded-text"><strong>${SUPERSEDED_TERMS_LABEL}:</strong> ${supersededTermsNoticeHtml(vendorName, termsSuperseded, escHtmlServer)} <a href="#changes">Read what we recorded &darr;</a></p>`
+      ? `<p class="terms-superseded-text"><strong>${storedTermsLabel(termsSuperseded)}:</strong> ${supersededTermsNoticeHtml(vendorName, termsSuperseded, escHtmlServer)} <a href="#changes">Read what we recorded &darr;</a></p>`
       : `<p class="desc-text">${escHtmlServer(primary.description)}</p>`}${freeTierSourceLine}${freePlanExcerptBlock}
   </div>
 ${growthPathHtml}
