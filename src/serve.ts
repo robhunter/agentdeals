@@ -6,7 +6,7 @@ import { dirname, join } from "node:path";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { createServer, getServerCard } from "./server.js";
 import { changesForVendor, oldestVerifiedDateForSlug, vendorRiskAssessment, withheldRecordCounts, publishedRisk, levelWithheldStatement, vendorNotIndexedSentence, riskCauseOf, freeTierEndingRecord, NEGATIVE_CHANGE_TYPES, POSITIVE_CHANGE_TYPES, SEVERE_CHANGE_TYPES, loadOffers, getCategories, getNewOffers, getNewestDeals, searchOffers, enrichOffers, gateForOffer, loadDealChanges, getDealChanges, changeContext, DEFAULT_CHANGE_WINDOW_DAYS, getOfferDetails, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, getFormattedWeeklyDigest, getFreshnessMetrics, publishedStabilityIndex, stabilityWithheldDisclosure, UNRATED_STABILITY, type StabilityIndex, type PublishedStabilityClass, getVendorReferral, sanitizeQuery, getChangeLogFreshness, isEventDated, partitionByDateProvenance } from "./data.js";
-import { loadChangeRefusals, changesRatingTheListedTier, changesTheVendorMade, stabilityDeciders, vendorNameAsPublished, freePlanExcerptHeldFor, freePlanExcerptHoldOn } from "./data.js";
+import { loadChangeRefusals, vendorWhoseAlternativesAQueryAsksFor, changesRatingTheListedTier, changesTheVendorMade, stabilityDeciders, vendorNameAsPublished, freePlanExcerptHeldFor, freePlanExcerptHoldOn } from "./data.js";
 import { A_DEMOTION_IN_FORCE_RULE, NO_DEMOTION_IN_FORCE_RULE, A_COMPLETE_LOG_NOTICE, A_VERDICT_ROLLS_NOTICE, A_WITHHELD_RATING_DOES_NOT_LAPSE, lapsingDemotionStated, VOLATILE_WHILE_A_DEMOTION_COUNTS_RULE, WATCH_RECEIVES_FROM_VOLATILE_RULE , confirmationCoverage, confirmationCoverageSentence, HOW_THE_CATALOGUE_IS_MAINTAINED, NOTHING_CONTRADICTS_OUR_TERMS_FOR, THE_DATES_WE_HOLD } from "./data.js";
 import { confirmingRead, confirmingReadSentence, refusalsByVendor, refusedReadSentence, supersededRefusalSentence, type ChangeRefusal } from "./change-refusal.js";
 import { getStackRecommendation } from "./stacks.js";
@@ -112,9 +112,10 @@ import type { RankedEntry, RankingResult } from "./ranking.js";
 import { eligibilityGateAsPublished, gatedShareDescriptionClause, gatedShareLede, publishableEligibilityConditions } from "./eligibility.js";
 import { gateDisclosureFor, gateDisclosureSentence, matchingSubject } from "./gate-disclosure.js";
 import { verificationLedger, QUARANTINE_AFTER_FAILURES } from "./verification-state.js";
-import { partitionAlternatives, partitionSubstitutes, type SubstitutesPartition, productRoleSentence, MEMBERSHIP_GATE_RULES, MEMBERSHIP_GATE_ORDER, MEMBERSHIP_GATE_SYMMETRY, MEMBERSHIP_GATE_SCOPE, MEMBERSHIP_GATE_CORRECTIONS, SUBTYPE_TAXONOMIES, SUBTYPE_MEMBERSHIP_RULE, SUBTYPE_MEMBERSHIP_GROUP_SCOPE, CURATED_SUBTYPE_EXEMPTION, membershipGroupsFor, subtypeDefinition, CROSS_TAXONOMY_RULE, CROSS_TAXONOMY_RULINGS } from "./product-role.js";
+import { partitionAlternatives, partitionSubstitutes, productRoleSentence, MEMBERSHIP_GATE_RULES, MEMBERSHIP_GATE_ORDER, MEMBERSHIP_GATE_SYMMETRY, MEMBERSHIP_GATE_SCOPE, MEMBERSHIP_GATE_CORRECTIONS, SUBTYPE_TAXONOMIES, SUBTYPE_MEMBERSHIP_RULE, SUBTYPE_MEMBERSHIP_GROUP_SCOPE, CURATED_SUBTYPE_EXEMPTION, membershipGroupsFor, subtypeDefinition, CROSS_TAXONOMY_RULE, CROSS_TAXONOMY_RULINGS } from "./product-role.js";
 import { buildProductFunctions, functionMembers, functionDefinitions, functionMeaningSentence, admissionFor, splitByFunction, labelsNaming, FUNCTION_RESIDUE_COPY, type ProductFunction, FUNCTION_MEMBERSHIP_RULE, FUNCTION_SPLIT_RULE, FUNCTION_NAMING_RULE, FUNCTION_TITLE_RULE, FUNCTION_PICK_RULE } from "./product-function.js";
-import { resolveCuratedAlternatives, curatedAlternativesFor, addCuratedToPool } from "./curated-alternatives.js";
+import { curatedAlternativesFor } from "./curated-alternatives.js";
+import { vendorSubstitutes, substitutesListedFor } from "./vendor-substitutes.js";
 import type { Agent, ChangeDateSource, DealChange, FreePlanExcerpt, RiskCause, RatingWithheld, LinkUnreachable, Offer, StabilityClass, SubtypeLabel } from "./types.js";
 import { A_DATED_HEADING_MARKER, A_DATED_SECTION_MARKER, datedHeadingNoticeHtml, datedSectionNoticeHtml, namedOnceItsDateArrived, namedWhileAheadOf, namedWhileNotBefore, ANNOUNCED_BADGE, ANNOUNCED_HEADING, announcedIntro, changeDateLabel, changeEntryDateLabel, changeEntryLongDateLabel, changeDateClause, changeDatePublished, changeEventStartDate, capListSections, latestEventDate, offerExpiryAfter, feedEntryUpdated, undatedGroupHeading, UNDATED_TILE_LABEL, firstReadHeading, discoveryBatchNote, coveringBracketedChanges, changeEntryDateLabelHtml, isoWeekOf, monthlyChangeSeries, changesInWindow, discoveryMonthSeriesHeading, periodComparisonSentence, DISCOVERED_DATE_PREFIX, EFFECTIVE_DATE_PREFIX, UNDATED_GROUP_NOTE, UNKNOWN_EFFECTIVE_DATE_MARKER, EFFECTIVE_BY_DATE_MEANING, BRACKETED_DATE_PREFIX, RECORDED_DATE_PREFIX, CORRECTED_DATE_PREFIX, EFFECTIVE_MONTH_SERIES_NOTE, DISCOVERY_MONTH_SERIES_NOTE, weekRangeLabel, newestChangeInEffect, vendorPageLastUpdated } from "./change-dates.js";
 import { changeFeedEntries, feedEntryFields, feedUpdatedTimestamp, changeFeedProvenanceNote, CHANGE_FEED_ENTRY_LIMIT, CHANGE_FEED_DESCRIPTION, CHANGE_FEED_NAMESPACE, CHANGE_FEED_NAMESPACE_PREFIX, channelUpdatedTimestamp, WEEKLY_FEED_POPULATION_NOTE, feedLinkTag, feedEntrySourceXml, digestSourceXml, PER_CHANGE_FEED, WEEKLY_DIGEST_FEED } from "./change-feed.js";
@@ -5992,35 +5993,20 @@ ${faqHtml}
 </html>`;
 }
 
-interface VendorSubstitutes {
-  categories: string[];
-  curatedNames: Set<string>;
-  membership: SubstitutesPartition<Offer>;
-}
-
-function vendorSubstitutes(vendorName: string, vendorOffers: Offer[], allChanges: DealChange[]): VendorSubstitutes {
-  const categories = [...new Set(vendorOffers.map(o => o.category))];
-  const seen = new Set<string>();
-  const pool: Offer[] = [];
-  for (const o of offers) {
-    if (o.vendor === vendorName || !categories.includes(o.category) || seen.has(o.vendor)) continue;
-    seen.add(o.vendor);
-    pool.push(o);
-  }
-  const curated = resolveCuratedAlternatives(vendorName, allChanges, offers);
-  const curatedNames = new Set(curated.matched.map(o => o.vendor));
-  const membership = partitionSubstitutes(addCuratedToPool(pool, curated.matched), vendorOffers, {
-    subtypeExempt: candidate => curatedNames.has(candidate.vendor),
-  });
-  return { categories, curatedNames, membership };
-}
-
 function alternativesPagePublishesSubstitutes(slug: string, allChanges: DealChange[]): boolean {
   const vendorName = vendorSlugMap.get(slug);
   if (!vendorName) return false;
-  const vendorOffers = offers.filter(o => o.vendor === vendorName);
-  if (vendorOffers.length === 0) return false;
-  return vendorSubstitutes(vendorName, vendorOffers, allChanges).membership.kept.length > 0;
+  return substitutesListedFor(vendorName, allChanges, offers).length > 0;
+}
+
+function vendorASearchNames(query: string): string | null {
+  return vendorWhoseAlternativesAQueryAsksFor(query) ?? vendorSlugMap.get(toSlug(query)) ?? null;
+}
+
+function alternativesPageLinkForASearch(query: string): string {
+  const vendor = vendorASearchNames(query);
+  if (!vendor || !alternativesPagePublishesSubstitutes(toSlug(vendor), loadDealChanges())) return "";
+  return `<p class="alternatives-page-link" style="margin:.5rem 0 1rem;font-size:.95rem"><a href="/alternative-to/${toSlug(vendor)}">Free alternatives to ${escHtmlServer(vendor)} &rarr;</a></p>\n  `;
 }
 
 function buildAlternativesPage(slug: string): string | null {
@@ -6053,7 +6039,7 @@ function buildAlternativesPage(slug: string): string | null {
   const riskLevel = publishedVendorLevel(enriched.risk_level ?? null, riskCause);
   const riskColor = (riskLevel ? riskColors[riskLevel] : null) ?? "#8b949e";
 
-  const substitutes = vendorSubstitutes(vendorName, vendorOffers, allChanges);
+  const substitutes = vendorSubstitutes(vendorName, vendorOffers, allChanges, offers);
   const vendorCategories = substitutes.categories;
   const curatedAltNames = substitutes.curatedNames;
   const altMembership = substitutes.membership;
@@ -50669,7 +50655,7 @@ function buildSearchPage(query: string, categoryFilter: string, typeFilter: stri
     + '\n'
     + '  <div class="cat-filters">\n' + catPillsHtml + '\n  </div>\n'
     + '\n'
-    + '  ' + (totalResults > 0 ? '<div class="results">\n' + resultsHtml + '\n  </div>\n  ' + paginationHtml : emptyStateHtml) + '\n'
+    + '  ' + (hasQuery ? alternativesPageLinkForASearch(sanitizeQuery(query)) : '') + (totalResults > 0 ? '<div class="results">\n' + resultsHtml + '\n  </div>\n  ' + paginationHtml : emptyStateHtml) + '\n'
     + '\n'
     + '  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>\n'
     + '</div>\n'
