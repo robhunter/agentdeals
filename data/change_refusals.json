@@ -257,6 +257,18 @@
     },
     {
       "vendor": "Apify",
+      "change_type": "limits_reduced",
+      "reason": "confirmed_unchanged",
+      "detail": "The stored description already stated no credit card was required. The $5 prepaid usage was already in the stored description. The expiration of unused credits is new information, but the report incorrectly states the $5 usage is *new*.",
+      "summary": "The free plan now includes a $5 prepaid usage. Also states that unused credits expire at the end of the billing cycle. The description of the free plan now explicitly states no credit card is required.",
+      "previous_state": "Web scraping and automation platform. The Free plan is $0 with $5 of prepaid usage a month to spend in Apify Store or on your own Actors, at $0.2 per compute unit, with up to 16 GB of Actor RAM and community support; no credit card is required. Starter is $19/month with $19 of usage a month. The Creator plan, for developers who run their own Actors, costs $1/month paid six months in advance, adds a one-time $500 of usage for those six months, and limits access to Apify Store Actors.",
+      "current_state": "The Free plan is $0 with $5 to spend in Apify Store or on your own Actors. $0.2 per compute unit, Community support, No Apify Store discount. No credit card required. Unused usage credits expire at the end of the billing cycle.",
+      "source_url": "https://apify.com/pricing",
+      "category": "Web Scraping",
+      "refused_date": "2026-10-03"
+    },
+    {
+      "vendor": "Apify",
       "change_type": "limits_increased",
       "reason": "same_transition_graded_differently",
       "detail": "same vendor, source_url and previous_state as Apify|limits_increased|2026-09-01|https://apify.com/pricing",
@@ -1037,6 +1049,18 @@
       "source_url": "https://circleci.com/pricing/",
       "category": "CI/CD",
       "refused_date": "2026-09-19"
+    },
+    {
+      "vendor": "CircleCI",
+      "change_type": "limits_increased",
+      "reason": "measures_the_opposite",
+      "detail": "limits_increased claimed, and every quantity that moved between the two states moved the other way — 30,000 credit/mo against 25,000 credit",
+      "summary": "The Free plan now includes 30,000 credits/month, 5 active users, and varying concurrency levels. The page details that 30,000 credits equates to 3,000 minutes on a Linux Medium resource. It also details additional costs for exceeding the 5 active user limit ($15 for every additional 25,000 credits).",
+      "previous_state": "The Free plan includes 30,000 credits/month, 5 active users, and options for different resource classes (Docker, Windows, Linux, Arm, macOS) with varying concurrency levels (30x for Docker, Linux, Arm, Windows VM, and macOS VM).",
+      "current_state": "The Free plan includes 30,000 credits/month, 5 active users, and options for different resource classes (Docker, Windows, Linux, Arm, macOS) with varying concurrency levels. 30,000 credits equates to 3,000 minutes on a Linux Medium resource. Additional users cost $15 for every additional 25,000 credits.",
+      "source_url": "https://circleci.com/pricing/",
+      "category": "CI/CD",
+      "refused_date": "2026-10-03"
     },
     {
       "vendor": "Circum Icons",
@@ -2187,6 +2211,18 @@
     },
     {
       "vendor": "Expo",
+      "change_type": "pricing_restructured",
+      "reason": "confirmed_unchanged",
+      "detail": "The descriptions both state 15 Android and 15 iOS builds and a low-priority queue. The report's claim about 'build credits' is not supported by the current page, which still lists a fixed number of builds.",
+      "summary": "The Free tier still exists, but build credits are now included instead of a fixed number of builds. The free tier now includes 'Up to 15 Android and 15 iOS builds' and 'Low-priority queue', but also includes 'Build credit' and 'Queue priority: Low priority'.",
+      "previous_state": "React Native build and deployment platform — The Free tier is $0/month and includes up to 15 Android and 15 iOS builds with a low-priority queue, 60 min. on CI/CD Workflows, and access to Submit, Update, and Launch.",
+      "current_state": "Includes: 15 Android and 15 iOS builds, Low-priority queue, 60 min. on CI/CD Workflows, Submit to app stores, Send updates to 1K MAUs, Access to Launch, Access to Observe.",
+      "source_url": "https://expo.dev/pricing",
+      "category": "Mobile Development",
+      "refused_date": "2026-10-03"
+    },
+    {
+      "vendor": "Expo",
       "change_type": "limits_reduced",
       "reason": "measures_no_change",
       "detail": "limits_reduced claimed, and every quantity the record compares holds the same value once notation and period are normalised — 15 android against 15 android, 15 build against 15 build, 60 workflow against 60 workflow",
@@ -2319,6 +2355,18 @@
       "source_url": "https://fireworks.ai/pricing",
       "category": "AI / ML",
       "refused_date": "2026-09-24"
+    },
+    {
+      "vendor": "Fireworks AI",
+      "change_type": "free_tier_removed",
+      "reason": "states_no_terms",
+      "detail": "every clause of the summary states absence or narration rather than a term the page carries, so it reports the reading rather than a change",
+      "summary": "The $1 free credit is no longer mentioned. The page details various paid options for serverless inference, training, and on-demand deployments. There is no mention of a free tier with a 10 requests/minute limit for accounts without a payment method.",
+      "previous_state": "Inference platform for open models, with serverless per-token pricing and on-demand GPU deployments billed per GPU second. Fireworks offers $1 in free credits to get started. Accounts with no payment method, or with no credits, are limited to 10 requests per minute, and an account without a payment method is suspended when the $1 credit runs out until one is added. Serverless prices: OpenAI GPT OSS 120B $0.15/$0.60 (per 1M tokens); MiniMax M3 $0.30/$1.20 (per 1M tokens); GLM 5.3 $1.40/$4.40 (per 1M tokens); Kimi K3 $3.00/$15.00 (per 1M tokens). Batch inference costs 50% of serverless prices. Image generation and audio inference were deprecated on June 10, 2026.",
+      "current_state": "Serverless Inference is a pay-per-token service. Users add a payment method to buy credits, and usage is deducted from their balance. Auto Reload and monthly spend limits are available.",
+      "source_url": "https://fireworks.ai/pricing",
+      "category": "AI / ML",
+      "refused_date": "2026-10-03"
     },
     {
       "vendor": "fivenines.io",
@@ -2543,6 +2591,18 @@
     {
       "vendor": "FreeIPAPI",
       "change_type": "limits_reduced",
+      "reason": "measures_no_change",
+      "detail": "limits_reduced claimed, and every quantity the record compares holds the same value once notation and period are normalised — 60 request/min against 60 request/min, 60 request/min against 10 request per 10 seconds, 60 request/min against 60 request/min",
+      "summary": "The free tier still exists, but the page details more features included in the paid tiers. The free tier includes 60 requests per minute, but the page also mentions a rate limit of 10 requests per 10 seconds.",
+      "previous_state": "FreeIPAPI is still FREE with no account required! We're introducing subscriptions for users who want to increase the request limit to more than 60 requests per minute. The free tier includes 60 Requests per minute.",
+      "current_state": "FreeIPAPI is still FREE with no account required! The free tier includes 60 Requests per minute. A rate limit of 10 requests per 10 seconds is also applied.",
+      "source_url": "https://freeipapi.com",
+      "category": "Dev Utilities",
+      "refused_date": "2026-10-03"
+    },
+    {
+      "vendor": "FreeIPAPI",
+      "change_type": "limits_reduced",
       "reason": "same_transition_graded_differently",
       "detail": "same vendor, source_url and previous_state as FreeIPAPI|limits_reduced|2026-08-28|https://freeipapi.com",
       "summary": "The free tier now has a rate limit of 60 requests per minute. Additional features like Countries & Phone Codes APIs, Timezones & Distance APIs, Languages API, IP & Domain White Listing, API Keys, and Bulk IP Lookups are no longer included in the free tier.",
@@ -2691,12 +2751,12 @@
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
       "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (3 alert)",
-      "summary": "The free tier now has limits of 50 PRs/month and 2 repos, with 7 days of history, while the stored information stated unlimited users, 3 repos, and 3 alert configs.",
+      "summary": "The free tier now has limits of 50 PRs/month and 2 repos, with 7 days of history, while the stored information stated unlimited users, three repos, and 3 alert configs.",
       "previous_state": "Daily reports of your team's Commit and Pull Request activity on GitHub. Includes Push visualizer, peer recognition system, and custom alert builder. The free tier has unlimited users, three repos, and 3 alert configs.",
-      "current_state": "$0 / month. 50 PRs / month. Unlimited users. 2 repos. 7 days history. Daily digests. PR metrics. DORA · partial. Shared alerts (2 rules).",
+      "current_state": "The Community tier is $0/month and includes 50 PRs/month, unlimited users, 2 repos, 7 days history, daily digests, PR metrics, DORA (partial), and shared alerts (2 rules).",
       "source_url": "https://gitdailies.com",
       "category": "Team Collaboration",
-      "refused_date": "2026-09-10"
+      "refused_date": "2026-10-03"
     },
     {
       "vendor": "Gitea",
@@ -2787,13 +2847,13 @@
       "vendor": "Google Cloud BigQuery",
       "change_type": "pricing_restructured",
       "reason": "confirmed_unchanged",
-      "detail": "The stored description and current page both state the first 1 TiB of queries is free.",
-      "summary": "The Always Free tier now only provides 1 TiB of queries per month, but the pricing page details on-demand query pricing as follows: The first 1 TiB per month is free, then $6.25 / 1 TiB.",
+      "detail": "The current page clarifies that usage beyond 1 TiB is billed, but the stored description already implies a limit to the 'Always Free' tier.",
+      "summary": "The Always Free tier now only provides 1 TiB of queries per month. The pricing page details on-demand query pricing as follows: The first 1 TiB per month is free, and then $6.25 / 1 TiB.",
       "previous_state": "Always Free: 1 TiB queries/month, 10 GiB storage. Serverless data warehouse with SQL, ML, and BI built in. No infrastructure to manage",
-      "current_state": "The first 1 TiB of queries per month is free, and then $6.25 / TiB.",
+      "current_state": "The first 1 TiB of queries per month is free, after which queries are billed at $6.25 / TiB.",
       "source_url": "https://cloud.google.com/bigquery/pricing",
       "category": "Databases",
-      "refused_date": "2026-09-20"
+      "refused_date": "2026-10-03"
     },
     {
       "vendor": "Google Cloud Monitoring",
@@ -2991,6 +3051,19 @@
       "collided_with": "Grafana Loki|new_free_tier|2026-08-28|https://grafana.com/oss/loki/"
     },
     {
+      "vendor": "Grafana",
+      "change_type": "pricing_restructured",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as Grafana|record_corrected|2026-09-09|https://grafana.com/oss/grafana/",
+      "summary": "The free tier is now associated with Grafana Cloud, not the self-hosted OSS version. The free tier now includes 10k metrics, 50GB logs, 50GB traces, 50GB profiles, 50k frontend sessions, and 500VUh of k6 testing for 3 users.",
+      "previous_state": "Grafana OSS — the self-hosted dashboarding and alerting front end, free under AGPL-3.0-only with Apache-2.0 exceptions. Unifies 150+ data sources into one dashboard and supports observability-as-code. You set up, administer and maintain the installation yourself; Grafana Cloud is the hosted product and is priced separately.",
+      "current_state": "Grafana Cloud includes a robust free tier with access to 10k metrics, 50GB logs, 50GB traces, 50GB profiles, 50k frontend sessions, and 500VUh of k6 testing for 3 users.",
+      "source_url": "https://grafana.com/oss/grafana/",
+      "category": "Monitoring",
+      "refused_date": "2026-10-03",
+      "collided_with": "Grafana|record_corrected|2026-09-09|https://grafana.com/oss/grafana/"
+    },
+    {
       "vendor": "Grapedrop",
       "change_type": "limits_reduced",
       "reason": "same_transition_graded_differently",
@@ -3075,6 +3148,18 @@
       "source_url": "https://hasura.io/pricing",
       "category": "API Development",
       "refused_date": "2026-09-03"
+    },
+    {
+      "vendor": "Have I been pwned?",
+      "change_type": "limits_reduced",
+      "reason": "no_price_signal",
+      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 1648 characters, so it states no terms to have changed",
+      "summary": "The page mentions an API but directs users to 'Pricing' for details, implying it's not entirely free. It also promotes 'Notify Me' as a paid service and highlights partnerships with password managers like 1Password.",
+      "previous_state": "REST API for fetching information on data breaches. Free web search; API requires subscription for some endpoints.",
+      "current_state": "The page mentions an API and directs users to the 'Pricing' page for details. It also promotes 'Notify Me' as a service to proactively protect data.",
+      "source_url": "https://haveibeenpwned.com",
+      "category": "Security",
+      "refused_date": "2026-10-03"
     },
     {
       "vendor": "heap.io",
@@ -3273,15 +3358,15 @@
     },
     {
       "vendor": "Hyperping",
-      "change_type": "pricing_restructured",
+      "change_type": "limits_increased",
       "reason": "confirmed_unchanged",
-      "detail": "The report describes features already present in the stored description, and the $0/forever pricing was implied by 'free plan'.",
-      "summary": "The free plan now includes a 14-day free trial, and the pricing is now $0/forever with the listed features.",
+      "detail": "The current page matches the stored description when accounting for reordering and conjunctions. The job's report claims changes that are not present.",
+      "summary": "The free tier now includes 50 monitors instead of 20, 5 server monitoring agents instead of 1, and 3 browser checks. The check interval is now 30 seconds instead of 5 minutes.",
       "previous_state": "Uptime and status page monitoring — free plan: 20 monitors (HTTP, port, ping, keyword), 5-minute check interval, 1 basic status page with real-time updates and subscriber notifications, 1 seat, 1 server monitoring agent, email and webhook alerts",
-      "current_state": "$0 /forever Includes: 1 seat included 20 monitors 5 min check interval 1 server monitoring agent 1 basic status page HTTP, port, ping & keyword monitoring",
+      "current_state": "The free plan includes 20 monitors, 5-minute checks, 1 server monitoring agent, 1 basic status page, HTTP, port, ping & keyword checks, and 1 seat.",
       "source_url": "https://hyperping.com/pricing",
       "category": "Monitoring",
-      "refused_date": "2026-09-10"
+      "refused_date": "2026-10-03"
     },
     {
       "vendor": "Hypertune",
@@ -4176,7 +4261,7 @@
       "current_state": "$0 Forever 100 Sheets Formulas 100 Daily API Credits Standard API Endpoints 1 Year Historical Data 24h Delayed Stock Data 24h Delayed Options Data",
       "source_url": "https://www.marketdata.app",
       "category": "Dev Utilities",
-      "refused_date": "2026-09-10"
+      "refused_date": "2026-10-03"
     },
     {
       "vendor": "MDBootstrap",
@@ -4351,15 +4436,15 @@
     },
     {
       "vendor": "Mistral AI",
-      "change_type": "limits_increased",
+      "change_type": "new_tier",
       "reason": "confirmed_unchanged",
-      "detail": "The report restates the stored description and notes additional details not present in the original description.",
-      "summary": "The free plan now includes limited messages, web searches, and coding sessions, $10/mo in API credits, and access to Mistral models in Studio. The current page details more specific limits (e.g., up to 5 free web searches, up to 40 free image generations) and additional features like voice mode, skills, and connectors. The Pro plan is $14.99/mo, and there's a Team plan at $24.99/user/mo.",
-      "previous_state": "Free plan includes $10/mo in API credits and access to Mistral models in Studio, alongside limited messages, web searches and coding sessions. Paid API rates start at $0.5/M input and $1.5/M output tokens for Mistral Large; batch processing halves the price and cached input tokens cost up to 90% less.",
-      "current_state": "The Free plan provides limited access to Vibe, including our latest models, chat, search, creation, and Vibe for code for agentic coding in your terminal. On the Free plan, you also get access to Mistral Studio. It includes $10 /mo in API credits.",
+      "detail": "The report primarily highlights additions to the free plan (image generation, more Vibe features) and introduces paid plans, but confirms the $10/month credit and access to Studio/Vibe which were already stated. The core free tier offering remains consistent.",
+      "summary": "The free plan now offers $10/month in API credits, access to Mistral Studio, and limited access to Vibe (including models, chat, search, creation, and Vibe for code). The page details additional features and limits for the free plan (e.g., limited messages, web searches, coding sessions, state-of-the-art image generation). The Pro plan is $14.99/month, and there's a Team plan at $24.99/user/month.",
+      "previous_state": "Mistral's Free plan includes $10 a month in API credits, shared across Studio, the API and Vibe Code. When it is used up, usage can stop until the next month unless pay-as-you-go is turned on. API keys work with no credit card, within rate limits. The plan also has limited messages, web searches and coding sessions in Vibe. Mistral may use inputs and outputs for training unless you opt out. API prices: Ministral 3 (3B) $0.1/$0.1 (per 1M tokens); Mistral Small 4 $0.15/$0.6 (per 1M tokens); Mistral Large 3 $0.5/$1.5 (per 1M tokens); Mistral Medium 3.5 $1.5/$7.5 (per 1M tokens); Codestral $0.3/$0.9 (per 1M tokens). Mistral Embed is $0.1 per 1M input tokens, and Codestral Embed is $0.15 per 1M input tokens. OCR 4.1 costs $4 per 1,000 pages. Mistral Moderation 2 is free. Mistral retired Devstral 2 (devstral-2512) on 2026-07-31 and names Mistral Medium 3.5 as its replacement. Batch processing is half price, and cached input tokens cost up to 90% less. Mistral publishes no rate-limit figures. Each organization's per-model limits (tokens per minute, requests per second) appear in Admin Panel > API > Limits.",
+      "current_state": "The Free plan provides $10 /mo in API credits, access to Mistral Studio, and limited access to Vibe, including our latest models, chat, search, creation, and Vibe for code for agentic coding in your terminal.",
       "source_url": "https://mistral.ai/pricing",
       "category": "AI / ML",
-      "refused_date": "2026-09-21"
+      "refused_date": "2026-10-03"
     },
     {
       "vendor": "mockaroo",
@@ -4555,6 +4640,18 @@
       "source_url": "https://nordpass.com/plans/",
       "category": "Password Managers",
       "refused_date": "2026-09-22"
+    },
+    {
+      "vendor": "Northflank",
+      "change_type": "limits_reduced",
+      "reason": "confirmed_unchanged",
+      "detail": "Wording difference only",
+      "summary": "The free tier now includes 2 services, 1 database and 2 cron jobs.",
+      "previous_state": "Build and deploy microservices, jobs, and managed databases with a powerful UI, API & CLI. Seamlessly scale containers from version control and external Docker registries. The free tier includes two services, two cron jobs and 1 database.",
+      "current_state": "The Sandbox tier includes 2× free services, 1× free database and 2× free cron jobs.",
+      "source_url": "https://northflank.com/pricing",
+      "category": "Cloud Hosting",
+      "refused_date": "2026-10-03"
     },
     {
       "vendor": "Notion",
@@ -5133,13 +5230,13 @@
       "vendor": "Pollinations.AI",
       "change_type": "pricing_model_change",
       "reason": "no_price_signal",
-      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 3141 characters, so it states no terms to have changed",
-      "summary": "While the site still offers a way to get started for free via 'Pollen Quests', the core offering now revolves around a 'pay-as-you-go' model where users spend across apps and earn rewards. The original description of a completely free API with no signups is no longer accurate. Users now need to register and can earn 'Pollen' to use the API, or spend from their own wallet.",
+      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 3127 characters, so it states no terms to have changed",
+      "summary": "While free access is still mentioned, the focus is now on 'Pollen', a token/currency earned through 'Quests' and used to pay for API usage. The original description of a completely free API with no signups is no longer accurate. Users now need to register and can earn free Pollen for prototyping, but ongoing usage requires spending Pollen.",
       "previous_state": "easy-to-use, free image generation AI with free API available. No signups or API keys required, and several option for integrating into a website or workflow. [#opensource](https://github.com/pollinations/pollinations)",
-      "current_state": "Users spend across apps. Earn rewards. Users sign in and spend from their own wallet. Set spending caps, revoke access any time. Add Pollen to your app. One API. Free Pollen from Quests to start, and earnings when your app gets used.",
+      "current_state": "One API. Free Pollen from Quests to start, and earnings when your app gets used.",
       "source_url": "https://pollinations.ai/",
       "category": "AI / ML",
-      "refused_date": "2026-09-14"
+      "refused_date": "2026-10-03"
     },
     {
       "vendor": "Portkey",
@@ -5318,12 +5415,12 @@
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
       "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (1 web, 512 mb, 100 cpu, 2 consol)",
-      "summary": "The free tier is now called 'Beginner' and has restricted outbound internet access. The stored deal info states outbound internet access is available to whitelisted sites via HTTP(S), while the current page states 'Specific sites via HTTP(S) only'.",
+      "summary": "The free tier now has restricted outbound internet access, and is called the 'Beginner' plan. The CPU-seconds allowance has been reduced from 100 to 100.",
       "previous_state": "Python web hosting — Beginner plan free forever: 1 web app (yourusername.pythonanywhere.com), 512 MB disk, 100 CPU-seconds/day, 2 consoles. Outbound internet access available to whitelisted sites via HTTP(S)",
       "current_state": "You'll get one web app at your-username .pythonanywhere.com and two consoles with restricted outbound Internet access.",
       "source_url": "https://www.pythonanywhere.com/pricing/",
       "category": "Cloud Hosting",
-      "refused_date": "2026-09-25"
+      "refused_date": "2026-10-03"
     },
     {
       "vendor": "Qdrant",
@@ -5523,13 +5620,13 @@
       "vendor": "RepoForge",
       "change_type": "restriction",
       "reason": "confirmed_unchanged",
-      "detail": "Terms are equivalent; 'non-commercial use only' is the same as 'Not for commercial use'.",
-      "summary": "The free plan now has restrictions on commercial use and is limited to 100MB of storage.",
+      "detail": "Commercial use restriction and 100MB storage were already stated in the stored description. The pricing detail is new information not claimed either way.",
+      "summary": "The free tier now has restrictions on commercial use, and the storage limit is explicitly stated as 100MB. The pricing is now per user, per month.",
       "previous_state": "Private cloud-hosted repository for Python, Debian, NPM packages and Docker registries. Free plan: 100MB storage, unlimited public packages, non-commercial use only.",
-      "current_state": "Free for open source projects. 100 MB storage. Unlimited public packages. Not for commercial use.",
+      "current_state": "Free for open source projects £ 0 / user / mo 100 MB storage Free forever Unlimited public packages Not for commercial use",
       "source_url": "https://repoforge.io",
       "category": "CI/CD",
-      "refused_date": "2026-09-10"
+      "refused_date": "2026-10-03"
     },
     {
       "vendor": "ReportGPT",
@@ -5591,6 +5688,18 @@
       "category": "Project Management",
       "refused_date": "2026-09-10",
       "collided_with": "RightFeature|limits_reduced|2026-08-28|https://rightfeature.com/"
+    },
+    {
+      "vendor": "RightFeature",
+      "change_type": "new_tier",
+      "reason": "states_no_difference",
+      "detail": "the summary states that the page agrees with what we hold, and names no figure the stored description did not already carry",
+      "summary": "The free tier still exists, but the stored information about the Pro plans is outdated. The Pro plans are now one-time payments of $199 and $299, as stated in the stored information, but the page also offers a 'Founding Member Deal' for lifetime access without recurring fees.",
+      "previous_state": "Easily collect feedback from your customers, turn customer feedback into your product roadmap — The free tier includes 1 Product, 1 Product board, 1 Team member. There are also Pro plans available for a one-time payment of $199 (1 Product, Unlimited Product boards, 5 Team members, AI Features) or $299 (2 Products, Unlimited Product boards, 5 Team members, AI Features).",
+      "current_state": "The Starter Free plan includes 1 Product, 1 Product board, 1 Team member. Pro Plan 1 is a one-time payment of $199 for 1 Product, Unlimited Product boards, 5 Team members, Custom statuses, Guest posting, AI Features. Pro Plan 2 is a one-time payment of $299 for 2 Products, Unlimited Product boards, 5 Team members, Custom statuses, Guest posting, AI Features.",
+      "source_url": "https://rightfeature.com/",
+      "category": "Project Management",
+      "refused_date": "2026-10-03"
     },
     {
       "vendor": "Roboflow",
@@ -5689,6 +5798,19 @@
       "source_url": "https://saucelabs.com/pricing",
       "category": "Testing",
       "refused_date": "2026-10-02"
+    },
+    {
+      "vendor": "ScaleGrid Startup Program",
+      "change_type": "limits_reduced",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as ScaleGrid Startup Program|record_corrected|2026-09-19|https://scalegrid.io/pricing/offers/startup-saver/",
+      "summary": "The Startup Saver program now has eligibility criteria of less than $1.5M in revenue and less than $1.5M in funding. Small plan sizes receive 50% off BYOC and 25% off Dedicated Hosting for 3 months.",
+      "previous_state": "ScaleGrid's startup offer is now called Startup Saver: up to 50% off for 12 months on managed MySQL, PostgreSQL, Redis and MongoDB. Bring Your Own Cloud plans get 50% off at medium size or larger; Dedicated Hosting gets 25% off at medium or larger. Small plan sizes get 50% off BYOC and 25% off Dedicated Hosting for 3 months.",
+      "current_state": "Benefit from significant cost savings on our database management solutions, specifically tailored to support the dynamic needs of startups. Check your eligibility and apply today! Up to 50% Off MySQL™ PostgreSQL® MongoDB® Redis® FOR 12 MONTHS DBaaS Plans Bring Your Own Cloud (BYOC) 50% off medium or larger plan sizes Dedicated Hosting 25% off medium or larger plan sizes Eligibility Criteria Less than $1.5M in revenue Less than $1.5M in funding New to ScaleGrid Small plan sizes receive 50% off BYOC and 25% off Dedicated Hosting plans for 3 months.",
+      "source_url": "https://scalegrid.io/pricing/offers/startup-saver/",
+      "category": "Startup Perks",
+      "refused_date": "2026-10-03",
+      "collided_with": "ScaleGrid Startup Program|record_corrected|2026-09-19|https://scalegrid.io/pricing/offers/startup-saver/"
     },
     {
       "vendor": "Science Exchange",
@@ -6246,6 +6368,19 @@
       "collided_with": "Stoplight|limits_increased|2026-08-28|https://stoplight.io/pricing"
     },
     {
+      "vendor": "Storj",
+      "change_type": "pricing_restructured",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as Storj|pricing_restructured|2026-09-09|https://storj.io/pricing",
+      "summary": "Object Mount is now a separately priced product with tiers ($29/license/mo for Teams, $39/license/mo for Any S3). The free trial now includes Object Mount with 2 licenses and 25GB of storage. The minimum monthly fee of $5 now applies to Storj Object Storage accounts unless paying with USDC or on a custom contract. There is a 30-day minimum storage retention period with early deletion fees unless using Object Mount.",
+      "previous_state": "Distributed S3-compatible object storage. Free trial only: 25 GB free storage for 30 days, no credit card required, and 2 Object Mount licenses. After the trial, $7/TB storage and $7/TB egress with a $5 monthly minimum fee (waived while the trial is running and for accounts paying in STORJ token).",
+      "current_state": "Object Mount is available as a paid add-on with different tiers. The free trial includes 2 Object Mount licenses and 25GB of storage. Paid plans include $29/license/mo for Teams (includes 500GB Storj Object Storage) and $39/license/mo for Any S3 (no included Storj storage).",
+      "source_url": "https://storj.io/pricing",
+      "category": "Storage",
+      "refused_date": "2026-10-03",
+      "collided_with": "Storj|pricing_restructured|2026-09-09|https://storj.io/pricing"
+    },
+    {
       "vendor": "Stream",
       "change_type": "limits_reduced",
       "reason": "no_baseline",
@@ -6775,6 +6910,18 @@
     {
       "vendor": "UniRateAPI",
       "change_type": "limits_reduced",
+      "reason": "measures_the_opposite",
+      "detail": "limits_reduced claimed, and every quantity that moved between the two states moved the other way — 200 request/day against 30 request/min",
+      "summary": "The free tier now has a limit of 30 requests per minute, or 200 requests per day. The stored information stated 200 requests/day.",
+      "previous_state": "Free Tier $0 /month Perfect for testing and personal projects 870+ currencies (FIAT + Crypto) Historical forex data 200 requests/day EU VAT rates included Precious metals API",
+      "current_state": "Free tier includes 30 requests per minute.",
+      "source_url": "https://unirateapi.com",
+      "category": "Dev Utilities",
+      "refused_date": "2026-10-03"
+    },
+    {
+      "vendor": "UniRateAPI",
+      "change_type": "limits_reduced",
       "reason": "states_no_terms",
       "detail": "every clause of the summary states bookkeeping rather than a term the page carries, so it reports the reading rather than a change",
       "summary": "The free tier now has a limit of 30 requests/minute and 200 requests/day, down from the stored value of 200 requests/day.",
@@ -6924,12 +7071,12 @@
       "change_type": "pricing_model_change",
       "reason": "same_transition_graded_differently",
       "detail": "same vendor, source_url and previous_state as Vast.ai|pricing_model_change|2026-09-02|https://vast.ai/startup",
-      "summary": "The startup program now offers a credit *match* up to the amount spent, rather than a fixed $2,500 in free credits. The program matches dollar-for-dollar on verified compute spend.",
+      "summary": "The Startup Program now offers a credit *match* up to the amount spent, rather than a flat $2,500 in free credits. The program matches dollar-for-dollar on verified compute spend.",
       "previous_state": "GPU marketplace — startup program offers $2,500 in free GPU credits. Access to A100s, H200s, and consumer cards. Up to 81% savings vs. major cloud GPU providers. 24/7 priority support during credit period. No long-term contracts",
-      "current_state": "The Vast.ai Startup Program matches your compute spend with credits — so your budget goes twice as far. Apply for the Startup Credit Matching Program Apply below and our team will reach out to finalize your offer. Spend on Vast, and we match your spend in credits — dollar for dollar.",
+      "current_state": "The Vast.ai Startup Program matches your compute spend with credits — so your budget goes twice as far. Apply for the Startup Credit Matching Program Apply below and our team will reach out to finalize your offer. Credits matched on verified compute spend. Pending verification. Credit Matching — Example You spend $500 → You get $500 back You spend $1,000 → You get $1,000 back You spend $2,500 → You get $2,500 back",
       "source_url": "https://vast.ai/startup",
       "category": "Startup Perks",
-      "refused_date": "2026-09-19",
+      "refused_date": "2026-10-03",
       "collided_with": "Vast.ai|pricing_model_change|2026-09-02|https://vast.ai/startup"
     },
     {
