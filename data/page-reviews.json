@@ -2639,13 +2639,13 @@
       "reviewer": null,
       "review_outcome": null,
       "review_note": null,
-      "reads_index": false,
+      "reads_index": true,
       "tables_read_index": false,
       "table_figures": 0,
       "table_figures_from_records": 0,
       "tables": [],
       "reads_changes": true,
-      "data_source": "unsourced",
+      "data_source": "catalogue",
       "data_source_reason": null
     },
     {
@@ -2667,13 +2667,13 @@
       "reviewer": null,
       "review_outcome": null,
       "review_note": null,
-      "reads_index": false,
+      "reads_index": true,
       "tables_read_index": false,
       "table_figures": 0,
       "table_figures_from_records": 0,
       "tables": [],
       "reads_changes": true,
-      "data_source": "unsourced",
+      "data_source": "catalogue",
       "data_source_reason": null
     },
     {
