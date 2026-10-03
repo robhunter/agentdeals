@@ -58,10 +58,11 @@ describe("a search that asks for a vendor's alternatives", () => {
   });
 
   it("lists the vendors the page lists ahead of other matches", () => {
-    const sendgrid = pagesListing().find((p) => p.vendor === "SendGrid");
-    assert.ok(sendgrid, "SendGrid has no alternatives page");
-    const found = vendorsFound("sendgrid alternative");
-    assert.ok(found.slice(0, sendgrid.listed.size).every((vendor) => sendgrid.listed.has(vendor)));
+    const postman = pagesListing().find((p) => p.vendor === "Postman");
+    assert.ok(postman, "Postman has no alternatives page");
+    const listedInTurn = vendorsFound("postman alternative").map((vendor) => postman.listed.has(vendor));
+    assert.ok(listedInTurn.includes(true) && listedInTurn.includes(false), "the search no longer returns both kinds of result");
+    assert.deepStrictEqual(listedInTurn, [...listedInTurn].sort((a, b) => Number(b) - Number(a)));
   });
 
   it("still returns what these searches returned before", () => {
