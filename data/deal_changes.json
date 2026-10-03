@@ -11111,6 +11111,12 @@
       "archive_check": {
         "checked": "2026-10-02",
         "outcome": "no_usable_capture"
+      },
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-10-03",
+        "detail": "Retracted 2026-10-03: no change on 2026-09-07. The Internet Archive's captures of localstack.cloud/pricing of 2026-08-19 and 2026-09-15 show the same plans and prices, including the free Hobby plan for non-commercial use. The reading took Base's faded $39 and $45 prices for new ones.",
+        "source_url": "https://web.archive.org/web/20260819234557/https://www.localstack.cloud/pricing"
       }
     },
     {
