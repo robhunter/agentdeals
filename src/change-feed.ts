@@ -1,6 +1,6 @@
 import type { DealChange } from "./types.js";
 import { changeCitesASource, type CitableChange } from "./change-citation.js";
-import { resolutionTag, theEventNeverHappened } from "./change-resolution.js";
+import { printsBeforeAndAfter, resolutionTag, theEventNeverHappened } from "./change-resolution.js";
 import {
   DISCOVERED_DATE_PREFIX,
   EFFECTIVE_DATE_PREFIX,
@@ -98,7 +98,7 @@ export function feedEntryDateSentence(change: FeedChange): string {
 
 export function feedEntrySummary(change: DealChange): string {
   const states =
-    change.previous_state && change.current_state
+    printsBeforeAndAfter(change)
       ? ` Before: ${change.previous_state}. After: ${change.current_state}.`
       : "";
   return `${feedEntryDateSentence(change)} ${change.summary}${states}`;

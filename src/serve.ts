@@ -53,7 +53,7 @@ import { changesToStartupProgrammes } from "./startup-programme-changes.js";
 import { HETZNER_APRIL_CHANGES, HETZNER_AVAILABILITY_READ, HETZNER_AX102_GERMANY, HETZNER_AX42_GERMANY, HETZNER_CLOUD_PLANS, HETZNER_PRICES_READ, HETZNER_PRICE_SOURCE, HETZNER_SETUP_FEE_STATEMENTS, HETZNER_SINGAPORE_EXAMPLE, cheapestOrderableHetznerPlan, hetznerEntryPriceClause, unorderableHetznerPlans } from "./hetzner-pricing.js";
 import { HUNDRED_GB_SCENARIO, HUNDRED_TB_SCENARIO, ONE_TO_ONE_SCENARIO, STORAGE_RATES_READ, STORAGE_SCALE_WORKLOADS, TEN_TO_ONE_SCENARIO, cheapestProviderAt, costAfterMonthlyEgressGrantFor, costliestProviderAt, egressAllowanceSentence, egressBillAfterMonthlyGrantFor, egressBillOnceOverAllowance, egressRatioWhereCostsMatch, fixedMonthlyGrantsSentence, monthlyEgressGrantGb, monthlyEgressGrantSentence, monthlyStorageCost, providersWithScalingEgressAllowance, rateCardFor, scaleCostFor } from "./storage-cost-model.js";
 import { changeTimelineDate, supersededLineups, supersessionNote } from "./change-lineup.js";
-import { CORRECTION_TO_OUR_OWN_RECORD, isACorrectionToOurOwnRecord, isNoLongerInForce, eventResolutionFields, recordsStillInForce, recordsWeStandBehind, INCLUDE_RETRACTED_REJECTED } from "./change-resolution.js";
+import { CORRECTION_TO_OUR_OWN_RECORD, isACorrectionToOurOwnRecord, isNoLongerInForce, printsBeforeAndAfter, eventResolutionFields, recordsStillInForce, recordsWeStandBehind, INCLUDE_RETRACTED_REJECTED } from "./change-resolution.js";
 import { trackedChanges, howEachRecordWasRead, isTrackedChange, isIndexHousekeeping, recordsOtherThanOurOwnIndexHousekeeping, changeCensus, changeCountPhrase, recordsNotCountedSentence, sliceById, CHANGE_SLICES, CENSUS_NOTE, TRACKED_CHANGE_RULE_ANCHOR, TRACKED_CHANGE_RULE_PATH, TRACKED_CHANGE_NOUN, INDEX_HOUSEKEEPING_CLASS, CORRECTION_TO_OUR_OWN_RECORD_CLASS, INDEX_HOUSEKEEPING_BADGE, INDEX_HOUSEKEEPING_BADGE_COLOR, INDEX_HOUSEKEEPING_NOTE, INCLUDE_INDEX_HOUSEKEEPING_REJECTED, indexHousekeepingHeadline } from "./change-census.js";
 import { SINCE_DEFAULT_SENTENCE } from "./change-window.js";
 import { NAME_MATCH_SENTENCE } from "./name-match.js";
@@ -5478,7 +5478,7 @@ function buildVendorPage(slug: string): string | null {
           ${uncited ? unsourcedTagHtml() : ""}
         </div>
         <div class="change-summary">${changeSummaryHtml(c, escHtmlServer)}</div>
-        ${c.previous_state && c.current_state ? `<div class="change-detail"><span class="state-label">Before:</span> ${escHtmlServer(c.previous_state)}</div><div class="change-detail"><span class="state-label">After:</span> ${escHtmlServer(c.current_state)}</div>` : ""}
+        ${printsBeforeAndAfter(c) ? `<div class="change-detail"><span class="state-label">Before:</span> ${escHtmlServer(c.previous_state)}</div><div class="change-detail"><span class="state-label">After:</span> ${escHtmlServer(c.current_state)}</div>` : ""}
       </div>`;
   }).join("\n") : offerHasEnded
     ? `<p class="no-changes">${escHtmlServer(endedHistorySentence(vendorName))}</p>`
@@ -8097,7 +8097,7 @@ const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
   {
     slug: "aws-free-tier-2026",
     title: "AWS Free Tier Complete Guide 2026 — Every Free Service, Real Limits, and Hidden Costs",
-    metaDesc: "Comprehensive guide to every AWS free tier service in 2026. Always Free, 12-month, and trial tiers explained. Aurora PostgreSQL Serverless just added. Hidden costs, gotchas, and cheaper alternatives compared.",
+    metaDesc: "AWS Free plan: up to $200 in credits over 6 months, 30+ always-free services, short-term trials, hidden costs, cheaper alternatives.",
     contextHtml: "",
     tag: "aws-free-tier-2026",
     primaryVendor: "AWS",
@@ -10605,14 +10605,14 @@ ${buildCards(startupCredits)}
       <tr>
         <td style="font-weight:600"><a href="/vendor/aws" style="color:var(--text)">AWS</a></td>
         <td>IaaS</td>
-        <td>750 hrs t2.micro/mo (12 mo)</td>
+        <td>Free plan: $100 credit at sign-up + up to $100 more, 6 months</td>
         <td>${monthlyEgressGrantGb("AWS S3")} GB/mo, no expiry</td>
-        <td>Full cloud platform, 12-month free tier</td>
+        <td>Full cloud platform, 6-month Free plan</td>
       </tr>
     </tbody>
   </table>
   </div>
-  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Oracle Cloud's Always Free tier is permanently free (not time-limited) and the most generous VPS offering. Cloudflare Pages and Workers offer unlimited bandwidth on free tier. Railway's Free plan opens with a 30-day $5 trial credit, then $1 of free credit a month. AWS and Azure free tiers are mostly 12-month introductory offers, with one exception that matters in the Bandwidth column: AWS's first ${monthlyEgressGrantGb("AWS S3")} GB of internet egress each month is free on an account of any age, aggregated across all AWS services and regions. [[freshness]]</p>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Oracle Cloud's Always Free tier is permanently free (not time-limited) and the most generous VPS offering. Cloudflare Pages and Workers offer unlimited bandwidth on free tier. Railway's Free plan opens with a 30-day $5 trial credit, then $1 of free credit a month. AWS's Free plan credits last at most 6 months; Azure's free VM hours last 12 months. One AWS allowance does not expire and matters in the Bandwidth column: AWS's first ${monthlyEgressGrantGb("AWS S3")} GB of internet egress each month is free on an account of any age, aggregated across all AWS services and regions. [[freshness]]</p>
 
   <div class="context-box" style="border-left:3px solid ${riskColors.risky}">
     <div style="font-weight:600;color:${riskColors.risky};margin-bottom:.5rem">Hetzner raised prices twice in 2026, and its cheapest line is unavailable</div>
@@ -10635,7 +10635,7 @@ ${buildCards(startupCredits)}
       <dd><a href="/vendor/cloudflare-workers">Cloudflare Workers</a> (100K req/day, edge-fast) for lightweight APIs. <a href="/vendor/deno-deploy">Deno Deploy</a> for TypeScript-native. <a href="/vendor/google-cloud-run">Google Cloud Run</a> for containerized APIs with auto-scale.</dd>
 
       <dt>Need a full VM with root access?</dt>
-      <dd><a href="/vendor/oracle-cloud">Oracle Cloud</a> is unmatched — ${escHtmlServer(oracleAlwaysFreeSpec())}, permanently free. <a href="/vendor/aws">AWS</a> and <a href="/vendor/azure">Azure</a> offer 12-month free tiers with t2.micro/B1 instances.</dd>
+      <dd><a href="/vendor/oracle-cloud">Oracle Cloud</a> is unmatched — ${escHtmlServer(oracleAlwaysFreeSpec())}, permanently free. <a href="/vendor/aws">AWS</a> gives new accounts no free EC2 hours; EC2 is paid from the Free plan's credits for up to 6 months. <a href="/vendor/azure">Azure</a> gives 750 hours a month each of B2pts v2 and B2ats v2 VMs for 12 months, for accounts that move to pay-as-you-go within 30 days.</dd>
 
       <dt>Running Docker containers?</dt>
       <dd><a href="/vendor/google-cloud-run">Google Cloud Run</a> (scale to zero, 2M req/mo free) or <a href="/vendor/fly-io">Fly.io</a> (legacy accounts: 3 shared VMs). <a href="/vendor/railway">Railway</a> ($1 of free credit a month after a 30-day trial) and <a href="/vendor/koyeb">Koyeb</a> (no free plan for new users; Pro from $29/mo) also run containers natively.</dd>
@@ -16777,7 +16777,7 @@ function buildFreeNextjsStackPage(): string {
       recommended: { vendor: "Cloudflare R2", why: "Zero egress fees — the standout differentiator. 10 GB storage, 1 million Class A operations, 10 million Class B operations per month. S3-compatible API means any S3 SDK works. Perfect for Next.js image uploads, user files, and static assets that would cost a fortune on S3 egress." },
       alternatives: ["Backblaze B2", "Tigris", "Supabase"],
       outgrow: "When you exceed 10 GB storage. At scale, R2 saves dramatically: 1 TB stored + 10 TB egress costs ~$15/month on R2 vs ~$925/month on S3 (the egress tax). Backblaze B2 offers 10 GB free and free egress up to 3x what you store, no CDN required. Tigris gives 5 GB with S3 compatibility and global distribution.",
-      whyNot: `Why not AWS S3: the 5 GB storage free tier expires after 12 months, then storage costs ${rateCardFor("AWS S3").publishedStorageRate}. Bandwidth is the part that does not expire — ${monthlyEgressGrantSentence(rateCardFor("AWS S3"))} — so at ${monthlyEgressGrantGb("AWS S3")} GB egress/month S3 bills ${egressBillAfterMonthlyGrantFor("AWS S3", HUNDRED_GB_SCENARIO)} for bandwidth, the same as R2. Past that S3 charges $0.09/GB and R2 still charges $0.`,
+      whyNot: `Why not AWS S3: new accounts get no free storage, only Free plan credits that last at most 6 months; then storage costs ${rateCardFor("AWS S3").publishedStorageRate}. Bandwidth is the part that does not expire — ${monthlyEgressGrantSentence(rateCardFor("AWS S3"))} — so at ${monthlyEgressGrantGb("AWS S3")} GB egress/month S3 bills ${egressBillAfterMonthlyGrantFor("AWS S3", HUNDRED_GB_SCENARIO)} for bandwidth, the same as R2. Past that S3 charges $0.09/GB and R2 still charges $0.`,
       relatedPage: "/storage-comparison-2026",
     },
     {
@@ -17113,7 +17113,7 @@ function buildFreeDjangoStackPage(): string {
       recommended: { vendor: "Railway", why: "Its Free plan opens with a 30-day trial carrying $5 of credits, then $1 of free credit a month, with WSGI/ASGI support, managed Postgres add-on, and auto-deploy from GitHub. Supports Gunicorn, Uvicorn, and Daphne out of the box. No sleep timer — your app stays warm. Nixpacks auto-detects Django projects and installs dependencies from requirements.txt or pyproject.toml." },
       alternatives: ["Render", "Fly.io", "PythonAnywhere"],
       outgrow: "When you exceed the $5 of usage that Hobby's $5/month includes (usually 1-2 services). Render's free tier spins down after 15 minutes of inactivity — cold starts of about one minute hurt Django apps. Fly.io has no free tier for new accounts — new signups get a trial of 2 hours runtime or 7 days, whichever comes first. PythonAnywhere offers a free tier with WSGI support but only one web app and no custom domain.",
-      whyNot: "Why not Heroku: No free tier since November 2022 — Eco dynos start at $5/month with mandatory credit card. Why not AWS Elastic Beanstalk: No free tier for the EB service itself, only the underlying EC2 instances (12-month trial). Overkill for a Django side project.",
+      whyNot: "Why not Heroku: No free tier since November 2022 — Eco dynos start at $5/month with mandatory credit card. Why not AWS Elastic Beanstalk: it has no fee of its own, but you pay for the EC2 instances it runs, from the Free plan's credits on a new account. Overkill for a Django side project.",
       relatedPage: "/hosting-free-tier-comparison-2026",
     },
     {
@@ -17149,7 +17149,7 @@ function buildFreeDjangoStackPage(): string {
       recommended: { vendor: "Cloudflare R2", why: "Zero egress fees — the standout differentiator. 10 GB storage, 1 million Class A operations, 10 million Class B operations per month. S3-compatible API means django-storages works out of the box with the S3Boto3Storage backend. Perfect for Django file uploads (ImageField, FileField), static file hosting (collectstatic), and media storage." },
       alternatives: ["Backblaze B2", "Supabase"],
       outgrow: "When you exceed 10 GB storage. At scale, R2 saves dramatically vs S3: 1 TB stored + 10 TB egress costs ~$15/month on R2 vs ~$925/month on S3. Backblaze B2 offers 10 GB free and free egress up to 3x what you store, no CDN required — also works with django-storages. Supabase Storage gives 1 GB free with image transformations.",
-      whyNot: `Why not AWS S3: the 5 GB storage free tier expires after 12 months, then storage costs ${rateCardFor("AWS S3").publishedStorageRate}. Bandwidth is the part that does not expire — ${monthlyEgressGrantSentence(rateCardFor("AWS S3"))} — so a Django app serving under ${monthlyEgressGrantGb("AWS S3")} GB of media a month pays nothing for egress on S3 either. Past that S3 charges $0.09/GB and R2 still charges $0.`,
+      whyNot: `Why not AWS S3: new accounts get no free storage, only Free plan credits that last at most 6 months; then storage costs ${rateCardFor("AWS S3").publishedStorageRate}. Bandwidth is the part that does not expire — ${monthlyEgressGrantSentence(rateCardFor("AWS S3"))} — so a Django app serving under ${monthlyEgressGrantGb("AWS S3")} GB of media a month pays nothing for egress on S3 either. Past that S3 charges $0.09/GB and R2 still charges $0.`,
       relatedPage: "/storage-comparison-2026",
     },
     {
@@ -17559,7 +17559,7 @@ function buildFreeFastapiStackPage(): string {
       recommended: { vendor: "Cloudflare R2", why: "Zero egress fees — the standout differentiator. 10 GB storage, 1 million Class A operations, 10 million Class B operations per month. S3-compatible API means boto3 and aioboto3 work directly. FastAPI's UploadFile with async streaming to R2 handles file uploads efficiently without buffering entire files in memory." },
       alternatives: ["Backblaze B2", "Supabase"],
       outgrow: "When you exceed 10 GB storage. At scale, R2 saves dramatically vs S3: 1 TB stored + 10 TB egress costs ~$15/month on R2 vs ~$925/month on S3. Backblaze B2 offers 10 GB free and free egress up to 3x what you store, no CDN required. Supabase Storage gives 1 GB free with image transformations.",
-      whyNot: `Why not AWS S3: the 5 GB storage free tier expires after 12 months, then storage costs ${rateCardFor("AWS S3").publishedStorageRate}. Bandwidth is the part that does not expire — ${monthlyEgressGrantSentence(rateCardFor("AWS S3"))} — so an API serving under ${monthlyEgressGrantGb("AWS S3")} GB of pre-signed downloads a month pays nothing for egress on S3 either. Past that S3 charges $0.09/GB and R2 still charges $0.`,
+      whyNot: `Why not AWS S3: new accounts get no free storage, only Free plan credits that last at most 6 months; then storage costs ${rateCardFor("AWS S3").publishedStorageRate}. Bandwidth is the part that does not expire — ${monthlyEgressGrantSentence(rateCardFor("AWS S3"))} — so an API serving under ${monthlyEgressGrantGb("AWS S3")} GB of pre-signed downloads a month pays nothing for egress on S3 either. Past that S3 charges $0.09/GB and R2 still charges $0.`,
       relatedPage: "/storage-comparison-2026",
     },
     {
@@ -17984,7 +17984,7 @@ function buildFreeGoStackPage(): string {
       recommended: { vendor: "Cloudflare R2", why: "Zero egress fees — the standout differentiator. 10 GB storage, 1 million Class A operations, 10 million Class B operations per month. S3-compatible API via aws-sdk-go-v2. Go's io.Reader/io.Writer interfaces make streaming uploads and downloads natural — no buffering entire files in memory. Multipart uploads work out of the box with the AWS SDK." },
       alternatives: ["Backblaze B2", "Supabase"],
       outgrow: "When you exceed 10 GB storage. At scale, R2 saves dramatically vs S3: 1 TB stored + 10 TB egress costs ~$15/month on R2 vs ~$925/month on S3. Backblaze B2 offers 10 GB free and free egress up to 3x what you store, no CDN required. Supabase Storage gives 1 GB free with image transformations.",
-      whyNot: `Why not AWS S3: the 5 GB storage free tier expires after 12 months, then storage costs ${rateCardFor("AWS S3").publishedStorageRate}. Bandwidth is the part that does not expire — ${monthlyEgressGrantSentence(rateCardFor("AWS S3"))} — so a Go service serving under ${monthlyEgressGrantGb("AWS S3")} GB of pre-signed downloads a month pays nothing for egress on S3 either. Past that S3 charges $0.09/GB and R2 still charges $0.`,
+      whyNot: `Why not AWS S3: new accounts get no free storage, only Free plan credits that last at most 6 months; then storage costs ${rateCardFor("AWS S3").publishedStorageRate}. Bandwidth is the part that does not expire — ${monthlyEgressGrantSentence(rateCardFor("AWS S3"))} — so a Go service serving under ${monthlyEgressGrantGb("AWS S3")} GB of pre-signed downloads a month pays nothing for egress on S3 either. Past that S3 charges $0.09/GB and R2 still charges $0.`,
       relatedPage: "/storage-comparison-2026",
     },
     {
@@ -18426,7 +18426,7 @@ function buildFreeSaasStackPage(): string {
       recommended: { vendor: "Cloudflare R2", why: "10 GB storage with zero egress fees \u2014 the only major storage provider that doesn't charge for bandwidth. S3-compatible API works with every SDK and library. For SaaS, this means user uploads (avatars, documents, images) cost nothing to serve, no matter how many times they're downloaded. No surprise bandwidth bills." },
       alternatives: ["Backblaze B2", "Supabase"],
       outgrow: `When you exceed 10 GB storage or 1M Class A operations/month. R2's zero-egress model means the constraint is storage volume, not bandwidth — a SaaS serving 1 TB of user files still pays $0 in egress. At scale: ${HUNDRED_GB_SCENARIO.storageGb} GB stored and ${HUNDRED_GB_SCENARIO.egressGb} GB served costs ${costAfterMonthlyEgressGrantFor("Cloudflare R2", HUNDRED_GB_SCENARIO)}/mo on R2 and ${costAfterMonthlyEgressGrantFor("AWS S3", HUNDRED_GB_SCENARIO)}/mo on S3, because S3's first ${monthlyEgressGrantGb("AWS S3")} GB of egress each month is free on any account and that is the whole of this workload; past it S3 charges $${rateCardFor("AWS S3").egressPerGb.toFixed(2)}/GB. Backblaze B2 offers 10 GB free and free egress up to 3x what you store, no CDN required.`,
-      whyNot: `Why not AWS S3: the 5 GB storage free tier expires after 12 months, then storage costs ${rateCardFor("AWS S3").publishedStorageRate}. Bandwidth is the part that does not expire — ${monthlyEgressGrantSentence(rateCardFor("AWS S3"))} — so a SaaS serving under ${monthlyEgressGrantGb("AWS S3")} GB of user files a month pays nothing for egress on S3 either. Past that S3 charges $0.09/GB and R2 charges $0, forever. Why not Vercel Blob: 250 MB free — too small for most SaaS file storage needs.`,
+      whyNot: `Why not AWS S3: new accounts get no free storage, only Free plan credits that last at most 6 months; then storage costs ${rateCardFor("AWS S3").publishedStorageRate}. Bandwidth is the part that does not expire — ${monthlyEgressGrantSentence(rateCardFor("AWS S3"))} — so a SaaS serving under ${monthlyEgressGrantGb("AWS S3")} GB of user files a month pays nothing for egress on S3 either. Past that S3 charges $0.09/GB and R2 charges $0, forever. Why not Vercel Blob: 250 MB free — too small for most SaaS file storage needs.`,
       relatedPage: "/storage-comparison-2026",
       isFrameworkSection: false,
     },
@@ -18466,7 +18466,7 @@ function buildFreeSaasStackPage(): string {
       recommended: { vendor: "Inngest", why: "Free tier: 25,000 function runs/month with 5 concurrent steps. Durable workflow orchestration \u2014 retries, scheduling, fan-out, and step functions. TypeScript-first with Next.js integration. No infrastructure to manage \u2014 send an event, Inngest runs your function reliably. Perfect for SaaS: onboarding workflows, scheduled reports, webhook processing, billing reconciliation." },
       alternatives: ["Trigger.dev", "Upstash"] as string[],
       outgrow: "When you exceed 25,000 runs/month. Trigger.dev offers 10,000 runs/month free with a similar developer experience. For simpler needs: Upstash QStash (500 messages/day free) provides HTTP-based async messaging \u2014 send a POST, it delivers reliably with retries. For self-managed: BullMQ (Redis-backed) with Upstash Redis (10K commands/day) handles moderate queue needs.",
-      whyNot: "Why not cron jobs alone: Cron doesn't retry failures, handle concurrency limits, or provide observability. Why not AWS SQS/Lambda: Complex setup, 12-month free tier expiration. Inngest and Trigger.dev give you managed, durable execution with a serverless DX.",
+      whyNot: "Why not cron jobs alone: Cron doesn't retry failures, handle concurrency limits, or provide observability. Why not AWS SQS/Lambda: Complex setup. Inngest and Trigger.dev give you managed, durable execution with a serverless DX.",
       relatedPage: null,
       isFrameworkSection: false,
     },
@@ -28732,16 +28732,16 @@ function buildDatabasePricingPage(): string {
       slug: "amazon-aurora-postgresql",
       category: "managed-postgres",
       dbType: "PostgreSQL (Managed)",
-      freeStorage: "20 GiB",
+      freeStorage: "1 GiB per cluster",
       freeConnections: "Standard",
-      freeCompute: "750 hrs/mo (db.t3.micro)",
+      freeCompute: "Up to 4 ACUs",
       paidFrom: "$0.073/hr (db.t3.medium)",
       pricingModel: "Per-instance-hour",
-      freeDetails: "Aurora PostgreSQL Serverless added to AWS Free Tier (March 2026). 750 hours/month of db.t3.micro (or Serverless v2 equivalent), 20 GiB storage, 20 GiB backup. 12-month free tier for new AWS accounts. Full PostgreSQL compatibility with Aurora performance (3-5x faster).",
+      freeDetails: "Aurora PostgreSQL serverless on the Free plan: up to 4 ACUs and 1 GiB per cluster, paid from the credits, for as long as the Free plan lasts. Upgrading to the Paid plan lifts the limits, and usage past the credits is billed.",
       freeType: "limited",
-      monthlyCostSmall: "$0 (year 1)",
+      monthlyCostSmall: "\u2014",
       monthlyCostTeam: "$50\u2013200+",
-      hiddenCosts: "12-month free tier only — costs jump significantly after. db.t3.micro is minimal (2 vCPU, 1 GB RAM). I/O costs on Aurora are separate. Backup beyond 20 GiB costs extra. Multi-AZ doubles the instance cost.",
+      hiddenCosts: "I/O costs on Aurora are separate. Multi-AZ doubles the instance cost.",
     },
     {
       name: "Nile",
@@ -32044,9 +32044,9 @@ function buildAppRunnerMigrationPage(): string {
   }
 
   const providers: ContainerProvider[] = [
-    { name: "Amazon ECS Express Mode", slug: "aws", freeTier: "AWS Free Tier (750 hrs t2.micro/mo, 12 months)", startingPrice: "~$0.01/hr (Fargate)", pricingModel: "Per-hour (Fargate vCPU + memory)", sourceCodeDeploy: "No — container images only", autoScaling: "Yes (Service Auto Scaling)", migrationEffort: "Moderate — different API, same AWS ecosystem", bestFor: "Existing AWS users (official recommendation)" },
+    { name: "Amazon ECS Express Mode", slug: "aws", freeTier: "Free plan: $100 credit at sign-up + up to $100 more, 6 months", startingPrice: "~$0.01/hr (Fargate)", pricingModel: "Per-hour (Fargate vCPU + memory)", sourceCodeDeploy: "No — container images only", autoScaling: "Yes (Service Auto Scaling)", migrationEffort: "Moderate — different API, same AWS ecosystem", bestFor: "Existing AWS users (official recommendation)" },
     { name: "AWS Fargate", slug: "aws", freeTier: "AWS Free Tier (limited)", startingPrice: "$0.04048/vCPU-hr + $0.004445/GB-hr", pricingModel: "Per-second (vCPU + memory)", sourceCodeDeploy: "No — container images only", autoScaling: "Yes (ECS Service Auto Scaling)", migrationEffort: "Moderate — different API, same ECR", bestFor: "Serverless containers on AWS" },
-    { name: "Elastic Beanstalk", slug: "aws", freeTier: "No EB fee (pay for underlying resources)", startingPrice: "EC2 pricing (t2.micro free 12 mo)", pricingModel: "Per-hour (underlying EC2/RDS)", sourceCodeDeploy: "Yes — source code + Dockerfiles", autoScaling: "Yes (EC2 Auto Scaling)", migrationEffort: "Low — supports source code deploy like App Runner", bestFor: "Source code deploy with full AWS control" },
+    { name: "Elastic Beanstalk", slug: "aws", freeTier: "No EB fee (pay for underlying resources)", startingPrice: "EC2 pricing", pricingModel: "Per-hour (underlying EC2/RDS)", sourceCodeDeploy: "Yes — source code + Dockerfiles", autoScaling: "Yes (EC2 Auto Scaling)", migrationEffort: "Low — supports source code deploy like App Runner", bestFor: "Source code deploy with full AWS control" },
     { name: "Google Cloud Run", slug: "google-cloud-run", freeTier: "2M requests/mo, 360K vCPU-sec, 180K GiB-sec free", startingPrice: "$0.00002400/vCPU-sec", pricingModel: "Per-request + per-second (scale to zero)", sourceCodeDeploy: "Yes — source code via buildpacks", autoScaling: "Yes (scale to zero)", migrationEffort: "Moderate — different cloud, similar DX", bestFor: "Pay-per-request with generous free tier" },
     { name: "Azure Container Apps", slug: "azure", freeTier: "180K vCPU-sec, 360K GiB-sec/mo free", startingPrice: "$0.000024/vCPU-sec", pricingModel: "Per-second (consumption) or dedicated", sourceCodeDeploy: "Yes — source code via buildpacks", autoScaling: "Yes (KEDA-based, scale to zero)", migrationEffort: "Moderate — different cloud, similar concepts", bestFor: "Azure ecosystem, event-driven scaling" },
     { name: "Railway", slug: "railway", freeTier: "$5 trial credit (30 days), then $1 of free credit a month", startingPrice: "$5/mo + usage ($0.000463/vCPU-min)", pricingModel: "Per-minute (vCPU + memory) + subscription", sourceCodeDeploy: "Yes — GitHub/GitLab auto-deploy", autoScaling: "Yes (horizontal + vertical)", migrationEffort: "Low — push to deploy, minimal config", bestFor: "Developer experience, fast deployment" },
@@ -32578,7 +32578,7 @@ railway up
 
 function buildAwsFreeTier2026Page(): string {
   const title = "AWS Free Tier Complete Guide 2026 — Every Free Service, Real Limits, and Hidden Costs";
-  const metaDesc = "Comprehensive guide to every AWS free tier service in 2026. Always Free, 12-month, and trial tiers explained. Aurora PostgreSQL Serverless just added. Hidden costs, gotchas, and cheaper alternatives compared.";
+  const metaDesc = "AWS Free plan: up to $200 in credits over 6 months, 30+ always-free services, short-term trials, hidden costs, cheaper alternatives.";
   const slug = "aws-free-tier-2026";
   const pubDate = "2026-03-27";
 
@@ -32597,17 +32597,16 @@ function buildAwsFreeTier2026Page(): string {
     slug: string;
     limits: string;
     category: string;
-    highlight?: boolean;
   }
 
   const alwaysFreeServices: AwsService[] = [
     { name: "AWS Lambda", slug: "aws", limits: "1M requests/month, 400K GB-seconds compute", category: "Compute" },
     { name: "Amazon DynamoDB", slug: "aws", limits: "25 GB storage, 25 WCU/RCU provisioned capacity", category: "Database" },
-    { name: "Amazon S3", slug: "aws", limits: "5 GB standard storage, 20K GET, 2K PUT requests/month (12-month)", category: "Storage" },
+    { name: "Amazon CloudFront", slug: "aws", limits: "1 TB data transfer out, 10M HTTP/HTTPS requests, 2M CloudFront Function invocations/month", category: "CDN" },
     { name: "Amazon SNS", slug: "aws", limits: "1M publishes, 100K HTTP deliveries, 1K email deliveries/month", category: "Messaging" },
     { name: "Amazon SQS", slug: "aws", limits: "1M requests/month", category: "Messaging" },
     { name: "Amazon CloudWatch", slug: "aws", limits: "10 custom metrics, 10 alarms, 1M API requests/month", category: "Monitoring" },
-    { name: "Amazon ECR Public", slug: "amazon-ecr-public", limits: "50 GB storage, unlimited public image pulls", category: "Containers" },
+    { name: "Amazon ECR Public", slug: "amazon-ecr-public", limits: "50 GB storage, 500 GB/month transfer out anonymously, 5 TB/month with an AWS account", category: "Containers" },
     { name: "AWS CloudFormation", slug: "aws", limits: "Unlimited for AWS resources (third-party charges may apply)", category: "IaC" },
     { name: "Amazon Cognito", slug: "aws", limits: "10,000 MAUs a month (Lite or Essentials tier, direct or social sign-in); 50 MAUs for SAML/OIDC. User pools created by November 22, 2024 keep 50,000 on Lite.", category: "Auth" },
     { name: "AWS CodeCommit", slug: "aws", limits: "5 active users, 50 GB storage, 10K Git requests/month", category: "DevOps" },
@@ -32615,25 +32614,12 @@ function buildAwsFreeTier2026Page(): string {
     { name: "AWS CodeBuild", slug: "aws", limits: "100 build minutes/month (general1.small)", category: "DevOps" },
     { name: "AWS X-Ray", slug: "aws", limits: "100K traces recorded, 1M traces scanned/month", category: "Monitoring" },
     { name: "AWS Step Functions", slug: "aws", limits: "4,000 state transitions/month", category: "Compute" },
-    { name: "Amazon SES", slug: "amazon-ses", limits: "No free tier — $200 in expiring AWS credits, then $0.10/1,000 emails", category: "Email" },
-  ];
-
-  const twelveMonthServices: AwsService[] = [
-    { name: "Amazon EC2", slug: "aws", limits: "750 hrs/month t2.micro or t3.micro (Linux/Windows)", category: "Compute" },
-    { name: "Amazon RDS", slug: "aws", limits: "750 hrs/month db.t2.micro or db.t3.micro, 20 GB storage", category: "Database" },
-    { name: "Aurora PostgreSQL Serverless", slug: "amazon-aurora-postgresql", limits: "Up to 4 ACUs per cluster, 1 GB storage (NEW — March 2026)", category: "Database", highlight: true },
-    { name: "Amazon S3", slug: "aws", limits: "5 GB standard storage, 20K GET, 2K PUT requests/month", category: "Storage" },
-    { name: "Amazon CloudFront", slug: "aws", limits: "1 TB data transfer out, 10M HTTP/HTTPS requests/month", category: "CDN" },
-    { name: "Amazon ElastiCache", slug: "aws", limits: "750 hrs/month cache.t2.micro or cache.t3.micro", category: "Database" },
-    { name: "Amazon OpenSearch", slug: "aws", limits: "750 hrs/month t2.small.search or t3.small.search", category: "Search" },
-    { name: "Amazon Redshift", slug: "amazon-redshift", limits: "750 hrs/month dc2.large node, 2 months free trial", category: "Data Warehouse" },
-    { name: "AWS Amplify Hosting", slug: "aws", limits: "1K build minutes/month, 15 GB served, 5 GB storage", category: "Hosting" },
+    { name: "Amazon Q Developer", slug: "amazon-q-developer", limits: "Inline suggestions, chat, 50 agent invocations/month (always free for individuals)", category: "AI Coding" },
   ];
 
   const trialServices: AwsService[] = [
     { name: "Amazon SageMaker", slug: "aws", limits: "250 hrs/month ml.t3.medium for Studio notebooks (2 months)", category: "AI/ML" },
     { name: "Amazon Bedrock", slug: "aws", limits: "Select foundation models with limited free inference (varies by model)", category: "AI/ML" },
-    { name: "Amazon Q Developer", slug: "amazon-q-developer", limits: "Inline suggestions, chat, 50 agent invocations/month (always free for individuals)", category: "AI Coding" },
     { name: "Amazon AppStream 2.0", slug: "aws", limits: "40 hrs/month stream.standard.small (first 12 months)", category: "Desktop" },
     { name: "Amazon Lightsail", slug: "aws", limits: "750 hrs/month of 512 MB instance (3 months free)", category: "Hosting" },
   ];
@@ -32650,7 +32636,7 @@ function buildAwsFreeTier2026Page(): string {
     { title: "Elastic IP addresses", desc: "Free when attached to a running instance. Charged $0.005/hr (~$3.60/month) when idle or unattached. Easy to forget.", cost: "$3.60/mo idle" },
     { title: "CloudWatch detailed monitoring", desc: "Basic monitoring is free (5-minute intervals). Detailed monitoring (1-minute) costs $2.10/metric/month. EC2 auto-enables it in some launch configs.", cost: "$2.10/metric" },
     { title: "EBS volumes on stopped instances", desc: "You pay for EBS storage even when EC2 instances are stopped. 30 GB gp3 = $2.40/month sitting idle.", cost: "$0.08/GB-mo" },
-    { title: "Free tier expiration", desc: "12-month services silently convert to paid after year one. No warning email by default. Set a billing alarm on day one.", cost: "Varies" },
+    { title: "Free tier expiration", desc: "On the Free plan nothing is billed: the account closes at 6 months or when credits run out, and content is deleted after 90 days unless you upgrade. On the Paid plan, usage past the credits is billed.", cost: "Varies" },
     { title: "S3 request costs", desc: "Storage is cheap but requests add up. PUT/COPY/POST at $0.005/1K requests. A deployment pipeline doing thousands of S3 operations can cost more in requests than storage.", cost: "$0.005/1K PUT" },
     { title: "Multi-AZ deployments", desc: "RDS Multi-AZ doubles your cost. The free tier only covers single-AZ. Some tutorials default to Multi-AZ.", cost: "2× RDS cost" },
   ];
@@ -32676,12 +32662,6 @@ function buildAwsFreeTier2026Page(): string {
 
   const alwaysFreeRows = alwaysFreeServices.map(s => `<tr>
       <td style="font-weight:600">${escHtmlServer(s.name)}</td>
-      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(s.limits)}</td>
-      <td style="color:var(--text-muted);font-size:.8rem">${escHtmlServer(s.category)}</td>
-    </tr>`).join("\n        ");
-
-  const twelveMonthRows = twelveMonthServices.map(s => `<tr${s.highlight ? ' style="background:rgba(59,130,246,0.1)"' : ""}>
-      <td style="font-weight:600">${s.highlight ? `<span style="color:var(--accent)">★</span> ` : ""}${escHtmlServer(s.name)}</td>
       <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(s.limits)}</td>
       <td style="color:var(--text-muted);font-size:.8rem">${escHtmlServer(s.category)}</td>
     </tr>`).join("\n        ");
@@ -32814,15 +32794,15 @@ ${mcpCtaCss()}
   <p class="pub-date">Published ${pubDate} &middot; ${pageDataProvenance("/aws-free-tier-2026", offers.length)} &middot; ${awsOffers.length} AWS entries tracked</p>
 
   <div class="summary-stats">
-    <div class="stat-card"><div class="stat-number">${alwaysFreeServices.length}</div><div class="stat-label">Always Free</div></div>
-    <div class="stat-card"><div class="stat-number">${twelveMonthServices.length}</div><div class="stat-label">12-Month Free</div></div>
-    <div class="stat-card"><div class="stat-number">${trialServices.length}</div><div class="stat-label">Trials</div></div>
-    <div class="stat-card"><div class="stat-number green">Aurora PG</div><div class="stat-label">New March 2026</div></div>
+    <div class="stat-card"><div class="stat-number">Up to $200</div><div class="stat-label">Credits</div></div>
+    <div class="stat-card"><div class="stat-number">6 months</div><div class="stat-label">Free plan</div></div>
+    <div class="stat-card"><div class="stat-number">30+</div><div class="stat-label">Always free</div></div>
+    <div class="stat-card"><div class="stat-number">90+</div><div class="stat-label">Services on the Free plan</div></div>
   </div>
 
   <div class="executive-summary">
-    <p><strong>Three tiers, very different rules.</strong> AWS bundles "free tier" into three categories that work completely differently. <strong>Always Free</strong> services never expire — Lambda, DynamoDB, and SNS stay free forever within limits. <strong>12-Month Free</strong> services (EC2, RDS, S3) expire silently after your first year and start billing. <strong>Short-Term Trials</strong> give limited access to premium services.</p>
-    <p><strong>What's new:</strong> Aurora PostgreSQL Serverless was added to the AWS Free Tier in March 2026 — the first time AWS's flagship managed PostgreSQL has been available at no cost. New accounts also get $100&ndash;$200 in credits.</p>
+    <p>New AWS accounts choose a Free plan or a Paid plan; both get $100 in credits at sign-up and can earn up to $100 more. The Free plan covers over 90 services, charges nothing, and closes at 6 months or when the credits run out. 30+ services stay always free on both plans. Short-term trials are for the Paid plan.</p>
+    <p><strong>What's new:</strong> Aurora PostgreSQL serverless joined the Free plan on 2026-03-25 with up to 4 ACUs and 1 GiB per cluster, paid from the credits. The 12-month free tier ended for the last eligible accounts in July 2026.</p>
     <p><strong>The hidden costs:</strong> AWS's free tier is generous but has well-known traps — data transfer charges, NAT Gateway fees, idle Elastic IPs, and EBS volumes on stopped instances. We cover all of them below.</p>
     <p><strong>Comparing clouds?</strong> See our <a href="/cloud-free-tier-comparison-2026">Cloud Free Tier Comparison</a> for a side-by-side matrix of AWS vs GCP vs Azure vs DigitalOcean.</p>
   </div>
@@ -32831,7 +32811,7 @@ ${mcpCtaCss()}
     <h3>Jump to section</h3>
     <ol>
       <li><a href="#always-free">Always Free Services</a></li>
-      <li><a href="#twelve-month">12-Month Free Tier</a></li>
+      <li><a href="#free-plan">Free plan</a></li>
       <li><a href="#trials">Short-Term Trials</a></li>
       <li><a href="#stacks">Developer-Focused Stacks</a></li>
       <li><a href="#gotchas">Hidden Costs &amp; Gotchas</a></li>
@@ -32842,7 +32822,7 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="always-free">Always Free Services</h2>
-  <p class="section-intro">These services remain free indefinitely within their monthly limits. No expiration, no credit card surprises after 12 months. This is the safest tier for long-running side projects.</p>
+  <p class="section-intro">30+ services are free within monthly limits on both plans. Usage beyond these limits is first covered by credits, then billed at standard pay-as-you-go rates on the Paid plan.</p>
 
   <div style="overflow-x:auto">
   <table class="pricing-table">
@@ -32863,30 +32843,16 @@ ${mcpCtaCss()}
     <strong>Lambda + DynamoDB is the killer combo.</strong> 1M Lambda invocations/month + 25 GB DynamoDB is enough to run a real API backend indefinitely at zero cost. Add SNS/SQS for async processing and CloudWatch for monitoring — all always free. This is why AWS dominates the serverless side project space.
   </div>
 
-  <h2 id="twelve-month">12-Month Free Tier</h2>
-  <p class="section-intro">Available for 12 months from account creation. After that, standard pricing applies with <strong>no automatic notification</strong>. Set a billing alarm on day one.</p>
-
-  <div style="overflow-x:auto">
-  <table class="pricing-table">
-    <thead>
-      <tr>
-        <th>Service</th>
-        <th>Free Limits</th>
-        <th>Category</th>
-      </tr>
-    </thead>
-    <tbody>
-        ${twelveMonthRows}
-    </tbody>
-  </table>
-  </div>
+  <h2 id="free-plan">Free plan</h2>
+  <p class="section-intro">When the Free plan ends, the account closes. AWS retains content for 90 days before permanent deletion. Upgrading to a Paid plan within 90 days restores access and applies remaining credits to future bills. The plan excludes Savings Plans, Reserved Instances, and some AWS Marketplace offers.</p>
+  <p class="section-intro">Joining AWS Organizations, setting up an AWS Control Tower landing zone, or joining the AWS Partner Network automatically upgrades a Free plan account to the Paid plan.</p>
 
   <div class="context-box">
-    <strong>Aurora PostgreSQL Serverless is the headline addition.</strong><span class="new-badge">NEW</span> Previously paid-only (starting ~$0.08/ACU-hour), Aurora PostgreSQL is now available on the AWS Free Tier with up to 4 ACUs per cluster and 1 GB storage. This gives you a managed, auto-scaling PostgreSQL database — the same engine that powers production workloads at scale — for free. Compare this to <a href="/vendor/neon">Neon</a> (512 MiB always-free) or <a href="/vendor/supabase">Supabase</a> (500 MB always-free but no expiration).
+    <strong>Aurora PostgreSQL serverless on the Free plan:</strong> up to 4 ACUs and 1 GiB per cluster, paid from the credits, for as long as the Free plan lasts. Upgrading to the Paid plan lifts the limits, and usage past the credits is billed. This gives you a managed, auto-scaling PostgreSQL database — the same engine that powers production workloads at scale. Compare this to <a href="/vendor/neon">Neon</a> (1 GB per project always-free) or <a href="/vendor/supabase">Supabase</a> (500 MB always-free but no expiration).
   </div>
 
   <h2 id="trials">Short-Term Trials</h2>
-  <p class="section-intro">Limited-time trials for premium services. Useful for evaluation, not for ongoing projects.</p>
+  <p class="section-intro">Trials are for Paid plan services and start when you activate the service; credits cover usage past the trial limits.</p>
 
   <div style="overflow-x:auto">
   <table class="pricing-table">
@@ -32904,19 +32870,19 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="stacks">Developer-Focused Stacks</h2>
-  <p class="section-intro">Common use cases and which free services to combine. All stacks below can run at zero cost within AWS free tier limits.</p>
+  <p class="section-intro">Common use cases and which free services to combine. Only the always-free services stay at zero cost after the Free plan; S3, EC2, RDS and Aurora draw on the credits.</p>
 
   <div class="verdict-box">
     <h3>Recommended Free Stacks</h3>
 
     <div class="verdict-item">
       <strong>Side project API backend</strong>
-      <p>Lambda + DynamoDB + API Gateway + S3 + CloudFront. Serverless, scales to zero, always free within limits. Best for REST/GraphQL APIs serving &lt;1M requests/month.</p>
+      <p>Lambda + DynamoDB + API Gateway + S3 + CloudFront. Serverless, scales to zero. Best for REST/GraphQL APIs serving &lt;1M requests/month.</p>
     </div>
 
     <div class="verdict-item">
       <strong>Testing a database</strong>
-      <p><strong>Aurora PostgreSQL Serverless</strong> (NEW) for managed PostgreSQL with auto-scaling. <strong>RDS PostgreSQL</strong> (750 hrs t3.micro) for traditional single-instance. <strong>DynamoDB</strong> (25 GB always free) for NoSQL. See our <a href="/neon-vs-supabase">Neon vs Supabase</a> comparison for PostgreSQL alternatives.</p>
+      <p><strong>Aurora PostgreSQL Serverless</strong> (NEW) for managed PostgreSQL with auto-scaling. <strong>RDS PostgreSQL</strong> for traditional single-instance. <strong>DynamoDB</strong> (25 GB always free) for NoSQL. See our <a href="/neon-vs-supabase">Neon vs Supabase</a> comparison for PostgreSQL alternatives.</p>
     </div>
 
     <div class="verdict-item">
@@ -32931,7 +32897,7 @@ ${mcpCtaCss()}
 
     <div class="verdict-item">
       <strong>Static website with CDN</strong>
-      <p>S3 (5 GB) + CloudFront (1 TB transfer/month) + Route 53 (not free — $0.50/hosted zone). Or use <a href="/vendor/cloudflare-pages">Cloudflare Pages</a> (unlimited, always free) as an alternative.</p>
+      <p>S3 + CloudFront (1 TB transfer/month) + Route 53 (not free — $0.50/hosted zone). Or use <a href="/vendor/cloudflare-pages">Cloudflare Pages</a> (unlimited, always free) as an alternative.</p>
     </div>
   </div>
 
@@ -33116,7 +33082,7 @@ function buildGcpFreeTier2026Page(): string {
   }
 
   const cloudAlts: CloudAlt[] = [
-    { name: "AWS", slug: "aws", freeTier: "Always Free: Lambda 1M req/mo, DynamoDB 25 GB, 12-month EC2/RDS", strength: "Broadest service catalog, most enterprise adoption", bestFor: "Enterprise workloads, serverless (Lambda)" },
+    { name: "AWS", slug: "aws", freeTier: "Always Free: Lambda 1M req/mo, DynamoDB 25 GB", strength: "Broadest service catalog, most enterprise adoption", bestFor: "Enterprise workloads, serverless (Lambda)" },
     { name: "Azure", slug: "azure", freeTier: "12 months: 750 hours each of B2pts v2 and B2ats v2 VMs. Always free: SQL Database (100K vCore seconds/mo, 32 GB), Cosmos DB (1K RU/s, 25 GB). $200 credit for 30 days, then pay-as-you-go to keep the free services.", strength: "Best .NET/Windows integration, hybrid cloud", bestFor: "Microsoft stack teams, enterprise" },
     { name: "Cloudflare", slug: "cloudflare-workers", freeTier: "Workers 100K req/day, R2 10 GB (zero egress), D1 5 GB, Pages unlimited", strength: "Zero egress on R2, global edge network", bestFor: "Edge computing, static sites, storage" },
     { name: "Railway", slug: "railway", freeTier: "$5 free trial credit, usage-based pricing", strength: "Best developer experience, instant deploys", bestFor: "Quick prototypes, hobby projects" },
@@ -33443,7 +33409,7 @@ ${mcpCtaCss()}
 
 function buildAzureFreeTier2026Page(): string {
   const title = "Azure Free Tier Complete Guide 2026 — Every Free Service, Real Limits, and Hidden Costs";
-  const metaDescAzure = "Comprehensive guide to every Azure free tier service in 2026. 65+ always-free services, $200 trial credit, 12-month free VMs and SQL. Cosmos DB lifetime free tier, Azure Functions 1M req/mo, and hidden costs explained.";
+  const metaDescAzure = "Comprehensive guide to every Azure free tier service in 2026. 65+ always-free services including SQL Database, $200 trial credit, 12-month free VMs. Cosmos DB lifetime free tier, Azure Functions, and hidden costs explained.";
   const slug = "azure-free-tier-2026";
   const pubDate = "2026-03-31";
 
@@ -33466,41 +33432,41 @@ function buildAzureFreeTier2026Page(): string {
   }
 
   const alwaysFreeServices: AzureService[] = [
-    { name: "Azure Functions", slug: "azure", limits: "1M executions/month, 400K GB-seconds compute", category: "Compute", highlight: true },
+    { name: "Azure Functions", slug: "azure", limits: "Flex Consumption: 250,000 executions and 100,000 GB-s/month. Legacy Consumption plan: 1M executions and 400,000 GB-s/month", category: "Compute", highlight: true },
     { name: "Azure Cosmos DB", slug: "azure", limits: "1,000 RU/s throughput + 25 GB storage (lifetime)", category: "Database", highlight: true },
+    { name: "Azure SQL Database", slug: "azure", limits: "Up to 10 General Purpose serverless databases, each with 100,000 vCore seconds and 32 GB/month, for the lifetime of your subscription", category: "Database" },
     { name: "App Service", slug: "azure", limits: "10 web/mobile/API apps (F1 tier), 1 GB storage, 60 min/day compute", category: "Compute" },
+    { name: "Container Apps", slug: "azure", limits: "180,000 vCPU seconds, 360,000 GiB seconds and 2 million requests/month", category: "Containers" },
     { name: "Azure DevOps", slug: "azure", limits: "5 users, unlimited private repos, 1 free parallel CI/CD pipeline (1,800 min/mo)", category: "DevOps" },
     { name: "Azure Active Directory (Entra ID)", slug: "azure", limits: "50,000 stored objects, SSO for all apps", category: "Identity" },
-    { name: "Azure Storage (Blob)", slug: "azure", limits: "5 GB LRS hot block blob storage, 20K read / 10K write operations", category: "Storage" },
-    { name: "Azure Cognitive Search", slug: "azure", limits: "3 indexes, 50 MB storage per service (F tier)", category: "Search" },
-    { name: "Bandwidth", slug: "azure", limits: "100 GB outbound data transfer/month (5 GB first 12 months is separate)", category: "Networking" },
-    { name: "Azure Maps", slug: "azure", limits: "250K mapping transactions/month", category: "Location" },
+    { name: "Azure AI Search", slug: "azure", limits: "3 indexes, 50 MB storage per service (F tier)", category: "Search" },
+    { name: "Foundry Tools: Language", slug: "azure", limits: "5,000 text records/month", category: "AI/ML" },
+    { name: "Foundry Tools: Translator", slug: "azure", limits: "2 million characters/month", category: "AI/ML" },
+    { name: "Bandwidth", slug: "azure", limits: "100 GB outbound data transfer/month (15 GB outbound for the first 12 months is separate)", category: "Networking" },
+    { name: "Azure Maps", slug: "azure", limits: "1,000 to 5,000 transactions/month for specific mapping and location insights features", category: "Location" },
     { name: "Azure IoT Hub", slug: "azure", limits: "8,000 messages/day (F1 tier)", category: "IoT" },
-    { name: "Notification Hubs", slug: "azure", limits: "1M push notifications, unlimited namespaces (free tier)", category: "Messaging" },
+    { name: "Notification Hubs", slug: "azure", limits: "1 million pushes, 100 free namespaces, 500 active devices per namespace", category: "Messaging" },
     { name: "Visual Studio Code", slug: "azure", limits: "Free IDE with Azure extensions, GitHub Copilot free tier", category: "Dev Tools" },
     { name: "Azure Advisor", slug: "azure", limits: "Unlimited cost, security, reliability, performance recommendations", category: "Management" },
-    { name: "Azure Policy", slug: "azure", limits: "Unlimited policy assignments and evaluations", category: "Governance" },
-    { name: "Azure Resource Manager", slug: "azure", limits: "Unlimited template deployments, tags, resource groups", category: "IaC" },
+    { name: "Azure Policy", slug: "azure", limits: "Free, up to 200 policy assignments per scope", category: "Governance" },
+    { name: "Azure Resource Manager", slug: "azure", limits: "Free, up to 980 resource groups per subscription and 50 tags per resource", category: "IaC" },
   ];
 
   const twelveMonthServices: AzureService[] = [
-    { name: "Azure Virtual Machines", slug: "azure", limits: "750 hrs/month B1S (Linux or Windows), two VMs simultaneously", category: "Compute" },
-    { name: "Azure SQL Database", slug: "azure", limits: "100K vCore seconds/month, 32 GB storage (S0 serverless)", category: "Database" },
+    { name: "Azure Virtual Machines", slug: "azure", limits: "750 hours/month each of B2pts v2 (Arm-based) and B2ats v2 (AMD-based) burstable VMs, for Linux and again for Windows", category: "Compute" },
     { name: "Managed Disks", slug: "azure", limits: "2× 64 GB P6 SSD managed disks, 1 GB snapshots, 2M I/O ops", category: "Storage" },
     { name: "Azure Blob Storage", slug: "azure", limits: "5 GB LRS hot storage, 20K read / 10K write operations", category: "Storage" },
     { name: "Azure Files", slug: "azure", limits: "100 GB file storage (LRS), 2M transactions", category: "Storage" },
-    { name: "Container Apps", slug: "azure", limits: "180K vCPU-seconds, 360K GiB-seconds memory/month", category: "Containers" },
-    { name: "Azure AI Services (multi-service)", slug: "azure", limits: "5K transactions/month for Text Analytics, Translator, Computer Vision, etc.", category: "AI/ML" },
-    { name: "Azure Cache for Redis", slug: "azure", limits: "250 MB C0 Basic instance", category: "Database" },
-    { name: "Azure Service Bus", slug: "azure", limits: "750 hrs/month Basic namespace", category: "Messaging" },
+    { name: "Foundry Tools: Vision", slug: "azure", limits: "5,000 transactions/month for each S1, S2 and S3 tier", category: "AI/ML" },
+    { name: "Azure Service Bus", slug: "azure", limits: "750 hours and 13 million operations/month, Standard tier base unit", category: "Messaging" },
   ];
 
   const trialServices: AzureService[] = [
-    { name: "$200 Azure Credit", slug: "azure", limits: "$200 credit for any service, valid for 30 days", category: "Credits", highlight: true },
-    { name: "Azure AI Studio", slug: "azure", limits: "Access to GPT-4o, Phi-3, Llama models with credit", category: "AI/ML" },
+    { name: "$200 Azure Credit", slug: "azure", limits: "$200 credit, valid for 30 days. Not for Marketplace purchases or Spot VMs", category: "Credits", highlight: true },
+    { name: "Microsoft Foundry", slug: "azure", limits: "Access to GPT-4o and Llama models with credit", category: "AI/ML" },
     { name: "Azure Kubernetes Service (AKS)", slug: "azure", limits: "Free cluster management, pay only for VMs (use with $200 credit)", category: "Containers" },
     { name: "Microsoft Fabric", slug: "azure", limits: "Free trial capacity for data analytics and AI workloads", category: "Analytics" },
-    { name: "Azure OpenAI Service", slug: "azure", limits: "GPT-4o, GPT-4o mini, Whisper with trial credit", category: "AI/ML" },
+    { name: "Azure OpenAI Service", slug: "azure", limits: "GPT-4o, Whisper with trial credit", category: "AI/ML" },
   ];
 
   interface GotchaItem {
@@ -33510,14 +33476,14 @@ function buildAzureFreeTier2026Page(): string {
   }
 
   const gotchas: GotchaItem[] = [
-    { title: "Log Analytics default ingestion", desc: "Every Azure subscription gets a Log Analytics workspace. By default, it ingests platform logs that count toward the 5 GB/day free tier, then charges $2.76/GB. Activity and diagnostic logs pile up silently.", cost: "$2.76/GB after 5 GB" },
-    { title: "No automatic throttling", desc: "Unlike GCP's $300 trial (which pauses when exhausted), Azure's free tier services start billing the moment you exceed limits. There's no built-in spend cap. Set budget alerts on day one.", cost: "Varies — immediate" },
-    { title: "App Service F1 limitations", desc: "The F1 tier gives 60 minutes of compute/day, no custom domain SSL, no always-on. Apps sleep after 20 min idle. For persistent hosting, B1S (12-month free) is better.", cost: "60 min/day limit" },
+    { title: "Log Analytics ingestion", desc: "The first 5 GB a month per billing account are free. After that, ingestion is billed per GB at a regional rate: $2.30/GB in East US. Resource logs are collected only once you create a diagnostic setting.", cost: "$2.30/GB after 5 GB/month (East US)" },
+    { title: "Pay-as-you-go has no spend cap", desc: "The free account has the spending limit turned on by default, so your card is not charged. Once you move to pay-as-you-go, services bill the moment you exceed free limits: a spending limit isn't shown in the Azure portal and you can't enable one. Budgets send alerts, but your consumption isn't stopped.", cost: "Pay-as-you-go — immediate" },
+    { title: "App Service F1 limitations", desc: "The F1 tier gives 60 minutes of compute/day, no custom domain SSL, no always-on. Apps sleep after 20 min idle. For persistent hosting, a B2ats v2 or B2pts v2 VM (12-month free) is better.", cost: "60 min/day limit" },
     { title: "Cosmos DB RU throttling", desc: "1,000 RU/s sounds generous, but a single complex query can consume 50+ RUs. Exceed the limit and requests get HTTP 429 throttled. Monitor RU consumption from day one.", cost: "429 errors at limit" },
-    { title: "Data transfer between regions", desc: "Outbound data transfer within Azure (cross-region) is charged even with a free tier subscription. Keep resources in the same region.", cost: "$0.01-0.05/GB" },
-    { title: "Free tier expiration", desc: "12-month services silently convert to paid pricing. No automatic notification. Azure sends emails but they're easy to miss. Set a calendar reminder for your anniversary date.", cost: "Varies" },
+    { title: "Data transfer between regions", desc: "Data transfer between Azure regions is billed: $0.02/GB within North America or Europe, $0.05/GB from those continents to others, and up to $0.16/GB elsewhere. Keep resources in the same region.", cost: "$0.02-0.16/GB" },
+    { title: "Free tier expiration", desc: "When the 12 months end, these services are billed at pay-as-you-go rates. Microsoft will send you an email notifying you when it's time to upgrade. Set a calendar reminder for your anniversary date as well.", cost: "Varies" },
     { title: "VMs running when stopped (not deallocated)", desc: "Stopping a VM from the OS doesn't deallocate it — you still pay. You must 'Stop (Deallocate)' from the Azure Portal or CLI to stop billing. Public IP charges continue separately.", cost: "Full VM hourly rate" },
-    { title: "Managed disk charges on deallocated VMs", desc: "Even when a VM is deallocated, you pay for its managed disks. A 64 GB P6 SSD costs ~$9.60/month. Delete disks you don't need.", cost: "$9.60/mo per P6 disk" },
+    { title: "Managed disk charges on deallocated VMs", desc: "Even when a VM is deallocated, you pay for its managed disks. A 64 GB P6 SSD costs $9.29/month in East US 2 and $10.21/month in East US. Delete disks you don't need.", cost: "$9.29/mo per P6 disk (East US 2)" },
   ];
 
   interface CloudAlt {
@@ -33678,16 +33644,16 @@ ${mcpCtaCss()}
   <p class="pub-date">Published ${pubDate} &middot; ${pageDataProvenance("/azure-free-tier-2026", offers.length)} &middot; ${azureOffers.length} Azure entries tracked</p>
 
   <div class="summary-stats">
-    <div class="stat-card"><div class="stat-number">${alwaysFreeServices.length}</div><div class="stat-label">Always Free</div></div>
-    <div class="stat-card"><div class="stat-number">${twelveMonthServices.length}</div><div class="stat-label">12-Month Free</div></div>
+    <div class="stat-card"><div class="stat-number">65+</div><div class="stat-label">Always-Free Services</div></div>
+    <div class="stat-card"><div class="stat-number">20+</div><div class="stat-label">Services Free for 12 Months</div></div>
     <div class="stat-card"><div class="stat-number green">$200</div><div class="stat-label">Trial Credit</div></div>
     <div class="stat-card"><div class="stat-number green">Cosmos DB</div><div class="stat-label">Lifetime Free Tier</div></div>
   </div>
 
   <div class="executive-summary">
-    <p><strong>Three tiers, different rules.</strong> Azure's free offering splits into three categories. <strong>Always Free</strong> services never expire — Azure Functions (1M executions/month), Cosmos DB (1,000 RU/s + 25 GB), and App Service stay free forever within limits. <strong>12-Month Free</strong> services (B1S VMs, SQL Database, Managed Disks) expire after your first year. <strong>$200 Trial Credit</strong> gives 30-day access to any Azure service.</p>
+    <p><strong>Three tiers, different rules.</strong> Azure's free offering splits into three categories. <strong>Always Free</strong> services never expire — Azure Functions, Cosmos DB (1,000 RU/s + 25 GB), SQL Database and App Service stay free forever within limits. <strong>12-Month Free</strong> services (B2pts v2 and B2ats v2 VMs, Managed Disks, Blob Storage) expire after your first year. <strong>$200 Trial Credit</strong> lasts 30 days and does not cover Marketplace purchases or Spot VMs.</p>
     <p><strong>Azure's unique advantage:</strong> Cosmos DB's always-free tier (1,000 RU/s + 25 GB) is the most generous lifetime-free managed database from any major cloud provider. It's multi-model (document, graph, key-value, column-family) and globally distributable — no equivalent exists on AWS or GCP's always-free tiers.</p>
-    <p><strong>The hidden costs:</strong> Azure has no automatic spend cap — once you exceed free limits, charges start immediately. Log Analytics ingestion, managed disk charges on deallocated VMs, and App Service F1 compute limits catch the most developers. We cover all of them below.</p>
+    <p><strong>The hidden costs:</strong> The free account has the spending limit turned on by default, so your card is not charged. At 30 days or when the credit runs out, your account and services are disabled unless you move to pay-as-you-go. Only pay-as-you-go has no spending cap: once you exceed free limits there, charges start immediately. Log Analytics ingestion, managed disk charges on deallocated VMs, and App Service F1 compute limits catch the most developers. We cover all of them below.</p>
     <p><strong>Comparing clouds?</strong> See our <a href="/cloud-free-tier-comparison-2026">Cloud Free Tier Comparison</a> for a side-by-side matrix of AWS vs GCP vs Azure vs DigitalOcean.</p>
   </div>
 
@@ -33729,7 +33695,7 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="twelve-month">12-Month Free Tier</h2>
-  <p class="section-intro">Available for 12 months from account creation. After that, standard pricing applies. Azure sends renewal emails but they're easy to miss — set a calendar reminder.</p>
+  <p class="section-intro">Available for 12 months from account creation. Customers who try Azure free must move to pay as you go within 30 days to continue receiving 12 months free services. When the 12 months end, pay-as-you-go rates apply, and Microsoft will send you an email notifying you when it's time to upgrade.</p>
 
   <div style="overflow-x:auto">
   <table class="pricing-table">
@@ -33747,11 +33713,11 @@ ${mcpCtaCss()}
   </div>
 
   <div class="context-box">
-    <strong>B1S VMs are the most flexible 12-month offering.</strong> You get 750 hours/month of B1S burstable instances — enough to run two VMs simultaneously (one Linux, one Windows). Compare with AWS (t3.micro, 750 hrs total) and GCP (e2-micro always-free but single region only). Azure SQL Database's serverless option auto-pauses when idle, making it genuinely free for intermittent workloads.
+    <strong>B2pts v2 and B2ats v2 VMs are the most flexible 12-month offering.</strong> You get 750 hours a month of each, for Linux and again for Windows. New subscriptions can't deploy the earlier B-series v1 VMs. Compare with AWS (new accounts get no free EC2 hours; EC2 is paid from the Free plan's credits) and GCP (e2-micro always-free but single region only).
   </div>
 
   <h2 id="trial">$200 Trial Credit</h2>
-  <p class="section-intro">New accounts get $200 in Azure credits valid for 30 days. Unlike GCP's $300/90-day trial, Azure's credit expires faster but works with every service including premium GPU instances and Azure OpenAI.</p>
+  <p class="section-intro">New accounts get $200 in Azure credits valid for 30 days. Unlike GCP's $300/90-day trial, Azure's credit expires faster. It does not cover Marketplace purchases or Spot VMs, and free trials start with zero GPU quota and aren't eligible for limit or quota increases.</p>
 
   <div style="overflow-x:auto">
   <table class="pricing-table">
@@ -33776,12 +33742,12 @@ ${mcpCtaCss()}
 
     <div class="verdict-item">
       <strong>Serverless API backend</strong>
-      <p>Azure Functions (1M executions/mo) + Cosmos DB (1,000 RU/s + 25 GB) + Azure Storage (5 GB). Serverless, scales to zero, always free within limits. The Cosmos DB integration with Functions is first-class — input/output bindings make it seamless.</p>
+      <p>Azure Functions + Cosmos DB (1,000 RU/s + 25 GB) + Blob Storage (5 GB, free for 12 months). Serverless and scales to zero; Functions and Cosmos DB stay free within limits. The Cosmos DB integration with Functions is first-class — input/output bindings make it seamless.</p>
     </div>
 
     <div class="verdict-item">
       <strong>Full-stack web app</strong>
-      <p>App Service F1 (10 apps) or B1S VM (12-month) + Azure SQL Database (serverless) + Azure Storage (Blob). For persistent hosting, use the B1S VM. For hobby apps that can sleep, App Service F1 works. See our <a href="/hosting-alternatives">hosting alternatives</a> for more options.</p>
+      <p>App Service F1 (10 apps) or a B2ats v2 VM (12-month) + Azure SQL Database (serverless, always free) + Blob Storage (12-month). For persistent hosting, use the VM. For hobby apps that can sleep, App Service F1 works. See our <a href="/hosting-alternatives">hosting alternatives</a> for more options.</p>
     </div>
 
     <div class="verdict-item">
@@ -33791,22 +33757,22 @@ ${mcpCtaCss()}
 
     <div class="verdict-item">
       <strong>AI/ML experimentation</strong>
-      <p>Azure AI Services (5K transactions/mo, 12-month) + Azure OpenAI (with $200 credit) + Azure Functions for inference endpoints. Or use <a href="/vendor/azure">Azure AI Studio</a> for a managed playground. See our <a href="/ai-ml-alternatives">AI/ML tools guide</a> for more options.</p>
+      <p>Foundry Tools (Language and Translator always free, Vision free for 12 months) + Azure OpenAI (with $200 credit) + Azure Functions for inference endpoints. Or use <a href="/vendor/azure">Microsoft Foundry</a> for a managed playground. See our <a href="/ai-ml-alternatives">AI/ML tools guide</a> for more options.</p>
     </div>
 
     <div class="verdict-item">
       <strong>DevOps pipeline</strong>
-      <p>Azure DevOps (5 users, 1 free parallel pipeline, 1,800 min/mo) + Azure Container Apps (12-month) + Azure Container Registry. A complete CI/CD pipeline with hosted agents, boards, and artifact feeds — free for small teams. See our <a href="/ci-cd-alternatives">CI/CD alternatives</a> for comparison.</p>
+      <p>Azure DevOps (5 users, 1 free parallel pipeline, 1,800 min/mo) + Azure Container Apps (always free) + Azure Container Registry. A complete CI/CD pipeline with hosted agents, boards, and artifact feeds — free for small teams. See our <a href="/ci-cd-alternatives">CI/CD alternatives</a> for comparison.</p>
     </div>
   </div>
 
   <h2 id="gotchas">Hidden Costs &amp; Gotchas</h2>
-  <p class="section-intro">Azure's free tier is generous, but these costs catch developers off guard. The #1 issue is the lack of automatic spend caps — unlike GCP, Azure starts billing immediately when limits are exceeded.</p>
+  <p class="section-intro">Azure's free tier is generous, but these costs catch developers off guard. The free account's spending limit is on by default; once you move to pay-as-you-go there is no spending cap, and Azure bills immediately when free limits are exceeded.</p>
 
     ${gotchaCards}
 
   <div class="context-box">
-    <strong>Pro tip:</strong> Set up budget alerts immediately. Go to Cost Management &rarr; Budgets &rarr; Add &rarr; set threshold to $1. You'll get alerts at 50%, 80%, and 100%. Also enable <strong>Azure Advisor</strong> (always free) for cost optimization recommendations. Consider using <strong>Azure Cost Management + Billing</strong> to set spending limits on your subscription — this is the closest Azure has to an automatic spend cap.
+    <strong>Pro tip:</strong> Set up budget alerts immediately. Go to Cost Management &rarr; Budgets &rarr; Add &rarr; set threshold to $1. You'll get alerts at 50%, 80%, and 100%. Also enable <strong>Azure Advisor</strong> (always free) for cost optimization recommendations.
   </div>
 
   <h2 id="alternatives">Azure vs Alternatives</h2>
@@ -34680,7 +34646,7 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="compute">Always-Free Compute</h2>
-  <p class="section-intro">Persistent compute is the most valuable free tier category. Only GCP and AWS offer always-free compute options.</p>
+  <p class="section-intro">Persistent compute is the most valuable free tier category.</p>
 
   <div style="overflow-x:auto">
   <table class="comp-table">
@@ -34695,9 +34661,9 @@ ${mcpCtaCss()}
     <tbody>
       <tr>
         <td class="provider-col">AWS</td>
-        <td>EC2 t2/t3.micro</td>
-        <td>750 hrs/mo, 1 vCPU, 1 GB RAM</td>
-        <td style="color:#d29922">12 months only</td>
+        <td>EC2</td>
+        <td>No free hours; paid from Free plan credits (up to $200)</td>
+        <td style="color:#d29922">Free plan: 6 months</td>
       </tr>
       <tr style="background:rgba(63,185,80,0.08)">
         <td class="provider-col">GCP</td>
@@ -34707,8 +34673,8 @@ ${mcpCtaCss()}
       </tr>
       <tr>
         <td class="provider-col">Azure</td>
-        <td>B1S VM</td>
-        <td>750 hrs/mo, 1 vCPU, 1 GB RAM</td>
+        <td>B2pts v2 / B2ats v2 VMs</td>
+        <td>750 hrs/mo each, 2 vCPU, 1 GiB RAM</td>
         <td style="color:#d29922">12 months only</td>
       </tr>
       <tr>
@@ -34722,7 +34688,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="context-box">
-    <strong>GCP is the only provider with a permanent free VM.</strong> AWS and Azure offer 12-month free instances that silently convert to paid. If you need a persistent server that costs nothing, GCP's e2-micro is the only option among the Big Four. DigitalOcean doesn't offer any free compute but starts at just $4/mo.
+    <strong>GCP is the only provider of the four with a permanent free VM.</strong> AWS gives new accounts no free VM hours, with EC2 paid from the Free plan's credits, and the plan closes after 6 months unless upgraded. Azure's free VM hours last 12 months for accounts that move to pay-as-you-go within 30 days, and VMs still running after 12 months are billed at pay-as-you-go rates. If you need a persistent server that costs nothing, GCP's e2-micro is the only option among the Big Four. DigitalOcean doesn't offer any free compute but starts at just $4/mo.
   </div>
 
   <h2 id="databases">Always-Free Databases</h2>
@@ -34798,7 +34764,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="context-box">
-    <strong>Azure's Cosmos DB lifetime free tier is the best always-free managed database.</strong> 1,000 RU/s and 25 GB with no expiration. AWS has DynamoDB (always free, 25 GB) and the new Aurora PostgreSQL Serverless (12-month). GCP has Firestore for document storage and BigQuery for analytics. DigitalOcean offers no free databases.
+    <strong>Azure's Cosmos DB has a lifetime free tier.</strong> 1,000 RU/s and 25 GB with no expiration. AWS has DynamoDB (always free, 25 GB) and Aurora PostgreSQL serverless (Free plan, paid from credits). GCP has Firestore for document storage and BigQuery for analytics. DigitalOcean offers no free databases.
   </div>
 
   <h2 id="serverless">Serverless Functions</h2>
@@ -34875,9 +34841,9 @@ ${mcpCtaCss()}
     <tbody>
       <tr>
         <td class="provider-col">AWS</td>
-        <td>S3: 5 GB standard</td>
+        <td>S3: no free storage (paid from credits)</td>
         <td>CloudFront: 1 TB transfer, 10M requests/mo</td>
-        <td style="color:#d29922">12 months (S3 &amp; CF)</td>
+        <td style="color:#d29922">CloudFront always free; S3 from credits</td>
       </tr>
       <tr>
         <td class="provider-col">GCP</td>
@@ -34997,7 +34963,7 @@ ${mcpCtaCss()}
 
   <div class="diff-card" style="border-left-color:#f85149">
     <h3>AWS <span style="font-size:.75rem;color:#f85149;font-weight:400">Most gotchas</span></h3>
-    <p class="diff-desc"><strong>Data transfer:</strong> $0.09/GB after 100 GB free. <strong>NAT Gateway:</strong> $32+/mo if Lambda needs VPC internet. <strong>Idle Elastic IPs:</strong> $3.60/mo when unattached. <strong>EBS on stopped instances:</strong> You pay for disk even when EC2 is stopped. <strong>12-month silent conversion:</strong> No warning when free tier expires. Set a billing alarm on day one.</p>
+    <p class="diff-desc"><strong>Data transfer:</strong> $0.09/GB after 100 GB free. <strong>NAT Gateway:</strong> $32+/mo if Lambda needs VPC internet. <strong>Idle Elastic IPs:</strong> $3.60/mo when unattached. <strong>EBS on stopped instances:</strong> You pay for disk even when EC2 is stopped. <strong>Free plan closure:</strong> the account closes at 6 months or when credits run out, and content is deleted after 90 days unless you upgrade to the Paid plan.</p>
   </div>
 
   <div class="diff-card" style="border-left-color:#d29922">
@@ -40126,9 +40092,9 @@ ${mcpCtaCss()}
         <td class="cheapest">Zero egress</td>
       </tr>
       <tr>
-        <td class="provider-col">AWS S3<span class="caution-badge">12-MO ONLY</span></td>
+        <td class="provider-col">AWS S3<span class="caution-badge">CREDITS ONLY</span></td>
         <td>Object</td>
-        <td>5 GB</td>
+        <td>None (credits)</td>
         <td>${monthlyEgressGrantGb("AWS S3")} GB/mo, no expiry</td>
         <td class="check">&#10003; (native)</td>
         <td class="partial">CloudFront sep.</td>
@@ -40268,7 +40234,7 @@ ${mcpCtaCss()}
     </tbody>
   </table>
   </div>
-  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem"><strong>Permanent Free</strong> is about the <strong>Free Storage</strong> column only: a tick means that storage allowance has no expiry date, a cross means it runs for a fixed term and then stops. It says nothing about the <strong>Free Egress</strong> column, which each row states for itself. AWS S3 is a cross because its 5 GB of storage is part of the 12-month AWS Free Tier &mdash; but ${monthlyEgressGrantSentence(rateCardFor("AWS S3"))}, aggregated across all AWS services and regions, so the ${monthlyEgressGrantGb("AWS S3")} GB in its Free Egress cell does not expire with it.</p>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem"><strong>Permanent Free</strong> is about the <strong>Free Storage</strong> column only: a tick means that storage allowance has no expiry date, a cross means it runs for a fixed term and then stops. It says nothing about the <strong>Free Egress</strong> column, which each row states for itself. AWS S3 gets a cross because new accounts get no free storage, only credits on a Free plan that closes after 6 months; but ${monthlyEgressGrantSentence(rateCardFor("AWS S3"))}, aggregated across all AWS services and regions, so the ${monthlyEgressGrantGb("AWS S3")} GB in its Free Egress cell does not expire.</p>
 
   <h2 id="zero-egress">Zero-Egress Object Storage</h2>
   <p class="section-intro">The most impactful category. Zero-egress providers eliminate bandwidth charges entirely &mdash; the single largest cost driver in cloud storage.</p>
@@ -40302,8 +40268,8 @@ ${mcpCtaCss()}
   <p class="section-intro">Object storage from major cloud providers. Tightly integrated with their ecosystems but with the most expensive egress pricing.</p>
 
   <div class="diff-card">
-    <h3>AWS S3 <span class="caution-badge">12-MONTH FREE ONLY</span></h3>
-    <div class="diff-desc"><strong>Free tier:</strong> 5 GB storage, 20,000 GET requests, 2,000 PUT requests per month &mdash; for 12 months only. After the trial you pay for storage from the first byte: $0.023/GB storage, $0.005/1K PUT, $0.0004/1K GET. Egress is the exception &mdash; ${monthlyEgressGrantSentence(rateCardFor("AWS S3"))}, so the $0.09/GB rate starts at the ${monthlyEgressGrantGb("AWS S3")} GB mark and not at the first byte. S3 is the industry standard with the broadest SDK ecosystem, but has the <strong>most expensive egress and the least generous free tier</strong>. Plus the hidden NAT Gateway charge ($0.045/GB) on EC2 instances. Best for teams already committed to AWS who need deep ecosystem integration.</div>
+    <h3>AWS S3 <span class="caution-badge">CREDITS ONLY</span></h3>
+    <div class="diff-desc"><strong>Free tier:</strong> no storage allowance of its own for new accounts. New accounts&rsquo; credits, up to $200, can pay for S3 while the Free plan lasts, at most 6 months. After that, standard rates from the first byte: $0.023/GB storage, $0.005/1K PUT, $0.0004/1K GET. Egress is the exception &mdash; ${monthlyEgressGrantSentence(rateCardFor("AWS S3"))}, so the $0.09/GB rate starts at the ${monthlyEgressGrantGb("AWS S3")} GB mark and not at the first byte. S3 is the industry standard with the broadest SDK ecosystem, but has the <strong>most expensive egress and the least generous free tier</strong>. Plus the hidden NAT Gateway charge ($0.045/GB) on EC2 instances. Best for teams already committed to AWS who need deep ecosystem integration.</div>
   </div>
 
   <div class="diff-card">
@@ -40592,8 +40558,8 @@ ${mcpCtaCss()}
   </div>
 
   <div class="diff-card">
-    <h3>AWS S3: the storage free tier expires after 12 months, the egress allowance does not</h3>
-    <div class="diff-desc">S3&rsquo;s 5 GB free tier is part of the 12-month AWS Free Tier, not Always Free. After 12 months you pay for stored bytes from the first one. What does not expire is the egress allowance: ${monthlyEgressGrantSentence(rateCardFor("AWS S3"))}, aggregated across all AWS services and regions, so a project serving under ${monthlyEgressGrantGb("AWS S3")} GB a month pays nothing for bandwidth however old the account is. The 12-month trap is the storage, and it catches developers who set up a project during the trial and forget about it. Azure Blob Storage&rsquo;s 5 GB of storage has the same 12-month limit. GCS and Oracle are Always Free.</div>
+    <h3>S3 has no free storage for new accounts; its monthly egress allowance stays</h3>
+    <div class="diff-desc">S3&rsquo;s 5 GB of free storage was part of the 12-month AWS Free Tier, which ended for the last eligible accounts in July 2026. New accounts pay for stored bytes from the first one, from their credits while the Free plan lasts. The egress allowance remains: ${monthlyEgressGrantSentence(rateCardFor("AWS S3"))}, aggregated across all AWS services and regions, so a project serving under ${monthlyEgressGrantGb("AWS S3")} GB a month pays nothing for bandwidth. Azure Blob Storage&rsquo;s 5 GB is free for the first 12 months only. GCS and Oracle are Always Free.</div>
   </div>
 
   <div class="diff-card">
@@ -48022,7 +47988,7 @@ function buildPricingChangesPage(): string {
     const altHtml = c.alternatives && c.alternatives.length > 0
       ? `<div class="pc-alts"><span class="pc-alts-label">Alternatives:</span> ${c.alternatives.map(a => changeVendorLinkHtml(a)).join(", ")}</div>`
       : "";
-    const stateHtml = c.previous_state && c.current_state
+    const stateHtml = printsBeforeAndAfter(c)
       ? `<div class="pc-states">
           <div class="pc-state"><span class="pc-state-label">Before:</span> ${escHtmlServer(c.previous_state)}</div>
           <div class="pc-state"><span class="pc-state-label">After:</span> ${escHtmlServer(c.current_state)}</div>
