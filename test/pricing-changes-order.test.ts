@@ -145,7 +145,7 @@ const EARLIEST_RECENT_MONTH = earliestMonthListedAheadOfUndatedChanges(TODAY);
 const monthBefore = (month: string) =>
   new Date(Date.UTC(Number(month.slice(0, 4)), Number(month.slice(5, 7)) - 2, 1)).toISOString().slice(0, 7);
 const OLDER_MONTH = monthBefore(EARLIEST_RECENT_MONTH);
-const retractedToday = { resolution: { state: "retracted", date: TODAY, detail: "Fixture." } };
+const retractedToday = (name: string) => ({ resolution: { state: "retracted", date: TODAY, detail: `${MARK} ${name}` } });
 
 const fixture = (name: string, change_type: string, date: string, date_source: string, extra: object = {}) => ({
   vendor: quietOffer?.vendor ?? "",
@@ -166,8 +166,8 @@ const injected = [
   fixture("older-month", "limits_reduced", `${OLDER_MONTH}-15`, "vendor_page"),
   fixture("undated", "pricing_restructured", TODAY, "discovered"),
   fixture("correction", "record_corrected", TODAY, "hand_written"),
-  fixture("retracted-dated", "free_tier_removed", `${EARLIEST_RECENT_MONTH}-15`, "vendor_page", retractedToday),
-  fixture("retracted-undated", "limits_reduced", TODAY, "discovered", retractedToday),
+  fixture("retracted-dated", "free_tier_removed", `${EARLIEST_RECENT_MONTH}-15`, "vendor_page", retractedToday("retracted-dated")),
+  fixture("retracted-undated", "limits_reduced", TODAY, "discovered", retractedToday("retracted-undated")),
 ];
 const scratchLog: Logged[] = [...liveLog.changes, ...injected];
 

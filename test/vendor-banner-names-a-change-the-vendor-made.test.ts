@@ -143,11 +143,14 @@ after(() => {
 });
 
 describe("the vendor page's pricing-change banner names a change the vendor made", () => {
-  it("shows no banner when every record the vendor has is one we retracted, and still lists them, labelled", async () => {
+  it("shows no banner when every record the vendor has is one we retracted, and still lists them, labelled, without the claims we withdrew", async () => {
     const html = await vendorPage(ALL_RETRACTED);
     assert.strictEqual(bannerOf(html), null, "the banner headlines a record we retracted");
-    for (const change of RECORDS.filter((c) => c.vendor === ALL_RETRACTED)) {
-      assert.ok(html.includes(escaped(change.summary)), `the history no longer lists "${change.summary}"`);
+    const withdrawn = RECORDS.filter((c) => c.vendor === ALL_RETRACTED);
+    assert.strictEqual(html.split('<div class="change-item change-resolved').length - 1, withdrawn.length, "the history does not list every retracted row");
+    for (const change of withdrawn) {
+      assert.ok(!html.includes(escaped(change.summary)), `the page states the withdrawn claim "${change.summary}"`);
+      assert.ok(html.includes(change.resolution.detail), "the history does not say what was wrong with the retracted row");
     }
     assert.ok(html.includes(RETRACTION_LABEL), "the history does not label the retracted rows");
   });

@@ -107,9 +107,14 @@ export function summaryWithResolution(change: ResolvableChange): string {
   if (!resolution) return change.summary;
   const tag = resolutionTag(resolution);
   const detail = resolution.detail;
+  if (theEventNeverHappened(change)) return detail ? `${tag} ${detail}` : tag;
   const tagged = change.summary.startsWith(tag) ? change.summary : `${tag} ${change.summary}`;
   if (!detail || tagged.includes(detail)) return tagged;
   return `${tagged} ${detail}`;
+}
+
+export function printsBeforeAndAfter(change: { resolution?: ChangeResolution | null; previous_state?: string | null; current_state?: string | null }): boolean {
+  return Boolean(change.previous_state && change.current_state) && !theEventNeverHappened(change);
 }
 
 export function withResolutionInSummary<T extends ResolvableChange>(change: T): T {
