@@ -2588,7 +2588,8 @@
       "source_url": "https://min.io/pricing",
       "record_date": "2026-09-26",
       "change_type": "open_source_killed",
-      "summary": "The original open-source MinIO edition (AGPL v3) is no longer maintained and is considered end-of-life. Users are encouraged to upgrade to AIStor. AIStor offers three tiers: Free, Enterprise Lite, and Enterprise. The Free tier is a single-node deployment."
+      "summary": "The original open-source MinIO edition (AGPL v3) is no longer maintained and is considered end-of-life. Users are encouraged to upgrade to AIStor. AIStor offers three tiers: Free, Enterprise Lite, and Enterprise. The Free tier is a single-node deployment.",
+      "reverted_on": "2026-10-04"
     },
     {
       "vendor": "Nango",

@@ -429,12 +429,14 @@ export function isSevereChange(
 
 export const SEVERE_CHANGE_TYPES = new Set(["free_tier_removed", "open_source_killed"]);
 
+export const FREE_TIER_ENDING_TYPES = new Set(["free_tier_removed"]);
+
 type EndingCandidate = Pick<DealChange, "change_type" | "date"> & { resolution?: DealChange["resolution"] };
 
 export function freeTierEndingRecord<T extends EndingCandidate>(vendorChanges: readonly T[]): T | null {
   const inForce = vendorChanges.filter(c => !isNoLongerInForce(c));
   const ending = inForce
-    .filter(c => SEVERE_CHANGE_TYPES.has(c.change_type))
+    .filter(c => FREE_TIER_ENDING_TYPES.has(c.change_type))
     .sort((a, b) => b.date.localeCompare(a.date))[0];
   if (!ending) return null;
   const restored = inForce.some(c => c.change_type === "new_free_tier" && c.date > ending.date);

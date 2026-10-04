@@ -1699,7 +1699,7 @@ function readBadgeStatus(vendorSlug: string, servedOn: string): BadgeReading {
     return { status: "time-limited", label: timeLimited.badgeLabel, verifiedDate: latestVerified };
   }
 
-  if (claim.level === "caution") {
+  if (claim.level === "caution" || claim.level === "risky") {
     return { status: "at-risk", label: "at risk", verifiedDate: latestVerified };
   }
 
@@ -26070,7 +26070,7 @@ function buildFreeTierTrackerPage(): string {
       oneLiner: "Open-source GitHub repository archived",
       changeType: "open_source_killed",
       impact: "high",
-      detail: "MinIO archived its open-source GitHub repository. All development moved to proprietary MinIO AIStor. No new Docker images, PRs, or contributions accepted. Only case-by-case critical security fixes.",
+      detail: "MinIO archived its open-source GitHub repository. All development moved to proprietary MinIO AIStor. No new Docker images, PRs, or contributions accepted. The open-source edition gets no bug fixes or security patches. MinIO's free option is now AIStor Free: one node, under a commercial licence.",
       alternatives: ["Ceph", "SeaweedFS", "GarageHQ"],
     },
     {
@@ -26339,7 +26339,7 @@ ${mcpCtaCss()}
     </div>
     <div class="verdict-item">
       <strong>For production workloads:</strong>
-      <p>If you&rsquo;re building on a free tier, have a migration plan. The vendors that removed free tiers in Q1 gave between 0 days (MinIO) and 6 months (HCP Terraform) of notice. Budget for paid tiers or self-hosted alternatives.</p>
+      <p>If you&rsquo;re building on a free tier, have a migration plan. The vendors that removed free tiers in Q1 gave up to 6 months of notice (HCP Terraform). Budget for paid tiers or self-hosted alternatives.</p>
     </div>
     <div class="verdict-item">
       <strong>For startups:</strong>
@@ -40247,12 +40247,12 @@ ${mcpCtaCss()}
       </tr>
       <tr>
         <td class="provider-col">MinIO</td>
-        <td>Self-hosted</td>
+        <td>Self-hosted, single node</td>
         <td>Unlimited</td>
         <td>Unlimited</td>
         <td class="check">&#10003;</td>
         <td class="cross">&#10007;</td>
-        <td class="check">&#10003; OSS</td>
+        <td class="check">&#10003;</td>
         <td>Your infra</td>
       </tr>
     </tbody>
@@ -40435,7 +40435,7 @@ ${mcpCtaCss()}
 
   <div class="diff-card">
     <h3>MinIO</h3>
-    <div class="diff-desc"><strong>Cost:</strong> Free, open-source (GNU AGPL v3). The most widely deployed S3-compatible object storage. Single binary, runs anywhere (Docker, Kubernetes, bare metal). Enterprise features: erasure coding, bitrot protection, encryption at rest, IAM policies, bucket versioning, cross-region replication. Active development with frequent releases. The default choice for any self-hosted S3-compatible storage need.</div>
+    <div class="diff-desc"><strong>Cost:</strong> Free single-node AIStor, under a commercial licence. The original AGPLv3 edition is no longer maintained, with no bug fixes or security patches. The most widely deployed S3-compatible object storage. Single binary, runs anywhere (Docker, Kubernetes, bare metal). Enterprise features: erasure coding, bitrot protection, encryption at rest, IAM policies, bucket versioning, cross-region replication. Active development with frequent releases. The default choice for any self-hosted S3-compatible storage need.</div>
   </div>
 
   <div class="diff-card">
@@ -40608,7 +40608,7 @@ ${mcpCtaCss()}
 
   <div class="diff-card">
     <h3>Self-hosted: ops cost is real</h3>
-    <div class="diff-desc">MinIO is free software, but running it in production requires: server infrastructure, monitoring, backup strategy, disaster recovery, security patching, and on-call. A 3-node MinIO cluster on bare metal costs $300-600/month in infrastructure + engineering time. For small teams, the TCO often exceeds managed services. Self-hosting makes economic sense at 50+ TB.</div>
+    <div class="diff-desc">AIStor Free costs nothing to license on a single node, but running it in production still requires: server infrastructure, monitoring, backup strategy, disaster recovery, security patching, and on-call. A 3-node MinIO cluster on bare metal costs $300-600/month in infrastructure + engineering time. It also needs a paid AIStor subscription (Enterprise Lite, price on request), since AIStor Free covers one node. For small teams, the TCO often exceeds managed services. Self-hosting makes economic sense at 50+ TB.</div>
   </div>
 
   <h2 id="changes">Pricing Change Timeline</h2>
@@ -43937,7 +43937,7 @@ const STRUCTURALLY_FREE_CARDS = [
   {
     heading: "Open Source Safety Net",
     blurb: "Self-hostable alternatives that can&rsquo;t remove free tiers by definition. Always have an exit strategy.",
-    vendors: ["GitLab", "Gitea", "Plausible", "Umami", "n8n", "Meilisearch", "MinIO"],
+    vendors: ["GitLab", "Gitea", "Plausible", "Umami", "n8n", "Meilisearch"],
   },
 ];
 

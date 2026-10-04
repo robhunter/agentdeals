@@ -1824,17 +1824,13 @@
       "published": "2026-03-27",
       "tier": "A",
       "vendors_asserted": [
-        "brave-search-api",
         "cloudflare-for-startups",
         "github",
         "github-copilot",
         "google-cloud",
         "hcp-terraform",
-        "localstack",
         "minio",
-        "postman",
-        "terragrunt-scale",
-        "windsurf"
+        "terragrunt-scale"
       ],
       "vendors_tabulated": [
         "amazon-aurora-postgresql",
@@ -2072,9 +2068,7 @@
       "path": "/hetzner-pricing-2026",
       "published": "2026-03-25",
       "tier": "A",
-      "vendors_asserted": [
-        "ovhcloud"
-      ],
+      "vendors_asserted": [],
       "vendors_tabulated": [
         "aws-lightsail",
         "digitalocean",

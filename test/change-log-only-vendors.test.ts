@@ -25,7 +25,7 @@ const changes: DealChange[] = JSON.parse(
   readFileSync(path.join(REPO, "data", "deal_changes.json"), "utf-8"),
 ).changes;
 
-const ENDS_THE_FREE_TIER = new Set(["free_tier_removed", "open_source_killed"]);
+const ENDS_THE_FREE_TIER = new Set(["free_tier_removed"]);
 const REMOVAL_MARKER = /class="[^"]*\bremoved-badge\b[^"]*"/;
 const PAGE_OWN_REMOVAL = /<span\b[^>]*class="[^"]*\bremoved-badge\b/;
 const JOIN_MARKER = /<a\b[^>]*href="(?:\/vendor\/[a-z0-9-]+#changes|\/changes#vendor-[a-z0-9-]+)"[^>]*>(?:CHANGED [A-Z]{3} \d+|FREE REMOVED)</;

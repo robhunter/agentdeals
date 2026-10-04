@@ -25,7 +25,7 @@ const REPO = path.join(__dirname, "..");
 const catalogue: { offers: Offer[] } = JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf-8"));
 const offers: Offer[] = catalogue.offers;
 const { loadDealChanges, refusalsForVendor, gateForOffer } = await import("../dist/data.js");
-const { badgeWithholding, freeTierClaim, withholdsTheTerms } = await import("../dist/vendor-verdict.js");
+const { badgeWithholding, freeTierClaim, riskyCauseEndsTheFreeTier, withholdsTheTerms } = await import("../dist/vendor-verdict.js");
 const { vendorVerdictContextFrom } = await import("../dist/vendor-verdict-input.js");
 
 const dealChanges: DealChange[] = loadDealChanges();
@@ -149,9 +149,9 @@ function gateLineOf(html: string): string | null {
   return m ? textOf(m[0]) : null;
 }
 
-type VendorPage = { slug: string; vendor: string; primary: Offer; gate: Gate | null; termsWithheld: boolean; freeTierEnded: boolean; html: string };
+type VendorPage = { slug: string; vendor: string; primary: Offer; gate: Gate | null; termsWithheld: boolean; freeTierEnded: boolean; ratedOnAChangeThatEndsNoFreeTier: boolean; html: string };
 
-const primaries: { slug: string; vendor: string; primary: Offer; termsWithheld: boolean; freeTierEnded: boolean }[] = [];
+const primaries: { slug: string; vendor: string; primary: Offer; termsWithheld: boolean; freeTierEnded: boolean; ratedOnAChangeThatEndsNoFreeTier: boolean }[] = [];
 for (const [slug, vendor] of vendorSlugMap.entries()) {
   const vendorOffers = offers.filter(o => o.vendor === vendor);
   if (vendorOffers.length === 0) continue;
@@ -169,6 +169,7 @@ for (const [slug, vendor] of vendorSlugMap.entries()) {
     primary: vendorOffers[0],
     termsWithheld: because !== null && withholdsTheTerms(because),
     freeTierEnded: context !== null && freeTierClaim(context.input).states === "ended",
+    ratedOnAChangeThatEndsNoFreeTier: context?.input.cause != null && !riskyCauseEndsTheFreeTier(context.input.cause),
   });
 }
 
@@ -694,7 +695,9 @@ describe("the same page an ungated record renders is unchanged", () => {
   });
 
   it("still makes every one of those claims somewhere, apart from the risky rating a stated ending replaces", () => {
-    const stillRatedRisky = ungated().filter(p => pageProse(p).includes(RATING_A_STATED_ENDING_REPLACES)).map(p => p.slug);
+    const stillRatedRisky = ungated()
+      .filter(p => !p.ratedOnAChangeThatEndsNoFreeTier && pageProse(p).includes(RATING_A_STATED_ENDING_REPLACES))
+      .map(p => p.slug);
     assert.deepStrictEqual(stillRatedRisky, [], "ungated pages that rate a vendor risky rather than state the ending that rating rests on");
     const unmade: string[] = [];
     for (const claim of [...CLAIMS_A_RATING("<vendor>", "<category>"), ...NAMES_A_FREE_TIER("<vendor>")]) {

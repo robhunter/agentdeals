@@ -4725,8 +4725,8 @@
     {
       "vendor": "MinIO",
       "category": "Storage",
-      "description": "S3-compatible object storage — MinIO OSS is at end of life and is no longer being maintained. Its codebase is frozen, with no new features, bug fixes, or security patches.",
-      "tier": "Open Source",
+      "description": "S3-compatible object storage — AIStor Free is free to download and deploy and includes the full AIStor feature set for a single-node deployment. Redistribution is prohibited. AIStor is commercially licensed; the original AGPLv3 MinIO edition is no longer maintained, with no bug fixes or security patches.",
+      "tier": "AIStor Free",
       "url": "https://min.io/pricing",
       "tags": [
         "storage",
@@ -4745,20 +4745,14 @@
         "reviewed": "2026-08-25"
       },
       "source_check": {
-        "checked": "2026-09-26",
+        "checked": "2026-10-04",
         "outcome": "ok",
         "detail": "the page names MinIO, renders \"Enterprise tiers\" and no amount, and its markup states 1 typed price (AIStor Free USD 0)",
         "read": "markup"
       },
-      "free_grounds": [
-        "licence"
-      ],
-      "restated_from": {
-        "reading_date": "2026-09-26",
-        "source_url": "https://min.io/pricing",
+      "restatement_reverted": {
         "record_date": "2026-09-26",
-        "change_type": "open_source_killed",
-        "restated_on": "2026-09-26"
+        "reverted_on": "2026-10-04"
       }
     },
     {
