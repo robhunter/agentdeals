@@ -41,6 +41,7 @@ import { comparisonVerdictText, freeTierFaqAnswer, stabilityFaqAnswer, type Comp
 import { gateStatesAnEnding, publishedVendorLevel, restorationClause, restoredRemovalReason, vendorVerdictSentence, withheldRecordCountsOf, WITHHOLDING_BADGE_LABELS, vendorBadge, freeTierClaim, endingStatedInPlaceOfARating, endingShutsTheProductDown, endedClaimReliabilityAnswer, statesRiskCause, withholdingThatDoesNotLapse, demotionTheVerdictNames, narrowingSentence, ourOwnRecordsSentence, changeKindNoun, isOurOwnBookkeeping, emptyHistoryCaveatSentence, refusedReadOurConfirmationSupersedes, refusedReadWeHold, refusedReadWithholdingSentence, nothingWeReadDescribesTheTerms, unconfirmedThresholdSentence, unconfirmedTermsOpening, whyWeCannotConfirmTheseTerms, withheldForARefusedRead, withUnconfirmedTerms, refusalWithholdsStability, termsUnconfirmedBySource, termsTheVerdictWithholds, closingTerms, termsWithTheReasonWeCannotConfirmThem, termsNotVerifiedMetaSentence, termsWithheldLabel, theReadConfirmedThePrice, unconfirmedTermsSentence, whereTheDoubtSits, withheldBadgeLabel, type BadgeWithholding, type UnconfirmedTerms, type FreeTierClaim, type VendorVerdictInput, type WhereTheDoubtSits } from "./vendor-verdict.js";
 import { descriptionDeniesAFreeTier, listingOffersAFreeTier, tierMayCarryAFreePlanExcerpt, tierRecordsAFreeTier, tierWhoseFreeOfferIsTheLicence } from "./free-tier-record.js";
 import { whyTheExcerptCannotStand } from "./free-plan-excerpt-rules.js";
+import { alternativesUnderTheVendorsRule, conditionsHtml, conditionsOf, levelBesideTheVendorsRule, productionAnswerOpening, stableRatingBesideTheVendorsRule, theVendorsRuleOnProduction, withConditionsAfter, type TheVendorsRule } from "./listing-conditions.js";
 import { PAGE_HEAD_OPEN, withLedeBeforeNav } from "./page-lede.js";
 import { withReviewByline } from "./page-byline.js";
 import { freshnessClaimFor, withFreshnessClaim } from "./page-freshness.js";
@@ -5367,6 +5368,9 @@ function buildVendorPage(slug: string): string | null {
     return excerpt ? `\n    ${freePlanExcerptHtml(excerpt, escHtmlServer)}` : "";
   })();
 
+  const listingConditions = termsSuperseded ? [] : conditionsOf(primary);
+  const listingConditionsBlock = conditionsHtml(listingConditions, escHtmlServer);
+
   const alternativesMembership = partitionSubstitutes(
     offers.filter(o => o.category === primary.category && o.vendor !== vendorName),
     [primary],
@@ -5729,11 +5733,11 @@ ${allCompareLinks.join("\n")}
     : `${freeTierAnswerLead} ${storedTerms}`;
   const faqTierAnswer = termsSuperseded
     ? `${eligibilityGateSentence}${vendorName}'s free tier is called "${primary.tier}". ${supersededTermsNotice(vendorName, termsSuperseded)}`
-    : retiredSentence
+    : withConditionsAfter(retiredSentence
     ? `${retiredSentence} ${withTheReasonARecordedEndingLeaves(primary.description)}`
     : eligibilityGateSentence + (termsWeCannotConfirm
     ? `${unconfirmedTermsPreamble}Our stored record calls ${vendorName}'s free tier "${primary.tier}". ${withUnconfirmedTermsCaveat(primary.description)}`
-    : `${vendorName}'s free tier is called "${primary.tier}". ${primary.description}`);
+    : `${vendorName}'s free tier is called "${primary.tier}". ${primary.description}`), listingConditions);
   const faqReliableAnswer = offerHasEnded
     ? endedReliabilitySentence(vendorName)
     : endedBy
@@ -5750,15 +5754,30 @@ ${allCompareLinks.join("\n")}
   const faqCategoryAnswer = `${vendorName} is categorized under ${allCategories.join(", ")} on AgentDeals.${alternatives.length > 0 ? ` We list ${alternatives.length} other ${primary.category} services alongside it, every one of them on this page with its free tier and the stability we publish for it.` : ""}`;
 
   const restoredRemovalLowersTheRating = riskLevel === "caution" ? restoredRemovalReason(verdictInput) : null;
+  const vendorsRuleOnProduction = hasFree && !endedBy ? theVendorsRuleOnProduction(listingConditions) : null;
+  const ratingBesideTheVendorsRule = (): (string | null)[] =>
+    riskLevel === "stable" || (primaryGate && historyLevel === "stable")
+      ? [primaryGate ? null : stableRatingBesideTheVendorsRule(vendorName), vendorChanges.length > 0 ? narrowingSentence(vendorChanges, primary, termsSuperseded !== null) : null]
+      : riskLevel === null
+      ? [primaryGate ? vendorHistorySentence(vendorName, historyLevel, riskCause) : levelWithheldBecause]
+      : restoredRemovalLowersTheRating
+      ? [levelBesideTheVendorsRule(vendorName, riskLevel, null), restoredRemovalLowersTheRating]
+      : [levelBesideTheVendorsRule(vendorName, riskLevel, riskCause ? `because of one recorded ${changeKindNoun(riskCause.change_type)}, ${changeDateClause(riskCause)}${restorationClause(riskCause, verdictInput.changes)}` : null)];
+  const productionAnswerUnderTheVendorsRule = (rule: TheVendorsRule) =>
+    [productionAnswerOpening(vendorName, rule), ...ratingBesideTheVendorsRule(), alternativesUnderTheVendorsRule(rule, primary.category)]
+      .filter(sentence => sentence)
+      .join(" ");
   const faqProductionAnswer = productionGate
     ? `${productionGate.reason} ${NO_FREE_TIER_FOR_PRODUCTION}`
     : termsSuperseded
     ? `${eligibilityGateSentence}${gateSentenceOpeningTheProductionAnswer}${supersededTermsVerdictSentence(vendorName, termsSuperseded)} Until we have re-read the page we cannot say what capacity ${vendorName} gives you, so we are not recommending it for production${isACorrectionToOurOwnRecord(termsSuperseded) ? "" : " on figures we have already superseded"}.`
     : eligibilityGateSentence + gateSentenceOpeningTheProductionAnswer + (levelWithheld
-    ? `${withheldLevelSentence(levelWithheld, vendorName, unconfirmableSince)} We cannot confirm what this offer provides today, so we are not recommending it for production or for anything else until we can.`
+    ? `${vendorsRuleOnProduction ? `${productionAnswerOpening(vendorName, vendorsRuleOnProduction)} ` : ""}${withheldLevelSentence(levelWithheld, vendorName, unconfirmableSince)} We cannot confirm what this offer provides today, so we are not recommending it for production or for anything else until we can.`
     : hasFree
     ? (endedBy
       ? endedClaimReliabilityAnswer(vendorName, endedBy)
+      : vendorsRuleOnProduction
+      ? productionAnswerUnderTheVendorsRule(vendorsRuleOnProduction)
       : riskLevel === "stable" || (primaryGate && historyLevel === "stable")
       ? `${vendorName}'s free tier can be suitable for small production workloads and side projects. ${primaryGate ? "It" : "We rate it stable and it"} offers ${keyLimit}, so it's a reasonable starting point.${vendorChanges.length > 0 ? ` ${narrowingSentence(vendorChanges, primary, termsSuperseded !== null)}` : ""} Monitor your usage against the limits and have an upgrade plan ready.`
       : riskLevel === null
@@ -5967,7 +5986,7 @@ ${referralCalloutHtml}
     <h2>Free Tier Details</h2>
     ${termsSuperseded
       ? `<p class="terms-superseded-text"><strong>${storedTermsLabel(termsSuperseded)}:</strong> ${supersededTermsNoticeHtml(vendorName, termsSuperseded, escHtmlServer)} <a href="#changes">Read what we recorded &darr;</a></p>`
-      : `<p class="desc-text">${escHtmlServer(primary.description)}</p>`}${freeTierSourceLine}${freePlanExcerptBlock}
+      : `<p class="desc-text">${escHtmlServer(primary.description)}</p>`}${freeTierSourceLine}${freePlanExcerptBlock}${listingConditionsBlock}
   </div>
 ${growthPathHtml}
 

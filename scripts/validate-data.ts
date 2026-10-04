@@ -5,6 +5,7 @@ import { resolve, dirname } from "path";
 import { fileURLToPath } from "url";
 import { summaryCallsItsSourceUnreadable } from "../dist/change-citation.js";
 import { CHANGE_IMPACT_LEVELS, isChangeImpactLevel } from "../dist/change-impact.js";
+import { USES_A_VENDOR_CAN_RULE_OUT } from "../dist/listing-conditions.js";
 import {
   CHANGE_REPORT_RULE,
   CHANGE_REPORT_SUBJECTS,
@@ -150,6 +151,47 @@ const REQUIRED_CHANGE_FIELDS = [
 
 const VALID_DATE_SOURCES = ["vendor_page", "hand_written", "discovered"];
 
+const CONDITION_TEXT_FIELDS = ["text", "quote", "url", "read_on"];
+
+function conditionProblems(conditions: unknown): string[] {
+  if (conditions === undefined) return [];
+  if (!Array.isArray(conditions) || conditions.length === 0) return ["conditions must be a non-empty list"];
+  const problems: string[] = [];
+  conditions.forEach((condition: unknown, n: number) => {
+    const at = `conditions[${n}]`;
+    if (typeof condition !== "object" || condition === null || Array.isArray(condition)) {
+      problems.push(`${at} must be an object`);
+      return;
+    }
+    const fields = condition as Record<string, unknown>;
+    for (const field of CONDITION_TEXT_FIELDS) {
+      if (typeof fields[field] !== "string" || (fields[field] as string).trim() === "") {
+        problems.push(`${at}.${field} is missing`);
+      }
+    }
+    if (typeof fields.url === "string" && fields.url.trim() !== "" && !URL_REGEX.test(fields.url)) {
+      problems.push(`${at}.url is not a URL: ${fields.url}`);
+    }
+    if (typeof fields.read_on === "string" && fields.read_on.trim() !== "" && !ISO_DATE_REGEX.test(fields.read_on)) {
+      problems.push(`${at}.read_on is not YYYY-MM-DD: ${fields.read_on}`);
+    }
+    if (fields.rules_out === undefined) return;
+    if (!Array.isArray(fields.rules_out) || fields.rules_out.length === 0) {
+      problems.push(`${at}.rules_out must be a non-empty list when present`);
+      return;
+    }
+    for (const use of fields.rules_out) {
+      if (!USES_A_VENDOR_CAN_RULE_OUT.includes(use)) {
+        problems.push(`${at}.rules_out names "${use}". Valid: ${USES_A_VENDOR_CAN_RULE_OUT.join(", ")}`);
+      }
+    }
+    if (new Set(fields.rules_out).size !== fields.rules_out.length) {
+      problems.push(`${at}.rules_out names a use twice`);
+    }
+  });
+  return problems;
+}
+
 function validateOffers(offers: Offer[]): ValidationError[] {
   const errors: ValidationError[] = [];
   const seen = new Map<string, number>();
@@ -221,6 +263,10 @@ function validateOffers(offers: Offer[]): ValidationError[] {
         field: "category",
         message: `Unknown category: "${offer.category}"`,
       });
+    }
+
+    for (const message of conditionProblems(offer.conditions)) {
+      errors.push({ file: "data/index.json", index: i, vendor, field: "conditions", message });
     }
 
     const key = `${offer.vendor}|||${offer.category}`;

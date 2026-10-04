@@ -97,6 +97,59 @@ describe("validate-data", () => {
     );
   });
 
+  describe("conditions", () => {
+    const stated = {
+      text: "The free plan is for personal projects.",
+      quote: "Hobby teams are restricted to non-commercial personal use only.",
+      url: "https://example.com/terms",
+      read_on: "2026-10-03",
+    };
+    const conditionErrors = (conditions: unknown) =>
+      validateOffers([makeOffer({ conditions })])
+        .filter((e: { field: string }) => e.field === "conditions")
+        .map((e: { message: string }) => e.message);
+
+    it("accepts a condition with or without the uses it rules out", () => {
+      assert.deepStrictEqual(conditionErrors([stated]), []);
+      assert.deepStrictEqual(conditionErrors([{ ...stated, rules_out: ["production"] }]), []);
+      assert.deepStrictEqual(conditionErrors([{ ...stated, rules_out: ["production", "commercial use"] }]), []);
+    });
+
+    it("accepts a listing without the field", () => {
+      assert.deepStrictEqual(validateOffers([makeOffer()]), []);
+    });
+
+    it("refuses an empty list or one that is not a list", () => {
+      assert.deepStrictEqual(conditionErrors([]), ["conditions must be a non-empty list"]);
+      assert.deepStrictEqual(conditionErrors(stated), ["conditions must be a non-empty list"]);
+    });
+
+    it("refuses a condition missing any of its four fields", () => {
+      for (const field of ["text", "quote", "url", "read_on"]) {
+        const { [field]: _missing, ...rest } = stated as Record<string, string>;
+        assert.deepStrictEqual(conditionErrors([rest]), [`conditions[0].${field} is missing`], field);
+        assert.deepStrictEqual(conditionErrors([{ ...stated, [field]: " " }]), [`conditions[0].${field} is missing`], field);
+      }
+    });
+
+    it("refuses a condition whose page is not a URL or whose read date is not a day", () => {
+      assert.deepStrictEqual(conditionErrors([{ ...stated, url: "example.com/terms" }]), ["conditions[0].url is not a URL: example.com/terms"]);
+      assert.deepStrictEqual(conditionErrors([{ ...stated, read_on: "Oct 3, 2026" }]), ["conditions[0].read_on is not YYYY-MM-DD: Oct 3, 2026"]);
+    });
+
+    it("refuses a use outside production and commercial use, an empty list of uses, and a use named twice", () => {
+      assert.deepStrictEqual(conditionErrors([{ ...stated, rules_out: ["resale"] }]), [
+        'conditions[0].rules_out names "resale". Valid: production, commercial use',
+      ]);
+      assert.deepStrictEqual(conditionErrors([{ ...stated, rules_out: [] }]), ["conditions[0].rules_out must be a non-empty list when present"]);
+      assert.deepStrictEqual(conditionErrors([{ ...stated, rules_out: ["production", "production"] }]), ["conditions[0].rules_out names a use twice"]);
+    });
+
+    it("names the condition at fault", () => {
+      assert.deepStrictEqual(conditionErrors([stated, { ...stated, quote: "" }]), ["conditions[1].quote is missing"]);
+    });
+  });
+
   it("validates deal_changes with no errors", () => {
     const errors = validateDealChanges([makeChange()]);
     assert.strictEqual(errors.length, 0);
