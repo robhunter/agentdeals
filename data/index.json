@@ -924,7 +924,7 @@
     {
       "vendor": "Upstash",
       "category": "Databases",
-      "description": "Serverless Redis — 500K commands/month (256MB data). Vector: 10K vectors free. QStash: 1,000 messages/day free",
+      "description": "Serverless Redis — 500K commands/month (256MB data). Vector: 200M vectors × dimensions and 10K queries a day free. QStash: 1,000 messages/day free",
       "tier": "Free",
       "url": "https://upstash.com/pricing",
       "tags": [
@@ -8811,7 +8811,7 @@
     {
       "vendor": "Upstash Vector",
       "category": "Databases",
-      "description": "Serverless vector database by Upstash — Free: $0 - 200M vectors, 1,536 dimensions, 100 namespaces, 10K daily query limit, 1 GB max total data.",
+      "description": "Serverless vector database by Upstash. Free: 200M vectors × dimensions (about 130,000 vectors at the maximum 1,536 dimensions), 100 namespaces, 10K queries and updates a day, 1 GB of data",
       "tier": "Free",
       "url": "https://upstash.com/pricing/vector",
       "tags": [
@@ -8823,7 +8823,7 @@
       ],
       "verifiedDate": "2026-08-13",
       "source_check": {
-        "checked": "2026-09-17",
+        "checked": "2026-10-04",
         "outcome": "ok",
         "detail": "the page names Upstash Vector as \"upstash vector\" and states \"$0\""
       },
@@ -8838,12 +8838,9 @@
         ],
         "reviewed": "2026-08-31"
       },
-      "restated_from": {
-        "reading_date": "2026-09-02",
-        "source_url": "https://upstash.com/pricing/vector",
+      "restatement_reverted": {
         "record_date": "2026-09-02",
-        "change_type": "limits_increased",
-        "restated_on": "2026-09-20"
+        "reverted_on": "2026-10-04"
       }
     },
     {

@@ -785,7 +785,8 @@
       "source_url": "https://upstash.com/pricing/vector",
       "record_date": "2026-09-02",
       "change_type": "limits_increased",
-      "summary": "The free tier now has a maximum vector capacity of 200 Million vectors, up from 10K."
+      "summary": "The free tier now has a maximum vector capacity of 200 Million vectors, up from 10K.",
+      "reverted_on": "2026-10-04"
     },
     {
       "vendor": "Chroma",

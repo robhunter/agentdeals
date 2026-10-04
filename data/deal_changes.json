@@ -9460,6 +9460,12 @@
       "archive_check": {
         "checked": "2026-10-02",
         "outcome": "no_usable_capture"
+      },
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-10-04",
+        "detail": "Retracted 2026-10-04: no change on 2026-09-02. The Internet Archive's captures of upstash.com/pricing/vector of 2024-08-29, 2025-08-11 and 2026-08-02 state the free plan the page states today: Max Vectors x Dimensions 200 Million, Max Dimensions 1,536, Max Namespaces 100, Daily Query/Update Limit 10K. The 200 million counts vectors times dimensions, not vectors, and the 10K vectors in our earlier listing was our error.",
+        "source_url": "https://web.archive.org/web/20240829160621/https://upstash.com/pricing/vector"
       }
     },
     {
