@@ -2050,7 +2050,7 @@
     {
       "vendor": "Cloudflare R2",
       "category": "Storage",
-      "description": "Object storage with zero egress fees — 10 GB storage, 1M writes, 10M reads/month free",
+      "description": "Object storage with zero egress fees — 10 GB storage, 1M writes, 10M reads/month free. The free tier covers Standard storage only, not Infrequent Access. You need an R2 subscription, added through a checkout in the Cloudflare dashboard. Usage beyond the free tier is charged monthly to the payment method on file. Budget alerts do not pause or cap usage.",
       "tier": "Free",
       "url": "https://developers.cloudflare.com/r2/pricing/",
       "tags": [
