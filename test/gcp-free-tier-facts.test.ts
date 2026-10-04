@@ -97,7 +97,7 @@ const PROVIDER_ROWS: [string, string, string[]][] = [
 
 const GUIDE_BLURBS: Record<string, string> = {
   "firebase-alternatives": "Firebase Studio is closing (no new workspaces since June 22, 2026; shutdown March 22, 2027) + Cloud Storage for Firebase now requires Blaze — 7 BaaS alternatives",
-  "aws-free-tier-2026": "Complete AWS free tier guide — every free service, real limits, hidden costs, and Aurora PostgreSQL on the Free Tier (March 2026)",
+  "aws-free-tier-2026": "AWS Free plan: up to $200 in credits over 6 months, 30+ always-free services, short-term trials, hidden costs, cheaper alternatives.",
 };
 
 const FREE_TRIAL_LIMITS = "During the trial you cannot add GPUs to VM instances, use Google Cloud Marketplace, request a quota increase or create Windows Server VMs, and the credit does not pay for partner generative AI models offered as a managed API (model as a service).";

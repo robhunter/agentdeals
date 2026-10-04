@@ -233,6 +233,15 @@ export function figureSourceLinkHtml(url: string, esc: Escaper): string {
   );
 }
 
+const TABLE_ROW_MARKUP = /<tr\b[^>]*>[\s\S]*?<\/tr>/g;
+const RECORD_SOURCE_LINK = new RegExp(`\\s*<a\\b[^>]*\\bclass="${RECORD_SOURCE_CLASS}"[^>]*>[\\s\\S]*?<\\/a>`, "g");
+const FIGURE_SOURCE_ATTRIBUTE = `class="${FIGURE_SOURCE_CLASS}"`;
+
+export function recordSourcesOffRowsThatCiteTheirOwn(html: string): string {
+  return html.replace(TABLE_ROW_MARKUP, (row) =>
+    row.includes(FIGURE_SOURCE_ATTRIBUTE) ? row.replace(RECORD_SOURCE_LINK, "") : row);
+}
+
 const UNCITED_TAG_STYLE =
   "display:inline-block;margin-left:.35rem;padding:.1rem .4rem;border-radius:10px;" +
   "font-size:.65rem;font-weight:600;background:#8b949e22;color:#8b949e";

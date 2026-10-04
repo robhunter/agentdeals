@@ -46,7 +46,7 @@ import { withReviewByline } from "./page-byline.js";
 import { freshnessClaimFor, withFreshnessClaim } from "./page-freshness.js";
 import { UNGRADED_IMPACT_COLOR, changeImpactColor, changeImpactLabel, changeImpactWord, isChangeImpactLevel } from "./change-impact.js";
 import { COMPARED_SERVICES_PLACEHOLDER, appendToCompiledFigureSlots, fillComparedServicesCount, labelNamesAProductOfItsVendor, markCompiledFigures, recordsSinceCompiled, replaceTimelineRows, staticHalfOf, timelineRecordsFor, vendorForSubject, vendorSubjectsOnCompiledPage, type CompiledFigureSubject, type CompiledFigureVendor, type CompiledFigureVerdict, type CompiledPageRecord } from "./compiled-figures.js";
-import { CHECK_ESTABLISHES, CHECK_SCOPE_CLASS, NO_CATALOGUE_RECORD_SOURCE, citedSourcesListHtml, figureSourceLinkHtml, freeTierSourceOf, freeTierSourceWeMayCite, freePlanExcerptHtml, pageQuoteHtml, readClauseHtml, readSourceOf, serviceSourceMarkerHtml, uncitedSourceTagHtml, withCitedSources, type CitedService, type FreeTierSource } from "./source-citation.js";
+import { CHECK_ESTABLISHES, CHECK_SCOPE_CLASS, NO_CATALOGUE_RECORD_SOURCE, citedSourcesListHtml, figureSourceLinkHtml, recordSourcesOffRowsThatCiteTheirOwn, freeTierSourceOf, freeTierSourceWeMayCite, freePlanExcerptHtml, pageQuoteHtml, readClauseHtml, readSourceOf, serviceSourceMarkerHtml, uncitedSourceTagHtml, withCitedSources, type CitedService, type FreeTierSource } from "./source-citation.js";
 import { vendorHistorySentence } from "./vendor-history.js";
 import { guideBlurb } from "./guide-blurbs.js";
 import { changesToStartupProgrammes } from "./startup-programme-changes.js";
@@ -1566,7 +1566,9 @@ function compiledPageCitingSources(html: string, servedOn = utcDate()): string {
   });
 
   const tabulated = markTabulatedRowSources(marked, byVendor);
-  return withCitedSources(tabulated, citedSourcesListHtml(services, escHtmlServer, SOURCE_READ_DATE_CLASS));
+  const tabulatedStatic = staticHalfOf(tabulated);
+  const sourced = recordSourcesOffRowsThatCiteTheirOwn(tabulatedStatic) + tabulated.slice(tabulatedStatic.length);
+  return withCitedSources(sourced, citedSourcesListHtml(services, escHtmlServer, SOURCE_READ_DATE_CLASS));
 }
 
 const ALREADY_MARKED = /class="(?:record-source|unsourced-tag)"/;
@@ -6451,6 +6453,9 @@ const MONITORING_COMPARISON_TITLE = "Free Tiers for Error Tracking, Monitoring &
 const MONITORING_COMPARISON_META_DESC = "Which error tracking, application monitoring and observability services still have a genuinely free tier in 2026. 25+ compared — Datadog, Grafana Cloud, New Relic, Better Stack, Sentry, Checkly, SigNoz, HyperDX, Elastic — free data ingest, retention and APM limits, and what monitoring costs at 10/50/100/500 hosts.";
 
 const LLM_API_PRICING_TITLE = "LLM API Free Tiers & Free Credits 2026 — LLM API Pricing Comparison: Token Costs, Rate Limits & Hidden Limits";
+const AZURE_FREE_TIER_TITLE = "Azure Free Tier 2026 — Always-Free and 12-Month Services, Limits, and Billing Rules";
+const AZURE_FREE_TIER_META_DESC = "Microsoft lists 65+ always-free Azure services. This page covers the main ones, the 12-month offers, the $200 credit, and billing rules.";
+const AWS_FREE_TIER_TITLE = "AWS Free Tier 2026 — Free Plan Credits, Always-Free Services, Limits, and Hidden Costs";
 const LLM_API_PRICING_META_DESC = "Which LLM APIs have a genuinely free tier or free credits in 2026, and what tokens cost once you exceed it. OpenAI, Anthropic, Google Gemini, Mistral, Groq, DeepSeek, Cerebras, OpenRouter, Cohere and xAI compared — free tier limits, rate limits, context windows and per-token pricing.";
 
 interface AlternativesPageConfig {
@@ -8096,7 +8101,7 @@ const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
   },
   {
     slug: "aws-free-tier-2026",
-    title: "AWS Free Tier Complete Guide 2026 — Every Free Service, Real Limits, and Hidden Costs",
+    title: AWS_FREE_TIER_TITLE,
     metaDesc: "AWS Free plan: up to $200 in credits over 6 months, 30+ always-free services, short-term trials, hidden costs, cheaper alternatives.",
     contextHtml: "",
     tag: "aws-free-tier-2026",
@@ -8112,8 +8117,8 @@ const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
   },
   {
     slug: "azure-free-tier-2026",
-    title: "Azure Free Tier Complete Guide 2026 — Every Free Service, Real Limits, and Hidden Costs",
-    metaDesc: "Comprehensive guide to every Azure free tier service in 2026. 65+ always-free services, $200 trial credit, 12-month free VMs and SQL. Cosmos DB lifetime free tier, Azure Functions 1M req/mo, and hidden costs explained.",
+    title: AZURE_FREE_TIER_TITLE,
+    metaDesc: AZURE_FREE_TIER_META_DESC,
     contextHtml: "",
     tag: "azure-free-tier-2026",
     primaryVendor: "Azure",
@@ -32577,7 +32582,7 @@ railway up
 }
 
 function buildAwsFreeTier2026Page(): string {
-  const title = "AWS Free Tier Complete Guide 2026 — Every Free Service, Real Limits, and Hidden Costs";
+  const title = AWS_FREE_TIER_TITLE;
   const metaDesc = "AWS Free plan: up to $200 in credits over 6 months, 30+ always-free services, short-term trials, hidden costs, cheaper alternatives.";
   const slug = "aws-free-tier-2026";
   const pubDate = "2026-03-27";
@@ -32790,7 +32795,7 @@ ${mcpCtaCss()}
 <div class="container">
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; AWS Free Tier 2026</div>
-  <h1>AWS Free Tier Complete Guide 2026</h1>
+  <h1>AWS Free Tier 2026</h1>
   <p class="pub-date">Published ${pubDate} &middot; ${pageDataProvenance("/aws-free-tier-2026", offers.length)} &middot; ${awsOffers.length} AWS entries tracked</p>
 
   <div class="summary-stats">
@@ -33408,8 +33413,8 @@ ${mcpCtaCss()}
 }
 
 function buildAzureFreeTier2026Page(): string {
-  const title = "Azure Free Tier Complete Guide 2026 — Every Free Service, Real Limits, and Hidden Costs";
-  const metaDescAzure = "Comprehensive guide to every Azure free tier service in 2026. 65+ always-free services including SQL Database, $200 trial credit, 12-month free VMs. Cosmos DB lifetime free tier, Azure Functions, and hidden costs explained.";
+  const title = AZURE_FREE_TIER_TITLE;
+  const metaDescAzure = AZURE_FREE_TIER_META_DESC;
   const slug = "azure-free-tier-2026";
   const pubDate = "2026-03-31";
 
@@ -33433,25 +33438,26 @@ function buildAzureFreeTier2026Page(): string {
   }
 
   const MICROSOFT_FREE_ACCOUNT_LIST = "https://azure.microsoft.com/en-us/pricing/purchase-options/azure-account";
+  const AZURE_SUBSCRIPTION_LIMITS = "https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/azure-subscription-service-limits";
 
   const alwaysFreeServices: AzureService[] = [
-    { name: "Azure Functions", slug: "azure", limits: "Flex Consumption: 250,000 executions and 100,000 GB-s/month. Legacy Consumption plan: 1M executions and 400,000 GB-s/month", category: "Compute", highlight: true },
+    { name: "Azure Functions", slug: "azure", limits: "Flex Consumption: 250,000 executions and 100,000 GB-s/month. Legacy Consumption plan: 1M executions and 400,000 GB-s/month", category: "Compute", highlight: true, source: "https://azure.microsoft.com/en-us/pricing/details/functions/" },
     { name: "Azure Cosmos DB", slug: "azure", limits: "1,000 RU/s throughput + 25 GB storage (lifetime)", category: "Database", highlight: true, source: MICROSOFT_FREE_ACCOUNT_LIST },
-    { name: "Azure SQL Database", slug: "azure", limits: "Up to 10 General Purpose serverless databases, each with 100,000 vCore seconds and 32 GB/month, for the lifetime of your subscription", category: "Database" },
+    { name: "Azure SQL Database", slug: "azure", limits: "Up to 10 General Purpose serverless databases, each with 100,000 vCore seconds and 32 GB/month, for the lifetime of your subscription", category: "Database", source: "https://learn.microsoft.com/en-us/azure/azure-sql/database/free-offer?view=azuresql" },
     { name: "App Service", slug: "azure", limits: "10 web/mobile/API apps (F1 tier), 1 GB storage, 60 min/day compute", category: "Compute", source: MICROSOFT_FREE_ACCOUNT_LIST },
     { name: "Container Apps", slug: "azure", limits: "180,000 vCPU seconds, 360,000 GiB seconds and 2 million requests/month", category: "Containers", source: MICROSOFT_FREE_ACCOUNT_LIST },
-    { name: "Azure DevOps", slug: "azure", limits: "5 users, unlimited private repos, 1 free parallel CI/CD pipeline (1,800 min/mo)", category: "DevOps" },
-    { name: "Azure Active Directory (Entra ID)", slug: "azure", limits: "50,000 stored objects, SSO for all apps", category: "Identity" },
+    { name: "Azure DevOps", slug: "azure", limits: "5 users, unlimited private Git repos, 1 Microsoft-hosted CI/CD job (60 min a run, 1,800 min/mo) once the organization is linked to an Azure subscription", category: "DevOps", source: "https://azure.microsoft.com/en-us/pricing/details/devops/azure-devops-services/" },
+    { name: "Azure Active Directory (Entra ID)", slug: "azure", limits: "50,000 stored objects (300,000 with a verified domain), SSO for all apps", category: "Identity", source: "https://learn.microsoft.com/en-us/entra/identity/users/directory-service-limits-restrictions" },
     { name: "Azure AI Search", slug: "azure", limits: "3 indexes, 50 MB storage per service (F tier)", category: "Search", source: MICROSOFT_FREE_ACCOUNT_LIST },
-    { name: "Foundry Tools: Language", slug: "azure", limits: "5,000 text records/month", category: "AI/ML" },
+    { name: "Foundry Tools: Language", slug: "azure", limits: "5,000 text records/month", category: "AI/ML", source: "https://azure.microsoft.com/en-us/pricing/details/cognitive-services/language-service/" },
     { name: "Foundry Tools: Translator", slug: "azure", limits: "2 million characters/month", category: "AI/ML", source: MICROSOFT_FREE_ACCOUNT_LIST },
-    { name: "Bandwidth", slug: "azure", limits: "100 GB outbound data transfer/month (15 GB outbound for the first 12 months is separate)", category: "Networking" },
+    { name: "Bandwidth", slug: "azure", limits: "100 GB outbound data transfer/month (15 GB outbound for the first 12 months is separate)", category: "Networking", source: "https://azure.microsoft.com/en-us/pricing/details/bandwidth/" },
     { name: "Azure Maps", slug: "azure", limits: "1,000 to 5,000 transactions/month for specific mapping and location insights features", category: "Location", source: MICROSOFT_FREE_ACCOUNT_LIST },
     { name: "Azure IoT Hub", slug: "azure", limits: "8,000 messages/day (F1 tier)", category: "IoT", source: MICROSOFT_FREE_ACCOUNT_LIST },
-    { name: "Notification Hubs", slug: "azure", limits: "1 million pushes, 100 free namespaces, 500 active devices per namespace", category: "Messaging" },
+    { name: "Notification Hubs", slug: "azure", limits: "1 million pushes, 100 free namespaces, 500 active devices per namespace", category: "Messaging", source: "https://azure.microsoft.com/en-us/pricing/details/notification-hubs/" },
     { name: "Azure Advisor", slug: "azure", limits: "Unlimited cost, security, reliability, performance recommendations", category: "Management", source: MICROSOFT_FREE_ACCOUNT_LIST },
-    { name: "Azure Policy", slug: "azure", limits: "Free, up to 200 policy assignments per scope", category: "Governance" },
-    { name: "Azure Resource Manager", slug: "azure", limits: "Free, up to 980 resource groups per subscription and 50 tags per resource", category: "IaC" },
+    { name: "Azure Policy", slug: "azure", limits: "Free, up to 200 policy assignments per scope", category: "Governance", source: AZURE_SUBSCRIPTION_LIMITS },
+    { name: "Azure Resource Manager", slug: "azure", limits: "Free, up to 980 resource groups per subscription and 50 tags per resource", category: "IaC", source: AZURE_SUBSCRIPTION_LIMITS },
   ];
 
   const twelveMonthServices: AzureService[] = [
@@ -33644,7 +33650,7 @@ ${mcpCtaCss()}
 <div class="container">
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; Azure Free Tier 2026</div>
-  <h1>Azure Free Tier Complete Guide 2026</h1>
+  <h1>Azure Free Tier 2026</h1>
   <p class="pub-date">Published ${pubDate} &middot; ${pageDataProvenance("/azure-free-tier-2026", offers.length)} &middot; ${azureOffers.length} Azure entries tracked</p>
 
   <div class="summary-stats">

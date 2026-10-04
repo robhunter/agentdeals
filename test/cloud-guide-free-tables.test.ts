@@ -34,6 +34,63 @@ const STATED_IN_FULL_ON_THE_ACCOUNT_LIST = [
   "Azure Database for MySQL",
 ];
 
+const AZURE_SUBSCRIPTION_LIMITS = "https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/azure-subscription-service-limits";
+
+const STATED_ON_THE_PRODUCTS_OWN_PAGE: Record<string, string> = {
+  "Azure Functions": "https://azure.microsoft.com/en-us/pricing/details/functions/",
+  "Azure SQL Database": "https://learn.microsoft.com/en-us/azure/azure-sql/database/free-offer?view=azuresql",
+  "Azure DevOps": "https://azure.microsoft.com/en-us/pricing/details/devops/azure-devops-services/",
+  "Notification Hubs": "https://azure.microsoft.com/en-us/pricing/details/notification-hubs/",
+  "Azure Resource Manager": AZURE_SUBSCRIPTION_LIMITS,
+  "Azure Policy": AZURE_SUBSCRIPTION_LIMITS,
+  "Foundry Tools: Language": "https://azure.microsoft.com/en-us/pricing/details/cognitive-services/language-service/",
+  "Azure Active Directory (Entra ID)": "https://learn.microsoft.com/en-us/entra/identity/users/directory-service-limits-restrictions",
+  "Bandwidth": "https://azure.microsoft.com/en-us/pricing/details/bandwidth/",
+};
+
+const NO_STATIC_PAGE_STATES_THE_ROW: Record<string, string[]> = {
+  [AZURE]: [
+    "Azure Virtual Machines",
+    "Managed Disks",
+    "Azure Blob Storage",
+    "Azure Files",
+    "Azure Service Bus",
+    "$200 Azure Credit",
+    "Microsoft Foundry",
+    "Azure Kubernetes Service (AKS)",
+    "Microsoft Fabric",
+    "Azure OpenAI Service",
+  ],
+  [AWS]: [
+    "AWS Lambda",
+    "Amazon DynamoDB",
+    "Amazon CloudFront",
+    "Amazon SNS",
+    "Amazon SQS",
+    "Amazon CloudWatch",
+    "Amazon ECR Public",
+    "AWS CloudFormation",
+    "Amazon Cognito",
+    "AWS CodeCommit",
+    "AWS CodePipeline",
+    "AWS CodeBuild",
+    "AWS X-Ray",
+    "AWS Step Functions",
+    "Amazon Q Developer",
+    "Amazon SageMaker",
+    "Amazon Bedrock",
+    "Amazon AppStream 2.0",
+    "Amazon Lightsail",
+  ],
+  [GCP]: [
+    "Firebase Auth",
+    "Firebase Hosting",
+    "Firebase Realtime Database",
+  ],
+};
+
+const RECORD_SOURCE_LINK = /<a\b[^>]*class="record-source"/g;
+
 let server: ChildProcess;
 const html = new Map<string, string>();
 
@@ -41,6 +98,7 @@ interface Row {
   section: string;
   name: string;
   citations: string[];
+  recordSources: number;
 }
 
 function textOf(markup: string): string {
@@ -72,6 +130,7 @@ function freeOfferRows(page: string): Row[] {
         section,
         name: textOf(cells[0].replace(new RegExp(SOURCE_MARKER_IN_A_CELL.source, "g"), "")),
         citations: cells.flatMap((cell) => [...cell.matchAll(CITATION)].map(([, href]) => href)),
+        recordSources: cells.reduce((count, cell) => count + (cell.match(RECORD_SOURCE_LINK) ?? []).length, 0),
       })));
 }
 
@@ -151,5 +210,30 @@ describe("the cloud guides' free-offer tables name each service once and cite pa
         .filter((row) => row.citations.some((href) => LISTS_NO_QUOTA.includes(href)))
         .map((row) => `${page}: ${row.name}`));
     assert.deepStrictEqual(cited, []);
+  });
+
+  it("cites the product's own page on each Azure row whose quota only that page states", () => {
+    const rows = freeOfferRows(AZURE);
+    const uncited = Object.entries(STATED_ON_THE_PRODUCTS_OWN_PAGE)
+      .filter(([name, page]) => !rows.some((row) => row.name === name && row.citations.includes(page)))
+      .map(([name]) => name);
+    assert.deepStrictEqual(uncited, []);
+  });
+
+  it("gives every free-offer row a citation of its own, except the rows no static page states, named here", () => {
+    const uncited = PAGES.flatMap((page) =>
+      freeOfferRows(page).filter((row) => row.citations.length === 0).map((row) => `${page}: ${row.name}`)).sort();
+    const named = Object.entries(NO_STATIC_PAGE_STATES_THE_ROW)
+      .flatMap(([page, names]) => names.map((name) => `${page}: ${name}`)).sort();
+    assert.deepStrictEqual(uncited, named);
+  });
+
+  it("drops the catalogue record's source link from rows that cite their own page, and keeps it on rows that cite none", () => {
+    const rows = PAGES.flatMap((page) => freeOfferRows(page).map((row) => ({ page, ...row })));
+    const doubled = rows.filter((row) => row.citations.length > 0 && row.recordSources > 0).map((row) => `${row.page}: ${row.name}`);
+    assert.deepStrictEqual(doubled, []);
+    const keptOnUncited = rows.filter((row) => row.citations.length === 0 && row.recordSources > 0).map((row) => `${row.page}: ${row.name}`);
+    assert.ok(keptOnUncited.includes(`${AZURE}: Azure Blob Storage`), keptOnUncited.join("; "));
+    assert.ok(keptOnUncited.includes(`${GCP}: Firebase Auth`), keptOnUncited.join("; "));
   });
 });

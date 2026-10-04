@@ -4062,7 +4062,7 @@ describe("HTTP transport", () => {
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
-    assert.ok(html.includes("AWS Free Tier Complete Guide"), "Should have title");
+    assert.ok(html.includes("<h1>AWS Free Tier 2026</h1>"), "Should have title");
     assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
     assert.ok(html.includes('"Article"'), "Should use Article schema");
     assert.ok(html.includes("canonical"), "Should have canonical link");
@@ -4117,7 +4117,7 @@ describe("HTTP transport", () => {
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
-    assert.ok(html.includes("Azure Free Tier Complete Guide"), "Should have title");
+    assert.ok(html.includes("<h1>Azure Free Tier 2026</h1>"), "Should have title");
     assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
     assert.ok(html.includes('"Article"'), "Should use Article schema");
     assert.ok(html.includes("canonical"), "Should have canonical link");

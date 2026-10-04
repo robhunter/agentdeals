@@ -35,7 +35,15 @@ const WITHDRAWN: Record<string, RegExp> = {
   "Blob Storage as an always-free service": /Azure Storage \(Blob\)/,
   "unlimited policy assignments, tags and resource groups": /Unlimited policy assignments|Unlimited template deployments, tags, resource groups/i,
   "a Basic Service Bus namespace": /750 hrs\/month Basic namespace/,
+  "a free parallel pipeline with no subscription linked": /free parallel CI\/CD pipeline/,
+  "a title that claims every Azure free service": /Azure Free Tier Complete Guide 2026 — Every Free Service/,
+  "a heading that calls the guide complete": /Azure Free Tier Complete Guide/,
+  "a description that claims every Azure free tier service": /guide to every Azure free tier service/,
 };
+
+const TITLE = "Azure Free Tier 2026 — Always-Free and 12-Month Services, Limits, and Billing Rules";
+const HEADING = "Azure Free Tier 2026";
+const META = "Microsoft lists 65+ always-free Azure services. This page covers the main ones, the 12-month offers, the $200 credit, and billing rules.";
 
 const STATED_ON_THE_PAGE = [
   "The free account has the spending limit turned on by default, so your card is not charged. At 30 days or when the credit runs out, your account and services are disabled unless you move to pay-as-you-go. Only pay-as-you-go has no spending cap: once you exceed free limits there, charges start immediately.",
@@ -62,6 +70,8 @@ const ALWAYS_FREE_ROWS: [string, string][] = [
   ["Notification Hubs", "1 million pushes, 100 free namespaces, 500 active devices per namespace"],
   ["Azure Policy", "Free, up to 200 policy assignments per scope"],
   ["Azure Resource Manager", "Free, up to 980 resource groups per subscription and 50 tags per resource"],
+  ["Azure DevOps", "5 users, unlimited private Git repos, 1 Microsoft-hosted CI/CD job (60 min a run, 1,800 min/mo) once the organization is linked to an Azure subscription"],
+  ["Azure Active Directory (Entra ID)", "50,000 stored objects (300,000 with a verified domain), SSO for all apps"],
 ];
 
 const TWELVE_MONTH_ROWS: [string, string][] = [
@@ -194,6 +204,38 @@ describe("the Azure free tier guide states Microsoft's terms as Microsoft's own 
     const stats = [...html.matchAll(/<div class="stat-number[^"]*">([^<]*)<\/div><div class="stat-label">([^<]*)<\/div>/g)]
       .map(([, number, label]) => `${number} ${label}`);
     assert.deepStrictEqual(stats.slice(0, 2), ["65+ Always-Free Services", "20+ Services Free for 12 Months"]);
+  });
+
+  it("titles the guide by what its tables cover in the title, social card and structured data", () => {
+    const titles = [
+      html.match(/<title>([^<]*) — AgentDeals<\/title>/)?.[1],
+      html.match(/<meta property="og:title" content="([^"]*)">/)?.[1],
+      html.match(/"@type":"Article","headline":"([^"]*)"/)?.[1],
+    ].map((title) => (title === undefined ? title : decode(title)));
+    assert.deepStrictEqual(titles, [TITLE, TITLE, TITLE]);
+  });
+
+  it("is named by the same title where the other cloud guides link to it", async () => {
+    const linking = await (await fetch(`${base}/aws-free-tier-2026`)).text();
+    const linkTitle = linking.match(/href="\/azure-free-tier-2026"[^>]*>\s*<div class="link-title">([^<]*)<\/div>/)?.[1];
+    assert.strictEqual(linkTitle === undefined ? linkTitle : decode(linkTitle), TITLE);
+  });
+
+  it("says it covers the main services in the meta description, social card, structured data and opening line", () => {
+    const article = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)]
+      .map(([, raw]) => JSON.parse(raw))
+      .find((data) => data["@type"] === "Article");
+    const descriptions = [
+      html.match(/<meta name="description" content="([^"]*)">/)?.[1],
+      html.match(/<meta property="og:description" content="([^"]*)">/)?.[1],
+      article?.description,
+      html.match(/<p class="page-claim">([^<]*)<\/p>/)?.[1],
+    ].map((description) => (description === undefined ? description : decode(description)));
+    assert.deepStrictEqual(descriptions, [META, META, META, META]);
+  });
+
+  it("is headed by its title's name, without calling itself complete", () => {
+    assert.strictEqual(html.match(/<h1>([^<]*)<\/h1>/)?.[1], HEADING);
   });
 
   it("keeps the Cosmos DB and App Service rows", () => {
