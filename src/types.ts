@@ -81,6 +81,17 @@ export interface Offer {
   free_grounds?: FreeGround[];
   free_plan_excerpt?: FreePlanExcerpt;
   free_plan_excerpt_hold?: FreePlanExcerptHold;
+  conditions?: ListingCondition[];
+}
+
+export type UseAVendorRulesOut = "production" | "commercial use";
+
+export interface ListingCondition {
+  text: string;
+  quote: string;
+  url: string;
+  read_on: string;
+  rules_out?: UseAVendorRulesOut[];
 }
 
 export type FreeGround = "licence" | "plan";

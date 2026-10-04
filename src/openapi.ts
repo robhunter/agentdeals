@@ -1,4 +1,5 @@
 import { API_ENDPOINTS, type ApiEndpoint } from "./api-inventory.js";
+import { USES_A_VENDOR_CAN_RULE_OUT } from "./listing-conditions.js";
 import { CHANGE_DIRECTION } from "./change-direction.js";
 import { MCP_TOOL_NAMES } from "./mcp-tool-inventory.js";
 import { RATE_LIMIT_PER_MINUTE, SIGNAL_BODY_MAX } from "./signal.js";
@@ -1521,6 +1522,21 @@ export const openapiSpec = {
               read_on: { type: "string", format: "date" }
             },
             required: ["text", "url", "read_on"]
+          },
+          conditions: {
+            type: "array",
+            description: "A list of the conditions a vendor attaches to using its free tier. Each item holds our sentence (text), the vendor's own words (quote), the page that states them (url) and the date we read that page (read_on). An optional list rules_out names the uses the vendor excludes: \"production\", \"commercial use\" or both. Our re-reads of the vendor's pricing page do not change this field.",
+            items: {
+              type: "object",
+              properties: {
+                text: { type: "string" },
+                quote: { type: "string" },
+                url: { type: "string", format: "uri" },
+                read_on: { type: "string", format: "date" },
+                rules_out: { type: "array", items: { type: "string", enum: [...USES_A_VENDOR_CAN_RULE_OUT] } }
+              },
+              required: ["text", "quote", "url", "read_on"]
+            }
           }
         },
         required: ["vendor", "category", "description", "tier", "url", "tags", "verifiedDate"]
