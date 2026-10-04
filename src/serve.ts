@@ -117,7 +117,7 @@ import { partitionAlternatives, partitionSubstitutes, productRoleSentence, MEMBE
 import { buildProductFunctions, functionMembers, functionDefinitions, functionMeaningSentence, admissionFor, splitByFunction, labelsNaming, FUNCTION_RESIDUE_COPY, type ProductFunction, FUNCTION_MEMBERSHIP_RULE, FUNCTION_SPLIT_RULE, FUNCTION_NAMING_RULE, FUNCTION_TITLE_RULE, FUNCTION_PICK_RULE } from "./product-function.js";
 import { curatedAlternativesFor } from "./curated-alternatives.js";
 import { vendorSubstitutes, substitutesListedFor } from "./vendor-substitutes.js";
-import type { Agent, ChangeDateSource, DealChange, FreePlanExcerpt, RiskCause, RatingWithheld, LinkUnreachable, Offer, StabilityClass, SubtypeLabel } from "./types.js";
+import type { Agent, ChangeDateSource, DealChange, FreePlanExcerpt, RiskCause, RatingWithheld, LinkUnreachable, ListingCondition, Offer, StabilityClass, SubtypeLabel } from "./types.js";
 import { A_DATED_HEADING_MARKER, A_DATED_SECTION_MARKER, datedHeadingNoticeHtml, datedSectionNoticeHtml, namedOnceItsDateArrived, namedWhileAheadOf, namedWhileNotBefore, ANNOUNCED_BADGE, ANNOUNCED_HEADING, announcedIntro, changeDateLabel, changeEntryDateLabel, changeEntryLongDateLabel, changeDateClause, changeDatePublished, changeEventStartDate, capListSections, latestEventDate, offerExpiryAfter, feedEntryUpdated, undatedGroupHeading, UNDATED_TILE_LABEL, firstReadHeading, discoveryBatchNote, coveringBracketedChanges, changeEntryDateLabelHtml, isoWeekOf, monthlyChangeSeries, changesInWindow, discoveryMonthSeriesHeading, periodComparisonSentence, DISCOVERED_DATE_PREFIX, EFFECTIVE_DATE_PREFIX, UNDATED_GROUP_NOTE, UNKNOWN_EFFECTIVE_DATE_MARKER, EFFECTIVE_BY_DATE_MEANING, BRACKETED_DATE_PREFIX, RECORDED_DATE_PREFIX, CORRECTED_DATE_PREFIX, EFFECTIVE_MONTH_SERIES_NOTE, DISCOVERY_MONTH_SERIES_NOTE, weekRangeLabel, newestChangeInEffect, vendorPageLastUpdated } from "./change-dates.js";
 import { changeFeedEntries, feedEntryFields, feedUpdatedTimestamp, changeFeedProvenanceNote, CHANGE_FEED_ENTRY_LIMIT, CHANGE_FEED_DESCRIPTION, CHANGE_FEED_NAMESPACE, CHANGE_FEED_NAMESPACE_PREFIX, channelUpdatedTimestamp, WEEKLY_FEED_POPULATION_NOTE, feedLinkTag, feedEntrySourceXml, digestSourceXml, PER_CHANGE_FEED, WEEKLY_DIGEST_FEED } from "./change-feed.js";
 import { changeLogSections, ourRecordsSectionHeading, OUR_RECORDS_SECTION_NOTE, type MonthGroup } from "./change-log-sections.js";
@@ -785,7 +785,7 @@ function contradictedTermsMarkerHtml(offer: Offer): string {
     + ` &middot; ${escHtmlServer(reading.date)}</span>`;
 }
 
-type StoredTermsOf = Pick<Offer, "vendor" | "description" | "tier">;
+type StoredTermsOf = Pick<Offer, "vendor" | "description" | "tier" | "conditions">;
 
 function supersedingChangeFor(offer: StoredTermsOf): DealChange | null {
   return supersedingChange(offer, changesFor(offer.vendor));
@@ -795,7 +795,20 @@ function publishedTermsText(offer: Offer): string {
   const superseded = supersedingChangeFor(offer);
   if (superseded) return supersededTermsNotice(offer.vendor, superseded);
   const unconfirmed = reasonWeCannotConfirmFor(offer);
-  return unconfirmed ? termsWithTheReasonWeCannotConfirmThem(offer.description, unconfirmed) : offer.description;
+  const terms = unconfirmed ? termsWithTheReasonWeCannotConfirmThem(offer.description, unconfirmed) : offer.description;
+  return withConditionsAfter(terms, conditionsBesideTheStoredTerms(offer));
+}
+
+function conditionsBesideTheStoredTerms(offer: StoredTermsOf): readonly ListingCondition[] {
+  return offerRetired(offer) || supersedingChangeFor(offer) ? [] : conditionsOf(offer);
+}
+
+function conditionsAfterTheTermsHtml(offer: StoredTermsOf): string {
+  return conditionsHtml(conditionsBesideTheStoredTerms(offer), escHtmlServer);
+}
+
+function withConditionsWhenWhole(offer: StoredTermsOf, printed: string): string {
+  return printed === offer.description ? withConditionsAfter(printed, conditionsBesideTheStoredTerms(offer)) : printed;
 }
 
 interface OfferStanding {
@@ -835,7 +848,7 @@ function pricedTierDescription(offer: Offer, describedAs: string): string {
   const unconfirmed = reasonWeCannotConfirmFor(offer);
   if (!unconfirmed) return offer.tier;
   const reason = unconfirmedTermsSentence(unconfirmed);
-  return describedAs.endsWith(reason) ? `${offer.tier} — ${reason}` : offer.tier;
+  return describedAs.includes(reason) ? `${offer.tier} — ${reason}` : offer.tier;
 }
 
 const DISCONTINUED_STATUS = "Discontinued";
@@ -953,14 +966,14 @@ function publishedTermsHtml(offer: Offer): string {
 function publishedTermsSummary(offer: StoredTermsOf, cap: number): string {
   const superseded = supersedingChangeFor(offer);
   if (superseded) return supersededTermsMetaSentence(offer.vendor, superseded);
-  return offer.description.length > cap ? `${offer.description.slice(0, cap)}...` : offer.description;
+  return offer.description.length > cap ? `${offer.description.slice(0, cap)}...` : withConditionsWhenWhole(offer, offer.description);
 }
 
 function publishedTermsOpening(offer: StoredTermsOf, sentences: number, cap?: number): string {
   const superseded = supersedingChangeFor(offer);
   if (superseded) return supersededTermsMetaSentence(offer.vendor, superseded);
   const opening = offer.description.split(". ").slice(0, sentences).join(". ");
-  return cap === undefined ? opening : opening.substring(0, cap);
+  return withConditionsWhenWhole(offer, cap === undefined ? opening : opening.substring(0, cap));
 }
 
 function supersededTermsField(offer: StoredTermsOf): { terms_superseded?: SupersededTermsRecord } {
@@ -1773,7 +1786,8 @@ function stackKeyLimitHtml(reading: StackPickReading, cap: number): string {
   const source = superseded ? readingBehindTheChange(superseded) : null;
   if (!source) {
     const unconfirmed = unconfirmedTermsFor(reading.primary);
-    return unconfirmed ? `${escHtmlServer(limit)} ${unconfirmedTermsMarkerHtml(unconfirmed)}` : escHtmlServer(limit);
+    const conditions = limit === reading.primary.description.replace(/\s+/g, " ").trim() ? conditionsAfterTheTermsHtml(reading.primary) : "";
+    return (unconfirmed ? `${escHtmlServer(limit)} ${unconfirmedTermsMarkerHtml(unconfirmed)}` : escHtmlServer(limit)) + conditions;
   }
   return `<span class="stack-limit-read" title="${escHtmlServer(`Our stored ${reading.vendor} terms are superseded. This is what ${source.label} read on ${source.date}.`)}">${escHtmlServer(limit)}</span>` +
     ` <a href="/vendor/${reading.slug}#changes" class="stack-limit-source" style="font-size:.7rem;color:var(--text-dim)">read ${escHtmlServer(source.date)}</a>`;
@@ -2296,7 +2310,7 @@ function buildCategoryPage(slug: string): string | null {
   const offersHtml = catOffers.map((o) => `        <tr${catStanding.includes(o) ? unconfirmedRowAttribute(o) : ""}>
           <td style="font-weight:600;color:var(--text);white-space:nowrap"><a href="/vendor/${toSlug(o.vendor)}" style="color:var(--text)">${escHtmlServer(o.vendor)}</a></td>
           <td style="font-family:var(--mono);color:var(--accent);white-space:nowrap">${escHtmlServer(o.tier)}</td>
-          <td style="color:var(--text-muted)">${storedTermsHtml(o)}${listingEligibilityNoticeHtml(o)}${listingUnreachableNoticeHtml(o)}${termsUnconfirmedNoticeHtml(o)}${contradictedTermsNoticeHtml(o)}</td>
+          <td style="color:var(--text-muted)">${storedTermsHtml(o)}${conditionsAfterTheTermsHtml(o)}${listingEligibilityNoticeHtml(o)}${listingUnreachableNoticeHtml(o)}${termsUnconfirmedNoticeHtml(o)}${contradictedTermsNoticeHtml(o)}</td>
           <td style="font-family:var(--mono);color:var(--text-dim);white-space:nowrap">${escHtmlServer(verificationDatesCell(o))}</td>
         </tr>`).join("\n");
 
@@ -2933,7 +2947,7 @@ function buildBestOfPage(slug: string): string | null {
             ${riskBadge}
           </div>
           <div class="best-pick-tier">${escHtmlServer(o.tier)}</div>
-          <p class="best-pick-review">${review}</p>${functionEvidenceHtml(o, cited, fn)}
+          <p class="best-pick-review">${review}</p>${conditionsAfterTheTermsHtml(o)}${functionEvidenceHtml(o, cited, fn)}
           ${renderDemerits(e)}
           ${renderDisclosures(e)}
           <div class="best-pick-links">
@@ -3766,7 +3780,7 @@ function buildComparisonPage(slug: string): string | null {
   const descBlockHtml = (offer: Offer, superseded: typeof supersededA) =>
     superseded
       ? `<div class="desc-block terms-superseded-text"><strong>${storedTermsLabel(superseded)}:</strong> ${supersededTermsNoticeHtml(offer.vendor, superseded, escHtmlServer)} <a href="#changes">Read what we recorded &darr;</a></div>`
-      : `<div class="desc-block">${publishedTermsHtml(offer)}</div>`;
+      : `<div class="desc-block">${publishedTermsHtml(offer)}${conditionsAfterTheTermsHtml(offer)}</div>`;
 
   const changesHtml = (changes: typeof a.deal_changes, vendor: string) => {
     if (changes.length === 0) return `<p style="color:var(--text-dim);font-size:.85rem">No recorded pricing changes for ${escHtmlServer(vendor)}.</p>`;
@@ -4344,8 +4358,8 @@ ${editorialVs.map(p => `      <a href="/${p.slug}" class="related-card">${escHtm
 
   const faqItems = [
     { q: `Is ${a.vendor} or ${b.vendor} better for free tier?`, a: config.verdict },
-    { q: `What is ${a.vendor}'s free tier?`, a: `${a.vendor} offers a ${a.tier} plan: ${storedTermsOf(a)}` },
-    { q: `What is ${b.vendor}'s free tier?`, a: `${b.vendor} offers a ${b.tier} plan: ${storedTermsOf(b)}` },
+    { q: `What is ${a.vendor}'s free tier?`, a: `${a.vendor} offers a ${a.tier} plan: ${withConditionsWhenWhole(a, storedTermsOf(a))}` },
+    { q: `What is ${b.vendor}'s free tier?`, a: `${b.vendor} offers a ${b.tier} plan: ${withConditionsWhenWhole(b, storedTermsOf(b))}` },
     { q: `Should I choose ${a.vendor} or ${b.vendor}?`, a: config.recommendation.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() },
   ];
 
@@ -4448,7 +4462,7 @@ ${globalNavCss()}
       <div class="detail-row"><span class="detail-label">${LAST_READ_LABEL}</span><span class="detail-value">${escHtmlServer(lastReadDate(a))}</span></div>
       <div class="detail-row"><span class="detail-label">Stability</span><span class="detail-value">${escHtmlServer(riskA.stability ?? "stable")}</span></div>
       <div class="detail-row"><span class="detail-label">Changes</span><span class="detail-value">${vendorMadeA.length} recorded</span></div>
-      <div class="desc-block">${publishedTermsHtml(a)}</div>
+      <div class="desc-block">${publishedTermsHtml(a)}${conditionsAfterTheTermsHtml(a)}</div>
     </div>
     <div class="vendor-col">
       <h3><a href="/vendor/${toSlug(b.vendor)}">${escHtmlServer(b.vendor)}</a> ${riskBadge(riskB)} ${stabilityBadge(riskB.stability ?? "stable")}</h3>
@@ -4458,7 +4472,7 @@ ${globalNavCss()}
       <div class="detail-row"><span class="detail-label">${LAST_READ_LABEL}</span><span class="detail-value">${escHtmlServer(lastReadDate(b))}</span></div>
       <div class="detail-row"><span class="detail-label">Stability</span><span class="detail-value">${escHtmlServer(riskB.stability ?? "stable")}</span></div>
       <div class="detail-row"><span class="detail-label">Changes</span><span class="detail-value">${vendorMadeB.length} recorded</span></div>
-      <div class="desc-block">${publishedTermsHtml(b)}</div>
+      <div class="desc-block">${publishedTermsHtml(b)}${conditionsAfterTheTermsHtml(b)}</div>
     </div>
   </div>
 
@@ -5236,7 +5250,7 @@ function listingInFullHtml(slug: string): string {
   const record = offerForSlug(slug);
   if (!record) return "";
   return `<div class="context-box listing-in-full">
-    <strong>${handwrittenVendorLinkHtml(slug, record.vendor, ' style="color:var(--text)"')}</strong> &mdash; ${storedTermsHtml(record)}${freeTierSourceLineHtml(record, changesFor(record.vendor), utcDate())}
+    <strong>${handwrittenVendorLinkHtml(slug, record.vendor, ' style="color:var(--text)"')}</strong> &mdash; ${storedTermsHtml(record)}${conditionsAfterTheTermsHtml(record)}${freeTierSourceLineHtml(record, changesFor(record.vendor), utcDate())}
   </div>`;
 }
 
@@ -6215,7 +6229,7 @@ ${renderAuditBlock(altRanking.tie_break)}
   });
   const altNotAFreeOffer = notAFreeOfferGateFor(primary);
   const faqFreeTierAnswer = altNotAFreeOffer
-    ? `${altNotAFreeOffer.reason}${altLevelWithheld ? ` ${altWithheldSentence}` : ""} ${storedTermsOf(primary)}`
+    ? `${altNotAFreeOffer.reason}${altLevelWithheld ? ` ${altWithheldSentence}` : ""} ${withConditionsWhenWhole(primary, storedTermsOf(primary))}`
     : altLevelWithheld
     ? `We cannot confirm that today. ${altWithheldSentence} Our stored record says ${vendorName} offers a free tier (${primary.tier}), but we have not confirmed those terms against the source we cite.`
     : riskLevel === null
@@ -8394,7 +8408,7 @@ function buildTimelyAlternativesPage(slug: string): string | null {
           <span class="alt-card-tier">${escHtmlServer(o.tier)}</span>
           ${riskBadge}
         </div>
-        <p class="alt-card-desc">${publishedTermsHtml(o)}</p>
+        <p class="alt-card-desc">${publishedTermsHtml(o)}</p>${conditionsAfterTheTermsHtml(o)}
         <div class="alt-card-links">
           <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(o.vendor)}">More alternatives</a>
@@ -8415,7 +8429,7 @@ function buildTimelyAlternativesPage(slug: string): string | null {
           <span class="alt-card-tier">${escHtmlServer(o.tier)}</span>
           ${riskBadge}
         </div>
-        <p class="alt-card-desc">${publishedTermsHtml(o)}</p>
+        <p class="alt-card-desc">${publishedTermsHtml(o)}</p>${conditionsAfterTheTermsHtml(o)}
         <div class="alt-card-links">
           <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
           ${offerPricingLink(o, "Pricing page &nearr;")}
@@ -10166,7 +10180,7 @@ function buildAiFreeTiersPage(): string {
           <span class="alt-card-tier">${escHtmlServer(cardTierLabel(o))}</span>
           ${riskBadge}
         </div>
-        <p class="alt-card-desc">${publishedTermsHtml(o)}</p>
+        <p class="alt-card-desc">${publishedTermsHtml(o)}</p>${conditionsAfterTheTermsHtml(o)}
         <div class="alt-card-links">
           <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
@@ -10389,7 +10403,7 @@ function buildHostingAlternativesPage(): string {
           <span class="alt-card-tier">${escHtmlServer(o.tier)}</span>
           ${riskBadge}
         </div>
-        <p class="alt-card-desc">${publishedTermsHtml(o)}</p>
+        <p class="alt-card-desc">${publishedTermsHtml(o)}</p>${conditionsAfterTheTermsHtml(o)}
         <div class="alt-card-links">
           <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
@@ -10733,7 +10747,7 @@ function buildDatabaseAlternativesPage(): string {
           <span class="alt-card-tier">${escHtmlServer(o.tier)}</span>
           ${riskBadge}
         </div>
-        <p class="alt-card-desc">${publishedTermsHtml(o)}</p>
+        <p class="alt-card-desc">${publishedTermsHtml(o)}</p>${conditionsAfterTheTermsHtml(o)}
         <div class="alt-card-links">
           <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
@@ -11067,7 +11081,7 @@ function buildMonitoringAlternativesPage(): string {
           <span class="alt-card-tier">${escHtmlServer(o.tier)}</span>
           ${riskBadge}
         </div>
-        <p class="alt-card-desc">${publishedTermsHtml(o)}</p>
+        <p class="alt-card-desc">${publishedTermsHtml(o)}</p>${conditionsAfterTheTermsHtml(o)}
         <div class="alt-card-links">
           <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
@@ -11396,7 +11410,7 @@ function buildCiCdAlternativesPage(): string {
           <span class="alt-card-tier">${escHtmlServer(o.tier)}</span>
           ${riskBadge}
         </div>
-        <p class="alt-card-desc">${publishedTermsHtml(o)}</p>
+        <p class="alt-card-desc">${publishedTermsHtml(o)}</p>${conditionsAfterTheTermsHtml(o)}
         <div class="alt-card-links">
           <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
@@ -11712,7 +11726,7 @@ function buildSecurityAlternativesPage(): string {
           <span class="alt-card-tier">${escHtmlServer(o.tier)}</span>
           ${riskBadge}
         </div>
-        <p class="alt-card-desc">${publishedTermsHtml(o)}</p>
+        <p class="alt-card-desc">${publishedTermsHtml(o)}</p>${conditionsAfterTheTermsHtml(o)}
         <div class="alt-card-links">
           <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
@@ -12050,7 +12064,7 @@ function buildTestingAlternativesPage(): string {
           <span class="alt-card-tier">${escHtmlServer(o.tier)}</span>
           ${riskBadge}
         </div>
-        <p class="alt-card-desc">${publishedTermsHtml(o)}</p>
+        <p class="alt-card-desc">${publishedTermsHtml(o)}</p>${conditionsAfterTheTermsHtml(o)}
         <div class="alt-card-links">
           <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
@@ -12372,7 +12386,7 @@ function buildStorageAlternativesPage(): string {
           <span class="alt-card-tier">${escHtmlServer(o.tier)}</span>
           ${riskBadge}
         </div>
-        <p class="alt-card-desc">${publishedTermsHtml(o)}</p>
+        <p class="alt-card-desc">${publishedTermsHtml(o)}</p>${conditionsAfterTheTermsHtml(o)}
         <div class="alt-card-links">
           <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
@@ -12685,7 +12699,7 @@ function buildAnalyticsAlternativesPage(): string {
           <span class="alt-card-tier">${escHtmlServer(o.tier)}</span>
           ${riskBadge}
         </div>
-        <p class="alt-card-desc">${publishedTermsHtml(o)}</p>
+        <p class="alt-card-desc">${publishedTermsHtml(o)}</p>${conditionsAfterTheTermsHtml(o)}
         <div class="alt-card-links">
           <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
@@ -13003,7 +13017,7 @@ function buildAiMlAlternativesPage(): string {
           <span class="alt-card-tier">${escHtmlServer(cardTierLabel(o))}</span>
           ${riskBadge}
         </div>
-        <p class="alt-card-desc">${publishedTermsHtml(o)}</p>
+        <p class="alt-card-desc">${publishedTermsHtml(o)}</p>${conditionsAfterTheTermsHtml(o)}
         <div class="alt-card-links">
           <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
@@ -13319,7 +13333,7 @@ function buildEmailAlternativesPage(): string {
           <span class="alt-card-tier">${escHtmlServer(o.tier)}</span>
           ${riskBadge}
         </div>
-        <p class="alt-card-desc">${publishedTermsHtml(o)}</p>
+        <p class="alt-card-desc">${publishedTermsHtml(o)}</p>${conditionsAfterTheTermsHtml(o)}
         <div class="alt-card-links">
           <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
@@ -13653,7 +13667,7 @@ function buildDesignAlternativesPage(): string {
           <span class="alt-card-tier">${escHtmlServer(o.tier)}</span>
           ${riskBadge}
         </div>
-        <p class="alt-card-desc">${publishedTermsHtml(o)}</p>
+        <p class="alt-card-desc">${publishedTermsHtml(o)}</p>${conditionsAfterTheTermsHtml(o)}
         <div class="alt-card-links">
           <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
@@ -13991,7 +14005,7 @@ function buildProjectManagementAlternativesPage(): string {
           <span class="alt-card-tier">${escHtmlServer(o.tier)}</span>
           ${riskBadge}
         </div>
-        <p class="alt-card-desc">${publishedTermsHtml(o)}</p>
+        <p class="alt-card-desc">${publishedTermsHtml(o)}</p>${conditionsAfterTheTermsHtml(o)}
         <div class="alt-card-links">
           <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
@@ -14320,7 +14334,7 @@ function buildIdeCodeEditorsAlternativesPage(): string {
           <span class="alt-card-tier">${escHtmlServer(o.tier)}</span>
           ${riskBadge}
         </div>
-        <p class="alt-card-desc">${publishedTermsHtml(o)}</p>
+        <p class="alt-card-desc">${publishedTermsHtml(o)}</p>${conditionsAfterTheTermsHtml(o)}
         <div class="alt-card-links">
           <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
@@ -14647,7 +14661,7 @@ function buildFreeLlmApisPage(): string {
           <span class="alt-card-tier">${escHtmlServer(cardTierLabel(o))}</span>
           ${riskBadge}
         </div>
-        <p class="alt-card-desc">${publishedTermsHtml(o)}</p>
+        <p class="alt-card-desc">${publishedTermsHtml(o)}</p>${conditionsAfterTheTermsHtml(o)}
         <div class="alt-card-links">
           <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
@@ -14890,7 +14904,7 @@ function buildApiDevelopmentAlternativesPage(): string {
           <span class="alt-card-tier">${escHtmlServer(o.tier)}</span>
           ${riskBadge}
         </div>
-        <p class="alt-card-desc">${publishedTermsHtml(o)}</p>
+        <p class="alt-card-desc">${publishedTermsHtml(o)}</p>${conditionsAfterTheTermsHtml(o)}
         <div class="alt-card-links">
           <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
@@ -15206,7 +15220,7 @@ function buildTeamCollaborationAlternativesPage(): string {
           <span class="alt-card-tier">${escHtmlServer(o.tier)}</span>
           ${riskBadge}
         </div>
-        <p class="alt-card-desc">${publishedTermsHtml(o)}</p>
+        <p class="alt-card-desc">${publishedTermsHtml(o)}</p>${conditionsAfterTheTermsHtml(o)}
         <div class="alt-card-links">
           <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
@@ -20350,7 +20364,7 @@ function buildSupabaseVsFirebasePage(): string {
     return `<tr>
       <td style="font-weight:600">${handwrittenVendorLinkHtml(vendorSlug, o.vendor, ' style="color:var(--text)"')}</td>
       <td style="font-family:var(--mono);color:var(--accent);font-size:.85rem">${escHtmlServer(o.tier)}</td>
-      <td style="color:var(--text-muted);font-size:.85rem">${publishedTermsHtml(o)}</td>
+      <td style="color:var(--text-muted);font-size:.85rem">${publishedTermsHtml(o)}${conditionsAfterTheTermsHtml(o)}</td>
     </tr>`;
   }).join("\n        ");
 
@@ -20494,8 +20508,8 @@ ${mcpCtaCss()}
       </tbody>
     </table>
   </div>
-  ${supabaseOffer ? `<div class="context-box"><strong>Supabase verified data:</strong> ${publishedTermsHtml(supabaseOffer)} <br>Verified: ${escHtmlServer(supabaseOffer.verifiedDate)} &middot; <a href="/vendor/supabase">Full profile →</a></div>` : ""}
-  ${firebaseOffer ? `<div class="context-box"><strong>Firebase verified data:</strong> ${publishedTermsHtml(firebaseOffer)} <br>Verified: ${escHtmlServer(firebaseOffer.verifiedDate)} &middot; <a href="/vendor/firebase">Full profile →</a></div>` : ""}
+  ${supabaseOffer ? `<div class="context-box"><strong>Supabase verified data:</strong> ${publishedTermsHtml(supabaseOffer)}${conditionsAfterTheTermsHtml(supabaseOffer)} <br>Verified: ${escHtmlServer(supabaseOffer.verifiedDate)} &middot; <a href="/vendor/supabase">Full profile →</a></div>` : ""}
+  ${firebaseOffer ? `<div class="context-box"><strong>Firebase verified data:</strong> ${publishedTermsHtml(firebaseOffer)}${conditionsAfterTheTermsHtml(firebaseOffer)} <br>Verified: ${escHtmlServer(firebaseOffer.verifiedDate)} &middot; <a href="/vendor/firebase">Full profile →</a></div>` : ""}
 
   <h2 id="differences">2. Key Differences</h2>
   <p class="section-intro">Beyond the raw numbers, these architectural differences matter for your long-term stack choice.</p>
@@ -20672,7 +20686,7 @@ function buildVercelVsNetlifyPage(): string {
     return `<tr>
       <td style="font-weight:600">${handwrittenVendorLinkHtml(vendorSlug, o.vendor, ' style="color:var(--text)"')}</td>
       <td style="font-family:var(--mono);color:var(--accent);font-size:.85rem">${escHtmlServer(o.tier)}</td>
-      <td style="color:var(--text-muted);font-size:.85rem">${publishedTermsHtml(o)}</td>
+      <td style="color:var(--text-muted);font-size:.85rem">${publishedTermsHtml(o)}${conditionsAfterTheTermsHtml(o)}</td>
     </tr>`;
   }).join("\n        ");
 
@@ -20816,8 +20830,8 @@ ${mcpCtaCss()}
       </tbody>
     </table>
   </div>
-  ${vercelOffer ? `<div class="context-box"><strong>Vercel verified data:</strong> ${publishedTermsHtml(vercelOffer)} <br>Verified: ${escHtmlServer(vercelOffer.verifiedDate)} &middot; <a href="/vendor/vercel">Full profile &rarr;</a></div>` : ""}
-  ${netlifyOffer ? `<div class="context-box"><strong>Netlify verified data:</strong> ${publishedTermsHtml(netlifyOffer)} <br>Verified: ${escHtmlServer(netlifyOffer.verifiedDate)} &middot; <a href="/vendor/netlify">Full profile &rarr;</a></div>` : ""}
+  ${vercelOffer ? `<div class="context-box"><strong>Vercel verified data:</strong> ${publishedTermsHtml(vercelOffer)}${conditionsAfterTheTermsHtml(vercelOffer)} <br>Verified: ${escHtmlServer(vercelOffer.verifiedDate)} &middot; <a href="/vendor/vercel">Full profile &rarr;</a></div>` : ""}
+  ${netlifyOffer ? `<div class="context-box"><strong>Netlify verified data:</strong> ${publishedTermsHtml(netlifyOffer)}${conditionsAfterTheTermsHtml(netlifyOffer)} <br>Verified: ${escHtmlServer(netlifyOffer.verifiedDate)} &middot; <a href="/vendor/netlify">Full profile &rarr;</a></div>` : ""}
 
   <h2 id="differences">2. Key Differences</h2>
   <p class="section-intro">Beyond the raw numbers, these structural differences matter for your hosting choice.</p>
@@ -20991,7 +21005,7 @@ function buildNeonVsSupabasePage(): string {
     return `<tr>
       <td style="font-weight:600">${handwrittenVendorLinkHtml(vendorSlug, o.vendor, ' style="color:var(--text)"')}</td>
       <td style="font-family:var(--mono);color:var(--accent);font-size:.85rem">${escHtmlServer(o.tier)}</td>
-      <td style="color:var(--text-muted);font-size:.85rem">${publishedTermsHtml(o)}</td>
+      <td style="color:var(--text-muted);font-size:.85rem">${publishedTermsHtml(o)}${conditionsAfterTheTermsHtml(o)}</td>
     </tr>`;
   }).join("\n        ");
 
@@ -21134,8 +21148,8 @@ ${mcpCtaCss()}
       </tbody>
     </table>
   </div>
-  ${neonOffer ? `<div class="context-box"><strong>Neon verified data:</strong> ${publishedTermsHtml(neonOffer)} <br>Verified: ${escHtmlServer(neonOffer.verifiedDate)} &middot; <a href="/vendor/neon">Full profile &rarr;</a></div>` : ""}
-  ${supabaseOffer ? `<div class="context-box"><strong>Supabase verified data:</strong> ${publishedTermsHtml(supabaseOffer)} <br>Verified: ${escHtmlServer(supabaseOffer.verifiedDate)} &middot; <a href="/vendor/supabase">Full profile &rarr;</a></div>` : ""}
+  ${neonOffer ? `<div class="context-box"><strong>Neon verified data:</strong> ${publishedTermsHtml(neonOffer)}${conditionsAfterTheTermsHtml(neonOffer)} <br>Verified: ${escHtmlServer(neonOffer.verifiedDate)} &middot; <a href="/vendor/neon">Full profile &rarr;</a></div>` : ""}
+  ${supabaseOffer ? `<div class="context-box"><strong>Supabase verified data:</strong> ${publishedTermsHtml(supabaseOffer)}${conditionsAfterTheTermsHtml(supabaseOffer)} <br>Verified: ${escHtmlServer(supabaseOffer.verifiedDate)} &middot; <a href="/vendor/supabase">Full profile &rarr;</a></div>` : ""}
 
   <h2 id="differences">2. Key Differences</h2>
   <p class="section-intro">Beyond the raw numbers, these architectural differences shape which platform fits your use case.</p>
@@ -21307,7 +21321,7 @@ function buildRailwayVsRenderPage(): string {
     return `<tr>
       <td style="font-weight:600">${handwrittenVendorLinkHtml(vendorSlug, o.vendor, ' style="color:var(--text)"')}</td>
       <td style="font-family:var(--mono);color:var(--accent);font-size:.85rem">${escHtmlServer(o.tier)}</td>
-      <td style="color:var(--text-muted);font-size:.85rem">${publishedTermsHtml(o)}</td>
+      <td style="color:var(--text-muted);font-size:.85rem">${publishedTermsHtml(o)}${conditionsAfterTheTermsHtml(o)}</td>
     </tr>`;
   }).join("\n        ");
 
@@ -21451,8 +21465,8 @@ ${mcpCtaCss()}
       </tbody>
     </table>
   </div>
-  ${railwayOffer ? `<div class="context-box"><strong>Railway verified data:</strong> ${publishedTermsHtml(railwayOffer)} <br>Verified: ${escHtmlServer(railwayOffer.verifiedDate)} &middot; <a href="/vendor/railway">Full profile &rarr;</a></div>` : ""}
-  ${renderOffer ? `<div class="context-box"><strong>Render verified data:</strong> ${publishedTermsHtml(renderOffer)} <br>Verified: ${escHtmlServer(renderOffer.verifiedDate)} &middot; <a href="/vendor/render">Full profile &rarr;</a></div>` : ""}
+  ${railwayOffer ? `<div class="context-box"><strong>Railway verified data:</strong> ${publishedTermsHtml(railwayOffer)}${conditionsAfterTheTermsHtml(railwayOffer)} <br>Verified: ${escHtmlServer(railwayOffer.verifiedDate)} &middot; <a href="/vendor/railway">Full profile &rarr;</a></div>` : ""}
+  ${renderOffer ? `<div class="context-box"><strong>Render verified data:</strong> ${publishedTermsHtml(renderOffer)}${conditionsAfterTheTermsHtml(renderOffer)} <br>Verified: ${escHtmlServer(renderOffer.verifiedDate)} &middot; <a href="/vendor/render">Full profile &rarr;</a></div>` : ""}
 
   <h2 id="differences">2. Key Differences</h2>
   <p class="section-intro">Beyond the raw numbers, these structural differences define the Railway vs Render choice.</p>
@@ -21628,7 +21642,7 @@ function buildDatadogVsNewRelicPage(): string {
     return `<tr>
       <td style="font-weight:600">${handwrittenVendorLinkHtml(vendorSlug, o.vendor, ' style="color:var(--text)"')}</td>
       <td style="font-family:var(--mono);color:var(--accent);font-size:.85rem">${escHtmlServer(o.tier)}</td>
-      <td style="color:var(--text-muted);font-size:.85rem">${publishedTermsHtml(o)}</td>
+      <td style="color:var(--text-muted);font-size:.85rem">${publishedTermsHtml(o)}${conditionsAfterTheTermsHtml(o)}</td>
     </tr>`;
   }).join("\n        ");
 
@@ -21772,8 +21786,8 @@ ${mcpCtaCss()}
       </tbody>
     </table>
   </div>
-  ${datadogOffer ? `<div class="context-box"><strong>Datadog verified data:</strong> ${publishedTermsHtml(datadogOffer)} <br>Verified: ${escHtmlServer(datadogOffer.verifiedDate)} &middot; <a href="/vendor/datadog">Full profile &rarr;</a></div>` : ""}
-  ${newRelicOffer ? `<div class="context-box"><strong>New Relic verified data:</strong> ${publishedTermsHtml(newRelicOffer)} <br>Verified: ${escHtmlServer(newRelicOffer.verifiedDate)} &middot; <a href="/vendor/new-relic">Full profile &rarr;</a></div>` : ""}
+  ${datadogOffer ? `<div class="context-box"><strong>Datadog verified data:</strong> ${publishedTermsHtml(datadogOffer)}${conditionsAfterTheTermsHtml(datadogOffer)} <br>Verified: ${escHtmlServer(datadogOffer.verifiedDate)} &middot; <a href="/vendor/datadog">Full profile &rarr;</a></div>` : ""}
+  ${newRelicOffer ? `<div class="context-box"><strong>New Relic verified data:</strong> ${publishedTermsHtml(newRelicOffer)}${conditionsAfterTheTermsHtml(newRelicOffer)} <br>Verified: ${escHtmlServer(newRelicOffer.verifiedDate)} &middot; <a href="/vendor/new-relic">Full profile &rarr;</a></div>` : ""}
 
   <h2 id="differences">2. Key Differences</h2>
   <p class="section-intro">Beyond the raw numbers, these structural differences define the Datadog vs New Relic choice.</p>
@@ -23168,7 +23182,8 @@ function listingTermsCellHtml(slug: string): string {
     ? ` <a href="/vendor/${slug}">Full profile</a>`
     : "";
   const unconfirmed = reasonWeCannotConfirmFor(record);
-  return escHtmlServer(opening) + profile + (unconfirmed ? unconfirmedTermsSpanHtml(unconfirmed) : "");
+  const conditions = opening === whole ? conditionsAfterTheTermsHtml(record) : "";
+  return escHtmlServer(opening) + profile + (unconfirmed ? unconfirmedTermsSpanHtml(unconfirmed) : "") + conditions;
 }
 
 function buildOpenaiAssistantsAlternativesPage(): string {
@@ -31220,7 +31235,7 @@ function buildLlmApiPricingPage(): string {
       return '<div class="diff-card" style="border-left-color:' + cells.tierColor + '">' +
         '<h3>' + handwrittenVendorLinkHtml(p.slug, p.name, ' style="color:var(--text)"') + ' ' +
         '<span style="font-size:.75rem;color:var(--text-dim);font-weight:400">' + escHtmlServer(cells.tier) + '</span></h3>' +
-        '<p class="diff-desc">' + (record ? publishedTermsHtml(record) : "&mdash;") + '</p>' +
+        '<p class="diff-desc">' + (record ? publishedTermsHtml(record) : "&mdash;") + '</p>' + (record ? conditionsAfterTheTermsHtml(record) : "") +
         '</div>';
     }).join("\n    ");
     return '<h3 id="cat-' + cat + '">' + escHtmlServer(categoryLabels[cat]) + '</h3>' +
