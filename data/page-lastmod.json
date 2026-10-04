@@ -1283,7 +1283,7 @@
       "changed": "2026-10-03"
     },
     "/category/storage": {
-      "hash": "5260bf040c94b9cb",
+      "hash": "c305ccab61eb1967",
       "changed": "2026-10-04"
     },
     "/category/team-collaboration": {
@@ -3146,11 +3146,11 @@
       "changed": "2026-10-04"
     },
     "/free-tier-risk": {
-      "hash": "f78f60a9d7f99d0d",
+      "hash": "4d3bf6072e769a52",
       "changed": "2026-10-04"
     },
     "/free-tier-tracker": {
-      "hash": "9e06a341b1987b3a",
+      "hash": "93c3af32fd5aac01",
       "changed": "2026-10-04"
     },
     "/freshness": {
@@ -3238,7 +3238,7 @@
       "changed": "2026-10-04"
     },
     "/localstack-alternatives": {
-      "hash": "b10c81f61940191e",
+      "hash": "41f55fbe7f01d2ac",
       "changed": "2026-10-04"
     },
     "/mongodb-alternatives": {
@@ -3495,15 +3495,15 @@
       "changed": "2026-10-04"
     },
     "/state-of-free-tiers": {
-      "hash": "dfd76d8f24c6e5fd",
+      "hash": "7c12f0eb87bfb824",
       "changed": "2026-10-04"
     },
     "/storage-alternatives": {
-      "hash": "ecde66f9f9607981",
+      "hash": "2fe983eda580a4b7",
       "changed": "2026-10-04"
     },
     "/storage-comparison-2026": {
-      "hash": "1631d2dace73f853",
+      "hash": "516fb84d498b58a1",
       "changed": "2026-10-04"
     },
     "/supabase-vs-firebase": {
@@ -3777,8 +3777,8 @@
       "changed": "2026-10-04"
     },
     "/vendor": {
-      "hash": "95879d6bd9cd69fb",
-      "changed": "2026-10-03"
+      "hash": "657fb8287ffc7e22",
+      "changed": "2026-10-04"
     },
     "/vendor/10minutemail": {
       "hash": "f6203c5560d2fe64",
@@ -7162,7 +7162,7 @@
       "daily": true
     },
     "/vendor/minio": {
-      "hash": "9b64751ef3042ae6",
+      "hash": "34b00ebb0d024cc8",
       "changed": "2026-10-04"
     },
     "/vendor/mintlify": {
