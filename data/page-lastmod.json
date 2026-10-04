@@ -788,7 +788,7 @@
       "changed": "2026-09-05"
     },
     "/auth-comparison-2026": {
-      "hash": "6858c0db8639f2dd",
+      "hash": "e1fc76c45a78a3f0",
       "changed": "2026-10-04"
     },
     "/auth0-alternatives": {
@@ -808,11 +808,11 @@
       "changed": "2026-10-04"
     },
     "/aws-free-tier-2026": {
-      "hash": "90811b63d9f6d6a2",
+      "hash": "1bc550071eb7754b",
       "changed": "2026-10-04"
     },
     "/azure-free-tier-2026": {
-      "hash": "5c3a4647a2d748fd",
+      "hash": "3490234caf32c603",
       "changed": "2026-10-04"
     },
     "/backblaze-b2-vs-cloudflare-r2": {
@@ -2686,7 +2686,7 @@
       "changed": "2026-10-04"
     },
     "/database-free-tier-comparison-2026": {
-      "hash": "03ad45a8ad546cd0",
+      "hash": "474db3476fee04fb",
       "changed": "2026-10-04"
     },
     "/database-pricing": {
@@ -3161,7 +3161,7 @@
       "changed": "2026-10-04"
     },
     "/gcp-free-tier-2026": {
-      "hash": "be538d3fef012b8a",
+      "hash": "b951498792bb5701",
       "changed": "2026-10-04"
     },
     "/gemini-api-pricing-2026": {
@@ -3503,7 +3503,7 @@
       "changed": "2026-10-04"
     },
     "/storage-comparison-2026": {
-      "hash": "6ff4d4b63f56484e",
+      "hash": "1631d2dace73f853",
       "changed": "2026-10-04"
     },
     "/supabase-vs-firebase": {
@@ -6003,7 +6003,7 @@
       "daily": true
     },
     "/vendor/google-compute-engine": {
-      "hash": "6cfeb2b292c699b1",
+      "hash": "892b1cbfceca5319",
       "changed": "2026-10-04"
     },
     "/vendor/google-content-api-for-shopping": {
