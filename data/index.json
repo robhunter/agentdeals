@@ -543,9 +543,9 @@
     {
       "vendor": "Azure",
       "category": "Cloud IaaS",
-      "description": "65+ always-free services: Functions (1 million requests/month, Consumption plan), Container Apps (180,000 vCPU seconds, 360,000 GiB seconds, 2 million requests), SQL Database (10 serverless databases, 100,000 vCore seconds and 32 GB each a month), Cosmos DB (1,000 RU/s, 25 GB), App Service (10 apps), Entra ID (50,000 objects), DevOps (5 users). 12 months for new customers: B2pts v2 and B2ats v2 VMs (750 hours each), Blob Storage (5 GB), Disk Storage (2 64 GB P6 SSDs). $200 credit for 30 days, spending limit on by default; move to pay-as-you-go to continue.",
+      "description": "65+ always-free services: Functions (1 million requests/month, Consumption plan), Container Apps (180,000 vCPU seconds, 360,000 GiB seconds, 2 million requests), SQL Database (10 serverless databases, 100,000 vCore seconds and 32 GB each a month), Cosmos DB (1,000 RU/s, 25 GB), App Service (10 apps), Entra ID (50,000 objects), DevOps (5 users). 12 months for new customers: B2pts v2 and B2ats v2 VMs (750 hours each), Database for PostgreSQL and Database for MySQL (750 hours each of a B1MS Flexible Server, 32 GB storage), Blob Storage (5 GB), Disk Storage (2 64 GB P6 SSDs). $200 credit for 30 days, spending limit on by default; move to pay-as-you-go to continue.",
       "tier": "Free Tier",
-      "url": "https://azure.microsoft.com/en-us/pricing/free-services/",
+      "url": "https://azure.microsoft.com/en-us/pricing/purchase-options/azure-account",
       "tags": [
         "cloud",
         "iaas",
@@ -557,9 +557,9 @@
       ],
       "verifiedDate": "2026-10-01",
       "source_check": {
-        "checked": "2026-10-01",
+        "checked": "2026-10-04",
         "outcome": "ok",
-        "detail": "the page names Azure as \"azure\" and states amounts, none of which we matched to the terms we publish"
+        "detail": "the page names Azure as \"azure\" and states \"$200\""
       }
     },
     {
@@ -665,7 +665,7 @@
     {
       "vendor": "Supabase",
       "category": "Databases",
-      "description": "Postgres development platform — The Free plan is $0/month and includes unlimited API requests, 50,000 monthly active users, a 500 MB database, 5 GB egress, 5 GB cached egress, 1 GB file storage, 500,000 Edge Function invocations, and Realtime with 200 concurrent connections and 2 million messages a month. Free projects are paused after 1 week of inactivity, with a limit of 2 active projects.",
+      "description": "Postgres development platform: database, Auth, Storage, Realtime and Edge Functions. The Free plan is $0: unlimited API requests, 50,000 monthly active users, a 500 MB database on a shared CPU with 500 MB RAM, 5 GB egress plus 5 GB cached egress, 1 GB file storage, 500,000 Edge Function invocations, and Realtime with 200 concurrent connections and 2 million messages a month. Free projects are paused after 1 week of inactivity, with a limit of 2 active projects. Pro starts at $25 a month for the first project and includes $10 a month of compute credits, enough for one Micro instance.",
       "tier": "Free",
       "url": "https://supabase.com/pricing",
       "tags": [
@@ -731,20 +731,13 @@
         "reviewed": "2026-08-31"
       },
       "restatement_reverted": {
-        "record_date": "2026-09-03",
-        "reverted_on": "2026-09-27"
+        "record_date": "2026-10-04",
+        "reverted_on": "2026-10-04"
       },
       "free_plan_excerpt": {
         "text": "Perfect for passion projects & simple websites. Start for Free $ 0 / month Get started with: Unlimited API requests 50,000 monthly active users 500 MB database size Shared CPU • 500 MB RAM 5 GB egress 5 GB cached egress 1 GB file storage Community support Free projects are paused after 1 week of inactivity. Limit of 2 active projects.",
         "url": "https://supabase.com/pricing",
         "read_on": "2026-10-04"
-      },
-      "restated_from": {
-        "reading_date": "2026-10-04",
-        "source_url": "https://supabase.com/pricing",
-        "record_date": "2026-10-04",
-        "change_type": "pricing_restructured",
-        "restated_on": "2026-10-04"
       }
     },
     {
@@ -924,7 +917,7 @@
     {
       "vendor": "Upstash",
       "category": "Databases",
-      "description": "Serverless Redis — 500K commands/month (256MB data). Vector: 10K vectors free. QStash: 1,000 messages/day free",
+      "description": "Serverless Redis — 500K commands/month (256MB data). Vector: 200M vectors × dimensions and 10K queries a day free. QStash: 1,000 messages/day free",
       "tier": "Free",
       "url": "https://upstash.com/pricing",
       "tags": [
@@ -8805,7 +8798,7 @@
     {
       "vendor": "Upstash Vector",
       "category": "Databases",
-      "description": "Serverless vector database by Upstash — Free: $0 - 200M vectors, 1,536 dimensions, 100 namespaces, 10K daily query limit, 1 GB max total data.",
+      "description": "Serverless vector database by Upstash. Free: 200M vectors × dimensions (about 130,000 vectors at the maximum 1,536 dimensions), 100 namespaces, 10K queries and updates a day, 1 GB of data",
       "tier": "Free",
       "url": "https://upstash.com/pricing/vector",
       "tags": [
@@ -8817,7 +8810,7 @@
       ],
       "verifiedDate": "2026-08-13",
       "source_check": {
-        "checked": "2026-09-17",
+        "checked": "2026-10-04",
         "outcome": "ok",
         "detail": "the page names Upstash Vector as \"upstash vector\" and states \"$0\""
       },
@@ -8832,12 +8825,9 @@
         ],
         "reviewed": "2026-08-31"
       },
-      "restated_from": {
-        "reading_date": "2026-09-02",
-        "source_url": "https://upstash.com/pricing/vector",
+      "restatement_reverted": {
         "record_date": "2026-09-02",
-        "change_type": "limits_increased",
-        "restated_on": "2026-09-20"
+        "reverted_on": "2026-10-04"
       }
     },
     {
@@ -33121,7 +33111,7 @@
     {
       "vendor": "Google Compute Engine",
       "category": "Cloud IaaS",
-      "description": "Access to 20+ free products, including Compute Engine, is available, but with restrictions such as not being able to add GPUs to VM instances. The $300 credit can't be used for Gemini API in AI Studio costs.",
+      "description": "Always Free: 1 non-preemptible e2-micro VM (us-west1, us-central1, or us-east1), 30 GB standard persistent disk, 1 GB North America egress. GPUs/TPUs excluded. Google Cloud's Free Tier requires a billing account. Usage beyond the monthly limits is billed at standard rates. The e2-micro instance limit is by time, not by instance: all e2-micro instances together are free for the number of hours in the month.",
       "tier": "Always Free",
       "url": "https://docs.cloud.google.com/free/docs/free-cloud-features",
       "tags": [
@@ -33135,14 +33125,11 @@
       "source_check": {
         "checked": "2026-10-04",
         "outcome": "ok",
-        "detail": "the page names Google Compute Engine as \"compute\" and states \"$300\""
+        "detail": "the page names Google Compute Engine as \"compute\" and states \"1 non-preemptible e2-micro VM instance per month\""
       },
-      "restated_from": {
-        "reading_date": "2026-10-04",
-        "source_url": "https://docs.cloud.google.com/free/docs/free-cloud-features",
+      "restatement_reverted": {
         "record_date": "2026-10-04",
-        "change_type": "pricing_restructured",
-        "restated_on": "2026-10-04"
+        "reverted_on": "2026-10-04"
       }
     },
     {

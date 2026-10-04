@@ -74,8 +74,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 20,
-      "table_figures_from_records": 20,
+      "table_figures": 19,
+      "table_figures_from_records": 19,
       "tables": [
         {
           "label": "Protocol Comparison",
@@ -84,8 +84,8 @@
         },
         {
           "label": "All Payment-Enabled Services",
-          "figures": 20,
-          "from_records": 20
+          "figures": 19,
+          "from_records": 19
         }
       ],
       "reads_changes": true,
@@ -106,13 +106,13 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 20,
-      "table_figures_from_records": 20,
+      "table_figures": 18,
+      "table_figures_from_records": 18,
       "tables": [
         {
           "label": "RAG Agent",
-          "figures": 7,
-          "from_records": 7
+          "figures": 6,
+          "from_records": 6
         },
         {
           "label": "Autonomous Coding Agent",
@@ -126,8 +126,8 @@
         },
         {
           "label": "Chat / Customer Agent",
-          "figures": 3,
-          "from_records": 3
+          "figures": 2,
+          "from_records": 2
         }
       ],
       "reads_changes": true,
@@ -952,8 +952,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 53,
-      "table_figures_from_records": 20,
+      "table_figures": 56,
+      "table_figures_from_records": 23,
       "tables": [
         {
           "label": "Main Comparison Table",
@@ -987,8 +987,8 @@
         },
         {
           "label": "Pricing Change Timeline",
-          "figures": 20,
-          "from_records": 20
+          "figures": 23,
+          "from_records": 23
         }
       ],
       "reads_changes": true,
@@ -1922,8 +1922,8 @@
       "review_note": "The corrections from https://github.com/robhunter/agentdeals/issues/2168 are live. Checked on production on 2026-09-30 against all six acceptance criteria, including a census of 2,593 routes for the withdrawn claims.",
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 58,
-      "table_figures_from_records": 7,
+      "table_figures": 57,
+      "table_figures_from_records": 6,
       "tables": [
         {
           "label": "Always Free Products",
@@ -1942,8 +1942,8 @@
         },
         {
           "label": "Recent GCP & Google Changes",
-          "figures": 8,
-          "from_records": 7
+          "figures": 7,
+          "from_records": 6
         }
       ],
       "reads_changes": true,
@@ -2928,13 +2928,13 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 32,
-      "table_figures_from_records": 4,
+      "table_figures": 31,
+      "table_figures_from_records": 3,
       "tables": [
         {
           "label": "The Stack",
-          "figures": 32,
-          "from_records": 4
+          "figures": 31,
+          "from_records": 3
         }
       ],
       "reads_changes": false,
@@ -3015,13 +3015,13 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 35,
-      "table_figures_from_records": 7,
+      "table_figures": 34,
+      "table_figures_from_records": 6,
       "tables": [
         {
           "label": "The Stack",
-          "figures": 35,
-          "from_records": 7
+          "figures": 34,
+          "from_records": 6
         }
       ],
       "reads_changes": false,
@@ -3184,8 +3184,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 83,
-      "table_figures_from_records": 24,
+      "table_figures": 85,
+      "table_figures_from_records": 26,
       "tables": [
         {
           "label": "Main Comparison Table",
@@ -3204,8 +3204,8 @@
         },
         {
           "label": "Pricing Change Timeline",
-          "figures": 24,
-          "from_records": 24
+          "figures": 26,
+          "from_records": 26
         }
       ],
       "reads_changes": true,
