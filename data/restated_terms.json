@@ -2777,7 +2777,8 @@
       "source_url": "https://supabase.com/pricing",
       "record_date": "2026-10-04",
       "change_type": "pricing_restructured",
-      "summary": "The free tier limits are the same."
+      "summary": "The free tier limits are the same.",
+      "reverted_on": "2026-10-04"
     },
     {
       "vendor": "SurrealDB Cloud",
@@ -2816,7 +2817,8 @@
       "source_url": "https://docs.cloud.google.com/free/docs/free-cloud-features",
       "record_date": "2026-10-04",
       "change_type": "pricing_restructured",
-      "summary": "The page details a $300 credit for 90 days and access to a Free Tier. The Free Tier is described as providing access to 20+ products, including Compute Engine. With potential restrictions like not being able to add GPUs."
+      "summary": "The page details a $300 credit for 90 days and access to a Free Tier. The Free Tier is described as providing access to 20+ products, including Compute Engine. With potential restrictions like not being able to add GPUs.",
+      "reverted_on": "2026-10-04"
     }
   ]
 }

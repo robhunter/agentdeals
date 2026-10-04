@@ -15313,7 +15313,13 @@
       "category": "Localization",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-10-04"
+      "recorded_date": "2026-10-04",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-10-04",
+        "detail": "Retracted 2026-10-04: no new free tier. The Internet Archive's 2026-08-29 capture of crowdin.com/pricing states the same Open Source Program and the same free allowance of up to 1M requests and 10GB of data transfer that the page states today.",
+        "source_url": "https://web.archive.org/web/20260829021050/https://crowdin.com/pricing"
+      }
     },
     {
       "vendor": "PostHog",
@@ -15330,7 +15336,13 @@
       "category": "Startup Perks",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-10-04"
+      "recorded_date": "2026-10-04",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-10-04",
+        "detail": "Retracted 2026-10-04: no change on 2026-09-14. PostHog's startups handbook page already said on 2026-09-01 that YC teams can use credits for a BAA under the Boost plan and can get up to 4 founder merch packs. The limit of one welcome pack is the startup program's, not the YC deal's.",
+        "source_url": "https://github.com/PostHog/posthog.com/blob/34578376937282016c859a3b99508b4507b38eee/contents/handbook/marketing/startups.md"
+      }
     },
     {
       "vendor": "Google Compute Engine",
@@ -15347,7 +15359,13 @@
       "category": "Cloud IaaS",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-10-04"
+      "recorded_date": "2026-10-04",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-10-04",
+        "detail": "Retracted 2026-10-04: no change. Google's Free Tier page still states the Compute Engine free tier we list: 1 non-preemptible e2-micro VM instance per month in us-west1, us-central1 or us-east1, 30 GB-months standard persistent disk and 1 GB of outbound data transfer from North America a month, with GPUs and TPUs excluded. The $300 credit the reading describes is the separate Free Trial.",
+        "source_url": "https://docs.cloud.google.com/free/docs/free-cloud-features"
+      }
     },
     {
       "vendor": "MATLAB and Simulink for Startups",
@@ -15398,7 +15416,13 @@
       "category": "Databases",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-10-04"
+      "recorded_date": "2026-10-04",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-10-04",
+        "detail": "Retracted 2026-10-04: no change. supabase.com/pricing states the Free plan we list: $0 a month, unlimited API requests, 50,000 monthly active users, a 500 MB database on a shared CPU with 500 MB RAM, 5 GB egress, 1 GB file storage, projects paused after 1 week of inactivity and a limit of 2 active projects, and Pro from $25 a month with $10 of compute credits. The reading's own summary says the free tier limits are the same.",
+        "source_url": "https://supabase.com/pricing"
+      }
     },
     {
       "vendor": "SurrealDB Cloud",
