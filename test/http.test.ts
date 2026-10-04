@@ -4068,7 +4068,7 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("canonical"), "Should have canonical link");
     assert.ok(html.includes("global-nav"), "Should have global nav");
     assert.ok(html.includes("Always Free Services"), "Should have always free section");
-    assert.ok(html.includes("12-Month Free Tier"), "Should have 12-month section");
+    assert.ok(html.includes('<h2 id="free-plan">Free plan</h2>'), "Should have Free plan section");
     assert.ok(html.includes("Short-Term Trials"), "Should have trials section");
     assert.ok(html.includes("Aurora PostgreSQL"), "Should highlight Aurora PostgreSQL");
     assert.ok(html.includes("Hidden Costs"), "Should have gotchas section");
