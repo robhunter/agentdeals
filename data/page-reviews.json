@@ -493,7 +493,7 @@
       "review_note": null,
       "reads_index": false,
       "tables_read_index": false,
-      "table_figures": 42,
+      "table_figures": 41,
       "table_figures_from_records": 4,
       "tables": [
         {
@@ -503,7 +503,7 @@
         },
         {
           "label": "Container Deployment Alternatives",
-          "figures": 23,
+          "figures": 22,
           "from_records": 0
         },
         {
@@ -846,7 +846,7 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 68,
+      "table_figures": 65,
       "table_figures_from_records": 12,
       "tables": [
         {
@@ -856,7 +856,7 @@
         },
         {
           "label": "Always-Free Compute",
-          "figures": 12,
+          "figures": 11,
           "from_records": 0
         },
         {
@@ -871,7 +871,7 @@
         },
         {
           "label": "Storage & CDN",
-          "figures": 10,
+          "figures": 8,
           "from_records": 0
         },
         {
@@ -1050,7 +1050,7 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 136,
+      "table_figures": 135,
       "table_figures_from_records": 30,
       "tables": [
         {
@@ -1065,7 +1065,7 @@
         },
         {
           "label": "Cost Comparison by Team Size",
-          "figures": 50,
+          "figures": 49,
           "from_records": 0
         },
         {
@@ -1781,12 +1781,12 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 52,
+      "table_figures": 56,
       "table_figures_from_records": 0,
       "tables": [
         {
           "label": "2. 🟢 Low Risk — Safe to Build On",
-          "figures": 4,
+          "figures": 6,
           "from_records": 0
         },
         {
@@ -1811,7 +1811,7 @@
         },
         {
           "label": "7. Full Scoring Table",
-          "figures": 26,
+          "figures": 28,
           "from_records": 0
         }
       ],
@@ -3190,12 +3190,12 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 86,
+      "table_figures": 85,
       "table_figures_from_records": 26,
       "tables": [
         {
           "label": "Main Comparison Table",
-          "figures": 30,
+          "figures": 29,
           "from_records": 0
         },
         {
