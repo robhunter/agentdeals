@@ -1,136 +1,48 @@
 {
   "held": [
     {
-      "vendor": "Apidog",
-      "change_type": "restriction",
-      "impact": "medium",
-      "summary": "The free tier now requires a 14-day trial period before access to core features.",
-      "previous_state": "API design, debugging, testing, and documentation platform — free tier: up to 4 users, unlimited projects, unlimited APIs, unlimited requests. API mocking included. 7-day change history",
-      "current_state": "Try it Free for 14 days, and cancel anytime you like! Perfect for individuals or small teams (up to 4 users) $ 0 per user / month. All core features for up to 4 users",
-      "source_url": "https://apidog.com/pricing/",
-      "category": "API Development",
-      "first_read_date": "2026-10-03"
-    },
-    {
-      "vendor": "Baseten",
-      "change_type": "pricing_model_change",
-      "impact": "medium",
-      "summary": "The pricing for GLM-5.3 and GLM-5.3-Flash model APIs has increased. The page also states that new Baseten accounts come with credits to get started, confirming the free credit aspect of the Basic tier.",
-      "previous_state": "ML model deployment platform. New workspaces receive credits for testing and deployment; Baseten does not state the amount. Basic plan: $0 per month, pay as you go. Dedicated deployments bill per minute. Model APIs bill per 1M tokens: GLM-5.3 $1.40/$4.40. GLM-5.3-Flash $0.15/$0.50.",
-      "current_state": "GLM-5.3 Fast: $2.10/$2.10/$0.21/$0.21/$6.60. GLM-5.3: $1.40/$1.40/$0.14/$0.14/$4.40. GLM-5.3-Flash: $0.15/$0.15/$0.03/$0.03/$0.50",
-      "source_url": "https://www.baseten.co/pricing/",
-      "category": "AI / ML",
-      "first_read_date": "2026-10-03"
-    },
-    {
-      "vendor": "Bitrise",
-      "change_type": "free_tier_removed",
-      "impact": "high",
-      "summary": "The Hobby plan is now a paid tier called 'Starter' starting at $89/month. The free Hobby plan is no longer available.",
-      "previous_state": "Mobile CI/CD platform — free Hobby plan: 300 credits/month, 1 private app (unlimited public apps), 1 user, 5 concurrent builds, 90-minute build timeout. Supports iOS, Android, Flutter, React Native",
-      "current_state": "Explore our new starter package options. Hobby Build and distribute your passion project without the extra cost. ‍ Free Forever Get started Access for a team of one (that’s you!) Enough build credits for you to build your small project a few times per month Support from the Bitrise Community via Slack or Discuss forum Starter Designed for indie developers and small teams to get up and running. Recommended up to 100 builds/month. From $89 per month when billed annually, or $99 per month when billed monthly",
-      "source_url": "https://bitrise.io/pricing",
-      "category": "CI/CD",
-      "first_read_date": "2026-10-03"
-    },
-    {
-      "vendor": "Cloudflare Workers",
+      "vendor": "Amazon Q Developer",
       "change_type": "pricing_restructured",
       "impact": "medium",
-      "summary": "The pricing page details a Workers Free plan with limited usage, and a Workers Paid plan starting at $5/month. The free plan includes limits for requests, CPU time, KV, Hyperdrive, and Queues. The paid plan offers increased allotments and charges for exceeding those allotments. The page provides more detailed pricing for exceeding limits and clarifies that Pages Functions are billed as Workers.",
-      "previous_state": "Edge compute with 100K requests/day, 10ms CPU time per invocation, 5 cron triggers/account. KV: 1 GB storage, 100K reads/day, 1K writes/day. D1: 5 GB storage, 5M rows read/day, 100K rows written/day. R2 (Standard storage): 10 GB-month/month, 1M Class A ops/month, 10M Class B ops/month. Durable Objects (SQLite-backed only): 100K requests/day. Queues: 10K operations/day. Vectorize: 30M queried vector dimensions/month, 5M stored vector dimensions. Dynamic Workers are paid only. US students 18+ with a verified .edu billing email: Workers Paid (10M requests/month), $5/mo fee waived for 12 months.",
-      "current_state": "By default, users have access to the Workers Free plan. The Workers Free plan includes limited usage of Workers, Pages Functions, Workers KV and Hyperdrive. The Workers Paid plan includes Workers, Pages Functions, Workers KV, Hyperdrive, and Durable Objects usage for a minimum charge of $5 USD per month for an account.",
-      "source_url": "https://developers.cloudflare.com/workers/platform/pricing/",
-      "category": "Cloud Hosting",
-      "first_read_date": "2026-10-03"
+      "summary": "The Amazon Q Developer now has two tiers: Free and Pro ($19/month per user). The Free tier includes 50 agentic requests per month and 1,000 lines of code transformation per month. The Pro tier includes increased limits for agentic requests and code transformation (4,000 lines per month pooled at the account level, with overage charges of $0.003/line), admin controls, and IP indemnity.",
+      "previous_state": "AI coding assistant by AWS. Free tier: inline code suggestions, chat, 1,000 lines code transformation/month, 50 agentic requests/month, access to latest Claude models. Supports VS Code, JetBrains, CLI, and AWS Console. Pro plan $19/user/month (higher limits, admin controls, IP indemnity). AWS will end support for the Amazon Q Developer IDE plugins on April 30, 2027, and points IDE users to Kiro.",
+      "current_state": "Amazon Q Developer offers two pricing tiers: Free Tier and Pro Tier ($19/mo. per user). The Free Tier includes 50 agentic requests per month and 1,000 lines of code transformation per month. The Pro Tier includes increased limits for agentic requests and code transformation (4,000 lines of code per month per user pooled at account level, with overage charges of $0.003 per line of code submitted), admin dashboard, and IP indemnity.",
+      "source_url": "https://aws.amazon.com/q/developer/pricing/",
+      "category": "AI Coding",
+      "first_read_date": "2026-10-04"
     },
     {
-      "vendor": "FeedBear",
+      "vendor": "GitHub Copilot",
       "change_type": "pricing_restructured",
       "impact": "medium",
-      "summary": "The Startup plan exists but is now $49/month billed monthly or $40/month billed annually.",
-      "previous_state": "There is no startup program and no free tier: feedbear.com/early-stage redirects to the pricing page, where Startup is the second of four paid plans at $49/month, described as being for early stage businesses that need more powerful community features. Checked 2026-09-02, entry is a 14-day trial. The former record read that price as a startup discount.",
-      "current_state": "The Startup plan is $49/month billed monthly or $40/month billed annually and includes 3 team members, unlimited boards, custom domain, and all features and integrations with Intercom, Slack, Trello, Jira and Zapier.",
-      "source_url": "https://www.feedbear.com/pricing",
-      "category": "Startup Perks",
-      "first_read_date": "2026-10-02"
+      "summary": "The free tier now includes access to Haiku 4.5, GPT-5 mini, and more, and Copilot CLI. The pricing for Pro, Pro+, Max, Business, and Enterprise plans has been updated.",
+      "previous_state": "AI coding assistant by GitHub. Copilot Free is $0 with no credit card: 2,000 code completions a month, a limited monthly allowance of GitHub AI Credits for chat and agent features, and models through auto model selection only. Copilot Student is free for verified students. Paid plans include a monthly allowance of AI credits: Pro $10 (1,500 credits), Pro+ $39 (7,000) and Max $100 (20,000); Business $19 (1,900) and Enterprise $39 (3,900) per seat. Code completions are unlimited on paid plans, and usage beyond an allowance costs $0.01 per AI credit.",
+      "current_state": "The Free plan is $0 per user/month and includes 2,000 completions per month, access to Haiku 4.5, GPT-5 mini, and more, Copilot CLI, and Community Support. No credit card is required. Verified students have access to the GitHub Copilot Student plan.",
+      "source_url": "https://github.com/features/copilot",
+      "category": "AI Coding",
+      "first_read_date": "2026-10-04"
     },
     {
-      "vendor": "Google Compute Engine",
+      "vendor": "LaunchDarkly",
+      "change_type": "pricing_restructured",
+      "impact": "medium",
+      "summary": "The Developer tier is still offered for free. AgentControl has usage-based pricing for AI runs beyond 5,000/mo.",
+      "previous_state": "Feature management — $0 / mo, forever. Unlimited seats. A/B Tests and Experiments includes 100K experimentation MAU per month. 10M logs and 10M traces /mo. 5K session replays and 5K errors /mo. 5K AI runs/mo included. 1K client-side MAU /mo.",
+      "current_state": "$0 / mo, forever. Unlimited seats. Includes 100K experimentation MAU per month. 10M logs and 10M traces /mo. 5K session replays and 5K errors /mo. 5K AI runs/mo included. 1K client-side MAU /mo. Additional client-side MAU is $10 / mo per 1K MAU. Additional AI runs are $5 / 1000.",
+      "source_url": "https://launchdarkly.com/pricing/",
+      "category": "Feature Flags",
+      "first_read_date": "2026-10-04"
+    },
+    {
+      "vendor": "Xata",
       "change_type": "pricing_restructured",
       "impact": "high",
-      "summary": "The page details a $300 credit for 90 days and access to a Free Tier. The Free Tier is described as providing access to 20+ products, including Compute Engine. With potential restrictions like not being able to add GPUs.",
-      "previous_state": "Always Free: 1 non-preemptible e2-micro VM (us-west1, us-central1, or us-east1), 30 GB standard persistent disk, 1 GB North America egress. GPUs/TPUs excluded",
-      "current_state": "Access to 20+ free products, including Compute Engine, is available, but with restrictions. A $300 credit is provided for 90 days, and usage beyond the credit or Free Tier limits is billed. GPUs cannot be added to VM instances during the Free Trial.",
-      "source_url": "https://docs.cloud.google.com/free/docs/free-cloud-features",
-      "category": "Cloud IaaS",
-      "first_read_date": "2026-10-03"
-    },
-    {
-      "vendor": "Mailchimp",
-      "change_type": "pricing_restructured",
-      "impact": "medium",
-      "summary": "The free tier now has a contact limit and send limit. The page also mentions a 100 email send limit for a free trial.",
-      "previous_state": "Email marketing — 250 contacts, 500 sends/month (250/day cap), 1 audience, 1 seat, marketing CRM, forms and landing pages, email support first 30 days",
-      "current_state": "The free plan has a limit of 500 contacts. It also offers a free trial with a 100 email send limit.",
-      "source_url": "https://mailchimp.com/pricing/",
-      "category": "Email",
-      "first_read_date": "2026-10-02"
-    },
-    {
-      "vendor": "MATLAB and Simulink for Startups",
-      "change_type": "pricing_restructured",
-      "impact": "high",
-      "summary": "The Startup Program now has defined pricing for the MATLAB Suite (USD 4,235 annually) and a smaller MATLAB and Simulink Suite (USD 1,770 annually). The program also offers access to the Accelerator Program for free licensing through partnerships with over 500 accelerators.",
-      "previous_state": "Eligible early stage technology startups can get MATLAB, Simulink, and more than 90 industry-specific toolboxes at a startup-friendly price along with other exclusive benefits.",
-      "current_state": "Annual individual license for MATLAB and Simulink Suite is USD 4,235. Annual individual license for MATLAB Suite is USD 1,770.",
-      "source_url": "https://mathworks.com/products/startups.html",
-      "category": "Startup Perks",
-      "first_read_date": "2026-10-02"
-    },
-    {
-      "vendor": "Maxim AI",
-      "change_type": "pricing_restructured",
-      "impact": "high",
-      "summary": "The free tier now refers to the OSS version. Is self-hosted. A 14-day free trial of Bifrost Enterprise is now available, requiring a request for access.",
-      "previous_state": "Simulate, evaluate, and observe your AI agents. Maxim is an end-to-end evaluation and observability platform, helping teams ship their AI agents reliably and >5x faster. Free forever for indie developers and small teams (3 seats).",
-      "current_state": "Free Forever OSS is available for self-hosted deployments (Docker, K8S, GO Binary). A 14-day free trial of Bifrost Enterprise is available upon request.",
-      "source_url": "https://getmaxim.ai/pricing",
-      "category": "AI / ML",
-      "first_read_date": "2026-10-03"
-    },
-    {
-      "vendor": "Sematext",
-      "change_type": "pricing_restructured",
-      "impact": "high",
-      "summary": "The free tier for Logs now has a 500 MB/day ingestion limit and 7-day retention, but the page now charges $0.1/GB for data received and $0.15/GB for data stored.",
-      "previous_state": "Observability platform — Logs: 500 MB/day ingestion, 7-day retention. Monitoring: 3 hosts, 3 containers/host, 30-min data retention, 1 alert rule. Volume-based pricing, no per-host charges on paid plans",
-      "current_state": "Basic $0.1/GB Data Received, $0.15/GB Data Stored, Retention 7 days, Daily Volume ? 500 MB/day",
-      "source_url": "https://sematext.com/pricing",
-      "category": "Monitoring",
-      "first_read_date": "2026-10-02"
-    },
-    {
-      "vendor": "Supabase",
-      "change_type": "pricing_restructured",
-      "impact": "medium",
-      "summary": "The pricing for MAUs and disk size on the Pro plan has changed. The free plan now has a more detailed breakdown of included features, and additional features are available as paid add-ons.",
-      "previous_state": "Postgres development platform: database, Auth, Storage, Realtime and Edge Functions. The Free plan is $0: unlimited API requests, 50,000 monthly active users, a 500 MB database on a shared CPU with 500 MB RAM, 5 GB egress plus 5 GB cached egress, 1 GB file storage, 500,000 Edge Function invocations, and Realtime with 200 concurrent connections and 2 million messages a month. Free projects are paused after 1 week of inactivity, with a limit of 2 active projects. Pro starts at $25 a month for the first project and includes $10 a month of compute credits, enough for one Micro instance.",
-      "current_state": "The Free plan is $0/month and includes unlimited API requests, 50,000 monthly active users, a 500 MB database, 5 GB egress, 5 GB cached egress, 1 GB file storage, 500,000 Edge Function invocations, and Realtime with 200 concurrent connections and 2 million messages a month. It also includes $10/month in compute credits. Projects are paused after 1 week of inactivity, with a limit of 2 active projects.",
-      "source_url": "https://supabase.com/pricing",
+      "summary": "The free, self-hosted option still exists. The managed platform is now paid, starting at $0.012/hr + $0.28/GB/month.",
+      "previous_state": "Open-source Postgres platform (Apache 2.0) with copy-on-write branching and scale-to-zero. Self-hosted on Kubernetes — free forever. Managed platform is now paid (compute + storage billed hourly); 14-day free trial with $100 credit on the commercial tier.",
+      "current_state": "Xata Cloud is a fully managed, pay-as-you-go service starting at $0.012 /hr + $0.28/GB/month.",
+      "source_url": "https://xata.io/pricing",
       "category": "Databases",
-      "first_read_date": "2026-10-03"
-    },
-    {
-      "vendor": "SurrealDB Cloud",
-      "change_type": "pricing_restructured",
-      "impact": "medium",
-      "summary": "The free tier now includes a compute instance with 0.25 vCPU and 1 GB memory, but also lists several paid tiers with varying compute and storage options. The free tier is now explicitly a 'Start' plan with a $0/hr compute cost, and 1GB of storage is free forever.",
-      "previous_state": "Multi-model cloud database — 1 GB storage, 0.25 vCPU, 512 MB memory free. Supports SQL-like queries, graph relations, document storage, real-time subscriptions. Includes team collaboration and RBAC",
-      "current_state": "The 'Start' plan offers 1GB of storage free forever, with compute starting at $0.000/hr for 0.25 vCPU and 1 GB memory. Additional compute options are available at higher costs.",
-      "source_url": "https://surrealdb.com/pricing",
-      "category": "Databases",
-      "first_read_date": "2026-10-03"
+      "first_read_date": "2026-10-04"
     }
   ],
   "resolved": [
@@ -1993,6 +1905,150 @@
       "outcome": "baseline_moved",
       "detail": "the terms it was read against are no longer the terms we publish",
       "resolved_date": "2026-10-03"
+    },
+    {
+      "vendor": "Apidog",
+      "change_type": "restriction",
+      "impact": "medium",
+      "summary": "The free tier now requires a 14-day trial period before access to core features.",
+      "previous_state": "API design, debugging, testing, and documentation platform — free tier: up to 4 users, unlimited projects, unlimited APIs, unlimited requests. API mocking included. 7-day change history",
+      "source_url": "https://apidog.com/pricing/",
+      "first_read_date": "2026-10-03",
+      "outcome": "contradicted",
+      "detail": "a reading on 2026-10-04 read it as limits_reduced",
+      "resolved_date": "2026-10-04"
+    },
+    {
+      "vendor": "Baseten",
+      "change_type": "pricing_model_change",
+      "impact": "medium",
+      "summary": "The pricing for GLM-5.3 and GLM-5.3-Flash model APIs has increased. The page also states that new Baseten accounts come with credits to get started, confirming the free credit aspect of the Basic tier.",
+      "previous_state": "ML model deployment platform. New workspaces receive credits for testing and deployment; Baseten does not state the amount. Basic plan: $0 per month, pay as you go. Dedicated deployments bill per minute. Model APIs bill per 1M tokens: GLM-5.3 $1.40/$4.40. GLM-5.3-Flash $0.15/$0.50.",
+      "source_url": "https://www.baseten.co/pricing/",
+      "first_read_date": "2026-10-03",
+      "outcome": "contradicted",
+      "detail": "a reading on 2026-10-04 read it as pricing_restructured",
+      "resolved_date": "2026-10-04"
+    },
+    {
+      "vendor": "Bitrise",
+      "change_type": "free_tier_removed",
+      "impact": "high",
+      "summary": "The Hobby plan is now a paid tier called 'Starter' starting at $89/month. The free Hobby plan is no longer available.",
+      "previous_state": "Mobile CI/CD platform — free Hobby plan: 300 credits/month, 1 private app (unlimited public apps), 1 user, 5 concurrent builds, 90-minute build timeout. Supports iOS, Android, Flutter, React Native",
+      "source_url": "https://bitrise.io/pricing",
+      "first_read_date": "2026-10-03",
+      "outcome": "contradicted",
+      "detail": "a reading on 2026-10-04 read it as pricing_restructured",
+      "resolved_date": "2026-10-04"
+    },
+    {
+      "vendor": "Cloudflare Workers",
+      "change_type": "pricing_restructured",
+      "impact": "medium",
+      "summary": "The pricing page details a Workers Free plan with limited usage, and a Workers Paid plan starting at $5/month. The free plan includes limits for requests, CPU time, KV, Hyperdrive, and Queues. The paid plan offers increased allotments and charges for exceeding those allotments. The page provides more detailed pricing for exceeding limits and clarifies that Pages Functions are billed as Workers.",
+      "previous_state": "Edge compute with 100K requests/day, 10ms CPU time per invocation, 5 cron triggers/account. KV: 1 GB storage, 100K reads/day, 1K writes/day. D1: 5 GB storage, 5M rows read/day, 100K rows written/day. R2 (Standard storage): 10 GB-month/month, 1M Class A ops/month, 10M Class B ops/month. Durable Objects (SQLite-backed only): 100K requests/day. Queues: 10K operations/day. Vectorize: 30M queried vector dimensions/month, 5M stored vector dimensions. Dynamic Workers are paid only. US students 18+ with a verified .edu billing email: Workers Paid (10M requests/month), $5/mo fee waived for 12 months.",
+      "source_url": "https://developers.cloudflare.com/workers/platform/pricing/",
+      "first_read_date": "2026-10-03",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-10-04 read it as pricing_restructured too",
+      "resolved_date": "2026-10-04"
+    },
+    {
+      "vendor": "FeedBear",
+      "change_type": "pricing_restructured",
+      "impact": "medium",
+      "summary": "The Startup plan exists but is now $49/month billed monthly or $40/month billed annually.",
+      "previous_state": "There is no startup program and no free tier: feedbear.com/early-stage redirects to the pricing page, where Startup is the second of four paid plans at $49/month, described as being for early stage businesses that need more powerful community features. Checked 2026-09-02, entry is a 14-day trial. The former record read that price as a startup discount.",
+      "source_url": "https://www.feedbear.com/pricing",
+      "first_read_date": "2026-10-02",
+      "outcome": "contradicted",
+      "detail": "a reading on 2026-10-04 read a change the gate refused as repeats_a_refused_reading",
+      "resolved_date": "2026-10-04"
+    },
+    {
+      "vendor": "Google Compute Engine",
+      "change_type": "pricing_restructured",
+      "impact": "high",
+      "summary": "The page details a $300 credit for 90 days and access to a Free Tier. The Free Tier is described as providing access to 20+ products, including Compute Engine. With potential restrictions like not being able to add GPUs.",
+      "previous_state": "Always Free: 1 non-preemptible e2-micro VM (us-west1, us-central1, or us-east1), 30 GB standard persistent disk, 1 GB North America egress. GPUs/TPUs excluded",
+      "source_url": "https://docs.cloud.google.com/free/docs/free-cloud-features",
+      "first_read_date": "2026-10-03",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-10-04 read it as pricing_restructured too",
+      "resolved_date": "2026-10-04"
+    },
+    {
+      "vendor": "Mailchimp",
+      "change_type": "pricing_restructured",
+      "impact": "medium",
+      "summary": "The free tier now has a contact limit and send limit. The page also mentions a 100 email send limit for a free trial.",
+      "previous_state": "Email marketing — 250 contacts, 500 sends/month (250/day cap), 1 audience, 1 seat, marketing CRM, forms and landing pages, email support first 30 days",
+      "source_url": "https://mailchimp.com/pricing/",
+      "first_read_date": "2026-10-02",
+      "outcome": "contradicted",
+      "detail": "a reading on 2026-10-04 read a change the gate refused as repeats_a_refused_reading",
+      "resolved_date": "2026-10-04"
+    },
+    {
+      "vendor": "MATLAB and Simulink for Startups",
+      "change_type": "pricing_restructured",
+      "impact": "high",
+      "summary": "The Startup Program now has defined pricing for the MATLAB Suite (USD 4,235 annually) and a smaller MATLAB and Simulink Suite (USD 1,770 annually). The program also offers access to the Accelerator Program for free licensing through partnerships with over 500 accelerators.",
+      "previous_state": "Eligible early stage technology startups can get MATLAB, Simulink, and more than 90 industry-specific toolboxes at a startup-friendly price along with other exclusive benefits.",
+      "source_url": "https://mathworks.com/products/startups.html",
+      "first_read_date": "2026-10-02",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-10-04 read it as pricing_restructured too",
+      "resolved_date": "2026-10-04"
+    },
+    {
+      "vendor": "Maxim AI",
+      "change_type": "pricing_restructured",
+      "impact": "high",
+      "summary": "The free tier now refers to the OSS version. Is self-hosted. A 14-day free trial of Bifrost Enterprise is now available, requiring a request for access.",
+      "previous_state": "Simulate, evaluate, and observe your AI agents. Maxim is an end-to-end evaluation and observability platform, helping teams ship their AI agents reliably and >5x faster. Free forever for indie developers and small teams (3 seats).",
+      "source_url": "https://getmaxim.ai/pricing",
+      "first_read_date": "2026-10-03",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-10-04 read it as pricing_restructured too",
+      "resolved_date": "2026-10-04"
+    },
+    {
+      "vendor": "Sematext",
+      "change_type": "pricing_restructured",
+      "impact": "high",
+      "summary": "The free tier for Logs now has a 500 MB/day ingestion limit and 7-day retention, but the page now charges $0.1/GB for data received and $0.15/GB for data stored.",
+      "previous_state": "Observability platform — Logs: 500 MB/day ingestion, 7-day retention. Monitoring: 3 hosts, 3 containers/host, 30-min data retention, 1 alert rule. Volume-based pricing, no per-host charges on paid plans",
+      "source_url": "https://sematext.com/pricing",
+      "first_read_date": "2026-10-02",
+      "outcome": "contradicted",
+      "detail": "a reading on 2026-10-04 read a change the gate refused as repeats_a_refused_reading",
+      "resolved_date": "2026-10-04"
+    },
+    {
+      "vendor": "Supabase",
+      "change_type": "pricing_restructured",
+      "impact": "medium",
+      "summary": "The pricing for MAUs and disk size on the Pro plan has changed. The free plan now has a more detailed breakdown of included features, and additional features are available as paid add-ons.",
+      "previous_state": "Postgres development platform: database, Auth, Storage, Realtime and Edge Functions. The Free plan is $0: unlimited API requests, 50,000 monthly active users, a 500 MB database on a shared CPU with 500 MB RAM, 5 GB egress plus 5 GB cached egress, 1 GB file storage, 500,000 Edge Function invocations, and Realtime with 200 concurrent connections and 2 million messages a month. Free projects are paused after 1 week of inactivity, with a limit of 2 active projects. Pro starts at $25 a month for the first project and includes $10 a month of compute credits, enough for one Micro instance.",
+      "source_url": "https://supabase.com/pricing",
+      "first_read_date": "2026-10-03",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-10-04 read it as pricing_restructured too",
+      "resolved_date": "2026-10-04"
+    },
+    {
+      "vendor": "SurrealDB Cloud",
+      "change_type": "pricing_restructured",
+      "impact": "medium",
+      "summary": "The free tier now includes a compute instance with 0.25 vCPU and 1 GB memory, but also lists several paid tiers with varying compute and storage options. The free tier is now explicitly a 'Start' plan with a $0/hr compute cost, and 1GB of storage is free forever.",
+      "previous_state": "Multi-model cloud database — 1 GB storage, 0.25 vCPU, 512 MB memory free. Supports SQL-like queries, graph relations, document storage, real-time subscriptions. Includes team collaboration and RBAC",
+      "source_url": "https://surrealdb.com/pricing",
+      "first_read_date": "2026-10-03",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-10-04 read it as pricing_restructured too",
+      "resolved_date": "2026-10-04"
     }
   ]
 }
