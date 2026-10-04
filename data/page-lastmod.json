@@ -10,7 +10,7 @@
       "changed": "2026-10-04"
     },
     "/agent-stack": {
-      "hash": "58fa448d10547f7b",
+      "hash": "03fb5cf060a5f959",
       "changed": "2026-10-04"
     },
     "/ai-coding-pricing-2026": {
@@ -816,8 +816,8 @@
       "changed": "2026-10-04"
     },
     "/backblaze-b2-vs-cloudflare-r2": {
-      "hash": "3c333a543a3649f6",
-      "changed": "2026-10-03"
+      "hash": "bd992cd76e5e8e1c",
+      "changed": "2026-10-04"
     },
     "/badges": {
       "daily": true
@@ -1283,7 +1283,7 @@
       "changed": "2026-10-03"
     },
     "/category/storage": {
-      "hash": "c305ccab61eb1967",
+      "hash": "74958b8b48479ead",
       "changed": "2026-10-04"
     },
     "/category/team-collaboration": {
@@ -3073,7 +3073,7 @@
       "changed": "2026-09-12"
     },
     "/estimate": {
-      "hash": "ca66e7f125852e35",
+      "hash": "0b0c21061a1ffde4",
       "changed": "2026-10-04"
     },
     "/events": {
@@ -3114,11 +3114,11 @@
       "changed": "2026-10-04"
     },
     "/free-django-stack": {
-      "hash": "3998660a36ad99d5",
+      "hash": "973e5045f20cd878",
       "changed": "2026-10-04"
     },
     "/free-fastapi-stack": {
-      "hash": "9217d4b42ff8e9ff",
+      "hash": "34bb5ffff1ed55c9",
       "changed": "2026-10-04"
     },
     "/free-frontend-stack": {
@@ -3126,7 +3126,7 @@
       "changed": "2026-10-04"
     },
     "/free-go-stack": {
-      "hash": "c52f32822c55e6e3",
+      "hash": "cb4ed2cd474afe03",
       "changed": "2026-10-04"
     },
     "/free-llm-apis": {
@@ -3134,15 +3134,15 @@
       "changed": "2026-10-04"
     },
     "/free-nextjs-stack": {
-      "hash": "8b5aa912a209087f",
+      "hash": "664503a8a4804e85",
       "changed": "2026-10-04"
     },
     "/free-saas-stack": {
-      "hash": "ebadc1aa266c3e09",
+      "hash": "554dbd2f754d39b0",
       "changed": "2026-10-04"
     },
     "/free-startup-stack": {
-      "hash": "52d53877e8601c5a",
+      "hash": "f8c3ae78c5bcc8e5",
       "changed": "2026-10-04"
     },
     "/free-tier-risk": {
@@ -3499,7 +3499,7 @@
       "changed": "2026-10-04"
     },
     "/storage-alternatives": {
-      "hash": "eb9a0f7108efe5e9",
+      "hash": "376aade2a371630c",
       "changed": "2026-10-04"
     },
     "/storage-comparison-2026": {
@@ -4698,7 +4698,7 @@
       "changed": "2026-10-04"
     },
     "/vendor/cloudflare-r2": {
-      "hash": "48fffa3cb1d11455",
+      "hash": "a3061f1bffcc5d67",
       "changed": "2026-10-04"
     },
     "/vendor/cloudflare-sandboxes": {
