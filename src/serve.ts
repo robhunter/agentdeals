@@ -10908,7 +10908,7 @@ ${buildCards(timeSeries)}
       <tr>
         <td style="font-weight:600"><a href="/vendor/upstash" style="color:var(--text)">Upstash</a></td>
         <td>Redis / Vector</td>
-        <td>256 MB + 10K vectors</td>
+        <td>256 MB + 200M vectors &times; dimensions</td>
         <td>Serverless caching and messaging</td>
       </tr>
       <tr>
@@ -10971,7 +10971,7 @@ ${buildCards(timeSeries)}
       <dd>${cachingAnswer}</dd>
 
       <dt>Building AI / RAG pipelines?</dt>
-      <dd><a href="/vendor/upstash-vector">Upstash Vector</a> (10K vectors, serverless) or self-hosted <a href="/vendor/weaviate">Weaviate</a> / <a href="/vendor/lancedb">LanceDB</a> for no limits. <a href="/vendor/zilliz-cloud">Zilliz Cloud</a> for managed Milvus.</dd>
+      <dd><a href="/vendor/upstash-vector">Upstash Vector</a> (200M vectors &times; dimensions free, serverless) or self-hosted <a href="/vendor/weaviate">Weaviate</a> / <a href="/vendor/lancedb">LanceDB</a> for no limits. <a href="/vendor/zilliz-cloud">Zilliz Cloud</a> for managed Milvus.</dd>
 
       <dt>Need a graph database?</dt>
       <dd><a href="/vendor/neo4j-auradb">Neo4j AuraDB</a> (200K nodes) is the standard. <a href="/vendor/gel">Gel</a> (formerly EdgeDB) offers a graph-relational hybrid.</dd>
@@ -16830,7 +16830,7 @@ function buildFreeNextjsStackPage(): string {
       icon: "⏱️",
       recommended: { vendor: "Inngest", why: "Free tier: 25,000 function runs/month with event-driven architecture, retries, scheduling, and step functions. First-class Next.js integration — define functions in your API routes, Inngest handles queuing, retries, and scheduling. No infrastructure to manage." },
       alternatives: ["QStash", "Trigger.dev", "Vercel Cron"],
-      outgrow: "When you exceed 25,000 runs/month. QStash (Upstash) offers 500 messages/day for simple HTTP-based job queuing. Trigger.dev gives 50,000 runs/month with a more code-first approach. Vercel Cron Jobs are free on Hobby for scheduled tasks (1/day minimum interval) but don't handle event-driven workflows.",
+      outgrow: "When you exceed 25,000 runs/month. QStash (Upstash) offers 1,000 messages/day for simple HTTP-based job queuing. Trigger.dev gives 50,000 runs/month with a more code-first approach. Vercel Cron Jobs are free on Hobby for scheduled tasks (1/day minimum interval) but don't handle event-driven workflows.",
       whyNot: null,
       relatedPage: null,
     },
@@ -17128,9 +17128,9 @@ function buildFreeDjangoStackPage(): string {
     {
       name: "Cache & Redis",
       icon: "⚡",
-      recommended: { vendor: "Upstash", why: "Serverless Redis with a generous free tier: 10,000 commands/day, 256 MB storage. Perfect for Django's cache framework (django.core.cache with django-redis backend), session storage, and Celery broker. Pay-per-request pricing means you only pay for what you use beyond free limits. REST API works anywhere — no persistent connections needed." },
+      recommended: { vendor: "Upstash", why: "Serverless Redis with a generous free tier: 500K commands/month, 256 MB storage. Perfect for Django's cache framework (django.core.cache with django-redis backend), session storage, and Celery broker. Pay-per-request pricing means you only pay for what you use beyond free limits. REST API works anywhere — no persistent connections needed." },
       alternatives: ["Redis Cloud", "Railway"],
-      outgrow: "When you exceed 10,000 commands/day. Redis Cloud offers 30 MB free with unlimited commands — better if you have high command volume but small data. For simple caching without Redis, Django's built-in database cache backend costs nothing extra.",
+      outgrow: "When you exceed 500K commands/month. Redis Cloud offers 30 MB free with unlimited commands — better if you have high command volume but small data. For simple caching without Redis, Django's built-in database cache backend costs nothing extra.",
       whyNot: null,
       relatedPage: null,
     },
@@ -17182,7 +17182,7 @@ function buildFreeDjangoStackPage(): string {
     {
       name: "Task Queue & Background Jobs",
       icon: "⏱️",
-      recommended: { vendor: "Upstash", why: "Celery + Upstash Redis is the Django-native solution for background jobs. Celery handles async tasks (email sending, image processing, report generation), periodic tasks (cron-like scheduling), and task chaining/grouping. Upstash's 10,000 commands/day free tier covers moderate task queue usage. Celery is free, open source, and the Django ecosystem's standard task runner." },
+      recommended: { vendor: "Upstash", why: "Celery + Upstash Redis is the Django-native solution for background jobs. Celery handles async tasks (email sending, image processing, report generation), periodic tasks (cron-like scheduling), and task chaining/grouping. Upstash's 500K commands/month free tier covers moderate task queue usage. Celery is free, open source, and the Django ecosystem's standard task runner." },
       alternatives: ["Redis Cloud", "Inngest"],
       outgrow: "When you exceed 10,000 Redis commands/day (roughly 3,000-5,000 task dispatches depending on complexity). Redis Cloud's 30 MB free with unlimited commands is better for high-throughput task queues. Inngest offers 25,000 function runs/month but requires adapting away from Celery's Django-native patterns.",
       whyNot: "Why not RQ (Redis Queue): Simpler than Celery but less feature-rich — no periodic tasks, no task chains, smaller ecosystem. Celery is the standard for a reason. Why not Django-Q2: Good lightweight alternative if Celery feels too heavy, but smaller community and fewer production deployments.",
@@ -17538,9 +17538,9 @@ function buildFreeFastapiStackPage(): string {
     {
       name: "Cache & Redis",
       icon: "⚡",
-      recommended: { vendor: "Upstash", why: "Serverless Redis with async support. Free tier: 10,000 commands/day, 256 MB storage. FastAPI's async architecture pairs perfectly with Upstash's REST API or the async redis-py client. Use for response caching (fastapi-cache2), rate limiting (slowapi), and session storage. Pay-per-request pricing means you only pay beyond free limits." },
+      recommended: { vendor: "Upstash", why: "Serverless Redis with async support. Free tier: 500K commands/month, 256 MB storage. FastAPI's async architecture pairs perfectly with Upstash's REST API or the async redis-py client. Use for response caching (fastapi-cache2), rate limiting (slowapi), and session storage. Pay-per-request pricing means you only pay beyond free limits." },
       alternatives: ["Redis Cloud"],
-      outgrow: "When you exceed 10,000 commands/day. Redis Cloud offers 30 MB free with unlimited commands — better for high-throughput caching. For simple caching without Redis, fastapi-cache2 supports in-memory backends, but these don't persist across deploys.",
+      outgrow: "When you exceed 500K commands/month. Redis Cloud offers 30 MB free with unlimited commands — better for high-throughput caching. For simple caching without Redis, fastapi-cache2 supports in-memory backends, but these don't persist across deploys.",
       whyNot: null,
       relatedPage: null,
     },
@@ -17592,7 +17592,7 @@ function buildFreeFastapiStackPage(): string {
     {
       name: "Background Tasks",
       icon: "⏱️",
-      recommended: { vendor: "Upstash", why: "FastAPI offers three tiers of background task support. (1) Built-in BackgroundTasks: free, zero dependencies, runs in the same process — perfect for fire-and-forget tasks like sending emails or logging. (2) ARQ + Upstash Redis: async-native task queue built for asyncio — natural fit for FastAPI's async architecture. (3) Celery + Upstash Redis: battle-tested but synchronous — use when you need periodic tasks (Celery Beat) or complex task chains. Upstash's 10,000 commands/day covers moderate task queue usage for both ARQ and Celery." },
+      recommended: { vendor: "Upstash", why: "FastAPI offers three tiers of background task support. (1) Built-in BackgroundTasks: free, zero dependencies, runs in the same process — perfect for fire-and-forget tasks like sending emails or logging. (2) ARQ + Upstash Redis: async-native task queue built for asyncio — natural fit for FastAPI's async architecture. (3) Celery + Upstash Redis: battle-tested but synchronous — use when you need periodic tasks (Celery Beat) or complex task chains. Upstash's 500K commands/month covers moderate task queue usage for both ARQ and Celery." },
       alternatives: ["Redis Cloud"],
       outgrow: "When you exceed 10,000 Redis commands/day or need more than a single worker process. Redis Cloud's 30 MB free with unlimited commands is better for high-throughput task queues. For simple use cases, FastAPI's built-in BackgroundTasks requires no external service at all.",
       whyNot: "Why not Celery as default: Celery is synchronous — it doesn't leverage FastAPI's async runtime. ARQ is async-native and lighter weight. Use Celery only when you need its advanced features (Beat scheduling, canvas chains, result backends). Why not Dramatiq: Similar to Celery but less ecosystem support and fewer production deployments.",
@@ -17963,9 +17963,9 @@ function buildFreeGoStackPage(): string {
     {
       name: "Cache & Redis",
       icon: "⚡",
-      recommended: { vendor: "Upstash", why: "Serverless Redis with Go support. Free tier: 10,000 commands/day, 256 MB storage. The go-redis/redis library is the standard Go Redis client — supports connection pooling, pipelining, pub/sub, and Lua scripting. Go's goroutines + Redis pub/sub is a natural fit for real-time features without external message brokers. Use for session storage, rate limiting, response caching, and as a task queue backend." },
+      recommended: { vendor: "Upstash", why: "Serverless Redis with Go support. Free tier: 500K commands/month, 256 MB storage. The go-redis/redis library is the standard Go Redis client — supports connection pooling, pipelining, pub/sub, and Lua scripting. Go's goroutines + Redis pub/sub is a natural fit for real-time features without external message brokers. Use for session storage, rate limiting, response caching, and as a task queue backend." },
       alternatives: ["Redis Cloud"],
-      outgrow: "When you exceed 10,000 commands/day. Redis Cloud offers 30 MB free with unlimited commands — better for high-throughput caching. For simple caching without Redis, Go's sync.Map or groupcache provide in-process caching with zero external dependencies, but these don't persist across deploys or share state between instances.",
+      outgrow: "When you exceed 500K commands/month. Redis Cloud offers 30 MB free with unlimited commands — better for high-throughput caching. For simple caching without Redis, Go's sync.Map or groupcache provide in-process caching with zero external dependencies, but these don't persist across deploys or share state between instances.",
       whyNot: null,
       relatedPage: null,
     },
@@ -18019,7 +18019,7 @@ function buildFreeGoStackPage(): string {
       icon: "⏱️",
       recommended: { vendor: "Go Goroutines", why: "Go's killer feature — goroutines handle most background task needs natively, with zero external dependencies. Launch a goroutine for fire-and-forget work (sending emails, logging, webhooks) at near-zero cost (~2 KB per goroutine). For persistent queues that survive restarts, use Asynq (Redis-backed, inspired by Ruby's Sidekiq) or Temporal (durable workflow orchestration, free tier available). Upstash Redis (10K cmds/day free) works as the Asynq backend." },
       alternatives: ["Upstash"],
-      outgrow: "Goroutines never outgrow — they scale to millions. You need a persistent queue (Asynq, Temporal, NATS JetStream) when tasks must survive process restarts, need scheduling, or require exactly-once delivery. Upstash's 10,000 commands/day covers moderate Asynq usage. Redis Cloud's 30 MB free with unlimited commands is better for high-throughput queues.",
+      outgrow: "Goroutines never outgrow — they scale to millions. You need a persistent queue (Asynq, Temporal, NATS JetStream) when tasks must survive process restarts, need scheduling, or require exactly-once delivery. Upstash's 500K commands/month covers moderate Asynq usage. Redis Cloud's 30 MB free with unlimited commands is better for high-throughput queues.",
       whyNot: "Why not Celery/Bull/Sidekiq equivalents: Go doesn't need them for most use cases — goroutines handle concurrent work natively. Asynq is the closest Go equivalent when you need persistence. Why not channels alone: Go channels are in-process — tasks are lost if the process crashes. For production reliability, use a Redis-backed queue.",
       relatedPage: null,
     },
@@ -18465,7 +18465,7 @@ function buildFreeSaasStackPage(): string {
       icon: "\u23F1\uFE0F",
       recommended: { vendor: "Inngest", why: "Free tier: 25,000 function runs/month with 5 concurrent steps. Durable workflow orchestration \u2014 retries, scheduling, fan-out, and step functions. TypeScript-first with Next.js integration. No infrastructure to manage \u2014 send an event, Inngest runs your function reliably. Perfect for SaaS: onboarding workflows, scheduled reports, webhook processing, billing reconciliation." },
       alternatives: ["Trigger.dev", "Upstash"] as string[],
-      outgrow: "When you exceed 25,000 runs/month. Trigger.dev offers 10,000 runs/month free with a similar developer experience. For simpler needs: Upstash QStash (500 messages/day free) provides HTTP-based async messaging \u2014 send a POST, it delivers reliably with retries. For self-managed: BullMQ (Redis-backed) with Upstash Redis (10K commands/day) handles moderate queue needs.",
+      outgrow: "When you exceed 25,000 runs/month. Trigger.dev offers 10,000 runs/month free with a similar developer experience. For simpler needs: Upstash QStash (1,000 messages/day free) provides HTTP-based async messaging \u2014 send a POST, it delivers reliably with retries. For self-managed: BullMQ (Redis-backed) with Upstash Redis (500K commands/month) handles moderate queue needs.",
       whyNot: "Why not cron jobs alone: Cron doesn't retry failures, handle concurrency limits, or provide observability. Why not AWS SQS/Lambda: Complex setup. Inngest and Trigger.dev give you managed, durable execution with a serverless DX.",
       relatedPage: null,
       isFrameworkSection: false,
@@ -28748,15 +28748,15 @@ function buildDatabasePricingPage(): string {
       slug: "nile",
       category: "managed-postgres",
       dbType: "PostgreSQL (Multi-tenant)",
-      freeStorage: "10 GiB",
-      freeConnections: "Unlimited",
+      freeStorage: "1 GB",
+      freeConnections: "500",
       freeCompute: "Shared",
-      paidFrom: "$30/mo (Pro)",
+      paidFrom: "$15/mo (Pro)",
       pricingModel: "Per-project",
-      freeDetails: "10 GiB storage, unlimited tenants, built-in tenant isolation for SaaS applications. PostgreSQL-compatible with virtual tenant databases — each tenant gets logical isolation without separate instances. AI-native embeddings and vector search included.",
+      freeDetails: "1 GB storage, unlimited tenants, built-in tenant isolation for SaaS applications. PostgreSQL-compatible with virtual tenant databases — each tenant gets logical isolation without separate instances. AI-native embeddings and vector search included.",
       freeType: "generous",
       monthlyCostSmall: "$0",
-      monthlyCostTeam: "$30+",
+      monthlyCostTeam: "$15+",
       hiddenCosts: "Newer service with smaller ecosystem. Tenant isolation adds overhead vs raw PostgreSQL. Limited managed tooling compared to Supabase or Neon.",
     },
     {
@@ -28798,14 +28798,14 @@ function buildDatabasePricingPage(): string {
       dbType: "Redis + Kafka + QStash",
       freeStorage: "256 MB (Redis)",
       freeConnections: "N/A (HTTP)",
-      freeCompute: "10K commands/day",
+      freeCompute: "500K commands/month",
       paidFrom: "$0.2/100K commands",
       pricingModel: "Per-command",
-      freeDetails: "Redis: 256 MB, 10,000 commands/day, 1 database. QStash: 500 messages/day, 3 retries. Kafka: removed from free tier. REST-based Redis — works in serverless/edge environments where TCP connections are unavailable. Global replication on paid plans.",
+      freeDetails: "Redis: 256 MB, 500K commands/month, 1 database. QStash: 1,000 messages/day, 3 retries. Kafka: removed from free tier. REST-based Redis — works in serverless/edge environments where TCP connections are unavailable. Global replication on paid plans.",
       freeType: "limited",
       monthlyCostSmall: "$0\u20135",
       monthlyCostTeam: "$10\u201350+",
-      hiddenCosts: "10K commands/day is tight for production use. Per-command pricing can spike with chatty applications. Kafka free tier was removed. REST-based means higher latency than native Redis protocol.",
+      hiddenCosts: "500K commands/month is tight for production use. Per-command pricing can spike with chatty applications. Kafka free tier was removed. REST-based means higher latency than native Redis protocol.",
     },
     {
       name: "Convex",
@@ -29489,7 +29489,7 @@ function buildDatabasePricingPage(): string {
     '\n' +
     '    <div class="verdict-item">\n' +
     '      <strong>Best for SaaS multi-tenancy</strong>\n' +
-    '      <p><a href="/vendor/nile">Nile</a> \u2014 purpose-built for multi-tenant SaaS with virtual tenant databases and built-in isolation. 10 GiB free. The only database with first-class tenant primitives.</p>\n' +
+    '      <p><a href="/vendor/nile">Nile</a> \u2014 purpose-built for multi-tenant SaaS with virtual tenant databases and built-in isolation. 1 GB free. The only database with first-class tenant primitives.</p>\n' +
     '    </div>\n' +
     '  </div>\n' +
     '\n' +
@@ -29680,17 +29680,17 @@ function buildVectorDatabasePricingPage(): string {
       slug: "upstash-vector",
       category: "serverless",
       vectorType: "Serverless (HTTP)",
-      freeVectors: "10K",
-      freeStorage: "~10K vectors",
+      freeVectors: "200M vectors \u00d7 dimensions",
+      freeStorage: "1 GB",
       freeDimensions: "1,536",
-      freeQueries: "150K query units/day",
+      freeQueries: "10K queries/day",
       paidFrom: "$0.4/100K queries (Pay-as-you-go)",
       pricingModel: "Per-query + per-vector",
-      freeDetails: "Serverless vector database: 10,000 vectors, 1,536 dimensions, 150,000 query units/day. REST API — works in serverless/edge environments. Built-in embedding generation (no separate API call needed). Metadata filtering. No connection management required.",
+      freeDetails: "Serverless vector database: 200M vectors \u00d7 dimensions, 1,536 dimensions, 10,000 queries/day. REST API — works in serverless/edge environments. Built-in embedding generation (no separate API call needed). Metadata filtering. No connection management required.",
       freeType: "limited",
       monthlyCostSmall: "$0\u20135",
       monthlyCostTeam: "$10\u201330",
-      hiddenCosts: "10K vectors is very limited for production RAG. Fixed 1,536 dimensions on free tier (matches OpenAI text-embedding-3-small). Daily query quotas, not monthly. Higher dimensions require paid plan. REST-only means higher latency than native gRPC protocols.",
+      hiddenCosts: "10K queries a day is very limited for production RAG. Fixed 1,536 dimensions on free tier (matches OpenAI text-embedding-3-small). Daily query quotas, not monthly. Higher dimensions require paid plan. REST-only means higher latency than native gRPC protocols.",
       selfHosted: false,
     },
     {
@@ -29831,7 +29831,7 @@ function buildVectorDatabasePricingPage(): string {
     { q: "What is a vector database and why do I need one?", a: "A vector database stores high-dimensional numerical representations (embeddings) of data like text, images, or audio, and enables fast similarity search. You need one if you're building RAG (Retrieval-Augmented Generation) pipelines, semantic search, recommendation systems, or any AI application that needs to find similar items. Traditional databases can't efficiently search across hundreds of dimensions." },
     { q: "Should I use a dedicated vector database or pgvector?", a: "For prototypes and small-to-medium workloads (under 1M vectors), pgvector in Supabase or Neon is the simplest choice — no extra infrastructure, SQL queries, and your vectors live alongside your relational data. For production RAG at scale (1M+ vectors), dedicated solutions like Pinecone, Qdrant, or Weaviate offer better query performance, more indexing options, and purpose-built features like hybrid search and reranking." },
     { q: "Which vector database has the best free tier?", a: "For managed cloud: Pinecone offers 2 GB (~1M vectors) free and Zilliz Cloud 5 GB (~5M vectors). For self-hosted: Qdrant, Chroma, Milvus, and LanceDB are all fully open-source with no limits. For the simplest setup: Supabase pgvector (500 MB, included with Postgres) or Neon pgvector (1 GB per project) require zero extra infrastructure." },
-    { q: "What is the cheapest vector database for production RAG?", a: "Self-hosted Qdrant or Milvus on a $5-10/month VPS is the absolute cheapest for small-to-medium scale. For managed services, Turbopuffer's pay-per-use model ($0.30/M vectors/month) is cheapest for workloads under ~10M vectors. Qdrant Cloud ($10/month) and Upstash Vector (150K queries/day free) are also cost-effective. Supabase pgvector is free if your total database is under 500 MB." },
+    { q: "What is the cheapest vector database for production RAG?", a: "Self-hosted Qdrant or Milvus on a $5-10/month VPS is the absolute cheapest for small-to-medium scale. For managed services, Turbopuffer's pay-per-use model ($0.30/M vectors/month) is cheapest for workloads under ~10M vectors. Qdrant Cloud ($10/month) and Upstash Vector (10K queries/day free) are also cost-effective. Supabase pgvector is free if your total database is under 500 MB." },
     { q: "How many vectors can I store in 1 GB?", a: "It depends on dimensions. With 1,536 dimensions (OpenAI text-embedding-3-small): ~170K vectors per GB raw, but with indexing overhead expect ~100K-150K. With 768 dimensions (many open-source models): ~340K vectors per GB raw, ~200K-250K with indexes. With 3,072 dimensions (OpenAI text-embedding-3-large): ~85K vectors per GB. Lower-dimension models are more cost-effective for storage." },
   ];
 
@@ -32258,7 +32258,7 @@ ${mcpCtaCss()}
   <div class="executive-summary">
     <p><strong>What happened:</strong> AWS App Runner <strong>stopped accepting new customers on April 30, 2026</strong>. Existing customers can keep using it as normal, including creating new services, and AWS says it does not plan new features. AWS recommends <strong>Amazon ECS Express Mode</strong> for migrating.</p>
     <p><strong>AWS&rsquo;s recommendation:</strong> <strong>ECS Express Mode</strong> provides a simplified ECS experience designed to replace App Runner. It supports auto-scaling, managed networking, and integration with ECR. The key difference: ECS Express Mode requires container images — it does not support App Runner&rsquo;s source code deployment.</p>
-    <p><strong>Free alternatives exist:</strong> If you want to leave AWS, <strong>Google Cloud Run</strong> (2M requests/mo free, scale to zero), <strong>Fly.io</strong> (3 free VMs), and <strong>Render</strong> (free tier with 750 hrs/mo) all offer container deployment with free tiers and source code deployment support.</p>
+    <p><strong>Free alternatives exist:</strong> If you want to leave AWS, <strong>Google Cloud Run</strong> (2M requests/mo free, scale to zero) and <strong>Render</strong> (free tier with 750 hrs/mo) both offer container deployment with free tiers and source code deployment support.</p>
   </div>
 
   <div class="toc">
@@ -35632,7 +35632,7 @@ ${mcpCtaCss()}
 
     <div class="verdict-item">
       <strong>AI / vector workloads &rarr; Zilliz Cloud or Weaviate</strong>
-      <p>Zilliz Cloud: 5 GB free managed Milvus with up to 5 collections. Weaviate: unlimited self-hosted. For simple RAG prototypes, Upstash Vector (10K vectors) gets you started fastest. <a href="/ai-ml-alternatives">AI/ML tools guide &rarr;</a></p>
+      <p>Zilliz Cloud: 5 GB free managed Milvus with up to 5 collections. Weaviate: unlimited self-hosted. For simple RAG prototypes, Upstash Vector (200M vectors &times; dimensions free) gets you started fastest. <a href="/ai-ml-alternatives">AI/ML tools guide &rarr;</a></p>
     </div>
 
     <div class="verdict-item">
@@ -39684,7 +39684,7 @@ ${mcpCtaCss()}
 
     <div class="verdict-item">
       <strong>Error tracking for small teams &rarr; Sentry</strong>
-      <p>5K errors/month on Developer tier. 90-day retention. 30+ platform SDKs. Source maps, breadcrumbs, and session replay. Self-hosted option for unlimited scale.</p>
+      <p>5K errors/month on Developer tier. 30-day retention. 30+ platform SDKs. Source maps, breadcrumbs, and session replay. Self-hosted option for unlimited scale.</p>
     </div>
 
     <div class="verdict-item">
