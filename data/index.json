@@ -61,7 +61,18 @@
       "restatement_reverted": {
         "record_date": "2026-09-07",
         "reverted_on": "2026-09-28"
-      }
+      },
+      "conditions": [
+        {
+          "text": "Vercel restricts Hobby to non-commercial personal use: a deployment used for anyone's financial gain, including a paid employee or consultant writing the code, needs a Pro or Enterprise plan.",
+          "quote": "Hobby teams are restricted to non-commercial personal use only. All commercial usage of the platform requires either a Pro or Enterprise plan.",
+          "url": "https://vercel.com/docs/limits/fair-use-guidelines",
+          "read_on": "2026-10-04",
+          "rules_out": [
+            "commercial use"
+          ]
+        }
+      ]
     },
     {
       "vendor": "Render",
@@ -743,7 +754,7 @@
     {
       "vendor": "Neon",
       "category": "Databases",
-      "description": "Serverless Postgres with branching — free tier includes 100 CU-hours/month per project, 1 GB of Postgres storage per project (20 GB total across all projects), up to 100 projects, 10 branches per project, Neon Auth (60K MAU), auto-scaling up to 2 CU, scale-to-zero, 5 GB of Object Storage, and Functions (10 active capacity-hours, 400 waiting capacity-hours, 1M invocations). On the Free plan, scale to zero can't be disabled: computes suspend after 5 minutes of inactivity. Running out of CU-hours or network transfer suspends the compute until the next billing period or an upgrade; no credit card is required. At the storage cap, inserts, updates and deletes fail until space is freed or the plan is upgraded.",
+      "description": "Serverless Postgres with branching — free tier includes 100 CU-hours/month per project, 1 GB of Postgres storage per project (20 GB total across all projects), up to 100 projects, 10 branches per project, Neon Auth (60K MAU), auto-scaling up to 2 CU, scale-to-zero, 5 GB of Object Storage, and Functions (10 active capacity-hours, 400 waiting capacity-hours, 1M invocations). No credit card is required.",
       "tier": "Free",
       "url": "https://neon.com/pricing",
       "tags": [
@@ -799,7 +810,27 @@
           }
         ],
         "reviewed": "2026-08-31"
-      }
+      },
+      "conditions": [
+        {
+          "text": "On the Free plan, scale to zero can't be disabled: computes suspend after 5 minutes of inactivity.",
+          "quote": "Scale to zero is always enabled (computes suspend after 5 minutes of inactivity) and can't be disabled.",
+          "url": "https://neon.com/docs/introduction/plans",
+          "read_on": "2026-10-04"
+        },
+        {
+          "text": "Running out of CU-hours or network transfer suspends the compute until the next billing period or an upgrade.",
+          "quote": "when you run out of CU-hours or public network transfer, your compute is suspended until the next billing period or until you upgrade.",
+          "url": "https://neon.com/docs/introduction/plans",
+          "read_on": "2026-10-04"
+        },
+        {
+          "text": "At the storage cap, inserts, updates and deletes fail until space is freed or the plan is upgraded.",
+          "quote": "causes operations that increase storage (inserts, updates, and deletes) to fail until you free space or upgrade.",
+          "url": "https://neon.com/docs/introduction/plans",
+          "read_on": "2026-10-04"
+        }
+      ]
     },
     {
       "vendor": "MongoDB Atlas",
@@ -2050,7 +2081,7 @@
     {
       "vendor": "Cloudflare R2",
       "category": "Storage",
-      "description": "Object storage with zero egress fees — 10 GB storage, 1M writes, 10M reads/month free. The free tier covers Standard storage only, not Infrequent Access. You need an R2 subscription, added through a checkout in the Cloudflare dashboard. Usage beyond the free tier is charged monthly to the payment method on file. Budget alerts do not pause or cap usage.",
+      "description": "Object storage with zero egress fees — 10 GB storage, 1M writes, 10M reads/month free.",
       "tier": "Free",
       "url": "https://developers.cloudflare.com/r2/pricing/",
       "tags": [
@@ -2082,7 +2113,33 @@
         "checked": "2026-10-03",
         "outcome": "ok",
         "detail": "the page names Cloudflare R2 as \"cloudflare r2\" and states \"10 GB-month / month\" and \"10,000,000 reads per day\""
-      }
+      },
+      "conditions": [
+        {
+          "text": "The free tier covers Standard storage only, not Infrequent Access.",
+          "quote": "only applies to Standard storage, and does not apply to Infrequent Access storage",
+          "url": "https://developers.cloudflare.com/r2/pricing/",
+          "read_on": "2026-10-04"
+        },
+        {
+          "text": "You need an R2 subscription, added through a checkout in the Cloudflare dashboard.",
+          "quote": "You need a Cloudflare account with an R2 subscription.",
+          "url": "https://developers.cloudflare.com/r2/get-started/",
+          "read_on": "2026-10-04"
+        },
+        {
+          "text": "Usage beyond the free tier is charged monthly to the payment method on file.",
+          "quote": "Cloudflare automatically charges your primary payment method on file.",
+          "url": "https://developers.cloudflare.com/billing/understand/how-billing-works/",
+          "read_on": "2026-10-04"
+        },
+        {
+          "text": "Cloudflare's budget alerts do not pause or cap usage.",
+          "quote": "Budget alerts are informational only. They do not pause or cap usage.",
+          "url": "https://developers.cloudflare.com/billing/manage/budget-alerts/",
+          "read_on": "2026-10-04"
+        }
+      ]
     },
     {
       "vendor": "Backblaze B2",
@@ -2616,7 +2673,7 @@
     {
       "vendor": "Hetzner",
       "category": "Infrastructure",
-      "description": "Budget cloud VMs, no free tier. As of 2026-09-04 hetzner.com marks every Cost-Optimized plan — CX23, CX33, CX43, CX53 and the Arm CAX11–CAX41 — \"not available\". The cheapest orderable plan is CPX12 at €11.99/month (1 vCPU AMD, 2 GB RAM, 40 GB NVMe, 0.5 TB traffic); CPX22 is €19.99 (2 vCPU, 4 GB, 80 GB, 20 TB traffic). Dedicated-vCPU CCX13 is €43.49/month in the EU and $51.59 in the US. These are hetzner.com's displayed prices and include the €0.50/month primary IPv4. Two 2026 increases: April 1 across all lines, then June 15, which applies to new orders and rescales only — existing contracts keep their terms. The June standardization renamed dedicated server models (-1, -2 and -3 suffixes, plus a -1-Ltd limited line) and left the cloud plan names unchanged; the older CX22/CX32/CX42 names went before it. Server Auction, IPs, storage, Load Balancers, Volumes, Snapshots and Object Storage were excluded from the June round. Hetzner blocks outgoing ports 25 and 465 on all cloud servers by default. After a month and a paid first invoice, you can ask to unblock them, decided case by case. Port 587 to external mail services is open.",
+      "description": "Budget cloud VMs, no free tier. As of 2026-09-04 hetzner.com marks every Cost-Optimized plan — CX23, CX33, CX43, CX53 and the Arm CAX11–CAX41 — \"not available\". The cheapest orderable plan is CPX12 at €11.99/month (1 vCPU AMD, 2 GB RAM, 40 GB NVMe, 0.5 TB traffic); CPX22 is €19.99 (2 vCPU, 4 GB, 80 GB, 20 TB traffic). Dedicated-vCPU CCX13 is €43.49/month in the EU and $51.59 in the US. These are hetzner.com's displayed prices and include the €0.50/month primary IPv4. Two 2026 increases: April 1 across all lines, then June 15, which applies to new orders and rescales only — existing contracts keep their terms. The June standardization renamed dedicated server models (-1, -2 and -3 suffixes, plus a -1-Ltd limited line) and left the cloud plan names unchanged; the older CX22/CX32/CX42 names went before it. Server Auction, IPs, storage, Load Balancers, Volumes, Snapshots and Object Storage were excluded from the June round.",
       "tier": "Paid",
       "url": "https://www.hetzner.com/cloud/",
       "tags": [
@@ -2642,7 +2699,27 @@
         "checked": "2026-10-03",
         "outcome": "states_no_terms",
         "detail": "the page names Hetzner but states no amount, tier or rate we can read, and its markup carries no structured data"
-      }
+      },
+      "conditions": [
+        {
+          "text": "Hetzner blocks outgoing ports 25 and 465 on all cloud servers by default.",
+          "quote": "we block ports 25 and 465 by default on all cloud servers.",
+          "url": "https://docs.hetzner.com/cloud/servers/faq/",
+          "read_on": "2026-10-04"
+        },
+        {
+          "text": "After a month and a paid first invoice, you can ask Hetzner to unblock ports 25 and 465; it decides case by case.",
+          "quote": "Once you have been with us for a month and paid your first invoice, you can create a limit request to unblock these ports for a valid use case.",
+          "url": "https://docs.hetzner.com/cloud/servers/faq/",
+          "read_on": "2026-10-04"
+        },
+        {
+          "text": "Port 587 to external mail services is open.",
+          "quote": "Port 587 is not blocked and can be used without sending a limit request.",
+          "url": "https://docs.hetzner.com/cloud/servers/faq/",
+          "read_on": "2026-10-04"
+        }
+      ]
     },
     {
       "vendor": "Cloudflare DNS",
@@ -3069,7 +3146,7 @@
     {
       "vendor": "Google Gemini API",
       "category": "AI / ML",
-      "description": "Free tier: Gemini 3.8 Flash, 3.7 Flash, 3.6 Flash, 3.5 Flash, 3.5 Flash-Lite, 3.1 Flash-Lite, Gemini 3 Flash Preview, Gemini Embedding 2 and Gemma 4 are free of charge. Gemini 3.1 Pro Preview is paid only. Google publishes no free-tier rate limits; each project's limits are shown in Google AI Studio. Google's pricing table marks free-tier use as \"Used to improve our products\". For developers outside the European Economic Area, Switzerland and the United Kingdom, Google's terms say human reviewers may read free-tier prompts and responses, and Google says not to send sensitive, confidential or personal information on the free tier. Apps that serve users in the European Economic Area, Switzerland or the United Kingdom may use only the paid tier. Since 2026-09-18 Google serves the Gemini 2.5 models only to users who have used them before, and points new projects to 3.5 Flash-Lite or 3.8 Flash. Paid, per million tokens (input/output): Gemini 3.8 Flash $0.75/$3.75 until 2026-12-31, then $1.50 input and $7.50 output from 2027-01-01 (3.7 Flash and 3.6 Flash: the same prices and dates); Gemini 3.5 Flash $1.50/$9; Gemini 3.5 Flash-Lite $0.30/$2.50; Gemini 3.1 Flash-Lite $0.25/$1.50; Gemini 3.1 Pro Preview $2/$12 (prompts up to 200K tokens). Accounts opened after 2026-03-02 cannot spend the $300 Google Cloud welcome credit on the Gemini API.",
+      "description": "Free tier: Gemini 3.8 Flash, 3.7 Flash, 3.6 Flash, 3.5 Flash, 3.5 Flash-Lite, 3.1 Flash-Lite, Gemini 3 Flash Preview, Gemini Embedding 2 and Gemma 4 are free of charge. Gemini 3.1 Pro Preview is paid only. Google publishes no free-tier rate limits; each project's limits are shown in Google AI Studio. Since 2026-09-18 Google serves the Gemini 2.5 models only to users who have used them before, and points new projects to 3.5 Flash-Lite or 3.8 Flash. Paid, per million tokens (input/output): Gemini 3.8 Flash $0.75/$3.75 until 2026-12-31, then $1.50 input and $7.50 output from 2027-01-01 (3.7 Flash and 3.6 Flash: the same prices and dates); Gemini 3.5 Flash $1.50/$9; Gemini 3.5 Flash-Lite $0.30/$2.50; Gemini 3.1 Flash-Lite $0.25/$1.50; Gemini 3.1 Pro Preview $2/$12 (prompts up to 200K tokens). Accounts opened after 2026-03-02 cannot spend the $300 Google Cloud welcome credit on the Gemini API.",
       "tier": "Free (Reduced)",
       "url": "https://ai.google.dev/pricing",
       "tags": [
@@ -3108,7 +3185,27 @@
           }
         ],
         "reviewed": "2026-09-01"
-      }
+      },
+      "conditions": [
+        {
+          "text": "Google's pricing page says free-tier content is used to improve Google's products.",
+          "quote": "Content used to improve our products",
+          "url": "https://ai.google.dev/gemini-api/docs/pricing",
+          "read_on": "2026-10-04"
+        },
+        {
+          "text": "For developers outside the European Economic Area, Switzerland and the United Kingdom, Google's terms say human reviewers may read free-tier prompts and responses, and Google says not to send sensitive, confidential or personal information on the free tier.",
+          "quote": "human reviewers may read, annotate, and process your API input and output.",
+          "url": "https://ai.google.dev/gemini-api/terms",
+          "read_on": "2026-10-04"
+        },
+        {
+          "text": "Apps that serve users in the European Economic Area, Switzerland or the United Kingdom may use only the paid tier.",
+          "quote": "You may use only Paid Services when making API Clients available to users in the European Economic Area, Switzerland, or the United Kingdom.",
+          "url": "https://ai.google.dev/gemini-api/terms",
+          "read_on": "2026-10-04"
+        }
+      ]
     },
     {
       "vendor": "Mistral AI",
@@ -5665,7 +5762,18 @@
         "record_date": "2026-09-03",
         "change_type": "limits_increased",
         "restated_on": "2026-09-20"
-      }
+      },
+      "conditions": [
+        {
+          "text": "Uploadcare's Free plan is for personal use only.",
+          "quote": "Personal use only",
+          "url": "https://uploadcare.com/pricing/",
+          "read_on": "2026-10-04",
+          "rules_out": [
+            "commercial use"
+          ]
+        }
+      ]
     },
     {
       "vendor": "IBM Cloud",
@@ -6731,7 +6839,7 @@
     {
       "vendor": "Cerebras",
       "category": "AI / ML",
-      "description": "Ultra-fast LLM inference API — no permanent free tier. New accounts get $5 in free credits after adding a verified payment method, expiring 30 days after they are granted. Free Trial limits on gpt-oss-120b and qwen-3.8-27b: 5 requests/min and 1M tokens/day. Pay as you go after: GPT OSS 120B $0.35/$0.75 per M tokens, Qwen 3.8 27B $0.99/$1.49 per M tokens. Multi-thousand tokens/sec inference speed. Cerebras's terms state it has no right to use API inputs and outputs to train or fine-tune models. Its privacy policy says it does not retain inference inputs and outputs.",
+      "description": "Ultra-fast LLM inference API — no permanent free tier. New accounts get $5 in free credits after adding a verified payment method, expiring 30 days after they are granted. Free Trial limits on gpt-oss-120b and qwen-3.8-27b: 5 requests/min and 1M tokens/day. Pay as you go after: GPT OSS 120B $0.35/$0.75 per M tokens, Qwen 3.8 27B $0.99/$1.49 per M tokens. Multi-thousand tokens/sec inference speed.",
       "tier": "Trial",
       "url": "https://inference-docs.cerebras.ai/support/rate-limits",
       "tags": [
@@ -6770,12 +6878,26 @@
         "text": "New accounts receive $5 in free credits after adding a verified payment method. These credits expire 30 days after they’re granted and can be used across all public models. There is no charge until you choose to purchase additional credits.",
         "url": "https://inference-docs.cerebras.ai/support/rate-limits",
         "read_on": "2026-10-03"
-      }
+      },
+      "conditions": [
+        {
+          "text": "Cerebras's terms give it no right to use API inputs and outputs to train or fine-tune models.",
+          "quote": "the foregoing does not grant Cerebras the right to use Service Content for the purpose of training or fine-tuning models.",
+          "url": "https://www.cerebras.ai/terms-of-service",
+          "read_on": "2026-10-04"
+        },
+        {
+          "text": "Cerebras's privacy policy says it does not retain inference inputs and outputs.",
+          "quote": "we do not retain inputs and outputs associated with our training, inference, and chatbot Services",
+          "url": "https://www.cerebras.ai/privacy-policy",
+          "read_on": "2026-10-04"
+        }
+      ]
     },
     {
       "vendor": "Cohere",
       "category": "AI / ML",
-      "description": "AI model API for Command chat models, Embed, Rerank, Transcribe and Parse. Every account starts with a Trial API key: calls made with it are free, limited to 1,000 API calls a month, and may not be used for production or commercial purposes. Trial rate limits: 20 requests a minute per Chat model, 2,000 Embed inputs a minute and 10 Rerank requests a minute. Trial keys can use all of Cohere's models and APIs. Production keys are pay-as-you-go. Prices per 1M tokens: Command R7B $0.0375/$0.15; Command R $0.15/$0.60. The pricing page lists Command A+ (Apache 2.0) at $0 through an API key and as a model download.",
+      "description": "AI model API for Command chat models, Embed, Rerank, Transcribe and Parse. Every account starts with a Trial API key: calls made with it are free and limited to 1,000 API calls a month. Trial rate limits: 20 requests a minute per Chat model, 2,000 Embed inputs a minute and 10 Rerank requests a minute. Trial keys can use all of Cohere's models and APIs. Production keys are pay-as-you-go. Prices per 1M tokens: Command R7B $0.0375/$0.15; Command R $0.15/$0.60. The pricing page lists Command A+ (Apache 2.0) at $0 through an API key and as a model download.",
       "tier": "Free",
       "url": "https://cohere.com/pricing",
       "tags": [
@@ -6830,7 +6952,19 @@
         "text": "API calls made from a Trial API key are free. However, trial keys are rate limited and are not permitted to be used for production or commercial purposes.",
         "url": "https://cohere.com/pricing",
         "read_on": "2026-10-02"
-      }
+      },
+      "conditions": [
+        {
+          "text": "Cohere's Trial API keys may not be used for production or commercial purposes.",
+          "quote": "trial keys are rate limited and are not permitted to be used for production or commercial purposes.",
+          "url": "https://cohere.com/pricing",
+          "read_on": "2026-10-04",
+          "rules_out": [
+            "production",
+            "commercial use"
+          ]
+        }
+      ]
     },
     {
       "vendor": "Coolify",
@@ -7506,7 +7640,7 @@
     {
       "vendor": "Brave Search API",
       "category": "Search",
-      "description": "$5 in free credits every month, applied automatically. Search is $5 per 1,000 requests; Answers is $4 per 1,000 requests plus $5 per million tokens. Web search, news, videos, images, LLM context endpoints. 50 queries/sec. Credit card required. Brave states that storing API results in whole or in part, for example to train or tune an LLM, requires a plan that explicitly grants storage rights, which are not covered in its general Terms of Service. The earlier free plan (2,000 queries/mo) ended Feb 2026",
+      "description": "$5 in free credits every month, applied automatically. Search is $5 per 1,000 requests; Answers is $4 per 1,000 requests plus $5 per million tokens. Web search, news, videos, images, LLM context endpoints. 50 queries/sec. Credit card required. The earlier free plan (2,000 queries/mo) ended Feb 2026",
       "tier": "Free",
       "url": "https://brave.com/search/api/",
       "tags": [
@@ -7527,7 +7661,15 @@
         "text": "Includes $5 in free credits every month Credits are automatically applied to your account",
         "url": "https://brave.com/search/api/",
         "read_on": "2026-10-03"
-      }
+      },
+      "conditions": [
+        {
+          "text": "Brave says storing API results in whole or in part, for example to train or tune an LLM, requires a plan that explicitly grants storage rights, which its general Terms of Service do not cover.",
+          "quote": "If you would like to store the API results in part or whole (for example, to train or tune an LLM), you will need to subscribe to a plan that explicitly grants storage rights.",
+          "url": "https://brave.com/search/api/",
+          "read_on": "2026-10-04"
+        }
+      ]
     },
     {
       "vendor": "OpenAI",
@@ -7743,7 +7885,7 @@
     {
       "vendor": "ngrok",
       "category": "Infrastructure",
-      "description": "Tunneling and ingress platform — 3 online endpoints, 1 GB bandwidth, 20K HTTP/S requests/month, 1 dev domain, 5K TCP connections. Includes $5 one-time usage credit. ngrok shows a warning page to browser traffic on the Free plan to deter phishing. Code can skip this page with the ngrok-skip-browser-warning header. TCP endpoints on Free require credit card verification.",
+      "description": "Tunneling and ingress platform — 3 online endpoints, 1 GB bandwidth, 20K HTTP/S requests/month, 1 dev domain, 5K TCP connections. Includes $5 one-time usage credit.",
       "tier": "Free",
       "url": "https://ngrok.com/pricing",
       "tags": [
@@ -7760,12 +7902,26 @@
         "unrendered_prices": [
           "Hobbyist (annual) USD 96"
         ]
-      }
+      },
+      "conditions": [
+        {
+          "text": "On the Free plan, ngrok shows a warning page to browser traffic to deter phishing; code can skip it with the ngrok-skip-browser-warning header.",
+          "quote": "To deter phishing attacks, ngrok shows an interstitial page in front of all HTML browser traffic on the free tier.",
+          "url": "https://ngrok.com/docs/pricing-limits/free-plan-limits",
+          "read_on": "2026-10-04"
+        },
+        {
+          "text": "TCP endpoints on the Free plan require credit card verification.",
+          "quote": "TCP with credit card verification",
+          "url": "https://ngrok.com/pricing",
+          "read_on": "2026-10-04"
+        }
+      ]
     },
     {
       "vendor": "Tailscale",
       "category": "Security",
-      "description": "Mesh VPN with WireGuard — 6 users, unlimited devices, MagicDNS, exit nodes, subnet routing. Free Personal plan. Tailscale states the Personal plan is \"only suitable for non-commercial use\". A tailnet created with a custom email domain counts as business use and starts a free trial instead of the Personal plan.",
+      "description": "Mesh VPN with WireGuard — 6 users, unlimited devices, MagicDNS, exit nodes, subnet routing. Free Personal plan.",
       "tier": "Personal",
       "url": "https://tailscale.com/pricing",
       "tags": [
@@ -7780,7 +7936,24 @@
         "checked": "2026-10-04",
         "outcome": "ok",
         "detail": "the page names Tailscale as \"tailscale\" and states \"$0\""
-      }
+      },
+      "conditions": [
+        {
+          "text": "Tailscale says the Personal plan is only suitable for non-commercial use.",
+          "quote": "This is a free plan and is only suitable for non-commercial use of Tailscale.",
+          "url": "https://tailscale.com/pricing",
+          "read_on": "2026-10-04",
+          "rules_out": [
+            "commercial use"
+          ]
+        },
+        {
+          "text": "A tailnet created with a custom email domain counts as business use and starts a free trial instead of the Personal plan.",
+          "quote": "If you create a tailnet with a custom domain, it's considered business use, and you'll be automatically enrolled in a free trial.",
+          "url": "https://tailscale.com/pricing",
+          "read_on": "2026-10-04"
+        }
+      ]
     },
     {
       "vendor": "Redis Cloud",
@@ -12936,7 +13109,7 @@
     {
       "vendor": "RepoForge",
       "category": "CI/CD",
-      "description": "Private cloud-hosted repository for Python, Debian, NPM packages and Docker registries. Free plan: 100MB storage, unlimited public packages, non-commercial use only.",
+      "description": "Private cloud-hosted repository for Python, Debian, NPM packages and Docker registries. Free plan: 100MB storage, unlimited public packages.",
       "tier": "Free",
       "url": "https://repoforge.io",
       "tags": [
@@ -12953,7 +13126,18 @@
         "text": "Free For open source projects £ 0 / user / mo 100 MB storage Free forever Unlimited public packages Not for commercial use",
         "url": "https://repoforge.io",
         "read_on": "2026-10-03"
-      }
+      },
+      "conditions": [
+        {
+          "text": "RepoForge's Free plan is for open-source projects, not for commercial use.",
+          "quote": "Not for commercial use",
+          "url": "https://repoforge.io/pricing",
+          "read_on": "2026-10-04",
+          "rules_out": [
+            "commercial use"
+          ]
+        }
+      ]
     },
     {
       "vendor": "repsy.io",
@@ -20982,7 +21166,7 @@
     {
       "vendor": "Northflank",
       "category": "Cloud Hosting",
-      "description": "Build and deploy microservices, jobs, and managed databases with a powerful UI, API & CLI. Seamlessly scale containers from version control and external Docker registries. The free tier includes two services, two cron jobs and 1 database. Northflank requires every user to add a payment method before creating resources, on any plan, to verify identity and prevent abuse. It says the free Developer Sandbox is for exploring the platform, hobby projects and testing ideas, and should not be used for production applications.",
+      "description": "Build and deploy microservices, jobs, and managed databases with a powerful UI, API & CLI. Seamlessly scale containers from version control and external Docker registries. The free tier includes two services, two cron jobs and 1 database.",
       "tier": "Free",
       "url": "https://northflank.com/pricing",
       "tags": [
@@ -21011,7 +21195,24 @@
         "text": "Sandbox for testing and building trust with Northflank Always-on-compute – no sleeping :) 2× free services 1× free database 2× free cron jobs Get started for free",
         "url": "https://northflank.com/pricing",
         "read_on": "2026-10-03"
-      }
+      },
+      "conditions": [
+        {
+          "text": "Northflank requires every user to add a payment method before creating resources, on any plan, to verify identity and prevent abuse.",
+          "quote": "all users must add a payment method to start creating resources on Northflank, regardless of plan selection.",
+          "url": "https://northflank.com/docs/v1/application/billing/pricing-on-northflank",
+          "read_on": "2026-10-04"
+        },
+        {
+          "text": "Northflank says the free Developer Sandbox is for exploring the platform, hobby projects and testing ideas, and should not be used for production applications.",
+          "quote": "Our free tier is a great way to explore the platform, spin up hobby projects, or test new ideas. However, it should not be used for production applications.",
+          "url": "https://northflank.com/docs/v1/application/billing/pricing-on-northflank",
+          "read_on": "2026-10-04",
+          "rules_out": [
+            "production"
+          ]
+        }
+      ]
     },
     {
       "vendor": "WunderGraph",
@@ -32601,7 +32802,7 @@
     {
       "vendor": "xAI",
       "category": "AI / ML",
-      "description": "Grok API, pay as you go: sign up at console.x.ai, then load it with credits. grok-4.7 $2.00/$6.00 (per 1M tokens, under 200k prompt tokens). grok-4.3 $1.25/$2.50 (under 200k prompt tokens). grok-build-0.1 $1.00/$2.00 (under 200k prompt tokens). Grok 4.1 Fast was retired on 2026-05-15; its model names now route to grok-4.3 at grok-4.3 rates. xAI's API FAQ says it never trains on API inputs or outputs without your explicit permission. It stores API requests and responses for 30 days to audit for abuse, then deletes them, and team admins can turn on Zero Data Retention.",
+      "description": "Grok API, pay as you go: sign up at console.x.ai, then load it with credits. grok-4.7 $2.00/$6.00 (per 1M tokens, under 200k prompt tokens). grok-4.3 $1.25/$2.50 (under 200k prompt tokens). grok-build-0.1 $1.00/$2.00 (under 200k prompt tokens). Grok 4.1 Fast was retired on 2026-05-15; its model names now route to grok-4.3 at grok-4.3 rates.",
       "tier": "Pay-as-you-go",
       "url": "https://docs.x.ai/developers/pricing",
       "tags": [
@@ -32636,7 +32837,21 @@
           }
         ],
         "reviewed": "2026-09-01"
-      }
+      },
+      "conditions": [
+        {
+          "text": "xAI's API FAQ says it never trains on API inputs or outputs without your explicit permission.",
+          "quote": "never trains on your API inputs or outputs without your explicit permission.",
+          "url": "https://docs.x.ai/developers/faq/security",
+          "read_on": "2026-10-04"
+        },
+        {
+          "text": "xAI stores API requests and responses for 30 days to audit for abuse, then deletes them; teams can turn on Zero Data Retention.",
+          "quote": "By default, all API requests and responses are stored on our servers (encrypted at rest) for 30 days for auditing purposes in the event of suspected abuse or misuse.",
+          "url": "https://docs.x.ai/developers/faq/security",
+          "read_on": "2026-10-04"
+        }
+      ]
     },
     {
       "vendor": "Devin",
@@ -33111,7 +33326,7 @@
     {
       "vendor": "Google Compute Engine",
       "category": "Cloud IaaS",
-      "description": "Always Free: 1 non-preemptible e2-micro VM (us-west1, us-central1, or us-east1), 30 GB standard persistent disk, 1 GB North America egress. GPUs/TPUs excluded. Google Cloud's Free Tier requires a billing account. Usage beyond the monthly limits is billed at standard rates. The e2-micro instance limit is by time, not by instance: all e2-micro instances together are free for the number of hours in the month.",
+      "description": "Always Free: 1 non-preemptible e2-micro VM (us-west1, us-central1, or us-east1), 30 GB standard persistent disk, 1 GB North America egress. GPUs/TPUs excluded.",
       "tier": "Always Free",
       "url": "https://docs.cloud.google.com/free/docs/free-cloud-features",
       "tags": [
@@ -33130,7 +33345,27 @@
       "restatement_reverted": {
         "record_date": "2026-10-04",
         "reverted_on": "2026-10-04"
-      }
+      },
+      "conditions": [
+        {
+          "text": "Google Cloud's Free Tier requires a billing account.",
+          "quote": "To use products that have a Free Tier, you need a Google Cloud billing account.",
+          "url": "https://docs.cloud.google.com/free/docs/free-cloud-features",
+          "read_on": "2026-10-04"
+        },
+        {
+          "text": "Usage beyond the Free Tier's monthly limits is billed at standard rates.",
+          "quote": "Any usage that exceeds the Free Tier usage limits is billed at standard rates.",
+          "url": "https://docs.cloud.google.com/free/docs/free-cloud-features",
+          "read_on": "2026-10-04"
+        },
+        {
+          "text": "The e2-micro instance limit is by time, not by instance: all e2-micro instances together are free for the number of hours in the month.",
+          "quote": "Your Free Tier e2-micro instance limit is by time, not by instance.",
+          "url": "https://docs.cloud.google.com/free/docs/free-cloud-features",
+          "read_on": "2026-10-04"
+        }
+      ]
     },
     {
       "vendor": "Google Cloud Storage",
@@ -36008,7 +36243,7 @@
     {
       "vendor": "Vercel Sandbox",
       "category": "Cloud Hosting",
-      "description": "Isolated Linux microVMs for running untrusted or agent-generated code, metered by active CPU, memory, sandbox creations and data transfer. The Hobby plan includes each month at no cost: 5 hours of Active CPU, 420 GB-hours of provisioned memory, 5,000 sandbox creations and 20 GB of data transfer, plus 15 GB of snapshot storage for the life of the account. Hobby sandboxes run for at most 45 minutes, 10 at a time. Past the quota, sandbox creation pauses and nothing is charged. Hobby is for non-commercial, personal use only. On Pro, Active CPU costs $0.128 an hour and memory $0.0212 per GB-hour.",
+      "description": "Isolated Linux microVMs for running untrusted or agent-generated code, metered by active CPU, memory, sandbox creations and data transfer. The Hobby plan includes each month at no cost: 5 hours of Active CPU, 420 GB-hours of provisioned memory, 5,000 sandbox creations and 20 GB of data transfer, plus 15 GB of snapshot storage for the life of the account. Hobby sandboxes run for at most 45 minutes, 10 at a time. Past the quota, sandbox creation pauses and nothing is charged. On Pro, Active CPU costs $0.128 an hour and memory $0.0212 per GB-hour.",
       "tier": "Hobby",
       "url": "https://vercel.com/docs/sandbox/pricing",
       "tags": [
@@ -36029,7 +36264,18 @@
           }
         ],
         "reviewed": "2026-09-27"
-      }
+      },
+      "conditions": [
+        {
+          "text": "Vercel's Hobby plan is for non-commercial, personal use only; commercial use needs a Pro or Enterprise plan.",
+          "quote": "Hobby teams are restricted to non-commercial personal use only. All commercial usage of the platform requires either a Pro or Enterprise plan.",
+          "url": "https://vercel.com/docs/limits/fair-use-guidelines",
+          "read_on": "2026-10-04",
+          "rules_out": [
+            "commercial use"
+          ]
+        }
+      ]
     },
     {
       "vendor": "Daytona",
