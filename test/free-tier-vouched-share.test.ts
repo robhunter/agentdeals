@@ -2,7 +2,8 @@ import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
 import { assertPopulationFloor } from "./population-floor.ts";
 import { spawn, type ChildProcess } from "node:child_process";
-import { readFileSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { fetchBadgeVerdicts, type SiteFreeTierVerdict } from "./badge-verdicts.ts";
@@ -24,19 +25,31 @@ let proc: ChildProcess | null = null;
 let verdicts = new Map<string, SiteFreeTierVerdict>();
 const fetched = new Map<string, string>();
 
-function startServer(): Promise<ChildProcess> {
+function startServerWith(env: Record<string, string>): Promise<{ child: ChildProcess; port: number }> {
   return new Promise((resolve, reject) => {
     const child = spawn("node", [path.join(REPO, "dist", "serve.js")], {
       stdio: ["pipe", "pipe", "pipe"],
-      env: { ...process.env, PORT: "0", BASE_URL: "http://localhost", TZ: "UTC" },
+      env: { ...process.env, PORT: "0", BASE_URL: "http://localhost", TZ: "UTC", ...env },
     });
     const timeout = setTimeout(() => { child.kill(); reject(new Error("Server startup timeout")); }, 60000);
     child.stderr!.on("data", (data: Buffer) => {
       const m = data.toString().match(/running on http:\/\/localhost:(\d+)/);
-      if (m) { port = parseInt(m[1], 10); clearTimeout(timeout); resolve(child); }
+      if (m) { clearTimeout(timeout); resolve({ child, port: parseInt(m[1], 10) }); }
     });
     child.on("error", (e) => { clearTimeout(timeout); reject(e); });
   });
+}
+
+async function startServer(): Promise<ChildProcess> {
+  const started = await startServerWith({});
+  port = started.port;
+  return started.child;
+}
+
+function namedAsDropped(html: string): string[] {
+  return (textOf(html).match(/which is why (.+?) (?:is|are) not here/)?.[1] ?? "")
+    .split(/,\s*|\s+and\s+/)
+    .filter(Boolean);
 }
 
 async function page(pathname: string): Promise<string> {
@@ -244,10 +257,7 @@ describe("the free tier report counts what the site is prepared to vouch for", (
       "the report does not say the lists are filtered",
     );
 
-    const dropped = (textOf(html).match(/which is why (.+?) (?:is|are) not here/)?.[1] ?? "")
-      .split(/,\s*|\s+and\s+/)
-      .filter(Boolean);
-    assert.ok(dropped.length > 0, "the report names no vendor it dropped, so the sentence is untested");
+    const dropped = namedAsDropped(html);
     for (const name of dropped) {
       assert.strictEqual(
         verdicts.get(toSlug(name)),
@@ -259,6 +269,38 @@ describe("the free tier report counts what the site is prepared to vouch for", (
       named.length + dropped.length >= 20,
       `the cards account for ${named.length} vendors published and ${dropped.length} dropped — a name in these lists resolves to no vendor page at all`,
     );
+  });
+});
+
+describe("the report names the vendor it drops from its lists when the change log ends its free tier", () => {
+  let scratch = "";
+  let ending: { child: ChildProcess; port: number } | null = null;
+  let target: { name: string; slug: string } | null = null;
+
+  before(async () => {
+    target = countOnVendors(await page("/state-of-free-tiers"))[0] ?? null;
+    assert.ok(target, "the report names no vendor to end");
+    const yearAgo = new Date(Date.now() - 365 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+    const log = JSON.parse(readFileSync(path.join(REPO, "data", "deal_changes.json"), "utf8"));
+    const removal = log.changes.find((change: { change_type: string; resolution?: unknown; date: string; vendor: string }) =>
+      change.change_type === "free_tier_removed" && !change.resolution && change.date > yearAgo && verdicts.get(toSlug(change.vendor)) === "ended");
+    assert.ok(removal, "no removal from the last year ends a free tier on the site, so there is none to copy");
+    log.changes.push({ ...removal, vendor: target.name });
+    scratch = mkdtempSync(path.join(tmpdir(), "count-on-ended-"));
+    writeFileSync(path.join(scratch, "deal_changes.json"), JSON.stringify(log));
+    ending = await startServerWith({ AGENTDEALS_CHANGES_PATH: path.join(scratch, "deal_changes.json") });
+  });
+
+  after(() => {
+    ending?.child.kill();
+    rmSync(scratch, { recursive: true, force: true });
+  });
+
+  it("takes the vendor off its card and names it as dropped, and its badge reads ended", async () => {
+    const html = await (await fetch(`http://localhost:${ending!.port}/state-of-free-tiers`)).text();
+    assert.ok(!countOnVendors(html).some((vendor) => vendor.slug === target!.slug), `the report still puts ${target!.name} forward`);
+    assert.deepStrictEqual(namedAsDropped(html), [target!.name]);
+    assert.strictEqual((await fetchBadgeVerdicts(ending!.port)).get(target!.slug), "ended");
   });
 });
 

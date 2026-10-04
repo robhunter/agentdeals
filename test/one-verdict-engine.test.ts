@@ -26,6 +26,7 @@ import { vendorSlugMap } from "../dist/vendor-slug.js";
 import { ENDED_BADGE_LABEL } from "../dist/retirement.js";
 import { classifyTier, TIME_LIMITED_TIER_RULES } from "../dist/ranking.js";
 import { endingTheListingConfirms } from "../dist/vendor-verdict-input.js";
+import { riskyCauseEndsTheFreeTier } from "../dist/vendor-verdict.js";
 import type { DealChange } from "../src/types.ts";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -221,6 +222,10 @@ describe("#1206 the badge and the vendor page read the same scale", () => {
       const listed = offers.find(o => o.vendor === vendor);
       return listed !== undefined && endingTheListingConfirms(listed, held.get(vendor.toLowerCase()) ?? []) !== null;
     };
+    const ratedOnAChangeThatEndsNoFreeTier = (vendor: string) => {
+      const cause = vendorRiskAssessment(held.get(vendor.toLowerCase()) ?? []).cause;
+      return cause !== null && !riskyCauseEndsTheFreeTier(cause);
+    };
     const slugs = [...vendorSlugMap.entries()];
     const disagreeing: string[] = [];
     let queue = 0;
@@ -252,6 +257,7 @@ describe("#1206 the badge and the vendor page read the same scale", () => {
         const expected = scaleFor(vendor).level;
         if (level === expected) continue;
         if (label === "free tier removed" && endedByTheListing(vendor)) continue;
+        if (label === "at risk" && expected === "risky" && ratedOnAChangeThatEndsNoFreeTier(vendor)) continue;
         disagreeing.push(`/badge/${slug}.svg reads ${level}, the risk scale reads ${expected}`);
       }
     };

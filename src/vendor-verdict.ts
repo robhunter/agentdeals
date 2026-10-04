@@ -629,6 +629,12 @@ export type FreeTierClaim =
   | { states: "ended"; how: "removed"; cause: RiskCause }
   | { states: "unconfirmed"; because: BadgeWithholding };
 
+export const RISKY_CHANGES_THAT_END_NO_FREE_TIER: ReadonlySet<string> = new Set(["open_source_killed"]);
+
+export function riskyCauseEndsTheFreeTier(cause: Pick<RiskCause, "change_type">): boolean {
+  return !RISKY_CHANGES_THAT_END_NO_FREE_TIER.has(cause.change_type);
+}
+
 export function freeTierClaim(input: VendorVerdictInput): FreeTierClaim {
   const badge = vendorBadge(input);
   if (badge.kind === "ended") {
@@ -636,7 +642,9 @@ export function freeTierClaim(input: VendorVerdictInput): FreeTierClaim {
     return { states: "ended", how: "retired", tier: input.tier ?? null };
   }
   if (badge.kind === "none") return { states: "unconfirmed", because: badge.because };
-  if (badge.word === "risky" && input.cause) return { states: "ended", how: "removed", cause: input.cause };
+  if (badge.word === "risky" && input.cause && riskyCauseEndsTheFreeTier(input.cause)) {
+    return { states: "ended", how: "removed", cause: input.cause };
+  }
   if (input.endingTheListingConfirms) return { states: "ended", how: "removed", cause: input.endingTheListingConfirms };
   return { states: "offered", level: badge.word };
 }

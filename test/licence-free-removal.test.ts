@@ -67,7 +67,7 @@ describe("a licence grants the free use and a pricing page cannot withdraw it (#
     });
 
     it("names the licence as the ground for every offer whose free thing the licence grants", () => {
-      for (const vendor of ["Plausible Analytics", "Circum Icons", "Rybbit", "DBOS", "n8n", "Kong", "MinIO"]) {
+      for (const vendor of ["Plausible Analytics", "Circum Icons", "Rybbit", "DBOS", "n8n", "Kong"]) {
         assert.ok(isFreeByLicence(offerFor(vendor)), `${vendor} is free because its licence grants the use`);
       }
     });

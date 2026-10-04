@@ -60,6 +60,7 @@ interface Subject {
   vendor: string;
   kind: "rating" | "time_limited" | "ended" | "none";
   word?: string;
+  offered: boolean;
   because?: Withholding;
   reasonKey: string | null;
   verifiedDate: string;
@@ -148,6 +149,7 @@ before(async () => {
       vendor,
       kind: badge.kind,
       word: badge.word,
+      offered: freeTierClaim(input).states === "offered",
       because,
       reasonKey: because ? (because.reason === "gated" ? because.gate! : because.reason) : null,
       verifiedDate,
@@ -411,12 +413,12 @@ describe("#1389 /badges counts at risk over vendors we make a claim about", () =
     const counts = new Map(tiles);
     assert.ok(counts.has("At Risk"), "/badges no longer publishes an at-risk count");
 
-    const cautioned = subjects.filter(s => s.kind === "rating" && s.word === "caution").length;
+    const lowered = subjects.filter(s => s.kind === "rating" && s.offered && (s.word === "caution" || s.word === "risky")).length;
     const withheld = subjects.filter(s => s.kind === "none").length;
     const stale = subjects.filter(s => s.kind === "rating" && s.word === "stable" && s.ageDays > staleAfter).length;
     const runsOut = subjects.filter(s => s.kind === "time_limited").length;
 
-    assert.strictEqual(counts.get("At Risk"), cautioned, "the at-risk tile counts vendors we publish no claim about");
+    assert.strictEqual(counts.get("At Risk"), lowered, "the at-risk tile counts vendors we publish no claim about");
     assert.strictEqual(counts.get("Unrated"), withheld, "the unrated tile does not match the badges that withhold");
     assert.strictEqual(counts.get("Stale"), stale, "the stale tile does not match the badges that read stale");
     assert.strictEqual(counts.get("Time-Limited"), runsOut, "the time-limited tile does not match the badges for a listing that runs out");

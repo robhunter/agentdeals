@@ -136,7 +136,7 @@ export function pagesOnTheReviewRegister(): Population {
   return { size: JSON.parse(readFileSync(at, "utf-8")).pages.length, read: "pages the review register holds" };
 }
 
-const ENDS_A_FREE_TIER = new Set(["free_tier_removed", "open_source_killed"]);
+const ENDS_A_FREE_TIER = new Set(["free_tier_removed"]);
 
 type StoredChange = { vendor: string; change_type: string; date: string; resolution?: unknown };
 

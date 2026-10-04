@@ -226,10 +226,10 @@ describe("a sweep read against the population it covers states coverage, not hea
     const held = process.env.AGENTDEALS_CHANGES_PATH;
     process.env.AGENTDEALS_CHANGES_PATH = at;
     try {
-      assert.strictEqual(vendorsTheChangeLogEnds().size, 2);
+      assert.strictEqual(vendorsTheChangeLogEnds().size, 1);
       assert.strictEqual(vendorsTheChangeLogEnds().read, "vendors whose free tier the change log ends");
-      writeFileSync(at, JSON.stringify({ changes: stored.filter(c => c.vendor !== "Source Closed") }));
-      assert.strictEqual(vendorsTheChangeLogEnds().size, 1, "the population is read from the store, not carried");
+      writeFileSync(at, JSON.stringify({ changes: stored.filter(c => c.vendor !== "Ended") }));
+      assert.strictEqual(vendorsTheChangeLogEnds().size, 0, "the population is read from the store, not carried");
     } finally {
       if (held === undefined) delete process.env.AGENTDEALS_CHANGES_PATH;
       else process.env.AGENTDEALS_CHANGES_PATH = held;

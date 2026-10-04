@@ -8,6 +8,7 @@ import { assertCoversPopulation, assertPopulationFloor, assertSharesPopulation, 
 import { everyRouteTheSitemapPublishes } from "./sitemap-routes.ts";
 
 const { descriptionDeniesAFreeTier, DENIES_A_FREE_TIER, listingOffersAFreeTier } = await import("../dist/free-tier-record.js");
+const { riskyCauseEndsTheFreeTier } = await import("../dist/vendor-verdict.js");
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -196,7 +197,7 @@ describe("#1724 structured data prices a tier at zero only where we state that t
   });
 
   it("publishes no price of zero for an offer we rate risky over a change that ended it", () => {
-    const ended = offersWhere(o => o.risk_level === "risky" && Boolean(o.risk_cause));
+    const ended = offersWhere(o => o.risk_level === "risky" && Boolean(o.risk_cause) && riskyCauseEndsTheFreeTier(o.risk_cause as { change_type: string }));
     assertPopulationFloor(ended.size, 6, "offers are rated risky over a change that ended them");
     assertPopulationFloor(nodesNaming(ended).length, 20, "nodes name one of those offers");
     assert.deepStrictEqual(pricedAmong(ended).slice(0, 25), []);

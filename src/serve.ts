@@ -1697,7 +1697,7 @@ function readBadgeStatus(vendorSlug: string, servedOn: string): BadgeReading {
     return { status: "time-limited", label: timeLimited.badgeLabel, verifiedDate: latestVerified };
   }
 
-  if (claim.level === "caution") {
+  if (claim.level === "caution" || claim.level === "risky") {
     return { status: "at-risk", label: "at risk", verifiedDate: latestVerified };
   }
 
@@ -40241,12 +40241,12 @@ ${mcpCtaCss()}
       </tr>
       <tr>
         <td class="provider-col">MinIO</td>
-        <td>Self-hosted</td>
+        <td>Self-hosted, single node</td>
         <td>Unlimited</td>
         <td>Unlimited</td>
         <td class="check">&#10003;</td>
         <td class="cross">&#10007;</td>
-        <td class="check">&#10003; OSS</td>
+        <td class="check">&#10003;</td>
         <td>Your infra</td>
       </tr>
     </tbody>
@@ -40429,7 +40429,7 @@ ${mcpCtaCss()}
 
   <div class="diff-card">
     <h3>MinIO</h3>
-    <div class="diff-desc"><strong>Cost:</strong> Free, open-source (GNU AGPL v3). The most widely deployed S3-compatible object storage. Single binary, runs anywhere (Docker, Kubernetes, bare metal). Enterprise features: erasure coding, bitrot protection, encryption at rest, IAM policies, bucket versioning, cross-region replication. Active development with frequent releases. The default choice for any self-hosted S3-compatible storage need.</div>
+    <div class="diff-desc"><strong>Cost:</strong> Free single-node AIStor, under a commercial licence. The original AGPLv3 edition is no longer maintained, with no bug fixes or security patches. The most widely deployed S3-compatible object storage. Single binary, runs anywhere (Docker, Kubernetes, bare metal). Enterprise features: erasure coding, bitrot protection, encryption at rest, IAM policies, bucket versioning, cross-region replication. Active development with frequent releases. The default choice for any self-hosted S3-compatible storage need.</div>
   </div>
 
   <div class="diff-card">
@@ -43931,7 +43931,7 @@ const STRUCTURALLY_FREE_CARDS = [
   {
     heading: "Open Source Safety Net",
     blurb: "Self-hostable alternatives that can&rsquo;t remove free tiers by definition. Always have an exit strategy.",
-    vendors: ["GitLab", "Gitea", "Plausible", "Umami", "n8n", "Meilisearch", "MinIO"],
+    vendors: ["GitLab", "Gitea", "Plausible", "Umami", "n8n", "Meilisearch"],
   },
 ];
 
