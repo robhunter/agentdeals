@@ -11,6 +11,10 @@ import {
   releaseReadingsWhoseBaselineMoved,
   writeHeldReadings,
 } from "./change-corroboration.js";
+import { detailWithoutFiguresWeDoNotPublish, needsAReread, reportedFigures } from "./withdraw-figures-we-do-not-publish.js";
+import { figuresWeAlsoPublish, priceSignals } from "./change-gate.js";
+import { sourceCheckRecord, statesAnAmountOfZero } from "./vendor-naming.js";
+import { fetchPageText } from "./verify-freshness.js";
 import { loadDealChanges } from "../dist/data.js";
 import { changesByVendor } from "../dist/superseded-census.js";
 import { RESTATEMENT_REFUSALS, restatementRulings, withheldTermsMeasure } from "../dist/restatement.js";
@@ -63,6 +67,25 @@ export function rulingsOver(offers, today) {
   return restatementRulings(offers, (offer) => byVendor.get(offer.vendor.toLowerCase()) ?? [], today);
 }
 
+export const NOT_RESTATED_FOR_A_CHECKED_FIGURE =
+  "Not restated because the reading drops a figure our source check found on the page";
+
+export function figuresTheReadingDrops(ruling) {
+  const reported = reportedFigures(ruling.offer.source_check?.detail);
+  if (!reported) return [];
+  const found = reported.figures.filter((figure) => !statesAnAmountOfZero(figure));
+  const stillStated = figuresWeAlsoPublish(found, ruling.description);
+  return figuresWeAlsoPublish(found, ruling.offer.description).filter((figure) => !stillStated.includes(figure));
+}
+
+export function restatementsKeptForTheCheck(rulings) {
+  return rulings.filter((ruling) => !ruling.refusal && figuresTheReadingDrops(ruling).length > 0);
+}
+
+function mayBeWritten(ruling) {
+  return !ruling.refusal && figuresTheReadingDrops(ruling).length === 0;
+}
+
 export function applyRestatements(data, rulings, today, limit = Infinity) {
   const written = [];
   const byKey = new Map(
@@ -70,7 +93,7 @@ export function applyRestatements(data, rulings, today, limit = Infinity) {
   );
   for (const ruling of rulings) {
     if (written.length >= limit) break;
-    if (ruling.refusal) continue;
+    if (!mayBeWritten(ruling)) continue;
     const index = byKey.get(offerKey(ruling.offer.vendor, ruling.offer.url));
     if (index === undefined) continue;
     written.push(restatementEntry(ruling, today));
@@ -83,7 +106,7 @@ export function applyRestatements(data, rulings, today, limit = Infinity) {
 export function termsTheWriteWouldPublish(rulings) {
   return new Map(
     rulings
-      .filter((ruling) => !ruling.refusal)
+      .filter(mayBeWritten)
       .map((ruling) => [offerKey(ruling.offer.vendor, ruling.offer.url), ruling.description]),
   );
 }
@@ -182,17 +205,49 @@ export function restatedFromPointer(entry) {
   };
 }
 
-export function putTheStoredTermsBack(data, entry, today, entries = []) {
-  const offer = (data.offers ?? []).find(
+function offerRestatedBy(data, entry) {
+  return (data.offers ?? []).find(
     (candidate) => offerKey(candidate.vendor, candidate.url) === offerKey(entry.vendor, entry.url),
   );
+}
+
+export function settleTheCheck(offer) {
+  const detail = offer.source_check?.detail;
+  if (!reportedFigures(detail)) return;
+  offer.source_check = { ...offer.source_check, detail: detailWithoutFiguresWeDoNotPublish(detail, offer.description) };
+}
+
+export function putTheStoredTermsBack(data, entry, today, entries = []) {
+  const offer = offerRestatedBy(data, entry);
   if (!offer) return null;
   offer.description = entry.previous_description;
   const stillStanding = restatementStandingBefore(entries, entry);
   if (stillStanding) offer.restated_from = restatedFromPointer(stillStanding);
   else delete offer.restated_from;
   offer.restatement_reverted = { record_date: entry.record_date, reverted_on: today };
+  settleTheCheck(offer);
   return { ...entry, reverted_on: today };
+}
+
+export function checksToReadAgain(data, reverted) {
+  return reverted
+    .map((entry) => offerRestatedBy(data, entry))
+    .filter((offer) => offer && needsAReread(offer.source_check?.detail, offer.description));
+}
+
+export async function readTheChecksAgain(offers, today, fetchPage = fetchPageText) {
+  for (const offer of offers) {
+    const fetched = await fetchPage(offer.url);
+    const page = fetched.ok
+      ? { ok: true, text: fetched.text, structured: fetched.structured ?? null }
+      : { ok: false, error: fetched.error };
+    offer.source_check = sourceCheckRecord(offer, page, page.ok ? priceSignals(page.text) : [], today);
+  }
+  return offers;
+}
+
+export function readAgainLines(offers) {
+  return offers.map((offer) => `  ⇤ ${offer.vendor}'s source check read again against the restored terms: ${offer.source_check.detail}`);
 }
 
 export function withTheRevertRecorded(entries, entry, recorded) {
@@ -274,7 +329,20 @@ export function openingLine(measure) {
   );
 }
 
-export function summaryLines(measure, written, path) {
+export function keptLines(kept) {
+  const lines = [`${NOT_RESTATED_FOR_A_CHECKED_FIGURE}: ${kept.length}`];
+  if (kept.length > 0) lines.push(`Not restated, by vendor: ${kept.map((ruling) => ruling.offer.vendor).join(", ")}`);
+  return lines;
+}
+
+export function keptRulingLines(kept) {
+  return kept.map((ruling) => {
+    const dropped = figuresTheReadingDrops(ruling).map((figure) => `"${figure}"`).join(" and ");
+    return `  ⇥ ${ruling.offer.vendor} not restated: the reading drops ${dropped}, which our source check found on ${ruling.offer.url}`;
+  });
+}
+
+export function summaryLines(measure, written, path, kept = []) {
   return [
     "",
     "── Summary ──",
@@ -284,12 +352,13 @@ export function summaryLines(measure, written, path) {
     openingLine(measure),
     ...refusalLines(measure),
     `Re-read since the record and still withheld: ${measure.offers_re_read_since_the_record_and_still_withheld}`,
+    ...keptLines(kept),
     `Restated this run: ${written.length}`,
     `Restatements recorded in ${path}`,
   ];
 }
 
-export function reportOnlyLines(measure) {
+export function reportOnlyLines(measure, kept = []) {
   return [
     "",
     "── Summary ──",
@@ -297,6 +366,7 @@ export function reportOnlyLines(measure) {
     openingLine(measure),
     ...refusalLines(measure),
     `Re-read since the record and still withheld: ${measure.offers_re_read_since_the_record_and_still_withheld}`,
+    ...keptLines(kept),
     "Restated this run: 0",
     "Run again with --write to store those readings as our terms.",
   ];
@@ -338,11 +408,13 @@ async function main() {
       console.error(`No restatement was recorded on ${revertDay}.`);
       process.exit(2);
     }
+    const readAgain = await readTheChecksAgain(checksToReadAgain(data, outcome.reverted), today);
     if (outcome.reverted.length > 0) {
       writeFileSync(path, JSON.stringify(data, null, 2) + "\n");
       writeRestatements(outcome.left);
     }
     for (const line of revertRunLines(revertDay, outcome)) console.log(line);
+    for (const line of readAgainLines(readAgain)) console.log(line);
     process.exit(outcome.reverted.length === outcome.written.length ? 0 : 1);
   }
 
@@ -356,24 +428,29 @@ async function main() {
       console.error(`${revert} was restated on ${entry.restated_on} but is no longer in the index.`);
       process.exit(2);
     }
+    const readAgain = await readTheChecksAgain(checksToReadAgain(data, [entry]), today);
     writeFileSync(path, JSON.stringify(data, null, 2) + "\n");
     writeRestatements(left);
     console.log(`Reverted ${entry.vendor} to the terms we stored before ${entry.restated_on}.`);
     console.log(`  restored: ${entry.previous_description}`);
+    for (const line of readAgainLines(readAgain)) console.log(line);
     process.exit(0);
   }
 
   const rulings = rulingsOver(data.offers ?? [], today);
   const measure = withheldTermsMeasure(rulings);
+  const kept = restatementsKeptForTheCheck(rulings);
 
   if (dryRun) {
     const wouldRelease = releaseHeldReadingsBehind(termsTheWriteWouldPublish(rulings), { dryRun: true });
-    for (const line of reportOnlyLines(measure)) console.log(line);
+    for (const line of keptRulingLines(kept)) console.log(line);
+    for (const line of reportOnlyLines(measure, kept)) console.log(line);
     for (const line of releaseLines(wouldRelease.resolutions)) console.log(line);
     process.exit(0);
   }
 
   const written = applyRestatements(data, rulings, today, limit);
+  for (const line of keptRulingLines(kept)) console.log(line);
 
   for (const entry of written) {
     console.log(`  ✎ ${entry.vendor} restated from ${entry.source_url} as read on ${entry.reading_date}`);
@@ -384,7 +461,7 @@ async function main() {
   const released = releaseHeldReadingsBehind(termsTheWriteDidPublish(written));
   const store = writeRestatements([...held, ...written]);
   if (written.length > 0) writeFileSync(path, JSON.stringify(data, null, 2) + "\n");
-  for (const line of summaryLines(measure, written, store.path)) console.log(line);
+  for (const line of summaryLines(measure, written, store.path, kept)) console.log(line);
   for (const line of releaseLines(released.resolutions)) console.log(line);
   process.exit(0);
 }

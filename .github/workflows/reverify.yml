@@ -82,9 +82,13 @@ jobs:
           RESTATED=$(grep -oE '^Restated this run: [0-9]+' /tmp/restate.log | grep -oE '[0-9]+$' || echo 0)
           ANSWERABLE=$(grep -oE '^We may restate from that reading: [0-9]+' /tmp/restate.log | grep -oE '[0-9]+$' || echo 0)
           STILL=$(grep -oE '^Re-read since the record and still withheld: [0-9]+' /tmp/restate.log | grep -oE '[0-9]+$' || echo 0)
+          KEPT=$(grep -oE '^Not restated because the reading drops a figure our source check found on the page: [0-9]+' /tmp/restate.log | grep -oE '[0-9]+$' || echo 0)
+          KEPT_VENDORS=$(sed -n 's/^Not restated, by vendor: //p' /tmp/restate.log)
+          KEPT_CLAUSE="$KEPT not restated because the reading drops a figure our source check found on the page${KEPT_VENDORS:+ ($KEPT_VENDORS)}"
           echo "restated=$RESTATED" >> "$GITHUB_OUTPUT"
           echo "answerable=$ANSWERABLE" >> "$GITHUB_OUTPUT"
           echo "still_withheld=$STILL" >> "$GITHUB_OUTPUT"
+          echo "kept_clause=$KEPT_CLAUSE" >> "$GITHUB_OUTPUT"
 
       - name: Run the suite, then push to main only if it is green
         id: gate
@@ -97,6 +101,7 @@ jobs:
           RESTATED: ${{ steps.restate.outputs.restated }}
           ANSWERABLE: ${{ steps.restate.outputs.answerable }}
           STILL_WITHHELD: ${{ steps.restate.outputs.still_withheld }}
+          KEPT_CLAUSE: ${{ steps.restate.outputs.kept_clause }}
           VERIFIED: ${{ steps.reverify.outputs.verified }}
           FLAGGED: ${{ steps.reverify.outputs.flagged }}
           RECORDED: ${{ steps.reverify.outputs.recorded }}
@@ -109,7 +114,7 @@ jobs:
         run: |
           bash scripts/gate-data-push.sh \
             data-quarantine/rolling-reverification \
-            "data(auto): rolling re-verification — ${VERIFIED} verified of ${DRAWN} drawn from the queue, ${SECOND} re-read to corroborate a held verdict, ${FLAGGED} flagged, ${RECORDED} changes recorded, ${RESTATED} of ${ANSWERABLE} withheld entries restated from the reading their page already showed with ${STILL_WITHHELD} re-read and still withheld, ${HELD} awaiting a second reading, ${RETRIED} retried from quarantine, ${QUARANTINED} in quarantine, ${REPICKED} to be checked again" \
+            "data(auto): rolling re-verification — ${VERIFIED} verified of ${DRAWN} drawn from the queue, ${SECOND} re-read to corroborate a held verdict, ${FLAGGED} flagged, ${RECORDED} changes recorded, ${RESTATED} of ${ANSWERABLE} withheld entries restated from the reading their page already showed with ${STILL_WITHHELD} re-read and still withheld, ${KEPT_CLAUSE}, ${HELD} awaiting a second reading, ${RETRIED} retried from quarantine, ${QUARANTINED} in quarantine, ${REPICKED} to be checked again" \
             data/index.json data/deal_changes.json data/change_refusals.json data/change_corroboration.json data/verification_state.json data/restated_terms.json data/quality_budgets.json data/page-lastmod.json data/page-reviews.json artifacts/free-llm-api-index/README.md
 
       - name: Say where it can be seen what the gate did with this run's data
