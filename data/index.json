@@ -543,9 +543,9 @@
     {
       "vendor": "Azure",
       "category": "Cloud IaaS",
-      "description": "65+ always-free services: Functions (1 million requests/month, Consumption plan), Container Apps (180,000 vCPU seconds, 360,000 GiB seconds, 2 million requests), SQL Database (10 serverless databases, 100,000 vCore seconds and 32 GB each a month), Cosmos DB (1,000 RU/s, 25 GB), App Service (10 apps), Entra ID (50,000 objects), DevOps (5 users). 12 months for new customers: B2pts v2 and B2ats v2 VMs (750 hours each), Blob Storage (5 GB), Disk Storage (2 64 GB P6 SSDs). $200 credit for 30 days, spending limit on by default; move to pay-as-you-go to continue.",
+      "description": "65+ always-free services: Functions (1 million requests/month, Consumption plan), Container Apps (180,000 vCPU seconds, 360,000 GiB seconds, 2 million requests), SQL Database (10 serverless databases, 100,000 vCore seconds and 32 GB each a month), Cosmos DB (1,000 RU/s, 25 GB), App Service (10 apps), Entra ID (50,000 objects), DevOps (5 users). 12 months for new customers: B2pts v2 and B2ats v2 VMs (750 hours each), Database for PostgreSQL and Database for MySQL (750 hours each of a B1MS Flexible Server, 32 GB storage), Blob Storage (5 GB), Disk Storage (2 64 GB P6 SSDs). $200 credit for 30 days, spending limit on by default; move to pay-as-you-go to continue.",
       "tier": "Free Tier",
-      "url": "https://azure.microsoft.com/en-us/pricing/free-services/",
+      "url": "https://azure.microsoft.com/en-us/pricing/purchase-options/azure-account",
       "tags": [
         "cloud",
         "iaas",
@@ -557,9 +557,9 @@
       ],
       "verifiedDate": "2026-10-01",
       "source_check": {
-        "checked": "2026-10-01",
+        "checked": "2026-10-04",
         "outcome": "ok",
-        "detail": "the page names Azure as \"azure\" and states amounts, none of which we matched to the terms we publish"
+        "detail": "the page names Azure as \"azure\" and states \"$200\""
       }
     },
     {
