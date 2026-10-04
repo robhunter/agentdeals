@@ -8096,7 +8096,7 @@
       "changed": "2026-10-04"
     },
     "/vendor/repoforge": {
-      "hash": "5c2efcaa5725ee0f",
+      "hash": "16abbd21816d889b",
       "changed": "2026-10-04"
     },
     "/vendor/repohistory": {
@@ -8883,7 +8883,7 @@
       "changed": "2026-10-04"
     },
     "/vendor/tailscale": {
-      "hash": "4777014ac970233b",
+      "hash": "7d9d4197dc6fc80e",
       "changed": "2026-10-04"
     },
     "/vendor/tailwindadmin": {
@@ -9248,7 +9248,7 @@
       "changed": "2026-10-04"
     },
     "/vendor/uploadcare": {
-      "hash": "8b81e2c4568539ea",
+      "hash": "df02d4a3f1c52656",
       "changed": "2026-10-04"
     },
     "/vendor/upptime": {
