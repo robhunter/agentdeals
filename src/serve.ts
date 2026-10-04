@@ -38,7 +38,7 @@ import { NO_CURRENT_FIGURE, costHeadlineCaveat, limitCellText, mayRecommendAsFre
 import { changesByVendor } from "./superseded-census.js";
 import { buildComparisonMap, comparisonSlug } from "./comparison-pairs.js";
 import { comparisonVerdictText, freeTierFaqAnswer, stabilityFaqAnswer, type ComparisonSide, type FreeTierSide, type SideFreeTier, type StabilityRating } from "./comparison-verdict.js";
-import { gateStatesAnEnding, publishedVendorLevel, vendorVerdictSentence, withheldRecordCountsOf, WITHHOLDING_BADGE_LABELS, vendorBadge, freeTierClaim, endingStatedInPlaceOfARating, endingShutsTheProductDown, endedClaimReliabilityAnswer, statesRiskCause, withholdingThatDoesNotLapse, demotionTheVerdictNames, narrowingSentence, ourOwnRecordsSentence, changeKindNoun, isOurOwnBookkeeping, emptyHistoryCaveatSentence, refusedReadOurConfirmationSupersedes, refusedReadWeHold, refusedReadWithholdingSentence, nothingWeReadDescribesTheTerms, unconfirmedThresholdSentence, unconfirmedTermsOpening, whyWeCannotConfirmTheseTerms, withheldForARefusedRead, withUnconfirmedTerms, refusalWithholdsStability, termsUnconfirmedBySource, termsTheVerdictWithholds, closingTerms, termsWithTheReasonWeCannotConfirmThem, termsNotVerifiedMetaSentence, termsWithheldLabel, theReadConfirmedThePrice, unconfirmedTermsSentence, whereTheDoubtSits, withheldBadgeLabel, type BadgeWithholding, type UnconfirmedTerms, type FreeTierClaim, type VendorVerdictInput, type WhereTheDoubtSits } from "./vendor-verdict.js";
+import { gateStatesAnEnding, publishedVendorLevel, restorationClause, restoredRemovalReason, vendorVerdictSentence, withheldRecordCountsOf, WITHHOLDING_BADGE_LABELS, vendorBadge, freeTierClaim, endingStatedInPlaceOfARating, endingShutsTheProductDown, endedClaimReliabilityAnswer, statesRiskCause, withholdingThatDoesNotLapse, demotionTheVerdictNames, narrowingSentence, ourOwnRecordsSentence, changeKindNoun, isOurOwnBookkeeping, emptyHistoryCaveatSentence, refusedReadOurConfirmationSupersedes, refusedReadWeHold, refusedReadWithholdingSentence, nothingWeReadDescribesTheTerms, unconfirmedThresholdSentence, unconfirmedTermsOpening, whyWeCannotConfirmTheseTerms, withheldForARefusedRead, withUnconfirmedTerms, refusalWithholdsStability, termsUnconfirmedBySource, termsTheVerdictWithholds, closingTerms, termsWithTheReasonWeCannotConfirmThem, termsNotVerifiedMetaSentence, termsWithheldLabel, theReadConfirmedThePrice, unconfirmedTermsSentence, whereTheDoubtSits, withheldBadgeLabel, type BadgeWithholding, type UnconfirmedTerms, type FreeTierClaim, type VendorVerdictInput, type WhereTheDoubtSits } from "./vendor-verdict.js";
 import { descriptionDeniesAFreeTier, listingOffersAFreeTier, tierMayCarryAFreePlanExcerpt, tierRecordsAFreeTier, tierWhoseFreeOfferIsTheLicence } from "./free-tier-record.js";
 import { whyTheExcerptCannotStand } from "./free-plan-excerpt-rules.js";
 import { PAGE_HEAD_OPEN, withLedeBeforeNav } from "./page-lede.js";
@@ -5289,7 +5289,7 @@ function buildVendorPage(slug: string): string | null {
 
   const recordTheVerdictRestsOn = endedBy ?? demotionTheVerdictNames(verdictInput);
   const verdictLapseLine = recordTheVerdictRestsOn
-    ? `  <p class="verdict-lapse-line" style="margin:.4rem 0 .6rem;font-size:.85rem;color:var(--text-muted)">${escHtmlServer(lapsingDemotionStated(recordTheVerdictRestsOn))}</p>`
+    ? `  <p class="verdict-lapse-line" style="margin:.4rem 0 .6rem;font-size:.85rem;color:var(--text-muted)">${escHtmlServer(lapsingDemotionStated(recordTheVerdictRestsOn, changesRatingTheListedTier(primary, vendorChanges)))}</p>`
     : "";
 
   const headingBadge = vendorHeadingBadge(verdictInput);
@@ -5749,6 +5749,7 @@ ${allCompareLinks.join("\n")}
     : `${vendorName}'s free tier is considered risky because of one specific recorded change${riskCause ? `, ${changeDateClause(riskCause)}: ${changeSummaryText(riskCause)}` : "."} Consider alternatives.`;
   const faqCategoryAnswer = `${vendorName} is categorized under ${allCategories.join(", ")} on AgentDeals.${alternatives.length > 0 ? ` We list ${alternatives.length} other ${primary.category} services alongside it, every one of them on this page with its free tier and the stability we publish for it.` : ""}`;
 
+  const restoredRemovalLowersTheRating = riskLevel === "caution" ? restoredRemovalReason(verdictInput) : null;
   const faqProductionAnswer = productionGate
     ? `${productionGate.reason} ${NO_FREE_TIER_FOR_PRODUCTION}`
     : termsSuperseded
@@ -5762,7 +5763,9 @@ ${allCompareLinks.join("\n")}
       ? `${vendorName}'s free tier can be suitable for small production workloads and side projects. ${primaryGate ? "It" : "We rate it stable and it"} offers ${keyLimit}, so it's a reasonable starting point.${vendorChanges.length > 0 ? ` ${narrowingSentence(vendorChanges, primary, termsSuperseded !== null)}` : ""} Monitor your usage against the limits and have an upgrade plan ready.`
       : riskLevel === null
       ? `${vendorName}'s free tier is usable for prototyping and development. ${primaryGate ? vendorHistorySentence(vendorName, historyLevel, riskCause) : levelWithheldBecause}`
-      : `${vendorName}'s free tier is usable for prototyping and development, but we rate it ${riskLevel}${riskCause ? ` because of one recorded ${changeKindNoun(riskCause.change_type)}, ${changeDateClause(riskCause)}` : ""}. Consider alternatives with more stable pricing for critical services.`)
+      : restoredRemovalLowersTheRating
+      ? `${vendorName}'s free tier is usable for prototyping and development, but we rate it ${riskLevel}. ${restoredRemovalLowersTheRating} Consider alternatives with more stable pricing for critical services.`
+      : `${vendorName}'s free tier is usable for prototyping and development, but we rate it ${riskLevel}${riskCause ? ` because of one recorded ${changeKindNoun(riskCause.change_type)}, ${changeDateClause(riskCause)}${restorationClause(riskCause, verdictInput.changes)}` : ""}. Consider alternatives with more stable pricing for critical services.`)
     : `${vendorName} does not offer a free tier for production use. Consider free alternatives in ${primary.category}.`);
   const changesVendorMade = changesTheVendorMade(vendorChanges);
   const mostRecentChange = newestChangeInEffect(changesVendorMade, servedOn);
@@ -22987,7 +22990,7 @@ ${mcpCtaCss()}
   </div>
 
   <h2>${stabilityEmoji.watch} Watch — Moderate Risk</h2>
-  <p class="section-intro">One negative pricing change tracked. The free tier still exists but has been tightened. Monitor for further changes.</p>
+  <p class="section-intro">One negative pricing change tracked. The free tier still exists but has been tightened, or was removed and later restored. Monitor for further changes.</p>
   <p class="section-intro">${escHtmlServer(WATCH_RECEIVES_FROM_VOLATILE_RULE)}</p>
   ${watchVendors.map(v => buildVendorCard(v, stabilityColors.watch)).join("\n  ")}
   <div class="context-box">

@@ -4,6 +4,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { hardcodedRowsCarryingASlug } from "./hardcoded-vendor-rows.ts";
 import { searchRecordingCalls } from "./search-recording-paths.ts";
+import { recordRestoringTheFreeTier } from "../dist/data.js";
 
 export const HEADROOM = 0.25;
 
@@ -138,7 +139,7 @@ export function pagesOnTheReviewRegister(): Population {
 
 const ENDS_A_FREE_TIER = new Set(["free_tier_removed"]);
 
-type StoredChange = { vendor: string; change_type: string; date: string; resolution?: unknown };
+type StoredChange = { vendor: string; change_type: string; date: string; resolution?: unknown; current_state?: string | null };
 
 export function vendorsTheChangeLogEnds(): Population {
   const REPO = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -157,7 +158,7 @@ export function vendorsTheChangeLogEnds(): Population {
       .filter((change) => ENDS_A_FREE_TIER.has(change.change_type))
       .sort((a, b) => b.date.localeCompare(a.date))[0];
     if (!ending) continue;
-    if (held.some((change) => change.change_type === "new_free_tier" && change.date > ending.date)) continue;
+    if (recordRestoringTheFreeTier(ending, held as Parameters<typeof recordRestoringTheFreeTier>[1])) continue;
     ended++;
   }
   return { size: ended, read: "vendors whose free tier the change log ends" };
