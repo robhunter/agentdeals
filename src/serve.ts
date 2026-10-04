@@ -33443,7 +33443,7 @@ ${mcpCtaCss()}
 
 function buildAzureFreeTier2026Page(): string {
   const title = "Azure Free Tier Complete Guide 2026 — Every Free Service, Real Limits, and Hidden Costs";
-  const metaDescAzure = "Comprehensive guide to every Azure free tier service in 2026. 65+ always-free services, $200 trial credit, 12-month free VMs and SQL. Cosmos DB lifetime free tier, Azure Functions 1M req/mo, and hidden costs explained.";
+  const metaDescAzure = "Comprehensive guide to every Azure free tier service in 2026. 65+ always-free services including SQL Database, $200 trial credit, 12-month free VMs. Cosmos DB lifetime free tier, Azure Functions, and hidden costs explained.";
   const slug = "azure-free-tier-2026";
   const pubDate = "2026-03-31";
 
@@ -33466,41 +33466,41 @@ function buildAzureFreeTier2026Page(): string {
   }
 
   const alwaysFreeServices: AzureService[] = [
-    { name: "Azure Functions", slug: "azure", limits: "1M executions/month, 400K GB-seconds compute", category: "Compute", highlight: true },
+    { name: "Azure Functions", slug: "azure", limits: "Flex Consumption: 250,000 executions and 100,000 GB-s/month. Legacy Consumption plan: 1M executions and 400,000 GB-s/month", category: "Compute", highlight: true },
     { name: "Azure Cosmos DB", slug: "azure", limits: "1,000 RU/s throughput + 25 GB storage (lifetime)", category: "Database", highlight: true },
+    { name: "Azure SQL Database", slug: "azure", limits: "Up to 10 General Purpose serverless databases, each with 100,000 vCore seconds and 32 GB/month, for the lifetime of your subscription", category: "Database" },
     { name: "App Service", slug: "azure", limits: "10 web/mobile/API apps (F1 tier), 1 GB storage, 60 min/day compute", category: "Compute" },
+    { name: "Container Apps", slug: "azure", limits: "180,000 vCPU seconds, 360,000 GiB seconds and 2 million requests/month", category: "Containers" },
     { name: "Azure DevOps", slug: "azure", limits: "5 users, unlimited private repos, 1 free parallel CI/CD pipeline (1,800 min/mo)", category: "DevOps" },
     { name: "Azure Active Directory (Entra ID)", slug: "azure", limits: "50,000 stored objects, SSO for all apps", category: "Identity" },
-    { name: "Azure Storage (Blob)", slug: "azure", limits: "5 GB LRS hot block blob storage, 20K read / 10K write operations", category: "Storage" },
-    { name: "Azure Cognitive Search", slug: "azure", limits: "3 indexes, 50 MB storage per service (F tier)", category: "Search" },
-    { name: "Bandwidth", slug: "azure", limits: "100 GB outbound data transfer/month (5 GB first 12 months is separate)", category: "Networking" },
-    { name: "Azure Maps", slug: "azure", limits: "250K mapping transactions/month", category: "Location" },
+    { name: "Azure AI Search", slug: "azure", limits: "3 indexes, 50 MB storage per service (F tier)", category: "Search" },
+    { name: "Foundry Tools: Language", slug: "azure", limits: "5,000 text records/month", category: "AI/ML" },
+    { name: "Foundry Tools: Translator", slug: "azure", limits: "2 million characters/month", category: "AI/ML" },
+    { name: "Bandwidth", slug: "azure", limits: "100 GB outbound data transfer/month (15 GB outbound for the first 12 months is separate)", category: "Networking" },
+    { name: "Azure Maps", slug: "azure", limits: "1,000 to 5,000 transactions/month for specific mapping and location insights features", category: "Location" },
     { name: "Azure IoT Hub", slug: "azure", limits: "8,000 messages/day (F1 tier)", category: "IoT" },
-    { name: "Notification Hubs", slug: "azure", limits: "1M push notifications, unlimited namespaces (free tier)", category: "Messaging" },
+    { name: "Notification Hubs", slug: "azure", limits: "1 million pushes, 100 free namespaces, 500 active devices per namespace", category: "Messaging" },
     { name: "Visual Studio Code", slug: "azure", limits: "Free IDE with Azure extensions, GitHub Copilot free tier", category: "Dev Tools" },
     { name: "Azure Advisor", slug: "azure", limits: "Unlimited cost, security, reliability, performance recommendations", category: "Management" },
-    { name: "Azure Policy", slug: "azure", limits: "Unlimited policy assignments and evaluations", category: "Governance" },
-    { name: "Azure Resource Manager", slug: "azure", limits: "Unlimited template deployments, tags, resource groups", category: "IaC" },
+    { name: "Azure Policy", slug: "azure", limits: "Free, up to 200 policy assignments per scope", category: "Governance" },
+    { name: "Azure Resource Manager", slug: "azure", limits: "Free, up to 980 resource groups per subscription and 50 tags per resource", category: "IaC" },
   ];
 
   const twelveMonthServices: AzureService[] = [
-    { name: "Azure Virtual Machines", slug: "azure", limits: "750 hrs/month B1S (Linux or Windows), two VMs simultaneously", category: "Compute" },
-    { name: "Azure SQL Database", slug: "azure", limits: "100K vCore seconds/month, 32 GB storage (S0 serverless)", category: "Database" },
+    { name: "Azure Virtual Machines", slug: "azure", limits: "750 hours/month each of B2pts v2 (Arm-based) and B2ats v2 (AMD-based) burstable VMs, for Linux and again for Windows", category: "Compute" },
     { name: "Managed Disks", slug: "azure", limits: "2× 64 GB P6 SSD managed disks, 1 GB snapshots, 2M I/O ops", category: "Storage" },
     { name: "Azure Blob Storage", slug: "azure", limits: "5 GB LRS hot storage, 20K read / 10K write operations", category: "Storage" },
     { name: "Azure Files", slug: "azure", limits: "100 GB file storage (LRS), 2M transactions", category: "Storage" },
-    { name: "Container Apps", slug: "azure", limits: "180K vCPU-seconds, 360K GiB-seconds memory/month", category: "Containers" },
-    { name: "Azure AI Services (multi-service)", slug: "azure", limits: "5K transactions/month for Text Analytics, Translator, Computer Vision, etc.", category: "AI/ML" },
-    { name: "Azure Cache for Redis", slug: "azure", limits: "250 MB C0 Basic instance", category: "Database" },
-    { name: "Azure Service Bus", slug: "azure", limits: "750 hrs/month Basic namespace", category: "Messaging" },
+    { name: "Foundry Tools: Vision", slug: "azure", limits: "5,000 transactions/month for each S1, S2 and S3 tier", category: "AI/ML" },
+    { name: "Azure Service Bus", slug: "azure", limits: "750 hours and 13 million operations/month, Standard tier base unit", category: "Messaging" },
   ];
 
   const trialServices: AzureService[] = [
-    { name: "$200 Azure Credit", slug: "azure", limits: "$200 credit for any service, valid for 30 days", category: "Credits", highlight: true },
-    { name: "Azure AI Studio", slug: "azure", limits: "Access to GPT-4o, Phi-3, Llama models with credit", category: "AI/ML" },
+    { name: "$200 Azure Credit", slug: "azure", limits: "$200 credit, valid for 30 days. Not for Marketplace purchases or Spot VMs", category: "Credits", highlight: true },
+    { name: "Microsoft Foundry", slug: "azure", limits: "Access to GPT-4o and Llama models with credit", category: "AI/ML" },
     { name: "Azure Kubernetes Service (AKS)", slug: "azure", limits: "Free cluster management, pay only for VMs (use with $200 credit)", category: "Containers" },
     { name: "Microsoft Fabric", slug: "azure", limits: "Free trial capacity for data analytics and AI workloads", category: "Analytics" },
-    { name: "Azure OpenAI Service", slug: "azure", limits: "GPT-4o, GPT-4o mini, Whisper with trial credit", category: "AI/ML" },
+    { name: "Azure OpenAI Service", slug: "azure", limits: "GPT-4o, Whisper with trial credit", category: "AI/ML" },
   ];
 
   interface GotchaItem {
@@ -33510,14 +33510,14 @@ function buildAzureFreeTier2026Page(): string {
   }
 
   const gotchas: GotchaItem[] = [
-    { title: "Log Analytics default ingestion", desc: "Every Azure subscription gets a Log Analytics workspace. By default, it ingests platform logs that count toward the 5 GB/day free tier, then charges $2.76/GB. Activity and diagnostic logs pile up silently.", cost: "$2.76/GB after 5 GB" },
-    { title: "No automatic throttling", desc: "Unlike GCP's $300 trial (which pauses when exhausted), Azure's free tier services start billing the moment you exceed limits. There's no built-in spend cap. Set budget alerts on day one.", cost: "Varies — immediate" },
-    { title: "App Service F1 limitations", desc: "The F1 tier gives 60 minutes of compute/day, no custom domain SSL, no always-on. Apps sleep after 20 min idle. For persistent hosting, B1S (12-month free) is better.", cost: "60 min/day limit" },
+    { title: "Log Analytics ingestion", desc: "The first 5 GB a month per billing account are free. After that, ingestion is billed per GB at a regional rate: $2.30/GB in East US. Resource logs are collected only once you create a diagnostic setting.", cost: "$2.30/GB after 5 GB/month (East US)" },
+    { title: "Pay-as-you-go has no spend cap", desc: "The free account has the spending limit turned on by default, so your card is not charged. Once you move to pay-as-you-go, services bill the moment you exceed free limits: a spending limit isn't shown in the Azure portal and you can't enable one. Budgets send alerts, but your consumption isn't stopped.", cost: "Pay-as-you-go — immediate" },
+    { title: "App Service F1 limitations", desc: "The F1 tier gives 60 minutes of compute/day, no custom domain SSL, no always-on. Apps sleep after 20 min idle. For persistent hosting, a B2ats v2 or B2pts v2 VM (12-month free) is better.", cost: "60 min/day limit" },
     { title: "Cosmos DB RU throttling", desc: "1,000 RU/s sounds generous, but a single complex query can consume 50+ RUs. Exceed the limit and requests get HTTP 429 throttled. Monitor RU consumption from day one.", cost: "429 errors at limit" },
-    { title: "Data transfer between regions", desc: "Outbound data transfer within Azure (cross-region) is charged even with a free tier subscription. Keep resources in the same region.", cost: "$0.01-0.05/GB" },
-    { title: "Free tier expiration", desc: "12-month services silently convert to paid pricing. No automatic notification. Azure sends emails but they're easy to miss. Set a calendar reminder for your anniversary date.", cost: "Varies" },
+    { title: "Data transfer between regions", desc: "Data transfer between Azure regions is billed: $0.02/GB within North America or Europe, $0.05/GB from those continents to others, and up to $0.16/GB elsewhere. Keep resources in the same region.", cost: "$0.02-0.16/GB" },
+    { title: "Free tier expiration", desc: "When the 12 months end, these services are billed at pay-as-you-go rates. Microsoft will send you an email notifying you when it's time to upgrade. Set a calendar reminder for your anniversary date as well.", cost: "Varies" },
     { title: "VMs running when stopped (not deallocated)", desc: "Stopping a VM from the OS doesn't deallocate it — you still pay. You must 'Stop (Deallocate)' from the Azure Portal or CLI to stop billing. Public IP charges continue separately.", cost: "Full VM hourly rate" },
-    { title: "Managed disk charges on deallocated VMs", desc: "Even when a VM is deallocated, you pay for its managed disks. A 64 GB P6 SSD costs ~$9.60/month. Delete disks you don't need.", cost: "$9.60/mo per P6 disk" },
+    { title: "Managed disk charges on deallocated VMs", desc: "Even when a VM is deallocated, you pay for its managed disks. A 64 GB P6 SSD costs $9.29/month in East US 2 and $10.21/month in East US. Delete disks you don't need.", cost: "$9.29/mo per P6 disk (East US 2)" },
   ];
 
   interface CloudAlt {
@@ -33678,16 +33678,16 @@ ${mcpCtaCss()}
   <p class="pub-date">Published ${pubDate} &middot; ${pageDataProvenance("/azure-free-tier-2026", offers.length)} &middot; ${azureOffers.length} Azure entries tracked</p>
 
   <div class="summary-stats">
-    <div class="stat-card"><div class="stat-number">${alwaysFreeServices.length}</div><div class="stat-label">Always Free</div></div>
-    <div class="stat-card"><div class="stat-number">${twelveMonthServices.length}</div><div class="stat-label">12-Month Free</div></div>
+    <div class="stat-card"><div class="stat-number">65+</div><div class="stat-label">Always-Free Services</div></div>
+    <div class="stat-card"><div class="stat-number">20+</div><div class="stat-label">Services Free for 12 Months</div></div>
     <div class="stat-card"><div class="stat-number green">$200</div><div class="stat-label">Trial Credit</div></div>
     <div class="stat-card"><div class="stat-number green">Cosmos DB</div><div class="stat-label">Lifetime Free Tier</div></div>
   </div>
 
   <div class="executive-summary">
-    <p><strong>Three tiers, different rules.</strong> Azure's free offering splits into three categories. <strong>Always Free</strong> services never expire — Azure Functions (1M executions/month), Cosmos DB (1,000 RU/s + 25 GB), and App Service stay free forever within limits. <strong>12-Month Free</strong> services (B1S VMs, SQL Database, Managed Disks) expire after your first year. <strong>$200 Trial Credit</strong> gives 30-day access to any Azure service.</p>
+    <p><strong>Three tiers, different rules.</strong> Azure's free offering splits into three categories. <strong>Always Free</strong> services never expire — Azure Functions, Cosmos DB (1,000 RU/s + 25 GB), SQL Database and App Service stay free forever within limits. <strong>12-Month Free</strong> services (B2pts v2 and B2ats v2 VMs, Managed Disks, Blob Storage) expire after your first year. <strong>$200 Trial Credit</strong> lasts 30 days and does not cover Marketplace purchases or Spot VMs.</p>
     <p><strong>Azure's unique advantage:</strong> Cosmos DB's always-free tier (1,000 RU/s + 25 GB) is the most generous lifetime-free managed database from any major cloud provider. It's multi-model (document, graph, key-value, column-family) and globally distributable — no equivalent exists on AWS or GCP's always-free tiers.</p>
-    <p><strong>The hidden costs:</strong> Azure has no automatic spend cap — once you exceed free limits, charges start immediately. Log Analytics ingestion, managed disk charges on deallocated VMs, and App Service F1 compute limits catch the most developers. We cover all of them below.</p>
+    <p><strong>The hidden costs:</strong> The free account has the spending limit turned on by default, so your card is not charged. At 30 days or when the credit runs out, your account and services are disabled unless you move to pay-as-you-go. Only pay-as-you-go has no spending cap: once you exceed free limits there, charges start immediately. Log Analytics ingestion, managed disk charges on deallocated VMs, and App Service F1 compute limits catch the most developers. We cover all of them below.</p>
     <p><strong>Comparing clouds?</strong> See our <a href="/cloud-free-tier-comparison-2026">Cloud Free Tier Comparison</a> for a side-by-side matrix of AWS vs GCP vs Azure vs DigitalOcean.</p>
   </div>
 
@@ -33729,7 +33729,7 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="twelve-month">12-Month Free Tier</h2>
-  <p class="section-intro">Available for 12 months from account creation. After that, standard pricing applies. Azure sends renewal emails but they're easy to miss — set a calendar reminder.</p>
+  <p class="section-intro">Available for 12 months from account creation. Customers who try Azure free must move to pay as you go within 30 days to continue receiving 12 months free services. When the 12 months end, pay-as-you-go rates apply, and Microsoft will send you an email notifying you when it's time to upgrade.</p>
 
   <div style="overflow-x:auto">
   <table class="pricing-table">
@@ -33747,11 +33747,11 @@ ${mcpCtaCss()}
   </div>
 
   <div class="context-box">
-    <strong>B1S VMs are the most flexible 12-month offering.</strong> You get 750 hours/month of B1S burstable instances — enough to run two VMs simultaneously (one Linux, one Windows). Compare with AWS (t3.micro, 750 hrs total) and GCP (e2-micro always-free but single region only). Azure SQL Database's serverless option auto-pauses when idle, making it genuinely free for intermittent workloads.
+    <strong>B2pts v2 and B2ats v2 VMs are the most flexible 12-month offering.</strong> You get 750 hours a month of each, for Linux and again for Windows. New subscriptions can't deploy the earlier B-series v1 VMs. Compare with AWS (t3.micro, 750 hrs total) and GCP (e2-micro always-free but single region only).
   </div>
 
   <h2 id="trial">$200 Trial Credit</h2>
-  <p class="section-intro">New accounts get $200 in Azure credits valid for 30 days. Unlike GCP's $300/90-day trial, Azure's credit expires faster but works with every service including premium GPU instances and Azure OpenAI.</p>
+  <p class="section-intro">New accounts get $200 in Azure credits valid for 30 days. Unlike GCP's $300/90-day trial, Azure's credit expires faster. It does not cover Marketplace purchases or Spot VMs, and free trials start with zero GPU quota and aren't eligible for limit or quota increases.</p>
 
   <div style="overflow-x:auto">
   <table class="pricing-table">
@@ -33776,12 +33776,12 @@ ${mcpCtaCss()}
 
     <div class="verdict-item">
       <strong>Serverless API backend</strong>
-      <p>Azure Functions (1M executions/mo) + Cosmos DB (1,000 RU/s + 25 GB) + Azure Storage (5 GB). Serverless, scales to zero, always free within limits. The Cosmos DB integration with Functions is first-class — input/output bindings make it seamless.</p>
+      <p>Azure Functions + Cosmos DB (1,000 RU/s + 25 GB) + Blob Storage (5 GB, free for 12 months). Serverless and scales to zero; Functions and Cosmos DB stay free within limits. The Cosmos DB integration with Functions is first-class — input/output bindings make it seamless.</p>
     </div>
 
     <div class="verdict-item">
       <strong>Full-stack web app</strong>
-      <p>App Service F1 (10 apps) or B1S VM (12-month) + Azure SQL Database (serverless) + Azure Storage (Blob). For persistent hosting, use the B1S VM. For hobby apps that can sleep, App Service F1 works. See our <a href="/hosting-alternatives">hosting alternatives</a> for more options.</p>
+      <p>App Service F1 (10 apps) or a B2ats v2 VM (12-month) + Azure SQL Database (serverless, always free) + Blob Storage (12-month). For persistent hosting, use the VM. For hobby apps that can sleep, App Service F1 works. See our <a href="/hosting-alternatives">hosting alternatives</a> for more options.</p>
     </div>
 
     <div class="verdict-item">
@@ -33791,22 +33791,22 @@ ${mcpCtaCss()}
 
     <div class="verdict-item">
       <strong>AI/ML experimentation</strong>
-      <p>Azure AI Services (5K transactions/mo, 12-month) + Azure OpenAI (with $200 credit) + Azure Functions for inference endpoints. Or use <a href="/vendor/azure">Azure AI Studio</a> for a managed playground. See our <a href="/ai-ml-alternatives">AI/ML tools guide</a> for more options.</p>
+      <p>Foundry Tools (Language and Translator always free, Vision free for 12 months) + Azure OpenAI (with $200 credit) + Azure Functions for inference endpoints. Or use <a href="/vendor/azure">Microsoft Foundry</a> for a managed playground. See our <a href="/ai-ml-alternatives">AI/ML tools guide</a> for more options.</p>
     </div>
 
     <div class="verdict-item">
       <strong>DevOps pipeline</strong>
-      <p>Azure DevOps (5 users, 1 free parallel pipeline, 1,800 min/mo) + Azure Container Apps (12-month) + Azure Container Registry. A complete CI/CD pipeline with hosted agents, boards, and artifact feeds — free for small teams. See our <a href="/ci-cd-alternatives">CI/CD alternatives</a> for comparison.</p>
+      <p>Azure DevOps (5 users, 1 free parallel pipeline, 1,800 min/mo) + Azure Container Apps (always free) + Azure Container Registry. A complete CI/CD pipeline with hosted agents, boards, and artifact feeds — free for small teams. See our <a href="/ci-cd-alternatives">CI/CD alternatives</a> for comparison.</p>
     </div>
   </div>
 
   <h2 id="gotchas">Hidden Costs &amp; Gotchas</h2>
-  <p class="section-intro">Azure's free tier is generous, but these costs catch developers off guard. The #1 issue is the lack of automatic spend caps — unlike GCP, Azure starts billing immediately when limits are exceeded.</p>
+  <p class="section-intro">Azure's free tier is generous, but these costs catch developers off guard. The free account's spending limit is on by default; once you move to pay-as-you-go there is no spending cap, and Azure bills immediately when free limits are exceeded.</p>
 
     ${gotchaCards}
 
   <div class="context-box">
-    <strong>Pro tip:</strong> Set up budget alerts immediately. Go to Cost Management &rarr; Budgets &rarr; Add &rarr; set threshold to $1. You'll get alerts at 50%, 80%, and 100%. Also enable <strong>Azure Advisor</strong> (always free) for cost optimization recommendations. Consider using <strong>Azure Cost Management + Billing</strong> to set spending limits on your subscription — this is the closest Azure has to an automatic spend cap.
+    <strong>Pro tip:</strong> Set up budget alerts immediately. Go to Cost Management &rarr; Budgets &rarr; Add &rarr; set threshold to $1. You'll get alerts at 50%, 80%, and 100%. Also enable <strong>Azure Advisor</strong> (always free) for cost optimization recommendations.
   </div>
 
   <h2 id="alternatives">Azure vs Alternatives</h2>
