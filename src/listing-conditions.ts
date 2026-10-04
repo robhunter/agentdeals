@@ -58,7 +58,7 @@ export function productionAnswerOpening(vendorName: string, rule: TheVendorsRule
     const uses = rule.alsoRulesOutCommercialUse ? "production or commercial use" : "production use";
     return `No. ${vendorName}'s free tier is not for ${uses}, ${terms}`;
   }
-  return `${vendorName}'s free tier is not for commercial use, ${terms} A non-commercial project, such as a personal site, may still run on it in production.`;
+  return `${vendorName}'s free tier is not for commercial use, ${terms} Personal, non-commercial use of the free tier is still allowed.`;
 }
 
 export function alternativesUnderTheVendorsRule(rule: TheVendorsRule, category: string): string {
