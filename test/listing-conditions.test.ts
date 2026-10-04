@@ -241,18 +241,40 @@ function freeTierDetails(html: string): string {
   return html.slice(start, html.indexOf("</div>", start));
 }
 
-function withoutWhatTheFieldMoves(html: string, offer: Offer): string {
-  const moved = new Set([WHAT_IS(offer), PRODUCTION(offer)]);
-  return html
+function escapeHtml(text: string): string {
+  return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+}
+
+const CONDITIONS_IN_PLAIN_TEXT = [...new Set(SYNTHETIC.flatMap(offer => {
+  if (!offer.conditions?.length) return [];
+  const plain = ` ${conditionsInPlainText(offer.conditions)}`;
+  return [plain, plain.replace(/<[^>]*>/g, "")];
+}))];
+
+function withoutThePlainConditions(value: unknown): unknown {
+  if (typeof value === "string") return CONDITIONS_IN_PLAIN_TEXT.reduce((text, plain) => text.split(plain).join(""), value);
+  if (Array.isArray(value)) return value.map(withoutThePlainConditions);
+  if (value && typeof value === "object") return Object.fromEntries(Object.entries(value).map(([key, inner]) => [key, withoutThePlainConditions(inner)]));
+  return value;
+}
+
+function withoutConditionsBesideDescriptions(html: string, faqAnswered: (question: string) => boolean = () => false): string {
+  return CONDITIONS_IN_PLAIN_TEXT.reduce((text, plain) => text.split(escapeHtml(plain)).join(""), html)
     .replace(/\n\s*<ul class="listing-conditions"[\s\S]*?<\/ul>/g, "")
     .replace(/(<summary class="faq-q">([\s\S]*?)<\/summary>\s*<div class="faq-a">)([\s\S]*?)(<\/div>)/g,
-      (whole, open, question, _answer, close) => moved.has(decodeHtml(question)) ? `${open}${close}` : whole)
-    .replace(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g, (whole, body) => {
+      (whole, open, question, _answer, close) => faqAnswered(decodeHtml(question)) ? `${open}${close}` : whole)
+    .replace(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g, (_whole, body) => {
       const block = JSON.parse(body);
-      if (block["@type"] !== "FAQPage") return whole;
-      for (const question of block.mainEntity) if (moved.has(question.name)) question.acceptedAnswer.text = "";
-      return `<script type="application/ld+json">${JSON.stringify(block)}</script>`;
+      if (block["@type"] === "FAQPage") {
+        for (const question of block.mainEntity) if (faqAnswered(question.name)) question.acceptedAnswer.text = "";
+      }
+      return `<script type="application/ld+json">${JSON.stringify(withoutThePlainConditions(block))}</script>`;
     });
+}
+
+function withoutWhatTheFieldMoves(html: string, offer: Offer): string {
+  const moved = new Set([WHAT_IS(offer), PRODUCTION(offer)]);
+  return withoutConditionsBesideDescriptions(html, question => moved.has(question));
 }
 
 describe("a listing's conditions of use", () => {
@@ -400,13 +422,15 @@ describe("a listing's conditions of use", () => {
     }
   });
 
-  it("changes no other page that lists the listings", async () => {
+  it("changes another page that lists the listings only by the conditions after each description it prints in full", async () => {
     const databases = catalogue.offers.filter((o: Offer) => o.category === "Databases").slice(0, 3);
     for (const route of ["/category/databases", ...databases.map((o: Offer) => `/vendor/${slugOf(o.vendor)}`)]) {
       const withIt = await fetchText(withField.base, route);
       assert.ok(withIt.includes(NOTED.vendor), `${route} does not list the listings, so the comparison says nothing`);
-      assert.strictEqual(withIt, await fetchText(withoutField.base, route), route);
+      assert.strictEqual(withoutConditionsBesideDescriptions(withIt), withoutConditionsBesideDescriptions(await fetchText(withoutField.base, route)), route);
     }
+    const category = await fetchText(withField.base, "/category/databases");
+    assert.ok(category.includes(`${escapeHtml(NOTED.description)}\n    <ul class="listing-conditions"`), "the category page prints the conditions right after the description");
   });
 
   it("orders the category in /api/offers as it does without the field", async () => {
