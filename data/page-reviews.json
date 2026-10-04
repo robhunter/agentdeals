@@ -852,7 +852,7 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 64,
+      "table_figures": 65,
       "table_figures_from_records": 12,
       "tables": [
         {
@@ -862,7 +862,7 @@
         },
         {
           "label": "Always-Free Compute",
-          "figures": 10,
+          "figures": 11,
           "from_records": 0
         },
         {

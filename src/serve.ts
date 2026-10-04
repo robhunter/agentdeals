@@ -10612,7 +10612,7 @@ ${buildCards(startupCredits)}
     </tbody>
   </table>
   </div>
-  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Oracle Cloud's Always Free tier is permanently free (not time-limited) and the most generous VPS offering. Cloudflare Pages and Workers offer unlimited bandwidth on free tier. Railway's Free plan opens with a 30-day $5 trial credit, then $1 of free credit a month. AWS and Azure free tiers are mostly 12-month introductory offers, with one exception that matters in the Bandwidth column: AWS's first ${monthlyEgressGrantGb("AWS S3")} GB of internet egress each month is free on an account of any age, aggregated across all AWS services and regions. [[freshness]]</p>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Oracle Cloud's Always Free tier is permanently free (not time-limited) and the most generous VPS offering. Cloudflare Pages and Workers offer unlimited bandwidth on free tier. Railway's Free plan opens with a 30-day $5 trial credit, then $1 of free credit a month. AWS's Free plan credits last at most 6 months; Azure's free VM hours last 12 months. One AWS allowance does not expire and matters in the Bandwidth column: AWS's first ${monthlyEgressGrantGb("AWS S3")} GB of internet egress each month is free on an account of any age, aggregated across all AWS services and regions. [[freshness]]</p>
 
   <div class="context-box" style="border-left:3px solid ${riskColors.risky}">
     <div style="font-weight:600;color:${riskColors.risky};margin-bottom:.5rem">Hetzner raised prices twice in 2026, and its cheapest line is unavailable</div>
@@ -10635,7 +10635,7 @@ ${buildCards(startupCredits)}
       <dd><a href="/vendor/cloudflare-workers">Cloudflare Workers</a> (100K req/day, edge-fast) for lightweight APIs. <a href="/vendor/deno-deploy">Deno Deploy</a> for TypeScript-native. <a href="/vendor/google-cloud-run">Google Cloud Run</a> for containerized APIs with auto-scale.</dd>
 
       <dt>Need a full VM with root access?</dt>
-      <dd><a href="/vendor/oracle-cloud">Oracle Cloud</a> is unmatched — ${escHtmlServer(oracleAlwaysFreeSpec())}, permanently free. <a href="/vendor/aws">AWS</a> and <a href="/vendor/azure">Azure</a> offer 12-month free tiers with t2.micro/B1 instances.</dd>
+      <dd><a href="/vendor/oracle-cloud">Oracle Cloud</a> is unmatched — ${escHtmlServer(oracleAlwaysFreeSpec())}, permanently free. <a href="/vendor/aws">AWS</a> gives new accounts no free EC2 hours; EC2 is paid from the Free plan's credits for up to 6 months. <a href="/vendor/azure">Azure</a> gives 750 hours a month each of B2pts v2 and B2ats v2 VMs for 12 months, for accounts that move to pay-as-you-go within 30 days.</dd>
 
       <dt>Running Docker containers?</dt>
       <dd><a href="/vendor/google-cloud-run">Google Cloud Run</a> (scale to zero, 2M req/mo free) or <a href="/vendor/fly-io">Fly.io</a> (legacy accounts: 3 shared VMs). <a href="/vendor/railway">Railway</a> ($1 of free credit a month after a 30-day trial) and <a href="/vendor/koyeb">Koyeb</a> (no free plan for new users; Pro from $29/mo) also run containers natively.</dd>
@@ -17113,7 +17113,7 @@ function buildFreeDjangoStackPage(): string {
       recommended: { vendor: "Railway", why: "Its Free plan opens with a 30-day trial carrying $5 of credits, then $1 of free credit a month, with WSGI/ASGI support, managed Postgres add-on, and auto-deploy from GitHub. Supports Gunicorn, Uvicorn, and Daphne out of the box. No sleep timer — your app stays warm. Nixpacks auto-detects Django projects and installs dependencies from requirements.txt or pyproject.toml." },
       alternatives: ["Render", "Fly.io", "PythonAnywhere"],
       outgrow: "When you exceed the $5 of usage that Hobby's $5/month includes (usually 1-2 services). Render's free tier spins down after 15 minutes of inactivity — cold starts of about one minute hurt Django apps. Fly.io has no free tier for new accounts — new signups get a trial of 2 hours runtime or 7 days, whichever comes first. PythonAnywhere offers a free tier with WSGI support but only one web app and no custom domain.",
-      whyNot: "Why not Heroku: No free tier since November 2022 — Eco dynos start at $5/month with mandatory credit card. Why not AWS Elastic Beanstalk: No free tier for the EB service itself, only the underlying EC2 instances. Overkill for a Django side project.",
+      whyNot: "Why not Heroku: No free tier since November 2022 — Eco dynos start at $5/month with mandatory credit card. Why not AWS Elastic Beanstalk: it has no fee of its own, but you pay for the EC2 instances it runs, from the Free plan's credits on a new account. Overkill for a Django side project.",
       relatedPage: "/hosting-free-tier-comparison-2026",
     },
     {
@@ -33747,7 +33747,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="context-box">
-    <strong>B2pts v2 and B2ats v2 VMs are the most flexible 12-month offering.</strong> You get 750 hours a month of each, for Linux and again for Windows. New subscriptions can't deploy the earlier B-series v1 VMs. Compare with AWS (t3.micro, 750 hrs total) and GCP (e2-micro always-free but single region only).
+    <strong>B2pts v2 and B2ats v2 VMs are the most flexible 12-month offering.</strong> You get 750 hours a month of each, for Linux and again for Windows. New subscriptions can't deploy the earlier B-series v1 VMs. Compare with AWS (new accounts get no free EC2 hours; EC2 is paid from the Free plan's credits) and GCP (e2-micro always-free but single region only).
   </div>
 
   <h2 id="trial">$200 Trial Credit</h2>
@@ -34680,7 +34680,7 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="compute">Always-Free Compute</h2>
-  <p class="section-intro">Persistent compute is the most valuable free tier category. Only GCP and AWS offer always-free compute options.</p>
+  <p class="section-intro">Persistent compute is the most valuable free tier category.</p>
 
   <div style="overflow-x:auto">
   <table class="comp-table">
@@ -34707,8 +34707,8 @@ ${mcpCtaCss()}
       </tr>
       <tr>
         <td class="provider-col">Azure</td>
-        <td>B1S VM</td>
-        <td>750 hrs/mo, 1 vCPU, 1 GB RAM</td>
+        <td>B2pts v2 / B2ats v2 VMs</td>
+        <td>750 hrs/mo each, 2 vCPU, 1 GiB RAM</td>
         <td style="color:#d29922">12 months only</td>
       </tr>
       <tr>
@@ -34722,7 +34722,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="context-box">
-    <strong>GCP is the only provider with a permanent free VM.</strong> AWS and Azure offer 12-month free instances that silently convert to paid. If you need a persistent server that costs nothing, GCP's e2-micro is the only option among the Big Four. DigitalOcean doesn't offer any free compute but starts at just $4/mo.
+    <strong>GCP is the only provider of the four with a permanent free VM.</strong> AWS gives new accounts no free VM hours, with EC2 paid from the Free plan's credits, and the plan closes after 6 months unless upgraded. Azure's free VM hours last 12 months for accounts that move to pay-as-you-go within 30 days, and VMs still running after 12 months are billed at pay-as-you-go rates. If you need a persistent server that costs nothing, GCP's e2-micro is the only option among the Big Four. DigitalOcean doesn't offer any free compute but starts at just $4/mo.
   </div>
 
   <h2 id="databases">Always-Free Databases</h2>

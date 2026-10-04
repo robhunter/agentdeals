@@ -23,6 +23,8 @@ const WITHDRAWN: Record<string, Record<string, RegExp>> = {
   "/hosting-alternatives": {
     "750 free hours of t2.micro for 12 months": /750 hrs t2\.micro\/mo \(12 mo\)/,
     "a 12-month free tier": /Full cloud platform, 12-month free tier/,
+    "AWS and Azure free tiers as 12-month introductory offers": /mostly 12-month introductory offers/,
+    "12-month free t2.micro and B1 instances": /12-month free tiers with t2\.micro\/B1 instances/,
   },
   "/aws-app-runner-migration": {
     "750 free hours of t2.micro for 12 months": /750 hrs t2\.micro\/mo, 12 months/,
@@ -30,6 +32,7 @@ const WITHDRAWN: Record<string, Record<string, RegExp>> = {
   },
   "/free-django-stack": {
     "EC2 instances on a 12-month trial": /\(12-month trial\)/,
+    "EC2 instances as the free part of Elastic Beanstalk": /No free tier for the EB service itself, only the underlying EC2 instances/,
   },
   "/free-saas-stack": {
     "SQS and Lambda free for 12 months only": /12-month free tier expiration/,
@@ -58,6 +61,12 @@ const WITHDRAWN: Record<string, Record<string, RegExp>> = {
     "a 12-month conversion with no warning": /12-month silent conversion/,
     "Aurora on a 12-month tier": /Aurora PostgreSQL Serverless \(12-month\)/,
     "a ranking of always-free databases": /best always-free managed database/,
+    "AWS among the always-free compute options": /Only GCP and AWS offer always-free compute options/,
+    "AWS and Azure instances free for 12 months": /AWS and Azure offer 12-month free instances/,
+    "Azure's B1S VM, which new subscriptions cannot deploy": /B1S VM|750 hrs\/mo, 1 vCPU, 1 GB RAM/,
+  },
+  "/azure-free-tier-2026": {
+    "750 free hours of AWS t3.micro": /AWS \(t3\.micro, 750 hrs total\)/,
   },
 };
 for (const page of STACK_PAGES) {
@@ -65,8 +74,15 @@ for (const page of STACK_PAGES) {
 }
 
 const STATED: Record<string, string[]> = {
+  "/hosting-alternatives": [
+    "AWS's Free plan credits last at most 6 months; Azure's free VM hours last 12 months. One AWS allowance does not expire and matters in the Bandwidth column: AWS's first",
+    "AWS gives new accounts no free EC2 hours; EC2 is paid from the Free plan's credits for up to 6 months. Azure gives 750 hours a month each of B2pts v2 and B2ats v2 VMs for 12 months, for accounts that move to pay-as-you-go within 30 days.",
+  ],
   "/free-django-stack": [
-    "Why not AWS Elastic Beanstalk: No free tier for the EB service itself, only the underlying EC2 instances. Overkill for a Django side project.",
+    "Why not AWS Elastic Beanstalk: it has no fee of its own, but you pay for the EC2 instances it runs, from the Free plan's credits on a new account. Overkill for a Django side project.",
+  ],
+  "/azure-free-tier-2026": [
+    "Compare with AWS (new accounts get no free EC2 hours; EC2 is paid from the Free plan's credits) and GCP (",
   ],
   "/free-saas-stack": [
     "Why not AWS SQS/Lambda: Complex setup. Inngest and Trigger.dev give you managed, durable execution with a serverless DX.",
@@ -84,6 +100,7 @@ const STATED: Record<string, string[]> = {
     "On 2025-07-15 AWS replaced the 12-month free tier for new accounts with a Free plan: up to $200 in credits, closing after 6 months. 30+ services, including Lambda (1M requests a month) and DynamoDB (25 GB), stay always free on both plans.",
   ],
   "/cloud-free-tier-comparison-2026": [
+    "GCP is the only provider of the four with a permanent free VM. AWS gives new accounts no free VM hours, with EC2 paid from the Free plan's credits, and the plan closes after 6 months unless upgraded. Azure's free VM hours last 12 months for accounts that move to pay-as-you-go within 30 days, and VMs still running after 12 months are billed at pay-as-you-go rates. If you need a persistent server",
     "Azure's Cosmos DB has a lifetime free tier.",
     "AWS has DynamoDB (always free, 25 GB) and Aurora PostgreSQL serverless (Free plan, paid from credits).",
     "Free plan closure: the account closes at 6 months or when credits run out, and content is deleted after 90 days unless you upgrade to the Paid plan.",
@@ -106,6 +123,7 @@ const ROWS: Record<string, string[][]> = {
   "/cloud-free-tier-comparison-2026": [
     ["AWS", "EC2", "No free hours; paid from Free plan credits (up to $200)", "Free plan: 6 months"],
     ["AWS", "S3: no free storage (paid from credits)", "CloudFront: 1 TB transfer, 10M requests/mo", "CloudFront always free; S3 from credits"],
+    ["Azure", "B2pts v2 / B2ats v2 VMs", "750 hrs/mo each, 2 vCPU, 1 GiB RAM", "12 months only"],
   ],
 };
 
@@ -202,7 +220,7 @@ describe("pages beyond the AWS guide describe AWS's 6-month Free plan, not the 1
     assert.deepStrictEqual(missing, []);
   });
 
-  it("puts the Free plan in the AWS rows of each table", () => {
+  it("puts the Free plan in the AWS rows of each table and Azure's deployable VM sizes in its compute row", () => {
     const missing = Object.entries(ROWS).flatMap(([page, expected]) => {
       const rows = rowsOf(html.get(page)!);
       return expected
