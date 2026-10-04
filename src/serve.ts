@@ -33429,25 +33429,27 @@ function buildAzureFreeTier2026Page(): string {
     limits: string;
     category: string;
     highlight?: boolean;
+    source?: string;
   }
+
+  const MICROSOFT_FREE_ACCOUNT_LIST = "https://azure.microsoft.com/en-us/pricing/purchase-options/azure-account";
 
   const alwaysFreeServices: AzureService[] = [
     { name: "Azure Functions", slug: "azure", limits: "Flex Consumption: 250,000 executions and 100,000 GB-s/month. Legacy Consumption plan: 1M executions and 400,000 GB-s/month", category: "Compute", highlight: true },
-    { name: "Azure Cosmos DB", slug: "azure", limits: "1,000 RU/s throughput + 25 GB storage (lifetime)", category: "Database", highlight: true },
+    { name: "Azure Cosmos DB", slug: "azure", limits: "1,000 RU/s throughput + 25 GB storage (lifetime)", category: "Database", highlight: true, source: MICROSOFT_FREE_ACCOUNT_LIST },
     { name: "Azure SQL Database", slug: "azure", limits: "Up to 10 General Purpose serverless databases, each with 100,000 vCore seconds and 32 GB/month, for the lifetime of your subscription", category: "Database" },
-    { name: "App Service", slug: "azure", limits: "10 web/mobile/API apps (F1 tier), 1 GB storage, 60 min/day compute", category: "Compute" },
-    { name: "Container Apps", slug: "azure", limits: "180,000 vCPU seconds, 360,000 GiB seconds and 2 million requests/month", category: "Containers" },
+    { name: "App Service", slug: "azure", limits: "10 web/mobile/API apps (F1 tier), 1 GB storage, 60 min/day compute", category: "Compute", source: MICROSOFT_FREE_ACCOUNT_LIST },
+    { name: "Container Apps", slug: "azure", limits: "180,000 vCPU seconds, 360,000 GiB seconds and 2 million requests/month", category: "Containers", source: MICROSOFT_FREE_ACCOUNT_LIST },
     { name: "Azure DevOps", slug: "azure", limits: "5 users, unlimited private repos, 1 free parallel CI/CD pipeline (1,800 min/mo)", category: "DevOps" },
     { name: "Azure Active Directory (Entra ID)", slug: "azure", limits: "50,000 stored objects, SSO for all apps", category: "Identity" },
-    { name: "Azure AI Search", slug: "azure", limits: "3 indexes, 50 MB storage per service (F tier)", category: "Search" },
+    { name: "Azure AI Search", slug: "azure", limits: "3 indexes, 50 MB storage per service (F tier)", category: "Search", source: MICROSOFT_FREE_ACCOUNT_LIST },
     { name: "Foundry Tools: Language", slug: "azure", limits: "5,000 text records/month", category: "AI/ML" },
-    { name: "Foundry Tools: Translator", slug: "azure", limits: "2 million characters/month", category: "AI/ML" },
+    { name: "Foundry Tools: Translator", slug: "azure", limits: "2 million characters/month", category: "AI/ML", source: MICROSOFT_FREE_ACCOUNT_LIST },
     { name: "Bandwidth", slug: "azure", limits: "100 GB outbound data transfer/month (15 GB outbound for the first 12 months is separate)", category: "Networking" },
-    { name: "Azure Maps", slug: "azure", limits: "1,000 to 5,000 transactions/month for specific mapping and location insights features", category: "Location" },
-    { name: "Azure IoT Hub", slug: "azure", limits: "8,000 messages/day (F1 tier)", category: "IoT" },
+    { name: "Azure Maps", slug: "azure", limits: "1,000 to 5,000 transactions/month for specific mapping and location insights features", category: "Location", source: MICROSOFT_FREE_ACCOUNT_LIST },
+    { name: "Azure IoT Hub", slug: "azure", limits: "8,000 messages/day (F1 tier)", category: "IoT", source: MICROSOFT_FREE_ACCOUNT_LIST },
     { name: "Notification Hubs", slug: "azure", limits: "1 million pushes, 100 free namespaces, 500 active devices per namespace", category: "Messaging" },
-    { name: "Visual Studio Code", slug: "azure", limits: "Free IDE with Azure extensions, GitHub Copilot free tier", category: "Dev Tools" },
-    { name: "Azure Advisor", slug: "azure", limits: "Unlimited cost, security, reliability, performance recommendations", category: "Management" },
+    { name: "Azure Advisor", slug: "azure", limits: "Unlimited cost, security, reliability, performance recommendations", category: "Management", source: MICROSOFT_FREE_ACCOUNT_LIST },
     { name: "Azure Policy", slug: "azure", limits: "Free, up to 200 policy assignments per scope", category: "Governance" },
     { name: "Azure Resource Manager", slug: "azure", limits: "Free, up to 980 resource groups per subscription and 50 tags per resource", category: "IaC" },
   ];
@@ -33457,7 +33459,7 @@ function buildAzureFreeTier2026Page(): string {
     { name: "Managed Disks", slug: "azure", limits: "2× 64 GB P6 SSD managed disks, 1 GB snapshots, 2M I/O ops", category: "Storage" },
     { name: "Azure Blob Storage", slug: "azure", limits: "5 GB LRS hot storage, 20K read / 10K write operations", category: "Storage" },
     { name: "Azure Files", slug: "azure", limits: "100 GB file storage (LRS), 2M transactions", category: "Storage" },
-    { name: "Foundry Tools: Vision", slug: "azure", limits: "5,000 transactions/month for each S1, S2 and S3 tier", category: "AI/ML" },
+    { name: "Foundry Tools: Vision", slug: "azure", limits: "5,000 transactions/month for each S1, S2 and S3 tier", category: "AI/ML", source: MICROSOFT_FREE_ACCOUNT_LIST },
     { name: "Azure Service Bus", slug: "azure", limits: "750 hours and 13 million operations/month, Standard tier base unit", category: "Messaging" },
   ];
 
@@ -33507,13 +33509,13 @@ function buildAzureFreeTier2026Page(): string {
 
   const alwaysFreeRows = alwaysFreeServices.map(s => `<tr${s.highlight ? ' style="background:rgba(59,130,246,0.1)"' : ""}>
       <td style="font-weight:600">${s.highlight ? `<span style="color:var(--accent)">★</span> ` : ""}${escHtmlServer(s.name)}</td>
-      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(s.limits)}</td>
+      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(s.limits)}${s.source ? figureSourceLinkHtml(s.source, escHtmlServer) : ""}</td>
       <td style="color:var(--text-muted);font-size:.8rem">${escHtmlServer(s.category)}</td>
     </tr>`).join("\n        ");
 
   const twelveMonthRows = twelveMonthServices.map(s => `<tr>
       <td style="font-weight:600">${escHtmlServer(s.name)}</td>
-      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(s.limits)}</td>
+      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(s.limits)}${s.source ? figureSourceLinkHtml(s.source, escHtmlServer) : ""}</td>
       <td style="color:var(--text-muted);font-size:.8rem">${escHtmlServer(s.category)}</td>
     </tr>`).join("\n        ");
 
