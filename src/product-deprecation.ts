@@ -124,7 +124,7 @@ export function deprecationCall(change: DeprecationSubject): DeprecationCall {
   return textSaysTheListedProductEnds(change) ? "ends" : "none";
 }
 
-const CHANGE_TYPES_THAT_END_A_FREE_TIER = new Set(["free_tier_removed", "open_source_killed"]);
+const CHANGE_TYPES_THAT_END_A_FREE_TIER = new Set(["free_tier_removed"]);
 
 export function endsAFreeTier(change: DeprecationSubject): boolean {
   if (CHANGE_TYPES_THAT_END_A_FREE_TIER.has(change.change_type)) return true;

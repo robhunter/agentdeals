@@ -45,10 +45,13 @@ function record(over: Record<string, unknown>) {
 }
 
 describe("what counts as a free tier removed", () => {
-  it("counts a removal, an open-source licence ending, and a deprecation of the product we list", () => {
+  it("counts a removal and a deprecation of the product we list", () => {
     assert.strictEqual(endsAFreeTier(record({}) as never), true);
-    assert.strictEqual(endsAFreeTier(record({ change_type: "open_source_killed" }) as never), true);
     assert.strictEqual(endsAFreeTier(XATA_LITE_RETIRED as never), true);
+  });
+
+  it("does not count a move away from open source, which leaves the vendor free to offer a free tier of its own", () => {
+    assert.strictEqual(endsAFreeTier(record({ change_type: "open_source_killed" }) as never), false);
   });
 
   it("does not count a deprecation of another product the vendor sells", () => {
@@ -63,7 +66,7 @@ describe("what counts as a free tier removed", () => {
 
   it("drops from the count exactly the published deprecations of other products", () => {
     const published = JSON.parse(readFileSync(path.join(REPO, "data", "deal_changes.json"), "utf-8")).changes;
-    const removalClass = new Set(["free_tier_removed", "open_source_killed", "product_deprecated"]);
+    const removalClass = new Set(["free_tier_removed", "product_deprecated"]);
     const dropped = published.filter((c: any) => removalClass.has(c.change_type) && !endsAFreeTier(c));
     assert.ok(dropped.length > 0, "no published deprecation of another product, so the rule moves nothing");
     for (const c of dropped) {
@@ -120,16 +123,27 @@ describe("the pages that count free tiers removed", () => {
     return Number(m![1]);
   };
 
-  it("counts three of the four removal-class records on /pricing-changes, in the tile and in the year's row", async () => {
+  it("counts two of the four removal-class records on /pricing-changes, in the tile and in the year's row", async () => {
     const body = await (await fetch(`http://localhost:${port}/pricing-changes`)).text();
-    assert.strictEqual(removalsTile(body), 3);
+    assert.strictEqual(removalsTile(body), 2);
     const m = body.match(/<span class="trend-num">(\d+)<\/span> <span class="trend-label">free tiers removed<\/span>/);
     assert.ok(m, "no free tiers removed figure for the year");
-    assert.strictEqual(Number(m![1]), 3);
+    assert.strictEqual(Number(m![1]), 2);
   });
 
-  it("counts the same three on /changes", async () => {
+  it("counts the same two on /changes", async () => {
     const body = await (await fetch(`http://localhost:${port}/changes`)).text();
-    assert.strictEqual(removalsTile(body), 3);
+    assert.strictEqual(removalsTile(body), 2);
+  });
+
+  it("declares in the change API that the move away from open source ends no free tier, and that the removal does", async () => {
+    const endsAFreeTierFor = async (vendor: string) => {
+      const body = await (await fetch(`http://localhost:${port}/api/changes?vendor=${encodeURIComponent(vendor)}`)).json();
+      const records = body.changes.filter((c: { vendor: string }) => c.vendor === vendor);
+      assert.strictEqual(records.length, 1, `${vendor}: ${records.length} records`);
+      return records[0].ends_a_free_tier;
+    };
+    assert.strictEqual(await endsAFreeTierFor("Licence Fixture"), false);
+    assert.strictEqual(await endsAFreeTierFor("Removal Fixture"), true);
   });
 });
