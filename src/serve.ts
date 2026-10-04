@@ -27921,6 +27921,19 @@ function buildAiCodingToolsPricingPage(): string {
     '</body>\n</html>', pubDate);
 }
 
+interface FreeTierAsTheVendorStatesIt {
+  typeLabel: string;
+  cardLabel: string;
+  figure: string;
+  wall: string;
+}
+
+function keyCostFactorCell(row: { hiddenCosts?: string; keyCostFactor?: string }): string {
+  if (row.keyCostFactor) return row.keyCostFactor;
+  const hiddenCosts = row.hiddenCosts ?? "";
+  return hiddenCosts.length > 80 ? hiddenCosts.substring(0, 80) + "..." : hiddenCosts;
+}
+
 function buildCiCdPricingPage(): string {
   const title = "CI/CD Tools Pricing Comparison 2026 — Build Minutes, Runners & Costs Compared";
   const metaDesc = "Compare 17+ CI/CD tools: GitHub Actions, GitLab CI, CircleCI, Buildkite, Harness CI, Google Cloud Build, Bitrise and more. Free tiers, build minutes, concurrent jobs, pricing models, and hidden costs. [[freshness]]";
@@ -27947,7 +27960,9 @@ function buildCiCdPricingPage(): string {
     freeType: "generous" | "limited" | "oss-only" | "trial" | "none";
     monthlyCostSmall: string;
     monthlyCostTeam: string;
-    hiddenCosts: string;
+    hiddenCosts?: string;
+    freeTierAsStated?: FreeTierAsTheVendorStatesIt;
+    keyCostFactor?: string;
   }
 
   const tools: CiCdTool[] = [
@@ -28015,16 +28030,22 @@ function buildCiCdPricingPage(): string {
       name: "Semaphore CI",
       slug: "semaphore-ci",
       category: "general",
-      freeMinutes: "Self-hosted only",
-      concurrency: "Unlimited (self-hosted)",
-      selfHosted: "Free (Community)",
-      paidFrom: "$25/user/mo (Startup)",
-      pricingModel: "Per-user + usage",
-      freeDetails: "Community plan is self-hosted only — free for small teams. Cloud-hosted plans start at $25/user/month (Startup). Known for fast build times with optimized caching and auto-scaling. Supports Docker, iOS, Android, and monorepo pipelines.",
-      freeType: "oss-only",
-      monthlyCostSmall: "$0 (self-hosted)",
-      monthlyCostTeam: "$25/user",
-      hiddenCosts: "No free cloud-hosted tier. Self-hosted Community plan lacks some features (role-based access, audit logs). Cloud plans charge per-minute on top of per-user fees.",
+      freeMinutes: "$15 credit (≈2,000 Ubuntu x64 2-vCPU min)",
+      concurrency: "20 jobs",
+      selfHosted: "Community Edition free; agents $0.0025/min",
+      paidFrom: "$0.003/min (Ubuntu ARM, 2 vCPU)",
+      pricingModel: "Per-minute usage",
+      freeDetails: "Semaphore Cloud gives every account a $15 credit each month, about 2,000 Ubuntu x64 2-vCPU minutes, and 20 concurrent jobs by default. Self-hosted Community Edition is free.",
+      freeType: "limited",
+      monthlyCostSmall: "$0 within the $15 credit",
+      monthlyCostTeam: "Usage-based",
+      keyCostFactor: "Semaphore Cloud provides a $15 monthly credit. Compute is billed per minute after the credit is used.",
+      freeTierAsStated: {
+        typeLabel: "Monthly credit",
+        cardLabel: "Monthly credit",
+        figure: "≈2,000 (Ubuntu x64, 2 vCPU)",
+        wall: "When the $15 monthly credit is used",
+      },
     },
     {
       name: "Harness CI",
@@ -28260,7 +28281,7 @@ function buildCiCdPricingPage(): string {
       const borderColor = freeTypeColors[t.freeType] || "var(--accent)";
       return '<div class="diff-card" style="border-left-color:' + borderColor + '">' +
         '<h3>' + handwrittenVendorLinkHtml(t.slug, t.name, ' style="color:var(--text)"') + ' ' +
-        '<span style="font-size:.75rem;color:var(--text-dim);font-weight:400">' + escHtmlServer(freeTypeLabels[t.freeType]) + '</span></h3>' +
+        '<span style="font-size:.75rem;color:var(--text-dim);font-weight:400">' + escHtmlServer(t.freeTierAsStated?.cardLabel ?? freeTypeLabels[t.freeType]) + '</span></h3>' +
         '<p class="diff-desc">' + escHtmlServer(t.freeDetails) + '</p>' +
         '</div>';
     }).join("\n    ");
@@ -28274,7 +28295,7 @@ function buildCiCdPricingPage(): string {
       '<td style="font-weight:600">' + handwrittenVendorLinkHtml(t.slug, t.name, ' style="color:var(--text)"') + '</td>' +
       '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(t.monthlyCostSmall) + '</td>' +
       '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(t.monthlyCostTeam) + '</td>' +
-      '<td style="font-size:.85rem;color:var(--text-muted)">' + escHtmlServer(t.hiddenCosts.substring(0, 80)) + (t.hiddenCosts.length > 80 ? "..." : "") + '</td>' +
+      '<td style="font-size:.85rem;color:var(--text-muted)">' + escHtmlServer(keyCostFactorCell(t)) + '</td>' +
       '</tr>';
   }).join("\n        ");
 
@@ -28494,9 +28515,9 @@ function buildCiCdPricingPage(): string {
         "1\u20134 weeks for active team";
       return '      <tr>' +
         '<td style="font-weight:600">' + escHtmlServer(t.name) + '</td>' +
-        '<td><span style="color:' + (freeTypeColors[t.freeType] || "var(--text-muted)") + ';font-size:.8rem;font-weight:600">' + escHtmlServer(freeTypeLabels[t.freeType]) + '</span></td>' +
-        '<td style="font-size:.85rem">' + escHtmlServer(t.freeMinutes) + '</td>' +
-        '<td style="font-size:.85rem;color:var(--text-muted)">' + escHtmlServer(wallDesc) + '</td>' +
+        '<td><span style="color:' + (freeTypeColors[t.freeType] || "var(--text-muted)") + ';font-size:.8rem;font-weight:600">' + escHtmlServer(t.freeTierAsStated?.typeLabel ?? freeTypeLabels[t.freeType]) + '</span></td>' +
+        '<td style="font-size:.85rem">' + escHtmlServer(t.freeTierAsStated?.figure ?? t.freeMinutes) + '</td>' +
+        '<td style="font-size:.85rem;color:var(--text-muted)">' + escHtmlServer(t.freeTierAsStated?.wall ?? wallDesc) + '</td>' +
         '</tr>';
     }).join("\n") + '\n' +
     '    </tbody>\n' +
@@ -28680,7 +28701,9 @@ function buildDatabasePricingPage(): string {
     freeType: "generous" | "limited" | "removed" | "trial" | "oss-only";
     monthlyCostSmall: string;
     monthlyCostTeam: string;
-    hiddenCosts: string;
+    hiddenCosts?: string;
+    freeTierAsStated?: FreeTierAsTheVendorStatesIt;
+    keyCostFactor?: string;
   }
 
   const services: DbService[] = [
@@ -28832,17 +28855,17 @@ function buildDatabasePricingPage(): string {
       name: "PlanetScale",
       slug: "planetscale",
       category: "serverless-edge",
-      dbType: "MySQL (Vitess)",
+      dbType: "Postgres and MySQL (Vitess)",
       freeStorage: "REMOVED",
       freeConnections: "N/A",
       freeCompute: "N/A",
-      paidFrom: "$39/mo (Scaler)",
+      paidFrom: "$5/mo (Postgres single node)",
       pricingModel: "Usage-based",
       freeDetails: "Free tier REMOVED (April 2024). PlanetScale eliminated the Hobby plan entirely — all free databases were deleted after a 30-day grace period. Previously offered 5 GB storage, 1 billion row reads/month. Now minimum is Scaler at $39/month. Vitess-based MySQL with branching and deploy requests.",
       freeType: "removed",
-      monthlyCostSmall: "$39",
-      monthlyCostTeam: "$39+",
-      hiddenCosts: "No free option at all. The $39/mo Scaler plan includes 10 GB storage and 1B row reads. Significant community backlash after free tier removal. Consider alternatives: Neon or Turso for free database hosting.",
+      monthlyCostSmall: "$5",
+      monthlyCostTeam: "$30+",
+      keyCostFactor: "PlanetScale has no free plan. The cheapest plan is PlanetScale Postgres, single node, from $5 a month.",
     },
     {
       name: "Prisma Accelerate",
@@ -29025,16 +29048,22 @@ function buildDatabasePricingPage(): string {
       slug: "weaviate",
       category: "specialized",
       dbType: "Vector",
-      freeStorage: "Sandbox (limited)",
+      freeStorage: "10 GB disk, 1 GB memory",
       freeConnections: "Unlimited",
       freeCompute: "Sandbox",
-      paidFrom: "$25/mo (Serverless)",
+      paidFrom: "$45/mo (Flex)",
       pricingModel: "Per-dimension-stored",
-      freeDetails: "Free sandbox cluster with limited resources and 14-day data retention. AI-native vector database for semantic search, RAG, and generative AI applications. Supports hybrid search (vector + keyword), multi-tenancy, and 20+ ML model integrations.",
-      freeType: "trial",
-      monthlyCostSmall: "$25+",
-      monthlyCostTeam: "$25\u2013100+",
-      hiddenCosts: "Sandbox is trial-only — 14-day data retention. Serverless tier starts at $25/mo. Vector storage costs scale with dimensions (1536-dim OpenAI embeddings are 6x more expensive per object than 384-dim). Bring-your-own-cloud for data sovereignty costs extra.",
+      freeDetails: "Free Forever cluster with 100,000 objects, 1 GB memory, and 10 GB disk. No credit card required. AI-native vector database for semantic search, RAG, and generative AI applications. Supports hybrid search (vector + keyword), multi-tenancy, and 20+ ML model integrations.",
+      freeType: "limited",
+      monthlyCostSmall: "$0 (Free Forever)",
+      monthlyCostTeam: "$45+ (Flex)",
+      keyCostFactor: 'Weaviate Cloud has a "Free Forever" plan. Flex plans start at $45 a month, pay as you go.',
+      freeTierAsStated: {
+        typeLabel: "Always free (Free Forever)",
+        cardLabel: "Always free",
+        figure: "10 GB disk",
+        wall: "At 100,000 objects or 1 collection",
+      },
     },
     {
       name: "Zilliz Cloud",
@@ -29140,7 +29169,7 @@ function buildDatabasePricingPage(): string {
       const borderColor = freeTypeColors[s.freeType] || "var(--accent)";
       return '<div class="diff-card" style="border-left-color:' + borderColor + '">' +
         '<h3>' + handwrittenVendorLinkHtml(s.slug, s.name, ' style="color:var(--text)"') + ' ' +
-        '<span style="font-size:.75rem;color:var(--text-dim);font-weight:400">' + escHtmlServer(s.dbType) + ' \u00b7 ' + escHtmlServer(freeTypeLabels[s.freeType]) + '</span></h3>' +
+        '<span style="font-size:.75rem;color:var(--text-dim);font-weight:400">' + escHtmlServer(s.dbType) + ' \u00b7 ' + escHtmlServer(s.freeTierAsStated?.cardLabel ?? freeTypeLabels[s.freeType]) + '</span></h3>' +
         '<p class="diff-desc">' + escHtmlServer(detailForEndedOffer(offerForSlug(s.slug), s.freeDetails)) + '</p>' +
         '</div>';
     }).join("\n    ");
@@ -29154,7 +29183,7 @@ function buildDatabasePricingPage(): string {
       '<td style="font-weight:600">' + handwrittenVendorLinkHtml(s.slug, s.name, ' style="color:var(--text)"') + '</td>' +
       '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(s.monthlyCostSmall) + '</td>' +
       '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(s.monthlyCostTeam) + '</td>' +
-      '<td style="font-size:.85rem;color:var(--text-muted)">' + escHtmlServer(s.hiddenCosts.substring(0, 80)) + (s.hiddenCosts.length > 80 ? "..." : "") + '</td>' +
+      '<td style="font-size:.85rem;color:var(--text-muted)">' + escHtmlServer(keyCostFactorCell(s)) + '</td>' +
       '</tr>';
   }).join("\n        ");
 
@@ -29189,10 +29218,10 @@ function buildDatabasePricingPage(): string {
   const faqEntries = [
     { q: "Which database has the best free tier in 2026?", a: "We publish no ranking of database free tiers. Supabase gives you 500 MB Postgres with Auth, Storage, Edge Functions, and Realtime included. For edge/serverless, Turso (5 GB, 100 databases) and Cloudflare D1 (5 GB) are standouts." },
     { q: "Is Supabase really free?", a: "Yes, but with caveats. Supabase free tier includes 500 MB Postgres, Auth, Storage, Edge Functions, and Realtime. However, free projects pause after 1 week of inactivity, you are limited to 2 projects, and egress is capped at 5 GB total across all services. For active projects, it is genuinely free." },
-    { q: "What happened to PlanetScale's free tier?", a: "PlanetScale removed its free Hobby plan entirely in April 2024. All free databases were deleted after a 30-day grace period. The minimum plan is now Scaler at $39/month. This was one of the most impactful free tier removals in developer tools. Alternatives: Neon (1 GB free per project), Turso (5 GB free)." },
+    { q: "What happened to PlanetScale's free tier?", a: "PlanetScale retired its free Hobby plan on 2024-04-08. Hobby databases that were not upgraded were put to sleep with their data kept. The cheapest plan is now $5 a month." },
     { q: "Neon vs Supabase: which is cheaper?", a: "Both have a free plan. Neon's gives 1 GB of storage and 100 CU-hours per project across up to 100 projects, with auth up to 60k MAU, 5 GB of object storage per project and Functions. Supabase's gives a 500 MB database per project across 2 active projects, with 50,000 MAU, 1 GB of file storage and 500,000 Edge Function invocations. On paid plans, Neon's Launch plan is usage-based with no monthly minimum; Supabase Pro starts at $25 a month, with the first project and $10 a month of compute credits included. Which costs less depends on your compute and storage use." },
     { q: "Should I use a managed database or self-host?", a: "Managed databases (Supabase, Neon, MongoDB Atlas) are better for small teams — zero ops overhead, automatic backups, and scaling. Self-hosting (PostgreSQL, MongoDB, Redis) makes sense when you need full control, have strict data residency requirements, or are optimizing costs at scale. The break-even point is typically around $200-500/month in managed database costs." },
-    { q: "Which database is best for AI/ML applications?", a: "For vector search: Weaviate, Zilliz Cloud (Milvus), or Supabase (pgvector). Weaviate offers the richest AI integrations but only has a trial sandbox. Supabase and Neon both include pgvector on their free plans. For RAG applications, Turso (edge) + any vector store gives low-latency retrieval." },
+    { q: "Which database is best for AI/ML applications?", a: "For vector search: Weaviate, Zilliz Cloud (Milvus), or Supabase (pgvector). Weaviate Cloud offers a \"Free Forever\" cluster with 100,000 objects, 1 GB memory, and 10 GB disk. Supabase and Neon both include pgvector on their free plans. For RAG applications, Turso (edge) + any vector store gives low-latency retrieval." },
     { q: "What are the hidden costs of database free tiers?", a: "The biggest gotchas: connection limits (MongoDB Atlas: 500, Redis Cloud: 30), storage caps that force upgrades (Supabase: 500 MB, Neon: 1 GB per project), operation-based pricing that spikes unpredictably (Firestore, DynamoDB), project pausing on inactivity (Supabase), and egress charges not included in free tier marketing." },
     { q: "How do I migrate away from a database if pricing changes?", a: "PostgreSQL-compatible databases (Supabase, Neon, CockroachDB, Aurora) offer the easiest migration path — pg_dump works across all of them. MongoDB Atlas data can be exported via mongodump. For serverless databases (Turso, D1, Convex), migration is harder due to proprietary APIs. Choose PostgreSQL-compatible databases to minimize lock-in risk." },
   ];
@@ -29376,9 +29405,9 @@ function buildDatabasePricingPage(): string {
         "1\u20134 weeks for active project";
       return '      <tr>' +
         '<td style="font-weight:600">' + escHtmlServer(s.name) + '</td>' +
-        '<td><span style="color:' + (freeTypeColors[s.freeType] || "var(--text-muted)") + ';font-size:.8rem;font-weight:600">' + escHtmlServer(freeTypeLabels[s.freeType]) + '</span></td>' +
-        '<td style="font-size:.85rem">' + escHtmlServer(s.freeStorage) + '</td>' +
-        '<td style="font-size:.85rem;color:var(--text-muted)">' + escHtmlServer(wallDesc) + '</td>' +
+        '<td><span style="color:' + (freeTypeColors[s.freeType] || "var(--text-muted)") + ';font-size:.8rem;font-weight:600">' + escHtmlServer(s.freeTierAsStated?.typeLabel ?? freeTypeLabels[s.freeType]) + '</span></td>' +
+        '<td style="font-size:.85rem">' + escHtmlServer(s.freeTierAsStated?.figure ?? s.freeStorage) + '</td>' +
+        '<td style="font-size:.85rem;color:var(--text-muted)">' + escHtmlServer(s.freeTierAsStated?.wall ?? wallDesc) + '</td>' +
         '</tr>';
     }).join("\n") + '\n' +
     '    </tbody>\n' +
@@ -29613,15 +29642,15 @@ function buildVectorDatabasePricingPage(): string {
       slug: "weaviate",
       category: "dedicated-cloud",
       vectorType: "Managed (Multi-model)",
-      freeVectors: "Sandbox only",
-      freeStorage: "Sandbox (14-day)",
+      freeVectors: "100,000 objects",
+      freeStorage: "10 GB disk, 1 GB memory",
       freeDimensions: "Unlimited",
       freeQueries: "Unlimited (during trial)",
-      paidFrom: "$25/mo (Shared)",
+      paidFrom: "$45/mo (Flex)",
       pricingModel: "Per-cluster",
-      freeDetails: "Cloud: 14-day free sandbox with full features (hybrid search, multi-tenancy, generative search, reranking). Sandbox expires — not a permanent free tier. Self-hosted: completely free and open-source with all features. Shared cloud from $25/month for 1M vectors.",
+      freeDetails: 'Weaviate Cloud offers a "Free Forever" cluster with 100,000 objects, 1 GB memory, and 10 GB disk. Weaviate is also open source and free to self-host.',
       freeType: "trial",
-      monthlyCostSmall: "$25",
+      monthlyCostSmall: "$0 (Free Forever)",
       monthlyCostTeam: "$45+ (Flex)",
       hiddenCosts: "No permanent cloud free tier — 14-day sandbox only. Self-hosted requires significant infrastructure for production use (multi-node for HA). Vectorization modules (OpenAI, Cohere) add API costs on top. Memory-intensive at scale.",
       selfHosted: true,
@@ -35668,7 +35697,7 @@ ${mcpCtaCss()}
 
   <div class="diff-card" style="border-left-color:#f85149">
     <h3>What happened <span style="font-size:.75rem;color:#f85149;font-weight:400">April 2024</span></h3>
-    <p class="diff-desc">PlanetScale shut down all free Hobby plan databases after a 30-day grace period. The free tier had been generous: 5 GB storage, 1 billion row reads/month, 10 million row writes/month, and database branching. Thousands of developers had to migrate overnight.</p>
+    <p class="diff-desc">PlanetScale retired its Hobby plan on April 8, 2024. Its FAQ: "Databases which are not upgraded by April 8th will be put into sleep mode. If you need to retrieve your data after April 8th, you will be able to temporarily wake your database for 24 hours." The free tier had been generous: 5 GB storage, 1 billion row reads/month, 10 million row writes/month, and database branching. Thousands of developers had to migrate overnight.</p>
   </div>
 
   <div class="diff-card" style="border-left-color:#d29922">
@@ -36108,7 +36137,7 @@ ${mcpCtaCss()}
       </tr>
       <tr>
         <td class="provider-col">Semaphore CI</td>
-        <td>Community plan (self-hosted, unlimited)</td>
+        <td>Cloud: $15 monthly credit. Self-hosted Community Edition: free</td>
         <td class="check">Unlimited (Community Edition); $0.0025/min on Cloud</td>
         <td class="check">Configurable</td>
         <td>Self-hosted teams</td>
@@ -45443,7 +45472,7 @@ function buildEstimatorData(): EstimatorCategory[] {
       vendors: [
         { slug: "supabase", name: "Supabase", free: "500 MB storage, 50K MAU", starter: 25, growth: 25, scale: 75, notes: "Pro $25/mo, usage-based after limits" },
         { slug: "neon", name: "Neon", free: "1 GB storage per project, 100 CU-hours", starter: 0, growth: 19, scale: 162, notes: "Usage-priced. Growth is 0.25 CU running all month on Launch ($0.106/CU-hour); scale is 1 CU all month on Scale ($0.222/CU-hour). Storage is extra at $0.35/GB-month." },
-        { slug: "planetscale", name: "PlanetScale", free: "No free tier", starter: 39, growth: 39, scale: 99, notes: "Free Hobby plan removed April 2024; every plan is paid" },
+        { slug: "planetscale", name: "PlanetScale", free: "No free tier", starter: 5, growth: 30, scale: 83, notes: "No free plan. Pricing by cluster size. Storage included only on Metal. Backup and egress billed separately." },
         { slug: "turso", name: "Turso", free: "100 DBs, 5 GB storage", starter: 0, growth: 29, scale: 29, notes: "Generous free tier, Scaler $29/mo" },
         { slug: "upstash", name: "Upstash", free: "256 MB Redis, 500K cmd/mo", starter: 0, growth: 10, scale: 50, notes: "Pay-per-request, $0.2/100K commands" },
         { slug: "mongodb-atlas", name: "MongoDB Atlas", free: "512 MB shared cluster", starter: 9, growth: 57, scale: 230, notes: "Dedicated clusters from $57/mo" },
