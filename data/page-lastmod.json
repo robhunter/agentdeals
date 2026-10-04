@@ -788,8 +788,8 @@
       "changed": "2026-09-05"
     },
     "/auth-comparison-2026": {
-      "hash": "31ecf1da5ab2333e",
-      "changed": "2026-10-03"
+      "hash": "610bc704ba367c0d",
+      "changed": "2026-10-04"
     },
     "/auth0-alternatives": {
       "hash": "1b74c817015631d4",
@@ -1147,8 +1147,8 @@
       "changed": "2026-10-01"
     },
     "/category/databases": {
-      "hash": "d7f0f2b6be339307",
-      "changed": "2026-10-03"
+      "hash": "0b0fde1399a866c9",
+      "changed": "2026-10-04"
     },
     "/category/design": {
       "hash": "708dd3a79fbc6cfd",
@@ -1179,8 +1179,8 @@
       "changed": "2026-10-01"
     },
     "/category/email": {
-      "hash": "324df12feea38043",
-      "changed": "2026-10-03"
+      "hash": "022c1d3a2c75f787",
+      "changed": "2026-10-04"
     },
     "/category/error-tracking": {
       "hash": "98af60f389ed9ae6",
@@ -1263,8 +1263,8 @@
       "changed": "2026-10-03"
     },
     "/category/security": {
-      "hash": "5343e3c267e8eda2",
-      "changed": "2026-10-03"
+      "hash": "c31e53d9cdf0d6d5",
+      "changed": "2026-10-04"
     },
     "/category/server-management": {
       "hash": "15d081d945685ec9",
@@ -2682,12 +2682,12 @@
       "changed": "2026-10-02"
     },
     "/database-alternatives": {
-      "hash": "d6d7d52fe8830962",
-      "changed": "2026-10-03"
+      "hash": "352a266fb00d1519",
+      "changed": "2026-10-04"
     },
     "/database-free-tier-comparison-2026": {
-      "hash": "440933f7dd0a2209",
-      "changed": "2026-10-03"
+      "hash": "1063a1ac8762491b",
+      "changed": "2026-10-04"
     },
     "/database-pricing": {
       "hash": "944a4863bc0a75a7",
@@ -3057,12 +3057,12 @@
       "changed": "2026-10-01"
     },
     "/email-alternatives": {
-      "hash": "8f5a5199105f21b4",
-      "changed": "2026-10-03"
+      "hash": "12bccf981f37d1a9",
+      "changed": "2026-10-04"
     },
     "/email-comparison-2026": {
-      "hash": "5f16785c62d8aa67",
-      "changed": "2026-10-03"
+      "hash": "d0b7d9b796a0ea2b",
+      "changed": "2026-10-04"
     },
     "/email-service-alternatives": {
       "hash": "b14fc325c3c19d62",
@@ -3073,8 +3073,8 @@
       "changed": "2026-09-12"
     },
     "/estimate": {
-      "hash": "65ceeb14564fe093",
-      "changed": "2026-10-02"
+      "hash": "ee3fbcdc8265b2ca",
+      "changed": "2026-10-04"
     },
     "/events": {
       "hash": "1cd961743e560957",
@@ -3099,8 +3099,8 @@
       "daily": true
     },
     "/firebase-alternatives": {
-      "hash": "77b29a9237fafe06",
-      "changed": "2026-10-03"
+      "hash": "b1c2fac7715b20d2",
+      "changed": "2026-10-04"
     },
     "/firebase-studio-shutdown": {
       "daily": true
@@ -3242,8 +3242,8 @@
       "changed": "2026-10-03"
     },
     "/mongodb-alternatives": {
-      "hash": "72efe8cdacf43156",
-      "changed": "2026-10-03"
+      "hash": "943656f3d57e98dc",
+      "changed": "2026-10-04"
     },
     "/monitoring-alternatives": {
       "hash": "d628eeb44816e9d2",
@@ -3441,12 +3441,12 @@
       "changed": "2026-10-03"
     },
     "/security-alternatives": {
-      "hash": "eec533aa46c75126",
-      "changed": "2026-10-03"
+      "hash": "9be9ad7c787f5fa7",
+      "changed": "2026-10-04"
     },
     "/security-free-tier-comparison-2026": {
-      "hash": "2c64e9ea18b56cab",
-      "changed": "2026-10-03"
+      "hash": "ccb151edd259468f",
+      "changed": "2026-10-04"
     },
     "/serverless-free-tier-comparison-2026": {
       "hash": "941bbc9cf80b07e2",
@@ -3507,8 +3507,8 @@
       "changed": "2026-10-04"
     },
     "/supabase-vs-firebase": {
-      "hash": "ecfe800c8beedc80",
-      "changed": "2026-10-03"
+      "hash": "c5a5a55a019650f2",
+      "changed": "2026-10-04"
     },
     "/team-collaboration-alternatives": {
       "hash": "15e59f53754e1784",
@@ -8883,8 +8883,8 @@
       "changed": "2026-10-03"
     },
     "/vendor/tailscale": {
-      "hash": "bbe6d71a226f17b3",
-      "changed": "2026-10-03"
+      "hash": "e95c31f68c7a16b4",
+      "changed": "2026-10-04"
     },
     "/vendor/tailwindadmin": {
       "hash": "bd1b9c707274860f",
