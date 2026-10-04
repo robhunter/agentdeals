@@ -21,7 +21,7 @@ const SYNTHETIC_TIER = "Free (Zorblax)";
 const BLANK_TERMS = "Terms replaced for this check.";
 const BLANK_TIER = "Replaced tier";
 
-type Offer = { vendor: string; tier: string; description: string };
+type Offer = { vendor: string; tier: string; description: string; conditions?: unknown[] };
 type Catalogue = { offers: Offer[] };
 
 const shipped: Catalogue = JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf8"));
@@ -95,7 +95,7 @@ describe("the LLM provider tables on the AI guides read each vendor's listing", 
 
   before(async () => {
     changed = await servePages(catalogueWith((o) => (o.vendor === SUBJECT ? { ...o, tier: SYNTHETIC_TIER, description: SYNTHETIC_TERMS } : o)));
-    blanked = await servePages(catalogueWith((o) => ({ ...o, tier: BLANK_TIER, description: BLANK_TERMS })));
+    blanked = await servePages(catalogueWith((o) => ({ ...o, tier: BLANK_TIER, description: BLANK_TERMS, conditions: undefined })));
   });
 
   it("has a listing-backed table on every page, each with a row for the subject vendor", () => {

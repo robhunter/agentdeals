@@ -1786,11 +1786,18 @@ function stackKeyLimitHtml(reading: StackPickReading, cap: number): string {
   const source = superseded ? readingBehindTheChange(superseded) : null;
   if (!source) {
     const unconfirmed = unconfirmedTermsFor(reading.primary);
-    const conditions = limit === reading.primary.description.replace(/\s+/g, " ").trim() ? conditionsAfterTheTermsHtml(reading.primary) : "";
-    return (unconfirmed ? `${escHtmlServer(limit)} ${unconfirmedTermsMarkerHtml(unconfirmed)}` : escHtmlServer(limit)) + conditions;
+    return unconfirmed ? `${escHtmlServer(limit)} ${unconfirmedTermsMarkerHtml(unconfirmed)}` : escHtmlServer(limit);
   }
   return `<span class="stack-limit-read" title="${escHtmlServer(`Our stored ${reading.vendor} terms are superseded. This is what ${source.label} read on ${source.date}.`)}">${escHtmlServer(limit)}</span>` +
     ` <a href="/vendor/${reading.slug}#changes" class="stack-limit-source" style="font-size:.7rem;color:var(--text-dim)">read ${escHtmlServer(source.date)}</a>`;
+}
+
+function stackKeyLimitConditionsHtml(reading: StackPickReading, cap: number): string {
+  return stackKeyLimit(reading.primary, cap) === reading.primary.description.replace(/\s+/g, " ").trim() ? conditionsAfterTheTermsHtml(reading.primary) : "";
+}
+
+function stackKeyLimitWithConditionsHtml(reading: StackPickReading, cap: number): string {
+  return stackKeyLimitHtml(reading, cap) + stackKeyLimitConditionsHtml(reading, cap);
 }
 
 function stackVerdictChipHtml(
@@ -1840,7 +1847,7 @@ function stackRecCardHtml(rec: EnrichedOfferRow, why: string): string {
           ${stackVerdictChipHtml(reading, { compact: true })}
         </div>
         <p class="pick-why">${escHtmlServer(reading.recommendable ? why : reading.why)}</p>
-        <p class="pick-limits">${stackKeyLimitHtml(reading, 220)}</p>
+        <p class="pick-limits">${stackKeyLimitHtml(reading, 220)}</p>${stackKeyLimitConditionsHtml(reading, 220)}
         <div class="pick-links">
           <a href="/vendor/${reading.slug}">Full profile</a>
           <a href="/alternative-to/${reading.slug}">Alternatives</a>
@@ -1880,7 +1887,7 @@ function stackTableCellsHtml(vendorName: string, fallbackLimit: string): { vendo
   }
   return {
     vendorLink: `${handwrittenVendorLinkHtml(reading.slug, vendorName, ' style="color:var(--text);font-weight:600"')}`,
-    limits: stackKeyLimitHtml(reading, 110),
+    limits: stackKeyLimitWithConditionsHtml(reading, 110),
     verdict: stackVerdictChipHtml(reading),
   };
 }
@@ -1908,7 +1915,7 @@ function stackNamedPickHtml(vendorName: string, why: string, tier: string, limit
           ${stackVerdictChipHtml(reading, { compact: true })}
         </div>
         <p class="pick-why">${escHtmlServer(reading.recommendable ? why : reading.why)}</p>
-        <p class="pick-limits">${stackKeyLimitHtml(reading, 220)}</p>
+        <p class="pick-limits">${stackKeyLimitHtml(reading, 220)}</p>${stackKeyLimitConditionsHtml(reading, 220)}
       </div>`;
 }
 
@@ -45127,6 +45134,10 @@ function buildStackTemplatePage(slug: string): string | null {
     const reading = templateReadings.get(s.slug);
     return reading ? stackKeyLimitHtml(reading, cap) : escHtmlServer(s.freeTier);
   };
+  const serviceLimitConditionsHtml = (s: StackService, cap: number) => {
+    const reading = templateReadings.get(s.slug);
+    return reading ? stackKeyLimitConditionsHtml(reading, cap) : "";
+  };
 
   const totals = { free: 0, starter: 0, growth: 0, scale: 0 };
   for (const s of template.services) {
@@ -45148,7 +45159,7 @@ function buildStackTemplatePage(slug: string): string | null {
   const tableRows = template.services.map(s => {
     return `<tr>
       <td>${escHtmlServer(s.category)}</td>
-      <td class="vendor-name">${vendorLabel(s)}<span class="free-tier-info">${serviceLimitHtml(s, 90)}</span></td>
+      <td class="vendor-name">${vendorLabel(s)}<span class="free-tier-info">${serviceLimitHtml(s, 90)}</span>${serviceLimitConditionsHtml(s, 90)}</td>
       <td>${serviceVerdictHtml(s)}</td>
       <td class="cost-free">$0</td>
       <td class="${costClass(s.starter)}">${formatCost(s.starter)}</td>
@@ -45165,7 +45176,7 @@ function buildStackTemplatePage(slug: string): string | null {
         ${serviceVerdictHtml(s)}
       </div>
       <p>${escHtmlServer(reading && !reading.recommendable ? reading.why : s.whyChosen)}</p>
-      <p class="why-free">${serviceLimitHtml(s, 150)}</p>
+      <p class="why-free">${serviceLimitHtml(s, 150)}</p>${serviceLimitConditionsHtml(s, 150)}
     </div>`;
   }).join("\n");
 
@@ -49618,7 +49629,7 @@ function buildAgentStackPage(): string {
 
     const serviceRows = recommended.map(({ svc, reading }) => {
       const shortLimits = reading
-        ? stackKeyLimitHtml(reading, 140)
+        ? stackKeyLimitWithConditionsHtml(reading, 140)
         : escHtmlServer(publishedTermsOpening({ vendor: svc.vendorName, description: svc.description, tier: svc.tier }, 1, 140));
       const verdict = reading ? stackVerdictChipHtml(reading) : `<span style="color:var(--text-dim)">&mdash;</span>`;
       return `          <tr>

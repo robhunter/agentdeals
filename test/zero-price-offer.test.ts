@@ -6,17 +6,22 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { assertCoversPopulation, assertPopulationFloor, assertSharesPopulation, type Population } from "./population-floor.ts";
 import { everyRouteTheSitemapPublishes } from "./sitemap-routes.ts";
+import { plainConditionsByVendor, withoutItsOwnConditions } from "./conditions-after-descriptions.ts";
 
 const { descriptionDeniesAFreeTier, DENIES_A_FREE_TIER, listingOffersAFreeTier } = await import("../dist/free-tier-record.js");
 const { riskyCauseEndsTheFreeTier } = await import("../dist/vendor-verdict.js");
+
+type ListingCondition = import("../src/types.ts").ListingCondition;
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
 
 const storedListings = JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf-8")).offers as
-  { vendor: string; tier: string; description: string }[];
+  { vendor: string; tier: string; description: string; conditions?: ListingCondition[] }[];
 
 const storedDescriptions = new Map<string, string>(storedListings.map(o => [`${o.vendor}|${o.tier}`, o.description ?? ""]));
+
+const storedConditions = plainConditionsByVendor(storedListings);
 
 const namingAFreePlanAndDenyingAnother = new Set(
   storedListings
@@ -89,9 +94,10 @@ const WITHHOLDS_OUR_TERMS = /We are not publishing our stored .+ terms beside it
 function caveatCarriedBy(node: Node): string | null {
   const stored = storedDescriptions.get(`${node.vendor}|${node.tier}`);
   if (stored === undefined) return null;
-  if (node.description === stored) return "";
+  const described = withoutItsOwnConditions(node.description, storedConditions.get(node.vendor));
   const closed = /[.!?…]$/.test(stored.trim()) ? stored : `${stored}.`;
-  return node.description.startsWith(`${closed} `) ? node.description.slice(closed.length + 1) : null;
+  if (described === stored || described === closed) return "";
+  return described.startsWith(`${closed} `) ? described.slice(closed.length + 1) : null;
 }
 
 describe("#1724 structured data prices a tier at zero only where we state that tier is free", () => {

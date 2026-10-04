@@ -152,11 +152,27 @@ function conditionsPrintedOn(route: string, body: string): ConditionPrinted[] {
   }));
 }
 
+const ELEMENTS_A_LIST_MAY_NOT_STAND_IN = ["p", "span", "a", "strong", "em", "small", "b", "i", "code", "label", "button", "h1", "h2", "h3", "h4", "h5", "h6"];
+
+function elementsHoldingAList(route: string, body: string): string[] {
+  const markup = body.replace(/<script\b[\s\S]*?<\/script>/g, "");
+  const holding: string[] = [];
+  for (const list of markup.matchAll(new RegExp(`<ul class="${LISTING_CONDITIONS_CLASS}"`, "g"))) {
+    const before = markup.slice(0, list.index);
+    for (const element of ELEMENTS_A_LIST_MAY_NOT_STAND_IN) {
+      const opened = Math.max(before.lastIndexOf(`<${element} `), before.lastIndexOf(`<${element}>`));
+      if (opened > before.lastIndexOf(`</${element}>`)) holding.push(`${route}: <${element}>`);
+    }
+  }
+  return holding;
+}
+
 describe("every route that prints a listing's description in full prints the listing's conditions right after it", () => {
   let server: { proc: ChildProcess; base: string };
   const readings: Reading[] = [];
   const conditionsSeen: ConditionPrinted[] = [];
   const setAsideSeen: string[] = [];
+  const listsMisplaced: string[] = [];
   let routesRead = 0;
 
   before(async () => {
@@ -168,6 +184,7 @@ describe("every route that prints a listing's description in full prints the lis
       const body = withoutTheHeadsSummaries(await response.text());
       readings.push(...readingsOf(route, body).filter(reading => planted.get(reading.code)?.role !== "set aside"));
       conditionsSeen.push(...conditionsPrintedOn(route, body));
+      listsMisplaced.push(...elementsHoldingAList(route, body));
       for (const match of body.matchAll(new RegExp(`${SET_ASIDE_TOKEN}([a-z]{3})`, "g"))) setAsideSeen.push(`${route}: ${planted.get(match[1]!)?.vendor}`);
     }
   });
@@ -196,6 +213,10 @@ describe("every route that prints a listing's description in full prints the lis
     assertPopulationFloor(conditionsSeen.length, 6000, "conditions printed on routes that print a description in full");
     const stray = conditionsSeen.filter(one => one.after !== one.code).map(one => `${one.route}: ${planted.get(one.code)?.vendor}`);
     assert.deepStrictEqual([...new Set(stray)], []);
+  });
+
+  it("sets every list of conditions where a list may stand, never inside a paragraph, a span or a link", () => {
+    assert.deepStrictEqual([...new Set(listsMisplaced)], []);
   });
 
 

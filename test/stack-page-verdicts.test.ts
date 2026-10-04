@@ -20,6 +20,7 @@ import {
   type PublishedPick,
 } from "../dist/stack-claim.js";
 import { toSlug } from "../dist/vendor-slug.js";
+import { conditionsHtml } from "../dist/listing-conditions.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -370,6 +371,17 @@ describe("the verdict comparison itself", () => {
     assert.deepStrictEqual(limitsPublishedOn(pick), [{ slug: "axiom", limit: "500 GB ingest/month" }]);
     const bare = pick.replace(/ <span class="listing-terms-unconfirmed"[\s\S]*?<\/span>/, "");
     assert.deepStrictEqual(limitsPublishedOn(bare), [{ slug: "axiom", limit: "500 GB ingest/month" }]);
+  });
+
+  it("reads a limit without the list of conditions printed after it", () => {
+    const conditions = conditionsHtml([{
+      text: "The free plan is for personal use only.",
+      quote: "Personal use only.",
+      url: "https://axiom.example/terms",
+      read_on: "2026-10-04",
+    }], (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"));
+    const cell = `<tr><td><a href="/vendor/axiom">Axiom</a></td><td style="font-family:var(--mono);font-size:.8rem;color:var(--accent)">500 GB ingest/month${conditions}</td></tr>`;
+    assert.deepStrictEqual(limitsPublishedOn(cell), [{ slug: "axiom", limit: "500 GB ingest/month" }]);
   });
 
   it("names a recommendation slot that states no verdict", () => {

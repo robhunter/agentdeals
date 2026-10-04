@@ -9,7 +9,7 @@ import { fileURLToPath } from "node:url";
 type Offer = import("../src/types.ts").Offer;
 type ListingCondition = import("../src/types.ts").ListingCondition;
 
-const { USES_A_VENDOR_CAN_RULE_OUT, conditionsInPlainText, productionAnswerOpening, theVendorsRuleOnProduction } = await import("../dist/listing-conditions.js");
+const { USES_A_VENDOR_CAN_RULE_OUT, conditionsInPlainText, productionAnswerOpening, theVendorsRuleOnProduction, withConditionsAfter } = await import("../dist/listing-conditions.js");
 const { citationLabel } = await import("../dist/change-citation.js");
 const { ruleOnRestating } = await import("../dist/restatement.js");
 const { applyRestatements, revertRestatement } = await import("../scripts/restate-superseded-terms.js");
@@ -95,6 +95,12 @@ const SYNTHETIC = [NOTED, NO_PRODUCTION, NO_COMMERCIAL_USE, NEITHER, ESCAPED, SU
 function withoutConditions(offer: Offer): Offer {
   const { conditions: _theFieldUnderTest, ...rest } = offer;
   return rest as Offer;
+}
+
+const SYNTHETIC_VENDORS = new Set(SYNTHETIC.map(offer => offer.vendor));
+
+function withoutTheSyntheticConditions(offer: Offer): Offer {
+  return SYNTHETIC_VENDORS.has(offer.vendor) ? withoutConditions(offer) : offer;
 }
 
 const SUPERSEDING_CHANGE = {
@@ -438,7 +444,7 @@ describe("a listing's conditions of use", () => {
     const withIt = (await (await fetch(`${withField.base}${route}`)).json()).offers as Offer[];
     const withoutIt = (await (await fetch(`${withoutField.base}${route}`)).json()).offers as Offer[];
     assert.ok(withIt.some(o => o.vendor === NOTED.vendor), "the category does not list the listings, so the comparison says nothing");
-    assert.deepStrictEqual(withIt.map(withoutConditions), withoutIt);
+    assert.deepStrictEqual(withIt.map(withoutTheSyntheticConditions), withoutIt);
   });
 
   it("carries the field in /api/offers and /api/details, and nothing else about the listing moves", async () => {
@@ -572,5 +578,12 @@ describe("which rule opens the production answer", () => {
       conditionsInPlainText([neither, production]),
       `${neither.text} (From ${neither.url}, read ${neither.read_on}.) ${production.text} (From ${production.url}, read ${production.read_on}.)`,
     );
+  });
+
+  it("ends the terms' last sentence before the conditions that follow them in plain text", () => {
+    const stated = conditionsInPlainText([neither]);
+    assert.strictEqual(withConditionsAfter("3 databases and 1 GB of storage", [neither]), `3 databases and 1 GB of storage. ${stated}`);
+    assert.strictEqual(withConditionsAfter("3 databases and 1 GB of storage.", [neither]), `3 databases and 1 GB of storage. ${stated}`);
+    assert.strictEqual(withConditionsAfter("3 databases and 1 GB of storage", []), "3 databases and 1 GB of storage");
   });
 });
