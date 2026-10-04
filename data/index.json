@@ -7721,7 +7721,7 @@
     {
       "vendor": "Tailscale",
       "category": "Security",
-      "description": "Mesh VPN with WireGuard — 6 users, unlimited devices, MagicDNS, exit nodes, subnet routing. Free Personal plan.",
+      "description": "Mesh VPN with WireGuard — 6 users, unlimited devices, MagicDNS, exit nodes, subnet routing. Free Personal plan. Tailscale states the Personal plan is \"only suitable for non-commercial use\". A tailnet created with a custom email domain counts as business use and starts a free trial instead of the Personal plan.",
       "tier": "Personal",
       "url": "https://tailscale.com/pricing",
       "tags": [
@@ -7733,7 +7733,7 @@
       ],
       "verifiedDate": "2026-10-03",
       "source_check": {
-        "checked": "2026-10-03",
+        "checked": "2026-10-04",
         "outcome": "ok",
         "detail": "the page names Tailscale as \"tailscale\" and states \"$0\""
       }
