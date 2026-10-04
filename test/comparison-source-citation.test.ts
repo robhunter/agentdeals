@@ -7,6 +7,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const {
+  catalogueMarkersOffRowsNoFetchablePageStates,
   citedSourcesListHtml,
   freeTierSourceOf,
   methodologyBlockEnd,
@@ -18,6 +19,7 @@ const {
   MISSING_SOURCE_LABELS,
   NO_CATALOGUE_RECORD,
   NO_CATALOGUE_RECORD_SOURCE,
+  NO_FETCHABLE_PAGE_STATES_THE_ROW,
   FIGURE_SOURCE_CLASS,
 } = await import("../dist/source-citation.js");
 const { SOURCE_CHECK_OUTCOMES, unconfirmedTermsClause } = await import("../dist/source-check.js");
@@ -92,6 +94,40 @@ const MARKS_A_SOURCE_OR_A_REASON = /class="(?:record-source|unsourced-tag)"/;
 function rowCitesItsOwnSource(html: string, at: number): boolean {
   const row = html.slice(html.lastIndexOf("<tr", at), html.indexOf("</tr>", at));
   return row.includes(`class="${FIGURE_SOURCE_CLASS}"`);
+}
+
+const AZURE_GUIDE = "/azure-free-tier-2026";
+
+const ROWS_NO_FETCHABLE_PAGE_STATES: Record<string, string[]> = {
+  [AZURE_GUIDE]: ["Azure Virtual Machines", "Azure Blob Storage", "Azure Files", "Azure Service Bus"],
+};
+
+interface TabulatedSlot {
+  slug: string | null;
+  subject: string;
+  cell: string;
+  cellEnd: number;
+}
+
+type SlotsOf = (html: string, resolve: typeof namedVendorSlug) => TabulatedSlot[];
+
+function rowsWithNeitherASourceNorAReason(page: string, html: string, slotsOf: SlotsOf): { rows: number; bare: string[] } {
+  const bare: string[] = [];
+  let rows = 0;
+  for (const slot of slotsOf(html, namedVendorSlug)) {
+    if (slot.slug === null) continue;
+    rows += 1;
+    if (MARKS_A_SOURCE_OR_A_REASON.test(slot.cell) || rowCitesItsOwnSource(html, slot.cellEnd)) continue;
+    if (ROWS_NO_FETCHABLE_PAGE_STATES[page]?.includes(slot.subject)) continue;
+    bare.push(`${page}: ${slot.subject}`);
+  }
+  return { rows, bare };
+}
+
+function withRowBefore(html: string, subject: string, row: string): string {
+  const at = html.lastIndexOf("<tr", html.indexOf(`>${subject}`));
+  assert.ok(at >= 0, `no row for ${subject} to put a scratch row beside`);
+  return html.slice(0, at) + row + html.slice(at);
 }
 
 function outboundHosts(html: string): string[] {
@@ -295,6 +331,20 @@ describe("what a record says about its source, without loading the catalogue", (
     assert.strictEqual(sourceAnchorId({ vendor: "Fly.io", slug: "fly-io" }), "source-fly-io");
     assert.strictEqual(sourceAnchorId({ vendor: "Dead Man's Snitch", slug: null }), "source-dead-man-s-snitch");
   });
+
+  it("takes the catalogue record's link or tag off a row that says no page a reader can fetch states it, and off no other row", () => {
+    const recordLink = ` <a href="https://example.com/pricing" rel="nofollow noopener" class="${RECORD_SOURCE_CLASS}">Source</a>`;
+    const reasonTag = ` <a href="#source-example" class="unsourced-tag" title="We could not confirm it.">Unconfirmed</a>`;
+    const cells = (marker: string) => `<td>Example Queue${marker}</td><td>750 hours/month</td>`;
+    for (const marker of [recordLink, reasonTag]) {
+      assert.strictEqual(
+        catalogueMarkersOffRowsNoFetchablePageStates(`<table><tr ${NO_FETCHABLE_PAGE_STATES_THE_ROW}>${cells(marker)}</tr></table>`),
+        `<table><tr ${NO_FETCHABLE_PAGE_STATES_THE_ROW}>${cells("")}</tr></table>`);
+      for (const row of [`<tr>${cells(marker)}</tr>`, `<tr ${NO_FETCHABLE_PAGE_STATES_THE_ROW}-elsewhere>${cells(marker)}</tr>`, `<tr><td ${NO_FETCHABLE_PAGE_STATES_THE_ROW}>Example Queue${marker}</td></tr>`]) {
+        assert.strictEqual(catalogueMarkersOffRowsNoFetchablePageStates(`<table>${row}</table>`), `<table>${row}</table>`);
+      }
+    }
+  });
 });
 
 describe("every comparison page reaches the pages its figures were read from", () => {
@@ -377,37 +427,45 @@ describe("every comparison page reaches the pages its figures were read from", (
   });
 
   it("leaves no row that puts a number beside a service without a source or a reason", () => {
-    const bare: string[] = [];
-    let rows = 0;
-    for (const page of COMPILED_PAGES) {
-      const html = staticHalfOf(rendered.get(page)!);
-      for (const slot of tabulatedSubjectSlots(html, namedVendorSlug)) {
-        if (slot.slug === null) continue;
-        rows += 1;
-        if (!MARKS_A_SOURCE_OR_A_REASON.test(slot.cell) && !rowCitesItsOwnSource(html, slot.cellEnd)) {
-          bare.push(`${page}: ${slot.subject}`);
-        }
-      }
-    }
-    assert.deepStrictEqual(bare, []);
-    assertPopulationFloor(rows, 100, "table rows naming a service we hold a record for");
+    const found = COMPILED_PAGES.map(page => rowsWithNeitherASourceNorAReason(page, staticHalfOf(rendered.get(page)!), tabulatedSubjectSlots));
+    assert.deepStrictEqual(found.flatMap(one => one.bare), []);
+    assertPopulationFloor(found.reduce((n, one) => n + one.rows, 0), 100, "table rows naming a service we hold a record for");
   });
 
   it("leaves no row linking a service's own page without a source or a reason", () => {
-    const bare: string[] = [];
-    let rows = 0;
-    for (const page of COMPILED_PAGES) {
+    const found = COMPILED_PAGES.map(page => rowsWithNeitherASourceNorAReason(page, staticHalfOf(rendered.get(page)!), tabulatedVendorSlots));
+    assert.deepStrictEqual(found.flatMap(one => one.bare), []);
+    assertPopulationFloor(found.reduce((n, one) => n + one.rows, 0), 200, "table rows naming a service we hold a record for");
+  });
+
+  it("serves each row it lets carry neither, because no page a reader can fetch states its figures", () => {
+    const servedBare = Object.entries(ROWS_NO_FETCHABLE_PAGE_STATES).flatMap(([page, subjects]) => {
       const html = staticHalfOf(rendered.get(page)!);
-      for (const slot of tabulatedVendorSlots(html, namedVendorSlug)) {
-        if (slot.slug === null) continue;
-        rows += 1;
-        if (!MARKS_A_SOURCE_OR_A_REASON.test(slot.cell) && !rowCitesItsOwnSource(html, slot.cellEnd)) {
-          bare.push(`${page}: ${slot.subject}`);
-        }
+      return tabulatedSubjectSlots(html, namedVendorSlug)
+        .filter((slot: TabulatedSlot) => subjects.includes(slot.subject))
+        .filter((slot: TabulatedSlot) => !MARKS_A_SOURCE_OR_A_REASON.test(slot.cell) && !rowCitesItsOwnSource(html, slot.cellEnd))
+        .map((slot: TabulatedSlot) => `${page}: ${slot.subject}`);
+    });
+    const named = Object.entries(ROWS_NO_FETCHABLE_PAGE_STATES).flatMap(([page, subjects]) => subjects.map(subject => `${page}: ${subject}`));
+    assert.deepStrictEqual(servedBare.sort(), named.sort());
+  });
+
+  it("lets those rows carry neither on their own page only, so the same rows elsewhere still need a source or a reason", () => {
+    const html = staticHalfOf(rendered.get(AZURE_GUIDE)!);
+    const elsewhere = "/cloud-free-tier-comparison-2026";
+    assert.deepStrictEqual(rowsWithNeitherASourceNorAReason(elsewhere, html, tabulatedSubjectSlots).bare,
+      ROWS_NO_FETCHABLE_PAGE_STATES[AZURE_GUIDE]!.map(subject => `${elsewhere}: ${subject}`));
+  });
+
+  it("still flags any other row in those tables that carries neither, whatever the row's markup says", () => {
+    const html = staticHalfOf(rendered.get(AZURE_GUIDE)!);
+    const cells = `<td style="font-weight:600">Azure Event Grid</td><td style="font-family:var(--mono);font-size:.8rem">100,000 operations/month</td><td style="color:var(--text-muted);font-size:.8rem">Messaging</td>`;
+    for (const row of [`<tr>${cells}</tr>`, `<tr ${NO_FETCHABLE_PAGE_STATES_THE_ROW}>${cells}</tr>`]) {
+      const scratch = withRowBefore(html, "Azure Virtual Machines", row);
+      for (const slotsOf of [tabulatedSubjectSlots, tabulatedVendorSlots]) {
+        assert.deepStrictEqual(rowsWithNeitherASourceNorAReason(AZURE_GUIDE, scratch, slotsOf).bare, [`${AZURE_GUIDE}: Azure Event Grid`]);
       }
     }
-    assert.deepStrictEqual(bare, []);
-    assertPopulationFloor(rows, 200, "table rows naming a service we hold a record for");
   });
 
   it("marks a row whose terms are stated in words as readily as one stating a figure", () => {

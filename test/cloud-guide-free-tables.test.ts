@@ -32,6 +32,8 @@ const STATED_IN_FULL_ON_THE_ACCOUNT_LIST = [
   "Foundry Tools: Vision",
   "Azure Database for PostgreSQL",
   "Azure Database for MySQL",
+  "$200 Azure Credit",
+  "Azure Kubernetes Service (AKS)",
 ];
 
 const AZURE_SUBSCRIPTION_LIMITS = "https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/azure-subscription-service-limits";
@@ -55,9 +57,7 @@ const NO_STATIC_PAGE_STATES_THE_ROW: Record<string, string[]> = {
     "Azure Blob Storage",
     "Azure Files",
     "Azure Service Bus",
-    "$200 Azure Credit",
     "Microsoft Foundry",
-    "Azure Kubernetes Service (AKS)",
     "Microsoft Fabric",
     "Azure OpenAI Service",
   ],
@@ -88,6 +88,8 @@ const NO_STATIC_PAGE_STATES_THE_ROW: Record<string, string[]> = {
     "Firebase Realtime Database",
   ],
 };
+
+const NO_FETCHABLE_PAGE_STATES_THE_AZURE_ROW = ["Azure Virtual Machines", "Azure Blob Storage", "Azure Files", "Azure Service Bus"];
 
 const RECORD_SOURCE_LINK = /<a\b[^>]*class="record-source"/g;
 
@@ -233,7 +235,16 @@ describe("the cloud guides' free-offer tables name each service once and cite pa
     const doubled = rows.filter((row) => row.citations.length > 0 && row.recordSources > 0).map((row) => `${row.page}: ${row.name}`);
     assert.deepStrictEqual(doubled, []);
     const keptOnUncited = rows.filter((row) => row.citations.length === 0 && row.recordSources > 0).map((row) => `${row.page}: ${row.name}`);
-    assert.ok(keptOnUncited.includes(`${AZURE}: Azure Blob Storage`), keptOnUncited.join("; "));
+    assert.ok(keptOnUncited.includes(`${AWS}: AWS Lambda`), keptOnUncited.join("; "));
     assert.ok(keptOnUncited.includes(`${GCP}: Firebase Auth`), keptOnUncited.join("; "));
+  });
+
+  it("links no page from the Azure rows whose figures no page a reader can fetch states, not even the catalogue record's", () => {
+    const rows = freeOfferRows(AZURE);
+    const linked = NO_FETCHABLE_PAGE_STATES_THE_AZURE_ROW.filter((name) => {
+      const row = rows.find((one) => one.name === name);
+      return row === undefined || row.citations.length > 0 || row.recordSources > 0;
+    });
+    assert.deepStrictEqual(linked, []);
   });
 });

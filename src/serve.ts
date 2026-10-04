@@ -47,7 +47,7 @@ import { withReviewByline } from "./page-byline.js";
 import { freshnessClaimFor, withFreshnessClaim } from "./page-freshness.js";
 import { UNGRADED_IMPACT_COLOR, changeImpactColor, changeImpactLabel, changeImpactWord, isChangeImpactLevel } from "./change-impact.js";
 import { COMPARED_SERVICES_PLACEHOLDER, appendToCompiledFigureSlots, fillComparedServicesCount, labelNamesAProductOfItsVendor, markCompiledFigures, recordsSinceCompiled, replaceTimelineRows, staticHalfOf, timelineRecordsFor, vendorForSubject, vendorSubjectsOnCompiledPage, type CompiledFigureSubject, type CompiledFigureVendor, type CompiledFigureVerdict, type CompiledPageRecord } from "./compiled-figures.js";
-import { CHECK_ESTABLISHES, CHECK_SCOPE_CLASS, NO_CATALOGUE_RECORD_SOURCE, citedSourcesListHtml, figureSourceLinkHtml, recordSourcesOffRowsThatCiteTheirOwn, freeTierSourceOf, freeTierSourceWeMayCite, freePlanExcerptHtml, pageQuoteHtml, readClauseHtml, readSourceOf, serviceSourceMarkerHtml, uncitedSourceTagHtml, withCitedSources, type CitedService, type FreeTierSource } from "./source-citation.js";
+import { CHECK_ESTABLISHES, CHECK_SCOPE_CLASS, NO_CATALOGUE_RECORD_SOURCE, NO_FETCHABLE_PAGE_STATES_THE_ROW, catalogueMarkersOffRowsNoFetchablePageStates, citedSourcesListHtml, figureSourceLinkHtml, recordSourcesOffRowsThatCiteTheirOwn, freeTierSourceOf, freeTierSourceWeMayCite, freePlanExcerptHtml, pageQuoteHtml, readClauseHtml, readSourceOf, serviceSourceMarkerHtml, uncitedSourceTagHtml, withCitedSources, type CitedService, type FreeTierSource } from "./source-citation.js";
 import { vendorHistorySentence } from "./vendor-history.js";
 import { guideBlurb } from "./guide-blurbs.js";
 import { changesToStartupProgrammes } from "./startup-programme-changes.js";
@@ -1568,7 +1568,7 @@ function compiledPageCitingSources(html: string, servedOn = utcDate()): string {
 
   const tabulated = markTabulatedRowSources(marked, byVendor);
   const tabulatedStatic = staticHalfOf(tabulated);
-  const sourced = recordSourcesOffRowsThatCiteTheirOwn(tabulatedStatic) + tabulated.slice(tabulatedStatic.length);
+  const sourced = catalogueMarkersOffRowsNoFetchablePageStates(recordSourcesOffRowsThatCiteTheirOwn(tabulatedStatic)) + tabulated.slice(tabulatedStatic.length);
   return withCitedSources(sourced, citedSourcesListHtml(services, escHtmlServer, SOURCE_READ_DATE_CLASS));
 }
 
@@ -33486,6 +33486,7 @@ function buildAzureFreeTier2026Page(): string {
     category: string;
     highlight?: boolean;
     source?: string;
+    noFetchablePageStatesIt?: true;
   }
 
   const MICROSOFT_FREE_ACCOUNT_LIST = "https://azure.microsoft.com/en-us/pricing/purchase-options/azure-account";
@@ -33512,20 +33513,20 @@ function buildAzureFreeTier2026Page(): string {
   ];
 
   const twelveMonthServices: AzureService[] = [
-    { name: "Azure Virtual Machines", slug: "azure", limits: "750 hours/month each of B2pts v2 (Arm-based) and B2ats v2 (AMD-based) burstable VMs, for Linux and again for Windows", category: "Compute" },
+    { name: "Azure Virtual Machines", slug: "azure", limits: "750 hours/month each of B2pts v2 (Arm-based) and B2ats v2 (AMD-based) burstable VMs, for Linux and again for Windows", category: "Compute", noFetchablePageStatesIt: true },
     { name: "Azure Database for PostgreSQL", slug: "azure", limits: "750 hours/month of Flexible Server, Burstable B1MS instance, with 32 GB storage and 32 GB backup storage", category: "Database", source: MICROSOFT_FREE_ACCOUNT_LIST },
     { name: "Azure Database for MySQL", slug: "azure", limits: "750 hours/month of Flexible Server, Burstable B1MS instance, with 32 GB storage and 32 GB backup storage", category: "Database", source: MICROSOFT_FREE_ACCOUNT_LIST },
     { name: "Managed Disks", slug: "azure", limits: "2× 64 GB P6 SSD managed disks, 1 GB snapshots, 2M I/O ops", category: "Storage" },
-    { name: "Azure Blob Storage", slug: "azure", limits: "5 GB LRS hot storage, 20K read / 10K write operations", category: "Storage" },
-    { name: "Azure Files", slug: "azure", limits: "100 GB file storage (LRS), 2M transactions", category: "Storage" },
+    { name: "Azure Blob Storage", slug: "azure", limits: "5 GB LRS hot storage, 20K read / 10K write operations", category: "Storage", noFetchablePageStatesIt: true },
+    { name: "Azure Files", slug: "azure", limits: "100 GB file storage (LRS), 2M transactions", category: "Storage", noFetchablePageStatesIt: true },
     { name: "Foundry Tools: Vision", slug: "azure", limits: "5,000 transactions/month for each S1, S2 and S3 tier", category: "AI/ML", source: MICROSOFT_FREE_ACCOUNT_LIST },
-    { name: "Azure Service Bus", slug: "azure", limits: "750 hours and 13 million operations/month, Standard tier base unit", category: "Messaging" },
+    { name: "Azure Service Bus", slug: "azure", limits: "750 hours and 13 million operations/month, Standard tier base unit", category: "Messaging", noFetchablePageStatesIt: true },
   ];
 
   const trialServices: AzureService[] = [
-    { name: "$200 Azure Credit", slug: "azure", limits: "$200 credit, valid for 30 days. Not for Marketplace purchases or Spot VMs", category: "Credits", highlight: true },
+    { name: "$200 Azure Credit", slug: "azure", limits: "$200 credit, valid for 30 days. Not for Marketplace purchases or Spot VMs", category: "Credits", highlight: true, source: MICROSOFT_FREE_ACCOUNT_LIST },
     { name: "Microsoft Foundry", slug: "azure", limits: "Access to GPT-4o and Llama models with credit", category: "AI/ML" },
-    { name: "Azure Kubernetes Service (AKS)", slug: "azure", limits: "Free cluster management, pay only for VMs (use with $200 credit)", category: "Containers" },
+    { name: "Azure Kubernetes Service (AKS)", slug: "azure", limits: "Free cluster management, pay only for VMs (use with $200 credit)", category: "Containers", source: MICROSOFT_FREE_ACCOUNT_LIST },
     { name: "Microsoft Fabric", slug: "azure", limits: "Free trial capacity for data analytics and AI workloads", category: "Analytics" },
     { name: "Azure OpenAI Service", slug: "azure", limits: "GPT-4o, Whisper with trial credit", category: "AI/ML" },
   ];
@@ -33566,21 +33567,24 @@ function buildAzureFreeTier2026Page(): string {
     { name: "Vercel", slug: "vercel", freeTier: "Hobby plan (personal, non-commercial use only): 100 deployments/day, 100 GB Fast Data Transfer/month, 1M function invocations/month.", strength: "Best Next.js hosting, instant previews", bestFor: "Frontend apps and Jamstack sites" },
   ];
 
-  const alwaysFreeRows = alwaysFreeServices.map(s => `<tr${s.highlight ? ' style="background:rgba(59,130,246,0.1)"' : ""}>
+  const azureRowAttributes = (s: AzureService) =>
+    `${s.highlight ? ' style="background:rgba(59,130,246,0.1)"' : ""}${s.noFetchablePageStatesIt ? ` ${NO_FETCHABLE_PAGE_STATES_THE_ROW}` : ""}`;
+
+  const alwaysFreeRows = alwaysFreeServices.map(s => `<tr${azureRowAttributes(s)}>
       <td style="font-weight:600">${s.highlight ? `<span style="color:var(--accent)">★</span> ` : ""}${escHtmlServer(s.name)}</td>
       <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(s.limits)}${s.source ? figureSourceLinkHtml(s.source, escHtmlServer) : ""}</td>
       <td style="color:var(--text-muted);font-size:.8rem">${escHtmlServer(s.category)}</td>
     </tr>`).join("\n        ");
 
-  const twelveMonthRows = twelveMonthServices.map(s => `<tr>
+  const twelveMonthRows = twelveMonthServices.map(s => `<tr${azureRowAttributes(s)}>
       <td style="font-weight:600">${escHtmlServer(s.name)}</td>
       <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(s.limits)}${s.source ? figureSourceLinkHtml(s.source, escHtmlServer) : ""}</td>
       <td style="color:var(--text-muted);font-size:.8rem">${escHtmlServer(s.category)}</td>
     </tr>`).join("\n        ");
 
-  const trialRows = trialServices.map(s => `<tr${s.highlight ? ' style="background:rgba(59,130,246,0.1)"' : ""}>
+  const trialRows = trialServices.map(s => `<tr${azureRowAttributes(s)}>
       <td style="font-weight:600">${s.highlight ? `<span style="color:var(--accent)">★</span> ` : ""}${escHtmlServer(s.name)}</td>
-      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(s.limits)}</td>
+      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(s.limits)}${s.source ? figureSourceLinkHtml(s.source, escHtmlServer) : ""}</td>
       <td style="color:var(--text-muted);font-size:.8rem">${escHtmlServer(s.category)}</td>
     </tr>`).join("\n        ");
 
