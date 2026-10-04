@@ -18,6 +18,7 @@ const {
   MISSING_SOURCE_LABELS,
   NO_CATALOGUE_RECORD,
   NO_CATALOGUE_RECORD_SOURCE,
+  FIGURE_SOURCE_CLASS,
 } = await import("../dist/source-citation.js");
 const { SOURCE_CHECK_OUTCOMES, unconfirmedTermsClause } = await import("../dist/source-check.js");
 const { tabulatedSubjectSlots, tabulatedVendorSlots, vendorFactRows, SOURCE_MARKER_IN_A_CELL } =
@@ -85,6 +86,13 @@ const [VENDOR_SLUG, VENDOR_WE_CAN_CONFIRM] = (() => {
 const VENDOR_PAGE = `/vendor/${VENDOR_SLUG}`;
 
 const OURS = /localhost|agentdeals\.dev|fonts\.(?:googleapis|gstatic)\.com/;
+
+const MARKS_A_SOURCE_OR_A_REASON = /class="(?:record-source|unsourced-tag)"/;
+
+function rowCitesItsOwnSource(html: string, at: number): boolean {
+  const row = html.slice(html.lastIndexOf("<tr", at), html.indexOf("</tr>", at));
+  return row.includes(`class="${FIGURE_SOURCE_CLASS}"`);
+}
 
 function outboundHosts(html: string): string[] {
   const hrefs = html.match(/href="https?:\/\/[^"]+"/g) ?? [];
@@ -376,7 +384,7 @@ describe("every comparison page reaches the pages its figures were read from", (
       for (const slot of tabulatedSubjectSlots(html, namedVendorSlug)) {
         if (slot.slug === null) continue;
         rows += 1;
-        if (!/class="(?:record-source|unsourced-tag)"/.test(slot.cell)) {
+        if (!MARKS_A_SOURCE_OR_A_REASON.test(slot.cell) && !rowCitesItsOwnSource(html, slot.cellEnd)) {
           bare.push(`${page}: ${slot.subject}`);
         }
       }
@@ -393,7 +401,7 @@ describe("every comparison page reaches the pages its figures were read from", (
       for (const slot of tabulatedVendorSlots(html, namedVendorSlug)) {
         if (slot.slug === null) continue;
         rows += 1;
-        if (!/class="(?:record-source|unsourced-tag)"/.test(slot.cell)) {
+        if (!MARKS_A_SOURCE_OR_A_REASON.test(slot.cell) && !rowCitesItsOwnSource(html, slot.cellEnd)) {
           bare.push(`${page}: ${slot.subject}`);
         }
       }

@@ -611,12 +611,12 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 40,
+      "table_figures": 41,
       "table_figures_from_records": 1,
       "tables": [
         {
           "label": "Always Free Services",
-          "figures": 14,
+          "figures": 15,
           "from_records": 0
         },
         {
