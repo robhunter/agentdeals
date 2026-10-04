@@ -66,6 +66,8 @@ const ALWAYS_FREE_ROWS: [string, string][] = [
 
 const TWELVE_MONTH_ROWS: [string, string][] = [
   ["Azure Virtual Machines", "750 hours/month each of B2pts v2 (Arm-based) and B2ats v2 (AMD-based) burstable VMs, for Linux and again for Windows"],
+  ["Azure Database for PostgreSQL", "750 hours/month of Flexible Server, Burstable B1MS instance, with 32 GB storage and 32 GB backup storage"],
+  ["Azure Database for MySQL", "750 hours/month of Flexible Server, Burstable B1MS instance, with 32 GB storage and 32 GB backup storage"],
   ["Azure Blob Storage", "5 GB LRS hot storage, 20K read / 10K write operations"],
   ["Foundry Tools: Vision", "5,000 transactions/month for each S1, S2 and S3 tier"],
   ["Azure Service Bus", "750 hours and 13 million operations/month, Standard tier base unit"],

@@ -33456,6 +33456,8 @@ function buildAzureFreeTier2026Page(): string {
 
   const twelveMonthServices: AzureService[] = [
     { name: "Azure Virtual Machines", slug: "azure", limits: "750 hours/month each of B2pts v2 (Arm-based) and B2ats v2 (AMD-based) burstable VMs, for Linux and again for Windows", category: "Compute" },
+    { name: "Azure Database for PostgreSQL", slug: "azure", limits: "750 hours/month of Flexible Server, Burstable B1MS instance, with 32 GB storage and 32 GB backup storage", category: "Database", source: MICROSOFT_FREE_ACCOUNT_LIST },
+    { name: "Azure Database for MySQL", slug: "azure", limits: "750 hours/month of Flexible Server, Burstable B1MS instance, with 32 GB storage and 32 GB backup storage", category: "Database", source: MICROSOFT_FREE_ACCOUNT_LIST },
     { name: "Managed Disks", slug: "azure", limits: "2× 64 GB P6 SSD managed disks, 1 GB snapshots, 2M I/O ops", category: "Storage" },
     { name: "Azure Blob Storage", slug: "azure", limits: "5 GB LRS hot storage, 20K read / 10K write operations", category: "Storage" },
     { name: "Azure Files", slug: "azure", limits: "100 GB file storage (LRS), 2M transactions", category: "Storage" },
@@ -34719,15 +34721,15 @@ ${mcpCtaCss()}
         <td class="provider-col">AWS</td>
         <td>RDS (MySQL/PostgreSQL)</td>
         <td>Relational</td>
-        <td>750 hrs/mo db.t3.micro, 20 GB</td>
-        <td style="color:#d29922">12 months</td>
+        <td>No allowance of its own: paid from the Free plan's credits (up to $200)</td>
+        <td style="color:#d29922">Free plan, up to 6 months</td>
       </tr>
       <tr>
         <td class="provider-col">AWS</td>
         <td>Aurora PostgreSQL Serverless</td>
         <td>Relational (serverless)</td>
-        <td>4 ACUs, 1 GB storage</td>
-        <td style="color:#d29922">12 months (new Mar 2026)</td>
+        <td>Up to 4 ACUs and 1 GiB per cluster, paid from the Free plan's credits</td>
+        <td style="color:#d29922">Free plan, up to 6 months</td>
       </tr>
       <tr>
         <td class="provider-col">GCP</td>
@@ -34754,7 +34756,21 @@ ${mcpCtaCss()}
         <td class="provider-col">Azure</td>
         <td>SQL Database</td>
         <td>Relational</td>
-        <td>100K vCore seconds/mo, 32 GB</td>
+        <td>Up to 10 serverless databases, each 100K vCore seconds/mo and 32 GB</td>
+        <td style="color:#3fb950">Always free</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Azure</td>
+        <td>Database for PostgreSQL</td>
+        <td>Relational</td>
+        <td>750 hrs/mo Flexible Server B1MS, 32 GB storage, 32 GB backup</td>
+        <td style="color:#d29922">12 months</td>
+      </tr>
+      <tr>
+        <td class="provider-col">Azure</td>
+        <td>Database for MySQL</td>
+        <td>Relational</td>
+        <td>750 hrs/mo Flexible Server B1MS, 32 GB storage, 32 GB backup</td>
         <td style="color:#d29922">12 months</td>
       </tr>
       <tr>

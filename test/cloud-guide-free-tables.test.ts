@@ -30,6 +30,8 @@ const STATED_IN_FULL_ON_THE_ACCOUNT_LIST = [
   "Azure IoT Hub",
   "Azure Advisor",
   "Foundry Tools: Vision",
+  "Azure Database for PostgreSQL",
+  "Azure Database for MySQL",
 ];
 
 let server: ChildProcess;

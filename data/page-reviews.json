@@ -611,7 +611,7 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 36,
+      "table_figures": 40,
       "table_figures_from_records": 1,
       "tables": [
         {
@@ -621,7 +621,7 @@
         },
         {
           "label": "12-Month Free Tier",
-          "figures": 6,
+          "figures": 10,
           "from_records": 0
         },
         {
@@ -846,7 +846,7 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 65,
+      "table_figures": 69,
       "table_figures_from_records": 12,
       "tables": [
         {
@@ -861,7 +861,7 @@
         },
         {
           "label": "Always-Free Databases",
-          "figures": 13,
+          "figures": 17,
           "from_records": 0
         },
         {
