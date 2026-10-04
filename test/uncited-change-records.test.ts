@@ -16,7 +16,8 @@ import {
   classifyStability,
   demotionForChange,
   demotionInForce,
-  demotionWithheld,
+  demotionInForceAmong,
+  demotionWithheldAmong,
   demotionWithheldForNoSource,
   enrichOffers,
   loadDealChanges,
@@ -174,7 +175,10 @@ describe("the shipped catalogue", () => {
   it("publishes no risk level a record citing no source would have set", () => {
     const rated = enriched
       .filter(o => o.risk_level !== null && o.risk_level !== "stable")
-      .filter((o) => recordsRating(o).filter(changeCitesASource).every(c => demotionInForce(c) === null))
+      .filter((o) => {
+        const rating = recordsRating(o);
+        return rating.filter(changeCitesASource).every(c => demotionInForceAmong(c, rating) === null);
+      })
       .map(o => `${o.vendor}: ${o.risk_level}`);
     assert.deepStrictEqual(rated, [], "a non-stable level rests on no record that cites a source");
   });
@@ -196,8 +200,8 @@ describe("the shipped catalogue", () => {
   it("withholds a rating for exactly the vendors whose only demoting records cite no source or are unconfirmed", () => {
     const withholding = loadOffers().filter((offer) => {
       const rating = recordsRating(offer);
-      return rating.some(c => demotionWithheld(c) !== null)
-        && rating.every(c => demotionInForce(c) === null);
+      return rating.some(c => demotionWithheldAmong(c, rating) !== null)
+        && rating.every(c => demotionInForceAmong(c, rating) === null);
     });
     assert.ok(
       withholding.some(offer => recordsRating(offer).some(c => demotionWithheldForNoSource(c) !== null)),
@@ -211,7 +215,8 @@ describe("the shipped catalogue", () => {
 
   it("counts the withheld records for the vendor whose rating is withheld", () => {
     for (const offer of enriched.filter(o => o.rating_withheld !== null)) {
-      const expected = recordsRating(offer).filter(c => demotionWithheld(c) !== null).length;
+      const rating = recordsRating(offer);
+      const expected = rating.filter(c => demotionWithheldAmong(c, rating) !== null).length;
       assert.strictEqual(offer.rating_withheld!.records, expected, offer.vendor);
       assert.ok(expected > 0, `${offer.vendor} withholds a rating on no record`);
     }

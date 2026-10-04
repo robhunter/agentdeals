@@ -1,6 +1,6 @@
 import type { DealChange, RatingWithheld, RatingWithheldReason, RiskCause, SourceCheck, SourceCheckOutcome } from "./types.js";
 import { restatedReadingDate, type TermsWeCannotConfirm } from "./read-date.js";
-import { CHANGE_DIRECTION, isACorrectionToOurOwnRecord, isOurOwnBookkeeping } from "./data.js";
+import { CHANGE_DIRECTION, freeTierRestoredOn, isACorrectionToOurOwnRecord, isOurOwnBookkeeping, recordRestoringTheFreeTier } from "./data.js";
 import { changeRatesTheListedTier, type GradedOffer } from "./change-tier.js";
 import { isNoLongerInForce, reversedOn, theEventNeverHappened } from "./change-resolution.js";
 import { changeIsUncited, changeSummaryText, ratingWithheldSentence, type WithheldRecordCounts } from "./change-citation.js";
@@ -729,6 +729,21 @@ function oneReversedNarrowingSentence(change: VendorVerdictInput["changes"][numb
   return `The one change we have recorded, a ${changeKindNoun(change.change_type)} ${changeDateClause(change)}, was reversed on ${reversedOn}.`;
 }
 
+export function restoredRemovalReason(input: Pick<VendorVerdictInput, "cause" | "changes">): string | null {
+  if (!input.cause || freeTierRestoredOn(input.cause, input.changes) === null) return null;
+  const byTheVendor = input.changes.filter(c => !changeIsUncited(c) && !isOurOwnBookkeeping(c));
+  const reversal = reversedOn(input.cause);
+  return byTheVendor.length === 1 && reversal ? oneReversedNarrowingSentence(byTheVendor[0]!, reversal) : null;
+}
+
+export function restorationClause(cause: RiskCause, changes: VendorVerdictInput["changes"]): string {
+  if (freeTierRestoredOn(cause, changes) === null) return "";
+  const reversal = reversedOn(cause);
+  if (reversal) return `, reversed on ${reversal}`;
+  const restoring = recordRestoringTheFreeTier(cause, changes);
+  return restoring ? `, after which the vendor offered a free plan again ${changeDateClause(restoring)}` : "";
+}
+
 export function narrowingSentence(
   changes: VendorVerdictInput["changes"],
   offer: GradedOffer | null = null,
@@ -800,8 +815,11 @@ export function vendorVerdictSentence(input: VendorVerdictInput): string {
     return endingWithOurOwnCorrections(vendorHistorySentence(input.vendor, input.historyLevel, input.cause), input.changes);
   }
 
+  const restored = level !== "stable" ? restoredRemovalReason(input) : null;
+  if (restored) return `We rate it ${level}. ${restored}${termsWeCannotConfirmToday(input)}`;
+
   if (level !== "stable" && input.cause) {
-    return `We rate it ${level} — one recorded ${changeKindNoun(input.cause.change_type)}, ${changeDateClause(input.cause)}.${termsWeCannotConfirmToday(input)}`;
+    return `We rate it ${level} — one recorded ${changeKindNoun(input.cause.change_type)}, ${changeDateClause(input.cause)}${restorationClause(input.cause, input.changes)}.${termsWeCannotConfirmToday(input)}`;
   }
 
   if (input.changes.length === 0) {

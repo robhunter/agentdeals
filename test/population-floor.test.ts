@@ -219,6 +219,10 @@ describe("a sweep read against the population it covers states coverage, not hea
       { vendor: "Source Closed", change_type: "open_source_killed", date: "2026-01-01" },
       { vendor: "Ended Then Offered Again", change_type: "free_tier_removed", date: "2026-01-01" },
       { vendor: "Ended Then Offered Again", change_type: "new_free_tier", date: "2026-02-01" },
+      { vendor: "Ended Then Restored In Words", change_type: "free_tier_removed", date: "2026-01-01" },
+      { vendor: "Ended Then Restored In Words", change_type: "pricing_restructured", date: "2026-02-01", current_state: "Hobby plan is free and includes 30+ services." },
+      { vendor: "Ended Then Denied Again", change_type: "free_tier_removed", date: "2026-01-01" },
+      { vendor: "Ended Then Denied Again", change_type: "pricing_restructured", date: "2026-02-01", current_state: "No free tier." },
       { vendor: "Retracted", change_type: "free_tier_removed", date: "2026-01-01", resolution: { state: "reversed" } },
       { vendor: "Narrowed", change_type: "limits_reduced", date: "2026-01-01" },
     ];
@@ -226,9 +230,9 @@ describe("a sweep read against the population it covers states coverage, not hea
     const held = process.env.AGENTDEALS_CHANGES_PATH;
     process.env.AGENTDEALS_CHANGES_PATH = at;
     try {
-      assert.strictEqual(vendorsTheChangeLogEnds().size, 1);
+      assert.strictEqual(vendorsTheChangeLogEnds().size, 2);
       assert.strictEqual(vendorsTheChangeLogEnds().read, "vendors whose free tier the change log ends");
-      writeFileSync(at, JSON.stringify({ changes: stored.filter(c => c.vendor !== "Ended") }));
+      writeFileSync(at, JSON.stringify({ changes: stored.filter(c => !c.vendor.startsWith("Ended") && c.vendor !== "ended") }));
       assert.strictEqual(vendorsTheChangeLogEnds().size, 0, "the population is read from the store, not carried");
     } finally {
       if (held === undefined) delete process.env.AGENTDEALS_CHANGES_PATH;

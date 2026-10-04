@@ -36,7 +36,10 @@ import { DEFAULT_CHANGE_WINDOW_DAYS, defaultChangeWindow, servedWindowOpens, win
 import { nameMatchDisclosure, type AskedByName, type NameMatch } from "./name-match.js";
 export { RISK_DEMOTION, SEVERE_TYPES_WITHOUT_FLAT_DEMOTION, changeTypeCanDemote } from "./change-demotion.js";
 import { vendorHistorySentence } from "./vendor-history.js";
-import { isACorrectionToOurOwnRecord, isNoLongerInForce, recordsStillInForce, recordsWeStandBehind, theEventNeverHappened, withResolutionInSummary, withStandingDeclaredOnEach } from "./change-resolution.js";
+import { isACorrectionToOurOwnRecord, isNoLongerInForce, recordsStillInForce, recordsWeStandBehind, reversedOn, theEventNeverHappened, withResolutionInSummary, withStandingDeclaredOnEach } from "./change-resolution.js";
+import { statesAFreePlan } from "./page-free-plan.js";
+import { DENIES_A_FREE_TIER } from "./free-tier-record.js";
+import { sentencesOf } from "./superseding-reading.js";
 import { trackedChanges, recordsOtherThanOurOwnIndexHousekeeping } from "./change-census.js";
 import { changeIsConfirmed, changeIsUnconfirmed, type ConfirmableChange } from "./change-confirmation.js";
 import type { WithheldRecordCounts } from "./change-citation.js";
@@ -431,7 +434,76 @@ export const SEVERE_CHANGE_TYPES = new Set(["free_tier_removed", "open_source_ki
 
 export const FREE_TIER_ENDING_TYPES = new Set(["free_tier_removed"]);
 
-type EndingCandidate = Pick<DealChange, "change_type" | "date"> & { resolution?: DealChange["resolution"] };
+type EndingCandidate = Pick<DealChange, "change_type" | "date"> & {
+  resolution?: DealChange["resolution"];
+  current_state?: string | null;
+};
+
+function statesAFreePlanItDoesNotDeny(text: string | null | undefined): boolean {
+  return sentencesOf(text ?? "").some(s => statesAFreePlan(s.text) && !DENIES_A_FREE_TIER.test(s.text));
+}
+
+export function recordRestoringTheFreeTier<T extends EndingCandidate>(
+  removal: Pick<DealChange, "date">,
+  vendorChanges: readonly T[],
+): T | null {
+  return changesTheVendorMade(recordsStillInForce(vendorChanges))
+    .filter(c => c.date > removal.date && !FREE_TIER_ENDING_TYPES.has(c.change_type))
+    .filter(c => c.change_type === "new_free_tier" || statesAFreePlanItDoesNotDeny(c.current_state))
+    .sort((a, b) => a.date.localeCompare(b.date))[0] ?? null;
+}
+
+export function freeTierRestoredOn(
+  removal: { change_type: string; date: string; resolution?: DealChange["resolution"] },
+  vendorChanges: readonly EndingCandidate[],
+): string | null {
+  if (!FREE_TIER_ENDING_TYPES.has(removal.change_type)) return null;
+  if (isNoLongerInForce(removal)) return reversedOn(removal);
+  return recordRestoringTheFreeTier(removal, vendorChanges)?.date ?? null;
+}
+
+export const A_RESTORED_REMOVAL_DEMOTES_TO = "caution" as const;
+
+function restoredRemovalStillCounts(removal: Pick<DealChange, "date">, nowMs: number): boolean {
+  return insideTheVerdictWindow(removal.date, nowMs);
+}
+
+export function restoredRemovalDemotionInForce(
+  removal: RateableChange & Pick<DealChange, "date">,
+  nowMs: number = Date.now(),
+): typeof A_RESTORED_REMOVAL_DEMOTES_TO | null {
+  if (!restoredRemovalStillCounts(removal, nowMs)) return null;
+  return changeCitesASource(removal) && changeIsConfirmed(removal) ? A_RESTORED_REMOVAL_DEMOTES_TO : null;
+}
+
+function restoredRemovalDemotionWithheld(
+  removal: RateableChange & Pick<DealChange, "date">,
+  nowMs: number,
+): { reason: RatingWithheldReason; level: typeof A_RESTORED_REMOVAL_DEMOTES_TO } | null {
+  if (!restoredRemovalStillCounts(removal, nowMs)) return null;
+  if (!changeCitesASource(removal)) return { reason: "no_source", level: A_RESTORED_REMOVAL_DEMOTES_TO };
+  return changeIsUnconfirmed(removal) ? { reason: "unconfirmed", level: A_RESTORED_REMOVAL_DEMOTES_TO } : null;
+}
+
+export function demotionWithheldAmong<T extends RateableChange & EndingCandidate>(
+  change: T,
+  vendorChanges: readonly T[],
+  nowMs: number = Date.now(),
+): { reason: RatingWithheldReason; level: "risky" | "caution" } | null {
+  return freeTierRestoredOn(change, vendorChanges) !== null
+    ? restoredRemovalDemotionWithheld(change, nowMs)
+    : demotionWithheld(change);
+}
+
+export function demotionInForceAmong<T extends RateableChange & EndingCandidate>(
+  change: T,
+  vendorChanges: readonly T[],
+  nowMs: number = Date.now(),
+): "risky" | "caution" | null {
+  return freeTierRestoredOn(change, vendorChanges) !== null
+    ? restoredRemovalDemotionInForce(change, nowMs)
+    : demotionInForce(change, nowMs);
+}
 
 export function freeTierEndingRecord<T extends EndingCandidate>(vendorChanges: readonly T[]): T | null {
   const inForce = vendorChanges.filter(c => !isNoLongerInForce(c));
@@ -439,17 +511,20 @@ export function freeTierEndingRecord<T extends EndingCandidate>(vendorChanges: r
     .filter(c => FREE_TIER_ENDING_TYPES.has(c.change_type))
     .sort((a, b) => b.date.localeCompare(a.date))[0];
   if (!ending) return null;
-  const restored = inForce.some(c => c.change_type === "new_free_tier" && c.date > ending.date);
-  return restored ? null : ending;
+  return recordRestoringTheFreeTier(ending, vendorChanges) ? null : ending;
 }
 
 const NEGATIVE_STABILITY_TYPES = NEGATIVE_CHANGE_TYPES;
 const POSITIVE_STABILITY_TYPES = POSITIVE_CHANGE_TYPES;
 
+function countsTowardStability(change: DealChange, vendorChanges: readonly DealChange[]): boolean {
+  return !isNoLongerInForce(change) || freeTierRestoredOn(change, vendorChanges) !== null;
+}
+
 export function stabilityDeciders(vendorChanges: readonly DealChange[]): DealChange[] {
   return vendorChanges.filter(
     (c) =>
-      !isNoLongerInForce(c) &&
+      countsTowardStability(c, vendorChanges) &&
       changeCitesASource(c) &&
       (NEGATIVE_STABILITY_TYPES.has(c.change_type) || POSITIVE_STABILITY_TYPES.has(c.change_type)),
   );
@@ -458,11 +533,12 @@ export function stabilityDeciders(vendorChanges: readonly DealChange[]): DealCha
 export function classifyStability(vendorChanges: DealChange[], nowMs: number = Date.now()): StabilityClass {
   if (vendorChanges.length === 0) return "stable";
 
-  const stillInForce = vendorChanges.filter((c) => !isNoLongerInForce(c) && changeCitesASource(c) && changeIsConfirmed(c));
-  const hasVolatile = stillInForce.some(isSevereChange);
-  const negativeCount = stillInForce.filter(c => NEGATIVE_STABILITY_TYPES.has(c.change_type)).length;
-  const positiveCount = stillInForce.filter(c => POSITIVE_STABILITY_TYPES.has(c.change_type)).length;
-  const riskScaleActs = stillInForce.some(c => demotionInForce(c, nowMs) !== null);
+  const counted = vendorChanges.filter((c) => countsTowardStability(c, vendorChanges) && changeCitesASource(c) && changeIsConfirmed(c));
+  const restored = new Set(counted.filter(c => freeTierRestoredOn(c, vendorChanges) !== null));
+  const hasVolatile = counted.some(c => !restored.has(c) && isSevereChange(c));
+  const negativeCount = counted.filter(c => NEGATIVE_STABILITY_TYPES.has(c.change_type)).length;
+  const positiveCount = counted.filter(c => POSITIVE_STABILITY_TYPES.has(c.change_type)).length;
+  const riskScaleActs = counted.some(c => demotionInForceAmong(c, vendorChanges, nowMs) !== null);
 
   if (hasVolatile || (negativeCount >= 2 && riskScaleActs)) return "volatile";
 
@@ -1126,19 +1202,19 @@ export const VERDICT_WINDOW_DAYS = 180;
 export const RECENT_CHANGE_WINDOW_DAYS = 90;
 
 export const A_DEMOTION_IN_FORCE_RULE =
-  `A vendor is named here for as long as a demotion is in force against it: a one-off pricing event, recorded against a source we cite, whose date falls in the last ${VERDICT_WINDOW_DAYS} days — or a standing condition, also cited, such as a free tier withdrawn or a product retired, which does not expire with time. A demotion can lift with nothing about the vendor having changed, and that happens on the day the vendor's newest qualifying event passes ${VERDICT_WINDOW_DAYS} days.`;
+  `A vendor is named here for as long as a demotion is in force against it: a one-off pricing event, recorded against a source we cite, whose date falls in the last ${VERDICT_WINDOW_DAYS} days — or a standing condition, also cited, such as a product retired or a free tier withdrawn and not restored, which does not expire with time. A demotion can lift with nothing about the vendor having changed, and that happens on the day the vendor's newest qualifying event passes ${VERDICT_WINDOW_DAYS} days.`;
 
 export const NO_DEMOTION_IN_FORCE_RULE =
   `A vendor is named here for as long as no demotion is in force against it and we hold no change record for it dated in the last ${RECENT_CHANGE_WINDOW_DAYS} days — any record, including ones the timeline above does not count. A vendor can join this section on a day we recorded nothing about it, when the later of those two clocks runs out: ${RECENT_CHANGE_WINDOW_DAYS} days after its newest record, or the day the demotion against it lapses. It leaves on the day we file a new record, or the day we can no longer vouch for the terms we list.`;
 
 export const VOLATILE_WHILE_A_DEMOTION_COUNTS_RULE =
-  `Counting only changes we cite a source for and the vendor has not reversed: two or more negative changes hold a vendor here while at least one of them still carries a demotion — a one-off pricing event whose date falls in the last ${VERDICT_WINDOW_DAYS} days, or a standing condition that does not expire with time. A vendor whose newest such event passes ${VERDICT_WINDOW_DAYS} days moves to Watch below on that day, with nothing about the vendor having changed. A vendor whose free tier was removed, whose open-source version was killed, or whose product was retired stays here whatever the date.`;
+  `Counting only changes we cite a source for, where a restriction the vendor later lifted counts for nothing and a free tier the vendor removed and later restored counts as one negative change: two or more negative changes hold a vendor here while at least one of them still carries a demotion — a one-off pricing event whose date falls in the last ${VERDICT_WINDOW_DAYS} days, or a standing condition that does not expire with time. A vendor whose newest such event passes ${VERDICT_WINDOW_DAYS} days moves to Watch below on that day, with nothing about the vendor having changed. A vendor whose free tier was removed and not restored, whose open-source version was killed, or whose product was retired stays here whatever the date.`;
 
 export const WATCH_RECEIVES_FROM_VOLATILE_RULE =
   `This section also receives vendors from Volatile above: a vendor arrives here on the day its newest qualifying pricing event passes ${VERDICT_WINDOW_DAYS} days and stops counting against it, without our having recorded anything new.`;
 
 export const A_VERDICT_LAPSES_RULE =
-  `A verdict here is not a fixed property of the vendor. A one-off pricing event demotes a vendor while its recorded date falls in the last ${VERDICT_WINDOW_DAYS} days and then lapses on its own, with nothing about the vendor having changed; a standing condition — a free tier withdrawn, a product retired — does not lapse with time.`;
+  `A verdict here is not a fixed property of the vendor. A one-off pricing event demotes a vendor while its recorded date falls in the last ${VERDICT_WINDOW_DAYS} days and then lapses on its own, with nothing about the vendor having changed; a standing condition — a free tier withdrawn and not restored, a product retired — does not lapse with time.`;
 
 export const A_BADGE_STATES_THE_RECORD_IT_RESTS_ON =
   "A badge carrying a date states the record it rests on; a badge with no date rests on no record in force.";
@@ -1224,8 +1300,12 @@ export function verdictHasLapsed(
   nowMs: number = Date.now(),
 ): boolean {
   if (!demotionCanLapse(change.change_type)) return false;
+  return !insideTheVerdictWindow(change.date, nowMs);
+}
+
+function insideTheVerdictWindow(date: string, nowMs: number): boolean {
   const windowOpens = new Date(nowMs - VERDICT_WINDOW_DAYS * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
-  return change.date < windowOpens;
+  return date >= windowOpens;
 }
 
 export function demotionInForce(
@@ -1241,9 +1321,10 @@ export function demotionLapsesOn(date: string): string {
 }
 
 export function lapsingDemotionStated(
-  cause: DatedChange & { change_type: string },
+  cause: DatedChange & { change_type: string; resolution?: DealChange["resolution"] },
+  vendorChanges: readonly EndingCandidate[] = [],
 ): string {
-  return demotionCanLapse(cause.change_type)
+  return demotionCanLapse(cause.change_type) || freeTierRestoredOn(cause, vendorChanges) !== null
     ? `${A_VERDICT_LAPSES_RULE} This one rests on a record ${changeEntryDateLabel(cause)}, so it lapses on ${demotionLapsesOn(cause.date)} unless we record something new first.`
     : `${A_VERDICT_LAPSES_RULE} This one rests on a standing condition, so it does not lapse.`;
 }
@@ -1256,10 +1337,13 @@ export interface VendorRiskAssessment {
   rating_withheld: RatingWithheld | null;
 }
 
-export function withheldRecordCounts(vendorChanges: readonly RateableChange[]): WithheldRecordCounts {
+export function withheldRecordCounts<T extends RateableChange & EndingCandidate>(
+  vendorChanges: readonly T[],
+  nowMs: number = Date.now(),
+): WithheldRecordCounts {
   const counts: WithheldRecordCounts = { unsourced: 0, unconfirmed: 0 };
   for (const change of vendorChanges) {
-    const withheld = demotionWithheld(change);
+    const withheld = demotionWithheldAmong(change, vendorChanges, nowMs);
     if (withheld?.reason === "no_source") counts.unsourced += 1;
     if (withheld?.reason === "unconfirmed") counts.unconfirmed += 1;
   }
@@ -1292,13 +1376,13 @@ export function vendorRiskAssessment(vendorChanges: DealChange[], nowMs: number 
   ) => !held || RISK_RANK[level] > RISK_RANK[held.level] || (level === held.level && cause.date > held.cause.date);
 
   for (const c of vendorChanges) {
-    const demotion = demotionInForce(c, nowMs);
+    const demotion = demotionInForceAmong(c, vendorChanges, nowMs);
     if (demotion) {
       const level = atTwelveMonths(demotion, c.date);
       if (better(best, level, c)) best = { level, cause: c };
       continue;
     }
-    const withheld = demotionWithheld(c);
+    const withheld = demotionWithheldAmong(c, vendorChanges, nowMs);
     if (!withheld) continue;
     const level = atTwelveMonths(withheld.level, c.date);
     if (better(withheldAt[withheld.reason], level, c)) withheldAt[withheld.reason] = { level, cause: c };
@@ -1312,7 +1396,7 @@ export function vendorRiskAssessment(vendorChanges: DealChange[], nowMs: number 
       cause: null,
       rating_withheld: {
         reason,
-        records: vendorChanges.filter(c => demotionWithheld(c) !== null).length,
+        records: vendorChanges.filter(c => demotionWithheldAmong(c, vendorChanges, nowMs) !== null).length,
       },
     };
   }
@@ -1394,7 +1478,7 @@ export function publishedRisk(
     risk_cause: riskCauseOf(assessment.cause),
     cause: assessment.cause,
     rating_withheld: assessment.rating_withheld,
-    withheld_records: withheldRecordCounts(grading),
+    withheld_records: withheldRecordCounts(grading, nowMs),
     link_unreachable,
     source_check: offer.source_check ?? null,
     gate,
