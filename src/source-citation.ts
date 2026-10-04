@@ -242,6 +242,16 @@ export function recordSourcesOffRowsThatCiteTheirOwn(html: string): string {
     row.includes(FIGURE_SOURCE_ATTRIBUTE) ? row.replace(RECORD_SOURCE_LINK, "") : row);
 }
 
+export const NO_FETCHABLE_PAGE_STATES_THE_ROW = "data-no-fetchable-page-states-the-row";
+
+const ROW_NO_FETCHABLE_PAGE_STATES = new RegExp(`^<tr\\b[^>]*\\s${NO_FETCHABLE_PAGE_STATES_THE_ROW}[\\s=>]`);
+const CATALOGUE_RECORD_MARKER = new RegExp(`\\s*<a\\b[^>]*\\bclass="(?:${RECORD_SOURCE_CLASS}|${UNCITED_TAG_CLASS})"[^>]*>[\\s\\S]*?<\\/a>`, "g");
+
+export function catalogueMarkersOffRowsNoFetchablePageStates(html: string): string {
+  return html.replace(TABLE_ROW_MARKUP, (row) =>
+    ROW_NO_FETCHABLE_PAGE_STATES.test(row) ? row.replace(CATALOGUE_RECORD_MARKER, "") : row);
+}
+
 const UNCITED_TAG_STYLE =
   "display:inline-block;margin-left:.35rem;padding:.1rem .4rem;border-radius:10px;" +
   "font-size:.65rem;font-weight:600;background:#8b949e22;color:#8b949e";
