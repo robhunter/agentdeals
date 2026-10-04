@@ -707,7 +707,7 @@
       "source_check": {
         "checked": "2026-10-04",
         "outcome": "ok",
-        "detail": "the page names Supabase as \"supabase\" and states \"$ 0\" and \"$ 25\" and \"$10\" and \"$ 10\""
+        "detail": "the page names Supabase as \"supabase\" and states \"$ 0\""
       },
       "product_subtypes": {
         "taxonomy": "Databases",
@@ -33141,7 +33141,7 @@
       "source_check": {
         "checked": "2026-10-04",
         "outcome": "ok",
-        "detail": "the page names Google Compute Engine as \"compute\" and states \"1 non-preemptible e2-micro VM instance per month\""
+        "detail": "the page names Google Compute Engine as \"compute\" and states \"$300\""
       },
       "restated_from": {
         "reading_date": "2026-10-04",

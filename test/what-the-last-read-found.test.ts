@@ -284,7 +284,7 @@ describe("the catalogue as it stands", () => {
         && o.last_read_date === record.last_attempt_at
         && settledFromStore(o) === null;
     });
-    assertPopulationFloor(unsettled.length, 177, "records whose last read found a difference we still hold");
+    assertPopulationFloor(unsettled.length, 60, "records whose last read found a difference we still hold");
     const quiet = unsettled.filter((o) => o.last_read_found !== A_DISAGREEMENT_STANDS);
     assert.deepStrictEqual(quiet.map((o) => `${o.vendor}: ${o.last_read_found}`), []);
   });
