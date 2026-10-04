@@ -28,7 +28,8 @@ import { INCLUDE_RETRACTED_ACCEPTS } from "./change-resolution.js";
 import { INCLUDE_INDEX_HOUSEKEEPING_ACCEPTS } from "./change-census.js";
 
 export const TRACK_CHANGES_LIMIT = 1000;
-import type { LinkUnreachable, ProductRole, ProductSubtypes, SourceCheck } from "./types.js";
+import type { LinkUnreachable, ListingCondition, ProductRole, ProductSubtypes, SourceCheck } from "./types.js";
+import { conditionsBesidePublishedTerms, withConditionsAfter } from "./listing-conditions.js";
 import type { RefusedReadWeHold } from "./change-refusal.js";
 import { NOT_VERIFIED, theReadConfirmedThePrice, publishedTermsEvidence, termsTheVerdictWithholds, termsWithTheReasonWeCannotConfirmThem, unconfirmedTermsFrom } from "./vendor-verdict.js";
 import { reasonWeCannotConfirmTheTerms } from "./vendor-verdict-input.js";
@@ -630,12 +631,12 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
       mimeType: "text/plain",
     },
     async (_uri, { slug }) => {
-      const data = (await fetchOffers({ category: slug as string, limit: 200 })) as { offers: Array<{ vendor: string; tier: string; description: string; verifiedDate: string; last_read_date: string; category: string }>; total: number };
+      const data = (await fetchOffers({ category: slug as string, limit: 200 })) as { offers: Array<{ vendor: string; tier: string; description: string; verifiedDate: string; last_read_date: string; category: string; conditions?: ListingCondition[]; terms_superseded?: unknown }>; total: number };
       if (!data.offers || data.offers.length === 0) {
         return { contents: [{ uri: `agentdeals://category/${slug}`, text: `No category found matching "${slug}".`, mimeType: "text/plain" }] };
       }
       const categoryName = data.offers[0].category;
-      const lines = data.offers.map(o => `- **${o.vendor}** — ${o.tier}: ${o.description} (${verificationDatesClause(o.last_read_date, o.verifiedDate)})`);
+      const lines = data.offers.map(o => `- **${o.vendor}** — ${o.tier}: ${withConditionsAfter(o.description, conditionsBesidePublishedTerms(o))} (${verificationDatesClause(o.last_read_date, o.verifiedDate)})`);
       const text = `# ${categoryName}\n\n${data.total} offers.\n\n${lines.join("\n")}`;
       return { contents: [{ uri: `agentdeals://category/${slug}`, text, mimeType: "text/plain" }] };
     }
@@ -683,7 +684,7 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
       mimeType: "text/plain",
     },
     async (_uri, { slug }) => {
-      const data = (await fetchOffers({ limit: 2000 })) as { offers: Array<{ vendor: string; category: string; tier: string; description: string; url: string; verifiedDate: string; last_read_date: string; tags: string[]; eligibility?: { type: string; conditions: string[] }; expires_date?: string; product_role?: ProductRole; product_subtypes?: ProductSubtypes; source_check?: SourceCheck | null; link_unreachable?: LinkUnreachable | null; refused_read?: RefusedReadWeHold | null; restated_from?: { reading_date: string } | null }>; total: number };
+      const data = (await fetchOffers({ limit: 2000 })) as { offers: Array<{ vendor: string; category: string; tier: string; description: string; url: string; verifiedDate: string; last_read_date: string; tags: string[]; eligibility?: { type: string; conditions: string[] }; expires_date?: string; product_role?: ProductRole; product_subtypes?: ProductSubtypes; source_check?: SourceCheck | null; link_unreachable?: LinkUnreachable | null; refused_read?: RefusedReadWeHold | null; restated_from?: { reading_date: string } | null; conditions?: ListingCondition[]; terms_superseded?: unknown }>; total: number };
       const match = data.offers.find(o => toSlug(o.vendor) === slug);
       if (!match) {
         return { contents: [{ uri: `agentdeals://vendor/${slug}`, text: `No vendor found matching "${slug}".`, mimeType: "text/plain" }] };
@@ -701,7 +702,7 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
       let text = `# ${match.vendor}\n\n`;
       text += `**Category:** ${match.category}\n`;
       text += `**Tier:** ${match.tier}\n`;
-      text += `**Description:** ${unconfirmed ? termsWithTheReasonWeCannotConfirmThem(match.description, unconfirmed) : match.description}\n`;
+      text += `**Description:** ${withConditionsAfter(unconfirmed ? termsWithTheReasonWeCannotConfirmThem(match.description, unconfirmed) : match.description, conditionsBesidePublishedTerms(match))}\n`;
       text += `**Pricing Page:** ${match.url}\n`;
       text += `${publishedDateLine(match)}\n`;
       const restatedLine = restatedReadingLine(match);
@@ -729,7 +730,7 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
         text += `\n## Alternatives in ${match.category}\n\n`;
         text += `${wholeRankedOrderList(alternatives.length)}\n\n`;
         for (const a of alternatives) {
-          text += `- **${a.vendor}** — ${a.tier}: ${a.description}\n`;
+          text += `- **${a.vendor}** — ${a.tier}: ${withConditionsAfter(a.description, conditionsBesidePublishedTerms(a))}\n`;
         }
       }
 

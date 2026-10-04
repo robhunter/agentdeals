@@ -21,6 +21,22 @@ const ENDS_A_FREE_TIER_PROPERTY = { type: "boolean" };
 
 const LISTING_EFFECT_PROPERTY = { type: "string", enum: [...DEPRECATION_CALLS] };
 
+const LISTING_CONDITIONS_PROPERTY = {
+  type: "array",
+  description: "A list of the conditions a vendor attaches to using its free tier. Each item holds our sentence (text), the vendor's own words (quote), the page that states them (url) and the date we read that page (read_on). An optional list rules_out names the uses the vendor excludes: \"production\", \"commercial use\" or both. Our re-reads of the vendor's pricing page do not change this field.",
+  items: {
+    type: "object",
+    properties: {
+      text: { type: "string" },
+      quote: { type: "string" },
+      url: { type: "string", format: "uri" },
+      read_on: { type: "string", format: "date" },
+      rules_out: { type: "array", items: { type: "string", enum: [...USES_A_VENDOR_CAN_RULE_OUT] } }
+    },
+    required: ["text", "quote", "url", "read_on"]
+  }
+};
+
 const ARCHIVE_CHECK_PROPERTY = {
   type: "object",
   nullable: true,
@@ -422,7 +438,24 @@ const DOCUMENTED_OPERATIONS: Record<string, Record<string, any>> = {
                   services_analyzed: { type: "number" },
                   risks_found: { type: "number", description: "Services carrying a published caution or risky level. A service whose level is withheld is not counted here — it is unrated, not safe (#1486)." },
                   savings_opportunities: { type: "number" },
-                  gaps: { type: "array", items: { type: "object" } },
+                  gaps: {
+                    type: "array",
+                    items: {
+                      type: "object",
+                      properties: {
+                        category: { type: "string" },
+                        recommendation: {
+                          type: "object",
+                          properties: {
+                            vendor: { type: "string" },
+                            tier: { type: "string" },
+                            description: { type: "string" },
+                            conditions: LISTING_CONDITIONS_PROPERTY
+                          }
+                        }
+                      }
+                    }
+                  },
                   services: {
                     type: "array",
                     items: {
@@ -731,7 +764,8 @@ const DOCUMENTED_OPERATIONS: Record<string, Record<string, any>> = {
                       properties: {
                         vendor: { type: "string" },
                         category: { type: "string" },
-                        description: { type: "string" }
+                        description: { type: "string" },
+                        conditions: LISTING_CONDITIONS_PROPERTY
                       }
                     }
                   },
@@ -788,6 +822,7 @@ const DOCUMENTED_OPERATIONS: Record<string, Record<string, any>> = {
                               vendor: { type: "string" },
                               tier: { type: "string" },
                               description: { type: "string" },
+                              conditions: LISTING_CONDITIONS_PROPERTY,
                               url: { type: "string", format: "uri" },
                               verified_date: { type: "string", format: "date" },
                               last_read_date: { type: "string", format: "date", description: "The day we last read this vendor's page, whatever that read concluded, taken from the verification store's own attempt. It can fall before verified_date, because verified_date is a stamp the record carries rather than a confirmation the store can always source (#1635)." },
@@ -905,6 +940,7 @@ const DOCUMENTED_OPERATIONS: Record<string, Record<string, any>> = {
                       properties: {
                         vendor: { type: "string" },
                         free_tier: { type: "string" },
+                        conditions: LISTING_CONDITIONS_PROPERTY,
                         estimated_monthly: { type: "string" },
                         notes: { type: "string" }
                       }
@@ -1523,21 +1559,7 @@ export const openapiSpec = {
             },
             required: ["text", "url", "read_on"]
           },
-          conditions: {
-            type: "array",
-            description: "A list of the conditions a vendor attaches to using its free tier. Each item holds our sentence (text), the vendor's own words (quote), the page that states them (url) and the date we read that page (read_on). An optional list rules_out names the uses the vendor excludes: \"production\", \"commercial use\" or both. Our re-reads of the vendor's pricing page do not change this field.",
-            items: {
-              type: "object",
-              properties: {
-                text: { type: "string" },
-                quote: { type: "string" },
-                url: { type: "string", format: "uri" },
-                read_on: { type: "string", format: "date" },
-                rules_out: { type: "array", items: { type: "string", enum: [...USES_A_VENDOR_CAN_RULE_OUT] } }
-              },
-              required: ["text", "quote", "url", "read_on"]
-            }
-          }
+          conditions: LISTING_CONDITIONS_PROPERTY
         },
         required: ["vendor", "category", "description", "tier", "url", "tags", "verifiedDate"]
       },
