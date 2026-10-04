@@ -312,7 +312,7 @@ describe("demerits", () => {
     assert.strictEqual(before.qualified.length, 2);
     const after = rankOffers([a, b], {
       queryKey: "t",
-      changes: [change({ vendor: "A", change_type: "open_source_killed", date: "2026-07-01" })],
+      changes: [change({ vendor: "A", change_type: "free_tier_removed", date: "2026-07-01" })],
       date: TODAY,
     });
     assert.deepStrictEqual(vendorsOf(after.qualified), ["B"]);
@@ -330,6 +330,12 @@ describe("recorded changes that must not move rank", () => {
       assert.strictEqual(e.disclosures[0].date, "2026-06-01");
     });
   }
+
+  it("open_source_killed costs nothing, since a move away from open source does not end a free tier", () => {
+    const e = evaluate(offer(), { date: TODAY, changesForVendor: [change({ change_type: "open_source_killed" })] });
+    assert.strictEqual(e.demerit_total, 0);
+    assert.ok(!e.demerits.some((d: { code: string }) => d.code === "free_tier_withdrawn"), JSON.stringify(e.demerits));
+  });
 
   it("a disclosed change we retracted is no longer disclosed", () => {
     const e = evaluate(offer(), {
