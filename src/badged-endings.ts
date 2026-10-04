@@ -35,8 +35,7 @@ export function subjectBadgedAsEnded(inner: string): string {
   return (qualified ? qualified[1]! : text).trim();
 }
 
-export function vendorsBadgedAsEnded(html: string): string[] {
-  const found = new Set<string>();
+function* holdersCarryingABadge(html: string): Generator<string> {
   const holders = new RegExp(BADGE_HOLDER.source, "g");
   for (let m: RegExpExecArray | null; (m = holders.exec(html)); ) {
     const tag = m[1]!;
@@ -44,10 +43,39 @@ export function vendorsBadgedAsEnded(html: string): string[] {
     const inner = m[3]!;
     if (!CARRIES_REMOVED_BADGE.test(inner)) continue;
     if (tag === "td" && !PROVIDER_CELL_ATTRS.test(attrs)) continue;
+    yield inner;
+  }
+}
+
+export function vendorsBadgedAsEnded(html: string): string[] {
+  const found = new Set<string>();
+  for (const inner of holdersCarryingABadge(html)) {
     const subject = subjectBadgedAsEnded(inner);
     if (subject !== "") found.add(subject);
   }
   return [...found].sort();
+}
+
+export interface EndingBadge {
+  subject: string;
+  href: string | null;
+  title: string | null;
+}
+
+function attributeOf(tag: string, name: "href" | "title"): string | null {
+  const value = new RegExp(`\\s${name}="([^"]*)"`).exec(tag)?.[1];
+  return value === undefined ? null : plainText(value);
+}
+
+export function endingBadgesServed(html: string): EndingBadge[] {
+  const badges: EndingBadge[] = [];
+  for (const inner of holdersCarryingABadge(html)) {
+    const subject = subjectBadgedAsEnded(inner);
+    for (const badge of inner.matchAll(new RegExp(BADGE_ELEMENT.source, "g"))) {
+      badges.push({ subject, href: attributeOf(badge[0], "href"), title: attributeOf(badge[0], "title") });
+    }
+  }
+  return badges;
 }
 
 export function badgedEndingPopulation(html: string): EndedOffer[] {
