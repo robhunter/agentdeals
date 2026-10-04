@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2026-10-03",
+  "generated": "2026-10-04",
   "pages": {
     "/": {
       "daily": true
@@ -30,8 +30,7 @@
       "changed": "2026-10-03"
     },
     "/alternative-to": {
-      "hash": "ab586b3cb075285e",
-      "changed": "2026-10-03"
+      "daily": true
     },
     "/alternative-to/360-monitoring": {
       "daily": true
@@ -1831,16 +1830,13 @@
       "changed": "2026-09-21"
     },
     "/compare/digitalocean-vs-google-compute-engine": {
-      "hash": "dd68261b0721efb0",
-      "changed": "2026-10-03"
+      "daily": true
     },
     "/compare/digitalocean-vs-heroku-for-startups-program": {
-      "hash": "f602bae2ea16327f",
-      "changed": "2026-10-02"
+      "daily": true
     },
     "/compare/digitalocean-vs-startup-with-ibm": {
-      "hash": "7dff6fc9dbf57da4",
-      "changed": "2026-10-02"
+      "daily": true
     },
     "/compare/digitalplat-vs-hurricane-electric-dns": {
       "hash": "7f8e2548c1b4c9ec",
@@ -3100,8 +3096,7 @@
       "daily": true
     },
     "/feed.xml": {
-      "hash": "67282bd475acf52e",
-      "changed": "2026-10-03"
+      "daily": true
     },
     "/firebase-alternatives": {
       "hash": "77b29a9237fafe06",
@@ -3214,20 +3209,17 @@
       "changed": "2026-10-01"
     },
     "/heroku-alternatives": {
-      "hash": "8c149a0174f29c12",
-      "changed": "2026-10-02"
+      "daily": true
     },
     "/hetzner-alternatives": {
-      "hash": "8075cac5bfa567f6",
-      "changed": "2026-10-03"
+      "daily": true
     },
     "/hetzner-pricing-2026": {
       "hash": "f4aac670acd77fb0",
       "changed": "2026-10-03"
     },
     "/hosting-alternatives": {
-      "hash": "54d7abf835ae4937",
-      "changed": "2026-10-03"
+      "daily": true
     },
     "/hosting-free-tier-comparison-2026": {
       "hash": "f7e50a7a23090d93",
@@ -3472,8 +3464,7 @@
       "changed": "2026-10-03"
     },
     "/stack-check": {
-      "hash": "709c4a354ed1b041",
-      "changed": "2026-10-03"
+      "daily": true
     },
     "/stacks": {
       "hash": "dbbc5f2fd6f38fac",
@@ -3540,8 +3531,7 @@
       "changed": "2026-10-03"
     },
     "/this-week": {
-      "hash": "982c468f691219f8",
-      "changed": "2026-10-03"
+      "daily": true
     },
     "/trends": {
       "hash": "07d4fb8d49f73139",
@@ -3589,8 +3579,7 @@
       "changed": "2026-10-03"
     },
     "/trends/cloud-iaas": {
-      "hash": "8eb8650c71311f5f",
-      "changed": "2026-10-03"
+      "daily": true
     },
     "/trends/cloud-storage": {
       "hash": "cd31188ab76cd6f4",
