@@ -1054,7 +1054,7 @@
     {
       "vendor": "Appwrite Cloud",
       "category": "Databases",
-      "description": "Open-source BaaS — 75K MAU, 2 GB storage, 750K function executions/month, 5 GB bandwidth, 1 database, 1 bucket and 2 functions per project, 500K database reads and 250K writes a month. Limit of 2 projects. Projects pause after 1 week of inactivity and are deleted after 90 days paused",
+      "description": "Open-source BaaS — 75K MAU, 2 GB storage, 750K function executions/month, 5 GB bandwidth, 1 database, 1 bucket and 2 functions per project, 500K database reads and 250K writes a month. Limit of 2 projects. Projects pause after 1 week of inactivity and are deleted after 90 days paused. If a Free project reaches a resource limit, it freezes and the Console becomes read-only, until the next billing cycle, or the owner upgrades to Pro or removes the resources over the limit.",
       "tier": "Free",
       "url": "https://appwrite.io/pricing",
       "tags": [
@@ -1070,7 +1070,7 @@
       ],
       "verifiedDate": "2026-08-23",
       "source_check": {
-        "checked": "2026-10-03",
+        "checked": "2026-10-04",
         "outcome": "ok",
         "detail": "the page names Appwrite Cloud as \"appwrite\" and states \"$0\""
       },
@@ -33478,7 +33478,7 @@
     {
       "vendor": "Amazon Aurora PostgreSQL",
       "category": "Databases",
-      "description": "Aurora PostgreSQL Serverless on AWS Free Tier — managed PostgreSQL-compatible database with automatic scaling. Free plan: up to 4 ACUs per cluster, 1 GB storage. New accounts also get $100–200 in AWS credits for 12 months",
+      "description": "Aurora PostgreSQL Serverless on AWS Free Tier — managed PostgreSQL-compatible database with automatic scaling. Free plan: up to 4 ACUs and 1 GiB of storage per cluster, paid from AWS credits ($100 at sign-up, up to $100 more). The Free plan closes after 6 months or when the credits run out",
       "tier": "Free Tier",
       "url": "https://aws.amazon.com/rds/aurora/pricing/",
       "tags": [
@@ -33492,7 +33492,7 @@
       ],
       "verifiedDate": "2026-09-20",
       "source_check": {
-        "checked": "2026-09-20",
+        "checked": "2026-10-04",
         "outcome": "ok",
         "detail": "the page names Amazon Aurora PostgreSQL as \"amazon aurora postgresql\" and states \"$100\""
       },
@@ -35394,7 +35394,7 @@
     {
       "vendor": "Amazon SES",
       "category": "Email",
-      "description": "Transactional and bulk email API/SMTP. No perpetual free tier: new AWS accounts get up to $200 in AWS Free Tier credits usable across eligible services, the free plan runs for 6 months after account creation, and credits expire 12 months after account creation. $0.10 per 1,000 outbound emails after that, plus EC2 compute and data transfer if you send from AWS.",
+      "description": "Transactional and bulk email API/SMTP. No perpetual free tier: new AWS accounts get up to $200 in AWS Free Tier credits usable across eligible services, and the free plan runs for 6 months after account creation. $0.10 per 1,000 outbound emails after that, plus EC2 compute and data transfer if you send from AWS.",
       "tier": "Credits",
       "url": "https://aws.amazon.com/ses/pricing/",
       "tags": [
@@ -35407,7 +35407,7 @@
       ],
       "verifiedDate": "2026-08-27",
       "source_check": {
-        "checked": "2026-09-26",
+        "checked": "2026-10-04",
         "outcome": "ok",
         "detail": "the page names Amazon SES as \"amazon ses\" and states \"$0.10\" and \"$200.00\" and \"$200\""
       }
