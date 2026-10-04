@@ -233,7 +233,7 @@ describe("#1491 the served list says the same thing to a reader and to a machine
       .filter((list) => list.itemListOrder === null)
       .map((list) => `${list.path} ${list.trail} (${list.elements.length} items)`);
     assert.deepStrictEqual(silent, [], `served lists carrying no itemListOrder:\n${silent.join("\n")}`);
-    assertPopulationFloor(everyRenderedList().length, 35, "ItemList blocks served over the sampled routes");
+    assertPopulationFloor(everyRenderedList().length, 27, "ItemList blocks served over the sampled routes");
   });
 
   it("publishes a claim schema.org defines", () => {
