@@ -6454,6 +6454,8 @@ const MONITORING_COMPARISON_META_DESC = "Which error tracking, application monit
 
 const LLM_API_PRICING_TITLE = "LLM API Free Tiers & Free Credits 2026 — LLM API Pricing Comparison: Token Costs, Rate Limits & Hidden Limits";
 const AZURE_FREE_TIER_TITLE = "Azure Free Tier 2026 — Always-Free and 12-Month Services, Limits, and Billing Rules";
+const AZURE_FREE_TIER_META_DESC = "Microsoft lists 65+ always-free Azure services. This page covers the main ones, the 12-month offers, the $200 credit, and billing rules.";
+const AWS_FREE_TIER_TITLE = "AWS Free Tier 2026 — Free Plan Credits, Always-Free Services, Limits, and Hidden Costs";
 const LLM_API_PRICING_META_DESC = "Which LLM APIs have a genuinely free tier or free credits in 2026, and what tokens cost once you exceed it. OpenAI, Anthropic, Google Gemini, Mistral, Groq, DeepSeek, Cerebras, OpenRouter, Cohere and xAI compared — free tier limits, rate limits, context windows and per-token pricing.";
 
 interface AlternativesPageConfig {
@@ -8099,7 +8101,7 @@ const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
   },
   {
     slug: "aws-free-tier-2026",
-    title: "AWS Free Tier Complete Guide 2026 — Every Free Service, Real Limits, and Hidden Costs",
+    title: AWS_FREE_TIER_TITLE,
     metaDesc: "AWS Free plan: up to $200 in credits over 6 months, 30+ always-free services, short-term trials, hidden costs, cheaper alternatives.",
     contextHtml: "",
     tag: "aws-free-tier-2026",
@@ -8116,7 +8118,7 @@ const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
   {
     slug: "azure-free-tier-2026",
     title: AZURE_FREE_TIER_TITLE,
-    metaDesc: "Comprehensive guide to every Azure free tier service in 2026. 65+ always-free services, $200 trial credit, 12-month free VMs and SQL. Cosmos DB lifetime free tier, Azure Functions 1M req/mo, and hidden costs explained.",
+    metaDesc: AZURE_FREE_TIER_META_DESC,
     contextHtml: "",
     tag: "azure-free-tier-2026",
     primaryVendor: "Azure",
@@ -32580,7 +32582,7 @@ railway up
 }
 
 function buildAwsFreeTier2026Page(): string {
-  const title = "AWS Free Tier Complete Guide 2026 — Every Free Service, Real Limits, and Hidden Costs";
+  const title = AWS_FREE_TIER_TITLE;
   const metaDesc = "AWS Free plan: up to $200 in credits over 6 months, 30+ always-free services, short-term trials, hidden costs, cheaper alternatives.";
   const slug = "aws-free-tier-2026";
   const pubDate = "2026-03-27";
@@ -32793,7 +32795,7 @@ ${mcpCtaCss()}
 <div class="container">
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; AWS Free Tier 2026</div>
-  <h1>AWS Free Tier Complete Guide 2026</h1>
+  <h1>AWS Free Tier 2026</h1>
   <p class="pub-date">Published ${pubDate} &middot; ${pageDataProvenance("/aws-free-tier-2026", offers.length)} &middot; ${awsOffers.length} AWS entries tracked</p>
 
   <div class="summary-stats">
@@ -33412,7 +33414,7 @@ ${mcpCtaCss()}
 
 function buildAzureFreeTier2026Page(): string {
   const title = AZURE_FREE_TIER_TITLE;
-  const metaDescAzure = "Comprehensive guide to every Azure free tier service in 2026. 65+ always-free services including SQL Database, $200 trial credit, 12-month free VMs. Cosmos DB lifetime free tier, Azure Functions, and hidden costs explained.";
+  const metaDescAzure = AZURE_FREE_TIER_META_DESC;
   const slug = "azure-free-tier-2026";
   const pubDate = "2026-03-31";
 
@@ -33648,7 +33650,7 @@ ${mcpCtaCss()}
 <div class="container">
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; Azure Free Tier 2026</div>
-  <h1>Azure Free Tier Complete Guide 2026</h1>
+  <h1>Azure Free Tier 2026</h1>
   <p class="pub-date">Published ${pubDate} &middot; ${pageDataProvenance("/azure-free-tier-2026", offers.length)} &middot; ${azureOffers.length} Azure entries tracked</p>
 
   <div class="summary-stats">

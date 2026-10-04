@@ -25,9 +25,12 @@ const WITHDRAWN: Record<string, RegExp> = {
   "Neon's storage as 512 MiB": /512 MiB/,
   "every stack at zero cost": /All stacks below can run at zero cost/,
   "every always-free service in the API stack": /scales to zero, always free within limits/,
+  "a title or heading that calls the guide complete": /AWS Free Tier Complete Guide/,
 };
 
 const META = "AWS Free plan: up to $200 in credits over 6 months, 30+ always-free services, short-term trials, hidden costs, cheaper alternatives.";
+const TITLE = "AWS Free Tier 2026 — Free Plan Credits, Always-Free Services, Limits, and Hidden Costs";
+const HEADING = "AWS Free Tier 2026";
 
 const STATS = ["Up to $200 Credits", "6 months Free plan", "30+ Always free", "90+ Services on the Free plan"];
 
@@ -147,6 +150,19 @@ describe("the AWS free tier guide describes the 6-month Free plan as AWS's own p
     assert.strictEqual(decode(meta ?? ""), META);
     const article = JSON.parse(html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)![1]);
     assert.strictEqual(article.description, META);
+  });
+
+  it("titles the guide by what its tables cover in the title, social card and structured data", () => {
+    const titles = [
+      html.match(/<title>([^<]*) — AgentDeals<\/title>/)?.[1],
+      html.match(/<meta property="og:title" content="([^"]*)">/)?.[1],
+      html.match(/"@type":"Article","headline":"([^"]*)"/)?.[1],
+    ].map((title) => (title === undefined ? title : decode(title)));
+    assert.deepStrictEqual(titles, [TITLE, TITLE, TITLE]);
+  });
+
+  it("is headed by its title's name, without calling itself complete", () => {
+    assert.strictEqual(html.match(/<h1>([^<]*)<\/h1>/)?.[1], HEADING);
   });
 
   it("gives AWS's own figures in the stat cards", () => {
