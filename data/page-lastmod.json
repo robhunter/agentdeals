@@ -812,7 +812,7 @@
       "changed": "2026-10-04"
     },
     "/azure-free-tier-2026": {
-      "hash": "2f7a68b527dd1f52",
+      "hash": "c9a7cdd290673d5e",
       "changed": "2026-10-04"
     },
     "/backblaze-b2-vs-cloudflare-r2": {
@@ -1334,7 +1334,7 @@
       "changed": "2026-10-03"
     },
     "/cloud-free-tier-comparison-2026": {
-      "hash": "0eef255630f5a7f7",
+      "hash": "06d3f537f8be4ec9",
       "changed": "2026-10-04"
     },
     "/cloudflare-pages-vs-vercel": {
