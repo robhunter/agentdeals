@@ -1067,7 +1067,7 @@
       "changed": "2026-10-03"
     },
     "/budget-builder": {
-      "hash": "9986af6d02b2b899",
+      "hash": "1efec656317f806f",
       "changed": "2026-10-04"
     },
     "/category": {
@@ -1322,11 +1322,11 @@
       "changed": "2026-10-04"
     },
     "/ci-cd-pricing": {
-      "hash": "105be7d4235cb836",
+      "hash": "697b52002acc9fa7",
       "changed": "2026-10-04"
     },
     "/cicd-free-tier-comparison-2026": {
-      "hash": "943af9b23d001281",
+      "hash": "e6730771d911fc0c",
       "changed": "2026-10-04"
     },
     "/circleci-vs-github-actions": {
@@ -2686,11 +2686,11 @@
       "changed": "2026-10-04"
     },
     "/database-free-tier-comparison-2026": {
-      "hash": "fab081dd56cf8b22",
+      "hash": "38b9e5d1e1c90675",
       "changed": "2026-10-04"
     },
     "/database-pricing": {
-      "hash": "21f456651fde7ad9",
+      "hash": "cbb1f75a5bc10d6d",
       "changed": "2026-10-04"
     },
     "/datadog-alternatives": {
@@ -3073,7 +3073,7 @@
       "changed": "2026-09-12"
     },
     "/estimate": {
-      "hash": "cde95ccfbcdd81d7",
+      "hash": "ca66e7f125852e35",
       "changed": "2026-10-04"
     },
     "/events": {
@@ -3773,7 +3773,7 @@
       "changed": "2026-10-04"
     },
     "/vector-database-pricing": {
-      "hash": "46d21cb925ae2aca",
+      "hash": "74bc2ed0e50ac319",
       "changed": "2026-10-04"
     },
     "/vendor": {
