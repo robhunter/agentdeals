@@ -1,14 +1,18 @@
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
 import { spawn, type ChildProcess } from "node:child_process";
+import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { assertPopulationFloor } from "./population-floor.ts";
+import { plainConditionsByVendor, withoutConditionsLists, withoutItsOwnConditions } from "./conditions-after-descriptions.ts";
 
 const { UNVERIFIED_TERMS_CAVEAT } = await import("../dist/vendor-verdict.js");
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
+
+const OWN_CONDITIONS = plainConditionsByVendor(JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf-8")).offers);
 
 const EVERY_NTH_VENDOR_PAGE = 3;
 const COMPARISON_PAGES_READ = 120;
@@ -55,7 +59,7 @@ function softwareNodes(html: string): ServedNode[] {
     if (record["@type"] === "SoftwareApplication" && typeof record.description === "string") {
       found.push({
         vendor: String(record.name ?? ""),
-        description: record.description,
+        description: withoutItsOwnConditions(record.description, OWN_CONDITIONS.get(String(record.name ?? ""))),
         offerTier: typeof record.offers?.name === "string" ? record.offers.name : null,
         offerDescription: typeof record.offers?.description === "string" ? record.offers.description : null,
         pricedAtZero: record.offers?.price === "0",
@@ -82,7 +86,7 @@ function vendorTermsBlock(html: string): TermsBlock | null {
 
 function comparisonTermsBlocks(html: string): TermsBlock[] {
   return [...html.matchAll(/<div class="desc-block( terms-superseded-text)?">([\s\S]*?)<\/div>/g)]
-    .map(([, withheld, body]) => ({ withheld: Boolean(withheld), text: textOf(body) }));
+    .map(([, withheld, body]) => ({ withheld: Boolean(withheld), text: textOf(withoutConditionsLists(body)) }));
 }
 
 function faqAnswer(html: string, vendor: string): string | null {

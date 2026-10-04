@@ -1,6 +1,7 @@
 import { citationLabel } from "./change-citation.js";
 import type { Escaper } from "./source-citation.js";
 import type { ListingCondition, Offer, UseAVendorRulesOut } from "./types.js";
+import { closingTerms } from "./vendor-verdict.js";
 
 export const USES_A_VENDOR_CAN_RULE_OUT: readonly UseAVendorRulesOut[] = ["production", "commercial use"];
 
@@ -30,7 +31,7 @@ export function conditionsInPlainText(conditions: readonly ListingCondition[]): 
 }
 
 export function withConditionsAfter(terms: string, conditions: readonly ListingCondition[]): string {
-  return conditions.length === 0 ? terms : `${terms} ${conditionsInPlainText(conditions)}`;
+  return conditions.length === 0 ? terms : `${closingTerms(terms)} ${conditionsInPlainText(conditions)}`;
 }
 
 export interface TheVendorsRule {

@@ -1,4 +1,5 @@
 import { TIME_LIMITED_TIER_RULES } from "./ranking.js";
+import { LISTING_CONDITIONS_CLASS } from "./listing-conditions.js";
 
 export type StackVerdictConfidence = 0 | 1 | 2 | 3;
 
@@ -150,6 +151,12 @@ function withoutTheUnconfirmedTermsMarker(html: string): string {
   return html.replace(/<span class="listing-terms-unconfirmed"[^>]*>[\s\S]*?(?:<\/span>|$)/g, " ");
 }
 
+const CONDITIONS_LIST = new RegExp(`<ul class="${LISTING_CONDITIONS_CLASS}"[^>]*>[\\s\\S]*?<\\/ul>`, "g");
+
+function withoutTheConditionsList(html: string): string {
+  return html.replace(CONDITIONS_LIST, " ");
+}
+
 export function limitsPublishedOn(html: string): PublishedLimit[] {
   const published: PublishedLimit[] = [];
   const scan = new RegExp(LIMIT_SCAN.source, "g");
@@ -165,7 +172,7 @@ export function limitsPublishedOn(html: string): PublishedLimit[] {
       continue;
     }
     if (subject === null) continue;
-    const limit = textOf(withoutTheUnconfirmedTermsMarker(m[3] ?? m[4] ?? ""));
+    const limit = textOf(withoutTheConditionsList(withoutTheUnconfirmedTermsMarker(m[3] ?? m[4] ?? "")));
     if (limit !== "") published.push({ slug: subject, limit });
   }
   return published;

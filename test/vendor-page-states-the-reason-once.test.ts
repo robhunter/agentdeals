@@ -4,12 +4,15 @@ import { spawn, type ChildProcess } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { assertPopulationFloor, assertSharesPopulation, type Population } from "./population-floor.ts";
+import { plainConditionsByVendor, withoutItsOwnConditions } from "./conditions-after-descriptions.ts";
 
 const { CANNOT_CONFIRM_THESE_TERMS, whyWeCannotConfirmTheseTerms } = await import("../dist/vendor-verdict.js");
 const { vendorVerdictContextFrom, reasonWeCannotConfirmTheTerms } = await import("../dist/vendor-verdict-input.js");
 const { loadOffers, changesByVendor, refusalsForVendor } = await import("../dist/data.js");
 const { vendorSlugMap } = await import("../dist/vendor-slug.js");
 const { ENDED_TIERS } = await import("../dist/retirement.js");
+
+const OWN_CONDITIONS = plainConditionsByVendor(loadOffers());
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -201,7 +204,7 @@ describe("a vendor page states the reason it cannot confirm the terms in its own
           tier: tierOf(html),
           verdict,
           visible,
-          reason: reasonTheNodeAdds(description, displayed),
+          reason: reasonTheNodeAdds(withoutItsOwnConditions(description, OWN_CONDITIONS.get(vendorSlugMap.get(slug) ?? "")), displayed),
           citesARead: /class="free-tier-source-line"/.test(html),
           restated: withholding ? restatements(visible, withholding) : null,
         });
