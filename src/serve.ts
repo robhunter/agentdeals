@@ -26065,7 +26065,7 @@ function buildFreeTierTrackerPage(): string {
       oneLiner: "Open-source GitHub repository archived",
       changeType: "open_source_killed",
       impact: "high",
-      detail: "MinIO archived its open-source GitHub repository. All development moved to proprietary MinIO AIStor. No new Docker images, PRs, or contributions accepted. Only case-by-case critical security fixes.",
+      detail: "MinIO archived its open-source GitHub repository. All development moved to proprietary MinIO AIStor. No new Docker images, PRs, or contributions accepted. The open-source edition gets no bug fixes or security patches. MinIO's free option is now AIStor Free: one node, under a commercial licence.",
       alternatives: ["Ceph", "SeaweedFS", "GarageHQ"],
     },
     {
@@ -26334,7 +26334,7 @@ ${mcpCtaCss()}
     </div>
     <div class="verdict-item">
       <strong>For production workloads:</strong>
-      <p>If you&rsquo;re building on a free tier, have a migration plan. The vendors that removed free tiers in Q1 gave between 0 days (MinIO) and 6 months (HCP Terraform) of notice. Budget for paid tiers or self-hosted alternatives.</p>
+      <p>If you&rsquo;re building on a free tier, have a migration plan. The vendors that removed free tiers in Q1 gave up to 6 months of notice (HCP Terraform). Budget for paid tiers or self-hosted alternatives.</p>
     </div>
     <div class="verdict-item">
       <strong>For startups:</strong>
@@ -40602,7 +40602,7 @@ ${mcpCtaCss()}
 
   <div class="diff-card">
     <h3>Self-hosted: ops cost is real</h3>
-    <div class="diff-desc">MinIO is free software, but running it in production requires: server infrastructure, monitoring, backup strategy, disaster recovery, security patching, and on-call. A 3-node MinIO cluster on bare metal costs $300-600/month in infrastructure + engineering time. For small teams, the TCO often exceeds managed services. Self-hosting makes economic sense at 50+ TB.</div>
+    <div class="diff-desc">AIStor Free costs nothing to license on a single node, but running it in production still requires: server infrastructure, monitoring, backup strategy, disaster recovery, security patching, and on-call. A 3-node MinIO cluster on bare metal costs $300-600/month in infrastructure + engineering time. It also needs a paid AIStor subscription (Enterprise Lite, price on request), since AIStor Free covers one node. For small teams, the TCO often exceeds managed services. Self-hosting makes economic sense at 50+ TB.</div>
   </div>
 
   <h2 id="changes">Pricing Change Timeline</h2>

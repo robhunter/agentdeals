@@ -143,4 +143,35 @@ describe("pages rate a vendor that moved away from open source without saying it
     assert.match(card, /href="\/vendor\/gitea"/, "the open-source card did not render");
     assert.doesNotMatch(card, /\/vendor\/minio"/);
   });
+
+  it("describes running MinIO by AIStor Free's single-node terms on the tracker, the risk index and the storage comparison", async () => {
+    const tracker = await get("/free-tier-tracker");
+    const trackerCard = tracker.match(/<a href="\/vendor\/minio"[^>]*>MinIO<\/a>[\s\S]*?Open-source GitHub repository archived<\/p>\s*<p\b[^>]*>([\s\S]*?)<\/p>/)?.[1];
+    assert.ok(trackerCard, "the tracker's MinIO card did not render");
+    assert.strictEqual(
+      textOf(trackerCard.replace(/<a\b[\s\S]*?<\/a>/g, "")),
+      "MinIO archived its open-source GitHub repository. All development moved to proprietary MinIO AIStor. No new Docker images, PRs, or contributions accepted. The open-source edition gets no bug fixes or security patches. MinIO's free option is now AIStor Free: one node, under a commercial licence.",
+    );
+    const productionAdvice = tracker.match(/<strong>For production workloads:<\/strong>\s*<p>([\s\S]*?)<\/p>/)?.[1];
+    assert.ok(productionAdvice, "the tracker's production advice did not render");
+    assert.strictEqual(
+      textOf(productionAdvice),
+      "If you&rsquo;re building on a free tier, have a migration plan. The vendors that removed free tiers in Q1 gave up to 6 months of notice (HCP Terraform). Budget for paid tiers or self-hosted alternatives.",
+    );
+
+    const riskRow = (await get("/free-tier-risk")).match(/<tr>\s*<td\b[^>]*><a href="\/vendor\/minio"[^>]*>MinIO \(OSS\)<\/a><\/td>[\s\S]*?<\/tr>/)?.[0] ?? "";
+    const riskCells = [...riskRow.matchAll(/<td\b[^>]*>([\s\S]*?)<\/td>/g)].map(m => textOf(m[1]!));
+    assert.ok(riskCells.length >= 4, "the risk index's MinIO (OSS) row did not render");
+    assert.strictEqual(
+      riskCells[3],
+      "Open-source version killed Feb 2026 (GNU AGPL → proprietary). The open-source edition gets no fixes or patches. AIStor Free is free on one node, including for production. A multi-node cluster needs a paid AIStor subscription.",
+    );
+
+    const opsCard = (await get("/storage-comparison-2026")).match(/<h3>Self-hosted: ops cost is real<\/h3>\s*<div class="diff-desc">([\s\S]*?)<\/div>/)?.[1];
+    assert.ok(opsCard, "the storage comparison's self-hosting card did not render");
+    assert.strictEqual(
+      textOf(opsCard),
+      "AIStor Free costs nothing to license on a single node, but running it in production still requires: server infrastructure, monitoring, backup strategy, disaster recovery, security patching, and on-call. A 3-node MinIO cluster on bare metal costs $300-600/month in infrastructure + engineering time. It also needs a paid AIStor subscription (Enterprise Lite, price on request), since AIStor Free covers one node. For small teams, the TCO often exceeds managed services. Self-hosting makes economic sense at 50+ TB.",
+    );
+  });
 });
