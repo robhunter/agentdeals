@@ -7444,7 +7444,30 @@
       "restatement_reverted": {
         "record_date": "2026-09-07",
         "reverted_on": "2026-10-03"
-      }
+      },
+      "conditions": [
+        {
+          "text": "LocalStack's terms say the Hobby plan is for personal, educational and non-commercial development use only.",
+          "quote": "The Hobby Plan is intended for personal, educational, and non-commercial development use only.",
+          "url": "https://www.localstack.cloud/legal/terms-of-service",
+          "read_on": "2026-10-05",
+          "rules_out": [
+            "commercial use"
+          ]
+        },
+        {
+          "text": "The Hobby plan is limited to a single user, and LocalStack's terms forbid sharing your credentials with any third party.",
+          "quote": "you may not: … Use of the LocalStack Assets outside of the Hobby Plan (which is limited to a single user, just you) … Share your credentials with any third party",
+          "url": "https://www.localstack.cloud/legal/terms-of-service",
+          "read_on": "2026-10-05"
+        },
+        {
+          "text": "Maintainers of a non-commercial open-source project can apply for a free Ultimate license if the project is not owned by a for-profit entity, uses an OSI-approved license, has a public repository and shows active maintenance.",
+          "quote": "If you maintain a non-commercial, open-source project, we invite you to apply for a free LocalStack for AWS license (Ultimate tier)",
+          "url": "https://www.localstack.cloud/pricing",
+          "read_on": "2026-10-05"
+        }
+      ]
     },
     {
       "vendor": "Testcontainers",
