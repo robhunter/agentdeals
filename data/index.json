@@ -784,7 +784,27 @@
         "text": "Perfect for passion projects & simple websites. Start for Free $ 0 / month Get started with: Unlimited API requests 50,000 monthly active users 500 MB database size Shared CPU • 500 MB RAM 5 GB egress 5 GB cached egress 1 GB file storage Community support Free projects are paused after 1 week of inactivity. Limit of 2 active projects.",
         "url": "https://supabase.com/pricing",
         "read_on": "2026-10-04"
-      }
+      },
+      "conditions": [
+        {
+          "text": "Supabase makes daily backups only for Pro, Team and Enterprise projects, so a free project has none, and Supabase recommends exporting it yourself with the CLI's db dump command.",
+          "quote": "We automatically back up all Pro, Team, and Enterprise Plan projects on a daily basis.",
+          "url": "https://supabase.com/docs/guides/platform/backups",
+          "read_on": "2026-10-05"
+        },
+        {
+          "text": "A paused project can be restored from the dashboard for 1 year. After that, only its backup file and Storage objects can be downloaded.",
+          "quote": "When a project is paused, users have a 1-year window to restore the project on the platform from within Supabase Studio.",
+          "url": "https://supabase.com/docs/guides/platform/upgrading",
+          "read_on": "2026-10-05"
+        },
+        {
+          "text": "Supabase notifies you when you exceed the Free Plan quota. Continued overuse brings restrictions that can include a read-only database, 402 responses to every API request, or paused projects. They lift when the quota refills next billing cycle or on upgrade to Pro.",
+          "quote": "If you continue to exceed the limits, service restrictions will apply.",
+          "url": "https://supabase.com/docs/guides/platform/billing-faq",
+          "read_on": "2026-10-05"
+        }
+      ]
     },
     {
       "vendor": "Neon",
