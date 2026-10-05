@@ -22,7 +22,7 @@ import { buildDailyRollup, readRollups, coverageOf, ROLLUP_DATE_PATTERN } from "
 import { AGENT_OPENS_WINDOW_DAYS, HOMEPAGE_GUIDE_COUNT, RANKED_TRAFFIC_CLASS, agentOpensByPath, agentOpensWindow, agentRequestAttribution, browseSectionSentence, completeDaysInWindow, guideSelectionSentence, guidesGroupedByHeading, opensDecidedPrefix, rankGuidesByAgentOpens, rankableDays } from "./homepage-routing.js";
 import { configureVendorSeries, recordVendorRequest, flushVendorSeries, readVendorSeries, vendorSeriesGauge, vendorExportAuthorized, isSeriesDate, seriesDateRange, VENDOR_SERIES_PATH, VENDOR_SERIES_RETENTION_DAYS, VENDOR_SERIES_NOTES } from "./vendor-series.js";
 import { openapiSpec } from "./openapi.js";
-import { OUTBOUND_PATH_PREFIX, configureOutboundStore, flushOutbound, loadOutbound, outboundByVendor, outboundSlug, outboundTotals, recordOutboundClick } from "./outbound.js";
+import { OUTBOUND_PATH_PREFIX, configureOutboundStore, flushOutbound, loadOutbound, outboundByVendor, outboundPath, outboundSlug, outboundTotals, recordOutboundClick } from "./outbound.js";
 import { AGENT_CARD_PATHS, OPENAPI_ALIAS_PATHS, OPENAPI_CANONICAL_PATH, OPENAPI_YAML_PATH, serviceDescription, theDocumentWeAlreadyServe } from "./agent-card.js";
 import { CATEGORY_ALIASES, CATEGORY_RETIREMENTS, CHANGE_LOG_CATEGORY_NAMES, EXAMPLE_MEMBERS_BASIS, buildCategoryDirectory, categoryHolds, familySiblings, publishedScopeFor, resolveCategoryName, resolveChangeCategory, retiredCategoryNames, retirementFor, scopeFor } from "./category-scope.js";
 import { retiredCategoryDescription, retiredCategoryNoticeHtml, retiredCategoryTitle } from "./category-retirement.js";
@@ -1346,9 +1346,33 @@ function linkToPublishedVendor(vendor: string, attributes = ""): string {
   return `<a href="/vendor/${toSlug(name)}"${attributes}>${escHtmlServer(name)}</a>`;
 }
 
-function offerPricingLink(offer: OfferTierAndUrl, label: string): string {
+function urlHostAndPath(url: string): string {
+  try {
+    const parsed = new URL(url);
+    return parsed.pathname === "/" ? parsed.host : `${parsed.host}${parsed.pathname}`;
+  } catch {
+    return url;
+  }
+}
+
+function linksThroughOutbound(slug: string, url: string): boolean {
+  return slug !== "" && outboundDestination(slug) === url;
+}
+
+function offerPricingLink(offer: OfferTierAndUrl & { vendor: string }, label: string): string {
   if (offerRetired(offer)) return "";
-  return `<a href="${escHtmlServer(offer.url)}" target="_blank" rel="noopener">${label}</a>`;
+  const slug = toSlug(offer.vendor);
+  if (!linksThroughOutbound(slug, offer.url)) {
+    return `<a href="${escHtmlServer(offer.url)}" target="_blank" rel="noopener">${label}</a>`;
+  }
+  return `<a href="${outboundPath(slug)}" target="_blank" rel="noopener">${escHtmlServer(urlHostAndPath(offer.url))} &nearr;</a>`;
+}
+
+function pricingPageCardLink(slug: string, url: string): string {
+  if (!linksThroughOutbound(slug, url)) {
+    return `<a href="${escHtmlServer(url)}" rel="noopener" target="_blank">Visit &rarr;</a>`;
+  }
+  return `<a href="${outboundPath(slug)}" rel="noopener" target="_blank" style="overflow-wrap:anywhere">${escHtmlServer(url)}</a>`;
 }
 
 type BadgeStatus = "active" | "at-risk" | "stale" | "time-limited" | "removed" | "retired" | "withheld" | "unknown";
@@ -6042,7 +6066,7 @@ ${referralCalloutHtml}
     </div>
     ${offerRetired(primary) ? "" : `<div class="detail-card">
       <div class="detail-label">Pricing Page</div>
-      <div class="detail-value"><a href="${escHtmlServer(primary.url)}" rel="noopener" target="_blank">Visit &rarr;</a></div>
+      <div class="detail-value">${pricingPageCardLink(slug, primary.url)}</div>
     </div>
     `}<div class="detail-card">
       <div class="detail-label">${discontinuedOn ? "Discontinued" : linkUnreachable ? "Link last reachable" : publishedDateLabel(primary)}</div>
@@ -49725,7 +49749,7 @@ function buildAgentStackPage(): string {
             <td>${handwrittenVendorLinkHtml(svc.slug, svc.vendorName, ' class="vendor-link"')} <span class="tier-badge">${escHtmlServer(svc.tier)}</span></td>
             <td class="limits-cell">${shortLimits}</td>
             <td class="verdict-cell">${verdict}</td>
-            <td class="link-cell">${offerPricingLink(svc, "Pricing →")}</td>
+            <td class="link-cell">${offerPricingLink({ ...svc, vendor: svc.vendorName }, "Pricing →")}</td>
           </tr>`;
     }).join("\n");
 

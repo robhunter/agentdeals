@@ -252,7 +252,7 @@ describe("a record that is not retired keeps everything the gate would take away
   it("still links to its pricing page from its vendor page", () => {
     const live = renderedVendorPages.filter(p => !offerRetired(p.offer));
     assertPopulationFloor(live.length, 600, "vendor pages render a live record");
-    const missing = live.filter(p => anchorsTo(p.html, escapeHtml(p.offer.url)) === 0).map(p => p.slug);
+    const missing = live.filter(p => anchorsTo(p.html, escapeHtml(p.offer.url)) + anchorsTo(p.html, `/go/${p.slug}`) === 0).map(p => p.slug);
     assert.deepStrictEqual(missing, []);
   });
 

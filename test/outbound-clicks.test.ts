@@ -371,13 +371,14 @@ describe("/go/<slug> on a running server", () => {
     assert.deepStrictEqual(wrong, []);
   });
 
-  it("links the same URL from the vendor page's Pricing Page card", async () => {
+  it("leads to the URL the vendor page's Pricing Page card shows, and the card links through /go/", async () => {
     for (const slug of ["supabase", "railway", "sentry"]) {
       const page = await (await fetch(`${server!.base}/vendor/${slug}`)).text();
-      const card = page.match(/<div class="detail-label">Pricing Page<\/div>\s*<div class="detail-value"><a href="([^"]+)"/);
+      const card = page.match(/<div class="detail-label">Pricing Page<\/div>\s*<div class="detail-value"><a href="([^"]+)"[^>]*>([^<]+)<\/a>/);
       assert.ok(card, `${slug} has a Pricing Page card`);
+      assert.strictEqual(card[1], `/go/${slug}`, slug);
       const location = (await click(server!.base, slug, SDK_UA, "HEAD")).headers.get("location");
-      assert.strictEqual(location, card[1].replace(/&amp;/g, "&"), slug);
+      assert.strictEqual(location, card[2].replace(/&amp;/g, "&"), slug);
     }
   });
 
