@@ -143,6 +143,11 @@ interface ConditionPrinted {
   after: string | null;
 }
 
+const GUIDES_PRINTING_THEIR_VENDORS_CONDITIONS: Record<string, string> = {
+  "/hetzner-pricing-2026": "Hetzner",
+  "/gcp-free-tier-2026": "Google Compute Engine",
+};
+
 function conditionsPrintedOn(route: string, body: string): ConditionPrinted[] {
   const descriptions = [...body.matchAll(ANY_DESCRIPTION_TOKEN)].map(match => ({ at: match.index!, code: match[1]! }));
   return [...body.matchAll(new RegExp(`${CONDITION_TOKEN}([a-z]{3})`, "g"))].map(match => ({
@@ -209,10 +214,16 @@ describe("every route that prints a listing's description in full prints the lis
     assert.deepStrictEqual(lines, [], `${lines.length} routes print a full description without its conditions`);
   });
 
-  it("prints a listing's conditions only right after its description in full", () => {
+  it("prints a listing's conditions only right after its description in full, or on the one guide about that listing's vendor", () => {
     assertPopulationFloor(conditionsSeen.length, 6000, "conditions printed on routes that print a description in full");
-    const stray = conditionsSeen.filter(one => one.after !== one.code).map(one => `${one.route}: ${planted.get(one.code)?.vendor}`);
+    const onItsVendorsGuide = (one: ConditionPrinted) => GUIDES_PRINTING_THEIR_VENDORS_CONDITIONS[one.route] === planted.get(one.code)?.vendor;
+    const stray = conditionsSeen.filter(one => one.after !== one.code && !onItsVendorsGuide(one)).map(one => `${one.route}: ${planted.get(one.code)?.vendor}`);
     assert.deepStrictEqual([...new Set(stray)], []);
+    assert.deepStrictEqual(
+      [...new Set(conditionsSeen.filter(onItsVendorsGuide).map(one => one.route))].sort(),
+      Object.keys(GUIDES_PRINTING_THEIR_VENDORS_CONDITIONS).sort(),
+      "each of those guides prints its vendor's conditions",
+    );
   });
 
   it("sets every list of conditions where a list may stand, never inside a paragraph, a span or a link", () => {

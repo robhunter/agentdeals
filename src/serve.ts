@@ -808,6 +808,11 @@ function conditionsAfterTheTermsHtml(offer: StoredTermsOf): string {
   return conditionsHtml(conditionsBesideTheStoredTerms(offer), escHtmlServer);
 }
 
+function vendorPageConditionsHtml(vendorName: string): string {
+  const primary = vendorVerdictContext(vendorName, utcDate())?.primary;
+  return primary ? conditionsAfterTheTermsHtml(primary) : "";
+}
+
 function withConditionsWhenWhole(offer: StoredTermsOf, printed: string): string {
   return printed === offer.description ? withConditionsAfter(printed, conditionsBesideTheStoredTerms(offer)) : printed;
 }
@@ -19108,6 +19113,7 @@ ${mcpCtaCss()}
   </div>
   <p class="section-intro" style="margin-top:0"><strong>Read this table by availability first.</strong> The ${unorderable.length} cheapest listed prices all belong to plans marked not available, so the lowest number on the page is not a number you can pay. The first orderable row is ${escHtmlServer(cheapestOrderable.sku)} at ${eur(cheapestOrderable.eur)}, and it is a ${cheapestOrderable.vcpu}-vCPU, ${cheapestOrderable.ram} GB machine — less server than the ${escHtmlServer(cheapestOverall.sku)} above it at ${eur(cheapestOverall.eur)}.</p>
   <p class="section-intro">A new AX42 dedicated server in Germany costs ${eur(HETZNER_AX42_GERMANY.newOrder)} a month and a new AX102 ${eur(HETZNER_AX102_GERMANY.newOrder)}, excluding IPv4. The one-off setup fee is €${HETZNER_AX42_GERMANY.setupFee} for an AX42 and €${HETZNER_AX102_GERMANY.setupFee} for an AX102. These prices were read from Hetzner's price API on ${HETZNER_PRICES_READ}.</p>
+  ${vendorPageConditionsHtml("Hetzner")}
 
   <h2 id="april">2. What the April 1 Adjustment Did</h2>
   <p class="section-intro">The April 1, 2026 round is the one this page was first written about. It applied to all regions and all customers, new and existing, with no grandfathering. These are historical figures for that event, not current prices — for what a plan costs now, use the table above.</p>
@@ -33083,6 +33089,7 @@ function buildGcpFreeTier2026Page(): string {
     category: string;
     highlight?: boolean;
     source?: string;
+    conditionsOf?: string;
   }
 
   const GOOGLE_FREE_TIER_LIST = "https://docs.cloud.google.com/free/docs/free-cloud-features#free-tier-usage-limits";
@@ -33090,7 +33097,7 @@ function buildGcpFreeTier2026Page(): string {
   const FREE_TRIAL_LIMITS = "During the trial you cannot add GPUs to VM instances, use Google Cloud Marketplace, request a quota increase or create Windows Server VMs, and the credit does not pay for partner generative AI models offered as a managed API (model as a service).";
 
   const alwaysFreeServices: GcpService[] = [
-    { name: "Compute Engine (e2-micro)", slug: "google-compute-engine", limits: "1 e2-micro VM/month (us-west1, us-central1, us-east1), 30 GB standard persistent disk", category: "Compute", source: GOOGLE_FREE_TIER_LIST },
+    { name: "Compute Engine (e2-micro)", slug: "google-compute-engine", limits: "1 e2-micro VM/month (us-west1, us-central1, us-east1), 30 GB standard persistent disk", category: "Compute", source: GOOGLE_FREE_TIER_LIST, conditionsOf: "Google Compute Engine" },
     { name: "Cloud Run", slug: "google-cloud-run", limits: "2M requests/month, 360K GiB-seconds memory, 180K vCPU-seconds", category: "Compute", source: GOOGLE_FREE_TIER_LIST },
     { name: "Cloud Run functions (1st gen)", slug: "google-cloud", limits: "2M invocations, 400K GB-seconds, 200K GHz-seconds, 5 GB egress/month. Current Cloud Run functions are billed on Cloud Run pricing.", category: "Compute", source: GOOGLE_FREE_TIER_LIST },
     { name: "App Engine", slug: "google-cloud", limits: "28 instance-hours/day (F1 instances), 1 GB egress/day", category: "Compute", source: GOOGLE_FREE_TIER_LIST },
@@ -33171,9 +33178,14 @@ function buildGcpFreeTier2026Page(): string {
     { name: "Neon", slug: "neon", freeTier: "100 CU-hours and 1 GB of storage per project, auth up to 60k MAU, branching", strength: "Serverless PostgreSQL with scale-to-zero", bestFor: "Serverless Postgres with branching and scale-to-zero" },
   ];
 
+  const conditionsInTheLimitsCell = (vendorName: string) => {
+    const list = vendorPageConditionsHtml(vendorName);
+    return list ? `<div style="font-family:var(--sans)">${list}</div>` : "";
+  };
+
   const alwaysFreeRows = alwaysFreeServices.map(s => `<tr>
       <td style="font-weight:600">${escHtmlServer(s.name)}</td>
-      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(s.limits)}${s.source ? figureSourceLinkHtml(s.source, escHtmlServer) : ""}</td>
+      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(s.limits)}${s.source ? figureSourceLinkHtml(s.source, escHtmlServer) : ""}${s.conditionsOf ? conditionsInTheLimitsCell(s.conditionsOf) : ""}</td>
       <td style="color:var(--text-muted);font-size:.8rem">${escHtmlServer(s.category)}</td>
     </tr>`).join("\n        ");
 

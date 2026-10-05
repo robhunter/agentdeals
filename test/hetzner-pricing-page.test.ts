@@ -242,7 +242,7 @@ describe("the April 1 table holds only rows from Hetzner's April price list", ()
 
   it("gives what a new AX42 and AX102 cost today in section 1, with the setup fee and the day the price was read, and not in section 2's history", async () => {
     const { body } = await get("/hetzner-pricing-2026");
-    const sectionOne = visible(body.slice(body.indexOf('<h2 id="pricing">'), body.indexOf('<h2 id="april">'))).trim();
+    const sectionOne = visible(body.slice(body.indexOf('<h2 id="pricing">'), body.indexOf('<h2 id="april">')).replace(/<ul class="listing-conditions"[^>]*>[\s\S]*?<\/ul>/g, "")).trim();
     const sectionTwo = visible(body.slice(body.indexOf('<h2 id="april">'), body.indexOf('<h2 id="why">')));
     assert.ok(sectionOne.endsWith(
       `A new AX42 dedicated server in Germany costs €97.30 a month and a new AX102 €257.30, excluding IPv4. The one-off setup fee is €49 for an AX42 and €129 for an AX102. These prices were read from Hetzner's price API on ${HETZNER_PRICES_READ}.`,
