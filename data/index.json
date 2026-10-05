@@ -20627,7 +20627,7 @@
     {
       "vendor": "Pollinations.AI",
       "category": "AI / ML",
-      "description": "easy-to-use, free image generation AI with free API available. No signups or API keys required, and several option for integrating into a website or workflow. [#opensource](https://github.com/pollinations/pollinations)",
+      "description": "Pollen credits earned by completing quests. The documented API for text, image, audio and video requires a GitHub sign-in and an API key. Free use draws from Quest Pollen, with no promise of future grants. Paid-only models, such as DeepSeek V4 Pro and GLM 5.2, need purchased Pollen. Older keyless endpoints for image and text still answered on 2026-10-05, but the current docs do not cover them and state no terms for them.",
       "tier": "Free",
       "url": "https://pollinations.ai/",
       "tags": [
