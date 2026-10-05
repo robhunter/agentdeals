@@ -106,7 +106,7 @@ describe("referral-programs page", () => {
     const html = await res.text();
     assert.ok(html.includes("DigitalOcean"), "Should list DigitalOcean");
     assert.ok(html.includes("Railway"), "Should list Railway");
-    assert.ok(html.includes("Hetzner"), "Should list Hetzner");
+    assert.ok(html.includes("Vercel"), "Should list Vercel");
     assert.ok(html.includes("Neon"), "Should list Neon");
   });
 
