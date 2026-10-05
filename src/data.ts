@@ -1,7 +1,8 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import type { Offer, EnrichedOffer, OfferIndex, DealChange, DateMeaning, PublishedDealChange, DealChangesIndex, ChangeDateSource, StabilityClass, Referral, RiskCause, RatingWithheld, RatingWithheldReason, LinkUnreachable, SourceCheck, FreePlanExcerpt, FreePlanExcerptHold } from "./types.js";
+import type { Offer, EnrichedOffer, OfferIndex, DealChange, DateMeaning, PublishedDealChange, DealChangesIndex, ChangeDateSource, StabilityClass, Referral, RiskCause, RatingWithheld, RatingWithheldReason, LinkUnreachable, SourceCheck, FreePlanExcerpt, FreePlanExcerptHold, ListingCondition } from "./types.js";
+import { conditionsField } from "./conditions-field.js";
 import { isUrlSuspended } from "./referral-health.js";
 import { CHANGE_DIRECTION, NEGATIVE_CHANGE_TYPES, POSITIVE_CHANGE_TYPES } from "./change-direction.js";
 import { changeRatesTheListedTier } from "./change-tier.js";
@@ -1640,7 +1641,7 @@ export interface AuditServiceResult {
 
 export interface AuditGap {
   category: string;
-  recommendation: { vendor: string; tier: string; description: string; terms_superseded: SupersededTermsRecord | null };
+  recommendation: { vendor: string; tier: string; description: string; terms_superseded: SupersededTermsRecord | null; conditions?: ListingCondition[] };
 }
 
 export interface AuditResult {
@@ -1737,6 +1738,7 @@ export function auditStack(serviceNames: string[]): AuditResult {
             tier: topFree[0].tier,
             description: topFree[0].description,
             terms_superseded: supersededTermsRecordFor(topFree[0], loadDealChanges().filter((c) => c.vendor.toLowerCase() === topFree[0].vendor.toLowerCase())),
+            ...conditionsField(topFree[0]),
           },
         });
       }
@@ -1995,7 +1997,7 @@ export function getWeeklyDigest(): {
   deal_changes: Array<DealChange & { date_meaning: DateMeaning; ends_a_free_tier: boolean }>;
   discovered_changes: Array<DealChange & { date_meaning: DateMeaning; ends_a_free_tier: boolean }>;
   discovery_note: string;
-  new_offers: { vendor: string; category: string; description: string }[];
+  new_offers: { vendor: string; category: string; description: string; conditions?: ListingCondition[] }[];
   upcoming_deadlines: { vendor: string; date: string; change_type: string; summary: string }[];
   summary: string;
 } {
@@ -2023,6 +2025,7 @@ export function getWeeklyDigest(): {
     vendor: o.vendor,
     category: o.category,
     description: o.description,
+    ...conditionsField(o),
   }));
 
   const expiringDeadlines = getExpiringDeals(30).deals.map((d) => ({

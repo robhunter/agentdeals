@@ -41,7 +41,8 @@ import { comparisonVerdictText, freeTierFaqAnswer, stabilityFaqAnswer, type Comp
 import { gateStatesAnEnding, publishedVendorLevel, restorationClause, restoredRemovalReason, vendorVerdictSentence, withheldRecordCountsOf, WITHHOLDING_BADGE_LABELS, vendorBadge, freeTierClaim, endingStatedInPlaceOfARating, endingShutsTheProductDown, endedClaimReliabilityAnswer, statesRiskCause, withholdingThatDoesNotLapse, demotionTheVerdictNames, narrowingSentence, ourOwnRecordsSentence, changeKindNoun, isOurOwnBookkeeping, emptyHistoryCaveatSentence, refusedReadOurConfirmationSupersedes, refusedReadWeHold, refusedReadWithholdingSentence, nothingWeReadDescribesTheTerms, unconfirmedThresholdSentence, unconfirmedTermsOpening, whyWeCannotConfirmTheseTerms, withheldForARefusedRead, withUnconfirmedTerms, refusalWithholdsStability, termsUnconfirmedBySource, termsTheVerdictWithholds, closingTerms, termsWithTheReasonWeCannotConfirmThem, termsNotVerifiedMetaSentence, termsWithheldLabel, theReadConfirmedThePrice, unconfirmedTermsSentence, whereTheDoubtSits, withheldBadgeLabel, type BadgeWithholding, type UnconfirmedTerms, type FreeTierClaim, type VendorVerdictInput, type WhereTheDoubtSits } from "./vendor-verdict.js";
 import { descriptionDeniesAFreeTier, listingOffersAFreeTier, tierMayCarryAFreePlanExcerpt, tierRecordsAFreeTier, tierWhoseFreeOfferIsTheLicence } from "./free-tier-record.js";
 import { whyTheExcerptCannotStand } from "./free-plan-excerpt-rules.js";
-import { alternativesUnderTheVendorsRule, conditionsHtml, conditionsOf, levelBesideTheVendorsRule, productionAnswerOpening, stableRatingBesideTheVendorsRule, theVendorsRuleOnProduction, withConditionsAfter, type TheVendorsRule } from "./listing-conditions.js";
+import { alternativesUnderTheVendorsRule, conditionsBesideStoredTerms, conditionsHtml, conditionsOf, levelBesideTheVendorsRule, productionAnswerOpening, stableRatingBesideTheVendorsRule, theVendorsRuleOnProduction, withConditionsAfter, type TheVendorsRule } from "./listing-conditions.js";
+import { conditionsField } from "./conditions-field.js";
 import { PAGE_HEAD_OPEN, withLedeBeforeNav } from "./page-lede.js";
 import { withReviewByline } from "./page-byline.js";
 import { freshnessClaimFor, withFreshnessClaim } from "./page-freshness.js";
@@ -800,7 +801,7 @@ function publishedTermsText(offer: Offer): string {
 }
 
 function conditionsBesideTheStoredTerms(offer: StoredTermsOf): readonly ListingCondition[] {
-  return offerRetired(offer) || supersedingChangeFor(offer) ? [] : conditionsOf(offer);
+  return conditionsBesideStoredTerms(offer, changesFor(offer.vendor));
 }
 
 function conditionsAfterTheTermsHtml(offer: StoredTermsOf): string {
@@ -52758,6 +52759,7 @@ const dispatchRequest = async (req: IncomingMessage, res: ServerResponse) => {
           tier: o.tier,
           description: o.description,
           ...supersededTermsField(o),
+          ...conditionsField(o),
           url: o.url,
           payment_protocols: o.payment_protocols,
           stability: o.stability,
@@ -52781,6 +52783,7 @@ const dispatchRequest = async (req: IncomingMessage, res: ServerResponse) => {
         tier: o.tier,
         description: o.description,
         ...supersededTermsField(o),
+        ...conditionsField(o),
         url: o.url,
         payment_protocols: o.payment_protocols,
         stability: o.stability,
@@ -52911,6 +52914,7 @@ const dispatchRequest = async (req: IncomingMessage, res: ServerResponse) => {
         category: toolCategory,
         description: o.description,
         ...supersededTermsField(o),
+        ...conditionsField(o),
         tier: o.tier,
         url: o.url,
         tags: o.tags,
@@ -52946,6 +52950,7 @@ const dispatchRequest = async (req: IncomingMessage, res: ServerResponse) => {
         category: toolCat,
         description: o.description,
         ...supersededTermsField(o),
+        ...conditionsField(o),
         tier: o.tier,
         url: o.url,
         tags: o.tags,
@@ -52982,6 +52987,7 @@ const dispatchRequest = async (req: IncomingMessage, res: ServerResponse) => {
         category: provCat,
         description: o.description,
         ...supersededTermsField(o),
+        ...conditionsField(o),
         tier: o.tier,
         url: o.url,
         tags: o.tags,
@@ -53018,6 +53024,7 @@ const dispatchRequest = async (req: IncomingMessage, res: ServerResponse) => {
         category: progCat,
         description: o.description,
         ...supersededTermsField(o),
+        ...conditionsField(o),
         tier: o.tier,
         url: o.url,
         tags: o.tags,

@@ -3,13 +3,15 @@ import { rankOffers, utcDate, CRITERIA_PATH, DEMOTE_ONLY_POLICY, NOT_MODELLED_NO
 import type { Demerit, Disclosure, Gate, TieBreak } from "./ranking.js";
 import { verificationLedger } from "./verification-state.js";
 import { lastReadDate } from "./read-date.js";
-import type { Offer, StabilityClass, DealChange, RatingWithheld, LinkUnreachable, SourceCheck } from "./types.js";
+import type { Offer, StabilityClass, DealChange, RatingWithheld, LinkUnreachable, SourceCheck, ListingCondition } from "./types.js";
+import { conditionsField } from "./conditions-field.js";
 import { partitionRoleCandidates, MEMBERSHIP_GATE_RULES } from "./product-role.js";
 
 export interface StackCandidate {
   vendor: string;
   tier: string;
   description: string;
+  conditions?: ListingCondition[];
   url: string;
   verified_date: string;
   last_read_date: string;
@@ -229,6 +231,7 @@ function toCandidate(
     vendor: offer.vendor,
     tier: offer.tier,
     description: offer.description.length > 200 ? offer.description.slice(0, 197) + "..." : offer.description,
+    ...conditionsField(offer),
     url: offer.url,
     verified_date: offer.verifiedDate,
     last_read_date: lastReadDate(offer),
