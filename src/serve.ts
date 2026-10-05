@@ -32676,10 +32676,12 @@ function buildAwsFreeTier2026Page(): string {
     slug: string;
     limits: string;
     category: string;
+    source?: string;
+    noFetchablePageStatesIt?: true;
   }
 
   const alwaysFreeServices: AwsService[] = [
-    { name: "AWS Lambda", slug: "aws", limits: "1M requests/month, 400K GB-seconds compute", category: "Compute" },
+    { name: "AWS Lambda", slug: "aws", limits: "1M requests/month, 400K GB-seconds compute", category: "Compute", source: "https://aws.amazon.com/lambda/pricing/" },
     { name: "Amazon DynamoDB", slug: "aws", limits: "25 GB storage, 25 WCU/RCU provisioned capacity", category: "Database" },
     { name: "Amazon CloudFront", slug: "aws", limits: "1 TB data transfer out, 10M HTTP/HTTPS requests, 2M CloudFront Function invocations/month", category: "CDN" },
     { name: "Amazon SNS", slug: "aws", limits: "1M publishes, 100K HTTP deliveries, 1K email deliveries/month", category: "Messaging" },
@@ -32688,18 +32690,17 @@ function buildAwsFreeTier2026Page(): string {
     { name: "Amazon ECR Public", slug: "amazon-ecr-public", limits: "50 GB storage, 500 GB/month transfer out anonymously, 5 TB/month with an AWS account", category: "Containers" },
     { name: "AWS CloudFormation", slug: "aws", limits: "Unlimited for AWS resources (third-party charges may apply)", category: "IaC" },
     { name: "Amazon Cognito", slug: "aws", limits: "10,000 MAUs a month (Lite or Essentials tier, direct or social sign-in); 50 MAUs for SAML/OIDC. User pools created by November 22, 2024 keep 50,000 on Lite.", category: "Auth" },
-    { name: "AWS CodeCommit", slug: "aws", limits: "5 active users, 50 GB storage, 10K Git requests/month", category: "DevOps" },
-    { name: "AWS CodePipeline", slug: "aws", limits: "1 free active pipeline/month", category: "DevOps" },
-    { name: "AWS CodeBuild", slug: "aws", limits: "100 build minutes/month (general1.small)", category: "DevOps" },
-    { name: "AWS X-Ray", slug: "aws", limits: "100K traces recorded, 1M traces scanned/month", category: "Monitoring" },
-    { name: "AWS Step Functions", slug: "aws", limits: "4,000 state transitions/month", category: "Compute" },
+    { name: "AWS CodeCommit", slug: "aws", limits: "5 active users, 50 GB storage, 10K Git requests/month", category: "DevOps", source: "https://aws.amazon.com/codecommit/pricing/" },
+    { name: "AWS CodePipeline", slug: "aws", limits: "1 V1 pipeline/month, or 100 V2 action execution minutes/month", category: "DevOps", source: "https://aws.amazon.com/codepipeline/pricing/" },
+    { name: "AWS CodeBuild", slug: "aws", limits: "100 build minutes/month (general1.small or arm1.small)", category: "DevOps", source: "https://aws.amazon.com/codebuild/pricing/" },
+    { name: "AWS X-Ray", slug: "aws", limits: "100K traces recorded, 1M traces scanned/month", category: "Monitoring", noFetchablePageStatesIt: true },
+    { name: "AWS Step Functions", slug: "aws", limits: "4,000 state transitions/month", category: "Compute", source: "https://aws.amazon.com/step-functions/pricing/" },
     { name: "Amazon Q Developer", slug: "amazon-q-developer", limits: "Inline suggestions, chat, 50 agent invocations/month (always free for individuals)", category: "AI Coding" },
   ];
 
   const trialServices: AwsService[] = [
     { name: "Amazon SageMaker", slug: "aws", limits: "250 hrs/month ml.t3.medium for Studio notebooks (2 months)", category: "AI/ML" },
     { name: "Amazon Bedrock", slug: "aws", limits: "Select foundation models with limited free inference (varies by model)", category: "AI/ML" },
-    { name: "Amazon AppStream 2.0", slug: "aws", limits: "40 hrs/month stream.standard.small (first 12 months)", category: "Desktop" },
     { name: "Amazon Lightsail", slug: "aws", limits: "750 hrs/month of 512 MB instance (3 months free)", category: "Hosting" },
   ];
 
@@ -32739,17 +32740,15 @@ function buildAwsFreeTier2026Page(): string {
     { name: "Vercel", slug: "vercel", freeTier: "Hobby plan (personal, non-commercial use only): 100 deployments/day, 100 GB Fast Data Transfer/month, 1M function invocations/month.", strength: "Best Next.js hosting, instant previews", bestFor: "Frontend apps and Jamstack sites" },
   ];
 
-  const alwaysFreeRows = alwaysFreeServices.map(s => `<tr>
+  const awsServiceRow = (s: AwsService) => `<tr${s.noFetchablePageStatesIt ? ` ${NO_FETCHABLE_PAGE_STATES_THE_ROW}` : ""}>
       <td style="font-weight:600">${escHtmlServer(s.name)}</td>
-      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(s.limits)}</td>
+      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(s.limits)}${s.source ? figureSourceLinkHtml(s.source, escHtmlServer) : ""}</td>
       <td style="color:var(--text-muted);font-size:.8rem">${escHtmlServer(s.category)}</td>
-    </tr>`).join("\n        ");
+    </tr>`;
 
-  const trialRows = trialServices.map(s => `<tr>
-      <td style="font-weight:600">${escHtmlServer(s.name)}</td>
-      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(s.limits)}</td>
-      <td style="color:var(--text-muted);font-size:.8rem">${escHtmlServer(s.category)}</td>
-    </tr>`).join("\n        ");
+  const alwaysFreeRows = alwaysFreeServices.map(awsServiceRow).join("\n        ");
+
+  const trialRows = trialServices.map(awsServiceRow).join("\n        ");
 
   const gotchaCards = gotchas.map(g => `<div class="diff-card" style="border-left-color:#f85149">
       <h3>${escHtmlServer(g.title)} <span style="font-size:.75rem;color:#f85149;font-weight:400">${escHtmlServer(g.cost)}</span></h3>

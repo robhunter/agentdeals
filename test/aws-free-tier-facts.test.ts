@@ -26,6 +26,9 @@ const WITHDRAWN: Record<string, RegExp> = {
   "every stack at zero cost": /All stacks below can run at zero cost/,
   "every always-free service in the API stack": /scales to zero, always free within limits/,
   "a title or heading that calls the guide complete": /AWS Free Tier Complete Guide/,
+  "AppStream 2.0 streaming hours, which the WorkSpaces Applications pricing page does not offer": /AppStream|stream\.standard/,
+  "one free CodePipeline pipeline with no V2 allowance": /1 free active pipeline/,
+  "CodeBuild's free minutes on general1.small alone": /\(general1\.small\)/,
 };
 
 const META = "AWS Free plan: up to $200 in credits over 6 months, 30+ always-free services, short-term trials, hidden costs, cheaper alternatives.";
@@ -50,6 +53,11 @@ const ALWAYS_FREE_ROWS: [string, string][] = [
   ["Amazon CloudFront", "1 TB data transfer out, 10M HTTP/HTTPS requests, 2M CloudFront Function invocations/month"],
   ["Amazon ECR Public", "50 GB storage, 500 GB/month transfer out anonymously, 5 TB/month with an AWS account"],
   ["Amazon Q Developer", "Inline suggestions, chat, 50 agent invocations/month (always free for individuals)"],
+];
+
+const STATED_AS_THE_PRICING_PAGES_STATE_THEM: [string, string][] = [
+  ["AWS CodePipeline", "1 V1 pipeline/month, or 100 V2 action execution minutes/month"],
+  ["AWS CodeBuild", "100 build minutes/month (general1.small or arm1.small)"],
 ];
 
 const CONTROL_ROWS: [string, string][] = [
@@ -190,6 +198,10 @@ describe("the AWS free tier guide describes the 6-month Free plan as AWS's own p
     assert.deepStrictEqual(rowsDifferingFrom(ALWAYS_FREE_ROWS, alwaysFree, "Always Free"), []);
     assert.deepStrictEqual(alwaysFree.map(([name]) => name).filter((name) => /\bS3\b|\bSES\b/.test(name)), []);
     assert.ok(!trials.includes("Amazon Q Developer"), "Amazon Q Developer is still listed as a trial");
+  });
+
+  it("states CodePipeline's V1 and V2 allowances and both of CodeBuild's free instance types, as their pricing pages do", () => {
+    assert.deepStrictEqual(rowsDifferingFrom(STATED_AS_THE_PRICING_PAGES_STATE_THEM, tableAfter('id="always-free"'), "Always Free"), []);
   });
 
   it("keeps the rows the Free plan did not change", () => {
