@@ -20,6 +20,9 @@ const PROTON_SLUGS = ["proton-mail", "proton-vpn", "proton-pass", "proton-drive"
 
 const COMMISSION_SENTENCE = "We may earn a commission if you sign up through this link.";
 
+const asPageText = (text: string) =>
+  text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+
 function startServer(env: Record<string, string> = {}): Promise<{ proc: ChildProcess; port: number }> {
   return new Promise((resolve, reject) => {
     const serverPath = path.join(__dirname, "..", "dist", "serve.js");
@@ -136,6 +139,7 @@ describe("the four Proton products offer no code of ours", () => {
   });
 
   it("leaves Railway resolving exactly as before", async () => {
+    const railwayRecord = JSON.parse(fs.readFileSync(PLATFORM_CODES_PATH, "utf-8")).platform_codes.find((c: any) => c.vendor === "Railway");
     const referral = getVendorReferral("Railway");
     assert.ok(referral, "get_referral_code must still resolve Railway");
     assert.strictEqual(referral.referral.code, "7RZL9q");
@@ -143,13 +147,20 @@ describe("the four Proton products offer no code of ours", () => {
     const best = getBestReferralCode("Railway");
     assert.strictEqual(best!.code, "7RZL9q");
     assert.strictEqual(best!.referee_benefit, "$20 in credits");
-    assert.deepStrictEqual(best!.restrictions, []);
+    assert.deepStrictEqual(best!.restrictions, railwayRecord.restrictions);
 
     const page = await (await fetch(`http://localhost:${port}/vendor/railway`)).text();
     assert.ok(page.includes("Sign up via our referral link and get $20 in credits"));
     assert.ok(page.includes("https://railway.com?referralCode=7RZL9q"));
     assert.ok(page.includes(COMMISSION_SENTENCE));
-    assert.ok(!page.includes("referral-conditions"), "Railway records no conditions, so none should be rendered");
+    assert.strictEqual(
+      page.includes("referral-conditions"),
+      railwayRecord.restrictions.length > 0,
+      "Railway's page should print a conditions block exactly when its record states a restriction"
+    );
+    for (const restriction of railwayRecord.restrictions) {
+      assert.ok(page.includes(asPageText(restriction)), `/vendor/railway should state: ${restriction}`);
+    }
   });
 
   it("carries the restrictions list alongside every benefit the code endpoint publishes", async () => {
