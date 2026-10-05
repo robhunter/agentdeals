@@ -3237,7 +3237,7 @@
       "reads_index": true,
       "tables_read_index": true,
       "table_figures": 35,
-      "table_figures_from_records": 14,
+      "table_figures_from_records": 13,
       "tables": [
         {
           "label": "1. Free Tier Comparison Table",
@@ -3252,7 +3252,7 @@
         {
           "label": "5. Other BaaS Alternatives",
           "figures": 14,
-          "from_records": 14
+          "from_records": 13
         }
       ],
       "reads_changes": true,
