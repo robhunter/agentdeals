@@ -10,6 +10,8 @@ export const EXCERPT_HOLDS_A_DATE_BESIDE_THE_TERMS = "the copy holds a date no w
 
 export const EXCERPT_NAMES_NO_ALLOWANCE_LIMIT_OR_PRICE = "the copy names no allowance, limit or price for the plan";
 
+export const EXCERPT_NEVER_SAYS_IT_IS_THE_FREE_OFFER = "the copy never says it is the free offer: it holds no \"free\", zero price, \"no cost\", first allowance without a price above zero beside it, or the plan's own name";
+
 export const LONGEST_RUN_AN_EXCERPT_MAY_REPEAT = 7;
 
 export type QuotedPlan = Pick<Offer, "vendor" | "tier" | "eligibility">;
@@ -93,11 +95,63 @@ export function namesAnAllowanceALimitOrAPrice(text: string, plan: QuotedPlan): 
   return wordsOf(rest).some((word) => WORDS_THAT_NAME_A_LIMIT.has(word) || (aProgramme && WORDS_THAT_NAME_WHO_MAY_APPLY.has(word)));
 }
 
+const NOT_INSIDE_A_WORD = "(?<![\\p{L}\\p{N}])";
+const AT_A_WORD_END = "(?![\\p{L}\\p{N}])";
+
+const SAYS_FREE = new RegExp(`${NOT_INSIDE_A_WORD}free${AT_A_WORD_END}`, "iu");
+
+const SAYS_NO_COST = new RegExp(`${NOT_INSIDE_A_WORD}no[\\s\\-\\u2010-\\u2015\\u2212]+cost${AT_A_WORD_END}`, "iu");
+
+const A_ZERO_PRICE = new RegExp(
+  `[$€£¥₹]\\s*0(?:[.,]0+)?(?![.,]?\\d)|(?<![\\p{L}\\p{N}.,])0(?:[.,]0+)?\\s*(?:[$€£]|(?:usd|eur|gbp)${AT_A_WORD_END})`,
+  "iu",
+);
+
+const A_FIRST_ALLOWANCE = new RegExp(`${NOT_INSIDE_A_WORD}first\\s+[$€£¥₹]?\\d[\\d.,]*`, "giu");
+
+const A_PRICE_ABOVE_ZERO = new RegExp(
+  `[$€£¥₹]\\s*[\\d.,]*[1-9]|[\\d.,]*[1-9][\\d.,]*\\s*(?:[$€£]|(?:usd|eur|gbp)${AT_A_WORD_END})`,
+  "iu",
+);
+
+function givesAFirstAllowanceAndNoPriceAboveZero(rest: string): boolean {
+  return rest.match(A_FIRST_ALLOWANCE) !== null && !A_PRICE_ABOVE_ZERO.test(rest.replace(A_FIRST_ALLOWANCE, " "));
+}
+
+function escapedForARegExp(text: string): string {
+  return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function asOneLine(text: string): string {
+  return String(text ?? "").toLowerCase().replace(/\s+/g, " ").trim();
+}
+
+function asWholeWords(name: string): RegExp {
+  return new RegExp(`${NOT_INSIDE_A_WORD}${escapedForARegExp(name)}${AT_A_WORD_END}`, "gu");
+}
+
+function withoutTheVendorsName(text: string, plan: QuotedPlan): string {
+  const vendor = asOneLine(plan.vendor);
+  return vendor ? asOneLine(text).replace(asWholeWords(vendor), " ") : asOneLine(text);
+}
+
+function namesThePlan(text: string, plan: QuotedPlan): boolean {
+  const tier = asOneLine(plan.tier);
+  return Boolean(tier) && asWholeWords(tier).test(asOneLine(text));
+}
+
+export function saysItIsTheFreeOffer(text: string, plan: QuotedPlan): boolean {
+  if (plan.eligibility) return true;
+  const rest = withoutTheVendorsName(text, plan);
+  return [SAYS_FREE, SAYS_NO_COST, A_ZERO_PRICE].some((says) => says.test(rest)) || givesAFirstAllowanceAndNoPriceAboveZero(rest) || namesThePlan(text, plan);
+}
+
 export function whyTheExcerptCannotStand(text: string, plan: QuotedPlan): string | null {
   if (TEMPLATE_SYNTAX.test(text)) return EXCERPT_HOLDS_TEMPLATE_SYNTAX;
   if (AN_HTML_ENTITY.test(text)) return EXCERPT_HOLDS_AN_UNDECODED_ENTITY;
   if (repeatsARunOfItsOwnWords(text)) return EXCERPT_REPEATS_A_RUN_OF_ITS_WORDS;
   if (holdsADateBesideTheTerms(text)) return EXCERPT_HOLDS_A_DATE_BESIDE_THE_TERMS;
   if (!namesAnAllowanceALimitOrAPrice(text, plan)) return EXCERPT_NAMES_NO_ALLOWANCE_LIMIT_OR_PRICE;
+  if (!saysItIsTheFreeOffer(text, plan)) return EXCERPT_NEVER_SAYS_IT_IS_THE_FREE_OFFER;
   return null;
 }

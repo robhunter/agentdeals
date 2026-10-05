@@ -5424,13 +5424,16 @@ function buildVendorPage(slug: string): string | null {
 
   const currentYear = new Date().getFullYear();
   const retiredSentence = offerRetired(primary) ? recordedTierSentence(vendorName, primary.tier) : "";
+  const endedAnswerOpening = offerHasEnded && !termsSuperseded ? retiredSentence : "";
   const hasFree = !retiredSentence && !noFreeTierGate && primary.tier.toLowerCase() !== "none" && !descriptionDeniesFreeTier(primary.description);
   const timeLimitedOffer = noFreeTierGate ? null : timeLimitedTierRule(primary.tier);
   const freeOfferNoun = timeLimitedOffer ? "free offer" : "free tier";
   const freeTierHeadline = timeLimitedOffer ? timeLimitedHeadline(vendorName, timeLimitedOffer.kind, currentYear) : `${vendorName} Free Tier ${currentYear}`;
   const pricingHeadline = `${vendorName} Pricing ${currentYear}`;
   const headline = offerHasEnded ? endedHeadline(vendorName) : hasFree ? freeTierHeadline : pricingHeadline;
-  const title = hasFree
+  const title = offerHasEnded
+    ? `${endedHeadline(vendorName)} | AgentDeals`
+    : hasFree
     ? `${freeTierHeadline}: Limits, Pricing & What Changed | AgentDeals`
     : `${pricingHeadline}: Plans, Costs & Free Alternatives | AgentDeals`;
   const descLimits = punctuatedOpeningOfTerms(publishableTerms, 100);
@@ -5443,7 +5446,9 @@ function buildVendorPage(slug: string): string | null {
     ? ` ${termsNotVerified}`
     : verifiedSentence;
   const eligibilityGateSentence = primaryEligibilityGate ? `${primaryEligibilityGate.reason} ` : "";
-  const metaDesc = eligibilityGateSentence + (termsSuperseded
+  const metaDesc = endedAnswerOpening
+    ? `${endedAnswerOpening} ${vendorName} pricing details${alternatives.length > 0 ? ` and ${alternatives.length} free alternatives in ${primary.category}` : ""}.`
+    : eligibilityGateSentence + (termsSuperseded
     ? `${supersededTermsMetaSentence(vendorName, termsSuperseded)} See the recorded change history${alternatives.length > 0 ? ` and ${alternatives.length} alternatives in ${primary.category}` : ""}.`
     : timeLimitedOffer
     ? `${vendorName} has no ongoing free tier; what it offers is ${timeLimitedOffer.note}. ${descLimits}${metaVerifiedSentence}${alternatives.length > 0 ? ` Compare with ${alternatives.length} alternatives in ${primary.category}.` : ""}`
@@ -5754,8 +5759,9 @@ ${allCompareLinks.join("\n")}
     ? `${primaryGateBeyondEligibility.reason} `
     : "";
   const weCanStillSayTheFreeTierExists = !termsWeCannotConfirm || termsWeCannotConfirm.theReadFoundAFreePlan;
+  const whatATimeLimitedOfferIs = timeLimitedOffer ? `No. What ${vendorName} offers is ${timeLimitedOffer.note}` : "";
   const freeTierAnswerLead = timeLimitedOffer
-    ? `No. What ${vendorName} offers is ${timeLimitedOffer.note}:`
+    ? `${whatATimeLimitedOfferIs}:`
     : weCanStillSayTheFreeTierExists
     ? `${primaryEligibilityGate ? "" : "Yes, "}${vendorName} offers a free tier: ${primary.tier}.`
     : `Our stored record says ${vendorName} offers a free tier: ${primary.tier}.`;
@@ -5766,6 +5772,8 @@ ${allCompareLinks.join("\n")}
     ? `${gateBesideARecordedEnding}${retiredSentence} ${withTheReasonARecordedEndingLeaves(storedTerms)}`
     : primaryGateBeyondEligibility
     ? `${eligibilityGateSentence}${primaryGateBeyondEligibility.reason} ${termsWeCannotConfirm ? `${unconfirmedTermsPreamble}${leadBesideAGate}${withUnconfirmedTermsCaveat(storedTerms)}` : `${leadBesideAGate}${storedTerms}`}${eligibilityConditionsSentence}`
+    : termsWeCannotConfirm && timeLimitedOffer
+    ? `${eligibilityGateSentence}${whatATimeLimitedOfferIs}. ${unconfirmedTermsPreamble}${withUnconfirmedTermsCaveat(storedTerms)}${eligibilityConditionsSentence}`
     : termsWeCannotConfirm
     ? `${eligibilityGateSentence}${unconfirmedTermsPreamble}${freeTierAnswerLead} ${withUnconfirmedTermsCaveat(storedTerms)}${eligibilityConditionsSentence}`
     : primaryEligibilityGate
@@ -6961,7 +6969,7 @@ const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
     </tbody>
   </table>
   </div>
-  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">PocketBase limits are "unlimited" because it's self-hosted \u2014 actual limits depend on your server hardware. Hasura is a GraphQL engine that sits on top of your own Postgres database. Appwrite projects pause after 1 week of inactivity on the free tier. Firebase Spark has no billing caps if you upgrade to Blaze.</p>`,
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">PocketBase limits are "unlimited" because it's self-hosted \u2014 actual limits depend on your server hardware. Hasura is a GraphQL engine that sits on top of your own Postgres database. Appwrite projects pause after 1 week of inactivity on the free tier. On Firebase's Blaze plan, spend caps must be set up and cover only AI Logic, App Hosting, Cloud Functions and Extensions, not Firestore or Cloud Storage.</p>`,
   },
   {
     slug: "github-actions-alternatives",
@@ -20368,7 +20376,7 @@ function buildSupabaseVsFirebasePage(): string {
     { feature: "Bandwidth", supabase: "10 GB total (5 GB cached + 5 GB uncached)", firebase: "360 MB/day Hosting, 10 GiB/mo Firestore egress", notes: "Supabase: database egress limited. Firebase: per-service bandwidth" },
     { feature: "Realtime", supabase: "200 concurrent connections", firebase: "100 concurrent (Realtime DB)", notes: "Both support real-time sync. Supabase uses Postgres changes" },
     { feature: "API Requests", supabase: "Unlimited API requests", firebase: "50K reads + 20K writes/day (Firestore)", notes: "Supabase has no request caps. Firebase daily limits can be restrictive" },
-    { feature: "Projects", supabase: "2 free projects", firebase: "Unlimited Spark projects", notes: "Firebase wins on project count. Supabase pauses inactive projects" },
+    { feature: "Projects", supabase: "2 free projects", firebase: "About 5-10 per account (Google's project quota)", notes: "Firebase wins on project count. Supabase pauses inactive projects" },
   ];
 
   const comparisonTableRows = comparisonRows.map(r => `<tr>
@@ -20381,17 +20389,17 @@ function buildSupabaseVsFirebasePage(): string {
   const differences = [
     { title: "Open Source vs. Proprietary", desc: "Supabase is fully open source (MIT license) — you can self-host and avoid vendor lock-in entirely. Firebase is proprietary to Google with no self-hosting option. If you leave Firebase, you rewrite your data layer." },
     { title: "SQL vs. NoSQL", desc: "Supabase runs PostgreSQL — full relational queries, joins, indexes, migrations. Firebase uses Firestore (document model) — great for simple reads but complex queries require denormalization. Choose based on your data model needs." },
-    { title: "Pricing Model", desc: "Supabase Pro is $25/month with predictable limits. Firebase Blaze is pay-as-you-go with no hard caps — great for low usage, but unexpected traffic spikes can cause surprise bills. Supabase is 30-50% cheaper at scale for most workloads." },
+    { title: "Pricing Model", desc: "Supabase Pro is $25/month with predictable limits. Firebase Blaze is pay-as-you-go and cheap at low usage. Spend caps cover only AI Logic, App Hosting, Cloud Functions and Extensions, so a traffic spike on Firestore or Cloud Storage can still cause a surprise bill." },
     { title: "Ecosystem & Lock-in", desc: "Firebase deeply integrates with Google Cloud — great if you're already on GCP, but creates tight coupling. Supabase uses standard Postgres, compatible with any Postgres client, ORM, or hosting provider." },
   ];
 
   const scalingComparison = [
-    { metric: "Starter paid plan", supabase: "$25/mo (Pro)", firebase: "Pay-as-you-go (Blaze)", notes: "Supabase: predictable flat rate. Firebase: usage-based, no spending cap" },
-    { metric: "Database at 10 GB", supabase: "$25/mo (8 GB included)", firebase: "$1.56/mo (Firestore)", notes: "Firebase cheaper for pure storage. Supabase includes more in base price" },
+    { metric: "Starter paid plan", supabase: "$25/mo (Pro)", firebase: "Pay-as-you-go (Blaze)", notes: "Supabase is a flat rate; Firebase is usage-based with spend caps on only four services." },
+    { metric: "Database at 10 GB", supabase: "$25.25/mo (8 GB included, then $0.125/GB)", firebase: "$1.56/mo (Firestore)", notes: "Firebase cheaper for pure storage. Supabase includes more in base price" },
     { metric: "100K MAU auth", supabase: "$25/mo (100K MAU included in Pro)", firebase: "$0 (unlimited on Spark)", notes: "Both effectively free at this scale" },
     { metric: "1M function invocations", supabase: "$25/mo (2M included in Pro)", firebase: "$0 on Blaze (2M a month at no cost)", notes: "Firebase needs Blaze for any function." },
-    { metric: "50 GB storage", supabase: "$25/mo + ~$2.50 overage", firebase: "Blaze required, ~$1.30/mo", notes: "Firebase cheaper for raw storage on Blaze pay-as-you-go" },
-    { metric: "Billing protection", supabase: "Hard limits, spend caps available", firebase: "No hard caps — set budget alerts only", notes: "Supabase safer for indie devs. Firebase can generate surprise bills" },
+    { metric: "50 GB storage", supabase: "$25/mo (100 GB included in Pro)", firebase: "Blaze required, about $1/mo (first 5 GB free)", notes: "Firebase cheaper for raw storage on Blaze pay-as-you-go" },
+    { metric: "Billing protection", supabase: "Hard limits, spend caps available", firebase: "Budget alerts, plus optional spend caps for AI Logic, App Hosting, Cloud Functions and Extensions", notes: "Supabase safer for indie devs. Firebase can generate surprise bills" },
   ];
 
   const scalingRows = scalingComparison.map(r => `<tr>
@@ -20521,9 +20529,9 @@ ${mcpCtaCss()}
   </div>
 
   <div class="executive-summary">
-    <p><strong>Quick verdict:</strong> Choose <strong>Supabase</strong> if you want PostgreSQL, open source, predictable pricing, and no vendor lock-in. Choose <strong>Firebase</strong> if you need a mature NoSQL ecosystem, unlimited free projects, and tight Google Cloud integration.</p>
-    <p><strong>On free tiers:</strong> Firebase offers more raw storage (1 GiB vs 500 MB) and unlimited projects, but imposes daily read/write caps (50K reads, 20K writes). Supabase has no API request limits and includes 200 concurrent realtime connections, but limits you to 2 free projects that pause after 1 week of inactivity.</p>
-    <p><strong>The big caveat:</strong> Firebase removed Cloud Storage from the free Spark plan in February 2026. If you need file storage on Firebase, you now need a Blaze (pay-as-you-go) account with a credit card — no hard spending caps. Supabase includes 1 GB file storage on the free tier.</p>
+    <p><strong>Quick verdict:</strong> Choose <strong>Supabase</strong> if you want PostgreSQL, open source, predictable pricing, and no vendor lock-in. Choose <strong>Firebase</strong> if you need a mature NoSQL ecosystem, more free projects than Supabase's 2, and tight Google Cloud integration.</p>
+    <p><strong>On free tiers:</strong> Firebase offers more raw storage (1 GiB vs 500 MB) and more free projects (about 5-10 per account, against Supabase's 2), but imposes daily read/write caps (50K reads, 20K writes). Supabase has no API request limits and includes 200 concurrent realtime connections, but limits you to 2 free projects that pause after 1 week of inactivity.</p>
+    <p><strong>The big caveat:</strong> Firebase removed Cloud Storage from the free Spark plan in February 2026. File storage now needs Blaze with a credit card, and Blaze's spend caps do not cover Cloud Storage. Supabase includes 1 GB file storage on the free tier.</p>
   </div>
 
   <div class="toc">
@@ -20575,7 +20583,7 @@ ${mcpCtaCss()}
     </table>
   </div>
   <div class="context-box">
-    <strong>Bottom line on scaling:</strong> Supabase is typically 30-50% cheaper at scale for most BaaS workloads because of its predictable flat-rate pricing. Firebase's pay-as-you-go model can be cheaper for very low usage but offers no hard spending caps — a risk for indie developers and startups. Supabase Pro includes enough headroom ($25/mo) that most small apps never pay overage.
+    <strong>Bottom line on scaling:</strong> At every volume in this table, Firebase's pay-as-you-go prices come to less than Supabase Pro's $25 a month. Supabase's advantage is a predictable bill, since Pro's spend cap is on by default. Blaze's spend caps must be set up and cover only AI Logic, App Hosting, Cloud Functions and Extensions, not Firestore or Cloud Storage.
   </div>
 
   <h2 id="when">4. When to Choose Each</h2>
@@ -20587,7 +20595,7 @@ ${mcpCtaCss()}
     </div>
     <div class="verdict-item">
       <strong>Choose Firebase if:</strong>
-      <p>You're building mobile-first apps with Google ecosystem integration, need unlimited free projects for prototyping, prefer document-model databases for simple CRUD, or want built-in analytics and crash reporting. Best for: mobile apps, rapid prototypes, real-time chat, apps already using Google Cloud.</p>
+      <p>You're building mobile-first apps with Google ecosystem integration, need several free projects for prototyping, prefer document-model databases for simple CRUD, or want built-in analytics and crash reporting. Best for: mobile apps, rapid prototypes, real-time chat, apps already using Google Cloud.</p>
     </div>
     <div class="verdict-item">
       <strong>Consider both if:</strong>

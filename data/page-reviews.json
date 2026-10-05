@@ -3234,7 +3234,7 @@
       "review_note": "Re-read 2026-10-05 against supabase.com/pricing, firebase.google.com/pricing and Firebase's FAQ. The Auth row from https://github.com/robhunter/agentdeals/issues/2168 is live. Still wrong: Firebase is said to allow unlimited free projects in four places (Firebase's FAQ: usually around 5-10 on Spark), Supabase is called 30-50% cheaper at scale in two places against the page's own cost table, and three cost cells (Supabase at 10 GB and 50 GB, Firebase at 50 GB). Copy is on https://github.com/robhunter/agentdeals/issues/2376. Firebase's $1.56 for 10 GB of Firestore was not re-checked; its rate loads by script.",
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 35,
+      "table_figures": 37,
       "table_figures_from_records": 14,
       "tables": [
         {
@@ -3244,7 +3244,7 @@
         },
         {
           "label": "3. Cost at Scale",
-          "figures": 13,
+          "figures": 15,
           "from_records": 0
         },
         {
