@@ -6,6 +6,9 @@ import { fileURLToPath } from "node:url";
 import { DECLARED_FIGURE_READS, declaredFigureReadsFor } from "../src/page-reviews.ts";
 
 const { staticHalfOf } = await import("../dist/compiled-figures.js");
+const { LISTING_CONDITIONS_CLASS } = await import("../dist/listing-conditions.js");
+
+const A_LISTINGS_CONDITIONS = new RegExp(`<ul class="${LISTING_CONDITIONS_CLASS}"[^>]*>[\\s\\S]*?</ul>`, "g");
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -47,7 +50,7 @@ function plainText(html: string): string {
 }
 
 export function figureReadDatesStatedBy(html: string): string[] {
-  const text = plainText(staticHalfOf(html));
+  const text = plainText(staticHalfOf(html).replace(A_LISTINGS_CONDITIONS, " "));
   const dates = new Set<string>();
   for (const match of text.matchAll(ISO_DATE_AFTER_READ)) dates.add(match[1]!);
   return [...dates].sort();
