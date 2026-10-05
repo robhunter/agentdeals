@@ -53,7 +53,7 @@ import { CHECK_ESTABLISHES, CHECK_SCOPE_CLASS, NO_CATALOGUE_RECORD_SOURCE, NO_FE
 import { vendorHistorySentence } from "./vendor-history.js";
 import { guideBlurb } from "./guide-blurbs.js";
 import { changesToStartupProgrammes } from "./startup-programme-changes.js";
-import { HETZNER_APRIL_CHANGES, HETZNER_AVAILABILITY_READ, HETZNER_AX102_GERMANY, HETZNER_AX42_GERMANY, HETZNER_CLOUD_PLANS, HETZNER_PRICES_READ, HETZNER_PRICE_SOURCE, HETZNER_SETUP_FEE_STATEMENTS, HETZNER_SINGAPORE_EXAMPLE, cheapestOrderableHetznerPlan, hetznerEntryPriceClause, unorderableHetznerPlans } from "./hetzner-pricing.js";
+import { HETZNER_APRIL_CHANGES, HETZNER_AVAILABILITY_READ, HETZNER_AX102_GERMANY, HETZNER_AX42_GERMANY, HETZNER_CLOUD_PLANS, HETZNER_PRICES_READ, HETZNER_PRICE_SOURCE, HETZNER_PROMO_CODE_PAGE, HETZNER_SETUP_FEE_STATEMENTS, HETZNER_SINGAPORE_EXAMPLE, cheapestOrderableHetznerPlan, hetznerEntryPriceClause, unorderableHetznerPlans } from "./hetzner-pricing.js";
 import { HUNDRED_GB_SCENARIO, HUNDRED_TB_SCENARIO, ONE_TO_ONE_SCENARIO, STORAGE_RATES_READ, STORAGE_SCALE_WORKLOADS, TEN_TO_ONE_SCENARIO, cheapestProviderAt, costAfterMonthlyEgressGrantFor, costliestProviderAt, egressAllowanceSentence, egressBillAfterMonthlyGrantFor, egressBillOnceOverAllowance, egressRatioWhereCostsMatch, fixedMonthlyGrantsSentence, monthlyEgressGrantGb, monthlyEgressGrantSentence, monthlyStorageCost, providersWithScalingEgressAllowance, rateCardFor, scaleCostFor } from "./storage-cost-model.js";
 import { changeTimelineDate, supersededLineups, supersessionNote } from "./change-lineup.js";
 import { CORRECTION_TO_OUR_OWN_RECORD, isACorrectionToOurOwnRecord, isNoLongerInForce, printsBeforeAndAfter, eventResolutionFields, recordsStillInForce, recordsWeStandBehind, INCLUDE_RETRACTED_REJECTED } from "./change-resolution.js";
@@ -75,7 +75,7 @@ import { getBestReferralCode, listAllReferralCodes, AGENT_SUBMISSION_RETIRED_REA
 import { DOCUMENTED_GROUPS, HOMEPAGE_GROUPS, endpointHref, endpointPathHref, endpointsInGroups, exampleSubjects, readableRequestLines, withdrawalReasonFor, type ApiEndpoint, type ExampleSubjects } from "./api-inventory.js";
 import { MCP_TOOLS, MCP_TOOL_COUNT, mcpToolNameList } from "./mcp-tool-inventory.js";
 import { ACCELERATOR_CREDIT_PROGRAM, ACCELERATOR_CREDIT_VENDOR, NOTHING_CHANGING_SOON_HTML, RECENT_CHANGES_ON_THE_HOME_PAGE, UPCOMING_DEADLINES_ON_THE_HOME_PAGE, acceleratorCreditClause, atMostShownHere, onlyTheMostRecentShown, programCeiling } from "./homepage-claims.js";
-import { REFERRAL_CONDITIONS_HEADING, allOurReferralLinks, heldReferralLinkForVendor, ourReferralLinkFor, platformCodeAsVendorReferral, referralLinkCountClause, referrerDisclosureSentence } from "./referral-surfaces.js";
+import { REFERRAL_CONDITIONS_HEADING, allOurReferralLinks, heldReferralLinkForVendor, ourReferralLinkFor, platformCodeAsVendorReferral, platformCodeLinkForNamedVendor, referralLinkCountClause, referrerDisclosureSentence } from "./referral-surfaces.js";
 import type { VendorReferralAnswer } from "./referral-surfaces.js";
 import { runHealthCheck, getLastReport, startPeriodicChecks } from "./referral-health.js";
 import { configureDurableBackend, hydrateDurableStores, persistDurableStores, identityStorageReport } from "./durable-store.js";
@@ -610,6 +610,15 @@ function changeVendorLinkHtml(name: string, attrs = ""): string {
 
 function handwrittenVendorLinkHtml(slug: string, name: string, attrs = ""): string {
   return vendorLinkHtml(servedVendorSlug(slug) === null ? null : slug, name, attrs);
+}
+
+function guideRowReferralHtml(vendorName: string): string {
+  const link = platformCodeLinkForNamedVendor(vendorName);
+  if (!link) return "";
+  const conditionsHtml = link.restrictions.length > 0
+    ? `<span class="referral-conditions-heading" style="display:block;margin-top:.35rem;font-size:.65rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-dim);font-family:var(--mono)">${REFERRAL_CONDITIONS_HEADING}</span><ul class="referral-conditions" style="margin:.2rem 0 .35rem;padding:.3rem .55rem .3rem 1.4rem;border-left:2px solid #d29922;border-radius:0 4px 4px 0;background:rgba(210,153,34,0.08);font-size:.75rem;color:var(--text);line-height:1.45">${link.restrictions.map(r => `<li>${escHtmlServer(r)}</li>`).join("")}</ul>`
+    : "";
+  return `<div class="row-referral" style="margin-top:.4rem;color:var(--text)"><span style="display:block">Sign up via our referral link and get ${escHtmlServer(link.refereeBenefit)}</span>${conditionsHtml}<a href="${escHtmlServer(link.url)}" rel="noopener sponsored" target="_blank">Get ${escHtmlServer(link.refereeBenefit)} &rarr;</a> <span style="font-size:.75rem;color:var(--text-dim)">${escHtmlServer(referrerDisclosureSentence(link.compensation))} See our <a href="/disclosure">affiliate disclosure</a>.</span></div>`;
 }
 
 function changeVendorUrlField(name: string): { url?: string } {
@@ -18999,7 +19008,7 @@ function buildHetznerPricing2026Page(): string {
       <td style="font-family:var(--mono);font-size:.85rem">${escHtmlServer(c.spec)}</td>
       <td style="font-family:var(--mono);font-weight:600;color:var(--accent)">${escHtmlServer(c.price)}</td>
       <td>${escHtmlServer(c.region)}</td>
-      <td style="color:var(--text-muted);font-size:.85rem">${escHtmlServer(c.note)}</td>
+      <td style="color:var(--text-muted);font-size:.85rem">${escHtmlServer(c.note)}${isHetzner ? "" : guideRowReferralHtml(c.vendor)}</td>
       <td class="figure-provenance" style="color:var(--text-muted);font-size:.85rem">${isHetzner ? hetznerReadProvenanceHtml() : figureProvenanceHtml(`${c.spec} ${c.price}`, c.vendor, vendorSlug)}</td>
     </tr>`;
   }).join("\n        ");
@@ -19147,6 +19156,7 @@ ${mcpCtaCss()}
   </div>
   <p class="section-intro" style="margin-top:0"><strong>Read this table by availability first.</strong> The ${unorderable.length} cheapest listed prices all belong to plans marked not available, so the lowest number on the page is not a number you can pay. The first orderable row is ${escHtmlServer(cheapestOrderable.sku)} at ${eur(cheapestOrderable.eur)}, and it is a ${cheapestOrderable.vcpu}-vCPU, ${cheapestOrderable.ram} GB machine — less server than the ${escHtmlServer(cheapestOverall.sku)} above it at ${eur(cheapestOverall.eur)}.</p>
   <p class="section-intro">A new AX42 dedicated server in Germany costs ${eur(HETZNER_AX42_GERMANY.newOrder)} a month and a new AX102 ${eur(HETZNER_AX102_GERMANY.newOrder)}, excluding IPv4. The one-off setup fee is €${HETZNER_AX42_GERMANY.setupFee} for an AX42 and €${HETZNER_AX102_GERMANY.setupFee} for an AX102. These prices were read from Hetzner's price API on ${HETZNER_PRICES_READ}.</p>
+  <p class="section-intro">New accounts can get €50 of credit with Hetzner's sign-up code, valid only for the billing period in which it is redeemed.</p>
   ${vendorPageConditionsHtml("Hetzner")}
 
   <h2 id="april">2. What the April 1 Adjustment Did</h2>
@@ -19241,6 +19251,10 @@ ${mcpCtaCss()}
     <div class="impact-card" style="border-left-color:#d29922">
       <h3>The Arm line is not an escape route</h3>
       <p class="impact-desc">CAX used to undercut Intel and AMD at the same specs. All four CAX plans are marked not available today, alongside all four CX plans, so it is not somewhere to move a workload to right now.</p>
+    </div>
+    <div class="impact-card" style="border-left-color:#3fb950">
+      <h3>Sign-up credit for new customers</h3>
+      <p class="impact-desc">New customers without an active Hetzner account can get €50 in credit for all Hetzner products. The code must be redeemed within 14 days of account creation. The credit is valid only for the billing period in which it is redeemed. Redeeming on the 20th leaves about ten days of it. Redeem on the 1st for full benefit. The code is at <a href="${HETZNER_PROMO_CODE_PAGE}" target="_blank" rel="noopener">hetzner.com/promo-code</a>. It cannot be combined with a referral code.</p>
     </div>
   </div>
 
