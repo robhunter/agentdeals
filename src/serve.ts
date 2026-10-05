@@ -41,7 +41,7 @@ import { comparisonVerdictText, freeTierFaqAnswer, stabilityFaqAnswer, type Comp
 import { gateStatesAnEnding, publishedVendorLevel, restorationClause, restoredRemovalReason, vendorVerdictSentence, withheldRecordCountsOf, WITHHOLDING_BADGE_LABELS, vendorBadge, freeTierClaim, endingStatedInPlaceOfARating, endingShutsTheProductDown, endedClaimReliabilityAnswer, statesRiskCause, withholdingThatDoesNotLapse, demotionTheVerdictNames, narrowingSentence, ourOwnRecordsSentence, changeKindNoun, isOurOwnBookkeeping, emptyHistoryCaveatSentence, refusedReadOurConfirmationSupersedes, refusedReadWeHold, refusedReadWithholdingSentence, nothingWeReadDescribesTheTerms, unconfirmedThresholdSentence, unconfirmedTermsOpening, whyWeCannotConfirmTheseTerms, withheldForARefusedRead, withUnconfirmedTerms, refusalWithholdsStability, termsUnconfirmedBySource, termsTheVerdictWithholds, closingTerms, termsWithTheReasonWeCannotConfirmThem, termsNotVerifiedMetaSentence, termsWithheldLabel, theReadConfirmedThePrice, unconfirmedTermsSentence, whereTheDoubtSits, withheldBadgeLabel, type BadgeWithholding, type UnconfirmedTerms, type FreeTierClaim, type VendorVerdictInput, type WhereTheDoubtSits } from "./vendor-verdict.js";
 import { descriptionDeniesAFreeTier, listingOffersAFreeTier, tierMayCarryAFreePlanExcerpt, tierRecordsAFreeTier, tierWhoseFreeOfferIsTheLicence } from "./free-tier-record.js";
 import { whyTheExcerptCannotStand } from "./free-plan-excerpt-rules.js";
-import { alternativesUnderTheVendorsRule, conditionsBesideStoredTerms, conditionsHtml, conditionsOf, levelBesideTheVendorsRule, productionAnswerOpening, stableRatingBesideTheVendorsRule, theVendorsRuleOnProduction, withConditionsAfter, type TheVendorsRule } from "./listing-conditions.js";
+import { alternativesUnderTheVendorsRule, conditionsBesideStoredTerms, conditionsForTheBrowser, conditionsHtml, conditionsOf, levelBesideTheVendorsRule, productionAnswerOpening, stableRatingBesideTheVendorsRule, theVendorsRuleOnProduction, withConditionsAfter, type TheVendorsRule } from "./listing-conditions.js";
 import { conditionsField } from "./conditions-field.js";
 import { PAGE_HEAD_OPEN, withLedeBeforeNav } from "./page-lede.js";
 import { withReviewByline } from "./page-byline.js";
@@ -45892,6 +45892,7 @@ function buildStackCheckPage(): string {
     var RATED_LEVELS = ${JSON.stringify(RATED_LEVELS)};
     ${isRated.toString()}
     ${gradeForStack.toString()}
+    ${conditionsForTheBrowser()}
 
     function usePreset(services) {
       document.getElementById('stack-input').value = services;
@@ -46003,7 +46004,7 @@ function buildStackCheckPage(): string {
         for (var i = 0; i < data.gaps.length; i++) {
           var g = data.gaps[i];
           gapsHtml += '<div class="gap-item"><span class="gap-cat">' + esc(g.category) + '</span>';
-          gapsHtml += '<span class="gap-rec">Try <a href="/vendor/' + esc(toSlug(g.recommendation.vendor)) + '">' + esc(g.recommendation.vendor) + '</a> — ' + esc(g.recommendation.terms_superseded ? g.recommendation.terms_superseded.notice : g.recommendation.description) + '</span></div>';
+          gapsHtml += '<span class="gap-rec">Try <a href="/vendor/' + esc(toSlug(g.recommendation.vendor)) + '">' + esc(g.recommendation.vendor) + '</a> — ' + esc(g.recommendation.terms_superseded ? g.recommendation.terms_superseded.notice : g.recommendation.description) + '</span></div>' + conditionsHtmlBesidePublishedTerms(g.recommendation);
         }
         document.getElementById('gaps-list').innerHTML = gapsHtml;
       } else {
@@ -46230,6 +46231,7 @@ ${globalNavCss()}
   var PRESETS = ${JSON.stringify(presetMatchups)};
   var NEG_TYPES = ${JSON.stringify([...NEGATIVE_CHANGE_TYPES])};
   var POS_TYPES = ${JSON.stringify([...POSITIVE_CHANGE_TYPES])};
+  ${conditionsForTheBrowser()}
   var EFFECTIVE_DATE_PREFIX = ${JSON.stringify(EFFECTIVE_DATE_PREFIX)};
   var DISCOVERED_DATE_PREFIX = ${JSON.stringify(DISCOVERED_DATE_PREFIX)};
   var UNKNOWN_EFFECTIVE_DATE_MARKER = ${JSON.stringify(UNKNOWN_EFFECTIVE_DATE_MARKER)};
@@ -46348,6 +46350,7 @@ ${globalNavCss()}
     html += '<h3><a href="/vendor/' + slug + '">' + escHtml(v.vendor) + '</a></h3>';
     html += '<span class="badge badge-category">' + escHtml(v.category) + '</span> ' + riskBadge(risk, riskCause);
     html += '<div class="vendor-desc">' + escHtml(v.terms_superseded ? v.terms_superseded.notice : v.description) + '</div>';
+    html += conditionsHtmlBesidePublishedTerms(v);
     html += '<div class="vendor-meta">Tier: ' + escHtml(v.tier) + ' &middot; Read: ' + escHtml(v.last_read_date || '') + ' &middot; Verified: ' + escHtml(v.verifiedDate || v.verified_date || '') + '</div>';
     html += '<div class="vendor-links">';
     html += '<a href="/vendor/' + slug + '">Details</a>';
@@ -51544,6 +51547,7 @@ ${buildBrowseSection()}
   <footer>AgentDeals &mdash; open source, built for agents | <a href="/developers">REST API</a> | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 <script>
+${conditionsForTheBrowser()}
 function copyConfig(btn){
   var code=btn.parentElement.querySelector('code');
   if(!code)return;
@@ -51577,7 +51581,7 @@ function copyConfig(btn){
         +'<div class="deal-card-header"><span class="deal-vendor">'+escHtml(o.vendor)+'</span>'
         +'<span class="deal-cat">'+escHtml(o.category)+'</span>'
         +'<span class="deal-tier">'+escHtml(tierLabel)+'</span></div>'
-        +'<div class="deal-desc">'+escHtml(o.description)+'</div>';
+        +'<div class="deal-desc">'+escHtml(o.description)+'</div>'+conditionsHtmlBesidePublishedTerms(o);
       if(o.url){html+='<a class="deal-link" href="'+escHtml(o.url)+'" target="_blank" rel="noopener">View deal &#8594;</a>';}
       html+='</div>';
     }
