@@ -14,6 +14,7 @@ import { checkVendorRisk, enrichOffers, loadChangeRefusals, loadDealChanges, loa
 import { resetVerificationStateCache } from "../dist/verification-state.js";
 import { LEVEL_WITHHOLDING_OUTCOMES } from "../dist/source-check.js";
 import { offerEnded } from "../dist/retirement.js";
+import { classifyTier } from "../dist/ranking.js";
 import { vendorSlugMap } from "../dist/vendor-slug.js";
 import { termsNotVerifiedMetaSentence, vendorVerdictSentence, whyWeCannotConfirmTheseTerms } from "../dist/vendor-verdict.js";
 import { vendorVerdictContextFrom } from "../dist/vendor-verdict-input.js";
@@ -591,7 +592,10 @@ describe("an empty history and a recorded threshold are claims a refused read wi
 
   it("ships the withheld threshold to an agent as well as to a reader", () => {
     const stating: string[] = [];
-    for (const subject of subjects.filter(s => s.unreconciled)) {
+    const listed = loadOffers();
+    const asksWhenTheReaderOutgrowsIt = (subject: Subject) =>
+      classifyTier(listed.find(o => o.vendor === subject.vendor)!.tier).class !== "time_limited";
+    for (const subject of subjects.filter(s => s.unreconciled && asksWhenTheReaderOutgrowsIt(s))) {
       const page = pages.get(subject.slug) ?? "";
       if (!A_THRESHOLD_WE_CANNOT_CONFIRM.test(growthBlockOf(page))) continue;
       const answer = page.match(/"name":"When will I outgrow[^"]*","acceptedAnswer":\{"@type":"Answer","text":"((?:[^"\\]|\\.)*)"/)?.[1] ?? "";

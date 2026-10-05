@@ -11,7 +11,7 @@ import { assertAheadOfTheVendorList, vendorsNamedAsUncontradicted } from "./snip
 
 const { eligibilityGate, eligibilityGateAsPublished, publishableEligibilityConditions, CONDITION_RECORDING_AN_UNREAD_PROGRAM } =
   await import("../dist/eligibility.js");
-const { gateFor, notAFreeOfferGateFor, utcDate } = await import("../dist/ranking.js");
+const { classifyTier, gateFor, notAFreeOfferGateFor, utcDate } = await import("../dist/ranking.js");
 const { supersedingChange } = await import("../dist/superseded-description.js");
 const { offerRetired } = await import("../dist/retirement.js");
 const { gateForOffer } = await import("../dist/data.js");
@@ -179,8 +179,9 @@ describe("a vendor page whose record is gated on eligibility says so", () => {
       "every vendor holding a gated record now renders it, so the over-fire control has no subject",
     );
     for (const p of controls) {
+      const entitledOpening = classifyTier(p.offer.tier).class === "time_limited" ? `No. What ${p.vendor} offers is ` : "Yes";
       assert.ok(
-        (faqAnswer(p.html, `Is ${p.vendor} free?`) ?? "").startsWith("Yes"),
+        (faqAnswer(p.html, `Is ${p.vendor} free?`) ?? "").startsWith(entitledOpening),
         `${p.slug} lost an answer it was entitled to`,
       );
       assert.ok(!p.html.includes("gate-line"), `${p.slug} renders a gate it does not carry`);

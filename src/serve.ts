@@ -5424,6 +5424,8 @@ function buildVendorPage(slug: string): string | null {
   const currentYear = new Date().getFullYear();
   const retiredSentence = offerRetired(primary) ? recordedTierSentence(vendorName, primary.tier) : "";
   const hasFree = !retiredSentence && !noFreeTierGate && primary.tier.toLowerCase() !== "none" && !descriptionDeniesFreeTier(primary.description);
+  const timeLimitedOffer = noFreeTierGate ? null : timeLimitedTierRule(primary.tier);
+  const freeOfferNoun = timeLimitedOffer ? "free offer" : "free tier";
   const freeTierHeadline = `${vendorName} Free Tier ${currentYear}`;
   const pricingHeadline = `${vendorName} Pricing ${currentYear}`;
   const headline = offerHasEnded ? endedHeadline(vendorName) : hasFree ? freeTierHeadline : pricingHeadline;
@@ -5442,6 +5444,8 @@ function buildVendorPage(slug: string): string | null {
   const eligibilityGateSentence = primaryEligibilityGate ? `${primaryEligibilityGate.reason} ` : "";
   const metaDesc = eligibilityGateSentence + (termsSuperseded
     ? `${supersededTermsMetaSentence(vendorName, termsSuperseded)} See the recorded change history${alternatives.length > 0 ? ` and ${alternatives.length} alternatives in ${primary.category}` : ""}.`
+    : timeLimitedOffer
+    ? `${vendorName} has no ongoing free tier; what it offers is ${timeLimitedOffer.note}. ${descLimits}${metaVerifiedSentence}${alternatives.length > 0 ? ` Compare with ${alternatives.length} alternatives in ${primary.category}.` : ""}`
     : hasFree
     ? `${vendorName} free tier includes ${descLimits}${metaVerifiedSentence}${alternatives.length > 0 ? ` Compare with ${alternatives.length} alternatives in ${primary.category}.` : ""}`
     : `${vendorName} pricing details${alternatives.length > 0 ? ` and ${alternatives.length} free alternatives in ${primary.category}` : ""}.${metaVerifiedSentence}`);
@@ -5456,6 +5460,8 @@ function buildVendorPage(slug: string): string | null {
   const verdictSubject = primaryGate ? primaryGate.reason : retiredSentence;
   const verdictTerms = termsSuperseded
     ? escHtmlServer(supersededTermsVerdictSentence(vendorName, termsSuperseded))
+    : timeLimitedOffer
+    ? escHtmlServer(`${vendorName} has no ongoing free tier; what it offers is ${timeLimitedOffer.note}: ${punctuated(keyLimit)}`)
     : "";
   const verdictOpening = verdictSubject
     ? `${escHtmlServer(verdictSubject)} ${verdictTerms || escHtmlServer(punctuated(keyLimit))}`
@@ -5744,15 +5750,18 @@ ${allCompareLinks.join("\n")}
     ? `${primaryGateBeyondEligibility.reason} `
     : "";
   const weCanStillSayTheFreeTierExists = !termsWeCannotConfirm || termsWeCannotConfirm.theReadFoundAFreePlan;
-  const freeTierAnswerLead = weCanStillSayTheFreeTierExists
+  const freeTierAnswerLead = timeLimitedOffer
+    ? `No. What ${vendorName} offers is ${timeLimitedOffer.note}:`
+    : weCanStillSayTheFreeTierExists
     ? `${primaryEligibilityGate ? "" : "Yes, "}${vendorName} offers a free tier: ${primary.tier}.`
     : `Our stored record says ${vendorName} offers a free tier: ${primary.tier}.`;
+  const leadBesideAGate = timeLimitedOffer ? `${freeTierAnswerLead} ` : "";
   const faqFreeAnswer = termsSuperseded
     ? `${gateSentencesBeforeTheTerms}${supersededTermsAnswer(vendorName, termsSuperseded)}`
     : retiredSentence
     ? `${gateBesideARecordedEnding}${retiredSentence} ${withTheReasonARecordedEndingLeaves(storedTerms)}`
     : primaryGateBeyondEligibility
-    ? `${eligibilityGateSentence}${primaryGateBeyondEligibility.reason} ${termsWeCannotConfirm ? `${unconfirmedTermsPreamble}${withUnconfirmedTermsCaveat(storedTerms)}` : storedTerms}${eligibilityConditionsSentence}`
+    ? `${eligibilityGateSentence}${primaryGateBeyondEligibility.reason} ${termsWeCannotConfirm ? `${unconfirmedTermsPreamble}${leadBesideAGate}${withUnconfirmedTermsCaveat(storedTerms)}` : `${leadBesideAGate}${storedTerms}`}${eligibilityConditionsSentence}`
     : termsWeCannotConfirm
     ? `${eligibilityGateSentence}${unconfirmedTermsPreamble}${freeTierAnswerLead} ${withUnconfirmedTermsCaveat(storedTerms)}${eligibilityConditionsSentence}`
     : primaryEligibilityGate
@@ -5774,10 +5783,10 @@ ${allCompareLinks.join("\n")}
     : riskLevel === null
     ? `${levelWithheldBecause}`
     : riskLevel === "stable"
-    ? `${vendorName}'s free tier is considered stable.${vendorChanges.length > 0 ? ` ${narrowingSentence(vendorChanges, primary, termsSuperseded !== null)} See the pricing history below.` : ""}`
+    ? `${vendorName}'s ${freeOfferNoun} is considered stable.${vendorChanges.length > 0 ? ` ${narrowingSentence(vendorChanges, primary, termsSuperseded !== null)} See the pricing history below.` : ""}`
     : riskLevel === "caution"
-    ? `${vendorName}'s free tier requires caution because of one specific recorded change${riskCause ? `, ${changeDateClause(riskCause)}: ${changeSummaryText(riskCause)}` : "."}`
-    : `${vendorName}'s free tier is considered risky because of one specific recorded change${riskCause ? `, ${changeDateClause(riskCause)}: ${changeSummaryText(riskCause)}` : "."} Consider alternatives.`;
+    ? `${vendorName}'s ${freeOfferNoun} requires caution because of one specific recorded change${riskCause ? `, ${changeDateClause(riskCause)}: ${changeSummaryText(riskCause)}` : "."}`
+    : `${vendorName}'s ${freeOfferNoun} is considered risky because of one specific recorded change${riskCause ? `, ${changeDateClause(riskCause)}: ${changeSummaryText(riskCause)}` : "."} Consider alternatives.`;
   const faqCategoryAnswer = `${vendorName} is categorized under ${allCategories.join(", ")} on AgentDeals.${alternatives.length > 0 ? ` We list ${alternatives.length} other ${primary.category} services alongside it, every one of them on this page with its free tier and the stability we publish for it.` : ""}`;
 
   const restoredRemovalLowersTheRating = riskLevel === "caution" ? restoredRemovalReason(verdictInput) : null;
@@ -5800,6 +5809,8 @@ ${allCompareLinks.join("\n")}
     ? `${eligibilityGateSentence}${gateSentenceOpeningTheProductionAnswer}${supersededTermsVerdictSentence(vendorName, termsSuperseded)} Until we have re-read the page we cannot say what capacity ${vendorName} gives you, so we are not recommending it for production${isACorrectionToOurOwnRecord(termsSuperseded) ? "" : " on figures we have already superseded"}.`
     : eligibilityGateSentence + gateSentenceOpeningTheProductionAnswer + (levelWithheld
     ? `${vendorsRuleOnProduction ? `${productionAnswerOpening(vendorName, vendorsRuleOnProduction)} ` : ""}${withheldLevelSentence(levelWithheld, vendorName, unconfirmableSince)} We cannot confirm what this offer provides today, so we are not recommending it for production or for anything else until we can.`
+    : timeLimitedOffer
+    ? `Not for long. It is ${timeLimitedOffer.note}, so plan for paid usage before you depend on it.`
     : hasFree
     ? (endedBy
       ? endedClaimReliabilityAnswer(vendorName, endedBy)
@@ -5851,12 +5862,12 @@ ${allCompareLinks.join("\n")}
 
   const vendorFaqItems = [
     { q: `Is ${vendorName} free?`, a: faqFreeAnswer },
-    ...(gateStatesThereIsNoFreeTier ? [] : [{ q: `What is ${vendorName}'s free tier?`, a: faqTierAnswer }]),
-    ...(reliabilityAnswerWouldRateAGatedOffer ? [] : [{ q: `Is ${vendorName}'s free tier reliable?`, a: faqReliableAnswer }]),
-    { q: `Is ${vendorName}'s free tier good for production?`, a: faqProductionAnswer },
+    ...(gateStatesThereIsNoFreeTier || timeLimitedOffer ? [] : [{ q: `What is ${vendorName}'s free tier?`, a: faqTierAnswer }]),
+    ...(reliabilityAnswerWouldRateAGatedOffer ? [] : [{ q: `Is ${vendorName}'s ${freeOfferNoun} reliable?`, a: faqReliableAnswer }]),
+    { q: `Is ${vendorName}'s ${freeOfferNoun} good for production?`, a: faqProductionAnswer },
     { q: `What changed in ${vendorName}'s pricing?`, a: faqChangedAnswer },
     ...(faqAlternativesAnswer === null ? [] : [{ q: `What are the best free alternatives to ${vendorName}?`, a: faqAlternativesAnswer }]),
-    ...(primaryGate ? [] : [{ q: `When will I outgrow ${vendorName}'s free tier?`, a: faqOutgrowAnswer }]),
+    ...(primaryGate || timeLimitedOffer ? [] : [{ q: `When will I outgrow ${vendorName}'s free tier?`, a: faqOutgrowAnswer }]),
     { q: `What category is ${vendorName} in?`, a: faqCategoryAnswer },
   ];
 
@@ -6241,17 +6252,28 @@ ${renderAuditBlock(altRanking.tie_break)}
     basis: unrankedListingBasis(altRanking.qualified_count, altRanking.demoted_count, altRanking.gated_count),
   });
   const altNotAFreeOffer = notAFreeOfferGateFor(primary);
+  const altTimeLimited = altNotAFreeOffer ? null : timeLimitedTierRule(primary.tier);
+  const altWhatTheRecordSaysItOffers = altTimeLimited
+    ? `No. What ${vendorName} offers is ${altTimeLimited.note} (${primary.tier})`
+    : `Our stored record says ${vendorName} offers a free tier (${primary.tier})`;
+  const altBecauseOfTheRecordedChange = `because of one specific recorded change${riskCause ? `, ${changeDateClause(riskCause)}: ${changeSummaryText(riskCause)}` : "."}`;
   const faqFreeTierAnswer = altNotAFreeOffer
     ? `${altNotAFreeOffer.reason}${altLevelWithheld ? ` ${altWithheldSentence}` : ""} ${withConditionsWhenWhole(primary, storedTermsOf(primary))}`
     : altLevelWithheld
-    ? `We cannot confirm that today. ${altWithheldSentence} Our stored record says ${vendorName} offers a free tier (${primary.tier}), but we have not confirmed those terms against the source we cite.`
+    ? `We cannot confirm that today. ${altWithheldSentence} ${altWhatTheRecordSaysItOffers}, but we have not confirmed those terms against the source we cite.`
     : riskLevel === null
-    ? `${altWithheldBecause} Our stored record says ${vendorName} offers a free tier (${primary.tier}), and we are not publishing a stability judgement over it.`
+    ? `${altWithheldBecause} ${altWhatTheRecordSaysItOffers}, and we are not publishing a stability judgement over it.`
+    : altTimeLimited
+    ? `${altWhatTheRecordSaysItOffers}. ${riskLevel === "stable"
+      ? (vendorChanges.length === 0 ? "No pricing changes have been recorded." : narrowingSentence(vendorChanges, primary, supersedingChangeFor(primary) !== null))
+      : riskLevel === "caution"
+      ? `${vendorName}'s free offer requires caution ${altBecauseOfTheRecordedChange}`
+      : `${vendorName}'s free offer is considered risky ${altBecauseOfTheRecordedChange} Consider migrating to a more stable alternative.`}`
     : riskLevel === "stable"
     ? `Yes, ${vendorName} currently offers a free tier (${primary.tier}). ${vendorChanges.length === 0 ? "No pricing changes have been recorded." : narrowingSentence(vendorChanges, primary, supersedingChangeFor(primary) !== null)}`
     : riskLevel === "caution"
-    ? `${vendorName} has a free tier (${primary.tier}), but it's flagged as "caution" because of one specific recorded change${riskCause ? `, ${changeDateClause(riskCause)}: ${changeSummaryText(riskCause)}` : "."}`
-    : `${vendorName}'s free tier (${primary.tier}) is considered risky because of one specific recorded change${riskCause ? `, ${changeDateClause(riskCause)}: ${changeSummaryText(riskCause)}` : "."} Consider migrating to a more stable alternative.`;
+    ? `${vendorName} has a free tier (${primary.tier}), but it's flagged as "caution" ${altBecauseOfTheRecordedChange}`
+    : `${vendorName}'s free tier (${primary.tier}) is considered risky ${altBecauseOfTheRecordedChange} Consider migrating to a more stable alternative.`;
   const faqCountAnswer = `There are ${enrichedAlts.length} free alternatives to ${vendorName} tracked on AgentDeals across the ${listedCategories.join(", ")} categor${listedCategories.length > 1 ? "ies" : "y"}.`;
   const altMostRecentChange = newestChangeInEffect(altChangesVendorMade, utcToday());
   const faqChangesAnswer = altChangesVendorMade.length > 0

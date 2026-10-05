@@ -34,7 +34,7 @@ import { vendorVerdictContextFrom } from "../dist/vendor-verdict-input.js";
 import { offerEnded, endedVerdictSentence, ENDED_BADGE_LABEL } from "../dist/retirement.js";
 import { PRODUCT_DEPRECATED } from "../dist/product-deprecation.js";
 import { CONFIRMED_DATE_LABEL, UNCONFIRMED_DATE_LABEL } from "../dist/read-date.js";
-import { gateFor, utcDate } from "../dist/ranking.js";
+import { GATES_LEAVING_NO_FREE_TIER, classifyTier, gateFor, utcDate } from "../dist/ranking.js";
 import type { DealChange, RiskCause } from "../dist/types.js";
 
 type Gate = { code: string; reason: string };
@@ -556,17 +556,22 @@ describe("vendor verdict — as rendered", () => {
     };
   };
 
-  const faqAnswers = (html: string, vendor: string): { reliable: string | null; production: string } => {
+  const askedAbout = (row: VendorRow): string =>
+    classifyTier(row.tier).class === "time_limited" && !(row.gate && GATES_LEAVING_NO_FREE_TIER.includes(row.gate.code))
+      ? "free offer"
+      : "free tier";
+
+  const faqAnswers = (html: string, vendor: string, offer = "free tier"): { reliable: string | null; production: string } => {
     const blocks = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)]
       .map(m => JSON.parse(m[1]) as Record<string, unknown>);
     const faq = blocks.find(b => b["@type"] === "FAQPage") as
       { mainEntity: Array<{ name: string; acceptedAnswer: { text: string } }> } | undefined;
     assert.ok(faq, `${vendor} emits FAQ structured data`);
     const find = (name: string) => faq.mainEntity.find(e => e.name === name)?.acceptedAnswer.text ?? null;
-    const production = find(`Is ${vendor}'s free tier good for production?`);
-    assert.ok(production, `the structured data answers "Is ${vendor}'s free tier good for production?"`);
+    const production = find(`Is ${vendor}'s ${offer} good for production?`);
+    assert.ok(production, `the structured data answers "Is ${vendor}'s ${offer} good for production?"`);
     return {
-      reliable: find(`Is ${vendor}'s free tier reliable?`),
+      reliable: find(`Is ${vendor}'s ${offer} reliable?`),
       production,
     };
   };
@@ -632,7 +637,7 @@ describe("vendor verdict — as rendered", () => {
       while (index < rows.length) {
         const row = rows[index++];
         const html = await get(`/vendor/${row.slug}`);
-        const answers = faqAnswers(html, row.vendor);
+        const answers = faqAnswers(html, row.vendor, askedAbout(row));
         for (const [name, text] of Object.entries(answers)) {
           if (text !== null && OTHER_SCALE_ON_A_SURFACE_THAT_EMBEDS_SUMMARIES.test(text)) {
             wrong.push(`${row.slug}: the "${name}" answer reaches for a second scale — ${text}`);
