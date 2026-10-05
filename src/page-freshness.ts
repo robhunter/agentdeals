@@ -34,6 +34,23 @@ export function verifiedSpanClaim(verifiedDates: readonly string[]): string {
   return `${FRESHNESS_VERB} ${opening} to ${latest}.`;
 }
 
+export interface PreviewedPeriod {
+  from: string;
+  to: string;
+}
+
+export function previewedPeriodLabel(period: PreviewedPeriod): string {
+  const first = monthOf(period.from);
+  const last = monthOf(period.to);
+  if (first === last) return last;
+  const opening = yearOf(first) === yearOf(last) ? first.slice(0, first.lastIndexOf(" ")) : first;
+  return `${opening}–${last}`;
+}
+
+export function endedPreviewItem(period: PreviewedPeriod, today: string): string {
+  return today > period.to ? `Previews ${previewedPeriodLabel(period)}, which ended ${period.to}` : "";
+}
+
 const VENDOR_HREF = /href="\/vendor\/([a-z0-9][a-z0-9-]*)"/g;
 
 export function vendorSlugsLinkedFrom(html: string): string[] {
