@@ -13,6 +13,7 @@ const { loadOffers, loadDealChanges, refusalsForVendor } = await import("../dist
 const { vendorSlugMap } = await import("../dist/vendor-slug.js");
 const { supersedingChange } = await import("../dist/superseded-description.js");
 const { discontinuedOnOrBefore } = await import("../dist/product-deprecation.js");
+const { offerEnded } = await import("../dist/retirement.js");
 const { utcDate } = await import("../dist/ranking.js");
 const { unconfirmedTermsClause, withheldLevelClause, outcomeConfirmsThePrice } = await import("../dist/source-check.js");
 const {
@@ -37,6 +38,7 @@ interface Subject {
   holdsAConfirmation: boolean;
   termsSuperseded: boolean;
   discontinuedOn: string | null;
+  offerHasEnded: boolean;
   termsWithheld: boolean;
   withheldBecause: string | null;
 }
@@ -118,6 +120,7 @@ before(async () => {
       holdsAConfirmation: confirmationDate(primary) !== null,
       termsSuperseded: supersedingChange(primary, vendorChanges) !== null,
       discontinuedOn: discontinuedOnOrBefore(vendorChanges, servedOn),
+      offerHasEnded: offerEnded(primary),
       termsWithheld: because !== null && withholdsTheTerms(because),
       withheldBecause: because !== null && withholdsTheTerms(because) ? because.reason : null,
     }];
@@ -262,7 +265,7 @@ describe("#1412 the meta description withholds wherever the source check failed"
 
   it("leaves the dated line standing wherever the source check passed, under the label its date has earned", async () => {
     const pages = await everyVendorPage();
-    const population = subjects.filter(s => s.outcome === "ok" && !s.termsSuperseded && !s.termsWithheld);
+    const population = subjects.filter(s => s.outcome === "ok" && !s.termsSuperseded && !s.termsWithheld && !s.offerHasEnded);
     assertPopulationFloor(population.length, Math.floor(subjects.length / 5), "records passed their source check");
 
     const wrongMonth: string[] = [];

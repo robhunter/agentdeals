@@ -5424,13 +5424,16 @@ function buildVendorPage(slug: string): string | null {
 
   const currentYear = new Date().getFullYear();
   const retiredSentence = offerRetired(primary) ? recordedTierSentence(vendorName, primary.tier) : "";
+  const endedAnswerOpening = offerHasEnded && !termsSuperseded ? retiredSentence : "";
   const hasFree = !retiredSentence && !noFreeTierGate && primary.tier.toLowerCase() !== "none" && !descriptionDeniesFreeTier(primary.description);
   const timeLimitedOffer = noFreeTierGate ? null : timeLimitedTierRule(primary.tier);
   const freeOfferNoun = timeLimitedOffer ? "free offer" : "free tier";
   const freeTierHeadline = timeLimitedOffer ? timeLimitedHeadline(vendorName, timeLimitedOffer.kind, currentYear) : `${vendorName} Free Tier ${currentYear}`;
   const pricingHeadline = `${vendorName} Pricing ${currentYear}`;
   const headline = offerHasEnded ? endedHeadline(vendorName) : hasFree ? freeTierHeadline : pricingHeadline;
-  const title = hasFree
+  const title = offerHasEnded
+    ? `${endedHeadline(vendorName)} | AgentDeals`
+    : hasFree
     ? `${freeTierHeadline}: Limits, Pricing & What Changed | AgentDeals`
     : `${pricingHeadline}: Plans, Costs & Free Alternatives | AgentDeals`;
   const descLimits = punctuatedOpeningOfTerms(publishableTerms, 100);
@@ -5443,7 +5446,9 @@ function buildVendorPage(slug: string): string | null {
     ? ` ${termsNotVerified}`
     : verifiedSentence;
   const eligibilityGateSentence = primaryEligibilityGate ? `${primaryEligibilityGate.reason} ` : "";
-  const metaDesc = eligibilityGateSentence + (termsSuperseded
+  const metaDesc = endedAnswerOpening
+    ? `${endedAnswerOpening} ${vendorName} pricing details${alternatives.length > 0 ? ` and ${alternatives.length} free alternatives in ${primary.category}` : ""}.`
+    : eligibilityGateSentence + (termsSuperseded
     ? `${supersededTermsMetaSentence(vendorName, termsSuperseded)} See the recorded change history${alternatives.length > 0 ? ` and ${alternatives.length} alternatives in ${primary.category}` : ""}.`
     : timeLimitedOffer
     ? `${vendorName} has no ongoing free tier; what it offers is ${timeLimitedOffer.note}. ${descLimits}${metaVerifiedSentence}${alternatives.length > 0 ? ` Compare with ${alternatives.length} alternatives in ${primary.category}.` : ""}`
