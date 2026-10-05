@@ -7,10 +7,13 @@
       "referrer_benefit": "15% commission (first 12 months)",
       "referrer_compensation": "commission",
       "referee_benefit": "$20 in credits",
-      "restrictions": [],
+      "restrictions": [
+        "The $20 is credited when the new account upgrades to a paid plan (Hobby or Pro), not at signup"
+      ],
       "source": "platform",
       "active": true,
-      "added_at": "2026-04-12"
+      "added_at": "2026-04-12",
+      "terms_verified": "2026-10-05"
     },
     {
       "vendor": "Vultr DNS",
