@@ -5,6 +5,9 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const REPO = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
+const { FIGURE_SOURCE_CLASS } = await import("../dist/source-citation.js");
+
+const FIGURE_SOURCE_ANCHOR = new RegExp(`<a [^>]*class="${FIGURE_SOURCE_CLASS}"[^>]*>[\\s\\S]*?<\\/a>`, "g");
 
 const PAGE = "/auth-comparison-2026";
 const SITEMAPS_OF_GUIDES_AND_REPORTS = ["/sitemap-pages.xml", "/sitemap-reports.xml", "/sitemap-misc.xml"];
@@ -930,7 +933,7 @@ describe("the auth comparison states each service's terms as the vendor does", (
       const found = tableWithHeader(html, table);
       const row = rowOf(found, vendor);
       if (!row) return [`${table} / ${vendor}: no row`];
-      const shown = column === "Provider" ? nameOf(row[0]) : textOf(row[headersOf(found).indexOf(column)] ?? "");
+      const shown = column === "Provider" ? nameOf(row[0]) : textOf((row[headersOf(found).indexOf(column)] ?? "").replace(FIGURE_SOURCE_ANCHOR, ""));
       return shown === now ? [] : [`${table} / ${vendor} / ${column}: ${shown}`];
     });
     assert.deepStrictEqual(wrong, []);
