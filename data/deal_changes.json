@@ -15462,7 +15462,13 @@
       "category": "DNS & Domain Management",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-10-05"
+      "recorded_date": "2026-10-05",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-10-05",
+        "detail": "Retracted 2026-10-05: nothing changed. Zilore's DNS page on 2026-10-05 still lists the Free plan with 5 domains, 1,000 resource records per domain and 10,000,000 DNS queries in its pricing table, the limits this record names as the previous state. The reading took the page's feature line \"All of our plans include an unlimited number of DNS records and an unlimited number of DNS requests\" for a new limit.",
+        "source_url": "https://zilore.com/en/dns"
+      }
     },
     {
       "vendor": "Tweek",
@@ -15479,7 +15485,13 @@
       "category": "Project Management",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-10-05"
+      "recorded_date": "2026-10-05",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-10-05",
+        "detail": "Retracted 2026-10-05: the record compares Tweek's page with our own one-line listing description, which stated no terms, so it shows a gap in our listing rather than a change by Tweek. The description now states Tweek's terms from the same reading.",
+        "source_url": "https://tweek.so/"
+      }
     },
     {
       "vendor": "GitHub Copilot",
@@ -15496,7 +15508,13 @@
       "category": "AI Coding",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-10-05"
+      "recorded_date": "2026-10-05",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-10-05",
+        "detail": "Retracted 2026-10-05: nothing changed. Our own readings of GitHub's Copilot page on 2026-08-28 and 2026-09-12 already list Copilot Free with 2,000 completions a month and \"access to Haiku 4.5, GPT-5 mini, and more\", and the 2026-09-12 reading adds Copilot CLI; the 2026-09-12 record that claimed this change was retracted on 2026-09-28. The page's FAQ still says Free models are provided through auto model selection, as our listing says. The record compared the page with our own listing text.",
+        "source_url": "https://github.com/features/copilot"
+      }
     }
   ]
 }
