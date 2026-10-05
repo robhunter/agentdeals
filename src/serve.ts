@@ -22,6 +22,7 @@ import { buildDailyRollup, readRollups, coverageOf, ROLLUP_DATE_PATTERN } from "
 import { AGENT_OPENS_WINDOW_DAYS, HOMEPAGE_GUIDE_COUNT, RANKED_TRAFFIC_CLASS, agentOpensByPath, agentOpensWindow, agentRequestAttribution, browseSectionSentence, completeDaysInWindow, guideSelectionSentence, guidesGroupedByHeading, opensDecidedPrefix, rankGuidesByAgentOpens, rankableDays } from "./homepage-routing.js";
 import { configureVendorSeries, recordVendorRequest, flushVendorSeries, readVendorSeries, vendorSeriesGauge, vendorExportAuthorized, isSeriesDate, seriesDateRange, VENDOR_SERIES_PATH, VENDOR_SERIES_RETENTION_DAYS, VENDOR_SERIES_NOTES } from "./vendor-series.js";
 import { openapiSpec } from "./openapi.js";
+import { OUTBOUND_PATH_PREFIX, configureOutboundStore, flushOutbound, loadOutbound, outboundByVendor, outboundSlug, outboundTotals, recordOutboundClick } from "./outbound.js";
 import { AGENT_CARD_PATHS, OPENAPI_ALIAS_PATHS, OPENAPI_CANONICAL_PATH, OPENAPI_YAML_PATH, serviceDescription, theDocumentWeAlreadyServe } from "./agent-card.js";
 import { CATEGORY_ALIASES, CATEGORY_RETIREMENTS, CHANGE_LOG_CATEGORY_NAMES, EXAMPLE_MEMBERS_BASIS, buildCategoryDirectory, categoryHolds, familySiblings, publishedScopeFor, resolveCategoryName, resolveChangeCategory, retiredCategoryNames, retirementFor, scopeFor } from "./category-scope.js";
 import { retiredCategoryDescription, retiredCategoryNoticeHtml, retiredCategoryTitle } from "./category-retirement.js";
@@ -507,6 +508,14 @@ if (useRedis()) {
   });
 }
 await hydrateDurableStores();
+
+if (useRedis()) {
+  configureOutboundStore({
+    get: redisJsonGet,
+    set: (key, value) => redisJsonSetWithoutExpiry(key, value),
+  });
+}
+await loadOutbound();
 
 async function identityWritePersisted(res: import("node:http").ServerResponse): Promise<boolean> {
   const outcome = await persistDurableStores();
@@ -51904,6 +51913,14 @@ function withAgentBlock<T extends object>(payload: T, slug?: string | null, cite
   };
 }
 
+function outboundDestination(slug: string): string | null {
+  const vendorName = vendorSlugMap.get(slug);
+  if (!vendorName) return null;
+  const listing = offers.find(o => o.vendor === vendorName);
+  if (!listing || offerRetired(listing)) return null;
+  return /^https?:\/\//i.test(listing.url) ? listing.url : null;
+}
+
 const SINGLE_VENDOR_PREFIXES = ["/vendor/", "/api/vendor/", "/api/details/", "/embed/vendor/"] as const;
 function singleVendorSlug(pathname: string): string | null {
   for (const prefix of SINGLE_VENDOR_PREFIXES) {
@@ -52266,6 +52283,7 @@ const dispatchRequest = async (req: IncomingMessage, res: ServerResponse) => {
       days: series.days,
       gauge: vendorSeriesGauge(),
       notes: VENDOR_SERIES_NOTES,
+      outbound: { ...outboundTotals(), by_vendor: outboundByVendor() },
     }, null, 2));
     return;
   }
@@ -52392,6 +52410,22 @@ const dispatchRequest = async (req: IncomingMessage, res: ServerResponse) => {
   }
   if (url.pathname.startsWith("/vendors/") && isGetOrHead) {
     res.writeHead(301, { Location: "/vendor/" + url.pathname.slice("/vendors/".length) });
+    res.end();
+    return;
+  }
+
+  if (url.pathname.startsWith(OUTBOUND_PATH_PREFIX) && isGetOrHead) {
+    const slug = outboundSlug(url.pathname, s => vendorSlugMap.has(s));
+    const destination = slug === null ? null : outboundDestination(slug);
+    if (slug === null || destination === null) {
+      res.writeHead(404, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ error: "Not found" }));
+      return;
+    }
+    if (req.method === "GET") {
+      recordOutboundClick(slug, classifyRequest(url.pathname, req.headers["user-agent"]).client_class);
+    }
+    res.writeHead(302, { Location: destination, "Cache-Control": "no-store" });
     res.end();
     return;
   }
@@ -52564,6 +52598,7 @@ const dispatchRequest = async (req: IncomingMessage, res: ServerResponse) => {
       api_hits_by_endpoint: getApiHitsByEndpoint(),
       top_search_queries_7d: searchAnalytics.top_queries_7d,
       change_log_freshness: getChangeLogFreshness(),
+      outbound_clicks: outboundTotals(),
     }));
   } else if (url.pathname === "/.well-known/glama.json") {
     const glamaCard = readRepoTextFile(join(__dirname, "..", "glama.json"));
@@ -55409,6 +55444,10 @@ const FLUSH_INTERVAL_MS = 5 * 60 * 1000;
 setInterval(() => flushTelemetry(), FLUSH_INTERVAL_MS).unref();
 
 setInterval(() => {
+  flushOutbound().catch((err) => console.error(`[outbound] flush failed: ${err?.message ?? err}`));
+}, FLUSH_INTERVAL_MS).unref();
+
+setInterval(() => {
   flushPending().catch((err) => console.error(`[telemetry] flush failed: ${err?.message ?? err}`));
 }, FLUSH_INTERVAL_SECONDS * 1000).unref();
 
@@ -55434,6 +55473,7 @@ async function onShutdown() {
     await flushPending();
     await flushVendorSeries(true);
     await persistDurableStores();
+    await flushOutbound();
     await flushTelemetry();
   } catch (err: any) {
     console.error(`[telemetry] shutdown flush failed: ${err?.message ?? err}`);
