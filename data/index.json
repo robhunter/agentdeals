@@ -3244,7 +3244,39 @@
           }
         ],
         "reviewed": "2026-09-01"
-      }
+      },
+      "conditions": [
+        {
+          "text": "Rate limits apply to the whole organization, not to each user or API key. A request over a limit gets a 429 Too Many Requests error.",
+          "quote": "Rate limits apply at the organization level, not individual users.",
+          "url": "https://console.groq.com/docs/rate-limits",
+          "read_on": "2026-10-05"
+        },
+        {
+          "text": "You are billed only after you add a payment method and move to the paid Developer tier.",
+          "quote": "To upgrade from the Free tier to the Developer tier, you'll need to provide a valid payment method (credit card, US bank account, or SEPA debit account).",
+          "url": "https://console.groq.com/docs/billing-faqs",
+          "read_on": "2026-10-05"
+        },
+        {
+          "text": "Groq's Services Agreement does not permit it to train or fine-tune models on your inputs or outputs unless you give permission.",
+          "quote": "Groq is not permitted to use Inputs or Outputs for training or fine-tuning any AI Model Services or other models, unless explicitly granted permission or instructed by Customer.",
+          "url": "https://console.groq.com/docs/legal/services-agreement",
+          "read_on": "2026-10-05"
+        },
+        {
+          "text": "Groq does not keep inference requests by default. It may log inputs and outputs for up to 30 days to troubleshoot or investigate abuse; enabling Zero Data Retention in Data Controls stops this.",
+          "quote": "These logs are retained for up to 30 days, unless legally required to retain longer.",
+          "url": "https://console.groq.com/docs/your-data",
+          "read_on": "2026-10-05"
+        },
+        {
+          "text": "Data Groq retains is stored in Google Cloud buckets in the United States.",
+          "quote": "All customer data is retained in Google Cloud Platform (GCP) buckets located in the United States.",
+          "url": "https://console.groq.com/docs/your-data",
+          "read_on": "2026-10-05"
+        }
+      ]
     },
     {
       "vendor": "Google Gemini API",
@@ -34006,7 +34038,39 @@
         "record_date": "2026-09-22",
         "change_type": "pricing_model_change",
         "restated_on": "2026-09-22"
-      }
+      },
+      "conditions": [
+        {
+          "text": "Ollama allows one account per person. A second free account is not allowed.",
+          "quote": "No. Ollama is one account per person.",
+          "url": "https://ollama.com/pricing",
+          "read_on": "2026-10-05"
+        },
+        {
+          "text": "Free usage resets monthly from your sign-up date. Unused usage does not roll over. You can buy usage credits instead of waiting.",
+          "quote": "On the Free plan, usage resets monthly from the date you signed up.",
+          "url": "https://ollama.com/pricing",
+          "read_on": "2026-10-05"
+        },
+        {
+          "text": "Ollama says cloud prompts and responses are never logged or used for training.",
+          "quote": "Prompt or response data is never logged or trained on.",
+          "url": "https://ollama.com/pricing",
+          "read_on": "2026-10-05"
+        },
+        {
+          "text": "Models run mainly in the United States. Requests may be routed to Europe or Singapore for capacity.",
+          "quote": "Ollama hosts models and compute resources primarily in the United States. To serve global demand, we may route to Europe and Singapore for additional capacity.",
+          "url": "https://ollama.com/pricing",
+          "read_on": "2026-10-05"
+        },
+        {
+          "text": "Requests beyond the 1 concurrent request wait in a queue. When the queue is full, new requests are rejected until a slot frees up.",
+          "quote": "Queued requests are held up to a fixed limit - if the queue is full, the request will be rejected until one of your concurrency slots opens.",
+          "url": "https://ollama.com/pricing",
+          "read_on": "2026-10-05"
+        }
+      ]
     },
     {
       "vendor": "Google Gemini Code Assist",
