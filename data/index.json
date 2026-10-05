@@ -8789,7 +8789,24 @@
           }
         ],
         "reviewed": "2026-09-01"
-      }
+      },
+      "conditions": [
+        {
+          "text": "Kaggle's terms limit use of its services to your own internal, personal, non-commercial use, not on behalf of or for the benefit of any third party.",
+          "quote": "You will only use the Services for your own internal, personal, non-commercial use, and not on behalf of or for the benefit of any third party",
+          "url": "https://www.kaggle.com/terms",
+          "read_on": "2026-10-04",
+          "rules_out": [
+            "commercial use"
+          ]
+        },
+        {
+          "text": "Kaggle requires phone verification for parts of its platform, including notebooks, datasets, discussion topics and competitions.",
+          "quote": "we are adding a phone verification requirement for creating public Models. This requirement is already in place for other parts of our platform, including notebooks, datasets, discussion topics, and competitions.",
+          "url": "https://www.kaggle.com/discussions/product-announcements/558078",
+          "read_on": "2026-10-04"
+        }
+      ]
     },
     {
       "vendor": "Roboflow",
@@ -9220,9 +9237,9 @@
     {
       "vendor": "Weights & Biases",
       "category": "AI / ML",
-      "description": "ML experiment tracking, model registry, and LLM app tracing and evaluation (Weave). The cloud Free plan is $0/mo and designed for personal development, with up to 5 model seats, 5 GB/mo of storage and 1 GB/mo of Weave data ingestion. Pro starts at $60/month with a 30-day free trial and is for teams with fewer than 50 employees. A separate self-hosted Personal plan (W&B server on your own machine) is $0/mo with 1 user seat, for personal projects only; corporate use is not allowed.",
+      "description": "ML experiment tracking, model registry, and LLM app tracing and evaluation (Weave). W&B's hosted service is now sold as CoreWeave Forge. Its Free plan is $0/mo and designed for personal development, with up to 5 model seats, 5 GB/mo of storage and 1 GB/mo of Weave data ingestion. Pro starts at $60/month with a 30-day free trial and is for teams with fewer than 50 employees. Self-managed W&B Server needs a license; W&B's docs offer a free trial license, and CoreWeave's pricing page lists no free self-hosted plan.",
       "tier": "Free",
-      "url": "https://wandb.ai/site/pricing/",
+      "url": "https://coreweave.com/forge-pricing",
       "tags": [
         "ml",
         "experiment-tracking",
@@ -19789,7 +19806,33 @@
         "outcome": "states_no_terms",
         "detail": "the page names Formsubmit.co but states no amount, tier or rate we can read, and the 1 structured-data block in its markup states no price",
         "rendered": true
-      }
+      },
+      "conditions": [
+        {
+          "text": "FormSubmit keeps form submissions for 30 days and does not retain uploaded files.",
+          "quote": "We retain your form submissions for 30 days. Uploaded files won't retain or can't access through the API.",
+          "url": "https://formsubmit.co/documentation",
+          "read_on": "2026-10-04"
+        },
+        {
+          "text": "The files in one form may total at most 10 MB.",
+          "quote": "the sum of each file size must not exceed the 10MB size limit",
+          "url": "https://formsubmit.co/documentation",
+          "read_on": "2026-10-04"
+        },
+        {
+          "text": "The first submission to a new form sends an email asking you to confirm the form.",
+          "quote": "Submit the form once. This first-time-use will trigger an email requesting confirmation.",
+          "url": "https://formsubmit.co/",
+          "read_on": "2026-10-04"
+        },
+        {
+          "text": "The submission archive API is free and limited to 5 calls a day.",
+          "quote": "You can access your submission archive through our API for free. The number of times that you can access the API is limited to 5 times a day.",
+          "url": "https://formsubmit.co/documentation",
+          "read_on": "2026-10-04"
+        }
+      ]
     },
     {
       "vendor": "Formware.io",
