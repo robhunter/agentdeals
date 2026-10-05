@@ -1066,7 +1066,27 @@
         "text": "No-cost (Spark plan) Generous no-cost usage limits No payment method needed",
         "url": "https://firebase.google.com/pricing",
         "read_on": "2026-10-03"
-      }
+      },
+      "conditions": [
+        {
+          "text": "If a Spark project exceeds a no-cost quota, that product is shut off for the project (all its apps) for the rest of the calendar month, unless you upgrade to Blaze.",
+          "quote": "If you exceed the no-cost quota limit in a calendar month for any product, your project's usage of that specific product will be shut off for the remainder of that month",
+          "url": "https://firebase.google.com/docs/projects/billing/firebase-pricing-plans",
+          "read_on": "2026-10-05"
+        },
+        {
+          "text": "A Spark account can create a small number of projects, usually about 5-10.",
+          "quote": "Project-creation quota is limited to a small number of projects (usually around 5-10).",
+          "url": "https://firebase.google.com/support/faq",
+          "read_on": "2026-10-05"
+        },
+        {
+          "text": "Linking a Cloud Billing account to a Spark project, including one with $300 Google Cloud free trial credits, automatically upgrades it to the pay-as-you-go Blaze plan.",
+          "quote": "linking a Cloud Billing account to your project will auto-upgrade your project to the Blaze pricing plan",
+          "url": "https://firebase.google.com/docs/projects/billing/firebase-pricing-plans",
+          "read_on": "2026-10-05"
+        }
+      ]
     },
     {
       "vendor": "Databricks (Lakeflow Connect)",
