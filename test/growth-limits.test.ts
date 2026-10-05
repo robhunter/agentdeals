@@ -191,6 +191,44 @@ describe("the other free-tier limits the page reports", () => {
   });
 });
 
+describe("a free-tier threshold starts where a figure starts", () => {
+  it("reads no quantity out of a model or product name", () => {
+    assert.deepEqual(growthLimitPhrases("Token Plan subscriptions from $10/mo (Starter: 1,500 M2.7 requests/5hr)"), []);
+    assert.deepEqual(growthLimitPhrases("Supports 89 resource types including VPCs, EC2 instances, security groups"), []);
+    assert.deepEqual(growthLimitPhrases("Free tier: 1,000 GPT-4 requests/day"), []);
+    assert.deepEqual(growthLimitPhrases("Rent 8 H100 instances by the hour"), []);
+  });
+
+  it("reads a decimal whole rather than the digits after its point", () => {
+    assert.deepEqual(growthLimitPhrases("1M function calls/month, 0.5 GB database + vector storage"), ["0.5 GB storage"]);
+    assert.deepEqual(growthLimitPhrases("The free version has 1.5 GB storage and 2 GB network/month"), ["1.5 GB storage"]);
+    assert.deepEqual(growthLimitPhrases("Error and performance monitoring 7.5K events and 1M spans per month"), ["7.5K events"]);
+    assert.deepEqual(growthLimitPhrases("Up to 2.5K monthly active users and 0.5 GB bandwidth"), ["0.5 GB bandwidth", "2.5K MAU"]);
+  });
+
+  it("states a range whole rather than its top", () => {
+    assert.deepEqual(growthLimitPhrases("Most APIs include a free tier with 100-1,000 requests/month."), ["100-1,000 requests/mo"]);
+    assert.deepEqual(growthLimitPhrases("Rate limits of 10–30 requests/min (varies by model)"), ["10–30 requests/min"]);
+    assert.deepEqual(growthLimitPhrases("Free: 2 - 3 projects and 1-2 GB storage"), ["1-2 GB storage", "2 - 3 projects"]);
+  });
+
+  it("still reads a figure after a space, a parenthesis, a colon or a tilde", () => {
+    assert.deepEqual(growthLimitPhrases("Free tier (100 requests/day), Free:5 GB storage, ~50K MAU"), ["5 GB storage", "50K MAU", "100 requests/day"]);
+  });
+
+  it("still reads a figure that a comma or a dash sets off with no space", () => {
+    assert.deepEqual(growthLimitPhrases("Free: 10 projects,5 GB storage"), ["5 GB storage", "10 projects"]);
+    assert.deepEqual(growthLimitPhrases("Free tier–5 GB storage"), ["5 GB storage"]);
+  });
+
+  it("leaves the limits of a description whose figures all start a word as they were", () => {
+    assert.deepEqual(
+      growthLimitPhrases("Edge compute with 100K requests/day, 10ms CPU time per invocation, 5 cron triggers/account. KV: 1 GB storage, 100K reads/day, 1K writes/day. D1: 5 GB storage, 5M rows read/day"),
+      ["1 GB storage", "100K requests/day"],
+    );
+  });
+});
+
 const A_RATE_WE_CONFIRMED = {
   vendor: "Controlcorp",
   category: "Databases",
@@ -215,6 +253,20 @@ const A_RATE_FROM_A_PAGE_STATING_NO_TERMS = {
   url: "https://prosecorp.example/pricing",
   description: "Free inference for open-source models with 100 requests/day limit.",
   source_check: { checked: "2026-08-28", outcome: "states_no_terms", detail: "no amount, tier or rate" },
+};
+
+const A_RANGE_WE_CONFIRMED = {
+  ...A_RATE_WE_CONFIRMED,
+  vendor: "Rangecorp",
+  url: "https://rangecorp.example/pricing",
+  description: "Free model access at 10-30 requests/min, varying by model.",
+};
+
+const A_MODEL_NAME_WE_CONFIRMED = {
+  ...A_RATE_WE_CONFIRMED,
+  vendor: "Modelcorp",
+  url: "https://modelcorp.example/pricing",
+  description: "Free access to the M2.7 model for 1,500 M2.7 requests/5hr.",
 };
 
 const A_RATE_ON_A_PAGE_WE_READ_AND_REFUSED = {
@@ -316,6 +368,8 @@ before(async () => {
       offers: [
         A_RATE_WE_CONFIRMED,
         A_PER_MINUTE_RATE_WE_CONFIRMED,
+        A_RANGE_WE_CONFIRMED,
+        A_MODEL_NAME_WE_CONFIRMED,
         A_RATE_FROM_A_PAGE_STATING_NO_TERMS,
         A_RATE_ON_A_PAGE_WE_READ_AND_REFUSED,
         A_RATE_ON_A_PAGE_WHOSE_READ_MOVED_NOTHING,
@@ -349,6 +403,20 @@ describe("the outgrow block on a vendor page", () => {
     const { body } = await get("/vendor/minutecorp");
     assert.match(growthBlock(body), /At 3 requests\/min, you'll need to upgrade\./);
     assert.match(outgrowAnswer(body), /^At 3 requests\/min, you'll need to upgrade\./);
+  });
+
+  it("states a range as the range, to readers and to structured data", async () => {
+    const { body } = await get("/vendor/rangecorp");
+    assert.match(growthBlock(body), /At 10-30 requests\/min, you'll need to upgrade\./);
+    assert.match(outgrowAnswer(body), /^At 10-30 requests\/min, you'll need to upgrade\./);
+  });
+
+  it("states no threshold read out of a model's name", async () => {
+    const { body } = await get("/vendor/modelcorp");
+    const block = growthBlock(body);
+    assert.doesNotMatch(block, /At \d/);
+    assert.match(block, /When your usage exceeds the free tier limits, you'll need to upgrade\./);
+    assert.doesNotMatch(outgrowAnswer(body), /At \d/);
   });
 
   it("does not state a threshold read off a page that states no price", async () => {

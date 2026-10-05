@@ -118,29 +118,38 @@ type LimitPattern = {
   format: (m: RegExpMatchArray, description: string) => string;
 };
 
+const NOT_INSIDE_A_WORD_OR_A_FIGURE = "(?<![\\p{L}\\p{N}.\\-])";
+const A_WHOLE_NUMBER = "\\d[\\d,]*";
+const A_DECIMAL = `${A_WHOLE_NUMBER}(?:\\.\\d+)?`;
+const A_COUNT_IN_THOUSANDS = `${A_DECIMAL}k?`;
+
+function aLimitOf(figure: string, nouns: string): RegExp {
+  return new RegExp(`${NOT_INSIDE_A_WORD_OR_A_FIGURE}(${figure}(?:\\s*[-–]\\s*${figure})?)\\s*${nouns}`, "iu");
+}
+
 export const LIMIT_PATTERNS: LimitPattern[] = [
   {
-    regex: /(\d[\d,]*)\s*(gb|gib)\s*(storage|data|disk)/i,
+    regex: aLimitOf(A_DECIMAL, "(gb|gib)\\s*(storage|data|disk)"),
     unit: "storage",
     format: (m) => `${m[1]} ${m[2].toUpperCase()} storage`,
   },
   {
-    regex: /(\d[\d,]*)\s*(gb|gib)\s*(bandwidth|transfer|egress)/i,
+    regex: aLimitOf(A_DECIMAL, "(gb|gib)\\s*(bandwidth|transfer|egress)"),
     unit: "bandwidth",
     format: (m) => `${m[1]} ${m[2].toUpperCase()} bandwidth`,
   },
   {
-    regex: /(\d[\d,]*k?)\s*(mau|monthly active users)/i,
+    regex: aLimitOf(A_COUNT_IN_THOUSANDS, "(mau|monthly active users)"),
     unit: "users",
     format: (m) => `${m[1]} MAU`,
   },
   {
-    regex: /(\d[\d,]*k?)\s*(api\s*calls|requests|invocations|events|emails|messages)/i,
+    regex: aLimitOf(A_COUNT_IN_THOUSANDS, "(api\\s*calls|requests|invocations|events|emails|messages)"),
     unit: "requests",
     format: (m, description) => readRateLimit(description, m),
   },
   {
-    regex: /(\d[\d,]*)\s*(projects?|repos?|sites?|apps?|databases?|instances?)/i,
+    regex: aLimitOf(A_WHOLE_NUMBER, "(projects?|repos?|sites?|apps?|databases?|instances?)"),
     unit: "projects",
     format: (m) => `${m[1]} ${m[2]}`,
   },
