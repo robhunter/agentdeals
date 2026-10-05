@@ -8095,6 +8095,12 @@
             "first_new_capture": "https://web.archive.org/web/20260828172412/https://grafana.com/pricing/"
           }
         ]
+      },
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-10-05",
+        "detail": "Retracted 2026-10-05: the record compares our own listing text with Grafana Cloud's general free-tier card. Grafana's pricing page still states the k6 free tier as \"Limited to 500 virtual user hours per month\", so the free tier did not lose 500 VUh.",
+        "source_url": "https://grafana.com/pricing/"
       }
     },
     {
@@ -9575,6 +9581,12 @@
             "first_new_capture": "https://web.archive.org/web/20260410095355/https://grafana.com/pricing/"
           }
         ]
+      },
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-10-05",
+        "detail": "Retracted 2026-10-05: the record's before-state is our own listing text, and Grafana's free tier states the same terms today: \"Limited to 10k active series per month\", 14 days retention and \"Limited to 3 active users per month\". The $19 a month platform fee is the Pro plan's.",
+        "source_url": "https://grafana.com/pricing/"
       }
     },
     {
