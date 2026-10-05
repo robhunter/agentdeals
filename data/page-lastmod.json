@@ -4364,7 +4364,7 @@
       "changed": "2026-10-05"
     },
     "/vendor/browser-use": {
-      "hash": "c1f8610b51b46dfc",
+      "hash": "d503e046d65654f9",
       "changed": "2026-10-05"
     },
     "/vendor/browserbase": {
@@ -4859,7 +4859,7 @@
       "changed": "2026-10-05"
     },
     "/vendor/cognee": {
-      "hash": "57bb79a25a940530",
+      "hash": "6f364ee480c853bf",
       "changed": "2026-10-05"
     },
     "/vendor/cohere": {
@@ -6376,7 +6376,7 @@
       "changed": "2026-10-05"
     },
     "/vendor/imgix": {
-      "hash": "2a76479c32395a96",
+      "hash": "5cf0f3c0e864a46f",
       "changed": "2026-10-05"
     },
     "/vendor/imitate-email": {
@@ -6894,7 +6894,7 @@
       "changed": "2026-10-05"
     },
     "/vendor/logrocket": {
-      "hash": "a4ec8cf05b53e4da",
+      "hash": "55b09de00130a753",
       "changed": "2026-10-05"
     },
     "/vendor/logspot": {
@@ -7457,7 +7457,7 @@
       "changed": "2026-10-05"
     },
     "/vendor/odrive": {
-      "hash": "891e7c3629140221",
+      "hash": "a0034fcdd4d0fcf0",
       "changed": "2026-10-05"
     },
     "/vendor/oklch": {
@@ -8660,7 +8660,7 @@
       "changed": "2026-10-05"
     },
     "/vendor/stability-ai": {
-      "hash": "a2672d125befe003",
+      "hash": "24a1df67893af681",
       "changed": "2026-10-05"
     },
     "/vendor/stackblitz-com": {
@@ -8717,7 +8717,7 @@
       "daily": true
     },
     "/vendor/steel": {
-      "hash": "2ed0db729e07c6e6",
+      "hash": "ff4fcb9c50fe809e",
       "changed": "2026-10-05"
     },
     "/vendor/stellate": {
@@ -8725,7 +8725,7 @@
       "changed": "2026-10-05"
     },
     "/vendor/stickies": {
-      "hash": "2b90e0e8ab31e846",
+      "hash": "d92801737ddc857e",
       "changed": "2026-10-05"
     },
     "/vendor/stitch-labs": {
@@ -8847,7 +8847,7 @@
       "changed": "2026-10-05"
     },
     "/vendor/swaggerhub": {
-      "hash": "cfcd5997486acafb",
+      "hash": "847aa399868bf8da",
       "changed": "2026-10-05"
     },
     "/vendor/swaggo-swag": {
@@ -9207,7 +9207,7 @@
       "changed": "2026-10-05"
     },
     "/vendor/typesense-cloud": {
-      "hash": "ebabfca782acb1b5",
+      "hash": "fb5d8c6a0b6249d3",
       "changed": "2026-10-05"
     },
     "/vendor/ui-avatars": {
@@ -9514,7 +9514,7 @@
       "changed": "2026-10-05"
     },
     "/vendor/webvizio": {
-      "hash": "d0cf573dbaae52e6",
+      "hash": "b8352a2e2996c22d",
       "changed": "2026-10-05"
     },
     "/vendor/weglot": {
