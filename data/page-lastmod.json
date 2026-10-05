@@ -1292,8 +1292,8 @@
       "changed": "2026-10-03"
     },
     "/category/testing": {
-      "hash": "b1443d1569e2ff80",
-      "changed": "2026-10-04"
+      "hash": "272c58d62ffac460",
+      "changed": "2026-10-05"
     },
     "/category/tunneling-networking": {
       "hash": "ec3bdbd258c6edc1",
@@ -3471,7 +3471,7 @@
       "changed": "2026-10-04"
     },
     "/stack-check": {
-      "hash": "91bc40f45b6389a4",
+      "hash": "ace00a1613a964f5",
       "changed": "2026-10-05"
     },
     "/stacks": {
@@ -3531,8 +3531,8 @@
       "changed": "2026-10-04"
     },
     "/testing-alternatives": {
-      "hash": "fef63b790a34699d",
-      "changed": "2026-10-04"
+      "hash": "2d657fa90ecf2117",
+      "changed": "2026-10-05"
     },
     "/testing-free-tier-comparison-2026": {
       "hash": "9bf6ee481d49a366",
