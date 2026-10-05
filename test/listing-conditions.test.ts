@@ -209,7 +209,7 @@ const theVendorsWords = (offer: Offer) => {
 };
 const productionRuledOut = (offer: Offer, uses: string) => `No. ${offer.vendor}'s free tier is not for ${uses}, ${theVendorsWords(offer)}`;
 const commercialUseRuledOut = (offer: Offer) =>
-  `${offer.vendor}'s free tier is not for commercial use, ${theVendorsWords(offer)} A non-commercial project, such as a personal site, may still run on it in production.`;
+  `${offer.vendor}'s free tier is not for commercial use, ${theVendorsWords(offer)} Personal, non-commercial use of the free tier is still allowed.`;
 const stableBeside = (offer: Offer) => `We rate ${offer.vendor}'s pricing stable. This rating is about how its terms have changed, not what they allow.`;
 const PRODUCTION_CLOSING = "Consider free alternatives in Databases.";
 const COMMERCIAL_USE_CLOSING = "For commercial use, consider free alternatives in Databases.";
@@ -344,7 +344,7 @@ describe("a listing's conditions of use", () => {
       `${productionRuledOut(NEITHER, "production or commercial use")} ${stableBeside(NEITHER)} ${PRODUCTION_CLOSING}`);
   });
 
-  it("answers that only commercial use is ruled out, and that a non-commercial project may still run on it in production", async () => {
+  it("answers that only commercial use is ruled out, and that personal, non-commercial use of the free tier is still allowed", async () => {
     assert.strictEqual(await productionAnswers(withField.base, NO_COMMERCIAL_USE),
       `${commercialUseRuledOut(NO_COMMERCIAL_USE)} ${stableBeside(NO_COMMERCIAL_USE)} ${COMMERCIAL_USE_CLOSING}`);
   });
