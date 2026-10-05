@@ -1148,8 +1148,8 @@
       "changed": "2026-10-04"
     },
     "/category/databases": {
-      "hash": "d8cbcf9b63bd3cf3",
-      "changed": "2026-10-04"
+      "hash": "ba0be196c5bef74f",
+      "changed": "2026-10-05"
     },
     "/category/design": {
       "hash": "43f5c489840a83ef",
@@ -2686,8 +2686,8 @@
       "changed": "2026-10-04"
     },
     "/database-alternatives": {
-      "hash": "85c838b24e0d99f6",
-      "changed": "2026-10-04"
+      "hash": "d6ae4d9a50d4ded9",
+      "changed": "2026-10-05"
     },
     "/database-free-tier-comparison-2026": {
       "hash": "38b9e5d1e1c90675",
@@ -3103,8 +3103,8 @@
       "daily": true
     },
     "/firebase-alternatives": {
-      "hash": "2d51c985b2589c29",
-      "changed": "2026-10-04"
+      "hash": "09580a3162b7f0cb",
+      "changed": "2026-10-05"
     },
     "/firebase-studio-shutdown": {
       "daily": true
@@ -3249,8 +3249,8 @@
       "changed": "2026-10-04"
     },
     "/mongodb-alternatives": {
-      "hash": "e6b2bb012bc360ff",
-      "changed": "2026-10-04"
+      "hash": "a3206fc31e7b5e82",
+      "changed": "2026-10-05"
     },
     "/monitoring-alternatives": {
       "hash": "cafdd87ba4d26e24",
@@ -3471,7 +3471,7 @@
       "changed": "2026-10-04"
     },
     "/stack-check": {
-      "hash": "06e709022d2a294c",
+      "hash": "91bc40f45b6389a4",
       "changed": "2026-10-05"
     },
     "/stacks": {
@@ -3515,8 +3515,8 @@
       "changed": "2026-10-04"
     },
     "/supabase-vs-firebase": {
-      "hash": "9ad30d000dbab4e2",
-      "changed": "2026-10-04"
+      "hash": "d9250cf62dae7f04",
+      "changed": "2026-10-05"
     },
     "/team-collaboration-alternatives": {
       "hash": "a1a37f3b1e93aff2",
