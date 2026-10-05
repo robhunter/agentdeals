@@ -211,6 +211,35 @@ describe("perturbing a store", () => {
     assert.strictEqual(perturbTextFields(records, CATALOGUE_TEXT_FIELDS), 1);
     assert.strictEqual(records[0]!.limits, 5);
   });
+
+  it("replaces the digits in the text and quote of every condition, so a figure printed from a condition counts as one from our records", () => {
+    const records = [{
+      description: "Free plan",
+      conditions: [
+        { text: "Free projects pause after 7 days idle.", quote: "paused after 7 days", url: "https://example.com/docs/v2", read_on: "2026-10-04", rules_out: ["production"] },
+        { text: "Deleted after 90 days paused.", quote: "deleted after 90 days", url: "https://example.com/terms", read_on: "2026-10-04" },
+      ],
+    }];
+    assert.strictEqual(perturbTextFields(records, CATALOGUE_TEXT_FIELDS), 5);
+    assert.deepStrictEqual(records[0]!.conditions.map(c => [c.text, c.quote]), [
+      [`${PERTURBATION_SENTINEL} Free projects pause after 9 days idle.`, `${PERTURBATION_SENTINEL} paused after 9 days`],
+      [`${PERTURBATION_SENTINEL} Deleted after 99 days paused.`, `${PERTURBATION_SENTINEL} deleted after 99 days`],
+    ]);
+  });
+
+  it("leaves a condition's link, read date and ruling as they were", () => {
+    const records = [{ conditions: [{ text: "Non-commercial use only.", quote: "for personal use", url: "https://example.com/docs/v2", read_on: "2026-10-04", rules_out: ["commercial use"] }] }];
+    perturbTextFields(records, CATALOGUE_TEXT_FIELDS);
+    const [condition] = records[0]!.conditions;
+    assert.deepStrictEqual([condition!.url, condition!.read_on, condition!.rules_out], ["https://example.com/docs/v2", "2026-10-04", ["commercial use"]]);
+  });
+
+  it("perturbs nothing in a conditions field that is missing or not a list of records", () => {
+    const records: any[] = [{ tier: "free" }, { tier: "free", conditions: "none" }, { tier: "free", conditions: [null, "text"] }];
+    assert.strictEqual(perturbTextFields(records, CATALOGUE_TEXT_FIELDS), 3);
+    assert.strictEqual(records[1].conditions, "none");
+    assert.deepStrictEqual(records[2].conditions, [null, "text"]);
+  });
 });
 
 describe("a review date means a review happened, and the outcome says what it found", () => {
