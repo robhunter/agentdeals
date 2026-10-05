@@ -1095,7 +1095,7 @@
     {
       "vendor": "Appwrite Cloud",
       "category": "Databases",
-      "description": "Open-source BaaS — 75K MAU, 2 GB storage, 750K function executions/month, 5 GB bandwidth, 1 database, 1 bucket and 2 functions per project, 500K database reads and 250K writes a month. Limit of 2 projects. Projects pause after 1 week of inactivity and are deleted after 90 days paused. If a Free project reaches a resource limit, it freezes and the Console becomes read-only, until the next billing cycle, or the owner upgrades to Pro or removes the resources over the limit.",
+      "description": "Open-source BaaS — 75K MAU, 2 GB storage, 750K function executions/month, 5 GB bandwidth, 1 database, 1 bucket and 2 functions per project, 500K database reads and 250K writes a month. Limit of 2 projects.",
       "tier": "Free",
       "url": "https://appwrite.io/pricing",
       "tags": [
@@ -1125,7 +1125,27 @@
           }
         ],
         "reviewed": "2026-08-31"
-      }
+      },
+      "conditions": [
+        {
+          "text": "Free projects pause after 1 week of inactivity.",
+          "quote": "Free projects are paused after 1 week of inactivity.",
+          "url": "https://appwrite.io/pricing",
+          "read_on": "2026-10-05"
+        },
+        {
+          "text": "Free projects are deleted after 90 days paused.",
+          "quote": "free projects that stay paused for 90 days will be deleted, including all of their resources. Affected projects receive email alerts before anything is deleted.",
+          "url": "https://appwrite.io/changelog/entry/2026-06-29",
+          "read_on": "2026-10-05"
+        },
+        {
+          "text": "If a Free project reaches any resource limit, such as function executions or monthly active users, it freezes and the Console becomes read-only until the next billing cycle, or the owner upgrades to Pro or removes the resources over the limit.",
+          "quote": "Your project will freeze, and Appwrite Console will continue running in read-only mode. You need to upgrade to Pro, remove resources that exceed their limit, or wait for the next billing cycle, which resets usage limits.",
+          "url": "https://appwrite.io/pricing",
+          "read_on": "2026-10-05"
+        }
+      ]
     },
     {
       "vendor": "Aiven",
