@@ -133,7 +133,42 @@
         "text": "Hobby For individuals building personal projects and prototypes. $ 0 /mo + compute Deploy for free",
         "url": "https://render.com/pricing",
         "read_on": "2026-10-02"
-      }
+      },
+      "conditions": [
+        {
+          "text": "Render's docs say not to use Free instances for production applications.",
+          "quote": "Free instances have important limitations… Do not use them for production applications.",
+          "url": "https://render.com/docs/free",
+          "read_on": "2026-10-05",
+          "rules_out": [
+            "production"
+          ]
+        },
+        {
+          "text": "Free web services cannot send outbound traffic on ports 25, 465, or 587, commonly used for SMTP.",
+          "quote": "Free web services can't send outbound network traffic on ports 25, 465, or 587, commonly used for SMTP.",
+          "url": "https://render.com/docs/free",
+          "read_on": "2026-10-05"
+        },
+        {
+          "text": "A free Postgres database expires 30 days after creation and becomes inaccessible. You then have a 14-day grace period to upgrade to a paid plan before Render deletes it with all its data.",
+          "quote": "After a Free database expires, you have a grace period of 14 days to upgrade it to a paid compute plan.",
+          "url": "https://render.com/docs/free",
+          "read_on": "2026-10-05"
+        },
+        {
+          "text": "Free Postgres databases have no backups of any kind.",
+          "quote": "Free Render Postgres databases don't support any form of backups.",
+          "url": "https://render.com/docs/free",
+          "read_on": "2026-10-05"
+        },
+        {
+          "text": "A free web service loses any changes to its local filesystem, such as uploaded images or a SQLite database, every time it redeploys, restarts or spins down, and it cannot attach a persistent disk.",
+          "quote": "any changes to your web service's filesystem (uploaded images, local SQLite databases, etc.) are lost every time the service redeploys, restarts, or spins down.",
+          "url": "https://render.com/docs/free",
+          "read_on": "2026-10-05"
+        }
+      ]
     },
     {
       "vendor": "Cloudflare Workers",
