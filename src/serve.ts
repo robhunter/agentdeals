@@ -8023,7 +8023,7 @@ const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
   {
     slug: "vercel-vs-netlify",
     title: "Vercel vs Netlify Free Tier Comparison — 2026 Deep Dive",
-    metaDesc: "Compare Vercel and Netlify free tiers side-by-side. Bandwidth, serverless functions, build minutes, storage — verified data, cost-at-scale analysis, and hosting alternatives. [[freshness]]",
+    metaDesc: "Compare Vercel and Netlify free tiers side-by-side. Bandwidth, serverless functions, builds, storage — verified data, cost-at-scale analysis, and hosting alternatives. [[freshness]]",
     contextHtml: "",
     tag: "vercel-vs-netlify",
     primaryVendor: "Vercel",
@@ -20640,7 +20640,7 @@ ${mcpCtaCss()}
 
 function buildVercelVsNetlifyPage(): string {
   const title = "Vercel vs Netlify Free Tier Comparison — 2026 Deep Dive";
-  const metaDesc = "Compare Vercel and Netlify free tiers side-by-side. Bandwidth, serverless functions, build minutes, storage, commercial use — verified data, cost-at-scale analysis, and hosting alternatives. [[freshness]]";
+  const metaDesc = "Compare Vercel and Netlify free tiers side-by-side. Bandwidth, serverless functions, builds, storage, commercial use — verified data, cost-at-scale analysis, and hosting alternatives. [[freshness]]";
   const slug = "vercel-vs-netlify";
   const pubDate = "2026-03-26";
 
@@ -20658,11 +20658,11 @@ function buildVercelVsNetlifyPage(): string {
     { feature: "Bandwidth", vercel: "100 GB/mo Fast Data Transfer", netlify: "300 credits/mo (20 credits/GB ≈ 15 GB)", notes: "Vercel has 6.7× more raw bandwidth. Netlify's credit model bundles bandwidth with deploys and compute" },
     { feature: "Serverless Functions", vercel: "1M invocations, 4 hrs Active CPU", netlify: "Credit-based (shared pool)", notes: "Vercel has explicit function limits. Netlify shares credits across all usage" },
     { feature: "Edge Requests", vercel: "1M/month", netlify: "Included in credits", notes: "Vercel tracks edge requests separately" },
-    { feature: "Build Minutes", vercel: "Included (no separate limit)", netlify: "300/month (15 credits/deploy)", notes: "Vercel includes builds. Netlify's 300 credits cover ~20 deploys at 15 credits each" },
+    { feature: "Builds", vercel: "Included (no separate limit)", netlify: "15 credits per production deploy", notes: "Vercel includes builds. Netlify's 300 credits cover about 20 production deploys if spent on nothing else" },
     { feature: "Storage", vercel: "1 GB Blob Storage", netlify: "Varies by add-on", notes: "Vercel includes Blob Storage. Netlify has no built-in equivalent on free tier" },
     { feature: "Image Optimization", vercel: "5K transformations/month", netlify: "Add-on (not free)", notes: "Vercel includes image optimization. Netlify requires paid add-on" },
-    { feature: "Team Members", vercel: "1 (Hobby = personal)", netlify: "1 (Starter = personal)", notes: "Both free tiers are single-developer" },
-    { feature: "Commercial Use", vercel: "Non-commercial only", netlify: "Commercial OK", notes: "Critical difference: Vercel Hobby prohibits commercial use. Netlify Starter allows it" },
+    { feature: "Team Members", vercel: "1 (Hobby = personal)", netlify: "1 (Free plan)", notes: "Both free tiers are single-developer" },
+    { feature: "Commercial Use", vercel: "Non-commercial only", netlify: "Commercial OK", notes: "Critical difference: Vercel Hobby prohibits commercial use. Netlify Free allows it" },
   ];
 
   const comparisonTableRows = comparisonRows.map(r => `<tr>
@@ -20675,16 +20675,17 @@ function buildVercelVsNetlifyPage(): string {
   const differences = [
     { title: "Pricing Model: Usage-Based vs. Credit-Based", desc: "Vercel uses per-resource usage limits (100 GB bandwidth, 1M invocations, etc.) — each metric tracked independently. Netlify uses a unified credit pool (300 credits/month) shared across deploys, bandwidth, and compute. Vercel is more predictable; Netlify's credits can be confusing but offer flexibility." },
     { title: "Framework Support: Next.js-Native vs. Framework-Agnostic", desc: "Vercel is built by the Next.js team — you get the deepest integration, fastest builds, and latest features first. Netlify supports any framework equally well (Astro, SvelteKit, Nuxt, Remix, Hugo, 11ty) and doesn't favor any specific framework. Choose Vercel for Next.js, Netlify for everything else." },
-    { title: "Commercial Use: The Biggest Free Tier Difference", desc: "Vercel's Hobby plan explicitly prohibits commercial use — your side project with ads or a paid SaaS on the free tier violates the TOS. Netlify's Starter plan allows commercial use. If you're building anything that makes money, Netlify is the free choice; Vercel requires upgrading to Pro ($20/member/mo)." },
+    { title: "Commercial Use: The Biggest Free Tier Difference", desc: "Vercel's Hobby plan explicitly prohibits commercial use — your side project with ads or a paid SaaS on the free tier violates the TOS. Netlify's Free plan allows commercial use. If you're building anything that makes money, Netlify is the free choice; Vercel requires upgrading to Pro ($20 a month per developer seat)." },
     { title: "Credit Exhaustion vs. Hard Limits", desc: "When Netlify credits run out, sites pause (no overage charges). When Vercel limits are hit on the Hobby plan, requests may be throttled. Neither charges overages on free tiers, but the failure modes differ — Netlify stops serving entirely, Vercel degrades." },
   ];
 
   const scalingComparison = [
-    { metric: "Starter paid plan", vercel: "$20/member/mo (Pro)", netlify: "$19/member/mo (Pro)", notes: "Nearly identical price. Both per-seat billing" },
-    { metric: "Bandwidth at 1 TB", vercel: "$20/mo + $40 overage (1 TB included in Pro)", netlify: "$19/mo + usage (100 GB base)", notes: "Vercel Pro includes 1 TB. Netlify Pro includes less, so overages kick in sooner" },
-    { metric: "Build minutes", vercel: "Included in Pro", netlify: "25K min/mo in Pro", notes: "Both generous. Netlify has an explicit cap" },
+    { metric: "First paid plan", vercel: "$20/mo per developer seat (Pro)", netlify: "$9/mo, 1 member (Personal)", notes: "Netlify Personal includes 1,000 credits a month. Vercel has no plan between Hobby and Pro" },
+    { metric: "Team plan", vercel: "$20/mo per developer seat (Pro)", netlify: "$20/mo, unlimited members (Pro)", notes: "Vercel bills each developer seat; viewer seats are free. Netlify Pro charges for no seat" },
+    { metric: "Bandwidth at 1 TB", vercel: "$20/mo (1 TB included in Pro)", netlify: "$126/mo (20,000-credit Pro tier)", notes: "Vercel Pro includes 1 TB. Netlify charges 20 credits per GB, so 1 TB takes its largest Pro tier before any deploy or compute" },
+    { metric: "Builds", vercel: "Included in Pro", netlify: "15 credits per production deploy", notes: "Netlify has no build-minute allowance on current plans. Each production deploy draws on the plan's monthly credits" },
     { metric: "Serverless compute", vercel: "1,000 GB-hrs in Pro", netlify: "Credits pool in Pro", notes: "Vercel more predictable. Netlify credits blur compute vs bandwidth" },
-    { metric: "Enterprise SSO/SAML", vercel: "$20/mo Pro (included)", netlify: "$99/member/mo (Business)", notes: "Vercel includes SAML in Pro. Netlify requires 5× the price for SSO" },
+    { metric: "SAML SSO", vercel: "$300/mo add-on to Pro; included in Enterprise", netlify: "Enterprise only (price not published)", notes: "Neither $20 plan includes SAML SSO" },
     { metric: "Spending protection", vercel: "Spend management, alerts, hard limits", netlify: "Credit-based (auto-pause on free, alerts on Pro)", notes: "Both offer protection. Vercel's spend management is more granular" },
   ];
 
@@ -20811,13 +20812,13 @@ ${mcpCtaCss()}
     <div class="stat-card"><div class="stat-number">100 GB</div><div class="stat-label">Vercel Bandwidth</div></div>
     <div class="stat-card"><div class="stat-number green">300 credits</div><div class="stat-label">Netlify Monthly</div></div>
     <div class="stat-card"><div class="stat-number">$20/mo</div><div class="stat-label">Vercel Pro</div></div>
-    <div class="stat-card"><div class="stat-number green">$19/mo</div><div class="stat-label">Netlify Pro</div></div>
+    <div class="stat-card"><div class="stat-number green">$20/mo</div><div class="stat-label">Netlify Pro</div></div>
   </div>
 
   <div class="executive-summary">
     <p><strong>Quick verdict:</strong> Choose <strong>Vercel</strong> if you're building with Next.js and don't need commercial use on the free tier. Choose <strong>Netlify</strong> if you want framework flexibility and commercial use allowed on the free plan.</p>
     <p><strong>On free tiers:</strong> Vercel offers more generous explicit limits — 100 GB bandwidth, 1M function invocations, 1 GB Blob Storage, and 5K image optimizations. Netlify's credit-based model (300 credits/month) is harder to compare directly but covers roughly 15 GB bandwidth or ~20 deploys before credits run out.</p>
-    <p><strong>The big difference:</strong> Vercel's Hobby plan is <strong>non-commercial only</strong> — if your site earns revenue (ads, subscriptions, paid features), you need Pro at $20/member/mo. Netlify's Starter plan allows commercial use. This is the single most important distinction for most developers.</p>
+    <p><strong>The big difference:</strong> Vercel's Hobby plan is <strong>non-commercial only</strong> — if your site earns revenue (ads, subscriptions, paid features), you need Pro at $20 a month per developer seat. Netlify's Free plan allows commercial use. This is the single most important distinction for most developers.</p>
   </div>
 
   <div class="toc">
@@ -20837,7 +20838,7 @@ ${mcpCtaCss()}
   <div style="overflow-x:auto">
     <table class="pricing-table">
       <thead>
-        <tr><th>Feature</th><th style="color:#60a5fa">Vercel Hobby</th><th style="color:#3fb950">Netlify Starter</th><th>Notes</th></tr>
+        <tr><th>Feature</th><th style="color:#60a5fa">Vercel Hobby</th><th style="color:#3fb950">Netlify Free</th><th>Notes</th></tr>
       </thead>
       <tbody>
         ${comparisonTableRows}
@@ -20857,7 +20858,7 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="scale">3. Cost at Scale</h2>
-  <p class="section-intro">What happens when you outgrow the free tier? Vercel Pro ($20/member/mo) vs Netlify Pro ($19/member/mo).</p>
+  <p class="section-intro">What happens when you outgrow the free tier? Vercel's next plan is Pro at $20 a month per developer seat. Netlify's are Personal at $9 a month for one member, then Pro at $20 a month for unlimited members.</p>
   <div style="overflow-x:auto">
     <table class="pricing-table">
       <thead>
@@ -20869,7 +20870,7 @@ ${mcpCtaCss()}
     </table>
   </div>
   <div class="context-box">
-    <strong>Bottom line on scaling:</strong> Both Pro plans are nearly identical at $19-20/member/month. The key differentiator is that Vercel Pro includes SAML SSO (a $99/member feature on Netlify Business) and 1 TB bandwidth. If your team needs SSO, Vercel is 5× cheaper. For solo developers, the pricing difference is negligible — the commercial use restriction on Vercel's free tier matters more than the $1/mo Pro difference.
+    <strong>Bottom line on scaling:</strong> For one developer, Netlify's first paid plan costs less: Personal is $9 a month for 1,000 credits, against $20 for Vercel Pro. For a team, Vercel Pro costs $20 a month per developer seat, while Netlify Pro is $20 a month for unlimited members with 3,000 credits, and larger credit tiers cost up to $126 a month. Neither includes SAML SSO on its $20 plan: Vercel sells it as a $300-a-month add-on to Pro, and Netlify offers it only on Enterprise, at a price it doesn't publish. Vercel Pro includes 1 TB of bandwidth; Netlify charges 20 credits per GB. For solo developers, the commercial-use restriction on Vercel's free tier matters more than the price gap.
   </div>
 
   <h2 id="when">4. When to Choose Each</h2>
@@ -20877,7 +20878,7 @@ ${mcpCtaCss()}
     <h3>Decision Guide</h3>
     <div class="verdict-item">
       <strong>Choose Vercel if:</strong>
-      <p>You're building with Next.js (deepest integration, fastest builds, latest features first), your free tier project is non-commercial (personal blog, portfolio, learning project), or your team needs SAML SSO on Pro. Best for: Next.js apps, personal projects, teams requiring enterprise SSO.</p>
+      <p>You're building with Next.js (deepest integration, fastest builds, latest features first), your free tier project is non-commercial (personal blog, portfolio, learning project), or your team needs SAML single sign-on without an Enterprise plan (Vercel sells it as a $300-a-month add-on to Pro; Netlify offers it only on Enterprise). Best for: Next.js apps, personal projects, teams requiring enterprise SSO.</p>
     </div>
     <div class="verdict-item">
       <strong>Choose Netlify if:</strong>
