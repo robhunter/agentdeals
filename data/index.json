@@ -8005,7 +8005,27 @@
           }
         ],
         "reviewed": "2026-08-31"
-      }
+      },
+      "conditions": [
+        {
+          "text": "An unused free web app expires after 1 month, down from 3 months before January 2026.",
+          "quote": "Unused web apps will expire after 1 month, rather than 3 months.",
+          "url": "https://blog.pythonanywhere.com/221/",
+          "read_on": "2026-10-05"
+        },
+        {
+          "text": "Free accounts created on or after 2026-01-15 (2026-01-08 on the EU system) have no MySQL database and no scheduled tasks, which are in the $10-a-month Developer plan. Older free accounts keep them.",
+          "quote": "Older accounts, created before 2026-01-15 (or before 2026-01-08 in our EU system) will also have access to:",
+          "url": "https://help.pythonanywhere.com/pages/FreeAccountsFeatures/",
+          "read_on": "2026-10-05"
+        },
+        {
+          "text": "PythonAnywhere's terms let it irretrievably delete an account's content after six months of inactivity, so keep a backup.",
+          "quote": "We may irretrievably delete Your Content if your account has been inactive for six months.",
+          "url": "https://www.pythonanywhere.com/terms/",
+          "read_on": "2026-10-05"
+        }
+      ]
     },
     {
       "vendor": "GitHub Codespaces",
