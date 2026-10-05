@@ -7,7 +7,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-const { GATES_LEAVING_NO_FREE_TIER, gateFor, utcDate } = await import("../dist/ranking.js");
+const { GATES_LEAVING_NO_FREE_TIER, classifyTier, gateFor, utcDate } = await import("../dist/ranking.js");
 const { vendorSlugMap } = await import("../dist/vendor-slug.js");
 const { offerEnded, offerRetired } = await import("../dist/retirement.js");
 const { storedTermsWithheldPhrase, supersedingChange } = await import("../dist/superseded-description.js");
@@ -205,8 +205,12 @@ const restrictedPages = (): Population => ({
 const supersededTerms = (p: VendorPage) => supersededBy.has(p.primary);
 const withheldPhraseOf = (p: VendorPage) => storedTermsWithheldPhrase(supersededBy.get(p.primary)!);
 const publishingItsTerms = () => ungated().filter(p => !supersededTerms(p));
+const listsAnOngoingFreeTier = (p: VendorPage) => classifyTier(p.primary.tier).class === "free";
+const listsAnOfferThatRunsOut = (p: VendorPage) =>
+  classifyTier(p.primary.tier).class === "time_limited" && !(p.gate && GATES_LEAVING_NO_FREE_TIER.includes(p.gate.code));
+const askedAbout = (p: VendorPage) => (listsAnOfferThatRunsOut(p) ? "free offer" : "free tier");
 const freeAnswer = (p: VendorPage) => faqAnswer(p.html, `Is ${p.vendor} free?`);
-const productionAnswer = (p: VendorPage) => faqAnswer(p.html, `Is ${p.vendor}'s free tier good for production?`);
+const productionAnswer = (p: VendorPage) => faqAnswer(p.html, `Is ${p.vendor}'s ${askedAbout(p)} good for production?`);
 
 describe("the page a gated record renders does not answer the free-tier question with yes", () => {
   it("renders one page per vendor and reads the record that page renders", () => {
@@ -327,7 +331,7 @@ describe("the ungated pages keep the answer they had", () => {
       p => p.primary.source_check?.outcome === "ok"
         && !p.termsWithheld
         && unreachableNoticeForUrl(p.primary.url) === null
-        && p.primary.tier.toLowerCase() !== "none"
+        && listsAnOngoingFreeTier(p)
         && !p.primary.description.toLowerCase().includes("no free tier"),
     );
     assertPopulationFloor(plainlyFree.length, 101, "ungated pages are plainly free");
@@ -688,8 +692,8 @@ describe("the same page an ungated record renders is unchanged", () => {
   });
 
   it("still asks what its free tier is and whether that tier is reliable", () => {
-    const silentOnTier = ungated().filter(p => !asks(p.html, `What is ${p.vendor}'s free tier?`)).map(p => p.slug);
-    const silentOnReliability = ungated().filter(p => !asks(p.html, `Is ${p.vendor}'s free tier reliable?`)).map(p => p.slug);
+    const silentOnTier = ungated().filter(listsAnOngoingFreeTier).filter(p => !asks(p.html, `What is ${p.vendor}'s free tier?`)).map(p => p.slug);
+    const silentOnReliability = ungated().filter(p => !asks(p.html, `Is ${p.vendor}'s ${askedAbout(p)} reliable?`)).map(p => p.slug);
     assert.deepStrictEqual(silentOnTier.slice(0, 20), [], "ungated pages that stopped asking what the tier is");
     assert.deepStrictEqual(silentOnReliability.slice(0, 20), [], "ungated pages that stopped asking whether it is reliable");
   });
@@ -713,9 +717,10 @@ describe("the same page an ungated record renders is unchanged", () => {
   });
 
   it("still opens its verdict on the free tier", () => {
-    const notOpening = publishingItsTerms().filter(p => !pageProse(p).includes(`${p.vendor}'s free tier offers `)).map(p => p.slug);
+    const listingAFreeTier = publishingItsTerms().filter(p => !listsAnOfferThatRunsOut(p));
+    const notOpening = listingAFreeTier.filter(p => !pageProse(p).includes(`${p.vendor}'s free tier offers `)).map(p => p.slug);
     assert.ok(
-      notOpening.length < publishingItsTerms().length * 0.01,
+      notOpening.length < listingAFreeTier.length * 0.01,
       `${notOpening.length} ungated verdicts do not open on the free tier: ${notOpening.slice(0, 20).join(", ")}`,
     );
   });
@@ -733,14 +738,14 @@ describe("the same page an ungated record renders is unchanged", () => {
 
   it("still rates the free tier in its reliability answer", () => {
     const rating = ungated().filter(p => {
-      const answer = faqAnswer(p.html, `Is ${p.vendor}'s free tier reliable?`);
+      const answer = faqAnswer(p.html, `Is ${p.vendor}'s ${askedAbout(p)} reliable?`);
       return /is considered stable|requires caution|is considered risky/.test(answer);
     }).length;
     assertSharesPopulation(rating, ungatedPages(), 0.25, "ungated pages rate the tier");
   });
 
   it("still answers when the reader will outgrow it", () => {
-    const unanswered = ungated().filter(p => !outgrowQuestionAsked(p)).map(p => p.slug);
+    const unanswered = ungated().filter(listsAnOngoingFreeTier).filter(p => !outgrowQuestionAsked(p)).map(p => p.slug);
     assert.deepStrictEqual(unanswered.slice(0, 20), [], "ungated pages that stopped answering when the reader outgrows the tier");
   });
 

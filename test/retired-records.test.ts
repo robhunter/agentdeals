@@ -7,7 +7,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const { offerRetired, recordedTierSentence } = await import("../dist/retirement.js");
-const { gateFor, utcDate } = await import("../dist/ranking.js");
+const { classifyTier, gateFor, utcDate } = await import("../dist/ranking.js");
 const { CITATION_CLASSES } = await import("../dist/change-citation.js");
 const { loadDealChanges, refusalsForVendor, gateForOffer } = await import("../dist/data.js");
 const { badgeWithholding, withholdsTheTerms } = await import("../dist/vendor-verdict.js");
@@ -268,7 +268,7 @@ describe("a record that is not retired keeps everything the gate would take away
         && !termsWithheldFor(p.offer.vendor)
         && unreachableNoticeForUrl(p.offer.url) === null
         && supersedingChange(p.offer, changesFor(p.offer.vendor)) === null
-        && p.offer.tier.toLowerCase() !== "none"
+        && classifyTier(p.offer.tier).class === "free"
         && !p.offer.description.toLowerCase().includes("no free tier"),
     );
     assertPopulationFloor(plainlyFree.length, 101, "vendor pages are plainly free");
