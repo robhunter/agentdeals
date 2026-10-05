@@ -256,3 +256,21 @@ describe("budget builder", () => {
     assert.strictEqual(nodes.get("share-bar")?.style.display, undefined);
   });
 });
+
+describe("compare tool", () => {
+  it("renders both vendor cards for a comparison in which each vendor has a recorded change, one of them no longer in force", async () => {
+    const { context, nodes } = runPageScripts(await body("/compare-tool"), "");
+    const [first, second] = (await (await fetch(`${base}/api/offers?limit=2`)).json()).offers;
+    const comparison = await (await fetch(`${base}/api/compare?a=${encodeURIComponent(first.vendor)}&b=${encodeURIComponent(second.vendor)}`)).json();
+    const [change] = (await (await fetch(`${base}/api/changes?since=2000-01-01`)).json()).changes;
+    comparison.vendor_a.deal_changes = [{ ...change, resolution: null }];
+    comparison.vendor_b.deal_changes = [{ ...change, resolution: { state: "reversed", date: change.date } }];
+
+    (context.renderComparison as (data: unknown) => void)(comparison);
+
+    const rendered = nodes.get("results")?.innerHTML ?? "";
+    assert.strictEqual((rendered.match(/class="vendor-card"/g) ?? []).length, 2, rendered.slice(0, 300));
+    assert.strictEqual((rendered.match(/class="change-item"/g) ?? []).length, 1);
+    assert.strictEqual((rendered.match(/class="change-item change-resolved"/g) ?? []).length, 1);
+  });
+});

@@ -46239,6 +46239,7 @@ ${globalNavCss()}
   var CORRECTED_DATE_PREFIX = ${JSON.stringify(CORRECTED_DATE_PREFIX)};
   var CORRECTION_TO_OUR_OWN_RECORD = ${JSON.stringify(CORRECTION_TO_OUR_OWN_RECORD)};
   var OURS_ARCHIVE_OUTCOME = ${JSON.stringify(OURS_ARCHIVE_OUTCOME)};
+  ${isNoLongerInForce.toString()}
 
   function changeEntryDateLabel(c) {
     if (c.date_meaning === EFFECTIVE_DATE_PREFIX) return EFFECTIVE_DATE_PREFIX + ' ' + c.date;
