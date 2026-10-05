@@ -75,7 +75,7 @@ import { getBestReferralCode, listAllReferralCodes, AGENT_SUBMISSION_RETIRED_REA
 import { DOCUMENTED_GROUPS, HOMEPAGE_GROUPS, endpointHref, endpointPathHref, endpointsInGroups, exampleSubjects, readableRequestLines, withdrawalReasonFor, type ApiEndpoint, type ExampleSubjects } from "./api-inventory.js";
 import { MCP_TOOLS, MCP_TOOL_COUNT, mcpToolNameList } from "./mcp-tool-inventory.js";
 import { ACCELERATOR_CREDIT_PROGRAM, ACCELERATOR_CREDIT_VENDOR, NOTHING_CHANGING_SOON_HTML, RECENT_CHANGES_ON_THE_HOME_PAGE, UPCOMING_DEADLINES_ON_THE_HOME_PAGE, acceleratorCreditClause, atMostShownHere, onlyTheMostRecentShown, programCeiling } from "./homepage-claims.js";
-import { REFERRAL_CONDITIONS_HEADING, allOurReferralLinks, heldReferralLinkForVendor, ourReferralLinkFor, platformCodeAsVendorReferral, referralLinkCountClause, referrerDisclosureSentence } from "./referral-surfaces.js";
+import { REFERRAL_CONDITIONS_HEADING, allOurReferralLinks, heldReferralLinkForVendor, ourReferralLinkFor, platformCodeAsVendorReferral, platformCodeLinkForNamedVendor, referralLinkCountClause, referrerDisclosureSentence } from "./referral-surfaces.js";
 import type { VendorReferralAnswer } from "./referral-surfaces.js";
 import { runHealthCheck, getLastReport, startPeriodicChecks } from "./referral-health.js";
 import { configureDurableBackend, hydrateDurableStores, persistDurableStores, identityStorageReport } from "./durable-store.js";
@@ -610,6 +610,15 @@ function changeVendorLinkHtml(name: string, attrs = ""): string {
 
 function handwrittenVendorLinkHtml(slug: string, name: string, attrs = ""): string {
   return vendorLinkHtml(servedVendorSlug(slug) === null ? null : slug, name, attrs);
+}
+
+function guideRowReferralHtml(vendorName: string): string {
+  const link = platformCodeLinkForNamedVendor(vendorName);
+  if (!link) return "";
+  const conditionsHtml = link.restrictions.length > 0
+    ? `<span class="referral-conditions-heading" style="display:block;margin-top:.35rem;font-size:.65rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-dim);font-family:var(--mono)">${REFERRAL_CONDITIONS_HEADING}</span><ul class="referral-conditions" style="margin:.2rem 0 .35rem;padding:.3rem .55rem .3rem 1.4rem;border-left:2px solid #d29922;border-radius:0 4px 4px 0;background:rgba(210,153,34,0.08);font-size:.75rem;color:var(--text);line-height:1.45">${link.restrictions.map(r => `<li>${escHtmlServer(r)}</li>`).join("")}</ul>`
+    : "";
+  return `<div class="row-referral" style="margin-top:.4rem;color:var(--text)"><span style="display:block">Sign up via our referral link and get ${escHtmlServer(link.refereeBenefit)}</span>${conditionsHtml}<a href="${escHtmlServer(link.url)}" rel="noopener sponsored" target="_blank">Get ${escHtmlServer(link.refereeBenefit)} &rarr;</a> <span style="font-size:.75rem;color:var(--text-dim)">${escHtmlServer(referrerDisclosureSentence(link.compensation))} See our <a href="/disclosure">affiliate disclosure</a>.</span></div>`;
 }
 
 function changeVendorUrlField(name: string): { url?: string } {
@@ -18999,7 +19008,7 @@ function buildHetznerPricing2026Page(): string {
       <td style="font-family:var(--mono);font-size:.85rem">${escHtmlServer(c.spec)}</td>
       <td style="font-family:var(--mono);font-weight:600;color:var(--accent)">${escHtmlServer(c.price)}</td>
       <td>${escHtmlServer(c.region)}</td>
-      <td style="color:var(--text-muted);font-size:.85rem">${escHtmlServer(c.note)}</td>
+      <td style="color:var(--text-muted);font-size:.85rem">${escHtmlServer(c.note)}${isHetzner ? "" : guideRowReferralHtml(c.vendor)}</td>
       <td class="figure-provenance" style="color:var(--text-muted);font-size:.85rem">${isHetzner ? hetznerReadProvenanceHtml() : figureProvenanceHtml(`${c.spec} ${c.price}`, c.vendor, vendorSlug)}</td>
     </tr>`;
   }).join("\n        ");

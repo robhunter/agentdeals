@@ -3,7 +3,10 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const PLATFORM_CODES_PATH = path.join(__dirname, "..", "data", "platform_codes.json");
+
+function platformCodesPath(): string {
+  return process.env.AGENTDEALS_PLATFORM_CODES_PATH || path.join(__dirname, "..", "data", "platform_codes.json");
+}
 
 export type ReferrerCompensation = "commission" | "credit" | "none";
 
@@ -46,13 +49,14 @@ let cachedPlatformCodes: PlatformCode[] | null = null;
 function loadPlatformCodes(): PlatformCode[] {
   if (cachedPlatformCodes) return cachedPlatformCodes;
 
-  if (!fs.existsSync(PLATFORM_CODES_PATH)) {
+  const storePath = platformCodesPath();
+  if (!fs.existsSync(storePath)) {
     cachedPlatformCodes = [];
     return cachedPlatformCodes;
   }
 
   try {
-    const raw = fs.readFileSync(PLATFORM_CODES_PATH, "utf-8");
+    const raw = fs.readFileSync(storePath, "utf-8");
     const data = JSON.parse(raw) as { platform_codes?: PlatformCode[] };
     cachedPlatformCodes = Array.isArray(data.platform_codes) ? data.platform_codes : [];
   } catch {

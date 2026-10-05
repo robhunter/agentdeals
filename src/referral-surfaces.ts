@@ -114,6 +114,24 @@ export function heldReferralLinkForVendor(offers: Offer[], vendorName: string): 
   return allOurReferralLinks(offers).find(link => toSlug(link.vendor) === slug) ?? null;
 }
 
+function signupDomainName(url: string): string | null {
+  try {
+    const labels = new URL(url).hostname.split(".");
+    return labels.length >= 2 ? labels[labels.length - 2] : null;
+  } catch {
+    return null;
+  }
+}
+
+export function platformCodeLinkForNamedVendor(vendorName: string): OurReferralLink | null {
+  const filedUnderTheName = ourReferralLinkFor(vendorName);
+  if (filedUnderTheName) return filedUnderTheName;
+  const slug = toSlug(vendorName);
+  if (!slug) return null;
+  const codeOnVendorDomain = getAllPlatformCodes().find(code => signupDomainName(code.referral_url) === slug);
+  return codeOnVendorDomain ? ourReferralLinkFor(codeOnVendorDomain.vendor) : null;
+}
+
 export function allOurReferralLinks(offers: Offer[]): OurReferralLink[] {
   const offerBySlug = new Map<string, Offer>();
   for (const offer of offers) {

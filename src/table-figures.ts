@@ -4,9 +4,11 @@ const TABLE = /<table\b[\s\S]*?<\/table>/g;
 const CELL = /<t[dh]\b[^>]*>[\s\S]*?<\/t[dh]>/g;
 const HEADING_OR_TABLE = /<(h[1-6])\b[^>]*>([\s\S]*?)<\/\1>|<table\b[\s\S]*?<\/table>/g;
 const CAPTION = /<caption\b[^>]*>([\s\S]*?)<\/caption>/;
+const ROW_REFERRAL_BLOCK = /<div class="row-referral"[\s\S]*?<\/div>/g;
 
 function cellText(fragment: string): string {
   return fragment
+    .replace(ROW_REFERRAL_BLOCK, " ")
     .replace(/<[^>]*>/g, " ")
     .replace(/&amp;/g, "&")
     .replace(/&[a-z]+;/g, " ")
