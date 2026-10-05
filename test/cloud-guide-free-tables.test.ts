@@ -50,6 +50,16 @@ const STATED_ON_THE_PRODUCTS_OWN_PAGE: Record<string, string> = {
   "Bandwidth": "https://azure.microsoft.com/en-us/pricing/details/bandwidth/",
 };
 
+const AWS_FREE_PAGE = "https://aws.amazon.com/free/";
+
+const STATED_ON_THE_AWS_PRODUCTS_OWN_PAGE: Record<string, string> = {
+  "AWS Lambda": "https://aws.amazon.com/lambda/pricing/",
+  "AWS CodeCommit": "https://aws.amazon.com/codecommit/pricing/",
+  "AWS CodePipeline": "https://aws.amazon.com/codepipeline/pricing/",
+  "AWS CodeBuild": "https://aws.amazon.com/codebuild/pricing/",
+  "AWS Step Functions": "https://aws.amazon.com/step-functions/pricing/",
+};
+
 const NO_STATIC_PAGE_STATES_THE_ROW: Record<string, string[]> = {
   [AZURE]: [
     "Azure Virtual Machines",
@@ -62,7 +72,6 @@ const NO_STATIC_PAGE_STATES_THE_ROW: Record<string, string[]> = {
     "Azure OpenAI Service",
   ],
   [AWS]: [
-    "AWS Lambda",
     "Amazon DynamoDB",
     "Amazon CloudFront",
     "Amazon SNS",
@@ -71,15 +80,10 @@ const NO_STATIC_PAGE_STATES_THE_ROW: Record<string, string[]> = {
     "Amazon ECR Public",
     "AWS CloudFormation",
     "Amazon Cognito",
-    "AWS CodeCommit",
-    "AWS CodePipeline",
-    "AWS CodeBuild",
     "AWS X-Ray",
-    "AWS Step Functions",
     "Amazon Q Developer",
     "Amazon SageMaker",
     "Amazon Bedrock",
-    "Amazon AppStream 2.0",
     "Amazon Lightsail",
   ],
   [GCP]: [
@@ -89,9 +93,13 @@ const NO_STATIC_PAGE_STATES_THE_ROW: Record<string, string[]> = {
   ],
 };
 
-const NO_FETCHABLE_PAGE_STATES_THE_AZURE_ROW = ["Azure Virtual Machines", "Azure Blob Storage", "Azure Files", "Azure Service Bus"];
+const NO_FETCHABLE_PAGE_STATES_THE_ROW: Record<string, string[]> = {
+  [AZURE]: ["Azure Virtual Machines", "Azure Blob Storage", "Azure Files", "Azure Service Bus"],
+  [AWS]: ["AWS X-Ray"],
+};
 
 const RECORD_SOURCE_LINK = /<a\b[^>]*class="record-source"/g;
+const ANY_LINK = /<a href="([^"]+)"/g;
 
 let server: ChildProcess;
 const html = new Map<string, string>();
@@ -101,6 +109,7 @@ interface Row {
   name: string;
   citations: string[];
   recordSources: number;
+  links: string[];
 }
 
 function textOf(markup: string): string {
@@ -133,6 +142,7 @@ function freeOfferRows(page: string): Row[] {
         name: textOf(cells[0].replace(new RegExp(SOURCE_MARKER_IN_A_CELL.source, "g"), "")),
         citations: cells.flatMap((cell) => [...cell.matchAll(CITATION)].map(([, href]) => href)),
         recordSources: cells.reduce((count, cell) => count + (cell.match(RECORD_SOURCE_LINK) ?? []).length, 0),
+        links: cells.flatMap((cell) => [...cell.matchAll(ANY_LINK)].map(([, href]) => href)),
       })));
 }
 
@@ -222,6 +232,19 @@ describe("the cloud guides' free-offer tables name each service once and cite pa
     assert.deepStrictEqual(uncited, []);
   });
 
+  it("cites the product's own pricing page on each AWS row whose quota only that page states", () => {
+    const rows = freeOfferRows(AWS);
+    const uncited = Object.entries(STATED_ON_THE_AWS_PRODUCTS_OWN_PAGE)
+      .filter(([name, page]) => !rows.some((row) => row.name === name && row.citations.includes(page)))
+      .map(([name]) => name);
+    assert.deepStrictEqual(uncited, []);
+  });
+
+  it("links aws.amazon.com/free, which states no service's quota, from no AWS row", () => {
+    const linked = freeOfferRows(AWS).filter((row) => row.links.includes(AWS_FREE_PAGE)).map((row) => `${row.section}: ${row.name}`);
+    assert.deepStrictEqual(linked, []);
+  });
+
   it("gives every free-offer row a citation of its own, except the rows no static page states, named here", () => {
     const uncited = PAGES.flatMap((page) =>
       freeOfferRows(page).filter((row) => row.citations.length === 0).map((row) => `${page}: ${row.name}`)).sort();
@@ -235,15 +258,19 @@ describe("the cloud guides' free-offer tables name each service once and cite pa
     const doubled = rows.filter((row) => row.citations.length > 0 && row.recordSources > 0).map((row) => `${row.page}: ${row.name}`);
     assert.deepStrictEqual(doubled, []);
     const keptOnUncited = rows.filter((row) => row.citations.length === 0 && row.recordSources > 0).map((row) => `${row.page}: ${row.name}`);
-    assert.ok(keptOnUncited.includes(`${AWS}: AWS Lambda`), keptOnUncited.join("; "));
+    assert.ok(keptOnUncited.includes(`${AWS}: Amazon Cognito`), keptOnUncited.join("; "));
     assert.ok(keptOnUncited.includes(`${GCP}: Firebase Auth`), keptOnUncited.join("; "));
   });
 
-  it("links no page from the Azure rows whose figures no page a reader can fetch states, not even the catalogue record's", () => {
-    const rows = freeOfferRows(AZURE);
-    const linked = NO_FETCHABLE_PAGE_STATES_THE_AZURE_ROW.filter((name) => {
-      const row = rows.find((one) => one.name === name);
-      return row === undefined || row.citations.length > 0 || row.recordSources > 0;
+  it("links no page from the Azure and AWS rows whose figures no page a reader can fetch states, not even the catalogue record's", () => {
+    const linked = Object.entries(NO_FETCHABLE_PAGE_STATES_THE_ROW).flatMap(([page, names]) => {
+      const rows = freeOfferRows(page);
+      return names
+        .filter((name) => {
+          const row = rows.find((one) => one.name === name);
+          return row === undefined || row.links.length > 0;
+        })
+        .map((name) => `${page}: ${name}`);
     });
     assert.deepStrictEqual(linked, []);
   });

@@ -97,9 +97,11 @@ function rowCitesItsOwnSource(html: string, at: number): boolean {
 }
 
 const AZURE_GUIDE = "/azure-free-tier-2026";
+const AWS_GUIDE = "/aws-free-tier-2026";
 
 const ROWS_NO_FETCHABLE_PAGE_STATES: Record<string, string[]> = {
   [AZURE_GUIDE]: ["Azure Virtual Machines", "Azure Blob Storage", "Azure Files", "Azure Service Bus"],
+  [AWS_GUIDE]: ["AWS X-Ray"],
 };
 
 interface TabulatedSlot {
