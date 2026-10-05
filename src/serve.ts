@@ -808,6 +808,11 @@ function conditionsAfterTheTermsHtml(offer: StoredTermsOf): string {
   return conditionsHtml(conditionsBesideTheStoredTerms(offer), escHtmlServer);
 }
 
+function vendorPageConditionsHtml(vendorName: string): string {
+  const primary = vendorVerdictContext(vendorName, utcDate())?.primary;
+  return primary ? conditionsAfterTheTermsHtml(primary) : "";
+}
+
 function withConditionsWhenWhole(offer: StoredTermsOf, printed: string): string {
   return printed === offer.description ? withConditionsAfter(printed, conditionsBesideTheStoredTerms(offer)) : printed;
 }
@@ -19108,6 +19113,7 @@ ${mcpCtaCss()}
   </div>
   <p class="section-intro" style="margin-top:0"><strong>Read this table by availability first.</strong> The ${unorderable.length} cheapest listed prices all belong to plans marked not available, so the lowest number on the page is not a number you can pay. The first orderable row is ${escHtmlServer(cheapestOrderable.sku)} at ${eur(cheapestOrderable.eur)}, and it is a ${cheapestOrderable.vcpu}-vCPU, ${cheapestOrderable.ram} GB machine — less server than the ${escHtmlServer(cheapestOverall.sku)} above it at ${eur(cheapestOverall.eur)}.</p>
   <p class="section-intro">A new AX42 dedicated server in Germany costs ${eur(HETZNER_AX42_GERMANY.newOrder)} a month and a new AX102 ${eur(HETZNER_AX102_GERMANY.newOrder)}, excluding IPv4. The one-off setup fee is €${HETZNER_AX42_GERMANY.setupFee} for an AX42 and €${HETZNER_AX102_GERMANY.setupFee} for an AX102. These prices were read from Hetzner's price API on ${HETZNER_PRICES_READ}.</p>
+  ${vendorPageConditionsHtml("Hetzner")}
 
   <h2 id="april">2. What the April 1 Adjustment Did</h2>
   <p class="section-intro">The April 1, 2026 round is the one this page was first written about. It applied to all regions and all customers, new and existing, with no grandfathering. These are historical figures for that event, not current prices — for what a plan costs now, use the table above.</p>
@@ -32676,10 +32682,12 @@ function buildAwsFreeTier2026Page(): string {
     slug: string;
     limits: string;
     category: string;
+    source?: string;
+    noFetchablePageStatesIt?: true;
   }
 
   const alwaysFreeServices: AwsService[] = [
-    { name: "AWS Lambda", slug: "aws", limits: "1M requests/month, 400K GB-seconds compute", category: "Compute" },
+    { name: "AWS Lambda", slug: "aws", limits: "1M requests/month, 400K GB-seconds compute", category: "Compute", source: "https://aws.amazon.com/lambda/pricing/" },
     { name: "Amazon DynamoDB", slug: "aws", limits: "25 GB storage, 25 WCU/RCU provisioned capacity", category: "Database" },
     { name: "Amazon CloudFront", slug: "aws", limits: "1 TB data transfer out, 10M HTTP/HTTPS requests, 2M CloudFront Function invocations/month", category: "CDN" },
     { name: "Amazon SNS", slug: "aws", limits: "1M publishes, 100K HTTP deliveries, 1K email deliveries/month", category: "Messaging" },
@@ -32688,18 +32696,17 @@ function buildAwsFreeTier2026Page(): string {
     { name: "Amazon ECR Public", slug: "amazon-ecr-public", limits: "50 GB storage, 500 GB/month transfer out anonymously, 5 TB/month with an AWS account", category: "Containers" },
     { name: "AWS CloudFormation", slug: "aws", limits: "Unlimited for AWS resources (third-party charges may apply)", category: "IaC" },
     { name: "Amazon Cognito", slug: "aws", limits: "10,000 MAUs a month (Lite or Essentials tier, direct or social sign-in); 50 MAUs for SAML/OIDC. User pools created by November 22, 2024 keep 50,000 on Lite.", category: "Auth" },
-    { name: "AWS CodeCommit", slug: "aws", limits: "5 active users, 50 GB storage, 10K Git requests/month", category: "DevOps" },
-    { name: "AWS CodePipeline", slug: "aws", limits: "1 free active pipeline/month", category: "DevOps" },
-    { name: "AWS CodeBuild", slug: "aws", limits: "100 build minutes/month (general1.small)", category: "DevOps" },
-    { name: "AWS X-Ray", slug: "aws", limits: "100K traces recorded, 1M traces scanned/month", category: "Monitoring" },
-    { name: "AWS Step Functions", slug: "aws", limits: "4,000 state transitions/month", category: "Compute" },
+    { name: "AWS CodeCommit", slug: "aws", limits: "5 active users, 50 GB storage, 10K Git requests/month", category: "DevOps", source: "https://aws.amazon.com/codecommit/pricing/" },
+    { name: "AWS CodePipeline", slug: "aws", limits: "1 V1 pipeline/month, or 100 V2 action execution minutes/month", category: "DevOps", source: "https://aws.amazon.com/codepipeline/pricing/" },
+    { name: "AWS CodeBuild", slug: "aws", limits: "100 build minutes/month (general1.small or arm1.small)", category: "DevOps", source: "https://aws.amazon.com/codebuild/pricing/" },
+    { name: "AWS X-Ray", slug: "aws", limits: "100K traces recorded, 1M traces scanned/month", category: "Monitoring", noFetchablePageStatesIt: true },
+    { name: "AWS Step Functions", slug: "aws", limits: "4,000 state transitions/month", category: "Compute", source: "https://aws.amazon.com/step-functions/pricing/" },
     { name: "Amazon Q Developer", slug: "amazon-q-developer", limits: "Inline suggestions, chat, 50 agent invocations/month (always free for individuals)", category: "AI Coding" },
   ];
 
   const trialServices: AwsService[] = [
     { name: "Amazon SageMaker", slug: "aws", limits: "250 hrs/month ml.t3.medium for Studio notebooks (2 months)", category: "AI/ML" },
     { name: "Amazon Bedrock", slug: "aws", limits: "Select foundation models with limited free inference (varies by model)", category: "AI/ML" },
-    { name: "Amazon AppStream 2.0", slug: "aws", limits: "40 hrs/month stream.standard.small (first 12 months)", category: "Desktop" },
     { name: "Amazon Lightsail", slug: "aws", limits: "750 hrs/month of 512 MB instance (3 months free)", category: "Hosting" },
   ];
 
@@ -32739,17 +32746,15 @@ function buildAwsFreeTier2026Page(): string {
     { name: "Vercel", slug: "vercel", freeTier: "Hobby plan (personal, non-commercial use only): 100 deployments/day, 100 GB Fast Data Transfer/month, 1M function invocations/month.", strength: "Best Next.js hosting, instant previews", bestFor: "Frontend apps and Jamstack sites" },
   ];
 
-  const alwaysFreeRows = alwaysFreeServices.map(s => `<tr>
+  const awsServiceRow = (s: AwsService) => `<tr${s.noFetchablePageStatesIt ? ` ${NO_FETCHABLE_PAGE_STATES_THE_ROW}` : ""}>
       <td style="font-weight:600">${escHtmlServer(s.name)}</td>
-      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(s.limits)}</td>
+      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(s.limits)}${s.source ? figureSourceLinkHtml(s.source, escHtmlServer) : ""}</td>
       <td style="color:var(--text-muted);font-size:.8rem">${escHtmlServer(s.category)}</td>
-    </tr>`).join("\n        ");
+    </tr>`;
 
-  const trialRows = trialServices.map(s => `<tr>
-      <td style="font-weight:600">${escHtmlServer(s.name)}</td>
-      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(s.limits)}</td>
-      <td style="color:var(--text-muted);font-size:.8rem">${escHtmlServer(s.category)}</td>
-    </tr>`).join("\n        ");
+  const alwaysFreeRows = alwaysFreeServices.map(awsServiceRow).join("\n        ");
+
+  const trialRows = trialServices.map(awsServiceRow).join("\n        ");
 
   const gotchaCards = gotchas.map(g => `<div class="diff-card" style="border-left-color:#f85149">
       <h3>${escHtmlServer(g.title)} <span style="font-size:.75rem;color:#f85149;font-weight:400">${escHtmlServer(g.cost)}</span></h3>
@@ -33083,6 +33088,7 @@ function buildGcpFreeTier2026Page(): string {
     category: string;
     highlight?: boolean;
     source?: string;
+    conditionsOf?: string;
   }
 
   const GOOGLE_FREE_TIER_LIST = "https://docs.cloud.google.com/free/docs/free-cloud-features#free-tier-usage-limits";
@@ -33090,7 +33096,7 @@ function buildGcpFreeTier2026Page(): string {
   const FREE_TRIAL_LIMITS = "During the trial you cannot add GPUs to VM instances, use Google Cloud Marketplace, request a quota increase or create Windows Server VMs, and the credit does not pay for partner generative AI models offered as a managed API (model as a service).";
 
   const alwaysFreeServices: GcpService[] = [
-    { name: "Compute Engine (e2-micro)", slug: "google-compute-engine", limits: "1 e2-micro VM/month (us-west1, us-central1, us-east1), 30 GB standard persistent disk", category: "Compute", source: GOOGLE_FREE_TIER_LIST },
+    { name: "Compute Engine (e2-micro)", slug: "google-compute-engine", limits: "1 e2-micro VM/month (us-west1, us-central1, us-east1), 30 GB standard persistent disk", category: "Compute", source: GOOGLE_FREE_TIER_LIST, conditionsOf: "Google Compute Engine" },
     { name: "Cloud Run", slug: "google-cloud-run", limits: "2M requests/month, 360K GiB-seconds memory, 180K vCPU-seconds", category: "Compute", source: GOOGLE_FREE_TIER_LIST },
     { name: "Cloud Run functions (1st gen)", slug: "google-cloud", limits: "2M invocations, 400K GB-seconds, 200K GHz-seconds, 5 GB egress/month. Current Cloud Run functions are billed on Cloud Run pricing.", category: "Compute", source: GOOGLE_FREE_TIER_LIST },
     { name: "App Engine", slug: "google-cloud", limits: "28 instance-hours/day (F1 instances), 1 GB egress/day", category: "Compute", source: GOOGLE_FREE_TIER_LIST },
@@ -33171,9 +33177,14 @@ function buildGcpFreeTier2026Page(): string {
     { name: "Neon", slug: "neon", freeTier: "100 CU-hours and 1 GB of storage per project, auth up to 60k MAU, branching", strength: "Serverless PostgreSQL with scale-to-zero", bestFor: "Serverless Postgres with branching and scale-to-zero" },
   ];
 
+  const conditionsInTheLimitsCell = (vendorName: string) => {
+    const list = vendorPageConditionsHtml(vendorName);
+    return list ? `<div style="font-family:var(--sans)">${list}</div>` : "";
+  };
+
   const alwaysFreeRows = alwaysFreeServices.map(s => `<tr>
       <td style="font-weight:600">${escHtmlServer(s.name)}</td>
-      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(s.limits)}${s.source ? figureSourceLinkHtml(s.source, escHtmlServer) : ""}</td>
+      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(s.limits)}${s.source ? figureSourceLinkHtml(s.source, escHtmlServer) : ""}${s.conditionsOf ? conditionsInTheLimitsCell(s.conditionsOf) : ""}</td>
       <td style="color:var(--text-muted);font-size:.8rem">${escHtmlServer(s.category)}</td>
     </tr>`).join("\n        ");
 
