@@ -45,7 +45,7 @@ import { alternativesUnderTheVendorsRule, conditionsBesideStoredTerms, condition
 import { conditionsField } from "./conditions-field.js";
 import { PAGE_HEAD_OPEN, withLedeBeforeNav } from "./page-lede.js";
 import { withReviewByline } from "./page-byline.js";
-import { freshnessClaimFor, withFreshnessClaim } from "./page-freshness.js";
+import { endedPreviewItem, freshnessClaimFor, withFreshnessClaim, type PreviewedPeriod } from "./page-freshness.js";
 import { UNGRADED_IMPACT_COLOR, changeImpactColor, changeImpactLabel, changeImpactWord, isChangeImpactLevel } from "./change-impact.js";
 import { COMPARED_SERVICES_PLACEHOLDER, appendToCompiledFigureSlots, fillComparedServicesCount, labelNamesAProductOfItsVendor, markCompiledFigures, recordsSinceCompiled, replaceTimelineRows, staticHalfOf, timelineRecordsFor, vendorForSubject, vendorSubjectsOnCompiledPage, type CompiledFigureSubject, type CompiledFigureVendor, type CompiledFigureVerdict, type CompiledPageRecord } from "./compiled-figures.js";
 import { CHECK_ESTABLISHES, CHECK_SCOPE_CLASS, NO_CATALOGUE_RECORD_SOURCE, NO_FETCHABLE_PAGE_STATES_THE_ROW, catalogueMarkersOffRowsNoFetchablePageStates, citedSourcesListHtml, figureSourceLinkHtml, recordSourcesOffRowsThatCiteTheirOwn, freeTierSourceOf, freeTierSourceWeMayCite, freePlanExcerptHtml, pageQuoteHtml, readClauseHtml, readSourceOf, serviceSourceMarkerHtml, uncitedSourceTagHtml, withCitedSources, type CitedService, type FreeTierSource } from "./source-citation.js";
@@ -19688,10 +19688,11 @@ function buildQ2PricingPreview2026Page(): string {
   const metaDesc = "Upcoming developer tool pricing changes for Q2 2026. Hetzner prices rose, Google Tenor shutdown, odrive removal, and more. Timeline, impact analysis, and alternatives.";
   const slug = "q2-pricing-preview-2026";
   const pubDate = "2026-03-25";
+  const previewedPeriod: PreviewedPeriod = { from: "2026-04-01", to: "2026-06-30" };
 
   const confirmed = trackedChanges(dealChanges);
-  const q2Changes = confirmed.filter(c => c.date >= "2026-04-01" && c.date <= "2026-06-30");
-  const lateQ1Changes = confirmed.filter(c => c.date >= "2026-03-25" && c.date < "2026-04-01");
+  const q2Changes = confirmed.filter(c => c.date >= previewedPeriod.from && c.date <= previewedPeriod.to);
+  const lateQ1Changes = confirmed.filter(c => c.date >= "2026-03-25" && c.date < previewedPeriod.from);
   const timelineChanges = [...lateQ1Changes, ...q2Changes].sort((a, b) => a.date.localeCompare(b.date));
   const { dated: effectiveDatedChanges, discovered: changesWithNoKnownEffectiveDate } = partitionByDateProvenance(timelineChanges);
   const uncountedLine = changesWithNoKnownEffectiveDate.length > 0
@@ -19735,6 +19736,7 @@ function buildQ2PricingPreview2026Page(): string {
 
   const highImpact = timelineChanges.filter(c => c.impact === "high").length;
   const uniqueVendors = new Set(timelineChanges.map(c => c.vendor)).size;
+  const previewEnded = endedPreviewItem(previewedPeriod, utcToday());
 
   const watchItems = [
     { vendor: "Microsoft 365", signal: "E3 price increase to $39.60/user/mo announced March 24. Takes effect in Q2. Not a developer tool per se, but signals broader Microsoft pricing trends that could affect Azure and GitHub.", impact: "medium" as const },
@@ -19842,7 +19844,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("changes")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/changes">Changes</a> &rsaquo; Q2 2026 Preview</div>
   <h1>Q2 2026 Developer Pricing Preview</h1>
-  <p class="pub-date">Published ${pubDate} &middot; ${effectiveDatedChanges.length} confirmed changes + ${watchItems.length} signals to watch &middot; ${pageDataProvenance("/q2-pricing-preview-2026", offers.length)}</p>
+  <p class="pub-date">Published ${pubDate} &middot; ${effectiveDatedChanges.length} confirmed changes + ${watchItems.length} signals to watch &middot; ${pageDataProvenance("/q2-pricing-preview-2026", offers.length)}${previewEnded ? ` &middot; ${previewEnded}` : ""}</p>
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number">${effectiveDatedChanges.length}</div><div class="stat-label">Confirmed Changes</div></div>
