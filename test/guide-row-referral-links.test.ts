@@ -6,7 +6,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-const { referrerDisclosureSentence } = await import("../dist/referral-surfaces.js");
+const { REFERRAL_CONDITIONS_HEADING, referrerDisclosureSentence } = await import("../dist/referral-surfaces.js");
 const { censusTableFigures } = await import("../dist/table-figures.js");
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -51,7 +51,7 @@ const activeCodeFiledUnder = (vendor: string) => {
 };
 
 function assertRowCarriesCode(row: string, code: any) {
-  const href = `href="${asPageText(code.referral_url)}" rel="noopener sponsored"`;
+  const href = `href="${asPageText(code.referral_url)}" rel="nofollow noopener sponsored"`;
   assert.ok(row.includes(href), `the row should link ${code.referral_url}`);
   assert.ok(row.includes(`Sign up via our referral link and get ${asPageText(code.referee_benefit)}`), "the row should name the reader's benefit");
   assert.strictEqual(row.includes("referral-conditions"), code.restrictions.length > 0, "a conditions block exactly when the record states a restriction");
@@ -119,7 +119,7 @@ describe("our referral links on the /hetzner-pricing-2026 rows that name the ven
     for (const provider of ["Railway", "Vultr"]) {
       const row = rowNaming(withRailwayRemovedAndVultrInactive, provider);
       assert.ok(!row.includes("row-referral"), `${provider}'s row should carry no link`);
-      assert.ok(!row.includes('rel="noopener sponsored"'), `${provider}'s row should carry no sponsored link`);
+      assert.ok(!row.includes('sponsored'), `${provider}'s row should carry no sponsored link`);
     }
   });
 
@@ -143,5 +143,141 @@ describe("our referral links on the /hetzner-pricing-2026 rows that name the ven
     assert.deepStrictEqual(sectionSixRows(withNoCodes).map(providerOf), providers);
     assert.deepStrictEqual(sectionSixRows(withRailwayRemovedAndVultrInactive).map(providerOf), providers);
     assert.ok(sectionSixRows(withNoCodes).every(row => !row.includes("row-referral")));
+  });
+});
+
+const GUIDE_TABLES_NAMING_A_CODE_HOLDER = [
+  { route: "/aws-free-tier-2026", from: '<h2 id="alternatives">', to: '<h2 id="changes">', linked: { Railway: "Railway" } },
+  { route: "/gcp-free-tier-2026", from: '<h2 id="alternatives">', to: '<h2 id="changes">', linked: { Railway: "Railway" } },
+  { route: "/azure-free-tier-2026", from: '<h2 id="alternatives">', to: '<h2 id="startups">', linked: { Railway: "Railway" } },
+  { route: "/digitalocean-free-tier-2026", from: '<h2 id="alternatives">', to: '<h2 id="startups">', linked: { Railway: "Railway", Vultr: "Vultr DNS" } },
+  { route: "/google-developer-program-2026", from: '<h2 id="cloud-alts">', to: '<h2 id="ai-alts">', linked: { Railway: "Railway" } },
+  { route: "/hosting-free-tier-comparison-2026", from: '<h2 id="main-comparison">', to: '<h2 id="frontend-jamstack">', linked: { Railway: "Railway" } },
+] as const;
+
+type GuideTable = (typeof GUIDE_TABLES_NAMING_A_CODE_HOLDER)[number];
+
+const tableRowsOf = (page: string, table: GuideTable) => {
+  const from = page.indexOf(table.from);
+  const to = page.indexOf(table.to, from);
+  assert.ok(from > -1 && to > from, `${table.route} should hold the section from ${table.from} to ${table.to}`);
+  return [...page.slice(from, to).matchAll(/<tr[\s>][\s\S]*?<\/tr>/g)].map(([row]) => row).filter(row => row.includes("<td"));
+};
+
+const vendorNamedBy = (row: string) => {
+  const firstCell = row.match(/<td[^>]*>([\s\S]*?)<\/td>/)?.[1] ?? "";
+  return (firstCell.match(/<(a|span)\b[^>]*>([^<]*)<\/\1>/)?.[2] ?? firstCell.replace(/<[^>]+>/g, "")).trim();
+};
+
+const rowOf = (page: string, table: GuideTable, vendor: string) => {
+  const rows = tableRowsOf(page, table).filter(row => vendorNamedBy(row) === vendor);
+  assert.strictEqual(rows.length, 1, `${table.route} should hold one ${vendor} row in its table`);
+  return rows[0];
+};
+
+const withTheMarkupDropped = (html: string) => ` ${html.replace(/<[^>]+>/g, "").replace(/\s+/g, " ")} `;
+
+describe("our referral links on the guide rows that name Railway or Vultr", () => {
+  const servers: ChildProcess[] = [];
+  let scratch = "";
+  const served = new Map<string, string>();
+  const servedWithRailwayRemovedAndVultrInactive = new Map<string, string>();
+  const servedWithNoCodes = new Map<string, string>();
+
+  const serveEveryRoute = async (env: Record<string, string>, into: Map<string, string>) => {
+    const { child, port } = await spawnServer(env);
+    servers.push(child);
+    for (const { route } of GUIDE_TABLES_NAMING_A_CODE_HOLDER) {
+      into.set(route, await (await fetch(`http://localhost:${port}${route}`)).text());
+    }
+    into.set("/hetzner-pricing-2026", await (await fetch(`http://localhost:${port}/hetzner-pricing-2026`)).text());
+  };
+
+  before(async () => {
+    scratch = mkdtempSync(path.join(tmpdir(), "guide-row-referral-guides-"));
+    const removedOrInactive = path.join(scratch, "removed-or-inactive.json");
+    writeFileSync(removedOrInactive, JSON.stringify({
+      platform_codes: STORE.platform_codes
+        .filter((c: any) => c.vendor !== "Railway")
+        .map((c: any) => (c.vendor === "Vultr DNS" ? { ...c, active: false } : c)),
+    }));
+    const none = path.join(scratch, "none.json");
+    writeFileSync(none, JSON.stringify({ platform_codes: [] }));
+
+    await serveEveryRoute({}, served);
+    await serveEveryRoute({ AGENTDEALS_PLATFORM_CODES_PATH: removedOrInactive }, servedWithRailwayRemovedAndVultrInactive);
+    await serveEveryRoute({ AGENTDEALS_PLATFORM_CODES_PATH: none }, servedWithNoCodes);
+  });
+
+  after(() => {
+    for (const child of servers) child.kill();
+    rmSync(scratch, { recursive: true, force: true });
+  });
+
+  it("links each Railway and Vultr row with the benefit, conditions and disclosure its code states", () => {
+    for (const table of GUIDE_TABLES_NAMING_A_CODE_HOLDER) {
+      for (const [vendor, filedUnder] of Object.entries(table.linked)) {
+        const row = rowOf(served.get(table.route)!, table, vendor);
+        assert.ok(row.includes('class="row-referral"'), `${table.route}: the ${vendor} row should carry our referral link`);
+        assertRowCarriesCode(row, activeCodeFiledUnder(filedUnder));
+      }
+    }
+  });
+
+  it("links no other row of those tables", () => {
+    for (const table of GUIDE_TABLES_NAMING_A_CODE_HOLDER) {
+      for (const row of tableRowsOf(served.get(table.route)!, table)) {
+        if (Object.keys(table.linked).includes(vendorNamedBy(row))) continue;
+        assert.ok(!row.includes("row-referral"), `${table.route}: ${vendorNamedBy(row)} should carry no referral link`);
+      }
+    }
+  });
+
+  it("drops the links when Railway's code is removed and Vultr's are inactive, and never prints an inactive code", () => {
+    const inactiveUrls = STORE.platform_codes.filter((c: any) => !c.active).map((c: any) => asPageText(c.referral_url));
+    for (const table of GUIDE_TABLES_NAMING_A_CODE_HOLDER) {
+      const page = servedWithRailwayRemovedAndVultrInactive.get(table.route)!;
+      for (const row of tableRowsOf(page, table)) {
+        assert.ok(!row.includes("row-referral"), `${table.route}: ${vendorNamedBy(row)} should carry no link`);
+        assert.ok(!row.includes('sponsored'), `${table.route}: ${vendorNamedBy(row)} should carry no sponsored link`);
+      }
+      for (const url of inactiveUrls) assert.ok(!served.get(table.route)!.includes(url), `${table.route} prints ${url}, which is inactive`);
+    }
+  });
+
+  it("keeps each table's rows and their order with or without platform codes", () => {
+    for (const table of GUIDE_TABLES_NAMING_A_CODE_HOLDER) {
+      const vendors = tableRowsOf(served.get(table.route)!, table).map(vendorNamedBy);
+      assert.ok(Object.keys(table.linked).every(vendor => vendors.includes(vendor)), `${table.route}'s table should name ${Object.keys(table.linked).join(" and ")}`);
+      assert.deepStrictEqual(tableRowsOf(servedWithNoCodes.get(table.route)!, table).map(vendorNamedBy), vendors, table.route);
+      assert.deepStrictEqual(tableRowsOf(servedWithRailwayRemovedAndVultrInactive.get(table.route)!, table).map(vendorNamedBy), vendors, table.route);
+    }
+  });
+
+  it("leaves the sponsored blocks out of each page's table figure count", () => {
+    for (const { route } of GUIDE_TABLES_NAMING_A_CODE_HOLDER) {
+      const withCodes = served.get(route)!;
+      const withoutCodes = servedWithNoCodes.get(route)!;
+      assert.deepStrictEqual(censusTableFigures(withCodes, withCodes), censusTableFigures(withoutCodes, withoutCodes), route);
+    }
+  });
+
+  it("separates each part of the block by whitespace, so a reader that drops the markup does not run them together", () => {
+    const linkedRows = [
+      ...GUIDE_TABLES_NAMING_A_CODE_HOLDER.flatMap(table =>
+        Object.entries(table.linked).map(([vendor, filedUnder]) => ({ row: rowOf(served.get(table.route)!, table, vendor), code: activeCodeFiledUnder(filedUnder) }))),
+      { row: rowNaming(served.get("/hetzner-pricing-2026")!, "Railway"), code: activeCodeFiledUnder("Railway") },
+      { row: rowNaming(served.get("/hetzner-pricing-2026")!, "Vultr"), code: activeCodeFiledUnder("Vultr DNS") },
+    ];
+    for (const { row, code } of linkedRows) {
+      assert.ok(row.includes('class="row-referral"'), `${vendorNamedBy(row)}'s row should carry our referral link`);
+      const text = withTheMarkupDropped(row);
+      const parts = [
+        `Sign up via our referral link and get ${asPageText(code.referee_benefit)}`,
+        ...(code.restrictions.length > 0 ? [REFERRAL_CONDITIONS_HEADING, ...code.restrictions.map(asPageText)] : []),
+        `Get ${asPageText(code.referee_benefit)} &rarr;`,
+      ];
+      for (const part of parts) assert.ok(text.includes(` ${part} `), `${vendorNamedBy(row)}: "${part}" should stand apart in: ${text}`);
+    }
   });
 });
