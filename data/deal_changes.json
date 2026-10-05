@@ -8041,6 +8041,12 @@
       "archive_check": {
         "checked": "2026-10-02",
         "outcome": "no_usable_capture"
+      },
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-10-05",
+        "detail": "Retracted 2026-10-05: no allowance fell. Email went from 100 sends a day in our stored description to 10,000 sends a month, an increase, and web push names 10,000 subscribers in both states. onesignal.com/pricing, fetched 2026-10-05, gives the Free plan \"Email 10,000 sends / month\" and web push \"Max 10,000 subscribers per send\". The 2026-09-25 record, which limits mobile push to organizations with up to 1,000 monthly active users, stands.",
+        "source_url": "https://onesignal.com/pricing"
       }
     },
     {
@@ -8703,6 +8709,11 @@
       "archive_check": {
         "checked": "2026-10-02",
         "outcome": "page_unreadable_today"
+      },
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-10-05",
+        "detail": "Retracted 2026-10-05: the record describes no narrowing. Our stored description stated no submission allowance, and the record's own summary says the free plan \"now offers 500 submissions per month instead of 250\", which is an increase. Its current state, \"Free plan, 500 a month\", narrows nothing our description had stated."
       }
     },
     {
@@ -9361,6 +9372,12 @@
       "archive_check": {
         "checked": "2026-10-02",
         "outcome": "no_usable_capture"
+      },
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-10-05",
+        "detail": "Retracted 2026-10-05: nothing narrowed. The reading's current state gives the same free allowances our stored description did: 10 monitors, 1 status page, 100,000 exceptions a month, 5,000 session replays, 3 GB of logs retained for 3 days and 30 GB of metrics. betterstack.com/pricing, fetched 2026-10-05, gives its free plan the same figures.",
+        "source_url": "https://betterstack.com/pricing"
       }
     },
     {
@@ -11700,6 +11717,12 @@
       "archive_check": {
         "checked": "2026-10-02",
         "outcome": "no_usable_capture"
+      },
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-10-05",
+        "detail": "Retracted 2026-10-05: nothing narrowed. The reading's current state gives the same 5,000 WebRTC minutes, 5 concurrent agent sessions, 100 concurrent connections and free US phone number our stored description did, and leaves the included agent session minutes unstated. livekit.com/pricing, fetched 2026-10-05, gives the Build plan \"1,000 minutes included\" of agent session time and 5 concurrent agent sessions, as our description states.",
+        "source_url": "https://livekit.com/pricing"
       }
     },
     {
@@ -11856,6 +11879,12 @@
       "archive_check": {
         "checked": "2026-10-02",
         "outcome": "no_usable_capture"
+      },
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-10-05",
+        "detail": "Retracted 2026-10-05: nothing narrowed. The reading's current state names only the $0 price our stored description already gave, and thunderclient.com/pricing, fetched 2026-10-05, still lists the Free plan at \"$0 Per user/month\" with \"Collection Runs Monthly\" of 1, the one local collection run a month our description states.",
+        "source_url": "https://www.thunderclient.com/pricing"
       }
     },
     {
@@ -12360,6 +12389,12 @@
       "archive_check": {
         "checked": "2026-10-02",
         "outcome": "no_usable_capture"
+      },
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-10-05",
+        "detail": "Retracted 2026-10-05: no allowance fell. Our stored description gave the REST API up to 200 credits a day; the reading's current state gives the IDE 1,000 code executions a day, a different allowance, and its languages rose from more than 60 to 114. jdoodle.com/pricing, fetched 2026-10-05, gives the Free plan \"1,000 code executions per day\" and \"100 saved projects\".",
+        "source_url": "https://www.jdoodle.com/pricing"
       }
     },
     {
@@ -12454,6 +12489,12 @@
       "archive_check": {
         "checked": "2026-10-02",
         "outcome": "no_usable_capture"
+      },
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-10-05",
+        "detail": "Retracted 2026-10-05: nothing narrowed. The reading's current state says \"Chanty is free\" and names only a paid AI agent price. chanty.com/pricing, fetched 2026-10-05, lists the Free plan at \"$0 forever\" with \"Up to 5 team members\", \"Up to 10 integrations\", \"File storage 20GB per team\", unlimited public and private chats, unlimited searchable history and unlimited one-on-one audio and video calls, which are the terms our stored description gave.",
+        "source_url": "https://www.chanty.com/pricing/"
       }
     },
     {
@@ -12805,6 +12846,12 @@
       "archive_check": {
         "checked": "2026-10-02",
         "outcome": "no_usable_capture"
+      },
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-10-05",
+        "detail": "Retracted 2026-10-05: nothing narrowed. The reading's current state lists features the Free tier does not include (Project Dashboard, IDP Integration, vertical and horizontal scalability, HA/Fallback, multi-region failover and an uptime guarantee), and our stored description never said it included any of them; it says \"Community support (no SLA or uptime guarantee)\". mendix.com/pricing, fetched 2026-10-05, marks each of them \"Not available in Free\". The record names no quantity that changed.",
+        "source_url": "https://www.mendix.com/pricing/"
       }
     },
     {
