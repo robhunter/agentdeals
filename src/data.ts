@@ -1171,8 +1171,8 @@ export function findVendor(offers: Offer[], name: string): VendorMatch {
 }
 
 export interface ComparisonResult {
-  vendor_a: Offer & { deal_changes: DealChange[] };
-  vendor_b: Offer & { deal_changes: DealChange[] };
+  vendor_a: Offer & { deal_changes: DealChange[]; terms_superseded: SupersededTermsRecord | null };
+  vendor_b: Offer & { deal_changes: DealChange[]; terms_superseded: SupersededTermsRecord | null };
   vendor_a_match: VendorMatchNotice;
   vendor_b_match: VendorMatchNotice;
   shared_categories: boolean;
@@ -1792,8 +1792,8 @@ export function compareServices(
 
   return {
     comparison: {
-      vendor_a: stripReferrerValue({ ...offerA, last_read_date: lastReadDate(offerA), deal_changes: changesA.map(withDateMeaningDeclared) }),
-      vendor_b: stripReferrerValue({ ...offerB, last_read_date: lastReadDate(offerB), deal_changes: changesB.map(withDateMeaningDeclared) }),
+      vendor_a: stripReferrerValue({ ...offerA, last_read_date: lastReadDate(offerA), terms_superseded: supersededTermsRecordFor(offerA, changesA), deal_changes: changesA.map(withDateMeaningDeclared) }),
+      vendor_b: stripReferrerValue({ ...offerB, last_read_date: lastReadDate(offerB), terms_superseded: supersededTermsRecordFor(offerB, changesB), deal_changes: changesB.map(withDateMeaningDeclared) }),
       vendor_a_match: vendorMatchNotice(vendorA, matchA)!,
       vendor_b_match: vendorMatchNotice(vendorB, matchB)!,
       shared_categories: sharedCategories,

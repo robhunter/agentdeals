@@ -1,5 +1,5 @@
 import { citationLabel } from "./change-citation.js";
-import { offerRetired } from "./retirement.js";
+import { offerRetired, RETIRED_TIER } from "./retirement.js";
 import type { Escaper } from "./source-citation.js";
 import { supersedingChange } from "./superseded-description.js";
 import type { DealChange, ListingCondition, Offer, UseAVendorRulesOut } from "./types.js";
@@ -83,4 +83,20 @@ export function stableRatingBesideTheVendorsRule(vendorName: string): string {
 
 export function levelBesideTheVendorsRule(vendorName: string, level: string, because: string | null): string {
   return `We also rate ${vendorName}'s pricing ${level}${because ? `, ${because}` : ""}.`;
+}
+
+function markupEscaped(text: string): string {
+  return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
+export function conditionsHtmlBesidePublishedTerms(item: Pick<Offer, "tier" | "conditions"> & { terms_superseded?: unknown }): string {
+  return conditionsHtml(conditionsBesidePublishedTerms(item), markupEscaped);
+}
+
+export function conditionsForTheBrowser(): string {
+  return [
+    `var LISTING_CONDITIONS_CLASS = ${JSON.stringify(LISTING_CONDITIONS_CLASS)};`,
+    `var RETIRED_TIER = ${RETIRED_TIER};`,
+    ...[citationLabel, offerRetired, conditionsOf, conditionsBesidePublishedTerms, conditionsHtml, markupEscaped, conditionsHtmlBesidePublishedTerms].map(String),
+  ].join("\n");
 }

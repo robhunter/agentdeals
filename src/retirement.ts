@@ -1,6 +1,6 @@
 import type { Offer } from "./types.js";
 
-const RETIRED_TIER = /\b(retired|deprecated|discontinued|sunset|withdrawn)\b/i;
+export const RETIRED_TIER = /\b(retired|deprecated|discontinued|sunset|withdrawn)\b/i;
 
 export const ENDED_TIERS = ["Retired", "Discontinued", "Sunset", "Withdrawn"] as const;
 
