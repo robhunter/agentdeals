@@ -5754,8 +5754,9 @@ ${allCompareLinks.join("\n")}
     ? `${primaryGateBeyondEligibility.reason} `
     : "";
   const weCanStillSayTheFreeTierExists = !termsWeCannotConfirm || termsWeCannotConfirm.theReadFoundAFreePlan;
+  const whatATimeLimitedOfferIs = timeLimitedOffer ? `No. What ${vendorName} offers is ${timeLimitedOffer.note}` : "";
   const freeTierAnswerLead = timeLimitedOffer
-    ? `No. What ${vendorName} offers is ${timeLimitedOffer.note}:`
+    ? `${whatATimeLimitedOfferIs}:`
     : weCanStillSayTheFreeTierExists
     ? `${primaryEligibilityGate ? "" : "Yes, "}${vendorName} offers a free tier: ${primary.tier}.`
     : `Our stored record says ${vendorName} offers a free tier: ${primary.tier}.`;
@@ -5766,6 +5767,8 @@ ${allCompareLinks.join("\n")}
     ? `${gateBesideARecordedEnding}${retiredSentence} ${withTheReasonARecordedEndingLeaves(storedTerms)}`
     : primaryGateBeyondEligibility
     ? `${eligibilityGateSentence}${primaryGateBeyondEligibility.reason} ${termsWeCannotConfirm ? `${unconfirmedTermsPreamble}${leadBesideAGate}${withUnconfirmedTermsCaveat(storedTerms)}` : `${leadBesideAGate}${storedTerms}`}${eligibilityConditionsSentence}`
+    : termsWeCannotConfirm && timeLimitedOffer
+    ? `${eligibilityGateSentence}${whatATimeLimitedOfferIs}. ${unconfirmedTermsPreamble}${withUnconfirmedTermsCaveat(storedTerms)}${eligibilityConditionsSentence}`
     : termsWeCannotConfirm
     ? `${eligibilityGateSentence}${unconfirmedTermsPreamble}${freeTierAnswerLead} ${withUnconfirmedTermsCaveat(storedTerms)}${eligibilityConditionsSentence}`
     : primaryEligibilityGate

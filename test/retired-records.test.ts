@@ -14,6 +14,7 @@ const { badgeWithholding, withholdsTheTerms } = await import("../dist/vendor-ver
 const { supersedingChange } = await import("../dist/superseded-description.js");
 const { vendorVerdictContextFrom } = await import("../dist/vendor-verdict-input.js");
 const { unreachableNoticeForUrl } = await import("../dist/link-health.js");
+const { descriptionDeniesAFreeTier } = await import("../dist/free-tier-record.js");
 
 type Offer = import("../src/types.ts").Offer;
 
@@ -269,7 +270,7 @@ describe("a record that is not retired keeps everything the gate would take away
         && unreachableNoticeForUrl(p.offer.url) === null
         && supersedingChange(p.offer, changesFor(p.offer.vendor)) === null
         && classifyTier(p.offer.tier).class === "free"
-        && !p.offer.description.toLowerCase().includes("no free tier"),
+        && !descriptionDeniesAFreeTier(p.offer.description),
     );
     assertPopulationFloor(plainlyFree.length, 101, "vendor pages are plainly free");
     const quiet = plainlyFree
