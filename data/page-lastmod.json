@@ -789,8 +789,8 @@
       "changed": "2026-09-05"
     },
     "/auth-comparison-2026": {
-      "hash": "8c0ec63f418cd75f",
-      "changed": "2026-10-04"
+      "hash": "c7e9d03105b4ae0a",
+      "changed": "2026-10-05"
     },
     "/auth0-alternatives": {
       "hash": "8296afef9a944507",
@@ -809,12 +809,12 @@
       "changed": "2026-10-04"
     },
     "/aws-free-tier-2026": {
-      "hash": "99aa135eb9c16056",
+      "hash": "98515490fc6bda39",
       "changed": "2026-10-05"
     },
     "/azure-free-tier-2026": {
-      "hash": "968e6d76b7b11054",
-      "changed": "2026-10-04"
+      "hash": "2fac987795b7321f",
+      "changed": "2026-10-05"
     },
     "/backblaze-b2-vs-cloudflare-r2": {
       "hash": "dad376687d7cd2c4",
@@ -1323,8 +1323,8 @@
       "changed": "2026-10-04"
     },
     "/ci-cd-pricing": {
-      "hash": "697b52002acc9fa7",
-      "changed": "2026-10-04"
+      "hash": "b5daf594b3f964b2",
+      "changed": "2026-10-05"
     },
     "/cicd-free-tier-comparison-2026": {
       "hash": "e6730771d911fc0c",
@@ -3053,8 +3053,8 @@
       "changed": "2026-10-04"
     },
     "/digitalocean-free-tier-2026": {
-      "hash": "697c05b6071fc95b",
-      "changed": "2026-10-04"
+      "hash": "e975979df2110a6f",
+      "changed": "2026-10-05"
     },
     "/disclosure": {
       "hash": "bef18cb5b3730918",
@@ -3165,7 +3165,7 @@
       "changed": "2026-10-04"
     },
     "/gcp-free-tier-2026": {
-      "hash": "cdec0c2d02bff13d",
+      "hash": "bd007e4e02be6110",
       "changed": "2026-10-05"
     },
     "/gemini-api-pricing-2026": {
@@ -3456,8 +3456,8 @@
       "changed": "2026-10-04"
     },
     "/serverless-free-tier-comparison-2026": {
-      "hash": "9a29ce90e9dfc88b",
-      "changed": "2026-10-04"
+      "hash": "d189cdf03a9f5116",
+      "changed": "2026-10-05"
     },
     "/setup": {
       "hash": "e3a1b8cb87e003c1",
@@ -3511,8 +3511,8 @@
       "changed": "2026-10-04"
     },
     "/storage-comparison-2026": {
-      "hash": "09e426b6c3846759",
-      "changed": "2026-10-04"
+      "hash": "3073bc2fb6ec5f73",
+      "changed": "2026-10-05"
     },
     "/supabase-vs-firebase": {
       "hash": "d9250cf62dae7f04",
