@@ -3104,7 +3104,7 @@
       "changed": "2026-10-05"
     },
     "/firebase-alternatives": {
-      "hash": "09580a3162b7f0cb",
+      "hash": "a4689410bae3c1fd",
       "changed": "2026-10-05"
     },
     "/firebase-studio-shutdown": {
@@ -3516,7 +3516,7 @@
       "changed": "2026-10-05"
     },
     "/supabase-vs-firebase": {
-      "hash": "a75a463baaa22de5",
+      "hash": "85df930d8e5459af",
       "changed": "2026-10-05"
     },
     "/team-collaboration-alternatives": {
@@ -3988,7 +3988,7 @@
       "changed": "2026-10-05"
     },
     "/vendor/apilayer": {
-      "hash": "f0835967a1c272d8",
+      "hash": "2d4570cf971d3c97",
       "changed": "2026-10-05"
     },
     "/vendor/apitemplate-io": {
@@ -4178,7 +4178,7 @@
       "changed": "2026-10-05"
     },
     "/vendor/backgroundstyler-com": {
-      "hash": "5d8aa4978a847001",
+      "hash": "a285920d83b23672",
       "changed": "2026-10-05"
     },
     "/vendor/backlog": {
@@ -4424,7 +4424,7 @@
       "changed": "2026-10-05"
     },
     "/vendor/bugsnag": {
-      "hash": "5eb33bc1b89beb54",
+      "hash": "88b0f15c5029f215",
       "changed": "2026-10-05"
     },
     "/vendor/build-opensuse-org": {
@@ -4601,7 +4601,7 @@
       "changed": "2026-10-05"
     },
     "/vendor/clarifai": {
-      "hash": "310a31be00694bce",
+      "hash": "e29fb724eed85c7a",
       "changed": "2026-10-05"
     },
     "/vendor/claude-code": {
@@ -4805,7 +4805,7 @@
       "changed": "2026-10-05"
     },
     "/vendor/codefresh": {
-      "hash": "e7b4f15be7e20dd9",
+      "hash": "53a5d56c5c813648",
       "changed": "2026-10-05"
     },
     "/vendor/codehooks-io": {
@@ -4987,7 +4987,7 @@
       "changed": "2026-10-05"
     },
     "/vendor/cron-job-org": {
-      "hash": "5612d7f852308c73",
+      "hash": "c419c6a7f72423f0",
       "changed": "2026-10-05"
     },
     "/vendor/cronhooks": {
@@ -5319,7 +5319,7 @@
       "changed": "2026-10-05"
     },
     "/vendor/drift-for-early-stage-startups": {
-      "hash": "163a7a59ac09bcca",
+      "hash": "59511b7cff323767",
       "changed": "2026-10-05"
     },
     "/vendor/drone-ci": {
@@ -5542,7 +5542,7 @@
       "changed": "2026-10-05"
     },
     "/vendor/feedbear": {
-      "hash": "497979a481ca4ffa",
+      "hash": "4abb3860f6fb2ef0",
       "changed": "2026-10-05"
     },
     "/vendor/fibery": {
@@ -5768,7 +5768,7 @@
       "changed": "2026-10-05"
     },
     "/vendor/freshworks-for-startups": {
-      "hash": "be8bd2f355d201ec",
+      "hash": "d44d60f1b4c1f701",
       "changed": "2026-10-05"
     },
     "/vendor/front": {
@@ -5975,7 +5975,7 @@
       "changed": "2026-10-05"
     },
     "/vendor/google-artifact-registry": {
-      "hash": "c2705dcb08cf06fa",
+      "hash": "6787de7b67e9896a",
       "changed": "2026-10-05"
     },
     "/vendor/google-cloud": {
@@ -6193,7 +6193,7 @@
       "changed": "2026-10-05"
     },
     "/vendor/heroku-for-startups-program": {
-      "hash": "b19e642c8beb2d1e",
+      "hash": "a5b86175760dc8fe",
       "changed": "2026-10-05"
     },
     "/vendor/herotofu-com": {
@@ -6430,7 +6430,7 @@
       "daily": true
     },
     "/vendor/instabug-for-startups": {
-      "hash": "70b1c79309b2846c",
+      "hash": "f9f48d81a12c2ee0",
       "changed": "2026-10-05"
     },
     "/vendor/instacart": {
@@ -6914,7 +6914,7 @@
       "changed": "2026-10-05"
     },
     "/vendor/lokalise": {
-      "hash": "07dc6d09499513d2",
+      "hash": "d02a6d660efafae6",
       "changed": "2026-10-05"
     },
     "/vendor/loops": {
@@ -7366,7 +7366,7 @@
       "daily": true
     },
     "/vendor/ninja-outreach": {
-      "hash": "ca9bec76750c2326",
+      "hash": "1597746de3aebd94",
       "changed": "2026-10-05"
     },
     "/vendor/nitropack-io": {
@@ -7443,7 +7443,7 @@
       "changed": "2026-10-05"
     },
     "/vendor/oaysus": {
-      "hash": "5db2c32098a05afe",
+      "hash": "b3ba8ffad58b0fe3",
       "changed": "2026-10-05"
     },
     "/vendor/obsidian": {
@@ -7458,7 +7458,7 @@
       "changed": "2026-10-05"
     },
     "/vendor/odrive": {
-      "hash": "7e56cae17e2648f0",
+      "hash": "ec12ecf5a69e71ec",
       "changed": "2026-10-05"
     },
     "/vendor/oklch": {
@@ -7477,7 +7477,7 @@
       "daily": true
     },
     "/vendor/ona": {
-      "hash": "5a3f2607ce9142a5",
+      "hash": "c5b9095e416e510f",
       "changed": "2026-10-05"
     },
     "/vendor/onecompiler": {
@@ -7655,7 +7655,7 @@
       "changed": "2026-10-05"
     },
     "/vendor/pdfbolt": {
-      "hash": "7f35a6316886849b",
+      "hash": "7eaf6b9102d1849a",
       "changed": "2026-10-05"
     },
     "/vendor/pdfendpoint-com": {
@@ -7979,7 +7979,7 @@
       "changed": "2026-10-05"
     },
     "/vendor/qrme-sh": {
-      "hash": "6c8e3be08187968b",
+      "hash": "f0852fd7c8e0a6ac",
       "changed": "2026-10-05"
     },
     "/vendor/qrtracer": {
@@ -8641,7 +8641,7 @@
       "changed": "2026-10-05"
     },
     "/vendor/squash-labs": {
-      "hash": "2b23b2611a7cb9e0",
+      "hash": "24c61955bd0087d9",
       "changed": "2026-10-05"
     },
     "/vendor/squidex": {
@@ -8673,7 +8673,7 @@
       "changed": "2026-10-05"
     },
     "/vendor/stackhawk": {
-      "hash": "499d380d780a13cc",
+      "hash": "6e77d7c79121fe8f",
       "changed": "2026-10-05"
     },
     "/vendor/stadiamaps-com": {
@@ -8685,7 +8685,7 @@
       "changed": "2026-10-05"
     },
     "/vendor/startup-with-ibm": {
-      "hash": "c13be0630a053aee",
+      "hash": "eea44a7194025a35",
       "changed": "2026-10-05"
     },
     "/vendor/statcounter": {
@@ -8726,7 +8726,7 @@
       "changed": "2026-10-05"
     },
     "/vendor/stickies": {
-      "hash": "545dd91a27c481b0",
+      "hash": "9507cc486b7ed9ce",
       "changed": "2026-10-05"
     },
     "/vendor/stitch-labs": {
@@ -8814,7 +8814,7 @@
       "changed": "2026-10-05"
     },
     "/vendor/supportivekoala": {
-      "hash": "a47b03401775ccee",
+      "hash": "6fc2153fa3b54a40",
       "changed": "2026-10-05"
     },
     "/vendor/suprsend": {
@@ -8996,7 +8996,7 @@
       "changed": "2026-10-05"
     },
     "/vendor/the-gosquared-early-stage-plan": {
-      "hash": "326bb5dd862ac530",
+      "hash": "f593a1594565400b",
       "changed": "2026-10-05"
     },
     "/vendor/the-intercom-early-stage-program": {
@@ -9024,7 +9024,7 @@
       "changed": "2026-10-05"
     },
     "/vendor/ticktick": {
-      "hash": "1867bcc5d4d47ce1",
+      "hash": "956ac683e6b22c44",
       "changed": "2026-10-05"
     },
     "/vendor/tigris": {
@@ -9188,7 +9188,7 @@
       "changed": "2026-10-05"
     },
     "/vendor/twilio-startups-program": {
-      "hash": "712266a0c8ef4041",
+      "hash": "e4295520900b2c92",
       "changed": "2026-10-05"
     },
     "/vendor/twingate": {
@@ -9208,7 +9208,7 @@
       "changed": "2026-10-05"
     },
     "/vendor/typesense-cloud": {
-      "hash": "41058fa68184fa47",
+      "hash": "c6c53cd6701cf150",
       "changed": "2026-10-05"
     },
     "/vendor/ui-avatars": {
@@ -9352,7 +9352,7 @@
       "changed": "2026-10-05"
     },
     "/vendor/vera-aws": {
-      "hash": "3822d501db0c9480",
+      "hash": "468d14fa92751df3",
       "changed": "2026-10-05"
     },
     "/vendor/vercel": {
