@@ -3210,7 +3210,7 @@
     {
       "vendor": "Mistral AI",
       "category": "AI / ML",
-      "description": "Mistral's Free plan includes $10 a month in API credits, shared across Studio, the API and Vibe Code. When it is used up, usage can stop until the next month unless pay-as-you-go is turned on. API keys work with no credit card, within rate limits. The plan also has limited messages, web searches and coding sessions in Vibe. Mistral may use inputs and outputs for training unless you opt out. API prices: Ministral 3 (3B) $0.1/$0.1 (per 1M tokens); Mistral Small 4 $0.15/$0.6 (per 1M tokens); Mistral Large 3 $0.5/$1.5 (per 1M tokens); Mistral Medium 3.5 $1.5/$7.5 (per 1M tokens); Codestral $0.3/$0.9 (per 1M tokens). Mistral Embed is $0.1 per 1M input tokens, and Codestral Embed is $0.15 per 1M input tokens. OCR 4.1 costs $4 per 1,000 pages. Mistral Moderation 2 is free. Mistral retired Devstral 2 (devstral-2512) on 2026-07-31 and names Mistral Medium 3.5 as its replacement. Batch processing is half price, and cached input tokens cost up to 90% less. Mistral publishes no rate-limit figures. Each organization's per-model limits (tokens per minute, requests per second) appear in Admin Panel > API > Limits.",
+      "description": "Mistral's Free plan includes $10 a month in API credits, shared across Studio, the API and Vibe Code. When it is used up, usage can stop until the next month unless pay-as-you-go is turned on. API keys work with no credit card, within rate limits. The plan also has limited messages, web searches and coding sessions in Vibe. API prices: Ministral 3 (3B) $0.1/$0.1 (per 1M tokens); Mistral Small 4 $0.15/$0.6 (per 1M tokens); Mistral Large 3 $0.5/$1.5 (per 1M tokens); Mistral Medium 3.5 $1.5/$7.5 (per 1M tokens); Codestral $0.3/$0.9 (per 1M tokens). Mistral Embed is $0.1 per 1M input tokens, and Codestral Embed is $0.15 per 1M input tokens. OCR 4.1 costs $4 per 1,000 pages. Mistral Moderation 2 is free. Mistral retired Devstral 2 (devstral-2512) on 2026-07-31 and names Mistral Medium 3.5 as its replacement. Batch processing is half price, and cached input tokens cost up to 90% less. Mistral publishes no rate-limit figures. Each organization's per-model limits (tokens per minute, requests per second) appear in Admin Panel > API > Limits.",
       "tier": "Free",
       "url": "https://mistral.ai/pricing",
       "tags": [
@@ -3251,7 +3251,27 @@
         "text": "Free Your personal AI agent for everyday tasks. Test out Vibe’s capabilities. Access on web and mobile. Limited messages and web searches. Limited coding sessions. State-of-the-art image generation. Test Mistral models in Studio. $10 /mo in API credits. 100+ connectors.",
         "url": "https://mistral.ai/pricing",
         "read_on": "2026-10-03"
-      }
+      },
+      "conditions": [
+        {
+          "text": "On the Free plan, Mistral may use your Studio and API inputs and outputs to train its models, and you can opt out at any time.",
+          "quote": "As stated during subscription, we may use your data (input and output) to train our artificial intelligence models.",
+          "url": "https://help.mistral.ai/en/articles/347617-do-you-use-my-user-data-to-train-your-artificial-intelligence-models",
+          "read_on": "2026-10-05"
+        },
+        {
+          "text": "The API opt-out toggle is under Anonymous improvement data, in the Privacy menu of the Admin panel, and is separate from the Vibe training toggle, so opting out of one does not opt out of the other.",
+          "quote": "Vibe and API opt-out toggles are separate. Opting out of one does not opt you out of the other",
+          "url": "https://help.mistral.ai/en/articles/455207-can-i-opt-out-of-my-input-or-output-data-being-used-for-training",
+          "read_on": "2026-10-05"
+        },
+        {
+          "text": "Mistral may train on inputs and outputs from Labs or Preview Models (models with the \"labs\" prefix in Studio) even if you opted out or use zero data retention.",
+          "quote": "the opt-out preferences you selected for other Mistral AI Products (including through zero data retention) does not apply to Labs or Preview Models.",
+          "url": "https://legal.mistral.ai/terms/commercial-terms-of-service",
+          "read_on": "2026-10-05"
+        }
+      ]
     },
     {
       "vendor": "OpenRouter",
