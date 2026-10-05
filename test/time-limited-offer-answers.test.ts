@@ -7,7 +7,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { assertPopulationFloor } from "./population-floor.ts";
 
-const { classifyTier, gateFor, utcDate, GATES_LEAVING_NO_FREE_TIER } = await import("../dist/ranking.js");
+const { classifyTier, gateFor, timeLimitedTierRule, utcDate, GATES_LEAVING_NO_FREE_TIER } = await import("../dist/ranking.js");
 const { toSlug } = await import("../dist/slug.js");
 const { loadDealChanges, refusalsForVendor } = await import("../dist/data.js");
 const { supersedingChange, supersededTermsVerdictSentence } = await import("../dist/superseded-description.js");
@@ -107,7 +107,36 @@ const ABANDONMENT: DealChange = {
   date_source: "hand_written",
 } as DealChange;
 
-const FIXTURES = [LAPSED_TRIAL, RESTRICTED_CREDITS, EXPIRED_TRIAL, NARROWED_TRIAL, ABANDONED_CREDITS];
+const SCHOLARSHIP: Offer = {
+  vendor: "Zqaward Scholarship",
+  category: "Monitoring",
+  description: "Error tracking for open-source maintainers. A scholarship award on application, renewed each year.",
+  tier: "Scholarship",
+  url: "https://zqaward-scholarship.example/pricing",
+  tags: ["monitoring"],
+  verifiedDate: TODAY,
+};
+const PREVIEW: Offer = {
+  vendor: "Zqpreview Public",
+  category: "Monitoring",
+  description: "Log search in public preview. Up to 10 GB storage while the preview runs.",
+  tier: "Public Preview",
+  url: "https://zqpreview-public.example/pricing",
+  tags: ["monitoring"],
+  verifiedDate: TODAY,
+};
+
+const BARE_PREVIEW: Offer = {
+  vendor: "Zqpreview Bare",
+  category: "Monitoring",
+  description: "Uptime checks in private beta.",
+  tier: "Beta",
+  url: "https://zqpreview-bare.example/pricing",
+  tags: ["monitoring"],
+  verifiedDate: TODAY,
+};
+
+const FIXTURES = [LAPSED_TRIAL, RESTRICTED_CREDITS, EXPIRED_TRIAL, NARROWED_TRIAL, ABANDONED_CREDITS, SCHOLARSHIP, PREVIEW, BARE_PREVIEW];
 const scratch = mkdtempSync(path.join(tmpdir(), "time-limited-offer-answers-"));
 const scratchIndex = path.join(scratch, "index.json");
 const scratchChanges = path.join(scratch, "deal_changes.json");
@@ -176,6 +205,10 @@ interface Page {
   ld: Faq[];
   meta: string;
   verdict: string;
+  title: string;
+  h1: string;
+  growthHeading: string | null;
+  growthBullets: string[];
 }
 
 function readPage(status: number, html: string): Page {
@@ -190,7 +223,11 @@ function readPage(status: number, html: string): Page {
   }
   const meta = decode(html.match(/<meta name="description" content="([^"]*)"/)?.[1] ?? "");
   const verdict = decode((html.match(/<div class="quick-verdict">\s*<p>([\s\S]*?)<\/p>/)?.[1] ?? "").replace(/<[^>]+>/g, ""));
-  return { status, body, ld, meta, verdict };
+  const title = decode(html.match(/<title>([^<]*)<\/title>/)?.[1] ?? "");
+  const h1 = decode((html.match(/<h1>([\s\S]*?)<\/h1>/)?.[1] ?? "").replace(/<span class="risk-badge"[\s\S]*?<\/span>/, "").replace(/<[^>]+>/g, "")).trim();
+  const growth = html.match(/<div class="section growth-section">\s*<h2>([^<]*)<\/h2>\s*<ul class="growth-list">([\s\S]*?)<\/ul>/);
+  const growthBullets = growth ? [...growth[2].matchAll(/<li>([\s\S]*?)<\/li>/g)].map(m => decode(m[1].replace(/<[^>]+>/g, ""))) : [];
+  return { status, body, ld, meta, verdict, title, h1, growthHeading: growth ? decode(growth[1]) : null, growthBullets };
 }
 
 let port = 0;
@@ -255,6 +292,18 @@ function phrasesPresumingAFreeTier(vendor: string): RegExp[] {
     new RegExp(`${escaped(vendor)} free tier includes`, "i"),
   ];
 }
+
+const YEAR = new Date().getUTCFullYear();
+const OFFER_TEXT: Record<string, { name: string; heading: (vendor: string) => string; bullet: string | null }> = {
+  credit: { name: "Free Credits", heading: v => `When ${v}'s Free Credits Run Out`, bullet: "When credits run out or expire, you must pay for further use." },
+  trial: { name: "Free Trial", heading: v => `When ${v}'s Free Trial Ends`, bullet: "When the trial ends, you must pay for further use." },
+  scholarship: { name: "Scholarship", heading: v => `When ${v}'s Scholarship Ends`, bullet: "When the award period ends, you must pay for further use." },
+  preview: { name: "Free Preview", heading: v => `When ${v}'s Free Preview Ends`, bullet: null },
+};
+const offerTextOf = (tier: string) => OFFER_TEXT[timeLimitedTierRule(tier)!.kind];
+const GENERIC_BULLET = "When your usage exceeds the free tier limits, you'll need to upgrade.";
+const THRESHOLD_BULLET = /^At .+, you'll need to upgrade\.$/;
+const ALTERNATIVES_BULLET = /^At that point, the \d+ alternatives in /;
 
 const productionSentence = (s: Subject) => `Not for long. It is ${s.note}, so plan for paid usage before you depend on it.`;
 const whatItOffers = (s: Subject) => `No. What ${s.vendor} offers is ${s.note}:`;
@@ -424,6 +473,57 @@ describe("a vendor whose listed tier is a trial or a credit grant is not said to
     );
   });
 
+  it("names the offer by its class in the title, the H1 and the section heading, and none of them says Free Tier", () => {
+    const retitled = timeLimited.filter(s => !page(`/vendor/${s.slug}`).title.startsWith(`${s.vendor} Pricing `));
+    assertPopulationFloor(retitled.length, 20, "trial and credit vendor pages titled by their offer");
+    for (const s of timeLimited) {
+      const p = page(`/vendor/${s.slug}`);
+      for (const text of [p.title, p.h1, p.growthHeading ?? ""]) assert.ok(!text.includes("Free Tier"), `/vendor/${s.slug}: ${text}`);
+      if (p.growthHeading !== null) assert.strictEqual(p.growthHeading, offerTextOf(s.tier).heading(s.vendor), `/vendor/${s.slug}`);
+    }
+    for (const s of retitled) {
+      const p = page(`/vendor/${s.slug}`);
+      assert.strictEqual(p.h1, `${s.vendor} ${offerTextOf(s.tier).name} ${YEAR}`);
+      assert.strictEqual(p.title, `${s.vendor} ${offerTextOf(s.tier).name} ${YEAR}: Limits, Pricing & What Changed | AgentDeals`);
+    }
+  });
+
+  it("says what follows the offer where a free tier's page says the usage exceeds its limits", () => {
+    const sayingWhatFollows = timeLimited.filter(s => page(`/vendor/${s.slug}`).growthBullets.includes(offerTextOf(s.tier).bullet ?? ""));
+    assert.notStrictEqual(sayingWhatFollows.length, 0, "no trial or credit page says what follows its offer");
+    for (const s of timeLimited.filter(t => !t.superseded)) {
+      const p = page(`/vendor/${s.slug}`);
+      if (p.growthHeading === null || p.title.startsWith(`${s.vendor} Pricing `)) continue;
+      const thresholds = p.growthBullets.filter(b => THRESHOLD_BULLET.test(b) || b.startsWith("We record "));
+      if (thresholds.length === 0) assert.strictEqual(p.growthBullets[0], offerTextOf(s.tier).bullet, `/vendor/${s.slug}`);
+    }
+    for (const s of timeLimited) {
+      for (const bullet of page(`/vendor/${s.slug}`).growthBullets) {
+        assert.ok(
+          bullet === offerTextOf(s.tier).bullet || THRESHOLD_BULLET.test(bullet) || ALTERNATIVES_BULLET.test(bullet) || bullet.startsWith("We record "),
+          `/vendor/${s.slug}: ${bullet}`,
+        );
+      }
+    }
+  });
+
+  it("names a scholarship and a preview by their class, and says nothing follows a preview", () => {
+    const award = page(`/vendor/${toSlug(SCHOLARSHIP.vendor)}`);
+    assert.strictEqual(award.h1, `${SCHOLARSHIP.vendor} Scholarship ${YEAR}`);
+    assert.strictEqual(award.title, `${SCHOLARSHIP.vendor} Scholarship ${YEAR}: Limits, Pricing & What Changed | AgentDeals`);
+    assert.strictEqual(award.growthHeading, `When ${SCHOLARSHIP.vendor}'s Scholarship Ends`);
+    assert.strictEqual(award.growthBullets[0], "When the award period ends, you must pay for further use.");
+
+    const preview = page(`/vendor/${toSlug(PREVIEW.vendor)}`);
+    assert.strictEqual(preview.h1, `${PREVIEW.vendor} Free Preview ${YEAR}`);
+    assert.strictEqual(preview.title, `${PREVIEW.vendor} Free Preview ${YEAR}: Limits, Pricing & What Changed | AgentDeals`);
+    assert.strictEqual(preview.growthHeading, `When ${PREVIEW.vendor}'s Free Preview Ends`);
+    assert.ok(preview.growthBullets.length > 0 && preview.growthBullets.every(b => THRESHOLD_BULLET.test(b) || ALTERNATIVES_BULLET.test(b)), JSON.stringify(preview.growthBullets));
+    const bare = page(`/vendor/${toSlug(BARE_PREVIEW.vendor)}`);
+    assert.strictEqual(bare.h1, `${BARE_PREVIEW.vendor} Free Preview ${YEAR}`);
+    assert.ok(bare.growthBullets.every(b => !b.endsWith("you must pay for further use.")), JSON.stringify(bare.growthBullets));
+  });
+
   it("leaves the pages of a vendor whose listed tier is an ongoing free tier as they were", () => {
     assertPopulationFloor(freeClass.length, 1000, "vendor pages whose listed tier is an ongoing free tier");
     const changed: string[] = [];
@@ -437,6 +537,9 @@ describe("a vendor whose listed tier is a trial or a credit grant is not said to
         `${s.vendor} has no ongoing free tier; what it offers is`,
       ];
       if (texts.some(t => timeLimitedWording.some(w => t.includes(w)))) changed.push(`/vendor/${s.slug}`);
+      const titled = p.title === `${s.vendor} Free Tier ${YEAR}: Limits, Pricing & What Changed | AgentDeals` || p.title === `${s.vendor} Pricing ${YEAR}: Plans, Costs & Free Alternatives | AgentDeals`;
+      const headed = p.growthHeading === null || p.growthHeading === `When You'll Outgrow ${s.vendor}'s Free Tier`;
+      if (!titled || !headed || p.growthBullets.some(b => Object.values(OFFER_TEXT).some(o => o.bullet === b))) changed.push(`/vendor/${s.slug} (title, heading or bullet)`);
     }
     assert.deepStrictEqual(changed, []);
     const answeringAlternatives = freeClass.filter(s => page(`/alternative-to/${s.slug}`).ld.length > 0);

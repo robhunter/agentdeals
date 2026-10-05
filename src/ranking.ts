@@ -42,17 +42,20 @@ export const NOT_FREE_TIER_RULES: { pattern: RegExp; note: string }[] = [
   { pattern: /^exempt\s*\/\s*paid$/i, note: "free only by case-by-case exemption" },
 ];
 
+export type TimeLimitedKind = "credit" | "trial" | "scholarship" | "preview";
+
 export interface TimeLimitedTierRule {
+  kind: TimeLimitedKind;
   pattern: RegExp;
   note: string;
   badgeLabel: string;
 }
 
 export const TIME_LIMITED_TIER_RULES: TimeLimitedTierRule[] = [
-  { pattern: /credit/i, note: "a credit grant that runs out", badgeLabel: "credits only" },
-  { pattern: /\btrial\b/i, note: "a trial that expires", badgeLabel: "trial only" },
-  { pattern: /scholarship/i, note: "a scholarship award, not an ongoing tier", badgeLabel: "award only" },
-  { pattern: /\bbeta\b|preview|sandbox/i, note: "a beta/preview/sandbox allowance that may end without notice", badgeLabel: "preview only" },
+  { kind: "credit", pattern: /credit/i, note: "a credit grant that runs out", badgeLabel: "credits only" },
+  { kind: "trial", pattern: /\btrial\b/i, note: "a trial that expires", badgeLabel: "trial only" },
+  { kind: "scholarship", pattern: /scholarship/i, note: "a scholarship award, not an ongoing tier", badgeLabel: "award only" },
+  { kind: "preview", pattern: /\bbeta\b|preview|sandbox/i, note: "a beta/preview/sandbox allowance that may end without notice", badgeLabel: "preview only" },
 ];
 
 export function timeLimitedTierRule(tier: string): TimeLimitedTierRule | null {
