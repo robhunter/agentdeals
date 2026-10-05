@@ -28137,7 +28137,7 @@ function buildCiCdPricingPage(): string {
       selfHosted: "N/A (managed)",
       paidFrom: "$0.005/min (general1.small)",
       pricingModel: "Per-minute",
-      freeDetails: "100 build minutes/month on general1.small (Always Free). Pay-per-minute after that. Integrates with CodePipeline, CodeCommit, and all AWS services. Supports custom Docker images, caching to S3, and batch builds. No server management.",
+      freeDetails: "100 build minutes/month on general1.small or arm1.small (Always Free). Pay-per-minute after that. Integrates with CodePipeline, CodeCommit, and all AWS services. Supports custom Docker images, caching to S3, and batch builds. No server management.",
       freeType: "limited",
       monthlyCostSmall: "$0\u201310",
       monthlyCostTeam: "$20\u2013100+",
@@ -32971,7 +32971,7 @@ ${mcpCtaCss()}
 
     <div class="verdict-item">
       <strong>CI/CD pipeline</strong>
-      <p>CodeBuild (100 min/month) + CodePipeline (1 free pipeline) + ECR Public (50 GB). Enough for a small team's build/deploy workflow. For more capacity, see <a href="/ci-cd-alternatives">CI/CD alternatives</a>.</p>
+      <p>CodeBuild (100 min/month) + CodePipeline (1 V1 pipeline or 100 V2 action minutes/month) + ECR Public (50 GB). Enough for a small team's build/deploy workflow. For more capacity, see <a href="/ci-cd-alternatives">CI/CD alternatives</a>.</p>
     </div>
 
     <div class="verdict-item">
@@ -33164,10 +33164,11 @@ function buildGcpFreeTier2026Page(): string {
     freeTier: string;
     strength: string;
     bestFor: string;
+    noFetchablePageStatesIt?: true;
   }
 
   const cloudAlts: CloudAlt[] = [
-    { name: "AWS", slug: "aws", freeTier: "Always Free: Lambda 1M req/mo, DynamoDB 25 GB", strength: "Broadest service catalog, most enterprise adoption", bestFor: "Enterprise workloads, serverless (Lambda)" },
+    { name: "AWS", slug: "aws", freeTier: "Always Free: Lambda 1M req/mo, DynamoDB 25 GB", strength: "Broadest service catalog, most enterprise adoption", bestFor: "Enterprise workloads, serverless (Lambda)", noFetchablePageStatesIt: true },
     { name: "Azure", slug: "azure", freeTier: "12 months: 750 hours each of B2pts v2 and B2ats v2 VMs. Always free: SQL Database (100K vCore seconds/mo, 32 GB), Cosmos DB (1K RU/s, 25 GB). $200 credit for 30 days, then pay-as-you-go to keep the free services.", strength: "Best .NET/Windows integration, hybrid cloud", bestFor: "Microsoft stack teams, enterprise" },
     { name: "Cloudflare", slug: "cloudflare-workers", freeTier: "Workers 100K req/day, R2 10 GB (zero egress), D1 5 GB, Pages unlimited", strength: "Zero egress on R2, global edge network", bestFor: "Edge computing, static sites, storage" },
     { name: "Railway", slug: "railway", freeTier: "$5 free trial credit, usage-based pricing", strength: "Best developer experience, instant deploys", bestFor: "Quick prototypes, hobby projects" },
@@ -33199,7 +33200,7 @@ function buildGcpFreeTier2026Page(): string {
       <p class="diff-desc">${escHtmlServer(g.desc)}</p>
     </div>`).join("\n    ");
 
-  const altRows = cloudAlts.map(a => `<tr>
+  const altRows = cloudAlts.map(a => `<tr${a.noFetchablePageStatesIt ? ` ${NO_FETCHABLE_PAGE_STATES_THE_ROW}` : ""}>
       <td style="font-weight:600">${handwrittenVendorLinkHtml(a.slug, a.name, ' style="color:var(--text)"')}</td>
       <td style="font-size:.8rem">${escHtmlServer(a.freeTier)}</td>
       <td style="font-size:.8rem;color:var(--text-muted)">${escHtmlServer(a.bestFor)}</td>
@@ -33588,10 +33589,11 @@ function buildAzureFreeTier2026Page(): string {
     freeTier: string;
     strength: string;
     bestFor: string;
+    noFetchablePageStatesIt?: true;
   }
 
   const cloudAlts: CloudAlt[] = [
-    { name: "AWS", slug: "aws", freeTier: "Always Free: Lambda 1M req/mo, DynamoDB 25 GB, 30+ services", strength: "Most services under one roof", bestFor: "Serverless backends, broadest ecosystem" },
+    { name: "AWS", slug: "aws", freeTier: "Always Free: Lambda 1M req/mo, DynamoDB 25 GB, 30+ services", strength: "Most services under one roof", bestFor: "Serverless backends, broadest ecosystem", noFetchablePageStatesIt: true },
     { name: "GCP (Google Cloud)", slug: "google-cloud", freeTier: "Always Free: e2-micro VM, BigQuery 1 TiB, Cloud Run 2M req/mo", strength: "Most generous always-free compute", bestFor: "Side projects needing a persistent VM" },
     { name: "Railway", slug: "railway", freeTier: "$5 free trial credit, usage-based pricing after", strength: "Best developer experience, instant deploys", bestFor: "Quick prototypes, hobby projects" },
     { name: "Render", slug: "render", freeTier: "Free web services (512 MB RAM), free PostgreSQL (30 days)", strength: "Simple PaaS with generous free tier", bestFor: "Replacing Heroku for small apps" },
@@ -33627,7 +33629,7 @@ function buildAzureFreeTier2026Page(): string {
       <p class="diff-desc">${escHtmlServer(g.desc)}</p>
     </div>`).join("\n    ");
 
-  const altRows = cloudAlts.map(a => `<tr>
+  const altRows = cloudAlts.map(a => `<tr${a.noFetchablePageStatesIt ? ` ${NO_FETCHABLE_PAGE_STATES_THE_ROW}` : ""}>
       <td style="font-weight:600">${handwrittenVendorLinkHtml(a.slug, a.name, ' style="color:var(--text)"')}</td>
       <td style="font-size:.8rem">${escHtmlServer(a.freeTier)}</td>
       <td style="font-size:.8rem;color:var(--text-muted)">${escHtmlServer(a.bestFor)}</td>
@@ -34041,10 +34043,11 @@ function buildDigitalOceanFreeTier2026Page(): string {
     freeTier: string;
     strength: string;
     bestFor: string;
+    noFetchablePageStatesIt?: true;
   }
 
   const cloudAlts: CloudAlt[] = [
-    { name: "AWS", slug: "aws", freeTier: "Always Free: Lambda 1M req/mo, DynamoDB 25 GB, 30+ services", strength: "Most services, broadest free tier", bestFor: "Enterprise, serverless, broadest ecosystem" },
+    { name: "AWS", slug: "aws", freeTier: "Always Free: Lambda 1M req/mo, DynamoDB 25 GB, 30+ services", strength: "Most services, broadest free tier", bestFor: "Enterprise, serverless, broadest ecosystem", noFetchablePageStatesIt: true },
     { name: "GCP (Google Cloud)", slug: "google-cloud", freeTier: "Always Free: e2-micro VM, BigQuery 1 TiB, Cloud Run 2M req/mo", strength: "Free persistent VM, generous compute", bestFor: "Side projects needing always-free compute" },
     { name: "Azure", slug: "azure", freeTier: "Always Free: Functions 1M req/mo, Cosmos DB 25 GB, 65+ services", strength: "Best free database (Cosmos DB), enterprise identity", bestFor: ".NET apps, enterprise auth, Cosmos DB" },
     { name: "Hetzner", slug: "hetzner", freeTier: `No free tier — cheapest orderable plan is ${hetznerEntryPriceClause()}`, strength: "Strong price/performance above the entry tier", bestFor: "European hosting, raw compute power" },
@@ -34072,7 +34075,7 @@ function buildDigitalOceanFreeTier2026Page(): string {
       <p class="diff-desc">${escHtmlServer(g.desc)}</p>
     </div>`).join("\n    ");
 
-  const altRows = cloudAlts.map(a => `<tr>
+  const altRows = cloudAlts.map(a => `<tr${a.noFetchablePageStatesIt ? ` ${NO_FETCHABLE_PAGE_STATES_THE_ROW}` : ""}>
       <td style="font-weight:600">${handwrittenVendorLinkHtml(a.slug, a.name, ' style="color:var(--text)"')}</td>
       <td style="font-size:.8rem">${escHtmlServer(a.freeTier)}</td>
       <td style="font-size:.8rem;color:var(--text-muted)">${escHtmlServer(a.bestFor)}</td>
@@ -36674,7 +36677,7 @@ ${mcpCtaCss()}
       <tr style="background:rgba(63,185,80,0.08)">
         <td class="provider-col"><a href="/vendor/aws" style="color:var(--text)">AWS Lambda</a></td>
         <td style="font-family:var(--mono)">1M / month</td>
-        <td style="font-family:var(--mono)">400K GB-sec/mo</td>
+        <td style="font-family:var(--mono)">400K GB-sec/mo${figureSourceLinkHtml("https://aws.amazon.com/lambda/pricing/", escHtmlServer)}</td>
         <td>128 MB &ndash; 10 GB</td>
         <td>15 min max</td>
         <td>Wall-clock time</td>
@@ -36808,7 +36811,7 @@ ${mcpCtaCss()}
       <tr style="background:rgba(63,185,80,0.08)">
         <td class="provider-col">AWS Lambda</td>
         <td style="font-family:var(--mono)">1M / month</td>
-        <td style="font-family:var(--mono)">400K GB-sec</td>
+        <td style="font-family:var(--mono)">400K GB-sec${figureSourceLinkHtml("https://aws.amazon.com/lambda/pricing/", escHtmlServer)}</td>
         <td>API Gateway, DynamoDB, S3, SQS, SNS, EventBridge</td>
         <td>Node.js, Python, Go, Java, .NET, Rust, Ruby</td>
         <td>AWS-native backends, event-driven architectures</td>
@@ -36911,18 +36914,18 @@ ${mcpCtaCss()}
       </tr>
       <tr>
         <td class="provider-col">AWS App Runner</td>
-        <td>No always-free tier (trial credits only)</td>
+        <td>Closed to new customers since April 30, 2026. Existing customers only.${figureSourceLinkHtml("https://aws.amazon.com/apprunner/", escHtmlServer)}</td>
         <td class="check">Any Docker image or source code</td>
         <td>Configurable</td>
         <td>Standard AWS egress</td>
-        <td>Simple container deployments on AWS</td>
+        <td>For existing App Runner customers. New customers use ECS Express Mode.</td>
       </tr>
     </tbody>
   </table>
   </div>
 
   <div class="context-box">
-    <strong>Cloud Run is the clear winner here</strong> — it&rsquo;s the only container-based serverless with a genuinely generous always-free tier. You can run any Docker image, handle up to 1000 concurrent requests per instance, and the 2M requests/month free tier is competitive with any FaaS. <strong>AWS App Runner</strong> doesn&rsquo;t have an always-free tier, making it a non-starter for free-tier comparisons. For containerized workloads that need more than FaaS constraints allow, Cloud Run is the answer.
+    <strong>Cloud Run is the clear winner here</strong> — it&rsquo;s the only container-based serverless with a genuinely generous always-free tier. You can run any Docker image, handle up to 1000 concurrent requests per instance, and the 2M requests/month free tier is competitive with any FaaS. AWS App Runner closed to new customers on April 30, 2026. New AWS accounts cannot use it. AWS recommends Amazon ECS Express Mode instead. For containerized workloads that need more than FaaS constraints allow, Cloud Run is the answer.
   </div>
 
   <h2 id="specialized">Specialized Serverless</h2>
@@ -37413,7 +37416,7 @@ ${mcpCtaCss()}
       </tr>
       <tr>
         <td class="provider-col">AWS Cognito</td>
-        <td style="font-family:var(--mono)">10K MAU (50K for Lite pools created by Nov 22, 2024)</td>
+        <td style="font-family:var(--mono)">10K MAU (50K for Lite pools created by Nov 22, 2024)${figureSourceLinkHtml("https://aws.amazon.com/cognito/pricing/", escHtmlServer)}</td>
         <td style="font-family:var(--mono)">$0.0055 Lite / $0.015 Essentials</td>
         <td class="check">Social, SAML, OIDC</td>
         <td class="check">SMS + TOTP</td>
@@ -37615,7 +37618,7 @@ ${mcpCtaCss()}
       </tr>
       <tr>
         <td class="provider-col">AWS Cognito</td>
-        <td style="font-family:var(--mono)">10,000</td>
+        <td style="font-family:var(--mono)">10,000${figureSourceLinkHtml("https://aws.amazon.com/cognito/pricing/", escHtmlServer)}</td>
         <td style="font-family:var(--mono)">$0.0055 Lite / $0.015 Essentials</td>
         <td>AWS (Lambda, DynamoDB, S3, etc.)</td>
         <td class="check">SMS + TOTP</td>
@@ -37850,7 +37853,7 @@ ${mcpCtaCss()}
       </tr>
       <tr>
         <td style="font-weight:600">AWS Cognito</td>
-        <td class="cheapest">$0 (free)</td>
+        <td class="cheapest">$0 (free)${figureSourceLinkHtml("https://aws.amazon.com/cognito/pricing/", escHtmlServer)}</td>
         <td>$82.50 Lite / $225 Essentials</td>
         <td>$220 / $600</td>
         <td>$495 / $1,350</td>
@@ -40208,7 +40211,7 @@ ${mcpCtaCss()}
         <td class="provider-col">AWS S3<span class="caution-badge">CREDITS ONLY</span></td>
         <td>Object</td>
         <td>None (credits)</td>
-        <td>${monthlyEgressGrantGb("AWS S3")} GB/mo, no expiry</td>
+        <td>${monthlyEgressGrantGb("AWS S3")} GB/mo, no expiry${figureSourceLinkHtml("https://aws.amazon.com/s3/pricing/", escHtmlServer)}</td>
         <td class="check">&#10003; (native)</td>
         <td class="partial">CloudFront sep.</td>
         <td class="cross">&#10007;</td>
