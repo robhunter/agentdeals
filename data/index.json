@@ -363,11 +363,11 @@
       "referral_program": {
         "available": true,
         "referrer_benefit": "15% commission (first 12 months)",
-        "referee_benefit": "$20 in credits",
+        "referee_benefit": "$20 in credits when the new account upgrades to a paid plan",
         "program_url": "https://railway.com/affiliate-program",
         "type": "self-service",
         "commission_type": "recurring",
-        "notes": "First 12 months of referred user spend."
+        "notes": "First 12 months of referred user spend. The $20 is credited on upgrade to Hobby or Pro, not at signup (read 2026-10-05)."
       },
       "payment_protocols": [
         {
@@ -823,12 +823,12 @@
       "verifiedDate": "2026-10-03",
       "referral_program": {
         "available": true,
-        "referrer_benefit": "$20 cash per referral",
-        "referee_benefit": "Free tier access",
-        "program_url": "https://neon.tech/docs/introduction/referral-program",
+        "referrer_benefit": "$5 in credits when the referred account spends $5",
+        "referee_benefit": "No benefit stated on the changelog",
+        "program_url": "https://neon.com/docs/changelog/2026-06-19",
         "type": "self-service",
-        "commission_type": "one-time",
-        "notes": "$20 cash per qualified referral."
+        "commission_type": "credits",
+        "notes": "Neon calls it an early pilot: \"when they sign up for Neon and spend $5, you get $5 in credits\" (changelog, 2026-06-19; read 2026-10-05)."
       },
       "payment_protocols": [
         {
@@ -903,13 +903,12 @@
       ],
       "verifiedDate": "2026-09-22",
       "referral_program": {
-        "available": true,
-        "referrer_benefit": "$100 Amazon gift card per referral",
-        "referee_benefit": "Atlas free tier",
+        "available": false,
+        "referrer_benefit": "N/A",
+        "referee_benefit": "N/A",
         "program_url": "https://www.mongodb.com/referral-program",
-        "type": "self-service",
-        "commission_type": "one-time",
-        "notes": "Referee must run M10+ cluster for 30+ days. Not valid for existing MongoDB users."
+        "type": "closed",
+        "notes": "mongodb.com/referral-program returns 404, and no MongoDB page we found states a referral program (read 2026-10-05)."
       },
       "source_check": {
         "checked": "2026-09-22",
@@ -2066,12 +2065,12 @@
       ],
       "verifiedDate": "2026-09-21",
       "referral_program": {
-        "available": true,
-        "referrer_benefit": "20% recurring commission (12 months)",
-        "referee_benefit": "Standard pricing",
+        "available": false,
+        "referrer_benefit": "N/A",
+        "referee_benefit": "N/A",
         "program_url": "https://postmarkapp.com/partner-program",
-        "type": "affiliate-network",
-        "commission_type": "one-time"
+        "type": "closed",
+        "notes": "postmarkapp.com/partner-program returns 404 (read 2026-10-05)."
       },
       "source_check": {
         "checked": "2026-09-21",
@@ -2256,12 +2255,12 @@
       ],
       "verifiedDate": "2026-09-24",
       "referral_program": {
-        "available": true,
-        "referrer_benefit": "1 free month per referral",
-        "referee_benefit": "1 free month",
-        "program_url": "https://www.backblaze.com/cloud-storage/refer-a-friend",
-        "type": "self-service",
-        "commission_type": "one-time"
+        "available": false,
+        "referrer_benefit": "N/A",
+        "referee_benefit": "N/A",
+        "program_url": "https://www.backblaze.com/computer-backup/docs/refer-a-friend",
+        "type": "closed",
+        "notes": "Backblaze's refer-a-friend gives a free month of Computer Backup, not B2 Cloud Storage (read 2026-10-05)."
       },
       "source_check": {
         "checked": "2026-09-24",
@@ -2773,7 +2772,7 @@
     {
       "vendor": "Hetzner",
       "category": "Infrastructure",
-      "description": "Budget cloud VMs, no free tier. As of 2026-09-04 hetzner.com marks every Cost-Optimized plan — CX23, CX33, CX43, CX53 and the Arm CAX11–CAX41 — \"not available\". The cheapest orderable plan is CPX12 at €11.99/month (1 vCPU AMD, 2 GB RAM, 40 GB NVMe, 0.5 TB traffic); CPX22 is €19.99 (2 vCPU, 4 GB, 80 GB, 20 TB traffic). Dedicated-vCPU CCX13 is €43.49/month in the EU and $51.59 in the US. These are hetzner.com's displayed prices and include the €0.50/month primary IPv4. Two 2026 increases: April 1 across all lines, then June 15, which applies to new orders and rescales only — existing contracts keep their terms. The June standardization renamed dedicated server models (-1, -2 and -3 suffixes, plus a -1-Ltd limited line) and left the cloud plan names unchanged; the older CX22/CX32/CX42 names went before it. Server Auction, IPs, storage, Load Balancers, Volumes, Snapshots and Object Storage were excluded from the June round.",
+      "description": "Budget cloud VMs, no free tier. As of 2026-09-04 hetzner.com marks every Cost-Optimized plan — CX23, CX33, CX43, CX53 and the Arm CAX11–CAX41 — \"not available\". The cheapest orderable plan is CPX12 at €11.99/month (1 vCPU AMD, 2 GB RAM, 40 GB NVMe, 0.5 TB traffic); CPX22 is €19.99 (2 vCPU, 4 GB, 80 GB, 20 TB traffic). Dedicated-vCPU CCX13 is €43.49/month in the EU and $51.59 in the US. These are hetzner.com's displayed prices and include the €0.50/month primary IPv4. Two 2026 increases: April 1 across all lines, then June 15, which applies to new orders and rescales only — existing contracts keep their terms. The June standardization renamed dedicated server models (-1, -2 and -3 suffixes, plus a -1-Ltd limited line) and left the cloud plan names unchanged; the older CX22/CX32/CX42 names went before it. Server Auction, IPs, storage, Load Balancers, Volumes, Snapshots and Object Storage were excluded from the June round. New accounts can get €50 of credit with Hetzner's sign-up code (hetzner.com/promo-code), valid only for the billing period in which it is redeemed.",
       "tier": "Paid",
       "url": "https://www.hetzner.com/cloud/",
       "tags": [
@@ -2787,13 +2786,12 @@
       ],
       "verifiedDate": "2026-09-04",
       "referral_program": {
-        "available": true,
-        "referrer_benefit": "€10 credit",
-        "referee_benefit": "€20 credit",
-        "program_url": "https://www.hetzner.com/tell-a-friend",
-        "type": "self-service",
-        "commission_type": "credits",
-        "notes": "Hetzner credits for both parties."
+        "available": false,
+        "referrer_benefit": "N/A",
+        "referee_benefit": "N/A",
+        "program_url": "https://www.hetzner.com/promo-code/",
+        "type": "closed",
+        "notes": "Hetzner's referral terms page no longer states referral terms, and its referral links open hetzner.com/promo-code, which offers new customers a €50 sign-up credit (read 2026-10-05)."
       },
       "source_check": {
         "checked": "2026-10-03",
@@ -27450,6 +27448,15 @@
         "text": "Up to 30 hours of chat on Free Mode Up to 60 projects on Free Mode $20 towards most powerful models",
         "url": "https://replit.com/pricing",
         "read_on": "2026-10-04"
+      },
+      "referral_program": {
+        "available": true,
+        "referrer_benefit": "$20 in credits per new paying customer",
+        "referee_benefit": "$20 in credits on becoming a paying customer",
+        "program_url": "https://replit.com/refer",
+        "type": "self-service",
+        "commission_type": "credits",
+        "notes": "Replit: \"For every new paying customer you refer, you both get $20 in Replit credits\" (read 2026-10-05)."
       }
     },
     {
@@ -31405,13 +31412,12 @@
         "program": "MongoDB Startup Deal"
       },
       "referral_program": {
-        "available": true,
-        "referrer_benefit": "$100 Amazon gift card per referral",
-        "referee_benefit": "Atlas free tier",
+        "available": false,
+        "referrer_benefit": "N/A",
+        "referee_benefit": "N/A",
         "program_url": "https://www.mongodb.com/referral-program",
-        "type": "self-service",
-        "commission_type": "one-time",
-        "notes": "Referee must run M10+ cluster for 30+ days."
+        "type": "closed",
+        "notes": "mongodb.com/referral-program returns 404, and no MongoDB page we found states a referral program (read 2026-10-05)."
       },
       "source_check": {
         "checked": "2026-09-15",
@@ -33183,6 +33189,15 @@
         "checked": "2026-09-26",
         "outcome": "ok",
         "detail": "the page writes \"bolt\", the domain we cite Bolt.new from, and states \"1M tokens per month\""
+      },
+      "referral_program": {
+        "available": true,
+        "referrer_benefit": "15% of what they pay Bolt, up to $50 per referral",
+        "referee_benefit": "20% off a paid plan (first 3 months monthly, or once on an annual plan)",
+        "program_url": "https://support.bolt.new/external-resources/referral-program",
+        "type": "self-service",
+        "commission_type": "one-time",
+        "notes": "Rewards apply only when the referred account subscribes to a paid plan (read 2026-10-05)."
       }
     },
     {
@@ -33210,6 +33225,15 @@
         "record_date": "2026-09-03",
         "change_type": "limits_increased",
         "restated_on": "2026-09-20"
+      },
+      "referral_program": {
+        "available": true,
+        "referrer_benefit": "100 bonus credits when they pay for their first Pro or Business subscription",
+        "referee_benefit": "10 bonus credits on signing up through the link",
+        "program_url": "https://docs.lovable.dev/introduction/faq",
+        "type": "self-service",
+        "commission_type": "credits",
+        "notes": "A sign-up alone earns the referrer nothing (Lovable FAQ, read 2026-10-05)."
       }
     },
     {
@@ -33513,13 +33537,12 @@
         }
       ],
       "referral_program": {
-        "available": true,
-        "referrer_benefit": "Referral fee per enterprise deal",
-        "referee_benefit": "Enterprise onboarding support",
-        "program_url": "https://www.anthropic.com/referral",
-        "type": "partner",
-        "commission_type": "one-time",
-        "notes": "Enterprise referral program. Must bring new enterprise customers. Commission negotiated per deal."
+        "available": false,
+        "referrer_benefit": "N/A",
+        "referee_benefit": "N/A",
+        "program_url": "https://www.anthropic.com/",
+        "type": "closed",
+        "notes": "anthropic.com/referral now redirects to anthropic.com, and no Anthropic page we found states a referral program (read 2026-10-05)."
       },
       "source_check": {
         "checked": "2026-10-02",
