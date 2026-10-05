@@ -793,7 +793,7 @@
       "changed": "2026-10-05"
     },
     "/auth0-alternatives": {
-      "hash": "0e55117e0033eb9d",
+      "hash": "d972a57f03cc08a8",
       "changed": "2026-10-05"
     },
     "/auth0-vs-clerk": {
@@ -1148,7 +1148,7 @@
       "changed": "2026-10-04"
     },
     "/category/databases": {
-      "hash": "90231272950897b5",
+      "hash": "61bab0482312754a",
       "changed": "2026-10-05"
     },
     "/category/design": {
@@ -1947,7 +1947,7 @@
       "changed": "2026-10-04"
     },
     "/compare/firebase-vs-supabase": {
-      "hash": "612c78b48d45ee02",
+      "hash": "1f07e38d2109874b",
       "changed": "2026-10-05"
     },
     "/compare/firebase-vs-vercel": {
@@ -2367,7 +2367,7 @@
       "changed": "2026-10-05"
     },
     "/compare/mongodb-vs-supabase": {
-      "hash": "064dc2a1628a9740",
+      "hash": "811331f3c9b9836b",
       "changed": "2026-10-05"
     },
     "/compare/moss-sh-vs-xcloud-host": {
@@ -2399,7 +2399,7 @@
       "changed": "2026-10-04"
     },
     "/compare/neon-vs-supabase": {
-      "hash": "e8a7a26fa062aba6",
+      "hash": "5c133c9fda12887e",
       "changed": "2026-10-05"
     },
     "/compare/netlify-vs-railway": {
@@ -2531,7 +2531,7 @@
       "changed": "2026-10-05"
     },
     "/compare/railway-vs-supabase": {
-      "hash": "587da394772ec2ed",
+      "hash": "815891bc395bdc66",
       "changed": "2026-10-05"
     },
     "/compare/rapidapi-vs-treblle": {
@@ -2686,7 +2686,7 @@
       "changed": "2026-10-05"
     },
     "/database-alternatives": {
-      "hash": "29543119930e3de0",
+      "hash": "e2e4b123bff5df93",
       "changed": "2026-10-05"
     },
     "/database-free-tier-comparison-2026": {
@@ -3077,7 +3077,7 @@
       "changed": "2026-09-12"
     },
     "/estimate": {
-      "hash": "e6e52a5b05cb0d61",
+      "hash": "49c6ed644fd4affe",
       "changed": "2026-10-05"
     },
     "/events": {
@@ -3104,7 +3104,7 @@
       "changed": "2026-10-05"
     },
     "/firebase-alternatives": {
-      "hash": "a4689410bae3c1fd",
+      "hash": "bb96d75e789fbc32",
       "changed": "2026-10-05"
     },
     "/firebase-studio-shutdown": {
@@ -3250,7 +3250,7 @@
       "changed": "2026-10-04"
     },
     "/mongodb-alternatives": {
-      "hash": "a05a8ce2a4d0c7f8",
+      "hash": "938886111e00e8ad",
       "changed": "2026-10-05"
     },
     "/monitoring-alternatives": {
@@ -3262,7 +3262,7 @@
       "changed": "2026-10-05"
     },
     "/neon-vs-supabase": {
-      "hash": "f396be2b832ca9c1",
+      "hash": "05356690226911fc",
       "changed": "2026-10-05"
     },
     "/neon-vs-turso": {
@@ -3472,7 +3472,7 @@
       "changed": "2026-10-05"
     },
     "/stack-check": {
-      "hash": "b9e4f2806e8c17fd",
+      "hash": "34cf0b472ac736b2",
       "changed": "2026-10-05"
     },
     "/stacks": {
@@ -3516,7 +3516,7 @@
       "changed": "2026-10-05"
     },
     "/supabase-vs-firebase": {
-      "hash": "027584a82f58beb8",
+      "hash": "902fba4d6ed1ceb4",
       "changed": "2026-10-05"
     },
     "/team-collaboration-alternatives": {
