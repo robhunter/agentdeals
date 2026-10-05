@@ -1116,8 +1116,8 @@
       "changed": "2026-10-04"
     },
     "/category/cloud-hosting": {
-      "hash": "668322a0f335f088",
-      "changed": "2026-10-04"
+      "hash": "740c618996710e4f",
+      "changed": "2026-10-05"
     },
     "/category/cloud-iaas": {
       "hash": "4abc57ff0ee9d689",
@@ -1615,8 +1615,8 @@
       "changed": "2026-10-04"
     },
     "/compare/cloudflare-pages-vs-render": {
-      "hash": "59a8633ddcb9ecfa",
-      "changed": "2026-10-04"
+      "hash": "6b982e37a14083d4",
+      "changed": "2026-10-05"
     },
     "/compare/cloudflare-pages-vs-vercel": {
       "hash": "7f100ab5af4e74ba",
@@ -2407,8 +2407,8 @@
       "changed": "2026-10-04"
     },
     "/compare/netlify-vs-render": {
-      "hash": "dfa8eeaeec8f6e41",
-      "changed": "2026-10-04"
+      "hash": "4aa04ff99d47073a",
+      "changed": "2026-10-05"
     },
     "/compare/netlify-vs-vercel": {
       "hash": "19f7f77aff15ec94",
@@ -2527,8 +2527,8 @@
       "changed": "2026-10-04"
     },
     "/compare/railway-vs-render": {
-      "hash": "b8eef404b2a20578",
-      "changed": "2026-10-04"
+      "hash": "535c544ec618b349",
+      "changed": "2026-10-05"
     },
     "/compare/railway-vs-supabase": {
       "hash": "a0a52830a130e35e",
@@ -2539,8 +2539,8 @@
       "changed": "2026-10-04"
     },
     "/compare/render-vs-vercel": {
-      "hash": "4ebe8b443262b1be",
-      "changed": "2026-10-04"
+      "hash": "99697dd3dfa1673d",
+      "changed": "2026-10-05"
     },
     "/compare/resend-vs-mail-tester-com": {
       "hash": "0cdd6ed66d3aa78a",
@@ -3077,8 +3077,8 @@
       "changed": "2026-09-12"
     },
     "/estimate": {
-      "hash": "475ae48c94b0b382",
-      "changed": "2026-10-04"
+      "hash": "e356523f0ddf03a5",
+      "changed": "2026-10-05"
     },
     "/events": {
       "hash": "1cd961743e560957",
@@ -3213,11 +3213,11 @@
       "changed": "2026-10-01"
     },
     "/heroku-alternatives": {
-      "hash": "421bce875e8210ec",
+      "hash": "d7f45187fb991e97",
       "changed": "2026-10-05"
     },
     "/hetzner-alternatives": {
-      "hash": "f63c172b27076eb2",
+      "hash": "d6e153665dcbd347",
       "changed": "2026-10-05"
     },
     "/hetzner-pricing-2026": {
@@ -3225,7 +3225,7 @@
       "changed": "2026-10-05"
     },
     "/hosting-alternatives": {
-      "hash": "74cad0502a953fe8",
+      "hash": "baf782e619ac1862",
       "changed": "2026-10-05"
     },
     "/hosting-free-tier-comparison-2026": {
@@ -3269,8 +3269,8 @@
       "changed": "2026-10-04"
     },
     "/netlify-vs-render": {
-      "hash": "09925d865346e132",
-      "changed": "2026-10-04"
+      "hash": "428764bd57c9be9c",
+      "changed": "2026-10-05"
     },
     "/openai-assistants-alternatives": {
       "hash": "ebbe07a13c99e7a7",
@@ -3316,8 +3316,8 @@
       "changed": "2026-10-04"
     },
     "/railway-vs-render": {
-      "hash": "871e4db4d8e43876",
-      "changed": "2026-10-04"
+      "hash": "e2cb918dad0e9242",
+      "changed": "2026-10-05"
     },
     "/redis-alternatives": {
       "hash": "5d5be7c48ab3f44d",
@@ -3471,7 +3471,7 @@
       "changed": "2026-10-04"
     },
     "/stack-check": {
-      "hash": "ace00a1613a964f5",
+      "hash": "8f92ec35f91d984d",
       "changed": "2026-10-05"
     },
     "/stacks": {
@@ -9818,12 +9818,12 @@
       "changed": "2026-10-04"
     },
     "/vercel-alternatives": {
-      "hash": "cc5eb0c902504dc2",
-      "changed": "2026-10-04"
+      "hash": "328bee9bc40c7d1f",
+      "changed": "2026-10-05"
     },
     "/vercel-vs-netlify": {
-      "hash": "262c953089507ad4",
-      "changed": "2026-10-04"
+      "hash": "471c59cfd9e5279b",
+      "changed": "2026-10-05"
     },
     "/x402-services": {
       "hash": "ae72426af08a209c",
