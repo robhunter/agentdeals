@@ -793,8 +793,8 @@
       "changed": "2026-10-05"
     },
     "/auth0-alternatives": {
-      "hash": "8296afef9a944507",
-      "changed": "2026-10-04"
+      "hash": "0e55117e0033eb9d",
+      "changed": "2026-10-05"
     },
     "/auth0-vs-clerk": {
       "hash": "e79382e1e05444d4",
@@ -1148,7 +1148,7 @@
       "changed": "2026-10-04"
     },
     "/category/databases": {
-      "hash": "2a9195af40307ad5",
+      "hash": "90231272950897b5",
       "changed": "2026-10-05"
     },
     "/category/design": {
@@ -1947,12 +1947,12 @@
       "changed": "2026-10-04"
     },
     "/compare/firebase-vs-supabase": {
-      "hash": "0ad12662ca119dc9",
+      "hash": "612c78b48d45ee02",
       "changed": "2026-10-05"
     },
     "/compare/firebase-vs-vercel": {
-      "hash": "084b37ffc7693fa5",
-      "changed": "2026-10-04"
+      "hash": "53c555751a94f680",
+      "changed": "2026-10-05"
     },
     "/compare/fivetran-activations-vs-heap-io": {
       "hash": "08e6c901fe358a20",
@@ -2686,7 +2686,7 @@
       "changed": "2026-10-05"
     },
     "/database-alternatives": {
-      "hash": "fbc3b2cca9454b0f",
+      "hash": "29543119930e3de0",
       "changed": "2026-10-05"
     },
     "/database-free-tier-comparison-2026": {
@@ -3077,7 +3077,7 @@
       "changed": "2026-09-12"
     },
     "/estimate": {
-      "hash": "e356523f0ddf03a5",
+      "hash": "e6e52a5b05cb0d61",
       "changed": "2026-10-05"
     },
     "/events": {
@@ -3250,7 +3250,7 @@
       "changed": "2026-10-04"
     },
     "/mongodb-alternatives": {
-      "hash": "a3206fc31e7b5e82",
+      "hash": "a05a8ce2a4d0c7f8",
       "changed": "2026-10-05"
     },
     "/monitoring-alternatives": {
@@ -3472,7 +3472,7 @@
       "changed": "2026-10-05"
     },
     "/stack-check": {
-      "hash": "d00d82c30dcfa17e",
+      "hash": "b9e4f2806e8c17fd",
       "changed": "2026-10-05"
     },
     "/stacks": {
@@ -3516,7 +3516,7 @@
       "changed": "2026-10-05"
     },
     "/supabase-vs-firebase": {
-      "hash": "d2efd00b85a66af0",
+      "hash": "027584a82f58beb8",
       "changed": "2026-10-05"
     },
     "/team-collaboration-alternatives": {
