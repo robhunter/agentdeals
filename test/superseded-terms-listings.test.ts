@@ -7,6 +7,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const {
+  readingBehindTheChange,
   storedTermsWithheldMetaPhrase,
   storedTermsWithheldPhrase,
   supersedingChange,
@@ -59,22 +60,25 @@ const withoutTags = (markup: string): string => decodeEntities(squash(markup.rep
 
 const storedTermsOf = new Map<Offer, string>(offers.map((offer) => [offer, squash(offer.description)]));
 
-function headTellingItFromEveryOtherRecord(offer: Offer): string {
+const readingPrintedInPlaceOf = new Map<Offer, string>(
+  superseded.map((offer) => [offer, readingBehindTheChange(supersedingFor(offer)!)?.terms ?? ""]),
+);
+
+function headTellingItFromEveryOtherRecordAndItsReading(offer: Offer): string {
   const stored = storedTermsOf.get(offer)!;
+  const reading = readingPrintedInPlaceOf.get(offer) ?? "";
+  const anotherTextOpensWith = (opening: string): boolean =>
+    reading.startsWith(opening) ||
+    offers.some((other) => other !== offer && storedTermsOf.get(other)!.startsWith(opening));
   let length = Math.min(HEAD, stored.length);
-  while (
-    length < stored.length &&
-    offers.some(
-      (other) => other !== offer && storedTermsOf.get(other)!.startsWith(stored.slice(0, length)),
-    )
-  ) {
+  while (length < stored.length && anotherTextOpensWith(stored.slice(0, length))) {
     length++;
   }
   return stored.slice(0, length);
 }
 
 const headOfRecord = new Map<Offer, string>(
-  offers.map((offer) => [offer, headTellingItFromEveryOtherRecord(offer)]),
+  offers.map((offer) => [offer, headTellingItFromEveryOtherRecordAndItsReading(offer)]),
 );
 
 const headOf = (offer: Offer): string =>
