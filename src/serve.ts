@@ -53,7 +53,7 @@ import { CHECK_ESTABLISHES, CHECK_SCOPE_CLASS, NO_CATALOGUE_RECORD_SOURCE, NO_FE
 import { vendorHistorySentence } from "./vendor-history.js";
 import { guideBlurb } from "./guide-blurbs.js";
 import { changesToStartupProgrammes } from "./startup-programme-changes.js";
-import { HETZNER_APRIL_CHANGES, HETZNER_AVAILABILITY_READ, HETZNER_AX102_GERMANY, HETZNER_AX42_GERMANY, HETZNER_CLOUD_PLANS, HETZNER_PRICES_READ, HETZNER_PRICE_SOURCE, HETZNER_SETUP_FEE_STATEMENTS, HETZNER_SINGAPORE_EXAMPLE, cheapestOrderableHetznerPlan, hetznerEntryPriceClause, unorderableHetznerPlans } from "./hetzner-pricing.js";
+import { HETZNER_APRIL_CHANGES, HETZNER_AVAILABILITY_READ, HETZNER_AX102_GERMANY, HETZNER_AX42_GERMANY, HETZNER_CLOUD_PLANS, HETZNER_PRICES_READ, HETZNER_PRICE_SOURCE, HETZNER_PROMO_CODE_PAGE, HETZNER_SETUP_FEE_STATEMENTS, HETZNER_SINGAPORE_EXAMPLE, cheapestOrderableHetznerPlan, hetznerEntryPriceClause, unorderableHetznerPlans } from "./hetzner-pricing.js";
 import { HUNDRED_GB_SCENARIO, HUNDRED_TB_SCENARIO, ONE_TO_ONE_SCENARIO, STORAGE_RATES_READ, STORAGE_SCALE_WORKLOADS, TEN_TO_ONE_SCENARIO, cheapestProviderAt, costAfterMonthlyEgressGrantFor, costliestProviderAt, egressAllowanceSentence, egressBillAfterMonthlyGrantFor, egressBillOnceOverAllowance, egressRatioWhereCostsMatch, fixedMonthlyGrantsSentence, monthlyEgressGrantGb, monthlyEgressGrantSentence, monthlyStorageCost, providersWithScalingEgressAllowance, rateCardFor, scaleCostFor } from "./storage-cost-model.js";
 import { changeTimelineDate, supersededLineups, supersessionNote } from "./change-lineup.js";
 import { CORRECTION_TO_OUR_OWN_RECORD, isACorrectionToOurOwnRecord, isNoLongerInForce, printsBeforeAndAfter, eventResolutionFields, recordsStillInForce, recordsWeStandBehind, INCLUDE_RETRACTED_REJECTED } from "./change-resolution.js";
@@ -19147,6 +19147,7 @@ ${mcpCtaCss()}
   </div>
   <p class="section-intro" style="margin-top:0"><strong>Read this table by availability first.</strong> The ${unorderable.length} cheapest listed prices all belong to plans marked not available, so the lowest number on the page is not a number you can pay. The first orderable row is ${escHtmlServer(cheapestOrderable.sku)} at ${eur(cheapestOrderable.eur)}, and it is a ${cheapestOrderable.vcpu}-vCPU, ${cheapestOrderable.ram} GB machine — less server than the ${escHtmlServer(cheapestOverall.sku)} above it at ${eur(cheapestOverall.eur)}.</p>
   <p class="section-intro">A new AX42 dedicated server in Germany costs ${eur(HETZNER_AX42_GERMANY.newOrder)} a month and a new AX102 ${eur(HETZNER_AX102_GERMANY.newOrder)}, excluding IPv4. The one-off setup fee is €${HETZNER_AX42_GERMANY.setupFee} for an AX42 and €${HETZNER_AX102_GERMANY.setupFee} for an AX102. These prices were read from Hetzner's price API on ${HETZNER_PRICES_READ}.</p>
+  <p class="section-intro">New accounts can get €50 of credit with Hetzner's sign-up code, valid only for the billing period in which it is redeemed.</p>
   ${vendorPageConditionsHtml("Hetzner")}
 
   <h2 id="april">2. What the April 1 Adjustment Did</h2>
@@ -19241,6 +19242,10 @@ ${mcpCtaCss()}
     <div class="impact-card" style="border-left-color:#d29922">
       <h3>The Arm line is not an escape route</h3>
       <p class="impact-desc">CAX used to undercut Intel and AMD at the same specs. All four CAX plans are marked not available today, alongside all four CX plans, so it is not somewhere to move a workload to right now.</p>
+    </div>
+    <div class="impact-card" style="border-left-color:#3fb950">
+      <h3>Sign-up credit for new customers</h3>
+      <p class="impact-desc">New customers without an active Hetzner account can get €50 in credit for all Hetzner products. The code must be redeemed within 14 days of account creation. The credit is valid only for the billing period in which it is redeemed. Redeeming on the 20th leaves about ten days of it. Redeem on the 1st for full benefit. The code is at <a href="${HETZNER_PROMO_CODE_PAGE}" target="_blank" rel="noopener">hetzner.com/promo-code</a>. It cannot be combined with a referral code.</p>
     </div>
   </div>
 

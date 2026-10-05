@@ -244,7 +244,7 @@ describe("the April 1 table holds only rows from Hetzner's April price list", ()
     const { body } = await get("/hetzner-pricing-2026");
     const sectionOne = visible(body.slice(body.indexOf('<h2 id="pricing">'), body.indexOf('<h2 id="april">')).replace(/<ul class="listing-conditions"[^>]*>[\s\S]*?<\/ul>/g, "")).trim();
     const sectionTwo = visible(body.slice(body.indexOf('<h2 id="april">'), body.indexOf('<h2 id="why">')));
-    assert.ok(sectionOne.endsWith(
+    assert.ok(sectionOne.includes(
       `A new AX42 dedicated server in Germany costs €97.30 a month and a new AX102 €257.30, excluding IPv4. The one-off setup fee is €49 for an AX42 and €129 for an AX102. These prices were read from Hetzner's price API on ${HETZNER_PRICES_READ}.`,
     ), sectionOne.slice(-400));
     assert.doesNotMatch(sectionTwo, /now costs?|€97\.30|€257\.30|setup fee is/);
@@ -379,6 +379,35 @@ describe("pages that compared US cloud providers' prices with Hetzner's on no so
       assert.doesNotMatch(visible(body), /3-6x higher|announced increases|US cloud providers:/);
     });
   }
+});
+
+describe("the sign-up credit /hetzner-pricing-2026 tells new customers about", () => {
+  const PROMO_CODE_PAGE = "https://www.hetzner.com/promo-code/";
+  const SIGN_UP_CREDIT_SENTENCE = "New accounts can get €50 of credit with Hetzner's sign-up code, valid only for the billing period in which it is redeemed.";
+  const SIGN_UP_CREDIT_SUBSECTION = "New customers without an active Hetzner account can get €50 in credit for all Hetzner products. The code must be redeemed within 14 days of account creation. The credit is valid only for the billing period in which it is redeemed. Redeeming on the 20th leaves about ten days of it. Redeem on the 1st for full benefit. The code is at hetzner.com/promo-code. It cannot be combined with a referral code.";
+
+  it("is stated in section 1 right after the dedicated-server prices, ahead of the listing's conditions", async () => {
+    const { body } = await get("/hetzner-pricing-2026");
+    const sectionOneHtml = body.slice(body.indexOf('<h2 id="pricing">'), body.indexOf('<h2 id="april">'));
+    const sectionOne = visible(sectionOneHtml.replace(/<ul class="listing-conditions"[^>]*>[\s\S]*?<\/ul>/g, "")).trim();
+    assert.ok(sectionOne.endsWith(`These prices were read from Hetzner's price API on ${HETZNER_PRICES_READ}. ${SIGN_UP_CREDIT_SENTENCE}`), sectionOne.slice(-400));
+    const conditionsAt = sectionOneHtml.indexOf('<ul class="listing-conditions"');
+    if (conditionsAt > -1) assert.ok(sectionOneHtml.indexOf(SIGN_UP_CREDIT_SENTENCE) < conditionsAt);
+  });
+
+  it("is explained in section 8's last subsection, which links Hetzner's promo-code page", async () => {
+    const { body } = await get("/hetzner-pricing-2026");
+    const sectionEight = body.slice(body.indexOf('<h2 id="optimize">'), body.indexOf("<h2>Related Guides</h2>"));
+    const subsections = [...sectionEight.matchAll(/<div class="impact-card"[^>]*>([\s\S]*?)<\/div>/g)].map(([, inner]) => inner);
+    const last = subsections[subsections.length - 1] ?? "";
+    assert.strictEqual(visible(last.replace(/<\/?a\b[^>]*>/g, "")).trim(), `Sign-up credit for new customers ${SIGN_UP_CREDIT_SUBSECTION}`);
+    assert.ok(last.includes(`<a href="${PROMO_CODE_PAGE}" target="_blank" rel="noopener">hetzner.com/promo-code</a>`), last);
+  });
+
+  it("points to Hetzner's page for the code rather than printing one", async () => {
+    const { body } = await get("/hetzner-pricing-2026");
+    assert.doesNotMatch(body, /HetznerPromo/i);
+  });
 });
 
 describe("the day /hetzner-pricing-2026 says Hetzner's prices were read", () => {

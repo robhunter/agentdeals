@@ -3,6 +3,7 @@ import { HETZNER_PLAN_AVAILABILITY_READ_ON, HETZNER_PLAN_TABLE_READ_ON } from ".
 export const HETZNER_PRICES_READ = HETZNER_PLAN_TABLE_READ_ON;
 export const HETZNER_AVAILABILITY_READ = HETZNER_PLAN_AVAILABILITY_READ_ON;
 export const HETZNER_PRICE_SOURCE = "https://www.hetzner.com/cloud/";
+export const HETZNER_PROMO_CODE_PAGE = "https://www.hetzner.com/promo-code/";
 
 export interface HetznerPlan {
   sku: string;
