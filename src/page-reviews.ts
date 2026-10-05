@@ -1027,18 +1027,26 @@ export function deriveTier(html: string): ReviewTier {
 }
 
 export const PERTURBATION_SENTINEL = "PMPERTURB";
-export const CATALOGUE_TEXT_FIELDS = ["description", "tier", "notes", "limits", "url"];
+export const CATALOGUE_TEXT_FIELDS = ["description", "tier", "notes", "limits", "url", "conditions.text", "conditions.quote"];
 export const CHANGE_LOG_TEXT_FIELDS = ["summary", "previous_state", "current_state"];
+
+function perturbFieldAt(holder: any, path: readonly string[]): number {
+  if (!holder || typeof holder !== "object") return 0;
+  const [field, ...inner] = path;
+  const value = holder[field!];
+  if (inner.length > 0) {
+    const items: unknown[] = Array.isArray(value) ? value : [value];
+    return items.reduce((touched: number, item) => touched + perturbFieldAt(item, inner), 0);
+  }
+  if (typeof value !== "string") return 0;
+  holder[field!] = `${PERTURBATION_SENTINEL} ${value.replace(/\d/g, "9")}`;
+  return 1;
+}
 
 export function perturbTextFields(records: any[], fields: string[]): number {
   let touched = 0;
   for (const record of records) {
-    if (!record || typeof record !== "object") continue;
-    for (const field of fields) {
-      if (typeof record[field] !== "string") continue;
-      record[field] = `${PERTURBATION_SENTINEL} ${record[field].replace(/\d/g, "9")}`;
-      touched += 1;
-    }
+    for (const field of fields) touched += perturbFieldAt(record, field.split("."));
   }
   return touched;
 }

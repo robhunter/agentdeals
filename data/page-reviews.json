@@ -1921,7 +1921,7 @@
       "review_outcome": "pass",
       "review_note": "The corrections from https://github.com/robhunter/agentdeals/issues/2168 are live. Checked on production on 2026-09-30 against all six acceptance criteria, including a census of 2,593 routes for the withdrawn claims.",
       "reads_index": true,
-      "tables_read_index": false,
+      "tables_read_index": true,
       "table_figures": 57,
       "table_figures_from_records": 6,
       "tables": [
@@ -3237,7 +3237,7 @@
       "reads_index": true,
       "tables_read_index": true,
       "table_figures": 35,
-      "table_figures_from_records": 13,
+      "table_figures_from_records": 14,
       "tables": [
         {
           "label": "1. Free Tier Comparison Table",
@@ -3252,7 +3252,7 @@
         {
           "label": "5. Other BaaS Alternatives",
           "figures": 14,
-          "from_records": 13
+          "from_records": 14
         }
       ],
       "reads_changes": true,
