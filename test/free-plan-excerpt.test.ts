@@ -25,13 +25,13 @@ const REPO = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const WRITER = path.join("scripts", "free-plan-excerpt.js");
 
 const RENDER_PAGE =
-  "Hobby Pro Scale Enterprise For individuals building personal projects and prototypes. $ 0 /mo + compute For teams deploying production-grade apps and agents. $ 25 /mo + compute Deploy for free Start with Pro Connect your repo, and go Deploy up to 25 services\n5 GB of bandwidth included Single-service previews Global regions & CDN Custom domains";
-const RENDER_EXCERPT = "Deploy up to 25 services 5 GB of bandwidth included Single-service previews";
+  "Hobby Pro Scale Enterprise For individuals building personal projects and prototypes. $ 0 /mo + compute For teams deploying production-grade apps and agents. $ 25 /mo + compute Start with Pro Connect your repo, and go Deploy for free Deploy up to 25 services\n5 GB of bandwidth included Single-service previews Global regions & CDN Custom domains";
+const RENDER_EXCERPT = "Deploy for free Deploy up to 25 services 5 GB of bandwidth included Single-service previews";
 const READ = { pageText: RENDER_PAGE, url: "https://render.com/pricing", readOn: "2026-09-16", terms: ["Deploy up to 25 services", "5 GB of bandwidth included"] };
 
 describe("an excerpt is the page's own words or nothing", () => {
   it("keeps a copy that is on the page once runs of whitespace are collapsed on both sides", () => {
-    assert.deepStrictEqual(verbatimExcerpt("Deploy up to 25 services\n  5 GB of bandwidth included  Single-service previews", RENDER_PAGE), {
+    assert.deepStrictEqual(verbatimExcerpt("Deploy for free\n Deploy up to 25 services\n  5 GB of bandwidth included  Single-service previews", RENDER_PAGE), {
       found: true,
       excerpt: RENDER_EXCERPT,
     });
@@ -203,7 +203,8 @@ describe("an excerpt states at least one of the plan's terms", () => {
     assert.deepStrictEqual(write({ vendor: "Airtable", tier: "Free" }, AIRTABLE_PAGE, AIRTABLE_PAGE, ["no charge", "teams"]).result, { outcome: "refused", why: COPY_STATES_NO_TERMS });
     assert.deepStrictEqual(write({ vendor: "Acme", tier: "Free" }, "Create a free account", "Create a free account", ["Create a free account"]).result, { outcome: "refused", why: COPY_STATES_NO_TERMS });
     for (const term of ["Up to 3 projects", "Unlimited team members", "5 seats", "50,000 monthly active users"]) {
-      assert.deepStrictEqual(write({ vendor: "Acme", tier: "Free" }, term, term, [term]).result, { outcome: "written" }, term);
+      const copy = `Free: ${term}`;
+      assert.deepStrictEqual(write({ vendor: "Acme", tier: "Free" }, copy, copy, [term]).result, { outcome: "written" }, term);
     }
   });
 
