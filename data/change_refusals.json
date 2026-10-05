@@ -124,6 +124,18 @@
     {
       "vendor": "Airtable",
       "change_type": "pricing_restructured",
+      "reason": "confirmed_unchanged",
+      "detail": "The report restates information already present in the stored description (Team plan price) and adds descriptive text about the free plan's target users which doesn't alter the technical limits.",
+      "summary": "The Free plan is still available. The details have changed. The page states the Free plan is for individual users, very small teams, or those with lightweight needs. The Team plan is now $20/user/month billed annually.",
+      "previous_state": "Database and app-building platform. Free: unlimited bases, 1,000 records per base, 1 GB attachments per base, 1 workspace, up to 5 editors and 50 commenters, 500 AI credits per editor/month, 100 automation runs, 1,000 API calls/month, 2-week revision and snapshot history, Interface Designer. Extensions, synced tables, Gantt/timeline views and expanded color/formatting are paid only; Team is $20/user/month billed annually.",
+      "current_state": "The Free plan is available at no cost for users just getting started and is formulated for individual users, very small teams, or those with lightweight needs.",
+      "source_url": "https://airtable.com/pricing",
+      "category": "Productivity & Notes",
+      "refused_date": "2026-10-05"
+    },
+    {
+      "vendor": "Airtable",
+      "change_type": "pricing_restructured",
       "reason": "same_transition_graded_differently",
       "detail": "same vendor, source_url and previous_state as Airtable|pricing_restructured|2026-08-28|https://airtable.com/pricing",
       "summary": "The free plan is still available. The page details pricing for paid plans and states that the free plan is 'formulated for individual users, very small teams, or those with lightweight needs'. The page also states that the free plan has no limits on read-only collaborators.",
@@ -194,6 +206,18 @@
       "source_url": "https://aws.amazon.com/q/developer/pricing/",
       "category": "AI Coding",
       "refused_date": "2026-09-12"
+    },
+    {
+      "vendor": "Amazon Q Developer",
+      "change_type": "limits_reduced",
+      "reason": "restates_stored_quantities",
+      "detail": "narrowing claimed, and every quantity the current state names is one the stored description already held at the same value (50 agentic/mo, 1,000 lin/mo), and drops 3 the stored description carried",
+      "summary": "The Amazon Q Developer now has two tiers: Free and Pro ($19/month per user). The free tier includes 50 agentic requests per month and 1,000 lines of code transformation per month. The Pro tier includes increased limits for agentic requests and code transformation (4,000 lines pooled at the account level, with overages at $0.003/line), admin controls, and IP indemnity.",
+      "previous_state": "AI coding assistant by AWS. Free tier: inline code suggestions, chat, 1,000 lines code transformation/month, 50 agentic requests/month, access to latest Claude models. Supports VS Code, JetBrains, CLI, and AWS Console. Pro plan $19/user/month (higher limits, admin controls, IP indemnity). AWS will end support for the Amazon Q Developer IDE plugins on April 30, 2027, and points IDE users to Kiro.",
+      "current_state": "The Free Tier includes 50 agentic requests per month and 1,000 lines of code transformation per month.",
+      "source_url": "https://aws.amazon.com/q/developer/pricing/",
+      "category": "AI Coding",
+      "refused_date": "2026-10-05"
     },
     {
       "vendor": "Amazon SES",
@@ -2041,13 +2065,13 @@
       "vendor": "drawDB",
       "change_type": "new_tier",
       "reason": "no_price_signal",
-      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 5543 characters, so it states no terms to have changed",
-      "summary": "drawDB offers a Pro tier with cloud storage, teams, and real-time collaboration on top of the free tier. The free tier stores diagrams locally in the browser and requires backups.",
+      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 5940 characters, so it states no terms to have changed",
+      "summary": "While drawDB remains free and open-source with no account required for basic use, a 'Pro' tier has been added that includes cloud storage, teams, and real-time collaboration. The free tier stores diagrams locally in the browser, requiring users to back them up themselves.",
       "previous_state": "Free and open-source online database diagram editor with no signup required.",
-      "current_state": "The free editor runs in your browser with no account required. Pro adds cloud storage, teams, and real-time collaboration on top.",
+      "current_state": "drawDB is free and open source — the full editor runs in your browser with no account required. Pro adds cloud storage, teams, and real-time collaboration on top.",
       "source_url": "https://drawdb.app/",
       "category": "Diagramming",
-      "refused_date": "2026-09-14"
+      "refused_date": "2026-10-05"
     },
     {
       "vendor": "Drift for Early Stage Startups",
@@ -2428,6 +2452,18 @@
       "source_url": "https://www.fizzy.do/",
       "category": "Project Management",
       "refused_date": "2026-10-04"
+    },
+    {
+      "vendor": "Fizzy",
+      "change_type": "limits_reduced",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this page refused on 2026-10-04 (no_price_signal) stated the same figure, so the page showed these terms before the date this record gives",
+      "summary": "The stored deal info mentions a limit of 1000 items, but the pricing page states that Fizzy is 'entirely free' with a file space limit of 1 GB.",
+      "previous_state": "Kanban-based platform for project management and issue tracking. Create public boards, set up webhooks, use card stamping, and track unlimited users — free for up to 1000 items.",
+      "current_state": "Fizzy is entirely free, with a 1 GB file space limit.",
+      "source_url": "https://www.fizzy.do/",
+      "category": "Project Management",
+      "refused_date": "2026-10-05"
     },
     {
       "vendor": "Flagsmith",
@@ -3349,12 +3385,12 @@
       "change_type": "limits_increased",
       "reason": "unquantified_limit",
       "detail": "limits_increased claimed, but the current state names no quantity for anything the stored state measured (200 messag)",
-      "summary": "The free tier now allows up to 5,000 SMS/month, and includes offline notifications and webhook forwarding. The original deal stated a limit of 200 SMS/month.",
+      "summary": "The free tier now allows up to 200 SMS/month, but also offers options for paid tiers with higher limits (5,000 or 10,000 SMS/month). The page states httpSMS is a free platform with no hard limit, but also lists paid plans.",
       "previous_state": "Send and receive text messages using your Android phone as an SMS Gateway. Free to send and receive up to 200 messages per month.",
-      "current_state": "Free to use. Send or receive up to 200 SMS/month. Offline notifications for your phone. Forward received messages via webhook. Basic email support.",
+      "current_state": "Most of the httpSMS features are completely free but if you want a little extra, you can go pro. Free to send or receive up to 200 SMS/month.",
       "source_url": "https://httpsms.com",
       "category": "Messaging",
-      "refused_date": "2026-09-14"
+      "refused_date": "2026-10-05"
     },
     {
       "vendor": "Hugging Face",
@@ -3906,6 +3942,18 @@
       "refused_date": "2026-08-29"
     },
     {
+      "vendor": "LaunchDarkly",
+      "change_type": "limits_increased",
+      "reason": "states_no_difference",
+      "detail": "the summary states that the page agrees with what we hold, and names no figure the stored description did not already carry",
+      "summary": "The Developer tier still exists and is $0/mo, but the page details more limits and features than were originally stored. Specifically, it mentions service connections (5 included, pay as you go beyond), and details around client-side MAU, and AgentControl features. The page also details Foundation and Enterprise tiers with different pricing and features.",
+      "previous_state": "Feature management — $0 / mo, forever. Unlimited seats. A/B Tests and Experiments includes 100K experimentation MAU per month. 10M logs and 10M traces /mo. 5K session replays and 5K errors /mo. 5K AI runs/mo included. 1K client-side MAU /mo.",
+      "current_state": "$0 / mo, forever. Unlimited seats. A/B Tests and Experiments includes 100K experimentation MAU per month. 10M logs and 10M traces /mo. 5K session replays and 5K errors /mo. 5K AI runs/mo included. 1K client-side MAU /mo. 5 service connections included, pay as you go beyond.",
+      "source_url": "https://launchdarkly.com/pricing/",
+      "category": "Feature Flags",
+      "refused_date": "2026-10-05"
+    },
+    {
       "vendor": "leapcell",
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
@@ -3941,6 +3989,18 @@
       "source_url": "https://www.lemonsqueezy.com/pricing",
       "category": "Payments",
       "refused_date": "2026-09-09"
+    },
+    {
+      "vendor": "lil'bots",
+      "change_type": "limits_reduced",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this page refused on 2026-09-13 (unquantified_limit) stated the same figure, so the page showed these terms before the date this record gives",
+      "summary": "The free tier now includes 3,600 execution credits per month, down from the previously stated 10,000.",
+      "previous_state": "write and run scripts online utilizing free built-in APIs like OpenAI, Anthropic, Firecrawl and others. Great for building AI agents / internal tooling and sharing with team. Free-tier includes full access to APIs, AI coding assistant and 10,000 execution credits / month.",
+      "current_state": "Free Plan $0 / month...Execution Credits: 3,600s / month",
+      "source_url": "https://www.lilbots.io/",
+      "category": "Low-Code Platforms",
+      "refused_date": "2026-10-05"
     },
     {
       "vendor": "lil'bots",
@@ -4336,6 +4396,18 @@
       "refused_date": "2026-09-14"
     },
     {
+      "vendor": "ManageEngine Log360 Cloud",
+      "change_type": "free_tier_removed",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this page refused on 2026-09-14 (no_removal_evidence) stated the same figure, so the page showed these terms before the date this record gives",
+      "summary": "The page no longer mentions a free plan with 50 GB storage and 15-day retention. Instead, it promotes a 30-day free trial and then directs users to paid editions (Standard, MSSP).",
+      "previous_state": "Log Management service powered by Manage Engine. Free Plan offers 50 GB storage with 15 days Storage Retention and 7 days search.",
+      "current_state": "The page offers a 30 day free trial, then directs users to Standard or MSSP editions.",
+      "source_url": "https://www.manageengine.com/cloud-siem/",
+      "category": "Logging",
+      "refused_date": "2026-10-05"
+    },
+    {
       "vendor": "MantleDB",
       "change_type": "limits_reduced",
       "reason": "measures_the_opposite",
@@ -4694,12 +4766,12 @@
       "change_type": "restriction",
       "reason": "no_terms_to_narrow",
       "detail": "a restriction was measured against \"Free CDN with basic DDoS protection for Namecheap-hosted domains\", a stored description that states no price, named tier or allowance, so there is nothing for the terms to have narrowed from",
-      "summary": "The free tier is now a 'Get Free' plan with a 50GB/mo traffic limit and basic DDoS protection, renewing at $0.00/mo. It's only available for EasyWP Subscriptions with Namecheap domains, 3rd Party domains using FreeDNS, and domains using Namecheap Shared Hosting nameservers. EasyWP customers using free domains are not eligible.",
+      "summary": "The free tier is now a 'Get Free - FOREVER' beta plan with limitations: 50GB/mo traffic limit, Basic DDoS protection. It's only available for EasyWP Subscriptions with Namecheap domains, 3rd Party domains using FreeDNS, and domains using Namecheap Shared Hosting nameservers. EasyWP customers using free domains are not eligible.",
       "previous_state": "Free CDN with basic DDoS protection for Namecheap-hosted domains",
-      "current_state": "Get Free - FOREVER. Renews at $0.00/mo. Basic DDoS protection. Traffic Limit: 50GB/mo. Only available for EasyWP Subscriptions with Namecheap domains, 3rd Party domains using FreeDNS, and domains using Namecheap Shared Hosting nameservers. EasyWP customers using free domains are not eligible for CDN early access at this time.",
+      "current_state": "Get Free - FOREVER. 50GB/mo traffic limit, Basic DDoS protection. Available for EasyWP Subscriptions with Namecheap domains, 3rd Party domains using FreeDNS, and domains using Namecheap Shared Hosting nameservers. EasyWP customers using free domains are not eligible.",
       "source_url": "https://www.namecheap.com/supersonic-cdn/#free-plan",
       "category": "CDN",
-      "refused_date": "2026-09-14"
+      "refused_date": "2026-10-05"
     },
     {
       "vendor": "Neo4j AuraDB",
@@ -4899,15 +4971,15 @@
     },
     {
       "vendor": "Ollama Cloud",
-      "change_type": "limits_reduced",
+      "change_type": "pricing_restructured",
       "reason": "repeats_a_refused_reading",
-      "detail": "the reading of this page refused on 2026-09-03 (unquantified_limit) stated the same 2 figures, so the page showed these terms before the date this record gives",
-      "summary": "The Free plan now includes usage credits instead of unlimited access unlocked by buying credits. It also explicitly states a limit of 1 concurrent request, which was previously implied.",
+      "detail": "the reading of this page refused on 2026-10-04 (repeats_a_refused_reading) stated the same 2 figures, so the page showed these terms before the date this record gives",
+      "summary": "The Free plan now includes starter usage credits and requires purchasing additional credits to unlock all models. It also includes a limit of 1 concurrent request, which aligns with the stored information. However, the page details several paid tiers (Pro, Max, Team) that were not mentioned in the stored deal info, and provides detailed pricing for various models based on token usage.",
       "previous_state": "Cloud-hosted Ollama for running open-source LLMs — The Free plan costs $0 and includes starter usage credits. Buying usage credits unlocks all models. It includes 1 concurrent request.",
-      "current_state": "The Free plan costs $0 and includes starter usage credits. It includes 1 concurrent request. Buying usage credits unlocks all models.",
+      "current_state": "The Free plan costs $0 and includes starter usage credits. Buying usage credits unlocks all models. It includes 1 concurrent request.",
       "source_url": "https://ollama.com/pricing",
       "category": "AI / ML",
-      "refused_date": "2026-10-04"
+      "refused_date": "2026-10-05"
     },
     {
       "vendor": "Ollama Cloud",
@@ -5405,6 +5477,18 @@
       "source_url": "https://portkey.ai/",
       "category": "AI / ML",
       "refused_date": "2026-09-18"
+    },
+    {
+      "vendor": "PostHog",
+      "change_type": "restriction",
+      "reason": "confirmed_unchanged",
+      "detail": "The current page describes a new feature (BAA under Boost plan) not mentioned in the stored description, but the report states the YC deal *allows* this, which isn't a change to the deal itself, but an addition to how the credits can be used.",
+      "summary": "The Y Combinator deal now allows credits to be used for a BAA under the Boost plan.",
+      "previous_state": "$50,000 a year in PostHog credits for Y Combinator companies in any batch, renewing automatically while the company has raised less than $25M. Apply through PostHog's YC page, linked from Bookface, from a PostHog account on the company's email domain. Not open to YC alumni who started another company, or to a YC company acquired by a non-YC parent. Since 2026-09-14 the credits don't pay for AI tools (PostHog AI, PostHog Desktop, the Slack app, Replay Vision, Inbox). It doesn't stack with PostHog for Startups.",
+      "current_state": "✅ Credits can be used to claim a BAA under the Boost plan.",
+      "source_url": "https://posthog.com/handbook/marketing/startups",
+      "category": "Startup Perks",
+      "refused_date": "2026-10-05"
     },
     {
       "vendor": "PostHog",
@@ -6725,13 +6809,13 @@
       "vendor": "Tailark",
       "change_type": "free_tier_removed",
       "reason": "no_price_signal",
-      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 528 characters, so it states no terms to have changed",
-      "summary": "The page does not mention a free tier. It focuses on 'Get full access' which implies a paid plan. It describes a collection of blocks, pages, and illustrations for building marketing websites, but doesn't specify a free option.",
+      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 529 characters, so it states no terms to have changed",
+      "summary": "The page does not mention a free tier. It focuses on 'full access' which implies a paid plan. It describes a collection of blocks, pages, and illustrations for building marketing websites, but frames it as a feature of a paid service.",
       "previous_state": "A collection of modern, responsive, pre-built UI blocks designed for marketing websites.",
-      "current_state": "Get full access to Dashboard Shadcn Registry for building marketing websites. Explore August 31: Libre About & Brand Pages Crafted with attention to detail. Beautifully crafted shadcn blocks, pages, and illustrations—designed to help you build modern marketing websites faster. Multiple styles. Built on Shadcn and Next.js. Compatible with Radix UI and Base UI.",
+      "current_state": "Get full access. Beautifully crafted shadcn blocks, pages, and illustrations—designed to help you build modern marketing websites faster.",
       "source_url": "https://tailark.com/",
       "category": "Design",
-      "refused_date": "2026-09-14"
+      "refused_date": "2026-10-05"
     },
     {
       "vendor": "taskade.com",
@@ -7531,6 +7615,18 @@
       "refused_date": "2026-09-21"
     },
     {
+      "vendor": "Xata",
+      "change_type": "free_tier_removed",
+      "reason": "no_removal_evidence",
+      "detail": "a free tier was recorded as removed on the evidence that the page did not mention it, and the summary states no price, ending or replacement where the free tier was",
+      "summary": "The self-hosted, open-source version remains free, but the managed platform is now paid. The stored information stated a 14-day free trial with $100 credit on the commercial tier, but the pricing page details hourly and monthly costs for various instance types and storage, with no mention of a free trial or credit.",
+      "previous_state": "Open-source Postgres platform (Apache 2.0) with copy-on-write branching and scale-to-zero. Self-hosted on Kubernetes — free forever. Managed platform is now paid (compute + storage billed hourly); 14-day free trial with $100 credit on the commercial tier.",
+      "current_state": "Xata Cloud is a fully managed, pay-as-you-go service starting at $0.012 /hr + $0.28/GB/mo storage.",
+      "source_url": "https://xata.io/pricing",
+      "category": "Databases",
+      "refused_date": "2026-10-05"
+    },
+    {
       "vendor": "xcloud.host",
       "change_type": "pricing_restructured",
       "reason": "confirmed_unchanged",
@@ -7746,6 +7842,18 @@
       "source_url": "https://zoho.com/bookings",
       "category": "Workflow Automation",
       "refused_date": "2026-09-19"
+    },
+    {
+      "vendor": "Zoho Checkout",
+      "change_type": "limits_reduced",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this page refused on 2026-09-13 (unquantified_limit) stated the same figure, so the page showed these terms before the date this record gives",
+      "summary": "The free tier still exists, but the description is no longer accurate. The page states the free tier allows unlimited checkout pages, but does not mention a limit of 3 pages.",
+      "previous_state": "Product Billing management with 3 pages & up to 50 payments.",
+      "current_state": "Start creating checkout pages for free and accept payment for free. $0 Per Organization /Month Billed Annually",
+      "source_url": "https://zoho.com/checkout",
+      "category": "Payments",
+      "refused_date": "2026-10-05"
     },
     {
       "vendor": "Zoho Checkout",

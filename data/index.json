@@ -1199,7 +1199,7 @@
       ],
       "verifiedDate": "2026-09-13",
       "source_check": {
-        "checked": "2026-09-13",
+        "checked": "2026-10-05",
         "outcome": "ok",
         "detail": "the page names Aiven as \"aiven\" and states \"$0\""
       },
@@ -1213,6 +1213,11 @@
           }
         ],
         "reviewed": "2026-08-31"
+      },
+      "free_plan_excerpt": {
+        "text": "Free $0 / month Get building 1 dedicated VM 1 CPU per VM 1 GB RAM per VM 1 GB total storage Cannot select a specific cloud or region No integrations or connection pooling",
+        "url": "https://aiven.io/pricing",
+        "read_on": "2026-10-05"
       }
     },
     {
@@ -1232,7 +1237,7 @@
       ],
       "verifiedDate": "2026-08-22",
       "source_check": {
-        "checked": "2026-10-04",
+        "checked": "2026-10-05",
         "outcome": "ok",
         "detail": "the page names Xata as \"xata\" and states amounts, none of which we matched to the terms we publish"
       },
@@ -2921,7 +2926,7 @@
       ],
       "verifiedDate": "2026-07-23",
       "source_check": {
-        "checked": "2026-10-04",
+        "checked": "2026-10-05",
         "outcome": "ok",
         "detail": "the page names LaunchDarkly as \"launchdarkly\" and states \"$0\" and \"100K experimentation MAU per month\" and \"10M traces /mo\" and \"1K client-side MAU /mo\""
       },
@@ -3111,7 +3116,7 @@
         "open-source",
         "free tier"
       ],
-      "verifiedDate": "2026-08-09",
+      "verifiedDate": "2026-10-05",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -3130,9 +3135,9 @@
         }
       ],
       "source_check": {
-        "checked": "2026-09-13",
+        "checked": "2026-10-05",
         "outcome": "ok",
-        "detail": "the page names Hugging Face as \"hugging face\" and states \"$0.10\""
+        "detail": "the page names Hugging Face as \"hugging face\" and states \"$0.10\" and \"$2.00\""
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -3149,6 +3154,11 @@
           }
         ],
         "reviewed": "2026-09-01"
+      },
+      "free_plan_excerpt": {
+        "text": "Free Users $0.10, subject to change Inference Providers yes (credits purchase required)",
+        "url": "https://huggingface.co/docs/inference-providers/pricing",
+        "read_on": "2026-10-05"
       }
     },
     {
@@ -3412,9 +3422,9 @@
         "notes": "Channel partner program only. No individual referral program."
       },
       "source_check": {
-        "checked": "2026-09-13",
+        "checked": "2026-10-05",
         "outcome": "ok",
-        "detail": "the page names Cloudflare Workers AI as \"cloudflare workers ai\" and states \"$0.011\""
+        "detail": "the page names Cloudflare Workers AI as \"cloudflare workers ai\" and states \"$0.011\" and \"10,000 Neurons per day\""
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -3430,6 +3440,11 @@
       "restatement_reverted": {
         "record_date": "2026-09-01",
         "reverted_on": "2026-09-27"
+      },
+      "free_plan_excerpt": {
+        "text": "Workers Free 10,000 Neurons per day N/A",
+        "url": "https://developers.cloudflare.com/workers-ai/platform/pricing/",
+        "read_on": "2026-10-05"
       }
     },
     {
@@ -3446,10 +3461,10 @@
         "ab testing",
         "free tier"
       ],
-      "verifiedDate": "2026-10-04",
+      "verifiedDate": "2026-10-05",
       "expires_date": "2027-01-31",
       "source_check": {
-        "checked": "2026-10-04",
+        "checked": "2026-10-05",
         "outcome": "ok",
         "detail": "the page names PostHog as \"posthog\" and states \"$0\""
       }
@@ -3617,7 +3632,7 @@
         "program": "PostHog for Y Combinator"
       },
       "source_check": {
-        "checked": "2026-10-04",
+        "checked": "2026-10-05",
         "outcome": "ok",
         "detail": "the page names PostHog as \"posthog\" and states \"$50,000\""
       }
@@ -3721,7 +3736,7 @@
         "accelerator",
         "aws"
       ],
-      "verifiedDate": "2026-10-04",
+      "verifiedDate": "2026-10-05",
       "eligibility": {
         "type": "accelerator",
         "conditions": [
@@ -3734,7 +3749,7 @@
       },
       "expires_date": "2026-12-31",
       "source_check": {
-        "checked": "2026-10-04",
+        "checked": "2026-10-05",
         "outcome": "ok",
         "detail": "the page names AWS Activate as \"aws activate\" and states \"$200,000\""
       }
@@ -4665,9 +4680,9 @@
         "api-docs",
         "developer-portal"
       ],
-      "verifiedDate": "2026-10-04",
+      "verifiedDate": "2026-10-05",
       "source_check": {
-        "checked": "2026-10-04",
+        "checked": "2026-10-05",
         "outcome": "ok",
         "detail": "the page names Mintlify as \"mintlify\" and states \"$ 0\""
       },
@@ -4943,9 +4958,9 @@
       },
       "expires_date": "2026-05-31",
       "source_check": {
-        "checked": "2026-10-04",
-        "outcome": "ok",
-        "detail": "the page names Backblaze as \"backblaze\" and states \"$100,000\""
+        "checked": "2026-10-05",
+        "outcome": "unreadable",
+        "detail": "HTTP 403"
       }
     },
     {
@@ -5200,9 +5215,9 @@
       ],
       "verifiedDate": "2026-07-19",
       "source_check": {
-        "checked": "2026-09-13",
+        "checked": "2026-10-05",
         "outcome": "ok",
-        "detail": "the page names Bugsnag as \"bugsnag\" and states \"$0\""
+        "detail": "the page names Bugsnag as \"bugsnag\" and states \"1M spans per month\""
       },
       "restated_from": {
         "reading_date": "2026-09-13",
@@ -5379,9 +5394,14 @@
       ],
       "verifiedDate": "2026-07-28",
       "source_check": {
-        "checked": "2026-10-04",
+        "checked": "2026-10-05",
         "outcome": "ok",
         "detail": "the page names LiveKit as \"livekit\" and states \"$0\""
+      },
+      "free_plan_excerpt": {
+        "text": "Start for free No credit card required $0/mo",
+        "url": "https://livekit.io/pricing",
+        "read_on": "2026-10-05"
       }
     },
     {
@@ -6671,7 +6691,7 @@
       ],
       "verifiedDate": "2026-08-23",
       "source_check": {
-        "checked": "2026-09-13",
+        "checked": "2026-10-05",
         "outcome": "unreadable",
         "detail": "page content too short (likely JS-rendered SPA); a rendering client read 285 characters",
         "rendered": true
@@ -7835,7 +7855,7 @@
       ],
       "verifiedDate": "2026-07-07",
       "source_check": {
-        "checked": "2026-09-13",
+        "checked": "2026-10-05",
         "outcome": "unreadable",
         "detail": "HTTP 403"
       }
@@ -8850,7 +8870,7 @@
       ],
       "verifiedDate": "2026-08-25",
       "source_check": {
-        "checked": "2026-09-13",
+        "checked": "2026-10-05",
         "outcome": "unreadable",
         "detail": "page content too short (likely JS-rendered SPA); a rendering client read 64 characters",
         "rendered": true
@@ -8919,9 +8939,9 @@
         "object-detection",
         "model-training"
       ],
-      "verifiedDate": "2026-10-04",
+      "verifiedDate": "2026-10-05",
       "source_check": {
-        "checked": "2026-10-04",
+        "checked": "2026-10-05",
         "outcome": "states_a_free_price",
         "detail": "the page names Roboflow and states its price in words as \"Free Tier\", and its markup carries no structured data"
       },
@@ -9606,9 +9626,9 @@
         "open-source",
         "postman-alternative"
       ],
-      "verifiedDate": "2026-09-13",
+      "verifiedDate": "2026-10-05",
       "source_check": {
-        "checked": "2026-09-13",
+        "checked": "2026-10-05",
         "outcome": "ok",
         "detail": "the page names Bruno as \"bruno\" and states \"$0\""
       },
@@ -10245,9 +10265,9 @@
         "flutter",
         "macos"
       ],
-      "verifiedDate": "2026-10-04",
+      "verifiedDate": "2026-10-05",
       "source_check": {
-        "checked": "2026-10-04",
+        "checked": "2026-10-05",
         "outcome": "ok",
         "detail": "the page names Codemagic as \"codemagic\" and states \"$0\""
       },
@@ -10556,9 +10576,14 @@
       ],
       "verifiedDate": "2026-07-30",
       "source_check": {
-        "checked": "2026-09-13",
+        "checked": "2026-10-05",
         "outcome": "ok",
         "detail": "the page names Zoho Checkout as \"zoho checkout\" and states \"$0\""
+      },
+      "free_plan_excerpt": {
+        "text": "$0 Per Organization /Month Billed Annually",
+        "url": "https://zoho.com/checkout",
+        "read_on": "2026-10-05"
       }
     },
     {
@@ -11164,7 +11189,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-10-04",
+      "verifiedDate": "2026-10-05",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -11175,7 +11200,7 @@
         }
       ],
       "source_check": {
-        "checked": "2026-10-04",
+        "checked": "2026-10-05",
         "outcome": "ok",
         "detail": "the page names Composio as \"composio\" and states \"$0\" and \"100,000 tool calls / mo\" and \"50,000 triggers / mo\" and \"100K tool calls a month\""
       },
@@ -11585,7 +11610,7 @@
       ],
       "verifiedDate": "2026-08-02",
       "source_check": {
-        "checked": "2026-09-14",
+        "checked": "2026-10-05",
         "outcome": "ok",
         "detail": "the page names drawDB, renders no terms we can read, and its markup states 1 typed price (USD 0)",
         "read": "markup"
@@ -12085,9 +12110,9 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-09-14",
+      "verifiedDate": "2026-10-05",
       "source_check": {
-        "checked": "2026-09-14",
+        "checked": "2026-10-05",
         "outcome": "ok",
         "detail": "the page names KillBait API as \"killbait api\" and states \"€0\"",
         "rendered": true
@@ -13282,9 +13307,9 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-09-14",
+      "verifiedDate": "2026-10-05",
       "source_check": {
-        "checked": "2026-09-14",
+        "checked": "2026-10-05",
         "outcome": "states_a_free_price",
         "detail": "the page names 3Cols and states its price in words as \"free forever\", and its markup carries no structured data",
         "rendered": true
@@ -13498,7 +13523,7 @@
       ],
       "verifiedDate": "2026-07-07",
       "source_check": {
-        "checked": "2026-10-04",
+        "checked": "2026-10-05",
         "outcome": "states_no_terms",
         "detail": "the page names Fizzy but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
@@ -14123,7 +14148,7 @@
       ],
       "verifiedDate": "2026-08-05",
       "source_check": {
-        "checked": "2026-09-14",
+        "checked": "2026-10-05",
         "outcome": "unreadable",
         "detail": "page content too short (likely JS-rendered SPA); a rendering client read 205 characters",
         "rendered": true
@@ -14312,7 +14337,7 @@
       ],
       "verifiedDate": "2026-07-12",
       "source_check": {
-        "checked": "2026-09-14",
+        "checked": "2026-10-05",
         "outcome": "unreadable",
         "detail": "page content too short (likely JS-rendered SPA); a rendering client read 171 characters",
         "rendered": true
@@ -14875,7 +14900,7 @@
       ],
       "verifiedDate": "2026-08-05",
       "source_check": {
-        "checked": "2026-09-14",
+        "checked": "2026-10-05",
         "outcome": "unreadable",
         "detail": "page content too short (likely JS-rendered SPA); a rendering client read 138 characters",
         "rendered": true
@@ -15018,7 +15043,7 @@
       ],
       "verifiedDate": "2026-08-06",
       "source_check": {
-        "checked": "2026-09-14",
+        "checked": "2026-10-05",
         "outcome": "unreadable",
         "detail": "page content too short (likely JS-rendered SPA); a rendering client read 449 characters",
         "rendered": true
@@ -15088,7 +15113,7 @@
       ],
       "verifiedDate": "2026-04-23",
       "source_check": {
-        "checked": "2026-09-28",
+        "checked": "2026-10-05",
         "outcome": "unreadable",
         "detail": "HTTP 429"
       }
@@ -15163,7 +15188,7 @@
       ],
       "verifiedDate": "2026-04-12",
       "source_check": {
-        "checked": "2026-09-28",
+        "checked": "2026-10-05",
         "outcome": "unreadable",
         "detail": "fetch failed"
       }
@@ -15394,7 +15419,7 @@
         "reviewed": "2026-08-25"
       },
       "source_check": {
-        "checked": "2026-10-04",
+        "checked": "2026-10-05",
         "outcome": "states_no_terms",
         "detail": "the page names Appetize but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
@@ -15958,9 +15983,9 @@
       ],
       "verifiedDate": "2026-07-10",
       "source_check": {
-        "checked": "2026-09-28",
+        "checked": "2026-10-05",
         "outcome": "unreadable",
-        "detail": "HTTP 404"
+        "detail": "fetch failed"
       }
     },
     {
@@ -16145,10 +16170,14 @@
       ],
       "verifiedDate": "2026-09-14",
       "source_check": {
-        "checked": "2026-09-14",
-        "outcome": "states_a_free_price",
-        "detail": "the page names Smart Grow Vault and states its price in words as \"Free Plan\", and its markup carries no structured data",
-        "rendered": true
+        "checked": "2026-10-05",
+        "outcome": "ok",
+        "detail": "the page names Smart Grow Vault as \"smart grow vault\" and states \"$0\""
+      },
+      "free_plan_excerpt": {
+        "text": "Free $0 / month For personal projects and small teams getting started. Start for free See all plans 1 organization 3 apps per organization 2 environments per app 50 variables per environment 2 secure files per environment 2 API keys",
+        "url": "https://vault.smart-grow.app/",
+        "read_on": "2026-10-05"
       }
     },
     {
@@ -16163,7 +16192,7 @@
       ],
       "verifiedDate": "2026-05-23",
       "source_check": {
-        "checked": "2026-09-28",
+        "checked": "2026-10-05",
         "outcome": "unreadable",
         "detail": "HTTP 410"
       }
@@ -16802,7 +16831,7 @@
       ],
       "verifiedDate": "2026-04-13",
       "source_check": {
-        "checked": "2026-09-28",
+        "checked": "2026-10-05",
         "outcome": "unreadable",
         "detail": "fetch failed"
       }
@@ -16964,7 +16993,7 @@
       ],
       "verifiedDate": "2026-08-07",
       "source_check": {
-        "checked": "2026-09-13",
+        "checked": "2026-10-05",
         "outcome": "unreadable",
         "detail": "HTTP 404"
       }
@@ -17000,10 +17029,15 @@
       ],
       "verifiedDate": "2026-08-08",
       "source_check": {
-        "checked": "2026-09-14",
+        "checked": "2026-10-05",
         "outcome": "ok",
         "detail": "the page names httpSMS as \"httpsms\" and states \"$0\"",
         "rendered": true
+      },
+      "free_plan_excerpt": {
+        "text": "10K Free Try sending and receiving SMS on your hobby websites and experiments. $0 No credit card required",
+        "url": "https://httpsms.com",
+        "read_on": "2026-10-05"
       }
     },
     {
@@ -17277,9 +17311,14 @@
       ],
       "verifiedDate": "2026-08-05",
       "source_check": {
-        "checked": "2026-09-14",
+        "checked": "2026-10-05",
         "outcome": "ok",
         "detail": "the page names ManageEngine Log360 Cloud as \"manageengine log360 cloud\" and states \"$ 0\""
+      },
+      "free_plan_excerpt": {
+        "text": "Start your 30 day free trial!",
+        "url": "https://www.manageengine.com/cloud-siem/",
+        "read_on": "2026-10-05"
       }
     },
     {
@@ -17361,7 +17400,7 @@
       ],
       "verifiedDate": "2026-08-08",
       "source_check": {
-        "checked": "2026-09-14",
+        "checked": "2026-10-05",
         "outcome": "unreadable",
         "detail": "page content too short (likely JS-rendered SPA); a rendering client read 264 characters",
         "rendered": true
@@ -18741,9 +18780,9 @@
       ],
       "verifiedDate": "2026-08-06",
       "source_check": {
-        "checked": "2026-09-13",
-        "outcome": "ok",
-        "detail": "the page names Whitespace as \"whitespace\" and states \"$0\""
+        "checked": "2026-10-05",
+        "outcome": "unreadable",
+        "detail": "fetch failed"
       },
       "restated_from": {
         "reading_date": "2026-09-01",
@@ -19109,10 +19148,9 @@
       ],
       "verifiedDate": "2026-07-12",
       "source_check": {
-        "checked": "2026-09-14",
+        "checked": "2026-10-05",
         "outcome": "unreadable",
-        "detail": "page content too short (likely JS-rendered SPA); a rendering client read 174 characters",
-        "rendered": true
+        "detail": "timeout"
       }
     },
     {
@@ -20151,11 +20189,17 @@
         "forms",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-08",
+      "verifiedDate": "2026-10-05",
       "source_check": {
-        "checked": "2026-09-13",
-        "outcome": "unreadable",
-        "detail": "HTTP 403"
+        "checked": "2026-10-05",
+        "outcome": "ok",
+        "detail": "the page names Web3Forms as \"web3forms\" and states \"250 submissions/month\" and \"250 submissions per month\" and \"250 submissions a month\"",
+        "rendered": true
+      },
+      "free_plan_excerpt": {
+        "text": "250 submissions/month free, forever.",
+        "url": "https://web3forms.com",
+        "read_on": "2026-10-05"
       }
     },
     {
@@ -20232,7 +20276,7 @@
       ],
       "verifiedDate": "2026-06-16",
       "source_check": {
-        "checked": "2026-09-28",
+        "checked": "2026-10-05",
         "outcome": "unreadable",
         "detail": "fetch failed"
       },
@@ -20397,11 +20441,11 @@
         "generative-ai",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-08",
+      "verifiedDate": "2026-10-05",
       "source_check": {
-        "checked": "2026-09-13",
+        "checked": "2026-10-05",
         "outcome": "ok",
-        "detail": "the page names LangSmith as \"langsmith\" and states \"$0\""
+        "detail": "the page names LangSmith as \"langsmith\" and states \"$0\" and \"$39\" and \"$1.00\" and \"$1\""
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -20425,6 +20469,11 @@
         "record_date": "2026-09-01",
         "change_type": "pricing_model_change",
         "restated_on": "2026-09-20"
+      },
+      "free_plan_excerpt": {
+        "text": "Developer For solo users getting started. $0 / seat per month then pay as you go Start for free Up to 5k base traces / mo, then pay-as-you-go Community support 1 seat",
+        "url": "https://www.langchain.com/pricing",
+        "read_on": "2026-10-05"
       }
     },
     {
@@ -20441,7 +20490,7 @@
       ],
       "verifiedDate": "2026-05-07",
       "source_check": {
-        "checked": "2026-09-28",
+        "checked": "2026-10-05",
         "outcome": "unreadable",
         "detail": "HTTP 404"
       }
@@ -20818,7 +20867,7 @@
         "notes": "Domains 20%, hosting 35%, SSL 35%. Powered by Impact. Min payout $10."
       },
       "source_check": {
-        "checked": "2026-09-14",
+        "checked": "2026-10-05",
         "outcome": "ok",
         "detail": "the page names Namecheap Supersonic as \"supersonic\" and states \"$0.00\"",
         "rendered": true
@@ -20855,11 +20904,11 @@
         "protection",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-10",
+      "verifiedDate": "2026-10-05",
       "source_check": {
-        "checked": "2026-09-13",
+        "checked": "2026-10-05",
         "outcome": "ok",
-        "detail": "the page names PromoProxy as \"promoproxy\" and states \"¥0\""
+        "detail": "the page names PromoProxy as \"promoproxy\" and states \"¥0\" and \"3 GB of data per day\""
       },
       "restated_from": {
         "reading_date": "2026-09-01",
@@ -20867,6 +20916,11 @@
         "record_date": "2026-09-01",
         "change_type": "limits_reduced",
         "restated_on": "2026-09-20"
+      },
+      "free_plan_excerpt": {
+        "text": "¥0 /month Up to 5 users 3 GB of data per day",
+        "url": "https://promoproxy.net/",
+        "read_on": "2026-10-05"
       }
     },
     {
@@ -21474,7 +21528,7 @@
       ],
       "verifiedDate": "2026-07-08",
       "source_check": {
-        "checked": "2026-09-28",
+        "checked": "2026-10-05",
         "outcome": "unreadable",
         "detail": "fetch failed"
       }
@@ -21492,7 +21546,7 @@
       ],
       "verifiedDate": "2026-04-24",
       "source_check": {
-        "checked": "2026-09-28",
+        "checked": "2026-10-05",
         "outcome": "unreadable",
         "detail": "fetch failed"
       }
@@ -21746,9 +21800,14 @@
       ],
       "verifiedDate": "2026-08-11",
       "source_check": {
-        "checked": "2026-09-13",
+        "checked": "2026-10-05",
         "outcome": "ok",
         "detail": "the page names lil'bots as \"lil bots\" and states \"$0\""
+      },
+      "free_plan_excerpt": {
+        "text": "Free Plan $0 / month Perfect for getting started with a few bots Create unlimited bots Use thousands of prebuilt bots from the bot hub Execution Credits: 3,600s / month",
+        "url": "https://www.lilbots.io/",
+        "read_on": "2026-10-05"
       }
     },
     {
@@ -21816,9 +21875,9 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-09",
+      "verifiedDate": "2026-10-05",
       "source_check": {
-        "checked": "2026-09-13",
+        "checked": "2026-10-05",
         "outcome": "ok",
         "detail": "the page names ToolJet as \"tooljet\" and states \"$0\""
       },
@@ -22445,7 +22504,7 @@
       ],
       "verifiedDate": "2026-08-09",
       "source_check": {
-        "checked": "2026-09-14",
+        "checked": "2026-10-05",
         "outcome": "unreadable",
         "detail": "page content too short (likely JS-rendered SPA); a rendering client read 255 characters",
         "rendered": true
@@ -22500,9 +22559,9 @@
       ],
       "verifiedDate": "2026-08-11",
       "source_check": {
-        "checked": "2026-09-13",
-        "outcome": "ok",
-        "detail": "the page names Glauca as \"glauca\" and states \"0.00 GBP\""
+        "checked": "2026-10-05",
+        "outcome": "unreadable",
+        "detail": "fetch failed"
       }
     },
     {
@@ -22518,7 +22577,7 @@
       ],
       "verifiedDate": "2026-08-09",
       "source_check": {
-        "checked": "2026-09-14",
+        "checked": "2026-10-05",
         "outcome": "unreadable",
         "detail": "HTTP 403"
       }
@@ -22552,7 +22611,7 @@
         "domain",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-09-14",
+      "verifiedDate": "2026-10-05",
       "referral_program": {
         "available": true,
         "referrer_benefit": "20-35% commission depending on product",
@@ -22563,7 +22622,7 @@
         "notes": "Domains 20%, hosting 35%, SSL 35%. Powered by Impact."
       },
       "source_check": {
-        "checked": "2026-09-14",
+        "checked": "2026-10-05",
         "outcome": "ok",
         "detail": "the page names namecheap.com as \"namecheap\" and states \"$0.00\"",
         "rendered": true
@@ -22636,7 +22695,7 @@
       ],
       "verifiedDate": "2026-07-12",
       "source_check": {
-        "checked": "2026-09-28",
+        "checked": "2026-10-05",
         "outcome": "unreadable",
         "detail": "fetch failed"
       }
@@ -22654,7 +22713,7 @@
       ],
       "verifiedDate": "2026-08-10",
       "source_check": {
-        "checked": "2026-09-13",
+        "checked": "2026-10-05",
         "outcome": "ok",
         "detail": "the page names zilore.com as \"zilore com\" and states \"$0\""
       },
@@ -22722,7 +22781,7 @@
       ],
       "verifiedDate": "2026-08-26",
       "source_check": {
-        "checked": "2026-10-04",
+        "checked": "2026-10-05",
         "outcome": "states_no_terms",
         "detail": "the page names DigitalPlat but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
@@ -23058,7 +23117,7 @@
       ],
       "verifiedDate": "2026-06-15",
       "source_check": {
-        "checked": "2026-09-28",
+        "checked": "2026-10-05",
         "outcome": "unreadable",
         "detail": "fetch failed"
       }
@@ -24049,7 +24108,7 @@
     {
       "vendor": "Tweek",
       "category": "Project Management",
-      "description": "Simple Weekly To-Do Calendar & Task Management.",
+      "description": "Simple Weekly To-Do Calendar & Task Management. — Tweek is free for unlimited users. Share your calendars along with all todo lists and tasks with your friends, family or teammates. Collaborate, add new tasks, set reminders, create notes and checklists for your colleagues and family. The API is available in the free version.",
       "tier": "Free",
       "url": "https://tweek.so/",
       "tags": [
@@ -24058,14 +24117,26 @@
       ],
       "verifiedDate": "2026-09-14",
       "source_check": {
-        "checked": "2026-09-14",
+        "checked": "2026-10-05",
         "outcome": "ok",
-        "detail": "the page names Tweek, renders no terms we can read, and its markup states 3 typed prices (FREE USD 0.00, Tweek Premium annual subscription USD 36, Tweek Premium monthly subscription USD 4)",
+        "detail": "the page names Tweek, renders \"free version\" and no amount, and its markup states 3 typed prices (FREE USD 0.00, Tweek Premium annual subscription USD 36, Tweek Premium monthly subscription USD 4)",
         "read": "markup",
-        "rendered": true,
         "unrendered_prices": [
-          "Tweek Premium annual subscription USD 36"
+          "Tweek Premium annual subscription USD 36",
+          "Tweek Premium monthly subscription USD 4"
         ]
+      },
+      "free_plan_excerpt": {
+        "text": "Sure, Tweek is free for unlimited users. Share your calendars along with all todo lists and tasks with your friends, family or teammates.",
+        "url": "https://tweek.so/",
+        "read_on": "2026-10-05"
+      },
+      "restated_from": {
+        "reading_date": "2026-10-05",
+        "source_url": "https://tweek.so/",
+        "record_date": "2026-10-05",
+        "change_type": "limits_increased",
+        "restated_on": "2026-10-05"
       }
     },
     {
@@ -24168,7 +24239,7 @@
       ],
       "verifiedDate": "2026-07-16",
       "source_check": {
-        "checked": "2026-09-14",
+        "checked": "2026-10-05",
         "outcome": "unreadable",
         "detail": "page content too short (likely JS-rendered SPA); a rendering client read 470 characters",
         "rendered": true
@@ -24259,7 +24330,7 @@
       ],
       "verifiedDate": "2026-07-17",
       "source_check": {
-        "checked": "2026-09-28",
+        "checked": "2026-10-05",
         "outcome": "unreadable",
         "detail": "fetch failed"
       }
@@ -24296,10 +24367,15 @@
       ],
       "verifiedDate": "2026-07-17",
       "source_check": {
-        "checked": "2026-09-14",
+        "checked": "2026-10-05",
         "outcome": "ok",
         "detail": "the page names GoFile.io as \"gofile io\" and states \"$0\"",
         "rendered": true
+      },
+      "free_plan_excerpt": {
+        "text": "Free $0 no account required Gofile is free to use — upload and share files instantly, no account required. Files are kept temporarily, perfect for quick shares.",
+        "url": "https://gofile.io/",
+        "read_on": "2026-10-05"
       }
     },
     {
@@ -25881,7 +25957,7 @@
       ],
       "verifiedDate": "2026-08-25",
       "source_check": {
-        "checked": "2026-09-14",
+        "checked": "2026-10-05",
         "outcome": "unreadable",
         "detail": "page content too short (likely JS-rendered SPA); a rendering client read 475 characters",
         "rendered": true
@@ -26172,7 +26248,7 @@
       ],
       "verifiedDate": "2026-07-19",
       "source_check": {
-        "checked": "2026-09-14",
+        "checked": "2026-10-05",
         "outcome": "ok",
         "detail": "the page names Tailark, renders no terms we can read, and its markup states 1 typed price (USD 0)",
         "read": "markup",
@@ -26601,11 +26677,11 @@
         "geolocation",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-09",
+      "verifiedDate": "2026-10-05",
       "source_check": {
-        "checked": "2026-09-13",
+        "checked": "2026-10-05",
         "outcome": "ok",
-        "detail": "the page names geocodify.com as \"geocodify com\" and states \"$0.00\""
+        "detail": "the page names geocodify.com as \"geocodify com\" and states \"$0.00\" and \"30,000 Calls/month\" and \"1 requests per/second\""
       },
       "restated_from": {
         "reading_date": "2026-09-01",
@@ -26613,6 +26689,11 @@
         "record_date": "2026-09-01",
         "change_type": "pricing_restructured",
         "restated_on": "2026-09-20"
+      },
+      "free_plan_excerpt": {
+        "text": "Free $0.00 /Month Save $0.00 on yearly plan 30,000 Calls/month 1 requests per/second Commercial use allowed Attribution Required Community Support Ecommerce Ready SLA Dedicated account manager Get Started",
+        "url": "https://geocodify.com/",
+        "read_on": "2026-10-05"
       }
     },
     {
@@ -26754,7 +26835,7 @@
       ],
       "verifiedDate": "2026-08-09",
       "source_check": {
-        "checked": "2026-09-15",
+        "checked": "2026-10-05",
         "outcome": "unreadable",
         "detail": "page content too short (likely JS-rendered SPA); a rendering client read 451 characters",
         "rendered": true
@@ -28193,9 +28274,9 @@
       ],
       "verifiedDate": "2026-07-20",
       "source_check": {
-        "checked": "2026-09-13",
+        "checked": "2026-10-05",
         "outcome": "ok",
-        "detail": "the page names numverify as \"numverify\" and states \"$14.99\""
+        "detail": "the page names numverify as \"numverify\" and states \"$14.99\" and \"$ 14.99\" and \"$59.99\" and \"$ 59.99\""
       },
       "restated_from": {
         "reading_date": "2026-08-28",
@@ -28203,6 +28284,11 @@
         "record_date": "2026-08-28",
         "change_type": "limits_increased",
         "restated_on": "2026-09-20"
+      },
+      "free_plan_excerpt": {
+        "text": "We're offering the most cost-effective API - validate 100 phone numbers per month for free. Need more? Subscriptions start at $14.99 per month",
+        "url": "https://numverify.com/",
+        "read_on": "2026-10-05"
       }
     },
     {
@@ -28376,7 +28462,7 @@
       ],
       "verifiedDate": "2026-08-12",
       "source_check": {
-        "checked": "2026-09-15",
+        "checked": "2026-10-05",
         "outcome": "unreadable",
         "detail": "page content too short (likely JS-rendered SPA); a rendering client read 147 characters",
         "rendered": true
@@ -28820,7 +28906,7 @@
       ],
       "verifiedDate": "2026-07-21",
       "source_check": {
-        "checked": "2026-09-15",
+        "checked": "2026-10-05",
         "outcome": "unreadable",
         "detail": "page content too short (likely JS-rendered SPA); a rendering client read 495 characters",
         "rendered": true
@@ -29174,9 +29260,9 @@
       ],
       "verifiedDate": "2026-07-27",
       "source_check": {
-        "checked": "2026-09-15",
-        "outcome": "unreadable",
-        "detail": "page content too short (likely JS-rendered SPA); a rendering client read 178 characters",
+        "checked": "2026-10-05",
+        "outcome": "states_no_terms",
+        "detail": "the page names ray.so but states no amount, tier or rate we can read, and its markup carries no structured data",
         "rendered": true
       }
     },
@@ -33113,7 +33199,7 @@
         "notes": "No individual referral program. Education partner program for student developer pack."
       },
       "source_check": {
-        "checked": "2026-10-04",
+        "checked": "2026-10-05",
         "outcome": "ok",
         "detail": "the page names GitHub Copilot as \"github copilot\" and states \"$ 0\" and \"$ 10\" and \"$ 39\" and \"$ 100\""
       },
@@ -33138,7 +33224,7 @@
       ],
       "verifiedDate": "2026-07-30",
       "source_check": {
-        "checked": "2026-10-04",
+        "checked": "2026-10-05",
         "outcome": "ok",
         "detail": "the page names Amazon Q Developer as \"amazon q developer\" and states \"$19\" and \"50 agentic requests per month\" and \"1,000 lines of code per month\""
       }
@@ -33229,11 +33315,11 @@
         "developer tools",
         "cursor-alternative"
       ],
-      "verifiedDate": "2026-09-12",
+      "verifiedDate": "2026-10-05",
       "source_check": {
-        "checked": "2026-09-12",
+        "checked": "2026-10-05",
         "outcome": "ok",
-        "detail": "the page names Augment Code as \"augment code\" and states \"$20\""
+        "detail": "the page names Augment Code as \"augment code\" and states \"$20\" and \"$100\""
       }
     },
     {
@@ -33816,7 +33902,7 @@
       ],
       "verifiedDate": "2026-08-19",
       "source_check": {
-        "checked": "2026-10-04",
+        "checked": "2026-10-05",
         "outcome": "ok",
         "detail": "the page writes \"ollama\", the domain we cite Ollama Cloud from, and states \"$0\""
       },
@@ -34032,9 +34118,9 @@
       ],
       "verifiedDate": "2026-07-09",
       "source_check": {
-        "checked": "2026-09-12",
+        "checked": "2026-10-05",
         "outcome": "ok",
-        "detail": "the page names MiniMax as \"minimax\" and states \"$0.60\""
+        "detail": "the page names MiniMax as \"minimax\" and states \"$0.30\" and \"$1.20\" and \"$0.60\" and \"$2.40\""
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -34107,7 +34193,7 @@
         "notes": "Commission on Plus, Business, or AI Plan upgrades. Paid monthly via PayPal/Stripe."
       },
       "source_check": {
-        "checked": "2026-09-12",
+        "checked": "2026-10-05",
         "outcome": "ok",
         "detail": "the page names Notion as \"notion\" and states \"$0\""
       },
@@ -34151,11 +34237,11 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-09-12",
+      "verifiedDate": "2026-10-05",
       "source_check": {
-        "checked": "2026-09-12",
+        "checked": "2026-10-05",
         "outcome": "ok",
-        "detail": "the page names Trello as \"trello\" and states \"$ 0\""
+        "detail": "the page names Trello as \"trello\" and states \"250 Workspace command runs per month\""
       }
     },
     {
@@ -34368,7 +34454,7 @@
       ],
       "verifiedDate": "2026-07-11",
       "source_check": {
-        "checked": "2026-09-12",
+        "checked": "2026-10-05",
         "outcome": "ok",
         "detail": "the page names Airtable as \"airtable\" and states \"$20\""
       },

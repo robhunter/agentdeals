@@ -15446,6 +15446,57 @@
       "alternatives": [],
       "detected_by": "reverify-ai",
       "recorded_date": "2026-10-04"
+    },
+    {
+      "vendor": "zilore.com",
+      "change_type": "limits_increased",
+      "date": "2026-10-05",
+      "date_source": "discovered",
+      "summary": "The free plan now has unlimited records and requests, and includes Managed DNS, Geo DNS, Failover IP, DNS DDoS Protection, IPv4 & IPv6, Instant updates, ALIAS records, IDN & New gTLD, and Low TTL. Previously 5 domains, 1000 resource records per domain, and 10,000,000 DNS queries.",
+      "tier": "Free",
+      "tier_direction": "widened",
+      "previous_state": "The free plan costs $0/month or $0/year and includes 5 domains, 1000 resource records per domain, and 10,000,000 DNS queries.",
+      "current_state": "The free plan costs $0/month or $0/year and includes unlimited records and requests. It also includes Managed DNS, Geo DNS, Failover IP, DNS DDoS Protection, IPv4 & IPv6, Instant updates, ALIAS records, IDN & New gTLD, and Low TTL.",
+      "impact": "high",
+      "source_url": "https://zilore.com/en/dns",
+      "category": "DNS & Domain Management",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-10-05"
+    },
+    {
+      "vendor": "Tweek",
+      "change_type": "limits_increased",
+      "date": "2026-10-05",
+      "date_source": "discovered",
+      "summary": "A free version exists, the description is no longer accurate. The free version allows unlimited users and collaboration, and includes an API.",
+      "tier": "Free",
+      "tier_direction": "widened",
+      "previous_state": "Simple Weekly To-Do Calendar & Task Management.",
+      "current_state": "Tweek is free for unlimited users. Share your calendars along with all todo lists and tasks with your friends, family or teammates. Collaborate, add new tasks, set reminders, create notes and checklists for your colleagues and family. The API is available in the free version.",
+      "impact": "medium",
+      "source_url": "https://tweek.so/",
+      "category": "Project Management",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-10-05"
+    },
+    {
+      "vendor": "GitHub Copilot",
+      "change_type": "pricing_restructured",
+      "date": "2026-10-05",
+      "date_source": "discovered",
+      "summary": "The free tier now includes access to Haiku 4.5, GPT-5 mini, and more, and access to the Copilot CLI. The free tier also includes Community Support.",
+      "tier": "Free",
+      "tier_direction": "widened",
+      "previous_state": "AI coding assistant by GitHub. Copilot Free is $0 with no credit card: 2,000 code completions a month, a limited monthly allowance of GitHub AI Credits for chat and agent features, and models through auto model selection only. Copilot Student is free for verified students. Paid plans include a monthly allowance of AI credits: Pro $10 (1,500 credits), Pro+ $39 (7,000) and Max $100 (20,000); Business $19 (1,900) and Enterprise $39 (3,900) per seat. Code completions are unlimited on paid plans, and usage beyond an allowance costs $0.01 per AI credit.",
+      "current_state": "The Free plan is $0 per user / month and includes 2,000 completions per month, access to Haiku 4.5, GPT-5 mini, and more, Copilot CLI, and Community Support. No credit card is required. Verified students have access to the GitHub Copilot Student plan.",
+      "impact": "medium",
+      "source_url": "https://github.com/features/copilot",
+      "category": "AI Coding",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-10-05"
     }
   ]
 }

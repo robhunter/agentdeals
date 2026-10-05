@@ -1,48 +1,103 @@
 {
   "held": [
     {
-      "vendor": "Amazon Q Developer",
-      "change_type": "pricing_restructured",
-      "impact": "medium",
-      "summary": "The Amazon Q Developer now has two tiers: Free and Pro ($19/month per user). The Free tier includes 50 agentic requests per month and 1,000 lines of code transformation per month. The Pro tier includes increased limits for agentic requests and code transformation (4,000 lines per month pooled at the account level, with overage charges of $0.003/line), admin controls, and IP indemnity.",
-      "previous_state": "AI coding assistant by AWS. Free tier: inline code suggestions, chat, 1,000 lines code transformation/month, 50 agentic requests/month, access to latest Claude models. Supports VS Code, JetBrains, CLI, and AWS Console. Pro plan $19/user/month (higher limits, admin controls, IP indemnity). AWS will end support for the Amazon Q Developer IDE plugins on April 30, 2027, and points IDE users to Kiro.",
-      "current_state": "Amazon Q Developer offers two pricing tiers: Free Tier and Pro Tier ($19/mo. per user). The Free Tier includes 50 agentic requests per month and 1,000 lines of code transformation per month. The Pro Tier includes increased limits for agentic requests and code transformation (4,000 lines of code per month per user pooled at account level, with overage charges of $0.003 per line of code submitted), admin dashboard, and IP indemnity.",
-      "source_url": "https://aws.amazon.com/q/developer/pricing/",
-      "category": "AI Coding",
-      "first_read_date": "2026-10-04"
+      "vendor": "Aiven",
+      "change_type": "limits_reduced",
+      "impact": "high",
+      "summary": "The free tier now has a limit of 1 dedicated VM, 1 CPU per VM, 1 GB RAM per VM, and 1 GB total storage.",
+      "previous_state": "Managed PostgreSQL, MySQL, or Valkey (Redis-compatible) — 1 CPU, 1 GB RAM, 1 GB disk per service. No time limit",
+      "current_state": "1 dedicated VM, 1 CPU per VM, 1 GB RAM per VM, 1 GB total storage. Cannot select a specific cloud or region. No integrations or connection pooling.",
+      "source_url": "https://aiven.io/pricing",
+      "category": "Databases",
+      "first_read_date": "2026-10-05"
     },
     {
-      "vendor": "GitHub Copilot",
+      "vendor": "Bugsnag",
       "change_type": "pricing_restructured",
       "impact": "medium",
-      "summary": "The free tier now includes access to Haiku 4.5, GPT-5 mini, and more, and Copilot CLI. The pricing for Pro, Pro+, Max, Business, and Enterprise plans has been updated.",
-      "previous_state": "AI coding assistant by GitHub. Copilot Free is $0 with no credit card: 2,000 code completions a month, a limited monthly allowance of GitHub AI Credits for chat and agent features, and models through auto model selection only. Copilot Student is free for verified students. Paid plans include a monthly allowance of AI credits: Pro $10 (1,500 credits), Pro+ $39 (7,000) and Max $100 (20,000); Business $19 (1,900) and Enterprise $39 (3,900) per seat. Code completions are unlimited on paid plans, and usage beyond an allowance costs $0.01 per AI credit.",
-      "current_state": "The Free plan is $0 per user/month and includes 2,000 completions per month, access to Haiku 4.5, GPT-5 mini, and more, Copilot CLI, and Community Support. No credit card is required. Verified students have access to the GitHub Copilot Student plan.",
-      "source_url": "https://github.com/features/copilot",
-      "category": "AI Coding",
-      "first_read_date": "2026-10-04"
+      "summary": "The free tier now has a limit of 7.5K events and 1M spans per month. The page details multiple paid tiers with varying event and span limits, and the free tier is positioned as being for 'Solo users and their passion projects'.",
+      "previous_state": "Error monitoring — Includes: 1 user Error and performance monitoring 7.5K events and 1M spans per month 50+ platforms 30+ third-party integrations Free plan features, plus: Unlimited users End-to-end diagnostics Basic notifications",
+      "current_state": "The free tier is for solo users and includes 7.5K events and 1M spans per month.",
+      "source_url": "https://www.bugsnag.com/pricing/",
+      "category": "Error Tracking",
+      "first_read_date": "2026-10-05"
     },
     {
-      "vendor": "LaunchDarkly",
-      "change_type": "pricing_restructured",
-      "impact": "medium",
-      "summary": "The Developer tier is still offered for free. AgentControl has usage-based pricing for AI runs beyond 5,000/mo.",
-      "previous_state": "Feature management — $0 / mo, forever. Unlimited seats. A/B Tests and Experiments includes 100K experimentation MAU per month. 10M logs and 10M traces /mo. 5K session replays and 5K errors /mo. 5K AI runs/mo included. 1K client-side MAU /mo.",
-      "current_state": "$0 / mo, forever. Unlimited seats. Includes 100K experimentation MAU per month. 10M logs and 10M traces /mo. 5K session replays and 5K errors /mo. 5K AI runs/mo included. 1K client-side MAU /mo. Additional client-side MAU is $10 / mo per 1K MAU. Additional AI runs are $5 / 1000.",
-      "source_url": "https://launchdarkly.com/pricing/",
-      "category": "Feature Flags",
-      "first_read_date": "2026-10-04"
-    },
-    {
-      "vendor": "Xata",
+      "vendor": "Cloudflare Workers AI",
       "change_type": "pricing_restructured",
       "impact": "high",
-      "summary": "The free, self-hosted option still exists. The managed platform is now paid, starting at $0.012/hr + $0.28/GB/month.",
-      "previous_state": "Open-source Postgres platform (Apache 2.0) with copy-on-write branching and scale-to-zero. Self-hosted on Kubernetes — free forever. Managed platform is now paid (compute + storage billed hourly); 14-day free trial with $100 credit on the commercial tier.",
-      "current_state": "Xata Cloud is a fully managed, pay-as-you-go service starting at $0.012 /hr + $0.28/GB/month.",
-      "source_url": "https://xata.io/pricing",
-      "category": "Databases",
-      "first_read_date": "2026-10-04"
+      "summary": "The pricing structure has been significantly restructured with per-model unit-based pricing (tokens and neurons) introduced. The pricing for these models is now explicitly stated in terms of both tokens and neurons.",
+      "previous_state": "Workers AI runs AI models on Cloudflare's global network. Every account gets 10,000 Neurons per day at no charge, reset daily at 00:00 UTC; on the Workers Free plan, requests beyond that fail until the reset. On the Workers Paid plan (from $5 per month), usage above 10,000 Neurons per day costs $0.011 per 1,000 Neurons. Seven models, including @cf/moonshotai/kimi-k2.6, @cf/zai-org/glm-5.3 and @cf/deepseek-ai/deepseek-v4-pro-0813, require the Workers Paid plan or prepaid AI Gateway credits.",
+      "current_state": "Workers AI is included in both the Free and Paid Workers plans and is priced at $0.011 per 1,000 Neurons . Our free allocation allows anyone to use a total of 10,000 Neurons per day at no charge . To use more than 10,000 Neurons per day, you need to sign up for the Workers Paid plan . On Workers Paid, you will be charged at $0.011 / 1,000 Neurons for any usage above the free allocation of 10,000 Neurons per day.",
+      "source_url": "https://developers.cloudflare.com/workers-ai/platform/pricing/",
+      "category": "AI / ML",
+      "first_read_date": "2026-10-05"
+    },
+    {
+      "vendor": "GoFile.io",
+      "change_type": "limits_reduced",
+      "impact": "high",
+      "summary": "The free tier is now described as temporary storage, with files kept 'temporarily, perfect for quick shares'. Previously 'unlimited' storage with a 10-day inactivity deletion policy.",
+      "previous_state": "Free file sharing and storage platform can be used via web-based UI & also API. unlimited file size, bandwidth, download count, etc. But it will be deleted when a file becomes inactive (no download for more than ten days).",
+      "current_state": "Gofile is free to use — upload and share files instantly, no account required. Files are kept temporarily, perfect for quick shares.",
+      "source_url": "https://gofile.io/",
+      "category": "Storage",
+      "first_read_date": "2026-10-05"
+    },
+    {
+      "vendor": "LiveKit",
+      "change_type": "pricing_restructured",
+      "impact": "medium",
+      "summary": "LiveKit's own page now redirects to livekit.com. The 'Build' plan is now a free tier with different limits. The page details many other limits and costs for additional usage (e.g., agent session minutes beyond 1,000 are $0.01/min).",
+      "previous_state": "Real-time audio/video and AI agent infrastructure — 5,000 WebRTC minutes/mo, 1,000 agent session minutes/mo, 5 concurrent agent sessions, 100 concurrent connections, 1 free US phone number. Open source",
+      "current_state": "The Build plan is free and includes 5,000 WebRTC minutes, 1,000 agent session minutes, 5 concurrent agent sessions, 100 concurrent connections, and 1 free US phone number. Additional usage is billed per minute/GB as detailed on the page.",
+      "source_url": "https://livekit.io/pricing",
+      "category": "Communication",
+      "first_read_date": "2026-10-05"
+    },
+    {
+      "vendor": "MiniMax",
+      "change_type": "product_deprecated",
+      "impact": "high",
+      "summary": "The Music APIs are being discontinued for new users on August 20, 2026. Additionally, the Video generation API offers a free allowance of images (first 5 images free for MiniMax-H3 and first 2 images free for MiniMax-H3-Max).",
+      "previous_state": "MiniMax sells API access pay-as-you-go on platform.minimax.io. Its pricing pages list no free API allowance; one docs page mentions a free quota for new pay-as-you-go users but gives no amount. Text: MiniMax-M3 $0.30/$1.20 (per 1M tokens, inputs up to 512k, after a permanent 50% discount); MiniMax-M2.7 $0.30/$1.20 (per 1M tokens); MiniMax-M2.7-highspeed $0.60/$2.40 (per 1M tokens). Speech: speech-2.8-turbo $60 and speech-2.8-hd $100 per 1M characters. Video: MiniMax-H3 $0.08 per second at 768P. Image: image-01 $0.0035 per image. Music and lyrics APIs closed to new users on 2026-08-20. Token Plan subscriptions: Plus $22, Max $55 and Ultra $132 per month.",
+      "current_state": "Starting August 20, 2026, the paid APIs (Music Generation and Lyrics Generation) will no longer be available to new users; existing paying users can continue to use the current API services. The free music generation APIs (Music-3.0-free, Music-2.6-free, music-cover-free) will be discontinued.",
+      "source_url": "https://platform.minimax.io/docs/guides/pricing-paygo",
+      "category": "AI / ML",
+      "first_read_date": "2026-10-05"
+    },
+    {
+      "vendor": "Notion",
+      "change_type": "limits_reduced",
+      "impact": "high",
+      "summary": "The free plan now includes a trial of AI capabilities and has limits on database features and connections. It also includes restrictions on file uploads (5MB) and page history (7 days).",
+      "previous_state": "Free $0 per seat/month. Pages & blocks Unlimited for individuals limited for 2+ members Unlimited Unlimited. File uploads Up to 5 MB Unlimited Unlimited Unlimited. Page history 7 days 30 days 90 days Unlimited. External guest limit 10 Unlimited guests Unlimited guests Unlimited guests",
+      "current_state": "The Free plan is $0 per member/month and includes trial AI capabilities, basic forms, basic sites, Notion Calendar, databases, and up to 5MB file uploads. Page history is limited to 7 days. External guest limit is 10.",
+      "source_url": "https://www.notion.com/pricing",
+      "category": "Productivity & Notes",
+      "first_read_date": "2026-10-05"
+    },
+    {
+      "vendor": "numverify",
+      "change_type": "limits_reduced",
+      "impact": "high",
+      "summary": "The free tier now offers 100 API requests per month, down from 1,000. The subscription price for the 5,000 requests plan has increased from $14.99 to $14.99.",
+      "previous_state": "Global phone number validation and lookup JSON API — We're offering the most cost-effective API - validate 1,000 phone numbers per month for free. Need more? Subscriptions start at $14.99 per month. There are also paid plans at $14.99/month (5,000 requests), $59.99/month (50,000 requests), and $129.99/month (250,000 requests).",
+      "current_state": "We're offering the most cost-effective API - validate 100 phone numbers per month for free.",
+      "source_url": "https://numverify.com/",
+      "category": "Dev Utilities",
+      "first_read_date": "2026-10-05"
+    },
+    {
+      "vendor": "Smart Grow Vault",
+      "change_type": "pricing_restructured",
+      "impact": "medium",
+      "summary": "The free tier now includes 3 apps per organization, 2 environments per app, 50 variables per environment, and 2 secure files per environment. This is a reduction in the number of secrets allowed (150 vs 50 per environment).",
+      "previous_state": "Secure Enterprise-grade platform for managing environment variables and secrets. Free tier includes up to 3 applications and 150 secrets per project.",
+      "current_state": "The Free plan includes 1 organization, 3 apps per organization, 2 environments per app, 50 variables per environment, 2 secure files per environment, and 2 API keys.",
+      "source_url": "https://vault.smart-grow.app/",
+      "category": "Security",
+      "first_read_date": "2026-10-05"
     }
   ],
   "resolved": [
@@ -2049,6 +2104,54 @@
       "outcome": "corroborated",
       "detail": "a reading on 2026-10-04 read it as pricing_restructured too",
       "resolved_date": "2026-10-04"
+    },
+    {
+      "vendor": "Amazon Q Developer",
+      "change_type": "pricing_restructured",
+      "impact": "medium",
+      "summary": "The Amazon Q Developer now has two tiers: Free and Pro ($19/month per user). The Free tier includes 50 agentic requests per month and 1,000 lines of code transformation per month. The Pro tier includes increased limits for agentic requests and code transformation (4,000 lines per month pooled at the account level, with overage charges of $0.003/line), admin controls, and IP indemnity.",
+      "previous_state": "AI coding assistant by AWS. Free tier: inline code suggestions, chat, 1,000 lines code transformation/month, 50 agentic requests/month, access to latest Claude models. Supports VS Code, JetBrains, CLI, and AWS Console. Pro plan $19/user/month (higher limits, admin controls, IP indemnity). AWS will end support for the Amazon Q Developer IDE plugins on April 30, 2027, and points IDE users to Kiro.",
+      "source_url": "https://aws.amazon.com/q/developer/pricing/",
+      "first_read_date": "2026-10-04",
+      "outcome": "contradicted",
+      "detail": "a reading on 2026-10-05 read a change the gate refused as restates_stored_quantities",
+      "resolved_date": "2026-10-05"
+    },
+    {
+      "vendor": "GitHub Copilot",
+      "change_type": "pricing_restructured",
+      "impact": "medium",
+      "summary": "The free tier now includes access to Haiku 4.5, GPT-5 mini, and more, and Copilot CLI. The pricing for Pro, Pro+, Max, Business, and Enterprise plans has been updated.",
+      "previous_state": "AI coding assistant by GitHub. Copilot Free is $0 with no credit card: 2,000 code completions a month, a limited monthly allowance of GitHub AI Credits for chat and agent features, and models through auto model selection only. Copilot Student is free for verified students. Paid plans include a monthly allowance of AI credits: Pro $10 (1,500 credits), Pro+ $39 (7,000) and Max $100 (20,000); Business $19 (1,900) and Enterprise $39 (3,900) per seat. Code completions are unlimited on paid plans, and usage beyond an allowance costs $0.01 per AI credit.",
+      "source_url": "https://github.com/features/copilot",
+      "first_read_date": "2026-10-04",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-10-05 read it as pricing_restructured too",
+      "resolved_date": "2026-10-05"
+    },
+    {
+      "vendor": "LaunchDarkly",
+      "change_type": "pricing_restructured",
+      "impact": "medium",
+      "summary": "The Developer tier is still offered for free. AgentControl has usage-based pricing for AI runs beyond 5,000/mo.",
+      "previous_state": "Feature management — $0 / mo, forever. Unlimited seats. A/B Tests and Experiments includes 100K experimentation MAU per month. 10M logs and 10M traces /mo. 5K session replays and 5K errors /mo. 5K AI runs/mo included. 1K client-side MAU /mo.",
+      "source_url": "https://launchdarkly.com/pricing/",
+      "first_read_date": "2026-10-04",
+      "outcome": "contradicted",
+      "detail": "a reading on 2026-10-05 read a change the gate refused as states_no_difference",
+      "resolved_date": "2026-10-05"
+    },
+    {
+      "vendor": "Xata",
+      "change_type": "pricing_restructured",
+      "impact": "high",
+      "summary": "The free, self-hosted option still exists. The managed platform is now paid, starting at $0.012/hr + $0.28/GB/month.",
+      "previous_state": "Open-source Postgres platform (Apache 2.0) with copy-on-write branching and scale-to-zero. Self-hosted on Kubernetes — free forever. Managed platform is now paid (compute + storage billed hourly); 14-day free trial with $100 credit on the commercial tier.",
+      "source_url": "https://xata.io/pricing",
+      "first_read_date": "2026-10-04",
+      "outcome": "contradicted",
+      "detail": "a reading on 2026-10-05 read a change the gate refused as no_removal_evidence",
+      "resolved_date": "2026-10-05"
     }
   ]
 }
