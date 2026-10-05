@@ -28,6 +28,8 @@ import { NOT_VERIFIED, theReadConfirmedThePrice, termsTheVerdictWithholds, terms
 import { BASE_URL } from "./base-url.js";
 import { withProvenance } from "./provenance.js";
 import { PKG_VERSION } from "./package-version.js";
+import { conditionsField } from "./conditions-field.js";
+import { conditionsBesideStoredTerms, withConditionsAfter } from "./listing-conditions.js";
 
 const SIGNAL_FOOTER_CONTENT = { type: "text" as const, text: MCP_SIGNAL_FOOTER };
 
@@ -51,12 +53,17 @@ function citedJsonAcrossTheWholeIndex<T extends object>(payload: T): string {
 
 
 function toConciseOffer(offer: Offer | EnrichedOffer) {
-  const base = { vendor: offer.vendor, tier: offer.tier, description: offer.description, url: offer.url, gate: gateForOffer(offer), ...(offer.payment_protocols?.length ? { payment_protocols: offer.payment_protocols.map(p => p.protocol) } : {}) };
+  const base = { vendor: offer.vendor, tier: offer.tier, description: offer.description, ...conditionsField(offer), url: offer.url, gate: gateForOffer(offer), ...(offer.payment_protocols?.length ? { payment_protocols: offer.payment_protocols.map(p => p.protocol) } : {}) };
   const enriched = offer as Partial<EnrichedOffer>;
   if (enriched.risk_level !== undefined) {
     return { ...base, risk_level: enriched.risk_level, risk_cause: enriched.risk_cause ?? null, stability: enriched.stability };
   }
   return base;
+}
+
+function termsWithTheirConditions(offer: Offer, terms: string, allChanges: readonly DealChange[]): string {
+  const vendorChanges = allChanges.filter(change => change.vendor.toLowerCase() === offer.vendor.toLowerCase());
+  return withConditionsAfter(terms, conditionsBesideStoredTerms(offer, vendorChanges));
 }
 
 function toConciseDealChange(change: DealChange) {
@@ -749,7 +756,8 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
         return { contents: [{ uri: `agentdeals://category/${slug}`, text: `No category found matching "${slug}".`, mimeType: "text/plain" }] };
       }
       const categoryName = match[0].category;
-      const lines = match.map(o => `- **${o.vendor}** — ${o.tier}: ${o.description} (${verificationDatesClause(lastReadDate(o), o.verifiedDate)})`);
+      const allChanges = loadDealChanges();
+      const lines = match.map(o => `- **${o.vendor}** — ${o.tier}: ${termsWithTheirConditions(o, o.description, allChanges)} (${verificationDatesClause(lastReadDate(o), o.verifiedDate)})`);
       const text = `# ${categoryName}\n\n${match.length} offers.\n\n${lines.join("\n")}`;
       return { contents: [{ uri: `agentdeals://category/${slug}`, text, mimeType: "text/plain" }] };
     }
@@ -806,7 +814,8 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
       if (!match) {
         return { contents: [{ uri: `agentdeals://vendor/${slug}`, text: `No vendor found matching "${slug}".`, mimeType: "text/plain" }] };
       }
-      const changes = loadDealChanges().filter(c => c.vendor.toLowerCase() === match.vendor.toLowerCase());
+      const allChanges = loadDealChanges();
+      const changes = allChanges.filter(c => c.vendor.toLowerCase() === match.vendor.toLowerCase());
       const stability = publishedStabilityFor(match.vendor);
       const details = getOfferDetails(match.vendor, true);
       const alternatives = "offer" in details ? details.offer.alternatives ?? [] : [];
@@ -818,7 +827,7 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
         ? `**Stability:** ${stability}\n`
         : `**Stability:** not published — ${stabilityWithheldSentence(match.vendor)}\n`;
       const unconfirmed = unconfirmedTermsForOffer(match);
-      text += `**Description:** ${unconfirmed ? termsWithTheReasonWeCannotConfirmThem(match.description, unconfirmed) : match.description}\n`;
+      text += `**Description:** ${termsWithTheirConditions(match, unconfirmed ? termsWithTheReasonWeCannotConfirmThem(match.description, unconfirmed) : match.description, allChanges)}\n`;
       text += `**Pricing Page:** ${match.url}\n`;
       text += `${publishedDateLine(match)}\n`;
       const restatedLine = restatedReadingLine(match);
@@ -846,7 +855,7 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
         text += `\n## Alternatives in ${match.category}\n\n`;
         text += `${wholeRankedOrderList(alternatives.length)}\n\n`;
         for (const a of alternatives) {
-          text += `- **${a.vendor}** — ${a.tier}: ${a.description}\n`;
+          text += `- **${a.vendor}** — ${a.tier}: ${termsWithTheirConditions(a, a.description, allChanges)}\n`;
         }
       }
 

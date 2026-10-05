@@ -1,6 +1,8 @@
 import { citationLabel } from "./change-citation.js";
+import { offerRetired } from "./retirement.js";
 import type { Escaper } from "./source-citation.js";
-import type { ListingCondition, Offer, UseAVendorRulesOut } from "./types.js";
+import { supersedingChange } from "./superseded-description.js";
+import type { DealChange, ListingCondition, Offer, UseAVendorRulesOut } from "./types.js";
 import { closingTerms } from "./vendor-verdict.js";
 
 export const USES_A_VENDOR_CAN_RULE_OUT: readonly UseAVendorRulesOut[] = ["production", "commercial use"];
@@ -9,6 +11,14 @@ export const LISTING_CONDITIONS_CLASS = "listing-conditions";
 
 export function conditionsOf(offer: Pick<Offer, "conditions">): readonly ListingCondition[] {
   return Array.isArray(offer.conditions) ? offer.conditions : [];
+}
+
+export function conditionsBesideStoredTerms(offer: Pick<Offer, "vendor" | "description" | "tier" | "conditions">, vendorChanges: readonly DealChange[]): readonly ListingCondition[] {
+  return offerRetired(offer) || supersedingChange(offer, vendorChanges) ? [] : conditionsOf(offer);
+}
+
+export function conditionsBesidePublishedTerms(item: Pick<Offer, "tier" | "conditions"> & { terms_superseded?: unknown }): readonly ListingCondition[] {
+  return offerRetired(item) || item.terms_superseded ? [] : conditionsOf(item);
 }
 
 function rulesOut(condition: ListingCondition, use: UseAVendorRulesOut): boolean {

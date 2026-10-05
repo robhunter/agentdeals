@@ -1,13 +1,15 @@
 import { changeSummaryText } from "./change-citation.js";
 import { loadOffers, loadDealChanges, searchOffers } from "./data.js";
-import type { Offer, DealChange } from "./types.js";
+import type { Offer, DealChange, ListingCondition } from "./types.js";
+import { conditionsField } from "./conditions-field.js";
 
 export interface ServiceCostEstimate {
   vendor: string;
   current_tier: string;
   free_tier_limits: string;
+  conditions?: ListingCondition[];
   estimated_monthly_cost: string;
-  free_alternative?: { vendor: string; tier: string; description: string };
+  free_alternative?: { vendor: string; tier: string; description: string; conditions?: ListingCondition[] };
   recent_changes?: string[];
 }
 
@@ -39,7 +41,7 @@ function extractFreeTierLimits(offer: Offer): string {
   return desc.slice(0, 197) + "...";
 }
 
-function findFreeAlternative(offer: Offer): { vendor: string; tier: string; description: string } | undefined {
+function findFreeAlternative(offer: Offer): { vendor: string; tier: string; description: string; conditions?: ListingCondition[] } | undefined {
   const offers = searchOffers(undefined, offer.category);
   const alternative = offers.find(
     (o) =>
@@ -53,6 +55,7 @@ function findFreeAlternative(offer: Offer): { vendor: string; tier: string; desc
     description: alternative.description.length > 150
       ? alternative.description.slice(0, 147) + "..."
       : alternative.description,
+    ...conditionsField(alternative),
   };
 }
 
@@ -149,6 +152,7 @@ export function estimateCosts(
       vendor: offer.vendor,
       current_tier: offer.tier,
       free_tier_limits: extractFreeTierLimits(offer),
+      ...conditionsField(offer),
       estimated_monthly_cost: estimatedCost,
     };
 

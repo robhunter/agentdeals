@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2026-10-04",
+  "generated": "2026-10-05",
   "pages": {
     "/": {
       "daily": true
@@ -22,15 +22,16 @@
       "changed": "2026-10-04"
     },
     "/ai-free-tiers": {
-      "hash": "58eeff940e298c04",
-      "changed": "2026-10-04"
+      "hash": "ff9c54be586f75b3",
+      "changed": "2026-10-05"
     },
     "/ai-ml-alternatives": {
-      "hash": "f2d7992337a9ee2d",
-      "changed": "2026-10-04"
+      "hash": "e93835edc2b36fc2",
+      "changed": "2026-10-05"
     },
     "/alternative-to": {
-      "daily": true
+      "hash": "46506fcb7e57b0b0",
+      "changed": "2026-10-05"
     },
     "/alternative-to/360-monitoring": {
       "daily": true
@@ -1079,8 +1080,8 @@
       "changed": "2026-10-04"
     },
     "/category/ai-ml": {
-      "hash": "78a232eea13c5cf7",
-      "changed": "2026-10-04"
+      "hash": "09dc0cd0fd908585",
+      "changed": "2026-10-05"
     },
     "/category/analytics": {
       "hash": "ba232ea8e2f2e65c",
@@ -1191,8 +1192,8 @@
       "changed": "2026-10-04"
     },
     "/category/forms": {
-      "hash": "3798387bdd132ef5",
-      "changed": "2026-10-04"
+      "hash": "99e8b0434ee270ec",
+      "changed": "2026-10-05"
     },
     "/category/headless-cms": {
       "hash": "a1e9c5537d783d7e",
@@ -1830,13 +1831,16 @@
       "changed": "2026-10-04"
     },
     "/compare/digitalocean-vs-google-compute-engine": {
-      "daily": true
+      "hash": "8e33d051371b961b",
+      "changed": "2026-10-05"
     },
     "/compare/digitalocean-vs-heroku-for-startups-program": {
-      "daily": true
+      "hash": "c32e87cc42654d64",
+      "changed": "2026-10-05"
     },
     "/compare/digitalocean-vs-startup-with-ibm": {
-      "daily": true
+      "hash": "ed83d3bc5422e335",
+      "changed": "2026-10-05"
     },
     "/compare/digitalplat-vs-hurricane-electric-dns": {
       "hash": "486d91b5434cd1d4",
@@ -3106,8 +3110,8 @@
       "daily": true
     },
     "/free-ai-stack": {
-      "hash": "00b61abc4144f949",
-      "changed": "2026-10-04"
+      "hash": "94dcd959485d13f9",
+      "changed": "2026-10-05"
     },
     "/free-devops-stack": {
       "hash": "8c74678221592e40",
@@ -3209,17 +3213,20 @@
       "changed": "2026-10-01"
     },
     "/heroku-alternatives": {
-      "daily": true
+      "hash": "421bce875e8210ec",
+      "changed": "2026-10-05"
     },
     "/hetzner-alternatives": {
-      "daily": true
+      "hash": "f63c172b27076eb2",
+      "changed": "2026-10-05"
     },
     "/hetzner-pricing-2026": {
       "hash": "7698b7f2c4cd2c5e",
       "changed": "2026-10-04"
     },
     "/hosting-alternatives": {
-      "daily": true
+      "hash": "74cad0502a953fe8",
+      "changed": "2026-10-05"
     },
     "/hosting-free-tier-comparison-2026": {
       "hash": "4cfcbd1e2756529f",
@@ -3464,7 +3471,8 @@
       "changed": "2026-10-04"
     },
     "/stack-check": {
-      "daily": true
+      "hash": "53852aa6083005c2",
+      "changed": "2026-10-05"
     },
     "/stacks": {
       "hash": "139122e3bb9e669b",
@@ -3531,7 +3539,8 @@
       "changed": "2026-10-03"
     },
     "/this-week": {
-      "daily": true
+      "hash": "7509551206148b08",
+      "changed": "2026-10-05"
     },
     "/trends": {
       "hash": "98fd36fe86e5f41f",
@@ -3579,7 +3588,8 @@
       "changed": "2026-10-04"
     },
     "/trends/cloud-iaas": {
-      "daily": true
+      "hash": "abcebe218019e700",
+      "changed": "2026-10-05"
     },
     "/trends/cloud-storage": {
       "hash": "cd31188ab76cd6f4",
@@ -5678,8 +5688,8 @@
       "changed": "2026-10-04"
     },
     "/vendor/formsubmit-co": {
-      "hash": "d601513687b52927",
-      "changed": "2026-10-04"
+      "hash": "30bcee11d9a3105c",
+      "changed": "2026-10-05"
     },
     "/vendor/formware-io": {
       "hash": "05b98b8f8d63d3c9",
@@ -8096,7 +8106,7 @@
       "changed": "2026-10-04"
     },
     "/vendor/repoforge": {
-      "hash": "5c2efcaa5725ee0f",
+      "hash": "16abbd21816d889b",
       "changed": "2026-10-04"
     },
     "/vendor/repohistory": {
@@ -8883,7 +8893,7 @@
       "changed": "2026-10-04"
     },
     "/vendor/tailscale": {
-      "hash": "4777014ac970233b",
+      "hash": "7d9d4197dc6fc80e",
       "changed": "2026-10-04"
     },
     "/vendor/tailwindadmin": {
@@ -9248,7 +9258,7 @@
       "changed": "2026-10-04"
     },
     "/vendor/uploadcare": {
-      "hash": "8b81e2c4568539ea",
+      "hash": "df02d4a3f1c52656",
       "changed": "2026-10-04"
     },
     "/vendor/upptime": {
