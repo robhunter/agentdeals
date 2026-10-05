@@ -45,6 +45,7 @@ import { alternativesUnderTheVendorsRule, conditionsBesideStoredTerms, condition
 import { conditionsField } from "./conditions-field.js";
 import { PAGE_HEAD_OPEN, withLedeBeforeNav } from "./page-lede.js";
 import { withReviewByline } from "./page-byline.js";
+import { timeLimitedHeadline, timeLimitedSectionHeading, whatFollowsTheOffer } from "./time-limited-headings.js";
 import { endedPreviewItem, freshnessClaimFor, withFreshnessClaim, type PreviewedPeriod } from "./page-freshness.js";
 import { UNGRADED_IMPACT_COLOR, changeImpactColor, changeImpactLabel, changeImpactWord, isChangeImpactLevel } from "./change-impact.js";
 import { COMPARED_SERVICES_PLACEHOLDER, appendToCompiledFigureSlots, fillComparedServicesCount, labelNamesAProductOfItsVendor, markCompiledFigures, recordsSinceCompiled, replaceTimelineRows, staticHalfOf, timelineRecordsFor, vendorForSubject, vendorSubjectsOnCompiledPage, type CompiledFigureSubject, type CompiledFigureVendor, type CompiledFigureVerdict, type CompiledPageRecord } from "./compiled-figures.js";
@@ -5426,7 +5427,7 @@ function buildVendorPage(slug: string): string | null {
   const hasFree = !retiredSentence && !noFreeTierGate && primary.tier.toLowerCase() !== "none" && !descriptionDeniesFreeTier(primary.description);
   const timeLimitedOffer = noFreeTierGate ? null : timeLimitedTierRule(primary.tier);
   const freeOfferNoun = timeLimitedOffer ? "free offer" : "free tier";
-  const freeTierHeadline = `${vendorName} Free Tier ${currentYear}`;
+  const freeTierHeadline = timeLimitedOffer ? timeLimitedHeadline(vendorName, timeLimitedOffer.kind, currentYear) : `${vendorName} Free Tier ${currentYear}`;
   const pricingHeadline = `${vendorName} Pricing ${currentYear}`;
   const headline = offerHasEnded ? endedHeadline(vendorName) : hasFree ? freeTierHeadline : pricingHeadline;
   const title = hasFree
@@ -5489,15 +5490,18 @@ function buildVendorPage(slug: string): string | null {
       ? unconfirmedThresholdSentence(phrase, termsWeCannotConfirm)
       : outgrowSentence(vendorName, phrase));
   }
-  if (growthBullets.length === 0 && hasFree && !termsSuperseded) {
-    growthBullets.push(`When your usage exceeds the free tier limits, you'll need to upgrade.`);
+  const whenTheFreeAllowanceIsUsed = timeLimitedOffer
+    ? whatFollowsTheOffer(timeLimitedOffer.kind)
+    : `When your usage exceeds the free tier limits, you'll need to upgrade.`;
+  if (growthBullets.length === 0 && hasFree && !termsSuperseded && whenTheFreeAllowanceIsUsed) {
+    growthBullets.push(whenTheFreeAllowanceIsUsed);
   }
   if (alternatives.length > 2 && !termsSuperseded) {
     growthBullets.push(`At that point, the <a href="#alternatives">${alternatives.length} alternatives in ${escHtmlServer(primary.category)}</a> are each listed with the free tier they offer, so you can compare what they give you against what you have outgrown.`);
   }
   const growthPathHtml = growthBullets.length > 0 && !discontinuedOn && !primaryGate ? `
   <div class="section growth-section">
-    <h2>When You'll Outgrow ${escHtmlServer(vendorName)}'s Free Tier</h2>
+    <h2>${escHtmlServer(timeLimitedOffer ? timeLimitedSectionHeading(vendorName, timeLimitedOffer.kind) : `When You'll Outgrow ${vendorName}'s Free Tier`)}</h2>
     <ul class="growth-list">
       ${growthBullets.map(b => `<li>${b}</li>`).join("\n      ")}
     </ul>

@@ -479,12 +479,14 @@ describe("the heading agrees with the title on the same page", () => {
     assertSharesPopulation(heading, restrictedPages(), 0.5, "restricted pages still head a free tier");
   });
 
-  it("heads a page whose title withholds the free-tier form with the pricing form", () => {
+  it("heads a page whose title withholds the free-tier form with the pricing form, or with the offer its title names", () => {
     const withheld = rendered.filter(p => !offerEnded(p.primary) && !/ Free Tier \d{4}:/.test(titleOf(p.html)));
     assert.ok(withheld.length > 0, "every live vendor page titles itself as a free tier");
+    const formOf = (text: string) => text.match(/^(.*? \d{4})\b/)?.[1] ?? "";
     for (const p of withheld) {
+      const form = listsAnOfferThatRunsOut(p) ? formOf(titleOf(p.html)) : `${p.vendor} Pricing `;
       assert.ok(
-        headingOf(p.html).startsWith(`${p.vendor} Pricing `),
+        form !== "" && headingOf(p.html).startsWith(form),
         `/vendor/${p.slug} is headed ${headingOf(p.html)}`,
       );
     }
