@@ -2021,7 +2021,8 @@
       "source_url": "https://foursquare.com/pricing/",
       "record_date": "2026-09-07",
       "change_type": "pricing_restructured",
-      "summary": "The Spatial Desktop Basic plan is $0/month through 2026, includes $1 of agent tokens, 3 GB of cloud storage, and 5 shared projects. The Places API free tier is now 10,000 free calls on Pro endpoints. The pricing for Pro and Premium endpoints has been updated with specific CPMs based on call volume."
+      "summary": "The Spatial Desktop Basic plan is $0/month through 2026, includes $1 of agent tokens, 3 GB of cloud storage, and 5 shared projects. The Places API free tier is now 10,000 free calls on Pro endpoints. The pricing for Pro and Premium endpoints has been updated with specific CPMs based on call volume.",
+      "reverted_on": "2026-10-06"
     },
     {
       "vendor": "geocodify.com",
