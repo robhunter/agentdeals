@@ -65,6 +65,7 @@
     {
       "id": "do_credit",
       "vendor": "DigitalOcean",
+      "subject": "DigitalOcean's new-account credit",
       "page": "/vendor/digitalocean",
       "question": "How much free credit does DigitalOcean give a new account, and for how many days? Give the amount and days first.",
       "outdated": "$200 of credit for 60 days",
@@ -136,6 +137,7 @@
     {
       "id": "gemini_code_assist",
       "vendor": "Google Gemini Code Assist",
+      "subject": "Gemini Code Assist for individuals",
       "page": "/vendor/google-gemini-code-assist",
       "question": "Is Gemini Code Assist for individuals still free to use today? Start with YES or NO.",
       "outdated": "the individuals tier is still free",
@@ -206,6 +208,7 @@
     {
       "id": "cerebras_free",
       "vendor": "Cerebras",
+      "subject": "Cerebras's free tier",
       "page": "/vendor/cerebras",
       "question": "Does Cerebras's inference API have a permanent free tier? Start with YES or NO.",
       "outdated": "a permanent free tier",
@@ -276,6 +279,7 @@
     {
       "id": "upstash_commands",
       "vendor": "Upstash",
+      "subject": "Upstash Redis's free command allowance",
       "page": "/vendor/upstash",
       "question": "How many commands does Upstash Redis's free tier allow, and per what period? Give the number first.",
       "outdated": "10,000 commands a day",
@@ -346,6 +350,7 @@
     {
       "id": "turso_storage",
       "vendor": "Turso",
+      "subject": "Turso's free storage",
       "page": "/vendor/turso",
       "question": "How much total storage does Turso's free plan include? Give the amount first.",
       "outdated": "9 GB of storage",
@@ -416,6 +421,7 @@
     {
       "id": "neon_compute",
       "vendor": "Neon",
+      "subject": "Neon's free compute hours",
       "page": "/vendor/neon",
       "question": "How many compute hours per month does Neon's Free plan include? Give the number first.",
       "outdated": "about 191 compute hours a month",
@@ -486,6 +492,7 @@
     {
       "id": "aws_duration",
       "vendor": "AWS",
+      "subject": "how long the AWS Free Tier lasts",
       "page": "/aws-free-tier-2026",
       "question": "How long does the AWS Free Tier last for a new AWS account opened today? Give the duration first.",
       "outdated": "12 months",
@@ -556,6 +563,7 @@
     {
       "id": "planetscale_free",
       "vendor": "PlanetScale",
+      "subject": "PlanetScale's free plan",
       "page": "/vendor/planetscale",
       "question": "Does PlanetScale currently offer a free plan? Start with YES or NO.",
       "outdated": "a free plan",
