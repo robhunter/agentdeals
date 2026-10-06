@@ -1276,8 +1276,8 @@
       "changed": "2026-10-05"
     },
     "/category/startup-perks": {
-      "hash": "b4840754fb2dabee",
-      "changed": "2026-10-05"
+      "hash": "a75c0a93974591a2",
+      "changed": "2026-10-06"
     },
     "/category/status-pages": {
       "hash": "c34b2db557ddf828",
@@ -1349,8 +1349,8 @@
       "changed": "2026-10-01"
     },
     "/compare": {
-      "hash": "9fb798a4e005d1ae",
-      "changed": "2026-10-01"
+      "hash": "6073753c860dfc35",
+      "changed": "2026-10-06"
     },
     "/compare-tool": {
       "hash": "2f9133078467f58d",
@@ -1857,8 +1857,8 @@
       "changed": "2026-10-04"
     },
     "/compare/discord-vs-zoom": {
-      "hash": "2ce7f0573642e712",
-      "changed": "2026-10-04"
+      "hash": "9a9885cc11a4dbbe",
+      "changed": "2026-10-06"
     },
     "/compare/docker-hub-vs-google-artifact-registry": {
       "hash": "29049503acf75604",
@@ -2081,8 +2081,8 @@
       "changed": "2026-10-04"
     },
     "/compare/google-cloud-vs-gorgias": {
-      "hash": "f00bdc55c53bed1e",
-      "changed": "2026-10-04"
+      "hash": "2f58a49226a4e4f2",
+      "changed": "2026-10-06"
     },
     "/compare/google-cloud-vs-vast-ai": {
       "hash": "4e68c898a3424acf",
@@ -2109,8 +2109,8 @@
       "changed": "2026-10-04"
     },
     "/compare/google-meet-vs-zoom": {
-      "hash": "0e6b114ebba3abf9",
-      "changed": "2026-10-04"
+      "hash": "e3116d4c01b5e634",
+      "changed": "2026-10-06"
     },
     "/compare/google-secret-manager-vs-hashicorp-vault": {
       "hash": "279693bdf48fb15b",
@@ -2125,8 +2125,8 @@
       "changed": "2026-10-04"
     },
     "/compare/gorgias-vs-hubspot-for-startups": {
-      "hash": "95cdc69a26b8349e",
-      "changed": "2026-10-04"
+      "hash": "712d03c4a12962d0",
+      "changed": "2026-10-06"
     },
     "/compare/gorgias-vs-vast-ai": {
       "hash": "3431f0e434c0af55",
@@ -2649,8 +2649,8 @@
       "changed": "2026-10-04"
     },
     "/compare/whatsapp-vs-zoom": {
-      "hash": "e8b962fbf3b67ff7",
-      "changed": "2026-10-04"
+      "hash": "8e11e280f1266455",
+      "changed": "2026-10-06"
     },
     "/compare/whereby-vs-wistia-com": {
       "hash": "4425d49f201a3203",
@@ -3470,7 +3470,7 @@
       "daily": true
     },
     "/stack-check": {
-      "hash": "2ff94a1dbaf1f9d6",
+      "hash": "ba1acf4a3e04158f",
       "changed": "2026-10-06"
     },
     "/stacks": {
@@ -3785,8 +3785,8 @@
       "changed": "2026-10-05"
     },
     "/vendor": {
-      "hash": "657fb8287ffc7e22",
-      "changed": "2026-10-04"
+      "hash": "99a9277c69bfecd5",
+      "changed": "2026-10-06"
     },
     "/vendor/10minutemail": {
       "hash": "5bfc536a15d10c58",
@@ -6063,7 +6063,7 @@
       "changed": "2026-10-06"
     },
     "/vendor/gorgias": {
-      "hash": "2926a49ffc5cb455",
+      "hash": "48ea2438630ae419",
       "changed": "2026-10-06"
     },
     "/vendor/gpu-bridge": {
@@ -6273,7 +6273,7 @@
       "changed": "2026-10-06"
     },
     "/vendor/hubspot-for-startups": {
-      "hash": "176af0a6c8756b24",
+      "hash": "d110624b1db93057",
       "changed": "2026-10-06"
     },
     "/vendor/hugging-face": {
@@ -9329,7 +9329,7 @@
       "changed": "2026-10-06"
     },
     "/vendor/vast-ai": {
-      "hash": "9a0c151ffd28b1b4",
+      "hash": "e9e671d7b5dcb9d1",
       "changed": "2026-10-06"
     },
     "/vendor/vatcheckapi-com": {
@@ -9796,7 +9796,7 @@
       "changed": "2026-10-06"
     },
     "/vendor/zoom": {
-      "hash": "ff228963397dde26",
+      "hash": "e0753d969550705c",
       "changed": "2026-10-06"
     },
     "/vendor/zoom-us": {
