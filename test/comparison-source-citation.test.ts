@@ -100,13 +100,21 @@ const AZURE_GUIDE = "/azure-free-tier-2026";
 const AWS_GUIDE = "/aws-free-tier-2026";
 const GCP_GUIDE = "/gcp-free-tier-2026";
 const DIGITALOCEAN_GUIDE = "/digitalocean-free-tier-2026";
+const CLOUD_COMPARISON = "/cloud-free-tier-comparison-2026";
 
 const ROWS_NO_FETCHABLE_PAGE_STATES: Record<string, string[]> = {
   [AZURE_GUIDE]: ["Azure Virtual Machines", "Azure Blob Storage", "Azure Files", "Azure Service Bus", "AWS"],
   [AWS_GUIDE]: ["AWS X-Ray"],
   [GCP_GUIDE]: ["AWS"],
   [DIGITALOCEAN_GUIDE]: ["AWS"],
+  [CLOUD_COMPARISON]: ["AWS"],
 };
+
+const RECORDED_SINCE_BADGE = / CHANGED [A-Z]{3} \d{1,2}$/;
+
+function rowName(subject: string): string {
+  return subject.replace(RECORDED_SINCE_BADGE, "");
+}
 
 interface TabulatedSlot {
   slug: string | null;
@@ -124,7 +132,7 @@ function rowsWithNeitherASourceNorAReason(page: string, html: string, slotsOf: S
     if (slot.slug === null) continue;
     rows += 1;
     if (MARKS_A_SOURCE_OR_A_REASON.test(slot.cell) || rowCitesItsOwnSource(html, slot.cellEnd)) continue;
-    if (ROWS_NO_FETCHABLE_PAGE_STATES[page]?.includes(slot.subject)) continue;
+    if (ROWS_NO_FETCHABLE_PAGE_STATES[page]?.includes(rowName(slot.subject))) continue;
     bare.push(`${page}: ${slot.subject}`);
   }
   return { rows, bare };
@@ -448,9 +456,9 @@ describe("every comparison page reaches the pages its figures were read from", (
     const servedBare = Object.entries(ROWS_NO_FETCHABLE_PAGE_STATES).flatMap(([page, subjects]) => {
       const html = staticHalfOf(rendered.get(page)!);
       return tabulatedSubjectSlots(html, namedVendorSlug)
-        .filter((slot: TabulatedSlot) => subjects.includes(slot.subject))
+        .filter((slot: TabulatedSlot) => subjects.includes(rowName(slot.subject)))
         .filter((slot: TabulatedSlot) => !MARKS_A_SOURCE_OR_A_REASON.test(slot.cell) && !rowCitesItsOwnSource(html, slot.cellEnd))
-        .map((slot: TabulatedSlot) => `${page}: ${slot.subject}`);
+        .map((slot: TabulatedSlot) => `${page}: ${rowName(slot.subject)}`);
     });
     const named = Object.entries(ROWS_NO_FETCHABLE_PAGE_STATES).flatMap(([page, subjects]) => subjects.map(subject => `${page}: ${subject}`));
     assert.deepStrictEqual(servedBare.sort(), named.sort());
@@ -458,7 +466,7 @@ describe("every comparison page reaches the pages its figures were read from", (
 
   it("lets those rows carry neither on their own page only, so the same rows elsewhere still need a source or a reason", () => {
     const html = staticHalfOf(rendered.get(AZURE_GUIDE)!);
-    const elsewhere = "/cloud-free-tier-comparison-2026";
+    const elsewhere = "/database-free-tier-comparison-2026";
     assert.deepStrictEqual(rowsWithNeitherASourceNorAReason(elsewhere, html, tabulatedSubjectSlots).bare,
       ROWS_NO_FETCHABLE_PAGE_STATES[AZURE_GUIDE]!.map(subject => `${elsewhere}: ${subject}`));
   });

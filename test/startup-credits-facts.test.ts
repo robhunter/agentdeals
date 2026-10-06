@@ -5,6 +5,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const REPO = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
+const { FIGURE_SOURCE_CLASS } = await import("../dist/source-citation.js");
 
 const PAGES_THIS_GUIDE_STATES_PROGRAMMES_ON = [
   "/startup-credits",
@@ -133,7 +134,7 @@ const STATED_ELSEWHERE: Record<string, string[]> = {
 };
 
 const CLOUD_STARTUP_ROWS = [
-  ["Activate", "Up to $200K", "1–2 years", "Activate Provider Org ID (Portfolio)"],
+  ["Activate", "Up to $200K", "—", "Activate Provider Org ID (Portfolio)"],
   ["Google for Startups", "Up to $350K", "1–2 years", "VC funding, pre-seed to Series A"],
   ["Microsoft for Startups", "Up to $150K", "90 days to 2 years", "No funding requirement (easiest to qualify)"],
   ["DigitalOcean Startups", "Amount varies (up to $10,000 a month)", "12 months", "$10M raised or less; partner or direct application"],
@@ -176,11 +177,13 @@ function structuredStrings(html: string): string[] {
   return strings;
 }
 
+const FIGURE_SOURCE_LINK = new RegExp(`<a\\b[^>]*class="${FIGURE_SOURCE_CLASS}"[^>]*>[\\s\\S]*?<\\/a>`, "g");
+
 function startupTableRows(html: string): string[][] {
   const table = html.split('id="startup-credits"')[1]?.split("</table>")[0] ?? "";
   const body = table.split("<tbody>")[1] ?? "";
   return [...body.matchAll(/<tr[^>]*>([\s\S]*?)<\/tr>/g)].map(([, row]) =>
-    [...row.matchAll(/<td[^>]*>([\s\S]*?)<\/td>/g)].slice(1).map(([, cell]) => readable(cell))
+    [...row.matchAll(/<td[^>]*>([\s\S]*?)<\/td>/g)].slice(1).map(([, cell]) => readable(cell.replace(FIGURE_SOURCE_LINK, "")))
   );
 }
 

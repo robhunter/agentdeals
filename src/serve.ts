@@ -34806,7 +34806,7 @@ ${mcpCtaCss()}
     <tbody>
       <tr>
         <td class="provider-col"><a href="/aws-free-tier-2026" style="color:var(--text)">AWS</a></td>
-        <td style="font-family:var(--mono)">$100 + up to $100</td>
+        <td style="font-family:var(--mono)">$100 + up to $100${figureSourceLinkHtml("https://aws.amazon.com/free/free-tier-faqs/", escHtmlServer)}</td>
         <td>6 months (Free plan)</td>
         <td>New accounts only; the Free plan closes at 6 months or when the credits run out, and AWS erases the account 90 days later unless you upgrade</td>
         <td>Yes</td>
@@ -34905,7 +34905,7 @@ ${mcpCtaCss()}
         <td class="provider-col">AWS</td>
         <td>DynamoDB</td>
         <td>NoSQL (key-value)</td>
-        <td>25 GB, 25 WCU/RCU</td>
+        <td>25 GB, 25 WCU/RCU${figureSourceLinkHtml("https://aws.amazon.com/dynamodb/pricing/", escHtmlServer)}</td>
         <td style="color:#3fb950">Always free</td>
       </tr>
       <tr>
@@ -34919,7 +34919,7 @@ ${mcpCtaCss()}
         <td class="provider-col">AWS</td>
         <td>Aurora PostgreSQL Serverless</td>
         <td>Relational (serverless)</td>
-        <td>Up to 4 ACUs and 1 GiB per cluster, paid from the Free plan's credits</td>
+        <td>Up to 4 ACUs and 1 GiB per cluster, paid from the Free plan's credits${figureSourceLinkHtml("https://aws.amazon.com/rds/aurora/pricing/", escHtmlServer)}</td>
         <td style="color:#d29922">Free plan, up to 6 months</td>
       </tr>
       <tr>
@@ -34994,7 +34994,7 @@ ${mcpCtaCss()}
       <tr style="background:rgba(63,185,80,0.08)">
         <td class="provider-col">AWS</td>
         <td>Lambda</td>
-        <td>1M requests/mo</td>
+        <td>1M requests/mo${figureSourceLinkHtml("https://aws.amazon.com/lambda/pricing/", escHtmlServer)}</td>
         <td>400K GB-seconds</td>
         <td style="color:#3fb950">Always free</td>
       </tr>
@@ -35048,7 +35048,7 @@ ${mcpCtaCss()}
       </tr>
     </thead>
     <tbody>
-      <tr>
+      <tr ${NO_FETCHABLE_PAGE_STATES_THE_ROW}>
         <td class="provider-col">AWS</td>
         <td>S3: no free storage (paid from credits)</td>
         <td>CloudFront: 1 TB transfer, 10M requests/mo</td>
@@ -35098,8 +35098,8 @@ ${mcpCtaCss()}
       <tr>
         <td class="provider-col">AWS</td>
         <td>Activate</td>
-        <td style="font-family:var(--mono)">Up to $200K</td>
-        <td>1&ndash;2 years</td>
+        <td style="font-family:var(--mono)">Up to $200K${figureSourceLinkHtml("https://aws.amazon.com/activate/credits/", escHtmlServer)}</td>
+        <td>&mdash;</td>
         <td>Activate Provider Org ID (Portfolio)</td>
       </tr>
       <tr style="background:rgba(63,185,80,0.08)">

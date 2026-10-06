@@ -6,6 +6,8 @@ import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
+const { FIGURE_SOURCE_CLASS } = await import("../dist/source-citation.js");
+const FIGURE_SOURCE_LINK = new RegExp(`<a\\b[^>]*class="${FIGURE_SOURCE_CLASS}"[^>]*>[\\s\\S]*?<\\/a>`, "g");
 
 const STATED: Record<string, string[]> = {
   "/digitalocean-free-tier-2026": [
@@ -90,7 +92,7 @@ function readable(html: string): string {
 
 function rowsOf(html: string): string[][] {
   return [...html.matchAll(/<tr[^>]*>([\s\S]*?)<\/tr>/g)].map(([, row]) =>
-    [...row.matchAll(/<t[dh][^>]*>([\s\S]*?)<\/t[dh]>/g)].map(([, cell]) => readable(cell)),
+    [...row.matchAll(/<t[dh][^>]*>([\s\S]*?)<\/t[dh]>/g)].map(([, cell]) => readable(cell.replace(FIGURE_SOURCE_LINK, ""))),
   );
 }
 
