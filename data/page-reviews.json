@@ -2070,7 +2070,8 @@
       "tier": "A",
       "vendors_asserted": [],
       "vendors_tabulated": [
-        "aws-lightsail",
+        "akamai-cloud",
+        "amazon-lightsail",
         "digitalocean",
         "fly-io",
         "hetzner",

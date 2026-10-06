@@ -13,12 +13,15 @@ const { getBestReferralCode, getPlatformCodeForVendor, getAllPlatformCodes, list
 const { ourReferralLinkFor, platformCodeAsVendorReferral, referralTypeOfPlatformCode } = await import("../dist/referral-surfaces.js");
 const { loadOffers } = await import("../dist/data.js");
 
-const VENDOR = "Vultr DNS";
-const SLUG = "vultr-dns";
+const VENDOR = "Vultr";
+const SLUG = "vultr";
+const DNS_LISTING = "Vultr DNS";
+const DNS_SLUG = "vultr-dns";
 const PUBLISHED_CODE = "9920277-9J";
 const PUBLISHED_URL = "https://www.vultr.com/?ref=9920277-9J";
 const READER_BENEFIT = "$300 in credit";
 const FALLBACK_CODE = "9920276";
+const PROGRAM_URL = "https://www.vultr.com/company/referral-program/";
 const CONDITIONS = [
   "A valid credit card or PayPal must be linked to claim the credit",
   "Unused credit expires 30 days after signup",
@@ -77,7 +80,7 @@ function readableText(html: string): string {
     .replace(/\s+/g, " ");
 }
 
-const CREDIT_AFTER_VULTR = /Vultr[^$]{0,200}?\$([\d,]+(?:\.\d+)?)\s*(?:in\s+)?(?:free\s+)?credits?\b/gi;
+const CREDIT_AFTER_VULTR = /Vultr[^${}]{0,200}?\$([\d,]+(?:\.\d+)?)\s*(?:in\s+)?(?:free\s+)?credits?\b/gi;
 
 describe("the record carries the terms the reader is held to and the terms we are paid under", () => {
   it("publishes one Vultr code and keeps the second stored but inactive", () => {
@@ -156,7 +159,7 @@ describe("the code resolves for the vendor whose page it renders on", () => {
 
     const resolved = getPlatformCodeForVendor(VENDOR);
     assert.strictEqual(resolved!.code, PUBLISHED_CODE);
-    assert.strictEqual(getPlatformCodeForVendor("Vultr"), null, "a bare vendor name resolves to no page and must not resolve to a code");
+    assert.strictEqual(getPlatformCodeForVendor(DNS_LISTING), null, "the credit is for cloud servers, so the DNS listing must not resolve to the code");
 
     const link = ourReferralLinkFor(VENDOR, offer);
     assert.strictEqual(link!.url, PUBLISHED_URL);
@@ -195,6 +198,7 @@ describe("the code resolves for the vendor whose page it renders on", () => {
 
 describe("every surface that offers the code also states its conditions", () => {
   let vendorPage = "";
+  let dnsVendorPage = "";
   let referralPrograms = "";
   let disclosure = "";
   let byVendor: any = null;
@@ -205,6 +209,7 @@ describe("every surface that offers the code also states its conditions", () => 
     serverProc = started.proc;
     port = started.port;
     vendorPage = await (await fetch(`http://localhost:${port}/vendor/${SLUG}`)).text();
+    dnsVendorPage = await (await fetch(`http://localhost:${port}/vendor/${DNS_SLUG}`)).text();
     referralPrograms = await (await fetch(`http://localhost:${port}/referral-programs`)).text();
     disclosure = await (await fetch(`http://localhost:${port}/disclosure`)).text();
     byVendor = await (await fetch(`http://localhost:${port}/api/referral-codes/${encodeURIComponent(VENDOR)}`)).json();
@@ -222,6 +227,20 @@ describe("every surface that offers the code also states its conditions", () => 
     const buttonAt = vendorPage.indexOf(`${PUBLISHED_URL}" rel="noopener sponsored"`);
     assert.ok(conditionAt > -1 && buttonAt > -1, "the page must carry both the conditions and the button");
     assert.ok(conditionAt < buttonAt, "the conditions must come before the button, not after it");
+  });
+
+  it("tells the reader on the vendor page what the link pays us", () => {
+    assert.ok(readableText(vendorPage).includes("We may earn a commission if you sign up through this link. See our affiliate disclosure"));
+    assert.ok(vendorPage.includes('<a href="/disclosure">'));
+  });
+
+  it("offers no code on the DNS listing's page", () => {
+    assert.ok(dnsVendorPage.includes("Vultr DNS"), `/vendor/${DNS_SLUG} should still render the DNS listing`);
+    assert.ok(!dnsVendorPage.includes("Sign up via our referral link"), `/vendor/${DNS_SLUG} should carry no referral block`);
+    assert.ok(!dnsVendorPage.includes(PUBLISHED_CODE), `/vendor/${DNS_SLUG} should not print the code`);
+    assert.ok(!dnsVendorPage.includes("sponsored"), `/vendor/${DNS_SLUG} should carry no sponsored link`);
+    assert.ok(!dnsVendorPage.includes(PROGRAM_URL), `/vendor/${DNS_SLUG} should not document the referral program`);
+    assert.ok(vendorPage.includes(PROGRAM_URL), `/vendor/${SLUG} should document the referral program`);
   });
 
   it("agrees with itself about what each side of the deal gets", () => {
@@ -258,7 +277,7 @@ describe("every surface that offers the code also states its conditions", () => 
   });
 
   it("inlines the code on the offer an agent reads without asking twice", async () => {
-    const listing = await (await fetch(`http://localhost:${port}/api/offers?category=${encodeURIComponent("DNS & Domain Management")}&limit=100`)).json();
+    const listing = await (await fetch(`http://localhost:${port}/api/offers?category=${encodeURIComponent("Cloud IaaS")}&limit=100`)).json();
     const vultr = listing.offers.find((o: any) => o.vendor === VENDOR);
     assert.ok(vultr, "the category listing should hold the vendor");
     assert.strictEqual(vultr.referral_code.code, PUBLISHED_CODE);

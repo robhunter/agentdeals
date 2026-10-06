@@ -33381,15 +33381,6 @@
         "dnssec"
       ],
       "verifiedDate": "2026-04-13",
-      "referral_program": {
-        "available": true,
-        "referrer_benefit": "$100 cash per verified paid signup",
-        "referee_benefit": "$300 in credit",
-        "program_url": "https://www.vultr.com/company/referral-program/",
-        "type": "self-service",
-        "commission_type": "one-time",
-        "notes": "Referred user must be active 30+ days and have paid $100+. Terms read from the referral dashboard on 2026-08-29."
-      },
       "source_check": {
         "checked": "2026-10-01",
         "outcome": "unreadable",
@@ -37452,6 +37443,15 @@
         "digitalocean-alternative"
       ],
       "verifiedDate": "2026-10-06",
+      "referral_program": {
+        "available": true,
+        "referrer_benefit": "$100 cash per verified paid signup",
+        "referee_benefit": "$300 in credit",
+        "program_url": "https://www.vultr.com/company/referral-program/",
+        "type": "self-service",
+        "commission_type": "one-time",
+        "notes": "Referred user must be active 30+ days and have paid $100+. Terms read from the referral dashboard on 2026-08-29."
+      },
       "conditions": [
         {
           "text": "Admission to the free instance is not guaranteed: Vultr grants it at random to eligible applicants in limited quantities, weighted by a score, and does not explain why an account was not admitted.",

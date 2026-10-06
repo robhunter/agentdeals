@@ -19047,9 +19047,9 @@ function buildHetznerPricing2026Page(): string {
     { vendor: "Hetzner (cheapest orderable)", spec: `${cheapestOrderable.sku} — ${cheapestOrderable.vcpu} vCPU, ${cheapestOrderable.ram} GB`, price: `${eur(cheapestOrderable.eur)}/mo`, region: cheapestOrderable.region, note: "Cost-Optimized line unavailable" },
     { vendor: "DigitalOcean", spec: "Basic — 1 vCPU, 512 MB", price: "$4/mo", region: "Global", note: "" },
     { vendor: "Vultr", spec: "Cloud — 1 vCPU, 1 GB", price: "$5/mo", region: "Global", note: "Free instance (1 vCPU, 512 MB, 10 GB SSD) for accepted applicants, in Miami, Seattle and Frankfurt" },
-    { vendor: "Linode/Akamai", spec: "Nanode — 1 vCPU, 1 GB", price: "$5/mo", region: "Global", note: "" },
+    { vendor: "Linode/Akamai", listedAs: "Akamai Cloud", spec: "Nanode — 1 vCPU, 1 GB", price: "$5/mo", region: "Global", note: "" },
     { vendor: "OVHcloud", spec: "VPS-1 — 2 vCores, 4 GB", price: "€4.49/mo", region: "EU", note: "VPS 2027 range, ex-VAT, without commitment (€3.81/mo on 12 months). $5.35/mo in the US. The 2026 range rose 36-49% from April 2026" },
-    { vendor: "AWS Lightsail", spec: "2 vCPUs, 512 MB", price: "$5/mo", region: "US", note: "The $3.50 bundle is IPv6-only; every other row here has a public IPv4 address" },
+    { vendor: "AWS Lightsail", listedAs: "Amazon Lightsail", spec: "2 vCPUs, 512 MB", price: "$5/mo", region: "US", note: "The $3.50 bundle is IPv6-only; every other row here has a public IPv4 address" },
     { vendor: "Oracle Cloud", spec: oracleArmAllowance(), price: "Free (Always Free)", region: "Global", note: "Best free tier for VMs" },
     { vendor: "Railway", spec: "Free Plan", price: "$0/mo", region: "US", note: "30-day trial with $5 credits, then $1 of free credit a month" },
     { vendor: "Render", spec: "Free Tier", price: "Free (750h/mo)", region: "US", note: "Auto-sleep on free tier" },
@@ -19057,20 +19057,21 @@ function buildHetznerPricing2026Page(): string {
   ];
 
   const altTableRows = competitorPricing.map(c => {
-    const vendorSlug = toSlug(c.vendor.replace(/ \(.*\)/, ""));
+    const listedAs = c.listedAs ?? c.vendor;
+    const vendorSlug = toSlug(listedAs.replace(/ \(.*\)/, ""));
     const isHetzner = c.vendor.startsWith("Hetzner");
     return `<tr${isHetzner ? ` style="background:var(--accent-glow)"` : ""}>
       <td style="font-weight:600">${isHetzner ? escHtmlServer(c.vendor) : `${handwrittenVendorLinkHtml(vendorSlug, c.vendor, ' style="color:var(--text)"')}`}</td>
       <td style="font-family:var(--mono);font-size:.85rem">${escHtmlServer(c.spec)}</td>
       <td style="font-family:var(--mono);font-weight:600;color:var(--accent)">${escHtmlServer(c.price)}</td>
       <td>${escHtmlServer(c.region)}</td>
-      <td style="color:var(--text-muted);font-size:.85rem">${escHtmlServer(c.note)}${isHetzner ? "" : guideRowReferralHtml(c.vendor)}</td>
-      <td class="figure-provenance" style="color:var(--text-muted);font-size:.85rem">${isHetzner ? hetznerReadProvenanceHtml() : figureProvenanceHtml(`${c.spec} ${c.price}`, c.vendor, vendorSlug)}</td>
+      <td style="color:var(--text-muted);font-size:.85rem">${escHtmlServer(c.note)}${isHetzner ? "" : guideRowReferralHtml(listedAs)}</td>
+      <td class="figure-provenance" style="color:var(--text-muted);font-size:.85rem">${isHetzner ? hetznerReadProvenanceHtml() : figureProvenanceHtml(`${c.spec} ${c.price}`, listedAs, vendorSlug)}</td>
     </tr>`;
   }).join("\n        ");
 
   const handTypedAlternativeRowCount = competitorPricing.filter(
-    c => !c.vendor.startsWith("Hetzner") && figureProvenance(`${c.spec} ${c.price}`, c.vendor) !== null,
+    c => !c.vendor.startsWith("Hetzner") && figureProvenance(`${c.spec} ${c.price}`, c.listedAs ?? c.vendor) !== null,
   ).length;
 
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>

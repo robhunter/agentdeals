@@ -8,6 +8,7 @@ import { assertPopulationFloor } from "./population-floor.ts";
 
 const { statedQuantities, quantitiesNotIn } = await import("../dist/quoted-figures.js");
 const { statementsWeHold } = await import("../dist/figure-provenance.js");
+const { toSlug } = await import("../dist/slug.js");
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -233,6 +234,8 @@ describe("#1734 — a page states the Always Free allowance by quoting the recor
 describe("#1734 — the alternatives table says where each row's figures come from", () => {
   let rows: string[][] = [];
   let sectionText = "";
+  const listingLinkedBy = new Map<string, string>();
+  const heldForRow = (cells: string[]) => whatWeHoldAbout(listingLinkedBy.get(cells[0]!) ?? cells[0]!);
 
   before(async () => {
     if (!server) {
@@ -251,6 +254,9 @@ describe("#1734 — the alternatives table says where each row's figures come fr
           unescapeServed(cell[1]!.replace(/<[^>]*>/g, " ")).replace(/\s+/g, " ").trim(),
         );
         const provenance = row[0].match(/<td[^>]*class="[^"]*\bfigure-provenance\b[^"]*"[^>]*>([\s\S]*?)<\/td>/);
+        const linkedSlug = row[0].match(/<td[^>]*>\s*<a href="\/vendor\/([^"]+)"/)?.[1];
+        const linkedListing = offers().find(offer => toSlug(offer.vendor) === linkedSlug)?.vendor;
+        if (cells.length > 0 && linkedListing) listingLinkedBy.set(cells[0]!, linkedListing);
         return cells.length === 0
           ? cells
           : [...cells.slice(0, 5), provenance === null ? "" : unescapeServed(provenance[1]!.replace(/<[^>]*>/g, " ")).replace(/\s+/g, " ").trim()];
@@ -284,7 +290,7 @@ describe("#1734 — the alternatives table says where each row's figures come fr
   it("claims a record only for a row whose every figure appears in what we hold", () => {
     const overclaimed = rows
       .filter(cells => (cells[cells.length - 1] ?? "").startsWith("Our record"))
-      .map(cells => ({ vendor: cells[0]!, missing: quantitiesNotIn(`${cells[1]} ${cells[2]}`, whatWeHoldAbout(cells[0]!)) }))
+      .map(cells => ({ vendor: cells[0]!, missing: quantitiesNotIn(`${cells[1]} ${cells[2]}`, heldForRow(cells)) }))
       .filter(row => row.missing.length > 0);
     assert.deepStrictEqual(
       overclaimed.map(row => `${row.vendor}: ${row.missing.join(", ")}`),
@@ -297,7 +303,7 @@ describe("#1734 — the alternatives table says where each row's figures come fr
     const understated = rows
       .filter(cells => (cells[cells.length - 1] ?? "").startsWith("Hand-typed"))
       .filter(cells => {
-        const held = whatWeHoldAbout(cells[0]!);
+        const held = heldForRow(cells);
         return held.length > 0 && quantitiesNotIn(`${cells[1]} ${cells[2]}`, held).length === 0;
       })
       .map(cells => cells[0]);
