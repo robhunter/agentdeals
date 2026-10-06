@@ -538,6 +538,7 @@
         "amazon-cloudfront",
         "amazon-cognito",
         "amazon-ecr-public",
+        "amazon-lightsail",
         "amazon-q-developer",
         "aws",
         "azure",

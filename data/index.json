@@ -37307,6 +37307,49 @@
           "read_on": "2026-10-06"
         }
       ]
+    },
+    {
+      "vendor": "Amazon Lightsail",
+      "category": "Cloud IaaS",
+      "description": "Virtual private servers billed by the hour, up to a fixed monthly price per bundle. No free trial for new customers: AWS replaced Lightsail's free trials (up to 90 days on select bundles) with the AWS Free Tier, whose credits ($100 at sign-up and up to $100 more) pay for Lightsail like any other service. Linux bundles with a public IPv4 address start at $5/mo for 2 vCPUs, 0.5 GB RAM, 20 GB SSD and 1 TB transfer, then $7/mo (1 GB RAM, 40 GB SSD, 2 TB) and $12/mo (2 GB RAM, 60 GB SSD, 3 TB). IPv6-only Linux bundles start at $3.50/mo (512 MB RAM, 20 GB SSD, 1 TB), and Windows bundles at $9.50/mo. Inbound and outbound transfer both count toward a bundle's allowance; outbound transfer beyond it costs from $0.09/GB, and bundles in Mumbai, Sydney, Jakarta, Malaysia, Hong Kong and São Paulo get half the allowance.",
+      "tier": "Credits",
+      "url": "https://aws.amazon.com/lightsail/pricing/",
+      "tags": [
+        "cloud",
+        "iaas",
+        "vps",
+        "aws",
+        "credits",
+        "time-limited",
+        "hetzner-alternative",
+        "digitalocean-alternative"
+      ],
+      "verifiedDate": "2026-10-06",
+      "conditions": [
+        {
+          "text": "Lightsail's own free trials are closed to new customers. A trial started before AWS removed them runs to the end of its period, and the resources then bill monthly.",
+          "quote": "These offers are no longer available to new Lightsail customers.",
+          "url": "https://docs.aws.amazon.com/lightsail/latest/userguide/amazon-lightsail-frequently-asked-questions-faq-billing-and-account-management.html",
+          "read_on": "2026-10-06"
+        },
+        {
+          "text": "An instance or managed database is charged until it is deleted, including while it is stopped.",
+          "quote": "Lightsail instances and managed databases incur charges until they are deleted. These resources accrue charges even when they are in the stopped state.",
+          "url": "https://docs.aws.amazon.com/lightsail/latest/userguide/amazon-lightsail-frequently-asked-questions-faq-billing-and-account-management.html",
+          "read_on": "2026-10-06"
+        },
+        {
+          "text": "A static IP is free only while attached to an instance: AWS charges $0.005 an hour for one left unattached for more than an hour, and an IPv6-only instance cannot take one.",
+          "quote": "we charge a small $0.005 USD/hour fee for static IPs not attached to an instance for more than 1 hour.",
+          "url": "https://docs.aws.amazon.com/lightsail/latest/userguide/amazon-lightsail-frequently-asked-questions-faq-billing-and-account-management.html",
+          "read_on": "2026-10-06"
+        }
+      ],
+      "source_check": {
+        "checked": "2026-10-06",
+        "outcome": "ok",
+        "detail": "the page names Amazon Lightsail as \"amazon lightsail\" and states \"$5\" and \"$7\" and \"$12\" and \"$9.50\""
+      }
     }
   ],
   "changes": []

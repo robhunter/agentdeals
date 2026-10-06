@@ -1388,12 +1388,12 @@
       "hash": "b3bbc5254bc4cc9c",
       "changed": "2026-10-04"
     },
-    "/compare/akamai-cloud-vs-google-ai-pro-ultra": {
-      "hash": "e4911b17597d852e",
+    "/compare/akamai-cloud-vs-clouddev": {
+      "hash": "cda1c11944bee9f6",
       "changed": "2026-10-06"
     },
-    "/compare/akamai-cloud-vs-oracle-cloud": {
-      "hash": "aaa0f27270312d83",
+    "/compare/akamai-cloud-vs-digitalocean": {
+      "hash": "2fc5fdc319f21da5",
       "changed": "2026-10-06"
     },
     "/compare/akamai-cloud-vs-vultr": {
@@ -1624,6 +1624,10 @@
       "hash": "7d4cd4397bbe0183",
       "changed": "2026-10-04"
     },
+    "/compare/clouddev-vs-vultr": {
+      "hash": "caa3d1175e90a295",
+      "changed": "2026-10-06"
+    },
     "/compare/cloudflare-pages-vs-netlify": {
       "hash": "e7b87e7acc802934",
       "changed": "2026-10-06"
@@ -1843,6 +1847,10 @@
     "/compare/diawi-vs-loadly": {
       "hash": "8c6592021e6613f1",
       "changed": "2026-10-04"
+    },
+    "/compare/digitalocean-vs-vultr": {
+      "hash": "d9160485172d1675",
+      "changed": "2026-10-06"
     },
     "/compare/digitalplat-vs-hurricane-electric-dns": {
       "hash": "13f2ddaeee43725a",
@@ -2075,10 +2083,6 @@
     "/compare/gmail-vs-tutanota": {
       "hash": "7793c802f4214693",
       "changed": "2026-10-04"
-    },
-    "/compare/google-ai-pro-ultra-vs-vultr": {
-      "hash": "434a974a4ccaa6c1",
-      "changed": "2026-10-06"
     },
     "/compare/google-cloud-vs-gorgias": {
       "hash": "2f58a49226a4e4f2",
@@ -2435,10 +2439,6 @@
     "/compare/openweathermap-vs-opencagedata-com": {
       "hash": "f797b715dd30370f",
       "changed": "2026-10-04"
-    },
-    "/compare/oracle-cloud-vs-vultr": {
-      "hash": "301c26e33f4f03f9",
-      "changed": "2026-10-06"
     },
     "/compare/orama-vs-bonsai-io": {
       "hash": "3946ffd35ba5856f",
@@ -3930,6 +3930,10 @@
     },
     "/vendor/amazon-kiro-aws-startups": {
       "daily": true
+    },
+    "/vendor/amazon-lightsail": {
+      "hash": "64371ed39f1ff254",
+      "changed": "2026-10-06"
     },
     "/vendor/amazon-q-developer": {
       "hash": "b49faecb34928437",
