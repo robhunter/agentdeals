@@ -24724,6 +24724,10 @@ ${mcpCtaCss()}
     <strong>What\u2019s NOT affected:</strong> The Tenor website (tenor.com) and the Tenor keyboard app will continue to work. Google is only shutting down the public developer API. If your users search GIFs on tenor.com directly, nothing changes for them \u2014 only API-integrated apps are affected.
   </div>
 
+  <div class="context-box">
+    <strong>GIF links an app already stored:</strong> Google\u2019s notice covers API requests and says nothing about media links. A media.tenor.com GIF link still loaded when we checked on 2026-10-06; Google does not say how long they will.
+  </div>
+
   <h2 id="comparison-table">GIF API Alternative Comparison</h2>
   <p class="section-intro">All ${providers.length} alternatives compared. Migration effort rated from the perspective of a Tenor API integration.</p>
 
@@ -24746,6 +24750,10 @@ ${mcpCtaCss()}
 
   <div class="context-box">
     <strong>Client-side requests only:</strong> Klipy and GIPHY both prohibit routing API calls or media loads through your servers. This applies to bots and server-side integrations. Requests must come directly from the user\u2019s app or browser. Klipy makes exceptions only with its prior written approval.
+  </div>
+
+  <div class="context-box">
+    <strong>Caching, ordering and mixing:</strong> Klipy and GIPHY set the same rules for standard integrations. Load media from the URLs the API returns; do not cache, store or re-host the media, unless the provider has approved a caching integration. Do not reorder or filter Search and Trending results in your code; Klipy\u2019s filters are set in its Partner Panel. Do not mix their GIFs with another provider\u2019s in the same grid; Klipy allows it only with written approval. (From docs.klipy.com/integration-requirements and GIPHY\u2019s API docs, read 2026-10-06.)
   </div>
 
   <div class="context-box">

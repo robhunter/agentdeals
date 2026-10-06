@@ -60,6 +60,12 @@ const BOTH_PROVIDERS_TERMS = [
   "Bots and server-side integrations: Klipy and GIPHY both require client-side calls; Klipy makes exceptions only with written approval. For bots, consider a self-hosted search index.",
 ];
 
+const INTEGRATION_RULES =
+  "Caching, ordering and mixing: Klipy and GIPHY set the same rules for standard integrations. Load media from the URLs the API returns; do not cache, store or re-host the media, unless the provider has approved a caching integration. Do not reorder or filter Search and Trending results in your code; Klipy’s filters are set in its Partner Panel. Do not mix their GIFs with another provider’s in the same grid; Klipy allows it only with written approval. (From docs.klipy.com/integration-requirements and GIPHY’s API docs, read 2026-10-06.)";
+
+const STORED_TENOR_LINKS =
+  "GIF links an app already stored: Google’s notice covers API requests and says nothing about media links. A media.tenor.com GIF link still loaded when we checked on 2026-10-06; Google does not say how long they will.";
+
 const META_DESCRIPTION =
   "Google's Tenor API shut down on June 30, 2026. Compare GIF API alternatives: Klipy and GIPHY (both Tenor-compatible), Imgur, self-hosted options.";
 
@@ -108,6 +114,11 @@ function comparisonRows(html: string): string[][] {
   return [...body.matchAll(/<tr>([\s\S]*?)<\/tr>/g)].map(([, row]) =>
     [...row.matchAll(/<td[^>]*>([\s\S]*?)<\/td>/g)].map(([, cell]) => readable(cell))
   );
+}
+
+function inReadingOrder(text: string, ...passages: string[]): boolean {
+  const positions = passages.map((passage) => text.indexOf(passage));
+  return positions.every((position, i) => position >= 0 && (i === 0 || position > positions[i - 1]));
 }
 
 let server: ChildProcess;
@@ -195,6 +206,18 @@ describe("the Tenor alternatives guide states each provider's terms as the provi
   it("states Klipy's and GIPHY's client-side rule and production-key terms as the providers do", () => {
     const text = readable(served.get("/tenor-alternatives")!);
     assert.deepStrictEqual(BOTH_PROVIDERS_TERMS.filter((line) => !text.includes(line)), []);
+  });
+
+  it("states Klipy's and GIPHY's caching, ordering and mixing rules after their client-side rule, naming both providers' docs and the day they were read", () => {
+    const text = readable(served.get("/tenor-alternatives")!);
+    assert.ok(text.includes(INTEGRATION_RULES));
+    assert.ok(inReadingOrder(text, "Client-side requests only:", INTEGRATION_RULES, "Production keys:"));
+  });
+
+  it("says Google's notice is silent on stored media.tenor.com links, after what the shutdown leaves alone, and promises nothing past the day one last loaded", () => {
+    const text = readable(served.get("/tenor-alternatives")!);
+    assert.ok(text.includes(STORED_TENOR_LINKS));
+    assert.ok(inReadingOrder(text, "What’s NOT affected:", STORED_TENOR_LINKS, "GIF API Alternative Comparison"));
   });
 
   it("describes the guide and the shutdown card the same way", () => {
