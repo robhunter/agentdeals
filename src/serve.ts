@@ -32987,7 +32987,7 @@ function buildAwsFreeTier2026Page(): string {
   const trialServices: AwsService[] = [
     { name: "Amazon SageMaker", slug: "aws", limits: "250 hrs/month ml.t3.medium for Studio notebooks (2 months)", category: "AI/ML" },
     { name: "Amazon Bedrock", slug: "aws", limits: "Select foundation models with limited free inference (varies by model)", category: "AI/ML" },
-    { name: "Amazon Lightsail", slug: "aws", limits: "750 hrs/month of 512 MB instance (3 months free)", category: "Hosting" },
+    { name: "Amazon Lightsail", slug: "aws", limits: "No free trial for new customers: AWS replaced Lightsail's 3-month free trials with the Free plan's credits, which pay for Lightsail like any other service (bundles from $3.50/month IPv6-only, $5/month with IPv4)", category: "Hosting", source: "https://docs.aws.amazon.com/lightsail/latest/userguide/amazon-lightsail-frequently-asked-questions-faq-billing-and-account-management.html" },
   ];
 
   interface GotchaItem {

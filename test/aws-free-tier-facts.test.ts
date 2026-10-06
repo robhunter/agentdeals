@@ -29,6 +29,7 @@ const WITHDRAWN: Record<string, RegExp> = {
   "AppStream 2.0 streaming hours, which the WorkSpaces Applications pricing page does not offer": /AppStream|stream\.standard/,
   "one free CodePipeline pipeline with no V2 allowance": /1 free active pipeline/,
   "CodeBuild's free minutes on general1.small alone": /\(general1\.small\)/,
+  "a 3-month Lightsail trial for new accounts": /750 hrs\/month of 512 MB instance|3 months free/,
 };
 
 const META = "AWS Free plan: up to $200 in credits over 6 months, 30+ always-free services, short-term trials, hidden costs, cheaper alternatives.";
@@ -66,7 +67,14 @@ const CONTROL_ROWS: [string, string][] = [
 ];
 
 const CONTROL_TRIAL_ROWS: [string, string][] = [
-  ["Amazon Lightsail", "750 hrs/month of 512 MB instance (3 months free)"],
+  ["Amazon SageMaker", "250 hrs/month ml.t3.medium for Studio notebooks (2 months)"],
+];
+
+const LIGHTSAIL_BILLING_FAQ = "https://docs.aws.amazon.com/lightsail/latest/userguide/amazon-lightsail-frequently-asked-questions-faq-billing-and-account-management.html";
+
+const LIGHTSAIL_ROW: [string, string] = [
+  "Amazon Lightsail",
+  "No free trial for new customers: AWS replaced Lightsail's 3-month free trials with the Free plan's credits, which pay for Lightsail like any other service (bundles from $3.50/month IPv6-only, $5/month with IPv4)",
 ];
 
 let server: ChildProcess;
@@ -202,6 +210,16 @@ describe("the AWS free tier guide describes the 6-month Free plan as AWS's own p
 
   it("states CodePipeline's V1 and V2 allowances and both of CodeBuild's free instance types, as their pricing pages do", () => {
     assert.deepStrictEqual(rowsDifferingFrom(STATED_AS_THE_PRICING_PAGES_STATE_THEM, tableAfter('id="always-free"'), "Always Free"), []);
+  });
+
+  it("says Lightsail's free trials ended for new customers, citing Lightsail's billing FAQ", () => {
+    assert.deepStrictEqual(rowsDifferingFrom([LIGHTSAIL_ROW], tableAfter('id="trials"'), "trials"), []);
+    const trials = html.slice(html.indexOf('id="trials"'));
+    const row = [...trials.slice(0, trials.indexOf("</table>")).matchAll(/<tr[^>]*>([\s\S]*?)<\/tr>/g)]
+      .map(([, cells]) => cells)
+      .find((cells) => cells.includes("Amazon Lightsail")) ?? "";
+    const cited = [...row.matchAll(new RegExp(`<a href="([^"]+)"[^>]*class="${FIGURE_SOURCE_CLASS}"`, "g"))].map(([, href]) => href);
+    assert.deepStrictEqual(cited, [LIGHTSAIL_BILLING_FAQ]);
   });
 
   it("keeps the rows the Free plan did not change", () => {

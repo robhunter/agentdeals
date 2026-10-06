@@ -558,7 +558,7 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 38,
+      "table_figures": 37,
       "table_figures_from_records": 9,
       "tables": [
         {
@@ -568,7 +568,7 @@
         },
         {
           "label": "Short-Term Trials",
-          "figures": 5,
+          "figures": 4,
           "from_records": 0
         },
         {
