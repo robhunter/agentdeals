@@ -223,7 +223,33 @@
       "restatement_reverted": {
         "record_date": "2026-09-13",
         "reverted_on": "2026-09-27"
-      }
+      },
+      "conditions": [
+        {
+          "text": "On the Free plan an account's Workers get 100,000 requests a day, shared with Pages Functions and reset at midnight UTC. Past that, a route set to fail closed returns Cloudflare's error 1027, and a route set to fail open skips the Worker as if none were configured.",
+          "quote": "Accounts on the Workers Free plan have a daily request limit of 100,000 requests, resetting at midnight UTC.",
+          "url": "https://developers.cloudflare.com/workers/platform/limits/",
+          "read_on": "2026-10-06"
+        },
+        {
+          "text": "On the Free plan a request may use 10 ms of CPU time; one that uses more fails with error 1102. Time spent waiting on fetch calls, KV reads or database queries does not count.",
+          "quote": "When a Worker exceeds its CPU time limit, Cloudflare returns Error 1102 to the client with the message Worker exceeded resource limits",
+          "url": "https://developers.cloudflare.com/workers/platform/limits/",
+          "read_on": "2026-10-06"
+        },
+        {
+          "text": "Cloudflare's terms prohibit processing or collecting credit card information on any site using its free services.",
+          "quote": "process or collect personal or business credit card information on any web property that is receiving Free Services",
+          "url": "https://www.cloudflare.com/terms/",
+          "read_on": "2026-10-06"
+        },
+        {
+          "text": "Cloudflare may change a Worker's workers.dev subdomain for any reason. Custom domains are not affected.",
+          "quote": "Cloudflare may change Cloudflare Workers/Pages subdomain names of projects hosted at workers.dev or pages.dev for any or no reason.",
+          "url": "https://www.cloudflare.com/service-specific-terms-developer-platform/",
+          "read_on": "2026-10-06"
+        }
+      ]
     },
     {
       "vendor": "Netlify",
