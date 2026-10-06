@@ -1,0 +1,2309 @@
+{
+  "run": {
+    "date": "2026-10-06",
+    "instruction": "Answer from your own knowledge, without browsing, in one or two sentences.",
+    "answers_per_model": 3,
+    "temperature": 0.7,
+    "via": "OpenRouter chat completions API, no web search or browsing tools",
+    "grading": "Each answer is graded by the figure, or the YES or NO, that it starts with: outdated when that is the old term, current when it is the vendor's current term, other when it is neither.",
+    "rerun": "monthly, same questions",
+    "answer_text": "Each answer as the model gave it, with markdown emphasis markers removed."
+  },
+  "models": [
+    {
+      "id": "anthropic/claude-fable-5.1",
+      "name": "Claude Fable 5.1",
+      "lab": "Anthropic"
+    },
+    {
+      "id": "anthropic/claude-opus-5.5",
+      "name": "Claude Opus 5.5",
+      "lab": "Anthropic"
+    },
+    {
+      "id": "anthropic/claude-sonnet-5.5",
+      "name": "Claude Sonnet 5.5",
+      "lab": "Anthropic"
+    },
+    {
+      "id": "openai/gpt-6.1-sol",
+      "name": "GPT-6.1 Sol",
+      "lab": "OpenAI"
+    },
+    {
+      "id": "openai/gpt-6-luna",
+      "name": "GPT-6 Luna",
+      "lab": "OpenAI"
+    },
+    {
+      "id": "google/gemini-3.8-flash",
+      "name": "Gemini 3.8 Flash",
+      "lab": "Google"
+    },
+    {
+      "id": "deepseek/deepseek-v4.1-flash",
+      "name": "DeepSeek V4.1 Flash",
+      "lab": "DeepSeek"
+    },
+    {
+      "id": "qwen/qwen3.8-max-prime",
+      "name": "Qwen3.8 Max Prime",
+      "lab": "Alibaba (Qwen)"
+    },
+    {
+      "id": "x-ai/grok-4.7",
+      "name": "Grok 4.7",
+      "lab": "xAI"
+    },
+    {
+      "id": "moonshotai/kimi-k3",
+      "name": "Kimi K3",
+      "lab": "Moonshot AI"
+    }
+  ],
+  "facts": [
+    {
+      "id": "do_credit",
+      "vendor": "DigitalOcean",
+      "page": "/vendor/digitalocean",
+      "question": "How much free credit does DigitalOcean give a new account, and for how many days? Give the amount and days first.",
+      "outdated": "$200 of credit for 60 days",
+      "current": "$5 of credit for 90 days",
+      "changed": {
+        "from": "2026-04-05",
+        "to": "2026-04-07",
+        "basis": "between two Internet Archive captures of the pricing page",
+        "source": "https://web.archive.org/web/20260407173809/https://www.digitalocean.com/pricing"
+      },
+      "source": {
+        "url": "https://www.digitalocean.com/pricing",
+        "quote": "How does the $5 free credit work? … Since the credit is valid for 90 days, you won't be able to use any remaining credit after the 90-day period expires.",
+        "read_on": "2026-10-06"
+      },
+      "results": {
+        "anthropic/claude-fable-5.1": {
+          "outdated": 3,
+          "current": 0,
+          "other": 0
+        },
+        "anthropic/claude-opus-5.5": {
+          "outdated": 3,
+          "current": 0,
+          "other": 0
+        },
+        "anthropic/claude-sonnet-5.5": {
+          "outdated": 3,
+          "current": 0,
+          "other": 0
+        },
+        "openai/gpt-6.1-sol": {
+          "outdated": 3,
+          "current": 0,
+          "other": 0
+        },
+        "openai/gpt-6-luna": {
+          "outdated": 3,
+          "current": 0,
+          "other": 0
+        },
+        "google/gemini-3.8-flash": {
+          "outdated": 3,
+          "current": 0,
+          "other": 0
+        },
+        "deepseek/deepseek-v4.1-flash": {
+          "outdated": 3,
+          "current": 0,
+          "other": 0
+        },
+        "qwen/qwen3.8-max-prime": {
+          "outdated": 2,
+          "current": 0,
+          "other": 1
+        },
+        "x-ai/grok-4.7": {
+          "outdated": 3,
+          "current": 0,
+          "other": 0
+        },
+        "moonshotai/kimi-k3": {
+          "outdated": 3,
+          "current": 0,
+          "other": 0
+        }
+      }
+    },
+    {
+      "id": "gemini_code_assist",
+      "vendor": "Google Gemini Code Assist",
+      "page": "/vendor/google-gemini-code-assist",
+      "question": "Is Gemini Code Assist for individuals still free to use today? Start with YES or NO.",
+      "outdated": "the individuals tier is still free",
+      "current": "stopped serving requests on 2026-06-18",
+      "changed": {
+        "date": "2026-06-18",
+        "basis": "effective date the vendor states",
+        "source": "https://developers.google.com/gemini-code-assist/docs/deprecations/code-assist-individuals"
+      },
+      "source": {
+        "url": "https://developers.google.com/gemini-code-assist/docs/deprecations/code-assist-individuals",
+        "quote": "Starting June 18, 2026, Gemini Code Assist IDE extensions stopped serving requests for the Gemini Code Assist for individuals, Google AI Pro, and Google AI Ultra tiers.",
+        "read_on": "2026-10-06"
+      },
+      "results": {
+        "anthropic/claude-fable-5.1": {
+          "outdated": 3,
+          "current": 0,
+          "other": 0
+        },
+        "anthropic/claude-opus-5.5": {
+          "outdated": 3,
+          "current": 0,
+          "other": 0
+        },
+        "anthropic/claude-sonnet-5.5": {
+          "outdated": 3,
+          "current": 0,
+          "other": 0
+        },
+        "openai/gpt-6.1-sol": {
+          "outdated": 3,
+          "current": 0,
+          "other": 0
+        },
+        "openai/gpt-6-luna": {
+          "outdated": 3,
+          "current": 0,
+          "other": 0
+        },
+        "google/gemini-3.8-flash": {
+          "outdated": 3,
+          "current": 0,
+          "other": 0
+        },
+        "deepseek/deepseek-v4.1-flash": {
+          "outdated": 3,
+          "current": 0,
+          "other": 0
+        },
+        "qwen/qwen3.8-max-prime": {
+          "outdated": 3,
+          "current": 0,
+          "other": 0
+        },
+        "x-ai/grok-4.7": {
+          "outdated": 3,
+          "current": 0,
+          "other": 0
+        },
+        "moonshotai/kimi-k3": {
+          "outdated": 3,
+          "current": 0,
+          "other": 0
+        }
+      }
+    },
+    {
+      "id": "cerebras_free",
+      "vendor": "Cerebras",
+      "page": "/vendor/cerebras",
+      "question": "Does Cerebras's inference API have a permanent free tier? Start with YES or NO.",
+      "outdated": "a permanent free tier",
+      "current": "a $5 trial that expires after 30 days",
+      "changed": {
+        "date": "2026-07-16",
+        "basis": "vendor change log entry",
+        "source": "https://inference-docs.cerebras.ai/support/change-log"
+      },
+      "source": {
+        "url": "https://inference-docs.cerebras.ai/support/rate-limits",
+        "quote": "Is there a permanently free tier? No. The Free Trial is time- and credit-bounded: $5 in credits that expire 30 days after they’re granted.",
+        "read_on": "2026-10-06"
+      },
+      "results": {
+        "anthropic/claude-fable-5.1": {
+          "outdated": 3,
+          "current": 0,
+          "other": 0
+        },
+        "anthropic/claude-opus-5.5": {
+          "outdated": 3,
+          "current": 0,
+          "other": 0
+        },
+        "anthropic/claude-sonnet-5.5": {
+          "outdated": 3,
+          "current": 0,
+          "other": 0
+        },
+        "openai/gpt-6.1-sol": {
+          "outdated": 3,
+          "current": 0,
+          "other": 0
+        },
+        "openai/gpt-6-luna": {
+          "outdated": 2,
+          "current": 1,
+          "other": 0
+        },
+        "google/gemini-3.8-flash": {
+          "outdated": 3,
+          "current": 0,
+          "other": 0
+        },
+        "deepseek/deepseek-v4.1-flash": {
+          "outdated": 3,
+          "current": 0,
+          "other": 0
+        },
+        "qwen/qwen3.8-max-prime": {
+          "outdated": 2,
+          "current": 1,
+          "other": 0
+        },
+        "x-ai/grok-4.7": {
+          "outdated": 2,
+          "current": 1,
+          "other": 0
+        },
+        "moonshotai/kimi-k3": {
+          "outdated": 3,
+          "current": 0,
+          "other": 0
+        }
+      }
+    },
+    {
+      "id": "upstash_commands",
+      "vendor": "Upstash",
+      "page": "/vendor/upstash",
+      "question": "How many commands does Upstash Redis's free tier allow, and per what period? Give the number first.",
+      "outdated": "10,000 commands a day",
+      "current": "500,000 commands a month",
+      "changed": {
+        "date": "2025-03-12",
+        "basis": "effective date the vendor states",
+        "source": "https://upstash.com/blog/redis-new-pricing"
+      },
+      "source": {
+        "url": "https://upstash.com/pricing/redis",
+        "quote": "Free tier includes 256MB data size and 500K commands per month",
+        "read_on": "2026-10-06"
+      },
+      "results": {
+        "anthropic/claude-fable-5.1": {
+          "outdated": 0,
+          "current": 3,
+          "other": 0
+        },
+        "anthropic/claude-opus-5.5": {
+          "outdated": 0,
+          "current": 3,
+          "other": 0
+        },
+        "anthropic/claude-sonnet-5.5": {
+          "outdated": 0,
+          "current": 3,
+          "other": 0
+        },
+        "openai/gpt-6.1-sol": {
+          "outdated": 0,
+          "current": 3,
+          "other": 0
+        },
+        "openai/gpt-6-luna": {
+          "outdated": 3,
+          "current": 0,
+          "other": 0
+        },
+        "google/gemini-3.8-flash": {
+          "outdated": 3,
+          "current": 0,
+          "other": 0
+        },
+        "deepseek/deepseek-v4.1-flash": {
+          "outdated": 3,
+          "current": 0,
+          "other": 0
+        },
+        "qwen/qwen3.8-max-prime": {
+          "outdated": 3,
+          "current": 0,
+          "other": 0
+        },
+        "x-ai/grok-4.7": {
+          "outdated": 3,
+          "current": 0,
+          "other": 0
+        },
+        "moonshotai/kimi-k3": {
+          "outdated": 1,
+          "current": 2,
+          "other": 0
+        }
+      }
+    },
+    {
+      "id": "turso_storage",
+      "vendor": "Turso",
+      "page": "/vendor/turso",
+      "question": "How much total storage does Turso's free plan include? Give the amount first.",
+      "outdated": "9 GB of storage",
+      "current": "5 GB of storage",
+      "changed": {
+        "date": "2025-03-31",
+        "basis": "effective date the vendor states",
+        "source": "https://turso.tech/blog/turso-cloud-debuts-the-new-developer-plan"
+      },
+      "source": {
+        "url": "https://turso.tech/pricing",
+        "quote": "Free $0/month Databases 100 Storage 5GB",
+        "read_on": "2026-10-06"
+      },
+      "results": {
+        "anthropic/claude-fable-5.1": {
+          "outdated": 0,
+          "current": 3,
+          "other": 0
+        },
+        "anthropic/claude-opus-5.5": {
+          "outdated": 0,
+          "current": 3,
+          "other": 0
+        },
+        "anthropic/claude-sonnet-5.5": {
+          "outdated": 0,
+          "current": 3,
+          "other": 0
+        },
+        "openai/gpt-6.1-sol": {
+          "outdated": 2,
+          "current": 1,
+          "other": 0
+        },
+        "openai/gpt-6-luna": {
+          "outdated": 0,
+          "current": 3,
+          "other": 0
+        },
+        "google/gemini-3.8-flash": {
+          "outdated": 3,
+          "current": 0,
+          "other": 0
+        },
+        "deepseek/deepseek-v4.1-flash": {
+          "outdated": 3,
+          "current": 0,
+          "other": 0
+        },
+        "qwen/qwen3.8-max-prime": {
+          "outdated": 0,
+          "current": 0,
+          "other": 3
+        },
+        "x-ai/grok-4.7": {
+          "outdated": 3,
+          "current": 0,
+          "other": 0
+        },
+        "moonshotai/kimi-k3": {
+          "outdated": 2,
+          "current": 1,
+          "other": 0
+        }
+      }
+    },
+    {
+      "id": "neon_compute",
+      "vendor": "Neon",
+      "page": "/vendor/neon",
+      "question": "How many compute hours per month does Neon's Free plan include? Give the number first.",
+      "outdated": "about 191 compute hours a month",
+      "current": "100 CU-hours a month per project",
+      "changed": {
+        "date": "2025-08-14",
+        "basis": "vendor announcement date",
+        "source": "https://neon.com/blog/new-usage-based-pricing"
+      },
+      "source": {
+        "url": "https://neon.com/pricing",
+        "quote": "On the Free plan, each project gets 100 CU-hours of database compute per month, and compute automatically scales down to zero when idle",
+        "read_on": "2026-10-06"
+      },
+      "results": {
+        "anthropic/claude-fable-5.1": {
+          "outdated": 0,
+          "current": 3,
+          "other": 0
+        },
+        "anthropic/claude-opus-5.5": {
+          "outdated": 1,
+          "current": 2,
+          "other": 0
+        },
+        "anthropic/claude-sonnet-5.5": {
+          "outdated": 0,
+          "current": 3,
+          "other": 0
+        },
+        "openai/gpt-6.1-sol": {
+          "outdated": 2,
+          "current": 1,
+          "other": 0
+        },
+        "openai/gpt-6-luna": {
+          "outdated": 0,
+          "current": 3,
+          "other": 0
+        },
+        "google/gemini-3.8-flash": {
+          "outdated": 0,
+          "current": 3,
+          "other": 0
+        },
+        "deepseek/deepseek-v4.1-flash": {
+          "outdated": 3,
+          "current": 0,
+          "other": 0
+        },
+        "qwen/qwen3.8-max-prime": {
+          "outdated": 2,
+          "current": 0,
+          "other": 1
+        },
+        "x-ai/grok-4.7": {
+          "outdated": 2,
+          "current": 1,
+          "other": 0
+        },
+        "moonshotai/kimi-k3": {
+          "outdated": 2,
+          "current": 1,
+          "other": 0
+        }
+      }
+    },
+    {
+      "id": "aws_duration",
+      "vendor": "AWS",
+      "page": "/aws-free-tier-2026",
+      "question": "How long does the AWS Free Tier last for a new AWS account opened today? Give the duration first.",
+      "outdated": "12 months",
+      "current": "6 months, or until the credits run out",
+      "changed": {
+        "date": "2025-07-16",
+        "basis": "vendor announcement date",
+        "source": "https://aws.amazon.com/about-aws/whats-new/2025/07/aws-free-tier-credits-month-free-plan/"
+      },
+      "source": {
+        "url": "https://aws.amazon.com/free/free-tier-faqs/",
+        "quote": "Your Free plan expires the earlier of (1) 6 months from the date you opened your AWS account, or (2) once you have exhausted your Free Tier credits.",
+        "read_on": "2026-10-06"
+      },
+      "results": {
+        "anthropic/claude-fable-5.1": {
+          "outdated": 0,
+          "current": 3,
+          "other": 0
+        },
+        "anthropic/claude-opus-5.5": {
+          "outdated": 0,
+          "current": 3,
+          "other": 0
+        },
+        "anthropic/claude-sonnet-5.5": {
+          "outdated": 0,
+          "current": 3,
+          "other": 0
+        },
+        "openai/gpt-6.1-sol": {
+          "outdated": 0,
+          "current": 3,
+          "other": 0
+        },
+        "openai/gpt-6-luna": {
+          "outdated": 0,
+          "current": 3,
+          "other": 0
+        },
+        "google/gemini-3.8-flash": {
+          "outdated": 3,
+          "current": 0,
+          "other": 0
+        },
+        "deepseek/deepseek-v4.1-flash": {
+          "outdated": 0,
+          "current": 3,
+          "other": 0
+        },
+        "qwen/qwen3.8-max-prime": {
+          "outdated": 3,
+          "current": 0,
+          "other": 0
+        },
+        "x-ai/grok-4.7": {
+          "outdated": 3,
+          "current": 0,
+          "other": 0
+        },
+        "moonshotai/kimi-k3": {
+          "outdated": 0,
+          "current": 3,
+          "other": 0
+        }
+      }
+    },
+    {
+      "id": "planetscale_free",
+      "vendor": "PlanetScale",
+      "page": "/vendor/planetscale",
+      "question": "Does PlanetScale currently offer a free plan? Start with YES or NO.",
+      "outdated": "a free plan",
+      "current": "no free plan; the cheapest starts at $5 a month",
+      "changed": {
+        "date": "2024-04-08",
+        "basis": "effective date the vendor states",
+        "source": "https://planetscale.com/changelog/deprecating-hobby"
+      },
+      "source": {
+        "url": "https://planetscale.com/pricing",
+        "quote": "Single node — Starting at $5/month for development and low-traffic workloads",
+        "read_on": "2026-10-06"
+      },
+      "results": {
+        "anthropic/claude-fable-5.1": {
+          "outdated": 0,
+          "current": 3,
+          "other": 0
+        },
+        "anthropic/claude-opus-5.5": {
+          "outdated": 0,
+          "current": 3,
+          "other": 0
+        },
+        "anthropic/claude-sonnet-5.5": {
+          "outdated": 0,
+          "current": 3,
+          "other": 0
+        },
+        "openai/gpt-6.1-sol": {
+          "outdated": 0,
+          "current": 3,
+          "other": 0
+        },
+        "openai/gpt-6-luna": {
+          "outdated": 0,
+          "current": 3,
+          "other": 0
+        },
+        "google/gemini-3.8-flash": {
+          "outdated": 0,
+          "current": 3,
+          "other": 0
+        },
+        "deepseek/deepseek-v4.1-flash": {
+          "outdated": 1,
+          "current": 2,
+          "other": 0
+        },
+        "qwen/qwen3.8-max-prime": {
+          "outdated": 0,
+          "current": 3,
+          "other": 0
+        },
+        "x-ai/grok-4.7": {
+          "outdated": 0,
+          "current": 3,
+          "other": 0
+        },
+        "moonshotai/kimi-k3": {
+          "outdated": 0,
+          "current": 3,
+          "other": 0
+        }
+      }
+    }
+  ],
+  "answers": [
+    {
+      "model": "anthropic/claude-fable-5.1",
+      "fact": "neon_compute",
+      "run": 1,
+      "grade": "current",
+      "text": "100 compute unit-hours per month (per project) — Neon's current Free plan includes 100 CU-hours of compute per project each month, with autoscaling up to 2 CU; note that the older Free Tier was described as ~191.9 compute hours/month (a 0.25 CU compute running continuously)."
+    },
+    {
+      "model": "anthropic/claude-fable-5.1",
+      "fact": "neon_compute",
+      "run": 2,
+      "grade": "current",
+      "text": "100 compute (CU) hours per month on Neon's current Free plan (the earlier Free Tier used to include 191.9 compute hours/month before the 2025 pricing update)."
+    },
+    {
+      "model": "anthropic/claude-fable-5.1",
+      "fact": "neon_compute",
+      "run": 3,
+      "grade": "current",
+      "text": "100 compute hours (CU-hours) per month — Neon's current Free plan includes 100 CU-hours monthly (along with 0.5 GB storage per project), though earlier versions of the Free plan offered 191.9 compute hours, so the exact figure depends on when the plan was last revised."
+    },
+    {
+      "model": "anthropic/claude-fable-5.1",
+      "fact": "planetscale_free",
+      "run": 1,
+      "grade": "current",
+      "text": "NO — PlanetScale discontinued its free Hobby tier in April 2024, and as of my latest knowledge its plans start with the paid Scaler Pro tier (though pricing can change, so it's worth checking their site)."
+    },
+    {
+      "model": "anthropic/claude-fable-5.1",
+      "fact": "planetscale_free",
+      "run": 2,
+      "grade": "current",
+      "text": "NO — PlanetScale eliminated its free Hobby tier in April 2024, so new databases require a paid plan (starting with the Scaler Pro tier), though this could change, so check their pricing page for the latest."
+    },
+    {
+      "model": "anthropic/claude-fable-5.1",
+      "fact": "planetscale_free",
+      "run": 3,
+      "grade": "current",
+      "text": "NO — PlanetScale eliminated its free Hobby tier in April 2024, and as of my knowledge its cheapest option is a low-cost paid plan (around $5/month), though pricing can change so it's worth checking their site."
+    },
+    {
+      "model": "anthropic/claude-fable-5.1",
+      "fact": "cerebras_free",
+      "run": 1,
+      "grade": "outdated",
+      "text": "YES — Cerebras offers a free tier for its inference API (via cloud.cerebras.ai) with rate and daily token limits (historically around 1M tokens/day), alongside paid Developer and Enterprise plans. However, \"permanent\" is not guaranteed; it's an ongoing free plan that Cerebras could change at any time, so check their current pricing page for the latest terms."
+    },
+    {
+      "model": "anthropic/claude-fable-5.1",
+      "fact": "cerebras_free",
+      "run": 2,
+      "grade": "outdated",
+      "text": "YES — Cerebras offers a standing free plan (not just a time-limited trial) for its inference API, though it comes with fairly tight rate and daily token limits, and the exact quotas and availability can change over time."
+    },
+    {
+      "model": "anthropic/claude-fable-5.1",
+      "fact": "cerebras_free",
+      "run": 3,
+      "grade": "outdated",
+      "text": "YES — as of my knowledge, Cerebras offers a free tier for its inference API (rate-limited, roughly on the order of 1M tokens/day) alongside paid Developer and Enterprise plans, though they haven't guaranteed it will exist forever and its limits or availability could change."
+    },
+    {
+      "model": "anthropic/claude-fable-5.1",
+      "fact": "do_credit",
+      "run": 1,
+      "grade": "outdated",
+      "text": "$200 for 60 days — as of my knowledge, DigitalOcean's standard new-account offer is $200 in free credit that must be used within 60 days of signup (earlier it was $100/60 days, and the exact amount can vary with promotions or referral links)."
+    },
+    {
+      "model": "anthropic/claude-fable-5.1",
+      "fact": "do_credit",
+      "run": 2,
+      "grade": "outdated",
+      "text": "DigitalOcean's standard new-account promotion is $200 in credit for 60 days (via referral or promotional sign-up links). The exact amount has changed over time (it was $100 for 60 days earlier), so it may differ depending on the current promotion."
+    },
+    {
+      "model": "anthropic/claude-fable-5.1",
+      "fact": "do_credit",
+      "run": 3,
+      "grade": "outdated",
+      "text": "DigitalOcean's standard new-account promotion gives $200 in free credit valid for 60 days (it was $100 for 60 days before 2022). The exact amount can vary by referral or promotional link, so check the current offer when signing up."
+    },
+    {
+      "model": "anthropic/claude-fable-5.1",
+      "fact": "aws_duration",
+      "run": 1,
+      "grade": "current",
+      "text": "Up to 6 months. Under the Free Tier plan AWS introduced in July 2025, new accounts get up to $200 in credits ($100 at signup plus up to $100 for completing certain activities) that expire after 6 months or when used up, after which you're moved to a paid plan (the older 12‑month free-usage model applies only to accounts created before mid-July 2025, and some \"always free\" services remain available regardless)."
+    },
+    {
+      "model": "anthropic/claude-fable-5.1",
+      "fact": "aws_duration",
+      "run": 2,
+      "grade": "current",
+      "text": "Up to 6 months. For accounts created on or after July 15, 2025, the AWS Free Tier gives you up to $200 in credits ($100 at sign-up plus up to $100 for completing onboarding activities) usable for 6 months or until the credits run out, whichever comes first (the older 12-month free tier applied only to accounts opened before that date), while \"always free\" offerings like certain Lambda and DynamoDB allowances remain available indefinitely."
+    },
+    {
+      "model": "anthropic/claude-fable-5.1",
+      "fact": "aws_duration",
+      "run": 3,
+      "grade": "current",
+      "text": "Six months (or until credits run out): accounts created on or after July 15, 2025 get the new credit-based Free Tier—up to $200 in credits ($100 at signup plus $100 earned by completing activities) that expire after 6 months—while \"Always Free\" services remain available indefinitely. (The older 12-month Free Tier applies only to accounts created before that date.)"
+    },
+    {
+      "model": "anthropic/claude-fable-5.1",
+      "fact": "gemini_code_assist",
+      "run": 1,
+      "grade": "outdated",
+      "text": "YES — as of my latest knowledge, Google offers Gemini Code Assist for individuals as a free tier (launched in early 2025) with generous usage limits like up to 180,000 code completions per month, though I can't verify any pricing changes made after my training data."
+    },
+    {
+      "model": "anthropic/claude-fable-5.1",
+      "fact": "gemini_code_assist",
+      "run": 2,
+      "grade": "outdated",
+      "text": "YES — as of my last knowledge, Gemini Code Assist for individuals (launched in early 2025) remains available as a free tier with a Google account, offering generous usage limits like roughly 180,000 code completions per month. Since pricing can change, it's worth confirming on Google's official page for the current status."
+    },
+    {
+      "model": "anthropic/claude-fable-5.1",
+      "fact": "gemini_code_assist",
+      "run": 3,
+      "grade": "outdated",
+      "text": "YES — as of my last knowledge, Gemini Code Assist for individuals remains free (launched as a no-cost tier in February 2025 with generous usage limits, requiring only a personal Google account). I can't verify real-time changes, so check Google's official page if you need current confirmation."
+    },
+    {
+      "model": "anthropic/claude-fable-5.1",
+      "fact": "upstash_commands",
+      "run": 1,
+      "grade": "current",
+      "text": "500,000 commands per month (the free tier was previously advertised as 10,000 commands per day, but Upstash moved it to a monthly quota of 500K)."
+    },
+    {
+      "model": "anthropic/claude-fable-5.1",
+      "fact": "upstash_commands",
+      "run": 2,
+      "grade": "current",
+      "text": "500,000 commands per month is the current free-tier limit for Upstash Redis (with about 256 MB of storage); note that the older free plan was capped at 10,000 commands per day before Upstash revised its pricing."
+    },
+    {
+      "model": "anthropic/claude-fable-5.1",
+      "fact": "upstash_commands",
+      "run": 3,
+      "grade": "current",
+      "text": "500,000 commands per month — that's the current Upstash Redis free-tier limit (it was previously 10,000 commands per day before their pricing update)."
+    },
+    {
+      "model": "anthropic/claude-fable-5.1",
+      "fact": "turso_storage",
+      "run": 1,
+      "grade": "current",
+      "text": "5 GB of total storage is included in Turso's free (Starter) plan, alongside limits like 500 databases, 500 million row reads, and 10 million row writes per month. (Earlier versions of the free tier advertised 9 GB, so the exact figure may vary depending on when you check.)"
+    },
+    {
+      "model": "anthropic/claude-fable-5.1",
+      "fact": "turso_storage",
+      "run": 2,
+      "grade": "current",
+      "text": "Turso's free plan includes 5 GB of total storage (it was previously 9 GB on the older \"Starter\" tier), shared across all your databases, along with limits on row reads/writes per month. Note that Turso adjusts its plan limits periodically, so the exact figure may have changed."
+    },
+    {
+      "model": "anthropic/claude-fable-5.1",
+      "fact": "turso_storage",
+      "run": 3,
+      "grade": "current",
+      "text": "5 GB of total storage is included in Turso's free plan (it was previously 9 GB, and the plan also includes limits like 500 databases and monthly row read/write caps). Exact figures may change, so check Turso's pricing page for the current numbers."
+    },
+    {
+      "model": "anthropic/claude-opus-5.5",
+      "fact": "neon_compute",
+      "run": 1,
+      "grade": "outdated",
+      "text": "191.9 compute hours per month, which covered the primary branch running continuously at 0.25 CU, though Neon has since revised its Free plan (for example, to a per-project CU-hour allowance), so check the current pricing page."
+    },
+    {
+      "model": "anthropic/claude-opus-5.5",
+      "fact": "neon_compute",
+      "run": 2,
+      "grade": "current",
+      "text": "100 CU-hours per project per month, per Neon's pricing as of my latest knowledge (2025); earlier Free plans offered about 191.9 compute hours, so check Neon's pricing page for the current figure."
+    },
+    {
+      "model": "anthropic/claude-opus-5.5",
+      "fact": "neon_compute",
+      "run": 3,
+      "grade": "current",
+      "text": "100 CU-hours (compute-unit hours) per project per month is my best recollection of Neon's Free plan allowance as of 2025, though the figure has changed several times (earlier versions offered about 191.9 hours), so check Neon's pricing page for the current number."
+    },
+    {
+      "model": "anthropic/claude-opus-5.5",
+      "fact": "planetscale_free",
+      "run": 1,
+      "grade": "current",
+      "text": "NO. As of my most recent knowledge, PlanetScale has not offered a free plan since retiring its free Hobby tier in April 2024, so its cheapest options are paid plans, though this may have changed since my training data."
+    },
+    {
+      "model": "anthropic/claude-opus-5.5",
+      "fact": "planetscale_free",
+      "run": 2,
+      "grade": "current",
+      "text": "NO. As of my knowledge cutoff, PlanetScale has not offered a free plan since it retired its free Hobby tier in April 2024, so all databases now require a paid plan; this may have changed since, so check their pricing page."
+    },
+    {
+      "model": "anthropic/claude-opus-5.5",
+      "fact": "planetscale_free",
+      "run": 3,
+      "grade": "current",
+      "text": "NO. PlanetScale retired its free Hobby tier in April 2024, so its plans are paid only, though this could have changed after my knowledge cutoff."
+    },
+    {
+      "model": "anthropic/claude-opus-5.5",
+      "fact": "cerebras_free",
+      "run": 1,
+      "grade": "outdated",
+      "text": "YES. As of my knowledge, Cerebras offers an ongoing free tier for its inference API with rate-limited access (roughly up to about 1 million tokens per day on select models), not a time-limited trial, though it could change at any time and you should check their current pricing page."
+    },
+    {
+      "model": "anthropic/claude-opus-5.5",
+      "fact": "cerebras_free",
+      "run": 2,
+      "grade": "outdated",
+      "text": "YES. As of my last knowledge, Cerebras offers an ongoing rate-limited free tier for its inference API (on the order of 1 million tokens per day), not a time-limited trial, though limits, available models, and terms can change, so check their current pricing page."
+    },
+    {
+      "model": "anthropic/claude-opus-5.5",
+      "fact": "cerebras_free",
+      "run": 3,
+      "grade": "outdated",
+      "text": "YES. As of my knowledge, Cerebras offers an ongoing free tier for its inference API with rate and daily token limits rather than a time-limited trial, though \"permanent\" isn't guaranteed and the terms may have changed, so check their current pricing page."
+    },
+    {
+      "model": "anthropic/claude-opus-5.5",
+      "fact": "do_credit",
+      "run": 1,
+      "grade": "outdated",
+      "text": "$200 for 60 days. DigitalOcean typically gives new accounts $200 in free credit that expires after 60 days, though promotional offers change over time, so check their current terms."
+    },
+    {
+      "model": "anthropic/claude-opus-5.5",
+      "fact": "do_credit",
+      "run": 2,
+      "grade": "outdated",
+      "text": "$200 for 60 days. That's DigitalOcean's standard new-account promotion as I know it, though the offer has changed over time (it used to be $100), so check their current terms."
+    },
+    {
+      "model": "anthropic/claude-opus-5.5",
+      "fact": "do_credit",
+      "run": 3,
+      "grade": "outdated",
+      "text": "$200 for 60 days. DigitalOcean typically gives new accounts $200 in free credit that expires after 60 days, though promotions can change, so check their current signup offer."
+    },
+    {
+      "model": "anthropic/claude-opus-5.5",
+      "fact": "aws_duration",
+      "run": 1,
+      "grade": "current",
+      "text": "Up to 6 months (or until your credits run out, if sooner): for accounts created on or after July 15, 2025, AWS replaced the old 12-month Free Tier with a credit-based free plan of up to $200, though \"always free\" services remain free indefinitely within their limits. This reflects my training knowledge, so check AWS's Free Tier page for current terms."
+    },
+    {
+      "model": "anthropic/claude-opus-5.5",
+      "fact": "aws_duration",
+      "run": 2,
+      "grade": "current",
+      "text": "6 months (or until your free credits run out, whichever comes first). For accounts created after July 15, 2025, AWS replaced the old 12-month Free Tier with a credit-based free plan of up to $200, though some \"always free\" service limits still apply."
+    },
+    {
+      "model": "anthropic/claude-opus-5.5",
+      "fact": "aws_duration",
+      "run": 3,
+      "grade": "current",
+      "text": "6 months (or until your free credits run out, if sooner): for accounts created after July 15, 2025, AWS replaced the old 12-month Free Tier with a credit-based free plan of up to $200, though some \"always free\" services stay free indefinitely within limits. AWS changes these terms periodically, so check the official Free Tier page to confirm."
+    },
+    {
+      "model": "anthropic/claude-opus-5.5",
+      "fact": "gemini_code_assist",
+      "run": 1,
+      "grade": "outdated",
+      "text": "YES. As far as I know, Gemini Code Assist for individuals has been free since its public launch in February 2025, with generous limits (about 180,000 code completions per month), though I can't confirm whether Google has changed this since my knowledge cutoff."
+    },
+    {
+      "model": "anthropic/claude-opus-5.5",
+      "fact": "gemini_code_assist",
+      "run": 2,
+      "grade": "outdated",
+      "text": "YES. As of my most recent information, Gemini Code Assist for individuals is free, with high usage limits (around 180,000 code completions per month), though Google may have changed this since, so check its official site to confirm."
+    },
+    {
+      "model": "anthropic/claude-opus-5.5",
+      "fact": "gemini_code_assist",
+      "run": 3,
+      "grade": "outdated",
+      "text": "YES. As of my latest knowledge, Gemini Code Assist for individuals is free, with generous limits of up to about 180,000 code completions per month. Google could have changed this since, so check its official page to confirm."
+    },
+    {
+      "model": "anthropic/claude-opus-5.5",
+      "fact": "upstash_commands",
+      "run": 1,
+      "grade": "current",
+      "text": "500,000 commands per month, as of Upstash's 2025 pricing update. Before that, the free tier allowed 10,000 commands per day, so check Upstash's pricing page for the current limit."
+    },
+    {
+      "model": "anthropic/claude-opus-5.5",
+      "fact": "upstash_commands",
+      "run": 2,
+      "grade": "current",
+      "text": "500,000 commands per month. That's my understanding after Upstash's 2025 pricing change; previously the limit was 10,000 commands per day, so check their current pricing page in case it has changed again."
+    },
+    {
+      "model": "anthropic/claude-opus-5.5",
+      "fact": "upstash_commands",
+      "run": 3,
+      "grade": "current",
+      "text": "500,000 commands per month, as of Upstash's 2025 pricing update; earlier it was 10,000 commands per day. Limits may have changed since my training data, so check Upstash's pricing page for current figures."
+    },
+    {
+      "model": "anthropic/claude-opus-5.5",
+      "fact": "turso_storage",
+      "run": 1,
+      "grade": "current",
+      "text": "5 GB of total storage, as of my most recent information, though Turso has changed its plans before (the earlier \"Starter\" tier offered 9 GB), so check their pricing page for current limits."
+    },
+    {
+      "model": "anthropic/claude-opus-5.5",
+      "fact": "turso_storage",
+      "run": 2,
+      "grade": "current",
+      "text": "5 GB of total storage, as best I recall from Turso's most recent free plan. Earlier versions offered 9 GB, and pricing changes often, so check Turso's pricing page for the current figure."
+    },
+    {
+      "model": "anthropic/claude-opus-5.5",
+      "fact": "turso_storage",
+      "run": 3,
+      "grade": "current",
+      "text": "5 GB of total storage, based on my most recent knowledge (with up to 100 databases), though Turso's earlier \"Starter\" free tier offered 9 GB, so check their current pricing page."
+    },
+    {
+      "model": "anthropic/claude-sonnet-5.5",
+      "fact": "neon_compute",
+      "run": 1,
+      "grade": "current",
+      "text": "100 compute hours (CU-hours) per month per project on the current Free plan, as best I recall. Neon previously advertised about 191.9 compute hours per month, and its plans change often, so check Neon's pricing page for the current figure."
+    },
+    {
+      "model": "anthropic/claude-sonnet-5.5",
+      "fact": "neon_compute",
+      "run": 2,
+      "grade": "current",
+      "text": "100 compute unit (CU) hours per month, per project, on Neon's current Free plan. The plan previously offered about 191.9 compute hours per month, and Neon's limits change periodically, so check the pricing page for the latest figures."
+    },
+    {
+      "model": "anthropic/claude-sonnet-5.5",
+      "fact": "neon_compute",
+      "run": 3,
+      "grade": "current",
+      "text": "100 compute-unit hours per month (per project) on Neon's current Free plan, as best I recall. Neon previously advertised about 191.9 compute hours per month for the free tier, and plan details change, so check their pricing page for the latest figures."
+    },
+    {
+      "model": "anthropic/claude-sonnet-5.5",
+      "fact": "planetscale_free",
+      "run": 1,
+      "grade": "current",
+      "text": "NO. PlanetScale removed its free Hobby plan in April 2024 and now offers only paid plans, starting at around $39/month (and later a cheaper $5/month single-node option for Postgres), though my information may be out of date, so check their pricing page."
+    },
+    {
+      "model": "anthropic/claude-sonnet-5.5",
+      "fact": "planetscale_free",
+      "run": 2,
+      "grade": "current",
+      "text": "NO. PlanetScale removed its free Hobby plan in April 2024, and its entry-level paid plans started at around $39/month, later adding a cheaper $5/month single-node option, though my information may be out of date."
+    },
+    {
+      "model": "anthropic/claude-sonnet-5.5",
+      "fact": "planetscale_free",
+      "run": 3,
+      "grade": "current",
+      "text": "NO. PlanetScale removed its free Hobby plan in April 2024, and its entry-level paid plans have since started at around $39/month (with a cheaper single-node option around $5/month added later), though my information may not reflect the latest changes."
+    },
+    {
+      "model": "anthropic/claude-sonnet-5.5",
+      "fact": "cerebras_free",
+      "run": 1,
+      "grade": "outdated",
+      "text": "YES. Cerebras has offered a free tier for its inference API with no expiration date, though it comes with rate limits (such as capped requests and tokens per minute/day) and a limited model selection. Terms may change, so check Cerebras's current pricing page to confirm."
+    },
+    {
+      "model": "anthropic/claude-sonnet-5.5",
+      "fact": "cerebras_free",
+      "run": 2,
+      "grade": "outdated",
+      "text": "YES. As far as I know, Cerebras offers a free tier for its inference API with no expiration date, though it comes with rate limits and token caps, and its terms and model availability may have changed since my knowledge was last updated."
+    },
+    {
+      "model": "anthropic/claude-sonnet-5.5",
+      "fact": "cerebras_free",
+      "run": 3,
+      "grade": "outdated",
+      "text": "YES. As far as I know, Cerebras offers a free tier for its inference API with no expiration, though it comes with rate limits and token caps that may change, so check their current pricing page for details."
+    },
+    {
+      "model": "anthropic/claude-sonnet-5.5",
+      "fact": "do_credit",
+      "run": 1,
+      "grade": "outdated",
+      "text": "$200 of free credit, valid for 60 days. This is DigitalOcean's standard new-account offer as I last knew it, but promotional terms change, so check their site for the current deal."
+    },
+    {
+      "model": "anthropic/claude-sonnet-5.5",
+      "fact": "do_credit",
+      "run": 2,
+      "grade": "outdated",
+      "text": "$200 in free credit, valid for 60 days. This is DigitalOcean's standard new-account promotion as I know it, but the offer has changed over time (it was previously $100 for 60 days), so check their site for the current terms."
+    },
+    {
+      "model": "anthropic/claude-sonnet-5.5",
+      "fact": "do_credit",
+      "run": 3,
+      "grade": "outdated",
+      "text": "$200 of free credit, valid for 60 days. This is the widely advertised new-account offer, though DigitalOcean has changed promotions over time, so check their site for the current terms."
+    },
+    {
+      "model": "anthropic/claude-sonnet-5.5",
+      "fact": "aws_duration",
+      "run": 1,
+      "grade": "current",
+      "text": "Up to 6 months. For accounts created on or after July 15, 2025, the Free Plan lasts 6 months or until your credits (up to about $200) run out, whichever comes first. After that you must upgrade to a paid plan to keep using AWS, though some \"always free\" services stay available. Accounts opened before that date got the older 12-month free tier, and AWS may change these terms, so check the current AWS Free Tier page."
+    },
+    {
+      "model": "anthropic/claude-sonnet-5.5",
+      "fact": "aws_duration",
+      "run": 2,
+      "grade": "current",
+      "text": "Up to 6 months. For accounts created on or after July 15, 2025, AWS's Free Tier uses a \"Free plan\" that lasts 6 months or until your credits (up to about $200) run out, whichever comes first. After that you upgrade to a paid plan, though some \"always free\" services stay free. Older accounts got 12 months of free-tier usage, and AWS may change these terms, so check the current AWS page."
+    },
+    {
+      "model": "anthropic/claude-sonnet-5.5",
+      "fact": "aws_duration",
+      "run": 3,
+      "grade": "current",
+      "text": "Up to 6 months. For accounts created on or after July 15, 2025, the Free Plan lasts 6 months or until your credits (up to about $200) run out, whichever comes first. After that you need to upgrade to a paid plan, though some \"Always Free\" service allowances continue. Accounts created before that date got the older 12-month free tier. AWS may change these terms, so check the current Free Tier page."
+    },
+    {
+      "model": "anthropic/claude-sonnet-5.5",
+      "fact": "gemini_code_assist",
+      "run": 1,
+      "grade": "outdated",
+      "text": "YES — as of my latest knowledge, Google offers Gemini Code Assist for individuals as a free tier (launched in preview in early 2025, with generous monthly limits for code completions and chat in VS Code, JetBrains IDEs, and via Gemini CLI). However, pricing and limits can change, so I can't confirm today's exact terms without checking Google's current page."
+    },
+    {
+      "model": "anthropic/claude-sonnet-5.5",
+      "fact": "gemini_code_assist",
+      "run": 2,
+      "grade": "outdated",
+      "text": "YES — as of my latest knowledge, Google offers Gemini Code Assist for individuals as a free tier (launched in 2025, with generous monthly limits for code completions and chat in VS Code, JetBrains, and via Gemini CLI). Pricing and limits can change, though, so check Google's current page to confirm."
+    },
+    {
+      "model": "anthropic/claude-sonnet-5.5",
+      "fact": "gemini_code_assist",
+      "run": 3,
+      "grade": "outdated",
+      "text": "YES, as of my latest knowledge, Gemini Code Assist for individuals has been offered free of charge (with generous usage limits, e.g., up to 180,000 code completions per month) in supported IDEs like VS Code and JetBrains. However, I can't check live, so pricing and limits may have changed, and it's worth verifying on Google's official page."
+    },
+    {
+      "model": "anthropic/claude-sonnet-5.5",
+      "fact": "upstash_commands",
+      "run": 1,
+      "grade": "current",
+      "text": "500,000 commands per month is the current free tier, with 256 MB of storage. It used to be 10,000 commands per day, and since this is from memory, check Upstash's pricing page for the latest limits."
+    },
+    {
+      "model": "anthropic/claude-sonnet-5.5",
+      "fact": "upstash_commands",
+      "run": 2,
+      "grade": "current",
+      "text": "500,000 commands per month, with a 256 MB data limit. Upstash previously capped the free tier at 10,000 commands per day, and limits can change, so check their pricing page for current numbers."
+    },
+    {
+      "model": "anthropic/claude-sonnet-5.5",
+      "fact": "upstash_commands",
+      "run": 3,
+      "grade": "current",
+      "text": "500,000 commands per month is the current free-tier limit, along with 256 MB of data. It used to be 10,000 commands per day, and limits can change, so check Upstash's pricing page for the latest."
+    },
+    {
+      "model": "anthropic/claude-sonnet-5.5",
+      "fact": "turso_storage",
+      "run": 1,
+      "grade": "current",
+      "text": "5 GB of total storage, according to my most recent knowledge of Turso's free plan. It used to be 9 GB before the plan was revised, so check their pricing page for current numbers."
+    },
+    {
+      "model": "anthropic/claude-sonnet-5.5",
+      "fact": "turso_storage",
+      "run": 2,
+      "grade": "current",
+      "text": "5 GB of total storage is included in Turso's free plan, as far as I know. It used to be 9 GB under the older Starter plan, and limits change, so check Turso's pricing page for the current figure."
+    },
+    {
+      "model": "anthropic/claude-sonnet-5.5",
+      "fact": "turso_storage",
+      "run": 3,
+      "grade": "current",
+      "text": "5 GB of total storage is what I recall for Turso's current free plan, which also includes about 100 databases. Earlier versions of the free tier offered 9 GB, and Turso has changed its limits over time, so check its pricing page for the current figure."
+    },
+    {
+      "model": "openai/gpt-6.1-sol",
+      "fact": "neon_compute",
+      "run": 1,
+      "grade": "current",
+      "text": "100 CU-hours per month per project are included in Neon’s Free plan."
+    },
+    {
+      "model": "openai/gpt-6.1-sol",
+      "fact": "neon_compute",
+      "run": 2,
+      "grade": "outdated",
+      "text": "191.9 compute hours per month, according to the Neon Free plan pricing I’m familiar with."
+    },
+    {
+      "model": "openai/gpt-6.1-sol",
+      "fact": "neon_compute",
+      "run": 3,
+      "grade": "outdated",
+      "text": "191.9 compute hours per month."
+    },
+    {
+      "model": "openai/gpt-6.1-sol",
+      "fact": "planetscale_free",
+      "run": 1,
+      "grade": "current",
+      "text": "NO. PlanetScale discontinued its free Hobby plan in 2024 and now requires a paid plan."
+    },
+    {
+      "model": "openai/gpt-6.1-sol",
+      "fact": "planetscale_free",
+      "run": 2,
+      "grade": "current",
+      "text": "NO. PlanetScale discontinued its free Hobby plan in April 2024; to my knowledge, it currently offers paid plans rather than an ongoing free tier."
+    },
+    {
+      "model": "openai/gpt-6.1-sol",
+      "fact": "planetscale_free",
+      "run": 3,
+      "grade": "current",
+      "text": "NO—based on the latest information I have, PlanetScale no longer offers a free plan; it discontinued its free Hobby tier in 2024."
+    },
+    {
+      "model": "openai/gpt-6.1-sol",
+      "fact": "cerebras_free",
+      "run": 1,
+      "grade": "outdated",
+      "text": "YES. Cerebras’s inference API offers an ongoing, rate-limited free tier rather than just a time-limited trial, though its availability and limits can change."
+    },
+    {
+      "model": "openai/gpt-6.1-sol",
+      "fact": "cerebras_free",
+      "run": 2,
+      "grade": "outdated",
+      "text": "YES. Cerebras’s inference API offers a free tier with rate limits rather than a time-limited trial, though its availability and terms can change."
+    },
+    {
+      "model": "openai/gpt-6.1-sol",
+      "fact": "cerebras_free",
+      "run": 3,
+      "grade": "outdated",
+      "text": "YES—Cerebras’s inference API offers an ongoing, rate-limited free tier, not just a time-limited trial. “Permanent” isn’t a guarantee that it will remain available forever; pricing and limits can change."
+    },
+    {
+      "model": "openai/gpt-6.1-sol",
+      "fact": "do_credit",
+      "run": 1,
+      "grade": "outdated",
+      "text": "$200 for 60 days is DigitalOcean’s standard free-credit offer for eligible new accounts."
+    },
+    {
+      "model": "openai/gpt-6.1-sol",
+      "fact": "do_credit",
+      "run": 2,
+      "grade": "outdated",
+      "text": "$200 in free credit for 60 days is DigitalOcean’s standard new-account offer, subject to eligibility and current promotional terms."
+    },
+    {
+      "model": "openai/gpt-6.1-sol",
+      "fact": "do_credit",
+      "run": 3,
+      "grade": "outdated",
+      "text": "$200 for 60 days. DigitalOcean’s standard new-account promotional credit is subject to eligibility and signup terms."
+    },
+    {
+      "model": "openai/gpt-6.1-sol",
+      "fact": "aws_duration",
+      "run": 1,
+      "grade": "current",
+      "text": "Up to 6 months, or until your credits run out—whichever comes first—if you choose AWS’s Free Plan for a new account. The older 12-month Free Tier applies to accounts created before July 15, 2025."
+    },
+    {
+      "model": "openai/gpt-6.1-sol",
+      "fact": "aws_duration",
+      "run": 2,
+      "grade": "current",
+      "text": "Up to 6 months, or until your Free Tier credits are exhausted, whichever comes first, for a new AWS account choosing the Free plan. The old 12-month introductory Free Tier applies only to accounts created before July 15, 2025."
+    },
+    {
+      "model": "openai/gpt-6.1-sol",
+      "fact": "aws_duration",
+      "run": 3,
+      "grade": "current",
+      "text": "Up to 6 months, or until your credits run out—whichever comes first—if you choose AWS’s Free plan. For accounts created on or after July 15, 2025, this replaces the former 12-month Free Tier."
+    },
+    {
+      "model": "openai/gpt-6.1-sol",
+      "fact": "gemini_code_assist",
+      "run": 1,
+      "grade": "outdated",
+      "text": "YES—as far as my latest information goes, Gemini Code Assist for individuals is free to use, subject to usage limits. I can’t confirm whether Google has changed that policy today without checking current information."
+    },
+    {
+      "model": "openai/gpt-6.1-sol",
+      "fact": "gemini_code_assist",
+      "run": 2,
+      "grade": "outdated",
+      "text": "YES—according to my latest information, Gemini Code Assist for individuals is free to use, subject to usage limits. I can’t verify whether that has changed as of today without browsing."
+    },
+    {
+      "model": "openai/gpt-6.1-sol",
+      "fact": "gemini_code_assist",
+      "run": 3,
+      "grade": "outdated",
+      "text": "YES—according to the latest information I have, Gemini Code Assist for individuals is free for personal Google accounts. I can’t verify whether that pricing has changed as of today."
+    },
+    {
+      "model": "openai/gpt-6.1-sol",
+      "fact": "upstash_commands",
+      "run": 1,
+      "grade": "current",
+      "text": "500,000 commands per month on Upstash Redis’s free tier."
+    },
+    {
+      "model": "openai/gpt-6.1-sol",
+      "fact": "upstash_commands",
+      "run": 2,
+      "grade": "current",
+      "text": "500,000 commands per month on Upstash Redis’s free tier."
+    },
+    {
+      "model": "openai/gpt-6.1-sol",
+      "fact": "upstash_commands",
+      "run": 3,
+      "grade": "current",
+      "text": "500,000 commands per month on Upstash Redis’s free tier."
+    },
+    {
+      "model": "openai/gpt-6.1-sol",
+      "fact": "turso_storage",
+      "run": 1,
+      "grade": "outdated",
+      "text": "9 GB of total storage is included in Turso’s free plan, according to the pricing information I’m familiar with."
+    },
+    {
+      "model": "openai/gpt-6.1-sol",
+      "fact": "turso_storage",
+      "run": 2,
+      "grade": "outdated",
+      "text": "9 GB of total storage, shared across your databases, based on the Turso free-plan limits I’m aware of."
+    },
+    {
+      "model": "openai/gpt-6.1-sol",
+      "fact": "turso_storage",
+      "run": 3,
+      "grade": "current",
+      "text": "5 GB of total storage is included in Turso’s free plan."
+    },
+    {
+      "model": "openai/gpt-6-luna",
+      "fact": "neon_compute",
+      "run": 1,
+      "grade": "current",
+      "text": "100 compute hours per month per project."
+    },
+    {
+      "model": "openai/gpt-6-luna",
+      "fact": "neon_compute",
+      "run": 2,
+      "grade": "current",
+      "text": "100 compute hours per month."
+    },
+    {
+      "model": "openai/gpt-6-luna",
+      "fact": "neon_compute",
+      "run": 3,
+      "grade": "current",
+      "text": "100 compute hours per month."
+    },
+    {
+      "model": "openai/gpt-6-luna",
+      "fact": "planetscale_free",
+      "run": 1,
+      "grade": "current",
+      "text": "NO. PlanetScale ended its free Hobby plan for new databases in 2024, though some existing accounts may retain legacy access."
+    },
+    {
+      "model": "openai/gpt-6-luna",
+      "fact": "planetscale_free",
+      "run": 2,
+      "grade": "current",
+      "text": "NO. PlanetScale discontinued its free Hobby plan in 2024; its managed database plans are paid."
+    },
+    {
+      "model": "openai/gpt-6-luna",
+      "fact": "planetscale_free",
+      "run": 3,
+      "grade": "current",
+      "text": "NO. PlanetScale discontinued its free Hobby plan for new customers in 2024, though some existing users may retain grandfathered access."
+    },
+    {
+      "model": "openai/gpt-6-luna",
+      "fact": "cerebras_free",
+      "run": 1,
+      "grade": "outdated",
+      "text": "YES. Cerebras offers a free tier for its inference API, subject to usage limits; it isn’t just a time-limited trial."
+    },
+    {
+      "model": "openai/gpt-6-luna",
+      "fact": "cerebras_free",
+      "run": 2,
+      "grade": "current",
+      "text": "NO. Cerebras offers free, rate-limited API access, but it isn’t guaranteed to remain free permanently."
+    },
+    {
+      "model": "openai/gpt-6-luna",
+      "fact": "cerebras_free",
+      "run": 3,
+      "grade": "outdated",
+      "text": "YES. Cerebras offers a free inference API tier with usage limits; it isn’t just a time-limited trial."
+    },
+    {
+      "model": "openai/gpt-6-luna",
+      "fact": "do_credit",
+      "run": 1,
+      "grade": "outdated",
+      "text": "$200 for 60 days. DigitalOcean typically offers this credit to eligible new accounts."
+    },
+    {
+      "model": "openai/gpt-6-luna",
+      "fact": "do_credit",
+      "run": 2,
+      "grade": "outdated",
+      "text": "$200 for 60 days. DigitalOcean’s new-account offer may vary by eligibility or promotion."
+    },
+    {
+      "model": "openai/gpt-6-luna",
+      "fact": "do_credit",
+      "run": 3,
+      "grade": "outdated",
+      "text": "$200 for 60 days. DigitalOcean’s new-account credit offer may vary by promotion or eligibility."
+    },
+    {
+      "model": "openai/gpt-6-luna",
+      "fact": "aws_duration",
+      "run": 1,
+      "grade": "current",
+      "text": "Six months. AWS’s current Free Tier for new accounts is a six-month plan, with usage subject to the available credits and service-specific limits."
+    },
+    {
+      "model": "openai/gpt-6-luna",
+      "fact": "aws_duration",
+      "run": 2,
+      "grade": "current",
+      "text": "Up to 6 months. For a new AWS account, the Free plan ends sooner if its credits run out first."
+    },
+    {
+      "model": "openai/gpt-6-luna",
+      "fact": "aws_duration",
+      "run": 3,
+      "grade": "current",
+      "text": "Six months. New AWS accounts can use the Free plan for up to six months; eligible promotional credits may have separate expiration terms."
+    },
+    {
+      "model": "openai/gpt-6-luna",
+      "fact": "gemini_code_assist",
+      "run": 1,
+      "grade": "outdated",
+      "text": "YES — Gemini Code Assist for individuals is free to use, subject to Google’s usage limits and eligibility requirements."
+    },
+    {
+      "model": "openai/gpt-6-luna",
+      "fact": "gemini_code_assist",
+      "run": 2,
+      "grade": "outdated",
+      "text": "YES — Gemini Code Assist for individuals is available at no cost, subject to Google’s usage limits and terms."
+    },
+    {
+      "model": "openai/gpt-6-luna",
+      "fact": "gemini_code_assist",
+      "run": 3,
+      "grade": "outdated",
+      "text": "YES — Gemini Code Assist for individuals is available free, subject to usage limits."
+    },
+    {
+      "model": "openai/gpt-6-luna",
+      "fact": "upstash_commands",
+      "run": 1,
+      "grade": "outdated",
+      "text": "10,000 commands per day."
+    },
+    {
+      "model": "openai/gpt-6-luna",
+      "fact": "upstash_commands",
+      "run": 2,
+      "grade": "outdated",
+      "text": "10,000 commands per day."
+    },
+    {
+      "model": "openai/gpt-6-luna",
+      "fact": "upstash_commands",
+      "run": 3,
+      "grade": "outdated",
+      "text": "10,000 commands per day."
+    },
+    {
+      "model": "openai/gpt-6-luna",
+      "fact": "turso_storage",
+      "run": 1,
+      "grade": "current",
+      "text": "5 GB total storage across all databases."
+    },
+    {
+      "model": "openai/gpt-6-luna",
+      "fact": "turso_storage",
+      "run": 2,
+      "grade": "current",
+      "text": "5 GB of total storage."
+    },
+    {
+      "model": "openai/gpt-6-luna",
+      "fact": "turso_storage",
+      "run": 3,
+      "grade": "current",
+      "text": "5 GB of total storage."
+    },
+    {
+      "model": "google/gemini-3.8-flash",
+      "fact": "neon_compute",
+      "run": 1,
+      "grade": "current",
+      "text": "100 compute hours per month are included in Neon's Free plan. This allowance automatically pauses compute when inactive to help stay within the limit."
+    },
+    {
+      "model": "google/gemini-3.8-flash",
+      "fact": "neon_compute",
+      "run": 2,
+      "grade": "current",
+      "text": "100 compute hours per month are included in Neon's Free plan. These hours only accrue when your database is actively handling traffic, thanks to automatic scale-to-zero."
+    },
+    {
+      "model": "google/gemini-3.8-flash",
+      "fact": "neon_compute",
+      "run": 3,
+      "grade": "current",
+      "text": "100 compute hours per month are included in Neon's Free plan. This active compute allowance resets at the start of each monthly billing cycle."
+    },
+    {
+      "model": "google/gemini-3.8-flash",
+      "fact": "planetscale_free",
+      "run": 1,
+      "grade": "current",
+      "text": "NO. PlanetScale retired its free \"Hobby\" tier in April 2024 and currently operates on paid-only subscription models."
+    },
+    {
+      "model": "google/gemini-3.8-flash",
+      "fact": "planetscale_free",
+      "run": 2,
+      "grade": "current",
+      "text": "NO. PlanetScale discontinued its free Hobby tier in April 2024 and now operates exclusively as a paid service."
+    },
+    {
+      "model": "google/gemini-3.8-flash",
+      "fact": "planetscale_free",
+      "run": 3,
+      "grade": "current",
+      "text": "NO. PlanetScale discontinued its free Hobby tier in April 2024 and now operates exclusively on paid plans."
+    },
+    {
+      "model": "google/gemini-3.8-flash",
+      "fact": "cerebras_free",
+      "run": 1,
+      "grade": "outdated",
+      "text": "YES, Cerebras's inference API offers a permanent free tier for developers that provides a daily token allowance without requiring a paid subscription. While it comes with rate and usage limits, it is designed as an ongoing access tier rather than a time-limited trial."
+    },
+    {
+      "model": "google/gemini-3.8-flash",
+      "fact": "cerebras_free",
+      "run": 2,
+      "grade": "outdated",
+      "text": "YES. Cerebras offers a permanent free tier for its inference API, providing developers with access to supported open-source models subject to rate and daily token limits."
+    },
+    {
+      "model": "google/gemini-3.8-flash",
+      "fact": "cerebras_free",
+      "run": 3,
+      "grade": "outdated",
+      "text": "YES, Cerebras offers a permanent free tier for its inference API that provides access to open-source models like Llama 3.1 with daily rate limits and no credit card requirement."
+    },
+    {
+      "model": "google/gemini-3.8-flash",
+      "fact": "do_credit",
+      "run": 1,
+      "grade": "outdated",
+      "text": "$200 for 60 days is the standard free credit DigitalOcean offers to new accounts. This promotional credit is automatically applied upon signing up with a valid payment method and expires after the 60-day window."
+    },
+    {
+      "model": "google/gemini-3.8-flash",
+      "fact": "do_credit",
+      "run": 2,
+      "grade": "outdated",
+      "text": "$200 for 60 days is the standard free credit DigitalOcean offers to new accounts. This promotional credit is typically activated upon signing up with a valid payment method through a referral or promotion."
+    },
+    {
+      "model": "google/gemini-3.8-flash",
+      "fact": "do_credit",
+      "run": 3,
+      "grade": "outdated",
+      "text": "$200 for 60 days is the free credit DigitalOcean typically offers to new accounts upon signing up. This promotional credit can be applied to any of their cloud infrastructure services during that initial two-month period."
+    },
+    {
+      "model": "google/gemini-3.8-flash",
+      "fact": "aws_duration",
+      "run": 1,
+      "grade": "outdated",
+      "text": "12 months is the standard duration for the AWS Free Tier, beginning on the date you create your account. However, while the core introductory tier expires after one year, select services remain accessible indefinitely under AWS's separate \"Always Free\" tier."
+    },
+    {
+      "model": "google/gemini-3.8-flash",
+      "fact": "aws_duration",
+      "run": 2,
+      "grade": "outdated",
+      "text": "12 months is the duration of the introductory AWS Free Tier, starting from the date your account is created. After this period, a select set of services continues to be accessible indefinitely under the \"Always Free\" tier."
+    },
+    {
+      "model": "google/gemini-3.8-flash",
+      "fact": "aws_duration",
+      "run": 3,
+      "grade": "outdated",
+      "text": "Twelve months is the standard duration for the introductory AWS Free Tier, starting from the day you open your account. After that year ends, you still retain access to the \"Always Free\" tier, which offers limited access to select services indefinitely."
+    },
+    {
+      "model": "google/gemini-3.8-flash",
+      "fact": "gemini_code_assist",
+      "run": 1,
+      "grade": "outdated",
+      "text": "YES. Gemini Code Assist offers a free tier for individual developers that includes code generation, completion, and chat directly in supported IDEs."
+    },
+    {
+      "model": "google/gemini-3.8-flash",
+      "fact": "gemini_code_assist",
+      "run": 2,
+      "grade": "outdated",
+      "text": "YES, Gemini Code Assist for individuals is free to use with a standard Google account, subject to daily usage limits."
+    },
+    {
+      "model": "google/gemini-3.8-flash",
+      "fact": "gemini_code_assist",
+      "run": 3,
+      "grade": "outdated",
+      "text": "YES, Gemini Code Assist offers a free tier for individual developers with access to code completion, generation, and chat features subject to monthly usage limits."
+    },
+    {
+      "model": "google/gemini-3.8-flash",
+      "fact": "upstash_commands",
+      "run": 1,
+      "grade": "outdated",
+      "text": "10,000 commands per day are allowed on Upstash Redis's free tier."
+    },
+    {
+      "model": "google/gemini-3.8-flash",
+      "fact": "upstash_commands",
+      "run": 2,
+      "grade": "outdated",
+      "text": "10,000 commands per day are allowed on Upstash Redis's free tier."
+    },
+    {
+      "model": "google/gemini-3.8-flash",
+      "fact": "upstash_commands",
+      "run": 3,
+      "grade": "outdated",
+      "text": "10,000 commands per day are allowed on Upstash Redis's free tier."
+    },
+    {
+      "model": "google/gemini-3.8-flash",
+      "fact": "turso_storage",
+      "run": 1,
+      "grade": "outdated",
+      "text": "9 GB of total storage is included in Turso's free Starter plan, which can be shared across up to 500 databases."
+    },
+    {
+      "model": "google/gemini-3.8-flash",
+      "fact": "turso_storage",
+      "run": 2,
+      "grade": "outdated",
+      "text": "9 GB of total storage is included in Turso's free plan. This storage allowance can be shared across up to 500 databases."
+    },
+    {
+      "model": "google/gemini-3.8-flash",
+      "fact": "turso_storage",
+      "run": 3,
+      "grade": "outdated",
+      "text": "9 GB of total storage is included in Turso's free Starter plan, which can be distributed across up to 500 databases."
+    },
+    {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "fact": "neon_compute",
+      "run": 1,
+      "grade": "outdated",
+      "text": "191.9 compute hours per month. Neon’s Free plan includes 191.9 compute hours each month."
+    },
+    {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "fact": "neon_compute",
+      "run": 2,
+      "grade": "outdated",
+      "text": "191.9 compute hours per month. Neon’s Free plan includes that amount of compute time."
+    },
+    {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "fact": "neon_compute",
+      "run": 3,
+      "grade": "outdated",
+      "text": "191.9 compute hours per month."
+    },
+    {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "fact": "planetscale_free",
+      "run": 1,
+      "grade": "current",
+      "text": "NO. PlanetScale discontinued its free Hobby plan in 2024 and now offers paid plans (such as Scaler) with trial credits rather than a permanent free tier."
+    },
+    {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "fact": "planetscale_free",
+      "run": 2,
+      "grade": "outdated",
+      "text": "YES. PlanetScale offers a free plan called PlanetScale Free, which includes 5GB of storage and limited monthly row reads/writes."
+    },
+    {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "fact": "planetscale_free",
+      "run": 3,
+      "grade": "current",
+      "text": "NO. PlanetScale discontinued its free Hobby plan and currently offers paid plans (with a free trial) rather than a permanent free tier."
+    },
+    {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "fact": "cerebras_free",
+      "run": 1,
+      "grade": "outdated",
+      "text": "YES. Cerebras Cloud offers a free tier for its inference API with rate/token limits, though exact limits and availability can change."
+    },
+    {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "fact": "cerebras_free",
+      "run": 2,
+      "grade": "outdated",
+      "text": "YES. Cerebras’s inference API offers a free tier with rate/token limits, though as with any service its terms and limits are subject to change."
+    },
+    {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "fact": "cerebras_free",
+      "run": 3,
+      "grade": "outdated",
+      "text": "YES. Cerebras’s inference API offers an ongoing free tier with daily token and rate limits, though the specific limits and available models can change over time."
+    },
+    {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "fact": "do_credit",
+      "run": 1,
+      "grade": "outdated",
+      "text": "$200 for 60 days. DigitalOcean typically gives new accounts $200 in free credit valid for 60 days."
+    },
+    {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "fact": "do_credit",
+      "run": 2,
+      "grade": "outdated",
+      "text": "DigitalOcean typically gives new accounts $200 in free credit valid for 60 days."
+    },
+    {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "fact": "do_credit",
+      "run": 3,
+      "grade": "outdated",
+      "text": "$200 in free credit for 60 days."
+    },
+    {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "fact": "aws_duration",
+      "run": 1,
+      "grade": "current",
+      "text": "6 months. For a new AWS account opened today, the credit-based AWS Free Tier lasts 6 months from sign-up, while always-free services do not expire."
+    },
+    {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "fact": "aws_duration",
+      "run": 2,
+      "grade": "current",
+      "text": "6 months. For a new AWS account opened today, the current Free Tier plan lasts six months, though some Always Free services and short-term trials may continue beyond that."
+    },
+    {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "fact": "aws_duration",
+      "run": 3,
+      "grade": "current",
+      "text": "6 months. For a new AWS account opened today, the current AWS Free Tier lasts 6 months from account creation, though some Always Free services and short-term trials have separate terms."
+    },
+    {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "fact": "gemini_code_assist",
+      "run": 1,
+      "grade": "outdated",
+      "text": "YES. Gemini Code Assist for individuals is still free to use, though it has usage limits and Google may change the offering over time."
+    },
+    {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "fact": "gemini_code_assist",
+      "run": 2,
+      "grade": "outdated",
+      "text": "YES, Gemini Code Assist for individuals remains free to use as of my knowledge, with usage limits on code completions and chat requests. Google may adjust limits or terms over time, so check the official page for the latest details."
+    },
+    {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "fact": "gemini_code_assist",
+      "run": 3,
+      "grade": "outdated",
+      "text": "YES. As of my knowledge, Gemini Code Assist for individuals is still free to use, with generous monthly limits on code completions and daily chat requests."
+    },
+    {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "fact": "upstash_commands",
+      "run": 1,
+      "grade": "outdated",
+      "text": "10,000 commands per day."
+    },
+    {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "fact": "upstash_commands",
+      "run": 2,
+      "grade": "outdated",
+      "text": "10,000 commands per day."
+    },
+    {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "fact": "upstash_commands",
+      "run": 3,
+      "grade": "outdated",
+      "text": "10,000 commands per day."
+    },
+    {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "fact": "turso_storage",
+      "run": 1,
+      "grade": "outdated",
+      "text": "9 GB. Turso’s free plan includes 9 GB of total storage across up to 500 databases."
+    },
+    {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "fact": "turso_storage",
+      "run": 2,
+      "grade": "outdated",
+      "text": "9 GB total storage. Turso’s free plan includes up to 9 GB of total storage across its databases."
+    },
+    {
+      "model": "deepseek/deepseek-v4.1-flash",
+      "fact": "turso_storage",
+      "run": 3,
+      "grade": "outdated",
+      "text": "9 GB. Turso’s free plan includes 9 GB of total storage across its databases."
+    },
+    {
+      "model": "qwen/qwen3.8-max-prime",
+      "fact": "neon_compute",
+      "run": 1,
+      "grade": "outdated",
+      "text": "191.9 — Neon’s Free plan includes 191.9 compute hours per month."
+    },
+    {
+      "model": "qwen/qwen3.8-max-prime",
+      "fact": "neon_compute",
+      "run": 2,
+      "grade": "outdated",
+      "text": "191.9. Neon’s Free plan includes 191.9 compute hours per month."
+    },
+    {
+      "model": "qwen/qwen3.8-max-prime",
+      "fact": "neon_compute",
+      "run": 3,
+      "grade": "other",
+      "text": "3. Neon’s Free plan includes 3 compute hours per month."
+    },
+    {
+      "model": "qwen/qwen3.8-max-prime",
+      "fact": "planetscale_free",
+      "run": 1,
+      "grade": "current",
+      "text": "NO. PlanetScale no longer offers a generally available free plan to new customers; its former free Hobby plan was discontinued, though paid plans or trials may be available."
+    },
+    {
+      "model": "qwen/qwen3.8-max-prime",
+      "fact": "planetscale_free",
+      "run": 2,
+      "grade": "current",
+      "text": "NO. PlanetScale discontinued its free Hobby plan for new users, so it does not currently offer a free plan."
+    },
+    {
+      "model": "qwen/qwen3.8-max-prime",
+      "fact": "planetscale_free",
+      "run": 3,
+      "grade": "current",
+      "text": "NO. PlanetScale discontinued its free Hobby plan in 2024, so based on my knowledge it does not currently offer a free plan."
+    },
+    {
+      "model": "qwen/qwen3.8-max-prime",
+      "fact": "cerebras_free",
+      "run": 1,
+      "grade": "outdated",
+      "text": "YES. Cerebras’s inference API includes an ongoing free tier with usage limits, while higher usage is paid."
+    },
+    {
+      "model": "qwen/qwen3.8-max-prime",
+      "fact": "cerebras_free",
+      "run": 2,
+      "grade": "current",
+      "text": "NO. Cerebras’s inference API has offered limited free access, but it is not advertised as a guaranteed permanent free tier."
+    },
+    {
+      "model": "qwen/qwen3.8-max-prime",
+      "fact": "cerebras_free",
+      "run": 3,
+      "grade": "outdated",
+      "text": "YES — Cerebras’s inference API offers a permanent free tier, though it comes with usage and rate limits."
+    },
+    {
+      "model": "qwen/qwen3.8-max-prime",
+      "fact": "do_credit",
+      "run": 1,
+      "grade": "outdated",
+      "text": "$200, 60 days. DigitalOcean typically gives new accounts a $200 free credit valid for 60 days."
+    },
+    {
+      "model": "qwen/qwen3.8-max-prime",
+      "fact": "do_credit",
+      "run": 2,
+      "grade": "outdated",
+      "text": "$200 for 60 days. DigitalOcean typically gives new accounts a $200 free credit valid for 60 days."
+    },
+    {
+      "model": "qwen/qwen3.8-max-prime",
+      "fact": "do_credit",
+      "run": 3,
+      "grade": "other",
+      "text": "$100, 60 days. DigitalOcean typically gives new accounts $100 in free credit valid for 60 days."
+    },
+    {
+      "model": "qwen/qwen3.8-max-prime",
+      "fact": "aws_duration",
+      "run": 1,
+      "grade": "outdated",
+      "text": "12 months. A new AWS account’s standard AWS Free Tier benefits last for 12 months from account creation, though some always-free usage limits may continue afterward."
+    },
+    {
+      "model": "qwen/qwen3.8-max-prime",
+      "fact": "aws_duration",
+      "run": 2,
+      "grade": "outdated",
+      "text": "12 months from the account creation date. Some “Always Free” usage limits may continue afterward, but the standard new-account AWS Free Tier lasts one year."
+    },
+    {
+      "model": "qwen/qwen3.8-max-prime",
+      "fact": "aws_duration",
+      "run": 3,
+      "grade": "outdated",
+      "text": "12 months. A new AWS account gets the 12-month Free Tier benefits from the account creation date, with some “always free” offers continuing afterward."
+    },
+    {
+      "model": "qwen/qwen3.8-max-prime",
+      "fact": "gemini_code_assist",
+      "run": 1,
+      "grade": "outdated",
+      "text": "YES — based on my knowledge, Gemini Code Assist has a free option for individual developers. I can’t verify any policy changes after my knowledge cutoff."
+    },
+    {
+      "model": "qwen/qwen3.8-max-prime",
+      "fact": "gemini_code_assist",
+      "run": 2,
+      "grade": "outdated",
+      "text": "YES—Gemini Code Assist remains available as a free option for individual developers, while paid Standard/Enterprise tiers exist for teams and organizations."
+    },
+    {
+      "model": "qwen/qwen3.8-max-prime",
+      "fact": "gemini_code_assist",
+      "run": 3,
+      "grade": "outdated",
+      "text": "YES — based on my knowledge, Gemini Code Assist still offers a free option for individual users, though it may have usage limits and Google’s terms could change."
+    },
+    {
+      "model": "qwen/qwen3.8-max-prime",
+      "fact": "upstash_commands",
+      "run": 1,
+      "grade": "outdated",
+      "text": "10,000 commands per day."
+    },
+    {
+      "model": "qwen/qwen3.8-max-prime",
+      "fact": "upstash_commands",
+      "run": 2,
+      "grade": "outdated",
+      "text": "10,000 commands per day."
+    },
+    {
+      "model": "qwen/qwen3.8-max-prime",
+      "fact": "upstash_commands",
+      "run": 3,
+      "grade": "outdated",
+      "text": "10,000 commands per day."
+    },
+    {
+      "model": "qwen/qwen3.8-max-prime",
+      "fact": "turso_storage",
+      "run": 1,
+      "grade": "other",
+      "text": "500 MB. Turso’s free plan includes 500 MB of total storage."
+    },
+    {
+      "model": "qwen/qwen3.8-max-prime",
+      "fact": "turso_storage",
+      "run": 2,
+      "grade": "other",
+      "text": "500 MB. Turso’s free plan includes 500 MB of total storage."
+    },
+    {
+      "model": "qwen/qwen3.8-max-prime",
+      "fact": "turso_storage",
+      "run": 3,
+      "grade": "other",
+      "text": "500 MB. Turso’s free plan includes 500 MB of total storage."
+    },
+    {
+      "model": "x-ai/grok-4.7",
+      "fact": "neon_compute",
+      "run": 1,
+      "grade": "outdated",
+      "text": "191.9. Neon's Free plan includes 191.9 compute hours per month."
+    },
+    {
+      "model": "x-ai/grok-4.7",
+      "fact": "neon_compute",
+      "run": 2,
+      "grade": "outdated",
+      "text": "191.9. Neon’s Free plan includes 191.9 compute hours per month."
+    },
+    {
+      "model": "x-ai/grok-4.7",
+      "fact": "neon_compute",
+      "run": 3,
+      "grade": "current",
+      "text": "100. Neon's Free plan includes 100 compute hours per month."
+    },
+    {
+      "model": "x-ai/grok-4.7",
+      "fact": "planetscale_free",
+      "run": 1,
+      "grade": "current",
+      "text": "NO. PlanetScale discontinued its free Hobby plan in 2024 and no longer offers a free tier."
+    },
+    {
+      "model": "x-ai/grok-4.7",
+      "fact": "planetscale_free",
+      "run": 2,
+      "grade": "current",
+      "text": "NO. PlanetScale discontinued its free Hobby plan in 2024 and currently offers only paid database plans."
+    },
+    {
+      "model": "x-ai/grok-4.7",
+      "fact": "planetscale_free",
+      "run": 3,
+      "grade": "current",
+      "text": "NO. PlanetScale discontinued its free Hobby plan in 2024 and no longer offers a free tier."
+    },
+    {
+      "model": "x-ai/grok-4.7",
+      "fact": "cerebras_free",
+      "run": 1,
+      "grade": "current",
+      "text": "NO. Cerebras's inference API uses pay-as-you-go pricing rather than a permanent free tier."
+    },
+    {
+      "model": "x-ai/grok-4.7",
+      "fact": "cerebras_free",
+      "run": 2,
+      "grade": "outdated",
+      "text": "YES. Cerebras offers an ongoing free tier for its inference API, subject to rate and usage limits."
+    },
+    {
+      "model": "x-ai/grok-4.7",
+      "fact": "cerebras_free",
+      "run": 3,
+      "grade": "outdated",
+      "text": "YES. Cerebras Inference offers an ongoing free developer tier (rate-limited, no paid plan required to start)."
+    },
+    {
+      "model": "x-ai/grok-4.7",
+      "fact": "do_credit",
+      "run": 1,
+      "grade": "outdated",
+      "text": "$200 for 60 days. DigitalOcean’s usual new-account offer is $200 in free credit valid for 60 days, though promotions can change."
+    },
+    {
+      "model": "x-ai/grok-4.7",
+      "fact": "do_credit",
+      "run": 2,
+      "grade": "outdated",
+      "text": "$200 for 60 days. DigitalOcean gives new accounts $200 in free credit that must be used within 60 days."
+    },
+    {
+      "model": "x-ai/grok-4.7",
+      "fact": "do_credit",
+      "run": 3,
+      "grade": "outdated",
+      "text": "$200 for 60 days. DigitalOcean typically gives new accounts $200 in free credit valid for 60 days."
+    },
+    {
+      "model": "x-ai/grok-4.7",
+      "fact": "aws_duration",
+      "run": 1,
+      "grade": "outdated",
+      "text": "12 months. New AWS accounts get 12 months of Free Tier access for eligible services from the signup date, alongside separate always-free offers and short trials."
+    },
+    {
+      "model": "x-ai/grok-4.7",
+      "fact": "aws_duration",
+      "run": 2,
+      "grade": "outdated",
+      "text": "12 months. New AWS accounts receive 12-month Free Tier offers that expire 12 months after the account is opened (always-free services continue beyond that)."
+    },
+    {
+      "model": "x-ai/grok-4.7",
+      "fact": "aws_duration",
+      "run": 3,
+      "grade": "outdated",
+      "text": "12 months. A new AWS account’s introductory Free Tier lasts 12 months from signup, while some Always Free offers continue after that."
+    },
+    {
+      "model": "x-ai/grok-4.7",
+      "fact": "gemini_code_assist",
+      "run": 1,
+      "grade": "outdated",
+      "text": "YES. Gemini Code Assist for individuals is still offered free, with monthly usage limits on completions and chat."
+    },
+    {
+      "model": "x-ai/grok-4.7",
+      "fact": "gemini_code_assist",
+      "run": 2,
+      "grade": "outdated",
+      "text": "YES. Gemini Code Assist for individuals is still free, with a large monthly quota of code completions."
+    },
+    {
+      "model": "x-ai/grok-4.7",
+      "fact": "gemini_code_assist",
+      "run": 3,
+      "grade": "outdated",
+      "text": "YES, Gemini Code Assist for individuals remains free to use with monthly usage limits."
+    },
+    {
+      "model": "x-ai/grok-4.7",
+      "fact": "upstash_commands",
+      "run": 1,
+      "grade": "outdated",
+      "text": "10,000 commands per day. Upstash Redis's free tier allows 10,000 commands per day."
+    },
+    {
+      "model": "x-ai/grok-4.7",
+      "fact": "upstash_commands",
+      "run": 2,
+      "grade": "outdated",
+      "text": "10,000 commands per day. Upstash Redis's free tier allows 10,000 commands daily."
+    },
+    {
+      "model": "x-ai/grok-4.7",
+      "fact": "upstash_commands",
+      "run": 3,
+      "grade": "outdated",
+      "text": "10,000 commands per day."
+    },
+    {
+      "model": "x-ai/grok-4.7",
+      "fact": "turso_storage",
+      "run": 1,
+      "grade": "outdated",
+      "text": "9 GB. Turso's free plan includes 9 GB of total storage."
+    },
+    {
+      "model": "x-ai/grok-4.7",
+      "fact": "turso_storage",
+      "run": 2,
+      "grade": "outdated",
+      "text": "9 GB. Turso's free plan includes 9 GB of total storage."
+    },
+    {
+      "model": "x-ai/grok-4.7",
+      "fact": "turso_storage",
+      "run": 3,
+      "grade": "outdated",
+      "text": "9 GB. Turso’s free plan includes 9 GB of total storage."
+    },
+    {
+      "model": "moonshotai/kimi-k3",
+      "fact": "neon_compute",
+      "run": 1,
+      "grade": "outdated",
+      "text": "191.9 compute hours per month. That’s Neon’s Free plan allotment, roughly enough for a 0.25 CU compute to run continuously."
+    },
+    {
+      "model": "moonshotai/kimi-k3",
+      "fact": "neon_compute",
+      "run": 2,
+      "grade": "outdated",
+      "text": "191.9 compute hours per month. I recall that being Neon’s Free plan monthly compute quota."
+    },
+    {
+      "model": "moonshotai/kimi-k3",
+      "fact": "neon_compute",
+      "run": 3,
+      "grade": "current",
+      "text": "100 compute hours per month."
+    },
+    {
+      "model": "moonshotai/kimi-k3",
+      "fact": "planetscale_free",
+      "run": 1,
+      "grade": "current",
+      "text": "NO. PlanetScale discontinued its free Hobby plan in early 2024 (announced in March 2024), requiring users on that tier to upgrade to a paid plan or migrate their databases elsewhere."
+    },
+    {
+      "model": "moonshotai/kimi-k3",
+      "fact": "planetscale_free",
+      "run": 2,
+      "grade": "current",
+      "text": "NO. PlanetScale discontinued its free Hobby plan in early 2024, and its offerings are now paid-only, with the entry-level Scaler plan starting at around $39/month."
+    },
+    {
+      "model": "moonshotai/kimi-k3",
+      "fact": "planetscale_free",
+      "run": 3,
+      "grade": "current",
+      "text": "NO. PlanetScale discontinued its popular free \"Hobby\" plan in 2024, requiring users to migrate to paid plans (starting around $39/month) or move their databases elsewhere."
+    },
+    {
+      "model": "moonshotai/kimi-k3",
+      "fact": "cerebras_free",
+      "run": 1,
+      "grade": "outdated",
+      "text": "YES. Cerebras Inference launched with a free tier offering API access to models like Llama with daily token limits (around 1 million tokens per day), presented as an ongoing offering rather than a limited-time trial—though pricing details could have changed since my knowledge cutoff."
+    },
+    {
+      "model": "moonshotai/kimi-k3",
+      "fact": "cerebras_free",
+      "run": 2,
+      "grade": "outdated",
+      "text": "YES. Cerebras's inference API has offered a permanent free tier with daily token/rate limits, alongside paid tiers for higher usage, rather than just expiring trial credits."
+    },
+    {
+      "model": "moonshotai/kimi-k3",
+      "fact": "cerebras_free",
+      "run": 3,
+      "grade": "outdated",
+      "text": "YES — as of my knowledge, Cerebras's inference API (Cerebras Inference, launched in 2024) offers a free tier with rate-limited access to its high-speed Llama and other open-model endpoints, alongside paid tiers for higher usage. That said, pricing terms can change, so it's worth confirming on their current pricing page."
+    },
+    {
+      "model": "moonshotai/kimi-k3",
+      "fact": "do_credit",
+      "run": 1,
+      "grade": "outdated",
+      "text": "$200 in free credit, valid for 60 days. This is DigitalOcean's standard new-account offer, though it requires a valid payment method to activate and any unused credit expires after the 60-day period."
+    },
+    {
+      "model": "moonshotai/kimi-k3",
+      "fact": "do_credit",
+      "run": 2,
+      "grade": "outdated",
+      "text": "$200 in credit, valid for 60 days. This is DigitalOcean's standard promotional offer for new accounts, though it requires adding a valid payment method and the credit expires if unused within that period."
+    },
+    {
+      "model": "moonshotai/kimi-k3",
+      "fact": "do_credit",
+      "run": 3,
+      "grade": "outdated",
+      "text": "$200 in free credit, valid for 60 days. This is DigitalOcean's standard new-account promotional offer as of my knowledge cutoff, though promotional terms can change, so it's worth verifying on their site."
+    },
+    {
+      "model": "moonshotai/kimi-k3",
+      "fact": "aws_duration",
+      "run": 1,
+      "grade": "current",
+      "text": "Six months. New AWS accounts created on or after July 15, 2025 get up to $200 in credits that expire after 6 months (or when used up), replacing the older 12-month Free Tier structure that still applies to accounts created before that date."
+    },
+    {
+      "model": "moonshotai/kimi-k3",
+      "fact": "aws_duration",
+      "run": 2,
+      "grade": "current",
+      "text": "6 months. Under AWS's revamped Free Tier program (introduced in July 2025), new accounts get a \"Free plan\" lasting six months with up to $200 in credits, replacing the previous 12-month free tier."
+    },
+    {
+      "model": "moonshotai/kimi-k3",
+      "fact": "aws_duration",
+      "run": 3,
+      "grade": "current",
+      "text": "6 months — for accounts created after July 15, 2025, AWS replaced the old 12-month Free Tier with a credit-based model: new accounts get up to $200 in credits ($100 at signup, up to $100 more for completing activities), and the free period ends after 6 months or when the credits run out, whichever comes first."
+    },
+    {
+      "model": "moonshotai/kimi-k3",
+      "fact": "gemini_code_assist",
+      "run": 1,
+      "grade": "outdated",
+      "text": "YES. As of my knowledge, Gemini Code Assist for individuals is available as a free tier from Google, offering generous daily limits for code completions and chat assistance, though I can't verify real-time changes to pricing since my knowledge has a cutoff date."
+    },
+    {
+      "model": "moonshotai/kimi-k3",
+      "fact": "gemini_code_assist",
+      "run": 2,
+      "grade": "outdated",
+      "text": "YES — as of my knowledge, Gemini Code Assist for individuals is free, offering generous daily limits on code completions and chat requests for anyone with a personal Google account. I can't verify any changes after my knowledge cutoff, so it's worth confirming on Google's site."
+    },
+    {
+      "model": "moonshotai/kimi-k3",
+      "fact": "gemini_code_assist",
+      "run": 3,
+      "grade": "outdated",
+      "text": "YES. Gemini Code Assist for individuals launched in February 2025 as a free tier with generous daily limits (thousands of code completions and hundreds of chat requests per day), and it remained free as of my knowledge cutoff—though I can't verify anything that may have changed after that date."
+    },
+    {
+      "model": "moonshotai/kimi-k3",
+      "fact": "upstash_commands",
+      "run": 1,
+      "grade": "outdated",
+      "text": "10,000 commands per day. Upstash Redis’s free tier is capped at that daily command quota."
+    },
+    {
+      "model": "moonshotai/kimi-k3",
+      "fact": "upstash_commands",
+      "run": 2,
+      "grade": "current",
+      "text": "500,000 commands per month — that's the free tier allowance for Upstash Redis under their pay-as-you-go pricing (previously it was 10,000 commands per day, so it may differ depending on when you checked)."
+    },
+    {
+      "model": "moonshotai/kimi-k3",
+      "fact": "upstash_commands",
+      "run": 3,
+      "grade": "current",
+      "text": "500,000 commands per month on Upstash Redis's current free tier (it was previously 10,000 commands per day before their 2023 pricing change)."
+    },
+    {
+      "model": "moonshotai/kimi-k3",
+      "fact": "turso_storage",
+      "run": 1,
+      "grade": "outdated",
+      "text": "9 GB — Turso's free \"Starter\" plan includes 9 GB of total storage (along with up to 500 databases), though plan details may have changed since my knowledge cutoff."
+    },
+    {
+      "model": "moonshotai/kimi-k3",
+      "fact": "turso_storage",
+      "run": 2,
+      "grade": "current",
+      "text": "5 GB. Turso's free (Starter) plan includes 5 GB of total storage, along with limits like 1 billion rows read and 25 million rows written per month—though these details may have changed since my knowledge cutoff."
+    },
+    {
+      "model": "moonshotai/kimi-k3",
+      "fact": "turso_storage",
+      "run": 3,
+      "grade": "outdated",
+      "text": "9 GB — Turso's free \"Starter\" plan includes 9 GB of total storage (along with up to 500 databases and monthly read/write limits), though plan details may have changed since my knowledge cutoff."
+    }
+  ]
+}
