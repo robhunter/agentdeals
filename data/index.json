@@ -5576,6 +5576,26 @@
       "vendor": "LiveKit",
       "category": "Communication",
       "description": "Real-time audio/video and AI agent infrastructure — 5,000 WebRTC minutes/mo, 1,000 agent session minutes/mo, 5 concurrent agent sessions, 100 concurrent connections, 1 free US phone number. Open source",
+      "conditions": [
+        {
+          "text": "On the free Build plan, new requests fail after you exceed the included allowance; there are no overage charges.",
+          "quote": "For projects on the free Build plan, the included allowance acts as a hard cap — after you exceed it, new requests fail rather than incurring overage charges.",
+          "url": "https://docs.livekit.io/deploy/admin/quotas-and-limits/",
+          "read_on": "2026-10-06"
+        },
+        {
+          "text": "Free projects share one allowance; creating more projects does not increase the total.",
+          "quote": "Free projects also share allowances and limits across all of a user's free projects; creating additional projects doesn't increase the total.",
+          "url": "https://docs.livekit.io/deploy/admin/quotas-and-limits/",
+          "read_on": "2026-10-06"
+        },
+        {
+          "text": "Build plan agents may shut down after all sessions end. They restart on a new session, causing up to 10 to 20 seconds of delay before joining.",
+          "quote": "Projects on the Build plan might have their deployed agents shut down after all active sessions end. The agent automatically starts again when a new session begins. This can cause up to 10 to 20 seconds of delay before the agent joins the room.",
+          "url": "https://docs.livekit.io/deploy/admin/quotas-and-limits/",
+          "read_on": "2026-10-06"
+        }
+      ],
       "tier": "Build",
       "url": "https://livekit.io/pricing",
       "tags": [
