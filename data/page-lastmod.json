@@ -2277,8 +2277,8 @@
       "changed": "2026-10-04"
     },
     "/compare/kong-vs-x-twitter": {
-      "hash": "fed4cabf36a12339",
-      "changed": "2026-10-05"
+      "hash": "cb133d05be544108",
+      "changed": "2026-10-06"
     },
     "/compare/kong-vs-zuplo": {
       "hash": "574f181cfccfba2d",
@@ -2629,8 +2629,8 @@
       "changed": "2026-10-06"
     },
     "/compare/unkey-vs-x-twitter": {
-      "hash": "2d8e9c8264821413",
-      "changed": "2026-10-05"
+      "hash": "930b3eba04a25fef",
+      "changed": "2026-10-06"
     },
     "/compare/unkey-vs-zuplo": {
       "hash": "e926129d167dbba7",
@@ -2891,12 +2891,12 @@
       "changed": "2026-09-15"
     },
     "/digest/2026-w05": {
-      "hash": "f82b65c412a6a914",
-      "changed": "2026-10-05"
+      "hash": "da398b9875adbe83",
+      "changed": "2026-10-06"
     },
     "/digest/2026-w06": {
-      "hash": "99023482d6336171",
-      "changed": "2026-10-01"
+      "hash": "5f60933df6f41f61",
+      "changed": "2026-10-06"
     },
     "/digest/2026-w07": {
       "hash": "62abd9b8aa83f42f",
@@ -3051,7 +3051,7 @@
       "changed": "2026-09-27"
     },
     "/digest/archive": {
-      "hash": "bcc096aad470db97",
+      "hash": "a61658c1ab0d4e87",
       "changed": "2026-10-06"
     },
     "/digitalocean-free-tier-2026": {
@@ -3159,7 +3159,7 @@
       "daily": true
     },
     "/free-tier-tracker": {
-      "hash": "c83af8fe29abac1b",
+      "hash": "41d199ebfb5a2419",
       "changed": "2026-10-06"
     },
     "/freshness": {
@@ -3313,7 +3313,7 @@
       "changed": "2026-10-06"
     },
     "/q1-2026-developer-pricing-report": {
-      "hash": "e405edd852d8369f",
+      "hash": "dbfbe31156f79677",
       "changed": "2026-10-06"
     },
     "/q2-pricing-preview-2026": {
@@ -3417,8 +3417,8 @@
       "changed": "2026-10-05"
     },
     "/reports/2026-02": {
-      "hash": "51ceb83c9007113a",
-      "changed": "2026-10-05"
+      "hash": "ca32ca10b7c2c8a0",
+      "changed": "2026-10-06"
     },
     "/reports/2026-03": {
       "hash": "d2af295edaabde84",
@@ -3562,8 +3562,8 @@
       "daily": true
     },
     "/trends/api-gateway": {
-      "hash": "caa78171051e2255",
-      "changed": "2026-10-04"
+      "hash": "76e12a8b6ac23aad",
+      "changed": "2026-10-06"
     },
     "/trends/auth": {
       "hash": "25d6f917af0e5aa9",
@@ -9634,7 +9634,7 @@
       "changed": "2026-10-06"
     },
     "/vendor/x-twitter": {
-      "hash": "99f344261c3b797c",
+      "hash": "1b9c8aa169467c90",
       "changed": "2026-10-06"
     },
     "/vendor/xai": {
