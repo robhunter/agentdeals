@@ -33250,7 +33250,7 @@
     {
       "vendor": "xAI",
       "category": "AI / ML",
-      "description": "Grok API, pay as you go: sign up at console.x.ai, then load it with credits. grok-4.7 $2.00/$6.00 (per 1M tokens, under 200k prompt tokens). grok-4.3 $1.25/$2.50 (under 200k prompt tokens). grok-build-0.1 $1.00/$2.00 (under 200k prompt tokens). Grok 4.1 Fast was retired on 2026-05-15; its model names now route to grok-4.3 at grok-4.3 rates.",
+      "description": "Grok API, pay as you go: sign up at console.x.ai, then load it with credits. grok-4.7 $2.00/$6.00 (per 1M tokens, under 200k prompt tokens). grok-4.3 $1.25/$2.50 (under 200k prompt tokens). grok-build-0.1 $1.00/$2.00 (under 200k prompt tokens). grok-4.6 and grok-4.5 cost the same as grok-4.7, and grok-4.20 (0309 reasoning, non-reasoning and multi-agent) the same as grok-4.3. Grok 4.1 Fast was retired on 2026-05-15; its model names now route to grok-4.3 at grok-4.3 rates. Image generation: grok-imagine-image $0.02 per image; grok-imagine-image-2.0 from $0.04 per 1K image at low quality. grok-imagine-image-quality ($0.05 per 1K image) is retired on 2026-11-02, when its requests are served by grok-imagine-image-2.0 at low quality.",
       "tier": "Pay-as-you-go",
       "url": "https://docs.x.ai/developers/pricing",
       "tags": [
@@ -33271,7 +33271,7 @@
         }
       ],
       "source_check": {
-        "checked": "2026-10-02",
+        "checked": "2026-10-06",
         "outcome": "ok",
         "detail": "the page names xAI as \"xai\" and states \"$2.00\" and \"$6.00\" and \"$1.00\" and \"$1.25\""
       },
