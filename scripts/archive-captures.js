@@ -375,6 +375,12 @@ function valueRuleFor(claim) {
   return { kind: "unmatched", why: `the figures match, but only ${sides.join(" and only ")}` };
 }
 
+function wordsOnTheOtherPage(claim, olderHas, newerHas) {
+  if (newerHas(claim.old)) return { kind: "one_sided", why: "the old words are still on the new page" };
+  if (olderHas(claim.new)) return { kind: "one_sided", why: "the new words were already on the old page" };
+  return null;
+}
+
 function classifyClaim(claim, older, newer) {
   const olderHas = (words) => older.includes(comparableText(words));
   const newerHas = (words) => newer.includes(comparableText(words));
@@ -382,7 +388,10 @@ function classifyClaim(claim, older, newer) {
   if (claim.new && !newerHas(claim.new)) return { kind: "unverifiable", side: "new", why: "the new words are not on the new page" };
   if (comparableText(claim.old) === comparableText(claim.new)) return { kind: "refuted", why: "the old and the new words are the same" };
   const refutation = refutationOf(claim, olderHas, newerHas);
-  if (!refutation) return valueRuleFor(claim);
+  if (!refutation) {
+    const rule = valueRuleFor(claim);
+    return rule.kind === "counts" ? wordsOnTheOtherPage(claim, olderHas, newerHas) ?? rule : rule;
+  }
   const tooCommon = wordsTooCommonToRefute(claim, older, newer);
   return tooCommon ? { kind: "unverifiable", side: tooCommon.unverifiable, why: tooCommon.why } : { kind: "refuted", why: refutation.why };
 }
