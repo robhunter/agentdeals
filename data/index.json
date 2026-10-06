@@ -6120,7 +6120,33 @@
         "record_date": "2026-08-28",
         "change_type": "limits_reduced",
         "restated_on": "2026-09-20"
-      }
+      },
+      "conditions": [
+        {
+          "text": "Free accounts are never charged overage. Once the month's free builds are used, new builds are unavailable until the quota resets on the first day of the next calendar month. You can upgrade or build locally instead.",
+          "quote": "Once you use your monthly quota of free builds, new builds are unavailable until the quota resets on the first day of the next calendar month.",
+          "url": "https://docs.expo.dev/billing/faq/",
+          "read_on": "2026-10-05"
+        },
+        {
+          "text": "At peak times the low-priority queue used by free builds can wait 90 minutes or more.",
+          "quote": "At peak times, you may experience wait times of 90+ minutes with the low-priority queue depending on demand.",
+          "url": "https://expo.dev/pricing.md",
+          "read_on": "2026-10-05"
+        },
+        {
+          "text": "A free build times out after 45 minutes; paid plans allow 2 hours.",
+          "quote": "45-minute build timeout",
+          "url": "https://expo.dev/pricing",
+          "read_on": "2026-10-05"
+        },
+        {
+          "text": "Over-the-air updates on the Free plan reach up to 1,000 monthly active users, and there is no overage billing beyond that limit.",
+          "quote": "The Free plan has no update overage pricing; it is limited to its included monthly active users.",
+          "url": "https://expo.dev/pricing.md",
+          "read_on": "2026-10-05"
+        }
+      ]
     },
     {
       "vendor": "Crowdin",
