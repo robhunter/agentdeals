@@ -144,12 +144,24 @@ function storedSentences(catalogue: Catalogue): string[] {
   return [...new Set(strings.flatMap((s) => s.split(/(?<=[.!?])\s+/)).map((s) => s.trim()).filter((s) => s.length >= 20))];
 }
 
+const CUT_SHORT = "...";
+
+function quotesItCutShort(sentence: string, at: number, end: number, s: string): boolean {
+  const cut = sentence.indexOf(CUT_SHORT, end);
+  if (cut < 0) return false;
+  const opening = s.slice(0, 20);
+  for (let from = sentence.lastIndexOf(opening, at); from >= 0; from = from === 0 ? -1 : sentence.lastIndexOf(opening, from - 1)) {
+    if (s.startsWith(sentence.slice(from, cut))) return true;
+  }
+  return false;
+}
+
 function quotesAStoredSentence(sentence: string, at: number, end: number, stored: string[]): boolean {
   return stored.some((s) => {
     for (let from = sentence.indexOf(s); from >= 0; from = sentence.indexOf(s, from + 1)) {
       if (from <= at && end <= from + s.length) return true;
     }
-    return false;
+    return quotesItCutShort(sentence, at, end, s);
   });
 }
 
