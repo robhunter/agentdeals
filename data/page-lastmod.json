@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2026-10-05",
+  "generated": "2026-10-06",
   "pages": {
     "/": {
       "daily": true
@@ -1228,8 +1228,8 @@
       "changed": "2026-10-05"
     },
     "/category/mobile-development": {
-      "hash": "58b3aa81847c092f",
-      "changed": "2026-10-04"
+      "hash": "093d393dbd259ae1",
+      "changed": "2026-10-06"
     },
     "/category/monitoring": {
       "hash": "c35db13385e62b00",
@@ -1323,8 +1323,7 @@
       "changed": "2026-10-05"
     },
     "/ci-cd-pricing": {
-      "hash": "9302fece373c9925",
-      "changed": "2026-10-05"
+      "daily": true
     },
     "/cicd-free-tier-comparison-2026": {
       "hash": "5c752f66d0f331f5",
@@ -1335,8 +1334,7 @@
       "changed": "2026-10-03"
     },
     "/cloud-free-tier-comparison-2026": {
-      "hash": "cc85901582534010",
-      "changed": "2026-10-05"
+      "daily": true
     },
     "/cloudflare-pages-vs-vercel": {
       "hash": "e578085a39b6f86d",
@@ -1823,8 +1821,8 @@
       "changed": "2026-10-04"
     },
     "/compare/diawi-vs-expo": {
-      "hash": "c54ff20cb1a36702",
-      "changed": "2026-10-04"
+      "hash": "ab98b9143cdb3837",
+      "changed": "2026-10-06"
     },
     "/compare/diawi-vs-loadly": {
       "hash": "8c6592021e6613f1",
@@ -1919,12 +1917,12 @@
       "changed": "2026-10-04"
     },
     "/compare/expo-vs-loadly": {
-      "hash": "a459a618b840f709",
-      "changed": "2026-10-04"
+      "hash": "9d5352f62c8de329",
+      "changed": "2026-10-06"
     },
     "/compare/expo-vs-shake": {
-      "hash": "3538f216d06d4a94",
-      "changed": "2026-10-04"
+      "hash": "8253d8c2db64c460",
+      "changed": "2026-10-06"
     },
     "/compare/export-sdk-vs-windmill-dev": {
       "hash": "53bbdb48d6c39431",
@@ -3100,8 +3098,7 @@
       "daily": true
     },
     "/feed.xml": {
-      "hash": "a25db00a077bec0d",
-      "changed": "2026-10-05"
+      "daily": true
     },
     "/firebase-alternatives": {
       "hash": "bb96d75e789fbc32",
@@ -3151,8 +3148,7 @@
       "changed": "2026-10-05"
     },
     "/free-tier-risk": {
-      "hash": "1fe367916bb00bb9",
-      "changed": "2026-10-05"
+      "daily": true
     },
     "/free-tier-tracker": {
       "hash": "04f7807d5fbd39bc",
@@ -3457,8 +3453,7 @@
       "changed": "2026-10-04"
     },
     "/serverless-free-tier-comparison-2026": {
-      "hash": "cd502538af32bff1",
-      "changed": "2026-10-05"
+      "daily": true
     },
     "/setup": {
       "hash": "e3a1b8cb87e003c1",
@@ -3468,12 +3463,11 @@
       "daily": true
     },
     "/stability": {
-      "hash": "57a88c99beabaedc",
-      "changed": "2026-10-05"
+      "daily": true
     },
     "/stack-check": {
-      "hash": "b5169df272b0c7d5",
-      "changed": "2026-10-05"
+      "hash": "2ff94a1dbaf1f9d6",
+      "changed": "2026-10-06"
     },
     "/stacks": {
       "hash": "139122e3bb9e669b",
@@ -3504,8 +3498,7 @@
       "changed": "2026-10-05"
     },
     "/state-of-free-tiers": {
-      "hash": "7f0f5fed745e5af0",
-      "changed": "2026-10-05"
+      "daily": true
     },
     "/storage-alternatives": {
       "hash": "c4fe6bc7ae4f2b67",
@@ -5506,8 +5499,8 @@
       "changed": "2026-10-05"
     },
     "/vendor/expo": {
-      "hash": "5cef684c0893f4be",
-      "changed": "2026-10-05"
+      "hash": "2fd76deccac1b71f",
+      "changed": "2026-10-06"
     },
     "/vendor/export-sdk": {
       "hash": "55d1f30cf874f041",
