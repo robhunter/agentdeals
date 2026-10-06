@@ -19,6 +19,10 @@ const STORAGE = "/storage-comparison-2026";
 const ALTERNATIVES_GUIDES = ["/gcp-free-tier-2026", "/azure-free-tier-2026", "/digitalocean-free-tier-2026"];
 const AWS_GUIDE = "/aws-free-tier-2026";
 const CI_CD_PRICING = "/ci-cd-pricing";
+const CLOUD_COMPARISON = "/cloud-free-tier-comparison-2026";
+
+const CLOUD_ROWS_ON_AWS_FREE_PAGE = ["EC2", "RDS (MySQL/PostgreSQL)"];
+const CLOUD_S3_AND_CLOUDFRONT = "S3: no free storage (paid from credits)";
 
 const APP_RUNNER_FREE_TIER = "Closed to new customers since April 30, 2026. Existing customers only.";
 const APP_RUNNER_BEST_FOR = "For existing App Runner customers. New customers use ECS Express Mode.";
@@ -32,9 +36,15 @@ const CITED_CELLS: Array<{ page: string; row: string; cell: string; source: stri
   { page: AUTH, row: "AWS Cognito", cell: "10,000", source: COGNITO_PRICING },
   { page: AUTH, row: "AWS Cognito", cell: "$0 (free)", source: COGNITO_PRICING },
   { page: STORAGE, row: "AWS S3", cell: `${monthlyEgressGrantGb("AWS S3")} GB/mo, no expiry`, source: "https://aws.amazon.com/s3/pricing/" },
+  { page: CLOUD_COMPARISON, row: "AWS", cell: "$100 + up to $100", source: "https://aws.amazon.com/free/free-tier-faqs/" },
+  { page: CLOUD_COMPARISON, row: "AWS", cell: "25 GB, 25 WCU/RCU", source: "https://aws.amazon.com/dynamodb/pricing/" },
+  { page: CLOUD_COMPARISON, row: "AWS", cell: "Up to 4 ACUs and 1 GiB per cluster, paid from the Free plan's credits", source: "https://aws.amazon.com/rds/aurora/pricing/" },
+  { page: CLOUD_COMPARISON, row: "AWS", cell: "1M requests/mo", source: LAMBDA_PRICING },
+  { page: CLOUD_COMPARISON, row: "AWS", cell: "Up to $200K", source: "https://aws.amazon.com/activate/credits/" },
 ];
 
 const PAGES = [SERVERLESS, AUTH, STORAGE, ...ALTERNATIVES_GUIDES, AWS_GUIDE, CI_CD_PRICING];
+const FETCHED = [...PAGES, CLOUD_COMPARISON];
 
 let server: ChildProcess;
 const html = new Map<string, string>();
@@ -101,7 +111,7 @@ describe("AWS rows beyond the AWS guide cite a page that states their figures, o
         reject(err);
       });
     });
-    for (const page of PAGES) {
+    for (const page of FETCHED) {
       const response = await fetch(`${base}${page}`);
       assert.strictEqual(response.status, 200, page);
       html.set(page, await response.text());
@@ -146,6 +156,26 @@ describe("AWS rows beyond the AWS guide cite a page that states their figures, o
         .filter((cells) => cells.some((cell) => [...linksIn(cell, RECORD_SOURCE_CLASS), ...linksIn(cell, FIGURE_SOURCE_CLASS)].includes(AWS_FREE_PAGE)))
         .map((cells) => `${page}: ${nameOf(cells[0]!)}`));
     assert.deepStrictEqual(rows, []);
+  });
+
+  it("keeps AWS's free page beside the cloud comparison's EC2 and RDS rows only", () => {
+    const rows = rowsNamed(CLOUD_COMPARISON, "AWS")
+      .filter((cells) => cells.some((cell) => [...linksIn(cell, RECORD_SOURCE_CLASS), ...linksIn(cell, FIGURE_SOURCE_CLASS)].includes(AWS_FREE_PAGE)))
+      .map((cells) => figuresOf(cells[1]!));
+    assert.deepStrictEqual(rows, CLOUD_ROWS_ON_AWS_FREE_PAGE);
+  });
+
+  it("links no page from the cloud comparison's S3 and CloudFront row", () => {
+    const rows = rowsNamed(CLOUD_COMPARISON, "AWS").filter((cells) => figuresOf(cells[1]!) === CLOUD_S3_AND_CLOUDFRONT);
+    assert.strictEqual(rows.length, 1);
+    const outbound = rows[0]!.flatMap((cell) => [...cell.matchAll(/<a\b[^>]*href="(https?:[^"]*)"/g)].map(([, href]) => href));
+    assert.deepStrictEqual(outbound, []);
+  });
+
+  it("gives AWS Activate no duration on the cloud comparison, since the credits page states none", () => {
+    const rows = rowsNamed(CLOUD_COMPARISON, "AWS").filter((cells) => figuresOf(cells[1]!) === "Activate");
+    assert.strictEqual(rows.length, 1);
+    assert.strictEqual(rows[0]![3]!.trim(), "&mdash;");
   });
 
   it("states App Runner's closure in its row and in the paragraph under the table", () => {

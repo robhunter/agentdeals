@@ -590,6 +590,67 @@ describe("judging a paired reading by the words it copied from each page", () =>
   });
 });
 
+const GRAFANA_PROMO = "The actually useful free plan Grafana Cloud Free Tier 10k series Prometheus metrics 50GB logs, 50GB traces, 50GB profiles 500VUh k6 testing 20+ Enterprise data source plugins 100+ pre-built solutions 3 active AI users Create account";
+const GRAFANA_FREE_CARD = "Free Always free Always $0 Perfect for personal projects, exploring new ideas, and early-stage startups. No charges ever. Start free | Benefits: All Grafana Cloud services, with limited usage Community support 14 days retention for metrics, logs, traces, profiles, & k6 performance tests | Actually useful free tier with access to everything that Grafana Cloud has to offer. Limited to 50 GB ingested per month 14 day retention Community support";
+const INFISICAL_FREE_2026_07_25 = "Free For individuals and personal projects. Get started $ 0 0 forever Get started with: 5 identities, unlimited projects 100+ integrations Agent Proxy Secret Sharing";
+const INFISICAL_FREE_2026_07_30 = `${INFISICAL_FREE_2026_07_25} Secret References and Imports Secret Overrides 2FA Unlimited Projects (separate from 5 identities) Pro For growing teams looking to boost their security.`;
+
+describe("a claimed difference whose words are also on the other page", () => {
+  it("counts a difference whose old words left the new page and whose new words were not on the old page", () => {
+    const verdict = judgePair(answer({ old_terms: ["Free: 500 MB database"], new_terms: ["Free: 250 MB database"], differences: [{ old: "500 MB database", new: "250 MB database" }] }), "Free: 500 MB database.", "Free: 250 MB database.");
+    assert.strictEqual(verdict.status, "differ", verdict.why);
+  });
+
+  it("does not count a difference whose old words are still on the new page, and leaves the pair for review", () => {
+    const before = "Free: 3 projects. 100+ integrations.";
+    const after = "Free: 3 projects. 100+ integrations. Unlimited projects for teams.";
+    const verdict = judgePair(answer({ old_terms: ["Free: 3 projects"], new_terms: ["Free: 3 projects"], differences: [{ old: "100+ integrations", new: "Unlimited projects for teams" }] }), before, after);
+    assert.strictEqual(verdict.status, "review", verdict.why);
+    assert.deepStrictEqual(verdict.one_sided, [{ old: "100+ integrations", new: "Unlimited projects for teams", why: "the old words are still on the new page" }]);
+  });
+
+  it("does not count a difference whose new words were already on the old page, and leaves the pair for review", () => {
+    const before = "Free: 500 MB database. 14 day retention.";
+    const after = "Free: 14 day retention.";
+    const verdict = judgePair(answer({ old_terms: ["Free: 500 MB database"], new_terms: ["Free: 14 day retention"], differences: [{ old: "500 MB database", new: "14 day retention" }] }), before, after);
+    assert.strictEqual(verdict.status, "review", verdict.why);
+    assert.deepStrictEqual(verdict.one_sided, [{ old: "500 MB database", new: "14 day retention", why: "the new words were already on the old page" }]);
+  });
+
+  it("reads the Grafana Cloud 2026-02-21 to 2026-04-10 and Grafana k6 Cloud 2026-02-28 to 2026-06-23 pairs as one-sided: a menu promo left the page and the free card stayed", () => {
+    const verdict = judgePair(
+      answer({
+        old_terms: ["Grafana Cloud Free Tier", "10k series Prometheus metrics", "50GB logs, 50GB traces, 50GB profiles", "500VUh k6 testing", "20+ Enterprise data source plugins", "100+ pre-built solutions", "3 active AI users", "Create account"],
+        new_terms: ["Free", "Always free", "Always $0", "Perfect for personal projects, exploring new ideas, and early-stage startups.", "No charges ever.", "Start free", "All Grafana Cloud services, with limited usage", "Community support", "14 days retention for metrics, logs, traces, profiles, & k6 performance tests"],
+        direction: "unchanged",
+        differences: [
+          { old: "500VUh k6 testing", new: "14 day retention" },
+          { old: "100+ pre-built solutions", new: "14 days retention for metrics, logs, traces, profiles, & k6 performance tests" },
+        ],
+      }),
+      `${GRAFANA_PROMO} | ${GRAFANA_FREE_CARD}`,
+      GRAFANA_FREE_CARD,
+    );
+    assert.strictEqual(verdict.status, "review", verdict.why);
+    assert.deepStrictEqual(verdict.one_sided.map((claim: { why: string }) => claim.why), ["the new words were already on the old page", "the new words were already on the old page"]);
+  });
+
+  it("reads the Infisical 2026-07-25 to 2026-07-30 pair as one-sided: \"100+ integrations\" is still on the later page", () => {
+    const verdict = judgePair(
+      answer({
+        old_terms: ["Free", "For individuals and personal projects.", "$ 0 0 forever", "Get started with: 5 identities, unlimited projects", "100+ integrations"],
+        new_terms: ["Free", "For individuals and personal projects.", "$ 0 0 forever", "Get started with: 5 identities, unlimited projects", "Unlimited Projects (separate from 5 identities)", "10"],
+        direction: "widened",
+        differences: [{ old: "100+ integrations", new: "Unlimited Projects (separate from 5 identities)" }],
+      }),
+      INFISICAL_FREE_2026_07_25,
+      INFISICAL_FREE_2026_07_30,
+    );
+    assert.strictEqual(verdict.status, "review", verdict.why);
+    assert.deepStrictEqual(verdict.one_sided.map((claim: { why: string }) => claim.why), ["the old words are still on the new page"]);
+  });
+});
+
 describe("the values a line of terms states", () => {
   it("reads each figure once, without its separators, and scales a K, M or B written against it", () => {
     assert.deepStrictEqual(valuesStated("10,000 calls, 10K triggers, 1.5M rows, 1B tokens, $5.40/mo"), ["10000", "10000", "1500000", "1000000000", "5.4"]);

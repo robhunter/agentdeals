@@ -8,7 +8,7 @@ const REPO = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const { FIGURE_SOURCE_CLASS } = await import("../dist/source-citation.js");
 const { SOURCE_MARKER_IN_A_CELL } = await import("../dist/page-reviews.js");
 
-const UPSTASH_REDIS_PER_DAY = /10,000 commands\/day|10K commands\/day/;
+const UPSTASH_REDIS_PER_DAY = /10,000 (?:Redis )?commands|10K (?:Redis )?(?:commands|cmds)\/day/;
 const QSTASH_AT_500 = /500 messages\/day/;
 
 const WITHDRAWN: Record<string, Record<string, RegExp>> = {
@@ -37,14 +37,20 @@ const STATED: Record<string, string[]> = {
     "Serverless Redis with a generous free tier: 500K commands/month, 256 MB storage.",
     "When you exceed 500K commands/month.",
     "Upstash's 500K commands/month free tier covers moderate task queue usage",
+    "When you exceed 500,000 Redis commands a month.",
+    "cache/Redis (500K cmds/mo)",
   ],
   "/free-fastapi-stack": [
     "Serverless Redis with async support. Free tier: 500K commands/month, 256 MB storage.",
     "When you exceed 500K commands/month.",
+    "When you exceed 500,000 Redis commands a month or need more than a single worker process.",
+    "cache/Redis (500K cmds/mo)",
   ],
   "/free-go-stack": [
     "Serverless Redis with Go support. Free tier: 500K commands/month, 256 MB storage.",
     "Upstash's 500K commands/month covers moderate Asynq usage.",
+    "Upstash Redis (500K commands a month free) works as the Asynq backend.",
+    "cache/Redis (500K cmds/mo)",
   ],
   "/free-saas-stack": ["Upstash QStash (1,000 messages/day free)", "Upstash Redis (500K commands/month)"],
   "/free-nextjs-stack": ["QStash (Upstash) offers 1,000 messages/day"],
@@ -74,7 +80,28 @@ const ROWS: Record<string, string[][]> = {
   ],
   "/vector-database-pricing": [["Upstash Vector", "Serverless (HTTP)", "200M vectors × dimensions", "1 GB", "1,536"]],
   "/database-alternatives": [["Upstash", "Redis / Vector", "256 MB + 200M vectors × dimensions"]],
+  "/free-django-stack": [
+    ["Cache/Redis", "500K cmds/mo", "Pay-as-you-go $0.2/100K"],
+    ["Task Queue", "500K cmds/mo", "Pay-as-you-go $0.2/100K"],
+  ],
+  "/free-fastapi-stack": [
+    ["Cache/Redis", "500K cmds/mo", "Pay-as-you-go $0.2/100K"],
+    ["Background Tasks", "500K cmds/mo", "Pay-as-you-go $0.2/100K"],
+  ],
+  "/free-go-stack": [["Cache/Redis", "500K cmds/mo", "Pay-as-you-go $0.2/100K"]],
 };
+
+const DJANGO_REDIS_ANSWER = "Upstash Redis offers 500,000 commands a month and 256 MB of data free.";
+
+function faqAnswersOf(markup: string): string[] {
+  const answers: string[] = [];
+  for (const [, raw] of markup.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)) {
+    const data = JSON.parse(raw);
+    if (data["@type"] !== "FAQPage") continue;
+    for (const question of data.mainEntity) answers.push(question.acceptedAnswer.text);
+  }
+  return answers;
+}
 
 const PAGES = [...new Set([...Object.keys(WITHDRAWN), ...Object.keys(STATED), ...Object.keys(ROWS)])].sort();
 
@@ -168,5 +195,11 @@ describe("database and stack pages state Upstash, QStash, Upstash Vector, Nile, 
         .map((cells) => `${page}: ${cells.join(" | ")}`);
     });
     assert.deepStrictEqual(missing, []);
+  });
+
+  it("gives the Django stack's Redis answer the monthly figure in its FAQ structured data", () => {
+    const answers = faqAnswersOf(html.get("/free-django-stack")!);
+    assert.ok(answers.length > 0, "the Django stack page publishes no FAQPage structured data");
+    assert.deepStrictEqual(answers.filter((answer) => answer.includes(DJANGO_REDIS_ANSWER)).length, 1);
   });
 });

@@ -846,7 +846,7 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 69,
+      "table_figures": 68,
       "table_figures_from_records": 12,
       "tables": [
         {
@@ -876,7 +876,7 @@
         },
         {
           "label": "Startup Credit Programs",
-          "figures": 10,
+          "figures": 9,
           "from_records": 0
         },
         {
