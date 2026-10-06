@@ -24776,7 +24776,7 @@
     {
       "vendor": "GoFile.io",
       "category": "Storage",
-      "description": "Gofile is free to use — upload and share files instantly, no account required. Files are kept temporarily, perfect for quick shares.",
+      "description": "Free file sharing and storage by web UI or API, no account needed. Free files are kept while they keep being downloaded and deleted after 10 days without a download. Free accounts get 100 GB of traffic per 30 days; past it, some downloads are restricted until usage falls back under the limit. Uploading and basic file management work on free accounts; most other API endpoints need Premium.",
       "tier": "Free",
       "url": "https://gofile.io/",
       "tags": [
@@ -24796,12 +24796,9 @@
         "url": "https://gofile.io/",
         "read_on": "2026-10-06"
       },
-      "restated_from": {
-        "reading_date": "2026-10-06",
-        "source_url": "https://gofile.io/",
+      "restatement_reverted": {
         "record_date": "2026-10-06",
-        "change_type": "limits_reduced",
-        "restated_on": "2026-10-06"
+        "reverted_on": "2026-10-06"
       }
     },
     {
@@ -28705,7 +28702,7 @@
     {
       "vendor": "numverify",
       "category": "Dev Utilities",
-      "description": "Global phone number validation and lookup JSON API — We're offering the most cost-effective API - validate 1,000 phone numbers per month for free. Need more? Subscriptions start at $14.99 per month. There are also paid plans at $14.99/month (5,000 requests), $59.99/month (50,000 requests), and $129.99/month (250,000 requests).",
+      "description": "Global phone number validation and lookup JSON API. Free Plan: 100 API requests a month, non-commercial use only, no support. Paid plans: $14.99/month (5,000 requests), $59.99/month (50,000 requests) and $129.99/month (250,000 requests), all for commercial use.",
       "tier": "Free",
       "url": "https://numverify.com/",
       "tags": [
@@ -28718,17 +28715,14 @@
         "outcome": "ok",
         "detail": "the page names numverify as \"numverify\" and states \"$14.99\" and \"$ 14.99\" and \"$59.99\" and \"$ 59.99\""
       },
-      "restated_from": {
-        "reading_date": "2026-08-28",
-        "source_url": "https://numverify.com/",
-        "record_date": "2026-08-28",
-        "change_type": "limits_increased",
-        "restated_on": "2026-09-20"
-      },
       "free_plan_excerpt": {
         "text": "We're offering the most cost-effective API - validate 100 phone numbers per month for free. Need more? Subscriptions start at $14.99 per month",
         "url": "https://numverify.com/",
         "read_on": "2026-10-06"
+      },
+      "restatement_reverted": {
+        "record_date": "2026-08-28",
+        "reverted_on": "2026-10-06"
       }
     },
     {

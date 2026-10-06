@@ -7075,6 +7075,12 @@
       "archive_check": {
         "checked": "2026-10-02",
         "outcome": "no_usable_capture"
+      },
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-10-06",
+        "detail": "Retracted 2026-10-06: no change. numverify.com has carried two versions of its \"Easy on your Budget\" sentence since at least 2026-06-09: \"validate 100 phone numbers per month for free\" ($14.99) in its desktop layout and \"1,000\" ($19.99) in a second block. Its Free Plan card states \"100 API Requests\" in Common Crawl's captures of 2026-06-09 and 2026-08-15 and on the page read 2026-10-06. The reading took the second block.",
+        "source_url": "https://numverify.com/"
       }
     },
     {
@@ -15606,7 +15612,13 @@
       "category": "Startup Perks",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-10-06"
+      "recorded_date": "2026-10-06",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-10-06",
+        "detail": "Retracted 2026-10-06: not a new change. The Internet Archive's capture of cloudflare.com/startups on 2026-05-12 already offers Tier 3 at $10k and Tier 1 at $350k, to startups \"incorporated no more than 10 years ago\" and \"Funded up to Series B\". That change is recorded on 2026-05-12 and AI Gateway's exclusion on 2026-05-28; the page's note \"We recently updated our program tiers\" refers to it.",
+        "source_url": "http://web.archive.org/web/20260512220759/https://www.cloudflare.com/startups/"
+      }
     },
     {
       "vendor": "Aiven",
@@ -15623,7 +15635,13 @@
       "category": "Databases",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-10-06"
+      "recorded_date": "2026-10-06",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-10-06",
+        "detail": "Retracted 2026-10-06: no change. aiven.io/pricing, read 2026-10-06, gives each service's Free plan as \"1 dedicated VM, 1 CPU per VM, 1 GB RAM per VM, 1 GB total storage\": the same 1 CPU, 1 GB RAM and 1 GB of disk per service that our listing states.",
+        "source_url": "https://aiven.io/pricing"
+      }
     },
     {
       "vendor": "GoFile.io",
@@ -15640,7 +15658,13 @@
       "category": "Storage",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-10-06"
+      "recorded_date": "2026-10-06",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-10-06",
+        "detail": "Retracted 2026-10-06: no change in how long free files are kept. gofile.io/faq, read 2026-10-06, says free accounts \"use temporary storage designed for quick sharing. Content is kept for 10 days of inactivity, and stays longer as long as it keeps being downloaded\", the ten-day rule our listing already stated.",
+        "source_url": "https://gofile.io/faq"
+      }
     },
     {
       "vendor": "numverify",
@@ -15657,7 +15681,13 @@
       "category": "Dev Utilities",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-10-06"
+      "recorded_date": "2026-10-06",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-10-06",
+        "detail": "Retracted 2026-10-06: no change. The Free Plan has stated \"100 API Requests\" a month since at least 2026-06-09 (Common Crawl captures of 2026-06-09 and 2026-08-15). The 1,000 this record compares with was our own listing, written from the 2026-08-28 reading, which is also retracted.",
+        "source_url": "https://numverify.com/"
+      }
     },
     {
       "vendor": "Smart Grow Vault",

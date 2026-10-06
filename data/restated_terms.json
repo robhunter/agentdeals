@@ -2164,7 +2164,8 @@
       "source_url": "https://numverify.com/",
       "record_date": "2026-08-28",
       "change_type": "limits_increased",
-      "summary": "The free tier now offers 1,000 API requests per month instead of 100. There are also multiple paid tiers available."
+      "summary": "The free tier now offers 1,000 API requests per month instead of 100. There are also multiple paid tiers available.",
+      "reverted_on": "2026-10-06"
     },
     {
       "vendor": "veriphone",
@@ -2858,7 +2859,8 @@
       "source_url": "https://gofile.io/",
       "record_date": "2026-10-06",
       "change_type": "limits_reduced",
-      "summary": "The free tier is now described as temporary storage, with files kept 'temporarily, perfect for quick shares'. Previously 'unlimited' storage with a 10-day inactivity deletion policy."
+      "summary": "The free tier is now described as temporary storage, with files kept 'temporarily, perfect for quick shares'. Previously 'unlimited' storage with a 10-day inactivity deletion policy.",
+      "reverted_on": "2026-10-06"
     }
   ]
 }
