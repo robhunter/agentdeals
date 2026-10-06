@@ -1388,6 +1388,14 @@
       "hash": "b3bbc5254bc4cc9c",
       "changed": "2026-10-04"
     },
+    "/compare/amazon-cloudfront-vs-stellate": {
+      "hash": "c4b66bd866be136c",
+      "changed": "2026-10-06"
+    },
+    "/compare/amazon-cloudfront-vs-weserv": {
+      "hash": "ff9cd8fcae2eb927",
+      "changed": "2026-10-06"
+    },
     "/compare/amazon-ecr-public-vs-container-registry-service": {
       "hash": "be8a3c736feef1e3",
       "changed": "2026-10-04"
@@ -1498,10 +1506,6 @@
     },
     "/compare/bolt-new-vs-lovable": {
       "hash": "836380ce78a173fa",
-      "changed": "2026-10-04"
-    },
-    "/compare/bootstrapcdn-com-vs-weserv": {
-      "hash": "27603f70aac0f8c3",
       "changed": "2026-10-04"
     },
     "/compare/braid-vs-element-io": {
@@ -1936,14 +1940,6 @@
       "hash": "6f1a323010b7b614",
       "changed": "2026-10-04"
     },
-    "/compare/fastly-vs-bootstrapcdn-com": {
-      "hash": "5f6f7cebe3f1d987",
-      "changed": "2026-10-04"
-    },
-    "/compare/fastly-vs-weserv": {
-      "hash": "4fa5f29091aaafb8",
-      "changed": "2026-10-04"
-    },
     "/compare/firebase-vs-supabase": {
       "hash": "1f07e38d2109874b",
       "changed": "2026-10-05"
@@ -2344,14 +2340,6 @@
       "hash": "a1b1c9c4f59a175c",
       "changed": "2026-10-04"
     },
-    "/compare/microsoft-ajax-vs-bootstrapcdn-com": {
-      "hash": "f2cb7e5a56f82b69",
-      "changed": "2026-10-04"
-    },
-    "/compare/microsoft-ajax-vs-weserv": {
-      "hash": "0b5ea0e045b1f3c1",
-      "changed": "2026-10-04"
-    },
     "/compare/mintlify-vs-apiary-io": {
       "hash": "20b187e15b57afee",
       "changed": "2026-10-05"
@@ -2504,6 +2492,14 @@
       "hash": "eb5109f9ecc9de95",
       "changed": "2026-10-04"
     },
+    "/compare/promoproxy-vs-stellate": {
+      "hash": "f9b402b5b0a40d6d",
+      "changed": "2026-10-06"
+    },
+    "/compare/promoproxy-vs-weserv": {
+      "hash": "58180d98e250b67e",
+      "changed": "2026-10-06"
+    },
     "/compare/proton-mail-vs-tutanota": {
       "hash": "61c6a252c888b0a3",
       "changed": "2026-10-04"
@@ -2595,6 +2591,10 @@
     "/compare/sololearn-vs-wave-terminal": {
       "hash": "eceef8bbb72023e0",
       "changed": "2026-10-04"
+    },
+    "/compare/stellate-vs-weserv": {
+      "hash": "ae7e45a183419f2a",
+      "changed": "2026-10-06"
     },
     "/compare/storyblok-vs-wpjack": {
       "hash": "b5db8842d4fa8fa5",
@@ -3904,6 +3904,10 @@
     },
     "/vendor/amazon-aws": {
       "hash": "f4a6538302f9d2eb",
+      "changed": "2026-10-06"
+    },
+    "/vendor/amazon-cloudfront": {
+      "hash": "0ee7a42bb67c9dbd",
       "changed": "2026-10-06"
     },
     "/vendor/amazon-cognito": {

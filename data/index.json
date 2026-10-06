@@ -37094,6 +37094,33 @@
         "free tier"
       ],
       "verifiedDate": "2026-09-27"
+    },
+    {
+      "vendor": "Amazon CloudFront",
+      "category": "CDN",
+      "description": "1 TB of data transfer out to the internet per month, 10,000,000 HTTP or HTTPS Requests per month, 2,000,000 CloudFront Function invocations per month, 2,000,000 CloudFront KeyValueStore reads per month, and free SSL certificates, always free under pay-as-you-go pricing. The flat-rate Free plan is $0/month per distribution. It includes 1 million requests, 100 GB of data transfer, and 5 GB of S3 storage a month, with no overage charges. An AWS account can have up to 3 Free plans. Pay-as-you-go data transfer in the USA is $0.085 per GB after the first TB. The flat-rate Pro plan is $15/month.",
+      "tier": "Free",
+      "url": "https://aws.amazon.com/cloudfront/pricing/",
+      "tags": [
+        "cdn",
+        "aws",
+        "edge"
+      ],
+      "verifiedDate": "2026-10-06",
+      "conditions": [
+        {
+          "text": "Accounts using AWS Free Tier, such as new accounts on AWS's 6-month Free plan, cannot subscribe to any flat-rate plan, including the $0 Free plan; the always-free pay-as-you-go allowance still applies.",
+          "quote": "AWS accounts are not eligible for pricing plans if they meet any of the following conditions: You reached the maximum number of subscriptions allowed. See Flat-rate pricing plan quotas. Your account is using AWS Free Tier.",
+          "url": "https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/flat-rate-pricing-plan.html",
+          "read_on": "2026-10-06"
+        },
+        {
+          "text": "There are no overage charges on flat-rate plans. Sustained excess over months or unusually high usage in one month can lead AWS to adjust traffic delivery. A first spike up to 3x the monthly allowance does not affect service that month.",
+          "quote": "you will not incur overage charges, regardless of how much you exceed your allowance. If your usage exceeds your allowance through sustained growth over multiple months or through unusually high usage in a single month, your traffic delivery might be adjusted. Most customers never experience performance adjustments. Here's how it works: Your first traffic spike up to 3x your monthly allowance won't affect your service that month.",
+          "url": "https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/flat-rate-pricing-plan.html",
+          "read_on": "2026-10-06"
+        }
+      ]
     }
   ],
   "changes": []
