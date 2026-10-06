@@ -64,12 +64,28 @@ function assertRowCarriesCode(row: string, code: any) {
   assert.ok(row.includes('<a href="/disclosure">'), "the row should link the disclosure");
 }
 
+const AKAMAI_CLOUD_FIXTURE_CODE = {
+  vendor: "Akamai Cloud",
+  code: "fixture-akamai",
+  referral_url: "https://www.linode.com/lp/refer/?r=fixture-akamai",
+  referrer_benefit: "$25 credit per paid signup",
+  referrer_compensation: "credit",
+  referee_benefit: "$100, 60-day credit",
+  restrictions: ["A valid payment method must be on the account"],
+  source: "platform",
+  active: true,
+  added_at: "2026-10-06",
+  terms_verified: "2026-10-06",
+};
+
 describe("our referral links on the /hetzner-pricing-2026 rows that name the vendor", () => {
   const servers: ChildProcess[] = [];
   let scratch = "";
   let page = "";
   let withRailwayRemovedAndVultrInactive = "";
   let withNoCodes = "";
+  let withVultrFiledUnderItsDnsListing = "";
+  let withACodeFiledUnderAkamaiCloud = "";
 
   const pageServedWith = async (env: Record<string, string>) => {
     const { child, port } = await spawnServer(env);
@@ -83,14 +99,22 @@ describe("our referral links on the /hetzner-pricing-2026 rows that name the ven
     writeFileSync(removedOrInactive, JSON.stringify({
       platform_codes: STORE.platform_codes
         .filter((c: any) => c.vendor !== "Railway")
-        .map((c: any) => (c.vendor === "Vultr DNS" ? { ...c, active: false } : c)),
+        .map((c: any) => (c.vendor === "Vultr" ? { ...c, active: false } : c)),
     }));
     const none = path.join(scratch, "none.json");
     writeFileSync(none, JSON.stringify({ platform_codes: [] }));
+    const filedUnderTheDnsListing = path.join(scratch, "filed-under-the-dns-listing.json");
+    writeFileSync(filedUnderTheDnsListing, JSON.stringify({
+      platform_codes: STORE.platform_codes.map((c: any) => (c.vendor === "Vultr" ? { ...c, vendor: "Vultr DNS" } : c)),
+    }));
 
     page = await pageServedWith({});
     withRailwayRemovedAndVultrInactive = await pageServedWith({ AGENTDEALS_PLATFORM_CODES_PATH: removedOrInactive });
     withNoCodes = await pageServedWith({ AGENTDEALS_PLATFORM_CODES_PATH: none });
+    withVultrFiledUnderItsDnsListing = await pageServedWith({ AGENTDEALS_PLATFORM_CODES_PATH: filedUnderTheDnsListing });
+    const filedUnderAkamaiCloud = path.join(scratch, "filed-under-akamai-cloud.json");
+    writeFileSync(filedUnderAkamaiCloud, JSON.stringify({ platform_codes: [...STORE.platform_codes, AKAMAI_CLOUD_FIXTURE_CODE] }));
+    withACodeFiledUnderAkamaiCloud = await pageServedWith({ AGENTDEALS_PLATFORM_CODES_PATH: filedUnderAkamaiCloud });
   });
 
   after(() => {
@@ -102,10 +126,19 @@ describe("our referral links on the /hetzner-pricing-2026 rows that name the ven
     assertRowCarriesCode(rowNaming(page, "Railway"), activeCodeFiledUnder("Railway"));
   });
 
-  it("links the Vultr row with the vultr.com sign-up code filed under Vultr DNS", () => {
-    const code = activeCodeFiledUnder("Vultr DNS");
+  it("links the Vultr row with the vultr.com sign-up code filed under Vultr", () => {
+    const code = activeCodeFiledUnder("Vultr");
     assert.strictEqual(new URL(code.referral_url).hostname, "www.vultr.com");
     assertRowCarriesCode(rowNaming(page, "Vultr"), code);
+  });
+
+  it("still links the Vultr row when the code is filed under another listing whose sign-up link is on vultr.com", () => {
+    assertRowCarriesCode(rowNaming(withVultrFiledUnderItsDnsListing, "Vultr"), activeCodeFiledUnder("Vultr"));
+  });
+
+  it("links the Linode/Akamai row with a code filed under Akamai Cloud, the listing the row reads", () => {
+    assertRowCarriesCode(rowNaming(withACodeFiledUnderAkamaiCloud, "Linode/Akamai"), AKAMAI_CLOUD_FIXTURE_CODE);
+    assert.ok(!rowNaming(page, "Linode/Akamai").includes("row-referral"), "with no such code the row carries no link");
   });
 
   it("links no row that names a vendor without a code of ours", () => {
@@ -125,7 +158,7 @@ describe("our referral links on the /hetzner-pricing-2026 rows that name the ven
 
   it("never prints an inactive code", () => {
     const inactiveUrls = STORE.platform_codes.filter((c: any) => !c.active).map((c: any) => c.referral_url);
-    const vultrUrls = STORE.platform_codes.filter((c: any) => c.vendor === "Vultr DNS").map((c: any) => c.referral_url);
+    const vultrUrls = STORE.platform_codes.filter((c: any) => c.vendor === "Vultr").map((c: any) => c.referral_url);
     for (const url of inactiveUrls) assert.ok(!page.includes(asPageText(url)), `${url} is inactive`);
     for (const url of vultrUrls) assert.ok(!withRailwayRemovedAndVultrInactive.includes(asPageText(url)), `${url} was made inactive`);
   });
@@ -150,7 +183,7 @@ const GUIDE_TABLES_NAMING_A_CODE_HOLDER = [
   { route: "/aws-free-tier-2026", from: '<h2 id="alternatives">', to: '<h2 id="changes">', linked: { Railway: "Railway" } },
   { route: "/gcp-free-tier-2026", from: '<h2 id="alternatives">', to: '<h2 id="changes">', linked: { Railway: "Railway" } },
   { route: "/azure-free-tier-2026", from: '<h2 id="alternatives">', to: '<h2 id="startups">', linked: { Railway: "Railway" } },
-  { route: "/digitalocean-free-tier-2026", from: '<h2 id="alternatives">', to: '<h2 id="startups">', linked: { Railway: "Railway", Vultr: "Vultr DNS" } },
+  { route: "/digitalocean-free-tier-2026", from: '<h2 id="alternatives">', to: '<h2 id="startups">', linked: { Railway: "Railway", Vultr: "Vultr" } },
   { route: "/google-developer-program-2026", from: '<h2 id="cloud-alts">', to: '<h2 id="ai-alts">', linked: { Railway: "Railway" } },
   { route: "/hosting-free-tier-comparison-2026", from: '<h2 id="main-comparison">', to: '<h2 id="frontend-jamstack">', linked: { Railway: "Railway" } },
 ] as const;
@@ -199,7 +232,7 @@ describe("our referral links on the guide rows that name Railway or Vultr", () =
     writeFileSync(removedOrInactive, JSON.stringify({
       platform_codes: STORE.platform_codes
         .filter((c: any) => c.vendor !== "Railway")
-        .map((c: any) => (c.vendor === "Vultr DNS" ? { ...c, active: false } : c)),
+        .map((c: any) => (c.vendor === "Vultr" ? { ...c, active: false } : c)),
     }));
     const none = path.join(scratch, "none.json");
     writeFileSync(none, JSON.stringify({ platform_codes: [] }));
@@ -267,7 +300,7 @@ describe("our referral links on the guide rows that name Railway or Vultr", () =
       ...GUIDE_TABLES_NAMING_A_CODE_HOLDER.flatMap(table =>
         Object.entries(table.linked).map(([vendor, filedUnder]) => ({ row: rowOf(served.get(table.route)!, table, vendor), code: activeCodeFiledUnder(filedUnder) }))),
       { row: rowNaming(served.get("/hetzner-pricing-2026")!, "Railway"), code: activeCodeFiledUnder("Railway") },
-      { row: rowNaming(served.get("/hetzner-pricing-2026")!, "Vultr"), code: activeCodeFiledUnder("Vultr DNS") },
+      { row: rowNaming(served.get("/hetzner-pricing-2026")!, "Vultr"), code: activeCodeFiledUnder("Vultr") },
     ];
     for (const { row, code } of linkedRows) {
       assert.ok(row.includes('class="row-referral"'), `${vendorNamedBy(row)}'s row should carry our referral link`);

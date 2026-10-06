@@ -89,6 +89,7 @@ import { clauseNaming } from "./quoted-figures.js";
 import { figureProvenanceAgainst, statementsWeHold } from "./figure-provenance.js";
 import { statesNoFreeTier } from "./retired-terms.js";
 import { countsDownTo, shutdownDeadlineHtml } from "./shutdown-deadline.js";
+import { forecastShutdownsWithoutACard, whatEnds, type RecordACardCovers } from "./forecast-shutdowns.js";
 import { createRegistrationLimiter, rateLimitHeaders } from "./rate-limit.js";
 import { offerForSlug, vendorRates, cheapestRate, dearestRate, spanOfRates, formatRate, formatRateSpan, monthlyTokenCost, formatDollars, type ModelRate } from "./model-rates.js";
 import { DECLARED_FIGURE_READS, READ_DATES_THAT_ARE_NOT_FIGURE_READS, STALE_FACT_PAGES_BASELINE, TABLE_STALENESS_DISCLOSURES, declaredFigureReadsFor, factsOutdatedBy, linkifyVerdictBlocks, newestChangeBySlug, overdueReport, pageCompiledClause, pageDataProvenance, pageDateModified, pageFigureSource, tabulatedVendorSlots, tabulatedVendors, utcToday, verdictsOutdatedBy } from "./page-reviews.js";
@@ -1041,12 +1042,15 @@ export function changeLogFreshnessNote(now: Date = new Date()): string {
 const today = new Date().toISOString().slice(0, 10);
 const hasAlreadyTakenEffect = (c: { date: string }) => c.date <= today;
 
-const recentChanges = changesTheVendorMade(dealChanges)
-  .filter(isEventDated)
-  .filter(hasAlreadyTakenEffect)
-  .filter(changeTouchesTheListing)
-  .sort((a, b) => b.date.localeCompare(a.date))
-  .slice(0, RECENT_CHANGES_ON_THE_HOME_PAGE);
+function newestChangesInEffect<T extends DealChange>(changes: readonly T[]): T[] {
+  return changes
+    .filter(isEventDated)
+    .filter(hasAlreadyTakenEffect)
+    .filter(changeTouchesTheListing)
+    .sort((a, b) => b.date.localeCompare(a.date));
+}
+
+const recentChanges = newestChangesInEffect(changesTheVendorMade(dealChanges)).slice(0, RECENT_CHANGES_ON_THE_HOME_PAGE);
 
 const upcomingDeadlines = changesTheVendorMade(dealChanges)
   .filter((c) => !hasAlreadyTakenEffect(c))
@@ -10267,7 +10271,7 @@ function buildAiFreeTiersPage(): string {
   const mlOfferedToday = enrichedMl.filter(o => !listingHasEnded(o));
 
   const aiChangeVendors = ["Google Gemini", "OpenAI", "Cursor", "GitHub Copilot", "Google Gemini 2.0 Flash", "Cloudflare Workers AI"];
-  const aiChanges = changesTheVendorMade(dealChanges).filter(c => aiChangeVendors.some(v => c.vendor.includes(v)));
+  const aiChanges = newestChangesInEffect(changesTheVendorMade(dealChanges).filter(c => aiChangeVendors.some(v => c.vendor.includes(v))));
   const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
 
   const llmInference = mlOfferedToday.filter(o =>
@@ -10522,7 +10526,7 @@ function buildHostingAlternativesPage(): string {
   }).join("\n");
 
   const hostingChangeVendors = ["Railway", "Render", "Fly.io", "Heroku", "Vercel", "Hetzner", "Netlify", "Cloudflare", "Koyeb", "Oracle Cloud", "DigitalOcean"];
-  const hostingChanges = changesTheVendorMade(dealChanges).filter(c => hostingChangeVendors.some(v => c.vendor.includes(v)));
+  const hostingChanges = newestChangesInEffect(changesTheVendorMade(dealChanges).filter(c => hostingChangeVendors.some(v => c.vendor.includes(v))));
   const changesHtml = hostingChanges.length > 0 ? `
   <div class="context-box" style="border-left:3px solid ${riskColors.caution}">
     <div style="font-weight:600;color:${riskColors.caution};margin-bottom:.5rem">Recent Hosting Pricing Changes</div>
@@ -10866,7 +10870,7 @@ function buildDatabaseAlternativesPage(): string {
   }).join("\n");
 
   const dbChangeVendors = ["MongoDB Atlas", "Redis Cloud", "Firebase", "Supabase", "Neon", "Turso", "Upstash", "CockroachDB"];
-  const dbChanges = changesTheVendorMade(dealChanges).filter(c => dbChangeVendors.some(v => c.vendor.includes(v)));
+  const dbChanges = newestChangesInEffect(changesTheVendorMade(dealChanges).filter(c => dbChangeVendors.some(v => c.vendor.includes(v))));
   const changesHtml = dbChanges.length > 0 ? `
   <div class="context-box" style="border-left:3px solid ${riskColors.caution}">
     <div style="font-weight:600;color:${riskColors.caution};margin-bottom:.5rem">Recent Database Pricing Changes</div>
@@ -11200,7 +11204,7 @@ function buildMonitoringAlternativesPage(): string {
   }).join("\n");
 
   const monitoringChangeVendors = ["Datadog", "New Relic", "Sentry", "Freshping", "Grafana", "BetterStack", "Rollbar", "Bugsnag", "PagerDuty"];
-  const monitoringChanges = changesTheVendorMade(dealChanges).filter(c => monitoringChangeVendors.some(v => c.vendor.includes(v)));
+  const monitoringChanges = newestChangesInEffect(changesTheVendorMade(dealChanges).filter(c => monitoringChangeVendors.some(v => c.vendor.includes(v))));
   const changesHtml = monitoringChanges.length > 0 ? `
   <div class="context-box" style="border-left:3px solid ${riskColors.caution}">
     <div style="font-weight:600;color:${riskColors.caution};margin-bottom:.5rem">Recent Monitoring Pricing Changes</div>
@@ -11529,7 +11533,7 @@ function buildCiCdAlternativesPage(): string {
   }).join("\n");
 
   const cicdChangeVendors = ["GitHub Actions", "GitLab", "CircleCI", "Buildkite", "Harness", "Bitrise", "Codefresh"];
-  const cicdChanges = changesTheVendorMade(dealChanges).filter(c => cicdChangeVendors.some(v => c.vendor.includes(v)));
+  const cicdChanges = newestChangesInEffect(changesTheVendorMade(dealChanges).filter(c => cicdChangeVendors.some(v => c.vendor.includes(v))));
   const changesHtml = cicdChanges.length > 0 ? `
   <div class="context-box" style="border-left:3px solid ${riskColors.caution}">
     <div style="font-weight:600;color:${riskColors.caution};margin-bottom:.5rem">Recent CI/CD Pricing Changes</div>
@@ -11845,7 +11849,7 @@ function buildSecurityAlternativesPage(): string {
   }).join("\n");
 
   const secChangeVendors = ["Snyk", "Auth0", "GitGuardian", "SonarCloud", "Trivy", "Tailscale", "HashiCorp", "Clerk", "Sentry"];
-  const secChanges = changesTheVendorMade(dealChanges).filter(c => secChangeVendors.some(v => c.vendor.includes(v)));
+  const secChanges = newestChangesInEffect(changesTheVendorMade(dealChanges).filter(c => secChangeVendors.some(v => c.vendor.includes(v))));
   const changesHtml = secChanges.length > 0 ? `
   <div class="context-box" style="border-left:3px solid ${riskColors.caution}">
     <div style="font-weight:600;color:${riskColors.caution};margin-bottom:.5rem">Recent Security Tool Pricing Changes</div>
@@ -12183,7 +12187,7 @@ function buildTestingAlternativesPage(): string {
   }).join("\n");
 
   const testingChangeVendors = ["Cypress", "Postman", "LocalStack", "BrowserStack", "Sauce Labs", "Chromatic"];
-  const testingChanges = changesTheVendorMade(dealChanges).filter(c => testingChangeVendors.some(v => c.vendor.includes(v)));
+  const testingChanges = newestChangesInEffect(changesTheVendorMade(dealChanges).filter(c => testingChangeVendors.some(v => c.vendor.includes(v))));
   const changesHtml = testingChanges.length > 0 ? `
   <div class="context-box" style="border-left:3px solid ${riskColors.caution}">
     <div style="font-weight:600;color:${riskColors.caution};margin-bottom:.5rem">Recent Testing Tool Pricing Changes</div>
@@ -12505,7 +12509,7 @@ function buildStorageAlternativesPage(): string {
   }).join("\n");
 
   const storageChangeVendors = ["Cloudflare", "Backblaze", "Cloudinary", "ImageKit", "Google Cloud", "Tigris", "Fastly"];
-  const storageChanges = changesTheVendorMade(dealChanges).filter(c => storageChangeVendors.some(v => c.vendor.includes(v)));
+  const storageChanges = newestChangesInEffect(changesTheVendorMade(dealChanges).filter(c => storageChangeVendors.some(v => c.vendor.includes(v))));
   const changesHtml = storageChanges.length > 0 ? `
   <div class="context-box" style="border-left:3px solid ${riskColors.caution}">
     <div style="font-weight:600;color:${riskColors.caution};margin-bottom:.5rem">Recent Storage Pricing Changes</div>
@@ -12818,7 +12822,7 @@ function buildAnalyticsAlternativesPage(): string {
   }).join("\n");
 
   const analyticsChangeVendors = ["PostHog", "Amplitude", "Mixpanel", "Plausible", "Umami", "Google Analytics", "Segment", "Tinybird", "Hotjar"];
-  const analyticsChanges = changesTheVendorMade(dealChanges).filter(c => analyticsChangeVendors.some(v => c.vendor.includes(v)));
+  const analyticsChanges = newestChangesInEffect(changesTheVendorMade(dealChanges).filter(c => analyticsChangeVendors.some(v => c.vendor.includes(v))));
   const changesHtml = analyticsChanges.length > 0 ? `
   <div class="context-box" style="border-left:3px solid ${riskColors.caution}">
     <div style="font-weight:600;color:${riskColors.caution};margin-bottom:.5rem">Recent Analytics Pricing Changes</div>
@@ -13136,7 +13140,7 @@ function buildAiMlAlternativesPage(): string {
   }).join("\n");
 
   const aiChangeVendors = ["OpenAI", "Anthropic", "Google Gemini", "Mistral", "Groq", "GitHub Copilot", "Cursor", "Windsurf", "Cerebras"];
-  const aiChanges = changesTheVendorMade(dealChanges).filter(c => aiChangeVendors.some(v => c.vendor.includes(v)));
+  const aiChanges = newestChangesInEffect(changesTheVendorMade(dealChanges).filter(c => aiChangeVendors.some(v => c.vendor.includes(v))));
   const changesHtml = aiChanges.length > 0 ? `
   <div class="context-box" style="border-left:3px solid ${riskColors.caution}">
     <div style="font-weight:600;color:${riskColors.caution};margin-bottom:.5rem">Recent AI/ML Pricing Changes</div>
@@ -13452,7 +13456,7 @@ function buildEmailAlternativesPage(): string {
   }).join("\n");
 
   const emailChangeVendors = ["SendGrid", "Mailchimp", "Resend", "Brevo", "Postmark", "Mailjet"];
-  const emailChanges = changesTheVendorMade(dealChanges).filter(c => emailChangeVendors.some(v => c.vendor.includes(v)));
+  const emailChanges = newestChangesInEffect(changesTheVendorMade(dealChanges).filter(c => emailChangeVendors.some(v => c.vendor.includes(v))));
   const changesHtml = emailChanges.length > 0 ? `
   <div class="context-box" style="border-left:3px solid ${riskColors.caution}">
     <div style="font-weight:600;color:${riskColors.caution};margin-bottom:.5rem">Recent Email Tool Pricing Changes</div>
@@ -13786,7 +13790,7 @@ function buildDesignAlternativesPage(): string {
   }).join("\n");
 
   const designChangeVendors = ["Figma", "Canva", "Penpot", "Webflow", "Framer", "Lucide"];
-  const designChanges = changesTheVendorMade(dealChanges).filter(c => designChangeVendors.some(v => c.vendor.includes(v)));
+  const designChanges = newestChangesInEffect(changesTheVendorMade(dealChanges).filter(c => designChangeVendors.some(v => c.vendor.includes(v))));
   const changesHtml = designChanges.length > 0 ? `
   <div class="context-box" style="border-left:3px solid ${riskColors.caution}">
     <div style="font-weight:600;color:${riskColors.caution};margin-bottom:.5rem">Recent Design Tool Pricing Changes</div>
@@ -14124,7 +14128,7 @@ function buildProjectManagementAlternativesPage(): string {
   }).join("\n");
 
   const pmChangeVendors = ["Linear", "Atlassian", "Asana", "Trello", "ClickUp", "Notion", "Jira", "Slack"];
-  const pmChanges = changesTheVendorMade(dealChanges).filter(c => pmChangeVendors.some(v => c.vendor.includes(v)));
+  const pmChanges = newestChangesInEffect(changesTheVendorMade(dealChanges).filter(c => pmChangeVendors.some(v => c.vendor.includes(v))));
   const changesHtml = pmChanges.length > 0 ? `
   <div class="context-box" style="border-left:3px solid ${riskColors.caution}">
     <div style="font-weight:600;color:${riskColors.caution};margin-bottom:.5rem">Recent PM Tool Pricing Changes</div>
@@ -14453,7 +14457,7 @@ function buildIdeCodeEditorsAlternativesPage(): string {
   }).join("\n");
 
   const ideChangeVendors = ["GitHub Copilot", "Cursor", "Windsurf", "Devin", "Replit", "JetBrains", "VS Code"];
-  const ideChanges = changesTheVendorMade(dealChanges).filter(c => ideChangeVendors.some(v => c.vendor.includes(v)));
+  const ideChanges = newestChangesInEffect(changesTheVendorMade(dealChanges).filter(c => ideChangeVendors.some(v => c.vendor.includes(v))));
   const changesHtml = ideChanges.length > 0 ? `
   <div class="context-box" style="border-left:3px solid ${riskColors.caution}">
     <div style="font-weight:600;color:${riskColors.caution};margin-bottom:.5rem">Recent IDE & AI Coding Pricing Changes</div>
@@ -14801,7 +14805,7 @@ function buildFreeLlmApisPage(): string {
       </tr>`).join("\n      ");
 
   const llmChangeVendors = ["OpenAI", "Anthropic", "Google Gemini", "Mistral", "Groq", "Cerebras", "Cohere", "xAI"];
-  const llmChanges = changesTheVendorMade(dealChanges).filter(c => llmChangeVendors.some(v => c.vendor.includes(v)));
+  const llmChanges = newestChangesInEffect(changesTheVendorMade(dealChanges).filter(c => llmChangeVendors.some(v => c.vendor.includes(v))));
   const changesHtml = llmChanges.length > 0 ? `
   <div class="context-box" style="border-left:3px solid ${riskColors.caution}">
     <div style="font-weight:600;color:${riskColors.caution};margin-bottom:.5rem">Recent LLM API Pricing Changes</div>
@@ -15023,7 +15027,7 @@ function buildApiDevelopmentAlternativesPage(): string {
   }).join("\n");
 
   const apiChangeVendors = ["Postman", "Hoppscotch", "Insomnia", "RapidAPI", "Swagger", "Mintlify"];
-  const apiChanges = changesTheVendorMade(dealChanges).filter(c => apiChangeVendors.some(v => c.vendor.includes(v)));
+  const apiChanges = newestChangesInEffect(changesTheVendorMade(dealChanges).filter(c => apiChangeVendors.some(v => c.vendor.includes(v))));
   const changesHtml = apiChanges.length > 0 ? `
   <div class="context-box" style="border-left:3px solid ${riskColors.caution}">
     <div style="font-weight:600;color:${riskColors.caution};margin-bottom:.5rem">Recent API Tool Pricing Changes</div>
@@ -15339,7 +15343,7 @@ function buildTeamCollaborationAlternativesPage(): string {
   }).join("\n");
 
   const collabChangeVendors = ["Slack", "Discord", "Zoom", "Notion", "Jitsi", "Webex", "Loom"];
-  const collabChanges = changesTheVendorMade(dealChanges).filter(c => collabChangeVendors.some(v => c.vendor.includes(v)));
+  const collabChanges = newestChangesInEffect(changesTheVendorMade(dealChanges).filter(c => collabChangeVendors.some(v => c.vendor.includes(v))));
   const changesHtml = collabChanges.length > 0 ? `
   <div class="context-box" style="border-left:3px solid ${riskColors.caution}">
     <div style="font-weight:600;color:${riskColors.caution};margin-bottom:.5rem">Recent Collaboration Tool Pricing Changes</div>
@@ -15705,7 +15709,7 @@ function buildFreeStartupStackPage(): string {
   };
 
   const stackVendors = stackCategories.flatMap(c => [c.recommended.vendor, ...c.alternatives]);
-  const stackChanges = changesTheVendorMade(dealChanges).filter(c => stackVendors.some(v => c.vendor.includes(v)));
+  const stackChanges = newestChangesInEffect(changesTheVendorMade(dealChanges).filter(c => stackVendors.some(v => c.vendor.includes(v))));
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -15996,7 +16000,7 @@ function buildFreeAiStackPage(): string {
   };
 
   const stackVendors = stackCategories.flatMap(c => [c.recommended.vendor, ...c.alternatives]);
-  const stackChanges = changesTheVendorMade(dealChanges).filter(c => stackVendors.some(v => c.vendor.includes(v)));
+  const stackChanges = newestChangesInEffect(changesTheVendorMade(dealChanges).filter(c => stackVendors.some(v => c.vendor.includes(v))));
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -16324,7 +16328,7 @@ function buildFreeDevopsStackPage(): string {
   };
 
   const stackVendors = stackCategories.flatMap(c => [c.recommended.vendor, ...c.alternatives]);
-  const stackChanges = changesTheVendorMade(dealChanges).filter(c => stackVendors.some(v => c.vendor.includes(v)));
+  const stackChanges = newestChangesInEffect(changesTheVendorMade(dealChanges).filter(c => stackVendors.some(v => c.vendor.includes(v))));
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -16653,7 +16657,7 @@ function buildFreeFrontendStackPage(): string {
   };
 
   const stackVendors = stackCategories.flatMap(c => [c.recommended.vendor, ...c.alternatives]);
-  const stackChanges = changesTheVendorMade(dealChanges).filter(c => stackVendors.some(v => c.vendor.includes(v)));
+  const stackChanges = newestChangesInEffect(changesTheVendorMade(dealChanges).filter(c => stackVendors.some(v => c.vendor.includes(v))));
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -16992,7 +16996,7 @@ function buildFreeNextjsStackPage(): string {
   };
 
   const stackVendors = stackCategories.flatMap(c => [c.recommended.vendor, ...c.alternatives]);
-  const stackChanges = changesTheVendorMade(dealChanges).filter(c => stackVendors.some(v => c.vendor.includes(v)));
+  const stackChanges = newestChangesInEffect(changesTheVendorMade(dealChanges).filter(c => stackVendors.some(v => c.vendor.includes(v))));
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -17366,7 +17370,7 @@ function buildFreeDjangoStackPage(): string {
     const v = c.recommended.vendor;
     return v === "Django Built-in Auth" ? [...c.alternatives] : [v, ...c.alternatives];
   });
-  const stackChanges = changesTheVendorMade(dealChanges).filter(c => stackVendors.some(v => c.vendor.includes(v)));
+  const stackChanges = newestChangesInEffect(changesTheVendorMade(dealChanges).filter(c => stackVendors.some(v => c.vendor.includes(v))));
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -17774,7 +17778,7 @@ function buildFreeFastapiStackPage(): string {
     const v = c.recommended.vendor;
     return v === "FastAPI Built-in" ? [...c.alternatives] : [v, ...c.alternatives];
   });
-  const stackChanges = changesTheVendorMade(dealChanges).filter(c => stackVendors.some(v => c.vendor.includes(v)));
+  const stackChanges = newestChangesInEffect(changesTheVendorMade(dealChanges).filter(c => stackVendors.some(v => c.vendor.includes(v))));
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -18199,7 +18203,7 @@ function buildFreeGoStackPage(): string {
     const v = c.recommended.vendor;
     return (v === "Go Goroutines" || v === "swaggo/swag") ? [...c.alternatives] : [v, ...c.alternatives];
   });
-  const stackChanges = changesTheVendorMade(dealChanges).filter(c => stackVendors.some(v => c.vendor.includes(v)));
+  const stackChanges = newestChangesInEffect(changesTheVendorMade(dealChanges).filter(c => stackVendors.some(v => c.vendor.includes(v))));
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -18632,7 +18636,7 @@ function buildFreeSaasStackPage(): string {
     const v = c.recommended.vendor;
     return (v === "Next.js" || v === "Stripe") ? [...c.alternatives] : [v, ...c.alternatives];
   });
-  const stackChanges = changesTheVendorMade(dealChanges).filter(c => stackVendors.some(v => c.vendor.includes(v)));
+  const stackChanges = newestChangesInEffect(changesTheVendorMade(dealChanges).filter(c => stackVendors.some(v => c.vendor.includes(v))));
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -19043,9 +19047,9 @@ function buildHetznerPricing2026Page(): string {
     { vendor: "Hetzner (cheapest orderable)", spec: `${cheapestOrderable.sku} — ${cheapestOrderable.vcpu} vCPU, ${cheapestOrderable.ram} GB`, price: `${eur(cheapestOrderable.eur)}/mo`, region: cheapestOrderable.region, note: "Cost-Optimized line unavailable" },
     { vendor: "DigitalOcean", spec: "Basic — 1 vCPU, 512 MB", price: "$4/mo", region: "Global", note: "" },
     { vendor: "Vultr", spec: "Cloud — 1 vCPU, 1 GB", price: "$5/mo", region: "Global", note: "Free instance (1 vCPU, 512 MB, 10 GB SSD) for accepted applicants, in Miami, Seattle and Frankfurt" },
-    { vendor: "Linode/Akamai", spec: "Nanode — 1 vCPU, 1 GB", price: "$5/mo", region: "Global", note: "" },
+    { vendor: "Linode/Akamai", listedAs: "Akamai Cloud", spec: "Nanode — 1 vCPU, 1 GB", price: "$5/mo", region: "Global", note: "" },
     { vendor: "OVHcloud", spec: "VPS-1 — 2 vCores, 4 GB", price: "€4.49/mo", region: "EU", note: "VPS 2027 range, ex-VAT, without commitment (€3.81/mo on 12 months). $5.35/mo in the US. The 2026 range rose 36-49% from April 2026" },
-    { vendor: "AWS Lightsail", spec: "2 vCPUs, 512 MB", price: "$5/mo", region: "US", note: "The $3.50 bundle is IPv6-only; every other row here has a public IPv4 address" },
+    { vendor: "AWS Lightsail", listedAs: "Amazon Lightsail", spec: "2 vCPUs, 512 MB", price: "$5/mo", region: "US", note: "The $3.50 bundle is IPv6-only; every other row here has a public IPv4 address" },
     { vendor: "Oracle Cloud", spec: oracleArmAllowance(), price: "Free (Always Free)", region: "Global", note: "Best free tier for VMs" },
     { vendor: "Railway", spec: "Free Plan", price: "$0/mo", region: "US", note: "30-day trial with $5 credits, then $1 of free credit a month" },
     { vendor: "Render", spec: "Free Tier", price: "Free (750h/mo)", region: "US", note: "Auto-sleep on free tier" },
@@ -19053,20 +19057,21 @@ function buildHetznerPricing2026Page(): string {
   ];
 
   const altTableRows = competitorPricing.map(c => {
-    const vendorSlug = toSlug(c.vendor.replace(/ \(.*\)/, ""));
+    const listedAs = c.listedAs ?? c.vendor;
+    const vendorSlug = toSlug(listedAs.replace(/ \(.*\)/, ""));
     const isHetzner = c.vendor.startsWith("Hetzner");
     return `<tr${isHetzner ? ` style="background:var(--accent-glow)"` : ""}>
       <td style="font-weight:600">${isHetzner ? escHtmlServer(c.vendor) : `${handwrittenVendorLinkHtml(vendorSlug, c.vendor, ' style="color:var(--text)"')}`}</td>
       <td style="font-family:var(--mono);font-size:.85rem">${escHtmlServer(c.spec)}</td>
       <td style="font-family:var(--mono);font-weight:600;color:var(--accent)">${escHtmlServer(c.price)}</td>
       <td>${escHtmlServer(c.region)}</td>
-      <td style="color:var(--text-muted);font-size:.85rem">${escHtmlServer(c.note)}${isHetzner ? "" : guideRowReferralHtml(c.vendor)}</td>
-      <td class="figure-provenance" style="color:var(--text-muted);font-size:.85rem">${isHetzner ? hetznerReadProvenanceHtml() : figureProvenanceHtml(`${c.spec} ${c.price}`, c.vendor, vendorSlug)}</td>
+      <td style="color:var(--text-muted);font-size:.85rem">${escHtmlServer(c.note)}${isHetzner ? "" : guideRowReferralHtml(listedAs)}</td>
+      <td class="figure-provenance" style="color:var(--text-muted);font-size:.85rem">${isHetzner ? hetznerReadProvenanceHtml() : figureProvenanceHtml(`${c.spec} ${c.price}`, listedAs, vendorSlug)}</td>
     </tr>`;
   }).join("\n        ");
 
   const handTypedAlternativeRowCount = competitorPricing.filter(
-    c => !c.vendor.startsWith("Hetzner") && figureProvenance(`${c.spec} ${c.price}`, c.vendor) !== null,
+    c => !c.vendor.startsWith("Hetzner") && figureProvenance(`${c.spec} ${c.price}`, c.listedAs ?? c.vendor) !== null,
   ).length;
 
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
@@ -25792,16 +25797,17 @@ function buildShutdownTrackerPage(): string {
     what: string;
     deadline: string;
     dateSource?: string;
-    impact: string;
-    whoAffected: string;
-    migrationPath: string;
+    impact?: string;
+    whoAffected?: string;
+    migrationPath?: string;
     migrationLink?: string;
+    covers?: RecordACardCovers[];
     status: "active" | "imminent" | "completed";
   }
 
   const today = new Date();
 
-  const shutdowns: ShutdownEntry[] = [
+  const handTyped: ShutdownEntry[] = [
     {
       service: "AWS App Runner (New Customers)",
       vendorSlug: "aws",
@@ -25879,6 +25885,7 @@ function buildShutdownTrackerPage(): string {
       whoAffected: "Apps, bots, forums, and messaging integrations using Tenor for GIF search",
       migrationPath: "Migrate to Klipy or GIPHY; both offer Tenor-compatible v2 endpoints",
       migrationLink: "/tenor-alternatives",
+      covers: [{ vendor: "Google Tenor API", deadline: "2026-06-30" }],
       status: "active",
     },
     {
@@ -25947,6 +25954,7 @@ function buildShutdownTrackerPage(): string {
       impact: "After 2027-03-31 the devices stop working: they cannot connect to Amazon WorkSpaces or be managed in the console. Until then existing customers can use them as normal and can still buy devices.",
       whoAffected: "Teams that reach Amazon WorkSpaces through WorkSpaces Thin Client devices",
       migrationPath: "Replace the devices with a partner thin client that supports Amazon WorkSpaces (AWS names Dell) or another supported device. The WorkSpaces themselves keep working.",
+      covers: [{ vendor: "AWS", deadline: "2026-04-20" }],
       status: "active",
     },
     {
@@ -26006,6 +26014,17 @@ function buildShutdownTrackerPage(): string {
     },
   ];
 
+  const recordedOnly: ShutdownEntry[] = forecastShutdownsWithoutACard(dealChanges, handTyped).map(({ record, vendorPage, deadline }) => ({
+    service: whatEnds(record) ?? (vendorPage === null ? null : recordNamedBySlug(vendorPage)) ?? record.vendor,
+    vendorSlug: vendorPage ?? toSlug(record.vendor),
+    what: record.summary,
+    deadline,
+    dateSource: record.source_url,
+    status: "active",
+  }));
+
+  const shutdowns: ShutdownEntry[] = [...handTyped, ...recordedOnly];
+
   shutdowns.sort((a, b) => new Date(a.deadline).getTime() - new Date(b.deadline).getTime());
 
   const imminent: ShutdownEntry[] = [];
@@ -26059,6 +26078,8 @@ function buildShutdownTrackerPage(): string {
       p.primaryVendor.toLowerCase() === (vendorOffer?.vendor ?? "").toLowerCase() ||
       p.slug.includes(s.vendorSlug)
     );
+    const details = ([["Who\u2019s affected", s.whoAffected], ["Impact", s.impact], ["Migration path", s.migrationPath]] as [string, string | undefined][])
+      .flatMap(([label, value]) => value === undefined ? [] : [[label, value] as const]);
 
     return `<div class="shutdown-card" style="border-left-color:${color}">
       <div class="shutdown-header">
@@ -26069,11 +26090,9 @@ function buildShutdownTrackerPage(): string {
         <div class="stability-badge" style="color:${stabColor}">${escHtmlServer(stability.toUpperCase())}</div>
       </div>
       <p class="shutdown-what">${escHtmlServer(s.what)}</p>
-      <div class="shutdown-details">
-        <div class="detail-row"><span class="detail-label">Who\u2019s affected:</span> <span>${escHtmlServer(s.whoAffected)}</span></div>
-        <div class="detail-row"><span class="detail-label">Impact:</span> <span>${escHtmlServer(s.impact)}</span></div>
-        <div class="detail-row"><span class="detail-label">Migration path:</span> <span>${escHtmlServer(s.migrationPath)}</span></div>
-      </div>
+      ${details.length === 0 ? "" : `<div class="shutdown-details">
+        ${details.map(([label, value]) => `<div class="detail-row"><span class="detail-label">${label}:</span> <span>${escHtmlServer(value)}</span></div>`).join("\n        ")}
+      </div>`}
       <div class="shutdown-links">
         ${servedVendorSlug(s.vendorSlug) === null ? "" : `<a href="/vendor/${escHtmlServer(s.vendorSlug)}">Vendor profile \u2192</a>`}
         ${s.migrationLink ? `<a href="${s.migrationLink}">Migration guide \u2192</a>` : ""}
@@ -26090,7 +26109,7 @@ function buildShutdownTrackerPage(): string {
     ${entries.map(s => buildShutdownCard(s)).join("\n    ")}`;
   }
 
-  const shutdownVendorSlugs = [...new Set(shutdowns.map(s => s.vendorSlug))];
+  const shutdownVendorSlugs = [...new Set(handTyped.map(s => s.vendorSlug))];
   const relevantChanges = changesTheVendorMade(dealChanges).filter(c =>
     shutdownVendorSlugs.some(slug => toSlug(c.vendor) === slug)
   ).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).slice(0, 10);
@@ -26221,7 +26240,7 @@ ${buildGlobalNav("guides")}
     escHtmlServer,
     ' class="subtitle dated-rule"',
   )}
-  <div class="pub-date">Published ${pubDate} &middot; ${activeCount} active shutdowns${nextDeadline ? ` &middot; Next deadline in ${nextDaysLeft} days` : ""} &middot; ${pageDataProvenance("/shutdowns", offers.length)}</div>
+  <div class="pub-date">Published ${pubDate} &middot; ${activeCount} active shutdowns${nextDeadline ? ` &middot; Next deadline in ${countedNoun(nextDaysLeft, "day")}` : ""} &middot; ${pageDataProvenance("/shutdowns", offers.length)}</div>
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number">${activeCount}</div><div class="stat-label">Active Shutdowns</div></div>
@@ -32969,7 +32988,7 @@ function buildAwsFreeTier2026Page(): string {
   const trialServices: AwsService[] = [
     { name: "Amazon SageMaker", slug: "aws", limits: "250 hrs/month ml.t3.medium for Studio notebooks (2 months)", category: "AI/ML" },
     { name: "Amazon Bedrock", slug: "aws", limits: "Select foundation models with limited free inference (varies by model)", category: "AI/ML" },
-    { name: "Amazon Lightsail", slug: "aws", limits: "750 hrs/month of 512 MB instance (3 months free)", category: "Hosting" },
+    { name: "Amazon Lightsail", slug: "aws", limits: "No free trial for new customers: AWS replaced Lightsail's 3-month free trials with the Free plan's credits, which pay for Lightsail like any other service (bundles from $3.50/month IPv6-only, $5/month with IPv4)", category: "Hosting", source: "https://docs.aws.amazon.com/lightsail/latest/userguide/amazon-lightsail-frequently-asked-questions-faq-billing-and-account-management.html" },
   ];
 
   interface GotchaItem {

@@ -321,15 +321,43 @@ describe("what /hetzner-pricing-2026 says costs nothing", () => {
 });
 
 describe("the notes in /hetzner-pricing-2026's alternatives table", () => {
-  it("gives the Linode row no note beside its hand-typed figures", async () => {
+  it("gives the Linode row no note beside the figures the Akamai Cloud record states", async () => {
     const text = visible((await get("/hetzner-pricing-2026")).body);
-    assert.ok(text.includes("Linode/Akamai Nanode — 1 vCPU, 1 GB $5/mo Global Hand-typed — we hold no record"));
+    assert.ok(text.includes("Linode/Akamai Nanode — 1 vCPU, 1 GB $5/mo Global Our record"));
   });
 
   it("says of no row that it has not been re-read since March 2026", async () => {
     const text = visible((await get("/hetzner-pricing-2026")).body);
     assert.doesNotMatch(text, /Not re-read since March 2026/);
   });
+});
+
+const alternativesRowLabelled = (body: string, label: string) => {
+  const section = body.slice(body.indexOf('<h2 id="alternatives">'), body.indexOf('<h2 id="industry">'));
+  const rows = [...section.matchAll(/<tr[\s>][\s\S]*?<\/tr>/g)]
+    .map(([row]) => row)
+    .filter(row => (row.match(/<td[^>]*>([\s\S]*?)<\/td>/)?.[1] ?? "").replace(/<[^>]+>/g, "").trim() === label);
+  assert.strictEqual(rows.length, 1, `section 6 should hold one ${label} row`);
+  return rows[0];
+};
+
+const linksIn = (markup: string) => [...markup.matchAll(/<a href="([^"]+)"/g)].map(([, href]) => href);
+
+describe("/hetzner-pricing-2026's Linode and Lightsail rows read the listings those vendors have", () => {
+  for (const [label, listing] of [["Linode/Akamai", "akamai-cloud"], ["AWS Lightsail", "amazon-lightsail"]]) {
+    it(`links the ${label} row's name and provenance to /vendor/${listing}`, async () => {
+      const row = alternativesRowLabelled((await get("/hetzner-pricing-2026")).body, label);
+      const [nameCell] = row.match(/<td[^>]*>[\s\S]*?<\/td>/) ?? [""];
+      const provenanceCell = row.match(/<td class="figure-provenance"[^>]*>([\s\S]*?)<\/td>/)?.[1] ?? "";
+      assert.deepStrictEqual(linksIn(nameCell), [`/vendor/${listing}`]);
+      assert.strictEqual(provenanceCell.replace(/<[^>]+>/g, "").trim(), "Our record");
+      assert.deepStrictEqual(linksIn(provenanceCell), [`/vendor/${listing}`]);
+    });
+
+    it(`answers 200 at /vendor/${listing}, the page the ${label} row links`, async () => {
+      assert.strictEqual((await get(`/vendor/${listing}`)).status, 200);
+    });
+  }
 });
 
 describe("why /hetzner-pricing-2026 says prices rose", () => {

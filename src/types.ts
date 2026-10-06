@@ -219,6 +219,7 @@ export interface DealChange {
   resolution?: ChangeResolution | null;
   source_check?: ChangeSourceCheck | null;
   discontinued_date?: string | null;
+  what_ends?: string | null;
   listing_effect?: import("./product-deprecation.js").DeprecationCall | null;
   archive_check?: ArchiveCheck | null;
 }

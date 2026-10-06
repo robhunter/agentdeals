@@ -116,8 +116,8 @@ describe("a submitted referral code cannot reach a served response", () => {
     const single = await (await fetch(`http://localhost:${serverPort}/api/referral-codes/railway`)).json();
     assert.strictEqual(single.code, "7RZL9q");
 
-    const vultr = listed.codes.find((c: any) => c.vendor === "Vultr DNS");
-    assert.ok(vultr, "Vultr DNS's code must still be served");
+    const vultr = listed.codes.find((c: any) => c.vendor === "Vultr");
+    assert.ok(vultr, "Vultr's code must still be served");
     assert.ok(vultr.restrictions.length > 0, "and with the conditions attached to it");
   });
 
