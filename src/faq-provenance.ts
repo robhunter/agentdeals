@@ -1,8 +1,14 @@
 import { compiledNotice, getPageReview, qualityBudget, readWithoutClearing, reviewStatus, utcToday, type PageReviewRecord } from "./page-reviews.js";
 
+export interface RecordProvenance {
+  vendor: string;
+  lastRead: string;
+}
+
 export interface FaqItem {
   q: string;
   a: string;
+  figuresFromRecord?: RecordProvenance;
 }
 
 export const FAQ_BASELINE = {
@@ -57,6 +63,12 @@ export function faqProvenanceClause(record: PageReviewRecord | null, today: stri
 
 export function pageFaqProvenanceClause(pagePath: string, today = utcToday()): string {
   return faqProvenanceClause(getPageReview(pagePath), today);
+}
+
+export function recordProvenanceClause(record: RecordProvenance): string {
+  return record.lastRead
+    ? `Figures from our ${record.vendor} record, last read ${record.lastRead}.`
+    : `Figures from our ${record.vendor} record.`;
 }
 
 const HTML_TAG = /<\/?[a-zA-Z][^>]*>/g;
@@ -119,7 +131,10 @@ export function faqPageJsonLd(pagePath: string, items: FaqItem[], today = utcTod
     mainEntity: items.map(item => ({
       "@type": "Question",
       name: item.q,
-      acceptedAnswer: { "@type": "Answer", text: answerWithProvenance(item.a, clause) },
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: answerWithProvenance(item.a, item.figuresFromRecord ? recordProvenanceClause(item.figuresFromRecord) : clause),
+      },
     })),
   };
 }

@@ -43,7 +43,8 @@ const STATED: Record<string, string[]> = {
     "Mistral's Free plan includes $10 a month in API credits",
     "For open models, SiliconFlow's international site lists gpt-oss-120b at $0.05/$0.45 and DeepSeek-V4.1-Flash at $0.15/$0.60 (per 1M tokens).",
     "Open-weight inference is cheap: Groq's free plan allows 200K tokens a day on each of its free chat models.",
-    "Anthropic cut Opus pricing 67% in November 2025.",
+    "Opus-class prices fell from $15/$75 per M tokens (Opus 4.1) to $5/$25 in November 2025 and $4/$20 with Opus 5.5",
+    "Groq's free plan offers gpt-oss-120b, gpt-oss-20b and Qwen3.8 27B.",
   ],
   "/groq-vs-hugging-face": [
     "Groq's free plan allows 30 RPM, 1,000 requests and 200K tokens a day per model.",
@@ -65,7 +66,14 @@ const STATED: Record<string, string[]> = {
 };
 
 const WITHDRAWN: Record<string, string[]> = {
-  "/llm-api-pricing": ["Groq and SiliconFlow serve", "Groq and Cerebras give away", "Opus pricing 67% in 2026"],
+  "/llm-api-pricing": [
+    "Groq and SiliconFlow serve",
+    "Groq and Cerebras give away",
+    "Opus pricing 67% in 2026",
+    "Frontier model pricing is in freefall",
+    "5-10x cheaper",
+    "Many apps work well with Llama 3.3 70B",
+  ],
   "/free-ai-stack": ["Cerebras (1M tokens/day) or OpenRouter", "500K tokens/day"],
   "/openai-assistants-migration-2026": ["Meta Llama (via Groq)", "Via Llama models"],
   "/groq-vs-mistral-ai": ["free token volume", "higher throughput ceiling", "the largest free token allowance"],
