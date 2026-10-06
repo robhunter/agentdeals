@@ -1,6 +1,7 @@
 import { CLIENT_CLASSES } from "./client-class.js";
 
 export const OUTBOUND_PATH_PREFIX = "/go/";
+export const OUTBOUND_LINK_REL = "nofollow noopener";
 export const OUTBOUND_STORE_KEY = "agentdeals:outbound";
 export const OUTBOUND_SCHEMA = 1;
 

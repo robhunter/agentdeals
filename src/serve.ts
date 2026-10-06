@@ -22,7 +22,7 @@ import { buildDailyRollup, readRollups, coverageOf, ROLLUP_DATE_PATTERN } from "
 import { AGENT_OPENS_WINDOW_DAYS, HOMEPAGE_GUIDE_COUNT, RANKED_TRAFFIC_CLASS, agentOpensByPath, agentOpensWindow, agentRequestAttribution, browseSectionSentence, completeDaysInWindow, guideSelectionSentence, guidesGroupedByHeading, opensDecidedPrefix, rankGuidesByAgentOpens, rankableDays } from "./homepage-routing.js";
 import { configureVendorSeries, recordVendorRequest, flushVendorSeries, readVendorSeries, vendorSeriesGauge, vendorExportAuthorized, isSeriesDate, seriesDateRange, VENDOR_SERIES_PATH, VENDOR_SERIES_RETENTION_DAYS, VENDOR_SERIES_NOTES } from "./vendor-series.js";
 import { openapiSpec } from "./openapi.js";
-import { OUTBOUND_PATH_PREFIX, configureOutboundStore, flushOutbound, loadOutbound, outboundByVendor, outboundPath, outboundSlug, outboundTotals, recordOutboundClick } from "./outbound.js";
+import { OUTBOUND_LINK_REL, OUTBOUND_PATH_PREFIX, configureOutboundStore, flushOutbound, loadOutbound, outboundByVendor, outboundPath, outboundSlug, outboundTotals, recordOutboundClick } from "./outbound.js";
 import { AGENT_CARD_PATHS, OPENAPI_ALIAS_PATHS, OPENAPI_CANONICAL_PATH, OPENAPI_YAML_PATH, serviceDescription, theDocumentWeAlreadyServe } from "./agent-card.js";
 import { CATEGORY_ALIASES, CATEGORY_RETIREMENTS, CHANGE_LOG_CATEGORY_NAMES, EXAMPLE_MEMBERS_BASIS, buildCategoryDirectory, categoryHolds, familySiblings, publishedScopeFor, resolveCategoryName, resolveChangeCategory, retiredCategoryNames, retirementFor, scopeFor } from "./category-scope.js";
 import { retiredCategoryDescription, retiredCategoryNoticeHtml, retiredCategoryTitle } from "./category-retirement.js";
@@ -1365,14 +1365,14 @@ function offerPricingLink(offer: OfferTierAndUrl & { vendor: string }, label: st
   if (!linksThroughOutbound(slug, offer.url)) {
     return `<a href="${escHtmlServer(offer.url)}" target="_blank" rel="noopener">${label}</a>`;
   }
-  return `<a href="${outboundPath(slug)}" target="_blank" rel="noopener">${escHtmlServer(urlHostAndPath(offer.url))} &nearr;</a>`;
+  return `<a href="${outboundPath(slug)}" target="_blank" rel="${OUTBOUND_LINK_REL}">${escHtmlServer(urlHostAndPath(offer.url))} &nearr;</a>`;
 }
 
 function pricingPageCardLink(slug: string, url: string): string {
   if (!linksThroughOutbound(slug, url)) {
     return `<a href="${escHtmlServer(url)}" rel="noopener" target="_blank">Visit &rarr;</a>`;
   }
-  return `<a href="${outboundPath(slug)}" rel="noopener" target="_blank" style="overflow-wrap:anywhere">${escHtmlServer(url)}</a>`;
+  return `<a href="${outboundPath(slug)}" rel="${OUTBOUND_LINK_REL}" target="_blank" style="overflow-wrap:anywhere">${escHtmlServer(url)}</a>`;
 }
 
 type BadgeStatus = "active" | "at-risk" | "stale" | "time-limited" | "removed" | "retired" | "withheld" | "unknown";

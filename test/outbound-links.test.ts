@@ -63,6 +63,7 @@ interface FoundLink {
   href: string;
   text: string;
   className: string | null;
+  rel: string | null;
 }
 
 describe("links through /go/ on every published page", () => {
@@ -79,7 +80,7 @@ describe("links through /go/ on every published page", () => {
         pages.set(route, html);
         for (const [, attributes, text] of html.matchAll(A_LINK)) {
           const href = attribute(attributes!, "href");
-          if (href !== null) links.push({ route, href, text: text!.trim(), className: attribute(attributes!, "class") });
+          if (href !== null) links.push({ route, href, text: text!.trim(), className: attribute(attributes!, "class"), rel: attribute(attributes!, "rel") });
         }
       }));
     }
@@ -111,6 +112,13 @@ describe("links through /go/ on every published page", () => {
       const shown = [escaped(destination), `${escaped(hostAndPath(destination))} &nearr;`];
       if (!destination || !shown.includes(link.text)) wrong.push(`${link.route}: ${link.href} shows "${link.text}"`);
     }
+    assert.deepStrictEqual(wrong.slice(0, 20), []);
+  });
+
+  it("marks every /go/ link nofollow noopener", () => {
+    const wrong = links
+      .filter(l => l.href.startsWith("/go/") && l.rel !== "nofollow noopener")
+      .map(l => `${l.route}: ${l.href} rel="${l.rel}"`);
     assert.deepStrictEqual(wrong.slice(0, 20), []);
   });
 
