@@ -3120,11 +3120,11 @@
       "changed": "2026-10-06"
     },
     "/free-django-stack": {
-      "hash": "172c6323479174ea",
+      "hash": "4e419124822b45ef",
       "changed": "2026-10-06"
     },
     "/free-fastapi-stack": {
-      "hash": "33cadd6cdb49f561",
+      "hash": "f3d64a29b1c1557c",
       "changed": "2026-10-06"
     },
     "/free-frontend-stack": {
@@ -3132,7 +3132,7 @@
       "changed": "2026-10-06"
     },
     "/free-go-stack": {
-      "hash": "d671fa28d42eb7b3",
+      "hash": "bdf88cab0c68662f",
       "changed": "2026-10-06"
     },
     "/free-llm-apis": {
@@ -3144,7 +3144,7 @@
       "changed": "2026-10-06"
     },
     "/free-saas-stack": {
-      "hash": "a26944a0e340c118",
+      "hash": "6cd03a03ad5747fa",
       "changed": "2026-10-06"
     },
     "/free-startup-stack": {
