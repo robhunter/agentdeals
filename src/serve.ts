@@ -53,6 +53,7 @@ import { COMPARED_SERVICES_PLACEHOLDER, appendToCompiledFigureSlots, fillCompare
 import { CHECK_ESTABLISHES, CHECK_SCOPE_CLASS, NO_CATALOGUE_RECORD_SOURCE, NO_FETCHABLE_PAGE_STATES_THE_ROW, catalogueMarkersOffRowsNoFetchablePageStates, citedSourcesListHtml, figureSourceLinkHtml, recordSourcesOffRowsThatCiteTheirOwn, freeTierSourceOf, freeTierSourceWeMayCite, freePlanExcerptHtml, pageQuoteHtml, readClauseHtml, readSourceOf, serviceSourceMarkerHtml, uncitedSourceTagHtml, withCitedSources, type CitedService, type FreeTierSource } from "./source-citation.js";
 import { vendorHistorySentence } from "./vendor-history.js";
 import { guideBlurb } from "./guide-blurbs.js";
+import { MODEL_BELIEFS_CLOSING, MODEL_BELIEFS_HEADING, MODEL_BELIEFS_PATH, MODEL_BELIEFS_RERUN_SENTENCE, MODEL_BELIEFS_SLUG, MODEL_BELIEFS_TITLE, MOSTLY_OLD_ANSWERS, QUOTED_MODEL_BELIEFS_CLASS, answersFor, answersPerFact, answersPerModel, changedLabel, factsByOldAnswers, findingOf, introOf, metaDescriptionOf, methodOf, modelsByOldAnswers, modelsMostlyOld, numberWord, oldAnswersFrom, readModelBeliefs, testedOnOf, type ModelBeliefs } from "./model-beliefs.js";
 import { changesToStartupProgrammes } from "./startup-programme-changes.js";
 import { HETZNER_APRIL_CHANGES, HETZNER_AVAILABILITY_READ, HETZNER_AX102_GERMANY, HETZNER_AX42_GERMANY, HETZNER_CLOUD_PLANS, HETZNER_PRICES_READ, HETZNER_PRICE_SOURCE, HETZNER_PROMO_CODE_PAGE, HETZNER_SETUP_FEE_STATEMENTS, HETZNER_SINGAPORE_EXAMPLE, cheapestOrderableHetznerPlan, hetznerEntryPriceClause, unorderableHetznerPlans } from "./hetzner-pricing.js";
 import { HUNDRED_GB_SCENARIO, HUNDRED_TB_SCENARIO, ONE_TO_ONE_SCENARIO, STORAGE_RATES_READ, STORAGE_SCALE_WORKLOADS, TEN_TO_ONE_SCENARIO, cheapestProviderAt, costAfterMonthlyEgressGrantFor, costliestProviderAt, egressAllowanceSentence, egressBillAfterMonthlyGrantFor, egressBillOnceOverAllowance, egressRatioWhereCostsMatch, fixedMonthlyGrantsSentence, monthlyEgressGrantGb, monthlyEgressGrantSentence, monthlyStorageCost, providersWithScalingEgressAllowance, rateCardFor, scaleCostFor } from "./storage-cost-model.js";
@@ -64,7 +65,7 @@ import { NAME_MATCH_SENTENCE } from "./name-match.js";
 import { FREE_TIER_STANDING_LABELS, GRADE_FACTORS_WITHOUT_PRICING_HISTORY, NOT_EVIDENCE_LABELS, citesAChangeOlderThanTheGrade, freeTierStanding, gradesFirstSet, gradesLastSet, gradingDatesClause, neverTracked, pricingHistoryCoverageAnswer, pricingHistoryCoverageSentence, riskEntries, scorecard, splitByFreeTierStanding, trackedSinceGrading, type RiskEntry } from "./risk-scorecard.js";
 import { CHANGE_DIRECTION, changeDirectionTable, directionRatioLabel } from "./change-direction.js";
 import { removalDurability, removalReturnRateSentence, removalDurabilityPattern, lastingRemovalExamplesFor } from "./removal-durability.js";
-import { changeCitesASource, changeIsUncited, changeSourceCitation, changeSourceLinkHtml, changeCitationHtml, citedClaimHtml, changeSummaryHtml, changeSummaryText, citedChanges, uncitedChangeNotice, uncitedChangeNoticeHtml, ratingWithheldForNoSourceClause, ratingWithheldForNoSourceSentence, ratingWithheldClause, ratingWithheldSentence, type WithheldRecordCounts, UNCITED_CHANGE_LABEL, type CitableChangeRow } from "./change-citation.js";
+import { changeCitesASource, changeIsUncited, changeSourceCitation, changeSourceLinkHtml, changeCitationHtml, citedClaimHtml, changeSummaryHtml, changeSummaryText, citedChanges, uncitedChangeNotice, uncitedChangeNoticeHtml, ratingWithheldForNoSourceClause, ratingWithheldForNoSourceSentence, ratingWithheldClause, ratingWithheldSentence, type WithheldRecordCounts, UNCITED_CHANGE_LABEL, RECORD_SOURCE_CLASS, type CitableChangeRow } from "./change-citation.js";
 import { growthLimitPhrases } from "./growth-limits.js";
 import { registerAgent, authenticateRequest, validateVestauthUrl, hashApiKey, updateAgentX402Address, getAgentById } from "./agents.js";
 import { attributeAuthenticatedRequest } from "./referral-attribution.js";
@@ -560,6 +561,7 @@ function durableHistoryBody(): string {
 const offers = loadOffers();
 const categories = getCategories();
 const dealChanges = loadDealChanges();
+const modelBeliefs: ModelBeliefs = readModelBeliefs();
 const trackedChangeRecords = trackedChanges(dealChanges);
 const trackedChangeCount = trackedChangeRecords.length;
 
@@ -8440,6 +8442,14 @@ const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
     contextHtml: "",
     tag: "app-runner-shutdown",
     primaryVendor: "AWS",
+  },
+  {
+    slug: MODEL_BELIEFS_SLUG,
+    title: MODEL_BELIEFS_TITLE,
+    metaDesc: metaDescriptionOf(modelBeliefs),
+    contextHtml: "",
+    tag: "model-beliefs",
+    primaryVendor: "AgentDeals",
   },
 ];
 
@@ -19327,6 +19337,161 @@ ${mcpCtaCss()}
   <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
+</body>
+</html>`;
+}
+
+function modelBeliefAnswersHtml(beliefs: ModelBeliefs, factId: string): string {
+  const modelOrder = new Map(beliefs.models.map((model, i) => [model.id, i]));
+  const nameOf = new Map(beliefs.models.map((model) => [model.id, model.name]));
+  const answers = beliefs.answers
+    .filter((answer) => answer.fact === factId)
+    .sort((a, b) => (modelOrder.get(a.model) ?? Infinity) - (modelOrder.get(b.model) ?? Infinity) || a.run - b.run);
+  const items = answers.map((answer) =>
+    `<li><strong>${escHtmlServer(nameOf.get(answer.model) ?? answer.model)}</strong>, run ${answer.run}, graded ${escHtmlServer(answer.grade)}: ${escHtmlServer(answer.text)}</li>`
+  ).join("\n          ");
+  return `<details class="belief-answers"><summary>All ${answers.length} answers and their grades</summary>
+        <ul>
+          ${items}
+        </ul>
+      </details>`;
+}
+
+function buildModelBeliefsPage(beliefs: ModelBeliefs = modelBeliefs): string {
+  const title = MODEL_BELIEFS_TITLE;
+  const metaDesc = metaDescriptionOf(beliefs);
+  const slug = MODEL_BELIEFS_SLUG;
+  const pubDate = "2026-10-06";
+  const perFact = answersPerFact(beliefs);
+  const perModel = answersPerModel(beliefs);
+  const perQuestion = beliefs.run.answers_per_model;
+  const finding = findingOf(beliefs);
+
+  const factRows = factsByOldAnswers(beliefs).map((fact) => {
+    const mostlyOld = modelsMostlyOld(beliefs, fact).map((model) => model.name);
+    return `<tr class="belief-fact" id="${escHtmlServer(fact.id)}">
+      <td><a href="${escHtmlServer(fact.page)}">${escHtmlServer(fact.vendor)}</a></td>
+      <td>${escHtmlServer(fact.question)}</td>
+      <td>${escHtmlServer(fact.outdated)}</td>
+      <td><a href="${escHtmlServer(fact.source.url)}" target="_blank" rel="nofollow noopener" class="${RECORD_SOURCE_CLASS}">&ldquo;${escHtmlServer(fact.source.quote)}&rdquo;</a>, read on ${escHtmlServer(fact.source.read_on)}</td>
+      <td>${escHtmlServer(changedLabel(fact.changed))}</td>
+      <td>${answersFor(beliefs, fact, "outdated")} of ${perFact}</td>
+    </tr>
+    <tr class="belief-models">
+      <td colspan="6">
+        <p>Gave the old term in at least ${MOSTLY_OLD_ANSWERS} of ${perQuestion} answers: ${mostlyOld.length > 0 ? escHtmlServer(mostlyOld.join(", ")) : "none"}.</p>
+        ${modelBeliefAnswersHtml(beliefs, fact.id)}
+      </td>
+    </tr>`;
+  }).join("\n    ");
+
+  const modelRows = modelsByOldAnswers(beliefs).map((model) => `<tr>
+      <td>${escHtmlServer(model.name)}</td>
+      <td>${escHtmlServer(model.lab)}</td>
+      <td>${oldAnswersFrom(beliefs, model)} of ${perModel}</td>
+    </tr>`).join("\n    ");
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description: metaDesc,
+    datePublished: pubDate,
+    dateModified: pageDateModified(MODEL_BELIEFS_PATH, pubDate),
+    author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)} — AgentDeals</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="${BASE_URL}/${slug}">
+<meta property="article:published_time" content="${pubDate}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals — Weekly Pricing Digest" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:1100px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
+.pub-date{color:var(--text-dim);font-size:.85rem;margin-bottom:1.5rem}
+.section-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:1.25rem;line-height:1.7}
+.table-scroll{overflow-x:auto}
+.pricing-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.85rem}
+.pricing-table th{text-align:left;padding:.75rem .5rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.pricing-table td{padding:.6rem .5rem;border-bottom:1px solid var(--border);vertical-align:top}
+.pricing-table tr.belief-fact td{border-bottom:none}
+.belief-models td{color:var(--text-muted);font-size:.8rem}
+.belief-answers{margin-top:.4rem}
+.belief-answers summary{cursor:pointer;color:var(--accent)}
+.belief-answers ul{margin:.5rem 0 0 1.25rem}
+.belief-answers li{margin-bottom:.4rem}
+.methodology{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+.methodology strong{color:var(--text)}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+footer a{color:var(--accent)}
+@media(max-width:768px){h1{font-size:1.6rem}.pricing-table{font-size:.75rem}.pricing-table td,.pricing-table th{padding:.4rem .25rem}}
+${globalNavCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("guides")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; ${escHtmlServer(title.replace(/ \(\d{4}\)$/, ""))}</div>
+  <h1>${escHtmlServer(MODEL_BELIEFS_HEADING)}</h1>
+  <p class="pub-date">${escHtmlServer(testedOnOf(beliefs))} ${escHtmlServer(MODEL_BELIEFS_RERUN_SENTENCE)}</p>
+
+  <p class="section-intro">${escHtmlServer(introOf(beliefs))}</p>
+  ${finding ? `<p class="section-intro">${escHtmlServer(finding)}</p>` : ""}
+
+  <h2>The ${numberWord(beliefs.facts.length)} facts</h2>
+  <section class="${QUOTED_MODEL_BELIEFS_CLASS}">
+  <div class="table-scroll">
+  <table class="pricing-table belief-facts">
+    <thead><tr><th>Vendor</th><th>Question</th><th>What models said</th><th>What the vendor says now</th><th>When it changed</th><th>Old answers</th></tr></thead>
+    <tbody>
+    ${factRows}
+    </tbody>
+  </table>
+  </div>
+  </section>
+
+  <h2>The ${numberWord(beliefs.models.length)} models</h2>
+  <div class="table-scroll">
+  <table class="pricing-table belief-model-totals">
+    <thead><tr><th>Model</th><th>Lab</th><th>Old answers</th></tr></thead>
+    <tbody>
+    ${modelRows}
+    </tbody>
+  </table>
+  </div>
+
+  <div class="methodology">
+    <strong>Method:</strong> ${escHtmlServer(methodOf(beliefs))}
+  </div>
+
+  <p class="section-intro">${escHtmlServer(MODEL_BELIEFS_CLOSING)}</p>
+
+  ${buildMoreAlternativesGuides(slug)}
+
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+</div>
 </body>
 </html>`;
 }
@@ -54216,6 +54381,11 @@ ${catList}
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/google-developer-program-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(withVerdictLinks(buildGoogleDeveloperProgram2026Page()));
+  } else if (url.pathname === "/free-tier-facts-ai-models-get-wrong" && isGetOrHead) {
+    recordApiHit("/free-tier-facts-ai-models-get-wrong");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/free-tier-facts-ai-models-get-wrong", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildModelBeliefsPage());
   } else if (url.pathname === "/hetzner-pricing-2026" && isGetOrHead) {
     recordApiHit("/hetzner-pricing-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/hetzner-pricing-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });

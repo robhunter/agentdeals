@@ -5,6 +5,7 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { assertPopulationFloor } from "./population-floor.ts";
+import { withoutQuotedModelBeliefs } from "../dist/model-beliefs.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "..");
@@ -107,7 +108,7 @@ describe(`Google ended the free Gemini Code Assist individuals tier and Gemini C
         const route = queue.shift()!;
         const res = await fetch(`${base}${route}`);
         if (res.status !== 200) continue;
-        const html = (await res.text()).replace(/<(style|svg)\b[\s\S]*?<\/\1>/gi, " ");
+        const html = withoutQuotedModelBeliefs(await res.text()).replace(/<(style|svg)\b[\s\S]*?<\/\1>/gi, " ");
         const blocks = html.split(BLOCK_END).map(readable);
         blocks.forEach((block, i) => {
           for (const m of block.matchAll(QUOTA)) {

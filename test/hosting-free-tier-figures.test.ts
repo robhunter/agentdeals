@@ -1,6 +1,7 @@
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
 import { assertPopulationFloor } from "./population-floor.ts";
+import { withoutQuotedModelBeliefs } from "../dist/model-beliefs.js";
 import { spawn, type ChildProcess } from "node:child_process";
 import { readFileSync } from "node:fs";
 import path from "node:path";
@@ -395,7 +396,7 @@ describe("hosting pages publish the free-tier figures our records hold (#1183)",
         const html = await res.text();
         scanned++;
         for (const [surface, body] of [
-          ["page", readableText(html)],
+          ["page", readableText(withoutQuotedModelBeliefs(html))],
           ["metadata", metaAndStructuredData(html)],
           ["embedded data", embeddedData(html)],
         ] as const) {

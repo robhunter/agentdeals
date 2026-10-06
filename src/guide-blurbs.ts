@@ -92,6 +92,7 @@ const WRITTEN_BLURBS: Readonly<Record<string, string>> = {
   "q1-2026-developer-pricing-report": "Pricing changes in Q1 2026 — free tiers removed, narrative analysis, category breakdown, monthly timeline, Cloudflare counter-trend, Q2 outlook",
   "free-tier-risk": "Predictive risk analysis for developer free tiers — grades dated and scored against what happened next, category heatmap, pattern analysis, counter-trends",
   "state-of-free-tiers": "Data-driven analysis of developer tool free tiers by category — trends, risks, and recommendations",
+  "free-tier-facts-ai-models-get-wrong": "AI models give old free-tier terms",
 };
 
 export function guideBlurb(slug: string): string {
