@@ -1259,19 +1259,19 @@
     {
       "vendor": "X (Twitter)",
       "change_type": "free_tier_removed",
-      "date": "2026-02-01",
-      "summary": "X/Twitter API eliminated free tier in February 2026, replacing it with a pay-per-use credit model. Active free-tier users receive a $0 voucher. 'For-good' utility apps remain free. Basic fixed tier remains at $200/month",
+      "date": "2026-02-06",
+      "summary": "X replaced its Legacy Free API tier with pay-per-use pricing, announced 2026-02-06. Recently active free-tier users moved to pay-per-use with a one-time $10 voucher. Only apps X classifies as Public Utility Apps keep free scaled access.",
       "previous_state": "Free tier: ~500 posts/month read, 1,500 tweets/month write, no search, ~1 request per 15 minutes",
-      "current_state": "No free tier. Pay-per-use credit model replaces free access. $0 voucher for existing free-tier users. For-good utility apps exempted",
+      "current_state": "No free tier. \"Starting now, only apps classified as Public Utility Apps will continue to receive free scaled access.\" \"If you've been recently active on our Legacy Free tier, you'll be transitioned to Pay-Per-Use with a one-time $10 voucher\" (X Developers announcement, 2026-02-06)",
       "impact": "high",
-      "source_url": "https://developer.x.com/en/portal/products",
+      "source_url": "https://devcommunity.x.com/t/announcing-the-launch-of-x-api-pay-per-use-pricing/256476",
       "category": "API Gateway",
       "alternatives": [
         "Bluesky AT Protocol",
         "Mastodon API"
       ],
       "recorded_date": "2026-03-09",
-      "date_source": "hand_written"
+      "date_source": "vendor_page"
     },
     {
       "vendor": "Devin",
@@ -15723,6 +15723,20 @@
         "detail": "Retracted 2026-10-06: no change we can show. The before state was our own listing text (\"up to 3 applications and 150 secrets per project\"), which no capture of the vendor's site states: the Internet Archive's 2026-08-28 capture of vault.smart-grow.app says only \"Free plan available\". The redesigned site read 2026-10-06 is the first that publishes the Free plan's limits, which our listing now states.",
         "source_url": "https://web.archive.org/web/20260828130302/https://vault.smart-grow.app/"
       }
+    },
+    {
+      "vendor": "X (Twitter)",
+      "change_type": "record_corrected",
+      "date": "2026-10-06",
+      "summary": "Data correction - X announced pay-per-use pricing in place of the Legacy Free tier on 2026-02-06, not 2026-02-01, and recently active free users got a one-time $10 voucher, not a $0 one. X's developer announcement dates it.",
+      "previous_state": "Recorded 2026-03-09 as free_tier_removed, dated 2026-02-01: X/Twitter API eliminated free tier in February 2026, replacing it with a pay-per-use credit model. Active free-tier users receive a $0 voucher. 'For-good' utility apps remain free. Basic fixed tier remains at $200/month",
+      "current_state": "free_tier_removed, dated 2026-02-06 from X's announcement",
+      "impact": "low",
+      "source_url": "https://devcommunity.x.com/t/announcing-the-launch-of-x-api-pay-per-use-pricing/256476",
+      "category": "API Gateway",
+      "alternatives": [],
+      "recorded_date": "2026-10-06",
+      "date_source": "hand_written"
     }
   ]
 }
