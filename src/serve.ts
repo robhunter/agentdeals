@@ -31793,7 +31793,7 @@ function buildLlmApiPricingPage(): string {
     '  </div>\n' +
     '  <div class="hidden-cost-card">\n' +
     '    <h4>Anthropic Thinking: Output Tokens Add Up</h4>\n' +
-    '    <p>Claude\'s thinking tokens are billed at output rates ($20/M on Opus 5.5, $50/M on Fable 5.1). A complex reasoning task can produce 10K+ thinking tokens before the actual answer. Budget for 2–5x the output tokens you\'d expect from a non-thinking request. Fable 5.1, Opus 5.5 and Sonnet 5 decide their own thinking budget (adaptive thinking) rather than taking one from the request, so the multiplier is harder to cap than it was on the 4.6 generation.</p>\n' +
+    '    <p>Claude\'s thinking tokens are billed at output rates ($20/M on Opus 5.5, $50/M on Fable 5.1). A complex reasoning task can produce 10K+ thinking tokens before the actual answer. Budget for 2–5x the output tokens you\'d expect from a non-thinking request. Fable 5.1, Opus 5.5, Sonnet 5.5 and Sonnet 5 decide their own thinking budget (adaptive thinking) rather than taking one from the request, so the multiplier is harder to cap than it was on the 4.6 generation.</p>\n' +
     '  </div>\n' +
     '  <div class="hidden-cost-card">\n' +
     '    <h4>Gemini Free Tier: Gemini 3.1 Pro Needs a Paid Account</h4>\n' +
