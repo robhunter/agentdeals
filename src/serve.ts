@@ -22414,14 +22414,18 @@ ${mcpCtaCss()}
     </thead>
     <tbody>
       <tr><td style="font-weight:600">Free</td><td style="font-family:var(--mono)">$0</td><td style="font-family:var(--mono)">Not published; shown per project in AI Studio</td><td>N/A</td><td style="color:#f85149">No free Pro model for new projects.</td></tr>
-      <tr><td style="font-weight:600">Tier 1 (Pay-as-you-go)</td><td style="font-family:var(--mono);color:#d29922;font-weight:600">$250/mo</td><td style="font-family:var(--mono)">Same as free</td><td>Higher RPM per model</td><td style="color:#d29922">Requests pause at $250 aggregate spend</td></tr>
-      <tr><td style="font-weight:600">Tier 2</td><td style="font-family:var(--mono);color:#d29922;font-weight:600">$2,000/mo</td><td style="font-family:var(--mono)">Same as free</td><td>Even higher RPM</td><td style="color:#d29922">Auto-upgraded at spend threshold</td></tr>
-      <tr><td style="font-weight:600">Tier 3+</td><td style="font-family:var(--mono);color:#d29922;font-weight:600">$20K&ndash;$100K+</td><td style="font-family:var(--mono)">Same as free</td><td>Highest RPM, priority</td><td>Enterprise scale, custom caps</td></tr>
+      <tr><td style="font-weight:600">Tier 1 (Pay-as-you-go)</td><td style="font-family:var(--mono);color:#d29922;font-weight:600">$250/mo</td><td style="font-family:var(--mono)">Same as free</td><td>Higher RPM per model</td><td style="color:#d29922">Starts when you link an active billing account. Requests pause at $250 aggregate spend</td></tr>
+      <tr><td style="font-weight:600">Tier 2</td><td style="font-family:var(--mono);color:#d29922;font-weight:600">$2,000/mo</td><td style="font-family:var(--mono)">Same as free</td><td>Even higher RPM</td><td style="color:#d29922">Automatic once $100 has been paid and 3 days have passed since the first successful payment</td></tr>
+      <tr><td style="font-weight:600">Tier 3+</td><td style="font-family:var(--mono);color:#d29922;font-weight:600">$20K&ndash;$100K+</td><td style="font-family:var(--mono)">Same as free</td><td>Highest RPM, priority</td><td>Automatic once $1,000 has been paid and 30 days have passed since the first successful payment</td></tr>
     </tbody>
   </table>
 
   <div class="context-box">
     <strong>What "spend cap" means in practice:</strong> Unlike rate limits (which reject individual requests), spend caps <em>pause all requests</em> for the remainder of the billing month once the tier's aggregate spend limit is reached. This is a billing-account-level control — all projects under the same billing account share the cap. Google added project-level spend caps on March 12, 2026.
+  </div>
+
+  <div class="context-box">
+    <strong>Spend-based rate limit:</strong> paid tiers can also be limited to a maximum spend over any rolling 10 minutes: $10 on Tier 1, $50 on Tier 2 and $200 on Tier 3. Above it, the API returns a 429 RESOURCE_EXHAUSTED error. Google says whether this limit applies depends on the account's billing history. The Tier 2 and Tier 3 payment thresholds count all Google Cloud spending on the billing account, not only the Gemini API.
   </div>
 
   <h2 id="prepaid">5. Prepaid Billing &amp; Paid-Only Models</h2>

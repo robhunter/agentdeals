@@ -110,3 +110,43 @@ describe(`${PAGE} on long prompts and prepaid credits`, () => {
     assert.ok(text.includes("others choose between Prepay and Postpay. Prepaid credits expire 12 months after purchase and are non-refundable. When the balance reaches $0, every API key on the billing account stops working until you add credits."));
   });
 });
+
+function tierSection(html: string): string {
+  const start = html.indexOf('<h2 id="new-tiers">');
+  const end = html.indexOf('<h2 id="prepaid">');
+  return start >= 0 && end > start ? html.slice(start, end) : "";
+}
+
+function keyConstraintByTier(html: string): Record<string, string> {
+  const rows = [...tierSection(html).matchAll(/<tr>([\s\S]*?)<\/tr>/g)]
+    .map(([, row]) => [...row.matchAll(/<td[^>]*>([\s\S]*?)<\/td>/g)].map(([, cell]) => readable(cell).trim()))
+    .filter((cells) => cells.length > 0);
+  return Object.fromEntries(rows.map((cells) => [cells[0], cells[cells.length - 1]]));
+}
+
+const SPEND_BASED_RATE_LIMIT =
+  "Spend-based rate limit: paid tiers can also be limited to a maximum spend over any rolling 10 minutes: $10 on Tier 1, $50 on Tier 2 and $200 on Tier 3. Above it, the API returns a 429 RESOURCE_EXHAUSTED error. Google says whether this limit applies depends on the account's billing history. The Tier 2 and Tier 3 payment thresholds count all Google Cloud spending on the billing account, not only the Gemini API.";
+
+describe(`${PAGE} on how a paid project moves up a tier`, () => {
+  it("gives Google's rule for reaching each paid tier, and never says a project is upgraded at a spend threshold", () => {
+    assert.deepStrictEqual(keyConstraintByTier(page), {
+      "Free": "No free Pro model for new projects.",
+      "Tier 1 (Pay-as-you-go)": "Starts when you link an active billing account. Requests pause at $250 aggregate spend",
+      "Tier 2": "Automatic once $100 has been paid and 3 days have passed since the first successful payment",
+      "Tier 3+": "Automatic once $1,000 has been paid and 30 days have passed since the first successful payment",
+    });
+    assert.doesNotMatch(readable(page), /Auto-upgraded at spend threshold/i);
+  });
+
+  it("states the spend-based rate limit of $10, $50 and $200 per rolling 10 minutes right after the spend-cap paragraph", () => {
+    const section = readable(tierSection(page));
+    const spendCap = section.indexOf('What "spend cap" means in practice:');
+    const spendRate = section.indexOf(SPEND_BASED_RATE_LIMIT);
+    assert.ok(spendCap >= 0, "the spend-cap paragraph is in section 4");
+    assert.ok(spendRate > spendCap, "the spend-based rate limit follows the spend-cap paragraph in section 4");
+    assert.match(
+      tierSection(page),
+      /What "spend cap" means in practice:<\/strong>(?:(?!<\/div>)[\s\S])*<\/div>\s*<div class="context-box">\s*<strong>Spend-based rate limit:<\/strong> paid tiers/,
+    );
+  });
+});
