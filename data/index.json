@@ -36478,6 +36478,26 @@
       "vendor": "Together AI",
       "category": "AI / ML",
       "description": "Inference API for open-source models, billed per token. Together AI does not currently offer free trials; access requires a minimum $5 credit purchase, and the platform is fully prepaid. Llama 3.3 70B $1.04/$1.04 (per 1M tokens). gpt-oss-120B $0.15/$0.60.",
+      "conditions": [
+        {
+          "text": "By default, Together stores prompts and responses and may use them for product improvements. Organization admins can turn storage off in privacy settings, enabling zero data retention.",
+          "quote": "By default, Together stores the prompts you send and the responses models return, and may use them for product improvements.",
+          "url": "https://docs.together.ai/docs/privacy-and-security",
+          "read_on": "2026-10-06"
+        },
+        {
+          "text": "Together does not train on your data unless you opt in; the setting is off by default.",
+          "quote": "Together does not train on your data without your explicit consent, whether or not ZDR is enabled.",
+          "url": "https://docs.together.ai/docs/zero-data-retention",
+          "read_on": "2026-10-06"
+        },
+        {
+          "text": "When the prepaid balance reaches zero, API access is suspended until credits are added.",
+          "quote": "If your balance reaches zero, API access is suspended until you add credits.",
+          "url": "https://docs.together.ai/docs/billing-credits",
+          "read_on": "2026-10-06"
+        }
+      ],
       "tier": "Pay-as-you-go",
       "url": "https://docs.together.ai/docs/billing-credits",
       "tags": [
