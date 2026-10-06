@@ -22,11 +22,11 @@
       "changed": "2026-10-06"
     },
     "/ai-free-tiers": {
-      "hash": "5b23b24b888d9568",
+      "hash": "630cb264a9111934",
       "changed": "2026-10-06"
     },
     "/ai-ml-alternatives": {
-      "hash": "03cc5c109f6da962",
+      "hash": "fe0f194f1d0c258c",
       "changed": "2026-10-06"
     },
     "/alternative-to": {
@@ -1080,7 +1080,7 @@
       "changed": "2026-10-06"
     },
     "/category/ai-ml": {
-      "hash": "27e2d5179f7830b6",
+      "hash": "7910fb817521d0f0",
       "changed": "2026-10-06"
     },
     "/category/analytics": {
@@ -1132,7 +1132,7 @@
       "changed": "2026-10-06"
     },
     "/category/communication": {
-      "hash": "41ff394160cd7bc3",
+      "hash": "fcc2b31d87378c06",
       "changed": "2026-10-06"
     },
     "/category/communication-messaging": {
@@ -1220,7 +1220,7 @@
       "changed": "2026-10-06"
     },
     "/category/maps-geolocation": {
-      "hash": "5eaac35ab97bc3fa",
+      "hash": "f3d90783ba3535d0",
       "changed": "2026-10-06"
     },
     "/category/messaging": {
@@ -3136,7 +3136,7 @@
       "changed": "2026-10-06"
     },
     "/free-llm-apis": {
-      "hash": "db6dc466bee15fdb",
+      "hash": "409e832e6a73a786",
       "changed": "2026-10-06"
     },
     "/free-nextjs-stack": {
@@ -3246,7 +3246,7 @@
       "changed": "2026-10-06"
     },
     "/llm-api-pricing": {
-      "hash": "2eae53b556ff9f65",
+      "hash": "2e73dad0bda08193",
       "changed": "2026-10-06"
     },
     "/localstack-alternatives": {
@@ -3474,7 +3474,7 @@
       "daily": true
     },
     "/stack-check": {
-      "hash": "f5bfb57de30809d3",
+      "hash": "5e2e3eb376312b2e",
       "changed": "2026-10-06"
     },
     "/stacks": {
@@ -3521,7 +3521,7 @@
       "changed": "2026-10-06"
     },
     "/team-collaboration-alternatives": {
-      "hash": "851b7124b910a743",
+      "hash": "b2c2ac6940770c32",
       "changed": "2026-10-06"
     },
     "/tenor-alternatives": {
@@ -5722,7 +5722,7 @@
       "changed": "2026-10-06"
     },
     "/vendor/foursquare": {
-      "hash": "2302b36ac8fe5eec",
+      "hash": "6c1e2b53d87393a5",
       "changed": "2026-10-06"
     },
     "/vendor/framagit-org": {
@@ -6818,7 +6818,7 @@
       "changed": "2026-10-06"
     },
     "/vendor/livekit": {
-      "hash": "f24f19f3ba2bc12f",
+      "hash": "19256c6ed5513de4",
       "changed": "2026-10-06"
     },
     "/vendor/llm7-io": {
