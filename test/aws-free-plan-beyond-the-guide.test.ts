@@ -34,8 +34,13 @@ const WITHDRAWN: Record<string, Record<string, RegExp>> = {
     "EC2 instances on a 12-month trial": /\(12-month trial\)/,
     "EC2 instances as the free part of Elastic Beanstalk": /No free tier for the EB service itself, only the underlying EC2 instances/,
   },
+  "/free-go-stack": {
+    "Lambda's free invocations expiring after 12 months": /free invocations expire after 12 months/,
+    "Cloud Run preferred to Lambda for staying free": /Cloud Run is simpler and stays free forever/,
+  },
   "/free-saas-stack": {
     "SQS and Lambda free for 12 months only": /12-month free tier expiration/,
+    "most services expiring after 12 months": /most services expire after 12 months/,
   },
   "/gcp-free-tier-2026": {
     "12 months of free EC2 and RDS": /12-month EC2\/RDS/,
@@ -64,6 +69,7 @@ const WITHDRAWN: Record<string, Record<string, RegExp>> = {
     "AWS among the always-free compute options": /Only GCP and AWS offer always-free compute options/,
     "AWS and Azure instances free for 12 months": /AWS and Azure offer 12-month free instances/,
     "Azure's B1S VM, which new subscriptions cannot deploy": /B1S VM|750 hrs\/mo, 1 vCPU, 1 GB RAM/,
+    "S3 and CloudFront expiring after 12 months": /(?:S3|CloudFront)[^.<]*expires? after 12 months/,
   },
   "/azure-free-tier-2026": {
     "750 free hours of AWS t3.micro": /AWS \(t3\.micro, 750 hrs total\)/,
@@ -86,6 +92,7 @@ const STATED: Record<string, string[]> = {
   ],
   "/free-saas-stack": [
     "Why not AWS SQS/Lambda: Complex setup. Inngest and Trigger.dev give you managed, durable execution with a serverless DX.",
+    "Why not AWS/GCP/Azure directly: Free tiers exist but are complex to configure. AWS credits last 6 months; GCP has $300 in credit plus always-free products; Azure offers free services for 12 months to new customers.",
   ],
   "/database-pricing": [
     "Aurora PostgreSQL serverless on the Free plan: up to 4 ACUs and 1 GiB per cluster, paid from the credits, for as long as the Free plan lasts. Upgrading to the Paid plan lifts the limits, and usage past the credits is billed.",
@@ -104,6 +111,7 @@ const STATED: Record<string, string[]> = {
     "Azure's Cosmos DB has a lifetime free tier.",
     "AWS has DynamoDB (always free, 25 GB) and Aurora PostgreSQL serverless (Free plan, paid from credits).",
     "Free plan closure: the account closes at 6 months or when credits run out, and content is deleted after 90 days unless you upgrade to the Paid plan.",
+    "CloudFront is always free up to 1 TB of data transfer out and 10,000,000 requests a month. S3 is paid from the Free plan credits, which last up to 6 months.",
   ],
 };
 for (const page of STACK_PAGES) STATED[page] = [...(STATED[page] ?? []), S3_WHY_NOT];

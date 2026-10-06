@@ -17323,7 +17323,7 @@ function buildFreeDjangoStackPage(): string {
       icon: "⏱️",
       recommended: { vendor: "Upstash", why: "Celery + Upstash Redis is the Django-native solution for background jobs. Celery handles async tasks (email sending, image processing, report generation), periodic tasks (cron-like scheduling), and task chaining/grouping. Upstash's 500K commands/month free tier covers moderate task queue usage. Celery is free, open source, and the Django ecosystem's standard task runner." },
       alternatives: ["Redis Cloud", "Inngest"],
-      outgrow: "When you exceed 10,000 Redis commands/day (roughly 3,000-5,000 task dispatches depending on complexity). Redis Cloud's 30 MB free with unlimited commands is better for high-throughput task queues. Inngest offers 25,000 function runs/month but requires adapting away from Celery's Django-native patterns.",
+      outgrow: "When you exceed 500,000 Redis commands a month. Redis Cloud's 30 MB free with unlimited commands is better for high-throughput task queues. Inngest offers 25,000 function runs/month but requires adapting away from Celery's Django-native patterns.",
       whyNot: "Why not RQ (Redis Queue): Simpler than Celery but less feature-rich — no periodic tasks, no task chains, smaller ecosystem. Celery is the standard for a reason. Why not Django-Q2: Good lightweight alternative if Celery feels too heavy, but smaller community and fewer production deployments.",
       relatedPage: null,
     },
@@ -17372,7 +17372,7 @@ function buildFreeDjangoStackPage(): string {
   const faqJsonLd = faqPageJsonLd("/free-django-stack", [
     { q: "Can I host Django for free in 2026?", a: "Yes. Railway's Free plan starts with a 30-day trial carrying $5 of credits, then $1 of free credit a month, with Gunicorn, auto-deploy from GitHub, and managed Postgres; its Hobby plan is $5/month and includes $5 of usage. Render has a free tier but spins down after 15 minutes of inactivity (cold starts of about one minute). PythonAnywhere offers free WSGI hosting but limits you to one web app with no custom domain. Fly.io has no free tier for new accounts — new signups get a trial of 2 hours runtime or 7 days, whichever comes first." },
     { q: "Which free databases work with Django?", a: "Any Postgres host works. Django's ORM supports Postgres, and django.contrib.postgres adds JSONField, ArrayField, full-text search and range types. Neon's Free plan gives 1 GB of storage and 100 CU-hours per project and scales to zero after 5 minutes idle. Supabase's gives a 500 MB database per project with built-in auth, and pauses free projects after a week of inactivity. We publish no ranking of these." },
-    { q: "Does Django need Redis?", a: "Not strictly, but practically yes for production. Redis powers Django's cache framework (fast page/fragment caching), session storage (faster than database sessions), and Celery (the standard Django task queue for background jobs). Upstash offers 10,000 Redis commands/day free. Without Redis, you can use Django's built-in database cache and in-process task runners, but you'll hit performance ceilings sooner." },
+    { q: "Does Django need Redis?", a: "Not strictly, but practically yes for production. Redis powers Django's cache framework (fast page/fragment caching), session storage (faster than database sessions), and Celery (the standard Django task queue for background jobs). Upstash Redis offers 500,000 commands a month and 256 MB of data free. Without Redis, you can use Django's built-in database cache and in-process task runners, but you'll hit performance ceilings sooner." },
     { q: "PythonAnywhere vs Railway vs Render for Django?", a: "Railway gives you a 30-day $5 trial credit then $1 of free credit a month, with no sleep timer, managed Postgres, and auto-deploy from GitHub. PythonAnywhere is great for learning (free WSGI hosting, built-in console) but limits you to one web app with no custom domain on free tier. Render has a free tier but your app sleeps after 15 minutes, causing cold starts of about one minute that hurt user experience. For production Django apps, Railway or Fly.io." },
   ]);
 
@@ -17451,12 +17451,12 @@ function buildFreeDjangoStackPage(): string {
   const growthCosts = [
     { layer: "Database", vendor: "Neon", freeLimit: "1 GB storage per project", firstPaid: "Launch, usage-based", gets: "$0.106/CU-hour, $0.35/GB-month, autoscaling up to 16 CU", hitFirst: true },
     { layer: "Hosting", vendor: "Railway", freeLimit: "$1 of free credit a month after 30-day $5 trial", firstPaid: "Hobby $5/mo", gets: "$5 of usage included, no sleep, more RAM", hitFirst: true },
-    { layer: "Cache/Redis", vendor: "Upstash", freeLimit: "10K cmds/day", firstPaid: "Pay-as-you-go $0.2/100K", gets: "Unlimited commands, 1 GB storage", hitFirst: false },
+    { layer: "Cache/Redis", vendor: "Upstash", freeLimit: "500K cmds/mo", firstPaid: "Pay-as-you-go $0.2/100K", gets: "Unlimited commands, 1 GB storage", hitFirst: false },
     { layer: "Auth", vendor: "Django Built-in", freeLimit: "Unlimited", firstPaid: "Free forever", gets: "N/A — scales with your app", hitFirst: false },
     { layer: "Email", vendor: "Resend", freeLimit: "3,000 emails/mo", firstPaid: "Pro $20/mo", gets: "50,000 emails/mo, custom domains, analytics", hitFirst: false },
     { layer: "Storage", vendor: "Cloudflare R2", freeLimit: "10 GB", firstPaid: "$0.015/GB/mo", gets: "Unlimited storage, still zero egress", hitFirst: false },
     { layer: "Monitoring", vendor: "Sentry", freeLimit: "5,000 errors/mo", firstPaid: "Team $26/mo", gets: "50,000 errors, unlimited members, integrations", hitFirst: false },
-    { layer: "Task Queue", vendor: "Celery + Upstash", freeLimit: "10K cmds/day", firstPaid: "Pay-as-you-go $0.2/100K", gets: "Unlimited task dispatches", hitFirst: false },
+    { layer: "Task Queue", vendor: "Celery + Upstash", freeLimit: "500K cmds/mo", firstPaid: "Pay-as-you-go $0.2/100K", gets: "Unlimited task dispatches", hitFirst: false },
     { layer: "Search", vendor: "Algolia", freeLimit: "10,000 records", firstPaid: "Build $0.50/1K req", gets: "100,000 records, more search requests", hitFirst: false },
     { layer: "CI/CD", vendor: "GitHub Actions", freeLimit: "2,000 min/mo", firstPaid: "Team $4/user/mo", gets: "3,000 min/mo, required reviewers", hitFirst: false },
   ];
@@ -17618,7 +17618,7 @@ ${growthCosts.map(g => `      <tr>
   </table>
   </div>
   <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1rem 0">
-    <p style="color:var(--text-muted);font-size:.9rem;line-height:1.7"><strong style="color:var(--text)">The first paid upgrade:</strong> Database (Neon Launch, usage-based, no monthly minimum) + Hosting (Railway Hobby $5/mo) gives you Postgres beyond 1 GB at $0.35/GB-month, no sleep timers. Everything else — auth (unlimited with Django), email (3K/mo), monitoring (5K errors), cache/Redis (10K cmds/day), storage (10 GB R2), search (10K records), CI (2,000 min) — stays free well past your first 1,000 users. Django's built-in auth means you never pay for authentication.</p>
+    <p style="color:var(--text-muted);font-size:.9rem;line-height:1.7"><strong style="color:var(--text)">The first paid upgrade:</strong> Database (Neon Launch, usage-based, no monthly minimum) + Hosting (Railway Hobby $5/mo) gives you Postgres beyond 1 GB at $0.35/GB-month, no sleep timers. Everything else — auth (unlimited with Django), email (3K/mo), monitoring (5K errors), cache/Redis (500K cmds/mo), storage (10 GB R2), search (10K records), CI (2,000 min) — stays free well past your first 1,000 users. Django's built-in auth means you never pay for authentication.</p>
   </div>
 
   <h2>Architecture: How It Fits Together</h2>
@@ -17733,7 +17733,7 @@ function buildFreeFastapiStackPage(): string {
       icon: "⏱️",
       recommended: { vendor: "Upstash", why: "FastAPI offers three tiers of background task support. (1) Built-in BackgroundTasks: free, zero dependencies, runs in the same process — perfect for fire-and-forget tasks like sending emails or logging. (2) ARQ + Upstash Redis: async-native task queue built for asyncio — natural fit for FastAPI's async architecture. (3) Celery + Upstash Redis: battle-tested but synchronous — use when you need periodic tasks (Celery Beat) or complex task chains. Upstash's 500K commands/month covers moderate task queue usage for both ARQ and Celery." },
       alternatives: ["Redis Cloud"],
-      outgrow: "When you exceed 10,000 Redis commands/day or need more than a single worker process. Redis Cloud's 30 MB free with unlimited commands is better for high-throughput task queues. For simple use cases, FastAPI's built-in BackgroundTasks requires no external service at all.",
+      outgrow: "When you exceed 500,000 Redis commands a month or need more than a single worker process. Redis Cloud's 30 MB free with unlimited commands is better for high-throughput task queues. For simple use cases, FastAPI's built-in BackgroundTasks requires no external service at all.",
       whyNot: "Why not Celery as default: Celery is synchronous — it doesn't leverage FastAPI's async runtime. ARQ is async-native and lighter weight. Use Celery only when you need its advanced features (Beat scheduling, canvas chains, result backends). Why not Dramatiq: Similar to Celery but less ecosystem support and fewer production deployments.",
       relatedPage: null,
     },
@@ -17859,12 +17859,12 @@ function buildFreeFastapiStackPage(): string {
   const growthCosts = [
     { layer: "Database", vendor: "Neon", freeLimit: "1 GB storage per project", firstPaid: "Launch, usage-based", gets: "$0.106/CU-hour, $0.35/GB-month, autoscaling up to 16 CU", hitFirst: true },
     { layer: "Hosting", vendor: "Railway", freeLimit: "$1 of free credit a month after 30-day $5 trial", firstPaid: "Hobby $5/mo", gets: "$5 of usage included, no sleep, more RAM", hitFirst: true },
-    { layer: "Cache/Redis", vendor: "Upstash", freeLimit: "10K cmds/day", firstPaid: "Pay-as-you-go $0.2/100K", gets: "Unlimited commands, 1 GB storage", hitFirst: false },
+    { layer: "Cache/Redis", vendor: "Upstash", freeLimit: "500K cmds/mo", firstPaid: "Pay-as-you-go $0.2/100K", gets: "Unlimited commands, 1 GB storage", hitFirst: false },
     { layer: "Auth", vendor: "Auth0", freeLimit: "25,000 MAU", firstPaid: "Essential $35/mo", gets: "Custom domains, roles, MFA policies", hitFirst: false },
     { layer: "Email", vendor: "Resend", freeLimit: "3,000 emails/mo", firstPaid: "Pro $20/mo", gets: "50,000 emails/mo, custom domains, analytics", hitFirst: false },
     { layer: "Storage", vendor: "Cloudflare R2", freeLimit: "10 GB", firstPaid: "$0.015/GB/mo", gets: "Unlimited storage, still zero egress", hitFirst: false },
     { layer: "Monitoring", vendor: "Sentry", freeLimit: "5,000 errors/mo", firstPaid: "Team $26/mo", gets: "50,000 errors, unlimited members, integrations", hitFirst: false },
-    { layer: "Background Tasks", vendor: "ARQ + Upstash", freeLimit: "10K cmds/day", firstPaid: "Pay-as-you-go $0.2/100K", gets: "Unlimited task dispatches", hitFirst: false },
+    { layer: "Background Tasks", vendor: "ARQ + Upstash", freeLimit: "500K cmds/mo", firstPaid: "Pay-as-you-go $0.2/100K", gets: "Unlimited task dispatches", hitFirst: false },
     { layer: "API Docs", vendor: "FastAPI Built-in", freeLimit: "Unlimited", firstPaid: "Free forever", gets: "N/A — scales with your API", hitFirst: false },
     { layer: "CI/CD", vendor: "GitHub Actions", freeLimit: "2,000 min/mo", firstPaid: "Team $4/user/mo", gets: "3,000 min/mo, required reviewers", hitFirst: false },
   ];
@@ -18043,7 +18043,7 @@ ${growthCosts.map(g => `      <tr>
   </table>
   </div>
   <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1rem 0">
-    <p style="color:var(--text-muted);font-size:.9rem;line-height:1.7"><strong style="color:var(--text)">The first paid upgrade:</strong> Database (Neon Launch, usage-based, no monthly minimum) is the first upgrade that matters — storage beyond 1 GB at $0.35/GB-month and autoscaling up to 16 CU. Everything else — auth (25K MAU on Auth0), email (3K/mo), monitoring (5K errors), cache/Redis (10K cmds/day), storage (10 GB R2), API docs (unlimited built-in), CI (2,000 min) — stays free well past your first 1,000 users. FastAPI's lightweight footprint means hosting costs stay lower than Django for the same traffic.</p>
+    <p style="color:var(--text-muted);font-size:.9rem;line-height:1.7"><strong style="color:var(--text)">The first paid upgrade:</strong> Database (Neon Launch, usage-based, no monthly minimum) is the first upgrade that matters — storage beyond 1 GB at $0.35/GB-month and autoscaling up to 16 CU. Everything else — auth (25K MAU on Auth0), email (3K/mo), monitoring (5K errors), cache/Redis (500K cmds/mo), storage (10 GB R2), API docs (unlimited built-in), CI (2,000 min) — stays free well past your first 1,000 users. FastAPI's lightweight footprint means hosting costs stay lower than Django for the same traffic.</p>
   </div>
 
   <h2>Architecture: How It Fits Together</h2>
@@ -18087,7 +18087,7 @@ function buildFreeGoStackPage(): string {
       recommended: { vendor: "Railway", why: "Its Free plan opens with a 30-day trial carrying $5 of credits, then $1 of free credit a month, with auto-deploy from GitHub. Nixpacks auto-detects Go projects — compiles your binary and runs it. No sleep timer — your service stays warm. Go binaries start in milliseconds, so even serverless cold starts are negligible. Docker images from scratch base are typically 5-15 MB, maximizing the free credit." },
       alternatives: ["Render", "Fly.io", "Koyeb"],
       outgrow: "When you exceed the $5 of usage that Hobby's $5/month includes (usually 1-2 services). Render's free tier spins down after 15 minutes of inactivity, but Go's instant cold starts (~50ms) make this less painful than Python/Node. Fly.io has no free tier for new accounts (legacy accounts retain 3 shared VMs with 256 MB RAM). Koyeb has no free compute tier. Google Cloud Run's free tier (2M requests/month) is excellent for Go — instant scale-to-zero with near-instant cold starts.",
-      whyNot: "Why not Heroku: No free tier since November 2022. Why not AWS Lambda: Go compiles to a native binary that works great on Lambda (via provided.al2023 runtime), but the 3.2M free invocations expire after 12 months. Cloud Run is simpler and stays free forever. Why not Vercel: Vercel's Go support is limited to serverless functions — no persistent connections, WebSockets, or goroutines.",
+      whyNot: "Why not Heroku: No free tier since November 2022. Why not Vercel: Vercel's Go support is limited to serverless functions — no persistent connections, WebSockets, or goroutines.",
       relatedPage: "/hosting-free-tier-comparison-2026",
     },
     {
@@ -18156,7 +18156,7 @@ function buildFreeGoStackPage(): string {
     {
       name: "Background Jobs",
       icon: "⏱️",
-      recommended: { vendor: "Go Goroutines", why: "Go's killer feature — goroutines handle most background task needs natively, with zero external dependencies. Launch a goroutine for fire-and-forget work (sending emails, logging, webhooks) at near-zero cost (~2 KB per goroutine). For persistent queues that survive restarts, use Asynq (Redis-backed, inspired by Ruby's Sidekiq) or Temporal (durable workflow orchestration, free tier available). Upstash Redis (10K cmds/day free) works as the Asynq backend." },
+      recommended: { vendor: "Go Goroutines", why: "Go's killer feature — goroutines handle most background task needs natively, with zero external dependencies. Launch a goroutine for fire-and-forget work (sending emails, logging, webhooks) at near-zero cost (~2 KB per goroutine). For persistent queues that survive restarts, use Asynq (Redis-backed, inspired by Ruby's Sidekiq) or Temporal (durable workflow orchestration, free tier available). Upstash Redis (500K commands a month free) works as the Asynq backend." },
       alternatives: ["Upstash"],
       outgrow: "Goroutines never outgrow — they scale to millions. You need a persistent queue (Asynq, Temporal, NATS JetStream) when tasks must survive process restarts, need scheduling, or require exactly-once delivery. Upstash's 500K commands/month covers moderate Asynq usage. Redis Cloud's 30 MB free with unlimited commands is better for high-throughput queues.",
       whyNot: "Why not Celery/Bull/Sidekiq equivalents: Go doesn't need them for most use cases — goroutines handle concurrent work natively. Asynq is the closest Go equivalent when you need persistence. Why not channels alone: Go channels are in-process — tasks are lost if the process crashes. For production reliability, use a Redis-backed queue.",
@@ -18284,7 +18284,7 @@ function buildFreeGoStackPage(): string {
   const growthCosts = [
     { layer: "Database", vendor: "Neon", freeLimit: "1 GB storage per project", firstPaid: "Launch, usage-based", gets: "$0.106/CU-hour, $0.35/GB-month, autoscaling up to 16 CU", hitFirst: true },
     { layer: "Hosting", vendor: "Railway", freeLimit: "$1 of free credit a month after 30-day $5 trial", firstPaid: "Hobby $5/mo", gets: "$5 of usage included, no sleep, more RAM", hitFirst: true },
-    { layer: "Cache/Redis", vendor: "Upstash", freeLimit: "10K cmds/day", firstPaid: "Pay-as-you-go $0.2/100K", gets: "Unlimited commands, 1 GB storage", hitFirst: false },
+    { layer: "Cache/Redis", vendor: "Upstash", freeLimit: "500K cmds/mo", firstPaid: "Pay-as-you-go $0.2/100K", gets: "Unlimited commands, 1 GB storage", hitFirst: false },
     { layer: "Auth", vendor: "Auth0", freeLimit: "25,000 MAU", firstPaid: "Essential $35/mo", gets: "Custom domains, roles, MFA policies", hitFirst: false },
     { layer: "Email", vendor: "Resend", freeLimit: "3,000 emails/mo", firstPaid: "Pro $20/mo", gets: "50,000 emails/mo, custom domains, analytics", hitFirst: false },
     { layer: "Storage", vendor: "Cloudflare R2", freeLimit: "10 GB", firstPaid: "$0.015/GB/mo", gets: "Unlimited storage, still zero egress", hitFirst: false },
@@ -18459,7 +18459,7 @@ ${growthCosts.map(g => `      <tr>
   </table>
   </div>
   <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1rem 0">
-    <p style="color:var(--text-muted);font-size:.9rem;line-height:1.7"><strong style="color:var(--text)">The first paid upgrade:</strong> Database (Neon Launch, usage-based, no monthly minimum) is the first upgrade that matters — storage beyond 1 GB at $0.35/GB-month and autoscaling up to 16 CU. Two layers — background jobs (goroutines) and API docs (swaggo) — are free forever with no external service. Everything else — auth (25K MAU on Auth0), email (3K/mo), monitoring (5K errors), cache/Redis (10K cmds/day), storage (10 GB R2), CI (2,000 min) — stays free well past your first 1,000 users. Go's minimal resource footprint means you get more out of every free tier.</p>
+    <p style="color:var(--text-muted);font-size:.9rem;line-height:1.7"><strong style="color:var(--text)">The first paid upgrade:</strong> Database (Neon Launch, usage-based, no monthly minimum) is the first upgrade that matters — storage beyond 1 GB at $0.35/GB-month and autoscaling up to 16 CU. Two layers — background jobs (goroutines) and API docs (swaggo) — are free forever with no external service. Everything else — auth (25K MAU on Auth0), email (3K/mo), monitoring (5K errors), cache/Redis (500K cmds/mo), storage (10 GB R2), CI (2,000 min) — stays free well past your first 1,000 users. Go's minimal resource footprint means you get more out of every free tier.</p>
   </div>
 
   <h2>Architecture: How It Fits Together</h2>
@@ -18515,7 +18515,7 @@ function buildFreeSaasStackPage(): string {
       recommended: { vendor: "Railway", why: "Its Free plan opens with a 30-day trial carrying $5 of credits, then $1 of free credit a month, with auto-deploy from GitHub. Supports any language/framework via Nixpacks or Dockerfile. No cold starts \u2014 your service stays warm. Includes free Postgres and Redis add-ons. Best DX: instant deploys, logs, and metrics in one dashboard." },
       alternatives: ["Vercel", "Render", "Cloudflare Pages"],
       outgrow: "When you exceed the $5 of usage that Hobby's $5/month includes (1-2 services). Vercel is best for Next.js (100 GB bandwidth, but bans commercial use on Hobby plan \u2014 you must upgrade to Pro at $20/seat/month when you launch your SaaS). Render offers a free tier with 750 hours/month but spins down after 15 min inactivity. Cloudflare Pages is best for static/Jamstack with unlimited bandwidth.",
-      whyNot: "Why not Heroku: No free tier since November 2022. Why not Vercel Hobby: Bans commercial use \u2014 the moment your SaaS charges users, you owe $20/seat/month. Great for prototyping, but plan for the upgrade. Why not AWS/GCP/Azure directly: Free tiers exist but are complex to configure and most services expire after 12 months.",
+      whyNot: "Why not Heroku: No free tier since November 2022. Why not Vercel Hobby: Bans commercial use \u2014 the moment your SaaS charges users, you owe $20/seat/month. Great for prototyping, but plan for the upgrade. Why not AWS/GCP/Azure directly: Free tiers exist but are complex to configure. AWS credits last 6 months; GCP has $300 in credit plus always-free products; Azure offers free services for 12 months to new customers.",
       relatedPage: "/hosting-free-tier-comparison-2026",
       isFrameworkSection: false,
     },
@@ -35077,7 +35077,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="context-box">
-    <strong>For free storage, consider alternatives:</strong> <a href="/vendor/cloudflare-r2">Cloudflare R2</a> (10 GB, zero egress fees) and <a href="/vendor/supabase">Supabase</a> (1 GB storage) often beat the Big Four for developer-scale storage. AWS's S3 + CloudFront is the most complete free CDN package but expires after 12 months.
+    <strong>For free storage, consider alternatives:</strong> <a href="/vendor/cloudflare-r2">Cloudflare R2</a> (10 GB, zero egress fees) and <a href="/vendor/supabase">Supabase</a> (1 GB storage) often beat the Big Four for developer-scale storage. CloudFront is always free up to 1 TB of data transfer out and 10,000,000 requests a month. S3 is paid from the Free plan credits, which last up to 6 months.
   </div>
 
   <h2 id="startup-credits">Startup Credit Programs</h2>
