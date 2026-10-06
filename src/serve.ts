@@ -89,6 +89,7 @@ import { clauseNaming } from "./quoted-figures.js";
 import { figureProvenanceAgainst, statementsWeHold } from "./figure-provenance.js";
 import { statesNoFreeTier } from "./retired-terms.js";
 import { countsDownTo, shutdownDeadlineHtml } from "./shutdown-deadline.js";
+import { forecastShutdownsWithoutACard, whatEnds, type RecordACardCovers } from "./forecast-shutdowns.js";
 import { createRegistrationLimiter, rateLimitHeaders } from "./rate-limit.js";
 import { offerForSlug, vendorRates, cheapestRate, dearestRate, spanOfRates, formatRate, formatRateSpan, monthlyTokenCost, formatDollars, type ModelRate } from "./model-rates.js";
 import { DECLARED_FIGURE_READS, READ_DATES_THAT_ARE_NOT_FIGURE_READS, STALE_FACT_PAGES_BASELINE, TABLE_STALENESS_DISCLOSURES, declaredFigureReadsFor, factsOutdatedBy, linkifyVerdictBlocks, newestChangeBySlug, overdueReport, pageCompiledClause, pageDataProvenance, pageDateModified, pageFigureSource, tabulatedVendorSlots, tabulatedVendors, utcToday, verdictsOutdatedBy } from "./page-reviews.js";
@@ -25795,16 +25796,17 @@ function buildShutdownTrackerPage(): string {
     what: string;
     deadline: string;
     dateSource?: string;
-    impact: string;
-    whoAffected: string;
-    migrationPath: string;
+    impact?: string;
+    whoAffected?: string;
+    migrationPath?: string;
     migrationLink?: string;
+    covers?: RecordACardCovers[];
     status: "active" | "imminent" | "completed";
   }
 
   const today = new Date();
 
-  const shutdowns: ShutdownEntry[] = [
+  const handTyped: ShutdownEntry[] = [
     {
       service: "AWS App Runner (New Customers)",
       vendorSlug: "aws",
@@ -25882,6 +25884,7 @@ function buildShutdownTrackerPage(): string {
       whoAffected: "Apps, bots, forums, and messaging integrations using Tenor for GIF search",
       migrationPath: "Migrate to Klipy or GIPHY; both offer Tenor-compatible v2 endpoints",
       migrationLink: "/tenor-alternatives",
+      covers: [{ vendor: "Google Tenor API", deadline: "2026-06-30" }],
       status: "active",
     },
     {
@@ -25950,6 +25953,7 @@ function buildShutdownTrackerPage(): string {
       impact: "After 2027-03-31 the devices stop working: they cannot connect to Amazon WorkSpaces or be managed in the console. Until then existing customers can use them as normal and can still buy devices.",
       whoAffected: "Teams that reach Amazon WorkSpaces through WorkSpaces Thin Client devices",
       migrationPath: "Replace the devices with a partner thin client that supports Amazon WorkSpaces (AWS names Dell) or another supported device. The WorkSpaces themselves keep working.",
+      covers: [{ vendor: "AWS", deadline: "2026-04-20" }],
       status: "active",
     },
     {
@@ -26009,6 +26013,17 @@ function buildShutdownTrackerPage(): string {
     },
   ];
 
+  const recordedOnly: ShutdownEntry[] = forecastShutdownsWithoutACard(dealChanges, handTyped).map(({ record, vendorPage, deadline }) => ({
+    service: whatEnds(record) ?? (vendorPage === null ? null : recordNamedBySlug(vendorPage)) ?? record.vendor,
+    vendorSlug: vendorPage ?? toSlug(record.vendor),
+    what: record.summary,
+    deadline,
+    dateSource: record.source_url,
+    status: "active",
+  }));
+
+  const shutdowns: ShutdownEntry[] = [...handTyped, ...recordedOnly];
+
   shutdowns.sort((a, b) => new Date(a.deadline).getTime() - new Date(b.deadline).getTime());
 
   const imminent: ShutdownEntry[] = [];
@@ -26062,6 +26077,8 @@ function buildShutdownTrackerPage(): string {
       p.primaryVendor.toLowerCase() === (vendorOffer?.vendor ?? "").toLowerCase() ||
       p.slug.includes(s.vendorSlug)
     );
+    const details = ([["Who\u2019s affected", s.whoAffected], ["Impact", s.impact], ["Migration path", s.migrationPath]] as [string, string | undefined][])
+      .flatMap(([label, value]) => value === undefined ? [] : [[label, value] as const]);
 
     return `<div class="shutdown-card" style="border-left-color:${color}">
       <div class="shutdown-header">
@@ -26072,11 +26089,9 @@ function buildShutdownTrackerPage(): string {
         <div class="stability-badge" style="color:${stabColor}">${escHtmlServer(stability.toUpperCase())}</div>
       </div>
       <p class="shutdown-what">${escHtmlServer(s.what)}</p>
-      <div class="shutdown-details">
-        <div class="detail-row"><span class="detail-label">Who\u2019s affected:</span> <span>${escHtmlServer(s.whoAffected)}</span></div>
-        <div class="detail-row"><span class="detail-label">Impact:</span> <span>${escHtmlServer(s.impact)}</span></div>
-        <div class="detail-row"><span class="detail-label">Migration path:</span> <span>${escHtmlServer(s.migrationPath)}</span></div>
-      </div>
+      ${details.length === 0 ? "" : `<div class="shutdown-details">
+        ${details.map(([label, value]) => `<div class="detail-row"><span class="detail-label">${label}:</span> <span>${escHtmlServer(value)}</span></div>`).join("\n        ")}
+      </div>`}
       <div class="shutdown-links">
         ${servedVendorSlug(s.vendorSlug) === null ? "" : `<a href="/vendor/${escHtmlServer(s.vendorSlug)}">Vendor profile \u2192</a>`}
         ${s.migrationLink ? `<a href="${s.migrationLink}">Migration guide \u2192</a>` : ""}
@@ -26093,7 +26108,7 @@ function buildShutdownTrackerPage(): string {
     ${entries.map(s => buildShutdownCard(s)).join("\n    ")}`;
   }
 
-  const shutdownVendorSlugs = [...new Set(shutdowns.map(s => s.vendorSlug))];
+  const shutdownVendorSlugs = [...new Set(handTyped.map(s => s.vendorSlug))];
   const relevantChanges = changesTheVendorMade(dealChanges).filter(c =>
     shutdownVendorSlugs.some(slug => toSlug(c.vendor) === slug)
   ).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).slice(0, 10);
@@ -26224,7 +26239,7 @@ ${buildGlobalNav("guides")}
     escHtmlServer,
     ' class="subtitle dated-rule"',
   )}
-  <div class="pub-date">Published ${pubDate} &middot; ${activeCount} active shutdowns${nextDeadline ? ` &middot; Next deadline in ${nextDaysLeft} days` : ""} &middot; ${pageDataProvenance("/shutdowns", offers.length)}</div>
+  <div class="pub-date">Published ${pubDate} &middot; ${activeCount} active shutdowns${nextDeadline ? ` &middot; Next deadline in ${countedNoun(nextDaysLeft, "day")}` : ""} &middot; ${pageDataProvenance("/shutdowns", offers.length)}</div>
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number">${activeCount}</div><div class="stat-label">Active Shutdowns</div></div>
