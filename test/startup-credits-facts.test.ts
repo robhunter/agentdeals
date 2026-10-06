@@ -44,10 +44,12 @@ const WITHDRAWN = [
   "Cloudflare $250K",
   "DigitalOcean $100K",
   "expanded its startup program to $250K",
+  "Usually 1–2 years, by package",
+  "AWS Activate credits usually expire within 1-2 years.",
 ];
 
 const PROGRAMMES: Record<string, [string, string, string, string]> = {
-  "AWS Activate": ["$1K–$5K (Founders), up to $200K (Portfolio)", "Pre-Series B, founded in the last 10 years, AWS account on a paid plan. Founders: self-funded. Portfolio: needs an Activate Provider Org ID.", "Usually 1–2 years, by package", "One award per approved application; a later, larger award pays only the difference"],
+  "AWS Activate": ["$1K–$5K (Founders), up to $200K (Portfolio)", "Pre-Series B, founded in the last 10 years, AWS account on a paid plan. Founders: self-funded. Portfolio: needs an Activate Provider Org ID.", "Activate credits expire on a date shown in the AWS Billing console.", "One award per approved application; a later, larger award pays only the difference"],
   "Google Cloud for Startups": ["$2K (Start), up to $200K (Scale), up to $350K (Scale AI)", "Start: no funding yet but plans to raise venture funding soon, founded within 24 months, working MVP; Scale: VC funding from pre-seed to Series A (Series A within the last 12 months; angel money does not count), founded within 5 years.", "12 months (Start), 2 years (Scale)", "Scale: year 1 covers usage up to $100K ($250K for AI); year 2 covers 20% of spend, up to $100K more"],
   "Microsoft for Startups (formerly Founders Hub)": ["$200 on sign-up; up to $150K as Azure usage grows or with an Investor Network partner", "B2B software, AI or tech startups, pre-seed to Series C, privately held; no investor needed. Business verification and sustained Azure usage unlock more credits, and Investor Network backing starts most startups at $100K.", "Activate within 90 days; the first $200 lasts 90 days, the verification credit 180 days, and credits from the $25K milestone up to 2 years", "Released in milestones as you verify the business and use more Azure"],
   "DigitalOcean Startups": ["Credits for 12 months; amount varies, up to $10,000 a month", "Raised $10M or less; apply through a partner or directly", "12 months", ""],
@@ -83,7 +85,7 @@ const STATED_ON_THE_GUIDE = [
   "Startup credits in 2026: 13 programs across cloud infrastructure, fintech perks, developer tools and AI. The largest published offers are up to $350,000. Cloud providers offer the highest individual values. Fintech platforms pass partner credits on to their customers; each perk is claimed separately.",
   "Key insight: Stacking Google Scale (up to $200K) + AWS Activate Portfolio (up to $200K) + Cloudflare Tier 2 ($100K) can reach $500K; each needs VC funding or an affiliated partner. AWS credits from Brex and Stripe Atlas overlap: a later award pays only the difference.",
   "Major cloud providers offering $200–$350K in compute",
-  "Credit Expiry Timelines AWS Activate credits usually expire within 1-2 years.",
+  "Credit Expiry Timelines AWS Activate credits expire on a date shown in the AWS Billing console.",
   "Vesting Schedules AWS Activate gives one award per approved application.",
   "Revenue & Funding Caps Google Scale requires VC funding; angel money doesn't count. PostHog's YC deal has a $25M fundraising cap and renews only while you stay under it.",
   "Overlapping Perks Problem Brex, Mercury, Ramp, SVB and Stripe Atlas all offer AWS Activate credits. A later AWS Activate award pays only the difference, so several $5,000 perks give $5,000 in total. Mercury states that credits are not added on.",
@@ -99,6 +101,7 @@ const FAQ_ANSWERS = [
   "The largest published offers are Google Scale AI and Cloudflare Tier 1, each up to $350,000. Then Google Scale and AWS Activate Portfolio, up to $200,000 each. Then Microsoft for Startups, up to $150,000. Most require VC funding or an affiliated partner.",
   "Yes. Programs on different platforms stack: Google Scale (up to $200K), AWS Activate Portfolio (up to $200K) and Cloudflare Tier 2 ($100K) can combine to $500K. Credits from fintech platforms come from the same programmes: a later AWS Activate award pays only the difference, and Stripe Atlas's Cloudflare and Azure credits are Cloudflare's and Microsoft's own programmes.",
   "Programmes that need no funding: AWS Founders, Google Start, Microsoft, Cloudflare Tier 3, PostHog, Amplitude and DigitalOcean Startups. Programmes that need VC backing or an affiliated partner: Google Scale, AWS Portfolio, Cloudflare Tiers 1 and 2. Kiro's page asks for VC backing; its terms do not. Banking programs (Brex, Mercury, Ramp, SVB) need an account; Stripe Atlas needs incorporation through Atlas.",
+  "Yes, startup credits expire. AWS Activate credits expire on a date shown in the AWS Billing console.",
 ];
 
 const STATED_ELSEWHERE: Record<string, string[]> = {
