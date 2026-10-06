@@ -3815,7 +3815,7 @@
     {
       "vendor": "AWS Activate",
       "category": "Startup Perks",
-      "description": "Founders: $1,000 to $5,000 in AWS credits for self-funded startups. Portfolio: up to $200,000 for startups with an Activate Provider Org ID. Both are for startups before Series B, founded in the last 10 years, with an AWS account on a paid plan. Credits usually expire within 1-2 years, depending on the package, and can also pay for AWS Support. One award per approved application; a later, larger award pays only the difference.",
+      "description": "Founders: $1,000 to $5,000 in AWS credits for self-funded startups. Portfolio: up to $200,000 for startups with an Activate Provider Org ID. Both are for startups before Series B, founded in the last 10 years, with an AWS account on a paid plan. Activate credits have expiration dates, shown in the AWS Billing console, and AWS cannot extend them. They can also pay for AWS Support. One award per approved application; a later, larger award pays only the difference.",
       "tier": "Portfolio",
       "url": "https://aws.amazon.com/activate/",
       "tags": [

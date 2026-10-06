@@ -5492,7 +5492,7 @@
       "date": "2025-07-16",
       "summary": "AWS restructured its Free Tier into expiring credits, which removed the per-service SES allowance for new accounts. The SES pricing page, read 2026-08-27, offers only 'up to $200 in AWS Free Tier credits' with 'the free plan will be available for 6 months after account creation' and no perpetual sending allowance from any source.",
       "previous_state": "3,000 messages/month free, rising to 62,000 emails/month when sent from EC2, Lambda or Elastic Beanstalk; $0.10/1,000 from external servers",
-      "current_state": "No free sending allowance. Up to $200 in AWS Free Tier credits usable across eligible services, free plan for 6 months after account creation, credits expiring 12 months after account creation, then $0.10/1,000 emails from any source",
+      "current_state": "No free sending allowance. Up to $200 in AWS Free Tier credits usable across eligible services, free plan for 6 months after account creation, then $0.10/1,000 emails from any source",
       "impact": "high",
       "source_url": "https://aws.amazon.com/about-aws/whats-new/2025/07/aws-free-tier-credits-month-free-plan/",
       "category": "Email",
