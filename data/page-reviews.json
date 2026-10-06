@@ -1973,7 +1973,7 @@
       "reviewed_at": "2026-10-02",
       "reviewer": "pm",
       "review_outcome": "pass",
-      "review_note": "Every figure checked on 2026-10-02 against Google's pricing, billing, rate-limits, deprecations and changelog pages, and the Groq, Anthropic and OpenAI rows against those vendors' own docs. The corrections in https://github.com/robhunter/agentdeals/issues/2237 were read on production on 2026-10-02: the page states the Google Gemini API listing in full, and \"largest free option\" is served on none of 2,601 routes. OpenRouter's \"25+ free models\" is OpenRouter's own pricing-page figure; its models API listed 21 at $0 that day.",
+      "review_note": "Every figure checked on 2026-10-02 against Google's pricing, billing, rate-limits, deprecations and changelog pages, and the Groq, Anthropic and OpenAI rows against those vendors' own docs. The corrections in https://github.com/robhunter/agentdeals/issues/2237 were read on production on 2026-10-02: the page states the Google Gemini API listing in full, and \"largest free option\" is served on none of 2,601 routes. OpenRouter's \"25+ free models\" is OpenRouter's own pricing-page figure; its models API listed 21 at $0 that day. Section 4's Tier 2 and Tier 3 rules and its 10-minute spend-based limits, added by https://github.com/robhunter/agentdeals/issues/2427, were read on 2026-10-06 against Google's billing page (updated 2026-09-28) and rate-limits page (updated 2026-09-02).",
       "reads_index": true,
       "tables_read_index": true,
       "table_figures": 61,
