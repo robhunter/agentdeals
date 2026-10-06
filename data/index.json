@@ -7898,10 +7898,22 @@
       },
       "conditions": [
         {
-          "text": "Brave says storing API results in whole or in part, for example to train or tune an LLM, requires a plan that explicitly grants storage rights, which its general Terms of Service do not cover.",
-          "quote": "If you would like to store the API results in part or whole (for example, to train or tune an LLM), you will need to subscribe to a plan that explicitly grants storage rights.",
-          "url": "https://brave.com/search/api/",
-          "read_on": "2026-10-04"
+          "text": "Keeping any data from the API is prohibited. Storing results or training an LLM requires an arrangement with Brave.",
+          "quote": "It is prohibited to retain any and all data received through the Brave Search API.",
+          "url": "https://api-dashboard.search.brave.com/documentation/resources/help-feedback",
+          "read_on": "2026-10-06"
+        },
+        {
+          "text": "Once the free $5 and any bought credits are used up, requests are rejected until funds are added. Auto-reload is optional.",
+          "quote": "if you exhaust your prepaid balance your service will be paused — further API requests are rejected until you add more funds.",
+          "url": "https://api-dashboard.search.brave.com/documentation/resources/help-feedback",
+          "read_on": "2026-10-06"
+        },
+        {
+          "text": "Unused free credit does not carry over. Bought credits do not expire and are not refunded.",
+          "quote": "Free monthly credits are the exception — those are replaced each month rather than carried over.",
+          "url": "https://api-dashboard.search.brave.com/documentation/resources/help-feedback",
+          "read_on": "2026-10-06"
         }
       ]
     },
