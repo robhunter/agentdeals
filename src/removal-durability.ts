@@ -121,12 +121,9 @@ export function removalStillLasting<T extends RemovalCandidate>(
   log: readonly T[],
   resolve: VendorNameResolver = spelledAsTheLogStoresIt,
 ): LastingRemovalExample | null {
-  const removals = removalsRecordedFor(vendor, log, resolve);
+  const removals = removalsRecordedFor(vendor, log, resolve).filter((removal) => !theEventNeverHappened(removal));
   if (removals.length === 0) return null;
-  const everyOneHeld = removals.every(
-    (removal) => !theEventNeverHappened(removal) && !theFreeTierCameBackAfter(removal, log),
-  );
-  if (!everyOneHeld) return null;
+  if (removals.some((removal) => theFreeTierCameBackAfter(removal, log))) return null;
   const first = removals[0]!;
   return { vendor: first.vendor, date: first.date, year: first.date.slice(0, 4) };
 }

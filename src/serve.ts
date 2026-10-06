@@ -65,6 +65,8 @@ import { NAME_MATCH_SENTENCE } from "./name-match.js";
 import { FREE_TIER_STANDING_LABELS, GRADE_FACTORS_WITHOUT_PRICING_HISTORY, NOT_EVIDENCE_LABELS, citesAChangeOlderThanTheGrade, freeTierStanding, gradesFirstSet, gradesLastSet, gradingDatesClause, neverTracked, pricingHistoryCoverageAnswer, pricingHistoryCoverageSentence, riskEntries, scorecard, splitByFreeTierStanding, trackedSinceGrading, type RiskEntry } from "./risk-scorecard.js";
 import { CHANGE_DIRECTION, changeDirectionTable, directionRatioLabel } from "./change-direction.js";
 import { removalDurability, removalReturnRateSentence, removalDurabilityPattern, lastingRemovalExamplesFor } from "./removal-durability.js";
+import { cutsByQuarterNewestFirst, cutsWindow, freeTierCutsIn } from "./free-tier-cuts.js";
+import { CHANGE_TIMELINE_LINK_TEXT, CHANGE_TIMELINE_PATH, CUTS_THIS_YEAR_ANCHOR, CUTS_THIS_YEAR_HEADING, CUTS_THIS_YEAR_SUMMARY_CLASS, FIGURES_AS_OF_CLASS, FREE_TIER_TRACKER_HEADING, FREE_TIER_TRACKER_META_DESCRIPTION, FREE_TIER_TRACKER_TITLE, FREE_TIER_TRACKER_YEAR, NO_KNOWN_EFFECTIVE_DATE_LEFT_OUT, UNTIL_ITS_DATE_ARRIVES, changeTypesAmong, cutsThisYearSummary, figuresAsOfTheChangeHtml, isAFirstQuarterCard, neonFiguresWereJanuarysHtml, quarterAnchor, quarterHeading } from "./free-tier-tracker.js";
 import { changeCitesASource, changeIsUncited, changeSourceCitation, changeSourceLinkHtml, changeCitationHtml, citedClaimHtml, changeSummaryHtml, changeSummaryText, citedChanges, uncitedChangeNotice, uncitedChangeNoticeHtml, ratingWithheldForNoSourceClause, ratingWithheldForNoSourceSentence, ratingWithheldClause, ratingWithheldSentence, type WithheldRecordCounts, UNCITED_CHANGE_LABEL, RECORD_SOURCE_CLASS, type CitableChangeRow } from "./change-citation.js";
 import { growthLimitPhrases } from "./growth-limits.js";
 import { registerAgent, authenticateRequest, validateVestauthUrl, hashApiKey, updateAgentX402Address, getAgentById } from "./agents.js";
@@ -123,7 +125,7 @@ import { buildProductFunctions, functionMembers, functionDefinitions, functionMe
 import { curatedAlternativesFor } from "./curated-alternatives.js";
 import { vendorSubstitutes, substitutesListedFor } from "./vendor-substitutes.js";
 import type { Agent, ChangeDateSource, DealChange, FreePlanExcerpt, RiskCause, RatingWithheld, LinkUnreachable, ListingCondition, Offer, StabilityClass, SubtypeLabel } from "./types.js";
-import { A_DATED_HEADING_MARKER, A_DATED_SECTION_MARKER, datedHeadingNoticeHtml, datedSectionNoticeHtml, namedOnceItsDateArrived, namedWhileAheadOf, namedWhileNotBefore, ANNOUNCED_BADGE, ANNOUNCED_HEADING, announcedIntro, changeDateLabel, changeEntryDateLabel, changeEntryLongDateLabel, changeDateClause, changeDatePublished, changeEventStartDate, capListSections, latestEventDate, offerExpiryAfter, feedEntryUpdated, undatedGroupHeading, UNDATED_TILE_LABEL, firstReadHeading, discoveryBatchNote, coveringBracketedChanges, changeEntryDateLabelHtml, isoWeekOf, monthlyChangeSeries, changesInWindow, discoveryMonthSeriesHeading, periodComparisonSentence, DISCOVERED_DATE_PREFIX, EFFECTIVE_DATE_PREFIX, UNDATED_GROUP_NOTE, UNKNOWN_EFFECTIVE_DATE_MARKER, EFFECTIVE_BY_DATE_MEANING, BRACKETED_DATE_PREFIX, RECORDED_DATE_PREFIX, CORRECTED_DATE_PREFIX, EFFECTIVE_MONTH_SERIES_NOTE, DISCOVERY_MONTH_SERIES_NOTE, weekRangeLabel, newestChangeInEffect, vendorPageLastUpdated } from "./change-dates.js";
+import { A_DATED_HEADING_MARKER, A_DATED_SECTION_MARKER, datedHeadingNoticeHtml, datedSectionNoticeHtml, namedFromItsDate, namedOnceItsDateArrived, namedWhileAheadOf, namedWhileNotBefore, ANNOUNCED_BADGE, ANNOUNCED_HEADING, announcedIntro, changeDateLabel, changeEntryDateLabel, changeEntryLongDateLabel, changeDateClause, changeDatePublished, changeEventStartDate, capListSections, latestEventDate, offerExpiryAfter, feedEntryUpdated, undatedGroupHeading, UNDATED_TILE_LABEL, firstReadHeading, discoveryBatchNote, coveringBracketedChanges, changeEntryDateLabelHtml, isoWeekOf, monthlyChangeSeries, changesInWindow, discoveryMonthSeriesHeading, periodComparisonSentence, DISCOVERED_DATE_PREFIX, EFFECTIVE_DATE_PREFIX, UNDATED_GROUP_NOTE, UNKNOWN_EFFECTIVE_DATE_MARKER, EFFECTIVE_BY_DATE_MEANING, BRACKETED_DATE_PREFIX, RECORDED_DATE_PREFIX, CORRECTED_DATE_PREFIX, EFFECTIVE_MONTH_SERIES_NOTE, DISCOVERY_MONTH_SERIES_NOTE, weekRangeLabel, newestChangeInEffect, vendorPageLastUpdated } from "./change-dates.js";
 import { changeFeedEntries, feedEntryFields, feedUpdatedTimestamp, changeFeedProvenanceNote, CHANGE_FEED_ENTRY_LIMIT, CHANGE_FEED_DESCRIPTION, CHANGE_FEED_NAMESPACE, CHANGE_FEED_NAMESPACE_PREFIX, channelUpdatedTimestamp, WEEKLY_FEED_POPULATION_NOTE, feedLinkTag, feedEntrySourceXml, digestSourceXml, PER_CHANGE_FEED, WEEKLY_DIGEST_FEED } from "./change-feed.js";
 import { changeLogSections, ourRecordsSectionHeading, OUR_RECORDS_SECTION_NOTE, type MonthGroup } from "./change-log-sections.js";
 import { FEED_CORRECTIONS, correctionEntriesXml } from "./feed-corrections.js";
@@ -8169,8 +8171,8 @@ const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
   },
   {
     slug: "free-tier-tracker",
-    title: "Free Tier Tracker — Q1 2026 Developer Tool Pricing Changes",
-    metaDesc: "Systematic tracker of developer tool free tiers removed, reduced, or expanded in Q1 2026. Postman, LocalStack, Brave Search, HCP Terraform, Windsurf, and more. Powered by AgentDeals deal_changes data.",
+    title: FREE_TIER_TRACKER_TITLE,
+    metaDesc: FREE_TIER_TRACKER_META_DESCRIPTION,
     contextHtml: "",
     tag: "free-tier-tracker",
     primaryVendor: "LocalStack",
@@ -26318,10 +26320,13 @@ ${buildGlobalNav("guides")}
 }
 
 function buildFreeTierTrackerPage(): string {
-  const title = "Free Tier Tracker — Q1 2026 Developer Tool Pricing Changes";
-  const metaDesc = "Systematic tracker of developer tool free tiers removed, reduced, or expanded in Q1 2026. Postman, LocalStack, Brave Search, HCP Terraform, Windsurf, and more. Powered by AgentDeals deal_changes data.";
+  const title = FREE_TIER_TRACKER_TITLE;
+  const metaDesc = FREE_TIER_TRACKER_META_DESCRIPTION;
   const slug = "free-tier-tracker";
   const pubDate = "2026-03-27";
+  const servedOn = new Date().toISOString().slice(0, 10);
+  const cutsThisYear = cutsByQuarterNewestFirst(FREE_TIER_TRACKER_YEAR, freeTierCutsIn(FREE_TIER_TRACKER_YEAR, dealChanges, servedOn));
+  const cutsSummary = cutsThisYearSummary(cutsWindow(FREE_TIER_TRACKER_YEAR, servedOn), cutsThisYear.flatMap((group) => group.records));
 
   const q1Changes = q1TrackedChanges;
 
@@ -26345,6 +26350,7 @@ function buildFreeTierTrackerPage(): string {
     impact: string;
     detail: string;
     alternatives: string[];
+    figuresNoteHtml?: string;
   }
 
   const recordBehindEntryCitation = (e: ErosionEntry): string => {
@@ -26391,7 +26397,7 @@ function buildFreeTierTrackerPage(): string {
       changeType: "pricing_restructured",
       impact: "high",
       detail: "HCP Terraform's legacy free plan ended March 31, 2026. Users were transitioned to a free tier with a 500 managed resource cap, SSO, and policy enforcement.",
-      alternatives: ["Spacelift", "env0", "Scalr", "Terragrunt Scale"],
+      alternatives: ["Spacelift", "env0", "Scalr"],
     },
     {
       vendor: "Windsurf",
@@ -26400,7 +26406,7 @@ function buildFreeTierTrackerPage(): string {
       oneLiner: "Credits replaced with hard quotas, Pro price +33%",
       changeType: "pricing_restructured",
       impact: "medium",
-      detail: "Windsurf replaced its flexible credits-based system with fixed monthly quotas and raised Pro pricing from $15 to $20/month. Free tier went from credits (flexible allocation) to hard limits on completions and chat messages.",
+      detail: "Windsurf replaced its flexible credits-based system with daily and weekly quotas and raised Pro pricing from $15 to $20/month. Free tier went from credits (flexible allocation) to hard limits on completions and chat messages.",
       alternatives: ["Cursor", "GitHub Copilot", "Cline"],
     },
     {
@@ -26414,13 +26420,13 @@ function buildFreeTierTrackerPage(): string {
       alternatives: ["Ceph", "SeaweedFS", "GarageHQ"],
     },
     {
-      vendor: "X API (Twitter)",
-      slug: "x-api-twitter-",
-      date: "2026-02-09",
+      vendor: "X (Twitter)",
+      slug: "x-twitter",
+      date: "2026-02-06",
       oneLiner: "Free tier eliminated — pay-per-use only",
       changeType: "free_tier_removed",
       impact: "high",
-      detail: "X/Twitter API eliminated its free tier, replacing it with pay-per-use credit model. Active free-tier users receive a $0 voucher. 'For-good' utility apps remain free. Basic fixed tier remains at $200/month.",
+      detail: "X replaced its Legacy Free API tier with pay-per-use pricing, announced 2026-02-06. Recently active free-tier users moved to pay-per-use with a one-time $10 voucher. Only apps X classifies as Public Utility Apps keep free scaled access.",
       alternatives: ["Bluesky AT Protocol", "Mastodon API"],
     },
   ];
@@ -26433,7 +26439,7 @@ function buildFreeTierTrackerPage(): string {
       oneLiner: "Free tier launched as HCP Terraform alternative",
       changeType: "new_free_tier",
       impact: "medium",
-      detail: "Gruntwork launched a free tier for Terragrunt Scale IaC orchestration, positioned as the HCP Terraform alternative. Includes GitOps, drift detection, and module update automation with 500+ managed resources.",
+      detail: "Gruntwork launched a free tier for Terragrunt Scale IaC orchestration, positioned as the HCP Terraform alternative. Includes GitOps, drift detection, and module update automation with up to 25 infrastructure units.",
       alternatives: ["Spacelift", "env0", "Scalr"],
     },
     {
@@ -26445,6 +26451,7 @@ function buildFreeTierTrackerPage(): string {
       impact: "medium",
       detail: "Post-Databricks acquisition, Neon restructured pricing with both expansions and changes. Projects increased from 10 to 100, storage became per-project (0.5 GB each, up to 5 GB total), and Neon Auth added at 60K MAU.",
       alternatives: ["Supabase", "Turso"],
+      figuresNoteHtml: neonFiguresWereJanuarysHtml(escHtmlServer),
     },
     {
       vendor: "Unity DevOps",
@@ -26466,7 +26473,7 @@ function buildFreeTierTrackerPage(): string {
     },
     {
       name: "Credits \u2192 Hard Quotas",
-      description: "Flexible credit systems are being replaced by fixed monthly quotas. This makes 'free' more predictable but less useful — you can't burst when you need to.",
+      description: "Flexible credit systems are being replaced by fixed quotas. This makes 'free' more predictable but less useful — you can't burst when you need to.",
       examples: "Windsurf, Netlify, Vercel",
     },
     {
@@ -26509,6 +26516,17 @@ function buildFreeTierTrackerPage(): string {
     pricing_postponed: "Postponed",
   };
 
+  const figuresNoteFor = (e: ErosionEntry): string => {
+    if (e.figuresNoteHtml !== undefined) return e.figuresNoteHtml;
+    if (!isAFirstQuarterCard(e.date)) return "";
+    return figuresAsOfTheChangeHtml(e.date, e.vendor, servedVendorSlugForName(e.slug), escHtmlServer);
+  };
+
+  const figuresNoteHtml = (e: ErosionEntry): string => {
+    const note = figuresNoteFor(e);
+    return note ? `<p class="${FIGURES_AS_OF_CLASS}" style="color:var(--text-dim);font-size:.8rem;line-height:1.6;margin-bottom:.5rem">${note}</p>` : "";
+  };
+
   const buildEntryCard = (e: ErosionEntry, borderColor: string) => `
     <div style="padding:1.25rem;border:1px solid var(--border);border-left:3px solid ${borderColor};border-radius:8px;background:var(--bg-card);margin-bottom:.75rem">
       <div style="display:flex;align-items:center;flex-wrap:wrap;gap:.5rem;margin-bottom:.5rem">
@@ -26519,6 +26537,7 @@ function buildFreeTierTrackerPage(): string {
       </div>
       <p style="color:var(--text);font-size:.95rem;font-weight:500;margin-bottom:.5rem">${escHtmlServer(e.oneLiner)}</p>
       <p style="color:var(--text-muted);font-size:.85rem;line-height:1.6;margin-bottom:.5rem">${escHtmlServer(e.detail)} ${recordBehindEntryCitation(e)}</p>
+      ${figuresNoteHtml(e)}
       ${e.alternatives.length ? `<p style="font-size:.8rem;color:var(--text-dim)"><strong style="color:var(--text-muted)">Still free:</strong> ${e.alternatives.map(a => changeVendorLinkHtml(a, ' style="color:var(--accent)"')).join(", ")}</p>` : ""}
     </div>`;
 
@@ -26534,6 +26553,24 @@ function buildFreeTierTrackerPage(): string {
   };
 
   const sortedQ1 = [...q1Changes].sort((a, b) => b.date.localeCompare(a.date));
+
+  const cutsThisYearHtml = cutsThisYear.map(group => `
+  <h3 id="${quarterAnchor(group.year, group.quarter)}">${escHtmlServer(quarterHeading(group.year, group.quarter))}</h3>
+  <div style="overflow-x:auto">
+  <table class="changes-table">
+    <thead>
+      <tr>
+        <th>Vendor</th>
+        <th>Type</th>
+        <th>Date</th>
+        <th>Summary</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${group.records.map(buildChangeRow).join("\n      ")}
+    </tbody>
+  </table>
+  </div>`).join("\n");
 
   const relatedSlugs = ["free-tier-risk", "q1-2026-developer-pricing-report", "q2-pricing-preview-2026", "localstack-alternatives", "postman-alternatives", "terraform-alternatives", "free-startup-stack"];
   const relatedPages = ALTERNATIVES_PAGES.filter(p => relatedSlugs.includes(p.slug));
@@ -26625,7 +26662,7 @@ ${mcpCtaCss()}
 <div class="container">
   ${buildGlobalNav("changes")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternatives">Guides</a> &rsaquo; Free Tier Tracker</div>
-  <h1>Free Tier Tracker &mdash; Q1 2026</h1>
+  <h1>${escHtmlServer(FREE_TIER_TRACKER_HEADING)}</h1>
   <p class="pub-date">Published ${pubDate} &middot; Tracking ${trackedChangeCount} pricing changes across ${offers.length.toLocaleString()} developer tools &middot; ${pageDataProvenance("/free-tier-tracker", offers.length)}</p>
 
   <div class="summary-stats">
@@ -26643,6 +26680,7 @@ ${mcpCtaCss()}
   <div class="toc">
     <h3>Contents</h3>
     <ol>
+      <li><a href="#${CUTS_THIS_YEAR_ANCHOR}">${escHtmlServer(CUTS_THIS_YEAR_HEADING)}</a></li>
       <li><a href="#removed">Free Tiers Removed &amp; Reduced</a></li>
       <li><a href="#expanded">Free Tiers Expanded &amp; New</a></li>
       <li><a href="#patterns">Trend Analysis</a></li>
@@ -26651,13 +26689,24 @@ ${mcpCtaCss()}
     </ol>
   </div>
 
+  <h2 id="${CUTS_THIS_YEAR_ANCHOR}">${escHtmlServer(CUTS_THIS_YEAR_HEADING)}</h2>
+  ${cutsSummary ? `<p class="section-intro ${CUTS_THIS_YEAR_SUMMARY_CLASS}">${escHtmlServer(cutsSummary)}</p>` : ""}
+  ${datedSectionNoticeHtml(
+    namedFromItsDate("A change", servedOn),
+    [{ when: UNTIL_ITS_DATE_ARRIVES, text: CHANGE_TIMELINE_LINK_TEXT, href: CHANGE_TIMELINE_PATH }],
+    escHtmlServer,
+    ' class="section-intro dated-rule"',
+  )}
+  ${cutsThisYearHtml}
+  <p class="section-intro">${escHtmlServer(NO_KNOWN_EFFECTIVE_DATE_LEFT_OUT)} <a href="${CHANGE_TIMELINE_PATH}">${escHtmlServer(CHANGE_TIMELINE_LINK_TEXT)}</a>.</p>
+
   <h2 id="removed">Free Tiers Removed &amp; Reduced</h2>
   <p class="section-intro">These are the most impactful free tier removals, reductions, and restrictions from Q1 2026. Each entry links to the vendor profile and lists free alternatives that still work.</p>
 
   ${featuredRemovals.map(e => buildEntryCard(e, changeTypeColors[e.changeType] ?? "#d29922")).join("\n  ")}
 
   <h2 id="expanded">Free Tiers Expanded &amp; New</h2>
-  <p class="section-intro">Not everything is shrinking. These vendors expanded their free tiers or launched new ones in Q1 2026 &mdash; often in direct response to competitor removals.</p>
+  <p class="section-intro">Not everything is shrinking. These vendors expanded their free tiers or launched new ones &mdash; often in direct response to competitor removals.</p>
 
   ${featuredExpansions.map(e => buildEntryCard(e, "#3fb950")).join("\n  ")}
 
@@ -26708,13 +26757,13 @@ ${mcpCtaCss()}
 
   <div id="methodology" class="methodology">
     <p><strong>Data Source &amp; Methodology</strong></p>
-    <p>This tracker is powered by AgentDeals&rsquo; <code>track_changes</code> tool, which monitors ${trackedChangeCount} pricing changes across ${offers.length.toLocaleString()} developer tools. ${escHtmlServer(howEachRecordWasRead(trackedChangeRecords))} Change types: <em>free_tier_removed</em>, <em>limits_reduced</em>, <em>restriction</em>, <em>open_source_killed</em>, <em>pricing_restructured</em>, <em>new_free_tier</em>, <em>limits_increased</em>, <em>startup_program_expanded</em>.</p>
+    <p>This tracker is powered by AgentDeals&rsquo; <code>track_changes</code> tool, which monitors ${trackedChangeCount} pricing changes across ${offers.length.toLocaleString()} developer tools. ${escHtmlServer(howEachRecordWasRead(trackedChangeRecords))} Change types: ${changeTypesAmong(trackedChangeRecords).map((type) => `<em>${escHtmlServer(type)}</em>`).join(", ")}.</p>
     <p>Impact is scored as high (affects thousands of developers or eliminates a widely-used free tier), medium (meaningful change to limits or pricing structure), or low (minor adjustments). Sources linked for each entry.</p>
     <p>Missing a change? <a href="https://github.com/robhunter/agentdeals/issues">File an issue</a> and we&rsquo;ll add it.</p>
   </div>
 
   <div class="search-cta">
-    <p>This tracker covers Q1 2026 changes. For real-time tracking of all ${trackedChangeCount}+ pricing changes, use our <a href="/changes">Changes Timeline</a> or subscribe to the <a href="/feed.xml">Atom Feed</a>.</p>
+    <p>This tracker covers ${FREE_TIER_TRACKER_YEAR}. For real-time tracking of all ${trackedChangeCount}+ pricing changes, use our <a href="/changes">Changes Timeline</a> or subscribe to the <a href="/feed.xml">Atom Feed</a>.</p>
     <p style="margin-top:.5rem;font-size:.85rem;color:var(--text-dim)">For risk scores on specific vendors, see the <a href="/free-tier-risk">Free Tier Risk Index</a>.</p>
   </div>
 
@@ -44832,7 +44881,7 @@ ${globalNavCss()}
     <h3 style="margin:0 0 .75rem;font-family:var(--serif);font-size:1rem;color:var(--text)">More Guides</h3>
     <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:.5rem">
       <li><a href="/free-tier-risk">Free Tier Risk Index</a> <span style="color:var(--text-muted);font-size:.85rem">&mdash; sustainability risk scores for ${riskEntries.length} vendors</span></li>
-      <li><a href="/free-tier-tracker">Q1 2026 Free Tier Tracker</a> <span style="color:var(--text-muted);font-size:.85rem">&mdash; removals, expansions, and trends</span></li>
+      <li><a href="/free-tier-tracker">${escHtmlServer(FREE_TIER_TRACKER_HEADING)}</a> <span style="color:var(--text-muted);font-size:.85rem">&mdash; removals, expansions, and trends</span></li>
       <li><a href="/startup-credits">Startup Credits Directory</a> <span style="color:var(--text-muted);font-size:.85rem">&mdash; 13 programs</span></li>
       <li><a href="/free-startup-stack">Free Startup Stack</a> <span style="color:var(--text-muted);font-size:.85rem">&mdash; complete infrastructure on $0/month</span></li>
       <li><a href="/q1-2026-developer-pricing-report">Q1 2026 Pricing Report</a> <span style="color:var(--text-muted);font-size:.85rem">&mdash; quarterly pricing analysis</span></li>
@@ -48817,7 +48866,7 @@ ${ourRecordsHtml}
       <li><a href="/expiring">Expiring Deals Timeline</a></li>
       <li><a href="/stability">Vendor Stability Dashboard</a></li>
       <li><a href="/free-tier-risk">Free Tier Risk Index</a></li>
-      <li><a href="/free-tier-tracker">Q1 2026 Erosion Report</a></li>
+      <li><a href="/free-tier-tracker">${escHtmlServer(FREE_TIER_TRACKER_HEADING)}</a></li>
       <li><a href="/state-of-free-tiers">State of Free Tiers 2026</a></li>
       <li><a href="/setup">Connect via MCP</a></li>
     </ul>

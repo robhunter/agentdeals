@@ -25,6 +25,7 @@ import { substitutesFor } from "../dist/product-role.js";
 import { changeTouchesTheListing } from "../dist/product-deprecation.js";
 import { A_DATED_HEADING_MARKER, A_DATED_SECTION_MARKER, ANNOUNCED_HEADING } from "../dist/change-dates.js";
 import { NOTHING_CHANGING_SOON_HTML, RECENT_CHANGES_ON_THE_HOME_PAGE, UPCOMING_DEADLINES_ON_THE_HOME_PAGE, atMostShownHere, onlyTheMostRecentShown } from "../dist/homepage-claims.js";
+import { CUTS_THIS_YEAR_HEADING } from "../dist/free-tier-tracker.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -202,6 +203,7 @@ const SECTIONS_GROUPED_BY_A_DATE: Array<{ page: string; heading: string; served:
   { page: "/deadlines", heading: "Developer Tool Deadline Tracker", served: "always" },
   { page: "/expiring", heading: "Upcoming Free Tier Changes", served: "always" },
   { page: "/shutdowns", heading: "Developer Tool Shutdown Tracker 2026", served: "always" },
+  { page: "/free-tier-tracker", heading: CUTS_THIS_YEAR_HEADING, served: "always" },
   { page: "/", heading: "Upcoming deal changes", served: "when it holds one" },
   { page: "/pricing-changes", heading: "Upcoming Changes", served: "when it holds one" },
   { page: "/trends/cloud-hosting", heading: ANNOUNCED_HEADING, served: "when it holds one" },
