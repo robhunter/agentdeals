@@ -1,103 +1,92 @@
 {
   "held": [
     {
-      "vendor": "Aiven",
+      "vendor": "AbstractAPI",
+      "change_type": "pricing_restructured",
+      "impact": "high",
+      "summary": "The free tier is still offered. The description is significantly different. The page details many individual APIs, each with its own free tier, rather than a suite of 15 APIs with a single free tier. The page states each API has a free tier with a generous usage allowance.",
+      "previous_state": "Suite of 15 REST APIs (IP geolocation, email validation, screenshots, exchange rates, phone validation, etc.) — free tier: 1,000 requests/month per API, 1 request/second rate limit. Non-commercial use only on free tier",
+      "current_state": "Each of our API’s has a free tier with a generous usage allowance for you to try the product out and verify that the speed and data quality work for you. The free tiers of our API’s may not be used in commercial projects.",
+      "source_url": "https://www.abstractapi.com/api",
+      "category": "API Development",
+      "first_read_date": "2026-10-06"
+    },
+    {
+      "vendor": "Auth0",
+      "change_type": "restriction",
+      "impact": "low",
+      "summary": "The free tier now requires credit card verification for custom domains. Additionally, the free tier includes Passkeys.",
+      "previous_state": "Identity platform — 25K MAU (B2C), unlimited logins, social + database connections, Universal Login, 1 Enterprise Connection, 5 Organizations, 1 Custom Domain. No credit card required",
+      "current_state": "Up to 25,000 monthly active users. Includes 1 Custom Domain* Secure Agentic AI workflows Passwordless Authentication Unlimited Social Connections** 5 Organizations Brand Customization Basic Attack Protection Community Support 1 Enterprise Connection New Self-Service SSO New SCIM New *credit card verification required for custom domains. **subject to system limitations.",
+      "source_url": "https://auth0.com/pricing",
+      "category": "Auth",
+      "first_read_date": "2026-10-06"
+    },
+    {
+      "vendor": "bitnami.com",
+      "change_type": "pricing_restructured",
+      "impact": "high",
+      "summary": "The free tier is now limited to non-production use cases and only provides access to a portion of the images. Access to all images and other benefits requires a purchase.",
+      "previous_state": "Deploy prepared apps on IaaS. Management of 1 AWS micro instance free",
+      "current_state": "Developers can access a portion of Bitnami Secure Images for non-production use cases. Free images are only available in the latest tag. For access to all the images/applications in the catalog, along with many other benefits, you can purchase Bitnami Secure Images.",
+      "source_url": "https://bitnami.com/",
+      "category": "Server Management",
+      "first_read_date": "2026-10-06"
+    },
+    {
+      "vendor": "formlets.com",
+      "change_type": "pricing_restructured",
+      "impact": "high",
+      "summary": "The free tier now offers unlimited submissions.",
+      "previous_state": "Online forms, unlimited single page forms/month, 100 submissions/month, email notifications.",
+      "current_state": "Unlimited submits & No signup/creditcard needed",
+      "source_url": "https://formlets.com/",
+      "category": "Forms",
+      "first_read_date": "2026-10-06"
+    },
+    {
+      "vendor": "Grafana Cloud",
       "change_type": "limits_reduced",
       "impact": "high",
-      "summary": "The free tier now has a limit of 1 dedicated VM, 1 CPU per VM, 1 GB RAM per VM, and 1 GB total storage.",
-      "previous_state": "Managed PostgreSQL, MySQL, or Valkey (Redis-compatible) — 1 CPU, 1 GB RAM, 1 GB disk per service. No time limit",
-      "current_state": "1 dedicated VM, 1 CPU per VM, 1 GB RAM per VM, 1 GB total storage. Cannot select a specific cloud or region. No integrations or connection pooling.",
-      "source_url": "https://aiven.io/pricing",
-      "category": "Databases",
-      "first_read_date": "2026-10-05"
+      "summary": "The free tier now includes access to all Grafana Cloud services with usage limits. The specific limits have changed and a $19/month platform fee is now required for exceeding those limits. Previously 10k metric series, 50 GB logs, and 50 GB traces.",
+      "previous_state": "Free tier includes access to all Grafana Cloud services with limited usage, 14-day retention, and community support. 10k metric series, 50 GB logs, and 50 GB traces are included. A $19/month platform fee is required for 10k active series, 50 GB ingested logs/traces, and 30 days retention.",
+      "current_state": "The free tier includes access to all Grafana Cloud services with usage limits. Metrics are limited to 10k active series per month. Logs, Traces, and Profiles are limited to 50 GB ingested per month with 14 day retention. Kubernetes Monitoring is limited to 2,232 host hours & 37,944 container hours per month. Application Observability is limited to 2,232 host hours per month. Frontend Observability is limited to 50k sessions per month. Database Observability is limited to 2,232 host hours (3 database hosts). Grafana Assistant is limited to 3 active AI users per month (40M tokens / user / mo) & 25M tokens per month for service account usage. A $19/month platform fee is required for exceeding the free tier limits.",
+      "source_url": "https://grafana.com/pricing/",
+      "category": "Monitoring",
+      "first_read_date": "2026-10-06"
     },
     {
-      "vendor": "Bugsnag",
-      "change_type": "pricing_restructured",
-      "impact": "medium",
-      "summary": "The free tier now has a limit of 7.5K events and 1M spans per month. The page details multiple paid tiers with varying event and span limits, and the free tier is positioned as being for 'Solo users and their passion projects'.",
-      "previous_state": "Error monitoring — Includes: 1 user Error and performance monitoring 7.5K events and 1M spans per month 50+ platforms 30+ third-party integrations Free plan features, plus: Unlimited users End-to-end diagnostics Basic notifications",
-      "current_state": "The free tier is for solo users and includes 7.5K events and 1M spans per month.",
-      "source_url": "https://www.bugsnag.com/pricing/",
-      "category": "Error Tracking",
-      "first_read_date": "2026-10-05"
-    },
-    {
-      "vendor": "Cloudflare Workers AI",
-      "change_type": "pricing_restructured",
+      "vendor": "LLM7.io",
+      "change_type": "limits_reduced",
       "impact": "high",
-      "summary": "The pricing structure has been significantly restructured with per-model unit-based pricing (tokens and neurons) introduced. The pricing for these models is now explicitly stated in terms of both tokens and neurons.",
-      "previous_state": "Workers AI runs AI models on Cloudflare's global network. Every account gets 10,000 Neurons per day at no charge, reset daily at 00:00 UTC; on the Workers Free plan, requests beyond that fail until the reset. On the Workers Paid plan (from $5 per month), usage above 10,000 Neurons per day costs $0.011 per 1,000 Neurons. Seven models, including @cf/moonshotai/kimi-k2.6, @cf/zai-org/glm-5.3 and @cf/deepseek-ai/deepseek-v4-pro-0813, require the Workers Paid plan or prepaid AI Gateway credits.",
-      "current_state": "Workers AI is included in both the Free and Paid Workers plans and is priced at $0.011 per 1,000 Neurons . Our free allocation allows anyone to use a total of 10,000 Neurons per day at no charge . To use more than 10,000 Neurons per day, you need to sign up for the Workers Paid plan . On Workers Paid, you will be charged at $0.011 / 1,000 Neurons for any usage above the free allocation of 10,000 Neurons per day.",
-      "source_url": "https://developers.cloudflare.com/workers-ai/platform/pricing/",
+      "summary": "The free tier limits have been significantly reduced. Previously 10 requests/minute, 60/hour, and 500,000 tokens/day without a key, and 40/minute, 100/hour, and 1,000,000 tokens/day with a free token. The current page states 1 request/minute, 60/hour, and 100,000 tokens/day with a free token.",
+      "previous_state": "LLM inference gateway. Without a key: 10 requests a minute, 60 an hour, 500,000 tokens per 24 hours. With a free token from dash.llm7.io: 40 a minute, 100 an hour, 1,000,000 tokens per 24 hours. Free access covers turbo-tier models not marked usage-only, such as GLM-5.3-Flash and codestral-latest. Other models, including all image and speech-to-text models, need Pro ($12/mo) or a paid balance.",
+      "current_state": "Text generation access type Free token has limits of 1 request per second, 60 requests per minute, and 250 requests per hour. Token availability is 100,000 tokens per 24 hours.",
+      "source_url": "https://docs.llm7.io/limits",
       "category": "AI / ML",
-      "first_read_date": "2026-10-05"
+      "first_read_date": "2026-10-06"
     },
     {
-      "vendor": "GoFile.io",
-      "change_type": "limits_reduced",
+      "vendor": "SimplePDF.eu",
+      "change_type": "free_tier_removed",
       "impact": "high",
-      "summary": "The free tier is now described as temporary storage, with files kept 'temporarily, perfect for quick shares'. Previously 'unlimited' storage with a 10-day inactivity deletion policy.",
-      "previous_state": "Free file sharing and storage platform can be used via web-based UI & also API. unlimited file size, bandwidth, download count, etc. But it will be deleted when a file becomes inactive (no download for more than ten days).",
-      "current_state": "Gofile is free to use — upload and share files instantly, no account required. Files are kept temporarily, perfect for quick shares.",
-      "source_url": "https://gofile.io/",
-      "category": "Storage",
-      "first_read_date": "2026-10-05"
+      "summary": "SimplePDF.eu's own page now redirects to simplepdf.com. The free plan no longer exists as described. The free editor does not collect submissions. Are features of paid plans.",
+      "previous_state": "Embed a PDF editor on your website and turn any PDF into a fillable form. The Free plan, for individuals editing PDFs, includes embedding on your site, unlimited PDFs and end users, and simple electronic signatures, but does not collect submissions: collecting and managing submissions starts on the Basic plan at $99 a month, with 2,500 documents and submissions a month.",
+      "current_state": "The page offers a free *trial* to start, but emphasizes paid plans for features like submission handling and white-labeling. The free editor does not store PDFs, and is HIPAA compliant because of that.",
+      "source_url": "https://simplepdf.eu/embed",
+      "category": "Forms",
+      "first_read_date": "2026-10-06"
     },
     {
-      "vendor": "LiveKit",
-      "change_type": "pricing_restructured",
+      "vendor": "testingbot.com",
+      "change_type": "limits_reduced",
       "impact": "medium",
-      "summary": "LiveKit's own page now redirects to livekit.com. The 'Build' plan is now a free tier with different limits. The page details many other limits and costs for additional usage (e.g., agent session minutes beyond 1,000 are $0.01/min).",
-      "previous_state": "Real-time audio/video and AI agent infrastructure — 5,000 WebRTC minutes/mo, 1,000 agent session minutes/mo, 5 concurrent agent sessions, 100 concurrent connections, 1 free US phone number. Open source",
-      "current_state": "The Build plan is free and includes 5,000 WebRTC minutes, 1,000 agent session minutes, 5 concurrent agent sessions, 100 concurrent connections, and 1 free US phone number. Additional usage is billed per minute/GB as detailed on the page.",
-      "source_url": "https://livekit.io/pricing",
-      "category": "Communication",
-      "first_read_date": "2026-10-05"
-    },
-    {
-      "vendor": "MiniMax",
-      "change_type": "product_deprecated",
-      "impact": "high",
-      "summary": "The Music APIs are being discontinued for new users on August 20, 2026. Additionally, the Video generation API offers a free allowance of images (first 5 images free for MiniMax-H3 and first 2 images free for MiniMax-H3-Max).",
-      "previous_state": "MiniMax sells API access pay-as-you-go on platform.minimax.io. Its pricing pages list no free API allowance; one docs page mentions a free quota for new pay-as-you-go users but gives no amount. Text: MiniMax-M3 $0.30/$1.20 (per 1M tokens, inputs up to 512k, after a permanent 50% discount); MiniMax-M2.7 $0.30/$1.20 (per 1M tokens); MiniMax-M2.7-highspeed $0.60/$2.40 (per 1M tokens). Speech: speech-2.8-turbo $60 and speech-2.8-hd $100 per 1M characters. Video: MiniMax-H3 $0.08 per second at 768P. Image: image-01 $0.0035 per image. Music and lyrics APIs closed to new users on 2026-08-20. Token Plan subscriptions: Plus $22, Max $55 and Ultra $132 per month.",
-      "current_state": "Starting August 20, 2026, the paid APIs (Music Generation and Lyrics Generation) will no longer be available to new users; existing paying users can continue to use the current API services. The free music generation APIs (Music-3.0-free, Music-2.6-free, music-cover-free) will be discontinued.",
-      "source_url": "https://platform.minimax.io/docs/guides/pricing-paygo",
-      "category": "AI / ML",
-      "first_read_date": "2026-10-05"
-    },
-    {
-      "vendor": "Notion",
-      "change_type": "limits_reduced",
-      "impact": "high",
-      "summary": "The free plan now includes a trial of AI capabilities and has limits on database features and connections. It also includes restrictions on file uploads (5MB) and page history (7 days).",
-      "previous_state": "Free $0 per seat/month. Pages & blocks Unlimited for individuals limited for 2+ members Unlimited Unlimited. File uploads Up to 5 MB Unlimited Unlimited Unlimited. Page history 7 days 30 days 90 days Unlimited. External guest limit 10 Unlimited guests Unlimited guests Unlimited guests",
-      "current_state": "The Free plan is $0 per member/month and includes trial AI capabilities, basic forms, basic sites, Notion Calendar, databases, and up to 5MB file uploads. Page history is limited to 7 days. External guest limit is 10.",
-      "source_url": "https://www.notion.com/pricing",
-      "category": "Productivity & Notes",
-      "first_read_date": "2026-10-05"
-    },
-    {
-      "vendor": "numverify",
-      "change_type": "limits_reduced",
-      "impact": "high",
-      "summary": "The free tier now offers 100 API requests per month, down from 1,000. The subscription price for the 5,000 requests plan has increased from $14.99 to $14.99.",
-      "previous_state": "Global phone number validation and lookup JSON API — We're offering the most cost-effective API - validate 1,000 phone numbers per month for free. Need more? Subscriptions start at $14.99 per month. There are also paid plans at $14.99/month (5,000 requests), $59.99/month (50,000 requests), and $129.99/month (250,000 requests).",
-      "current_state": "We're offering the most cost-effective API - validate 100 phone numbers per month for free.",
-      "source_url": "https://numverify.com/",
-      "category": "Dev Utilities",
-      "first_read_date": "2026-10-05"
-    },
-    {
-      "vendor": "Smart Grow Vault",
-      "change_type": "pricing_restructured",
-      "impact": "medium",
-      "summary": "The free tier now includes 3 apps per organization, 2 environments per app, 50 variables per environment, and 2 secure files per environment. This is a reduction in the number of secrets allowed (150 vs 50 per environment).",
-      "previous_state": "Secure Enterprise-grade platform for managing environment variables and secrets. Free tier includes up to 3 applications and 150 secrets per project.",
-      "current_state": "The Free plan includes 1 organization, 3 apps per organization, 2 environments per app, 50 variables per environment, 2 secure files per environment, and 2 API keys.",
-      "source_url": "https://vault.smart-grow.app/",
-      "category": "Security",
-      "first_read_date": "2026-10-05"
+      "summary": "The page details a free plan with limited macOS sessions and specific browser versions.",
+      "previous_state": "Selenium Browser and Device Testing, [free for Open Source](https://testingbot.com/open-source)",
+      "current_state": "The free plan runs automated tests, live manual sessions, screenshot tests and visual comparisons, including Safari on macOS, on a recent version of each browser with a limited number of live macOS sessions. No credit card is required.",
+      "source_url": "https://testingbot.com/",
+      "category": "Testing",
+      "first_read_date": "2026-10-06"
     }
   ],
   "resolved": [
@@ -2152,6 +2141,114 @@
       "outcome": "contradicted",
       "detail": "a reading on 2026-10-05 read a change the gate refused as no_removal_evidence",
       "resolved_date": "2026-10-05"
+    },
+    {
+      "vendor": "Aiven",
+      "change_type": "limits_reduced",
+      "impact": "high",
+      "summary": "The free tier now has a limit of 1 dedicated VM, 1 CPU per VM, 1 GB RAM per VM, and 1 GB total storage.",
+      "previous_state": "Managed PostgreSQL, MySQL, or Valkey (Redis-compatible) — 1 CPU, 1 GB RAM, 1 GB disk per service. No time limit",
+      "source_url": "https://aiven.io/pricing",
+      "first_read_date": "2026-10-05",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-10-06 read it as limits_reduced too",
+      "resolved_date": "2026-10-06"
+    },
+    {
+      "vendor": "Bugsnag",
+      "change_type": "pricing_restructured",
+      "impact": "medium",
+      "summary": "The free tier now has a limit of 7.5K events and 1M spans per month. The page details multiple paid tiers with varying event and span limits, and the free tier is positioned as being for 'Solo users and their passion projects'.",
+      "previous_state": "Error monitoring — Includes: 1 user Error and performance monitoring 7.5K events and 1M spans per month 50+ platforms 30+ third-party integrations Free plan features, plus: Unlimited users End-to-end diagnostics Basic notifications",
+      "source_url": "https://www.bugsnag.com/pricing/",
+      "first_read_date": "2026-10-05",
+      "outcome": "contradicted",
+      "detail": "a reading on 2026-10-06 read it as limits_reduced",
+      "resolved_date": "2026-10-06"
+    },
+    {
+      "vendor": "Cloudflare Workers AI",
+      "change_type": "pricing_restructured",
+      "impact": "high",
+      "summary": "The pricing structure has been significantly restructured with per-model unit-based pricing (tokens and neurons) introduced. The pricing for these models is now explicitly stated in terms of both tokens and neurons.",
+      "previous_state": "Workers AI runs AI models on Cloudflare's global network. Every account gets 10,000 Neurons per day at no charge, reset daily at 00:00 UTC; on the Workers Free plan, requests beyond that fail until the reset. On the Workers Paid plan (from $5 per month), usage above 10,000 Neurons per day costs $0.011 per 1,000 Neurons. Seven models, including @cf/moonshotai/kimi-k2.6, @cf/zai-org/glm-5.3 and @cf/deepseek-ai/deepseek-v4-pro-0813, require the Workers Paid plan or prepaid AI Gateway credits.",
+      "source_url": "https://developers.cloudflare.com/workers-ai/platform/pricing/",
+      "first_read_date": "2026-10-05",
+      "outcome": "contradicted",
+      "detail": "a reading on 2026-10-06 read the page as unchanged",
+      "resolved_date": "2026-10-06"
+    },
+    {
+      "vendor": "GoFile.io",
+      "change_type": "limits_reduced",
+      "impact": "high",
+      "summary": "The free tier is now described as temporary storage, with files kept 'temporarily, perfect for quick shares'. Previously 'unlimited' storage with a 10-day inactivity deletion policy.",
+      "previous_state": "Free file sharing and storage platform can be used via web-based UI & also API. unlimited file size, bandwidth, download count, etc. But it will be deleted when a file becomes inactive (no download for more than ten days).",
+      "source_url": "https://gofile.io/",
+      "first_read_date": "2026-10-05",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-10-06 read it as limits_reduced too",
+      "resolved_date": "2026-10-06"
+    },
+    {
+      "vendor": "LiveKit",
+      "change_type": "pricing_restructured",
+      "impact": "medium",
+      "summary": "LiveKit's own page now redirects to livekit.com. The 'Build' plan is now a free tier with different limits. The page details many other limits and costs for additional usage (e.g., agent session minutes beyond 1,000 are $0.01/min).",
+      "previous_state": "Real-time audio/video and AI agent infrastructure — 5,000 WebRTC minutes/mo, 1,000 agent session minutes/mo, 5 concurrent agent sessions, 100 concurrent connections, 1 free US phone number. Open source",
+      "source_url": "https://livekit.io/pricing",
+      "first_read_date": "2026-10-05",
+      "outcome": "contradicted",
+      "detail": "a reading on 2026-10-06 read a change the gate refused as repeats_a_refused_reading",
+      "resolved_date": "2026-10-06"
+    },
+    {
+      "vendor": "MiniMax",
+      "change_type": "product_deprecated",
+      "impact": "high",
+      "summary": "The Music APIs are being discontinued for new users on August 20, 2026. Additionally, the Video generation API offers a free allowance of images (first 5 images free for MiniMax-H3 and first 2 images free for MiniMax-H3-Max).",
+      "previous_state": "MiniMax sells API access pay-as-you-go on platform.minimax.io. Its pricing pages list no free API allowance; one docs page mentions a free quota for new pay-as-you-go users but gives no amount. Text: MiniMax-M3 $0.30/$1.20 (per 1M tokens, inputs up to 512k, after a permanent 50% discount); MiniMax-M2.7 $0.30/$1.20 (per 1M tokens); MiniMax-M2.7-highspeed $0.60/$2.40 (per 1M tokens). Speech: speech-2.8-turbo $60 and speech-2.8-hd $100 per 1M characters. Video: MiniMax-H3 $0.08 per second at 768P. Image: image-01 $0.0035 per image. Music and lyrics APIs closed to new users on 2026-08-20. Token Plan subscriptions: Plus $22, Max $55 and Ultra $132 per month.",
+      "source_url": "https://platform.minimax.io/docs/guides/pricing-paygo",
+      "first_read_date": "2026-10-05",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-10-06 read it as product_deprecated too",
+      "resolved_date": "2026-10-06"
+    },
+    {
+      "vendor": "Notion",
+      "change_type": "limits_reduced",
+      "impact": "high",
+      "summary": "The free plan now includes a trial of AI capabilities and has limits on database features and connections. It also includes restrictions on file uploads (5MB) and page history (7 days).",
+      "previous_state": "Free $0 per seat/month. Pages & blocks Unlimited for individuals limited for 2+ members Unlimited Unlimited. File uploads Up to 5 MB Unlimited Unlimited Unlimited. Page history 7 days 30 days 90 days Unlimited. External guest limit 10 Unlimited guests Unlimited guests Unlimited guests",
+      "source_url": "https://www.notion.com/pricing",
+      "first_read_date": "2026-10-05",
+      "outcome": "contradicted",
+      "detail": "a reading on 2026-10-06 read a change the gate refused as states_no_difference",
+      "resolved_date": "2026-10-06"
+    },
+    {
+      "vendor": "numverify",
+      "change_type": "limits_reduced",
+      "impact": "high",
+      "summary": "The free tier now offers 100 API requests per month, down from 1,000. The subscription price for the 5,000 requests plan has increased from $14.99 to $14.99.",
+      "previous_state": "Global phone number validation and lookup JSON API — We're offering the most cost-effective API - validate 1,000 phone numbers per month for free. Need more? Subscriptions start at $14.99 per month. There are also paid plans at $14.99/month (5,000 requests), $59.99/month (50,000 requests), and $129.99/month (250,000 requests).",
+      "source_url": "https://numverify.com/",
+      "first_read_date": "2026-10-05",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-10-06 read it as limits_reduced too",
+      "resolved_date": "2026-10-06"
+    },
+    {
+      "vendor": "Smart Grow Vault",
+      "change_type": "pricing_restructured",
+      "impact": "medium",
+      "summary": "The free tier now includes 3 apps per organization, 2 environments per app, 50 variables per environment, and 2 secure files per environment. This is a reduction in the number of secrets allowed (150 vs 50 per environment).",
+      "previous_state": "Secure Enterprise-grade platform for managing environment variables and secrets. Free tier includes up to 3 applications and 150 secrets per project.",
+      "source_url": "https://vault.smart-grow.app/",
+      "first_read_date": "2026-10-05",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-10-06 read it as pricing_restructured too",
+      "resolved_date": "2026-10-06"
     }
   ]
 }

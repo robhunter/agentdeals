@@ -2833,6 +2833,32 @@
       "record_date": "2026-10-05",
       "change_type": "limits_increased",
       "summary": "A free version exists, the description is no longer accurate. The free version allows unlimited users and collaboration, and includes an API."
+    },
+    {
+      "vendor": "Smart Grow Vault",
+      "url": "https://vault.smart-grow.app/",
+      "restated_on": "2026-10-06",
+      "previous_description": "Secure Enterprise-grade platform for managing environment variables and secrets. Free tier includes up to 3 applications and 150 secrets per project.",
+      "description": "Secure Enterprise-grade platform for managing environment variables and secrets — Free plan includes 1 organization, 3 apps per organization, 2 environments per app, 50 variables per environment, 2 secure files per environment, and 2 API keys.",
+      "reading_date": "2026-10-06",
+      "reading_terms": "Free plan includes 1 organization, 3 apps per organization, 2 environments per app, 50 variables per environment, 2 secure files per environment, and 2 API keys.",
+      "source_url": "https://vault.smart-grow.app/",
+      "record_date": "2026-10-06",
+      "change_type": "pricing_restructured",
+      "summary": "The free tier now includes 3 apps per organization, 2 environments per app, 50 variables per environment, and 2 secure files per environment."
+    },
+    {
+      "vendor": "GoFile.io",
+      "url": "https://gofile.io/",
+      "restated_on": "2026-10-06",
+      "previous_description": "Free file sharing and storage platform can be used via web-based UI & also API. unlimited file size, bandwidth, download count, etc. But it will be deleted when a file becomes inactive (no download for more than ten days).",
+      "description": "Gofile is free to use — upload and share files instantly, no account required. Files are kept temporarily, perfect for quick shares.",
+      "reading_date": "2026-10-06",
+      "reading_terms": "Gofile is free to use — upload and share files instantly, no account required. Files are kept temporarily, perfect for quick shares.",
+      "source_url": "https://gofile.io/",
+      "record_date": "2026-10-06",
+      "change_type": "limits_reduced",
+      "summary": "The free tier is now described as temporary storage, with files kept 'temporarily, perfect for quick shares'. Previously 'unlimited' storage with a 10-day inactivity deletion policy."
     }
   ]
 }

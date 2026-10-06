@@ -269,6 +269,18 @@
     },
     {
       "vendor": "Amplitude",
+      "change_type": "limits_increased",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this page refused on 2026-09-18 (measures_the_opposite) stated the same figure, so the page showed these terms before the date this record gives",
+      "summary": "The free tier now offers 2M Events/month forever, whereas the stored deal info stated 10K MTU, 10M events, 1K session replays/month. Session replays are now 10,000 monthly for the free tier, and the stored deal info stated 1K session replays/month.",
+      "previous_state": "Product analytics — 10K MTU, 10M events, 1K session replays/month (1-month replay retention), unlimited feature flags, 1-year data access, 10 saved charts, 5 projects",
+      "current_state": "Free analytics with AI built in. Every plan includes the full platform and unlimited seats. All plans include: Amplitude AI Analytics Session Replay Experimentation Guides and Surveys Activation Free For individuals and explorers getting started Free 2M Events/month forever.",
+      "source_url": "https://amplitude.com/pricing",
+      "category": "Analytics",
+      "refused_date": "2026-10-06"
+    },
+    {
+      "vendor": "Amplitude",
       "change_type": "pricing_restructured",
       "reason": "confirmed_unchanged",
       "detail": "The limits (100M events/month or 200K MTUs) and core offering (up to 100M events) are consistent between the stored description and the current page. The report highlights new features (session replays, MCP) and a value claim ($60,000) that weren't in the original description, but don't represent a *reduction* in what was previously offered.",
@@ -462,6 +474,18 @@
       "source_url": "https://wso2.com/asgardeo",
       "category": "Auth",
       "refused_date": "2026-09-17"
+    },
+    {
+      "vendor": "asgardeo.io",
+      "change_type": "limits_reduced",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this page refused on 2026-09-17 (dangling_reference) stated the same figure, so the page showed these terms before the date this record gives",
+      "summary": "The free tier information is no longer explicitly stated on the pricing page. The page highlights a 'generous free-forever tier' but does not specify limits like MAUs or social login providers. It mentions starting with a 30-day full-feature trial and PAYG/enterprise plans.",
+      "previous_state": "Seamless Integration of SSO, MFA, passwordless auth and more. Includes SDKs for frontend and backend apps. Free tier: 7,500 Consumer MAUs (B2C), 250 B2B MAUs, 2 social login providers.",
+      "current_state": "The page states a 'generous free-forever tier' is available, but provides no specific limits on usage. It also mentions a 30-day full-feature trial and pay-as-you-go options.",
+      "source_url": "https://wso2.com/asgardeo",
+      "category": "Auth",
+      "refused_date": "2026-10-06"
     },
     {
       "vendor": "asgardeo.io",
@@ -1633,6 +1657,18 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "Cronhooks",
+      "change_type": "pricing_restructured",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this page refused on 2026-09-15 (measures_no_change) stated the same 2 figures, so the page showed these terms before the date this record gives",
+      "summary": "The free plan now has a limit of 5 ad-hoc schedules, which matches the stored information. However, the page also details several paid tiers with varying schedule limits and features. The free plan is explicitly listed as 'Just for playing around' and includes email alerts and unlimited team members.",
+      "previous_state": "Schedule on-time or recurring webhooks. The free plan allows 5 ad-hoc schedules.",
+      "current_state": "The free plan costs $0/month and includes 5 ad-hoc schedules, email alerts, and unlimited team members.",
+      "source_url": "https://cronhooks.io/",
+      "category": "Dev Utilities",
+      "refused_date": "2026-10-06"
+    },
+    {
       "vendor": "Cronitor",
       "change_type": "limits_reduced",
       "reason": "measures_no_change",
@@ -2457,13 +2493,13 @@
       "vendor": "Fizzy",
       "change_type": "limits_reduced",
       "reason": "repeats_a_refused_reading",
-      "detail": "the reading of this page refused on 2026-10-04 (no_price_signal) stated the same figure, so the page showed these terms before the date this record gives",
-      "summary": "The stored deal info mentions a limit of 1000 items, but the pricing page states that Fizzy is 'entirely free' with a file space limit of 1 GB.",
+      "detail": "the reading of this page refused on 2026-10-05 (repeats_a_refused_reading) stated the same figure, so the page showed these terms before the date this record gives",
+      "summary": "The stored deal info mentions a limit of 1000 items, but the pricing page states that Fizzy is entirely free with a file space usage limit of 1 GB.",
       "previous_state": "Kanban-based platform for project management and issue tracking. Create public boards, set up webhooks, use card stamping, and track unlimited users — free for up to 1000 items.",
-      "current_state": "Fizzy is entirely free, with a 1 GB file space limit.",
+      "current_state": "Fizzy is entirely free. It does limit file space usage to 1 GB.",
       "source_url": "https://www.fizzy.do/",
       "category": "Project Management",
-      "refused_date": "2026-10-05"
+      "refused_date": "2026-10-06"
     },
     {
       "vendor": "Flagsmith",
@@ -2871,12 +2907,12 @@
       "change_type": "limits_reduced",
       "reason": "states_no_difference",
       "detail": "limits_reduced claimed, and every figure the summary carried sat in a clause about our own record rather than about the vendor's terms",
-      "summary": "The free tier for private repositories now has different limits. The stored information states 2,000 minutes, while the current pricing page states 2,000 minutes for the 'GitHub Free' plan. The stored information also mentions a postponed charge for self-hosted runners, which is not mentioned on the current page. The pricing for different runner types is now explicitly stated.",
+      "summary": "The free tier for private repositories now has different limits. The stored information states 2,000 minutes, while the current pricing page states 2,000 minutes for the 'GitHub Free' plan. The storage limits have also changed; the stored information states 500MB, while the current page states 500MB for 'GitHub Free'. The page details pricing for exceeding the included minutes and storage, which was not present in the stored information.",
       "previous_state": "Free CI/CD for public repos (unlimited minutes). Private repos: 2,000 min/mo GitHub-hosted runners, 500 MB artifact storage, 10 GB cache/repo. Self-hosted runners remain free — planned $0.002/min charge was postponed indefinitely after community backlash (March 2026). Hosted runner prices reduced 39% (Jan 2026)",
-      "current_state": "The GitHub Free plan includes 500 MB of artifact storage, 2,000 minutes per month, and 10 GB of cache storage per repository. Usage beyond these limits is billed.",
+      "current_state": "The GitHub Free plan includes 500 MB of artifact storage and 2,000 minutes per month for private repositories. Usage beyond these limits is billed based on hourly usage of artifacts and caches, and total processing time used by each runner type.",
       "source_url": "https://docs.github.com/en/billing/managing-billing-for-github-actions/about-billing-for-github-actions",
       "category": "CI/CD",
-      "refused_date": "2026-09-16"
+      "refused_date": "2026-10-06"
     },
     {
       "vendor": "GitHub",
@@ -4068,13 +4104,13 @@
       "vendor": "LiveKit",
       "change_type": "pricing_restructured",
       "reason": "repeats_a_refused_reading",
-      "detail": "the reading of this page refused on 2026-09-26 (same_transition_graded_differently) stated the same 6 figures, so the page showed these terms before the date this record gives",
-      "summary": "The 'Build' plan is now a free tier with 5,000 WebRTC minutes, 1,000 agent session minutes, 5 concurrent agent sessions, and 100 concurrent connections, but the page details per-minute costs for various services (LLM, STT, TTS, etc.) that were not mentioned in the stored deal info. The free US phone number is still included.",
+      "detail": "the reading of this page refused on 2026-10-04 (repeats_a_refused_reading) stated the same 6 figures, so the page showed these terms before the date this record gives",
+      "summary": "The 'Build' plan is now a $0/mo plan with specific included limits, whereas the stored information indicated it was a free tier. The limits for agent session minutes, concurrent agent sessions, and concurrent connections have been clarified and quantified. The inclusion of a free US phone number remains.",
       "previous_state": "Real-time audio/video and AI agent infrastructure — 5,000 WebRTC minutes/mo, 1,000 agent session minutes/mo, 5 concurrent agent sessions, 100 concurrent connections, 1 free US phone number. Open source",
-      "current_state": "The Build plan is $0/mo and includes Agent deployment, Agent observability, Inference credits, Global edge network, Telephony (1 free number), Session metrics and analytics, and Community support. It offers 5,000 WebRTC minutes, 1,000 agent session minutes, 5 concurrent agent sessions, and 100 concurrent connections.",
+      "current_state": "The Build plan is $0/mo and includes 5,000 WebRTC minutes, 1,000 agent session minutes, 5 concurrent agent sessions, 100 concurrent connections, and 1 free US phone number.",
       "source_url": "https://livekit.io/pricing",
       "category": "Communication",
-      "refused_date": "2026-10-04"
+      "refused_date": "2026-10-06"
     },
     {
       "vendor": "LiveKit",
@@ -4174,6 +4210,18 @@
       "category": "Error Tracking",
       "refused_date": "2026-09-26",
       "collided_with": "LogRocket|free_tier_removed|2026-08-28|https://logrocket.com/pricing"
+    },
+    {
+      "vendor": "Logto",
+      "change_type": "pricing_restructured",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this page refused on 2026-09-18 (same_transition_graded_differently) stated the same 3 figures, so the page showed these terms before the date this record gives",
+      "summary": "The free tier still exists with the same limits (50,000 MAU, 50K tokens), but many features previously included in the free tier are now add-ons (RBAC, MFA, Organizations). Additionally, the pricing page details many more features and add-ons with associated costs that were not mentioned in the stored deal info.",
+      "previous_state": "Open-source identity solution — Free tier is $0/month for up to 50,000 MAU and 50K tokens. Includes user authentication, machine-to-machine apps, account APIs, audit logs, and user management. Additional features like RBAC, MFA, and Organizations are paid add-ons.",
+      "current_state": "The Free plan is $0/mo for up to 50,000 MAU and 50K tokens, including user authentication, machine-to-machine apps, account APIs, audit logs, and user management. RBAC, MFA, and Organizations are paid add-ons.",
+      "source_url": "https://logto.io/pricing",
+      "category": "Auth",
+      "refused_date": "2026-10-06"
     },
     {
       "vendor": "Logto",
@@ -4352,12 +4400,12 @@
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
       "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (1,500 api)",
-      "summary": "The free tier appears to be limited to public addresses with throttling. Custom domains and private forwarding require a 'reservation' and are not part of the basic free offering. The API is still available, but the 1,500 monthly limit is not explicitly stated.",
+      "summary": "The free tier now includes only one private address, and paid plans starting at $18/month add custom test domains. The API limit of 1,500 monthly API calls is no longer explicitly mentioned.",
       "previous_state": "Free API for temporary email testing, free public email hosting, outbound capture, email-to-slack/websocket/webhook (1,500 monthly API limit)",
-      "current_state": "Sending to any address @mailsac.com works, but it’s public and subject to throttling. To access custom forwarding features (to web socket, webhook, slack, etc), you must “reserve” that address first.",
+      "current_state": "The free plan includes one private address. Sending to @mailsac.com addresses is public and subject to throttling.",
       "source_url": "https://mailsac.com",
       "category": "Email",
-      "refused_date": "2026-09-17"
+      "refused_date": "2026-10-06"
     },
     {
       "vendor": "Mailtrap.io",
@@ -4778,12 +4826,12 @@
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
       "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (200,000 nod, 400,000 relationship)",
-      "summary": "The free tier now has limits on the database size (up to 128GB memory) and does not include multiple databases per instance, availability zone configuration, or a service availability SLA.",
+      "summary": "The free tier now has limits on node and relationship counts (up to 200,000 nodes and 400,000 relationships), and does not include multiple databases per instance.",
       "previous_state": "Graph database cloud service — free tier: single database, up to 200,000 nodes and 400,000 relationships. Full Cypher query language support. No credit card required",
-      "current_state": "AuraDB Free offers a database with up to 128GB memory. It does not include multiple databases per instance, an availability zone configuration, or a service availability SLA.",
+      "current_state": "AuraDB Free: Start learning. No credit card or other payment method required. Limits on node and relationship counts.",
       "source_url": "https://neo4j.com/pricing/",
       "category": "Databases",
-      "refused_date": "2026-09-17"
+      "refused_date": "2026-10-06"
     },
     {
       "vendor": "netdata.cloud",
@@ -4845,6 +4893,18 @@
       "category": "Productivity & Notes",
       "refused_date": "2026-09-12",
       "collided_with": "Notion|limits_increased|2026-08-28|https://www.notion.com/pricing"
+    },
+    {
+      "vendor": "Notion",
+      "change_type": "limits_reduced",
+      "reason": "states_no_difference",
+      "detail": "the summary states that the page agrees with what we hold, and names no figure the stored description did not already carry",
+      "summary": "The free plan now includes a trial of AI capabilities and has limits on database features and file uploads that were previously unlimited. The external guest limit remains the same.",
+      "previous_state": "Free $0 per seat/month. Pages & blocks Unlimited for individuals limited for 2+ members Unlimited Unlimited. File uploads Up to 5 MB Unlimited Unlimited Unlimited. Page history 7 days 30 days 90 days Unlimited. External guest limit 10 Unlimited guests Unlimited guests Unlimited guests",
+      "current_state": "The Free plan is $0 per member/month and includes a trial of AI capabilities, basic forms, basic sites, and up to 5MB file uploads. Page history is 7 days. External guest limit is 10.",
+      "source_url": "https://www.notion.com/pricing",
+      "category": "Productivity & Notes",
+      "refused_date": "2026-10-06"
     },
     {
       "vendor": "Notion",
@@ -4934,6 +4994,18 @@
     },
     {
       "vendor": "OCR.Space",
+      "change_type": "limits_reduced",
+      "reason": "restates_stored_quantities",
+      "detail": "narrowing claimed, and every quantity the current state names is one the stored description already held at the same value (5 MB, 3 page), and drops 5 the stored description carried",
+      "summary": "The stored information about the free tier is partially inaccurate. The page states a 5MB file size limit for the online OCR, which matches the stored info, but the stored information mentions a 3-page PDF limit which is not present on the current page. The page also details multiple OCR engines with varying language support, and mentions Engine 3 supports over 200 languages, which is new information.",
+      "previous_state": "Free OCR API that parses image and PDF files and returns the text as JSON: 25,000 requests/month, 1 MB file size limit, 3-page PDF limit, 500 requests/day per IP address, plus 2,500 Engine 3 conversions/month. Free-tier searchable PDFs carry a watermark. The online OCR web form needs no registration and accepts files up to 5MB.",
+      "current_state": "The free tier allows files up to 5MB. The page does not mention a 3-page PDF limit.",
+      "source_url": "https://ocr.space/",
+      "category": "AI / ML",
+      "refused_date": "2026-10-06"
+    },
+    {
+      "vendor": "OCR.Space",
       "change_type": "limits_increased",
       "reason": "same_transition_graded_differently",
       "detail": "same vendor, source_url and previous_state as OCR.Space|pricing_restructured|2026-08-28|https://ocr.space/",
@@ -4960,6 +5032,18 @@
     {
       "vendor": "Okta",
       "change_type": "rebranded",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this page refused on 2026-09-17 (dangling_reference) stated the same figure, so the page showed these terms before the date this record gives",
+      "summary": "The free tier now appears to be the \"Okta Integrator Free Plan\" and is focused on building and testing integrations. The original description mentioned a 25,000 MAU limit for developer authentication via Auth0, which is not mentioned in the current pricing page text. The Auth0 Platform is now presented as a separate offering with its own signup process.",
+      "previous_state": "Developer authentication via Auth0 platform — 25,000 MAU free, social login, passwordless, MFA, SSO. Note: developer.okta.com/signup now routes to Auth0.",
+      "current_state": "Access the Okta Integrator Free Plan. Build, test, and manage integrations. Access is limited to 90 days of inactivity.",
+      "source_url": "https://developer.okta.com/signup/",
+      "category": "Auth",
+      "refused_date": "2026-10-06"
+    },
+    {
+      "vendor": "Okta",
+      "change_type": "rebranded",
       "reason": "states_no_terms",
       "detail": "every clause of the summary states absence or hedge rather than a term the page carries, so it reports the reading rather than a change",
       "summary": "The free tier is now the 'Okta Integrator Free Plan' and appears to be focused on integration building and testing, not general developer authentication. The 25,000 MAU limit is no longer mentioned.",
@@ -4973,13 +5057,13 @@
       "vendor": "Ollama Cloud",
       "change_type": "pricing_restructured",
       "reason": "repeats_a_refused_reading",
-      "detail": "the reading of this page refused on 2026-10-04 (repeats_a_refused_reading) stated the same 2 figures, so the page showed these terms before the date this record gives",
-      "summary": "The Free plan now includes starter usage credits and requires purchasing additional credits to unlock all models. It also includes a limit of 1 concurrent request, which aligns with the stored information. However, the page details several paid tiers (Pro, Max, Team) that were not mentioned in the stored deal info, and provides detailed pricing for various models based on token usage.",
+      "detail": "the reading of this page refused on 2026-10-05 (repeats_a_refused_reading) stated the same 2 figures, so the page showed these terms before the date this record gives",
+      "summary": "The Free plan still exists, but the description is more nuanced. It now explicitly states that starter usage credits are included and that buying credits unlocks all models. The page also details pricing for various models based on tokens used.",
       "previous_state": "Cloud-hosted Ollama for running open-source LLMs — The Free plan costs $0 and includes starter usage credits. Buying usage credits unlocks all models. It includes 1 concurrent request.",
       "current_state": "The Free plan costs $0 and includes starter usage credits. Buying usage credits unlocks all models. It includes 1 concurrent request.",
       "source_url": "https://ollama.com/pricing",
       "category": "AI / ML",
-      "refused_date": "2026-10-05"
+      "refused_date": "2026-10-06"
     },
     {
       "vendor": "Ollama Cloud",
@@ -5101,6 +5185,18 @@
       "source_url": "https://www.ovhcloud.com/en/bare-metal/",
       "category": "Infrastructure",
       "refused_date": "2026-09-16"
+    },
+    {
+      "vendor": "OVHcloud",
+      "change_type": "pricing_restructured",
+      "reason": "confirmed_unchanged",
+      "detail": "Report restates information already in the stored description.",
+      "summary": "The price of VPS-1 has increased from €4.49 to €6.49 as of April 2026.",
+      "previous_state": "Public Cloud free trial: €200 credit for 60 days. VPS from €4.49/month ex-VAT without commitment (VPS-1 2027: 2 vCores, 4 GB RAM, 40 GB NVMe; €3.81 on 12 months). Discovery instances (d2-2) from ~€5/mo. Object Storage (S3-compatible). Managed Kubernetes (free control plane). 40+ regions across Europe, NA, APAC. From April 2026, OVHcloud raised VPS 2026 list prices 36-49% (VPS-1 €4.49 to €6.49), and Public Cloud, Private Cloud and Bare Metal prices by 9-11% on average for new deployments.",
+      "current_state": "VPS are available.",
+      "source_url": "https://www.ovhcloud.com/en/public-cloud/",
+      "category": "Cloud IaaS",
+      "refused_date": "2026-10-06"
     },
     {
       "vendor": "OVHcloud",
@@ -5482,13 +5578,13 @@
       "vendor": "PostHog",
       "change_type": "restriction",
       "reason": "confirmed_unchanged",
-      "detail": "The current page describes a new feature (BAA under Boost plan) not mentioned in the stored description, but the report states the YC deal *allows* this, which isn't a change to the deal itself, but an addition to how the credits can be used.",
-      "summary": "The Y Combinator deal now allows credits to be used for a BAA under the Boost plan.",
+      "detail": "The current page describes a new benefit (BAA under Boost plan) not mentioned in the stored description, but the report states this *is* the change. The stored description doesn't claim the credits *cannot* be used for a BAA, so this isn't a contradiction.",
+      "summary": "The YC deal now allows credits to be used for a BAA under the Boost plan.",
       "previous_state": "$50,000 a year in PostHog credits for Y Combinator companies in any batch, renewing automatically while the company has raised less than $25M. Apply through PostHog's YC page, linked from Bookface, from a PostHog account on the company's email domain. Not open to YC alumni who started another company, or to a YC company acquired by a non-YC parent. Since 2026-09-14 the credits don't pay for AI tools (PostHog AI, PostHog Desktop, the Slack app, Replay Vision, Inbox). It doesn't stack with PostHog for Startups.",
       "current_state": "✅ Credits can be used to claim a BAA under the Boost plan.",
       "source_url": "https://posthog.com/handbook/marketing/startups",
       "category": "Startup Perks",
-      "refused_date": "2026-10-05"
+      "refused_date": "2026-10-06"
     },
     {
       "vendor": "PostHog",
@@ -5702,13 +5798,13 @@
       "vendor": "Railway",
       "change_type": "limits_reduced",
       "reason": "restates_stored_quantities",
-      "detail": "narrowing claimed, and every quantity the current state names is one the stored description already held at the same value (0 currency/mo, 30 trial, 5 currency, 1 currency/mo, 1 vcpu, 0.5 GB ram, 0.5 GB volume), and drops 10 the stored description carried",
-      "summary": "The free tier now has a $1/month minimum after the trial, and the number of projects is reduced to 1 after the trial. The free trial now offers 2 replicas instead of 3 services.",
-      "previous_state": "Free plan: $0/month with one-time $5 credit (30-day trial), 1 vCPU, 0.5 GB RAM per service, 0.5 GB volume storage, 1 project, 3 services max ($1/month minimum after trial). Hobby plan: $5/month with $5 resource credit included, 48 vCPU, 48 GB RAM, 5 GB volume storage, up to 5 replicas at 8 vCPU/8 GB RAM each",
-      "current_state": "Free $ 0 per month Perfect for getting started and deploying small apps on Railway Start with a 30-day free trial with $5 credits, then $1 per month Up to 1 vCPU / 0.5 GB RAM per service 0.5 GB of volume storage Community support Deploy a new project No credit card required",
+      "detail": "narrowing claimed, and every quantity the current state names is one the stored description already held at the same value (0 currency/mo, 30 trial, 5 currency, 1 currency/mo, 1 vcpu, 0.5 GB ram, 0.5 GB volume, 2 replica, 1 project, 5 during)",
+      "summary": "The free tier now has limits on projects (5 during trial, then 1), services per project (5 during trial, then 3), CPU per service (up to 2 vCPU during trial, then up to 1 vCPU), RAM per service (up to 1 GB during trial, then up to 0.5 GB), ephemeral disk (1 GB), volume storage (0.5 GB), and replicas per service (2 during the free trial, then 1).",
+      "previous_state": "Free $0 per month. Start with a 30-day free trial with $5 credits, then $1 per month. Up to 1 vCPU / 0.5 GB RAM per service. 0.5 GB of volume storage. 2 replicas during the free trial, then 1. Projects: 5 during trial, then 1",
+      "current_state": "Free $0 per month. Start with a 30-day free trial with $5 credits, then $1 per month. Up to 1 vCPU / 0.5 GB RAM per service. 0.5 GB of volume storage. 2 replicas during the free trial, then 1. Projects: 5 during trial, then 1",
       "source_url": "https://railway.com/pricing",
       "category": "Cloud Hosting",
-      "refused_date": "2026-09-18"
+      "refused_date": "2026-10-06"
     },
     {
       "vendor": "Ramp",
@@ -6509,6 +6605,18 @@
       "refused_date": "2026-10-01"
     },
     {
+      "vendor": "Solo",
+      "change_type": "product_deprecated",
+      "reason": "no_price_signal",
+      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 967 characters, so it states no terms to have changed",
+      "summary": "Solo is shutting down on November 30, 2026, and registrations are closed.",
+      "previous_state": "Free AI website creator from Mozilla, create a beautiful website for your business from a few simple inputs. Free custom domain, no credit card needed.",
+      "current_state": "Registrations are closed. Solo will cease operations on Nov 30, 2026.",
+      "source_url": "https://soloist.ai",
+      "category": "Headless CMS",
+      "refused_date": "2026-10-06"
+    },
+    {
       "vendor": "SonarQube Cloud",
       "change_type": "free_tier_removed",
       "reason": "states_no_terms",
@@ -6604,6 +6712,18 @@
       "source_url": "https://standardnotes.com/plans",
       "category": "Productivity & Notes",
       "refused_date": "2026-09-20"
+    },
+    {
+      "vendor": "StatusCake",
+      "change_type": "limits_reduced",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this page refused on 2026-09-18 (same_transition_graded_differently) stated the same 6 figures, so the page showed these terms before the date this record gives",
+      "summary": "The free tier now includes server monitoring (3 tests) and SMS credits, but the test intervals for uptime monitoring are now 5 minutes, and the page speed monitor is limited to 1.",
+      "previous_state": "Uptime monitoring — 10 monitors, 5-min intervals, 1 page speed monitor, 1 domain monitor, 1 SSL monitor, email alerts, basic integrations",
+      "current_state": "The Free plan includes 10 Uptime Monitors, 5 Mins Test Intervals, 1 Page Speed Monitor, 1 Domain Monitor, 1 SSL Monitor, 3 Server Monitors, Alerts through Integrations.",
+      "source_url": "https://www.statuscake.com/pricing/",
+      "category": "Monitoring",
+      "refused_date": "2026-10-06"
     },
     {
       "vendor": "StatusCake",
@@ -7627,6 +7747,18 @@
       "refused_date": "2026-10-05"
     },
     {
+      "vendor": "Xata",
+      "change_type": "free_tier_removed",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this page refused on 2026-10-05 (no_removal_evidence) stated the same 2 figures, so the page showed these terms before the date this record gives",
+      "summary": "The self-hosted, open-source version remains free, but the managed platform is now paid. The stored information stated a 14-day free trial with $100 credit on the commercial tier, but the pricing page details hourly and monthly costs for various instance types and storage, with no mention of a free trial or credit.",
+      "previous_state": "Open-source Postgres platform (Apache 2.0) with copy-on-write branching and scale-to-zero. Self-hosted on Kubernetes — free forever. Managed platform is now paid (compute + storage billed hourly); 14-day free trial with $100 credit on the commercial tier.",
+      "current_state": "Xata Cloud is a fully managed, pay-as-you-go service starting at $0.012/hr + $0.28/GB/month for compute and storage.",
+      "source_url": "https://xata.io/pricing",
+      "category": "Databases",
+      "refused_date": "2026-10-06"
+    },
+    {
       "vendor": "xcloud.host",
       "change_type": "pricing_restructured",
       "reason": "confirmed_unchanged",
@@ -7890,6 +8022,18 @@
       "source_url": "https://zoho.com/meeting",
       "category": "Video",
       "refused_date": "2026-09-17"
+    },
+    {
+      "vendor": "Zoho Meeting",
+      "change_type": "limits_reduced",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this page refused on 2026-09-17 (measures_the_opposite) stated the same 2 figures, so the page showed these terms before the date this record gives",
+      "summary": "The free tier now has a 60-minute meeting limit and supports up to 100 participants, whereas the stored information stated up to 3 meeting participants and no time limit.",
+      "previous_state": "Meetings with upto 3 meeting participants & 10 Webinar attendees.",
+      "current_state": "The free plan offers up to 60 minutes of meetings and supports 100 meeting participants.",
+      "source_url": "https://zoho.com/meeting",
+      "category": "Video",
+      "refused_date": "2026-10-06"
     },
     {
       "vendor": "Zoho Projects",
