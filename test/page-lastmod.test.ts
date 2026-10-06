@@ -861,6 +861,16 @@ describe("the ledger keeps up with the code that renders the pages", () => {
       );
     }
   });
+
+  it("reads main as it stands when the run starts, so a run queued behind another dates pages against the ledger that run pushed", () => {
+    for (const workflow of workflows().filter(w => readsEveryPageToDateIt(w) && runsOnAPushToMain(w))) {
+      assert.match(
+        workflow.text,
+        /uses: actions\/checkout@v\d+\n\s+with:\n\s+ref: \$\{\{ github\.ref \}\}\n/,
+        `${workflow.file} checks out the commit that queued it, so once the run ahead of it pushes, its ledger conflicts with that push on every page both runs moved`,
+      );
+    }
+  });
 });
 
 describe("what a run reports about the days it wrote", () => {
