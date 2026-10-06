@@ -8156,7 +8156,7 @@
     {
       "vendor": "GitHub Codespaces",
       "category": "IDE & Code Editors",
-      "description": "Cloud development environments — 120 core hours/month (60 hours on 2-core machine) + 15 GB storage free for all GitHub users. Pre-configured dev containers with VS Code in browser",
+      "description": "Cloud development environments — 120 core hours/month (60 hours on 2-core machine) + 15 GB storage free for every GitHub Free personal account. Pre-configured dev containers with VS Code in browser",
       "tier": "Free",
       "url": "https://github.com/features/codespaces",
       "tags": [
@@ -8176,7 +8176,7 @@
         "notes": "No individual referral program."
       },
       "source_check": {
-        "checked": "2026-10-04",
+        "checked": "2026-10-06",
         "outcome": "ok",
         "detail": "the page names GitHub Codespaces as \"github codespaces\" and states amounts, none of which we matched to the terms we publish"
       },
@@ -8184,7 +8184,27 @@
         "text": "GitHub will provide users in the free plan 120 core hours or 60 hours of run time on a 2 core codespace, plus 15 GB of storage each month. See how it's balanced on the billing page .",
         "url": "https://github.com/features/codespaces",
         "read_on": "2026-10-04"
-      }
+      },
+      "conditions": [
+        {
+          "text": "The free quota is for personal accounts only: codespaces billed to an organization or enterprise get no free usage.",
+          "quote": "GitHub plans for organizations and enterprises do not include a free quota for GitHub Codespaces.",
+          "url": "https://docs.github.com/en/billing/concepts/product-billing/github-codespaces",
+          "read_on": "2026-10-06"
+        },
+        {
+          "text": "Without a payment method on file, you cannot create or resume a codespace once the month's quota is used up. You can still export unpushed changes to a branch, and the quota resets at the start of the next billing cycle.",
+          "quote": "If your account does not have a valid payment method on file, usage is blocked once you use up your quota.",
+          "url": "https://docs.github.com/en/billing/concepts/product-billing/github-codespaces",
+          "read_on": "2026-10-06"
+        },
+        {
+          "text": "By default a stopped codespace is deleted after 30 days without use, even if it holds unpushed changes. Opening it again restarts the count.",
+          "quote": "By default, GitHub Codespaces are automatically deleted after they have been stopped and have remained inactive for 30 days.",
+          "url": "https://docs.github.com/en/codespaces/setting-your-user-preferences/configuring-automatic-deletion-of-your-codespaces",
+          "read_on": "2026-10-06"
+        }
+      ]
     },
     {
       "vendor": "ngrok",
