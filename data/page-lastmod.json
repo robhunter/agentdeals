@@ -3151,6 +3151,10 @@
       "hash": "1a381f6b9b3e3ef6",
       "changed": "2026-10-06"
     },
+    "/free-tier-facts-ai-models-get-wrong": {
+      "hash": "d93842cde7fc692c",
+      "changed": "2026-10-06"
+    },
     "/free-tier-risk": {
       "daily": true
     },

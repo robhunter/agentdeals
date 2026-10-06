@@ -1,4 +1,5 @@
 import { loadOffers } from "./data.js";
+import { withoutQuotedModelBeliefs } from "./model-beliefs.js";
 import { offerRetired } from "./retirement.js";
 import { toSlug } from "./slug.js";
 import { statesATrialPeriod } from "./trial-period.js";
@@ -74,7 +75,7 @@ const SOURCE_REGISTER_ENTRY = /<li\b[^>]*\bid="source-[a-z0-9-]+"[^>]*>[\s\S]*?<
 
 export function surfacesThatRecommend(html: string): string {
   const timeline = /<h2\b[^>]*\bid="changes"/i.exec(html);
-  return blankOut(timeline ? html.slice(0, timeline.index) : html, SOURCE_REGISTER_ENTRY);
+  return withoutQuotedModelBeliefs(blankOut(timeline ? html.slice(0, timeline.index) : html, SOURCE_REGISTER_ENTRY));
 }
 
 function renderedBody(html: string): string {

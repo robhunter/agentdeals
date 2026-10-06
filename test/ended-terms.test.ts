@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 import { dropEndedFromNameList, endedIndex, markEndedVendorRows } from "../dist/ended-surfaces.js";
 import { endedStatusWord, ENDED_STATUS_WHEN_THE_TIER_NAMES_NONE } from "../dist/retirement.js";
 import { endedOffersStatedAsAvailable, ENDED_TERMS_POPULATION, pageSubjectSlug } from "../dist/retired-terms.js";
+import { QUOTED_MODEL_BELIEFS_CLASS } from "../dist/model-beliefs.js";
 import { assertCoversPopulation, assertPopulationFloor, type Population } from "./population-floor.ts";
 import { readFileSync } from "node:fs";
 
@@ -49,6 +50,14 @@ describe("a page that states terms for an offer whose record has ended", () => {
     const found = endedOffersStatedAsAvailable(html, "/free-llm-apis", POPULATION);
     assert.strictEqual(found.length, 1);
     assert.strictEqual(found[0].vendor, "GitHub Models");
+  });
+
+  it("reads what AI models were quoted as saying as theirs, and the same words outside that section as ours", () => {
+    const claim = "<p>GitHub Models provides 100+ models with generous daily limits for free.</p>";
+    const quoted = page(`<section class="${QUOTED_MODEL_BELIEFS_CLASS}">${claim}</section>`);
+    assert.deepStrictEqual(endedOffersStatedAsAvailable(quoted, "/free-tier-facts-ai-models-get-wrong", POPULATION), []);
+    const ours = page(`<section class="${QUOTED_MODEL_BELIEFS_CLASS}"><p>Quoted.</p></section>${claim}`);
+    assert.deepStrictEqual(endedOffersStatedAsAvailable(ours, "/free-tier-facts-ai-models-get-wrong", POPULATION).map(f => f.vendor), ["GitHub Models"]);
   });
 
   it("credits a free plan named in one clause to that clause's vendor only", () => {
