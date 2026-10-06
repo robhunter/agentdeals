@@ -284,7 +284,7 @@
     {
       "vendor": "Cloudflare Pages",
       "category": "Cloud Hosting",
-      "description": "Up to 100 sites (soft limit), unlimited bandwidth, 500 builds/month, 100 custom domains per project",
+      "description": "Up to 100 projects, unlimited bandwidth, 500 builds/month, 100 custom domains per project. The project limit is not routinely increased.",
       "tier": "Free",
       "url": "https://developers.cloudflare.com/pages/platform/limits/",
       "tags": [
@@ -313,7 +313,7 @@
         "notes": "Channel partner program only. No individual referral program."
       },
       "source_check": {
-        "checked": "2026-10-01",
+        "checked": "2026-10-06",
         "outcome": "ok",
         "detail": "the page names Cloudflare Pages as \"cloudflare pages\" and states amounts, none of which we matched to the terms we publish"
       },
@@ -327,7 +327,45 @@
           }
         ],
         "reviewed": "2026-08-31"
-      }
+      },
+      "conditions": [
+        {
+          "text": "Cloudflare recommends starting new projects on Workers, its primary platform for building applications.",
+          "quote": "It is Cloudflare's primary platform for building applications. Start new projects with Workers.",
+          "url": "https://developers.cloudflare.com/pages/",
+          "read_on": "2026-10-06"
+        },
+        {
+          "text": "Pages Functions and Workers requests share a daily free limit of 100,000 that resets at midnight UTC. Static asset requests are free and unlimited.",
+          "quote": "For example, you could use 50,000 Functions requests and 50,000 Workers requests to use your full 100,000 daily request usage. The free plan daily request limit resets at midnight UTC.",
+          "url": "https://developers.cloudflare.com/pages/functions/pricing/",
+          "read_on": "2026-10-06"
+        },
+        {
+          "text": "At the daily limit, fail open serves static assets without Functions. Fail closed returns an error page. Each project chooses one mode.",
+          "quote": "\"Fail open\" means that static assets will continue to be served, even if Pages Functions would ordinarily have run first. \"Fail closed\" means an error page will be returned, rather than static assets.",
+          "url": "https://developers.cloudflare.com/pages/functions/routing/",
+          "read_on": "2026-10-06"
+        },
+        {
+          "text": "One build runs at a time per account. Builds time out after 20 minutes.",
+          "quote": "Builds will timeout after 20 minutes. Concurrent builds are counted per account.",
+          "url": "https://developers.cloudflare.com/pages/platform/limits/",
+          "read_on": "2026-10-06"
+        },
+        {
+          "text": "Cloudflare's terms prohibit processing or collecting credit card information on any site using its free services.",
+          "quote": "process or collect personal or business credit card information on any web property that is receiving Free Services",
+          "url": "https://www.cloudflare.com/terms/",
+          "read_on": "2026-10-06"
+        },
+        {
+          "text": "Cloudflare may change a project's pages.dev subdomain for any reason, and aims to give at least a week's notice. Custom domains are not affected.",
+          "quote": "Cloudflare may change Cloudflare Workers/Pages subdomain names of projects hosted at workers.dev or pages.dev for any or no reason.",
+          "url": "https://www.cloudflare.com/service-specific-terms-developer-platform/",
+          "read_on": "2026-10-06"
+        }
+      ]
     },
     {
       "vendor": "Railway",
@@ -10374,7 +10412,7 @@
     {
       "vendor": "Bitrise",
       "category": "CI/CD",
-      "description": "Mobile CI/CD platform — free Hobby plan: 300 credits/month, 1 private app (unlimited public apps), 1 user, 5 concurrent builds, 90-minute build timeout. Supports iOS, Android, Flutter, React Native",
+      "description": "Mobile CI/CD platform — free Hobby plan: 300 credits/month, 1 private app, 1 user, 5 concurrent builds, 90-minute build timeout. Supports iOS, Android, Flutter, React Native",
       "tier": "Hobby",
       "url": "https://bitrise.io/pricing",
       "tags": [
@@ -10388,7 +10426,7 @@
       ],
       "verifiedDate": "2026-07-09",
       "source_check": {
-        "checked": "2026-10-04",
+        "checked": "2026-10-06",
         "outcome": "ok",
         "detail": "the page names Bitrise as \"bitrise\" and states \"300 credits per month\""
       },
@@ -10396,7 +10434,39 @@
         "text": "Hobby Build and distribute your passion project without the extra cost. ‍ Free Forever Get started Access for a team of one (that's you!) Enough build credits for you to build your small project a few times per month Support from the Bitrise Community via Slack or Discuss forum",
         "url": "https://bitrise.io/pricing",
         "read_on": "2026-10-04"
-      }
+      },
+      "conditions": [
+        {
+          "text": "No credit card is needed for the Hobby plan.",
+          "quote": "Our Hobby tier is free. No strings attached, no credit card needed.",
+          "url": "https://bitrise.io/pricing",
+          "read_on": "2026-10-06"
+        },
+        {
+          "text": "Creating more than one account requires Bitrise's permission.",
+          "quote": "Without limitation on the foregoing, without Bitrise’s express permission, creating multiple accounts is not permitted, particularly by using automated methods.",
+          "url": "https://bitrise.io/legal/terms-of-service",
+          "read_on": "2026-10-06"
+        },
+        {
+          "text": "Apps may only be distributed through Bitrise for internal testing, such as quality assurance, never for general use.",
+          "quote": "The Customer may not use the Website and the Services for distributing its applications for purposes other than for internal testing (including, for instance, quality assurance) purposes.",
+          "url": "https://bitrise.io/legal/acceptable-use-policy",
+          "read_on": "2026-10-06"
+        },
+        {
+          "text": "Builds and logs are kept 200 days. Older builds are accessible via the API. Test results and non-installable artifacts: 90 days. Installable artifacts: 150 days. HTML reports: 7 days. Deleted artifacts cannot be recovered.",
+          "quote": "Builds older than 200 days can still be accessed via the Bitrise API.",
+          "url": "https://docs.bitrise.io/en/bitrise-ci/run-and-analyze-builds/managing-build-files/artifact-retention-policy",
+          "read_on": "2026-10-06"
+        },
+        {
+          "text": "Anyone with the build URL can see a public project's build logs, and a public project cannot be made private again.",
+          "quote": "Once you've added an project as a public project, you can't set it back to private.",
+          "url": "https://docs.bitrise.io/en/bitrise-platform/projects/public-projects",
+          "read_on": "2026-10-06"
+        }
+      ]
     },
     {
       "vendor": "Codemagic",
