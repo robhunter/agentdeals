@@ -258,7 +258,7 @@ function textOf(html: string): string {
 
 function rowsOf(html: string): string[][] {
   return [...html.matchAll(/<tr[^>]*>([\s\S]*?)<\/tr>/g)]
-    .map(([, row]) => [...row.matchAll(/<td[^>]*>([\s\S]*?)<\/td>/g)].map(([, cell]) => textOf(cell)))
+    .map(([, row]) => [...row.matchAll(/<td[^>]*>([\s\S]*?)<\/td>/g)].map(([, cell]) => textOf(cell.replace(/<div class="row-referral"[\s\S]*?<\/div>/g, " "))))
     .filter((cells) => cells.length >= 2);
 }
 

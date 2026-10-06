@@ -100,7 +100,7 @@ describe("links that name Cloudflare land on the listing they name, before and a
     const html = await page("/free-frontend-stack");
     const cdn = html.slice(html.indexOf('id="cdn-edge-network"'), html.indexOf('id="headless-cms"'));
     assert.match(cdn, /<a href="\/vendor\/cloudflare-dns" class="pick-name">Cloudflare DNS<\/a>\s*<span class="pick-tier">Free<\/span>/);
-    assert.match(cdn, /<a href="https:\/\/www\.cloudflare\.com\/plans\/free\/"/);
+    assert.match(cdn, /<a href="\/go\/cloudflare-dns"[^>]*>www\.cloudflare\.com\/plans\/free\/ &nearr;<\/a>/);
     assert.doesNotMatch(cdn, /Startup Program|forstartups|Unlimited bandwidth/);
     assert.doesNotMatch(html, /No bandwidth caps|no request limits|industry default|offer unlimited bandwidth on free tiers/);
   });

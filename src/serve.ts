@@ -22,6 +22,7 @@ import { buildDailyRollup, readRollups, coverageOf, ROLLUP_DATE_PATTERN } from "
 import { AGENT_OPENS_WINDOW_DAYS, HOMEPAGE_GUIDE_COUNT, RANKED_TRAFFIC_CLASS, agentOpensByPath, agentOpensWindow, agentRequestAttribution, browseSectionSentence, completeDaysInWindow, guideSelectionSentence, guidesGroupedByHeading, opensDecidedPrefix, rankGuidesByAgentOpens, rankableDays } from "./homepage-routing.js";
 import { configureVendorSeries, recordVendorRequest, flushVendorSeries, readVendorSeries, vendorSeriesGauge, vendorExportAuthorized, isSeriesDate, seriesDateRange, VENDOR_SERIES_PATH, VENDOR_SERIES_RETENTION_DAYS, VENDOR_SERIES_NOTES } from "./vendor-series.js";
 import { openapiSpec } from "./openapi.js";
+import { OUTBOUND_LINK_REL, OUTBOUND_PATH_PREFIX, configureOutboundStore, flushOutbound, loadOutbound, outboundByVendor, outboundPath, outboundSlug, outboundTotals, recordOutboundClick } from "./outbound.js";
 import { AGENT_CARD_PATHS, OPENAPI_ALIAS_PATHS, OPENAPI_CANONICAL_PATH, OPENAPI_YAML_PATH, serviceDescription, theDocumentWeAlreadyServe } from "./agent-card.js";
 import { CATEGORY_ALIASES, CATEGORY_RETIREMENTS, CHANGE_LOG_CATEGORY_NAMES, EXAMPLE_MEMBERS_BASIS, buildCategoryDirectory, categoryHolds, familySiblings, publishedScopeFor, resolveCategoryName, resolveChangeCategory, retiredCategoryNames, retirementFor, scopeFor } from "./category-scope.js";
 import { retiredCategoryDescription, retiredCategoryNoticeHtml, retiredCategoryTitle } from "./category-retirement.js";
@@ -508,6 +509,14 @@ if (useRedis()) {
 }
 await hydrateDurableStores();
 
+if (useRedis()) {
+  configureOutboundStore({
+    get: redisJsonGet,
+    set: (key, value) => redisJsonSetWithoutExpiry(key, value),
+  });
+}
+await loadOutbound();
+
 async function identityWritePersisted(res: import("node:http").ServerResponse): Promise<boolean> {
   const outcome = await persistDurableStores();
   if (outcome.ok) return true;
@@ -616,9 +625,18 @@ function guideRowReferralHtml(vendorName: string): string {
   const link = platformCodeLinkForNamedVendor(vendorName);
   if (!link) return "";
   const conditionsHtml = link.restrictions.length > 0
-    ? `<span class="referral-conditions-heading" style="display:block;margin-top:.35rem;font-size:.65rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-dim);font-family:var(--mono)">${REFERRAL_CONDITIONS_HEADING}</span><ul class="referral-conditions" style="margin:.2rem 0 .35rem;padding:.3rem .55rem .3rem 1.4rem;border-left:2px solid #d29922;border-radius:0 4px 4px 0;background:rgba(210,153,34,0.08);font-size:.75rem;color:var(--text);line-height:1.45">${link.restrictions.map(r => `<li>${escHtmlServer(r)}</li>`).join("")}</ul>`
-    : "";
-  return `<div class="row-referral" style="margin-top:.4rem;color:var(--text)"><span style="display:block">Sign up via our referral link and get ${escHtmlServer(link.refereeBenefit)}</span>${conditionsHtml}<a href="${escHtmlServer(link.url)}" rel="noopener sponsored" target="_blank">Get ${escHtmlServer(link.refereeBenefit)} &rarr;</a> <span style="font-size:.75rem;color:var(--text-dim)">${escHtmlServer(referrerDisclosureSentence(link.compensation))} See our <a href="/disclosure">affiliate disclosure</a>.</span></div>`;
+    ? [
+      `<span class="referral-conditions-heading" style="display:block;margin-top:.35rem;font-size:.65rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-dim);font-family:var(--mono)">${REFERRAL_CONDITIONS_HEADING}</span>`,
+      `<ul class="referral-conditions" style="margin:.2rem 0 .35rem;padding:.3rem .55rem .3rem 1.4rem;border-left:2px solid #d29922;border-radius:0 4px 4px 0;background:rgba(210,153,34,0.08);font-size:.75rem;color:var(--text);line-height:1.45">${link.restrictions.map(r => `<li>${escHtmlServer(r)}</li>`).join(" ")}</ul>`,
+    ]
+    : [];
+  const parts = [
+    `<span style="display:block">Sign up via our referral link and get ${escHtmlServer(link.refereeBenefit)}</span>`,
+    ...conditionsHtml,
+    `<a href="${escHtmlServer(link.url)}" rel="nofollow noopener sponsored" target="_blank">Get ${escHtmlServer(link.refereeBenefit)} &rarr;</a>`,
+    `<span style="font-size:.75rem;color:var(--text-dim)">${escHtmlServer(referrerDisclosureSentence(link.compensation))} See our <a href="/disclosure">affiliate disclosure</a>.</span>`,
+  ];
+  return `<div class="row-referral" style="margin-top:.4rem;color:var(--text)"> ${parts.join(" ")}</div>`;
 }
 
 function changeVendorUrlField(name: string): { url?: string } {
@@ -1328,9 +1346,33 @@ function linkToPublishedVendor(vendor: string, attributes = ""): string {
   return `<a href="/vendor/${toSlug(name)}"${attributes}>${escHtmlServer(name)}</a>`;
 }
 
-function offerPricingLink(offer: OfferTierAndUrl, label: string): string {
+function urlHostAndPath(url: string): string {
+  try {
+    const parsed = new URL(url);
+    return parsed.pathname === "/" ? parsed.host : `${parsed.host}${parsed.pathname}`;
+  } catch {
+    return url;
+  }
+}
+
+function linksThroughOutbound(slug: string, url: string): boolean {
+  return slug !== "" && outboundDestination(slug) === url;
+}
+
+function offerPricingLink(offer: OfferTierAndUrl & { vendor: string }, label: string): string {
   if (offerRetired(offer)) return "";
-  return `<a href="${escHtmlServer(offer.url)}" target="_blank" rel="noopener">${label}</a>`;
+  const slug = toSlug(offer.vendor);
+  if (!linksThroughOutbound(slug, offer.url)) {
+    return `<a href="${escHtmlServer(offer.url)}" target="_blank" rel="noopener">${label}</a>`;
+  }
+  return `<a href="${outboundPath(slug)}" target="_blank" rel="${OUTBOUND_LINK_REL}">${escHtmlServer(urlHostAndPath(offer.url))} &nearr;</a>`;
+}
+
+function pricingPageCardLink(slug: string, url: string): string {
+  if (!linksThroughOutbound(slug, url)) {
+    return `<a href="${escHtmlServer(url)}" rel="noopener" target="_blank">Visit &rarr;</a>`;
+  }
+  return `<a href="${outboundPath(slug)}" rel="${OUTBOUND_LINK_REL}" target="_blank" style="overflow-wrap:anywhere">${escHtmlServer(url)}</a>`;
 }
 
 type BadgeStatus = "active" | "at-risk" | "stale" | "time-limited" | "removed" | "retired" | "withheld" | "unknown";
@@ -6024,7 +6066,7 @@ ${referralCalloutHtml}
     </div>
     ${offerRetired(primary) ? "" : `<div class="detail-card">
       <div class="detail-label">Pricing Page</div>
-      <div class="detail-value"><a href="${escHtmlServer(primary.url)}" rel="noopener" target="_blank">Visit &rarr;</a></div>
+      <div class="detail-value">${pricingPageCardLink(slug, primary.url)}</div>
     </div>
     `}<div class="detail-card">
       <div class="detail-label">${discontinuedOn ? "Discontinued" : linkUnreachable ? "Link last reachable" : publishedDateLabel(primary)}</div>
@@ -19996,7 +20038,7 @@ function buildGoogleDeveloperProgram2026Page(): string {
   const creditAltRows = creditAlternatives.map(c => `<tr>
       <td style="font-weight:600"><a href="${c.link}"${crawlRel(c.link)} style="color:var(--text)">${escHtmlServer(c.vendor)}</a></td>
       <td style="font-family:var(--mono);color:var(--accent);font-size:.85rem">${escHtmlServer(c.credits)}</td>
-      <td style="color:var(--text-muted);font-size:.85rem">${escHtmlServer(c.highlight)}</td>
+      <td style="color:var(--text-muted);font-size:.85rem">${escHtmlServer(c.highlight)}${guideRowReferralHtml(c.vendor)}</td>
     </tr>`).join("\n        ");
 
   const llmAlternatives = [
@@ -32815,7 +32857,7 @@ function buildAwsFreeTier2026Page(): string {
   const altRows = cloudAlts.map(a => `<tr>
       <td style="font-weight:600">${handwrittenVendorLinkHtml(a.slug, a.name, ' style="color:var(--text)"')}</td>
       <td style="font-size:.8rem">${escHtmlServer(a.freeTier)}</td>
-      <td style="font-size:.8rem;color:var(--text-muted)">${escHtmlServer(a.bestFor)}</td>
+      <td style="font-size:.8rem;color:var(--text-muted)">${escHtmlServer(a.bestFor)}${guideRowReferralHtml(a.name)}</td>
     </tr>`).join("\n        ");
 
   const changeTimelineRows = awsChanges.slice(0, 10).map((c: any) => {
@@ -33254,7 +33296,7 @@ function buildGcpFreeTier2026Page(): string {
   const altRows = cloudAlts.map(a => `<tr${a.noFetchablePageStatesIt ? ` ${NO_FETCHABLE_PAGE_STATES_THE_ROW}` : ""}>
       <td style="font-weight:600">${handwrittenVendorLinkHtml(a.slug, a.name, ' style="color:var(--text)"')}</td>
       <td style="font-size:.8rem">${escHtmlServer(a.freeTier)}</td>
-      <td style="font-size:.8rem;color:var(--text-muted)">${escHtmlServer(a.bestFor)}</td>
+      <td style="font-size:.8rem;color:var(--text-muted)">${escHtmlServer(a.bestFor)}${guideRowReferralHtml(a.name)}</td>
     </tr>`).join("\n        ");
 
   const changeTimelineRows = gcpChanges.slice(0, 12).map((c: any) => {
@@ -33683,7 +33725,7 @@ function buildAzureFreeTier2026Page(): string {
   const altRows = cloudAlts.map(a => `<tr${a.noFetchablePageStatesIt ? ` ${NO_FETCHABLE_PAGE_STATES_THE_ROW}` : ""}>
       <td style="font-weight:600">${handwrittenVendorLinkHtml(a.slug, a.name, ' style="color:var(--text)"')}</td>
       <td style="font-size:.8rem">${escHtmlServer(a.freeTier)}</td>
-      <td style="font-size:.8rem;color:var(--text-muted)">${escHtmlServer(a.bestFor)}</td>
+      <td style="font-size:.8rem;color:var(--text-muted)">${escHtmlServer(a.bestFor)}${guideRowReferralHtml(a.name)}</td>
     </tr>`).join("\n        ");
 
   const changeTimelineRows = azureChanges.slice(0, 10).map((c: any) => {
@@ -34129,7 +34171,7 @@ function buildDigitalOceanFreeTier2026Page(): string {
   const altRows = cloudAlts.map(a => `<tr${a.noFetchablePageStatesIt ? ` ${NO_FETCHABLE_PAGE_STATES_THE_ROW}` : ""}>
       <td style="font-weight:600">${handwrittenVendorLinkHtml(a.slug, a.name, ' style="color:var(--text)"')}</td>
       <td style="font-size:.8rem">${escHtmlServer(a.freeTier)}</td>
-      <td style="font-size:.8rem;color:var(--text-muted)">${escHtmlServer(a.bestFor)}</td>
+      <td style="font-size:.8rem;color:var(--text-muted)">${escHtmlServer(a.bestFor)}${guideRowReferralHtml(a.name)}</td>
     </tr>`).join("\n        ");
 
   const changeTimelineRows = doChanges.slice(0, 10).map((c: any) => {
@@ -43582,7 +43624,7 @@ h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .
 .comp-table td{padding:.5rem .4rem;border-bottom:1px solid var(--border);vertical-align:top}
 .comp-table tr:hover{background:var(--accent-glow)}
 .comp-table .provider-col{font-weight:600;white-space:nowrap;min-width:100px}
-.comp-table .check{color:#3fb950}.comp-table .cross{color:#f85149}.comp-table .partial{color:#d29922}
+.comp-table .check{color:#3fb950}.comp-table .cross{color:#f85149}.comp-table .partial{color:#d29922}.comp-table .row-referral{min-width:12rem}
 .winner-badge{display:inline-block;background:rgba(63,185,80,0.15);color:#3fb950;font-size:.65rem;font-weight:700;padding:.1rem .35rem;border-radius:4px;margin-left:.35rem;letter-spacing:.03em}
 .caution-badge{display:inline-block;background:rgba(210,153,34,0.15);color:#d29922;font-size:.65rem;font-weight:700;padding:.1rem .35rem;border-radius:4px;margin-left:.35rem;letter-spacing:.03em}
 .removed-badge{display:inline-block;background:rgba(248,81,73,0.15);color:#f85149;font-size:.65rem;font-weight:700;padding:.1rem .35rem;border-radius:4px;margin-left:.35rem;letter-spacing:.03em}
@@ -43668,7 +43710,7 @@ ${mcpCtaCss()}
         <td>1M invocations</td>
         <td class="check">&#10003; (beta)</td>
         <td>Can cold-start; prevention on Pro</td>
-        <td class="check">&#10003;</td>
+        <td class="check">&#10003;${guideRowReferralHtml("Vercel")}</td>
       </tr>
       <tr>
         <td class="provider-col"><a href="/vendor/netlify">Netlify</a></td>
@@ -43681,7 +43723,7 @@ ${mcpCtaCss()}
         <td>10 credits/GB-hr + 2 credits/10K requests</td>
         <td class="cross">&#10007;</td>
         <td>No figure in Netlify docs</td>
-        <td class="check">&#10003;</td>
+        <td class="check">&#10003;${guideRowReferralHtml("Netlify")}</td>
       </tr>
       <tr>
         <td class="provider-col"><a href="/vendor/cloudflare-pages">Cloudflare Pages</a></td>
@@ -43694,7 +43736,7 @@ ${mcpCtaCss()}
         <td>Workers Functions</td>
         <td class="cross">&#10007;</td>
         <td>~0ms (edge)</td>
-        <td class="check">&#10003;</td>
+        <td class="check">&#10003;${guideRowReferralHtml("Cloudflare Pages")}</td>
       </tr>
       <tr>
         <td class="provider-col"><a href="/vendor/render">Render</a></td>
@@ -43707,7 +43749,7 @@ ${mcpCtaCss()}
         <td class="cross">&#10007;</td>
         <td class="check">&#10003; Docker</td>
         <td>~1 min (spins down after 15 min idle)</td>
-        <td class="check">&#10003;</td>
+        <td class="check">&#10003;${guideRowReferralHtml("Render")}</td>
       </tr>
       <tr>
         <td class="provider-col"><a href="/vendor/railway">Railway</a></td>
@@ -43720,7 +43762,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003; Functions (Bun)</td>
         <td class="check">&#10003; Docker</td>
         <td>None (always on)</td>
-        <td class="check">&#10003; $1/mo credit after trial</td>
+        <td class="check">&#10003; $1/mo credit after trial${guideRowReferralHtml("Railway")}</td>
       </tr>
       <tr>
         <td class="provider-col"><a href="/vendor/fly-io">Fly.io</a><span class="caution-badge">LIMITED TRIAL</span></td>
@@ -43733,7 +43775,7 @@ ${mcpCtaCss()}
         <td class="cross">&#10007;</td>
         <td class="check">&#10003; Docker</td>
         <td>Trial machines stop after 5 min</td>
-        <td class="cross">&#10007; Legacy only (no free tier for new accounts)</td>
+        <td class="cross">&#10007; Legacy only (no free tier for new accounts)${guideRowReferralHtml("Fly.io")}</td>
       </tr>
       <tr>
         <td class="provider-col"><a href="/vendor/koyeb">Koyeb</a></td>
@@ -43746,7 +43788,7 @@ ${mcpCtaCss()}
         <td class="cross">&#10007;</td>
         <td class="cross">&#10007; Paid only</td>
         <td>—</td>
-        <td class="cross">&#10007;</td>
+        <td class="cross">&#10007;${guideRowReferralHtml("Koyeb")}</td>
       </tr>
       <tr>
         <td class="provider-col"><a href="/vendor/deno-deploy">Deno Deploy</a></td>
@@ -43759,7 +43801,7 @@ ${mcpCtaCss()}
         <td>Serverless JS/TS apps (2 regions)</td>
         <td class="cross">&#10007;</td>
         <td>≤100 ms (hello world)</td>
-        <td class="check">&#10003;</td>
+        <td class="check">&#10003;${guideRowReferralHtml("Deno Deploy")}</td>
       </tr>
       <tr>
         <td class="provider-col"><a href="/vendor/cloudflare-workers">Cloudflare Workers</a></td>
@@ -43772,7 +43814,7 @@ ${mcpCtaCss()}
         <td>Native edge compute</td>
         <td class="cross">&#10007;</td>
         <td>~0ms (edge)</td>
-        <td class="check">&#10003;</td>
+        <td class="check">&#10003;${guideRowReferralHtml("Cloudflare Workers")}</td>
       </tr>
       <tr>
         <td class="provider-col"><a href="/vendor/github-pages">GitHub Pages</a></td>
@@ -43785,7 +43827,7 @@ ${mcpCtaCss()}
         <td class="cross">&#10007;</td>
         <td class="cross">&#10007;</td>
         <td>N/A (static)</td>
-        <td class="check">&#10003;</td>
+        <td class="check">&#10003;${guideRowReferralHtml("GitHub Pages")}</td>
       </tr>
       <tr>
         <td class="provider-col"><a href="/vendor/pythonanywhere">PythonAnywhere</a></td>
@@ -43798,7 +43840,7 @@ ${mcpCtaCss()}
         <td class="cross">&#10007;</td>
         <td class="cross">&#10007;</td>
         <td>N/A</td>
-        <td class="check">&#10003;</td>
+        <td class="check">&#10003;${guideRowReferralHtml("PythonAnywhere")}</td>
       </tr>
       <tr>
         <td class="provider-col">${handwrittenVendorLinkHtml("heroku", "Heroku")}<span class="removed-badge">FREE REMOVED</span></td>
@@ -43811,7 +43853,7 @@ ${mcpCtaCss()}
         <td>N/A</td>
         <td>N/A</td>
         <td>N/A</td>
-        <td class="cross">&#10007; Removed</td>
+        <td class="cross">&#10007; Removed${guideRowReferralHtml("Heroku")}</td>
       </tr>
     </tbody>
   </table>
@@ -49707,7 +49749,7 @@ function buildAgentStackPage(): string {
             <td>${handwrittenVendorLinkHtml(svc.slug, svc.vendorName, ' class="vendor-link"')} <span class="tier-badge">${escHtmlServer(svc.tier)}</span></td>
             <td class="limits-cell">${shortLimits}</td>
             <td class="verdict-cell">${verdict}</td>
-            <td class="link-cell">${offerPricingLink(svc, "Pricing →")}</td>
+            <td class="link-cell">${offerPricingLink({ ...svc, vendor: svc.vendorName }, "Pricing →")}</td>
           </tr>`;
     }).join("\n");
 
@@ -51895,6 +51937,14 @@ function withAgentBlock<T extends object>(payload: T, slug?: string | null, cite
   };
 }
 
+function outboundDestination(slug: string): string | null {
+  const vendorName = vendorSlugMap.get(slug);
+  if (!vendorName) return null;
+  const listing = offers.find(o => o.vendor === vendorName);
+  if (!listing || offerRetired(listing)) return null;
+  return /^https?:\/\//i.test(listing.url) ? listing.url : null;
+}
+
 const SINGLE_VENDOR_PREFIXES = ["/vendor/", "/api/vendor/", "/api/details/", "/embed/vendor/"] as const;
 function singleVendorSlug(pathname: string): string | null {
   for (const prefix of SINGLE_VENDOR_PREFIXES) {
@@ -52257,6 +52307,7 @@ const dispatchRequest = async (req: IncomingMessage, res: ServerResponse) => {
       days: series.days,
       gauge: vendorSeriesGauge(),
       notes: VENDOR_SERIES_NOTES,
+      outbound: { ...outboundTotals(), by_vendor: outboundByVendor() },
     }, null, 2));
     return;
   }
@@ -52383,6 +52434,22 @@ const dispatchRequest = async (req: IncomingMessage, res: ServerResponse) => {
   }
   if (url.pathname.startsWith("/vendors/") && isGetOrHead) {
     res.writeHead(301, { Location: "/vendor/" + url.pathname.slice("/vendors/".length) });
+    res.end();
+    return;
+  }
+
+  if (url.pathname.startsWith(OUTBOUND_PATH_PREFIX) && isGetOrHead) {
+    const slug = outboundSlug(url.pathname, s => vendorSlugMap.has(s));
+    const destination = slug === null ? null : outboundDestination(slug);
+    if (slug === null || destination === null) {
+      res.writeHead(404, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ error: "Not found" }));
+      return;
+    }
+    if (req.method === "GET") {
+      recordOutboundClick(slug, classifyRequest(url.pathname, req.headers["user-agent"]).client_class);
+    }
+    res.writeHead(302, { Location: destination, "Cache-Control": "no-store" });
     res.end();
     return;
   }
@@ -52555,6 +52622,7 @@ const dispatchRequest = async (req: IncomingMessage, res: ServerResponse) => {
       api_hits_by_endpoint: getApiHitsByEndpoint(),
       top_search_queries_7d: searchAnalytics.top_queries_7d,
       change_log_freshness: getChangeLogFreshness(),
+      outbound_clicks: outboundTotals(),
     }));
   } else if (url.pathname === "/.well-known/glama.json") {
     const glamaCard = readRepoTextFile(join(__dirname, "..", "glama.json"));
@@ -55400,6 +55468,10 @@ const FLUSH_INTERVAL_MS = 5 * 60 * 1000;
 setInterval(() => flushTelemetry(), FLUSH_INTERVAL_MS).unref();
 
 setInterval(() => {
+  flushOutbound().catch((err) => console.error(`[outbound] flush failed: ${err?.message ?? err}`));
+}, FLUSH_INTERVAL_MS).unref();
+
+setInterval(() => {
   flushPending().catch((err) => console.error(`[telemetry] flush failed: ${err?.message ?? err}`));
 }, FLUSH_INTERVAL_SECONDS * 1000).unref();
 
@@ -55425,6 +55497,7 @@ async function onShutdown() {
     await flushPending();
     await flushVendorSeries(true);
     await persistDurableStores();
+    await flushOutbound();
     await flushTelemetry();
   } catch (err: any) {
     console.error(`[telemetry] shutdown flush failed: ${err?.message ?? err}`);
