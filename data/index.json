@@ -223,7 +223,33 @@
       "restatement_reverted": {
         "record_date": "2026-09-13",
         "reverted_on": "2026-09-27"
-      }
+      },
+      "conditions": [
+        {
+          "text": "On the Free plan an account's Workers get 100,000 requests a day, shared with Pages Functions and reset at midnight UTC. Past that, a route set to fail closed returns Cloudflare's error 1027, and a route set to fail open skips the Worker as if none were configured.",
+          "quote": "Accounts on the Workers Free plan have a daily request limit of 100,000 requests, resetting at midnight UTC.",
+          "url": "https://developers.cloudflare.com/workers/platform/limits/",
+          "read_on": "2026-10-06"
+        },
+        {
+          "text": "On the Free plan a request may use 10 ms of CPU time; one that uses more fails with error 1102. Time spent waiting on fetch calls, KV reads or database queries does not count.",
+          "quote": "When a Worker exceeds its CPU time limit, Cloudflare returns Error 1102 to the client with the message Worker exceeded resource limits",
+          "url": "https://developers.cloudflare.com/workers/platform/limits/",
+          "read_on": "2026-10-06"
+        },
+        {
+          "text": "Cloudflare's terms prohibit processing or collecting credit card information on any site using its free services.",
+          "quote": "process or collect personal or business credit card information on any web property that is receiving Free Services",
+          "url": "https://www.cloudflare.com/terms/",
+          "read_on": "2026-10-06"
+        },
+        {
+          "text": "Cloudflare may change a Worker's workers.dev subdomain for any reason. Custom domains are not affected.",
+          "quote": "Cloudflare may change Cloudflare Workers/Pages subdomain names of projects hosted at workers.dev or pages.dev for any or no reason.",
+          "url": "https://www.cloudflare.com/service-specific-terms-developer-platform/",
+          "read_on": "2026-10-06"
+        }
+      ]
     },
     {
       "vendor": "Netlify",
@@ -8201,7 +8227,7 @@
     {
       "vendor": "GitHub Codespaces",
       "category": "IDE & Code Editors",
-      "description": "Cloud development environments — 120 core hours/month (60 hours on 2-core machine) + 15 GB storage free for all GitHub users. Pre-configured dev containers with VS Code in browser",
+      "description": "Cloud development environments — 120 core hours/month (60 hours on 2-core machine) + 15 GB storage free for every GitHub Free personal account. Pre-configured dev containers with VS Code in browser",
       "tier": "Free",
       "url": "https://github.com/features/codespaces",
       "tags": [
@@ -8221,7 +8247,7 @@
         "notes": "No individual referral program."
       },
       "source_check": {
-        "checked": "2026-10-04",
+        "checked": "2026-10-06",
         "outcome": "ok",
         "detail": "the page names GitHub Codespaces as \"github codespaces\" and states amounts, none of which we matched to the terms we publish"
       },
@@ -8229,7 +8255,27 @@
         "text": "GitHub will provide users in the free plan 120 core hours or 60 hours of run time on a 2 core codespace, plus 15 GB of storage each month. See how it's balanced on the billing page .",
         "url": "https://github.com/features/codespaces",
         "read_on": "2026-10-04"
-      }
+      },
+      "conditions": [
+        {
+          "text": "The free quota is for personal accounts only: codespaces billed to an organization or enterprise get no free usage.",
+          "quote": "GitHub plans for organizations and enterprises do not include a free quota for GitHub Codespaces.",
+          "url": "https://docs.github.com/en/billing/concepts/product-billing/github-codespaces",
+          "read_on": "2026-10-06"
+        },
+        {
+          "text": "Without a payment method on file, you cannot create or resume a codespace once the month's quota is used up. You can still export unpushed changes to a branch, and the quota resets at the start of the next billing cycle.",
+          "quote": "If your account does not have a valid payment method on file, usage is blocked once you use up your quota.",
+          "url": "https://docs.github.com/en/billing/concepts/product-billing/github-codespaces",
+          "read_on": "2026-10-06"
+        },
+        {
+          "text": "By default a stopped codespace is deleted after 30 days without use, even if it holds unpushed changes. Opening it again restarts the count.",
+          "quote": "By default, GitHub Codespaces are automatically deleted after they have been stopped and have remained inactive for 30 days.",
+          "url": "https://docs.github.com/en/codespaces/setting-your-user-preferences/configuring-automatic-deletion-of-your-codespaces",
+          "read_on": "2026-10-06"
+        }
+      ]
     },
     {
       "vendor": "ngrok",
@@ -33345,7 +33391,7 @@
         "available": true,
         "referrer_benefit": "$100 cash per verified paid signup",
         "referee_benefit": "$300 in credit",
-        "program_url": "https://www.vultr.com/docs/vultr-referral-program/",
+        "program_url": "https://www.vultr.com/company/referral-program/",
         "type": "self-service",
         "commission_type": "one-time",
         "notes": "Referred user must be active 30+ days and have paid $100+. Terms read from the referral dashboard on 2026-08-29."
@@ -33405,7 +33451,7 @@
     {
       "vendor": "xAI",
       "category": "AI / ML",
-      "description": "Grok API, pay as you go: sign up at console.x.ai, then load it with credits. grok-4.7 $2.00/$6.00 (per 1M tokens, under 200k prompt tokens). grok-4.3 $1.25/$2.50 (under 200k prompt tokens). grok-build-0.1 $1.00/$2.00 (under 200k prompt tokens). Grok 4.1 Fast was retired on 2026-05-15; its model names now route to grok-4.3 at grok-4.3 rates.",
+      "description": "Grok API, pay as you go: sign up at console.x.ai, then load it with credits. grok-4.7 $2.00/$6.00 (per 1M tokens, under 200k prompt tokens). grok-4.3 $1.25/$2.50 (under 200k prompt tokens). grok-build-0.1 $1.00/$2.00 (under 200k prompt tokens). grok-4.6 and grok-4.5 cost the same as grok-4.7, and grok-4.20 (0309 reasoning, non-reasoning and multi-agent) the same as grok-4.3. Grok 4.1 Fast was retired on 2026-05-15; its model names now route to grok-4.3 at grok-4.3 rates. Image generation: grok-imagine-image $0.02 per image; grok-imagine-image-2.0 from $0.04 per 1K image at low quality. grok-imagine-image-quality ($0.05 per 1K image) is retired on 2026-11-02, when its requests are served by grok-imagine-image-2.0 at low quality.",
       "tier": "Pay-as-you-go",
       "url": "https://docs.x.ai/developers/pricing",
       "tags": [
@@ -33426,7 +33472,7 @@
         }
       ],
       "source_check": {
-        "checked": "2026-10-02",
+        "checked": "2026-10-06",
         "outcome": "ok",
         "detail": "the page names xAI as \"xai\" and states \"$2.00\" and \"$6.00\" and \"$1.00\" and \"$1.25\""
       },
@@ -37396,6 +37442,119 @@
           "read_on": "2026-10-06"
         }
       ]
+    },
+    {
+      "vendor": "Vultr",
+      "category": "Cloud IaaS",
+      "description": "Free Tier Program: a free cloud instance (1 vCPU, 512 MB RAM, 10 GB SSD, IPv4 address) in Miami, Seattle or Frankfurt, for applicants Vultr admits. Vultr calls it early access in limited quantities and admits eligible applicants at random, weighted by a score built from what they say about themselves and their intended use. New customers can also claim promotional credit, up to $300, with codes on Vultr's coupons page; it applies to select products only, cannot be combined with other offers, and expires. Paid Cloud Compute starts at $2.50/mo for 1 vCPU, 512 MB and 10 GB SSD on IPv6 only (New Jersey and Atlanta), $3.50/mo for the same plan without the IPv6-only restriction (New Jersey), and $5/mo for 1 vCPU, 1 GB RAM and 25 GB SSD. Billed hourly.",
+      "tier": "Free",
+      "url": "https://www.vultr.com/free-tier-program/",
+      "tags": [
+        "cloud",
+        "iaas",
+        "vps",
+        "free tier",
+        "hetzner-alternative",
+        "digitalocean-alternative"
+      ],
+      "verifiedDate": "2026-10-06",
+      "conditions": [
+        {
+          "text": "Admission to the free instance is not guaranteed: Vultr grants it at random to eligible applicants in limited quantities, weighted by a score, and does not explain why an account was not admitted.",
+          "quote": "Since there is a limited quantity, eligible members will be granted access on a randomized basis, incorporating a weighted score for each applicant.",
+          "url": "https://www.vultr.com/free-tier-program/",
+          "read_on": "2026-10-06"
+        },
+        {
+          "text": "Coupon credit is for new customers only, applies to select products only, and cannot be combined with any other offer.",
+          "quote": "Promotional credit applies to select products only and cannot be combined with any other offers. Restrictions and terms apply. New customers only.",
+          "url": "https://www.vultr.com/coupons/",
+          "read_on": "2026-10-06"
+        },
+        {
+          "text": "A card or PayPal account must be linked to sign up and to be eligible for any promotion, Vultr allows one promotion per user, and promotional credit expires; the pages for the $200, $250 and $300 codes state no expiry period.",
+          "quote": "A valid Credit Card or PayPal must be linked to register for services and be eligible for promotions—one promo per user. Credits from promo codes expire.",
+          "url": "https://www.vultr.com/faq/",
+          "read_on": "2026-10-06"
+        }
+      ]
+    },
+    {
+      "vendor": "Akamai Cloud",
+      "category": "Cloud IaaS",
+      "description": "Akamai Cloud, formerly Linode: a new user who signs up through a referral link gets a $100, 60-day credit, applied once a valid payment method is on the account. Shared CPU plans start with the Nanode 1 GB at $5/mo in most regions (1 vCPU, 1 GB RAM, 25 GB of storage, 1 TB transfer); the next plan, 2 GB RAM, is $12/mo.",
+      "tier": "Credits",
+      "url": "https://techdocs.akamai.com/cloud-computing/docs/referral-program",
+      "tags": [
+        "cloud",
+        "iaas",
+        "vps",
+        "credits",
+        "linode",
+        "hetzner-alternative",
+        "digitalocean-alternative"
+      ],
+      "verifiedDate": "2026-10-06",
+      "referral_program": {
+        "available": true,
+        "referrer_benefit": "$25 non-expiring credit once the new user has been active 90 days and spent $25, after their promotional credit has been used or has expired",
+        "referee_benefit": "$100 credit for 60 days, after adding a valid payment method",
+        "program_url": "https://techdocs.akamai.com/cloud-computing/docs/referral-program",
+        "type": "self-service",
+        "commission_type": "credits",
+        "notes": "A referral link is issued only after the referrer has spent at least $25 on Akamai Cloud services, not counting promotional credits (read 2026-10-06)."
+      },
+      "conditions": [
+        {
+          "text": "The $100 is a 60-day credit, applied only after a valid payment method is added to the new account.",
+          "quote": "A new user receives a $100 60-day credit . They get the credit when they sign up through a referral link. Before the credit is applied, they need to add a valid payment method to their account.",
+          "url": "https://techdocs.akamai.com/cloud-computing/docs/referral-program",
+          "read_on": "2026-10-06"
+        }
+      ]
+    },
+    {
+      "vendor": "Amazon Lightsail",
+      "category": "Cloud IaaS",
+      "description": "Virtual private servers billed by the hour, up to a fixed monthly price per bundle. No free trial for new customers: AWS replaced Lightsail's free trials (up to 90 days on select bundles) with the AWS Free Tier, whose credits ($100 at sign-up and up to $100 more) pay for Lightsail like any other service. Linux bundles with a public IPv4 address start at $5/mo for 2 vCPUs, 0.5 GB RAM, 20 GB SSD and 1 TB transfer, then $7/mo (1 GB RAM, 40 GB SSD, 2 TB) and $12/mo (2 GB RAM, 60 GB SSD, 3 TB). IPv6-only Linux bundles start at $3.50/mo (512 MB RAM, 20 GB SSD, 1 TB), and Windows bundles at $9.50/mo. Inbound and outbound transfer both count toward a bundle's allowance; outbound transfer beyond it costs from $0.09/GB, and bundles in Mumbai, Sydney, Jakarta, Malaysia, Hong Kong and São Paulo get half the allowance.",
+      "tier": "Credits",
+      "url": "https://aws.amazon.com/lightsail/pricing/",
+      "tags": [
+        "cloud",
+        "iaas",
+        "vps",
+        "aws",
+        "credits",
+        "time-limited",
+        "hetzner-alternative",
+        "digitalocean-alternative"
+      ],
+      "verifiedDate": "2026-10-06",
+      "conditions": [
+        {
+          "text": "Lightsail's own free trials are closed to new customers. A trial started before AWS removed them runs to the end of its period, and the resources then bill monthly.",
+          "quote": "These offers are no longer available to new Lightsail customers.",
+          "url": "https://docs.aws.amazon.com/lightsail/latest/userguide/amazon-lightsail-frequently-asked-questions-faq-billing-and-account-management.html",
+          "read_on": "2026-10-06"
+        },
+        {
+          "text": "An instance or managed database is charged until it is deleted, including while it is stopped.",
+          "quote": "Lightsail instances and managed databases incur charges until they are deleted. These resources accrue charges even when they are in the stopped state.",
+          "url": "https://docs.aws.amazon.com/lightsail/latest/userguide/amazon-lightsail-frequently-asked-questions-faq-billing-and-account-management.html",
+          "read_on": "2026-10-06"
+        },
+        {
+          "text": "A static IP is free only while attached to an instance: AWS charges $0.005 an hour for one left unattached for more than an hour, and an IPv6-only instance cannot take one.",
+          "quote": "we charge a small $0.005 USD/hour fee for static IPs not attached to an instance for more than 1 hour.",
+          "url": "https://docs.aws.amazon.com/lightsail/latest/userguide/amazon-lightsail-frequently-asked-questions-faq-billing-and-account-management.html",
+          "read_on": "2026-10-06"
+        }
+      ],
+      "source_check": {
+        "checked": "2026-10-06",
+        "outcome": "ok",
+        "detail": "the page names Amazon Lightsail as \"amazon lightsail\" and states \"$5\" and \"$7\" and \"$12\" and \"$9.50\""
+      }
     }
   ],
   "changes": []

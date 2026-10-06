@@ -1388,6 +1388,18 @@
       "hash": "b3bbc5254bc4cc9c",
       "changed": "2026-10-04"
     },
+    "/compare/akamai-cloud-vs-clouddev": {
+      "hash": "cda1c11944bee9f6",
+      "changed": "2026-10-06"
+    },
+    "/compare/akamai-cloud-vs-digitalocean": {
+      "hash": "2fc5fdc319f21da5",
+      "changed": "2026-10-06"
+    },
+    "/compare/akamai-cloud-vs-vultr": {
+      "hash": "0793ceecd7c55033",
+      "changed": "2026-10-06"
+    },
     "/compare/amazon-cloudfront-vs-stellate": {
       "hash": "c4b66bd866be136c",
       "changed": "2026-10-06"
@@ -1612,6 +1624,10 @@
       "hash": "7d4cd4397bbe0183",
       "changed": "2026-10-04"
     },
+    "/compare/clouddev-vs-vultr": {
+      "hash": "caa3d1175e90a295",
+      "changed": "2026-10-06"
+    },
     "/compare/cloudflare-pages-vs-netlify": {
       "hash": "e7b87e7acc802934",
       "changed": "2026-10-06"
@@ -1832,17 +1848,9 @@
       "hash": "8c6592021e6613f1",
       "changed": "2026-10-04"
     },
-    "/compare/digitalocean-vs-google-compute-engine": {
-      "hash": "8e33d051371b961b",
-      "changed": "2026-10-05"
-    },
-    "/compare/digitalocean-vs-heroku-for-startups-program": {
-      "hash": "c32e87cc42654d64",
-      "changed": "2026-10-05"
-    },
-    "/compare/digitalocean-vs-startup-with-ibm": {
-      "hash": "ed83d3bc5422e335",
-      "changed": "2026-10-05"
+    "/compare/digitalocean-vs-vultr": {
+      "hash": "d9160485172d1675",
+      "changed": "2026-10-06"
     },
     "/compare/digitalplat-vs-hurricane-electric-dns": {
       "hash": "62f8c70bedcd279c",
@@ -2084,10 +2092,6 @@
       "hash": "4e68c898a3424acf",
       "changed": "2026-10-06"
     },
-    "/compare/google-compute-engine-vs-heroku-for-startups-program": {
-      "hash": "f8ed121249d1f043",
-      "changed": "2026-10-04"
-    },
     "/compare/google-keep-vs-todoist": {
       "hash": "6b06a412d9098a84",
       "changed": "2026-10-04"
@@ -2186,10 +2190,6 @@
     },
     "/compare/heap-io-vs-smartlook-com": {
       "hash": "4e79bcc653a133a0",
-      "changed": "2026-10-04"
-    },
-    "/compare/heroku-for-startups-program-vs-startup-with-ibm": {
-      "hash": "4e9bb1673f58e380",
       "changed": "2026-10-04"
     },
     "/compare/highlight-io-vs-logz-io": {
@@ -3885,6 +3885,9 @@
     "/vendor/aiven": {
       "daily": true
     },
+    "/vendor/akamai-cloud": {
+      "daily": true
+    },
     "/vendor/algolia": {
       "hash": "a6773000b1a48bde",
       "changed": "2026-10-06"
@@ -3927,6 +3930,10 @@
     },
     "/vendor/amazon-kiro-aws-startups": {
       "daily": true
+    },
+    "/vendor/amazon-lightsail": {
+      "hash": "64371ed39f1ff254",
+      "changed": "2026-10-06"
     },
     "/vendor/amazon-q-developer": {
       "hash": "51f843673561146e",
@@ -9436,6 +9443,9 @@
     "/vendor/vscodium": {
       "hash": "dc8e5ea3262fae1a",
       "changed": "2026-10-06"
+    },
+    "/vendor/vultr": {
+      "daily": true
     },
     "/vendor/vultr-dns": {
       "hash": "03d37451d5a1ed4d",

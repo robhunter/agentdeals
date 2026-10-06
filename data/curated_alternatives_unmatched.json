@@ -743,14 +743,6 @@
       ]
     },
     {
-      "name": "Vultr",
-      "named_by": [
-        "DigitalOcean",
-        "Hetzner",
-        "OVHcloud"
-      ]
-    },
-    {
       "name": "Wave API",
       "named_by": [
         "Xero Developer API"

@@ -21,7 +21,9 @@
     { "retired": "Terrateam", "survivor": "Stategraph" },
     { "retired": "X API (Twitter)", "survivor": "X (Twitter)" },
     { "retired": "flightcontrol.dev", "survivor": "Ravion" },
-    { "retired": "v0", "survivor": "v0.dev" }
+    { "retired": "v0", "survivor": "v0.dev" },
+    { "retired": "Linode", "survivor": "Akamai Cloud" },
+    { "retired": "AWS Lightsail", "survivor": "Amazon Lightsail" }
   ],
   "shared_pricing_pages": [
     {
