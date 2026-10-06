@@ -19,7 +19,16 @@ const STACK_PAGES = ["/free-nextjs-stack", "/free-django-stack", "/free-fastapi-
 
 const S3_WHY_NOT = `Why not AWS S3: new accounts get no free storage, only Free plan credits that last at most 6 months; then storage costs ${S3_STORAGE_RATE}. Bandwidth is the part that does not expire`;
 
+const CREDITS_EXPIRING_AT_12_MONTHS = /credits (?:that )?expire 12 months/;
+
+const SES_ESTIMATE = `"slug":"amazon-ses","name":"Amazon SES","free":"None — $200 in expiring credits","starter":0,"growth":10,"scale":100,"notes":"$0.10/1K emails"`;
+
 const WITHDRAWN: Record<string, Record<string, RegExp>> = {
+  "/email-comparison-2026": {
+    "SES's Free Tier credits expiring 12 months from account creation": CREDITS_EXPIRING_AT_12_MONTHS,
+  },
+  "/estimate": { "SES's credits expiring 12 months after sign-up": CREDITS_EXPIRING_AT_12_MONTHS },
+  "/budget-builder": { "SES's credits expiring 12 months after sign-up": CREDITS_EXPIRING_AT_12_MONTHS },
   "/hosting-alternatives": {
     "750 free hours of t2.micro for 12 months": /750 hrs t2\.micro\/mo \(12 mo\)/,
     "a 12-month free tier": /Full cloud platform, 12-month free tier/,
@@ -80,6 +89,9 @@ for (const page of STACK_PAGES) {
 }
 
 const STATED: Record<string, string[]> = {
+  "/email-comparison-2026": [
+    "New accounts get up to $200 in AWS Free Tier credits spendable across eligible services, and a free plan that runs 6 months from account creation.",
+  ],
   "/hosting-alternatives": [
     "AWS's Free plan credits last at most 6 months; Azure's free VM hours last 12 months. One AWS allowance does not expire and matters in the Bandwidth column: AWS's first",
     "AWS gives new accounts no free EC2 hours; EC2 is paid from the Free plan's credits for up to 6 months. Azure gives 750 hours a month each of B2pts v2 and B2ats v2 VMs for 12 months, for accounts that move to pay-as-you-go within 30 days.",
@@ -236,6 +248,10 @@ describe("pages beyond the AWS guide describe AWS's 6-month Free plan, not the 1
         .map((cells) => `${page}: ${cells.join(" | ")}`);
     });
     assert.deepStrictEqual(missing, []);
+  });
+
+  it("gives Amazon SES's row in both estimators its per-email price and no 12-month credit expiry", () => {
+    assert.deepStrictEqual(["/estimate", "/budget-builder"].filter((page) => !html.get(page)!.includes(SES_ESTIMATE)), []);
   });
 
   it("keeps Azure's 12-month storage badges and every account's S3 egress allowance", () => {
