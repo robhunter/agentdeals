@@ -6052,7 +6052,13 @@
       "category": "Dev Utilities",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-10-06",
+        "detail": "Retracted 2026-10-06: no change in the free plan's limit. The record's own before and after states both give 200 requests a day; the after state also lists more currencies (870+ against 590+), which is not a reduction. Its summary's 30 requests a minute appears in neither state.",
+        "source_url": "https://unirateapi.com"
+      }
     },
     {
       "vendor": "Tomorrow.io Weather API",
@@ -12190,6 +12196,12 @@
             "first_new_capture": "https://web.archive.org/web/20260413103330/https://cal.com/pricing"
           }
         ]
+      },
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-10-06",
+        "detail": "Retracted 2026-10-06: no change to the free plan. The Internet Archive's captures of cal.com/pricing on 2026-02-20 and 2026-04-13 show the same Individuals card, word for word (\"1 user\", \"Unlimited event types & calendars\", \"Email & SMS notifications\" and six more). The only difference between them is the Teams plan's yearly discount, 20% to 25%. The record's before state was our own listing text, not the vendor's page, and its summary says the free tier still exists.",
+        "source_url": "https://web.archive.org/web/20260413103330/https://cal.com/pricing"
       }
     },
     {
@@ -15704,7 +15716,13 @@
       "category": "Security",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-10-06"
+      "recorded_date": "2026-10-06",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-10-06",
+        "detail": "Retracted 2026-10-06: no change we can show. The before state was our own listing text (\"up to 3 applications and 150 secrets per project\"), which no capture of the vendor's site states: the Internet Archive's 2026-08-28 capture of vault.smart-grow.app says only \"Free plan available\". The redesigned site read 2026-10-06 is the first that publishes the Free plan's limits, which our listing now states.",
+        "source_url": "https://web.archive.org/web/20260828130302/https://vault.smart-grow.app/"
+      }
     }
   ]
 }
