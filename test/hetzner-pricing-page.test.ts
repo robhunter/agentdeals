@@ -316,7 +316,7 @@ describe("what /hetzner-pricing-2026 says costs nothing", () => {
 
   it("gives Vultr's free instance in Vultr's row", async () => {
     const text = visible((await get("/hetzner-pricing-2026")).body.replace(/<div class="row-referral"[\s\S]*?<\/div>/g, " "));
-    assert.ok(text.includes("Vultr Cloud — 1 vCPU, 1 GB $5/mo Global Free instance (1 vCPU, 512 MB, 10 GB SSD) for accepted applicants, in Miami, Seattle and Frankfurt Hand-typed — we hold no record"));
+    assert.ok(text.includes("Vultr Cloud — 1 vCPU, 1 GB $5/mo Global Free instance (1 vCPU, 512 MB, 10 GB SSD) for accepted applicants, in Miami, Seattle and Frankfurt Our record"));
   });
 });
 
