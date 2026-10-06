@@ -8030,6 +8030,26 @@
       "vendor": "OpenAI",
       "category": "AI / ML",
       "description": "AI API platform. One model is priced Free in OpenAI's own table: the moderation model omni-moderation-latest. No GPT model is priced free. GPT prices per 1M tokens (Standard, short context): gpt-6-astra $10.00/$50.00; gpt-6.1-sol $2.00/$10.00; gpt-6-sol $2.00/$10.00; gpt-6-luna $0.10/$0.50; gpt-5.6-sol $4.00/$20.00 (a promotional price, available at least through November 21, 2026); gpt-5.6-terra $2.00/$12.00; gpt-5.6-luna $0.20/$1.20. Batch and Flex processing halve these prices. Embeddings from $0.02 per 1M tokens. Three further free amounts are sub-quotas inside paid tools: 1 GB of File search storage (then $0.10/GB per day), 1 GB per account per month of ChatKit upload storage, and search content tokens from the web search preview tool on non-reasoning models.",
+      "conditions": [
+        {
+          "text": "OpenAI does not use data sent to the API to train its models unless you opt in to share data.",
+          "quote": "As of March 1, 2023, data sent to the OpenAI API is not used to train or improve OpenAI models (unless you explicitly opt in to share data with us).",
+          "url": "https://developers.openai.com/api/docs/guides/your-data",
+          "read_on": "2026-10-06"
+        },
+        {
+          "text": "Abuse monitoring logs may contain prompts and responses and are kept for up to 30 days by default.",
+          "quote": "By default, abuse monitoring logs are generated for all API feature usage and retained for up to 30 days, unless longer retention is required by law, or is reasonably necessary to protect our services or any third party from harm.",
+          "url": "https://developers.openai.com/api/docs/guides/your-data",
+          "read_on": "2026-10-06"
+        },
+        {
+          "text": "New API accounts use prepaid billing. Purchased credits expire after 1 year and are non-refundable unless required by law, contract, or an approved exception.",
+          "quote": "Purchased credits expire after 1 year. OpenAI cannot extend the expiration date of purchased credits or credit grants.",
+          "url": "https://help.openai.com/en/articles/8264644-how-can-i-set-up-prepaid-billing",
+          "read_on": "2026-10-06"
+        }
+      ],
       "tier": "Pay-as-you-go",
       "url": "https://developers.openai.com/api/docs/pricing",
       "tags": [
