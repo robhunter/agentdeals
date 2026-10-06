@@ -34024,7 +34024,21 @@
           }
         ],
         "reviewed": "2026-09-01"
-      }
+      },
+      "conditions": [
+        {
+          "text": "NVIDIA does not store or use prompts or outputs after each API session, except for fine-tuning services, services where the catalog says otherwise, and logging for security, fraud or abuse.",
+          "quote": "NVIDIA will not store or use User Content or Generated Content at the end of each API Service session.",
+          "url": "https://assets.ngc.nvidia.com/products/api-catalog/legal/NVIDIA%20API%20Trial%20Terms%20of%20Service.pdf",
+          "read_on": "2026-10-06"
+        },
+        {
+          "text": "Using the API in production, or after the trial credits are used up, needs a separate subscription from NVIDIA or a third-party provider.",
+          "quote": "to use the API Service in production or to use the API Service after you have used your available Credits",
+          "url": "https://assets.ngc.nvidia.com/products/api-catalog/legal/NVIDIA%20API%20Trial%20Terms%20of%20Service.pdf",
+          "read_on": "2026-10-06"
+        }
+      ]
     },
     {
       "vendor": "Ollama Cloud",
