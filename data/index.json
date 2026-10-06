@@ -1040,7 +1040,27 @@
         "text": "Free $0 - Perfect for prototypes and hobby projects. Data Size 256 MB Monthly Bandwidth 10 GB Monthly Commands 500K",
         "url": "https://upstash.com/pricing",
         "read_on": "2026-10-04"
-      }
+      },
+      "conditions": [
+        {
+          "text": "Free Redis databases unused for at least 30 days are archived after warning emails. Their data is backed up and can be restored into a new database from the console.",
+          "quote": "Free tier databases are archived after a minimum of 30 days of inactivity.",
+          "url": "https://upstash.com/docs/redis/help/faq",
+          "read_on": "2026-10-06"
+        },
+        {
+          "text": "Entering a credit card upgrades a Redis database to pay-as-you-go. Paid databases are charged by their plan and do not get free 256MB data or 500K commands.",
+          "quote": "Once you enter your credit card, your database will be upgraded to the pay-as-you-go plan and limits will be updated.",
+          "url": "https://upstash.com/pricing",
+          "read_on": "2026-10-06"
+        },
+        {
+          "text": "A Redis database created with no account by a POST request to upstash.com/start-redis is deleted after 3 days unless it is claimed into an account from the console link in the response.",
+          "quote": "The database is deleted after 3 days unless you claim it into your account from the console link in the response.",
+          "url": "https://upstash.com/pricing",
+          "read_on": "2026-10-06"
+        }
+      ]
     },
     {
       "vendor": "Firebase",
