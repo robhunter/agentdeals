@@ -3815,7 +3815,7 @@
     {
       "vendor": "AWS Activate",
       "category": "Startup Perks",
-      "description": "Founders: $1,000 to $5,000 in AWS credits for self-funded startups. Portfolio: up to $200,000 for startups with an Activate Provider Org ID. Both are for startups before Series B, founded in the last 10 years, with an AWS account on a paid plan. Credits usually expire within 1-2 years, depending on the package, and can also pay for AWS Support. One award per approved application; a later, larger award pays only the difference.",
+      "description": "Founders: $1,000 to $5,000 in AWS credits for self-funded startups. Portfolio: up to $200,000 for startups with an Activate Provider Org ID. Both are for startups before Series B, founded in the last 10 years, with an AWS account on a paid plan. Activate credits have expiration dates, shown in the AWS Billing console, and AWS cannot extend them. They can also pay for AWS Support. One award per approved application; a later, larger award pays only the difference.",
       "tier": "Portfolio",
       "url": "https://aws.amazon.com/activate/",
       "tags": [
@@ -13046,7 +13046,27 @@
         "text": "Researcher Free / month For new creators 1,000 API credits / month No credit card required Email support",
         "url": "https://www.tavily.com/pricing",
         "read_on": "2026-10-03"
-      }
+      },
+      "conditions": [
+        {
+          "text": "When monthly free credits are used up, requests stop until credits reset or the account upgrades. Pay-as-you-go charging applies if enabled.",
+          "quote": "If you exhaust your monthly credits, requests will stop until your credits reset or you upgrade to a paid plan.",
+          "url": "https://www.tavily.com/pricing",
+          "read_on": "2026-10-06"
+        },
+        {
+          "text": "Production API keys need an active paid plan or pay-as-you-go enabled. Development keys are limited to 100 requests per minute, production keys 1,000.",
+          "quote": "Access to production keys requires either an active Paid Plan or PAYGO enabled.",
+          "url": "https://docs.tavily.com/documentation/rate-limits",
+          "read_on": "2026-10-06"
+        },
+        {
+          "text": "Tavily may use your query data to improve its services; an account setting turns this off, and then query data is not stored or used for improvements.",
+          "quote": "At Tavily, you have the option to decide whether your query data is used to improve our services. You can change this setting anytime in your account settings.",
+          "url": "https://help.tavily.com/articles/4205958832-understanding-the-allow-use-of-query-data-setting",
+          "read_on": "2026-10-06"
+        }
+      ]
     },
     {
       "vendor": "The IP API",
@@ -35810,7 +35830,21 @@
         "text": "The Free Tier gives you $10 in credits (up to 2,500 Instant searches) the day you sign up, and your free balance resets to $10 on the first of every month. No payment method required. Complete onboarding in the dashboard and your first team earns a one-time $10 bonus.",
         "url": "https://exa.ai/docs/admin/pricing",
         "read_on": "2026-10-03"
-      }
+      },
+      "conditions": [
+        {
+          "text": "When a team's credits run out, requests return 402 Payment Required. Auto recharge is optional.",
+          "quote": "If your team exhausts its credits, requests return 402 Payment Required.",
+          "url": "https://exa.ai/docs/admin/billing",
+          "read_on": "2026-10-06"
+        },
+        {
+          "text": "Exa uses anonymized data on default plans to improve its models. Zero Data Retention is available only on Enterprise plans.",
+          "quote": "On default plans, we use anonymized data to make our models more accurate and useful over time.",
+          "url": "https://trust.exa.ai/faq",
+          "read_on": "2026-10-06"
+        }
+      ]
     },
     {
       "vendor": "Hyperbrowser",
@@ -37106,6 +37140,33 @@
         "free tier"
       ],
       "verifiedDate": "2026-09-27"
+    },
+    {
+      "vendor": "Amazon CloudFront",
+      "category": "CDN",
+      "description": "1 TB of data transfer out to the internet per month, 10,000,000 HTTP or HTTPS Requests per month, 2,000,000 CloudFront Function invocations per month, 2,000,000 CloudFront KeyValueStore reads per month, and free SSL certificates, always free under pay-as-you-go pricing. The flat-rate Free plan is $0/month per distribution. It includes 1 million requests, 100 GB of data transfer, and 5 GB of S3 storage a month, with no overage charges. An AWS account can have up to 3 Free plans. Pay-as-you-go data transfer in the USA is $0.085 per GB after the first TB. The flat-rate Pro plan is $15/month.",
+      "tier": "Free",
+      "url": "https://aws.amazon.com/cloudfront/pricing/",
+      "tags": [
+        "cdn",
+        "aws",
+        "edge"
+      ],
+      "verifiedDate": "2026-10-06",
+      "conditions": [
+        {
+          "text": "Accounts using AWS Free Tier, such as new accounts on AWS's 6-month Free plan, cannot subscribe to any flat-rate plan, including the $0 Free plan; the always-free pay-as-you-go allowance still applies.",
+          "quote": "AWS accounts are not eligible for pricing plans if they meet any of the following conditions: You reached the maximum number of subscriptions allowed. See Flat-rate pricing plan quotas. Your account is using AWS Free Tier.",
+          "url": "https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/flat-rate-pricing-plan.html",
+          "read_on": "2026-10-06"
+        },
+        {
+          "text": "There are no overage charges on flat-rate plans. Sustained excess over months or unusually high usage in one month can lead AWS to adjust traffic delivery. A first spike up to 3x the monthly allowance does not affect service that month.",
+          "quote": "you will not incur overage charges, regardless of how much you exceed your allowance. If your usage exceeds your allowance through sustained growth over multiple months or through unusually high usage in a single month, your traffic delivery might be adjusted. Most customers never experience performance adjustments. Here's how it works: Your first traffic spike up to 3x your monthly allowance won't affect your service that month.",
+          "url": "https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/flat-rate-pricing-plan.html",
+          "read_on": "2026-10-06"
+        }
+      ]
     }
   ],
   "changes": []

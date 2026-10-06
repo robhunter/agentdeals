@@ -535,6 +535,7 @@
         "supabase"
       ],
       "vendors_tabulated": [
+        "amazon-cloudfront",
         "amazon-cognito",
         "amazon-ecr-public",
         "amazon-q-developer",
