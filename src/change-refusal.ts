@@ -82,6 +82,7 @@ export const REFUSAL_REASONS_THAT_LEAVE_THE_READ_STANDING = [
   "zero_allowance",
   "removal_does_not_reach_the_licence",
   "same_transition_graded_differently",
+  "repeats_a_refused_claim",
 ] as const;
 
 export type RefusedRead = Pick<ChangeRefusal, "reason" | "refused_date">;

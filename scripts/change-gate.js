@@ -29,6 +29,7 @@ export const REJECT_ZERO_ALLOWANCE = "zero_allowance";
 export const REJECT_RESTATES_STORED_QUANTITIES = "restates_stored_quantities";
 export const REJECT_REMOVAL_DOES_NOT_REACH_THE_LICENCE = "removal_does_not_reach_the_licence";
 export const REJECT_REPEATS_A_REFUSED_READING = "repeats_a_refused_reading";
+export const REJECT_REPEATS_A_REFUSED_CLAIM = "repeats_a_refused_claim";
 
 export const GATE_REASONS = [
   REJECT_NULL_COMPARISON,
@@ -54,6 +55,7 @@ export const GATE_REASONS = [
   REJECT_RESTATES_STORED_QUANTITIES,
   REJECT_REMOVAL_DOES_NOT_REACH_THE_LICENCE,
   REJECT_REPEATS_A_REFUSED_READING,
+  REJECT_REPEATS_A_REFUSED_CLAIM,
 ];
 
 export const FREE_TIER_REMOVED = "free_tier_removed";
@@ -653,6 +655,61 @@ export function refusedReadingItRepeats(candidate, refusals = [], { auditingPubl
 
 export function repeatedReadingDetail(refusal, figures) {
   return `the reading of this page refused on ${refusal.refused_date} (${refusal.reason}) stated the same ${figures === 1 ? "figure" : `${figures} figures`}, so the page showed these terms before the date this record gives`;
+}
+
+export const SAME_CURRENT_STATE = "current_state";
+export const SAME_CLAIM = "previous_state_and_change_type";
+
+function normalisedState(text) {
+  return String(text ?? "").replace(/\s+/g, " ").trim().toLowerCase();
+}
+
+export function sameStateText(left, right) {
+  const held = normalisedState(left);
+  return held !== "" && held === normalisedState(right);
+}
+
+function namesTheSameVendor(refusal, candidate) {
+  return String(refusal?.vendor ?? "").toLowerCase() === String(candidate?.vendor ?? "").toLowerCase();
+}
+
+function dayOfTheReading(candidate) {
+  return String(candidate?.recorded_date ?? candidate?.date ?? "");
+}
+
+function latestRefusalOfTheVendorBefore(candidate, refusals, repeats) {
+  const readOn = dayOfTheReading(candidate);
+  let latest = null;
+  for (const refusal of refusals) {
+    if (!namesTheSameVendor(refusal, candidate)) continue;
+    if (!(String(refusal?.refused_date ?? "") < readOn)) continue;
+    if (!repeats(refusal)) continue;
+    if (!latest || refusal.refused_date > latest.refused_date) latest = refusal;
+  }
+  return latest;
+}
+
+export function refusedReadingItRestates(candidate, refusals = [], { auditingPublishedRecords = false } = {}) {
+  if (auditingPublishedRecords && isACorrectionToOurOwnRecord(candidate ?? {})) return null;
+  const sameText = latestRefusalOfTheVendorBefore(candidate, refusals, (refusal) =>
+    sameStateText(refusal.current_state, candidate?.current_state));
+  if (sameText) return { refusal: sameText, repeats: SAME_CURRENT_STATE };
+  const sameClaim = latestRefusalOfTheVendorBefore(candidate, refusals, (refusal) =>
+    refusal.change_type === candidate?.change_type && sameStateText(refusal.previous_state, candidate?.previous_state));
+  if (sameClaim) return { refusal: sameClaim, repeats: SAME_CLAIM };
+  return null;
+}
+
+export function restatedRefusalReason({ repeats }) {
+  return repeats === SAME_CURRENT_STATE ? REJECT_REPEATS_A_REFUSED_READING : REJECT_REPEATS_A_REFUSED_CLAIM;
+}
+
+export function restatedRefusalDetail({ refusal, repeats }, candidate) {
+  const refused = `the reading of this vendor refused on ${refusal.refused_date} (${refusal.reason})`;
+  if (repeats === SAME_CURRENT_STATE) return `${refused} stated the same current state, word for word`;
+  const sameClaim = `${refused} claimed the same change, ${refusal.change_type}, against the same stored description`;
+  if (sameKeys(statedTermKeys(refusal.current_state), statedTermKeys(candidate?.current_state))) return sameClaim;
+  return `${sameClaim}, and the two readings state different figures, so the vendor may have changed since`;
 }
 
 export function unquantifiedInCurrentState(entry) {
@@ -1686,6 +1743,15 @@ export async function gateCandidates(candidates, options = {}) {
         candidate: original,
         reason: REJECT_REPEATS_A_REFUSED_READING,
         detail: repeatedReadingDetail(repeated, statedTermKeys(original.current_state).length),
+      });
+      continue;
+    }
+    const restated = refusedReadingItRestates(original, refusals, { auditingPublishedRecords });
+    if (restated) {
+      rejected.push({
+        candidate: original,
+        reason: restatedRefusalReason(restated),
+        detail: restatedRefusalDetail(restated, original),
       });
       continue;
     }
