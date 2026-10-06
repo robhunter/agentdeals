@@ -6,7 +6,7 @@
       "daily": true
     },
     "/agent-payments": {
-      "hash": "97f5aca092bd0fe0",
+      "hash": "fe105e2cfb36bd59",
       "changed": "2026-10-06"
     },
     "/agent-stack": {
@@ -1112,11 +1112,11 @@
       "changed": "2026-10-06"
     },
     "/category/ci-cd": {
-      "hash": "1c6116c68107a00e",
+      "hash": "7400625be0e81ab8",
       "changed": "2026-10-06"
     },
     "/category/cloud-hosting": {
-      "hash": "54f84f7b90f8a624",
+      "hash": "93d19ff13395a905",
       "changed": "2026-10-06"
     },
     "/category/cloud-iaas": {
@@ -1319,14 +1319,14 @@
       "daily": true
     },
     "/ci-cd-alternatives": {
-      "hash": "b3cea7bb55e78930",
+      "hash": "d12ffe1ef4fec989",
       "changed": "2026-10-06"
     },
     "/ci-cd-pricing": {
       "daily": true
     },
     "/cicd-free-tier-comparison-2026": {
-      "hash": "c465014ef04d3e90",
+      "hash": "a5c20efe7ebe198c",
       "changed": "2026-10-06"
     },
     "/circleci-vs-github-actions": {
@@ -1337,8 +1337,8 @@
       "daily": true
     },
     "/cloudflare-pages-vs-vercel": {
-      "hash": "e578085a39b6f86d",
-      "changed": "2026-10-04"
+      "hash": "d92ccd48a3aa4a1c",
+      "changed": "2026-10-06"
     },
     "/cloudinary-vs-imagekit": {
       "hash": "b553becfa13718b9",
@@ -1477,12 +1477,12 @@
       "changed": "2026-10-04"
     },
     "/compare/bitrise-vs-appveyor-com": {
-      "hash": "9327d405ddaa0a56",
-      "changed": "2026-10-04"
+      "hash": "d24341129b02dc4e",
+      "changed": "2026-10-06"
     },
     "/compare/bitrise-vs-codefresh": {
-      "hash": "7765ed63ec7b51a6",
-      "changed": "2026-10-04"
+      "hash": "40bcb528e10d5cd7",
+      "changed": "2026-10-06"
     },
     "/compare/blaxel-vs-deepseek-api": {
       "hash": "0ffd1d3d56f04b43",
@@ -1613,16 +1613,16 @@
       "changed": "2026-10-04"
     },
     "/compare/cloudflare-pages-vs-netlify": {
-      "hash": "7f8be48e69ff402f",
-      "changed": "2026-10-04"
+      "hash": "e7b87e7acc802934",
+      "changed": "2026-10-06"
     },
     "/compare/cloudflare-pages-vs-render": {
-      "hash": "6b982e37a14083d4",
-      "changed": "2026-10-05"
+      "hash": "b13a9eec755d3625",
+      "changed": "2026-10-06"
     },
     "/compare/cloudflare-pages-vs-vercel": {
-      "hash": "7f100ab5af4e74ba",
-      "changed": "2026-10-04"
+      "hash": "ee1319fd75981217",
+      "changed": "2026-10-06"
     },
     "/compare/cloudflare-warp-vs-proton-vpn": {
       "hash": "1d4c710fa856dadc",
@@ -3079,7 +3079,7 @@
       "changed": "2026-09-12"
     },
     "/estimate": {
-      "hash": "d3ecc9eba6349e22",
+      "hash": "8a11e577384801d1",
       "changed": "2026-10-06"
     },
     "/events": {
@@ -3128,7 +3128,7 @@
       "changed": "2026-10-06"
     },
     "/free-frontend-stack": {
-      "hash": "5e6186e16fb0245c",
+      "hash": "141495862f0451bd",
       "changed": "2026-10-06"
     },
     "/free-go-stack": {
@@ -3226,11 +3226,11 @@
       "changed": "2026-10-06"
     },
     "/hosting-alternatives": {
-      "hash": "e05868f4a698d65f",
+      "hash": "c7a217526bce142c",
       "changed": "2026-10-06"
     },
     "/hosting-free-tier-comparison-2026": {
-      "hash": "c4f08ed0f144a877",
+      "hash": "3064e0fceefcdd8d",
       "changed": "2026-10-06"
     },
     "/hosting-pricing": {
@@ -3470,7 +3470,7 @@
       "daily": true
     },
     "/stack-check": {
-      "hash": "0763db82e4ca4d3a",
+      "hash": "0321692f4bd8c554",
       "changed": "2026-10-06"
     },
     "/stacks": {
@@ -4265,7 +4265,7 @@
       "changed": "2026-10-06"
     },
     "/vendor/bitrise": {
-      "hash": "cf966d03950982dd",
+      "hash": "47ac9b5c15af38d3",
       "changed": "2026-10-06"
     },
     "/vendor/bitrix24-com": {
@@ -9820,15 +9820,15 @@
       "changed": "2026-10-06"
     },
     "/vercel-alternatives": {
-      "hash": "1fb1aca40234a11b",
+      "hash": "085b780ff0e61c47",
       "changed": "2026-10-06"
     },
     "/vercel-vs-netlify": {
-      "hash": "3e42751e711cd92d",
+      "hash": "beaff557d79e4e9b",
       "changed": "2026-10-06"
     },
     "/x402-services": {
-      "hash": "d5062c8940f1f5e1",
+      "hash": "4600aa0ef01b8e22",
       "changed": "2026-10-06"
     }
   }
