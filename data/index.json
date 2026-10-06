@@ -27045,7 +27045,7 @@
     {
       "vendor": "Foursquare",
       "category": "Maps/Geolocation",
-      "description": "Location discovery, venue search, and context-aware content — Places API Pro endpoints: 0-500 Calls $0.00 CPM, 501 to 100,000 Calls $15.00 CPM, 100,001 to 500,000 Calls $12.00 CPM, 500,001+ Calls $9.00 CPM. Places API Premium endpoints: 0-100,000 Calls $18.75 CPM, 100,001 to 500,000 Calls $15.00 CPM, 500,001+ Calls $11.25 CPM.",
+      "description": "Location discovery, venue search, and context-aware content. The first 500 Pro endpoint calls each month are free. Pro endpoints are Place Search, Place Details, Autocomplete, Place Match and Geotagging Candidates with default fields. Premium endpoints are Tips, Photos, and Pro endpoints when requested with premium fields. They have no free calls. The first 100,000 each month cost $18.75 per 1,000 calls. Places API Pro endpoints: 0-500 Calls $0.00 CPM, 501 to 100,000 Calls $15.00 CPM, 100,001 to 500,000 Calls $12.00 CPM, 500,001+ Calls $9.00 CPM. Places API Premium endpoints: 0-100,000 Calls $18.75 CPM, 100,001 to 500,000 Calls $15.00 CPM, 500,001+ Calls $11.25 CPM.",
       "tier": "Free",
       "url": "https://foursquare.com/pricing/",
       "tags": [
