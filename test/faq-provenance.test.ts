@@ -11,9 +11,10 @@ import {
   perturbTextFields, utcToday, type PageReviewRecord,
 } from "../src/page-reviews.ts";
 import {
-  answerWithProvenance, faqAnswersIn, faqPageJsonLd, faqProvenanceClause, statesVendorFigure,
+  answerWithProvenance, faqAnswersIn, faqPageJsonLd, faqProvenanceClause, recordProvenanceClause, statesVendorFigure,
   type ServedFaqAnswer,
 } from "../dist/faq-provenance.js";
+import { lastReadDate } from "../dist/read-date.js";
 import { NEVER_REVIEWED, registerWith, reviewFailedOn, type RegisterFixture } from "./page-review-fixture.ts";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -23,6 +24,8 @@ const TODAY = "2026-08-27";
 const THE_DAY_THE_SERVER_RENDERS = utcToday();
 
 const PROVENANCE = /Figures compiled (\d{4}-\d{2}-\d{2}), (?:not re-checked since|last checked (\d{4}-\d{2}-\d{2}))/;
+
+const RECORD_PROVENANCE = /Figures from our (.+) record(?:, last read (\d{4}-\d{2}-\d{2}))?\.$/;
 
 function registeredPages(): PageReviewRecord[] {
   return parsePageReviews(readFileSync(path.join(REPO, "data", "page-reviews.json"), "utf-8")).pages;
@@ -183,6 +186,35 @@ describe("#1086 the clause is appended only where a figure is stated", () => {
   });
 });
 
+describe("#2446 an answer whose figures come from a vendor record is dated by that record", () => {
+  const record = { vendor: "Example API", lastRead: "2026-08-15" };
+
+  it("names the record and the day it was last read", () => {
+    assert.strictEqual(recordProvenanceClause(record), "Figures from our Example API record, last read 2026-08-15.");
+  });
+
+  it("names the record alone when it holds no read date", () => {
+    assert.strictEqual(recordProvenanceClause({ vendor: "Example API", lastRead: "" }), "Figures from our Example API record.");
+  });
+
+  it("carries the record's clause in place of the page's compile date, and leaves the other answers on the page's", () => {
+    const registered = registeredPages()[0];
+    const ld: any = faqPageJsonLd(registered.path, [
+      { q: "From the record?", a: "Model X costs $2/$10 per M tokens.", figuresFromRecord: record },
+      { q: "Typed on the page?", a: "Model Y costs $3/$15 per M tokens." },
+    ], TODAY);
+    const [fromRecord, typed] = ld.mainEntity.map((e: any) => e.acceptedAnswer.text);
+    assert.strictEqual(fromRecord, "Model X costs $2/$10 per M tokens. Figures from our Example API record, last read 2026-08-15.");
+    assert.ok(PROVENANCE.test(typed), typed);
+    assert.ok(!PROVENANCE.test(fromRecord), fromRecord);
+  });
+
+  it("appends no clause to an answer from a record that states no figure", () => {
+    const ld: any = faqPageJsonLd("/not-a-registered-page", [{ q: "A?", a: "See the vendor's pricing page.", figuresFromRecord: record }]);
+    assert.strictEqual(ld.mainEntity[0].acceptedAnswer.text, "See the vendor's pricing page.");
+  });
+});
+
 describe("#1086 every structured answer that states a vendor figure carries the page's provenance", () => {
   const pages = registeredPages();
   let tmp: string;
@@ -236,8 +268,37 @@ describe("#1086 every structured answer that states a vendor figure carries the 
   });
 
   it("leaves no answer stating a figure without one", () => {
-    const bare = answers.filter((a) => statesVendorFigure(a.text) && !PROVENANCE.test(a.text));
+    const bare = answers.filter((a) => statesVendorFigure(a.text) && !PROVENANCE.test(a.text) && !RECORD_PROVENANCE.test(a.text));
     assert.deepStrictEqual(bare.map((a) => `${a.path} :: ${a.question}`), []);
+  });
+
+  it("dates an answer by a vendor record only where the catalogue moves it", () => {
+    const held: string[] = [];
+    let moved = 0;
+    for (const page of pages) {
+      const before = answers.filter((a) => a.path === page.path);
+      const after = perturbedAnswers.get(page.path) ?? [];
+      for (let i = 0; i < before.length; i++) {
+        if (!RECORD_PROVENANCE.test(before[i].text)) continue;
+        if (after[i] && after[i].text === before[i].text) held.push(`${page.path} :: ${before[i].question}`);
+        else moved += 1;
+      }
+    }
+    assert.deepStrictEqual(held, []);
+    assertPopulationFloor(moved, 1, "answers dated by the vendor record their figures come from");
+  });
+
+  it("takes a record clause's date from that record", () => {
+    const offers: Array<{ vendor: string }> = JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf-8")).offers;
+    const wrong: string[] = [];
+    for (const answer of answers) {
+      const found = RECORD_PROVENANCE.exec(answer.text);
+      if (!found) continue;
+      const offer = offers.find((o) => o.vendor === found[1]);
+      const stated = found[2] ?? "";
+      if (!offer || stated !== lastReadDate(offer)) wrong.push(`${answer.path} :: ${found[0]}`);
+    }
+    assert.deepStrictEqual(wrong, []);
   });
 
   it("finds answers stating a figure, so the rule above is not passing on an empty set", () => {
@@ -344,14 +405,22 @@ describe("#1086 recording a failed review changes what the structured copy of th
 
   it("says the figures were never re-checked while no review is on record", () => {
     for (const answer of faqAnswersIn(SUBJECT, rendered.get("before")!)) {
-      if (!statesVendorFigure(answer.text)) continue;
+      if (!statesVendorFigure(answer.text) || RECORD_PROVENANCE.test(answer.text)) continue;
       assert.ok(answer.text.endsWith("not re-checked since."), answer.question);
+    }
+  });
+
+  it("leaves an answer dated by a vendor record out of the page's review", () => {
+    const fromRecord = faqAnswersIn(SUBJECT, rendered.get("after")!).filter((a) => RECORD_PROVENANCE.test(a.text));
+    assert.ok(fromRecord.length >= 1, `no answer on ${SUBJECT} is dated by a vendor record`);
+    for (const answer of fromRecord) {
+      assert.ok(!/corrections outstanding/.test(answer.text), answer.question);
     }
   });
 
   it("says corrections are outstanding in every dated answer once the review records a failure", () => {
     const dated = faqAnswersIn(SUBJECT, rendered.get("after")!).filter((a) => PROVENANCE.test(a.text));
-    assert.ok(dated.length >= 4, `only ${dated.length} answers carry a date`);
+    assert.ok(dated.length >= 3, `only ${dated.length} answers carry a date`);
     for (const answer of dated) {
       assert.ok(answer.text.endsWith(`last checked ${REVIEWED_ON}; corrections outstanding.`), answer.question);
     }

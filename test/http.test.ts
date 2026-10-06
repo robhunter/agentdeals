@@ -6093,7 +6093,7 @@ describe("shutdown tracker page", () => {
     assert.ok(html.includes("Inference Providers"), "Should have inference category");
     assert.ok(html.includes("What You Actually Get for Free"), "Should have free tier section");
     assert.ok(html.includes("Pricing Gotchas"), "Should have gotchas section");
-    assert.ok(html.includes("Best-for-Use-Case Recommendations"), "Should have recommendations");
+    assert.ok(html.includes('<h2 id="recommendations">By Use Case</h2>'), "Should have the use-case section");
     assert.ok(html.includes("Frequently Asked Questions"), "Should have FAQ");
     assert.ok(html.includes("mcp-cta"), "Should have MCP CTA");
     assert.ok(html.includes("/api/llm-pricing"), "Should link to API endpoint");

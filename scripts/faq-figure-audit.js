@@ -7,7 +7,7 @@ import { statesVendorFigure } from "../dist/faq-provenance.js";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
 
-const PROVENANCE = /Figures compiled \d{4}-\d{2}-\d{2}, (?:not re-checked since|last checked \d{4}-\d{2}-\d{2})/;
+const PROVENANCE = /Figures compiled \d{4}-\d{2}-\d{2}, (?:not re-checked since|last checked \d{4}-\d{2}-\d{2})|Figures from our .+ record(?:, last read \d{4}-\d{2}-\d{2})?\.$/;
 
 function startServer(env = {}) {
   return new Promise((resolve, reject) => {
