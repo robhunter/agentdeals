@@ -32493,31 +32493,6 @@
       }
     },
     {
-      "vendor": "Zoom",
-      "category": "Startup Perks",
-      "description": "20% discount on annual subscription. Access via: Free for Brex customers",
-      "tier": "Startup Program",
-      "url": "https://brex.com/rewards/",
-      "tags": [
-        "developer-tools",
-        "startup-credits",
-        "startupdeals"
-      ],
-      "verifiedDate": "2026-07-30",
-      "eligibility": {
-        "type": "startup",
-        "conditions": [
-          "Free for Brex customers"
-        ],
-        "program": "Zoom Startup Deal"
-      },
-      "source_check": {
-        "checked": "2026-09-16",
-        "outcome": "does_not_name_vendor",
-        "detail": "the page never names Zoom and is not served from its domain"
-      }
-    },
-    {
       "vendor": "Selenium Grid",
       "category": "Testing",
       "description": "Open source browser automation and testing framework. Self-hosted grid for parallel test execution across browsers. No usage limits.",
@@ -35023,6 +34998,31 @@
         "checked": "2026-09-02",
         "outcome": "states_no_terms",
         "detail": "the page names Zoom but states no amount, tier or rate we can read"
+      }
+    },
+    {
+      "vendor": "Zoom",
+      "category": "Startup Perks",
+      "description": "20% discount on annual subscription. Access via: Free for Brex customers",
+      "tier": "Startup Program",
+      "url": "https://brex.com/rewards/",
+      "tags": [
+        "developer-tools",
+        "startup-credits",
+        "startupdeals"
+      ],
+      "verifiedDate": "2026-07-30",
+      "eligibility": {
+        "type": "startup",
+        "conditions": [
+          "Free for Brex customers"
+        ],
+        "program": "Zoom Startup Deal"
+      },
+      "source_check": {
+        "checked": "2026-09-16",
+        "outcome": "does_not_name_vendor",
+        "detail": "the page never names Zoom and is not served from its domain"
       }
     },
     {
