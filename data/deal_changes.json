@@ -10822,10 +10822,10 @@
     {
       "vendor": "Momento",
       "change_type": "free_tier_removed",
-      "date": "2026-09-05",
+      "date": "2025-11-10",
       "date_source": "discovered",
-      "summary": "Momento Cache Flex starts at $13 per GB-month. Pub/sub Topics are priced at $1 per 1M operations. Data transfer is $0.01 per GB for Valkey Router and $0.05/GiB for ingress/egress.",
-      "previous_state": "Serverless cache and pub/sub — 5 GB data transfer/month free, sub-millisecond latency, no infrastructure to manage",
+      "summary": "Momento ended the free allowance on its pay-as-you-go plan, the first 5 million operations each month. By 2025-11-10 its pricing page offered Flex from $5,000 a month and a legacy pay-as-you-go plan at $1 per 1 million operations, with nothing free.",
+      "previous_state": "Pay only for what you use: first 5 million operations free each month, then $1.00 per million operations",
       "current_state": "Momento Cache Flex from $13 per GB-month. Pub / sub Topics from $1 per 1M operations. Valkey Router $0.01 per GB of data transfer. Data Transfer Ingress + Egress 200 GiB included per month $0.05 GiB",
       "impact": "high",
       "source_url": "https://www.gomomento.com/pricing",
@@ -10834,14 +10834,14 @@
       "detected_by": "reverify-ai",
       "recorded_date": "2026-09-05",
       "archive_check": {
-        "checked": "2026-10-02",
+        "checked": "2026-10-06",
         "outcome": "vendor_changed",
         "brackets": [
           {
-            "last_old": "2026-06-18",
-            "first_new": "2026-09-16",
-            "last_old_capture": "https://web.archive.org/web/20260618003639/https://www.gomomento.com/pricing/",
-            "first_new_capture": "https://web.archive.org/web/20260916165532/https://www.gomomento.com/pricing/"
+            "last_old": "2025-08-03",
+            "first_new": "2025-11-10",
+            "last_old_capture": "https://web.archive.org/web/20250803233107/https://www.gomomento.com/pricing/",
+            "first_new_capture": "https://web.archive.org/web/20251110161049/https://www.gomomento.com/pricing/"
           }
         ]
       }
@@ -15314,6 +15314,20 @@
       "category": "Analytics",
       "alternatives": [],
       "recorded_date": "2026-10-03",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Momento",
+      "change_type": "record_corrected",
+      "date": "2026-10-06",
+      "summary": "Data correction - Momento's free allowance, the first 5 million operations each month, ended between 2025-08-03 and 2025-11-10, not in 2026. Our 2026-09-05 re-read compared the page with our own listing text, which still gave the 5 GB a month Momento offered until 2024.",
+      "previous_state": "Dated 2026-09-05, between archive copies of 2026-06-18 and 2026-09-16, with the free tier given as 5 GB of data transfer a month",
+      "current_state": "Dated between archive copies of 2025-08-03, which offers the first 5 million operations free each month, and 2025-11-10, which offers nothing free",
+      "impact": "low",
+      "source_url": "https://web.archive.org/web/20250803233107/https://www.gomomento.com/pricing/",
+      "category": "Databases",
+      "alternatives": [],
+      "recorded_date": "2026-10-06",
       "date_source": "hand_written"
     },
     {
