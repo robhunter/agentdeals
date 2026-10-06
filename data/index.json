@@ -33190,7 +33190,7 @@
         "available": true,
         "referrer_benefit": "$100 cash per verified paid signup",
         "referee_benefit": "$300 in credit",
-        "program_url": "https://www.vultr.com/docs/vultr-referral-program/",
+        "program_url": "https://www.vultr.com/company/referral-program/",
         "type": "self-service",
         "commission_type": "one-time",
         "notes": "Referred user must be active 30+ days and have paid $100+. Terms read from the referral dashboard on 2026-08-29."
@@ -37234,6 +37234,76 @@
           "text": "There are no overage charges on flat-rate plans. Sustained excess over months or unusually high usage in one month can lead AWS to adjust traffic delivery. A first spike up to 3x the monthly allowance does not affect service that month.",
           "quote": "you will not incur overage charges, regardless of how much you exceed your allowance. If your usage exceeds your allowance through sustained growth over multiple months or through unusually high usage in a single month, your traffic delivery might be adjusted. Most customers never experience performance adjustments. Here's how it works: Your first traffic spike up to 3x your monthly allowance won't affect your service that month.",
           "url": "https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/flat-rate-pricing-plan.html",
+          "read_on": "2026-10-06"
+        }
+      ]
+    },
+    {
+      "vendor": "Vultr",
+      "category": "Cloud IaaS",
+      "description": "Free Tier Program: a free cloud instance (1 vCPU, 512 MB RAM, 10 GB SSD, IPv4 address) in Miami, Seattle or Frankfurt, for applicants Vultr admits. Vultr calls it early access in limited quantities and admits eligible applicants at random, weighted by a score built from what they say about themselves and their intended use. New customers can also claim promotional credit, up to $300, with codes on Vultr's coupons page; it applies to select products only, cannot be combined with other offers, and expires. Paid Cloud Compute starts at $2.50/mo for 1 vCPU, 512 MB and 10 GB SSD on IPv6 only (New Jersey and Atlanta), $3.50/mo for the same plan without the IPv6-only restriction (New Jersey), and $5/mo for 1 vCPU, 1 GB RAM and 25 GB SSD. Billed hourly.",
+      "tier": "Free",
+      "url": "https://www.vultr.com/free-tier-program/",
+      "tags": [
+        "cloud",
+        "iaas",
+        "vps",
+        "free tier",
+        "hetzner-alternative",
+        "digitalocean-alternative"
+      ],
+      "verifiedDate": "2026-10-06",
+      "conditions": [
+        {
+          "text": "Admission to the free instance is not guaranteed: Vultr grants it at random to eligible applicants in limited quantities, weighted by a score, and does not explain why an account was not admitted.",
+          "quote": "Since there is a limited quantity, eligible members will be granted access on a randomized basis, incorporating a weighted score for each applicant.",
+          "url": "https://www.vultr.com/free-tier-program/",
+          "read_on": "2026-10-06"
+        },
+        {
+          "text": "Coupon credit is for new customers only, applies to select products only, and cannot be combined with any other offer.",
+          "quote": "Promotional credit applies to select products only and cannot be combined with any other offers. Restrictions and terms apply. New customers only.",
+          "url": "https://www.vultr.com/coupons/",
+          "read_on": "2026-10-06"
+        },
+        {
+          "text": "A card or PayPal account must be linked to sign up and to be eligible for any promotion, Vultr allows one promotion per user, and promotional credit expires; the pages for the $200, $250 and $300 codes state no expiry period.",
+          "quote": "A valid Credit Card or PayPal must be linked to register for services and be eligible for promotions—one promo per user. Credits from promo codes expire.",
+          "url": "https://www.vultr.com/faq/",
+          "read_on": "2026-10-06"
+        }
+      ]
+    },
+    {
+      "vendor": "Akamai Cloud",
+      "category": "Cloud IaaS",
+      "description": "Akamai Cloud, formerly Linode: a new user who signs up through a referral link gets a $100, 60-day credit, applied once a valid payment method is on the account. Shared CPU plans start with the Nanode 1 GB at $5/mo in most regions (1 vCPU, 1 GB RAM, 25 GB of storage, 1 TB transfer); the next plan, 2 GB RAM, is $12/mo.",
+      "tier": "Credits",
+      "url": "https://techdocs.akamai.com/cloud-computing/docs/referral-program",
+      "tags": [
+        "cloud",
+        "iaas",
+        "vps",
+        "credits",
+        "linode",
+        "hetzner-alternative",
+        "digitalocean-alternative"
+      ],
+      "verifiedDate": "2026-10-06",
+      "referral_program": {
+        "available": true,
+        "referrer_benefit": "$25 non-expiring credit once the new user has been active 90 days and spent $25, after their promotional credit has been used or has expired",
+        "referee_benefit": "$100 credit for 60 days, after adding a valid payment method",
+        "program_url": "https://techdocs.akamai.com/cloud-computing/docs/referral-program",
+        "type": "self-service",
+        "commission_type": "credits",
+        "notes": "A referral link is issued only after the referrer has spent at least $25 on Akamai Cloud services, not counting promotional credits (read 2026-10-06)."
+      },
+      "conditions": [
+        {
+          "text": "The $100 is a 60-day credit, applied only after a valid payment method is added to the new account.",
+          "quote": "A new user receives a $100 60-day credit . They get the credit when they sign up through a referral link. Before the credit is applied, they need to add a valid payment method to their account.",
+          "url": "https://techdocs.akamai.com/cloud-computing/docs/referral-program",
           "read_on": "2026-10-06"
         }
       ]

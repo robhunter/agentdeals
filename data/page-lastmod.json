@@ -1388,6 +1388,18 @@
       "hash": "b3bbc5254bc4cc9c",
       "changed": "2026-10-04"
     },
+    "/compare/akamai-cloud-vs-google-ai-pro-ultra": {
+      "hash": "e4911b17597d852e",
+      "changed": "2026-10-06"
+    },
+    "/compare/akamai-cloud-vs-oracle-cloud": {
+      "hash": "aaa0f27270312d83",
+      "changed": "2026-10-06"
+    },
+    "/compare/akamai-cloud-vs-vultr": {
+      "hash": "0793ceecd7c55033",
+      "changed": "2026-10-06"
+    },
     "/compare/amazon-cloudfront-vs-stellate": {
       "hash": "c4b66bd866be136c",
       "changed": "2026-10-06"
@@ -1832,18 +1844,6 @@
       "hash": "8c6592021e6613f1",
       "changed": "2026-10-04"
     },
-    "/compare/digitalocean-vs-google-compute-engine": {
-      "hash": "8e33d051371b961b",
-      "changed": "2026-10-05"
-    },
-    "/compare/digitalocean-vs-heroku-for-startups-program": {
-      "hash": "c32e87cc42654d64",
-      "changed": "2026-10-05"
-    },
-    "/compare/digitalocean-vs-startup-with-ibm": {
-      "hash": "ed83d3bc5422e335",
-      "changed": "2026-10-05"
-    },
     "/compare/digitalplat-vs-hurricane-electric-dns": {
       "hash": "13f2ddaeee43725a",
       "changed": "2026-10-05"
@@ -2076,6 +2076,10 @@
       "hash": "7793c802f4214693",
       "changed": "2026-10-04"
     },
+    "/compare/google-ai-pro-ultra-vs-vultr": {
+      "hash": "434a974a4ccaa6c1",
+      "changed": "2026-10-06"
+    },
     "/compare/google-cloud-vs-gorgias": {
       "hash": "2f58a49226a4e4f2",
       "changed": "2026-10-06"
@@ -2083,10 +2087,6 @@
     "/compare/google-cloud-vs-vast-ai": {
       "hash": "4e68c898a3424acf",
       "changed": "2026-10-06"
-    },
-    "/compare/google-compute-engine-vs-heroku-for-startups-program": {
-      "hash": "f8ed121249d1f043",
-      "changed": "2026-10-04"
     },
     "/compare/google-keep-vs-todoist": {
       "hash": "6b06a412d9098a84",
@@ -2186,10 +2186,6 @@
     },
     "/compare/heap-io-vs-smartlook-com": {
       "hash": "4e79bcc653a133a0",
-      "changed": "2026-10-04"
-    },
-    "/compare/heroku-for-startups-program-vs-startup-with-ibm": {
-      "hash": "4e9bb1673f58e380",
       "changed": "2026-10-04"
     },
     "/compare/highlight-io-vs-logz-io": {
@@ -2439,6 +2435,10 @@
     "/compare/openweathermap-vs-opencagedata-com": {
       "hash": "f797b715dd30370f",
       "changed": "2026-10-04"
+    },
+    "/compare/oracle-cloud-vs-vultr": {
+      "hash": "301c26e33f4f03f9",
+      "changed": "2026-10-06"
     },
     "/compare/orama-vs-bonsai-io": {
       "hash": "3946ffd35ba5856f",
@@ -3883,6 +3883,9 @@
       "changed": "2026-10-06"
     },
     "/vendor/aiven": {
+      "daily": true
+    },
+    "/vendor/akamai-cloud": {
       "daily": true
     },
     "/vendor/algolia": {
@@ -9436,6 +9439,9 @@
     "/vendor/vscodium": {
       "hash": "2104f899299a4036",
       "changed": "2026-10-06"
+    },
+    "/vendor/vultr": {
+      "daily": true
     },
     "/vendor/vultr-dns": {
       "hash": "796ce41c07f6b3b6",
