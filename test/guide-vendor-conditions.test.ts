@@ -378,9 +378,28 @@ async function listTheVendorPagePrints(base: string, slug: string, memo: Map<str
   return found;
 }
 
+function rowsNamedWithoutALink(html: string): string[] {
+  const named = new Set<string>();
+  for (const table of html.matchAll(TABLE_MARKUP)) {
+    for (const row of table[0].matchAll(TABLE_ROW)) {
+      const first = row[2]!.match(FIRST_CELL);
+      if (!first || VENDOR_PAGE_LINK.test(first[2]!)) continue;
+      const subject = subjectOfRow(row[2]!);
+      if (subject) named.add(subject);
+    }
+  }
+  return [...named];
+}
+
+async function vendorPageStatus(base: string, slug: string, memo: Map<string, number>): Promise<number> {
+  if (!memo.has(slug)) memo.set(slug, (await fetch(`${base}/vendor/${slug}`, { redirect: "manual" })).status);
+  return memo.get(slug)!;
+}
+
 interface GuideReading {
   route: string;
   layout: GuideLayout;
+  rowsNamedWithoutALink: string[];
   lists: number;
   carriesAnEmptyConditionsRow: boolean;
   tokens: string[];
@@ -394,6 +413,7 @@ async function readGuides(base: string, routes: string[]): Promise<GuideReading[
       return {
         route,
         layout: layoutOf(html),
+        rowsNamedWithoutALink: rowsNamedWithoutALink(html),
         lists: conditionLists(html).length,
         carriesAnEmptyConditionsRow: html.includes(CONDITIONS_ROW_ATTRIBUTE),
         tokens: html.match(ANY_TOKEN) ?? [],
@@ -428,6 +448,18 @@ const PRODUCT_ROWS_THEIR_PARENTS_CONDITIONS_DO_NOT_COVER = [
   { route: "/storage-comparison-2026", row: "firebase-storage", parent: "firebase" },
 ];
 
+const ROWS_NAMING_NO_LISTING = [
+  { route: "/auth-comparison-2026", row: "authelia" },
+  { route: "/hosting-free-tier-comparison-2026", row: "heroku" },
+  { route: "/storage-comparison-2026", row: "bunnycdn" },
+  { route: "/storage-comparison-2026", row: "keycdn" },
+  { route: "/storage-comparison-2026", row: "uploadthing" },
+];
+
+function namesNoListing(route: string, row: string): boolean {
+  return ROWS_NAMING_NO_LISTING.some((listed) => listed.route === route && listed.row === row);
+}
+
 function placementOf(html: string, slug: string): Placement {
   const placement = layoutOf(html).placements.find((candidate) => candidate.slug === slug);
   assert.ok(placement, `a ${slug} row`);
@@ -458,6 +490,26 @@ describe("every guide that compares vendors prints each vendor's conditions of u
 
   it("prints every vendor's list once: in its card where the guide has one, else after the first table row that names it", async () => {
     assert.deepStrictEqual(await placementsNotMatchingTheirVendorPage(conditioned.base, await readingsOn(conditioned.base)), []);
+  });
+
+  it("ties every vendor row to a vendor page, by a link in its first cell or by a name one answers to, unless the row is listed as naming no listing", async () => {
+    const memo = new Map<string, number>();
+    const unanswered: string[] = [];
+    for (const { route, rowsNamedWithoutALink } of await readingsOn(conditioned.base)) {
+      for (const row of rowsNamedWithoutALink) {
+        if (!namesNoListing(route, row) && await vendorPageStatus(conditioned.base, row, memo) === 404) unanswered.push(`${route}: the ${row} row`);
+      }
+    }
+    assert.deepStrictEqual(unanswered, []);
+  });
+
+  it("lists as naming no listing only rows a guide it reads still prints, under a name no vendor page answers to", async () => {
+    const memo = new Map<string, number>();
+    const readings = new Map((await readingsOn(conditioned.base)).map((reading) => [reading.route, reading]));
+    for (const { route, row } of ROWS_NAMING_NO_LISTING) {
+      assert.ok(readings.get(route)?.rowsNamedWithoutALink.includes(row), `${route} prints no ${row} row named without a link`);
+      assert.strictEqual(await vendorPageStatus(conditioned.base, row, memo), 404, `/vendor/${row} answers now; take ${route}'s ${row} row off the list`);
+    }
   });
 
   it("prints the parent listing's conditions after a product row they cover", async () => {
