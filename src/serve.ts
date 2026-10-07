@@ -20939,11 +20939,13 @@ function buildVercelVsNetlifyPage(): string {
       <td style="color:var(--text-muted);font-size:.8rem">${escHtmlServer(r.notes)}</td>
     </tr>`).join("\n        ");
 
-  const differences = [
+  const vercelHobbyDocs = { url: "https://vercel.com/docs/plans/hobby", readOn: "2026-10-07" };
+
+  const differences: { title: string; desc: string; source?: { url: string; readOn: string } }[] = [
     { title: "Pricing Model: Usage-Based vs. Credit-Based", desc: "Vercel uses per-resource usage limits (100 GB bandwidth, 1M invocations, etc.) — each metric tracked independently. Netlify uses a unified credit pool (300 credits/month) shared across deploys, bandwidth, and compute. Vercel is more predictable; Netlify's credits can be confusing but offer flexibility." },
     { title: "Framework Support: Next.js-Native vs. Framework-Agnostic", desc: "Vercel is built by the Next.js team — you get the deepest integration, fastest builds, and latest features first. Netlify supports any framework equally well (Astro, SvelteKit, Nuxt, Remix, Hugo, 11ty) and doesn't favor any specific framework. Choose Vercel for Next.js, Netlify for everything else." },
     { title: "Commercial Use: The Biggest Free Tier Difference", desc: "Vercel's Hobby plan explicitly prohibits commercial use — your side project with ads or a paid SaaS on the free tier violates the TOS. Netlify's Free plan allows commercial use. If you're building anything that makes money, Netlify is the free choice; Vercel requires upgrading to Pro ($20 a month per developer seat)." },
-    { title: "Credit Exhaustion vs. Hard Limits", desc: "When Netlify credits run out, sites pause (no overage charges). When Vercel limits are hit on the Hobby plan, requests may be throttled. Neither charges overages on free tiers, but the failure modes differ — Netlify stops serving entirely, Vercel degrades." },
+    { title: "Credit Exhaustion vs. Hard Limits", desc: "When Netlify credits run out, sites pause (no overage charges). When a Vercel Hobby project exceeds a usage limit, Vercel says that in most cases you have to wait until 30 days have passed before you can use that feature again. Neither charges overages on free plans.", source: vercelHobbyDocs },
   ];
 
   const scalingComparison = [
@@ -21120,7 +21122,7 @@ ${mcpCtaCss()}
   <div style="display:grid;gap:.75rem;margin:1rem 0">
     ${differences.map((d, i) => `<div class="diff-card" style="border-left-color:${i % 2 === 0 ? "var(--accent)" : "#3fb950"}">
       <h3>${escHtmlServer(d.title)}</h3>
-      <p class="diff-desc">${escHtmlServer(d.desc)}</p>
+      <p class="diff-desc">${escHtmlServer(d.desc)}${d.source ? ` (From <a href="${escHtmlServer(d.source.url)}" rel="nofollow noopener">${escHtmlServer(citationLabel(d.source.url))}</a>, read ${escHtmlServer(d.source.readOn)}.)` : ""}</p>
     </div>`).join("\n    ")}
   </div>
 
