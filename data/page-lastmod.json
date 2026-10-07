@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2026-10-06",
+  "generated": "2026-10-07",
   "pages": {
     "/": {
       "daily": true
@@ -1323,7 +1323,8 @@
       "changed": "2026-10-06"
     },
     "/ci-cd-pricing": {
-      "daily": true
+      "hash": "5f39fdb6c4491e18",
+      "changed": "2026-10-07"
     },
     "/cicd-free-tier-comparison-2026": {
       "hash": "b81132ae87e5ea91",
@@ -1334,7 +1335,8 @@
       "changed": "2026-10-06"
     },
     "/cloud-free-tier-comparison-2026": {
-      "daily": true
+      "hash": "7650bf94ba924d14",
+      "changed": "2026-10-07"
     },
     "/cloudflare-pages-vs-vercel": {
       "hash": "d92ccd48a3aa4a1c",
@@ -3156,7 +3158,8 @@
       "changed": "2026-10-06"
     },
     "/free-tier-risk": {
-      "daily": true
+      "hash": "9dc52b8a816b5544",
+      "changed": "2026-10-07"
     },
     "/free-tier-tracker": {
       "hash": "41d199ebfb5a2419",
@@ -3461,7 +3464,8 @@
       "changed": "2026-10-06"
     },
     "/serverless-free-tier-comparison-2026": {
-      "daily": true
+      "hash": "ebf09ba57d32065d",
+      "changed": "2026-10-07"
     },
     "/setup": {
       "hash": "e3a1b8cb87e003c1",
@@ -3471,7 +3475,8 @@
       "daily": true
     },
     "/stability": {
-      "daily": true
+      "hash": "e0f98407d0cd7e07",
+      "changed": "2026-10-07"
     },
     "/stack-check": {
       "hash": "e5b79b64d10f6e54",
@@ -3506,7 +3511,8 @@
       "changed": "2026-10-06"
     },
     "/state-of-free-tiers": {
-      "daily": true
+      "hash": "e9f7c25c9a685b20",
+      "changed": "2026-10-07"
     },
     "/storage-alternatives": {
       "hash": "fb65dd27b499404a",
@@ -3674,7 +3680,8 @@
       "changed": "2026-10-05"
     },
     "/trends/infrastructure": {
-      "daily": true
+      "hash": "6717711699f0d5ea",
+      "changed": "2026-10-07"
     },
     "/trends/localization": {
       "hash": "d90d5ce9770da384",
