@@ -4554,7 +4554,7 @@
     {
       "vendor": "Directus",
       "category": "Headless CMS",
-      "description": "Self-hosted free (BSL license, free for <$5M revenue). Cloud free tier discontinued Nov 2025 — Cloud starts at $15/mo",
+      "description": "Self-hostable headless CMS. Core is $0 a month with 3 user seats, 25 collections and 5 flows. The Open Innovation Grant gives organizations under $5M in annual revenue and fewer than 50 employees a fully permissive license at no cost. Directus Cloud hosting is a $99 a month add-on; Team is $499 a month billed annually.",
       "tier": "Self-Hosted",
       "url": "https://directus.io/pricing",
       "tags": [
