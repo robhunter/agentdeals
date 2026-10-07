@@ -7895,9 +7895,9 @@
           "chain": "Base",
           "settlement": "USDC",
           "pricing_model": "per-search",
-          "example_cost": "$5/1k",
+          "example_cost": "$0.005",
           "source_url": "https://search.agent.s.brave.app/llms.txt",
-          "source_quote": "A pay-per-request proxy in front of the Brave Search API. Each request carries a stablecoin micropayment, and the signed payment is the credential. No API key, no account, no signup. … x402 rail, USDC on Base … Prices are in base units of a six decimal token, so 5000 is $0.005. … | `/res/v1/web/search` | 5000 | $5/1k |",
+          "source_quote": "A pay-per-request proxy in front of the Brave Search API. Each request carries a stablecoin micropayment, and the signed payment is the credential. No API key, no account, no signup. … x402 rail, USDC on Base … 5000 is the price of one search. … Prices are in base units of a six decimal token, so 5000 is $0.005.",
           "read_on": "2026-10-07"
         }
       ]
