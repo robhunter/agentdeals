@@ -882,6 +882,12 @@
           "quote": "causes operations that increase storage (inserts, updates, and deletes) to fail until you free space or upgrade.",
           "url": "https://neon.com/docs/introduction/plans",
           "read_on": "2026-10-04"
+        },
+        {
+          "text": "Neon's Azure East US 2, West US 3, and Germany West Central regions no longer accept new projects as of April 7, 2026; Free-plan projects there inactive for 90+ days may be deleted after October 5, 2026.",
+          "quote": "As of April 7, 2026, Neon's Azure regions are deprecated, and you can no longer create new projects in those regions. After October 5, 2026, these regions will not receive Neon feature updates. Also on October 5, projects on Free plans that have been inactive for 90 days or more are subject to deletion.",
+          "url": "https://neon.com/docs/import/azure-regions-deprecation",
+          "read_on": "2026-10-07"
         }
       ]
     },
