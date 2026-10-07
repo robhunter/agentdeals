@@ -12468,6 +12468,8 @@ ${buildCards(other)}
 </html>`;
 }
 
+const SELF_HOSTED_S3_STORAGE_ANSWER = "MinIO&rsquo;s open-source edition is no longer maintained, and its free AIStor edition runs on one node under a commercial licence. <strong>SeaweedFS</strong> (Apache 2.0) and <strong>Garage</strong> (AGPLv3) are maintained open-source, S3-compatible options.";
+
 function buildStorageAlternativesPage(): string {
   const title = "Best Free Cloud Storage for Developers in 2026 — Object Storage, Media CDN & File Hosting Compared";
   const metaDesc = "Compare 55+ free cloud storage tools — Cloudflare R2, Backblaze B2, Tigris, Cloudinary, ImageKit, Google Cloud Storage, and more. Exact free tier limits by storage type. [[freshness]]";
@@ -12733,7 +12735,7 @@ ${buildCards(other)}
     </tbody>
   </table>
   </div>
-  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Cloudflare R2 leads on value with 10 GB free and zero egress fees \u2014 a game-changer for read-heavy workloads. Backblaze B2 undercuts it on storage and serves up to 3x what you store for nothing, charging $0.01/GB only past that. For media, Cloudinary and ImageKit both offer generous transformation pipelines. MinIO is the go-to for self-hosted S3-compatible storage. [[freshness]]</p>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Cloudflare R2 leads on value with 10 GB free and zero egress fees \u2014 a game-changer for read-heavy workloads. Backblaze B2 undercuts it on storage and serves up to 3x what you store for nothing, charging $0.01/GB only past that. For media, Cloudinary and ImageKit both offer generous transformation pipelines. For self-hosted: ${SELF_HOSTED_S3_STORAGE_ANSWER} [[freshness]]</p>
 
   <h2>Which Free Storage Should I Use?</h2>
   <div class="decision-guide">
@@ -12751,7 +12753,7 @@ ${buildCards(other)}
       <dd><a href="/vendor/jsdelivr">jsDelivr</a> for npm packages and GitHub repos (free, no limits). <a href="/vendor/cdnjs-com">cdnjs</a> for popular open-source libraries. Both are free and widely used.</dd>
 
       <dt>Want self-hosted object storage?</dt>
-      <dd><a href="/vendor/minio">MinIO</a> \u2014 high-performance, S3-compatible, open-source. Run it on your own infrastructure with no storage or bandwidth limits. Widely used in on-prem and Kubernetes environments.</dd>
+      <dd>${SELF_HOSTED_S3_STORAGE_ANSWER}</dd>
 
       <dt>Need encrypted file sync?</dt>
       <dd><a href="/vendor/proton-drive">Proton Drive</a> for end-to-end encrypted cloud storage (1 GB free). <a href="/vendor/internxt">Internxt</a> and <a href="/vendor/sync-com">Sync.com</a> are privacy-focused alternatives. <a href="/vendor/seafile-com">Seafile</a> is self-hostable.</dd>
@@ -39988,7 +39990,6 @@ function buildStorageComparison2026Page(): string {
   const title = "Storage & CDN Comparison 2026 — S3 vs R2 vs B2 vs Supabase Storage vs Cloudinary";
   const metaDescStorage = "Comprehensive comparison of 15+ storage and CDN free tiers in 2026. AWS S3, Cloudflare R2, Backblaze B2, Tigris, Storj, Supabase Storage, Cloudinary, ImageKit, BunnyCDN, MinIO — storage limits, egress fees, S3 compatibility, CDN, and the S3 egress tax at scale.";
   const slug = "storage-comparison-2026";
-  const selfHostedVerdict = "MinIO&rsquo;s open-source edition is no longer maintained, and its free AIStor edition runs on one node under a commercial licence. <strong>SeaweedFS</strong> (Apache 2.0) and <strong>Garage</strong> (AGPLv3) are maintained open-source, S3-compatible options.";
   const pubDate = "2026-04-03";
 
   const storageVendorKeywords = ["Cloudflare R2", "Cloudflare", "Backblaze", "AWS S3", "Amazon S3", "Google Cloud Storage", "Azure Blob", "DigitalOcean Spaces", "Supabase", "Firebase", "Storj", "Tigris", "Wasabi", "MinIO", "Cloudinary", "ImageKit", "Uploadcare", "Vercel Blob", "Oracle Cloud", "BunnyCDN", "Bunny", "KeyCDN", "Gumlet", "Pinata", "SeaweedFS", "Garage"];
@@ -40152,7 +40153,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="executive-summary">
-    <p><strong>Quick verdict:</strong> <strong>Cloudflare R2</strong> is the standout choice for most developers &mdash; 10 GB storage with zero egress fees, S3-compatible API, and a permanent free tier. At scale, the savings are staggering: 5 TB stored + 50 TB egress costs $75/month on R2 vs $4,625/month on S3. <strong>Storj</strong> offers the largest starting capacity at 25 GB, but as a 30-day trial rather than a free tier &mdash; a $5 minimum monthly fee applies once it ends. <strong>Backblaze B2</strong> has the cheapest paid storage at ${rateCardFor("Backblaze B2").publishedStorageRate} and gives every account free egress up to 3x what it stores, no CDN needed &mdash; which makes it the cheapest column in the scaling table below, not R2&rsquo;s equal. For media: <strong>Cloudinary</strong> (25 credits/month) and <strong>BunnyCDN</strong> ($0.01/GB, 14-day trial) are best-in-class. For self-hosted: ${selfHostedVerdict}</p>
+    <p><strong>Quick verdict:</strong> <strong>Cloudflare R2</strong> is the standout choice for most developers &mdash; 10 GB storage with zero egress fees, S3-compatible API, and a permanent free tier. At scale, the savings are staggering: 5 TB stored + 50 TB egress costs $75/month on R2 vs $4,625/month on S3. <strong>Storj</strong> offers the largest starting capacity at 25 GB, but as a 30-day trial rather than a free tier &mdash; a $5 minimum monthly fee applies once it ends. <strong>Backblaze B2</strong> has the cheapest paid storage at ${rateCardFor("Backblaze B2").publishedStorageRate} and gives every account free egress up to 3x what it stores, no CDN needed &mdash; which makes it the cheapest column in the scaling table below, not R2&rsquo;s equal. For media: <strong>Cloudinary</strong> (25 credits/month) and <strong>BunnyCDN</strong> ($0.01/GB, 14-day trial) are best-in-class. For self-hosted: ${SELF_HOSTED_S3_STORAGE_ANSWER}</p>
     <p><strong>The S3 egress tax is legendary.</strong> AWS S3 egress charges are the #1 developer bill shock story. S3 bills across 6 dimensions most developers don&rsquo;t know about: storage, egress, PUT requests, GET requests, lifecycle transitions, and the hidden NAT Gateway charge ($0.045/GB) that appears on your EC2 bill, not your S3 bill. At 1 TB/month egress, S3 costs ${egressBillAfterMonthlyGrantFor("AWS S3", ONE_TO_ONE_SCENARIO)} in bandwidth alone &mdash; 1 TB less the ${monthlyEgressGrantGb("AWS S3")} GB every account gets free each month, billed at $${rateCardFor("AWS S3").egressPerGb.toFixed(2)}/GB. R2 costs $0. This single difference has disrupted the entire cloud storage market.</p>
   </div>
 
@@ -40673,7 +40674,7 @@ ${mcpCtaCss()}
 
     <div class="verdict-item">
       <strong>Self-hosted</strong>
-      <p>${selfHostedVerdict}</p>
+      <p>${SELF_HOSTED_S3_STORAGE_ANSWER}</p>
     </div>
 
     <div class="verdict-item">

@@ -37,21 +37,32 @@ function startServer(): Promise<{ child: ChildProcess; port: number }> {
 describe("/storage-comparison-2026 points self-hosters at maintained open-source storage", () => {
   let child: ChildProcess | undefined;
   let body = "";
+  let alternatives = "";
 
   before(async () => {
     const started = await startServer();
     child = started.child;
-    const html = await (await fetch(`http://localhost:${started.port}/storage-comparison-2026`)).text();
-    body = html.replace(/<head>[\s\S]*?<\/head>/, " ").replace(/<script[\s\S]*?<\/script>/g, " ").replace(/<style[\s\S]*?<\/style>/g, " ");
+    const withoutHeadScriptsAndStyles = (html: string) => html.replace(/<head>[\s\S]*?<\/head>/, " ").replace(/<script[\s\S]*?<\/script>/g, " ").replace(/<style[\s\S]*?<\/style>/g, " ");
+    body = withoutHeadScriptsAndStyles(await (await fetch(`http://localhost:${started.port}/storage-comparison-2026`)).text());
+    alternatives = withoutHeadScriptsAndStyles(await (await fetch(`http://localhost:${started.port}/storage-alternatives`)).text());
   });
 
   after(() => child?.kill());
 
-  it("never sells MinIO as open-source, maintained, the default or the standard without saying its open-source edition is unmaintained", () => {
-    const sentences = plain(body).split(/(?<=[.!?])\s+/).filter(sentence => /MinIO/.test(sentence));
-    assert.ok(sentences.length >= 3, `the page names MinIO in ${sentences.length} sentences, so the rule checks little`);
-    const selling = sentences.filter(sentence => SELLS_MINIO_AS_MAINTAINED.test(sentence) && !sentence.includes("no longer maintained"));
-    assert.deepStrictEqual(selling, []);
+  it("never sells MinIO as open-source, maintained, the default or the standard without saying its open-source edition is unmaintained, on either storage page", () => {
+    for (const [route, page] of [["/storage-comparison-2026", body], ["/storage-alternatives", alternatives]]) {
+      const sentences = plain(page.replace(/<table[\s\S]*?<\/table>/g, " ")).split(/(?<=[.!?])\s+/).filter(sentence => /MinIO/.test(sentence));
+      assert.ok(sentences.length >= 3, `${route} names MinIO in ${sentences.length} sentences, so the rule checks little`);
+      const selling = sentences.filter(sentence => SELLS_MINIO_AS_MAINTAINED.test(sentence) && !/no longer maintained/i.test(sentence));
+      assert.deepStrictEqual(selling, [], route);
+    }
+  });
+
+  it("gives /storage-alternatives the same self-hosted answer in its summary and its self-hosted question", () => {
+    const summary = plain(alternatives.match(/<p style="color:var\(--text-dim\);font-size:\.8rem;margin-top:\.5rem">Cloudflare R2 leads on value([\s\S]*?)<\/p>/)?.[1] ?? "");
+    assert.ok(summary.includes(`For self-hosted: ${SELF_HOSTED_ANSWER}`), summary);
+    const answer = plain(alternatives.match(/<dt>Want self-hosted object storage\?<\/dt>\s*<dd>([\s\S]*?)<\/dd>/)?.[1] ?? "");
+    assert.strictEqual(answer, SELF_HOSTED_ANSWER);
   });
 
   it("gives the same self-hosted answer in the quick verdict and the self-hosted pick, ranking no option first", () => {
