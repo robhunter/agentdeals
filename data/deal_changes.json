@@ -1486,12 +1486,12 @@
     {
       "vendor": "Auth0",
       "change_type": "limits_increased",
-      "date": "2025-11-01",
-      "summary": "Auth0 increased free tier from 7,500 to 25,000 monthly active users. Largest free tier expansion since Okta acquisition. Makes Auth0 competitive with Clerk and Firebase Auth on free tier",
-      "previous_state": "Free tier: 7,500 MAU, unlimited social connections, 2 organizations",
-      "current_state": "Free tier: 25,000 MAU (+233%), unlimited social connections, 5 organizations. Actions, Branding, MFA included",
+      "date": "2024-09-24",
+      "summary": "Auth0's Free plan went from 7,500 to 25,000 monthly active users, with unlimited social and Okta connections, Organizations, Passwordless authentication and a custom domain. Auth0 announced it on 2024-09-24, available that day.",
+      "previous_state": "Free plan: 7,500 monthly active users",
+      "current_state": "Free plan: 25,000 monthly active users, unlimited social and Okta connections, Organizations, Passwordless, a custom domain (a card is needed to add it, for verification only)",
       "impact": "high",
-      "source_url": "https://auth0.com/pricing",
+      "source_url": "https://auth0.com/blog/auth0-plans-got-an-upgrade/",
       "category": "Authentication",
       "alternatives": [
         "Clerk",
@@ -1499,7 +1499,7 @@
         "Supabase Auth"
       ],
       "recorded_date": "2026-03-19",
-      "date_source": "hand_written"
+      "date_source": "vendor_page"
     },
     {
       "vendor": "Railway",
@@ -16037,6 +16037,20 @@
       "impact": "low",
       "source_url": "https://web.archive.org/web/20260131023803/https://applitools.com/platform-pricing/",
       "category": "Testing",
+      "alternatives": [],
+      "recorded_date": "2026-10-07",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Auth0",
+      "change_type": "record_corrected",
+      "date": "2026-10-07",
+      "summary": "Data correction - Auth0 raised its Free plan from 7,500 to 25,000 monthly active users on 2024-09-24, not 2025-11-01: Auth0's post \"Auth0 plans got an upgrade\" is dated 2024-09-24 and says the updates were \"available as of September 24th, 2024\". The record's after state also listed MFA on the Free plan; the post's MFA increases are for the paid plans.",
+      "previous_state": "Dated 2025-11-01 (hand-written); after state included MFA",
+      "current_state": "Dated 2024-09-24 from Auth0's announcement; after state from the announcement's Free plan list",
+      "impact": "low",
+      "source_url": "https://auth0.com/blog/auth0-plans-got-an-upgrade/",
+      "category": "Authentication",
       "alternatives": [],
       "recorded_date": "2026-10-07",
       "date_source": "hand_written"
