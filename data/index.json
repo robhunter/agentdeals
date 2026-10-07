@@ -71,6 +71,12 @@
           "rules_out": [
             "commercial use"
           ]
+        },
+        {
+          "text": "In most cases, exceeding Hobby plan usage limits requires waiting 30 days before using the feature again.",
+          "quote": "In most cases, if you exceed your usage limits on the Hobby plan, you will have to wait until 30 days have passed before you can use the feature again.",
+          "url": "https://vercel.com/docs/plans/hobby",
+          "read_on": "2026-10-07"
         }
       ]
     },
