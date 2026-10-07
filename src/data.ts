@@ -847,11 +847,15 @@ export function loadDealChanges(): DealChange[] {
     return cachedChanges;
   }
 
-  cachedChanges = applyReviewedDirections(data.changes.map(withResolutionInSummary)).map((change) => {
-    const survivor = vendorNameAsPublished(change.vendor);
+  cachedChanges = dealChangesAsPublished(data.changes, liveVendorNames());
+  return cachedChanges;
+}
+
+export function dealChangesAsPublished(changes: readonly DealChange[], liveVendors: ReadonlySet<string>): DealChange[] {
+  return applyReviewedDirections(changes.map(withResolutionInSummary)).map((change) => {
+    const survivor = survivingVendorName(change.vendor, liveVendors) ?? change.vendor;
     return survivor === change.vendor ? change : { ...change, vendor: survivor };
   });
-  return cachedChanges;
 }
 
 function liveVendorNames(): Set<string> {

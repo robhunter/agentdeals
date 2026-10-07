@@ -394,7 +394,7 @@ describe("what the catalogue reports about readings that did not answer", () => 
 
   it("puts the count and the quarantine forecast in the summary the run prints", () => {
     const lines = summaryLines(
-      { verified: 0, flagged: 0, changed: 0, recorded: [], suppressed: [], unclassified: [], sourceChecks: new Map() },
+      { verified: 0, flagged: 0, changed: 0, proposed: [], suppressed: [], unclassified: [], sourceChecks: new Map() },
       {
         useAi: false,
         checked: 1,

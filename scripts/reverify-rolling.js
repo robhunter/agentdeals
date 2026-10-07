@@ -11,11 +11,8 @@ import {
   challengeRendersThisRun,
   VERIFIER_MODEL,
 } from "./verify-freshness.js";
-import {
-  buildChangeEntry,
-  appendChangeEntries,
-  SUPPRESSED_SAME_TRANSITION_REGRADED,
-} from "./change-log.js";
+import { buildChangeEntry, SUPPRESSED_SAME_TRANSITION_REGRADED } from "./change-log.js";
+import { PROPOSALS_FILE, proposalLine, proposeChangeEntries, restatementPreviewLines } from "./change-proposals.js";
 import {
   gateCandidates,
   confirmDescribesChange,
@@ -306,12 +303,12 @@ export async function runUrlMode(picked, data, dryRun, now, options = {}) {
       flagged++;
     }
   }
-  return { verified, flagged, changed: 0, changes: [], recorded: [], suppressed: [], unclassified: [], rejected: [], unchecked: [], reclassified: [], overruled: [], sourceChecks, challengeRenders: challengeRendersThisRun(), attempts: recorder.attempts };
+  return { verified, flagged, changed: 0, changes: [], proposed: [], suppressed: [], unclassified: [], rejected: [], unchecked: [], reclassified: [], overruled: [], sourceChecks, challengeRenders: challengeRendersThisRun(), attempts: recorder.attempts };
 }
 
 export async function runAiMode(picked, data, dryRun, now, options = {}) {
   const fetchFn = options.fetchFn ?? fetchPageText;
-  const appendFn = options.appendFn ?? appendChangeEntries;
+  const proposeFn = options.proposeFn ?? proposeChangeEntries;
   const rateLimitMs = options.rateLimitMs ?? AI_RATE_LIMIT_MS;
   let verifyFn = options.verifyFn;
   let confirmFn = options.confirmFn ?? null;
@@ -454,14 +451,21 @@ export async function runAiMode(picked, data, dryRun, now, options = {}) {
     `  → ${corroboration.document.held.length} reading(s) awaiting a second reading in ${corroboration.path}`
   );
 
-  const { appended, suppressed } = appendFn([...publishNow, ...published], {
+  const { proposed, suppressed } = proposeFn([...publishNow, ...published], {
     dryRun,
+    now,
     windowDays: options.windowDays,
-    path: options.changesPath,
+    changesPath: options.changesPath,
+    path: options.proposalsPath,
+    offers: data.offers ?? [],
   });
   for (const { candidate, reason, collidedWith } of suppressed) {
     const against = collidedWith ? ` (collides with ${collidedWith})` : "";
-    console.log(`  – ${candidate.vendor} (${candidate.change_type}) not recorded: ${reason}${against}`);
+    console.log(`  – ${candidate.vendor} (${candidate.change_type}) not proposed: ${reason}${against}`);
+  }
+  for (const proposal of proposed) {
+    console.log(`  ⇢ ${proposal.vendor} (${proposal.change_type}) proposed as ${proposal.proposal_id}`);
+    for (const line of restatementPreviewLines(proposal)) console.log(line);
   }
 
   const refusals = (options.recordRefusalsFn ?? recordRefusals)(
@@ -475,7 +479,7 @@ export async function runAiMode(picked, data, dryRun, now, options = {}) {
     flagged,
     changed,
     changes,
-    recorded: appended,
+    proposed,
     suppressed,
     unclassified,
     rejected,
@@ -607,14 +611,15 @@ export function summaryLines(result, { useAi, checked, drawnFromQueue, oldestRem
     for (const line of heldReadingLines(result.held ?? [])) lines.push(line);
     lines.push(`Held readings a reading this run answered: ${(result.resolutions ?? []).length}`);
     for (const line of resolutionLines(result.resolutions ?? [])) lines.push(line);
-    lines.push(`Published because a second reading agreed: ${(result.corroborated ?? []).length}`);
+    lines.push(`Proposed because a second reading agreed: ${(result.corroborated ?? []).length}`);
     lines.push(
       `Awaiting a second reading, given up on after ${CORROBORATION_EXPIRY_DAYS} days: ` +
         `${(result.awaitingCorroboration ?? []).length}`
     );
-    lines.push(`Recorded to data/deal_changes.json: ${result.recorded.length}`);
+    lines.push(`Proposed to ${PROPOSALS_FILE}: ${result.proposed.length}`);
+    for (const proposal of result.proposed) lines.push(proposalLine(proposal));
     const regraded = regradeRefusals(result.suppressed).length;
-    lines.push(`Already recorded, not written again: ${result.suppressed.length - regraded}`);
+    lines.push(`Already recorded or proposed, not written again: ${result.suppressed.length - regraded}`);
     lines.push(`Same transition re-read and graded differently, not written again: ${regraded}`);
     for (const line of regradedVendorLines(result.suppressed)) lines.push(line);
     lines.push(`Detected but not recordable: ${result.unclassified.length}`);

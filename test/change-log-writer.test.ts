@@ -33,6 +33,7 @@ const { runUrlMode, runAiMode, summaryLines, repickWindowDays, regradeRefusals, 
 const { firstSeenDates } = await import("../scripts/backfill-change-recorded-dates.js");
 const { report, DEFAULT_THRESHOLD_DAYS, detectorSchedule, flagTokens, DETECTOR_CLI_OPTIONS, WORKFLOW_PATH, changeLogAtRef } = await import("../scripts/check-change-log-staleness.js");
 const { VERIFIER_API_KEY_ENV, VERIFIER_MODEL } = await import("../scripts/verify-freshness.js");
+const { proposalsBeside, readProposals } = await import("../scripts/change-proposals.js");
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -647,8 +648,15 @@ describe("change log writer", () => {
   });
 
   describe("what the run tells whoever reads the log", () => {
-    const urlResult = { verified: 3, flagged: 1, changed: 0, changes: [], recorded: [], suppressed: [], unclassified: [] };
-    const aiResult = { verified: 1, flagged: 0, changed: 2, changes: [{}], recorded: [{}], suppressed: [{}], unclassified: [{}] };
+    const urlResult = { verified: 3, flagged: 1, changed: 0, changes: [], proposed: [], suppressed: [], unclassified: [] };
+    const proposal = {
+      proposal_id: "2026-08-27/examplebase/limits_reduced",
+      vendor: "Examplebase",
+      change_type: "limits_reduced",
+      impact: "high",
+      source_url: "https://examplebase.example/pricing",
+    };
+    const aiResult = { verified: 1, flagged: 0, changed: 2, changes: [{}], proposed: [proposal], suppressed: [{}], unclassified: [{}] };
     const context = { checked: 4, oldestRemaining: "2026-04-05", total: 1580 };
 
     it("states that URL mode cannot detect a change rather than printing a count of zero", () => {
@@ -657,10 +665,10 @@ describe("change log writer", () => {
       assert.ok(!lines.some((l: string) => /^Changed/.test(l)), "URL mode printed a change count");
     });
 
-    it("reports what AI mode wrote, what it withheld and what it could not classify", () => {
+    it("reports what AI mode proposed, what it withheld and what it could not classify", () => {
       const lines = summaryLines(aiResult, { ...context, useAi: true });
-      assert.ok(lines.includes("Recorded to data/deal_changes.json: 1"));
-      assert.ok(lines.includes("Already recorded, not written again: 1"));
+      assert.ok(lines.includes("Proposed to data/change_proposals.json: 1"));
+      assert.ok(lines.includes("Already recorded or proposed, not written again: 1"));
       assert.ok(lines.includes("Detected but not recordable: 1"));
     });
 
@@ -671,7 +679,7 @@ describe("change log writer", () => {
         { candidate: {}, reason: SUPPRESSED_SAME_TRANSITION_REGRADED, collidedWith: "k" },
       ];
       const lines = summaryLines({ ...aiResult, suppressed }, { ...context, useAi: true });
-      assert.ok(lines.includes("Already recorded, not written again: 2"));
+      assert.ok(lines.includes("Already recorded or proposed, not written again: 2"));
       assert.ok(lines.includes("Same transition re-read and graded differently, not written again: 1"));
     });
 
@@ -781,7 +789,7 @@ describe("change log writer", () => {
       assert.strictEqual(result.verified, 2);
       assert.strictEqual(result.changed, 0);
       assert.deepStrictEqual(result.changes, []);
-      assert.deepStrictEqual(result.recorded, []);
+      assert.deepStrictEqual(result.proposed, []);
     });
 
     it("returns a change count of zero when every entry fails its fetch", async () => {
@@ -840,11 +848,11 @@ describe("change log writer", () => {
     });
   });
 
-  describe("AI mode is the only mode that can write a change", () => {
+  describe("AI mode is the only mode that can propose a change", () => {
     const picked = [{ index: 0, offer: { ...OFFER, verifiedDate: "2026-01-01" } }];
     const fetchFn = async () => ({ ok: true, text: "Examplebase pricing — 500 MB for 14 days, then $19/month" });
 
-    it("writes the detected change to the log once a second reading agrees", async () => {
+    it("proposes the detected change once a second reading agrees, and publishes nothing", async () => {
       const file = tempLog([]);
       const corroborationPath = path.join(path.dirname(file), "change_corroboration.json");
       const data = { offers: [{ ...OFFER, verifiedDate: "2026-01-01" }] };
@@ -859,13 +867,16 @@ describe("change log writer", () => {
 
       const first = await readIt();
       assert.strictEqual(first.changed, 1);
-      assert.strictEqual(first.recorded.length, 0, "a demoting change published on one reading");
+      assert.strictEqual(first.proposed.length, 0, "a demoting change published on one reading");
       assert.strictEqual(JSON.parse(readFileSync(file, "utf-8")).changes.length, 0);
 
       const second = await readIt();
-      assert.strictEqual(second.recorded.length, 1);
-      const written = JSON.parse(readFileSync(file, "utf-8"));
-      assert.strictEqual(written.changes.length, 1);
+      assert.strictEqual(second.proposed.length, 1);
+      assert.strictEqual(JSON.parse(readFileSync(file, "utf-8")).changes.length, 0);
+      assert.deepStrictEqual(
+        readProposals(proposalsBeside(file)).proposals.map((p: { vendor: string }) => p.vendor),
+        ["Examplebase"],
+      );
       rmSync(path.dirname(file), { recursive: true, force: true });
     });
 
@@ -893,7 +904,7 @@ describe("change log writer", () => {
         changesPath: file,
       });
       assert.strictEqual(result.changed, 1);
-      assert.strictEqual(result.recorded.length, 0);
+      assert.strictEqual(result.proposed.length, 0);
       assert.strictEqual(result.unclassified.length, 1);
       const written = JSON.parse(readFileSync(file, "utf-8"));
       assert.strictEqual(written.changes.length, 0);
@@ -910,7 +921,7 @@ describe("change log writer", () => {
         changesPath: file,
       });
       assert.strictEqual(result.verified, 1);
-      assert.strictEqual(result.recorded.length, 0);
+      assert.strictEqual(result.proposed.length, 0);
       assert.ok(
         ["2026-08-25", "2026-08-26", "2026-08-27"].includes(data.offers[0].verifiedDate),
         `confirmed record was stamped ${data.offers[0].verifiedDate}`

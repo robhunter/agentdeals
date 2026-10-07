@@ -62,6 +62,7 @@ const { REFUSAL_REASONS_THAT_MEASURED_NO_DIFFERENCE } = await import("../dist/ch
 const REPO_ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 
 const { runAiMode, summaryLines } = await import("../scripts/reverify-rolling.js");
+const { proposalsBeside, readProposals } = await import("../scripts/change-proposals.js");
 const { fetchPageText, MAX_PAGE_TEXT_LENGTH, MIN_PAGE_TEXT_LENGTH } = await import("../scripts/verify-freshness.js");
 const { withoutARenderingClient } = await import("../scripts/rendered-page.js");
 const { CHANGE_TYPES } = await import("../scripts/change-log.js");
@@ -1219,7 +1220,7 @@ describe("a recorded change must describe a change", () => {
       assert.strictEqual(counts.get(REJECT_NO_PRICE_SIGNAL), 1);
 
       const text = summaryLines(
-        { verified: 0, flagged: 0, changed: 2, recorded: [], suppressed: [], unclassified: [], unchecked: [], rejected },
+        { verified: 0, flagged: 0, changed: 2, proposed: [], suppressed: [], unclassified: [], unchecked: [], rejected },
         { useAi: true, checked: 2, oldestRemaining: "2026-07-05", total: 1580 }
       ).join("\n");
       assert.match(text, /Rejected \(page does not name the vendor\): 1/);
@@ -1231,7 +1232,7 @@ describe("a recorded change must describe a change", () => {
           verified: 0,
           flagged: 0,
           changed: 3,
-          recorded: [],
+          proposed: [],
           suppressed: [],
           unclassified: [],
           unchecked: [],
@@ -1351,7 +1352,7 @@ describe("the run does not write a change the gate refused", () => {
     impact: "medium",
   };
 
-  it("leaves the change log empty", async () => {
+  it("leaves the change log and the proposals empty", async () => {
     const file = tempLog([]);
     const data = { offers: [{ ...offer }] };
     const result = await runAiMode(picked, data, false, NOW, {
@@ -1361,11 +1362,12 @@ describe("the run does not write a change the gate refused", () => {
       changesPath: file,
     });
     assert.strictEqual(result.changed, 1);
-    assert.strictEqual(result.recorded.length, 0);
+    assert.strictEqual(result.proposed.length, 0);
     assert.strictEqual(result.rejected.length, 1);
     assert.strictEqual(result.rejected[0].reason, REJECT_NULL_COMPARISON);
     const written = JSON.parse(readFileSync(file, "utf-8"));
     assert.strictEqual(written.changes.length, 0);
+    assert.deepStrictEqual(readProposals(proposalsBeside(file)).proposals, []);
     rmSync(path.dirname(file), { recursive: true, force: true });
   });
 
@@ -1460,14 +1462,14 @@ describe("the run does not write a change the gate refused", () => {
     it("grades it a new free tier when it read the page in full", async () => {
       const result = await runReading(false);
       assert.strictEqual(result.rejected.length, 0, JSON.stringify(result.rejected));
-      const taken = [...result.recorded, ...result.held];
+      const taken = [...result.proposed, ...result.held];
       assert.strictEqual(taken.length, 1);
       assert.strictEqual(taken[0].change_type, "new_free_tier");
     });
 
     it("refuses the same reading when the page was cut at the fetch limit", async () => {
       const result = await runReading(true);
-      assert.deepStrictEqual([...result.recorded, ...result.held], []);
+      assert.deepStrictEqual([...result.proposed, ...result.held], []);
       assert.strictEqual(result.rejected[0].reason, REJECT_UNQUANTIFIED_LIMIT);
     });
   });
@@ -1494,7 +1496,7 @@ describe("the run does not write a change the gate refused", () => {
       changesPath: file,
       corroborationPath: path.join(path.dirname(file), "change_corroboration.json"),
     });
-    assert.strictEqual([...result.recorded, ...result.held].length, 1);
+    assert.strictEqual([...result.proposed, ...result.held].length, 1);
     assert.strictEqual(result.rejected.length, 0);
     rmSync(path.dirname(file), { recursive: true, force: true });
   });
@@ -1521,7 +1523,7 @@ describe("the run does not write a change the gate refused", () => {
       changesPath: file,
     });
     assert.strictEqual(result.changed, 1);
-    assert.strictEqual(result.recorded.length, 0);
+    assert.strictEqual(result.proposed.length, 0);
     assert.strictEqual(result.rejected[0].reason, REJECT_NO_PRICE_SIGNAL);
     assert.strictEqual(JSON.parse(readFileSync(file, "utf-8")).changes.length, 0);
     rmSync(path.dirname(file), { recursive: true, force: true });
@@ -1549,7 +1551,7 @@ describe("the run does not write a change the gate refused", () => {
       changesPath: file,
       corroborationPath: path.join(path.dirname(file), "change_corroboration.json"),
     });
-    assert.strictEqual([...result.recorded, ...result.held].length, 1);
+    assert.strictEqual([...result.proposed, ...result.held].length, 1);
     assert.strictEqual(result.rejected.length, 0);
     rmSync(path.dirname(file), { recursive: true, force: true });
   });
@@ -1560,7 +1562,7 @@ describe("the run does not write a change the gate refused", () => {
         verified: 3,
         flagged: 1,
         changed: 4,
-        recorded: [{}, {}],
+        proposed: [{}, {}],
         suppressed: [],
         unclassified: [],
         rejected: [
@@ -1577,7 +1579,7 @@ describe("the run does not write a change the gate refused", () => {
 
   it("reports no refusals for a mode that cannot detect a change", () => {
     const lines = summaryLines(
-      { verified: 3, flagged: 1, changed: 0, recorded: [], suppressed: [], unclassified: [], rejected: [], unchecked: [] },
+      { verified: 3, flagged: 1, changed: 0, proposed: [], suppressed: [], unclassified: [], rejected: [], unchecked: [] },
       { useAi: false, checked: 4, oldestRemaining: "2026-01-01", total: 100 }
     );
     assert.ok(!lines.some((l: string) => l.startsWith("Rejected")), lines.join("\n"));

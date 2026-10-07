@@ -23,6 +23,7 @@ const {
   REJECT_REPEATS_A_REFUSED_CLAIM,
 } = await import("../scripts/change-gate.js");
 const { runAiMode, summaryLines } = await import("../scripts/reverify-rolling.js");
+const { proposalsBeside, readProposals } = await import("../scripts/change-proposals.js");
 const { auditPublishedRecords } = await import("../scripts/gate-report.js");
 const { refusedReadRegister, WHAT_A_VOIDED_READ_FOUND } = await import("../dist/change-refusal.js");
 
@@ -285,7 +286,10 @@ async function readAivenOnce() {
       refusalsPath,
     });
     const stored = JSON.parse(readFileSync(refusalsPath, "utf-8")).refusals;
-    const recorded = JSON.parse(readFileSync(changesPath, "utf-8")).changes;
+    const recorded = [
+      ...JSON.parse(readFileSync(changesPath, "utf-8")).changes,
+      ...readProposals(proposalsBeside(changesPath)).proposals,
+    ];
     return { result, stored, recorded };
   } finally {
     rmSync(dir, { recursive: true, force: true });

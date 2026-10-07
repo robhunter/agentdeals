@@ -295,7 +295,7 @@ async function readFeedBearOnceAs(changeType: string) {
 describe("the rolling re-read hands the gate the refusals it holds", () => {
   it("refuses a reading that repeats a refusal in its store, and stores that refusal too", async () => {
     const { result, stored } = await readFeedBearOnceAs(FEEDBEAR_READ.change_type);
-    assert.strictEqual(result.recorded.length, 0);
+    assert.strictEqual(result.proposed.length, 0);
     assert.deepStrictEqual(result.rejected.map((r: { reason: string }) => r.reason), [REJECT_REPEATS_A_REFUSED_READING]);
     const repeat = stored.find((r: { refused_date: string }) => r.refused_date === "2026-10-03");
     assert.ok(repeat, "the run stored no refusal for the repeated reading");
@@ -305,7 +305,7 @@ describe("the rolling re-read hands the gate the refusals it holds", () => {
 
   it("refuses a reading it typed as a correction to our own record when that reading repeats a refusal in its store", async () => {
     const { result, stored } = await readFeedBearOnceAs("record_corrected");
-    assert.strictEqual(result.recorded.length, 0);
+    assert.strictEqual(result.proposed.length, 0);
     assert.deepStrictEqual(result.rejected.map((r: { reason: string }) => r.reason), [REJECT_REPEATS_A_REFUSED_READING]);
     assert.ok(stored.some((r: { refused_date: string; reason: string }) => r.refused_date === "2026-10-03" && r.reason === REJECT_REPEATS_A_REFUSED_READING));
   });

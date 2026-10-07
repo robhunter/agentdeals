@@ -25,6 +25,7 @@ const { RISK_DEMOTION, SEVERE_TYPES_WITHOUT_FLAT_DEMOTION, changeTypeCanDemote }
   "../src/change-demotion.ts"
 );
 const { CHANGE_TYPES } = await import("../scripts/change-log.js");
+const { proposalsBeside, readProposals } = await import("../scripts/change-proposals.js");
 
 type Store = { held: any[]; resolved: any[] };
 
@@ -43,6 +44,9 @@ function scratch() {
 
 const published = (paths: { changesPath: string }) =>
   JSON.parse(readFileSync(paths.changesPath, "utf-8")).changes as any[];
+const proposed = (paths: { changesPath: string }) =>
+  readProposals(proposalsBeside(paths.changesPath)).proposals as any[];
+const sentForward = (paths: { changesPath: string }) => [...published(paths), ...proposed(paths)];
 const store = (paths: { corroborationPath: string }) =>
   JSON.parse(readFileSync(paths.corroborationPath, "utf-8")) as Store;
 
@@ -60,7 +64,7 @@ function runSummary() {
       verified: 3,
       flagged: 1,
       changed: 4,
-      recorded: [],
+      proposed: [],
       suppressed: [],
       unclassified: [],
       rejected: [],
@@ -128,8 +132,8 @@ describe("#1640 — a demoting verdict is not published on one reading", () => {
     const run = await runOver(SNAPPIFY, A_REDUCTION, "2026-09-14", paths);
 
     assert.strictEqual(run.changed, 1, "the reading did not produce a change to hold");
-    assert.deepStrictEqual(published(paths), [], "a single reading demoted the vendor on main");
-    assert.strictEqual(run.recorded.length, 0);
+    assert.deepStrictEqual(sentForward(paths), [], "a single reading demoted the vendor on main");
+    assert.strictEqual(run.proposed.length, 0);
   });
 
   it("keeps the reading it held, so the run is not silent about what it read", async () => {
@@ -145,16 +149,17 @@ describe("#1640 — a demoting verdict is not published on one reading", () => {
     assert.strictEqual(held[0].first_read_date, "2026-09-14");
   });
 
-  it("publishes once a second reading of the same page reaches the same verdict", async () => {
+  it("proposes it once a second reading of the same page reaches the same verdict", async () => {
     const paths = scratch();
     await runOver(SNAPPIFY, A_REDUCTION, "2026-09-14", paths);
     const second = await runOver(SNAPPIFY, A_REDUCTION, "2026-09-15", paths);
 
     assert.strictEqual(second.corroborated.length, 1);
     assert.deepStrictEqual(
-      published(paths).map((c) => c.change_type),
+      proposed(paths).map((c) => c.change_type),
       ["limits_reduced"],
     );
+    assert.deepStrictEqual(published(paths), [], "a corroborated reading reached the change log before review");
     assert.deepStrictEqual(store(paths).held, [], "the reading stayed held after it was corroborated");
     const resolved = store(paths).resolved;
     assert.strictEqual(resolved.length, 1);
@@ -162,19 +167,19 @@ describe("#1640 — a demoting verdict is not published on one reading", () => {
     assert.match(resolved[0].detail, /2026-09-15/);
   });
 
-  it("publishes the impact both readings support, not the louder one", async () => {
+  it("proposes the impact both readings support, not the louder one", async () => {
     const paths = scratch();
     await runOver(SNAPPIFY, A_REDUCTION, "2026-09-14", paths);
     await runOver(SNAPPIFY, { ...A_REDUCTION, impact: "low" }, "2026-09-15", paths);
 
     assert.deepStrictEqual(
-      published(paths).map((c) => c.impact),
+      sentForward(paths).map((c) => c.impact),
       ["low"],
-      "two readings that disagreed on severity published the higher one",
+      "two readings that disagreed on severity proposed the higher one",
     );
   });
 
-  it("leaves a change that demotes nobody to publish on the reading that found it", async () => {
+  it("proposes a change that demotes nobody on the reading that found it", async () => {
     const paths = scratch();
     const widened = {
       status: "changed",
@@ -185,7 +190,7 @@ describe("#1640 — a demoting verdict is not published on one reading", () => {
     };
     const run = await runOver(SNAPPIFY, widened, "2026-09-14", paths);
 
-    assert.strictEqual(run.recorded.length, 1, "an improvement was held for a second reading it does not need");
+    assert.strictEqual(run.proposed.length, 1, "an improvement was held for a second reading it does not need");
     assert.deepStrictEqual(store(paths).held, []);
   });
 });
@@ -211,7 +216,7 @@ describe("#1640 AC-3 — a page whose readings disagree publishes nothing", () =
     await runOver(AMAZON_Q, READ_AS_REDUCED, "2026-09-12", paths);
     const second = await runOver(AMAZON_Q, { status: "confirmed" }, "2026-09-13", paths);
 
-    assert.deepStrictEqual(published(paths), [], "one reading in four demoted the vendor");
+    assert.deepStrictEqual(sentForward(paths), [], "one reading in four demoted the vendor");
     assert.strictEqual(second.verified, 1, "the confirming reading did not confirm the terms");
     const resolved = store(paths).resolved;
     assert.strictEqual(resolved.length, 1);
@@ -242,7 +247,7 @@ describe("#1640 AC-3 — a page whose readings disagree publishes nothing", () =
     );
 
     assert.ok(second.rejected.length > 0, "the gate accepted the reading this control needs it to refuse");
-    assert.deepStrictEqual(published(paths), []);
+    assert.deepStrictEqual(sentForward(paths), []);
     const resolved = store(paths).resolved;
     assert.strictEqual(resolved[0].outcome, CONTRADICTED);
     assert.match(resolved[0].detail, /the gate refused/);
@@ -264,13 +269,13 @@ describe("#1640 AC-3 — a page whose readings disagree publishes nothing", () =
       paths,
     );
 
-    assert.deepStrictEqual(published(paths), [], "two readings that named different changes published one of them");
+    assert.deepStrictEqual(sentForward(paths), [], "two readings that named different changes published one of them");
     assert.strictEqual(store(paths).resolved[0].outcome, CONTRADICTED);
     assert.deepStrictEqual(store(paths).held, [], "the contradicting reading was itself held, so the page never settles");
   });
 });
 
-describe("#1640 AC-4 — a reduction both readings see still reaches a reader", () => {
+describe("#1640 AC-4 — a reduction both readings see still reaches review", () => {
   const SYNADIA = {
     vendor: "Synadia",
     url: "https://synadia.example/pricing",
@@ -290,17 +295,17 @@ describe("#1640 AC-4 — a reduction both readings see still reaches a reader", 
     "Synadia pricing. Free tier: 2 Accounts, 10 Connections, 2 Leaf Nodes, 1 MiB Message Size, 10 GiB Network Data for $0.",
   );
 
-  it("publishes on the second reading, one run later than it would have", async () => {
+  it("is proposed on the second reading, one run later than it would have been", async () => {
     const paths = scratch();
     const first = await runOver(SYNADIA, REAL_REDUCTION, "2026-09-13", paths, { fetchFn: page });
     assert.strictEqual(first.held.length, 1, "a real reduction was not even held");
-    assert.deepStrictEqual(published(paths), []);
+    assert.deepStrictEqual(sentForward(paths), []);
 
     await runOver(SYNADIA, REAL_REDUCTION, "2026-09-14", paths, { fetchFn: page });
     assert.deepStrictEqual(
-      published(paths).map((c) => `${c.change_type}/${c.impact}`),
+      sentForward(paths).map((c) => `${c.change_type}/${c.impact}`),
       ["pricing_restructured/high"],
-      "a reduction with new quantities on both sides, read twice, still did not publish",
+      "a reduction with new quantities on both sides, read twice, still was not proposed",
     );
   });
 });
@@ -319,7 +324,7 @@ describe("#1640 — a held reading does not outlive what it was read against", (
       `no held reading was dropped when its baseline moved: ${JSON.stringify(resolved)}`,
     );
     assert.deepStrictEqual(
-      published(paths),
+      sentForward(paths),
       [],
       "a reading taken against terms we no longer publish was published anyway",
     );
@@ -349,7 +354,7 @@ describe("#1640 — a held reading does not outlive what it was read against", (
 
     assert.deepStrictEqual(store(paths).held, []);
     assert.strictEqual(store(paths).resolved[0].outcome, NEVER_CORROBORATED);
-    assert.deepStrictEqual(published(paths), []);
+    assert.deepStrictEqual(sentForward(paths), []);
   });
 
   it("keeps holding while the page cannot be read, because a failed read agrees with nothing", async () => {
@@ -459,7 +464,7 @@ describe("#1650 — a second reading is added to the run, not taken out of it", 
         verified: 3,
         flagged: 0,
         changed: 0,
-        recorded: [],
+        proposed: [],
         suppressed: [],
         unclassified: [],
         sourceChecks: new Map(),
