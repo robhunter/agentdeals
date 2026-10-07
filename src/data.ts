@@ -22,6 +22,7 @@ import {
   withheldLevelSentence,
 } from "./source-check.js";
 import { substitutesFor } from "./product-role.js";
+import { withPaymentCostsTheirSourcesState } from "./payment-protocols.js";
 import { supersededTermsMeasure, supersededTermsRecordFor, type SupersededTermsMeasure, type SupersededTermsRecord } from "./superseded-description.js";
 import { restatementCensus, restatementRulings, withheldTermsMeasure, type RestatementCensus, type WithheldTermsMeasure } from "./restatement.js";
 import { isSubSlug, toSlug } from "./slug.js";
@@ -118,7 +119,7 @@ export function loadOffers(): Offer[] {
     return cachedOffers;
   }
 
-  cachedOffers = data.offers.map(withoutGateInput).map(withFreePlanExcerptHeldAside);
+  cachedOffers = data.offers.map(withoutGateInput).map(withFreePlanExcerptHeldAside).map(withPaymentCostsTheirSourcesState);
   return cachedOffers;
 }
 
