@@ -7883,10 +7883,22 @@
           "read_on": "2026-10-06"
         },
         {
-          "text": "Unused free credit does not carry over. Bought credits do not expire and are not refunded.",
+          "text": "Unused free monthly credit does not carry over.",
           "quote": "Free monthly credits are the exception — those are replaced each month rather than carried over.",
           "url": "https://api-dashboard.search.brave.com/documentation/resources/help-feedback",
           "read_on": "2026-10-06"
+        },
+        {
+          "text": "Brave's Service Credit Terms say credits, bought or free, expire one year after they are issued or when the account closes, while its help page says bought credits do not expire.",
+          "quote": "Service Credits expire upon the earlier of one year from the date of issuance or the date that you close your account with us.",
+          "url": "https://api-dashboard.search.brave.com/terms-of-service/credit-terms",
+          "read_on": "2026-10-07"
+        },
+        {
+          "text": "Bought credits are not refunded.",
+          "quote": "Purchases of Prepaid Service Credits are non-refundable.",
+          "url": "https://api-dashboard.search.brave.com/terms-of-service/credit-terms",
+          "read_on": "2026-10-07"
         }
       ]
     },
