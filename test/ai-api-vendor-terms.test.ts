@@ -362,7 +362,7 @@ describe("AI API vendors' free terms on the guides", () => {
   it("lists OpenAI's model shutdowns of October 23, 2026 on /shutdowns", () => {
     const card = shutdownCards(served.get("/shutdowns")!).find((text) => text.startsWith("OpenAI legacy model snapshots "));
     assert.ok(card, "/shutdowns has no card for OpenAI's legacy model snapshots");
-    for (const expected of ["October 23, 2026", "gpt-3.5-turbo", "gpt-image-1", "gpt-5.6-terra for gpt-3.5-turbo and o4-mini", "gpt-image-2 for gpt-image-1"]) {
+    for (const expected of ["October 23, 2026", "gpt-3.5-turbo", "gpt-image-1", "gpt-5.6-terra for gpt-3.5-turbo and o4-mini", "gpt-image-2.5-sunburst or gpt-image-2.5-flare for gpt-image-1"]) {
       assert.ok(card.includes(expected), `the card does not say "${expected}": ${card}`);
     }
   });
