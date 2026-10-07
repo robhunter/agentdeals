@@ -15,6 +15,7 @@ const dayOffset = (days: number) =>
   new Date(Date.parse(TODAY) + days * 86400000).toISOString().slice(0, 10);
 
 const SUBJECT = "Xata";
+const SUBJECT_PAGE = `/vendor/${SUBJECT.toLowerCase()}`;
 const CONTROL = "Hyperping";
 const CONTROL_DATE = dayOffset(-10);
 const DIGEST_SURFACES = ["/feed.xml", "/api/feed", "/this-week", "/api/digest"];
@@ -123,15 +124,18 @@ describe("no published surface presents a discovery date as the date a vendor ch
     const absent = await startServer(write("absent.json", [control]));
     servers.push(absent.proc);
 
-    const reportingPeriods = new Set<string>();
-    for (const route of DIGEST_SURFACES) {
+    const datesAlreadyPrinted = new Set<string>();
+    for (const route of [...DIGEST_SURFACES, SUBJECT_PAGE]) {
       const body = await (await fetch(`http://localhost:${absent.port}${route}`)).text();
-      for (const m of body.matchAll(/\d{4}-\d{2}-\d{2}/g)) reportingPeriods.add(m[0]);
+      for (const m of body.matchAll(/\d{4}-\d{2}-\d{2}/g)) datesAlreadyPrinted.add(m[0]);
     }
     ENTRY_DATE = [0, -1, -2, -3, -4, -5, -6]
       .map(dayOffset)
-      .find((d) => !reportingPeriods.has(d)) ?? "";
-    assert.ok(ENTRY_DATE, "every candidate date is already a reporting period boundary");
+      .find((d) => !datesAlreadyPrinted.has(d)) ?? "";
+    assert.ok(
+      ENTRY_DATE,
+      "every candidate date is already a reporting period boundary or a date the subject's own page prints"
+    );
 
     const discovered = await startServer(
       write("discovered.json", [control, change(SUBJECT, ENTRY_DATE, "discovered")])
@@ -157,7 +161,7 @@ describe("no published surface presents a discovery date as the date a vendor ch
         "/api/changes",
         "/api/digest",
         "/api/digest/weekly",
-        `/vendor/${SUBJECT.toLowerCase()}`,
+        SUBJECT_PAGE,
       ]),
     ];
 
