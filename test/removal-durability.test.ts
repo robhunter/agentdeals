@@ -248,15 +248,34 @@ describe("the vendors our pages name as removals that lasted", () => {
     );
   });
 
-  it("names no vendor carrying a resolution or a later positive record", () => {
+  it("names no vendor whose free tier came back or none of whose removals still stands", () => {
     const durability = removalDurability(LOG);
     const cameBack = new Set(durability.cameBack.map((r) => vendorNameAsPublished(r.removal.vendor)));
-    const retracted = new Set(durability.retracted.map((r) => vendorNameAsPublished(r.vendor)));
     for (const named of REMOVALS_PAGES_NAME_AS_LASTING) {
       const subject = vendorNameAsPublished(named.vendor);
       assert.ok(!cameBack.has(subject), `${named.route} names ${named.vendor}, whose free tier came back`);
-      assert.ok(!retracted.has(subject), `${named.route} names ${named.vendor}, whose removal we retracted`);
+      assert.ok(
+        removalStillLasting(named.vendor, LOG, vendorNameAsPublished),
+        `${named.route} names ${named.vendor}, none of whose removals still stands`,
+      );
     }
+  });
+
+  it("still names a vendor whose duplicate removal we retracted while another removal of it stands", () => {
+    const resolve = (vendor: string) => (vendor === "Acme API" ? "Acme" : vendor);
+    const standing = removal("Acme", "2026-02-06");
+    const duplicate = removal("Acme API", "2026-02-09", retractedOn("2026-10-06"));
+
+    assert.deepStrictEqual(removalStillLasting("Acme API", [duplicate, standing], resolve), {
+      vendor: "Acme",
+      date: "2026-02-06",
+      year: "2026",
+    });
+    assert.strictEqual(removalStillLasting("Acme API", [duplicate], resolve), null);
+    assert.strictEqual(
+      removalStillLasting("Acme API", [{ ...duplicate, date: "2026-01-02" }, standing], resolve)?.date,
+      "2026-02-06",
+    );
   });
 
   it("will not name a vendor whose second removal came back, however the first one ended", () => {

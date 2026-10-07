@@ -1,3 +1,4 @@
+import { FREE_TIER_TRACKER_HEADING } from "./free-tier-tracker.js";
 import { guideBlurb } from "./guide-blurbs.js";
 
 export interface GuideMetadata {
@@ -69,7 +70,7 @@ const GUIDE_ENTRIES: Array<{ slug: string; title: string }> = [
   { slug: "datadog-vs-new-relic", title: "Datadog vs New Relic" },
   { slug: "free-tier-risk", title: "Free Tier Risk Index" },
   { slug: "gemini-api-pricing-2026", title: "Gemini API Pricing 2026" },
-  { slug: "free-tier-tracker", title: "Free Tier Tracker Q1 2026" },
+  { slug: "free-tier-tracker", title: FREE_TIER_TRACKER_HEADING },
   { slug: "startup-credits", title: "Startup Credits Directory" },
   { slug: "openai-assistants-migration", title: "OpenAI Assistants API Migration Cost Guide" },
   { slug: "ai-coding-pricing-2026", title: "AI Coding Tools Pricing 2026" },
