@@ -19219,6 +19219,7 @@ ${mcpCtaCss()}
     </table>
   </div>
   <p class="section-intro" style="margin-top:0"><strong>Read this table by availability first.</strong> ${unpayableLowestPrices === "" ? "" : `${unpayableLowestPrices} `}The first orderable row is ${escHtmlServer(cheapestOrderable.sku)} at ${eur(cheapestOrderable.eur)}, and it is a ${cheapestOrderable.vcpu}-vCPU, ${cheapestOrderable.ram} GB machine${moreServerForLess ? ` — less server than the ${escHtmlServer(moreServerForLess.sku)} above it at ${eur(moreServerForLess.eur)}` : ""}.</p>
+  <p class="section-intro">Every cloud price in this table includes the primary IPv4 address. Cloud servers include at least 20 TB of outgoing traffic a month in the EU, 1 TB in the US and 0.5 TB in Singapore; incoming traffic is free.</p>
   <p class="section-intro">A new AX42 dedicated server in Germany costs ${eur(HETZNER_AX42_GERMANY.newOrder)} a month and a new AX102 ${eur(HETZNER_AX102_GERMANY.newOrder)}, excluding IPv4. The one-off setup fee is €${HETZNER_AX42_GERMANY.setupFee} for an AX42 and €${HETZNER_AX102_GERMANY.setupFee} for an AX102. These prices were read from Hetzner's price API on ${HETZNER_PRICES_READ}.</p>
   <p class="section-intro">New accounts can get €50 of credit with Hetzner's sign-up code, valid only for the billing period in which it is redeemed.</p>
   ${vendorPageConditionsHtml("Hetzner")}
