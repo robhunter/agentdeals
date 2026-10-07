@@ -37556,6 +37556,12 @@
           "quote": "A valid Credit Card or PayPal must be linked to register for services and be eligible for promotions—one promo per user. Credits from promo codes expire.",
           "url": "https://www.vultr.com/faq/",
           "read_on": "2026-10-06"
+        },
+        {
+          "text": "A stopped instance is still billed, because its CPU, RAM, storage and IP addresses stay reserved; only destroying it ends billing.",
+          "quote": "Stopping an instance does not halt billing because the instance continues to reserve critical resources such as CPU, RAM, SSD storage, and IP addresses.",
+          "url": "https://docs.vultr.com/support/platform/billing/are-stopped-instances-still-billed-on-vultr",
+          "read_on": "2026-10-07"
         }
       ]
     },
