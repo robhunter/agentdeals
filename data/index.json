@@ -3667,8 +3667,8 @@
     {
       "vendor": "Amplitude",
       "category": "Analytics",
-      "description": "Product analytics — 10K MTU, 10M events, 1K session replays/month (1-month replay retention), unlimited feature flags, 1-year data access, 10 saved charts, 5 projects",
-      "tier": "Starter",
+      "description": "Product analytics — Free plan: 2M events a month, 10K session replays a month (1-month replay retention), unlimited feature flags, 1-year data access, 10 saved charts, unlimited team members. No credit card required.",
+      "tier": "Free",
       "url": "https://amplitude.com/pricing",
       "tags": [
         "analytics",
@@ -3677,7 +3677,7 @@
         "session replay",
         "free tier"
       ],
-      "verifiedDate": "2026-08-15",
+      "verifiedDate": "2026-10-07",
       "source_check": {
         "checked": "2026-10-06",
         "outcome": "ok",
