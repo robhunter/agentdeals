@@ -32921,7 +32921,7 @@ ${mcpCtaCss()}
   <div class="executive-summary">
     <p>New AWS accounts choose a Free plan or a Paid plan; both get $100 in credits at sign-up and can earn up to $100 more. The Free plan covers over 90 services, charges nothing, and closes at 6 months or when the credits run out. 30+ services stay always free on both plans. Short-term trials are for the Paid plan.</p>
     <p><strong>What's new:</strong> Aurora PostgreSQL serverless joined the Free plan on 2026-03-25 with up to 4 ACUs and 1 GiB per cluster, paid from the credits. The 12-month free tier ended for the last eligible accounts in July 2026.</p>
-    <p><strong>The hidden costs:</strong> AWS's free tier is generous but has well-known traps — data transfer charges, NAT Gateway fees, idle Elastic IPs, and EBS volumes on stopped instances. We cover all of them below.</p>
+    <p><strong>The hidden costs:</strong> data transfer, NAT Gateway fees, idle Elastic IPs and EBS volumes on stopped instances use up credits fast. On the Free plan, using up the credits closes the account and nothing is charged to your card; on the Paid plan, usage past the credits is billed. We cover all of them below.</p>
     <p><strong>Comparing clouds?</strong> See our <a href="/cloud-free-tier-comparison-2026">Cloud Free Tier Comparison</a> for a side-by-side matrix of AWS vs GCP vs Azure vs DigitalOcean.</p>
   </div>
 
@@ -32940,7 +32940,7 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="always-free">Always Free Services</h2>
-  <p class="section-intro">30+ services are free within monthly limits on both plans. Usage beyond these limits is first covered by credits, then billed at standard pay-as-you-go rates on the Paid plan.</p>
+  <p class="section-intro">30+ services are free within monthly limits on both plans. Usage beyond these limits is paid from the credits. On the Free plan nothing is billed to your card; on the Paid plan, usage past the credits is billed at standard pay-as-you-go rates.</p>
 
   <div style="overflow-x:auto">
   <table class="pricing-table">
@@ -33020,7 +33020,7 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="gotchas">Hidden Costs &amp; Gotchas</h2>
-  <p class="section-intro">AWS's free tier is generous, but these costs catch almost every new user. The #1 cause of surprise AWS bills isn't usage — it's infrastructure that runs when you're not looking.</p>
+  <p class="section-intro">These costs catch almost every new user. On the Free plan they draw down the credits, and when the credits run out the account closes; nothing is charged to your card. On the Paid plan they are billed once the credits are used up. The usual cause isn't usage — it's infrastructure that runs when you're not looking.</p>
 
     ${gotchaCards}
 
@@ -34794,7 +34794,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="context-box">
-    <strong>GCP offers the most generous trial:</strong> $300 over 90 days vs Azure's $200/30 days. AWS gives new accounts $100 in credits and up to $100 more for trying key services, on a Free plan that closes after 6 months or when the credits run out. DigitalOcean gives new accounts a $5 credit for 90 days. All require a credit card.
+    <strong>GCP offers the most generous trial:</strong> $300 over 90 days vs Azure's $200/30 days. AWS gives new accounts $100 in credits and up to $100 more for trying key services, on a Free plan that closes after 6 months or when the credits run out. DigitalOcean gives new accounts a $5 credit for 90 days. All require a credit card. None of the AWS, GCP or Azure trials charges that card when its credit runs out unless you upgrade: Google closes the Free Trial billing account, AWS closes the Free plan account, and Azure disables the subscription.
   </div>
 
   <h2 id="compute">Always-Free Compute</h2>
@@ -35129,7 +35129,7 @@ ${mcpCtaCss()}
 
   <div class="diff-card" style="border-left-color:#f85149">
     <h3>AWS <span style="font-size:.75rem;color:#f85149;font-weight:400">Most gotchas</span></h3>
-    <p class="diff-desc"><strong>Data transfer:</strong> $0.09/GB after 100 GB free. <strong>NAT Gateway:</strong> $32+/mo if Lambda needs VPC internet. <strong>Idle Elastic IPs:</strong> $3.60/mo when unattached. <strong>EBS on stopped instances:</strong> You pay for disk even when EC2 is stopped. <strong>Free plan closure:</strong> the account closes at 6 months or when credits run out, and content is deleted after 90 days unless you upgrade to the Paid plan.</p>
+    <p class="diff-desc"><strong>Data transfer:</strong> $0.09/GB after 100 GB free. <strong>NAT Gateway:</strong> $32+/mo if Lambda needs VPC internet. <strong>Idle Elastic IPs:</strong> $3.60/mo when unattached. <strong>EBS on stopped instances:</strong> You pay for disk even when EC2 is stopped. <strong>Free plan closure:</strong> nothing is charged to your card on the Free plan; the account closes at 6 months or when credits run out, and content is deleted after 90 days unless you upgrade to the Paid plan.</p>
   </div>
 
   <div class="diff-card" style="border-left-color:#d29922">
@@ -35138,8 +35138,8 @@ ${mcpCtaCss()}
   </div>
 
   <div class="diff-card" style="border-left-color:#d29922">
-    <h3>Azure <span style="font-size:.75rem;color:#d29922;font-weight:400">One major trap</span></h3>
-    <p class="diff-desc"><strong>No spending cap:</strong> Once your $200 trial expires, there's no automatic stop — charges accumulate on pay-as-you-go. <strong>Log Analytics ingestion:</strong> 5 GB/mo free, then $2.76/GB — logging can cost more than compute. <strong>App Service F1 limits:</strong> 60 CPU-min/day with 1 GB RAM — apps sleep after the quota. <strong>VM deallocation:</strong> You must "deallocate" (not just "stop") VMs to stop charges.</p>
+    <h3>Azure</h3>
+    <p class="diff-desc"><strong>Spending limit:</strong> the free account's spending limit is on by default, so your card is not charged; at 30 days or when the $200 credit runs out, services are disabled unless you upgrade. Upgrading to pay-as-you-go removes the limit, and from then on there is no automatic stop. <strong>Log Analytics ingestion:</strong> 5 GB/mo free, then $2.76/GB — logging can cost more than compute. <strong>App Service F1 limits:</strong> 60 CPU-min/day with 1 GB RAM — apps sleep after the quota. <strong>VM deallocation:</strong> You must "deallocate" (not just "stop") VMs to stop charges.</p>
   </div>
 
   <div class="diff-card" style="border-left-color:#3fb950">

@@ -122,7 +122,7 @@ const STATED: Record<string, string[]> = {
     "GCP is the only provider of the four with a permanent free VM. AWS gives new accounts no free VM hours, with EC2 paid from the Free plan's credits, and the plan closes after 6 months unless upgraded. Azure's free VM hours last 12 months for accounts that move to pay-as-you-go within 30 days, and VMs still running after 12 months are billed at pay-as-you-go rates. If you need a persistent server",
     "Azure's Cosmos DB has a lifetime free tier.",
     "AWS has DynamoDB (always free, 25 GB) and Aurora PostgreSQL serverless (Free plan, paid from credits).",
-    "Free plan closure: the account closes at 6 months or when credits run out, and content is deleted after 90 days unless you upgrade to the Paid plan.",
+    "Free plan closure: nothing is charged to your card on the Free plan; the account closes at 6 months or when credits run out, and content is deleted after 90 days unless you upgrade to the Paid plan.",
     "CloudFront is always free up to 1 TB of data transfer out and 10,000,000 requests a month. S3 is paid from the Free plan credits, which last up to 6 months.",
   ],
 };
