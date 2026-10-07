@@ -858,8 +858,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 61,
-      "table_figures_from_records": 28,
+      "table_figures": 63,
+      "table_figures_from_records": 30,
       "tables": [
         {
           "label": "Main Comparison Table",
@@ -888,8 +888,8 @@
         },
         {
           "label": "Vector Databases",
-          "figures": 5,
-          "from_records": 0
+          "figures": 7,
+          "from_records": 2
         },
         {
           "label": "Pricing Change Timeline",
@@ -2627,8 +2627,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 54,
-      "table_figures_from_records": 13,
+      "table_figures": 55,
+      "table_figures_from_records": 14,
       "tables": [
         {
           "label": "1. Free Tier Comparison Table",
@@ -2642,8 +2642,8 @@
         },
         {
           "label": "5. Other PaaS Alternatives",
-          "figures": 14,
-          "from_records": 13
+          "figures": 15,
+          "from_records": 14
         }
       ],
       "reads_changes": true,

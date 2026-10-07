@@ -62,6 +62,18 @@
           "quote": "In most cases, if you exceed your usage limits on the Hobby plan, you will have to wait until 30 days have passed before you can use the feature again.",
           "url": "https://vercel.com/docs/plans/hobby",
           "read_on": "2026-10-07"
+        },
+        {
+          "text": "On Hobby, Vercel's terms let it use your content to train its AI models and share it with third parties for their model training; you can opt out in your team settings.",
+          "quote": "if you are on a Hobby plan or trial Pro plan, you agree that we may use Your Content to train our artificial intelligence (\"AI\") and machine learning models, and we may share Your Content with third parties for the purpose of developing and improving their products, including training and improving their AI and machine learning models",
+          "url": "https://vercel.com/legal/terms",
+          "read_on": "2026-10-07"
+        },
+        {
+          "text": "Hobby teams get 10 GB of Deployment Storage; going over it can block new deployments until you delete some.",
+          "quote": "Hobby teams get 10GB of Deployment Storage. Every deployment you keep uses some of it, and going over the limit can block you from deploying until you free some up.",
+          "url": "https://vercel.com/changelog/hobby-projects-now-retain-fewer-deployments-to-free-up-storage",
+          "read_on": "2026-10-07"
         }
       ]
     },
@@ -272,7 +284,21 @@
         "text": "Free $0 forever Build and deploy free forever Deploy any framework: Deploy from AI, Git, or API Private by default until you publish Unlimited deploy previews Build with Agent Runners Add Custom domains with SSL Functions & AI models Store structured data with Netlify Database Store files & images with Blob storage Firewall Traffic Rules & basic rate limiting Global CDN 300 credit limit / month",
         "url": "https://www.netlify.com/pricing/",
         "read_on": "2026-10-04"
-      }
+      },
+      "conditions": [
+        {
+          "text": "If one site uses up the Free plan's monthly credits, Netlify pauses every site on the account until the next billing cycle or an upgrade.",
+          "quote": "Please note that if one site/web project exceeds its limits, all sites/projects on your account will be paused.",
+          "url": "https://docs.netlify.com/manage/accounts-and-billing/billing/billing-for-credit-based-plans/billing-faq-for-credit-based-plans/",
+          "read_on": "2026-10-07"
+        },
+        {
+          "text": "Paused sites show a \"Site not available\" page, take no traffic or form submissions, and cannot get new production deploys.",
+          "quote": "all of your web projects (sites/apps) are paused and visitors to your web projects will find a Site not available page at each of your web project’s URLs. In addition, while your web projects are paused, they will not receive new web requests, web traffic, or form submissions and you cannot trigger new production deploys.",
+          "url": "https://docs.netlify.com/manage/accounts-and-billing/billing/billing-for-credit-based-plans/billing-faq-for-credit-based-plans/",
+          "read_on": "2026-10-07"
+        }
+      ]
     },
     {
       "vendor": "Cloudflare Pages",
@@ -1093,6 +1119,12 @@
           "quote": "linking a Cloud Billing account to your project will auto-upgrade your project to the Blaze pricing plan",
           "url": "https://firebase.google.com/docs/projects/billing/firebase-pricing-plans",
           "read_on": "2026-10-05"
+        },
+        {
+          "text": "On Spark, email-link sign-in is limited to 5 emails a day; sending more needs a billing account (Blaze).",
+          "quote": "Please add a billing instrument to go beyond 5 email link sign-in emails.",
+          "url": "https://firebase.google.com/docs/auth/limits",
+          "read_on": "2026-10-07"
         }
       ]
     },
@@ -8240,7 +8272,15 @@
         "text": "Free Tier Free forever For testing, and prototypes Single Node Cluster 0.5 vCPU / 1GB RAM/ 4 GB Disk.",
         "url": "https://qdrant.tech/pricing/",
         "read_on": "2026-10-04"
-      }
+      },
+      "conditions": [
+        {
+          "text": "An unused Free Tier cluster is suspended after 1 week and deleted after 4 weeks of inactivity unless you reactivate it.",
+          "quote": "If unused, free tier clusters are automatically suspended after 1 week, and deleted after 4 weeks of inactivity if not reactivated.",
+          "url": "https://qdrant.tech/documentation/cloud/create-cluster/",
+          "read_on": "2026-10-07"
+        }
+      ]
     },
     {
       "vendor": "SuperTokens",
@@ -9076,7 +9116,21 @@
         "text": "Database Engram ✦ Always free Free Forever $0 /mo No credit card required A fully managed AI Database to explore Weaviate features. Easiest way to get started, always free. Start free ✓ Always free — 1 cluster per user, upgrade to paid anytime. ✓ 100,000 objects · 1 GB memory · 10 GB disk. ✓ 1 collection, up to 3 tenants. ✓ Embeddings (2,000 req/day) + Query Agent (1,000 req/mo).",
         "url": "https://weaviate.io/pricing",
         "read_on": "2026-10-03"
-      }
+      },
+      "conditions": [
+        {
+          "text": "A free Weaviate Cloud cluster is suspended after 7 days of inactivity, with its data kept, until you reactivate it.",
+          "quote": "After 7 days of inactivity, the cluster is suspended and your data is preserved.",
+          "url": "https://docs.weaviate.io/cloud/manage-clusters/create",
+          "read_on": "2026-10-07"
+        },
+        {
+          "text": "A free cluster that stays inactive is permanently deleted after 30 days of total inactivity.",
+          "quote": "If a cluster stays inactive, it is permanently deleted after 30 days of total inactivity (about 23 days after it is suspended).",
+          "url": "https://docs.weaviate.io/cloud/manage-clusters/create",
+          "read_on": "2026-10-07"
+        }
+      ]
     },
     {
       "vendor": "Zilliz Cloud",
@@ -9219,12 +9273,20 @@
         "record_date": "2026-09-07",
         "change_type": "pricing_model_change",
         "restated_on": "2026-09-20"
-      }
+      },
+      "conditions": [
+        {
+          "text": "On Chroma Cloud, reaching a usage limit, whether yours or Chroma's, pauses the service until the limit is changed.",
+          "quote": "Both result in a pausing of the service until the limit is changed.",
+          "url": "https://www.trychroma.com/pricing",
+          "read_on": "2026-10-07"
+        }
+      ]
     },
     {
       "vendor": "Turbopuffer",
       "category": "Databases",
-      "description": "Serverless vector database — pay-per-use with no minimum. $0.30/M vectors stored/month, $0.04/M vectors queried. No free tier but extremely low entry cost for small workloads",
+      "description": "Serverless vector database. No free tier: every plan has a monthly minimum, $16 on Launch and $256 on Scale, and usage above the minimum is billed. Turbopuffer cut the Launch minimum from $64 to $16 a month in June 2026.",
       "tier": "Pay-as-you-go",
       "url": "https://turbopuffer.com/pricing",
       "tags": [
@@ -12802,7 +12864,15 @@
         "text": "Free $ 0 / month Get Started 250 searches per month 50 throughput per hour 50 successful searches per hour is the guaranteed throughput for this plan.",
         "url": "https://serpapi.com/pricing",
         "read_on": "2026-10-04"
-      }
+      },
+      "conditions": [
+        {
+          "text": "SerpApi's U.S. Legal Shield, its cover for legal claims over scraping search engines, comes only with the Production plan and above, not the Free plan.",
+          "quote": "U.S. Legal Shield is included with the Production Plan and above, with up to $2 million in coverage.",
+          "url": "https://serpapi.com/faq",
+          "read_on": "2026-10-07"
+        }
+      ]
     },
     {
       "vendor": "Simplescraper",
@@ -15509,7 +15579,15 @@
         "checked": "2026-10-07",
         "outcome": "states_no_terms",
         "detail": "the page names Appetize but states no amount, tier or rate we can read, and its markup carries no structured data"
-      }
+      },
+      "conditions": [
+        {
+          "text": "Free sessions end after 3 minutes; paid plans have no session limit.",
+          "quote": "Session limit 3 minutes",
+          "url": "https://appetize.io/pricing",
+          "read_on": "2026-10-07"
+        }
+      ]
     },
     {
       "vendor": "Argos",
@@ -20345,7 +20423,15 @@
         "text": "250 submissions/month free, forever.",
         "url": "https://web3forms.com",
         "read_on": "2026-10-05"
-      }
+      },
+      "conditions": [
+        {
+          "text": "When a Free account passes its monthly submission limit, Web3Forms stops accepting new submissions until the next month unless you upgrade.",
+          "quote": "If you exceed the limit, we will stop accepting new submissions until the next month. You can upgrade to continue receiving submissions.",
+          "url": "https://web3forms.com/pricing",
+          "read_on": "2026-10-07"
+        }
+      ]
     },
     {
       "vendor": "Wufoo",
@@ -33665,7 +33751,21 @@
         "text": "The first 1 TiB of query data processed per month is free.",
         "url": "https://cloud.google.com/bigquery/pricing",
         "read_on": "2026-10-03"
-      }
+      },
+      "conditions": [
+        {
+          "text": "Google Cloud's Free Tier requires a billing account.",
+          "quote": "A Google Cloud billing account is required to access the Google Cloud Free Tier.",
+          "url": "https://docs.cloud.google.com/free/docs/free-cloud-features",
+          "read_on": "2026-10-07"
+        },
+        {
+          "text": "Usage beyond the Free Tier's monthly limits is billed at standard rates.",
+          "quote": "Any usage that exceeds the Free Tier usage limits is billed at standard rates.",
+          "url": "https://docs.cloud.google.com/free/docs/free-cloud-features",
+          "read_on": "2026-10-07"
+        }
+      ]
     },
     {
       "vendor": "Google Cloud Run",
@@ -33701,7 +33801,21 @@
           }
         ],
         "reviewed": "2026-08-31"
-      }
+      },
+      "conditions": [
+        {
+          "text": "Google Cloud's Free Tier requires a billing account.",
+          "quote": "A Google Cloud billing account is required to access the Google Cloud Free Tier.",
+          "url": "https://docs.cloud.google.com/free/docs/free-cloud-features",
+          "read_on": "2026-10-07"
+        },
+        {
+          "text": "Usage beyond the Free Tier's monthly limits is billed at standard rates.",
+          "quote": "Any usage that exceeds the Free Tier usage limits is billed at standard rates.",
+          "url": "https://docs.cloud.google.com/free/docs/free-cloud-features",
+          "read_on": "2026-10-07"
+        }
+      ]
     },
     {
       "vendor": "Google Compute Engine",
@@ -33729,15 +33843,15 @@
       "conditions": [
         {
           "text": "Google Cloud's Free Tier requires a billing account.",
-          "quote": "To use products that have a Free Tier, you need a Google Cloud billing account.",
+          "quote": "A Google Cloud billing account is required to access the Google Cloud Free Tier.",
           "url": "https://docs.cloud.google.com/free/docs/free-cloud-features",
-          "read_on": "2026-10-04"
+          "read_on": "2026-10-07"
         },
         {
           "text": "Usage beyond the Free Tier's monthly limits is billed at standard rates.",
           "quote": "Any usage that exceeds the Free Tier usage limits is billed at standard rates.",
           "url": "https://docs.cloud.google.com/free/docs/free-cloud-features",
-          "read_on": "2026-10-04"
+          "read_on": "2026-10-07"
         },
         {
           "text": "The e2-micro instance limit is by time, not by instance: all e2-micro instances together are free for the number of hours in the month.",
@@ -33763,7 +33877,21 @@
         "checked": "2026-10-02",
         "outcome": "ok",
         "detail": "the page names Google Cloud Storage as \"google cloud storage\" and states \"$0\""
-      }
+      },
+      "conditions": [
+        {
+          "text": "Google Cloud's Free Tier requires a billing account.",
+          "quote": "A Google Cloud billing account is required to access the Google Cloud Free Tier.",
+          "url": "https://docs.cloud.google.com/free/docs/free-cloud-features",
+          "read_on": "2026-10-07"
+        },
+        {
+          "text": "Usage beyond the Free Tier's monthly limits is billed at standard rates.",
+          "quote": "Any usage that exceeds the Free Tier usage limits is billed at standard rates.",
+          "url": "https://docs.cloud.google.com/free/docs/free-cloud-features",
+          "read_on": "2026-10-07"
+        }
+      ]
     },
     {
       "vendor": "Google Cloud Pub/Sub",
@@ -33789,7 +33917,21 @@
         "record_date": "2026-09-03",
         "change_type": "limits_reduced",
         "restated_on": "2026-09-20"
-      }
+      },
+      "conditions": [
+        {
+          "text": "Google Cloud's Free Tier requires a billing account.",
+          "quote": "A Google Cloud billing account is required to access the Google Cloud Free Tier.",
+          "url": "https://docs.cloud.google.com/free/docs/free-cloud-features",
+          "read_on": "2026-10-07"
+        },
+        {
+          "text": "Usage beyond the Free Tier's monthly limits is billed at standard rates.",
+          "quote": "Any usage that exceeds the Free Tier usage limits is billed at standard rates.",
+          "url": "https://docs.cloud.google.com/free/docs/free-cloud-features",
+          "read_on": "2026-10-07"
+        }
+      ]
     },
     {
       "vendor": "Google Cloud Build",
@@ -33814,7 +33956,21 @@
         "text": "Each billing account comes with 2,500 free build-minutes per month.",
         "url": "https://cloud.google.com/build/pricing",
         "read_on": "2026-10-03"
-      }
+      },
+      "conditions": [
+        {
+          "text": "Google Cloud's Free Tier requires a billing account.",
+          "quote": "A Google Cloud billing account is required to access the Google Cloud Free Tier.",
+          "url": "https://docs.cloud.google.com/free/docs/free-cloud-features",
+          "read_on": "2026-10-07"
+        },
+        {
+          "text": "Usage beyond the Free Tier's monthly limits is billed at standard rates.",
+          "quote": "Any usage that exceeds the Free Tier usage limits is billed at standard rates.",
+          "url": "https://docs.cloud.google.com/free/docs/free-cloud-features",
+          "read_on": "2026-10-07"
+        }
+      ]
     },
     {
       "vendor": "Google Artifact Registry",
@@ -33838,7 +33994,21 @@
         "text": "0 gibibyte month to 0.5 gibibyte month $0.00 (Free) / 1 gibibyte hour, per 1 month / account",
         "url": "https://cloud.google.com/artifact-registry/pricing",
         "read_on": "2026-10-07"
-      }
+      },
+      "conditions": [
+        {
+          "text": "Google Cloud's Free Tier requires a billing account.",
+          "quote": "A Google Cloud billing account is required to access the Google Cloud Free Tier.",
+          "url": "https://docs.cloud.google.com/free/docs/free-cloud-features",
+          "read_on": "2026-10-07"
+        },
+        {
+          "text": "Usage beyond the Free Tier's monthly limits is billed at standard rates.",
+          "quote": "Any usage that exceeds the Free Tier usage limits is billed at standard rates.",
+          "url": "https://docs.cloud.google.com/free/docs/free-cloud-features",
+          "read_on": "2026-10-07"
+        }
+      ]
     },
     {
       "vendor": "Google Cloud Logging",
@@ -33861,7 +34031,21 @@
         "text": "First 50 GiB/project/month July 1, 2018",
         "url": "https://cloud.google.com/logging/pricing",
         "read_on": "2026-10-02"
-      }
+      },
+      "conditions": [
+        {
+          "text": "Google Cloud's Free Tier requires a billing account.",
+          "quote": "A Google Cloud billing account is required to access the Google Cloud Free Tier.",
+          "url": "https://docs.cloud.google.com/free/docs/free-cloud-features",
+          "read_on": "2026-10-07"
+        },
+        {
+          "text": "Usage beyond the Free Tier's monthly limits is billed at standard rates.",
+          "quote": "Any usage that exceeds the Free Tier usage limits is billed at standard rates.",
+          "url": "https://docs.cloud.google.com/free/docs/free-cloud-features",
+          "read_on": "2026-10-07"
+        }
+      ]
     },
     {
       "vendor": "Google Secret Manager",
@@ -33879,7 +34063,21 @@
         "checked": "2026-09-20",
         "outcome": "ok",
         "detail": "the page names Google Secret Manager as \"manager\" and states \"$0.00\""
-      }
+      },
+      "conditions": [
+        {
+          "text": "Google Cloud's Free Tier requires a billing account.",
+          "quote": "A Google Cloud billing account is required to access the Google Cloud Free Tier.",
+          "url": "https://docs.cloud.google.com/free/docs/free-cloud-features",
+          "read_on": "2026-10-07"
+        },
+        {
+          "text": "Usage beyond the Free Tier's monthly limits is billed at standard rates.",
+          "quote": "Any usage that exceeds the Free Tier usage limits is billed at standard rates.",
+          "url": "https://docs.cloud.google.com/free/docs/free-cloud-features",
+          "read_on": "2026-10-07"
+        }
+      ]
     },
     {
       "vendor": "Google Cloud Shell",
@@ -33938,7 +34136,21 @@
           }
         ],
         "reviewed": "2026-09-01"
-      }
+      },
+      "conditions": [
+        {
+          "text": "Google Cloud's Free Tier requires a billing account.",
+          "quote": "A Google Cloud billing account is required to access the Google Cloud Free Tier.",
+          "url": "https://docs.cloud.google.com/free/docs/free-cloud-features",
+          "read_on": "2026-10-07"
+        },
+        {
+          "text": "Usage beyond the Free Tier's monthly limits is billed at standard rates.",
+          "quote": "Any usage that exceeds the Free Tier usage limits is billed at standard rates.",
+          "url": "https://docs.cloud.google.com/free/docs/free-cloud-features",
+          "read_on": "2026-10-07"
+        }
+      ]
     },
     {
       "vendor": "ClickUp",
