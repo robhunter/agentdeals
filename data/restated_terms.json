@@ -2875,7 +2875,8 @@
       "source_url": "https://grafana.com/pricing/",
       "record_date": "2026-10-07",
       "change_type": "limits_reduced",
-      "summary": "The free tier now includes access to all Grafana Cloud services with usage limits. The specific limits have changed and a $19/month platform fee is now required for exceeding those limits. Previously 10k metric series, 50 GB logs, and 50 GB traces. The current page details limits for Metrics (10k active series), Logs (50 GB ingested), Traces (50 GB ingested), Profiles (50 GB ingested), Kubernetes Monitoring (2,232 host hours & 37,944 container hours), Application Observability (2,232 host hours), Frontend Observability (50k sessions), Database Observability (2,232 host hours), and Grafana Assistant (3 active AI users)."
+      "summary": "The free tier now includes access to all Grafana Cloud services with usage limits. The specific limits have changed and a $19/month platform fee is now required for exceeding those limits. Previously 10k metric series, 50 GB logs, and 50 GB traces. The current page details limits for Metrics (10k active series), Logs (50 GB ingested), Traces (50 GB ingested), Profiles (50 GB ingested), Kubernetes Monitoring (2,232 host hours & 37,944 container hours), Application Observability (2,232 host hours), Frontend Observability (50k sessions), Database Observability (2,232 host hours), and Grafana Assistant (3 active AI users).",
+      "reverted_on": "2026-10-07"
     },
     {
       "vendor": "testingbot.com",
@@ -2888,7 +2889,8 @@
       "source_url": "https://testingbot.com/",
       "record_date": "2026-10-07",
       "change_type": "limits_reduced",
-      "summary": "The current page only mentions a 'free plan' with limited features (automated tests, live manual sessions, screenshot tests, visual comparisons, Safari on macOS, limited macOS sessions)."
+      "summary": "The current page only mentions a 'free plan' with limited features (automated tests, live manual sessions, screenshot tests, visual comparisons, Safari on macOS, limited macOS sessions).",
+      "reverted_on": "2026-10-07"
     }
   ]
 }
