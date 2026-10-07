@@ -7888,6 +7888,18 @@
           "url": "https://api-dashboard.search.brave.com/documentation/resources/help-feedback",
           "read_on": "2026-10-06"
         }
+      ],
+      "payment_protocols": [
+        {
+          "protocol": "x402",
+          "chain": "Base",
+          "settlement": "USDC",
+          "pricing_model": "per-search",
+          "example_cost": "$5/1k",
+          "source_url": "https://search.agent.s.brave.app/llms.txt",
+          "source_quote": "A pay-per-request proxy in front of the Brave Search API. Each request carries a stablecoin micropayment, and the signed payment is the credential. No API key, no account, no signup. … x402 rail, USDC on Base … Prices are in base units of a six decimal token, so 5000 is $0.005. … | `/res/v1/web/search` | 5000 | $5/1k |",
+          "read_on": "2026-10-07"
+        }
       ]
     },
     {
