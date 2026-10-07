@@ -2955,6 +2955,18 @@
           "quote": "Port 587 is not blocked and can be used without sending a limit request.",
           "url": "https://docs.hetzner.com/cloud/servers/faq/",
           "read_on": "2026-10-04"
+        },
+        {
+          "text": "Hetzner bills a cloud server for as long as it exists, even while it is powered off; only deleting it stops the charge.",
+          "quote": "Yes, you pay for a server that has completed the creation process for as long as it exists, regardless of whether it is turned on or not. We will bill you for your servers until you delete them, independent of their state.",
+          "url": "https://docs.hetzner.com/cloud/billing/faq/",
+          "read_on": "2026-10-07"
+        },
+        {
+          "text": "Cloud servers are billed by the hour, rounded up to a whole hour, and never more than the plan's monthly price.",
+          "quote": "Mathematically speaking, we will bill you for the minimum amount, whether that is the monthly price cap OR the hourly price multiplied by the number of hours you used the server. We always round up the hourly usage of a server.",
+          "url": "https://docs.hetzner.com/cloud/billing/faq/",
+          "read_on": "2026-10-07"
         }
       ]
     },
