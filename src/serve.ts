@@ -8186,14 +8186,6 @@ const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
     primaryVendor: "AWS Activate",
   },
   {
-    slug: "ai-coding-pricing-2026",
-    title: "AI Coding Tools Pricing Guide — 2026 Comparison",
-    metaDesc: "Side-by-side pricing comparison of Cursor, Windsurf, GitHub Copilot, Gemini Code Assist, Amazon Q, Claude Code, Augment Code and more. Free tiers, pro plans, and recent pricing changes. [[freshness]]",
-    contextHtml: "",
-    tag: "ai-coding-pricing-2026",
-    primaryVendor: "Cursor",
-  },
-  {
     slug: "ai-coding-tools-pricing",
     title: "AI Coding Tools Pricing Comparison 2026 — The Definitive Free Tier Breakdown",
     metaDesc: "Compare 17 AI coding tools: Cursor, Windsurf, Amazon Kiro, GitHub Copilot, Claude Code, Devin, Bolt.new, Lovable, Codex, Gemini CLI and more. Free tiers, hidden costs, cost analysis for solo devs and teams. [[freshness]]",
@@ -23571,7 +23563,7 @@ function buildOpenaiAssistantsAlternativesPage(): string {
   }).join("\n        ");
 
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
-    ["ai-ml-alternatives", "ai-coding-pricing-2026", "free-ai-stack", "free-llm-apis", "free-tier-risk", "stability"].includes(p.slug)
+    ["ai-ml-alternatives", "ai-coding-tools-pricing", "free-ai-stack", "free-llm-apis", "free-tier-risk", "stability"].includes(p.slug)
   );
 
   const jsonLd = {
@@ -24061,7 +24053,7 @@ function buildOpenaiAssistantsMigration2026Page(): string {
   }).join("\n        ");
 
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
-    ["openai-assistants-alternatives", "shutdowns", "free-llm-apis", "ai-ml-alternatives", "ai-coding-pricing-2026", "free-ai-stack", "stability", "free-tier-risk"].includes(p.slug)
+    ["openai-assistants-alternatives", "shutdowns", "free-llm-apis", "ai-ml-alternatives", "ai-coding-tools-pricing", "free-ai-stack", "stability", "free-tier-risk"].includes(p.slug)
   );
 
   const jsonLd = {
@@ -25001,7 +24993,7 @@ function buildFirebaseStudioShutdownPage(): string {
   }).join("\n        ");
 
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
-    ["firebase-alternatives", "stability", "shutdowns", "ide-code-editors-alternatives", "ai-coding-pricing-2026", "google-developer-program-2026"].includes(p.slug)
+    ["firebase-alternatives", "stability", "shutdowns", "ide-code-editors-alternatives", "ai-coding-tools-pricing", "google-developer-program-2026"].includes(p.slug)
   );
 
   const jsonLd = {
@@ -27174,397 +27166,6 @@ function buildStartupCreditsPage(): string {
     '</body>\n</html>', pubDate);
 }
 
-function buildAiCodingPricing2026Page(): string {
-  const title = "AI Coding Tools Pricing Guide — 2026 Comparison";
-  const metaDesc = "Side-by-side pricing comparison of Cursor, Windsurf, GitHub Copilot, Gemini Code Assist, Amazon Q, Claude Code, Augment Code and more. Free tiers, pro plans, and recent pricing changes. [[freshness]]";
-  const slug = "ai-coding-pricing-2026";
-  const pubDate = "2026-03-27";
-
-  const aiCodingOffers = offers.filter(o => o.category === "AI Coding");
-  const ideCodingOffers = offers.filter(o => o.category === "IDE & Code Editors" && o.tags?.some(t => t === "ai" || t === "code completion"));
-
-  const aiCodingChanges = changesTheVendorMade(dealChanges).filter(c =>
-    ["Cursor", "Windsurf", "GitHub Copilot", "Augment Code", "Google Gemini Code Assist"].includes(c.vendor)
-  ).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-
-  interface PricingTool {
-    name: string;
-    slug: string;
-    free: string;
-    pro: string;
-    power: string;
-    teams: string;
-    model: string;
-    freeDetails: string;
-  }
-
-  const tools: PricingTool[] = [
-    {
-      name: "Cursor",
-      slug: "cursor",
-      free: "Limited Agent requests",
-      pro: "$20/mo",
-      power: "$200/mo (Ultra)",
-      teams: "$40/user/mo",
-      model: "Credit-based",
-      freeDetails: "Hobby is the free plan: no credit card, limited Agent requests, Composer access — Cursor publishes no completion or request figure for it. Paid: Pro $20/mo, Pro+ $60/mo (3x Pro's Agent limits), Ultra $200/mo (20x), Teams $40/user/mo, Enterprise custom.",
-    },
-    {
-      name: "Windsurf",
-      slug: "windsurf",
-      free: "Limited daily quotas",
-      pro: "$20/mo",
-      power: "$200/mo (Max)",
-      teams: "$80/mo + $40/seat",
-      model: "Quota-based (Mar 2026)",
-      freeDetails: "Renamed Devin Desktop by Cognition. Free: a light agent quota, limited models, unlimited inline edits and Tab completions. Paid: Pro $20/mo, Max $200/mo, Teams $80/mo plus $40 per dev seat. Credits were replaced by daily and weekly quotas in March 2026; subscribers on the old $15/mo Pro price keep it.",
-    },
-    {
-      name: "GitHub Copilot",
-      slug: "github-copilot",
-      free: "2K completions/mo",
-      pro: "$10/mo",
-      power: "$100/mo (Max)",
-      teams: "$19/seat",
-      model: "Tier + AI credits",
-      freeDetails: "2,000 code completions/month plus limited chat and agent use. On paid plans completions and next edit suggestions are unlimited and consume nothing; everything else is metered in GitHub AI Credits at $0.01 each — Pro $10/mo ($15 of credits), Pro+ $39/mo ($70), Max $100/mo ($200). Business $19/seat (1,900 credits/user), Enterprise $39/seat (3,900/user). Student plan (Mar 2026): premium models via Auto mode only, no manual selection.",
-    },
-    {
-      name: "Gemini Code Assist",
-      slug: "google-gemini-code-assist",
-      free: "Ended 2026-06-18",
-      pro: "\u2014",
-      power: "\u2014",
-      teams: "$22.80/seat",
-      model: "Standard + Enterprise (per user)",
-      freeDetails: "Google stopped serving the free individuals tier on 2026-06-18 (deprecation notice). codeassist.google still advertises 6,000 code-related requests and 240 chat requests a day. Standard and Enterprise subscriptions are unchanged.",
-    },
-    {
-      name: "Amazon Q Developer",
-      slug: "amazon-q-developer",
-      free: "Generous free tier",
-      pro: "$19/mo",
-      power: "\u2014",
-      teams: "\u2014",
-      model: "Tier-based",
-      freeDetails: "Inline code suggestions, chat, code transformation, 50 agent invocations/month, /doc and /test commands. Supports VS Code, JetBrains, CLI, and AWS Console. Best value if you're already on AWS.",
-    },
-    {
-      name: "Claude Code",
-      slug: "claude-code",
-      free: "None (paid plans or API key)",
-      pro: "$20/mo (Pro)",
-      power: "$100\u2013200/mo (Max)",
-      teams: "$25/seat (Team)",
-      model: "Subscription + usage credits",
-      freeDetails: "Agentic coding tool by Anthropic, in the terminal, IDEs, a desktop app and the browser. Included in every paid Claude plan, not in Free: Pro $20/mo ($17 billed annually), Max $100 or $200/mo, Team Standard $25/seat ($20 billed annually), Enterprise $20/seat plus usage at API rates. Also runs on an Anthropic API key, billed per token.",
-    },
-    {
-      name: "Augment Code",
-      slug: "augment-code",
-      free: "No free tier",
-      pro: "$20/mo flat",
-      power: "$100/mo flat (Business)",
-      teams: "Included up to 50 seats",
-      model: "Flat + pay-as-you-go top-ups",
-      freeDetails: "No free tier. Standard $20/month flat and Business $100/month flat, each covering up to 50 seats with $20 and $100 of included monthly usage respectively across LLM, Context Engine and compute; top-ups are pay-as-you-go. Enterprise is custom-priced. Flat team pricing with no per-seat charge.",
-    },
-    {
-      name: "Cline",
-      slug: "cline",
-      free: "Fully free (OSS)",
-      pro: "BYO API key",
-      power: "BYO API key",
-      teams: "\u2014",
-      model: "Open source + BYO key",
-      freeDetails: "Fully free, open-source (MIT). VS Code extension — users provide their own API keys (OpenRouter, Anthropic, OpenAI, etc.). No usage limits beyond API provider costs. Autonomous file editing, terminal commands, browser interaction.",
-    },
-    {
-      name: "Aider",
-      slug: "aider",
-      free: "Fully free (OSS)",
-      pro: "BYO API key",
-      power: "BYO API key",
-      teams: "\u2014",
-      model: "Open source + BYO key",
-      freeDetails: "Fully free, open-source (Apache 2.0). CLI tool — users provide their own LLM API keys. Supports GPT-4o, Claude, Gemini, DeepSeek, and local models via Ollama. Git-aware editing, multi-file changes, voice coding.",
-    },
-  ];
-
-  const pricingTableRows = tools.map(t => {
-    const vendorSlug = t.slug;
-    return `<tr>
-      <td style="font-weight:600">${handwrittenVendorLinkHtml(vendorSlug, t.name, ' style="color:var(--text)"')}</td>
-      <td style="font-family:var(--mono);font-size:.85rem;color:${t.free.includes("free") || t.free.includes("6K") ? "#3fb950" : "var(--accent)"}">${escHtmlServer(t.free)}</td>
-      <td style="font-family:var(--mono);font-size:.85rem">${escHtmlServer(t.pro)}</td>
-      <td style="font-family:var(--mono);font-size:.85rem">${escHtmlServer(t.power)}</td>
-      <td style="font-family:var(--mono);font-size:.85rem">${escHtmlServer(t.teams)}</td>
-    </tr>`;
-  }).join("\n        ");
-
-  const freeDetailCards = tools.map(t => {
-    const vendorSlug = t.slug;
-    const isOpenSource = t.free.includes("free (OSS)");
-    const borderColor = isOpenSource ? "#3fb950" : t.free.includes("6K") ? "#3fb950" : "var(--accent)";
-    return `<div class="diff-card" style="border-left-color:${borderColor}">
-      <h3>${handwrittenVendorLinkHtml(vendorSlug, t.name, ' style="color:var(--text)"')} <span style="font-size:.75rem;color:var(--text-dim);font-weight:400">${escHtmlServer(t.model)}</span></h3>
-      <p class="diff-desc">${escHtmlServer(t.freeDetails)}</p>
-    </div>`;
-  }).join("\n    ");
-
-  const supersededAiCodingLineups = supersededLineups(aiCodingChanges);
-
-  const changeTimelineRows = aiCodingChanges.map(c => {
-    const dateStr = changeEntryLongDateLabel(c);
-    const impactColor = changeImpactColor(c.impact);
-    const newest = supersededAiCodingLineups.get(c);
-    const historyNote = newest
-      ? `<div class="superseded-note">${escHtmlServer(supersessionNote(newest, changeTimelineDate))}</div>`
-      : "";
-    return `<tr${newest || isNoLongerInForce(c) ? ` class="superseded-row"` : ""}>
-      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(dateStr)}</td>
-      <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
-      <td style="font-size:.85rem">${changeSummaryHtml(c, escHtmlServer)}${historyNote}</td>
-      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
-    </tr>`;
-  }).join("\n        ");
-
-  const relatedPages = ALTERNATIVES_PAGES.filter(p =>
-    ["ide-code-editors-alternatives", "ai-ml-alternatives", "free-ai-stack", "free-llm-apis", "free-tier-risk", "free-tier-tracker"].includes(p.slug)
-  );
-
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    headline: title,
-    description: metaDesc,
-    datePublished: pubDate,
-    dateModified: pageDateModified("/ai-coding-pricing-2026", pubDate),
-    author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
-    publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
-    mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
-    about: tools.map(t => ({ "@type": "SoftwareApplication", name: t.name })),
-  };
-
-  return compiledFiguresMarked(`<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>${escHtmlServer(title)} — AgentDeals</title>
-<meta name="description" content="${escHtmlServer(metaDesc)}">
-<link rel="canonical" href="${BASE_URL}/${slug}">
-<meta property="og:title" content="${escHtmlServer(title)}">
-<meta property="og:description" content="${escHtmlServer(metaDesc)}">
-<meta property="og:type" content="article">
-<meta property="og:url" content="${BASE_URL}/${slug}">
-<meta property="article:published_time" content="${pubDate}">
-${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
-<link rel="alternate" type="application/atom+xml" title="AgentDeals — Weekly Pricing Digest" href="/feed.xml">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
-body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
-a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
-.container{max-width:960px;margin:0 auto;padding:0 1.5rem}
-.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
-.breadcrumb a{color:var(--text-muted)}
-h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
-h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
-h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}
-.pub-date{color:var(--text-dim);font-size:.85rem;margin-bottom:1.5rem}
-.summary-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin:1.5rem 0 2rem}
-.stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center}
-.stat-number{font-size:1.8rem;font-weight:700;font-family:var(--mono);color:var(--accent)}
-.stat-number.green{color:#3fb950}
-.stat-label{font-size:.8rem;color:var(--text-muted);margin-top:.25rem}
-.executive-summary{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:1.5rem 0;line-height:1.8}
-.executive-summary p{color:var(--text-muted);margin-bottom:.75rem;font-size:.95rem}
-.executive-summary p:last-child{margin-bottom:0}
-.executive-summary strong{color:var(--text)}
-.section-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:1.25rem;line-height:1.7}
-.pricing-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.85rem}
-.pricing-table th{text-align:left;padding:.75rem .5rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
-.pricing-table td{padding:.6rem .5rem;border-bottom:1px solid var(--border)}
-.pricing-table tr:hover{background:var(--accent-glow)}
-.superseded-row td{color:var(--text-dim)}
-.superseded-note{margin-top:.35rem;font-size:.75rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.04em}
-.diff-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem}
-.diff-card h3{margin:0 0 .5rem;font-size:1rem}
-.diff-desc{color:var(--text-muted);font-size:.9rem;line-height:1.6}
-.context-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
-.context-box strong{color:var(--text)}
-.verdict-box{background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(139,92,246,0.1));border:1px solid var(--accent);border-radius:12px;padding:1.5rem;margin:1.5rem 0}
-.verdict-box h3{color:var(--accent);margin:0 0 .75rem;font-size:1.1rem}
-.verdict-item{margin-bottom:.75rem;padding-left:1rem;border-left:2px solid var(--border)}
-.verdict-item strong{color:var(--text)}
-.verdict-item p{color:var(--text-muted);font-size:.9rem;margin:.25rem 0 0}
-.methodology{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
-.methodology strong{color:var(--text)}
-.related-pages{display:flex;flex-direction:column;gap:.5rem;margin:1rem 0}
-.related-page-link{padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .15s}
-.related-page-link:hover{border-color:var(--accent);text-decoration:none}
-.related-page-link .link-title{color:var(--accent);font-weight:600;font-size:.95rem}
-.related-page-link .link-desc{color:var(--text-muted);font-size:.8rem;margin-top:.25rem}
-.search-cta{text-align:center;margin:2rem 0;padding:1.5rem;border:1px solid var(--border);border-radius:12px;background:var(--bg-elevated);color:var(--text-muted);font-size:.9rem}
-.toc{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1.5rem 0}
-.toc h3{margin:0 0 .5rem;font-size:.9rem;color:var(--text-muted)}
-.toc ol{padding-left:1.25rem;margin:0}
-.toc li{margin-bottom:.35rem;font-size:.9rem}
-.toc a{color:var(--accent)}
-footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
-footer a{color:var(--accent)}
-@media(max-width:768px){h1{font-size:1.6rem}.summary-stats{grid-template-columns:1fr 1fr}.pricing-table{font-size:.75rem}.pricing-table td,.pricing-table th{padding:.4rem .25rem}}
-${globalNavCss()}
-${mcpCtaCss()}
-</style>
-</head>
-<body>
-<div class="container">
-  ${buildGlobalNav("changes")}
-  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/ide-code-editors-alternatives">AI Coding</a> &rsaquo; Pricing Guide 2026</div>
-  <h1>AI Coding Tools Pricing — 2026 Comparison</h1>
-  <p class="pub-date">Published ${pubDate} &middot; ${pageDataProvenance("/ai-coding-pricing-2026", offers.length)} &middot; ${aiCodingChanges.length} pricing changes tracked</p>
-
-  <div class="summary-stats">
-    <div class="stat-card"><div class="stat-number">${tools.length}</div><div class="stat-label">Tools Compared</div></div>
-    <div class="stat-card"><div class="stat-number">$20/mo</div><div class="stat-label">New Standard</div></div>
-    <div class="stat-card"><div class="stat-number">$200/mo</div><div class="stat-label">Power Tier</div></div>
-    <div class="stat-card"><div class="stat-number green">3 Free</div><div class="stat-label">Generous Free Tiers</div></div>
-  </div>
-
-  <div class="executive-summary">
-    <p><strong>The pricing earthquake:</strong> AI coding tools pricing has converged. $20/month is the new standard, $200/month for power users, and free tiers are getting thinner. Windsurf just overhauled from credits to quotas and hiked Pro by 33%.</p>
-    <p><strong>Key insight:</strong> Cursor and Windsurf both charge $20/month for Pro and $200/month for their top individual plan; for teams, Cursor is $40/user/month and Windsurf $80/month plus $40 per seat. GitHub Copilot remains the cheapest paid option at $10/mo. Open-source tools (Cline, Aider) remain fully free with BYO API keys.</p>
-    <p><strong>Our advantage:</strong> Unlike other comparison guides, we track pricing changes over time. We've recorded ${aiCodingChanges.length} pricing changes for AI coding tools — so you can see not just where prices are, but where they're heading.</p>
-  </div>
-
-  <div class="toc">
-    <h3>Jump to section</h3>
-    <ol>
-      <li><a href="#pricing-table">Pricing Comparison Table</a></li>
-      <li><a href="#free-tiers">What You Actually Get for Free</a></li>
-      <li><a href="#changes">Recent Pricing Changes</a></li>
-      <li><a href="#which-tool">Which Tool for Which Developer</a></li>
-      <li><a href="#data-source">Data Source</a></li>
-    </ol>
-  </div>
-
-  <h2 id="pricing-table">Pricing Comparison Table</h2>
-  <p class="section-intro">[[freshness]] Hover rows to highlight. Click tool names for full vendor profiles with free tier details.</p>
-
-  <div style="overflow-x:auto">
-  <table class="pricing-table">
-    <thead>
-      <tr>
-        <th>Tool</th>
-        <th>Free Tier</th>
-        <th>Pro</th>
-        <th>Power</th>
-        <th>Teams</th>
-      </tr>
-    </thead>
-    <tbody>
-        ${pricingTableRows}
-    </tbody>
-  </table>
-  </div>
-
-  <div class="context-box">
-    <strong>Price convergence:</strong> Cursor, Windsurf, and Augment Code have all adopted credit or consumption-based models in the past year. The $20/mo Pro and $200/mo Power price points have emerged as the de facto standard. GitHub Copilot at $10/mo is the outlier — kept low by Microsoft's distribution strategy.
-  </div>
-
-  <h2 id="free-tiers">What You Actually Get for Free</h2>
-  <p class="section-intro">Free tiers vary wildly. Some are genuinely usable for daily coding, others run out in a few hours. Here's what each tool actually gives you at zero cost.</p>
-
-    ${freeDetailCards}
-
-  <h2 id="changes">Recent Pricing Changes</h2>
-  <p class="section-intro">The AI coding market has been in flux. Here are the pricing changes we've tracked, most recent first. See <a href="/changes">full change timeline</a> for all tracked changes.</p>
-
-  ${aiCodingChanges.length > 0 ? `<div style="overflow-x:auto">
-  <table class="pricing-table">
-    <thead>
-      <tr>
-        <th>Date</th>
-        <th>Vendor</th>
-        <th>Change</th>
-        <th>Impact</th>
-      </tr>
-    </thead>
-    <tbody>
-        ${changeTimelineRows}
-    </tbody>
-  </table>
-  </div>` : `<p class="section-intro">No AI coding pricing changes tracked yet.</p>`}
-
-  <div class="context-box">
-    <strong>The pattern:</strong> Credits and quotas are replacing flat subscriptions. Cursor moved first (June 2025), Augment Code followed (October 2025), and Windsurf completed the shift (March 2026). This lets vendors monetize power users at $200/month while keeping entry prices at $20. Expect GitHub Copilot to adopt a similar model as competitive pressure mounts.
-  </div>
-
-  <h2 id="which-tool">Which Tool for Which Developer</h2>
-
-  <div class="verdict-box">
-    <h3>Recommendations by Use Case</h3>
-
-    <div class="verdict-item">
-      <strong>Budget-conscious / students</strong>
-      <p><a href="/vendor/github-copilot">GitHub Copilot</a> ($10/mo, cheapest paid tier). Copilot is free for verified students and OSS maintainers.</p>
-    </div>
-
-    <div class="verdict-item">
-      <strong>Professional developers</strong>
-      <p><a href="/vendor/cursor">Cursor Pro</a> or <a href="/vendor/windsurf">Windsurf Pro</a> (both $20/mo). Cursor has more mature multi-model support. Windsurf's agentic Cascade flows are compelling for complex tasks.</p>
-    </div>
-
-    <div class="verdict-item">
-      <strong>Power users / all-day coding</strong>
-      <p><a href="/vendor/cursor">Cursor Ultra</a> or <a href="/vendor/windsurf">Windsurf Max</a> ($200/mo). For developers who hit Pro limits regularly. Also consider <a href="/vendor/claude-code">Claude Code</a> via Max subscription ($100\u2013200/mo) for autonomous terminal-based workflows.</p>
-    </div>
-
-    <div class="verdict-item">
-      <strong>Teams &amp; enterprise</strong>
-      <p>All converging at $19\u2013$40/seat. <a href="/vendor/github-copilot">GitHub Copilot Business</a> ($19/seat) is cheapest. <a href="/vendor/google-gemini-code-assist">Gemini Code Assist Enterprise</a> ($19/seat) matches on price and adds deep Google Cloud integration. Cursor/Windsurf Business ($40/seat) for teams needing maximum AI throughput.</p>
-    </div>
-
-    <div class="verdict-item">
-      <strong>Open-source enthusiasts / BYO model</strong>
-      <p><a href="/vendor/cline">Cline</a> (VS Code) or <a href="/vendor/aider">Aider</a> (CLI). Both fully free and open-source — you bring your own API key and choose your model. Zero vendor lock-in, unlimited usage bounded only by your API spend.</p>
-    </div>
-  </div>
-
-  <h2 id="data-source">Data Source</h2>
-  <div class="methodology">
-    <strong>Powered by AgentDeals.</strong> The tables on this page were compiled by hand from official vendor pricing pages and have not been re-checked since. Pricing changes are tracked via our <a href="/changes">deal changes timeline</a> (${trackedChangeCount} total changes tracked). The pricing changes we track are updated continuously; the tables above are not.<br><br>
-    <strong>Query this data programmatically</strong> via our <a href="/setup">MCP tools</a> — search for AI coding tools, compare vendors, or track pricing changes from your AI coding assistant.
-  </div>
-
-  ${buildMcpCta("Compare AI coding tool pricing, search free tiers, and track pricing changes — all from your AI coding assistant.")}
-
-  <h2>Related Guides</h2>
-  <div class="related-pages">
-    ${relatedPages.map(p => `<a href="/${p.slug}" class="related-page-link">
-      <div class="link-title">${escHtmlServer(p.title)}</div>
-      <div class="link-desc">${escHtmlServer(p.hubDesc)}</div>
-    </a>`).join("\n    ")}
-  </div>
-
-  <div class="search-cta">
-    Explore all ${offers.length.toLocaleString()} developer tool deals &rarr; <a href="/">Browse the full index</a> or <a href="/setup">connect via MCP</a>
-  </div>
-</div>
-<footer>
-  <div class="container">
-    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a>
-  </div>
-</footer>
-<script>${mcpCtaScript()}</script>
-</body>
-</html>`, pubDate);
-}
-
 function buildAiCodingToolsPricingPage(): string {
   const title = "AI Coding Tools Pricing Comparison 2026 — The Definitive Free Tier Breakdown";
   const metaDesc = "Compare 17 AI coding tools: Cursor, Windsurf, Amazon Kiro, GitHub Copilot, Claude Code, Devin, Bolt.new, Lovable, Codex, Gemini CLI and more. Free tiers, hidden costs, cost analysis for solo devs and teams. [[freshness]]";
@@ -27945,7 +27546,7 @@ function buildAiCodingToolsPricingPage(): string {
   }).join("\n        ");
 
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
-    ["ide-code-editors-alternatives", "ai-ml-alternatives", "free-ai-stack", "free-llm-apis", "free-tier-risk", "cursor-alternatives", "ai-coding-pricing-2026"].includes(p.slug)
+    ["ide-code-editors-alternatives", "ai-ml-alternatives", "free-ai-stack", "free-llm-apis", "free-tier-risk", "cursor-alternatives"].includes(p.slug)
   );
 
   const jsonLd = {
@@ -52662,6 +52263,11 @@ const dispatchRequest = async (req: IncomingMessage, res: ServerResponse) => {
     res.end();
     return;
   }
+  if (url.pathname === "/ai-coding-pricing-2026" && isGetOrHead) {
+    res.writeHead(301, { Location: "/ai-coding-tools-pricing" });
+    res.end();
+    return;
+  }
 
 
   if ((url.pathname === "/auth-free-tier-comparison-2026" || url.pathname === "/auth-pricing" || url.pathname === "/auth-identity-pricing") && isGetOrHead) {
@@ -54534,11 +54140,6 @@ ${catList}
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/gemini-api-pricing-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(withVerdictLinks(buildGeminiApiPricing2026Page()));
-  } else if (url.pathname === "/ai-coding-pricing-2026" && isGetOrHead) {
-    recordApiHit("/ai-coding-pricing-2026");
-    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/ai-coding-pricing-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
-    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(withVerdictLinks(compiledPageCitingSources(buildAiCodingPricing2026Page())));
   } else if (url.pathname === "/ai-coding-tools-pricing" && isGetOrHead) {
     recordApiHit("/ai-coding-tools-pricing");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/ai-coding-tools-pricing", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });

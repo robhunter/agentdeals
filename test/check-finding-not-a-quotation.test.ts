@@ -55,7 +55,6 @@ const COMPILED_PAGES = [
   "/gcp-free-tier-2026",
   "/azure-free-tier-2026",
   "/digitalocean-free-tier-2026",
-  "/ai-coding-pricing-2026",
 ];
 
 const QUOTED_AS_THE_PAGES_OWN_WORDS = new RegExp(

@@ -198,9 +198,9 @@ const CHANGE_ROW_DATE = new RegExp(
 const isChangeRow = (row: string) => CHANGE_ROW_DATE.test(row);
 const withoutChangeRows = (body: string) =>
   rowsOf(body).filter(isChangeRow).reduce((rest, row) => rest.replace(row, ""), body);
-const AI_CODING_PAGES = ["/ai-coding-pricing-2026", "/ai-coding-tools-pricing"];
+const AI_CODING_PAGES = ["/ai-coding-tools-pricing"];
 
-describe("the AI coding pages state one lineup per vendor", () => {
+describe("the AI coding guide states one lineup per vendor", () => {
   before(async () => { proc = await startServer(); });
   after(() => { proc?.kill(); });
 
@@ -237,7 +237,7 @@ describe("the AI coding pages state one lineup per vendor", () => {
         );
       }
     }
-    assert.ok(rendered > 0, "no superseded record renders on the AI coding pages, so the check proves nothing");
+    assert.ok(rendered > 0, "no superseded record renders on the AI coding guide, so the check proves nothing");
   });
 
   it("prices no Cursor plan named Hobby outside the change log recording that we did", async () => {

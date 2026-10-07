@@ -9,7 +9,7 @@ import { DISCOVERED_DATE_PREFIX, EFFECTIVE_DATE_PREFIX } from "../dist/change-da
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
 
-const AI_CODING_PAGES = ["/ai-coding-pricing-2026", "/ai-coding-tools-pricing"];
+const AI_CODING_PAGES = ["/ai-coding-tools-pricing"];
 const PREMIUM_REQUEST_QUANTITY = /\b\d[\d,]*\s+premium[ -]requests?\b/gi;
 
 let serverPort = 0;
@@ -59,17 +59,17 @@ describe("GitHub Copilot is priced in the unit GitHub bills in", () => {
   });
 });
 
-describe("the AI coding pages carry Copilot's current plan ladder", () => {
+describe("the AI coding guide carries Copilot's current plan ladder", () => {
   before(async () => { proc = await startServer(); });
   after(() => { proc?.kill(); });
 
-  it("names Max as the top individual plan on both pages", async () => {
+  it("names Max as the top individual plan", async () => {
     for (const page of AI_CODING_PAGES) {
       assert.match(await get(page), /\$100\/mo \(Max\)/, `${page} omits Copilot Max`);
     }
   });
 
-  it("names the AI-credit unit and its price on both pages", async () => {
+  it("names the AI-credit unit and its price", async () => {
     for (const page of AI_CODING_PAGES) {
       const body = await get(page);
       assert.match(body, /AI Credits at \$0\.01/i, `${page} states no price for an AI credit`);

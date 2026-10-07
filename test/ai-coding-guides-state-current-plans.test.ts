@@ -9,7 +9,6 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
 
 const TOOLS_PAGE = "/ai-coding-tools-pricing";
-const YEAR_PAGE = "/ai-coding-pricing-2026";
 
 let proc: ChildProcess | null = null;
 const served = new Map<string, string>();
@@ -27,9 +26,7 @@ before(async () => {
       if (m) { clearTimeout(timeout); resolve(parseInt(m[1], 10)); }
     });
   });
-  for (const page of [TOOLS_PAGE, YEAR_PAGE]) {
-    served.set(page, await (await fetch(`http://localhost:${port}${page}`)).text());
-  }
+  served.set(TOOLS_PAGE, await (await fetch(`http://localhost:${port}${TOOLS_PAGE}`)).text());
 });
 
 after(() => { proc?.kill(); });
@@ -86,10 +83,8 @@ describe("the AI coding guides state the plans the vendors' own pricing pages li
     assert.doesNotMatch(pricingRow(TOOLS_PAGE, "Google Antigravity").free, /preview/i);
   });
 
-  it("does not list Claude Code's free tier as API-based on either guide", () => {
-    for (const page of [TOOLS_PAGE, YEAR_PAGE]) {
-      assert.doesNotMatch(pricingRow(page, "Claude Code").free, /API-based/i, page);
-    }
+  it("does not list Claude Code's free tier as API-based", () => {
+    assert.doesNotMatch(pricingRow(TOOLS_PAGE, "Claude Code").free, /API-based/i);
   });
 
   it("prices Bolt.new's and Lovable's Pro plans at $25", () => {

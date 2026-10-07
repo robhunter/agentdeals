@@ -61,7 +61,6 @@ const COMPILED_PAGES = [
   "/gcp-free-tier-2026",
   "/azure-free-tier-2026",
   "/digitalocean-free-tier-2026",
-  "/ai-coding-pricing-2026",
 ];
 
 const PAGES_THAT_ALREADY_LINKED_OUT = [
@@ -495,7 +494,7 @@ describe("every comparison page reaches the pages its figures were read from", (
       }
     }
     assert.deepStrictEqual(bare, []);
-    assertPopulationFloor(statedInWords.length, 2, "rows stating a service's terms without a numeral");
+    assertPopulationFloor(statedInWords.length, 1, "rows stating a service's terms without a numeral");
   });
 
   it("gives each thing a marker stands for its own word, on every page that marks one", () => {

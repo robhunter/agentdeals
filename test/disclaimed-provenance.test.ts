@@ -85,7 +85,6 @@ const COMPILED_PAGES_CITING_A_LIST = [
   "/gcp-free-tier-2026",
   "/azure-free-tier-2026",
   "/digitalocean-free-tier-2026",
-  "/ai-coding-pricing-2026",
 ];
 
 const SOURCE_LINE = /<p class="free-tier-source-line"[\s\S]*?<\/p>/;
