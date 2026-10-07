@@ -1362,7 +1362,7 @@
     {
       "vendor": "Xata",
       "category": "Databases",
-      "description": "Open-source Postgres platform (Apache 2.0) with copy-on-write branching and scale-to-zero. Self-hosted on Kubernetes — free forever. Managed platform is now paid (compute + storage billed hourly); 14-day free trial with $100 credit on the commercial tier.",
+      "description": "Open-source Postgres platform (Apache 2.0) with copy-on-write branching and scale-to-zero. Self-hosted on Kubernetes — free forever. The managed platform, Xata Cloud, is paid: from $0.012 an hour plus $0.28 per GB-month of storage, billed by the minute, with a 14-day free trial.",
       "tier": "Free",
       "url": "https://xata.io/pricing",
       "tags": [
@@ -2814,7 +2814,21 @@
         "text": "$0 Free for everyone Unlimited members 2 teams 250 issues",
         "url": "https://linear.app/pricing",
         "read_on": "2026-10-04"
-      }
+      },
+      "conditions": [
+        {
+          "text": "When a paid workspace returns to the Free plan, Linear deletes nothing, but a workspace with more than 250 issues can no longer create new issues.",
+          "quote": "When cancelling a subscription: Nothing will be deleted. If you have over 250 issues, you will no longer be able to create new issues.",
+          "url": "https://linear.app/docs/billing-and-plans",
+          "read_on": "2026-10-07"
+        },
+        {
+          "text": "On the Free plan every member is an admin.",
+          "quote": "Members will become Admins of the workspace, as all users are Admins on free plans.",
+          "url": "https://linear.app/docs/billing-and-plans",
+          "read_on": "2026-10-07"
+        }
+      ]
     },
     {
       "vendor": "Snyk",
@@ -34605,7 +34619,7 @@
     {
       "vendor": "MiniMax",
       "category": "AI / ML",
-      "description": "MiniMax sells API access pay-as-you-go on platform.minimax.io. Its pricing pages list no free API allowance; one docs page mentions a free quota for new pay-as-you-go users but gives no amount. Text: MiniMax-M3 $0.30/$1.20 (per 1M tokens, inputs up to 512k, after a permanent 50% discount); MiniMax-M2.7 $0.30/$1.20 (per 1M tokens); MiniMax-M2.7-highspeed $0.60/$2.40 (per 1M tokens). Speech: speech-2.8-turbo $60 and speech-2.8-hd $100 per 1M characters. Video: MiniMax-H3 $0.08 per second at 768P. Image: image-01 $0.0035 per image. Music and lyrics APIs closed to new users on 2026-08-20. Token Plan subscriptions: Plus $22, Max $55 and Ultra $132 per month.",
+      "description": "MiniMax sells API access pay-as-you-go on platform.minimax.io. Its pricing pages list no free API allowance; one docs page mentions a free quota for new pay-as-you-go users but gives no amount. Text: MiniMax-M3 $0.30/$1.20 (per 1M tokens, inputs up to 512k, after a permanent 50% discount); MiniMax-M2.7 $0.30/$1.20 (per 1M tokens); MiniMax-M2.7-highspeed $0.60/$2.40 (per 1M tokens). Speech: speech-2.8-turbo $60 and speech-2.8-hd $100 per 1M characters. Video: MiniMax-H3 $0.08 per second at 768P. Image: image-01 $0.0035 per image. Music and lyrics APIs closed to new users on 2026-08-20. Subscriptions: M Plan Go $22, Explore $55 and Build $132 a month, with the first month half price on monthly billing during the M Plan launch; annual billing charges 10 months for 12. The Token Plan no longer takes new purchases.",
       "tier": "Pay-as-you-go",
       "url": "https://platform.minimax.io/docs/guides/pricing-paygo",
       "tags": [
