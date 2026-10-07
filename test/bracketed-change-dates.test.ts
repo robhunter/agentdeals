@@ -17,16 +17,19 @@ import {
   changeEntryLongDateLabel,
   coveringBracketedChanges,
   dateMeaningOf,
+  withDateMeaningDeclared,
 } from "../dist/change-dates.js";
 import { feedEntryDateSentence } from "../dist/change-feed.js";
 import type { ArchiveBracket, DealChange } from "../dist/types.js";
 
 const LAST_OLD_CAPTURE = "https://web.archive.org/web/20260616093000/https://example.com/pricing";
-const FIRST_NEW_CAPTURE = "https://web.archive.org/web/20260828120000/https://example.com/pricing";
+const FIRST_NEW_CAPTURE = "https://web.archive.org/web/20260715120000/https://example.com/pricing";
+const LATER_CAPTURE = "https://web.archive.org/web/20260904120000/https://example.com/pricing";
+const SAME_DAY_CAPTURE = "https://web.archive.org/web/20260828120000/https://example.com/pricing";
 
 const bracket = (over: Partial<ArchiveBracket> = {}): ArchiveBracket => ({
   last_old: "2026-06-16",
-  first_new: "2026-08-28",
+  first_new: "2026-07-15",
   last_old_capture: LAST_OLD_CAPTURE,
   first_new_capture: FIRST_NEW_CAPTURE,
   ...over,
@@ -54,13 +57,24 @@ const bracketed = (over: Partial<DealChange> = {}): DealChange =>
 const esc = (text: string) => text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
 describe("a discovered change that archived copies of the vendor's page bracket", () => {
-  it("runs from the last copy with the old terms to the record's date, with each copy kept", () => {
+  it("runs from the last copy with the old terms to the first copy with the new terms, with each copy kept", () => {
     assert.deepStrictEqual(archiveBracketOf(bracketed()), {
       from: "2026-06-16",
-      to: "2026-08-28",
+      to: "2026-07-15",
       from_capture: LAST_OLD_CAPTURE,
       to_capture: FIRST_NEW_CAPTURE,
     });
+    const sameDay = bracketed({ archive_check: { checked: "2026-10-01", outcome: "vendor_changed", brackets: [bracket({ first_new: "2026-08-28", first_new_capture: SAME_DAY_CAPTURE })] } });
+    assert.deepStrictEqual(archiveBracketOf(sameDay), { from: "2026-06-16", to: "2026-08-28", from_capture: LAST_OLD_CAPTURE, to_capture: SAME_DAY_CAPTURE });
+  });
+
+  it("ends on the record's own day, unlinked, where no copy on or before that day shows the new terms", () => {
+    const later = bracketed({ archive_check: { checked: "2026-10-01", outcome: "vendor_changed", brackets: [bracket({ first_new: "2026-09-04", first_new_capture: LATER_CAPTURE })] } });
+    assert.deepStrictEqual(archiveBracketOf(later), { from: "2026-06-16", to: "2026-08-28", from_capture: LAST_OLD_CAPTURE, to_capture: null });
+    assert.ok(!changeEntryDateLabelHtml(later, esc).includes(LATER_CAPTURE), changeEntryDateLabelHtml(later, esc));
+    const none = bracketed({ archive_check: { checked: "2026-10-01", outcome: "vendor_changed", brackets: [bracket({ first_new: null, first_new_capture: null })] } });
+    assert.deepStrictEqual(archiveBracketOf(none), { from: "2026-06-16", to: "2026-08-28", from_capture: LAST_OLD_CAPTURE, to_capture: null });
+    assert.ok(changeEntryDateLabelHtml(none, esc).endsWith(" and 2026-08-28"), changeEntryDateLabelHtml(none, esc));
   });
 
   it("has no bracket unless the check found one vendor change between two copies", () => {
@@ -86,10 +100,10 @@ describe("a discovered change that archived copies of the vendor's page bracket"
   });
 
   it("is labelled effective between its two days, short and long", () => {
-    assert.strictEqual(changeDateLabel(bracketed()), "effective between 2026-06-16 and 2026-08-28");
-    assert.strictEqual(changeEntryDateLabel(bracketed()), "effective between 2026-06-16 and 2026-08-28");
-    assert.strictEqual(changeDateClause(bracketed()), "effective between 2026-06-16 and 2026-08-28");
-    assert.strictEqual(changeEntryLongDateLabel(bracketed()), "effective between Jun\u00a016,\u00a02026 and Aug\u00a028,\u00a02026");
+    assert.strictEqual(changeDateLabel(bracketed()), "effective between 2026-06-16 and 2026-07-15");
+    assert.strictEqual(changeEntryDateLabel(bracketed()), "effective between 2026-06-16 and 2026-07-15");
+    assert.strictEqual(changeDateClause(bracketed()), "effective between 2026-06-16 and 2026-07-15");
+    assert.strictEqual(changeEntryLongDateLabel(bracketed()), "effective between Jun\u00a016,\u00a02026 and Jul\u00a015,\u00a02026");
     assert.strictEqual(changeEntryDateLabel(discovered()), "discovered 2026-08-28 \u00b7 effective date unknown");
   });
 
@@ -98,15 +112,15 @@ describe("a discovered change that archived copies of the vendor's page bracket"
     assert.strictEqual(
       html,
       `effective between <a href="${LAST_OLD_CAPTURE}" target="_blank" rel="noopener" class="${ARCHIVE_CAPTURE_CLASS}">2026-06-16</a>` +
-        ` and <a href="${FIRST_NEW_CAPTURE}" target="_blank" rel="noopener" class="${ARCHIVE_CAPTURE_CLASS}">2026-08-28</a>`,
+        ` and <a href="${FIRST_NEW_CAPTURE}" target="_blank" rel="noopener" class="${ARCHIVE_CAPTURE_CLASS}">2026-07-15</a>`,
     );
     const uncaptured = bracketed({ archive_check: { checked: "2026-10-01", outcome: "vendor_changed", brackets: [bracket({ first_new_capture: null })] } });
-    assert.ok(changeEntryDateLabelHtml(uncaptured, esc).endsWith(" and 2026-08-28"), changeEntryDateLabelHtml(uncaptured, esc));
+    assert.ok(changeEntryDateLabelHtml(uncaptured, esc).endsWith(" and 2026-07-15"), changeEntryDateLabelHtml(uncaptured, esc));
     assert.strictEqual(changeEntryDateLabelHtml(discovered(), esc), esc(changeEntryDateLabel(discovered())));
   });
 
   it("is dated in the feed by its bracket and the day we recorded it", () => {
-    assert.strictEqual(feedEntryDateSentence(bracketed()), "effective between 2026-06-16 and 2026-08-28 \u00b7 recorded 2026-09-10.");
+    assert.strictEqual(feedEntryDateSentence(bracketed()), "effective between 2026-06-16 and 2026-07-15 \u00b7 recorded 2026-09-10.");
     assert.ok(feedEntryDateSentence(discovered()).startsWith("discovered 2026-08-28 \u00b7 effective date unknown"));
   });
 });
@@ -157,7 +171,7 @@ function bracketedRecord() {
   return {
     vendor: BRACKETED,
     change_type: "limits_reduced",
-    date: FIRST_NEW,
+    date: RECORDED,
     summary: "Free plan storage cut from 2 GB to 1 GB.",
     previous_state: "Free plan: 2 GB of storage and 100 hours a month.",
     current_state: "Free plan: 1 GB of storage and 100 hours a month.",
@@ -233,7 +247,7 @@ describe("every surface that dates a bracketed change", () => {
   it("labels the vendor page's history row with both days", async () => {
     const page = decoded(await (await get(`/vendor/${toSlug(BRACKETED)}`)).text());
     assert.ok(page.includes(`effective between ${LAST_OLD} and ${FIRST_NEW}`), "the history row prints the bracket");
-    assert.ok(!page.includes(`discovered ${FIRST_NEW}`), "the history row still prints the bracketed change as discovered");
+    assert.ok(!page.includes(`discovered ${RECORDED}`), "the history row still prints the bracketed change as discovered");
   });
 
   for (const route of ["/changes", "/pricing-changes"]) {
@@ -249,7 +263,7 @@ describe("every surface that dates a bracketed change", () => {
     const body = await (await get(`/api/changes?vendor=${encodeURIComponent(BRACKETED)}&since=2020-01-01`)).json();
     const entry = body.changes.find((c: { vendor: string }) => c.vendor === BRACKETED);
     assert.strictEqual(entry?.date_meaning, "effective_by", JSON.stringify(body).slice(0, 300));
-    assert.strictEqual(entry.date, FIRST_NEW);
+    assert.strictEqual(entry.date, RECORDED);
     assert.ok(body.date_provenance.note.endsWith(BRACKETED_CHANGE_DATING), body.date_provenance.note);
     const schema = JSON.parse(await (await get("/openapi.json")).text());
     const meaning = schema.components.schemas.PublishedDealChange.allOf[1].properties.date_meaning;
@@ -262,7 +276,7 @@ describe("every surface that dates a bracketed change", () => {
 
   it("carries the archive check on the risk cause it rates the vendor by, so its date can be read", async () => {
     const risk = await (await get(`/api/vendor-risk/${encodeURIComponent(BRACKETED)}`)).json();
-    assert.strictEqual(risk.risk_cause?.date, FIRST_NEW, JSON.stringify(risk).slice(0, 300));
+    assert.strictEqual(risk.risk_cause?.date, RECORDED, JSON.stringify(risk).slice(0, 300));
     assert.deepStrictEqual(risk.risk_cause.archive_check, bracketedRecord().archive_check);
     const schema = JSON.parse(await (await get("/openapi.json")).text());
     const cause = schema.paths["/api/vendor-risk/{vendor}"].get.responses["200"].content["application/json"].schema.properties.risk_cause;
@@ -271,6 +285,16 @@ describe("every surface that dates a bracketed change", () => {
       schema.components.schemas.PublishedDealChange.allOf[1].properties.archive_check,
     );
   });
+
+  for (const route of ["/changes", "/pricing-changes"]) {
+    it(`prints on ${route}, beside every link to an archived copy, the day that copy was taken`, async () => {
+      const html = await (await get(route)).text();
+      const linked = [...html.matchAll(new RegExp(`<a href="https://web\\.archive\\.org/web/(\\d{4})(\\d{2})(\\d{2})\\d*/[^"]*"[^>]*class="${ARCHIVE_CAPTURE_CLASS}">([^<]*)</a>`, "g"))];
+      assert.ok(linked.length >= 2, `${route} links ${linked.length} archived copies`);
+      const misdated = linked.filter(([, year, month, day, printed]) => printed !== `${year}-${month}-${day}`).map(([link]) => link);
+      assert.deepStrictEqual(misdated, []);
+    });
+  }
 
   for (const route of ["/free-tier-risk", "/state-of-free-tiers"]) {
     it(`says how the bracketed change is dated where ${route} counts undated changes by month`, async () => {
@@ -285,8 +309,13 @@ describe("every surface that dates a bracketed change", () => {
     assert.ok(labeller && constants.length === 9, "the compare tool no longer labels dates in the browser");
     const label = new Function(`${constants.map((m) => m[0]).join("\n")}\n${labeller![0]}\nreturn changeEntryDateLabel;`)();
     const compared = await (await get(`/api/compare?a=${encodeURIComponent(BRACKETED)}&b=${encodeURIComponent(CONTROL)}`)).json();
-    const served = compared.vendor_a.deal_changes.find((c: { date: string }) => c.date === FIRST_NEW);
+    const served = compared.vendor_a.deal_changes.find((c: { date: string }) => c.date === RECORDED);
     assert.ok(served, JSON.stringify(compared).slice(0, 300));
     assert.strictEqual(label(served), `effective between ${LAST_OLD} and ${FIRST_NEW}`);
+    const ending = (first_new: string | null) =>
+      bracketed({ archive_check: { checked: "2026-10-01", outcome: "vendor_changed", brackets: [bracket({ first_new, first_new_capture: first_new && LATER_CAPTURE })] } });
+    for (const record of [bracketed(), ending("2026-08-28"), ending("2026-09-04"), ending(null), discovered()]) {
+      assert.strictEqual(label(withDateMeaningDeclared(record)), changeEntryDateLabel(record));
+    }
   });
 });

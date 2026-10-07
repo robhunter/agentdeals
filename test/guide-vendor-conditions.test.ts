@@ -6,6 +6,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { assertPopulationFloor } from "./population-floor.ts";
+import { everyRouteTheSitemapPublishes } from "./sitemap-routes.ts";
 
 const { offerRetired } = await import("../dist/retirement.js");
 const { VENDOR_CONDITIONS_ROW_CLASS } = await import("../dist/listing-conditions.js");
@@ -216,15 +217,52 @@ describe("the Hetzner and Google Cloud guides print their vendor's conditions of
   });
 });
 
-const COMPARISON_GUIDES = [
-  "/database-pricing",
-  "/hosting-pricing",
-  HETZNER_GUIDE,
-  "/database-free-tier-comparison-2026",
-  "/hosting-free-tier-comparison-2026",
+const TEMPLATES_THAT_PRINT_CONDITIONS_THEIR_OWN_WAY = [/^\/vendor\//, /^\/category\//, /^\/best\//, /^\/compare\//, /^\/alternative-to\//];
+
+const PAGES_WHOSE_ROWS_ARE_NOT_ABOUT_A_VENDORS_TERMS = [
+  /^\/events\//,
+  /^\/freshness$/,
+  /^\/free-tier-risk$/,
+  /^\/free-tier-tracker$/,
+  /^\/referral-programs$/,
+  /^\/state-of-free-tiers$/,
+  /^\/x402-services$/,
+  /^\/agent-payments$/,
 ];
 
+const GUIDES_NOT_YET_PRINTING_CONDITIONS = [
+  "/ai-coding-tools-pricing",
+  "/analytics-alternatives",
+  "/analytics-free-tier-comparison-2026",
+  "/api-development-alternatives",
+  "/api-development-free-tier-comparison-2026",
+  "/aws-app-runner-migration",
+  "/cloud-free-tier-comparison-2026",
+  "/datadog-vs-new-relic",
+  "/email-alternatives",
+  "/email-comparison-2026",
+  "/firebase-studio-shutdown",
+  "/free-tier-facts-ai-models-get-wrong",
+  "/google-developer-program-2026",
+  "/heroku-alternatives",
+  "/hosting-alternatives",
+  "/monitoring-comparison-2026",
+  "/neon-vs-supabase",
+  "/project-management-alternatives",
+  "/railway-vs-render",
+  "/supabase-vs-firebase",
+  "/team-collaboration-alternatives",
+  "/vercel-alternatives",
+  "/vercel-vs-netlify",
+];
+
+function coveredByThisTest(route: string): boolean {
+  return ![...TEMPLATES_THAT_PRINT_CONDITIONS_THEIR_OWN_WAY, ...PAGES_WHOSE_ROWS_ARE_NOT_ABOUT_A_VENDORS_TERMS].some((pattern) => pattern.test(route));
+}
+
 const VENDOR_CARD = /<div class="diff-card"[^>]*>\s*<h3>([\s\S]*?)<\/h3>\s*<(p|div) class="diff-desc">[\s\S]*?<\/\2>([\s\S]*?)<\/div>/g;
+const CATALOGUE_CARD = /<div class="alt-card"[^>]*>\s*<div class="alt-card-header">\s*<a href="\/vendor\/([a-z0-9-]+)" class="alt-card-name">/g;
+const LISTING_IN_FULL = /<div class="context-box listing-in-full">\s*<strong><a href="\/vendor\/([a-z0-9-]+)"/g;
 const VENDOR_PAGE_LINK = /<a href="\/vendor\/([a-z0-9-]+)"/;
 const TABLE_MARKUP = /<table\b[\s\S]*?<\/table>/g;
 const TABLE_ROW = /<tr\b([^>]*)>([\s\S]*?)<\/tr>/g;
@@ -235,6 +273,7 @@ const FIRST_DECORATION = /<a |<span class=/;
 
 type Piece =
   | { kind: "card"; slug: string; printed: string; at: number }
+  | { kind: "listed in full"; slug: string; at: number }
   | { kind: "row"; subject: string | null; at: number }
   | { kind: "conditions"; colspan: number; columns: number; list: string; at: number };
 
@@ -269,7 +308,10 @@ function piecesOf(html: string): Piece[] {
   const pieces: Piece[] = [];
   for (const card of html.matchAll(VENDOR_CARD)) {
     const slug = card[1]!.match(VENDOR_PAGE_LINK)?.[1];
-    if (slug) pieces.push({ kind: "card", slug, printed: card[3]!.trim(), at: card.index! });
+    if (slug) pieces.push({ kind: "card", slug, printed: conditionLists(card[3]!).join(""), at: card.index! });
+  }
+  for (const listed of [...html.matchAll(CATALOGUE_CARD), ...html.matchAll(LISTING_IN_FULL)]) {
+    pieces.push({ kind: "listed in full", slug: listed[1]!, at: listed.index! });
   }
   for (const table of html.matchAll(TABLE_MARKUP)) {
     const columns = headerColumns(table[0]);
@@ -288,7 +330,7 @@ function piecesOf(html: string): Piece[] {
 
 function layoutOf(html: string): GuideLayout {
   const pieces = piecesOf(html);
-  const carded = new Set(pieces.flatMap((piece) => (piece.kind === "card" ? [piece.slug] : [])));
+  const carded = new Set(pieces.flatMap((piece) => (piece.kind === "card" || piece.kind === "listed in full" ? [piece.slug] : [])));
   const rowed = new Set<string>();
   const layout: GuideLayout = { placements: [], spans: [], strays: [] };
   let awaitingItsRow: Placement | null = null;
@@ -303,7 +345,7 @@ function layoutOf(html: string): GuideLayout {
     awaitingItsRow = null;
     if (piece.kind === "card") {
       layout.placements.push({ slug: piece.slug, where: `the ${piece.slug} card`, printed: piece.printed });
-    } else if (piece.subject && !carded.has(piece.subject) && !rowed.has(piece.subject)) {
+    } else if (piece.kind === "row" && piece.subject && !carded.has(piece.subject) && !rowed.has(piece.subject)) {
       rowed.add(piece.subject);
       awaitingItsRow = { slug: piece.subject, where: `the first ${piece.subject} row`, printed: "" };
       layout.placements.push(awaitingItsRow);
@@ -319,78 +361,165 @@ const endedSlugs = new Set(
     .map((primary: Offer) => vendorSlug(primary.vendor)),
 );
 
-async function listTheVendorPagePrints(base: string, slug: string, memo: Map<string, string>): Promise<string> {
-  const known = memo.get(slug);
-  if (known !== undefined) return known;
-  const response = await fetch(`${base}/vendor/${slug}`);
-  const list = response.status === 200 ? conditionLists(await response.text())[0] ?? "" : "";
-  memo.set(slug, list);
-  return list;
+interface VendorPageList {
+  list: string;
+  landsOnAnotherListing: boolean;
 }
 
-async function placementsNotMatchingTheirVendorPage(base: string): Promise<string[]> {
-  const memo = new Map<string, string>();
+async function listTheVendorPagePrints(base: string, slug: string, memo: Map<string, VendorPageList>): Promise<VendorPageList> {
+  const known = memo.get(slug);
+  if (known) return known;
+  const response = await fetch(`${base}/vendor/${slug}`, { redirect: "manual" });
+  const location = response.headers.get("location");
+  const redirected = response.status >= 300 && response.status < 400 && location !== null;
+  const landing = redirected ? await fetch(new URL(location, base)) : response;
+  const found = { list: landing.status === 200 ? conditionLists(await landing.text())[0] ?? "" : "", landsOnAnotherListing: redirected };
+  memo.set(slug, found);
+  return found;
+}
+
+interface GuideReading {
+  route: string;
+  layout: GuideLayout;
+  lists: number;
+  carriesAnEmptyConditionsRow: boolean;
+  tokens: string[];
+}
+
+async function readGuides(base: string, routes: string[]): Promise<GuideReading[]> {
+  const readings: GuideReading[] = [];
+  for (let at = 0; at < routes.length; at += 8) {
+    readings.push(...await Promise.all(routes.slice(at, at + 8).map(async (route) => {
+      const html = await page(base, route);
+      return {
+        route,
+        layout: layoutOf(html),
+        lists: conditionLists(html).length,
+        carriesAnEmptyConditionsRow: html.includes(CONDITIONS_ROW_ATTRIBUTE),
+        tokens: html.match(ANY_TOKEN) ?? [],
+      };
+    })));
+  }
+  return readings;
+}
+
+async function placementsNotMatchingTheirVendorPage(base: string, readings: GuideReading[]): Promise<string[]> {
+  const memo = new Map<string, VendorPageList>();
   const wrong: string[] = [];
-  for (const guide of COMPARISON_GUIDES) {
-    for (const placement of layoutOf(await page(base, guide)).placements) {
-      const expected = endedSlugs.has(placement.slug) ? "" : await listTheVendorPagePrints(base, placement.slug, memo);
-      if (placement.printed !== expected) {
-        wrong.push(`${guide}, ${placement.where}: printed ${placement.printed.slice(0, 160) || "nothing"}; its vendor page lists ${expected.slice(0, 160) || "nothing"}`);
+  for (const { route, layout } of readings) {
+    for (const placement of layout.placements) {
+      const onTheVendorPage = await listTheVendorPagePrints(base, placement.slug, memo);
+      const expected = endedSlugs.has(placement.slug) ? "" : onTheVendorPage.list;
+      const acceptable = onTheVendorPage.landsOnAnotherListing ? [expected, ""] : [expected];
+      if (!acceptable.includes(placement.printed)) {
+        wrong.push(`${route}, ${placement.where}: printed ${placement.printed.slice(0, 160) || "nothing"}; its vendor page lists ${expected.slice(0, 160) || "nothing"}`);
       }
     }
   }
   return wrong;
 }
 
-describe("five comparison guides print each vendor's conditions of use beside its card or row, as its vendor page lists them", () => {
-  it("prints every vendor's list once: in its card where the guide has one, else after the first table row that names it", async () => {
-    assert.deepStrictEqual(await placementsNotMatchingTheirVendorPage(conditioned.base), []);
+const PRODUCT_ROWS_THEIR_PARENTS_CONDITIONS_COVER = [
+  { route: "/storage-comparison-2026", row: "supabase-storage", parent: "supabase" },
+  { route: "/storage-comparison-2026", row: "vercel-blob", parent: "vercel" },
+];
+
+const PRODUCT_ROWS_THEIR_PARENTS_CONDITIONS_DO_NOT_COVER = [
+  { route: "/storage-comparison-2026", row: "firebase-storage", parent: "firebase" },
+];
+
+function placementOf(html: string, slug: string): Placement {
+  const placement = layoutOf(html).placements.find((candidate) => candidate.slug === slug);
+  assert.ok(placement, `a ${slug} row`);
+  return placement;
+}
+
+async function parentListOf(base: string, row: string, parent: string, memo: Map<string, VendorPageList>): Promise<string> {
+  const viaTheRow = await listTheVendorPagePrints(base, row, memo);
+  const parents = await listTheVendorPagePrints(base, parent, memo);
+  assert.ok(viaTheRow.landsOnAnotherListing && viaTheRow.list === parents.list, `/vendor/${row} lands on /vendor/${parent}`);
+  assert.notStrictEqual(parents.list, "", `/vendor/${parent} lists conditions`);
+  return parents.list;
+}
+
+let routesCovered: string[] = [];
+const readingsOf = new Map<string, Promise<GuideReading[]>>();
+
+function readingsOn(base: string): Promise<GuideReading[]> {
+  if (!readingsOf.has(base)) readingsOf.set(base, readGuides(base, routesCovered));
+  return readingsOf.get(base)!;
+}
+
+describe("every guide that compares vendors prints each vendor's conditions of use beside its card or row, as its vendor page lists them", () => {
+  before(async () => {
+    const published = await everyRouteTheSitemapPublishes(conditioned.base);
+    routesCovered = published.filter(coveredByThisTest).filter((route) => !GUIDES_NOT_YET_PRINTING_CONDITIONS.includes(route)).sort();
   });
 
-  it("finds vendors to print on each guide when every listing holds conditions", async () => {
-    for (const guide of COMPARISON_GUIDES) {
-      const printed = layoutOf(await page(conditioned.base, guide)).placements.filter((placement) => placement.printed !== "");
-      assertPopulationFloor(printed.length, 3, `vendors whose conditions ${guide} prints`);
+  it("prints every vendor's list once: in its card where the guide has one, else after the first table row that names it", async () => {
+    assert.deepStrictEqual(await placementsNotMatchingTheirVendorPage(conditioned.base, await readingsOn(conditioned.base)), []);
+  });
+
+  it("prints the parent listing's conditions after a product row they cover", async () => {
+    const memo = new Map<string, VendorPageList>();
+    for (const { route, row, parent } of PRODUCT_ROWS_THEIR_PARENTS_CONDITIONS_COVER) {
+      const list = await parentListOf(conditioned.base, row, parent, memo);
+      assert.strictEqual(placementOf(await page(conditioned.base, route), row).printed, list, `${route}, the ${row} row`);
     }
   });
 
-  it("prints no list a placement does not account for", async () => {
-    for (const guide of COMPARISON_GUIDES) {
-      const html = await page(conditioned.base, guide);
-      const layout = layoutOf(html);
-      const ownSection = guide === HETZNER_GUIDE ? conditionLists(sectionOne(html)).length : 0;
-      assert.deepStrictEqual(layout.strays, [], `${guide}: a conditions row follows no vendor row that should carry one`);
-      assert.strictEqual(
-        conditionLists(html).length,
-        layout.placements.filter((placement) => placement.printed !== "").length + ownSection,
-        `${guide}: every list on the page sits in a vendor's card or right after its first row`,
-      );
+  it("prints no conditions after a product row its parent listing's conditions do not cover", async () => {
+    const memo = new Map<string, VendorPageList>();
+    for (const { route, row, parent } of PRODUCT_ROWS_THEIR_PARENTS_CONDITIONS_DO_NOT_COVER) {
+      await parentListOf(conditioned.base, row, parent, memo);
+      assert.strictEqual(placementOf(await page(conditioned.base, route), row).printed, "", `${route}, the ${row} row`);
+    }
+  });
+
+  it("finds the guides it covers from the sitemap, and vendors to print on them when every listing holds conditions", async () => {
+    const readings = await readingsOn(conditioned.base);
+    const printing = readings.filter(({ layout }) => layout.placements.some((placement) => placement.printed !== ""));
+    assertPopulationFloor(printing.length, 15, "guides that print a vendor's conditions beside its card or row");
+    assertPopulationFloor(printing.reduce((sum, { layout }) => sum + layout.placements.filter((placement) => placement.printed !== "").length, 0), 150, "cards and rows that print their vendor's conditions");
+  });
+
+  it("prints no conditions row after a row that is not its vendor's first", async () => {
+    for (const { route, layout } of await readingsOn(conditioned.base)) {
+      assert.deepStrictEqual(layout.strays, [], `${route}: a conditions row follows no vendor row that should carry one`);
     }
   });
 
   it("spans each conditions row across every column of its table", async () => {
-    for (const guide of COMPARISON_GUIDES) {
-      const { spans } = layoutOf(await page(conditioned.base, guide));
-      assert.deepStrictEqual(spans.filter((span) => span.colspan !== span.columns || span.columns === 0), [], guide);
+    for (const { route, layout } of await readingsOn(conditioned.base)) {
+      assert.deepStrictEqual(layout.spans.filter((span) => span.colspan !== span.columns || span.columns === 0), [], route);
     }
   });
 
   it("prints no list and no empty conditions row where no listing holds conditions", async () => {
-    for (const guide of COMPARISON_GUIDES) {
-      const html = await page(unconditioned.base, guide);
-      assert.deepStrictEqual(conditionLists(html), [], guide);
-      assert.ok(!html.includes(CONDITIONS_ROW_ATTRIBUTE), `${guide} carries an empty conditions row`);
+    const readings = await readingsOn(unconditioned.base);
+    for (const { route, lists, carriesAnEmptyConditionsRow } of readings) {
+      assert.strictEqual(lists, 0, route);
+      assert.ok(!carriesAnEmptyConditionsRow, `${route} carries an empty conditions row`);
     }
-    assert.deepStrictEqual(await placementsNotMatchingTheirVendorPage(unconditioned.base), []);
+    assert.deepStrictEqual(await placementsNotMatchingTheirVendorPage(unconditioned.base, readings), []);
   });
 
   it("withholds a vendor's conditions wherever its vendor page does, as beside stored terms a recorded change supersedes", async () => {
     const withheld = [...(tokensOf.get(SUPABASE) ?? []), ...(tokensOf.get(RENDER) ?? [])];
     assert.strictEqual(withheld.length, 4, "one listing each for Supabase and Render");
-    for (const guide of COMPARISON_GUIDES) {
-      const printed = (await page(superseded.base, guide)).match(ANY_TOKEN) ?? [];
-      assert.deepStrictEqual(printed.filter((token) => withheld.includes(token)), [], guide);
+    const readings = await readingsOn(superseded.base);
+    for (const { route, tokens } of readings) {
+      assert.deepStrictEqual(tokens.filter((token) => withheld.includes(token)), [], route);
     }
-    assert.deepStrictEqual(await placementsNotMatchingTheirVendorPage(superseded.base), []);
+    assert.deepStrictEqual(await placementsNotMatchingTheirVendorPage(superseded.base, readings), []);
+  });
+
+  it("names only published guides as not yet printing conditions, and each still leaves a vendor's out", async () => {
+    const published = new Set(await everyRouteTheSitemapPublishes(conditioned.base));
+    const stillMissing = await placementsNotMatchingTheirVendorPage(conditioned.base, await readGuides(conditioned.base, GUIDES_NOT_YET_PRINTING_CONDITIONS));
+    for (const guide of GUIDES_NOT_YET_PRINTING_CONDITIONS) {
+      assert.ok(published.has(guide) && coveredByThisTest(guide), `${guide} is not a published guide this test would read`);
+      assert.ok(stillMissing.some((line) => line.startsWith(`${guide}, `)), `${guide} prints every vendor's conditions now; take it off the list`);
+    }
   });
 });

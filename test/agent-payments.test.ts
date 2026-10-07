@@ -5,12 +5,16 @@ import {
   BOTH_WITH_AN_UNSTATED_X402_COST,
   BUSIEST_CATEGORY,
   PAYMENT_LISTINGS,
+  catalogueVendorsNamedIn,
+  descriptionsOf,
+  faqAnswers,
   json,
   mcpToolTexts,
   page,
   serviceRows,
   servedVendors,
   startServer,
+  textOf,
   vendorsHolding,
   writeSyntheticCatalogue,
 } from "./payment-protocol-fixture.ts";
@@ -30,6 +34,18 @@ function statValue(html: string, label: string): string | undefined {
 }
 
 const holdingBoth = PAYMENT_LISTINGS.filter(listing => vendorsHolding([listing], "x402").length && vendorsHolding([listing], "stripe-mpp").length);
+
+const holdingX402 = PAYMENT_LISTINGS.filter(listing => vendorsHolding([listing], "x402").length);
+
+const MPP_METHODS_IN_STRIPES_WORDS = "cards through Shared Payment Tokens (SPTs) and stablecoins";
+
+function namesIn(list: string): string[] {
+  return list.split(/, | and /);
+}
+
+function withAFreeTier(listings: readonly (typeof PAYMENT_LISTINGS)[number][]): typeof listings {
+  return listings.filter(listing => listing.tier === "Free");
+}
 
 describe("Agent Payments, on a catalogue whose payment listings are synthetic", () => {
   let scratch: ReturnType<typeof writeSyntheticCatalogue>;
@@ -87,7 +103,8 @@ describe("Agent Payments, on a catalogue whose payment listings are synthetic", 
         assert.strictEqual(service.tier, listing.tier);
         assert.strictEqual(service.description, listing.description);
         assert.strictEqual(service.url, listing.url);
-        assert.ok(service.stability, `${listing.vendor} has no stability`);
+        assert.ok("stability" in service, `${listing.vendor} is served without its stability field`);
+        if (listing.tier === "Free") assert.ok(service.stability, `${listing.vendor} has no stability`);
         assert.deepStrictEqual(service.payment_protocols.map((entry: { protocol: string }) => entry.protocol), listing.payment_protocols!.map(entry => entry.protocol));
       }
     });
@@ -138,6 +155,72 @@ describe("Agent Payments, on a catalogue whose payment listings are synthetic", 
         "the count line does not match the listings",
       );
     });
+
+    it("names in its x402 answer exactly the listings that hold an x402 entry", async () => {
+      const answer = faqAnswers(await page(server.base, "/agent-payments")).get("Which developer services accept x402 payments?");
+      const named = answer?.match(new RegExp(`^Currently ${holdingX402.length} developer services indexed on AgentDeals accept x402 payments: ([^.]*)\\.`))?.[1];
+      assert.ok(named, `the answer does not count and list the x402 listings: ${answer}`);
+      const alphabetical = vendorsHolding(PAYMENT_LISTINGS, "x402");
+      assert.notDeepStrictEqual(holdingX402.map(listing => listing.vendor), alphabetical, "the synthetic x402 listings are catalogued alphabetically, so the answer's order is not tested");
+      assert.deepStrictEqual(namesIn(named), alphabetical);
+    });
+
+    it("says how many of the x402 listings, and of all the listings, also offer a free tier", async () => {
+      const free = withAFreeTier(holdingX402);
+      assert.ok(free.length > 0 && free.length < holdingX402.length, "every x402 listing or none has a free tier, so the share is not tested");
+      const html = await page(server.base, "/agent-payments");
+      const answer = faqAnswers(html).get("Do x402 services still have free tiers?");
+      const share = answer?.match(/^Not all\. (\d+) of the (\d+) x402-enabled services indexed here also offer a free tier: ([^.]*)\./);
+      assert.ok(share, `the answer does not give the share of x402 listings with a free tier: ${answer}`);
+      assert.deepStrictEqual([Number(share[1]), Number(share[2])], [free.length, holdingX402.length]);
+      assert.deepStrictEqual(namesIn(share[3]!), vendorsHolding(free));
+      const freeOfAll = withAFreeTier(PAYMENT_LISTINGS);
+      assert.notStrictEqual(freeOfAll.length, free.length, "the two shares count the same listings, so one printed in the other's place would pass");
+      assert.ok(
+        html.includes(`<li><strong>Free tier fallback.</strong> ${freeOfAll.length} of the ${PAYMENT_LISTINGS.length} services listed here also offer a free tier.`),
+        "the free tier fallback does not count the payment listings with a free tier",
+      );
+    });
+
+    it("states MPP's payment methods in the words of Stripe's docs", async () => {
+      const html = await page(server.base, "/agent-payments");
+      const mppSection = html.match(/<p class="proto-desc">Stripe&rsquo;s Machine Payments Protocol[\s\S]*?<\/p>/)?.[0];
+      assert.ok(mppSection?.includes(`Agents pay with a variety of payment methods, including ${MPP_METHODS_IN_STRIPES_WORDS}.`), `the MPP section: ${mppSection}`);
+      const answer = faqAnswers(html).get("How do AI agents pay for services autonomously?");
+      assert.ok(answer?.includes(`With MPP, agents pay with a variety of payment methods, including ${MPP_METHODS_IN_STRIPES_WORDS}.`), answer);
+      assert.ok(html.includes("<tr><td>Account required</td><td>No &mdash; wallet only</td><td>Stablecoins: no, a wallet only. Cards: a Shared Payment Token, issued from a Link account</td></tr>"), "the comparison table does not say what an MPP payment needs");
+      assert.ok(!/managed wallet/i.test(html), "the page still says agents pay MPP from a managed wallet");
+    });
+
+    it("dates x402 to Coinbase's launch in May 2025, not the Linux Foundation's of April 2026", async () => {
+      const html = await page(server.base, "/agent-payments");
+      assert.ok(html.includes('<div class="proto-meta"><span>Coinbase</span><span>Launched May 2025</span><span>Linux Foundation since April 2026</span></div>'), "the x402 section does not date the protocol's launch");
+      assert.ok(html.includes("<tr><td>Launched</td><td>May 2025</td><td>March 2026</td></tr>"), "the comparison table does not date x402's launch");
+      assert.ok(!html.includes("Launched April 2026"), "the page dates x402's launch to April 2026");
+      const answer = faqAnswers(html).get("What is the x402 payment protocol?");
+      assert.ok(answer?.includes("Coinbase launched it in May 2025 and contributed it in April 2026 to the x402 Foundation"), answer);
+    });
+  });
+
+  describe("both payment pages", () => {
+    for (const route of ["/agent-payments", "/x402-services"]) {
+      it(`${route} prints no industry-wide count of services or integrations`, async () => {
+        const html = await page(server.base, route);
+        const otherGuides = html.indexOf('<div class="more-guides"');
+        assert.ok(otherGuides > 0, `${route} lost its list of other guides, whose blurbs this check skips`);
+        const served = textOf(html.slice(0, otherGuides));
+        assert.ok(served.includes("x402") && served.includes("Frequently Asked Questions"), `${route} served no text to check`);
+        assert.deepStrictEqual(served.match(/\d[\d,]*\+\s*(?:services|integrations)\b|industry-wide/gi), null);
+      });
+
+      it(`${route} names no listing in its descriptions`, async () => {
+        const descriptions = descriptionsOf(await page(server.base, route));
+        assert.ok(descriptions.length >= 3, `${route} has ${descriptions.length} descriptions, expected its meta, Open Graph and JSON-LD ones`);
+        for (const description of descriptions) {
+          assert.deepStrictEqual(catalogueVendorsNamedIn(description, Object.values(BADGE_LABEL)), [], description);
+        }
+      });
+    }
   });
 
   describe("MCP search_deals payment_protocol filter", () => {

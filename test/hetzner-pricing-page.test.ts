@@ -480,6 +480,20 @@ describe("pages that compared US cloud providers' prices with Hetzner's on no so
   }
 });
 
+describe("what a Hetzner cloud price on /hetzner-pricing-2026 includes", () => {
+  const INCLUDED_IN_THE_PRICE = "Every cloud price in this table includes the primary IPv4 address. Cloud servers include at least 20 TB of outgoing traffic a month in the EU, 1 TB in the US and 0.5 TB in Singapore; incoming traffic is free.";
+
+  it("is the paragraph after the table's availability note, ahead of the dedicated-server prices that exclude IPv4", async () => {
+    const { body } = await get("/hetzner-pricing-2026");
+    const sectionOneHtml = body.slice(body.indexOf('<h2 id="pricing">'), body.indexOf('<h2 id="april">'));
+    const paragraphs = [...sectionOneHtml.matchAll(/<p\b[^>]*>([\s\S]*?)<\/p>/g)].map(([, inner]) => visible(inner).trim());
+    const availabilityNote = paragraphs.findIndex(paragraph => paragraph.startsWith("Read this table by availability first."));
+    assert.ok(availabilityNote > -1, paragraphs.join(" | "));
+    assert.strictEqual(paragraphs[availabilityNote + 1], INCLUDED_IN_THE_PRICE);
+    assert.match(paragraphs[availabilityNote + 2] ?? "", /^A new AX42 dedicated server in Germany costs .*, excluding IPv4\./);
+  });
+});
+
 describe("the sign-up credit /hetzner-pricing-2026 tells new customers about", () => {
   const PROMO_CODE_PAGE = "https://www.hetzner.com/promo-code/";
   const SIGN_UP_CREDIT_SENTENCE = "New accounts can get €50 of credit with Hetzner's sign-up code, valid only for the billing period in which it is redeemed.";

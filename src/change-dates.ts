@@ -59,11 +59,13 @@ export function archiveBracketOf(change: DatedChange): DateBracket | null {
   const check = change.archive_check;
   if (check?.outcome !== "vendor_changed" || check.brackets?.length !== 1) return null;
   const [bracket] = check.brackets;
+  const firstNew = bracket.first_new ?? null;
+  const endsOnTheFirstNewCopy = firstNew !== null && firstNew <= change.date;
   return {
     from: bracket.last_old,
-    to: change.date,
+    to: endsOnTheFirstNewCopy ? firstNew : change.date,
     from_capture: bracket.last_old_capture ?? null,
-    to_capture: bracket.first_new_capture ?? null,
+    to_capture: endsOnTheFirstNewCopy ? bracket.first_new_capture ?? null : null,
   };
 }
 

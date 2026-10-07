@@ -13,6 +13,10 @@ function textOf(html: string): string {
   return html.replace(/<[^>]+>/g, " ").replace(/&[a-z]+;|&#\d+;/g, " ").replace(/\s+/g, " ").trim();
 }
 
+function printedDeadline(cardHtml: string): string | undefined {
+  return cardHtml.match(/<div class="shutdown-deadline"[^>]*>\s*<span class="deadline-icon">[^<]*<\/span>\s*<span>([^<]*)<\/span>/)?.[1];
+}
+
 describe("the shutdown tracker counts down only to dates a vendor set", () => {
   let proc: ChildProcess | null = null;
   let cards: { title: string; html: string; text: string }[] = [];
@@ -76,7 +80,17 @@ describe("the shutdown tracker counts down only to dates a vendor set", () => {
     const lambda = cards.find((c) => /Node\.js 20 AWS Lambda/.test(c.title));
     assert.ok(lambda, "the Node.js 20 Lambda entry is missing");
     assert.ok(lambda!.text.includes("AWS never blocks invocations"), lambda!.text);
-    assert.ok(lambda!.text.includes("February 1, 2027"), lambda!.text);
+  });
+
+  it("dates Lambda's Node.js 20 blocks to AWS's July 29 and August 31, 2027, and sorts the card by the first", () => {
+    const lambda = cards.find((c) => /Node\.js 20 AWS Lambda/.test(c.title));
+    assert.ok(lambda, "the Node.js 20 Lambda entry is missing");
+    assert.strictEqual(printedDeadline(lambda!.html), "July 29, 2027");
+    assert.ok(lambda!.text.includes("Lambda blocks creating functions on nodejs20.x from 2027-07-29 and updating them from 2027-08-31."), lambda!.text);
+    const section = page.split("<h2").find((html) => html.includes("Node.js 20 AWS Lambda Runtime</a></h3>"))!;
+    const deadlines = section.split('<div class="shutdown-card"').slice(1).map((html) => Date.parse(`${printedDeadline(html)} UTC`));
+    assert.ok(deadlines.length >= 2 && deadlines.every((at) => !Number.isNaN(at)), `the Lambda card's section holds no other dated card: ${deadlines}`);
+    assert.deepStrictEqual(deadlines, [...deadlines].sort((a, b) => a - b), "the Lambda card's section is not in deadline order");
   });
 
   it("states that Proton's deployed stacks keep running", () => {

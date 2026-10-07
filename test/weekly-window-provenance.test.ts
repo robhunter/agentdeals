@@ -278,7 +278,7 @@ describe("a weekly digest counts only changes with an effective date", () => {
         digest.discovered_in_week,
         "the week holds more records than the digest lists, so the two names below prove nothing"
       );
-      assert.strictEqual(digest.discovered_in_week, discoveredInWeek(recordsStillInForce(file.changes)));
+      assert.strictEqual(digest.discovered_in_week, discoveredInWeek(vendorChangesStillInForce(file.changes)));
       assert.ok(
         digest.discovered_in_week < discoveredInWeek(file.changes),
         "counting the raw file and counting what is in force agree, so this proves nothing"

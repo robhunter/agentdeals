@@ -20,6 +20,7 @@ interface Page {
   scaleIntro: string;
   scaleBottomLine: string;
   netlifyProStat: string;
+  overTheLimitsCard: string;
 }
 
 function readPage(html: string): Page {
@@ -38,6 +39,7 @@ function readPage(html: string): Page {
     scaleIntro: plain(scale.match(/<p class="section-intro">([\s\S]*?)<\/p>/)?.[1] ?? ""),
     scaleBottomLine: plain(scale.match(/<div class="context-box">([\s\S]*?)<\/div>/)?.[1] ?? ""),
     netlifyProStat: plain(body.match(/<div class="stat-number green">([^<]*)<\/div><div class="stat-label">Netlify Pro<\/div>/)?.[1] ?? ""),
+    overTheLimitsCard: body.match(/<div class="diff-card"[^>]*>\s*<h3>Credit Exhaustion vs\. Hard Limits<\/h3>\s*<p class="diff-desc">([\s\S]*?)<\/p>/)?.[1] ?? "",
   };
 }
 
@@ -133,6 +135,15 @@ describe("/vercel-vs-netlify prices each vendor's plans as the vendor does", () 
     assert.ok(page.text.includes("you need Pro at $20 a month per developer seat. Netlify's Free plan allows commercial use."), "the big-difference paragraph");
     assert.ok(page.text.includes("Vercel requires upgrading to Pro ($20 a month per developer seat)."), "the commercial-use card");
     assert.match(page.meta, /^Compare Vercel and Netlify free tiers side-by-side\. Bandwidth, serverless functions, builds, storage, commercial use — /);
+  });
+
+  it("gives Vercel's own rule for a Hobby project over a usage limit, with the Hobby doc and the day it was read", () => {
+    assert.strictEqual(
+      decode(page.overTheLimitsCard.replace(/<[^>]+>/g, "")).replace(/\s+/g, " ").trim(),
+      "When Netlify credits run out, sites pause (no overage charges). When a Vercel Hobby project exceeds a usage limit, Vercel says that in most cases you have to wait until 30 days have passed before you can use that feature again. Neither charges overages on free plans. (From vercel.com/docs/plans/hobby, read 2026-10-07.)",
+    );
+    assert.match(page.overTheLimitsCard, /<a href="https:\/\/vercel\.com\/docs\/plans\/hobby" rel="nofollow noopener">/);
+    assert.doesNotMatch(page.text, /throttl|degrades/i);
   });
 
   it("names no Netlify plan, price or unit that Netlify's pricing page does not list", () => {

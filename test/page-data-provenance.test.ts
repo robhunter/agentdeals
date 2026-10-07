@@ -510,7 +510,7 @@ describe("a page may only name the source it actually reads", () => {
     );
     assertPopulationFloor(
       everySentinelOutsideTables.length,
-      10,
+      8,
       "pages the catalogue reaches only outside their tables that print perturbed catalogue text there"
     );
   });

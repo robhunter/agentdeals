@@ -12,6 +12,7 @@ import {
   UNSTATED_X402_COST,
   X402_WITH_A_STATED_COST,
   X402_WITHOUT_A_COST,
+  faqAnswers,
   json,
   mcpToolTexts,
   page,
@@ -151,13 +152,30 @@ describe("payment protocol filters and pages, on a catalogue whose payment listi
     assert.ok(!html.includes(UNSTATED_X402_COST), "the page prints a cost its source does not state");
   });
 
-  it("GET /x402-services prints each x402 listing's chain and settlement", async () => {
+  it("GET /x402-services prints each x402 listing's chain and settlement, and a dash for either one its entry does not give", async () => {
     const rows = serviceRows(await page(server.base, "/x402-services"));
-    for (const listing of PAYMENT_LISTINGS) {
-      const entry = listing.payment_protocols!.find(candidate => candidate.protocol === "x402");
-      if (!entry) continue;
-      assert.strictEqual(textOf(rows.get(listing.vendor)![3]!), `${entry.chain} / ${entry.settlement}`);
+    const entries = PAYMENT_LISTINGS.flatMap(listing => listing.payment_protocols!.filter(entry => entry.protocol === "x402").map(entry => ({ vendor: listing.vendor, entry })));
+    assert.ok(entries.some(({ entry }) => entry.chain && entry.settlement), "no synthetic x402 entry gives both its chain and its settlement");
+    assert.ok(entries.some(({ entry }) => !entry.chain && entry.settlement), "every synthetic x402 entry gives its chain");
+    assert.ok(entries.some(({ entry }) => entry.chain && !entry.settlement), "every synthetic x402 entry gives its settlement");
+    for (const { vendor, entry } of entries) {
+      assert.strictEqual(textOf(rows.get(vendor)![3]!), `${entry.chain ?? "—"} / ${entry.settlement ?? "—"}`, vendor);
     }
+  });
+
+  it("GET /x402-services names the x402 project's fetch and axios clients as the libraries that handle payment", async () => {
+    const answer = faqAnswers(await page(server.base, "/x402-services")).get("Do x402 services require crypto knowledge?");
+    assert.deepStrictEqual(answer?.match(/Libraries like (.*?) abstract the payment negotiation/)?.[1]?.split(/, | and /), ["@x402/fetch", "@x402/axios"]);
+  });
+
+  it("GET /x402-services gives no price of its own for x402 calls and no growth it cannot source", async () => {
+    const answers = faqAnswers(await page(server.base, "/x402-services"));
+    const costs = answers.get("What are the costs of using x402?");
+    assert.ok(costs?.startsWith("Each service sets its own price, and this page lists a cost only where the vendor's own docs state it."), costs);
+    assert.deepStrictEqual(costs.match(/API calls cost|\$\d[\d.]*\s*[-–]\s*\$\d/g), null);
+    const count = answers.get("How many developer services support x402?");
+    assert.ok(count?.startsWith(`We currently index ${vendorsHolding(PAYMENT_LISTINGS, "x402").length} developer services with x402 support across `), count);
+    assert.deepStrictEqual(count.match(/ecosystem|weekly/g), null);
   });
 
   it("serves each entry's source with it, and no cost its source does not state, on the APIs and MCP", async () => {
@@ -223,6 +241,12 @@ describe("on the shipped catalogue, each payment surface lists exactly the listi
     assert.deepStrictEqual(servedVendors((await json(server.base, "/api/agent-payments")).services), all);
     assert.deepStrictEqual([...serviceRows(await page(server.base, "/x402-services")).keys()].sort(), x402);
     assert.deepStrictEqual([...serviceRows(await page(server.base, "/agent-payments")).keys()].sort(), all);
+  });
+
+  it("/agent-payments counts the listings with an MPP entry in its MPP answer, in the singular for one", async () => {
+    const count = vendorsHolding(SHIPPED_OFFERS, "stripe-mpp").length;
+    const answer = faqAnswers(await page(server.base, "/agent-payments")).get("What is Stripe MPP (Machine Payments Protocol)?");
+    assert.ok(answer?.includes(count === 1 ? "Currently 1 service in our index supports MPP." : `Currently ${count} services in our index support MPP.`), answer);
   });
 
   it("serves a cost with a shipped entry only where the entry's source quote holds it", async () => {

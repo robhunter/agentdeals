@@ -15,6 +15,7 @@ import {
 const { compiledFigureSlots, staticHalfOf } = await import("../dist/compiled-figures.js");
 const { changeLogAnchorFor, namedVendorSlug, toSlug, vendorSlugMap } = await import("../dist/vendor-slug.js");
 const { survivingVendorName, vendorMerges } = await import("../dist/vendor-merges.js");
+const { changeEntryDateLabel } = await import("../dist/change-dates.js");
 
 type DealChange = import("../src/types.ts").DealChange;
 
@@ -70,7 +71,8 @@ const CHANGE_LOG_ENTRY = /<div class="chg-entry[^"]*"[^>]*>([\s\S]*?)(?=\n      
 const changeLogEntries = (log: string) => [...log.matchAll(CHANGE_LOG_ENTRY)].map(m => m[1]!);
 const vendorNamedIn = (entry: string) => entry.match(/class="chg-vendor"[^>]*>([\s\S]*?)<\//)?.[1]?.trim() ?? "";
 const dateCellOf = (entry: string) => (entry.match(/class="chg-date[^"]*">([\s\S]*?)<\/div>/)?.[1] ?? "").replace(/<[^>]+>/g, "");
-const dateShownOn = (entry: string) => [...dateCellOf(entry).matchAll(/\d{4}-\d{2}-\d{2}/g)].at(-1)?.[0] ?? "";
+const lastDayIn = (text: string) => [...text.matchAll(/\d{4}-\d{2}-\d{2}/g)].at(-1)?.[0] ?? "";
+const dateShownOn = (entry: string) => lastDayIn(dateCellOf(entry));
 
 let proc: ChildProcess | null = null;
 let base = "";
@@ -152,7 +154,7 @@ describe("marking a comparison slot whose vendor has no catalogue entry", () => 
         .map(entry => `${toSlug(vendorNamedIn(entry))}|${dateShownOn(entry)}`),
     );
     const withheld = [...endedByTheLog.values()]
-      .filter(c => !carried.has(`${toSlug(vendorNameAsPublished(c.vendor))}|${c.date}`))
+      .filter(c => !carried.has(`${toSlug(vendorNameAsPublished(c.vendor))}|${lastDayIn(changeEntryDateLabel(c))}`))
       .map(c => `${c.vendor} ${c.date} -> ${toSlug(vendorNameAsPublished(c.vendor))}`)
       .sort();
     assert.deepStrictEqual(withheld, []);

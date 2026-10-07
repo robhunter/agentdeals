@@ -125,9 +125,9 @@ import { buildProductFunctions, functionMembers, functionDefinitions, functionMe
 import { curatedAlternativesFor } from "./curated-alternatives.js";
 import { vendorSubstitutes, substitutesListedFor } from "./vendor-substitutes.js";
 import type { Agent, ChangeDateSource, DealChange, FreePlanExcerpt, RiskCause, RatingWithheld, LinkUnreachable, ListingCondition, Offer, StabilityClass, SubtypeLabel } from "./types.js";
-import { A_DATED_HEADING_MARKER, A_DATED_SECTION_MARKER, datedHeadingNoticeHtml, datedSectionNoticeHtml, namedFromItsDate, namedOnceItsDateArrived, namedWhileAheadOf, namedWhileNotBefore, ANNOUNCED_BADGE, ANNOUNCED_HEADING, announcedIntro, changeDateLabel, changeEntryDateLabel, changeEntryLongDateLabel, changeDateClause, changeDatePublished, changeEventStartDate, capListSections, latestEventDate, offerExpiryAfter, feedEntryUpdated, undatedGroupHeading, UNDATED_TILE_LABEL, firstReadHeading, discoveryBatchNote, coveringBracketedChanges, changeEntryDateLabelHtml, isoWeekOf, monthlyChangeSeries, changesInWindow, discoveryMonthSeriesHeading, periodComparisonSentence, DISCOVERED_DATE_PREFIX, EFFECTIVE_DATE_PREFIX, UNDATED_GROUP_NOTE, UNKNOWN_EFFECTIVE_DATE_MARKER, EFFECTIVE_BY_DATE_MEANING, BRACKETED_DATE_PREFIX, RECORDED_DATE_PREFIX, CORRECTED_DATE_PREFIX, EFFECTIVE_MONTH_SERIES_NOTE, DISCOVERY_MONTH_SERIES_NOTE, weekRangeLabel, newestChangeInEffect, vendorPageLastUpdated } from "./change-dates.js";
+import { A_DATED_HEADING_MARKER, A_DATED_SECTION_MARKER, archiveBracketOf, datedHeadingNoticeHtml, datedSectionNoticeHtml, namedFromItsDate, namedOnceItsDateArrived, namedWhileAheadOf, namedWhileNotBefore, ANNOUNCED_BADGE, ANNOUNCED_HEADING, announcedIntro, changeDateLabel, changeEntryDateLabel, changeEntryLongDateLabel, changeDateClause, changeDatePublished, changeEventStartDate, capListSections, latestEventDate, offerExpiryAfter, feedEntryUpdated, UNDATED_TILE_LABEL, firstReadHeading, discoveryBatchNote, coveringBracketedChanges, changeEntryDateLabelHtml, isoWeekOf, monthlyChangeSeries, changesInWindow, discoveryMonthSeriesHeading, periodComparisonSentence, DISCOVERED_DATE_PREFIX, EFFECTIVE_DATE_PREFIX, UNKNOWN_EFFECTIVE_DATE_MARKER, EFFECTIVE_BY_DATE_MEANING, BRACKETED_DATE_PREFIX, RECORDED_DATE_PREFIX, CORRECTED_DATE_PREFIX, EFFECTIVE_MONTH_SERIES_NOTE, DISCOVERY_MONTH_SERIES_NOTE, weekRangeLabel, newestChangeInEffect, vendorPageLastUpdated } from "./change-dates.js";
 import { changeFeedEntries, feedEntryFields, feedUpdatedTimestamp, changeFeedProvenanceNote, CHANGE_FEED_ENTRY_LIMIT, CHANGE_FEED_DESCRIPTION, CHANGE_FEED_NAMESPACE, CHANGE_FEED_NAMESPACE_PREFIX, channelUpdatedTimestamp, WEEKLY_FEED_POPULATION_NOTE, feedLinkTag, feedEntrySourceXml, digestSourceXml, PER_CHANGE_FEED, WEEKLY_DIGEST_FEED } from "./change-feed.js";
-import { changeLogSections, ourRecordsSectionHeading, OUR_RECORDS_SECTION_NOTE, type MonthGroup } from "./change-log-sections.js";
+import { changeLogInPageOrder, changeLogSections, changeLogSectionsHtml } from "./change-log-sections.js";
 import { FEED_CORRECTIONS, correctionEntriesXml } from "./feed-corrections.js";
 import { buildDay, emptyPageLastmod, entryDay, fallbackDay, httpDate, lastmodFor, newestLastmod, readPageLastmod, type PageLastmodLedger } from "./page-lastmod.js";
 import { bestOfPathResolves, readBestOfPublished } from "./best-of-publication.js";
@@ -1779,7 +1779,7 @@ function readBadgeStatus(vendorSlug: string, servedOn: string): BadgeReading {
     return {
       status: "removed",
       label: removedClaimLabel(claim.cause),
-      verifiedDate: claim.cause.date,
+      verifiedDate: archiveBracketOf(claim.cause)?.to ?? claim.cause.date,
     };
   }
 
@@ -4301,28 +4301,28 @@ const VS_PAGES: VsPageConfig[] = [
   {
     vendorA: "Amplitude", vendorB: "PostHog",
     category: "Analytics",
-    verdict: "PostHog gives 1M events/month with session replays, feature flags, and A/B testing included. Amplitude gives 10K MTU with 10M events but charges separately for session replays. PostHog is the better all-in-one value; Amplitude has deeper behavioral analytics.",
+    verdict: "PostHog gives 1M events/month with session replays, feature flags, and A/B testing included. Amplitude's Free plan gives 2M events and 10K session replays a month. PostHog is the better all-in-one value; Amplitude has deeper behavioral analytics.",
     keyDifferences: `<ul>
-      <li><strong>Free tier:</strong> PostHog offers 1M events + 5K session replays + 1M feature flag requests — all included. Amplitude offers 10K MTU (10M events) + 1K session replays but feature flags are limited.</li>
-      <li><strong>Product scope:</strong> PostHog bundles analytics, session replays, feature flags, A/B testing, and error tracking in one platform. Amplitude is analytics-focused with replays as an add-on.</li>
-      <li><strong>Pricing model:</strong> PostHog charges per event. Amplitude charges per Monthly Tracked User (MTU). The MTU model can be cheaper for high-event/low-user products, or more expensive for low-event/high-user ones.</li>
+      <li><strong>Free tier:</strong> PostHog offers 1M events + 5K session replays + 1M feature flag requests — all included. Amplitude's Free plan offers 2M events + 10K session replays a month, with unlimited feature flags.</li>
+      <li><strong>Product scope:</strong> PostHog bundles analytics, session replays, feature flags, A/B testing, and error tracking in one platform. Amplitude is analytics-focused; its Free plan includes 10K session replays a month.</li>
+      <li><strong>Pricing model:</strong> PostHog charges per event. Amplitude's Free plan counts events (2M a month); its paid Plus plan is sized in MTUs or events.</li>
       <li><strong>Self-hosting:</strong> PostHog is open source (MIT core) and can be self-hosted. Amplitude is cloud-only.</li>
     </ul>`,
     recommendation: `<p><strong>Choose PostHog if</strong> you want an all-in-one product analytics platform, value open source, or want to replace multiple tools (analytics + replays + flags + A/B testing).</p>
-    <p><strong>Choose Amplitude if</strong> you need deep behavioral analytics with advanced cohort analysis, or your product has high events-per-user where MTU pricing works in your favor.</p>`,
+    <p><strong>Choose Amplitude if</strong> you need deep behavioral analytics with advanced cohort analysis, or want the larger free event allowance (2M a month).</p>`,
   },
   {
     vendorA: "Amplitude", vendorB: "Mixpanel",
     category: "Analytics",
-    verdict: "Mixpanel offers 1M events/month with 10K session replays and unlimited seats. Amplitude offers 10K MTU with 10M events and 1K replays. Mixpanel's per-event pricing is simpler; Amplitude's MTU model can be cheaper or more expensive depending on your product's usage patterns.",
+    verdict: "Mixpanel offers 1M events/month with 10K session replays and unlimited seats. Amplitude's Free plan offers 2M events and 10K session replays a month. Both free plans count events.",
     keyDifferences: `<ul>
-      <li><strong>Pricing model:</strong> Mixpanel charges per event (1M/month free). Amplitude charges per MTU — 10K users with up to 10M events. If your users generate many events, Amplitude could be cheaper.</li>
-      <li><strong>Session replays:</strong> Mixpanel includes 10K session replays free. Amplitude includes only 1K — a 10x difference.</li>
+      <li><strong>Pricing model:</strong> Mixpanel charges per event (1M/month free). Amplitude's Free plan counts events (2M a month); its paid Plus plan is sized in MTUs or events.</li>
+      <li><strong>Session replays:</strong> Mixpanel includes 10K session replays free. Amplitude's Free plan also includes 10K a month.</li>
       <li><strong>Seats:</strong> Mixpanel has unlimited seats on the free plan. Amplitude allows unlimited users too but with governance features reserved for paid plans.</li>
       <li><strong>Data retention:</strong> Both offer 1-year retention on free plans, which is generous compared to most analytics tools.</li>
     </ul>`,
-    recommendation: `<p><strong>Choose Mixpanel if</strong> you want the most events and session replays for free, prefer per-event pricing clarity, or need unlimited team seats.</p>
-    <p><strong>Choose Amplitude if</strong> you have high-frequency event tracking per user (where MTU pricing saves money), or need Amplitude's experiment and feature flag capabilities.</p>`,
+    recommendation: `<p><strong>Choose Mixpanel if</strong> you prefer its reports; on the free plans, Amplitude includes more events (2M a month against Mixpanel's 1M).</p>
+    <p><strong>Choose Amplitude if</strong> you want the larger free event allowance (2M a month), or need Amplitude's experiment and feature flag capabilities.</p>`,
   },
   {
     vendorA: "Groq", vendorB: "Hugging Face",
@@ -12468,6 +12468,8 @@ ${buildCards(other)}
 </html>`;
 }
 
+const SELF_HOSTED_S3_STORAGE_ANSWER = "MinIO&rsquo;s open-source edition is no longer maintained, and its free AIStor edition runs on one node under a commercial licence. <strong>SeaweedFS</strong> (Apache 2.0) and <strong>Garage</strong> (AGPLv3) are maintained open-source, S3-compatible options.";
+
 function buildStorageAlternativesPage(): string {
   const title = "Best Free Cloud Storage for Developers in 2026 — Object Storage, Media CDN & File Hosting Compared";
   const metaDesc = "Compare 55+ free cloud storage tools — Cloudflare R2, Backblaze B2, Tigris, Cloudinary, ImageKit, Google Cloud Storage, and more. Exact free tier limits by storage type. [[freshness]]";
@@ -12733,7 +12735,7 @@ ${buildCards(other)}
     </tbody>
   </table>
   </div>
-  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Cloudflare R2 leads on value with 10 GB free and zero egress fees \u2014 a game-changer for read-heavy workloads. Backblaze B2 undercuts it on storage and serves up to 3x what you store for nothing, charging $0.01/GB only past that. For media, Cloudinary and ImageKit both offer generous transformation pipelines. MinIO is the go-to for self-hosted S3-compatible storage. [[freshness]]</p>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Cloudflare R2 leads on value with 10 GB free and zero egress fees \u2014 a game-changer for read-heavy workloads. Backblaze B2 undercuts it on storage and serves up to 3x what you store for nothing, charging $0.01/GB only past that. For media, Cloudinary and ImageKit both offer generous transformation pipelines. For self-hosted: ${SELF_HOSTED_S3_STORAGE_ANSWER} [[freshness]]</p>
 
   <h2>Which Free Storage Should I Use?</h2>
   <div class="decision-guide">
@@ -12751,7 +12753,7 @@ ${buildCards(other)}
       <dd><a href="/vendor/jsdelivr">jsDelivr</a> for npm packages and GitHub repos (free, no limits). <a href="/vendor/cdnjs-com">cdnjs</a> for popular open-source libraries. Both are free and widely used.</dd>
 
       <dt>Want self-hosted object storage?</dt>
-      <dd><a href="/vendor/minio">MinIO</a> \u2014 high-performance, S3-compatible, open-source. Run it on your own infrastructure with no storage or bandwidth limits. Widely used in on-prem and Kubernetes environments.</dd>
+      <dd>${SELF_HOSTED_S3_STORAGE_ANSWER}</dd>
 
       <dt>Need encrypted file sync?</dt>
       <dd><a href="/vendor/proton-drive">Proton Drive</a> for end-to-end encrypted cloud storage (1 GB free). <a href="/vendor/internxt">Internxt</a> and <a href="/vendor/sync-com">Sync.com</a> are privacy-focused alternatives. <a href="/vendor/seafile-com">Seafile</a> is self-hostable.</dd>
@@ -12917,7 +12919,7 @@ ${mcpCtaCss()}
   <h1>Best Free Analytics Tools for Developers</h1>
 
   <div class="context">
-    <p>Analytics is essential for understanding users, but pricing can be opaque and usage-based costs escalate fast. Fortunately, the free tier landscape is generous. <strong>PostHog</strong> offers <strong>1M events/month</strong> with session replays, feature flags, and A/B testing included. <strong>Amplitude</strong> gives <strong>10M events with 10K MTU</strong>. <strong>Plausible</strong> and <strong>Umami</strong> are privacy-first, cookie-free alternatives you can self-host with no limits.</p>
+    <p>Analytics is essential for understanding users, but pricing can be opaque and usage-based costs escalate fast. Fortunately, the free tier landscape is generous. <strong>PostHog</strong> offers <strong>1M events/month</strong> with session replays, feature flags, and A/B testing included. <strong>Amplitude</strong> gives <strong>2M events a month</strong>. <strong>Plausible</strong> and <strong>Umami</strong> are privacy-first, cookie-free alternatives you can self-host with no limits.</p>
     <p>This page compares every free analytics tool in our index \u2014 <strong>${analyticsOffers.length} tools</strong> across product analytics, web analytics, session replay, event tracking, and data infrastructure. Whether you need a Google Analytics alternative or a full product analytics suite, we have the comparison with exact free tier limits.</p>
   </div>
 
@@ -12973,7 +12975,7 @@ ${buildCards(other)}
       <tr>
         <td style="font-weight:600"><a href="/vendor/amplitude" style="color:var(--text)">Amplitude</a></td>
         <td>Product</td>
-        <td>10M events, 10K MTU</td>
+        <td>2M events/mo</td>
         <td>No</td>
         <td>Enterprise-grade product analytics</td>
       </tr>
@@ -13059,7 +13061,7 @@ ${buildCards(other)}
       <dd><a href="/vendor/posthog">PostHog</a> \u2014 1M events/month free with session replays, feature flags, A/B testing, and error tracking. Open-source and self-hostable. The most complete free product analytics platform.</dd>
 
       <dt>Want enterprise-grade product analytics?</dt>
-      <dd><a href="/vendor/amplitude">Amplitude</a> \u2014 10M events and 10K MTU on the free Starter plan with unlimited feature flags and 1-year retention. Best for teams that need deep funnel and cohort analysis.</dd>
+      <dd><a href="/vendor/amplitude">Amplitude</a> \u2014 2M events a month on the Free plan, with unlimited feature flags and 1 year of data access. Best for teams that need deep funnel and cohort analysis.</dd>
 
       <dt>Looking for a privacy-first Google Analytics alternative?</dt>
       <dd><a href="/vendor/plausible-analytics">Plausible</a> for a sub-1KB script with no cookies (AGPL, self-hostable). <a href="/vendor/umami">Umami</a> for MIT-licensed simplicity. <a href="/vendor/goatcounter">GoatCounter</a> for 100K pageviews/month free hosted.</dd>
@@ -19217,6 +19219,7 @@ ${mcpCtaCss()}
     </table>
   </div>
   <p class="section-intro" style="margin-top:0"><strong>Read this table by availability first.</strong> ${unpayableLowestPrices === "" ? "" : `${unpayableLowestPrices} `}The first orderable row is ${escHtmlServer(cheapestOrderable.sku)} at ${eur(cheapestOrderable.eur)}, and it is a ${cheapestOrderable.vcpu}-vCPU, ${cheapestOrderable.ram} GB machine${moreServerForLess ? ` — less server than the ${escHtmlServer(moreServerForLess.sku)} above it at ${eur(moreServerForLess.eur)}` : ""}.</p>
+  <p class="section-intro">Every cloud price in this table includes the primary IPv4 address. Cloud servers include at least 20 TB of outgoing traffic a month in the EU, 1 TB in the US and 0.5 TB in Singapore; incoming traffic is free.</p>
   <p class="section-intro">A new AX42 dedicated server in Germany costs ${eur(HETZNER_AX42_GERMANY.newOrder)} a month and a new AX102 ${eur(HETZNER_AX102_GERMANY.newOrder)}, excluding IPv4. The one-off setup fee is €${HETZNER_AX42_GERMANY.setupFee} for an AX42 and €${HETZNER_AX102_GERMANY.setupFee} for an AX102. These prices were read from Hetzner's price API on ${HETZNER_PRICES_READ}.</p>
   <p class="section-intro">New accounts can get €50 of credit with Hetzner's sign-up code, valid only for the billing period in which it is redeemed.</p>
   ${vendorPageConditionsHtml("Hetzner")}
@@ -20939,11 +20942,13 @@ function buildVercelVsNetlifyPage(): string {
       <td style="color:var(--text-muted);font-size:.8rem">${escHtmlServer(r.notes)}</td>
     </tr>`).join("\n        ");
 
-  const differences = [
+  const vercelHobbyDocs = { url: "https://vercel.com/docs/plans/hobby", readOn: "2026-10-07" };
+
+  const differences: { title: string; desc: string; source?: { url: string; readOn: string } }[] = [
     { title: "Pricing Model: Usage-Based vs. Credit-Based", desc: "Vercel uses per-resource usage limits (100 GB bandwidth, 1M invocations, etc.) — each metric tracked independently. Netlify uses a unified credit pool (300 credits/month) shared across deploys, bandwidth, and compute. Vercel is more predictable; Netlify's credits can be confusing but offer flexibility." },
     { title: "Framework Support: Next.js-Native vs. Framework-Agnostic", desc: "Vercel is built by the Next.js team — you get the deepest integration, fastest builds, and latest features first. Netlify supports any framework equally well (Astro, SvelteKit, Nuxt, Remix, Hugo, 11ty) and doesn't favor any specific framework. Choose Vercel for Next.js, Netlify for everything else." },
     { title: "Commercial Use: The Biggest Free Tier Difference", desc: "Vercel's Hobby plan explicitly prohibits commercial use — your side project with ads or a paid SaaS on the free tier violates the TOS. Netlify's Free plan allows commercial use. If you're building anything that makes money, Netlify is the free choice; Vercel requires upgrading to Pro ($20 a month per developer seat)." },
-    { title: "Credit Exhaustion vs. Hard Limits", desc: "When Netlify credits run out, sites pause (no overage charges). When Vercel limits are hit on the Hobby plan, requests may be throttled. Neither charges overages on free tiers, but the failure modes differ — Netlify stops serving entirely, Vercel degrades." },
+    { title: "Credit Exhaustion vs. Hard Limits", desc: "When Netlify credits run out, sites pause (no overage charges). When a Vercel Hobby project exceeds a usage limit, Vercel says that in most cases you have to wait until 30 days have passed before you can use that feature again. Neither charges overages on free plans.", source: vercelHobbyDocs },
   ];
 
   const scalingComparison = [
@@ -21120,7 +21125,7 @@ ${mcpCtaCss()}
   <div style="display:grid;gap:.75rem;margin:1rem 0">
     ${differences.map((d, i) => `<div class="diff-card" style="border-left-color:${i % 2 === 0 ? "var(--accent)" : "#3fb950"}">
       <h3>${escHtmlServer(d.title)}</h3>
-      <p class="diff-desc">${escHtmlServer(d.desc)}</p>
+      <p class="diff-desc">${escHtmlServer(d.desc)}${d.source ? ` (From <a href="${escHtmlServer(d.source.url)}" rel="nofollow noopener">${escHtmlServer(citationLabel(d.source.url))}</a>, read ${escHtmlServer(d.source.readOn)}.)` : ""}</p>
     </div>`).join("\n    ")}
   </div>
 
@@ -22210,6 +22215,7 @@ function buildGeminiApiPricing2026Page(): string {
     { name: "Cerebras", slug: "cerebras" },
     { name: "DeepSeek", slug: "deepseek-api" },
   ];
+  const listedInFull = "google-gemini-api";
 
   const servedOn = new Date().toISOString().slice(0, 10);
   const flashPriceStep = geminiFlashPriceStepEntry(servedOn);
@@ -22341,7 +22347,7 @@ ${mcpCtaCss()}
     ${rateLimitChange ? `<p><strong>From our tracker:</strong> ${changeSummaryHtml(rateLimitChange, escHtmlServer)}</p>` : ""}
   </div>
 
-  ${listingInFullHtml("google-gemini-api")}
+  ${listingInFullHtml(listedInFull)}
 
   <div class="toc">
     <h3>In This Guide</h3>
@@ -22467,7 +22473,7 @@ ${mcpCtaCss()}
         <td style="font-size:.8rem">${listingTermsCellHtml(p.slug)}</td>
         <td style="font-family:var(--mono);font-size:.8rem">${listingCells(p.slug).rateCell}</td>
         <td>${servedRatingHtml(p.name)}</td>
-      </tr>`).join("\n      ")}
+      </tr>${p.slug === listedInFull ? "" : vendorPageConditionsRowHtml(p.slug, 4)}`).join("\n      ")}
     </tbody>
   </table>
 
@@ -23527,7 +23533,7 @@ function buildOpenaiAssistantsAlternativesPage(): string {
       <td style="font-size:.8rem">${escHtmlServer(p.toolUse)}</td>
       <td style="font-size:.8rem">${escHtmlServer(p.codeExec)}</td>
       <td><span style="color:${cells.stabilityColor};font-size:.8rem;font-weight:600;text-transform:uppercase">${escHtmlServer(cells.stability)}</span></td>
-    </tr>`;
+    </tr>${vendorPageConditionsRowHtml(p.slug, 6)}`;
   }).join("\n        ");
 
   const monthlyAtScale = providers
@@ -24006,7 +24012,7 @@ function buildOpenaiAssistantsMigration2026Page(): string {
       <td style="font-size:.8rem">${escHtmlServer(p.toolUse)}</td>
       <td style="font-family:var(--mono);font-size:.8rem">${cells.rateCell}</td>
       <td><span style="color:${cells.stabilityColor};font-size:.8rem;font-weight:600;text-transform:uppercase">${escHtmlServer(cells.stability)}</span></td>
-    </tr>`;
+    </tr>${vendorPageConditionsRowHtml(p.slug, 5)}`;
   }).join("\n        ");
 
   const frameworkRows = frameworks.map(f =>
@@ -25488,6 +25494,7 @@ function buildOpenAIAssistantsMigrationPage(): string {
       '<p class="diff-desc">' + escHtmlServer(p.details) + '</p>' +
       '<p style="margin-top:.5rem;font-size:.85rem"><strong style="color:var(--text)">Free option:</strong> <span style="color:var(--text-muted)">' + escHtmlServer(p.freeOption) + '</span> · ' +
       '<strong style="color:var(--text)">Best for:</strong> <span style="color:var(--text-muted)">' + escHtmlServer(p.bestFor) + '</span></p>' +
+      (p.slug ? vendorPageConditionsHtmlForSlug(p.slug) : '') +
       '</div>';
   }).join("\n    ");
 
@@ -25874,7 +25881,7 @@ function buildShutdownTrackerPage(): string {
       dateSource: "https://developers.openai.com/api/docs/deprecations",
       impact: "Apps and fine-tunes pinned to these model IDs stop working",
       whoAffected: "Developers calling any of these model IDs or their fine-tuned versions",
-      migrationPath: "OpenAI's substitutes: gpt-5.6-terra for gpt-3.5-turbo and o4-mini; gpt-5.6-sol for gpt-4, gpt-4-turbo, gpt-4-1106-preview, gpt-4o-2024-05-13, o1 and o3-mini; gpt-5.6-sol with reasoning.mode: pro for o1-pro; gpt-5.6-luna for gpt-4.1-nano; gpt-image-2 for gpt-image-1. Replacement base models for fine-tunes: gpt-5.6-terra for gpt-3.5-turbo, o4-mini, babbage-002 and davinci-002; gpt-5.6-sol for gpt-4; gpt-5.6-luna for gpt-4.1-nano. The gpt-5.6 models do not support fine-tuning or the legacy /v1/completions endpoint.",
+      migrationPath: "OpenAI's substitutes: gpt-5.6-terra for gpt-3.5-turbo and o4-mini; gpt-5.6-sol for gpt-4, gpt-4-turbo, gpt-4-1106-preview, gpt-4o-2024-05-13, o1 and o3-mini; gpt-5.6-sol with reasoning.mode: pro for o1-pro; gpt-5.6-luna for gpt-4.1-nano; gpt-image-2.5-sunburst or gpt-image-2.5-flare for gpt-image-1. Replacement base models for fine-tunes: gpt-5.6-terra for gpt-3.5-turbo, o4-mini, babbage-002 and davinci-002; gpt-5.6-sol for gpt-4; gpt-5.6-luna for gpt-4.1-nano. The gpt-5.6 models do not support fine-tuning or the legacy /v1/completions endpoint.",
       status: "active",
     },
     {
@@ -25974,9 +25981,9 @@ function buildShutdownTrackerPage(): string {
       service: "Node.js 20 AWS Lambda Runtime",
       vendorSlug: "aws",
       what: "Deprecated 2026-04-30.",
-      deadline: "2027-02-01",
+      deadline: "2027-07-29",
       dateSource: "https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtimes.html",
-      impact: "Lambda blocks creating functions on nodejs20.x from 2027-02-01 and updating them from 2027-03-03. Functions keep running; AWS never blocks invocations.",
+      impact: "Lambda blocks creating functions on nodejs20.x from 2027-07-29 and updating them from 2027-08-31. Functions keep running; AWS never blocks invocations.",
       whoAffected: "All AWS Lambda functions running on the nodejs20.x runtime",
       migrationPath: "Upgrade to Node.js 22 runtime (nodejs22.x) \u2014 test for breaking changes in Node.js 22 (fetch global, V8 updates)",
       status: "active",
@@ -28284,6 +28291,7 @@ function buildCiCdPricingPage(): string {
         '<h3>' + handwrittenVendorLinkHtml(t.slug, t.name, ' style="color:var(--text)"') + ' ' +
         '<span style="font-size:.75rem;color:var(--text-dim);font-weight:400">' + escHtmlServer(t.freeTierAsStated?.cardLabel ?? freeTypeLabels[t.freeType]) + '</span></h3>' +
         '<p class="diff-desc">' + escHtmlServer(t.freeDetails) + '</p>' +
+        vendorPageConditionsHtmlForSlug(t.slug) +
         '</div>';
     }).join("\n    ");
     return '<h3 id="cat-' + cat + '">' + escHtmlServer(categoryLabels[cat]) + '</h3>' +
@@ -29849,7 +29857,8 @@ function buildVectorDatabasePricingPage(): string {
       catServices.map(s =>
         '<div class="diff-card">\n' +
         '  <h3>' + handwrittenVendorLinkHtml(s.slug, s.name) + '</h3>\n' +
-        '  <div class="diff-desc">' + escHtmlServer(s.freeDetails) + '</div>\n' +
+        '  <div class="diff-desc">' + escHtmlServer(s.freeDetails) + '</div>' +
+        vendorPageConditionsHtmlForSlug(s.slug) + '\n' +
         '</div>'
       ).join("\n");
   }).join("\n\n  ");
@@ -31581,9 +31590,39 @@ function buildLlmApiPricingPage(): string {
     '</body>\n</html>', pubDate);
 }
 
+const MPP_PAYMENT_METHODS = "a variety of payment methods, including cards through Shared Payment Tokens (SPTs) and stablecoins";
+
+const FREE_TIER_BEFORE_X402 = "x402 is an additional payment option — it doesn't replace free tier access. Agents can use free tiers first and fall back to x402 when limits are exceeded.";
+
+function vendorNamesAlphabetically(listings: readonly Offer[]): string[] {
+  return listings.map(o => o.vendor).sort((a, b) => a.localeCompare(b));
+}
+
+function x402ServicesAnswer(x402Offers: readonly Offer[]): string {
+  if (x402Offers.length === 0) return "No developer service indexed on AgentDeals accepts x402 payments.";
+  const services = x402Offers.length === 1 ? "1 developer service indexed on AgentDeals accepts" : `${x402Offers.length} developer services indexed on AgentDeals accept`;
+  return `Currently ${services} x402 payments: ${joinWithAnd(vendorNamesAlphabetically(x402Offers))}.`;
+}
+
+function x402FreeTierAnswer(x402Offers: readonly Offer[]): string {
+  const withAFreeTier = x402Offers.filter(listingOffersAFreeTier);
+  if (withAFreeTier.length === 0) return `No. None of the ${x402Offers.length} x402-enabled services indexed here offers a free tier.`;
+  if (withAFreeTier.length === x402Offers.length) return `Yes. All ${x402Offers.length} x402-enabled services indexed here also offer traditional free tiers. ${FREE_TIER_BEFORE_X402}`;
+  return `Not all. ${withAFreeTier.length} of the ${x402Offers.length} x402-enabled services indexed here also offer a free tier: ${joinWithAnd(vendorNamesAlphabetically(withAFreeTier))}. ${FREE_TIER_BEFORE_X402}`;
+}
+
+function freeTierFallbackItem(listings: readonly Offer[]): string {
+  const withAFreeTier = listings.filter(listingOffersAFreeTier);
+  if (withAFreeTier.length === 0) return "";
+  const share = withAFreeTier.length === listings.length
+    ? "All services listed here also offer traditional free tiers."
+    : `${withAFreeTier.length} of the ${listings.length} services listed here also offer a free tier.`;
+  return `\n      <li><strong>Free tier fallback.</strong> ${share} Agents can use free tiers first and fall back to paid access when limits are exceeded.</li>`;
+}
+
 function buildAgentPaymentsPage(): string {
   const title = "Developer Services That Accept Agent Payments (2026) — x402 & MPP Directory";
-  const metaDesc = "Directory of developer services accepting autonomous AI agent payments via x402 and Stripe MPP. Firecrawl, Cloudflare, Vercel, Pinata and more. Per-call pricing, free tiers, and integration guides.";
+  const metaDesc = "Directory of developer services accepting autonomous AI agent payments via x402 and Stripe MPP. Per-call pricing, free tiers, and integration guides.";
   const slug = "agent-payments";
   const pubDate = "2026-04-09";
 
@@ -31610,11 +31649,11 @@ function buildAgentPaymentsPage(): string {
   };
 
   const faqItems = [
-    { q: "What is the x402 payment protocol?", a: "x402 is an open HTTP-native payment protocol that uses the HTTP 402 status code to enable machine-to-machine payments. Launched by the x402 Foundation (Linux Foundation) in April 2026 with backing from Stripe, Cloudflare, Shopify, Visa, and Mastercard. It allows AI agents to autonomously pay for API calls without pre-provisioned accounts or API keys." },
-    { q: "Which developer services accept x402 payments?", a: `Currently ${x402Offers.length} developer services indexed on AgentDeals accept x402 payments, including Firecrawl (web scraping), Cloudflare Workers/Pages/D1/R2/KV (cloud infrastructure), Vercel (hosting), Browserbase (browser automation), OpenAI and Anthropic (AI APIs), and Pinata IPFS (storage). The ecosystem is growing rapidly with 130+ services industry-wide.` },
-    { q: "What is Stripe MPP (Machine Payments Protocol)?", a: `MPP (Machine Payments Protocol) is Stripe's framework for agent-to-service payments launched March 2026. Currently ${mppOffers.length} services in our index support MPP. It builds on Stripe's existing payment infrastructure to add agent identity, budget controls, and audit trails. MPP uses familiar Stripe APIs, making adoption simpler for services already using Stripe.` },
-    { q: "How do AI agents pay for services autonomously?", a: "Agents use payment protocols like x402 or MPP to negotiate and complete payments in real-time. With x402, the agent receives a 402 response with payment requirements, completes the crypto payment, and retries with proof of payment. With MPP, agents use Stripe-managed wallets with configurable spending limits." },
-    { q: "Do x402 services still have free tiers?", a: `Yes. All ${x402Offers.length} x402-enabled services indexed here also offer traditional free tiers. x402 is an additional payment option — it doesn't replace free tier access. Agents can use free tiers first and fall back to x402 when limits are exceeded.` },
+    { q: "What is the x402 payment protocol?", a: "x402 is an open HTTP-native payment protocol that uses the HTTP 402 status code to enable machine-to-machine payments. Coinbase launched it in May 2025 and contributed it in April 2026 to the x402 Foundation, which the Linux Foundation launched with members including Stripe, Cloudflare, Shopify, Visa, and Mastercard. It allows AI agents to autonomously pay for API calls without pre-provisioned accounts or API keys." },
+    { q: "Which developer services accept x402 payments?", a: x402ServicesAnswer(x402Offers) },
+    { q: "What is Stripe MPP (Machine Payments Protocol)?", a: `MPP (Machine Payments Protocol) is Stripe's framework for agent-to-service payments launched March 2026. Currently ${mppOffers.length === 1 ? "1 service in our index supports" : `${mppOffers.length} services in our index support`} MPP. It builds on Stripe's existing payment infrastructure to add agent identity, budget controls, and audit trails. MPP uses familiar Stripe APIs, making adoption simpler for services already using Stripe.` },
+    { q: "How do AI agents pay for services autonomously?", a: `Agents use payment protocols like x402 or MPP to negotiate and complete payments in real-time. With x402, the agent receives a 402 response with payment requirements, completes the crypto payment, and retries with proof of payment. With MPP, agents pay with ${MPP_PAYMENT_METHODS}.` },
+    { q: "Do x402 services still have free tiers?", a: x402FreeTierAnswer(x402Offers) },
   ];
 
   const faqJsonLd = faqPageJsonLd("/agent-payments", faqItems);
@@ -31784,7 +31823,7 @@ ${globalNavCss()}
       <div class="proto-icon x402">402</div>
       <div>
         <h3>x402 &mdash; HTTP Native Agent Payments</h3>
-        <div class="proto-meta"><span>Linux Foundation</span><span>Launched April 2026</span><span>130+ services</span></div>
+        <div class="proto-meta"><span>Coinbase</span><span>Launched May 2025</span><span>Linux Foundation since April 2026</span></div>
       </div>
     </div>
     <p class="proto-desc">x402 uses the HTTP 402 &ldquo;Payment Required&rdquo; status code to enable pay-per-call API access. When an agent hits a 402 response, it reads the payment requirements from the response headers, completes the payment (typically via stablecoin on Base), and retries the request with proof of payment. No accounts or API keys needed &mdash; just a wallet. Founded by Coinbase with backing from Stripe, Cloudflare, Shopify, Visa, and Mastercard.</p>
@@ -31795,10 +31834,10 @@ ${globalNavCss()}
       <div class="proto-icon stripe-mpp">MPP</div>
       <div>
         <h3>MPP &mdash; Stripe Machine Payments Protocol</h3>
-        <div class="proto-meta"><span>Stripe</span><span>Launched March 2026</span><span>100+ integrations</span></div>
+        <div class="proto-meta"><span>Stripe</span><span>Launched March 2026</span></div>
       </div>
     </div>
-    <p class="proto-desc">Stripe&rsquo;s Machine Payments Protocol (MPP) extends Stripe&rsquo;s payment infrastructure for agent-to-service transactions. MPP adds agent identity verification, configurable spending limits, budget controls, and full audit trails. Built on familiar Stripe APIs, making adoption straightforward for services already using Stripe for billing. Agents pay with Stripe-managed wallets rather than crypto.</p>
+    <p class="proto-desc">Stripe&rsquo;s Machine Payments Protocol (MPP) extends Stripe&rsquo;s payment infrastructure for agent-to-service transactions. MPP adds agent identity verification, configurable spending limits, budget controls, and full audit trails. Built on familiar Stripe APIs, making adoption straightforward for services already using Stripe for billing. Agents pay with ${MPP_PAYMENT_METHODS}.</p>
   </div>
 
   <h2>Protocol Comparison</h2>
@@ -31807,9 +31846,9 @@ ${globalNavCss()}
     <thead><tr><th>Feature</th><th><span class="proto-badge x402">x402</span></th><th><span class="proto-badge stripe-mpp">Stripe MPP</span></th></tr></thead>
     <tbody>
       <tr><td>Backed by</td><td>Linux Foundation (Coinbase)</td><td>Stripe</td></tr>
-      <tr><td>Launched</td><td>April 2026</td><td>March 2026</td></tr>
+      <tr><td>Launched</td><td>May 2025</td><td>March 2026</td></tr>
       <tr><td>Payment method</td><td>USDC stablecoin on Base</td><td>Stablecoin + fiat (cards, BNPL)</td></tr>
-      <tr><td>Account required</td><td>No &mdash; wallet only</td><td>Stripe-managed wallet</td></tr>
+      <tr><td>Account required</td><td>No &mdash; wallet only</td><td>Stablecoins: no, a wallet only. Cards: a Shared Payment Token, issued from a Link account</td></tr>
       <tr><td>Integration effort</td><td>HTTP 402 handler + wallet</td><td>Stripe SDK integration</td></tr>
       <tr><td>Budget controls</td><td>Wallet balance limits</td><td>Configurable per-agent spending limits</td></tr>
       <tr><td>Audit trail</td><td>On-chain (Base L2)</td><td>Stripe dashboard + API</td></tr>
@@ -31839,8 +31878,7 @@ ${categorySections}
       <li><strong>No pre-provisioned accounts.</strong> Agents can access any x402-enabled API instantly &mdash; no signup, no API key management, no billing configuration.</li>
       <li><strong>Pay-per-call economics.</strong> Agents pay only for what they use, at per-request granularity. No monthly minimums or commitment tiers.</li>
       <li><strong>Autonomous operation.</strong> Agents can discover, negotiate, and pay for services without human intervention &mdash; enabling truly autonomous workflows.</li>
-      <li><strong>Budget controls.</strong> Both x402 (wallet limits) and MPP (Stripe controls) provide guardrails to prevent runaway spending.</li>
-      <li><strong>Free tier fallback.</strong> All services listed here also offer traditional free tiers. Agents can use free tiers first and fall back to paid access when limits are exceeded.</li>
+      <li><strong>Budget controls.</strong> Both x402 (wallet limits) and MPP (Stripe controls) provide guardrails to prevent runaway spending.</li>${freeTierFallbackItem(allPaymentOffers)}
     </ul>
   </div>
 
@@ -31867,7 +31905,7 @@ ${faqHtml}
 
 function buildX402ServicesPage(): string {
   const title = "x402 Payment Protocol Services Directory (2026) — Developer Tools with HTTP 402 Micropayments";
-  const metaDesc = "Directory of developer tools and APIs supporting x402 HTTP 402 micropayments. Pay-per-call pricing for AI agents — no signup, no API keys. Exa, Cloudflare, Firecrawl, OpenVPS, GPU-Bridge, and more.";
+  const metaDesc = "Directory of developer tools and APIs supporting x402 HTTP 402 micropayments. Pay-per-call pricing for AI agents — no signup, no API keys.";
   const slug = "x402-services";
   const pubDate = "2026-04-14";
 
@@ -31897,9 +31935,9 @@ function buildX402ServicesPage(): string {
   const faqItems = [
     { q: "What is the x402 payment protocol?", a: "x402 is an open HTTP-native payment protocol that uses the HTTP 402 status code to enable machine-to-machine micropayments. When an agent hits a 402 response, it reads payment requirements from the response, completes a USDC payment on Base, and retries with proof of payment. No accounts or API keys needed. Joined the Linux Foundation in April 2026 with founding members including Coinbase, Cloudflare, Stripe, Google, Visa, Mastercard, AWS, and Shopify." },
     { q: "How does x402 work for AI agents?", a: "An AI agent sends an HTTP request to an x402-enabled API. If payment is required, the server returns HTTP 402 with payment details (amount, address, chain). The agent completes the USDC payment on Base L2 (fast, ~$0.001 gas fees), then retries the original request with the payment receipt in headers. The server verifies on-chain and serves the response. The entire flow takes 1-3 seconds." },
-    { q: `How many developer services support x402?`, a: `We currently index ${x402Offers.length} developer services with x402 support across ${byCategory.size} categories. The broader x402 ecosystem includes 400+ services. New services are being added weekly as the protocol gains adoption.` },
-    { q: "Do x402 services require crypto knowledge?", a: "No. Modern x402 client libraries handle the payment flow automatically. The agent needs a funded USDC wallet on Base — that's it. Libraries like @anthropic-ai/x402, @coinbase/x402, and cdp-agentkit abstract the payment negotiation entirely." },
-    { q: "What are the costs of using x402?", a: "Most x402 API calls cost $0.001-$0.01. Base L2 gas fees are typically under $0.001 per transaction. There are no monthly minimums, no commitments, and no signup fees. You only pay for what you use, per-request." },
+    { q: `How many developer services support x402?`, a: `We currently index ${x402Offers.length} developer services with x402 support across ${byCategory.size} categories.` },
+    { q: "Do x402 services require crypto knowledge?", a: "No. Modern x402 client libraries handle the payment flow automatically. The agent needs a funded USDC wallet on Base — that's it. Libraries like @x402/fetch and @x402/axios abstract the payment negotiation entirely." },
+    { q: "What are the costs of using x402?", a: "Each service sets its own price, and this page lists a cost only where the vendor's own docs state it. Base L2 gas fees are typically under $0.001 per transaction. There are no monthly minimums, no commitments, and no signup fees. You only pay for what you use, per-request." },
   ];
 
   const faqJsonLd = faqPageJsonLd("/x402-services", faqItems);
@@ -31909,8 +31947,8 @@ function buildX402ServicesPage(): string {
     const shortDesc = publishedTermsOpening(o, 1, 120);
     const proto = o.payment_protocols?.find(p => p.protocol === "x402");
     const cost = proto?.example_cost ?? "—";
-    const chain = proto?.chain || "Base";
-    const settlement = proto?.settlement || "USDC";
+    const chain = proto?.chain || "—";
+    const settlement = proto?.settlement || "—";
     return `<tr>
       <td>${handwrittenVendorLinkHtml(vendorSlug, o.vendor, ' class="vendor-link"')}</td>
       <td>${escHtmlServer(o.category)}</td>
@@ -32031,7 +32069,6 @@ ${globalNavCss()}
   <div class="stats-row">
     <div class="stat-card"><div class="stat-value">${x402Offers.length}</div><div class="stat-label">x402 services</div></div>
     <div class="stat-card"><div class="stat-value">${byCategory.size}</div><div class="stat-label">Categories</div></div>
-    <div class="stat-card"><div class="stat-value">400+</div><div class="stat-label">Industry-wide</div></div>
     <div class="stat-card"><div class="stat-value">USDC</div><div class="stat-label">Settlement</div></div>
   </div>
 
@@ -32744,7 +32781,7 @@ function buildAwsFreeTier2026Page(): string {
       <td style="font-weight:600">${handwrittenVendorLinkHtml(a.slug, a.name, ' style="color:var(--text)"')}</td>
       <td style="font-size:.8rem">${escHtmlServer(a.freeTier)}</td>
       <td style="font-size:.8rem;color:var(--text-muted)">${escHtmlServer(a.bestFor)}${guideRowReferralHtml(a.name)}</td>
-    </tr>`).join("\n        ");
+    </tr>${vendorPageConditionsRowHtml(a.slug, 3)}`).join("\n        ");
 
   const changeTimelineRows = awsChanges.slice(0, 10).map((c: any) => {
     const dateStr = changeEntryLongDateLabel(c);
@@ -33183,7 +33220,7 @@ function buildGcpFreeTier2026Page(): string {
       <td style="font-weight:600">${handwrittenVendorLinkHtml(a.slug, a.name, ' style="color:var(--text)"')}</td>
       <td style="font-size:.8rem">${escHtmlServer(a.freeTier)}</td>
       <td style="font-size:.8rem;color:var(--text-muted)">${escHtmlServer(a.bestFor)}${guideRowReferralHtml(a.name)}</td>
-    </tr>`).join("\n        ");
+    </tr>${vendorPageConditionsRowHtml(a.slug, 3)}`).join("\n        ");
 
   const changeTimelineRows = gcpChanges.slice(0, 12).map((c: any) => {
     const dateStr = changeEntryLongDateLabel(c);
@@ -33628,7 +33665,7 @@ function buildAzureFreeTier2026Page(): string {
       <td style="font-weight:600">${handwrittenVendorLinkHtml(a.slug, a.name, ' style="color:var(--text)"')}</td>
       <td style="font-size:.8rem">${escHtmlServer(a.freeTier)}</td>
       <td style="font-size:.8rem;color:var(--text-muted)">${escHtmlServer(a.bestFor)}${guideRowReferralHtml(a.name)}</td>
-    </tr>`).join("\n        ");
+    </tr>${vendorPageConditionsRowHtml(a.slug, 3)}`).join("\n        ");
 
   const changeTimelineRows = azureChanges.slice(0, 10).map((c: any) => {
     const dateStr = changeEntryLongDateLabel(c);
@@ -34074,7 +34111,7 @@ function buildDigitalOceanFreeTier2026Page(): string {
       <td style="font-weight:600">${handwrittenVendorLinkHtml(a.slug, a.name, ' style="color:var(--text)"')}</td>
       <td style="font-size:.8rem">${escHtmlServer(a.freeTier)}</td>
       <td style="font-size:.8rem;color:var(--text-muted)">${escHtmlServer(a.bestFor)}${guideRowReferralHtml(a.name)}</td>
-    </tr>`).join("\n        ");
+    </tr>${vendorPageConditionsRowHtml(a.slug, 3)}`).join("\n        ");
 
   const changeTimelineRows = doChanges.slice(0, 10).map((c: any) => {
     const dateStr = changeEntryLongDateLabel(c);
@@ -36016,7 +36053,7 @@ ${mcpCtaCss()}
         <td style="color:#3fb950">Public: unlimited</td>
         <td class="check">Free (charge postponed)</td>
         <td style="color:#3fb950">Yes</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("github-actions", 8)}
       <tr style="background:rgba(63,185,80,0.08)">
         <td class="provider-col"><a href="/vendor/gitlab-ci" style="color:var(--text)">GitLab CI</a></td>
         <td style="font-family:var(--mono)">400 compute min/mo</td>
@@ -36026,7 +36063,7 @@ ${mcpCtaCss()}
         <td>Same rate; GitLab for Open Source projects get 50K minutes</td>
         <td class="check">Free (unlimited)</td>
         <td style="color:#3fb950">Yes</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("gitlab-ci", 8)}
       <tr style="background:rgba(63,185,80,0.08)">
         <td class="provider-col"><a href="/vendor/circleci" style="color:var(--text)">CircleCI</a></td>
         <td style="font-family:var(--mono)">30,000 credits/mo</td>
@@ -36036,7 +36073,7 @@ ${mcpCtaCss()}
         <td>Open source: up to 400,000 credits/mo (Linux, Arm, Docker)</td>
         <td class="check">Free runner time; 5 concurrent self-hosted tasks</td>
         <td style="color:#3fb950">Yes</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("circleci", 8)}
       <tr>
         <td class="provider-col"><a href="/vendor/buildkite" style="color:var(--text)">Buildkite</a></td>
         <td style="font-family:var(--mono)">Unlimited (self-hosted)<br>Hosted: 2,000 Linux vCPU min/mo</td>
@@ -36046,7 +36083,7 @@ ${mcpCtaCss()}
         <td>Same limits for all repos</td>
         <td class="check">Free (self-hosted)</td>
         <td style="color:#3fb950">Yes (Free plan, up to 5 users)</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("buildkite", 8)}
       <tr>
         <td class="provider-col"><a href="/vendor/bitbucket-pipelines" style="color:var(--text)">Bitbucket Pipelines</a></td>
         <td style="font-family:var(--mono)">50 min/mo</td>
@@ -36056,7 +36093,7 @@ ${mcpCtaCss()}
         <td>Same limits for all repos</td>
         <td class="check">Yes (no build minutes used)</td>
         <td style="color:#3fb950">Yes</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("bitbucket-pipelines", 8)}
       <tr>
         <td class="provider-col"><a href="/vendor/harness-ci" style="color:var(--text)">Harness CI</a></td>
         <td style="font-family:var(--mono)">2,000 build credits/mo</td>
@@ -36066,7 +36103,7 @@ ${mcpCtaCss()}
         <td>Same limits for all repos</td>
         <td class="check">Free</td>
         <td style="color:#3fb950">Yes</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("harness-ci", 8)}
       <tr>
         <td class="provider-col"><a href="/vendor/google-cloud-build" style="color:var(--text)">Google Cloud Build</a></td>
         <td style="font-family:var(--mono)">2,500 min/mo (e2-standard-2)</td>
@@ -36076,7 +36113,7 @@ ${mcpCtaCss()}
         <td>Same limits for all repos</td>
         <td class="cross">No (GCE-based)</td>
         <td style="color:#3fb950">Yes (promotional)</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("google-cloud-build", 8)}
       <tr>
         <td class="provider-col"><a href="/vendor/bitrise" style="color:var(--text)">Bitrise</a></td>
         <td style="font-family:var(--mono)">300 credits/mo</td>
@@ -36086,7 +36123,7 @@ ${mcpCtaCss()}
         <td>1 private app; unlimited public apps</td>
         <td class="cross">Paid plans only</td>
         <td style="color:#3fb950">Yes (Hobby)</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("bitrise", 8)}
       <tr>
         <td class="provider-col"><a href="/vendor/codemagic" style="color:var(--text)">Codemagic</a></td>
         <td style="font-family:var(--mono)">500 min/mo</td>
@@ -36096,7 +36133,7 @@ ${mcpCtaCss()}
         <td>Same limits for all repos</td>
         <td class="cross">No</td>
         <td style="color:#3fb950">Yes</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("codemagic", 8)}
       <tr style="background:rgba(63,185,80,0.08)">
         <td class="provider-col"><a href="/vendor/drone-ci" style="color:var(--text)">Drone CI</a></td>
         <td style="font-family:var(--mono)">Unlimited (self-hosted)</td>
@@ -36106,7 +36143,7 @@ ${mcpCtaCss()}
         <td>Same (self-hosted)</td>
         <td class="check">Fully self-hosted</td>
         <td style="color:#3fb950">Yes (Community)</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("drone-ci", 8)}
     </tbody>
   </table>
   </div>
@@ -36199,14 +36236,14 @@ ${mcpCtaCss()}
         <td class="check">Unlimited (Community Edition); $0.0025/min on Cloud</td>
         <td class="check">Configurable</td>
         <td>Self-hosted teams</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("semaphore-ci", 5)}
       <tr>
         <td class="provider-col">Buddy</td>
         <td>1 seat, 1 concurrent run, 300 pipeline GB-minutes/mo</td>
         <td class="cross">Paid only</td>
         <td class="partial">Limited</td>
         <td>Visual pipeline builder, simple deploys</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("buddy", 5)}
       <tr>
         <td class="provider-col">Harness CI</td>
         <td>2,000 build credits/mo</td>
@@ -36261,7 +36298,7 @@ ${mcpCtaCss()}
         <td class="check">Linux runners</td>
         <td class="check">Supported</td>
         <td>Enterprise mobile DevOps</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("appcircle", 6)}
     </tbody>
   </table>
   </div>
@@ -36289,7 +36326,7 @@ ${mcpCtaCss()}
         <td>Hobby plan: free for small teams</td>
         <td>Monorepo build orchestration</td>
         <td>Nx/monorepo projects (remote caching, task distribution)</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("nx-cloud", 4)}
       <tr>
         <td class="provider-col">Google Cloud Build</td>
         <td>2,500 build-min/mo (e2-standard-2)</td>
@@ -36301,19 +36338,19 @@ ${mcpCtaCss()}
         <td>No published free plan (now part of Octopus Deploy)</td>
         <td>GitOps + Argo CD native</td>
         <td>Kubernetes deployments, GitOps workflows</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("codefresh", 4)}
       <tr>
         <td class="provider-col">Terramate</td>
         <td>Free up to 2 users, 1,000 resources</td>
         <td>IaC orchestration (Terraform, OpenTofu)</td>
         <td>IaC orchestration inside your CI/CD</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("terramate", 4)}
       <tr>
         <td class="provider-col">RunJob (formerly RunMyJob)</td>
         <td>400 vCPU-min, 800 GB-min, 10 concurrent</td>
         <td>Smart scaling for GitHub Actions/GitLab CI</td>
         <td>Cost optimization for existing CI pipelines</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("runmyjob", 4)}
     </tbody>
   </table>
   </div>
@@ -36353,7 +36390,7 @@ ${mcpCtaCss()}
         <td class="check">Docker-native</td>
         <td class="check">Kubernetes backend</td>
         <td>Drone CI fork with active community</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("woodpecker-ci", 6)}
     </tbody>
   </table>
   </div>
@@ -36678,7 +36715,7 @@ ${mcpCtaCss()}
         <td>Wall-clock time</td>
         <td>100&ndash;500ms (cold)</td>
         <td style="color:#3fb950">Yes (Always Free)</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("aws", 8)}
       <tr style="background:rgba(63,185,80,0.08)">
         <td class="provider-col"><a href="/vendor/google-cloud" style="color:var(--text)">Google Cloud Functions</a></td>
         <td style="font-family:var(--mono)">2M / month</td>
@@ -36688,7 +36725,7 @@ ${mcpCtaCss()}
         <td>Wall-clock time</td>
         <td>200&ndash;800ms (cold)</td>
         <td style="color:#3fb950">Yes (Always Free)</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("google-cloud", 8)}
       <tr>
         <td class="provider-col"><a href="/vendor/azure" style="color:var(--text)">Azure Functions</a></td>
         <td style="font-family:var(--mono)">1M / month</td>
@@ -36698,7 +36735,7 @@ ${mcpCtaCss()}
         <td>Wall-clock time</td>
         <td>200&ndash;1000ms (cold)</td>
         <td style="color:#3fb950">Yes (Always Free)</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("azure", 8)}
       <tr style="background:rgba(63,185,80,0.08)">
         <td class="provider-col"><a href="/vendor/google-cloud" style="color:var(--text)">Google Cloud Run</a></td>
         <td style="font-family:var(--mono)">2M / month</td>
@@ -36718,7 +36755,7 @@ ${mcpCtaCss()}
         <td><strong style="color:#3fb950">CPU time only</strong></td>
         <td>&lt;5ms (near-zero)</td>
         <td style="color:#3fb950">Yes</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("cloudflare-workers", 8)}
       <tr>
         <td class="provider-col"><a href="/vendor/vercel" style="color:var(--text)">Vercel Edge Functions</a></td>
         <td style="font-family:var(--mono)">1M edge requests/mo</td>
@@ -36728,7 +36765,7 @@ ${mcpCtaCss()}
         <td>Wall-clock time (credit-based)</td>
         <td>&lt;5ms (Edge) / 250ms (Serverless)</td>
         <td style="color:#3fb950">Yes (Hobby)</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("vercel", 8)}
       <tr>
         <td class="provider-col"><a href="/vendor/deno-deploy" style="color:var(--text)">Deno Deploy</a></td>
         <td style="font-family:var(--mono)">1M / month</td>
@@ -36738,7 +36775,7 @@ ${mcpCtaCss()}
         <td>CPU time</td>
         <td>&lt;10ms (near-zero)</td>
         <td style="color:#3fb950">Yes</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("deno-deploy", 8)}
       <tr>
         <td class="provider-col"><a href="/vendor/val-town" style="color:var(--text)">Val Town</a></td>
         <td style="font-family:var(--mono)">100K runs/day</td>
@@ -36748,7 +36785,7 @@ ${mcpCtaCss()}
         <td>Run-based</td>
         <td>&lt;50ms</td>
         <td style="color:#3fb950">Yes</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("val-town", 8)}
       <tr>
         <td class="provider-col"><a href="/vendor/dbos" style="color:var(--text)">DBOS</a></td>
         <td style="font-family:var(--mono)">1M service calls/mo</td>
@@ -36758,7 +36795,7 @@ ${mcpCtaCss()}
         <td>Service call-based</td>
         <td>Scale-to-zero (seconds)</td>
         <td style="color:#3fb950">Yes</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("dbos", 8)}
       <tr>
         <td class="provider-col">Inngest</td>
         <td style="font-family:var(--mono)">50K executions/mo</td>
@@ -36768,7 +36805,7 @@ ${mcpCtaCss()}
         <td>Execution-based</td>
         <td>Depends on host</td>
         <td style="color:#3fb950">Yes (Hobby)</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("inngest", 8)}
       <tr>
         <td class="provider-col">Trigger.dev</td>
         <td style="font-family:var(--mono)">$5 free compute/mo</td>
@@ -36778,7 +36815,7 @@ ${mcpCtaCss()}
         <td>Compute time-based</td>
         <td>Warm pool available</td>
         <td style="color:#3fb950">Yes</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("trigger-dev", 8)}
     </tbody>
   </table>
   </div>
@@ -36810,7 +36847,7 @@ ${mcpCtaCss()}
         <td>API Gateway, DynamoDB, S3, SQS, SNS, EventBridge</td>
         <td>Node.js, Python, Go, Java, .NET, Rust, Ruby</td>
         <td>AWS-native backends, event-driven architectures</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("aws-lambda", 6)}
       <tr style="background:rgba(63,185,80,0.08)">
         <td class="provider-col">Google Cloud Functions</td>
         <td style="font-family:var(--mono)">2M / month</td>
@@ -36818,7 +36855,7 @@ ${mcpCtaCss()}
         <td>Cloud Run, Firestore, Pub/Sub, Cloud Storage</td>
         <td>Node.js, Python, Go, Java, .NET, Ruby, PHP</td>
         <td>GCP-native, Firebase integrations</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("google-cloud-functions", 6)}
       <tr>
         <td class="provider-col">Azure Functions</td>
         <td style="font-family:var(--mono)">1M / month</td>
@@ -36826,7 +36863,7 @@ ${mcpCtaCss()}
         <td>Cosmos DB, Service Bus, Event Grid, Storage</td>
         <td>Node.js, Python, Java, .NET, PowerShell</td>
         <td>Microsoft/.NET shops, enterprise integrations</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("azure-functions", 6)}
     </tbody>
   </table>
   </div>
@@ -36866,7 +36903,7 @@ ${mcpCtaCss()}
         <td>V8 isolates (JS/TS)</td>
         <td>Blob: 1 GB, KV: via Vercel KV</td>
         <td>Next.js middleware, edge API routes</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("vercel-edge-functions", 6)}
       <tr>
         <td class="provider-col">Deno Deploy</td>
         <td>1M req/mo, 10 hrs CPU, 20 GiB egress</td>
@@ -36906,7 +36943,7 @@ ${mcpCtaCss()}
         <td>Up to 1000 concurrent per instance</td>
         <td>1 GB North America free</td>
         <td>Containerized APIs, microservices</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("google-cloud-run", 6)}
       <tr>
         <td class="provider-col">AWS App Runner</td>
         <td>Closed to new customers since April 30, 2026. Existing customers only.${figureSourceLinkHtml("https://aws.amazon.com/apprunner/", escHtmlServer)}</td>
@@ -36914,7 +36951,7 @@ ${mcpCtaCss()}
         <td>Configurable</td>
         <td>Standard AWS egress</td>
         <td>For existing App Runner customers. New customers use ECS Express Mode.</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("aws-app-runner", 6)}
     </tbody>
   </table>
   </div>
@@ -36972,7 +37009,7 @@ ${mcpCtaCss()}
         <td>Stateful serverless compute</td>
         <td class="check">Strongly consistent, WebSocket hibernation</td>
         <td>Real-time collaboration, stateful edge computing</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("cloudflare-durable-objects", 5)}
     </tbody>
   </table>
   </div>
@@ -37328,7 +37365,7 @@ ${mcpCtaCss()}
         <td class="check">1 enterprise connection + SCIM</td>
         <td style="font-family:var(--mono)">1,000 M2M tokens/mo; Token Vault (2 apps)</td>
         <td class="cross">No</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("auth0", 8)}
       <tr style="background:rgba(63,185,80,0.08)">
         <td class="provider-col"><a href="/vendor/clerk" style="color:var(--text)">Clerk</a></td>
         <td style="font-family:var(--mono)">50K MRU</td>
@@ -37338,7 +37375,7 @@ ${mcpCtaCss()}
         <td>Pro plan ($25/mo)</td>
         <td>2,500 token creations/mo</td>
         <td class="cross">No</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("clerk", 8)}
       <tr>
         <td class="provider-col"><a href="/vendor/kinde" style="color:var(--text)">Kinde</a></td>
         <td style="font-family:var(--mono)">10.5K MAU</td>
@@ -37348,7 +37385,7 @@ ${mcpCtaCss()}
         <td>1 enterprise SSO connection</td>
         <td style="font-family:var(--mono)">2,000 tokens</td>
         <td class="cross">No</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("kinde", 8)}
       <tr>
         <td class="provider-col">PropelAuth</td>
         <td style="font-family:var(--mono)">10K MAU</td>
@@ -37358,7 +37395,7 @@ ${mcpCtaCss()}
         <td>Growth plan</td>
         <td>&mdash;</td>
         <td class="cross">No</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("propelauth", 8)}
       <tr>
         <td class="provider-col"><a href="/vendor/stytch" style="color:var(--text)">Stytch</a></td>
         <td style="font-family:var(--mono)">10K MAU</td>
@@ -37368,7 +37405,7 @@ ${mcpCtaCss()}
         <td>5 SSO or SCIM connections (B2B), then $125/mo each</td>
         <td style="font-family:var(--mono)">1,000 M2M</td>
         <td class="cross">No</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("stytch", 8)}
       <tr>
         <td class="provider-col"><a href="/vendor/descope" style="color:var(--text)">Descope</a></td>
         <td style="font-family:var(--mono)">7.5K MAU</td>
@@ -37378,7 +37415,7 @@ ${mcpCtaCss()}
         <td>3 connections, 10 active tenants</td>
         <td style="font-family:var(--mono)">10,000 exchanges</td>
         <td class="cross">No</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("descope", 8)}
       <tr style="background:rgba(63,185,80,0.08)">
         <td class="provider-col"><a href="/vendor/workos" style="color:var(--text)">WorkOS</a> <span class="winner-badge">1M FREE</span></td>
         <td style="font-family:var(--mono)">1M MAU</td>
@@ -37388,7 +37425,7 @@ ${mcpCtaCss()}
         <td>SSO paid add-on</td>
         <td>M2M apps (price not listed)</td>
         <td class="cross">No</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("workos", 8)}
       <tr style="background:rgba(63,185,80,0.08)">
         <td class="provider-col"><a href="/vendor/supabase" style="color:var(--text)">Supabase Auth</a></td>
         <td style="font-family:var(--mono)">50K MAU</td>
@@ -37398,7 +37435,7 @@ ${mcpCtaCss()}
         <td>SAML on Pro (50 SSO MAU, then $0.015)</td>
         <td>&mdash;</td>
         <td class="check">Yes (Docker)</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("supabase", 8)}
       <tr>
         <td class="provider-col"><a href="/vendor/firebase" style="color:var(--text)">Firebase Auth</a></td>
         <td style="font-family:var(--mono)">No cost; SMS on Blaze only</td>
@@ -37408,7 +37445,7 @@ ${mcpCtaCss()}
         <td>Identity Platform</td>
         <td>&mdash;</td>
         <td class="cross">BaaS-integrated</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("firebase", 8)}
       <tr>
         <td class="provider-col">AWS Cognito</td>
         <td style="font-family:var(--mono)">10K MAU (50K for Lite pools created by Nov 22, 2024)${figureSourceLinkHtml("https://aws.amazon.com/cognito/pricing/", escHtmlServer)}</td>
@@ -37418,7 +37455,7 @@ ${mcpCtaCss()}
         <td class="partial">50 federated MAU free, then $0.015</td>
         <td style="font-family:var(--mono)">Paid add-on ($0.00225/token request)</td>
         <td class="cross">AWS-only</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("aws-cognito", 8)}
       <tr>
         <td class="provider-col">Appwrite Auth</td>
         <td style="font-family:var(--mono)">75K MAU</td>
@@ -37428,7 +37465,7 @@ ${mcpCtaCss()}
         <td>&mdash;</td>
         <td>&mdash;</td>
         <td class="check">Yes (Docker)</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("appwrite-auth", 8)}
       <tr>
         <td class="provider-col"><a href="/vendor/keycloak" style="color:var(--text)">Keycloak</a></td>
         <td style="font-family:var(--mono)">Unlimited</td>
@@ -37438,7 +37475,7 @@ ${mcpCtaCss()}
         <td class="check">Full SAML/OIDC</td>
         <td class="check">Unlimited</td>
         <td class="check">Yes (Java)</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("keycloak", 8)}
       <tr>
         <td class="provider-col">Authentik</td>
         <td style="font-family:var(--mono)">Unlimited</td>
@@ -37448,7 +37485,7 @@ ${mcpCtaCss()}
         <td class="check">Full SAML/OIDC</td>
         <td class="check">Unlimited</td>
         <td class="check">Yes (Python/Django)</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("authentik", 8)}
       <tr>
         <td class="provider-col">Authelia</td>
         <td style="font-family:var(--mono)">Unlimited</td>
@@ -37458,7 +37495,7 @@ ${mcpCtaCss()}
         <td class="check">OIDC provider</td>
         <td>Client credentials</td>
         <td class="check">Yes (Go)</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("authelia", 8)}
       <tr>
         <td class="provider-col"><a href="/vendor/fusionauth" style="color:var(--text)">FusionAuth</a></td>
         <td style="font-family:var(--mono)">Unlimited</td>
@@ -37468,7 +37505,7 @@ ${mcpCtaCss()}
         <td class="check">SAML + OIDC</td>
         <td>Starter plan and up</td>
         <td class="check">Yes (Docker)</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("fusionauth", 8)}
       <tr>
         <td class="provider-col"><a href="/vendor/supertokens" style="color:var(--text)">SuperTokens</a></td>
         <td style="font-family:var(--mono)">5K (managed)</td>
@@ -37478,7 +37515,7 @@ ${mcpCtaCss()}
         <td>Multi-tenancy (paid)</td>
         <td>Paid add-on (managed service only)</td>
         <td class="check">Yes (open-source features free)</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("supertokens", 8)}
       <tr>
         <td class="provider-col"><a href="/vendor/hanko" style="color:var(--text)">Hanko</a></td>
         <td style="font-family:var(--mono)">10K (cloud)</td>
@@ -37488,7 +37525,7 @@ ${mcpCtaCss()}
         <td>SAML on Pro ($49/mo per connection)</td>
         <td>&mdash;</td>
         <td class="check">Yes (unlimited)</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("hanko", 8)}
       <tr>
         <td class="provider-col"><a href="/vendor/ory" style="color:var(--text)">Ory</a></td>
         <td style="font-family:var(--mono)">Self-hosted; cloud Developer plan has no production use</td>
@@ -37498,7 +37535,7 @@ ${mcpCtaCss()}
         <td class="check">Full OIDC</td>
         <td class="partial">Self-hosted Hydra; billed on Ory Network</td>
         <td class="check">Yes (unlimited)</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("ory", 8)}
     </tbody>
   </table>
   </div>
@@ -37602,7 +37639,7 @@ ${mcpCtaCss()}
         <td>Supabase (Postgres, Realtime, Storage)</td>
         <td class="check">TOTP (phone MFA paid)</td>
         <td class="check">Yes (open source)</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("supabase-auth", 6)}
       <tr>
         <td class="provider-col">Firebase Auth</td>
         <td style="font-family:var(--mono)">No cost; SMS on Blaze only</td>
@@ -37610,7 +37647,7 @@ ${mcpCtaCss()}
         <td>Firebase (Firestore, Hosting, Functions)</td>
         <td class="check">Phone + TOTP (Identity Platform)</td>
         <td class="cross">No</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("firebase-auth", 6)}
       <tr>
         <td class="provider-col">AWS Cognito</td>
         <td style="font-family:var(--mono)">10,000${figureSourceLinkHtml("https://aws.amazon.com/cognito/pricing/", escHtmlServer)}</td>
@@ -37717,17 +37754,17 @@ ${mcpCtaCss()}
         <td class="provider-col">Authgear</td>
         <td>No MAU limit (cloud Free)</td>
         <td>Passkeys + biometric auth, pre-built login UI</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("authgear", 3)}
       <tr>
         <td class="provider-col">MojoAuth</td>
         <td>25K MAU</td>
         <td>Passwordless-first: magic links, email OTP, social (passkeys on Business Pro)</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("mojoauth", 3)}
       <tr>
         <td class="provider-col">Hexclave (formerly Stack Auth)</td>
         <td>Self-hosting free; managed 10K user accounts</td>
         <td>Open-source auth, managed or self-hosted</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("hexclave", 3)}
     </tbody>
   </table>
   </div>
@@ -37749,17 +37786,17 @@ ${mcpCtaCss()}
         <td class="provider-col"><a href="/vendor/permit-io" style="color:var(--text)">Permit.io</a></td>
         <td>1,000 MAU, RBAC + ABAC</td>
         <td>Policy-as-a-service (OPA-based)</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("permit-io", 3)}
       <tr>
         <td class="provider-col">Cerbos Hub</td>
         <td>100 monthly active principals, 2 PDPs</td>
         <td>Open-source policy engine (self-hosted or cloud)</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("cerbos-hub", 3)}
       <tr>
         <td class="provider-col"><a href="/vendor/authress" style="color:var(--text)">Authress</a></td>
         <td>First 1,000 billable calls free, then $0.0012/call</td>
         <td>Login and permissions API</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("authress", 3)}
     </tbody>
   </table>
   </div>
@@ -40121,7 +40158,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="executive-summary">
-    <p><strong>Quick verdict:</strong> <strong>Cloudflare R2</strong> is the standout choice for most developers &mdash; 10 GB storage with zero egress fees, S3-compatible API, and a permanent free tier. At scale, the savings are staggering: 5 TB stored + 50 TB egress costs $75/month on R2 vs $4,625/month on S3. <strong>Storj</strong> offers the largest starting capacity at 25 GB, but as a 30-day trial rather than a free tier &mdash; a $5 minimum monthly fee applies once it ends. <strong>Backblaze B2</strong> has the cheapest paid storage at ${rateCardFor("Backblaze B2").publishedStorageRate} and gives every account free egress up to 3x what it stores, no CDN needed &mdash; which makes it the cheapest column in the scaling table below, not R2&rsquo;s equal. For media: <strong>Cloudinary</strong> (25 credits/month) and <strong>BunnyCDN</strong> ($0.01/GB, 14-day trial) are best-in-class. For self-hosted: <strong>MinIO</strong> is the industry standard.</p>
+    <p><strong>Quick verdict:</strong> <strong>Cloudflare R2</strong> is the standout choice for most developers &mdash; 10 GB storage with zero egress fees, S3-compatible API, and a permanent free tier. At scale, the savings are staggering: 5 TB stored + 50 TB egress costs $75/month on R2 vs $4,625/month on S3. <strong>Storj</strong> offers the largest starting capacity at 25 GB, but as a 30-day trial rather than a free tier &mdash; a $5 minimum monthly fee applies once it ends. <strong>Backblaze B2</strong> has the cheapest paid storage at ${rateCardFor("Backblaze B2").publishedStorageRate} and gives every account free egress up to 3x what it stores, no CDN needed &mdash; which makes it the cheapest column in the scaling table below, not R2&rsquo;s equal. For media: <strong>Cloudinary</strong> (25 credits/month) and <strong>BunnyCDN</strong> ($0.01/GB, 14-day trial) are best-in-class. For self-hosted: ${SELF_HOSTED_S3_STORAGE_ANSWER}</p>
     <p><strong>The S3 egress tax is legendary.</strong> AWS S3 egress charges are the #1 developer bill shock story. S3 bills across 6 dimensions most developers don&rsquo;t know about: storage, egress, PUT requests, GET requests, lifecycle transitions, and the hidden NAT Gateway charge ($0.045/GB) that appears on your EC2 bill, not your S3 bill. At 1 TB/month egress, S3 costs ${egressBillAfterMonthlyGrantFor("AWS S3", ONE_TO_ONE_SCENARIO)} in bandwidth alone &mdash; 1 TB less the ${monthlyEgressGrantGb("AWS S3")} GB every account gets free each month, billed at $${rateCardFor("AWS S3").egressPerGb.toFixed(2)}/GB. R2 costs $0. This single difference has disrupted the entire cloud storage market.</p>
   </div>
 
@@ -40171,7 +40208,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003; Workers</td>
         <td class="check">&#10003;</td>
         <td class="cheapest">Zero egress</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("cloudflare-r2", 8)}
       <tr>
         <td class="provider-col">Storj<span class="caution-badge">30-DAY TRIAL</span></td>
         <td>Object</td>
@@ -40181,7 +40218,7 @@ ${mcpCtaCss()}
         <td class="partial">Edge</td>
         <td class="cross">&#10007;</td>
         <td>$0.007/GB</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("storj", 8)}
       <tr>
         <td class="provider-col">Backblaze B2</td>
         <td>Object</td>
@@ -40191,7 +40228,7 @@ ${mcpCtaCss()}
         <td class="partial">CF partner</td>
         <td class="check">&#10003;</td>
         <td class="cheapest">Free to 3x</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("backblaze-b2", 8)}
       <tr>
         <td class="provider-col">Tigris (Fly.io)</td>
         <td>Object</td>
@@ -40201,7 +40238,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003; Global</td>
         <td class="check">&#10003;</td>
         <td class="cheapest">Zero egress</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("tigris-fly-io", 8)}
       <tr>
         <td class="provider-col">AWS S3<span class="caution-badge">CREDITS ONLY</span></td>
         <td>Object</td>
@@ -40211,7 +40248,7 @@ ${mcpCtaCss()}
         <td class="partial">CloudFront sep.</td>
         <td class="cross">&#10007;</td>
         <td class="expensive">$0.09/GB</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("aws-s3", 8)}
       <tr>
         <td class="provider-col">Google Cloud Storage</td>
         <td>Object</td>
@@ -40221,7 +40258,7 @@ ${mcpCtaCss()}
         <td class="partial">Cloud CDN sep.</td>
         <td class="check">&#10003;</td>
         <td class="expensive">$0.12/GB</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("google-cloud-storage", 8)}
       <tr>
         <td class="provider-col">Azure Blob Storage<span class="caution-badge">12-MO ONLY</span></td>
         <td>Object</td>
@@ -40231,7 +40268,7 @@ ${mcpCtaCss()}
         <td class="partial">Azure CDN sep.</td>
         <td class="cross">&#10007;</td>
         <td class="expensive">$0.087/GB</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("azure-blob-storage", 8)}
       <tr>
         <td class="provider-col">Oracle Cloud Obj. Storage</td>
         <td>Object</td>
@@ -40241,7 +40278,7 @@ ${mcpCtaCss()}
         <td class="cross">&#10007;</td>
         <td class="check">&#10003;</td>
         <td>$0.0085/GB</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("oracle-cloud-obj-storage", 8)}
       <tr>
         <td class="provider-col">Supabase Storage</td>
         <td>BaaS</td>
@@ -40251,7 +40288,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
         <td>Included</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("supabase", 8)}
       <tr>
         <td class="provider-col">Firebase Storage</td>
         <td>BaaS</td>
@@ -40261,7 +40298,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="partial">Blaze only</td>
         <td>$0.12/GB</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("firebase-storage", 8)}
       <tr>
         <td class="provider-col">Vercel Blob</td>
         <td>BaaS</td>
@@ -40271,7 +40308,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003; Edge</td>
         <td class="check">&#10003;</td>
         <td>Included</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("vercel", 8)}
       <tr>
         <td class="provider-col">Cloudinary</td>
         <td>Media CDN</td>
@@ -40281,7 +40318,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003; Global</td>
         <td class="check">&#10003;</td>
         <td>Credit system</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("cloudinary", 8)}
       <tr>
         <td class="provider-col">ImageKit</td>
         <td>Media CDN</td>
@@ -40291,7 +40328,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003; Global</td>
         <td class="check">&#10003;</td>
         <td>Included</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("imagekit", 8)}
       <tr>
         <td class="provider-col">BunnyCDN</td>
         <td>CDN</td>
@@ -40301,7 +40338,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003; 114 PoPs</td>
         <td class="cross">&#10007; Trial</td>
         <td>$0.01/GB</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("bunnycdn", 8)}
       <tr>
         <td class="provider-col">KeyCDN</td>
         <td>CDN</td>
@@ -40311,7 +40348,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003; 50+ PoPs</td>
         <td class="cross">&#10007; Credit</td>
         <td>$0.04/GB</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("keycdn", 8)}
       <tr>
         <td class="provider-col">Uploadcare</td>
         <td>Upload</td>
@@ -40321,7 +40358,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003; Global</td>
         <td class="check">&#10003;</td>
         <td>Included</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("uploadcare", 8)}
       <tr>
         <td class="provider-col">Pinata IPFS</td>
         <td>Decentr.</td>
@@ -40331,7 +40368,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003; IPFS</td>
         <td class="check">&#10003;</td>
         <td>Gateway</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("pinata-ipfs", 8)}
       <tr>
         <td class="provider-col">MinIO</td>
         <td>Self-hosted, single node</td>
@@ -40341,7 +40378,7 @@ ${mcpCtaCss()}
         <td class="cross">&#10007;</td>
         <td class="check">&#10003;</td>
         <td>Your infra</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("minio", 8)}
     </tbody>
   </table>
   </div>
@@ -40458,7 +40495,7 @@ ${mcpCtaCss()}
         <td>Global</td>
         <td class="check">&#10003;</td>
         <td>Image + video optimization</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("gumlet-com", 6)}
       <tr>
         <td class="provider-col">Uploadcare</td>
         <td>3,000 uploads/mo + 3 GB storage</td>
@@ -40474,7 +40511,7 @@ ${mcpCtaCss()}
         <td>Edge</td>
         <td class="cross">&#10007;</td>
         <td>Simple file uploads for Next.js/React</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("uploadthing", 6)}
     </tbody>
   </table>
   </div>
@@ -40522,7 +40559,7 @@ ${mcpCtaCss()}
 
   <div class="diff-card">
     <h3>MinIO</h3>
-    <div class="diff-desc"><strong>Cost:</strong> Free single-node AIStor, under a commercial licence. The original AGPLv3 edition is no longer maintained, with no bug fixes or security patches. The most widely deployed S3-compatible object storage. Single binary, runs anywhere (Docker, Kubernetes, bare metal). Enterprise features: erasure coding, bitrot protection, encryption at rest, IAM policies, bucket versioning, cross-region replication. Active development with frequent releases. The default choice for any self-hosted S3-compatible storage need.</div>
+    <div class="diff-desc"><strong>Cost:</strong> Free single-node AIStor, under a commercial licence. The original AGPLv3 edition is no longer maintained, with no bug fixes or security patches. The most widely deployed S3-compatible object storage. Single binary, runs anywhere (Docker, Kubernetes, bare metal). Enterprise features: erasure coding, bitrot protection, encryption at rest, IAM policies, bucket versioning, cross-region replication.</div>
   </div>
 
   <div class="diff-card">
@@ -40641,8 +40678,8 @@ ${mcpCtaCss()}
     </div>
 
     <div class="verdict-item">
-      <strong>Best self-hosted &rarr; MinIO</strong>
-      <p>Open-source, S3-compatible, enterprise-grade. Single binary, runs on any infrastructure. The industry standard for organizations that need full control over their storage infrastructure and data sovereignty.</p>
+      <strong>Self-hosted</strong>
+      <p>${SELF_HOSTED_S3_STORAGE_ANSWER}</p>
     </div>
 
     <div class="verdict-item">
@@ -40951,7 +40988,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("playwright", 8)}
       <tr>
         <td class="provider-col">Cypress Cloud<span class="caution-badge">500 RESULTS/MO</span></td>
         <td>500 test results/mo, 3 users</td>
@@ -40961,7 +40998,7 @@ ${mcpCtaCss()}
         <td class="partial">&#9679; Framework only</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("cypress-cloud", 8)}
       <tr>
         <td class="provider-col">BrowserStack<span class="caution-badge">OSS ONLY</span></td>
         <td>Free for open source</td>
@@ -40971,7 +41008,7 @@ ${mcpCtaCss()}
         <td class="cross">&#10007;</td>
         <td class="check">&#10003; OSS projects</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("browserstack", 8)}
       <tr>
         <td class="provider-col">Selenium Grid</td>
         <td>Unlimited (OSS)</td>
@@ -40981,7 +41018,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("selenium-grid", 8)}
       <tr>
         <td class="provider-col">Checkly</td>
         <td>50K API checks + 10 browser/mo</td>
@@ -40991,7 +41028,7 @@ ${mcpCtaCss()}
         <td class="cross">&#10007;</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("checkly", 8)}
       <tr>
         <td class="provider-col">Chromatic</td>
         <td>5K snapshots/mo</td>
@@ -41001,7 +41038,7 @@ ${mcpCtaCss()}
         <td class="cross">&#10007;</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("chromatic", 8)}
       <tr>
         <td class="provider-col">BrowserStack Percy</td>
         <td>5K screenshots/mo</td>
@@ -41011,7 +41048,7 @@ ${mcpCtaCss()}
         <td class="cross">&#10007;</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("browserstack-percy", 8)}
       <tr>
         <td class="provider-col">Grafana k6 Cloud</td>
         <td>500 VU hours/mo</td>
@@ -41021,7 +41058,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003; CLI</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("grafana-k6-cloud", 8)}
       <tr>
         <td class="provider-col">Postman<span class="caution-badge">SINGLE USER</span></td>
         <td>25 collection runs/mo, 1 user</td>
@@ -41031,7 +41068,7 @@ ${mcpCtaCss()}
         <td class="cross">&#10007;</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("postman", 8)}
       <tr>
         <td class="provider-col">Codecov</td>
         <td>Free for public repos, 1 user private</td>
@@ -41041,7 +41078,7 @@ ${mcpCtaCss()}
         <td class="cross">&#10007;</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("codecov", 8)}
       <tr>
         <td class="provider-col">LocalStack</td>
         <td>30+ AWS services (auth required)</td>
@@ -41051,7 +41088,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("localstack", 8)}
       <tr>
         <td class="provider-col">Testcontainers</td>
         <td>Unlimited (OSS)</td>
@@ -41061,7 +41098,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("testcontainers", 8)}
       <tr>
         <td class="provider-col">Sauce Labs</td>
         <td>Free for open source</td>
@@ -41071,7 +41108,7 @@ ${mcpCtaCss()}
         <td class="cross">&#10007;</td>
         <td class="check">&#10003; OSS projects</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("sauce-labs", 8)}
       <tr>
         <td class="provider-col">Argos</td>
         <td>5K screenshots/mo</td>
@@ -41081,7 +41118,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("argos", 8)}
       <tr>
         <td class="provider-col">Artillery</td>
         <td>CLI unlimited, Cloud 600 VU mins/mo</td>
@@ -41091,7 +41128,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("artillery", 8)}
       <tr>
         <td class="provider-col">LambdaTest</td>
         <td>60 mins/mo live, 10 screenshot tests</td>
@@ -41101,7 +41138,7 @@ ${mcpCtaCss()}
         <td class="cross">&#10007;</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("lambdatest", 8)}
     </tbody>
   </table>
   </div>
@@ -41404,6 +41441,8 @@ function buildAnalyticsFreeTierComparison2026Page(): string {
   const metaDescAnalytics = "Side-by-side comparison of 15+ analytics free tiers in 2026. Compare PostHog, Mixpanel, Amplitude, Plausible, Google Analytics, Umami, and more — event limits, session replays, feature flags, and scaling costs.";
   const slug = "analytics-free-tier-comparison-2026";
   const pubDate = "2026-04-01";
+  const GA4_SAMPLING_DOC = { url: "https://support.google.com/analytics/answer/13331292", readOn: "2026-10-07" };
+  const AMPLITUDE_PRICING = { url: "https://amplitude.com/pricing", readOn: "2026-10-07" };
 
   const analyticsVendorKeywords = ["PostHog", "Mixpanel", "Amplitude", "Plausible", "Google Analytics", "Umami", "Matomo", "Heap", "June", "Countly", "Fathom", "Simple Analytics", "Pirsch", "Pendo"];
   const analyticsChanges = dealChanges.filter((c: any) =>
@@ -41561,11 +41600,11 @@ ${mcpCtaCss()}
     <div class="stat-card"><div class="stat-number">15+</div><div class="stat-label">Analytics Services Compared</div></div>
     <div class="stat-card"><div class="stat-number green">1M</div><div class="stat-label">PostHog Free Events/mo</div></div>
     <div class="stat-card"><div class="stat-number green">1M</div><div class="stat-label">Mixpanel Free Events/mo</div></div>
-    <div class="stat-card"><div class="stat-number amber">10K</div><div class="stat-label">Amplitude Free MTUs</div></div>
+    <div class="stat-card"><div class="stat-number green">2M</div><div class="stat-label">Amplitude Free Events/mo</div></div>
   </div>
 
   <div class="executive-summary">
-    <p><strong>Quick verdict:</strong> <strong>PostHog</strong> is the most generous all-in-one platform &mdash; 1M events/month free plus 5K session replays, 1M feature flag evaluations, and experiments. <strong>Mixpanel</strong> matches with 1M events/month on a polished behavioral analytics UI. <strong>Amplitude</strong> is the most restrictive of the big three at 10K MTUs free but offers enterprise-grade governance. <strong>Google Analytics</strong> is unlimited and free but comes with privacy trade-offs and data sampling. For privacy-focused analytics, <strong>Plausible</strong> and <strong>Umami</strong> are the leading options (self-hosted free, cloud plans paid).</p>
+    <p><strong>Quick verdict:</strong> <strong>PostHog</strong> is the most generous all-in-one platform &mdash; 1M events/month free plus 5K session replays, 1M feature flag evaluations, and experiments. <strong>Mixpanel</strong> matches with 1M events/month on a polished behavioral analytics UI. <strong>Amplitude</strong> gives 2M events/month free, with 1 year of data access. <strong>Google Analytics</strong> is unlimited and free but comes with privacy trade-offs and data sampling. For privacy-focused analytics, <strong>Plausible</strong> and <strong>Umami</strong> are the leading options (self-hosted free, cloud plans paid).</p>
     <p><strong>The all-in-one shift:</strong> PostHog has redefined the category by bundling analytics, session replays, feature flags, experiments, and surveys into one platform with a generous free tier. Mixpanel and Amplitude remain focused on behavioral analytics, while the privacy-focused segment (Plausible, Fathom, Umami) targets teams that need GDPR compliance without cookie banners.</p>
   </div>
 
@@ -41628,11 +41667,11 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
       </tr>
       <tr>
-        <td class="provider-col">Amplitude<span class="caution-badge">LOW FREE LIMIT</span></td>
-        <td>10K MTUs/mo</td>
-        <td class="partial">&#9679; 1K/mo (add-on)</td>
-        <td class="partial">&#9679; Limited</td>
-        <td>Unlimited</td>
+        <td class="provider-col">Amplitude</td>
+        <td>2M events/mo</td>
+        <td class="check">&#10003; 10K/mo</td>
+        <td class="check">&#10003; Unlimited</td>
+        <td>1 year</td>
         <td class="cross">&#10007;</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
@@ -41766,8 +41805,8 @@ ${mcpCtaCss()}
   </div>
 
   <div class="diff-card">
-    <h3>Amplitude <span class="caution-badge">LOW FREE LIMIT</span></h3>
-    <div class="diff-desc"><strong>Free tier:</strong> 10K Monthly Tracked Users (MTUs). The MTU metric means one active user generating 100 events counts as 1 MTU, making it cheaper per-user but the 10K limit is very restrictive for growing products. Session replay available as an add-on (1K replays free). Unlimited data retention. Enterprise-grade governance features even on the free plan. Best for enterprise-leaning teams that value governance and don't expect rapid user growth on the free tier.</div>
+    <h3>Amplitude</h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 2M events a month, 10K session replays a month, 1 year of data access and 10 saved charts, no credit card (<a href="${AMPLITUDE_PRICING.url}" rel="nofollow noopener">${escHtmlServer(citationLabel(AMPLITUDE_PRICING.url))}</a>, read ${AMPLITUDE_PRICING.readOn}).</div>
   </div>
 
   <div class="diff-card">
@@ -41918,7 +41957,7 @@ ${mcpCtaCss()}
         <td><strong>500K events/mo</strong></td>
         <td class="cheapest">$0 (free)</td>
         <td class="cheapest">$0 (free)</td>
-        <td>Varies by MTUs</td>
+        <td class="cheapest">$0 (free)</td>
         <td class="cheapest">$0 (free)</td>
         <td>~$9/mo</td>
       </tr>
@@ -41926,7 +41965,7 @@ ${mcpCtaCss()}
         <td><strong>2M events/mo</strong></td>
         <td>~$31</td>
         <td>~$24</td>
-        <td>Custom pricing</td>
+        <td class="cheapest">$0 (free)</td>
         <td class="cheapest">$0 (free, sampled)</td>
         <td>~$19/mo</td>
       </tr>
@@ -41959,15 +41998,15 @@ ${mcpCtaCss()}
   </div>
 
   <div class="context-box">
-    <strong>The MTU vs event pricing trap:</strong> Amplitude charges by Monthly Tracked Users (MTUs), while PostHog and Mixpanel charge by events. One power user generating 100 events counts as 1 MTU on Amplitude but 100 events on PostHog/Mixpanel. For apps with high engagement per user, Amplitude's MTU model is cheaper. For apps with many low-engagement users (e.g., content sites), event-based pricing wins. <strong>Know your engagement pattern before choosing.</strong>
+    <strong>Free plans count events:</strong> Amplitude's Free plan includes 2M events a month; PostHog and Mixpanel include 1M. Amplitude's paid Plus plan is sized in MTUs or events.
   </div>
 
   <div class="context-box">
-    <strong>The session replay add-on trap:</strong> Session replay is increasingly essential for debugging and UX research. PostHog includes 5K replays free. Amplitude offers 1K free but charges for more. Mixpanel doesn't offer replay at all &mdash; you'd need a separate tool like FullStory ($300+/mo), Hotjar ($80+/mo), or LogRocket ($99+/mo). At growth stage, buying analytics + replay separately typically costs 2&ndash;3x what PostHog charges for both bundled.
+    <strong>The session replay add-on trap:</strong> Session replay is increasingly essential for debugging and UX research. PostHog includes 5K replays free, and Amplitude's Free plan includes 10K a month. Mixpanel doesn't offer replay at all &mdash; you'd need a separate tool like FullStory ($300+/mo), Hotjar ($80+/mo), or LogRocket ($99+/mo). At growth stage, buying analytics + replay separately typically costs 2&ndash;3x what PostHog charges for both bundled.
   </div>
 
   <div class="context-box">
-    <strong>The Google Analytics "free" trap:</strong> GA is free in dollars but costs you in data quality and privacy. Data sampling begins at 500K sessions per property for ad-hoc queries. You don't own the data &mdash; Google uses it for advertising. EU regulators have ruled GA non-compliant. The real cost is the cookie consent banner (reducing opt-in rates by 20&ndash;40%), compliance risk, and data sampling at scale. "Free" analytics that samples your data isn't really free.
+    <strong>The Google Analytics "free" trap:</strong> GA is free in dollars but costs you in data quality and privacy. In GA4, explorations and other event-level queries are sampled above 10 million events per query on standard properties (<a href="${GA4_SAMPLING_DOC.url}" rel="nofollow noopener">${escHtmlServer(citationLabel(GA4_SAMPLING_DOC.url))}</a>, read ${GA4_SAMPLING_DOC.readOn}). You don't own the data &mdash; Google uses it for advertising. EU regulators have ruled GA non-compliant. The real cost is the cookie consent banner (reducing opt-in rates by 20&ndash;40%), compliance risk, and data sampling at scale. "Free" analytics that samples your data isn't really free.
   </div>
 
   <h2 id="best-for">By Use Case</h2>
@@ -42002,7 +42041,7 @@ ${mcpCtaCss()}
 
     <div class="verdict-item">
       <strong>Enterprise-ready free start &rarr; Amplitude</strong>
-      <p>10K MTUs free with enterprise governance, SSO, and unlimited retention. The free limit is low, but the enterprise features are unmatched. Best for companies that know they'll scale to paid and want enterprise governance from day one.</p>
+      <p>2M events a month free, with 1 year of data access. Best for companies that know they'll scale to paid and want enterprise governance from day one.</p>
     </div>
 
     <div class="verdict-item">
@@ -42019,8 +42058,8 @@ ${mcpCtaCss()}
   </div>
 
   <div class="diff-card">
-    <h3>Amplitude's 10K MTU limit is very restrictive</h3>
-    <div class="diff-desc">10K Monthly Tracked Users sounds generous until your product grows. A B2C app that goes viral can burn through 10K MTUs in days. Beyond the free tier, Amplitude's pricing is opaque (custom quotes), and customers report $50K&ndash;$200K+/year contracts. The jump from free to paid is one of the steepest in analytics.</div>
+    <h3>Amplitude's free plan keeps 1 year of data</h3>
+    <div class="diff-desc">Amplitude's Free plan includes 2M events a month and 1 year of data access.</div>
   </div>
 
   <div class="diff-card">
@@ -42040,7 +42079,7 @@ ${mcpCtaCss()}
 
   <div class="diff-card">
     <h3>Data retention limits on free plans</h3>
-    <div class="diff-desc">PostHog retains data for 1 year on the free plan. Heap retains for 6 months. GA4 retains for 14 months (adjustable to 2 or 14 months only). After the retention period, your historical data is gone. Mixpanel and Amplitude offer unlimited retention on free plans, which is a significant advantage for long-term trend analysis.</div>
+    <div class="diff-desc">PostHog retains data for 1 year on the free plan. Amplitude's Free plan gives 1 year of data access. Heap retains for 6 months. GA4 retains for 14 months (adjustable to 2 or 14 months only). After the retention period, your historical data is gone. Mixpanel offers unlimited retention on its free plan, which is a significant advantage for long-term trend analysis.</div>
   </div>
 
   <h2 id="changes">Pricing Change Timeline</h2>
@@ -42890,7 +42929,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="check">&#10003; Unlimited devs</td>
         <td class="cross">&#10007;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("snyk", 7)}
       <tr>
         <td class="provider-col">Semgrep</td>
         <td>SAST + SCA</td>
@@ -42899,7 +42938,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="check">&#10003; 50 repos</td>
         <td class="check">&#10003; OSS CLI</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("semgrep", 7)}
       <tr>
         <td class="provider-col">SonarCloud</td>
         <td>SAST + Code Quality</td>
@@ -42908,7 +42947,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="cross">&#10007; Public only</td>
         <td class="check">&#10003; SonarQube</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("sonarcloud", 7)}
       <tr>
         <td class="provider-col">CodeQL</td>
         <td>SAST (Semantic)</td>
@@ -42917,7 +42956,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003; GitHub Actions</td>
         <td class="cross">&#10007; Public only (free)</td>
         <td class="cross">&#10007;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("codeql", 7)}
       <tr>
         <td class="provider-col">aikido.dev</td>
         <td>All-in-one AppSec</td>
@@ -42926,7 +42965,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
         <td class="cross">&#10007;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("aikido-dev", 7)}
       <tr>
         <td class="provider-col">GitGuardian</td>
         <td>Secrets Detection</td>
@@ -42935,7 +42974,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003; ggshield CLI</td>
         <td class="check">&#10003;</td>
         <td class="cross">&#10007;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("gitguardian", 7)}
       <tr>
         <td class="provider-col">Gitleaks</td>
         <td>Secrets Detection</td>
@@ -42944,7 +42983,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003; GitHub Action</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("gitleaks", 7)}
       <tr>
         <td class="provider-col">TruffleHog</td>
         <td>Secrets Detection</td>
@@ -42953,7 +42992,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("trufflehog", 7)}
       <tr>
         <td class="provider-col">Trivy</td>
         <td>Container + FS + IaC + SBOM</td>
@@ -42962,7 +43001,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("trivy", 7)}
       <tr>
         <td class="provider-col">Grype</td>
         <td>Container + FS Vulnerability</td>
@@ -42971,7 +43010,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("grype", 7)}
       <tr>
         <td class="provider-col">Checkov</td>
         <td>IaC Static Analysis</td>
@@ -42980,7 +43019,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("checkov", 7)}
       <tr>
         <td class="provider-col">OWASP ZAP</td>
         <td>DAST</td>
@@ -42989,7 +43028,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("owasp-zap", 7)}
       <tr>
         <td class="provider-col">Nuclei</td>
         <td>DAST + Vulnerability Scanner</td>
@@ -42998,7 +43037,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("nuclei", 7)}
       <tr>
         <td class="provider-col">StackHawk</td>
         <td>DAST</td>
@@ -43007,7 +43046,7 @@ ${mcpCtaCss()}
         <td>Was included</td>
         <td>Was included</td>
         <td class="cross">&#10007;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("stackhawk", 7)}
       <tr>
         <td class="provider-col">Probely</td>
         <td>DAST</td>
@@ -43016,7 +43055,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
         <td class="cross">&#10007;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("probely", 7)}
       <tr>
         <td class="provider-col">Dependabot</td>
         <td>SCA + Dependency Updates</td>
@@ -43025,7 +43064,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003; Native</td>
         <td class="check">&#10003;</td>
         <td class="cross">&#10007; GitHub only</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("dependabot", 7)}
       <tr>
         <td class="provider-col">Renovate</td>
         <td>Dependency Updates</td>
@@ -43034,7 +43073,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("renovate", 7)}
       <tr>
         <td class="provider-col">FOSSA</td>
         <td>License Compliance + SCA</td>
@@ -43043,7 +43082,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
         <td class="cross">&#10007;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("fossa", 7)}
       <tr>
         <td class="provider-col">Socket.dev</td>
         <td>Supply Chain Security</td>
@@ -43052,7 +43091,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="partial">&#9679; 1 private</td>
         <td class="cross">&#10007;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("socket-dev", 7)}
       <tr>
         <td class="provider-col">SOOS</td>
         <td>SCA</td>
@@ -43061,7 +43100,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="cross">&#10007; OSS only</td>
         <td class="cross">&#10007;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("soos", 7)}
       <tr>
         <td class="provider-col">Falco</td>
         <td>Runtime Security</td>
@@ -43070,7 +43109,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("falco", 7)}
       <tr>
         <td class="provider-col">Tailscale</td>
         <td>Zero Trust VPN</td>
@@ -43079,7 +43118,7 @@ ${mcpCtaCss()}
         <td class="cross">&#10007;</td>
         <td class="check">&#10003;</td>
         <td class="partial">&#9679; Headscale</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("tailscale", 7)}
       <tr>
         <td class="provider-col">Twingate</td>
         <td>Zero Trust Access</td>
@@ -43088,7 +43127,7 @@ ${mcpCtaCss()}
         <td class="cross">&#10007;</td>
         <td class="check">&#10003;</td>
         <td class="cross">&#10007;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("twingate", 7)}
       <tr>
         <td class="provider-col">Let&rsquo;s Encrypt</td>
         <td>SSL/TLS Certificates</td>
@@ -43097,7 +43136,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003; ACME</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("let-s-encrypt", 7)}
     </tbody>
   </table>
   </div>
@@ -45618,7 +45657,7 @@ function buildEstimatorData(): EstimatorCategory[] {
       vendors: [
         { slug: "posthog", name: "PostHog", free: "1M events/mo", starter: 0, growth: 0, scale: 450, notes: "Free up to 1M, then $0.000045/event" },
         { slug: "mixpanel", name: "Mixpanel", free: "1M events/mo", starter: 0, growth: 0, scale: 150, notes: "Growth from $0.00028/event" },
-        { slug: "amplitude", name: "Amplitude", free: "10K MTU", starter: 0, growth: 0, scale: 995, notes: "Growth pricing varies" },
+        { slug: "amplitude", name: "Amplitude", free: "2M events/mo", starter: 0, growth: 0, scale: 995, notes: "Growth pricing varies" },
         { slug: "plausible", name: "Plausible", free: "Self-hosted only", starter: 9, growth: 19, scale: 69, notes: "Cloud $9/mo (10K pageviews)" },
       ],
     },
@@ -46255,7 +46294,10 @@ ${globalNavCss()}
   function changeEntryDateLabel(c) {
     if (c.date_meaning === EFFECTIVE_DATE_PREFIX) return EFFECTIVE_DATE_PREFIX + ' ' + c.date;
     if (c.change_type === CORRECTION_TO_OUR_OWN_RECORD && c.archive_check && c.archive_check.outcome === OURS_ARCHIVE_OUTCOME) return RECORDED_DATE_PREFIX + ' ' + (c.recorded_date || c.date) + ' \u00b7 ' + CORRECTED_DATE_PREFIX + ' ' + c.archive_check.checked;
-    if (c.date_meaning === EFFECTIVE_BY_DATE_MEANING) return BRACKETED_DATE_PREFIX + ' ' + c.archive_check.brackets[0].last_old + ' and ' + c.date;
+    if (c.date_meaning === EFFECTIVE_BY_DATE_MEANING) {
+      var firstNew = c.archive_check.brackets[0].first_new;
+      return BRACKETED_DATE_PREFIX + ' ' + c.archive_check.brackets[0].last_old + ' and ' + (firstNew && firstNew <= c.date ? firstNew : c.date);
+    }
     return DISCOVERED_DATE_PREFIX + ' ' + c.date + ' \u00b7 ' + UNKNOWN_EFFECTIVE_DATE_MARKER;
   }
 
@@ -48087,12 +48129,6 @@ function buildPricingChangesPage(): string {
   const sorted = [...eventDated].sort((a, b) => b.date.localeCompare(a.date));
   const sections = changeLogSections(allChanges, today);
 
-  const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-  function formatMonth(key: string): string {
-    const [y, m] = key.split("-");
-    return `${monthNames[parseInt(m, 10) - 1]} ${y}`;
-  }
-
   const filterCategory: Record<string, string> = CHANGE_DIRECTION;
 
   function buildChangeEntry(c: typeof allChanges[0]): string {
@@ -48201,26 +48237,6 @@ ${altHtml}
         </select>
       </div>
       <div class="pc-filter-count"><span id="pc-visible-count">${sorted.length}</span> of ${sorted.length} changes shown</div>
-    </div>`;
-
-  const monthGroupsHtml = (groups: MonthGroup<typeof allChanges[0]>[]) => groups.map(({ month, changes }) => {
-    const entriesHtml = changes.map(c => buildChangeEntry(c)).join("\n");
-    return `    <div class="month-group">
-      <h2 class="month-heading" id="month-${month}">${formatMonth(month)}</h2>
-${entriesHtml}
-    </div>`;
-  }).join("\n");
-
-  const undatedHtml = sections.undated.length === 0 ? "" : `    <div class="month-group month-group-undated">
-      <h2 class="month-heading" id="month-undated">${undatedGroupHeading(sections.undated.length, allChanges.length)}</h2>
-      <p class="month-note">${coveringBracketedChanges(UNDATED_GROUP_NOTE, sections.undated)}</p>
-${sections.undated.map(c => buildChangeEntry(c)).join("\n")}
-    </div>`;
-
-  const ourRecordsHtml = sections.ours.length === 0 ? "" : `    <div class="month-group month-group-ours">
-      <h2 class="month-heading" id="month-ours">${escHtmlServer(ourRecordsSectionHeading(sections.ours.length))}</h2>
-      <p class="month-note">${escHtmlServer(OUR_RECORDS_SECTION_NOTE)}</p>
-${sections.ours.map(c => buildChangeEntry(c)).join("\n")}
     </div>`;
 
   const title = "Developer Tool Pricing Changes \u2014 Free Tier Tracker";
@@ -48484,10 +48500,7 @@ ${upcomingChanges.map(c => buildChangeEntry(c)).join("\n")}
 ` : ""}
 ${filterButtonsHtml}
 
-${monthGroupsHtml(sections.recentMonths)}
-${undatedHtml}
-${monthGroupsHtml(sections.olderMonths)}
-${ourRecordsHtml}
+${changeLogSectionsHtml(sections, allChanges.length, buildChangeEntry, escHtmlServer)}
 
   <div class="cross-links">
     <h2>Related</h2>
@@ -48576,8 +48589,8 @@ function buildChangesPage(): string {
   const undatedCounted = trackedChanges(undatedChanges).length;
 
   const sorted = [...eventDated].sort((a, b) => b.date.localeCompare(a.date));
-  const undatedSorted = [...undatedChanges].sort((a, b) => b.date.localeCompare(a.date));
-  const newestFirst = [...allChanges].sort((a, b) => b.date.localeCompare(a.date));
+  const sections = changeLogSections(allChanges, today);
+  const inPageOrder = changeLogInPageOrder(sections);
 
   const byMonth = new Map<string, typeof sorted>();
   for (const c of sorted) {
@@ -48586,14 +48599,8 @@ function buildChangesPage(): string {
     byMonth.get(monthKey)!.push(c);
   }
 
-  const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-  function formatMonth(key: string): string {
-    const [y, m] = key.split("-");
-    return `${monthNames[parseInt(m, 10) - 1]} ${y}`;
-  }
-
   const anchorHolder = new Map<string, typeof allChanges[0]>();
-  for (const c of newestFirst) {
+  for (const c of inPageOrder) {
     const anchor = changeLogAnchorFor(c.vendor);
     if (anchor && !anchorHolder.has(anchor)) anchorHolder.set(anchor, c);
   }
@@ -48632,21 +48639,7 @@ ${altHtml}
 
   const upcomingCount = changesTheVendorMade(trackedChanges(sorted)).filter(c => c.date >= today).length;
   const removedCount = changesTheVendorMade(counted).filter(endsAFreeTier).length;
-  const entriesListed = sorted.length + undatedSorted.length;
-
-  const monthsHtml = Array.from(byMonth.entries()).map(([month, changes]) => {
-    const entriesHtml = changes.map(c => buildChangeEntry(c)).join("\n");
-    return `    <div class="month-group">
-      <h2 class="month-heading">${formatMonth(month)}</h2>
-${entriesHtml}
-    </div>`;
-  }).join("\n");
-
-  const undatedHtml = undatedSorted.length === 0 ? "" : `    <div class="month-group month-group-undated">
-      <h2 class="month-heading">${undatedGroupHeading(undatedSorted.length, allChanges.length)}</h2>
-      <p class="month-note">${coveringBracketedChanges(UNDATED_GROUP_NOTE, undatedSorted)}</p>
-${undatedSorted.map(c => buildChangeEntry(c)).join("\n")}
-    </div>`;
+  const entriesListed = inPageOrder.length;
 
   const title = "Deal Change Timeline \u2014 AgentDeals";
   const metaDesc = `${trackedChanges(dealChanges).length} developer infrastructure pricing changes tracked since launch \u2014 ${last30DaysCount} in the last 30 days. Free tier removals, price increases, product shutdowns, and new deals.`;
@@ -48654,12 +48647,12 @@ ${undatedSorted.map(c => buildChangeEntry(c)).join("\n")}
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    itemListOrder: listOrderOf("newest-first"),
+    itemListOrder: listOrderOf("sectioned"),
     name: title,
     description: `${metaDesc} This list holds every record we hold — ${changeCountPhrase("held", allChanges)} — counted at ${BASE_URL}${TRACKED_CHANGE_RULE_PATH}.`,
     numberOfItems: entriesListed,
     url: `${BASE_URL}/changes`,
-    itemListElement: newestFirst.slice(0, 50).map((c, i) => {
+    itemListElement: inPageOrder.slice(0, 50).map((c, i) => {
       const citation = changeSourceCitation(c);
       return {
         "@type": "ListItem",
@@ -48755,7 +48748,7 @@ ${globalNavCss()}
   ${buildGlobalNav("changes")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; Changes</div>
   <h1>Deal Change Timeline</h1>
-  <p class="page-intro">Every pricing change we\u2019ve tracked \u2014 free tier removals, price increases, restructures, and new deals. ${listOrderSentence("newest-first")} <a href="#${TRACKED_CHANGE_RULE_ANCHOR}">What counts as a change</a>. Subscribe to stay ahead.</p>
+  <p class="page-intro">Every pricing change we\u2019ve tracked \u2014 free tier removals, price increases, restructures, and new deals. ${listOrderSentence("sectioned")} <a href="#${TRACKED_CHANGE_RULE_ANCHOR}">What counts as a change</a>. Subscribe to stay ahead.</p>
   <a href="/feed.xml" class="rss-link">\u{1F4E1} Subscribe to deal changes</a>
   <a href="/deadlines" class="rss-link" style="margin-left:.5rem">\u{1F6A8} See upcoming deadlines &rarr;</a>
 
@@ -48785,8 +48778,7 @@ ${undatedTileHtml(undatedCounted)}
 
 ${changeLogFreshnessNote()}
 ${whatCountsAsAChangeHtml(dealChanges, entriesListed)}
-${undatedHtml}
-${monthsHtml}
+${changeLogSectionsHtml(sections, allChanges.length, buildChangeEntry, escHtmlServer)}
 
   <div class="mcp-cta">
     <p>Get real-time pricing change alerts in your AI coding assistant.</p>

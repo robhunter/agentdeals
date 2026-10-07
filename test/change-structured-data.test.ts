@@ -196,10 +196,12 @@ describe("the machine-readable change lists carry the entries the pages carry", 
     itemFor(list, DISCOVERY, "/changes");
   });
 
-  it("orders the list by the date each entry carries, newest first", () => {
+  it("orders the list as the page lists its entries, the recent months' dated changes ahead of one with no known effective date", () => {
     const list = changeList(bodies.get("/changes")!, "/changes");
-    assert.strictEqual(list.items[0].headline?.startsWith(`${UPCOMING}:`), true);
-    assert.strictEqual(list.items[1].headline?.startsWith(`${DISCOVERY}:`), true);
+    assert.deepStrictEqual(
+      list.items.slice(0, 4).map((it) => it.headline?.split(":")[0]),
+      [UPCOMING, RECENT, DISCOVERY, "Backlog00"],
+    );
   });
 
   it("advertises a total that counts every entry, not only the page of them it shows", () => {
