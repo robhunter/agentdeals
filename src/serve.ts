@@ -67,7 +67,7 @@ import { CHANGE_DIRECTION, changeDirectionTable, directionRatioLabel } from "./c
 import { removalDurability, removalReturnRateSentence, removalDurabilityPattern, lastingRemovalExamplesFor } from "./removal-durability.js";
 import { cutsByQuarterNewestFirst, cutsWindow, freeTierCutsIn } from "./free-tier-cuts.js";
 import { CHANGE_TIMELINE_LINK_TEXT, CHANGE_TIMELINE_PATH, CUTS_THIS_YEAR_ANCHOR, CUTS_THIS_YEAR_HEADING, CUTS_THIS_YEAR_SUMMARY_CLASS, FIGURES_AS_OF_CLASS, FREE_TIER_TRACKER_HEADING, FREE_TIER_TRACKER_META_DESCRIPTION, FREE_TIER_TRACKER_TITLE, FREE_TIER_TRACKER_YEAR, NO_KNOWN_EFFECTIVE_DATE_LEFT_OUT, UNTIL_ITS_DATE_ARRIVES, changeTypesAmong, cutsThisYearSummary, figuresAsOfTheChangeHtml, isAFirstQuarterCard, neonFiguresWereJanuarysHtml, quarterAnchor, quarterHeading } from "./free-tier-tracker.js";
-import { changeCitesASource, changeIsUncited, changeSourceCitation, changeSourceLinkHtml, changeCitationHtml, citedClaimHtml, changeSummaryHtml, changeSummaryText, citedChanges, uncitedChangeNotice, uncitedChangeNoticeHtml, ratingWithheldForNoSourceClause, ratingWithheldForNoSourceSentence, ratingWithheldClause, ratingWithheldSentence, type WithheldRecordCounts, UNCITED_CHANGE_LABEL, RECORD_SOURCE_CLASS, type CitableChangeRow } from "./change-citation.js";
+import { changeCitesASource, citationLabel, changeIsUncited, changeSourceCitation, changeSourceLinkHtml, changeCitationHtml, citedClaimHtml, changeSummaryHtml, changeSummaryText, citedChanges, uncitedChangeNotice, uncitedChangeNoticeHtml, ratingWithheldForNoSourceClause, ratingWithheldForNoSourceSentence, ratingWithheldClause, ratingWithheldSentence, type WithheldRecordCounts, UNCITED_CHANGE_LABEL, RECORD_SOURCE_CLASS, type CitableChangeRow } from "./change-citation.js";
 import { growthLimitPhrases } from "./growth-limits.js";
 import { registerAgent, authenticateRequest, validateVestauthUrl, hashApiKey, updateAgentX402Address, getAgentById } from "./agents.js";
 import { attributeAuthenticatedRequest } from "./referral-attribution.js";
@@ -33481,6 +33481,12 @@ function buildAzureFreeTier2026Page(): string {
     c.vendor.includes("Azure")
   ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
+  interface DatedNotice {
+    text: string;
+    url: string;
+    readOn: string;
+  }
+
   interface AzureService {
     name: string;
     slug: string;
@@ -33489,13 +33495,20 @@ function buildAzureFreeTier2026Page(): string {
     highlight?: boolean;
     source?: string;
     noFetchablePageStatesIt?: true;
+    notice?: DatedNotice;
   }
 
   const MICROSOFT_FREE_ACCOUNT_LIST = "https://azure.microsoft.com/en-us/pricing/purchase-options/azure-account";
   const AZURE_SUBSCRIPTION_LIMITS = "https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/azure-subscription-service-limits";
 
+  const LINUX_CONSUMPTION_RETIREMENT: DatedNotice = {
+    text: "Microsoft retires the Consumption plan on Linux on 2028-09-30 and says to move Linux apps to Flex Consumption before then. Linux Consumption apps still on the v3 runtime stopped running after 2026-09-30; Microsoft's fix is to migrate them to the v4 runtime. Windows Consumption apps are not currently affected.",
+    url: "https://learn.microsoft.com/en-us/azure/azure-functions/consumption-plan",
+    readOn: "2026-10-07",
+  };
+
   const alwaysFreeServices: AzureService[] = [
-    { name: "Azure Functions", slug: "azure", limits: "Flex Consumption: 250,000 executions and 100,000 GB-s/month. Legacy Consumption plan: 1M executions and 400,000 GB-s/month", category: "Compute", highlight: true, source: "https://azure.microsoft.com/en-us/pricing/details/functions/" },
+    { name: "Azure Functions", slug: "azure", limits: "Flex Consumption: 250,000 executions and 100,000 GB-s/month. Legacy Consumption plan: 1M executions and 400,000 GB-s/month", category: "Compute", highlight: true, source: "https://azure.microsoft.com/en-us/pricing/details/functions/", notice: LINUX_CONSUMPTION_RETIREMENT },
     { name: "Azure Cosmos DB", slug: "azure", limits: "1,000 RU/s throughput + 25 GB storage (lifetime)", category: "Database", highlight: true, source: MICROSOFT_FREE_ACCOUNT_LIST },
     { name: "Azure SQL Database", slug: "azure", limits: "Up to 10 General Purpose serverless databases, each with 100,000 vCore seconds and 32 GB/month, for the lifetime of your subscription", category: "Database", source: "https://learn.microsoft.com/en-us/azure/azure-sql/database/free-offer?view=azuresql" },
     { name: "App Service", slug: "azure", limits: "10 web/mobile/API apps (F1 tier), 1 GB storage, 60 min/day compute", category: "Compute", source: MICROSOFT_FREE_ACCOUNT_LIST },
@@ -33573,9 +33586,12 @@ function buildAzureFreeTier2026Page(): string {
   const azureRowAttributes = (s: AzureService) =>
     `${s.highlight ? ' style="background:rgba(59,130,246,0.1)"' : ""}${s.noFetchablePageStatesIt ? ` ${NO_FETCHABLE_PAGE_STATES_THE_ROW}` : ""}`;
 
+  const datedNoticeHtml = (notice: DatedNotice) =>
+    `<div style="font-family:var(--sans);margin-top:.35rem">${escHtmlServer(notice.text)} (From <a href="${escHtmlServer(notice.url)}" rel="nofollow noopener">${escHtmlServer(citationLabel(notice.url))}</a>, read ${escHtmlServer(notice.readOn)}.)</div>`;
+
   const alwaysFreeRows = alwaysFreeServices.map(s => `<tr${azureRowAttributes(s)}>
       <td style="font-weight:600">${s.highlight ? `<span style="color:var(--accent)">★</span> ` : ""}${escHtmlServer(s.name)}</td>
-      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(s.limits)}${s.source ? figureSourceLinkHtml(s.source, escHtmlServer) : ""}</td>
+      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(s.limits)}${s.source ? figureSourceLinkHtml(s.source, escHtmlServer) : ""}${s.notice ? datedNoticeHtml(s.notice) : ""}</td>
       <td style="color:var(--text-muted);font-size:.8rem">${escHtmlServer(s.category)}</td>
     </tr>`).join("\n        ");
 
