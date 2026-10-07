@@ -2863,6 +2863,32 @@
       "change_type": "limits_reduced",
       "summary": "The free tier is now described as temporary storage, with files kept 'temporarily, perfect for quick shares'. Previously 'unlimited' storage with a 10-day inactivity deletion policy.",
       "reverted_on": "2026-10-06"
+    },
+    {
+      "vendor": "Grafana Cloud",
+      "url": "https://grafana.com/pricing/",
+      "restated_on": "2026-10-07",
+      "previous_description": "Free tier includes access to all Grafana Cloud services with limited usage, 14-day retention, and community support. 10k metric series, 50 GB logs, and 50 GB traces are included. A $19/month platform fee is required for 10k active series, 50 GB ingested logs/traces, and 30 days retention.",
+      "description": "The free tier includes access to all Grafana Cloud services with usage limits. Limits include 10k active series, 50 GB ingested logs, 50 GB ingested traces, 50 GB ingested profiles, 2,232 host hours & 37,944 container hours for Kubernetes Monitoring, 2,232 host hours for Application Observability, 50k sessions for Frontend Observability, 2,232 database host hours, and 3 active AI users. A $19/month platform fee is required for exceeding these limits.",
+      "reading_date": "2026-10-07",
+      "reading_terms": "The free tier includes access to all Grafana Cloud services with usage limits. Limits include 10k active series, 50 GB ingested logs, 50 GB ingested traces, 50 GB ingested profiles, 2,232 host hours & 37,944 container hours for Kubernetes Monitoring, 2,232 host hours for Application Observability, 50k sessions for Frontend Observability, 2,232 database host hours, and 3 active AI users. A $19/month platform fee is required for exceeding these limits.",
+      "source_url": "https://grafana.com/pricing/",
+      "record_date": "2026-10-07",
+      "change_type": "limits_reduced",
+      "summary": "The free tier now includes access to all Grafana Cloud services with usage limits. The specific limits have changed and a $19/month platform fee is now required for exceeding those limits. Previously 10k metric series, 50 GB logs, and 50 GB traces. The current page details limits for Metrics (10k active series), Logs (50 GB ingested), Traces (50 GB ingested), Profiles (50 GB ingested), Kubernetes Monitoring (2,232 host hours & 37,944 container hours), Application Observability (2,232 host hours), Frontend Observability (50k sessions), Database Observability (2,232 host hours), and Grafana Assistant (3 active AI users)."
+    },
+    {
+      "vendor": "testingbot.com",
+      "url": "https://testingbot.com/",
+      "restated_on": "2026-10-07",
+      "previous_description": "Selenium Browser and Device Testing, [free for Open Source](https://testingbot.com/open-source)",
+      "description": "TestingBot offers a free plan that runs automated tests, live manual sessions, screenshot tests and visual comparisons, including Safari on macOS, on a recent version of each browser with a limited number of live macOS sessions. No credit card is required.",
+      "reading_date": "2026-10-07",
+      "reading_terms": "TestingBot offers a free plan that runs automated tests, live manual sessions, screenshot tests and visual comparisons, including Safari on macOS, on a recent version of each browser with a limited number of live macOS sessions. No credit card is required.",
+      "source_url": "https://testingbot.com/",
+      "record_date": "2026-10-07",
+      "change_type": "limits_reduced",
+      "summary": "The current page only mentions a 'free plan' with limited features (automated tests, live manual sessions, screenshot tests, visual comparisons, Safari on macOS, limited macOS sessions)."
     }
   ]
 }

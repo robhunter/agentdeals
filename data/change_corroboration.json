@@ -1,92 +1,15 @@
 {
   "held": [
     {
-      "vendor": "AbstractAPI",
+      "vendor": "Elastic",
       "change_type": "pricing_restructured",
-      "impact": "high",
-      "summary": "The free tier is still offered. The description is significantly different. The page details many individual APIs, each with its own free tier, rather than a suite of 15 APIs with a single free tier. The page states each API has a free tier with a generous usage allowance.",
-      "previous_state": "Suite of 15 REST APIs (IP geolocation, email validation, screenshots, exchange rates, phone validation, etc.) — free tier: 1,000 requests/month per API, 1 request/second rate limit. Non-commercial use only on free tier",
-      "current_state": "Each of our API’s has a free tier with a generous usage allowance for you to try the product out and verify that the speed and data quality work for you. The free tiers of our API’s may not be used in commercial projects.",
-      "source_url": "https://www.abstractapi.com/api",
-      "category": "API Development",
-      "first_read_date": "2026-10-06"
-    },
-    {
-      "vendor": "Auth0",
-      "change_type": "restriction",
-      "impact": "low",
-      "summary": "The free tier now requires credit card verification for custom domains. Additionally, the free tier includes Passkeys.",
-      "previous_state": "Identity platform — 25K MAU (B2C), unlimited logins, social + database connections, Universal Login, 1 Enterprise Connection, 5 Organizations, 1 Custom Domain. No credit card required",
-      "current_state": "Up to 25,000 monthly active users. Includes 1 Custom Domain* Secure Agentic AI workflows Passwordless Authentication Unlimited Social Connections** 5 Organizations Brand Customization Basic Attack Protection Community Support 1 Enterprise Connection New Self-Service SSO New SCIM New *credit card verification required for custom domains. **subject to system limitations.",
-      "source_url": "https://auth0.com/pricing",
-      "category": "Auth",
-      "first_read_date": "2026-10-06"
-    },
-    {
-      "vendor": "bitnami.com",
-      "change_type": "pricing_restructured",
-      "impact": "high",
-      "summary": "The free tier is now limited to non-production use cases and only provides access to a portion of the images. Access to all images and other benefits requires a purchase.",
-      "previous_state": "Deploy prepared apps on IaaS. Management of 1 AWS micro instance free",
-      "current_state": "Developers can access a portion of Bitnami Secure Images for non-production use cases. Free images are only available in the latest tag. For access to all the images/applications in the catalog, along with many other benefits, you can purchase Bitnami Secure Images.",
-      "source_url": "https://bitnami.com/",
-      "category": "Server Management",
-      "first_read_date": "2026-10-06"
-    },
-    {
-      "vendor": "formlets.com",
-      "change_type": "pricing_restructured",
-      "impact": "high",
-      "summary": "The free tier now offers unlimited submissions.",
-      "previous_state": "Online forms, unlimited single page forms/month, 100 submissions/month, email notifications.",
-      "current_state": "Unlimited submits & No signup/creditcard needed",
-      "source_url": "https://formlets.com/",
-      "category": "Forms",
-      "first_read_date": "2026-10-06"
-    },
-    {
-      "vendor": "Grafana Cloud",
-      "change_type": "limits_reduced",
-      "impact": "high",
-      "summary": "The free tier now includes access to all Grafana Cloud services with usage limits. The specific limits have changed and a $19/month platform fee is now required for exceeding those limits. Previously 10k metric series, 50 GB logs, and 50 GB traces.",
-      "previous_state": "Free tier includes access to all Grafana Cloud services with limited usage, 14-day retention, and community support. 10k metric series, 50 GB logs, and 50 GB traces are included. A $19/month platform fee is required for 10k active series, 50 GB ingested logs/traces, and 30 days retention.",
-      "current_state": "The free tier includes access to all Grafana Cloud services with usage limits. Metrics are limited to 10k active series per month. Logs, Traces, and Profiles are limited to 50 GB ingested per month with 14 day retention. Kubernetes Monitoring is limited to 2,232 host hours & 37,944 container hours per month. Application Observability is limited to 2,232 host hours per month. Frontend Observability is limited to 50k sessions per month. Database Observability is limited to 2,232 host hours (3 database hosts). Grafana Assistant is limited to 3 active AI users per month (40M tokens / user / mo) & 25M tokens per month for service account usage. A $19/month platform fee is required for exceeding the free tier limits.",
-      "source_url": "https://grafana.com/pricing/",
-      "category": "Monitoring",
-      "first_read_date": "2026-10-06"
-    },
-    {
-      "vendor": "LLM7.io",
-      "change_type": "limits_reduced",
-      "impact": "high",
-      "summary": "The free tier limits have been significantly reduced. Previously 10 requests/minute, 60/hour, and 500,000 tokens/day without a key, and 40/minute, 100/hour, and 1,000,000 tokens/day with a free token. The current page states 1 request/minute, 60/hour, and 100,000 tokens/day with a free token.",
-      "previous_state": "LLM inference gateway. Without a key: 10 requests a minute, 60 an hour, 500,000 tokens per 24 hours. With a free token from dash.llm7.io: 40 a minute, 100 an hour, 1,000,000 tokens per 24 hours. Free access covers turbo-tier models not marked usage-only, such as GLM-5.3-Flash and codestral-latest. Other models, including all image and speech-to-text models, need Pro ($12/mo) or a paid balance.",
-      "current_state": "Text generation access type Free token has limits of 1 request per second, 60 requests per minute, and 250 requests per hour. Token availability is 100,000 tokens per 24 hours.",
-      "source_url": "https://docs.llm7.io/limits",
-      "category": "AI / ML",
-      "first_read_date": "2026-10-06"
-    },
-    {
-      "vendor": "SimplePDF.eu",
-      "change_type": "free_tier_removed",
-      "impact": "high",
-      "summary": "SimplePDF.eu's own page now redirects to simplepdf.com. The free plan no longer exists as described. The free editor does not collect submissions. Are features of paid plans.",
-      "previous_state": "Embed a PDF editor on your website and turn any PDF into a fillable form. The Free plan, for individuals editing PDFs, includes embedding on your site, unlimited PDFs and end users, and simple electronic signatures, but does not collect submissions: collecting and managing submissions starts on the Basic plan at $99 a month, with 2,500 documents and submissions a month.",
-      "current_state": "The page offers a free *trial* to start, but emphasizes paid plans for features like submission handling and white-labeling. The free editor does not store PDFs, and is HIPAA compliant because of that.",
-      "source_url": "https://simplepdf.eu/embed",
-      "category": "Forms",
-      "first_read_date": "2026-10-06"
-    },
-    {
-      "vendor": "testingbot.com",
-      "change_type": "limits_reduced",
       "impact": "medium",
-      "summary": "The page details a free plan with limited macOS sessions and specific browser versions.",
-      "previous_state": "Selenium Browser and Device Testing, [free for Open Source](https://testingbot.com/open-source)",
-      "current_state": "The free plan runs automated tests, live manual sessions, screenshot tests and visual comparisons, including Safari on macOS, on a recent version of each browser with a limited number of live macOS sessions. No credit card is required.",
-      "source_url": "https://testingbot.com/",
-      "category": "Testing",
-      "first_read_date": "2026-10-06"
+      "summary": "The free offering now focuses on downloading Elasticsearch and Kibana. While self-managed options remain, the description of a 'Free OSS' tier with the Elastic Stack is no longer prominent. The page details Platinum and Enterprise tiers with specific features and support levels, and highlights Elastic Cloud Serverless and Hosted as separately billed options.",
+      "previous_state": "The Elastic Stack — Elasticsearch, Kibana, ingest and basic security — self-managed at no cost on the Free and Open tier under the Elastic License and SSPL, with community support. Platinum (existing customers only) and Enterprise are custom-priced and add machine learning, cross-cluster replication, searchable snapshots and 24/7 support. Elastic Cloud Serverless and Hosted are billed separately by usage or resources.",
+      "current_state": "Download The full Elastic Stack Elasticsearch: The open source, distributed vector database and search and analytics engine built for speed and scale Kibana: The open source interface to query, analyze, visualize, and manage your data stored in Elasticsearch",
+      "source_url": "https://www.elastic.co/pricing/self-managed",
+      "category": "Monitoring",
+      "first_read_date": "2026-10-07"
     }
   ],
   "resolved": [
@@ -2249,6 +2172,102 @@
       "outcome": "corroborated",
       "detail": "a reading on 2026-10-06 read it as pricing_restructured too",
       "resolved_date": "2026-10-06"
+    },
+    {
+      "vendor": "AbstractAPI",
+      "change_type": "pricing_restructured",
+      "impact": "high",
+      "summary": "The free tier is still offered. The description is significantly different. The page details many individual APIs, each with its own free tier, rather than a suite of 15 APIs with a single free tier. The page states each API has a free tier with a generous usage allowance.",
+      "previous_state": "Suite of 15 REST APIs (IP geolocation, email validation, screenshots, exchange rates, phone validation, etc.) — free tier: 1,000 requests/month per API, 1 request/second rate limit. Non-commercial use only on free tier",
+      "source_url": "https://www.abstractapi.com/api",
+      "first_read_date": "2026-10-06",
+      "outcome": "contradicted",
+      "detail": "a reading on 2026-10-07 read a change the gate refused as repeats_a_refused_reading",
+      "resolved_date": "2026-10-07"
+    },
+    {
+      "vendor": "Auth0",
+      "change_type": "restriction",
+      "impact": "low",
+      "summary": "The free tier now requires credit card verification for custom domains. Additionally, the free tier includes Passkeys.",
+      "previous_state": "Identity platform — 25K MAU (B2C), unlimited logins, social + database connections, Universal Login, 1 Enterprise Connection, 5 Organizations, 1 Custom Domain. No credit card required",
+      "source_url": "https://auth0.com/pricing",
+      "first_read_date": "2026-10-06",
+      "outcome": "contradicted",
+      "detail": "a reading on 2026-10-07 read a change the gate refused as repeats_a_refused_claim",
+      "resolved_date": "2026-10-07"
+    },
+    {
+      "vendor": "bitnami.com",
+      "change_type": "pricing_restructured",
+      "impact": "high",
+      "summary": "The free tier is now limited to non-production use cases and only provides access to a portion of the images. Access to all images and other benefits requires a purchase.",
+      "previous_state": "Deploy prepared apps on IaaS. Management of 1 AWS micro instance free",
+      "source_url": "https://bitnami.com/",
+      "first_read_date": "2026-10-06",
+      "outcome": "contradicted",
+      "detail": "a reading on 2026-10-07 read a change the gate refused as repeats_a_refused_reading",
+      "resolved_date": "2026-10-07"
+    },
+    {
+      "vendor": "formlets.com",
+      "change_type": "pricing_restructured",
+      "impact": "high",
+      "summary": "The free tier now offers unlimited submissions.",
+      "previous_state": "Online forms, unlimited single page forms/month, 100 submissions/month, email notifications.",
+      "source_url": "https://formlets.com/",
+      "first_read_date": "2026-10-06",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-10-07 read it as pricing_restructured too",
+      "resolved_date": "2026-10-07"
+    },
+    {
+      "vendor": "Grafana Cloud",
+      "change_type": "limits_reduced",
+      "impact": "high",
+      "summary": "The free tier now includes access to all Grafana Cloud services with usage limits. The specific limits have changed and a $19/month platform fee is now required for exceeding those limits. Previously 10k metric series, 50 GB logs, and 50 GB traces.",
+      "previous_state": "Free tier includes access to all Grafana Cloud services with limited usage, 14-day retention, and community support. 10k metric series, 50 GB logs, and 50 GB traces are included. A $19/month platform fee is required for 10k active series, 50 GB ingested logs/traces, and 30 days retention.",
+      "source_url": "https://grafana.com/pricing/",
+      "first_read_date": "2026-10-06",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-10-07 read it as limits_reduced too",
+      "resolved_date": "2026-10-07"
+    },
+    {
+      "vendor": "LLM7.io",
+      "change_type": "limits_reduced",
+      "impact": "high",
+      "summary": "The free tier limits have been significantly reduced. Previously 10 requests/minute, 60/hour, and 500,000 tokens/day without a key, and 40/minute, 100/hour, and 1,000,000 tokens/day with a free token. The current page states 1 request/minute, 60/hour, and 100,000 tokens/day with a free token.",
+      "previous_state": "LLM inference gateway. Without a key: 10 requests a minute, 60 an hour, 500,000 tokens per 24 hours. With a free token from dash.llm7.io: 40 a minute, 100 an hour, 1,000,000 tokens per 24 hours. Free access covers turbo-tier models not marked usage-only, such as GLM-5.3-Flash and codestral-latest. Other models, including all image and speech-to-text models, need Pro ($12/mo) or a paid balance.",
+      "source_url": "https://docs.llm7.io/limits",
+      "first_read_date": "2026-10-06",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-10-07 read it as limits_reduced too",
+      "resolved_date": "2026-10-07"
+    },
+    {
+      "vendor": "SimplePDF.eu",
+      "change_type": "free_tier_removed",
+      "impact": "high",
+      "summary": "SimplePDF.eu's own page now redirects to simplepdf.com. The free plan no longer exists as described. The free editor does not collect submissions. Are features of paid plans.",
+      "previous_state": "Embed a PDF editor on your website and turn any PDF into a fillable form. The Free plan, for individuals editing PDFs, includes embedding on your site, unlimited PDFs and end users, and simple electronic signatures, but does not collect submissions: collecting and managing submissions starts on the Basic plan at $99 a month, with 2,500 documents and submissions a month.",
+      "source_url": "https://simplepdf.eu/embed",
+      "first_read_date": "2026-10-06",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-10-07 read it as free_tier_removed too",
+      "resolved_date": "2026-10-07"
+    },
+    {
+      "vendor": "testingbot.com",
+      "change_type": "limits_reduced",
+      "impact": "medium",
+      "summary": "The page details a free plan with limited macOS sessions and specific browser versions.",
+      "previous_state": "Selenium Browser and Device Testing, [free for Open Source](https://testingbot.com/open-source)",
+      "source_url": "https://testingbot.com/",
+      "first_read_date": "2026-10-06",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-10-07 read it as limits_reduced too",
+      "resolved_date": "2026-10-07"
     }
   ]
 }
