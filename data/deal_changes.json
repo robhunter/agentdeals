@@ -15839,7 +15839,7 @@
       "change_type": "record_corrected",
       "date": "2026-10-07",
       "date_source": "discovered",
-      "summary": "The next selection date for the UP Programme has been updated to January 7, 2027, from September 16, 2026.",
+      "summary": "Data correction - our listing named 16 September 2026 as the next UP Programme selection round, which has passed; clever.cloud/up-program now names 7 January 2027.",
       "tier": "UP Program",
       "tier_direction": "unchanged",
       "previous_state": "Clever Cloud's startup programme is now called UP. It offers up to €10,000 in cloud credits for the first year, onboarding and training with Clever Cloud engineers, a monthly coaching session, premium support access, workshops and masterclasses for technical teams, mentoring, and access to Angel Start financial planning tools. Admission is by selection round; the page names the next as 16 September 2026.",
@@ -15866,7 +15866,13 @@
       "category": "Monitoring",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-10-07"
+      "recorded_date": "2026-10-07",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-10-07",
+        "detail": "Retracted 2026-10-07: no change to the free tier. grafana.com/pricing, read 2026-10-07, still calls the Free plan \"Always free\" and says it is \"Limited to 10k active series per month\" and \"Limited to 50 GB ingested per month\" for logs and traces, with \"14 days retention\", the terms our listing states. The $19 a month platform fee is the Pro plan's, as before.",
+        "source_url": "https://grafana.com/pricing/"
+      }
     },
     {
       "vendor": "LLM7.io",
@@ -15900,7 +15906,13 @@
       "category": "Forms",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-10-07"
+      "recorded_date": "2026-10-07",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-10-07",
+        "detail": "Retracted 2026-10-07: the free plan was not removed. simplepdf.eu/embed now redirects to simplepdf.com/embed, a product page with a trial button. simplepdf.com/pricing, read 2026-10-07, still lists \"Free For individuals editing PDFs Use for free\" beside Basic at $99 a month, with \"Add SimplePDF to your site\" included on Free, the terms our listing states.",
+        "source_url": "https://simplepdf.com/pricing"
+      }
     },
     {
       "vendor": "testingbot.com",
@@ -15917,7 +15929,13 @@
       "category": "Testing",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-10-07"
+      "recorded_date": "2026-10-07",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-10-07",
+        "detail": "Retracted 2026-10-07: nothing narrowed. Our listing describes TestingBot's free plan for open-source projects, and testingbot.com/open-source, read 2026-10-07, still says \"Qualifying open source projects get a free TestingBot Open Source plan with unlimited automated testing and 2 concurrent tests, at no cost.\" The reading compared our listing with the homepage's description of a different plan.",
+        "source_url": "https://testingbot.com/open-source"
+      }
     }
   ]
 }
