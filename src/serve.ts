@@ -42,7 +42,7 @@ import { comparisonVerdictText, freeTierFaqAnswer, stabilityFaqAnswer, type Comp
 import { gateStatesAnEnding, publishedVendorLevel, restorationClause, restoredRemovalReason, vendorVerdictSentence, withheldRecordCountsOf, WITHHOLDING_BADGE_LABELS, vendorBadge, freeTierClaim, endingStatedInPlaceOfARating, endingShutsTheProductDown, endedClaimReliabilityAnswer, statesRiskCause, withholdingThatDoesNotLapse, demotionTheVerdictNames, narrowingSentence, ourOwnRecordsSentence, changeKindNoun, isOurOwnBookkeeping, emptyHistoryCaveatSentence, refusedReadOurConfirmationSupersedes, refusedReadWeHold, refusedReadWithholdingSentence, nothingWeReadDescribesTheTerms, unconfirmedThresholdSentence, unconfirmedTermsOpening, whyWeCannotConfirmTheseTerms, withheldForARefusedRead, withUnconfirmedTerms, refusalWithholdsStability, termsUnconfirmedBySource, termsTheVerdictWithholds, closingTerms, termsWithTheReasonWeCannotConfirmThem, termsNotVerifiedMetaSentence, termsWithheldLabel, theReadConfirmedThePrice, unconfirmedTermsSentence, whereTheDoubtSits, withheldBadgeLabel, type BadgeWithholding, type UnconfirmedTerms, type FreeTierClaim, type VendorVerdictInput, type WhereTheDoubtSits } from "./vendor-verdict.js";
 import { descriptionDeniesAFreeTier, listingOffersAFreeTier, tierMayCarryAFreePlanExcerpt, tierRecordsAFreeTier, tierWhoseFreeOfferIsTheLicence } from "./free-tier-record.js";
 import { whyTheExcerptCannotStand } from "./free-plan-excerpt-rules.js";
-import { alternativesUnderTheVendorsRule, conditionsBesideStoredTerms, conditionsForTheBrowser, conditionsHtml, conditionsOf, levelBesideTheVendorsRule, productionAnswerOpening, stableRatingBesideTheVendorsRule, theVendorsRuleOnProduction, withConditionsAfter, type TheVendorsRule } from "./listing-conditions.js";
+import { alternativesUnderTheVendorsRule, conditionsBesideStoredTerms, conditionsForTheBrowser, conditionsHtml, conditionsOf, levelBesideTheVendorsRule, productionAnswerOpening, rowSpanningTheTableHtml, stableRatingBesideTheVendorsRule, theVendorsRuleOnProduction, withConditionsAfter, type TheVendorsRule } from "./listing-conditions.js";
 import { conditionsField } from "./conditions-field.js";
 import { PAGE_HEAD_OPEN, withLedeBeforeNav } from "./page-lede.js";
 import { withReviewByline } from "./page-byline.js";
@@ -844,6 +844,15 @@ function conditionsAfterTheTermsHtml(offer: StoredTermsOf): string {
 function vendorPageConditionsHtml(vendorName: string): string {
   const primary = vendorVerdictContext(vendorName, utcDate())?.primary;
   return primary ? conditionsAfterTheTermsHtml(primary) : "";
+}
+
+function vendorPageConditionsHtmlForSlug(slug: string): string {
+  const vendorName = recordNamedBySlug(slug);
+  return vendorName ? vendorPageConditionsHtml(vendorName) : "";
+}
+
+function vendorPageConditionsRowHtml(slug: string, columns: number): string {
+  return rowSpanningTheTableHtml(vendorPageConditionsHtmlForSlug(slug), columns);
 }
 
 function withConditionsWhenWhole(offer: StoredTermsOf, printed: string): string {
@@ -19061,7 +19070,7 @@ function buildHetznerPricing2026Page(): string {
       <td>${escHtmlServer(c.region)}</td>
       <td style="color:var(--text-muted);font-size:.85rem">${escHtmlServer(c.note)}${isHetzner ? "" : guideRowReferralHtml(listedAs)}</td>
       <td class="figure-provenance" style="color:var(--text-muted);font-size:.85rem">${isHetzner ? hetznerReadProvenanceHtml() : figureProvenanceHtml(`${c.spec} ${c.price}`, listedAs, vendorSlug)}</td>
-    </tr>`;
+    </tr>${isHetzner ? "" : vendorPageConditionsRowHtml(vendorSlug, 6)}`;
   }).join("\n        ");
 
   const handTypedAlternativeRowCount = competitorPricing.filter(
@@ -29161,6 +29170,7 @@ function buildDatabasePricingPage(): string {
         '<h3>' + handwrittenVendorLinkHtml(s.slug, s.name, ' style="color:var(--text)"') + ' ' +
         '<span style="font-size:.75rem;color:var(--text-dim);font-weight:400">' + escHtmlServer(s.dbType) + ' \u00b7 ' + escHtmlServer(s.freeTierAsStated?.cardLabel ?? freeTypeLabels[s.freeType]) + '</span></h3>' +
         '<p class="diff-desc">' + escHtmlServer(detailForEndedOffer(offerForSlug(s.slug), s.freeDetails)) + '</p>' +
+        vendorPageConditionsHtmlForSlug(s.slug) +
         '</div>';
     }).join("\n    ");
     return '<h3 id="cat-' + cat + '">' + escHtmlServer(categoryLabels[cat]) + '</h3>' +
@@ -30532,6 +30542,7 @@ function buildHostingPricingPage(): string {
         '<h3>' + handwrittenVendorLinkHtml(s.slug, s.name, ' style="color:var(--text)"') + ' ' +
         '<span style="font-size:.75rem;color:var(--text-dim);font-weight:400">' + escHtmlServer(freeTypeLabels[s.freeType]) + '</span></h3>' +
         '<p class="diff-desc">' + escHtmlServer(s.freeDetails) + '</p>' +
+        vendorPageConditionsHtmlForSlug(s.slug) +
         '</div>';
     }).join("\n    ");
     return '<h3 id="cat-' + cat + '">' + escHtmlServer(categoryLabels[cat]) + '</h3>' +
@@ -35329,7 +35340,7 @@ ${mcpCtaCss()}
         <td class="cross">No</td>
         <td style="color:#3fb950">Yes</td>
         <td style="color:#3fb950">Low (standard Postgres)</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("supabase", 8)}
       <tr style="background:rgba(63,185,80,0.08)">
         <td class="provider-col"><a href="/vendor/neon" style="color:var(--text)">Neon</a></td>
         <td>Serverless Postgres</td>
@@ -35339,7 +35350,7 @@ ${mcpCtaCss()}
         <td class="check">Yes (10/project)</td>
         <td style="color:#3fb950">Yes</td>
         <td style="color:#3fb950">Low (standard Postgres)</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("neon", 8)}
       <tr>
         <td class="provider-col"><a href="/vendor/firebase" style="color:var(--text)">Firebase</a></td>
         <td>NoSQL (Firestore) + BaaS</td>
@@ -35349,7 +35360,7 @@ ${mcpCtaCss()}
         <td class="cross">No</td>
         <td style="color:#d29922">Mostly (Storage removed Feb 2026)</td>
         <td style="color:#f85149">High (proprietary)</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("firebase", 8)}
       <tr>
         <td class="provider-col"><a href="/vendor/turso" style="color:var(--text)">Turso</a></td>
         <td>Edge SQLite</td>
@@ -35359,7 +35370,7 @@ ${mcpCtaCss()}
         <td class="cross">No</td>
         <td style="color:#3fb950">Yes</td>
         <td style="color:#d29922">Medium (libSQL fork)</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("turso", 8)}
       <tr>
         <td class="provider-col"><a href="/vendor/mongodb-atlas" style="color:var(--text)">MongoDB Atlas</a></td>
         <td>Document NoSQL</td>
@@ -35369,7 +35380,7 @@ ${mcpCtaCss()}
         <td class="cross">No</td>
         <td style="color:#3fb950">Yes</td>
         <td style="color:#d29922">Medium (MongoDB query language)</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("mongodb-atlas", 8)}
       <tr>
         <td class="provider-col"><a href="/vendor/cloudflare-d1" style="color:var(--text)">Cloudflare D1</a></td>
         <td>Edge SQLite</td>
@@ -35379,7 +35390,7 @@ ${mcpCtaCss()}
         <td class="cross">No</td>
         <td style="color:#3fb950">Yes</td>
         <td style="color:#d29922">Medium (Cloudflare ecosystem)</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("cloudflare-d1", 8)}
       <tr>
         <td class="provider-col"><a href="/vendor/upstash" style="color:var(--text)">Upstash</a></td>
         <td>Serverless Redis + KV</td>
@@ -35389,7 +35400,7 @@ ${mcpCtaCss()}
         <td class="cross">No</td>
         <td style="color:#3fb950">Yes</td>
         <td style="color:#3fb950">Low (Redis-compatible)</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("upstash", 8)}
       <tr>
         <td class="provider-col"><a href="/vendor/convex" style="color:var(--text)">Convex</a></td>
         <td>Reactive backend</td>
@@ -35399,7 +35410,7 @@ ${mcpCtaCss()}
         <td class="cross">No</td>
         <td style="color:#3fb950">Yes</td>
         <td style="color:#f85149">High (proprietary)</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("convex", 8)}
       <tr style="background:rgba(248,81,73,0.08)">
         <td class="provider-col"><span style="color:var(--text-dim);text-decoration:line-through">PlanetScale</span> <span class="removed-badge">FREE REMOVED</span></td>
         <td>Serverless MySQL</td>
@@ -35409,7 +35420,7 @@ ${mcpCtaCss()}
         <td style="color:var(--text-dim)">Was included</td>
         <td style="color:#f85149">No (removed)</td>
         <td style="color:#f85149">High (proprietary Vitess)</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("planetscale", 8)}
     </tbody>
   </table>
   </div>
@@ -35461,7 +35472,7 @@ ${mcpCtaCss()}
         <td class="cross">Always-on (no cold starts)</td>
         <td>Built-in multi-tenancy, unlimited tenant DBs</td>
         <td>SaaS / multi-tenant apps</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("nile", 7)}
     </tbody>
   </table>
   </div>
@@ -35513,7 +35524,7 @@ ${mcpCtaCss()}
         <td class="check">750K executions/mo</td>
         <td class="check">Yes</td>
         <td style="color:#3fb950">Low — fully open-source, self-hostable</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("appwrite-cloud", 7)}
       <tr>
         <td class="provider-col">Convex</td>
         <td>Reactive document</td>
@@ -35528,7 +35539,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="context-box">
-    <strong>Firebase had major free tier changes in early 2026:</strong> Cloud Storage was removed from the Spark (free) plan in February 2026, and Google announced in March that Firebase Studio (formerly Project IDX) will shut down on March 22, 2027. If you're starting new, <strong>Supabase</strong> gives you a similar feature set on standard Postgres with no lock-in. <strong>Appwrite</strong> has the most generous free tier (75K MAU) and is fully open-source, with two constraints its plan card states and this table does not: the free plan is limited to 2 projects, and a free project is paused after 1 week of inactivity. See our <a href="/supabase-vs-firebase">Supabase vs Firebase comparison</a>.
+    <strong>Firebase had major free tier changes in early 2026:</strong> Cloud Storage was removed from the Spark (free) plan in February 2026, and Google announced in March that Firebase Studio (formerly Project IDX) will shut down on March 22, 2027. If you're starting new, <strong>Supabase</strong> gives you a similar feature set on standard Postgres with no lock-in. <strong>Appwrite</strong> has the most generous free tier (75K MAU) and is fully open-source, with two constraints its plan card states: the free plan is limited to 2 projects, and a free project is paused after 1 week of inactivity. See our <a href="/supabase-vs-firebase">Supabase vs Firebase comparison</a>.
   </div>
 
   <h2 id="edge">Edge / Embedded Databases</h2>
@@ -35570,7 +35581,7 @@ ${mcpCtaCss()}
         <td>Unlimited</td>
         <td>Unlimited</td>
         <td>Single-binary backend, hobby projects</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("pocketbase", 6)}
     </tbody>
   </table>
   </div>
@@ -35610,7 +35621,7 @@ ${mcpCtaCss()}
         <td>100K reads/day, 1K writes/day</td>
         <td class="check">Yes (eventually consistent)</td>
         <td>Edge config, feature flags</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("cloudflare-kv", 6)}
       <tr>
         <td class="provider-col">Momento</td>
         <td>Cache + pub/sub</td>
@@ -35618,7 +35629,7 @@ ${mcpCtaCss()}
         <td>Was unlimited within that transfer limit</td>
         <td class="cross">Cache only</td>
         <td>High-throughput caching</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("momento", 6)}
       <tr>
         <td class="provider-col">Redis Cloud</td>
         <td>Redis</td>
@@ -35626,7 +35637,7 @@ ${mcpCtaCss()}
         <td>Unlimited (shared)</td>
         <td class="check">Yes</td>
         <td>Dev/test Redis instances</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("redis-cloud", 6)}
     </tbody>
   </table>
   </div>
@@ -35656,28 +35667,28 @@ ${mcpCtaCss()}
         <td>Unlimited self-hosted. Cloud: 1 GB memory, 10 GB disk</td>
         <td>OSS: free. Cloud: Free Forever, 1 cluster, 1 collection</td>
         <td>Self-hosted vector search</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("weaviate", 5)}
       <tr>
         <td class="provider-col">Zilliz Cloud</td>
         <td style="font-family:var(--mono)">Up to 5 collections</td>
         <td style="font-family:var(--mono)">5 GB</td>
         <td>Free tier, no credit card</td>
         <td>Managed Milvus, large-scale vector search</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("zilliz-cloud", 5)}
       <tr>
         <td class="provider-col">LanceDB</td>
         <td>Unlimited (embedded)</td>
         <td>Unlimited (embedded)</td>
         <td>OSS: free. Cloud: $100 credits</td>
         <td>Embedded vector search, local development</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("lancedb", 5)}
       <tr>
         <td class="provider-col">Upstash Vector</td>
         <td style="font-family:var(--mono)">200M vectors &times; dimensions</td>
         <td>1 GB, up to 1,536 dimensions</td>
         <td>Serverless, no credit card. 10K queries or updates a day</td>
         <td>Lightweight RAG, serverless apps</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("upstash-vector", 5)}
     </tbody>
   </table>
   </div>
@@ -43738,17 +43749,17 @@ ${mcpCtaCss()}
 
   <div class="diff-card">
     <h3><a href="/vendor/vercel">Vercel</a></h3>
-    <div class="diff-desc"><strong>Free tier:</strong> Hobby includes 100 GB of Fast Data Transfer, 1M Edge Requests, 1M Function Invocations, 4 hours of Fluid Active CPU, 360 GB-hrs of Provisioned Memory, 1 GB of Blob Storage and 5K image transformations a month. Vercel is made by the creators of Next.js. Hobby includes preview deployments, Routing Middleware, ISR and image optimization. <strong>Key limitation:</strong> Hobby is for non-commercial personal use only. Commercial use needs Pro or Enterprise; Pro is $20 a month with one deploying seat and $20 for each additional deploying seat. <a href="/vercel-vs-netlify">See Vercel vs Netlify comparison &rarr;</a></div>
+    <div class="diff-desc"><strong>Free tier:</strong> Hobby includes 100 GB of Fast Data Transfer, 1M Edge Requests, 1M Function Invocations, 4 hours of Fluid Active CPU, 360 GB-hrs of Provisioned Memory, 1 GB of Blob Storage and 5K image transformations a month. Vercel is made by the creators of Next.js. Hobby includes preview deployments, Routing Middleware, ISR and image optimization. <strong>Key limitation:</strong> Hobby is for non-commercial personal use only. Commercial use needs Pro or Enterprise; Pro is $20 a month with one deploying seat and $20 for each additional deploying seat. <a href="/vercel-vs-netlify">See Vercel vs Netlify comparison &rarr;</a></div>${vendorPageConditionsHtmlForSlug("vercel")}
   </div>
 
   <div class="diff-card">
     <h3><a href="/vendor/netlify">Netlify</a> &mdash; Credit-Based Free Tier</h3>
-    <div class="diff-desc"><strong>Free tier:</strong> 300 credits a month. Bandwidth costs 20 credits per GB, about 15 GB a month if nothing else uses credits. Production deploys cost 15 credits each; deploy previews, branch deploys and failed deploys are free. Function compute costs 10 credits per GB-hour, and web requests 2 credits per 10,000. All projects pause when credits run out, with no overage charges. Accounts created before 2025-09-04 keep their legacy plans; legacy Free includes 100 GB of bandwidth and 300 build minutes a month, and 125,000 function invocations per site a month. <strong>Key limitation:</strong> bandwidth, deploys, compute and requests all draw on the one 300-credit pool.</div>
+    <div class="diff-desc"><strong>Free tier:</strong> 300 credits a month. Bandwidth costs 20 credits per GB, about 15 GB a month if nothing else uses credits. Production deploys cost 15 credits each; deploy previews, branch deploys and failed deploys are free. Function compute costs 10 credits per GB-hour, and web requests 2 credits per 10,000. All projects pause when credits run out, with no overage charges. Accounts created before 2025-09-04 keep their legacy plans; legacy Free includes 100 GB of bandwidth and 300 build minutes a month, and 125,000 function invocations per site a month. <strong>Key limitation:</strong> bandwidth, deploys, compute and requests all draw on the one 300-credit pool.</div>${vendorPageConditionsHtmlForSlug("netlify")}
   </div>
 
   <div class="diff-card">
     <h3><a href="/vendor/cloudflare-pages">Cloudflare Pages</a></h3>
-    <div class="diff-desc"><strong>Free tier:</strong> 100 projects per account, unlimited static bandwidth, 500 builds a month with a 20-minute timeout each, 100 custom domains per project, and 20,000 files per site, each up to 25 MiB. Pages Functions count toward the Workers Free limit of 100,000 requests a day and run with no cold starts. Cloudflare publishes Pages guides for Astro and SvelteKit. Pages takes only a static export of Next.js; for full-stack Next.js, Cloudflare recommends vinext, a beta reimplementation of the Next.js API, on Workers. Remix's successor is React Router. Cloudflare Workers also serves static assets free and without limit, and Cloudflare now tells new projects to start on Workers.</div>
+    <div class="diff-desc"><strong>Free tier:</strong> 100 projects per account, unlimited static bandwidth, 500 builds a month with a 20-minute timeout each, 100 custom domains per project, and 20,000 files per site, each up to 25 MiB. Pages Functions count toward the Workers Free limit of 100,000 requests a day and run with no cold starts. Cloudflare publishes Pages guides for Astro and SvelteKit. Pages takes only a static export of Next.js; for full-stack Next.js, Cloudflare recommends vinext, a beta reimplementation of the Next.js API, on Workers. Remix's successor is React Router. Cloudflare Workers also serves static assets free and without limit, and Cloudflare now tells new projects to start on Workers.</div>${vendorPageConditionsHtmlForSlug("cloudflare-pages")}
   </div>
 
   <h2 id="backend-api">Backend &amp; API Hosting</h2>
@@ -43756,27 +43767,27 @@ ${mcpCtaCss()}
 
   <div class="diff-card">
     <h3><a href="/vendor/render">Render</a></h3>
-    <div class="diff-desc"><strong>Free tier:</strong> free web services with 512 MB RAM and 0.1 CPU, and 750 free instance hours per workspace a month. They draw on a Hobby workspace's 5 GB of bandwidth and 500 build minutes a month. With a payment method on file, extra bandwidth is $0.15 per GB; without one, Render suspends free services for the rest of the month. One free Postgres database per workspace (256 MB RAM, 1 GB storage) expires 30 days after creation and is deleted 14 days later unless upgraded. One free Key Value instance per workspace (Redis-compatible, 25 MB) keeps its data in memory only. Hobby includes 2 custom domains with managed TLS, then $0.25 per domain a month. Docker images run on free web services. <strong>Key limitation:</strong> a free web service spins down after 15 minutes with no inbound traffic, and spinning it back up takes about one minute. Render says free instances are not for production.</div>
+    <div class="diff-desc"><strong>Free tier:</strong> free web services with 512 MB RAM and 0.1 CPU, and 750 free instance hours per workspace a month. They draw on a Hobby workspace's 5 GB of bandwidth and 500 build minutes a month. With a payment method on file, extra bandwidth is $0.15 per GB; without one, Render suspends free services for the rest of the month. One free Postgres database per workspace (256 MB RAM, 1 GB storage) expires 30 days after creation and is deleted 14 days later unless upgraded. One free Key Value instance per workspace (Redis-compatible, 25 MB) keeps its data in memory only. Hobby includes 2 custom domains with managed TLS, then $0.25 per domain a month. Docker images run on free web services. <strong>Key limitation:</strong> a free web service spins down after 15 minutes with no inbound traffic, and spinning it back up takes about one minute. Render says free instances are not for production.</div>${vendorPageConditionsHtmlForSlug("render")}
   </div>
 
   <div class="diff-card">
     <h3><a href="/vendor/railway">Railway</a></h3>
-    <div class="diff-desc"><strong>Free tier:</strong> new accounts get a 30-day trial with a one-time $5 credit and no credit card, allowing up to 2 vCPU and 1 GB RAM per service, 5 services per project and 1 custom domain. After the trial, the Free plan gives $1 of credit a month and allows up to 1 vCPU and 0.5 GB RAM per service and 0.5 GB of volume storage. Builds are free. Docker and many languages are supported. Railway's one-click PostgreSQL, MySQL, Redis and MongoDB templates are unmanaged: you handle backups, tuning, security and maintenance.</div>
+    <div class="diff-desc"><strong>Free tier:</strong> new accounts get a 30-day trial with a one-time $5 credit and no credit card, allowing up to 2 vCPU and 1 GB RAM per service, 5 services per project and 1 custom domain. After the trial, the Free plan gives $1 of credit a month and allows up to 1 vCPU and 0.5 GB RAM per service and 0.5 GB of volume storage. Builds are free. Docker and many languages are supported. Railway's one-click PostgreSQL, MySQL, Redis and MongoDB templates are unmanaged: you handle backups, tuning, security and maintenance.</div>${vendorPageConditionsHtmlForSlug("railway")}
   </div>
 
   <div class="diff-card">
     <h3><a href="/vendor/fly-io">Fly.io</a> <span class="caution-badge">NO FREE TIER</span></h3>
-    <div class="diff-desc"><strong>Free tier:</strong> Fly.io stopped offering plans to new customers on 2024-10-07. New accounts get a trial of 2 hours of machine runtime or 7 days, whichever comes first, before adding a payment method; after it, billing is pay-as-you-go with a payment method on file. Organizations on the Hobby, Launch or Scale plans before 2024-10-07 keep a legacy allowance: up to 3 shared-cpu-1x 256 MB VMs, 3 GB of volume storage, and 100 GB of outbound transfer a month in North America and Europe (30 GB in other regions). Volume snapshots: first 10 GB free each month, then $0.08 per GB-month.</div>
+    <div class="diff-desc"><strong>Free tier:</strong> Fly.io stopped offering plans to new customers on 2024-10-07. New accounts get a trial of 2 hours of machine runtime or 7 days, whichever comes first, before adding a payment method; after it, billing is pay-as-you-go with a payment method on file. Organizations on the Hobby, Launch or Scale plans before 2024-10-07 keep a legacy allowance: up to 3 shared-cpu-1x 256 MB VMs, 3 GB of volume storage, and 100 GB of outbound transfer a month in North America and Europe (30 GB in other regions). Volume snapshots: first 10 GB free each month, then $0.08 per GB-month.</div>${vendorPageConditionsHtmlForSlug("fly-io")}
   </div>
 
   <div class="diff-card">
     <h3><a href="/vendor/koyeb">Koyeb</a> <span class="caution-badge">NO FREE TIER</span></h3>
-    <div class="diff-desc"><strong>Free tier:</strong> none for new users. Since February 2026, new users must subscribe to Pro ($29 a month plus compute, with $10 of compute included) or a higher plan. Every plan can run one free-type Postgres instance with 0.25 vCPU, 1 GB RAM, 1 GB storage and 5 hours of compute a month. Organizations already on the Starter plan keep it. Paid plans deploy containers from any registry or build from Docker.</div>
+    <div class="diff-desc"><strong>Free tier:</strong> none for new users. Since February 2026, new users must subscribe to Pro ($29 a month plus compute, with $10 of compute included) or a higher plan. Every plan can run one free-type Postgres instance with 0.25 vCPU, 1 GB RAM, 1 GB storage and 5 hours of compute a month. Organizations already on the Starter plan keep it. Paid plans deploy containers from any registry or build from Docker.</div>${vendorPageConditionsHtmlForSlug("koyeb")}
   </div>
 
   <div class="diff-card">
     <h3><a href="/vendor/pythonanywhere">PythonAnywhere</a></h3>
-    <div class="diff-desc"><strong>Free tier:</strong> Beginner gives one web app at your-username.pythonanywhere.com, 512 MiB of disk, 100 CPU-seconds a day for consoles and tasks (not the web app), and 2 consoles. Free web apps stop after one month unless you log in and extend them. Accounts created since 2026-01-15 (2026-01-08 in the EU) get no MySQL and no scheduled tasks. Hosts server-side Python web apps (Django, Flask and others) with many libraries preinstalled. <strong>Key limitation:</strong> custom domains are paid only. Free accounts reach the internet only over HTTP(S) and only to allowlisted sites, about 6,500 of them, including api.openai.com and api.stripe.com.</div>
+    <div class="diff-desc"><strong>Free tier:</strong> Beginner gives one web app at your-username.pythonanywhere.com, 512 MiB of disk, 100 CPU-seconds a day for consoles and tasks (not the web app), and 2 consoles. Free web apps stop after one month unless you log in and extend them. Accounts created since 2026-01-15 (2026-01-08 in the EU) get no MySQL and no scheduled tasks. Hosts server-side Python web apps (Django, Flask and others) with many libraries preinstalled. <strong>Key limitation:</strong> custom domains are paid only. Free accounts reach the internet only over HTTP(S) and only to allowlisted sites, about 6,500 of them, including api.openai.com and api.stripe.com.</div>${vendorPageConditionsHtmlForSlug("pythonanywhere")}
   </div>
 
   <h2 id="edge-serverless">Edge &amp; Serverless</h2>
@@ -43784,12 +43795,12 @@ ${mcpCtaCss()}
 
   <div class="diff-card">
     <h3><a href="/vendor/cloudflare-workers">Cloudflare Workers</a></h3>
-    <div class="diff-desc"><strong>Free tier:</strong> 100,000 requests a day and 10 milliseconds of CPU time per invocation. KV: 1 GB storage, 100,000 reads and 1,000 writes a day. D1: 5 GB storage, 5 million rows read and 100,000 rows written a day. Queues: 10,000 operations a day. 5 Cron Triggers per account, and SQLite-backed Durable Objects. 100 Workers per account. Workers Builds: 3,000 build minutes a month. <strong>How it runs:</strong> no cold starts, in 330+ cities. Time spent waiting on network requests does not count toward CPU time, and duration is not charged. Workers Paid starts at $5 a month. See our <a href="/serverless-free-tier-comparison-2026">serverless comparison</a> for details.</div>
+    <div class="diff-desc"><strong>Free tier:</strong> 100,000 requests a day and 10 milliseconds of CPU time per invocation. KV: 1 GB storage, 100,000 reads and 1,000 writes a day. D1: 5 GB storage, 5 million rows read and 100,000 rows written a day. Queues: 10,000 operations a day. 5 Cron Triggers per account, and SQLite-backed Durable Objects. 100 Workers per account. Workers Builds: 3,000 build minutes a month. <strong>How it runs:</strong> no cold starts, in 330+ cities. Time spent waiting on network requests does not count toward CPU time, and duration is not charged. Workers Paid starts at $5 a month. See our <a href="/serverless-free-tier-comparison-2026">serverless comparison</a> for details.</div>${vendorPageConditionsHtmlForSlug("cloudflare-workers")}
   </div>
 
   <div class="diff-card">
     <h3><a href="/vendor/deno-deploy">Deno Deploy</a></h3>
-    <div class="diff-desc"><strong>Free tier:</strong> 1M requests a month, 20 GiB of egress a month, 10 hours of active CPU a month, 1 GiB KV storage, 1,000,000 KV read units and 500,000 KV write units a month, 10 apps, 5 custom domains, and 15 builds an hour, one at a time. Runs in 2 regions. Cold starts complete within 100 ms for a hello-world app and within a few hundred ms for larger apps. Native TypeScript and JavaScript. Built-in KV with strongly consistent writes.</div>
+    <div class="diff-desc"><strong>Free tier:</strong> 1M requests a month, 20 GiB of egress a month, 10 hours of active CPU a month, 1 GiB KV storage, 1,000,000 KV read units and 500,000 KV write units a month, 10 apps, 5 custom domains, and 15 builds an hour, one at a time. Runs in 2 regions. Cold starts complete within 100 ms for a hello-world app and within a few hundred ms for larger apps. Native TypeScript and JavaScript. Built-in KV with strongly consistent writes.</div>${vendorPageConditionsHtmlForSlug("deno-deploy")}
   </div>
 
   <h2 id="static-sites">Static Site Hosting</h2>
@@ -43797,7 +43808,7 @@ ${mcpCtaCss()}
 
   <div class="diff-card">
     <h3><a href="/vendor/github-pages">GitHub Pages</a></h3>
-    <div class="diff-desc"><strong>Free tier:</strong> every GitHub plan includes Pages; on GitHub Free it works only from public repositories. Published sites up to 1 GB, a soft limit of 100 GB of bandwidth a month, and a soft limit of 10 builds an hour that does not apply when you publish with a custom GitHub Actions workflow. Custom domains with HTTPS via Let's Encrypt. Jekyll is built in; other static site generators work through a GitHub Actions workflow or your own build. <strong>Limitations:</strong> static files only. Sites are public on every plan except Enterprise Cloud. GitHub bars using Pages to run an online business, e-commerce site or SaaS.</div>
+    <div class="diff-desc"><strong>Free tier:</strong> every GitHub plan includes Pages; on GitHub Free it works only from public repositories. Published sites up to 1 GB, a soft limit of 100 GB of bandwidth a month, and a soft limit of 10 builds an hour that does not apply when you publish with a custom GitHub Actions workflow. Custom domains with HTTPS via Let's Encrypt. Jekyll is built in; other static site generators work through a GitHub Actions workflow or your own build. <strong>Limitations:</strong> static files only. Sites are public on every plan except Enterprise Cloud. GitHub bars using Pages to run an online business, e-commerce site or SaaS.</div>${vendorPageConditionsHtmlForSlug("github-pages")}
   </div>
 
   <h2 id="cost-trap">The Hosting Cost Trap</h2>

@@ -9,6 +9,8 @@ export const USES_A_VENDOR_CAN_RULE_OUT: readonly UseAVendorRulesOut[] = ["produ
 
 export const LISTING_CONDITIONS_CLASS = "listing-conditions";
 
+export const VENDOR_CONDITIONS_ROW_CLASS = "vendor-conditions-row";
+
 export function conditionsOf(offer: Pick<Offer, "conditions">): readonly ListingCondition[] {
   return Array.isArray(offer.conditions) ? offer.conditions : [];
 }
@@ -34,6 +36,10 @@ export function conditionsHtml(conditions: readonly ListingCondition[], esc: Esc
   const items = conditions.map(condition =>
     `<li>${esc(condition.text)} (From <a href="${esc(condition.url)}" rel="nofollow noopener">${esc(citationLabel(condition.url))}</a>, read ${esc(condition.read_on)}.)</li>`);
   return `\n    <ul class="${LISTING_CONDITIONS_CLASS}" style="margin:.6rem 0 0 1.1rem;padding:0;font-size:.9rem;color:var(--text-muted);line-height:1.7">${items.join("")}</ul>`;
+}
+
+export function rowSpanningTheTableHtml(conditionsList: string, columns: number): string {
+  return conditionsList === "" ? "" : `\n      <tr class="${VENDOR_CONDITIONS_ROW_CLASS}"><td colspan="${columns}">${conditionsList}</td></tr>`;
 }
 
 export function conditionsInPlainText(conditions: readonly ListingCondition[]): string {

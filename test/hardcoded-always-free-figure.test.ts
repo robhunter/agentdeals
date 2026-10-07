@@ -9,6 +9,7 @@ import { assertPopulationFloor } from "./population-floor.ts";
 const { statedQuantities, quantitiesNotIn } = await import("../dist/quoted-figures.js");
 const { statementsWeHold } = await import("../dist/figure-provenance.js");
 const { toSlug } = await import("../dist/slug.js");
+const { VENDOR_CONDITIONS_ROW_CLASS } = await import("../dist/listing-conditions.js");
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -249,6 +250,7 @@ describe("#1734 — the alternatives table says where each row's figures come fr
       .replace(/\s+/g, " ")
       .trim();
     rows = [...table.matchAll(/<tr[\s\S]*?<\/tr>/g)]
+      .filter(row => !row[0].includes(`class="${VENDOR_CONDITIONS_ROW_CLASS}"`))
       .map(row => {
         const cells = [...row[0].matchAll(/<td[^>]*>([\s\S]*?)<\/td>/g)].map(cell =>
           unescapeServed(cell[1]!.replace(/<[^>]*>/g, " ")).replace(/\s+/g, " ").trim(),
