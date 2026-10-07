@@ -41,6 +41,10 @@ const WITHDRAWN: Record<string, RegExp> = {
   "a description that claims every Azure free tier service": /guide to every Azure free tier service/,
 };
 
+const CONSUMPTION_PLAN_PAGE = "https://learn.microsoft.com/en-us/azure/azure-functions/consumption-plan";
+const CONSUMPTION_PLAN_PAGE_LABEL = "learn.microsoft.com/en-us/azure/azure-functions/consumption-plan";
+const LINUX_CONSUMPTION_RETIREMENT = "Microsoft retires the Consumption plan on Linux on 2028-09-30 and says to move Linux apps to Flex Consumption before then. Linux Consumption apps still on the v3 runtime stopped running after 2026-09-30; Microsoft's fix is to migrate them to the v4 runtime. Windows Consumption apps are not currently affected.";
+
 const TITLE = "Azure Free Tier 2026 — Always-Free and 12-Month Services, Limits, and Billing Rules";
 const HEADING = "Azure Free Tier 2026";
 const META = "Microsoft lists 65+ always-free Azure services. This page covers the main ones, the 12-month offers, the $200 credit, and billing rules.";
@@ -61,7 +65,7 @@ const STATED_ON_THE_PAGE = [
 const ALWAYS_FREE_ROWS: [string, string][] = [
   ["Azure SQL Database", "Up to 10 General Purpose serverless databases, each with 100,000 vCore seconds and 32 GB/month, for the lifetime of your subscription"],
   ["Container Apps", "180,000 vCPU seconds, 360,000 GiB seconds and 2 million requests/month"],
-  ["Azure Functions", "Flex Consumption: 250,000 executions and 100,000 GB-s/month. Legacy Consumption plan: 1M executions and 400,000 GB-s/month"],
+  ["Azure Functions", `Flex Consumption: 250,000 executions and 100,000 GB-s/month. Legacy Consumption plan: 1M executions and 400,000 GB-s/month ${LINUX_CONSUMPTION_RETIREMENT} (From ${CONSUMPTION_PLAN_PAGE_LABEL}, read 2026-10-07.)`],
   ["Foundry Tools: Language", "5,000 text records/month"],
   ["Foundry Tools: Translator", "2 million characters/month"],
   ["Azure AI Search", "3 indexes, 50 MB storage per service (F tier)"],
@@ -236,6 +240,19 @@ describe("the Azure free tier guide states Microsoft's terms as Microsoft's own 
 
   it("is headed by its title's name, without calling itself complete", () => {
     assert.strictEqual(html.match(/<h1>([^<]*)<\/h1>/)?.[1], HEADING);
+  });
+
+  it("says in the Functions row that Linux Consumption hosting retires on 2028-09-30, that v3 apps on it stopped after 2026-09-30, and that Windows Consumption apps are not affected, citing Microsoft's page and the day it was read", () => {
+    const section = html.slice(html.indexOf('id="always-free"'));
+    const functionsRow = [...section.slice(0, section.indexOf("</table>")).matchAll(/<tr[^>]*>[\s\S]*?<\/tr>/g)]
+      .map(([row]) => row)
+      .find((row) => textOf(row).includes("Azure Functions"));
+    assert.ok(functionsRow, "no Azure Functions row in the Always Free table");
+    const stated = textOf(functionsRow);
+    for (const fact of ["on Linux on 2028-09-30", "to Flex Consumption before then", "v3 runtime stopped running after 2026-09-30", "migrate them to the v4 runtime", "Windows Consumption apps are not currently affected"]) {
+      assert.ok(stated.includes(fact), `the Functions row does not say "${fact}": ${stated}`);
+    }
+    assert.ok(functionsRow.includes(`<a href="${CONSUMPTION_PLAN_PAGE}" rel="nofollow noopener">${CONSUMPTION_PLAN_PAGE_LABEL}</a>, read 2026-10-07.)`), "the row cites Microsoft's Consumption plan page with the day it was read");
   });
 
   it("keeps the Cosmos DB and App Service rows", () => {
