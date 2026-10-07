@@ -125,9 +125,9 @@ import { buildProductFunctions, functionMembers, functionDefinitions, functionMe
 import { curatedAlternativesFor } from "./curated-alternatives.js";
 import { vendorSubstitutes, substitutesListedFor } from "./vendor-substitutes.js";
 import type { Agent, ChangeDateSource, DealChange, FreePlanExcerpt, RiskCause, RatingWithheld, LinkUnreachable, ListingCondition, Offer, StabilityClass, SubtypeLabel } from "./types.js";
-import { A_DATED_HEADING_MARKER, A_DATED_SECTION_MARKER, datedHeadingNoticeHtml, datedSectionNoticeHtml, namedFromItsDate, namedOnceItsDateArrived, namedWhileAheadOf, namedWhileNotBefore, ANNOUNCED_BADGE, ANNOUNCED_HEADING, announcedIntro, changeDateLabel, changeEntryDateLabel, changeEntryLongDateLabel, changeDateClause, changeDatePublished, changeEventStartDate, capListSections, latestEventDate, offerExpiryAfter, feedEntryUpdated, undatedGroupHeading, UNDATED_TILE_LABEL, firstReadHeading, discoveryBatchNote, coveringBracketedChanges, changeEntryDateLabelHtml, isoWeekOf, monthlyChangeSeries, changesInWindow, discoveryMonthSeriesHeading, periodComparisonSentence, DISCOVERED_DATE_PREFIX, EFFECTIVE_DATE_PREFIX, UNDATED_GROUP_NOTE, UNKNOWN_EFFECTIVE_DATE_MARKER, EFFECTIVE_BY_DATE_MEANING, BRACKETED_DATE_PREFIX, RECORDED_DATE_PREFIX, CORRECTED_DATE_PREFIX, EFFECTIVE_MONTH_SERIES_NOTE, DISCOVERY_MONTH_SERIES_NOTE, weekRangeLabel, newestChangeInEffect, vendorPageLastUpdated } from "./change-dates.js";
+import { A_DATED_HEADING_MARKER, A_DATED_SECTION_MARKER, datedHeadingNoticeHtml, datedSectionNoticeHtml, namedFromItsDate, namedOnceItsDateArrived, namedWhileAheadOf, namedWhileNotBefore, ANNOUNCED_BADGE, ANNOUNCED_HEADING, announcedIntro, changeDateLabel, changeEntryDateLabel, changeEntryLongDateLabel, changeDateClause, changeDatePublished, changeEventStartDate, capListSections, latestEventDate, offerExpiryAfter, feedEntryUpdated, UNDATED_TILE_LABEL, firstReadHeading, discoveryBatchNote, coveringBracketedChanges, changeEntryDateLabelHtml, isoWeekOf, monthlyChangeSeries, changesInWindow, discoveryMonthSeriesHeading, periodComparisonSentence, DISCOVERED_DATE_PREFIX, EFFECTIVE_DATE_PREFIX, UNKNOWN_EFFECTIVE_DATE_MARKER, EFFECTIVE_BY_DATE_MEANING, BRACKETED_DATE_PREFIX, RECORDED_DATE_PREFIX, CORRECTED_DATE_PREFIX, EFFECTIVE_MONTH_SERIES_NOTE, DISCOVERY_MONTH_SERIES_NOTE, weekRangeLabel, newestChangeInEffect, vendorPageLastUpdated } from "./change-dates.js";
 import { changeFeedEntries, feedEntryFields, feedUpdatedTimestamp, changeFeedProvenanceNote, CHANGE_FEED_ENTRY_LIMIT, CHANGE_FEED_DESCRIPTION, CHANGE_FEED_NAMESPACE, CHANGE_FEED_NAMESPACE_PREFIX, channelUpdatedTimestamp, WEEKLY_FEED_POPULATION_NOTE, feedLinkTag, feedEntrySourceXml, digestSourceXml, PER_CHANGE_FEED, WEEKLY_DIGEST_FEED } from "./change-feed.js";
-import { changeLogSections, ourRecordsSectionHeading, OUR_RECORDS_SECTION_NOTE, type MonthGroup } from "./change-log-sections.js";
+import { changeLogInPageOrder, changeLogSections, changeLogSectionsHtml } from "./change-log-sections.js";
 import { FEED_CORRECTIONS, correctionEntriesXml } from "./feed-corrections.js";
 import { buildDay, emptyPageLastmod, entryDay, fallbackDay, httpDate, lastmodFor, newestLastmod, readPageLastmod, type PageLastmodLedger } from "./page-lastmod.js";
 import { bestOfPathResolves, readBestOfPublished } from "./best-of-publication.js";
@@ -46289,7 +46289,10 @@ ${globalNavCss()}
   function changeEntryDateLabel(c) {
     if (c.date_meaning === EFFECTIVE_DATE_PREFIX) return EFFECTIVE_DATE_PREFIX + ' ' + c.date;
     if (c.change_type === CORRECTION_TO_OUR_OWN_RECORD && c.archive_check && c.archive_check.outcome === OURS_ARCHIVE_OUTCOME) return RECORDED_DATE_PREFIX + ' ' + (c.recorded_date || c.date) + ' \u00b7 ' + CORRECTED_DATE_PREFIX + ' ' + c.archive_check.checked;
-    if (c.date_meaning === EFFECTIVE_BY_DATE_MEANING) return BRACKETED_DATE_PREFIX + ' ' + c.archive_check.brackets[0].last_old + ' and ' + c.date;
+    if (c.date_meaning === EFFECTIVE_BY_DATE_MEANING) {
+      var firstNew = c.archive_check.brackets[0].first_new;
+      return BRACKETED_DATE_PREFIX + ' ' + c.archive_check.brackets[0].last_old + ' and ' + (firstNew && firstNew <= c.date ? firstNew : c.date);
+    }
     return DISCOVERED_DATE_PREFIX + ' ' + c.date + ' \u00b7 ' + UNKNOWN_EFFECTIVE_DATE_MARKER;
   }
 
@@ -48121,12 +48124,6 @@ function buildPricingChangesPage(): string {
   const sorted = [...eventDated].sort((a, b) => b.date.localeCompare(a.date));
   const sections = changeLogSections(allChanges, today);
 
-  const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-  function formatMonth(key: string): string {
-    const [y, m] = key.split("-");
-    return `${monthNames[parseInt(m, 10) - 1]} ${y}`;
-  }
-
   const filterCategory: Record<string, string> = CHANGE_DIRECTION;
 
   function buildChangeEntry(c: typeof allChanges[0]): string {
@@ -48235,26 +48232,6 @@ ${altHtml}
         </select>
       </div>
       <div class="pc-filter-count"><span id="pc-visible-count">${sorted.length}</span> of ${sorted.length} changes shown</div>
-    </div>`;
-
-  const monthGroupsHtml = (groups: MonthGroup<typeof allChanges[0]>[]) => groups.map(({ month, changes }) => {
-    const entriesHtml = changes.map(c => buildChangeEntry(c)).join("\n");
-    return `    <div class="month-group">
-      <h2 class="month-heading" id="month-${month}">${formatMonth(month)}</h2>
-${entriesHtml}
-    </div>`;
-  }).join("\n");
-
-  const undatedHtml = sections.undated.length === 0 ? "" : `    <div class="month-group month-group-undated">
-      <h2 class="month-heading" id="month-undated">${undatedGroupHeading(sections.undated.length, allChanges.length)}</h2>
-      <p class="month-note">${coveringBracketedChanges(UNDATED_GROUP_NOTE, sections.undated)}</p>
-${sections.undated.map(c => buildChangeEntry(c)).join("\n")}
-    </div>`;
-
-  const ourRecordsHtml = sections.ours.length === 0 ? "" : `    <div class="month-group month-group-ours">
-      <h2 class="month-heading" id="month-ours">${escHtmlServer(ourRecordsSectionHeading(sections.ours.length))}</h2>
-      <p class="month-note">${escHtmlServer(OUR_RECORDS_SECTION_NOTE)}</p>
-${sections.ours.map(c => buildChangeEntry(c)).join("\n")}
     </div>`;
 
   const title = "Developer Tool Pricing Changes \u2014 Free Tier Tracker";
@@ -48518,10 +48495,7 @@ ${upcomingChanges.map(c => buildChangeEntry(c)).join("\n")}
 ` : ""}
 ${filterButtonsHtml}
 
-${monthGroupsHtml(sections.recentMonths)}
-${undatedHtml}
-${monthGroupsHtml(sections.olderMonths)}
-${ourRecordsHtml}
+${changeLogSectionsHtml(sections, allChanges.length, buildChangeEntry, escHtmlServer)}
 
   <div class="cross-links">
     <h2>Related</h2>
@@ -48610,8 +48584,8 @@ function buildChangesPage(): string {
   const undatedCounted = trackedChanges(undatedChanges).length;
 
   const sorted = [...eventDated].sort((a, b) => b.date.localeCompare(a.date));
-  const undatedSorted = [...undatedChanges].sort((a, b) => b.date.localeCompare(a.date));
-  const newestFirst = [...allChanges].sort((a, b) => b.date.localeCompare(a.date));
+  const sections = changeLogSections(allChanges, today);
+  const inPageOrder = changeLogInPageOrder(sections);
 
   const byMonth = new Map<string, typeof sorted>();
   for (const c of sorted) {
@@ -48620,14 +48594,8 @@ function buildChangesPage(): string {
     byMonth.get(monthKey)!.push(c);
   }
 
-  const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-  function formatMonth(key: string): string {
-    const [y, m] = key.split("-");
-    return `${monthNames[parseInt(m, 10) - 1]} ${y}`;
-  }
-
   const anchorHolder = new Map<string, typeof allChanges[0]>();
-  for (const c of newestFirst) {
+  for (const c of inPageOrder) {
     const anchor = changeLogAnchorFor(c.vendor);
     if (anchor && !anchorHolder.has(anchor)) anchorHolder.set(anchor, c);
   }
@@ -48666,21 +48634,7 @@ ${altHtml}
 
   const upcomingCount = changesTheVendorMade(trackedChanges(sorted)).filter(c => c.date >= today).length;
   const removedCount = changesTheVendorMade(counted).filter(endsAFreeTier).length;
-  const entriesListed = sorted.length + undatedSorted.length;
-
-  const monthsHtml = Array.from(byMonth.entries()).map(([month, changes]) => {
-    const entriesHtml = changes.map(c => buildChangeEntry(c)).join("\n");
-    return `    <div class="month-group">
-      <h2 class="month-heading">${formatMonth(month)}</h2>
-${entriesHtml}
-    </div>`;
-  }).join("\n");
-
-  const undatedHtml = undatedSorted.length === 0 ? "" : `    <div class="month-group month-group-undated">
-      <h2 class="month-heading">${undatedGroupHeading(undatedSorted.length, allChanges.length)}</h2>
-      <p class="month-note">${coveringBracketedChanges(UNDATED_GROUP_NOTE, undatedSorted)}</p>
-${undatedSorted.map(c => buildChangeEntry(c)).join("\n")}
-    </div>`;
+  const entriesListed = inPageOrder.length;
 
   const title = "Deal Change Timeline \u2014 AgentDeals";
   const metaDesc = `${trackedChanges(dealChanges).length} developer infrastructure pricing changes tracked since launch \u2014 ${last30DaysCount} in the last 30 days. Free tier removals, price increases, product shutdowns, and new deals.`;
@@ -48688,12 +48642,12 @@ ${undatedSorted.map(c => buildChangeEntry(c)).join("\n")}
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    itemListOrder: listOrderOf("newest-first"),
+    itemListOrder: listOrderOf("sectioned"),
     name: title,
     description: `${metaDesc} This list holds every record we hold — ${changeCountPhrase("held", allChanges)} — counted at ${BASE_URL}${TRACKED_CHANGE_RULE_PATH}.`,
     numberOfItems: entriesListed,
     url: `${BASE_URL}/changes`,
-    itemListElement: newestFirst.slice(0, 50).map((c, i) => {
+    itemListElement: inPageOrder.slice(0, 50).map((c, i) => {
       const citation = changeSourceCitation(c);
       return {
         "@type": "ListItem",
@@ -48789,7 +48743,7 @@ ${globalNavCss()}
   ${buildGlobalNav("changes")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; Changes</div>
   <h1>Deal Change Timeline</h1>
-  <p class="page-intro">Every pricing change we\u2019ve tracked \u2014 free tier removals, price increases, restructures, and new deals. ${listOrderSentence("newest-first")} <a href="#${TRACKED_CHANGE_RULE_ANCHOR}">What counts as a change</a>. Subscribe to stay ahead.</p>
+  <p class="page-intro">Every pricing change we\u2019ve tracked \u2014 free tier removals, price increases, restructures, and new deals. ${listOrderSentence("sectioned")} <a href="#${TRACKED_CHANGE_RULE_ANCHOR}">What counts as a change</a>. Subscribe to stay ahead.</p>
   <a href="/feed.xml" class="rss-link">\u{1F4E1} Subscribe to deal changes</a>
   <a href="/deadlines" class="rss-link" style="margin-left:.5rem">\u{1F6A8} See upcoming deadlines &rarr;</a>
 
@@ -48819,8 +48773,7 @@ ${undatedTileHtml(undatedCounted)}
 
 ${changeLogFreshnessNote()}
 ${whatCountsAsAChangeHtml(dealChanges, entriesListed)}
-${undatedHtml}
-${monthsHtml}
+${changeLogSectionsHtml(sections, allChanges.length, buildChangeEntry, escHtmlServer)}
 
   <div class="mcp-cta">
     <p>Get real-time pricing change alerts in your AI coding assistant.</p>

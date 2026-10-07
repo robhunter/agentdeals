@@ -95,7 +95,7 @@ function monthKeyFromHeading(heading: string): string | null {
 
 function changeLogMonths(body: string): Map<string, number> {
   const months = new Map<string, number>();
-  for (const group of body.split(/<h2 class="month-heading">/).slice(1)) {
+  for (const group of body.split(/<h2 class="month-heading"[^>]*>/).slice(1)) {
     const heading = group.slice(0, group.indexOf("<"));
     const key = monthKeyFromHeading(heading);
     if (!key) continue;

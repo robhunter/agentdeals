@@ -1,6 +1,6 @@
 import type { DealChange } from "./types.js";
 import { changesTheVendorMade, isOurOwnBookkeeping } from "./data.js";
-import { groupByMonth, partitionByDateProvenance } from "./change-dates.js";
+import { coveringBracketedChanges, groupByMonth, partitionByDateProvenance, undatedGroupHeading, UNDATED_GROUP_NOTE, type DatedChange } from "./change-dates.js";
 
 type LoggedChange = Pick<DealChange, "date" | "date_source" | "recorded_date" | "change_type"> & {
   resolution?: DealChange["resolution"];
@@ -51,4 +51,44 @@ export function changeLogSections<T extends LoggedChange>(changes: readonly T[],
     olderMonths: months.filter(group => group.month < earliestRecentMonth),
     ours: newestFirst(changes.filter(isOurOwnBookkeeping)),
   };
+}
+
+const MONTH_NAMES = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+export function monthHeadingLabel(month: string): string {
+  const [year, number] = month.split("-");
+  return `${MONTH_NAMES[parseInt(number, 10) - 1]} ${year}`;
+}
+
+export function changeLogInPageOrder<T>(sections: ChangeLogSections<T>): T[] {
+  return [
+    ...sections.recentMonths.flatMap(group => group.changes),
+    ...sections.undated,
+    ...sections.olderMonths.flatMap(group => group.changes),
+    ...sections.ours,
+  ];
+}
+
+export function changeLogSectionsHtml<T extends DatedChange>(
+  sections: ChangeLogSections<T>,
+  heldTotal: number,
+  entryHtml: (change: T) => string,
+  esc: (text: string) => string,
+): string {
+  const entries = (changes: readonly T[]) => changes.map(change => entryHtml(change)).join("\n");
+  const monthGroups = (groups: MonthGroup<T>[]) => groups.map(({ month, changes }) => `    <div class="month-group">
+      <h2 class="month-heading" id="month-${month}">${monthHeadingLabel(month)}</h2>
+${entries(changes)}
+    </div>`).join("\n");
+  const undated = sections.undated.length === 0 ? "" : `    <div class="month-group month-group-undated">
+      <h2 class="month-heading" id="month-undated">${undatedGroupHeading(sections.undated.length, heldTotal)}</h2>
+      <p class="month-note">${coveringBracketedChanges(UNDATED_GROUP_NOTE, sections.undated)}</p>
+${entries(sections.undated)}
+    </div>`;
+  const ours = sections.ours.length === 0 ? "" : `    <div class="month-group month-group-ours">
+      <h2 class="month-heading" id="month-ours">${esc(ourRecordsSectionHeading(sections.ours.length))}</h2>
+      <p class="month-note">${esc(OUR_RECORDS_SECTION_NOTE)}</p>
+${entries(sections.ours)}
+    </div>`;
+  return [monthGroups(sections.recentMonths), undated, monthGroups(sections.olderMonths), ours].join("\n");
 }

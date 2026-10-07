@@ -163,7 +163,7 @@ describe("/free-tier-tracker lists the year's free tier removals and cuts from t
 
   it("dates a bracketed change by its bracket and every other change by its effective date", () => {
     const q3 = quarters.find((q) => q.heading === "Q3 2026")!;
-    assert.deepStrictEqual(q3.dates, ["effective 2026-09-20", "effective between 2026-05-10 and 2026-08-28", "effective 2026-08-14"]);
+    assert.deepStrictEqual(q3.dates, ["effective 2026-09-20", "effective between 2026-05-10 and 2026-05-13", "effective 2026-08-14"]);
   });
 
   it("leaves out undated, retracted, medium-impact, last year's and not-yet-arrived records", () => {

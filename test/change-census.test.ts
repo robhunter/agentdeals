@@ -21,7 +21,7 @@ const {
 } = await import("../dist/change-census.js");
 const { whyNotEvidence } = await import("../dist/risk-scorecard.js");
 const { isACorrectionToOurOwnRecord } = await import("../dist/change-resolution.js");
-const { loadDealChanges, partitionByDateProvenance } = await import("../dist/data.js");
+const { changesTheVendorMade, loadDealChanges, partitionByDateProvenance } = await import("../dist/data.js");
 
 const dealChanges = loadDealChanges() as any[];
 
@@ -324,8 +324,8 @@ describe("every published total is the tracked count or names the slice it is", 
 
   it("does not move the count of changes whose effective date is unknown", async () => {
     const body = await get("/changes");
-    const undated = partitionByDateProvenance(dealChanges).discovered.length;
-    assertPopulationFloor(undated, 200, "records whose effective date is unknown");
+    const undated = partitionByDateProvenance(changesTheVendorMade(dealChanges)).discovered.length;
+    assertPopulationFloor(undated, 100, "vendor changes whose effective date is unknown");
     assert.ok(
       body.includes(`Effective date unknown (${undated} changes, of ${dealChanges.length.toLocaleString("en-US")} ${sliceById("held").noun})`),
       `/changes does not publish the undated group at ${undated} over the held slice`,
