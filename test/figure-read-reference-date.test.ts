@@ -4,7 +4,7 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import {
-  DECLARED_FIGURE_READS, HETZNER_PLAN_AVAILABILITY_READ_ON, HETZNER_PLAN_TABLE_READ_ON,
+  DECLARED_FIGURE_READS, HETZNER_PLAN_TABLE_READ_ON,
   READ_DATES_THAT_ARE_NOT_FIGURE_READS, STORAGE_RATE_CARD_READ_ON, TABLE_STALENESS_DISCLOSURES,
   declaredFigureReadsFor, factsOutdatedBy, newestChangeBySlug, parsePageReviews, referenceDateFor,
   reviewStatus, staleFactPages, utcToday,
@@ -210,11 +210,16 @@ describe("the hetzner plan table is dated by the read that produced it", () => {
     }
   });
 
-  it("dates the hetzner row by the newer of its two reads, the prices' read", () => {
-    const [prices, availability] = [HETZNER_PLAN_TABLE_READ_ON, HETZNER_PLAN_AVAILABILITY_READ_ON];
-    assert.ok(prices > availability, "the prices were read after the availability");
-    assert.ok(!tableFlags(dayAfter(availability)).includes("hetzner"));
-    assert.ok(tableFlags(dayAfter(prices)).includes("hetzner"));
+  it("dates the hetzner row by the newer of its two reads, whichever is declared first", () => {
+    const older = "2026-09-04";
+    const newer = "2026-10-02";
+    assert.strictEqual(declared.filter(read => read.vendors.includes("hetzner")).length, 2);
+    for (const order of [[newer, older], [older, newer]]) {
+      const reads = declared.map((read, at) => ({ ...read, read_on: order[at]! }));
+      assert.ok(!tableFlags(dayAfter(older), reads).includes("hetzner"), order.join(" then "));
+      assert.ok(!tableFlags(newer, reads).includes("hetzner"), order.join(" then "));
+      assert.ok(tableFlags(dayAfter(newer), reads).includes("hetzner"), order.join(" then "));
+    }
   });
 });
 

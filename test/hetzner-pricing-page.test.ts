@@ -13,11 +13,16 @@ import {
   HETZNER_CLOUD_PLANS,
   HETZNER_PRICES_READ,
   HETZNER_SINGAPORE_EXAMPLE,
+  cheaperUnorderablePlanWithMoreServer,
   cheapestOrderableHetznerPlan,
   hetznerEntryPriceClause,
   unorderableHetznerPlans,
+  unpayableLowestPricesSentence,
 } from "../dist/hetzner-pricing.js";
 import { parseHetznerPricesRead } from "../dist/page-reviews.js";
+import { everyRouteTheSitemapPublishes } from "./sitemap-routes.ts";
+
+type HetznerPlan = import("../src/hetzner-pricing.ts").HetznerPlan;
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -78,6 +83,7 @@ const PAGES_NAMING_HETZNER_PRICES = [
   "/hetzner-pricing-2026",
   "/hetzner-alternatives",
   "/hosting-alternatives",
+  "/digitalocean-free-tier-2026",
 ];
 
 before(async () => { proc = await startServer(); });
@@ -109,6 +115,44 @@ describe("the plan table Hetzner pages are priced from", () => {
     const cheapestListed = HETZNER_CLOUD_PLANS.reduce((a, b) => (a.eur <= b.eur ? a : b));
     assert.equal(cheapestListed.available, false, "the trap is that the lowest price is not orderable");
   });
+
+  it("lists the cheapest orderable plan as the first orderable row, as the table note says", () => {
+    assert.equal(HETZNER_CLOUD_PLANS.find(p => p.available)?.sku, cheapestOrderableHetznerPlan().sku);
+  });
+});
+
+function plan(sku: string, eur: number, available: boolean, vcpu = 2, ram = 4): HetznerPlan {
+  return { sku, line: "Synthetic", cpu: "AMD", vcpu, ram, region: "EU", eur, available };
+}
+
+describe("the table note's count of listed prices nobody can pay", () => {
+  it("says nothing when the cheapest listed plan can be ordered", () => {
+    assert.equal(unpayableLowestPricesSentence([plan("CX1", 3, true), plan("CX2", 2.5, true), plan("CX3", 4, false)]), "");
+  });
+
+  it("speaks of one plan in the singular", () => {
+    assert.equal(
+      unpayableLowestPricesSentence([plan("CX1", 3, false), plan("CX2", 4, true), plan("CX3", 5, false)]),
+      "The cheapest listed price belongs to a plan marked not available, so the lowest number on the page is not a number you can pay.",
+    );
+  });
+
+  it("counts every listed price below the cheapest orderable one, and none level with it", () => {
+    assert.equal(
+      unpayableLowestPricesSentence([plan("CX1", 3, false), plan("CX2", 3.5, false), plan("CX3", 4, false), plan("CX4", 4, true), plan("CX5", 3.9, false)]),
+      "The 3 cheapest listed prices all belong to plans marked not available, so the lowest number on the page is not a number you can pay.",
+    );
+  });
+
+  it("names the cheaper plan as more server only when it has at least as much of each and more of one, and sits above", () => {
+    const entry = plan("CPX1", 6, true, 1, 1);
+    assert.equal(cheaperUnorderablePlanWithMoreServer([plan("CX1", 5, false, 2, 4), entry])?.sku, "CX1");
+    assert.equal(cheaperUnorderablePlanWithMoreServer([plan("CX1", 5, false, 1, 2), entry])?.sku, "CX1");
+    assert.equal(cheaperUnorderablePlanWithMoreServer([plan("CX1", 5, false, 1, 1), entry]), null);
+    assert.equal(cheaperUnorderablePlanWithMoreServer([plan("CX1", 5, false, 2, 0.5), entry]), null);
+    assert.equal(cheaperUnorderablePlanWithMoreServer([entry, plan("CX1", 5, false, 2, 4)]), null);
+    assert.equal(cheaperUnorderablePlanWithMoreServer([plan("CX1", 7, false, 2, 4), entry]), null);
+  });
 });
 
 describe("the pricing page prices what Hetzner sells today", () => {
@@ -132,6 +176,20 @@ describe("the pricing page prices what Hetzner sells today", () => {
       assert.ok(match, `${plan.sku} must appear with €${plan.eur.toFixed(2)} and a state`);
       assert.equal(match[1], plan.available ? "orderable" : "not available", plan.sku);
     }
+  });
+
+  it("counts in its table note the listed prices below the cheapest orderable plan, and names that plan", async () => {
+    const { body } = await get("/hetzner-pricing-2026");
+    const text = visible(body);
+    const cheapest = cheapestOrderableHetznerPlan();
+    const below = HETZNER_CLOUD_PLANS.filter(p => p.eur < cheapest.eur);
+    const several = text.match(/The (\d+) cheapest listed prices all belong to plans marked not available/)?.[1];
+    const one = text.includes("The cheapest listed price belongs to a plan marked not available");
+    assert.equal(several === undefined ? (one ? 1 : 0) : Number(several), below.length, "the note counts a different number of unpayable prices than the table holds");
+    assert.ok(
+      text.includes(`The first orderable row is ${cheapest.sku} at €${cheapest.eur.toFixed(2)}, and it is a ${cheapest.vcpu}-vCPU, ${cheapest.ram} GB machine`),
+      "the note does not name the cheapest orderable plan",
+    );
   });
 
   it("names no cloud plan Hetzner no longer lists", async () => {
@@ -187,6 +245,19 @@ describe("every page that states a Hetzner entry price states the same one", () 
       }
     });
   }
+
+  it("names every route that prints the plan table's entry price", async () => {
+    const clause = hetznerEntryPriceClause();
+    const routes = await everyRouteTheSitemapPublishes(`http://localhost:${serverPort}`);
+    const printing: string[] = [];
+    for (let at = 0; at < routes.length; at += 16) {
+      await Promise.all(routes.slice(at, at + 16).map(async route => {
+        const { status, body } = await get(route);
+        if (status === 200 && visible(body).includes(clause)) printing.push(route);
+      }));
+    }
+    assert.deepEqual(printing.sort(), [...PAGES_NAMING_HETZNER_PRICES].sort());
+  });
 
   it("composes that price from the plan table rather than from a literal", () => {
     const cheapest = cheapestOrderableHetznerPlan();

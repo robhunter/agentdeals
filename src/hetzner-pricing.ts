@@ -25,6 +25,7 @@ export const HETZNER_CLOUD_PLANS: HetznerPlan[] = [
   { sku: "CAX21", line: "Cost-Optimized", cpu: "Ampere Arm", vcpu: 4, ram: 8, region: "EU", eur: 10.99, available: false },
   { sku: "CAX31", line: "Cost-Optimized", cpu: "Ampere Arm", vcpu: 8, ram: 16, region: "EU", eur: 21.49, available: false },
   { sku: "CAX41", line: "Cost-Optimized", cpu: "Ampere Arm", vcpu: 16, ram: 32, region: "EU", eur: 41.49, available: false },
+  { sku: "CPX02", line: "Regular Performance", cpu: "AMD", vcpu: 1, ram: 1, region: "EU", eur: 6.49, available: true },
   { sku: "CPX12", line: "Regular Performance", cpu: "AMD", vcpu: 1, ram: 2, region: "EU", eur: 11.99, available: true },
   { sku: "CPX22", line: "Regular Performance", cpu: "AMD", vcpu: 2, ram: 4, region: "EU", eur: 19.99, available: true },
   { sku: "CPX32", line: "Regular Performance", cpu: "AMD", vcpu: 4, ram: 8, region: "EU", eur: 35.99, available: true },
@@ -62,9 +63,36 @@ export const HETZNER_SETUP_FEE_STATEMENTS = [
   { day: "29 April", url: "https://www.hetzner.com/pressroom/statement-on%20the-latest-adjustment-to%20setup-fees/" },
 ];
 
-export function cheapestOrderableHetznerPlan(): HetznerPlan {
-  const orderable = HETZNER_CLOUD_PLANS.filter(p => p.available);
+export function cheapestOrderableHetznerPlan(plans: readonly HetznerPlan[] = HETZNER_CLOUD_PLANS): HetznerPlan {
+  const orderable = plans.filter(p => p.available);
   return orderable.reduce((a, b) => (a.eur <= b.eur ? a : b));
+}
+
+export function cheapestListedHetznerPlan(plans: readonly HetznerPlan[] = HETZNER_CLOUD_PLANS): HetznerPlan {
+  return plans.reduce((a, b) => (a.eur <= b.eur ? a : b));
+}
+
+export function plansPricedBelowTheCheapestOrderable(plans: readonly HetznerPlan[] = HETZNER_CLOUD_PLANS): HetznerPlan[] {
+  const entry = cheapestOrderableHetznerPlan(plans);
+  return plans.filter(p => p.eur < entry.eur);
+}
+
+export function unpayableLowestPricesSentence(plans: readonly HetznerPlan[] = HETZNER_CLOUD_PLANS): string {
+  const below = plansPricedBelowTheCheapestOrderable(plans);
+  if (below.length === 0) return "";
+  const subject = below.length === 1
+    ? "The cheapest listed price belongs to a plan"
+    : `The ${below.length} cheapest listed prices all belong to plans`;
+  return `${subject} marked not available, so the lowest number on the page is not a number you can pay.`;
+}
+
+export function cheaperUnorderablePlanWithMoreServer(plans: readonly HetznerPlan[] = HETZNER_CLOUD_PLANS): HetznerPlan | null {
+  const entry = cheapestOrderableHetznerPlan(plans);
+  const cheapest = cheapestListedHetznerPlan(plans);
+  const noLess = cheapest.vcpu >= entry.vcpu && cheapest.ram >= entry.ram;
+  const more = cheapest.vcpu > entry.vcpu || cheapest.ram > entry.ram;
+  const above = plans.indexOf(cheapest) < plans.indexOf(entry);
+  return cheapest.eur < entry.eur && noLess && more && above ? cheapest : null;
 }
 
 export function hetznerEntryPriceClause(): string {
