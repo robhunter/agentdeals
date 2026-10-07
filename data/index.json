@@ -1230,6 +1230,12 @@
           "quote": "linking a Cloud Billing account to your project will auto-upgrade your project to the Blaze pricing plan",
           "url": "https://firebase.google.com/docs/projects/billing/firebase-pricing-plans",
           "read_on": "2026-10-05"
+        },
+        {
+          "text": "On Spark, email-link sign-in is limited to 5 emails a day; sending more needs a billing account (Blaze).",
+          "quote": "Please add a billing instrument to go beyond 5 email link sign-in emails.",
+          "url": "https://firebase.google.com/docs/auth/limits",
+          "read_on": "2026-10-07"
         }
       ]
     },
@@ -8549,7 +8555,15 @@
         "text": "Free Tier Free forever For testing, and prototypes Single Node Cluster 0.5 vCPU / 1GB RAM/ 4 GB Disk.",
         "url": "https://qdrant.tech/pricing/",
         "read_on": "2026-10-04"
-      }
+      },
+      "conditions": [
+        {
+          "text": "An unused Free Tier cluster is suspended after 1 week and deleted after 4 weeks of inactivity unless you reactivate it.",
+          "quote": "If unused, free tier clusters are automatically suspended after 1 week, and deleted after 4 weeks of inactivity if not reactivated.",
+          "url": "https://qdrant.tech/documentation/cloud/create-cluster/",
+          "read_on": "2026-10-07"
+        }
+      ]
     },
     {
       "vendor": "SuperTokens",
@@ -9389,7 +9403,21 @@
         "text": "Database Engram ✦ Always free Free Forever $0 /mo No credit card required A fully managed AI Database to explore Weaviate features. Easiest way to get started, always free. Start free ✓ Always free — 1 cluster per user, upgrade to paid anytime. ✓ 100,000 objects · 1 GB memory · 10 GB disk. ✓ 1 collection, up to 3 tenants. ✓ Embeddings (2,000 req/day) + Query Agent (1,000 req/mo).",
         "url": "https://weaviate.io/pricing",
         "read_on": "2026-10-03"
-      }
+      },
+      "conditions": [
+        {
+          "text": "A free Weaviate Cloud cluster is suspended after 7 days of inactivity, with its data kept, until you reactivate it.",
+          "quote": "After 7 days of inactivity, the cluster is suspended and your data is preserved.",
+          "url": "https://docs.weaviate.io/cloud/manage-clusters/create",
+          "read_on": "2026-10-07"
+        },
+        {
+          "text": "A free cluster that stays inactive is permanently deleted after 30 days of total inactivity.",
+          "quote": "If a cluster stays inactive, it is permanently deleted after 30 days of total inactivity (about 23 days after it is suspended).",
+          "url": "https://docs.weaviate.io/cloud/manage-clusters/create",
+          "read_on": "2026-10-07"
+        }
+      ]
     },
     {
       "vendor": "Zilliz Cloud",
@@ -9532,12 +9560,20 @@
         "record_date": "2026-09-07",
         "change_type": "pricing_model_change",
         "restated_on": "2026-09-20"
-      }
+      },
+      "conditions": [
+        {
+          "text": "On Chroma Cloud, reaching a usage limit, whether yours or Chroma's, pauses the service until the limit is changed.",
+          "quote": "Both result in a pausing of the service until the limit is changed.",
+          "url": "https://www.trychroma.com/pricing",
+          "read_on": "2026-10-07"
+        }
+      ]
     },
     {
       "vendor": "Turbopuffer",
       "category": "Databases",
-      "description": "Serverless vector database — pay-per-use with no minimum. $0.30/M vectors stored/month, $0.04/M vectors queried. No free tier but extremely low entry cost for small workloads",
+      "description": "Serverless vector database. No free tier: every plan has a monthly minimum, $16 on Launch and $256 on Scale, and usage above the minimum is billed. Turbopuffer cut the Launch minimum from $64 to $16 a month in June 2026.",
       "tier": "Pay-as-you-go",
       "url": "https://turbopuffer.com/pricing",
       "tags": [
