@@ -270,7 +270,7 @@ const STATED: Record<string, string[]> = {
     "1. Set project-level spend caps in AI Studio (available since March 12, 2026; Google marks them experimental).",
     "every project on a billing account shares its tier spend cap",
     "Set project-level spend caps in AI Studio (available since March 12, 2026).",
-    "Groq's free plan allows 30 requests a minute and 1,000 a day per model. Mistral AI includes $10 a month in API credits. OpenRouter serves 25+ free models through one API.",
+    "Groq's free plan allows 30 requests a minute and 1,000 a day per model. Mistral AI's Free plan includes monthly API usage; its pricing page listed $10 a month until 2026-10-07, then stopped stating the amount. OpenRouter serves 25+ free models through one API.",
     "How Gemini's free tier compares to alternatives.",
     "Groq and OpenRouter publish their free limits, which Google no longer does: Groq's free plan allows 30 requests a minute and 1,000 a day per model; OpenRouter's free models allow 20 a minute and 50 a day.",
     "This guide covers Gemini API pricing changes through September 2026.",
@@ -295,6 +295,7 @@ const WITHDRAWN: Record<string, string[]> = {
     "prepay for some new users",
     "Prepaid billing for new users",
     "affect new and high-usage developers",
+    "Mistral AI includes $10 a month in API credits",
   ],
 };
 

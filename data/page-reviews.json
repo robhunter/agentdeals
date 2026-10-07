@@ -1977,7 +1977,7 @@
       "review_note": "Two readers checked the page's 44 claims against Google's, Microsoft's, AWS's, Appwrite's and Mistral's own pages on 2026-09-28. The nine that failed were corrected in https://github.com/robhunter/agentdeals/issues/2144 and read on production on 2026-09-28.",
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 49,
+      "table_figures": 48,
       "table_figures_from_records": 8,
       "tables": [
         {
@@ -1992,7 +1992,7 @@
         },
         {
           "label": "6. Free AI/LLM API Alternatives",
-          "figures": 2,
+          "figures": 1,
           "from_records": 1
         },
         {
