@@ -27832,7 +27832,7 @@
     {
       "vendor": "Replit",
       "category": "IDE & Code Editors",
-      "description": "Cloud IDE with AI code assistant — The Starter (Free) plan includes daily agent credits, the ability to create anything from slides to apps, a built-in database, and the ability to publish 1 live project.",
+      "description": "Cloud IDE with AI agent — The Starter plan includes daily Agent credits up to a monthly cap, and monthly credits for databases, storage and publishing. It uses Lite build only. Starter supports one published app; the link goes down after 30 days and shows a \"Made with Replit\" badge. Full build, Plan Mode, third-party connectors and slide decks require Core ($20 a month).",
       "tier": "Free",
       "url": "https://replit.com/pricing",
       "tags": [
@@ -27846,17 +27846,10 @@
         "outcome": "ok",
         "detail": "the page names Replit as \"replit\" and states amounts, none of which we matched to the terms we publish"
       },
-      "restated_from": {
-        "reading_date": "2026-09-01",
-        "source_url": "https://replit.com/pricing",
+      "free_plan_excerpt_hold": {
         "record_date": "2026-09-01",
         "change_type": "pricing_restructured",
-        "restated_on": "2026-09-20"
-      },
-      "free_plan_excerpt": {
-        "text": "Up to 30 hours of chat on Free Mode Up to 60 projects on Free Mode $20 towards most powerful models",
-        "url": "https://replit.com/pricing",
-        "read_on": "2026-10-04"
+        "reason": "replit.com/pricing shows only the paid Core, Pro and Enterprise plans, so an excerpt read there quotes the Core card. The Starter plan's terms are in Replit's docs (docs.replit.com/billing/plans/starter-plan, read 2026-10-07)."
       },
       "referral_program": {
         "available": true,
