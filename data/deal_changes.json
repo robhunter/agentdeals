@@ -15737,6 +15737,48 @@
       "alternatives": [],
       "recorded_date": "2026-10-06",
       "date_source": "hand_written"
+    },
+    {
+      "vendor": "Amplitude",
+      "change_type": "limits_reduced",
+      "date": "2026-02-14",
+      "date_source": "hand_written",
+      "summary": "Amplitude cut its free Starter plan from 50K to 10K monthly tracked users (MTUs) between the Internet Archive's copies of its pricing page from 2026-01-24 and 2026-02-14. The plan still allowed up to 10M events a month.",
+      "previous_state": "Starter, Free: \"50K MTUs, up to 10M events\" (amplitude.com/pricing, Internet Archive copy of 2026-01-24)",
+      "current_state": "Starter, Free: \"10K MTUs, up to 10M events\" (amplitude.com/pricing, Internet Archive copy of 2026-02-14)",
+      "impact": "high",
+      "source_url": "https://web.archive.org/web/20260214215435/https://amplitude.com/pricing",
+      "category": "Analytics",
+      "alternatives": [],
+      "recorded_date": "2026-10-07"
+    },
+    {
+      "vendor": "Amplitude",
+      "change_type": "limits_reduced",
+      "date": "2026-04-27",
+      "date_source": "hand_written",
+      "summary": "Amplitude cut its free Starter plan from up to 10M to up to 2M events a month between the Internet Archive's copies of its pricing page from 2026-04-12 and 2026-04-27. The 10K MTU limit stayed.",
+      "previous_state": "Starter, Free: \"10K MTUs, up to 10M events\" (amplitude.com/pricing, Internet Archive copy of 2026-04-12)",
+      "current_state": "Starter, Free: \"10K MTUs, up to 2M events\" (amplitude.com/pricing, Internet Archive copy of 2026-04-27)",
+      "impact": "high",
+      "source_url": "https://web.archive.org/web/20260427000722/https://amplitude.com/pricing",
+      "category": "Analytics",
+      "alternatives": [],
+      "recorded_date": "2026-10-07"
+    },
+    {
+      "vendor": "Amplitude",
+      "change_type": "limits_increased",
+      "date": "2026-08-04",
+      "date_source": "hand_written",
+      "summary": "Amplitude dropped the 10K MTU limit from its free plan between the Internet Archive's copies of its pricing page from 2026-06-08 and 2026-08-04: the Starter plan (10K MTUs, up to 2M events) became a Free plan of 2M events a month.",
+      "previous_state": "Starter, Free: \"10K MTUs, up to 2M events\" (amplitude.com/pricing, Internet Archive copy of 2026-06-08)",
+      "current_state": "Free: \"2M Events/month forever\" (amplitude.com/pricing, Internet Archive copy of 2026-08-04)",
+      "impact": "medium",
+      "source_url": "https://web.archive.org/web/20260804172056/https://amplitude.com/pricing",
+      "category": "Analytics",
+      "alternatives": [],
+      "recorded_date": "2026-10-07"
     }
   ]
 }

@@ -1836,6 +1836,7 @@
       "vendors_tabulated": [
         "amazon-aurora-postgresql",
         "amazon-sp-api",
+        "amplitude",
         "appwrite-cloud",
         "atlassian",
         "aws",
