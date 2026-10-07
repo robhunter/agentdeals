@@ -37457,7 +37457,7 @@ ${mcpCtaCss()}
         <td class="cross">AWS-only</td>
       </tr>${vendorPageConditionsRowHtml("aws-cognito", 8)}
       <tr>
-        <td class="provider-col">Appwrite Auth</td>
+        <td class="provider-col"><a href="/vendor/appwrite-cloud" style="color:var(--text)">Appwrite Auth</a></td>
         <td style="font-family:var(--mono)">75K MAU</td>
         <td style="font-family:var(--mono)">$3 per 1,000 above 200K (Pro, $25/mo)</td>
         <td class="check">30+ providers</td>
@@ -37465,7 +37465,7 @@ ${mcpCtaCss()}
         <td>&mdash;</td>
         <td>&mdash;</td>
         <td class="check">Yes (Docker)</td>
-      </tr>${vendorPageConditionsRowHtml("appwrite-auth", 8)}
+      </tr>${vendorPageConditionsRowHtml("appwrite-cloud", 8)}
       <tr>
         <td class="provider-col"><a href="/vendor/keycloak" style="color:var(--text)">Keycloak</a></td>
         <td style="font-family:var(--mono)">Unlimited</td>
@@ -37625,7 +37625,7 @@ ${mcpCtaCss()}
     </thead>
     <tbody>
       <tr style="background:rgba(63,185,80,0.08)">
-        <td class="provider-col">Appwrite Auth <span class="winner-badge">75K FREE</span></td>
+        <td class="provider-col"><a href="/vendor/appwrite-cloud" style="color:var(--text)">Appwrite Auth</a> <span class="winner-badge">75K FREE</span></td>
         <td style="font-family:var(--mono)">75,000</td>
         <td style="font-family:var(--mono)">$3 per 1,000 above 200K (Pro, $25/mo)</td>
         <td>Appwrite (DB, Storage, Functions, Messaging)</td>
@@ -43129,14 +43129,14 @@ ${mcpCtaCss()}
         <td class="cross">&#10007;</td>
       </tr>${vendorPageConditionsRowHtml("twingate", 7)}
       <tr>
-        <td class="provider-col">Let&rsquo;s Encrypt</td>
+        <td class="provider-col"><a href="/vendor/letsencrypt-org" style="color:var(--text)">Let&rsquo;s Encrypt</a></td>
         <td>SSL/TLS Certificates</td>
         <td>Unlimited free certificates</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003; ACME</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
-      </tr>${vendorPageConditionsRowHtml("let-s-encrypt", 7)}
+      </tr>${vendorPageConditionsRowHtml("letsencrypt-org", 7)}
     </tbody>
   </table>
   </div>
