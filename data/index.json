@@ -2975,6 +2975,12 @@
           "quote": "Mathematically speaking, we will bill you for the minimum amount, whether that is the monthly price cap OR the hourly price multiplied by the number of hours you used the server. We always round up the hourly usage of a server.",
           "url": "https://docs.hetzner.com/cloud/billing/faq/",
           "read_on": "2026-10-07"
+        },
+        {
+          "text": "Hetzner may ask a new customer to verify the account before it processes an order, with a government ID or an advance payment by the customer's own credit card.",
+          "quote": "As part of our fraud prevention measures, we may ask you to verify your account before we process an order. You can do this in two ways: Verification via ID document: You provide us with a copy of a valid government-issued ID (e.g., ID card or passport). This allows us to confirm that the information provided during registration matches your identity. Verification via prepayment (credit card): Alternatively, you can verify your account by making an advance payment with your own credit card.",
+          "url": "https://docs.hetzner.com/general/security-and-identify/fraud-prevention-faq/",
+          "read_on": "2026-10-07"
         }
       ]
     },
