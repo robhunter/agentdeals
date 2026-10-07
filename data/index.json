@@ -13,21 +13,6 @@
         "jamstack"
       ],
       "verifiedDate": "2026-08-26",
-      "payment_protocols": [
-        {
-          "protocol": "x402",
-          "chain": "Base",
-          "settlement": "USDC",
-          "pricing_model": "per-request",
-          "example_cost": "$0.01-0.10/request"
-        },
-        {
-          "protocol": "stripe-mpp",
-          "settlement": "fiat+stablecoin",
-          "pricing_model": "per-request",
-          "example_cost": "$0.01-0.10/request"
-        }
-      ],
       "referral_program": {
         "available": true,
         "referrer_benefit": "$5/lead + 30% recurring (6 months)",
@@ -104,21 +89,6 @@
         "type": "closed",
         "notes": "No referral program. Feature requested by community but not launched."
       },
-      "payment_protocols": [
-        {
-          "protocol": "x402",
-          "chain": "Base",
-          "settlement": "USDC",
-          "pricing_model": "per-request",
-          "example_cost": "$0.001-0.01/request"
-        },
-        {
-          "protocol": "stripe-mpp",
-          "settlement": "fiat+stablecoin",
-          "pricing_model": "per-session",
-          "example_cost": "$0.001-0.01/request"
-        }
-      ],
       "source_check": {
         "checked": "2026-10-02",
         "outcome": "ok",
@@ -193,15 +163,6 @@
         "student-upgrade"
       ],
       "verifiedDate": "2026-08-11",
-      "payment_protocols": [
-        {
-          "protocol": "x402",
-          "chain": "Base",
-          "settlement": "USDC",
-          "pricing_model": "per-request",
-          "example_cost": "$0.001-0.01/request"
-        }
-      ],
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -327,15 +288,6 @@
         "vercel-alternative"
       ],
       "verifiedDate": "2026-08-12",
-      "payment_protocols": [
-        {
-          "protocol": "x402",
-          "chain": "Base",
-          "settlement": "USDC",
-          "pricing_model": "per-request",
-          "example_cost": "$0.001-0.01/request"
-        }
-      ],
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -439,21 +391,6 @@
         "commission_type": "recurring",
         "notes": "First 12 months of referred user spend. The $20 is credited on upgrade to Hobby or Pro, not at signup (read 2026-10-05)."
       },
-      "payment_protocols": [
-        {
-          "protocol": "x402",
-          "chain": "Base",
-          "settlement": "USDC",
-          "pricing_model": "per-request",
-          "example_cost": "$0.000005/vCPU-sec"
-        },
-        {
-          "protocol": "stripe-mpp",
-          "settlement": "fiat+stablecoin",
-          "pricing_model": "per-session",
-          "example_cost": "$0.000005/vCPU-sec"
-        }
-      ],
       "source_check": {
         "checked": "2026-10-06",
         "outcome": "ok",
@@ -509,15 +446,6 @@
         "type": "closed",
         "notes": "Confirmed no affiliate program. Extensions partner program exists for service integrations."
       },
-      "payment_protocols": [
-        {
-          "protocol": "x402",
-          "chain": "Base",
-          "settlement": "USDC",
-          "pricing_model": "per-request",
-          "example_cost": "$0.000003/vCPU-sec"
-        }
-      ],
       "source_check": {
         "checked": "2026-10-02",
         "outcome": "ok",
@@ -552,15 +480,6 @@
         "vercel-alternative"
       ],
       "verifiedDate": "2026-09-24",
-      "payment_protocols": [
-        {
-          "protocol": "x402",
-          "chain": "Base",
-          "settlement": "USDC",
-          "pricing_model": "per-request",
-          "example_cost": "$0.0002/request"
-        }
-      ],
       "source_check": {
         "checked": "2026-09-24",
         "outcome": "ok",
@@ -810,21 +729,6 @@
         "type": "closed",
         "notes": "No referral/affiliate program. Partner program for integrations only. SupaSquad advocate program exists."
       },
-      "payment_protocols": [
-        {
-          "protocol": "x402",
-          "chain": "Base",
-          "settlement": "USDC",
-          "pricing_model": "per-request",
-          "example_cost": "$0.001-0.01/request"
-        },
-        {
-          "protocol": "stripe-mpp",
-          "settlement": "fiat+stablecoin",
-          "pricing_model": "per-request",
-          "example_cost": "$0.001-0.01/request"
-        }
-      ],
       "source_check": {
         "checked": "2026-10-04",
         "outcome": "ok",
@@ -905,21 +809,6 @@
         "commission_type": "credits",
         "notes": "Neon calls it an early pilot: \"when they sign up for Neon and spend $5, you get $5 in credits\" (changelog, 2026-06-19; read 2026-10-05)."
       },
-      "payment_protocols": [
-        {
-          "protocol": "x402",
-          "chain": "Base",
-          "settlement": "USDC",
-          "pricing_model": "per-query",
-          "example_cost": "$0.001-0.01/query"
-        },
-        {
-          "protocol": "stripe-mpp",
-          "settlement": "fiat+stablecoin",
-          "pricing_model": "per-query",
-          "example_cost": "$0.001-0.01/query"
-        }
-      ],
       "source_check": {
         "checked": "2026-10-04",
         "outcome": "ok",
@@ -1411,15 +1300,6 @@
         "mongodb-alternative"
       ],
       "verifiedDate": "2026-10-03",
-      "payment_protocols": [
-        {
-          "protocol": "x402",
-          "chain": "Base",
-          "settlement": "USDC",
-          "pricing_model": "per-request",
-          "example_cost": "$0.001/query"
-        }
-      ],
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -2311,15 +2191,6 @@
         "free tier"
       ],
       "verifiedDate": "2026-10-03",
-      "payment_protocols": [
-        {
-          "protocol": "x402",
-          "chain": "Base",
-          "settlement": "USDC",
-          "pricing_model": "per-request",
-          "example_cost": "$0.0004/read"
-        }
-      ],
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -2463,15 +2334,6 @@
         "free tier"
       ],
       "verifiedDate": "2026-09-21",
-      "payment_protocols": [
-        {
-          "protocol": "x402",
-          "chain": "Base",
-          "settlement": "USDC",
-          "pricing_model": "per-request",
-          "example_cost": "$0.001/message"
-        }
-      ],
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -2507,15 +2369,6 @@
         "free tier"
       ],
       "verifiedDate": "2026-10-01",
-      "payment_protocols": [
-        {
-          "protocol": "x402",
-          "chain": "Base",
-          "settlement": "USDC",
-          "pricing_model": "per-request",
-          "example_cost": "$0.0005/read"
-        }
-      ],
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -2564,15 +2417,6 @@
         "facets"
       ],
       "verifiedDate": "2026-08-13",
-      "payment_protocols": [
-        {
-          "protocol": "x402",
-          "chain": "Base",
-          "settlement": "USDC",
-          "pricing_model": "per-request",
-          "example_cost": "$0.001/request"
-        }
-      ],
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -2708,15 +2552,6 @@
         "free tier"
       ],
       "verifiedDate": "2026-09-30",
-      "payment_protocols": [
-        {
-          "protocol": "x402",
-          "chain": "Base",
-          "settlement": "USDC",
-          "pricing_model": "per-request",
-          "example_cost": "$0.001-0.01/scrape"
-        }
-      ],
       "source_check": {
         "checked": "2026-09-30",
         "outcome": "ok",
@@ -2958,15 +2793,6 @@
         "free tier"
       ],
       "verifiedDate": "2026-07-05",
-      "payment_protocols": [
-        {
-          "protocol": "x402",
-          "chain": "Base",
-          "settlement": "USDC",
-          "pricing_model": "per-request",
-          "example_cost": "$0.001/query"
-        }
-      ],
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -3180,14 +3006,6 @@
         "free tier"
       ],
       "verifiedDate": "2026-09-21",
-      "payment_protocols": [
-        {
-          "protocol": "stripe-mpp",
-          "settlement": "USD",
-          "pricing_model": "per-request",
-          "example_cost": "$0.01-0.10/transaction"
-        }
-      ],
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -3293,15 +3111,6 @@
         "type": "closed",
         "notes": "No referral or affiliate program. Fellowship program exists for community advocates."
       },
-      "payment_protocols": [
-        {
-          "protocol": "x402",
-          "chain": "Base",
-          "settlement": "USDC",
-          "pricing_model": "per-request",
-          "example_cost": "$0.001-1.00/request"
-        }
-      ],
       "source_check": {
         "checked": "2026-10-05",
         "outcome": "ok",
@@ -3344,21 +3153,6 @@
         "free tier"
       ],
       "verifiedDate": "2026-10-03",
-      "payment_protocols": [
-        {
-          "protocol": "x402",
-          "chain": "Base",
-          "settlement": "USDC",
-          "pricing_model": "per-token",
-          "example_cost": "$0.05-0.50/M tokens"
-        },
-        {
-          "protocol": "stripe-mpp",
-          "settlement": "fiat+stablecoin",
-          "pricing_model": "per-token",
-          "example_cost": "$0.05-0.50/M tokens"
-        }
-      ],
       "source_check": {
         "checked": "2026-10-03",
         "outcome": "ok",
@@ -3487,15 +3281,6 @@
         "free tier"
       ],
       "verifiedDate": "2026-10-01",
-      "payment_protocols": [
-        {
-          "protocol": "x402",
-          "chain": "Base",
-          "settlement": "USDC",
-          "pricing_model": "per-token",
-          "example_cost": "$0.04-2.00/M tokens"
-        }
-      ],
       "source_check": {
         "checked": "2026-10-03",
         "outcome": "ok",
@@ -3553,21 +3338,6 @@
         "free tier"
       ],
       "verifiedDate": "2026-09-22",
-      "payment_protocols": [
-        {
-          "protocol": "x402",
-          "chain": "Base",
-          "settlement": "USDC",
-          "pricing_model": "per-token",
-          "example_cost": "varies by model"
-        },
-        {
-          "protocol": "stripe-mpp",
-          "settlement": "fiat+stablecoin",
-          "pricing_model": "per-token",
-          "example_cost": "varies by model"
-        }
-      ],
       "source_check": {
         "checked": "2026-09-22",
         "outcome": "ok",
@@ -3604,15 +3374,6 @@
         "free tier"
       ],
       "verifiedDate": "2026-10-06",
-      "payment_protocols": [
-        {
-          "protocol": "x402",
-          "chain": "Base",
-          "settlement": "USDC",
-          "pricing_model": "per-request",
-          "example_cost": "$0.001-0.05/inference"
-        }
-      ],
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -4541,15 +4302,6 @@
         "developer-portal"
       ],
       "verifiedDate": "2026-09-24",
-      "payment_protocols": [
-        {
-          "protocol": "x402",
-          "chain": "Base",
-          "settlement": "USDC",
-          "pricing_model": "per-request",
-          "example_cost": "$0.001-0.01/request"
-        }
-      ],
       "source_check": {
         "checked": "2026-09-24",
         "outcome": "ok",
@@ -5361,14 +5113,11 @@
           "protocol": "x402",
           "chain": "Base",
           "settlement": "USDC",
-          "pricing_model": "per-request",
-          "example_cost": "$0.01-0.05/session"
-        },
-        {
-          "protocol": "stripe-mpp",
-          "settlement": "USD",
-          "pricing_model": "per-request",
-          "example_cost": "$0.01-0.05/session"
+          "pricing_model": "per-hour",
+          "example_cost": "$0.12/hour",
+          "source_url": "https://docs.browserbase.com/integrations/x402/introduction",
+          "source_quote": "Built on the x402 protocol, this integration lets you create and manage Browserbase sessions by paying with USDC on Base, with no API keys or accounts required. … Rate: $0.12/hour",
+          "read_on": "2026-10-07"
         }
       ],
       "source_check": {
@@ -7208,15 +6957,6 @@
         "api"
       ],
       "verifiedDate": "2026-10-03",
-      "payment_protocols": [
-        {
-          "protocol": "x402",
-          "chain": "Base",
-          "settlement": "USDC",
-          "pricing_model": "per-token",
-          "example_cost": "$0.10-0.60/M tokens"
-        }
-      ],
       "source_check": {
         "checked": "2026-10-03",
         "outcome": "ok",
@@ -7267,15 +7007,6 @@
         "api"
       ],
       "verifiedDate": "2026-08-16",
-      "payment_protocols": [
-        {
-          "protocol": "x402",
-          "chain": "Base",
-          "settlement": "USDC",
-          "pricing_model": "per-token",
-          "example_cost": "$0.15-2.00/M tokens"
-        }
-      ],
       "source_check": {
         "checked": "2026-10-02",
         "outcome": "ok",
@@ -8101,15 +7832,6 @@
         "generative-ai"
       ],
       "verifiedDate": "2026-09-10",
-      "payment_protocols": [
-        {
-          "protocol": "x402",
-          "chain": "Base",
-          "settlement": "USDC",
-          "pricing_model": "per-request",
-          "example_cost": "$0.001-0.06/1K tokens"
-        }
-      ],
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -8454,15 +8176,6 @@
         "search"
       ],
       "verifiedDate": "2026-07-31",
-      "payment_protocols": [
-        {
-          "protocol": "x402",
-          "chain": "Base",
-          "settlement": "USDC",
-          "pricing_model": "per-query",
-          "example_cost": "$0.001-0.01/query"
-        }
-      ],
       "source_check": {
         "checked": "2026-09-26",
         "outcome": "ok",
@@ -8503,15 +8216,6 @@
         "search"
       ],
       "verifiedDate": "2026-10-04",
-      "payment_protocols": [
-        {
-          "protocol": "x402",
-          "chain": "Base",
-          "settlement": "USDC",
-          "pricing_model": "per-query",
-          "example_cost": "$0.001/query"
-        }
-      ],
       "source_check": {
         "checked": "2026-10-04",
         "outcome": "ok",
@@ -8694,15 +8398,6 @@
         "nlp"
       ],
       "verifiedDate": "2026-10-03",
-      "payment_protocols": [
-        {
-          "protocol": "x402",
-          "chain": "Base",
-          "settlement": "USDC",
-          "pricing_model": "per-minute",
-          "example_cost": "$0.0043-0.0145/min"
-        }
-      ],
       "source_check": {
         "checked": "2026-10-03",
         "outcome": "ok",
@@ -9572,15 +9267,6 @@
         "api"
       ],
       "verifiedDate": "2026-09-30",
-      "payment_protocols": [
-        {
-          "protocol": "x402",
-          "chain": "Base",
-          "settlement": "USDC",
-          "pricing_model": "per-minute",
-          "example_cost": "$0.01-0.05/min"
-        }
-      ],
       "source_check": {
         "checked": "2026-09-30",
         "outcome": "ok",
@@ -9620,21 +9306,6 @@
         "type": "closed",
         "notes": "No verified referral/affiliate program for the AI inference platform."
       },
-      "payment_protocols": [
-        {
-          "protocol": "x402",
-          "chain": "Base",
-          "settlement": "USDC",
-          "pricing_model": "per-prediction",
-          "example_cost": "$0.001-5.00/prediction"
-        },
-        {
-          "protocol": "stripe-mpp",
-          "settlement": "fiat+stablecoin",
-          "pricing_model": "per-prediction",
-          "example_cost": "$0.001-5.00/prediction"
-        }
-      ],
       "source_check": {
         "checked": "2026-10-01",
         "outcome": "ok",
@@ -9667,15 +9338,6 @@
         "serverless"
       ],
       "verifiedDate": "2026-08-01",
-      "payment_protocols": [
-        {
-          "protocol": "x402",
-          "chain": "Base",
-          "settlement": "USDC",
-          "pricing_model": "per-prediction",
-          "example_cost": "$0.001-0.50/prediction"
-        }
-      ],
       "source_check": {
         "checked": "2026-10-04",
         "outcome": "ok",
@@ -11582,15 +11244,6 @@
         "free-for-dev"
       ],
       "verifiedDate": "2026-10-07",
-      "payment_protocols": [
-        {
-          "protocol": "x402",
-          "chain": "Base",
-          "settlement": "USDC",
-          "pricing_model": "per-action",
-          "example_cost": "$0.01/action"
-        }
-      ],
       "source_check": {
         "checked": "2026-10-07",
         "outcome": "ok",
@@ -13024,15 +12677,6 @@
         "free-for-dev"
       ],
       "verifiedDate": "2026-08-01",
-      "payment_protocols": [
-        {
-          "protocol": "x402",
-          "chain": "Base",
-          "settlement": "USDC",
-          "pricing_model": "per-page",
-          "example_cost": "$0.01/page"
-        }
-      ],
       "source_check": {
         "checked": "2026-10-07",
         "outcome": "ok",
@@ -13285,7 +12929,10 @@
           "chain": "Base",
           "settlement": "USDC",
           "pricing_model": "per-search",
-          "example_cost": "$0.01/search"
+          "example_cost": "$0.01 / call",
+          "source_url": "https://docs.tavily.com/documentation/machine-payments/x402",
+          "source_quote": "AI agents pay per request for Tavily Advanced Search in USDC on Base — no API key, no account, no human in the loop. … POST /search | advanced | $0.01 / call",
+          "read_on": "2026-10-07"
         }
       ],
       "source_check": {
@@ -20901,15 +20548,6 @@
         "free-for-dev"
       ],
       "verifiedDate": "2026-09-30",
-      "payment_protocols": [
-        {
-          "protocol": "x402",
-          "chain": "Base",
-          "settlement": "USDC",
-          "pricing_model": "per-event",
-          "example_cost": "$0.0001/event"
-        }
-      ],
       "source_check": {
         "checked": "2026-09-30",
         "outcome": "ok",
@@ -21171,15 +20809,6 @@
         "free-for-dev"
       ],
       "verifiedDate": "2026-08-12",
-      "payment_protocols": [
-        {
-          "protocol": "x402",
-          "chain": "Base",
-          "settlement": "USDC",
-          "pricing_model": "per-request",
-          "example_cost": "$0.001/request"
-        }
-      ],
       "source_check": {
         "checked": "2026-10-01",
         "outcome": "ok",
@@ -25169,8 +24798,21 @@
           "protocol": "x402",
           "chain": "Base",
           "settlement": "USDC",
-          "pricing_model": "per-request",
-          "example_cost": "$0.001/pin"
+          "pricing_model": "per-upload",
+          "example_cost": "$0.10/GB * 12",
+          "source_url": "https://docs.pinata.cloud/api-reference/endpoint/x402/pin",
+          "source_quote": "Uploads a file to Pinata's public IPFS network … $0.10/GB * 12 | Pins for 12 months",
+          "read_on": "2026-10-07"
+        },
+        {
+          "protocol": "stripe-mpp",
+          "chain": "Tempo",
+          "settlement": "USDC",
+          "pricing_model": "per-upload",
+          "example_cost": "fileSize (GB) x $0.10 x 12 months, minimum $0.01 USDC",
+          "source_url": "https://docs.pinata.cloud/files/mpp/overview",
+          "source_quote": "No API key or Pinata account required — just pay with USDC on Tempo and get your files stored on IPFS. … Pricing: fileSize (GB) x $0.10 x 12 months, minimum $0.01 USDC",
+          "read_on": "2026-10-07"
         }
       ],
       "source_check": {
@@ -33552,15 +33194,6 @@
         "api"
       ],
       "verifiedDate": "2026-08-14",
-      "payment_protocols": [
-        {
-          "protocol": "x402",
-          "chain": "Base",
-          "settlement": "USDC",
-          "pricing_model": "per-token",
-          "example_cost": "$2.00-10.00/M tokens"
-        }
-      ],
       "source_check": {
         "checked": "2026-10-06",
         "outcome": "ok",
@@ -33973,15 +33606,6 @@
         "deal-change"
       ],
       "verifiedDate": "2026-08-15",
-      "payment_protocols": [
-        {
-          "protocol": "x402",
-          "chain": "Base",
-          "settlement": "USDC",
-          "pricing_model": "per-request",
-          "example_cost": "$0.001-0.075/1K tokens"
-        }
-      ],
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -34393,15 +34017,6 @@
         "free tier"
       ],
       "verifiedDate": "2026-08-15",
-      "payment_protocols": [
-        {
-          "protocol": "x402",
-          "chain": "Base",
-          "settlement": "USDC",
-          "pricing_model": "per-request",
-          "example_cost": "$0.01-0.50/request"
-        }
-      ],
       "source_check": {
         "checked": "2026-09-02",
         "outcome": "states_no_terms",
@@ -34579,15 +34194,6 @@
         "free tier"
       ],
       "verifiedDate": "2026-08-20",
-      "payment_protocols": [
-        {
-          "protocol": "x402",
-          "chain": "Base",
-          "settlement": "USDC",
-          "pricing_model": "per-token",
-          "example_cost": "$0.03-0.80/M tokens"
-        }
-      ],
       "source_check": {
         "checked": "2026-10-01",
         "outcome": "ok",
@@ -34654,15 +34260,6 @@
         "reasoning"
       ],
       "verifiedDate": "2026-08-18",
-      "payment_protocols": [
-        {
-          "protocol": "x402",
-          "chain": "Base",
-          "settlement": "USDC",
-          "pricing_model": "per-token",
-          "example_cost": "$0.07-1.10/M tokens"
-        }
-      ],
       "source_check": {
         "checked": "2026-09-21",
         "outcome": "ok",
@@ -36174,10 +35771,13 @@
       "payment_protocols": [
         {
           "protocol": "x402",
-          "chain": "Base",
+          "chain": "Base or Solana",
           "settlement": "USDC",
           "pricing_model": "per-request",
-          "example_cost": "$0.007-0.015/search, $0.001/page (contents)"
+          "example_cost": "$0.007 / request",
+          "source_url": "https://exa.ai/docs/integrations/payments/x402/quickstart",
+          "source_quote": "Pay per request with USDC on Base or Solana via the x402 protocol. … auto, fast | $0.007 / request",
+          "read_on": "2026-10-07"
         }
       ],
       "source_check": {
@@ -36234,10 +35834,13 @@
       "payment_protocols": [
         {
           "protocol": "x402",
-          "chain": "Base",
+          "chain": "Base or Solana",
           "settlement": "USDC",
-          "pricing_model": "per-session",
-          "example_cost": "$0.01-0.05/session"
+          "pricing_model": "per-hour",
+          "example_cost": "$0.10 per hour",
+          "source_url": "https://www.hyperbrowser.ai/docs/integrations/x402/sessions",
+          "source_quote": "Purchase a browser session for $0.10 per hour using your wallet. … It supports both EVM and Solana wallets.",
+          "read_on": "2026-10-07"
         }
       ],
       "source_check": {
@@ -36250,8 +35853,8 @@
     {
       "vendor": "OpenVPS",
       "category": "Cloud Hosting",
-      "description": "AI agent VPS hosting — Firecracker microVMs from $0.005/hour via x402 micropayments. No signup required. Instant provisioning, SSH access, per-second billing. Built for ephemeral agent compute workloads.",
-      "tier": "Pay-per-use",
+      "description": "OpenVPS's service does not answer, so there is no service to use. Checked 2026-10-07, openvps.ai and openvps.sh both resolve but neither returned a page. The former offer was Firecracker microVMs paid per hour over x402.",
+      "tier": "Retired",
       "url": "https://openvps.ai",
       "tags": [
         "vps",
@@ -36262,16 +35865,7 @@
         "agent-payments",
         "ai-agents"
       ],
-      "verifiedDate": "2026-04-14",
-      "payment_protocols": [
-        {
-          "protocol": "x402",
-          "chain": "Base",
-          "settlement": "USDC",
-          "pricing_model": "per-hour",
-          "example_cost": "$0.005/hour"
-        }
-      ],
+      "verifiedDate": "2026-10-07",
       "source_check": {
         "checked": "2026-10-01",
         "outcome": "unreadable",
@@ -36281,9 +35875,9 @@
     {
       "vendor": "GPU-Bridge",
       "category": "AI / ML",
-      "description": "Multi-provider GPU inference API — 30+ AI services (LLM, image generation, embeddings, speech) accessible via x402 micropayments. Unified API across providers, no accounts needed. Pay per inference call.",
-      "tier": "Pay-per-use",
-      "url": "https://gpu-bridge.com",
+      "description": "GPU-Bridge's API does not answer, so there is no service to use. Checked 2026-10-07, every path we tried on api.gpubridge.io, the API host its site links to (/run, /catalog, /account/register, /health and /v1/models), returned HTTP 502. Its site, gpubridge.io, still advertises 30 AI services paid per request with x402 USDC on Base or with prepaid credits.",
+      "tier": "Retired",
+      "url": "https://gpubridge.io",
       "tags": [
         "gpu",
         "inference",
@@ -36293,16 +35887,7 @@
         "agent-payments",
         "machine-learning"
       ],
-      "verifiedDate": "2026-04-14",
-      "payment_protocols": [
-        {
-          "protocol": "x402",
-          "chain": "Base",
-          "settlement": "USDC",
-          "pricing_model": "per-inference",
-          "example_cost": "$0.001-0.10/inference"
-        }
-      ],
+      "verifiedDate": "2026-10-07",
       "source_check": {
         "checked": "2026-10-01",
         "outcome": "unreadable",
@@ -36312,9 +35897,9 @@
     {
       "vendor": "Strale",
       "category": "Dev Utilities",
-      "description": "250+ business compliance APIs — IBAN validation, VAT lookup, sanctions screening, company data, and more via x402 micropayments. No API key or signup required. Ideal for agent compliance checks.",
+      "description": "Business data APIs for AI agents: 298+ capabilities across 25 countries by Strale's count (read 2026-10-07), including IBAN validation, VAT lookup, sanctions screening and company data. Callable over MCP, A2A or REST with an API key, or per call over x402 in USDC on Base with no API key or signup.",
       "tier": "Pay-per-use",
-      "url": "https://strale.io",
+      "url": "https://api.strale.io/llms.txt",
       "tags": [
         "compliance",
         "api",
@@ -36324,14 +35909,16 @@
         "x402",
         "agent-payments"
       ],
-      "verifiedDate": "2026-04-14",
+      "verifiedDate": "2026-10-07",
       "payment_protocols": [
         {
           "protocol": "x402",
           "chain": "Base",
           "settlement": "USDC",
           "pricing_model": "per-request",
-          "example_cost": "$0.001-0.01/call"
+          "source_url": "https://api.strale.io/llms.txt",
+          "source_quote": "Strale provides business data capabilities that AI agents can use at runtime via MCP, A2A, REST API, or x402 micropayments. … Pay with USDC on Base",
+          "read_on": "2026-10-07"
         }
       ],
       "source_check": {
@@ -36345,7 +35932,7 @@
       "category": "Dev Utilities",
       "description": "Open-source x402 payment gateway — gate any API behind micropayments with YAML config. Self-hosted, supports USDC on Base. Enables any developer to monetize APIs for AI agents without building payment infrastructure.",
       "tier": "Free",
-      "url": "https://github.com/ArcadeLabsInc/tollbooth",
+      "url": "https://github.com/x402-tollbooth/gateway",
       "tags": [
         "open-source",
         "gateway",
@@ -36355,16 +35942,7 @@
         "self-hosted",
         "free tier"
       ],
-      "verifiedDate": "2026-04-14",
-      "payment_protocols": [
-        {
-          "protocol": "x402",
-          "chain": "Base",
-          "settlement": "USDC",
-          "pricing_model": "configurable",
-          "example_cost": "configurable"
-        }
-      ],
+      "verifiedDate": "2026-10-07",
       "source_check": {
         "checked": "2026-10-02",
         "outcome": "unreadable",
@@ -36518,15 +36096,6 @@
         "free tier"
       ],
       "verifiedDate": "2026-08-22",
-      "payment_protocols": [
-        {
-          "protocol": "x402",
-          "chain": "Base",
-          "settlement": "USDC",
-          "pricing_model": "per-session",
-          "example_cost": "$0.002/sandbox-min"
-        }
-      ],
       "source_check": {
         "checked": "2026-09-24",
         "outcome": "ok",
@@ -36577,15 +36146,6 @@
         "open-source"
       ],
       "verifiedDate": "2026-10-02",
-      "payment_protocols": [
-        {
-          "protocol": "x402",
-          "chain": "Base",
-          "settlement": "USDC",
-          "pricing_model": "per-token",
-          "example_cost": "$0.10-2.00/M tokens"
-        }
-      ],
       "source_check": {
         "checked": "2026-10-02",
         "outcome": "ok",
@@ -36622,15 +36182,6 @@
         "free tier"
       ],
       "verifiedDate": "2026-08-25",
-      "payment_protocols": [
-        {
-          "protocol": "x402",
-          "chain": "Base",
-          "settlement": "USDC",
-          "pricing_model": "per-token",
-          "example_cost": "$0.10-1.00/M tokens"
-        }
-      ],
       "source_check": {
         "checked": "2026-10-03",
         "outcome": "ok",
@@ -36667,15 +36218,6 @@
         "free tier"
       ],
       "verifiedDate": "2026-09-22",
-      "payment_protocols": [
-        {
-          "protocol": "x402",
-          "chain": "Base",
-          "settlement": "USDC",
-          "pricing_model": "per-second",
-          "example_cost": "$0.000016/GPU-sec (T4)"
-        }
-      ],
       "source_check": {
         "checked": "2026-09-22",
         "outcome": "ok",
