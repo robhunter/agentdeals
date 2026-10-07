@@ -13,7 +13,7 @@ type ListingCondition = import("../src/types.ts").ListingCondition;
 
 const { supersedingChange } = await import("../dist/superseded-description.js");
 const { offerRetired } = await import("../dist/retirement.js");
-const { LISTING_CONDITIONS_CLASS } = await import("../dist/listing-conditions.js");
+const { LISTING_CONDITIONS_CLASS, VENDOR_CONDITIONS_ROW_CLASS } = await import("../dist/listing-conditions.js");
 
 const REPO = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const TODAY = new Date().toISOString().slice(0, 10);
@@ -141,6 +141,7 @@ interface ConditionPrinted {
   route: string;
   code: string;
   after: string | null;
+  besideACardOrRow: boolean;
 }
 
 const GUIDES_PRINTING_THEIR_VENDORS_CONDITIONS: Record<string, string> = {
@@ -148,20 +149,21 @@ const GUIDES_PRINTING_THEIR_VENDORS_CONDITIONS: Record<string, string> = {
   "/gcp-free-tier-2026": "Google Compute Engine",
 };
 
-const GUIDES_PRINTING_CONDITIONS_BESIDE_EACH_VENDORS_CARD_OR_ROW = [
-  "/database-pricing",
-  "/hosting-pricing",
-  "/hetzner-pricing-2026",
-  "/database-free-tier-comparison-2026",
-  "/hosting-free-tier-comparison-2026",
-];
+const VENDOR_CARD = /<div class="diff-card"[^>]*>\s*<h3>[\s\S]*?<\/h3>\s*<(p|div) class="diff-desc">[\s\S]*?<\/\1>[\s\S]*?<\/div>/g;
+const CONDITIONS_ROW = new RegExp(`<tr class="${VENDOR_CONDITIONS_ROW_CLASS}">[\\s\\S]*?<\\/tr>`, "g");
+
+function cardsAndConditionsRows(body: string): Array<{ from: number; to: number }> {
+  return [...body.matchAll(VENDOR_CARD), ...body.matchAll(CONDITIONS_ROW)].map(match => ({ from: match.index!, to: match.index! + match[0].length }));
+}
 
 function conditionsPrintedOn(route: string, body: string): ConditionPrinted[] {
   const descriptions = [...body.matchAll(ANY_DESCRIPTION_TOKEN)].map(match => ({ at: match.index!, code: match[1]! }));
+  const besideACardOrRow = cardsAndConditionsRows(body);
   return [...body.matchAll(new RegExp(`${CONDITION_TOKEN}([a-z]{3})`, "g"))].map(match => ({
     route,
     code: match[1]!,
     after: descriptions.filter(description => description.at < match.index!).pop()?.code ?? null,
+    besideACardOrRow: besideACardOrRow.some(({ from, to }) => from <= match.index! && match.index! < to),
   }));
 }
 
@@ -222,12 +224,11 @@ describe("every route that prints a listing's description in full prints the lis
     assert.deepStrictEqual(lines, [], `${lines.length} routes print a full description without its conditions`);
   });
 
-  it("prints a listing's conditions only right after its description in full, on the one guide about that listing's vendor, or on a guide comparing vendors card by card or row by row", () => {
+  it("prints a listing's conditions only right after its description in full, on the one guide about that listing's vendor, or in a vendor's card or the conditions row after its table row", () => {
     assertPopulationFloor(conditionsSeen.length, 6000, "conditions printed on routes that print a description in full");
     const onItsVendorsGuide = (one: ConditionPrinted) => GUIDES_PRINTING_THEIR_VENDORS_CONDITIONS[one.route] === planted.get(one.code)?.vendor;
-    const besideACardOrRow = (one: ConditionPrinted) => GUIDES_PRINTING_CONDITIONS_BESIDE_EACH_VENDORS_CARD_OR_ROW.includes(one.route);
     const stray = conditionsSeen
-      .filter(one => one.after !== one.code && !onItsVendorsGuide(one) && !besideACardOrRow(one))
+      .filter(one => one.after !== one.code && !onItsVendorsGuide(one) && !one.besideACardOrRow)
       .map(one => `${one.route}: ${planted.get(one.code)?.vendor}`);
     assert.deepStrictEqual([...new Set(stray)], []);
     assert.deepStrictEqual(
@@ -235,10 +236,10 @@ describe("every route that prints a listing's description in full prints the lis
       Object.keys(GUIDES_PRINTING_THEIR_VENDORS_CONDITIONS).sort(),
       "each of those guides prints its vendor's conditions",
     );
-    assert.deepStrictEqual(
-      [...new Set(conditionsSeen.filter(besideACardOrRow).map(one => one.route))].sort(),
-      [...GUIDES_PRINTING_CONDITIONS_BESIDE_EACH_VENDORS_CARD_OR_ROW].sort(),
-      "each guide comparing vendors card by card or row by row prints conditions; guide-vendor-conditions.test.ts checks which, and where",
+    assertPopulationFloor(
+      new Set(conditionsSeen.filter(one => one.besideACardOrRow && one.after !== one.code).map(one => one.route)).size,
+      15,
+      "routes printing conditions in a vendor's card or the conditions row after its table row; guide-vendor-conditions.test.ts checks which, and where",
     );
   });
 
