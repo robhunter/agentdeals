@@ -84,6 +84,14 @@ describe(`${PAGE} states Amplitude's Free plan and GA4's sampling quota as the v
     }
   });
 
+  it("gives no reason to choose Mixpanel that both free plans share, such as seats or per-event pricing", async () => {
+    const page = await (await fetch(`${base}/amplitude-vs-mixpanel`)).text();
+    const served = [plain(withoutPricingChangeHistory(withoutHeadScriptsAndStyles(page))), ...jsonLdStrings(page)].join(" ");
+    assert.ok(served.includes("Choose Mixpanel if you prefer its reports; on the free plans, Amplitude includes more events (2M a month against Mixpanel's 1M)."), "the Mixpanel recommendation");
+    const reasons = served.match(/Choose Mixpanel if[^.]*\./g) ?? [];
+    assert.deepStrictEqual(reasons.filter(reason => /seats|per-event|pricing clarity/i.test(reason)), []);
+  });
+
   it("gives Amplitude 2M events in /analytics-alternatives' introduction, table and answer", async () => {
     const page = withoutHeadScriptsAndStyles(await (await fetch(`${base}/analytics-alternatives`)).text());
     assert.ok(page.includes("<strong>Amplitude</strong> gives <strong>2M events a month</strong>."), "the introduction");

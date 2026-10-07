@@ -4321,7 +4321,7 @@ const VS_PAGES: VsPageConfig[] = [
       <li><strong>Seats:</strong> Mixpanel has unlimited seats on the free plan. Amplitude allows unlimited users too but with governance features reserved for paid plans.</li>
       <li><strong>Data retention:</strong> Both offer 1-year retention on free plans, which is generous compared to most analytics tools.</li>
     </ul>`,
-    recommendation: `<p><strong>Choose Mixpanel if</strong> you prefer per-event pricing clarity, or need unlimited team seats.</p>
+    recommendation: `<p><strong>Choose Mixpanel if</strong> you prefer its reports; on the free plans, Amplitude includes more events (2M a month against Mixpanel's 1M).</p>
     <p><strong>Choose Amplitude if</strong> you want the larger free event allowance (2M a month), or need Amplitude's experiment and feature flag capabilities.</p>`,
   },
   {
