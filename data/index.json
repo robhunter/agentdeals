@@ -77,6 +77,18 @@
           "quote": "In most cases, if you exceed your usage limits on the Hobby plan, you will have to wait until 30 days have passed before you can use the feature again.",
           "url": "https://vercel.com/docs/plans/hobby",
           "read_on": "2026-10-07"
+        },
+        {
+          "text": "On Hobby, Vercel's terms let it use your content to train its AI models and share it with third parties for their model training; you can opt out in your team settings.",
+          "quote": "if you are on a Hobby plan or trial Pro plan, you agree that we may use Your Content to train our artificial intelligence (\"AI\") and machine learning models, and we may share Your Content with third parties for the purpose of developing and improving their products, including training and improving their AI and machine learning models",
+          "url": "https://vercel.com/legal/terms",
+          "read_on": "2026-10-07"
+        },
+        {
+          "text": "Hobby teams get 10 GB of Deployment Storage; going over it can block new deployments until you delete some.",
+          "quote": "Hobby teams get 10GB of Deployment Storage. Every deployment you keep uses some of it, and going over the limit can block you from deploying until you free some up.",
+          "url": "https://vercel.com/changelog/hobby-projects-now-retain-fewer-deployments-to-free-up-storage",
+          "read_on": "2026-10-07"
         }
       ]
     },
@@ -311,7 +323,21 @@
         "text": "Free $0 forever Build and deploy free forever Deploy any framework: Deploy from AI, Git, or API Private by default until you publish Unlimited deploy previews Build with Agent Runners Add Custom domains with SSL Functions & AI models Store structured data with Netlify Database Store files & images with Blob storage Firewall Traffic Rules & basic rate limiting Global CDN 300 credit limit / month",
         "url": "https://www.netlify.com/pricing/",
         "read_on": "2026-10-04"
-      }
+      },
+      "conditions": [
+        {
+          "text": "If one site uses up the Free plan's monthly credits, Netlify pauses every site on the account until the next billing cycle or an upgrade.",
+          "quote": "Please note that if one site/web project exceeds its limits, all sites/projects on your account will be paused.",
+          "url": "https://docs.netlify.com/manage/accounts-and-billing/billing/billing-for-credit-based-plans/billing-faq-for-credit-based-plans/",
+          "read_on": "2026-10-07"
+        },
+        {
+          "text": "Paused sites show a \"Site not available\" page, take no traffic or form submissions, and cannot get new production deploys.",
+          "quote": "all of your web projects (sites/apps) are paused and visitors to your web projects will find a Site not available page at each of your web project’s URLs. In addition, while your web projects are paused, they will not receive new web requests, web traffic, or form submissions and you cannot trigger new production deploys.",
+          "url": "https://docs.netlify.com/manage/accounts-and-billing/billing/billing-for-credit-based-plans/billing-faq-for-credit-based-plans/",
+          "read_on": "2026-10-07"
+        }
+      ]
     },
     {
       "vendor": "Cloudflare Pages",
