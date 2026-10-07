@@ -39,6 +39,10 @@ function syntheticListing(vendor: string, category: string, payment_protocols: P
   };
 }
 
+function paidPerUse(listing: Offer): Offer {
+  return { ...listing, tier: "Pay-per-use", description: "A synthetic API. Every request is paid." };
+}
+
 export const X402_WITH_A_STATED_COST = syntheticListing("Zqpay Stated", BUSIEST_CATEGORY, [
   {
     protocol: "x402",
@@ -54,12 +58,11 @@ export const X402_WITH_A_STATED_COST = syntheticListing("Zqpay Stated", BUSIEST_
 export const BOTH_WITH_AN_UNSTATED_X402_COST = syntheticListing("Zqpay Unstated", SECOND_BUSIEST_CATEGORY, [
   {
     protocol: "x402",
-    chain: "Zqchain",
     settlement: "Zqcoin",
     pricing_model: "per-request",
     example_cost: UNSTATED_X402_COST,
     source_url: "https://zqpay-unstated.example/docs/x402",
-    source_quote: "Agents pay per request in Zqcoin on Zqchain over x402.",
+    source_quote: "Agents pay per request in Zqcoin over x402.",
   },
   {
     protocol: "stripe-mpp",
@@ -75,16 +78,15 @@ export const MPP_WITHOUT_A_SOURCE = syntheticListing("Zqpay Unsourced", BUSIEST_
   { protocol: "stripe-mpp", settlement: "Zqfiat", pricing_model: "per-request", example_cost: UNSOURCED_MPP_COST },
 ]);
 
-export const X402_WITHOUT_A_COST = syntheticListing("Zqpay Costless", SECOND_BUSIEST_CATEGORY, [
+export const X402_WITHOUT_A_COST = paidPerUse(syntheticListing("Zqpay Costless", SECOND_BUSIEST_CATEGORY, [
   {
     protocol: "x402",
     chain: "Zqledger",
-    settlement: "Zqtoken",
     pricing_model: "per-request",
     source_url: "https://zqpay-costless.example/docs/x402",
-    source_quote: "Agents pay in Zqtoken on Zqledger over x402.",
+    source_quote: "Agents pay on Zqledger over x402.",
   },
-]);
+]));
 
 export const PAYMENT_LISTINGS: readonly Offer[] = [X402_WITH_A_STATED_COST, BOTH_WITH_AN_UNSTATED_X402_COST, MPP_WITHOUT_A_SOURCE, X402_WITHOUT_A_COST];
 
@@ -157,6 +159,30 @@ export function serviceCards(html: string): Map<string, string> {
     if (vendor !== undefined) cards.set(textOf(vendor), header);
   }
   return cards;
+}
+
+function jsonLdBlocks(html: string): any[] {
+  return [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map(match => JSON.parse(match[1]!));
+}
+
+export function faqAnswers(html: string): Map<string, string> {
+  const answers = new Map<string, string>();
+  for (const block of jsonLdBlocks(html).filter(candidate => candidate["@type"] === "FAQPage")) {
+    for (const question of block.mainEntity) answers.set(question.name, question.acceptedAnswer.text);
+  }
+  return answers;
+}
+
+export function descriptionsOf(html: string): string[] {
+  const metas = [...html.matchAll(/<meta (?:name="description"|property="og:description") content="([^"]*)"/g)].map(match => textOf(match[1]!));
+  const structured = jsonLdBlocks(html).filter(block => typeof block.description === "string").map(block => block.description as string);
+  return [...metas, ...structured];
+}
+
+export function catalogueVendorsNamedIn(text: string, protocolNames: readonly string[]): string[] {
+  const withoutProtocolNames = protocolNames.reduce((rest, name) => rest.split(name).join(" "), text);
+  return [...new Set(SHIPPED_OFFERS.map(offer => offer.vendor))].filter(vendor =>
+    new RegExp(`(?<![\\w-])${vendor.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}(?![\\w-])`).test(withoutProtocolNames));
 }
 
 export function servedVendors(offers: ReadonlyArray<{ vendor: string }>): string[] {

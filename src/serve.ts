@@ -31581,9 +31581,39 @@ function buildLlmApiPricingPage(): string {
     '</body>\n</html>', pubDate);
 }
 
+const MPP_PAYMENT_METHODS = "a variety of payment methods, including cards through Shared Payment Tokens (SPTs) and stablecoins";
+
+const FREE_TIER_BEFORE_X402 = "x402 is an additional payment option — it doesn't replace free tier access. Agents can use free tiers first and fall back to x402 when limits are exceeded.";
+
+function vendorNamesAlphabetically(listings: readonly Offer[]): string[] {
+  return listings.map(o => o.vendor).sort((a, b) => a.localeCompare(b));
+}
+
+function x402ServicesAnswer(x402Offers: readonly Offer[]): string {
+  if (x402Offers.length === 0) return "No developer service indexed on AgentDeals accepts x402 payments.";
+  const services = x402Offers.length === 1 ? "1 developer service indexed on AgentDeals accepts" : `${x402Offers.length} developer services indexed on AgentDeals accept`;
+  return `Currently ${services} x402 payments: ${joinWithAnd(vendorNamesAlphabetically(x402Offers))}.`;
+}
+
+function x402FreeTierAnswer(x402Offers: readonly Offer[]): string {
+  const withAFreeTier = x402Offers.filter(listingOffersAFreeTier);
+  if (withAFreeTier.length === 0) return `No. None of the ${x402Offers.length} x402-enabled services indexed here offers a free tier.`;
+  if (withAFreeTier.length === x402Offers.length) return `Yes. All ${x402Offers.length} x402-enabled services indexed here also offer traditional free tiers. ${FREE_TIER_BEFORE_X402}`;
+  return `Not all. ${withAFreeTier.length} of the ${x402Offers.length} x402-enabled services indexed here also offer a free tier: ${joinWithAnd(vendorNamesAlphabetically(withAFreeTier))}. ${FREE_TIER_BEFORE_X402}`;
+}
+
+function freeTierFallbackItem(listings: readonly Offer[]): string {
+  const withAFreeTier = listings.filter(listingOffersAFreeTier);
+  if (withAFreeTier.length === 0) return "";
+  const share = withAFreeTier.length === listings.length
+    ? "All services listed here also offer traditional free tiers."
+    : `${withAFreeTier.length} of the ${listings.length} services listed here also offer a free tier.`;
+  return `\n      <li><strong>Free tier fallback.</strong> ${share} Agents can use free tiers first and fall back to paid access when limits are exceeded.</li>`;
+}
+
 function buildAgentPaymentsPage(): string {
   const title = "Developer Services That Accept Agent Payments (2026) — x402 & MPP Directory";
-  const metaDesc = "Directory of developer services accepting autonomous AI agent payments via x402 and Stripe MPP. Firecrawl, Cloudflare, Vercel, Pinata and more. Per-call pricing, free tiers, and integration guides.";
+  const metaDesc = "Directory of developer services accepting autonomous AI agent payments via x402 and Stripe MPP. Per-call pricing, free tiers, and integration guides.";
   const slug = "agent-payments";
   const pubDate = "2026-04-09";
 
@@ -31610,11 +31640,11 @@ function buildAgentPaymentsPage(): string {
   };
 
   const faqItems = [
-    { q: "What is the x402 payment protocol?", a: "x402 is an open HTTP-native payment protocol that uses the HTTP 402 status code to enable machine-to-machine payments. Launched by the x402 Foundation (Linux Foundation) in April 2026 with backing from Stripe, Cloudflare, Shopify, Visa, and Mastercard. It allows AI agents to autonomously pay for API calls without pre-provisioned accounts or API keys." },
-    { q: "Which developer services accept x402 payments?", a: `Currently ${x402Offers.length} developer services indexed on AgentDeals accept x402 payments, including Firecrawl (web scraping), Cloudflare Workers/Pages/D1/R2/KV (cloud infrastructure), Vercel (hosting), Browserbase (browser automation), OpenAI and Anthropic (AI APIs), and Pinata IPFS (storage). The ecosystem is growing rapidly with 130+ services industry-wide.` },
-    { q: "What is Stripe MPP (Machine Payments Protocol)?", a: `MPP (Machine Payments Protocol) is Stripe's framework for agent-to-service payments launched March 2026. Currently ${mppOffers.length} services in our index support MPP. It builds on Stripe's existing payment infrastructure to add agent identity, budget controls, and audit trails. MPP uses familiar Stripe APIs, making adoption simpler for services already using Stripe.` },
-    { q: "How do AI agents pay for services autonomously?", a: "Agents use payment protocols like x402 or MPP to negotiate and complete payments in real-time. With x402, the agent receives a 402 response with payment requirements, completes the crypto payment, and retries with proof of payment. With MPP, agents use Stripe-managed wallets with configurable spending limits." },
-    { q: "Do x402 services still have free tiers?", a: `Yes. All ${x402Offers.length} x402-enabled services indexed here also offer traditional free tiers. x402 is an additional payment option — it doesn't replace free tier access. Agents can use free tiers first and fall back to x402 when limits are exceeded.` },
+    { q: "What is the x402 payment protocol?", a: "x402 is an open HTTP-native payment protocol that uses the HTTP 402 status code to enable machine-to-machine payments. Coinbase launched it in May 2025 and contributed it in April 2026 to the x402 Foundation, which the Linux Foundation launched with members including Stripe, Cloudflare, Shopify, Visa, and Mastercard. It allows AI agents to autonomously pay for API calls without pre-provisioned accounts or API keys." },
+    { q: "Which developer services accept x402 payments?", a: x402ServicesAnswer(x402Offers) },
+    { q: "What is Stripe MPP (Machine Payments Protocol)?", a: `MPP (Machine Payments Protocol) is Stripe's framework for agent-to-service payments launched March 2026. Currently ${mppOffers.length === 1 ? "1 service in our index supports" : `${mppOffers.length} services in our index support`} MPP. It builds on Stripe's existing payment infrastructure to add agent identity, budget controls, and audit trails. MPP uses familiar Stripe APIs, making adoption simpler for services already using Stripe.` },
+    { q: "How do AI agents pay for services autonomously?", a: `Agents use payment protocols like x402 or MPP to negotiate and complete payments in real-time. With x402, the agent receives a 402 response with payment requirements, completes the crypto payment, and retries with proof of payment. With MPP, agents pay with ${MPP_PAYMENT_METHODS}.` },
+    { q: "Do x402 services still have free tiers?", a: x402FreeTierAnswer(x402Offers) },
   ];
 
   const faqJsonLd = faqPageJsonLd("/agent-payments", faqItems);
@@ -31784,7 +31814,7 @@ ${globalNavCss()}
       <div class="proto-icon x402">402</div>
       <div>
         <h3>x402 &mdash; HTTP Native Agent Payments</h3>
-        <div class="proto-meta"><span>Linux Foundation</span><span>Launched April 2026</span><span>130+ services</span></div>
+        <div class="proto-meta"><span>Coinbase</span><span>Launched May 2025</span><span>Linux Foundation since April 2026</span></div>
       </div>
     </div>
     <p class="proto-desc">x402 uses the HTTP 402 &ldquo;Payment Required&rdquo; status code to enable pay-per-call API access. When an agent hits a 402 response, it reads the payment requirements from the response headers, completes the payment (typically via stablecoin on Base), and retries the request with proof of payment. No accounts or API keys needed &mdash; just a wallet. Founded by Coinbase with backing from Stripe, Cloudflare, Shopify, Visa, and Mastercard.</p>
@@ -31795,10 +31825,10 @@ ${globalNavCss()}
       <div class="proto-icon stripe-mpp">MPP</div>
       <div>
         <h3>MPP &mdash; Stripe Machine Payments Protocol</h3>
-        <div class="proto-meta"><span>Stripe</span><span>Launched March 2026</span><span>100+ integrations</span></div>
+        <div class="proto-meta"><span>Stripe</span><span>Launched March 2026</span></div>
       </div>
     </div>
-    <p class="proto-desc">Stripe&rsquo;s Machine Payments Protocol (MPP) extends Stripe&rsquo;s payment infrastructure for agent-to-service transactions. MPP adds agent identity verification, configurable spending limits, budget controls, and full audit trails. Built on familiar Stripe APIs, making adoption straightforward for services already using Stripe for billing. Agents pay with Stripe-managed wallets rather than crypto.</p>
+    <p class="proto-desc">Stripe&rsquo;s Machine Payments Protocol (MPP) extends Stripe&rsquo;s payment infrastructure for agent-to-service transactions. MPP adds agent identity verification, configurable spending limits, budget controls, and full audit trails. Built on familiar Stripe APIs, making adoption straightforward for services already using Stripe for billing. Agents pay with ${MPP_PAYMENT_METHODS}.</p>
   </div>
 
   <h2>Protocol Comparison</h2>
@@ -31807,9 +31837,9 @@ ${globalNavCss()}
     <thead><tr><th>Feature</th><th><span class="proto-badge x402">x402</span></th><th><span class="proto-badge stripe-mpp">Stripe MPP</span></th></tr></thead>
     <tbody>
       <tr><td>Backed by</td><td>Linux Foundation (Coinbase)</td><td>Stripe</td></tr>
-      <tr><td>Launched</td><td>April 2026</td><td>March 2026</td></tr>
+      <tr><td>Launched</td><td>May 2025</td><td>March 2026</td></tr>
       <tr><td>Payment method</td><td>USDC stablecoin on Base</td><td>Stablecoin + fiat (cards, BNPL)</td></tr>
-      <tr><td>Account required</td><td>No &mdash; wallet only</td><td>Stripe-managed wallet</td></tr>
+      <tr><td>Account required</td><td>No &mdash; wallet only</td><td>No &mdash; a card through a Shared Payment Token, or a stablecoin wallet</td></tr>
       <tr><td>Integration effort</td><td>HTTP 402 handler + wallet</td><td>Stripe SDK integration</td></tr>
       <tr><td>Budget controls</td><td>Wallet balance limits</td><td>Configurable per-agent spending limits</td></tr>
       <tr><td>Audit trail</td><td>On-chain (Base L2)</td><td>Stripe dashboard + API</td></tr>
@@ -31839,8 +31869,7 @@ ${categorySections}
       <li><strong>No pre-provisioned accounts.</strong> Agents can access any x402-enabled API instantly &mdash; no signup, no API key management, no billing configuration.</li>
       <li><strong>Pay-per-call economics.</strong> Agents pay only for what they use, at per-request granularity. No monthly minimums or commitment tiers.</li>
       <li><strong>Autonomous operation.</strong> Agents can discover, negotiate, and pay for services without human intervention &mdash; enabling truly autonomous workflows.</li>
-      <li><strong>Budget controls.</strong> Both x402 (wallet limits) and MPP (Stripe controls) provide guardrails to prevent runaway spending.</li>
-      <li><strong>Free tier fallback.</strong> All services listed here also offer traditional free tiers. Agents can use free tiers first and fall back to paid access when limits are exceeded.</li>
+      <li><strong>Budget controls.</strong> Both x402 (wallet limits) and MPP (Stripe controls) provide guardrails to prevent runaway spending.</li>${freeTierFallbackItem(allPaymentOffers)}
     </ul>
   </div>
 
@@ -31867,7 +31896,7 @@ ${faqHtml}
 
 function buildX402ServicesPage(): string {
   const title = "x402 Payment Protocol Services Directory (2026) — Developer Tools with HTTP 402 Micropayments";
-  const metaDesc = "Directory of developer tools and APIs supporting x402 HTTP 402 micropayments. Pay-per-call pricing for AI agents — no signup, no API keys. Exa, Cloudflare, Firecrawl, OpenVPS, GPU-Bridge, and more.";
+  const metaDesc = "Directory of developer tools and APIs supporting x402 HTTP 402 micropayments. Pay-per-call pricing for AI agents — no signup, no API keys.";
   const slug = "x402-services";
   const pubDate = "2026-04-14";
 
@@ -31897,9 +31926,9 @@ function buildX402ServicesPage(): string {
   const faqItems = [
     { q: "What is the x402 payment protocol?", a: "x402 is an open HTTP-native payment protocol that uses the HTTP 402 status code to enable machine-to-machine micropayments. When an agent hits a 402 response, it reads payment requirements from the response, completes a USDC payment on Base, and retries with proof of payment. No accounts or API keys needed. Joined the Linux Foundation in April 2026 with founding members including Coinbase, Cloudflare, Stripe, Google, Visa, Mastercard, AWS, and Shopify." },
     { q: "How does x402 work for AI agents?", a: "An AI agent sends an HTTP request to an x402-enabled API. If payment is required, the server returns HTTP 402 with payment details (amount, address, chain). The agent completes the USDC payment on Base L2 (fast, ~$0.001 gas fees), then retries the original request with the payment receipt in headers. The server verifies on-chain and serves the response. The entire flow takes 1-3 seconds." },
-    { q: `How many developer services support x402?`, a: `We currently index ${x402Offers.length} developer services with x402 support across ${byCategory.size} categories. The broader x402 ecosystem includes 400+ services. New services are being added weekly as the protocol gains adoption.` },
-    { q: "Do x402 services require crypto knowledge?", a: "No. Modern x402 client libraries handle the payment flow automatically. The agent needs a funded USDC wallet on Base — that's it. Libraries like @anthropic-ai/x402, @coinbase/x402, and cdp-agentkit abstract the payment negotiation entirely." },
-    { q: "What are the costs of using x402?", a: "Most x402 API calls cost $0.001-$0.01. Base L2 gas fees are typically under $0.001 per transaction. There are no monthly minimums, no commitments, and no signup fees. You only pay for what you use, per-request." },
+    { q: `How many developer services support x402?`, a: `We currently index ${x402Offers.length} developer services with x402 support across ${byCategory.size} categories.` },
+    { q: "Do x402 services require crypto knowledge?", a: "No. Modern x402 client libraries handle the payment flow automatically. The agent needs a funded USDC wallet on Base — that's it. Libraries like @x402/fetch and @x402/axios abstract the payment negotiation entirely." },
+    { q: "What are the costs of using x402?", a: "Each service sets its own price, and this page lists a cost only where the vendor's own docs state it. Base L2 gas fees are typically under $0.001 per transaction. There are no monthly minimums, no commitments, and no signup fees. You only pay for what you use, per-request." },
   ];
 
   const faqJsonLd = faqPageJsonLd("/x402-services", faqItems);
@@ -31909,8 +31938,8 @@ function buildX402ServicesPage(): string {
     const shortDesc = publishedTermsOpening(o, 1, 120);
     const proto = o.payment_protocols?.find(p => p.protocol === "x402");
     const cost = proto?.example_cost ?? "—";
-    const chain = proto?.chain || "Base";
-    const settlement = proto?.settlement || "USDC";
+    const chain = proto?.chain || "—";
+    const settlement = proto?.settlement || "—";
     return `<tr>
       <td>${handwrittenVendorLinkHtml(vendorSlug, o.vendor, ' class="vendor-link"')}</td>
       <td>${escHtmlServer(o.category)}</td>
@@ -32031,7 +32060,6 @@ ${globalNavCss()}
   <div class="stats-row">
     <div class="stat-card"><div class="stat-value">${x402Offers.length}</div><div class="stat-label">x402 services</div></div>
     <div class="stat-card"><div class="stat-value">${byCategory.size}</div><div class="stat-label">Categories</div></div>
-    <div class="stat-card"><div class="stat-value">400+</div><div class="stat-label">Industry-wide</div></div>
     <div class="stat-card"><div class="stat-value">USDC</div><div class="stat-label">Settlement</div></div>
   </div>
 
