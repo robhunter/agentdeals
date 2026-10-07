@@ -18,11 +18,11 @@
       "changed": "2026-10-07"
     },
     "/ai-free-tiers": {
-      "hash": "447840f24ae30e03",
+      "hash": "6274412698f1aab7",
       "changed": "2026-10-07"
     },
     "/ai-ml-alternatives": {
-      "hash": "d8d88b29deac1bf9",
+      "hash": "dc9ca7437cd48a75",
       "changed": "2026-10-07"
     },
     "/alternative-to": {
@@ -1076,7 +1076,7 @@
       "changed": "2026-10-07"
     },
     "/category/ai-ml": {
-      "hash": "48e69d635cccaae8",
+      "hash": "0eb6650b049c5bc0",
       "changed": "2026-10-07"
     },
     "/category/analytics": {
@@ -1252,7 +1252,7 @@
       "changed": "2026-10-07"
     },
     "/category/search": {
-      "hash": "2b55b79aef9fd42c",
+      "hash": "c77e40124a89bc10",
       "changed": "2026-10-07"
     },
     "/category/secrets-management": {
@@ -1531,16 +1531,16 @@
       "changed": "2026-10-06"
     },
     "/compare/brave-search-api-vs-bonsai-io": {
-      "hash": "070612250f2e36e5",
-      "changed": "2026-10-06"
+      "hash": "4ed1cbc3362b11f9",
+      "changed": "2026-10-07"
     },
     "/compare/brave-search-api-vs-orama": {
-      "hash": "9db091fb95b4f0a9",
-      "changed": "2026-10-06"
+      "hash": "d6b1a3851d0e4985",
+      "changed": "2026-10-07"
     },
     "/compare/brave-search-api-vs-typesense-cloud": {
-      "hash": "40f74e533c2e767c",
-      "changed": "2026-10-06"
+      "hash": "d83d6ce1daa180f7",
+      "changed": "2026-10-07"
     },
     "/compare/bright-data-mcp-server-vs-geekflare-api": {
       "hash": "7e9dfcf417f5c38e",
@@ -3061,8 +3061,8 @@
       "changed": "2026-10-07"
     },
     "/disclosure": {
-      "hash": "b439ce8552afd875",
-      "changed": "2026-10-06"
+      "hash": "1b86bdb4115e122f",
+      "changed": "2026-10-07"
     },
     "/email-alternatives": {
       "hash": "524aa9d4a5017854",
@@ -3139,7 +3139,7 @@
       "changed": "2026-10-07"
     },
     "/free-llm-apis": {
-      "hash": "258b61ec9e916dab",
+      "hash": "21bb56d596436f8f",
       "changed": "2026-10-07"
     },
     "/free-nextjs-stack": {
@@ -3177,7 +3177,7 @@
       "changed": "2026-10-07"
     },
     "/gemini-api-pricing-2026": {
-      "hash": "6dd941fcb53e8f74",
+      "hash": "74fcd48bab086ce1",
       "changed": "2026-10-07"
     },
     "/github-actions-alternatives": {
@@ -3197,7 +3197,7 @@
       "changed": "2026-10-05"
     },
     "/groq-vs-mistral-ai": {
-      "hash": "88521c50da2445a8",
+      "hash": "a3171055bb008bb6",
       "changed": "2026-10-07"
     },
     "/guides": {
@@ -3249,7 +3249,7 @@
       "changed": "2026-10-07"
     },
     "/llm-api-pricing": {
-      "hash": "9eb454d99f681608",
+      "hash": "64c92b76b38864d8",
       "changed": "2026-10-07"
     },
     "/localstack-alternatives": {
@@ -3281,15 +3281,15 @@
       "changed": "2026-10-07"
     },
     "/openai-assistants-alternatives": {
-      "hash": "736a65bfde93ee32",
+      "hash": "65289759093737ce",
       "changed": "2026-10-07"
     },
     "/openai-assistants-migration": {
-      "hash": "e36774dabaedba3b",
+      "hash": "e1a2221d209e62e2",
       "changed": "2026-10-07"
     },
     "/openai-assistants-migration-2026": {
-      "hash": "f63263c0db4b648e",
+      "hash": "12af6b8c74ab1498",
       "changed": "2026-10-07"
     },
     "/postman-alternatives": {
@@ -3332,8 +3332,8 @@
       "changed": "2026-10-07"
     },
     "/referral-programs": {
-      "hash": "306727faaf58fb17",
-      "changed": "2026-10-06"
+      "hash": "c8fcfd699e264c0b",
+      "changed": "2026-10-07"
     },
     "/reports": {
       "hash": "d48a69e989e52a39",
@@ -3483,7 +3483,7 @@
       "changed": "2026-10-07"
     },
     "/stack-check": {
-      "hash": "9f3b65504399bc3b",
+      "hash": "94db4d9ba2b66549",
       "changed": "2026-10-07"
     },
     "/stacks": {
@@ -4322,7 +4322,7 @@
       "changed": "2026-10-07"
     },
     "/vendor/bolt-new": {
-      "hash": "5ae3ba81528b7fbf",
+      "hash": "ba5dacbf5fb7669b",
       "changed": "2026-10-07"
     },
     "/vendor/bonsai-io": {
@@ -4365,7 +4365,7 @@
       "daily": true
     },
     "/vendor/brave-search-api": {
-      "hash": "1a81c46f20f49c45",
+      "hash": "7e02f7a1a3b374eb",
       "changed": "2026-10-07"
     },
     "/vendor/brevo": {
@@ -6958,7 +6958,7 @@
       "changed": "2026-10-07"
     },
     "/vendor/lovable": {
-      "hash": "d422388f113c7490",
+      "hash": "e93b13f6d29db27c",
       "changed": "2026-10-07"
     },
     "/vendor/luadns-com": {
