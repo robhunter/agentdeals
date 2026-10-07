@@ -38,6 +38,52 @@
       "added_at": "2026-08-29"
     },
     {
+      "vendor": "Replit",
+      "code": "RobHunter3",
+      "referral_url": "https://replit.com/refer/RobHunter3",
+      "referrer_benefit": "$20 in Replit credits per new paying customer",
+      "referrer_compensation": "credit",
+      "referee_benefit": "$20 in Replit credits",
+      "restrictions": [
+        "The $20 is credited when the new account becomes a paying customer, not at signup"
+      ],
+      "source": "platform",
+      "active": true,
+      "added_at": "2026-10-07",
+      "terms_verified": "2026-10-07"
+    },
+    {
+      "vendor": "Lovable",
+      "code": "L3XZSUB",
+      "referral_url": "https://lovable.dev/invite/L3XZSUB",
+      "referrer_benefit": "100 bonus credits when the referred account pays for its first Pro or Business subscription",
+      "referrer_compensation": "credit",
+      "referee_benefit": "10 bonus credits",
+      "restrictions": [
+        "Referral credits expire 12 months after Lovable grants them"
+      ],
+      "source": "platform",
+      "active": true,
+      "added_at": "2026-10-07",
+      "terms_verified": "2026-10-07"
+    },
+    {
+      "vendor": "Bolt.new",
+      "code": "Iap76n9eN1T",
+      "referral_url": "https://bolt.cello.so/Iap76n9eN1T",
+      "referrer_benefit": "15% of what the referred account pays Bolt, up to $50 per referral",
+      "referrer_compensation": "commission",
+      "referee_benefit": "20% off a paid plan",
+      "restrictions": [
+        "The 20% discount applies when you subscribe to a paid plan: for the first 3 months of a monthly plan, or once on an annual plan",
+        "Bolt does not apply the referral to an account created without the link or before clicking it"
+      ],
+      "source": "platform",
+      "active": true,
+      "added_at": "2026-10-07",
+      "terms_verified": "2026-10-07"
+    },
+    {
       "vendor": "Vultr",
       "code": "9920276",
       "referral_url": "https://www.vultr.com/?ref=9920276",
