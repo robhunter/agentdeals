@@ -35,8 +35,9 @@ export interface PaymentProtocol {
   settlement?: string;
   pricing_model?: string;
   example_cost?: string;
-  source_url?: string;
-  source_quote?: string;
+  source_url: string;
+  source_quote: string;
+  read_on: string;
 }
 
 export type DeploymentModel = "hosted" | "self_hosted" | "local_dev_only";
