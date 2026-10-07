@@ -82,7 +82,7 @@ a record asserting a source its own measurement denies is worse than a stale one
 `;
 
 const EDITORIAL_PAGES = [
-  "/agent-payments", "/agent-stack", "/ai-coding-pricing-2026", "/ai-coding-tools-pricing",
+  "/agent-payments", "/agent-stack", "/ai-coding-tools-pricing",
   "/analytics-free-tier-comparison-2026", "/api-development-free-tier-comparison-2026",
   "/auth-comparison-2026", "/aws-app-runner-migration", "/aws-free-tier-2026",
   "/azure-free-tier-2026", "/budget-builder", "/ci-cd-pricing",

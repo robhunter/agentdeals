@@ -109,12 +109,6 @@ describe("a hardcoded comparison row does not sell a tier its own record has ret
 describe("the rows this rule must leave alone", () => {
   const accepted: Array<{ builder: string; array: string; slug: string; because: string }> = [
     {
-      builder: "buildAiCodingPricing2026Page",
-      array: "tools",
-      slug: "augment-code",
-      because: "its record is retired and the row already says there is no free tier",
-    },
-    {
       builder: "buildAiCodingToolsPricingPage",
       array: "tools",
       slug: "augment-code",

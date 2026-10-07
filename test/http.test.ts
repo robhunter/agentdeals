@@ -3774,35 +3774,14 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("Frequently Asked Questions"), "Should have FAQ");
   });
 
-  it("GET /ai-coding-pricing-2026 renders AI coding pricing guide", async () => {
+  it("GET and HEAD /ai-coding-pricing-2026 redirect to /ai-coding-tools-pricing", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${serverPort}/ai-coding-pricing-2026`);
-    assert.strictEqual(response.status, 200);
-    assert.ok(response.headers.get("content-type")?.includes("text/html"));
-    const html = await response.text();
-    assert.ok(html.includes("AI Coding Tools Pricing"), "Should have title");
-    assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
-    assert.ok(html.includes('"Article"'), "Should use Article schema");
-    assert.ok(html.includes("canonical"), "Should have canonical link");
-    assert.ok(html.includes("global-nav"), "Should have global nav");
-    assert.ok(html.includes("Cursor"), "Should include Cursor");
-    assert.ok(html.includes("Windsurf"), "Should include Windsurf");
-    assert.ok(html.includes("GitHub Copilot"), "Should include GitHub Copilot");
-    assert.ok(html.includes("Gemini Code Assist"), "Should include Gemini Code Assist");
-    assert.ok(html.includes("Amazon Q Developer"), "Should include Amazon Q");
-    assert.ok(html.includes("Claude Code"), "Should include Claude Code");
-    assert.ok(html.includes("Augment Code"), "Should include Augment Code");
-    assert.ok(html.includes("Cline"), "Should include Cline");
-    assert.ok(html.includes("Aider"), "Should include Aider");
-    assert.ok(html.includes("$20/mo"), "Should show $20/mo price point");
-    assert.ok(html.includes("$200/mo"), "Should show $200/mo power tier");
-    assert.ok(html.includes("What You Actually Get for Free"), "Should have free tier section");
-    assert.ok(html.includes("Recent Pricing Changes"), "Should have changes section");
-    assert.ok(html.includes("Which Tool for Which Developer"), "Should have recommendations");
-    assert.ok(html.includes("mcp-cta"), "Should have MCP CTA");
-    assert.ok(html.includes("/changes"), "Should cross-link to changes timeline");
-    assert.ok(html.includes("/setup"), "Should cross-link to setup guide");
+    for (const method of ["GET", "HEAD"]) {
+      const response = await fetch(`http://localhost:${serverPort}/ai-coding-pricing-2026`, { method, redirect: "manual" });
+      assert.strictEqual(response.status, 301, method);
+      assert.strictEqual(response.headers.get("location"), "/ai-coding-tools-pricing", method);
+    }
   });
 
   it("GET /ai-coding-tools-pricing renders definitive AI coding comparison", async () => {
@@ -4741,7 +4720,7 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("Stack Guides"), "Should have stack guides section");
     assert.ok(html.includes("Category Alternatives"), "Should have alternatives section");
     assert.ok(html.includes("Special Reports"), "Should have reports section");
-    assert.ok(html.includes("/ai-coding-pricing-2026"), "Should link to AI coding pricing");
+    assert.ok(html.includes("/ai-coding-tools-pricing"), "Should link to AI coding pricing");
     assert.ok(html.includes("/supabase-vs-firebase"), "Should link to vendor comparison");
     assert.ok(html.includes("/free-startup-stack"), "Should link to stack guide");
     assert.ok(html.includes("/database-alternatives"), "Should link to category hub");

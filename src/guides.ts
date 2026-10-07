@@ -73,7 +73,6 @@ const GUIDE_ENTRIES: Array<{ slug: string; title: string }> = [
   { slug: "free-tier-tracker", title: FREE_TIER_TRACKER_HEADING },
   { slug: "startup-credits", title: "Startup Credits Directory" },
   { slug: "openai-assistants-migration", title: "OpenAI Assistants API Migration Cost Guide" },
-  { slug: "ai-coding-pricing-2026", title: "AI Coding Tools Pricing 2026" },
   { slug: "ai-coding-tools-pricing", title: "AI Coding Tools Pricing Comparison 2026" },
   { slug: "ci-cd-pricing", title: "CI/CD Tools Pricing Comparison 2026" },
   { slug: "database-pricing", title: "Database Pricing Comparison 2026" },

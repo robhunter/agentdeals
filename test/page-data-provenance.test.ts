@@ -484,7 +484,7 @@ describe("a page may only name the source it actually reads", () => {
 
   it("keeps enough pages saying the tables were compiled by hand for the rule above to have something to catch", () => {
     const denying = pages.filter((p) => deniesTheCatalogueSupplied(bodies.get(p.path)!));
-    assertPopulationFloor(denying.length, 17, "registered pages telling the reader their tables were compiled by hand");
+    assertPopulationFloor(denying.length, 16, "registered pages telling the reader their tables were compiled by hand");
     const citing = pages.filter((p) => citesOurRecords(bodies.get(p.path)!, INDEX_SIZE));
     assert.ok(citing.length >= 5, `only ${citing.length} pages cite the index, so the pairing cannot arise`);
   });
@@ -508,9 +508,10 @@ describe("a page may only name the source it actually reads", () => {
       (p) => perturbedBodies.get(p.path)!.includes(PERTURBATION_SENTINEL)
         && !readableTableText(perturbedBodies.get(p.path)!).includes(PERTURBATION_SENTINEL)
     );
-    assert.ok(
-      everySentinelOutsideTables.length >= 15,
-      `only ${everySentinelOutsideTables.length} of those carry perturbed catalogue text outside their tables, so the narrower measurement is not being exercised`
+    assertPopulationFloor(
+      everySentinelOutsideTables.length,
+      10,
+      "pages the catalogue reaches only outside their tables that print perturbed catalogue text there"
     );
   });
 

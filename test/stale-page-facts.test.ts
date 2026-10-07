@@ -206,8 +206,8 @@ describe("the register the site ships", () => {
   });
 
   it("counts a vendor a comparison table prices but no verdict awards", () => {
-    const page = REGISTRY.pages.find(p => p.path === "/ai-coding-pricing-2026");
-    assert.ok(page, "/ai-coding-pricing-2026 is not on the register");
+    const page = REGISTRY.pages.find(p => p.path === "/ai-coding-tools-pricing");
+    assert.ok(page, "/ai-coding-tools-pricing is not on the register");
     assert.ok(page.vendors_tabulated.includes("augment-code"), JSON.stringify(page.vendors_tabulated));
     assert.ok(!page.vendors_asserted.includes("augment-code"), JSON.stringify(page.vendors_asserted));
     assert.ok(vendorsStatedBy(page).includes("augment-code"));

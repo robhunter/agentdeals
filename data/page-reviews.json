@@ -135,54 +135,6 @@
       "data_source_reason": null
     },
     {
-      "path": "/ai-coding-pricing-2026",
-      "published": "2026-03-27",
-      "tier": "A",
-      "vendors_asserted": [
-        "aider",
-        "claude-code",
-        "cline",
-        "cursor",
-        "github-copilot",
-        "google-gemini-code-assist",
-        "windsurf"
-      ],
-      "vendors_tabulated": [
-        "amazon-q-developer",
-        "augment-code",
-        "claude-code",
-        "cursor",
-        "github-copilot",
-        "google-gemini-code-assist",
-        "windsurf"
-      ],
-      "badge_subjects_unresolved": [],
-      "stat_card_subjects_unresolved": [],
-      "reviewed_at": "2026-09-13",
-      "reviewer": "pm",
-      "review_outcome": "fail",
-      "review_note": null,
-      "reads_index": true,
-      "tables_read_index": false,
-      "table_figures": 35,
-      "table_figures_from_records": 17,
-      "tables": [
-        {
-          "label": "Pricing Comparison Table",
-          "figures": 18,
-          "from_records": 0
-        },
-        {
-          "label": "Recent Pricing Changes",
-          "figures": 17,
-          "from_records": 17
-        }
-      ],
-      "reads_changes": true,
-      "data_source": "catalogue",
-      "data_source_reason": null
-    },
-    {
       "path": "/ai-coding-tools-pricing",
       "published": "2026-04-08",
       "tier": "A",
