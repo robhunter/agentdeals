@@ -4301,28 +4301,28 @@ const VS_PAGES: VsPageConfig[] = [
   {
     vendorA: "Amplitude", vendorB: "PostHog",
     category: "Analytics",
-    verdict: "PostHog gives 1M events/month with session replays, feature flags, and A/B testing included. Amplitude gives 10K MTU with 10M events but charges separately for session replays. PostHog is the better all-in-one value; Amplitude has deeper behavioral analytics.",
+    verdict: "PostHog gives 1M events/month with session replays, feature flags, and A/B testing included. Amplitude's Free plan gives 2M events and 10K session replays a month. PostHog is the better all-in-one value; Amplitude has deeper behavioral analytics.",
     keyDifferences: `<ul>
-      <li><strong>Free tier:</strong> PostHog offers 1M events + 5K session replays + 1M feature flag requests — all included. Amplitude offers 10K MTU (10M events) + 1K session replays but feature flags are limited.</li>
-      <li><strong>Product scope:</strong> PostHog bundles analytics, session replays, feature flags, A/B testing, and error tracking in one platform. Amplitude is analytics-focused with replays as an add-on.</li>
-      <li><strong>Pricing model:</strong> PostHog charges per event. Amplitude charges per Monthly Tracked User (MTU). The MTU model can be cheaper for high-event/low-user products, or more expensive for low-event/high-user ones.</li>
+      <li><strong>Free tier:</strong> PostHog offers 1M events + 5K session replays + 1M feature flag requests — all included. Amplitude's Free plan offers 2M events + 10K session replays a month, with unlimited feature flags.</li>
+      <li><strong>Product scope:</strong> PostHog bundles analytics, session replays, feature flags, A/B testing, and error tracking in one platform. Amplitude is analytics-focused; its Free plan includes 10K session replays a month.</li>
+      <li><strong>Pricing model:</strong> PostHog charges per event. Amplitude's Free plan counts events (2M a month); its paid Plus plan is sized in MTUs or events.</li>
       <li><strong>Self-hosting:</strong> PostHog is open source (MIT core) and can be self-hosted. Amplitude is cloud-only.</li>
     </ul>`,
     recommendation: `<p><strong>Choose PostHog if</strong> you want an all-in-one product analytics platform, value open source, or want to replace multiple tools (analytics + replays + flags + A/B testing).</p>
-    <p><strong>Choose Amplitude if</strong> you need deep behavioral analytics with advanced cohort analysis, or your product has high events-per-user where MTU pricing works in your favor.</p>`,
+    <p><strong>Choose Amplitude if</strong> you need deep behavioral analytics with advanced cohort analysis, or want the larger free event allowance (2M a month).</p>`,
   },
   {
     vendorA: "Amplitude", vendorB: "Mixpanel",
     category: "Analytics",
-    verdict: "Mixpanel offers 1M events/month with 10K session replays and unlimited seats. Amplitude offers 10K MTU with 10M events and 1K replays. Mixpanel's per-event pricing is simpler; Amplitude's MTU model can be cheaper or more expensive depending on your product's usage patterns.",
+    verdict: "Mixpanel offers 1M events/month with 10K session replays and unlimited seats. Amplitude's Free plan offers 2M events and 10K session replays a month. Both free plans count events.",
     keyDifferences: `<ul>
-      <li><strong>Pricing model:</strong> Mixpanel charges per event (1M/month free). Amplitude charges per MTU — 10K users with up to 10M events. If your users generate many events, Amplitude could be cheaper.</li>
-      <li><strong>Session replays:</strong> Mixpanel includes 10K session replays free. Amplitude includes only 1K — a 10x difference.</li>
+      <li><strong>Pricing model:</strong> Mixpanel charges per event (1M/month free). Amplitude's Free plan counts events (2M a month); its paid Plus plan is sized in MTUs or events.</li>
+      <li><strong>Session replays:</strong> Mixpanel includes 10K session replays free. Amplitude's Free plan also includes 10K a month.</li>
       <li><strong>Seats:</strong> Mixpanel has unlimited seats on the free plan. Amplitude allows unlimited users too but with governance features reserved for paid plans.</li>
       <li><strong>Data retention:</strong> Both offer 1-year retention on free plans, which is generous compared to most analytics tools.</li>
     </ul>`,
-    recommendation: `<p><strong>Choose Mixpanel if</strong> you want the most events and session replays for free, prefer per-event pricing clarity, or need unlimited team seats.</p>
-    <p><strong>Choose Amplitude if</strong> you have high-frequency event tracking per user (where MTU pricing saves money), or need Amplitude's experiment and feature flag capabilities.</p>`,
+    recommendation: `<p><strong>Choose Mixpanel if</strong> you prefer per-event pricing clarity, or need unlimited team seats.</p>
+    <p><strong>Choose Amplitude if</strong> you want the larger free event allowance (2M a month), or need Amplitude's experiment and feature flag capabilities.</p>`,
   },
   {
     vendorA: "Groq", vendorB: "Hugging Face",
@@ -12919,7 +12919,7 @@ ${mcpCtaCss()}
   <h1>Best Free Analytics Tools for Developers</h1>
 
   <div class="context">
-    <p>Analytics is essential for understanding users, but pricing can be opaque and usage-based costs escalate fast. Fortunately, the free tier landscape is generous. <strong>PostHog</strong> offers <strong>1M events/month</strong> with session replays, feature flags, and A/B testing included. <strong>Amplitude</strong> gives <strong>10M events with 10K MTU</strong>. <strong>Plausible</strong> and <strong>Umami</strong> are privacy-first, cookie-free alternatives you can self-host with no limits.</p>
+    <p>Analytics is essential for understanding users, but pricing can be opaque and usage-based costs escalate fast. Fortunately, the free tier landscape is generous. <strong>PostHog</strong> offers <strong>1M events/month</strong> with session replays, feature flags, and A/B testing included. <strong>Amplitude</strong> gives <strong>2M events a month</strong>. <strong>Plausible</strong> and <strong>Umami</strong> are privacy-first, cookie-free alternatives you can self-host with no limits.</p>
     <p>This page compares every free analytics tool in our index \u2014 <strong>${analyticsOffers.length} tools</strong> across product analytics, web analytics, session replay, event tracking, and data infrastructure. Whether you need a Google Analytics alternative or a full product analytics suite, we have the comparison with exact free tier limits.</p>
   </div>
 
@@ -12975,7 +12975,7 @@ ${buildCards(other)}
       <tr>
         <td style="font-weight:600"><a href="/vendor/amplitude" style="color:var(--text)">Amplitude</a></td>
         <td>Product</td>
-        <td>10M events, 10K MTU</td>
+        <td>2M events/mo</td>
         <td>No</td>
         <td>Enterprise-grade product analytics</td>
       </tr>
@@ -13061,7 +13061,7 @@ ${buildCards(other)}
       <dd><a href="/vendor/posthog">PostHog</a> \u2014 1M events/month free with session replays, feature flags, A/B testing, and error tracking. Open-source and self-hostable. The most complete free product analytics platform.</dd>
 
       <dt>Want enterprise-grade product analytics?</dt>
-      <dd><a href="/vendor/amplitude">Amplitude</a> \u2014 10M events and 10K MTU on the free Starter plan with unlimited feature flags and 1-year retention. Best for teams that need deep funnel and cohort analysis.</dd>
+      <dd><a href="/vendor/amplitude">Amplitude</a> \u2014 2M events a month on the Free plan, with unlimited feature flags and 1 year of data access. Best for teams that need deep funnel and cohort analysis.</dd>
 
       <dt>Looking for a privacy-first Google Analytics alternative?</dt>
       <dd><a href="/vendor/plausible-analytics">Plausible</a> for a sub-1KB script with no cookies (AGPL, self-hostable). <a href="/vendor/umami">Umami</a> for MIT-licensed simplicity. <a href="/vendor/goatcounter">GoatCounter</a> for 100K pageviews/month free hosted.</dd>
@@ -41436,6 +41436,8 @@ function buildAnalyticsFreeTierComparison2026Page(): string {
   const metaDescAnalytics = "Side-by-side comparison of 15+ analytics free tiers in 2026. Compare PostHog, Mixpanel, Amplitude, Plausible, Google Analytics, Umami, and more — event limits, session replays, feature flags, and scaling costs.";
   const slug = "analytics-free-tier-comparison-2026";
   const pubDate = "2026-04-01";
+  const GA4_SAMPLING_DOC = { url: "https://support.google.com/analytics/answer/13331292", readOn: "2026-10-07" };
+  const AMPLITUDE_PRICING = { url: "https://amplitude.com/pricing", readOn: "2026-10-07" };
 
   const analyticsVendorKeywords = ["PostHog", "Mixpanel", "Amplitude", "Plausible", "Google Analytics", "Umami", "Matomo", "Heap", "June", "Countly", "Fathom", "Simple Analytics", "Pirsch", "Pendo"];
   const analyticsChanges = dealChanges.filter((c: any) =>
@@ -41593,11 +41595,11 @@ ${mcpCtaCss()}
     <div class="stat-card"><div class="stat-number">15+</div><div class="stat-label">Analytics Services Compared</div></div>
     <div class="stat-card"><div class="stat-number green">1M</div><div class="stat-label">PostHog Free Events/mo</div></div>
     <div class="stat-card"><div class="stat-number green">1M</div><div class="stat-label">Mixpanel Free Events/mo</div></div>
-    <div class="stat-card"><div class="stat-number amber">10K</div><div class="stat-label">Amplitude Free MTUs</div></div>
+    <div class="stat-card"><div class="stat-number green">2M</div><div class="stat-label">Amplitude Free Events/mo</div></div>
   </div>
 
   <div class="executive-summary">
-    <p><strong>Quick verdict:</strong> <strong>PostHog</strong> is the most generous all-in-one platform &mdash; 1M events/month free plus 5K session replays, 1M feature flag evaluations, and experiments. <strong>Mixpanel</strong> matches with 1M events/month on a polished behavioral analytics UI. <strong>Amplitude</strong> is the most restrictive of the big three at 10K MTUs free but offers enterprise-grade governance. <strong>Google Analytics</strong> is unlimited and free but comes with privacy trade-offs and data sampling. For privacy-focused analytics, <strong>Plausible</strong> and <strong>Umami</strong> are the leading options (self-hosted free, cloud plans paid).</p>
+    <p><strong>Quick verdict:</strong> <strong>PostHog</strong> is the most generous all-in-one platform &mdash; 1M events/month free plus 5K session replays, 1M feature flag evaluations, and experiments. <strong>Mixpanel</strong> matches with 1M events/month on a polished behavioral analytics UI. <strong>Amplitude</strong> gives 2M events/month free, with 1 year of data access. <strong>Google Analytics</strong> is unlimited and free but comes with privacy trade-offs and data sampling. For privacy-focused analytics, <strong>Plausible</strong> and <strong>Umami</strong> are the leading options (self-hosted free, cloud plans paid).</p>
     <p><strong>The all-in-one shift:</strong> PostHog has redefined the category by bundling analytics, session replays, feature flags, experiments, and surveys into one platform with a generous free tier. Mixpanel and Amplitude remain focused on behavioral analytics, while the privacy-focused segment (Plausible, Fathom, Umami) targets teams that need GDPR compliance without cookie banners.</p>
   </div>
 
@@ -41660,11 +41662,11 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
       </tr>
       <tr>
-        <td class="provider-col">Amplitude<span class="caution-badge">LOW FREE LIMIT</span></td>
-        <td>10K MTUs/mo</td>
-        <td class="partial">&#9679; 1K/mo (add-on)</td>
-        <td class="partial">&#9679; Limited</td>
-        <td>Unlimited</td>
+        <td class="provider-col">Amplitude</td>
+        <td>2M events/mo</td>
+        <td class="check">&#10003; 10K/mo</td>
+        <td class="check">&#10003; Unlimited</td>
+        <td>1 year</td>
         <td class="cross">&#10007;</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
@@ -41798,8 +41800,8 @@ ${mcpCtaCss()}
   </div>
 
   <div class="diff-card">
-    <h3>Amplitude <span class="caution-badge">LOW FREE LIMIT</span></h3>
-    <div class="diff-desc"><strong>Free tier:</strong> 10K Monthly Tracked Users (MTUs). The MTU metric means one active user generating 100 events counts as 1 MTU, making it cheaper per-user but the 10K limit is very restrictive for growing products. Session replay available as an add-on (1K replays free). Unlimited data retention. Enterprise-grade governance features even on the free plan. Best for enterprise-leaning teams that value governance and don't expect rapid user growth on the free tier.</div>
+    <h3>Amplitude</h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 2M events a month, 10K session replays a month, 1 year of data access and 10 saved charts, no credit card (<a href="${AMPLITUDE_PRICING.url}" rel="nofollow noopener">${escHtmlServer(citationLabel(AMPLITUDE_PRICING.url))}</a>, read ${AMPLITUDE_PRICING.readOn}).</div>
   </div>
 
   <div class="diff-card">
@@ -41950,7 +41952,7 @@ ${mcpCtaCss()}
         <td><strong>500K events/mo</strong></td>
         <td class="cheapest">$0 (free)</td>
         <td class="cheapest">$0 (free)</td>
-        <td>Varies by MTUs</td>
+        <td class="cheapest">$0 (free)</td>
         <td class="cheapest">$0 (free)</td>
         <td>~$9/mo</td>
       </tr>
@@ -41958,7 +41960,7 @@ ${mcpCtaCss()}
         <td><strong>2M events/mo</strong></td>
         <td>~$31</td>
         <td>~$24</td>
-        <td>Custom pricing</td>
+        <td class="cheapest">$0 (free)</td>
         <td class="cheapest">$0 (free, sampled)</td>
         <td>~$19/mo</td>
       </tr>
@@ -41991,15 +41993,15 @@ ${mcpCtaCss()}
   </div>
 
   <div class="context-box">
-    <strong>The MTU vs event pricing trap:</strong> Amplitude charges by Monthly Tracked Users (MTUs), while PostHog and Mixpanel charge by events. One power user generating 100 events counts as 1 MTU on Amplitude but 100 events on PostHog/Mixpanel. For apps with high engagement per user, Amplitude's MTU model is cheaper. For apps with many low-engagement users (e.g., content sites), event-based pricing wins. <strong>Know your engagement pattern before choosing.</strong>
+    <strong>Free plans count events:</strong> Amplitude's Free plan includes 2M events a month; PostHog and Mixpanel include 1M. Amplitude's paid Plus plan is sized in MTUs or events.
   </div>
 
   <div class="context-box">
-    <strong>The session replay add-on trap:</strong> Session replay is increasingly essential for debugging and UX research. PostHog includes 5K replays free. Amplitude offers 1K free but charges for more. Mixpanel doesn't offer replay at all &mdash; you'd need a separate tool like FullStory ($300+/mo), Hotjar ($80+/mo), or LogRocket ($99+/mo). At growth stage, buying analytics + replay separately typically costs 2&ndash;3x what PostHog charges for both bundled.
+    <strong>The session replay add-on trap:</strong> Session replay is increasingly essential for debugging and UX research. PostHog includes 5K replays free, and Amplitude's Free plan includes 10K a month. Mixpanel doesn't offer replay at all &mdash; you'd need a separate tool like FullStory ($300+/mo), Hotjar ($80+/mo), or LogRocket ($99+/mo). At growth stage, buying analytics + replay separately typically costs 2&ndash;3x what PostHog charges for both bundled.
   </div>
 
   <div class="context-box">
-    <strong>The Google Analytics "free" trap:</strong> GA is free in dollars but costs you in data quality and privacy. Data sampling begins at 500K sessions per property for ad-hoc queries. You don't own the data &mdash; Google uses it for advertising. EU regulators have ruled GA non-compliant. The real cost is the cookie consent banner (reducing opt-in rates by 20&ndash;40%), compliance risk, and data sampling at scale. "Free" analytics that samples your data isn't really free.
+    <strong>The Google Analytics "free" trap:</strong> GA is free in dollars but costs you in data quality and privacy. In GA4, explorations and other event-level queries are sampled above 10 million events per query on standard properties (<a href="${GA4_SAMPLING_DOC.url}" rel="nofollow noopener">${escHtmlServer(citationLabel(GA4_SAMPLING_DOC.url))}</a>, read ${GA4_SAMPLING_DOC.readOn}). You don't own the data &mdash; Google uses it for advertising. EU regulators have ruled GA non-compliant. The real cost is the cookie consent banner (reducing opt-in rates by 20&ndash;40%), compliance risk, and data sampling at scale. "Free" analytics that samples your data isn't really free.
   </div>
 
   <h2 id="best-for">By Use Case</h2>
@@ -42034,7 +42036,7 @@ ${mcpCtaCss()}
 
     <div class="verdict-item">
       <strong>Enterprise-ready free start &rarr; Amplitude</strong>
-      <p>10K MTUs free with enterprise governance, SSO, and unlimited retention. The free limit is low, but the enterprise features are unmatched. Best for companies that know they'll scale to paid and want enterprise governance from day one.</p>
+      <p>2M events a month free, with 1 year of data access. Best for companies that know they'll scale to paid and want enterprise governance from day one.</p>
     </div>
 
     <div class="verdict-item">
@@ -42051,8 +42053,8 @@ ${mcpCtaCss()}
   </div>
 
   <div class="diff-card">
-    <h3>Amplitude's 10K MTU limit is very restrictive</h3>
-    <div class="diff-desc">10K Monthly Tracked Users sounds generous until your product grows. A B2C app that goes viral can burn through 10K MTUs in days. Beyond the free tier, Amplitude's pricing is opaque (custom quotes), and customers report $50K&ndash;$200K+/year contracts. The jump from free to paid is one of the steepest in analytics.</div>
+    <h3>Amplitude's free plan keeps 1 year of data</h3>
+    <div class="diff-desc">Amplitude's Free plan includes 2M events a month and 1 year of data access.</div>
   </div>
 
   <div class="diff-card">
@@ -42072,7 +42074,7 @@ ${mcpCtaCss()}
 
   <div class="diff-card">
     <h3>Data retention limits on free plans</h3>
-    <div class="diff-desc">PostHog retains data for 1 year on the free plan. Heap retains for 6 months. GA4 retains for 14 months (adjustable to 2 or 14 months only). After the retention period, your historical data is gone. Mixpanel and Amplitude offer unlimited retention on free plans, which is a significant advantage for long-term trend analysis.</div>
+    <div class="diff-desc">PostHog retains data for 1 year on the free plan. Amplitude's Free plan gives 1 year of data access. Heap retains for 6 months. GA4 retains for 14 months (adjustable to 2 or 14 months only). After the retention period, your historical data is gone. Mixpanel offers unlimited retention on its free plan, which is a significant advantage for long-term trend analysis.</div>
   </div>
 
   <h2 id="changes">Pricing Change Timeline</h2>
@@ -45650,7 +45652,7 @@ function buildEstimatorData(): EstimatorCategory[] {
       vendors: [
         { slug: "posthog", name: "PostHog", free: "1M events/mo", starter: 0, growth: 0, scale: 450, notes: "Free up to 1M, then $0.000045/event" },
         { slug: "mixpanel", name: "Mixpanel", free: "1M events/mo", starter: 0, growth: 0, scale: 150, notes: "Growth from $0.00028/event" },
-        { slug: "amplitude", name: "Amplitude", free: "10K MTU", starter: 0, growth: 0, scale: 995, notes: "Growth pricing varies" },
+        { slug: "amplitude", name: "Amplitude", free: "2M events/mo", starter: 0, growth: 0, scale: 995, notes: "Growth pricing varies" },
         { slug: "plausible", name: "Plausible", free: "Self-hosted only", starter: 9, growth: 19, scale: 69, notes: "Cloud $9/mo (10K pageviews)" },
       ],
     },
