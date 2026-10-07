@@ -2087,7 +2087,8 @@
       "source_url": "https://replit.com/pricing",
       "record_date": "2026-09-01",
       "change_type": "pricing_restructured",
-      "summary": "The free tier now includes daily agent credits and allows publishing 1 live project."
+      "summary": "The free tier now includes daily agent credits and allows publishing 1 live project.",
+      "reverted_on": "2026-10-07"
     },
     {
       "vendor": "AppFit",
