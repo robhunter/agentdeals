@@ -188,7 +188,7 @@ describe("Agent Payments, on a catalogue whose payment listings are synthetic", 
       assert.ok(mppSection?.includes(`Agents pay with a variety of payment methods, including ${MPP_METHODS_IN_STRIPES_WORDS}.`), `the MPP section: ${mppSection}`);
       const answer = faqAnswers(html).get("How do AI agents pay for services autonomously?");
       assert.ok(answer?.includes(`With MPP, agents pay with a variety of payment methods, including ${MPP_METHODS_IN_STRIPES_WORDS}.`), answer);
-      assert.ok(html.includes("<tr><td>Account required</td><td>No &mdash; wallet only</td><td>No &mdash; a card through a Shared Payment Token, or a stablecoin wallet</td></tr>"), "the comparison table does not say what an MPP payment needs");
+      assert.ok(html.includes("<tr><td>Account required</td><td>No &mdash; wallet only</td><td>Stablecoins: no, a wallet only. Cards: a Shared Payment Token, issued from a Link account</td></tr>"), "the comparison table does not say what an MPP payment needs");
       assert.ok(!/managed wallet/i.test(html), "the page still says agents pay MPP from a managed wallet");
     });
 

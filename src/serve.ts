@@ -31839,7 +31839,7 @@ ${globalNavCss()}
       <tr><td>Backed by</td><td>Linux Foundation (Coinbase)</td><td>Stripe</td></tr>
       <tr><td>Launched</td><td>May 2025</td><td>March 2026</td></tr>
       <tr><td>Payment method</td><td>USDC stablecoin on Base</td><td>Stablecoin + fiat (cards, BNPL)</td></tr>
-      <tr><td>Account required</td><td>No &mdash; wallet only</td><td>No &mdash; a card through a Shared Payment Token, or a stablecoin wallet</td></tr>
+      <tr><td>Account required</td><td>No &mdash; wallet only</td><td>Stablecoins: no, a wallet only. Cards: a Shared Payment Token, issued from a Link account</td></tr>
       <tr><td>Integration effort</td><td>HTTP 402 handler + wallet</td><td>Stripe SDK integration</td></tr>
       <tr><td>Budget controls</td><td>Wallet balance limits</td><td>Configurable per-agent spending limits</td></tr>
       <tr><td>Audit trail</td><td>On-chain (Base L2)</td><td>Stripe dashboard + API</td></tr>
