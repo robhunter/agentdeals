@@ -5,6 +5,7 @@ import { resolve, dirname, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
 import { readChangeLog, changeLogFreshness, CHANGES_PATH } from "./change-log.js";
+import { proposalsPath, readProposals } from "./change-proposals.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -12,7 +13,7 @@ export const DEFAULT_THRESHOLD_DAYS = 14;
 
 export const REPO = resolve(__dirname, "..");
 
-export function changeLogAtRef(ref, path = CHANGES_PATH, repo = REPO) {
+function fileAtRef(ref, path, repo) {
   const tracked = relative(repo, path).split("\\").join("/");
   const show = spawnSync("git", ["show", `${ref}:${tracked}`], {
     cwd: repo,
@@ -24,9 +25,30 @@ export function changeLogAtRef(ref, path = CHANGES_PATH, repo = REPO) {
       `Cannot read ${tracked} at ${ref}: ${(show.stderr || show.error?.message || "git failed").toString().trim()}`
     );
   }
-  const data = JSON.parse(show.stdout);
+  return { tracked, data: JSON.parse(show.stdout) };
+}
+
+export function changeLogAtRef(ref, path = CHANGES_PATH, repo = REPO) {
+  const { tracked, data } = fileAtRef(ref, path, repo);
   if (!Array.isArray(data.changes)) throw new Error(`${tracked} at ${ref} has no changes array`);
   return data;
+}
+
+export function proposalsAtRef(ref, path = proposalsPath(), repo = REPO) {
+  const { tracked, data } = fileAtRef(ref, path, repo);
+  if (!Array.isArray(data.proposals) || !Array.isArray(data.dropped)) {
+    throw new Error(`${tracked} at ${ref} has no proposals and dropped arrays`);
+  }
+  return data;
+}
+
+export function recordsTheDetectorProposed(store) {
+  return [...store.proposals, ...store.dropped];
+}
+
+export function daysSinceTheDetectorLastWrote(freshness, proposed = null) {
+  const days = [freshness.days_since_last_detected, proposed?.days_since_last_detected].filter((d) => d !== null && d !== undefined);
+  return days.length === 0 ? null : Math.min(...days);
 }
 
 export const WORKFLOW_PATH =
@@ -144,7 +166,7 @@ export function detectorSchedule(workflowYaml) {
   return { known: true, scheduled: withAi.length > 0, reason: null };
 }
 
-export function report(freshness, thresholdDays, schedule) {
+export function report(freshness, thresholdDays, schedule, proposed = null) {
   const lines = [];
   lines.push("── Change-log freshness ──");
   lines.push(`Records held in the change log: ${freshness.records_held}`);
@@ -157,6 +179,14 @@ export function report(freshness, thresholdDays, schedule) {
         ? ` (last ${freshness.last_detected_date}, ${freshness.days_since_last_detected} days ago)`
         : " (none — no detector has ever written to this log)")
   );
+  if (proposed) {
+    lines.push(
+      `Proposed by the detector, pending review or dropped: ${proposed.machine_detected_total}` +
+        (proposed.last_detected_date
+          ? ` (last ${proposed.last_detected_date}, ${proposed.days_since_last_detected} days ago)`
+          : "")
+    );
+  }
   lines.push(`Entries whose effective date is the day we looked: ${freshness.discovered_date_total}`);
   lines.push("");
 
@@ -178,7 +208,7 @@ export function report(freshness, thresholdDays, schedule) {
     return { failJob: false, openAbsenceIssue: true, undecidable: false, text: lines.join("\n") };
   }
 
-  const days = freshness.days_since_last_detected;
+  const days = daysSinceTheDetectorLastWrote(freshness, proposed);
   lines.push(`Detector is scheduled (--ai). Threshold: ${thresholdDays} days since last detection.`);
   const stale = days === null || days > thresholdDays;
   if (stale) {
@@ -186,7 +216,7 @@ export function report(freshness, thresholdDays, schedule) {
     lines.push(
       days === null
         ? "STALE: the detector is scheduled but has never written an entry to this log. This fires from its first scheduled run, because a detector that runs and records nothing is indistinguishable here from one that never ran — only its first detection clears it."
-        : `STALE: ${days} days since the detector last recorded a change, past the ${thresholdDays}-day threshold.`
+        : `STALE: ${days} days since the detector last recorded or proposed a change, past the ${thresholdDays}-day threshold.`
     );
     lines.push(
       "A hand-written entry does not clear this: the gate reads days_since_last_detected, not days_since_last_recorded."
@@ -225,8 +255,10 @@ function main() {
   }
 
   let data;
+  let store;
   try {
     data = ref ? changeLogAtRef(ref) : readChangeLog(CHANGES_PATH);
+    store = ref ? proposalsAtRef(ref) : readProposals(proposalsPath());
   } catch (err) {
     console.error(`Failed to read change log: ${err.message}`);
     process.exit(2);
@@ -246,7 +278,12 @@ function main() {
   }
 
   const schedule = detectorSchedule(workflowYaml);
-  const result = report(changeLogFreshness(data.changes), thresholdDays, schedule);
+  const result = report(
+    changeLogFreshness(data.changes),
+    thresholdDays,
+    schedule,
+    changeLogFreshness(recordsTheDetectorProposed(store))
+  );
   console.log(result.text);
   emitOutputs(result, schedule);
   if (result.undecidable) process.exit(2);

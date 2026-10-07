@@ -55,7 +55,7 @@ jobs:
           node scripts/reverify-rolling.js --ai --limit "$LIMIT" | tee /tmp/reverify.log
           VERIFIED=$(grep -oE '^Verified \(date bumped\): [0-9]+' /tmp/reverify.log | grep -oE '[0-9]+$' || echo 0)
           FLAGGED=$(grep -oE '^Flagged \(URL/AI failure\): [0-9]+' /tmp/reverify.log | grep -oE '[0-9]+$' || echo 0)
-          RECORDED=$(grep -oE '^Recorded to data/deal_changes.json: [0-9]+' /tmp/reverify.log | grep -oE '[0-9]+$' || echo 0)
+          PROPOSED=$(grep -oE '^Proposed to data/change_proposals.json: [0-9]+' /tmp/reverify.log | grep -oE '[0-9]+$' || echo 0)
           QUARANTINED=$(grep -oE '^In quarantine, retried every [0-9]+ days: [0-9]+' /tmp/reverify.log | grep -oE '[0-9]+$' || echo 0)
           RETRIED=$(grep -oE '^Retried from quarantine: [0-9]+' /tmp/reverify.log | grep -oE '[0-9]+$' || echo 0)
           REPICKED=$(grep -oE '^Checked again on the next run: [0-9]+' /tmp/reverify.log | grep -oE '[0-9]+$' || echo 0)
@@ -67,10 +67,17 @@ jobs:
           echo "second=$SECOND" >> "$GITHUB_OUTPUT"
           echo "verified=$VERIFIED" >> "$GITHUB_OUTPUT"
           echo "flagged=$FLAGGED" >> "$GITHUB_OUTPUT"
-          echo "recorded=$RECORDED" >> "$GITHUB_OUTPUT"
+          echo "proposed=$PROPOSED" >> "$GITHUB_OUTPUT"
           echo "quarantined=$QUARANTINED" >> "$GITHUB_OUTPUT"
           echo "retried=$RETRIED" >> "$GITHUB_OUTPUT"
           echo "repicked=$REPICKED" >> "$GITHUB_OUTPUT"
+          {
+            echo "### Change records proposed for review: $PROPOSED"
+            echo ""
+            echo "None is published until it is confirmed with \`node scripts/change-proposals.js confirm <id>\`."
+            echo ""
+            sed -n 's/^  proposed /- /p' /tmp/reverify.log
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Store the readings the withheld entries already show, and count the ones no reading answers
         id: restate
@@ -104,7 +111,7 @@ jobs:
           KEPT_CLAUSE: ${{ steps.restate.outputs.kept_clause }}
           VERIFIED: ${{ steps.reverify.outputs.verified }}
           FLAGGED: ${{ steps.reverify.outputs.flagged }}
-          RECORDED: ${{ steps.reverify.outputs.recorded }}
+          PROPOSED: ${{ steps.reverify.outputs.proposed }}
           QUARANTINED: ${{ steps.reverify.outputs.quarantined }}
           RETRIED: ${{ steps.reverify.outputs.retried }}
           REPICKED: ${{ steps.reverify.outputs.repicked }}
@@ -112,10 +119,15 @@ jobs:
           DRAWN: ${{ steps.reverify.outputs.drawn }}
           SECOND: ${{ steps.reverify.outputs.second }}
         run: |
+          MESSAGE="data(auto): rolling re-verification — ${VERIFIED} verified of ${DRAWN} drawn from the queue, ${SECOND} re-read to corroborate a held verdict, ${FLAGGED} flagged, ${PROPOSED} changes proposed for review, ${RESTATED} of ${ANSWERABLE} withheld entries restated from the reading their page already showed with ${STILL_WITHHELD} re-read and still withheld, ${KEPT_CLAUSE}, ${HELD} awaiting a second reading, ${RETRIED} retried from quarantine, ${QUARANTINED} in quarantine, ${REPICKED} to be checked again"
+          PROPOSALS=$(sed -n 's/^  proposed /- /p' /tmp/reverify.log)
+          if [ -n "$PROPOSALS" ]; then
+            MESSAGE=$(printf '%s\n\nProposed for review, none published until confirmed:\n%s' "$MESSAGE" "$PROPOSALS")
+          fi
           bash scripts/gate-data-push.sh \
             data-quarantine/rolling-reverification \
-            "data(auto): rolling re-verification — ${VERIFIED} verified of ${DRAWN} drawn from the queue, ${SECOND} re-read to corroborate a held verdict, ${FLAGGED} flagged, ${RECORDED} changes recorded, ${RESTATED} of ${ANSWERABLE} withheld entries restated from the reading their page already showed with ${STILL_WITHHELD} re-read and still withheld, ${KEPT_CLAUSE}, ${HELD} awaiting a second reading, ${RETRIED} retried from quarantine, ${QUARANTINED} in quarantine, ${REPICKED} to be checked again" \
-            data/index.json data/deal_changes.json data/change_refusals.json data/change_corroboration.json data/verification_state.json data/restated_terms.json data/quality_budgets.json data/page-lastmod.json data/page-reviews.json artifacts/free-llm-api-index/README.md
+            "$MESSAGE" \
+            data/index.json data/deal_changes.json data/change_proposals.json data/change_refusals.json data/change_corroboration.json data/verification_state.json data/restated_terms.json data/quality_budgets.json data/page-lastmod.json data/page-reviews.json artifacts/free-llm-api-index/README.md
 
       - name: Say where it can be seen what the gate did with this run's data
         if: always() && (steps.gate.outputs.quarantined == 'true' || steps.gate.outputs.pushed_over_failures == 'true' || steps.gate.outputs.drifted_guards != '' || steps.gate.outputs.pushed_commit != '' || steps.gate.outputs.pushed_nothing == 'true' || steps.gate.outputs.held_back_vendors != '')

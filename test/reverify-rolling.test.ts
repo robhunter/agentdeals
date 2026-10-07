@@ -414,7 +414,7 @@ describe("every checked record leaves an attempt behind", () => {
 describe("the run summary says whether the queue moved", () => {
   const base = { useAi: true, checked: 75, oldestRemaining: "2026-07-13", total: 1580 };
   const result = {
-    verified: 6, flagged: 6, changed: 63, changes: [], recorded: [], suppressed: [],
+    verified: 6, flagged: 6, changed: 63, changes: [], proposed: [], suppressed: [],
     unclassified: [], rejected: [], unchecked: [], reclassified: [], overruled: [], sourceChecks: new Map(),
   };
 
@@ -774,7 +774,7 @@ describe("a page that answered the last reading with nothing waits a turn", () =
 
   it("states the rule and the turn it used in the run's own summary", () => {
     const lines = summaryLines(
-      { verified: 0, flagged: 0, recorded: [], attempts: [] },
+      { verified: 0, flagged: 0, proposed: [], attempts: [] },
       { useAi: false, checked: 4, total: 12, turnDays: 20, deferredATurn: 589, liveQueueLength: 1492 },
     );
     const text = lines.join("\n");
@@ -785,7 +785,7 @@ describe("a page that answered the last reading with nothing waits a turn", () =
 
   it("says nothing about a deferral when the caller reported no queue", () => {
     const lines = summaryLines(
-      { verified: 0, flagged: 0, recorded: [], attempts: [] },
+      { verified: 0, flagged: 0, proposed: [], attempts: [] },
       { useAi: false, checked: 4, total: 12 },
     );
     assert.ok(!lines.some((line: string) => line.includes("Deferred a turn")), lines.join("\n"));

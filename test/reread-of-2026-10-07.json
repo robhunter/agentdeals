@@ -1,0 +1,163 @@
+{
+  "records": [
+    {
+      "vendor": "Grafana Cloud",
+      "change_type": "limits_reduced",
+      "date": "2026-10-07",
+      "date_source": "discovered",
+      "summary": "The free tier now includes access to all Grafana Cloud services with usage limits. The specific limits have changed and a $19/month platform fee is now required for exceeding those limits. Previously 10k metric series, 50 GB logs, and 50 GB traces. The current page details limits for Metrics (10k active series), Logs (50 GB ingested), Traces (50 GB ingested), Profiles (50 GB ingested), Kubernetes Monitoring (2,232 host hours & 37,944 container hours), Application Observability (2,232 host hours), Frontend Observability (50k sessions), Database Observability (2,232 host hours), and Grafana Assistant (3 active AI users).",
+      "tier": "Free",
+      "tier_direction": "narrowed",
+      "previous_state": "Free tier includes access to all Grafana Cloud services with limited usage, 14-day retention, and community support. 10k metric series, 50 GB logs, and 50 GB traces are included. A $19/month platform fee is required for 10k active series, 50 GB ingested logs/traces, and 30 days retention.",
+      "current_state": "The free tier includes access to all Grafana Cloud services with usage limits. Limits include 10k active series, 50 GB ingested logs, 50 GB ingested traces, 50 GB ingested profiles, 2,232 host hours & 37,944 container hours for Kubernetes Monitoring, 2,232 host hours for Application Observability, 50k sessions for Frontend Observability, 2,232 database host hours, and 3 active AI users. A $19/month platform fee is required for exceeding these limits.",
+      "impact": "high",
+      "source_url": "https://grafana.com/pricing/",
+      "category": "Monitoring",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-10-07"
+    },
+    {
+      "vendor": "SimplePDF.eu",
+      "change_type": "free_tier_removed",
+      "date": "2026-10-07",
+      "date_source": "discovered",
+      "summary": "SimplePDF.eu's own page now redirects to simplepdf.com. The free plan no longer exists as described. Submissions are now routed to the user's storage (S3, Azure, or SharePoint) or SimplePDF's storage, and webhooks/email notifications are available.",
+      "tier": "Free",
+      "tier_direction": "narrowed",
+      "previous_state": "Embed a PDF editor on your website and turn any PDF into a fillable form. The Free plan, for individuals editing PDFs, includes embedding on your site, unlimited PDFs and end users, and simple electronic signatures, but does not collect submissions: collecting and managing submissions starts on the Basic plan at $99 a month, with 2,500 documents and submissions a month.",
+      "current_state": "The page offers a free trial and emphasizes that features like Bring Your Own Storage and webhook integration are available on paid plans. Users can embed a PDF editor, and completed submissions can go to their own S3/Azure storage.",
+      "impact": "high",
+      "source_url": "https://simplepdf.eu/embed",
+      "category": "Forms",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-10-07"
+    },
+    {
+      "vendor": "testingbot.com",
+      "change_type": "limits_reduced",
+      "date": "2026-10-07",
+      "date_source": "discovered",
+      "summary": "The current page only mentions a 'free plan' with limited features (automated tests, live manual sessions, screenshot tests, visual comparisons, Safari on macOS, limited macOS sessions).",
+      "tier": "Free",
+      "tier_direction": "narrowed",
+      "previous_state": "Selenium Browser and Device Testing, [free for Open Source](https://testingbot.com/open-source)",
+      "current_state": "TestingBot offers a free plan that runs automated tests, live manual sessions, screenshot tests and visual comparisons, including Safari on macOS, on a recent version of each browser with a limited number of live macOS sessions. No credit card is required.",
+      "impact": "medium",
+      "source_url": "https://testingbot.com/",
+      "category": "Testing",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-10-07"
+    },
+    {
+      "vendor": "LLM7.io",
+      "change_type": "limits_reduced",
+      "date": "2026-10-07",
+      "date_source": "discovered",
+      "summary": "The free tier limits have been significantly reduced. The free tier now allows 60 requests per minute and 100,000 tokens per 24 hours, whereas previously it allowed 10 requests per minute and 500,000 tokens per 24 hours without a token. The free tier with a token now allows 60 requests per minute and 100,000 tokens per 24 hours, whereas previously it allowed 40 requests per minute and 1,000,000 tokens per 24 hours.",
+      "tier": "Free token",
+      "tier_direction": "narrowed",
+      "previous_state": "LLM inference gateway. Without a key: 10 requests a minute, 60 an hour, 500,000 tokens per 24 hours. With a free token from dash.llm7.io: 40 a minute, 100 an hour, 1,000,000 tokens per 24 hours. Free access covers turbo-tier models not marked usage-only, such as GLM-5.3-Flash and codestral-latest. Other models, including all image and speech-to-text models, need Pro ($12/mo) or a paid balance.",
+      "current_state": "Text generation access type limits are: Free token - 1 second: 1, 1 minute: 60, 1 hour: 250. Token usage availability is 100,000 tokens per 24 hours.",
+      "impact": "high",
+      "source_url": "https://docs.llm7.io/limits",
+      "category": "AI / ML",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-10-07"
+    },
+    {
+      "vendor": "Clever Bootstrap Program",
+      "change_type": "record_corrected",
+      "date": "2026-10-07",
+      "date_source": "discovered",
+      "summary": "Data correction - our listing named 16 September 2026 as the next UP Programme selection round, which has passed; clever.cloud/up-program now names 7 January 2027.",
+      "tier": "UP Program",
+      "tier_direction": "unchanged",
+      "previous_state": "Clever Cloud's startup programme is now called UP. It offers up to €10,000 in cloud credits for the first year, onboarding and training with Clever Cloud engineers, a monthly coaching session, premium support access, workshops and masterclasses for technical teams, mentoring, and access to Angel Start financial planning tools. Admission is by selection round; the page names the next as 16 September 2026.",
+      "current_state": "The next selection for the UP Programme is on 7 January 2027.",
+      "impact": "low",
+      "source_url": "https://www.clever.cloud/up-program/",
+      "category": "Startup Perks",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-10-07"
+    }
+  ],
+  "listings": [
+    {
+      "vendor": "Grafana Cloud",
+      "category": "Monitoring",
+      "tier": "Free",
+      "url": "https://grafana.com/pricing/",
+      "description": "Free tier includes access to all Grafana Cloud services with limited usage, 14-day retention, and community support. 10k metric series, 50 GB logs, and 50 GB traces are included. A $19/month platform fee is required for 10k active series, 50 GB ingested logs/traces, and 30 days retention.",
+      "verifiedDate": "2026-08-14",
+      "source_check": {
+        "checked": "2026-10-07",
+        "outcome": "ok",
+        "detail": "the page names Grafana Cloud as \"grafana cloud\" and states \"$19\" and \"10k active series per month\" and \"50 GB ingested per month\""
+      },
+      "restated_from": {
+        "reading_date": "2026-09-02",
+        "source_url": "https://grafana.com/pricing/",
+        "record_date": "2026-09-02",
+        "change_type": "pricing_restructured",
+        "restated_on": "2026-09-20"
+      }
+    },
+    {
+      "vendor": "SimplePDF.eu",
+      "category": "Forms",
+      "tier": "Free",
+      "url": "https://simplepdf.eu/embed",
+      "description": "Embed a PDF editor on your website and turn any PDF into a fillable form. The Free plan, for individuals editing PDFs, includes embedding on your site, unlimited PDFs and end users, and simple electronic signatures, but does not collect submissions: collecting and managing submissions starts on the Basic plan at $99 a month, with 2,500 documents and submissions a month.",
+      "verifiedDate": "2026-08-05",
+      "source_check": {
+        "checked": "2026-10-07",
+        "outcome": "states_no_amount",
+        "detail": "the page names SimplePDF.eu and says \"Pro plans\" but states no amount, rate or price we can read, and the 3 structured-data blocks in its markup state no price"
+      }
+    },
+    {
+      "vendor": "testingbot.com",
+      "category": "Testing",
+      "tier": "Free",
+      "url": "https://testingbot.com/",
+      "description": "Selenium Browser and Device Testing, [free for Open Source](https://testingbot.com/open-source)",
+      "verifiedDate": "2026-08-04",
+      "source_check": {
+        "checked": "2026-10-07",
+        "outcome": "states_a_free_price",
+        "detail": "the page names testingbot.com and states its price in words as \"free plan\", and the 2 structured-data blocks in its markup state no price"
+      }
+    },
+    {
+      "vendor": "LLM7.io",
+      "category": "AI / ML",
+      "tier": "Free",
+      "url": "https://docs.llm7.io/limits",
+      "description": "LLM inference gateway. Without a key: 10 requests a minute, 60 an hour, 500,000 tokens per 24 hours. With a free token from dash.llm7.io: 40 a minute, 100 an hour, 1,000,000 tokens per 24 hours. Free access covers turbo-tier models not marked usage-only, such as GLM-5.3-Flash and codestral-latest. Other models, including all image and speech-to-text models, need Pro ($12/mo) or a paid balance.",
+      "verifiedDate": "2026-08-17",
+      "source_check": {
+        "checked": "2026-10-07",
+        "outcome": "ok",
+        "detail": "the page names LLM7.io as \"llm7 io\" and states \"$12\""
+      }
+    },
+    {
+      "vendor": "Clever Bootstrap Program",
+      "category": "Startup Perks",
+      "tier": "Startup Program",
+      "url": "https://www.clever.cloud/up-program/",
+      "description": "Clever Cloud's startup programme is now called UP. It offers up to €10,000 in cloud credits for the first year, onboarding and training with Clever Cloud engineers, a monthly coaching session, premium support access, workshops and masterclasses for technical teams, mentoring, and access to Angel Start financial planning tools. Admission is by selection round; the page names the next as 16 September 2026.",
+      "verifiedDate": "2026-09-18",
+      "source_check": {
+        "checked": "2026-10-07",
+        "outcome": "ok",
+        "detail": "the page names Clever Bootstrap Program as \"program\" and states \"€10,000\""
+      }
+    }
+  ]
+}

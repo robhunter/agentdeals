@@ -194,13 +194,21 @@ describe("#1337 putting a held vendor back the way main had it", () => {
   });
 
   it("every file a vendor's rows live in carries a vendor on every row", () => {
-    for (const { path, arrayKeys } of VENDOR_KEYED_DATA) {
+    for (const { path, arrayKeys, mayHoldNoRows } of VENDOR_KEYED_DATA) {
       const parsed = JSON.parse(readFileSync(join(REPO, path), "utf8"));
       const rows = arrayKeys.flatMap((arrayKey) => parsed[arrayKey] as { vendor?: unknown }[]);
+      if (rows.length === 0 && mayHoldNoRows) continue;
       assert.ok(rows.length > 0, `${path} is empty, so this rule has no subject`);
       const nameless = rows.filter((r) => vendorKey(r.vendor) === "").length;
       assert.strictEqual(nameless, 0, `${path} has ${nameless} row(s) no holdback could attribute to a vendor`);
     }
+  });
+
+  it("lets only the proposals store hold no rows, since it is empty whenever nothing awaits review", () => {
+    assert.deepStrictEqual(
+      VENDOR_KEYED_DATA.filter((f) => f.mayHoldNoRows).map((f) => f.path),
+      ["data/change_proposals.json"],
+    );
   });
 
   it("names files that exist, so a rename cannot quietly stop a holdback reaching one", () => {
