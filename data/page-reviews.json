@@ -3347,12 +3347,12 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 72,
+      "table_figures": 75,
       "table_figures_from_records": 12,
       "tables": [
         {
           "label": "Free Tier Comparison Table",
-          "figures": 25,
+          "figures": 27,
           "from_records": 0
         },
         {
@@ -3362,7 +3362,7 @@
         },
         {
           "label": "Cost Comparison by Team Size",
-          "figures": 21,
+          "figures": 22,
           "from_records": 0
         },
         {

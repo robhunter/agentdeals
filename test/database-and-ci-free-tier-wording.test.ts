@@ -21,6 +21,13 @@ const WITHDRAWN: Record<string, Record<string, RegExp>> = {
   "/vector-database-pricing": {
     "Weaviate Cloud as a 14-day sandbox": /Sandbox only|Sandbox \(14-day\)|14-day free sandbox with full features/,
     "Weaviate Cloud's paid plans from $25": /\$25\/mo \(Shared\)|Shared cloud from \$25/,
+    "Zilliz Cloud's free tier as about 5M vectors": /~5M/,
+    "Turbopuffer with no minimum": /[Nn]o minimum commitment/,
+    "Turbopuffer priced from $0.30 a month": /\$0\.30\/M vectors\/mo stored|\$0\.30–5|Turbopuffer's pay-per-use model/,
+    "Chroma Cloud's pricing as TBA or in early access": /pricing TBA|cloud TBA|Chroma Cloud in early access/,
+    "Qdrant's free cluster with backups included": /backups included/,
+    "Turbopuffer billed per million vectors stored or queried": /per million vectors (?:stored|queried)/,
+    "Turbopuffer's entry cost as extremely low": /extremely low entry cost/,
   },
   "/ci-cd-pricing": {
     "Semaphore Cloud with no free tier": /No free cloud-hosted tier|Community plan is self-hosted only/,
@@ -44,6 +51,11 @@ const STATED: Record<string, string[]> = {
   ],
   "/vector-database-pricing": [
     'Weaviate Cloud offers a "Free Forever" cluster with 100,000 objects, 1 GB memory, and 10 GB disk. Weaviate is also open source and free to self-host.',
+    "Pinecone offers 2 GB (~1M vectors) free and Zilliz Cloud (5 GB, about 1M 768-dimension vectors).",
+    "Pinecone (2 GB, ~1M vectors) or Zilliz Cloud (5 GB, about 1M 768-dimension vectors).",
+    "No free tier. S3-native architecture — vectors stored on S3 with warm cache layer. Every plan has a monthly minimum: $16 on Launch and $256 on Scale (turbopuffer.com/pricing, read 2026-10-07).",
+    "Turbopuffer bills usage with a $16 monthly minimum on its Launch plan.",
+    "Chroma Cloud's Starter plan is $0 a month plus usage, with $5 in free credits; Team is $250 a month plus usage (trychroma.com/pricing, read 2026-10-07).",
   ],
   "/ci-cd-pricing": [
     "Semaphore Cloud gives every account a $15 credit each month, about 2,000 Ubuntu x64 2-vCPU minutes, and 20 concurrent jobs by default. Self-hosted Community Edition is free.",
@@ -64,6 +76,11 @@ const ROWS: Record<string, string[][]> = {
   "/vector-database-pricing": [
     ["Weaviate Cloud", "Managed (Multi-model)", "100,000 objects", "10 GB disk, 1 GB memory", "Unlimited", "$45/mo (Flex)"],
     ["Weaviate Cloud", "$0 (Free Forever)", "$45+ (Flex)"],
+    ["Zilliz Cloud", "Managed Milvus", "~1M at 768 dimensions (5 GB)", "5 GB"],
+    ["Chroma", "Embedded / Cloud", "Cloud Starter: $0/mo + usage, $5 free credits"],
+    ["Chroma", "$0 (self-hosted)", "$0 self-hosted; Cloud Team $250/mo + usage"],
+    ["Turbopuffer", "Serverless (S3-backed)", "$16/mo minimum (Launch)", "Usage-based, with a monthly minimum"],
+    ["Turbopuffer", "$16 (Launch minimum)", "$16–50", "Usage-based, with a monthly minimum"],
   ],
   "/ci-cd-pricing": [
     ["Semaphore CI", "$15 credit (≈2,000 Ubuntu x64 2-vCPU min)", "20 jobs", "Community Edition free; agents $0.0025/min", "$0.003/min (Ubuntu ARM, 2 vCPU)", "Per-minute usage"],
@@ -129,7 +146,7 @@ function costTableRows(page: string): string[][] {
   return rowsOf(section.slice(0, section.indexOf("</table>")));
 }
 
-describe("database, vector and CI/CD pricing pages state Weaviate's, PlanetScale's and Semaphore's plans as each vendor's page does", () => {
+describe("database, vector and CI/CD pricing pages state each vendor's plan as the vendor's own page does", () => {
   before(async () => {
     server = spawn("node", [path.join(REPO, "dist", "serve.js")], {
       stdio: ["pipe", "pipe", "pipe"],
