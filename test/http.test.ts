@@ -9,6 +9,7 @@ import { MCP_TOOL_COUNT, MCP_TOOL_NAMES } from "../dist/mcp-tool-inventory.js";
 import { API_ENDPOINTS } from "../dist/api-inventory.js";
 import { PATHS_OUTSIDE_THE_ENDPOINT_INVENTORY } from "../dist/openapi.js";
 import { entryDay, readPageLastmod } from "../dist/page-lastmod.js";
+import { cheapestOrderableHetznerPlan } from "../dist/hetzner-pricing.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 let serverPort = 0;
@@ -2974,7 +2975,7 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("Industry Context"), "Should have industry context section");
     assert.ok(html.includes("Optimization Strategies"), "Should have optimization section");
     assert.ok(html.includes("CPX11"), "Should have specific pricing data");
-    assert.ok(html.includes("CPX12"), "Should name the cheapest orderable plan");
+    assert.ok(html.includes(cheapestOrderableHetznerPlan().sku), "Should name the cheapest orderable plan");
     assert.ok(html.includes("not available"), "Should mark the unorderable line");
     assert.ok(html.includes("€111 a month, up from €22"), "Should give the February memory upgrade price from Hetzner's add-on list");
     assert.ok(html.includes("OVHcloud"), "Should mention OVH in industry context");
