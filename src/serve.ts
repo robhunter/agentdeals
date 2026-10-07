@@ -8173,7 +8173,7 @@ const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
   {
     slug: "gemini-api-pricing-2026",
     title: "Gemini API Pricing 2026 — Free Tier Changes, Spend Caps & Alternatives",
-    metaDesc: "Gemini API billing changes in March and April 2026: spend caps by tier ($250 to $100K+ a month, enforced from April 1), prepay for some new users, and Gemini 3.1 Pro Preview paid only. The free tier covers the Gemini 3.x Flash and Flash-Lite models.",
+    metaDesc: "Gemini API billing changes in March and April 2026: spend caps by tier ($250 to $100K+ a month, enforced from April 1), prepay for new users and, from a cutover reported as October 12, 2026, for existing Postpay accounts, and Gemini 3.1 Pro Preview paid only. The free tier covers the Gemini 3.x Flash and Flash-Lite models.",
     contextHtml: "",
     tag: "gemini-api-pricing-2026",
     primaryVendor: "Google Gemini API",
@@ -22198,7 +22198,7 @@ function geminiFlashPriceStepEntry(servedOn: string): GeminiTimelineEntry | null
 
 function buildGeminiApiPricing2026Page(): string {
   const title = "Gemini API Pricing 2026 — Free Tier Changes, Spend Caps & Alternatives";
-  const metaDesc = "Gemini API billing changes in March and April 2026: spend caps by tier ($250 to $100K+ a month, enforced from April 1), prepay for some new users, and Gemini 3.1 Pro Preview paid only. The free tier covers the Gemini 3.x Flash and Flash-Lite models.";
+  const metaDesc = "Gemini API billing changes in March and April 2026: spend caps by tier ($250 to $100K+ a month, enforced from April 1), prepay for new users and, from a cutover reported as October 12, 2026, for existing Postpay accounts, and Gemini 3.1 Pro Preview paid only. The free tier covers the Gemini 3.x Flash and Flash-Lite models.";
   const slug = "gemini-api-pricing-2026";
   const pubDate = "2026-03-26";
 
@@ -22342,7 +22342,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="executive-summary">
-    <p>Google began enforcing monthly spend caps on the Gemini API on April 1, 2026 (Tier 1: $250, Tier 2: $2,000, Tier 3: $20,000 to $100,000+). When a billing account reaches its cap, requests pause until the next billing month. Since March 23, 2026, AI Studio may ask new users to prepay to set up billing (minimum $5). Gemini 3.1 Pro Preview is paid only.</p>
+    <p>Google began enforcing monthly spend caps on the Gemini API on April 1, 2026 (Tier 1: $250, Tier 2: $2,000, Tier 3: $20,000 to $100,000+). When a billing account reaches its cap, requests pause until the next billing month. New users default to Prepay (minimum $5), and existing Postpay accounts must switch to Prepay by the cutover date in their account notice, reported as October 12, 2026. Gemini 3.1 Pro Preview is paid only.</p>
     <p>For developers who built on Gemini's generous early free tier, the API has fundamentally changed: <strong>On 2025-12-06 Google cut 2.5 Flash's free tier from 250 requests a day to about 20, and 2.5 Pro's to none.</strong> The free tier covers the Gemini 3.x Flash and Flash-Lite models. Google publishes no free-tier limits; AI Studio shows each project's. Since 2026-09-18 Google serves the Gemini 2.5 models only to users who used them before. New projects use 3.5 Flash-Lite or 3.8 Flash. Below we cover what changed, who's affected, and which alternatives offer better free access.</p>
     ${rateLimitChange ? `<p><strong>From our tracker:</strong> ${changeSummaryHtml(rateLimitChange, escHtmlServer)}</p>` : ""}
   </div>
@@ -22373,7 +22373,7 @@ ${mcpCtaCss()}
       <tr><td style="font-weight:600">Free tier rate limits</td><td>2.5 Flash: 10 RPM, 250 RPD. 2.5 Pro: 2 RPM, 50 RPD</td><td style="font-weight:600">Not published. About 5 RPM and 20 RPD on 2.5 Flash, none on 2.5 Pro (2025-12-06)</td><td style="color:#f85149;font-weight:600">92% fewer daily requests on 2.5 Flash</td></tr>
       <tr><td style="font-weight:600">Gemini 2.0 Flash</td><td>Available, standard limits</td><td style="font-weight:600">Shut down 2026-06-01</td><td style="color:#f85149;font-weight:600">Google recommends 3.6 Flash or 3.1 Flash-Lite</td></tr>
       <tr><td style="font-weight:600">Spend caps (Apr 1)</td><td>No hard caps — billed without pausing</td><td style="font-weight:600">$250/mo (Tier 1), $2K/mo (Tier 2), $20K+ (Tier 3)</td><td style="color:#d29922;font-weight:600">Requests pause at cap</td></tr>
-      <tr><td style="font-weight:600">Billing model</td><td>Pay-as-you-go for all</td><td style="font-weight:600">Prepay may be required for new users (from March 23, 2026)</td><td style="color:#d29922;font-weight:600">Minimum $5 prepayment</td></tr>
+      <tr><td style="font-weight:600">Billing model</td><td>Pay-as-you-go for all</td><td style="font-weight:600">Prepay by default for new users; Postpay accounts must switch (reported cutover October 12, 2026)</td><td style="color:#d29922;font-weight:600">Minimum $5 prepayment</td></tr>
       <tr><td style="font-weight:600">Gemini 3.1 Pro</td><td>N/A (new model)</td><td style="font-weight:600">Paid only</td><td style="color:#f85149;font-weight:600">No free tier</td></tr>
       <tr><td style="font-weight:600">Context window</td><td>1M tokens</td><td>1M tokens</td><td style="color:var(--text-dim)">Unchanged</td></tr>
       <tr><td style="font-weight:600">Flash-Lite limits</td><td>Generous (unspecified)</td><td style="font-weight:600">Not published</td><td style="color:#3fb950;font-weight:600">Free tier preserved</td></tr>
@@ -22445,11 +22445,11 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="prepaid">5. Prepaid Billing &amp; Paid-Only Models</h2>
-  <p class="section-intro">Two additional changes that affect new and high-usage developers.</p>
+  <p class="section-intro">Two additional changes that affect paid and high-usage developers.</p>
 
   <div class="impact-card" style="border-left-color:#d29922">
-    <h3 style="color:#d29922">Prepaid billing for new users</h3>
-    <p class="impact-desc">Since March 23, 2026, AI Studio may ask a new user to prepay to set up billing (minimum $5); others choose between Prepay and Postpay. Prepaid credits expire 12 months after purchase and are non-refundable. When the balance reaches $0, every API key on the billing account stops working until you add credits.</p>
+    <h3 style="color:#d29922">Prepaid billing for all paid accounts</h3>
+    <p class="impact-desc">New users default to Prepay and buy at least $5 of credits to set up billing. <a href="https://ai.google.dev/gemini-api/docs/billing" target="_blank" rel="noopener">Google is moving existing paid accounts from Postpay to Prepay for Gemini API usage</a>: switch on the AI Studio Billing page and buy credits before the cutover date in your account notice, <a href="https://www.watch.impress.co.jp/docs/news/2132505.html" target="_blank" rel="noopener">reported as October 12, 2026</a>, or the account's paid Gemini API service is interrupted. Only Gemini API usage moves to Prepay; other Google Cloud services on the same billing account stay on Postpay. Accounts that use only the free tier need take no action. Eligible Google Cloud credits are used only after you have bought Prepay credits, and stop being used when the Prepay balance reaches $0. Prepaid credits expire 12 months after purchase and are non-refundable. When the balance reaches $0, every API key on the billing account stops working until you add credits.</p>
   </div>
   <div class="impact-card" style="border-left-color:#f85149">
     <h3 style="color:#f85149">Gemini 3.1 Pro is paid-only</h3>

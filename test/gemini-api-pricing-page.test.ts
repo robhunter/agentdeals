@@ -107,7 +107,13 @@ describe(`${PAGE} on long prompts and prepaid credits`, () => {
 
   it("says prepaid credits expire after 12 months and that a $0 balance stops every API key on the billing account", () => {
     const text = readable(page);
-    assert.ok(text.includes("others choose between Prepay and Postpay. Prepaid credits expire 12 months after purchase and are non-refundable. When the balance reaches $0, every API key on the billing account stops working until you add credits."));
+    assert.ok(text.includes("and stop being used when the Prepay balance reaches $0. Prepaid credits expire 12 months after purchase and are non-refundable. When the balance reaches $0, every API key on the billing account stops working until you add credits."));
+  });
+
+  it("links the move to Prepay to Google's billing page and the reported cutover date to the article that reports it", () => {
+    const prepaid = page.slice(page.indexOf('<h2 id="prepaid">'));
+    assert.ok(prepaid.includes('<a href="https://ai.google.dev/gemini-api/docs/billing" target="_blank" rel="noopener">Google is moving existing paid accounts from Postpay to Prepay for Gemini API usage</a>: switch on the AI Studio Billing page'));
+    assert.ok(prepaid.includes('in your account notice, <a href="https://www.watch.impress.co.jp/docs/news/2132505.html" target="_blank" rel="noopener">reported as October 12, 2026</a>, or the account'));
   });
 });
 
