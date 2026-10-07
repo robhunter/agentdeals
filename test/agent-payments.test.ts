@@ -1,112 +1,99 @@
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
-import { spawn, type ChildProcess } from "node:child_process";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
+import type { ChildProcess } from "node:child_process";
+import {
+  BOTH_WITH_AN_UNSTATED_X402_COST,
+  BUSIEST_CATEGORY,
+  PAYMENT_LISTINGS,
+  json,
+  mcpToolTexts,
+  page,
+  serviceRows,
+  servedVendors,
+  startServer,
+  vendorsHolding,
+  writeSyntheticCatalogue,
+} from "./payment-protocol-fixture.ts";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-let serverPort = 0;
+const BADGE_LABEL: Record<string, string> = { x402: "x402", "stripe-mpp": "Stripe MPP" };
 
-function startHttpServer(): Promise<ChildProcess> {
-  return new Promise((resolve, reject) => {
-    const serverPath = path.join(__dirname, "..", "dist", "serve.js");
-    const proc = spawn("node", [serverPath], {
-      stdio: ["pipe", "pipe", "pipe"],
-      env: { ...process.env, PORT: "0", BASE_URL: "http://localhost" },
-    });
-
-    const timeout = setTimeout(() => {
-      proc.kill();
-      reject(new Error("Server startup timeout"));
-    }, 10000);
-
-    proc.stderr!.on("data", (data: Buffer) => {
-      const match = data.toString().match(/running on http:\/\/localhost:(\d+)/);
-      if (match) {
-        serverPort = parseInt(match[1], 10);
-        clearTimeout(timeout);
-        resolve(proc);
-      }
-    });
-
-    proc.on("error", (err) => {
-      clearTimeout(timeout);
-      reject(err);
-    });
-  });
+function badgesIn(cell: string): string[] {
+  return [...cell.matchAll(/<span class="proto-badge ([^"]+)">([^<]*)<\/span>/g)].map(match => `${match[1]}:${match[2]}`);
 }
 
-describe("Agent Payments", () => {
-  let proc: ChildProcess;
+function expectedBadges(protocols: readonly string[]): string[] {
+  return protocols.map(protocol => `${protocol}:${BADGE_LABEL[protocol]}`);
+}
+
+function statValue(html: string, label: string): string | undefined {
+  return html.match(new RegExp(`<div class="stat-value">([^<]*)</div><div class="stat-label">${label}</div>`))?.[1];
+}
+
+const holdingBoth = PAYMENT_LISTINGS.filter(listing => vendorsHolding([listing], "x402").length && vendorsHolding([listing], "stripe-mpp").length);
+
+describe("Agent Payments, on a catalogue whose payment listings are synthetic", () => {
+  let scratch: ReturnType<typeof writeSyntheticCatalogue>;
+  let server: { child: ChildProcess; base: string };
 
   before(async () => {
-    proc = await startHttpServer();
+    scratch = writeSyntheticCatalogue();
+    server = await startServer({ AGENTDEALS_INDEX_PATH: scratch.indexPath });
   });
 
   after(() => {
-    proc?.kill();
+    server?.child.kill();
+    scratch?.remove();
   });
 
   describe("GET /api/agent-payments", () => {
-    it("returns structured payment protocol data", async () => {
-      const res = await fetch(`http://localhost:${serverPort}/api/agent-payments`);
-      assert.strictEqual(res.status, 200);
-      const body = await res.json() as any;
-      assert.ok(body.total > 0, "should have payment-enabled services");
-      assert.ok(body.protocols.x402.count > 0, "should have x402 services");
-      assert.ok(body.protocols["stripe-mpp"], "should have stripe-mpp protocol info");
-      assert.ok(body.protocols.both, "should have both protocol info");
-      assert.ok(body.by_category, "should have services grouped by category");
-      assert.ok(Array.isArray(body.services), "should have flat services array");
-      assert.ok(body.services.length === body.total, "services count matches total");
+    it("counts and groups every listing with a payment entry", async () => {
+      const body = await json(server.base, "/api/agent-payments");
+      assert.strictEqual(body.total, PAYMENT_LISTINGS.length);
+      assert.deepStrictEqual(servedVendors(body.services), vendorsHolding(PAYMENT_LISTINGS));
+      assert.strictEqual(body.protocols.x402.count, vendorsHolding(PAYMENT_LISTINGS, "x402").length);
+      assert.strictEqual(body.protocols["stripe-mpp"].count, vendorsHolding(PAYMENT_LISTINGS, "stripe-mpp").length);
+      assert.strictEqual(body.protocols.both.count, holdingBoth.length);
+      const grouped = Object.fromEntries(Object.entries(body.by_category).map(([category, services]) => [category, servedVendors(services as Array<{ vendor: string }>)]));
+      const expected: Record<string, string[]> = {};
+      for (const listing of PAYMENT_LISTINGS) expected[listing.category] = [...(expected[listing.category] ?? []), listing.vendor].sort();
+      assert.deepStrictEqual(grouped, expected);
     });
 
     it("filters by protocol=x402", async () => {
-      const res = await fetch(`http://localhost:${serverPort}/api/agent-payments?protocol=x402`);
-      assert.strictEqual(res.status, 200);
-      const body = await res.json() as any;
-      assert.ok(body.total > 0);
-      for (const s of body.services) {
-        assert.ok(s.payment_protocols.some((p: any) => p.protocol === "x402"), `${s.vendor} should support x402`);
-      }
+      const body = await json(server.base, "/api/agent-payments?protocol=x402");
+      assert.deepStrictEqual(servedVendors(body.services), vendorsHolding(PAYMENT_LISTINGS, "x402"));
+      assert.strictEqual(body.total, body.services.length);
     });
 
     it("filters by protocol=stripe-mpp", async () => {
-      const res = await fetch(`http://localhost:${serverPort}/api/agent-payments?protocol=stripe-mpp`);
-      assert.strictEqual(res.status, 200);
-      const body = await res.json() as any;
-      assert.ok(body.total > 0);
-      for (const s of body.services) {
-        assert.ok(s.payment_protocols.some((p: any) => p.protocol === "stripe-mpp"), `${s.vendor} should support stripe-mpp`);
-      }
+      const body = await json(server.base, "/api/agent-payments?protocol=stripe-mpp");
+      assert.deepStrictEqual(servedVendors(body.services), vendorsHolding(PAYMENT_LISTINGS, "stripe-mpp"));
+      assert.strictEqual(body.total, body.services.length);
     });
 
     it("filters by category", async () => {
-      const res = await fetch(`http://localhost:${serverPort}/api/agent-payments?category=Cloud%20Hosting`);
-      assert.strictEqual(res.status, 200);
-      const body = await res.json() as any;
-      for (const s of body.services) {
-        assert.strictEqual(s.category, "Cloud Hosting");
+      const body = await json(server.base, `/api/agent-payments?category=${encodeURIComponent(BUSIEST_CATEGORY)}`);
+      const inCategory = PAYMENT_LISTINGS.filter(listing => listing.category === BUSIEST_CATEGORY);
+      assert.deepStrictEqual(servedVendors(body.services), vendorsHolding(inCategory));
+      assert.ok(inCategory.length < PAYMENT_LISTINGS.length, "every synthetic listing is in the filtered category, so the filter is not tested");
+    });
+
+    it("returns each service's details and the entries it holds", async () => {
+      const body = await json(server.base, "/api/agent-payments");
+      for (const listing of PAYMENT_LISTINGS) {
+        const service = body.services.find((candidate: { vendor: string }) => candidate.vendor === listing.vendor);
+        assert.ok(service, `${listing.vendor} is missing`);
+        assert.strictEqual(service.category, listing.category);
+        assert.strictEqual(service.tier, listing.tier);
+        assert.strictEqual(service.description, listing.description);
+        assert.strictEqual(service.url, listing.url);
+        assert.ok(service.stability, `${listing.vendor} has no stability`);
+        assert.deepStrictEqual(service.payment_protocols.map((entry: { protocol: string }) => entry.protocol), listing.payment_protocols!.map(entry => entry.protocol));
       }
     });
 
-    it("returns service details with required fields", async () => {
-      const res = await fetch(`http://localhost:${serverPort}/api/agent-payments`);
-      const body = await res.json() as any;
-      const service = body.services[0];
-      assert.ok(service.vendor, "should have vendor");
-      assert.ok(service.category, "should have category");
-      assert.ok(service.tier, "should have tier");
-      assert.ok(service.description, "should have description");
-      assert.ok(service.url, "should have url");
-      assert.ok(service.payment_protocols, "should have payment_protocols");
-      assert.ok(service.stability, "should have stability");
-    });
-
     it("returns empty result for non-matching protocol", async () => {
-      const res = await fetch(`http://localhost:${serverPort}/api/agent-payments?protocol=bitcoin`);
-      assert.strictEqual(res.status, 200);
-      const body = await res.json() as any;
+      const body = await json(server.base, "/api/agent-payments?protocol=bitcoin");
       assert.strictEqual(body.total, 0);
       assert.strictEqual(body.services.length, 0);
     });
@@ -114,54 +101,53 @@ describe("Agent Payments", () => {
 
   describe("GET /agent-payments page", () => {
     it("returns 200 with HTML", async () => {
-      const res = await fetch(`http://localhost:${serverPort}/agent-payments`);
+      const res = await fetch(`${server.base}/agent-payments`);
       assert.strictEqual(res.status, 200);
       assert.ok(res.headers.get("content-type")?.includes("text/html"));
     });
 
     it("contains JSON-LD structured data", async () => {
-      const res = await fetch(`http://localhost:${serverPort}/agent-payments`);
-      const html = await res.text();
+      const html = await page(server.base, "/agent-payments");
       assert.ok(html.includes("application/ld+json"), "should have JSON-LD");
       assert.ok(html.includes("FAQPage"), "should have FAQ JSON-LD");
     });
 
     it("contains protocol comparison table", async () => {
-      const res = await fetch(`http://localhost:${serverPort}/agent-payments`);
-      const html = await res.text();
+      const html = await page(server.base, "/agent-payments");
       assert.ok(html.includes("Protocol Comparison"), "should have protocol comparison section");
-      assert.ok(html.includes("proto-badge x402"), "should have x402 badges");
-      assert.ok(html.includes("proto-badge stripe-mpp"), "should have mpp badges");
     });
 
-    it("shows both x402 and MPP services", async () => {
-      const res = await fetch(`http://localhost:${serverPort}/agent-payments`);
-      const html = await res.text();
-      assert.ok(html.includes("x402"), "should mention x402");
-      assert.ok(html.includes("MPP"), "should mention MPP");
-      assert.ok(html.includes("Browserbase"), "should list Browserbase (supports both)");
+    it("lists every listing with a payment entry, with a badge for each protocol it holds", async () => {
+      const rows = serviceRows(await page(server.base, "/agent-payments"));
+      assert.deepStrictEqual([...rows.keys()].sort(), vendorsHolding(PAYMENT_LISTINGS));
+      for (const listing of PAYMENT_LISTINGS) {
+        assert.deepStrictEqual(badgesIn(rows.get(listing.vendor)![1]!), expectedBadges(listing.payment_protocols!.map(entry => entry.protocol)), listing.vendor);
+      }
+      assert.ok(holdingBoth.includes(BOTH_WITH_AN_UNSTATED_X402_COST), "no synthetic listing holds both protocols");
+    });
+
+    it("counts the listings by protocol", async () => {
+      const counts = [PAYMENT_LISTINGS.length, vendorsHolding(PAYMENT_LISTINGS, "x402").length, vendorsHolding(PAYMENT_LISTINGS, "stripe-mpp").length, holdingBoth.length];
+      assert.strictEqual(new Set(counts).size, counts.length, "two of the counts are equal, so a page printing one in the other's place would pass");
+      const html = await page(server.base, "/agent-payments");
+      assert.strictEqual(statValue(html, "Services indexed"), String(PAYMENT_LISTINGS.length));
+      assert.strictEqual(statValue(html, "x402 services"), String(vendorsHolding(PAYMENT_LISTINGS, "x402").length));
+      assert.strictEqual(statValue(html, "MPP services"), String(vendorsHolding(PAYMENT_LISTINGS, "stripe-mpp").length));
+      assert.ok(
+        html.includes(`${PAYMENT_LISTINGS.length} developer services accepting autonomous agent payments. ${vendorsHolding(PAYMENT_LISTINGS, "x402").length} via x402, ${vendorsHolding(PAYMENT_LISTINGS, "stripe-mpp").length} via Stripe MPP, ${holdingBoth.length} supporting both.`),
+        "the count line does not match the listings",
+      );
     });
   });
 
   describe("MCP search_deals payment_protocol filter", () => {
-    it("filters offers by x402 via API", async () => {
-      const res = await fetch(`http://localhost:${serverPort}/api/offers?payment_protocol=x402`);
-      assert.strictEqual(res.status, 200);
-      const body = await res.json() as any;
-      assert.ok(body.total > 0, "should have x402 offers");
-      for (const o of body.offers) {
-        assert.ok(o.payment_protocols?.some((p: any) => p.protocol === "x402"), `${o.vendor} should support x402`);
-      }
-    });
-
-    it("filters offers by stripe-mpp via API", async () => {
-      const res = await fetch(`http://localhost:${serverPort}/api/offers?payment_protocol=stripe-mpp`);
-      assert.strictEqual(res.status, 200);
-      const body = await res.json() as any;
-      assert.ok(body.total > 0, "should have stripe-mpp offers");
-      for (const o of body.offers) {
-        assert.ok(o.payment_protocols?.some((p: any) => p.protocol === "stripe-mpp"), `${o.vendor} should support stripe-mpp`);
-      }
+    it("returns every listing with an entry for the protocol asked for, and no other", async () => {
+      const [x402, mpp] = await mcpToolTexts(server.base, [
+        { name: "search_deals", arguments: { payment_protocol: "x402" } },
+        { name: "search_deals", arguments: { payment_protocol: "stripe-mpp" } },
+      ]);
+      assert.deepStrictEqual(servedVendors(JSON.parse(x402![0]!).results), vendorsHolding(PAYMENT_LISTINGS, "x402"));
+      assert.deepStrictEqual(servedVendors(JSON.parse(mpp![0]!).results), vendorsHolding(PAYMENT_LISTINGS, "stripe-mpp"));
     });
   });
 });

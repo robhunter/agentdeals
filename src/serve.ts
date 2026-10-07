@@ -31906,7 +31906,7 @@ function buildX402ServicesPage(): string {
     const vendorSlug = toSlug(o.vendor);
     const shortDesc = publishedTermsOpening(o, 1, 120);
     const proto = o.payment_protocols?.find(p => p.protocol === "x402");
-    const cost = proto?.example_cost || "varies";
+    const cost = proto?.example_cost ?? "—";
     const chain = proto?.chain || "Base";
     const settlement = proto?.settlement || "USDC";
     return `<tr>
@@ -31923,12 +31923,11 @@ function buildX402ServicesPage(): string {
     const serviceList = catOffers.map(o => {
       const vendorSlug = toSlug(o.vendor);
       const shortDesc = publishedTermsOpening(o, 1, 100);
-      const proto = o.payment_protocols?.find(p => p.protocol === "x402");
-      const cost = proto?.example_cost || "varies";
+      const cost = o.payment_protocols?.find(p => p.protocol === "x402")?.example_cost;
       return `<div class="service-card">
         <div class="service-header">
-          ${handwrittenVendorLinkHtml(vendorSlug, o.vendor, ' class="vendor-link"')}
-          <span class="cost-tag">${escHtmlServer(cost)}</span>
+          ${handwrittenVendorLinkHtml(vendorSlug, o.vendor, ' class="vendor-link"')}${cost === undefined ? "" : `
+          <span class="cost-tag">${escHtmlServer(cost)}</span>`}
         </div>
         <p class="service-tier">${escHtmlServer(o.tier)}</p>
         <p class="service-desc">${escHtmlServer(shortDesc)}</p>
