@@ -3353,8 +3353,14 @@
           "read_on": "2026-10-07"
         },
         {
-          "text": "When the Prepay balance reaches $0, every API key in every project on the billing account stops working until credits are added.",
+          "text": "When the Prepay balance reaches $0, every API key in every project on the billing account stops working until credits are added; requests then fail with an HTTP 402 Payment Required error.",
           "quote": "When your Prepay credit balance on the billing account hits $0, all API keys in all projects linked to that billing account will stop working simultaneously. Requests then fail with an HTTP 402 Payment Required error until you add credits.",
+          "url": "https://ai.google.dev/gemini-api/docs/billing",
+          "read_on": "2026-10-07"
+        },
+        {
+          "text": "Google's steps for switching to Prepay tell you to set up auto-reload on the AI Studio Billing page to top up your credit balance when it runs low.",
+          "quote": "To prevent service interruptions after switching, configure auto-reload to top up your credit balance when it runs low.",
           "url": "https://ai.google.dev/gemini-api/docs/billing",
           "read_on": "2026-10-07"
         }
@@ -3363,7 +3369,7 @@
     {
       "vendor": "Mistral AI",
       "category": "AI / ML",
-      "description": "Mistral's Free plan includes $10 a month in API credits, shared across Studio, the API and Vibe Code. When it is used up, usage can stop until the next month unless pay-as-you-go is turned on. API keys work with no credit card, within rate limits. The plan also has limited messages, web searches and coding sessions in Vibe. API prices: Ministral 3 (3B) $0.1/$0.1 (per 1M tokens); Mistral Small 4 $0.15/$0.6 (per 1M tokens); Mistral Large 3 $0.5/$1.5 (per 1M tokens); Mistral Large 4 (public preview since 2026-10-06, 1M-token context) $1.36/$4.18 (per 1M tokens), and Mistral charges half that for its first two weeks; Mistral Medium 3.5 $1.5/$7.5 (per 1M tokens); Codestral $0.3/$0.9 (per 1M tokens). Mistral Embed is $0.1 per 1M input tokens, and Codestral Embed is $0.15 per 1M input tokens. OCR 4.1 costs $4 per 1,000 pages. Mistral Moderation 2 is free. Mistral retired Devstral 2 (devstral-2512) on 2026-07-31 and names Mistral Medium 3.5 as its replacement. Batch processing is half price, and cached input tokens cost up to 90% less. Mistral publishes no rate-limit figures. Each organization's per-model limits (tokens per minute, requests per second) appear in Admin Panel > API > Limits.",
+      "description": "Mistral's Free plan includes monthly usage shared across Studio, the API and Vibe Code. The pricing page no longer states the amount as of 2026-10-07; it previously listed $10 a month in API credits. When it is used up, usage can stop until the next month unless pay-as-you-go is turned on. API keys work with no credit card, within rate limits. The plan also has limited messages, web searches and coding sessions in Vibe. API prices: Ministral 3 (3B) $0.1/$0.1 (per 1M tokens); Mistral Small 4 $0.15/$0.6 (per 1M tokens); Mistral Large 3 $0.5/$1.5 (per 1M tokens); Mistral Large 4 (public preview since 2026-10-06, 1M-token context) $1.36/$4.18 (per 1M tokens), and Mistral charges half that for its first two weeks; Mistral Medium 3.5 $1.5/$7.5 (per 1M tokens); Codestral $0.3/$0.9 (per 1M tokens). Mistral Embed is $0.1 per 1M input tokens, and Codestral Embed is $0.15 per 1M input tokens. OCR 4.1 costs $4 per 1,000 pages. Mistral Moderation 2 is free. Mistral retired Devstral 2 (devstral-2512) on 2026-07-31 and names Mistral Medium 3.5 as its replacement. Batch processing is half price, and cached input tokens cost up to 90% less. Mistral publishes no rate-limit figures. Each organization's per-model limits (tokens per minute, requests per second) appear in Admin Panel > API > Limits.",
       "tier": "Free",
       "url": "https://mistral.ai/pricing",
       "tags": [
@@ -3390,11 +3396,6 @@
           }
         ],
         "reviewed": "2026-09-01"
-      },
-      "free_plan_excerpt": {
-        "text": "Free Your personal AI agent for everyday tasks. Test out Vibe’s capabilities. Access on web and mobile. Limited messages and web searches. Limited coding sessions. State-of-the-art image generation. Test Mistral models in Studio. $10 /mo in API credits. 100+ connectors.",
-        "url": "https://mistral.ai/pricing",
-        "read_on": "2026-10-03"
       },
       "conditions": [
         {
@@ -7883,10 +7884,22 @@
           "read_on": "2026-10-06"
         },
         {
-          "text": "Unused free credit does not carry over. Bought credits do not expire and are not refunded.",
+          "text": "Unused free monthly credit does not carry over.",
           "quote": "Free monthly credits are the exception — those are replaced each month rather than carried over.",
           "url": "https://api-dashboard.search.brave.com/documentation/resources/help-feedback",
           "read_on": "2026-10-06"
+        },
+        {
+          "text": "Brave's Service Credit Terms say credits, bought or free, expire one year after they are issued or when the account closes, while its help page says bought credits do not expire.",
+          "quote": "Service Credits expire upon the earlier of one year from the date of issuance or the date that you close your account with us.",
+          "url": "https://api-dashboard.search.brave.com/terms-of-service/credit-terms",
+          "read_on": "2026-10-07"
+        },
+        {
+          "text": "Bought credits are not refunded.",
+          "quote": "Purchases of Prepaid Service Credits are non-refundable.",
+          "url": "https://api-dashboard.search.brave.com/terms-of-service/credit-terms",
+          "read_on": "2026-10-07"
         }
       ]
     },
