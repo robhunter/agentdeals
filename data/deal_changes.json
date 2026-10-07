@@ -15839,7 +15839,7 @@
       "change_type": "record_corrected",
       "date": "2026-10-07",
       "date_source": "discovered",
-      "summary": "The next selection date for the UP Programme has been updated to January 7, 2027, from September 16, 2026.",
+      "summary": "Data correction - our listing named 16 September 2026 as the next UP Programme selection round, which has passed; clever.cloud/up-program now names 7 January 2027.",
       "tier": "UP Program",
       "tier_direction": "unchanged",
       "previous_state": "Clever Cloud's startup programme is now called UP. It offers up to €10,000 in cloud credits for the first year, onboarding and training with Clever Cloud engineers, a monthly coaching session, premium support access, workshops and masterclasses for technical teams, mentoring, and access to Angel Start financial planning tools. Admission is by selection round; the page names the next as 16 September 2026.",
