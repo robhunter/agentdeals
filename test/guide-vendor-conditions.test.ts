@@ -419,6 +419,29 @@ async function placementsNotMatchingTheirVendorPage(base: string, readings: Guid
   return wrong;
 }
 
+const PRODUCT_ROWS_THEIR_PARENTS_CONDITIONS_COVER = [
+  { route: "/storage-comparison-2026", row: "supabase-storage", parent: "supabase" },
+  { route: "/storage-comparison-2026", row: "vercel-blob", parent: "vercel" },
+];
+
+const PRODUCT_ROWS_THEIR_PARENTS_CONDITIONS_DO_NOT_COVER = [
+  { route: "/storage-comparison-2026", row: "firebase-storage", parent: "firebase" },
+];
+
+function placementOf(html: string, slug: string): Placement {
+  const placement = layoutOf(html).placements.find((candidate) => candidate.slug === slug);
+  assert.ok(placement, `a ${slug} row`);
+  return placement;
+}
+
+async function parentListOf(base: string, row: string, parent: string, memo: Map<string, VendorPageList>): Promise<string> {
+  const viaTheRow = await listTheVendorPagePrints(base, row, memo);
+  const parents = await listTheVendorPagePrints(base, parent, memo);
+  assert.ok(viaTheRow.landsOnAnotherListing && viaTheRow.list === parents.list, `/vendor/${row} lands on /vendor/${parent}`);
+  assert.notStrictEqual(parents.list, "", `/vendor/${parent} lists conditions`);
+  return parents.list;
+}
+
 let routesCovered: string[] = [];
 const readingsOf = new Map<string, Promise<GuideReading[]>>();
 
@@ -435,6 +458,22 @@ describe("every guide that compares vendors prints each vendor's conditions of u
 
   it("prints every vendor's list once: in its card where the guide has one, else after the first table row that names it", async () => {
     assert.deepStrictEqual(await placementsNotMatchingTheirVendorPage(conditioned.base, await readingsOn(conditioned.base)), []);
+  });
+
+  it("prints the parent listing's conditions after a product row they cover", async () => {
+    const memo = new Map<string, VendorPageList>();
+    for (const { route, row, parent } of PRODUCT_ROWS_THEIR_PARENTS_CONDITIONS_COVER) {
+      const list = await parentListOf(conditioned.base, row, parent, memo);
+      assert.strictEqual(placementOf(await page(conditioned.base, route), row).printed, list, `${route}, the ${row} row`);
+    }
+  });
+
+  it("prints no conditions after a product row its parent listing's conditions do not cover", async () => {
+    const memo = new Map<string, VendorPageList>();
+    for (const { route, row, parent } of PRODUCT_ROWS_THEIR_PARENTS_CONDITIONS_DO_NOT_COVER) {
+      await parentListOf(conditioned.base, row, parent, memo);
+      assert.strictEqual(placementOf(await page(conditioned.base, route), row).printed, "", `${route}, the ${row} row`);
+    }
   });
 
   it("finds the guides it covers from the sitemap, and vendors to print on them when every listing holds conditions", async () => {

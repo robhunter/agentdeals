@@ -40288,7 +40288,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
         <td>Included</td>
-      </tr>${vendorPageConditionsRowHtml("supabase-storage", 8)}
+      </tr>${vendorPageConditionsRowHtml("supabase", 8)}
       <tr>
         <td class="provider-col">Firebase Storage</td>
         <td>BaaS</td>
@@ -40308,7 +40308,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003; Edge</td>
         <td class="check">&#10003;</td>
         <td>Included</td>
-      </tr>${vendorPageConditionsRowHtml("vercel-blob", 8)}
+      </tr>${vendorPageConditionsRowHtml("vercel", 8)}
       <tr>
         <td class="provider-col">Cloudinary</td>
         <td>Media CDN</td>
