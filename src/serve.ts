@@ -22215,6 +22215,7 @@ function buildGeminiApiPricing2026Page(): string {
     { name: "Cerebras", slug: "cerebras" },
     { name: "DeepSeek", slug: "deepseek-api" },
   ];
+  const listedInFull = "google-gemini-api";
 
   const servedOn = new Date().toISOString().slice(0, 10);
   const flashPriceStep = geminiFlashPriceStepEntry(servedOn);
@@ -22346,7 +22347,7 @@ ${mcpCtaCss()}
     ${rateLimitChange ? `<p><strong>From our tracker:</strong> ${changeSummaryHtml(rateLimitChange, escHtmlServer)}</p>` : ""}
   </div>
 
-  ${listingInFullHtml("google-gemini-api")}
+  ${listingInFullHtml(listedInFull)}
 
   <div class="toc">
     <h3>In This Guide</h3>
@@ -22472,7 +22473,7 @@ ${mcpCtaCss()}
         <td style="font-size:.8rem">${listingTermsCellHtml(p.slug)}</td>
         <td style="font-family:var(--mono);font-size:.8rem">${listingCells(p.slug).rateCell}</td>
         <td>${servedRatingHtml(p.name)}</td>
-      </tr>`).join("\n      ")}
+      </tr>${p.slug === listedInFull ? "" : vendorPageConditionsRowHtml(p.slug, 4)}`).join("\n      ")}
     </tbody>
   </table>
 
@@ -23532,7 +23533,7 @@ function buildOpenaiAssistantsAlternativesPage(): string {
       <td style="font-size:.8rem">${escHtmlServer(p.toolUse)}</td>
       <td style="font-size:.8rem">${escHtmlServer(p.codeExec)}</td>
       <td><span style="color:${cells.stabilityColor};font-size:.8rem;font-weight:600;text-transform:uppercase">${escHtmlServer(cells.stability)}</span></td>
-    </tr>`;
+    </tr>${vendorPageConditionsRowHtml(p.slug, 6)}`;
   }).join("\n        ");
 
   const monthlyAtScale = providers
@@ -24011,7 +24012,7 @@ function buildOpenaiAssistantsMigration2026Page(): string {
       <td style="font-size:.8rem">${escHtmlServer(p.toolUse)}</td>
       <td style="font-family:var(--mono);font-size:.8rem">${cells.rateCell}</td>
       <td><span style="color:${cells.stabilityColor};font-size:.8rem;font-weight:600;text-transform:uppercase">${escHtmlServer(cells.stability)}</span></td>
-    </tr>`;
+    </tr>${vendorPageConditionsRowHtml(p.slug, 5)}`;
   }).join("\n        ");
 
   const frameworkRows = frameworks.map(f =>
@@ -25493,6 +25494,7 @@ function buildOpenAIAssistantsMigrationPage(): string {
       '<p class="diff-desc">' + escHtmlServer(p.details) + '</p>' +
       '<p style="margin-top:.5rem;font-size:.85rem"><strong style="color:var(--text)">Free option:</strong> <span style="color:var(--text-muted)">' + escHtmlServer(p.freeOption) + '</span> · ' +
       '<strong style="color:var(--text)">Best for:</strong> <span style="color:var(--text-muted)">' + escHtmlServer(p.bestFor) + '</span></p>' +
+      (p.slug ? vendorPageConditionsHtmlForSlug(p.slug) : '') +
       '</div>';
   }).join("\n    ");
 
@@ -28289,6 +28291,7 @@ function buildCiCdPricingPage(): string {
         '<h3>' + handwrittenVendorLinkHtml(t.slug, t.name, ' style="color:var(--text)"') + ' ' +
         '<span style="font-size:.75rem;color:var(--text-dim);font-weight:400">' + escHtmlServer(t.freeTierAsStated?.cardLabel ?? freeTypeLabels[t.freeType]) + '</span></h3>' +
         '<p class="diff-desc">' + escHtmlServer(t.freeDetails) + '</p>' +
+        vendorPageConditionsHtmlForSlug(t.slug) +
         '</div>';
     }).join("\n    ");
     return '<h3 id="cat-' + cat + '">' + escHtmlServer(categoryLabels[cat]) + '</h3>' +
@@ -29854,7 +29857,8 @@ function buildVectorDatabasePricingPage(): string {
       catServices.map(s =>
         '<div class="diff-card">\n' +
         '  <h3>' + handwrittenVendorLinkHtml(s.slug, s.name) + '</h3>\n' +
-        '  <div class="diff-desc">' + escHtmlServer(s.freeDetails) + '</div>\n' +
+        '  <div class="diff-desc">' + escHtmlServer(s.freeDetails) + '</div>' +
+        vendorPageConditionsHtmlForSlug(s.slug) + '\n' +
         '</div>'
       ).join("\n");
   }).join("\n\n  ");
@@ -32777,7 +32781,7 @@ function buildAwsFreeTier2026Page(): string {
       <td style="font-weight:600">${handwrittenVendorLinkHtml(a.slug, a.name, ' style="color:var(--text)"')}</td>
       <td style="font-size:.8rem">${escHtmlServer(a.freeTier)}</td>
       <td style="font-size:.8rem;color:var(--text-muted)">${escHtmlServer(a.bestFor)}${guideRowReferralHtml(a.name)}</td>
-    </tr>`).join("\n        ");
+    </tr>${vendorPageConditionsRowHtml(a.slug, 3)}`).join("\n        ");
 
   const changeTimelineRows = awsChanges.slice(0, 10).map((c: any) => {
     const dateStr = changeEntryLongDateLabel(c);
@@ -33216,7 +33220,7 @@ function buildGcpFreeTier2026Page(): string {
       <td style="font-weight:600">${handwrittenVendorLinkHtml(a.slug, a.name, ' style="color:var(--text)"')}</td>
       <td style="font-size:.8rem">${escHtmlServer(a.freeTier)}</td>
       <td style="font-size:.8rem;color:var(--text-muted)">${escHtmlServer(a.bestFor)}${guideRowReferralHtml(a.name)}</td>
-    </tr>`).join("\n        ");
+    </tr>${vendorPageConditionsRowHtml(a.slug, 3)}`).join("\n        ");
 
   const changeTimelineRows = gcpChanges.slice(0, 12).map((c: any) => {
     const dateStr = changeEntryLongDateLabel(c);
@@ -33661,7 +33665,7 @@ function buildAzureFreeTier2026Page(): string {
       <td style="font-weight:600">${handwrittenVendorLinkHtml(a.slug, a.name, ' style="color:var(--text)"')}</td>
       <td style="font-size:.8rem">${escHtmlServer(a.freeTier)}</td>
       <td style="font-size:.8rem;color:var(--text-muted)">${escHtmlServer(a.bestFor)}${guideRowReferralHtml(a.name)}</td>
-    </tr>`).join("\n        ");
+    </tr>${vendorPageConditionsRowHtml(a.slug, 3)}`).join("\n        ");
 
   const changeTimelineRows = azureChanges.slice(0, 10).map((c: any) => {
     const dateStr = changeEntryLongDateLabel(c);
@@ -34107,7 +34111,7 @@ function buildDigitalOceanFreeTier2026Page(): string {
       <td style="font-weight:600">${handwrittenVendorLinkHtml(a.slug, a.name, ' style="color:var(--text)"')}</td>
       <td style="font-size:.8rem">${escHtmlServer(a.freeTier)}</td>
       <td style="font-size:.8rem;color:var(--text-muted)">${escHtmlServer(a.bestFor)}${guideRowReferralHtml(a.name)}</td>
-    </tr>`).join("\n        ");
+    </tr>${vendorPageConditionsRowHtml(a.slug, 3)}`).join("\n        ");
 
   const changeTimelineRows = doChanges.slice(0, 10).map((c: any) => {
     const dateStr = changeEntryLongDateLabel(c);
@@ -36049,7 +36053,7 @@ ${mcpCtaCss()}
         <td style="color:#3fb950">Public: unlimited</td>
         <td class="check">Free (charge postponed)</td>
         <td style="color:#3fb950">Yes</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("github-actions", 8)}
       <tr style="background:rgba(63,185,80,0.08)">
         <td class="provider-col"><a href="/vendor/gitlab-ci" style="color:var(--text)">GitLab CI</a></td>
         <td style="font-family:var(--mono)">400 compute min/mo</td>
@@ -36059,7 +36063,7 @@ ${mcpCtaCss()}
         <td>Same rate; GitLab for Open Source projects get 50K minutes</td>
         <td class="check">Free (unlimited)</td>
         <td style="color:#3fb950">Yes</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("gitlab-ci", 8)}
       <tr style="background:rgba(63,185,80,0.08)">
         <td class="provider-col"><a href="/vendor/circleci" style="color:var(--text)">CircleCI</a></td>
         <td style="font-family:var(--mono)">30,000 credits/mo</td>
@@ -36069,7 +36073,7 @@ ${mcpCtaCss()}
         <td>Open source: up to 400,000 credits/mo (Linux, Arm, Docker)</td>
         <td class="check">Free runner time; 5 concurrent self-hosted tasks</td>
         <td style="color:#3fb950">Yes</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("circleci", 8)}
       <tr>
         <td class="provider-col"><a href="/vendor/buildkite" style="color:var(--text)">Buildkite</a></td>
         <td style="font-family:var(--mono)">Unlimited (self-hosted)<br>Hosted: 2,000 Linux vCPU min/mo</td>
@@ -36079,7 +36083,7 @@ ${mcpCtaCss()}
         <td>Same limits for all repos</td>
         <td class="check">Free (self-hosted)</td>
         <td style="color:#3fb950">Yes (Free plan, up to 5 users)</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("buildkite", 8)}
       <tr>
         <td class="provider-col"><a href="/vendor/bitbucket-pipelines" style="color:var(--text)">Bitbucket Pipelines</a></td>
         <td style="font-family:var(--mono)">50 min/mo</td>
@@ -36089,7 +36093,7 @@ ${mcpCtaCss()}
         <td>Same limits for all repos</td>
         <td class="check">Yes (no build minutes used)</td>
         <td style="color:#3fb950">Yes</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("bitbucket-pipelines", 8)}
       <tr>
         <td class="provider-col"><a href="/vendor/harness-ci" style="color:var(--text)">Harness CI</a></td>
         <td style="font-family:var(--mono)">2,000 build credits/mo</td>
@@ -36099,7 +36103,7 @@ ${mcpCtaCss()}
         <td>Same limits for all repos</td>
         <td class="check">Free</td>
         <td style="color:#3fb950">Yes</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("harness-ci", 8)}
       <tr>
         <td class="provider-col"><a href="/vendor/google-cloud-build" style="color:var(--text)">Google Cloud Build</a></td>
         <td style="font-family:var(--mono)">2,500 min/mo (e2-standard-2)</td>
@@ -36109,7 +36113,7 @@ ${mcpCtaCss()}
         <td>Same limits for all repos</td>
         <td class="cross">No (GCE-based)</td>
         <td style="color:#3fb950">Yes (promotional)</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("google-cloud-build", 8)}
       <tr>
         <td class="provider-col"><a href="/vendor/bitrise" style="color:var(--text)">Bitrise</a></td>
         <td style="font-family:var(--mono)">300 credits/mo</td>
@@ -36119,7 +36123,7 @@ ${mcpCtaCss()}
         <td>1 private app; unlimited public apps</td>
         <td class="cross">Paid plans only</td>
         <td style="color:#3fb950">Yes (Hobby)</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("bitrise", 8)}
       <tr>
         <td class="provider-col"><a href="/vendor/codemagic" style="color:var(--text)">Codemagic</a></td>
         <td style="font-family:var(--mono)">500 min/mo</td>
@@ -36129,7 +36133,7 @@ ${mcpCtaCss()}
         <td>Same limits for all repos</td>
         <td class="cross">No</td>
         <td style="color:#3fb950">Yes</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("codemagic", 8)}
       <tr style="background:rgba(63,185,80,0.08)">
         <td class="provider-col"><a href="/vendor/drone-ci" style="color:var(--text)">Drone CI</a></td>
         <td style="font-family:var(--mono)">Unlimited (self-hosted)</td>
@@ -36139,7 +36143,7 @@ ${mcpCtaCss()}
         <td>Same (self-hosted)</td>
         <td class="check">Fully self-hosted</td>
         <td style="color:#3fb950">Yes (Community)</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("drone-ci", 8)}
     </tbody>
   </table>
   </div>
@@ -36232,14 +36236,14 @@ ${mcpCtaCss()}
         <td class="check">Unlimited (Community Edition); $0.0025/min on Cloud</td>
         <td class="check">Configurable</td>
         <td>Self-hosted teams</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("semaphore-ci", 5)}
       <tr>
         <td class="provider-col">Buddy</td>
         <td>1 seat, 1 concurrent run, 300 pipeline GB-minutes/mo</td>
         <td class="cross">Paid only</td>
         <td class="partial">Limited</td>
         <td>Visual pipeline builder, simple deploys</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("buddy", 5)}
       <tr>
         <td class="provider-col">Harness CI</td>
         <td>2,000 build credits/mo</td>
@@ -36294,7 +36298,7 @@ ${mcpCtaCss()}
         <td class="check">Linux runners</td>
         <td class="check">Supported</td>
         <td>Enterprise mobile DevOps</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("appcircle", 6)}
     </tbody>
   </table>
   </div>
@@ -36322,7 +36326,7 @@ ${mcpCtaCss()}
         <td>Hobby plan: free for small teams</td>
         <td>Monorepo build orchestration</td>
         <td>Nx/monorepo projects (remote caching, task distribution)</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("nx-cloud", 4)}
       <tr>
         <td class="provider-col">Google Cloud Build</td>
         <td>2,500 build-min/mo (e2-standard-2)</td>
@@ -36334,19 +36338,19 @@ ${mcpCtaCss()}
         <td>No published free plan (now part of Octopus Deploy)</td>
         <td>GitOps + Argo CD native</td>
         <td>Kubernetes deployments, GitOps workflows</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("codefresh", 4)}
       <tr>
         <td class="provider-col">Terramate</td>
         <td>Free up to 2 users, 1,000 resources</td>
         <td>IaC orchestration (Terraform, OpenTofu)</td>
         <td>IaC orchestration inside your CI/CD</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("terramate", 4)}
       <tr>
         <td class="provider-col">RunJob (formerly RunMyJob)</td>
         <td>400 vCPU-min, 800 GB-min, 10 concurrent</td>
         <td>Smart scaling for GitHub Actions/GitLab CI</td>
         <td>Cost optimization for existing CI pipelines</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("runmyjob", 4)}
     </tbody>
   </table>
   </div>
@@ -36386,7 +36390,7 @@ ${mcpCtaCss()}
         <td class="check">Docker-native</td>
         <td class="check">Kubernetes backend</td>
         <td>Drone CI fork with active community</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("woodpecker-ci", 6)}
     </tbody>
   </table>
   </div>
@@ -36711,7 +36715,7 @@ ${mcpCtaCss()}
         <td>Wall-clock time</td>
         <td>100&ndash;500ms (cold)</td>
         <td style="color:#3fb950">Yes (Always Free)</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("aws", 8)}
       <tr style="background:rgba(63,185,80,0.08)">
         <td class="provider-col"><a href="/vendor/google-cloud" style="color:var(--text)">Google Cloud Functions</a></td>
         <td style="font-family:var(--mono)">2M / month</td>
@@ -36721,7 +36725,7 @@ ${mcpCtaCss()}
         <td>Wall-clock time</td>
         <td>200&ndash;800ms (cold)</td>
         <td style="color:#3fb950">Yes (Always Free)</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("google-cloud", 8)}
       <tr>
         <td class="provider-col"><a href="/vendor/azure" style="color:var(--text)">Azure Functions</a></td>
         <td style="font-family:var(--mono)">1M / month</td>
@@ -36731,7 +36735,7 @@ ${mcpCtaCss()}
         <td>Wall-clock time</td>
         <td>200&ndash;1000ms (cold)</td>
         <td style="color:#3fb950">Yes (Always Free)</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("azure", 8)}
       <tr style="background:rgba(63,185,80,0.08)">
         <td class="provider-col"><a href="/vendor/google-cloud" style="color:var(--text)">Google Cloud Run</a></td>
         <td style="font-family:var(--mono)">2M / month</td>
@@ -36751,7 +36755,7 @@ ${mcpCtaCss()}
         <td><strong style="color:#3fb950">CPU time only</strong></td>
         <td>&lt;5ms (near-zero)</td>
         <td style="color:#3fb950">Yes</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("cloudflare-workers", 8)}
       <tr>
         <td class="provider-col"><a href="/vendor/vercel" style="color:var(--text)">Vercel Edge Functions</a></td>
         <td style="font-family:var(--mono)">1M edge requests/mo</td>
@@ -36761,7 +36765,7 @@ ${mcpCtaCss()}
         <td>Wall-clock time (credit-based)</td>
         <td>&lt;5ms (Edge) / 250ms (Serverless)</td>
         <td style="color:#3fb950">Yes (Hobby)</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("vercel", 8)}
       <tr>
         <td class="provider-col"><a href="/vendor/deno-deploy" style="color:var(--text)">Deno Deploy</a></td>
         <td style="font-family:var(--mono)">1M / month</td>
@@ -36771,7 +36775,7 @@ ${mcpCtaCss()}
         <td>CPU time</td>
         <td>&lt;10ms (near-zero)</td>
         <td style="color:#3fb950">Yes</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("deno-deploy", 8)}
       <tr>
         <td class="provider-col"><a href="/vendor/val-town" style="color:var(--text)">Val Town</a></td>
         <td style="font-family:var(--mono)">100K runs/day</td>
@@ -36781,7 +36785,7 @@ ${mcpCtaCss()}
         <td>Run-based</td>
         <td>&lt;50ms</td>
         <td style="color:#3fb950">Yes</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("val-town", 8)}
       <tr>
         <td class="provider-col"><a href="/vendor/dbos" style="color:var(--text)">DBOS</a></td>
         <td style="font-family:var(--mono)">1M service calls/mo</td>
@@ -36791,7 +36795,7 @@ ${mcpCtaCss()}
         <td>Service call-based</td>
         <td>Scale-to-zero (seconds)</td>
         <td style="color:#3fb950">Yes</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("dbos", 8)}
       <tr>
         <td class="provider-col">Inngest</td>
         <td style="font-family:var(--mono)">50K executions/mo</td>
@@ -36801,7 +36805,7 @@ ${mcpCtaCss()}
         <td>Execution-based</td>
         <td>Depends on host</td>
         <td style="color:#3fb950">Yes (Hobby)</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("inngest", 8)}
       <tr>
         <td class="provider-col">Trigger.dev</td>
         <td style="font-family:var(--mono)">$5 free compute/mo</td>
@@ -36811,7 +36815,7 @@ ${mcpCtaCss()}
         <td>Compute time-based</td>
         <td>Warm pool available</td>
         <td style="color:#3fb950">Yes</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("trigger-dev", 8)}
     </tbody>
   </table>
   </div>
@@ -36843,7 +36847,7 @@ ${mcpCtaCss()}
         <td>API Gateway, DynamoDB, S3, SQS, SNS, EventBridge</td>
         <td>Node.js, Python, Go, Java, .NET, Rust, Ruby</td>
         <td>AWS-native backends, event-driven architectures</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("aws-lambda", 6)}
       <tr style="background:rgba(63,185,80,0.08)">
         <td class="provider-col">Google Cloud Functions</td>
         <td style="font-family:var(--mono)">2M / month</td>
@@ -36851,7 +36855,7 @@ ${mcpCtaCss()}
         <td>Cloud Run, Firestore, Pub/Sub, Cloud Storage</td>
         <td>Node.js, Python, Go, Java, .NET, Ruby, PHP</td>
         <td>GCP-native, Firebase integrations</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("google-cloud-functions", 6)}
       <tr>
         <td class="provider-col">Azure Functions</td>
         <td style="font-family:var(--mono)">1M / month</td>
@@ -36859,7 +36863,7 @@ ${mcpCtaCss()}
         <td>Cosmos DB, Service Bus, Event Grid, Storage</td>
         <td>Node.js, Python, Java, .NET, PowerShell</td>
         <td>Microsoft/.NET shops, enterprise integrations</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("azure-functions", 6)}
     </tbody>
   </table>
   </div>
@@ -36899,7 +36903,7 @@ ${mcpCtaCss()}
         <td>V8 isolates (JS/TS)</td>
         <td>Blob: 1 GB, KV: via Vercel KV</td>
         <td>Next.js middleware, edge API routes</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("vercel-edge-functions", 6)}
       <tr>
         <td class="provider-col">Deno Deploy</td>
         <td>1M req/mo, 10 hrs CPU, 20 GiB egress</td>
@@ -36939,7 +36943,7 @@ ${mcpCtaCss()}
         <td>Up to 1000 concurrent per instance</td>
         <td>1 GB North America free</td>
         <td>Containerized APIs, microservices</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("google-cloud-run", 6)}
       <tr>
         <td class="provider-col">AWS App Runner</td>
         <td>Closed to new customers since April 30, 2026. Existing customers only.${figureSourceLinkHtml("https://aws.amazon.com/apprunner/", escHtmlServer)}</td>
@@ -36947,7 +36951,7 @@ ${mcpCtaCss()}
         <td>Configurable</td>
         <td>Standard AWS egress</td>
         <td>For existing App Runner customers. New customers use ECS Express Mode.</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("aws-app-runner", 6)}
     </tbody>
   </table>
   </div>
@@ -37005,7 +37009,7 @@ ${mcpCtaCss()}
         <td>Stateful serverless compute</td>
         <td class="check">Strongly consistent, WebSocket hibernation</td>
         <td>Real-time collaboration, stateful edge computing</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("cloudflare-durable-objects", 5)}
     </tbody>
   </table>
   </div>
@@ -37361,7 +37365,7 @@ ${mcpCtaCss()}
         <td class="check">1 enterprise connection + SCIM</td>
         <td style="font-family:var(--mono)">1,000 M2M tokens/mo; Token Vault (2 apps)</td>
         <td class="cross">No</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("auth0", 8)}
       <tr style="background:rgba(63,185,80,0.08)">
         <td class="provider-col"><a href="/vendor/clerk" style="color:var(--text)">Clerk</a></td>
         <td style="font-family:var(--mono)">50K MRU</td>
@@ -37371,7 +37375,7 @@ ${mcpCtaCss()}
         <td>Pro plan ($25/mo)</td>
         <td>2,500 token creations/mo</td>
         <td class="cross">No</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("clerk", 8)}
       <tr>
         <td class="provider-col"><a href="/vendor/kinde" style="color:var(--text)">Kinde</a></td>
         <td style="font-family:var(--mono)">10.5K MAU</td>
@@ -37381,7 +37385,7 @@ ${mcpCtaCss()}
         <td>1 enterprise SSO connection</td>
         <td style="font-family:var(--mono)">2,000 tokens</td>
         <td class="cross">No</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("kinde", 8)}
       <tr>
         <td class="provider-col">PropelAuth</td>
         <td style="font-family:var(--mono)">10K MAU</td>
@@ -37391,7 +37395,7 @@ ${mcpCtaCss()}
         <td>Growth plan</td>
         <td>&mdash;</td>
         <td class="cross">No</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("propelauth", 8)}
       <tr>
         <td class="provider-col"><a href="/vendor/stytch" style="color:var(--text)">Stytch</a></td>
         <td style="font-family:var(--mono)">10K MAU</td>
@@ -37401,7 +37405,7 @@ ${mcpCtaCss()}
         <td>5 SSO or SCIM connections (B2B), then $125/mo each</td>
         <td style="font-family:var(--mono)">1,000 M2M</td>
         <td class="cross">No</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("stytch", 8)}
       <tr>
         <td class="provider-col"><a href="/vendor/descope" style="color:var(--text)">Descope</a></td>
         <td style="font-family:var(--mono)">7.5K MAU</td>
@@ -37411,7 +37415,7 @@ ${mcpCtaCss()}
         <td>3 connections, 10 active tenants</td>
         <td style="font-family:var(--mono)">10,000 exchanges</td>
         <td class="cross">No</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("descope", 8)}
       <tr style="background:rgba(63,185,80,0.08)">
         <td class="provider-col"><a href="/vendor/workos" style="color:var(--text)">WorkOS</a> <span class="winner-badge">1M FREE</span></td>
         <td style="font-family:var(--mono)">1M MAU</td>
@@ -37421,7 +37425,7 @@ ${mcpCtaCss()}
         <td>SSO paid add-on</td>
         <td>M2M apps (price not listed)</td>
         <td class="cross">No</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("workos", 8)}
       <tr style="background:rgba(63,185,80,0.08)">
         <td class="provider-col"><a href="/vendor/supabase" style="color:var(--text)">Supabase Auth</a></td>
         <td style="font-family:var(--mono)">50K MAU</td>
@@ -37431,7 +37435,7 @@ ${mcpCtaCss()}
         <td>SAML on Pro (50 SSO MAU, then $0.015)</td>
         <td>&mdash;</td>
         <td class="check">Yes (Docker)</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("supabase", 8)}
       <tr>
         <td class="provider-col"><a href="/vendor/firebase" style="color:var(--text)">Firebase Auth</a></td>
         <td style="font-family:var(--mono)">No cost; SMS on Blaze only</td>
@@ -37441,7 +37445,7 @@ ${mcpCtaCss()}
         <td>Identity Platform</td>
         <td>&mdash;</td>
         <td class="cross">BaaS-integrated</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("firebase", 8)}
       <tr>
         <td class="provider-col">AWS Cognito</td>
         <td style="font-family:var(--mono)">10K MAU (50K for Lite pools created by Nov 22, 2024)${figureSourceLinkHtml("https://aws.amazon.com/cognito/pricing/", escHtmlServer)}</td>
@@ -37451,7 +37455,7 @@ ${mcpCtaCss()}
         <td class="partial">50 federated MAU free, then $0.015</td>
         <td style="font-family:var(--mono)">Paid add-on ($0.00225/token request)</td>
         <td class="cross">AWS-only</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("aws-cognito", 8)}
       <tr>
         <td class="provider-col">Appwrite Auth</td>
         <td style="font-family:var(--mono)">75K MAU</td>
@@ -37461,7 +37465,7 @@ ${mcpCtaCss()}
         <td>&mdash;</td>
         <td>&mdash;</td>
         <td class="check">Yes (Docker)</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("appwrite-auth", 8)}
       <tr>
         <td class="provider-col"><a href="/vendor/keycloak" style="color:var(--text)">Keycloak</a></td>
         <td style="font-family:var(--mono)">Unlimited</td>
@@ -37471,7 +37475,7 @@ ${mcpCtaCss()}
         <td class="check">Full SAML/OIDC</td>
         <td class="check">Unlimited</td>
         <td class="check">Yes (Java)</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("keycloak", 8)}
       <tr>
         <td class="provider-col">Authentik</td>
         <td style="font-family:var(--mono)">Unlimited</td>
@@ -37481,7 +37485,7 @@ ${mcpCtaCss()}
         <td class="check">Full SAML/OIDC</td>
         <td class="check">Unlimited</td>
         <td class="check">Yes (Python/Django)</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("authentik", 8)}
       <tr>
         <td class="provider-col">Authelia</td>
         <td style="font-family:var(--mono)">Unlimited</td>
@@ -37491,7 +37495,7 @@ ${mcpCtaCss()}
         <td class="check">OIDC provider</td>
         <td>Client credentials</td>
         <td class="check">Yes (Go)</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("authelia", 8)}
       <tr>
         <td class="provider-col"><a href="/vendor/fusionauth" style="color:var(--text)">FusionAuth</a></td>
         <td style="font-family:var(--mono)">Unlimited</td>
@@ -37501,7 +37505,7 @@ ${mcpCtaCss()}
         <td class="check">SAML + OIDC</td>
         <td>Starter plan and up</td>
         <td class="check">Yes (Docker)</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("fusionauth", 8)}
       <tr>
         <td class="provider-col"><a href="/vendor/supertokens" style="color:var(--text)">SuperTokens</a></td>
         <td style="font-family:var(--mono)">5K (managed)</td>
@@ -37511,7 +37515,7 @@ ${mcpCtaCss()}
         <td>Multi-tenancy (paid)</td>
         <td>Paid add-on (managed service only)</td>
         <td class="check">Yes (open-source features free)</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("supertokens", 8)}
       <tr>
         <td class="provider-col"><a href="/vendor/hanko" style="color:var(--text)">Hanko</a></td>
         <td style="font-family:var(--mono)">10K (cloud)</td>
@@ -37521,7 +37525,7 @@ ${mcpCtaCss()}
         <td>SAML on Pro ($49/mo per connection)</td>
         <td>&mdash;</td>
         <td class="check">Yes (unlimited)</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("hanko", 8)}
       <tr>
         <td class="provider-col"><a href="/vendor/ory" style="color:var(--text)">Ory</a></td>
         <td style="font-family:var(--mono)">Self-hosted; cloud Developer plan has no production use</td>
@@ -37531,7 +37535,7 @@ ${mcpCtaCss()}
         <td class="check">Full OIDC</td>
         <td class="partial">Self-hosted Hydra; billed on Ory Network</td>
         <td class="check">Yes (unlimited)</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("ory", 8)}
     </tbody>
   </table>
   </div>
@@ -37635,7 +37639,7 @@ ${mcpCtaCss()}
         <td>Supabase (Postgres, Realtime, Storage)</td>
         <td class="check">TOTP (phone MFA paid)</td>
         <td class="check">Yes (open source)</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("supabase-auth", 6)}
       <tr>
         <td class="provider-col">Firebase Auth</td>
         <td style="font-family:var(--mono)">No cost; SMS on Blaze only</td>
@@ -37643,7 +37647,7 @@ ${mcpCtaCss()}
         <td>Firebase (Firestore, Hosting, Functions)</td>
         <td class="check">Phone + TOTP (Identity Platform)</td>
         <td class="cross">No</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("firebase-auth", 6)}
       <tr>
         <td class="provider-col">AWS Cognito</td>
         <td style="font-family:var(--mono)">10,000${figureSourceLinkHtml("https://aws.amazon.com/cognito/pricing/", escHtmlServer)}</td>
@@ -37750,17 +37754,17 @@ ${mcpCtaCss()}
         <td class="provider-col">Authgear</td>
         <td>No MAU limit (cloud Free)</td>
         <td>Passkeys + biometric auth, pre-built login UI</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("authgear", 3)}
       <tr>
         <td class="provider-col">MojoAuth</td>
         <td>25K MAU</td>
         <td>Passwordless-first: magic links, email OTP, social (passkeys on Business Pro)</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("mojoauth", 3)}
       <tr>
         <td class="provider-col">Hexclave (formerly Stack Auth)</td>
         <td>Self-hosting free; managed 10K user accounts</td>
         <td>Open-source auth, managed or self-hosted</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("hexclave", 3)}
     </tbody>
   </table>
   </div>
@@ -37782,17 +37786,17 @@ ${mcpCtaCss()}
         <td class="provider-col"><a href="/vendor/permit-io" style="color:var(--text)">Permit.io</a></td>
         <td>1,000 MAU, RBAC + ABAC</td>
         <td>Policy-as-a-service (OPA-based)</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("permit-io", 3)}
       <tr>
         <td class="provider-col">Cerbos Hub</td>
         <td>100 monthly active principals, 2 PDPs</td>
         <td>Open-source policy engine (self-hosted or cloud)</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("cerbos-hub", 3)}
       <tr>
         <td class="provider-col"><a href="/vendor/authress" style="color:var(--text)">Authress</a></td>
         <td>First 1,000 billable calls free, then $0.0012/call</td>
         <td>Login and permissions API</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("authress", 3)}
     </tbody>
   </table>
   </div>
@@ -40204,7 +40208,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003; Workers</td>
         <td class="check">&#10003;</td>
         <td class="cheapest">Zero egress</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("cloudflare-r2", 8)}
       <tr>
         <td class="provider-col">Storj<span class="caution-badge">30-DAY TRIAL</span></td>
         <td>Object</td>
@@ -40214,7 +40218,7 @@ ${mcpCtaCss()}
         <td class="partial">Edge</td>
         <td class="cross">&#10007;</td>
         <td>$0.007/GB</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("storj", 8)}
       <tr>
         <td class="provider-col">Backblaze B2</td>
         <td>Object</td>
@@ -40224,7 +40228,7 @@ ${mcpCtaCss()}
         <td class="partial">CF partner</td>
         <td class="check">&#10003;</td>
         <td class="cheapest">Free to 3x</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("backblaze-b2", 8)}
       <tr>
         <td class="provider-col">Tigris (Fly.io)</td>
         <td>Object</td>
@@ -40234,7 +40238,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003; Global</td>
         <td class="check">&#10003;</td>
         <td class="cheapest">Zero egress</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("tigris-fly-io", 8)}
       <tr>
         <td class="provider-col">AWS S3<span class="caution-badge">CREDITS ONLY</span></td>
         <td>Object</td>
@@ -40244,7 +40248,7 @@ ${mcpCtaCss()}
         <td class="partial">CloudFront sep.</td>
         <td class="cross">&#10007;</td>
         <td class="expensive">$0.09/GB</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("aws-s3", 8)}
       <tr>
         <td class="provider-col">Google Cloud Storage</td>
         <td>Object</td>
@@ -40254,7 +40258,7 @@ ${mcpCtaCss()}
         <td class="partial">Cloud CDN sep.</td>
         <td class="check">&#10003;</td>
         <td class="expensive">$0.12/GB</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("google-cloud-storage", 8)}
       <tr>
         <td class="provider-col">Azure Blob Storage<span class="caution-badge">12-MO ONLY</span></td>
         <td>Object</td>
@@ -40264,7 +40268,7 @@ ${mcpCtaCss()}
         <td class="partial">Azure CDN sep.</td>
         <td class="cross">&#10007;</td>
         <td class="expensive">$0.087/GB</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("azure-blob-storage", 8)}
       <tr>
         <td class="provider-col">Oracle Cloud Obj. Storage</td>
         <td>Object</td>
@@ -40274,7 +40278,7 @@ ${mcpCtaCss()}
         <td class="cross">&#10007;</td>
         <td class="check">&#10003;</td>
         <td>$0.0085/GB</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("oracle-cloud-obj-storage", 8)}
       <tr>
         <td class="provider-col">Supabase Storage</td>
         <td>BaaS</td>
@@ -40284,7 +40288,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
         <td>Included</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("supabase-storage", 8)}
       <tr>
         <td class="provider-col">Firebase Storage</td>
         <td>BaaS</td>
@@ -40294,7 +40298,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="partial">Blaze only</td>
         <td>$0.12/GB</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("firebase-storage", 8)}
       <tr>
         <td class="provider-col">Vercel Blob</td>
         <td>BaaS</td>
@@ -40304,7 +40308,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003; Edge</td>
         <td class="check">&#10003;</td>
         <td>Included</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("vercel-blob", 8)}
       <tr>
         <td class="provider-col">Cloudinary</td>
         <td>Media CDN</td>
@@ -40314,7 +40318,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003; Global</td>
         <td class="check">&#10003;</td>
         <td>Credit system</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("cloudinary", 8)}
       <tr>
         <td class="provider-col">ImageKit</td>
         <td>Media CDN</td>
@@ -40324,7 +40328,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003; Global</td>
         <td class="check">&#10003;</td>
         <td>Included</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("imagekit", 8)}
       <tr>
         <td class="provider-col">BunnyCDN</td>
         <td>CDN</td>
@@ -40334,7 +40338,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003; 114 PoPs</td>
         <td class="cross">&#10007; Trial</td>
         <td>$0.01/GB</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("bunnycdn", 8)}
       <tr>
         <td class="provider-col">KeyCDN</td>
         <td>CDN</td>
@@ -40344,7 +40348,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003; 50+ PoPs</td>
         <td class="cross">&#10007; Credit</td>
         <td>$0.04/GB</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("keycdn", 8)}
       <tr>
         <td class="provider-col">Uploadcare</td>
         <td>Upload</td>
@@ -40354,7 +40358,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003; Global</td>
         <td class="check">&#10003;</td>
         <td>Included</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("uploadcare", 8)}
       <tr>
         <td class="provider-col">Pinata IPFS</td>
         <td>Decentr.</td>
@@ -40364,7 +40368,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003; IPFS</td>
         <td class="check">&#10003;</td>
         <td>Gateway</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("pinata-ipfs", 8)}
       <tr>
         <td class="provider-col">MinIO</td>
         <td>Self-hosted, single node</td>
@@ -40374,7 +40378,7 @@ ${mcpCtaCss()}
         <td class="cross">&#10007;</td>
         <td class="check">&#10003;</td>
         <td>Your infra</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("minio", 8)}
     </tbody>
   </table>
   </div>
@@ -40491,7 +40495,7 @@ ${mcpCtaCss()}
         <td>Global</td>
         <td class="check">&#10003;</td>
         <td>Image + video optimization</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("gumlet-com", 6)}
       <tr>
         <td class="provider-col">Uploadcare</td>
         <td>3,000 uploads/mo + 3 GB storage</td>
@@ -40507,7 +40511,7 @@ ${mcpCtaCss()}
         <td>Edge</td>
         <td class="cross">&#10007;</td>
         <td>Simple file uploads for Next.js/React</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("uploadthing", 6)}
     </tbody>
   </table>
   </div>
@@ -40984,7 +40988,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("playwright", 8)}
       <tr>
         <td class="provider-col">Cypress Cloud<span class="caution-badge">500 RESULTS/MO</span></td>
         <td>500 test results/mo, 3 users</td>
@@ -40994,7 +40998,7 @@ ${mcpCtaCss()}
         <td class="partial">&#9679; Framework only</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("cypress-cloud", 8)}
       <tr>
         <td class="provider-col">BrowserStack<span class="caution-badge">OSS ONLY</span></td>
         <td>Free for open source</td>
@@ -41004,7 +41008,7 @@ ${mcpCtaCss()}
         <td class="cross">&#10007;</td>
         <td class="check">&#10003; OSS projects</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("browserstack", 8)}
       <tr>
         <td class="provider-col">Selenium Grid</td>
         <td>Unlimited (OSS)</td>
@@ -41014,7 +41018,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("selenium-grid", 8)}
       <tr>
         <td class="provider-col">Checkly</td>
         <td>50K API checks + 10 browser/mo</td>
@@ -41024,7 +41028,7 @@ ${mcpCtaCss()}
         <td class="cross">&#10007;</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("checkly", 8)}
       <tr>
         <td class="provider-col">Chromatic</td>
         <td>5K snapshots/mo</td>
@@ -41034,7 +41038,7 @@ ${mcpCtaCss()}
         <td class="cross">&#10007;</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("chromatic", 8)}
       <tr>
         <td class="provider-col">BrowserStack Percy</td>
         <td>5K screenshots/mo</td>
@@ -41044,7 +41048,7 @@ ${mcpCtaCss()}
         <td class="cross">&#10007;</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("browserstack-percy", 8)}
       <tr>
         <td class="provider-col">Grafana k6 Cloud</td>
         <td>500 VU hours/mo</td>
@@ -41054,7 +41058,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003; CLI</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("grafana-k6-cloud", 8)}
       <tr>
         <td class="provider-col">Postman<span class="caution-badge">SINGLE USER</span></td>
         <td>25 collection runs/mo, 1 user</td>
@@ -41064,7 +41068,7 @@ ${mcpCtaCss()}
         <td class="cross">&#10007;</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("postman", 8)}
       <tr>
         <td class="provider-col">Codecov</td>
         <td>Free for public repos, 1 user private</td>
@@ -41074,7 +41078,7 @@ ${mcpCtaCss()}
         <td class="cross">&#10007;</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("codecov", 8)}
       <tr>
         <td class="provider-col">LocalStack</td>
         <td>30+ AWS services (auth required)</td>
@@ -41084,7 +41088,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("localstack", 8)}
       <tr>
         <td class="provider-col">Testcontainers</td>
         <td>Unlimited (OSS)</td>
@@ -41094,7 +41098,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("testcontainers", 8)}
       <tr>
         <td class="provider-col">Sauce Labs</td>
         <td>Free for open source</td>
@@ -41104,7 +41108,7 @@ ${mcpCtaCss()}
         <td class="cross">&#10007;</td>
         <td class="check">&#10003; OSS projects</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("sauce-labs", 8)}
       <tr>
         <td class="provider-col">Argos</td>
         <td>5K screenshots/mo</td>
@@ -41114,7 +41118,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("argos", 8)}
       <tr>
         <td class="provider-col">Artillery</td>
         <td>CLI unlimited, Cloud 600 VU mins/mo</td>
@@ -41124,7 +41128,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("artillery", 8)}
       <tr>
         <td class="provider-col">LambdaTest</td>
         <td>60 mins/mo live, 10 screenshot tests</td>
@@ -41134,7 +41138,7 @@ ${mcpCtaCss()}
         <td class="cross">&#10007;</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("lambdatest", 8)}
     </tbody>
   </table>
   </div>
@@ -42925,7 +42929,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="check">&#10003; Unlimited devs</td>
         <td class="cross">&#10007;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("snyk", 7)}
       <tr>
         <td class="provider-col">Semgrep</td>
         <td>SAST + SCA</td>
@@ -42934,7 +42938,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="check">&#10003; 50 repos</td>
         <td class="check">&#10003; OSS CLI</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("semgrep", 7)}
       <tr>
         <td class="provider-col">SonarCloud</td>
         <td>SAST + Code Quality</td>
@@ -42943,7 +42947,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="cross">&#10007; Public only</td>
         <td class="check">&#10003; SonarQube</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("sonarcloud", 7)}
       <tr>
         <td class="provider-col">CodeQL</td>
         <td>SAST (Semantic)</td>
@@ -42952,7 +42956,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003; GitHub Actions</td>
         <td class="cross">&#10007; Public only (free)</td>
         <td class="cross">&#10007;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("codeql", 7)}
       <tr>
         <td class="provider-col">aikido.dev</td>
         <td>All-in-one AppSec</td>
@@ -42961,7 +42965,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
         <td class="cross">&#10007;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("aikido-dev", 7)}
       <tr>
         <td class="provider-col">GitGuardian</td>
         <td>Secrets Detection</td>
@@ -42970,7 +42974,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003; ggshield CLI</td>
         <td class="check">&#10003;</td>
         <td class="cross">&#10007;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("gitguardian", 7)}
       <tr>
         <td class="provider-col">Gitleaks</td>
         <td>Secrets Detection</td>
@@ -42979,7 +42983,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003; GitHub Action</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("gitleaks", 7)}
       <tr>
         <td class="provider-col">TruffleHog</td>
         <td>Secrets Detection</td>
@@ -42988,7 +42992,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("trufflehog", 7)}
       <tr>
         <td class="provider-col">Trivy</td>
         <td>Container + FS + IaC + SBOM</td>
@@ -42997,7 +43001,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("trivy", 7)}
       <tr>
         <td class="provider-col">Grype</td>
         <td>Container + FS Vulnerability</td>
@@ -43006,7 +43010,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("grype", 7)}
       <tr>
         <td class="provider-col">Checkov</td>
         <td>IaC Static Analysis</td>
@@ -43015,7 +43019,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("checkov", 7)}
       <tr>
         <td class="provider-col">OWASP ZAP</td>
         <td>DAST</td>
@@ -43024,7 +43028,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("owasp-zap", 7)}
       <tr>
         <td class="provider-col">Nuclei</td>
         <td>DAST + Vulnerability Scanner</td>
@@ -43033,7 +43037,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("nuclei", 7)}
       <tr>
         <td class="provider-col">StackHawk</td>
         <td>DAST</td>
@@ -43042,7 +43046,7 @@ ${mcpCtaCss()}
         <td>Was included</td>
         <td>Was included</td>
         <td class="cross">&#10007;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("stackhawk", 7)}
       <tr>
         <td class="provider-col">Probely</td>
         <td>DAST</td>
@@ -43051,7 +43055,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
         <td class="cross">&#10007;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("probely", 7)}
       <tr>
         <td class="provider-col">Dependabot</td>
         <td>SCA + Dependency Updates</td>
@@ -43060,7 +43064,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003; Native</td>
         <td class="check">&#10003;</td>
         <td class="cross">&#10007; GitHub only</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("dependabot", 7)}
       <tr>
         <td class="provider-col">Renovate</td>
         <td>Dependency Updates</td>
@@ -43069,7 +43073,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("renovate", 7)}
       <tr>
         <td class="provider-col">FOSSA</td>
         <td>License Compliance + SCA</td>
@@ -43078,7 +43082,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
         <td class="cross">&#10007;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("fossa", 7)}
       <tr>
         <td class="provider-col">Socket.dev</td>
         <td>Supply Chain Security</td>
@@ -43087,7 +43091,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="partial">&#9679; 1 private</td>
         <td class="cross">&#10007;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("socket-dev", 7)}
       <tr>
         <td class="provider-col">SOOS</td>
         <td>SCA</td>
@@ -43096,7 +43100,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="cross">&#10007; OSS only</td>
         <td class="cross">&#10007;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("soos", 7)}
       <tr>
         <td class="provider-col">Falco</td>
         <td>Runtime Security</td>
@@ -43105,7 +43109,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("falco", 7)}
       <tr>
         <td class="provider-col">Tailscale</td>
         <td>Zero Trust VPN</td>
@@ -43114,7 +43118,7 @@ ${mcpCtaCss()}
         <td class="cross">&#10007;</td>
         <td class="check">&#10003;</td>
         <td class="partial">&#9679; Headscale</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("tailscale", 7)}
       <tr>
         <td class="provider-col">Twingate</td>
         <td>Zero Trust Access</td>
@@ -43123,7 +43127,7 @@ ${mcpCtaCss()}
         <td class="cross">&#10007;</td>
         <td class="check">&#10003;</td>
         <td class="cross">&#10007;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("twingate", 7)}
       <tr>
         <td class="provider-col">Let&rsquo;s Encrypt</td>
         <td>SSL/TLS Certificates</td>
@@ -43132,7 +43136,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003; ACME</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("let-s-encrypt", 7)}
     </tbody>
   </table>
   </div>
