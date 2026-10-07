@@ -2676,8 +2676,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 53,
-      "table_figures_from_records": 12,
+      "table_figures": 54,
+      "table_figures_from_records": 13,
       "tables": [
         {
           "label": "1. Free Tier Comparison Table",
@@ -2691,8 +2691,8 @@
         },
         {
           "label": "5. Other PaaS Alternatives",
-          "figures": 13,
-          "from_records": 12
+          "figures": 14,
+          "from_records": 13
         }
       ],
       "reads_changes": true,
