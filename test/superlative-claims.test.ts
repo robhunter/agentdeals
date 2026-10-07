@@ -383,9 +383,9 @@ describe("#1073 the check goes red on the cards this issue was filed for", () =>
   it("reports two winners when one column carries two superlatives", () => {
     const html = rendered.get("/serverless-free-tier-comparison-2026")!;
     const markup = `<td class="provider-col"><a href="/vendor/aws">AWS Lambda</a> <span class="winner-badge">MOST INVOCATIONS</span></td>`;
-    const unbadgedCell = `<td class="provider-col">Google Cloud Functions `;
+    const unbadgedCell = `<td class="provider-col">Google Cloud Functions</td>`;
     assert.ok(html.includes(unbadgedCell), "the Traditional FaaS row for Google Cloud Functions is gone from the page");
-    const badgedCell = `${unbadgedCell}<span class="winner-badge">MOST FREE INVOCATIONS</span> `;
+    const badgedCell = `<td class="provider-col">Google Cloud Functions <span class="winner-badge">MOST FREE INVOCATIONS</span></td>`;
     const found = contradictorySuperlatives(
       html.replace(`<a href="/vendor/aws" style="color:var(--text)">AWS Lambda</a>`, markup).replace(unbadgedCell, badgedCell),
     );
