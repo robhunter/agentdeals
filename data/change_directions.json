@@ -131,14 +131,6 @@
       "finding": "the device limit is the same one device type; the stored terms end \"no dark web monitoring on free\" and the reading lists dark web monitoring as included"
     },
     {
-      "vendor": "Liveblocks",
-      "change_type": "limits_reduced",
-      "date": "2026-09-01",
-      "source_url": "https://liveblocks.io/pricing",
-      "tier_direction": "widened",
-      "finding": "500 monthly active rooms -> unlimited; 256 MB realtime data -> 1 GB"
-    },
-    {
       "vendor": "LiveKit",
       "change_type": "limits_reduced",
       "date": "2026-09-09",
