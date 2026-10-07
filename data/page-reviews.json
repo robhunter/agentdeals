@@ -174,6 +174,7 @@
       "vendors_tabulated": [
         "amplitude",
         "google-analytics",
+        "heap-io",
         "mixpanel",
         "plausible-analytics",
         "posthog",
@@ -396,10 +397,10 @@
       "reviewer": null,
       "review_outcome": null,
       "review_note": null,
-      "reads_index": false,
-      "tables_read_index": false,
-      "table_figures": 41,
-      "table_figures_from_records": 4,
+      "reads_index": true,
+      "tables_read_index": true,
+      "table_figures": 42,
+      "table_figures_from_records": 5,
       "tables": [
         {
           "label": "Deprecation Timeline",
@@ -408,13 +409,13 @@
         },
         {
           "label": "Container Deployment Alternatives",
-          "figures": 22,
+          "figures": 23,
           "from_records": 0
         },
         {
           "label": "Pricing Comparison",
           "figures": 15,
-          "from_records": 0
+          "from_records": 1
         },
         {
           "label": "AWS Change Timeline",
@@ -423,7 +424,7 @@
         }
       ],
       "reads_changes": true,
-      "data_source": "unsourced",
+      "data_source": "catalogue",
       "data_source_reason": null
     },
     {
@@ -743,7 +744,8 @@
       "vendors_tabulated": [
         "aws",
         "azure",
-        "digitalocean"
+        "digitalocean",
+        "google-compute-engine"
       ],
       "badge_subjects_unresolved": [],
       "stat_card_subjects_unresolved": [],
@@ -752,7 +754,7 @@
       "review_outcome": "fail",
       "review_note": null,
       "reads_index": true,
-      "tables_read_index": false,
+      "tables_read_index": true,
       "table_figures": 68,
       "table_figures_from_records": 12,
       "tables": [
@@ -1219,10 +1221,10 @@
       "reviewer": "pm",
       "review_outcome": "pass",
       "review_note": "Rewritten from each alternative's own pages for https://github.com/robhunter/agentdeals/issues/2163. Checked on production on 2026-09-28, including a census of 2,593 routes for the ten withdrawn claims.",
-      "reads_index": false,
-      "tables_read_index": false,
-      "table_figures": 20,
-      "table_figures_from_records": 7,
+      "reads_index": true,
+      "tables_read_index": true,
+      "table_figures": 21,
+      "table_figures_from_records": 8,
       "tables": [
         {
           "label": "Shutdown Timeline",
@@ -1231,8 +1233,8 @@
         },
         {
           "label": "Cloud IDE Free Tier Comparison",
-          "figures": 10,
-          "from_records": 0
+          "figures": 11,
+          "from_records": 1
         },
         {
           "label": "AI Full-Stack Builder Alternatives",
@@ -1246,7 +1248,7 @@
         }
       ],
       "reads_changes": true,
-      "data_source": "unsourced",
+      "data_source": "catalogue",
       "data_source_reason": null
     },
     {
@@ -1974,8 +1976,8 @@
       "review_note": "Two readers checked the page's 44 claims against Google's, Microsoft's, AWS's, Appwrite's and Mistral's own pages on 2026-09-28. The nine that failed were corrected in https://github.com/robhunter/agentdeals/issues/2144 and read on production on 2026-09-28.",
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 45,
-      "table_figures_from_records": 4,
+      "table_figures": 49,
+      "table_figures_from_records": 8,
       "tables": [
         {
           "label": "2. Price Comparison Table",
@@ -1989,13 +1991,13 @@
         },
         {
           "label": "6. Free AI/LLM API Alternatives",
-          "figures": 1,
-          "from_records": 0
+          "figures": 2,
+          "from_records": 1
         },
         {
           "label": "7. Firebase Alternatives",
-          "figures": 5,
-          "from_records": 0
+          "figures": 8,
+          "from_records": 3
         }
       ],
       "reads_changes": true,
@@ -2279,6 +2281,7 @@
         "checkly",
         "cronitor",
         "datadog",
+        "deadmanssnitch-com",
         "elastic",
         "grafana-cloud",
         "healthchecks-io",
@@ -3022,7 +3025,7 @@
       "reviewer": "pm",
       "review_outcome": "pass",
       "review_note": "The corrections from https://github.com/robhunter/agentdeals/issues/2152 are live. Checked on production on 2026-10-01: 52 programme fields, 23 summary, card, strategy and FAQ strings (the FAQ also in its JSON-LD), Recent Changes against 10 named records, and a census of 2,596 routes for the withdrawn claims.",
-      "reads_index": false,
+      "reads_index": true,
       "tables_read_index": false,
       "table_figures": 87,
       "table_figures_from_records": 38,
@@ -3039,7 +3042,7 @@
         }
       ],
       "reads_changes": true,
-      "data_source": "unsourced",
+      "data_source": "catalogue",
       "data_source_reason": null
     },
     {

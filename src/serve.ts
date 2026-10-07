@@ -855,6 +855,19 @@ function vendorPageConditionsRowHtml(slug: string, columns: number): string {
   return rowSpanningTheTableHtml(vendorPageConditionsHtmlForSlug(slug), columns);
 }
 
+function vendorPageConditionsRowHtmlForLink(link: string, columns: number): string {
+  return link.startsWith("/vendor/") ? vendorPageConditionsRowHtml(link.slice("/vendor/".length), columns) : "";
+}
+
+function conditionsRowAfterEachVendorsFirstRow(columns: number): (slug: string) => string {
+  const vendorsWithTheirRow = new Set<string>();
+  return (slug) => {
+    if (slug === "" || vendorsWithTheirRow.has(slug)) return "";
+    vendorsWithTheirRow.add(slug);
+    return vendorPageConditionsRowHtml(slug, columns);
+  };
+}
+
 function withConditionsWhenWhole(offer: StoredTermsOf, printed: string): string {
   return printed === offer.description ? withConditionsAfter(printed, conditionsBesideTheStoredTerms(offer)) : printed;
 }
@@ -6951,7 +6964,7 @@ const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
         <td style="font-weight:600"><a href="/vendor/koyeb" style="color:var(--text)">Koyeb</a></td>
         <td>None for new users</td><td>None for new users</td><td>\u2705</td><td>\u2705</td>
         <td>Only with scale-to-zero (1-5 s)</td><td>$29/mo</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("koyeb", 7)}
       <tr>
         <td style="font-weight:600"><a href="/vendor/digitalocean" style="color:var(--text)">DigitalOcean</a></td>
         <td>$5 credit (90 days)</td><td>Not in free tier</td><td>\u2705</td><td>\u2705</td>
@@ -7415,7 +7428,7 @@ const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
         <td>—</td>
         <td>—</td>
         <td>No free plan for new users since Feb 2026 (Pro from $29/mo)</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("koyeb", 5)}
       <tr>
         <td style="font-weight:600"><a href="/vendor/coolify" style="color:var(--text)">Coolify</a></td>
         <td>Free OSS (Apache 2.0)</td>
@@ -10701,7 +10714,7 @@ ${buildCards(startupCredits)}
         <td>None for new users</td>
         <td>—</td>
         <td>No free plan for new users since Feb 2026 (Pro from $29/mo)</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("koyeb", 5)}
       <tr>
         <td style="font-weight:600"><a href="/vendor/deno-deploy" style="color:var(--text)">Deno Deploy</a></td>
         <td>Edge PaaS</td>
@@ -13041,7 +13054,7 @@ ${buildCards(other)}
         <td>$50K credits (startup)</td>
         <td>No</td>
         <td>Customer data platform, 300+ integrations</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("segment", 5)}
       <tr>
         <td style="font-weight:600"><a href="/vendor/openreplay-com" style="color:var(--text)">OpenReplay</a></td>
         <td>Session Replay</td>
@@ -13669,7 +13682,7 @@ ${buildCards(other)}
         <td>1 GB storage, E2E encryption</td>
         <td>Yes</td>
         <td>Privacy-focused encrypted email</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("proton-mail", 5)}
       <tr>
         <td style="font-weight:600"><a href="/vendor/emailoctopus" style="color:var(--text)">EmailOctopus</a></td>
         <td>Marketing</td>
@@ -14310,7 +14323,7 @@ ${buildCards(other)}
         <td>Unlimited cards, 10 boards/workspace</td>
         <td>No</td>
         <td>Simple, visual kanban for small teams</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("trello", 5)}
       <tr>
         <td style="font-weight:600"><a href="/vendor/asana-com" style="color:var(--text)">Asana</a></td>
         <td>Issue Tracking</td>
@@ -14331,7 +14344,7 @@ ${buildCards(other)}
         <td>Unlimited pages, 10 guests</td>
         <td>No</td>
         <td>All-in-one workspace for docs, wikis, and databases</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("notion", 5)}
       <tr>
         <td style="font-weight:600"><a href="/vendor/clockify" style="color:var(--text)">Clockify</a></td>
         <td>Time Tracking</td>
@@ -15170,7 +15183,7 @@ ${buildCards(apiIntegration)}
         <td>Free tier with testing, monitoring, environments</td>
         <td>No</td>
         <td>Industry standard API workspace</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("postman", 5)}
       <tr>
         <td style="font-weight:600"><a href="/vendor/hoppscotch" style="color:var(--text)">Hoppscotch</a></td>
         <td>API Client</td>
@@ -15240,7 +15253,7 @@ ${buildCards(apiIntegration)}
         <td>Free: 1 GB data, 3M API requests</td>
         <td>Yes</td>
         <td>Instant GraphQL API over any DB</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("hasura", 5)}
       <tr>
         <td style="font-weight:600"><a href="/vendor/mockapi" style="color:var(--text)">MockAPI</a></td>
         <td>Mocking</td>
@@ -15492,7 +15505,7 @@ ${buildCards(other)}
         <td>90-day history, 10 integrations</td>
         <td>No</td>
         <td>Industry-standard team messaging</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("slack", 5)}
       <tr>
         <td style="font-weight:600"><a href="/vendor/pumble" style="color:var(--text)">Pumble</a></td>
         <td>Chat</td>
@@ -15555,7 +15568,7 @@ ${buildCards(other)}
         <td>Unlimited pages, 10 guests</td>
         <td>No</td>
         <td>All-in-one workspace for docs and wikis</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("notion", 5)}
       <tr>
         <td style="font-weight:600"><a href="/vendor/cal-com" style="color:var(--text)">Cal.com</a></td>
         <td>Scheduling</td>
@@ -20217,7 +20230,7 @@ function buildGoogleDeveloperProgram2026Page(): string {
       <td style="font-weight:600"><a href="${c.link}"${crawlRel(c.link)} style="color:var(--text)">${escHtmlServer(c.vendor)}</a></td>
       <td style="font-family:var(--mono);color:var(--accent);font-size:.85rem">${escHtmlServer(c.credits)}</td>
       <td style="color:var(--text-muted);font-size:.85rem">${escHtmlServer(c.highlight)}${guideRowReferralHtml(c.vendor)}</td>
-    </tr>`).join("\n        ");
+    </tr>${vendorPageConditionsRowHtmlForLink(c.link, 3)}`).join("\n        ");
 
   const llmAlternatives = [
     { vendor: "Groq", free: "30 RPM; 1K requests and 200K tokens/day per model", models: "gpt-oss-120b, gpt-oss-20b, Qwen3.8 27B", link: "/vendor/groq" },
@@ -20230,7 +20243,7 @@ function buildGoogleDeveloperProgram2026Page(): string {
       <td style="font-weight:600"><a href="${c.link}"${crawlRel(c.link)} style="color:var(--text)">${escHtmlServer(c.vendor)}</a></td>
       <td style="font-family:var(--mono);color:var(--accent);font-size:.85rem">${escHtmlServer(c.free)}</td>
       <td style="color:var(--text-muted);font-size:.85rem">${escHtmlServer(c.models)}</td>
-    </tr>`).join("\n        ");
+    </tr>${vendorPageConditionsRowHtmlForLink(c.link, 3)}`).join("\n        ");
 
   const firebaseAlternatives = [
     { vendor: "Supabase", free: "500MB DB, 1GB storage, 50K auth users", highlight: "Postgres-based, real-time, auth included", link: "/vendor/supabase" },
@@ -20243,7 +20256,7 @@ function buildGoogleDeveloperProgram2026Page(): string {
       <td style="font-weight:600"><a href="${c.link}"${crawlRel(c.link)} style="color:var(--text)">${escHtmlServer(c.vendor)}</a></td>
       <td style="font-family:var(--mono);color:var(--accent);font-size:.85rem">${escHtmlServer(c.free)}</td>
       <td style="color:var(--text-muted);font-size:.85rem">${escHtmlServer(c.highlight)}</td>
-    </tr>`).join("\n        ");
+    </tr>${vendorPageConditionsRowHtmlForLink(c.link, 3)}`).join("\n        ");
 
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["free-ai-stack", "free-startup-stack", "free-llm-apis", "ai-ml-alternatives", "hosting-alternatives", "q2-pricing-preview-2026"].includes(p.slug)
@@ -24995,7 +25008,7 @@ function buildFirebaseStudioShutdownPage(): string {
         <td style="font-size:.8rem">${escHtmlServer(a.collaboration)}</td>
         <td style="font-size:.8rem">${escHtmlServer(a.aiFeatures)}</td>
         <td><span style="color:${stabColor};font-size:.8rem;font-weight:600;text-transform:uppercase">${a.slug ? escHtmlServer(stability) : "\u2014"}</span></td>
-      </tr>`;
+      </tr>${a.slug ? vendorPageConditionsRowHtml(servedVendorSlug(a.slug) ?? a.slug, 6) : ""}`;
     }).join("\n        ");
   }
 
@@ -26808,6 +26821,7 @@ function buildStartupCreditsPage(): string {
     whatsIncluded: string;
     hiddenConstraints: string;
     vestingSchedule: string;
+    governedByConditionsOf?: string;
   }
 
   const difficultyColors: Record<string, string> = {
@@ -26840,7 +26854,7 @@ function buildStartupCreditsPage(): string {
     { name: "AWS Activate", slug: "aws-activate", category: "cloud-infrastructure", creditValue: "$1K–$5K (Founders), up to $200K (Portfolio)", eligibility: "Pre-Series B, founded in the last 10 years, AWS account on a paid plan. Founders: self-funded. Portfolio: needs an Activate Provider Org ID.", duration: "Activate credits expire on a date shown in the AWS Billing console.", applicationDifficulty: "open", whatsIncluded: "AWS credits, which can also pay for AWS Support. Technical guidance, mentoring and go-to-market resources.", hiddenConstraints: "Founders start at $1,000; select participants may get up to $5,000. Portfolio needs an Org ID from an Activate Provider such as an accelerator or VC firm. AWS cannot extend expiry dates, even with credits unused. Accounts on the Free plan are not eligible.", vestingSchedule: "One award per approved application; a later, larger award pays only the difference" },
     { name: "Google Cloud for Startups", slug: "google-cloud-for-startups", category: "cloud-infrastructure", creditValue: "$2K (Start), up to $200K (Scale), up to $350K (Scale AI)", eligibility: "Start: no funding yet but plans to raise venture funding soon, founded within 24 months, working MVP; Scale: VC funding from pre-seed to Series A (Series A within the last 12 months; angel money does not count), founded within 5 years.", duration: "12 months (Start), 2 years (Scale)", applicationDifficulty: "open", whatsIncluded: "Google Cloud and Firebase credits, 12 months of Google Workspace Business Plus, technical training and business support. The AI tier adds $150K of credits.", hiddenConstraints: "Equity funding required \u2014 bootstrapped startups don\u2019t qualify for Scale tier. $200K is split $100K/year. Must use within Google Cloud (not transferable). 24-month expiry. Requires application review.", vestingSchedule: "Scale: year 1 covers usage up to $100K ($250K for AI); year 2 covers 20% of spend, up to $100K more" },
     { name: "Microsoft for Startups (formerly Founders Hub)", slug: "microsoft-founders-hub", category: "cloud-infrastructure", creditValue: "$200 on sign-up; up to $150K as Azure usage grows or with an Investor Network partner", eligibility: "B2B software, AI or tech startups, pre-seed to Series C, privately held; no investor needed. Business verification and sustained Azure usage unlock more credits, and Investor Network backing starts most startups at $100K.", duration: "Activate within 90 days; the first $200 lasts 90 days, the verification credit 180 days, and credits from the $25K milestone up to 2 years", applicationDifficulty: "open", whatsIncluded: "Azure credits and Azure AI models. GitHub Enterprise, Microsoft 365 Business Premium, Visual Studio Enterprise and LinkedIn Premium offers are for Investor Network-backed startups only.", hiddenConstraints: "Basic path gives only $5K without investor connection. Premium path up to $150K requires investor network verification. Credits expire in 12 months. Azure-only (not applicable to M365 or other Microsoft products).", vestingSchedule: "Released in milestones as you verify the business and use more Azure" },
-    { name: "DigitalOcean Startups", slug: "digitalocean-hatch", category: "cloud-infrastructure", creditValue: "Credits for 12 months; amount varies, up to $10,000 a month", eligibility: "Raised $10M or less; apply through a partner or directly", duration: "12 months", applicationDifficulty: "open", whatsIncluded: "Compute credits for most DigitalOcean services, 15 months of free Standard-tier support; GPU credits are a separate benefit for selected startups", hiddenConstraints: "Credits exclude GPU Droplets, H100 GPU products, inference, third-party AI models, Paperspace and Cloudways. Use over $10,000 in a month is charged. Only for startups that have not used DigitalOcean credits before.", vestingSchedule: "Lump sum per partner agreement" },
+    { name: "DigitalOcean Startups", slug: "digitalocean-hatch", category: "cloud-infrastructure", creditValue: "Credits for 12 months; amount varies, up to $10,000 a month", eligibility: "Raised $10M or less; apply through a partner or directly", duration: "12 months", applicationDifficulty: "open", whatsIncluded: "Compute credits for most DigitalOcean services, 15 months of free Standard-tier support; GPU credits are a separate benefit for selected startups", hiddenConstraints: "Credits exclude GPU Droplets, H100 GPU products, inference, third-party AI models, Paperspace and Cloudways. Use over $10,000 in a month is charged. Only for startups that have not used DigitalOcean credits before.", vestingSchedule: "Lump sum per partner agreement", governedByConditionsOf: "digitalocean" },
     { name: "Cloudflare Startup Program", slug: "cloudflare-startup-program", category: "cloud-infrastructure", creditValue: "$10K, $100K or $350K by tier", eligibility: "Tier 3 ($10K): bootstrapped or self-funded, under $1M raised; Tiers 2 ($100K) and 1 ($350K): funded by an affiliated partner, Tier 1 with $5M+ raised.", duration: "1 year or until used up", applicationDifficulty: "open", whatsIncluded: "Credits for usage-based services such as Workers and R2 (R2 up to $10K; Workers AI up to $2.5K, $10K or $50K by tier). AI Gateway is not covered. Core security and networking features are free at every tier.", hiddenConstraints: "Tier is based on funding stage \u2014 bootstrapped startups get only $5K. Higher tiers require more funding documentation. Credits are Cloudflare-only. Limited time window to use credits.", vestingSchedule: "Lump sum per tier" },
     { name: "Stripe Atlas", slug: "stripe-atlas", category: "fintech-banking", creditValue: "Over $50K in partner discounts, plus $2.5K of Stripe credits", eligibility: "Companies incorporated through Atlas ($500, then $100 a year after the first year)", duration: "Varies by perk; Stripe credits last the first year", applicationDifficulty: "open", whatsIncluded: "$2.5K of Stripe product credits for the first year, $5K of AWS Activate credits (new AWS users), $100K of Cloudflare credits through the Cloudflare Startup Program, Microsoft for Startups Azure credits, a 30-minute immigration attorney consult (Ellis), and banking through Stripe Treasury.", hiddenConstraints: "Requires Stripe Atlas incorporation ($500 one-time fee). Perks are from third parties \u2014 each has own eligibility requirements. Processing credits only apply to Stripe payments. Some perks expire 90 days after incorporation.", vestingSchedule: "Available once the Atlas application is approved" },
     { name: "Brex", slug: "brex", category: "fintech-banking", creditValue: "Over $350K in partner discounts and credits", eligibility: "Brex customers", duration: "Varies by partner", applicationDifficulty: "open", whatsIncluded: "Up to $5K of AWS credits for new Brex customers (subject to Activate eligibility), $1K of OpenAI credits for a year, up to $200K of Google Cloud and Firebase credits over 2 years, 6 months of Notion Plus, 30% off Slack for 12 months.", hiddenConstraints: "Must be a Brex cardholder. Individual perks have separate eligibility and expiry. Some require minimum card spend. Google Cloud $200K requires separate Google for Startups qualification. Partner perks change frequently.", vestingSchedule: "Per-partner activation" },
@@ -26881,6 +26895,7 @@ function buildStartupCreditsPage(): string {
         '<p class="diff-desc"><strong>Duration:</strong> ' + escHtmlServer(p.duration) + '</p>' +
         '<p class="diff-desc"><strong>What\'s included:</strong> ' + escHtmlServer(p.whatsIncluded) + '</p>' +
         '<p class="diff-desc"><strong>Vesting:</strong> ' + escHtmlServer(p.vestingSchedule) + '</p>' +
+        (p.governedByConditionsOf ? vendorPageConditionsHtmlForSlug(p.governedByConditionsOf) : '') +
         '</div>';
     }).join("\n    ");
     return '<h3 id="cat-' + cat + '">' + escHtmlServer(categoryLabels[cat]) + '</h3>' +
@@ -27530,6 +27545,7 @@ function buildAiCodingToolsPricingPage(): string {
         '<h3>' + handwrittenVendorLinkHtml(t.slug, t.name, ' style="color:var(--text)"') + ' ' +
         '<span style="font-size:.75rem;color:var(--text-dim);font-weight:400">' + escHtmlServer(freeTypeLabels[t.freeType]) + '</span></h3>' +
         '<p class="diff-desc">' + escHtmlServer(t.freeDetails) + '</p>' +
+        vendorPageConditionsHtmlForSlug(t.slug) +
         '</div>';
     }).join("\n    ");
     return '<h3 id="cat-' + cat + '">' + escHtmlServer(categoryLabels[cat]) + '</h3>' +
@@ -32135,6 +32151,7 @@ function buildAppRunnerMigrationPage(): string {
   interface ContainerProvider {
     name: string;
     slug: string;
+    parentListingsConditionsDoNotApply?: true;
     freeTier: string;
     startingPrice: string;
     pricingModel: string;
@@ -32153,7 +32170,7 @@ function buildAppRunnerMigrationPage(): string {
     { name: "Railway", slug: "railway", freeTier: "$5 trial credit (30 days), then $1 of free credit a month", startingPrice: "$5/mo + usage ($0.000463/vCPU-min)", pricingModel: "Per-minute (vCPU + memory) + subscription", sourceCodeDeploy: "Yes — GitHub/GitLab auto-deploy", autoScaling: "Yes (horizontal + vertical)", migrationEffort: "Low — push to deploy, minimal config", bestFor: "Developer experience, fast deployment" },
     { name: "Render", slug: "render", freeTier: "Free tier (750 hrs/mo, sleeps after inactivity)", startingPrice: "$7/mo (Starter)", pricingModel: "Per-service fixed monthly", sourceCodeDeploy: "Yes — GitHub auto-deploy", autoScaling: "Yes (paid plans)", migrationEffort: "Low — similar DX to App Runner", bestFor: "Simple web services, closest App Runner experience" },
     { name: "Fly.io", slug: "fly-io", freeTier: "None for new accounts — 2 hrs runtime or 7-day trial", startingPrice: "$2.19/mo (shared-cpu-1x)", pricingModel: "Per-VM + bandwidth", sourceCodeDeploy: "Yes — Dockerfiles + buildpacks", autoScaling: "Yes (scale to zero, multi-region)", migrationEffort: "Low-Moderate — CLI-driven, different paradigm", bestFor: "Multi-region, edge deployment" },
-    { name: "DigitalOcean App Platform", slug: "digitalocean", freeTier: "3 static sites free, starter apps $5/mo", startingPrice: "$5/mo (Basic)", pricingModel: "Fixed monthly per app", sourceCodeDeploy: "Yes — GitHub/GitLab auto-deploy", autoScaling: "Yes (Pro+ plans)", migrationEffort: "Low — similar source code deploy model", bestFor: "Simple apps, predictable pricing" },
+    { name: "DigitalOcean App Platform", slug: "digitalocean", freeTier: "3 static sites free, starter apps $5/mo", startingPrice: "$5/mo (Basic)", pricingModel: "Fixed monthly per app", sourceCodeDeploy: "Yes — GitHub/GitLab auto-deploy", autoScaling: "Yes (Pro+ plans)", migrationEffort: "Low — similar source code deploy model", bestFor: "Simple apps, predictable pricing", parentListingsConditionsDoNotApply: true },
     { name: "Northflank", slug: "northflank", freeTier: "Free tier (2 services, 0.2 vCPU, 512MB RAM)", startingPrice: "$10/mo (Developer)", pricingModel: "Per-service + resource usage", sourceCodeDeploy: "Yes — buildpacks + Dockerfiles", autoScaling: "Yes", migrationEffort: "Low — designed as PaaS, similar concepts", bestFor: "Full PaaS with CI/CD built-in" },
   ];
 
@@ -32163,6 +32180,7 @@ function buildAppRunnerMigrationPage(): string {
 
   const freeProviderCount = providers.filter(p => p.freeTier.toLowerCase().includes("free")).length;
 
+  const conditionsRowFor = conditionsRowAfterEachVendorsFirstRow(6);
   const providerTableRows = providers.map(p => {
     const freeColor = p.freeTier.toLowerCase().includes("free") ? "#3fb950" : "var(--accent)";
     const effortColor = p.migrationEffort.startsWith("Low") ? "#3fb950" : p.migrationEffort.startsWith("Moderate") ? "#d29922" : "#f85149";
@@ -32174,7 +32192,7 @@ function buildAppRunnerMigrationPage(): string {
       <td style="font-size:.8rem">${escHtmlServer(p.pricingModel)}</td>
       <td style="font-size:.8rem">${p.sourceCodeDeploy.startsWith("Yes") ? '<span style="color:#3fb950">Yes</span>' : '<span style="color:#f85149">No</span>'}</td>
       <td><span style="color:${effortColor};font-size:.8rem;font-weight:600">${escHtmlServer(p.migrationEffort.split(" — ")[0])}</span></td>
-    </tr>`;
+    </tr>${p.parentListingsConditionsDoNotApply ? "" : conditionsRowFor(p.slug)}`;
   }).join("\n        ");
 
   const pricingComparisonRows = [
@@ -34798,25 +34816,25 @@ ${mcpCtaCss()}
         <td>EC2</td>
         <td>No free hours; paid from Free plan credits (up to $200)</td>
         <td style="color:#d29922">Free plan: 6 months</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("aws", 4)}
       <tr style="background:rgba(63,185,80,0.08)">
-        <td class="provider-col">GCP</td>
+        <td class="provider-col"><a href="/vendor/google-compute-engine" style="color:var(--text)">GCP</a></td>
         <td>e2-micro VM</td>
         <td>2 shared vCPU, 1 GB RAM, 30 GB disk, us-* regions</td>
         <td style="color:#3fb950">Always free</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("google-compute-engine", 4)}
       <tr>
         <td class="provider-col">Azure</td>
         <td>B2pts v2 / B2ats v2 VMs</td>
         <td>750 hrs/mo each, 2 vCPU, 1 GiB RAM</td>
         <td style="color:#d29922">12 months only</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("azure", 4)}
       <tr>
         <td class="provider-col">DigitalOcean</td>
         <td class="cross">No free compute</td>
         <td>Cheapest: $4/mo Droplet (512 MB RAM)</td>
         <td class="cross">Paid only</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("digitalocean", 4)}
     </tbody>
   </table>
   </div>
@@ -36717,15 +36735,15 @@ ${mcpCtaCss()}
         <td style="color:#3fb950">Yes (Always Free)</td>
       </tr>${vendorPageConditionsRowHtml("aws", 8)}
       <tr style="background:rgba(63,185,80,0.08)">
-        <td class="provider-col"><a href="/vendor/google-cloud" style="color:var(--text)">Google Cloud Functions</a></td>
+        <td class="provider-col">Google Cloud Functions</td>
         <td style="font-family:var(--mono)">2M / month</td>
-        <td style="font-family:var(--mono)">400K GB-sec + 200K GHz-sec</td>
+        <td style="font-family:var(--mono)">400K GB-sec + 200K GHz-sec${figureSourceLinkHtml("https://cloud.google.com/functions/pricing-1stgen", escHtmlServer)}</td>
         <td>128 MB &ndash; 32 GB</td>
         <td>9 min (1st gen) / 60 min (2nd gen)</td>
         <td>Wall-clock time</td>
         <td>200&ndash;800ms (cold)</td>
         <td style="color:#3fb950">Yes (Always Free)</td>
-      </tr>${vendorPageConditionsRowHtml("google-cloud", 8)}
+      </tr>
       <tr>
         <td class="provider-col"><a href="/vendor/azure" style="color:var(--text)">Azure Functions</a></td>
         <td style="font-family:var(--mono)">1M / month</td>
@@ -36737,7 +36755,7 @@ ${mcpCtaCss()}
         <td style="color:#3fb950">Yes (Always Free)</td>
       </tr>${vendorPageConditionsRowHtml("azure", 8)}
       <tr style="background:rgba(63,185,80,0.08)">
-        <td class="provider-col"><a href="/vendor/google-cloud" style="color:var(--text)">Google Cloud Run</a></td>
+        <td class="provider-col"><a href="/vendor/google-cloud-run" style="color:var(--text)">Google Cloud Run</a></td>
         <td style="font-family:var(--mono)">2M / month</td>
         <td style="font-family:var(--mono)">360K GB-sec + 180K vCPU-sec</td>
         <td>Up to 32 GB / 8 vCPU</td>
@@ -36745,7 +36763,7 @@ ${mcpCtaCss()}
         <td>Wall-clock time (request-based)</td>
         <td>100&ndash;500ms (cold)</td>
         <td style="color:#3fb950">Yes (Always Free)</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("google-cloud-run", 8)}
       <tr style="background:rgba(63,185,80,0.08)">
         <td class="provider-col"><a href="/vendor/cloudflare-workers" style="color:var(--text)">Cloudflare Workers</a></td>
         <td style="font-family:var(--mono)">100K / day (~3M/mo)</td>
@@ -36851,7 +36869,7 @@ ${mcpCtaCss()}
       <tr style="background:rgba(63,185,80,0.08)">
         <td class="provider-col">Google Cloud Functions</td>
         <td style="font-family:var(--mono)">2M / month</td>
-        <td style="font-family:var(--mono)">400K GB-sec + 200K GHz-sec</td>
+        <td style="font-family:var(--mono)">400K GB-sec + 200K GHz-sec${figureSourceLinkHtml("https://cloud.google.com/functions/pricing-1stgen", escHtmlServer)}</td>
         <td>Cloud Run, Firestore, Pub/Sub, Cloud Storage</td>
         <td>Node.js, Python, Go, Java, .NET, Ruby, PHP</td>
         <td>GCP-native, Firebase integrations</td>
@@ -36943,7 +36961,7 @@ ${mcpCtaCss()}
         <td>Up to 1000 concurrent per instance</td>
         <td>1 GB North America free</td>
         <td>Containerized APIs, microservices</td>
-      </tr>${vendorPageConditionsRowHtml("google-cloud-run", 6)}
+      </tr>
       <tr>
         <td class="provider-col">AWS App Runner</td>
         <td>Closed to new customers since April 30, 2026. Existing customers only.${figureSourceLinkHtml("https://aws.amazon.com/apprunner/", escHtmlServer)}</td>
@@ -38208,7 +38226,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003; SNS</td>
         <td class="partial">Free (manual warm-up)</td>
         <td><span style="color:#f85149">Volatile</span></td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("amazon-ses", 10)}
       <tr>
         <td class="provider-col">Resend</td>
         <td>Transactional</td>
@@ -38220,7 +38238,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="cross">Pro+ ($80/mo)</td>
         <td><span style="color:#3fb950">Stable</span></td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("resend", 10)}
       <tr>
         <td class="provider-col">Maileroo</td>
         <td>Transactional</td>
@@ -38232,7 +38250,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="cross">Paid</td>
         <td><span style="color:#3fb950">Stable</span></td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("maileroo", 10)}
       <tr>
         <td class="provider-col">Mailtrap</td>
         <td>Transactional + Testing</td>
@@ -38244,7 +38262,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="cross">Paid</td>
         <td><span style="color:#3fb950">Stable</span></td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("mailtrap-io", 10)}
       <tr>
         <td class="provider-col">MailerSend<span class="caution-badge">SHRINKING</span></td>
         <td>Transactional</td>
@@ -38256,7 +38274,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="cross">Paid</td>
         <td><span style="color:#d29922">Watch</span></td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("mailersend-com", 10)}
       <tr>
         <td class="provider-col">Brevo</td>
         <td>All-in-One</td>
@@ -38268,7 +38286,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="cross">Paid</td>
         <td><span style="color:#3fb950">Stable</span></td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("brevo", 10)}
       <tr>
         <td class="provider-col">Mailjet</td>
         <td>All-in-One</td>
@@ -38280,7 +38298,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="cross">Paid</td>
         <td><span style="color:#3fb950">Stable</span></td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("mailjet", 10)}
       <tr>
         <td class="provider-col">Loops</td>
         <td>All-in-One</td>
@@ -38292,7 +38310,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="cross">&#10007;</td>
         <td><span style="color:#3fb950">Stable</span></td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("loops", 10)}
       <tr>
         <td class="provider-col">EmailLabs.io</td>
         <td>All-in-One</td>
@@ -38304,7 +38322,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="cross">Paid</td>
         <td><span style="color:#3fb950">Stable</span></td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("emaillabs-io", 10)}
       <tr>
         <td class="provider-col">Postmark<span class="caution-badge">TEST ONLY</span></td>
         <td>Transactional</td>
@@ -38316,7 +38334,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="cross">$50/mo</td>
         <td><span style="color:#3fb950">Stable</span></td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("postmark", 10)}
       <tr>
         <td class="provider-col">Mailchimp<span class="caution-badge">LIMITED</span></td>
         <td>Marketing</td>
@@ -38328,7 +38346,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="cross">Paid</td>
         <td><span style="color:#d29922">Watch</span></td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("mailchimp", 10)}
       <tr>
         <td class="provider-col">EmailOctopus</td>
         <td>Marketing</td>
@@ -38340,7 +38358,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="cross">&#10007;</td>
         <td><span style="color:#3fb950">Stable</span></td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("emailoctopus", 10)}
       <tr>
         <td class="provider-col">MailerLite<span class="caution-badge">SHRINKING</span></td>
         <td>Marketing</td>
@@ -38352,7 +38370,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="cross">Paid</td>
         <td><span style="color:#d29922">Watch</span></td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("mailerlite-com", 10)}
       <tr>
         <td class="provider-col">Buttondown</td>
         <td>Marketing</td>
@@ -38364,7 +38382,7 @@ ${mcpCtaCss()}
         <td class="cross">&#10007;</td>
         <td class="cross">N/A</td>
         <td><span style="color:#3fb950">Stable</span></td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("buttondown", 10)}
       <tr>
         <td class="provider-col">Substack</td>
         <td>Marketing</td>
@@ -38376,7 +38394,7 @@ ${mcpCtaCss()}
         <td class="cross">&#10007;</td>
         <td class="cross">N/A</td>
         <td><span style="color:#3fb950">Stable</span></td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("substack", 10)}
       <tr>
         <td class="provider-col">SMTP2GO</td>
         <td>Infrastructure</td>
@@ -38400,7 +38418,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="cross">&#10007;</td>
         <td><span style="color:#3fb950">Stable</span></td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("sweego", 10)}
       <tr>
         <td class="provider-col">Plunk</td>
         <td>Transactional</td>
@@ -38412,7 +38430,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="cross">N/A</td>
         <td><span style="color:#3fb950">Stable</span></td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("plunk", 10)}
       <tr>
         <td class="provider-col">AhaSend</td>
         <td>Transactional</td>
@@ -38424,7 +38442,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="cross">&#10007;</td>
         <td><span style="color:#3fb950">Stable</span></td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("ahasend", 10)}
       <tr>
         <td class="provider-col">SendGrid<span class="removed-badge">FREE REMOVED</span></td>
         <td>Transactional</td>
@@ -38658,7 +38676,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("verifalia", 5)}
       <tr>
         <td class="provider-col">Mailcheck.ai</td>
         <td>300/mo</td>
@@ -38672,7 +38690,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("emailvalidation-io", 5)}
     </tbody>
   </table>
   </div>
@@ -39179,7 +39197,7 @@ ${mcpCtaCss()}
         <td class="cross">&#10007; Paid</td>
         <td class="cross">&#10007;</td>
         <td><span style="color:#f85149">High</span></td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("datadog", 11)}
       <tr>
         <td class="provider-col">Grafana Cloud</td>
         <td>10K series + 50GB logs + 50GB traces</td>
@@ -39192,7 +39210,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003; 50GB traces</td>
         <td class="partial">OSS core</td>
         <td><span style="color:#3fb950">Low</span></td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("grafana-cloud", 11)}
       <tr>
         <td class="provider-col">New Relic</td>
         <td>100GB/mo</td>
@@ -39205,7 +39223,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003; Included</td>
         <td class="cross">&#10007;</td>
         <td><span style="color:#d29922">Medium</span></td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("new-relic", 11)}
       <tr>
         <td class="provider-col">Axiom</td>
         <td>500GB/mo ingest</td>
@@ -39218,7 +39236,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003; Traces</td>
         <td class="cross">&#10007;</td>
         <td><span style="color:#d29922">Medium</span></td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("axiom", 11)}
       <tr>
         <td class="provider-col">Sematext</td>
         <td>500MB/day logs</td>
@@ -39231,7 +39249,7 @@ ${mcpCtaCss()}
         <td class="partial">Basic</td>
         <td class="cross">&#10007;</td>
         <td><span style="color:#d29922">Medium</span></td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("sematext", 11)}
       <tr>
         <td class="provider-col">Middleware.io</td>
         <td>1 host</td>
@@ -39244,7 +39262,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="cross">&#10007;</td>
         <td><span style="color:#d29922">Medium</span></td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("middleware-io", 11)}
       <tr>
         <td class="provider-col">BetterStack</td>
         <td>3 GB logs</td>
@@ -39257,7 +39275,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003; 3GB traces</td>
         <td class="cross">&#10007;</td>
         <td><span style="color:#3fb950">Low</span></td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("betterstack", 11)}
       <tr>
         <td class="provider-col">Sentry</td>
         <td>5K errors/mo + 50 replays</td>
@@ -39270,7 +39288,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003; Performance</td>
         <td class="partial">Self-hosted</td>
         <td><span style="color:#3fb950">Low</span></td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("sentry", 11)}
       <tr>
         <td class="provider-col">AppSignal</td>
         <td>100K requests</td>
@@ -39283,7 +39301,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="cross">&#10007;</td>
         <td><span style="color:#3fb950">Low</span></td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("appsignal", 11)}
       <tr>
         <td class="provider-col">UptimeRobot</td>
         <td>N/A</td>
@@ -39296,7 +39314,7 @@ ${mcpCtaCss()}
         <td class="cross">&#10007;</td>
         <td class="cross">&#10007;</td>
         <td><span style="color:#3fb950">Low</span></td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("uptimerobot", 11)}
       <tr>
         <td class="provider-col">StatusCake</td>
         <td>N/A</td>
@@ -39309,7 +39327,7 @@ ${mcpCtaCss()}
         <td class="cross">&#10007;</td>
         <td class="cross">&#10007;</td>
         <td><span style="color:#3fb950">Low</span></td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("statuscake", 11)}
       <tr>
         <td class="provider-col">PagerDuty</td>
         <td>N/A</td>
@@ -39322,7 +39340,7 @@ ${mcpCtaCss()}
         <td class="cross">&#10007;</td>
         <td class="cross">&#10007;</td>
         <td><span style="color:#d29922">Medium</span></td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("pagerduty", 11)}
       <tr>
         <td class="provider-col">incident.io</td>
         <td>N/A</td>
@@ -39335,7 +39353,7 @@ ${mcpCtaCss()}
         <td class="cross">&#10007;</td>
         <td class="cross">&#10007;</td>
         <td><span style="color:#3fb950">Low</span></td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("incident-io", 11)}
       <tr>
         <td class="provider-col">Healthchecks.io</td>
         <td>N/A</td>
@@ -39348,7 +39366,7 @@ ${mcpCtaCss()}
         <td class="cross">&#10007;</td>
         <td class="partial">Self-hosted</td>
         <td><span style="color:#3fb950">Low</span></td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("healthchecks-io", 11)}
       <tr>
         <td class="provider-col">Cronitor</td>
         <td>N/A</td>
@@ -39361,7 +39379,7 @@ ${mcpCtaCss()}
         <td class="cross">&#10007;</td>
         <td class="cross">&#10007;</td>
         <td><span style="color:#3fb950">Low</span></td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("cronitor", 11)}
       <tr>
         <td class="provider-col">Prometheus</td>
         <td>Unlimited</td>
@@ -39374,7 +39392,7 @@ ${mcpCtaCss()}
         <td class="cross">&#10007;</td>
         <td class="check">&#10003;</td>
         <td><span style="color:#3fb950">None</span></td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("prometheus", 11)}
       <tr>
         <td class="provider-col">Jaeger</td>
         <td>Unlimited</td>
@@ -39387,7 +39405,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003; Tracing</td>
         <td class="check">&#10003;</td>
         <td><span style="color:#3fb950">None</span></td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("jaeger", 11)}
       <tr>
         <td class="provider-col">Netdata</td>
         <td>Unlimited</td>
@@ -39400,7 +39418,7 @@ ${mcpCtaCss()}
         <td class="cross">&#10007;</td>
         <td class="check">&#10003;</td>
         <td><span style="color:#3fb950">None</span></td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("netdata-cloud", 11)}
       <tr>
         <td class="provider-col">Elastic (ELK)<span class="winner-badge">OPEN SOURCE</span></td>
         <td>Unlimited (self-hosted)</td>
@@ -39426,7 +39444,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003; OpenTelemetry</td>
         <td class="check">&#10003;</td>
         <td><span style="color:#3fb950">None</span></td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("signoz", 11)}
       <tr>
         <td class="provider-col">HyperDX</td>
         <td>Unlimited (self-hosted)</td>
@@ -39452,7 +39470,7 @@ ${mcpCtaCss()}
         <td class="cross">&#10007;</td>
         <td class="cross">&#10007;</td>
         <td><span style="color:#3fb950">Low</span></td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("checkly", 11)}
       <tr>
         <td class="provider-col">Rollbar</td>
         <td>5K events/mo</td>
@@ -39465,7 +39483,7 @@ ${mcpCtaCss()}
         <td class="cross">&#10007;</td>
         <td class="cross">&#10007;</td>
         <td><span style="color:#3fb950">Low</span></td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("rollbar", 11)}
       <tr>
         <td class="provider-col">Bugsnag</td>
         <td>7.5K events/mo</td>
@@ -39478,7 +39496,7 @@ ${mcpCtaCss()}
         <td class="partial">Performance</td>
         <td class="cross">&#10007;</td>
         <td><span style="color:#3fb950">Low</span></td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("bugsnag", 11)}
     </tbody>
   </table>
   </div>
@@ -39596,7 +39614,7 @@ ${mcpCtaCss()}
         <td>Email, Slack</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("hyperping", 6)}
       <tr>
         <td class="provider-col">Pulsetic</td>
         <td>10</td>
@@ -39604,7 +39622,7 @@ ${mcpCtaCss()}
         <td>Email</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("pulsetic", 6)}
       <tr>
         <td class="provider-col">Pingbreak</td>
         <td>3</td>
@@ -39612,7 +39630,7 @@ ${mcpCtaCss()}
         <td>Email, webhook</td>
         <td class="cross">&#10007;</td>
         <td class="cross">&#10007;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("pingbreak-com", 6)}
       <tr>
         <td class="provider-col">OnlineOrNot</td>
         <td>5</td>
@@ -39620,7 +39638,7 @@ ${mcpCtaCss()}
         <td>Email, Slack</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("onlineornot", 6)}
       <tr>
         <td class="provider-col">Checkly</td>
         <td>5 browser + 10 API</td>
@@ -39688,13 +39706,13 @@ ${mcpCtaCss()}
         <td class="cross">&#10007;</td>
       </tr>
       <tr>
-        <td class="provider-col">Dead Man's Snitch</td>
+        <td class="provider-col"><a href="/vendor/deadmanssnitch-com" style="color:var(--text)">Dead Man's Snitch</a></td>
         <td>1</td>
         <td>1</td>
         <td>Email</td>
         <td class="check">&#10003;</td>
         <td class="cross">&#10007;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("deadmanssnitch-com", 6)}
     </tbody>
   </table>
   </div>
@@ -40551,7 +40569,7 @@ ${mcpCtaCss()}
 
   <div class="diff-card">
     <h3>Netlify Blobs</h3>
-    <div class="diff-desc"><strong>Free tier:</strong> Included in Netlify&rsquo;s free plan. Key-value blob storage for Netlify sites and functions. Not general-purpose object storage. Best for Netlify-hosted Jamstack sites needing simple data persistence.</div>
+    <div class="diff-desc"><strong>Free tier:</strong> Included in Netlify&rsquo;s free plan. Key-value blob storage for Netlify sites and functions. Not general-purpose object storage. Best for Netlify-hosted Jamstack sites needing simple data persistence.</div>${vendorPageConditionsHtmlForSlug("netlify")}
   </div>
 
   <h2 id="self-hosted">Self-Hosted &amp; Open Source</h2>
@@ -41654,7 +41672,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003; EU hosting</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("posthog", 9)}
       <tr>
         <td class="provider-col">Mixpanel</td>
         <td>1M events/mo</td>
@@ -41665,7 +41683,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003; EU residency</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("mixpanel", 9)}
       <tr>
         <td class="provider-col">Amplitude</td>
         <td>2M events/mo</td>
@@ -41676,7 +41694,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("amplitude", 9)}
       <tr>
         <td class="provider-col">Google Analytics<span class="caution-badge">PRIVACY TRADE-OFF</span></td>
         <td>Unlimited</td>
@@ -41687,9 +41705,9 @@ ${mcpCtaCss()}
         <td class="cross">&#10007; Data shared</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("google-analytics", 9)}
       <tr>
-        <td class="provider-col">Heap (Contentsquare)</td>
+        <td class="provider-col"><a href="/vendor/heap-io" style="color:var(--text)">Heap (Contentsquare)</a></td>
         <td>10K sessions/mo</td>
         <td class="check">&#10003; Included</td>
         <td class="cross">&#10007;</td>
@@ -41698,7 +41716,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("heap-io", 9)}
       <tr>
         <td class="provider-col">June.so</td>
         <td>1K MAUs</td>
@@ -41711,7 +41729,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
       </tr>
       <tr>
-        <td class="provider-col">Plausible</td>
+        <td class="provider-col"><a href="/vendor/plausible-analytics" style="color:var(--text)">Plausible</a></td>
         <td>Self-hosted: unlimited</td>
         <td class="cross">&#10007;</td>
         <td class="cross">&#10007;</td>
@@ -41720,7 +41738,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003; No cookies</td>
         <td class="partial">&#9679; Self-hosted only</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("plausible-analytics", 9)}
       <tr>
         <td class="provider-col">Umami</td>
         <td>Cloud: 100K events/mo</td>
@@ -41731,7 +41749,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003; No cookies</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("umami", 9)}
       <tr>
         <td class="provider-col">Fathom</td>
         <td>No free tier</td>
@@ -41887,7 +41905,7 @@ ${mcpCtaCss()}
         <td>Simple GA alternative</td>
       </tr>
       <tr>
-        <td class="provider-col">Plausible CE</td>
+        <td class="provider-col"><a href="/vendor/plausible-analytics" style="color:var(--text)">Plausible CE</a></td>
         <td>AGPL v3</td>
         <td>Web analytics</td>
         <td class="cross">&#10007;</td>
@@ -42337,7 +42355,7 @@ ${mcpCtaCss()}
         <td class="cross">&#10007;</td>
         <td class="partial">&#9679; Limited</td>
         <td class="cross">&#10007;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("postman", 9)}
       <tr>
         <td class="provider-col">Bruno</td>
         <td>Unlimited (OSS)</td>
@@ -42348,7 +42366,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="check">&#10003; Full</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("bruno", 9)}
       <tr>
         <td class="provider-col">Hoppscotch</td>
         <td>1 user cloud free, unlimited requests</td>
@@ -42359,7 +42377,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
         <td class="partial">&#9679; Desktop only</td>
         <td class="partial">&#9679; Via export</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("hoppscotch", 9)}
       <tr>
         <td class="provider-col">Insomnia</td>
         <td>1 user free, local storage</td>
@@ -42370,7 +42388,7 @@ ${mcpCtaCss()}
         <td class="cross">&#10007;</td>
         <td class="check">&#10003; Full</td>
         <td class="partial">&#9679; Via export</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("insomnia", 9)}
       <tr>
         <td class="provider-col">Thunder Client</td>
         <td>Free tier with collection limits</td>
@@ -42381,7 +42399,7 @@ ${mcpCtaCss()}
         <td class="cross">&#10007;</td>
         <td class="check">&#10003; Full</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("thunder-client", 9)}
       <tr>
         <td class="provider-col">Apidog</td>
         <td>Free plan, team collaboration, API design + testing</td>
@@ -42392,7 +42410,7 @@ ${mcpCtaCss()}
         <td class="cross">&#10007;</td>
         <td class="partial">&#9679; Limited</td>
         <td class="cross">&#10007;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("apidog", 9)}
       <tr>
         <td class="provider-col">Yaak</td>
         <td>Unlimited (OSS)</td>
@@ -42436,7 +42454,7 @@ ${mcpCtaCss()}
         <td class="cross">&#10007;</td>
         <td class="cross">&#10007;</td>
         <td class="check">&#10003;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("stoplight", 9)}
       <tr>
         <td class="provider-col">Mockoon</td>
         <td>Unlimited (OSS)</td>
@@ -42458,7 +42476,7 @@ ${mcpCtaCss()}
         <td class="cross">&#10007;</td>
         <td class="cross">&#10007;</td>
         <td class="cross">&#10007;</td>
-      </tr>
+      </tr>${vendorPageConditionsRowHtml("rapidapi", 9)}
     </tbody>
   </table>
   </div>

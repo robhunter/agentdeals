@@ -316,7 +316,7 @@ describe("a page may only name the source it actually reads", () => {
       }
     }
     assert.deepStrictEqual(overreaching, []);
-    assertPopulationFloor(scoped, 21, "registered pages whose credited figures all sit in one of several tables");
+    assertPopulationFloor(scoped, 20, "registered pages whose credited figures all sit in one of several tables");
   });
 
   it("names a table the served page lays out under that heading, so the byline cannot point at nothing", () => {
@@ -510,7 +510,7 @@ describe("a page may only name the source it actually reads", () => {
     );
     assertPopulationFloor(
       everySentinelOutsideTables.length,
-      8,
+      7,
       "pages the catalogue reaches only outside their tables that print perturbed catalogue text there"
     );
   });

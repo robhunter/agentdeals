@@ -228,32 +228,7 @@ const PAGES_WHOSE_ROWS_ARE_NOT_ABOUT_A_VENDORS_TERMS = [
   /^\/state-of-free-tiers$/,
   /^\/x402-services$/,
   /^\/agent-payments$/,
-];
-
-const GUIDES_NOT_YET_PRINTING_CONDITIONS = [
-  "/ai-coding-tools-pricing",
-  "/analytics-alternatives",
-  "/analytics-free-tier-comparison-2026",
-  "/api-development-alternatives",
-  "/api-development-free-tier-comparison-2026",
-  "/aws-app-runner-migration",
-  "/cloud-free-tier-comparison-2026",
-  "/datadog-vs-new-relic",
-  "/email-alternatives",
-  "/email-comparison-2026",
-  "/firebase-studio-shutdown",
-  "/free-tier-facts-ai-models-get-wrong",
-  "/google-developer-program-2026",
-  "/heroku-alternatives",
-  "/hosting-alternatives",
-  "/monitoring-comparison-2026",
-  "/neon-vs-supabase",
-  "/project-management-alternatives",
-  "/railway-vs-render",
-  "/supabase-vs-firebase",
-  "/team-collaboration-alternatives",
-  "/vercel-alternatives",
-  "/vercel-vs-netlify",
+  /^\/free-tier-facts-ai-models-get-wrong$/,
 ];
 
 function coveredByThisTest(route: string): boolean {
@@ -321,7 +296,9 @@ function piecesOf(html: string): Piece[] {
         const [, colspan, list] = row[2]!.match(CONDITIONS_CELL) ?? [];
         pieces.push({ kind: "conditions", colspan: Number(colspan), columns, list: (list ?? "").trim(), at });
       } else {
-        pieces.push({ kind: "row", subject: subjectOfRow(row[2]!), at });
+        const subject = subjectOfRow(row[2]!);
+        if (subject && conditionLists(row[2]!).length > 0) pieces.push({ kind: "listed in full", slug: subject, at });
+        pieces.push({ kind: "row", subject, at });
       }
     }
   }
@@ -391,6 +368,12 @@ function rowsNamedWithoutALink(html: string): string[] {
   return [...named];
 }
 
+function cardsLinkingNoListingThatPrintAList(html: string): string[] {
+  return [...html.matchAll(VENDOR_CARD)]
+    .filter((card) => !VENDOR_PAGE_LINK.test(card[1]!) && conditionLists(card[3]!).length > 0)
+    .map((card) => card[1]!.split("<")[0]!.trim());
+}
+
 async function vendorPageStatus(base: string, slug: string, memo: Map<string, number>): Promise<number> {
   if (!memo.has(slug)) memo.set(slug, (await fetch(`${base}/vendor/${slug}`, { redirect: "manual" })).status);
   return memo.get(slug)!;
@@ -400,6 +383,7 @@ interface GuideReading {
   route: string;
   layout: GuideLayout;
   rowsNamedWithoutALink: string[];
+  cardsLinkingNoListingThatPrintAList: string[];
   lists: number;
   carriesAnEmptyConditionsRow: boolean;
   tokens: string[];
@@ -414,6 +398,7 @@ async function readGuides(base: string, routes: string[]): Promise<GuideReading[
         route,
         layout: layoutOf(html),
         rowsNamedWithoutALink: rowsNamedWithoutALink(html),
+        cardsLinkingNoListingThatPrintAList: cardsLinkingNoListingThatPrintAList(html),
         lists: conditionLists(html).length,
         carriesAnEmptyConditionsRow: html.includes(CONDITIONS_ROW_ATTRIBUTE),
         tokens: html.match(ANY_TOKEN) ?? [],
@@ -423,34 +408,55 @@ async function readGuides(base: string, routes: string[]): Promise<GuideReading[
   return readings;
 }
 
-async function placementsNotMatchingTheirVendorPage(base: string, readings: GuideReading[]): Promise<string[]> {
-  const memo = new Map<string, VendorPageList>();
-  const wrong: string[] = [];
-  for (const { route, layout } of readings) {
-    for (const placement of layout.placements) {
-      const onTheVendorPage = await listTheVendorPagePrints(base, placement.slug, memo);
-      const expected = endedSlugs.has(placement.slug) ? "" : onTheVendorPage.list;
-      const acceptable = onTheVendorPage.landsOnAnotherListing ? [expected, ""] : [expected];
-      if (!acceptable.includes(placement.printed)) {
-        wrong.push(`${route}, ${placement.where}: printed ${placement.printed.slice(0, 160) || "nothing"}; its vendor page lists ${expected.slice(0, 160) || "nothing"}`);
-      }
-    }
-  }
-  return wrong;
-}
-
 const PRODUCT_ROWS_THEIR_PARENTS_CONDITIONS_COVER = [
   { route: "/storage-comparison-2026", row: "supabase-storage", parent: "supabase" },
   { route: "/storage-comparison-2026", row: "vercel-blob", parent: "vercel" },
 ];
 
-const PRODUCT_ROWS_THEIR_PARENTS_CONDITIONS_DO_NOT_COVER = [
-  { route: "/storage-comparison-2026", row: "firebase-storage", parent: "firebase" },
+const PRODUCT_CARDS_THEIR_PARENTS_CONDITIONS_COVER = [
+  { route: "/storage-comparison-2026", card: "Netlify Blobs", parent: "netlify" },
+  { route: "/startup-credits", card: "DigitalOcean Startups", parent: "digitalocean" },
+];
+
+const PRODUCT_CARDS_THEIR_PARENTS_CONDITIONS_DO_NOT_COVER = [
+  { route: "/storage-comparison-2026", card: "DigitalOcean Spaces", parent: "digitalocean" },
+];
+
+function listsInTheCardHeaded(html: string, heading: string): string {
+  const cards = [...html.matchAll(VENDOR_CARD)].filter((card) => card[1]!.split("<")[0]!.trim() === heading);
+  assert.strictEqual(cards.length, 1, `one ${heading} card`);
+  return conditionLists(cards[0]![3]!).join("");
+}
+
+const ROWS_THEIR_LISTINGS_CONDITIONS_DO_NOT_DESCRIBE = [
+  { route: "/storage-comparison-2026", row: "firebase-storage", listing: "firebase" },
+  { route: "/aws-app-runner-migration", row: "digitalocean", listing: "digitalocean" },
+  { route: "/email-alternatives", row: "sendgrid", listing: "sendgrid" },
+  { route: "/email-comparison-2026", row: "sendgrid", listing: "sendgrid" },
 ];
 
 const ROWS_NAMING_NO_LISTING = [
+  { route: "/analytics-free-tier-comparison-2026", row: "countly" },
+  { route: "/analytics-free-tier-comparison-2026", row: "fathom" },
+  { route: "/analytics-free-tier-comparison-2026", row: "june-so" },
+  { route: "/analytics-free-tier-comparison-2026", row: "matomo" },
+  { route: "/analytics-free-tier-comparison-2026", row: "pirsch" },
+  { route: "/analytics-free-tier-comparison-2026", row: "simple-analytics" },
+  { route: "/api-development-free-tier-comparison-2026", row: "httpie" },
+  { route: "/api-development-free-tier-comparison-2026", row: "scalar" },
+  { route: "/api-development-free-tier-comparison-2026", row: "yaak" },
   { route: "/auth-comparison-2026", row: "authelia" },
+  { route: "/cloud-free-tier-comparison-2026", row: "gcp" },
+  { route: "/email-comparison-2026", row: "best-dx-modern-stack" },
+  { route: "/email-comparison-2026", row: "email-testing-staging" },
+  { route: "/email-comparison-2026", row: "mailcheck-ai" },
+  { route: "/email-comparison-2026", row: "mailgun" },
+  { route: "/email-comparison-2026", row: "marketing-transactional" },
+  { route: "/email-comparison-2026", row: "self-hosted-oss-hedge" },
+  { route: "/email-comparison-2026", row: "side-project-transactional" },
+  { route: "/email-comparison-2026", row: "smtp2go" },
   { route: "/hosting-free-tier-comparison-2026", row: "heroku" },
+  { route: "/monitoring-comparison-2026", row: "hyperdx" },
   { route: "/storage-comparison-2026", row: "bunnycdn" },
   { route: "/storage-comparison-2026", row: "keycdn" },
   { route: "/storage-comparison-2026", row: "uploadthing" },
@@ -458,6 +464,38 @@ const ROWS_NAMING_NO_LISTING = [
 
 function namesNoListing(route: string, row: string): boolean {
   return ROWS_NAMING_NO_LISTING.some((listed) => listed.route === route && listed.row === row);
+}
+
+const ROWS_UNDER_A_VENDORS_FORMER_NAME = [
+  { route: "/firebase-studio-shutdown", row: "codesandbox", listing: "codesandbox-io" },
+  { route: "/firebase-studio-shutdown", row: "stackblitz", listing: "stackblitz-com" },
+  { route: "/firebase-studio-shutdown", row: "v0", listing: "v0-dev" },
+  { route: "/email-comparison-2026", row: "mailtrap", listing: "mailtrap-io" },
+  { route: "/email-comparison-2026", row: "mailersend", listing: "mailersend-com" },
+  { route: "/email-comparison-2026", row: "mailerlite", listing: "mailerlite-com" },
+  { route: "/monitoring-comparison-2026", row: "netdata", listing: "netdata-cloud" },
+  { route: "/monitoring-comparison-2026", row: "pingbreak", listing: "pingbreak-com" },
+  { route: "/team-collaboration-alternatives", row: "slack-api", listing: "slack" },
+];
+
+function listingsConditionsDoNotDescribe(route: string, slug: string): boolean {
+  return ROWS_THEIR_LISTINGS_CONDITIONS_DO_NOT_DESCRIBE.some((listed) => listed.route === route && listed.row === slug);
+}
+
+async function placementsNotMatchingTheirVendorPage(base: string, readings: GuideReading[]): Promise<string[]> {
+  const memo = new Map<string, VendorPageList>();
+  const wrong: string[] = [];
+  for (const { route, layout } of readings) {
+    for (const placement of layout.placements) {
+      const onTheVendorPage = await listTheVendorPagePrints(base, placement.slug, memo);
+      const expected = endedSlugs.has(placement.slug) ? "" : onTheVendorPage.list;
+      const acceptable = onTheVendorPage.landsOnAnotherListing || listingsConditionsDoNotDescribe(route, placement.slug) ? [expected, ""] : [expected];
+      if (!acceptable.includes(placement.printed)) {
+        wrong.push(`${route}, ${placement.where}: printed ${placement.printed.slice(0, 160) || "nothing"}; its vendor page lists ${expected.slice(0, 160) || "nothing"}`);
+      }
+    }
+  }
+  return wrong;
 }
 
 function placementOf(html: string, slug: string): Placement {
@@ -469,7 +507,7 @@ function placementOf(html: string, slug: string): Placement {
 async function parentListOf(base: string, row: string, parent: string, memo: Map<string, VendorPageList>): Promise<string> {
   const viaTheRow = await listTheVendorPagePrints(base, row, memo);
   const parents = await listTheVendorPagePrints(base, parent, memo);
-  assert.ok(viaTheRow.landsOnAnotherListing && viaTheRow.list === parents.list, `/vendor/${row} lands on /vendor/${parent}`);
+  assert.ok(row === parent || (viaTheRow.landsOnAnotherListing && viaTheRow.list === parents.list), `/vendor/${row} lands on /vendor/${parent}`);
   assert.notStrictEqual(parents.list, "", `/vendor/${parent} lists conditions`);
   return parents.list;
 }
@@ -485,7 +523,7 @@ function readingsOn(base: string): Promise<GuideReading[]> {
 describe("every guide that compares vendors prints each vendor's conditions of use beside its card or row, as its vendor page lists them", () => {
   before(async () => {
     const published = await everyRouteTheSitemapPublishes(conditioned.base);
-    routesCovered = published.filter(coveredByThisTest).filter((route) => !GUIDES_NOT_YET_PRINTING_CONDITIONS.includes(route)).sort();
+    routesCovered = published.filter(coveredByThisTest).sort();
   });
 
   it("prints every vendor's list once: in its card where the guide has one, else after the first table row that names it", async () => {
@@ -520,10 +558,38 @@ describe("every guide that compares vendors prints each vendor's conditions of u
     }
   });
 
-  it("prints no conditions after a product row its parent listing's conditions do not cover", async () => {
+  it("prints the parent listing's conditions in a product card they cover, and none in a product card they do not", async () => {
     const memo = new Map<string, VendorPageList>();
-    for (const { route, row, parent } of PRODUCT_ROWS_THEIR_PARENTS_CONDITIONS_DO_NOT_COVER) {
-      await parentListOf(conditioned.base, row, parent, memo);
+    for (const { route, card, parent } of PRODUCT_CARDS_THEIR_PARENTS_CONDITIONS_COVER) {
+      const { list } = await listTheVendorPagePrints(conditioned.base, parent, memo);
+      assert.notStrictEqual(list, "", `/vendor/${parent} lists conditions`);
+      assert.strictEqual(listsInTheCardHeaded(await page(conditioned.base, route), card), list, `${route}, the ${card} card`);
+    }
+    for (const { route, card, parent } of PRODUCT_CARDS_THEIR_PARENTS_CONDITIONS_DO_NOT_COVER) {
+      assert.notStrictEqual((await listTheVendorPagePrints(conditioned.base, parent, memo)).list, "", `/vendor/${parent} lists conditions`);
+      assert.strictEqual(listsInTheCardHeaded(await page(conditioned.base, route), card), "", `${route}, the ${card} card`);
+    }
+  });
+
+  it("prints a list in a card that links no listing only where a parent listing's conditions are listed as covering it", async () => {
+    const named = ({ route, card }: { route: string; card: string }) => `${route}: the ${card} card`;
+    const printing = (await readingsOn(conditioned.base)).flatMap(({ route, cardsLinkingNoListingThatPrintAList }) =>
+      cardsLinkingNoListingThatPrintAList.map((card) => named({ route, card })));
+    assert.deepStrictEqual(printing.sort(), PRODUCT_CARDS_THEIR_PARENTS_CONDITIONS_COVER.map(named).sort());
+  });
+
+  it("prints the conditions of the listing a vendor's former name lands on after a row under that name", async () => {
+    const memo = new Map<string, VendorPageList>();
+    for (const { route, row, listing } of ROWS_UNDER_A_VENDORS_FORMER_NAME) {
+      const list = await parentListOf(conditioned.base, row, listing, memo);
+      assert.strictEqual(placementOf(await page(conditioned.base, route), row).printed, list, `${route}, the ${row} row`);
+    }
+  });
+
+  it("prints no conditions after a row whose listing's conditions do not describe what the row compares", async () => {
+    const memo = new Map<string, VendorPageList>();
+    for (const { route, row, listing } of ROWS_THEIR_LISTINGS_CONDITIONS_DO_NOT_DESCRIBE) {
+      await parentListOf(conditioned.base, row, listing, memo);
       assert.strictEqual(placementOf(await page(conditioned.base, route), row).printed, "", `${route}, the ${row} row`);
     }
   });
@@ -564,14 +630,5 @@ describe("every guide that compares vendors prints each vendor's conditions of u
       assert.deepStrictEqual(tokens.filter((token) => withheld.includes(token)), [], route);
     }
     assert.deepStrictEqual(await placementsNotMatchingTheirVendorPage(superseded.base, readings), []);
-  });
-
-  it("names only published guides as not yet printing conditions, and each still leaves a vendor's out", async () => {
-    const published = new Set(await everyRouteTheSitemapPublishes(conditioned.base));
-    const stillMissing = await placementsNotMatchingTheirVendorPage(conditioned.base, await readGuides(conditioned.base, GUIDES_NOT_YET_PRINTING_CONDITIONS));
-    for (const guide of GUIDES_NOT_YET_PRINTING_CONDITIONS) {
-      assert.ok(published.has(guide) && coveredByThisTest(guide), `${guide} is not a published guide this test would read`);
-      assert.ok(stillMissing.some((line) => line.startsWith(`${guide}, `)), `${guide} prints every vendor's conditions now; take it off the list`);
-    }
   });
 });
