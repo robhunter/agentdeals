@@ -5882,10 +5882,10 @@
     {
       "vendor": "fivenines.io",
       "change_type": "free_tier_removed",
-      "date": "2026-08-28",
-      "date_source": "discovered",
-      "summary": "The page now highlights a 14-day free trial and a starting plan at €19/month.",
-      "previous_state": "Linux server monitoring with real‑time dashboards and alerting — free forever for up to 5 monitored servers at 60-seconds interval. No credit card required.",
+      "date": "2026-05-15",
+      "date_source": "hand_written",
+      "summary": "fivenines.io removed its Free plan (5 monitors, 1 team member, 1 month of data retention) between the archived copies of its site from 2026-05-13 and 2026-05-15. Paid plans now start at €19 a month, with a 14-day free trial.",
+      "previous_state": "Free: €0 a month, forever free. 5 monitors, 1 team member, 1 month of data retention. No credit card required.",
       "current_state": "The page promotes a 14-day free trial and a paid plan starting at €19/month. It does not mention a permanently free tier for up to 5 servers.",
       "impact": "high",
       "source_url": "https://fivenines.io/",
@@ -5894,14 +5894,14 @@
       "detected_by": "reverify-ai",
       "recorded_date": "2026-08-28",
       "archive_check": {
-        "checked": "2026-10-03",
+        "checked": "2026-10-07",
         "outcome": "vendor_changed",
         "brackets": [
           {
-            "last_old": "2026-05-10",
-            "first_new": "2026-05-13",
-            "last_old_capture": "https://web.archive.org/web/20260510190024/https://fivenines.io/",
-            "first_new_capture": "https://web.archive.org/web/20260513093138/https://fivenines.io/"
+            "last_old": "2026-05-13",
+            "first_new": "2026-05-15",
+            "last_old_capture": "https://web.archive.org/web/20260513093138/https://fivenines.io/",
+            "first_new_capture": "https://web.archive.org/web/20260515084757/https://fivenines.io/"
           }
         ]
       }
@@ -6793,9 +6793,9 @@
       "change_type": "limits_reduced",
       "date": "2026-08-19",
       "date_source": "discovered",
-      "summary": "The free tier now allows only 1 project and a maximum of 5 users. Previously 3 projects and 20 users.",
-      "previous_state": "To-do lists, milestone management, forum-like messaging, file sharing, and time tracking. Up to 3 projects, 20 users, and 1GB of storage space.",
-      "current_state": "Free plan includes 1 project, 1 GB of storage space, and a maximum of 5 users.",
+      "summary": "Basecamp cut its free plan from up to 20 users to 5, and now offers it as one free project for personal use. It still has 1 project and 1 GB of storage.",
+      "previous_state": "Run 1 project free forever. Includes 1 GB of storage and up to 20 users.",
+      "current_state": "Free: one free project for personal use. 1 project, 1 GB storage space, 5 users max.",
       "impact": "high",
       "source_url": "https://basecamp.com/personal",
       "category": "Project Management",
@@ -7667,6 +7667,12 @@
             "first_new_capture": "https://web.archive.org/web/20260721184802/https://www.augmentcode.com/pricing"
           }
         ]
+      },
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-10-07",
+        "detail": "Retracted 2026-10-07: describes no change to a free tier. The Internet Archive's copy of augmentcode.com/pricing from 2026-03-12 lists no free plan (Indie $20, Standard $60 and Max $200 a month), nor do its copies of 2025-09-14 and 2025-12-16, and this record's own previous state reads \"No free tier\". What changed between 2026-03-12 and 2026-07-21 was the paid plans.",
+        "source_url": "https://web.archive.org/web/20260312065818/https://www.augmentcode.com/pricing"
       }
     },
     {
@@ -10386,8 +10392,8 @@
       "change_type": "free_tier_removed",
       "date": "2026-09-03",
       "date_source": "discovered",
-      "summary": "The free tier no longer exists. The lowest tier is 'Starter' at $667/month, offering 100,000 component checkpoints or 1,000 page checkpoints.",
-      "previous_state": "Free tier: 50 Test Units per month, unlimited users. AI-powered Visual AI testing to detect meaningful visual differences while ignoring acceptable rendering variations. Supports Playwright, Cypress, Selenium, Storybook. No credit card required.",
+      "summary": "The free Eyes plan no longer exists: the Internet Archive's copy of the pricing page from 2025-08-12 lists it, and its copy of 2026-01-31 does not. The lowest tier is 'Starter' at $667/month, offering 100,000 component checkpoints or 1,000 page checkpoints.",
+      "previous_state": "Eyes Free: $0, 1 user, 50 pages (comparable to 50,000 checkpoints), unlimited test executions.",
       "current_state": "The Starter plan costs $667 / mo (paid annually) and includes Unlimited users, 100,000 component checkpoints or 1,000 page checkpoints.",
       "impact": "high",
       "source_url": "https://applitools.com/platform-pricing/",
@@ -10396,14 +10402,14 @@
       "detected_by": "reverify-ai",
       "recorded_date": "2026-09-03",
       "archive_check": {
-        "checked": "2026-10-02",
+        "checked": "2026-10-07",
         "outcome": "vendor_changed",
         "brackets": [
           {
-            "last_old": "2026-05-26",
-            "first_new": "2026-09-06",
-            "last_old_capture": "https://web.archive.org/web/20260526051118/https://applitools.com/platform-pricing/",
-            "first_new_capture": "https://web.archive.org/web/20260906053905/https://applitools.com/platform-pricing/"
+            "last_old": "2025-08-12",
+            "first_new": "2026-01-31",
+            "last_old_capture": "https://web.archive.org/web/20250812090722/https://applitools.com/platform-pricing/",
+            "first_new_capture": "https://web.archive.org/web/20260131023803/https://applitools.com/platform-pricing/"
           }
         ]
       }
@@ -15742,6 +15748,48 @@
       "category": "API Gateway",
       "alternatives": [],
       "recorded_date": "2026-10-06",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "fivenines.io",
+      "change_type": "record_corrected",
+      "date": "2026-10-07",
+      "summary": "Data correction - fivenines.io's free plan ended between the Internet Archive's copies of 2026-05-13 and 2026-05-15, not between 2026-05-10 and 2026-05-13: the copy of 2026-05-13 still lists the Free plan. The record is dated 2026-05-15, not 2026-08-28, the day our re-read found it.",
+      "previous_state": "Recorded 2026-08-28 from fivenines.io, archive bracket 2026-05-10 to 2026-05-13",
+      "current_state": "Dated 2026-05-15 from the archived copies of 2026-05-13 and 2026-05-15",
+      "impact": "low",
+      "source_url": "https://web.archive.org/web/20260515084757/https://fivenines.io/",
+      "category": "Monitoring",
+      "alternatives": [],
+      "recorded_date": "2026-10-07",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Applitools Eyes",
+      "change_type": "record_corrected",
+      "date": "2026-10-07",
+      "summary": "Data correction - Applitools' free Eyes plan ended between the Internet Archive's copies of 2025-08-12 and 2026-01-31, not between 2026-05-26 and 2026-09-06: the copy of 2026-05-26 lists no free plan.",
+      "previous_state": "Archive bracket 2026-05-26 to 2026-09-06",
+      "current_state": "Archive bracket 2025-08-12 to 2026-01-31",
+      "impact": "low",
+      "source_url": "https://web.archive.org/web/20250812090722/https://applitools.com/platform-pricing/",
+      "category": "Testing",
+      "alternatives": [],
+      "recorded_date": "2026-10-07",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Basecamp",
+      "change_type": "record_corrected",
+      "date": "2026-10-07",
+      "summary": "Data correction - Basecamp's free plan had 1 project before its 2026-08-19 change, not 3: the Internet Archive's copy of 2026-08-16 reads \"Run 1 project free forever. Includes 1 GB of storage and up to 20 users.\" Only the user limit fell, from 20 to 5.",
+      "previous_state": "Before state: 3 projects and 20 users",
+      "current_state": "Before state: 1 project and 20 users",
+      "impact": "low",
+      "source_url": "https://web.archive.org/web/20260816012047/https://basecamp.com/pricing",
+      "category": "Project Management",
+      "alternatives": [],
+      "recorded_date": "2026-10-07",
       "date_source": "hand_written"
     }
   ]
