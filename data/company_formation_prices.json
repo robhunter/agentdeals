@@ -1,0 +1,602 @@
+{
+  "published": "2026-10-08",
+  "title": "Forming a US Company in 2026: Costs and Changes",
+  "meta_description": "Firstbase Start costs $99 under an offer plus a required $299-a-year agent. Stripe pays the $500 Atlas fee back for a $5,000 Treasury deposit. Delaware's LLC tax is $400.",
+  "lead": "Firstbase Start costs $99 under a current offer (listed at $399), plus the state fee and a required registered agent at $299 a year. Stripe Atlas costs $500, including Delaware's filing fee and the first year of registered agent service, and Stripe pays the $500 back when the company deposits $5,000 in a Stripe Treasury account within 90 days of incorporating and keeps it there 30 days. No ZenBusiness package includes a registered agent. Delaware's annual LLC tax is $400 since 2026-01-01.",
+  "read_line": "Prices read on each provider's own pages, and Delaware's and FinCEN's, on 2026-10-08.",
+  "services": {
+    "heading": "Formation services",
+    "intro": "Each row gives the price, what the first year includes, and what recurs after it. State taxes are extra.",
+    "columns": [
+      "Service",
+      "Package",
+      "Price",
+      "Entity types and states",
+      "State filing fee",
+      "Registered agent",
+      "After the first year"
+    ],
+    "rows": [
+      {
+        "label": "Stripe Atlas",
+        "cells": [
+          "Atlas",
+          "$500 one-time",
+          "Delaware C corporation or LLC",
+          "Included",
+          "First year included",
+          "Registered agent $100 a year"
+        ]
+      },
+      {
+        "label": "Clerky",
+        "cells": [
+          "Incorporation (pay per use)",
+          "$427 one-time",
+          "Delaware C corporation only",
+          "Included ($203 Delaware expedited fees)",
+          "First year included ($125 value)",
+          "CSC invoices the registered agent directly; Clerky's help centre lists it at $125 a year"
+        ]
+      },
+      {
+        "label": "Clerky",
+        "cells": [
+          "Company Lifetime Package",
+          "$819 one-time",
+          "Delaware C corporation only",
+          "Included",
+          "First year included",
+          "Same as above; Clerky's documents for fundraising and hiring included for the company's life"
+        ]
+      },
+      {
+        "label": "Firstbase",
+        "cells": [
+          "Start",
+          "$99, shown beside a struck $399 and labelled \"OFFER\"",
+          "LLC or C corporation, in Delaware or Wyoming",
+          "Not included",
+          "Not included; Firstbase Agent, $299 a year per state, is required",
+          "Agent $299 a year"
+        ]
+      },
+      {
+        "label": "doola",
+        "cells": [
+          "Starter",
+          "$297 a year",
+          "LLC in any state; C corporation in Delaware or Wyoming",
+          "Not included",
+          "Included while the plan is paid",
+          "$297 a year"
+        ]
+      },
+      {
+        "label": "LegalZoom",
+        "cells": [
+          "LLC Basic",
+          "$0",
+          "LLC",
+          "Not included",
+          "Not included; $249 a year",
+          "Registered agent $249 a year if bought"
+        ]
+      },
+      {
+        "label": "LegalZoom",
+        "cells": [
+          "LLC Managed Service",
+          "$249",
+          "LLC",
+          "Not included",
+          "Not included; $249 a year",
+          "Business advisor $49 a month after 30 days unless cancelled"
+        ]
+      },
+      {
+        "label": "ZenBusiness",
+        "cells": [
+          "Starter",
+          "$0",
+          "LLC or corporation",
+          "Not included",
+          "Not included; $199 a year on the pricing page, $99 for the first year on ZenBusiness's registered-agent page",
+          "Worry-Free Compliance $199 a year after a free first year, if kept"
+        ]
+      },
+      {
+        "label": "ZenBusiness",
+        "cells": [
+          "Pro",
+          "$199 a year",
+          "LLC or corporation",
+          "Not included",
+          "Not included; $199 a year on the pricing page, $99 for the first year on ZenBusiness's registered-agent page",
+          "$199 a year"
+        ]
+      },
+      {
+        "label": "ZenBusiness",
+        "cells": [
+          "Premium",
+          "$299 a year",
+          "LLC or corporation",
+          "Not included",
+          "Not included; $199 a year on the pricing page, $99 for the first year on ZenBusiness's registered-agent page",
+          "$299 a year"
+        ]
+      },
+      {
+        "label": "Northwest Registered Agent",
+        "cells": [
+          "LLC or corporation",
+          "$39",
+          "LLC or corporation, any state",
+          "Not included",
+          "First year included",
+          "Registered agent $125 a year"
+        ]
+      }
+    ],
+    "note": "Northwest Registered Agent has the lowest first-year cost for forming an LLC with a registered agent: $39, before the state filing fee, and $125 a year after the first year."
+  },
+  "changes": {
+    "heading": "Changes in 2025 and 2026",
+    "intro": "Each row gives what changed, the old and new terms, and when.",
+    "rows": [
+      {
+        "who": "Delaware",
+        "change": "Annual tax for LLCs, LPs and GPs",
+        "before": "$300",
+        "after": "$400",
+        "when": "Law effective 2026-01-01; due each June 1 for the year before. Delaware's tax page changed between 2026-06-30 and 2026-08-11",
+        "source": {
+          "text": "House Bill 400 (85 Del. Laws c. 273); corp.delaware.gov/alt-entitytaxinstructions",
+          "links": [
+            {
+              "text": "House Bill 400 (85 Del. Laws c. 273)",
+              "url": "https://legis.delaware.gov/SessionLaws/Chapter?id=42436"
+            },
+            {
+              "text": "corp.delaware.gov/alt-entitytaxinstructions",
+              "url": "https://corp.delaware.gov/alt-entitytaxinstructions/"
+            }
+          ]
+        }
+      },
+      {
+        "who": "FinCEN",
+        "change": "Beneficial ownership (BOI) report for companies formed in the US",
+        "before": "Required",
+        "after": "Not required",
+        "when": "Exempt since 2025-03-21; final rule effective 2026-08-14",
+        "source": {
+          "text": "fincen.gov/boi",
+          "links": [
+            {
+              "text": "fincen.gov/boi",
+              "url": "https://www.fincen.gov/boi"
+            }
+          ]
+        }
+      },
+      {
+        "who": "Stripe Atlas",
+        "change": "First-year perk",
+        "before": "Free card processing on the first $100,000 for a year",
+        "after": "$2,500 in Stripe product credits",
+        "when": "Companies incorporated from 2025-10-16; companies that already had the waiver keep it",
+        "source": {
+          "text": "support.stripe.com waived-fees and Atlas credits FAQs",
+          "links": [
+            {
+              "text": "support.stripe.com waived-fees",
+              "url": "https://support.stripe.com/questions/waived-payments-processing-fees-for-atlas-users"
+            },
+            {
+              "text": "Atlas credits FAQs",
+              "url": "https://support.stripe.com/questions/atlas-fee-credits-faq"
+            }
+          ]
+        }
+      },
+      {
+        "who": "Stripe Atlas",
+        "change": "Fee back",
+        "before": "",
+        "after": "$500 when you deposit $5,000 in a Stripe Treasury account within 90 days of incorporating and keep it there 30 days",
+        "when": "Advertised from between 2026-09-12 and 2026-09-16",
+        "source": {
+          "text": "stripe.com/atlas; docs.stripe.com/atlas/stripe-treasury-offer",
+          "links": [
+            {
+              "text": "stripe.com/atlas",
+              "url": "https://stripe.com/atlas"
+            },
+            {
+              "text": "docs.stripe.com/atlas/stripe-treasury-offer",
+              "url": "https://docs.stripe.com/atlas/stripe-treasury-offer"
+            }
+          ]
+        }
+      },
+      {
+        "who": "Firstbase",
+        "change": "Start",
+        "before": "$399",
+        "after": "$99, labelled \"OFFER\"",
+        "when": "Between 2026-06-04 and 2026-08-21",
+        "source": {
+          "text": "firstbase.io/pricing (archived 2026-06-04, 2026-08-21)",
+          "links": [
+            {
+              "text": "2026-06-04",
+              "url": "https://web.archive.org/web/20260604135831/https://www.firstbase.io/pricing"
+            },
+            {
+              "text": "2026-08-21",
+              "url": "https://web.archive.org/web/20260821045509/https://www.firstbase.io/pricing"
+            }
+          ]
+        }
+      },
+      {
+        "who": "Firstbase",
+        "change": "Agent tiers",
+        "before": "Light $149, Autopilot $299, Payroll $599 a year",
+        "after": "One tier, $299 a year",
+        "when": "Between 2025-09-10 and 2025-12-22",
+        "source": {
+          "text": "firstbase.io/pricing (archived 2025-09-10, 2025-12-22)",
+          "links": [
+            {
+              "text": "2025-09-10",
+              "url": "https://web.archive.org/web/20250910141002/https://www.firstbase.io/pricing"
+            },
+            {
+              "text": "2025-12-22",
+              "url": "https://web.archive.org/web/20251222122349/https://www.firstbase.io/pricing"
+            }
+          ]
+        }
+      },
+      {
+        "who": "ZenBusiness",
+        "change": "Premium",
+        "before": "$299 a year; registered agent extra",
+        "after": "$399 a year with registered agent, from late 2025; then $299 a year with registered agent extra again ($199 a year)",
+        "when": "$399 between 2025-10-15 and 2025-11-09; back to $299 between 2026-07-23 and 2026-09-17",
+        "source": {
+          "text": "zenbusiness.com/pricing-formation-plans (archived 2025-10-15, 2025-11-09, 2026-07-23, 2026-09-17)",
+          "links": [
+            {
+              "text": "2025-10-15",
+              "url": "https://web.archive.org/web/20251015170230/https://www.zenbusiness.com/pricing-formation-plans/"
+            },
+            {
+              "text": "2025-11-09",
+              "url": "https://web.archive.org/web/20251109001444/https://www.zenbusiness.com/pricing-formation-plans/"
+            },
+            {
+              "text": "2026-07-23",
+              "url": "https://web.archive.org/web/20260723001927/https://www.zenbusiness.com/pricing-formation-plans/"
+            },
+            {
+              "text": "2026-09-17",
+              "url": "https://web.archive.org/web/20260917222231/https://www.zenbusiness.com/pricing-formation-plans/"
+            }
+          ]
+        }
+      },
+      {
+        "who": "ZenBusiness",
+        "change": "EIN",
+        "before": "$99 add-on on every package",
+        "after": "Included in Pro and Premium; $99 on Starter",
+        "when": "Between 2026-01-25 and 2026-02-10",
+        "source": {
+          "text": "zenbusiness.com/pricing-formation-plans (archived 2026-01-25, 2026-02-10)",
+          "links": [
+            {
+              "text": "2026-01-25",
+              "url": "https://web.archive.org/web/20260125081629/https://www.zenbusiness.com/pricing-formation-plans/"
+            },
+            {
+              "text": "2026-02-10",
+              "url": "https://web.archive.org/web/20260210101032/https://www.zenbusiness.com/pricing-formation-plans/"
+            }
+          ]
+        }
+      },
+      {
+        "who": "Clerky",
+        "change": "BOI filing in the package",
+        "before": "\"FinCEN BOI report compliance\" listed",
+        "after": "Removed",
+        "when": "Between 2025-07-14 and 2025-08-24",
+        "source": {
+          "text": "clerky.com/pricing (archived 2025-07-14, 2025-08-24)",
+          "links": [
+            {
+              "text": "2025-07-14",
+              "url": "https://web.archive.org/web/20250714214844/https://www.clerky.com/pricing"
+            },
+            {
+              "text": "2025-08-24",
+              "url": "https://web.archive.org/web/20250824164714/https://www.clerky.com/pricing"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "delaware_costs": {
+    "heading": "Delaware state costs",
+    "intro": "These are the fees and taxes Delaware charges, whichever service files the company.",
+    "columns": [
+      "Item",
+      "Corporation",
+      "LLC"
+    ],
+    "rows": [
+      {
+        "label": "Formation filing fee",
+        "cells": [
+          "$109 minimum for a one-page certificate; more with more stock",
+          "$110"
+        ]
+      },
+      {
+        "label": "Annual tax",
+        "cells": [
+          "Franchise tax: $175 minimum under the Authorized Shares method (5,000 shares or fewer), $400 minimum under the Assumed Par Value Capital method; $200,000 maximum",
+          "$400 a year"
+        ]
+      },
+      {
+        "label": "Annual report",
+        "cells": [
+          "$50",
+          "None"
+        ]
+      },
+      {
+        "label": "Due",
+        "cells": [
+          "March 1, for the year before",
+          "June 1, for the year before"
+        ]
+      },
+      {
+        "label": "Late payment",
+        "cells": [
+          "$200 penalty plus 1.5% interest a month",
+          "$200 penalty plus 1.5% interest a month"
+        ]
+      }
+    ]
+  },
+  "checked_claim": {
+    "heading": "A claim we checked",
+    "text": "Stripe's Atlas tax page and its guide to Delaware costs still give the annual LLC tax as $300. Delaware raised it to $400 for every LLC, LP and GP, and the law took effect on 2026-01-01.",
+    "links": [
+      {
+        "text": "Stripe's Atlas tax page",
+        "url": "https://docs.stripe.com/atlas/business-taxes"
+      }
+    ]
+  },
+  "sources": [
+    {
+      "name": "Stripe Atlas",
+      "read_on": "2026-10-08",
+      "sources": [
+        {
+          "url": "https://stripe.com/atlas",
+          "covers": "price, registered agent renewal, fee back, credits"
+        },
+        {
+          "url": "https://docs.stripe.com/atlas/stripe-treasury-offer",
+          "covers": "fee-back terms: 90 days, 30 days"
+        },
+        {
+          "url": "https://support.stripe.com/questions/waived-payments-processing-fees-for-atlas-users",
+          "covers": "credits from 2025-10-16"
+        },
+        {
+          "url": "https://support.stripe.com/questions/atlas-fee-credits-faq",
+          "covers": "earlier companies keep the waiver"
+        },
+        {
+          "url": "https://docs.stripe.com/atlas/company-types",
+          "covers": "entity types"
+        },
+        {
+          "url": "https://docs.stripe.com/atlas/business-taxes",
+          "covers": "still says 300 USD"
+        }
+      ]
+    },
+    {
+      "name": "Clerky",
+      "read_on": "2026-10-08",
+      "sources": [
+        {
+          "url": "https://www.clerky.com/pricing",
+          "covers": "prices, $203 Delaware fees, first-year agent"
+        },
+        {
+          "url": "https://help.clerky.com/article/2790-invoice-registered-agent-service-legitimate",
+          "covers": "CSC invoices renewals"
+        },
+        {
+          "url": "https://help.clerky.com/article/2824-minimum-ongoing-costs",
+          "covers": "$125 a year"
+        },
+        {
+          "url": "https://web.archive.org/web/20250714214844/https://www.clerky.com/pricing",
+          "covers": "BOI row removed"
+        },
+        {
+          "url": "https://web.archive.org/web/20250824164714/https://www.clerky.com/pricing",
+          "covers": "BOI row removed"
+        }
+      ]
+    },
+    {
+      "name": "Firstbase",
+      "read_on": "2026-10-08",
+      "sources": [
+        {
+          "url": "https://www.firstbase.io/pricing",
+          "covers": ""
+        },
+        {
+          "url": "https://web.archive.org/web/20260604135831/https://www.firstbase.io/pricing",
+          "covers": "Start $399 to $99"
+        },
+        {
+          "url": "https://web.archive.org/web/20260821045509/https://www.firstbase.io/pricing",
+          "covers": "Start $399 to $99"
+        },
+        {
+          "url": "https://web.archive.org/web/20250910141002/https://www.firstbase.io/pricing",
+          "covers": "Agent tiers"
+        },
+        {
+          "url": "https://web.archive.org/web/20251222122349/https://www.firstbase.io/pricing",
+          "covers": "Agent tiers"
+        }
+      ]
+    },
+    {
+      "name": "doola",
+      "read_on": "2026-10-08",
+      "sources": [
+        {
+          "url": "https://www.doola.com/pricing/",
+          "covers": ""
+        },
+        {
+          "url": "https://www.doola.com/formation/",
+          "covers": "LLCs in any state"
+        },
+        {
+          "url": "https://www.doola.com/c-corp/",
+          "covers": "C corporations in Delaware or Wyoming"
+        }
+      ]
+    },
+    {
+      "name": "LegalZoom",
+      "read_on": "2026-10-08",
+      "sources": [
+        {
+          "url": "https://www.legalzoom.com/business/business-formation/llc-overview.html",
+          "covers": "Basic $0, Managed Service $249"
+        },
+        {
+          "url": "https://www.legalzoom.com/business/business-operations/registered-agent-overview.html",
+          "covers": "$249 a year"
+        }
+      ]
+    },
+    {
+      "name": "ZenBusiness",
+      "read_on": "2026-10-08",
+      "sources": [
+        {
+          "url": "https://www.zenbusiness.com/pricing-formation-plans/",
+          "covers": "packages, agent $199 a year"
+        },
+        {
+          "url": "https://www.zenbusiness.com/registered-agent/",
+          "covers": "$99 for the first year"
+        },
+        {
+          "url": "https://web.archive.org/web/20251015170230/https://www.zenbusiness.com/pricing-formation-plans/",
+          "covers": "Premium"
+        },
+        {
+          "url": "https://web.archive.org/web/20251109001444/https://www.zenbusiness.com/pricing-formation-plans/",
+          "covers": "Premium"
+        },
+        {
+          "url": "https://web.archive.org/web/20260723001927/https://www.zenbusiness.com/pricing-formation-plans/",
+          "covers": "Premium"
+        },
+        {
+          "url": "https://web.archive.org/web/20260917222231/https://www.zenbusiness.com/pricing-formation-plans/",
+          "covers": "Premium"
+        },
+        {
+          "url": "https://web.archive.org/web/20260125081629/https://www.zenbusiness.com/pricing-formation-plans/",
+          "covers": "EIN"
+        },
+        {
+          "url": "https://web.archive.org/web/20260210101032/https://www.zenbusiness.com/pricing-formation-plans/",
+          "covers": "EIN"
+        }
+      ]
+    },
+    {
+      "name": "Northwest Registered Agent",
+      "read_on": "2026-10-08",
+      "sources": [
+        {
+          "url": "https://www.northwestregisteredagent.com/llc",
+          "covers": ""
+        },
+        {
+          "url": "https://www.northwestregisteredagent.com/corporation",
+          "covers": ""
+        },
+        {
+          "url": "https://www.northwestregisteredagent.com/registered-agent",
+          "covers": "$125 a year"
+        }
+      ]
+    },
+    {
+      "name": "Delaware",
+      "read_on": "2026-10-08",
+      "sources": [
+        {
+          "url": "https://corp.delaware.gov/alt-entitytaxinstructions/",
+          "covers": "$400, June 1"
+        },
+        {
+          "url": "https://corp.delaware.gov/paytaxes/",
+          "covers": "franchise tax, $50 report, March 1, penalty"
+        },
+        {
+          "url": "https://corpfiles.delaware.gov/Fee_Schedule/AugustFee2026.pdf",
+          "covers": "formation fees"
+        },
+        {
+          "url": "https://legis.delaware.gov/SessionLaws/Chapter?id=42436",
+          "covers": "House Bill 400, Section 45: effective 2026-01-01"
+        },
+        {
+          "url": "https://web.archive.org/web/20260630133936/https://corp.delaware.gov/alt-entitytaxinstructions/",
+          "covers": "the page's $300 to $400"
+        },
+        {
+          "url": "https://web.archive.org/web/20260811090946/https://corp.delaware.gov/alt-entitytaxinstructions/",
+          "covers": "the page's $300 to $400"
+        }
+      ]
+    },
+    {
+      "name": "FinCEN",
+      "read_on": "2026-10-08",
+      "sources": [
+        {
+          "url": "https://www.fincen.gov/boi",
+          "covers": "US companies exempt; final rule effective 2026-08-14"
+        }
+      ]
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { isCalendarDay, isPageAddress, isText, linkedWordsProblems, textFieldProblems, type LinkedWords } from "./guide-data.js";
+import { columnTableProblems, isCalendarDay, isPageAddress, isText, linkedWordsProblems, textFieldProblems, type ColumnTable, type LinkedWords } from "./guide-data.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -17,11 +17,6 @@ export interface Bank {
   name: string;
   read_on: string;
   sources: BankSource[];
-}
-
-export interface FreeAccountRow {
-  label: string;
-  cells: string[];
 }
 
 export interface BankChange {
@@ -46,7 +41,7 @@ export interface BankingFees {
   meta_description: string;
   lead: string;
   read_line: string;
-  free_accounts: { heading: string; intro: string; columns: string[]; rows: FreeAccountRow[] };
+  free_accounts: ColumnTable;
   changes: { heading: string; intro: string; rows: BankChange[] };
   paid_plans: { heading: string; intro: string; rows: PaidPlan[] };
   checked_claim: { heading: string } & LinkedWords;
@@ -94,21 +89,7 @@ export function bankingFeesProblems(data: unknown): string[] {
     if (!isText(fees[field])) problems.push(`${field} is missing`);
   }
 
-  const free = fees.free_accounts;
-  if (!free || !Array.isArray(free.columns) || free.columns.length < 2 || !Array.isArray(free.rows)) {
-    problems.push("free_accounts needs columns, at least two, and rows");
-  } else {
-    problems.push(...textFieldProblems(free, ["heading", "intro"], "free_accounts"));
-    free.columns.forEach((column, n) => {
-      if (!isText(column)) problems.push(`free_accounts.columns[${n}] is missing`);
-    });
-    free.rows.forEach((row, n) => {
-      if (!isText(row?.label)) problems.push(`free_accounts.rows[${n}].label is missing`);
-      if (!Array.isArray(row?.cells) || row.cells.length !== free.columns.length - 1 || row.cells.some((cell) => typeof cell !== "string")) {
-        problems.push(`free_accounts.rows[${n}] needs one cell for each of the ${free.columns.length - 1} columns after the first`);
-      }
-    });
-  }
+  problems.push(...columnTableProblems(fees.free_accounts, "free_accounts"));
 
   const changes = fees.changes;
   if (!changes || !Array.isArray(changes.rows)) {

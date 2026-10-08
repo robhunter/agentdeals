@@ -30,6 +30,37 @@ export function textFieldProblems(record: unknown, fields: readonly string[], at
   return fields.filter((field) => typeof values[field] !== "string").map((field) => `${at}.${field} is missing`);
 }
 
+export interface LabelledRow {
+  label: string;
+  cells: string[];
+}
+
+export interface ColumnTable {
+  heading: string;
+  intro: string;
+  columns: string[];
+  rows: LabelledRow[];
+}
+
+export function columnTableProblems(value: unknown, at: string): string[] {
+  const table = value as Partial<ColumnTable> | undefined;
+  if (!table || !Array.isArray(table.columns) || table.columns.length < 2 || !Array.isArray(table.rows)) {
+    return [`${at} needs columns, at least two, and rows`];
+  }
+  const { columns, rows } = table;
+  const problems = textFieldProblems(table, ["heading", "intro"], at);
+  columns.forEach((column, n) => {
+    if (!isText(column)) problems.push(`${at}.columns[${n}] is missing`);
+  });
+  rows.forEach((row, n) => {
+    if (!isText(row?.label)) problems.push(`${at}.rows[${n}].label is missing`);
+    if (!Array.isArray(row?.cells) || row.cells.length !== columns.length - 1 || row.cells.some((cell) => typeof cell !== "string")) {
+      problems.push(`${at}.rows[${n}] needs one cell for each of the ${columns.length - 1} columns after the first`);
+    }
+  });
+  return problems;
+}
+
 export interface LinkedWord {
   text: string;
   url: string;
