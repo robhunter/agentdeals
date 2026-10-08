@@ -2717,7 +2717,7 @@
       "changed": "2026-10-07"
     },
     "/developers": {
-      "hash": "f8f658a184c925ab",
+      "hash": "9242c98b7c035620",
       "changed": "2026-10-08"
     },
     "/digest/2022-w48": {
@@ -3081,7 +3081,7 @@
       "changed": "2026-09-12"
     },
     "/estimate": {
-      "hash": "cea324363b5e992d",
+      "hash": "f169e666ea4d0c30",
       "changed": "2026-10-08"
     },
     "/events": {
@@ -3205,20 +3205,20 @@
       "changed": "2026-10-07"
     },
     "/guides/crewai": {
-      "hash": "d75d6fb84161be96",
-      "changed": "2026-10-06"
+      "hash": "beffd6a11abc92f4",
+      "changed": "2026-10-08"
     },
     "/guides/langchain": {
-      "hash": "1aefc8ab00c09aac",
-      "changed": "2026-10-06"
+      "hash": "695e1788755c1774",
+      "changed": "2026-10-08"
     },
     "/guides/n8n": {
-      "hash": "bb01304b45e14462",
-      "changed": "2026-10-06"
+      "hash": "65d8faf2f1b51ce8",
+      "changed": "2026-10-08"
     },
     "/guides/vercel-ai-sdk": {
-      "hash": "51f883926c75991f",
-      "changed": "2026-10-06"
+      "hash": "407e0fa595580ce0",
+      "changed": "2026-10-08"
     },
     "/heroku-alternatives": {
       "hash": "ee61f4274535b59b",
@@ -3472,8 +3472,8 @@
       "changed": "2026-10-08"
     },
     "/setup": {
-      "hash": "e3a1b8cb87e003c1",
-      "changed": "2026-09-12"
+      "hash": "843e763b4d14c927",
+      "changed": "2026-10-08"
     },
     "/shutdowns": {
       "daily": true
