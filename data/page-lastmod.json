@@ -18,12 +18,12 @@
       "changed": "2026-10-07"
     },
     "/ai-free-tiers": {
-      "hash": "6274412698f1aab7",
-      "changed": "2026-10-07"
+      "hash": "c478ceb976c3c682",
+      "changed": "2026-10-08"
     },
     "/ai-ml-alternatives": {
-      "hash": "dc9ca7437cd48a75",
-      "changed": "2026-10-07"
+      "hash": "82b661c157d1f113",
+      "changed": "2026-10-08"
     },
     "/alternative-to": {
       "hash": "7be64c6192174cd8",
@@ -805,7 +805,7 @@
       "changed": "2026-10-07"
     },
     "/aws-free-tier-2026": {
-      "hash": "682e94848af09a07",
+      "hash": "fdccde3e2c196558",
       "changed": "2026-10-08"
     },
     "/azure-free-tier-2026": {
@@ -1331,8 +1331,8 @@
       "changed": "2026-10-06"
     },
     "/cloud-free-tier-comparison-2026": {
-      "hash": "6af082d3853c4728",
-      "changed": "2026-10-07"
+      "hash": "1d567dc88a449637",
+      "changed": "2026-10-08"
     },
     "/cloudflare-pages-vs-vercel": {
       "hash": "f2f82252c7a13306",
@@ -3139,8 +3139,8 @@
       "changed": "2026-10-07"
     },
     "/free-llm-apis": {
-      "hash": "21bb56d596436f8f",
-      "changed": "2026-10-07"
+      "hash": "356c04e6e1ddee15",
+      "changed": "2026-10-08"
     },
     "/free-nextjs-stack": {
       "hash": "03eca24a9e6958c1",
@@ -3177,8 +3177,8 @@
       "changed": "2026-10-08"
     },
     "/gemini-api-pricing-2026": {
-      "hash": "74fcd48bab086ce1",
-      "changed": "2026-10-07"
+      "hash": "7baf8af9fa44d3d2",
+      "changed": "2026-10-08"
     },
     "/github-actions-alternatives": {
       "hash": "adb6fde6f63d0d9d",
@@ -3189,16 +3189,16 @@
       "changed": "2026-10-06"
     },
     "/google-developer-program-2026": {
-      "hash": "b5c5c9cb73cee918",
-      "changed": "2026-10-07"
+      "hash": "a2fd43e3b67eb4a5",
+      "changed": "2026-10-08"
     },
     "/groq-vs-hugging-face": {
       "hash": "430860ffb0625d80",
       "changed": "2026-10-05"
     },
     "/groq-vs-mistral-ai": {
-      "hash": "a3171055bb008bb6",
-      "changed": "2026-10-07"
+      "hash": "4d5c080926b05051",
+      "changed": "2026-10-08"
     },
     "/guides": {
       "hash": "12f29b7ceb34271d",
@@ -3249,8 +3249,8 @@
       "changed": "2026-10-07"
     },
     "/llm-api-pricing": {
-      "hash": "64c92b76b38864d8",
-      "changed": "2026-10-07"
+      "hash": "aa7150658d513197",
+      "changed": "2026-10-08"
     },
     "/localstack-alternatives": {
       "hash": "79f7b363c6ade93a",
@@ -3796,7 +3796,7 @@
       "changed": "2026-10-07"
     },
     "/vector-database-pricing": {
-      "hash": "fd7c87730d0511b0",
+      "hash": "2fa2cf858fbcd82d",
       "changed": "2026-10-08"
     },
     "/vendor": {
