@@ -80,6 +80,20 @@ const INCLUDED: Record<string, string> = {
   "Amplitude Early Stage Startup Pricing": "The full Growth plan for 200K monthly tracked users or 100M events a month.",
 };
 
+const WHEN_CREDITS_RUN_OUT: Record<string, [string, string]> = {
+  "AWS Activate": ["Your AWS account is billed for usage beyond the credits. Some services are not eligible for the credits.", "https://aws.amazon.com/awscredits/"],
+  "Google Cloud for Startups": ["Usage beyond the credits is billed to you. Google is not required to notify you when the credits are exhausted.", "https://cloud.google.com/terms/startup-program-tos"],
+  "Microsoft for Startups (formerly Founders Hub)": ["When the credits are used up or reach their end date, the subscription converts automatically to Pay-As-You-Go and you pay for further usage.", "https://azure.microsoft.com/en-us/pricing/offers/ms-azr-0036p"],
+};
+
+const CREDITS_RUN_OUT_TERMS_READ = "2026-10-08";
+
+const CREDITS_ENDING_WITHOUT_CHARGES: [string, RegExp][] = [
+  ["usage past the credits is not charged or billed", /\b(?:not|never|won't|will not) (?:be )?(?:charged|billed)\b|\bnothing is (?:charged|billed)\b|\bno charges?\b|\bwithout (?:a )?charge\b/i],
+  ["a programme is free until its credits end", /\bfree until\b/i],
+  ["services stop when the credits end", /credits? (?:run out|runs out|are used up|expire)[^.]*\b(?:stops?|closes?|closed|disabled|paused|suspended)\b/i],
+];
+
 const STATED_ON_THE_GUIDE = [
   "$350K Largest Published Offer",
   "Startup credits in 2026: 13 programs across cloud infrastructure, fintech perks, developer tools and AI. The largest published offers are up to $350,000. Cloud providers offer the highest individual values. Fintech platforms pass partner credits on to their customers; each perk is claimed separately.",
@@ -201,6 +215,11 @@ function programmeCards(html: string): Map<string, Record<string, string>> {
   return cards;
 }
 
+function programmeCardMarkup(html: string): Map<string, string> {
+  return new Map([...html.matchAll(/<div class="diff-card"[^>]*>([\s\S]*?)<\/div>/g)].map(([, card]) =>
+    [readable(card.match(/<h3>([\s\S]*?)<span/)?.[1] ?? "").trim(), card]));
+}
+
 let server: ChildProcess;
 const served = new Map<string, string>();
 let cloudflareProgrammePageStatus = 0;
@@ -264,6 +283,27 @@ describe("the startup credits guide states each programme's terms as the program
         .map(([label, value]) => `${name} ${label}: "${card[label]}" where the programme says "${value}"`);
     });
     assert.deepStrictEqual(wrong, []);
+  });
+
+  it("says what happens when each cloud programme's credits run out, citing the programme's own terms and the day they were read", () => {
+    const html = served.get("/startup-credits")!;
+    const stated = Object.fromEntries([...programmeCards(html)]
+      .filter(([, fields]) => "When credits run out" in fields)
+      .map(([name, fields]) => [name, fields["When credits run out"]]));
+    const expected = Object.fromEntries(Object.entries(WHEN_CREDITS_RUN_OUT).map(([name, [terms, url]]) =>
+      [name, `${terms} (From ${url.replace(/^https:\/\//, "").replace(/\/$/, "")}, read ${CREDITS_RUN_OUT_TERMS_READ}.)`]));
+    assert.deepStrictEqual(stated, expected);
+    const cards = programmeCardMarkup(html);
+    const unlinked = Object.entries(WHEN_CREDITS_RUN_OUT)
+      .filter(([name, [, url]]) => !cards.get(name)?.includes(`(From <a href="${url}" rel="nofollow noopener">`))
+      .map(([name]) => name);
+    assert.deepStrictEqual(unlinked, []);
+  });
+
+  it("says nowhere on the guide that a programme's credits end without charges", () => {
+    const html = served.get("/startup-credits")!;
+    const text = `${readable(html)} ${structuredStrings(html).join(" ")}`;
+    assert.deepStrictEqual(CREDITS_ENDING_WITHOUT_CHARGES.filter(([, pattern]) => pattern.test(text)).map(([claim]) => claim), []);
   });
 
   it("states the summary, constraints and stacking lines as written", () => {
