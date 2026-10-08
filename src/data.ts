@@ -659,6 +659,16 @@ export function changesForVendor(vendor: string): DealChange[] {
   return index.get(vendor.toLowerCase()) ?? [];
 }
 
+export type WithTermsSuperseded<T> = T & { terms_superseded: SupersededTermsRecord | null };
+
+export function withTermsSuperseded<T extends Pick<Offer, "vendor" | "description" | "tier">>(offer: T): WithTermsSuperseded<T> {
+  return { ...offer, terms_superseded: supersededTermsRecordFor(offer, changesForVendor(offer.vendor)) };
+}
+
+export function publishedOffer<T extends Offer>(offer: T): WithTermsSuperseded<T> {
+  return stripReferrerValue(withTermsSuperseded(offer));
+}
+
 export function publishedStabilityIndex(): StabilityIndex {
   const vendorChangesMap = changesByVendor();
 
@@ -801,7 +811,7 @@ export function enrichOffers(offers: Offer[]): EnrichedOffer[] {
   });
 }
 
-export function getNewOffers(days: number = 7): { offers: Offer[]; total: number } {
+export function getNewOffers(days: number = 7): { offers: WithTermsSuperseded<Offer>[]; total: number } {
   const clampedDays = Math.min(Math.max(days, 1), 30);
   const cutoff = new Date(Date.now() - clampedDays * 24 * 60 * 60 * 1000)
     .toISOString()
@@ -810,7 +820,7 @@ export function getNewOffers(days: number = 7): { offers: Offer[]; total: number
   const results = offers
     .filter((o) => o.verifiedDate >= cutoff)
     .sort((a, b) => b.verifiedDate.localeCompare(a.verifiedDate))
-    .map(o => stripReferrerValue(o));
+    .map(o => publishedOffer(o));
   return { offers: results, total: results.length };
 }
 
@@ -1811,7 +1821,7 @@ export function getNewestDeals(params: {
   since?: string;
   limit?: number;
   category?: string;
-}): { deals: Array<Offer & { days_since_update: number; gate: Gate | null }>; total: number } {
+}): { deals: Array<WithTermsSuperseded<Offer> & { days_since_update: number; gate: Gate | null }>; total: number } {
   const now = new Date();
   const defaultSince = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
     .toISOString()
@@ -1828,7 +1838,7 @@ export function getNewestDeals(params: {
 
   results.sort((a, b) => b.verifiedDate.localeCompare(a.verifiedDate));
 
-  const deals = results.slice(0, limit).map((o) => stripReferrerValue({
+  const deals = results.slice(0, limit).map((o) => publishedOffer({
     ...o,
     days_since_update: Math.floor(
       (now.getTime() - new Date(o.verifiedDate).getTime()) / (24 * 60 * 60 * 1000)
@@ -1839,7 +1849,7 @@ export function getNewestDeals(params: {
   return { deals, total: deals.length };
 }
 
-export function getExpiringDeals(withinDays: number = 30): { deals: Array<Offer & { days_until_expiry: number }>, total: number } {
+export function getExpiringDeals(withinDays: number = 30): { deals: Array<WithTermsSuperseded<Offer> & { days_until_expiry: number }>, total: number } {
   const offers = loadOffers();
   const now = new Date();
   const cutoff = new Date(now.getTime() + withinDays * 24 * 60 * 60 * 1000);
@@ -1850,7 +1860,7 @@ export function getExpiringDeals(withinDays: number = 30): { deals: Array<Offer 
       const expires = new Date(o.expires_date);
       return expires >= now && expires <= cutoff;
     })
-    .map((o) => ({
+    .map((o) => publishedOffer({
       ...o,
       days_until_expiry: Math.ceil((new Date(o.expires_date!).getTime() - now.getTime()) / (24 * 60 * 60 * 1000)),
     }))
@@ -2002,7 +2012,7 @@ export function getWeeklyDigest(): {
   deal_changes: Array<DealChange & { date_meaning: DateMeaning; ends_a_free_tier: boolean }>;
   discovered_changes: Array<DealChange & { date_meaning: DateMeaning; ends_a_free_tier: boolean }>;
   discovery_note: string;
-  new_offers: { vendor: string; category: string; description: string; conditions?: ListingCondition[] }[];
+  new_offers: { vendor: string; category: string; description: string; conditions?: ListingCondition[]; terms_superseded: SupersededTermsRecord | null }[];
   upcoming_deadlines: { vendor: string; date: string; change_type: string; summary: string }[];
   summary: string;
 } {
@@ -2031,6 +2041,7 @@ export function getWeeklyDigest(): {
     category: o.category,
     description: o.description,
     ...conditionsField(o),
+    terms_superseded: o.terms_superseded,
   }));
 
   const expiringDeadlines = getExpiringDeals(30).deals.map((d) => ({

@@ -192,6 +192,26 @@ describe("the machine-readable spec describes what the API serves", () => {
     assert.strictEqual(inSpec.length, documented.length);
   });
 
+  it("serves on /api/costs the keys its own schema declares, at the top level and on each service", async () => {
+    const schema = (spec.paths["/api/costs"].get as unknown as { responses: Record<string, { content: Record<string, { schema: any }> }> })
+      .responses["200"].content["application/json"].schema;
+    const declaredAtTheTop = Object.keys(schema.properties).sort();
+    const declaredOnAService = new Set(Object.keys(schema.properties.services.items.properties));
+    const reads = await Promise.all([
+      "?services=Neon,OpenAI,phare.io,NotAVendorWeList",
+      "?services=Vercel,Supabase,Render,CockroachDB,Auth0,Hetzner&scale=startup",
+    ].map(async (query) => await (await fetch(`${base}/api/costs${query}`, { redirect: "error" })).json() as Record<string, any>));
+    const servedOnAService = new Set<string>();
+    for (const body of reads) {
+      assert.deepStrictEqual(Object.keys(body).sort(), declaredAtTheTop);
+      for (const service of body.services) {
+        assert.deepStrictEqual(Object.keys(service).filter((key) => !declaredOnAService.has(key)), [], service.vendor);
+        for (const key of Object.keys(service)) servedOnAService.add(key);
+      }
+    }
+    assert.deepStrictEqual([...declaredOnAService].filter((key) => !servedOnAService.has(key)), [], "a declared service field no read served; read a service that carries it");
+  });
+
   it("serves on /api/details the top-level keys its own schema declares, each of them once", async () => {
     const schema = (spec.paths["/api/details/{vendor}"].get as unknown as { responses: Record<string, { content: Record<string, { schema: unknown }> }> })
       .responses["200"].content["application/json"].schema;
