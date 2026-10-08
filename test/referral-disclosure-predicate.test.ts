@@ -60,11 +60,20 @@ describe("one predicate decides whether we hold a referral link for a vendor", (
   });
 
   it("a vendor that documents its own program is a referral surface but not a link of ours", () => {
-    const vercel = offerFor("Vercel");
-    assert.ok(vercel, "Vercel should be in the index");
-    assert.ok(documentsVendorReferralProgram(vercel), "Vercel documents its own referral program");
-    assert.strictEqual(ourReferralLinkFor("Vercel", vercel), null, "we hold no code for Vercel");
-    assert.strictEqual(hasAnyReferralSurface("Vercel", vercel), true, "the program section is still a referral surface");
+    const documented = {
+      vendor: "Example Hosting",
+      referral_program: {
+        available: true,
+        referrer_benefit: "$5 credit",
+        referee_benefit: "$5 credit",
+        program_url: "https://programs.example/hosting",
+        type: "self-service",
+        read_on: "2026-09-01",
+      },
+    };
+    assert.ok(documentsVendorReferralProgram(documented as any), "Example Hosting documents its own referral program");
+    assert.strictEqual(ourReferralLinkFor(documented.vendor, documented as any), null, "we hold no code for Example Hosting");
+    assert.strictEqual(hasAnyReferralSurface(documented.vendor, documented as any), true, "the program section is still a referral surface");
   });
 
   it("a vendor with no program and no code of ours has no referral surface at all", () => {
@@ -160,7 +169,7 @@ describe("the affiliate disclosure counts what the site renders", () => {
   it("separates vendors running their own programs from partners of ours", () => {
     const ours = new Set(allOurReferralLinks(offers).map((l: any) => l.vendor.toLowerCase()));
     const theirs = new Set(
-      offers.filter((o: any) => o.referral_program?.available === true && !ours.has(o.vendor.toLowerCase())).map((o: any) => o.vendor)
+      offers.filter((o: any) => documentsVendorReferralProgram(o) && !ours.has(o.vendor.toLowerCase())).map((o: any) => o.vendor)
     );
     assert.ok(theirs.size > 0, "expected vendors that run their own program without a code of ours");
     assert.ok(html.includes(`We also document ${theirs.size} vendors that run their own referral programs`));
@@ -199,7 +208,7 @@ describe("the referral programs directory labels our commercial relationships", 
     const seen = new Set<string>();
     const sourceOrder: string[] = [];
     for (const o of offers) {
-      if (o.referral_program?.available && !seen.has(o.vendor)) {
+      if (documentsVendorReferralProgram(o) && !seen.has(o.vendor)) {
         seen.add(o.vendor);
         sourceOrder.push(o.vendor);
       }
@@ -219,7 +228,7 @@ describe("the referral programs directory labels our commercial relationships", 
 
   it("puts every vendor we hold a code for in the section that says we may be paid", () => {
     const paid = sectionAfter(html, "Programs we have a referral link for", "Programs we don");
-    const withProgram = offers.filter((o: any) => o.referral_program?.available === true);
+    const withProgram = offers.filter((o: any) => documentsVendorReferralProgram(o));
     for (const offer of withProgram) {
       if (!hasOurReferralLink(offer.vendor, offer)) continue;
       assert.ok(paid.includes(`>${offer.vendor}<`), `${offer.vendor} has a referral link of ours and belongs in the paid section`);
@@ -251,7 +260,7 @@ describe("the referral programs directory labels our commercial relationships", 
     const paid = sectionAfter(html, "Programs we have a referral link for", "Programs we don");
     for (const link of allOurReferralLinks(offers)) {
       const offer = offerFor(link.vendor);
-      if (!offer?.referral_program?.available) continue;
+      if (!documentsVendorReferralProgram(offer)) continue;
       assert.ok(paid.includes(link.url), `${link.vendor}'s row should link to the code we hold`);
     }
   });

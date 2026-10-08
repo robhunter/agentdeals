@@ -253,7 +253,8 @@
         "program_url": "https://www.netlify.com/partners/",
         "type": "partner",
         "commission_type": "recurring",
-        "notes": "PartnerStack-powered. Tiers: Ecosystem (education/influence) and Certified (deeper delivery)."
+        "notes": "PartnerStack-powered. Tiers: Ecosystem (education/influence) and Certified (deeper delivery).",
+        "read_on": "2026-10-08"
       },
       "source_check": {
         "checked": "2026-10-04",
@@ -415,7 +416,8 @@
         "program_url": "https://railway.com/affiliate-program",
         "type": "self-service",
         "commission_type": "recurring",
-        "notes": "First 12 months of referred user spend. The $20 is credited on upgrade to Hobby or Pro, not at signup (read 2026-10-05)."
+        "notes": "First 12 months of referred user spend. The $20 is credited on upgrade to Hobby or Pro, not at signup (read 2026-10-05).",
+        "read_on": "2026-10-05"
       },
       "source_check": {
         "checked": "2026-10-06",
@@ -658,7 +660,8 @@
         "program_url": "https://www.digitalocean.com/referral-program",
         "type": "self-service",
         "commission_type": "credits",
-        "notes": "The referrer gets $25 after the referred account spends its first $25. The referral page states no credit for the referred account."
+        "notes": "The referrer gets $25 after the referred account spends its first $25. The referral page states no credit for the referred account.",
+        "read_on": "2026-10-08"
       },
       "source_check": {
         "checked": "2026-10-02",
@@ -706,7 +709,8 @@
         "program_url": "https://www.digitalocean.com/referral-program",
         "type": "self-service",
         "commission_type": "credits",
-        "notes": "The referrer gets $25 after the referred account spends its first $25. The referral page states no credit for the referred account."
+        "notes": "The referrer gets $25 after the referred account spends its first $25. The referral page states no credit for the referred account.",
+        "read_on": "2026-10-08"
       },
       "source_check": {
         "checked": "2026-09-25",
@@ -841,7 +845,8 @@
         "program_url": "https://neon.com/docs/changelog/2026-06-19",
         "type": "self-service",
         "commission_type": "credits",
-        "notes": "Neon calls it an early pilot: \"when they sign up for Neon and spend $5, you get $5 in credits\" (changelog, 2026-06-19; read 2026-10-05)."
+        "notes": "Neon calls it an early pilot: \"when they sign up for Neon and spend $5, you get $5 in credits\" (changelog, 2026-06-19; read 2026-10-05).",
+        "read_on": "2026-10-05"
       },
       "source_check": {
         "checked": "2026-10-04",
@@ -4527,9 +4532,9 @@
       ],
       "verifiedDate": "2026-07-28",
       "source_check": {
-        "checked": "2026-09-25",
-        "outcome": "ok",
-        "detail": "the page names Kong as \"kong\" and states \"$0\""
+        "checked": "2026-10-08",
+        "outcome": "states_no_terms",
+        "detail": "the page names Kong but states no amount, tier or rate we can read, and its markup carries no structured data"
       },
       "free_grounds": [
         "licence"
@@ -21311,7 +21316,7 @@
       ],
       "verifiedDate": "2026-05-20",
       "referral_program": {
-        "available": true,
+        "available": false,
         "referrer_benefit": "20-35% commission depending on product",
         "referee_benefit": "Standard pricing",
         "program_url": "https://www.namecheap.com/affiliates/",
@@ -25216,11 +25221,13 @@
       "verifiedDate": "2026-10-08",
       "referral_program": {
         "available": true,
-        "referrer_benefit": "Free months of service",
-        "referee_benefit": "Free months of service",
+        "referrer_benefit": "$20 in Proton credit when they subscribe to a paid plan",
+        "referee_benefit": "$20 in Proton credit after a full month on a paid plan (two months on a monthly plan)",
         "program_url": "https://proton.me/support/referral-program",
         "type": "self-service",
-        "commission_type": "credits"
+        "commission_type": "credits",
+        "notes": "Proton: \"When your referee signs up using your link, if they chose an eligible plan (such as Mail Plus, Drive Plus, and Pass Plus), they'll also get a two-week free trial. They won't have to add any payment information until the trial ends.\" (read 2026-10-08)",
+        "read_on": "2026-10-08"
       },
       "source_check": {
         "checked": "2026-10-08",
@@ -27904,7 +27911,8 @@
         "program_url": "https://replit.com/refer",
         "type": "self-service",
         "commission_type": "credits",
-        "notes": "Replit: \"For every new paying customer you refer, you both get $20 in Replit credits\" (read 2026-10-05)."
+        "notes": "Replit: \"For every new paying customer you refer, you both get $20 in Replit credits\" (read 2026-10-05).",
+        "read_on": "2026-10-05"
       }
     },
     {
@@ -33627,7 +33635,8 @@
         "program_url": "https://support.bolt.new/external-resources/referral-program",
         "type": "self-service",
         "commission_type": "one-time",
-        "notes": "Rewards apply only when the referred account subscribes to a paid plan (read 2026-10-05)."
+        "notes": "Rewards apply only when the referred account subscribes to a paid plan (read 2026-10-05).",
+        "read_on": "2026-10-05"
       }
     },
     {
@@ -33663,7 +33672,8 @@
         "program_url": "https://docs.lovable.dev/introduction/faq",
         "type": "self-service",
         "commission_type": "credits",
-        "notes": "A sign-up alone earns the referrer nothing (Lovable FAQ, read 2026-10-05)."
+        "notes": "A sign-up alone earns the referrer nothing (Lovable FAQ, read 2026-10-05).",
+        "read_on": "2026-10-05"
       }
     },
     {
@@ -35338,11 +35348,13 @@
       "verifiedDate": "2026-08-21",
       "referral_program": {
         "available": true,
-        "referrer_benefit": "Free months of service",
-        "referee_benefit": "Free months of service",
+        "referrer_benefit": "$20 in Proton credit when they subscribe to a paid plan",
+        "referee_benefit": "$20 in Proton credit after a full month on a paid plan (two months on a monthly plan)",
         "program_url": "https://proton.me/support/referral-program",
         "type": "self-service",
-        "commission_type": "credits"
+        "commission_type": "credits",
+        "notes": "Proton: \"When your referee signs up using your link, if they chose an eligible plan (such as Mail Plus, Drive Plus, and Pass Plus), they'll also get a two-week free trial. They won't have to add any payment information until the trial ends.\" (read 2026-10-08)",
+        "read_on": "2026-10-08"
       },
       "source_check": {
         "checked": "2026-09-22",
@@ -35775,11 +35787,13 @@
       "verifiedDate": "2026-09-22",
       "referral_program": {
         "available": true,
-        "referrer_benefit": "Free months of service",
-        "referee_benefit": "Free months of service",
+        "referrer_benefit": "$20 in Proton credit when they subscribe to a paid plan",
+        "referee_benefit": "$20 in Proton credit after a full month on a paid plan (two months on a monthly plan)",
         "program_url": "https://proton.me/support/referral-program",
         "type": "self-service",
-        "commission_type": "credits"
+        "commission_type": "credits",
+        "notes": "Proton: \"When your referee signs up using your link, if they chose an eligible plan (such as Mail Plus, Drive Plus, and Pass Plus), they'll also get a two-week free trial. They won't have to add any payment information until the trial ends.\" (read 2026-10-08)",
+        "read_on": "2026-10-08"
       },
       "source_check": {
         "checked": "2026-09-22",
@@ -36108,11 +36122,13 @@
       "verifiedDate": "2026-09-22",
       "referral_program": {
         "available": true,
-        "referrer_benefit": "Free months of service",
-        "referee_benefit": "Free months of service",
+        "referrer_benefit": "$20 in Proton credit when they subscribe to a paid plan",
+        "referee_benefit": "$20 in Proton credit after a full month on a paid plan (two months on a monthly plan)",
         "program_url": "https://proton.me/support/referral-program",
         "type": "self-service",
-        "commission_type": "credits"
+        "commission_type": "credits",
+        "notes": "Proton: \"When your referee signs up using your link, if they chose an eligible plan (such as Mail Plus, Drive Plus, and Pass Plus), they'll also get a two-week free trial. They won't have to add any payment information until the trial ends.\" (read 2026-10-08)",
+        "read_on": "2026-10-08"
       },
       "source_check": {
         "checked": "2026-09-22",
@@ -37608,7 +37624,8 @@
         "program_url": "https://www.vultr.com/company/referral-program/",
         "type": "self-service",
         "commission_type": "one-time",
-        "notes": "Referred user must be active 30+ days and have paid $100+. Terms read from the referral dashboard on 2026-08-29."
+        "notes": "Referred user must be active 30+ days and have paid $100+. Terms read from the referral dashboard on 2026-08-29.",
+        "read_on": "2026-08-29"
       },
       "conditions": [
         {
@@ -37660,7 +37677,8 @@
         "program_url": "https://techdocs.akamai.com/cloud-computing/docs/referral-program",
         "type": "self-service",
         "commission_type": "credits",
-        "notes": "A referral link is issued only after the referrer has spent at least $25 on Akamai Cloud services, not counting promotional credits (read 2026-10-06)."
+        "notes": "A referral link is issued only after the referrer has spent at least $25 on Akamai Cloud services, not counting promotional credits (read 2026-10-06).",
+        "read_on": "2026-10-06"
       },
       "conditions": [
         {

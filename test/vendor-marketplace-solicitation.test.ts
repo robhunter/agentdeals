@@ -6,6 +6,18 @@ import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+const { loadOffers } = await import("../dist/data.js");
+const { documentsVendorReferralProgram, hasOurReferralLink } = await import("../dist/referral-surfaces.js");
+const { toSlug } = await import("../dist/vendor-slug.js");
+
+const vendorsRunningTheirOwnProgram = [
+  ...new Set(
+    loadOffers()
+      .filter((o: any) => documentsVendorReferralProgram(o) && !hasOurReferralLink(o.vendor, o))
+      .map((o: any) => o.vendor as string)
+  ),
+];
+
 let serverPort = 0;
 let serverProc: ChildProcess | null = null;
 
@@ -73,7 +85,8 @@ describe("what the vendor pages keep", () => {
   after(() => { serverProc?.kill(); });
 
   it("a vendor running its own referral program keeps that section", async () => {
-    for (const slug of ["vercel", "neon", "proton-mail", "proton-drive", "proton-vpn", "proton-pass"]) {
+    assert.ok(vendorsRunningTheirOwnProgram.length >= 4, `expected several vendors running their own program, got ${vendorsRunningTheirOwnProgram.length}`);
+    for (const slug of vendorsRunningTheirOwnProgram.map((vendor) => toSlug(vendor))) {
       const html = await getText(`/vendor/${slug}`);
       assert.ok(html.includes(">Referral Program</h2>"), `/vendor/${slug} lost its referral program section`);
       assert.deepStrictEqual(solicitationsIn(html), [], `/vendor/${slug} gained a solicitation`);

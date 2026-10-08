@@ -1,7 +1,8 @@
 import { getAllPlatformCodes, getPlatformCodeForVendor, referrerCompensationOf, restrictionsOf } from "./platform-codes.js";
 import type { PlatformCode, ReferrerCompensation } from "./platform-codes.js";
 import { toSlug } from "./vendor-slug.js";
-import type { Offer, Referral } from "./types.js";
+import { programPageAnswersForUrl } from "./link-health.js";
+import type { Offer, Referral, ReferralProgram } from "./types.js";
 
 export type OurReferralLinkSource = "platform_code" | "offer_referral";
 
@@ -100,8 +101,22 @@ export function hasOurReferralLink(vendorName: string, offer?: Offer | null): bo
   return ourReferralLinkFor(vendorName, offer) !== null;
 }
 
-export function documentsVendorReferralProgram(offer?: Offer | null): boolean {
-  return offer?.referral_program?.available === true;
+const A_DATE = /^\d{4}-\d{2}-\d{2}$/;
+
+export const TERMS_READ_LABEL = "Terms read";
+
+export function termsReadOn(program?: ReferralProgram | null): string | null {
+  const readOn = program?.read_on;
+  return typeof readOn === "string" && A_DATE.test(readOn) ? readOn : null;
+}
+
+export function documentsVendorReferralProgram(
+  offer?: Offer | null
+): offer is Offer & { referral_program: ReferralProgram } {
+  const program = offer?.referral_program;
+  if (program?.available !== true) return false;
+  if (termsReadOn(program) === null) return false;
+  return programPageAnswersForUrl(program.program_url);
 }
 
 export function hasAnyReferralSurface(vendorName: string, offer?: Offer | null): boolean {

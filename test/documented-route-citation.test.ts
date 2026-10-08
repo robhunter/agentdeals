@@ -62,7 +62,7 @@ const CITE_THE_SITE_ROOT = ["/api/new", "/api/newest", "/api/audit-stack", "/api
 const SOURCE_POPULATION_PAGES: [string, string, number][] = [
   ["/api/llm-pricing", "providers", 60],
   ["/api/hosting-pricing", "platforms", 50],
-  ["/api/referral-programs", "programs", 15],
+  ["/api/referral-programs", "programs", 5],
   ["/api/deadlines", "deadlines", 0],
 ];
 
