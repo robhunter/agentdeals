@@ -945,14 +945,18 @@ const DOCUMENTED_OPERATIONS: Record<string, Record<string, any>> = {
                       type: "object",
                       properties: {
                         vendor: { type: "string" },
-                        free_tier: { type: "string" },
+                        current_tier: { type: "string" },
+                        free_tier_limits: { type: "string" },
                         conditions: LISTING_CONDITIONS_PROPERTY,
-                        estimated_monthly: { type: "string" },
-                        notes: { type: "string" }
+                        estimated_monthly_cost: { type: "string" },
+                        free_alternative: { type: "object", properties: { vendor: { type: "string" }, tier: { type: "string" }, description: { type: "string" }, conditions: LISTING_CONDITIONS_PROPERTY } },
+                        recent_changes: { type: "array", items: { type: "string" } }
                       }
                     }
                   },
-                  total_estimated_monthly: { type: "string" }
+                  total_estimated_cost: { type: "string" },
+                  savings_available: { type: "string" },
+                  warnings: { type: "array", items: { type: "string" } }
                 }
               }
             }

@@ -150,9 +150,6 @@ function planStackHtml(): string {
   return `<!DOCTYPE html>
 <html><head><meta charset="utf-8"><style>${SHARED_STYLES}
   .cost-cell { font-weight: 600; }
-  .cost-free { color: #34d399; }
-  .cost-moderate { color: #fbbf24; }
-  .cost-expensive { color: #f87171; }
   .rec-card { background: #1e293b; border-radius: 8px; padding: 12px; margin: 8px 0; border-left: 3px solid #3b82f6; }
   .rec-vendor { font-weight: 600; color: #f1f5f9; }
   .rec-reason { font-size: 13px; color: #94a3b8; margin-top: 4px; }
@@ -166,45 +163,46 @@ function render(args, data) {
   if (!data) { el.innerHTML = '<div class="empty">Loading...</div>'; return; }
   const mode = args.mode || "recommend";
 
-  if (mode === "recommend" && data.recommendations) {
-    const recs = data.recommendations || [];
+  if (mode === "recommend" && Array.isArray(data.stack)) {
     el.innerHTML = \`
       <h2>Recommended Stack</h2>
-      <p class="subtitle">Free-tier stack for: \${esc(args.use_case || "your project")}</p>
-      \${recs.map(r => \`
+      <p class="subtitle">Free-tier stack for: \${esc(data.use_case || args.use_case || "your project")}</p>
+      \${data.stack.map(r => {
+        const candidates = r.candidates || [];
+        const tieText = r.tie_count > candidates.length
+          ? candidates.length + " of " + r.tie_count + " equally-qualified options, rotated daily"
+          : candidates.length + " option" + (candidates.length === 1 ? "" : "s");
+        return \`
         <div class="rec-card">
           <div style="display:flex;justify-content:space-between">
-            <span class="rec-vendor">\${esc(r.vendor || r.service)}</span>
-            <span class="badge badge-blue">\${esc(r.category || "")}</span>
+            <span class="rec-vendor">\${esc(r.role)}</span>
+            <span class="badge badge-blue">\${esc(r.category)}</span>
           </div>
-          <div class="rec-reason">\${esc(r.reason || r.description || "")}</div>
-          \${r.free_tier ? \`<div style="margin-top:4px;font-size:12px;color:#a78bfa">\${esc(r.free_tier)}</div>\` : ""}
-        </div>
-      \`).join("")}
+          <div style="margin-top:4px;font-size:14px">\${candidates.map(c => \`<a href="${BASE_URL}/vendor/\${encodeURIComponent((c.vendor || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""))}" target="_blank">\${esc(c.vendor)}</a>\`).join(", ")}</div>
+          <div class="rec-reason">\${esc(tieText)}</div>
+        </div>\`;
+      }).join("")}
+      <table>
+        <tbody><tr><td style="font-weight:600">Monthly cost</td><td class="cost-cell">\${esc(data.total_monthly_cost)}</td></tr></tbody>
+      </table>
       <div class="link-row"><a href="${BASE_URL}/stacks" target="_blank">Browse curated stacks on agentdeals.dev \\u2192</a></div>
     \`;
     return;
   }
 
-  if (mode === "estimate" && (data.services || data.costs)) {
-    const services = data.services || data.costs || [];
-    const total = data.total_monthly || services.reduce((s, v) => s + (v.monthly_cost || 0), 0);
+  if (mode === "estimate" && Array.isArray(data.services)) {
     el.innerHTML = \`
       <h2>Cost Estimate</h2>
       <p class="subtitle">Scale: \${esc(args.scale || "hobby")}</p>
       <table>
         <thead><tr><th>Service</th><th>Free Tier</th><th style="text-align:right">Monthly Cost</th></tr></thead>
         <tbody>
-          \${services.map(s => {
-            const cost = s.monthly_cost || 0;
-            const cls = cost === 0 ? "cost-free" : cost < 50 ? "cost-moderate" : "cost-expensive";
-            return \`<tr>
-              <td>\${esc(s.vendor || s.service)}</td>
-              <td style="font-size:13px;color:#94a3b8">\${esc(s.free_tier || s.tier || "")}</td>
-              <td class="cost-cell \${cls}" style="text-align:right">\${cost === 0 ? "Free" : "$" + cost.toFixed(0) + "/mo"}</td>
-            </tr>\`;
-          }).join("")}
-          <tr style="border-top:2px solid #334155"><td colspan="2" style="font-weight:600">Total</td><td class="cost-cell" style="text-align:right;font-weight:700">\${total === 0 ? "Free" : "$" + total.toFixed(0) + "/mo"}</td></tr>
+          \${data.services.map(s => \`<tr>
+              <td>\${esc(s.vendor)}</td>
+              <td style="font-size:13px;color:#94a3b8">\${esc(s.free_tier_limits)}</td>
+              <td class="cost-cell" style="text-align:right">\${esc(s.estimated_monthly_cost)}</td>
+            </tr>\`).join("")}
+          <tr style="border-top:2px solid #334155"><td colspan="2" style="font-weight:600">Total</td><td class="cost-cell" style="text-align:right;font-weight:700">\${esc(data.total_estimated_cost)}</td></tr>
         </tbody>
       </table>
       <div class="link-row"><a href="${BASE_URL}/estimate" target="_blank">Try the interactive cost estimator \\u2192</a></div>
@@ -212,29 +210,22 @@ function render(args, data) {
     return;
   }
 
-  if (mode === "audit") {
-    const risks = data.risks || data.risk_flags || [];
-    const gaps = data.gaps || data.coverage_gaps || [];
-    const savings = data.savings || data.cost_savings || [];
+  if (mode === "audit" && Array.isArray(data.services)) {
+    const risks = data.services.filter(s => s.risk_level === "caution" || s.risk_level === "risky");
+    const gaps = data.gaps || [];
     el.innerHTML = \`
       <h2>Stack Audit</h2>
       <p class="subtitle">Infrastructure risk and cost analysis</p>
       \${risks.length > 0 ? \`
         <div class="card">
           <h3>\\u26A0\\uFE0F Risk Flags</h3>
-          \${risks.map(r => \`<div style="margin:6px 0;font-size:14px"><span class="badge badge-red">\${esc(r.level || "risk")}</span> <strong>\${esc(r.vendor || r.service)}</strong>: \${esc(r.reason || r.description || "")}</div>\`).join("")}
+          \${risks.map(r => \`<div style="margin:6px 0;font-size:14px"><span class="badge badge-red">\${esc(r.risk_level)}</span> <strong>\${esc(r.vendor)}</strong>: \${esc(r.risk_cause ? r.risk_cause.summary : "")}</div>\`).join("")}
         </div>
       \` : ""}
       \${gaps.length > 0 ? \`
         <div class="card">
           <h3>Coverage Gaps</h3>
-          \${gaps.map(g => \`<div style="margin:4px 0;font-size:14px">\${esc(g.category || g)}: \${esc(g.suggestion || "")}</div>\`).join("")}
-        </div>
-      \` : ""}
-      \${savings.length > 0 ? \`
-        <div class="card">
-          <h3>Savings Opportunities</h3>
-          \${savings.map(s => \`<div style="margin:4px 0;font-size:14px"><strong>\${esc(s.vendor || s.service)}</strong> \\u2192 \${esc(s.alternative || "")}: \${esc(s.reason || "")}</div>\`).join("")}
+          \${gaps.map(g => \`<div style="margin:4px 0;font-size:14px">\${esc(g.category)}</div>\`).join("")}
         </div>
       \` : ""}
       <div class="link-row"><a href="${BASE_URL}/free-tier-risk" target="_blank">View full risk index on agentdeals.dev \\u2192</a></div>
