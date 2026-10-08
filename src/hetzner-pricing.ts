@@ -57,6 +57,12 @@ export const HETZNER_CLOUD_ADD_ON_PRICES = {
   snapshotPerGbMonth: 0.0143,
 };
 
+export const HETZNER_OBJECT_STORAGE_PRICES = {
+  basePerMonth: { eur: 6.49, usd: 7.99 },
+  storagePerTbHourBeyondTheQuota: { eur: 0.0087, usd: 0.0123 },
+  egressPerTbBeyondTheQuota: { eur: 1, usd: 1.2 },
+};
+
 export const HETZNER_APRIL_CHANGES = [
   { product: "CX23 (2 vCPU, 4 GB) — entry cloud server", before: "€2.99", after: "€3.99", pctChange: 33 },
   { product: "LB11 (Load Balancer)", before: "€5.39", after: "€7.49", pctChange: 39 },

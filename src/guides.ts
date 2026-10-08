@@ -105,6 +105,7 @@ const GUIDE_ENTRIES: Array<{ slug: string; title: string }> = [
   { slug: "guides/vercel-ai-sdk", title: "Using AgentDeals with Vercel AI SDK" },
   { slug: "aws-app-runner-migration", title: "AWS App Runner Migration Guide" },
   { slug: "free-tier-facts-ai-models-get-wrong", title: "Free-Tier Facts AI Models Get Wrong (2026)" },
+  { slug: "accounting-software-pricing-2026", title: "Accounting Software 2026: Free Plans and Price Increases" },
 ];
 
 export function getGuideList(): GuideMetadata[] {

@@ -53,6 +53,7 @@ import { COMPARED_SERVICES_PLACEHOLDER, appendToCompiledFigureSlots, fillCompare
 import { CHECK_ESTABLISHES, CHECK_SCOPE_CLASS, NO_CATALOGUE_RECORD_SOURCE, NO_FETCHABLE_PAGE_STATES_THE_ROW, catalogueMarkersOffRowsNoFetchablePageStates, citedSourcesListHtml, figureSourceLinkHtml, recordSourcesOffRowsThatCiteTheirOwn, freeTierSourceOf, freeTierSourceWeMayCite, freePlanExcerptHtml, pageQuoteHtml, readClauseHtml, readSourceOf, serviceSourceMarkerHtml, uncitedSourceTagHtml, withCitedSources, type CitedService, type FreeTierSource } from "./source-citation.js";
 import { vendorHistorySentence } from "./vendor-history.js";
 import { guideBlurb } from "./guide-blurbs.js";
+import { ACCOUNTING_PRICES_PATH, ACCOUNTING_PRICES_SLUG, archiveCaptureDate, archivedAddress, readAccountingPrices, type AccountingPrices, type AccountingSource } from "./accounting-prices.js";
 import { MODEL_BELIEFS_CLOSING, MODEL_BELIEFS_HEADING, MODEL_BELIEFS_PATH, MODEL_BELIEFS_RERUN_SENTENCE, MODEL_BELIEFS_SLUG, MODEL_BELIEFS_TITLE, MOSTLY_OLD_ANSWERS, QUOTED_MODEL_BELIEFS_CLASS, answersFor, answersPerFact, answersPerModel, changedLabel, factsByOldAnswers, findingOf, introOf, metaDescriptionOf, methodOf, modelsByOldAnswers, modelsMostlyOld, numberWord, oldAnswersFrom, readModelBeliefs, testedOnOf, type ModelBeliefs } from "./model-beliefs.js";
 import { changesToStartupProgrammes } from "./startup-programme-changes.js";
 import { HETZNER_APRIL_CHANGES, HETZNER_AVAILABILITY_READ, HETZNER_AX102_GERMANY, HETZNER_AX42_GERMANY, HETZNER_CLOUD_PLANS, HETZNER_PRICES_READ, HETZNER_PRICE_SOURCE, HETZNER_PROMO_CODE_PAGE, HETZNER_SETUP_FEE_STATEMENTS, HETZNER_SINGAPORE_EXAMPLE, HETZNER_APRIL_DOLLAR_EXAMPLE, cheaperUnorderablePlanWithMoreServer, cheapestListedHetznerPlan, cheapestOrderableHetznerPlan, hetznerEntryPriceClause, unorderableHetznerPlans, unpayableLowestPricesSentence } from "./hetzner-pricing.js";
@@ -67,7 +68,7 @@ import { CHANGE_DIRECTION, changeDirectionTable, directionRatioLabel } from "./c
 import { removalDurability, removalReturnRateSentence, removalDurabilityPattern, lastingRemovalExamplesFor } from "./removal-durability.js";
 import { cutsByQuarterNewestFirst, cutsWindow, freeTierCutsIn } from "./free-tier-cuts.js";
 import { CHANGE_TIMELINE_LINK_TEXT, CHANGE_TIMELINE_PATH, CUTS_THIS_YEAR_ANCHOR, CUTS_THIS_YEAR_HEADING, CUTS_THIS_YEAR_SUMMARY_CLASS, FIGURES_AS_OF_CLASS, FREE_TIER_TRACKER_HEADING, FREE_TIER_TRACKER_META_DESCRIPTION, FREE_TIER_TRACKER_TITLE, FREE_TIER_TRACKER_YEAR, NO_KNOWN_EFFECTIVE_DATE_LEFT_OUT, UNTIL_ITS_DATE_ARRIVES, changeTypesAmong, cutsThisYearSummary, figuresAsOfTheChangeHtml, isAFirstQuarterCard, neonFiguresWereJanuarysHtml, quarterAnchor, quarterHeading } from "./free-tier-tracker.js";
-import { changeCitesASource, citationLabel, changeIsUncited, changeSourceCitation, changeSourceLinkHtml, changeCitationHtml, citedClaimHtml, changeSummaryHtml, changeSummaryText, citedChanges, uncitedChangeNotice, uncitedChangeNoticeHtml, ratingWithheldForNoSourceClause, ratingWithheldForNoSourceSentence, ratingWithheldClause, ratingWithheldSentence, type WithheldRecordCounts, UNCITED_CHANGE_LABEL, RECORD_SOURCE_CLASS, type CitableChangeRow } from "./change-citation.js";
+import { changeCitesASource, citationLabel, changeIsUncited, changeSourceCitation, changeSourceLinkHtml, changeCitationHtml, citedClaimHtml, changeSummaryHtml, changeSummaryText, citedChanges, uncitedChangeNotice, uncitedChangeNoticeHtml, ratingWithheldForNoSourceClause, ratingWithheldForNoSourceSentence, ratingWithheldClause, ratingWithheldSentence, type WithheldRecordCounts, UNCITED_CHANGE_LABEL, RECORD_SOURCE_CLASS, CITATION_REL, type CitableChangeRow } from "./change-citation.js";
 import { growthLimitPhrases } from "./growth-limits.js";
 import { registerAgent, authenticateRequest, validateVestauthUrl, hashApiKey, updateAgentX402Address, getAgentById } from "./agents.js";
 import { attributeAuthenticatedRequest } from "./referral-attribution.js";
@@ -565,6 +566,7 @@ const offers = loadOffers();
 const categories = getCategories();
 const dealChanges = loadDealChanges();
 const modelBeliefs: ModelBeliefs = readModelBeliefs();
+const accountingPrices: AccountingPrices = readAccountingPrices();
 const trackedChangeRecords = trackedChanges(dealChanges);
 const trackedChangeCount = trackedChangeRecords.length;
 
@@ -8470,6 +8472,14 @@ const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
     metaDesc: metaDescriptionOf(modelBeliefs),
     contextHtml: "",
     tag: "model-beliefs",
+    primaryVendor: "AgentDeals",
+  },
+  {
+    slug: ACCOUNTING_PRICES_SLUG,
+    title: accountingPrices.title,
+    metaDesc: accountingPrices.meta_description,
+    contextHtml: "",
+    tag: "accounting-software",
     primaryVendor: "AgentDeals",
   },
 ];
@@ -19514,6 +19524,192 @@ ${globalNavCss()}
   </div>
 
   <p class="section-intro">${escHtmlServer(MODEL_BELIEFS_CLOSING)}</p>
+
+  ${buildMoreAlternativesGuides(slug)}
+
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+</div>
+</body>
+</html>`;
+}
+
+function accountingSourceLinkText(url: string): string {
+  const archived = archivedAddress(url);
+  return archived === null ? citationLabel(url) : `${citationLabel(archived)}, archived ${archiveCaptureDate(url)}`;
+}
+
+function accountingLinkHtml(url: string, text: string): string {
+  return `<a href="${escHtmlServer(url)}" target="_blank" rel="${CITATION_REL}">${escHtmlServer(text)}</a>`;
+}
+
+function accountingSourceHtml(source: AccountingSource): string {
+  if (source.urls.length === 1) return accountingLinkHtml(source.urls[0], source.label);
+  const captures = source.urls.map((url) => `<span class="capture-day">${accountingLinkHtml(url, archiveCaptureDate(url) ?? citationLabel(url))}</span>`).join(", ");
+  return `${escHtmlServer(source.label)} (${captures})`;
+}
+
+function accountingLinkedWordsHtml(text: string, links: readonly { text: string; url: string }[]): string {
+  const placed = links
+    .map((link) => ({ ...link, at: text.indexOf(link.text) }))
+    .filter((link) => link.at >= 0)
+    .sort((a, b) => a.at - b.at);
+  let html = "";
+  let from = 0;
+  for (const link of placed) {
+    if (link.at < from) continue;
+    html += escHtmlServer(text.slice(from, link.at)) + accountingLinkHtml(link.url, link.text);
+    from = link.at + link.text.length;
+  }
+  return html + escHtmlServer(text.slice(from));
+}
+
+function buildAccountingSoftwarePricingPage(prices: AccountingPrices = accountingPrices): string {
+  const title = prices.title;
+  const metaDesc = prices.meta_description;
+  const slug = ACCOUNTING_PRICES_SLUG;
+  const pubDate = prices.published;
+  const cell = (text: string) => `<td>${escHtmlServer(text)}</td>`;
+  const free = prices.free_plans;
+
+  const freePlanRows = [
+    ...free.rows.map((row) => `<tr><th scope="row">${escHtmlServer(row.label)}</th>${row.cells.map(cell).join("")}</tr>`),
+    `<tr><th scope="row">Source</th>${free.sources.map((list) => `<td>${list.map(accountingSourceHtml).join("; ")}</td>`).join("")}</tr>`,
+  ].join("\n    ");
+
+  const changeRows = prices.price_changes.rows.map((row) =>
+    `<tr>${[row.vendor, row.plan, row.old, row.new, row.who, row.from].map(cell).join("")}<td>${accountingSourceHtml(row.source)}</td></tr>`
+  ).join("\n    ");
+
+  const listPriceRows = prices.list_prices.rows.map((row) =>
+    `<tr>${[row.vendor, row.plan, row.per_month, row.notes].map(cell).join("")}</tr>`
+  ).join("\n    ");
+
+  const feeRows = prices.payment_fees.rows.map((row) =>
+    `<tr>${[row.vendor, row.card, row.ach].map(cell).join("")}</tr>`
+  ).join("\n    ");
+
+  const vendorSources = prices.vendors.map((vendor) =>
+    `<li><strong>${escHtmlServer(vendor.name)}</strong>, read ${escHtmlServer(vendor.read_on)}: ${vendor.sources.map((source) => `${accountingLinkHtml(source.url, accountingSourceLinkText(source.url))} (${escHtmlServer(source.covers)})`).join("; ")}</li>`
+  ).join("\n    ");
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description: metaDesc,
+    datePublished: pubDate,
+    dateModified: pageDateModified(ACCOUNTING_PRICES_PATH, pubDate),
+    author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)} — AgentDeals</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="${BASE_URL}/${slug}">
+<meta property="article:published_time" content="${escHtmlServer(pubDate)}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals — Weekly Pricing Digest" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:1100px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
+.pub-date{color:var(--text-dim);font-size:.85rem;margin-bottom:1.5rem}
+.section-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:1.25rem;line-height:1.7}
+.table-scroll{overflow-x:auto}
+.pricing-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.85rem}
+.pricing-table th{text-align:left;padding:.75rem .5rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.pricing-table td{padding:.6rem .5rem;border-bottom:1px solid var(--border);vertical-align:top}
+.pricing-table th[scope="row"]{text-transform:none;letter-spacing:normal;font-size:.85rem;border-bottom:1px solid var(--border);vertical-align:top}
+.accounting-price-changes td:nth-child(6),.capture-day{white-space:nowrap}
+.accounting-sources{margin:0 0 2rem 1.25rem;font-size:.85rem;color:var(--text-muted);line-height:1.7}
+.accounting-sources li{margin-bottom:.5rem}
+.accounting-sources strong{color:var(--text)}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+footer a{color:var(--accent)}
+@media(max-width:768px){h1{font-size:1.6rem}.pricing-table{font-size:.75rem}.pricing-table td,.pricing-table th{padding:.4rem .25rem}}
+${globalNavCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("guides")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; ${escHtmlServer(title)}</div>
+  <article class="accounting-guide">
+  <h1>${escHtmlServer(title)}</h1>
+  <p class="section-intro">${escHtmlServer(prices.lead)}</p>
+  <p class="pub-date">${escHtmlServer(prices.read_line)}</p>
+
+  <h2 id="free-plans">${escHtmlServer(free.heading)}</h2>
+  <p class="section-intro">${escHtmlServer(free.intro)}</p>
+  <div class="table-scroll">
+  <table class="pricing-table accounting-free-plans">
+    <thead><tr><th></th>${free.plans.map((plan) => `<th>${escHtmlServer(plan)}</th>`).join("")}</tr></thead>
+    <tbody>
+    ${freePlanRows}
+    </tbody>
+  </table>
+  </div>
+
+  <h2 id="price-changes">${escHtmlServer(prices.price_changes.heading)}</h2>
+  <p class="section-intro">${escHtmlServer(prices.price_changes.intro)}</p>
+  <div class="table-scroll">
+  <table class="pricing-table accounting-price-changes">
+    <thead><tr><th>Vendor</th><th>Plan</th><th>Old</th><th>New</th><th>Who pays it</th><th>From</th><th>Source</th></tr></thead>
+    <tbody>
+    ${changeRows}
+    </tbody>
+  </table>
+  </div>
+  <p class="section-intro">${escHtmlServer(prices.price_changes.note)}</p>
+
+  <h2 id="list-prices">${escHtmlServer(prices.list_prices.heading)}</h2>
+  <p class="section-intro">${escHtmlServer(prices.list_prices.intro)}</p>
+  <div class="table-scroll">
+  <table class="pricing-table accounting-list-prices">
+    <thead><tr><th>Vendor</th><th>Plan</th><th>Per month</th><th>Notes</th></tr></thead>
+    <tbody>
+    ${listPriceRows}
+    </tbody>
+  </table>
+  </div>
+  <p class="section-intro">${escHtmlServer(prices.list_prices.offers)}</p>
+
+  <h2 id="payment-fees">${escHtmlServer(prices.payment_fees.heading)}</h2>
+  <div class="table-scroll">
+  <table class="pricing-table accounting-payment-fees">
+    <thead><tr><th>Vendor</th><th>Card payments</th><th>ACH bank payments</th></tr></thead>
+    <tbody>
+    ${feeRows}
+    </tbody>
+  </table>
+  </div>
+
+  <h2 id="checked-claim">${escHtmlServer(prices.checked_claim.heading)}</h2>
+  <p class="section-intro">${accountingLinkedWordsHtml(prices.checked_claim.text, prices.checked_claim.links)}</p>
+
+  <h2 id="sources">Sources</h2>
+  <ul class="accounting-sources">
+    ${vendorSources}
+  </ul>
+  </article>
 
   ${buildMoreAlternativesGuides(slug)}
 
@@ -53382,6 +53578,7 @@ ${MCP_TOOLS.map(t => `- **${t.name}**: ${t.brief}`).join("\n")}
 - [Browse Categories](${BASE_URL}/category)
 - [Pricing Changes Feed](${BASE_URL}/feed.xml)
 - [Expiring Deals](${BASE_URL}/expiring)
+- [${accountingPrices.title}](${BASE_URL}${ACCOUNTING_PRICES_PATH})
 - [Full details for LLMs](${BASE_URL}/llms-full.txt)
 `;
     res.writeHead(200, { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "public, max-age=3600" });
@@ -54156,6 +54353,11 @@ ${catList}
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/free-tier-facts-ai-models-get-wrong", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildModelBeliefsPage());
+  } else if (url.pathname === "/accounting-software-pricing-2026" && isGetOrHead) {
+    recordApiHit("/accounting-software-pricing-2026");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/accounting-software-pricing-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildAccountingSoftwarePricingPage());
   } else if (url.pathname === "/hetzner-pricing-2026" && isGetOrHead) {
     recordApiHit("/hetzner-pricing-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/hetzner-pricing-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
