@@ -13,39 +13,42 @@ export interface HetznerPlan {
   ram: number;
   region: string;
   eur: number;
+  usd: number;
   available: boolean;
 }
 
 export const HETZNER_CLOUD_PLANS: HetznerPlan[] = [
-  { sku: "CX23", line: "Cost-Optimized", cpu: "Intel/AMD", vcpu: 2, ram: 4, region: "EU", eur: 5.99, available: false },
-  { sku: "CX33", line: "Cost-Optimized", cpu: "Intel/AMD", vcpu: 4, ram: 8, region: "EU", eur: 8.99, available: false },
-  { sku: "CX43", line: "Cost-Optimized", cpu: "Intel/AMD", vcpu: 8, ram: 16, region: "EU", eur: 16.49, available: false },
-  { sku: "CX53", line: "Cost-Optimized", cpu: "Intel/AMD", vcpu: 16, ram: 32, region: "EU", eur: 29.99, available: false },
-  { sku: "CAX11", line: "Cost-Optimized", cpu: "Ampere Arm", vcpu: 2, ram: 4, region: "EU", eur: 6.49, available: false },
-  { sku: "CAX21", line: "Cost-Optimized", cpu: "Ampere Arm", vcpu: 4, ram: 8, region: "EU", eur: 10.99, available: false },
-  { sku: "CAX31", line: "Cost-Optimized", cpu: "Ampere Arm", vcpu: 8, ram: 16, region: "EU", eur: 21.49, available: false },
-  { sku: "CAX41", line: "Cost-Optimized", cpu: "Ampere Arm", vcpu: 16, ram: 32, region: "EU", eur: 41.49, available: false },
-  { sku: "CPX02", line: "Regular Performance", cpu: "AMD", vcpu: 1, ram: 1, region: "EU", eur: 6.49, available: true },
-  { sku: "CPX12", line: "Regular Performance", cpu: "AMD", vcpu: 1, ram: 2, region: "EU", eur: 11.99, available: true },
-  { sku: "CPX22", line: "Regular Performance", cpu: "AMD", vcpu: 2, ram: 4, region: "EU", eur: 19.99, available: true },
-  { sku: "CPX32", line: "Regular Performance", cpu: "AMD", vcpu: 4, ram: 8, region: "EU", eur: 35.99, available: true },
-  { sku: "CPX42", line: "Regular Performance", cpu: "AMD", vcpu: 8, ram: 16, region: "EU", eur: 69.99, available: true },
-  { sku: "CPX52", line: "Regular Performance", cpu: "AMD", vcpu: 12, ram: 24, region: "EU", eur: 100.99, available: true },
-  { sku: "CPX62", line: "Regular Performance", cpu: "AMD", vcpu: 16, ram: 32, region: "EU", eur: 130.49, available: true },
-  { sku: "CPX11", line: "Regular Performance", cpu: "AMD", vcpu: 2, ram: 2, region: "US", eur: 17.99, available: true },
-  { sku: "CPX21", line: "Regular Performance", cpu: "AMD", vcpu: 3, ram: 4, region: "US", eur: 32.49, available: true },
-  { sku: "CPX31", line: "Regular Performance", cpu: "AMD", vcpu: 4, ram: 8, region: "US", eur: 62.99, available: true },
-  { sku: "CPX41", line: "Regular Performance", cpu: "AMD", vcpu: 8, ram: 16, region: "US", eur: 120.99, available: true },
-  { sku: "CPX51", line: "Regular Performance", cpu: "AMD", vcpu: 16, ram: 32, region: "US", eur: 238.49, available: true },
-  { sku: "CCX13", line: "General Purpose", cpu: "dedicated AMD", vcpu: 2, ram: 8, region: "EU", eur: 43.49, available: true },
-  { sku: "CCX23", line: "General Purpose", cpu: "dedicated AMD", vcpu: 4, ram: 16, region: "EU", eur: 86.49, available: true },
-  { sku: "CCX33", line: "General Purpose", cpu: "dedicated AMD", vcpu: 8, ram: 32, region: "EU", eur: 138.99, available: true },
-  { sku: "CCX43", line: "General Purpose", cpu: "dedicated AMD", vcpu: 16, ram: 64, region: "EU", eur: 276.49, available: true },
-  { sku: "CCX53", line: "General Purpose", cpu: "dedicated AMD", vcpu: 32, ram: 128, region: "EU", eur: 533.99, available: true },
-  { sku: "CCX63", line: "General Purpose", cpu: "dedicated AMD", vcpu: 48, ram: 192, region: "EU", eur: 853.99, available: true },
+  { sku: "CX23", line: "Cost-Optimized", cpu: "Intel/AMD", vcpu: 2, ram: 4, region: "EU", eur: 5.99, usd: 7.09, available: false },
+  { sku: "CX33", line: "Cost-Optimized", cpu: "Intel/AMD", vcpu: 4, ram: 8, region: "EU", eur: 8.99, usd: 10.59, available: false },
+  { sku: "CX43", line: "Cost-Optimized", cpu: "Intel/AMD", vcpu: 8, ram: 16, region: "EU", eur: 16.49, usd: 19.09, available: false },
+  { sku: "CX53", line: "Cost-Optimized", cpu: "Intel/AMD", vcpu: 16, ram: 32, region: "EU", eur: 29.99, usd: 35.59, available: false },
+  { sku: "CAX11", line: "Cost-Optimized", cpu: "Ampere Arm", vcpu: 2, ram: 4, region: "EU", eur: 6.49, usd: 7.59, available: false },
+  { sku: "CAX21", line: "Cost-Optimized", cpu: "Ampere Arm", vcpu: 4, ram: 8, region: "EU", eur: 10.99, usd: 13.09, available: false },
+  { sku: "CAX31", line: "Cost-Optimized", cpu: "Ampere Arm", vcpu: 8, ram: 16, region: "EU", eur: 21.49, usd: 25.59, available: false },
+  { sku: "CAX41", line: "Cost-Optimized", cpu: "Ampere Arm", vcpu: 16, ram: 32, region: "EU", eur: 41.49, usd: 49.09, available: false },
+  { sku: "CPX02", line: "Regular Performance", cpu: "AMD", vcpu: 1, ram: 1, region: "EU", eur: 6.49, usd: 8.09, available: true },
+  { sku: "CPX12", line: "Regular Performance", cpu: "AMD", vcpu: 1, ram: 2, region: "EU", eur: 11.99, usd: 14.09, available: true },
+  { sku: "CPX22", line: "Regular Performance", cpu: "AMD", vcpu: 2, ram: 4, region: "EU", eur: 19.99, usd: 23.59, available: true },
+  { sku: "CPX32", line: "Regular Performance", cpu: "AMD", vcpu: 4, ram: 8, region: "EU", eur: 35.99, usd: 42.59, available: true },
+  { sku: "CPX42", line: "Regular Performance", cpu: "AMD", vcpu: 8, ram: 16, region: "EU", eur: 69.99, usd: 82.59, available: true },
+  { sku: "CPX52", line: "Regular Performance", cpu: "AMD", vcpu: 12, ram: 24, region: "EU", eur: 100.99, usd: 119.59, available: true },
+  { sku: "CPX62", line: "Regular Performance", cpu: "AMD", vcpu: 16, ram: 32, region: "EU", eur: 130.49, usd: 153.59, available: true },
+  { sku: "CPX11", line: "Regular Performance", cpu: "AMD", vcpu: 2, ram: 2, region: "US", eur: 17.99, usd: 21.09, available: true },
+  { sku: "CPX21", line: "Regular Performance", cpu: "AMD", vcpu: 3, ram: 4, region: "US", eur: 32.49, usd: 38.09, available: true },
+  { sku: "CPX31", line: "Regular Performance", cpu: "AMD", vcpu: 4, ram: 8, region: "US", eur: 62.99, usd: 74.09, available: true },
+  { sku: "CPX41", line: "Regular Performance", cpu: "AMD", vcpu: 8, ram: 16, region: "US", eur: 120.99, usd: 142.09, available: true },
+  { sku: "CPX51", line: "Regular Performance", cpu: "AMD", vcpu: 16, ram: 32, region: "US", eur: 238.49, usd: 280.09, available: true },
+  { sku: "CCX13", line: "General Purpose", cpu: "dedicated AMD", vcpu: 2, ram: 8, region: "EU", eur: 43.49, usd: 51.09, available: true },
+  { sku: "CCX23", line: "General Purpose", cpu: "dedicated AMD", vcpu: 4, ram: 16, region: "EU", eur: 86.49, usd: 102.09, available: true },
+  { sku: "CCX33", line: "General Purpose", cpu: "dedicated AMD", vcpu: 8, ram: 32, region: "EU", eur: 138.99, usd: 163.59, available: true },
+  { sku: "CCX43", line: "General Purpose", cpu: "dedicated AMD", vcpu: 16, ram: 64, region: "EU", eur: 276.49, usd: 326.09, available: true },
+  { sku: "CCX53", line: "General Purpose", cpu: "dedicated AMD", vcpu: 32, ram: 128, region: "EU", eur: 533.99, usd: 630.09, available: true },
+  { sku: "CCX63", line: "General Purpose", cpu: "dedicated AMD", vcpu: 48, ram: 192, region: "EU", eur: 853.99, usd: 1007.59, available: true },
 ];
 
 export const HETZNER_SINGAPORE_EXAMPLE = { sku: "CCX13", eur: 54.49 };
+
+export const HETZNER_APRIL_DOLLAR_EXAMPLE = { sku: "CX23", before: 3.49, after: 4.99 };
 
 export const HETZNER_CLOUD_ADD_ON_PRICES = {
   trafficPerTbBeyondTheIncluded: { euAndUs: 1, singapore: 7.4 },

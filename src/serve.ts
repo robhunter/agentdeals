@@ -55,7 +55,7 @@ import { vendorHistorySentence } from "./vendor-history.js";
 import { guideBlurb } from "./guide-blurbs.js";
 import { MODEL_BELIEFS_CLOSING, MODEL_BELIEFS_HEADING, MODEL_BELIEFS_PATH, MODEL_BELIEFS_RERUN_SENTENCE, MODEL_BELIEFS_SLUG, MODEL_BELIEFS_TITLE, MOSTLY_OLD_ANSWERS, QUOTED_MODEL_BELIEFS_CLASS, answersFor, answersPerFact, answersPerModel, changedLabel, factsByOldAnswers, findingOf, introOf, metaDescriptionOf, methodOf, modelsByOldAnswers, modelsMostlyOld, numberWord, oldAnswersFrom, readModelBeliefs, testedOnOf, type ModelBeliefs } from "./model-beliefs.js";
 import { changesToStartupProgrammes } from "./startup-programme-changes.js";
-import { HETZNER_APRIL_CHANGES, HETZNER_AVAILABILITY_READ, HETZNER_AX102_GERMANY, HETZNER_AX42_GERMANY, HETZNER_CLOUD_PLANS, HETZNER_PRICES_READ, HETZNER_PRICE_SOURCE, HETZNER_PROMO_CODE_PAGE, HETZNER_SETUP_FEE_STATEMENTS, HETZNER_SINGAPORE_EXAMPLE, cheaperUnorderablePlanWithMoreServer, cheapestListedHetznerPlan, cheapestOrderableHetznerPlan, hetznerEntryPriceClause, unorderableHetznerPlans, unpayableLowestPricesSentence } from "./hetzner-pricing.js";
+import { HETZNER_APRIL_CHANGES, HETZNER_AVAILABILITY_READ, HETZNER_AX102_GERMANY, HETZNER_AX42_GERMANY, HETZNER_CLOUD_PLANS, HETZNER_PRICES_READ, HETZNER_PRICE_SOURCE, HETZNER_PROMO_CODE_PAGE, HETZNER_SETUP_FEE_STATEMENTS, HETZNER_SINGAPORE_EXAMPLE, HETZNER_APRIL_DOLLAR_EXAMPLE, cheaperUnorderablePlanWithMoreServer, cheapestListedHetznerPlan, cheapestOrderableHetznerPlan, hetznerEntryPriceClause, unorderableHetznerPlans, unpayableLowestPricesSentence } from "./hetzner-pricing.js";
 import { HUNDRED_GB_SCENARIO, HUNDRED_TB_SCENARIO, ONE_TO_ONE_SCENARIO, STORAGE_RATES_READ, STORAGE_SCALE_WORKLOADS, TEN_TO_ONE_SCENARIO, cheapestProviderAt, costAfterMonthlyEgressGrantFor, costliestProviderAt, egressAllowanceSentence, egressBillAfterMonthlyGrantFor, egressBillOnceOverAllowance, egressRatioWhereCostsMatch, fixedMonthlyGrantsSentence, monthlyEgressGrantGb, monthlyEgressGrantSentence, monthlyStorageCost, providersWithScalingEgressAllowance, rateCardFor, scaleCostFor } from "./storage-cost-model.js";
 import { changeTimelineDate, supersededLineups, supersessionNote } from "./change-lineup.js";
 import { CORRECTION_TO_OUR_OWN_RECORD, isACorrectionToOurOwnRecord, isNoLongerInForce, printsBeforeAndAfter, eventResolutionFields, recordsStillInForce, recordsWeStandBehind, INCLUDE_RETRACTED_REJECTED } from "./change-resolution.js";
@@ -19041,6 +19041,7 @@ function buildHetznerPricing2026Page(): string {
   const unpayableLowestPrices = unpayableLowestPricesSentence();
   const moreServerForLess = cheaperUnorderablePlanWithMoreServer();
   const eur = (n: number) => `€${n.toFixed(2)}`;
+  const usd = (n: number) => `$${n.toFixed(2)}`;
 
   const planRows = HETZNER_CLOUD_PLANS.map(p => {
     const color = p.available ? "#3fb950" : "#f85149";
@@ -19050,7 +19051,7 @@ function buildHetznerPricing2026Page(): string {
       <td style="font-family:var(--mono);font-size:.85rem">${escHtmlServer(`${p.vcpu} ${p.cpu} · ${p.ram} GB`)}</td>
       <td>${escHtmlServer(p.line)}</td>
       <td style="font-family:var(--mono)">${escHtmlServer(p.region)}</td>
-      <td style="font-family:var(--mono);font-weight:600">${escHtmlServer(eur(p.eur))}</td>
+      <td style="font-family:var(--mono);font-weight:600">${escHtmlServer(`${eur(p.eur)} / ${usd(p.usd)}`)}</td>
       <td><span style="display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;background:${color}22;color:${color};font-weight:600">${label}</span></td>
     </tr>`;
   }).join("\n        ");
@@ -19219,11 +19220,11 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="pricing">1. Every Cloud Plan, Priced Today</h2>
-  <p class="section-intro">All ${HETZNER_CLOUD_PLANS.length} Hetzner Cloud plans, with the monthly price read from Hetzner's price API on ${HETZNER_PRICES_READ} and the availability hetzner.com showed on ${HETZNER_AVAILABILITY_READ}. EU prices are the Falkenstein, Helsinki and Nuremberg figure; the US rows are Ashburn and Hillsboro, which are the only datacentres those plans are offered in. Singapore is priced higher again and is not listed here.</p>
+  <p class="section-intro">All ${HETZNER_CLOUD_PLANS.length} Hetzner Cloud plans, with the monthly price read from Hetzner's price API on ${HETZNER_PRICES_READ} and the availability hetzner.com showed on ${HETZNER_AVAILABILITY_READ}. EU prices are the Falkenstein, Helsinki and Nuremberg figure; the US rows are Ashburn and Hillsboro, which are the only datacentres those plans are offered in. Singapore is priced higher again and is not listed here. Each cell shows the price for accounts billed in euros and the price for accounts billed in US dollars.</p>
   <div style="overflow-x:auto">
     <table class="pricing-table">
       <thead>
-        <tr><th>Plan</th><th>Spec</th><th>Line</th><th>Region</th><th>Per month</th><th>Availability</th></tr>
+        <tr><th>Plan</th><th>Spec</th><th>Line</th><th>Region</th><th>Per month (€ / $)</th><th>Availability</th></tr>
       </thead>
       <tbody>
         ${planRows}
@@ -19248,7 +19249,7 @@ ${mcpCtaCss()}
       </tbody>
     </table>
   </div>
-  <p class="section-intro" style="margin-top:0">Hetzner's table also gives dollar prices, which moved by different amounts: cloud servers rose 28-43% in dollars (CX23 from $3.49 to $4.99), against 30-37% in euros. Dedicated servers rose 2-21% in euros and 3-26% in dollars on 1 April 2026. In Germany, the AX42 went from ${eur(HETZNER_AX42_GERMANY.beforeApril)} to ${eur(HETZNER_AX42_GERMANY.afterApril)}. After the April 1 adjustment, new orders cost ${eur(HETZNER_AX42_GERMANY.afterApril)} for an AX42 and ${eur(HETZNER_AX102_GERMANY.afterApril)} for an AX102. On June 15, prices rose to ${eur(HETZNER_AX42_GERMANY.initialJune)} and ${eur(HETZNER_AX102_GERMANY.initialJune)}, then fell on June 30 to the current prices. Hetzner adjusted setup fees for dedicated servers on ${HETZNER_SETUP_FEE_STATEMENTS.map(({ day, url }) => `<a href="${url}" target="_blank" rel="noopener">${day}</a>`).join(" and ")} 2026, citing RAM and NVMe SSD costs; its statements give no fee amounts. Memory upgrades for dedicated servers are not in the April table. Hetzner raised them in February: its add-on price list of 2026-02-17 put a 64 GB DDR5 ECC step at €111 a month, up from €22, and a 32 GB step at €66, up from €14. Until 15 June, adding 128 GB of memory that way cost more than a whole AX102 server with 128 GB built in (${eur(HETZNER_AX102_GERMANY.beforeApril)} a month before April, ${eur(HETZNER_AX102_GERMANY.afterApril)} after, in Germany). Of the products in this table, the load balancer is the one we have re-read since: LB11 is still €7.49, and load balancers were explicitly excluded from the June round.</p>
+  <p class="section-intro" style="margin-top:0">Hetzner's table also gives dollar prices, which moved by different amounts: cloud servers rose 28-43% in dollars (${escHtmlServer(HETZNER_APRIL_DOLLAR_EXAMPLE.sku)} from ${usd(HETZNER_APRIL_DOLLAR_EXAMPLE.before)} to ${usd(HETZNER_APRIL_DOLLAR_EXAMPLE.after)}), against 30-37% in euros. Dedicated servers rose 2-21% in euros and 3-26% in dollars on 1 April 2026. In Germany, the AX42 went from ${eur(HETZNER_AX42_GERMANY.beforeApril)} to ${eur(HETZNER_AX42_GERMANY.afterApril)}. After the April 1 adjustment, new orders cost ${eur(HETZNER_AX42_GERMANY.afterApril)} for an AX42 and ${eur(HETZNER_AX102_GERMANY.afterApril)} for an AX102. On June 15, prices rose to ${eur(HETZNER_AX42_GERMANY.initialJune)} and ${eur(HETZNER_AX102_GERMANY.initialJune)}, then fell on June 30 to the current prices. Hetzner adjusted setup fees for dedicated servers on ${HETZNER_SETUP_FEE_STATEMENTS.map(({ day, url }) => `<a href="${url}" target="_blank" rel="noopener">${day}</a>`).join(" and ")} 2026, citing RAM and NVMe SSD costs; its statements give no fee amounts. Memory upgrades for dedicated servers are not in the April table. Hetzner raised them in February: its add-on price list of 2026-02-17 put a 64 GB DDR5 ECC step at €111 a month, up from €22, and a 32 GB step at €66, up from €14. Until 15 June, adding 128 GB of memory that way cost more than a whole AX102 server with 128 GB built in (${eur(HETZNER_AX102_GERMANY.beforeApril)} a month before April, ${eur(HETZNER_AX102_GERMANY.afterApril)} after, in Germany). Of the products in this table, the load balancer is the one we have re-read since: LB11 is still €7.49, and load balancers were explicitly excluded from the June round.</p>
 
   <h2 id="why">3. Why Prices Rose</h2>
   <div class="context-box">

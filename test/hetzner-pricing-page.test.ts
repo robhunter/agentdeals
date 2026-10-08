@@ -7,6 +7,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import {
   HETZNER_APRIL_CHANGES,
+  HETZNER_APRIL_DOLLAR_EXAMPLE,
   HETZNER_AVAILABILITY_READ,
   HETZNER_AX102_GERMANY,
   HETZNER_AX42_GERMANY,
@@ -90,6 +91,8 @@ const SNAPSHOT_CONDITION = "Snapshots cost";
 const { trafficPerTbBeyondTheIncluded, ipv4PerMonth, backupShareOfThePriceWithoutIpv4, snapshotPerGbMonth } = HETZNER_CLOUD_ADD_ON_PRICES;
 
 const eurosIn = (text: string) => text.match(/€\d+\.\d{2,}/g) ?? [];
+const dollarsIn = (text: string) => text.match(/\$\d+\.\d{2,}/g) ?? [];
+const dollars = (usd: number) => `$${usd.toFixed(2)}`;
 const asWritten = (eur: number) => `€${eur.toFixed(4).replace(/0{1,2}$/, "")}`;
 const cents = (eur: number) => Math.round(eur * 100);
 const fromCents = (amount: number) => `€${(amount / 100).toFixed(2)}`;
@@ -121,13 +124,18 @@ const addOnExamples = () => {
   return [backup, withBackups, snapshotExample(hetznerConditionOpening(SNAPSHOT_CONDITION))];
 };
 
+const headedByAnotherVendor = (cell: string) => {
+  const linked = cell.match(/<a href="\/vendor\/([^"]+)"/)?.[1];
+  return OTHER_LISTED_VENDORS.has(cell.replace(/<[^>]+>/g, "").trim()) || (linked !== undefined && linked !== "hetzner");
+};
+
 const withoutItemsOrRowsHeadedByAnotherVendor = (body: string) =>
   body
     .replace(/<li><strong>([^<]*):<\/strong>[\s\S]*?<\/li>/g, (item, label: string) =>
       OTHER_LISTED_VENDORS.has(label.trim()) ? " " : item,
     )
-    .replace(/<tr[^>]*>\s*<td[^>]*>([\s\S]*?)<\/td>[\s\S]*?<\/tr>/g, (row, firstCell: string) =>
-      OTHER_LISTED_VENDORS.has(firstCell.replace(/<[^>]+>/g, "").trim()) ? " " : row,
+    .replace(/<tr[^>]*>\s*<td[^>]*>([\s\S]*?)<\/td>[\s\S]*?<\/tr>(\s*<tr class="vendor-conditions-row">[\s\S]*?<\/tr>)?/g, (row, firstCell: string) =>
+      headedByAnotherVendor(firstCell) ? " " : row,
     );
 
 const PAGES_NAMING_HETZNER_PRICES = [
@@ -264,6 +272,18 @@ describe("the pricing page prices what Hetzner sells today", () => {
     const quoted = new Set(eurosIn(visible(withoutItemsOrRowsHeadedByAnotherVendor(body))));
     const strays = [...quoted].filter(price => !allowed.has(price));
     assert.deepEqual(strays, [], `prices with no plan, April row, dedicated-server figure or add-on price behind them: ${strays.join(", ")}`);
+  });
+
+  it("quotes no dollar price that is not in the plan table or the April example", async () => {
+    const { body } = await get("/hetzner-pricing-2026");
+    const allowed = new Set([
+      ...HETZNER_CLOUD_PLANS.map(p => dollars(p.usd)),
+      dollars(HETZNER_APRIL_DOLLAR_EXAMPLE.before),
+      dollars(HETZNER_APRIL_DOLLAR_EXAMPLE.after),
+    ]);
+    const quoted = new Set(dollarsIn(visible(withoutItemsOrRowsHeadedByAnotherVendor(body))));
+    const strays = [...quoted].filter(price => !allowed.has(price));
+    assert.deepEqual(strays, [], `dollar prices with no plan or April figure behind them: ${strays.join(", ")}`);
   });
 
   it("does not describe a completed price change as still to come", async () => {
@@ -647,6 +667,62 @@ describe("the day /hetzner-pricing-2026 says Hetzner's prices were read", () => 
     assert.strictEqual(parseHetznerPricesRead('{"read_on":"2026-10-02"}', "scratch.json"), "2026-10-02");
     for (const text of ["{", "null", "{}", '{"read_on":"2026-02-30"}', '{"read_on":"2026-10-2"}', '{"read_on":20261002}']) {
       assert.throws(() => parseHetznerPricesRead(text, "scratch.json"), /^Error: scratch\.json /, text);
+    }
+  });
+});
+
+describe("the dollar prices /hetzner-pricing-2026 gives beside each euro price", () => {
+  const BOTH_CURRENCIES_SENTENCE = "Each cell shows the price for accounts billed in euros and the price for accounts billed in US dollars.";
+
+  const planTable = (body: string) => {
+    const sectionOneHtml = body.slice(body.indexOf('<h2 id="pricing">'), body.indexOf('<h2 id="april">'));
+    return sectionOneHtml.match(/<table class="pricing-table">[\s\S]*?<\/table>/)?.[0] ?? "";
+  };
+
+  it("heads the price column Per month (€ / $) and prints both prices in every row, in the plan table's order", async () => {
+    const { body } = await get("/hetzner-pricing-2026");
+    const table = planTable(body);
+    const headers = [...table.matchAll(/<th>([\s\S]*?)<\/th>/g)].map(([, inner]) => visible(inner).trim());
+    assert.deepEqual(headers, ["Plan", "Spec", "Line", "Region", "Per month (€ / $)", "Availability"]);
+    const rows = [...table.matchAll(/<tr\b[^>]*>\s*<td[\s\S]*?<\/tr>/g)].map(([row]) => [...row.matchAll(/<td\b[^>]*>([\s\S]*?)<\/td>/g)].map(([, inner]) => visible(inner).trim()));
+    assert.deepEqual(
+      rows.map(cells => [cells[0], cells[4]]),
+      HETZNER_CLOUD_PLANS.map(p => [p.sku, `€${p.eur.toFixed(2)} / ${dollars(p.usd)}`]),
+    );
+  });
+
+  it("says what the two prices in each cell are, right after the sentence on Singapore", async () => {
+    const { body } = await get("/hetzner-pricing-2026");
+    const sectionOneHtml = body.slice(body.indexOf('<h2 id="pricing">'), body.indexOf('<h2 id="april">'));
+    const intro = visible(sectionOneHtml.match(/<p class="section-intro">([\s\S]*?)<\/p>/)?.[1] ?? "").trim();
+    assert.ok(intro.endsWith(`Singapore is priced higher again and is not listed here. ${BOTH_CURRENCIES_SENTENCE}`), intro);
+  });
+
+  it("gives the April dollar example from its named figures", async () => {
+    const { body } = await get("/hetzner-pricing-2026");
+    const { sku, before, after } = HETZNER_APRIL_DOLLAR_EXAMPLE;
+    assert.ok(visible(body).includes(`cloud servers rose 28-43% in dollars (${sku} from ${dollars(before)} to ${dollars(after)})`));
+  });
+});
+
+describe("the account currency and payment methods Hetzner's listing states", () => {
+  const LAST_VAT_CONDITION = "Outside the EU, Hetzner adds tax only";
+  const CURRENCY_CONDITION = "When you create a Hetzner account, you choose euros or US dollars.";
+  const PAYMENT_CONDITION = "Hetzner takes credit cards, SEPA direct debit, bank transfer and PayPal.";
+
+  it("follow the VAT conditions, currency first", () => {
+    const at = (opening: string) => HETZNER_CONDITIONS.findIndex(condition => condition.text.startsWith(opening));
+    assert.ok(at(LAST_VAT_CONDITION) > -1);
+    assert.deepEqual([at(CURRENCY_CONDITION), at(PAYMENT_CONDITION)], [at(LAST_VAT_CONDITION) + 1, at(LAST_VAT_CONDITION) + 2]);
+  });
+
+  it("are printed among the listing's conditions on /hetzner-pricing-2026 and /vendor/hetzner", async () => {
+    const texts = [CURRENCY_CONDITION, PAYMENT_CONDITION].map(hetznerConditionOpening);
+    for (const route of ["/hetzner-pricing-2026", "/vendor/hetzner"]) {
+      const { status, body } = await get(route);
+      assert.equal(status, 200, route);
+      const printed = [...body.matchAll(/<ul class="listing-conditions"[\s\S]*?<\/ul>/g)].map(([list]) => visible(list)).join(" ");
+      for (const text of texts) assert.ok(printed.includes(text), `${route} does not print: ${text}`);
     }
   });
 });

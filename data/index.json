@@ -2922,6 +2922,18 @@
           "read_on": "2026-10-08"
         },
         {
+          "text": "When you create a Hetzner account, you choose euros or US dollars. You cannot change the currency later; to change it, you must open a new account and move your products.",
+          "quote": "When creating a new account, you can choose between euros and US dollars. Once you have created your account, you cannot change the currency afterwards. If you need to change your currency, you will need to create a new account and transfer the products you use from the old account to the new one.",
+          "url": "https://docs.hetzner.com/general/billing-and-account-management/billing-at-hetzner/payment-overview/",
+          "read_on": "2026-10-08"
+        },
+        {
+          "text": "Hetzner takes credit cards, SEPA direct debit, bank transfer and PayPal. Visa, Mastercard and Amex cards and SEPA direct debit are charged automatically; UnionPay, bank transfer and PayPal are paid by hand. SEPA direct debit is only for euro accounts. Not all methods are available in every country.",
+          "quote": "We support VISA, Mastercard, AMEX, and UnionPay. We automatically charge credit card payments, except for UnionPay. … SEPA is only available for EUR accounts. We process the payment automatically. … The customer must make the payment manually. … The customer can only make manual payments via Hetzner Accounts. … We do not offer all payment options in every country.",
+          "url": "https://docs.hetzner.com/general/billing-and-account-management/billing-at-hetzner/payment-overview/",
+          "read_on": "2026-10-08"
+        },
+        {
           "text": "Hetzner may ask a new customer to verify the account before it processes an order, with a government ID or an advance payment by the customer's own credit card.",
           "quote": "As part of our fraud prevention measures, we may ask you to verify your account before we process an order. You can do this in two ways: Verification via ID document: You provide us with a copy of a valid government-issued ID (e.g., ID card or passport). This allows us to confirm that the information provided during registration matches your identity. Verification via prepayment (credit card): Alternatively, you can verify your account by making an advance payment with your own credit card.",
           "url": "https://docs.hetzner.com/general/security-and-identify/fraud-prevention-faq/",

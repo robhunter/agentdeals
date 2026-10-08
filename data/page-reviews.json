@@ -2033,12 +2033,12 @@
       "review_note": "Re-checked on 2026-10-02: section 1's prices against Hetzner's price API, sections 2 and 4 against Hetzner's April and June tables and its price API's AX42 and AX102 prices, section 8's Server Auction figure against Hetzner's April table, section 3 against The Register's article of 2026-02-24, and section 6's DigitalOcean, Vultr, Linode, AWS Lightsail, Oracle Cloud, OVHcloud and Fly.io trial rows against those vendors' own pages, plan APIs or notices. The corrections in https://github.com/robhunter/agentdeals/issues/2238, https://github.com/robhunter/agentdeals/issues/2243, https://github.com/robhunter/agentdeals/issues/2247 and https://github.com/robhunter/agentdeals/issues/2258 were read on production that day.",
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 102,
+      "table_figures": 128,
       "table_figures_from_records": 9,
       "tables": [
         {
           "label": "1. Every Cloud Plan, Priced Today",
-          "figures": 52,
+          "figures": 78,
           "from_records": 0
         },
         {
