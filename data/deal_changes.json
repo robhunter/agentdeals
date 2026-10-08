@@ -16054,6 +16054,20 @@
       "alternatives": [],
       "recorded_date": "2026-10-07",
       "date_source": "hand_written"
+    },
+    {
+      "vendor": "Mistral AI",
+      "change_type": "pricing_restructured",
+      "date": "2026-10-07",
+      "date_source": "hand_written",
+      "summary": "Mistral's pricing page stopped listing an API credit on the Free plan. It had listed $10 a month. Mistral's docs still say each plan includes monthly usage but give no amount.",
+      "previous_state": "Free plan: \"... Limited coding sessions. State-of-the-art image generation. Test Mistral models in Studio. $10 /mo in API credits. 100+ connectors.\" (mistral.ai/pricing, Internet Archive capture of 2026-10-07 14:48 UTC)",
+      "current_state": "Free plan: \"Your personal AI agent for everyday tasks. Test out Vibe's capabilities. Access on web and mobile. Limited messages and web searches. Limited coding sessions. Basic image generation and editing. 100+ connectors.\" (Internet Archive capture of 2026-10-07 22:04 UTC). Mistral's docs (Usage and limits, read 2026-10-07): \"Free mode lets you create API keys and use included monthly usage within the limits shown on the Limits page.\"",
+      "impact": "medium",
+      "source_url": "https://web.archive.org/web/20261007220416/https://mistral.ai/pricing/",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-10-07"
     }
   ]
 }
