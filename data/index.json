@@ -4527,9 +4527,9 @@
       ],
       "verifiedDate": "2026-07-28",
       "source_check": {
-        "checked": "2026-09-25",
-        "outcome": "ok",
-        "detail": "the page names Kong as \"kong\" and states \"$0\""
+        "checked": "2026-10-08",
+        "outcome": "states_no_terms",
+        "detail": "the page names Kong but states no amount, tier or rate we can read, and its markup carries no structured data"
       },
       "free_grounds": [
         "licence"
