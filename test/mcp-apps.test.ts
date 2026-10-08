@@ -1,10 +1,9 @@
-import { describe, it } from "node:test";
+import { describe, it, before, after } from "node:test";
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
+import { startLocalApi, startStdioServerAgainst, type LocalApi } from "./local-api.ts";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+let api: LocalApi;
 
 function sendMcpRequest(
   serverProcess: ReturnType<typeof spawn>,
@@ -37,8 +36,7 @@ function sendMcpRequest(
 }
 
 async function initServer() {
-  const serverPath = path.join(__dirname, "..", "dist", "index.js");
-  const proc = spawn("node", [serverPath], { stdio: ["pipe", "pipe", "pipe"] });
+  const proc = startStdioServerAgainst(api);
 
   await sendMcpRequest(proc, {
     jsonrpc: "2.0", id: 1, method: "initialize",
@@ -51,6 +49,9 @@ async function initServer() {
 }
 
 describe("MCP Apps UI resources", () => {
+  before(async () => { api = await startLocalApi(); });
+  after(() => { api?.stop(); });
+
   it("tools/list includes _meta with ui.resourceUri for all 4 tools", async () => {
     const proc = await initServer();
     try {

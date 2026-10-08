@@ -19,6 +19,7 @@ import { recordsStillInForce } from "../dist/change-resolution.js";
 import { trackedChanges } from "../dist/change-census.js";
 import { MCP_TOOLS } from "../dist/mcp-tool-inventory.js";
 import { openapiSpec } from "../dist/openapi.js";
+import { startStdioServerAgainst } from "./local-api.ts";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -314,7 +315,7 @@ describe("the service description answers the paths agent directories ask for", 
 
   function versionOverStdio(): Promise<string> {
     return new Promise((resolve, reject) => {
-      const child = spawn("node", [path.join(REPO, "dist", "index.js")], { stdio: ["pipe", "pipe", "pipe"] });
+      const child = startStdioServerAgainst({ url: base });
       const timer = setTimeout(() => { child.kill("SIGKILL"); reject(new Error("stdio initialize timed out")); }, 60000);
       let out = "";
       child.stdout!.on("data", (b: Buffer) => {

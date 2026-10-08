@@ -1,6 +1,7 @@
-import { describe, it } from "node:test";
+import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
 import { assertPopulationFloor } from "./population-floor.ts";
+import { startLocalApi, startStdioServerAgainst, type LocalApi } from "./local-api.ts";
 import { INDEX_SWEEP_STATE, recordsOtherThanOurOwnIndexHousekeeping } from "../dist/change-census.js";
 import { recordsWeStandBehind } from "../dist/change-resolution.js";
 import { spawn } from "node:child_process";
@@ -62,11 +63,10 @@ const INIT_MESSAGES = [
   { jsonrpc: "2.0", method: "notifications/initialized" },
 ];
 
+let api: LocalApi;
+
 function startServer() {
-  const serverPath = path.join(__dirname, "..", "dist", "index.js");
-  return spawn("node", [serverPath], {
-    stdio: ["pipe", "pipe", "pipe"],
-  });
+  return startStdioServerAgainst(api);
 }
 
 function changeLogOnFile(): { vendor: string; date: string; resolution?: { state: string } | null }[] {
@@ -83,6 +83,9 @@ function servedRecordsNaming(names: string[], since: string): { vendor: string; 
 }
 
 describe("track_changes tool", () => {
+  before(async () => { api = await startLocalApi(); });
+  after(() => { api?.stop(); });
+
   it("returns all changes when no filters (with broad since)", async () => {
     const { getDealChanges } = await import("../dist/data.js");
     const since = "2024-01-01";

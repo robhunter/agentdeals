@@ -1,8 +1,9 @@
-import { describe, it, afterEach } from "node:test";
+import { describe, it, before, after, afterEach } from "node:test";
 import assert from "node:assert";
 import { spawn, type ChildProcess } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { startLocalApi, startStdioServerAgainst, type LocalApi } from "./local-api.ts";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -73,15 +74,18 @@ describe("estimate_costs logic", () => {
 });
 
 describe("estimate_costs MCP tool via stdio", () => {
+  let api: LocalApi;
   let proc: ChildProcess | null = null;
+
+  before(async () => { api = await startLocalApi(); });
+  after(() => { api?.stop(); });
 
   afterEach(() => {
     if (proc) { proc.kill(); proc = null; }
   });
 
   it("responds to estimate_costs tool call", async () => {
-    const serverPath = path.join(__dirname, "..", "dist", "index.js");
-    proc = spawn("node", [serverPath], { stdio: ["pipe", "pipe", "pipe"] });
+    proc = startStdioServerAgainst(api);
 
     const initMsg = JSON.stringify({
       jsonrpc: "2.0",
