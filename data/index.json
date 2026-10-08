@@ -10576,7 +10576,7 @@
     {
       "vendor": "Google Colab",
       "category": "AI / ML",
-      "description": "Hosted Jupyter notebooks with free access to GPUs and TPUs. In the free version, notebooks run for at most 12 hours, depending on availability and usage, and idle runtimes time out. GPU access is heavily restricted, GPU and TPU types vary over time, and usage limits fluctuate. Colab Pro, Pro+ and Pay As You Go offer more compute, based on a balance of compute units.",
+      "description": "Hosted Jupyter notebooks with free access to GPUs and TPUs. In the free version, notebooks run for at most 12 hours, depending on availability and usage, and idle runtimes time out. GPU access is heavily restricted, GPU and TPU types vary over time, and usage limits fluctuate. Colab Pro, Pro+ and Pay As You Go offer more compute, based on a balance of compute units. Colab Pro costs $9.99 a month for 100 compute units. Colab Pro+ costs $49.99 a month for 600 compute units. Pay As You Go costs $9.99 for 100 compute units or $49.99 for 500 compute units. These are the US prices on Google's signup page. Compute units expire after 90 days and are not refundable.",
       "tier": "Free",
       "url": "https://research.google.com/colaboratory/faq.html",
       "tags": [
@@ -10601,7 +10601,21 @@
           }
         ],
         "reviewed": "2026-10-01"
-      }
+      },
+      "conditions": [
+        {
+          "text": "On a free runtime with no compute-unit balance, Google may terminate without warning sessions that use SSH shells, remote desktops, a web UI instead of the notebook, chess training or distributed computing workers. SSH shells, remote desktops and working in a web UI instead of the notebook are allowed on a paid plan while the compute-unit balance is positive.",
+          "quote": "The following are disallowed from managed Colab runtimes running free of charge, without a positive Colab compute unit balance, and may be terminated at any time without warning: remote control such as SSH shells, remote desktops bypassing the notebook UI to interact primarily via a web UI chess training running distributed computing workers You can remove these types of restrictions by purchasing one of our paid plans here and maintaining a positive compute unit balance.",
+          "url": "https://research.google.com/colaboratory/faq.html",
+          "read_on": "2026-10-08"
+        },
+        {
+          "text": "A paid Google AI plan adds a monthly allotment of Colab compute units and stronger GPUs and TPUs to the same account. Storage-only Google One plans and free trials do not.",
+          "quote": "Subscribing to an eligible Google AI plan now also unlocks premium Colab benefits, similar to those offered by Colab's own paid plans: a monthly allotment of Colab compute units, access to more powerful GPUs and TPUs, and, on higher plans, additional capabilities such as background execution. The exact benefits depend on your plan, and they are included only with eligible paid Google AI plans (not with storage-only Google One plans ). … Premium Colab benefits are only available to paid Google AI plan subscribers. They are not included during a free trial of a Google One plan",
+          "url": "https://research.google.com/colaboratory/faq.html",
+          "read_on": "2026-10-08"
+        }
+      ]
     },
     {
       "vendor": "Zoho",
