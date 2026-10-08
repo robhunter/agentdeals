@@ -4353,10 +4353,10 @@ const VS_PAGES: VsPageConfig[] = [
   {
     vendorA: "Groq", vendorB: "Mistral AI",
     category: "AI / ML",
-    verdict: "Groq provides ultra-fast inference for open models on custom hardware. Mistral AI offers its own proprietary models (Mistral Large, Codestral, Pixtral) and its Free plan includes $10 a month in API credits. Groq wins on speed; Mistral wins on model variety.",
+    verdict: "Groq provides ultra-fast inference for open models on custom hardware. Mistral AI offers its own proprietary models (Mistral Large, Codestral, Pixtral) and its Free plan includes monthly API usage; its pricing page listed $10 a month until 2026-10-07, then stopped stating the amount. Groq wins on speed; Mistral wins on model variety.",
     keyDifferences: `<ul>
       <li><strong>Models:</strong> Groq serves open-weight models (gpt-oss, Qwen) on its hardware. Mistral serves its own proprietary models (Mistral Large, Codestral, Pixtral) plus Mistral-tuned open models.</li>
-      <li><strong>Free tier volume:</strong> Mistral's Free plan includes $10 a month in API credits. Groq allows 200K tokens a day per model (about 6M a month) at 30 RPM.</li>
+      <li><strong>Free tier volume:</strong> Mistral's Free plan includes monthly API usage; its pricing page listed $10 a month until 2026-10-07, then stopped stating the amount. Groq allows 200K tokens a day per model (about 6M a month) at 30 RPM.</li>
       <li><strong>Speed:</strong> Groq's custom LPU hardware delivers significantly faster inference. Mistral runs on standard GPU infrastructure.</li>
       <li><strong>Code models:</strong> Mistral has Codestral, a dedicated coding model. Groq serves general models that also handle code but without a specialized coding model.</li>
     </ul>`,
@@ -10427,7 +10427,7 @@ ${mcpCtaCss()}
   <h1>Best Free AI APIs and Coding Tools</h1>
 
   <div class="context">
-    <p>The AI pricing landscape is volatile. On 2025-12-06 Google cut 2.5 Flash's free tier from 250 requests a day to about 20, and 2.5 Pro's to none. <strong>OpenAI removed the Assistants API</strong> on 2026-08-26. But new players are offering generous free tiers to win developer mindshare — <strong>Groq</strong> serves fast inference on a free plan, <strong>Mistral</strong> includes $10 a month in API credits, and <strong>Google Antigravity</strong> has a free individual plan with weekly limits.</p>
+    <p>The AI pricing landscape is volatile. On 2025-12-06 Google cut 2.5 Flash's free tier from 250 requests a day to about 20, and 2.5 Pro's to none. <strong>OpenAI removed the Assistants API</strong> on 2026-08-26. But new players are offering generous free tiers to win developer mindshare — <strong>Groq</strong> serves fast inference on a free plan, and <strong>Google Antigravity</strong> has a free individual plan with weekly limits.</p>
     <p>This page compares <strong>${allAiOffers.length} AI offers</strong> across our index — exact rate limits, not marketing copy. We track ${enrichedMl.length} AI/ML tools and ${enrichedCoding.length} AI coding tools. ${escHtmlServer(confirmationCoverageSentence(confirmationCoverage(allAiOffers), "AI"))}</p>
   </div>
 
@@ -10466,7 +10466,7 @@ ${buildCards(mlPlatforms)}
     </tbody>
   </table>
   </div>
-  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Groq and Cerebras achieve 500+ tokens/second via custom silicon (LPU and WSE respectively). Mistral's Free plan includes $10 a month in API credits. OpenAI prices one model Free, the moderation model omni-moderation-latest; no GPT model is priced free. Gemini free tier limits were quietly reduced in late 2025.</p>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Groq and Cerebras achieve 500+ tokens/second via custom silicon (LPU and WSE respectively). Mistral's Free plan includes monthly API usage; its pricing page listed $10 a month until 2026-10-07, then stopped stating the amount. OpenAI prices one model Free, the moderation model omni-moderation-latest; no GPT model is priced free. Gemini free tier limits were quietly reduced in late 2025.</p>
 
   <h2>Free AI Coding Tools</h2>
   <p style="color:var(--text-muted);margin-bottom:1rem">AI-powered code editors, assistants, and autonomous coding agents. From IDE plugins to fully autonomous engineers.</p>
@@ -13250,7 +13250,7 @@ ${mcpCtaCss()}
   <h1>Best Free AI &amp; ML Tools for Developers</h1>
 
   <div class="context">
-    <p>AI infrastructure is evolving faster than any other developer tooling category. The good news: competition has driven generous free tiers. <strong>Groq</strong> offers blazing-fast gpt-oss-120b inference at 30 RPM free. <strong>Mistral</strong>'s Free plan includes $10 a month in API credits. And open-source tools like <strong>Cline</strong>, <strong>Aider</strong>, and <strong>Gemini CLI</strong> are completely free \u2014 just bring your own API key.</p>
+    <p>AI infrastructure is evolving faster than any other developer tooling category. The good news: competition has driven generous free tiers. <strong>Groq</strong> offers blazing-fast gpt-oss-120b inference at 30 RPM free. <strong>Mistral</strong>'s Free plan includes monthly API usage; its pricing page listed $10 a month until 2026-10-07, then stopped stating the amount. And open-source tools like <strong>Cline</strong>, <strong>Aider</strong>, and <strong>Gemini CLI</strong> are completely free \u2014 just bring your own API key.</p>
     <p>This page compares every AI and ML tool in our index \u2014 <strong>${aiOffers.length} tools</strong> across LLM APIs, AI coding assistants, ML platforms, observability, and specialized services. Whether you need an OpenAI alternative or a free AI coding assistant, we have the comparison with exact free tier limits.</p>
   </div>
 
@@ -13306,7 +13306,7 @@ ${buildCards(other)}
       <tr>
         <td style="font-weight:600"><a href="/vendor/mistral-ai" style="color:var(--text)">Mistral AI</a></td>
         <td>LLM API</td>
-        <td>$10/month in API credits</td>
+        <td>Free plan includes monthly API usage whose amount the pricing page has not stated since 2026-10-07</td>
         <td>No</td>
         <td>Access to all Mistral models including Codestral</td>
       </tr>
@@ -13385,7 +13385,7 @@ ${buildCards(other)}
       <dd><a href="/vendor/groq">Groq</a> \u2014 ultra-fast inference on LPU hardware with gpt-oss-120b, 30 RPM free. <a href="/vendor/openrouter">OpenRouter</a> for access to 25+ free models through one API.</dd>
 
       <dt>Want access to all frontier models?</dt>
-      <dd><a href="/vendor/mistral-ai">Mistral AI</a> \u2014 $10 a month in API credits on the Free plan, and API keys need no credit card.</dd>
+      <dd><a href="/vendor/mistral-ai">Mistral AI</a> \u2014 Free plan includes monthly API usage whose amount the pricing page has not stated since 2026-10-07. API keys need no credit card.</dd>
 
       <dt>Looking for an AI coding assistant?</dt>
       <dd><a href="/vendor/github-copilot">GitHub Copilot</a> for IDE-integrated autocomplete (2,000/mo free). <a href="/vendor/cursor">Cursor</a> for an AI-native editor. <a href="/vendor/gemini-cli">Gemini CLI</a> and <a href="/vendor/cline">Cline</a> for free open-source terminal agents (BYOK).</dd>
@@ -14915,7 +14915,7 @@ ${mcpCtaCss()}
   <h1>Best Free LLM APIs for Developers</h1>
 
   <div class="context">
-    <p>Free LLM API access has never been better. <strong>Groq</strong> delivers gpt-oss-120b at 30 RPM on custom LPU hardware \u2014 the fastest free inference available. <strong>Mistral</strong>'s Free plan includes $10 a month in API credits. <strong>OpenRouter</strong> aggregates 25+ free models through one OpenAI-compatible API. ${ledeClause}</p>
+    <p>Free LLM API access has never been better. <strong>Groq</strong> delivers gpt-oss-120b at 30 RPM on custom LPU hardware \u2014 the fastest free inference available. <strong>Mistral</strong>'s Free plan includes monthly API usage; its pricing page listed $10 a month until 2026-10-07, then stopped stating the amount. <strong>OpenRouter</strong> aggregates 25+ free models through one OpenAI-compatible API. ${ledeClause}</p>
     <p>This page compares <strong>${allLlmOffers.length} LLM API providers</strong> \u2014 from proprietary model APIs (OpenAI, Anthropic, Gemini) to open-model inference platforms (Groq, Cerebras, NVIDIA NIM) and AI gateways (OpenRouter, Portkey). The rate limit comparison table below has the data developers actually need when choosing a provider.</p>
   </div>
 
@@ -14950,7 +14950,7 @@ ${buildCards(aiGateways)}
     </tbody>
   </table>
   </div>
-  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Mistral's Free plan includes $10 a month in API credits. OpenRouter gives one API key for 25+ free models. ${summaryClause} Of the proprietary frontier APIs, xAI and Anthropic are pay-as-you-go (Anthropic gives new users a small amount of free credits to test the API), and OpenAI prices no GPT model free. [[freshness]]</p>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Mistral's Free plan includes monthly API usage; its pricing page listed $10 a month until 2026-10-07, then stopped stating the amount. OpenRouter gives one API key for 25+ free models. ${summaryClause} Of the proprietary frontier APIs, xAI and Anthropic are pay-as-you-go (Anthropic gives new users a small amount of free credits to test the API), and OpenAI prices no GPT model free. [[freshness]]</p>
 
   <h2>Which Free LLM API Should I Use?</h2>
   <div class="decision-guide">
@@ -14959,7 +14959,7 @@ ${buildCards(aiGateways)}
       <dd><a href="/vendor/groq">Groq</a> \u2014 custom LPU hardware delivers the fastest token generation, 30 RPM free with gpt-oss-120b. No credit card required.</dd>
 
       <dt>Need maximum free token volume?</dt>
-      <dd><a href="/vendor/mistral-ai">Mistral AI</a> \u2014 $10 a month in API credits on the Free plan.</dd>
+      <dd><a href="/vendor/mistral-ai">Mistral AI</a> \u2014 Free plan includes monthly API usage whose amount the pricing page has not stated since 2026-10-07. API keys need no credit card.</dd>
 
       <dt>Want one API key for many models?</dt>
       <dd><a href="/vendor/openrouter">OpenRouter</a> \u2014 25+ free models through one OpenAI-compatible API; free models are capped at 20 requests a minute and 50 a day, or 1,000 a day once you have bought at least $10 of credits. ${manyModelsAnswer}</dd>
@@ -20235,7 +20235,7 @@ function buildGoogleDeveloperProgram2026Page(): string {
   const llmAlternatives = [
     { vendor: "Groq", free: "30 RPM; 1K requests and 200K tokens/day per model", models: "gpt-oss-120b, gpt-oss-20b, Qwen3.8 27B", link: "/vendor/groq" },
     { vendor: "OpenRouter", free: "Free models available", models: "500+ models aggregated", link: "/vendor/openrouter" },
-    { vendor: "Mistral AI", free: "Free plan, $10/mo API credits", models: "Mistral Large 3, Medium 3.5, Small 4", link: "/vendor/mistral-ai" },
+    { vendor: "Mistral AI", free: "Free plan includes monthly API usage whose amount the pricing page has not stated since 2026-10-07", models: "Mistral Large 3, Medium 3.5, Small 4", link: "/vendor/mistral-ai" },
     { vendor: "Cohere", free: "Trial key available", models: "Command, Embed, Rerank", link: "/vendor/cohere" },
   ];
 
@@ -22491,7 +22491,7 @@ ${mcpCtaCss()}
   </table>
 
   <div class="context-box">
-    <strong>Key takeaway:</strong> <a href="/vendor/groq">Groq</a>'s free plan allows 30 requests a minute and 1,000 a day per model. <a href="/vendor/mistral-ai">Mistral AI</a> includes $10 a month in API credits. <a href="/vendor/openrouter">OpenRouter</a> serves 25+ free models through one API. For the full comparison, see our <a href="/free-llm-apis">Free LLM APIs</a> guide.
+    <strong>Key takeaway:</strong> <a href="/vendor/groq">Groq</a>'s free plan allows 30 requests a minute and 1,000 a day per model. <a href="/vendor/mistral-ai">Mistral AI</a>'s Free plan includes monthly API usage; its pricing page listed $10 a month until 2026-10-07, then stopped stating the amount. <a href="/vendor/openrouter">OpenRouter</a> serves 25+ free models through one API. For the full comparison, see our <a href="/free-llm-apis">Free LLM APIs</a> guide.
   </div>
 
   <h2 id="what-to-do">7. What to Do</h2>
@@ -29656,7 +29656,7 @@ function buildVectorDatabasePricingPage(): string {
       freeQueries: "Unlimited",
       paidFrom: "~$10/mo",
       pricingModel: "Per-cluster (RAM/disk)",
-      freeDetails: "Free forever cluster: 1 GB storage on AWS/GCP/Azure. Fully managed with backups included. Supports filtering, payload indexing, quantization, multi-tenancy. Open-source Qdrant can also be self-hosted with no limits. Rust-based for high performance.",
+      freeDetails: "Free forever cluster: 1 GB storage on AWS/GCP/Azure. Supports filtering, payload indexing, quantization, multi-tenancy. Open-source Qdrant can also be self-hosted with no limits. Rust-based for high performance.",
       freeType: "generous",
       monthlyCostSmall: "$0",
       monthlyCostTeam: "$10\u201350",
@@ -29686,7 +29686,7 @@ function buildVectorDatabasePricingPage(): string {
       slug: "zilliz-cloud",
       category: "dedicated-cloud",
       vectorType: "Managed Milvus",
-      freeVectors: "~5M (5 GB)",
+      freeVectors: "~1M at 768 dimensions (5 GB)",
       freeStorage: "5 GB",
       freeDimensions: "Up to 32,768",
       freeQueries: "2.5M CU/mo",
@@ -29708,13 +29708,13 @@ function buildVectorDatabasePricingPage(): string {
       freeStorage: "Unlimited (self-hosted)",
       freeDimensions: "Unlimited",
       freeQueries: "Unlimited (self-hosted)",
-      paidFrom: "Cloud pricing TBA",
+      paidFrom: "Cloud Starter: $0/mo + usage, $5 free credits",
       pricingModel: "Self-hosted: free; Cloud: usage-based",
-      freeDetails: "Open-source AI-native embedding database. Self-hosted: fully free with no limits — runs in-process with Python or JavaScript, or as a standalone server. Chroma Cloud in early access with managed hosting. Simple API: add, query, filter. Automatic embedding generation with pluggable models.",
+      freeDetails: "Open-source AI-native embedding database. Self-hosted: fully free with no limits — runs in-process with Python or JavaScript, or as a standalone server. Chroma Cloud's Starter plan is $0 a month plus usage, with $5 in free credits; Team is $250 a month plus usage (trychroma.com/pricing, read 2026-10-07). Simple API: add, query, filter. Automatic embedding generation with pluggable models.",
       freeType: "oss-only",
       monthlyCostSmall: "$0 (self-hosted)",
-      monthlyCostTeam: "$0\u201350 (self-hosted + cloud TBA)",
-      hiddenCosts: "Self-hosted means you manage infrastructure, backups, and scaling. In-process mode stores data on local disk — not distributed. No built-in replication or HA. Cloud offering is early-stage with limited docs. Performance degrades past ~10M vectors without tuning.",
+      monthlyCostTeam: "$0 self-hosted; Cloud Team $250/mo + usage",
+      hiddenCosts: "Self-hosted means you manage infrastructure, backups, and scaling. In-process mode stores data on local disk — not distributed. No built-in replication or HA. Performance degrades past ~10M vectors without tuning.",
       selfHosted: true,
     },
     {
@@ -29762,12 +29762,12 @@ function buildVectorDatabasePricingPage(): string {
       freeStorage: "None",
       freeDimensions: "Unlimited",
       freeQueries: "None",
-      paidFrom: "$0.30/M vectors/mo stored",
-      pricingModel: "Pay-per-use (storage + queries)",
-      freeDetails: "No free tier but extremely low entry cost. $0.30 per million vectors stored per month, $0.04 per million vectors queried. S3-native architecture — vectors stored on S3 with warm cache layer. No minimum commitment. Supports namespaces, metadata filtering, hybrid search.",
+      paidFrom: "$16/mo minimum (Launch)",
+      pricingModel: "Usage-based, with a monthly minimum",
+      freeDetails: "No free tier. S3-native architecture — vectors stored on S3 with warm cache layer. Every plan has a monthly minimum: $16 on Launch and $256 on Scale (turbopuffer.com/pricing, read 2026-10-07). Supports namespaces, metadata filtering, hybrid search.",
       freeType: "pay-as-you-go",
-      monthlyCostSmall: "$0.30\u20135",
-      monthlyCostTeam: "$5\u201350",
+      monthlyCostSmall: "$16 (Launch minimum)",
+      monthlyCostTeam: "$16\u201350",
       hiddenCosts: "No free tier at all — charges from first vector. S3-backed means higher p99 latency than in-memory solutions for cold queries. Cache hit rate is critical for performance. Newer service with smaller community. Limited SDK ecosystem compared to Pinecone/Qdrant.",
       selfHosted: false,
     },
@@ -29891,8 +29891,8 @@ function buildVectorDatabasePricingPage(): string {
   const faqEntries = [
     { q: "What is a vector database and why do I need one?", a: "A vector database stores high-dimensional numerical representations (embeddings) of data like text, images, or audio, and enables fast similarity search. You need one if you're building RAG (Retrieval-Augmented Generation) pipelines, semantic search, recommendation systems, or any AI application that needs to find similar items. Traditional databases can't efficiently search across hundreds of dimensions." },
     { q: "Should I use a dedicated vector database or pgvector?", a: "For prototypes and small-to-medium workloads (under 1M vectors), pgvector in Supabase or Neon is the simplest choice — no extra infrastructure, SQL queries, and your vectors live alongside your relational data. For production RAG at scale (1M+ vectors), dedicated solutions like Pinecone, Qdrant, or Weaviate offer better query performance, more indexing options, and purpose-built features like hybrid search and reranking." },
-    { q: "Which vector database has the best free tier?", a: "For managed cloud: Pinecone offers 2 GB (~1M vectors) free and Zilliz Cloud 5 GB (~5M vectors). For self-hosted: Qdrant, Chroma, Milvus, and LanceDB are all fully open-source with no limits. For the simplest setup: Supabase pgvector (500 MB, included with Postgres) or Neon pgvector (1 GB per project) require zero extra infrastructure." },
-    { q: "What is the cheapest vector database for production RAG?", a: "Self-hosted Qdrant or Milvus on a $5-10/month VPS is the absolute cheapest for small-to-medium scale. For managed services, Turbopuffer's pay-per-use model ($0.30/M vectors/month) is cheapest for workloads under ~10M vectors. Qdrant Cloud ($10/month) and Upstash Vector (10K queries/day free) are also cost-effective. Supabase pgvector is free if your total database is under 500 MB." },
+    { q: "Which vector database has the best free tier?", a: "For managed cloud: Pinecone offers 2 GB (~1M vectors) free and Zilliz Cloud (5 GB, about 1M 768-dimension vectors). For self-hosted: Qdrant, Chroma, Milvus, and LanceDB are all fully open-source with no limits. For the simplest setup: Supabase pgvector (500 MB, included with Postgres) or Neon pgvector (1 GB per project) require zero extra infrastructure." },
+    { q: "What is the cheapest vector database for production RAG?", a: "Self-hosted Qdrant or Milvus on a $5-10/month VPS is the absolute cheapest for small-to-medium scale. Turbopuffer bills usage with a $16 monthly minimum on its Launch plan. Qdrant Cloud ($10/month) and Upstash Vector (10K queries/day free) are also cost-effective. Supabase pgvector is free if your total database is under 500 MB." },
     { q: "How many vectors can I store in 1 GB?", a: "It depends on dimensions. With 1,536 dimensions (OpenAI text-embedding-3-small): ~170K vectors per GB raw, but with indexing overhead expect ~100K-150K. With 768 dimensions (many open-source models): ~340K vectors per GB raw, ~200K-250K with indexes. With 3,072 dimensions (OpenAI text-embedding-3-large): ~85K vectors per GB. Lower-dimension models are more cost-effective for storage." },
   ];
 
@@ -30174,7 +30174,7 @@ function buildVectorDatabasePricingPage(): string {
     '\n' +
     '    <div class="verdict-item">\n' +
     '      <strong>Best managed free tier</strong>\n' +
-    '      <p><a href="/vendor/pinecone">Pinecone</a> (2 GB, ~1M vectors) or <a href="/vendor/zilliz-cloud">Zilliz Cloud</a> (5 GB, ~5M vectors). Both offer generous free tiers with zero ops. Zilliz has more free storage; Pinecone has a larger ecosystem and simpler API.</p>\n' +
+    '      <p><a href="/vendor/pinecone">Pinecone</a> (2 GB, ~1M vectors) or <a href="/vendor/zilliz-cloud">Zilliz Cloud</a> (5 GB, about 1M 768-dimension vectors). Both offer generous free tiers with zero ops. Zilliz has more free storage; Pinecone has a larger ecosystem and simpler API.</p>\n' +
     '    </div>\n' +
     '\n' +
     '    <div class="verdict-item">\n' +
@@ -31023,7 +31023,7 @@ function buildLlmApiPricingPage(): string {
       name: "Mistral AI",
       slug: "mistral-ai",
       category: "frontier",
-      freeTier: "$10/mo in API credits",
+      freeTier: "Free plan includes monthly API usage whose amount the pricing page has not stated since 2026-10-07",
       freeType: "generous",
     },
     {
@@ -31121,7 +31121,7 @@ function buildLlmApiPricingPage(): string {
       name: "LLM7.io",
       slug: "llm7-io",
       category: "specialized",
-      freeTier: "1M tokens/24h with a free token",
+      freeTier: "100,000 tokens/24h with a free token",
       freeType: "generous",
     },
     {
@@ -31272,7 +31272,7 @@ function buildLlmApiPricingPage(): string {
     ].filter(sentence => sentence !== "").join(" ");
 
   const faqEntries: FaqItem[] = [
-    { q: "Which LLM API has the best free tier in 2026?", a: "Groq's free plan allows 30 RPM, 1,000 requests and 200K tokens a day per model, no credit card required, with fast LPU-accelerated inference. " + freeTiersThisPageStandsBehind + " For frontier models specifically, Mistral's Free plan includes $10 a month in API credits." },
+    { q: "Which LLM API has the best free tier in 2026?", a: "Groq's free plan allows 30 RPM, 1,000 requests and 200K tokens a day per model, no credit card required, with fast LPU-accelerated inference. " + freeTiersThisPageStandsBehind + " For frontier models specifically, Mistral's Free plan includes monthly API usage; its pricing page listed $10 a month until 2026-10-07, then stopped stating the amount." },
     { q: "How much does GPT-4o cost per token?", a: "GPT-4o costs $2.50 per million input tokens and $10 per million output tokens. For reference, 1 million tokens is roughly 750,000 words. The batch API offers 50% discount ($1.25/$5 per M tokens). GPT-4o-mini is significantly cheaper at $0.15/$0.60 per M tokens." },
     {
       q: "How much does Claude cost per token?",
@@ -32921,7 +32921,7 @@ ${mcpCtaCss()}
   <div class="executive-summary">
     <p>New AWS accounts choose a Free plan or a Paid plan; both get $100 in credits at sign-up and can earn up to $100 more. The Free plan covers over 90 services, charges nothing, and closes at 6 months or when the credits run out. 30+ services stay always free on both plans. Short-term trials are for the Paid plan.</p>
     <p><strong>What's new:</strong> Aurora PostgreSQL serverless joined the Free plan on 2026-03-25 with up to 4 ACUs and 1 GiB per cluster, paid from the credits. The 12-month free tier ended for the last eligible accounts in July 2026.</p>
-    <p><strong>The hidden costs:</strong> AWS's free tier is generous but has well-known traps — data transfer charges, NAT Gateway fees, idle Elastic IPs, and EBS volumes on stopped instances. We cover all of them below.</p>
+    <p><strong>The hidden costs:</strong> data transfer, NAT Gateway fees, idle Elastic IPs and EBS volumes on stopped instances use up credits fast. On the Free plan, using up the credits closes the account and nothing is charged to your card; on the Paid plan, usage past the credits is billed. We cover all of them below.</p>
     <p><strong>Comparing clouds?</strong> See our <a href="/cloud-free-tier-comparison-2026">Cloud Free Tier Comparison</a> for a side-by-side matrix of AWS vs GCP vs Azure vs DigitalOcean.</p>
   </div>
 
@@ -32940,7 +32940,7 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="always-free">Always Free Services</h2>
-  <p class="section-intro">30+ services are free within monthly limits on both plans. Usage beyond these limits is first covered by credits, then billed at standard pay-as-you-go rates on the Paid plan.</p>
+  <p class="section-intro">30+ services are free within monthly limits on both plans. Usage beyond these limits is paid from the credits. On the Free plan nothing is billed to your card; on the Paid plan, usage past the credits is billed at standard pay-as-you-go rates.</p>
 
   <div style="overflow-x:auto">
   <table class="pricing-table">
@@ -33020,7 +33020,7 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="gotchas">Hidden Costs &amp; Gotchas</h2>
-  <p class="section-intro">AWS's free tier is generous, but these costs catch almost every new user. The #1 cause of surprise AWS bills isn't usage — it's infrastructure that runs when you're not looking.</p>
+  <p class="section-intro">These costs catch almost every new user. On the Free plan they draw down the credits, and when the credits run out the account closes; nothing is charged to your card. On the Paid plan they are billed once the credits are used up. The usual cause isn't usage — it's infrastructure that runs when you're not looking.</p>
 
     ${gotchaCards}
 
@@ -34794,7 +34794,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="context-box">
-    <strong>GCP offers the most generous trial:</strong> $300 over 90 days vs Azure's $200/30 days. AWS gives new accounts $100 in credits and up to $100 more for trying key services, on a Free plan that closes after 6 months or when the credits run out. DigitalOcean gives new accounts a $5 credit for 90 days. All require a credit card.
+    <strong>GCP offers the most generous trial:</strong> $300 over 90 days vs Azure's $200/30 days. AWS gives new accounts $100 in credits and up to $100 more for trying key services, on a Free plan that closes after 6 months or when the credits run out. DigitalOcean gives new accounts a $5 credit for 90 days. All require a credit card. None of the AWS, GCP or Azure trials charges that card when its credit runs out unless you upgrade: Google closes the Free Trial billing account, AWS closes the Free plan account, and Azure disables the subscription.
   </div>
 
   <h2 id="compute">Always-Free Compute</h2>
@@ -35129,7 +35129,7 @@ ${mcpCtaCss()}
 
   <div class="diff-card" style="border-left-color:#f85149">
     <h3>AWS <span style="font-size:.75rem;color:#f85149;font-weight:400">Most gotchas</span></h3>
-    <p class="diff-desc"><strong>Data transfer:</strong> $0.09/GB after 100 GB free. <strong>NAT Gateway:</strong> $32+/mo if Lambda needs VPC internet. <strong>Idle Elastic IPs:</strong> $3.60/mo when unattached. <strong>EBS on stopped instances:</strong> You pay for disk even when EC2 is stopped. <strong>Free plan closure:</strong> the account closes at 6 months or when credits run out, and content is deleted after 90 days unless you upgrade to the Paid plan.</p>
+    <p class="diff-desc"><strong>Data transfer:</strong> $0.09/GB after 100 GB free. <strong>NAT Gateway:</strong> $32+/mo if Lambda needs VPC internet. <strong>Idle Elastic IPs:</strong> $3.60/mo when unattached. <strong>EBS on stopped instances:</strong> You pay for disk even when EC2 is stopped. <strong>Free plan closure:</strong> nothing is charged to your card on the Free plan; the account closes at 6 months or when credits run out, and content is deleted after 90 days unless you upgrade to the Paid plan.</p>
   </div>
 
   <div class="diff-card" style="border-left-color:#d29922">
@@ -35138,8 +35138,8 @@ ${mcpCtaCss()}
   </div>
 
   <div class="diff-card" style="border-left-color:#d29922">
-    <h3>Azure <span style="font-size:.75rem;color:#d29922;font-weight:400">One major trap</span></h3>
-    <p class="diff-desc"><strong>No spending cap:</strong> Once your $200 trial expires, there's no automatic stop — charges accumulate on pay-as-you-go. <strong>Log Analytics ingestion:</strong> 5 GB/mo free, then $2.76/GB — logging can cost more than compute. <strong>App Service F1 limits:</strong> 60 CPU-min/day with 1 GB RAM — apps sleep after the quota. <strong>VM deallocation:</strong> You must "deallocate" (not just "stop") VMs to stop charges.</p>
+    <h3>Azure</h3>
+    <p class="diff-desc"><strong>Spending limit:</strong> the free account's spending limit is on by default, so your card is not charged; at 30 days or when the $200 credit runs out, services are disabled unless you upgrade. Upgrading to pay-as-you-go removes the limit, and from then on there is no automatic stop. <strong>Log Analytics ingestion:</strong> 5 GB/mo free, then $2.76/GB — logging can cost more than compute. <strong>App Service F1 limits:</strong> 60 CPU-min/day with 1 GB RAM — apps sleep after the quota. <strong>VM deallocation:</strong> You must "deallocate" (not just "stop") VMs to stop charges.</p>
   </div>
 
   <div class="diff-card" style="border-left-color:#3fb950">

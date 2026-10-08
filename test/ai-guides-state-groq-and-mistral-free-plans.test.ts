@@ -16,9 +16,10 @@ const STATED: Record<string, string[]> = {
     "30 RPM; 1K requests and 200K tokens/day per model",
     "gpt-oss-120b, gpt-oss-20b, Qwen3.8 27B",
     "Mistral Large 3, Medium 3.5, Small 4",
+    "Mistral AI Free plan includes monthly API usage whose amount the pricing page has not stated since 2026-10-07 Mistral Large 3, Medium 3.5, Small 4",
   ],
   "/gemini-api-pricing-2026": [
-    "Mistral AI includes $10 a month in API credits.",
+    "Free plan includes monthly API usage; its pricing page listed $10 a month until 2026-10-07, then stopped stating the amount.",
   ],
   "/free-ai-stack": [
     "Ultra-fast inference on LPU hardware — 30 RPM, 1,000 requests and 200K tokens a day per model, free. Serves gpt-oss-120b, gpt-oss-20b and Qwen3.8 27B. Best balance of speed, limits, and model quality for prototyping.",
@@ -27,20 +28,22 @@ const STATED: Record<string, string[]> = {
   "/ai-ml-alternatives": [
     "offers blazing-fast gpt-oss-120b inference at 30 RPM free",
     "with gpt-oss-120b, 30 RPM free",
-    "Free plan includes $10 a month in API credits.",
-    "$10 a month in API credits on the Free plan, and API keys need no credit card.",
+    "Free plan includes monthly API usage; its pricing page listed $10 a month until 2026-10-07, then stopped stating the amount.",
+    "Mistral AI — Free plan includes monthly API usage whose amount the pricing page has not stated since 2026-10-07. API keys need no credit card.",
+    "Mistral AI LLM API Free plan includes monthly API usage whose amount the pricing page has not stated since 2026-10-07 No",
   ],
   "/free-llm-apis": [
     "delivers gpt-oss-120b at 30 RPM",
     "30 RPM free with gpt-oss-120b",
-    "Free plan includes $10 a month in API credits.",
-    "Mistral's Free plan includes $10 a month in API credits.",
-    "$10 a month in API credits on the Free plan.",
+    "Free plan includes monthly API usage; its pricing page listed $10 a month until 2026-10-07, then stopped stating the amount.",
+    "Mistral's Free plan includes monthly API usage; its pricing page listed $10 a month until 2026-10-07, then stopped stating the amount.",
+    "Mistral AI — Free plan includes monthly API usage whose amount the pricing page has not stated since 2026-10-07. API keys need no credit card.",
   ],
   "/llm-api-pricing": [
     "Groq's free plan allows 30 RPM, 1,000 requests and 200K tokens a day per model",
     "Groq gpt-oss-20b ($0.075/M input)",
-    "Mistral's Free plan includes $10 a month in API credits",
+    "For frontier models specifically, Mistral's Free plan includes monthly API usage; its pricing page listed $10 a month until 2026-10-07, then stopped stating the amount.",
+    "Mistral AI — Free plan includes monthly API usage whose amount the pricing page has not stated since 2026-10-07",
     "For open models, SiliconFlow's international site lists gpt-oss-120b at $0.05/$0.45 and DeepSeek-V4.1-Flash at $0.15/$0.60 (per 1M tokens).",
     "Open-weight inference is cheap: Groq's free plan allows 200K tokens a day on each of its free chat models.",
     "Opus-class prices fell from $15/$75 per M tokens (Opus 4.1) to $5/$25 in November 2025 and $4/$20 with Opus 5.5",
@@ -51,19 +54,27 @@ const STATED: Record<string, string[]> = {
     "Groq serves a short list of open-weight models on its hardware; the free plan covers gpt-oss-120b, gpt-oss-20b and Qwen3.8 27B.",
   ],
   "/groq-vs-mistral-ai": [
-    "and its Free plan includes $10 a month in API credits",
+    "Mistral AI offers its own proprietary models (Mistral Large, Codestral, Pixtral) and its Free plan includes monthly API usage; its pricing page listed $10 a month until 2026-10-07, then stopped stating the amount.",
     "Groq serves open-weight models (gpt-oss, Qwen) on its hardware.",
-    "Mistral's Free plan includes $10 a month in API credits.",
+    "Mistral's Free plan includes monthly API usage; its pricing page listed $10 a month until 2026-10-07, then stopped stating the amount.",
     "Groq allows 200K tokens a day per model (about 6M a month) at 30 RPM.",
     "want to use open-weight models such as gpt-oss",
     "Groq wins on speed; Mistral wins on model variety.",
     "(especially Codestral for code), or prefer European-based AI providers.",
   ],
   "/ai-free-tiers": [
-    "Mistral includes $10 a month in API credits, and Google Antigravity has a free individual plan with weekly limits.",
-    "Mistral's Free plan includes $10 a month in API credits.",
+    "Groq serves fast inference on a free plan, and Google Antigravity has a free individual plan with weekly limits.",
+    "Mistral's Free plan includes monthly API usage; its pricing page listed $10 a month until 2026-10-07, then stopped stating the amount.",
   ],
 };
+
+const MISTRAL_CREDIT_AS_CURRENT = [
+  "includes $10 a month in API credits",
+  "$10 a month in API credits on the Free plan",
+  "$10/month in API credits",
+  "$10/mo in API credits",
+  "$10/mo API credits",
+];
 
 const WITHDRAWN: Record<string, string[]> = {
   "/llm-api-pricing": [
@@ -73,11 +84,16 @@ const WITHDRAWN: Record<string, string[]> = {
     "Frontier model pricing is in freefall",
     "5-10x cheaper",
     "Many apps work well with Llama 3.3 70B",
+    ...MISTRAL_CREDIT_AS_CURRENT,
   ],
   "/free-ai-stack": ["Cerebras (1M tokens/day) or OpenRouter", "500K tokens/day"],
   "/openai-assistants-migration-2026": ["Meta Llama (via Groq)", "Via Llama models"],
-  "/groq-vs-mistral-ai": ["free token volume", "higher throughput ceiling", "the largest free token allowance"],
-  "/google-developer-program-2026": ["Mixtral"],
+  "/groq-vs-mistral-ai": ["free token volume", "higher throughput ceiling", "the largest free token allowance", ...MISTRAL_CREDIT_AS_CURRENT],
+  "/google-developer-program-2026": ["Mixtral", ...MISTRAL_CREDIT_AS_CURRENT],
+  "/gemini-api-pricing-2026": MISTRAL_CREDIT_AS_CURRENT,
+  "/ai-ml-alternatives": MISTRAL_CREDIT_AS_CURRENT,
+  "/free-llm-apis": MISTRAL_CREDIT_AS_CURRENT,
+  "/ai-free-tiers": MISTRAL_CREDIT_AS_CURRENT,
 };
 
 const PAGES = Object.keys(STATED);
@@ -200,13 +216,13 @@ describe("the AI guides state Groq's and Mistral's free plans as the vendors lis
     assert.deepStrictEqual(left, []);
   });
 
-  it("still states Groq's 30 RPM beside Groq, and Mistral's $10 credit beside Mistral", () => {
+  it("still states Groq's 30 RPM beside Groq, and Mistral's monthly API usage beside Mistral", () => {
     for (const page of ["/free-llm-apis", "/gemini-api-pricing-2026"]) {
       assert.ok(unitsOf(served.get(page)!).some((unit) => /Groq/.test(unit) && /30 RPM/.test(unit)), page);
     }
     assert.ok(textOf(served.get("/llm-api-pricing")!).includes("gpt-oss-120b"));
     for (const page of ["/llm-api-pricing", "/free-llm-apis"]) {
-      assert.ok(unitsOf(served.get(page)!).some((unit) => /Mistral/.test(unit) && /\$10/.test(unit)), page);
+      assert.ok(unitsOf(served.get(page)!).some((unit) => /Mistral/.test(unit) && /monthly API usage/.test(unit)), page);
     }
   });
 });

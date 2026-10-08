@@ -9,15 +9,15 @@ const REPO = path.join(__dirname, "..");
 
 const STATED: Record<string, string[]> = {
   "/ai-ml-alternatives": [
-    "Mistral's Free plan includes $10 a month in API credits.",
-    "Mistral AI — $10 a month in API credits on the Free plan, and API keys need no credit card.",
+    "Mistral's Free plan includes monthly API usage; its pricing page listed $10 a month until 2026-10-07, then stopped stating the amount.",
+    "Mistral AI — Free plan includes monthly API usage whose amount the pricing page has not stated since 2026-10-07. API keys need no credit card.",
     "Kaggle — a weekly quota of 30 GPU hours (one P100 or two T4s) and up to 20 TPU hours, at no charge.",
     "Qdrant — a free single-node cluster (0.5 vCPU, 1 GB RAM, 4 GB disk) for testing, suspended after a week unused.",
   ],
   "/free-llm-apis": [
-    "Mistral's Free plan includes $10 a month in API credits. OpenRouter aggregates",
-    "Mistral's Free plan includes $10 a month in API credits. OpenRouter gives one API key",
-    "Mistral AI — $10 a month in API credits on the Free plan.",
+    "Mistral's Free plan includes monthly API usage; its pricing page listed $10 a month until 2026-10-07, then stopped stating the amount. OpenRouter aggregates",
+    "Mistral's Free plan includes monthly API usage; its pricing page listed $10 a month until 2026-10-07, then stopped stating the amount. OpenRouter gives one API key",
+    "Mistral AI — Free plan includes monthly API usage whose amount the pricing page has not stated since 2026-10-07. API keys need no credit card.",
     "Cloudflare Workers AI — 10,000 Neurons a day at no charge on every account; on the Workers Free plan, requests beyond that fail until the daily reset at 00:00 UTC. Some models, including Kimi K2.6 and GLM-5.3, need the Workers Paid plan or prepaid AI Gateway credits.",
     "Ollama — open source (MIT) and free to run on your own machine; its cloud models are paid with usage credits, and the Free plan includes starter credits.",
   ],
@@ -55,6 +55,8 @@ const WITHDRAWN = [
   "Compare free AI coding alternatives",
   "carry no paid rate in our index",
   "rate-limited free access only",
+  "includes $10 a month in API credits",
+  "$10 a month in API credits on the Free plan",
 ];
 
 const PAGES = [...new Set([...Object.keys(STATED), ...Object.keys(DESCRIBED)])];
