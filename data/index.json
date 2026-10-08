@@ -23111,7 +23111,7 @@
     {
       "vendor": "DigitalPlat",
       "category": "DNS & Domain Management",
-      "description": "Free subdomains via nonprofit foundation. dpdns.org is the primary service. The us.kg subdomain offering has been suspended due to abuse and is no longer accepting registrations. qzz.io and xx.kg may also be available.",
+      "description": "Free subdomains under .qzz.io, .dpdns.org, .us.kg, .xx.kg, and .qd.je. All five namespaces were listed as available on 2026-10-08. A registered name can use external nameservers. The service is run by the DigitalPlat Foundation.",
       "tier": "Free",
       "url": "https://domain.digitalplat.org",
       "tags": [
