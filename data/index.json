@@ -2023,7 +2023,15 @@
         "checked": "2026-10-07",
         "outcome": "ok",
         "detail": "the page names Auth0 as \"auth0\" and states \"$ 0\""
-      }
+      },
+      "conditions": [
+        {
+          "text": "Using the Free plan's custom domain requires a valid credit card on file for verification and fraud prevention. Auth0 does not charge it.",
+          "quote": "To set up a free custom domain, Auth0 tenants must have a valid credit card on file for verification purposes and fraud prevention. The credit card will not be charged.",
+          "url": "https://auth0.com/docs/customize/custom-domains",
+          "read_on": "2026-10-08"
+        }
+      ]
     },
     {
       "vendor": "Kinde",
@@ -34367,7 +34375,7 @@
     {
       "vendor": "Ollama Cloud",
       "category": "AI / ML",
-      "description": "Cloud-hosted Ollama for running open-source LLMs — The Free plan costs $0 and includes starter usage credits. Buying usage credits unlocks all models. It includes 1 concurrent request.",
+      "description": "Cloud-hosted Ollama for running open-source LLMs — The Free plan costs $0 and includes starter usage credits. Buying usage credits unlocks all models. It includes 1 concurrent request. Pro costs $20 a month with $60 of usage credits, Max $100 a month with $300. Usage is billed per million tokens at each model's rate, for example gpt-oss:120b at $0.15 input and $0.60 output, and some models, such as deepseek-v4.1-flash, cost half off-peak (outside 12:00 to 18:00 UTC on weekdays, and all weekend).",
       "tier": "Free",
       "url": "https://ollama.com/pricing",
       "tags": [
@@ -34396,12 +34404,9 @@
         ],
         "reviewed": "2026-09-01"
       },
-      "restated_from": {
-        "reading_date": "2026-09-22",
-        "source_url": "https://ollama.com/pricing",
+      "restatement_reverted": {
         "record_date": "2026-09-22",
-        "change_type": "pricing_model_change",
-        "restated_on": "2026-09-22"
+        "reverted_on": "2026-10-08"
       },
       "conditions": [
         {
