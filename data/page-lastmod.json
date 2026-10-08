@@ -1108,7 +1108,7 @@
       "changed": "2026-10-07"
     },
     "/category/ci-cd": {
-      "hash": "07bfda3f54f17896",
+      "hash": "62afd211726dea7b",
       "changed": "2026-10-08"
     },
     "/category/cloud-hosting": {
@@ -1315,7 +1315,7 @@
       "daily": true
     },
     "/ci-cd-alternatives": {
-      "hash": "b0b887eed207ba7f",
+      "hash": "dde2191bb7b98efb",
       "changed": "2026-10-08"
     },
     "/ci-cd-pricing": {
@@ -1323,7 +1323,7 @@
       "changed": "2026-10-08"
     },
     "/cicd-free-tier-comparison-2026": {
-      "hash": "2c73c199fcf40b46",
+      "hash": "64c9300aca43d087",
       "changed": "2026-10-08"
     },
     "/circleci-vs-github-actions": {
@@ -3491,7 +3491,7 @@
       "changed": "2026-10-08"
     },
     "/stack-check": {
-      "hash": "71b1a917e781dc0e",
+      "hash": "fbdf15463b066795",
       "changed": "2026-10-08"
     },
     "/stacks": {
@@ -4848,7 +4848,7 @@
       "changed": "2026-10-08"
     },
     "/vendor/codemagic": {
-      "hash": "ed3c6ef76169c2fb",
+      "hash": "196d4a37c8cac629",
       "changed": "2026-10-08"
     },
     "/vendor/codemyui": {
