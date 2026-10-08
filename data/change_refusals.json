@@ -781,6 +781,18 @@
       "refused_date": "2026-09-20"
     },
     {
+      "vendor": "Brackets",
+      "change_type": "rebranded",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-09-20 (no_price_signal) claimed the same change, rebranded, against the same stored description",
+      "summary": "Brackets is now called Phoenix Code and is the next generation of Brackets. The page recommends users upgrade to Phoenix Code.",
+      "previous_state": "Brackets is an open-source text editor specifically designed for web development. It is lightweight, easy to use, and highly customizable.",
+      "current_state": "Brackets recommends users upgrade to Phoenix Code – the new Brackets, built for you.",
+      "source_url": "http://brackets.io/",
+      "category": "IDE & Code Editors",
+      "refused_date": "2026-10-08"
+    },
+    {
       "vendor": "Braid",
       "change_type": "pricing_restructured",
       "reason": "dangling_reference",
@@ -1133,6 +1145,18 @@
       "source_url": "https://wso2.com/choreo/",
       "category": "Cloud Hosting",
       "refused_date": "2026-09-20"
+    },
+    {
+      "vendor": "Choreo",
+      "change_type": "free_tier_removed",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-09-20 (no_price_signal) claimed the same change, free_tier_removed, against the same stored description",
+      "summary": "The free tier is now a 'Sign Up for Free' option that does not specify component limits or monthly credits. The page focuses on features and capabilities of the platform, with a strong emphasis on paid offerings and enterprise solutions.",
+      "previous_state": "AI-native internal developer platform as a service. The free tier includes up to 5 components and $100 credits per month.",
+      "current_state": "The page offers a 'Sign Up for Free' option for the Developer Platform, but does not detail any specific limits or credits associated with it. It highlights features like AI-powered FinOps, automated workflows, and security measures.",
+      "source_url": "https://wso2.com/choreo/",
+      "category": "Cloud Hosting",
+      "refused_date": "2026-10-08"
     },
     {
       "vendor": "CircleCI",
@@ -1548,6 +1572,18 @@
       "refused_date": "2026-09-21"
     },
     {
+      "vendor": "Composio",
+      "change_type": "new_tier",
+      "reason": "confirmed_unchanged",
+      "detail": "Name change only",
+      "summary": "The free tier is now called 'Hobby' and still exists. The limits (100,000 tool calls / mo, 50,000 triggers / mo, 3 team members) remain the same for the 'Hobby' tier.",
+      "previous_state": "Integration platform for AI Agents and LLMs — Free $0 No credit card required 100,000 tool calls / mo 50,000 triggers / mo 3 team members",
+      "current_state": "Hobby $0 No credit card required 100,000 tool calls / mo 50,000 triggers / mo 3 team members",
+      "source_url": "https://composio.dev/pricing",
+      "category": "AI / ML",
+      "refused_date": "2026-10-08"
+    },
+    {
       "vendor": "ConfigCat",
       "change_type": "limits_increased",
       "reason": "measures_no_change",
@@ -1606,6 +1642,18 @@
       "source_url": "https://www.cosmicjs.com/",
       "category": "Headless CMS",
       "refused_date": "2026-09-20"
+    },
+    {
+      "vendor": "Cosmic",
+      "change_type": "limits_reduced",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this vendor refused on 2026-09-20 (dangling_reference) stated the same current state, word for word",
+      "summary": "The page mentions a 'Free' plan but does not detail the specific limits (projects, users, objects, API requests, storage, bandwidth, AI agents, AI tokens) listed in the stored deal info. It only states 'No credit card required • Free forever'.",
+      "previous_state": "Headless CMS — 1 project, 2 users, 1,000 objects, 10K API requests/month (100K cached), 1 GB storage, 1 GB API bandwidth, 3 AI agents, 300K AI tokens/month",
+      "current_state": "The page states a 'Free' plan is available with no credit card required and is 'forever' free, but does not specify any usage limits.",
+      "source_url": "https://www.cosmicjs.com/",
+      "category": "Headless CMS",
+      "refused_date": "2026-10-08"
     },
     {
       "vendor": "Cosmic",
@@ -2328,16 +2376,28 @@
       "collided_with": "E2B|limits_reduced|2026-09-05|https://e2b.dev/pricing"
     },
     {
+      "vendor": "economize.cloud",
+      "change_type": "rebranded",
+      "reason": "no_price_signal",
+      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 8515 characters, so it states no terms to have changed",
+      "summary": "The page states that Economize has been acquired by OpenMetal. While a free tier is mentioned ('Get started for free'), the specific $100,000 spend limit is not mentioned.",
+      "previous_state": "Economize helps demystify cloud infrastructure costs by organizing cloud resources to optimize and report the same. Free for up to $100,000 spent on cloud (AWS, Azure, GCP) every month.",
+      "current_state": "'Get started for free' is mentioned, but no specific spend limit is stated.",
+      "source_url": "https://economize.cloud",
+      "category": "Monitoring",
+      "refused_date": "2026-10-08"
+    },
+    {
       "vendor": "Elastic",
-      "change_type": "limits_increased",
+      "change_type": "limits_reduced",
       "reason": "unquantified_limit",
-      "detail": "limits_increased claimed, but the current state names no quantity for anything the stored state measured (24 support, 7 support)",
-      "summary": "The free offering now focuses on self-managed deployments and includes Elasticsearch, Kibana, ingest, and basic security. The page details Platinum and Enterprise tiers with advanced features and support, which are custom-priced. Elastic Cloud Serverless and Hosted are separately billed. The page also details features available in Platinum and Enterprise tiers that were not mentioned in the stored deal info, such as Single Sign-On, Machine Learning, and Cross-Cluster Replication.",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (24 support, 7 support)",
+      "summary": "The free offering now requires a download and is described as the full Elastic Stack (Elasticsearch, Kibana, ingest and basic security) but does not explicitly mention community support. The page details Platinum and Enterprise tiers with more features, and also mentions Elastic Cloud Serverless and Hosted as separately billed options. The free tier is now more explicitly tied to self-management.",
       "previous_state": "The Elastic Stack — Elasticsearch, Kibana, ingest and basic security — self-managed at no cost on the Free and Open tier under the Elastic License and SSPL, with community support. Platinum (existing customers only) and Enterprise are custom-priced and add machine learning, cross-cluster replication, searchable snapshots and 24/7 support. Elastic Cloud Serverless and Hosted are billed separately by usage or resources.",
-      "current_state": "Platinum includes advanced security and compliance (SSO, LDAP/Active Directory, field/document-level security, and audit logging), machine learning (out-of-the-box anomaly detection for logs/metrics and ELSER for semantic search), and high availability (Cross-cluster replication (CCR)).",
+      "current_state": "The full Elastic Stack Elasticsearch: The open source, distributed vector database and search and analytics engine built for speed and scale Kibana: The open source interface to query, analyze, visualize, and manage your data stored in Elasticsearch Data ingestion: Centralize data from any source with native support for OTel, Logstash, and Beats Security: Native authentication (username/password), RBAC, and TLS encryption is available for download.",
       "source_url": "https://www.elastic.co/pricing/self-managed",
       "category": "Monitoring",
-      "refused_date": "2026-09-18"
+      "refused_date": "2026-10-08"
     },
     {
       "vendor": "EmailOctopus",
@@ -2424,6 +2484,18 @@
       "source_url": "https://expo.dev/pricing",
       "category": "Mobile Development",
       "refused_date": "2026-09-26"
+    },
+    {
+      "vendor": "FabForm",
+      "change_type": "limits_increased",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this vendor refused on 2026-09-20 (unquantified_limit) stated the same current state, word for word",
+      "summary": "The free plan now offers unlimited forms and responses, a significant increase from the previously stated 250 submissions per month.",
+      "previous_state": "Form backend platform for intelligent developers. The free plan allows 250 form submissions per month. Friendly modern GUI. Integrates with Google Sheets, Airtable, Slack, Email, and others.",
+      "current_state": "Collect unlimited responses for free. Build and manage unlimited forms without worrying about restrictions.",
+      "source_url": "https://fabform.io/",
+      "category": "Forms",
+      "refused_date": "2026-10-08"
     },
     {
       "vendor": "FabForm",
@@ -2613,13 +2685,13 @@
       "vendor": "Fizzy",
       "change_type": "limits_reduced",
       "reason": "repeats_a_refused_reading",
-      "detail": "the reading of this page refused on 2026-10-06 (repeats_a_refused_reading) stated the same figure, so the page showed these terms before the date this record gives",
-      "summary": "The stored deal info mentions a limit of 1000 items, but the pricing page states that Fizzy is entirely free with a 1 GB file storage limit.",
+      "detail": "the reading of this page refused on 2026-10-07 (repeats_a_refused_reading) stated the same figure, so the page showed these terms before the date this record gives",
+      "summary": "The stored deal info mentions a limit of 1000 items, but the pricing page does not mention any item limits. It does state a 1 GB file storage limit.",
       "previous_state": "Kanban-based platform for project management and issue tracking. Create public boards, set up webhooks, use card stamping, and track unlimited users — free for up to 1000 items.",
-      "current_state": "Fizzy is entirely free with a 1 GB file storage limit.",
+      "current_state": "Fizzy is entirely free and subsidized by Basecamp and HEY. File space usage is limited to 1 GB.",
       "source_url": "https://www.fizzy.do/",
       "category": "Project Management",
-      "refused_date": "2026-10-07"
+      "refused_date": "2026-10-08"
     },
     {
       "vendor": "Flagsmith",
@@ -3682,6 +3754,18 @@
       "refused_date": "2026-09-20"
     },
     {
+      "vendor": "IFTTT",
+      "change_type": "limits_increased",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-09-20 (no_price_signal) claimed the same change, limits_increased, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "The free tier now allows for unlimited Applets, a significant increase from the previously stated 2 Applets.",
+      "previous_state": "Automate your favorite apps and devices. Free 2 Applets",
+      "current_state": "The page states you can 'Automate more, effortlessly. Try it free' and 'Connect up to 20 automations with Pro, and unlimited automations with Pro+'. It also says 'Join over 32M people who save time with IFTTT Get started for free'.",
+      "source_url": "https://ifttt.com",
+      "category": "Cloud Hosting",
+      "refused_date": "2026-10-08"
+    },
+    {
       "vendor": "image-charts.com",
       "change_type": "limits_reduced",
       "reason": "confirmed_unchanged",
@@ -4319,6 +4403,18 @@
       "collided_with": "logflare.app|pricing_restructured|2026-09-01|https://logflare.app/"
     },
     {
+      "vendor": "Logo.dev",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (44 brand, 10,000 api)",
+      "summary": "The page states you can 'Get started for free' and offers a free API key, but does not explicitly mention a limit of 10,000 API calls. It also highlights multiple APIs (Logo, Search, Brand, Transaction Enrichment) suggesting a more comprehensive offering than just the logo API described in the stored information.",
+      "previous_state": "Company logo API with 44M+ brands that's as easy as calling a URL. First 10,000 API calls are free.",
+      "current_state": "Get started for free. Get a free API key.",
+      "source_url": "https://www.logo.dev",
+      "category": "Design",
+      "refused_date": "2026-10-08"
+    },
+    {
       "vendor": "LogRocket",
       "change_type": "free_tier_removed",
       "reason": "same_transition_graded_differently",
@@ -4808,15 +4904,15 @@
     },
     {
       "vendor": "Mistral AI",
-      "change_type": "new_tier",
+      "change_type": "pricing_restructured",
       "reason": "confirmed_unchanged",
-      "detail": "The report primarily highlights additions to the free plan (image generation, more Vibe features) and introduces paid plans, but confirms the $10/month credit and access to Studio/Vibe which were already stated. The core free tier offering remains consistent.",
-      "summary": "The free plan now offers $10/month in API credits, access to Mistral Studio, and limited access to Vibe (including models, chat, search, creation, and Vibe for code). The page details additional features and limits for the free plan (e.g., limited messages, web searches, coding sessions, state-of-the-art image generation). The Pro plan is $14.99/month, and there's a Team plan at $24.99/user/month.",
-      "previous_state": "Mistral's Free plan includes $10 a month in API credits, shared across Studio, the API and Vibe Code. When it is used up, usage can stop until the next month unless pay-as-you-go is turned on. API keys work with no credit card, within rate limits. The plan also has limited messages, web searches and coding sessions in Vibe. Mistral may use inputs and outputs for training unless you opt out. API prices: Ministral 3 (3B) $0.1/$0.1 (per 1M tokens); Mistral Small 4 $0.15/$0.6 (per 1M tokens); Mistral Large 3 $0.5/$1.5 (per 1M tokens); Mistral Medium 3.5 $1.5/$7.5 (per 1M tokens); Codestral $0.3/$0.9 (per 1M tokens). Mistral Embed is $0.1 per 1M input tokens, and Codestral Embed is $0.15 per 1M input tokens. OCR 4.1 costs $4 per 1,000 pages. Mistral Moderation 2 is free. Mistral retired Devstral 2 (devstral-2512) on 2026-07-31 and names Mistral Medium 3.5 as its replacement. Batch processing is half price, and cached input tokens cost up to 90% less. Mistral publishes no rate-limit figures. Each organization's per-model limits (tokens per minute, requests per second) appear in Admin Panel > API > Limits.",
-      "current_state": "The Free plan provides $10 /mo in API credits, access to Mistral Studio, and limited access to Vibe, including our latest models, chat, search, creation, and Vibe for code for agentic coding in your terminal.",
+      "detail": "The report describes features already mentioned in the stored description (Vibe, limited messages/searches/coding sessions). The addition of Mistral Studio is also present in the stored description.",
+      "summary": "The free plan now has limited messages and web searches, and limited coding sessions. It also includes access to Mistral Studio. The free plan now includes access to Mistral Studio and Vibe, with limited features.",
+      "previous_state": "Mistral's Free plan includes monthly usage shared across Studio, the API and Vibe Code. The pricing page no longer states the amount as of 2026-10-07; it previously listed $10 a month in API credits. When it is used up, usage can stop until the next month unless pay-as-you-go is turned on. API keys work with no credit card, within rate limits. The plan also has limited messages, web searches and coding sessions in Vibe. API prices: Ministral 3 (3B) $0.1/$0.1 (per 1M tokens); Mistral Small 4 $0.15/$0.6 (per 1M tokens); Mistral Large 3 $0.5/$1.5 (per 1M tokens); Mistral Large 4 (public preview since 2026-10-06, 1M-token context) $1.36/$4.18 (per 1M tokens), and Mistral charges half that for its first two weeks; Mistral Medium 3.5 $1.5/$7.5 (per 1M tokens); Codestral $0.3/$0.9 (per 1M tokens). Mistral Embed is $0.1 per 1M input tokens, and Codestral Embed is $0.15 per 1M input tokens. OCR 4.1 costs $4 per 1,000 pages. Mistral Moderation 2 is free. Mistral retired Devstral 2 (devstral-2512) on 2026-07-31 and names Mistral Medium 3.5 as its replacement. Batch processing is half price, and cached input tokens cost up to 90% less. Mistral publishes no rate-limit figures. Each organization's per-model limits (tokens per minute, requests per second) appear in Admin Panel > API > Limits.",
+      "current_state": "The Free plan provides limited access to Vibe, including our latest models, chat, search, creation, and Vibe for code for agentic coding in your terminal. On the Free plan, you also get access to Mistral Studio.",
       "source_url": "https://mistral.ai/pricing",
       "category": "AI / ML",
-      "refused_date": "2026-10-03"
+      "refused_date": "2026-10-08"
     },
     {
       "vendor": "mockaroo",
@@ -5220,6 +5316,18 @@
       "source_url": "https://ollama.com/pricing",
       "category": "AI / ML",
       "refused_date": "2026-09-03"
+    },
+    {
+      "vendor": "Ona",
+      "change_type": "free_tier_removed",
+      "reason": "no_price_signal",
+      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 1544 characters, so it states no terms to have changed",
+      "summary": "The pricing page does not mention a free tier or any specific pricing details. It only offers a contact form to request a quote.",
+      "previous_state": "There is no free tier: formerly Gitpod, and gitpod.io/pricing now 308-redirects to ona.com/pricing, which on a read of 2026-09-19 does not contain the word \"free\" anywhere. Core starts at $20/month for up to 100 team members with 80 to 2,200 included Ona Compute Units a month; add-on OCUs are $10 per 40 OCUs; Enterprise is custom. Self-hosted cloud development environments and agents.",
+      "current_state": "The page states to 'Talk to us' and fill out a form to get a quote. It asks for the total number of engineers and cloud infrastructure preference.",
+      "source_url": "https://ona.com/pricing",
+      "category": "IDE & Code Editors",
+      "refused_date": "2026-10-08"
     },
     {
       "vendor": "OneDrive",
@@ -5645,6 +5753,30 @@
       "refused_date": "2026-09-20"
     },
     {
+      "vendor": "Plane",
+      "change_type": "limits_reduced",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-09-20 (no_price_signal) claimed the same change, limits_reduced, against the same stored description",
+      "summary": "The page promotes a 'Get started free' option, but details about limits are sparse. While the initial description mentions 'unlimited members, up to 5MB file upload size, 1000 issues', the current page does not explicitly confirm these limits for the free tier. It focuses heavily on paid features like AI agents, migration support, and self-hosting options.",
+      "previous_state": "Plane is a simple, extensible, open-source project and product management tool. Free for unlimited members, up to 5MB file upload size, 1000 issues.",
+      "current_state": "The page offers a 'Get started free' option but does not specify limits for free users. It heavily promotes paid features and plans like Business and Enterprise-grid.",
+      "source_url": "https://plane.so/",
+      "category": "Project Management",
+      "refused_date": "2026-10-08"
+    },
+    {
+      "vendor": "PlanetScale",
+      "change_type": "free_tier_removed",
+      "reason": "restates_stored_quantities",
+      "detail": "narrowing claimed, and every quantity the current state names is one the stored description already held at the same value (5 currency/mo), and drops 9 the stored description carried",
+      "summary": "The Hobby plan/free tier has been removed. PlanetScale Postgres now starts at $5/month, and Vitess and Neki have their own pricing structures.",
+      "previous_state": "Managed MySQL, Postgres and Vitess, formerly a serverless MySQL with a free Hobby plan. No free tier. planetscale.com/pricing, read 2026-09-19, prices every plan: Postgres EBS non-HA PS-5 from $5/month, Neki PS-10 arm64 $30/month, Vitess PS-10 $39/month, Metal from $50/month.",
+      "current_state": "PlanetScale Postgres Single node — Starting at $5/month for development and low-traffic workloads",
+      "source_url": "https://planetscale.com/pricing",
+      "category": "Databases",
+      "refused_date": "2026-10-08"
+    },
+    {
       "vendor": "Plausible Analytics",
       "change_type": "free_tier_removed",
       "reason": "removal_does_not_reach_the_licence",
@@ -5765,6 +5897,18 @@
       "source_url": "https://posthog.com/handbook/marketing/startups",
       "category": "Startup Perks",
       "refused_date": "2026-10-07"
+    },
+    {
+      "vendor": "PostHog",
+      "change_type": "restriction",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this vendor refused on 2026-10-06 (confirmed_unchanged) stated the same current state, word for word",
+      "summary": "YC teams can now use credits for a BAA under the Boost plan, whereas the stored information stated credits could not be used for a BAA.",
+      "previous_state": "$50,000 a year in PostHog credits for Y Combinator companies in any batch, renewing automatically while the company has raised less than $25M. Apply through PostHog's YC page, linked from Bookface, from a PostHog account on the company's email domain. Not open to YC alumni who started another company, or to a YC company acquired by a non-YC parent. Since 2026-09-14 the credits don't pay for AI tools (PostHog AI, PostHog Desktop, the Slack app, Replay Vision, Inbox). It doesn't stack with PostHog for Startups.",
+      "current_state": "✅ Credits can be used to claim a BAA under the Boost plan.",
+      "source_url": "https://posthog.com/handbook/marketing/startups",
+      "category": "Startup Perks",
+      "refused_date": "2026-10-08"
     },
     {
       "vendor": "PostHog",
@@ -6714,6 +6858,18 @@
     {
       "vendor": "smartlook.com",
       "change_type": "product_deprecated",
+      "reason": "restates_stored_quantities",
+      "detail": "narrowing claimed, and every quantity the current state names is one the stored description already held at the same value (31 august, 2027 smartlook, 30 september, 2027 you, 30 september)",
+      "summary": "The Smartlook platform is being decommissioned on September 30, 2027. While a free plan will be available until then, the platform is no longer available for new subscriptions as of May 31, 2026, and renewals are ending on August 31, 2026. The platform is being transitioned to Digital Experience Analytics within Splunk Observability Cloud.",
+      "previous_state": "After 31 August 2027, the Smartlook platform will be available in free mode, providing access to some historical data before the account is fully deactivated on 30 September 2027. You may continue using Smartlook until your paid plan ends (after which you may use the free plan until 30 September 2027).",
+      "current_state": "After 31 August 2027, the Smartlook platform will be available in free mode, providing access to some historical data before the account is fully deactivated on 30 September 2027. You may continue using Smartlook until your paid plan ends (after which you may use the free plan until 30 September 2027).",
+      "source_url": "https://www.smartlook.com/",
+      "category": "Analytics",
+      "refused_date": "2026-10-08"
+    },
+    {
+      "vendor": "smartlook.com",
+      "change_type": "product_deprecated",
       "reason": "same_transition_graded_differently",
       "detail": "same vendor, source_url and previous_state as smartlook.com|product_deprecated|2026-08-28|https://www.smartlook.com/",
       "summary": "Smartlook is being deprecated and will be fully decommissioned on September 30, 2027. While a free plan will be available until then, it will have limitations. New subscriptions are not being sold as of May 31, 2026, and renewals are ending August 31, 2026. The features are being transitioned to Splunk Digital Experience Analytics.",
@@ -6868,6 +7024,18 @@
       "source_url": "https://stackby.com/",
       "category": "Databases",
       "refused_date": "2026-09-20"
+    },
+    {
+      "vendor": "StackBy",
+      "change_type": "limits_reduced",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-08-28 (unquantified_limit) claimed the same change, limits_reduced, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "The page promotes a 'Free Forever Plan' and a '14 days Business Trial' but does not explicitly detail the limits of the free plan (editors, read-only guests, stacks, attachment size). It highlights features like AI and automations, which were not mentioned in the original description.",
+      "previous_state": "One tool that combines spreadsheets' flexibility, databases' power, and built-in integrations with your favorite business apps. The free plan includes 5 editors plus 50 read-only guests, 20 stacks, and a 2GB attachment per stack.",
+      "current_state": "The page mentions a 'Free Forever Plan' but does not specify the limits of editors, read-only guests, stacks, or attachment size.",
+      "source_url": "https://stackby.com/",
+      "category": "Databases",
+      "refused_date": "2026-10-08"
     },
     {
       "vendor": "StackBy",
@@ -7166,6 +7334,18 @@
       "refused_date": "2026-08-29"
     },
     {
+      "vendor": "Teamcamp",
+      "change_type": "pricing_model_change",
+      "reason": "restates_stored_quantities",
+      "detail": "narrowing claimed, and every quantity the current state names is one the stored description already held at the same value (8 currency/mo), and drops 4 the stored description carried",
+      "summary": "The free plan is now $8/month when billed monthly.",
+      "previous_state": "All-in-one project management. Free plan: up to 10 users, unlimited projects, 250 tasks, 1 GB storage, time tracking, docs & whiteboard, invoicing and payment, integrations, free support. Plus is $6 per user/month billed annually, $8 billed monthly.",
+      "current_state": "Free is $8 when billed monthly",
+      "source_url": "https://www.teamcamp.app/pricing",
+      "category": "Project Management",
+      "refused_date": "2026-10-08"
+    },
+    {
       "vendor": "teamwork.com",
       "change_type": "free_tier_removed",
       "reason": "no_price_signal",
@@ -7176,6 +7356,18 @@
       "source_url": "https://teamwork.com/",
       "category": "Project Management",
       "refused_date": "2026-09-20"
+    },
+    {
+      "vendor": "teamwork.com",
+      "change_type": "free_tier_removed",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this page refused on 2026-09-20 (no_price_signal) stated the same figure, so the page showed these terms before the date this record gives",
+      "summary": "The page no longer mentions a free plan with 5 users and 2 projects. It focuses on a 14-day free trial and emphasizes paid plans with features like AI-powered automation, resourcing, and profitability tracking.",
+      "previous_state": "Project management — 5 users, 2 projects on free plan. Task lists, milestones, time tracking, file storage, messages, Gantt chart view, board view",
+      "current_state": "The page promotes a 14-day free trial with no mention of a continuing free plan. It highlights paid plans with features like AI-powered automation, resourcing, and profitability tracking.",
+      "source_url": "https://teamwork.com/",
+      "category": "Project Management",
+      "refused_date": "2026-10-08"
     },
     {
       "vendor": "TeleportHQ",
@@ -7200,6 +7392,18 @@
       "source_url": "https://temp-mail.io",
       "category": "Email",
       "refused_date": "2026-09-20"
+    },
+    {
+      "vendor": "temp-mail.io",
+      "change_type": "limits_reduced",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this page refused on 2026-09-20 (no_price_signal) stated the same figure, so the page showed these terms before the date this record gives",
+      "summary": "The free tier now has a 10-minute validity period, whereas the stored information states it has forwarding and multiple emails at once without a time limit. The page also highlights a Premium tier with longer validity (1 hour) and additional features.",
+      "previous_state": "Free disposable temporary email service with multiple emails at once and forwarding",
+      "current_state": "For non-premium users, the temp mail is valid for 10 minutes.",
+      "source_url": "https://temp-mail.io",
+      "category": "Email",
+      "refused_date": "2026-10-08"
     },
     {
       "vendor": "Tencent RTC",
@@ -7667,6 +7871,18 @@
       "refused_date": "2026-09-12"
     },
     {
+      "vendor": "UXtweak.com",
+      "change_type": "limits_reduced",
+      "reason": "confirmed_unchanged",
+      "detail": "The stored description already acknowledges a free plan exists.",
+      "summary": "The page indicates a free plan is available with no credit card required.",
+      "previous_state": "UX testing platform with free plan for limited UX testing tools. Session recordings require paid Business plan (EUR 125/mo).",
+      "current_state": "A free plan is available with no credit card required for small-scale projects.",
+      "source_url": "https://www.uxtweak.com/",
+      "category": "Analytics",
+      "refused_date": "2026-10-08"
+    },
+    {
       "vendor": "Vaadin",
       "change_type": "limits_reduced",
       "reason": "dangling_reference",
@@ -7765,6 +7981,18 @@
       "refused_date": "2026-09-30"
     },
     {
+      "vendor": "WaiverStevie.com",
+      "change_type": "restriction",
+      "reason": "states_no_narrowing",
+      "detail": "a restriction was recorded by a summary that reports the free tier still standing and names no term that moved",
+      "summary": "The free tier still exists, but the stored information did not mention watermarks on all PDFs for the free tier.",
+      "previous_state": "Now WaiverCat — A free account is available with no stated signature limits, but all PDFs are watermarked. Usage beyond the free account is $0.06 per signature. Basic is $15/mo for 250 signatures and Premium is $25/mo for 500 signatures.",
+      "current_state": "All PDFs are Watermarked",
+      "source_url": "https://waivercat.com/pricing/",
+      "category": "Forms",
+      "refused_date": "2026-10-08"
+    },
+    {
       "vendor": "webhook.site",
       "change_type": "limits_reduced",
       "reason": "same_transition_graded_differently",
@@ -7813,6 +8041,18 @@
       "source_url": "https://webvizio.com",
       "category": "Communication",
       "refused_date": "2026-09-26"
+    },
+    {
+      "vendor": "Weights & Biases",
+      "change_type": "limits_increased",
+      "reason": "confirmed_unchanged",
+      "detail": "The report details features already present in the stored description, just worded differently. The storage and ingestion limits are also unchanged.",
+      "summary": "The free tier now includes AI application evaluations, tracing, scoring, model experiment tracking, and a registry. It also includes 5 GB/mo of storage and 1 GB/mo of Weave data ingestion. The Pro plan starts at $60/month and includes unlimited teams, team-based access controls, service accounts, priority support, and CI/CD automations. The page also details Enterprise plans with custom pricing.",
+      "previous_state": "ML experiment tracking, model registry, and LLM app tracing and evaluation (Weave). W&B's hosted service is now sold as CoreWeave Forge. Its Free plan is $0/mo and designed for personal development, with up to 5 model seats, 5 GB/mo of storage and 1 GB/mo of Weave data ingestion. Pro starts at $60/month with a 30-day free trial and is for teams with fewer than 50 employees. Self-managed W&B Server needs a license; W&B's docs offer a free trial license, and CoreWeave's pricing page lists no free self-hosted plan.",
+      "current_state": "Free: Designed for personal development of AI applications and models $0/mo. Features includes: AI application evaluations, AI application tracing, AI application scorers, AI model experiment tracking, AI assets registry & lineage tracking, Community Support. 5 GB/mo storage, 1 GB/mo Weave data ingestion. Pro: Starts at $60/month, billed monthly. All features from Free, plus: Unlimited teams for collaboration, Team-based access controls, Service Accounts, Priority email & chat support, CI/CD automations, Slack and email alerts.",
+      "source_url": "https://coreweave.com/forge-pricing",
+      "category": "AI / ML",
+      "refused_date": "2026-10-08"
     },
     {
       "vendor": "Weights & Biases",
@@ -7954,13 +8194,13 @@
       "vendor": "Xata",
       "change_type": "pricing_restructured",
       "reason": "repeats_a_refused_reading",
-      "detail": "the reading of this page refused on 2026-10-06 (repeats_a_refused_reading) stated the same 2 figures, so the page showed these terms before the date this record gives",
-      "summary": "The self-hosted, open-source version remains free. However, the managed platform is now paid, starting at $0.012/hr + $0.28/GB/month. The stored information indicated a 14-day free trial with a $100 credit on the commercial tier, which is not mentioned on the current pricing page.",
-      "previous_state": "Open-source Postgres platform (Apache 2.0) with copy-on-write branching and scale-to-zero. Self-hosted on Kubernetes — free forever. Managed platform is now paid (compute + storage billed hourly); 14-day free trial with $100 credit on the commercial tier.",
-      "current_state": "Xata Cloud is a fully managed, pay-as-you-go service starting at $0.012 /hr + $0.28/GB/mo storage.",
+      "detail": "the reading of this page refused on 2026-10-07 (repeats_a_refused_reading) stated the same 2 figures, so the page showed these terms before the date this record gives",
+      "summary": "The self-hosted, open-source version is still free, but the pricing page details a more complex pricing structure for the managed 'Xata Cloud' service, with hourly and storage costs. The stored information only mentioned a 14-day free trial for the managed platform.",
+      "previous_state": "Open-source Postgres platform (Apache 2.0) with copy-on-write branching and scale-to-zero. Self-hosted on Kubernetes — free forever. The managed platform, Xata Cloud, is paid: from $0.012 an hour plus $0.28 per GB-month of storage, billed by the minute, with a 14-day free trial.",
+      "current_state": "Xata Cloud is a pay-as-you-go service starting at $0.012 /hr + $0.28/GB/mo storage.",
       "source_url": "https://xata.io/pricing",
       "category": "Databases",
-      "refused_date": "2026-10-07"
+      "refused_date": "2026-10-08"
     },
     {
       "vendor": "xcloud.host",

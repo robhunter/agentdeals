@@ -1,15 +1,37 @@
 {
   "held": [
     {
-      "vendor": "Elastic",
+      "vendor": "Codemagic",
+      "change_type": "limits_reduced",
+      "impact": "medium",
+      "summary": "The free tier still exists, but the build cache storage has been reduced from 10GB to 3GB.",
+      "previous_state": "Mobile CI/CD platform — Single-user plan with unlimited number of applications and 500 free build minutes refilled every month. 30 days build history & artifact storage, 10GB per build cache storage.",
+      "current_state": "Single-user plan with unlimited number of applications and 500 free build minutes refilled every month. 3GB per build cache storage.",
+      "source_url": "https://codemagic.io/pricing/",
+      "category": "CI/CD",
+      "first_read_date": "2026-10-08"
+    },
+    {
+      "vendor": "leiga.com",
       "change_type": "pricing_restructured",
       "impact": "medium",
-      "summary": "The free offering now focuses on downloading Elasticsearch and Kibana. While self-managed options remain, the description of a 'Free OSS' tier with the Elastic Stack is no longer prominent. The page details Platinum and Enterprise tiers with specific features and support levels, and highlights Elastic Cloud Serverless and Hosted as separately billed options.",
-      "previous_state": "The Elastic Stack — Elasticsearch, Kibana, ingest and basic security — self-managed at no cost on the Free and Open tier under the Elastic License and SSPL, with community support. Platinum (existing customers only) and Enterprise are custom-priced and add machine learning, cross-cluster replication, searchable snapshots and 24/7 support. Elastic Cloud Serverless and Hosted are billed separately by usage or resources.",
-      "current_state": "Download The full Elastic Stack Elasticsearch: The open source, distributed vector database and search and analytics engine built for speed and scale Kibana: The open source interface to query, analyze, visualize, and manage your data stored in Elasticsearch",
-      "source_url": "https://www.elastic.co/pricing/self-managed",
-      "category": "Monitoring",
-      "first_read_date": "2026-10-07"
+      "summary": "The page states \"Free forever. No credit card required.\", indicating a continued free tier.",
+      "previous_state": "Leiga is a SaaS product that uses AI to automatically manage your projects, helping your team stay focused and unleash immense potential, ensuring your projects progress as planned. Free for up to 10 users, 20 custom fields, 2GB of storage space, Video Recording with AI limited to 5 mins/video, Automation Runs at 20/user/month.",
+      "current_state": "Free forever. No credit card required.",
+      "source_url": "https://www.leiga.com/",
+      "category": "Project Management",
+      "first_read_date": "2026-10-08"
+    },
+    {
+      "vendor": "The Intercom Early Stage Program",
+      "change_type": "limits_reduced",
+      "impact": "medium",
+      "summary": "The number of Fin outcomes and qualifications available in years 2 and 3 have been reduced. Year 2 now includes 150 Fin outcomes and 15 Fin qualifications, down from 300 and 15 respectively. Year 3 now includes 75 Fin outcomes and 15 Fin qualifications, down from 300 and 15 respectively.",
+      "previous_state": "Intercom Early Stage pricing starts at $33/month, with 93% off in the first year, 50% off in the second and 25% off in the third. The first year includes 300 Fin outcomes and 15 Fin qualifications per month. The discount does not apply to additional outcomes or qualifications; phone, SMS and WhatsApp are charged at list price.",
+      "current_state": "Year 1 includes 300 Fin outcomes and 15 Fin qualifications. Year 2 includes 150 Fin outcomes and 15 Fin qualifications. Year 3 includes 75 Fin outcomes and 15 Fin qualifications.",
+      "source_url": "https://www.intercom.com/early-stage",
+      "category": "Startup Perks",
+      "first_read_date": "2026-10-08"
     }
   ],
   "resolved": [
@@ -2268,6 +2290,18 @@
       "outcome": "corroborated",
       "detail": "a reading on 2026-10-07 read it as limits_reduced too",
       "resolved_date": "2026-10-07"
+    },
+    {
+      "vendor": "Elastic",
+      "change_type": "pricing_restructured",
+      "impact": "medium",
+      "summary": "The free offering now focuses on downloading Elasticsearch and Kibana. While self-managed options remain, the description of a 'Free OSS' tier with the Elastic Stack is no longer prominent. The page details Platinum and Enterprise tiers with specific features and support levels, and highlights Elastic Cloud Serverless and Hosted as separately billed options.",
+      "previous_state": "The Elastic Stack — Elasticsearch, Kibana, ingest and basic security — self-managed at no cost on the Free and Open tier under the Elastic License and SSPL, with community support. Platinum (existing customers only) and Enterprise are custom-priced and add machine learning, cross-cluster replication, searchable snapshots and 24/7 support. Elastic Cloud Serverless and Hosted are billed separately by usage or resources.",
+      "source_url": "https://www.elastic.co/pricing/self-managed",
+      "first_read_date": "2026-10-07",
+      "outcome": "contradicted",
+      "detail": "a reading on 2026-10-08 read a change the gate refused as unquantified_limit",
+      "resolved_date": "2026-10-08"
     }
   ]
 }
