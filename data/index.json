@@ -2868,6 +2868,18 @@
           "read_on": "2026-10-04"
         },
         {
+          "text": "Each Hetzner account has a default limit on how many cloud resources it can run at once, shown on the Limits tab of the Hetzner Console; Hetzner does not publish the number, and no new server can be created once the limit is reached.",
+          "quote": "In order to prevent abuse, we put some limits on the number of resources a single account can create. You can find these limits on the \"Limits\" tab on your overview page.",
+          "url": "https://docs.hetzner.com/cloud/general/faq/",
+          "read_on": "2026-10-08"
+        },
+        {
+          "text": "You can ask to raise the limit in the Hetzner Console only after a month with Hetzner and a paid first invoice, and Hetzner reviews each request by hand.",
+          "quote": "Please note that this is only possible if you have been with us for a month and paid your first invoice.",
+          "url": "https://docs.hetzner.com/cloud/servers/faq/",
+          "read_on": "2026-10-08"
+        },
+        {
           "text": "Hetzner bills a cloud server for as long as it exists, even while it is powered off; only deleting it stops the charge.",
           "quote": "Yes, you pay for a server that has completed the creation process for as long as it exists, regardless of whether it is turned on or not. We will bill you for your servers until you delete them, independent of their state.",
           "url": "https://docs.hetzner.com/cloud/billing/faq/",
