@@ -65,6 +65,8 @@ const APP_BRIDGE_SCRIPT = `
 
 const BASE_URL = "https://agentdeals.dev";
 
+const PUBLISHED_TERMS_SCRIPT = `function publishedTerms(offer) { return offer.terms_superseded ? offer.terms_superseded.notice : offer.description; }`;
+
 function searchDealsHtml(): string {
   return `<!DOCTYPE html>
 <html><head><meta charset="utf-8"><style>${SHARED_STYLES}
@@ -107,14 +109,14 @@ function render(args, data) {
           <span class="badge \${stabBadge}">\${esc(stability)}</span>
         </div>
         <div class="deal-tier">\${esc(data.tier || "")} \\u2014 \${esc(data.category || "")}</div>
-        <p style="margin-top:8px;font-size:14px">\${esc(data.description || "")}</p>
+        <p style="margin-top:8px;font-size:14px">\${esc(publishedTerms(data) || "")}</p>
         \${data.url ? \`<div class="link-row"><a href="\${esc(data.url)}" target="_blank">Pricing page \\u2192</a></div>\` : ""}
       </div>
       \${alts.length > 0 ? \`
         <h3>Alternatives in \${esc(data.category || "this category")}</h3>
         <table>
           <thead><tr><th>Vendor</th><th>Tier</th><th>Description</th></tr></thead>
-          <tbody>\${alts.map(a => \`<tr><td>\${esc(a.vendor)}</td><td>\${esc(a.tier || "")}</td><td style="font-size:13px;color:#94a3b8">\${esc(a.description || "").slice(0, 80)}</td></tr>\`).join("")}</tbody>
+          <tbody>\${alts.map(a => \`<tr><td>\${esc(a.vendor)}</td><td>\${esc(a.tier || "")}</td><td style="font-size:13px;color:#94a3b8">\${a.terms_superseded ? esc(publishedTerms(a)) : esc(a.description || "").slice(0, 80)}</td></tr>\`).join("")}</tbody>
         </table>
       \` : ""}
       <div class="link-row"><a href="${BASE_URL}/vendor/\${encodeURIComponent(data.vendor?.toLowerCase().replace(/[^a-z0-9]+/g, '-'))}" target="_blank">View on agentdeals.dev \\u2192</a></div>
@@ -134,7 +136,7 @@ function render(args, data) {
           <td><a href="${BASE_URL}/vendor/\${encodeURIComponent((r.vendor || '').toLowerCase().replace(/[^a-z0-9]+/g, '-'))}" target="_blank">\${esc(r.vendor)}</a></td>
           <td><span class="badge badge-blue">\${esc(r.tier || "")}</span></td>
           <td style="font-size:13px">\${esc(r.category || "")}</td>
-          <td style="font-size:13px;color:#94a3b8;max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">\${esc(r.description || "").slice(0, 100)}</td>
+          <td style="font-size:13px;color:#94a3b8;max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">\${r.terms_superseded ? esc(publishedTerms(r)) : esc(r.description || "").slice(0, 100)}</td>
         </tr>\`).join("")}</tbody>
       </table>
     \`}
@@ -143,6 +145,7 @@ function render(args, data) {
 }
 
 function esc(s) { if (!s) return ""; const d = document.createElement("div"); d.textContent = String(s); return d.innerHTML; }
+${PUBLISHED_TERMS_SCRIPT}
 </script></body></html>`;
 }
 

@@ -1,6 +1,6 @@
 import { McpServer, ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { oldestVerifiedDateForSlug, getCategories, getDealChanges, getPersonalizedChanges, getNewOffers, getNewestDeals, getOfferDetails, searchOffers, stabilityWithheldDisclosure, enrichOffers, gateForOffer, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, loadOffers, loadDealChanges, classifyStability, publishedStabilityFor, stabilityWithheldSentence, getVendorReferral, sanitizeQuery } from "./data.js";
+import { oldestVerifiedDateForSlug, getCategories, getDealChanges, getPersonalizedChanges, getNewOffers, getNewestDeals, getOfferDetails, searchOffers, stabilityWithheldDisclosure, enrichOffers, gateForOffer, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, loadOffers, loadDealChanges, classifyStability, publishedStabilityFor, stabilityWithheldSentence, getVendorReferral, sanitizeQuery, withTermsSuperseded } from "./data.js";
 import { SINCE_DEFAULT_SENTENCE } from "./change-window.js";
 import { NAME_MATCH_SENTENCE } from "./name-match.js";
 import { gateDisclosureFor } from "./gate-disclosure.js";
@@ -53,7 +53,7 @@ function citedJsonAcrossTheWholeIndex<T extends object>(payload: T): string {
 
 
 function toConciseOffer(offer: Offer | EnrichedOffer) {
-  const base = { vendor: offer.vendor, tier: offer.tier, description: offer.description, ...conditionsField(offer), url: offer.url, gate: gateForOffer(offer), ...(offer.payment_protocols?.length ? { payment_protocols: offer.payment_protocols.map(p => p.protocol) } : {}) };
+  const base = { vendor: offer.vendor, tier: offer.tier, description: offer.description, terms_superseded: withTermsSuperseded(offer).terms_superseded, ...conditionsField(offer), url: offer.url, gate: gateForOffer(offer), ...(offer.payment_protocols?.length ? { payment_protocols: offer.payment_protocols.map(p => p.protocol) } : {}) };
   const enriched = offer as Partial<EnrichedOffer>;
   if (enriched.risk_level !== undefined) {
     return { ...base, risk_level: enriched.risk_level, risk_cause: enriched.risk_cause ?? null, stability: enriched.stability };
