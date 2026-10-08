@@ -70,7 +70,7 @@ export const API_ENDPOINTS: readonly ApiEndpoint[] = [
   { method: "GET", path: "/api/digest", desc: "Weekly pricing digest", params: "", group: "product", cites: true },
   { method: "GET", path: "/api/digest/weekly", desc: "Formatted weekly digest with multiple output formats", params: "format (json|markdown|html), limit, weeks_ago", group: "product", request: "/api/digest/weekly?format=markdown&weeks_ago=1", cites: true },
   { method: "GET", path: "/api/stack", desc: "Free-tier stack recommendation", params: "use_case, requirements", group: "product", request: "/api/stack?use_case=SaaS+app" , requiresParams: true, cites: true },
-  { method: "GET", path: "/api/costs", desc: "Estimate infrastructure costs", params: "services, scale", group: "product", request: "/api/costs?services={vendor},{otherVendor}" , requiresParams: true, cites: true },
+  { method: "GET", path: "/api/costs", desc: "Check free tier coverage per service", params: "services, scale", group: "product", request: "/api/costs?services={vendor},{otherVendor}" , requiresParams: true, cites: true },
   { method: "GET", path: "/api/query-log", desc: "Recent request log", params: "limit", group: "product", request: "/api/query-log?limit=10" },
   { method: "GET", path: "/api/pageviews", desc: "Page view analytics", params: "path, period", group: "product" },
   { method: "GET", path: "/api/traffic", desc: "Traffic attributed by client class (AI agent / crawler / browser), with web-vs-MCP comparison", params: "", group: "product" },

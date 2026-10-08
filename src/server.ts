@@ -246,10 +246,10 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
       },
       _meta: TOOL_UI_META.plan_stack,
       inputSchema: {
-        mode: z.enum(["recommend", "estimate", "audit"]).describe("recommend: free-tier stack for a use case. estimate: cost analysis at scale. audit: risk + cost + gap analysis."),
+        mode: z.enum(["recommend", "estimate", "audit"]).describe("recommend: free-tier stack for a use case. estimate: free-tier status check. audit: risk + cost + gap analysis."),
         use_case: z.string().optional().describe("What you're building (for recommend mode, e.g. 'Next.js SaaS app')"),
         services: z.array(z.string()).optional().describe("Current vendor names (for estimate/audit mode, e.g. ['Vercel', 'Supabase']). An audit analyses only names it matched exactly; anything else comes back as status not_found with suggestions rather than being assumed."),
-        scale: z.enum(["hobby", "startup", "growth"]).optional().describe("Scale for cost estimation (default: hobby)"),
+        scale: z.enum(["hobby", "startup", "growth"]).optional().describe("Scale for free-tier status check (default: hobby)"),
         requirements: z.array(z.string()).optional().describe("Specific infra needs for recommend mode (e.g. ['database', 'auth', 'email'])"),
       },
     },
@@ -1044,7 +1044,7 @@ export function getServerCard(baseUrl: string) {
       description: `MCP server aggregating ${CATALOGUE_OFFER_FLOOR_LABEL}+ free tiers, startup credits, and developer infrastructure deals across ${CATALOGUE_CATEGORY_COUNT} categories`,
       homepage: "https://agentdeals.dev",
     },
-    description: `Search and compare free tiers, startup credits, and pricing changes across ${CATALOGUE_OFFER_FLOOR_LABEL}+ developer tools. ${MCP_TOOL_COUNT} intent-based MCP tools for infrastructure decisions, cost estimation, and vendor comparison.`,
+    description: `Search and compare free tiers, startup credits, and pricing changes across ${CATALOGUE_OFFER_FLOOR_LABEL}+ developer tools. ${MCP_TOOL_COUNT} intent-based MCP tools for infrastructure decisions, free-tier status check, and vendor comparison.`,
     iconUrl: `${baseUrl}/og-image.png`,
     documentationUrl: `${baseUrl}/setup`,
     transport: {
@@ -1084,7 +1084,7 @@ export function getServerCard(baseUrl: string) {
       },
       {
         name: "plan_stack",
-        description: "Plan a technology stack with cost-optimized infrastructure choices. Recommends services, estimates costs, or audits existing stacks. Call this tool when a user asks: 'What free tools can I use for a SaaS app?', 'Build me a stack under $50/month'.",
+        description: "Plan a technology stack with cost-optimized infrastructure choices. Recommends services, checks free-tier status, or audits existing stacks. Call this tool when a user asks: 'What free tools can I use for a SaaS app?', 'Build me a stack under $50/month'.",
         annotations: {
           readOnlyHint: true,
           destructiveHint: false,
@@ -1092,10 +1092,10 @@ export function getServerCard(baseUrl: string) {
         inputSchema: {
           type: "object",
           properties: {
-            mode: { type: "string", enum: ["recommend", "estimate", "audit"], description: "recommend: free-tier stack. estimate: cost analysis. audit: risk + cost + gap analysis." },
+            mode: { type: "string", enum: ["recommend", "estimate", "audit"], description: "recommend: free-tier stack. estimate: free-tier status check. audit: risk + cost + gap analysis." },
             use_case: { type: "string", description: "What you're building (for recommend mode)" },
             services: { type: "array", items: { type: "string" }, description: "Current vendor names (for estimate/audit mode)" },
-            scale: { type: "string", enum: ["hobby", "startup", "growth"], description: "Scale for cost estimation" },
+            scale: { type: "string", enum: ["hobby", "startup", "growth"], description: "Scale for free-tier status check" },
             requirements: { type: "array", items: { type: "string" }, description: "Specific infra needs for recommend mode" },
           },
           required: ["mode"],

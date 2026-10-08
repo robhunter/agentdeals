@@ -206,17 +206,17 @@ export function createServer(): McpServer {
     "plan_stack",
     {
       description:
-        "Get stack recommendations, cost estimates, or a full infrastructure audit. Describe what you're building to get a free-tier stack, or pass your current services to estimate costs and find risks. Call this tool when a user asks: 'What free tools can I use for a SaaS app?', 'Build me a stack under $50/month'.",
+        "Get stack recommendations, free-tier checks, or a full infrastructure audit. Describe what you're building to get a free-tier stack, or pass your current services to check free-tier status and find risks. Call this tool when a user asks: 'What free tools can I use for a SaaS app?', 'Build me a stack under $50/month'.",
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
       },
       _meta: TOOL_UI_META.plan_stack,
       inputSchema: {
-        mode: z.enum(["recommend", "estimate", "audit"]).describe("recommend: free-tier stack for a use case. estimate: cost analysis at scale. audit: risk + cost + gap analysis."),
+        mode: z.enum(["recommend", "estimate", "audit"]).describe("recommend: free-tier stack for a use case. estimate: free-tier status check. audit: risk + cost + gap analysis."),
         use_case: z.string().optional().describe("What you're building (for recommend mode, e.g. 'Next.js SaaS app')"),
         services: z.array(z.string()).optional().describe("Current vendor names (for estimate/audit mode, e.g. ['Vercel', 'Supabase'])"),
-        scale: z.enum(["hobby", "startup", "growth"]).optional().describe("Scale for cost estimation (default: hobby)"),
+        scale: z.enum(["hobby", "startup", "growth"]).optional().describe("Scale for free-tier status check (default: hobby)"),
         requirements: z.array(z.string()).optional().describe("Specific infra needs for recommend mode (e.g. ['database', 'auth', 'email'])"),
       },
     },

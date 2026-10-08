@@ -30,7 +30,7 @@ If the user is reasoning about the cost, free tier, or stability of a developer 
 ## Tool selection
 
 - \`search_deals\` — vendor lookup, browse a category, or find alternatives. First reach for this when the user names a specific service or category.
-- \`plan_stack\` — stack recommendations (\`mode="recommend"\`), cost estimation at scale (\`mode="estimate"\`), or full risk + cost audit of a current stack (\`mode="audit"\`).
+- \`plan_stack\` — stack recommendations (\`mode="recommend"\`), free-tier status check (\`mode="estimate"\`), or full risk + cost audit of a current stack (\`mode="audit"\`).
 - \`compare_vendors\` — side-by-side comparison of 2 vendors, or a single-vendor pricing-risk check (pass 1 vendor).
 - \`track_changes\` — recent pricing changes, upcoming expirations, or the weekly digest (call with no params).
 

@@ -8955,12 +8955,11 @@ print(result["messages"][-1].content)`,
       },
       {
         title: "Plan a free infrastructure stack",
-        description: "Get stack recommendations with cost projections at different scale points.",
+        description: "Get stack recommendations with free tier coverage.",
         code: `result = await agent.ainvoke(
     {"messages": [{"role": "user", "content":
         "Plan a free stack for a SaaS MVP: I need hosting, "
-        "database, auth, email, and monitoring. Estimate costs "
-        "at 1K, 10K, and 100K monthly active users."
+        "database, auth, email, and monitoring. Check free tier coverage."
     }]}
 )
 print(result["messages"][-1].content)`,
@@ -9141,9 +9140,9 @@ Google Sheets node:
 - Columns: Vendor, Free Tier, Limits, Risk Level, Date`,
       },
       {
-        title: "Stack cost estimation with email report",
-        description: "Generate a cost estimate for a set of vendors and email the results to stakeholders.",
-        code: `Workflow: Stack Cost Report
+        title: "Stack free tier coverage check",
+        description: "Check free tier coverage for vendors and email results to stakeholders.",
+        code: `Workflow: Stack free tier coverage check
 ┌─────────────┐    ┌──────────────────┐    ┌───────────┐
 │  Schedule    │───▶│  MCP Server      │───▶│   Email   │
 │  (Monthly)   │    │  plan_stack      │    │  Report   │
@@ -9152,13 +9151,13 @@ Google Sheets node:
 MCP Server Trigger configuration:
 - Tool: plan_stack
 - Input: {
-    "query": "Estimate costs for our stack: Vercel, Neon,
-     Clerk, Resend, Sentry at 10K MAU"
+    "query": "Check which of these services are free-tier: Vercel,
+     Neon, Clerk, Resend, Sentry."
   }
 
 Email node:
 - To: engineering-leads@company.com
-- Subject: "Monthly Stack Cost Report"
+- Subject: "Monthly stack free tier coverage check"
 - Body: "{{ $json.output }}"`,
       },
     ],
@@ -9282,7 +9281,7 @@ const { text } = await generateText({
   model: openai("gpt-4o"),
   tools: await mcpClient.tools(),
   prompt: \`Audit this stack: \${stack}. For each vendor, show the
-free tier limits, risk level, and estimated cost at 10K MAU.
+free tier limits, risk level, and free tier coverage.
 Suggest free alternatives for any high-risk vendors.\`,
   maxSteps: 5,
 });
@@ -44618,7 +44617,7 @@ function buildSetupPage(): string {
     { tool: "search_deals", question: "Find free database hosting", desc: "Search 1,600+ deals by category, pricing, or keyword" },
     { tool: "compare_vendors", question: "Compare Supabase vs Neon", desc: "Side-by-side comparison of free tiers, risk levels, and limits" },
     { tool: "track_changes", question: "What pricing changes happened this month?", desc: "Track free tier removals, limit changes, and new deals" },
-    { tool: "plan_stack", question: "Estimate costs for a SaaS backend", desc: "Stack recommendations, cost estimates, and infrastructure audits" },
+    { tool: "plan_stack", question: "Check free-tier status for a SaaS backend.", desc: "Stack recommendations, free-tier checks, and audits." },
     { tool: "compare_vendors", question: "Is Heroku's free tier at risk?", desc: "Risk scoring based on pricing history and signals" },
     { tool: "search_deals", question: "Show me startup credit programs", desc: "Filter by eligibility type: startup, student, or open-source" },
     { tool: "search_deals", question: "What are alternatives to Vercel?", desc: "Vendor details with alternatives in the same category" },
@@ -46663,7 +46662,7 @@ function buildEstimatePage(): string {
       <div class="est-empty">Select services above to see cost comparison</div>
     </div>
 
-    ${buildMcpCta("Use <code>plan_stack</code> to get AI-powered stack recommendations with cost estimates directly in your editor.")}
+    ${buildMcpCta("Use <code>plan_stack</code> to get AI-powered stack recommendations with free tier coverage directly in your editor.")}
 
     <div class="footer">
       <p>Prices are approximate and based on published vendor pricing as of April 2026. Actual costs may vary based on usage patterns.</p>
@@ -48020,8 +48019,8 @@ function buildDeveloperHubPage(): string {
     + "      <p>Query <code>/api/offers?category=CI/CD</code> in your pipeline to compare build-minute pricing across providers. Use <code>/api/changes</code> to alert when a vendor changes their free tier.</p>\n"
     + "    </div>\n"
     + "    <div class=\"use-case\">\n"
-    + "      <h4>Stack Planning &amp; Cost Estimation</h4>\n"
-    + "      <p>Use <code>/api/stack</code> to get free-tier recommendations for your use case, then <code>/api/costs</code> to estimate what happens at scale. Feed results into architecture decision records.</p>\n"
+    + "      <h4>Stack Planning &amp; Free Tier Coverage</h4>\n"
+    + "      <p>Use <code>/api/stack</code> to get free-tier recommendations for your use case, then <code>/api/costs</code> to check free tier coverage. Feed results into architecture decision records.</p>\n"
     + "    </div>\n"
     + "    <div class=\"use-case\">\n"
     + "      <h4>Vendor Comparison Dashboards</h4>\n"
@@ -53456,7 +53455,7 @@ Parameters:
 - GET /api/details/:vendor — Vendor details (params: alternatives)
 - GET /api/vendor-risk/:vendor — Vendor risk assessment
 - GET /api/stack — Stack recommendation (params: use_case, requirements)
-- GET /api/costs — Cost estimation (params: services, scale)
+- GET /api/costs — Free tier coverage only, not paid usage (params: services, scale)
 - GET /api/audit-stack — Stack audit (params: services)
 - GET /api/expiring — Expiring deals (params: days)
 - GET /api/digest — Weekly pricing digest

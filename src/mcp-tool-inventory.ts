@@ -19,8 +19,8 @@ export const MCP_TOOLS: readonly McpToolEntry[] = [
   },
   {
     name: "plan_stack",
-    card: "Get stack recommendations, cost estimates, or a full infrastructure audit for your project.",
-    brief: "Plan a technology stack with cost-optimized choices. Per role, returns the set of free-tier offers whose terms we can stand behind today — not a single pick — with the recorded facts behind any demotion. Does not model technical fit; the caller applies that. Also estimates costs at scale and audits existing stacks for risk.",
+    card: "Get stack recommendations, free-tier checks, or a full infrastructure audit for your project.",
+    brief: "Plan a technology stack with cost-optimized choices. Per role, returns the set of free-tier offers whose terms we can stand behind today — not a single pick — with the recorded facts behind any demotion. Does not model technical fit; the caller applies that. Checks free tier coverage and audits existing stacks.",
   },
   {
     name: "compare_vendors",
