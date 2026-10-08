@@ -1088,7 +1088,7 @@
       "changed": "2026-10-08"
     },
     "/category/api-gateway": {
-      "hash": "15f536f94e0e5b25",
+      "hash": "09b15d2ae4386da5",
       "changed": "2026-10-08"
     },
     "/category/auth": {
@@ -2271,15 +2271,15 @@
       "changed": "2026-10-04"
     },
     "/compare/kong-vs-unkey": {
-      "hash": "f36058857aba0e8f",
+      "hash": "0af65a5e4de13748",
       "changed": "2026-10-08"
     },
     "/compare/kong-vs-x-twitter": {
-      "hash": "60f869bb303285c3",
+      "hash": "e2c27843afa95e87",
       "changed": "2026-10-08"
     },
     "/compare/kong-vs-zuplo": {
-      "hash": "79bd4b506d26bd1c",
+      "hash": "73d18ee677bca21e",
       "changed": "2026-10-08"
     },
     "/compare/kumu-io-vs-gleek-io": {
@@ -3065,8 +3065,8 @@
       "changed": "2026-10-08"
     },
     "/disclosure": {
-      "hash": "1b86bdb4115e122f",
-      "changed": "2026-10-07"
+      "hash": "2ee4f64cb3943887",
+      "changed": "2026-10-08"
     },
     "/email-alternatives": {
       "hash": "298c41bde89b8d5a",
@@ -3336,8 +3336,8 @@
       "changed": "2026-10-07"
     },
     "/referral-programs": {
-      "hash": "c8fcfd699e264c0b",
-      "changed": "2026-10-07"
+      "hash": "617f17a8286ceef8",
+      "changed": "2026-10-08"
     },
     "/reports": {
       "hash": "ddbdc9ddfa160729",
@@ -3487,11 +3487,11 @@
       "daily": true
     },
     "/stability": {
-      "hash": "142604f40c6d2529",
+      "hash": "915def2e2843f520",
       "changed": "2026-10-08"
     },
     "/stack-check": {
-      "hash": "c984ab95ecf0305d",
+      "hash": "d2182ce75348b861",
       "changed": "2026-10-08"
     },
     "/stacks": {
@@ -3580,7 +3580,7 @@
       "daily": true
     },
     "/trends/api-gateway": {
-      "hash": "1e55451399766086",
+      "hash": "23b27372d28b5be7",
       "changed": "2026-10-08"
     },
     "/trends/auth": {
@@ -3905,7 +3905,7 @@
       "daily": true
     },
     "/vendor/akamai-cloud": {
-      "hash": "5b5fcd4f2c962eee",
+      "hash": "d5fe2eef1a31891e",
       "changed": "2026-10-08"
     },
     "/vendor/algolia": {
@@ -4330,7 +4330,7 @@
       "changed": "2026-10-08"
     },
     "/vendor/bolt-new": {
-      "hash": "a0b58fbe2b02a01e",
+      "hash": "83d74c6c92bac0c7",
       "changed": "2026-10-08"
     },
     "/vendor/bonsai-io": {
@@ -4377,7 +4377,7 @@
       "changed": "2026-10-08"
     },
     "/vendor/brevo": {
-      "hash": "08dc324d86bc7bff",
+      "hash": "1ec19bde5ba11c47",
       "changed": "2026-10-08"
     },
     "/vendor/brex": {
@@ -6710,7 +6710,7 @@
       "changed": "2026-10-08"
     },
     "/vendor/kong": {
-      "hash": "62cf6c03336d1dd3",
+      "hash": "91413dda9f3dc0db",
       "changed": "2026-10-08"
     },
     "/vendor/koyeb": {
@@ -6966,7 +6966,7 @@
       "changed": "2026-10-08"
     },
     "/vendor/lovable": {
-      "hash": "0bb009589d34dcfa",
+      "hash": "33907e5f948ca8fd",
       "changed": "2026-10-08"
     },
     "/vendor/luadns-com": {
@@ -7335,11 +7335,11 @@
       "changed": "2026-10-08"
     },
     "/vendor/namecheap-com": {
-      "hash": "b1c0e0dbd00859d3",
+      "hash": "dc8caeff6ece235c",
       "changed": "2026-10-08"
     },
     "/vendor/namecheap-supersonic": {
-      "hash": "d9212c0539104c4f",
+      "hash": "76a1a285545f37bf",
       "changed": "2026-10-08"
     },
     "/vendor/nango": {
@@ -7425,7 +7425,7 @@
       "daily": true
     },
     "/vendor/notion": {
-      "hash": "7c364cd9e3a78796",
+      "hash": "7def6396b9341301",
       "changed": "2026-10-08"
     },
     "/vendor/novita-sandbox": {
@@ -7931,19 +7931,19 @@
       "changed": "2026-10-08"
     },
     "/vendor/proton-drive": {
-      "hash": "494715620128d624",
+      "hash": "b80f90d7395b1ced",
       "changed": "2026-10-08"
     },
     "/vendor/proton-mail": {
-      "hash": "fb3d426303476c19",
+      "hash": "0818bab1fba02f60",
       "changed": "2026-10-08"
     },
     "/vendor/proton-pass": {
-      "hash": "5ae68b0aa1ab1f93",
+      "hash": "f5c9b71b9ebb9b51",
       "changed": "2026-10-08"
     },
     "/vendor/proton-vpn": {
-      "hash": "5ccd2f56935ed811",
+      "hash": "2417b81046038d2c",
       "changed": "2026-10-08"
     },
     "/vendor/proxysentry": {
@@ -9220,7 +9220,7 @@
       "changed": "2026-10-08"
     },
     "/vendor/twilio-startups-program": {
-      "hash": "6ce5ddc6816ac6c5",
+      "hash": "8c19a5de5e17cdf2",
       "changed": "2026-10-08"
     },
     "/vendor/twingate": {
@@ -9465,7 +9465,7 @@
       "changed": "2026-10-08"
     },
     "/vendor/vultr": {
-      "hash": "dccee74d877cd25f",
+      "hash": "0976759c29f6e300",
       "changed": "2026-10-08"
     },
     "/vendor/vultr-dns": {
