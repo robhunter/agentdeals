@@ -894,7 +894,8 @@
       "source_url": "https://codemagic.io/pricing/",
       "record_date": "2026-09-03",
       "change_type": "limits_reduced",
-      "summary": "The free tier now has 30 days of build history instead of 60, and 10GB cache per build instead of 3GB."
+      "summary": "The free tier now has 30 days of build history instead of 60, and 10GB cache per build instead of 3GB.",
+      "reverted_on": "2026-10-08"
     },
     {
       "vendor": "Harness CI",
