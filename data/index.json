@@ -20966,7 +20966,7 @@
     {
       "vendor": "Pollinations.AI",
       "category": "AI / ML",
-      "description": "Pollen credits earned by completing quests. The documented API for text, image, audio and video requires a GitHub sign-in and an API key. Free use draws from Quest Pollen, with no promise of future grants. Paid-only models, such as DeepSeek V4 Pro and GLM 5.2, need purchased Pollen. Older keyless endpoints for image and text still answered on 2026-10-05, but the current docs do not cover them and state no terms for them.",
+      "description": "Pollen credits earned by completing quests. No credit card is required. On 2026-10-08, the nine setup quests paid 4 Pollen in total, worth about $4 because 1 Pollen is worth about $1. The documented API for text, image, audio and video requires a GitHub sign-in and an API key. Free use draws from Quest Pollen, with no promise of future grants. Paid-only models, such as Claude models, DeepSeek V4 Pro and GLM 5.2, need purchased Pollen. Older keyless endpoints for image and text still answered on 2026-10-05, but the current docs do not cover them and state no terms for them.",
       "tier": "Free",
       "url": "https://pollinations.ai/",
       "tags": [
