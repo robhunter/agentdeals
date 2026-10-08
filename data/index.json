@@ -34367,7 +34367,7 @@
     {
       "vendor": "Ollama Cloud",
       "category": "AI / ML",
-      "description": "Cloud-hosted Ollama for running open-source LLMs — The Free plan costs $0 and includes starter usage credits. Buying usage credits unlocks all models. It includes 1 concurrent request.",
+      "description": "Cloud-hosted Ollama for running open-source LLMs — The Free plan costs $0 and includes starter usage credits. Buying usage credits unlocks all models. It includes 1 concurrent request. Pro costs $20 a month with $60 of usage credits, Max $100 a month with $300. Usage is billed per million tokens at each model's rate, for example gpt-oss:120b at $0.15 input and $0.60 output, and some models, such as deepseek-v4.1-flash, cost half off-peak (outside 12:00 to 18:00 UTC on weekdays, and all weekend).",
       "tier": "Free",
       "url": "https://ollama.com/pricing",
       "tags": [
