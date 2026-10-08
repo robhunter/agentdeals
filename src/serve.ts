@@ -79,7 +79,7 @@ import { getBestReferralCode, listAllReferralCodes, AGENT_SUBMISSION_RETIRED_REA
 import { DOCUMENTED_GROUPS, HOMEPAGE_GROUPS, endpointHref, endpointPathHref, endpointsInGroups, exampleSubjects, readableRequestLines, withdrawalReasonFor, type ApiEndpoint, type ExampleSubjects } from "./api-inventory.js";
 import { MCP_TOOLS, MCP_TOOL_COUNT, mcpToolNameList } from "./mcp-tool-inventory.js";
 import { ACCELERATOR_CREDIT_PROGRAM, ACCELERATOR_CREDIT_VENDOR, NOTHING_CHANGING_SOON_HTML, RECENT_CHANGES_ON_THE_HOME_PAGE, UPCOMING_DEADLINES_ON_THE_HOME_PAGE, acceleratorCreditClause, atMostShownHere, onlyTheMostRecentShown, programCeiling } from "./homepage-claims.js";
-import { REFERRAL_CONDITIONS_HEADING, allOurReferralLinks, heldReferralLinkForVendor, ourReferralLinkFor, platformCodeAsVendorReferral, platformCodeLinkForNamedVendor, referralLinkCountClause, referrerDisclosureSentence } from "./referral-surfaces.js";
+import { REFERRAL_CONDITIONS_HEADING, TERMS_READ_LABEL, allOurReferralLinks, documentsVendorReferralProgram, heldReferralLinkForVendor, ourReferralLinkFor, platformCodeAsVendorReferral, platformCodeLinkForNamedVendor, referralLinkCountClause, referrerDisclosureSentence, termsReadOn } from "./referral-surfaces.js";
 import type { VendorReferralAnswer } from "./referral-surfaces.js";
 import { runHealthCheck, getLastReport, startPeriodicChecks, referralHealthChecksAreOn } from "./referral-health.js";
 import { configureDurableBackend, hydrateDurableStores, persistDurableStores, identityStorageReport } from "./durable-store.js";
@@ -5646,7 +5646,7 @@ function buildVendorPage(slug: string): string | null {
     </div>
   </div>` : "";
 
-  const referralProgramHtml = primary.referral_program?.available ? `
+  const referralProgramHtml = documentsVendorReferralProgram(primary) ? `
   <div class="section" style="margin-top:1.5rem">
     <h2>Referral Program</h2>
     <div style="border:1px solid var(--border);border-radius:8px;padding:1rem;background:var(--bg-card)">
@@ -5656,6 +5656,7 @@ function buildVendorPage(slug: string): string | null {
       </div>
       <div style="display:flex;gap:.75rem;flex-wrap:wrap;font-size:.85rem">
         <a href="${escHtmlServer(primary.referral_program.program_url)}" rel="noopener" target="_blank">View program details &rarr;</a>
+        <span class="referral-terms-read" style="color:var(--text-dim)">${TERMS_READ_LABEL} ${escHtmlServer(termsReadOn(primary.referral_program) ?? "")}</span>
       </div>
     </div>
   </div>` : "";
@@ -49776,9 +49777,9 @@ ${bundleHtml}
 
 function buildReferralProgramsPage(): string {
   const seen = new Set<string>();
-  const programVendors: { vendor: string; category: string; referrer_benefit: string; referee_benefit: string; program_url: string; type: string; commission_type?: string; hasCode: boolean; referralUrl?: string; refereeValue?: string; restrictions: string[] }[] = [];
+  const programVendors: { vendor: string; category: string; referrer_benefit: string; referee_benefit: string; program_url: string; type: string; commission_type?: string; read_on: string; hasCode: boolean; referralUrl?: string; refereeValue?: string; restrictions: string[] }[] = [];
   for (const o of offers) {
-    if (o.referral_program?.available && !seen.has(o.vendor)) {
+    if (documentsVendorReferralProgram(o) && !seen.has(o.vendor)) {
       seen.add(o.vendor);
       const ourLink = ourReferralLinkFor(o.vendor, o);
       programVendors.push({
@@ -49789,6 +49790,7 @@ function buildReferralProgramsPage(): string {
         program_url: o.referral_program.program_url,
         type: o.referral_program.type,
         commission_type: o.referral_program.commission_type,
+        read_on: termsReadOn(o.referral_program) ?? "",
         hasCode: ourLink !== null,
         referralUrl: ourLink?.url,
         refereeValue: ourLink?.refereeBenefit,
@@ -49869,6 +49871,7 @@ function buildReferralProgramsPage(): string {
         <td class="benefit-cell">${escHtmlServer(v.referrer_benefit)}</td>
         <td class="type-cell">${typeLabel(v.type)}</td>
         <td class="status-cell">${statusHtml}</td>
+        <td class="read-cell">${escHtmlServer(v.read_on)}</td>
         <td class="link-cell">${linkHtml}</td>
       </tr>`;
   }).join("\n");
@@ -49882,6 +49885,7 @@ function buildReferralProgramsPage(): string {
         <th>Referrer Benefit</th>
         <th>Type</th>
         <th>Status</th>
+        <th>${TERMS_READ_LABEL}</th>
         <th>Link</th>
       </tr>
     </thead>`;
@@ -49933,9 +49937,10 @@ h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5
 .referral-conditions ul{margin:0;padding-left:1rem;font-size:.75rem;color:var(--text);line-height:1.45}
 .type-cell{font-size:.75rem;color:var(--text-dim);font-family:var(--mono)}
 .status-cell{text-align:center}
+.read-cell{font-size:.75rem;color:var(--text-dim);font-family:var(--mono);white-space:nowrap}
 .link-cell{text-align:center}
 .program-link{font-size:.75rem;color:var(--text-dim);text-decoration:underline}
-.status-badge{display:inline-block;padding:.2rem .6rem;border-radius:10px;font-size:.7rem;font-weight:600;text-decoration:none}
+.status-badge{display:inline-block;padding:.2rem .6rem;border-radius:10px;font-size:.7rem;font-weight:600;text-decoration:none;white-space:nowrap}
 .status-active{background:var(--green-glow);color:var(--green);border:1px solid rgba(63,185,80,0.3)}
 .status-active:hover{text-decoration:none;border-color:var(--green)}
 .status-none{color:var(--text-dim)}
@@ -50307,7 +50312,7 @@ function buildDisclosurePage(): string {
   };
 
   const ourReferralLinks = allOurReferralLinks(offers);
-  const vendorsWithOwnProgram = new Set(offers.filter(o => o.referral_program?.available === true).map(o => toSlug(o.vendor)));
+  const vendorsWithOwnProgram = new Set(offers.filter(o => documentsVendorReferralProgram(o)).map(o => toSlug(o.vendor)));
   for (const link of ourReferralLinks) vendorsWithOwnProgram.delete(toSlug(link.vendor));
   const countClause = referralLinkCountClause(ourReferralLinks.length);
 
@@ -53024,7 +53029,7 @@ const dispatchRequest = async (req: IncomingMessage, res: ServerResponse) => {
         verifiedDate: o.verifiedDate,
         last_read_date: lastReadDate(o),
         vendor_page: "/vendor/" + toSlug(o.vendor),
-        has_referral: !!(o.referral_program?.available),
+        has_referral: documentsVendorReferralProgram(o),
       };
     }).filter(t => !hostingTypeFilter || !validHostingTypes.includes(hostingTypeFilter) || t.category === hostingTypeFilter);
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/hosting-pricing", params: { type: hostingTypeFilter }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: hostingTools.length });
@@ -53107,9 +53112,9 @@ const dispatchRequest = async (req: IncomingMessage, res: ServerResponse) => {
     recordApiHit("/api/referral-programs");
     const seen = new Set<string>();
     const refCategoryFilter = url.searchParams.get("category") || undefined;
-    const refPrograms: { vendor: string; category: string; referrer_benefit: string; referee_benefit: string; program_url: string; type: string; commission_type?: string; notes?: string; vendor_page: string }[] = [];
+    const refPrograms: { vendor: string; category: string; referrer_benefit: string; referee_benefit: string; program_url: string; type: string; commission_type?: string; notes?: string; read_on: string | null; vendor_page: string }[] = [];
     for (const o of offers) {
-      if (o.referral_program?.available && !seen.has(o.vendor)) {
+      if (documentsVendorReferralProgram(o) && !seen.has(o.vendor)) {
         seen.add(o.vendor);
         const catNormalized = o.category.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-+$/, "");
         if (!refCategoryFilter || catNormalized === refCategoryFilter || o.category === refCategoryFilter) {
@@ -53122,6 +53127,7 @@ const dispatchRequest = async (req: IncomingMessage, res: ServerResponse) => {
             type: o.referral_program.type,
             commission_type: o.referral_program.commission_type,
             notes: o.referral_program.notes,
+            read_on: termsReadOn(o.referral_program),
             vendor_page: "/vendor/" + toSlug(o.vendor),
           });
         }

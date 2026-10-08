@@ -25,6 +25,7 @@ export interface LinkCheckRecord {
   terminal: boolean;
   last_reachable: string | null;
   consecutive_unreachable: number;
+  redirected_to?: string;
 }
 
 export interface LinkHealthIndex {
@@ -45,6 +46,28 @@ export function classifyNetworkError(code: string | undefined): LivenessOutcome 
 
 export function isTerminalStatus(status: number): boolean {
   return status === 410;
+}
+
+function pageOf(url: string): string | null {
+  try {
+    const parsed = new URL(url);
+    return `${parsed.hostname.replace(/^www\./, "")}${parsed.pathname.replace(/\/+$/, "")}`;
+  } catch {
+    return null;
+  }
+}
+
+export function landsOnAnotherPage(stored: string, landed: string | undefined): boolean {
+  if (!landed) return false;
+  const from = pageOf(stored);
+  const to = pageOf(landed);
+  return from !== null && to !== null && from !== to;
+}
+
+export function programPageAnswers(record: LinkCheckRecord | undefined): boolean {
+  if (!record) return true;
+  if (record.outcome === "unreachable") return false;
+  return !(record.outcome === "reachable" && typeof record.redirected_to === "string");
 }
 
 let cachedLinkHealth: Map<string, LinkCheckRecord> | null = null;
@@ -115,4 +138,8 @@ export function unreachableNoticeForUrl(
   nowMs: number = Date.now()
 ): LinkUnreachable | null {
   return unreachableNotice(loadLinkHealth().get(url), nowMs);
+}
+
+export function programPageAnswersForUrl(url: string): boolean {
+  return programPageAnswers(loadLinkHealth().get(url));
 }

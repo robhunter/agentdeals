@@ -27,6 +27,7 @@ export interface ReferralProgram {
   type: "self-service" | "application" | "affiliate-network" | "partner" | "closed";
   commission_type?: "one-time" | "recurring" | "credits";
   notes?: string;
+  read_on?: string;
 }
 
 export interface PaymentProtocol {

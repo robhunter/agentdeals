@@ -7,6 +7,7 @@ import {
   classifyHttpStatus,
   classifyNetworkError,
   isTerminalStatus,
+  landsOnAnotherPage,
   LINK_GRACE_DAYS,
 } from "../dist/link-health.js";
 
@@ -21,7 +22,8 @@ const SAME_HOST_DELAY_MS = 1200;
 
 const HELP = `Link liveness — asks whether each catalog URL still resolves, which is a
 separate and much cheaper question than whether its terms are still right.
-Runs over every record on every run, regardless of verifiedDate.
+Runs over every record on every run, regardless of verifiedDate, and over
+every referral program's page.
 
 Three outcomes, and the distinction between the last two is the point:
 
@@ -32,6 +34,10 @@ Three outcomes, and the distinction between the last two is the point:
   unknown      403, 429, 5xx, timeouts. Evidence that this checker was
                refused, which is not evidence about the vendor. Publishes
                nothing in either direction and changes no page.
+
+A referral program whose page is unreachable, or answers only by redirecting
+to another page, stops being published. That never counts toward delisting
+the listing itself.
 
 Usage:
   node scripts/check-liveness.js                 check every record
@@ -60,7 +66,7 @@ async function request(url, method) {
       redirect: "follow",
       headers: { "User-Agent": USER_AGENT, Accept: "text/html,*/*" },
     });
-    return { status: res.status };
+    return { status: res.status, finalUrl: res.url || url };
   } catch (err) {
     const code = err.name === "AbortError" ? "TIMEOUT" : (err.cause?.code ?? err.code ?? "FETCH_FAILED");
     return { errorCode: code };
@@ -73,7 +79,7 @@ export async function checkLiveness(url) {
   const head = await request(url, "HEAD");
 
   if (head.status !== undefined && classifyHttpStatus(head.status) === "reachable") {
-    return { outcome: "reachable", detail: `HEAD ${head.status}`, terminal: false };
+    return { outcome: "reachable", detail: `HEAD ${head.status}`, terminal: false, finalUrl: head.finalUrl };
   }
 
   const get = await request(url, "GET");
@@ -83,6 +89,7 @@ export async function checkLiveness(url) {
       outcome: classifyHttpStatus(get.status),
       detail: `GET ${get.status}`,
       terminal: isTerminalStatus(get.status),
+      finalUrl: get.finalUrl,
     };
   }
 
@@ -93,20 +100,39 @@ export async function checkLiveness(url) {
   };
 }
 
-function collectUrls(offers) {
+function laterOf(one, other) {
+  if (!one) return other ?? null;
+  if (!other) return one;
+  return other > one ? other : one;
+}
+
+export function collectUrls(offers) {
   const byUrl = new Map();
+  const targetFor = (url) => {
+    if (!byUrl.has(url)) byUrl.set(url, { url, latestVerified: null, latestRead: null, vendors: [], programs: [] });
+    return byUrl.get(url);
+  };
   for (const offer of offers) {
-    if (typeof offer.url !== "string" || offer.url.length === 0) continue;
-    const seen = byUrl.get(offer.url);
-    const verified = offer.verifiedDate ?? null;
-    if (!seen) {
-      byUrl.set(offer.url, { url: offer.url, latestVerified: verified, vendors: [offer.vendor] });
-      continue;
+    if (typeof offer.url === "string" && offer.url.length > 0) {
+      const target = targetFor(offer.url);
+      target.latestVerified = laterOf(target.latestVerified, offer.verifiedDate ?? null);
+      if (!target.vendors.includes(offer.vendor)) target.vendors.push(offer.vendor);
     }
-    if (verified && (!seen.latestVerified || verified > seen.latestVerified)) seen.latestVerified = verified;
-    if (!seen.vendors.includes(offer.vendor)) seen.vendors.push(offer.vendor);
+    const programUrl = offer.referral_program?.program_url;
+    if (typeof programUrl === "string" && programUrl.length > 0) {
+      const target = targetFor(programUrl);
+      target.latestRead = laterOf(target.latestRead, offer.referral_program.read_on ?? null);
+      if (!target.programs.includes(offer.vendor)) target.programs.push(offer.vendor);
+    }
   }
-  return [...byUrl.values()];
+  return [...byUrl.values()].map(({ latestRead, ...target }) => ({
+    ...target,
+    latestVerified: target.vendors.length > 0 ? target.latestVerified : latestRead,
+  }));
+}
+
+export function citedOnlyAsAProgram(target) {
+  return target.vendors.length === 0 && (target.programs ?? []).length > 0;
 }
 
 export function nextRecord(target, previous, result, today) {
@@ -114,7 +140,7 @@ export function nextRecord(target, previous, result, today) {
   const priorStreak = previous?.consecutive_unreachable ?? 0;
 
   if (result.outcome === "reachable") {
-    return {
+    const record = {
       url: target.url,
       checked: today,
       outcome: "reachable",
@@ -123,6 +149,10 @@ export function nextRecord(target, previous, result, today) {
       last_reachable: today,
       consecutive_unreachable: 0,
     };
+    if ((target.programs ?? []).length > 0 && landsOnAnotherPage(target.url, result.finalUrl)) {
+      record.redirected_to = result.finalUrl;
+    }
+    return record;
   }
 
   if (result.outcome === "unreachable") {
@@ -168,10 +198,21 @@ async function runHostQueue(targets, previous, today, onRecord) {
   }
 }
 
-function delistingQueue(records, today) {
+export function recordsToKeep(records) {
+  return records.filter((r) => r.outcome !== "reachable" || typeof r.redirected_to === "string");
+}
+
+export function programPagesWithdrawn(records, programUrls) {
+  return records.filter(
+    (r) => programUrls.has(r.url) && (r.outcome === "unreachable" || typeof r.redirected_to === "string")
+  );
+}
+
+export function delistingQueue(records, today, programOnlyUrls = new Set()) {
   const nowMs = new Date(today).getTime();
   return records
     .filter((r) => r.outcome === "unreachable")
+    .filter((r) => !programOnlyUrls.has(r.url))
     .filter((r) => {
       if (r.terminal) return true;
       if (!r.last_reachable) return false;
@@ -207,7 +248,10 @@ async function main() {
 
   const today = new Date().toISOString().split("T")[0];
   const previous = loadPrevious();
-  const targets = collectUrls(data.offers ?? []).slice(0, limit);
+  const everyTarget = collectUrls(data.offers ?? []);
+  const programOnlyUrls = new Set(everyTarget.filter(citedOnlyAsAProgram).map((t) => t.url));
+  const programsByUrl = new Map(everyTarget.filter((t) => t.programs.length > 0).map((t) => [t.url, t.programs]));
+  const targets = everyTarget.slice(0, limit);
   const vendorsByUrl = new Map(targets.map((t) => [t.url, t.vendors]));
 
   const byHost = new Map();
@@ -239,13 +283,14 @@ async function main() {
   const counts = { reachable: 0, unreachable: 0, unknown: 0 };
   for (const r of records) counts[r.outcome] = (counts[r.outcome] ?? 0) + 1;
 
-  const persisted = records.filter((r) => r.outcome !== "reachable");
+  const persisted = recordsToKeep(records);
 
   if (!dryRun) {
     writeFileSync(HEALTH_PATH, JSON.stringify({ generated_at: today, links: persisted }, null, 2) + "\n");
   }
 
-  const queue = delistingQueue(records, today);
+  const queue = delistingQueue(records, today, programOnlyUrls);
+  const withdrawn = programPagesWithdrawn(records, new Set(programsByUrl.keys()));
 
   console.log("");
   console.log("── Summary ──");
@@ -253,7 +298,8 @@ async function main() {
   console.log(`Unreachable: ${counts.unreachable}`);
   console.log(`Unknown (we were refused, no claim published): ${counts.unknown}`);
   console.log(`Past the ${LINK_GRACE_DAYS}-day grace window or terminal: ${queue.length}`);
-  console.log(`Written to data/link_health.json: ${persisted.length} (a link that answers needs no record)`);
+  console.log(`Referral program pages unreachable or redirected, so their programs are not published: ${withdrawn.length}`);
+  console.log(`Written to data/link_health.json: ${persisted.length} (a link that answers needs no record, unless it is a program page that redirected)`);
 
   if (report) {
     console.log("");
@@ -265,10 +311,17 @@ async function main() {
       );
     }
     console.log("");
+    console.log("── Referral program pages — the program is not published, the listing is unaffected ──");
+    for (const r of withdrawn) {
+      const programs = (programsByUrl.get(r.url) ?? []).join(", ");
+      const landed = typeof r.redirected_to === "string" ? ` -> ${r.redirected_to}` : "";
+      console.log(`         ${String(r.detail).padEnd(22)} ${programs} — ${r.url}${landed}`);
+    }
+    console.log("");
     console.log("── Could not check — these publish nothing and are not evidence ──");
     for (const r of records.filter((x) => x.outcome === "unknown")) {
-      const vendors = (vendorsByUrl.get(r.url) ?? []).join(", ");
-      console.log(`         ${String(r.detail).padEnd(22)} ${vendors} — ${r.url}`);
+      const vendors = [...(vendorsByUrl.get(r.url) ?? []), ...(programsByUrl.get(r.url) ?? [])];
+      console.log(`         ${String(r.detail).padEnd(22)} ${[...new Set(vendors)].join(", ")} — ${r.url}`);
     }
   }
 

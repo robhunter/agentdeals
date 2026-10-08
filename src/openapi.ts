@@ -1250,7 +1250,7 @@ const DOCUMENTED_OPERATIONS: Record<string, Record<string, any>> = {
   "/api/referral-programs": {
     get: {
       summary: "Vendors running a referral or affiliate programme",
-      description: "Vendors whose own referral programme is open to anyone, with what the referrer and the referee each get. This is not the list of codes we hold and earn on — that is /api/referral-codes, and /disclosure names every one of them.",
+      description: "Vendors whose own referral programme is open to anyone, with what the referrer and the referee each get. A programme is listed once we have read its terms on the vendor's page, and not while that page is unreachable or redirects to another page. This is not the list of codes we hold and earn on — that is /api/referral-codes, and /disclosure names every one of them.",
       parameters: [
         { name: "category", in: "query", description: "Filter by vendor category name. The categories field lists the ones present.", schema: { type: "string" }, example: "Cloud Hosting" }
       ],
@@ -1274,6 +1274,7 @@ const DOCUMENTED_OPERATIONS: Record<string, Record<string, any>> = {
                         program_url: { type: "string", format: "uri", description: "The vendor's own page describing the programme." },
                         type: { type: "string" },
                         commission_type: { type: "string" },
+                        read_on: { type: "string", format: "date", description: "The date we last read the programme's terms on the vendor's page." },
                         vendor_page: { type: "string" }
                       }
                     }

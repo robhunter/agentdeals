@@ -7,7 +7,12 @@ import { fileURLToPath } from "node:url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const { loadOffers } = await import("../dist/data.js");
+const { documentsVendorReferralProgram } = await import("../dist/referral-surfaces.js");
 const offers = loadOffers();
+const publishedVendors = [...new Set(offers.filter((o: any) => documentsVendorReferralProgram(o)).map((o: any) => o.vendor))] as string[];
+const asPageText = (text: string) =>
+  text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+const slugOf = (vendor: string) => vendor.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
 describe("referral_program metadata", () => {
   it("at least 40 vendors have referral_program metadata", () => {
@@ -101,13 +106,13 @@ describe("referral-programs page", () => {
     assert.strictEqual(res.status, 200);
   });
 
-  it("/referral-programs lists vendors with programs", async () => {
+  it("/referral-programs lists every vendor whose program we publish", async () => {
     const res = await fetch(`http://localhost:${serverPort}/referral-programs`);
     const html = await res.text();
-    assert.ok(html.includes("DigitalOcean"), "Should list DigitalOcean");
-    assert.ok(html.includes("Railway"), "Should list Railway");
-    assert.ok(html.includes("Vercel"), "Should list Vercel");
-    assert.ok(html.includes("Neon"), "Should list Neon");
+    assert.ok(publishedVendors.length >= 4, `expected several published programs, got ${publishedVendors.length}`);
+    for (const vendor of publishedVendors) {
+      assert.ok(html.includes(`>${asPageText(vendor)}<`), `Should list ${vendor}`);
+    }
   });
 
   it("/referral-programs shows 'Use our code' for vendors with codes", async () => {
@@ -147,11 +152,13 @@ describe("referral-programs page", () => {
     assert.ok(!html.includes("Submit your referral code"), "Should not invite a submission");
   });
 
-  it("/vendor/vercel shows referral program section", async () => {
-    const res = await fetch(`http://localhost:${serverPort}/vendor/vercel`);
-    assert.strictEqual(res.status, 200);
-    const html = await res.text();
-    assert.ok(html.includes("Referral Program"), "Vercel should show referral program section");
+  it("the vendor page of every published program shows its referral program section", async () => {
+    for (const vendor of publishedVendors) {
+      const res = await fetch(`http://localhost:${serverPort}/vendor/${slugOf(vendor)}`);
+      assert.strictEqual(res.status, 200);
+      const html = await res.text();
+      assert.ok(html.includes("<h2>Referral Program</h2>"), `${vendor} should show referral program section`);
+    }
   });
 
   it("/referral-programs has category filter buttons", async () => {
@@ -184,7 +191,7 @@ describe("referral-programs page", () => {
     assert.strictEqual(res.headers.get("access-control-allow-origin"), "*");
     const body = await res.json();
     assert.ok(Array.isArray(body.programs), "Should have programs array");
-    assert.ok(body.count >= 15, `Should have at least 15 programs, got ${body.count}`);
+    assert.strictEqual(body.count, publishedVendors.length, "Should return one program per vendor whose program we publish");
     assert.ok(Array.isArray(body.categories), "Should have categories array");
     assert.ok(body.categories.length >= 3, "Should have at least 3 categories");
     const first = body.programs[0];

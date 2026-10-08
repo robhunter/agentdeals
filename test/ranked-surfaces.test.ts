@@ -310,14 +310,14 @@ describe("/referral-programs stops being ordered by our own money", () => {
     assert.notDeepStrictEqual(vendors, [...vendors].sort((a, b) => a.localeCompare(b)), "still alphabetical inside the section");
 
     const { rotateListing } = await import("../dist/ranking.js");
-    const { hasOurReferralLink } = await import("../dist/referral-surfaces.js");
+    const { hasOurReferralLink, documentsVendorReferralProgram } = await import("../dist/referral-surfaces.js");
     const index = JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf8")) as {
       offers: { vendor: string; referral?: unknown; referral_program?: { available?: boolean } }[];
     };
     const seen = new Set<string>();
     const sourceOrder: string[] = [];
     for (const o of index.offers) {
-      if (o.referral_program?.available && !seen.has(o.vendor)) {
+      if (documentsVendorReferralProgram(o) && !seen.has(o.vendor)) {
         seen.add(o.vendor);
         if (!hasOurReferralLink(o.vendor, o)) sourceOrder.push(o.vendor);
       }

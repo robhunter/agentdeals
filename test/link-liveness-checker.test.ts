@@ -2,7 +2,15 @@ import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
 import http from "node:http";
 import type { AddressInfo } from "node:net";
-import { checkLiveness, nextRecord } from "../scripts/check-liveness.js";
+import {
+  checkLiveness,
+  citedOnlyAsAProgram,
+  collectUrls,
+  delistingQueue,
+  nextRecord,
+  programPagesWithdrawn,
+  recordsToKeep,
+} from "../scripts/check-liveness.js";
 import { reverifyBatch } from "../scripts/reverify.js";
 
 let server: http.Server;
@@ -33,6 +41,14 @@ before(async () => {
     }
     if (path === "/rate-limited") {
       res.writeHead(429).end();
+      return;
+    }
+    if (path === "/moved") {
+      res.writeHead(302, { Location: "/elsewhere" }).end();
+      return;
+    }
+    if (path === "/slash") {
+      res.writeHead(301, { Location: "/slash/" }).end();
       return;
     }
     res.writeHead(200).end();
@@ -126,5 +142,117 @@ describe("#1046 how a check updates a link's history", () => {
     const previous = { url: target.url, checked: "2026-08-24", outcome: "unreachable" as const, detail: "GET 410", terminal: true, last_reachable: "2026-05-23", consecutive_unreachable: 3 };
     const next = nextRecord(target, previous, { outcome: "unknown", detail: "GET 429", terminal: false }, "2026-08-25");
     assert.equal(next.terminal, true);
+  });
+});
+
+const CATALOGUE = [
+  { vendor: "Listed", url: "https://listed.example/pricing", verifiedDate: "2026-05-01" },
+  {
+    vendor: "Runs A Program",
+    url: "https://program-vendor.example/pricing",
+    verifiedDate: "2026-05-02",
+    referral_program: { available: true, program_url: "https://program-vendor.example/refer", read_on: "2026-09-01" },
+  },
+  {
+    vendor: "Shares Its Page",
+    url: "https://shared.example/",
+    verifiedDate: "2026-05-03",
+    referral_program: { available: false, program_url: "https://shared.example/", read_on: "2026-09-02" },
+  },
+];
+
+const targetAt = (url: string) => collectUrls(CATALOGUE).find((t: { url: string }) => t.url === url);
+
+describe("#1152 the checker reads every referral program's page with the catalogue's links", () => {
+  it("adds a program's page to the URLs it checks and names the program, not a listing", () => {
+    const program = targetAt("https://program-vendor.example/refer");
+    assert.ok(program, "the program page should be one of the URLs checked");
+    assert.deepEqual(program.vendors, []);
+    assert.deepEqual(program.programs, ["Runs A Program"]);
+    assert.equal(citedOnlyAsAProgram(program), true);
+  });
+
+  it("reads a program's page whether or not the program is published", () => {
+    assert.deepEqual(targetAt("https://shared.example/").programs, ["Shares Its Page"]);
+  });
+
+  it("checks a page that a listing and its program both cite once, as the listing's", () => {
+    const shared = collectUrls(CATALOGUE).filter((t: { url: string }) => t.url === "https://shared.example/");
+    assert.equal(shared.length, 1);
+    assert.deepEqual(shared[0].vendors, ["Shares Its Page"]);
+    assert.equal(citedOnlyAsAProgram(shared[0]), false);
+  });
+
+  it("dates a program page's last known answer from the day we read its terms", () => {
+    assert.equal(targetAt("https://program-vendor.example/refer").latestVerified, "2026-09-01");
+  });
+
+  it("keeps the listing's verification date on a page the listing shares with its program", () => {
+    assert.equal(targetAt("https://shared.example/").latestVerified, "2026-05-03");
+  });
+
+  it("leaves the listings' own links as they were", () => {
+    const listed = targetAt("https://listed.example/pricing");
+    assert.deepEqual(listed.vendors, ["Listed"]);
+    assert.deepEqual(listed.programs, []);
+    assert.equal(listed.latestVerified, "2026-05-01");
+  });
+});
+
+describe("#1152 a program page reached only by redirecting to another page is recorded where it landed", () => {
+  it("records the page a program's link redirected to", async () => {
+    const target = { url: `${base}/moved`, latestVerified: null, vendors: [], programs: ["Moved Program"] };
+    const result = await checkLiveness(target.url);
+    assert.equal(result.outcome, "reachable");
+    const record = nextRecord(target, undefined, result, "2026-10-08");
+    assert.equal(record.redirected_to, `${base}/elsewhere`);
+  });
+
+  it("counts a redirect that only adds a trailing slash as the same page", async () => {
+    const target = { url: `${base}/slash`, latestVerified: null, vendors: [], programs: ["Slash Program"] };
+    const record = nextRecord(target, undefined, await checkLiveness(target.url), "2026-10-08");
+    assert.equal(record.outcome, "reachable");
+    assert.equal(record.redirected_to, undefined);
+  });
+
+  it("never records a redirect on a listing's own link", async () => {
+    const target = { url: `${base}/moved`, latestVerified: null, vendors: ["Moved Listing"], programs: [] };
+    const record = nextRecord(target, undefined, await checkLiveness(target.url), "2026-10-08");
+    assert.equal(record.outcome, "reachable");
+    assert.equal(record.redirected_to, undefined);
+  });
+
+  it("keeps a redirected program page in the file although it answered, and drops a page that answered where we cite it", () => {
+    const answered = { url: "https://a.example/", checked: "2026-10-08", outcome: "reachable", detail: "HEAD 200", terminal: false, last_reachable: "2026-10-08", consecutive_unreachable: 0 };
+    const redirected = { ...answered, url: "https://b.example/refer", redirected_to: "https://b.example/" };
+    const refused = { ...answered, url: "https://c.example/refer", outcome: "unknown", detail: "GET 403" };
+    assert.deepEqual(recordsToKeep([answered, redirected, refused]).map((r: { url: string }) => r.url), [
+      "https://b.example/refer",
+      "https://c.example/refer",
+    ]);
+  });
+});
+
+describe("#1152 a dead program page never queues the listing for delisting", () => {
+  const dead = (url: string) => ({ url, checked: "2026-10-01", outcome: "unreachable", detail: "GET 410", terminal: true, last_reachable: "2026-09-01", consecutive_unreachable: 3 });
+  const programOnly = new Set(collectUrls(CATALOGUE).filter(citedOnlyAsAProgram).map((t: { url: string }) => t.url));
+
+  it("leaves a page only a program cites out of the delisting queue", () => {
+    const queue = delistingQueue([dead("https://listed.example/pricing"), dead("https://program-vendor.example/refer")], "2026-10-08", programOnly);
+    assert.deepEqual(queue.map((r: { url: string }) => r.url), ["https://listed.example/pricing"]);
+  });
+
+  it("still queues a page a listing cites when its program cites it too", () => {
+    const queue = delistingQueue([dead("https://shared.example/")], "2026-10-08", programOnly);
+    assert.deepEqual(queue.map((r: { url: string }) => r.url), ["https://shared.example/"]);
+  });
+
+  it("names the dead or redirected program pages, so the report can say their programs are not published", () => {
+    const answered = { url: "https://listed.example/pricing", checked: "2026-10-01", outcome: "reachable", detail: "HEAD 200", terminal: false, last_reachable: "2026-10-01", consecutive_unreachable: 0 };
+    const redirected = { ...answered, url: "https://shared.example/", redirected_to: "https://shared.example/home" };
+    const programUrls = new Set(["https://program-vendor.example/refer", "https://shared.example/"]);
+    const records = [answered, dead("https://gone-listing.example/pricing"), dead("https://program-vendor.example/refer"), redirected];
+    const withdrawn = programPagesWithdrawn(records, programUrls);
+    assert.deepEqual(withdrawn.map((r: { url: string }) => r.url), ["https://program-vendor.example/refer", "https://shared.example/"]);
   });
 });
