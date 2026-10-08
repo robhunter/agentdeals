@@ -16090,6 +16090,26 @@
       "alternatives": [],
       "recorded_date": "2026-10-08",
       "listing_effect": "none"
+    },
+    {
+      "vendor": "OVHcloud",
+      "change_type": "pricing_restructured",
+      "date": "2026-10-01",
+      "date_source": "vendor_page",
+      "tier": "Public Cloud",
+      "summary": "From 2026-10-01, OVHcloud bills the local storage and public IPv4 address of its Gen3 Public Cloud instances (B3, C3 and R3) as separate lines: local storage at €0.0001458 per GB an hour (about €109 per TB a month) and an IPv4 address at €0.0027 an hour (about €1.97 a month). Instance hourly prices do not change, so total bills rise 1.4% to 21.9% depending on size, most for small instances. Block, Object and File Storage prices do not change.",
+      "previous_state": "Gen3 Public Cloud instance prices included local storage and a public IPv4 address",
+      "current_state": "\"The hourly price of instances does not change. This price will be identical before and after October 1, 2026, for all ranges.\" Local storage (\"Local Low Latency\") €0.0001458/GB/hour; public IPv4 €0.0027/hour; total increases of \"1.4% to 21.9%, dependent on size\" (OVHcloud blog, \"Public Cloud: our prices are changing on 1 October 2026\", published 2026-08-25, read 2026-10-08).",
+      "impact": "medium",
+      "source_url": "https://blog.ovhcloud.com/en/posts/public-cloud-pricing-update-october-2026/",
+      "category": "Cloud IaaS",
+      "alternatives": [
+        "Hetzner",
+        "DigitalOcean",
+        "Vultr",
+        "AWS"
+      ],
+      "recorded_date": "2026-10-08"
     }
   ]
 }
