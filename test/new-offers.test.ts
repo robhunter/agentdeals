@@ -1,8 +1,9 @@
-import { describe, it, afterEach } from "node:test";
+import { describe, it, before, after, afterEach } from "node:test";
 import assert from "node:assert";
 import { spawn, type ChildProcess } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { startLocalApi, startStdioServerAgainst, type LocalApi } from "./local-api.ts";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -59,7 +60,11 @@ const INIT_MESSAGES = [
 ];
 
 describe("search_deals with since param (new offers)", () => {
+  let api: LocalApi;
   let proc: ReturnType<typeof spawn> | null = null;
+
+  before(async () => { api = await startLocalApi(); });
+  after(() => { api?.stop(); });
 
   afterEach(() => {
     if (proc) {
@@ -69,10 +74,7 @@ describe("search_deals with since param (new offers)", () => {
   });
 
   it("returns deals verified since a given date", async () => {
-    const serverPath = path.join(__dirname, "..", "dist", "index.js");
-    proc = spawn("node", [serverPath], {
-      stdio: ["pipe", "pipe", "pipe"],
-    });
+    proc = startStdioServerAgainst(api);
 
     const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
       .toISOString()
@@ -101,10 +103,7 @@ describe("search_deals with since param (new offers)", () => {
   });
 
   it("returns deals within 30-day window", async () => {
-    const serverPath = path.join(__dirname, "..", "dist", "index.js");
-    proc = spawn("node", [serverPath], {
-      stdio: ["pipe", "pipe", "pipe"],
-    });
+    proc = startStdioServerAgainst(api);
 
     const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
       .toISOString()
@@ -131,10 +130,7 @@ describe("search_deals with since param (new offers)", () => {
   });
 
   it("returns empty array when no deals match", async () => {
-    const serverPath = path.join(__dirname, "..", "dist", "index.js");
-    proc = spawn("node", [serverPath], {
-      stdio: ["pipe", "pipe", "pipe"],
-    });
+    proc = startStdioServerAgainst(api);
 
     const responses = await sendMcpMessages(proc, [
       ...INIT_MESSAGES,

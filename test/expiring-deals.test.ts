@@ -5,6 +5,7 @@ import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { startLocalApi, startStdioServerAgainst, type LocalApi } from "./local-api.ts";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -62,15 +63,18 @@ describe("getExpiringDeals logic", () => {
 });
 
 describe("get_expiring_deals MCP tool via stdio", () => {
+  let api: LocalApi;
   let proc: ChildProcess | null = null;
+
+  before(async () => { api = await startLocalApi(); });
+  after(() => { api?.stop(); });
 
   afterEach(() => {
     if (proc) { proc.kill(); proc = null; }
   });
 
   it("get_expiring_deals is listed in tools/list", async () => {
-    const serverPath = path.join(__dirname, "..", "dist", "index.js");
-    proc = spawn("node", [serverPath], { stdio: ["pipe", "pipe", "pipe"] });
+    proc = startStdioServerAgainst(api);
 
     const initMsg = JSON.stringify({
       jsonrpc: "2.0",

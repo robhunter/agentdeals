@@ -4,6 +4,7 @@ import { assertPopulationFloor } from "./population-floor.ts";
 import { spawn, type ChildProcess } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { startLocalApi, startStdioServerAgainst, type LocalApi } from "./local-api.ts";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -202,9 +203,12 @@ function mcpRequest(proc: ChildProcess, request: object): Promise<any> {
 }
 
 describe("mcp app resources", () => {
+  let api: LocalApi;
+  before(async () => { api = await startLocalApi(); });
+  after(() => { api?.stop(); });
+
   it("carry no comments in their style or script blocks", async () => {
-    const serverPath = path.join(__dirname, "..", "dist", "index.js");
-    const proc = spawn("node", [serverPath], { stdio: ["pipe", "pipe", "pipe"] });
+    const proc = startStdioServerAgainst(api);
     try {
       await mcpRequest(proc, {
         jsonrpc: "2.0", id: 1, method: "initialize",

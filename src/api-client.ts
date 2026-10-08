@@ -1,5 +1,8 @@
+import { PKG_VERSION } from "./package-version.js";
+
 const DEFAULT_BASE_URL = "https://agentdeals.dev";
 const TIMEOUT_MS = 10_000;
+const USER_AGENT = `agentdeals-mcp/${PKG_VERSION}`;
 
 export function getBaseUrl(): string {
   return process.env.AGENTDEALS_API_URL || DEFAULT_BASE_URL;
@@ -17,6 +20,7 @@ async function apiFetch(path: string, params?: Record<string, string>): Promise<
   try {
     res = await fetch(url.toString(), {
       signal: AbortSignal.timeout(TIMEOUT_MS),
+      headers: { "User-Agent": USER_AGENT },
     });
   } catch (err) {
     if (err instanceof DOMException && err.name === "TimeoutError") {

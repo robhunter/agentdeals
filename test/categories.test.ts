@@ -1,10 +1,7 @@
-import { describe, it } from "node:test";
+import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
 import { spawn } from "node:child_process";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+import { startLocalApi, startStdioServerAgainst, type LocalApi } from "./local-api.ts";
 
 function sendMcpMessages(
   serverProcess: ReturnType<typeof spawn>,
@@ -45,11 +42,12 @@ function sendMcpMessages(
 }
 
 describe("search_deals category list", () => {
+  let api: LocalApi;
+  before(async () => { api = await startLocalApi(); });
+  after(() => { api?.stop(); });
+
   it("returns categories from index data", async () => {
-    const serverPath = path.join(__dirname, "..", "dist", "index.js");
-    const proc = spawn("node", [serverPath], {
-      stdio: ["pipe", "pipe", "pipe"],
-    });
+    const proc = startStdioServerAgainst(api);
 
     try {
       const responses = (await sendMcpMessages(proc, [
