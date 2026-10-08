@@ -2880,6 +2880,24 @@
           "read_on": "2026-10-07"
         },
         {
+          "text": "Hetzner's prices are net, so VAT is added by the customer's country of residence: 19% in Germany, and each EU country's own rate for EU customers without a valid VAT ID.",
+          "quote": "Our net prices are the same for all customers. The rate of Value Added Tax (VAT) that we charge is based on your country of residence … We charge clients based in Germany 19% VAT. … We charge customers from EU Member States the VAT rate of their respective country of origin",
+          "url": "https://docs.hetzner.com/general/billing-and-account-management/billing-at-hetzner/value-added-tax/",
+          "read_on": "2026-10-08"
+        },
+        {
+          "text": "An EU business with a valid VAT ID is invoiced without VAT under the reverse-charge procedure.",
+          "quote": "Customers in EU Member States who can produce a valid VAT ID will receive their invoice according to the \"Reverse-Charge\" procedure, without German tax.",
+          "url": "https://docs.hetzner.com/general/billing-and-account-management/billing-at-hetzner/value-added-tax/",
+          "read_on": "2026-10-08"
+        },
+        {
+          "text": "Outside the EU, Hetzner adds tax only in the United Kingdom (20%), Switzerland (8.1%), Norway, Australia, Singapore, South Africa and five US states (Texas, Utah, Arizona, Colorado, New Mexico); everyone else pays none.",
+          "quote": "We charge an 8% sales tax for customers in Texas. We also collect sales tax from customers in Utah and Arizona. … The same rule applies to customers in Colorado and New Mexico. … Customers from these countries will receive their invoice without VAT.",
+          "url": "https://docs.hetzner.com/general/billing-and-account-management/billing-at-hetzner/value-added-tax/",
+          "read_on": "2026-10-08"
+        },
+        {
           "text": "Hetzner may ask a new customer to verify the account before it processes an order, with a government ID or an advance payment by the customer's own credit card.",
           "quote": "As part of our fraud prevention measures, we may ask you to verify your account before we process an order. You can do this in two ways: Verification via ID document: You provide us with a copy of a valid government-issued ID (e.g., ID card or passport). This allows us to confirm that the information provided during registration matches your identity. Verification via prepayment (credit card): Alternatively, you can verify your account by making an advance payment with your own credit card.",
           "url": "https://docs.hetzner.com/general/security-and-identify/fraud-prevention-faq/",
@@ -4450,9 +4468,9 @@
     {
       "vendor": "Kong",
       "category": "API Gateway",
-      "description": "Open source API gateway (Apache 2.0). Self-hosted with no request or usage limits. Lacks enterprise features (Manager GUI, advanced analytics)",
+      "description": "Kong Gateway is an open-source API, LLM and MCP gateway under Apache 2.0. It is self-hosted with no request or usage limits and includes the Kong Manager web UI. Kong Konnect is a separate hosted platform with a free trial and per-gateway paid plans.",
       "tier": "OSS",
-      "url": "https://konghq.com/pricing",
+      "url": "https://github.com/Kong/kong",
       "tags": [
         "api-gateway",
         "open-source",
@@ -10605,7 +10623,7 @@
     {
       "vendor": "Google Colab",
       "category": "AI / ML",
-      "description": "Hosted Jupyter notebooks with free access to GPUs and TPUs. In the free version, notebooks run for at most 12 hours, depending on availability and usage, and idle runtimes time out. GPU access is heavily restricted, GPU and TPU types vary over time, and usage limits fluctuate. Colab Pro, Pro+ and Pay As You Go offer more compute, based on a balance of compute units.",
+      "description": "Hosted Jupyter notebooks with free access to GPUs and TPUs. In the free version, notebooks run for at most 12 hours, depending on availability and usage, and idle runtimes time out. GPU access is heavily restricted, GPU and TPU types vary over time, and usage limits fluctuate. Colab Pro, Pro+ and Pay As You Go offer more compute, based on a balance of compute units. Colab Pro costs $9.99 a month for 100 compute units. Colab Pro+ costs $49.99 a month for 600 compute units. Pay As You Go costs $9.99 for 100 compute units or $49.99 for 500 compute units. These are the US prices on Google's signup page. Compute units expire after 90 days and are not refundable.",
       "tier": "Free",
       "url": "https://research.google.com/colaboratory/faq.html",
       "tags": [
@@ -10630,7 +10648,21 @@
           }
         ],
         "reviewed": "2026-10-01"
-      }
+      },
+      "conditions": [
+        {
+          "text": "On a free runtime with no compute-unit balance, Google may terminate without warning sessions that use SSH shells, remote desktops, a web UI instead of the notebook, chess training or distributed computing workers. SSH shells, remote desktops and working in a web UI instead of the notebook are allowed on a paid plan while the compute-unit balance is positive.",
+          "quote": "The following are disallowed from managed Colab runtimes running free of charge, without a positive Colab compute unit balance, and may be terminated at any time without warning: remote control such as SSH shells, remote desktops bypassing the notebook UI to interact primarily via a web UI chess training running distributed computing workers You can remove these types of restrictions by purchasing one of our paid plans here and maintaining a positive compute unit balance.",
+          "url": "https://research.google.com/colaboratory/faq.html",
+          "read_on": "2026-10-08"
+        },
+        {
+          "text": "A paid Google AI plan adds a monthly allotment of Colab compute units and stronger GPUs and TPUs to the same account. Storage-only Google One plans and free trials do not.",
+          "quote": "Subscribing to an eligible Google AI plan now also unlocks premium Colab benefits, similar to those offered by Colab's own paid plans: a monthly allotment of Colab compute units, access to more powerful GPUs and TPUs, and, on higher plans, additional capabilities such as background execution. The exact benefits depend on your plan, and they are included only with eligible paid Google AI plans (not with storage-only Google One plans ). … Premium Colab benefits are only available to paid Google AI plan subscribers. They are not included during a free trial of a Google One plan",
+          "url": "https://research.google.com/colaboratory/faq.html",
+          "read_on": "2026-10-08"
+        }
+      ]
     },
     {
       "vendor": "Zoho",
@@ -21010,7 +21042,7 @@
     {
       "vendor": "Pollinations.AI",
       "category": "AI / ML",
-      "description": "Pollen credits earned by completing quests. The documented API for text, image, audio and video requires a GitHub sign-in and an API key. Free use draws from Quest Pollen, with no promise of future grants. Paid-only models, such as DeepSeek V4 Pro and GLM 5.2, need purchased Pollen. Older keyless endpoints for image and text still answered on 2026-10-05, but the current docs do not cover them and state no terms for them.",
+      "description": "Pollen credits earned by completing quests. No credit card is required. On 2026-10-08, the nine setup quests paid 4 Pollen in total, worth about $4 because 1 Pollen is worth about $1. The documented API for text, image, audio and video requires a GitHub sign-in and an API key. Free use draws from Quest Pollen, with no promise of future grants. Paid-only models, such as Claude models, DeepSeek V4 Pro and GLM 5.2, need purchased Pollen. Older keyless endpoints for image and text still answered on 2026-10-05, but the current docs do not cover them and state no terms for them.",
       "tier": "Free",
       "url": "https://pollinations.ai/",
       "tags": [
@@ -22288,7 +22320,7 @@
     {
       "vendor": "Alwaysdata",
       "category": "Cloud Hosting",
-      "description": "1 GB free web hosting with support for MySQL, PostgreSQL, RabbitMQ, .NET, Deno, Elixir, Go, Java, Lua, Node.js, PHP, Python, Ruby, Rust. Custom web servers, access via FTP, WebDAV and SSH. Mailbox, mailing list and app installer included. No custom domain on free plan.",
+      "description": "1 GB free web hosting with support for MySQL, PostgreSQL, RabbitMQ, .NET, Deno, Elixir, Go, Java, Lua, Node.js, PHP, Python, Ruby, Rust. Custom web servers, access via FTP, WebDAV and SSH. Mailbox, mailing list and app installer included. 256 MB RAM and a quarter of a CPU. Sites get an alwaysdata.net address; email can use your own domain. No credit card is required and the plan has no time limit.",
       "tier": "Free",
       "url": "https://www.alwaysdata.com/",
       "tags": [
@@ -22302,6 +22334,17 @@
         "outcome": "states_no_terms",
         "detail": "the page names Alwaysdata but states no amount, tier or rate we can read"
       },
+      "conditions": [
+        {
+          "text": "The Free plan is offered for personal use.",
+          "quote": "For personal needs, ad-free offer available for life",
+          "url": "https://www.alwaysdata.com/en/offers/",
+          "read_on": "2026-10-08",
+          "rules_out": [
+            "commercial use"
+          ]
+        }
+      ],
       "product_subtypes": {
         "taxonomy": "Cloud Hosting",
         "labels": [
@@ -23155,7 +23198,7 @@
     {
       "vendor": "DigitalPlat",
       "category": "DNS & Domain Management",
-      "description": "Free subdomains via nonprofit foundation. dpdns.org is the primary service. The us.kg subdomain offering has been suspended due to abuse and is no longer accepting registrations. qzz.io and xx.kg may also be available.",
+      "description": "Free subdomains under .qzz.io, .dpdns.org, .us.kg, .xx.kg, and .qd.je. All five namespaces were listed as available on 2026-10-08. A registered name can use external nameservers. The service is run by the DigitalPlat Foundation.",
       "tier": "Free",
       "url": "https://domain.digitalplat.org",
       "tags": [

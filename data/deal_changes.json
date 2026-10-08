@@ -4565,7 +4565,7 @@
       "change_type": "product_deprecated",
       "date": "2026-10-31",
       "date_source": "vendor_page",
-      "summary": "Apiary reaches end of life on 2026-10-31, when Oracle stops the service and deletes remaining instances. Oracle announced it on 2025-10-28. The Free plan is the only one still open, so it ends with the product.",
+      "summary": "Apiary reaches end of life on 2026-10-31, when Oracle stops the service and deletes remaining instances. Oracle announced it on 2025-10-28. The Free plan is the only one still open, so it ends with the product. Oracle instructed customers using the API Blueprint format to convert to OpenAPI and move the files to tools such as Apimatic, Postman, Swagger Editor, Stoplight, Redocly, or Bump.sh.",
       "previous_state": "Free: unlimited API blueprints and unlimited users with one admin account and hosted documentation. The paid Standard and Pro plans have taken no new teams since 2021-09-09.",
       "current_state": "\"Service Change: End-of-Life (EOL) for Apiary Cloud Service effective October 31, 2026. Date Announced: Oct 28, 2025 Date in Effect: Oct 31, 2026\"",
       "impact": "high",
@@ -13155,6 +13155,12 @@
       "archive_check": {
         "checked": "2026-10-02",
         "outcome": "no_usable_capture"
+      },
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-10-08",
+        "detail": "Retracted 2026-10-08: the third reading of konghq.com/pricing attached to our open-source gateway listing, after the 2026-08-28 and 2026-09-09 records were retracted on 2026-09-10 for the same reason. The page prices Kong Konnect; \"Apache\" and \"OSS\" appear zero times on it, and the open-source gateway appears only as a navigation link to /community. github.com/Kong/kong still carries the Apache-2.0 license, with release 3.9.3 on 2026-06-17, so the open-source gateway's terms did not change.",
+        "source_url": "https://github.com/Kong/kong"
       }
     },
     {
@@ -16068,6 +16074,22 @@
       "category": "AI / ML",
       "alternatives": [],
       "recorded_date": "2026-10-07"
+    },
+    {
+      "vendor": "Anthropic API",
+      "change_type": "product_deprecated",
+      "date": "2026-11-30",
+      "date_source": "vendor_page",
+      "summary": "Claude Sonnet 4.5 (claude-sonnet-4-5-20250929) retires from the Claude API on 2026-11-30, and requests to it fail after that date. Anthropic deprecated it on 2026-09-30 and names claude-sonnet-5-5 as the replacement. The Claude API and Anthropic's other models keep running. Amazon Bedrock and Google Cloud set their own retirement dates.",
+      "what_ends": "Claude Sonnet 4.5",
+      "previous_state": "claude-sonnet-4-5-20250929 callable in the Claude API at pay-as-you-go rates",
+      "current_state": "\"claude-sonnet-4-5-20250929 | Deprecated | September 30, 2026 | November 30, 2026\" (Model status table). \"On September 30, 2026, Anthropic notified developers using Claude Sonnet 4.5 of its upcoming retirement on the Claude API.\" Recommended replacement: claude-sonnet-5-5. \"Requests to models past the retirement date will fail.\" (platform.claude.com/docs/en/about-claude/model-deprecations, read 2026-10-08)",
+      "impact": "medium",
+      "source_url": "https://platform.claude.com/docs/en/about-claude/model-deprecations",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-10-08",
+      "listing_effect": "none"
     }
   ]
 }
