@@ -13,6 +13,7 @@ import {
   HETZNER_AX42_GERMANY,
   HETZNER_CLOUD_ADD_ON_PRICES,
   HETZNER_CLOUD_PLANS,
+  HETZNER_OBJECT_STORAGE_PRICES,
   HETZNER_PRICES_READ,
   HETZNER_SINGAPORE_EXAMPLE,
   cheaperUnorderablePlanWithMoreServer,
@@ -87,13 +88,17 @@ const TRAFFIC_CONDITION = "Outgoing traffic beyond";
 const BACKUP_PRICE_CONDITION = "Backups cost";
 const BACKUP_SLOTS_CONDITION = "Backups are automatic";
 const SNAPSHOT_CONDITION = "Snapshots cost";
+const OBJECT_STORAGE_PRICE_CONDITION = "Object Storage costs";
+const OBJECT_STORAGE_BILLING_CONDITION = "The base price is billed for every hour";
 
 const { trafficPerTbBeyondTheIncluded, ipv4PerMonth, backupShareOfThePriceWithoutIpv4, snapshotPerGbMonth } = HETZNER_CLOUD_ADD_ON_PRICES;
+const { basePerMonth, storagePerTbHourBeyondTheQuota, egressPerTbBeyondTheQuota } = HETZNER_OBJECT_STORAGE_PRICES;
 
 const eurosIn = (text: string) => text.match(/€\d+\.\d{2,}/g) ?? [];
 const dollarsIn = (text: string) => text.match(/\$\d+\.\d{2,}/g) ?? [];
 const dollars = (usd: number) => `$${usd.toFixed(2)}`;
 const asWritten = (eur: number) => `€${eur.toFixed(4).replace(/0{1,2}$/, "")}`;
+const dollarsAsWritten = (usd: number) => `$${usd.toFixed(4).replace(/0{1,2}$/, "")}`;
 const cents = (eur: number) => Math.round(eur * 100);
 const fromCents = (amount: number) => `€${(amount / 100).toFixed(2)}`;
 
@@ -103,6 +108,10 @@ const ADD_ON_PRICES_AS_WRITTEN = [
   ipv4PerMonth,
   snapshotPerGbMonth,
 ].map(asWritten);
+
+const OBJECT_STORAGE_PRICES = [basePerMonth, storagePerTbHourBeyondTheQuota, egressPerTbBeyondTheQuota];
+const OBJECT_STORAGE_EUROS_AS_WRITTEN = OBJECT_STORAGE_PRICES.map(price => asWritten(price.eur));
+const OBJECT_STORAGE_DOLLARS_AS_WRITTEN = OBJECT_STORAGE_PRICES.map(price => dollarsAsWritten(price.usd));
 
 function backupExample(text: string) {
   const skus = text.match(/\bC[A-Z]*X\d+\b/g) ?? [];
@@ -119,10 +128,18 @@ function snapshotExample(text: string) {
   return fromCents(Math.round(sizes[0] * snapshotPerGbMonth * 100));
 }
 
+function objectStorageMonthExample(text: string) {
+  const days = [...text.matchAll(/(\d+)-day month\b/g)].map(([, count]) => Number(count));
+  assert.equal(days.length, 1, `the Object Storage condition should give one example month: ${text}`);
+  return fromCents(Math.round(days[0] * 24 * storagePerTbHourBeyondTheQuota.eur * 100));
+}
+
 const addOnExamples = () => {
   const { backup, withBackups } = backupExample(hetznerConditionOpening(BACKUP_PRICE_CONDITION));
   return [backup, withBackups, snapshotExample(hetznerConditionOpening(SNAPSHOT_CONDITION))];
 };
+
+const objectStorageExamples = () => [objectStorageMonthExample(hetznerConditionOpening(OBJECT_STORAGE_PRICE_CONDITION))];
 
 const headedByAnotherVendor = (cell: string) => {
   const linked = cell.match(/<a href="\/vendor\/([^"]+)"/)?.[1];
@@ -268,22 +285,25 @@ describe("the pricing page prices what Hetzner sells today", () => {
       ...[HETZNER_AX42_GERMANY, HETZNER_AX102_GERMANY].flatMap(server => Object.values(server)).map(price => `€${price.toFixed(2)}`),
       ...ADD_ON_PRICES_AS_WRITTEN,
       ...addOnExamples(),
+      ...OBJECT_STORAGE_EUROS_AS_WRITTEN,
+      ...objectStorageExamples(),
     ]);
     const quoted = new Set(eurosIn(visible(withoutItemsOrRowsHeadedByAnotherVendor(body))));
     const strays = [...quoted].filter(price => !allowed.has(price));
-    assert.deepEqual(strays, [], `prices with no plan, April row, dedicated-server figure or add-on price behind them: ${strays.join(", ")}`);
+    assert.deepEqual(strays, [], `prices with no plan, April row, dedicated-server figure, add-on or Object Storage price behind them: ${strays.join(", ")}`);
   });
 
-  it("quotes no dollar price that is not in the plan table or the April example", async () => {
+  it("quotes no dollar price that is not in the plan table, the April example or the Object Storage prices", async () => {
     const { body } = await get("/hetzner-pricing-2026");
     const allowed = new Set([
       ...HETZNER_CLOUD_PLANS.map(p => dollars(p.usd)),
       dollars(HETZNER_APRIL_DOLLAR_EXAMPLE.before),
       dollars(HETZNER_APRIL_DOLLAR_EXAMPLE.after),
+      ...OBJECT_STORAGE_DOLLARS_AS_WRITTEN,
     ]);
     const quoted = new Set(dollarsIn(visible(withoutItemsOrRowsHeadedByAnotherVendor(body))));
     const strays = [...quoted].filter(price => !allowed.has(price));
-    assert.deepEqual(strays, [], `dollar prices with no plan or April figure behind them: ${strays.join(", ")}`);
+    assert.deepEqual(strays, [], `dollar prices with no plan, April or Object Storage figure behind them: ${strays.join(", ")}`);
   });
 
   it("does not describe a completed price change as still to come", async () => {
@@ -593,6 +613,36 @@ describe("the add-on prices Hetzner's listing states", () => {
   it("price snapshots per GB, with an example derived from that price", () => {
     const text = hetznerConditionOpening(SNAPSHOT_CONDITION);
     assert.deepEqual(eurosIn(text).sort(), [asWritten(snapshotPerGbMonth), snapshotExample(text)].sort(), text);
+  });
+});
+
+describe("what Object Storage costs, as Hetzner's listing states it", () => {
+  it("follows the snapshot condition, the prices first and then how the base price is billed", () => {
+    const at = (opening: string) => HETZNER_CONDITIONS.findIndex(condition => condition.text.startsWith(opening));
+    assert.ok(at(SNAPSHOT_CONDITION) > -1);
+    assert.deepEqual(
+      [at(OBJECT_STORAGE_PRICE_CONDITION), at(OBJECT_STORAGE_BILLING_CONDITION)],
+      [at(SNAPSHOT_CONDITION) + 1, at(SNAPSHOT_CONDITION) + 2],
+    );
+  });
+
+  it("is printed after the snapshot condition on /hetzner-pricing-2026 and /vendor/hetzner", async () => {
+    const texts = [SNAPSHOT_CONDITION, OBJECT_STORAGE_PRICE_CONDITION, OBJECT_STORAGE_BILLING_CONDITION].map(hetznerConditionOpening);
+    for (const route of ["/hetzner-pricing-2026", "/vendor/hetzner"]) {
+      const { status, body } = await get(route);
+      assert.equal(status, 200, route);
+      const printed = [...body.matchAll(/<ul class="listing-conditions"[\s\S]*?<\/ul>/g)].map(([list]) => visible(list)).join(" ");
+      const positions = texts.map(text => printed.indexOf(text));
+      assert.ok(positions.every(position => position > -1), `${route} does not print all of: ${texts.join(" | ")}`);
+      assert.deepEqual([...positions].sort((a, b) => a - b), positions, route);
+    }
+  });
+
+  it("gives the base price, storage and egress beyond the quota in euros and dollars as the Object Storage prices hold them", () => {
+    const text = hetznerConditionOpening(OBJECT_STORAGE_PRICE_CONDITION);
+    const [base, storage, egress] = OBJECT_STORAGE_EUROS_AS_WRITTEN;
+    assert.deepEqual(eurosIn(text), [base, storage, objectStorageMonthExample(text), egress], text);
+    assert.deepEqual(dollarsIn(text), OBJECT_STORAGE_DOLLARS_AS_WRITTEN, text);
   });
 });
 

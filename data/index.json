@@ -2921,6 +2921,18 @@
           "read_on": "2026-10-08"
         },
         {
+          "text": "Object Storage costs €6.49 a month ($7.99) for 1 TB storage (up to 744 TB-hours) and 1 TB egress. Storage beyond that costs €0.0087 per TB-hour ($0.0123), or about €6.47 per TB for a 31-day month. Egress beyond 1 TB costs €1.00 per TB ($1.20).",
+          "quote": "This base price includes 1 TB of storage (up to 744 TB-hours) and 1 TB of egress traffic.",
+          "url": "https://www.hetzner.com/storage/object-storage/",
+          "read_on": "2026-10-08"
+        },
+        {
+          "text": "The base price is billed for every hour at least one bucket exists, even if it is empty. Unused quota does not carry over. Objects smaller than 64 KB are billed as 64 KB.",
+          "quote": "You are billed for each hour that you have at least one active Bucket, even if it’s empty.",
+          "url": "https://www.hetzner.com/storage/object-storage/",
+          "read_on": "2026-10-08"
+        },
+        {
           "text": "Hetzner's prices are net, so VAT is added by the customer's country of residence: 19% in Germany, and each EU country's own rate for EU customers without a valid VAT ID.",
           "quote": "Our net prices are the same for all customers. The rate of Value Added Tax (VAT) that we charge is based on your country of residence … We charge clients based in Germany 19% VAT. … We charge customers from EU Member States the VAT rate of their respective country of origin",
           "url": "https://docs.hetzner.com/general/billing-and-account-management/billing-at-hetzner/value-added-tax/",
