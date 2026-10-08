@@ -5,6 +5,10 @@
     "/": {
       "daily": true
     },
+    "/accounting-software-pricing-2026": {
+      "hash": "b4bce585c979aafd",
+      "changed": "2026-10-08"
+    },
     "/agent-payments": {
       "hash": "2a79edc847090f64",
       "changed": "2026-10-08"

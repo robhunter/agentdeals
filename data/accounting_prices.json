@@ -1,0 +1,570 @@
+{
+  "published": "2026-10-08",
+  "title": "Accounting Software 2026: Free Plans and Price Increases",
+  "meta_description": "QuickBooks Free connects one bank account. QuickBooks, Xero, FreshBooks raised prices in 2026. Zoho Books and Wave did not.",
+  "lead": "QuickBooks Free connects one bank account; Zoho Books Free and Wave Starter do not. QuickBooks Online raised prices from August 1 renewals, Xero on October 1, and FreshBooks from January 27. Zoho Books and Wave did not change plan prices in 2026.",
+  "read_line": "Prices read on each vendor's own page on 2026-10-08.",
+  "free_plans": {
+    "heading": "Free plans",
+    "intro": "QuickBooks Free, Zoho Books Free and Wave Starter cost $0 and differ in bank connections, invoice limits and who may use them.",
+    "plans": [
+      "QuickBooks Free",
+      "Zoho Books Free",
+      "Wave Starter"
+    ],
+    "rows": [
+      {
+        "label": "Price",
+        "cells": [
+          "$0",
+          "$0 while the business's revenue for the financial year is $50,000 or less",
+          "$0"
+        ]
+      },
+      {
+        "label": "Bank connection",
+        "cells": [
+          "1 bank account",
+          "None. Bank reconciliation only; bank feeds start on Standard ($20 a month, or $15 a month billed annually)",
+          "None. Bank connections need Pro ($19 a month or $190 a year)"
+        ]
+      },
+      {
+        "label": "Invoices",
+        "cells": [
+          "2 a month (unlimited if you qualify for and turn on QuickBooks Payments)",
+          "Up to 1,000 a year",
+          "Unlimited"
+        ]
+      },
+      {
+        "label": "Users",
+        "cells": [
+          "1 user, no accountant access",
+          "1 user and 1 accountant",
+          "The owner only; more users need Pro"
+        ]
+      },
+      {
+        "label": "Other limits",
+        "cells": [
+          "Top 3 reports (profit and loss, balance sheet, account quick report). No mobile app, no third-party integrations, no automatic sales tax",
+          "Up to 1,000 expenses a year; 50 receipt autoscans a month",
+          "Receipt capture needs Pro"
+        ]
+      },
+      {
+        "label": "Since",
+        "cells": [
+          "On Intuit's pricing page from September 2026",
+          "",
+          "On 2026-06-01 Wave moved free legacy accounts that did not use Wave's payments, payroll or another paid Wave service onto Starter; they lost their bank connections"
+        ]
+      }
+    ],
+    "sources": [
+      [
+        {
+          "label": "quickbooks.intuit.com/pricing",
+          "urls": [
+            "https://quickbooks.intuit.com/pricing/"
+          ]
+        }
+      ],
+      [
+        {
+          "label": "zoho.com/us/books/pricing",
+          "urls": [
+            "https://www.zoho.com/us/books/pricing/"
+          ]
+        }
+      ],
+      [
+        {
+          "label": "waveapps.com/pricing",
+          "urls": [
+            "https://www.waveapps.com/pricing"
+          ]
+        },
+        {
+          "label": "support.waveapps.com \"FAQ: Plans for legacy businesses\"",
+          "urls": [
+            "https://support.waveapps.com/hc/en-us/articles/26449863006612-FAQ-Plans-for-legacy-businesses"
+          ]
+        }
+      ]
+    ]
+  },
+  "price_changes": {
+    "heading": "Price changes in 2025 and 2026",
+    "intro": "Each row gives the old and new monthly price, who pays it, and from what date.",
+    "rows": [
+      {
+        "vendor": "Xero",
+        "plan": "Early",
+        "old": "$25",
+        "new": "$27",
+        "who": "New and existing US subscribers",
+        "from": "2026-10-01",
+        "source": {
+          "label": "Xero's US price update notice",
+          "urls": [
+            "https://web.archive.org/web/20260825112656/https://www.xero.com/us/pricing-plans/update/"
+          ]
+        }
+      },
+      {
+        "vendor": "Xero",
+        "plan": "Growing",
+        "old": "$55",
+        "new": "$59",
+        "who": "New and existing US subscribers",
+        "from": "2026-10-01",
+        "source": {
+          "label": "Xero's US price update notice",
+          "urls": [
+            "https://web.archive.org/web/20260825112656/https://www.xero.com/us/pricing-plans/update/"
+          ]
+        }
+      },
+      {
+        "vendor": "Xero",
+        "plan": "Established",
+        "old": "$90",
+        "new": "$97",
+        "who": "New and existing US subscribers",
+        "from": "2026-10-01",
+        "source": {
+          "label": "Xero's US price update notice",
+          "urls": [
+            "https://web.archive.org/web/20260825112656/https://www.xero.com/us/pricing-plans/update/"
+          ]
+        }
+      },
+      {
+        "vendor": "QuickBooks Online",
+        "plan": "Essentials",
+        "old": "$75",
+        "new": "$85",
+        "who": "Existing subscribers from their next billing date on or after 2026-08-01; new customers from 2026-08-03",
+        "from": "2026-08-01",
+        "source": {
+          "label": "Intuit's price change FAQ",
+          "urls": [
+            "https://www.firmofthefuture.com/product-update/quickbooks-price-changes/"
+          ]
+        }
+      },
+      {
+        "vendor": "QuickBooks Online",
+        "plan": "Plus",
+        "old": "$115",
+        "new": "$140",
+        "who": "Existing subscribers from their next billing date on or after 2026-08-01; new customers from 2026-08-03",
+        "from": "2026-08-01",
+        "source": {
+          "label": "Intuit's price change FAQ",
+          "urls": [
+            "https://www.firmofthefuture.com/product-update/quickbooks-price-changes/"
+          ]
+        }
+      },
+      {
+        "vendor": "QuickBooks Online",
+        "plan": "Advanced",
+        "old": "$275",
+        "new": "$340",
+        "who": "Existing subscribers from their next billing date on or after 2026-08-01; new customers from 2026-08-03",
+        "from": "2026-08-01",
+        "source": {
+          "label": "Intuit's price change FAQ",
+          "urls": [
+            "https://www.firmofthefuture.com/product-update/quickbooks-price-changes/"
+          ]
+        }
+      },
+      {
+        "vendor": "FreshBooks",
+        "plan": "Lite",
+        "old": "$21",
+        "new": "$23",
+        "who": "New customers from 2026-01-27; existing customers from their first bill after 2026-03-05",
+        "from": "2026-01-27",
+        "source": {
+          "label": "FreshBooks' 2026 price change FAQ",
+          "urls": [
+            "https://www.freshbooks.com/2026-faq-price-change"
+          ]
+        }
+      },
+      {
+        "vendor": "FreshBooks",
+        "plan": "Plus",
+        "old": "$38",
+        "new": "$43",
+        "who": "New customers from 2026-01-27; existing customers from their first bill after 2026-03-05",
+        "from": "2026-01-27",
+        "source": {
+          "label": "FreshBooks' 2026 price change FAQ",
+          "urls": [
+            "https://www.freshbooks.com/2026-faq-price-change"
+          ]
+        }
+      },
+      {
+        "vendor": "FreshBooks",
+        "plan": "Premium",
+        "old": "$65",
+        "new": "$70",
+        "who": "New customers from 2026-01-27; existing customers from their first bill after 2026-03-05",
+        "from": "2026-01-27",
+        "source": {
+          "label": "FreshBooks' 2026 price change FAQ",
+          "urls": [
+            "https://www.freshbooks.com/2026-faq-price-change"
+          ]
+        }
+      },
+      {
+        "vendor": "Xero",
+        "plan": "Early, Growing, Established",
+        "old": "$20, $47, $80",
+        "new": "$25, $55, $90",
+        "who": "New and existing US subscribers",
+        "from": "2025-10-01",
+        "source": {
+          "label": "Xero's 2025 US price update notice",
+          "urls": [
+            "https://web.archive.org/web/20250819124205/https://www.xero.com/us/pricing-plans/update/"
+          ]
+        }
+      },
+      {
+        "vendor": "Wave",
+        "plan": "Pro",
+        "old": "$16 ($170 a year)",
+        "new": "$19 ($190 a year)",
+        "who": "New subscriptions only",
+        "from": "August 2025",
+        "source": {
+          "label": "waveapps.com/pricing",
+          "urls": [
+            "https://web.archive.org/web/20250802011941/https://www.waveapps.com/pricing",
+            "https://web.archive.org/web/20250814091026/https://www.waveapps.com/pricing"
+          ]
+        }
+      },
+      {
+        "vendor": "QuickBooks Online",
+        "plan": "Simple Start, Essentials, Plus, Advanced",
+        "old": "$35, $65, $99, $235",
+        "new": "$38, $75, $115, $275",
+        "who": "New and existing client-billed subscriptions; existing accountant-billed subscriptions from 2025-08-01",
+        "from": "2025-07-01",
+        "source": {
+          "label": "Intuit's 2025 price change FAQ",
+          "urls": [
+            "https://www.firmofthefuture.com/product-update/changes-to-quickbooks-pricing-faqs/"
+          ]
+        }
+      },
+      {
+        "vendor": "FreshBooks",
+        "plan": "Lite, Plus, Premium",
+        "old": "$19, $33, $60",
+        "new": "$21, $38, $65",
+        "who": "New customers",
+        "from": "March 2025",
+        "source": {
+          "label": "freshbooks.com/pricing",
+          "urls": [
+            "https://web.archive.org/web/20250302032721/https://www.freshbooks.com/pricing",
+            "https://web.archive.org/web/20250311211544/https://www.freshbooks.com/pricing"
+          ]
+        }
+      }
+    ],
+    "note": "Zoho Books did not change its plan prices in 2025 or 2026. QuickBooks Free, Simple Start, Lite and Ledger did not change in 2026."
+  },
+  "list_prices": {
+    "heading": "Current US list prices",
+    "intro": "Prices are monthly US list prices before tax. Introductory discounts apply to new customers for a limited time.",
+    "rows": [
+      {
+        "vendor": "QuickBooks Online",
+        "plan": "Free",
+        "per_month": "$0",
+        "notes": "1 user"
+      },
+      {
+        "vendor": "QuickBooks Online",
+        "plan": "Simple Start",
+        "per_month": "$38",
+        "notes": "1 user and 2 accountants"
+      },
+      {
+        "vendor": "QuickBooks Online",
+        "plan": "Essentials",
+        "per_month": "$85",
+        "notes": "3 users and 2 accountants"
+      },
+      {
+        "vendor": "QuickBooks Online",
+        "plan": "Plus",
+        "per_month": "$140",
+        "notes": "5 users and 2 accountants"
+      },
+      {
+        "vendor": "QuickBooks Online",
+        "plan": "Advanced",
+        "per_month": "$340",
+        "notes": "25 users and 3 accountants"
+      },
+      {
+        "vendor": "Xero",
+        "plan": "Early",
+        "per_month": "$27",
+        "notes": "20 invoices and 5 bills"
+      },
+      {
+        "vendor": "Xero",
+        "plan": "Growing",
+        "per_month": "$59",
+        "notes": ""
+      },
+      {
+        "vendor": "Xero",
+        "plan": "Established",
+        "per_month": "$97",
+        "notes": ""
+      },
+      {
+        "vendor": "FreshBooks",
+        "plan": "Lite",
+        "per_month": "$23 ($248.40 a year)",
+        "notes": "5 billable clients"
+      },
+      {
+        "vendor": "FreshBooks",
+        "plan": "Plus",
+        "per_month": "$43 ($464.40 a year)",
+        "notes": "50 billable clients"
+      },
+      {
+        "vendor": "FreshBooks",
+        "plan": "Premium",
+        "per_month": "$70 ($756.00 a year)",
+        "notes": "Unlimited billable clients"
+      },
+      {
+        "vendor": "Wave",
+        "plan": "Starter",
+        "per_month": "$0",
+        "notes": ""
+      },
+      {
+        "vendor": "Wave",
+        "plan": "Pro",
+        "per_month": "$19 ($190 a year)",
+        "notes": ""
+      },
+      {
+        "vendor": "Zoho Books",
+        "plan": "Free",
+        "per_month": "$0",
+        "notes": "Revenue up to $50,000 a year"
+      },
+      {
+        "vendor": "Zoho Books",
+        "plan": "Standard",
+        "per_month": "$20 ($15 billed annually)",
+        "notes": "3 users"
+      },
+      {
+        "vendor": "Zoho Books",
+        "plan": "Professional",
+        "per_month": "$50 ($40 billed annually)",
+        "notes": "5 users"
+      },
+      {
+        "vendor": "Zoho Books",
+        "plan": "Premium",
+        "per_month": "$70 ($60 billed annually)",
+        "notes": "10 users"
+      },
+      {
+        "vendor": "Zoho Books",
+        "plan": "Elite",
+        "per_month": "$150 ($120 billed annually)",
+        "notes": "10 users"
+      },
+      {
+        "vendor": "Zoho Books",
+        "plan": "Ultimate",
+        "per_month": "$275 ($240 billed annually)",
+        "notes": "15 users"
+      }
+    ],
+    "offers": "Introductory offers on 2026-10-08: QuickBooks Online 50% off for 3 months on a monthly plan; Xero 80% off for 3 months with a code, for a first organization; FreshBooks Lite $1 a month for the first year, Plus and Premium 80% off for 3 months."
+  },
+  "payment_fees": {
+    "heading": "Payment processing fees",
+    "rows": [
+      {
+        "vendor": "QuickBooks Payments",
+        "card": "2.99% on invoices; 2.5% in person; 3.5% keyed in",
+        "ach": "1%"
+      },
+      {
+        "vendor": "Xero (Stripe)",
+        "card": "2.9% + 30¢ domestic cards",
+        "ach": "1%, capped at $9"
+      },
+      {
+        "vendor": "FreshBooks Payments",
+        "card": "2.9% + $0.30; 3.5% + $0.30 for American Express and commercial, corporate or business cards",
+        "ach": "1%"
+      },
+      {
+        "vendor": "Wave",
+        "card": "Starter 2.9% + $0.60 (American Express 3.4% + $0.60); Pro: the first 10 card payments a month without the $0.60",
+        "ach": "1%, minimum $1"
+      },
+      {
+        "vendor": "Zoho Payments",
+        "card": "2.90% + 30¢ domestic cards",
+        "ach": "0.8%, capped at $5"
+      }
+    ]
+  },
+  "checked_claim": {
+    "heading": "A claim we checked",
+    "text": "Some articles say QuickBooks doubled its ACH fees in 2026. Intuit's rates page shows ACH at 1% from January 2025 to October 2026.",
+    "links": [
+      {
+        "text": "January 2025",
+        "url": "https://web.archive.org/web/20250114051315/https://quickbooks.intuit.com/payments/payment-rates/"
+      },
+      {
+        "text": "October 2026",
+        "url": "https://quickbooks.intuit.com/payments/payment-rates/"
+      }
+    ]
+  },
+  "vendors": [
+    {
+      "name": "QuickBooks Online",
+      "read_on": "2026-10-08",
+      "sources": [
+        {
+          "url": "https://quickbooks.intuit.com/pricing/",
+          "covers": "plans, Free plan"
+        },
+        {
+          "url": "https://www.firmofthefuture.com/product-update/quickbooks-price-changes/",
+          "covers": "2026 change"
+        },
+        {
+          "url": "https://www.firmofthefuture.com/product-update/changes-to-quickbooks-pricing-faqs/",
+          "covers": "2025 change"
+        },
+        {
+          "url": "https://quickbooks.intuit.com/payments/payment-rates/",
+          "covers": "fees"
+        },
+        {
+          "url": "https://web.archive.org/web/20250114051315/https://quickbooks.intuit.com/payments/payment-rates/",
+          "covers": "ACH 1% in January 2025"
+        }
+      ]
+    },
+    {
+      "name": "Xero",
+      "read_on": "2026-10-08",
+      "sources": [
+        {
+          "url": "https://www.xero.com/us/pricing-plans/",
+          "covers": "plans"
+        },
+        {
+          "url": "https://web.archive.org/web/20260825112656/https://www.xero.com/us/pricing-plans/update/",
+          "covers": "2026 notice"
+        },
+        {
+          "url": "https://web.archive.org/web/20250819124205/https://www.xero.com/us/pricing-plans/update/",
+          "covers": "2025 notice"
+        },
+        {
+          "url": "https://www.xero.com/us/pricing-plans/pricing-and-fees-for-stripe/",
+          "covers": "fees"
+        }
+      ]
+    },
+    {
+      "name": "FreshBooks",
+      "read_on": "2026-10-08",
+      "sources": [
+        {
+          "url": "https://www.freshbooks.com/pricing",
+          "covers": "plans"
+        },
+        {
+          "url": "https://www.freshbooks.com/2026-faq-price-change",
+          "covers": "2026 change"
+        },
+        {
+          "url": "https://web.archive.org/web/20250302032721/https://www.freshbooks.com/pricing",
+          "covers": "2025 change"
+        },
+        {
+          "url": "https://web.archive.org/web/20250311211544/https://www.freshbooks.com/pricing",
+          "covers": "2025 change"
+        },
+        {
+          "url": "https://support.freshbooks.com/hc/en-us/articles/25362149006349-What-are-the-transaction-fees-for-FreshBooks-Payments-USD",
+          "covers": "fees"
+        }
+      ]
+    },
+    {
+      "name": "Wave",
+      "read_on": "2026-10-08",
+      "sources": [
+        {
+          "url": "https://www.waveapps.com/pricing",
+          "covers": "plans"
+        },
+        {
+          "url": "https://support.waveapps.com/hc/en-us/articles/26449863006612-FAQ-Plans-for-legacy-businesses",
+          "covers": "2026-06-01 move to Starter"
+        },
+        {
+          "url": "https://web.archive.org/web/20250802011941/https://www.waveapps.com/pricing",
+          "covers": "2025 change"
+        },
+        {
+          "url": "https://web.archive.org/web/20250814091026/https://www.waveapps.com/pricing",
+          "covers": "2025 change"
+        },
+        {
+          "url": "https://support.waveapps.com/hc/en-us/articles/218323823-Online-payments-processing-fees-and-timelines",
+          "covers": "fees"
+        }
+      ]
+    },
+    {
+      "name": "Zoho Books",
+      "read_on": "2026-10-08",
+      "sources": [
+        {
+          "url": "https://www.zoho.com/us/books/pricing/",
+          "covers": "plans, Free plan, bank feeds on Standard"
+        },
+        {
+          "url": "https://www.zoho.com/us/payments/pricing/",
+          "covers": "fees"
+        }
+      ]
+    }
+  ]
+}

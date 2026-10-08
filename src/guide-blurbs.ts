@@ -94,6 +94,7 @@ const WRITTEN_BLURBS: Readonly<Record<string, string>> = {
   "free-tier-risk": "Predictive risk analysis for developer free tiers — grades dated and scored against what happened next, category heatmap, pattern analysis, counter-trends",
   "state-of-free-tiers": "Data-driven analysis of developer tool free tiers by category — trends, risks, and recommendations",
   "free-tier-facts-ai-models-get-wrong": "AI models give old free-tier terms",
+  "accounting-software-pricing-2026": "QuickBooks Free connects one bank account. QuickBooks, Xero, FreshBooks raised prices in 2026. Zoho Books and Wave did not.",
 };
 
 export function guideBlurb(slug: string): string {
