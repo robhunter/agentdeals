@@ -1,13 +1,13 @@
 {
   "version": 1,
-  "generated": "2026-10-07",
+  "generated": "2026-10-08",
   "pages": {
     "/": {
       "daily": true
     },
     "/agent-payments": {
-      "hash": "60e8285c5b393f3b",
-      "changed": "2026-10-07"
+      "hash": "2a79edc847090f64",
+      "changed": "2026-10-08"
     },
     "/agent-stack": {
       "hash": "a9ece2bf4129b04b",
@@ -805,12 +805,12 @@
       "changed": "2026-10-07"
     },
     "/aws-free-tier-2026": {
-      "hash": "598eaebfd1e11852",
-      "changed": "2026-10-07"
+      "hash": "682e94848af09a07",
+      "changed": "2026-10-08"
     },
     "/azure-free-tier-2026": {
-      "hash": "405bd0470fb349a7",
-      "changed": "2026-10-07"
+      "hash": "1b9ee2a0f1e1f96b",
+      "changed": "2026-10-08"
     },
     "/backblaze-b2-vs-cloudflare-r2": {
       "hash": "dad376687d7cd2c4",
@@ -1144,8 +1144,8 @@
       "changed": "2026-10-07"
     },
     "/category/databases": {
-      "hash": "8bf08551f6244d14",
-      "changed": "2026-10-07"
+      "hash": "30f560f88e50ad28",
+      "changed": "2026-10-08"
     },
     "/category/design": {
       "hash": "ac03e1e95530ba72",
@@ -1659,8 +1659,8 @@
       "changed": "2026-10-04"
     },
     "/compare/cockroachdb-vs-neon": {
-      "hash": "685bbf678ae94b60",
-      "changed": "2026-10-04"
+      "hash": "603e96040fcc4719",
+      "changed": "2026-10-08"
     },
     "/compare/codeberg-vs-gitgud": {
       "hash": "c95637ea1128b4e6",
@@ -2383,8 +2383,8 @@
       "changed": "2026-10-04"
     },
     "/compare/neon-vs-supabase": {
-      "hash": "5c133c9fda12887e",
-      "changed": "2026-10-05"
+      "hash": "cbdfb8d97dd3ab41",
+      "changed": "2026-10-08"
     },
     "/compare/netlify-vs-railway": {
       "hash": "5aa96a3bd259ba9c",
@@ -2682,16 +2682,16 @@
       "changed": "2026-10-07"
     },
     "/database-alternatives": {
-      "hash": "7b32d7f257d8efe7",
-      "changed": "2026-10-07"
+      "hash": "6a6f221d5880ae7a",
+      "changed": "2026-10-08"
     },
     "/database-free-tier-comparison-2026": {
-      "hash": "6c25fdd38790ca30",
-      "changed": "2026-10-07"
+      "hash": "f69f713aac1c2a33",
+      "changed": "2026-10-08"
     },
     "/database-pricing": {
-      "hash": "a345f36790dd71e4",
-      "changed": "2026-10-07"
+      "hash": "410b9c1b26b0d085",
+      "changed": "2026-10-08"
     },
     "/datadog-alternatives": {
       "hash": "3a46385f6b1953b9",
@@ -3081,8 +3081,8 @@
       "changed": "2026-09-12"
     },
     "/estimate": {
-      "hash": "1056234b76b0c144",
-      "changed": "2026-10-07"
+      "hash": "2365ff59e85233d6",
+      "changed": "2026-10-08"
     },
     "/events": {
       "hash": "1cd961743e560957",
@@ -3173,8 +3173,8 @@
       "changed": "2026-10-07"
     },
     "/gcp-free-tier-2026": {
-      "hash": "dd6f97685cc94e11",
-      "changed": "2026-10-07"
+      "hash": "af1ff0dac4148b88",
+      "changed": "2026-10-08"
     },
     "/gemini-api-pricing-2026": {
       "hash": "74fcd48bab086ce1",
@@ -3257,8 +3257,8 @@
       "changed": "2026-10-07"
     },
     "/mongodb-alternatives": {
-      "hash": "cf09e754dffa1b6e",
-      "changed": "2026-10-07"
+      "hash": "8fef780c2a9dccad",
+      "changed": "2026-10-08"
     },
     "/monitoring-alternatives": {
       "hash": "ba920497edcb3bee",
@@ -3269,12 +3269,12 @@
       "changed": "2026-10-07"
     },
     "/neon-vs-supabase": {
-      "hash": "203afcd304dc6cea",
-      "changed": "2026-10-07"
+      "hash": "c53d5eeab0702a2d",
+      "changed": "2026-10-08"
     },
     "/neon-vs-turso": {
-      "hash": "408ffac0e07c8428",
-      "changed": "2026-10-06"
+      "hash": "c1bbecdb7c6e9329",
+      "changed": "2026-10-08"
     },
     "/netlify-vs-render": {
       "hash": "af268d9925328513",
@@ -3483,8 +3483,8 @@
       "changed": "2026-10-07"
     },
     "/stack-check": {
-      "hash": "94db4d9ba2b66549",
-      "changed": "2026-10-07"
+      "hash": "fb379216469c94df",
+      "changed": "2026-10-08"
     },
     "/stacks": {
       "hash": "f1f9e5d8e6e77684",
@@ -3796,8 +3796,8 @@
       "changed": "2026-10-07"
     },
     "/vector-database-pricing": {
-      "hash": "cd92f0a19a3f1447",
-      "changed": "2026-10-07"
+      "hash": "fd7c87730d0511b0",
+      "changed": "2026-10-08"
     },
     "/vendor": {
       "hash": "5152292723f79912",
@@ -9855,8 +9855,8 @@
       "changed": "2026-10-07"
     },
     "/x402-services": {
-      "hash": "7ced9c2c1a616132",
-      "changed": "2026-10-07"
+      "hash": "e8f6cbd81e8d68cb",
+      "changed": "2026-10-08"
     }
   }
 }
