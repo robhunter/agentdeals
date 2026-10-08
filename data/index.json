@@ -4740,7 +4740,7 @@
       "source_check": {
         "checked": "2026-09-22",
         "outcome": "ok",
-        "detail": "the page names Tinybird as \"tinybird\" and states \"0.25 vCPUs 1 thread/request\" and \"1k requests per day\""
+        "detail": "the page names Tinybird as \"tinybird\" and states \"1k requests per day\""
       },
       "restated_from": {
         "reading_date": "2026-09-07",
@@ -8164,7 +8164,7 @@
       "source_check": {
         "checked": "2026-09-22",
         "outcome": "ok",
-        "detail": "the page names Twingate as \"twingate\" and states \"5 user / mo\" and \"5 per user 5 per user\""
+        "detail": "the page names Twingate as \"twingate\" and states \"5 user / mo\""
       },
       "restated_from": {
         "reading_date": "2026-09-07",
@@ -9288,7 +9288,7 @@
       "source_check": {
         "checked": "2026-10-03",
         "outcome": "ok",
-        "detail": "the page names Weaviate as \"weaviate\" and states \"$45\" and \"$ 45\" and \"1 cluster per user\" and \"1,000 requests / month\""
+        "detail": "the page names Weaviate as \"weaviate\" and states \"$45\" and \"$ 45\" and \"1,000 requests / month\""
       },
       "product_subtypes": {
         "taxonomy": "Databases",
@@ -18847,9 +18847,9 @@
       ],
       "verifiedDate": "2026-09-25",
       "source_check": {
-        "checked": "2026-09-25",
+        "checked": "2026-10-08",
         "outcome": "ok",
-        "detail": "the page names syagent.com as \"syagent com\" and states \"25 uptime monitoring per user\""
+        "detail": "the page names syagent.com as \"syagent com\" and states amounts, none of which we matched to the terms we publish"
       },
       "product_subtypes": {
         "taxonomy": "Monitoring",
