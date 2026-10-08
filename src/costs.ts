@@ -1,7 +1,10 @@
 import { changeSummaryText } from "./change-citation.js";
-import { loadOffers, loadDealChanges, searchOffers } from "./data.js";
+import { loadOffers, loadDealChanges, enrichOffers } from "./data.js";
 import type { Offer, DealChange, ListingCondition } from "./types.js";
 import { conditionsField } from "./conditions-field.js";
+import { classifyTier, rankForListing } from "./ranking.js";
+import { supersededTermsRecordFor, type SupersededTermsRecord } from "./superseded-description.js";
+import { substitutesListedFor } from "./vendor-substitutes.js";
 
 export interface ServiceCostEstimate {
   vendor: string;
@@ -29,11 +32,35 @@ const SCALE_DESCRIPTIONS: Record<Scale, string> = {
   growth: "Exceeding most free tiers — established product with significant usage",
 };
 
-const SCALE_COST_RANGES: Record<Scale, { min: number; max: number }> = {
-  hobby: { min: 0, max: 0 },
-  startup: { min: 5, max: 50 },
-  growth: { min: 25, max: 200 },
-};
+const WITHIN_FREE_TIER = "$0 (within free tier)";
+const ALL_WITHIN_FREE_TIERS = "$0/mo (all within free tiers)";
+const ALREADY_ON_FREE_TIERS = "$0 — already on free tiers";
+const STORED_TERMS_WITHHELD_NOTE = "stored terms withheld";
+const NOT_IN_OUR_INDEX_NOTE = "not in our index";
+const SAVINGS_NOT_ESTIMATED_BESIDE_ALTERNATIVES =
+  "Not estimated. free_alternative names a substitute with an ongoing free tier where we list one.";
+const SAVINGS_NOT_ESTIMATED = "Not estimated.";
+
+function notEstimatedForTier(tier: string, note: string): string {
+  return `Not estimated: tier "${tier}" is ${note}.`;
+}
+
+function notEstimatedForWithheldTerms(vendor: string): string {
+  return `Not estimated: we are not publishing our stored ${vendor} terms.`;
+}
+
+function notEstimatedAboveTheFreeTier(listingUrl: string): string {
+  return `Not estimated: we do not price usage above the free tier. Prices: ${listingUrl}`;
+}
+
+function totalNotEstimatedAtScale(scale: Scale): string {
+  return `Not estimated at ${scale} scale: we do not price usage above free tiers.`;
+}
+
+interface PricedService {
+  vendor: string;
+  notEstimatedBecause: string | null;
+}
 
 function extractFreeTierLimits(offer: Offer): string {
   const desc = offer.description;
@@ -41,13 +68,46 @@ function extractFreeTierLimits(offer: Offer): string {
   return desc.slice(0, 197) + "...";
 }
 
-function findFreeAlternative(offer: Offer): { vendor: string; tier: string; description: string; conditions?: ListingCondition[] } | undefined {
-  const offers = searchOffers(undefined, offer.category);
-  const alternative = offers.find(
-    (o) =>
-      o.vendor.toLowerCase() !== offer.vendor.toLowerCase() &&
-      (o.tier === "Free" || o.tier === "Hobby" || o.tier === "Open Source")
-  );
+function changesNaming(vendor: string, allChanges: DealChange[]): DealChange[] {
+  const key = vendor.toLowerCase();
+  return allChanges.filter((c) => c.vendor.toLowerCase() === key);
+}
+
+function withheldTermsOf(offer: Offer, allChanges: DealChange[]): SupersededTermsRecord | null {
+  return supersededTermsRecordFor(offer, changesNaming(offer.vendor, allChanges));
+}
+
+function reasonNotPricedAtZero(offer: Offer, withheld: SupersededTermsRecord | null): string | null {
+  const tierClass = classifyTier(offer.tier);
+  if (tierClass.class !== "free") return tierClass.note;
+  if (withheld) return STORED_TERMS_WITHHELD_NOTE;
+  return null;
+}
+
+function monthlyCostEstimate(offer: Offer, withheld: SupersededTermsRecord | null, scale: Scale): string {
+  const tierClass = classifyTier(offer.tier);
+  if (tierClass.class !== "free") return notEstimatedForTier(offer.tier, tierClass.note);
+  if (withheld) return notEstimatedForWithheldTerms(offer.vendor);
+  if (scale === "hobby") return WITHIN_FREE_TIER;
+  return notEstimatedAboveTheFreeTier(offer.url);
+}
+
+function untiedBestFreeSubstitute(offer: Offer, allChanges: DealChange[], catalogue: Offer[]): Offer | undefined {
+  const listed = substitutesListedFor(offer.vendor, allChanges, catalogue);
+  const freeWithPublishedTerms = rankForListing(enrichOffers(listed), { queryKey: `alternative-to:${offer.vendor}`, changes: allChanges })
+    .entries.filter((entry) => !entry.gate && classifyTier(entry.offer.tier).class === "free" && withheldTermsOf(entry.offer, allChanges) === null);
+  if (freeWithPublishedTerms.length === 0) return undefined;
+  const fewestDemerits = Math.min(...freeWithPublishedTerms.map((entry) => entry.demerit_total));
+  const best = freeWithPublishedTerms.filter((entry) => entry.demerit_total === fewestDemerits);
+  return best.length === 1 ? best[0].offer : undefined;
+}
+
+function findFreeAlternative(
+  offer: Offer,
+  allChanges: DealChange[],
+  catalogue: Offer[],
+): { vendor: string; tier: string; description: string; conditions?: ListingCondition[] } | undefined {
+  const alternative = untiedBestFreeSubstitute(offer, allChanges, catalogue);
   if (!alternative) return undefined;
   return {
     vendor: alternative.vendor,
@@ -76,17 +136,15 @@ function getRecentChanges(vendorName: string): string[] {
 function generateWarnings(
   services: ServiceCostEstimate[],
   scale: Scale,
-  offers: Map<string, Offer>
+  offersWithPublishedFreeTerms: Map<string, Offer>
 ): string[] {
   const warnings: string[] = [];
 
   for (const svc of services) {
-    const offer = offers.get(svc.vendor.toLowerCase());
-    if (!offer) continue;
+    const offer = offersWithPublishedFreeTerms.get(svc.vendor.toLowerCase());
 
-    const desc = offer.description.toLowerCase();
-
-    if (scale !== "hobby") {
+    if (offer && scale !== "hobby") {
+      const desc = offer.description.toLowerCase();
       if (desc.includes("1,000") || desc.includes("1000 ")) {
         warnings.push(
           `${svc.vendor} free tier has low request/usage limits — likely exceeded at ${scale} scale`
@@ -114,13 +172,24 @@ function generateWarnings(
   return warnings;
 }
 
+function hobbyTotal(priced: PricedService[]): string {
+  const atZero = priced.filter((s) => s.notEstimatedBecause === null);
+  const notEstimated = priced.filter((s) => s.notEstimatedBecause !== null);
+  if (notEstimated.length === 0) return ALL_WITHIN_FREE_TIERS;
+  const unpriced = `Not estimated: ${notEstimated.map((s) => `${s.vendor} (${s.notEstimatedBecause})`).join(", ")}.`;
+  if (atZero.length === 0) return unpriced;
+  return `$0/mo for ${atZero.length} of ${priced.length} services (${atZero.map((s) => s.vendor).join(", ")}), within their free tiers. ${unpriced}`;
+}
+
 export function estimateCosts(
   vendorNames: string[],
   scale: Scale = "hobby"
 ): CostEstimateResult {
   const allOffers = loadOffers();
-  const matchedOffers = new Map<string, Offer>();
+  const allChanges = loadDealChanges();
+  const offersWithPublishedFreeTerms = new Map<string, Offer>();
   const services: ServiceCostEstimate[] = [];
+  const priced: PricedService[] = [];
   const unknownVendors: string[] = [];
 
   for (const name of vendorNames) {
@@ -128,6 +197,7 @@ export function estimateCosts(
     const offer = allOffers.find((o) => o.vendor.toLowerCase() === lowerName);
     if (!offer) {
       unknownVendors.push(name);
+      priced.push({ vendor: name, notEstimatedBecause: NOT_IN_OUR_INDEX_NOTE });
       services.push({
         vendor: name,
         current_tier: "Unknown",
@@ -137,27 +207,22 @@ export function estimateCosts(
       continue;
     }
 
-    matchedOffers.set(lowerName, offer);
+    const withheld = withheldTermsOf(offer, allChanges);
+    const notEstimatedBecause = reasonNotPricedAtZero(offer, withheld);
+    priced.push({ vendor: offer.vendor, notEstimatedBecause });
+    if (notEstimatedBecause === null) offersWithPublishedFreeTerms.set(lowerName, offer);
 
     const recentChanges = getRecentChanges(offer.vendor);
-    const costRange = SCALE_COST_RANGES[scale];
-    let estimatedCost: string;
-    if (scale === "hobby") {
-      estimatedCost = "$0 (within free tier)";
-    } else {
-      estimatedCost = `$${costRange.min}-${costRange.max}/mo (estimated at ${scale} scale)`;
-    }
-
     const svc: ServiceCostEstimate = {
       vendor: offer.vendor,
       current_tier: offer.tier,
-      free_tier_limits: extractFreeTierLimits(offer),
-      ...conditionsField(offer),
-      estimated_monthly_cost: estimatedCost,
+      free_tier_limits: withheld ? withheld.notice : extractFreeTierLimits(offer),
+      ...(withheld ? {} : conditionsField(offer)),
+      estimated_monthly_cost: monthlyCostEstimate(offer, withheld, scale),
     };
 
-    if (scale !== "hobby" || offer.tier !== "Free") {
-      const alt = findFreeAlternative(offer);
+    if (scale !== "hobby" || notEstimatedBecause !== null) {
+      const alt = findFreeAlternative(offer, allChanges, allOffers);
       if (alt) svc.free_alternative = alt;
     }
 
@@ -168,7 +233,7 @@ export function estimateCosts(
     services.push(svc);
   }
 
-  const warnings = generateWarnings(services, scale, matchedOffers);
+  const warnings = generateWarnings(services, scale, offersWithPublishedFreeTerms);
   if (unknownVendors.length > 0) {
     warnings.unshift(
       `Unknown vendor(s): ${unknownVendors.join(", ")} — not in our index`
@@ -177,23 +242,14 @@ export function estimateCosts(
 
   let totalEstimated: string;
   let savingsAvailable: string;
-  const knownCount = services.length - unknownVendors.length;
-
   if (scale === "hobby") {
-    totalEstimated = "$0/mo (all within free tiers)";
-    savingsAvailable = "$0 — already on free tiers";
+    totalEstimated = hobbyTotal(priced);
+    savingsAvailable = priced.some((s) => s.notEstimatedBecause !== null)
+      ? SAVINGS_NOT_ESTIMATED_BESIDE_ALTERNATIVES
+      : ALREADY_ON_FREE_TIERS;
   } else {
-    const range = SCALE_COST_RANGES[scale];
-    const totalMin = range.min * knownCount;
-    const totalMax = range.max * knownCount;
-    totalEstimated = `$${totalMin}-${totalMax}/mo (estimated for ${knownCount} services at ${scale} scale)`;
-
-    const alternativesCount = services.filter((s) => s.free_alternative).length;
-    if (alternativesCount > 0) {
-      savingsAvailable = `${alternativesCount} service(s) have free alternatives — switching could save $${range.min * alternativesCount}-${range.max * alternativesCount}/mo`;
-    } else {
-      savingsAvailable = "No free alternatives identified";
-    }
+    totalEstimated = totalNotEstimatedAtScale(scale);
+    savingsAvailable = SAVINGS_NOT_ESTIMATED;
   }
 
   return {

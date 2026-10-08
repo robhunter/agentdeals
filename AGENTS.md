@@ -187,7 +187,7 @@ Find free tiers, startup credits, and developer deals for cloud infrastructure, 
 Plan a technology stack with cost-optimized infrastructure choices. Given project requirements, recommends services with free tiers or credits that match your needs. Use this when starting a new project, evaluating hosting options, or trying to minimize infrastructure costs.
 
 **Parameters:**
-- `mode` (enum, required) — `recommend` (free-tier stack for a use case), `estimate` (cost analysis at scale), `audit` (risk + cost + gap analysis)
+- `mode` (enum, required) — `recommend` (free-tier stack for a use case), `estimate` (free-tier status check), `audit` (risk + cost + gap analysis)
 - `use_case` (string) — What you're building (for recommend mode)
 - `services` (array) — Current vendor names (for estimate/audit mode)
 - `scale` (enum) — `hobby`, `startup`, `growth`

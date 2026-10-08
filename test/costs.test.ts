@@ -40,23 +40,21 @@ describe("estimate_costs logic", () => {
     assert.ok(result.warnings.some(w => w.includes("NonExistentVendor123")));
   });
 
-  it("startup scale returns non-zero cost estimates", async () => {
+  it("startup scale prices no service above its free tier", async () => {
     const { estimateCosts } = await import("../dist/costs.js");
     const result = estimateCosts(["Vercel", "Supabase"], "startup");
     assert.ok(result.scale.includes("startup"));
     for (const svc of result.services) {
-      if (svc.current_tier !== "Unknown") {
-        assert.ok(svc.estimated_monthly_cost.includes("startup"), `${svc.vendor} should mention startup scale`);
-      }
+      assert.ok(svc.estimated_monthly_cost.startsWith("Not estimated:"), `${svc.vendor}: ${svc.estimated_monthly_cost}`);
     }
     assert.ok(!result.total_estimated_cost.includes("$0/mo"));
   });
 
-  it("growth scale returns higher cost estimates", async () => {
+  it("growth scale prices no service above its free tier", async () => {
     const { estimateCosts } = await import("../dist/costs.js");
     const result = estimateCosts(["Vercel"], "growth");
     assert.ok(result.scale.includes("growth"));
-    assert.ok(result.services[0].estimated_monthly_cost.includes("growth"));
+    assert.ok(result.services[0].estimated_monthly_cost.startsWith("Not estimated:"), result.services[0].estimated_monthly_cost);
   });
 
   it("suggests free alternatives at startup/growth scale", async () => {

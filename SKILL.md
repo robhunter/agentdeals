@@ -43,7 +43,7 @@ No API key required. No environment variables needed.
 Find free tiers, startup credits, and developer deals. Search by keyword, category, vendor name, or eligibility type. Returns the terms we hold, with specific limits and the day each was last read.
 
 ### plan_stack
-Plan a technology stack with cost-optimized choices. Per role, returns the set of free-tier offers whose terms we can stand behind today — not a single pick — with the recorded facts behind any demotion. Does not model technical fit; the caller applies that. Also estimates costs at scale and audits existing stacks for risk.
+Plan a technology stack with cost-optimized choices. Per role, returns the set of free-tier offers whose terms we can stand behind today — not a single pick — with the recorded facts behind any demotion. Does not model technical fit; the caller applies that. Checks free tier coverage and audits existing stacks.
 
 ### compare_vendors
 Compare developer tools side by side — free tier limits, pricing tiers, risk levels, and recent pricing changes.

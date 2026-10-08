@@ -295,8 +295,8 @@ curl "https://agentdeals.dev/api/details/Supabase?alternatives=true"
 # Stack recommendation
 curl "https://agentdeals.dev/api/stack?use_case=saas"
 
-# Cost estimation
-curl "https://agentdeals.dev/api/costs?services=Vercel,Supabase&scale=startup"
+# Check free tier coverage per service
+curl "https://agentdeals.dev/api/costs?services=Vercel,Supabase"
 
 # Compare vendors
 curl "https://agentdeals.dev/api/compare?a=Supabase&b=Neon"
@@ -322,7 +322,7 @@ curl "https://agentdeals.dev/api/openapi.json"
 | Tool | Description |
 |------|-------------|
 | `search_deals` | Find free tiers, browse categories, get vendor details with alternatives. Filter by category, eligibility, or keyword. |
-| `plan_stack` | Get stack recommendations, cost estimates, or a full infrastructure audit for your project. |
+| `plan_stack` | Get stack recommendations, free-tier checks, or a full infrastructure audit for your project. |
 | `compare_vendors` | Compare 2 vendors side-by-side or check a single vendor's pricing risk. |
 | `track_changes` | Track pricing changes, upcoming expirations, and new deals. Weekly digest with no params. |
 | `get_referral_code` | Look up the referral link we hold for a vendor, with the conditions attached to it. We hold codes for a handful of vendors. |

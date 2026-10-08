@@ -918,8 +918,8 @@ const DOCUMENTED_OPERATIONS: Record<string, Record<string, any>> = {
   },
   "/api/costs": {
     get: {
-      summary: "Estimate infrastructure costs",
-      description: "Estimate monthly costs for a stack of services at different scales. Shows free tier limits, when you'd exceed them, and projected costs.",
+      summary: "Check free tier coverage per service",
+      description: "Free tier coverage only, not paid usage.",
       parameters: [
         { name: "services", in: "query", required: true, description: "Comma-separated list of vendor names", schema: { type: "string" }, example: "Vercel,Supabase,Clerk" },
         { name: "scale", in: "query", description: "Usage scale tier", schema: { type: "string", enum: ["hobby", "startup", "growth"], default: "hobby" } }
