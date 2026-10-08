@@ -1037,9 +1037,9 @@ function publishedTermsOpening(offer: StoredTermsOf, sentences: number, cap?: nu
   return withConditionsWhenWhole(offer, cap === undefined ? opening : opening.substring(0, cap));
 }
 
-function supersededTermsField(offer: StoredTermsOf): { terms_superseded?: SupersededTermsRecord } {
+function supersededTermsField(offer: StoredTermsOf): { terms_superseded: SupersededTermsRecord | null } {
   const superseded = supersedingChangeFor(offer);
-  return superseded ? { terms_superseded: supersededTermsRecord(offer.vendor, superseded) } : {};
+  return { terms_superseded: superseded ? supersededTermsRecord(offer.vendor, superseded) : null };
 }
 
 const stats = {

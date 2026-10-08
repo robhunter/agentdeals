@@ -103,10 +103,18 @@ interface DoorRead {
   json: unknown;
 }
 
+type Schema = Record<string, any>;
+
+interface OpenApi {
+  paths: Record<string, Record<string, Schema>>;
+  components: { schemas: Record<string, Schema> };
+}
+
 let server: ChildProcess | null = null;
 let withheld: Withheld[] = [];
 let reads: DoorRead[] = [];
 let documentedGetPaths: string[] = [];
+let spec: OpenApi = { paths: {}, components: { schemas: {} } };
 
 function requestsFor(door: string): string[] {
   return REQUESTS[door] ?? [door];
@@ -121,7 +129,7 @@ function printedWithheld(read: DoorRead): { object: JsonObject; listing: Withhel
 before(async () => {
   const started = await startServer(newAndExpiringFirst());
   server = started.child;
-  const spec = await (await fetch(`${started.base}/api/openapi.json`)).json() as { paths: Record<string, Record<string, unknown>> };
+  spec = await (await fetch(`${started.base}/api/openapi.json`)).json() as OpenApi;
   documentedGetPaths = Object.entries(spec.paths).filter(([, operations]) => "get" in operations).map(([door]) => door);
   const offers = await (await fetch(`${started.base}/api/offers?limit=5000`)).json() as { offers: (Offer & { terms_superseded: unknown })[] };
   withheld = offers.offers
@@ -213,5 +221,76 @@ describe("#1746 the monthly cost /api/stack gives", () => {
       const every = stack.stack.every((role) => role.candidates.every(pricedAtZero));
       assert.strictEqual(stack.total_monthly_cost === "$0/mo (all within free tiers)", every, stack.total_monthly_cost);
     }
+  });
+});
+
+function referenced(ref: string): Schema {
+  return spec.components.schemas[ref.replace("#/components/schemas/", "")] ?? {};
+}
+
+function branchesOf(schema: Schema): Schema[] {
+  if (schema.$ref) return branchesOf(referenced(schema.$ref));
+  const nested: Schema[] = [...(schema.allOf ?? []), ...(schema.oneOf ?? []), ...(schema.anyOf ?? [])];
+  return [schema, ...nested.flatMap(branchesOf)];
+}
+
+function schemasForKey(schemas: Schema[], key: string): { schemas: Schema[]; mapped: boolean } {
+  const named = schemas.filter((schema) => schema.properties && key in schema.properties).map((schema) => schema.properties[key]);
+  if (named.length > 0) return { schemas: named, mapped: false };
+  const mapped = schemas.filter((schema) => schema.additionalProperties && typeof schema.additionalProperties === "object").map((schema) => schema.additionalProperties);
+  return { schemas: mapped, mapped: mapped.length > 0 };
+}
+
+function termsSupersededMismatches(schemas: Schema[], value: unknown, at: string, found: Set<string>): Set<string> {
+  const branches = schemas.flatMap(branchesOf);
+  if (Array.isArray(value)) {
+    const items = branches.filter((schema) => schema.items).map((schema) => schema.items);
+    for (const item of value) termsSupersededMismatches(items, item, `${at}[]`, found);
+    return found;
+  }
+  if (value === null || typeof value !== "object") return found;
+  const documented = branches.some((schema) => schema.properties && "terms_superseded" in schema.properties);
+  const returned = "terms_superseded" in value;
+  if (returned && !documented) found.add(`${at}: returned, not documented`);
+  if (documented && !returned) found.add(`${at}: documented, not returned`);
+  for (const [key, inner] of Object.entries(value)) {
+    if (key === "terms_superseded") continue;
+    const child = schemasForKey(branches, key);
+    termsSupersededMismatches(child.schemas, inner, child.mapped ? `${at}.*` : `${at}.${key}`, found);
+  }
+  return found;
+}
+
+const THE_SPEC_ITSELF = "/api/openapi.json";
+
+function responseSchemaOf(door: string): Schema | null {
+  return spec.paths[door]?.get?.responses?.["200"]?.content?.["application/json"]?.schema ?? null;
+}
+
+describe("/openapi.json describes terms_superseded where the doors return it", () => {
+  it("documents terms_superseded at every place a documented door returns it, and every documented place returns it", () => {
+    const mismatches = reads
+      .filter((read) => documentedGetPaths.includes(read.door) && read.door !== THE_SPEC_ITSELF && read.json !== null)
+      .flatMap((read) => {
+        const schema = responseSchemaOf(read.door);
+        return [...termsSupersededMismatches(schema ? [schema] : [], read.json, read.door, new Set())];
+      });
+    assert.deepStrictEqual([...new Set(mismatches)], []);
+  });
+
+  it("gives every documented terms_superseded one shared schema", () => {
+    const places: string[] = [];
+    const visit = (node: unknown, at: string) => {
+      if (Array.isArray(node)) { node.forEach((item, index) => visit(item, `${at}[${index}]`)); return; }
+      if (node === null || typeof node !== "object") return;
+      const properties = (node as Schema).properties;
+      if (properties && typeof properties === "object" && "terms_superseded" in properties) {
+        if (properties.terms_superseded.$ref !== "#/components/schemas/TermsSuperseded") places.push(at);
+      }
+      for (const [key, inner] of Object.entries(node)) visit(inner, `${at}.${key}`);
+    };
+    visit(spec, "openapi");
+    assert.deepStrictEqual(places, []);
+    assert.strictEqual(spec.components.schemas.TermsSuperseded?.nullable, true);
   });
 });

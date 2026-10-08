@@ -17,6 +17,8 @@ export const CHANGE_TYPES: readonly string[] = Object.keys(CHANGE_DIRECTION);
 
 export const PROVENANCE_REF = "#/components/schemas/Provenance";
 
+const TERMS_SUPERSEDED_REF = "#/components/schemas/TermsSuperseded";
+
 const ENDS_A_FREE_TIER_PROPERTY = { type: "boolean" };
 
 const LISTING_EFFECT_PROPERTY = { type: "string", enum: [...DEPRECATION_CALLS] };
@@ -450,6 +452,7 @@ const DOCUMENTED_OPERATIONS: Record<string, Record<string, any>> = {
                             vendor: { type: "string" },
                             tier: { type: "string" },
                             description: { type: "string" },
+                            terms_superseded: { $ref: TERMS_SUPERSEDED_REF },
                             conditions: LISTING_CONDITIONS_PROPERTY
                           }
                         }
@@ -585,6 +588,7 @@ const DOCUMENTED_OPERATIONS: Record<string, Record<string, any>> = {
                         vendor: { type: "string" },
                         category: { type: "string" },
                         description: { type: "string" },
+                        terms_superseded: { $ref: TERMS_SUPERSEDED_REF },
                         tier: { type: "string" },
                         url: { type: "string", format: "uri" },
                         expires_date: { type: "string", format: "date" },
@@ -765,6 +769,7 @@ const DOCUMENTED_OPERATIONS: Record<string, Record<string, any>> = {
                         vendor: { type: "string" },
                         category: { type: "string" },
                         description: { type: "string" },
+                        terms_superseded: { $ref: TERMS_SUPERSEDED_REF },
                         conditions: LISTING_CONDITIONS_PROPERTY
                       }
                     }
@@ -822,6 +827,7 @@ const DOCUMENTED_OPERATIONS: Record<string, Record<string, any>> = {
                               vendor: { type: "string" },
                               tier: { type: "string" },
                               description: { type: "string" },
+                              terms_superseded: { $ref: TERMS_SUPERSEDED_REF },
                               conditions: LISTING_CONDITIONS_PROPERTY,
                               url: { type: "string", format: "uri" },
                               verified_date: { type: "string", format: "date" },
@@ -1537,6 +1543,7 @@ export const openapiSpec = {
           vendor: { type: "string", description: "Vendor/service name" },
           category: { type: "string", description: "Offer category" },
           description: { type: "string", description: "Description of the offer and free tier details" },
+          terms_superseded: { $ref: TERMS_SUPERSEDED_REF },
           tier: { type: "string", description: "Tier name (e.g. Free, Free Credits, Open Source)" },
           url: { type: "string", format: "uri", description: "Pricing/offer page URL" },
           tags: { type: "array", items: { type: "string" }, description: "Searchable tags" },
@@ -1562,6 +1569,29 @@ export const openapiSpec = {
           conditions: LISTING_CONDITIONS_PROPERTY
         },
         required: ["vendor", "category", "description", "tier", "url", "tags", "verifiedDate"]
+      },
+      TermsSuperseded: {
+        type: "object",
+        nullable: true,
+        description: "Null unless a dated change record supersedes the terms we stored for this listing. When present, `description` still holds those stored terms, which we no longer publish as current. Use `notice`, or `reading.terms`, the vendor page's text at `reading.url` on `reading.date`.",
+        properties: {
+          change_date: { type: "string", format: "date" },
+          change_type: { type: "string" },
+          summary: { type: "string" },
+          reading: {
+            type: "object",
+            nullable: true,
+            properties: {
+              date: { type: "string", format: "date" },
+              url: { type: "string", format: "uri" },
+              label: { type: "string" },
+              terms: { type: "string" }
+            },
+            required: ["date", "url", "label", "terms"]
+          },
+          notice: { type: "string" }
+        },
+        required: ["change_date", "change_type", "summary", "reading", "notice"]
       },
       TieBreak: {
         type: "object",
