@@ -34396,12 +34396,9 @@
         ],
         "reviewed": "2026-09-01"
       },
-      "restated_from": {
-        "reading_date": "2026-09-22",
-        "source_url": "https://ollama.com/pricing",
+      "restatement_reverted": {
         "record_date": "2026-09-22",
-        "change_type": "pricing_model_change",
-        "restated_on": "2026-09-22"
+        "reverted_on": "2026-10-08"
       },
       "conditions": [
         {

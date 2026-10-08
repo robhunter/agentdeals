@@ -2444,7 +2444,8 @@
       "source_url": "https://ollama.com/pricing",
       "record_date": "2026-09-22",
       "change_type": "pricing_model_change",
-      "summary": "The free tier now includes usage credits instead of unlimited access to a single model. It also requires purchasing credits to unlock all models."
+      "summary": "The free tier now includes usage credits instead of unlimited access to a single model. It also requires purchasing credits to unlock all models.",
+      "reverted_on": "2026-10-08"
     },
     {
       "vendor": "Apple Notes",
