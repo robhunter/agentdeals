@@ -7543,7 +7543,7 @@
       "category": "Analytics",
       "description": "Free OSS (MIT). Simple, privacy-focused web analytics. No cookies, GDPR compliant, real-time dashboard, event tracking. Self-hosted with no limits",
       "tier": "Free OSS",
-      "url": "https://umami.is/",
+      "url": "https://github.com/umami-software/umami",
       "tags": [
         "analytics",
         "privacy",
@@ -7552,10 +7552,9 @@
       ],
       "verifiedDate": "2026-08-23",
       "source_check": {
-        "checked": "2026-09-10",
+        "checked": "2026-10-08",
         "outcome": "states_no_terms",
-        "detail": "the page names Umami but states no amount, tier or rate we can read, and the 1 structured-data block in its markup states no price",
-        "rendered": true
+        "detail": "the page names Umami but states no amount, tier or rate we can read, and its markup carries no structured data"
       },
       "free_grounds": [
         "licence"
@@ -11082,7 +11081,7 @@
       "category": "Infrastructure",
       "description": "Free for personal projects (includes one deployment server, one static site), Cloud 66 gives you everything you need to build, deploy, and grow your applications on any cloud without the headache of the “server stuff.”.",
       "tier": "Free",
-      "url": "https://www.cloud66.com/",
+      "url": "https://www.cloud66.com/pricing",
       "tags": [
         "infrastructure",
         "cloud",
@@ -11091,9 +11090,9 @@
       ],
       "verifiedDate": "2026-07-31",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Cloud 66 but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names Cloud 66 as \"cloud 66\" and states \"$ 0\""
       }
     },
     {
@@ -11376,16 +11375,16 @@
       "category": "API Development",
       "description": "No-code, cloud-based platform for mocking and debugging multi-protocol APIs (REST, SOAP, gRPC & GraphQL), providing instant servers with rules-based logic, CRUD & stateful mocking, proxying, and CORS management for faster integration and testing. The free plan includes 50 requests per day and provides a public dashboard/endpoint where anyone with the dashboard URL can view submitted requests and responses.",
       "tier": "Free",
-      "url": "https://beeceptor.com",
+      "url": "https://beeceptor.com/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
       "verifiedDate": "2026-08-04",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Beeceptor but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names Beeceptor as \"beeceptor\" and states \"$ 0\""
       }
     },
     {
@@ -11618,16 +11617,16 @@
       "category": "Notebooks & Data Science",
       "description": "Cube helps data engineers and application developers access data from modern data stores, organize it into consistent definitions, and deliver it to every application. The fastest way to use Cube is with Cube Cloud, which has a free tier limited to 1,000 queries per day.",
       "tier": "Free",
-      "url": "https://cube.dev/",
+      "url": "https://cube.dev/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
       "verifiedDate": "2026-08-03",
       "source_check": {
-        "checked": "2026-09-26",
-        "outcome": "states_no_terms",
-        "detail": "the page names Cube but states no amount, tier or rate we can read, and its markup carries no structured data"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names Cube as \"cube\" and states \"$0\""
       }
     },
     {
@@ -12705,16 +12704,16 @@
       "category": "Dev Utilities",
       "description": "Search news on the web with code, and get JSON results. Developers get 100 queries free each day. Articles have a 24 hour delay.",
       "tier": "Free",
-      "url": "https://newsapi.org",
+      "url": "https://newsapi.org/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
       "verifiedDate": "2026-08-26",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names News API but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names News API as \"news api\" and states \"$ 0\""
       }
     },
     {
@@ -13519,16 +13518,16 @@
       "category": "CI/CD",
       "description": "Private and public artifact repos for Maven, PyPi, NPM, Go Module, Nuget, APT, and RPM repositories. Free for public projects. Note: gemfury.com now redirects to fury.co",
       "tier": "Free",
-      "url": "https://gemfury.com",
+      "url": "https://gemfury.com/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
       "verifiedDate": "2026-07-09",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Gemfury but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names Gemfury as \"gemfury\" and states \"$0\""
       }
     },
     {
@@ -13676,16 +13675,16 @@
       "category": "Team Collaboration",
       "description": "Free all-on-one bookmark manager, tab manager, and task manager in a customizable online desktop with folder collaboration.",
       "tier": "Free",
-      "url": "https://bookmarkos.com",
+      "url": "https://bookmarkos.com/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
       "verifiedDate": "2026-08-04",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names BookmarkOS.com but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page writes \"bookmarkos\", the domain we cite BookmarkOS.com from, and states \"$ 0\""
       }
     },
     {
@@ -13836,16 +13835,16 @@
       "category": "Project Management",
       "description": "Connected workspace platform. Free for up to 10 users, 10 databases, unlimited entities.",
       "tier": "Free",
-      "url": "https://fibery.com/",
+      "url": "https://fibery.com/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
       "verifiedDate": "2026-07-12",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Fibery but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names Fibery as \"fibery\" and states \"$ 0\""
       }
     },
     {
@@ -13889,16 +13888,16 @@
       "category": "Team Collaboration",
       "description": "Interactive customizable spaces for team meetings & happy hours socials. Unlimited meetings, free up to 8 concurrent users.",
       "tier": "Free",
-      "url": "https://flat.social",
+      "url": "https://flat.social/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
       "verifiedDate": "2026-08-05",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names flat.social but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names flat.social as \"flat social\" and states \"$0\""
       }
     },
     {
@@ -13975,16 +13974,16 @@
       "category": "Team Collaboration",
       "description": "Real time collaboration & writing tool for markdown format docs/files. Like Google Docs but for markdown files. Free unlimited number of \"notes\", but the number of collaborators (invitee) for private notes & template [will be limited](https://hackmd.io/pricing).",
       "tier": "Free",
-      "url": "https://hackmd.io/",
+      "url": "https://hackmd.io/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
       "verifiedDate": "2026-08-02",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Hackmd.io but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names Hackmd.io as \"hackmd io\" and states \"$ 0\""
       }
     },
     {
@@ -14043,16 +14042,16 @@
       "category": "Team Collaboration",
       "description": "Reserve and lock shared resources within Slack like Rooms, Dev environments , servers etc. Free for upto 2 resources",
       "tier": "Free",
-      "url": "https://www.lockitbot.com/",
+      "url": "https://www.lockitbot.com/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
       "verifiedDate": "2026-08-02",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Lockitbot but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names Lockitbot as \"lockitbot\" and states \"$0\""
       }
     },
     {
@@ -14317,16 +14316,16 @@
       "category": "Team Collaboration",
       "description": "A modern knowledge management service for teams. Free for up to 10 users.",
       "tier": "Free",
-      "url": "https://slab.com/",
+      "url": "https://slab.com/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
       "verifiedDate": "2026-08-06",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Slab but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names Slab as \"slab\" and states \"$ 0\""
       }
     },
     {
@@ -14442,16 +14441,16 @@
       "category": "Project Management",
       "description": "improve team development processes with Team Analytics and Smart Daily Standup. Includes full-featured Time Off management for remote-first teams. Free for small groups of up to 5 users.",
       "tier": "Free",
-      "url": "https://teamplify.com",
+      "url": "https://teamplify.com/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
       "verifiedDate": "2026-07-07",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Teamplify but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names Teamplify as \"teamplify\" and states \"$ 0\""
       }
     },
     {
@@ -14565,16 +14564,16 @@
       "category": "Team Collaboration",
       "description": "An asynchronous-friendly team communication app where conversations stay organized and on-topic. Free and Unlimited plans are available. Discounts are provided for eligible teams.",
       "tier": "Free",
-      "url": "https://twist.com",
+      "url": "https://twist.com/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
       "verifiedDate": "2026-08-02",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names twist.com but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names twist.com as \"twist com\" and states \"$ 0\""
       }
     },
     {
@@ -14674,16 +14673,16 @@
       "category": "Video",
       "description": "Video hosting with viewer analytics, HD video delivery, and marketing tools to help understand your visitors, 25 videos, and Wistia branded player",
       "tier": "Free",
-      "url": "https://wistia.com/",
+      "url": "https://wistia.com/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
       "verifiedDate": "2026-08-03",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names wistia.com but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names wistia.com as \"wistia\" and states \"$0\""
       }
     },
     {
@@ -14743,16 +14742,16 @@
       "category": "Team Collaboration",
       "description": "Real-time chat with a unique email-like threading model. The free plan includes 10,000 messages of search history and File storage up to 5 GB. also, it provides a self-hostable open-source version.",
       "tier": "Free",
-      "url": "https://zulip.com/plans",
+      "url": "https://zulip.com/",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
       "verifiedDate": "2026-07-31",
       "source_check": {
-        "checked": "2026-09-22",
-        "outcome": "ok",
-        "detail": "the page names Zulip as \"zulip\" and states \"5 GB per user\" and \"5 GB total 5 GB/user\" and \"5 GB/user\""
+        "checked": "2026-09-02",
+        "outcome": "states_no_terms",
+        "detail": "the page names Zulip but states no amount, tier or rate we can read"
       }
     },
     {
@@ -14930,7 +14929,7 @@
       "category": "Headless CMS",
       "description": "Replacing Forestry.io. Open source Git-backed headless CMS that supports Markdown, MDX, and JSON. The basic offer is free with two users available.",
       "tier": "Free",
-      "url": "https://tina.io/",
+      "url": "https://tina.io/pricing",
       "tags": [
         "cms",
         "headless",
@@ -14939,9 +14938,9 @@
       ],
       "verifiedDate": "2026-08-06",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names TinaCMS but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names TinaCMS as \"tinacms\" and states \"$0\""
       }
     },
     {
@@ -15139,16 +15138,16 @@
       "category": "Code Quality",
       "description": "Automated Code Review for Git. The free version includes unlimited users, public repositories, and one private repo.",
       "tier": "Free",
-      "url": "https://www.codefactor.io",
+      "url": "https://www.codefactor.io/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
       "verifiedDate": "2026-08-05",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names CodeFactor but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names CodeFactor as \"codefactor\" and states \"$0\""
       }
     },
     {
@@ -15173,16 +15172,19 @@
       "category": "Code Quality",
       "description": "Automate performance tracking in your CI pipelines. Catch performance regressions before deployment, thanks to precise and consistent metrics. Free forever for Open Source projects.",
       "tier": "Free",
-      "url": "https://codspeed.io",
+      "url": "https://codspeed.io/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
       "verifiedDate": "2026-08-07",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names CodSpeed but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names CodSpeed as \"codspeed\" and states \"$ 0\"",
+        "unrendered_prices": [
+          "USD 20"
+        ]
       }
     },
     {
@@ -15207,16 +15209,16 @@
       "category": "Code Quality",
       "description": "Advanced static analysis for automatically finding runtime errors in JavaScript code, free for Open Source",
       "tier": "Free",
-      "url": "https://deepscan.io",
+      "url": "https://deepscan.io/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
       "verifiedDate": "2026-08-02",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names deepscan.io but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names deepscan.io as \"deepscan io\" and states \"$ 0\""
       }
     },
     {
@@ -15770,7 +15772,7 @@
       "category": "Testing",
       "description": "Test your Android & iOS apps on this Cloud Based Android Phone / Tablets emulator and iPhone/iPad simulators directly in your browser. The free tier includes two concurrent session with 30 minutes of usage per month. No limit on app size.",
       "tier": "Free",
-      "url": "https://appetize.io",
+      "url": "https://appetize.io/pricing",
       "tags": [
         "testing",
         "qa",
@@ -15786,8 +15788,8 @@
       },
       "source_check": {
         "checked": "2026-10-08",
-        "outcome": "states_no_terms",
-        "detail": "the page names Appetize but states no amount, tier or rate we can read, and its markup carries no structured data"
+        "outcome": "ok",
+        "detail": "the page names Appetize as \"appetize\" and states \"$ 0\""
       },
       "conditions": [
         {
@@ -15821,7 +15823,7 @@
       "category": "Testing",
       "description": "A continuous benchmarking tool suite to catch CI performance regressions. Free for all public projects.",
       "tier": "Free",
-      "url": "https://bencher.dev/",
+      "url": "https://bencher.dev/pricing",
       "tags": [
         "testing",
         "qa",
@@ -15829,9 +15831,9 @@
       ],
       "verifiedDate": "2026-08-24",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Bencher but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names Bencher as \"bencher\" and states \"$0\""
       }
     },
     {
@@ -15918,7 +15920,7 @@
       "category": "Testing",
       "description": "Selenium Grid testing with a free plan of up to 4 simultaneous selenium nodes/10 grid starts/4,000 test minutes/month",
       "tier": "Free",
-      "url": "https://www.gridlastic.com/",
+      "url": "https://www.gridlastic.com/pricing.html",
       "tags": [
         "testing",
         "qa",
@@ -15926,9 +15928,9 @@
       ],
       "verifiedDate": "2026-08-05",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names gridlastic.com but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names gridlastic.com as \"gridlastic com\" and states \"$0\""
       }
     },
     {
@@ -16034,7 +16036,7 @@
       "category": "Testing",
       "description": "Test management system for Dev and QA teams. Manage test cases, compose test runs, perform tests, track defects, and measure impact. The free tier includes all core features, with 500MB available for attachments and up to 3 users.",
       "tier": "Free",
-      "url": "https://qase.io",
+      "url": "https://qase.io/pricing",
       "tags": [
         "testing",
         "qa",
@@ -16042,9 +16044,9 @@
       ],
       "verifiedDate": "2026-08-03",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names qase.io but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names qase.io as \"qase io\" and states \"$0\""
       }
     },
     {
@@ -16129,7 +16131,7 @@
       "category": "Testing",
       "description": "A Dashboard for publishing automated test results and a Framework for implementing manual tests as code using GitHub. The service is [free for Open Source](https://github.com/marketplace/testspace-com) and accounts for 450 monthly results.",
       "tier": "Free",
-      "url": "https://testspace.com/",
+      "url": "https://testspace.com/pricing",
       "tags": [
         "testing",
         "qa",
@@ -16137,9 +16139,9 @@
       ],
       "verifiedDate": "2026-08-03",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Testspace.com but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names Testspace.com as \"testspace com\" and states \"$0\""
       }
     },
     {
@@ -16325,16 +16327,16 @@
       "category": "Security",
       "description": "Cloud-first, developer-friendly security platform prevents data breaches in .NET and Java applications",
       "tier": "Free",
-      "url": "https://www.crypteron.com/",
+      "url": "https://www.crypteron.com/pricing",
       "tags": [
         "security",
         "free-for-dev"
       ],
       "verifiedDate": "2026-07-12",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names crypteron.com but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names crypteron.com as \"crypteron\" and states \"$ 0\""
       }
     },
     {
@@ -16857,7 +16859,7 @@
       "category": "Auth",
       "description": "Two-factor authentication (2FA) by push notifications, free for 3 users, VPN, Websites, and SSH",
       "tier": "Free",
-      "url": "https://www.logintc.com/",
+      "url": "https://www.logintc.com/pricing",
       "tags": [
         "auth",
         "authentication",
@@ -16866,9 +16868,9 @@
       ],
       "verifiedDate": "2026-07-11",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names logintc.com but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names logintc.com as \"logintc\" and states \"$0\""
       }
     },
     {
@@ -17067,7 +17069,7 @@
       "category": "Auth",
       "description": "A turnkey user and access management that works for you and supports multi-tenant (B2B) use cases. Free for up to 100 Daily Active Users, with all security features (no paywall for OTP, Passwordless, Policies, and so on).",
       "tier": "Free",
-      "url": "https://zitadel.com",
+      "url": "https://zitadel.com/pricing",
       "tags": [
         "auth",
         "authentication",
@@ -17076,9 +17078,9 @@
       ],
       "verifiedDate": "2026-07-13",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names ZITADEL Cloud but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names ZITADEL Cloud as \"zitadel cloud\" and states \"$ 0\""
       }
     },
     {
@@ -17904,16 +17906,16 @@
       "category": "Localization",
       "description": "Free up to 1,000 strings with unlimited projects and 5 contributors",
       "tier": "Free",
-      "url": "https://poeditor.com/",
+      "url": "https://poeditor.com/pricing/",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
       "verifiedDate": "2026-08-06",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names POEditor but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names POEditor as \"poeditor\" and states \"$ 0\""
       }
     },
     {
@@ -17959,16 +17961,16 @@
       "category": "Localization",
       "description": "Free SaaS offering with limited translations, forever-free self-hosted version",
       "tier": "Free",
-      "url": "https://tolgee.io",
+      "url": "https://tolgee.io/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
       "verifiedDate": "2026-08-08",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Tolgee but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names Tolgee as \"tolgee\" and states \"€0\""
       }
     },
     {
@@ -17993,7 +17995,7 @@
       "category": "Monitoring",
       "description": "Automated API testing and monitoring. Free plans for teams and individuals.",
       "tier": "Free",
-      "url": "https://assertible.com",
+      "url": "https://assertible.com/plans",
       "tags": [
         "monitoring",
         "observability",
@@ -18001,9 +18003,9 @@
       ],
       "verifiedDate": "2026-07-12",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names assertible.com but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names assertible.com as \"assertible\" and states \"$ 0\""
       },
       "product_subtypes": {
         "taxonomy": "Monitoring",
@@ -18300,7 +18302,7 @@
       "category": "Monitoring",
       "description": "Free load testing tools with limitations",
       "tier": "Free",
-      "url": "https://loader.io/",
+      "url": "https://loader.io/pricing",
       "tags": [
         "monitoring",
         "observability",
@@ -18308,9 +18310,9 @@
       ],
       "verifiedDate": "2026-07-09",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names loader.io but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names loader.io as \"loader io\" and states \"$0.00\""
       },
       "product_subtypes": {
         "taxonomy": "Monitoring",
@@ -19132,7 +19134,7 @@
       "category": "Error Tracking",
       "description": "Developer friendly bug reports in one click. Free plan with unlimited jams.",
       "tier": "Free",
-      "url": "https://jam.dev",
+      "url": "https://jam.dev/pricing",
       "tags": [
         "error-tracking",
         "crash-reporting",
@@ -19140,9 +19142,9 @@
       ],
       "verifiedDate": "2026-08-10",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Jam but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names Jam as \"jam\" and states \"$0\""
       }
     },
     {
@@ -20252,16 +20254,16 @@
       "category": "Forms",
       "description": "Endpoint for HTML forms submissions. With notifications, spam blockers, and GDPR-compliant data processing. Free plan for basic usage.",
       "tier": "Free",
-      "url": "https://form.taxi/",
+      "url": "https://form.taxi/pricing",
       "tags": [
         "forms",
         "free-for-dev"
       ],
       "verifiedDate": "2026-08-06",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Form.taxi but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names Form.taxi as \"form taxi\" and states \"$0\""
       }
     },
     {
@@ -20353,16 +20355,16 @@
       "category": "Forms",
       "description": "Form to Email service, free plan allows unlimited forms, 250 submissions per month, support by Customer assistance team.",
       "tier": "Free",
-      "url": "https://formspark.io/",
+      "url": "https://formspark.io/pricing",
       "tags": [
         "forms",
         "free-for-dev"
       ],
       "verifiedDate": "2026-08-06",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names formspark.io but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names formspark.io as \"formspark\" and states \"$ 0\""
       }
     },
     {
@@ -20582,16 +20584,16 @@
       "category": "Forms",
       "description": "Collect feedback using delightful surveys with high response rates. Free plan includes 1 active survey, 25 responses per survey and customizable templates.",
       "tier": "Free",
-      "url": "https://vidhook.io/",
+      "url": "https://vidhook.io/pricing",
       "tags": [
         "forms",
         "free-for-dev"
       ],
       "verifiedDate": "2026-08-09",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Vidhook but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names Vidhook as \"vidhook\" and states \"$0\""
       }
     },
     {
@@ -21627,7 +21629,7 @@
       "category": "Cloud Hosting",
       "description": "Run compute jobs across Cloud Providers & On-Prem. The free tier includes up to 10 concurrent job runs, 2 compute spawns, self-hosted compute, 1 cloud provider, 1 container registry and 1 cron job.",
       "tier": "Free",
-      "url": "https://daestro.com",
+      "url": "https://daestro.com/pricing",
       "tags": [
         "hosting",
         "paas",
@@ -21635,9 +21637,9 @@
       ],
       "verifiedDate": "2026-07-16",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Daestro but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names Daestro as \"daestro\" and states \"$0\""
       },
       "product_subtypes": {
         "taxonomy": "Cloud Hosting",
@@ -22000,7 +22002,7 @@
       "category": "Cloud Hosting",
       "description": "Chat messaging, p2p voice & video calls, files attachments and push notifications. Free for apps up to 1,000 users. Group chat limited to 10 participants. 5 GB storage, 1 month data retention.",
       "tier": "Free",
-      "url": "https://connectycube.com",
+      "url": "https://connectycube.com/pricing",
       "tags": [
         "hosting",
         "paas",
@@ -22008,9 +22010,9 @@
       ],
       "verifiedDate": "2026-07-15",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names connectycube.com but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names connectycube.com as \"connectycube com\" and states \"$ 0\""
       },
       "product_subtypes": {
         "taxonomy": "Cloud Hosting",
@@ -22046,7 +22048,7 @@
       "category": "Cloud Hosting",
       "description": "Build your Flutter App UI without writing a single line of code. Also has a Firebase integration. The free plan includes 2 projects, access to 1,000+ templates, and the UI Builder with limited AI generation (5 lifetime requests). No code download or APK export on free tier.",
       "tier": "Free",
-      "url": "https://flutterflow.io",
+      "url": "https://flutterflow.io/pricing",
       "tags": [
         "hosting",
         "paas",
@@ -22054,9 +22056,9 @@
       ],
       "verifiedDate": "2026-07-11",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Flutter Flow but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names Flutter Flow as \"flutterflow\" and states \"$0\""
       },
       "product_subtypes": {
         "taxonomy": "Cloud Hosting",
@@ -22338,16 +22340,16 @@
       "category": "Low-Code Platforms",
       "description": "Low-code platform that enables faster building of custom web applications. Supports building UI using drag and drop with a high level of customization through JavaScript, Python, and SQL. Available as both cloud and self-hosted solutions. Free for up to 5 users.",
       "tier": "Free",
-      "url": "https://uibakery.io",
+      "url": "https://uibakery.io/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
       "verifiedDate": "2026-08-07",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names UI Bakery but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names UI Bakery as \"ui bakery\" and states \"$ 0\""
       }
     },
     {
@@ -22883,7 +22885,7 @@
       "category": "Cloud Hosting",
       "description": "SaaS-focused website builder - unlimited websites, 70+ blocks, five templates, custom CSS, favicon, SEO and forms. No custom domain.",
       "tier": "Free",
-      "url": "https://versoly.com/",
+      "url": "https://versoly.com/pricing",
       "tags": [
         "hosting",
         "paas",
@@ -22891,9 +22893,9 @@
       ],
       "verifiedDate": "2026-07-13",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Versoly but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names Versoly as \"versoly\" and states \"$ 0\""
       },
       "product_subtypes": {
         "taxonomy": "Cloud Hosting",
@@ -23869,16 +23871,16 @@
       "category": "Project Management",
       "description": "Everything your team needs to release great projects in one platform. The free plan offers 1 Project with ten users & 100MB of storage.",
       "tier": "Free",
-      "url": "https://backlog.com",
+      "url": "https://backlog.com/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
       "verifiedDate": "2026-07-15",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Backlog but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names Backlog as \"backlog\" and states \"$ 0\""
       }
     },
     {
@@ -23995,16 +23997,16 @@
       "category": "Project Management",
       "description": "Versatile project management platform. Free for up to 3 projects, unlimited users, 1 GB storage.",
       "tier": "Free",
-      "url": "https://crosswork.app/",
+      "url": "https://crosswork.app/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
       "verifiedDate": "2026-07-14",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Crosswork but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names Crosswork as \"crosswork\" and states \"$0\""
       }
     },
     {
@@ -24132,16 +24134,16 @@
       "category": "Diagramming",
       "description": "interactive diagrams that allow users to see their infrastructure from multiple perspectives and levels of detail. Charts can be expressed in code. The free tier has unlimited private diagrams with up to 3 viewers.",
       "tier": "Free",
-      "url": "https://www.ilograph.com/",
+      "url": "https://www.ilograph.com/pricing.html",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
       "verifiedDate": "2026-08-08",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Ilograph but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names Ilograph as \"ilograph\" and states \"$ 0\""
       }
     },
     {
@@ -24166,16 +24168,16 @@
       "category": "Project Management",
       "description": "Board-based project management. Free, premium version with more options",
       "tier": "Free",
-      "url": "https://kanbanflow.com/",
+      "url": "https://kanbanflow.com/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
       "verifiedDate": "2026-07-15",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names kanbanflow.com but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names kanbanflow.com as \"kanbanflow com\" and states \"$ 0\""
       }
     },
     {
@@ -24183,16 +24185,16 @@
       "category": "Project Management",
       "description": "Kanban board-based project management. The free plan has two boards and two users, without attachments or files.",
       "tier": "Free",
-      "url": "https://kanbantool.com/",
+      "url": "https://kanbantool.com/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
       "verifiedDate": "2026-07-16",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names kanbantool.com but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names kanbantool.com as \"kanbantool com\" and states \"€0\""
       }
     },
     {
@@ -24200,16 +24202,16 @@
       "category": "Diagramming",
       "description": "Relationship maps with animation, decorations, filters, clustering, spreadsheet imports, etc. The free tier allows unlimited public projects. Graph size unlimited. Free private projects for students. Sandbox mode is available if you prefer not to leave your file publicly online (upload, edit, download, discard).",
       "tier": "Free",
-      "url": "https://kumu.io/",
+      "url": "https://kumu.io/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
       "verifiedDate": "2026-08-09",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Kumu.io but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names Kumu.io as \"kumu io\" and states \"$0\""
       }
     },
     {
@@ -24309,16 +24311,16 @@
       "category": "Project Management",
       "description": "Free online planning poker (estimation tool)",
       "tier": "Free",
-      "url": "https://www.planitpoker.com/",
+      "url": "https://www.planitpoker.com/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
       "verifiedDate": "2026-07-15",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names planitpoker.com but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names planitpoker.com as \"planitpoker\" and states \"$0\""
       }
     },
     {
@@ -24618,16 +24620,16 @@
       "category": "Project Management",
       "description": "Agile development and issue tracking. Free up to 3 users, unlimited projects.",
       "tier": "Free",
-      "url": "https://www.yodiz.com/",
+      "url": "https://www.yodiz.com/pricing.html",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
       "verifiedDate": "2026-07-16",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Yodiz but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names Yodiz as \"yodiz\" and states \"$ 0\""
       }
     },
     {
@@ -24635,16 +24637,16 @@
       "category": "Project Management",
       "description": "The only project management solution inside GitHub. Free for public repos, OSS, and nonprofit organizations",
       "tier": "Free",
-      "url": "https://www.zenhub.com",
+      "url": "https://www.zenhub.com/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
       "verifiedDate": "2026-07-18",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names zenhub.com but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names zenhub.com as \"zenhub com\" and states \"$0\""
       }
     },
     {
@@ -24652,16 +24654,16 @@
       "category": "Project Management",
       "description": "Project management with free plan for 4 Projects & 4 users. GitHub integration is available.",
       "tier": "Free",
-      "url": "https://zube.io",
+      "url": "https://zube.io/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
       "verifiedDate": "2026-07-16",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Zube but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names Zube as \"zube\" and states \"$0\""
       }
     },
     {
@@ -24724,7 +24726,7 @@
       "category": "Storage",
       "description": "Provides APIs for embedding media in a webpage, responsive image scaling, and extracting elements from a webpage. Free for up to 5,000 URLs/month at 15 requests/second",
       "tier": "Free",
-      "url": "https://embed.ly/",
+      "url": "https://embed.ly/pricing",
       "tags": [
         "storage",
         "media",
@@ -24732,9 +24734,9 @@
       ],
       "verifiedDate": "2026-07-17",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names embed.ly but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names embed.ly as \"embed ly\" and states \"$0\""
       }
     },
     {
@@ -25015,7 +25017,7 @@
       "category": "Storage",
       "description": "Accelerate your site's speed on autopilot with complete front-end optimization (caching, images and code optimization, CDN). Free for up to 5,000 pageviews/month",
       "tier": "Free",
-      "url": "https://nitropack.io/",
+      "url": "https://nitropack.io/pricing",
       "tags": [
         "storage",
         "media",
@@ -25023,9 +25025,9 @@
       ],
       "verifiedDate": "2026-07-17",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names nitropack.io but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names nitropack.io as \"nitropack\" and states \"$0.00\""
       }
     },
     {
@@ -25153,7 +25155,7 @@
       "category": "Storage",
       "description": "Graph and share your data. The free tier includes unlimited public files and ten private files",
       "tier": "Free",
-      "url": "https://plotly.com/",
+      "url": "https://plotly.com/pricing",
       "tags": [
         "storage",
         "media",
@@ -25161,9 +25163,9 @@
       ],
       "verifiedDate": "2026-07-19",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names plot.ly but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names plot.ly as \"plotly\" and states \"$0\""
       }
     },
     {
@@ -25250,7 +25252,7 @@
       "category": "Storage",
       "description": "New Free accounts can create up to 3 dynamic codes and get 14 days of Analytics and QR Studio access. After that, Pro is required to use those premium areas. Existing codes keep redirecting and scans continue to be recorded.",
       "tier": "Free",
-      "url": "https://qrtracer.io",
+      "url": "https://qrtracer.io/pricing",
       "tags": [
         "storage",
         "media",
@@ -25258,9 +25260,9 @@
       ],
       "verifiedDate": "2026-08-27",
       "source_check": {
-        "checked": "2026-10-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names QRtracer but states no amount, tier or rate we can read, and the 1 structured-data block in its markup states no price"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names QRtracer as \"qrtracer\" and states \"€0\""
       },
       "restated_from": {
         "reading_date": "2026-09-19",
@@ -25268,11 +25270,6 @@
         "record_date": "2026-09-19",
         "change_type": "limits_reduced",
         "restated_on": "2026-09-20"
-      },
-      "free_plan_excerpt": {
-        "text": "Free to create. Choose tracking next. No credit card. 1,000+ QR codes generated 100+ registered users 20,000+ recorded scans",
-        "url": "https://qrtracer.io",
-        "read_on": "2026-10-02"
       }
     },
     {
@@ -25280,7 +25277,7 @@
       "category": "Storage",
       "description": "Generate embeddable image charts, graphs, and QR codes",
       "tier": "Free",
-      "url": "https://quickchart.io",
+      "url": "https://quickchart.io/pricing",
       "tags": [
         "storage",
         "media",
@@ -25288,9 +25285,9 @@
       ],
       "verifiedDate": "2026-07-16",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names QuickChart but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names QuickChart as \"quickchart\" and states \"$0\""
       }
     },
     {
@@ -25408,7 +25405,7 @@
       "category": "Storage",
       "description": "Responsive images as a service. It provides an image CDN, a media processing API, and a frontend library to automate image optimization. The service is free for up to 3GB of traffic/per month.",
       "tier": "Free",
-      "url": "https://www.twicpics.com",
+      "url": "https://www.twicpics.com/pricing",
       "tags": [
         "storage",
         "media",
@@ -25416,9 +25413,9 @@
       ],
       "verifiedDate": "2026-07-18",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names twicpics.com but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names twicpics.com as \"twicpics\" and states \"$0\""
       }
     },
     {
@@ -25444,7 +25441,7 @@
       "category": "Storage",
       "description": "Cloud storage sync and unification platform — connects Google Drive, Dropbox, S3, OneDrive, and other providers into a single file manager. No free plan since 2026-03-31, when odrive ended free consumer accounts. New users get a 30-day free trial with no credit card; Standard is $20/user/month or $200/user/year.",
       "tier": "Trial",
-      "url": "https://www.odrive.com/",
+      "url": "https://www.odrive.com/pricing",
       "tags": [
         "storage",
         "sync",
@@ -25453,9 +25450,9 @@
       ],
       "verifiedDate": "2026-07-19",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names odrive but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names odrive as \"odrive\" and states \"$20\" and \"$200\""
       }
     },
     {
@@ -26546,7 +26543,7 @@
       "category": "Design",
       "description": "Create and ship beautiful animations to any platform. Free forever for Individuals. The service is an editor that also hosts all the graphics on their servers. They also provide runtimes for many platforms to run representations made using Rive.",
       "tier": "Free",
-      "url": "https://rive.app",
+      "url": "https://rive.app/pricing",
       "tags": [
         "design",
         "ui",
@@ -26554,9 +26551,9 @@
       ],
       "verifiedDate": "2026-07-19",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Rive but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names Rive as \"rive\" and states \"$0\""
       }
     },
     {
@@ -26638,7 +26635,7 @@
       "category": "Design",
       "description": "Beautifully crafted, open-source Shadcn UI components, blocks, and templates to copy or install via CLI for your React & Tailwind CSS projects.",
       "tier": "Free",
-      "url": "https://shadcnspace.com/",
+      "url": "https://shadcnspace.com/pricing",
       "tags": [
         "design",
         "ui",
@@ -26646,9 +26643,9 @@
       ],
       "verifiedDate": "2026-07-17",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Shadcn Space but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names Shadcn Space as \"shadcn space\" and states \"$0\""
       }
     },
     {
@@ -27059,7 +27056,7 @@
       "category": "Design",
       "description": "Open-source alternative to Webflow. The free plan offers unlimited websites on their domain. Five websites with custom domains. Ten thousand page views/month. 2 GB asset storage.",
       "tier": "Free",
-      "url": "https://webstudio.is/",
+      "url": "https://webstudio.is/pricing",
       "tags": [
         "design",
         "ui",
@@ -27067,9 +27064,9 @@
       ],
       "verifiedDate": "2026-07-22",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Webstudio but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names Webstudio as \"webstudio\" and states \"$ 0\""
       }
     },
     {
@@ -27077,7 +27074,7 @@
       "category": "Design",
       "description": "Collaborative flowcharts, wireframes, sticky notes and mind maps. Free plan: 3 team boards, 100 AI actions per editor.",
       "tier": "Free",
-      "url": "https://whimsical.com/",
+      "url": "https://whimsical.com/pricing",
       "tags": [
         "design",
         "ui",
@@ -27085,9 +27082,9 @@
       ],
       "verifiedDate": "2026-07-22",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names whimsical.com but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names whimsical.com as \"whimsical\" and states \"$ 0\""
       }
     },
     {
@@ -27095,7 +27092,7 @@
       "category": "Design",
       "description": "Design handoff platform — 1 active project, unlimited members, style guide, component inspection, asset export. Integrates with Figma, Sketch, and Adobe XD",
       "tier": "Free",
-      "url": "https://zeplin.io/",
+      "url": "https://zeplin.io/pricing",
       "tags": [
         "design",
         "ui",
@@ -27103,9 +27100,9 @@
       ],
       "verifiedDate": "2026-08-18",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Zeplin but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names Zeplin as \"zeplin\" and states \"$ 0\""
       }
     },
     {
@@ -27578,16 +27575,16 @@
       "category": "IDE & Code Editors",
       "description": "Code snippet organizer with labels and support for 100+ programming languages.",
       "tier": "Free",
-      "url": "https://www.cacher.io",
+      "url": "https://www.cacher.io/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
       "verifiedDate": "2026-08-08",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names cacher.io but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names cacher.io as \"cacher io\" and states \"$0\""
       }
     },
     {
@@ -27647,17 +27644,16 @@
       "category": "IDE & Code Editors",
       "description": "Front-end code playground — unlimited public pens (HTML/CSS/JS), 1 project with 10 files, asset hosting, embedded previews, console, live collaboration. Supports preprocessors (Sass, LESS, TypeScript)",
       "tier": "Free",
-      "url": "https://codepen.io/",
+      "url": "https://codepen.io/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
       "verifiedDate": "2026-08-18",
       "source_check": {
-        "checked": "2026-09-16",
-        "outcome": "states_no_terms",
-        "detail": "the page names codepen.io but states no amount, tier or rate we can read, and its markup carries no structured data",
-        "rendered": true
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names codepen.io as \"codepen\" and states \"$ 0\""
       }
     },
     {
@@ -27717,16 +27713,16 @@
       "category": "IDE & Code Editors",
       "description": "Instant free Linux and IDEs chrome sidebar. The free tier includes 5 VMs per day.",
       "tier": "Free",
-      "url": "https://getvm.io",
+      "url": "https://getvm.io/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
       "verifiedDate": "2026-08-08",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names GetVM but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names GetVM as \"getvm\" and states \"$0\""
       }
     },
     {
@@ -27855,16 +27851,16 @@
       "category": "IDE & Code Editors",
       "description": "Online development environment for PHP",
       "tier": "Free",
-      "url": "https://phpsandbox.io/",
+      "url": "https://phpsandbox.io/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
       "verifiedDate": "2026-08-09",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names PHPSandbox but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names PHPSandbox as \"phpsandbox\" and states \"$0\""
       }
     },
     {
@@ -28007,16 +28003,16 @@
       "category": "IDE & Code Editors",
       "description": "Coding activity tracker via editor plugins — 1-week dashboard history, 1 programming goal, weekly email reports, public leaderboard. Supports 60+ IDEs including VS Code, JetBrains, Vim",
       "tier": "Free",
-      "url": "https://wakatime.com/",
+      "url": "https://wakatime.com/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
       "verifiedDate": "2026-08-16",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names wakatime.com but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names wakatime.com as \"wakatime\" and states \"$ 0\""
       }
     },
     {
@@ -28118,7 +28114,7 @@
       "category": "Analytics",
       "description": "Simplified analytics release workflow. Single-source-of-truth tracking plan, type-safe analytics tracking library, in-app debuggers, and data observability to catch all data issues before you release. Free for two workspace members and 1 hour data observability lookback.",
       "tier": "Free",
-      "url": "https://avo.app/",
+      "url": "https://avo.app/pricing",
       "tags": [
         "analytics",
         "statistics",
@@ -28126,9 +28122,9 @@
       ],
       "verifiedDate": "2026-07-21",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Avo but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names Avo as \"avo\" and states \"$0\""
       }
     },
     {
@@ -28469,7 +28465,7 @@
       "category": "Analytics",
       "description": "Blazingly fast, connected spreadsheet. Connect directly to data databases, S3, and APIs. Import, analyze, graph, and share millions of rows instantly. Three free (forever) workbooks.",
       "tier": "Free",
-      "url": "https://rowzero.com/",
+      "url": "https://rowzero.com/pricing",
       "tags": [
         "analytics",
         "statistics",
@@ -28477,9 +28473,9 @@
       ],
       "verifiedDate": "2026-07-20",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Row Zero but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names Row Zero as \"row zero\" and states \"$0\""
       }
     },
     {
@@ -29436,16 +29432,16 @@
       "category": "Dev Utilities",
       "description": "A SaaS with API to control, build & evaluate IoT devices. Free Developer Plan with 5 devices, Free Cloud & data storage. Mobile Apps are also available.",
       "tier": "Free",
-      "url": "https://blynk.io",
+      "url": "https://blynk.io/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
       "verifiedDate": "2026-07-21",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Blynk but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names Blynk as \"blynk\" and states \"$0\""
       }
     },
     {
@@ -29812,16 +29808,16 @@
       "category": "Dev Utilities",
       "description": "SaaS tool for managing HTTP redirections for businesses, marketing and SEO.",
       "tier": "Free",
-      "url": "https://redirection.io/",
+      "url": "https://redirection.io/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
       "verifiedDate": "2026-07-20",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names redirection.io but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names redirection.io as \"redirection io\" and states \"€0\""
       }
     },
     {
@@ -29869,16 +29865,16 @@
       "category": "Dev Utilities",
       "description": "An API for cars to locate, get fuel tank, battery levels, odometer, unlock/lock doors, etc.",
       "tier": "Free",
-      "url": "https://smartcar.com",
+      "url": "https://smartcar.com/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
       "verifiedDate": "2026-07-21",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Smartcar API but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names Smartcar API as \"smartcar api\" and states \"$0\""
       }
     },
     {
@@ -30042,16 +30038,16 @@
       "category": "Dev Utilities",
       "description": "Access a wide range of free developer tools for encoding, decoding, and data manipulation.",
       "tier": "Free",
-      "url": "https://webacus.dev",
+      "url": "https://webacus.dev/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
       "verifiedDate": "2026-07-25",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Webacus but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names Webacus as \"webacus\" and states \"$0\""
       }
     },
     {
@@ -33833,7 +33829,7 @@
       "category": "AI Coding",
       "description": "Agentic development platform by Google, generally available: a desktop app to manage multiple local agents in parallel, an agentic IDE, a CLI and an SDK, for macOS, Windows and Linux. Its agents can open and drive a local Chrome browser. The individual plan is $0/month, with Gemini, Claude and gpt-oss agent models, \"Unlimited Tab completions\", \"Unlimited Command requests\" and \"Basic weekly rate limits\". Google AI Pro ($19.99/month) and Google AI Ultra (from $99.99/month) add \"More generous rate limits\" and a \"Flexible AI credit pool\", and organizations can use it through Google Cloud. Announced November 2025.",
       "tier": "Free",
-      "url": "https://antigravity.google",
+      "url": "https://antigravity.google/pricing",
       "tags": [
         "ai",
         "coding",
@@ -33844,9 +33840,9 @@
       ],
       "verifiedDate": "2026-07-27",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Google Antigravity but states no amount, tier or rate we can read"
+        "checked": "2026-10-08",
+        "outcome": "ok",
+        "detail": "the page names Google Antigravity as \"google antigravity\" and states \"$0\""
       }
     },
     {
