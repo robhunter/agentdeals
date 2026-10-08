@@ -14959,7 +14959,7 @@ ${buildCards(aiGateways)}
       <dd><a href="/vendor/groq">Groq</a> \u2014 custom LPU hardware delivers the fastest token generation, 30 RPM free with gpt-oss-120b. No credit card required.</dd>
 
       <dt>Need maximum free token volume?</dt>
-      <dd><a href="/vendor/mistral-ai">Mistral AI</a> \u2014 Free plan includes monthly API usage whose amount the pricing page has not stated since 2026-10-07. API keys need no credit card.</dd>
+      <dd><a href="/vendor/groq">Groq</a> \u2014 200,000 tokens a day on each of its three free chat models, the largest renewing quota stated on this page. Cerebras's trial allows 1M tokens a day but only for 30 days and $5 of credits. Mistral and Gemini state no amount.</dd>
 
       <dt>Want one API key for many models?</dt>
       <dd><a href="/vendor/openrouter">OpenRouter</a> \u2014 25+ free models through one OpenAI-compatible API; free models are capped at 20 requests a minute and 50 a day, or 1,000 a day once you have bought at least $10 of credits. ${manyModelsAnswer}</dd>

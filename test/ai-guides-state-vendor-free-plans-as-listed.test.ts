@@ -17,7 +17,6 @@ const STATED: Record<string, string[]> = {
   "/free-llm-apis": [
     "Mistral's Free plan includes monthly API usage; its pricing page listed $10 a month until 2026-10-07, then stopped stating the amount. OpenRouter aggregates",
     "Mistral's Free plan includes monthly API usage; its pricing page listed $10 a month until 2026-10-07, then stopped stating the amount. OpenRouter gives one API key",
-    "Mistral AI — Free plan includes monthly API usage whose amount the pricing page has not stated since 2026-10-07. API keys need no credit card.",
     "Cloudflare Workers AI — 10,000 Neurons a day at no charge on every account; on the Workers Free plan, requests beyond that fail until the daily reset at 00:00 UTC. Some models, including Kimi K2.6 and GLM-5.3, need the Workers Paid plan or prepaid AI Gateway credits.",
     "Ollama — open source (MIT) and free to run on your own machine; its cloud models are paid with usage credits, and the Free plan includes starter credits.",
   ],

@@ -11,6 +11,14 @@ const REPO = path.join(__dirname, "..");
 const GROQ_RETIRED = /Llama 3\.3|Llama 3\.1|Llama 4|Llama, Mixtral|Mixtral|Gemma|Qwen3(?![.\d])|100K-500K|14\.4K RPD|3-15M/;
 const MISTRAL_RETIRED = /1B tokens|1B tok|1 billion tokens|2 RPM|2\.8K RPD|Experiment tier/;
 
+const TOKEN_VOLUME_QUESTION = "Need maximum free token volume?";
+const TOKEN_VOLUME_ANSWER =
+  "Groq — 200,000 tokens a day on each of its three free chat models, the largest renewing quota stated on this page. Cerebras's trial allows 1M tokens a day but only for 30 days and $5 of credits. Mistral and Gemini state no amount.";
+const LISTED_FIGURES_QUOTED: Record<string, string[]> = {
+  Groq: ["Free plan: gpt-oss-120b, gpt-oss-20b and Qwen3.8 27B, each at", "200,000 tokens a day"],
+  Cerebras: ["$5 in free credits", "expiring 30 days after they are granted", "1M tokens/day"],
+};
+
 const STATED: Record<string, string[]> = {
   "/google-developer-program-2026": [
     "30 RPM; 1K requests and 200K tokens/day per model",
@@ -37,7 +45,6 @@ const STATED: Record<string, string[]> = {
     "30 RPM free with gpt-oss-120b",
     "Free plan includes monthly API usage; its pricing page listed $10 a month until 2026-10-07, then stopped stating the amount.",
     "Mistral's Free plan includes monthly API usage; its pricing page listed $10 a month until 2026-10-07, then stopped stating the amount.",
-    "Mistral AI — Free plan includes monthly API usage whose amount the pricing page has not stated since 2026-10-07. API keys need no credit card.",
   ],
   "/llm-api-pricing": [
     "Groq's free plan allows 30 RPM, 1,000 requests and 200K tokens a day per model",
@@ -159,6 +166,17 @@ function textOf(html: string): string {
   return decode(html.replace(/<script(?![^>]*ld\+json)[\s\S]*?<\/script>/g, " ").replace(/<[^>]+>/g, " ")).replace(/\s+/g, " ");
 }
 
+function entriesFor(html: string, question: string): string[] {
+  return [...html.matchAll(/<dt\b[^>]*>([\s\S]*?)<\/dt>([\s\S]*?)(?=<dt\b|<\/dl>)/g)]
+    .filter(([, term]) => textOf(term).trim() === question)
+    .map(([, , answers]) => answers);
+}
+
+function listedDescription(vendor: string): string {
+  const offers: { vendor: string; description?: string }[] = JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf-8")).offers;
+  return offers.filter((offer) => offer.vendor === vendor).map((offer) => offer.description ?? "").join(" ");
+}
+
 let proc: ChildProcess | null = null;
 const served = new Map<string, string>();
 
@@ -224,5 +242,21 @@ describe("the AI guides state Groq's and Mistral's free plans as the vendors lis
     for (const page of ["/llm-api-pricing", "/free-llm-apis"]) {
       assert.ok(unitsOf(served.get(page)!).some((unit) => /Mistral/.test(unit) && /monthly API usage/.test(unit)), page);
     }
+  });
+
+  it("answers the free token volume question on /free-llm-apis with Groq's daily quota, and that answer never names Mistral AI", () => {
+    const entries = entriesFor(served.get("/free-llm-apis")!, TOKEN_VOLUME_QUESTION);
+    assert.strictEqual(entries.length, 1, `/free-llm-apis asks "${TOKEN_VOLUME_QUESTION}" ${entries.length} times`);
+    const answers = [...entries[0].matchAll(/<dd\b[^>]*>([\s\S]*?)<\/dd>/g)].map(([, answer]) => answer);
+    assert.deepStrictEqual(answers.map((answer) => textOf(answer).trim()), [TOKEN_VOLUME_ANSWER]);
+    assert.ok(answers[0].trim().startsWith('<a href="/vendor/groq">Groq</a>'), answers[0]);
+    assert.doesNotMatch(entries[0], /Mistral AI|\/vendor\/mistral-ai/);
+  });
+
+  it("quotes only figures that Groq's and Cerebras's own listings still state", () => {
+    const missing = Object.entries(LISTED_FIGURES_QUOTED).flatMap(([vendor, figures]) =>
+      figures.filter((figure) => !listedDescription(vendor).includes(figure)).map((figure) => `${vendor}: ${figure}`),
+    );
+    assert.deepStrictEqual(missing, [], `the "${TOKEN_VOLUME_QUESTION}" answer on /free-llm-apis quotes figures these listings no longer state`);
   });
 });
