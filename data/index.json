@@ -2023,7 +2023,15 @@
         "checked": "2026-10-07",
         "outcome": "ok",
         "detail": "the page names Auth0 as \"auth0\" and states \"$ 0\""
-      }
+      },
+      "conditions": [
+        {
+          "text": "Using the Free plan's custom domain requires a valid credit card on file for verification and fraud prevention. Auth0 does not charge it.",
+          "quote": "To set up a free custom domain, Auth0 tenants must have a valid credit card on file for verification purposes and fraud prevention. The credit card will not be charged.",
+          "url": "https://auth0.com/docs/customize/custom-domains",
+          "read_on": "2026-10-08"
+        }
+      ]
     },
     {
       "vendor": "Kinde",
