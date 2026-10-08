@@ -2870,6 +2870,24 @@
           "read_on": "2026-10-07"
         },
         {
+          "text": "Hetzner's prices are net, so VAT is added by the customer's country of residence: 19% in Germany, and each EU country's own rate for EU customers without a valid VAT ID.",
+          "quote": "Our net prices are the same for all customers. The rate of Value Added Tax (VAT) that we charge is based on your country of residence … We charge clients based in Germany 19% VAT. … We charge customers from EU Member States the VAT rate of their respective country of origin",
+          "url": "https://docs.hetzner.com/general/billing-and-account-management/billing-at-hetzner/value-added-tax/",
+          "read_on": "2026-10-08"
+        },
+        {
+          "text": "An EU business with a valid VAT ID is invoiced without VAT under the reverse-charge procedure.",
+          "quote": "Customers in EU Member States who can produce a valid VAT ID will receive their invoice according to the \"Reverse-Charge\" procedure, without German tax.",
+          "url": "https://docs.hetzner.com/general/billing-and-account-management/billing-at-hetzner/value-added-tax/",
+          "read_on": "2026-10-08"
+        },
+        {
+          "text": "Outside the EU, Hetzner adds tax only in the United Kingdom (20%), Switzerland (8.1%), Norway, Australia, Singapore, South Africa and five US states (Texas, Utah, Arizona, Colorado, New Mexico); everyone else pays none.",
+          "quote": "We charge an 8% sales tax for customers in Texas. We also collect sales tax from customers in Utah and Arizona. … The same rule applies to customers in Colorado and New Mexico. … Customers from these countries will receive their invoice without VAT.",
+          "url": "https://docs.hetzner.com/general/billing-and-account-management/billing-at-hetzner/value-added-tax/",
+          "read_on": "2026-10-08"
+        },
+        {
           "text": "Hetzner may ask a new customer to verify the account before it processes an order, with a government ID or an advance payment by the customer's own credit card.",
           "quote": "As part of our fraud prevention measures, we may ask you to verify your account before we process an order. You can do this in two ways: Verification via ID document: You provide us with a copy of a valid government-issued ID (e.g., ID card or passport). This allows us to confirm that the information provided during registration matches your identity. Verification via prepayment (credit card): Alternatively, you can verify your account by making an advance payment with your own credit card.",
           "url": "https://docs.hetzner.com/general/security-and-identify/fraud-prevention-faq/",
