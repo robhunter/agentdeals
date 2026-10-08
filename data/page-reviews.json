@@ -320,12 +320,12 @@
       "review_note": "The corrections from https://github.com/robhunter/agentdeals/issues/2187 are live. Checked on production on 2026-10-01: 221 replacement strings, 141 of them cell by cell, and a census of 2,595 routes for the withdrawn claims.",
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 103,
+      "table_figures": 104,
       "table_figures_from_records": 3,
       "tables": [
         {
           "label": "Main Comparison Table",
-          "figures": 39,
+          "figures": 40,
           "from_records": 3
         },
         {
