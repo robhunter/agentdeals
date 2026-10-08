@@ -21311,7 +21311,7 @@
       ],
       "verifiedDate": "2026-05-20",
       "referral_program": {
-        "available": true,
+        "available": false,
         "referrer_benefit": "20-35% commission depending on product",
         "referee_benefit": "Standard pricing",
         "program_url": "https://www.namecheap.com/affiliates/",
@@ -25216,11 +25216,12 @@
       "verifiedDate": "2026-10-08",
       "referral_program": {
         "available": true,
-        "referrer_benefit": "Free months of service",
-        "referee_benefit": "Free months of service",
+        "referrer_benefit": "$20 in Proton credit when they subscribe to a paid plan",
+        "referee_benefit": "$20 in Proton credit after a full month on a paid plan (two months on a monthly plan)",
         "program_url": "https://proton.me/support/referral-program",
         "type": "self-service",
-        "commission_type": "credits"
+        "commission_type": "credits",
+        "notes": "Proton: \"When your referee signs up using your link, if they chose an eligible plan (such as Mail Plus, Drive Plus, and Pass Plus), they'll also get a two-week free trial. They won't have to add any payment information until the trial ends.\" (read 2026-10-08)"
       },
       "source_check": {
         "checked": "2026-10-08",
@@ -35338,11 +35339,12 @@
       "verifiedDate": "2026-08-21",
       "referral_program": {
         "available": true,
-        "referrer_benefit": "Free months of service",
-        "referee_benefit": "Free months of service",
+        "referrer_benefit": "$20 in Proton credit when they subscribe to a paid plan",
+        "referee_benefit": "$20 in Proton credit after a full month on a paid plan (two months on a monthly plan)",
         "program_url": "https://proton.me/support/referral-program",
         "type": "self-service",
-        "commission_type": "credits"
+        "commission_type": "credits",
+        "notes": "Proton: \"When your referee signs up using your link, if they chose an eligible plan (such as Mail Plus, Drive Plus, and Pass Plus), they'll also get a two-week free trial. They won't have to add any payment information until the trial ends.\" (read 2026-10-08)"
       },
       "source_check": {
         "checked": "2026-09-22",
@@ -35775,11 +35777,12 @@
       "verifiedDate": "2026-09-22",
       "referral_program": {
         "available": true,
-        "referrer_benefit": "Free months of service",
-        "referee_benefit": "Free months of service",
+        "referrer_benefit": "$20 in Proton credit when they subscribe to a paid plan",
+        "referee_benefit": "$20 in Proton credit after a full month on a paid plan (two months on a monthly plan)",
         "program_url": "https://proton.me/support/referral-program",
         "type": "self-service",
-        "commission_type": "credits"
+        "commission_type": "credits",
+        "notes": "Proton: \"When your referee signs up using your link, if they chose an eligible plan (such as Mail Plus, Drive Plus, and Pass Plus), they'll also get a two-week free trial. They won't have to add any payment information until the trial ends.\" (read 2026-10-08)"
       },
       "source_check": {
         "checked": "2026-09-22",
@@ -36108,11 +36111,12 @@
       "verifiedDate": "2026-09-22",
       "referral_program": {
         "available": true,
-        "referrer_benefit": "Free months of service",
-        "referee_benefit": "Free months of service",
+        "referrer_benefit": "$20 in Proton credit when they subscribe to a paid plan",
+        "referee_benefit": "$20 in Proton credit after a full month on a paid plan (two months on a monthly plan)",
         "program_url": "https://proton.me/support/referral-program",
         "type": "self-service",
-        "commission_type": "credits"
+        "commission_type": "credits",
+        "notes": "Proton: \"When your referee signs up using your link, if they chose an eligible plan (such as Mail Plus, Drive Plus, and Pass Plus), they'll also get a two-week free trial. They won't have to add any payment information until the trial ends.\" (read 2026-10-08)"
       },
       "source_check": {
         "checked": "2026-09-22",
