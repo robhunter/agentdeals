@@ -16110,6 +16110,21 @@
         "AWS"
       ],
       "recorded_date": "2026-10-08"
+    },
+    {
+      "vendor": "Neon",
+      "change_type": "limits_increased",
+      "date": "2025-12-09",
+      "tier": "Launch and Scale",
+      "summary": "Neon removed the $5 monthly minimum from its paid Launch and Scale plans, which now bill only for what you use.",
+      "previous_state": "Launch and Scale: usage-based with a $5 monthly minimum. \"For Launch and Scale, the minimum monthly fee is $5.\" (Neon's plans docs, Internet Archive capture of 2025-12-01)",
+      "current_state": "\"On Launch and Scale plans, you pay only for what you use; there's no minimum monthly fee.\" (neon.com/docs/introduction/plans). Neon's pricing page dropped the minimum on 2025-12-09, and its changelog of 2025-12-12 says: \"We've removed the $5 monthly minimum from our paid plans.\"",
+      "source_url": "https://github.com/neondatabase/website/pull/4218",
+      "impact": "medium",
+      "category": "Databases",
+      "alternatives": [],
+      "recorded_date": "2026-10-08",
+      "date_source": "vendor_page"
     }
   ]
 }
