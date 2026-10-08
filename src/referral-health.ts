@@ -97,8 +97,20 @@ function isValid(status: number | null): boolean {
   return status !== null && status >= 200 && status < 400;
 }
 
-function collectReferralUrls(): { vendor: string; url: string; source: "curated" | "agent-submitted" }[] {
-  const urls: { vendor: string; url: string; source: "curated" | "agent-submitted" }[] = [];
+export interface ReferralUrlToCheck {
+  vendor: string;
+  url: string;
+  source: "curated" | "agent-submitted";
+}
+
+export const REFERRAL_HEALTH_SWITCH = "AGENTDEALS_REFERRAL_HEALTH";
+
+export function referralHealthChecksAreOn(env: NodeJS.ProcessEnv = process.env): boolean {
+  return env[REFERRAL_HEALTH_SWITCH] !== "off";
+}
+
+export function collectReferralUrls(): ReferralUrlToCheck[] {
+  const urls: ReferralUrlToCheck[] = [];
 
   const offers = loadOffers();
   for (const offer of offers) {
@@ -120,8 +132,7 @@ function collectReferralUrls(): { vendor: string; url: string; source: "curated"
   return urls;
 }
 
-export async function runHealthCheck(): Promise<ReferralHealthReport> {
-  const urls = collectReferralUrls();
+export async function runHealthCheck(urls: ReferralUrlToCheck[] = collectReferralUrls()): Promise<ReferralHealthReport> {
   const results: ReferralCheckResult[] = [];
 
   for (const entry of urls) {
