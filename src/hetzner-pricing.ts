@@ -47,6 +47,13 @@ export const HETZNER_CLOUD_PLANS: HetznerPlan[] = [
 
 export const HETZNER_SINGAPORE_EXAMPLE = { sku: "CCX13", eur: 54.49 };
 
+export const HETZNER_CLOUD_ADD_ON_PRICES = {
+  trafficPerTbBeyondTheIncluded: { euAndUs: 1, singapore: 7.4 },
+  ipv4PerMonth: 0.5,
+  backupShareOfThePriceWithoutIpv4: 0.2,
+  snapshotPerGbMonth: 0.0143,
+};
+
 export const HETZNER_APRIL_CHANGES = [
   { product: "CX23 (2 vCPU, 4 GB) — entry cloud server", before: "€2.99", after: "€3.99", pctChange: 33 },
   { product: "LB11 (Load Balancer)", before: "€5.39", after: "€7.49", pctChange: 39 },

@@ -10,6 +10,7 @@ import {
   HETZNER_AVAILABILITY_READ,
   HETZNER_AX102_GERMANY,
   HETZNER_AX42_GERMANY,
+  HETZNER_CLOUD_ADD_ON_PRICES,
   HETZNER_CLOUD_PLANS,
   HETZNER_PRICES_READ,
   HETZNER_SINGAPORE_EXAMPLE,
@@ -23,6 +24,7 @@ import { parseHetznerPricesRead } from "../dist/page-reviews.js";
 import { everyRouteTheSitemapPublishes } from "./sitemap-routes.ts";
 
 type HetznerPlan = import("../src/hetzner-pricing.ts").HetznerPlan;
+type ListingCondition = import("../src/types.ts").ListingCondition;
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -64,11 +66,60 @@ const visible = (body: string) =>
     .replace(/&euro;/g, "€")
     .replace(/\s+/g, " ");
 
+const CATALOGUE_OFFERS = JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf8")).offers as { vendor: string; conditions?: ListingCondition[] }[];
+
 const OTHER_LISTED_VENDORS = new Set(
-  (JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf8")).offers as { vendor: string }[])
+  CATALOGUE_OFFERS
     .map(o => o.vendor)
     .filter(vendor => vendor !== "Hetzner"),
 );
+
+const HETZNER_CONDITIONS = CATALOGUE_OFFERS.find(o => o.vendor === "Hetzner")?.conditions ?? [];
+
+const hetznerConditionOpening = (opening: string) => {
+  const found = HETZNER_CONDITIONS.filter(condition => condition.text.startsWith(opening));
+  assert.equal(found.length, 1, `Hetzner's listing should hold one condition opening "${opening}"`);
+  return found[0].text;
+};
+
+const TRAFFIC_CONDITION = "Outgoing traffic beyond";
+const BACKUP_PRICE_CONDITION = "Backups cost";
+const BACKUP_SLOTS_CONDITION = "Backups are automatic";
+const SNAPSHOT_CONDITION = "Snapshots cost";
+
+const { trafficPerTbBeyondTheIncluded, ipv4PerMonth, backupShareOfThePriceWithoutIpv4, snapshotPerGbMonth } = HETZNER_CLOUD_ADD_ON_PRICES;
+
+const eurosIn = (text: string) => text.match(/€\d+\.\d{2,}/g) ?? [];
+const asWritten = (eur: number) => `€${eur.toFixed(4).replace(/0{1,2}$/, "")}`;
+const cents = (eur: number) => Math.round(eur * 100);
+const fromCents = (amount: number) => `€${(amount / 100).toFixed(2)}`;
+
+const ADD_ON_PRICES_AS_WRITTEN = [
+  trafficPerTbBeyondTheIncluded.euAndUs,
+  trafficPerTbBeyondTheIncluded.singapore,
+  ipv4PerMonth,
+  snapshotPerGbMonth,
+].map(asWritten);
+
+function backupExample(text: string) {
+  const skus = text.match(/\bC[A-Z]*X\d+\b/g) ?? [];
+  assert.equal(skus.length, 1, `the backup condition should name one plan: ${text}`);
+  const plan = HETZNER_CLOUD_PLANS.find(p => p.sku === skus[0]);
+  assert.ok(plan, `${skus[0]} is not in the plan table`);
+  const backup = Math.round((cents(plan.eur) - cents(ipv4PerMonth)) * backupShareOfThePriceWithoutIpv4);
+  return { backup: fromCents(backup), withBackups: fromCents(cents(plan.eur) + backup) };
+}
+
+function snapshotExample(text: string) {
+  const sizes = [...text.matchAll(/(\d+) GB\b/g)].map(([, gb]) => Number(gb));
+  assert.equal(sizes.length, 1, `the snapshot condition should give one example size: ${text}`);
+  return fromCents(Math.round(sizes[0] * snapshotPerGbMonth * 100));
+}
+
+const addOnExamples = () => {
+  const { backup, withBackups } = backupExample(hetznerConditionOpening(BACKUP_PRICE_CONDITION));
+  return [backup, withBackups, snapshotExample(hetznerConditionOpening(SNAPSHOT_CONDITION))];
+};
 
 const withoutItemsOrRowsHeadedByAnotherVendor = (body: string) =>
   body
@@ -207,10 +258,12 @@ describe("the pricing page prices what Hetzner sells today", () => {
       ...HETZNER_APRIL_CHANGES.flatMap(c => [c.before, c.after]),
       `€${HETZNER_SINGAPORE_EXAMPLE.eur.toFixed(2)}`,
       ...[HETZNER_AX42_GERMANY, HETZNER_AX102_GERMANY].flatMap(server => Object.values(server)).map(price => `€${price.toFixed(2)}`),
+      ...ADD_ON_PRICES_AS_WRITTEN,
+      ...addOnExamples(),
     ]);
-    const quoted = new Set(visible(withoutItemsOrRowsHeadedByAnotherVendor(body)).match(/€\d+\.\d{2}/g) ?? []);
+    const quoted = new Set(eurosIn(visible(withoutItemsOrRowsHeadedByAnotherVendor(body))));
     const strays = [...quoted].filter(price => !allowed.has(price));
-    assert.deepEqual(strays, [], `prices with no plan, April row or dedicated-server figure behind them: ${strays.join(", ")}`);
+    assert.deepEqual(strays, [], `prices with no plan, April row, dedicated-server figure or add-on price behind them: ${strays.join(", ")}`);
   });
 
   it("does not describe a completed price change as still to come", async () => {
@@ -491,6 +544,35 @@ describe("what a Hetzner cloud price on /hetzner-pricing-2026 includes", () => {
     assert.ok(availabilityNote > -1, paragraphs.join(" | "));
     assert.strictEqual(paragraphs[availabilityNote + 1], INCLUDED_IN_THE_PRICE);
     assert.match(paragraphs[availabilityNote + 2] ?? "", /^A new AX42 dedicated server in Germany costs .*, excluding IPv4\./);
+  });
+});
+
+describe("the add-on prices Hetzner's listing states", () => {
+  it("are printed among the listing's conditions on /hetzner-pricing-2026 and /vendor/hetzner", async () => {
+    const texts = [TRAFFIC_CONDITION, BACKUP_PRICE_CONDITION, BACKUP_SLOTS_CONDITION, SNAPSHOT_CONDITION].map(hetznerConditionOpening);
+    for (const route of ["/hetzner-pricing-2026", "/vendor/hetzner"]) {
+      const { status, body } = await get(route);
+      assert.equal(status, 200, route);
+      const printed = [...body.matchAll(/<ul class="listing-conditions"[\s\S]*?<\/ul>/g)].map(([list]) => visible(list)).join(" ");
+      for (const text of texts) assert.ok(printed.includes(text), `${route} does not print: ${text}`);
+    }
+  });
+
+  it("charge traffic beyond the included amount at the per-TB prices the add-on table holds", () => {
+    const text = hetznerConditionOpening(TRAFFIC_CONDITION);
+    assert.deepEqual(eurosIn(text), [trafficPerTbBeyondTheIncluded.euAndUs, trafficPerTbBeyondTheIncluded.singapore].map(asWritten), text);
+  });
+
+  it("price backups at the table's share of the server price less its IPv4 address, with an example derived from the plan it names", () => {
+    const text = hetznerConditionOpening(BACKUP_PRICE_CONDITION);
+    const { backup, withBackups } = backupExample(text);
+    assert.equal(text.match(/(\d+)%/)?.[1], String(Math.round(backupShareOfThePriceWithoutIpv4 * 100)), text);
+    assert.deepEqual(eurosIn(text).sort(), [asWritten(ipv4PerMonth), withBackups, backup].sort(), text);
+  });
+
+  it("price snapshots per GB, with an example derived from that price", () => {
+    const text = hetznerConditionOpening(SNAPSHOT_CONDITION);
+    assert.deepEqual(eurosIn(text).sort(), [asWritten(snapshotPerGbMonth), snapshotExample(text)].sort(), text);
   });
 });
 

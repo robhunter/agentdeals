@@ -2880,6 +2880,30 @@
           "read_on": "2026-10-07"
         },
         {
+          "text": "Outgoing traffic beyond a server's included amount costs €1.00 per TB in the EU and the US, and €7.40 per TB in Singapore. Hetzner bills overage in 100 MB blocks. It emails the project owner when usage passes 75% of the included traffic.",
+          "quote": "If you exceed the traffic included in your package, we will bill you for the over-usage in blocks of 100MB. … We will notify you, the project owner, if the traffic usage exceeds 75% of the included free traffic",
+          "url": "https://docs.hetzner.com/cloud/billing/faq/",
+          "read_on": "2026-10-08"
+        },
+        {
+          "text": "Backups cost 20% of the server's monthly price minus its €0.50 IPv4 address. A CPX22 with backups and IPv4 costs €23.89 a month; backups are €3.90.",
+          "quote": "Backups mo. price related to instance, starting at: € 1.1980",
+          "url": "https://www.hetzner.com/cloud/regular-performance/",
+          "read_on": "2026-10-08"
+        },
+        {
+          "text": "Backups are automatic daily copies of the server's disk. Each server has seven backup slots; when all seven are full, the oldest is deleted when a new one is made. Backups are deleted with the server.",
+          "quote": "Backups are bound to a single server and will automatically be deleted if you delete the server. For every server, there are seven slots for Backups. If all slots are full and you create an additional one, then the oldest Backup will be deleted.",
+          "url": "https://docs.hetzner.com/cloud/servers/backups-snapshots/faq/",
+          "read_on": "2026-10-08"
+        },
+        {
+          "text": "Snapshots cost €0.0143 per GB a month, so a 40 GB snapshot costs about €0.57 a month. Snapshots are kept until deleted. By default an account can hold up to 30 snapshots across all its projects.",
+          "quote": "Snapshots are never deleted or updated automatically. … Up to 30 Snapshots across all projects",
+          "url": "https://docs.hetzner.com/cloud/servers/backups-snapshots/faq/",
+          "read_on": "2026-10-08"
+        },
+        {
           "text": "Hetzner's prices are net, so VAT is added by the customer's country of residence: 19% in Germany, and each EU country's own rate for EU customers without a valid VAT ID.",
           "quote": "Our net prices are the same for all customers. The rate of Value Added Tax (VAT) that we charge is based on your country of residence … We charge clients based in Germany 19% VAT. … We charge customers from EU Member States the VAT rate of their respective country of origin",
           "url": "https://docs.hetzner.com/general/billing-and-account-management/billing-at-hetzner/value-added-tax/",
