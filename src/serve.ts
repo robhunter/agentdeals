@@ -81,7 +81,7 @@ import { MCP_TOOLS, MCP_TOOL_COUNT, mcpToolNameList } from "./mcp-tool-inventory
 import { ACCELERATOR_CREDIT_PROGRAM, ACCELERATOR_CREDIT_VENDOR, NOTHING_CHANGING_SOON_HTML, RECENT_CHANGES_ON_THE_HOME_PAGE, UPCOMING_DEADLINES_ON_THE_HOME_PAGE, acceleratorCreditClause, atMostShownHere, onlyTheMostRecentShown, programCeiling } from "./homepage-claims.js";
 import { REFERRAL_CONDITIONS_HEADING, allOurReferralLinks, heldReferralLinkForVendor, ourReferralLinkFor, platformCodeAsVendorReferral, platformCodeLinkForNamedVendor, referralLinkCountClause, referrerDisclosureSentence } from "./referral-surfaces.js";
 import type { VendorReferralAnswer } from "./referral-surfaces.js";
-import { runHealthCheck, getLastReport, startPeriodicChecks } from "./referral-health.js";
+import { runHealthCheck, getLastReport, startPeriodicChecks, referralHealthChecksAreOn } from "./referral-health.js";
 import { configureDurableBackend, hydrateDurableStores, persistDurableStores, identityStorageReport } from "./durable-store.js";
 import { addFriend, removeFriend, getFriends, getFriendCodesForVendors } from "./friends.js";
 import { changeLogAnchorFor, changeLogVendorMap, toSlug, vendorSlugMap, resolveVendorSlug, namedVendorSlug, comparisonOfOneRecord, recordNamedBySlug, servedVendorSlug, servedVendorSlugForName } from "./vendor-slug.js";
@@ -55292,8 +55292,10 @@ httpServer.listen(PORT, () => {
   console.error(`agentdeals MCP server running on http://localhost:${actualPort}/mcp`);
 });
 
-runHealthCheck().catch((err) => console.error(`[referral-health] Startup check failed: ${err.message}`));
-startPeriodicChecks();
+if (referralHealthChecksAreOn()) {
+  runHealthCheck().catch((err) => console.error(`[referral-health] Startup check failed: ${err.message}`));
+  startPeriodicChecks();
+}
 
 async function pingSearchEngines(): Promise<void> {
   const urlList: string[] = [
@@ -55348,20 +55350,6 @@ async function pingSearchEngines(): Promise<void> {
   ].slice(0, 2000);
   for (const s of sortedVendorSlugs) {
     urlList.push(`${BASE_URL}/vendor/${s}`);
-  }
-
-  const sitemapUrl = `${BASE_URL}/sitemap.xml`;
-  const sitemapPings = [
-    `https://www.bing.com/ping?sitemap=${encodeURIComponent(sitemapUrl)}`,
-    `https://www.google.com/ping?sitemap=${encodeURIComponent(sitemapUrl)}`,
-  ];
-  for (const pingUrl of sitemapPings) {
-    try {
-      const resp = await fetch(pingUrl, { signal: AbortSignal.timeout(10000) });
-      console.error(`Sitemap ping ${new URL(pingUrl).hostname}: ${resp.status}`);
-    } catch (err: any) {
-      console.error(`Sitemap ping ${new URL(pingUrl).hostname} failed: ${err.message}`);
-    }
   }
 
   if (!INDEXNOW_KEY) {
