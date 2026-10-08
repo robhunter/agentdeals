@@ -4435,9 +4435,9 @@
     {
       "vendor": "Kong",
       "category": "API Gateway",
-      "description": "Open source API gateway (Apache 2.0). Self-hosted with no request or usage limits. Lacks enterprise features (Manager GUI, advanced analytics)",
+      "description": "Kong Gateway is an open-source API, LLM and MCP gateway under Apache 2.0. It is self-hosted with no request or usage limits and includes the Kong Manager web UI. Kong Konnect is a separate hosted platform with a free trial and per-gateway paid plans.",
       "tier": "OSS",
-      "url": "https://konghq.com/pricing",
+      "url": "https://github.com/Kong/kong",
       "tags": [
         "api-gateway",
         "open-source",

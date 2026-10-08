@@ -13155,6 +13155,12 @@
       "archive_check": {
         "checked": "2026-10-02",
         "outcome": "no_usable_capture"
+      },
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-10-08",
+        "detail": "Retracted 2026-10-08: the third reading of konghq.com/pricing attached to our open-source gateway listing, after the 2026-08-28 and 2026-09-09 records were retracted on 2026-09-10 for the same reason. The page prices Kong Konnect; \"Apache\" and \"OSS\" appear zero times on it, and the open-source gateway appears only as a navigation link to /community. github.com/Kong/kong still carries the Apache-2.0 license, with release 3.9.3 on 2026-06-17, so the open-source gateway's terms did not change.",
+        "source_url": "https://github.com/Kong/kong"
       }
     },
     {
