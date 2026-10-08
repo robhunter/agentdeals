@@ -6,7 +6,8 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-const { accountingPageUrls, archiveCaptureDate, parseAccountingPrices } = await import("../dist/accounting-prices.js");
+const { accountingPageUrls, parseAccountingPrices } = await import("../dist/accounting-prices.js");
+const { archiveCaptureDate } = await import("../dist/guide-data.js");
 
 type AccountingPrices = import("../src/accounting-prices.ts").AccountingPrices;
 type AccountingSource = import("../src/accounting-prices.ts").AccountingSource;

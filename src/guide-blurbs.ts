@@ -95,6 +95,7 @@ const WRITTEN_BLURBS: Readonly<Record<string, string>> = {
   "state-of-free-tiers": "Data-driven analysis of developer tool free tiers by category — trends, risks, and recommendations",
   "free-tier-facts-ai-models-get-wrong": "AI models give old free-tier terms",
   "accounting-software-pricing-2026": "QuickBooks Free connects one bank account. QuickBooks, Xero, FreshBooks raised prices in 2026. Zoho Books and Wave did not.",
+  "business-bank-account-fees-2026": "Mercury and Brex send domestic wires for $0 on free accounts. Found Plus now costs $35 a month. northone.com redirects to Relay.",
 };
 
 export function guideBlurb(slug: string): string {
