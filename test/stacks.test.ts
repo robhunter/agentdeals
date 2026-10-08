@@ -12,7 +12,7 @@ describe("stack recommendation logic", () => {
     const result = getStackRecommendation("Next.js SaaS app");
     assert.strictEqual(result.use_case, "Next.js SaaS app");
     assert.ok(result.stack.length >= 3, "SaaS stack should have at least 3 components");
-    assert.strictEqual(result.total_monthly_cost, "$0");
+    assert.match(result.total_monthly_cost, /^\$0\/mo /);
     assert.ok(Array.isArray(result.limitations));
     assert.ok(typeof result.upgrade_path === "string");
 
@@ -75,7 +75,7 @@ describe("stack recommendation logic", () => {
     const { getStackRecommendation } = await import("../dist/stacks.js");
     const result = getStackRecommendation("quantum teleporter management system");
     assert.ok(result.stack.length >= 3);
-    assert.strictEqual(result.total_monthly_cost, "$0");
+    assert.match(result.total_monthly_cost, /^\$0\/mo /);
   });
 
   it("description is capped at 200 characters", async () => {
@@ -298,7 +298,7 @@ describe("stack REST endpoint", () => {
     const body = await response.json() as any;
     assert.ok(Array.isArray(body.stack));
     assert.ok(body.stack.length >= 3);
-    assert.strictEqual(body.total_monthly_cost, "$0");
+    assert.match(body.total_monthly_cost, /^\$0\/mo /);
     assert.ok(Array.isArray(body.limitations));
     assert.ok(typeof body.upgrade_path === "string");
     assert.ok(Array.isArray(body.stack[0].candidates));

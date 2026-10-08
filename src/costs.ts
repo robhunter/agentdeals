@@ -57,7 +57,7 @@ function totalNotEstimatedAtScale(scale: Scale): string {
   return `Not estimated at ${scale} scale: we do not price usage above free tiers.`;
 }
 
-interface PricedService {
+export interface PricedService {
   vendor: string;
   notEstimatedBecause: string | null;
 }
@@ -77,7 +77,7 @@ function withheldTermsOf(offer: Offer, allChanges: DealChange[]): SupersededTerm
   return supersededTermsRecordFor(offer, changesNaming(offer.vendor, allChanges));
 }
 
-function reasonNotPricedAtZero(offer: Offer, withheld: SupersededTermsRecord | null): string | null {
+export function reasonNotPricedAtZero(offer: Pick<Offer, "tier">, withheld: SupersededTermsRecord | null): string | null {
   const tierClass = classifyTier(offer.tier);
   if (tierClass.class !== "free") return tierClass.note;
   if (withheld) return STORED_TERMS_WITHHELD_NOTE;
@@ -172,13 +172,14 @@ function generateWarnings(
   return warnings;
 }
 
-function hobbyTotal(priced: PricedService[]): string {
+export function freeTierCoverageTotal(priced: readonly PricedService[], { namingThoseAtZero = true } = {}): string {
   const atZero = priced.filter((s) => s.notEstimatedBecause === null);
   const notEstimated = priced.filter((s) => s.notEstimatedBecause !== null);
   if (notEstimated.length === 0) return ALL_WITHIN_FREE_TIERS;
   const unpriced = `Not estimated: ${notEstimated.map((s) => `${s.vendor} (${s.notEstimatedBecause})`).join(", ")}.`;
   if (atZero.length === 0) return unpriced;
-  return `$0/mo for ${atZero.length} of ${priced.length} services (${atZero.map((s) => s.vendor).join(", ")}), within their free tiers. ${unpriced}`;
+  const named = namingThoseAtZero ? ` (${atZero.map((s) => s.vendor).join(", ")})` : "";
+  return `$0/mo for ${atZero.length} of ${priced.length} services${named}, within their free tiers. ${unpriced}`;
 }
 
 export function estimateCosts(
@@ -243,7 +244,7 @@ export function estimateCosts(
   let totalEstimated: string;
   let savingsAvailable: string;
   if (scale === "hobby") {
-    totalEstimated = hobbyTotal(priced);
+    totalEstimated = freeTierCoverageTotal(priced);
     savingsAvailable = priced.some((s) => s.notEstimatedBecause !== null)
       ? SAVINGS_NOT_ESTIMATED_BESIDE_ALTERNATIVES
       : ALREADY_ON_FREE_TIERS;

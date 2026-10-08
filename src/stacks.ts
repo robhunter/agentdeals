@@ -6,12 +6,15 @@ import { lastReadDate } from "./read-date.js";
 import type { Offer, StabilityClass, DealChange, RatingWithheld, LinkUnreachable, SourceCheck, ListingCondition } from "./types.js";
 import { conditionsField } from "./conditions-field.js";
 import { partitionRoleCandidates, MEMBERSHIP_GATE_RULES } from "./product-role.js";
+import { supersededTermsRecordFor, type SupersededTermsRecord } from "./superseded-description.js";
+import { freeTierCoverageTotal, reasonNotPricedAtZero } from "./costs.js";
 
 export interface StackCandidate {
   vendor: string;
   tier: string;
   description: string;
   conditions?: ListingCondition[];
+  terms_superseded: SupersededTermsRecord | null;
   url: string;
   verified_date: string;
   last_read_date: string;
@@ -232,6 +235,7 @@ function toCandidate(
     tier: offer.tier,
     description: offer.description.length > 200 ? offer.description.slice(0, 197) + "..." : offer.description,
     ...conditionsField(offer),
+    terms_superseded: supersededTermsRecordFor(offer, vendorChanges),
     url: offer.url,
     verified_date: offer.verifiedDate,
     last_read_date: lastReadDate(offer),
@@ -333,7 +337,10 @@ export function getStackRecommendation(
   return {
     use_case: useCase,
     stack,
-    total_monthly_cost: "$0",
+    total_monthly_cost: freeTierCoverageTotal(stack.flatMap((role) => role.candidates.map((candidate) => ({
+      vendor: candidate.vendor,
+      notEstimatedBecause: reasonNotPricedAtZero(candidate, candidate.terms_superseded),
+    }))), { namingThoseAtZero: false }),
     limitations: buildLimitations(stack),
     upgrade_path: upgradePath,
     risk_warnings: buildRiskWarnings(stack),
