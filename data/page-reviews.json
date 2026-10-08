@@ -11,6 +11,7 @@
       "tier": "B",
       "vendors_asserted": [],
       "vendors_tabulated": [
+        "brave-search-api",
         "browserbase",
         "exa",
         "hyperbrowser",
@@ -26,8 +27,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 2,
-      "table_figures_from_records": 2,
+      "table_figures": 3,
+      "table_figures_from_records": 3,
       "tables": [
         {
           "label": "Protocol Comparison",
@@ -36,8 +37,8 @@
         },
         {
           "label": "All Payment-Enabled Services",
-          "figures": 2,
-          "from_records": 2
+          "figures": 3,
+          "from_records": 3
         }
       ],
       "reads_changes": true,
@@ -3429,6 +3430,7 @@
       "tier": "B",
       "vendors_asserted": [],
       "vendors_tabulated": [
+        "brave-search-api",
         "browserbase",
         "exa",
         "hyperbrowser",
@@ -3443,12 +3445,12 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 5,
+      "table_figures": 6,
       "table_figures_from_records": 0,
       "tables": [
         {
           "label": "All x402-Enabled Services",
-          "figures": 5,
+          "figures": 6,
           "from_records": 0
         }
       ],
