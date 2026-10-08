@@ -4565,7 +4565,7 @@
       "change_type": "product_deprecated",
       "date": "2026-10-31",
       "date_source": "vendor_page",
-      "summary": "Apiary reaches end of life on 2026-10-31, when Oracle stops the service and deletes remaining instances. Oracle announced it on 2025-10-28. The Free plan is the only one still open, so it ends with the product.",
+      "summary": "Apiary reaches end of life on 2026-10-31, when Oracle stops the service and deletes remaining instances. Oracle announced it on 2025-10-28. The Free plan is the only one still open, so it ends with the product. Oracle instructed customers using the API Blueprint format to convert to OpenAPI and move the files to tools such as Apimatic, Postman, Swagger Editor, Stoplight, Redocly, or Bump.sh.",
       "previous_state": "Free: unlimited API blueprints and unlimited users with one admin account and hosted documentation. The paid Standard and Pro plans have taken no new teams since 2021-09-09.",
       "current_state": "\"Service Change: End-of-Life (EOL) for Apiary Cloud Service effective October 31, 2026. Date Announced: Oct 28, 2025 Date in Effect: Oct 31, 2026\"",
       "impact": "high",
