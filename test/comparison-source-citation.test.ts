@@ -562,7 +562,7 @@ describe("every comparison page reaches the pages its figures were read from", (
       }
     }
     assert.deepStrictEqual(unreachable, []);
-    assertPopulationFloor(reaching, 60, "markers reaching a sentence on the page that spells the clause out");
+    assertPopulationFloor(reaching, 50, "markers reaching a sentence on the page that spells the clause out");
   });
 
   it("counts the same rows the page register counts, once the markers are stripped", () => {

@@ -34,11 +34,11 @@ const MUTANTS = [
     `  return probes.filter((probe) => probe.repoint_to);`],
 
   ["the-repoint-restamps-the-verified-date", AUDIT,
-    `    offer.url = probe.repoint_to;\n    offer.source_check = probe.winner_check;`,
-    `    offer.url = probe.repoint_to;\n    offer.source_check = probe.winner_check;\n    offer.verifiedDate = probe.winner_check.checked;`],
+    `    offer.url = to;\n    offer.source_check = check;`,
+    `    offer.url = to;\n    offer.source_check = check;\n    offer.verifiedDate = check.checked;`],
 
   ["the-repoint-keeps-the-check-taken-on-the-root", AUDIT,
-    `    offer.source_check = probe.winner_check;`,
+    `    offer.source_check = check;`,
     `    offer.source_check = probe.root.check;`],
 
   ["an-offer-whose-url-moved-since-the-probe-is-repointed-anyway", AUDIT,
@@ -50,8 +50,8 @@ const MUTANTS = [
     `  const rootUnreadable = probes.filter((p) => p.root.ok === false && p.root.error === "");`],
 
   ["the-ruling-takes-every-repoint-the-probe-earned", AUDIT,
-    `  return repointsTheReportEarned(probes).filter(quotesAFigureWeAlsoPublish);`,
-    `  return repointsTheReportEarned(probes);`],
+    `    (probe) => theRulingCovers(probe) && reasonToHold(probe) === null`,
+    `    (probe) => reasonToHold(probe) === null`],
 
   ["a-page-matching-none-of-our-figures-counts-as-quoting-one", AUDIT,
     `  return (probe.winner_figures_we_also_publish ?? []).length > 0;`,
@@ -66,8 +66,8 @@ const MUTANTS = [
     `    const [offer] = matched;`],
 
   ["the-held-population-is-the-repoints-we-took", AUDIT,
-    `  return repointsTheReportEarned(probes).filter((probe) => !quotesAFigureWeAlsoPublish(probe));`,
-    `  return repointsTheReportEarned(probes).filter((probe) => quotesAFigureWeAlsoPublish(probe));`],
+    `  return repointsTheReportEarned(probes).filter((probe) => !theRulingCovers(probe));`,
+    `  return repointsTheReportEarned(probes).filter((probe) => theRulingCovers(probe));`],
 
   ["a-held-offer-is-named-without-the-amounts-its-page-states", AUDIT,
     `    amounts_the_page_states: probe.winner_amounts_the_page_states,`,
@@ -78,8 +78,144 @@ const MUTANTS = [
     `    terms_we_hold: null,\n  }));`],
 
   ["the-summary-counts-no-repoint-as-held", AUDIT,
-    `    one_hop_answers_matching_no_figure_of_ours: heldForMatchingNoFigureOfOurs(probes).length,`,
-    `    one_hop_answers_matching_no_figure_of_ours: 0,`],
+    `    one_hop_answers_stating_only_amounts_not_ours: heldForStatingOnlyAmountsNotOurs(probes).length,`,
+    `    one_hop_answers_stating_only_amounts_not_ours: 0,`],
+
+  ["a-page-stating-a-zero-and-none-of-our-figures-is-held", AUDIT,
+    `  return quotesAFigureWeAlsoPublish(probe) || reportsOnlyAStatedZero(probe);`,
+    `  return quotesAFigureWeAlsoPublish(probe);`],
+
+  ["a-check-reporting-a-zero-beside-another-amount-counts-as-the-zero", AUDIT,
+    `  return figures.length > 0 && figures.every(statesAnAmountOfZero);`,
+    `  return figures.some(statesAnAmountOfZero);`],
+
+  ["a-check-reporting-no-figure-counts-as-a-zero", AUDIT,
+    `  return figures.length > 0 && figures.every(statesAnAmountOfZero);`,
+    `  return figures.every(statesAnAmountOfZero);`],
+
+  ["a-zero-beside-a-figure-we-publish-counts-as-the-zero", AUDIT,
+    `  return !quotesAFigureWeAlsoPublish(probe) && reportsOnlyAStatedZero(probe);`,
+    `  return reportsOnlyAStatedZero(probe) || quotesAFigureWeAlsoPublish(probe);`],
+
+  ["zulip-is-not-held", AUDIT,
+    `  if (HELD_LISTINGS.has(listing.vendor)) return HELD_LISTINGS.get(listing.vendor);\n`,
+    ``],
+
+  ["an-ended-listing-is-not-held", AUDIT,
+    `  if (offerRetired(listing)) return AN_ENDED_LISTING;\n`,
+    ``],
+
+  ["the-repoint-does-not-ask-the-listing-it-writes-whether-it-is-held", AUDIT,
+    `    const reason = reasonToHold(offer);`,
+    `    const reason = null;`],
+
+  ["a-held-listing-is-named-without-its-reason", AUDIT,
+    `      reason: reasonToHold(probe),\n    }));`,
+    `      reason: null,\n    }));`],
+
+  ["the-held-list-names-the-repoints-taken", AUDIT,
+    `        theRulingCovers(probe) && reasonToHold(probe) !== null && !citingTheirRepository.has(probe)`,
+    `        theRulingCovers(probe)`],
+
+  ["every-zero-repoint-is-filed-as-stating-a-quantity", AUDIT,
+    `  return quantifiedAttributes(probe.terms_we_hold ?? "").length > 0;`,
+    `  return true;`],
+
+  ["the-zero-lists-take-repoints-that-quote-our-figures", AUDIT,
+    `  const taken = repointsTheRulingTakes(probes).filter(statesAZeroAndNoFigureOfOurs);`,
+    `  const taken = repointsTheRulingTakes(probes);`],
+
+  ["the-summary-counts-every-repoint-as-quoting-a-figure", AUDIT,
+    `    one_hop_answers_quoting_a_figure_we_publish: repointable.filter(quotesAFigureWeAlsoPublish).length,`,
+    `    one_hop_answers_quoting_a_figure_we_publish: repointsTheRulingTakes(probes).length,`],
+
+  ["the-summary-counts-no-zero-repoint", AUDIT,
+    `    one_hop_answers_stating_a_zero_and_no_figure_of_ours: repointable.filter(statesAZeroAndNoFigureOfOurs).length,`,
+    `    one_hop_answers_stating_a_zero_and_no_figure_of_ours: 0,`],
+
+  ["the-summary-counts-no-held-listing", AUDIT,
+    `    held_before_repointing: heldBeforeRepointing(probes).length,`,
+    `    held_before_repointing: 0,`],
+
+  ["the-summary-counts-every-answer-as-taken", AUDIT,
+    `    repoints_taken: repointsTheRulingTakes(probes).length,`,
+    `    repoints_taken: repointable.length,`],
+
+  ["the-repoint-keeps-an-excerpt-read-from-the-root", AUDIT,
+    `      delete offer[FREE_PLAN_EXCERPT];\n`,
+    ``],
+
+  ["the-repoint-removes-every-excerpt", AUDIT,
+    `    if (offer[FREE_PLAN_EXCERPT] && offer[FREE_PLAN_EXCERPT].url !== offer.url) {`,
+    `    if (offer[FREE_PLAN_EXCERPT]) {`],
+
+  ["the-probe-forgets-the-tier", AUDIT,
+    `    tier: offer.tier ?? null,`,
+    `    tier: null,`],
+
+  ["an-open-source-edition-takes-the-hosted-pricing-page", AUDIT,
+    `  if (anOpenSourceEdition(listing)) return AN_OPEN_SOURCE_EDITION;\n`,
+    ``],
+
+  ["only-a-tier-saying-oss-is-an-open-source-edition", AUDIT,
+    `export const AN_OPEN_SOURCE_TIER = /\\bOSS\\b|open[- ]?source|self[- ]?host/i;`,
+    `export const AN_OPEN_SOURCE_TIER = /\\bOSS\\b/i;`],
+
+  ["a-tier-naming-a-self-hosted-edition-is-not-read", AUDIT,
+    `export const AN_OPEN_SOURCE_TIER = /\\bOSS\\b|open[- ]?source|self[- ]?host/i;`,
+    `export const AN_OPEN_SOURCE_TIER = /\\bOSS\\b|open[- ]?source/i;`],
+
+  ["the-tier-is-read-case-sensitively", AUDIT,
+    `export const AN_OPEN_SOURCE_TIER = /\\bOSS\\b|open[- ]?source|self[- ]?host/i;`,
+    `export const AN_OPEN_SOURCE_TIER = /\\bOSS\\b|open[- ]?source|self[- ]?host/;`],
+
+  ["any-tier-is-an-open-source-edition", AUDIT,
+    `  return AN_OPEN_SOURCE_TIER.test(listing.tier ?? "");`,
+    `  return true;`],
+
+  ["the-probe-never-reads-the-repository", AUDIT,
+    `    ? await readPageFor(offer, REPOSITORIES_OF_OPEN_SOURCE_EDITIONS.get(offer.vendor), fetchFn, checked)\n    : null;`,
+    `    ? null\n    : null;`],
+
+  ["the-repository-repoint-cites-the-hosted-page", AUDIT,
+    `      to: probe.repository.url,`,
+    `      to: probe.repoint_to,`],
+
+  ["the-repository-repoint-stores-the-hosted-page-check", AUDIT,
+    `      check: probe.repository.check,`,
+    `      check: probe.winner_check,`],
+
+  ["a-repository-we-could-not-read-is-cited", AUDIT,
+    `  return Boolean(reading?.ok) && OUTCOMES_THAT_NAME_THE_LISTING.has(reading.outcome);`,
+    `  return Boolean(reading);`],
+
+  ["a-repository-that-never-names-the-listing-is-cited", AUDIT,
+    `  return Boolean(reading?.ok) && OUTCOMES_THAT_NAME_THE_LISTING.has(reading.outcome);`,
+    `  return Boolean(reading?.ok);`],
+
+  ["an-ended-open-source-edition-is-repointed-to-its-repository", AUDIT,
+    `      reasonToHold(probe) === AN_OPEN_SOURCE_EDITION &&`,
+    `      anOpenSourceEdition(probe) &&`],
+
+  ["the-repository-repoint-takes-listings-the-ruling-does-not-cover", AUDIT,
+    `      theRulingCovers(probe) &&\n      reasonToHold(probe) === AN_OPEN_SOURCE_EDITION &&`,
+    `      reasonToHold(probe) === AN_OPEN_SOURCE_EDITION &&`],
+
+  ["applying-a-repository-repoint-lifts-every-hold", AUDIT,
+    `    if (reason !== null && reason !== holdItLifts) {`,
+    `    if (reason !== null && holdItLifts === null) {`],
+
+  ["a-hop-lifts-the-open-source-hold-on-applying", AUDIT,
+    `      check: probe.winner_check,\n      holdItLifts: null,`,
+    `      check: probe.winner_check,\n      holdItLifts: AN_OPEN_SOURCE_EDITION,`],
+
+  ["the-summary-counts-no-repository-repoint", AUDIT,
+    `    repointed_to_their_repository: repointsToTheirRepository(probes).length,`,
+    `    repointed_to_their_repository: 0,`],
+
+  ["the-held-list-names-the-repository-repoint", AUDIT,
+    `        theRulingCovers(probe) && reasonToHold(probe) !== null && !citingTheirRepository.has(probe)`,
+    `        theRulingCovers(probe) && reasonToHold(probe) !== null`],
 ];
 
 function run(cmd, args) {

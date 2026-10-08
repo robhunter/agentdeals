@@ -262,6 +262,7 @@ const A_SCOPE = /\sper\s/i;
 const A_CLAUSE_BOUNDARY = /[;:()]|[.,](?!\d)/g;
 const ALLOWANCE_SCAN = 80;
 const TIME_UNIT_RATE = /^\s?(hours?|hrs?|minutes?|mins?|seconds?|secs?|days?|months?|years?)\s?\//i;
+const A_NAMED_SCOPE = /(?:\s+per\s+|\s*\/\s*)([a-z][a-z-]+)/i;
 
 function periodAfter(window) {
   const ends = window.search(PERIOD_SCAN_ENDS);
@@ -336,6 +337,20 @@ function timeUnitRateIn(trailing) {
   return match ? [singular(match[1].toLowerCase())] : [];
 }
 
+function scopeNamedIn(span) {
+  const named = span.match(A_NAMED_SCOPE);
+  if (!named) return null;
+  const word = singular(named[1].toLowerCase());
+  if (ATTRIBUTE_STOPWORDS.has(word) || readPeriod(`/${word}`)) return null;
+  return word;
+}
+
+function scopeOf(beside, rate) {
+  if (rate?.period?.scope) return singular(rate.period.scope.toLowerCase());
+  const stops = [beside.search(A_FIGURE), beside.search(CLAUSE_ENDS)].filter((at) => at !== -1);
+  return scopeNamedIn(beside.slice(0, Math.min(...stops, beside.length)));
+}
+
 export function allowanceNamedBefore(text, at) {
   const window = text.slice(Math.max(0, at - ALLOWANCE_SCAN), at);
   const boundaries = [...window.matchAll(A_CLAUSE_BOUNDARY)];
@@ -383,7 +398,8 @@ export function readQuantities(text) {
       spanOf(durationMatch ? durationMatch[1] : null) ??
       1;
     const period = rate?.period ?? null;
-    read.push({ value: match[0], words, unit, scale, period, at: match.index, spellsAPeriod: match.index < readThrough });
+    const scope = scopeOf(beside, rate);
+    read.push({ value: match[0], words, unit, scale, period, scope, at: match.index, spellsAPeriod: match.index < readThrough });
     if (rate) readThrough = start + rate.ends;
   }
   return read;
@@ -455,9 +471,14 @@ export function measuredValue(attribute) {
 export function statesTheSameQuantity(stated, published) {
   const value = measuredValue(stated);
   if (value === null || value !== measuredValue(published)) return false;
+  if (stated?.scope && stated.scope !== published?.scope) return false;
   if (stated?.unit && stated.unit === published?.unit) return true;
   const measures = new Set((published?.words ?? []).filter(isAMeasureWord));
   return (stated?.words ?? []).some((word) => isAMeasureWord(word) && measures.has(word));
+}
+
+export function carriesAScopeOursDoNot(quantity, published) {
+  return Boolean(quantity?.scope) && !published.some((ours) => ours.scope === quantity.scope);
 }
 
 export function figuresWeAlsoPublish(signals, terms) {
@@ -470,6 +491,7 @@ export function figuresWeAlsoPublish(signals, terms) {
     const key = figure.toLowerCase().replace(/\s+/g, " ");
     if (key === "" || seen.has(key)) continue;
     const stated = quantifiedAttributes(figure);
+    if (stated.some((quantity) => carriesAScopeOursDoNot(quantity, published))) continue;
     if (!stated.some((quantity) => published.some((ours) => statesTheSameQuantity(quantity, ours)))) continue;
     seen.add(key);
     bearing.push(figure);
