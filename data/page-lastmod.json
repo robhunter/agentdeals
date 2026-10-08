@@ -18,11 +18,11 @@
       "changed": "2026-10-08"
     },
     "/ai-free-tiers": {
-      "hash": "f2c87d160730e57e",
+      "hash": "1328f809724cc207",
       "changed": "2026-10-08"
     },
     "/ai-ml-alternatives": {
-      "hash": "6dead0735311f801",
+      "hash": "e1df7771aa2ed09f",
       "changed": "2026-10-08"
     },
     "/alternative-to": {
@@ -785,7 +785,7 @@
       "changed": "2026-09-05"
     },
     "/auth-comparison-2026": {
-      "hash": "e9e8ef06bc22f471",
+      "hash": "0139e6c2286be2de",
       "changed": "2026-10-08"
     },
     "/auth0-alternatives": {
@@ -793,12 +793,12 @@
       "changed": "2026-10-08"
     },
     "/auth0-vs-clerk": {
-      "hash": "93f88b6df6dd75d9",
-      "changed": "2026-10-07"
+      "hash": "8dc2f9ee40cf6efc",
+      "changed": "2026-10-08"
     },
     "/auth0-vs-kinde": {
-      "hash": "dd9d975182575c44",
-      "changed": "2026-10-07"
+      "hash": "d72bdbd1d5b80729",
+      "changed": "2026-10-08"
     },
     "/aws-app-runner-migration": {
       "hash": "e15a88c43fbbc30f",
@@ -1076,7 +1076,7 @@
       "changed": "2026-10-07"
     },
     "/category/ai-ml": {
-      "hash": "0bd9f68dce4539f7",
+      "hash": "8f5f2a5b8ea1cc3e",
       "changed": "2026-10-08"
     },
     "/category/analytics": {
@@ -1092,7 +1092,7 @@
       "changed": "2026-10-07"
     },
     "/category/auth": {
-      "hash": "717f3f61cdf6ee66",
+      "hash": "87db6d623d14bdf7",
       "changed": "2026-10-08"
     },
     "/category/background-jobs": {
@@ -1483,8 +1483,8 @@
       "changed": "2026-10-07"
     },
     "/compare/auth0-vs-clerk": {
-      "hash": "9898e040cb419ae0",
-      "changed": "2026-10-07"
+      "hash": "9085e08282d14a7e",
+      "changed": "2026-10-08"
     },
     "/compare/bitrise-vs-appveyor-com": {
       "hash": "d24341129b02dc4e",
@@ -3081,7 +3081,7 @@
       "changed": "2026-09-12"
     },
     "/estimate": {
-      "hash": "2d024068c16a4518",
+      "hash": "cea324363b5e992d",
       "changed": "2026-10-08"
     },
     "/events": {
@@ -3127,7 +3127,7 @@
       "changed": "2026-10-08"
     },
     "/free-fastapi-stack": {
-      "hash": "336ce35bb4936c4d",
+      "hash": "4e5476964d4298c9",
       "changed": "2026-10-08"
     },
     "/free-frontend-stack": {
@@ -3135,11 +3135,11 @@
       "changed": "2026-10-08"
     },
     "/free-go-stack": {
-      "hash": "68d3e48b44761fa6",
+      "hash": "06d83a460538006b",
       "changed": "2026-10-08"
     },
     "/free-llm-apis": {
-      "hash": "35066241f3d3e25e",
+      "hash": "7aef037e107bdaec",
       "changed": "2026-10-08"
     },
     "/free-nextjs-stack": {
@@ -3249,7 +3249,7 @@
       "changed": "2026-10-08"
     },
     "/llm-api-pricing": {
-      "hash": "07ec0d35ef37bfc1",
+      "hash": "58a4ca9d1c93f12f",
       "changed": "2026-10-08"
     },
     "/localstack-alternatives": {
@@ -3460,7 +3460,7 @@
       "changed": "2026-10-04"
     },
     "/security-alternatives": {
-      "hash": "a2fac56bd666045b",
+      "hash": "9e17fb3315573ad7",
       "changed": "2026-10-08"
     },
     "/security-free-tier-comparison-2026": {
@@ -3483,7 +3483,7 @@
       "changed": "2026-10-08"
     },
     "/stack-check": {
-      "hash": "a7b6323f6f28178a",
+      "hash": "912c1f19e319022c",
       "changed": "2026-10-08"
     },
     "/stacks": {
