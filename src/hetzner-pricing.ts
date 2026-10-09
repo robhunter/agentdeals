@@ -111,6 +111,22 @@ export function cheaperUnorderablePlanWithMoreServer(plans: readonly HetznerPlan
   return cheapest.eur < entry.eur && noLess && more && above ? cheapest : null;
 }
 
+export function cheapestOrderableEuPlanForEachMemorySize(plans: readonly HetznerPlan[] = HETZNER_CLOUD_PLANS): HetznerPlan[] {
+  const cheapestByMemory = new Map<number, HetznerPlan>();
+  for (const plan of plans) {
+    if (!plan.available || plan.region !== "EU") continue;
+    const held = cheapestByMemory.get(plan.ram);
+    if (held === undefined || plan.eur < held.eur) cheapestByMemory.set(plan.ram, plan);
+  }
+  return [...cheapestByMemory.values()].sort((a, b) => a.ram - b.ram);
+}
+
+export function cheapestOrderableEuPlanForEachMemorySizeSentence(plans: readonly HetznerPlan[] = HETZNER_CLOUD_PLANS): string {
+  const sizes = cheapestOrderableEuPlanForEachMemorySize(plans).map(p => `${p.ram} GB, ${p.sku} at €${p.eur.toFixed(2)} ($${p.usd.toFixed(2)})`);
+  if (sizes.length === 0) return "";
+  return `Cheapest orderable EU plan for each memory size: ${sizes.join("; ")}.`;
+}
+
 export function hetznerEntryPriceClause(): string {
   const p = cheapestOrderableHetznerPlan();
   return `${p.sku} at €${p.eur.toFixed(2)}/mo (${p.vcpu} vCPU, ${p.ram} GB)`;

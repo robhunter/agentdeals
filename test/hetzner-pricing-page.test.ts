@@ -17,6 +17,8 @@ import {
   HETZNER_PRICES_READ,
   HETZNER_SINGAPORE_EXAMPLE,
   cheaperUnorderablePlanWithMoreServer,
+  cheapestOrderableEuPlanForEachMemorySize,
+  cheapestOrderableEuPlanForEachMemorySizeSentence,
   cheapestOrderableHetznerPlan,
   hetznerEntryPriceClause,
   unorderableHetznerPlans,
@@ -228,6 +230,74 @@ describe("the table note's count of listed prices nobody can pay", () => {
     assert.equal(cheaperUnorderablePlanWithMoreServer([plan("CX1", 5, false, 2, 0.5), entry]), null);
     assert.equal(cheaperUnorderablePlanWithMoreServer([entry, plan("CX1", 5, false, 2, 4)]), null);
     assert.equal(cheaperUnorderablePlanWithMoreServer([plan("CX1", 7, false, 2, 4), entry]), null);
+  });
+});
+
+function sized(sku: string, ram: number, eur: number, usd: number, available = true, region = "EU"): HetznerPlan {
+  return { sku, line: "Synthetic", cpu: "AMD", vcpu: 2, ram, region, eur, usd, available };
+}
+
+const isOrderableInTheEu = (p: HetznerPlan) => p.available && p.region === "EU";
+
+const withAvailability = (sku: string, available: boolean) =>
+  HETZNER_CLOUD_PLANS.map(p => (p.sku === sku ? { ...p, available } : p));
+
+const memorySizeEntry = (p: HetznerPlan) => `${p.ram} GB, ${p.sku} at €${p.eur.toFixed(2)} (${dollars(p.usd)})`;
+
+describe("the cheapest orderable EU plan for each memory size", () => {
+  it("is chosen among EU plans marked orderable, one per memory size, smallest size first", () => {
+    const plans = [
+      sized("CCX8", 8, 9, 10.6),
+      sized("CX8", 8, 4, 4.7, false),
+      sized("CPX8", 8, 7, 8.3),
+      sized("CX16", 16, 2, 2.4),
+      sized("CPX2", 2, 3, 3.5),
+      sized("CPX1", 1, 1, 1.2, true, "US"),
+    ];
+    assert.deepEqual(cheapestOrderableEuPlanForEachMemorySize(plans).map(p => p.sku), ["CPX2", "CPX8", "CX16"]);
+  });
+
+  it("goes to the plan listed first when two plans of one size share the lowest euro price, as the entry price does", () => {
+    assert.deepEqual(cheapestOrderableEuPlanForEachMemorySize([sized("CPX8", 8, 7, 8.3), sized("CCX8", 8, 7, 8.3)]).map(p => p.sku), ["CPX8"]);
+  });
+
+  it("prints each size with that plan's euro and dollar prices, and nothing when no EU plan can be ordered", () => {
+    assert.equal(
+      cheapestOrderableEuPlanForEachMemorySizeSentence([sized("CPX8", 8, 7, 8.25), sized("CPX2", 2, 3.5, 4.1)]),
+      "Cheapest orderable EU plan for each memory size: 2 GB, CPX2 at €3.50 ($4.10); 8 GB, CPX8 at €7.00 ($8.25).",
+    );
+    assert.equal(cheapestOrderableEuPlanForEachMemorySizeSentence([sized("CX2", 2, 3, 3.5, false), sized("CPX2", 2, 3, 3.5, true, "US")]), "");
+  });
+
+  it("names, in every size the plan table has, a plan no other orderable EU plan of that size undercuts in dollars", () => {
+    const named = cheapestOrderableEuPlanForEachMemorySize();
+    assert.ok(named.length > 0);
+    for (const cheapest of named) {
+      for (const other of HETZNER_CLOUD_PLANS.filter(p => isOrderableInTheEu(p) && p.ram === cheapest.ram)) {
+        assert.ok(cheapest.usd <= other.usd, `${cheapest.sku} is the cheapest ${cheapest.ram} GB plan in euros, but ${other.sku} is cheaper in dollars`);
+      }
+    }
+  });
+
+  it("hands a size to the next cheapest orderable EU plan of that size, or drops the size, when the plan named for it is marked not available", () => {
+    for (const named of cheapestOrderableEuPlanForEachMemorySize()) {
+      const plans = withAvailability(named.sku, false);
+      const next = plans.filter(p => isOrderableInTheEu(p) && p.ram === named.ram).sort((a, b) => a.eur - b.eur)[0];
+      const sentence = cheapestOrderableEuPlanForEachMemorySizeSentence(plans);
+      assert.ok(!sentence.includes(memorySizeEntry(named)), `${named.sku} is still named once it is not available: ${sentence}`);
+      if (next) assert.ok(sentence.includes(memorySizeEntry(next)), `${named.ram} GB should read ${memorySizeEntry(next)}: ${sentence}`);
+      else assert.doesNotMatch(sentence, new RegExp(`[:;] ${named.ram} GB, `), sentence);
+    }
+  });
+
+  it("gives a size to a plan nobody can order today once it is orderable, when it is cheaper than the plan named for that size", () => {
+    const today = cheapestOrderableEuPlanForEachMemorySize();
+    for (const candidate of HETZNER_CLOUD_PLANS.filter(p => !p.available && p.region === "EU")) {
+      const named = today.find(p => p.ram === candidate.ram);
+      const expected = named === undefined || candidate.eur < named.eur ? candidate : named;
+      const sentence = cheapestOrderableEuPlanForEachMemorySizeSentence(withAvailability(candidate.sku, true));
+      assert.ok(sentence.includes(memorySizeEntry(expected)), `with ${candidate.sku} orderable, ${candidate.ram} GB should read ${memorySizeEntry(expected)}: ${sentence}`);
+    }
   });
 });
 
@@ -573,17 +643,55 @@ describe("pages that compared US cloud providers' prices with Hetzner's on no so
   }
 });
 
+const sectionOneParagraphs = (body: string) => {
+  const sectionOneHtml = body.slice(body.indexOf('<h2 id="pricing">'), body.indexOf('<h2 id="april">'));
+  return [...sectionOneHtml.matchAll(/<p\b[^>]*>([\s\S]*?)<\/p>/g)].map(([, inner]) => visible(inner).trim());
+};
+
+const isTheAvailabilityNote = (paragraph: string) => paragraph.startsWith("Read this table by availability first.");
+
+describe("the cheapest orderable EU plan for each memory size on /hetzner-pricing-2026", () => {
+  it("is the paragraph right after the table's availability note", async () => {
+    const { body } = await get("/hetzner-pricing-2026");
+    const paragraphs = sectionOneParagraphs(body);
+    const availabilityNote = paragraphs.findIndex(isTheAvailabilityNote);
+    assert.ok(availabilityNote > -1, paragraphs.join(" | "));
+    assert.strictEqual(paragraphs[availabilityNote + 1], cheapestOrderableEuPlanForEachMemorySizeSentence());
+  });
+
+  it("gives every size the memory and the euro and dollar prices of the table row for the plan it names, an orderable EU plan", async () => {
+    const { body } = await get("/hetzner-pricing-2026");
+    const line = sectionOneParagraphs(body).find(paragraph => paragraph.startsWith("Cheapest orderable EU plan for each memory size: ")) ?? "";
+    const entries = [...line.matchAll(/(\d+) GB, (\w+) at €(\d+\.\d{2}) \(\$(\d+\.\d{2})\)/g)];
+    assert.ok(entries.length > 0, line);
+    for (const [entry, ram, sku, eur, usd] of entries) {
+      const row = HETZNER_CLOUD_PLANS.find(p => p.sku === sku);
+      assert.ok(row && isOrderableInTheEu(row), `${sku} is not an orderable EU plan in the table: ${entry}`);
+      assert.deepEqual([Number(ram), eur, usd], [row.ram, row.eur.toFixed(2), row.usd.toFixed(2)], entry);
+    }
+  });
+
+  it("is printed by the guide's builder from the plan table, not typed into it", () => {
+    const source = readFileSync(path.join(REPO, "src", "serve.ts"), "utf-8");
+    const start = source.indexOf("function buildHetznerPricing2026Page(");
+    assert.ok(start > 0, "buildHetznerPricing2026Page is no longer in src/serve.ts");
+    const next = source.indexOf("\nfunction ", start + 1);
+    const body = source.slice(start, next > 0 ? next : undefined);
+    assert.ok(body.includes("cheapestOrderableEuPlanForEachMemorySizeSentence()"), "the guide does not take the line from the plan table");
+    assert.ok(!body.includes("for each memory size"), "the guide types the line instead of printing it from the plan table");
+  });
+});
+
 describe("what a Hetzner cloud price on /hetzner-pricing-2026 includes", () => {
   const INCLUDED_IN_THE_PRICE = "Every cloud price in this table includes the primary IPv4 address. Cloud servers include at least 20 TB of outgoing traffic a month in the EU, 1 TB in the US and 0.5 TB in Singapore; incoming traffic is free.";
 
-  it("is the paragraph after the table's availability note, ahead of the dedicated-server prices that exclude IPv4", async () => {
+  it("is the paragraph after the table's availability note and the cheapest plan for each memory size, ahead of the dedicated-server prices that exclude IPv4", async () => {
     const { body } = await get("/hetzner-pricing-2026");
-    const sectionOneHtml = body.slice(body.indexOf('<h2 id="pricing">'), body.indexOf('<h2 id="april">'));
-    const paragraphs = [...sectionOneHtml.matchAll(/<p\b[^>]*>([\s\S]*?)<\/p>/g)].map(([, inner]) => visible(inner).trim());
-    const availabilityNote = paragraphs.findIndex(paragraph => paragraph.startsWith("Read this table by availability first."));
+    const paragraphs = sectionOneParagraphs(body);
+    const availabilityNote = paragraphs.findIndex(isTheAvailabilityNote);
     assert.ok(availabilityNote > -1, paragraphs.join(" | "));
-    assert.strictEqual(paragraphs[availabilityNote + 1], INCLUDED_IN_THE_PRICE);
-    assert.match(paragraphs[availabilityNote + 2] ?? "", /^A new AX42 dedicated server in Germany costs .*, excluding IPv4\./);
+    assert.strictEqual(paragraphs[availabilityNote + 2], INCLUDED_IN_THE_PRICE);
+    assert.match(paragraphs[availabilityNote + 3] ?? "", /^A new AX42 dedicated server in Germany costs .*, excluding IPv4\./);
   });
 });
 

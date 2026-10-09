@@ -59,7 +59,7 @@ import { COMPANY_FORMATION_PATH, COMPANY_FORMATION_SLUG, readCompanyFormationPri
 import { archiveCaptureDate, archivedAddress, type ColumnTable } from "./guide-data.js";
 import { MODEL_BELIEFS_CLOSING, MODEL_BELIEFS_HEADING, MODEL_BELIEFS_PATH, MODEL_BELIEFS_RERUN_SENTENCE, MODEL_BELIEFS_SLUG, MODEL_BELIEFS_TITLE, MOSTLY_OLD_ANSWERS, QUOTED_MODEL_BELIEFS_CLASS, answersFor, answersPerFact, answersPerModel, changedLabel, factsByOldAnswers, findingOf, introOf, metaDescriptionOf, methodOf, modelsByOldAnswers, modelsMostlyOld, numberWord, oldAnswersFrom, readModelBeliefs, testedOnOf, type ModelBeliefs } from "./model-beliefs.js";
 import { changesToStartupProgrammes } from "./startup-programme-changes.js";
-import { HETZNER_APRIL_CHANGES, HETZNER_AVAILABILITY_READ, HETZNER_AX102_GERMANY, HETZNER_AX42_GERMANY, HETZNER_CLOUD_PLANS, HETZNER_PRICES_READ, HETZNER_PRICE_SOURCE, HETZNER_PROMO_CODE_PAGE, HETZNER_SETUP_FEE_STATEMENTS, HETZNER_SINGAPORE_EXAMPLE, HETZNER_APRIL_DOLLAR_EXAMPLE, cheaperUnorderablePlanWithMoreServer, cheapestListedHetznerPlan, cheapestOrderableHetznerPlan, hetznerEntryPriceClause, unorderableHetznerPlans, unpayableLowestPricesSentence } from "./hetzner-pricing.js";
+import { HETZNER_APRIL_CHANGES, HETZNER_AVAILABILITY_READ, HETZNER_AX102_GERMANY, HETZNER_AX42_GERMANY, HETZNER_CLOUD_PLANS, HETZNER_PRICES_READ, HETZNER_PRICE_SOURCE, HETZNER_PROMO_CODE_PAGE, HETZNER_SETUP_FEE_STATEMENTS, HETZNER_SINGAPORE_EXAMPLE, HETZNER_APRIL_DOLLAR_EXAMPLE, cheaperUnorderablePlanWithMoreServer, cheapestListedHetznerPlan, cheapestOrderableEuPlanForEachMemorySizeSentence, cheapestOrderableHetznerPlan, hetznerEntryPriceClause, unorderableHetznerPlans, unpayableLowestPricesSentence } from "./hetzner-pricing.js";
 import { HUNDRED_GB_SCENARIO, HUNDRED_TB_SCENARIO, ONE_TO_ONE_SCENARIO, STORAGE_RATES_READ, STORAGE_SCALE_WORKLOADS, TEN_TO_ONE_SCENARIO, cheapestProviderAt, costAfterMonthlyEgressGrantFor, costliestProviderAt, egressAllowanceSentence, egressBillAfterMonthlyGrantFor, egressBillOnceOverAllowance, egressRatioWhereCostsMatch, fixedMonthlyGrantsSentence, monthlyEgressGrantGb, monthlyEgressGrantSentence, monthlyStorageCost, providersWithScalingEgressAllowance, rateCardFor, scaleCostFor } from "./storage-cost-model.js";
 import { changeTimelineDate, supersededLineups, supersessionNote } from "./change-lineup.js";
 import { CORRECTION_TO_OUR_OWN_RECORD, isACorrectionToOurOwnRecord, isNoLongerInForce, printsBeforeAndAfter, eventResolutionFields, recordsStillInForce, recordsWeStandBehind, INCLUDE_RETRACTED_REJECTED } from "./change-resolution.js";
@@ -19072,6 +19072,7 @@ function buildHetznerPricing2026Page(): string {
   const cheapestOverall = cheapestListedHetznerPlan();
   const unpayableLowestPrices = unpayableLowestPricesSentence();
   const moreServerForLess = cheaperUnorderablePlanWithMoreServer();
+  const cheapestForEachMemorySize = cheapestOrderableEuPlanForEachMemorySizeSentence();
   const eur = (n: number) => `€${n.toFixed(2)}`;
   const usd = (n: number) => `$${n.toFixed(2)}`;
 
@@ -19264,6 +19265,7 @@ ${mcpCtaCss()}
     </table>
   </div>
   <p class="section-intro" style="margin-top:0"><strong>Read this table by availability first.</strong> ${unpayableLowestPrices === "" ? "" : `${unpayableLowestPrices} `}The first orderable row is ${escHtmlServer(cheapestOrderable.sku)} at ${eur(cheapestOrderable.eur)}, and it is a ${cheapestOrderable.vcpu}-vCPU, ${cheapestOrderable.ram} GB machine${moreServerForLess ? ` — less server than the ${escHtmlServer(moreServerForLess.sku)} above it at ${eur(moreServerForLess.eur)}` : ""}.</p>
+  ${cheapestForEachMemorySize === "" ? "" : `<p class="section-intro">${escHtmlServer(cheapestForEachMemorySize)}</p>`}
   <p class="section-intro">Every cloud price in this table includes the primary IPv4 address. Cloud servers include at least 20 TB of outgoing traffic a month in the EU, 1 TB in the US and 0.5 TB in Singapore; incoming traffic is free.</p>
   <p class="section-intro">A new AX42 dedicated server in Germany costs ${eur(HETZNER_AX42_GERMANY.newOrder)} a month and a new AX102 ${eur(HETZNER_AX102_GERMANY.newOrder)}, excluding IPv4. The one-off setup fee is €${HETZNER_AX42_GERMANY.setupFee} for an AX42 and €${HETZNER_AX102_GERMANY.setupFee} for an AX102. These prices were read from Hetzner's price API on ${HETZNER_PRICES_READ}.</p>
   <p class="section-intro">New accounts can get €50 of credit with Hetzner's sign-up code, valid only for the billing period in which it is redeemed.</p>
