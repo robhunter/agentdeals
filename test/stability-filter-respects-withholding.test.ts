@@ -6,6 +6,38 @@ import path from "node:path";
 import { assertCoversPopulation, recordsInTheCatalogue } from "./population-floor.ts";
 
 const CLASSES = ["stable", "watch", "volatile", "improving"] as const;
+const FAVOURABLE_CLASSES = ["stable", "improving"] as const;
+
+type Listed = { vendor: string; url: string; stability: string | null; link_unreachable: unknown };
+
+async function withItsPageUnreachable(subject: Listed, check: (row: Listed) => Promise<void>) {
+  const { enrichOffers, loadOffers, resetCache } = await import("../dist/data.js");
+  const scratch = mkdtempSync(path.join(tmpdir(), "stability-unreachable-"));
+  const today = new Date().toISOString().slice(0, 10);
+  const longAgo = new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+  writeFileSync(path.join(scratch, "link_health.json"), JSON.stringify({
+    generated_at: today,
+    links: [{ url: subject.url, checked: today, outcome: "unreachable", detail: "GET ENOTFOUND", terminal: false, last_reachable: longAgo, consecutive_unreachable: 20 }],
+  }));
+  process.env.AGENTDEALS_LINK_HEALTH_PATH = path.join(scratch, "link_health.json");
+  resetCache();
+  try {
+    const row = (enrichOffers(loadOffers()) as Listed[]).find((r) => r.vendor === subject.vendor && r.url === subject.url);
+    assert.ok(row?.link_unreachable, `${subject.vendor}'s page did not read as unreachable in the scratch link check`);
+    await check(row);
+  } finally {
+    delete process.env.AGENTDEALS_LINK_HEALTH_PATH;
+    resetCache();
+    rmSync(scratch, { recursive: true, force: true });
+  }
+}
+
+async function classesReturning(subject: Listed) {
+  const { searchOffers } = await import("../dist/data.js");
+  return CLASSES.filter((asked) =>
+    (searchOffers(undefined, undefined, undefined, undefined, asked) as Listed[]).some((o) => o.vendor === subject.vendor && o.url === subject.url),
+  );
+}
 
 async function catalogue() {
   const { loadOffers, loadDealChanges, enrichOffers } = await import("../dist/data.js");
@@ -25,10 +57,10 @@ describe("a record we decline to rate cannot be returned as one we rate", () => 
     assert.ok(matched > 0, "no record matches any class, so this asserts nothing");
   });
 
-  it("returns no record whose pricing page we cannot reach", async () => {
+  it("returns no record whose pricing page we cannot reach under a favourable class", async () => {
     const { searchOffers, enrichOffers } = await import("../dist/data.js");
     const unreachable: string[] = [];
-    for (const asked of CLASSES) {
+    for (const asked of FAVOURABLE_CLASSES) {
       for (const row of enrichOffers(searchOffers(undefined, undefined, undefined, undefined, asked))) {
         if (row.link_unreachable) unreachable.push(`${row.vendor} (${asked})`);
       }
@@ -36,36 +68,30 @@ describe("a record we decline to rate cannot be returned as one we rate", () => 
     assert.deepStrictEqual(unreachable.slice(0, 10), []);
   });
 
-  it("returns no record whose pricing page we cannot reach even where its history earns an adverse class", async () => {
-    const { searchOffers, enrichOffers, loadOffers, publishedRisk, changesByVendor, resetCache } = await import("../dist/data.js");
-    const subject = enrichOffers(loadOffers()).find(
+  it("keeps the adverse class an unreachable record's history earns, and returns it under that class alone", async () => {
+    const { enrichOffers, loadOffers, publishedRisk, changesByVendor } = await import("../dist/data.js");
+    const subject = (enrichOffers(loadOffers()) as Listed[]).find(
       (row) => (row.stability === "watch" || row.stability === "volatile") && row.link_unreachable === null,
     );
     assert.ok(subject, "no reachable record publishes an adverse class, so there is no subject to make unreachable");
-    const scratch = mkdtempSync(path.join(tmpdir(), "stability-unreachable-"));
-    const today = new Date().toISOString().slice(0, 10);
-    const longAgo = new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
-    writeFileSync(path.join(scratch, "link_health.json"), JSON.stringify({
-      generated_at: today,
-      links: [{ url: subject.url, checked: today, outcome: "unreachable", detail: "GET ENOTFOUND", terminal: false, last_reachable: longAgo, consecutive_unreachable: 1 }],
-    }));
-    process.env.AGENTDEALS_LINK_HEALTH_PATH = path.join(scratch, "link_health.json");
-    resetCache();
-    try {
-      const row = enrichOffers(loadOffers()).find((r) => r.vendor === subject.vendor && r.url === subject.url);
-      assert.ok(row?.link_unreachable, `${subject.vendor}'s page did not read as unreachable in the scratch link check`);
+    await withItsPageUnreachable(subject, async (row) => {
+      assert.strictEqual(row.stability, subject.stability, `${subject.vendor} lost its ${subject.stability} class when its page stopped resolving`);
+      const risk = publishedRisk(row, changesByVendor().get(row.vendor.toLowerCase()) ?? []);
+      assert.strictEqual(risk.stability_withheld_because, null);
+      assert.deepStrictEqual(await classesReturning(subject), [subject.stability]);
+    });
+  });
+
+  it("withholds the favourable class of a record whose pricing page we cannot reach, and returns it under no class", async () => {
+    const { enrichOffers, loadOffers, publishedRisk, changesByVendor } = await import("../dist/data.js");
+    const subject = (enrichOffers(loadOffers()) as Listed[]).find((row) => row.stability === "stable" && row.link_unreachable === null);
+    assert.ok(subject, "no reachable record publishes the stable class, so there is no subject to make unreachable");
+    await withItsPageUnreachable(subject, async (row) => {
       assert.strictEqual(row.stability, null, `${subject.vendor} still publishes ${row.stability} for a page we cannot reach`);
       const risk = publishedRisk(row, changesByVendor().get(row.vendor.toLowerCase()) ?? []);
       assert.strictEqual(risk.stability_withheld_because, "link_unreachable");
-      const returned = CLASSES.filter((asked) =>
-        searchOffers(undefined, undefined, undefined, undefined, asked).some((o) => o.vendor === subject.vendor && o.url === subject.url),
-      );
-      assert.deepStrictEqual(returned, [], `${subject.vendor} was returned under ${returned.join(", ")}`);
-    } finally {
-      delete process.env.AGENTDEALS_LINK_HEALTH_PATH;
-      resetCache();
-      rmSync(scratch, { recursive: true, force: true });
-    }
+      assert.deepStrictEqual(await classesReturning(subject), []);
+    });
   });
 
   it("never matches a vendor on the strength of holding no change record for it", async () => {

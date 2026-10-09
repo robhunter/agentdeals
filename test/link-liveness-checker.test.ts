@@ -111,10 +111,35 @@ describe("#1046 a non-2xx HEAD is not evidence until GET has been asked", () => 
 describe("#1046 how a check updates a link's history", () => {
   const target = { url: "https://example.test/pricing", latestVerified: "2026-05-23", vendors: ["Example"] };
 
-  it("seeds last reachable from the record's verification date the first time a link fails", () => {
+  it("seeds last reachable from the record's verification date when no earlier run has checked the link", () => {
     const next = nextRecord(target, undefined, { outcome: "unreachable", detail: "GET 404", terminal: false }, "2026-08-25");
     assert.equal(next.last_reachable, "2026-05-23");
     assert.equal(next.consecutive_unreachable, 1);
+  });
+
+  it("dates last reachable to the last run that reached the link the first time it fails, not to the record's verification date", () => {
+    const next = nextRecord(target, undefined, { outcome: "unreachable", detail: "GET ENOTFOUND", terminal: false }, "2026-09-29", "2026-09-28");
+    assert.equal(next.last_reachable, "2026-09-28");
+    assert.equal(next.consecutive_unreachable, 1);
+  });
+
+  it("takes a verification read newer than the last run as the last day the page answered", () => {
+    const readToday = { ...target, latestVerified: "2026-09-29" };
+    const next = nextRecord(readToday, undefined, { outcome: "unreachable", detail: "GET 404", terminal: false }, "2026-09-29", "2026-09-28");
+    assert.equal(next.last_reachable, "2026-09-29");
+  });
+
+  it("dates a link we were refused on its first check to the last run that reached it", () => {
+    const next = nextRecord(target, undefined, { outcome: "unknown", detail: "GET 403", terminal: false }, "2026-09-29", "2026-09-28");
+    assert.equal(next.last_reachable, "2026-09-28");
+    assert.equal(next.consecutive_unreachable, 0);
+  });
+
+  it("keeps the last reachable date of a link that was already failing, whatever day the last run was", () => {
+    const previous = { url: target.url, checked: "2026-10-08", outcome: "unreachable" as const, detail: "GET 404", terminal: false, last_reachable: "2026-08-06", consecutive_unreachable: 40 };
+    const next = nextRecord(target, previous, { outcome: "unreachable", detail: "GET 404", terminal: false }, "2026-10-09", "2026-10-08");
+    assert.equal(next.last_reachable, "2026-08-06");
+    assert.equal(next.consecutive_unreachable, 41);
   });
 
   it("advances last reachable to today whenever the link answers", () => {

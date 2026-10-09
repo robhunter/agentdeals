@@ -605,7 +605,6 @@ export function withheldStability(
   stability: StabilityClass,
   vendorChanges: readonly DealChange[] = [],
 ): StabilityClass | null {
-  if (withholding.link_unreachable) return null;
   if (stabilityWithholdingReason(withholding, vendorChanges) === null) return stability;
   return FAVOURABLE_STABILITY_CLASSES.has(stability) ? null : stability;
 }
