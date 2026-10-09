@@ -355,11 +355,12 @@ describe("#1222 the functions AI / ML splits by", () => {
     "web_search_api",
     "agent_sandbox",
     "agent_tool_access",
+    "agent_memory",
   ];
 
   const INFERENCE_GROUP = ["llm_api", "model_gateway"];
 
-  it("publishes all sixteen, so a record may carry any of them", () => {
+  it("publishes all seventeen, so a record may carry any of them", () => {
     assert.deepStrictEqual(SUBTYPE_TAXONOMIES["AI / ML"]?.map(e => e.subtype), AI_ML_SUBTYPES);
   });
 

@@ -88,6 +88,7 @@ export const SUBTYPE_TAXONOMIES: Record<string, SubtypeTaxonomyEntry[]> = {
     { subtype: "web_search_api", definition: "answers a query with current web results shaped for a model to read" },
     { subtype: "agent_sandbox", definition: "isolated execution environments provisioned programmatically for code an agent writes" },
     { subtype: "agent_tool_access", definition: "supplies an agent with authenticated connections to third-party applications it can call as tools" },
+    { subtype: "agent_memory", definition: "stores what an agent is told or learns (conversations, documents, user activity) and returns the relevant part to the agent on later calls; the stored unit is a memory or fact, not a vector the caller computed" },
   ],
 };
 
