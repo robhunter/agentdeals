@@ -52,6 +52,7 @@ import { UNGRADED_IMPACT_COLOR, changeImpactColor, changeImpactLabel, changeImpa
 import { COMPARED_SERVICES_PLACEHOLDER, appendToCompiledFigureSlots, fillComparedServicesCount, labelNamesAProductOfItsVendor, markCompiledFigures, recordsSinceCompiled, replaceTimelineRows, staticHalfOf, timelineRecordsFor, vendorForSubject, vendorSubjectsOnCompiledPage, type CompiledFigureSubject, type CompiledFigureVendor, type CompiledFigureVerdict, type CompiledPageRecord } from "./compiled-figures.js";
 import { CHECK_ESTABLISHES, CHECK_SCOPE_CLASS, NO_CATALOGUE_RECORD_SOURCE, NO_FETCHABLE_PAGE_STATES_THE_ROW, catalogueMarkersOffRowsNoFetchablePageStates, citedSourcesListHtml, figureSourceLinkHtml, recordSourcesOffRowsThatCiteTheirOwn, freeTierSourceOf, freeTierSourceWeMayCite, freePlanExcerptHtml, pageQuoteHtml, readClauseHtml, readSourceOf, serviceSourceMarkerHtml, uncitedSourceTagHtml, withCitedSources, type CitedService, type FreeTierSource } from "./source-citation.js";
 import { vendorHistorySentence } from "./vendor-history.js";
+import { hcpTerraformPastTheFreeTierHtml } from "./hcp-terraform-pricing.js";
 import { guideBlurb } from "./guide-blurbs.js";
 import { ACCOUNTING_PRICES_PATH, ACCOUNTING_PRICES_SLUG, readAccountingPrices, type AccountingPrices, type AccountingSource } from "./accounting-prices.js";
 import { BANKING_FEES_PATH, BANKING_FEES_SLUG, readBankingFees, type BankingFees } from "./banking-fees.js";
@@ -6785,7 +6786,7 @@ const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
     slug: "terraform-alternatives",
     title: "HCP Terraform Alternatives — Free IaC Tools After the March 2026 EOL",
     metaDesc: "HCP Terraform's legacy free plan ended March 31, 2026 and the free tier now caps managed resources at 500. Compare free alternatives: Spacelift, Terragrunt Scale, Pulumi, Scalr, and more. [[freshness]]",
-    contextHtml: `<p>HCP Terraform's legacy free plan reached end of life on March 31, 2026. Organizations were transitioned to an enhanced free tier that caps managed resources at 500.</p>
+    contextHtml: `<p>HCP Terraform's legacy free plan reached end of life on March 31, 2026. Organizations were transitioned to an enhanced free tier that caps managed resources at 500. ${hcpTerraformPastTheFreeTierHtml()}</p>
       <p>The new enhanced tier does include SSO, policy as code (Sentinel + OPA), and unlimited users. But if the 500-resource limit doesn't fit your workloads, or you want to avoid vendor lock-in, here are free IaC alternatives worth evaluating — including <strong>Terragrunt Scale</strong>, a new free tier from Gruntwork positioned as a direct HCP Terraform replacement.</p>`,
     serviceMatrixHtml: `
   <h2>Free Tier Comparison</h2>
