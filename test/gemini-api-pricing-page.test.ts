@@ -164,7 +164,6 @@ describe(`${PAGE} on paying after use once Prepay starts`, () => {
 
   it("ends by saying usage can run past a $0 balance and that a negative balance comes off the next purchase", () => {
     assert.ok(withoutTags(prepayParagraph(page)).endsWith(
-      "When the balance reaches $0, every API key on the billing account stops working until you add credits. " +
       "Usage can continue for approximately 10 minutes past a $0 balance due to billing latency. " +
       "Batch jobs and agents may consume credits beyond the balance. " +
       "A negative balance is deducted from the next credit purchase.",
@@ -187,6 +186,24 @@ describe(`${PAGE} on a missed payment for another Google Cloud service`, () => {
   it("links the suspension to the billing FAQ's answer on missed payments", () => {
     const paragraph = prepayParagraph(page);
     assert.ok(paragraph.includes('the Gemini API <a href="https://ai.google.dev/gemini-api/docs/billing#missed-payment" target="_blank" rel="noopener">can still be suspended</a>.'), paragraph);
+  });
+});
+
+describe(`${PAGE} on buying credits by bank transfer`, () => {
+  it("follows the $0 stop with how long a bank transfer can take to clear and when service resumes, before the usage that runs past $0", () => {
+    const text = withoutTags(prepayParagraph(page));
+    assert.ok(text.includes(
+      "When the balance reaches $0, every API key on the billing account stops working until you add credits. " +
+      "If you pay by bank transfer, some payments take several days to clear. " +
+      "Most card payments are instant. " +
+      "Gemini API service resumes only after the purchase is confirmed. " +
+      "Usage can continue for approximately 10 minutes past a $0 balance",
+    ), text);
+  });
+
+  it("links the clearing time to the billing doc's answer on processing times", () => {
+    const paragraph = prepayParagraph(page);
+    assert.ok(paragraph.includes('some payments take <a href="https://ai.google.dev/gemini-api/docs/billing#processing-times" target="_blank" rel="noopener">several days to clear</a>.'), paragraph);
   });
 });
 
