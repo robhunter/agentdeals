@@ -135,7 +135,7 @@ import { vendorSubstitutes, substitutesListedFor } from "./vendor-substitutes.js
 import type { Agent, ChangeDateSource, DealChange, FreePlanExcerpt, RiskCause, RatingWithheld, LinkUnreachable, ListingCondition, Offer, StabilityClass, SubtypeLabel } from "./types.js";
 import { A_DATED_HEADING_MARKER, A_DATED_SECTION_MARKER, archiveBracketOf, datedHeadingNoticeHtml, datedSectionNoticeHtml, namedFromItsDate, namedOnceItsDateArrived, namedWhileAheadOf, namedWhileNotBefore, ANNOUNCED_BADGE, ANNOUNCED_HEADING, announcedIntro, changeDateLabel, changeEntryDateLabel, changeEntryLongDateLabel, changeDateClause, changeDatePublished, changeEventStartDate, capListSections, latestEventDate, offerExpiryAfter, feedEntryUpdated, UNDATED_TILE_LABEL, firstReadHeading, discoveryBatchNote, coveringBracketedChanges, changeEntryDateLabelHtml, isoWeekOf, monthlyChangeSeries, changesInWindow, discoveryMonthSeriesHeading, periodComparisonSentence, DISCOVERED_DATE_PREFIX, EFFECTIVE_DATE_PREFIX, UNKNOWN_EFFECTIVE_DATE_MARKER, EFFECTIVE_BY_DATE_MEANING, BRACKETED_DATE_PREFIX, RECORDED_DATE_PREFIX, CORRECTED_DATE_PREFIX, EFFECTIVE_MONTH_SERIES_NOTE, DISCOVERY_MONTH_SERIES_NOTE, weekRangeLabel, newestChangeInEffect, vendorPageLastUpdated } from "./change-dates.js";
 import { changeFeedEntries, feedEntryFields, feedUpdatedTimestamp, changeFeedProvenanceNote, CHANGE_FEED_ENTRY_LIMIT, CHANGE_FEED_DESCRIPTION, CHANGE_FEED_NAMESPACE, CHANGE_FEED_NAMESPACE_PREFIX, channelUpdatedTimestamp, WEEKLY_FEED_POPULATION_NOTE, feedLinkTag, feedEntrySourceXml, digestSourceXml, PER_CHANGE_FEED, WEEKLY_DIGEST_FEED } from "./change-feed.js";
-import { changeLogInPageOrder, changeLogSections, changeLogSectionsHtml } from "./change-log-sections.js";
+import { changeLogInPageOrder, changeLogSections, changeLogSectionsHtml, monthHeadingLabel } from "./change-log-sections.js";
 import { FEED_CORRECTIONS, correctionEntriesXml } from "./feed-corrections.js";
 import { buildDay, emptyPageLastmod, entryDay, fallbackDay, httpDate, lastmodFor, newestLastmod, readPageLastmod, type PageLastmodLedger } from "./page-lastmod.js";
 import { bestOfPathResolves, readBestOfPublished } from "./best-of-publication.js";
@@ -35759,6 +35759,35 @@ ${mcpCtaCss()}
 </html>`, pubDate, cloudChanges);
 }
 
+const NO_LONGER_FREE_SLOT = '<span data-no-longer-free=""></span>';
+
+function freeTierRemovalsThePageCovers(html: string, declaredByThePage: (vendor: string) => boolean): DealChange[] {
+  const removals = new Map<string, DealChange>();
+  const keep = (ending: DealChange | null) => {
+    if (ending && !removals.has(ending.vendor.toLowerCase())) removals.set(ending.vendor.toLowerCase(), ending);
+  };
+  for (const subject of vendorSubjectsOnCompiledPage(html)) {
+    const named = vendorForSubject(subject);
+    if (named && !labelNamesAProductOfItsVendor(subject, named.slug)) keep(freeTierEndingRecord(changesForSubject(named)));
+  }
+  const declared = new Set(dealChanges.filter(c => declaredByThePage(c.vendor)).map(c => c.vendor));
+  for (const vendor of declared) keep(freeTierEndingRecord(changesFor(vendor)));
+  return [...removals.values()];
+}
+
+function noLongerFreeSentence(removals: readonly DealChange[]): string {
+  if (removals.length === 0) return "";
+  const named = [...removals]
+    .sort((a, b) => b.date.localeCompare(a.date) || a.vendor.localeCompare(b.vendor))
+    .map(r => `${escHtmlServer(r.vendor)} (${monthHeadingLabel(r.date.slice(0, 7))})`);
+  return `No longer free for new users: ${named.join(", ")}. `;
+}
+
+function withNoLongerFreeSentence(html: string, declaredByThePage: (vendor: string) => boolean): string {
+  const sentence = noLongerFreeSentence(freeTierRemovalsThePageCovers(html, declaredByThePage));
+  return html.split(NO_LONGER_FREE_SLOT).join(sentence);
+}
+
 function buildDatabaseFreeTierComparison2026Page(): string {
   const title = "Database Free Tier Comparison 2026 — Supabase vs Neon vs Firebase vs Turso vs PlanetScale";
   const metaDescDb = "Side-by-side comparison of 10+ database free tiers in 2026. Compare Supabase, Neon, Firebase, Turso, MongoDB, CockroachDB, Upstash, Cloudflare D1, and more — storage, compute, connections, and lock-in risk.";
@@ -35766,8 +35795,10 @@ function buildDatabaseFreeTierComparison2026Page(): string {
   const pubDate = "2026-03-31";
 
   const dbVendorKeywords = ["Supabase", "Neon", "Firebase", "Turso", "PlanetScale", "MongoDB", "CockroachDB", "Upstash", "Cloudflare D1", "Redis", "Appwrite", "Convex", "Weaviate", "Zilliz", "Aiven", "Aurora", "Neo4j", "Hasura"];
+  const namesADeclaredDatabase = (vendor: string) =>
+    dbVendorKeywords.some(v => vendor === v || vendor.startsWith(v + " ") || vendor.includes(v));
   const dbChanges = dealChanges.filter((c: any) =>
-    dbVendorKeywords.some(v => c.vendor === v || c.vendor.startsWith(v + " ") || c.vendor.includes(v)) || c.category === "Databases"
+    namesADeclaredDatabase(c.vendor) || c.category === "Databases"
   ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   const changeTimelineRows = dbChanges.slice(0, 12).map((c: any) => {
@@ -35818,7 +35849,7 @@ function buildDatabaseFreeTierComparison2026Page(): string {
     mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
   };
 
-  return comparisonPageWithLiveRecords(`<!DOCTYPE html>
+  const page = `<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -36052,7 +36083,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="context-box">
-    Turso and Cloudflare D1 give 5 GB of free storage each. <strong>Supabase</strong>'s free plan bundles Postgres with auth, file storage, edge functions and realtime; <strong>Neon</strong>'s bundles Postgres with auth, object storage and Functions. <strong>Neon</strong> lets you create up to 100 projects with 1 GB each, 20 GB in total — ideal for microservices or per-client databases. PlanetScale's free tier removal in April 2024 was one of the most impactful such changes in developer tooling history.
+    ${NO_LONGER_FREE_SLOT}Turso and Cloudflare D1 give 5 GB of free storage each. <strong>Supabase</strong>'s free plan bundles Postgres with auth, file storage, edge functions and realtime; <strong>Neon</strong>'s bundles Postgres with auth, object storage and Functions. <strong>Neon</strong> lets you create up to 100 projects with 1 GB each, 20 GB in total — ideal for microservices or per-client databases. PlanetScale's free tier removal in April 2024 was one of the most impactful such changes in developer tooling history.
   </div>
 
   <h2 id="postgres">Postgres-Compatible Databases</h2>
@@ -36251,8 +36282,8 @@ ${mcpCtaCss()}
       <tr>
         <td class="provider-col">Momento</td>
         <td>Cache + pub/sub</td>
-        <td style="font-family:var(--mono)">Removed Sept 2026 &mdash; was 5 GB transfer/mo</td>
-        <td>Was unlimited within that transfer limit</td>
+        <td style="font-family:var(--mono)">No free tier. Ended November 2025.</td>
+        <td>First 5M operations/month free until November 2025.</td>
         <td class="cross">Cache only</td>
         <td>High-throughput caching</td>
       </tr>${vendorPageConditionsRowHtml("momento", 6)}
@@ -36418,7 +36449,8 @@ ${mcpCtaCss()}
 </footer>
 <script>${mcpCtaScript()}</script>
 </body>
-</html>`, pubDate, dbChanges);
+</html>`;
+  return comparisonPageWithLiveRecords(withNoLongerFreeSentence(page, namesADeclaredDatabase), pubDate, dbChanges);
 }
 
 function buildCicdFreeTierComparison2026Page(): string {
