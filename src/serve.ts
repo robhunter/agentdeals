@@ -36282,8 +36282,8 @@ ${mcpCtaCss()}
       <tr>
         <td class="provider-col">Momento</td>
         <td>Cache + pub/sub</td>
-        <td style="font-family:var(--mono)">Removed Sept 2026 &mdash; was 5 GB transfer/mo</td>
-        <td>Was unlimited within that transfer limit</td>
+        <td style="font-family:var(--mono)">No free tier. Ended November 2025.</td>
+        <td>First 5M operations/month free until November 2025.</td>
         <td class="cross">Cache only</td>
         <td>High-throughput caching</td>
       </tr>${vendorPageConditionsRowHtml("momento", 6)}

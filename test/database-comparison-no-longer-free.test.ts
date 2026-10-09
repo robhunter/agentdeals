@@ -90,12 +90,22 @@ async function servePage(changes: ChangeRecord[]): Promise<string> {
   }
 }
 
+function keyValueRowCells(html: string, provider: string): string[] {
+  const section = html.slice(html.indexOf('<h2 id="kv">'), html.indexOf('<h2 id="vector">'));
+  for (const row of section.matchAll(/<tr[^>]*>([\s\S]*?)<\/tr>/g)) {
+    const cells = [...row[1]!.matchAll(/<td[^>]*>([\s\S]*?)<\/td>/g)].map(m => text(m[1]!));
+    if (cells[0]?.startsWith(provider)) return cells;
+  }
+  assert.fail(`${PAGE}'s Key-Value table holds no ${provider} row`);
+}
+
 describe(`${PAGE} names the databases it covers whose free tier our records say was removed`, () => {
+  let page = "";
   let withRemovals = "";
   let withNone = "";
 
   before(async () => {
-    withRemovals = storageContextBox(await servePage([
+    page = await servePage([
       ...withoutRemovals,
       removal("Turso", "2025-05-01", "Databases"),
       removal("Turso", "2026-08-20", "Databases"),
@@ -105,8 +115,16 @@ describe(`${PAGE} names the databases it covers whose free tier our records say 
         resolution: { state: "retracted", date: "2026-09-05", detail: "Retracted 2026-09-05: the free plan did not end." },
       }),
       removal("Typeform", "2026-09-30", "Forms"),
-    ]));
+    ]);
+    withRemovals = storageContextBox(page);
     withNone = storageContextBox(await servePage(withoutRemovals));
+  });
+
+  it("dates Momento's ended allowance in the Key-Value table to 2025, as our records do", () => {
+    const [, , storage, operations] = keyValueRowCells(page, "Momento");
+    assert.strictEqual(storage, "No free tier. Ended November 2025.");
+    assert.strictEqual(operations, "First 5M operations/month free until November 2025.");
+    assert.doesNotMatch(`${storage} ${operations}`, /2026/);
   });
 
   it("opens the storage paragraph with every covered database's removal, newest first, by month and year", () => {

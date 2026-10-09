@@ -860,7 +860,7 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 65,
+      "table_figures": 64,
       "table_figures_from_records": 32,
       "tables": [
         {
@@ -885,7 +885,7 @@
         },
         {
           "label": "Key-Value / Cache Databases",
-          "figures": 4,
+          "figures": 3,
           "from_records": 1
         },
         {
