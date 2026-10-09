@@ -19,7 +19,7 @@ const TIER_STOPWORDS = new Set([
   "for",
 ]);
 
-const ALLOWLIST = new Set([]);
+const ALLOWLIST = new Set(["DigitalOcean"]);
 
 const TLD_SUFFIX_RE = /\.(com|io|net|org|dev|app|co|ai)$/;
 const CORP_SUFFIX_RE = /\s+(inc\.?|llc|ltd\.?)$/;

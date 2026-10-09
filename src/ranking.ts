@@ -40,6 +40,7 @@ export const NOT_FREE_TIER_RULES: { pattern: RegExp; note: string }[] = [
   { pattern: /^legacy free$/i, note: "a free tier closed to new accounts" },
   { pattern: /^conditional$/i, note: "an offer whose availability is not stated in terms we can check" },
   { pattern: /^exempt\s*\/\s*paid$/i, note: "free only by case-by-case exemption" },
+  { pattern: /^startup discount$/i, note: "a discount on a paid plan for qualifying startups, not a free tier" },
 ];
 
 export type TimeLimitedKind = "credit" | "trial" | "scholarship" | "preview";

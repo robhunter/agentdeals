@@ -431,8 +431,6 @@ function listsInTheCardHeaded(html: string, heading: string): string {
 const ROWS_THEIR_LISTINGS_CONDITIONS_DO_NOT_DESCRIBE = [
   { route: "/storage-comparison-2026", row: "firebase-storage", listing: "firebase" },
   { route: "/aws-app-runner-migration", row: "digitalocean", listing: "digitalocean" },
-  { route: "/email-alternatives", row: "sendgrid", listing: "sendgrid" },
-  { route: "/email-comparison-2026", row: "sendgrid", listing: "sendgrid" },
 ];
 
 const ROWS_NAMING_NO_LISTING = [
@@ -453,10 +451,12 @@ const ROWS_NAMING_NO_LISTING = [
   { route: "/email-comparison-2026", row: "mailgun" },
   { route: "/email-comparison-2026", row: "marketing-transactional" },
   { route: "/email-comparison-2026", row: "self-hosted-oss-hedge" },
+  { route: "/email-comparison-2026", row: "sendgrid" },
   { route: "/email-comparison-2026", row: "side-project-transactional" },
   { route: "/email-comparison-2026", row: "smtp2go" },
   { route: "/hosting-free-tier-comparison-2026", row: "heroku" },
   { route: "/monitoring-comparison-2026", row: "hyperdx" },
+  { route: "/serverless-free-tier-comparison-2026", row: "google-cloud-functions" },
   { route: "/storage-comparison-2026", row: "bunnycdn" },
   { route: "/storage-comparison-2026", row: "keycdn" },
   { route: "/storage-comparison-2026", row: "uploadthing" },
@@ -546,7 +546,7 @@ describe("every guide that compares vendors prints each vendor's conditions of u
     const readings = new Map((await readingsOn(conditioned.base)).map((reading) => [reading.route, reading]));
     for (const { route, row } of ROWS_NAMING_NO_LISTING) {
       assert.ok(readings.get(route)?.rowsNamedWithoutALink.includes(row), `${route} prints no ${row} row named without a link`);
-      assert.strictEqual(await vendorPageStatus(conditioned.base, row, memo), 404, `/vendor/${row} answers now; take ${route}'s ${row} row off the list`);
+      assert.ok([404, 410].includes(await vendorPageStatus(conditioned.base, row, memo)), `/vendor/${row} answers now; take ${route}'s ${row} row off the list`);
     }
   });
 

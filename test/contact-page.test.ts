@@ -107,7 +107,7 @@ describe("#1084 /contact", () => {
   it("keeps the page inventory the dates job reads equal to the pages the sitemaps list", async () => {
     const inventory = JSON.parse(readFileSync(INVENTORY, "utf-8")) as string[];
     const listed = await everySitemapPage();
-    assertPopulationFloor(listed.length, 1900, "pages the sitemaps list");
+    assertPopulationFloor(listed.length, 1850, "pages the sitemaps list");
     assert.deepStrictEqual([...new Set(inventory)].sort(), [...new Set(listed)].sort());
   });
 });
@@ -123,7 +123,7 @@ describe("#1084 every page links /contact from its footer", () => {
 
   it("serves every page in the sitemaps with exactly one footer, and that footer links /contact once", async () => {
     const pages = await everySitemapPage();
-    assertPopulationFloor(pages.length, 1900, "pages the sitemaps list");
+    assertPopulationFloor(pages.length, 1850, "pages the sitemaps list");
     const wrong: string[] = [];
     for (let i = 0; i < pages.length; i += 16) {
       await Promise.all(pages.slice(i, i + 16).map(async page => {

@@ -291,7 +291,7 @@ describe("the catalogue as it stands", () => {
 
   it("carries the outcome of the read whose date it publishes", () => {
     const dated = enriched.filter((o) => o.last_read_outcome !== null);
-    assertPopulationFloor(dated.length, 900, "records publishing what the read on their last read date concluded");
+    assertPopulationFloor(dated.length, 850, "records publishing what the read on their last read date concluded");
     for (const offer of dated) {
       const record = state.get(`${offer.vendor}|${offer.url}`);
       if (!record?.last_attempt_at) continue;

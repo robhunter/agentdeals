@@ -1,7 +1,7 @@
 {
   "$schema": "https://glama.ai/mcp/schemas/server.json",
   "name": "agentdeals",
-  "description": "Search and compare free tiers, credits, and pricing changes across 1,500+ developer tools. 5 intent-based MCP tools for infrastructure decisions, free-tier status check, and vendor comparison.",
+  "description": "Search and compare free tiers, credits, and pricing changes across 1,400+ developer tools. 5 intent-based MCP tools for infrastructure decisions, free-tier status check, and vendor comparison.",
   "repository": "https://github.com/robhunter/agentdeals",
   "license": "MIT",
   "tools": 5,

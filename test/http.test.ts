@@ -5582,14 +5582,14 @@ describe("shutdown tracker page", () => {
     assert.ok(html.includes("AWS Proton"), "Should list AWS Proton shutdown");
   });
 
-  it("GET /cockroachdb-vs-mongodb renders programmatic VS page", async () => {
+  it("GET /neon-vs-turso renders programmatic VS page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${serverPort}/cockroachdb-vs-mongodb`);
+    const response = await fetch(`http://localhost:${serverPort}/neon-vs-turso`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
-    assert.ok(html.includes("CockroachDB vs MongoDB: Free Tier Comparison"), "Should have correct H1");
+    assert.ok(html.includes("Neon vs Turso: Free Tier Comparison"), "Should have correct H1");
     assert.ok(html.includes("Quick Verdict"), "Should have quick verdict section");
     assert.ok(html.includes("Key Differences"), "Should have key differences section");
     assert.ok(html.includes("Our Recommendation"), "Should have recommendation section");
@@ -5598,17 +5598,17 @@ describe("shutdown tracker page", () => {
     assert.ok(html.includes("Frequently Asked Questions"), "Should have FAQ section");
     assert.ok(html.includes("FAQPage"), "Should have FAQPage JSON-LD");
     assert.ok(html.includes("canonical"), "Should have canonical link");
-    assert.ok(html.includes("/vendor/cockroachdb"), "Should link to vendor pages");
-    assert.ok(html.includes("/vendor/mongodb"), "Should link to vendor pages");
+    assert.ok(html.includes("/vendor/neon"), "Should link to vendor pages");
+    assert.ok(html.includes("/vendor/turso"), "Should link to vendor pages");
     assert.ok(html.includes("database-alternatives"), "Should link to category hub");
   });
 
   it("GET /<reversed-vs-slug> redirects to canonical VS page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${serverPort}/mongodb-vs-cockroachdb`, { redirect: "manual" });
+    const response = await fetch(`http://localhost:${serverPort}/turso-vs-neon`, { redirect: "manual" });
     assert.strictEqual(response.status, 301);
-    assert.ok(response.headers.get("location")?.includes("/cockroachdb-vs-mongodb"), "Should redirect to canonical URL");
+    assert.ok(response.headers.get("location")?.includes("/neon-vs-turso"), "Should redirect to canonical URL");
   });
 
   it("sitemap-comparisons.xml includes programmatic VS pages", async () => {
@@ -5616,7 +5616,7 @@ describe("shutdown tracker page", () => {
 
     const response = await fetch(`http://localhost:${serverPort}/sitemap-comparisons.xml`);
     const xml = await response.text();
-    assert.ok(xml.includes("/cockroachdb-vs-mongodb"), "Sitemap should include VS pages");
+    assert.ok(xml.includes("/neon-vs-turso"), "Sitemap should include VS pages");
     assert.ok(xml.includes("/auth0-vs-clerk"), "Sitemap should include VS pages");
     assert.ok(xml.includes("/amplitude-vs-posthog"), "Sitemap should include VS pages");
   });

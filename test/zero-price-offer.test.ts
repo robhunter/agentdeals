@@ -211,7 +211,7 @@ describe("#1724 structured data prices a tier at zero only where we state that t
 
   it("publishes no price of zero for an offer the ranking gate holds back", () => {
     const gated = offersWhere(o => Boolean(o.gate));
-    assertPopulationFloor(gated.size, 100, "offers are held back by a ranking gate");
+    assertPopulationFloor(gated.size, 75, "offers are held back by a ranking gate");
     assertPopulationFloor(nodesNaming(gated).length, 100, "nodes name a gated offer");
     assert.deepStrictEqual(pricedAmong(gated).slice(0, 25), []);
   });

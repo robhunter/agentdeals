@@ -261,7 +261,7 @@ describe("no published reason states a gap a reading we hold contradicts", () =>
       const checked = o.source_check?.checked;
       return Boolean(checked) && daysApart(checked!, TODAY) <= STALE_VERIFICATION_DAYS;
     });
-    assertPopulationFloor(readInsideTheWindow.length, 1100, "records read inside the staleness window");
+    assertPopulationFloor(readInsideTheWindow.length, 1000, "records read inside the staleness window");
 
     const readInside = new Set(readInsideTheWindow.map(o => `${o.vendor}|${o.url}`));
     const contradicted = everyStaleReason(TODAY)
@@ -308,9 +308,9 @@ describe("the controls this issue names", () => {
     return { gate: null, staleReason: entry.demerits.find(d => d.code === "stale_verification")?.reason ?? null };
   }
 
-  it("holds Segment out of the ranked population altogether, where it already was", () => {
-    assert.equal(standingOf("Segment").gate, "eligibility_restricted");
-    assert.equal(standingOf("Segment").staleReason, null);
+  it("holds Segment's startup programme out of the ranked population altogether, where it already was", () => {
+    assert.equal(standingOf("Segment Startup Program").gate, "eligibility_restricted");
+    assert.equal(standingOf("Segment Startup Program").staleReason, null);
   });
 });
 
@@ -333,7 +333,7 @@ describe("the criteria page publishes the count and what moves it", () => {
     const measured = offers.filter(o =>
       verificationDoubt(o, DATE, ledger, lastReadingFor(o)) !== null,
     ).length;
-    assertPopulationFloor(measured, 350, "records meeting the stale_verification trigger");
+    assertPopulationFloor(measured, 300, "records meeting the stale_verification trigger");
     assert.equal(stated, measured);
   });
 

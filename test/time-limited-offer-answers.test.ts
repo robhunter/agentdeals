@@ -155,6 +155,7 @@ interface Subject {
   superseded: boolean;
   levelWithheld: boolean;
   termsUnconfirmed: boolean;
+  restriction: string;
 }
 
 const primaries = new Map<string, Offer>();
@@ -174,6 +175,7 @@ function subjectOf(offer: Offer): Subject {
     servedOn: TODAY,
   });
   const supersededBy = supersedingChange(offer, changesOf(offer.vendor));
+  const gate = gateFor(offer, TODAY, changesOf(offer.vendor));
   return {
     vendor: offer.vendor,
     slug: toSlug(offer.vendor),
@@ -184,6 +186,7 @@ function subjectOf(offer: Offer): Subject {
     superseded: supersededBy !== null,
     levelWithheld: (context?.levelWithheld ?? null) !== null,
     termsUnconfirmed: context ? whyWeCannotConfirmTheseTerms(context.input) !== null : false,
+    restriction: gate?.code === "eligibility_restricted" ? `${gate.reason} ` : "",
   };
 }
 
@@ -400,15 +403,15 @@ describe("a vendor whose listed tier is a trial or a credit grant is not said to
   it("opens the meta description with the tier's class", () => {
     for (const s of timeLimited.filter(t => !t.superseded)) {
       const meta = page(`/vendor/${s.slug}`).meta;
-      assert.ok(meta.startsWith(`${s.vendor} has no ongoing free tier; what it offers is ${s.note}. `), `/vendor/${s.slug}: "${meta}"`);
+      assert.ok(meta.startsWith(`${s.restriction}${s.vendor} has no ongoing free tier; what it offers is ${s.note}. `), `/vendor/${s.slug}: "${meta}"`);
     }
   });
 
   it("opens the quick verdict with the tier's class, followed by the stored terms", () => {
     for (const s of timeLimited.filter(t => !t.superseded)) {
       const verdict = page(`/vendor/${s.slug}`).verdict;
-      assert.ok(verdict.startsWith(verdictLead(s)), `/vendor/${s.slug}: "${verdict.slice(0, 200)}"`);
-      const openingOfTheTerms = verdict.slice(verdictLead(s).length).split("…")[0].slice(0, 30);
+      assert.ok(verdict.startsWith(s.restriction + verdictLead(s)), `/vendor/${s.slug}: "${verdict.slice(0, 200)}"`);
+      const openingOfTheTerms = verdict.slice((s.restriction + verdictLead(s)).length).split("…")[0].slice(0, 30);
       assert.ok(openingOfTheTerms.length >= 20 && s.description.startsWith(openingOfTheTerms), `/vendor/${s.slug}: "${verdict.slice(0, 200)}"`);
     }
   });
@@ -416,7 +419,7 @@ describe("a vendor whose listed tier is a trial or a credit grant is not said to
   it("opens the quick verdict on the superseding record where the stored terms are withheld", () => {
     for (const s of timeLimited.filter(t => t.supersededBy !== null)) {
       const verdict = page(`/vendor/${s.slug}`).verdict;
-      assert.ok(verdict.startsWith(supersededTermsVerdictSentence(s.vendor, s.supersededBy)), `/vendor/${s.slug}: "${verdict.slice(0, 200)}"`);
+      assert.ok(verdict.startsWith(s.restriction + supersededTermsVerdictSentence(s.vendor, s.supersededBy)), `/vendor/${s.slug}: "${verdict.slice(0, 200)}"`);
     }
   });
 

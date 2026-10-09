@@ -252,7 +252,7 @@ describe("/alternative-to/:slug", () => {
   });
 
   it("offers no substitute from a category we hold no product taxonomy for", async () => {
-    const { status, text } = await get("/alternative-to/brex");
+    const { status, text } = await get("/alternative-to/brex-partner-perks");
     assert.strictEqual(status, 200);
     const shown = (text.match(/class="alt-vendor-name"/g) ?? []).length;
     assert.strictEqual(shown, 0, "Startup Perks carries no subtype taxonomy, so no record in it is offered as a substitute");

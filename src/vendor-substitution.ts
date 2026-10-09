@@ -12,6 +12,7 @@ export interface VendorNameUniverse {
   all(): readonly string[];
   renamedTo(slug: string): string | null;
   hasEnded(slug: string): boolean;
+  withdrawn?(slug: string): boolean;
 }
 
 const SHORTEST_INPUT_WE_COMPLETE = 3;
@@ -23,6 +24,7 @@ export function resolveVendorName(input: string, universe: VendorNameUniverse): 
 
   const renamed = universe.renamedTo(input);
   if (renamed) return { type: "redirect", slug: renamed };
+  if (universe.withdrawn?.(input)) return { type: "none" };
   if (input.length < SHORTEST_INPUT_WE_COMPLETE) return { type: "none" };
 
   const all = universe.all();

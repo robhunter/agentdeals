@@ -98,7 +98,7 @@
       "named_by": [
         "Cloudflare Startup Program",
         "DigitalOcean",
-        "Google Cloud"
+        "Google for Startups Cloud Program"
       ]
     },
     {
@@ -232,7 +232,7 @@
     {
       "name": "DigitalOcean Hatch",
       "named_by": [
-        "Google Cloud"
+        "Google for Startups Cloud Program"
       ]
     },
     {
@@ -366,12 +366,6 @@
       "name": "Google for Startups Cloud",
       "named_by": [
         "Google"
-      ]
-    },
-    {
-      "name": "Google for Startups Cloud Program",
-      "named_by": [
-        "Cloudflare Startup Program"
       ]
     },
     {
@@ -654,6 +648,12 @@
       "name": "Self-hosted Connect apps",
       "named_by": [
         "Atlassian Forge"
+      ]
+    },
+    {
+      "name": "SendGrid",
+      "named_by": [
+        "SendGrid Accelerate"
       ]
     },
     {

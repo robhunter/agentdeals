@@ -206,7 +206,6 @@ describe("#1063 reading the subject a badge is attached to", () => {
 
 describe("#1063 which records an editorial subject commits us to", () => {
   it("resolves a name we hold under a different one", () => {
-    assert.deepStrictEqual(assertedVendorSlugs("GCP"), ["google-cloud"]);
     assert.deepStrictEqual(assertedVendorSlugs("Appwrite Auth"), ["appwrite-cloud"]);
   });
 

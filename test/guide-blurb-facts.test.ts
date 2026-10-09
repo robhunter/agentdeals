@@ -11,7 +11,7 @@ const SITEMAPS_OF_GUIDES_AND_REPORTS = ["/sitemap-pages.xml", "/sitemap-reports.
 const WITHDRAWN: Record<string, RegExp> = {
   "a self-hosted runner fee GitHub charges": /self-hosted runners? (?:now )?costs?\b|self-hosted runner (?:charges|costs) introduced|introduced self-hosted runner charges|private repos pay \$0\.002|private: \$0\.002|\$0\.002\/min \(private\)|runners now \$0\.002|per-minute fees for (?:private )?self-hosted runners|self-hosted runner per-minute fees|new cost only applies to self-hosted runners|GitHub Actions runner fees/i,
   "Mailgun's free tier removed": /Mailgun (?:had already |has )?(?:killed|eliminated|removed|dropped)|Mailgun and [^.;]{0,40} (?:have|has) (?:since )?dropped their free tiers|Mailgun free tier gone|Why not Mailgun: Free tier removed|Sinch 2021, free tier removed|Mailgun<span class="removed-badge">/i,
-  "a SendGrid free tier of 100 a day": /SendGrid (?:restricted|down) to 100\/day|SendGrid gives you 100 emails\/day|SendGrid<\/strong> (?:cut|slashed) its free tier|SendGrid slashed its free tier|free plans reduced to 100 emails\/day|>SendGrid<\/a><\/td>\s*<td>[^<]*<\/td>\s*<td>100 emails\/day|"name":"SendGrid","free":"100 emails\/day"/i,
+  "a SendGrid free tier of 100 a day": /SendGrid (?:restricted|down) to 100\/day|SendGrid gives you 100 emails\/day|SendGrid<\/strong> (?:cut|slashed) its free tier|SendGrid slashed its free tier|free plans reduced to 100 emails\/day|>SendGrid<\/(?:a|span)><\/td>\s*<td>[^<]*<\/td>\s*<td>100 emails\/day|"name":"SendGrid","free":"100 emails\/day"/i,
   "Redis under the BSL": /Redis switched to BSL|Business Source License \(BSL\)|Redis \(BSL\)|free under BSL|<td>BSL restrictions<\/td>/i,
   "Auth0's Essentials at $240": /Essential plan starting at|\$240\/month for just 500/i,
   "an Auth0 price at 100K users that no Auth0 plan charges": /Auth0 ~\$240/i,
@@ -31,7 +31,7 @@ const CONTROLS: [string, string][] = [
 ];
 
 const CORRECTED: [string, string][] = [
-  ["/email-alternatives", ">SendGrid</a></td>\n        <td>Transactional API</td>\n        <td>None (60-day trial)</td>"],
+  ["/email-alternatives", ">SendGrid</span></td>\n        <td>Transactional API</td>\n        <td>None (60-day trial)</td>"],
   ["/estimate", '"name":"SendGrid","free":"None (60-day trial)"'],
   ["/testing-free-tier-comparison-2026", "GitHub Actions charges $0.006/min (Linux) beyond the free tier"],
   ["/testing-free-tier-comparison-2026", "A GitHub Free account gets 2,000 free minutes a month for private repositories, so 50 runs of a 5&ndash;15 minute suite (250&ndash;750 minutes) cost $0."],

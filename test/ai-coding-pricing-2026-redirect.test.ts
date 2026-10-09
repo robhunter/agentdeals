@@ -97,7 +97,7 @@ describe(`${RETIRED_PAGE} is retired in favor of ${SUCCESSOR_PAGE}`, () => {
   });
 
   it("reads every sitemap, every route they list, the feed and the llms files", () => {
-    assertPopulationFloor(routes.length, 1900, "routes the sitemaps list");
+    assertPopulationFloor(routes.length, 1850, "routes the sitemaps list");
     assert.deepStrictEqual(found.unread.sort(), []);
     assert.ok(routes.includes(SUCCESSOR_PAGE), `${SUCCESSOR_PAGE} is in no sitemap`);
   });

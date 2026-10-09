@@ -16,8 +16,10 @@ const offers: Offer[] = JSON.parse(readFileSync(path.join(REPO, "data", "index.j
 const changes: DealChange[] = JSON.parse(readFileSync(path.join(REPO, "data", "deal_changes.json"), "utf-8")).changes;
 
 const CLASSIFIED_CATEGORIES = ["Databases", "Cloud Hosting"];
-const SENDGRID_WRONG_CLASS = ["Bench", "Remote for Startups", "Esri Startup Program"];
-const SENDGRID_CURATED = ["Postmark", "Resend", "Amazon SES"];
+const PROGRAMME = "Google for Startups Cloud Program";
+const PROGRAMME_SLUG = "google-for-startups-cloud-program";
+const PROGRAMME_WRONG_CLASS = ["Bench", "Remote for Startups", "Stripe Atlas"];
+const PROGRAMME_CURATED = ["AWS Activate"];
 
 interface UnclassifiedSubject {
   vendor: string;
@@ -121,9 +123,9 @@ describe("a category is not a product class", () => {
   });
 
   it("reaches every same-category consumer through one rule", () => {
-    const sendgrid = offers.find(o => o.vendor === "SendGrid")!;
-    assert.ok(sendgrid, "SendGrid must be in the index");
-    assert.deepStrictEqual(substitutesFor(offers, sendgrid), []);
+    const programme = offers.find(o => o.vendor === PROGRAMME)!;
+    assert.ok(programme, `${PROGRAMME} must be in the index`);
+    assert.deepStrictEqual(substitutesFor(offers, programme), []);
   });
 });
 
@@ -159,9 +161,9 @@ function jsonLdBlocks(body: string): Array<Record<string, unknown>> {
 before(async () => { proc = await startServer(); });
 after(() => { proc?.kill(); });
 
-describe("/alternative-to/sendgrid", () => {
+describe(`/alternative-to/${PROGRAMME_SLUG}`, () => {
   it("names no product from another class on any surface that carries the list", async () => {
-    const { status, body } = await get("/alternative-to/sendgrid");
+    const { status, body } = await get(`/alternative-to/${PROGRAMME_SLUG}`);
     assert.strictEqual(status, 200);
 
     const blocks = jsonLdBlocks(body);
@@ -175,15 +177,15 @@ describe("/alternative-to/sendgrid", () => {
     const listed = itemList.itemListElement.map(e => e.item.name);
     const faqText = faq.mainEntity.map(e => `${e.name} ${e.acceptedAnswer.text}`).join(" ");
 
-    for (const wrong of SENDGRID_WRONG_CLASS) {
-      assert.ok(!rendered.includes(wrong), `${wrong} is still rendered as a SendGrid alternative`);
+    for (const wrong of PROGRAMME_WRONG_CLASS) {
+      assert.ok(!rendered.includes(wrong), `${wrong} is still rendered as an alternative to ${PROGRAMME}`);
       assert.ok(!listed.includes(wrong), `${wrong} is still in the ItemList`);
       assert.ok(!ogDescription.includes(wrong), `${wrong} is still in og:description`);
       assert.ok(!faqText.includes(wrong), `${wrong} is still in an FAQ answer`);
     }
 
-    for (const name of SENDGRID_CURATED) {
-      assert.ok(rendered.includes(name), `${name} was written down for SendGrid and must survive`);
+    for (const name of PROGRAMME_CURATED) {
+      assert.ok(rendered.includes(name), `${name} was written down for ${PROGRAMME} and must survive`);
       assert.ok(listed.includes(name), `${name} must reach the ItemList`);
     }
 
@@ -238,14 +240,14 @@ describe("a page with no evidence of a product class", () => {
   });
 
   it("names none of them through the vendor page or the API either", async () => {
-    const vendor = await get("/vendor/sendgrid");
+    const vendor = await get(`/vendor/${PROGRAMME_SLUG}`);
     assert.strictEqual(vendor.status, 200);
-    const risk = await get("/api/vendor-risk/SendGrid");
+    const risk = await get(`/api/vendor-risk/${PROGRAMME_SLUG}`);
     assert.strictEqual(risk.status, 200);
     const named = JSON.parse(risk.body).alternatives.map((a: { vendor: string }) => a.vendor);
-    for (const wrong of SENDGRID_WRONG_CLASS) {
+    for (const wrong of PROGRAMME_WRONG_CLASS) {
       assert.ok(!named.includes(wrong), `${wrong} is still offered through /api/vendor-risk`);
-      assert.ok(!vendor.body.includes(`>${wrong}<`), `${wrong} is still named on /vendor/sendgrid`);
+      assert.ok(!vendor.body.includes(`>${wrong}<`), `${wrong} is still named on /vendor/${PROGRAMME_SLUG}`);
     }
   });
 });

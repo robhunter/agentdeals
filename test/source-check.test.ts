@@ -274,10 +274,7 @@ describe("two offers may not share a source that states only one of their terms"
     );
   });
 
-  const SHARED_SOURCES_THAT_NAME_NOBODY = [
-    "https://brex.com/rewards/",
-    "https://www.joinsecret.com/offers",
-  ];
+  const SHARED_SOURCES_THAT_NAME_NOBODY: string[] = [];
 
   it("adds no new shared source that fails to name the offers it carries", () => {
     const failing = sharedUrlGroups()

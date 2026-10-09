@@ -6,23 +6,20 @@ export interface ProgrammeListing {
 }
 
 export const STARTUP_PROGRAMME_LISTINGS: readonly ProgrammeListing[] = [
-  { vendor: "AWS Activate", tier: "Portfolio" },
-  { vendor: "Google Cloud", tier: "Startup Program" },
-  { vendor: "Microsoft for Startups", tier: "Startup Program" },
-  { vendor: "Microsoft Founders Hub", tier: "Startup Program" },
-  { vendor: "DigitalOcean", tier: "Hatch" },
-  { vendor: "Cloudflare for Startups", tier: "Startup Program" },
-  { vendor: "Stripe Atlas", tier: "Founder Perks" },
-  { vendor: "Brex", tier: "Partner Perks" },
-  { vendor: "Mercury", tier: "Banking Perks" },
-  { vendor: "Ramp", tier: "Partner Rewards" },
-  { vendor: "SVB (Silicon Valley Bank)", tier: "Banking Offers" },
-  { vendor: "PostHog", tier: "YC Deal" },
-  { vendor: "PostHog", tier: "Startup Program" },
-  { vendor: "Amazon Kiro (AWS Startups)", tier: "Startup Program" },
+  { vendor: "AWS Activate", tier: "Startup Credits" },
+  { vendor: "Google for Startups Cloud Program", tier: "Startup Credits" },
+  { vendor: "Microsoft for Startups", tier: "Startup Credits" },
+  { vendor: "DigitalOcean", tier: "Startup Credits" },
+  { vendor: "Cloudflare for Startups", tier: "Startup Credits" },
+  { vendor: "Stripe Atlas", tier: "Paid" },
+  { vendor: "Brex Partner Perks", tier: "Startup Credits" },
+  { vendor: "Mercury Perks", tier: "Startup Credits" },
+  { vendor: "Ramp Partner Rewards", tier: "Startup Credits" },
+  { vendor: "SVB Startup Banking Offers", tier: "Startup Credits" },
+  { vendor: "PostHog", tier: "Startup Credits" },
+  { vendor: "Amazon Kiro (AWS Startups)", tier: "Startup Credits" },
   { vendor: "Amplitude", tier: "Startup Scholarship" },
-  { vendor: "Segment", tier: "Startup Program" },
-  { vendor: "IBM Cloud", tier: "Startup Program" },
+  { vendor: "Segment Startup Program", tier: "Startup Credits" },
 ];
 
 export function listingCountsByVendor(offers: readonly Pick<Offer, "vendor">[]): Map<string, number> {
