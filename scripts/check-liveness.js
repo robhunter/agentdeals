@@ -12,8 +12,8 @@ import {
 } from "../dist/link-health.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const INDEX_PATH = resolve(__dirname, "..", "data", "index.json");
-const HEALTH_PATH = resolve(__dirname, "..", "data", "link_health.json");
+const INDEX_PATH = process.env.AGENTDEALS_INDEX_PATH || resolve(__dirname, "..", "data", "index.json");
+const HEALTH_PATH = process.env.AGENTDEALS_LINK_HEALTH_PATH || resolve(__dirname, "..", "data", "link_health.json");
 
 const USER_AGENT = "AgentDeals-Liveness/1.0 (+https://agentdeals.dev)";
 const FETCH_TIMEOUT_MS = 15000;

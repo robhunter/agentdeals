@@ -5909,19 +5909,23 @@ ${allCompareLinks.join("\n")}
     : eligibilityGateSentence + (termsWeCannotConfirm
     ? `${unconfirmedTermsPreamble}Our stored record calls ${vendorName}'s free tier "${primary.tier}". ${withUnconfirmedTermsCaveat(primary.description)}`
     : `${vendorName}'s free tier is called "${primary.tier}". ${primary.description}`), listingConditions);
+  const adverseLevelAnswer = riskLevel === null || riskLevel === "stable"
+    ? null
+    : riskLevel === "caution"
+    ? `${vendorName}'s ${freeOfferNoun} requires caution because of one specific recorded change${riskCause ? `, ${changeDateClause(riskCause)}: ${changeSummaryText(riskCause)}` : "."}`
+    : `${vendorName}'s ${freeOfferNoun} is considered risky because of one specific recorded change${riskCause ? `, ${changeDateClause(riskCause)}: ${changeSummaryText(riskCause)}` : "."} Consider alternatives.`;
   const faqReliableAnswer = offerHasEnded
     ? endedReliabilitySentence(vendorName)
     : endedBy
     ? endedClaimReliabilityAnswer(vendorName, endedBy)
+    : levelWithheld === "link_unreachable" && adverseLevelAnswer
+    ? `${adverseLevelAnswer} ${withheldLevelSentence(levelWithheld, vendorName, unconfirmableSince)}`
     : levelWithheld
     ? `We cannot say. ${withheldLevelSentence(levelWithheld, vendorName, unconfirmableSince)} Nothing we have read describes these terms, so we are not publishing a stability judgement for this vendor until that is fixed.`
     : riskLevel === null
     ? `${levelWithheldBecause}`
-    : riskLevel === "stable"
-    ? `${vendorName}'s ${freeOfferNoun} is considered stable.${vendorChanges.length > 0 ? ` ${narrowingSentence(vendorChanges, primary, termsSuperseded !== null)} See the pricing history below.` : ""}`
-    : riskLevel === "caution"
-    ? `${vendorName}'s ${freeOfferNoun} requires caution because of one specific recorded change${riskCause ? `, ${changeDateClause(riskCause)}: ${changeSummaryText(riskCause)}` : "."}`
-    : `${vendorName}'s ${freeOfferNoun} is considered risky because of one specific recorded change${riskCause ? `, ${changeDateClause(riskCause)}: ${changeSummaryText(riskCause)}` : "."} Consider alternatives.`;
+    : adverseLevelAnswer
+    ?? `${vendorName}'s ${freeOfferNoun} is considered stable.${vendorChanges.length > 0 ? ` ${narrowingSentence(vendorChanges, primary, termsSuperseded !== null)} See the pricing history below.` : ""}`;
   const faqCategoryAnswer = `${vendorName} is categorized under ${allCategories.join(", ")} on AgentDeals.${alternatives.length > 0 ? ` We list ${alternatives.length} other ${primary.category} services alongside it, every one of them on this page with its free tier and the stability we publish for it.` : ""}`;
 
   const restoredRemovalLowersTheRating = riskLevel === "caution" ? restoredRemovalReason(verdictInput) : null;
