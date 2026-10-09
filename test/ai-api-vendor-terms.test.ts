@@ -103,6 +103,10 @@ const RULES: Rule[] = [
   },
   { vendor: "OpenAI", names: /Realtime API Beta/g, within: 60, retired: [/May 7, 2026/, /2026-05-07/] },
   {
+    vendor: "OpenAI", names: /OpenAI(?! Codex|-compatible)/g, notAfter: /Google|Gemini|Anthropic|Claude|Cloudflare/g, within: 200,
+    retired: [/\b[Tt]ier[ -]?[1-5]\b/],
+  },
+  {
     vendor: "OpenRouter", names: /OpenRouter/g, within: 200,
     retired: [/~30 free models/, /30\+ models through one API/, /~20 RPM/, /20 RPM per model/, /DeepSeek R1, Llama 3\.3/, /100\+ models (?:aggregated|from multiple)/, /across 100\+ models/, /One API key for 200\+/, /Routes to cheapest/, /Universal gateway to 200/],
   },
@@ -217,7 +221,7 @@ const STATED: Record<string, string[]> = {
     "The price floor: For open models,",
     "($20/M on Opus 5.5, $50/M on Fable 5.1)",
     "Fable 5.1, Opus 5.5, Sonnet 5.5 and Sonnet 5 decide their own thinking budget (adaptive thinking) rather than taking one from the request",
-    "OpenAI and Anthropic set rate limits by usage tier. OpenAI moves an organization up a tier as its paid spend grows ($5 paid for Tier 1, $50 for Tier 2, $100 for Tier 3). Anthropic places organizations on a tier based on usage history and account standing, and new organizations may start in an Evaluation tier with lower limits.",
+    "OpenAI and Anthropic set rate limits by usage tier. OpenAI has three paid tiers since 2026-10-06 and moves an organization up as its total credit purchases reach $5 (Build), $100 (Launch) and $500 (Grow). Anthropic places organizations on a tier based on usage history and account standing, and new organizations may start in an Evaluation tier with lower limits.",
     "(25+ free models, try different providers)",
     "Claude Opus 5.5 ($4/$20/M), or",
     "Claude Fable 5.1, Opus 5.5, Sonnet 5.5 or Sonnet 5 (1M context each).",
@@ -236,7 +240,7 @@ const STATED: Record<string, string[]> = {
   "/gemini-api-pricing-2026": [
     "OpenRouter (25+ free models).",
     "OpenRouter — 25+ free models through one OpenAI-compatible API.",
-    "4. For production workloads: Anthropic and OpenAI also cap monthly spend by usage tier. Anthropic pauses API usage at its tier's cap ($500 a month on Start) until the next month, and OpenAI sets each organization a monthly usage limit ($100 on Tier 1).",
+    "4. For production workloads: Anthropic and OpenAI also cap monthly spend by usage tier. Anthropic pauses API usage at its tier's cap ($500 a month on Start) until the next month, and OpenAI sets each organization a monthly usage limit ($500 on Build, reached at $5 in total credit purchases).",
   ],
   "/ai-free-tiers": [
     "OpenAI removed the Assistants API on 2026-08-26.",

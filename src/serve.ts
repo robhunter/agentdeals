@@ -23000,7 +23000,7 @@ ${mcpCtaCss()}
       <strong>1. For maximum free requests:</strong> <a href="/vendor/groq">Groq</a> — 30 RPM, no credit card, ultra-fast inference.<br>
       <strong>2. For model variety:</strong> <a href="/vendor/openrouter">OpenRouter</a> — 25+ free models through one OpenAI-compatible API.<br>
       <strong>3. For long context:</strong> Gemini's Flash models accept up to 1,048,576 input tokens. Google no longer publishes free-tier token limits, so check your project's limits in AI Studio before relying on long prompts at no cost.<br>
-      <strong>4. For production workloads:</strong> <a href="/vendor/anthropic-api">Anthropic</a> and <a href="/vendor/openai">OpenAI</a> also cap monthly spend by usage tier. Anthropic pauses API usage at its tier's cap ($500 a month on Start) until the next month, and OpenAI sets each organization a monthly usage limit ($100 on Tier 1).
+      <strong>4. For production workloads:</strong> <a href="/vendor/anthropic-api">Anthropic</a> and <a href="/vendor/openai">OpenAI</a> also cap monthly spend by usage tier. Anthropic pauses API usage at its tier's cap ($500 a month on Start) until the next month, and OpenAI sets each organization a monthly usage limit ($500 on Build, reached at $5 in total credit purchases).
     </p>
   </div>
 
@@ -32001,7 +32001,7 @@ function buildLlmApiPricingPage(): string {
     '  </div>\n' +
     '  <div class="hidden-cost-card">\n' +
     '    <h4>Rate Limits Follow Usage Tiers</h4>\n' +
-    '    <p>OpenAI and Anthropic set rate limits by usage tier. OpenAI moves an organization up a tier as its paid spend grows ($5 paid for Tier 1, $50 for Tier 2, $100 for Tier 3). Anthropic places organizations on a tier based on usage history and account standing, and new organizations may start in an Evaluation tier with lower limits. Groq\'s free tier limits are per-model, so switching models resets your quota.</p>\n' +
+    '    <p>OpenAI and Anthropic set rate limits by usage tier. OpenAI has three paid tiers since 2026-10-06 and moves an organization up as its total credit purchases reach $5 (Build), $100 (Launch) and $500 (Grow). Anthropic places organizations on a tier based on usage history and account standing, and new organizations may start in an Evaluation tier with lower limits. Groq\'s free tier limits are per-model, so switching models resets your quota.</p>\n' +
     '  </div>\n' +
     '\n' +
     '  <h2 id="changes">Recent Pricing Changes</h2>\n' +
