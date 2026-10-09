@@ -144,10 +144,9 @@ function prepayParagraph(html: string): string {
 const withoutTags = (html: string) => html.replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
 
 describe(`${PAGE} on paying after use once Prepay starts`, () => {
-  it("follows the move to Prepay with what cannot be undone, then the route that bills after use, at the Gemini API's paid-tier prices", () => {
+  it("says what cannot be undone, then the route that bills after use, at the Gemini API's paid-tier prices", () => {
     const text = withoutTags(prepayParagraph(page));
     assert.ok(text.includes(
-      "Only Gemini API usage moves to Prepay; other Google Cloud services on the same billing account stay on Postpay. " +
       "Google's billing FAQ states that accounts cannot switch from Prepay to Postpay, and Prepay is not available for invoiced accounts. " +
       "To pay after use instead of prepaying, use Gemini Enterprise Agent Platform (formerly Vertex AI). " +
       "Google bills it on the standard Cloud charging cycle, not Prepay. " +
@@ -170,6 +169,24 @@ describe(`${PAGE} on paying after use once Prepay starts`, () => {
       "Batch jobs and agents may consume credits beyond the balance. " +
       "A negative balance is deducted from the next credit purchase.",
     ));
+  });
+});
+
+describe(`${PAGE} on a missed payment for another Google Cloud service`, () => {
+  it("follows the split between Prepay and Postpay with the suspension a declined payment can cause whatever the Prepay balance, before what cannot be undone", () => {
+    const text = withoutTags(prepayParagraph(page));
+    assert.ok(text.includes(
+      "Only Gemini API usage moves to Prepay; other Google Cloud services on the same billing account stay on Postpay. " +
+      "If your Cloud Billing account has a Gemini API Prepay credit balance but your card expired or a payment for another Google Cloud service was declined, the Gemini API can still be suspended. " +
+      "This happens with an overdue balance, a declined payment, or an invalid payment method. " +
+      "Resolve the issue in the Google Cloud Billing console to restore service. " +
+      "Google's billing FAQ states that accounts cannot switch from Prepay to Postpay",
+    ), text);
+  });
+
+  it("links the suspension to the billing FAQ's answer on missed payments", () => {
+    const paragraph = prepayParagraph(page);
+    assert.ok(paragraph.includes('the Gemini API <a href="https://ai.google.dev/gemini-api/docs/billing#missed-payment" target="_blank" rel="noopener">can still be suspended</a>.'), paragraph);
   });
 });
 
