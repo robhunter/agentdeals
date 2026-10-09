@@ -21108,20 +21108,19 @@
       "vendor": "Pollinations.AI",
       "category": "AI / ML",
       "description": "Pollen credits earned by completing quests. No credit card is required. On 2026-10-08, the nine setup quests paid 4 Pollen in total, worth about $4 because 1 Pollen is worth about $1. The documented API for text, image, audio and video requires a GitHub sign-in and an API key. Free use draws from Quest Pollen, with no promise of future grants. Paid-only models, such as Claude models, DeepSeek V4 Pro and GLM 5.2, need purchased Pollen. Older keyless endpoints for image and text still answered on 2026-10-05, but the current docs do not cover them and state no terms for them.",
-      "tier": "Free",
-      "url": "https://pollinations.ai/",
+      "tier": "Free Credits",
+      "url": "https://github.com/pollinations/pollinations/blob/main/enter.pollinations.ai/POLLEN_FAQ.md",
       "tags": [
         "ai",
         "ml",
         "generative-ai",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-07",
+      "verifiedDate": "2026-10-09",
       "source_check": {
-        "checked": "2026-10-03",
-        "outcome": "states_no_terms",
-        "detail": "the page names Pollinations.AI but states no amount, tier or rate we can read, and the 1 structured-data block in its markup states no price",
-        "rendered": true
+        "checked": "2026-10-09",
+        "outcome": "ok",
+        "detail": "the page names Pollinations.AI as \"pollinations ai\" and states \"$1\""
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
