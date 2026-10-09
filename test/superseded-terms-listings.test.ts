@@ -221,7 +221,7 @@ describe("#1395 the listing surfaces answer the stored-terms question the way th
     );
     assertPopulationFloor(
       sharingAnOpening.length,
-      14,
+      9,
       `records open with the same ${HEAD} characters as another record`,
     );
 
@@ -254,7 +254,7 @@ describe("#1395 the listing surfaces answer the stored-terms question the way th
       sharingAnOpening.length * (sharingAnOpening.length - 1),
       "the sweep does not reach every pair of records that open alike",
     );
-    assertPopulationFloor(told, 200, "pairs open alike and say different things further in");
+    assertPopulationFloor(told, 90, "pairs open alike and say different things further in");
   });
 
   it("publishes no superseded stored terms in a visible listing slot", () => {

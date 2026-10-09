@@ -1150,7 +1150,7 @@ describe("a recorded change must describe a change", () => {
       assert.deepStrictEqual(
         named,
         [
-          "Microsoft Founders Hub 2026-08-28",
+          "Microsoft for Startups 2026-08-28",
           "Railway 2025-06-30",
           "Scalr 2026-09-05",
           "Thunder Client 2026-09-10",

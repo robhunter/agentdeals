@@ -2,6 +2,7 @@ import { loadDealChanges, loadOffers } from "./data.js";
 import { offerRetired } from "./retirement.js";
 import { isSubSlug, toSlug } from "./slug.js";
 import { comparisonSlugTargets, retiredSlugTargets, selfComparisonSlug } from "./vendor-merges.js";
+import { loadRemovedListings, removedListingAnswer, removedListingsBySlug, type RemovedListing, type RemovedListingAnswer } from "./removed-listings.js";
 import type { Offer } from "./types.js";
 import { resolveVendorName, type VendorNameUniverse, type VendorSlugResolution } from "./vendor-substitution.js";
 
@@ -38,6 +39,17 @@ export const endedVendorSlugs: Set<string> = slugsWhoseEveryRecordEnded(loadOffe
 export const retiredVendorSlugMap: Map<string, string> = retiredSlugTargets(
   new Set(vendorSlugMap.keys()),
 );
+
+export const removedListings: ReadonlyMap<string, RemovedListing> = removedListingsBySlug(loadRemovedListings());
+
+export function removedListingFor(slug: string): RemovedListingAnswer | null {
+  return removedListingAnswer(slug, removedListings, vendorSlugMap, endedVendorSlugs);
+}
+
+function successorOfRemovedListing(slug: string): string | null {
+  const answer = removedListingFor(slug);
+  return answer?.status === 301 ? answer.slug : null;
+}
 
 export function canonicalVendorSlug(input: string): string | null {
   if (!input) return null;
@@ -101,7 +113,6 @@ export function namedVendorSlug(phrase: string): string | null {
 }
 
 const SUBJECT_ALIASES: Record<string, string> = {
-  gcp: "google-cloud",
   "appwrite-auth": "appwrite-cloud",
 };
 
@@ -163,8 +174,9 @@ const allVendorSlugs: readonly string[] = [...vendorSlugMap.keys()];
 const servedVendorNames: VendorNameUniverse = {
   known: slug => vendorSlugMap.has(slug),
   all: () => allVendorSlugs,
-  renamedTo: slug => retiredVendorSlugMap.get(slug) ?? null,
+  renamedTo: slug => retiredVendorSlugMap.get(slug) ?? successorOfRemovedListing(slug),
   hasEnded: slug => endedVendorSlugs.has(slug),
+  withdrawn: slug => removedListings.has(slug),
 };
 
 export function resolveVendorSlug(input: string): VendorSlugResolution {

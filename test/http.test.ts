@@ -3,12 +3,13 @@ import assert from "node:assert";
 import { assertPopulationFloor } from "./population-floor.ts";
 import { spawn, type ChildProcess } from "node:child_process";
 import fs from "node:fs";
+import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { MCP_TOOL_COUNT, MCP_TOOL_NAMES } from "../dist/mcp-tool-inventory.js";
 import { API_ENDPOINTS } from "../dist/api-inventory.js";
 import { PATHS_OUTSIDE_THE_ENDPOINT_INVENTORY } from "../dist/openapi.js";
-import { entryDay, readPageLastmod } from "../dist/page-lastmod.js";
+import { entryDay, isDailyEntry, readPageLastmod } from "../dist/page-lastmod.js";
 import { cheapestOrderableHetznerPlan } from "../dist/hetzner-pricing.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -62,12 +63,14 @@ function jsonLdWebPage(html: string): Record<string, any> | undefined {
   return undefined;
 }
 
-function startHttpServer(): Promise<ChildProcess> {
+const REDATED_VENDOR_DAY = "2026-01-15";
+
+function startHttpServer(extraEnv: NodeJS.ProcessEnv = {}): Promise<ChildProcess> {
   return new Promise((resolve, reject) => {
     const serverPath = path.join(__dirname, "..", "dist", "serve.js");
     const proc = spawn("node", [serverPath], {
       stdio: ["pipe", "pipe", "pipe"],
-      env: { ...process.env, PORT: "0", BASE_URL: "http://localhost" },
+      env: { ...process.env, PORT: "0", BASE_URL: "http://localhost", ...extraEnv },
     });
 
     const timeout = setTimeout(() => {
@@ -1752,23 +1755,34 @@ describe("HTTP transport", () => {
   });
 
   it("dates every vendor URL in the sitemap from the ledger rather than from one constant", async () => {
-    proc = await startHttpServer();
+    const shipped = readPageLastmod();
+    const redated = Object.keys(shipped.pages)
+      .filter(page => page.startsWith("/vendor/") && !isDailyEntry(shipped.pages[page]!))
+      .sort()[0];
+    assert.ok(redated, "the ledger dates no vendor page from its own output");
+    const ledger = { ...shipped, pages: { ...shipped.pages, [redated]: { ...shipped.pages[redated]!, changed: REDATED_VENDOR_DAY } } };
+    const dir = fs.mkdtempSync(path.join(tmpdir(), "vendor-sitemap-ledger-"));
+    const ledgerPath = path.join(dir, "page-lastmod.json");
+    fs.writeFileSync(ledgerPath, JSON.stringify(ledger));
+    try {
+      proc = await startHttpServer({ AGENTDEALS_PAGE_LASTMOD_PATH: ledgerPath });
 
-    const response = await fetch(`http://localhost:${serverPort}/sitemap-vendors.xml`);
-    const xml = await response.text();
-    const entries = [...xml.matchAll(/<loc>([^<]+)<\/loc>\s*<lastmod>([^<]+)<\/lastmod>/g)]
-      .map(m => ({ page: new URL(m[1]!).pathname, lastmod: m[2]! }));
-    assertPopulationFloor(entries.length, 101, "lastmod entries in the sitemap");
-    const ledger = readPageLastmod();
-    const today = new Date().toISOString().split("T")[0];
-    for (const { page, lastmod } of entries) {
-      assert.match(lastmod, /^\d{4}-\d{2}-\d{2}$/, `Invalid lastmod date format: ${lastmod}`);
-      assert.ok(lastmod <= today, `Lastmod date ${lastmod} is in the future`);
-      assert.equal(lastmod, entryDay(ledger.pages[page], today), `${page} advertises a day the ledger does not hold for it`);
+      const response = await fetch(`http://localhost:${serverPort}/sitemap-vendors.xml`);
+      const xml = await response.text();
+      const entries = [...xml.matchAll(/<loc>([^<]+)<\/loc>\s*<lastmod>([^<]+)<\/lastmod>/g)]
+        .map(m => ({ page: new URL(m[1]!).pathname, lastmod: m[2]! }));
+      assertPopulationFloor(entries.length, 101, "lastmod entries in the sitemap");
+      const today = new Date().toISOString().split("T")[0];
+      for (const { page, lastmod } of entries) {
+        assert.match(lastmod, /^\d{4}-\d{2}-\d{2}$/, `Invalid lastmod date format: ${lastmod}`);
+        assert.ok(lastmod <= today, `Lastmod date ${lastmod} is in the future`);
+        assert.equal(lastmod, entryDay(ledger.pages[page], today), `${page} advertises a day the ledger does not hold for it`);
+      }
+      assert.equal(entries.find(e => e.page === redated)?.lastmod, REDATED_VENDOR_DAY, `${redated} does not advertise the day the ledger holds for it`);
+      assert.ok(entries.some(e => e.page === "/vendor/vercel"), "Should have vercel vendor entry");
+    } finally {
+      fs.rmSync(dir, { recursive: true, force: true });
     }
-    const held = new Set(Object.values(ledger.pages).map(entry => entryDay(entry, today)));
-    assert.ok(held.size > 1, `the ledger holds one day for every page it dates, so a constant would pass this: ${[...held].join(", ")}`);
-    assert.ok(entries.some(e => e.page === "/vendor/vercel"), "Should have vercel vendor entry");
   });
 
   it("GET /expiring renders expiring deals timeline page", async () => {
@@ -5582,14 +5596,14 @@ describe("shutdown tracker page", () => {
     assert.ok(html.includes("AWS Proton"), "Should list AWS Proton shutdown");
   });
 
-  it("GET /cockroachdb-vs-mongodb renders programmatic VS page", async () => {
+  it("GET /neon-vs-turso renders programmatic VS page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${serverPort}/cockroachdb-vs-mongodb`);
+    const response = await fetch(`http://localhost:${serverPort}/neon-vs-turso`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
-    assert.ok(html.includes("CockroachDB vs MongoDB: Free Tier Comparison"), "Should have correct H1");
+    assert.ok(html.includes("Neon vs Turso: Free Tier Comparison"), "Should have correct H1");
     assert.ok(html.includes("Quick Verdict"), "Should have quick verdict section");
     assert.ok(html.includes("Key Differences"), "Should have key differences section");
     assert.ok(html.includes("Our Recommendation"), "Should have recommendation section");
@@ -5598,17 +5612,17 @@ describe("shutdown tracker page", () => {
     assert.ok(html.includes("Frequently Asked Questions"), "Should have FAQ section");
     assert.ok(html.includes("FAQPage"), "Should have FAQPage JSON-LD");
     assert.ok(html.includes("canonical"), "Should have canonical link");
-    assert.ok(html.includes("/vendor/cockroachdb"), "Should link to vendor pages");
-    assert.ok(html.includes("/vendor/mongodb"), "Should link to vendor pages");
+    assert.ok(html.includes("/vendor/neon"), "Should link to vendor pages");
+    assert.ok(html.includes("/vendor/turso"), "Should link to vendor pages");
     assert.ok(html.includes("database-alternatives"), "Should link to category hub");
   });
 
   it("GET /<reversed-vs-slug> redirects to canonical VS page", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${serverPort}/mongodb-vs-cockroachdb`, { redirect: "manual" });
+    const response = await fetch(`http://localhost:${serverPort}/turso-vs-neon`, { redirect: "manual" });
     assert.strictEqual(response.status, 301);
-    assert.ok(response.headers.get("location")?.includes("/cockroachdb-vs-mongodb"), "Should redirect to canonical URL");
+    assert.ok(response.headers.get("location")?.includes("/neon-vs-turso"), "Should redirect to canonical URL");
   });
 
   it("sitemap-comparisons.xml includes programmatic VS pages", async () => {
@@ -5616,7 +5630,7 @@ describe("shutdown tracker page", () => {
 
     const response = await fetch(`http://localhost:${serverPort}/sitemap-comparisons.xml`);
     const xml = await response.text();
-    assert.ok(xml.includes("/cockroachdb-vs-mongodb"), "Sitemap should include VS pages");
+    assert.ok(xml.includes("/neon-vs-turso"), "Sitemap should include VS pages");
     assert.ok(xml.includes("/auth0-vs-clerk"), "Sitemap should include VS pages");
     assert.ok(xml.includes("/amplitude-vs-posthog"), "Sitemap should include VS pages");
   });

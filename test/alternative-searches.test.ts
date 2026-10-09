@@ -41,14 +41,14 @@ describe("a search that asks for a vendor's alternatives", () => {
   });
 
   it("names only a vendor we list", () => {
-    assert.strictEqual(vendorWhoseAlternativesAQueryAsksFor("sendgrid alternative"), "SendGrid");
+    assert.strictEqual(vendorWhoseAlternativesAQueryAsksFor("postmark alternative"), "Postmark");
     assert.strictEqual(vendorWhoseAlternativesAQueryAsksFor("alternative to redis cloud"), "Redis Cloud");
     assert.strictEqual(vendorWhoseAlternativesAQueryAsksFor("nosuchvendorxyz alternative"), null);
   });
 
   it("returns a vendor the alternatives page lists, for every vendor with an alternatives page and each way of asking", () => {
     const pages = pagesListing();
-    assertPopulationFloor(pages.length, 180, "vendors with an alternatives page");
+    assertPopulationFloor(pages.length, 175, "vendors with an alternatives page");
     const missed: string[] = [];
     for (const { vendor, listed } of pages) {
       for (const query of [`${vendor} alternative`, `${vendor} alternatives`, `alternative to ${vendor}`]) {
@@ -74,10 +74,10 @@ describe("a search that asks for a vendor's alternatives", () => {
   });
 
   it("keeps the other filters", () => {
-    const email = searchOffers(sanitizeQuery("sendgrid alternative"), "Email").map((o: { category: string }) => o.category);
+    const email = searchOffers(sanitizeQuery("amazon ses alternative"), "Email").map((o: { category: string }) => o.category);
     assert.ok(email.length > 0);
     assert.deepStrictEqual([...new Set(email)], ["Email"]);
-    assert.deepStrictEqual(searchOffers(sanitizeQuery("sendgrid alternative"), "Databases"), []);
+    assert.deepStrictEqual(searchOffers(sanitizeQuery("amazon ses alternative"), "Databases"), []);
   });
 });
 
@@ -105,10 +105,10 @@ describe("the search page and the API for a search that names a vendor", () => {
   const page = async (query: string) => (await fetch(`http://localhost:${port}/search?q=${encodeURIComponent(query)}`)).text();
 
   it("links the vendor's alternatives page above the results", async () => {
-    for (const query of ["sendgrid alternative", "alternative to SendGrid", "sendgrid"]) {
+    for (const query of ["amazon ses alternative", "alternative to Amazon SES", "amazon ses"]) {
       const html = await page(query);
-      const link = html.indexOf('<a href="/alternative-to/sendgrid">');
-      assert.ok(link >= 0, `no link to /alternative-to/sendgrid for "${query}"`);
+      const link = html.indexOf('<a href="/alternative-to/amazon-ses">');
+      assert.ok(link >= 0, `no link to /alternative-to/amazon-ses for "${query}"`);
       assert.ok(link < html.indexOf('<div class="results">'), `the link follows the results for "${query}"`);
     }
   });
@@ -125,9 +125,9 @@ describe("the search page and the API for a search that names a vendor", () => {
   });
 
   it("answers the API with the alternatives the page lists", async () => {
-    const served = await (await fetch(`http://localhost:${port}/api/offers?q=${encodeURIComponent("sendgrid alternative")}`)).json();
-    const sendgrid = pagesListing().find((p) => p.vendor === "SendGrid")!;
+    const served = await (await fetch(`http://localhost:${port}/api/offers?q=${encodeURIComponent("amazon ses alternative")}`)).json();
+    const ses = pagesListing().find((p) => p.vendor === "Amazon SES")!;
     assert.ok(served.total > 0);
-    assert.ok(served.offers.some((o: { vendor: string }) => sendgrid.listed.has(o.vendor)));
+    assert.ok(served.offers.some((o: { vendor: string }) => ses.listed.has(o.vendor)));
   });
 });

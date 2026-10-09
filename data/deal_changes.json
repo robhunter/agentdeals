@@ -682,7 +682,7 @@
       ],
       "recorded_date": "2026-02-26",
       "date_source": "hand_written",
-      "tier": "Hatch"
+      "tier": "Startup Credits"
     },
     {
       "vendor": "DigitalOcean",
@@ -723,7 +723,7 @@
     {
       "vendor": "DigitalOcean",
       "change_type": "restriction",
-      "tier": "Hatch",
+      "tier": "Startup Credits",
       "date": "2026-05-13",
       "date_source": "vendor_page",
       "summary": "As of 2026-05-13, DigitalOcean's startup credits exclude Dedicated and Serverless Inference, third-party AI models, Paperspace Machines, Cloudways and Bare Metal GPUs as well as GPU Droplets and H100 GPU products, the two exclusions its page stated before. The page also now puts the monthly credit limit at $10,000; its April capture mentioned a monthly limit without an amount.",
@@ -737,7 +737,7 @@
       "recorded_date": "2026-08-28"
     },
     {
-      "vendor": "Google Cloud",
+      "vendor": "Google for Startups Cloud Program",
       "change_type": "limits_increased",
       "date": "2026-01-01",
       "summary": "Google for Startups Cloud Program now offers up to $350K GCP credits for AI-first startups, plus $10K Anthropic (Claude) partner credits via Model Garden",
@@ -5538,7 +5538,7 @@
       "date_source": "hand_written"
     },
     {
-      "vendor": "Segment",
+      "vendor": "Segment Startup Program",
       "change_type": "free_tier_removed",
       "date": "2026-08-28",
       "date_source": "discovered",
@@ -7532,7 +7532,7 @@
       }
     },
     {
-      "vendor": "Mercury",
+      "vendor": "Mercury Perks",
       "change_type": "limits_reduced",
       "date": "2026-08-28",
       "date_source": "discovered",
@@ -7569,26 +7569,6 @@
       "archive_check": {
         "checked": "2026-10-02",
         "outcome": "no_usable_capture"
-      }
-    },
-    {
-      "vendor": "Sendinblue",
-      "change_type": "pricing_model_change",
-      "date": "2026-08-28",
-      "date_source": "discovered",
-      "summary": "The deal is now 50% off Starter and Standard Plans, not 12 months free on the Premium plan.",
-      "previous_state": "12 months free on the Premium plan. Access via: First deal free, then 99€/year or invite friends",
-      "current_state": "Brevo (ex. Sendinblue) 50% off Starter and Standard Plans Save up to $2,574 Get deal for free",
-      "impact": "high",
-      "source_url": "https://www.joinsecret.com/offers",
-      "category": "Startup Perks",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28",
-      "archive_check": {
-        "checked": "2026-10-03",
-        "outcome": "vendor_changed",
-        "brackets": []
       }
     },
     {
@@ -8080,7 +8060,7 @@
       }
     },
     {
-      "vendor": "Microsoft Founders Hub",
+      "vendor": "Microsoft for Startups",
       "change_type": "limits_reduced",
       "date": "2026-08-28",
       "date_source": "discovered",
@@ -9710,7 +9690,7 @@
       "alternatives": [],
       "detected_by": "reverify-ai",
       "recorded_date": "2026-09-02",
-      "tier": "Startup Program",
+      "tier": "Startup Credits",
       "resolution": {
         "state": "retracted",
         "date": "2026-10-01",
@@ -10967,7 +10947,7 @@
       }
     },
     {
-      "vendor": "Ramp",
+      "vendor": "Ramp Partner Rewards",
       "change_type": "pricing_restructured",
       "date": "2026-09-05",
       "date_source": "discovered",
@@ -11610,7 +11590,7 @@
       }
     },
     {
-      "vendor": "Segment",
+      "vendor": "Segment Startup Program",
       "change_type": "startup_program_expanded",
       "date": "2026-09-09",
       "date_source": "discovered",
@@ -14569,7 +14549,7 @@
       "date_source": "hand_written"
     },
     {
-      "vendor": "Mercury",
+      "vendor": "Mercury Perks",
       "change_type": "limits_reduced",
       "date": "2026-07-02",
       "summary": "Mercury paused its Google Cloud perk. mercury.com/perks/google-cloud offered \"Google Cloud and Firebase costs covered up to $200,000 USD over 2 years\" in the Internet Archive's capture of 2026-02-10 and said \"Offer temporarily unavailable. New offer coming later this year\" in the capture of 2026-07-02, as it does today.",
@@ -14583,7 +14563,7 @@
       "date_source": "hand_written"
     },
     {
-      "vendor": "Segment",
+      "vendor": "Segment Startup Program",
       "change_type": "free_tier_removed",
       "date": "2025-09-04",
       "summary": "Segment ended its Startup Program, which gave early-stage startups Segment free for up to two years. segment.com/industry/startups described it in the Internet Archive's capture of 2025-07-09; by the capture of 2025-09-04 the address redirected to Twilio's startups page, which says \"We do not offer additional credits to startups at this time.\"",
@@ -14933,7 +14913,7 @@
       "change_type": "limits_reduced",
       "date": "2025-06-04",
       "summary": "Cloudflare capped its startup programme's Workers AI credits at $50,000. The Internet Archive's capture of cloudflare.com/forstartups on 2025-05-23 capped only R2 and Cache Reserve; the capture of 2025-06-04 adds \"$50,000 of Credits for any Workers AI services\".",
-      "tier": "Startup Program",
+      "tier": "Startup Credits",
       "previous_state": "Credits up to the tier's amount for usage-based services, with a cap on R2 and Cache Reserve only",
       "current_state": "$50,000 of Credits for any Workers AI services",
       "impact": "medium",
@@ -14948,7 +14928,7 @@
       "change_type": "pricing_restructured",
       "date": "2026-05-12",
       "summary": "Cloudflare replaced its four startup tiers with three. In the Internet Archive's capture of 2026-05-11, cloudflare.com/forstartups offered $5K, $25K, $100K and $250K tiers. In the capture of 2026-05-12, cloudflare.com/startups offers Tier 3 at $10k (bootstrapped or self-funded, under $1M raised), Tier 2 at $100k ($1M+ raised, funded by an affiliated partner) and Tier 1 at $350k ($5M+ raised, funded by an affiliated partner), to startups founded within the last 10 years whose most recent round was within the last 12 months.",
-      "tier": "Startup Program",
+      "tier": "Startup Credits",
       "previous_state": "$5K Bootstrapped / Stealth, $25K Up-and-coming, $100K Seed-funded, $250K High Growth; founded within the last 5 years",
       "current_state": "Tier 3 $10k (under $1M raised), Tier 2 $100k ($1M+ raised, affiliated partner), Tier 1 $350k ($5M+ raised, affiliated partner); founded within the last 10 years; latest round within the last 12 months",
       "impact": "medium",
@@ -14963,7 +14943,7 @@
       "change_type": "limits_reduced",
       "date": "2026-05-28",
       "summary": "Cloudflare's startup programme stopped covering AI Gateway. The Internet Archive's capture of cloudflare.com/startups on 2026-05-25 lists \"$250 on AI Gateway\"; the capture of 2026-05-28 says \"AI Gateway: Temporarily not covered by credits\". The same capture changed Tier 2's criterion from \"$1M+ raised\" to \"Under $5M raised\".",
-      "tier": "Startup Program",
+      "tier": "Startup Credits",
       "previous_state": "$50,000 on Workers AI and $250 on AI Gateway; Tier 2 for startups with $1M+ raised",
       "current_state": "AI Gateway: Temporarily not covered by credits; Tier 2 for startups with under $5M raised",
       "impact": "medium",
@@ -14978,7 +14958,7 @@
       "change_type": "limits_reduced",
       "date": "2026-07-02",
       "summary": "Cloudflare replaced its startup programme's single Workers AI cap with caps by tier. The Internet Archive's capture of cloudflare.com/startups on 2026-07-01 says Workers AI is \"Covered up to a $50,000 cap\"; the capture of 2026-07-02 says \"Covered up to a $2,500 cap for Tier 3, $25,000 for Tier 2, and $50,000 for Tier 1\".",
-      "tier": "Startup Program",
+      "tier": "Startup Credits",
       "previous_state": "Workers AI: Covered up to a $50,000 cap",
       "current_state": "Workers AI: Covered up to a $2,500 cap for Tier 3, $25,000 for Tier 2, and $50,000 for Tier 1",
       "impact": "medium",
@@ -14993,7 +14973,7 @@
       "change_type": "limits_reduced",
       "date": "2026-08-07",
       "summary": "Cloudflare cut Tier 2's Workers AI credit cap from $25,000 to $10,000. The Internet Archive's capture of cloudflare.com/startups on 2026-08-06 says \"$25,000 for Tier 2\"; the capture of 2026-08-07 says \"$10,000 for Tier 2\". Tier 3 kept $2,500 and Tier 1 kept $50,000.",
-      "tier": "Startup Program",
+      "tier": "Startup Credits",
       "previous_state": "Workers AI: Covered up to a $2,500 cap for Tier 3, $25,000 for Tier 2, and $50,000 for Tier 1",
       "current_state": "Workers AI: Covered up to a $2,500 cap for Tier 3, $10,000 for Tier 2, and $50,000 for Tier 1",
       "impact": "medium",
@@ -15008,7 +14988,7 @@
       "change_type": "new_free_tier",
       "date": "2025-11-17",
       "summary": "Kiro launched startup credits: up to one year of Kiro Pro+ for startups between \"we have an idea and some funding\" and Series B VC-backed, in three tiers of up to 2, 50 and 100 users, for applications until 2025-12-31. Kiro announced it on its blog on 2025-11-17.",
-      "tier": "Startup Program",
+      "tier": "Startup Credits",
       "previous_state": "No Kiro startup credits",
       "current_state": "Up to one year of Kiro Pro+ for startups up to Series B; Starter up to 2 users, Growth up to 50, Scale up to 100",
       "impact": "medium",
@@ -15023,7 +15003,7 @@
       "change_type": "limits_reduced",
       "date": "2026-04-07",
       "summary": "Kiro reopened its startup credits with smaller tiers and a lower funding ceiling. Its post of 2026-04-07 offers up to one year of Kiro Pro+ to \"early-stage to Series A\" startups in tiers of up to 2, 10 and 30 users, and says \"Startups who currently participate in AWS Activate are not eligible\". The 2025 offer covered startups up to Series B in tiers of up to 2, 50 and 100 users; Kiro had closed its applications in December 2025 \"due to high demand\".",
-      "tier": "Startup Program",
+      "tier": "Startup Credits",
       "previous_state": "Up to one year of Kiro Pro+ for startups up to Series B; Starter up to 2 users, Growth up to 50, Scale up to 100",
       "current_state": "Up to one year of Kiro Pro+ for early-stage to Series A startups; Starter up to 2 users, Growth up to 10, Scale up to 30; startups in AWS Activate not eligible",
       "impact": "medium",
@@ -15052,7 +15032,7 @@
       "change_type": "pricing_restructured",
       "date": "2025-04-17",
       "summary": "Cloudflare split its startup programme into four funding tiers and capped bootstrapped startups at $5K. In the Internet Archive's capture of 2025-04-08, cloudflare.com/forstartups credited \"up to $250,000 worth of service\" to startups meeting one of its criteria. In the capture of 2025-04-17 a startup had to meet all of them, including \"Funded up to series B\", and the tiers were \"$5K: Bootstrapped / Stealth Startups\", \"$25K: Up-and-coming Startups\", \"$100K: Seed-funded Startups\" and \"$250K: High Growth Startups\".",
-      "tier": "Startup Program",
+      "tier": "Startup Credits",
       "previous_state": "Up to $250,000 worth of service for startups meeting one of the criteria (software product, founded within the last 5 years, valid website and email)",
       "current_state": "Four tiers: $5K Bootstrapped / Stealth, $25K Up-and-coming, $100K Seed-funded, $250K High Growth; funded up to Series B",
       "impact": "high",
@@ -15639,7 +15619,7 @@
       "date": "2026-10-06",
       "date_source": "discovered",
       "summary": "The Tier 1 credit amount has increased from $250K to $350K, and Tier 3 from $5K to $10K. AI Gateway is now explicitly excluded from credit coverage. There are also new requirements for qualification, including being founded within the last 10 years, funded up to Series B, and having a valid website and social media presence.",
-      "tier": "Startup Program",
+      "tier": "Startup Credits",
       "tier_direction": "widened",
       "previous_state": "Credits for one year or until used up, in three tiers: Tier 3 gives $10K to bootstrapped or self-funded startups with under $1M raised; Tier 2 ($100K) and Tier 1 ($350K) are for startups funded by an affiliated partner, Tier 1 with $5M+ raised. Credits cover usage-based services such as Workers and R2 (R2 up to $10K; Workers AI up to $2.5K, $10K or $50K by tier). AI Gateway is not covered. Core security and networking features are free at every tier.",
       "current_state": "Tier 3 offers $10k in credits, Tier 2 offers $100k, and Tier 1 offers $350k. AI Gateway is temporarily not covered by credits.",

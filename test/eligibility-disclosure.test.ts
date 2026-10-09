@@ -414,7 +414,10 @@ describe("the other answers on a gated vendor page", () => {
     );
     for (const p of pagesStillNamingATier()) {
       const reason = gateForOffer(p.offer, "")!.reason;
-      for (const question of [`What is ${p.vendor}'s free tier?`, `Is ${p.vendor}'s free tier good for production?`]) {
+      const questions = classifyTier(p.offer.tier).class === "time_limited"
+        ? [`Is ${p.vendor} free?`, `Is ${p.vendor}'s free offer good for production?`]
+        : [`What is ${p.vendor}'s free tier?`, `Is ${p.vendor}'s free tier good for production?`];
+      for (const question of questions) {
         const answer = faqAnswer(p.html, question) ?? "";
         assert.ok(answer.startsWith(reason), `${p.slug} answers "${question}" with ${answer.slice(0, 70)}`);
       }

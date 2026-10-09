@@ -240,7 +240,7 @@ describe("every API item and MCP result that prints a listing's description in f
   after(() => server?.proc.kill());
 
   it("reads enough full descriptions for the check to be able to fail", () => {
-    assertPopulationFloor(printed.length, 2000, "full descriptions printed in API items and MCP results");
+    assertPopulationFloor(printed.length, 1900, "full descriptions printed in API items and MCP results");
     assertPopulationFloor(new Set(printed.map(one => one.surface)).size, 20, "API routes and MCP calls printing a full description");
   });
 

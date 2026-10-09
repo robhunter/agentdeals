@@ -12,11 +12,11 @@ const CATALOGUE = [
   "AWS Activate", "AWS", "AWS",
   "DigitalOcean", "DigitalOcean",
   "Cloudflare for Startups", "Cloudflare",
-  "Google Cloud", "Google",
-  "Microsoft for Startups", "Microsoft Founders Hub",
+  "Google for Startups Cloud Program", "Google",
+  "Microsoft for Startups",
   "Stripe Atlas", "Stripe",
   "Amazon Kiro (AWS Startups)", "Kiro",
-  "Segment", "IBM Cloud",
+  "Segment Startup Program",
   "PostHog", "PostHog", "PostHog",
 ].map((vendor) => ({ vendor }));
 
@@ -38,19 +38,19 @@ describe("a startup programme's changes are the records about its own catalogue 
   });
 
   it("where the vendor has several listings, keeps only the records on the programme's tier", () => {
-    assert.deepStrictEqual(kept([{ vendor: "DigitalOcean", tier: "Hatch" }, { vendor: "DigitalOcean", tier: "Droplets" }, { vendor: "DigitalOcean" }]), ["DigitalOcean/Hatch"]);
+    assert.deepStrictEqual(kept([{ vendor: "DigitalOcean", tier: "Startup Credits" }, { vendor: "DigitalOcean", tier: "Droplets" }, { vendor: "DigitalOcean" }]), ["DigitalOcean/Startup Credits"]);
   });
 
   it("keeps the records of programmes the page no longer lists, so their ending shows", () => {
-    assert.deepStrictEqual(kept([{ vendor: "Segment" }, { vendor: "IBM Cloud" }]), ["Segment/-", "IBM Cloud/-"]);
+    assert.deepStrictEqual(kept([{ vendor: "Segment Startup Program" }, { vendor: "Segment" }]), ["Segment Startup Program/-"]);
   });
 
-  it("keeps the records of both PostHog programme listings, and none of its free tier's", () => {
-    assert.deepStrictEqual(kept([{ vendor: "PostHog", tier: "YC Deal" }, { vendor: "PostHog", tier: "Startup Program" }, { vendor: "PostHog", tier: "Free" }]), ["PostHog/YC Deal", "PostHog/Startup Program"]);
+  it("keeps the records of PostHog's programme listings and none of its free tier's", () => {
+    assert.deepStrictEqual(kept([{ vendor: "PostHog", tier: "Startup Credits" }, { vendor: "PostHog", tier: "Free" }]), ["PostHog/Startup Credits"]);
   });
 
-  it("keeps the records of both Microsoft programme listings", () => {
-    assert.deepStrictEqual(kept([{ vendor: "Microsoft for Startups" }, { vendor: "Microsoft Founders Hub" }]), ["Microsoft for Startups/-", "Microsoft Founders Hub/-"]);
+  it("keeps the records of Microsoft for Startups, the one Microsoft programme listing", () => {
+    assert.deepStrictEqual(kept([{ vendor: "Microsoft for Startups" }]), ["Microsoft for Startups/-"]);
   });
 
   it("names a catalogue listing for every programme it selects on", () => {

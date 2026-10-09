@@ -54,7 +54,7 @@ Those counts are generated with the rows. If most of a column carries a caveat, 
 
 **Record verified** is the day we last confirmed that record against the page. Where the link has not resolved for 14 days, we withhold that date and print the day the link last worked instead: a recent date over a destination that no longer answers is the most confident-looking thing on a page and the least true.
 
-We re-read records on a rolling schedule. 0 rows say in the row that we have not re-read them within our 118-day interval. That is a statement about us, not about the vendor. Where a link has stopped resolving, the row says that instead, because we cannot re-read a page that does not answer.
+We re-read records on a rolling schedule. 0 rows say in the row that we have not re-read them within our 112-day interval. That is a statement about us, not about the vendor. Where a link has stopped resolving, the row says that instead, because we cannot re-read a page that does not answer.
 
 ## What counts as a free tier here
 
@@ -69,6 +69,7 @@ These tier names are **not** a free offer. A record carrying one is still publis
 - `^legacy free$` — a free tier closed to new accounts
 - `^conditional$` — an offer whose availability is not stated in terms we can check
 - `^exempt\s*\/\s*paid$` — free only by case-by-case exemption
+- `^startup discount$` — a discount on a paid plan for qualifying startups, not a free tier
 
 These are free but **time-limited** — the free part runs out:
 

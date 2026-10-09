@@ -90,7 +90,8 @@ import type { VendorReferralAnswer } from "./referral-surfaces.js";
 import { runHealthCheck, getLastReport, startPeriodicChecks, referralHealthChecksAreOn } from "./referral-health.js";
 import { configureDurableBackend, hydrateDurableStores, persistDurableStores, identityStorageReport } from "./durable-store.js";
 import { addFriend, removeFriend, getFriends, getFriendCodesForVendors } from "./friends.js";
-import { changeLogAnchorFor, changeLogVendorMap, toSlug, vendorSlugMap, resolveVendorSlug, namedVendorSlug, comparisonOfOneRecord, recordNamedBySlug, servedVendorSlug, servedVendorSlugForName } from "./vendor-slug.js";
+import { changeLogAnchorFor, changeLogVendorMap, toSlug, vendorSlugMap, removedListings, removedListingFor, resolveVendorSlug, namedVendorSlug, comparisonOfOneRecord, recordNamedBySlug, servedVendorSlug, servedVendorSlugForName } from "./vendor-slug.js";
+import type { RemovedListingAnswer } from "./removed-listings.js";
 import { NO_PUSH_NOTICE, watchCommandBlock, watchRequestsFor } from "./change-watching.js";
 import { AN_UNCONFIRMED_CHANGE_SETS_NO_LABEL, OURS_ARCHIVE_OUTCOME } from "./change-confirmation.js";
 import { clauseNaming } from "./quoted-figures.js";
@@ -3752,6 +3753,33 @@ ${globalNavCss()}
 }
 
 const comparisonMap = buildComparisonMap();
+
+function removedComparisonFor(slug: string): RemovedListingAnswer | null {
+  const parts = slug.split("-vs-");
+  if (parts.length !== 2) return null;
+  const answers = parts.map(part => removedListingFor(part));
+  if (answers.every(answer => answer === null)) return null;
+  const gone = answers.find(answer => answer?.status === 410);
+  if (gone) return gone;
+  const successors = parts.map((part, i) => answers[i]?.status === 301 ? (answers[i] as { slug: string }).slug : part);
+  const pair = comparisonSlug(...(successors.slice().sort() as [string, string]));
+  if (comparisonMap.has(pair)) return { status: 301, slug: pair };
+  return { status: 410, vendor: answers.map((answer, i) => answer ? (removedListings.get(parts[i])?.vendor ?? parts[i]) : null).filter((name): name is string => name !== null).join(" and ") };
+}
+
+function answerRemovedListing(res: ServerResponse, answer: RemovedListingAnswer, routePrefix: string, browseLabel: string): void {
+  if (answer.status === 301) {
+    res.writeHead(301, { Location: `${routePrefix}/${answer.slug}` });
+    res.end();
+    return;
+  }
+  res.writeHead(410, { "Content-Type": "text/html; charset=utf-8" });
+  res.end(goneListingPage(answer.vendor, routePrefix, browseLabel));
+}
+
+function goneListingPage(vendor: string, browseHref: string, browseLabel: string): string {
+  return `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Listing removed — AgentDeals</title><meta name="robots" content="noindex"><style>body{font-family:-apple-system,sans-serif;background:#0f172a;color:#f1f5f9;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}a{color:#3b82f6}.box{text-align:center;max-width:480px;padding:2rem}</style></head><body><div class="box"><h1 style="font-size:3rem;margin-bottom:.5rem">410</h1><p>We no longer list <strong>${escHtmlServer(vendor)}</strong>.</p><p style="margin-top:1rem"><a href="${browseHref}">${escHtmlServer(browseLabel)}</a></p></div></body></html>`;
+}
 
 function getComparisonsByCategory(): Map<string, Array<{ slug: string; a: string; b: string }>> {
   const byCat = new Map<string, Array<{ slug: string; a: string; b: string }>>();
@@ -8544,6 +8572,15 @@ for (const vs of VS_PAGES) {
   }
 }
 
+const vsPagesOnRemovedListings = new Map<string, string>();
+for (const vs of VS_PAGES) {
+  const slug = `${toSlug(vs.vendorA)}-vs-${toSlug(vs.vendorB)}`;
+  const removed = [vs.vendorA, vs.vendorB].find(v => removedListings.has(toSlug(v)) && !vendorSlugMap.has(toSlug(v)));
+  if (!removed || vsPageMap.has(slug)) continue;
+  vsPagesOnRemovedListings.set(slug, removed);
+  vsPagesOnRemovedListings.set(`${toSlug(vs.vendorB)}-vs-${toSlug(vs.vendorA)}`, removed);
+}
+
 function buildTimelyAlternativesPage(slug: string): string | null {
   const config = alternativesPageMap.get(slug);
   if (!config) return null;
@@ -10556,7 +10593,7 @@ function buildHostingAlternativesPage(): string {
     ["Cloudflare Workers", "Cloudflare Pages", "4EVERLAND"].includes(o.vendor) && !staticJamstack.some(s => s.vendor === o.vendor) && !serverless.some(s => s.vendor === o.vendor)
   );
   const startupCredits = enrichedAll.filter(o =>
-    ["AWS Activate", "Microsoft Founders Hub", "Cloudflare for Startups", "Heroku for Startups Program", "Scaleway Startup Program", "Microsoft for Startups", "Startup with IBM", "Create@Alibaba Cloud", "Clever Bootstrap Program", "Google Cloud"].includes(o.vendor)
+    ["AWS Activate", "Cloudflare for Startups", "Heroku for Startups Program", "Scaleway Startup Program", "Microsoft for Startups", "Startup with IBM", "Clever Bootstrap Program", "Google for Startups Cloud Program"].includes(o.vendor)
   );
 
   const buildCards = (items: ReturnType<typeof enrichOffers>) => items.map(o => {
@@ -13085,12 +13122,12 @@ ${buildCards(other)}
         <td>Mobile &amp; desktop app analytics</td>
       </tr>
       <tr>
-        <td style="font-weight:600"><a href="/vendor/segment" style="color:var(--text)">Segment</a></td>
+        <td style="font-weight:600"><a href="/vendor/segment-startup-program" style="color:var(--text)">Segment</a></td>
         <td>Data Infra</td>
         <td>$50K credits (startup)</td>
         <td>No</td>
         <td>Customer data platform, 300+ integrations</td>
-      </tr>${vendorPageConditionsRowHtml("segment", 5)}
+      </tr>${vendorPageConditionsRowHtml("segment-startup-program", 5)}
       <tr>
         <td style="font-weight:600"><a href="/vendor/openreplay-com" style="color:var(--text)">OpenReplay</a></td>
         <td>Session Replay</td>
@@ -13122,7 +13159,7 @@ ${buildCards(other)}
       <dd><a href="/vendor/aptabase">Aptabase</a> \u2014 privacy-friendly analytics with SDKs for Swift, Kotlin, React Native, Flutter, and Electron. 20K events/month free. <a href="/vendor/appfit">AppFit</a> for cross-platform analytics with product journal.</dd>
 
       <dt>Need a customer data platform?</dt>
-      <dd><a href="/vendor/segment">Segment</a> \u2014 $50K in credits for startups, connecting 300+ integrations. ${handwrittenVendorLinkHtml("census", "Census")} for reverse ETL from your data warehouse to 60+ SaaS tools.</dd>
+      <dd><a href="/vendor/segment-startup-program">Segment</a> \u2014 $50K in credits for startups, connecting 300+ integrations. ${handwrittenVendorLinkHtml("census", "Census")} for reverse ETL from your data warehouse to 60+ SaaS tools.</dd>
 
       <dt>Want real-time analytics APIs?</dt>
       <dd><a href="/vendor/tinybird">Tinybird</a> \u2014 10 GB storage and 10 QPS free for building real-time analytics endpoints over SQL. Great for dashboards, usage tracking, and product metrics APIs.</dd>
@@ -13678,7 +13715,7 @@ ${buildCards(other)}
         <td>High-volume transactional with EU data residency</td>
       </tr>
       <tr>
-        <td style="font-weight:600"><a href="/vendor/sendgrid" style="color:var(--text)">SendGrid</a></td>
+        <td style="font-weight:600">${handwrittenVendorLinkHtml("sendgrid", "SendGrid", ' style="color:var(--text)"')}</td>
         <td>Transactional API</td>
         <td>None (60-day trial)</td>
         <td>No</td>
@@ -14425,7 +14462,7 @@ ${buildCards(other)}
   <div class="decision-guide">
     <dl>
       <dt>Need a modern issue tracker for a dev team?</dt>
-      <dd><a href="/vendor/linear">Linear</a> — fast, keyboard-driven, 250 issues free. <a href="/vendor/shortcut">Shortcut</a> — 10 free seats with epics and iterations. <a href="/vendor/atlassian">Atlassian/Jira</a> — 10 users free, deep integrations.</dd>
+      <dd><a href="/vendor/linear">Linear</a> — fast, keyboard-driven, 250 issues free. <a href="/vendor/shortcut">Shortcut</a> — 10 free seats with epics and iterations. ${handwrittenVendorLinkHtml("atlassian", "Atlassian/Jira")} — 10 users free, deep integrations.</dd>
 
       <dt>Want an open-source, self-hosted PM?</dt>
       <dd><a href="/vendor/plane">Plane</a> — open-source Jira alternative with cycles and modules. <a href="/vendor/huly">Huly</a> — all-in-one with chat, docs, and HR. <a href="/vendor/taiga-io">Taiga</a> — agile PM with Scrum and Kanban.</dd>
@@ -23000,7 +23037,7 @@ ${mcpCtaCss()}
       <strong>1. For maximum free requests:</strong> <a href="/vendor/groq">Groq</a> — 30 RPM, no credit card, ultra-fast inference.<br>
       <strong>2. For model variety:</strong> <a href="/vendor/openrouter">OpenRouter</a> — 25+ free models through one OpenAI-compatible API.<br>
       <strong>3. For long context:</strong> Gemini's Flash models accept up to 1,048,576 input tokens. Google no longer publishes free-tier token limits, so check your project's limits in AI Studio before relying on long prompts at no cost.<br>
-      <strong>4. For production workloads:</strong> <a href="/vendor/anthropic-api">Anthropic</a> and <a href="/vendor/openai">OpenAI</a> also cap monthly spend by usage tier. Anthropic pauses API usage at its tier's cap ($500 a month on Start) until the next month, and OpenAI sets each organization a monthly usage limit ($100 on Tier 1).
+      <strong>4. For production workloads:</strong> <a href="/vendor/anthropic-api">Anthropic</a> and <a href="/vendor/openai">OpenAI</a> also cap monthly spend by usage tier. Anthropic pauses API usage at its tier's cap ($500 a month on Start) until the next month, and OpenAI sets each organization a monthly usage limit ($500 on Build, reached at $5 in total credit purchases).
     </p>
   </div>
 
@@ -27243,7 +27280,7 @@ ${mcpCtaCss()}
     </div>
     <div class="verdict-item">
       <strong>For startups:</strong>
-      <p>Take advantage of expanded startup programs: <a href="/vendor/cloudflare-for-startups">Cloudflare $350K</a>, <a href="/vendor/google-cloud">Google Cloud $350K</a>. These are more reliable than consumer free tiers. See our <a href="/free-startup-stack">Free Startup Stack Guide</a>.</p>
+      <p>Take advantage of expanded startup programs: <a href="/vendor/cloudflare-for-startups">Cloudflare $350K</a>, <a href="/vendor/google-for-startups-cloud-program">Google Cloud $350K</a>. These are more reliable than consumer free tiers. See our <a href="/free-startup-stack">Free Startup Stack Guide</a>.</p>
     </div>
   </div>
 
@@ -27352,10 +27389,10 @@ function buildStartupCreditsPage(): string {
     { name: "DigitalOcean Startups", slug: "digitalocean-hatch", category: "cloud-infrastructure", creditValue: "Credits for 12 months; amount varies, up to $10,000 a month", eligibility: "Raised $10M or less; apply through a partner or directly", duration: "12 months", applicationDifficulty: "open", whatsIncluded: "Compute credits for most DigitalOcean services, 15 months of free Standard-tier support; GPU credits are a separate benefit for selected startups", hiddenConstraints: "Credits exclude GPU Droplets, H100 GPU products, inference, third-party AI models, Paperspace and Cloudways. Use over $10,000 in a month is charged. Only for startups that have not used DigitalOcean credits before.", vestingSchedule: "Lump sum per partner agreement", governedByConditionsOf: "digitalocean" },
     { name: "Cloudflare Startup Program", slug: "cloudflare-startup-program", category: "cloud-infrastructure", creditValue: "$10K, $100K or $350K by tier", eligibility: "Tier 3 ($10K): bootstrapped or self-funded, under $1M raised; Tiers 2 ($100K) and 1 ($350K): funded by an affiliated partner, Tier 1 with $5M+ raised.", duration: "1 year or until used up", applicationDifficulty: "open", whatsIncluded: "Credits for usage-based services such as Workers and R2 (R2 up to $10K; Workers AI up to $2.5K, $10K or $50K by tier). AI Gateway is not covered. Core security and networking features are free at every tier.", hiddenConstraints: "Tier is based on funding stage \u2014 bootstrapped startups get only $5K. Higher tiers require more funding documentation. Credits are Cloudflare-only. Limited time window to use credits.", vestingSchedule: "Lump sum per tier" },
     { name: "Stripe Atlas", slug: "stripe-atlas", category: "fintech-banking", creditValue: "Over $50K in partner discounts, plus $2.5K of Stripe credits", eligibility: "Companies incorporated through Atlas ($500, then $100 a year after the first year)", duration: "Varies by perk; Stripe credits last the first year", applicationDifficulty: "open", whatsIncluded: "$2.5K of Stripe product credits for the first year, $5K of AWS Activate credits (new AWS users), $100K of Cloudflare credits through the Cloudflare Startup Program, Microsoft for Startups Azure credits, a 30-minute immigration attorney consult (Ellis), and banking through Stripe Treasury.", hiddenConstraints: "Requires Stripe Atlas incorporation ($500 one-time fee). Perks are from third parties \u2014 each has own eligibility requirements. Processing credits only apply to Stripe payments. Some perks expire 90 days after incorporation.", vestingSchedule: "Available once the Atlas application is approved" },
-    { name: "Brex", slug: "brex", category: "fintech-banking", creditValue: "Over $350K in partner discounts and credits", eligibility: "Brex customers", duration: "Varies by partner", applicationDifficulty: "open", whatsIncluded: "Up to $5K of AWS credits for new Brex customers (subject to Activate eligibility), $1K of OpenAI credits for a year, up to $200K of Google Cloud and Firebase credits over 2 years, 6 months of Notion Plus, 30% off Slack for 12 months.", hiddenConstraints: "Must be a Brex cardholder. Individual perks have separate eligibility and expiry. Some require minimum card spend. Google Cloud $200K requires separate Google for Startups qualification. Partner perks change frequently.", vestingSchedule: "Per-partner activation" },
-    { name: "Mercury", slug: "mercury", category: "fintech-banking", creditValue: "Banking perks bundle", eligibility: "Mercury banking customers", duration: "Varies by perk", applicationDifficulty: "open", whatsIncluded: "1 year of Datadog free (up to $100K in credits; Series A or earlier, new Datadog customers), up to $5K of AWS Activate credits, 50% off QuickBooks Online for 3 months. Mercury's Google Cloud offer is paused.", hiddenConstraints: "Must have Mercury business account. Datadog credit is usage-based cap \u2014 may not reach full $100K value. Google Cloud credits require separate application to Google for Startups. Perks are subject to partner availability.", vestingSchedule: "Per-partner activation" },
-    { name: "Ramp", slug: "ramp", category: "fintech-banking", creditValue: "Over $350K in partner rewards", eligibility: "Ramp customers", duration: "Varies", applicationDifficulty: "open", whatsIncluded: "AWS credits through AWS Activate and OpenAI API credits (Ramp states no amount for either), $350 of Google Cloud credits, 6 months of Notion Business with Notion AI.", hiddenConstraints: "Must be Ramp cardholder. AWS credits are a subset of what AWS Activate offers separately. Partner perks overlap with Brex offerings. Some discounts require annual commitments.", vestingSchedule: "Per-partner activation" },
-    { name: "SVB (Silicon Valley Bank)", slug: "svb-silicon-valley-bank", category: "fintech-banking", creditValue: "$5K AWS + partner offers", eligibility: "SVB clients (SVB is a division of First Citizens Bank)", duration: "Varies", applicationDifficulty: "open", whatsIncluded: "$5K of AWS Activate credits (with an Activate Provider Org ID, pre-Series B), $5K of MongoDB credits for 12 months, 25% off Slack upgrades (up to $9K). 79 offers from 58 vendors; no Google Cloud offer.", hiddenConstraints: "SVB was acquired by First Citizens Bank (2023) \u2014 program continuity uncertain for new applicants. Google Cloud credits are usage-based annual cap (not guaranteed full amount). Partner perks change over time.", vestingSchedule: "Per-partner activation" },
+    { name: "Brex Partner Perks", slug: "brex-partner-perks", category: "fintech-banking", creditValue: "Over $350K in partner discounts and credits", eligibility: "Brex customers", duration: "Varies by partner", applicationDifficulty: "open", whatsIncluded: "Up to $5K of AWS credits for new Brex customers (subject to Activate eligibility), $1K of OpenAI credits for a year, up to $200K of Google Cloud and Firebase credits over 2 years, 6 months of Notion Plus, 30% off Slack for 12 months.", hiddenConstraints: "Must be a Brex cardholder. Individual perks have separate eligibility and expiry. Some require minimum card spend. Google Cloud $200K requires separate Google for Startups qualification. Partner perks change frequently.", vestingSchedule: "Per-partner activation" },
+    { name: "Mercury Perks", slug: "mercury-perks", category: "fintech-banking", creditValue: "Banking perks bundle", eligibility: "Mercury banking customers", duration: "Varies by perk", applicationDifficulty: "open", whatsIncluded: "1 year of Datadog free (up to $100K in credits; Series A or earlier, new Datadog customers), up to $5K of AWS Activate credits, 50% off QuickBooks Online for 3 months. Mercury's Google Cloud offer is paused.", hiddenConstraints: "Must have Mercury business account. Datadog credit is usage-based cap \u2014 may not reach full $100K value. Google Cloud credits require separate application to Google for Startups. Perks are subject to partner availability.", vestingSchedule: "Per-partner activation" },
+    { name: "Ramp Partner Rewards", slug: "ramp-partner-rewards", category: "fintech-banking", creditValue: "Over $350K in partner rewards", eligibility: "Ramp customers", duration: "Varies", applicationDifficulty: "open", whatsIncluded: "AWS credits through AWS Activate and OpenAI API credits (Ramp states no amount for either), $350 of Google Cloud credits, 6 months of Notion Business with Notion AI.", hiddenConstraints: "Must be Ramp cardholder. AWS credits are a subset of what AWS Activate offers separately. Partner perks overlap with Brex offerings. Some discounts require annual commitments.", vestingSchedule: "Per-partner activation" },
+    { name: "SVB Startup Banking Offers", slug: "svb-startup-banking-offers", category: "fintech-banking", creditValue: "$5K AWS + partner offers", eligibility: "SVB clients (SVB is a division of First Citizens Bank)", duration: "Varies", applicationDifficulty: "open", whatsIncluded: "$5K of AWS Activate credits (with an Activate Provider Org ID, pre-Series B), $5K of MongoDB credits for 12 months, 25% off Slack upgrades (up to $9K). 79 offers from 58 vendors; no Google Cloud offer.", hiddenConstraints: "SVB was acquired by First Citizens Bank (2023) \u2014 program continuity uncertain for new applicants. Google Cloud credits are usage-based annual cap (not guaranteed full amount). Partner perks change over time.", vestingSchedule: "Per-partner activation" },
     { name: "PostHog for Startups", slug: "posthog-yc-deal", category: "developer-tools", creditValue: "$50K in credits (YC: $50K a year)", eligibility: "Under 2 years old and under $5M raised. YC companies under $25M raised get $50K a year instead.", duration: "12 months (YC: renews yearly while eligible)", applicationDifficulty: "open", whatsIncluded: "Credits for product analytics, session replay, feature flags and experiments, plus about $12K of partner perks. Since 2026-09-14, credits don't cover PostHog AI, Desktop, the Slack app, Replay Vision or Inbox.", hiddenConstraints: "YC companies only \u2014 not open to general startups. $25M fundraising cap. Must maintain active YC alumni status. Covers PostHog only \u2014 not transferable.", vestingSchedule: "Credits for 12 months; the YC deal renews yearly" },
     { name: "Amazon Kiro (AWS Startups)", slug: "amazon-kiro-aws-startups", category: "ai-tools", creditValue: "Up to 1 year of Kiro Pro+ ($40 per user a month)", eligibility: "Early stage to Series A, without active AWS Activate credits; Kiro's startup page asks for VC backing and its terms do not; not available in France, Germany, Italy, Spain, Poland, Brazil, Mexico, Argentina, the UAE, China or sanctioned regions; apply by 2026-12-31.", duration: "Credits expire 1 year after they are issued", applicationDifficulty: "open", whatsIncluded: "Kiro Pro+ for up to 2, 10 or 30 users (Starter, Growth and Scale tiers).", hiddenConstraints: "Requires existing AWS Startups membership (not standalone). Pro+ credit allocation is model-dependent (Sonnet 4 costs 1.3x). Free tier duration is exactly 12 months. Not combinable with other Kiro promotions.", vestingSchedule: "Deposited once to your AWS account" },
     { name: "Amplitude Early Stage Startup Pricing", slug: "amplitude-startup-scholarship", category: "ai-tools", creditValue: "1 year of the Growth plan free", eligibility: "Under 20 employees and under $10M raised", duration: "1 year; year 2 at 40% off the annual Plus plan, or move to the free plan", applicationDifficulty: "open", whatsIncluded: "The full Growth plan for 200K monthly tracked users or 100M events a month.", hiddenConstraints: "Growth plan converts to paid ($49+/mo) after 1 year. Application review required. MTU/event limits are soft \u2014 overage may be billed. Plan features may change during the free year.", vestingSchedule: "Full plan for 12 months" },
@@ -32001,7 +32038,7 @@ function buildLlmApiPricingPage(): string {
     '  </div>\n' +
     '  <div class="hidden-cost-card">\n' +
     '    <h4>Rate Limits Follow Usage Tiers</h4>\n' +
-    '    <p>OpenAI and Anthropic set rate limits by usage tier. OpenAI moves an organization up a tier as its paid spend grows ($5 paid for Tier 1, $50 for Tier 2, $100 for Tier 3). Anthropic places organizations on a tier based on usage history and account standing, and new organizations may start in an Evaluation tier with lower limits. Groq\'s free tier limits are per-model, so switching models resets your quota.</p>\n' +
+    '    <p>OpenAI and Anthropic set rate limits by usage tier. OpenAI has three paid tiers since 2026-10-06 and moves an organization up as its total credit purchases reach $5 (Build), $100 (Launch) and $500 (Grow). Anthropic places organizations on a tier based on usage history and account standing, and new organizations may start in an Evaluation tier with lower limits. Groq\'s free tier limits are per-model, so switching models resets your quota.</p>\n' +
     '  </div>\n' +
     '\n' +
     '  <h2 id="changes">Recent Pricing Changes</h2>\n' +
@@ -44571,7 +44608,7 @@ const STRUCTURALLY_FREE_CARDS = [
   {
     heading: "Cloud Provider Loss Leaders",
     blurb: "Free tiers subsidized by the larger platform &mdash; they exist to acquire users into the paid ecosystem.",
-    vendors: ["Cloudflare Workers", "Vercel", "Netlify", "Railway", "AWS", "Google Cloud", "Azure"],
+    vendors: ["Cloudflare Workers", "Vercel", "Netlify", "Railway", "AWS", "Google Compute Engine", "Azure"],
   },
   {
     heading: "Developer-First Companies",
@@ -44953,7 +44990,7 @@ ${globalNavCss()}
   <table>
     <thead><tr><th>Program</th><th>Credits</th><th>Eligibility</th><th>Notable Benefits</th></tr></thead>
     <tbody>
-      <tr><td><a href="/vendor/google-cloud">Google for Startups</a></td><td style="color:#3fb950;font-weight:600">Up to $350K</td><td>AI-first startups</td><td>GCP credits, technical support</td></tr>
+      <tr><td><a href="/vendor/google-for-startups-cloud-program">Google for Startups</a></td><td style="color:#3fb950;font-weight:600">Up to $350K</td><td>AI-first startups</td><td>GCP credits, technical support</td></tr>
       <tr><td><a href="/vendor/cloudflare-for-startups">Cloudflare Startup Program</a></td><td style="color:#3fb950;font-weight:600">Up to $350K</td><td>3 tiers; upper two via affiliated partners</td><td>Workers, R2, CDN, security</td></tr>
       <tr><td><a href="/vendor/microsoft-azure">Microsoft for Startups</a></td><td style="color:#3fb950;font-weight:600">Up to $150K</td><td>B2B tech startups, pre-seed to Series C</td><td>Azure credits, Foundry models</td></tr>
       <tr><td><a href="/vendor/digitalocean">DigitalOcean Startups</a></td><td style="color:#3fb950;font-weight:600">Amount varies</td><td>Early-stage</td><td>Compute + support credits</td></tr>
@@ -53650,9 +53687,9 @@ const dispatchRequest = async (req: IncomingMessage, res: ServerResponse) => {
       (o.tier && o.tier.toLowerCase().includes("startup"))
     );
     const startupCategoryMap: Record<string, string[]> = {
-      "cloud-infrastructure": ["AWS Activate", "Google Cloud", "Microsoft Founders Hub", "DigitalOcean", "IBM Cloud", "Cloudflare"],
-      "fintech-banking": ["Stripe Atlas", "Brex", "Mercury", "Ramp", "SVB (Silicon Valley Bank)"],
-      "developer-tools": ["PostHog", "Segment", "Amplitude"],
+      "cloud-infrastructure": ["AWS Activate", "Google for Startups Cloud Program", "Microsoft for Startups", "DigitalOcean", "Cloudflare"],
+      "fintech-banking": ["Stripe Atlas", "Brex Partner Perks", "Mercury Perks", "Ramp Partner Rewards", "SVB Startup Banking Offers"],
+      "developer-tools": ["PostHog", "Segment Startup Program", "Amplitude"],
       "ai-tools": ["Amazon Kiro (AWS Startups)"],
     };
     const startupTypeFilter = url.searchParams.get("type") || undefined;
@@ -54269,6 +54306,11 @@ ${catList}
     res.end(buildCompareIndexPage());
   } else if (url.pathname.startsWith("/compare/") && isGetOrHead) {
     const slug = url.pathname.slice("/compare/".length).replace(/\/$/, "");
+    const removed = comparisonMap.has(slug) ? null : removedComparisonFor(slug);
+    if (removed) {
+      answerRemovedListing(res, removed, "/compare", "Browse all comparisons");
+      return;
+    }
     if (!comparisonMap.has(slug) && slug.includes("-vs-")) {
       const oneRecord = comparisonOfOneRecord(slug);
       if (oneRecord) {
@@ -54339,6 +54381,11 @@ ${catList}
     res.end(buildVendorIndexPage());
   } else if (url.pathname.startsWith("/vendor/") && isGetOrHead) {
     const slug = url.pathname.slice("/vendor/".length).replace(/\/$/, "");
+    const removed = removedListingFor(slug);
+    if (removed) {
+      answerRemovedListing(res, removed, "/vendor", `Browse all ${vendorSlugMap.size} vendors`);
+      return;
+    }
     const resolution = resolveVendorSlug(slug);
     if (resolution.type === "exact") {
       const html = buildVendorPage(resolution.slug)!;
@@ -54528,6 +54575,11 @@ ${catList}
     res.end(buildAlternativesIndexPage());
   } else if (url.pathname.startsWith("/alternative-to/") && isGetOrHead) {
     const slug = url.pathname.slice("/alternative-to/".length).replace(/\/$/, "");
+    const removed = removedListingFor(slug);
+    if (removed) {
+      answerRemovedListing(res, removed, "/alternative-to", "Browse all alternatives");
+      return;
+    }
     const resolution = resolveVendorSlug(slug);
     if (resolution.type === "exact") {
       const html = buildAlternativesPage(resolution.slug)!;
@@ -54976,7 +55028,11 @@ ${catList}
   } else if (isGetOrHead && url.pathname.includes("-vs-") && url.pathname.split("/").length === 2) {
     const slug = url.pathname.slice(1);
     const vsIdx = slug.indexOf("-vs-");
-    if (vsIdx > 0) {
+    const removedVendor = vsPagesOnRemovedListings.get(slug);
+    if (removedVendor) {
+      res.writeHead(410, { "Content-Type": "text/html; charset=utf-8" });
+      res.end(goneListingPage(removedVendor, "/compare", "Browse all comparisons"));
+    } else if (vsIdx > 0) {
       const partB = slug.substring(0, vsIdx);
       const partA = slug.substring(vsIdx + 4);
       const reversed = `${partA}-vs-${partB}`;

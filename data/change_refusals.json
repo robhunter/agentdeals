@@ -61,18 +61,6 @@
       "refused_date": "2026-09-17"
     },
     {
-      "vendor": "Achieved",
-      "change_type": "free_tier_removed",
-      "reason": "page_does_not_name_vendor",
-      "detail": "the page read never names Achieved and is not served from its domain, so any terms on it belong to somebody else",
-      "summary": "The Startup Program with 6 months free is not mentioned. The page offers various free trials and credits for different services, but no specific 6-month free program is listed.",
-      "previous_state": "6 months free. Access via: First deal free, then 99€/year or invite friends",
-      "current_state": "The page offers various deals, including free trials and credits for services like Notion, Stripe, Google Workspace, Brevo, Xero, Fin, and Airtable. It also mentions a 'Premium' tier with access to more deals.",
-      "source_url": "https://www.joinsecret.com/offers",
-      "category": "Startup Perks",
-      "refused_date": "2026-09-15"
-    },
-    {
       "vendor": "Activepieces",
       "change_type": "free_tier_removed",
       "reason": "free_tier_still_offered",
@@ -120,18 +108,6 @@
       "category": "Email",
       "refused_date": "2026-09-11",
       "collided_with": "Aionda Mail|limits_reduced|2026-08-28|https://mail.aionda.com/"
-    },
-    {
-      "vendor": "Aircall",
-      "change_type": "free_tier_removed",
-      "reason": "page_does_not_name_vendor",
-      "detail": "the page read never names Aircall and is not served from its domain, so any terms on it belong to somebody else",
-      "summary": "The Aircall 2 months free offer for Brex customers is not mentioned on the current pricing page. The page focuses on Brex Rewards and discounts from various vendors, including AWS, Slack, and OpenAI, but does not list Aircall as a partner with a specific offer.",
-      "previous_state": "2 months free. Access via: Free for Brex customers",
-      "current_state": "The page details a rewards program with points multipliers and discounts from various vendors, but does not mention any free access to Aircall.",
-      "source_url": "https://brex.com/rewards/",
-      "category": "Startup Perks",
-      "refused_date": "2026-09-15"
     },
     {
       "vendor": "Airtable",
@@ -182,18 +158,6 @@
       "category": "Search",
       "refused_date": "2026-09-24",
       "collided_with": "Algolia|limits_reduced|2026-08-28|https://www.algolia.com/pricing"
-    },
-    {
-      "vendor": "Amazon AWS",
-      "change_type": "pricing_restructured",
-      "reason": "page_does_not_name_vendor",
-      "detail": "the page read never names Amazon AWS and is not served from its domain, so any terms on it belong to somebody else",
-      "summary": "The AWS deal is now part of a larger set of discounts totaling over $350,000, rather than a standalone $5,000 credit.",
-      "previous_state": "$5,000 in credit over a year. Access via: Free for Brex customers",
-      "current_state": "Access over $350,000 in discounts from our partners on the tools you already use, including AWS, Slack, OpenAI, and QuickBooks.",
-      "source_url": "https://brex.com/rewards/",
-      "category": "Startup Perks",
-      "refused_date": "2026-09-15"
     },
     {
       "vendor": "Amazon Kiro (AWS Startups)",
@@ -854,7 +818,7 @@
       "refused_date": "2026-09-21"
     },
     {
-      "vendor": "Brex",
+      "vendor": "Brex Partner Perks",
       "change_type": "limits_reduced",
       "reason": "restates_stored_quantities",
       "detail": "narrowing claimed, and every quantity the current state names is one the stored description already held at the same value (350 currency), and drops 7 the stored description carried",
@@ -866,7 +830,7 @@
       "refused_date": "2026-09-30"
     },
     {
-      "vendor": "Brex",
+      "vendor": "Brex Partner Perks",
       "change_type": "limits_reduced",
       "reason": "states_no_terms",
       "detail": "every clause of the summary states absence or bookkeeping rather than a term the page carries, so it reports the reading rather than a change",
@@ -1013,18 +977,6 @@
       "refused_date": "2026-09-26"
     },
     {
-      "vendor": "Carta",
-      "change_type": "free_tier_removed",
-      "reason": "page_does_not_name_vendor",
-      "detail": "the page read never names Carta and is not served from its domain, so any terms on it belong to somebody else",
-      "summary": "The Carta Startup Program discount is not mentioned on the Brex pricing page. Instead, the page highlights access to over $350,000 in discounts from partners like AWS, Slack, and OpenAI, and a launch stack for startups.",
-      "previous_state": "20% discount on first year subscription and waived implementation fees. Access via: Free for Brex customers",
-      "current_state": "The page details a rewards program with points and discounts on various services (billboards, travel, DashPass, etc.) and access to partner discounts, but does not mention a specific 20% discount or waived implementation fees for Carta.",
-      "source_url": "https://brex.com/rewards/",
-      "category": "Startup Perks",
-      "refused_date": "2026-09-15"
-    },
-    {
       "vendor": "CatchJS.com",
       "change_type": "limits_reduced",
       "reason": "same_transition_graded_differently",
@@ -1036,18 +988,6 @@
       "category": "Error Tracking",
       "refused_date": "2026-09-15",
       "collided_with": "CatchJS.com|limits_reduced|2026-09-01|https://catchjs.com/"
-    },
-    {
-      "vendor": "Caviar",
-      "change_type": "free_tier_removed",
-      "reason": "page_does_not_name_vendor",
-      "detail": "the page read never names Caviar and is not served from its domain, so any terms on it belong to somebody else",
-      "summary": "The Caviar deal is no longer explicitly mentioned. The page focuses on Brex Rewards which includes DoorDash benefits (DashPass) and discounts from various vendors, but there's no specific mention of a $35 off 3 orders deal from Caviar.",
-      "previous_state": "$35 off of 3 orders of $75 or more. Access via: Free for Brex customers",
-      "current_state": "Brex Rewards offers free DashPass for all, with $0 delivery fees and 5% back in DoorDash credits. It also provides access to over $350,000 in discounts from partners like AWS, Slack, and OpenAI.",
-      "source_url": "https://brex.com/rewards/",
-      "category": "Startup Perks",
-      "refused_date": "2026-09-15"
     },
     {
       "vendor": "Cerebras",
@@ -1232,18 +1172,6 @@
       "refused_date": "2026-09-10"
     },
     {
-      "vendor": "Clear Channel Outdoor",
-      "change_type": "pricing_model_change",
-      "reason": "page_does_not_name_vendor",
-      "detail": "the page read never names Clear Channel Outdoor and is not served from its domain, so any terms on it belong to somebody else",
-      "summary": "The deal is no longer a direct discount on advertising campaigns. Instead, Brex Rewards points can be redeemed for billboards. Access is now tied to being an active Brex user and redeeming points, rather than being 'free for Brex customers'.",
-      "previous_state": "10%+ discount on first advertising campaign. Access via: Free for Brex customers",
-      "current_state": "Brex Rewards allows users to redeem points for full-service billboard campaigns. Users earn points on purchases and can redeem them for various rewards, including billboards.",
-      "source_url": "https://brex.com/rewards/",
-      "category": "Startup Perks",
-      "refused_date": "2026-09-15"
-    },
-    {
       "vendor": "clevebrush.com",
       "change_type": "free_tier_removed",
       "reason": "page_does_not_name_vendor",
@@ -1414,18 +1342,6 @@
       "category": "Startup Perks",
       "refused_date": "2026-09-17",
       "collided_with": "Cloudflare|limits_increased|2026-09-02|https://www.cloudflare.com/forstartups/"
-    },
-    {
-      "vendor": "Cloudways",
-      "change_type": "limits_reduced",
-      "reason": "page_does_not_name_vendor",
-      "detail": "the page read never names Cloudways and is not served from its domain, so any terms on it belong to somebody else",
-      "summary": "The offer has been reduced: the page now shows a first deal free, then 99€/year, rather than 30% off for 3 months.",
-      "previous_state": "30% off for 3 months. Access via: First deal free, then 99€/year or invite friends",
-      "current_state": "First deal free, then 99€/year or invite friends.",
-      "source_url": "https://www.joinsecret.com/offers",
-      "category": "Startup Perks",
-      "refused_date": "2026-08-29"
     },
     {
       "vendor": "cocalc.com",
@@ -1716,19 +1632,6 @@
       "refused_date": "2026-09-09"
     },
     {
-      "vendor": "Create@Alibaba Cloud",
-      "change_type": "rebranded",
-      "reason": "same_transition_graded_differently",
-      "detail": "same vendor, source_url and previous_state as Create@Alibaba Cloud|rebranded|2026-09-03|https://www.alibabacloud.com/startup",
-      "summary": "The program is now called the AI Catalyst Program and offers up to $120k in cloud credits and 2B free tokens on Model Studio.",
-      "previous_state": "Create@Alibaba Cloud is a global program focused on accelerating business success for startups.",
-      "current_state": "The AI Catalyst Program offers up to $120k cloud credits support and up to 2B free Model Studio tokens.",
-      "source_url": "https://www.alibabacloud.com/startup",
-      "category": "Startup Perks",
-      "refused_date": "2026-10-02",
-      "collided_with": "Create@Alibaba Cloud|rebranded|2026-09-03|https://www.alibabacloud.com/startup"
-    },
-    {
       "vendor": "Crisp",
       "change_type": "limits_increased",
       "reason": "confirmed_unchanged",
@@ -1813,18 +1716,6 @@
       "refused_date": "2026-10-07"
     },
     {
-      "vendor": "Crowdfire",
-      "change_type": "pricing_restructured",
-      "reason": "page_does_not_name_vendor",
-      "detail": "the page read never names Crowdfire and is not served from its domain, so any terms on it belong to somebody else",
-      "summary": "The page mentions a Premium plan that unlocks access to 284 deals, and states that 346 deals are available for free. It does not mention a 50% off lifetime deal on the Premium plan or the 'First deal free, then 99€/year or invite friends' option.",
-      "previous_state": "50% off on Premium plan lifetime deal. Access via: First deal free, then 99€/year or invite friends",
-      "current_state": "Access to 284 deals requires upgrading to Premium. 346 deals are available for free.",
-      "source_url": "https://www.joinsecret.com/offers",
-      "category": "Startup Perks",
-      "refused_date": "2026-09-15"
-    },
-    {
       "vendor": "Crystallize",
       "change_type": "limits_reduced",
       "reason": "measures_no_change",
@@ -1885,18 +1776,6 @@
       "source_url": "https://currencylayer.com/",
       "category": "Payments",
       "refused_date": "2026-10-01"
-    },
-    {
-      "vendor": "Dareboost",
-      "change_type": "free_tier_removed",
-      "reason": "page_does_not_name_vendor",
-      "detail": "the page read never names Dareboost and is not served from its domain, so any terms on it belong to somebody else",
-      "summary": "Dareboost is not listed with a 6-month free trial on the Business plan. Instead, Notion offers 3 months free on the Business plan, Stripe offers $500 in credits, Google Workspace offers 20% off, and other deals are available.",
-      "previous_state": "6 months free on Business plan. Access via: First deal free, then 99€/year or invite friends",
-      "current_state": "The page lists several deals, including 3 months free on Notion's Business plan, but does not mention a 6-month free trial for Dareboost.",
-      "source_url": "https://www.joinsecret.com/offers",
-      "category": "Startup Perks",
-      "refused_date": "2026-09-15"
     },
     {
       "vendor": "Databricks (Lakeflow Connect)",
@@ -2227,18 +2106,6 @@
       "source_url": "https://www.docker.com/pricing/",
       "category": "Container Registry",
       "refused_date": "2026-10-04"
-    },
-    {
-      "vendor": "Docsend",
-      "change_type": "free_tier_removed",
-      "reason": "page_does_not_name_vendor",
-      "detail": "the page read never names Docsend and is not served from its domain, so any terms on it belong to somebody else",
-      "summary": "Docsend is not mentioned on the pricing page. The page focuses on Brex Rewards and discounts on other tools like AWS, Slack, and OpenAI. It does mention access to exclusive deals and $350,000 in discounts from partners, but does not specifically mention Docsend or a 3-month free trial.",
-      "previous_state": "3 months free DocSend Advanced. Access via: Free for Brex customers",
-      "current_state": "The page details Brex Rewards, offering points and discounts on various business tools, including AWS, Slack, and OpenAI. It does not mention Docsend or any specific free trial for Docsend.",
-      "source_url": "https://brex.com/rewards/",
-      "category": "Startup Perks",
-      "refused_date": "2026-09-15"
     },
     {
       "vendor": "Doczilla",
@@ -2876,18 +2743,6 @@
       "refused_date": "2026-09-30"
     },
     {
-      "vendor": "Forter",
-      "change_type": "startup_program_expanded",
-      "reason": "page_does_not_name_vendor",
-      "detail": "the page read never names Forter and is not served from its domain, so any terms on it belong to somebody else",
-      "summary": "The page does not mention the 50% off for the first two months or the 'Startup Program' specifically. It focuses on Brex Rewards and discounts from partners like AWS, Slack, and OpenAI, offering access to over $350,000 in discounts.",
-      "previous_state": "50% off of your first two monthly invoices. Access via: Free for Brex customers",
-      "current_state": "Brex offers a rewards program with points redeemable for various benefits like travel, offsites, and cash back. Access to exclusive deals and discounts from partners is available.",
-      "source_url": "https://brex.com/rewards/",
-      "category": "Startup Perks",
-      "refused_date": "2026-09-15"
-    },
-    {
       "vendor": "forwardemail.net",
       "change_type": "limits_reduced",
       "reason": "same_transition_graded_differently",
@@ -2899,18 +2754,6 @@
       "category": "Email",
       "refused_date": "2026-09-11",
       "collided_with": "forwardemail.net|limits_reduced|2026-08-28|https://forwardemail.net"
-    },
-    {
-      "vendor": "Freebe",
-      "change_type": "free_tier_removed",
-      "reason": "page_does_not_name_vendor",
-      "detail": "the page read never names Freebe and is not served from its domain, so any terms on it belong to somebody else",
-      "summary": "The Freebe Startup Program is not explicitly mentioned. The page lists several deals, including some with free trials or credits, but does not mention a 6-month free period or the 99€/year option.",
-      "previous_state": "6 months free. Access via: First deal free, then 99€/year or invite friends",
-      "current_state": "The page does not mention a 6-month free period or a 99€/year option for Freebe. It lists other deals with free access and paid options.",
-      "source_url": "https://www.joinsecret.com/offers",
-      "category": "Startup Perks",
-      "refused_date": "2026-09-15"
     },
     {
       "vendor": "FreeIPAPI",
@@ -3156,18 +2999,6 @@
       "refused_date": "2026-09-14"
     },
     {
-      "vendor": "GOOGLE ADS",
-      "change_type": "free_tier_removed",
-      "reason": "page_does_not_name_vendor",
-      "detail": "the page read never names GOOGLE ADS and is not served from its domain, so any terms on it belong to somebody else",
-      "summary": "The page does not mention a specific $150 Google Ads credit for Brex customers. It broadly mentions access to 'exclusive deals' and '$350,000 in discounts from our partners' including AWS, Slack, OpenAI, and QuickBooks, but does not detail the Google Ads offer.",
-      "previous_state": "Up to $150 in Google Ads credit. Access via: Free for Brex customers",
-      "current_state": "The page states access to over $350,000 in discounts from partners including AWS, Slack, OpenAI, and QuickBooks.",
-      "source_url": "https://brex.com/rewards/",
-      "category": "Startup Perks",
-      "refused_date": "2026-09-15"
-    },
-    {
       "vendor": "Google Cloud BigQuery",
       "change_type": "pricing_restructured",
       "reason": "confirmed_unchanged",
@@ -3312,18 +3143,6 @@
       "refused_date": "2026-09-02"
     },
     {
-      "vendor": "Gorgias",
-      "change_type": "free_tier_removed",
-      "reason": "page_does_not_name_vendor",
-      "detail": "the page read never names Gorgias and is not served from its domain, so any terms on it belong to somebody else",
-      "summary": "The page mentions access to discounts from top vendors, including Gorgias, but does not specifically mention $1,000 of Gorgias credits or a 'Startup Program' offering free access for Brex customers. It broadly states access to over $350,000 in discounts.",
-      "previous_state": "$1,000 of Gorgias credits. Access via: Free for Brex customers",
-      "current_state": "Access over $350,000 in discounts from our partners on the tools you already use, including AWS, Slack, OpenAI, and QuickBooks.",
-      "source_url": "https://brex.com/rewards/",
-      "category": "Startup Perks",
-      "refused_date": "2026-09-15"
-    },
-    {
       "vendor": "Grafana Cloud",
       "change_type": "pricing_restructured",
       "reason": "same_transition_graded_differently",
@@ -3411,18 +3230,6 @@
       "source_url": "https://gtmetrix.com/free-plan-features.html",
       "category": "Code Quality",
       "refused_date": "2026-09-14"
-    },
-    {
-      "vendor": "Guideline 401(k)",
-      "change_type": "free_tier_removed",
-      "reason": "page_does_not_name_vendor",
-      "detail": "the page read never names Guideline 401(k) and is not served from its domain, so any terms on it belong to somebody else",
-      "summary": "The 3 months free offer is not mentioned. The page focuses on Brex Rewards and discounts from partners like AWS, Slack, and DoorDash. There is no specific 'Startup Program' mentioned with a free period.",
-      "previous_state": "3 months free. Access via: Free for Brex customers",
-      "current_state": "Brex offers rewards points redeemable for various benefits like travel, offsites, and cash back. Users can access discounts from partners and earn multipliers on spending.",
-      "source_url": "https://brex.com/rewards/",
-      "category": "Startup Perks",
-      "refused_date": "2026-09-15"
     },
     {
       "vendor": "Harness CI",
@@ -3864,18 +3671,6 @@
       "refused_date": "2026-09-15"
     },
     {
-      "vendor": "Instacart",
-      "change_type": "rebranded",
-      "reason": "page_does_not_name_vendor",
-      "detail": "the page read never names Instacart and is not served from its domain, so any terms on it belong to somebody else",
-      "summary": "The Instacart Startup Program deal of $35 off 3 orders is no longer explicitly mentioned. The page now highlights a DashPass benefit: free DashPass for all, with $0 delivery fees and 5% back in DoorDash credits.",
-      "previous_state": "$35 off 3 orders of $75 or more. Access via: Free for Brex customers",
-      "current_state": "Get free DashPass for all, on us. Enjoy $0 delivery fees and lower service fees. Plus, earn 5% back in DoorDash credits every time you use your Brex card.",
-      "source_url": "https://brex.com/rewards/",
-      "category": "Startup Perks",
-      "refused_date": "2026-09-15"
-    },
-    {
       "vendor": "InstallOnAir",
       "change_type": "pricing_restructured",
       "reason": "confirmed_unchanged",
@@ -3911,18 +3706,6 @@
       "source_url": "https://integrately.com",
       "category": "Cloud Hosting",
       "refused_date": "2026-09-30"
-    },
-    {
-      "vendor": "Intercom",
-      "change_type": "free_tier_removed",
-      "reason": "page_does_not_name_vendor",
-      "detail": "the page read never names Intercom and is not served from its domain, so any terms on it belong to somebody else",
-      "summary": "The page does not mention a specific startup program offering $100 off per month. It broadly mentions access to discounts from top vendors, including AWS, Slack, OpenAI, and QuickBooks, and a Brex Rewards program with various perks.",
-      "previous_state": "Up to $100 off per month for 3 months. Access via: Free for Brex customers",
-      "current_state": "Brex Rewards offers points on purchases redeemable for various business benefits like billboards, travel, and offsites. Users can also access discounts from partners and earn multipliers on specific spending categories.",
-      "source_url": "https://brex.com/rewards/",
-      "category": "Startup Perks",
-      "refused_date": "2026-09-15"
     },
     {
       "vendor": "IP Geolocation API by ipwho.org",
@@ -4070,30 +3853,6 @@
       "source_url": "https://www.khanacademy.org",
       "category": "Education",
       "refused_date": "2026-09-10"
-    },
-    {
-      "vendor": "Klaviyo",
-      "change_type": "free_tier_removed",
-      "reason": "page_does_not_name_vendor",
-      "detail": "the page read never names Klaviyo and is not served from its domain, so any terms on it belong to somebody else",
-      "summary": "The page does not mention a specific 15% discount for six months of Klaviyo access for Brex customers. It broadly mentions access to discounts from top vendors, including AWS, Slack, OpenAI, and QuickBooks, and over $350,000 in discounts, but does not detail the Klaviyo offer.",
-      "previous_state": "15% off six months of your Klaviyo subscription. Access via: Free for Brex customers",
-      "current_state": "Access over $350,000 in discounts from our partners on the tools you already use, including AWS, Slack, OpenAI, and QuickBooks.",
-      "source_url": "https://brex.com/rewards/",
-      "category": "Startup Perks",
-      "refused_date": "2026-09-15"
-    },
-    {
-      "vendor": "Knotel",
-      "change_type": "free_tier_removed",
-      "reason": "page_does_not_name_vendor",
-      "detail": "the page read never names Knotel and is not served from its domain, so any terms on it belong to somebody else",
-      "summary": "The 1 million Brex rewards points bonus is not mentioned on the current pricing page. The page focuses on earning points through spending and redeeming them for various rewards, as well as discounts with partners.",
-      "previous_state": "1 million Brex rewards points bonus. Access via: Free for Brex customers",
-      "current_state": "The page details a rewards program where users earn points based on spending and can redeem them for various benefits like travel, offsites, and discounts. It does not mention a 1 million points bonus for new customers.",
-      "source_url": "https://brex.com/rewards/",
-      "category": "Startup Perks",
-      "refused_date": "2026-09-15"
     },
     {
       "vendor": "Koyeb",
@@ -4816,7 +4575,7 @@
       "refused_date": "2026-08-28"
     },
     {
-      "vendor": "Mercury",
+      "vendor": "Mercury Perks",
       "change_type": "limits_reduced",
       "reason": "same_transition_graded_differently",
       "detail": "same vendor, source_url and previous_state as Mercury|limits_reduced|2026-08-28|https://mercury.com/perks",
@@ -4867,7 +4626,7 @@
       "collided_with": "Microsoft for Startups|limits_increased|2026-09-02|https://startups.microsoft.com/en-us/"
     },
     {
-      "vendor": "Microsoft Founders Hub",
+      "vendor": "Microsoft for Startups",
       "change_type": "limits_reduced",
       "reason": "restates_stored_quantities",
       "detail": "narrowing claimed, and every quantity the current state names is one the stored description already held at the same value (150,000 currency), and drops 5 the stored description carried",
@@ -5948,18 +5707,6 @@
       "collided_with": "Postman|limits_reduced|2026-09-02|https://www.postman.com/pricing/"
     },
     {
-      "vendor": "Postscript",
-      "change_type": "free_tier_removed",
-      "reason": "page_does_not_name_vendor",
-      "detail": "the page read never names Postscript and is not served from its domain, so any terms on it belong to somebody else",
-      "summary": "The page does not mention a specific 25% off discount for the first 4 months, or a free offering specifically for Brex customers. It broadly mentions access to discounts from top vendors, including AWS, Slack, OpenAI, and QuickBooks, and a Brex Rewards program with various perks.",
-      "previous_state": "25% off any plan for the first 4 months. Access via: Free for Brex customers",
-      "current_state": "Brex offers a rewards program with points earned on purchases redeemable for various benefits like travel, offsites, and discounts from partners. Access exclusive deals and save with pre-negotiated discounts from top vendors.",
-      "source_url": "https://brex.com/rewards/",
-      "category": "Startup Perks",
-      "refused_date": "2026-09-15"
-    },
-    {
       "vendor": "Preset Cloud",
       "change_type": "free_tier_removed",
       "reason": "no_price_signal",
@@ -6008,18 +5755,6 @@
       "category": "CDN",
       "refused_date": "2026-09-13",
       "collided_with": "PromoProxy|limits_reduced|2026-09-01|https://promoproxy.net/"
-    },
-    {
-      "vendor": "Publist",
-      "change_type": "pricing_restructured",
-      "reason": "page_does_not_name_vendor",
-      "detail": "the page read never names Publist and is not served from its domain, so any terms on it belong to somebody else",
-      "summary": "The page indicates a free tier with access to 344 deals, and a Premium tier with access to 284 deals. The stored information stated a 'Personal plan free forever' with a first deal free, then a 99€/year option or invite friends.",
-      "previous_state": "Personal plan free forever. Access via: First deal free, then 99€/year or invite friends",
-      "current_state": "Get access to 344 deals for free and 271 deals when you upgrade to Premium.",
-      "source_url": "https://www.joinsecret.com/offers",
-      "category": "Startup Perks",
-      "refused_date": "2026-09-16"
     },
     {
       "vendor": "pubnub.com",
@@ -6107,18 +5842,6 @@
       "refused_date": "2026-10-02"
     },
     {
-      "vendor": "Quartzy",
-      "change_type": "startup_program_expanded",
-      "reason": "page_does_not_name_vendor",
-      "detail": "the page read never names Quartzy and is not served from its domain, so any terms on it belong to somebody else",
-      "summary": "The page mentions access to over $350,000 in discounts from partners, including AWS, Slack, OpenAI, and QuickBooks, and a Startup Program is not explicitly mentioned with $10,000 in Quartzy credits. The focus is on Brex Rewards and discounts from various vendors, not a specific Quartzy deal tied to Brex customers.",
-      "previous_state": "Up to $10,000 in Quartzy credits. Access via: Free for Brex customers",
-      "current_state": "Access over $350,000 in discounts from our partners on the tools you already use, including AWS, Slack, OpenAI, and QuickBooks.",
-      "source_url": "https://brex.com/rewards/",
-      "category": "Startup Perks",
-      "refused_date": "2026-09-16"
-    },
-    {
       "vendor": "Railway",
       "change_type": "limits_reduced",
       "reason": "restates_stored_quantities",
@@ -6131,7 +5854,7 @@
       "refused_date": "2026-10-06"
     },
     {
-      "vendor": "Ramp",
+      "vendor": "Ramp Partner Rewards",
       "change_type": "limits_reduced",
       "reason": "confirmed_unchanged",
       "detail": "The current page clarifies details about the AWS credits (Activate program, varying amounts) and provides more examples of partner discounts, but doesn't fundamentally change the offer of AWS credits and partner discounts up to a total of $350,000. The stored description didn't guarantee a fixed $5,000 AWS credit.",
@@ -6460,18 +6183,6 @@
       "collided_with": "Rybbit|free_tier_removed|2026-08-28|https://rybbit.com/"
     },
     {
-      "vendor": "Salesforce",
-      "change_type": "restriction",
-      "reason": "page_does_not_name_vendor",
-      "detail": "the page read never names Salesforce and is not served from its domain, so any terms on it belong to somebody else",
-      "summary": "The page mentions access to over $350,000 in discounts from partners, including Salesforce, but does not mention a 25% subscription discount or a $375 limit specifically for startups. It also does not mention the discount being exclusive to Brex customers.",
-      "previous_state": "25% subscription discount, up to $375. Access via: Free for Brex customers",
-      "current_state": "Access over $350,000 in discounts from our partners on the tools you already use, including AWS, Slack, OpenAI, and QuickBooks.",
-      "source_url": "https://brex.com/rewards/",
-      "category": "Startup Perks",
-      "refused_date": "2026-09-16"
-    },
-    {
       "vendor": "Sauce Labs",
       "change_type": "pricing_restructured",
       "reason": "dangling_reference",
@@ -6509,18 +6220,6 @@
       "collided_with": "ScaleGrid Startup Program|record_corrected|2026-09-19|https://scalegrid.io/pricing/offers/startup-saver/"
     },
     {
-      "vendor": "Science Exchange",
-      "change_type": "restriction",
-      "reason": "page_does_not_name_vendor",
-      "detail": "the page read never names Science Exchange and is not served from its domain, so any terms on it belong to somebody else",
-      "summary": "The page mentions access to discounts from top vendors, including Science Exchange, but does not specifically mention a 15% discount on an Enterprise License for Brex customers. It broadly states access to over $350,000 in discounts.",
-      "previous_state": "15% discount on Enterprise License. Access via: Free for Brex customers",
-      "current_state": "Access over $350,000 in discounts from our partners on the tools you already use, including AWS, Slack, OpenAI, and QuickBooks.",
-      "source_url": "https://brex.com/rewards/",
-      "category": "Startup Perks",
-      "refused_date": "2026-09-16"
-    },
-    {
       "vendor": "ScraperAPI",
       "change_type": "free_tier_removed",
       "reason": "same_transition_graded_differently",
@@ -6547,7 +6246,7 @@
       "collided_with": "ScrumFast|limits_increased|2026-08-28|https://www.scrumfast.com"
     },
     {
-      "vendor": "Segment",
+      "vendor": "Segment Startup Program",
       "change_type": "startup_program_expanded",
       "reason": "same_transition_graded_differently",
       "detail": "same vendor, source_url and previous_state as Segment|free_tier_removed|2026-08-28|https://segment.com/docs/guides/usage-and-billing/discounts-for-startups-npos/",
@@ -6631,31 +6330,6 @@
       "source_url": "https://sendbird.com/pricing/chat",
       "category": "Communication",
       "refused_date": "2026-09-25"
-    },
-    {
-      "vendor": "SendGrid",
-      "change_type": "free_tier_removed",
-      "reason": "page_does_not_name_vendor",
-      "detail": "the page read never names SendGrid and is not served from its domain, so any terms on it belong to somebody else",
-      "summary": "The page does not mention the $130/month off the Pro 100K Plan specifically for Brex customers. It broadly mentions access to over $350,000 in discounts from partners, including Slack, AWS, OpenAI, and QuickBooks, and a launch stack for startups.",
-      "previous_state": "$130/month off of new Pro 100K Plan. Access via: Free for Brex customers",
-      "current_state": "The page states access to over $350,000 in discounts from partners and a launch stack for startups, but does not mention the specific $130/month discount on the Pro 100K plan for Brex customers.",
-      "source_url": "https://brex.com/rewards/",
-      "category": "Startup Perks",
-      "refused_date": "2026-09-16"
-    },
-    {
-      "vendor": "Sendinblue",
-      "change_type": "free_tier_removed",
-      "reason": "same_transition_graded_differently",
-      "detail": "same vendor, source_url and previous_state as Sendinblue|pricing_model_change|2026-08-28|https://www.joinsecret.com/offers",
-      "summary": "Sendinblue (now Brevo) is offering 50% off Starter and Standard Plans, not 12 months free on the Premium plan.",
-      "previous_state": "12 months free on the Premium plan. Access via: First deal free, then 99€/year or invite friends",
-      "current_state": "50% off Starter and Standard Plans",
-      "source_url": "https://www.joinsecret.com/offers",
-      "category": "Startup Perks",
-      "refused_date": "2026-10-01",
-      "collided_with": "Sendinblue|pricing_model_change|2026-08-28|https://www.joinsecret.com/offers"
     },
     {
       "vendor": "Sentry",
@@ -6743,30 +6417,6 @@
       "category": "Design",
       "refused_date": "2026-09-11",
       "collided_with": "Shadcn Studio|pricing_model_change|2026-08-28|https://shadcnstudio.com/theme-editor"
-    },
-    {
-      "vendor": "Shine",
-      "change_type": "free_tier_removed",
-      "reason": "page_does_not_name_vendor",
-      "detail": "the page read never names Shine and is not served from its domain, so any terms on it belong to somebody else",
-      "summary": "The deal is no longer 6 months free on the Premium plan. The page states that Premium access is granted with a subscription, and offers access to 284 deals when upgrading to Premium.",
-      "previous_state": "6 months free on Premium plan. Access via: First deal free, then 99€/year or invite friends",
-      "current_state": "Get access to 284 deals when you upgrade to Premium.",
-      "source_url": "https://www.joinsecret.com/offers",
-      "category": "Startup Perks",
-      "refused_date": "2026-09-16"
-    },
-    {
-      "vendor": "Shippo",
-      "change_type": "free_tier_removed",
-      "reason": "page_does_not_name_vendor",
-      "detail": "the page read never names Shippo and is not served from its domain, so any terms on it belong to somebody else",
-      "summary": "The page does not mention a 4-month free trial of Shippo Pro Plan specifically for Brex customers. It broadly mentions access to exclusive deals and over $350,000 in discounts from partners, including AWS, Slack, OpenAI, and QuickBooks, but does not detail the Shippo offer.",
-      "previous_state": "4 months free Shippo Pro Plan. Access via: Free for Brex customers",
-      "current_state": "The page states access to 'exclusive deals' and '$350,000 in discounts from our partners' but does not mention Shippo or a free trial of Shippo Pro Plan.",
-      "source_url": "https://brex.com/rewards/",
-      "category": "Startup Perks",
-      "refused_date": "2026-09-16"
     },
     {
       "vendor": "SigNoz",
@@ -6915,18 +6565,6 @@
       "source_url": "https://smartparse.io",
       "category": "Dev Utilities",
       "refused_date": "2026-09-26"
-    },
-    {
-      "vendor": "Snap",
-      "change_type": "restriction",
-      "reason": "page_does_not_name_vendor",
-      "detail": "the page read never names Snap and is not served from its domain, so any terms on it belong to somebody else",
-      "summary": "The page no longer mentions the $1,500 Snapchat Ads credit specifically for Brex customers. It broadly mentions access to over $350,000 in discounts from partners, including Snap (OpenAI), but doesn't detail the specific credit amount or exclusivity for Brex users.",
-      "previous_state": "$1,500 of Snapchat Ads credits. Access via: Free for Brex customers",
-      "current_state": "Access over $350,000 in discounts from our partners on the tools you already use, including AWS, Slack, OpenAI, and QuickBooks.",
-      "source_url": "https://brex.com/rewards/",
-      "category": "Startup Perks",
-      "refused_date": "2026-09-16"
     },
     {
       "vendor": "snappify",
@@ -7099,18 +6737,6 @@
       "collided_with": "StatusCake|limits_increased|2026-09-02|https://www.statuscake.com/pricing/"
     },
     {
-      "vendor": "Stitch Labs",
-      "change_type": "free_tier_removed",
-      "reason": "page_does_not_name_vendor",
-      "detail": "the page read never names Stitch Labs and is not served from its domain, so any terms on it belong to somebody else",
-      "summary": "The Startup Program with 2 months free is not mentioned. The page details a Brex Rewards program with various perks (DashPass, discounts on AWS, Slack, etc.) and a tiered pricing structure starting at $0/user/month and $12/user/month for advanced features.",
-      "previous_state": "2 months free subscription. Access via: Free for Brex customers",
-      "current_state": "Plans start at $0 per user, per month, and more advanced features are available for $12 per user, per month. Access exclusive deals and save with pre-negotiated discounts from top vendors.",
-      "source_url": "https://brex.com/rewards/",
-      "category": "Startup Perks",
-      "refused_date": "2026-09-16"
-    },
-    {
       "vendor": "Stoplight",
       "change_type": "free_tier_removed",
       "reason": "same_transition_graded_differently",
@@ -7237,7 +6863,7 @@
       "collided_with": "Survicate|free_tier_removed|2026-08-28|https://survicate.com/pricing/"
     },
     {
-      "vendor": "SVB (Silicon Valley Bank)",
+      "vendor": "SVB Startup Banking Offers",
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
       "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (5 currency, 100 currency, 5 currency, 9 currency, 50 currency)",
@@ -8105,30 +7731,6 @@
       "refused_date": "2026-09-24"
     },
     {
-      "vendor": "Wizishop",
-      "change_type": "free_tier_removed",
-      "reason": "page_does_not_name_vendor",
-      "detail": "the page read never names Wizishop and is not served from its domain, so any terms on it belong to somebody else",
-      "summary": "Wizishop is not mentioned on the page. However, there are several deals for free trials or credits for other services like Notion, Stripe, Google Workspace, etc.",
-      "previous_state": "3 months free on Pro plan. Access via: First deal free, then 99€/year or invite friends",
-      "current_state": "The page does not mention Wizishop or a 3-month free trial on the Pro plan. It offers deals for other services, some of which are free and some require payment or upgrading to Premium.",
-      "source_url": "https://www.joinsecret.com/offers",
-      "category": "Startup Perks",
-      "refused_date": "2026-09-16"
-    },
-    {
-      "vendor": "WP Engine",
-      "change_type": "free_tier_removed",
-      "reason": "page_does_not_name_vendor",
-      "detail": "the page read never names WP Engine and is not served from its domain, so any terms on it belong to somebody else",
-      "summary": "WP Engine is not directly mentioned on the page, but Notion, Stripe, Google Workspace, Brevo, Xero, AWS Activate, Fin, and Airtable all have deals listed. There is no mention of a 3-month free trial on annual plans or the 'Startup Program' as described.",
-      "previous_state": "3 months free on annual plans. Access via: First deal free, then 99€/year or invite friends",
-      "current_state": "The page lists various deals from different vendors, including Notion (3 months free on the Business plan), Stripe ($500 in credits), Google Workspace (20% off Standard plans), and others. There is no specific deal for WP Engine.",
-      "source_url": "https://www.joinsecret.com/offers",
-      "category": "Startup Perks",
-      "refused_date": "2026-09-16"
-    },
-    {
       "vendor": "Wraps",
       "change_type": "limits_reduced",
       "reason": "measures_the_opposite",
@@ -8333,18 +7935,6 @@
       "source_url": "https://zenscrape.com/web-scraping-api",
       "category": "Web Scraping",
       "refused_date": "2026-08-29"
-    },
-    {
-      "vendor": "Zentail",
-      "change_type": "startup_program_expanded",
-      "reason": "page_does_not_name_vendor",
-      "detail": "the page read never names Zentail and is not served from its domain, so any terms on it belong to somebody else",
-      "summary": "The page mentions access to over $350,000 in discounts from partners, including AWS, Slack, OpenAI, and QuickBooks, and a 'launch faster' program with exclusive discounts, but does not specifically mention a $3,000 discount on a Zentail contract or a 'Startup Program' tied to Brex customers. It broadly references access to exclusive deals for Brex users.",
-      "previous_state": "$3,000 off annual Zentail contract. Access via: Free for Brex customers",
-      "current_state": "Brex users have access to over $350,000 in discounts from partners like AWS, Slack, OpenAI, and QuickBooks, and can access exclusive deals.",
-      "source_url": "https://brex.com/rewards/",
-      "category": "Startup Perks",
-      "refused_date": "2026-09-16"
     },
     {
       "vendor": "Zhipu AI",

@@ -23,7 +23,8 @@
     { "retired": "flightcontrol.dev", "survivor": "Ravion" },
     { "retired": "v0", "survivor": "v0.dev" },
     { "retired": "Linode", "survivor": "Akamai Cloud" },
-    { "retired": "AWS Lightsail", "survivor": "Amazon Lightsail" }
+    { "retired": "AWS Lightsail", "survivor": "Amazon Lightsail" },
+    { "retired": "Microsoft Founders Hub", "survivor": "Microsoft for Startups" }
   ],
   "shared_pricing_pages": [
     {

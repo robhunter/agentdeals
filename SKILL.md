@@ -1,6 +1,6 @@
 ---
 name: agentdeals
-description: Search and compare 1,500+ developer infrastructure deals — free tiers, startup credits, and pricing changes across 54 categories.
+description: Search and compare 1,400+ developer infrastructure deals — free tiers, startup credits, and pricing changes across 54 categories.
 version: 1.0.0
 metadata:
   openclaw:
@@ -10,7 +10,7 @@ metadata:
 
 # AgentDeals — Developer Infrastructure Deals for AI Agents
 
-Search and compare free tiers, startup credits, and pricing changes across 1,500+ developer tools and services. 54 categories covering cloud, databases, CI/CD, monitoring, auth, AI/ML, and more.
+Search and compare free tiers, startup credits, and pricing changes across 1,400+ developer tools and services. 54 categories covering cloud, databases, CI/CD, monitoring, auth, AI/ML, and more.
 
 ## When to Use
 

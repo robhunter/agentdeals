@@ -24,7 +24,7 @@ const REPO = path.join(__dirname, "..");
 
 const catalogue: { offers: Offer[] } = JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf-8"));
 const offers: Offer[] = catalogue.offers;
-const { loadDealChanges, refusalsForVendor, gateForOffer } = await import("../dist/data.js");
+const { loadDealChanges, refusalsForVendor, gateForOffer, publishedRisk } = await import("../dist/data.js");
 const { badgeWithholding, freeTierClaim, riskyCauseEndsTheFreeTier, withholdsTheTerms } = await import("../dist/vendor-verdict.js");
 const { vendorVerdictContextFrom } = await import("../dist/vendor-verdict-input.js");
 
@@ -51,6 +51,23 @@ const expiredSubject = [...vendorSlugMap.entries()]
     gateForOffer(records[0], TODAY) === null,
   ) ?? null;
 if (expiredSubject) expiredSubject.records[0].expires_date = EXPIRED_ON;
+const RESTRICTION_GIVEN_TO_A_RECORD_WITH_A_PRICING_HISTORY = { type: "oss", conditions: ["Maintainers of an open-source project"], program: "Open Source Program" };
+const restrictedSubjectWithAPricingHistory = [...vendorSlugMap.entries()]
+  .map(([slug, vendor]) => ({ slug, vendor, records: offers.filter(o => o.vendor === vendor) }))
+  .find(({ vendor, records }) =>
+    records.length === 1 &&
+    records[0] !== expiredSubject?.records[0] &&
+    !records[0].eligibility &&
+    !records[0].conditions &&
+    !records[0].free_plan_excerpt &&
+    records[0].source_check?.outcome === "ok" &&
+    unreachableNoticeForUrl(records[0].url) === null &&
+    classifyTier(records[0].tier).class === "free" &&
+    !supersededBy.has(records[0]) &&
+    gateForOffer(records[0], TODAY) === null &&
+    ["caution", "risky"].includes(publishedRisk(records[0], dealChanges.filter(c => c.vendor.toLowerCase() === vendor.toLowerCase()), TODAY).risk_level ?? ""),
+  ) ?? null;
+if (restrictedSubjectWithAPricingHistory) restrictedSubjectWithAPricingHistory.records[0].eligibility = RESTRICTION_GIVEN_TO_A_RECORD_WITH_A_PRICING_HISTORY;
 const scratch = mkdtempSync(path.join(tmpdir(), "gated-vendor-answers-"));
 const scratchIndex = path.join(scratch, "index.json");
 writeFileSync(scratchIndex, JSON.stringify(catalogue));
@@ -198,9 +215,9 @@ const expiredPage = (): VendorPage => {
 const ungated = () => rendered.filter(p => !p.gate);
 const gatedPages = (): Population => ({ size: gated().length, read: "vendor pages a gate holds back" });
 const ungatedPages = (): Population => ({ size: ungated().length, read: "vendor pages no gate holds back" });
-const restrictedPages = (): Population => ({
-  size: gated().filter(p => p.gate!.code === "eligibility_restricted").length,
-  read: "gated pages whose gate is the restriction rather than the tier",
+const restrictedFreeTierPages = (): Population => ({
+  size: gated().filter(p => p.gate!.code === "eligibility_restricted" && listsAnOngoingFreeTier(p)).length,
+  read: "gated pages whose gate is the restriction on an ongoing free tier",
 });
 const supersededTerms = (p: VendorPage) => supersededBy.has(p.primary);
 const withheldPhraseOf = (p: VendorPage) => storedTermsWithheldPhrase(supersededBy.get(p.primary)!);
@@ -217,7 +234,7 @@ describe("the page a gated record renders does not answer the free-tier question
     assert.strictEqual(rendered.length, primaries.length, "a vendor page did not render for every vendor the catalogue lists");
     assertPopulationFloor(primaries.length, 1, "vendors the catalogue lists");
     const secondRecordToRuleOut = rendered.filter(p => offers.filter(o => o.vendor === p.vendor).length > 1);
-    assertPopulationFloor(secondRecordToRuleOut.length, 5, "vendors hold a second record the identity below has to rule out");
+    assertPopulationFloor(secondRecordToRuleOut.length, 4, "vendors hold a second record the identity below has to rule out");
     for (const p of rendered) {
       const node = blockOfType(p.html, "WebPage")?.mainEntity;
       assert.strictEqual(
@@ -473,10 +490,10 @@ describe("the heading agrees with the title on the same page", () => {
     }
   });
 
-  it("keeps it on a page whose gate is the restriction rather than the tier", () => {
-    const restricted = gated().filter(p => p.gate!.code === "eligibility_restricted");
+  it("keeps it on a page whose gate is the restriction on an ongoing free tier rather than the tier", () => {
+    const restricted = gated().filter(p => p.gate!.code === "eligibility_restricted" && listsAnOngoingFreeTier(p));
     const heading = restricted.filter(p => / Free Tier \d{4}/.test(headingOf(p.html))).length;
-    assertSharesPopulation(heading, restrictedPages(), 0.5, "restricted pages still head a free tier");
+    assertSharesPopulation(heading, restrictedFreeTierPages(), 0.5, "restricted pages still head a free tier");
   });
 
   it("heads a page whose title withholds the free-tier form with the pricing form, or with the offer its title names", () => {
@@ -639,11 +656,11 @@ const RATES_THE_FREE_TIER = (vendor: string) => [
   "We rate it risky",
 ];
 
-const QUESTIONS_A_GATE_DOES_NOT_TOUCH = (vendor: string) => [
-  `Is ${vendor} free?`,
-  `Is ${vendor}'s free tier good for production?`,
-  `What changed in ${vendor}'s pricing?`,
-  `What category is ${vendor} in?`,
+const QUESTIONS_A_GATE_DOES_NOT_TOUCH = (p: VendorPage) => [
+  `Is ${p.vendor} free?`,
+  `Is ${p.vendor}'s ${askedAbout(p)} good for production?`,
+  `What changed in ${p.vendor}'s pricing?`,
+  `What category is ${p.vendor} in?`,
 ];
 
 
@@ -676,7 +693,7 @@ describe("no question a gated page asks presupposes what its own answer denies",
 
   it("keeps every question the gate does not touch", () => {
     for (const p of gated()) {
-      for (const q of QUESTIONS_A_GATE_DOES_NOT_TOUCH(p.vendor)) {
+      for (const q of QUESTIONS_A_GATE_DOES_NOT_TOUCH(p)) {
         assert.ok(asks(p.html, q), `/vendor/${p.slug} no longer asks "${q}"`);
       }
     }
@@ -684,7 +701,7 @@ describe("no question a gated page asks presupposes what its own answer denies",
 
   it("still asks what the tier is where the gate is the restriction rather than the tier", () => {
     const asking = gated().filter(p => asks(p.html, `What is ${p.vendor}'s free tier?`)).length;
-    assertSharesPopulation(asking, gatedPages(), 0.33, "gated pages ask what the tier is");
+    assertSharesPopulation(asking, gatedPages(), 0.28, "gated pages ask what the tier is");
   });
 });
 
