@@ -752,22 +752,25 @@ export function narrowingSentence(
   termsSuperseded: boolean = false,
   asOf: string = new Date().toISOString().slice(0, 10),
 ): string {
-  const inEffect = changes.filter(c => !hasNotTakenEffect(c, asOf));
-  const opening = changes.length > 0 && inEffect.length === 0
+  const announced = announcedNarrowings(changes, offer, asOf);
+  const opening = changes.length > 0 && changes.every(c => hasNotTakenEffect(c, asOf))
     ? NO_RECORD_IN_EFFECT_YET
-    : narrowingSentenceOverRecordsInEffect(inEffect, offer, termsSuperseded);
-  return [opening, announcedNarrowingSentence(changes, offer, asOf)].filter(Boolean).join(" ");
+    : narrowingSentenceOverRecords(changes.filter(c => !announced.includes(c)), offer, termsSuperseded);
+  return [opening, announcedNarrowingSentence(announced)].filter(Boolean).join(" ");
 }
 
-export function announcedNarrowingSentence(
+export function announcedNarrowings(
   changes: VendorVerdictInput["changes"],
   offer: GradedOffer | null,
   asOf: string,
-): string {
-  const announced = narrowingChanges(
+): VendorVerdictInput["changes"] {
+  return narrowingChanges(
     changes.filter(c => hasNotTakenEffect(c, asOf) && !changeIsUncited(c) && !isOurOwnBookkeeping(c)),
     offer,
   ).sort((a, b) => a.date.localeCompare(b.date));
+}
+
+function announcedNarrowingSentence(announced: VendorVerdictInput["changes"]): string {
   if (announced.length === 0) return "";
   const first = announced[0];
   return announced.length === 1
@@ -775,7 +778,7 @@ export function announcedNarrowingSentence(
     : `${announced.length} narrowing changes are announced and have not taken effect; the first is a ${changeKindNoun(first.change_type)} on ${first.date}.`;
 }
 
-function narrowingSentenceOverRecordsInEffect(
+function narrowingSentenceOverRecords(
   changes: VendorVerdictInput["changes"],
   offer: GradedOffer | null,
   termsSuperseded: boolean,

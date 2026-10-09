@@ -378,12 +378,42 @@ describe("vendor verdict — a narrowing that has not taken effect is announced,
     );
   });
 
-  it("counts the records that did not narrow the terms over the same set in effect", () => {
+  it("keeps an announced change that does not narrow the terms in the did-not-narrow count", () => {
     const changes = [
       change({ change_type: "limits_increased", date: "2026-09-01" }),
       change({ change_type: "new_tier", date: "2026-10-20" }),
     ];
-    assert.strictEqual(narrowingSentence(changes, null, false, SERVED_ON), "The one change we have recorded did not narrow the terms.");
+    assert.strictEqual(narrowingSentence(changes, null, false, SERVED_ON), "None of the 2 recorded changes narrowed the terms.");
+  });
+
+  it("keeps an announced deprecation that leaves the listing standing in the did-not-narrow count", () => {
+    const changes = [
+      change({ change_type: "new_tier", date: "2026-04-02" }),
+      change({ change_type: "product_deprecated", date: "2026-10-14", listing_effect: "none" }),
+    ];
+    assert.strictEqual(narrowingSentence(changes, null, false, SERVED_ON), "None of the 2 recorded changes narrowed the terms.");
+  });
+
+  it("keeps an announced narrowing of another tier in the did-not-narrow count", () => {
+    const changes = [
+      change({ change_type: "limits_increased", date: "2026-09-01", tier: "Free" }),
+      change({ change_type: "limits_reduced", date: "2026-10-20", tier: "Team", summary: "Team plan seats cut from 10 to 5" }),
+    ];
+    assert.strictEqual(
+      narrowingSentence(changes, { vendor: "Vendor A", tier: "Free" }, false, SERVED_ON),
+      "None of the 2 recorded changes narrowed the terms.",
+    );
+  });
+
+  it("leaves an announced narrowing out of the did-not-narrow count", () => {
+    const changes = [
+      change({ change_type: "limits_increased", date: "2026-09-01" }),
+      change({ change_type: "limits_reduced", date: "2026-10-20" }),
+    ];
+    assert.strictEqual(
+      narrowingSentence(changes, null, false, SERVED_ON),
+      "The one change we have recorded did not narrow the terms. A limit reduction is announced for 2026-10-20 and has not taken effect.",
+    );
   });
 
   it("counts a narrowing dated the day the page is served as in effect", () => {
