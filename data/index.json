@@ -35521,6 +35521,55 @@
         "outcome": "ok",
         "detail": "the page names Amazon Lightsail as \"amazon lightsail\" and states \"$5\" and \"$7\" and \"$12\" and \"$9.50\""
       }
+    },
+    {
+      "vendor": "Hetzner Inference API",
+      "category": "AI / ML",
+      "description": "Hetzner's experimental Inference API: an OpenAI-compatible API for open-weight models, free while it stays experimental. Models listed on 2026-10-09: Qwen3.6-35B-A3B and Qwen3.8-27B, each with a 262,144-token context and image input. Limits per API key, per minute: 4M input tokens, 100k output tokens and 10 requests. Needs a Hetzner account; keys are created at experiments.hetzner.com. Hetzner says it does not store the content of requests or responses.",
+      "tier": "Free",
+      "url": "https://docs.hetzner.com/general/company-and-policy/experiments/inference/",
+      "tags": [
+        "ai",
+        "ml",
+        "llm",
+        "inference",
+        "openai-compatible",
+        "free tier"
+      ],
+      "verifiedDate": "2026-10-09",
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "llm_api",
+            "source_url": "https://docs.hetzner.com/general/company-and-policy/experiments/inference/",
+            "source_quote": "The Inference API provides access to open-source large language models via an OpenAI-compatible REST API."
+          }
+        ],
+        "reviewed": "2026-10-09"
+      },
+      "conditions": [
+        {
+          "text": "Hetzner says not to use the Inference API for production: it is experimental and offered as is, with no guarantee of performance or availability.",
+          "quote": "should not use the platform for production environments",
+          "url": "https://docs.hetzner.com/general/company-and-policy/experiments/inference/",
+          "read_on": "2026-10-09",
+          "rules_out": [
+            "production"
+          ]
+        },
+        {
+          "text": "It is free only while it stays experimental. Hetzner says it will email users before that changes.",
+          "quote": "As long as the Inference API remains in experimental status, it is free of charge. Should this status change, we will notify you in advance via email.",
+          "url": "https://docs.hetzner.com/general/company-and-policy/experiments/inference/",
+          "read_on": "2026-10-09"
+        }
+      ],
+      "source_check": {
+        "checked": "2026-10-09",
+        "outcome": "states_no_terms",
+        "detail": "the page names Hetzner Inference API but states no amount, tier or rate we can read, and its markup carries no structured data"
+      }
     }
   ],
   "changes": []
