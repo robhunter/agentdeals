@@ -144,10 +144,9 @@ function prepayParagraph(html: string): string {
 const withoutTags = (html: string) => html.replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
 
 describe(`${PAGE} on paying after use once Prepay starts`, () => {
-  it("follows the move to Prepay with what cannot be undone, then the route that bills after use, at the Gemini API's paid-tier prices", () => {
+  it("says what cannot be undone, then the route that bills after use, at the Gemini API's paid-tier prices", () => {
     const text = withoutTags(prepayParagraph(page));
     assert.ok(text.includes(
-      "Only Gemini API usage moves to Prepay; other Google Cloud services on the same billing account stay on Postpay. " +
       "Google's billing FAQ states that accounts cannot switch from Prepay to Postpay, and Prepay is not available for invoiced accounts. " +
       "To pay after use instead of prepaying, use Gemini Enterprise Agent Platform (formerly Vertex AI). " +
       "Google bills it on the standard Cloud charging cycle, not Prepay. " +
@@ -165,11 +164,46 @@ describe(`${PAGE} on paying after use once Prepay starts`, () => {
 
   it("ends by saying usage can run past a $0 balance and that a negative balance comes off the next purchase", () => {
     assert.ok(withoutTags(prepayParagraph(page)).endsWith(
-      "When the balance reaches $0, every API key on the billing account stops working until you add credits. " +
       "Usage can continue for approximately 10 minutes past a $0 balance due to billing latency. " +
       "Batch jobs and agents may consume credits beyond the balance. " +
       "A negative balance is deducted from the next credit purchase.",
     ));
+  });
+});
+
+describe(`${PAGE} on a missed payment for another Google Cloud service`, () => {
+  it("follows the split between Prepay and Postpay with the suspension a declined payment can cause whatever the Prepay balance, before what cannot be undone", () => {
+    const text = withoutTags(prepayParagraph(page));
+    assert.ok(text.includes(
+      "Only Gemini API usage moves to Prepay; other Google Cloud services on the same billing account stay on Postpay. " +
+      "If your Cloud Billing account has a Gemini API Prepay credit balance but your card expired or a payment for another Google Cloud service was declined, the Gemini API can still be suspended. " +
+      "This happens with an overdue balance, a declined payment, or an invalid payment method. " +
+      "Resolve the issue in the Google Cloud Billing console to restore service. " +
+      "Google's billing FAQ states that accounts cannot switch from Prepay to Postpay",
+    ), text);
+  });
+
+  it("links the suspension to the billing FAQ's answer on missed payments", () => {
+    const paragraph = prepayParagraph(page);
+    assert.ok(paragraph.includes('the Gemini API <a href="https://ai.google.dev/gemini-api/docs/billing#missed-payment" target="_blank" rel="noopener">can still be suspended</a>.'), paragraph);
+  });
+});
+
+describe(`${PAGE} on buying credits by bank transfer`, () => {
+  it("follows the $0 stop with how long a bank transfer can take to clear and when service resumes, before the usage that runs past $0", () => {
+    const text = withoutTags(prepayParagraph(page));
+    assert.ok(text.includes(
+      "When the balance reaches $0, every API key on the billing account stops working until you add credits. " +
+      "If you pay by bank transfer, some payments take several days to clear. " +
+      "Most card payments are instant. " +
+      "Gemini API service resumes only after the purchase is confirmed. " +
+      "Usage can continue for approximately 10 minutes past a $0 balance",
+    ), text);
+  });
+
+  it("links the clearing time to the billing doc's answer on processing times", () => {
+    const paragraph = prepayParagraph(page);
+    assert.ok(paragraph.includes('some payments take <a href="https://ai.google.dev/gemini-api/docs/billing#processing-times" target="_blank" rel="noopener">several days to clear</a>.'), paragraph);
   });
 });
 

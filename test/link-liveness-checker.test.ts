@@ -2,6 +2,11 @@ import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
 import http from "node:http";
 import type { AddressInfo } from "node:net";
+import { spawn } from "node:child_process";
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import {
   checkLiveness,
   citedOnlyAsAProgram,
@@ -111,10 +116,35 @@ describe("#1046 a non-2xx HEAD is not evidence until GET has been asked", () => 
 describe("#1046 how a check updates a link's history", () => {
   const target = { url: "https://example.test/pricing", latestVerified: "2026-05-23", vendors: ["Example"] };
 
-  it("seeds last reachable from the record's verification date the first time a link fails", () => {
+  it("seeds last reachable from the record's verification date when no earlier run has checked the link", () => {
     const next = nextRecord(target, undefined, { outcome: "unreachable", detail: "GET 404", terminal: false }, "2026-08-25");
     assert.equal(next.last_reachable, "2026-05-23");
     assert.equal(next.consecutive_unreachable, 1);
+  });
+
+  it("dates last reachable to the last run that reached the link the first time it fails, not to the record's verification date", () => {
+    const next = nextRecord(target, undefined, { outcome: "unreachable", detail: "GET ENOTFOUND", terminal: false }, "2026-09-29", "2026-09-28");
+    assert.equal(next.last_reachable, "2026-09-28");
+    assert.equal(next.consecutive_unreachable, 1);
+  });
+
+  it("takes a verification read newer than the last run as the last day the page answered", () => {
+    const readToday = { ...target, latestVerified: "2026-09-29" };
+    const next = nextRecord(readToday, undefined, { outcome: "unreachable", detail: "GET 404", terminal: false }, "2026-09-29", "2026-09-28");
+    assert.equal(next.last_reachable, "2026-09-29");
+  });
+
+  it("dates a link we were refused on its first check to the last run that reached it", () => {
+    const next = nextRecord(target, undefined, { outcome: "unknown", detail: "GET 403", terminal: false }, "2026-09-29", "2026-09-28");
+    assert.equal(next.last_reachable, "2026-09-28");
+    assert.equal(next.consecutive_unreachable, 0);
+  });
+
+  it("keeps the last reachable date of a link that was already failing, whatever day the last run was", () => {
+    const previous = { url: target.url, checked: "2026-10-08", outcome: "unreachable" as const, detail: "GET 404", terminal: false, last_reachable: "2026-08-06", consecutive_unreachable: 40 };
+    const next = nextRecord(target, previous, { outcome: "unreachable", detail: "GET 404", terminal: false }, "2026-10-09", "2026-10-08");
+    assert.equal(next.last_reachable, "2026-08-06");
+    assert.equal(next.consecutive_unreachable, 41);
   });
 
   it("advances last reachable to today whenever the link answers", () => {
@@ -254,5 +284,38 @@ describe("#1152 a dead program page never queues the listing for delisting", () 
     const records = [answered, dead("https://gone-listing.example/pricing"), dead("https://program-vendor.example/refer"), redirected];
     const withdrawn = programPagesWithdrawn(records, programUrls);
     assert.deepEqual(withdrawn.map((r: { url: string }) => r.url), ["https://program-vendor.example/refer", "https://shared.example/"]);
+  });
+});
+
+describe("a run dates a link's first failure from the run before it", () => {
+  it("records the previous run's day as the last reachable day of a link that answered then and fails now", async () => {
+    const script = join(dirname(fileURLToPath(import.meta.url)), "..", "scripts", "check-liveness.js");
+    const dir = mkdtempSync(join(tmpdir(), "liveness-run-"));
+    const indexPath = join(dir, "index.json");
+    const healthPath = join(dir, "link_health.json");
+    writeFileSync(indexPath, JSON.stringify({ offers: [
+      { vendor: "Missing Example", url: `${base}/missing`, verifiedDate: "2026-05-23" },
+      { vendor: "Answering Example", url: `${base}/answering`, verifiedDate: "2026-05-23" },
+    ] }));
+    writeFileSync(healthPath, JSON.stringify({ generated_at: "2026-09-28", links: [] }));
+    try {
+      const status = await new Promise<number | null>((resolve, reject) => {
+        const child = spawn("node", [script], {
+          env: { ...process.env, AGENTDEALS_INDEX_PATH: indexPath, AGENTDEALS_LINK_HEALTH_PATH: healthPath },
+          stdio: "ignore",
+        });
+        child.on("error", reject);
+        child.on("close", resolve);
+      });
+      assert.equal(status, 0);
+      const written = JSON.parse(readFileSync(healthPath, "utf8"));
+      assert.deepEqual(
+        written.links.map((r: { url: string; outcome: string; last_reachable: string; consecutive_unreachable: number }) =>
+          [r.url, r.outcome, r.last_reachable, r.consecutive_unreachable]),
+        [[`${base}/missing`, "unreachable", "2026-09-28", 1]],
+      );
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
   });
 });

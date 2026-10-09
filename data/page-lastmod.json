@@ -22,11 +22,11 @@
       "changed": "2026-10-09"
     },
     "/ai-free-tiers": {
-      "hash": "97d695f60f811c80",
+      "hash": "545eb2e1739b4d33",
       "changed": "2026-10-09"
     },
     "/ai-ml-alternatives": {
-      "hash": "943488aaeb72467d",
+      "hash": "27a074e35526337d",
       "changed": "2026-10-09"
     },
     "/alternative-to": {
@@ -171,6 +171,9 @@
       "daily": true
     },
     "/alternative-to/codehooks-io": {
+      "daily": true
+    },
+    "/alternative-to/cognee": {
       "daily": true
     },
     "/alternative-to/cohere": {
@@ -405,6 +408,9 @@
       "daily": true
     },
     "/alternative-to/mdb-go": {
+      "daily": true
+    },
+    "/alternative-to/mem0": {
       "daily": true
     },
     "/alternative-to/middleware-io": {
@@ -659,6 +665,9 @@
     "/alternative-to/supabase": {
       "daily": true
     },
+    "/alternative-to/supermemory": {
+      "daily": true
+    },
     "/alternative-to/surge-sh": {
       "daily": true
     },
@@ -744,6 +753,9 @@
       "daily": true
     },
     "/alternative-to/you-com": {
+      "daily": true
+    },
+    "/alternative-to/zep": {
       "daily": true
     },
     "/alternative-to/zhipu-ai": {
@@ -1080,7 +1092,7 @@
       "changed": "2026-10-09"
     },
     "/category/ai-ml": {
-      "hash": "b080500dc8d43f7e",
+      "hash": "ef2310eec0dbf7bf",
       "changed": "2026-10-09"
     },
     "/category/analytics": {
@@ -1158,7 +1170,7 @@
       "changed": "2026-10-09"
     },
     "/category/dev-utilities": {
-      "hash": "04d4b8af75b87e99",
+      "hash": "82848d097eb6b97d",
       "changed": "2026-10-09"
     },
     "/category/diagramming": {
@@ -1166,7 +1178,7 @@
       "changed": "2026-10-09"
     },
     "/category/dns-domain-management": {
-      "hash": "482628d04504e0ed",
+      "hash": "2bb0b9d9532a415f",
       "changed": "2026-10-09"
     },
     "/category/documentation": {
@@ -1182,7 +1194,7 @@
       "changed": "2026-10-09"
     },
     "/category/error-tracking": {
-      "hash": "d7b9d6f1884ea375",
+      "hash": "4b6a56b8b619050f",
       "changed": "2026-10-09"
     },
     "/category/feature-flags": {
@@ -1222,7 +1234,7 @@
       "changed": "2026-10-09"
     },
     "/category/messaging": {
-      "hash": "11ddb1846da16fc3",
+      "hash": "dee6a96a10ebd148",
       "changed": "2026-10-09"
     },
     "/category/mobile-development": {
@@ -3036,7 +3048,7 @@
       "changed": "2026-10-09"
     },
     "/digest/2026-w43": {
-      "hash": "622240bce6e43b32",
+      "hash": "e158242e7e0d9389",
       "changed": "2026-10-09"
     },
     "/digest/2026-w44": {
@@ -3084,11 +3096,11 @@
       "changed": "2026-10-09"
     },
     "/events/google-cloud-next-2026": {
-      "hash": "e5fb135a86dbd9f4",
+      "hash": "3d294fa4c46571a2",
       "changed": "2026-10-09"
     },
     "/events/google-io-2026": {
-      "hash": "3bda1e5451b9a360",
+      "hash": "81112a51ca8e0410",
       "changed": "2026-10-09"
     },
     "/events/microsoft-build-2026": {
@@ -3134,7 +3146,7 @@
       "changed": "2026-10-09"
     },
     "/free-llm-apis": {
-      "hash": "5f17cea7cc490bda",
+      "hash": "1a89d5c5afec88fc",
       "changed": "2026-10-09"
     },
     "/free-nextjs-stack": {
@@ -3172,7 +3184,7 @@
       "changed": "2026-10-09"
     },
     "/gemini-api-pricing-2026": {
-      "hash": "d54bbb412f0e3050",
+      "hash": "b85a63803e096c62",
       "changed": "2026-10-09"
     },
     "/github-actions-alternatives": {
@@ -3244,7 +3256,7 @@
       "changed": "2026-10-09"
     },
     "/llm-api-pricing": {
-      "hash": "1ed3e91260a73c34",
+      "hash": "52ceb801428eb40a",
       "changed": "2026-10-09"
     },
     "/localstack-alternatives": {
@@ -3256,7 +3268,7 @@
       "changed": "2026-10-09"
     },
     "/monitoring-alternatives": {
-      "hash": "3dd5d34283b9298f",
+      "hash": "c8ea3ed3d50e6974",
       "changed": "2026-10-09"
     },
     "/monitoring-comparison-2026": {
@@ -3276,15 +3288,15 @@
       "changed": "2026-10-09"
     },
     "/openai-assistants-alternatives": {
-      "hash": "973e4f76b19b2788",
+      "hash": "f80fc59fbb1c40fb",
       "changed": "2026-10-09"
     },
     "/openai-assistants-migration": {
-      "hash": "ca1b0d0cda9c678b",
+      "hash": "ff0589ead7528685",
       "changed": "2026-10-09"
     },
     "/openai-assistants-migration-2026": {
-      "hash": "3b52e2f2d182e1ef",
+      "hash": "315eb1f4e7d7ee84",
       "changed": "2026-10-09"
     },
     "/postman-alternatives": {
@@ -3459,7 +3471,7 @@
       "changed": "2026-10-09"
     },
     "/security-alternatives": {
-      "hash": "98f30e92a5bbeefa",
+      "hash": "96b9cdcdc22e8503",
       "changed": "2026-10-09"
     },
     "/security-free-tier-comparison-2026": {
@@ -4017,7 +4029,7 @@
       "changed": "2026-10-09"
     },
     "/vendor/appfit": {
-      "hash": "218061cb799a75de",
+      "hash": "3dc8acd8a57c8a91",
       "changed": "2026-10-09"
     },
     "/vendor/appho-st": {
@@ -4821,8 +4833,7 @@
       "changed": "2026-10-09"
     },
     "/vendor/cognee": {
-      "hash": "8ac86d2f942b64a2",
-      "changed": "2026-10-09"
+      "daily": true
     },
     "/vendor/cohere": {
       "daily": true
@@ -5380,7 +5391,7 @@
       "changed": "2026-10-09"
     },
     "/vendor/engagespot-co": {
-      "hash": "5833f826150fe624",
+      "hash": "a7e127803d7e0304",
       "changed": "2026-10-09"
     },
     "/vendor/ente": {
@@ -6934,8 +6945,7 @@
       "changed": "2026-10-09"
     },
     "/vendor/mem0": {
-      "hash": "f57bbed0600c47cf",
-      "changed": "2026-10-09"
+      "daily": true
     },
     "/vendor/memfault-com": {
       "hash": "eeb6b3a0b8093d8d",
@@ -8513,8 +8523,7 @@
       "changed": "2026-10-09"
     },
     "/vendor/supermemory": {
-      "hash": "e852f6ce6072a00e",
-      "changed": "2026-10-09"
+      "daily": true
     },
     "/vendor/supertokens": {
       "hash": "fc879a3a8599fb85",
@@ -9002,7 +9011,7 @@
       "changed": "2026-10-09"
     },
     "/vendor/uuid-generator": {
-      "hash": "9a2625e02a9275ee",
+      "hash": "4430f0cc78ec924c",
       "changed": "2026-10-09"
     },
     "/vendor/uxtweak-com": {
@@ -9239,7 +9248,7 @@
       "changed": "2026-10-09"
     },
     "/vendor/whitespace": {
-      "hash": "8652d9ff3f828983",
+      "hash": "12bd960e4ef7fe66",
       "changed": "2026-10-09"
     },
     "/vendor/windmill-dev": {
@@ -9354,8 +9363,7 @@
       "changed": "2026-10-09"
     },
     "/vendor/zep": {
-      "hash": "e79d42e18e50ac9e",
-      "changed": "2026-10-09"
+      "daily": true
     },
     "/vendor/zeplin": {
       "hash": "a889a2544d75f458",
@@ -9464,7 +9472,7 @@
       "changed": "2026-10-09"
     },
     "/vendor/zonomi": {
-      "hash": "68df5bae75a21154",
+      "hash": "8f119630827f8226",
       "changed": "2026-10-09"
     },
     "/vendor/zoom": {

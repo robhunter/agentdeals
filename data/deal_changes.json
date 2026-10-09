@@ -14310,7 +14310,7 @@
       "vendor": "OpenAI",
       "change_type": "product_deprecated",
       "date": "2026-10-23",
-      "summary": "gpt-3.5-turbo, gpt-4, gpt-4-turbo, gpt-4.1-nano, gpt-4o-2024-05-13, gpt-image-1, o1, o1-pro, o3-mini and o4-mini shut down in the OpenAI API on October 23, 2026, with their fine-tuned versions. OpenAI names gpt-5.6-sol, gpt-5.6-terra and gpt-5.6-luna as substitutes for the text models, and gpt-image-2.5-sunburst or gpt-image-2.5-flare for gpt-image-1.",
+      "summary": "The OpenAI API keeps running. The gpt-3.5-turbo, gpt-4, gpt-4-turbo, gpt-4-1106-preview, gpt-4.1-nano, gpt-4o-2024-05-13, gpt-image-1, o1, o1-pro, o3-mini and o4-mini models, with their fine-tuned versions, can be called until October 23, 2026, when OpenAI shuts down their access. OpenAI's substitutes: gpt-5.6-terra for gpt-3.5-turbo and o4-mini; gpt-5.6-sol for gpt-4, gpt-4-turbo, gpt-4-1106-preview, gpt-4o-2024-05-13, o1 and o3-mini; gpt-5.6-sol with reasoning.mode: pro for o1-pro; gpt-5.6-luna for gpt-4.1-nano; gpt-image-2.5-sunburst or gpt-image-2.5-flare for gpt-image-1.",
       "previous_state": "The models were callable in the OpenAI API at pay-as-you-go rates.",
       "current_state": "OpenAI's deprecations page lists October 23, 2026 as the date after which the models are no longer accessible.",
       "impact": "medium",
