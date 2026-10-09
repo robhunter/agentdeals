@@ -7,7 +7,7 @@
       "outcome": "unknown",
       "detail": "GET UND_ERR_CONNECT_TIMEOUT",
       "terminal": false,
-      "last_reachable": "2026-10-07",
+      "last_reachable": "2026-10-08",
       "consecutive_unreachable": 0
     },
     {
@@ -26,7 +26,7 @@
       "outcome": "unknown",
       "detail": "GET 403",
       "terminal": false,
-      "last_reachable": "2026-07-04",
+      "last_reachable": "2026-09-16",
       "consecutive_unreachable": 0
     },
     {
@@ -53,7 +53,7 @@
       "outcome": "unknown",
       "detail": "GET 451",
       "terminal": false,
-      "last_reachable": "2026-09-26",
+      "last_reachable": "2026-10-08",
       "consecutive_unreachable": 0
     },
     {
@@ -89,7 +89,7 @@
       "outcome": "unknown",
       "detail": "GET 403",
       "terminal": false,
-      "last_reachable": "2026-04-12",
+      "last_reachable": "2026-08-25",
       "consecutive_unreachable": 0
     },
     {
@@ -107,7 +107,7 @@
       "outcome": "unknown",
       "detail": "GET 403",
       "terminal": false,
-      "last_reachable": "2026-07-25",
+      "last_reachable": "2026-10-03",
       "consecutive_unreachable": 0
     },
     {
@@ -116,7 +116,7 @@
       "outcome": "unknown",
       "detail": "GET 503",
       "terminal": false,
-      "last_reachable": "2026-09-28",
+      "last_reachable": "2026-10-08",
       "consecutive_unreachable": 0
     },
     {
@@ -143,7 +143,7 @@
       "outcome": "unknown",
       "detail": "GET TIMEOUT",
       "terminal": false,
-      "last_reachable": "2026-08-08",
+      "last_reachable": "2026-08-31",
       "consecutive_unreachable": 0
     },
     {
@@ -152,7 +152,7 @@
       "outcome": "unreachable",
       "detail": "GET 404",
       "terminal": false,
-      "last_reachable": "2026-08-07",
+      "last_reachable": "2026-08-30",
       "consecutive_unreachable": 40
     },
     {
@@ -161,7 +161,7 @@
       "outcome": "unknown",
       "detail": "GET ECONNRESET",
       "terminal": false,
-      "last_reachable": "2026-07-15",
+      "last_reachable": "2026-09-25",
       "consecutive_unreachable": 0
     },
     {
@@ -215,7 +215,7 @@
       "outcome": "unknown",
       "detail": "GET 403",
       "terminal": false,
-      "last_reachable": "2026-08-17",
+      "last_reachable": "2026-09-14",
       "consecutive_unreachable": 0
     },
     {
@@ -224,7 +224,7 @@
       "outcome": "unknown",
       "detail": "GET ERR_SSL_TLSV1_UNRECOGNIZED_NAME",
       "terminal": false,
-      "last_reachable": "2026-09-20",
+      "last_reachable": "2026-09-30",
       "consecutive_unreachable": 0
     },
     {
@@ -233,7 +233,7 @@
       "outcome": "unknown",
       "detail": "GET TIMEOUT",
       "terminal": false,
-      "last_reachable": "2026-07-23",
+      "last_reachable": "2026-10-05",
       "consecutive_unreachable": 0
     },
     {
@@ -287,7 +287,7 @@
       "outcome": "unknown",
       "detail": "GET CERT_HAS_EXPIRED",
       "terminal": false,
-      "last_reachable": "2026-05-13",
+      "last_reachable": "2026-08-25",
       "consecutive_unreachable": 0
     },
     {
@@ -296,7 +296,7 @@
       "outcome": "unreachable",
       "detail": "GET ENOTFOUND",
       "terminal": false,
-      "last_reachable": "2026-09-15",
+      "last_reachable": "2026-10-02",
       "consecutive_unreachable": 7
     },
     {
@@ -323,7 +323,7 @@
       "outcome": "unknown",
       "detail": "GET 403",
       "terminal": false,
-      "last_reachable": null,
+      "last_reachable": "2026-10-08",
       "consecutive_unreachable": 0
     },
     {
@@ -332,7 +332,7 @@
       "outcome": "unknown",
       "detail": "GET 403",
       "terminal": false,
-      "last_reachable": "2026-06-30",
+      "last_reachable": "2026-08-25",
       "consecutive_unreachable": 0
     },
     {
@@ -341,7 +341,7 @@
       "outcome": "unknown",
       "detail": "GET 403",
       "terminal": false,
-      "last_reachable": null,
+      "last_reachable": "2026-10-08",
       "consecutive_unreachable": 0
     },
     {
@@ -350,7 +350,7 @@
       "outcome": "unknown",
       "detail": "GET 403",
       "terminal": false,
-      "last_reachable": "2026-08-02",
+      "last_reachable": "2026-08-25",
       "consecutive_unreachable": 0
     },
     {
@@ -368,7 +368,7 @@
       "outcome": "unreachable",
       "detail": "GET 404",
       "terminal": false,
-      "last_reachable": null,
+      "last_reachable": "2026-10-08",
       "consecutive_unreachable": 1
     },
     {
@@ -377,7 +377,7 @@
       "outcome": "unknown",
       "detail": "GET ECONNRESET",
       "terminal": false,
-      "last_reachable": "2026-09-08",
+      "last_reachable": "2026-09-15",
       "consecutive_unreachable": 0
     },
     {
@@ -414,7 +414,7 @@
       "outcome": "unknown",
       "detail": "GET 403",
       "terminal": false,
-      "last_reachable": "2026-04-05",
+      "last_reachable": "2026-09-02",
       "consecutive_unreachable": 0
     },
     {
@@ -423,7 +423,7 @@
       "outcome": "unknown",
       "detail": "GET UND_ERR_CONNECT_TIMEOUT",
       "terminal": false,
-      "last_reachable": "2026-08-31",
+      "last_reachable": "2026-09-14",
       "consecutive_unreachable": 0
     },
     {
@@ -450,7 +450,7 @@
       "outcome": "unknown",
       "detail": "GET 403",
       "terminal": false,
-      "last_reachable": "2026-04-14",
+      "last_reachable": "2026-08-25",
       "consecutive_unreachable": 0
     },
     {
@@ -459,7 +459,7 @@
       "outcome": "unknown",
       "detail": "GET 401",
       "terminal": false,
-      "last_reachable": "2026-04-12",
+      "last_reachable": "2026-08-25",
       "consecutive_unreachable": 0
     },
     {
@@ -495,7 +495,7 @@
       "outcome": "unreachable",
       "detail": "GET ENOTFOUND",
       "terminal": false,
-      "last_reachable": "2026-08-06",
+      "last_reachable": "2026-09-28",
       "consecutive_unreachable": 10
     },
     {
@@ -504,7 +504,7 @@
       "outcome": "unknown",
       "detail": "GET 403",
       "terminal": false,
-      "last_reachable": "2026-07-11",
+      "last_reachable": "2026-09-03",
       "consecutive_unreachable": 0
     },
     {
@@ -513,7 +513,7 @@
       "outcome": "unknown",
       "detail": "GET 403",
       "terminal": false,
-      "last_reachable": "2026-07-17",
+      "last_reachable": "2026-09-03",
       "consecutive_unreachable": 0
     },
     {
@@ -549,7 +549,7 @@
       "outcome": "unknown",
       "detail": "GET 403",
       "terminal": false,
-      "last_reachable": "2026-04-23",
+      "last_reachable": "2026-08-25",
       "consecutive_unreachable": 0
     },
     {
@@ -603,7 +603,7 @@
       "outcome": "unknown",
       "detail": "GET 429",
       "terminal": false,
-      "last_reachable": null,
+      "last_reachable": "2026-10-08",
       "consecutive_unreachable": 0
     },
     {
@@ -693,7 +693,7 @@
       "outcome": "unreachable",
       "detail": "GET 404",
       "terminal": false,
-      "last_reachable": null,
+      "last_reachable": "2026-10-08",
       "consecutive_unreachable": 1
     },
     {
@@ -702,7 +702,7 @@
       "outcome": "unknown",
       "detail": "GET 403",
       "terminal": false,
-      "last_reachable": null,
+      "last_reachable": "2026-10-08",
       "consecutive_unreachable": 0
     },
     {
@@ -738,7 +738,7 @@
       "outcome": "unknown",
       "detail": "GET 403",
       "terminal": false,
-      "last_reachable": "2026-04-05",
+      "last_reachable": "2026-08-25",
       "consecutive_unreachable": 0
     },
     {
@@ -756,7 +756,7 @@
       "outcome": "unknown",
       "detail": "GET 429",
       "terminal": false,
-      "last_reachable": "2026-08-06",
+      "last_reachable": "2026-09-12",
       "consecutive_unreachable": 0
     },
     {
@@ -765,7 +765,7 @@
       "outcome": "unknown",
       "detail": "GET 403",
       "terminal": false,
-      "last_reachable": "2026-08-29",
+      "last_reachable": "2026-10-08",
       "consecutive_unreachable": 0
     },
     {
@@ -801,7 +801,7 @@
       "outcome": "unreachable",
       "detail": "GET 404",
       "terminal": false,
-      "last_reachable": "2026-08-06",
+      "last_reachable": "2026-09-21",
       "consecutive_unreachable": 17
     }
   ]
