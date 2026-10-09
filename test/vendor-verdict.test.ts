@@ -340,6 +340,68 @@ describe("vendor verdict — a stable rating reports direction, not volume", () 
   });
 });
 
+describe("vendor verdict — a narrowing that has not taken effect is announced, not counted", () => {
+  const SERVED_ON = "2026-10-06";
+
+  it("counts and names as the most recent only the narrowings in effect, then announces the one ahead", () => {
+    const changes = [
+      change({ change_type: "restriction", date: "2026-08-28" }),
+      change({ change_type: "restriction", date: "2026-09-20" }),
+      change({ change_type: "limits_reduced", date: "2026-10-20" }),
+    ];
+    assert.strictEqual(
+      narrowingSentence(changes, null, false, SERVED_ON),
+      "2 recorded changes narrowed the terms, the most recent on 2026-09-20. A limit reduction is announced for 2026-10-20 and has not taken effect.",
+    );
+  });
+
+  it("gives the count of announced narrowings and the first of them by date", () => {
+    const changes = [
+      change({ change_type: "restriction", date: "2026-09-20" }),
+      change({ change_type: "limits_reduced", date: "2026-11-30" }),
+      change({ change_type: "free_tier_removed", date: "2026-10-20" }),
+    ];
+    assert.strictEqual(
+      narrowingSentence(changes, null, false, SERVED_ON),
+      "One recorded restriction narrowed the terms, on 2026-09-20. 2 narrowing changes are announced and have not taken effect; the first is a free tier removal on 2026-10-20.",
+    );
+  });
+
+  it("opens by saying nothing has taken effect when every record is still ahead", () => {
+    assert.strictEqual(
+      narrowingSentence([change({ change_type: "limits_reduced", date: "2026-10-20" })], null, false, SERVED_ON),
+      "None of the changes we have recorded has taken effect yet. A limit reduction is announced for 2026-10-20 and has not taken effect.",
+    );
+    assert.strictEqual(
+      narrowingSentence([change({ change_type: "new_tier", date: "2026-10-20" })], null, false, SERVED_ON),
+      "None of the changes we have recorded has taken effect yet.",
+    );
+  });
+
+  it("counts the records that did not narrow the terms over the same set in effect", () => {
+    const changes = [
+      change({ change_type: "limits_increased", date: "2026-09-01" }),
+      change({ change_type: "new_tier", date: "2026-10-20" }),
+    ];
+    assert.strictEqual(narrowingSentence(changes, null, false, SERVED_ON), "The one change we have recorded did not narrow the terms.");
+  });
+
+  it("counts a narrowing dated the day the page is served as in effect", () => {
+    assert.strictEqual(
+      narrowingSentence([change({ change_type: "restriction", date: SERVED_ON })], null, false, SERVED_ON),
+      `One recorded restriction narrowed the terms, on ${SERVED_ON}.`,
+    );
+  });
+
+  it("announces no narrowing ahead that cites no source", () => {
+    const changes = [
+      change({ change_type: "restriction", date: "2026-09-20" }),
+      change({ change_type: "limits_reduced", date: "2026-10-20", source_url: "" }),
+    ];
+    assert.strictEqual(narrowingSentence(changes, null, false, SERVED_ON), "One recorded restriction narrowed the terms, on 2026-09-20.");
+  });
+});
+
 describe("vendor verdict — the prose table covers the data", () => {
   it("names every change type present in the change log", () => {
     const missing = [...new Set(loadDealChanges().map(c => c.change_type))]
@@ -708,8 +770,9 @@ describe("vendor verdict — as rendered", () => {
   });
 
   it("counts one narrowing where a repair to our own entry sits beside it", async () => {
+    const today = new Date().toISOString().slice(0, 10);
     const besideARepair = vendorRows()
-      .filter(row => row.changes.some(isARepairToOurOwnEntry))
+      .filter(row => row.changes.some(isARepairToOurOwnEntry) && row.changes.every(c => c.date <= today))
       .map(row => ({
         row,
         narrowing: narrowingChanges(row.changes.filter(c => !isARepairToOurOwnEntry(c) && changeCitesASource(c)), row),
