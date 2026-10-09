@@ -168,7 +168,9 @@ describe("enrichOffers", () => {
     if (changes.length === 0) return;
 
     const ninetyDaysAgo = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
-    const recentChange = changes.find((c: { date: string }) => c.date >= ninetyDaysAgo);
+    const today = new Date().toISOString().slice(0, 10);
+    const insideTheWindow = (c: { date: string }) => c.date >= ninetyDaysAgo && c.date <= today;
+    const recentChange = changes.find(insideTheWindow);
     if (!recentChange) return;
 
     const offer = offers.find((o: { vendor: string }) => o.vendor.toLowerCase() === recentChange.vendor.toLowerCase());
@@ -176,7 +178,7 @@ describe("enrichOffers", () => {
 
     const newestForThatVendor = changes
       .filter((c: { vendor: string; date: string }) =>
-        c.vendor.toLowerCase() === offer.vendor.toLowerCase() && c.date >= ninetyDaysAgo)
+        c.vendor.toLowerCase() === offer.vendor.toLowerCase() && insideTheWindow(c))
       .sort((a: { date: string }, b: { date: string }) => b.date.localeCompare(a.date))[0];
 
     const enriched = enrichOffers([offer]);
@@ -185,5 +187,14 @@ describe("enrichOffers", () => {
       enriched[0].recent_change!.includes(newestForThatVendor.date),
       `recent_change names ${enriched[0].recent_change}, not the newest record inside the window, dated ${newestForThatVendor.date}`,
     );
+  });
+
+  it("never dates recent_change after the day it is served, on any listing", async () => {
+    const { enrichOffers, loadOffers } = await import("../dist/data.js");
+    const today = new Date().toISOString().slice(0, 10);
+    const ahead = enrichOffers(loadOffers())
+      .filter((o: { recent_change: string | null }) => o.recent_change !== null && o.recent_change.slice(0, 10) > today)
+      .map((o: { vendor: string; recent_change: string }) => `${o.vendor}: ${o.recent_change.slice(0, 60)}`);
+    assert.deepStrictEqual(ahead, [], `${ahead.length} listings name as their recent change a record that has not taken effect`);
   });
 });

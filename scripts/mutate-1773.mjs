@@ -18,8 +18,8 @@ const COMPARE_HEADING = `      <h2><a href="/vendor/\${toSlug(a.vendor)}">\${esc
 
 const MUTANTS = [
   ["stable-picks-caps-at-twelve-again", "src/serve.ts",
-    `  const stablePicks = enriched.filter(o => o.risk_level === "stable" && !o.recent_change);`,
-    `  const stablePicks = enriched.filter(o => o.risk_level === "stable" && !o.recent_change).slice(0, 12);`],
+    `  const stablePicks = stablePicksAmong(enriched);`,
+    `  const stablePicks = stablePicksAmong(enriched).slice(0, 12);`],
 
   ["stable-picks-stops-stating-the-window-its-membership-rolls-on", "src/serve.ts",
     STABLE_DESC,
@@ -38,12 +38,12 @@ const MUTANTS = [
     `    <h2>Pricing Change Timeline</h2>`],
 
   ["the-filter-narrows-to-ten-days-while-the-copy-still-publishes-ninety", "src/data.ts",
-    `  const cutoffDate = new Date(now.getTime() - RECENT_CHANGE_WINDOW_DAYS * 24 * 60 * 60 * 1000)`,
-    `  const cutoffDate = new Date(now.getTime() - 10 * 24 * 60 * 60 * 1000)`],
+    `  return new Date(now.getTime() - RECENT_CHANGE_WINDOW_DAYS * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);`,
+    `  return new Date(now.getTime() - 10 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);`],
 
   ["the-filter-widens-to-a-year-while-the-copy-still-publishes-ninety", "src/data.ts",
-    `  const cutoffDate = new Date(now.getTime() - RECENT_CHANGE_WINDOW_DAYS * 24 * 60 * 60 * 1000)`,
-    `  const cutoffDate = new Date(now.getTime() - 365 * 24 * 60 * 60 * 1000)`],
+    `  return new Date(now.getTime() - RECENT_CHANGE_WINDOW_DAYS * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);`,
+    `  return new Date(now.getTime() - 365 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);`],
 
   ["a-comparison-heading-carries-a-verdict-that-lapses", "src/serve.ts",
     COMPARE_HEADING,

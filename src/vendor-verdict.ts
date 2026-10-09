@@ -4,7 +4,7 @@ import { CHANGE_DIRECTION, freeTierRestoredOn, isACorrectionToOurOwnRecord, isOu
 import { changeRatesTheListedTier, type GradedOffer } from "./change-tier.js";
 import { isNoLongerInForce, reversedOn, theEventNeverHappened } from "./change-resolution.js";
 import { changeIsUncited, changeSummaryText, ratingWithheldSentence, type WithheldRecordCounts } from "./change-citation.js";
-import { changeDateClause } from "./change-dates.js";
+import { changeDateClause, hasNotTakenEffect } from "./change-dates.js";
 import { PRODUCT_DEPRECATED, deprecationTouchesTheListing } from "./product-deprecation.js";
 import {
   amountUnstatedSentence,
@@ -744,10 +744,44 @@ export function restorationClause(cause: RiskCause, changes: VendorVerdictInput[
   return restoring ? `, after which the vendor offered a free plan again ${changeDateClause(restoring)}` : "";
 }
 
+export const NO_RECORD_IN_EFFECT_YET = "None of the changes we have recorded has taken effect yet.";
+
 export function narrowingSentence(
   changes: VendorVerdictInput["changes"],
   offer: GradedOffer | null = null,
   termsSuperseded: boolean = false,
+  asOf: string = new Date().toISOString().slice(0, 10),
+): string {
+  const announced = announcedNarrowings(changes, offer, asOf);
+  const opening = changes.length > 0 && changes.every(c => hasNotTakenEffect(c, asOf))
+    ? NO_RECORD_IN_EFFECT_YET
+    : narrowingSentenceOverRecords(changes.filter(c => !announced.includes(c)), offer, termsSuperseded);
+  return [opening, announcedNarrowingSentence(announced)].filter(Boolean).join(" ");
+}
+
+export function announcedNarrowings(
+  changes: VendorVerdictInput["changes"],
+  offer: GradedOffer | null,
+  asOf: string,
+): VendorVerdictInput["changes"] {
+  return narrowingChanges(
+    changes.filter(c => hasNotTakenEffect(c, asOf) && !changeIsUncited(c) && !isOurOwnBookkeeping(c)),
+    offer,
+  ).sort((a, b) => a.date.localeCompare(b.date));
+}
+
+function announcedNarrowingSentence(announced: VendorVerdictInput["changes"]): string {
+  if (announced.length === 0) return "";
+  const first = announced[0];
+  return announced.length === 1
+    ? `A ${changeKindNoun(first.change_type)} is announced for ${first.date} and has not taken effect.`
+    : `${announced.length} narrowing changes are announced and have not taken effect; the first is a ${changeKindNoun(first.change_type)} on ${first.date}.`;
+}
+
+function narrowingSentenceOverRecords(
+  changes: VendorVerdictInput["changes"],
+  offer: GradedOffer | null,
+  termsSuperseded: boolean,
 ): string {
   const cited = changes.filter(c => !changeIsUncited(c));
   const ours = cited.filter(isOurOwnBookkeeping);

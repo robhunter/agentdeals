@@ -138,8 +138,8 @@ m_only_a_deprecation_can_end_the_offer() {
   py <<'PY'
 p = "src/change-dates.ts"
 s = open(p).read()
-s = s.replace("  if (change.change_type !== PRODUCT_DEPRECATED) return true;",
-              "  if (change.change_type !== PRODUCT_DEPRECATED) return false;")
+s = s.replace("  return NEGATIVE_CHANGE_TYPES.has(change.change_type);",
+              "  return false;")
 open(p, "w").write(s)
 PY
 }
@@ -148,8 +148,8 @@ m_a_deprecation_naming_the_vendor_alone_is_excluded() {
   py <<'PY'
 p = "src/change-dates.ts"
 s = open(p).read()
-s = s.replace("  return deprecationEndsTheListedProduct(change);",
-              "  return !deprecationEndsTheListedProduct(change);")
+s = s.replace("  if (change.change_type === PRODUCT_DEPRECATED) return deprecationEndsTheListedProduct(change);",
+              "  if (change.change_type === PRODUCT_DEPRECATED) return !deprecationEndsTheListedProduct(change);")
 open(p, "w").write(s)
 PY
 }
