@@ -1,7 +1,8 @@
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
 import { spawn, type ChildProcess } from "node:child_process";
-import { readFileSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -20,8 +21,42 @@ type Gate = { code: string; reason: string } | null;
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
 
-const offers: Offer[] = JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf-8")).offers;
 const TODAY = utcDate();
+
+function listingOnlyThisTestHolds(vendor: string, category: string, terms: Partial<Offer>): Offer {
+  return {
+    vendor,
+    category,
+    description: "A listing that exists only in this test's catalogue.",
+    tier: "Free",
+    url: `https://example.com/${toSlug(vendor)}`,
+    tags: [],
+    verifiedDate: TODAY,
+    ...terms,
+  };
+}
+
+const EXPIRED = { tier: "Credits", expires_date: "2026-01-31" };
+const BY_APPLICATION = (program: string) => ({
+  tier: "Startup Credits",
+  eligibility: { type: "startup", conditions: ["Founded in the last two years"], program },
+});
+
+const LISTINGS_ONLY_THIS_TEST_HOLDS: Offer[] = [
+  listingOnlyThisTestHolds("Lede Test Expired Credits", "Lede Test Mixed Gates", EXPIRED),
+  listingOnlyThisTestHolds("Lede Test Programme By Application", "Lede Test Mixed Gates", BY_APPLICATION("Lede Test Programme")),
+  listingOnlyThisTestHolds("Lede Test Open Plan", "Lede Test Mixed Gates", {}),
+  listingOnlyThisTestHolds("Lede Test First Programme", "Lede Test Applications Only", BY_APPLICATION("Lede Test First")),
+  listingOnlyThisTestHolds("Lede Test Second Programme", "Lede Test Applications Only", BY_APPLICATION("Lede Test Second")),
+  listingOnlyThisTestHolds("Lede Test Lapsed Trial", "Lede Test One Expired", EXPIRED),
+  listingOnlyThisTestHolds("Lede Test Free Plan", "Lede Test One Expired", {}),
+  listingOnlyThisTestHolds("Lede Test Ungated Plan", "Lede Test Ungated", {}),
+];
+
+const offers: Offer[] = [
+  ...JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf-8")).offers,
+  ...LISTINGS_ONLY_THIS_TEST_HOLDS,
+];
 
 const ALL_GATED_ELIGIBILITY_LEDE = "none of them generally available — each requires an application or qualification.";
 const RANKED_LIST_PHRASE = "not on our ranked list";
@@ -112,12 +147,13 @@ function buildCensus(verdicts: Map<string, SiteFreeTierVerdict>): CategoryCensus
 
 let port = 0;
 let proc: ChildProcess | null = null;
+let scratch = "";
 
-function startServer(): Promise<ChildProcess> {
+function startServer(indexPath: string): Promise<ChildProcess> {
   return new Promise((resolve, reject) => {
     const child = spawn("node", [path.join(REPO, "dist", "serve.js")], {
       stdio: ["pipe", "pipe", "pipe"],
-      env: { ...process.env, PORT: "0", BASE_URL: "http://localhost", TZ: "UTC" },
+      env: { ...process.env, PORT: "0", BASE_URL: "http://localhost", TZ: "UTC", AGENTDEALS_INDEX_PATH: indexPath },
     });
     const timeout = setTimeout(() => { child.kill(); reject(new Error("Server startup timeout")); }, 60000);
     child.stderr!.on("data", (data: Buffer) => {
@@ -178,11 +214,17 @@ function disclosedCountIn(lede: string, total: number): number | null {
 }
 
 before(async () => {
-  proc = await startServer();
+  scratch = mkdtempSync(path.join(tmpdir(), "category-gate-lede-"));
+  const indexPath = path.join(scratch, "index.json");
+  writeFileSync(indexPath, JSON.stringify({ ...JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf-8")), offers }));
+  proc = await startServer(indexPath);
   census = buildCensus(await fetchBadgeVerdicts(port));
 });
 
-after(() => { proc?.kill(); });
+after(() => {
+  proc?.kill();
+  if (scratch) rmSync(scratch, { recursive: true, force: true });
+});
 
 describe("a category page discloses every gated record, not eligibility alone", () => {
 

@@ -7999,7 +7999,7 @@ const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
   {
     slug: "analytics-alternatives",
     title: "Best Free Analytics Tools for Developers in 2026 — Product, Web, Event & Data Analytics Compared",
-    metaDesc: "Compare 45+ free analytics tools — PostHog, Amplitude, Mixpanel, Plausible, Umami, Tinybird, Segment, and more. Exact free tier limits by analytics domain. [[freshness]]",
+    metaDesc: "Compare 45+ free analytics tools — PostHog, Amplitude, Mixpanel, Plausible, Umami, Tinybird, and more. Exact free tier limits by analytics domain. [[freshness]]",
     contextHtml: "",
     tag: "analytics-hub",
     primaryVendor: "PostHog",
@@ -12872,7 +12872,7 @@ ${buildCards(other)}
 
 function buildAnalyticsAlternativesPage(): string {
   const title = "Best Free Analytics Tools for Developers in 2026 — Product, Web, Event & Data Analytics Compared";
-  const metaDesc = "Compare 45+ free analytics tools — PostHog, Amplitude, Mixpanel, Plausible, Umami, Tinybird, Segment, and more. Exact free tier limits by analytics domain. [[freshness]]";
+  const metaDesc = "Compare 45+ free analytics tools — PostHog, Amplitude, Mixpanel, Plausible, Umami, Tinybird, and more. Exact free tier limits by analytics domain. [[freshness]]";
   const slug = "analytics-alternatives";
 
   const analyticsOffers = offers.filter(o => o.category === "Analytics");
@@ -13126,13 +13126,6 @@ ${buildCards(other)}
         <td>Mobile &amp; desktop app analytics</td>
       </tr>
       <tr>
-        <td style="font-weight:600"><a href="/vendor/segment-startup-program" style="color:var(--text)">Segment</a></td>
-        <td>Data Infra</td>
-        <td>$50K credits (startup)</td>
-        <td>No</td>
-        <td>Customer data platform, 300+ integrations</td>
-      </tr>${vendorPageConditionsRowHtml("segment-startup-program", 5)}
-      <tr>
         <td style="font-weight:600"><a href="/vendor/openreplay-com" style="color:var(--text)">OpenReplay</a></td>
         <td>Session Replay</td>
         <td>\u221e (self-hosted)</td>
@@ -13163,7 +13156,7 @@ ${buildCards(other)}
       <dd><a href="/vendor/aptabase">Aptabase</a> \u2014 privacy-friendly analytics with SDKs for Swift, Kotlin, React Native, Flutter, and Electron. 20K events/month free. <a href="/vendor/appfit">AppFit</a> for cross-platform analytics with product journal.</dd>
 
       <dt>Need a customer data platform?</dt>
-      <dd><a href="/vendor/segment-startup-program">Segment</a> \u2014 $50K in credits for startups, connecting 300+ integrations. ${handwrittenVendorLinkHtml("census", "Census")} for reverse ETL from your data warehouse to 60+ SaaS tools.</dd>
+      <dd>${handwrittenVendorLinkHtml("census", "Census")} for reverse ETL from your data warehouse to 60+ SaaS tools.</dd>
 
       <dt>Want real-time analytics APIs?</dt>
       <dd><a href="/vendor/tinybird">Tinybird</a> \u2014 10 GB storage and 10 QPS free for building real-time analytics endpoints over SQL. Great for dashboards, usage tracking, and product metrics APIs.</dd>
