@@ -7191,6 +7191,15 @@
       },
       "conditions": [
         {
+          "text": "Cerebras's pricing page puts its $5 trial credit and pay-as-you-go pricing on its Developer tier, which it says is not intended for production use, and puts production workloads on its Enterprise tier, priced by quote.",
+          "quote": "For development, evaluation, and experimentation; not intended for production use.",
+          "url": "https://www.cerebras.ai/pricing",
+          "read_on": "2026-10-09",
+          "rules_out": [
+            "production"
+          ]
+        },
+        {
           "text": "Cerebras's terms give it no right to use API inputs and outputs to train or fine-tune models.",
           "quote": "the foregoing does not grant Cerebras the right to use Service Content for the purpose of training or fine-tuning models.",
           "url": "https://www.cerebras.ai/terms-of-service",
