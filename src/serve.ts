@@ -43,7 +43,7 @@ import { comparisonVerdictText, freeTierFaqAnswer, stabilityFaqAnswer, type Comp
 import { gateStatesAnEnding, publishedVendorLevel, restorationClause, restoredRemovalReason, vendorVerdictSentence, withheldRecordCountsOf, WITHHOLDING_BADGE_LABELS, vendorBadge, freeTierClaim, endingStatedInPlaceOfARating, endingShutsTheProductDown, endedClaimReliabilityAnswer, statesRiskCause, withholdingThatDoesNotLapse, demotionTheVerdictNames, narrowingSentence, ourOwnRecordsSentence, changeKindNoun, isOurOwnBookkeeping, emptyHistoryCaveatSentence, refusedReadOurConfirmationSupersedes, refusedReadWeHold, refusedReadWithholdingSentence, nothingWeReadDescribesTheTerms, unconfirmedThresholdSentence, unconfirmedTermsOpening, whyWeCannotConfirmTheseTerms, withheldForARefusedRead, withUnconfirmedTerms, refusalWithholdsStability, termsUnconfirmedBySource, termsTheVerdictWithholds, closingTerms, termsWithTheReasonWeCannotConfirmThem, termsNotVerifiedMetaSentence, termsWithheldLabel, theReadConfirmedThePrice, unconfirmedTermsSentence, whereTheDoubtSits, withheldBadgeLabel, type BadgeWithholding, type UnconfirmedTerms, type FreeTierClaim, type VendorVerdictInput, type WhereTheDoubtSits } from "./vendor-verdict.js";
 import { descriptionDeniesAFreeTier, listingOffersAFreeTier, tierMayCarryAFreePlanExcerpt, tierRecordsAFreeTier, tierWhoseFreeOfferIsTheLicence } from "./free-tier-record.js";
 import { whyTheExcerptCannotStand } from "./free-plan-excerpt-rules.js";
-import { alternativesUnderTheVendorsRule, conditionsBesideStoredTerms, conditionsForTheBrowser, conditionsHtml, conditionsOf, levelBesideTheVendorsRule, productionAnswerOpening, rowSpanningTheTableHtml, stableRatingBesideTheVendorsRule, theVendorsRuleOnProduction, withConditionsAfter, type TheVendorsRule } from "./listing-conditions.js";
+import { alternativesUnderTheVendorsRule, conditionRulingOut, conditionsBesideStoredTerms, conditionsForTheBrowser, conditionsHtml, conditionsOf, levelBesideTheVendorsRule, productionAnswerOpening, rowSpanningTheTableHtml, stableRatingBesideTheVendorsRule, theVendorsRuleOnProduction, trialProductionAnswer, withConditionsAfter, type TheVendorsRule } from "./listing-conditions.js";
 import { conditionsField } from "./conditions-field.js";
 import { PAGE_HEAD_OPEN, withLedeBeforeNav } from "./page-lede.js";
 import { withReviewByline } from "./page-byline.js";
@@ -72,6 +72,7 @@ import { FREE_TIER_STANDING_LABELS, GRADE_FACTORS_WITHOUT_PRICING_HISTORY, NOT_E
 import { CHANGE_DIRECTION, changeDirectionTable, directionRatioLabel } from "./change-direction.js";
 import { removalDurability, removalReturnRateSentence, removalDurabilityPattern, lastingRemovalExamplesFor } from "./removal-durability.js";
 import { cutsByQuarterNewestFirst, cutsWindow, freeTierCutsIn } from "./free-tier-cuts.js";
+import { STARTUP_CREDITS_META_DESCRIPTION, STARTUP_PROGRAMS, type DatedTerms, type StartupProgram } from "./startup-programmes.js";
 import { CHANGE_TIMELINE_LINK_TEXT, CHANGE_TIMELINE_PATH, CUTS_THIS_YEAR_ANCHOR, CUTS_THIS_YEAR_HEADING, CUTS_THIS_YEAR_SUMMARY_CLASS, FIGURES_AS_OF_CLASS, FREE_TIER_TRACKER_HEADING, FREE_TIER_TRACKER_META_DESCRIPTION, FREE_TIER_TRACKER_TITLE, FREE_TIER_TRACKER_YEAR, NO_KNOWN_EFFECTIVE_DATE_LEFT_OUT, UNTIL_ITS_DATE_ARRIVES, changeTypesAmong, cutsThisYearSummary, figuresAsOfTheChangeHtml, isAFirstQuarterCard, neonFiguresWereJanuarysHtml, quarterAnchor, quarterHeading } from "./free-tier-tracker.js";
 import { changeCitesASource, citationLabel, changeIsUncited, changeSourceCitation, changeSourceLinkHtml, changeCitationHtml, citedClaimHtml, changeSummaryHtml, changeSummaryText, citedChanges, uncitedChangeNotice, uncitedChangeNoticeHtml, ratingWithheldForNoSourceClause, ratingWithheldForNoSourceSentence, ratingWithheldClause, ratingWithheldSentence, type WithheldRecordCounts, UNCITED_CHANGE_LABEL, RECORD_SOURCE_CLASS, CITATION_REL, type CitableChangeRow } from "./change-citation.js";
 import { growthLimitPhrases } from "./growth-limits.js";
@@ -100,9 +101,9 @@ import { statesNoFreeTier } from "./retired-terms.js";
 import { countsDownTo, shutdownDeadlineHtml } from "./shutdown-deadline.js";
 import { forecastShutdownsWithoutACard, whatEnds, type RecordACardCovers } from "./forecast-shutdowns.js";
 import { createRegistrationLimiter, rateLimitHeaders } from "./rate-limit.js";
-import { offerForSlug, vendorRates, cheapestRate, dearestRate, spanOfRates, formatRate, formatRateSpan, monthlyTokenCost, formatDollars, type ModelRate } from "./model-rates.js";
+import { offerForSlug, vendorRates, cheapestRate, dearestRate, spanOfRates, formatRate, formatRateSpan, monthlyTokenCost, formatDollars, amountValue, type ModelRate } from "./model-rates.js";
 import { DECLARED_FIGURE_READS, READ_DATES_THAT_ARE_NOT_FIGURE_READS, STALE_FACT_PAGES_BASELINE, TABLE_STALENESS_DISCLOSURES, declaredFigureReadsFor, factsOutdatedBy, linkifyVerdictBlocks, newestChangeBySlug, overdueReport, pageCompiledClause, pageDataProvenance, pageDateModified, pageFigureSource, tabulatedVendorSlots, tabulatedVendors, utcToday, verdictsOutdatedBy } from "./page-reviews.js";
-import { faqPageJsonLd, type FaqItem } from "./faq-provenance.js";
+import { faqPageJsonLd, type FaqItem, type RecordProvenance } from "./faq-provenance.js";
 import {
   GENEROSITY_JSON_TOKEN,
   GENEROSITY_PROSE_TOKEN,
@@ -5925,6 +5926,7 @@ ${allCompareLinks.join("\n")}
 
   const restoredRemovalLowersTheRating = riskLevel === "caution" ? restoredRemovalReason(verdictInput) : null;
   const vendorsRuleOnProduction = hasFree && !endedBy ? theVendorsRuleOnProduction(listingConditions) : null;
+  const trialRuledOutForProduction = timeLimitedOffer ? conditionRulingOut(listingConditions, "production") : null;
   const ratingBesideTheVendorsRule = (): (string | null)[] =>
     riskLevel === "stable" || (primaryGate && historyLevel === "stable")
       ? [primaryGate ? null : stableRatingBesideTheVendorsRule(vendorName), vendorChanges.length > 0 ? narrowingSentence(vendorChanges, primary, termsSuperseded !== null) : null]
@@ -5944,7 +5946,9 @@ ${allCompareLinks.join("\n")}
     : eligibilityGateSentence + gateSentenceOpeningTheProductionAnswer + (levelWithheld
     ? `${vendorsRuleOnProduction ? `${productionAnswerOpening(vendorName, vendorsRuleOnProduction)} ` : ""}${withheldLevelSentence(levelWithheld, vendorName, unconfirmableSince)} We cannot confirm what this offer provides today, so we are not recommending it for production or for anything else until we can.`
     : timeLimitedOffer
-    ? `Not for long. It is ${timeLimitedOffer.note}, so plan for paid usage before you depend on it.`
+    ? (trialRuledOutForProduction
+      ? trialProductionAnswer(trialRuledOutForProduction)
+      : `Not for long. It is ${timeLimitedOffer.note}, so plan for paid usage before you depend on it.`)
     : hasFree
     ? (endedBy
       ? endedClaimReliabilityAnswer(vendorName, endedBy)
@@ -8243,7 +8247,7 @@ const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
   {
     slug: "startup-credits",
     title: "Startup Credits Comparison 2026 — Cloud Credits, Eligibility & Hidden Constraints",
-    metaDesc: "Compare 13 startup programs: AWS Activate, Google for Startups, Microsoft for Startups, Cloudflare, DigitalOcean Startups, Stripe Atlas, Brex, Mercury, and more. Credit values, eligibility, vesting, and stacking strategies. [[freshness]]",
+    metaDesc: STARTUP_CREDITS_META_DESCRIPTION,
     contextHtml: "",
     tag: "startup-credits",
     primaryVendor: "AWS Activate",
@@ -27330,41 +27334,22 @@ ${mcpCtaCss()}
 
 function buildStartupCreditsPage(): string {
   const title = "Startup Credits Comparison 2026 — Cloud Credits, Eligibility & Hidden Constraints";
-  const metaDesc = "Compare 13 startup programs: AWS Activate, Google for Startups, Microsoft for Startups, Cloudflare, DigitalOcean Startups, Stripe Atlas, Brex, Mercury, and more. Credit values, eligibility, vesting, and stacking strategies. [[freshness]]";
+  const metaDesc = STARTUP_CREDITS_META_DESCRIPTION;
   const slug = "startup-credits";
   const pubDate = "2026-03-27";
   const STARTUP_CREDIT_FIGURES_READ = "2026-09-28";
 
-  interface DatedTerms {
-    text: string;
-    url: string;
-    readOn: string;
-  }
-
-  interface StartupProgram {
-    name: string;
-    slug: string;
-    category: "cloud-infrastructure" | "fintech-banking" | "developer-tools" | "ai-tools";
-    creditValue: string;
-    eligibility: string;
-    duration: string;
-    applicationDifficulty: "open" | "accelerator-only" | "invite-only" | "vc-backed";
-    whatsIncluded: string;
-    hiddenConstraints: string;
-    vestingSchedule: string;
-    whenCreditsRunOut?: DatedTerms;
-    governedByConditionsOf?: string;
-  }
-
   const difficultyColors: Record<string, string> = {
     "open": "#3fb950",
     "vc-backed": "#d29922",
+    "vc-referral": "#d29922",
     "accelerator-only": "#bc8cff",
     "invite-only": "#f85149",
   };
   const difficultyLabels: Record<string, string> = {
     "open": "Open application",
     "vc-backed": "VC/funding required",
+    "vc-referral": "Referral from a partner VC",
     "accelerator-only": "Accelerator required",
     "invite-only": "Invite only",
   };
@@ -27382,55 +27367,45 @@ function buildStartupCreditsPage(): string {
     "ai-tools": "AI coding tools and ML platforms offering startup-specific credit programs. A newer category driven by the AI tool boom.",
   };
 
-  const programs: StartupProgram[] = [
-    { name: "AWS Activate", slug: "aws-activate", category: "cloud-infrastructure", creditValue: "$1K–$5K (Founders), up to $200K (Portfolio)", eligibility: "Pre-Series B, founded in the last 10 years, AWS account on a paid plan. Founders: self-funded. Portfolio: needs an Activate Provider Org ID.", duration: "Activate credits expire on a date shown in the AWS Billing console.", applicationDifficulty: "open", whatsIncluded: "AWS credits, which can also pay for AWS Support. Technical guidance, mentoring and go-to-market resources.", hiddenConstraints: "Founders start at $1,000; select participants may get up to $5,000. Portfolio needs an Org ID from an Activate Provider such as an accelerator or VC firm. AWS cannot extend expiry dates, even with credits unused. Accounts on the Free plan are not eligible.", vestingSchedule: "One award per approved application; a later, larger award pays only the difference", whenCreditsRunOut: { text: "Your AWS account is billed for usage beyond the credits. Some services are not eligible for the credits.", url: "https://aws.amazon.com/awscredits/", readOn: "2026-10-08" } },
-    { name: "Google Cloud for Startups", slug: "google-cloud-for-startups", category: "cloud-infrastructure", creditValue: "$2K (Start), up to $200K (Scale), up to $350K (Scale AI)", eligibility: "Start: no funding yet but plans to raise venture funding soon, founded within 24 months, working MVP; Scale: VC funding from pre-seed to Series A (Series A within the last 12 months; angel money does not count), founded within 5 years.", duration: "12 months (Start), 2 years (Scale)", applicationDifficulty: "open", whatsIncluded: "Google Cloud and Firebase credits, 12 months of Google Workspace Business Plus, technical training and business support. The AI tier adds $150K of credits.", hiddenConstraints: "Equity funding required \u2014 bootstrapped startups don\u2019t qualify for Scale tier. $200K is split $100K/year. Must use within Google Cloud (not transferable). 24-month expiry. Requires application review.", vestingSchedule: "Scale: year 1 covers usage up to $100K ($250K for AI); year 2 covers 20% of spend, up to $100K more", whenCreditsRunOut: { text: "Usage beyond the credits is billed to you. Google is not required to notify you when the credits are exhausted.", url: "https://cloud.google.com/terms/startup-program-tos", readOn: "2026-10-08" } },
-    { name: "Microsoft for Startups (formerly Founders Hub)", slug: "microsoft-founders-hub", category: "cloud-infrastructure", creditValue: "$200 on sign-up; up to $150K as Azure usage grows or with an Investor Network partner", eligibility: "B2B software, AI or tech startups, pre-seed to Series C, privately held; no investor needed. Business verification and sustained Azure usage unlock more credits, and Investor Network backing starts most startups at $100K.", duration: "Activate within 90 days; the first $200 lasts 90 days, the verification credit 180 days, and credits from the $25K milestone up to 2 years", applicationDifficulty: "open", whatsIncluded: "Azure credits and Azure AI models. GitHub Enterprise, Microsoft 365 Business Premium, Visual Studio Enterprise and LinkedIn Premium offers are for Investor Network-backed startups only.", hiddenConstraints: "Basic path gives only $5K without investor connection. Premium path up to $150K requires investor network verification. Credits expire in 12 months. Azure-only (not applicable to M365 or other Microsoft products).", vestingSchedule: "Released in milestones as you verify the business and use more Azure", whenCreditsRunOut: { text: "When the credits are used up or reach their end date, the subscription converts automatically to Pay-As-You-Go and you pay for further usage.", url: "https://azure.microsoft.com/en-us/pricing/offers/ms-azr-0036p", readOn: "2026-10-08" } },
-    { name: "DigitalOcean Startups", slug: "digitalocean-hatch", category: "cloud-infrastructure", creditValue: "Credits for 12 months; amount varies, up to $10,000 a month", eligibility: "Raised $10M or less; apply through a partner or directly", duration: "12 months", applicationDifficulty: "open", whatsIncluded: "Compute credits for most DigitalOcean services, 15 months of free Standard-tier support; GPU credits are a separate benefit for selected startups", hiddenConstraints: "Credits exclude GPU Droplets, H100 GPU products, inference, third-party AI models, Paperspace and Cloudways. Use over $10,000 in a month is charged. Only for startups that have not used DigitalOcean credits before.", vestingSchedule: "Lump sum per partner agreement", governedByConditionsOf: "digitalocean" },
-    { name: "Cloudflare Startup Program", slug: "cloudflare-startup-program", category: "cloud-infrastructure", creditValue: "$10K, $100K or $350K by tier", eligibility: "Tier 3 ($10K): bootstrapped or self-funded, under $1M raised; Tiers 2 ($100K) and 1 ($350K): funded by an affiliated partner, Tier 1 with $5M+ raised.", duration: "1 year or until used up", applicationDifficulty: "open", whatsIncluded: "Credits for usage-based services such as Workers and R2 (R2 up to $10K; Workers AI up to $2.5K, $10K or $50K by tier). AI Gateway is not covered. Core security and networking features are free at every tier.", hiddenConstraints: "Tier is based on funding stage \u2014 bootstrapped startups get only $5K. Higher tiers require more funding documentation. Credits are Cloudflare-only. Limited time window to use credits.", vestingSchedule: "Lump sum per tier" },
-    { name: "Stripe Atlas", slug: "stripe-atlas", category: "fintech-banking", creditValue: "Over $50K in partner discounts, plus $2.5K of Stripe credits", eligibility: "Companies incorporated through Atlas ($500, then $100 a year after the first year)", duration: "Varies by perk; Stripe credits last the first year", applicationDifficulty: "open", whatsIncluded: "$2.5K of Stripe product credits for the first year, $5K of AWS Activate credits (new AWS users), $100K of Cloudflare credits through the Cloudflare Startup Program, Microsoft for Startups Azure credits, a 30-minute immigration attorney consult (Ellis), and banking through Stripe Treasury.", hiddenConstraints: "Requires Stripe Atlas incorporation ($500 one-time fee). Perks are from third parties \u2014 each has own eligibility requirements. Processing credits only apply to Stripe payments. Some perks expire 90 days after incorporation.", vestingSchedule: "Available once the Atlas application is approved" },
-    { name: "Brex Partner Perks", slug: "brex-partner-perks", category: "fintech-banking", creditValue: "Over $350K in partner discounts and credits", eligibility: "Brex customers", duration: "Varies by partner", applicationDifficulty: "open", whatsIncluded: "Up to $5K of AWS credits for new Brex customers (subject to Activate eligibility), $1K of OpenAI credits for a year, up to $200K of Google Cloud and Firebase credits over 2 years, 6 months of Notion Plus, 30% off Slack for 12 months.", hiddenConstraints: "Must be a Brex cardholder. Individual perks have separate eligibility and expiry. Some require minimum card spend. Google Cloud $200K requires separate Google for Startups qualification. Partner perks change frequently.", vestingSchedule: "Per-partner activation" },
-    { name: "Mercury Perks", slug: "mercury-perks", category: "fintech-banking", creditValue: "Banking perks bundle", eligibility: "Mercury banking customers", duration: "Varies by perk", applicationDifficulty: "open", whatsIncluded: "1 year of Datadog free (up to $100K in credits; Series A or earlier, new Datadog customers), up to $5K of AWS Activate credits, 50% off QuickBooks Online for 3 months. Mercury's Google Cloud offer is paused.", hiddenConstraints: "Must have Mercury business account. Datadog credit is usage-based cap \u2014 may not reach full $100K value. Google Cloud credits require separate application to Google for Startups. Perks are subject to partner availability.", vestingSchedule: "Per-partner activation" },
-    { name: "Ramp Partner Rewards", slug: "ramp-partner-rewards", category: "fintech-banking", creditValue: "Over $350K in partner rewards", eligibility: "Ramp customers", duration: "Varies", applicationDifficulty: "open", whatsIncluded: "AWS credits through AWS Activate and OpenAI API credits (Ramp states no amount for either), $350 of Google Cloud credits, 6 months of Notion Business with Notion AI.", hiddenConstraints: "Must be Ramp cardholder. AWS credits are a subset of what AWS Activate offers separately. Partner perks overlap with Brex offerings. Some discounts require annual commitments.", vestingSchedule: "Per-partner activation" },
-    { name: "SVB Startup Banking Offers", slug: "svb-startup-banking-offers", category: "fintech-banking", creditValue: "$5K AWS + partner offers", eligibility: "SVB clients (SVB is a division of First Citizens Bank)", duration: "Varies", applicationDifficulty: "open", whatsIncluded: "$5K of AWS Activate credits (with an Activate Provider Org ID, pre-Series B), $5K of MongoDB credits for 12 months, 25% off Slack upgrades (up to $9K). 79 offers from 58 vendors; no Google Cloud offer.", hiddenConstraints: "SVB was acquired by First Citizens Bank (2023) \u2014 program continuity uncertain for new applicants. Google Cloud credits are usage-based annual cap (not guaranteed full amount). Partner perks change over time.", vestingSchedule: "Per-partner activation" },
-    { name: "PostHog for Startups", slug: "posthog-yc-deal", category: "developer-tools", creditValue: "$50K in credits (YC: $50K a year)", eligibility: "Under 2 years old and under $5M raised. YC companies under $25M raised get $50K a year instead.", duration: "12 months (YC: renews yearly while eligible)", applicationDifficulty: "open", whatsIncluded: "Credits for product analytics, session replay, feature flags and experiments, plus about $12K of partner perks. Since 2026-09-14, credits don't cover PostHog AI, Desktop, the Slack app, Replay Vision or Inbox.", hiddenConstraints: "YC companies only \u2014 not open to general startups. $25M fundraising cap. Must maintain active YC alumni status. Covers PostHog only \u2014 not transferable.", vestingSchedule: "Credits for 12 months; the YC deal renews yearly" },
-    { name: "Amazon Kiro (AWS Startups)", slug: "amazon-kiro-aws-startups", category: "ai-tools", creditValue: "Up to 1 year of Kiro Pro+ ($40 per user a month)", eligibility: "Early stage to Series A, without active AWS Activate credits; Kiro's startup page asks for VC backing and its terms do not; not available in France, Germany, Italy, Spain, Poland, Brazil, Mexico, Argentina, the UAE, China or sanctioned regions; apply by 2026-12-31.", duration: "Credits expire 1 year after they are issued", applicationDifficulty: "open", whatsIncluded: "Kiro Pro+ for up to 2, 10 or 30 users (Starter, Growth and Scale tiers).", hiddenConstraints: "Requires existing AWS Startups membership (not standalone). Pro+ credit allocation is model-dependent (Sonnet 4 costs 1.3x). Free tier duration is exactly 12 months. Not combinable with other Kiro promotions.", vestingSchedule: "Deposited once to your AWS account" },
-    { name: "Amplitude Early Stage Startup Pricing", slug: "amplitude-startup-scholarship", category: "ai-tools", creditValue: "1 year of the Growth plan free", eligibility: "Under 20 employees and under $10M raised", duration: "1 year; year 2 at 40% off the annual Plus plan, or move to the free plan", applicationDifficulty: "open", whatsIncluded: "The full Growth plan for 200K monthly tracked users or 100M events a month.", hiddenConstraints: "Growth plan converts to paid ($49+/mo) after 1 year. Application review required. MTU/event limits are soft \u2014 overage may be billed. Plan features may change during the free year.", vestingSchedule: "Full plan for 12 months" },
-  ];
-
   const startupChanges = changesToStartupProgrammes(changesTheVendorMade(dealChanges), offers)
     .sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
-  const openCount = programs.filter(p => p.applicationDifficulty === "open").length;
+  const openCount = STARTUP_PROGRAMS.filter(p => p.applicationDifficulty === "open").length;
   const categories: Array<"cloud-infrastructure" | "fintech-banking" | "developer-tools" | "ai-tools"> = ["cloud-infrastructure", "fintech-banking", "developer-tools", "ai-tools"];
 
-  const heroTableRows = programs.map(p => {
+  const heroTableRows = STARTUP_PROGRAMS.map(p => {
     const diffColor = difficultyColors[p.applicationDifficulty] || "var(--text-muted)";
     return '<tr>' +
       '<td style="font-weight:600">' + escHtmlServer(p.name) + '</td>' +
       '<td style="font-family:var(--mono);font-size:.85rem;color:var(--accent)">' + escHtmlServer(p.creditValue) + '</td>' +
       '<td style="font-size:.85rem;color:var(--text-muted)">' + escHtmlServer(p.eligibility.split(".")[0]) + '</td>' +
-      '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(p.duration) + '</td>' +
+      '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(p.duration ?? "\u2014") + '</td>' +
       '<td><span style="color:' + diffColor + ';font-size:.8rem;font-weight:600">' + escHtmlServer(difficultyLabels[p.applicationDifficulty]) + '</span></td>' +
       '</tr>';
   }).join("\n        ");
+
+  const programmeNameHtml = (p: StartupProgram) =>
+    p.programmePage
+      ? '<a href="' + escHtmlServer(p.programmePage) + '" rel="nofollow noopener" style="color:var(--text)">' + escHtmlServer(p.name) + '</a>'
+      : escHtmlServer(p.name);
 
   const whenCreditsRunOutHtml = (terms: DatedTerms) =>
     '<p class="diff-desc"><strong>When credits run out:</strong> ' + escHtmlServer(terms.text) +
     ' (From <a href="' + escHtmlServer(terms.url) + '" rel="nofollow noopener">' + escHtmlServer(citationLabel(terms.url)) + '</a>, read ' + escHtmlServer(terms.readOn) + '.)</p>';
 
   const categorySections = categories.map(cat => {
-    const catPrograms = programs.filter(p => p.category === cat);
+    const catPrograms = STARTUP_PROGRAMS.filter(p => p.category === cat);
     const cards = catPrograms.map(p => {
       const borderColor = difficultyColors[p.applicationDifficulty] || "var(--accent)";
       return '<div class="diff-card" style="border-left-color:' + borderColor + '">' +
-        '<h3>' + escHtmlServer(p.name) + ' ' +
+        '<h3>' + programmeNameHtml(p) + ' ' +
         '<span style="font-size:.75rem;color:var(--text-dim);font-weight:400">' + escHtmlServer(difficultyLabels[p.applicationDifficulty]) + '</span></h3>' +
         '<p class="diff-desc"><strong>Credit value:</strong> ' + escHtmlServer(p.creditValue) + '</p>' +
         '<p class="diff-desc"><strong>Eligibility:</strong> ' + escHtmlServer(p.eligibility) + '</p>' +
-        '<p class="diff-desc"><strong>Duration:</strong> ' + escHtmlServer(p.duration) + '</p>' +
+        (p.duration ? '<p class="diff-desc"><strong>Duration:</strong> ' + escHtmlServer(p.duration) + '</p>' : '') +
         '<p class="diff-desc"><strong>What\'s included:</strong> ' + escHtmlServer(p.whatsIncluded) + '</p>' +
-        '<p class="diff-desc"><strong>Vesting:</strong> ' + escHtmlServer(p.vestingSchedule) + '</p>' +
+        (p.vestingSchedule ? '<p class="diff-desc"><strong>Vesting:</strong> ' + escHtmlServer(p.vestingSchedule) + '</p>' : '') +
+        (p.status ? '<p class="diff-desc"><strong>Status:</strong> ' + escHtmlServer(p.status) + '</p>' : '') +
         (p.whenCreditsRunOut ? whenCreditsRunOutHtml(p.whenCreditsRunOut) : '') +
         (p.governedByConditionsOf ? vendorPageConditionsHtmlForSlug(p.governedByConditionsOf) : '') +
         '</div>';
@@ -27480,7 +27455,7 @@ function buildStartupCreditsPage(): string {
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
     mainEntityOfPage: { "@type": "WebPage", "@id": BASE_URL + "/" + slug },
-    about: programs.map(p => ({ "@type": "SoftwareApplication", name: p.name })),
+    about: STARTUP_PROGRAMS.map(p => ({ "@type": "SoftwareApplication", name: p.name })),
   };
 
   const faqJsonLd = faqPageJsonLd("/startup-credits", faqEntries);
@@ -27580,17 +27555,17 @@ function buildStartupCreditsPage(): string {
     '  ' + buildGlobalNav("alternatives") + '\n' +
     '  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternatives">Startup Programs</a> &rsaquo; Credits Comparison</div>\n' +
     '  <h1>Startup Credits Comparison \u2014 The 2026 Guide</h1>\n' +
-    '  <p class="pub-date">Published ' + pubDate + ' &middot; ' + programs.length + ' programs compared &middot; ' + pageDataProvenance("/startup-credits", offers.length) + '</p>\n' +
+    '  <p class="pub-date">Published ' + pubDate + ' &middot; ' + STARTUP_PROGRAMS.length + ' programs compared &middot; ' + pageDataProvenance("/startup-credits", offers.length) + '</p>\n' +
     '\n' +
     '  <div class="summary-stats">\n' +
-    '    <div class="stat-card"><div class="stat-number">' + programs.length + '</div><div class="stat-label">Programs Compared</div></div>\n' +
+    '    <div class="stat-card"><div class="stat-number">' + STARTUP_PROGRAMS.length + '</div><div class="stat-label">Programs Compared</div></div>\n' +
     '    <div class="stat-card"><div class="stat-number green">$350K</div><div class="stat-label">Largest Published Offer</div></div>\n' +
     '    <div class="stat-card"><div class="stat-number">' + categories.length + '</div><div class="stat-label">Categories</div></div>\n' +
     '    <div class="stat-card"><div class="stat-number yellow">' + openCount + '</div><div class="stat-label">Open Application</div></div>\n' +
     '  </div>\n' +
     '\n' +
     '  <div class="executive-summary">\n' +
-    '    <p><strong>Startup credits in 2026:</strong> ' + programs.length + ' programs across cloud infrastructure, fintech perks, developer tools and AI. The largest published offers are up to $350,000. Cloud providers offer the highest individual values. Fintech platforms pass partner credits on to their customers; each perk is claimed separately.</p>\n' +
+    '    <p><strong>Startup credits in 2026:</strong> ' + STARTUP_PROGRAMS.length + ' programs across cloud infrastructure, fintech perks, developer tools and AI. The largest published offers are up to $350,000. Cloud providers offer the highest individual values. Fintech platforms pass partner credits on to their customers; each perk is claimed separately.</p>\n' +
     '    <p><strong>Key insight:</strong> Stacking Google Scale (up to $200K) + AWS Activate Portfolio (up to $200K) + Cloudflare Tier 2 ($100K) can reach $500K; each needs VC funding or an affiliated partner. AWS credits from Brex and Stripe Atlas overlap: a later award pays only the difference.</p>\n' +
     '    <p><strong>This guide covers:</strong> credit values, eligibility requirements, vesting schedules, hidden constraints, application difficulty, and optimal stacking strategies \u2014 compiled by hand from vendor pricing pages.</p>\n' +
     '  </div>\n' +
@@ -31808,6 +31783,48 @@ function buildLlmApiPricingPage(): string {
       "The Batch API offers 50% discount on all models.",
     ].filter(sentence => sentence !== "").join(" ");
 
+  type PricedRate = NamedRate & { output: string };
+  type PricedModel = { provider: LlmProvider; rate: PricedRate };
+
+  const pricedModels: PricedModel[] = providers.flatMap(p =>
+    cellsOf.get(p.slug)!.rates
+      .filter((rate): rate is PricedRate => rate.model !== null && rate.output !== null)
+      .map(rate => ({ provider: p, rate })));
+
+  const byInputThenOutputPrice = (a: PricedModel, b: PricedModel): number =>
+    amountValue(a.rate.input) - amountValue(b.rate.input) || amountValue(a.rate.output) - amountValue(b.rate.output);
+
+  const cheapestModels = [...pricedModels].sort(byInputThenOutputPrice).slice(0, 4);
+
+  const inDollarsAndCents = (amount: string): string => {
+    const [dollars, cents = ""] = amount.split(".");
+    return dollars + "." + cents.padEnd(2, "0");
+  };
+
+  const cheapestModelNamed = (m: PricedModel): string =>
+    m.provider.name + " " + m.rate.model + " (" + inDollarsAndCents(m.rate.input) + " input, " + inDollarsAndCents(m.rate.output) + " output)";
+
+  const withSerialAnd = (items: string[]): string =>
+    items.length <= 2 ? items.join(" and ") : items.slice(0, -1).join(", ") + ", and " + items[items.length - 1];
+
+  const deepseek = providers.find(p => p.slug === "deepseek-api")!;
+  const deepseekFlash = cheapestRate(cellsOf.get(deepseek.slug)!.rates);
+  const deepseekFlashSentence = deepseekFlash === null || deepseekFlash.model === null || deepseekFlash.output === null || cheapestModels.some(m => m.rate === deepseekFlash)
+    ? ""
+    : deepseek.name + " " + deepseekFlash.model + " costs " + inDollarsAndCents(deepseekFlash.input) + " input, " + inDollarsAndCents(deepseekFlash.output) + " output at peak hours; half that off-peak.";
+
+  const recordOf = (p: LlmProvider): RecordProvenance[] => {
+    const offer = offerForSlug(p.slug);
+    return offer ? [{ vendor: offer.vendor, lastRead: lastReadDate(offer) }] : [];
+  };
+  const cheapestForProductionRecords = [...cheapestModels.map(m => m.provider), ...(deepseekFlashSentence ? [deepseek] : [])].flatMap(recordOf);
+
+  const cheapestForProductionAnswer = [
+    (cheapestModels.length === 1 ? "The cheapest model on this page is " : "The cheapest models on this page are ") + withSerialAnd(cheapestModels.map(cheapestModelNamed)) + ".",
+    deepseekFlashSentence,
+    "These are list prices per million tokens.",
+  ].filter(sentence => sentence !== "").join(" ");
+
   const faqEntries: FaqItem[] = [
     { q: "Which LLM API has the best free tier in 2026?", a: "Groq's free plan allows 30 RPM, 1,000 requests and 200K tokens a day per model, no credit card required, with fast LPU-accelerated inference. " + freeTiersThisPageStandsBehind + " For frontier models specifically, Mistral's Free plan includes monthly API usage; its pricing page listed $10 a month until 2026-10-07, then stopped stating the amount." },
     { q: "How much does GPT-4o cost per token?", a: "GPT-4o costs $2.50 per million input tokens and $10 per million output tokens. For reference, 1 million tokens is roughly 750,000 words. The batch API offers 50% discount ($1.25/$5 per M tokens). GPT-4o-mini is significantly cheaper at $0.15/$0.60 per M tokens." },
@@ -31818,7 +31835,7 @@ function buildLlmApiPricingPage(): string {
         ? { figuresFromRecord: { vendor: anthropicRecord.vendor, lastRead: lastReadDate(anthropicRecord) } }
         : {}),
     },
-    { q: "What is the cheapest LLM API for production use?", a: "DeepSeek's deepseek-flash is $0.30/M input and $1.20/M output at peak hours, half that off-peak, with cached input at $0.006/M. Groq offers free tiers that can handle moderate production traffic. Google Gemini Flash models are free with rate limits." },
+    ...(cheapestModels.length > 0 ? [{ q: "What is the cheapest LLM API for production use?", a: cheapestForProductionAnswer, figuresFromRecords: cheapestForProductionRecords }] : []),
     { q: "Should I use a frontier lab API or an inference provider?", a: "Use frontier lab APIs (OpenAI, Anthropic, Google) when you need their proprietary models (GPT-4o, Claude, Gemini Pro) or specific features (function calling, vision, extended thinking). Use inference providers (Groq, Cerebras, OpenRouter) when running open-weight models, which usually cost less per token. Groq's free plan offers gpt-oss-120b, gpt-oss-20b and Qwen3.8 27B. Llama 3.3 70B left it on 2026-08-16." },
   ];
 
@@ -45000,7 +45017,7 @@ ${globalNavCss()}
     </tbody>
   </table>
   </div>
-  <p style="color:var(--text-dim);font-size:.85rem;margin-top:.5rem">See our full <a href="/startup-credits">startup credits directory</a> for 13 programs.</p>
+  <p style="color:var(--text-dim);font-size:.85rem;margin-top:.5rem">See our full <a href="/startup-credits">startup credits directory</a> for ${STARTUP_PROGRAMS.length} programs.</p>
 
   <h2>Category Landscape</h2>
   <p class="section-desc">Which categories have the most free tier options? The table below shows our top 20 categories ranked by the share we can vouch for today. <strong>Recorded</strong> counts the free tiers our offers describe; <strong>Vouched</strong> counts the ones whose vendor page still states a verdict rather than withholding one. ${categoryShares.filter(c => c.recordedPct === 100).length} of ${categoryShares.length} categories record a free tier for every service they list, which is why the recorded share cannot rank them. The two shares diverge most in ${escHtmlServer(widestGap.category)}: ${widestGap.census.recorded} of ${widestGap.census.total} recorded, ${widestGap.census.vouched} vouched.</p>
@@ -45105,7 +45122,7 @@ ${globalNavCss()}
     <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:.5rem">
       <li><a href="/free-tier-risk">Free Tier Risk Index</a> <span style="color:var(--text-muted);font-size:.85rem">&mdash; sustainability risk scores for ${riskEntries.length} vendors</span></li>
       <li><a href="/free-tier-tracker">${escHtmlServer(FREE_TIER_TRACKER_HEADING)}</a> <span style="color:var(--text-muted);font-size:.85rem">&mdash; removals, expansions, and trends</span></li>
-      <li><a href="/startup-credits">Startup Credits Directory</a> <span style="color:var(--text-muted);font-size:.85rem">&mdash; 13 programs</span></li>
+      <li><a href="/startup-credits">Startup Credits Directory</a> <span style="color:var(--text-muted);font-size:.85rem">&mdash; ${STARTUP_PROGRAMS.length} programs</span></li>
       <li><a href="/free-startup-stack">Free Startup Stack</a> <span style="color:var(--text-muted);font-size:.85rem">&mdash; complete infrastructure on $0/month</span></li>
       <li><a href="/q1-2026-developer-pricing-report">Q1 2026 Pricing Report</a> <span style="color:var(--text-muted);font-size:.85rem">&mdash; quarterly pricing analysis</span></li>
     </ul>

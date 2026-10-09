@@ -16,6 +16,7 @@ const { whyWeCannotConfirmTheseTerms } = await import("../dist/vendor-verdict.js
 
 type Offer = import("../src/types.ts").Offer;
 type DealChange = import("../src/types.ts").DealChange;
+type ListingCondition = import("../src/types.ts").ListingCondition;
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -154,6 +155,7 @@ interface Subject {
   supersededBy: DealChange | null;
   superseded: boolean;
   levelWithheld: boolean;
+  productionRuledOutBy: ListingCondition | null;
   termsUnconfirmed: boolean;
   restriction: string;
 }
@@ -185,6 +187,7 @@ function subjectOf(offer: Offer): Subject {
     supersededBy,
     superseded: supersededBy !== null,
     levelWithheld: (context?.levelWithheld ?? null) !== null,
+    productionRuledOutBy: supersededBy ? null : (offer.conditions ?? []).find(c => (c.rules_out ?? []).includes("production")) ?? null,
     termsUnconfirmed: context ? whyWeCannotConfirmTheseTerms(context.input) !== null : false,
     restriction: gate?.code === "eligibility_restricted" ? `${gate.reason} ` : "",
   };
@@ -312,6 +315,7 @@ const THRESHOLD_BULLET = /^At .+, you'll need to upgrade\.$/;
 const ALTERNATIVES_BULLET = /^At that point, the \d+ alternatives in /;
 
 const productionSentence = (s: Subject) => `Not for long. It is ${s.note}, so plan for paid usage before you depend on it.`;
+const THE_TRIAL_EXPIRES = "The trial also expires.";
 const whatItOffers = (s: Subject) => `No. What ${s.vendor} offers is ${s.note}:`;
 const whatItOffersBeforeTheCaveat = (s: Subject) => `No. What ${s.vendor} offers is ${s.note}. We cannot confirm that today.`;
 const verdictLead = (s: Subject) => `${s.vendor} has no ongoing free tier; what it offers is ${s.note}: `;
@@ -395,7 +399,10 @@ describe("a vendor whose listed tier is a trial or a credit grant is not said to
     assertPopulationFloor(toldItRunsOut.length, 15, "trial and credit vendor pages answering that the offer runs out");
     for (const s of timeLimited) {
       const answer = answerTo(page(`/vendor/${s.slug}`).ld, `Is ${s.vendor}'s free offer good for production?`) ?? "";
-      if (toldItRunsOut.includes(s)) assert.ok(answer.endsWith(productionSentence(s)), `/vendor/${s.slug} answers "${answer.slice(0, 200)}"`);
+      if (toldItRunsOut.includes(s) && s.productionRuledOutBy) {
+        assert.ok(answer.includes(`No. ${s.productionRuledOutBy.text} (From `), `/vendor/${s.slug} answers "${answer.slice(0, 200)}"`);
+        assert.ok(answer.endsWith(` ${THE_TRIAL_EXPIRES}`), `/vendor/${s.slug} answers "${answer.slice(0, 200)}"`);
+      } else if (toldItRunsOut.includes(s)) assert.ok(answer.endsWith(productionSentence(s)), `/vendor/${s.slug} answers "${answer.slice(0, 200)}"`);
       else assert.match(answer, NOT_RECOMMENDED_FOR_PRODUCTION, `/vendor/${s.slug} answers "${answer.slice(0, 200)}"`);
     }
   });

@@ -64,6 +64,8 @@ const PROGRAMMES: Record<string, [string, string, string, string]> = {
   "Amplitude Early Stage Startup Pricing": ["1 year of the Growth plan free", "Under 20 employees and under $10M raised", "1 year; year 2 at 40% off the annual Plus plan, or move to the free plan", "Full plan for 12 months"],
 };
 
+const AI_LAB_PROGRAMMES = ["Claude Startups (Anthropic)", "OpenAI for Startups"];
+
 const INCLUDED: Record<string, string> = {
   "AWS Activate": "AWS credits, which can also pay for AWS Support. Technical guidance, mentoring and go-to-market resources.",
   "Google Cloud for Startups": "Google Cloud and Firebase credits, 12 months of Google Workspace Business Plus, technical training and business support. The AI tier adds $150K of credits.",
@@ -96,7 +98,7 @@ const CREDITS_ENDING_WITHOUT_CHARGES: [string, RegExp][] = [
 
 const STATED_ON_THE_GUIDE = [
   "$350K Largest Published Offer",
-  "Startup credits in 2026: 13 programs across cloud infrastructure, fintech perks, developer tools and AI. The largest published offers are up to $350,000. Cloud providers offer the highest individual values. Fintech platforms pass partner credits on to their customers; each perk is claimed separately.",
+  "Startup credits in 2026: 15 programs across cloud infrastructure, fintech perks, developer tools and AI. The largest published offers are up to $350,000. Cloud providers offer the highest individual values. Fintech platforms pass partner credits on to their customers; each perk is claimed separately.",
   "Key insight: Stacking Google Scale (up to $200K) + AWS Activate Portfolio (up to $200K) + Cloudflare Tier 2 ($100K) can reach $500K; each needs VC funding or an affiliated partner. AWS credits from Brex and Stripe Atlas overlap: a later award pays only the difference.",
   "Major cloud providers offering $200–$350K in compute",
   "Credit Expiry Timelines AWS Activate credits expire on a date shown in the AWS Billing console.",
@@ -143,7 +145,7 @@ const STATED_ELSEWHERE: Record<string, string[]> = {
     "Microsoft for Startups Up to $150K B2B tech startups, pre-seed to Series C Azure credits, Foundry models",
     "DigitalOcean Startups Amount varies",
     "AWS Activate Up to $200K Portfolio needs an Activate Provider Org ID",
-    "for 13 programs.",
+    "for 15 programs.",
   ],
   "/free-tier-risk": ["Microsoft for Startups offers up to $150K in credits.", "Added free Queues and expanded Workers in Q1 2026."],
   "/q1-2026-developer-pricing-report": ["In Q1 2026, Cloudflare added a free tier for Queues:", "Free Queues (February)"],
@@ -263,12 +265,12 @@ describe("the startup credits guide states each programme's terms as the program
     assert.deepStrictEqual(found, []);
   });
 
-  it("lists thirteen programmes, without IBM or Segment, and counts thirteen", () => {
+  it("lists fifteen programmes, without IBM or Segment, and counts fifteen", () => {
     const cards = programmeCards(served.get("/startup-credits")!);
-    assert.deepStrictEqual([...cards.keys()].sort(), Object.keys(PROGRAMMES).sort());
+    assert.deepStrictEqual([...cards.keys()].sort(), [...Object.keys(PROGRAMMES), ...AI_LAB_PROGRAMMES].sort());
     const text = readable(served.get("/startup-credits")!);
-    assert.ok(text.includes("13 Programs Compared"), "the programme count card does not say 13");
-    assert.ok(structuredStrings(served.get("/startup-credits")!).some((s) => s.startsWith("Compare 13 startup programs: AWS Activate, Google for Startups, Microsoft for Startups, Cloudflare, DigitalOcean Startups, Stripe Atlas, Brex, Mercury, and more.")));
+    assert.ok(text.includes("15 Programs Compared"), "the programme count card does not say 15");
+    assert.ok(structuredStrings(served.get("/startup-credits")!).some((s) => s.startsWith("Compare 15 startup programs: AWS Activate, Google for Startups, Microsoft for Startups, Cloudflare, DigitalOcean Startups, Stripe Atlas, Brex, Mercury, and more.")));
   });
 
   it("states each programme's credit value, eligibility, duration, inclusions and vesting as written", () => {

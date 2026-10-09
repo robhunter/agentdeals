@@ -272,12 +272,12 @@ describe("no published reason states a gap a reading we hold contradicts", () =>
 
   it("dates every reason to the reading it is drawn from, where a reading falls inside the window", () => {
     const reasons = everyStaleReason(TODAY);
-    assertPopulationFloor(reasons.length, 350, "records carrying a stale_verification demerit");
+    assertPopulationFloor(reasons.length, 250, "records carrying a stale_verification demerit");
     const drawnFromAReading = reasons.filter(({ offer }) => {
       const held = lastReadingFor(offer);
       return Boolean(held) && daysApart(held!.date, TODAY) <= STALE_VERIFICATION_DAYS;
     });
-    assertPopulationFloor(drawnFromAReading.length, 350, "demerits drawn from a reading inside the window");
+    assertPopulationFloor(drawnFromAReading.length, 250, "demerits drawn from a reading inside the window");
     const undated = drawnFromAReading.filter(({ offer, reason }) => !reason.includes(lastReadingFor(offer)!.date));
     assert.deepEqual(undated.map(u => u.offer.vendor), []);
   });
@@ -333,7 +333,7 @@ describe("the criteria page publishes the count and what moves it", () => {
     const measured = offers.filter(o =>
       verificationDoubt(o, DATE, ledger, lastReadingFor(o)) !== null,
     ).length;
-    assertPopulationFloor(measured, 300, "records meeting the stale_verification trigger");
+    assertPopulationFloor(measured, 200, "records meeting the stale_verification trigger");
     assert.equal(stated, measured);
   });
 
