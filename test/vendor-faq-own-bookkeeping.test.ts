@@ -16,6 +16,7 @@ type DealChange = import("../src/types.ts").DealChange;
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
 const DAY_MS = 24 * 60 * 60 * 1000;
+const TODAY = new Date().toISOString().slice(0, 10);
 
 const OUR_OWN_RECORD_QUOTED_AS_LATEST =
   /Most recently: (?:Retracted|Data correction)|The most recent was [^:]{0,60}: (?:Retracted|Data correction)/;
@@ -145,12 +146,12 @@ describe("our own retractions and corrections stay out of a vendor's change coun
     for (const [, records] of storedByVendor()) {
       records.forEach((record, i) => {
         const without = records.filter((_, j) => j !== i);
-        const expected = freeTierLongevityStart(without, beforeAnyRecord).getTime();
-        const asWritten = freeTierLongevityStart(records, beforeAnyRecord).getTime();
+        const expected = freeTierLongevityStart(without, beforeAnyRecord, TODAY).getTime();
+        const asWritten = freeTierLongevityStart(records, beforeAnyRecord, TODAY).getTime();
         for (const [how, mark] of OUR_OWN_BOOKKEEPING) {
           const marked = records.map((r, j) => (j === i ? mark(r) : r));
           assert.strictEqual(
-            freeTierLongevityStart(marked, beforeAnyRecord).getTime(),
+            freeTierLongevityStart(marked, beforeAnyRecord, TODAY).getTime(),
             expected,
             `${record.vendor} ${record.date} ${how} still dates the free tier's longevity`,
           );
@@ -195,7 +196,7 @@ describe("the vendor and alternatives FAQs as served (#1925)", () => {
       if (!slug || vendorOffers.length !== 1) continue;
       const verified = new Date(vendorOffers[0].verifiedDate).getTime();
       const narrowing = changesTheVendorMade(records)
-        .filter((c: DealChange) => NEGATIVE_CHANGE_TYPES.has(c.change_type))
+        .filter((c: DealChange) => NEGATIVE_CHANGE_TYPES.has(c.change_type) && c.date <= TODAY)
         .sort((a: DealChange, b: DealChange) => b.date.localeCompare(a.date));
       if (narrowing.length === 0 || new Date(narrowing[0].date).getTime() <= verified) continue;
       if (narrowing[1] && narrowing[1].date === narrowing[0].date) continue;

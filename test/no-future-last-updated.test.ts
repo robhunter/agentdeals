@@ -1,6 +1,8 @@
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
 import { spawn, type ChildProcess } from "node:child_process";
+import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import type { DealChange } from "../dist/types.js";
@@ -8,8 +10,8 @@ import type { DealChange } from "../dist/types.js";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
 
-const { vendorPageLastUpdated, newestChangeInEffect } = await import("../dist/change-dates.js");
-const { loadDealChanges } = await import("../dist/data.js");
+const { vendorPageLastUpdated, newestChangeInEffect, latestEventDate } = await import("../dist/change-dates.js");
+const { loadDealChanges, freeTierLongevityStart } = await import("../dist/data.js");
 const { vendorSlugMap } = await import("../dist/vendor-slug.js");
 const { isNoLongerInForce } = await import("../dist/change-resolution.js");
 
@@ -58,6 +60,144 @@ describe("the most recent change a page names has taken effect", () => {
 
   it("names none when every change is still ahead", () => {
     assert.strictEqual(newestChangeInEffect([record(TOMORROW)], SERVED_ON), null);
+  });
+});
+
+describe("a free tier's age and the latest event date count only changes that have taken effect", () => {
+  it("starts a free tier's age at the last narrowing in effect, not at one dated tomorrow", () => {
+    const start = freeTierLongevityStart(
+      [record(TOMORROW, { change_type: "limits_reduced" }), record(LAST_WEEK, { change_type: "limits_reduced" })],
+      new Date(LAST_READ),
+      SERVED_ON,
+    );
+    assert.strictEqual(start.toISOString().slice(0, 10), LAST_WEEK);
+  });
+
+  it("starts a free tier's age at its verified date while its only narrowing is still ahead", () => {
+    const start = freeTierLongevityStart([record(TOMORROW, { change_type: "free_tier_removed" })], new Date(LAST_READ), SERVED_ON);
+    assert.strictEqual(start.toISOString().slice(0, 10), LAST_READ);
+  });
+
+  it("leaves a record dated after today out of the latest event date when no day is given", () => {
+    const today = new Date().toISOString().slice(0, 10);
+    const tomorrow = new Date(Date.parse(today) + 86400000).toISOString().slice(0, 10);
+    assert.strictEqual(latestEventDate([record(tomorrow), record(LAST_WEEK)]), LAST_WEEK);
+  });
+});
+
+describe("a record that has not taken effect is not a listing's recent change, does not restart its free tier's age, and does not date the change log", () => {
+  const today = new Date().toISOString().slice(0, 10);
+  const dayOffset = (days: number) => new Date(Date.parse(today) + days * 86400000).toISOString().slice(0, 10);
+  const DAY_MS = 86400000;
+  let proc: ChildProcess | null = null;
+  let base = "";
+  let scratch = "";
+
+  const listing = (vendor: string) => ({
+    vendor,
+    category: "Databases",
+    description: `${vendor} publishes a free allowance of 10 GB storage and 1M reads per month.`,
+    tier: "Free",
+    url: `https://example.com/${vendor.toLowerCase()}/pricing`,
+    tags: ["database"],
+    verifiedDate: dayOffset(-60),
+    source_check: { checked: dayOffset(-60), outcome: "ok", detail: `the page names ${vendor} and states "10 GB storage"` },
+  });
+
+  const change = (vendor: string, date: string, change_type: string) => ({
+    vendor,
+    change_type,
+    date,
+    date_source: "vendor_page",
+    summary: `${vendor} changes the terms of its free allowance on ${date}.`,
+    previous_state: "10 GB storage",
+    current_state: "2 GB storage",
+    impact: "medium",
+    source_url: `https://example.com/${vendor.toLowerCase()}/pricing`,
+    category: "Databases",
+    alternatives: [],
+    recorded_date: dayOffset(-1),
+  });
+
+  before(async () => {
+    scratch = mkdtempSync(path.join(tmpdir(), "not-yet-in-effect-"));
+    const indexPath = path.join(scratch, "index.json");
+    const changesPath = path.join(scratch, "deal_changes.json");
+    writeFileSync(indexPath, JSON.stringify({ offers: ["Larkspurdb", "Moorhenapi", "Nettlecache"].map(listing) }));
+    writeFileSync(changesPath, JSON.stringify({
+      changes: [
+        change("Larkspurdb", dayOffset(1), "limits_reduced"),
+        change("Larkspurdb", dayOffset(-30), "limits_reduced"),
+        change("Moorhenapi", dayOffset(5), "new_tier"),
+      ],
+    }));
+    const child = spawn("node", [path.join(REPO, "dist", "serve.js")], {
+      stdio: ["pipe", "pipe", "pipe"],
+      env: { ...process.env, PORT: "0", BASE_URL: "http://localhost", TZ: "UTC", AGENTDEALS_INDEX_PATH: indexPath, AGENTDEALS_CHANGES_PATH: changesPath },
+    });
+    proc = child;
+    const port = await new Promise<number>((resolve, reject) => {
+      const timeout = setTimeout(() => { child.kill(); reject(new Error("Server startup timeout")); }, 30000);
+      child.stderr!.on("data", (data: Buffer) => {
+        const m = data.toString().match(/running on http:\/\/localhost:(\d+)/);
+        if (m) { clearTimeout(timeout); resolve(parseInt(m[1], 10)); }
+      });
+    });
+    base = `http://localhost:${port}`;
+  });
+
+  after(() => {
+    proc?.kill();
+    if (scratch) rmSync(scratch, { recursive: true, force: true });
+  });
+
+  const recentChangeOf = async (vendor: string) => {
+    const body = await (await fetch(`${base}/api/offers?q=${vendor}`)).json();
+    const offer = body.offers.find((o: { vendor: string }) => o.vendor === vendor);
+    assert.ok(offer, `/api/offers?q=${vendor} did not return ${vendor}`);
+    return offer.recent_change as string | null;
+  };
+
+  const jsonLdOf = (html: string) =>
+    [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map((m) => JSON.parse(m[1]));
+
+  it("names the change in effect, not tomorrow's, as the listing's recent change on the API and the search page", async () => {
+    assert.match((await recentChangeOf("Larkspurdb")) ?? "", new RegExp(`^${dayOffset(-30)}: `));
+    const search = await (await fetch(`${base}/search?q=Larkspurdb`)).text();
+    const cardLines = search.match(/<div class="result-meta">[\s\S]*?<\/div>/)?.[0] ?? "";
+    assert.ok(cardLines.includes(`${dayOffset(-30)}: Larkspurdb`), "the search card does not print the change in effect");
+    assert.ok(!cardLines.includes(dayOffset(1)), `the search card prints the change dated ${dayOffset(1)} as its recent change`);
+  });
+
+  it("names no recent change for a listing whose only record is still ahead", async () => {
+    assert.strictEqual(await recentChangeOf("Moorhenapi"), null);
+  });
+
+  it("counts a free tier's age from the narrowing in effect, not from tomorrow's", async () => {
+    const expected = Math.floor((Date.now() - Date.parse(dayOffset(-30))) / DAY_MS);
+    const served = (await (await fetch(`${base}/api/vendor-risk/larkspurdb`)).json()).free_tier_longevity_days;
+    assert.ok(Math.abs(served - expected) <= 1, `Larkspurdb's free tier is ${served} days old where ${expected} were expected`);
+  });
+
+  it("dates the change log's last modification and its coverage by the newest change in effect", async () => {
+    const dataset = jsonLdOf(await (await fetch(`${base}/pricing-changes`)).text()).find((ld) => ld["@type"] === "Dataset");
+    assert.ok(dataset, "/pricing-changes publishes no Dataset");
+    assert.strictEqual(dataset.dateModified, dayOffset(-30));
+    assert.strictEqual(dataset.temporalCoverage, `${dayOffset(-30)}/${dayOffset(-30)}`);
+  });
+
+  it("dates the vendor page by the change in effect", async () => {
+    const page = await (await fetch(`${base}/vendor/larkspurdb`)).text();
+    const modified = [...page.matchAll(/"dateModified":"(\d{4}-\d{2}-\d{2})/g)].map((m) => m[1]);
+    assert.ok(modified.length > 0, "/vendor/larkspurdb publishes no dateModified");
+    assert.deepStrictEqual([...new Set(modified)], [dayOffset(-30)]);
+  });
+
+  it("keeps a vendor whose only record is still ahead out of Stable Picks, as the section's rule says, and names the vendor with no record", async () => {
+    const page = await (await fetch(`${base}/trends/databases`)).text();
+    const section = page.split("<h2>Stable Picks</h2>")[1]?.split("<h2")[0] ?? "";
+    const named = [...section.matchAll(/href="\/vendor\/([^"]+)"/g)].map((m) => m[1]);
+    assert.deepStrictEqual(named, ["nettlecache"]);
   });
 });
 

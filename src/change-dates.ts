@@ -1,5 +1,6 @@
 import type { ArchiveCheck, DealChange, ChangeDateSource, DateMeaning } from "./types.js";
 import { PRODUCT_DEPRECATED, deprecationEndsTheListedProduct } from "./product-deprecation.js";
+import { NEGATIVE_CHANGE_TYPES } from "./change-direction.js";
 import { sliceById } from "./change-census.js";
 import { isACorrectionToOurOwnRecord } from "./change-resolution.js";
 import { reportsOurIndex } from "./change-reporting.js";
@@ -295,8 +296,8 @@ export function feedEntryUpdated(day: string, now: Date = new Date()): string {
 }
 
 export function endsTheListedOffer(change: ExpiringChange): boolean {
-  if (change.change_type !== PRODUCT_DEPRECATED) return true;
-  return deprecationEndsTheListedProduct(change);
+  if (change.change_type === PRODUCT_DEPRECATED) return deprecationEndsTheListedProduct(change);
+  return NEGATIVE_CHANGE_TYPES.has(change.change_type);
 }
 
 export function offerExpiryAfter(changes: ExpiringChange[], onDate: string): string | null {
@@ -310,11 +311,11 @@ export function offerExpiryAfter(changes: ExpiringChange[], onDate: string): str
   return earliest;
 }
 
-export function latestEventDate(changes: DatedChange[], notAfter?: string): string | null {
+export function latestEventDate(changes: DatedChange[], notAfter: string = new Date().toISOString().slice(0, 10)): string | null {
   let latest: string | null = null;
   for (const c of changes) {
     if (!c.date || !isEventDated(c)) continue;
-    if (notAfter && c.date > notAfter) continue;
+    if (c.date > notAfter) continue;
     if (latest === null || c.date > latest) latest = c.date;
   }
   return latest;

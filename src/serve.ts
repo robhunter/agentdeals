@@ -7,7 +7,7 @@ import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/
 import { createServer, getServerCard } from "./server.js";
 import { changesForVendor, oldestVerifiedDateForSlug, vendorRiskAssessment, withheldRecordCounts, publishedRisk, levelWithheldStatement, vendorNotIndexedSentence, riskCauseOf, freeTierEndingRecord, NEGATIVE_CHANGE_TYPES, POSITIVE_CHANGE_TYPES, SEVERE_CHANGE_TYPES, loadOffers, getCategories, getNewOffers, getNewestDeals, searchOffers, enrichOffers, gateForOffer, loadDealChanges, getDealChanges, changeContext, DEFAULT_CHANGE_WINDOW_DAYS, getOfferDetails, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, getFormattedWeeklyDigest, getFreshnessMetrics, publishedStabilityIndex, stabilityWithheldDisclosure, UNRATED_STABILITY, type StabilityIndex, type PublishedStabilityClass, getVendorReferral, sanitizeQuery, getChangeLogFreshness, isEventDated, partitionByDateProvenance } from "./data.js";
 import { loadChangeRefusals, vendorWhoseAlternativesAQueryAsksFor, changesRatingTheListedTier, changesTheVendorMade, stabilityDeciders, vendorNameAsPublished, freePlanExcerptHeldFor, freePlanExcerptHoldOn } from "./data.js";
-import { A_DEMOTION_IN_FORCE_RULE, NO_DEMOTION_IN_FORCE_RULE, A_COMPLETE_LOG_NOTICE, A_VERDICT_ROLLS_NOTICE, A_WITHHELD_RATING_DOES_NOT_LAPSE, lapsingDemotionStated, VOLATILE_WHILE_A_DEMOTION_COUNTS_RULE, WATCH_RECEIVES_FROM_VOLATILE_RULE , confirmationCoverage, confirmationCoverageSentence, HOW_THE_CATALOGUE_IS_MAINTAINED, NOTHING_CONTRADICTS_OUR_TERMS_FOR, THE_DATES_WE_HOLD } from "./data.js";
+import { A_DEMOTION_IN_FORCE_RULE, NO_DEMOTION_IN_FORCE_RULE, stablePicksAmong, A_COMPLETE_LOG_NOTICE, A_VERDICT_ROLLS_NOTICE, A_WITHHELD_RATING_DOES_NOT_LAPSE, lapsingDemotionStated, VOLATILE_WHILE_A_DEMOTION_COUNTS_RULE, WATCH_RECEIVES_FROM_VOLATILE_RULE , confirmationCoverage, confirmationCoverageSentence, HOW_THE_CATALOGUE_IS_MAINTAINED, NOTHING_CONTRADICTS_OUR_TERMS_FOR, THE_DATES_WE_HOLD } from "./data.js";
 import { confirmingRead, confirmingReadSentence, refusalsByVendor, refusedReadSentence, supersededRefusalSentence, type ChangeRefusal } from "./change-refusal.js";
 import { getStackRecommendation } from "./stacks.js";
 import { estimateCosts } from "./costs.js";
@@ -48756,6 +48756,7 @@ ${altHtml}
   const title = "Developer Tool Pricing Changes \u2014 Free Tier Tracker";
   const metaDesc = `Track ${trackedChanges(allChanges).length}+ developer tool pricing changes: free tier removals, limit reductions, price hikes, and new free tiers. Interactive timeline filterable by type, impact, year, and category.`;
 
+  const newestInEffect = latestEventDate(sorted, today);
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Dataset",
@@ -48764,8 +48765,8 @@ ${altHtml}
     url: `${BASE_URL}/pricing-changes`,
     keywords: ["developer tool pricing", "free tier removed", "free tier changelog", "developer pricing changes " + currentYear],
     creator: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
-    dateModified: sorted.length > 0 ? sorted[0].date : "2026-04-04",
-    temporalCoverage: sorted.length > 0 ? `${sorted[sorted.length - 1].date}/${sorted[0].date}` : undefined,
+    dateModified: newestInEffect ?? "2026-04-04",
+    temporalCoverage: newestInEffect ? `${sorted[sorted.length - 1].date}/${newestInEffect}` : undefined,
     variableMeasured: [
       { "@type": "PropertyValue", name: "Total changes tracked", value: trackedChanges(allChanges).length },
       { "@type": "PropertyValue", name: "Free tiers removed", value: removedCount },
@@ -51421,7 +51422,7 @@ function buildTrendsPage(slug: string): string | null {
   const atRisk = enriched.filter(o => (o.risk_level === "risky" || o.risk_level === "caution") && o.risk_cause)
     .sort((a, b) => (a.risk_level === "risky" ? 0 : 1) - (b.risk_level === "risky" ? 0 : 1));
 
-  const stablePicks = enriched.filter(o => o.risk_level === "stable" && !o.recent_change);
+  const stablePicks = stablePicksAmong(enriched);
 
   const totalAll = trackedChanges(allChanges).length;
   const categoryPct = totalAll > 0 ? Math.round((catTracked.length / totalAll) * 100) : 0;

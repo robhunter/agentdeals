@@ -34,6 +34,8 @@ const FIXTURE_VENDORS = [
   "Gustline",
   "Halcyonio",
   "Ironvale",
+  "Juniperdesk",
+  "Kestrelnet",
 ];
 
 const RATED_RISKY_OVER_A_CHANGE_THAT_ENDS_THE_OFFER = ["Beaconstack", "Foldergrid"];
@@ -63,6 +65,8 @@ const FIXTURE_CHANGES: ChangeSpec[] = [
   { vendor: "Halcyonio", date: TODAY, type: "limits_reduced", source: "vendor_page" },
   { vendor: "Ironvale", date: dayOffset(45), type: "limits_reduced", source: "vendor_page" },
   { vendor: "Ironvale", date: dayOffset(12), type: "limits_reduced", source: "vendor_page" },
+  { vendor: "Juniperdesk", date: dayOffset(14), type: "new_free_tier", source: "vendor_page" },
+  { vendor: "Kestrelnet", date: dayOffset(20), type: "rebranded", source: "vendor_page" },
 ];
 
 const EXPECTED_EXPIRY: Record<string, string | null> = {
@@ -73,6 +77,8 @@ const EXPECTED_EXPIRY: Record<string, string | null> = {
   Gustline: null,
   Halcyonio: null,
   Ironvale: dayOffset(12),
+  Juniperdesk: null,
+  Kestrelnet: null,
 };
 
 function offer(vendor: string) {
@@ -251,6 +257,22 @@ describe("a vendor page states a free tier's price expiry only when a dated chan
       offerExpiryAfter(FIXTURE_CHANGES.filter(c => c.vendor === "Foldergrid").map(change), TODAY),
       dayOffset(26),
       "a deprecation naming the vendor itself did not date the offer"
+    );
+  });
+
+  it("does not date the offer from a future change that widens or renames it, or whose type it does not know", () => {
+    for (const vendor of ["Juniperdesk", "Kestrelnet"]) {
+      const offers = offerJsonLd(pages.get(vendor)!)!;
+      assert.ok(
+        !("priceValidUntil" in offers),
+        `/vendor/${toSlug(vendor)} was dated ${offers.priceValidUntil} by a change that does not end its offer`,
+      );
+    }
+    const unknownType = { vendor: "Lumenpath", date: dayOffset(8), type: "a_type_not_yet_defined", source: "vendor_page" };
+    assert.strictEqual(
+      offerExpiryAfter([change(unknownType)], TODAY),
+      null,
+      "a change type with no recorded direction dates the offer",
     );
   });
 

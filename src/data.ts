@@ -30,7 +30,7 @@ import { vendorPhraseOfAnAlternativesQuery } from "./alternatives-query.js";
 import { substitutesListedFor } from "./vendor-substitutes.js";
 export { sanitizeQuery } from "./search-query.js";
 import { matchingSubject } from "./gate-disclosure.js";
-import { DATE_SOURCES, isEventDated, withDateMeaningDeclared, type DatedChange, changeDateClause, changeEntryDateLabel, isoWeekWindow, changesInWindow, discoveryBatchNote, coveringBracketedChanges, firstReadHeading, type DateWindow } from "./change-dates.js";
+import { DATE_SOURCES, isEventDated, withDateMeaningDeclared, type DatedChange, changeDateClause, changeEntryDateLabel, isoWeekWindow, changesInWindow, discoveryBatchNote, coveringBracketedChanges, firstReadHeading, hasNotTakenEffect, newestChangeInEffect, type DateWindow } from "./change-dates.js";
 import { PRODUCT_DEPRECATED, deprecationCall, withListingEffectDeclared } from "./product-deprecation.js";
 import { DEMOTION_FOR_A_DEPRECATION, RISK_DEMOTION } from "./change-demotion.js";
 import { sinceFilterDay } from "./since-parameter.js";
@@ -375,9 +375,10 @@ export function changesTheVendorMade<T extends BookkeepingFields>(changes: reado
 export function freeTierLongevityStart(
   changes: readonly Pick<DealChange, "change_type" | "date" | "resolution">[],
   verifiedDate: Date,
+  asOf: string,
 ): Date {
   const lastNarrowing = changesTheVendorMade(changes)
-    .filter(change => NEGATIVE_CHANGE_TYPES.has(change.change_type))
+    .filter(change => NEGATIVE_CHANGE_TYPES.has(change.change_type) && !hasNotTakenEffect(change, asOf))
     .reduce((latest, change) => Math.max(latest, new Date(change.date).getTime()), Number.NEGATIVE_INFINITY);
   return new Date(Math.max(lastNarrowing, verifiedDate.getTime()));
 }
@@ -751,9 +752,7 @@ export function enrichOffers(offers: Offer[]): EnrichedOffer[] {
   const now = new Date();
   const servedOn = utcDate();
   const ninetyDaysMs = 90 * 24 * 60 * 60 * 1000;
-  const cutoffDate = new Date(now.getTime() - RECENT_CHANGE_WINDOW_DAYS * 24 * 60 * 60 * 1000)
-    .toISOString()
-    .slice(0, 10);
+  const cutoffDate = recentChangeWindowOpens(now);
 
   const vendorChanges = new Map<string, DealChange[]>();
   for (const c of changesTheVendorMade(changes)) {
@@ -774,12 +773,8 @@ export function enrichOffers(offers: Offer[]): EnrichedOffer[] {
   return offers.map((offer) => {
     const key = offer.vendor.toLowerCase();
 
-    const recentChanges = vendorChanges.get(key);
-    let recent_change: string | null = null;
-    if (recentChanges && recentChanges.length > 0) {
-      const mostRecent = recentChanges.sort((a, b) => b.date.localeCompare(a.date))[0];
-      recent_change = `${mostRecent.date}: ${changeSummaryText(mostRecent)}`;
-    }
+    const mostRecent = newestChangeInEffect(vendorChanges.get(key) ?? [], servedOn);
+    const recent_change = mostRecent ? `${mostRecent.date}: ${changeSummaryText(mostRecent)}` : null;
 
     let expires_soon: string | null = null;
     if (offer.expires_date) {
@@ -1217,6 +1212,23 @@ export const VERDICT_WINDOW_DAYS = 180;
 
 export const RECENT_CHANGE_WINDOW_DAYS = 90;
 
+export function recentChangeWindowOpens(now: Date = new Date()): string {
+  return new Date(now.getTime() - RECENT_CHANGE_WINDOW_DAYS * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+}
+
+export function vendorsWithAChangeDatedFrom(day: string): Set<string> {
+  return new Set(
+    changesTheVendorMade(loadDealChanges())
+      .filter(change => change.date >= day)
+      .map(change => change.vendor.toLowerCase()),
+  );
+}
+
+export function stablePicksAmong<T extends Pick<EnrichedOffer, "vendor" | "risk_level">>(offers: T[], now: Date = new Date()): T[] {
+  const filedSinceTheWindowOpened = vendorsWithAChangeDatedFrom(recentChangeWindowOpens(now));
+  return offers.filter(offer => offer.risk_level === "stable" && !filedSinceTheWindowOpened.has(offer.vendor.toLowerCase()));
+}
+
 export const A_DEMOTION_IN_FORCE_RULE =
   `A vendor is named here for as long as a demotion is in force against it: a one-off pricing event, recorded against a source we cite, whose date falls in the last ${VERDICT_WINDOW_DAYS} days — or a standing condition, also cited, such as a product retired or a free tier withdrawn and not restored, which does not expire with time. A demotion can lift with nothing about the vendor having changed, and that happens on the day the vendor's newest qualifying event passes ${VERDICT_WINDOW_DAYS} days.`;
 
@@ -1550,11 +1562,8 @@ export function checkVendorRisk(
   const linkUnreachable = published.link_unreachable;
   const riskLevel = assessment.level;
 
-  const longevityStart = freeTierLongevityStart(vendorChanges, new Date(offer.verifiedDate));
-  const longevityDays = Math.max(
-    0,
-    Math.floor((Date.now() - longevityStart.getTime()) / (24 * 60 * 60 * 1000))
-  );
+  const longevityStart = freeTierLongevityStart(vendorChanges, new Date(offer.verifiedDate), utcDate());
+  const longevityDays = Math.floor((Date.now() - longevityStart.getTime()) / (24 * 60 * 60 * 1000));
 
   const alternativesRanking = rankForListing(
     substitutesFor(offers, offer),

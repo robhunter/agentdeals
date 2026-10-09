@@ -89,8 +89,8 @@ const MUTANTS = [
     "    if (!c.date) continue;"],
 
   ["a-deprecation-of-a-separate-product-dates-the-offer", "src/change-dates.ts",
-    "  if (change.change_type !== PRODUCT_DEPRECATED) return true;\n  return deprecationEndsTheListedProduct(change);",
-    "  return true;"],
+    "  if (change.change_type === PRODUCT_DEPRECATED) return deprecationEndsTheListedProduct(change);\n  return NEGATIVE_CHANGE_TYPES.has(change.change_type);",
+    "  if (change.change_type === PRODUCT_DEPRECATED) return true;\n  return NEGATIVE_CHANGE_TYPES.has(change.change_type);"],
 
   ["a-comparison-page-takes-the-looser-rule", "src/serve.ts",
     '            ...(free.states === "offered" ? freeTierOfferJsonLd(v, describedAs) : {}),',

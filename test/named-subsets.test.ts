@@ -20,6 +20,7 @@ import {
   NO_DEMOTION_IN_FORCE_RULE,
   RECENT_CHANGE_WINDOW_DAYS,
   VERDICT_WINDOW_DAYS,
+  stablePicksAmong,
 } from "../dist/data.js";
 import { substitutesFor } from "../dist/product-role.js";
 import { changeTouchesTheListing } from "../dist/product-deprecation.js";
@@ -750,8 +751,12 @@ describe("what a page names changes overnight only where the page itself says wh
       if (!offersByCategory.has(offer.category)) offersByCategory.set(offer.category, []);
       offersByCategory.get(offer.category)!.push(offer);
     }
+    const windowOpens = new Date(Date.now() - RECENT_CHANGE_WINDOW_DAYS * A_DAY_IN_MS).toISOString().slice(0, 10);
+    const filedSinceTheWindowOpened = new Set(
+      changesTheVendorMade(loadDealChanges()).filter(c => c.date >= windowOpens).map(c => c.vendor.toLowerCase()),
+    );
     for (const [category, list] of offersByCategory) {
-      const qualifying = enrichOffers(list).filter(o => o.risk_level === "stable" && !o.recent_change);
+      const qualifying = enrichOffers(list).filter(o => o.risk_level === "stable" && !filedSinceTheWindowOpened.has(o.vendor.toLowerCase()));
       qualifyingIn.set(toSlug(category), new Set(qualifying.map(o => toSlug(o.vendor))));
     }
     const withheld: string[] = [];
@@ -1126,15 +1131,19 @@ describe("the rule that decides it is published where a reader can find it", () 
     }
     const inside = dated(RECENT_CHANGE_WINDOW_DAYS - 1);
     const outside = dated(RECENT_CHANGE_WINDOW_DAYS + 1);
-    const disagreeing = enrichOffers(loadOffers()).filter(offer => {
+    const offers = loadOffers();
+    const keptByTheFilter = new Set(
+      stablePicksAmong(offers.map(offer => ({ vendor: offer.vendor, risk_level: "stable" as const }))).map(offer => offer.vendor),
+    );
+    const disagreeing = offers.filter(offer => {
       const newest = newestChangeFor.get(offer.vendor.toLowerCase());
       if (newest === undefined || (newest > outside && newest < inside)) return false;
-      return (newest >= inside) !== (offer.recent_change !== null);
+      return (newest >= inside) !== !keptByTheFilter.has(offer.vendor);
     });
     assert.deepEqual(
       disagreeing.slice(0, 4).map(offer => `${offer.vendor}: newest ${newestChangeFor.get(offer.vendor.toLowerCase())}`),
       [],
-      `${disagreeing.length} offers carry a recent_change the published ${RECENT_CHANGE_WINDOW_DAYS}-day sentence does not account for, so a section states one window and filters on another`,
+      `${disagreeing.length} vendors are kept out of Stable Picks, or let in, on a window the published ${RECENT_CHANGE_WINDOW_DAYS}-day sentence does not account for, so a section states one window and filters on another`,
     );
   });
 });
