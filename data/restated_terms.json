@@ -93,7 +93,8 @@
       "source_url": "https://grafana.com/pricing/",
       "record_date": "2026-09-02",
       "change_type": "pricing_restructured",
-      "summary": "The free tier now includes access to all Grafana Cloud services with limited usage, 14-day retention for metrics, logs, traces, profiles, & k6 performance tests, and community support. The free tier includes 10k metric series, 50 GB logs, and 50 GB traces. A $19/month platform fee is now required for 10k active series, 50 GB ingested logs/traces, and 30 days retention."
+      "summary": "The free tier now includes access to all Grafana Cloud services with limited usage, 14-day retention for metrics, logs, traces, profiles, & k6 performance tests, and community support. The free tier includes 10k metric series, 50 GB logs, and 50 GB traces. A $19/month platform fee is now required for 10k active series, 50 GB ingested logs/traces, and 30 days retention.",
+      "reverted_on": "2026-10-09"
     },
     {
       "vendor": "WorkOS",
