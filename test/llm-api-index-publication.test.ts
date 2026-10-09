@@ -199,6 +199,14 @@ describe("#1497 the publisher run end to end against a repository API", () => {
   let heldPath = "";
   let generated = "";
 
+  function rowsOfTheRecordTable(index: string) {
+    const start = index.indexOf("\n## The records");
+    assert.ok(start >= 0, "the generated index should hold its record table");
+    const end = index.indexOf("\n## ", start + 1);
+    const table = index.slice(start, end < 0 ? undefined : end);
+    return table.split("\n").filter(line => line.startsWith("|")).length - 2;
+  }
+
   before(async () => {
     heldPath = path.join(mkdtempSync(path.join(tmpdir(), "llm-index-publish-")), "README.md");
     const wrote = spawnSync("node", [GENERATOR, `--on=${SERVED_ON}`], {
@@ -309,7 +317,7 @@ describe("#1497 the publisher run end to end against a repository API", () => {
     assert.equal(Buffer.from(body.content, "base64").toString("utf8"), generated);
     assert.equal(body.branch, "main");
     assert.equal(body.sha, undefined, "a create carries no blob to replace");
-    assert.match(body.message, /31 records/);
+    assert.match(body.message, new RegExp(`\\b${rowsOfTheRecordTable(generated)} records?\\b`));
   });
 
   it("writes no commit on a second run over the same data", async () => {
