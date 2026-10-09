@@ -31764,7 +31764,7 @@
     {
       "vendor": "Anthropic API",
       "category": "AI / ML",
-      "description": "Claude API with usage-based pricing per million tokens (input/output). Claude Fable 5.1 $10/$50. Claude Opus 5.5 $4/$20. Claude Sonnet 5.5 $2/$10. Claude Sonnet 5 $2/$10. Claude Haiku 4.5 $1/$5. The Batch API gives a 50% discount on input and output tokens. New users receive a small amount of free credits to test the API.",
+      "description": "Claude API with usage-based pricing per million tokens (input/output). Claude Fable 5.1 $10/$50. Claude Opus 5.5 $4/$20. Claude Sonnet 5.5 $2/$10. Claude Sonnet 5 $2/$10. Claude Haiku 5.5 $0.10/$0.50 (for prompts up to 100,000 tokens; longer prompts cost five times as much). Claude Haiku 4.5 $1/$5. The Batch API gives a 50% discount on input and output tokens. New users receive a small amount of free credits to test the API.",
       "tier": "Pay-as-you-go",
       "url": "https://platform.claude.com/docs/en/about-claude/pricing",
       "tags": [
