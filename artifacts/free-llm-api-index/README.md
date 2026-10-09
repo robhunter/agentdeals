@@ -1,6 +1,6 @@
 # Free tiers for AI and LLM APIs, with the date we read each one
 
-31 records for vendors that serve models behind an API, each one carrying the date we last read the vendor's own page and the URL we read it on. There is no single freshness stamp for this file, because a single stamp for a list nobody re-read is worth nothing.
+32 records for vendors that serve models behind an API, each one carrying the date we last read the vendor's own page and the URL we read it on. There is no single freshness stamp for this file, because a single stamp for a list nobody re-read is worth nothing.
 
 Generated from the free-tier catalogue at https://agentdeals.dev, which is where each row's record lives. It is regenerated whenever those records move, so editing it by hand is pointless — the next run overwrites it. The code that writes it is https://github.com/robhunter/agentdeals/blob/main/src/llm-api-readme.ts, so every rule this file states can be read against the rule it applies.
 
@@ -17,7 +17,7 @@ A record is published here when it carries one of four subtype labels, and by no
 - `model_hosting` — you supply or select a model and the platform serves it behind an endpoint on hardware you choose
 - `embeddings_api` — returns a vector for text or media so it can be compared to other vectors; the vector is the output, not a completion
 
-31 records carry one of those. The catalogue holds them under **AI / ML** and **AI Coding**, and 68 records there are left out. Each is left out for a stated reason, counted here so the size of each reason is visible:
+32 records carry one of those. The catalogue holds them under **AI / ML** and **AI Coding**, and 68 records there are left out. Each is left out for a stated reason, counted here so the size of each reason is visible:
 
 | | Records | Why |
 | --- | --- | --- |
@@ -33,10 +33,10 @@ Nothing else keeps a record out. A record whose terms name no free price is stil
 
 | | |
 | --- | --- |
-| Records | 31 |
+| Records | 32 |
 | Carrying a rating | 17 |
 | Recorded as ended | 1 |
-| Publishing a reason instead of a rating | 13 — `gate:not_a_free_offer` 5, `no_source` 4, `states_no_terms` 2, `does_not_name_vendor` 1, `unconfirmed` 1 |
+| Publishing a reason instead of a rating | 14 — `gate:not_a_free_offer` 5, `no_source` 4, `states_no_terms` 3, `does_not_name_vendor` 1, `unconfirmed` 1 |
 | Showing the terms they replaced | 0 |
 | Carrying a caveat about our own reading | 0 |
 
@@ -50,7 +50,7 @@ Those counts are generated with the rows. If most of a column carries a caveat, 
 
 - `stable`, `caution` or `risky` — always printed beside the single dated record that produced it;
 - `ended` — a free tier we recorded going away. The row stays for the record;
-- `unrated` — we are publishing no rating, and the next column says why. 13 of 31 rows are unrated. A record whose page we could not read, that names no terms we can read, that is not a free offer, whose terms name no free price, or whose link has stopped resolving gets the reason instead of a verdict. We would rather print why we cannot say than guess.
+- `unrated` — we are publishing no rating, and the next column says why. 14 of 32 rows are unrated. A record whose page we could not read, that names no terms we can read, that is not a free offer, whose terms name no free price, or whose link has stopped resolving gets the reason instead of a verdict. We would rather print why we cannot say than guess.
 
 **Record verified** is the day we last confirmed that record against the page. Where the link has not resolved for 14 days, we withhold that date and print the day the link last worked instead: a recent date over a destination that no longer answers is the most confident-looking thing on a page and the least true.
 
@@ -96,7 +96,7 @@ A change is one dated record about one vendor, carrying the terms before, the te
 
 A rating is decided by the *type* of the most recent narrowing record, never by how many records we hold. A vendor we have never had cause to examine reads the same as one with a long clean history — `stable` is a statement about our records, not a clean bill of health.
 
-## The records — 31
+## The records — 32
 
 | Vendor | The terms, and where they came from | Rating | What we can say | Record verified |
 | --- | --- | --- | --- | --- |
@@ -111,6 +111,7 @@ A rating is decided by the *type* of the most recent narrowing record, never by 
 | [Google Gemini API](https://agentdeals.dev/vendor/google-gemini-api)<br>Free (Reduced) | Our record, read from [ai.google.dev/pricing](https://ai.google.dev/pricing) on 2026-08-18: Free tier: Gemini 3.8 Flash, 3.7 Flash, 3.6 Flash, 3.5 Flash, 3.5 Flash-Lite, 3.1 Flash-Lite, Gemini 3 Flash Preview, Gemini Embedding 2 and Gemma 4 are free of charge. Also free of charge are Gemini 3.8 Live (real-time voice), Gemini 3.5 Live Translate (translation), Gemini 3.5 Transcribe (speech-to-text), Gemini 3.8 Flash TTS and Gemini 3.8 Flash-Lite TTS (text-to-speech). Gemini 3.1 Pro Preview and Gemini Omni Flash Preview are paid only. No Gemini image model has a free tier in the API. Nano Banana 2.1 (gemini-nano-banana-2.1) became generally available on 2026-10-06. It costs $0.0336 per 1K image, $0.0504 per 2K image and $0.113 per 4K image. The Batch API halves those prices. Nano Banana Pro costs $0.134 per 1K or 2K image and $0.24 per 4K image. Google publishes no free-tier rate limits; each project's limits are shown in Google AI Studio. Since 2026-09-18 Google serves the Gemini 2.5 models only to users who have used them before, and points new projects to 3.5 Flash-Lite or 3.8 Flash. Paid, per million tokens (input/output): Gemini 3.8 Flash $0.75/$3.75 until 2026-12-31, then $1.50 input and $7.50 output from 2027-01-01 (3.7 Flash and 3.6 Flash: the same prices and dates); Gemini 3.5 Flash $1.50/$9; Gemini 3.5 Flash-Lite $0.30/$2.50; Gemini 3.1 Flash-Lite $0.25/$1.50; Gemini 3.1 Pro Preview $2/$12 (prompts up to 200K tokens). The Batch API costs half the standard price; Gemini 3.8 Flash is $0.375/$1.875 per million tokens through 2026-12-31. Grounding with Google Search is not available on the free tier for Gemini 3.x models. On the paid tier, 5,000 search requests a month are free, shared across all Gemini 3.x models, then $14 per 1,000. Accounts opened after 2026-03-02 cannot spend the $300 Google Cloud welcome credit on the Gemini API. | `stable` | We rate it stable. None of the 4 recorded changes narrowed the terms. | 2026-08-18 |
 | [Google Gemini Embedding 2](https://agentdeals.dev/vendor/google-gemini-embedding-2)<br>Pay-as-you-go | Our record, read from [cloud.google.com/vertex-ai/docs/generative-ai/embeddings/get-text-embeddings](https://cloud.google.com/vertex-ai/docs/generative-ai/embeddings/get-text-embeddings) on 2026-08-17: First natively multimodal embedding model — text, images, video, audio, and documents in a single embedding space. Enables cross-modal similarity search and retrieval. Available via Vertex AI and Gemini API. | `unrated` | The page we cite for Google Gemini Embedding 2 states no amount, tier or rate we can read when we last looked, on 2026-10-01. | 2026-08-17 |
 | [Groq](https://agentdeals.dev/vendor/groq)<br>Free | Our record, read from [console.groq.com/docs/rate-limits](https://console.groq.com/docs/rate-limits) on 2026-10-03: Fast LLM inference on Groq's LPU hardware. Free plan: gpt-oss-120b, gpt-oss-20b and Qwen3.8 27B, each at 30 requests a minute, 1,000 requests and 200,000 tokens a day, plus Whisper speech-to-text at 2,000 requests a day. Llama 3.3 70B and Llama 3.1 8B left the free and developer plans on 2026-08-16 and are Enterprise-only. Orpheus text-to-speech (English and Saudi Arabic) is also on the free plan, at 10 requests a minute, 100 requests and 3,600 tokens a day. Developer plan prices per 1M tokens: gpt-oss-120b $0.15/$0.60; gpt-oss-20b $0.075/$0.30. Orpheus text-to-speech costs $22 per 1M characters in English and $40 in Saudi Arabic. | `caution` | We rate it caution — one recorded limit reduction, on 2026-08-16. | 2026-10-03 |
+| [Hetzner Inference API](https://agentdeals.dev/vendor/hetzner-inference-api)<br>Free | Our record, read from [docs.hetzner.com/general/company-and-policy/experiments/inference](https://docs.hetzner.com/general/company-and-policy/experiments/inference/) on 2026-10-09: Hetzner's experimental Inference API: an OpenAI-compatible API for open-weight models, free while it stays experimental. Models listed on 2026-10-09: Qwen3.6-35B-A3B and Qwen3.8-27B, each with a 262,144-token context and image input. Limits per API key, per minute: 4M input tokens, 100k output tokens and 10 requests. Needs a Hetzner account; keys are created at experiments.hetzner.com. Hetzner says it does not store the content of requests or responses. | `unrated` | The page we cite for Hetzner Inference API states no amount, tier or rate we can read when we last looked, on 2026-10-09. | 2026-10-09 |
 | [Hugging Face](https://agentdeals.dev/vendor/hugging-face)<br>Free | Our record, read from [huggingface.co/docs/inference-providers/pricing](https://huggingface.co/docs/inference-providers/pricing) on 2026-10-05: ML model hub. Free users get $0.10 a month of Inference Providers credits (subject to change); Inference Providers serves 200+ models, and extra usage requires a credits purchase. PRO ($9/month) gets $2.00 a month. Free accounts get 100GB of private storage and best-effort public storage; substantial storage needs PRO, Team or Enterprise. | `stable` | It's stable — zero pricing changes recorded. | 2026-10-05 |
 | [Keywords AI](https://agentdeals.dev/vendor/keywords-ai)<br>Free | Our record, read from [respan.ai/pricing](https://www.respan.ai/pricing) on 2026-10-06: Rebranded to Respan; keywordsai.co redirects to respan.ai. Free plan: full platform, 100k logs, 1k scores, 5 datasets, 2 evaluators, 5 prompts. No credit card required. | `stable` | We rate it stable. The one record we hold cites no source, so it sets no rating. | 2026-10-06 |
 | [LLM7.io](https://agentdeals.dev/vendor/llm7-io)<br>Free | Our record, read from [docs.llm7.io/limits](https://docs.llm7.io/limits) on 2026-08-17: LLM inference gateway. With a free token from dash.llm7.io: 1 request a second, 60 a minute, 250 an hour and 100,000 tokens per 24 hours, counting input and output tokens; LLM7 says free quotas may be reduced without notice. Free access covers turbo-tier models not marked usage-only, such as GLM-5.3-Flash and codestral-latest. Other models, including all image and speech-to-text models, need Pro ($12/mo) or a paid balance. | `caution` | We rate it caution — one recorded limit reduction, discovered 2026-10-07. | 2026-08-17 |
