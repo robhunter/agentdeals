@@ -22,11 +22,11 @@
       "changed": "2026-10-08"
     },
     "/ai-free-tiers": {
-      "hash": "209b705b3bc78100",
+      "hash": "784a7d5aa7e1e3f5",
       "changed": "2026-10-09"
     },
     "/ai-ml-alternatives": {
-      "hash": "5cde341ab1671573",
+      "hash": "f28bc5387c4fcaf1",
       "changed": "2026-10-09"
     },
     "/alternative-to": {
@@ -1083,8 +1083,8 @@
       "changed": "2026-10-08"
     },
     "/category/ai-ml": {
-      "hash": "c4f775e824dfa9c3",
-      "changed": "2026-10-08"
+      "hash": "a0891f2d80d249d2",
+      "changed": "2026-10-09"
     },
     "/category/analytics": {
       "hash": "f37399a187da04b0",
@@ -1233,8 +1233,8 @@
       "changed": "2026-10-07"
     },
     "/category/monitoring": {
-      "hash": "5758a3769b878fb5",
-      "changed": "2026-10-08"
+      "hash": "f3e424539320de6e",
+      "changed": "2026-10-09"
     },
     "/category/notebooks-data-science": {
       "hash": "dde26440531d918b",
@@ -1817,8 +1817,8 @@
       "changed": "2026-10-08"
     },
     "/compare/datadog-vs-grafana-cloud": {
-      "hash": "c6b65bc6561fb107",
-      "changed": "2026-10-07"
+      "hash": "95f08edd648286e3",
+      "changed": "2026-10-09"
     },
     "/compare/datalore-vs-deepnote": {
       "hash": "d3a5a244719ec628",
@@ -2136,8 +2136,8 @@
       "changed": "2026-10-06"
     },
     "/compare/grafana-cloud-vs-sentry": {
-      "hash": "1f6de2358880a2af",
-      "changed": "2026-10-07"
+      "hash": "54237c85d2305515",
+      "changed": "2026-10-09"
     },
     "/compare/grafana-loki-vs-highlight-io": {
       "hash": "be691d125442cc78",
@@ -2697,15 +2697,15 @@
       "changed": "2026-10-08"
     },
     "/datadog-alternatives": {
-      "hash": "66f65819fe8cef9c",
+      "hash": "eb13b70a4955528e",
       "changed": "2026-10-09"
     },
     "/datadog-vs-grafana-cloud": {
-      "hash": "9991075ba34441ea",
-      "changed": "2026-10-07"
+      "hash": "0bf5249709dd87f1",
+      "changed": "2026-10-09"
     },
     "/datadog-vs-new-relic": {
-      "hash": "00828ff76563cdce",
+      "hash": "cf69afacffb0b435",
       "changed": "2026-10-09"
     },
     "/datadog-vs-sentry": {
@@ -3087,8 +3087,8 @@
       "changed": "2026-09-12"
     },
     "/estimate": {
-      "hash": "f169e666ea4d0c30",
-      "changed": "2026-10-08"
+      "hash": "0857f425a81998b9",
+      "changed": "2026-10-09"
     },
     "/events": {
       "hash": "1cd961743e560957",
@@ -3125,7 +3125,7 @@
       "changed": "2026-10-09"
     },
     "/free-devops-stack": {
-      "hash": "fee6b01fd0d3ea19",
+      "hash": "76e2c7d0aa378ae8",
       "changed": "2026-10-09"
     },
     "/free-django-stack": {
@@ -3145,7 +3145,7 @@
       "changed": "2026-10-09"
     },
     "/free-llm-apis": {
-      "hash": "3585bd66ac8e0257",
+      "hash": "bce1ebb220bf7ad2",
       "changed": "2026-10-09"
     },
     "/free-nextjs-stack": {
@@ -3203,8 +3203,8 @@
       "changed": "2026-10-05"
     },
     "/groq-vs-mistral-ai": {
-      "hash": "68a1a5de5474284c",
-      "changed": "2026-10-08"
+      "hash": "ef46d6eaf7dcf76f",
+      "changed": "2026-10-09"
     },
     "/guides": {
       "hash": "8186ddc0aab14163",
@@ -3255,8 +3255,8 @@
       "changed": "2026-10-09"
     },
     "/llm-api-pricing": {
-      "hash": "726983dc6b5a4675",
-      "changed": "2026-10-08"
+      "hash": "ea4af3293ab79293",
+      "changed": "2026-10-09"
     },
     "/localstack-alternatives": {
       "hash": "667fbf653ac7117d",
@@ -3267,12 +3267,12 @@
       "changed": "2026-10-09"
     },
     "/monitoring-alternatives": {
-      "hash": "35481c63615bde03",
+      "hash": "1a4435a0f2a790a8",
       "changed": "2026-10-09"
     },
     "/monitoring-comparison-2026": {
-      "hash": "b5186d73e1867844",
-      "changed": "2026-10-08"
+      "hash": "2c6fa9e18fd765fb",
+      "changed": "2026-10-09"
     },
     "/neon-vs-supabase": {
       "hash": "9955720f2acd2e4d",
