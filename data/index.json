@@ -1702,7 +1702,7 @@
     {
       "vendor": "Grafana Cloud",
       "category": "Monitoring",
-      "description": "Free tier includes access to all Grafana Cloud services with limited usage, 14-day retention, and community support. 10k metric series, 50 GB logs, and 50 GB traces are included. A $19/month platform fee is required for 10k active series, 50 GB ingested logs/traces, and 30 days retention.",
+      "description": "Free tier includes access to all Grafana Cloud services with limited usage, 14-day retention, and community support. 10k metric series, 50 GB logs, and 50 GB traces are included. The Pro plan costs $19 a month plus usage. It includes 10k active series and 50 GB of logs and of traces, with usage above that billed. Pro keeps metrics for 13 months and logs, traces, profiles and k6 tests for 30 days.",
       "tier": "Free",
       "url": "https://grafana.com/pricing/",
       "tags": [
@@ -1741,21 +1741,14 @@
         ],
         "reviewed": "2026-09-01"
       },
-      "restated_from": {
-        "reading_date": "2026-09-02",
-        "source_url": "https://grafana.com/pricing/",
-        "record_date": "2026-09-02",
-        "change_type": "pricing_restructured",
-        "restated_on": "2026-09-20"
-      },
       "free_plan_excerpt": {
         "text": "free Always free Always $0 Perfect for personal projects, exploring new ideas, and early-stage startups. No charges ever. Start free Benefits: All Grafana Cloud services, with usage limits Adaptive Telemetry, AI Assistant, and much more Community support 14 days retention for metrics, logs, traces, profiles, & k6 performance tests",
         "url": "https://grafana.com/pricing/",
         "read_on": "2026-10-07"
       },
       "restatement_reverted": {
-        "record_date": "2026-10-07",
-        "reverted_on": "2026-10-07"
+        "record_date": "2026-09-02",
+        "reverted_on": "2026-10-09"
       }
     },
     {
@@ -3484,7 +3477,7 @@
     {
       "vendor": "Mistral AI",
       "category": "AI / ML",
-      "description": "Mistral's Free plan includes monthly usage shared across Studio, the API and Vibe Code. The pricing page no longer states the amount as of 2026-10-07; it previously listed $10 a month in API credits. When it is used up, usage can stop until the next month unless pay-as-you-go is turned on. API keys work with no credit card, within rate limits. The plan also has limited messages, web searches and coding sessions in Vibe. API prices: Ministral 3 (3B) $0.1/$0.1 (per 1M tokens); Mistral Small 4 $0.15/$0.6 (per 1M tokens); Mistral Large 3 $0.5/$1.5 (per 1M tokens); Mistral Large 4 (public preview since 2026-10-06, 1M-token context) $1.36/$4.18 (per 1M tokens), and Mistral charges half that for its first two weeks; Mistral Medium 3.5 $1.5/$7.5 (per 1M tokens); Codestral $0.3/$0.9 (per 1M tokens). Mistral Embed is $0.1 per 1M input tokens, and Codestral Embed is $0.15 per 1M input tokens. OCR 4.1 costs $4 per 1,000 pages. Mistral Moderation 2 is free. Mistral retired Devstral 2 (devstral-2512) on 2026-07-31 and names Mistral Medium 3.5 as its replacement. Batch processing is half price, and cached input tokens cost up to 90% less. Mistral publishes no rate-limit figures. Each organization's per-model limits (tokens per minute, requests per second) appear in Admin Panel > API > Limits.",
+      "description": "Mistral's Free plan includes monthly usage shared across Studio, the API and Vibe Code. The pricing page no longer states the amount as of 2026-10-07; it previously listed $10 a month in API credits. When it is used up, usage can stop until the next month unless pay-as-you-go is turned on. Mistral Pro costs $14.99 a month and includes $25.50 a month in API credits, shared across the API, Studio and Vibe Code. It included $30 a month until 2026-10-07. Verified students who have not used Vibe or Le Chat before can take the Education plan for $5.99 a month, for up to 12 months, with $15 a month in API credits. API keys work with no credit card, within rate limits. The plan also has limited messages, web searches and coding sessions in Vibe. API prices: Ministral 3 (3B) $0.1/$0.1 (per 1M tokens); Mistral Small 4 $0.15/$0.6 (per 1M tokens); Mistral Large 3 $0.5/$1.5 (per 1M tokens); Mistral Large 4 (public preview since 2026-10-06, 1M-token context) $1.36/$4.18 (per 1M tokens), and Mistral charges half that for its first two weeks; Mistral Medium 3.5 $1.5/$7.5 (per 1M tokens); Codestral $0.3/$0.9 (per 1M tokens). Mistral Embed is $0.1 per 1M input tokens, and Codestral Embed is $0.15 per 1M input tokens. OCR 4.1 costs $4 per 1,000 pages. Mistral Moderation 2 is free. Mistral retired Devstral 2 (devstral-2512) on 2026-07-31 and names Mistral Medium 3.5 as its replacement. Batch processing is half price, and cached input tokens cost up to 90% less. Mistral publishes no rate-limit figures. Each organization's per-model limits (tokens per minute, requests per second) appear in Admin Panel > API > Limits.",
       "tier": "Free",
       "url": "https://mistral.ai/pricing",
       "tags": [
