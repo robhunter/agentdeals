@@ -1,0 +1,607 @@
+{
+  "published": "2026-10-08",
+  "title": "Business Bank Accounts 2026: Free Plans, Fees and Changes",
+  "meta_description": "Mercury and Brex send domestic wires for $0 on free accounts. Found Plus now costs $35 a month. northone.com redirects to Relay.",
+  "lead": "Mercury and Brex send domestic wires for $0 on their free accounts. Relay Starter charges $8. Bluevine, Found and Lili charge $15. Novo charges up to $45. Found Plus now costs $35 a month, up from $19.99 in early 2026. Relay's $30 plan is now Grow and charges $5 per domestic wire. northone.com now redirects to Relay's site.",
+  "read_line": "Fees read on each bank's own pages on 2026-10-08.",
+  "free_accounts": {
+    "heading": "Free business accounts",
+    "intro": "Each row is a free plan with no monthly fee. The columns are the fees and terms that differ.",
+    "columns": [
+      "Bank and free plan",
+      "Outgoing domestic wire",
+      "Same-day ACH",
+      "Cash deposits",
+      "Interest",
+      "Deposit insurance"
+    ],
+    "rows": [
+      {
+        "label": "Mercury",
+        "cells": [
+          "$0",
+          "$0",
+          "Not accepted",
+          "None stated; Treasury, an investment account, needs a $250K Mercury balance",
+          "Up to $5M through partner banks and their sweep networks"
+        ]
+      },
+      {
+        "label": "Relay Starter",
+        "cells": [
+          "$8",
+          "$1",
+          "Up to $4.95 at Green Dot retailers; $0 at Allpoint ATMs",
+          "1.19% APY on savings",
+          "Up to $3M per business"
+        ]
+      },
+      {
+        "label": "Bluevine Standard",
+        "cells": [
+          "$15",
+          "$10",
+          "At Green Dot retailers and Allpoint+ ATMs",
+          "1.3% APY on up to $250K, in months you spend $500 on the debit card or receive $2,500 in customer payments",
+          "Up to $3M"
+        ]
+      },
+      {
+        "label": "Novo",
+        "cells": [
+          "Up to $45",
+          "1.5% (minimum $0.50, maximum $20)",
+          "Not in Novo's fee schedule",
+          "None (0% APY)",
+          "Up to $250,000"
+        ]
+      },
+      {
+        "label": "Found",
+        "cells": [
+          "$15",
+          "1% for same- or next-day transfers (minimum $0.50, maximum $25)",
+          "$2 each",
+          "None",
+          "Up to $250,000"
+        ]
+      },
+      {
+        "label": "Lili Core",
+        "cells": [
+          "$15",
+          "1.5% (minimum $0.50, maximum $20)",
+          "No Lili fee; retailers charge up to $4.95",
+          "2.25% APY on savings up to $500,000",
+          "Up to $3M"
+        ]
+      },
+      {
+        "label": "Brex Essentials",
+        "cells": [
+          "$0",
+          "$0",
+          "Not stated on Brex's pages",
+          "Brex Treasury, a money market fund that is not FDIC-insured",
+          "Up to $6M in Brex Vault"
+        ]
+      }
+    ]
+  },
+  "changes": {
+    "heading": "Changes in 2025 and 2026",
+    "intro": "Each row gives what changed, the old and new terms, and when.",
+    "rows": [
+      {
+        "bank": "Found",
+        "change": "Found Plus price",
+        "before": "$19.99 a month or $149.99 a year",
+        "after": "$35 a month or $315 a year",
+        "when": "Between 2026-02-08 and 2026-04-17",
+        "source": {
+          "text": "found.com/pricing (archived 2026-02-08, 2026-04-17)",
+          "links": [
+            {
+              "text": "2026-02-08",
+              "url": "https://web.archive.org/web/20260208170017/https://found.com/pricing"
+            },
+            {
+              "text": "2026-04-17",
+              "url": "https://web.archive.org/web/20260417174353/https://found.com/pricing"
+            }
+          ]
+        }
+      },
+      {
+        "bank": "Found",
+        "change": "Found Pro added",
+        "before": "",
+        "after": "$80 a month or $720 a year, with 2.50% APY on all balances",
+        "when": "Between 2025-12-05 and 2026-02-08",
+        "source": {
+          "text": "found.com/pricing (archived 2025-12-05, 2026-02-08)",
+          "links": [
+            {
+              "text": "2025-12-05",
+              "url": "https://web.archive.org/web/20251205230549/https://found.com/pricing"
+            },
+            {
+              "text": "2026-02-08",
+              "url": "https://web.archive.org/web/20260208170017/https://found.com/pricing"
+            }
+          ]
+        }
+      },
+      {
+        "bank": "Relay",
+        "change": "Plans",
+        "before": "Relay (free) and Relay Pro ($30)",
+        "after": "Starter ($0), Grow ($30) and Scale ($120, shown at $90 \"for a limited time\")",
+        "when": "Accounts opened from 2025-04-29; existing accounts when Relay moves them",
+        "source": {
+          "text": "relayfi.com/pricing (archived 2025-03-20, 2025-07-04)",
+          "links": [
+            {
+              "text": "2025-03-20",
+              "url": "https://web.archive.org/web/20250320085342/https://relayfi.com/pricing/"
+            },
+            {
+              "text": "2025-07-04",
+              "url": "https://web.archive.org/web/20250704131852/https://relayfi.com/pricing/"
+            }
+          ]
+        }
+      },
+      {
+        "bank": "Relay",
+        "change": "Outgoing domestic wire",
+        "before": "Free plan $5; Relay Pro $0",
+        "after": "Starter $8; Grow $5; Scale $5",
+        "when": "By 2026-03-12",
+        "source": {
+          "text": "relayfi.com/pricing (archived 2025-03-20, 2026-03-12)",
+          "links": [
+            {
+              "text": "2025-03-20",
+              "url": "https://web.archive.org/web/20250320085342/https://relayfi.com/pricing/"
+            },
+            {
+              "text": "2026-03-12",
+              "url": "https://web.archive.org/web/20260312012528/https://relayfi.com/pricing/"
+            }
+          ]
+        }
+      },
+      {
+        "bank": "Relay",
+        "change": "Same-day ACH",
+        "before": "$5 on Starter, $3 on Grow, $1 on Scale after 10 free a month",
+        "after": "$1 on Starter, $0.50 on Grow, $0 on Scale",
+        "when": "Between 2026-07-11 and 2026-08-11",
+        "source": {
+          "text": "relayfi.com/pricing (archived 2026-07-11); Relay help article updated 2026-08-11",
+          "links": [
+            {
+              "text": "2026-07-11",
+              "url": "https://web.archive.org/web/20260711020900/https://relayfi.com/pricing/"
+            },
+            {
+              "text": "Relay help article",
+              "url": "https://relayfi.com/hc/en-us/articles/35671952781204-Overview-of-Relay-Subscription-Plans/"
+            }
+          ]
+        }
+      },
+      {
+        "bank": "Mercury",
+        "change": "Annual billing",
+        "before": "Plus $35 and Pro $350 a month, billed monthly only",
+        "after": "Annual billing added at $29.90 and $299 a month; monthly prices unchanged",
+        "when": "Between 2025-08-05 and 2025-09-04",
+        "source": {
+          "text": "mercury.com/pricing (archived 2025-08-05, 2025-09-04)",
+          "links": [
+            {
+              "text": "2025-08-05",
+              "url": "https://web.archive.org/web/20250805005030/https://mercury.com/pricing"
+            },
+            {
+              "text": "2025-09-04",
+              "url": "https://web.archive.org/web/20250904062916/https://mercury.com/pricing"
+            }
+          ]
+        }
+      },
+      {
+        "bank": "Mercury",
+        "change": "Treasury minimum balance",
+        "before": "$500K",
+        "after": "$250K",
+        "when": "In three steps during 2025; the last between 2025-08-05 and 2025-09-04",
+        "source": {
+          "text": "mercury.com/pricing (archived 2025-01-14, 2025-09-04)",
+          "links": [
+            {
+              "text": "2025-01-14",
+              "url": "https://web.archive.org/web/20250114101716/https://mercury.com/pricing"
+            },
+            {
+              "text": "2025-09-04",
+              "url": "https://web.archive.org/web/20250904062916/https://mercury.com/pricing"
+            }
+          ]
+        }
+      },
+      {
+        "bank": "Lili",
+        "change": "Savings interest",
+        "before": "3.00% APY, paid plans only",
+        "after": "2.25% APY up to $500,000 and 4.00% from $500,000 to $1,000,000, on every plan including Core",
+        "when": "Rates effective 2026-01-13",
+        "source": {
+          "text": "lili.co/plans (archived 2025-06-16; live)",
+          "links": [
+            {
+              "text": "2025-06-16",
+              "url": "https://web.archive.org/web/20250616103709/https://lili.co/plans"
+            },
+            {
+              "text": "live",
+              "url": "https://lili.co/plans"
+            }
+          ]
+        }
+      },
+      {
+        "bank": "Bluevine",
+        "change": "Interest on checking",
+        "before": "1.5%, 2.7% and 3.7% APY on Standard, Plus and Premier (March 2025)",
+        "after": "1.3%, 1.75% and 3.0%",
+        "when": "Bluevine gives no dates",
+        "source": {
+          "text": "bluevine.com/business-checking/plans-and-pricing (archived 2025-03-13, 2025-10-09; live)",
+          "links": [
+            {
+              "text": "2025-03-13",
+              "url": "https://web.archive.org/web/20250313054029/https://www.bluevine.com/business-checking/plans-and-pricing"
+            },
+            {
+              "text": "2025-10-09",
+              "url": "https://web.archive.org/web/20251009193655/https://www.bluevine.com/business-checking/plans-and-pricing"
+            },
+            {
+              "text": "live",
+              "url": "https://www.bluevine.com/business-checking/plans-and-pricing"
+            }
+          ]
+        }
+      },
+      {
+        "bank": "Bluevine",
+        "change": "Owner",
+        "before": "",
+        "after": "Valley National Bancorp agreed to buy Bluevine. Bluevine says nothing changes for now: account and routing numbers, pricing and rates stay the same, and the two companies operate separately until the deal closes. It has not said what changes after that",
+        "when": "Announced 2026-09-28; expected to close in early 2027",
+        "source": {
+          "text": "bluevine.com newsroom and acquisition FAQ",
+          "links": [
+            {
+              "text": "bluevine.com newsroom",
+              "url": "https://www.bluevine.com/newsroom/valley-national-bancorp-bluevine-reach-acquisition-agreement"
+            },
+            {
+              "text": "acquisition FAQ",
+              "url": "https://www.bluevine.com/newsroom/valley-national-bancorp-bluevine-acquisition-faq"
+            }
+          ]
+        }
+      },
+      {
+        "bank": "Brex",
+        "change": "Owner",
+        "before": "",
+        "after": "Capital One completed its purchase of Brex. Brex's plan prices are unchanged",
+        "when": "2026-04-07",
+        "source": {
+          "text": "brex.com/journal",
+          "links": [
+            {
+              "text": "brex.com/journal",
+              "url": "https://www.brex.com/journal/capital-one-completes-acquisition-of-brex"
+            }
+          ]
+        }
+      },
+      {
+        "bank": "NorthOne",
+        "change": "Website",
+        "before": "NorthOne's own site",
+        "after": "northone.com and help.northone.com redirect to Relay's site. Relay has published no notice about it",
+        "when": "Between 2026-04-20 and 2026-10-08",
+        "source": {
+          "text": "northone.com (archived 2026-03-31, 2026-04-20; checked 2026-10-08)",
+          "links": [
+            {
+              "text": "2026-03-31",
+              "url": "https://web.archive.org/web/20260331160421/https://www.northone.com/"
+            },
+            {
+              "text": "2026-04-20",
+              "url": "https://web.archive.org/web/20260420164509/https://www.northone.com/pricing"
+            },
+            {
+              "text": "checked 2026-10-08",
+              "url": "https://www.northone.com/"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "paid_plans": {
+    "heading": "Paid plans",
+    "intro": "Mercury's pricing page shows annual prices by default. Billed monthly, Mercury Plus costs $35 and Pro $350.",
+    "rows": [
+      {
+        "bank": "Mercury",
+        "plan": "Plus",
+        "per_month": "$35 billed monthly; $29.90 billed annually",
+        "notes": "Unlimited 1099 filings"
+      },
+      {
+        "bank": "Mercury",
+        "plan": "Pro",
+        "per_month": "$350 billed monthly; $299 billed annually",
+        "notes": "A relationship manager"
+      },
+      {
+        "bank": "Relay",
+        "plan": "Grow",
+        "per_month": "$30",
+        "notes": "Domestic wires $5; same-day ACH $0.50; 1.87% APY on savings"
+      },
+      {
+        "bank": "Relay",
+        "plan": "Scale",
+        "per_month": "$120, shown at $90 \"for a limited time\" since at least July 2025",
+        "notes": "Domestic wires $5; same-day ACH $0; 3.21% APY on savings"
+      },
+      {
+        "bank": "Bluevine",
+        "plan": "Plus",
+        "per_month": "$30; waived when you keep a $20,000 average daily balance and spend $2,000 a month on the debit card",
+        "notes": "1.75% APY on up to $250K; domestic wires $12"
+      },
+      {
+        "bank": "Bluevine",
+        "plan": "Premier",
+        "per_month": "$95; waived when you keep a $100,000 average daily balance and spend $5,000 a month on the debit card",
+        "notes": "3.0% APY on all balances; domestic wires $7.50"
+      },
+      {
+        "bank": "Found",
+        "plan": "Plus",
+        "per_month": "$35, or $315 a year",
+        "notes": "1.50% APY on up to $20,000"
+      },
+      {
+        "bank": "Found",
+        "plan": "Pro",
+        "per_month": "$80, or $720 a year",
+        "notes": "2.50% APY on all balances; domestic wires $10"
+      },
+      {
+        "bank": "Lili",
+        "plan": "Pro",
+        "per_month": "$15, or $144 a year; $9 a month for the first 3 months",
+        "notes": ""
+      },
+      {
+        "bank": "Lili",
+        "plan": "Smart",
+        "per_month": "$35, or $336 a year; $21 a month for the first 3 months",
+        "notes": ""
+      },
+      {
+        "bank": "Lili",
+        "plan": "Premium",
+        "per_month": "$55, or $528 a year; $33 a month for the first 3 months",
+        "notes": ""
+      },
+      {
+        "bank": "Brex",
+        "plan": "Premium",
+        "per_month": "$12 per active user",
+        "notes": ""
+      }
+    ]
+  },
+  "checked_claim": {
+    "heading": "A claim we checked",
+    "text": "Search results describe Relay Pro at $30 a month with free outgoing wires. Relay replaced Pro with Grow for accounts opened from 2025-04-29, and Grow charges $5 per domestic wire. The structured data on Relay's pricing page still describes the old plans.",
+    "links": [
+      {
+        "text": "Relay's pricing page",
+        "url": "https://relayfi.com/pricing/"
+      }
+    ]
+  },
+  "banks": [
+    {
+      "name": "Mercury",
+      "read_on": "2026-10-08",
+      "sources": [
+        {
+          "url": "https://mercury.com/pricing",
+          "covers": "plans, fees, Treasury minimum"
+        },
+        {
+          "url": "https://mercury.com/faq",
+          "covers": "cash deposits"
+        },
+        {
+          "url": "https://web.archive.org/web/20250114101716/https://mercury.com/pricing",
+          "covers": "Treasury $500K"
+        },
+        {
+          "url": "https://web.archive.org/web/20250805005030/https://mercury.com/pricing",
+          "covers": "monthly billing only"
+        },
+        {
+          "url": "https://web.archive.org/web/20250904062916/https://mercury.com/pricing",
+          "covers": "annual billing, Treasury $250K"
+        }
+      ]
+    },
+    {
+      "name": "Relay",
+      "read_on": "2026-10-08",
+      "sources": [
+        {
+          "url": "https://relayfi.com/pricing/",
+          "covers": "plans, fees, APY"
+        },
+        {
+          "url": "https://web.archive.org/web/20250320085342/https://relayfi.com/pricing/",
+          "covers": "old plans and wire fees"
+        },
+        {
+          "url": "https://web.archive.org/web/20250704131852/https://relayfi.com/pricing/",
+          "covers": "new plans"
+        },
+        {
+          "url": "https://web.archive.org/web/20260312012528/https://relayfi.com/pricing/",
+          "covers": "new wire fees"
+        },
+        {
+          "url": "https://web.archive.org/web/20260711020900/https://relayfi.com/pricing/",
+          "covers": "same-day ACH $5/$3/$1"
+        },
+        {
+          "url": "https://relayfi.com/hc/en-us/articles/35671952781204-Overview-of-Relay-Subscription-Plans/",
+          "covers": "updated 2026-08-11, same-day ACH $1/$0.50/included"
+        }
+      ]
+    },
+    {
+      "name": "Bluevine",
+      "read_on": "2026-10-08",
+      "sources": [
+        {
+          "url": "https://www.bluevine.com/business-checking/plans-and-pricing",
+          "covers": "plans, fees, APY"
+        },
+        {
+          "url": "https://web.archive.org/web/20250313054029/https://www.bluevine.com/business-checking/plans-and-pricing",
+          "covers": "March 2025 APY"
+        },
+        {
+          "url": "https://web.archive.org/web/20251009193655/https://www.bluevine.com/business-checking/plans-and-pricing",
+          "covers": "October 2025 APY"
+        },
+        {
+          "url": "https://www.bluevine.com/newsroom/valley-national-bancorp-bluevine-reach-acquisition-agreement",
+          "covers": "announcement, closing"
+        },
+        {
+          "url": "https://www.bluevine.com/newsroom/valley-national-bancorp-bluevine-acquisition-faq",
+          "covers": "\"Nothing changes today\""
+        }
+      ]
+    },
+    {
+      "name": "Novo",
+      "read_on": "2026-10-08",
+      "sources": [
+        {
+          "url": "https://www.novo.co/legal/fee-schedule",
+          "covers": "Fee Schedule 2026, revised 2026-02-26"
+        }
+      ]
+    },
+    {
+      "name": "Found",
+      "read_on": "2026-10-08",
+      "sources": [
+        {
+          "url": "https://found.com/pricing",
+          "covers": "plans, APY"
+        },
+        {
+          "url": "https://found.com/legal/fee-schedule-lead",
+          "covers": "fees"
+        },
+        {
+          "url": "https://web.archive.org/web/20251205230549/https://found.com/pricing",
+          "covers": "no Pro"
+        },
+        {
+          "url": "https://web.archive.org/web/20260208170017/https://found.com/pricing",
+          "covers": "Plus $19.99, Pro $80"
+        },
+        {
+          "url": "https://web.archive.org/web/20260417174353/https://found.com/pricing",
+          "covers": "Plus $35"
+        }
+      ]
+    },
+    {
+      "name": "Lili",
+      "read_on": "2026-10-08",
+      "sources": [
+        {
+          "url": "https://lili.co/plans",
+          "covers": "plans, APY"
+        },
+        {
+          "url": "https://lili.co/legal-documents/sunrise-account-agreement",
+          "covers": "fee schedule"
+        },
+        {
+          "url": "https://web.archive.org/web/20250616103709/https://lili.co/plans",
+          "covers": "3.00% APY, paid plans only"
+        }
+      ]
+    },
+    {
+      "name": "Brex",
+      "read_on": "2026-10-08",
+      "sources": [
+        {
+          "url": "https://www.brex.com/pricing",
+          "covers": "plans"
+        },
+        {
+          "url": "https://www.brex.com/support/cost-of-brex-services",
+          "covers": "no wire fees"
+        },
+        {
+          "url": "https://www.brex.com/product/business-account",
+          "covers": "Treasury, Vault"
+        },
+        {
+          "url": "https://www.brex.com/journal/capital-one-completes-acquisition-of-brex",
+          "covers": "2026-04-07"
+        }
+      ]
+    },
+    {
+      "name": "NorthOne",
+      "read_on": "2026-10-08",
+      "sources": [
+        {
+          "url": "https://www.northone.com/",
+          "covers": "redirects to relayfi.com, checked 2026-10-08"
+        },
+        {
+          "url": "https://web.archive.org/web/20260331160421/https://www.northone.com/",
+          "covers": "NorthOne's own site"
+        },
+        {
+          "url": "https://web.archive.org/web/20260420164509/https://www.northone.com/pricing",
+          "covers": "NorthOne's own 404 page"
+        }
+      ]
+    }
+  ]
+}

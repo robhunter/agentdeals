@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { archiveCaptureDate, isCalendarDay, isPageAddress, isText, linkedWordsProblems, textFieldProblems } from "./guide-data.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -70,17 +71,6 @@ export interface AccountingPrices {
   vendors: AccountingVendor[];
 }
 
-const ARCHIVE_CAPTURE = /^https:\/\/web\.archive\.org\/web\/(\d{4})(\d{2})(\d{2})\d{6}\/(https?:\/\/.+)$/;
-
-export function archiveCaptureDate(url: string): string | null {
-  const match = url.match(ARCHIVE_CAPTURE);
-  return match ? `${match[1]}-${match[2]}-${match[3]}` : null;
-}
-
-export function archivedAddress(url: string): string | null {
-  return url.match(ARCHIVE_CAPTURE)?.[4] ?? null;
-}
-
 export function accountingPricesPath(): string {
   return process.env.AGENTDEALS_ACCOUNTING_PRICES_PATH || path.join(__dirname, "..", "data", "accounting_prices.json");
 }
@@ -115,22 +105,6 @@ export function parseAccountingPrices(text: string, file: string): AccountingPri
   return parsed as AccountingPrices;
 }
 
-const CALENDAR_DAY = /^\d{4}-\d{2}-\d{2}$/;
-
-function isCalendarDay(value: unknown): boolean {
-  if (typeof value !== "string" || !CALENDAR_DAY.test(value)) return false;
-  const day = new Date(`${value}T00:00:00Z`);
-  return !Number.isNaN(day.getTime()) && day.toISOString().slice(0, 10) === value;
-}
-
-function isText(value: unknown): value is string {
-  return typeof value === "string" && value.trim() !== "";
-}
-
-function isPageAddress(value: unknown): value is string {
-  return typeof value === "string" && /^https:\/\/[^\s]+$/.test(value);
-}
-
 function sourceProblems(source: unknown, at: string): string[] {
   const { label, urls } = (source ?? {}) as Partial<AccountingSource>;
   const problems: string[] = [];
@@ -143,11 +117,6 @@ function sourceProblems(source: unknown, at: string): string[] {
     problems.push(`${at} gives several addresses, which is allowed only for Internet Archive captures`);
   }
   return problems;
-}
-
-function textFieldProblems(record: unknown, fields: readonly string[], at: string): string[] {
-  const values = (record ?? {}) as Record<string, unknown>;
-  return fields.filter((field) => typeof values[field] !== "string").map((field) => `${at}.${field} is missing`);
 }
 
 export function accountingPricesProblems(data: unknown): string[] {
@@ -204,14 +173,11 @@ export function accountingPricesProblems(data: unknown): string[] {
   }
 
   const claim = prices.checked_claim;
-  if (!claim || !isText(claim.text) || !Array.isArray(claim.links)) {
+  if (!claim) {
     problems.push("checked_claim needs text and links");
   } else {
     problems.push(...textFieldProblems(claim, ["heading"], "checked_claim"));
-    claim.links.forEach((link, n) => {
-      if (!isText(link?.text) || !claim.text.includes(link.text)) problems.push(`checked_claim.links[${n}].text is not words of checked_claim.text`);
-      if (!isPageAddress(link?.url)) problems.push(`checked_claim.links[${n}].url is not an https address`);
-    });
+    problems.push(...linkedWordsProblems(claim, "checked_claim", false));
   }
 
   if (!Array.isArray(prices.vendors) || prices.vendors.length === 0) {

@@ -32,7 +32,7 @@ function readPage(html: string): Page {
   }));
   const scale = body.slice(body.indexOf('<h2 id="scale">'), body.indexOf('<h2 id="when">'));
   return {
-    text: plain(body),
+    text: plain(body.replace(/<div class="more-guides"[\s\S]*$/, " ")),
     meta: plain(html.match(/<meta name="description" content="([^"]*)"/)?.[1] ?? ""),
     chooseVercel: plain(body.match(/<strong>Choose Vercel if:<\/strong>\s*<p>([\s\S]*?)<\/p>/)?.[1] ?? ""),
     tables,
