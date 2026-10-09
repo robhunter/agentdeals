@@ -21,9 +21,9 @@ A record is published here when it carries one of four subtype labels, and by no
 
 | | Records | Why |
 | --- | --- | --- |
-| `not_read_against_subtypes` | 27 | We have not read this record against any subtype taxonomy, so we hold no basis for saying it serves models. That states what we have not done rather than a finding about the product, and it stops applying the day the record is classified. |
+| `not_read_against_subtypes` | 23 | We have not read this record against any subtype taxonomy, so we hold no basis for saying it serves models. That states what we have not done rather than a finding about the product, and it stops applying the day the record is classified. |
 | `no_subtype_applies` | 8 | We have read this record against the taxonomy and none of its subtypes applies, so it is not one of the kinds of product those labels describe. |
-| `another_function` | 33 | The record is labelled, and every label it carries names a different function — observability, evaluation, labelling, generation and the rest are not the serving of a model behind an API. |
+| `another_function` | 37 | The record is labelled, and every label it carries names a different function — observability, evaluation, labelling, generation and the rest are not the serving of a model behind an API. |
 
 A record left out is not a record we are hiding: every one of them is published in full at https://agentdeals.dev, and `not_read_against_subtypes` in particular measures our own reading rather than the product.
 
