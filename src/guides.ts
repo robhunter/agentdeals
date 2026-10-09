@@ -107,6 +107,7 @@ const GUIDE_ENTRIES: Array<{ slug: string; title: string }> = [
   { slug: "free-tier-facts-ai-models-get-wrong", title: "Free-Tier Facts AI Models Get Wrong (2026)" },
   { slug: "accounting-software-pricing-2026", title: "Accounting Software 2026: Free Plans and Price Increases" },
   { slug: "business-bank-account-fees-2026", title: "Business Bank Accounts 2026: Free Plans, Fees and Changes" },
+  { slug: "company-formation-pricing-2026", title: "Forming a US Company in 2026: Costs and Changes" },
 ];
 
 export function getGuideList(): GuideMetadata[] {
