@@ -43,7 +43,7 @@ import { comparisonVerdictText, freeTierFaqAnswer, stabilityFaqAnswer, type Comp
 import { gateStatesAnEnding, publishedVendorLevel, restorationClause, restoredRemovalReason, vendorVerdictSentence, withheldRecordCountsOf, WITHHOLDING_BADGE_LABELS, vendorBadge, freeTierClaim, endingStatedInPlaceOfARating, endingShutsTheProductDown, endedClaimReliabilityAnswer, statesRiskCause, withholdingThatDoesNotLapse, demotionTheVerdictNames, narrowingSentence, ourOwnRecordsSentence, changeKindNoun, isOurOwnBookkeeping, emptyHistoryCaveatSentence, refusedReadOurConfirmationSupersedes, refusedReadWeHold, refusedReadWithholdingSentence, nothingWeReadDescribesTheTerms, unconfirmedThresholdSentence, unconfirmedTermsOpening, whyWeCannotConfirmTheseTerms, withheldForARefusedRead, withUnconfirmedTerms, refusalWithholdsStability, termsUnconfirmedBySource, termsTheVerdictWithholds, closingTerms, termsWithTheReasonWeCannotConfirmThem, termsNotVerifiedMetaSentence, termsWithheldLabel, theReadConfirmedThePrice, unconfirmedTermsSentence, whereTheDoubtSits, withheldBadgeLabel, type BadgeWithholding, type UnconfirmedTerms, type FreeTierClaim, type VendorVerdictInput, type WhereTheDoubtSits } from "./vendor-verdict.js";
 import { descriptionDeniesAFreeTier, listingOffersAFreeTier, tierMayCarryAFreePlanExcerpt, tierRecordsAFreeTier, tierWhoseFreeOfferIsTheLicence } from "./free-tier-record.js";
 import { whyTheExcerptCannotStand } from "./free-plan-excerpt-rules.js";
-import { alternativesUnderTheVendorsRule, conditionsBesideStoredTerms, conditionsForTheBrowser, conditionsHtml, conditionsOf, levelBesideTheVendorsRule, productionAnswerOpening, rowSpanningTheTableHtml, stableRatingBesideTheVendorsRule, theVendorsRuleOnProduction, withConditionsAfter, type TheVendorsRule } from "./listing-conditions.js";
+import { alternativesUnderTheVendorsRule, conditionRulingOut, conditionsBesideStoredTerms, conditionsForTheBrowser, conditionsHtml, conditionsOf, levelBesideTheVendorsRule, productionAnswerOpening, rowSpanningTheTableHtml, stableRatingBesideTheVendorsRule, theVendorsRuleOnProduction, trialProductionAnswer, withConditionsAfter, type TheVendorsRule } from "./listing-conditions.js";
 import { conditionsField } from "./conditions-field.js";
 import { PAGE_HEAD_OPEN, withLedeBeforeNav } from "./page-lede.js";
 import { withReviewByline } from "./page-byline.js";
@@ -5925,6 +5925,7 @@ ${allCompareLinks.join("\n")}
 
   const restoredRemovalLowersTheRating = riskLevel === "caution" ? restoredRemovalReason(verdictInput) : null;
   const vendorsRuleOnProduction = hasFree && !endedBy ? theVendorsRuleOnProduction(listingConditions) : null;
+  const trialRuledOutForProduction = timeLimitedOffer ? conditionRulingOut(listingConditions, "production") : null;
   const ratingBesideTheVendorsRule = (): (string | null)[] =>
     riskLevel === "stable" || (primaryGate && historyLevel === "stable")
       ? [primaryGate ? null : stableRatingBesideTheVendorsRule(vendorName), vendorChanges.length > 0 ? narrowingSentence(vendorChanges, primary, termsSuperseded !== null) : null]
@@ -5944,7 +5945,9 @@ ${allCompareLinks.join("\n")}
     : eligibilityGateSentence + gateSentenceOpeningTheProductionAnswer + (levelWithheld
     ? `${vendorsRuleOnProduction ? `${productionAnswerOpening(vendorName, vendorsRuleOnProduction)} ` : ""}${withheldLevelSentence(levelWithheld, vendorName, unconfirmableSince)} We cannot confirm what this offer provides today, so we are not recommending it for production or for anything else until we can.`
     : timeLimitedOffer
-    ? `Not for long. It is ${timeLimitedOffer.note}, so plan for paid usage before you depend on it.`
+    ? (trialRuledOutForProduction
+      ? trialProductionAnswer(trialRuledOutForProduction)
+      : `Not for long. It is ${timeLimitedOffer.note}, so plan for paid usage before you depend on it.`)
     : hasFree
     ? (endedBy
       ? endedClaimReliabilityAnswer(vendorName, endedBy)

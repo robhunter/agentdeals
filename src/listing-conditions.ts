@@ -77,6 +77,10 @@ export function productionAnswerOpening(vendorName: string, rule: TheVendorsRule
   return `${vendorName}'s free tier is not for commercial use, ${terms} Personal, non-commercial use of the free tier is still allowed.`;
 }
 
+export function trialProductionAnswer(condition: ListingCondition): string {
+  return `No. ${condition.text} (From ${citationLabel(condition.url)}, read ${condition.read_on}.) The trial also expires.`;
+}
+
 export function alternativesUnderTheVendorsRule(rule: TheVendorsRule, category: string): string {
   return rule.use === "production"
     ? `Consider free alternatives in ${category}.`

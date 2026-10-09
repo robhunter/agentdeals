@@ -9,8 +9,9 @@ import { fileURLToPath } from "node:url";
 type Offer = import("../src/types.ts").Offer;
 type ListingCondition = import("../src/types.ts").ListingCondition;
 
-const { USES_A_VENDOR_CAN_RULE_OUT, conditionsInPlainText, productionAnswerOpening, theVendorsRuleOnProduction, withConditionsAfter } = await import("../dist/listing-conditions.js");
+const { USES_A_VENDOR_CAN_RULE_OUT, conditionsInPlainText, conditionsOf, productionAnswerOpening, theVendorsRuleOnProduction, withConditionsAfter } = await import("../dist/listing-conditions.js");
 const { citationLabel } = await import("../dist/change-citation.js");
+const { toSlug } = await import("../dist/slug.js");
 const { ruleOnRestating } = await import("../dist/restatement.js");
 const { applyRestatements, revertRestatement } = await import("../scripts/restate-superseded-terms.js");
 
@@ -47,7 +48,15 @@ function listing(vendor: string, conditions: ListingCondition[]): Offer {
   } as Offer;
 }
 
+function trialListing(vendor: string, conditions: ListingCondition[]): Offer {
+  return { ...listing(vendor, conditions), tier: "Trial", description: `${vendor} gives new accounts $5 of trial credit.` } as Offer;
+}
+
 const NOTED = listing("Noted Conditions Co", [condition("Noted Conditions Co", "noted-marker")]);
+const TRIAL_NO_PRODUCTION = trialListing("Trial No Production Conditions Co", [
+  condition("Trial No Production Conditions Co", "trial-no-production-marker", ["production"]),
+]);
+const TRIAL_NOTED = trialListing("Trial Noted Conditions Co", [condition("Trial Noted Conditions Co", "trial-noted-marker")]);
 const NO_PRODUCTION = listing("No Production Conditions Co", [
   condition("No Production Conditions Co", "no-production-marker", ["production"]),
 ]);
@@ -90,7 +99,7 @@ const NOT_FREE_WITHHELD = {
   source_check: UNNAMED,
 } as Offer;
 
-const SYNTHETIC = [NOTED, NO_PRODUCTION, NO_COMMERCIAL_USE, NEITHER, ESCAPED, SUPERSEDED, CAUTION, RESTORED, UNRATED, WITHHELD, GATED, GATED_WITH_A_CHANGE, WIDENED, ENDED_WITHHELD, NOT_FREE_WITHHELD];
+const SYNTHETIC = [NOTED, NO_PRODUCTION, NO_COMMERCIAL_USE, NEITHER, ESCAPED, SUPERSEDED, CAUTION, RESTORED, UNRATED, WITHHELD, GATED, GATED_WITH_A_CHANGE, WIDENED, ENDED_WITHHELD, NOT_FREE_WITHHELD, TRIAL_NO_PRODUCTION, TRIAL_NOTED];
 
 function withoutConditions(offer: Offer): Offer {
   const { conditions: _theFieldUnderTest, ...rest } = offer;
@@ -215,7 +224,12 @@ const PRODUCTION_CLOSING = "Consider free alternatives in Databases.";
 const COMMERCIAL_USE_CLOSING = "For commercial use, consider free alternatives in Databases.";
 
 const WHAT_IS = (offer: Offer) => `What is ${offer.vendor}'s free tier?`;
-const PRODUCTION = (offer: Offer) => `Is ${offer.vendor}'s free tier good for production?`;
+const OFFER_NOUN = (offer: Offer) => offer.tier === "Trial" ? "free offer" : "free tier";
+const PRODUCTION = (offer: Offer) => `Is ${offer.vendor}'s ${OFFER_NOUN(offer)} good for production?`;
+const TRIAL_RULED_OUT = (offer: Offer) => {
+  const stated = offer.conditions![0];
+  return `No. ${stated.text} (From ${citationLabel(stated.url)}, read ${stated.read_on}.) The trial also expires.`;
+};
 const TODAYS_STABLE_PRODUCTION_WORDS = ["suitable for small production workloads", "reasonable starting point"];
 
 function decodeHtml(text: string): string {
@@ -404,6 +418,32 @@ describe("a listing's conditions of use", () => {
       assert.ok(today.includes("we are not recommending it for production or for anything else"), today);
       assert.strictEqual(await productionAnswers(withField.base, offer), today, offer.vendor);
     }
+  });
+
+  it("answers no where the vendor rules out production for a trial, in the condition's text with its page and the day we read it, then says the trial expires", async () => {
+    assert.strictEqual(await productionAnswers(withField.base, TRIAL_NO_PRODUCTION), TRIAL_RULED_OUT(TRIAL_NO_PRODUCTION));
+    assert.match(await productionAnswers(withoutField.base, TRIAL_NO_PRODUCTION), /^Not for long\. It is .+, so plan for paid usage before you depend on it\.$/);
+  });
+
+  it("keeps today's trial answer where no condition rules out production", async () => {
+    const today = await productionAnswers(withoutField.base, TRIAL_NOTED);
+    assert.match(today, /^Not for long\. /);
+    assert.strictEqual(await productionAnswers(withField.base, TRIAL_NOTED), today);
+  });
+
+  it("opens the production answer with no on every listed page that states a condition ruling out production", async () => {
+    const ruledOut = catalogue.offers.filter((offer: Offer) => conditionsOf(offer).some(c => (c.rules_out ?? []).includes("production")));
+    const listed: string[] = [];
+    for (const offer of [...ruledOut, NO_PRODUCTION, NEITHER, TRIAL_NO_PRODUCTION]) {
+      const html = await fetchText(withField.base, `/vendor/${toSlug(offer.vendor)}`);
+      const rule = conditionsOf(offer).find(c => (c.rules_out ?? []).includes("production"))!;
+      if (!decodeHtml(freeTierDetails(html)).includes(rule.text)) continue;
+      const answer = [...visibleFaq(html)].find(([question]) => / good for production\?$/.test(question))?.[1];
+      assert.ok(answer?.startsWith("No. "), `${offer.vendor}: ${answer}`);
+      listed.push(offer.vendor);
+    }
+    assert.deepStrictEqual(listed.slice(-3), [NO_PRODUCTION.vendor, NEITHER.vendor, TRIAL_NO_PRODUCTION.vendor]);
+    assert.ok(listed.length > 3, `no listed vendor states a condition ruling out production: ${ruledOut.map((o: Offer) => o.vendor).join(", ")}`);
   });
 
   it("gives a listing without the field today's production answer", async () => {
