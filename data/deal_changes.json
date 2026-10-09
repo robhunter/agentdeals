@@ -13055,7 +13055,7 @@
       "change_type": "product_deprecated",
       "date": "2026-10-14",
       "date_source": "vendor_page",
-      "summary": "The GPT-5.5 model retires from ChatGPT, ChatGPT Work and Codex on all plans on 2026-10-14. ChatGPT and Codex keep running: OpenAI names GPT-6 Sol as the replacement on Plus, Pro, Business, Enterprise and Edu plans and GPT-6 Luna on Free and Go plans. The OpenAI API is not affected.",
+      "summary": "ChatGPT and Codex keep running. Only the GPT-5.5 model retires from ChatGPT, ChatGPT Work and Codex on all plans on 2026-10-14: OpenAI names GPT-6 Sol as the replacement on Plus, Pro, Business, Enterprise and Edu plans and GPT-6 Luna on Free and Go plans. The OpenAI API is not affected.",
       "what_ends": "GPT-5.5",
       "tier": "Codex",
       "tier_direction": "narrowed",
