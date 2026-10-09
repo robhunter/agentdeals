@@ -16119,6 +16119,20 @@
       "alternatives": [],
       "recorded_date": "2026-10-09",
       "date_source": "vendor_page"
+    },
+    {
+      "vendor": "Together AI",
+      "change_type": "pricing_restructured",
+      "date": "2026-10-07",
+      "summary": "Together AI raised the minimum first credit purchase from $5 to $15; later purchases can still be $5. Its billing docs said $5 in the Internet Archive's capture of 2026-09-29 and have said $15 since the page was modified on 2026-10-07.",
+      "previous_state": "\"Access to the Together platform requires a minimum $5 credit purchase.\" (docs.together.ai/docs/billing-credits, Internet Archive capture of 2026-09-29)",
+      "current_state": "\"Access to the Together platform requires a minimum $15 credit purchase.\" and \"The minimum is $15 for your organization's first purchase and $5 after that.\" (docs.together.ai/docs/billing-credits, modified 2026-10-07)",
+      "source_url": "https://docs.together.ai/docs/billing-credits",
+      "impact": "low",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-10-09",
+      "date_source": "hand_written"
     }
   ]
 }

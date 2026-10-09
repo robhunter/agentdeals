@@ -34386,7 +34386,7 @@
     {
       "vendor": "Together AI",
       "category": "AI / ML",
-      "description": "Inference API for open-source models, billed per token. Together AI does not currently offer free trials; access requires a minimum $5 credit purchase, and the platform is fully prepaid. Llama 3.3 70B $1.04/$1.04 (per 1M tokens). gpt-oss-120B $0.15/$0.60.",
+      "description": "Inference API for open-source models, billed per token. Together AI does not currently offer free trials; access requires a minimum $15 credit purchase for an organization's first purchase ($5 for later purchases), and the platform is fully prepaid. Llama 3.3 70B $1.04/$1.04 (per 1M tokens). gpt-oss-120B $0.15/$0.60.",
       "conditions": [
         {
           "text": "By default, Together stores prompts and responses and may use them for product improvements. Organization admins can turn storage off in privacy settings, enabling zero data retention.",
