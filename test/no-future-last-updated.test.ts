@@ -93,15 +93,15 @@ describe("a record that has not taken effect is not a listing's recent change, d
   let base = "";
   let scratch = "";
 
-  const listing = (vendor: string) => ({
+  const listing = (vendor: string, category = "Databases", verifiedDate = dayOffset(-60)) => ({
     vendor,
-    category: "Databases",
+    category,
     description: `${vendor} publishes a free allowance of 10 GB storage and 1M reads per month.`,
     tier: "Free",
     url: `https://example.com/${vendor.toLowerCase()}/pricing`,
     tags: ["database"],
-    verifiedDate: dayOffset(-60),
-    source_check: { checked: dayOffset(-60), outcome: "ok", detail: `the page names ${vendor} and states "10 GB storage"` },
+    verifiedDate,
+    source_check: { checked: verifiedDate, outcome: "ok", detail: `the page names ${vendor} and states "10 GB storage"` },
   });
 
   const change = (vendor: string, date: string, change_type: string) => ({
@@ -123,12 +123,18 @@ describe("a record that has not taken effect is not a listing's recent change, d
     scratch = mkdtempSync(path.join(tmpdir(), "not-yet-in-effect-"));
     const indexPath = path.join(scratch, "index.json");
     const changesPath = path.join(scratch, "deal_changes.json");
-    writeFileSync(indexPath, JSON.stringify({ offers: ["Larkspurdb", "Moorhenapi", "Nettlecache"].map(listing) }));
+    writeFileSync(indexPath, JSON.stringify({
+      offers: [
+        ...["Larkspurdb", "Moorhenapi", "Nettlecache", "Pipitstore"].map((vendor) => listing(vendor)),
+        listing("Osprelay", "Monitoring", dayOffset(2)),
+      ],
+    }));
     writeFileSync(changesPath, JSON.stringify({
       changes: [
         change("Larkspurdb", dayOffset(1), "limits_reduced"),
         change("Larkspurdb", dayOffset(-30), "limits_reduced"),
         change("Moorhenapi", dayOffset(5), "new_tier"),
+        change("Pipitstore", dayOffset(-400), "free_tier_removed"),
       ],
     }));
     const child = spawn("node", [path.join(REPO, "dist", "serve.js")], {
@@ -179,11 +185,16 @@ describe("a record that has not taken effect is not a listing's recent change, d
     assert.ok(Math.abs(served - expected) <= 1, `Larkspurdb's free tier is ${served} days old where ${expected} were expected`);
   });
 
+  it("gives a free tier verified after the day it is served an age that cannot be read as a measurement, not 0", async () => {
+    const served = (await (await fetch(`${base}/api/vendor-risk/osprelay`)).json()).free_tier_longevity_days;
+    assert.ok(typeof served === "number" && served < 0, `Osprelay, verified on ${dayOffset(2)}, has a free tier ${served} days old`);
+  });
+
   it("dates the change log's last modification and its coverage by the newest change in effect", async () => {
     const dataset = jsonLdOf(await (await fetch(`${base}/pricing-changes`)).text()).find((ld) => ld["@type"] === "Dataset");
     assert.ok(dataset, "/pricing-changes publishes no Dataset");
     assert.strictEqual(dataset.dateModified, dayOffset(-30));
-    assert.strictEqual(dataset.temporalCoverage, `${dayOffset(-30)}/${dayOffset(-30)}`);
+    assert.strictEqual(dataset.temporalCoverage, `${dayOffset(-400)}/${dayOffset(-30)}`);
   });
 
   it("dates the vendor page by the change in effect", async () => {
@@ -193,7 +204,7 @@ describe("a record that has not taken effect is not a listing's recent change, d
     assert.deepStrictEqual([...new Set(modified)], [dayOffset(-30)]);
   });
 
-  it("keeps a vendor whose only record is still ahead out of Stable Picks, as the section's rule says, and names the vendor with no record", async () => {
+  it("keeps out of Stable Picks a vendor whose only record is still ahead and a vendor rated below stable, and names the stable vendor with no record", async () => {
     const page = await (await fetch(`${base}/trends/databases`)).text();
     const section = page.split("<h2>Stable Picks</h2>")[1]?.split("<h2")[0] ?? "";
     const named = [...section.matchAll(/href="\/vendor\/([^"]+)"/g)].map((m) => m[1]);
