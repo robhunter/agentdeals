@@ -9,6 +9,7 @@ export interface FaqItem {
   q: string;
   a: string;
   figuresFromRecord?: RecordProvenance;
+  figuresFromRecords?: RecordProvenance[];
 }
 
 export const FAQ_BASELINE = {
@@ -69,6 +70,31 @@ export function recordProvenanceClause(record: RecordProvenance): string {
   return record.lastRead
     ? `Figures from our ${record.vendor} record, last read ${record.lastRead}.`
     : `Figures from our ${record.vendor} record.`;
+}
+
+function namesJoinedWithAnd(names: readonly string[]): string {
+  return names.length <= 2 ? names.join(" and ") : `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}`;
+}
+
+function lastReadSpan(dates: readonly string[]): string {
+  const read = dates.filter(date => date !== "").sort();
+  if (read.length === 0) return "";
+  const earliest = read[0];
+  const latest = read[read.length - 1];
+  return earliest === latest ? `, last read ${earliest}` : `, last read ${earliest} to ${latest}`;
+}
+
+export function recordsProvenanceClause(records: readonly RecordProvenance[]): string {
+  const named = records.filter((record, i) => records.findIndex(other => other.vendor === record.vendor) === i);
+  if (named.length === 0) return "";
+  if (named.length === 1) return recordProvenanceClause(named[0]);
+  return `Figures from our ${namesJoinedWithAnd(named.map(record => record.vendor))} records${lastReadSpan(named.map(record => record.lastRead))}.`;
+}
+
+function itemProvenanceClause(item: FaqItem, pageClause: string): string {
+  if (item.figuresFromRecord) return recordProvenanceClause(item.figuresFromRecord);
+  if (item.figuresFromRecords) return recordsProvenanceClause(item.figuresFromRecords);
+  return pageClause;
 }
 
 const HTML_TAG = /<\/?[a-zA-Z][^>]*>/g;
@@ -133,7 +159,7 @@ export function faqPageJsonLd(pagePath: string, items: FaqItem[], today = utcTod
       name: item.q,
       acceptedAnswer: {
         "@type": "Answer",
-        text: answerWithProvenance(item.a, item.figuresFromRecord ? recordProvenanceClause(item.figuresFromRecord) : clause),
+        text: answerWithProvenance(item.a, itemProvenanceClause(item, clause)),
       },
     })),
   };

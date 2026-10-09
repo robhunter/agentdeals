@@ -101,9 +101,9 @@ import { statesNoFreeTier } from "./retired-terms.js";
 import { countsDownTo, shutdownDeadlineHtml } from "./shutdown-deadline.js";
 import { forecastShutdownsWithoutACard, whatEnds, type RecordACardCovers } from "./forecast-shutdowns.js";
 import { createRegistrationLimiter, rateLimitHeaders } from "./rate-limit.js";
-import { offerForSlug, vendorRates, cheapestRate, dearestRate, spanOfRates, formatRate, formatRateSpan, monthlyTokenCost, formatDollars, type ModelRate } from "./model-rates.js";
+import { offerForSlug, vendorRates, cheapestRate, dearestRate, spanOfRates, formatRate, formatRateSpan, monthlyTokenCost, formatDollars, amountValue, type ModelRate } from "./model-rates.js";
 import { DECLARED_FIGURE_READS, READ_DATES_THAT_ARE_NOT_FIGURE_READS, STALE_FACT_PAGES_BASELINE, TABLE_STALENESS_DISCLOSURES, declaredFigureReadsFor, factsOutdatedBy, linkifyVerdictBlocks, newestChangeBySlug, overdueReport, pageCompiledClause, pageDataProvenance, pageDateModified, pageFigureSource, tabulatedVendorSlots, tabulatedVendors, utcToday, verdictsOutdatedBy } from "./page-reviews.js";
-import { faqPageJsonLd, type FaqItem } from "./faq-provenance.js";
+import { faqPageJsonLd, type FaqItem, type RecordProvenance } from "./faq-provenance.js";
 import {
   GENEROSITY_JSON_TOKEN,
   GENEROSITY_PROSE_TOKEN,
@@ -31783,6 +31783,48 @@ function buildLlmApiPricingPage(): string {
       "The Batch API offers 50% discount on all models.",
     ].filter(sentence => sentence !== "").join(" ");
 
+  type PricedRate = NamedRate & { output: string };
+  type PricedModel = { provider: LlmProvider; rate: PricedRate };
+
+  const pricedModels: PricedModel[] = providers.flatMap(p =>
+    cellsOf.get(p.slug)!.rates
+      .filter((rate): rate is PricedRate => rate.model !== null && rate.output !== null)
+      .map(rate => ({ provider: p, rate })));
+
+  const byInputThenOutputPrice = (a: PricedModel, b: PricedModel): number =>
+    amountValue(a.rate.input) - amountValue(b.rate.input) || amountValue(a.rate.output) - amountValue(b.rate.output);
+
+  const cheapestModels = [...pricedModels].sort(byInputThenOutputPrice).slice(0, 4);
+
+  const inDollarsAndCents = (amount: string): string => {
+    const [dollars, cents = ""] = amount.split(".");
+    return dollars + "." + cents.padEnd(2, "0");
+  };
+
+  const cheapestModelNamed = (m: PricedModel): string =>
+    m.provider.name + " " + m.rate.model + " (" + inDollarsAndCents(m.rate.input) + " input, " + inDollarsAndCents(m.rate.output) + " output)";
+
+  const withSerialAnd = (items: string[]): string =>
+    items.length <= 2 ? items.join(" and ") : items.slice(0, -1).join(", ") + ", and " + items[items.length - 1];
+
+  const deepseek = providers.find(p => p.slug === "deepseek-api")!;
+  const deepseekFlash = cheapestRate(cellsOf.get(deepseek.slug)!.rates);
+  const deepseekFlashSentence = deepseekFlash === null || deepseekFlash.model === null || deepseekFlash.output === null || cheapestModels.some(m => m.rate === deepseekFlash)
+    ? ""
+    : deepseek.name + " " + deepseekFlash.model + " costs " + inDollarsAndCents(deepseekFlash.input) + " input, " + inDollarsAndCents(deepseekFlash.output) + " output at peak hours; half that off-peak.";
+
+  const recordOf = (p: LlmProvider): RecordProvenance[] => {
+    const offer = offerForSlug(p.slug);
+    return offer ? [{ vendor: offer.vendor, lastRead: lastReadDate(offer) }] : [];
+  };
+  const cheapestForProductionRecords = [...cheapestModels.map(m => m.provider), ...(deepseekFlashSentence ? [deepseek] : [])].flatMap(recordOf);
+
+  const cheapestForProductionAnswer = [
+    (cheapestModels.length === 1 ? "The cheapest model on this page is " : "The cheapest models on this page are ") + withSerialAnd(cheapestModels.map(cheapestModelNamed)) + ".",
+    deepseekFlashSentence,
+    "These are list prices per million tokens.",
+  ].filter(sentence => sentence !== "").join(" ");
+
   const faqEntries: FaqItem[] = [
     { q: "Which LLM API has the best free tier in 2026?", a: "Groq's free plan allows 30 RPM, 1,000 requests and 200K tokens a day per model, no credit card required, with fast LPU-accelerated inference. " + freeTiersThisPageStandsBehind + " For frontier models specifically, Mistral's Free plan includes monthly API usage; its pricing page listed $10 a month until 2026-10-07, then stopped stating the amount." },
     { q: "How much does GPT-4o cost per token?", a: "GPT-4o costs $2.50 per million input tokens and $10 per million output tokens. For reference, 1 million tokens is roughly 750,000 words. The batch API offers 50% discount ($1.25/$5 per M tokens). GPT-4o-mini is significantly cheaper at $0.15/$0.60 per M tokens." },
@@ -31793,7 +31835,7 @@ function buildLlmApiPricingPage(): string {
         ? { figuresFromRecord: { vendor: anthropicRecord.vendor, lastRead: lastReadDate(anthropicRecord) } }
         : {}),
     },
-    { q: "What is the cheapest LLM API for production use?", a: "DeepSeek's deepseek-flash is $0.30/M input and $1.20/M output at peak hours, half that off-peak, with cached input at $0.006/M. Groq offers free tiers that can handle moderate production traffic. Google Gemini Flash models are free with rate limits." },
+    ...(cheapestModels.length > 0 ? [{ q: "What is the cheapest LLM API for production use?", a: cheapestForProductionAnswer, figuresFromRecords: cheapestForProductionRecords }] : []),
     { q: "Should I use a frontier lab API or an inference provider?", a: "Use frontier lab APIs (OpenAI, Anthropic, Google) when you need their proprietary models (GPT-4o, Claude, Gemini Pro) or specific features (function calling, vision, extended thinking). Use inference providers (Groq, Cerebras, OpenRouter) when running open-weight models, which usually cost less per token. Groq's free plan offers gpt-oss-120b, gpt-oss-20b and Qwen3.8 27B. Llama 3.3 70B left it on 2026-08-16." },
   ];
 
