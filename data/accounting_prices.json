@@ -24,7 +24,7 @@
       {
         "label": "Bank connection",
         "cells": [
-          "1 bank account",
+          "1 bank account; its transactions import automatically",
           "None. Bank reconciliation only; bank feeds start on Standard ($20 a month, or $15 a month billed annually)",
           "None. Bank connections need Pro ($19 a month or $190 a year)"
         ]
@@ -68,6 +68,12 @@
           "label": "quickbooks.intuit.com/pricing",
           "urls": [
             "https://quickbooks.intuit.com/pricing/"
+          ]
+        },
+        {
+          "label": "quickbooks.intuit.com/compare/quickbooks-free-vs-free-accounting-software",
+          "urls": [
+            "https://quickbooks.intuit.com/compare/quickbooks-free-vs-free-accounting-software/"
           ]
         }
       ],
@@ -459,6 +465,10 @@
         {
           "url": "https://quickbooks.intuit.com/pricing/",
           "covers": "plans, Free plan"
+        },
+        {
+          "url": "https://quickbooks.intuit.com/compare/quickbooks-free-vs-free-accounting-software/",
+          "covers": "Free plan imports transactions from its one bank account"
         },
         {
           "url": "https://www.firmofthefuture.com/product-update/quickbooks-price-changes/",
