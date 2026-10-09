@@ -14845,7 +14845,7 @@ function buildFreeLlmApisPage(): string {
     ["OpenAI", "Anthropic API", "Google Gemini API", "Mistral AI", "Cohere", "xAI"].includes(o.vendor)
   );
   const inferencePlatforms = offeredToday.filter(o =>
-    ["Groq", "Cerebras", "GitHub Models", "NVIDIA NIM", "Cloudflare Workers AI", "Hugging Face", "OpenRouter", "Replicate", "Ollama Cloud"].includes(o.vendor)
+    ["Groq", "Cerebras", "GitHub Models", "NVIDIA NIM", "Cloudflare Workers AI", "Hugging Face", "OpenRouter", "Replicate", "Ollama Cloud", "Hetzner Inference API"].includes(o.vendor)
   );
   const aiGateways = offeredToday.filter(o =>
     ["Baseten", "Keywords AI", "Portkey", "Pollinations.AI", "Mediaworkbench.ai", "Lumenfall.ai"].includes(o.vendor)
