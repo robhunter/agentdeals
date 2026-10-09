@@ -278,6 +278,8 @@ function searchQueryAnchor(href: string, inner: string, attrs = ""): string {
 
 const swaggerUiDistPath = join(__dirname, "..", "node_modules", "swagger-ui-dist");
 
+const FOOTER_FOR_PAGES_WITHOUT_ONE = '<footer style="text-align:center;color:#64748b;font-size:.8rem;padding:2rem 1.5rem;margin-top:3rem;border-top:1px solid #334155">AgentDeals &mdash; open source, built for agents | <a href="/privacy" style="color:#94a3b8">Privacy</a> | <a href="/press" style="color:#94a3b8">Press</a> | <a href="/disclosure" style="color:#94a3b8">Affiliate Disclosure</a> | <a href="/contact" style="color:#94a3b8">Contact</a></footer>';
+
 const swaggerDocsHtml = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -357,6 +359,7 @@ const swaggerDocsHtml = `<!DOCTYPE html>
       syntaxHighlight: { theme: 'monokai' }
     });
   </script>
+${FOOTER_FOR_PAGES_WITHOUT_ONE}
 </body>
 </html>`;
 
@@ -2704,7 +2707,7 @@ ${offersHtml}
 
   ${signalHtmlBlock(BASE_URL, null, catOffers[0] ? toSlug(catOffers[0].vendor) : null)}
   ${buildMcpCta("Browse this category from your AI coding assistant. Search 1,600+ deals, compare free tiers, and track pricing changes — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -2777,7 +2780,7 @@ ${globalNavCss()}
   <div class="cat-index-grid">${catCardsHtml}
   </div>
 
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 </body>
 </html>`;
@@ -2832,7 +2835,7 @@ ${globalNavCss()}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category">Categories</a> &rsaquo; ${escHtmlServer(categoryName)}</div>
   <h1>${escHtmlServer(categoryName)}</h1>
   ${retiredCategoryNoticeHtml(categoryName, retirement, escHtmlServer)}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 </body>
 </html>`;
@@ -3314,7 +3317,7 @@ ${bestOfFaqHtml}
 
   ${signalHtmlBlock(BASE_URL, null, qualified[0] ? toSlug(qualified[0].offer.vendor) : null)}
   ${buildMcpCta("Get personalized recommendations from your AI. Search 1,600+ deals, compare free tiers, and track pricing changes — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -3400,7 +3403,7 @@ ${globalNavCss()}
   <div class="best-index-grid">${cardsHtml}
   </div>
 
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 </body>
 </html>`;
@@ -3653,7 +3656,7 @@ ${crossTaxonomyRows}
 
   <p style="font-size:.8rem;color:var(--text-dim);margin-top:2rem">This page is generated from the same constants the ranking uses, so it cannot drift from the code. Last computed ${escHtmlServer(date)}.</p>
 
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 </body>
 </html>`;
@@ -3742,7 +3745,7 @@ ${globalNavCss()}
   <h2>What we do with signals</h2>
   <p>Signals never affect ranking, sorting or ordering on any page. We record per-vendor counts and do not publish them.</p>
 
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="${CRITERIA_PATH}">How we rank</a> | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="${CRITERIA_PATH}">How we rank</a> | <a href="/privacy">Privacy</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 </body>
 </html>`;
@@ -3837,7 +3840,7 @@ ${globalNavCss()}
   <h1>Free Tier Comparisons</h1>
   <p class="page-meta">${totalComparisons} side-by-side vendor comparisons. Published pricing, change history, and risk indicators. <a href="/compare-tool" style="font-weight:600">Compare any two vendors &rarr;</a></p>
 ${categorySections}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 </body>
 </html>`;
@@ -4121,7 +4124,7 @@ ${watchCtaHtml}
 ${relatedHtml}
   ${signalHtmlBlock(BASE_URL, null, toSlug(a.vendor))}
   ${buildMcpCta("Compare any two vendors from your AI coding assistant. Search 1,600+ deals, compare free tiers, and track pricing changes — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -4616,7 +4619,7 @@ ${faqItems.map(f => `    <div class="faq-item">
   </div>
 
   ${buildMcpCta(`Compare ${escHtmlServer(a.vendor)}, ${escHtmlServer(b.vendor)}, and 1,600+ other developer tools from your AI coding assistant.`)}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -4851,7 +4854,7 @@ ${trendingHtml}
     <a href="/feed.xml">Subscribe via RSS &rarr;</a>
   </div>
 ${navHtml}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 </body>
 </html>`;
@@ -4914,7 +4917,7 @@ ${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" hre
     <a href="/feed.xml">Subscribe via RSS &rarr;</a>
   </div>
 
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 </body>
 </html>`;
@@ -5087,7 +5090,7 @@ ${contentHtml}
     </div>
   </div>
 ${navHtml}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 </body>
 </html>`;
@@ -5204,7 +5207,7 @@ ${globalNavCss()}
     <span class="search-count" id="search-count"></span>
   </div>
 ${categorySections}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 <script>
 (function(){
@@ -6151,7 +6154,7 @@ ${internalLinksHtml}
 ${faqHtml}
   ${signalHtmlBlock(BASE_URL, slug)}
   ${buildMcpCta("Want to compare this vendor in your AI? Search 1,600+ deals, compare free tiers, and track pricing changes — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -6520,7 +6523,7 @@ ${allAltsHtml}
 ${altFaqHtml}
   ${signalHtmlBlock(BASE_URL, null, enrichedAlts[0] ? toSlug(enrichedAlts[0].vendor) : null)}
   ${buildMcpCta("Find alternatives from your AI coding assistant. Search 1,600+ deals, compare free tiers, and track pricing changes — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -6617,7 +6620,7 @@ ${globalNavCss()}
 ${vendorListHtml}
   </div>
 
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 </body>
 </html>`;
@@ -8731,7 +8734,7 @@ ${tableRows}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get personalized recommendations from your AI. Search " + offers.length.toLocaleString() + "+ deals, compare free tiers, and track pricing changes — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -8833,7 +8836,7 @@ ${mcpCtaCss()}
   </div>
 
   ${buildMcpCta("Get personalized migration advice from your AI assistant. Compare free tiers, track pricing changes, and plan your stack — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -9454,7 +9457,7 @@ function buildIntegrationGuidePage(slug: string): string | null {
     '    <h2>Other Framework Guides</h2>\n' +
     '    <div class="guide-cards">\n      ' + otherGuidesHtml + '\n    </div>\n' +
     '  </div>\n' +
-    '\n  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>\n' +
+    '\n  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>\n' +
     '</div>\n' +
     '<script>' + mcpCtaScript() + '</script>\n' +
     '</body>\n</html>';
@@ -9640,7 +9643,7 @@ function buildEventsIndexPage(): string {
     + '<h1>Developer Events &amp; Conference Coverage</h1>\n'
     + '<p class="subtitle">Live tracking of pricing changes, new free tiers, and developer program updates from major tech conferences.</p>\n'
     + eventCards
-    + '\n<footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>\n'
+    + '\n<footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>\n'
     + '</div>\n</body>\n</html>';
 }
 
@@ -9865,7 +9868,7 @@ function buildEventPage(slug: string): string | null {
     + categoryGroups + '\n</section>\n'
     + comparisonsHtml + '\n'
     + watchHtml + '\n'
-    + '<footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>\n'
+    + '<footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>\n'
     + '</div>\n</body>\n</html>';
 }
 
@@ -9976,7 +9979,7 @@ function buildReportsIndexPage(): string {
     + '<h1>Monthly Pricing Intelligence Reports</h1>\n'
     + '<p class="subtitle">Auto-generated monthly analysis of developer tool pricing trends across ' + trackedChanges(allChanges).length + ' tracked changes. ' + listOrderSentence("newest-first") + '</p>\n'
     + monthCards
-    + '\n<footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>\n'
+    + '\n<footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>\n'
     + '</div>\n</body>\n</html>';
 }
 
@@ -10162,7 +10165,7 @@ function buildMonthlyReportPage(yearMonth: string): string | null {
     + '<p class="section-desc">Which categories saw the most pricing changes</p>\n'
     + '<table><thead><tr><th>Category</th><th>Total</th><th>Negative</th><th>Positive</th></tr></thead><tbody>' + catBreakdownRows + '</tbody></table>\n'
     + reportNav
-    + '\n<footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>\n'
+    + '\n<footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>\n'
     + '</div>\n</body>\n</html>';
 }
 
@@ -10300,7 +10303,7 @@ ${mcpCtaCss()}
   </div>
 
   ${buildMcpCta("Get personalized recommendations from your AI assistant. Compare free tiers, track pricing changes, and plan your stack — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -10515,7 +10518,7 @@ ${buildCards(enrichedCoding)}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get AI tool recommendations from your AI assistant. Compare free tiers, track pricing changes, and plan your stack — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -10857,7 +10860,7 @@ ${buildCards(startupCredits)}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get hosting recommendations from your AI assistant. Compare free tiers, track pricing changes, and plan your stack — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -11190,7 +11193,7 @@ ${buildCards(timeSeries)}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get database recommendations from your AI assistant. Compare free tiers, track pricing changes, and plan your stack — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -11531,7 +11534,7 @@ ${buildCards(startupPrograms)}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get monitoring recommendations from your AI assistant. Compare free tiers, track pricing changes, and audit your observability stack — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -11838,7 +11841,7 @@ ${buildCards(specialized)}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get CI/CD recommendations from your AI assistant. Compare build minutes, track pricing changes, and find the right pipeline tool for your stack \u2014 directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -12175,7 +12178,7 @@ ${buildCards(other)}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get security tool recommendations from your AI assistant. Compare SAST scanners, secret managers, auth providers, and container security tools \u2014 directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -12507,7 +12510,7 @@ ${buildCards(other)}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get testing tool recommendations from your AI assistant. Compare browser testing, visual regression, load testing, and E2E automation tools \u2014 directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -12819,7 +12822,7 @@ ${buildCards(other)}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get cloud storage recommendations from your AI assistant. Compare object storage, media CDNs, and file hosting services \u2014 directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -13136,7 +13139,7 @@ ${buildCards(other)}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get analytics tool recommendations from your AI assistant. Compare product analytics, web analytics, and session replay tools \u2014 directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -13447,7 +13450,7 @@ ${buildCards(other)}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get AI tool recommendations from your AI assistant. Compare LLM APIs, coding tools, and ML platforms \u2014 directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -13778,7 +13781,7 @@ ${buildCards(other)}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get email tool recommendations from your AI assistant. Compare transactional APIs, marketing platforms, and email infrastructure — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -14116,7 +14119,7 @@ ${buildCards(other)}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get design tool recommendations from your AI assistant. Compare UI kits, icons, and prototyping tools \u2014 directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -14454,7 +14457,7 @@ ${buildCards(other)}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get project management tool recommendations from your AI assistant. Compare PM tools, team chat, and scheduling — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -14771,7 +14774,7 @@ ${buildCards(other)}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get IDE and AI coding tool recommendations from your AI assistant. Compare editors, AI assistants, and cloud IDEs — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -15021,7 +15024,7 @@ ${buildCards(aiGateways)}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get LLM API recommendations from your AI assistant. Compare rate limits, models, and pricing \u2014 directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -15335,7 +15338,7 @@ ${buildCards(apiIntegration)}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get API tool recommendations from your AI assistant. Compare free tiers, features, and alternatives \u2014 directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -15657,7 +15660,7 @@ ${buildCards(other)}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get team collaboration tool recommendations from your AI assistant. Compare chat, video, and scheduling tools — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -15949,7 +15952,7 @@ ${stabilityNotes}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get personalized stack recommendations from your AI assistant. Compare free tiers, check stability, and plan your infrastructure — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -16277,7 +16280,7 @@ ${ossAlternatives.map(oss => `      <tr>
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get personalized AI stack recommendations from your AI assistant. Compare free tiers, check model limits, and plan your AI infrastructure — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -16606,7 +16609,7 @@ ${ossAlternatives.map(oss => `      <tr>
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get personalized DevOps stack recommendations from your AI assistant. Compare free tiers, check limits, and plan your infrastructure — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -16935,7 +16938,7 @@ ${ossAlternatives.map(oss => `      <tr>
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get personalized frontend stack recommendations from your AI assistant. Compare free tiers, check limits, and plan your Jamstack infrastructure — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -17298,7 +17301,7 @@ GitHub → GitHub Actions (CI: tests + lint) → Vercel (CD: auto-deploy)</div>
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get personalized Next.js stack recommendations from your AI assistant. Compare free tiers, check limits, and plan your infrastructure — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -17708,7 +17711,7 @@ GitHub → GitHub Actions (CI: pytest + ruff) → Railway (CD: auto-deploy)</div
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get personalized Django stack recommendations from your AI assistant. Compare free tiers, check limits, and plan your infrastructure — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -18133,7 +18136,7 @@ GitHub → GitHub Actions (CI: pytest + ruff) → Railway (CD: auto-deploy)</div
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get personalized FastAPI stack recommendations from your AI assistant. Compare free tiers, check limits, and plan your infrastructure — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -18549,7 +18552,7 @@ GitHub → GitHub Actions (CI: go test + golangci-lint) → Railway (CD: auto-de
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get personalized Go stack recommendations from your AI assistant. Compare free tiers, check limits, and plan your infrastructure — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -19051,7 +19054,7 @@ ${upgradeTable}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Get personalized SaaS stack recommendations from your AI assistant. Compare free tiers, check stability, and plan your infrastructure \u2014 directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -19396,7 +19399,7 @@ ${mcpCtaCss()}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Track Hetzner pricing changes and compare hosting alternatives from your AI assistant. Get alerts on price increases and find free-tier options — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -19552,7 +19555,7 @@ ${globalNavCss()}
 
   ${buildMoreAlternativesGuides(slug)}
 
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 </body>
 </html>`;
@@ -19735,7 +19738,7 @@ ${globalNavCss()}
 
   ${buildMoreAlternativesGuides(slug)}
 
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 </body>
 </html>`;
@@ -19884,7 +19887,7 @@ ${globalNavCss()}
 
   ${buildMoreAlternativesGuides(slug)}
 
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 </body>
 </html>`;
@@ -20001,7 +20004,7 @@ ${globalNavCss()}
 
   ${buildMoreAlternativesGuides(slug)}
 
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 </body>
 </html>`;
@@ -20421,7 +20424,7 @@ mcpCtaCss() + "\n" +
   buildMoreAlternativesGuides(slug) + "\n" +
 
   buildMcpCta("Track pricing changes from your AI assistant. Get alerts on free tier removals, limit reductions, and new deals — directly in your editor.") + "\n" +
-  "<footer>AgentDeals &mdash; open source, built for agents | <a href=\"/privacy\">Privacy</a> | <a href=\"/disclosure\">Affiliate Disclosure</a></footer>\n" +
+  "<footer>AgentDeals &mdash; open source, built for agents | <a href=\"/privacy\">Privacy</a> | <a href=\"/disclosure\">Affiliate Disclosure</a> | <a href=\"/contact\">Contact</a></footer>\n" +
 "</div>\n" +
 "<script>" + mcpCtaScript() + "</script>\n" +
 "</body>\n</html>";
@@ -20651,7 +20654,7 @@ ${mcpCtaCss()}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Track pricing changes from your AI assistant. Get alerts on free tier removals, limit reductions, and new deals — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -21076,7 +21079,7 @@ ${gdpChanges.map(c => `      <li><strong>${escHtmlServer(changeEntryLongDateLabe
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Track Google pricing changes and find free alternatives from your AI assistant. Get alerts on free tier removals and discover $0/month infrastructure options — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -21399,7 +21402,7 @@ ${mcpCtaCss()}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Compare Supabase, Firebase, and 1,600+ other developer tools from your AI assistant. Get free tier data, pricing alerts, and stack recommendations — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -21719,7 +21722,7 @@ ${mcpCtaCss()}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Compare Vercel, Netlify, and 1,600+ other developer tools from your AI assistant. Get free tier data, pricing alerts, and stack recommendations — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -22033,7 +22036,7 @@ ${mcpCtaCss()}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Compare Neon, Supabase, and 1,600+ other developer tools from your AI assistant. Get free tier data, pricing alerts, and stack recommendations — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -22354,7 +22357,7 @@ ${mcpCtaCss()}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Compare Railway, Render, and 1,600+ other developer tools from your AI assistant. Get free tier data, pricing alerts, and stack recommendations — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -22670,7 +22673,7 @@ ${mcpCtaCss()}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Compare Datadog, New Relic, and 1,600+ other developer tools from your AI assistant. Get free tier data, pricing alerts, and stack recommendations — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -23041,7 +23044,7 @@ ${mcpCtaCss()}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Track Gemini API pricing changes and compare free LLM APIs from your AI assistant. Get alerts on rate limit changes and find alternatives — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -23560,7 +23563,7 @@ ${mcpCtaCss()}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Track free tier risk for 1,600+ developer tools from your AI assistant. Get pricing alerts, risk scores, and migration recommendations — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -23892,7 +23895,7 @@ ${mcpCtaCss()}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Track vendor stability for 1,600+ developer tools from your AI assistant. Get real-time stability ratings, pricing alerts, and migration recommendations — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -24396,7 +24399,7 @@ ${mcpCtaCss()}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Track OpenAI pricing changes and compare AI API free tiers from your AI assistant. Get stability ratings, migration alerts, and cost comparisons \u2014 directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -24985,7 +24988,7 @@ ${mcpCtaCss()}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Track OpenAI pricing changes and compare AI API free tiers from your AI assistant. Get stability ratings, migration alerts, and cost comparisons \u2014 directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -25421,7 +25424,7 @@ ${mcpCtaCss()}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Track GIF API shutdowns and compare developer tool free tiers from your AI assistant. Get stability ratings, migration alerts, and pricing comparisons \u2014 directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -25846,7 +25849,7 @@ ${mcpCtaCss()}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Track Firebase pricing changes, compare cloud IDE free tiers, and get shutdown deadline alerts from your AI assistant. Stability ratings, migration guidance, and cost comparisons \u2014 directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -26294,7 +26297,7 @@ function buildOpenAIAssistantsMigrationPage(): string {
     '\n' +
     buildMcpCta("Query our MCP server for real-time pricing data on OpenAI, Azure, Anthropic, Google Gemini, and 1,600+ other developer tools. Compare free tiers, track pricing changes, and find alternatives — all from your AI editor.") + '\n' +
     '\n' +
-    '  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>\n' +
+    '  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>\n' +
     '</div>\n' +
     '<script>' + mcpCtaScript() + '</script>\n' +
     '</body>\n</html>', pubDate);
@@ -26820,7 +26823,7 @@ ${buildGlobalNav("guides")}
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Query shutdown data and migration deadlines from your AI assistant. Get stability ratings, track vendor changes, and find free alternatives \u2014 directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -27281,7 +27284,7 @@ ${mcpCtaCss()}
   </div>
 
   ${buildMcpCta("Track free tier changes across 1,600+ developer tools from your AI assistant. Get pricing alerts, change history, and migration recommendations — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -27689,7 +27692,7 @@ function buildStartupCreditsPage(): string {
     '</div>\n' +
     '<footer>\n' +
     '  <div class="container">\n' +
-    '    &copy; ' + new Date().getFullYear() + ' <a href="/">AgentDeals</a> &middot; ' + offers.length.toLocaleString() + ' offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a>\n' +
+    '    &copy; ' + new Date().getFullYear() + ' <a href="/">AgentDeals</a> &middot; ' + offers.length.toLocaleString() + ' offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a> &middot; <a href="/contact">Contact</a>\n' +
     '  </div>\n' +
     '</footer>\n' +
     '<script>' + mcpCtaScript() + '</script>\n' +
@@ -28435,7 +28438,7 @@ function buildAiCodingToolsPricingPage(): string {
     '</div>\n' +
     '<footer>\n' +
     '  <div class="container">\n' +
-    '    &copy; ' + new Date().getFullYear() + ' <a href="/">AgentDeals</a> &middot; ' + offers.length.toLocaleString() + ' offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a>\n' +
+    '    &copy; ' + new Date().getFullYear() + ' <a href="/">AgentDeals</a> &middot; ' + offers.length.toLocaleString() + ' offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a> &middot; <a href="/contact">Contact</a>\n' +
     '  </div>\n' +
     '</footer>\n' +
     '<script>' + mcpCtaScript() + '</script>\n' +
@@ -29189,7 +29192,7 @@ function buildCiCdPricingPage(): string {
     '</div>\n' +
     '<footer>\n' +
     '  <div class="container">\n' +
-    '    &copy; ' + new Date().getFullYear() + ' <a href="/">AgentDeals</a> &middot; ' + offers.length.toLocaleString() + ' offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a>\n' +
+    '    &copy; ' + new Date().getFullYear() + ' <a href="/">AgentDeals</a> &middot; ' + offers.length.toLocaleString() + ' offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a> &middot; <a href="/contact">Contact</a>\n' +
     '  </div>\n' +
     '</footer>\n' +
     '<script>' + mcpCtaScript() + '</script>\n' +
@@ -30084,7 +30087,7 @@ function buildDatabasePricingPage(): string {
     '</div>\n' +
     '<footer>\n' +
     '  <div class="container">\n' +
-    '    &copy; ' + new Date().getFullYear() + ' <a href="/">AgentDeals</a> &middot; ' + offers.length.toLocaleString() + ' offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a>\n' +
+    '    &copy; ' + new Date().getFullYear() + ' <a href="/">AgentDeals</a> &middot; ' + offers.length.toLocaleString() + ' offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a> &middot; <a href="/contact">Contact</a>\n' +
     '  </div>\n' +
     '</footer>\n' +
     '<script>' + mcpCtaScript() + '</script>\n' +
@@ -30746,7 +30749,7 @@ function buildVectorDatabasePricingPage(): string {
     '</div>\n' +
     '<footer>\n' +
     '  <div class="container">\n' +
-    '    &copy; ' + new Date().getFullYear() + ' <a href="/">AgentDeals</a> &middot; ' + offers.length.toLocaleString() + ' offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a>\n' +
+    '    &copy; ' + new Date().getFullYear() + ' <a href="/">AgentDeals</a> &middot; ' + offers.length.toLocaleString() + ' offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a> &middot; <a href="/contact">Contact</a>\n' +
     '  </div>\n' +
     '</footer>\n' +
     '<script>' + mcpCtaScript() + '</script>\n' +
@@ -31466,7 +31469,7 @@ function buildHostingPricingPage(): string {
     '</div>\n' +
     '<footer>\n' +
     '  <div class="container">\n' +
-    '    &copy; ' + new Date().getFullYear() + ' <a href="/">AgentDeals</a> &middot; ' + offers.length.toLocaleString() + ' offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a>\n' +
+    '    &copy; ' + new Date().getFullYear() + ' <a href="/">AgentDeals</a> &middot; ' + offers.length.toLocaleString() + ' offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a> &middot; <a href="/contact">Contact</a>\n' +
     '  </div>\n' +
     '</footer>\n' +
     '<script>' + mcpCtaScript() + '</script>\n' +
@@ -32096,7 +32099,7 @@ function buildLlmApiPricingPage(): string {
     '</div>\n' +
     '<footer>\n' +
     '  <div class="container">\n' +
-    '    &copy; ' + new Date().getFullYear() + ' <a href="/">AgentDeals</a> &middot; ' + offers.length.toLocaleString() + ' offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a>\n' +
+    '    &copy; ' + new Date().getFullYear() + ' <a href="/">AgentDeals</a> &middot; ' + offers.length.toLocaleString() + ' offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a> &middot; <a href="/contact">Contact</a>\n' +
     '  </div>\n' +
     '</footer>\n' +
     '<script>' + mcpCtaScript() + '</script>\n' +
@@ -32408,7 +32411,7 @@ ${faqHtml}
 
   <footer style="text-align:center;padding:2rem 0;color:var(--text-dim);font-size:.8rem;border-top:1px solid var(--border);margin-top:2rem">
     <p>Data verified ${pubDate}. ${offers.length.toLocaleString()} total offers indexed.</p>
-    <p style="margin-top:.5rem"><a href="/">AgentDeals</a> &middot; <a href="/agent-stack">Agent Stacks</a> &middot; <a href="/guides">Guides</a> &middot; <a href="/changes">Changes</a> &middot; <a href="/disclosure">Disclosure</a></p>
+    <p style="margin-top:.5rem"><a href="/">AgentDeals</a> &middot; <a href="/agent-stack">Agent Stacks</a> &middot; <a href="/guides">Guides</a> &middot; <a href="/changes">Changes</a> &middot; <a href="/disclosure">Disclosure</a> &middot; <a href="/contact">Contact</a></p>
   </footer>
 </div>
 <script>${mcpCtaScript()}</script>
@@ -32625,7 +32628,7 @@ ${faqHtml}
 
   <footer style="text-align:center;padding:2rem 0;color:var(--text-dim);font-size:.8rem;border-top:1px solid var(--border);margin-top:2rem">
     <p>Data verified ${pubDate}. ${offers.length.toLocaleString()} total offers indexed.</p>
-    <p style="margin-top:.5rem"><a href="/">AgentDeals</a> &middot; <a href="/agent-payments">Agent Payments</a> &middot; <a href="/guides">Guides</a> &middot; <a href="/changes">Changes</a> &middot; <a href="/disclosure">Disclosure</a></p>
+    <p style="margin-top:.5rem"><a href="/">AgentDeals</a> &middot; <a href="/agent-payments">Agent Payments</a> &middot; <a href="/guides">Guides</a> &middot; <a href="/changes">Changes</a> &middot; <a href="/disclosure">Disclosure</a> &middot; <a href="/contact">Contact</a></p>
   </footer>
 </div>
 <script>${mcpCtaScript()}</script>
@@ -33185,7 +33188,7 @@ railway up
   ${buildMoreAlternativesGuides(slug)}
 
   ${buildMcpCta("Track cloud service deprecations and compare container deployment free tiers from your AI assistant. Get stability ratings, migration alerts, and pricing comparisons — directly in your editor.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
@@ -33588,7 +33591,7 @@ ${mcpCtaCss()}
 </div>
 <footer>
   <div class="container">
-    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a>
+    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a> &middot; <a href="/contact">Contact</a>
   </div>
 </footer>
 <script>${mcpCtaScript()}</script>
@@ -34021,7 +34024,7 @@ ${mcpCtaCss()}
 </div>
 <footer>
   <div class="container">
-    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a>
+    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a> &middot; <a href="/contact">Contact</a>
   </div>
 </footer>
 <script>${mcpCtaScript()}</script>
@@ -34508,7 +34511,7 @@ ${mcpCtaCss()}
 </div>
 <footer>
   <div class="container">
-    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a>
+    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a> &middot; <a href="/contact">Contact</a>
   </div>
 </footer>
 <script>${mcpCtaScript()}</script>
@@ -34943,7 +34946,7 @@ ${mcpCtaCss()}
 </div>
 <footer>
   <div class="container">
-    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a>
+    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a> &middot; <a href="/contact">Contact</a>
   </div>
 </footer>
 <script>${mcpCtaScript()}</script>
@@ -35694,7 +35697,7 @@ ${mcpCtaCss()}
 </div>
 <footer>
   <div class="container">
-    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a>
+    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a> &middot; <a href="/contact">Contact</a>
   </div>
 </footer>
 <script>${mcpCtaScript()}</script>
@@ -36356,7 +36359,7 @@ ${mcpCtaCss()}
 </div>
 <footer>
   <div class="container">
-    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a>
+    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a> &middot; <a href="/contact">Contact</a>
   </div>
 </footer>
 <script>${mcpCtaScript()}</script>
@@ -37016,7 +37019,7 @@ ${mcpCtaCss()}
 </div>
 <footer>
   <div class="container">
-    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a>
+    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a> &middot; <a href="/contact">Contact</a>
   </div>
 </footer>
 <script>${mcpCtaScript()}</script>
@@ -37660,7 +37663,7 @@ ${mcpCtaCss()}
 </div>
 <footer>
   <div class="container">
-    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a>
+    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a> &middot; <a href="/contact">Contact</a>
   </div>
 </footer>
 <script>${mcpCtaScript()}</script>
@@ -38491,7 +38494,7 @@ ${mcpCtaCss()}
 </div>
 <footer>
   <div class="container">
-    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a>
+    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a> &middot; <a href="/contact">Contact</a>
   </div>
 </footer>
 <script>${mcpCtaScript()}</script>
@@ -39464,7 +39467,7 @@ ${mcpCtaCss()}
 </div>
 <footer>
   <div class="container">
-    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a>
+    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a> &middot; <a href="/contact">Contact</a>
   </div>
 </footer>
 <script>${mcpCtaScript()}</script>
@@ -40461,7 +40464,7 @@ ${mcpCtaCss()}
 </div>
 <footer>
   <div class="container">
-    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a>
+    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a> &middot; <a href="/contact">Contact</a>
   </div>
 </footer>
 <script>${mcpCtaScript()}</script>
@@ -41280,7 +41283,7 @@ ${mcpCtaCss()}
 </div>
 <footer>
   <div class="container">
-    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a>
+    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a> &middot; <a href="/contact">Contact</a>
   </div>
 </footer>
 <script>${mcpCtaScript()}</script>
@@ -41943,7 +41946,7 @@ ${mcpCtaCss()}
 </div>
 <footer>
   <div class="container">
-    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a>
+    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a> &middot; <a href="/contact">Contact</a>
   </div>
 </footer>
 <script>${mcpCtaScript()}</script>
@@ -42627,7 +42630,7 @@ ${mcpCtaCss()}
 </div>
 <footer>
   <div class="container">
-    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a>
+    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a> &middot; <a href="/contact">Contact</a>
   </div>
 </footer>
 <script>${mcpCtaScript()}</script>
@@ -43223,7 +43226,7 @@ ${mcpCtaCss()}
 </div>
 <footer>
   <div class="container">
-    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a>
+    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a> &middot; <a href="/contact">Contact</a>
   </div>
 </footer>
 <script>${mcpCtaScript()}</script>
@@ -43940,7 +43943,7 @@ ${mcpCtaCss()}
 </div>
 <footer>
   <div class="container">
-    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a>
+    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a> &middot; <a href="/contact">Contact</a>
   </div>
 </footer>
 <script>${mcpCtaScript()}</script>
@@ -44556,7 +44559,7 @@ ${mcpCtaCss()}
 </div>
 <footer>
   <div class="container">
-    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a>
+    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a> &middot; <a href="/contact">Contact</a>
   </div>
 </footer>
 <script>${mcpCtaScript()}</script>
@@ -45074,7 +45077,7 @@ ${globalNavCss()}
 </div>
 <footer>
   <div class="container">
-    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a>
+    &copy; ${new Date().getFullYear()} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers tracked &middot; <a href="/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a> &middot; <a href="/contact">Contact</a>
   </div>
 </footer>
 <script>${mcpCtaScript()}</script>
@@ -45468,7 +45471,7 @@ ${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" hre
 
   <p style="margin-top:2rem;font-size:.85rem;color:var(--text-muted)">Prefer plain HTTP? Use the <a href="/developers">REST API</a> &mdash; no MCP client needed, same data.</p>
 
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/developers">REST API</a> | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/developers">REST API</a> | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 <script>
 (function(){
@@ -45931,7 +45934,7 @@ function buildStackTemplatePage(slug: string): string | null {
 
     <div class="footer">
       <p>${stackFreshnessNote([...templateReadings.values()])} Stability ratings based on <a href="/stability">tracked pricing changes</a>.</p>
-      <p style="margin-top:.5rem"><a href="/stacks">All Stack Templates</a> &middot; <a href="/estimate">Cost Estimator</a> &middot; <a href="/guides">Guides</a> &middot; <a href="/privacy">Privacy</a></p>
+      <p style="margin-top:.5rem"><a href="/stacks">All Stack Templates</a> &middot; <a href="/estimate">Cost Estimator</a> &middot; <a href="/guides">Guides</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/contact">Contact</a></p>
     </div>
   </div>
 </body>
@@ -46057,7 +46060,7 @@ function buildStacksIndexPage(): string {
 
     <div class="footer">
       <p>${stackFreshnessNote(stackPrimaryReadings(STACK_TEMPLATES.flatMap(t => t.services.map(s => ({ recommended: { vendor: s.vendor } })))))} Stability ratings based on <a href="/stability">tracked pricing changes</a>.</p>
-      <p style="margin-top:.5rem"><a href="/">AgentDeals</a> &middot; <a href="/estimate">Cost Estimator</a> &middot; <a href="/guides">Guides</a> &middot; <a href="/privacy">Privacy</a></p>
+      <p style="margin-top:.5rem"><a href="/">AgentDeals</a> &middot; <a href="/estimate">Cost Estimator</a> &middot; <a href="/guides">Guides</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/contact">Contact</a></p>
     </div>
   </div>
 </body>
@@ -46615,6 +46618,7 @@ function buildStackCheckPage(): string {
       }
     })();
   </script>
+${FOOTER_FOR_PAGES_WITHOUT_ONE}
 </body>
 </html>`;
 }
@@ -46786,7 +46790,7 @@ ${globalNavCss()}
     ${faqItems.map(f => `<div class="faq-item"><h3>${escHtmlServer(f.q)}</h3><p>${escHtmlServer(f.a)}</p></div>`).join("")}
   </div>
 
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 
 <script>
@@ -47152,7 +47156,7 @@ function buildEstimatePage(): string {
 
     <div class="footer">
       <p>Prices are approximate and based on published vendor pricing as of April 2026. Actual costs may vary based on usage patterns.</p>
-      <p style="margin-top:.5rem">Powered by <a href="/">AgentDeals</a> pricing data &middot; <a href="/pricing-changes">Pricing Changes</a> &middot; <a href="/stability">Stability Dashboard</a> &middot; <a href="/privacy">Privacy</a></p>
+      <p style="margin-top:.5rem">Powered by <a href="/">AgentDeals</a> pricing data &middot; <a href="/pricing-changes">Pricing Changes</a> &middot; <a href="/stability">Stability Dashboard</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/contact">Contact</a></p>
     </div>
   </div>
 
@@ -47765,6 +47769,7 @@ function buildBudgetBuilderPage(): string {
     + '})();\n'
     + '</script>\n'
     + (mcpCtaScript() ? '<script>' + mcpCtaScript() + '</script>' : '') + '\n'
+    + FOOTER_FOR_PAGES_WITHOUT_ONE + '\n'
     + '</body>\n'
     + '</html>';
 }
@@ -47947,7 +47952,7 @@ ${allVendors.filter(v => v.status !== "unknown").map(v =>
     ${buildMcpCta("Query free tier status for any vendor via MCP tools — search, compare, and track pricing changes programmatically.")}
 
     <div class="footer">
-      <p>Badges powered by <a href="/">AgentDeals</a> pricing data · <a href="/pricing-changes">Pricing Changes</a> · <a href="/stability">Stability Dashboard</a> · <a href="/privacy">Privacy</a></p>
+      <p>Badges powered by <a href="/">AgentDeals</a> pricing data · <a href="/pricing-changes">Pricing Changes</a> · <a href="/stability">Stability Dashboard</a> · <a href="/privacy">Privacy</a> · <a href="/contact">Contact</a></p>
     </div>
   </div>
   <script>
@@ -48234,6 +48239,7 @@ function buildEmbedDocsPage(): string {
 ${mcpCtaScript()}
 function copyCode(btn){var block=btn.parentElement;var text=block.textContent.replace(/^Copy/,"").trim();navigator.clipboard.writeText(text).then(function(){btn.textContent="Copied!";btn.classList.add("copied");setTimeout(function(){btn.textContent="Copy";btn.classList.remove("copied")},2000)})}
 </script>
+${FOOTER_FOR_PAGES_WITHOUT_ONE}
 </body></html>`;
 }
 
@@ -48584,7 +48590,7 @@ function buildDeveloperHubPage(): string {
     + "    </p>\n"
     + "\n"
     + "    <div class=\"footer\">\n"
-    + "      <p>Powered by <a href=\"/\">AgentDeals</a> &middot; <a href=\"/privacy\">Privacy</a> &middot; <a href=\"/feed.xml\">Feed</a> &middot; <a href=\"/sitemap.xml\">Sitemap</a></p>\n"
+    + "      <p>Powered by <a href=\"/\">AgentDeals</a> &middot; <a href=\"/privacy\">Privacy</a> &middot; <a href=\"/feed.xml\">Feed</a> &middot; <a href=\"/sitemap.xml\">Sitemap</a> &middot; <a href=\"/contact\">Contact</a></p>\n"
     + "    </div>\n"
     + "  </div>\n"
     + "  <script>\n"
@@ -49035,7 +49041,7 @@ ${changeLogSectionsHtml(sections, allChanges.length, buildChangeEntry, escHtmlSe
     <a href="/setup">Connect via MCP &rarr;</a>
   </div>
 
-  <footer>\u00a9 ${currentYear} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers across ${categories.length} categories &middot; <a href="/pricing-changes/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a></footer>
+  <footer>\u00a9 ${currentYear} <a href="/">AgentDeals</a> &middot; ${offers.length.toLocaleString()} offers across ${categories.length} categories &middot; <a href="/pricing-changes/feed.xml">Feed</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/disclosure">Disclosure</a> &middot; <a href="/contact">Contact</a></footer>
 </div>
 ${filterScript}
 </body>
@@ -49301,7 +49307,7 @@ ${changeLogSectionsHtml(sections, allChanges.length, buildChangeEntry, escHtmlSe
     <a href="/setup">Connect via MCP &rarr;</a>
   </div>
 
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 </body>
 </html>`;
@@ -49528,7 +49534,7 @@ ${recentlyDiscovered.map(c => buildEntry(c, false)).join("\n")}
     <a href="/setup">Connect via MCP &rarr;</a>
   </div>
 
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 </body>
 </html>`;
@@ -49769,7 +49775,7 @@ ${freshestRows}
     <a href="/setup">Connect via MCP &rarr;</a>
   </div>
 
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 </body>
 </html>`;
@@ -50019,7 +50025,7 @@ ${cardsHtml}
     <a href="/setup">Connect via MCP &rarr;</a>
   </div>
 
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 <script>
 (function() {
@@ -50254,7 +50260,7 @@ ${bundleHtml}
     <p style="margin-top:.75rem"><a href="/setup">Set up MCP client \u2192</a></p>
   </div>
 
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 </body>
 </html>`;
@@ -50506,7 +50512,7 @@ ${unpaidRows}
   <p style="margin-top:1.5rem;font-size:.85rem;color:var(--text-dim);text-align:center">Query this data programmatically via <a href="/api/referral-programs">/api/referral-programs</a> (JSON), our <a href="/setup">MCP tools</a>, or <a href="/developers">REST API</a>.</p>
 
   ${buildMcpCta("Search referral programs and compare vendor free tiers directly in your AI coding assistant.")}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 <script>
 document.querySelectorAll('.filter-btn').forEach(btn => {
@@ -50666,7 +50672,7 @@ ${payoutsAvailable() && (balance?.confirmed_balance ?? 0) >= 10 ? `    <a href="
   </div>
 
   <footer>
-    <p><a href="/">AgentDeals</a> &mdash; <a href="/disclosure">Affiliate Disclosure</a></p>
+    <p><a href="/">AgentDeals</a> &mdash; <a href="/disclosure">Affiliate Disclosure</a> &mdash; <a href="/contact">Contact</a></p>
   </footer>
 </div>
 </body>
@@ -50776,7 +50782,7 @@ ${globalNavCss()}
 
 ${entriesHtml}
 
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/press">Press</a> | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/press">Press</a> | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 </body>
 </html>`;
@@ -50879,7 +50885,7 @@ ${globalNavCss()}
   </div>
 
   <p class="updated">Published 2026-04-11</p>
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 </body>
 </html>`;
@@ -50891,6 +50897,87 @@ function privacyLastUpdatedLabel(): string {
   const [y, m, d] = PRIVACY_LAST_UPDATED.split("-");
   const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
   return `${months[parseInt(m, 10) - 1]} ${parseInt(d, 10)}, ${y}`;
+}
+
+const PATHS_MOVED_TO_CONTACT = new Set(["/about", "/feedback", "/corrections"]);
+
+function buildContactPage(): string {
+  const title = "Contact — AgentDeals";
+  const metaDesc = `Email ${CONTACT_EMAIL} to correct an AgentDeals listing, for press and partnership enquiries, or with a privacy request.`;
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    name: title,
+    description: metaDesc,
+    url: `${BASE_URL}/contact`,
+    publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)}</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}/contact">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="${BASE_URL}/contact">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals — Weekly Pricing Digest" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:720px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.2rem;color:var(--text);margin:2rem 0 .75rem}
+.page-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:2rem;max-width:640px}
+.section{border:1px solid var(--border);border-radius:12px;background:var(--bg-card);padding:1.25rem 1.5rem;margin-bottom:1rem}
+.section p{color:var(--text-muted);font-size:.9rem}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+footer a{color:var(--text-muted)}
+@media(max-width:768px){h1{font-size:1.5rem}.section{padding:1rem}}
+${globalNavCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("home")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; Contact</div>
+  <h1>Contact</h1>
+  <div class="page-intro">
+    <p style="margin-bottom:.75rem">AgentDeals is an index of free tiers, startup credits and pricing changes for developer tools. Developers and their AI assistants read it. We publish vendor pricing information collected from vendors’ public pages. Each listing states the date of the read behind its terms.</p>
+    <p>Email: ${CONTACT_EMAIL}</p>
+  </div>
+
+  <h2>Correct a listing</h2>
+  <div class="section">
+    <p>Anyone may write to correct a listing that is wrong or out of date. That includes the vendor whose product the listing describes. Email ${CONTACT_EMAIL}. Include the AgentDeals page URL and a link to the vendor’s own public page stating the current terms. We correct listings from vendors’ public pages, so a correction needs a link to one.</p>
+  </div>
+
+  <h2>Press and partnerships</h2>
+  <div class="section">
+    <p>Press and partnership enquiries go to ${CONTACT_EMAIL}.</p>
+  </div>
+
+  <h2>Privacy</h2>
+  <div class="section">
+    <p>If you believe personal information about you has reached us, email ${CONTACT_EMAIL} and we will remove it. The privacy policy is at <a href="/privacy">/privacy</a>.</p>
+  </div>
+
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
+</div>
+</body>
+</html>`;
 }
 
 function buildPrivacyPage(): string {
@@ -51016,7 +51103,7 @@ ${globalNavCss()}
 
   <p class="updated">Last updated: ${privacyLastUpdatedLabel()}</p>
 
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 </body>
 </html>`;
@@ -51256,7 +51343,7 @@ function buildSearchPage(query: string, categoryFilter: string, typeFilter: stri
     + '\n'
     + '  ' + (hasQuery ? alternativesPageLinkForASearch(sanitizeQuery(query)) : '') + (totalResults > 0 ? '<div class="results">\n' + resultsHtml + '\n  </div>\n  ' + paginationHtml : emptyStateHtml) + '\n'
     + '\n'
-    + '  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>\n'
+    + '  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>\n'
     + '</div>\n'
     + '<script>\n'
     + 'document.addEventListener("keydown",function(e){if(e.key==="/"&&document.activeElement.tagName!=="INPUT"&&document.activeElement.tagName!=="TEXTAREA"){e.preventDefault();document.getElementById("search-input").focus()}});\n'
@@ -51391,7 +51478,7 @@ ${zeroCats.length > 0 ? `  <div class="section-label">Stable categories (no trac
   <div class="trend-list">
 ${zeroCatRows}
   </div>` : ""}
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 </body>
 </html>`;
@@ -51617,7 +51704,7 @@ ${stableHtml}
     </div>
   </div>
 
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 </body>
 </html>`;
@@ -52065,7 +52152,7 @@ ${buildBrowseSection()}
     </div>
   </div>
 
-  <footer>AgentDeals &mdash; open source, built for agents | <a href="/developers">REST API</a> | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/developers">REST API</a> | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
 <script>
 ${conditionsForTheBrowser()}
@@ -52394,7 +52481,7 @@ function alternativeToSitemapPaths(): string[] {
 }
 
 function pagesSitemapLedgerPaths(): string[] {
-  const paths = ["/", "/feed.xml", "/api/docs", "/setup", "/privacy", "/disclosure", "/press"];
+  const paths = ["/", "/feed.xml", "/api/docs", "/setup", "/privacy", "/disclosure", "/press", "/contact"];
   paths.push("/referral-programs", "/expiring", "/changes", "/deadlines", "/pricing-changes", "/freshness", CRITERIA_PATH, "/stacks");
   for (const t of STACK_TEMPLATES) paths.push("/stacks/" + t.slug);
   paths.push("/estimate", "/stack-check", "/compare-tool", "/budget-builder", "/developers", "/badges", "/embed", "/agent-stack", "/category");
@@ -54050,6 +54137,7 @@ ${catList}
       + '  <url>\n    <loc>' + BASE_URL + '/privacy</loc>\n    <lastmod>' + pageLastmod("/privacy") + '</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.3</priority>\n  </url>\n'
       + '  <url>\n    <loc>' + BASE_URL + '/disclosure</loc>\n    <lastmod>' + pageLastmod("/disclosure") + '</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.4</priority>\n  </url>\n'
       + '  <url>\n    <loc>' + BASE_URL + '/press</loc>\n    <lastmod>' + pageLastmod("/press") + '</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.5</priority>\n  </url>\n'
+      + '  <url>\n    <loc>' + BASE_URL + '/contact</loc>\n    <lastmod>' + pageLastmod("/contact") + '</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.5</priority>\n  </url>\n'
       + '  <url>\n    <loc>' + BASE_URL + '/referral-programs</loc>\n    <lastmod>' + pageLastmod("/referral-programs") + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.7</priority>\n  </url>\n'
       + '  <url>\n    <loc>' + BASE_URL + '/expiring</loc>\n    <lastmod>' + pageLastmod("/expiring") + '</lastmod>\n    <changefreq>daily</changefreq>\n    <priority>0.8</priority>\n  </url>\n'
       + '  <url>\n    <loc>' + BASE_URL + '/changes</loc>\n    <lastmod>' + pageLastmod("/changes") + '</lastmod>\n    <changefreq>daily</changefreq>\n    <priority>0.8</priority>\n  </url>\n'
@@ -54376,6 +54464,14 @@ ${catList}
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/privacy", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildPrivacyPage());
+  } else if (url.pathname === "/contact" && isGetOrHead) {
+    recordApiHit("/contact");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/contact", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildContactPage());
+  } else if (PATHS_MOVED_TO_CONTACT.has(url.pathname) && isGetOrHead) {
+    res.writeHead(301, { Location: `${BASE_URL}/contact` });
+    res.end();
   } else if (url.pathname === "/deal-changes" && isGetOrHead) {
     res.writeHead(301, { Location: `${BASE_URL}/changes` });
     res.end();
