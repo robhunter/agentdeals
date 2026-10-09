@@ -191,9 +191,9 @@ describe("stability is withheld the way the risk level already is", () => {
     assert.strictEqual(withheldStability(deadLink, "improving"), null);
   });
 
-  it("withholds an adverse class too, because a page we cannot reach backs no class we publish", () => {
-    assert.strictEqual(withheldStability(deadLink, "watch"), null);
-    assert.strictEqual(withheldStability(deadLink, "volatile"), null);
+  it("publishes an adverse class, which the dead link does not soften", () => {
+    assert.strictEqual(withheldStability(deadLink, "watch"), "watch");
+    assert.strictEqual(withheldStability(deadLink, "volatile"), "volatile");
   });
 
   it("leaves a reachable record alone", () => {

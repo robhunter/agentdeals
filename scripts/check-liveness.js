@@ -12,8 +12,8 @@ import {
 } from "../dist/link-health.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const INDEX_PATH = resolve(__dirname, "..", "data", "index.json");
-const HEALTH_PATH = resolve(__dirname, "..", "data", "link_health.json");
+const INDEX_PATH = process.env.AGENTDEALS_INDEX_PATH || resolve(__dirname, "..", "data", "index.json");
+const HEALTH_PATH = process.env.AGENTDEALS_LINK_HEALTH_PATH || resolve(__dirname, "..", "data", "link_health.json");
 
 const USER_AGENT = "AgentDeals-Liveness/1.0 (+https://agentdeals.dev)";
 const FETCH_TIMEOUT_MS = 15000;
@@ -135,8 +135,8 @@ export function citedOnlyAsAProgram(target) {
   return target.vendors.length === 0 && (target.programs ?? []).length > 0;
 }
 
-export function nextRecord(target, previous, result, today) {
-  const priorLastReachable = previous?.last_reachable ?? target.latestVerified ?? null;
+export function nextRecord(target, previous, result, today, lastRun = null) {
+  const priorLastReachable = previous?.last_reachable ?? laterOf(lastRun, target.latestVerified);
   const priorStreak = previous?.consecutive_unreachable ?? 0;
 
   if (result.outcome === "reachable") {
@@ -179,13 +179,16 @@ export function nextRecord(target, previous, result, today) {
 }
 
 function loadPrevious() {
-  if (!existsSync(HEALTH_PATH)) return new Map();
+  if (!existsSync(HEALTH_PATH)) return { lastRun: null, records: new Map() };
   try {
     const parsed = JSON.parse(readFileSync(HEALTH_PATH, "utf-8"));
-    return new Map((parsed.links ?? []).map((r) => [r.url, r]));
+    return {
+      lastRun: typeof parsed.generated_at === "string" ? parsed.generated_at : null,
+      records: new Map((parsed.links ?? []).map((r) => [r.url, r])),
+    };
   } catch (err) {
     console.error(`Existing link health index unreadable (${err.message}); starting from empty.`);
-    return new Map();
+    return { lastRun: null, records: new Map() };
   }
 }
 
@@ -194,7 +197,7 @@ async function runHostQueue(targets, previous, today, onRecord) {
     if (i > 0) await sleep(SAME_HOST_DELAY_MS);
     const target = targets[i];
     const result = await checkLiveness(target.url);
-    onRecord(nextRecord(target, previous.get(target.url), result, today));
+    onRecord(nextRecord(target, previous.records.get(target.url), result, today, previous.lastRun));
   }
 }
 
@@ -274,7 +277,7 @@ async function main() {
   });
   await Promise.all(workers);
 
-  for (const record of previous.values()) {
+  for (const record of previous.records.values()) {
     if (!vendorsByUrl.has(record.url)) records.push(record);
   }
 
