@@ -1918,8 +1918,8 @@
       "review_note": "Every figure checked on 2026-10-02 against Google's pricing, billing, rate-limits, deprecations and changelog pages, and the Groq, Anthropic and OpenAI rows against those vendors' own docs. The corrections in https://github.com/robhunter/agentdeals/issues/2237 were read on production on 2026-10-02: the page states the Google Gemini API listing in full, and \"largest free option\" is served on none of 2,601 routes. OpenRouter's \"25+ free models\" is OpenRouter's own pricing-page figure; its models API listed 21 at $0 that day. Section 4's Tier 2 and Tier 3 rules and its 10-minute spend-based limits, added by https://github.com/robhunter/agentdeals/issues/2427, were read on 2026-10-06 against Google's billing page (updated 2026-09-28) and rate-limits page (updated 2026-09-02).",
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 64,
-      "table_figures_from_records": 50,
+      "table_figures": 62,
+      "table_figures_from_records": 48,
       "tables": [
         {
           "label": "1. What Changed on April 1",
@@ -1933,8 +1933,8 @@
         },
         {
           "label": "6. Free LLM API Comparison",
-          "figures": 50,
-          "from_records": 50
+          "figures": 48,
+          "from_records": 48
         }
       ],
       "reads_changes": true,
@@ -2229,8 +2229,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 95,
-      "table_figures_from_records": 94,
+      "table_figures": 93,
+      "table_figures_from_records": 92,
       "tables": [
         {
           "label": "Pricing Comparison Table",
@@ -2239,8 +2239,8 @@
         },
         {
           "label": "What You Actually Get for Free",
-          "figures": 31,
-          "from_records": 30
+          "figures": 29,
+          "from_records": 28
         },
         {
           "label": "Recent Pricing Changes",
