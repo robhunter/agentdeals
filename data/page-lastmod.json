@@ -173,6 +173,9 @@
     "/alternative-to/codehooks-io": {
       "daily": true
     },
+    "/alternative-to/cognee": {
+      "daily": true
+    },
     "/alternative-to/cohere": {
       "daily": true
     },
@@ -405,6 +408,9 @@
       "daily": true
     },
     "/alternative-to/mdb-go": {
+      "daily": true
+    },
+    "/alternative-to/mem0": {
       "daily": true
     },
     "/alternative-to/middleware-io": {
@@ -659,6 +665,9 @@
     "/alternative-to/supabase": {
       "daily": true
     },
+    "/alternative-to/supermemory": {
+      "daily": true
+    },
     "/alternative-to/surge-sh": {
       "daily": true
     },
@@ -744,6 +753,9 @@
       "daily": true
     },
     "/alternative-to/you-com": {
+      "daily": true
+    },
+    "/alternative-to/zep": {
       "daily": true
     },
     "/alternative-to/zhipu-ai": {
@@ -4821,8 +4833,7 @@
       "changed": "2026-10-09"
     },
     "/vendor/cognee": {
-      "hash": "8ac86d2f942b64a2",
-      "changed": "2026-10-09"
+      "daily": true
     },
     "/vendor/cohere": {
       "daily": true
@@ -6934,8 +6945,7 @@
       "changed": "2026-10-09"
     },
     "/vendor/mem0": {
-      "hash": "f57bbed0600c47cf",
-      "changed": "2026-10-09"
+      "daily": true
     },
     "/vendor/memfault-com": {
       "hash": "eeb6b3a0b8093d8d",
@@ -8513,8 +8523,7 @@
       "changed": "2026-10-09"
     },
     "/vendor/supermemory": {
-      "hash": "e852f6ce6072a00e",
-      "changed": "2026-10-09"
+      "daily": true
     },
     "/vendor/supertokens": {
       "hash": "fc879a3a8599fb85",
@@ -9354,8 +9363,7 @@
       "changed": "2026-10-09"
     },
     "/vendor/zep": {
-      "hash": "e79d42e18e50ac9e",
-      "changed": "2026-10-09"
+      "daily": true
     },
     "/vendor/zeplin": {
       "hash": "a889a2544d75f458",
