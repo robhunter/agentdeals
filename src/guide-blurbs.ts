@@ -1,4 +1,5 @@
 import { FREE_TIER_TRACKER_META_DESCRIPTION } from "./free-tier-tracker.js";
+import { STARTUP_PROGRAMS } from "./startup-programmes.js";
 
 const WRITTEN_BLURBS: Readonly<Record<string, string>> = {
   "localstack-alternatives": "In March 2026, LocalStack merged Community and Pro images, requiring an auth token for the latest image — compare 9 free open-source AWS emulators",
@@ -53,7 +54,7 @@ const WRITTEN_BLURBS: Readonly<Record<string, string>> = {
   "stability": "Visual stability dashboard — which developer free tiers are safe, watched, volatile, or improving",
   "gemini-api-pricing-2026": "Gemini API billing guide — spend caps ($250-$100K+/mo), prepaid billing, 3.1 Pro paid-only, free tier changes, 8-provider comparison",
   "free-tier-tracker": FREE_TIER_TRACKER_META_DESCRIPTION,
-  "startup-credits": "The definitive startup credits comparison — 13 programs across cloud infrastructure, fintech, and developer tools with eligibility requirements, vesting schedules, and stacking strategies",
+  "startup-credits": `The definitive startup credits comparison — ${STARTUP_PROGRAMS.length} programs across cloud infrastructure, fintech, and developer tools with eligibility requirements, vesting schedules, and stacking strategies`,
   "ai-coding-tools-pricing": "The definitive AI coding tools comparison — 17 tools across IDE, CLI, cloud agent, and app builder categories with free tier analysis and cost breakdowns",
   "ci-cd-pricing": "The definitive CI/CD pricing comparison — 17+ tools across general, cloud-native, mobile, and self-hosted categories with free tier analysis and cost breakdowns",
   "database-pricing": "The definitive database pricing comparison — 25+ services across managed Postgres, serverless/edge, document/NoSQL, cloud provider, and specialized categories with free tier analysis and cost breakdowns",

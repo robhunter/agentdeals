@@ -3018,12 +3018,12 @@
       "review_note": "The corrections from https://github.com/robhunter/agentdeals/issues/2152 are live. Checked on production on 2026-10-01: 52 programme fields, 23 summary, card, strategy and FAQ strings (the FAQ also in its JSON-LD), Recent Changes against 10 named records, and a census of 2,596 routes for the withdrawn claims.",
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 87,
+      "table_figures": 89,
       "table_figures_from_records": 38,
       "tables": [
         {
           "label": "Comparison Table",
-          "figures": 49,
+          "figures": 51,
           "from_records": 0
         },
         {
