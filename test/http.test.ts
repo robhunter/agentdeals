@@ -3,12 +3,13 @@ import assert from "node:assert";
 import { assertPopulationFloor } from "./population-floor.ts";
 import { spawn, type ChildProcess } from "node:child_process";
 import fs from "node:fs";
+import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { MCP_TOOL_COUNT, MCP_TOOL_NAMES } from "../dist/mcp-tool-inventory.js";
 import { API_ENDPOINTS } from "../dist/api-inventory.js";
 import { PATHS_OUTSIDE_THE_ENDPOINT_INVENTORY } from "../dist/openapi.js";
-import { entryDay, readPageLastmod } from "../dist/page-lastmod.js";
+import { entryDay, isDailyEntry, readPageLastmod } from "../dist/page-lastmod.js";
 import { cheapestOrderableHetznerPlan } from "../dist/hetzner-pricing.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -62,12 +63,14 @@ function jsonLdWebPage(html: string): Record<string, any> | undefined {
   return undefined;
 }
 
-function startHttpServer(): Promise<ChildProcess> {
+const REDATED_VENDOR_DAY = "2026-01-15";
+
+function startHttpServer(extraEnv: NodeJS.ProcessEnv = {}): Promise<ChildProcess> {
   return new Promise((resolve, reject) => {
     const serverPath = path.join(__dirname, "..", "dist", "serve.js");
     const proc = spawn("node", [serverPath], {
       stdio: ["pipe", "pipe", "pipe"],
-      env: { ...process.env, PORT: "0", BASE_URL: "http://localhost" },
+      env: { ...process.env, PORT: "0", BASE_URL: "http://localhost", ...extraEnv },
     });
 
     const timeout = setTimeout(() => {
@@ -1752,23 +1755,34 @@ describe("HTTP transport", () => {
   });
 
   it("dates every vendor URL in the sitemap from the ledger rather than from one constant", async () => {
-    proc = await startHttpServer();
+    const shipped = readPageLastmod();
+    const redated = Object.keys(shipped.pages)
+      .filter(page => page.startsWith("/vendor/") && !isDailyEntry(shipped.pages[page]!))
+      .sort()[0];
+    assert.ok(redated, "the ledger dates no vendor page from its own output");
+    const ledger = { ...shipped, pages: { ...shipped.pages, [redated]: { ...shipped.pages[redated]!, changed: REDATED_VENDOR_DAY } } };
+    const dir = fs.mkdtempSync(path.join(tmpdir(), "vendor-sitemap-ledger-"));
+    const ledgerPath = path.join(dir, "page-lastmod.json");
+    fs.writeFileSync(ledgerPath, JSON.stringify(ledger));
+    try {
+      proc = await startHttpServer({ AGENTDEALS_PAGE_LASTMOD_PATH: ledgerPath });
 
-    const response = await fetch(`http://localhost:${serverPort}/sitemap-vendors.xml`);
-    const xml = await response.text();
-    const entries = [...xml.matchAll(/<loc>([^<]+)<\/loc>\s*<lastmod>([^<]+)<\/lastmod>/g)]
-      .map(m => ({ page: new URL(m[1]!).pathname, lastmod: m[2]! }));
-    assertPopulationFloor(entries.length, 101, "lastmod entries in the sitemap");
-    const ledger = readPageLastmod();
-    const today = new Date().toISOString().split("T")[0];
-    for (const { page, lastmod } of entries) {
-      assert.match(lastmod, /^\d{4}-\d{2}-\d{2}$/, `Invalid lastmod date format: ${lastmod}`);
-      assert.ok(lastmod <= today, `Lastmod date ${lastmod} is in the future`);
-      assert.equal(lastmod, entryDay(ledger.pages[page], today), `${page} advertises a day the ledger does not hold for it`);
+      const response = await fetch(`http://localhost:${serverPort}/sitemap-vendors.xml`);
+      const xml = await response.text();
+      const entries = [...xml.matchAll(/<loc>([^<]+)<\/loc>\s*<lastmod>([^<]+)<\/lastmod>/g)]
+        .map(m => ({ page: new URL(m[1]!).pathname, lastmod: m[2]! }));
+      assertPopulationFloor(entries.length, 101, "lastmod entries in the sitemap");
+      const today = new Date().toISOString().split("T")[0];
+      for (const { page, lastmod } of entries) {
+        assert.match(lastmod, /^\d{4}-\d{2}-\d{2}$/, `Invalid lastmod date format: ${lastmod}`);
+        assert.ok(lastmod <= today, `Lastmod date ${lastmod} is in the future`);
+        assert.equal(lastmod, entryDay(ledger.pages[page], today), `${page} advertises a day the ledger does not hold for it`);
+      }
+      assert.equal(entries.find(e => e.page === redated)?.lastmod, REDATED_VENDOR_DAY, `${redated} does not advertise the day the ledger holds for it`);
+      assert.ok(entries.some(e => e.page === "/vendor/vercel"), "Should have vercel vendor entry");
+    } finally {
+      fs.rmSync(dir, { recursive: true, force: true });
     }
-    const held = new Set(Object.values(ledger.pages).map(entry => entryDay(entry, today)));
-    assert.ok(held.size > 1, `the ledger holds one day for every page it dates, so a constant would pass this: ${[...held].join(", ")}`);
-    assert.ok(entries.some(e => e.page === "/vendor/vercel"), "Should have vercel vendor entry");
   });
 
   it("GET /expiring renders expiring deals timeline page", async () => {
