@@ -3048,7 +3048,7 @@
       "changed": "2026-10-09"
     },
     "/digest/2026-w43": {
-      "hash": "622240bce6e43b32",
+      "hash": "e158242e7e0d9389",
       "changed": "2026-10-09"
     },
     "/digest/2026-w44": {
@@ -3256,7 +3256,7 @@
       "changed": "2026-10-09"
     },
     "/llm-api-pricing": {
-      "hash": "eeb53d86d8483360",
+      "hash": "52ceb801428eb40a",
       "changed": "2026-10-09"
     },
     "/localstack-alternatives": {
@@ -3288,15 +3288,15 @@
       "changed": "2026-10-09"
     },
     "/openai-assistants-alternatives": {
-      "hash": "973e4f76b19b2788",
+      "hash": "f80fc59fbb1c40fb",
       "changed": "2026-10-09"
     },
     "/openai-assistants-migration": {
-      "hash": "ca1b0d0cda9c678b",
+      "hash": "ff0589ead7528685",
       "changed": "2026-10-09"
     },
     "/openai-assistants-migration-2026": {
-      "hash": "3b52e2f2d182e1ef",
+      "hash": "315eb1f4e7d7ee84",
       "changed": "2026-10-09"
     },
     "/postman-alternatives": {
