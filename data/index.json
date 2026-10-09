@@ -35067,7 +35067,18 @@
         "open-source",
         "free tier"
       ],
-      "verifiedDate": "2026-09-27"
+      "verifiedDate": "2026-09-27",
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "agent_memory",
+            "source_url": "https://mem0.ai/pricing",
+            "source_quote": "Drop-in memory infrastructure for AI agents and apps."
+          }
+        ],
+        "reviewed": "2026-10-09"
+      }
     },
     {
       "vendor": "Zep",
@@ -35082,7 +35093,18 @@
         "knowledge graph",
         "free tier"
       ],
-      "verifiedDate": "2026-09-27"
+      "verifiedDate": "2026-09-27",
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "agent_memory",
+            "source_url": "https://www.getzep.com/",
+            "source_quote": "Give agents context from past conversations, user activity, and changing preferences."
+          }
+        ],
+        "reviewed": "2026-10-09"
+      }
     },
     {
       "vendor": "Letta",
@@ -35112,7 +35134,18 @@
         "search",
         "free tier"
       ],
-      "verifiedDate": "2026-09-27"
+      "verifiedDate": "2026-09-27",
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "agent_memory",
+            "source_url": "https://supermemory.ai/",
+            "source_quote": "supermemory is building the default engine for memory and continual learning for agents."
+          }
+        ],
+        "reviewed": "2026-10-09"
+      }
     },
     {
       "vendor": "Cognee",
@@ -35127,7 +35160,18 @@
         "knowledge graph",
         "open-source"
       ],
-      "verifiedDate": "2026-09-27"
+      "verifiedDate": "2026-09-27",
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "agent_memory",
+            "source_url": "https://www.cognee.ai/",
+            "source_quote": "Cognee gives your agents memory."
+          }
+        ],
+        "reviewed": "2026-10-09"
+      }
     },
     {
       "vendor": "Serper",
