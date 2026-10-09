@@ -173,6 +173,28 @@ describe(`${PAGE} on paying after use once Prepay starts`, () => {
   });
 });
 
+describe(`${PAGE} on how much a high-spend account can prepay`, () => {
+  it("follows the $5 minimum with the $5,000 ceiling, what a monthly auto-reload limit does, and what stopping a switch halfway can cut off, before the move to Prepay", () => {
+    const text = withoutTags(prepayParagraph(page));
+    assert.ok(text.startsWith(
+      "New users default to Prepay and buy at least $5 of credits to set up billing. " +
+      "To keep a high-spend account running, you can prepay up to $5,000 in credits. " +
+      "For amounts larger than $5,000 a month, use auto-reload to automatically add credits. " +
+      "If you set a monthly auto-reload limit, auto-reload stops when reached. " +
+      "Manual purchases still work. " +
+      "Auto-reload resumes at the next billing cycle start. " +
+      "If you start the switch to Prepay and stop before paying, other projects may lose service. " +
+      "To restore service, complete the setup, or contact Cloud Billing Support to set the account back to Postpay. " +
+      "Google is moving existing paid accounts from Postpay to Prepay for Gemini API usage:",
+    ), text);
+  });
+
+  it("links the $5,000 ceiling to Google's billing doc", () => {
+    const paragraph = prepayParagraph(page);
+    assert.ok(paragraph.includes('To keep a high-spend account running, you can <a href="https://ai.google.dev/gemini-api/docs/billing" target="_blank" rel="noopener">prepay up to $5,000 in credits</a>.'), paragraph);
+  });
+});
+
 describe(`${PAGE} on how a paid project moves up a tier`, () => {
   it("gives Google's rule for reaching each paid tier, and never says a project is upgraded at a spend threshold", () => {
     assert.deepStrictEqual(keyConstraintByTier(page), {
