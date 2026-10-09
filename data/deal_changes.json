@@ -16125,6 +16125,20 @@
       "alternatives": [],
       "recorded_date": "2026-10-08",
       "date_source": "vendor_page"
+    },
+    {
+      "vendor": "Pollinations.AI",
+      "change_type": "free_tier_removed",
+      "date": "2026-07-10",
+      "summary": "Pollinations ended the free Pollen that refilled every hour on every account (0.01 to 0.4 Pollen an hour, by tier). Free Pollen now comes only from Quests, whose rewards are paid once and land as Quest Pollen; further use needs purchased Pollen.",
+      "previous_state": "\"Free Pollen on every account, refilled hourly. No credit card to register.\" Spore 0.01, Seed 0.15 and Flower 0.4 Pollen an hour (POLLEN_FAQ.md before 2026-06-25)",
+      "current_state": "\"Removes hourly Pollen drip/refill, user-tier runtime state, tier progression flows, and tier-focused admin/API/frontend surfaces.\" (pull request 11928, merged 2026-07-10). POLLEN_FAQ.md: \"Create an account, complete eligible Quests, and claim the rewards to receive Quest Pollen.\"",
+      "source_url": "https://github.com/pollinations/pollinations/pull/11928",
+      "impact": "high",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-10-09",
+      "date_source": "vendor_page"
     }
   ]
 }
