@@ -133,6 +133,46 @@ function keyConstraintByTier(html: string): Record<string, string> {
 const SPEND_BASED_RATE_LIMIT =
   "Spend-based rate limit: paid tiers can also be limited to a maximum spend over any rolling 10 minutes: $10 on Tier 1, $50 on Tier 2 and $200 on Tier 3. Above it, the API returns a 429 RESOURCE_EXHAUSTED error. Google says whether this limit applies depends on the account's billing history. The Tier 2 and Tier 3 payment thresholds count all Google Cloud spending on the billing account, not only the Gemini API.";
 
+const PREPAY_HEADING = '<h3 style="color:#d29922">Prepaid billing for all paid accounts</h3>';
+
+function prepayParagraph(html: string): string {
+  const card = html.slice(html.indexOf(PREPAY_HEADING));
+  const match = card.match(/<p class="impact-desc">[\s\S]*?<\/p>/);
+  return match ? match[0] : "";
+}
+
+const withoutTags = (html: string) => html.replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
+
+describe(`${PAGE} on paying after use once Prepay starts`, () => {
+  it("follows the move to Prepay with what cannot be undone, then the route that bills after use, at the Gemini API's paid-tier prices", () => {
+    const text = withoutTags(prepayParagraph(page));
+    assert.ok(text.includes(
+      "Only Gemini API usage moves to Prepay; other Google Cloud services on the same billing account stay on Postpay. " +
+      "Google's billing FAQ states that accounts cannot switch from Prepay to Postpay, and Prepay is not available for invoiced accounts. " +
+      "To pay after use instead of prepaying, use Gemini Enterprise Agent Platform (formerly Vertex AI). " +
+      "Google bills it on the standard Cloud charging cycle, not Prepay. " +
+      "Gemini 3.5 Flash costs $1.50 input and $9.00 output per million tokens on the global endpoint, the same as the Gemini API's paid tier. " +
+      "Non-global endpoints cost 10% more. " +
+      "Accounts that use only the free tier need take no action.",
+    ), text);
+  });
+
+  it("links the charging cycle to Google's billing doc and both prices to the Agent Platform pricing page", () => {
+    const paragraph = prepayParagraph(page);
+    assert.ok(paragraph.includes('Google <a href="https://ai.google.dev/gemini-api/docs/billing" target="_blank" rel="noopener">bills it on the standard Cloud charging cycle</a>, not Prepay.'), paragraph);
+    assert.ok(paragraph.includes('Gemini 3.5 Flash costs <a href="https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing" target="_blank" rel="noopener">$1.50 input and $9.00 output per million tokens on the global endpoint</a>, the same as the Gemini API\'s paid tier.'), paragraph);
+  });
+
+  it("ends by saying usage can run past a $0 balance and that a negative balance comes off the next purchase", () => {
+    assert.ok(withoutTags(prepayParagraph(page)).endsWith(
+      "When the balance reaches $0, every API key on the billing account stops working until you add credits. " +
+      "Usage can continue for approximately 10 minutes past a $0 balance due to billing latency. " +
+      "Batch jobs and agents may consume credits beyond the balance. " +
+      "A negative balance is deducted from the next credit purchase.",
+    ));
+  });
+});
+
 describe(`${PAGE} on how a paid project moves up a tier`, () => {
   it("gives Google's rule for reaching each paid tier, and never says a project is upgraded at a spend threshold", () => {
     assert.deepStrictEqual(keyConstraintByTier(page), {
