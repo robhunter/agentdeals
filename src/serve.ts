@@ -5918,7 +5918,7 @@ ${allCompareLinks.join("\n")}
     ? endedReliabilitySentence(vendorName)
     : endedBy
     ? endedClaimReliabilityAnswer(vendorName, endedBy)
-    : levelWithheld === "link_unreachable" && adverseLevelAnswer
+    : levelWithheld && adverseLevelAnswer
     ? `${adverseLevelAnswer} ${withheldLevelSentence(levelWithheld, vendorName, unconfirmableSince)}`
     : levelWithheld
     ? `We cannot say. ${withheldLevelSentence(levelWithheld, vendorName, unconfirmableSince)} Nothing we have read describes these terms, so we are not publishing a stability judgement for this vendor until that is fixed.`
