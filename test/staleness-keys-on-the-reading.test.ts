@@ -288,29 +288,35 @@ describe("no published reason states a gap a reading we hold contradicts", () =>
   });
 });
 
-describe("the controls this issue names", () => {
-  const offers = loadOffers();
+describe("a programme an eligibility gate holds out of the ranking", () => {
   const changes = loadDealChanges();
   const ledger = verificationLedger();
+  const programme: Offer = {
+    vendor: "Zqprogramme Gated",
+    category: "Startup Perks",
+    description: "Seed-stage startups get $10,000 in cloud credits for a year.",
+    tier: "Startup Credits",
+    url: "https://zqprogramme-gated.example/startups",
+    tags: ["startup"],
+    verifiedDate: "2026-05-01",
+    eligibility: { type: "startup", conditions: ["Seed-stage startups only"], program: "Zqprogramme Startups" },
+  };
 
-  function standingOf(vendor: string): { gate: string | null; staleReason: string | null } {
-    const offer = offers.find(o => o.vendor === vendor);
-    assert.ok(offer, `${vendor} must still be in the catalogue for this control to mean anything`);
-    const result = rankOffers(enrichOffers([offer]), {
-      queryKey: "control",
-      changes,
-      date: DATE,
-      verificationLedger: ledger,
-    });
-    const gated = result.excluded[0];
-    if (gated) return { gate: gated.gate.code, staleReason: null };
-    const entry = result.ranked[0];
-    return { gate: null, staleReason: entry.demerits.find(d => d.code === "stale_verification")?.reason ?? null };
+  function rankedAlone(offer: Offer) {
+    return rankOffers(enrichOffers([offer]), { queryKey: "control", changes, date: DATE, verificationLedger: ledger });
   }
 
-  it("holds Segment's startup programme out of the ranked population altogether, where it already was", () => {
-    assert.equal(standingOf("Segment Startup Program").gate, "eligibility_restricted");
-    assert.equal(standingOf("Segment Startup Program").staleReason, null);
+  it("is held out of the ranked population altogether, so it carries no staleness demerit", () => {
+    const result = rankedAlone(programme);
+    assert.equal(result.ranked.length, 0);
+    assert.equal(result.excluded[0]?.gate.code, "eligibility_restricted");
+  });
+
+  it("would carry the demerit if nothing held it out, so the gate is what keeps it off", () => {
+    const { eligibility: _, ...open } = programme;
+    const entry = rankedAlone(open).ranked[0];
+    assert.ok(entry, "the same listing without its eligibility is ranked");
+    assert.ok(entry.demerits.some(d => d.code === "stale_verification"), JSON.stringify(entry.demerits.map(d => d.code)));
   });
 });
 

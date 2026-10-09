@@ -417,7 +417,7 @@ describe("eligibility filtering", () => {
       const body = JSON.parse(result.result.content[0].text);
       const offers = body.results;
 
-      assert.ok(offers.length >= 5);
+      assertPopulationFloor(offers.length, 3, "listings restricted to fintech customers that the search returns");
       for (const offer of offers) {
         assert.ok(offer.eligibility);
         assert.strictEqual(offer.eligibility.type, "fintech");

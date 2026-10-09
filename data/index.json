@@ -3636,7 +3636,6 @@
         "free tier"
       ],
       "verifiedDate": "2026-10-09",
-      "expires_date": "2027-01-31",
       "source_check": {
         "checked": "2026-10-09",
         "outcome": "ok",
@@ -3848,9 +3847,9 @@
     {
       "vendor": "Segment Startup Program",
       "category": "Startup Perks",
-      "description": "$50,000 in credits toward monthly Team plan for up to 2 years. Includes access to $1M+ in partner deals (AWS, Google, Intercom) and Analytics Academy",
-      "tier": "Startup Credits",
-      "url": "https://segment.com/docs/guides/usage-and-billing/discounts-for-startups-npos/",
+      "description": "There is no startup programme: Twilio, which owns Segment, says on its startups page \"We do not offer additional credits to startups at this time.\" Checked 2026-10-09, Segment's discounts page offers coupons to non-profits ($120 a month off the monthly Team plan) and occasionally to select customers. The former programme gave early-stage startups Segment's Team plan free for up to two years.",
+      "tier": "Retired",
+      "url": "https://www.twilio.com/en-us/solutions/startups",
       "tags": [
         "analytics",
         "cdp",
@@ -3858,20 +3857,11 @@
         "startup credits",
         "data pipeline"
       ],
-      "verifiedDate": "2026-04-12",
-      "eligibility": {
-        "type": "accelerator",
-        "conditions": [
-          "Incorporated less than 2 years ago",
-          "Raised no more than $5M in total funding"
-        ],
-        "program": "Segment Startup Program"
-      },
-      "expires_date": "2026-12-31",
+      "verifiedDate": "2026-10-09",
       "source_check": {
         "checked": "2026-10-09",
         "outcome": "ok",
-        "detail": "the page names Segment Startup Program as \"program\" and states amounts, none of which we matched to the terms we publish"
+        "detail": "the page names Segment Startup Program as \"segment\" and states amounts, none of which we matched to the terms we publish"
       }
     },
     {
@@ -3926,7 +3916,6 @@
         ],
         "program": "AWS Activate Portfolio"
       },
-      "expires_date": "2026-12-31",
       "source_check": {
         "checked": "2026-10-08",
         "outcome": "ok",
@@ -4144,13 +4133,6 @@
         "startup perks"
       ],
       "verifiedDate": "2026-10-01",
-      "eligibility": {
-        "type": "fintech",
-        "conditions": [
-          "Incorporated through Stripe Atlas ($500 one-time fee)"
-        ],
-        "program": "Stripe Atlas Founder Perks"
-      },
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -4254,7 +4236,6 @@
         ],
         "program": "Google for Startups Cloud Program"
       },
-      "expires_date": "2027-03-31",
       "source_check": {
         "checked": "2026-10-09",
         "outcome": "ok",
@@ -30538,7 +30519,6 @@
         ],
         "program": "HubSpot for Startups Startup Program"
       },
-      "expires_date": "2026-12-31",
       "source_check": {
         "checked": "2026-09-02",
         "outcome": "states_no_terms",
@@ -33992,7 +33972,6 @@
         "hetzner-alternative"
       ],
       "verifiedDate": "2026-08-20",
-      "expires_date": "2026-06-14",
       "free_tier_limits": {
         "credits": "€200 (US$200 on the international site), valid for one month after activation",
         "vps_from": "€4.49/month ex-VAT without commitment (VPS-1 2027: 2 vCores, 4 GB RAM, 40 GB NVMe)",

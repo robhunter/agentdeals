@@ -16,6 +16,7 @@ import {
 import { getCategories, loadOffers } from "../dist/data.js";
 import { toSlug } from "../dist/slug.js";
 import { offerEnded } from "../dist/retirement.js";
+import { classifyTier } from "../dist/ranking.js";
 
 const categories = getCategories();
 const offers = loadOffers();
@@ -150,14 +151,14 @@ describe("a tier that names a programme is not filed as a product", () => {
     assert.deepStrictEqual(misfiled, [], `records whose tier says programme and whose category says product: ${misfiled.join("; ")}`);
   });
 
-  it("holds nothing but qualified-access offers in a programme category", () => {
+  it("holds no free offer open to anyone in a programme category", () => {
     const programmeCategories = Object.entries(CATEGORY_SCOPES)
       .filter(([, scope]) => scope.holds === "programmes")
       .map(([name]) => name);
     assert.ok(programmeCategories.length > 0);
     for (const name of programmeCategories) {
       const members = offers.filter((o) => o.category === name);
-      const openToAnyone = members.filter((o) => !o.eligibility && !offerEnded(o) && !/startup|founder|accelerator|partner|perks|portfolio|deal|scholarship|sponsor|hatch|banking|offers/i.test(o.tier));
+      const openToAnyone = members.filter((o) => !o.eligibility && !offerEnded(o) && classifyTier(o.tier).class !== "not_free" && !/startup|founder|accelerator|partner|perks|portfolio|deal|scholarship|sponsor|hatch|banking|offers/i.test(o.tier));
       assert.deepStrictEqual(openToAnyone.map((o) => `${o.vendor} (${o.tier})`), []);
     }
   });

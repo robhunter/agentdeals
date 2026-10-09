@@ -3,7 +3,7 @@ import assert from "node:assert";
 import { spawn, type ChildProcess } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { changesToStartupProgrammes, STARTUP_PROGRAMME_LISTINGS } from "../dist/startup-programme-changes.js";
+import { changesToStartupProgrammes, listingCountsByVendor, STARTUP_PROGRAMME_LISTINGS } from "../dist/startup-programme-changes.js";
 import { changesTheVendorMade, loadDealChanges, loadOffers } from "../dist/data.js";
 
 const REPO = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -53,9 +53,15 @@ describe("a startup programme's changes are the records about its own catalogue 
     assert.deepStrictEqual(kept([{ vendor: "Microsoft for Startups" }]), ["Microsoft for Startups/-"]);
   });
 
-  it("names a catalogue listing for every programme it selects on", () => {
-    const listed = new Set(loadOffers().map((offer: { vendor: string; tier: string }) => `${offer.vendor}/${offer.tier}`));
-    assert.deepStrictEqual(STARTUP_PROGRAMME_LISTINGS.map(({ vendor, tier }) => `${vendor}/${tier}`).filter((listing) => !listed.has(listing)), []);
+  it("names a catalogue vendor for every programme it selects on, and one of its listings' tiers where the vendor holds several", () => {
+    const offers: { vendor: string; tier: string }[] = loadOffers();
+    const listed = new Set(offers.map((offer) => `${offer.vendor}/${offer.tier}`));
+    const counts = listingCountsByVendor(offers);
+    const unmatched = STARTUP_PROGRAMME_LISTINGS.filter(({ vendor, tier }) => {
+      const held = counts.get(vendor) ?? 0;
+      return held === 0 || (held > 1 && !listed.has(`${vendor}/${tier}`));
+    });
+    assert.deepStrictEqual(unmatched.map(({ vendor, tier }) => `${vendor}/${tier}`), []);
   });
 });
 

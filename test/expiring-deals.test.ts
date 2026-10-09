@@ -9,11 +9,39 @@ import { startLocalApi, startStdioServerAgainst, type LocalApi } from "./local-a
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+const DAY_MS = 24 * 60 * 60 * 1000;
+const dateIn = (days: number) => new Date(Date.now() + days * DAY_MS).toISOString().slice(0, 10);
+
+const EXPIRING_IN_DAYS = [200, 10, 40];
+const EXPIRED_DAYS_AGO = 5;
+
+function catalogueExpiringIn(days: readonly number[]): string {
+  const catalogue = JSON.parse(readFileSync(path.join(__dirname, "..", "data", "index.json"), "utf-8"));
+  for (const offer of catalogue.offers) delete offer.expires_date;
+  const subjects: { vendor: string; expires_date?: string }[] = [];
+  for (const offer of catalogue.offers) {
+    if (subjects.length === days.length) break;
+    if (subjects.some((s) => s.vendor === offer.vendor)) continue;
+    subjects.push(offer);
+  }
+  subjects.forEach((subject, i) => { subject.expires_date = dateIn(days[i]); });
+  const dir = mkdtempSync(path.join(tmpdir(), "expiring-deals-"));
+  writeFileSync(path.join(dir, "index.json"), JSON.stringify(catalogue));
+  return path.join(dir, "index.json");
+}
+
+const expiringCatalogue = catalogueExpiringIn([...EXPIRING_IN_DAYS, -EXPIRED_DAYS_AGO]);
+
+after(() => rmSync(path.dirname(expiringCatalogue), { recursive: true, force: true }));
+
 describe("getExpiringDeals logic", () => {
+  before(() => { process.env.AGENTDEALS_INDEX_PATH = expiringCatalogue; });
+  after(() => { delete process.env.AGENTDEALS_INDEX_PATH; });
+
   it("returns deals expiring within the given window", async () => {
     const { getExpiringDeals } = await import("../dist/data.js");
     const result = getExpiringDeals(365);
-    assert.ok(result.deals.length > 0, "Should find deals expiring within 365 days");
+    assert.strictEqual(result.deals.length, EXPIRING_IN_DAYS.length, "Should find every deal expiring within 365 days");
     assert.strictEqual(result.total, result.deals.length);
     for (const deal of result.deals) {
       assert.ok(deal.expires_date, "Each deal should have expires_date");
@@ -59,6 +87,7 @@ describe("getExpiringDeals logic", () => {
     const wide = getExpiringDeals(365);
     const narrow = getExpiringDeals(30);
     assert.ok(narrow.total <= wide.total, "Narrower window should return fewer or equal results");
+    assert.strictEqual(narrow.total, EXPIRING_IN_DAYS.filter((d) => d <= 30).length);
   });
 });
 
@@ -129,7 +158,7 @@ describe("get_expiring_deals REST endpoint", () => {
       const serverPath = path.join(__dirname, "..", "dist", "serve.js");
       const p = spawn("node", [serverPath], {
         stdio: ["pipe", "pipe", "pipe"],
-        env: { ...process.env, PORT: "0" },
+        env: { ...process.env, PORT: "0", AGENTDEALS_INDEX_PATH: expiringCatalogue },
       });
       const timeout = setTimeout(() => { p.kill(); reject(new Error("Server startup timeout")); }, 10000);
       p.stderr!.on("data", (data: Buffer) => {
@@ -152,10 +181,9 @@ describe("get_expiring_deals REST endpoint", () => {
     const body = await response.json() as any;
     assert.ok(Array.isArray(body.deals), "Should have deals array");
     assert.ok(typeof body.total === "number", "Should have total count");
-    if (body.deals.length > 0) {
-      assert.ok(body.deals[0].expires_date, "Deals should include expires_date");
-      assert.ok(typeof body.deals[0].days_until_expiry === "number", "Deals should include days_until_expiry");
-    }
+    assert.strictEqual(body.deals.length, EXPIRING_IN_DAYS.length);
+    assert.ok(body.deals[0].expires_date, "Deals should include expires_date");
+    assert.ok(typeof body.deals[0].days_until_expiry === "number", "Deals should include days_until_expiry");
   });
 
   it("GET /api/expiring defaults to 30 days", async () => {
@@ -164,6 +192,7 @@ describe("get_expiring_deals REST endpoint", () => {
     assert.strictEqual(response.status, 200);
     const body = await response.json() as any;
     assert.ok(Array.isArray(body.deals));
+    assert.strictEqual(body.deals.length, EXPIRING_IN_DAYS.filter((d) => d <= 30).length);
     for (const deal of body.deals) {
       assert.ok(deal.days_until_expiry <= 30, `Deal ${deal.vendor} should expire within 30 days`);
     }
@@ -171,8 +200,6 @@ describe("get_expiring_deals REST endpoint", () => {
 });
 
 describe("/api/expiring cites the expiring page whatever the window holds", () => {
-  const DAY_MS = 24 * 60 * 60 * 1000;
-  const dateIn = (days: number) => new Date(Date.now() + days * DAY_MS).toISOString().slice(0, 10);
   let scratch = "";
   let serverPort = 0;
   let proc: ChildProcess | null = null;
