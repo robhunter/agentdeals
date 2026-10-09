@@ -2678,6 +2678,10 @@
       "hash": "1b40d6eeea2599d6",
       "changed": "2026-10-08"
     },
+    "/contact": {
+      "hash": "6f4b937ae457ad32",
+      "changed": "2026-10-09"
+    },
     "/criteria": {
       "daily": true
     },
