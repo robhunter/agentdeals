@@ -15,6 +15,7 @@ import { classifyRequest } from "./client-class.js";
 import { acceptSignal, ackMissing, checkRateLimit, clientAddress, RATE_LIMIT_PER_MINUTE, SIGNAL_ACK_PARAM, SIGNAL_BODY_MAX, SIGNAL_DOC_PATH, SIGNAL_PATH, type SignalInput } from "./signal.js";
 import { agentBlock, DEFERENCE, signalExampleSlug, signalHeaderValue, signalHtmlBlock, signalLlmsSection, SIGNAL_HEADER_NAME } from "./signal-copy.js";
 import { BASE_URL } from "./base-url.js";
+import { CONTACT_EMAIL } from "./contact.js";
 import { RATED_LEVELS, isRated, gradeForStack } from "./stack-grade.js";
 import { provenanceBlock } from "./provenance.js";
 import { recordApiHit, recordSessionConnect, recordSessionDisconnect, recordLandingPageView, getStats, getConnectionStats, loadTelemetry, flushTelemetry, flushPending, FLUSH_INTERVAL_SECONDS, logRequest, getPublicRequestLogResult, getTelemetryHealth, recordPageView, getPageViews, recordReferralListingCall, recordReferralVendorLookup, getReferralMarketplaceStats, getSessionClassification, recordSearchQuery, getSearchAnalytics, getApiHitsByEndpoint, recordTraffic, getTrafficReport, getSignalReport, publicSignalReport, getRollupDaySource, getRollupDatesAvailable, setDurableRollupCoverage, setReservedRouteKeys, reservedRoutePathsInForce, reservedRouteClassesInForce, MAX_CLASS_ROUTE_KEYS_PER_DAY, redisJsonGet, redisJsonMget, redisJsonSet, redisJsonSetWithoutExpiry, useRedis } from "./stats.js";
@@ -50710,7 +50711,7 @@ function buildPressPage(): string {
   };
 
   const entriesHtml = sortedItems.length === 0
-    ? `<p class="empty">No press coverage yet. <a href="mailto:hello@agentdeals.dev">Covered us?</a> Let us know.</p>`
+    ? `<p class="empty">No press coverage yet. <a href="mailto:${CONTACT_EMAIL}">Covered us?</a> Let us know.</p>`
     : sortedItems.map(p => `    <article class="press-item">
       <div class="press-meta">
         <span class="press-outlet">${escHtmlServer(p.outlet)}</span>
@@ -50965,7 +50966,7 @@ ${globalNavCss()}
   <h2>Personal Information</h2>
   <div class="section">
     <p>The free-text fields described above are chosen entirely by you. Please do not enter personal information into them.</p>
-    <p>We do not sell personal information. If you believe personal information about you has reached us, email us at <a href="mailto:info@robbobobbo.com">info@robbobobbo.com</a> and we will remove it.</p>
+    <p>We do not sell personal information. If you believe personal information about you has reached us, email us at <a href="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a> and we will remove it.</p>
   </div>
 
   <h2>How We Use Information</h2>
@@ -51009,7 +51010,7 @@ ${globalNavCss()}
 
   <h2>Contact</h2>
   <div class="section">
-    <p>Questions about this policy: <a href="mailto:info@robbobobbo.com">info@robbobobbo.com</a></p>
+    <p>Questions about this policy: <a href="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a></p>
   </div>
 
   <p class="updated">Last updated: ${privacyLastUpdatedLabel()}</p>
@@ -53855,6 +53856,7 @@ ${MCP_TOOLS.map(t => `- **${t.name}**: ${t.brief}`).join("\n")}
 - REST API: ${BASE_URL}/developers
 - Swagger docs: ${BASE_URL}/api/docs
 - npm: npx agentdeals
+- Email: ${CONTACT_EMAIL}
 
 ## Links
 

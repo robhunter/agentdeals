@@ -4,6 +4,7 @@ import { recordsStillInForce } from "./change-resolution.js";
 import { trackedChanges } from "./change-census.js";
 import { MCP_TOOLS, MCP_PROTOCOL_VERSION } from "./mcp-tool-inventory.js";
 import { CRITERIA_PATH } from "./ranking.js";
+import { CONTACT_EMAIL } from "./contact.js";
 import { openapiSpec } from "./openapi.js";
 
 export const AGENT_CARD_PATHS = [
@@ -130,6 +131,7 @@ export function buildServiceDescription(input: ServiceDescriptionInput) {
       homepage: baseUrl,
       repository: input.repositoryUrl,
       issues: `${input.repositoryUrl}/issues`,
+      email: CONTACT_EMAIL,
     },
     discovery: {
       service_description: `${baseUrl}${AGENT_CARD_PATHS[0]}`,
