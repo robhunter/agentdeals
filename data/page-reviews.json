@@ -278,7 +278,6 @@
       "published": "2026-04-03",
       "tier": "A",
       "vendors_asserted": [
-        "appwrite-cloud",
         "auth0",
         "aws",
         "clerk",
@@ -737,8 +736,7 @@
       "vendors_asserted": [
         "aws",
         "azure",
-        "digitalocean",
-        "google-cloud"
+        "digitalocean"
       ],
       "vendors_tabulated": [
         "aws",
@@ -1128,7 +1126,6 @@
         "postal",
         "postmark",
         "resend",
-        "sendgrid",
         "simplelogin",
         "substack"
       ],
@@ -1733,7 +1730,7 @@
         "cloudflare-for-startups",
         "github",
         "github-copilot",
-        "google-cloud",
+        "google-for-startups-cloud-program",
         "hcp-terraform",
         "terragrunt-scale"
       ],
@@ -2736,7 +2733,6 @@
         "cloudflare-workers",
         "dbos",
         "deno-deploy",
-        "google-cloud",
         "google-cloud-run",
         "inngest",
         "trigger-dev",

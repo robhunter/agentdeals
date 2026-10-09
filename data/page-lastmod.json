@@ -1116,7 +1116,7 @@
       "changed": "2026-10-09"
     },
     "/category/cloud-iaas": {
-      "hash": "6e75c3448a90fa1f",
+      "hash": "8939052ee812c0dc",
       "changed": "2026-10-09"
     },
     "/category/cloud-storage": {
@@ -1270,7 +1270,7 @@
       "daily": true
     },
     "/category/startup-perks": {
-      "hash": "42751f5bbe28d87f",
+      "hash": "26b96d3c62e5ee6d",
       "changed": "2026-10-09"
     },
     "/category/status-pages": {
@@ -3089,7 +3089,7 @@
       "changed": "2026-10-09"
     },
     "/events/microsoft-build-2026": {
-      "hash": "4b54d59309f677c1",
+      "hash": "3d674b1fa48f5e21",
       "changed": "2026-10-09"
     },
     "/expiring": {
@@ -3217,7 +3217,7 @@
       "changed": "2026-10-09"
     },
     "/hetzner-alternatives": {
-      "hash": "05f1e41055a9483e",
+      "hash": "6f65d1768884b44a",
       "changed": "2026-10-09"
     },
     "/hetzner-pricing-2026": {
@@ -3790,7 +3790,7 @@
       "changed": "2026-10-09"
     },
     "/vendor": {
-      "hash": "f4336d340839075a",
+      "hash": "9cea411a93c03ece",
       "changed": "2026-10-09"
     },
     "/vendor/10minutemail": {
@@ -6972,7 +6972,7 @@
       "changed": "2026-10-09"
     },
     "/vendor/microsoft-for-startups": {
-      "hash": "f481349b27f542e0",
+      "hash": "a660b8435c14596b",
       "changed": "2026-10-09"
     },
     "/vendor/microsoft-teams": {
@@ -9019,7 +9019,7 @@
       "changed": "2026-10-09"
     },
     "/vendor/vast-ai": {
-      "hash": "b89af6642872d832",
+      "hash": "decae87e574399e8",
       "changed": "2026-10-09"
     },
     "/vendor/vatcheckapi-com": {
