@@ -126,7 +126,7 @@ import { changeTouchesTheListing, countsAsANegativeChange, discontinuedClause, d
 import { rankOffers, rankForListing, rotateListing, utcDate, gateFor, notAFreeOfferGateFor, GATES_LEAVING_NO_FREE_TIER, GATES_LEAVING_NOTHING_TO_RUN_IN_PRODUCTION, descriptionDeniesFreeTier, classifyTier, timeLimitedTierRule, CRITERIA_PATH, DEMOTE_ONLY_POLICY, DISCLOSURE_RATIONALE, TIE_BREAK_ALGORITHM, NAMED_SUBSET_RULE, NAMED_SUBSET_FIELD_RULE, wholeRankedOrderClause, GATE_TABLE, gateTableRowText, DEMERIT_TABLE, demeritTableRowText, NOT_FREE_TIER_RULES, TIME_LIMITED_TIER_RULES, type TieBreak, type Gate } from "./ranking.js";
 import type { RankedEntry, RankingResult } from "./ranking.js";
 import { eligibilityGateAsPublished, gatedShareDescriptionClause, gatedShareLede, publishableEligibilityConditions } from "./eligibility.js";
-import { gateDisclosureFor, gateDisclosureSentence, matchingSubject } from "./gate-disclosure.js";
+import { composedWithinTheCap, gateDisclosureFor, gateDisclosureSentence, matchingSubject, type LapseWording } from "./gate-disclosure.js";
 import { verificationLedger, QUARANTINE_AFTER_FAILURES } from "./verification-state.js";
 import { partitionAlternatives, partitionSubstitutes, productRoleSentence, MEMBERSHIP_GATE_RULES, MEMBERSHIP_GATE_ORDER, MEMBERSHIP_GATE_SYMMETRY, MEMBERSHIP_GATE_SCOPE, MEMBERSHIP_GATE_CORRECTIONS, SUBTYPE_TAXONOMIES, SUBTYPE_MEMBERSHIP_RULE, SUBTYPE_MEMBERSHIP_GROUP_SCOPE, CURATED_SUBTYPE_EXEMPTION, membershipGroupsFor, subtypeDefinition, CROSS_TAXONOMY_RULE, CROSS_TAXONOMY_RULINGS } from "./product-role.js";
 import { buildProductFunctions, functionMembers, functionDefinitions, functionMeaningSentence, admissionFor, splitByFunction, labelsNaming, FUNCTION_RESIDUE_COPY, type ProductFunction, FUNCTION_MEMBERSHIP_RULE, FUNCTION_SPLIT_RULE, FUNCTION_NAMING_RULE, FUNCTION_TITLE_RULE, FUNCTION_PICK_RULE } from "./product-function.js";
@@ -2409,10 +2409,13 @@ function buildCategoryPage(slug: string): string | null {
   const catStanding = catOffers.filter((o) => !catEnded.includes(o));
   const catStandingCount = catStanding.length;
   const catGates = catStanding.map((o) => gateFor(o, catServedOn, changesForVendor(o.vendor)));
-  const catGatedClause = gatedShareDescriptionClause(catStandingCount, catGates);
+  const catMeasuredWith = (lapseWording: LapseWording) => {
+    const gatedClause = gatedShareDescriptionClause(catStandingCount, catGates, lapseWording);
+    return `Compare ${catStandingCount} free ${categoryName.toLowerCase()} tools, free tiers, and developer deals.${gatedClause ? ` ${gatedClause}` : ""}${termsWeCannotConfirmMetaClause(catStanding)}`;
+  };
   const title = `Free ${categoryName} Tools & Deals (${catCount} offers) — AgentDeals`;
   const catUncontradicted = catStanding.filter(nothingOnRecordContradictsOurTerms);
-  const catMeasured = `Compare ${catStandingCount} free ${categoryName.toLowerCase()} tools, free tiers, and developer deals.${catGatedClause ? ` ${catGatedClause}` : ""}${termsWeCannotConfirmMetaClause(catStanding)}`;
+  const catMeasured = composedWithinTheCap(DESCRIPTION_CHARACTER_CAP, catMeasuredWith);
   const metaDesc = catMeasured
     + uncontradictedVendorClause(catUncontradicted.map(o => o.vendor), DESCRIPTION_CHARACTER_CAP - catMeasured.length);
 
@@ -5473,9 +5476,10 @@ function buildVendorPage(slug: string): string | null {
   const primaryGateBeyondEligibility = primaryGate && primaryGate.code !== "eligibility_restricted" ? primaryGate : primaryNotAFreeOfferGate;
   const noFreeTierGate = primaryGate && GATES_LEAVING_NO_FREE_TIER.includes(primaryGate.code) ? primaryGate : primaryNotAFreeOfferGate;
   const productionGate = primaryGate && GATES_LEAVING_NOTHING_TO_RUN_IN_PRODUCTION.includes(primaryGate.code) ? primaryGate : null;
-  const gateSentenceOpeningTheProductionAnswer = primaryGate && primaryGate.code !== "eligibility_restricted" && !productionGate
-    ? `${primaryGate.reason} `
-    : "";
+  const gateOpeningTheProductionAnswer = primaryGate && primaryGate.code !== "eligibility_restricted" && !productionGate
+    ? primaryGate
+    : null;
+  const gateSentenceOpeningTheProductionAnswer = gateOpeningTheProductionAnswer ? `${gateOpeningTheProductionAnswer.reason} ` : "";
   const linedGate = primaryGate && primaryGate.code !== "offer_retired" ? primaryGate : null;
   const gateLine = linedGate
     ? `\n  <p class="gate-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong style="color:#d29922;font-family:var(--mono)">${escHtmlServer(linedGate.code)}</strong> ${escHtmlServer(linedGate.reason)} <a href="${CRITERIA_PATH}#gates">How we use this</a>.</p>${
@@ -5903,11 +5907,13 @@ ${allCompareLinks.join("\n")}
     ? `${eligibilityGateSentence}${freeTierAnswerLead} ${storedTerms}${eligibilityConditionsSentence}`
     : `${freeTierAnswerLead} ${storedTerms}`;
   const faqTierAnswer = termsSuperseded
-    ? `${eligibilityGateSentence}${vendorName}'s free tier is called "${primary.tier}". ${supersededTermsNotice(vendorName, termsSuperseded)}`
+    ? `${primaryGateBeyondEligibility ? gateSentencesBeforeTheTerms : `${eligibilityGateSentence}${vendorName}'s free tier is called "${primary.tier}". `}${supersededTermsNotice(vendorName, termsSuperseded)}`
     : withConditionsAfter(retiredSentence
     ? `${retiredSentence} ${withTheReasonARecordedEndingLeaves(primary.description)}`
     : eligibilityGateSentence + (termsWeCannotConfirm
     ? `${unconfirmedTermsPreamble}Our stored record calls ${vendorName}'s free tier "${primary.tier}". ${withUnconfirmedTermsCaveat(primary.description)}`
+    : primaryGateBeyondEligibility
+    ? `${primaryGateBeyondEligibility.reason} ${primary.description}`
     : `${vendorName}'s free tier is called "${primary.tier}". ${primary.description}`), listingConditions);
   const adverseLevelAnswer = riskLevel === null || riskLevel === "stable"
     ? null
@@ -5947,6 +5953,8 @@ ${allCompareLinks.join("\n")}
     ? `${productionGate.reason} ${NO_FREE_TIER_FOR_PRODUCTION}`
     : termsSuperseded
     ? `${eligibilityGateSentence}${gateSentenceOpeningTheProductionAnswer}${supersededTermsVerdictSentence(vendorName, termsSuperseded)} Until we have re-read the page we cannot say what capacity ${vendorName} gives you, so we are not recommending it for production${isACorrectionToOurOwnRecord(termsSuperseded) ? "" : " on figures we have already superseded"}.`
+    : gateOpeningTheProductionAnswer && !levelWithheld
+    ? `${eligibilityGateSentence}${gateOpeningTheProductionAnswer.reason}`
     : eligibilityGateSentence + gateSentenceOpeningTheProductionAnswer + (levelWithheld
     ? `${vendorsRuleOnProduction ? `${productionAnswerOpening(vendorName, vendorsRuleOnProduction)} ` : ""}${withheldLevelSentence(levelWithheld, vendorName, unconfirmableSince)} We cannot confirm what this offer provides today, so we are not recommending it for production or for anything else until we can.`
     : timeLimitedOffer

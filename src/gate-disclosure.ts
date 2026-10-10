@@ -35,14 +35,27 @@ const GATE_CLAUSES: { code: GateCode; one: string; many: (n: number) => string }
   },
 ];
 
-export function gateClauseList(codes: GateCode[]): string {
+export type LapseWording = "full" | "short";
+
+const SHORT_LAPSE_CLAUSE = {
+  one: `1 unconfirmed in ${VERIFICATION_LAPSED_DAYS} days`,
+  many: (n: number) => `${n} unconfirmed in ${VERIFICATION_LAPSED_DAYS} days`,
+};
+
+export function gateClauseList(codes: GateCode[], lapseWording: LapseWording = "full"): string {
   const clauses: string[] = [];
   for (const clause of GATE_CLAUSES) {
     const n = codes.filter((c) => c === clause.code).length;
     if (n === 0) continue;
-    clauses.push(n === 1 ? clause.one : clause.many(n));
+    const wording = clause.code === "verification_lapsed" && lapseWording === "short" ? SHORT_LAPSE_CLAUSE : clause;
+    clauses.push(n === 1 ? wording.one : wording.many(n));
   }
   return clauses.join(", ");
+}
+
+export function composedWithinTheCap(cap: number, compose: (lapseWording: LapseWording) => string): string {
+  const full = compose("full");
+  return full.length > cap ? compose("short") : full;
 }
 
 export function gateCensusSentence(code: GateCode, gates: (Gate | null)[], date: string): string {
