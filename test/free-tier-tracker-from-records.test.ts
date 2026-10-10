@@ -330,6 +330,37 @@ describe("/free-tier-tracker's hand-typed cards say when their figures were true
   });
 });
 
+describe("/free-tier-tracker's API Monetization Wave", () => {
+  let proc: ChildProcess | null = null;
+  let page = "";
+
+  before(async () => {
+    const child = spawn("node", [path.join(REPO, "dist", "serve.js")], {
+      stdio: ["pipe", "pipe", "pipe"],
+      env: { ...process.env, PORT: "0", BASE_URL: "http://localhost", TZ: "UTC" },
+    });
+    proc = child;
+    const port = await new Promise<number>((resolve, reject) => {
+      const timeout = setTimeout(() => { child.kill(); reject(new Error("Server startup timeout")); }, 60000);
+      child.stderr!.on("data", (data: Buffer) => {
+        const m = data.toString().match(/running on http:\/\/localhost:(\d+)/);
+        if (m) { clearTimeout(timeout); resolve(parseInt(m[1], 10)); }
+      });
+      child.on("error", (err) => { clearTimeout(timeout); reject(err); });
+    });
+    page = await (await fetch(`http://localhost:${port}/free-tier-tracker`)).text();
+  });
+
+  after(() => { if (proc) proc.kill(); });
+
+  it("does not give Amazon SP-API, which never charged its announced fees, as an API adding billing", () => {
+    const wave = page.match(/API Monetization Wave[\s\S]*?<p class="pattern-examples">([^<]*)<\/p>/)?.[1];
+    assert.ok(wave, "the page has no API Monetization Wave examples");
+    assert.ok(wave.startsWith("Examples: "), wave);
+    assert.ok(!wave.includes("SP-API"), wave);
+  });
+});
+
 describe("the guide list the MCP servers return names /free-tier-tracker for the year", () => {
   it("gives it the page's heading and meta description", () => {
     const guide = getGuideBySlug("free-tier-tracker");
