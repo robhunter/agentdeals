@@ -32,6 +32,23 @@ describe("the free-tier threshold reads only the clauses that state the terms", 
   });
 });
 
+describe("the free-tier threshold is never a price unit", () => {
+  it("reads no threshold from a quantity that follows per", () => {
+    assert.deepEqual(growthLimitPhrases("Search costs $4 per 1,000 requests for Instant."), []);
+    assert.deepEqual(growthLimitPhrases("Usage covers web requests (2 credits per 10k requests)."), []);
+    assert.deepEqual(growthLimitPhrases("Storage is billed at $0.02 PER 1 GB storage a month."), []);
+  });
+
+  it("still reads a limit the same description states elsewhere", () => {
+    assert.deepEqual(growthLimitPhrases("After $4 per 1,000 requests, the free plan still covers 2,500 requests a month."), ["2,500 requests/mo"]);
+  });
+
+  it("keeps a limit that a per-period rate follows", () => {
+    assert.equal(rateLimit("Edge compute with 100K requests/day, 10ms CPU time per invocation"), "100K requests/day");
+    assert.equal(rateLimit("The free plan allows 300 requests per day."), "300 requests/day");
+  });
+});
+
 describe("the free-tier threshold reads its period from the clause the quantity is in", () => {
   it("keeps a per-day rate written with a slash", () => {
     assert.equal(
