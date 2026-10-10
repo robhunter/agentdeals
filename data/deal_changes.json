@@ -15361,7 +15361,7 @@
       "date_source": "vendor_page",
       "summary": "Mockoon replaced its hosted Mockoon Cloud plans with self-hosted Mockoon Pro, launched in beta on 2026-10-01. The Team plan is now €10 per license a month, billed €120 per license a year, for self-hosting; before, Team was $100 a month billed annually for 5 members, 3 cloud-deployed mocks and 100,000 calls a month. A managed cloud is offered to Enterprise customers only. The open-source desktop app, CLI and Docker image stay free.",
       "tier": "Team plan",
-      "tier_direction": "narrowed",
+      "tier_direction": "unchanged",
       "previous_state": "Free and open-source desktop app for creating local API mocks — dynamic responses, request logging, record/replay and OpenAPI import. Mockoon Cloud adds hosted mocks and collaboration: Team is $100/month billed annually for 5 members, 3 deployed mocks and 100,000 calls/month, with a 14-day trial on a work email (7 days and a card otherwise).",
       "current_state": "\"Mockoon Pro self-hosted is now available in beta\" (Mockoon blog, 2026-10-01). mockoon.com/pricing: \"Team plan Self-host Mockoon Pro on your own infrastructure € 10 /license/month (Tax excl.) billed €120/license/year\"; \"a managed cloud option for Enterprise customers\".",
       "impact": "low",
