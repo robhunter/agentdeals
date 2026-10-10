@@ -16133,6 +16133,20 @@
       "alternatives": [],
       "recorded_date": "2026-10-09",
       "date_source": "hand_written"
+    },
+    {
+      "vendor": "Exa",
+      "change_type": "limits_reduced",
+      "date": "2026-10-01",
+      "date_source": "hand_written",
+      "summary": "Between 2026-09-16 and 2026-10-01, Exa replaced the $20 sign-up credit with a one-time $10 bonus for completing onboarding, which only a user's first team earns. The $10 monthly credit, available in full on the day of sign-up, continues.",
+      "previous_state": "\"New accounts get $20 in free credits (around 2,800 searches) and the Free Tier adds $10 in credits every month.\" (exa.ai/docs/admin/pricing, Internet Archive capture of 2026-09-16)",
+      "current_state": "\"The Free Tier gives you $10 in credits (up to 2,500 Instant searches) the day you sign up ... Complete onboarding in the dashboard and your first team earns a one-time $10 bonus.\" (exa.ai/docs/admin/pricing, Internet Archive capture of 2026-10-01)",
+      "impact": "medium",
+      "source_url": "https://web.archive.org/web/20261001232535/https://exa.ai/docs/admin/pricing",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-10-10"
     }
   ]
 }
