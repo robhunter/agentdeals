@@ -206,6 +206,7 @@ export interface PageReviewRecord {
 export interface PageReviewIndex {
   version: number;
   sla_days: Record<ReviewTier, number>;
+  measured_on?: string;
   pages: PageReviewRecord[];
 }
 
@@ -308,7 +309,8 @@ export function parsePageReviews(text: string): PageReviewIndex {
     seen.add(record.path);
     pages.push(record);
   }
-  return { version: typeof raw.version === "number" ? raw.version : 1, sla_days: { ...SLA_DAYS }, pages };
+  const measuredOn = typeof raw.measured_on === "string" && /^\d{4}-\d{2}-\d{2}$/.test(raw.measured_on) ? raw.measured_on : null;
+  return { version: typeof raw.version === "number" ? raw.version : 1, sla_days: { ...SLA_DAYS }, ...(measuredOn ? { measured_on: measuredOn } : {}), pages };
 }
 
 let cached: PageReviewIndex | null = null;

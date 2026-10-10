@@ -38,12 +38,19 @@ function perturbStore(name: string, key: string, fields: string[], target: strin
   return touched;
 }
 
+const A_DAY_IN_MS = 86_400_000;
+const utcDay = (ms: number) => new Date(ms).toISOString().slice(0, 10);
+const MEASURED_ON = parsePageReviews(readFileSync(path.join(REPO, "data", "page-reviews.json"), "utf-8")).measured_on ?? utcDay(Date.now());
+const DAYS_FROM_TODAY_TO_THE_MEASURED_DAY = Math.round((Date.parse(MEASURED_ON) - Date.parse(utcDay(Date.now()))) / A_DAY_IN_MS);
+const CLOCK_SHIFT_TO_THE_MEASURED_DAY_MS = Number(process.env.AGENTDEALS_CLOCK_SHIFT_MS ?? 0) + DAYS_FROM_TODAY_TO_THE_MEASURED_DAY * A_DAY_IN_MS;
+
 function startServer(env: NodeJS.ProcessEnv): Promise<{ proc: ChildProcess; port: number }> {
   return new Promise((resolve, reject) => {
-    const child = spawn("node", [path.join(REPO, "dist", "serve.js")], {
+    const atTheMeasuredDay = CLOCK_SHIFT_TO_THE_MEASURED_DAY_MS === 0 ? [] : ["--import", path.join(REPO, "scripts", "shifted-clock.mjs")];
+    const child = spawn("node", [...atTheMeasuredDay, path.join(REPO, "dist", "serve.js")], {
       cwd: REPO,
       stdio: ["ignore", "ignore", "pipe"],
-      env: { ...process.env, PORT: "0", BASE_URL: "http://localhost:3000", ...env },
+      env: { ...process.env, PORT: "0", BASE_URL: "http://localhost:3000", AGENTDEALS_CLOCK_SHIFT_MS: String(CLOCK_SHIFT_TO_THE_MEASURED_DAY_MS), ...env },
     });
     const timeout = setTimeout(() => {
       child.kill();

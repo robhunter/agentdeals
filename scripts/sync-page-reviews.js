@@ -63,6 +63,12 @@ so a page asserting vendor facts from nowhere has to be argued for rather than s
 Publication dates come from the first commit in which the page's route was served,
 which is an event that happened, unlike a hand-typed literal.
 
+The registry records the UTC day it was measured as measured_on, and
+test/page-data-provenance.test.ts renders every page at that day. A table that reads
+the change log moves on the day an announced record takes effect; until the next
+sync, the test still compares like with like, and a change to the code or the data
+that moves a figure still fails it.
+
 Usage: node scripts/sync-page-reviews.js [options]
 
   --out <path>       Registry to write (default ${pageReviewsPath()})
@@ -195,6 +201,7 @@ async function main() {
   };
   const resolver = { slugsFor: assertedVendorSlugs, isNonVendor: isNonVendorSubject };
 
+  const measuredOn = new Date().toISOString().slice(0, 10);
   const tmp = mkdtempSync(join(tmpdir(), "sync-page-reviews-"));
   const perturbedIndex = writePerturbed(tmp, "index.json", "offers", CATALOGUE_TEXT_FIELDS);
   const perturbedChanges = writePerturbed(tmp, "deal_changes.json", "changes", CHANGE_LOG_TEXT_FIELDS);
@@ -284,11 +291,11 @@ async function main() {
     if (!pages.some(p => p.path === stale)) changes.push(`- ${stale} (no longer an editorial page)`);
   }
 
-  const index = { version: 1, sla_days: { A: 30, B: 90 }, pages };
+  const index = { version: 1, sla_days: { A: 30, B: 90 }, measured_on: measuredOn, pages };
   const serialized = JSON.stringify(index, null, 2) + "\n";
   const tierA = pages.filter(p => p.tier === "A").length;
   const unsourcedA = pages.filter(p => p.tier === "A" && p.data_source === "unsourced").length;
-  console.log(`${pages.length} pages, ${tierA} tier A, ${pages.length - tierA} tier B`);
+  console.log(`${pages.length} pages, ${tierA} tier A, ${pages.length - tierA} tier B, measured on ${measuredOn}`);
   console.log(`${pages.filter(p => p.reads_index).length} read the catalogue, ${pages.filter(p => p.reads_changes).length} read the change log`);
   console.log(`${pages.filter(p => p.tables_read_index).length} of those put catalogue-derived text in a table`);
   const withFigures = pages.filter(p => p.table_figures > 0);
