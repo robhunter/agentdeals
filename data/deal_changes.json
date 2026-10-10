@@ -40,7 +40,13 @@
       "category": "API Development",
       "alternatives": [],
       "recorded_date": "2026-04-19",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-10-10",
+        "detail": "Retracted 2026-10-10: an announcement of fees Amazon never charged, so SP-API's terms did not change. Amazon delayed the fees in January 2026, postponed them indefinitely in March, and its developer portal says it \"will not move forward with the SP-API usage and annual fees at this time\".",
+        "source_url": "https://developer.amazonservices.com/cancellation-of-sp-api-fees"
+      }
     },
     {
       "vendor": "Xata",
@@ -257,7 +263,13 @@
         "BigCommerce API"
       ],
       "recorded_date": "2026-02-25",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-10-10",
+        "detail": "Retracted 2026-10-10: free access did not end and the annual fee did not start. Amazon delayed the fees in January 2026, postponed them indefinitely in March, and its developer portal says it \"will not move forward with the SP-API usage and annual fees at this time\".",
+        "source_url": "https://developer.amazonservices.com/cancellation-of-sp-api-fees"
+      }
     },
     {
       "vendor": "PythonAnywhere",
@@ -1959,7 +1971,13 @@
         "BigCommerce API"
       ],
       "recorded_date": "2026-04-14",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-10-10",
+        "detail": "Retracted 2026-10-10: the $1,400 annual fee it says remains in effect never started. Amazon postponed all SP-API fees indefinitely in March 2026, and its developer portal says it \"will not move forward with the SP-API usage and annual fees at this time\".",
+        "source_url": "https://developer.amazonservices.com/cancellation-of-sp-api-fees"
+      }
     },
     {
       "vendor": "Amazon Kiro",
@@ -10088,21 +10106,45 @@
     {
       "vendor": "DeepSeek API",
       "change_type": "pricing_restructured",
-      "date": "2026-09-03",
-      "date_source": "discovered",
-      "summary": "Pricing has significantly changed. The previous pricing of $0.28/$0.42/M tokens is no longer accurate. New models (deepseek-v4-flash, deepseek-v4-pro, deepseek-v4-flash-vision-exp) are available with different pricing tiers for peak and off-peak hours, and cache hits/misses.",
-      "previous_state": "Among the cheapest LLM APIs available. DeepSeek V3.2 (deepseek-chat): $0.28/M input, $0.42/M output (1M context). DeepSeek V3.2 Thinking (deepseek-reasoner): $0.28/M input, $0.42/M output. Cache hits 90% cheaper. Off-peak discounts available. China-based.",
-      "current_state": "Pricing is now per 1M tokens with different rates for input and output tokens, peak and off-peak hours, and cache hits/misses. For example, deepseek-v4-flash has input token prices ranging from $0.007 to $0.44 depending on these factors, and output tokens cost $0.66 to $1.32 per 1M tokens.",
+      "date": "2026-08-16",
+      "date_source": "vendor_page",
+      "summary": "At 16:00 UTC on 2026-08-16, DeepSeek introduced peak and off-peak pricing, with off-peak at half the peak rate. V4 Flash and V4 Pro output prices rose, with Flash from $0.28 to $1.32 at peak and Pro from $0.87 to $3.96 at peak.",
+      "previous_state": "Per 1M tokens, cache-hit input / cache-miss input / output. Before 2026-08-16, deepseek-v4-flash was $0.0028 / $0.14 / $0.28 and deepseek-v4-pro was $0.003625 / $0.435 / $0.87, with one price at all hours.",
+      "current_state": "Per 1M tokens, cache-hit input / cache-miss input / output. From 2026-08-16, peak hours are 01:00-04:00 and 06:00-10:00 UTC. deepseek-v4-flash peak is $0.014 / $0.44 / $1.32, off-peak $0.007 / $0.22 / $0.66. deepseek-v4-pro peak is $0.044 / $1.32 / $3.96, off-peak $0.022 / $0.66 / $1.98.",
       "impact": "high",
-      "source_url": "https://api-docs.deepseek.com/quick_start/pricing",
+      "source_url": "https://api-docs.deepseek.com/updates",
       "category": "AI / ML",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-03",
-      "archive_check": {
-        "checked": "2026-10-02",
-        "outcome": "no_usable_capture"
-      }
+      "recorded_date": "2026-09-03"
+    },
+    {
+      "vendor": "DeepSeek API",
+      "change_type": "pricing_restructured",
+      "date": "2026-09-10",
+      "date_source": "vendor_page",
+      "summary": "On 2026-09-10, DeepSeek released deepseek-flash (V4.1-Flash) and retired deepseek-v4-flash and deepseek-v4-flash-vision-exp. These retired names still route to V4.1-Flash at Flash prices. Flash prices fell from 04:00 UTC; V4 Pro prices did not change.",
+      "previous_state": "Per 1M tokens, cache-hit input / cache-miss input / output. Before 2026-09-10, deepseek-v4-flash peak was $0.014 / $0.44 / $1.32 and off-peak $0.007 / $0.22 / $0.66.",
+      "current_state": "Per 1M tokens, cache-hit input / cache-miss input / output. From 2026-09-10, deepseek-flash (V4.1-Flash) peak is $0.006 / $0.30 / $1.20 and off-peak $0.003 / $0.15 / $0.60.",
+      "impact": "medium",
+      "source_url": "https://api-docs.deepseek.com/news/news260910",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-10-10"
+    },
+    {
+      "vendor": "DeepSeek API",
+      "change_type": "record_corrected",
+      "date": "2026-10-10",
+      "summary": "Data correction - DeepSeek's August prices took effect at 16:00 UTC on 2026-08-16. Our record dated the change 2026-09-03, the day we found it, called the effective date unknown, and listed as available models DeepSeek retired on 2026-09-10.",
+      "previous_state": "Recorded 2026-09-03 as: Pricing has significantly changed. The previous pricing of $0.28/$0.42/M tokens is no longer accurate. New models (deepseek-v4-flash, deepseek-v4-pro, deepseek-v4-flash-vision-exp) are available with different pricing tiers for peak and off-peak hours, and cache hits/misses.",
+      "current_state": "\"The new prices will take effect at 16:00 (UTC Time) on August 16, 2026.\"",
+      "impact": "medium",
+      "source_url": "https://api-docs.deepseek.com/updates",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-10-10",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Internxt",
@@ -13977,6 +14019,21 @@
       "recorded_date": "2026-09-26"
     },
     {
+      "vendor": "Groq",
+      "change_type": "limits_reduced",
+      "date": "2026-10-06",
+      "summary": "Groq cut the free limits of gpt-oss-safeguard-20b from 30 to 3 requests a minute and from 8,000 to 2,000 tokens a minute; 1,000 requests and 200,000 tokens a day are unchanged. The Internet Archive's capture of console.groq.com/docs/rate-limits on 2026-09-28 lists 30 RPM and 8K TPM, and its capture of 2026-10-06 lists 3 RPM and 2K TPM. Groq announced no change. The other free chat models keep 30 requests and 8,000 tokens a minute.",
+      "tier": "Free",
+      "previous_state": "gpt-oss-safeguard-20b on the free plan: 30 requests a minute, 1,000 requests a day, 8,000 tokens a minute, 200,000 tokens a day",
+      "current_state": "gpt-oss-safeguard-20b on the free plan: 3 requests a minute, 1,000 requests a day, 2,000 tokens a minute, 200,000 tokens a day (Free Plan Limits table)",
+      "impact": "low",
+      "source_url": "http://web.archive.org/web/20261006074250/https://console.groq.com/docs/rate-limits",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-10-10",
+      "date_source": "hand_written"
+    },
+    {
       "vendor": "Windsurf",
       "change_type": "rebranded",
       "date": "2026-06-02",
@@ -14320,6 +14377,118 @@
       "recorded_date": "2026-09-27",
       "date_source": "hand_written",
       "listing_effect": "none"
+    },
+    {
+      "vendor": "OpenAI",
+      "change_type": "product_deprecated",
+      "date": "2026-11-30",
+      "summary": "The OpenAI API keeps running. Agent Builder, the Evals platform and the v1/prompts API can be used until November 30, 2026. Existing evals become read-only on October 31, 2026. ChatKit remains available. Migrate from Agent Builder to the Agents SDK or ChatGPT Workspace Agents. Migrate from Evals to Promptfoo. Move reusable prompt content into application code.",
+      "previous_state": "Agent Builder, the Evals platform (dashboard and API) and reusable prompt objects (the v1/prompts API) were available on the OpenAI platform.",
+      "current_state": "OpenAI's deprecations page (notices of 2026-06-03) lists November 30, 2026 as the date Agent Builder, the Evals dashboard and API, and the v1/prompts API and reusable prompt objects shut down, with existing evals read-only from October 31, 2026.",
+      "impact": "low",
+      "source_url": "https://developers.openai.com/api/docs/deprecations",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-10-10",
+      "date_source": "hand_written",
+      "listing_effect": "none",
+      "what_ends": "OpenAI Agent Builder, Evals platform and reusable prompts"
+    },
+    {
+      "vendor": "OpenAI",
+      "change_type": "product_deprecated",
+      "date": "2026-12-01",
+      "summary": "The OpenAI API keeps running. The gpt-image-1-mini, gpt-image-1.5 and chatgpt-image-latest models can be called until December 1, 2026. OpenAI's substitutes are gpt-image-2.5-sunburst or gpt-image-2.5-flare.",
+      "previous_state": "gpt-image-1-mini, gpt-image-1.5 and chatgpt-image-latest were callable in the OpenAI API at pay-as-you-go rates.",
+      "current_state": "OpenAI's deprecations page (notice of 2026-06-02) lists December 1, 2026 as the date the three models are removed from the API.",
+      "impact": "low",
+      "source_url": "https://developers.openai.com/api/docs/deprecations",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-10-10",
+      "date_source": "hand_written",
+      "listing_effect": "none",
+      "what_ends": "gpt-image-1-mini, gpt-image-1.5 and chatgpt-image-latest"
+    },
+    {
+      "vendor": "OpenAI",
+      "change_type": "product_deprecated",
+      "date": "2026-12-11",
+      "summary": "The OpenAI API keeps running. The gpt-5-2025-08-07, gpt-5-mini-2025-08-07, gpt-5-nano-2025-08-07, gpt-5-pro-2025-10-06, o3-2025-04-16 and o3-pro-2025-06-10 snapshots can be called until December 11, 2026. OpenAI's substitutes: gpt-5.6-sol for gpt-5-2025-08-07 and o3-2025-04-16; gpt-5.6-terra for gpt-5-mini-2025-08-07; gpt-5.6-luna for gpt-5-nano-2025-08-07; gpt-5.6-sol with reasoning.mode: pro for gpt-5-pro-2025-10-06 and o3-pro-2025-06-10.",
+      "previous_state": "The gpt-5-2025-08-07, gpt-5-mini-2025-08-07, gpt-5-nano-2025-08-07, gpt-5-pro-2025-10-06, o3-2025-04-16 and o3-pro-2025-06-10 snapshots were callable in the OpenAI API at pay-as-you-go rates.",
+      "current_state": "OpenAI's deprecations page (notice of 2026-06-11) lists December 11, 2026 as the date the six snapshots are removed from the API.",
+      "impact": "medium",
+      "source_url": "https://developers.openai.com/api/docs/deprecations",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-10-10",
+      "date_source": "hand_written",
+      "listing_effect": "none",
+      "what_ends": "OpenAI's 2025 GPT-5 and o3 snapshots"
+    },
+    {
+      "vendor": "OpenAI",
+      "change_type": "product_deprecated",
+      "date": "2027-01-20",
+      "summary": "The OpenAI API keeps running. The gpt-realtime, gpt-4o-realtime, gpt-realtime-mini, gpt-4o-mini-realtime, gpt-audio, gpt-4o-audio, gpt-audio-mini, gpt-4o-mini-audio and gpt-4o-mini-transcribe-2025-03-20 models can be called until January 20, 2027. OpenAI's substitutes: gpt-realtime-2.1 for gpt-realtime and gpt-4o-realtime; gpt-realtime-2.1-mini for gpt-realtime-mini and gpt-4o-mini-realtime; gpt-audio-1.5 for gpt-audio, gpt-4o-audio, gpt-audio-mini and gpt-4o-mini-audio; gpt-4o-mini-transcribe-2025-12-15 for gpt-4o-mini-transcribe-2025-03-20.",
+      "previous_state": "gpt-realtime, gpt-4o-realtime, gpt-realtime-mini, gpt-4o-mini-realtime, gpt-audio, gpt-4o-audio, gpt-audio-mini, gpt-4o-mini-audio and gpt-4o-mini-transcribe-2025-03-20 were callable in the OpenAI API at pay-as-you-go rates.",
+      "current_state": "OpenAI's deprecations page (notice of 2026-07-20) lists January 20, 2027 as the date these model families and snapshots are removed from the API.",
+      "impact": "low",
+      "source_url": "https://developers.openai.com/api/docs/deprecations",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-10-10",
+      "date_source": "hand_written",
+      "listing_effect": "none",
+      "what_ends": "OpenAI legacy realtime and audio models"
+    },
+    {
+      "vendor": "OpenAI",
+      "change_type": "product_deprecated",
+      "date": "2027-02-26",
+      "summary": "The OpenAI API keeps running. The whisper-1, gpt-4o-transcribe, gpt-4o-mini-transcribe and gpt-4o-transcribe-diarize models can be called until February 26, 2027. OpenAI's substitute for each is gpt-live-transcribe or gpt-transcribe.",
+      "previous_state": "whisper-1, gpt-4o-transcribe, gpt-4o-mini-transcribe and gpt-4o-transcribe-diarize were callable in the OpenAI API at pay-as-you-go rates.",
+      "current_state": "OpenAI's deprecations page (notice of 2026-08-26) lists February 26, 2027 as the date the four models are removed from the API.",
+      "impact": "medium",
+      "source_url": "https://developers.openai.com/api/docs/deprecations",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-10-10",
+      "date_source": "hand_written",
+      "listing_effect": "none",
+      "what_ends": "whisper-1 and the gpt-4o transcription models"
+    },
+    {
+      "vendor": "OpenAI",
+      "change_type": "product_deprecated",
+      "date": "2027-01-06",
+      "summary": "The OpenAI API keeps running. The tts-1, tts-1-hd, gpt-4o-mini-tts-2025-03-20 and gpt-4o-mini-tts-2025-12-15 models can be called until January 6, 2027. OpenAI's replacement for each: gpt-realtime-2.1-mini.",
+      "previous_state": "tts-1, tts-1-hd, gpt-4o-mini-tts-2025-03-20 and gpt-4o-mini-tts-2025-12-15 were callable in the OpenAI API at pay-as-you-go rates.",
+      "current_state": "OpenAI's deprecations page (notice of 2026-10-01) lists January 6, 2027 as the date the four text-to-speech models are removed from the API.",
+      "impact": "low",
+      "source_url": "https://developers.openai.com/api/docs/deprecations",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-10-10",
+      "date_source": "hand_written",
+      "listing_effect": "none",
+      "what_ends": "OpenAI tts-1, tts-1-hd and gpt-4o-mini-tts"
+    },
+    {
+      "vendor": "OpenAI",
+      "change_type": "product_deprecated",
+      "date": "2027-04-01",
+      "summary": "The OpenAI API keeps running. The gpt-5.3-codex, gpt-5.1 and gpt-5.4-nano models can be called until April 1, 2027. OpenAI's replacements: gpt-6-sol for gpt-5.3-codex and gpt-5.1; gpt-6-luna for gpt-5.4-nano.",
+      "previous_state": "gpt-5.3-codex, gpt-5.1 and gpt-5.4-nano were callable in the OpenAI API at pay-as-you-go rates.",
+      "current_state": "OpenAI's deprecations page (notice of 2026-10-01) lists April 1, 2027 as the date the three models are removed from the API.",
+      "impact": "medium",
+      "source_url": "https://developers.openai.com/api/docs/deprecations",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-10-10",
+      "date_source": "hand_written",
+      "listing_effect": "none",
+      "what_ends": "gpt-5.1, gpt-5.3-codex and gpt-5.4-nano"
     },
     {
       "vendor": "Cursor",
@@ -15135,7 +15304,8 @@
       "category": "Cloud Hosting",
       "alternatives": [],
       "recorded_date": "2026-10-02",
-      "date_source": "vendor_page"
+      "date_source": "vendor_page",
+      "tier_direction": "unchanged"
     },
     {
       "vendor": "DatoCMS",
@@ -16133,6 +16303,20 @@
       "alternatives": [],
       "recorded_date": "2026-10-09",
       "date_source": "hand_written"
+    },
+    {
+      "vendor": "Exa",
+      "change_type": "limits_reduced",
+      "date": "2026-10-01",
+      "date_source": "hand_written",
+      "summary": "Between 2026-09-16 and 2026-10-01, Exa replaced the $20 sign-up credit with a one-time $10 bonus for completing onboarding, which only a user's first team earns. The $10 monthly credit, available in full on the day of sign-up, continues.",
+      "previous_state": "\"New accounts get $20 in free credits (around 2,800 searches) and the Free Tier adds $10 in credits every month.\" (exa.ai/docs/admin/pricing, Internet Archive capture of 2026-09-16)",
+      "current_state": "\"The Free Tier gives you $10 in credits (up to 2,500 Instant searches) the day you sign up ... Complete onboarding in the dashboard and your first team earns a one-time $10 bonus.\" (exa.ai/docs/admin/pricing, Internet Archive capture of 2026-10-01)",
+      "impact": "medium",
+      "source_url": "https://web.archive.org/web/20261001232535/https://exa.ai/docs/admin/pricing",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-10-10"
     }
   ]
 }
