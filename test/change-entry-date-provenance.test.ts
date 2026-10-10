@@ -13,6 +13,7 @@ import {
   UNDATED_TILE_LABEL,
   UNKNOWN_EFFECTIVE_DATE_MARKER,
 } from "../dist/change-dates.js";
+import { enrichOffers, loadOffers } from "../dist/data.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -26,6 +27,19 @@ const CONTROL = "Hyperping";
 const CONTROL_DATE = dayOffset(-10);
 const SUMMARY = "Free storage allowance cut from 15 GB to 5 GB.";
 const FIELD_SLACK = 20;
+const DAYS_BACK_TO_TRY = [3, 4, 5, 6];
+
+const DATES_THE_SUBJECT_CARRIES: ReadonlySet<string> = new Set(
+  JSON.stringify(enrichOffers(loadOffers().filter((o) => o.vendor === SUBJECT))).match(/\d{4}-\d{2}-\d{2}/g) ?? [],
+);
+
+function entryDateClearOf(datesTheSubjectCarries: ReadonlySet<string>): string {
+  for (const back of DAYS_BACK_TO_TRY) {
+    const day = dayOffset(-back);
+    if (!datesTheSubjectCarries.has(day)) return day;
+  }
+  throw new Error(`every day ${DAYS_BACK_TO_TRY.join(", ")} days back is a date ${SUBJECT}'s listing carries`);
+}
 
 function change(vendor: string, date: string, dateSource: string, summary: string) {
   return {
@@ -258,7 +272,7 @@ describe("an entry lifted out of its section still says what its date is", () =>
       return p;
     };
     const control = change(CONTROL, CONTROL_DATE, "vendor_page", "Monitor allowance cut.");
-    ENTRY_DATE = dayOffset(-3);
+    ENTRY_DATE = entryDateClearOf(DATES_THE_SUBJECT_CARRIES);
 
     const discovered = await startServer(
       write("discovered.json", [control, change(SUBJECT, ENTRY_DATE, "discovered", SUMMARY)])
@@ -323,6 +337,13 @@ describe("an entry lifted out of its section still says what its date is", () =>
   it("reaches enough of the site for the sweep below to mean something", () => {
     assertPopulationFloor(routes.length, 1001, "routes enumerated from the sitemap");
     assert.ok(rendered.size > 8, `only ${rendered.size} routes rendered the entry at all`);
+  });
+
+  it("dates the scratch entry on a day the subject's listing does not already carry", () => {
+    assert.ok(DATES_THE_SUBJECT_CARRIES.size > 0, `${SUBJECT}'s listing carries no date, so no collision is being avoided`);
+    assert.ok(!DATES_THE_SUBJECT_CARRIES.has(ENTRY_DATE), `${ENTRY_DATE} is a date ${SUBJECT}'s listing already carries`);
+    assert.strictEqual(entryDateClearOf(new Set([dayOffset(-3)])), dayOffset(-4));
+    assert.strictEqual(entryDateClearOf(new Set()), dayOffset(-3));
   });
 
   function fieldsTheEntryPuts(body: string, b: { withoutTheEntry: string }): string[] {
