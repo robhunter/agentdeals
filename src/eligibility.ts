@@ -1,6 +1,6 @@
 import { eligibilityGateFor, gateFor } from "./ranking.js";
 import type { Gate, GateCode } from "./ranking.js";
-import { gateClauseList, gateDisclosureSentence } from "./gate-disclosure.js";
+import { gateClauseList, gateDisclosureSentence, type LapseWording } from "./gate-disclosure.js";
 import type { DealChange, Offer } from "./types.js";
 
 export const CONDITION_RECORDING_AN_UNREAD_PROGRAM = "Startup program — check vendor for eligibility details";
@@ -43,11 +43,11 @@ export function gatedShareLede(total: number, gates: (Gate | null)[], ended = 0)
   return `${counted}. ${gateDisclosureSentence("them", total, codes)}${alsoEnded}`;
 }
 
-export function gatedShareDescriptionClause(total: number, gates: (Gate | null)[]): string {
+export function gatedShareDescriptionClause(total: number, gates: (Gate | null)[], lapseWording: LapseWording = "full"): string {
   const codes = gatedCodes(gates);
   if (codes.length === 0) return "";
   if (eligibilityAccountsForEveryOffer(codes, total)) return `All ${total} require an application or qualification.`;
-  return `${gateClauseList(codes)}.`;
+  return `${gateClauseList(codes, lapseWording)}.`;
 }
 
 export function publishableEligibilityConditions(offer: Pick<Offer, "eligibility">): string[] {

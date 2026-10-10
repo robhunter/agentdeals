@@ -9,6 +9,7 @@ import { assertCoversPopulation, assertPopulationFloor, categoriesInTheCatalogue
 import { assertAheadOfTheVendorList, vendorsNamedAsUncontradicted } from "./snippet-order.ts";
 
 const { getCategories } = await import("../dist/data.js");
+const { composedWithinTheCap, gateClauseList } = await import("../dist/gate-disclosure.js");
 const { toSlug } = await import("../dist/vendor-slug.js");
 const {
   measuredNoDifferenceClause,
@@ -313,5 +314,31 @@ describe("a category description counts the terms it could not confirm", () => {
       `a description runs past ${LONGEST_DESCRIPTION_BEFORE_THIS_RULE} characters: ${over.join("; ")}`,
     );
     assertPopulationFloor(pages.length, 40, "category descriptions measured against the cap");
+  });
+});
+
+describe("the lapse clause in a category description", () => {
+  const OPENING = "Compare 14 free source control tools, free tiers, and developer deals.";
+  const composeWithLapses = (lapsed: number, rest: string) => (lapseWording: "full" | "short") =>
+    `${OPENING} ${gateClauseList(["eligibility_restricted", ...Array(lapsed).fill("verification_lapsed")], lapseWording)}.${rest}`;
+
+  it("keeps the full wording while the description fits the cap", () => {
+    assert.strictEqual(
+      composedWithinTheCap(LONGEST_DESCRIPTION_BEFORE_THIS_RULE, composeWithLapses(1, " Each row says why.")),
+      `${OPENING} 1 requires an application or qualification, 1 we have not been able to confirm in the last 180 days. Each row says why.`,
+    );
+  });
+
+  it("writes the lapse short where the full wording runs past the cap, and changes no other clause", () => {
+    const rest = " We could not confirm today's terms for 11 of them: on 10 the page we cite did not answer, and on 1 our own read did not confirm them. Each row says why.";
+    assert.strictEqual(
+      composedWithinTheCap(LONGEST_DESCRIPTION_BEFORE_THIS_RULE, composeWithLapses(3, rest)),
+      `${OPENING} 1 requires an application or qualification, 3 unconfirmed in 180 days.${rest}`,
+    );
+  });
+
+  it("gives the short lapse clause in the singular for one offer", () => {
+    assert.strictEqual(gateClauseList(["verification_lapsed"], "short"), "1 unconfirmed in 180 days");
+    assert.strictEqual(gateClauseList(["verification_lapsed"]), "1 we have not been able to confirm in the last 180 days");
   });
 });
