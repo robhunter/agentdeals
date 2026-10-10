@@ -5949,11 +5949,12 @@ ${allCompareLinks.join("\n")}
     [productionAnswerOpening(vendorName, rule), ...ratingBesideTheVendorsRule(), alternativesUnderTheVendorsRule(rule, primary.category)]
       .filter(sentence => sentence)
       .join(" ");
+  const theAnswerWouldJudgeTheFreeTierForProduction = hasFree && !levelWithheld && !timeLimitedOffer && !endedBy && !vendorsRuleOnProduction;
   const faqProductionAnswer = productionGate
     ? `${productionGate.reason} ${NO_FREE_TIER_FOR_PRODUCTION}`
     : termsSuperseded
     ? `${eligibilityGateSentence}${gateSentenceOpeningTheProductionAnswer}${supersededTermsVerdictSentence(vendorName, termsSuperseded)} Until we have re-read the page we cannot say what capacity ${vendorName} gives you, so we are not recommending it for production${isACorrectionToOurOwnRecord(termsSuperseded) ? "" : " on figures we have already superseded"}.`
-    : gateOpeningTheProductionAnswer && !levelWithheld
+    : gateOpeningTheProductionAnswer && theAnswerWouldJudgeTheFreeTierForProduction
     ? `${eligibilityGateSentence}${gateOpeningTheProductionAnswer.reason}`
     : eligibilityGateSentence + gateSentenceOpeningTheProductionAnswer + (levelWithheld
     ? `${vendorsRuleOnProduction ? `${productionAnswerOpening(vendorName, vendorsRuleOnProduction)} ` : ""}${withheldLevelSentence(levelWithheld, vendorName, unconfirmableSince)} We cannot confirm what this offer provides today, so we are not recommending it for production or for anything else until we can.`
