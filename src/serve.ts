@@ -23391,7 +23391,7 @@ ${mcpCtaCss()}
     </table>
   </div>
   <div class="context-box">
-    <strong>Pattern:</strong> Medium-risk vendors typically show one or more warning signs: credit-based pricing transitions (Vercel, Netlify), post-acquisition uncertainty (Neon/Databricks), or incremental tightening (Supabase project pausing, Render sleep reduction). The free tier still works today — but the trend line points toward further restrictions.
+    <strong>Pattern:</strong> Medium-risk vendors typically show one or more warning signs: credit-based pricing transitions (Vercel, Netlify) or post-acquisition uncertainty (Neon/Databricks). The free tier still works today — but the trend line points toward further restrictions.
   </div>
 
   <h2 id="high">4. \u{1F534} High Risk — Plan Your Exit</h2>
@@ -23407,7 +23407,7 @@ ${mcpCtaCss()}
     </table>
   </div>
   <div class="context-box">
-    <strong>Pattern:</strong> High-risk vendors share traits: multiple negative changes in a short period (OpenAI, X/Twitter), hostile stance toward free users (Spotify, Amazon SP-API), or entering "sustaining mode" with no investment (Heroku). When you see a vendor make 2+ negative changes in 6 months, the third is coming.
+    <strong>Pattern:</strong> High-risk vendors share traits: a free tier already removed (OpenAI, X/Twitter), hostile stance toward free users (Spotify, Amazon SP-API), or entering "sustaining mode" with no investment (Heroku). When you see a vendor make 2+ negative changes in 6 months, the third is coming.
   </div>
   <div class="context-box">
     <strong>How this band is split:</strong> the grade is editorial and unchanged; only where it renders is derived. A vendor appears above if our catalogue holds a free tier for it today. ${highBand.alreadyGone.length === 0 ? "Every vendor in this band still has one." : highBand.alreadyGone.map(e => `${escHtmlServer(e.vendor)} (${escHtmlServer(FREE_TIER_STANDING_LABELS[freeTierStanding(e, offers)])})`).join(", ")}${highBand.alreadyGone.length === 0 ? "" : " did not, so they moved down a section."}

@@ -9,7 +9,7 @@ import { fileURLToPath } from "node:url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
 
-const { riskEntries, changeLogNamesFor, lastChangeShown } = await import("../dist/risk-scorecard.js");
+const { riskEntries, changeLogNamesFor, lastChangeShown, whyNotEvidence, INDEX_SWEEP_STATE } = await import("../dist/risk-scorecard.js");
 const { loadDealChanges } = await import("../dist/data.js");
 
 type Change = {
@@ -19,6 +19,7 @@ type Change = {
   summary: string;
   current_state: string;
   resolution?: { state: string; date: string; detail?: string };
+  listing_effect?: string;
 };
 
 const shipped: Change[] = loadDealChanges();
@@ -41,7 +42,7 @@ const entry = {
 const retracted = { state: "retracted", date: "2026-09-01", detail: "Retracted 2026-09-01: no change." };
 const reversed = { state: "reversed", date: "2026-08-01", detail: "Reversed 2026-08-01." };
 
-describe("the Last Change a scorecard row prints is a record still in force", () => {
+describe("the Last Change a scorecard row prints is a record the scorecard counts", () => {
   it("prints the typed date while the record behind it stands", () => {
     const changes = [record("2026-02-01", "limits_reduced"), record("2026-05-01", "pricing_restructured")];
     assert.strictEqual(lastChangeShown(entry, changes, "2026-10-10"), "2026-02-01");
@@ -62,10 +63,28 @@ describe("the Last Change a scorecard row prints is a record still in force", ()
       record("2026-04-01", "pricing_restructured"),
       record("2026-06-01", "limits_reduced", reversed),
       record("2026-09-28", "record_corrected"),
-      record("2026-11-30", "product_deprecated"),
+      { ...record("2026-11-30", "product_deprecated"), listing_effect: "ends" },
     ];
     assert.strictEqual(lastChangeShown(entry, changes, "2026-10-10"), "2026-04-01");
     assert.strictEqual(lastChangeShown(entry, changes, "2026-11-30"), "2026-11-30");
+  });
+
+  it("skips a deprecation of another product and an index sweep, which the scorecard does not count", () => {
+    const changes = [
+      record("2026-02-01", "limits_reduced", retracted),
+      record("2026-04-01", "pricing_restructured"),
+      { ...record("2026-07-01", "product_deprecated"), listing_effect: "none" },
+      { ...record("2026-08-01", "limits_reduced"), current_state: INDEX_SWEEP_STATE },
+    ];
+    assert.strictEqual(lastChangeShown(entry, changes, "2026-10-10"), "2026-04-01");
+  });
+
+  it("falls back from a typed date whose record is a deprecation of another product", () => {
+    const typedDeprecation = { ...entry, lastChange: "2026-03-19", changeType: "product_deprecated" };
+    const elsewhere = [{ ...record("2026-03-19", "product_deprecated"), listing_effect: "none" }, record("2026-02-03", "limits_reduced")];
+    assert.strictEqual(lastChangeShown(typedDeprecation, elsewhere, "2026-10-10"), "2026-02-03");
+    const ofTheListing = [{ ...record("2026-03-19", "product_deprecated"), listing_effect: "ends" }, record("2026-02-03", "limits_reduced")];
+    assert.strictEqual(lastChangeShown(typedDeprecation, ofTheListing, "2026-10-10"), "2026-03-19");
   });
 
   it("prints nothing when no record the vendor made is left in force", () => {
@@ -108,10 +127,14 @@ function riskRows(html: string): Map<string, string[]> {
 
 type Entry = (typeof riskEntries)[number];
 
-function newestInForce(e: Entry, changes: readonly Change[]): string | null {
+function countedByTheScorecard(c: Change): boolean {
+  return whyNotEvidence(c) === null && !c.resolution && c.change_type !== "record_corrected";
+}
+
+function newestCounted(e: Entry, changes: readonly Change[]): string | null {
   const names = new Set(changeLogNamesFor(e));
   const dates = changes
-    .filter(c => names.has(c.vendor) && !c.resolution && c.change_type !== "record_corrected" && c.date <= today)
+    .filter(c => names.has(c.vendor) && countedByTheScorecard(c) && c.date <= today)
     .map(c => c.date)
     .sort();
   return dates[dates.length - 1] ?? null;
@@ -123,14 +146,14 @@ function typedRecordsOf(e: Entry, changes: readonly Change[]): Change[] {
   return changes.filter(c => names.has(c.vendor) && c.date === e.lastChange && (!e.changeType || c.change_type === e.changeType));
 }
 
-function typedRecordsAllRetracted(e: Entry, changes: readonly Change[]): boolean {
+function typedRecordsAllUncounted(e: Entry, changes: readonly Change[]): boolean {
   const typed = typedRecordsOf(e, changes);
-  return typed.length > 0 && typed.every(c => c.resolution);
+  return typed.length > 0 && !typed.some(countedByTheScorecard);
 }
 
 function expectedLastChange(e: Entry, changes: readonly Change[]): string | null {
   if (!e.lastChange) return null;
-  return typedRecordsAllRetracted(e, changes) ? newestInForce(e, changes) : e.lastChange;
+  return typedRecordsAllUncounted(e, changes) ? newestCounted(e, changes) : e.lastChange;
 }
 
 async function servedRiskPage(changesPath?: string): Promise<string> {
@@ -171,11 +194,11 @@ describe("retracting the record behind a row's Last Change in a copy of the chan
   const raw = JSON.parse(readFileSync(path.join(REPO, "data", "deal_changes.json"), "utf-8")) as { changes: Change[] };
   const standing = riskEntries.filter(e => {
     const typed = typedRecordsOf(e, shipped);
-    return typed.length > 0 && typed.every(c => !c.resolution);
+    return typed.length > 0 && typed.every(countedByTheScorecard);
   });
   const withoutTyped = (e: Entry) => shipped.filter(c => !typedRecordsOf(e, shipped).includes(c));
   const fallsBack = standing.find(e => {
-    const fallback = newestInForce(e, withoutTyped(e));
+    const fallback = newestCounted(e, withoutTyped(e));
     return fallback !== null && fallback !== e.lastChange;
   });
   const emptied = standing.find(e =>
@@ -187,7 +210,7 @@ describe("retracting the record behind a row's Last Change in a copy of the chan
   before(async () => {
     assert.ok(fallsBack, "no row's typed record stands beside another record in force, so a fallback proves nothing");
     assert.ok(emptied, "no second row's typed record stands, so the empty case proves nothing");
-    expectedFallback = newestInForce(fallsBack!, withoutTyped(fallsBack!));
+    expectedFallback = newestCounted(fallsBack!, withoutTyped(fallsBack!));
 
     const typedSummaries = new Set(typedRecordsOf(fallsBack!, shipped).map(c => `${c.date}|${c.change_type}|${c.summary}`));
     const emptiedSummaries = new Set(shipped.filter(c => new Set(changeLogNamesFor(emptied!)).has(c.vendor)).map(c => `${c.date}|${c.change_type}|${c.summary}`));
@@ -238,15 +261,15 @@ describe("the shipped scorecard", () => {
     page = await servedRiskPage();
   });
 
-  it("prints no row's typed date once the record behind it is no longer in force", () => {
+  it("prints no row's typed date once the scorecard no longer counts the record behind it", () => {
     const rows = riskRows(page);
     for (const e of riskEntries) {
       const cells = rows.get(e.vendor) ?? [];
       assert.ok(cells.length > 0, `${e.vendor} has no row on the page`);
       const expected = expectedLastChange(e, shipped) ?? "—";
       for (const cell of cells) assert.ok(cell.startsWith(expected), `${e.vendor} prints "${cell}", not ${expected}`);
-      if (typedRecordsAllRetracted(e, shipped)) {
-        for (const cell of cells) assert.ok(!cell.includes(e.lastChange!), `${e.vendor} prints ${e.lastChange}, whose record is no longer in force`);
+      if (typedRecordsAllUncounted(e, shipped)) {
+        for (const cell of cells) assert.ok(!cell.includes(e.lastChange!), `${e.vendor} prints ${e.lastChange}, a record the scorecard does not count`);
       }
     }
   });
@@ -267,5 +290,29 @@ describe("the shipped scorecard", () => {
       card[1].startsWith("GitHub Copilot Free (2K completions) and the Windsurf launch. "),
       `the AI Coding Tools card reads: ${card[1]}`,
     );
+  });
+
+  it("restates no retracted record in its Reasoning cells or pattern notes", () => {
+    const visible = page.replace(/<script[\s\S]*?<\/script>/g, "");
+    for (const retired of [
+      "Project pause tightened",
+      "Post-Series C",
+      "Sleep time reduced",
+      "256 MB with 30-day expiry",
+      "Free tier removed twice",
+      "incremental tightening",
+      "multiple negative changes in a short period",
+    ]) {
+      assert.ok(!visible.includes(retired), `the page still says "${retired}"`);
+    }
+    for (const given of [
+      "Free projects pause after 1 week of inactivity.",
+      "A free web service spins down after 15 minutes without inbound traffic. Free Postgres is limited to 1 GB of storage and expires 30 days after creation.",
+      "X replaced its free API tier with pay-per-use pricing, announced 2026-02-06. Recently active free-tier users got a one-time $10 voucher. Only Public Utility Apps keep free access.",
+      "credit-based pricing transitions (Vercel, Netlify) or post-acquisition uncertainty (Neon/Databricks).",
+      "High-risk vendors share traits: a free tier already removed (OpenAI, X/Twitter),",
+    ]) {
+      assert.ok(visible.includes(given), `the page does not say "${given}"`);
+    }
   });
 });
