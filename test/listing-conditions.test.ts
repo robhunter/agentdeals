@@ -388,19 +388,18 @@ describe("a listing's conditions of use", () => {
   });
 
   it("leaves out both rating sentences where a gate opens the answer, as today's answer leaves out the rating", async () => {
-    const today = await productionAnswers(withoutField.base, GATED);
-    const gate = today.slice(0, today.indexOf(`${GATED.vendor}'s free tier can be suitable`));
-    assert.ok(gate.startsWith("We have not been able to confirm this offer since"), today);
-    assert.strictEqual(await productionAnswers(withField.base, GATED), `${gate}${productionRuledOut(GATED, "production use")} ${PRODUCTION_CLOSING}`);
+    const gate = await productionAnswers(withoutField.base, GATED);
+    assert.ok(gate.startsWith("We have not been able to confirm this offer since") && gate.endsWith(" days."), gate);
+    assert.strictEqual(await productionAnswers(withField.base, GATED), `${gate} ${productionRuledOut(GATED, "production use")} ${PRODUCTION_CLOSING}`);
   });
 
-  it("keeps today's history sentence between the vendor's rule and the free alternatives where a gate leaves no level", async () => {
-    const today = await productionAnswers(withoutField.base, GATED_WITH_A_CHANGE);
-    const usable = `${GATED_WITH_A_CHANGE.vendor}'s free tier is usable for prototyping and development. `;
-    const at = today.indexOf(usable);
-    assert.ok(at > 0 && today.includes("warrants caution"), today);
-    assert.strictEqual(await productionAnswers(withField.base, GATED_WITH_A_CHANGE),
-      `${today.slice(0, at)}${productionRuledOut(GATED_WITH_A_CHANGE, "production use")} ${today.slice(at + usable.length)} ${PRODUCTION_CLOSING}`);
+  it("keeps the history sentence between the vendor's rule and the free alternatives where a gate leaves no level", async () => {
+    const gate = await productionAnswers(withoutField.base, GATED_WITH_A_CHANGE);
+    assert.ok(gate.startsWith("We have not been able to confirm this offer since") && gate.endsWith(" days."), gate);
+    const ruled = await productionAnswers(withField.base, GATED_WITH_A_CHANGE);
+    const opening = `${gate} ${productionRuledOut(GATED_WITH_A_CHANGE, "production use")} `;
+    assert.ok(ruled.startsWith(opening) && ruled.endsWith(` ${PRODUCTION_CLOSING}`), ruled);
+    assert.ok(ruled.slice(opening.length, ruled.length - PRODUCTION_CLOSING.length).includes("warrants caution"), ruled);
   });
 
   it("keeps today's sentence on the recorded changes after the stable rating", async () => {

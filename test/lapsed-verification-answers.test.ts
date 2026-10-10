@@ -144,6 +144,32 @@ describe("a vendor page whose offer we have not confirmed within the lapse windo
     assert.ok(lapsed.has(`What is ${A_LISTING_WE_LAST_CONFIRMED_LONG_AGO.vendor}'s free tier?`));
   });
 
+  it("answers what the free tier is with the lapse and then the stored terms, naming no tier", () => {
+    const vendor = A_LISTING_WE_LAST_CONFIRMED_LONG_AGO.vendor;
+    assert.strictEqual(
+      lapsed.get(`What is ${vendor}'s free tier?`),
+      `${lapse!.reason} ${A_LISTING_WE_LAST_CONFIRMED_LONG_AGO.description}`,
+    );
+  });
+
+  it("answers the production question with the lapse alone", () => {
+    const vendor = A_LISTING_WE_LAST_CONFIRMED_LONG_AGO.vendor;
+    assert.strictEqual(lapsed.get(`Is ${vendor}'s free tier good for production?`), lapse!.reason);
+  });
+
+  it("opens the free-tier answer with the lapse where a record also supersedes the stored terms, naming no tier", () => {
+    const vendor = A_LAPSED_LISTING_A_RECORD_SUPERSEDES.vendor;
+    const tier = superseded.get(`What is ${vendor}'s free tier?`) ?? "";
+    assert.ok(tier.startsWith(lapse!.reason), tier);
+    assert.ok(!tier.includes(`${vendor}'s free tier is called`), tier);
+  });
+
+  it("still names the tier where we confirmed the offer recently", () => {
+    const vendor = THE_SAME_LISTING_CONFIRMED_RECENTLY.vendor;
+    const tier = recent.get(`What is ${vendor}'s free tier?`) ?? "";
+    assert.ok(tier.startsWith(`${vendor}'s free tier is called "Free".`), tier);
+  });
+
   it("says nothing of a lapse where we confirmed the offer recently", () => {
     const vendor = THE_SAME_LISTING_CONFIRMED_RECENTLY.vendor;
     const production = recent.get(`Is ${vendor}'s free tier good for production?`) ?? "";
