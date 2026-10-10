@@ -1856,8 +1856,8 @@
       "review_note": "The corrections from https://github.com/robhunter/agentdeals/issues/2168 are live. Checked on production on 2026-09-30 against all six acceptance criteria, including a census of 2,593 routes for the withdrawn claims.",
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 63,
-      "table_figures_from_records": 12,
+      "table_figures": 57,
+      "table_figures_from_records": 7,
       "tables": [
         {
           "label": "Always Free Products",
@@ -1876,8 +1876,8 @@
         },
         {
           "label": "Recent GCP & Google Changes",
-          "figures": 7,
-          "from_records": 6
+          "figures": 1,
+          "from_records": 1
         }
       ],
       "reads_changes": true,
