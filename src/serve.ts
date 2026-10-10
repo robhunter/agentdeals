@@ -6309,12 +6309,10 @@ function buildAlternativesPage(slug: string): string | null {
     if (!offerRetired(primary)) {
       parts.push(`<div class="risk-row"><span class="risk-label">Pricing Page:</span> <a href="${escHtmlServer(primary.url)}" rel="noopener" target="_blank">${escHtmlServer(primary.url.replace(/^https?:\/\//, "").slice(0, 50))}${primary.url.replace(/^https?:\/\//, "").length > 50 ? "..." : ""}</a></div>`);
     }
-    if (altChangesVendorMade.length > 0) {
-      const shownChanges = altChangesVendorMade.slice(0, 5);
-      parts.push(`<div class="changes-summary"><h3>Recent Pricing Changes (${altChangesVendorMade.length})</h3>`);
-      parts.push(shownChanges.map(c => {
-        const badge = changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
-        return `<div class="change-item${isNoLongerInForce(c) ? " change-resolved" : ""}">
+    const altChangesByDayServed = splitAtTheDayServed(altChangesVendorMade, utcToday());
+    const altChangeItemHtml = (c: DealChange) => {
+      const badge = changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
+      return `<div class="change-item${isNoLongerInForce(c) ? " change-resolved" : ""}">
           <div class="change-head">
             <span class="badge" style="background:${badge.color}">${badge.label}</span>
             <span class="change-date">${changeEntryDateLabel(c)}</span>
@@ -6322,10 +6320,20 @@ function buildAlternativesPage(slug: string): string | null {
           </div>
           <div class="change-summary">${changeSummaryHtml(c, escHtmlServer)}</div>
         </div>`;
-      }).join("\n"));
-      if (vendorChanges.length > shownChanges.length) {
+    };
+    if (altChangesByDayServed.inEffect.length > 0) {
+      const shownChanges = altChangesByDayServed.inEffect.slice(0, 5);
+      parts.push(`<div class="changes-summary"><h3>Recent Pricing Changes (${altChangesByDayServed.inEffect.length})</h3>`);
+      parts.push(shownChanges.map(altChangeItemHtml).join("\n"));
+      if (vendorChanges.length > shownChanges.length + altChangesByDayServed.upcoming.length) {
         parts.push(`<p class="more-link"><a href="/vendor/${slug}">See ${escHtmlServer(vendorName)}'s full history &rarr;</a></p>`);
       }
+      parts.push("</div>");
+    }
+    if (altChangesByDayServed.upcoming.length > 0) {
+      parts.push(`<div class="changes-summary"><h3 id="upcoming-changes">${escHtmlServer(UPCOMING_CHANGES_HEADING)} (${altChangesByDayServed.upcoming.length})</h3>`);
+      parts.push(`<p class="section-note">${escHtmlServer(UPCOMING_CHANGES_INTRO)}</p>`);
+      parts.push(altChangesByDayServed.upcoming.map(altChangeItemHtml).join("\n"));
       parts.push("</div>");
     }
     return parts.join("\n");
@@ -9754,23 +9762,31 @@ function buildEventPage(slug: string): string | null {
       ? '<span class="event-status event-past">Completed</span>'
       : '<span class="event-status event-upcoming">Upcoming</span>';
 
-  const updatesHtml = recentChanges.length > 0
+  const recentChangesByDayServed = splitAtTheDayServed(recentChanges, utcToday());
+  const eventUpdateItemHtml = (c: DealChange) => {
+    const badge = changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
+    return '<div class="update-item">'
+      + '<div class="update-head">'
+      + '<span class="badge" style="background:' + badge.color + '">' + badge.label + '</span>'
+      + '<strong>' + escHtmlServer(c.vendor) + '</strong>'
+      + '<span class="update-date">' + escHtmlServer(changeEntryDateLabel(c)) + '</span>'
+      + '<span class="impact impact-' + changeImpactWord(c.impact) + '">' + changeImpactWord(c.impact) + ' impact</span>'
+      + '</div>'
+      + '<div class="update-summary">' + changeSummaryHtml(c, escHtmlServer) + '</div>'
+      + '</div>';
+  };
+  const upcomingUpdatesHtml = recentChangesByDayServed.upcoming.length > 0
+    ? '\n<section class="event-section">\n<h2 id="upcoming-changes">' + escHtmlServer(UPCOMING_CHANGES_HEADING) + '</h2>\n<p class="section-desc">' + escHtmlServer(UPCOMING_CHANGES_INTRO) + '</p>\n'
+      + '<div class="updates-list">'
+      + recentChangesByDayServed.upcoming.map(eventUpdateItemHtml).join("\n")
+      + '</div>\n</section>'
+    : '';
+  const updatesHtml = (recentChangesByDayServed.inEffect.length > 0
     ? '<section class="event-section">\n<h2>Recent Updates</h2>\n<p class="section-desc">Pricing changes and updates from event vendors since April 2026.</p>\n'
       + '<div class="updates-list">'
-      + recentChanges.slice(0, 20).map(c => {
-        const badge = changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
-        return '<div class="update-item">'
-          + '<div class="update-head">'
-          + '<span class="badge" style="background:' + badge.color + '">' + badge.label + '</span>'
-          + '<strong>' + escHtmlServer(c.vendor) + '</strong>'
-          + '<span class="update-date">' + escHtmlServer(changeEntryDateLabel(c)) + '</span>'
-          + '<span class="impact impact-' + changeImpactWord(c.impact) + '">' + changeImpactWord(c.impact) + ' impact</span>'
-          + '</div>'
-          + '<div class="update-summary">' + changeSummaryHtml(c, escHtmlServer) + '</div>'
-          + '</div>';
-      }).join("\n")
+      + recentChangesByDayServed.inEffect.slice(0, 20).map(eventUpdateItemHtml).join("\n")
       + '</div>\n</section>'
-    : '<section class="event-section">\n<h2>Updates</h2>\n<p class="section-desc">Updates will appear here as announcements are made during the event. Check back during ' + escHtmlServer(event.dates) + '.</p>\n</section>';
+    : '<section class="event-section">\n<h2>Updates</h2>\n<p class="section-desc">Updates will appear here as announcements are made during the event. Check back during ' + escHtmlServer(event.dates) + '.</p>\n</section>') + upcomingUpdatesHtml;
 
   const categoryGroups = eventCategories.sort().map(cat => {
     const catOffers = enrichedOffers.filter(o => o.category === cat);
@@ -9919,7 +9935,7 @@ function buildEventPage(slug: string): string | null {
     + '<div class="stat-box"><div class="stat-value">' + vendorNames.length + '</div><div class="stat-label">Tracked Vendors</div></div>'
     + '<div class="stat-box"><div class="stat-value">' + eventOffers.length + '</div><div class="stat-label">Current Offerings</div></div>'
     + '<div class="stat-box"><div class="stat-value">' + eventCategories.length + '</div><div class="stat-label">Categories</div></div>'
-    + '<div class="stat-box"><div class="stat-value">' + recentChanges.length + '</div><div class="stat-label">Recent Changes</div></div>'
+    + '<div class="stat-box"><div class="stat-value">' + recentChangesByDayServed.inEffect.length + '</div><div class="stat-label">Recent Changes</div></div>'
     + '</div>\n'
     + updatesHtml + '\n'
     + confirmedHtml + '\n'
@@ -21143,6 +21159,26 @@ ${gdpChanges.map(c => `      <li><strong>${escHtmlServer(changeEntryLongDateLabe
 </html>`, endedIndex(offers));
 }
 
+function vendorChangesInEffectOnTheDayServed(): DealChange[] {
+  return splitAtTheDayServed(changesTheVendorMade(dealChanges), utcToday()).inEffect;
+}
+
+function upcomingDealChangeCardsHtml(vendors: readonly string[]): string {
+  const upcoming = splitAtTheDayServed(changesTheVendorMade(dealChanges).filter(c => vendors.includes(c.vendor)), utcToday()).upcoming;
+  if (upcoming.length === 0) return "";
+  return `
+
+  <h2 id="upcoming-changes">${escHtmlServer(UPCOMING_CHANGES_HEADING)}</h2>
+  <p class="section-intro">${escHtmlServer(UPCOMING_CHANGES_INTRO)}</p>
+  <div style="display:grid;gap:.75rem;margin:1rem 0">
+    ${upcoming.map(c => `<div class="diff-card" style="border-left-color:#d29922">
+      <h3>${escHtmlServer(c.vendor)} — ${escHtmlServer(changeEntryDateLabel(c))}</h3>
+      <p class="diff-desc">${changeSummaryHtml(c, escHtmlServer)}</p>
+      <p style="font-size:.8rem;color:var(--text-dim);margin-top:.5rem">Impact: ${escHtmlServer(c.impact)}${changeCitesASource(c) ? ` &middot; <a href="${escHtmlServer(c.source_url.trim())}" target="_blank" rel="noopener">Source &rarr;</a>` : ""}</p>
+    </div>`).join("\n    ")}
+  </div>`;
+}
+
 function buildSupabaseVsFirebasePage(): string {
   const title = "Supabase vs Firebase Free Tier Comparison — 2026 Deep Dive";
   const metaDesc = "Compare Supabase and Firebase free tiers side-by-side. Database, auth, storage, functions, bandwidth — verified data, cost-at-scale analysis, and BaaS alternatives. [[freshness]]";
@@ -21152,9 +21188,9 @@ function buildSupabaseVsFirebasePage(): string {
   const supabaseOffer = offers.find(o => o.vendor === "Supabase" && o.category === "Databases");
   const firebaseOffer = offers.find(o => o.vendor === "Firebase" && o.category === "Databases");
 
-  const supabasePause = changesTheVendorMade(dealChanges).find(c => c.vendor === "Supabase" && c.change_type === "limits_reduced");
-  const firebaseStorage = changesTheVendorMade(dealChanges).find(c => c.vendor === "Firebase" && c.change_type === "limits_reduced");
-  const firebaseStudio = changesTheVendorMade(dealChanges).find(c => c.vendor === "Firebase" && c.change_type === "product_deprecated");
+  const supabasePause = vendorChangesInEffectOnTheDayServed().find(c => c.vendor === "Supabase" && c.change_type === "limits_reduced");
+  const firebaseStorage = vendorChangesInEffectOnTheDayServed().find(c => c.vendor === "Firebase" && c.change_type === "limits_reduced");
+  const firebaseStudio = vendorChangesInEffectOnTheDayServed().find(c => c.vendor === "Firebase" && c.change_type === "product_deprecated");
 
   const baasAlts = offers.filter(o =>
     ["Appwrite Cloud", "PocketBase", "Nhost", "Convex"].includes(o.vendor) && o.category === "Databases"
@@ -21433,7 +21469,7 @@ ${mcpCtaCss()}
       <p class="diff-desc">${changeSummaryHtml(firebaseStudio, escHtmlServer)}</p>
       <p style="font-size:.8rem;color:var(--text-dim);margin-top:.5rem">Impact: ${escHtmlServer(firebaseStudio.impact)} &middot; <a href="${escHtmlServer(firebaseStudio.source_url)}" target="_blank" rel="noopener">Source →</a></p>
     </div>` : ""}
-  </div>
+  </div>${upcomingDealChangeCardsHtml(["Supabase", "Firebase"])}
 
   <h2>Related Guides</h2>
   <p class="section-intro">Deep-dive guides for database selection and free tier infrastructure.</p>
@@ -21475,8 +21511,8 @@ function buildVercelVsNetlifyPage(): string {
   const vercelOffer = offers.find(o => o.vendor === "Vercel" && o.category === "Cloud Hosting");
   const netlifyOffer = offers.find(o => o.vendor === "Netlify" && o.category === "Cloud Hosting");
 
-  const vercelChange = changesTheVendorMade(dealChanges).find(c => c.vendor === "Vercel" && c.change_type === "pricing_restructured");
-  const netlifyChange = changesTheVendorMade(dealChanges).find(c => c.vendor === "Netlify" && c.change_type === "pricing_restructured");
+  const vercelChange = vendorChangesInEffectOnTheDayServed().find(c => c.vendor === "Vercel" && c.change_type === "pricing_restructured");
+  const netlifyChange = vendorChangesInEffectOnTheDayServed().find(c => c.vendor === "Netlify" && c.change_type === "pricing_restructured");
 
   const hostingAlts = offers.filter(o =>
     ["Cloudflare Pages", "Railway", "Render", "Fly.io", "Coolify", "Deno Deploy"].includes(o.vendor) && o.category === "Cloud Hosting"
@@ -21753,7 +21789,7 @@ ${mcpCtaCss()}
       <p class="diff-desc">${changeSummaryHtml(netlifyChange, escHtmlServer)}</p>
       <p style="font-size:.8rem;color:var(--text-dim);margin-top:.5rem">Impact: ${escHtmlServer(netlifyChange.impact)} &middot; <a href="${escHtmlServer(netlifyChange.source_url)}" target="_blank" rel="noopener">Source &rarr;</a></p>
     </div>` : ""}
-  </div>
+  </div>${upcomingDealChangeCardsHtml(["Vercel", "Netlify"])}
 
   <h2>Related Guides</h2>
   <p class="section-intro">Deep-dive guides for hosting selection and free tier infrastructure.</p>
@@ -21795,8 +21831,8 @@ function buildNeonVsSupabasePage(): string {
   const neonOffer = offers.find(o => o.vendor === "Neon" && o.category === "Databases");
   const supabaseOffer = offers.find(o => o.vendor === "Supabase" && o.category === "Databases");
 
-  const neonChange = changesTheVendorMade(dealChanges).find(c => c.vendor === "Neon" && c.change_type === "pricing_restructured");
-  const supabaseChange = changesTheVendorMade(dealChanges).find(c => c.vendor === "Supabase" && c.change_type === "limits_reduced");
+  const neonChange = vendorChangesInEffectOnTheDayServed().find(c => c.vendor === "Neon" && c.change_type === "pricing_restructured");
+  const supabaseChange = vendorChangesInEffectOnTheDayServed().find(c => c.vendor === "Supabase" && c.change_type === "limits_reduced");
 
   const dbAlts = offers.filter(o =>
     ["CockroachDB", "Turso", "Railway", "Xata Lite", "Convex"].includes(o.vendor) && o.category === "Databases"
@@ -22067,7 +22103,7 @@ ${mcpCtaCss()}
       <p class="diff-desc">${changeSummaryHtml(supabaseChange, escHtmlServer)}</p>
       <p style="font-size:.8rem;color:var(--text-dim);margin-top:.5rem">Impact: ${escHtmlServer(supabaseChange.impact)} &middot; <a href="${escHtmlServer(supabaseChange.source_url)}" target="_blank" rel="noopener">Source &rarr;</a></p>
     </div>` : ""}
-  </div>
+  </div>${upcomingDealChangeCardsHtml(["Neon", "Supabase"])}
 
   <h2>Related Guides</h2>
   <p class="section-intro">Deep-dive guides for database selection and free tier infrastructure.</p>
@@ -22109,8 +22145,8 @@ function buildRailwayVsRenderPage(): string {
   const railwayOffer = offers.find(o => o.vendor === "Railway" && o.category === "Cloud Hosting");
   const renderOffer = offers.find(o => o.vendor === "Render" && o.category === "Cloud Hosting");
 
-  const railwayChange = changesTheVendorMade(dealChanges).find(c => c.vendor === "Railway" && c.change_type === "limits_increased");
-  const renderChange = changesTheVendorMade(dealChanges).find(c => c.vendor === "Render" && c.change_type === "limits_reduced");
+  const railwayChange = vendorChangesInEffectOnTheDayServed().find(c => c.vendor === "Railway" && c.change_type === "limits_increased");
+  const renderChange = vendorChangesInEffectOnTheDayServed().find(c => c.vendor === "Render" && c.change_type === "limits_reduced");
 
   const hostingAlts = offers.filter(o =>
     ["Fly.io", "Vercel", "Netlify", "Coolify", "DigitalOcean App Platform", "Koyeb"].includes(o.vendor) && o.category === "Cloud Hosting"
@@ -22388,7 +22424,7 @@ ${mcpCtaCss()}
       <p class="diff-desc">${changeSummaryHtml(renderChange, escHtmlServer)}</p>
       <p style="font-size:.8rem;color:var(--text-dim);margin-top:.5rem">Impact: ${escHtmlServer(renderChange.impact)} &middot; <a href="${escHtmlServer(renderChange.source_url)}" target="_blank" rel="noopener">Source &rarr;</a></p>
     </div>` : ""}
-  </div>
+  </div>${upcomingDealChangeCardsHtml(["Railway", "Render"])}
 
   <h2>Related Guides</h2>
   <p class="section-intro">Deep-dive guides for PaaS and hosting selection.</p>
@@ -22430,8 +22466,8 @@ function buildDatadogVsNewRelicPage(): string {
   const datadogOffer = offers.find(o => o.vendor === "Datadog" && o.category === "Monitoring");
   const newRelicOffer = offers.find(o => o.vendor === "New Relic" && o.category === "Monitoring");
 
-  const datadogChanges = changesTheVendorMade(dealChanges).filter(c => c.vendor === "Datadog");
-  const newRelicChanges = changesTheVendorMade(dealChanges).filter(c => c.vendor === "New Relic");
+  const datadogChanges = vendorChangesInEffectOnTheDayServed().filter(c => c.vendor === "Datadog");
+  const newRelicChanges = vendorChangesInEffectOnTheDayServed().filter(c => c.vendor === "New Relic");
   const relatedChanges = [...datadogChanges, ...newRelicChanges];
 
   const monitoringAlts = offers.filter(o =>
@@ -22704,7 +22740,7 @@ ${mcpCtaCss()}
       <p class="diff-desc">${changeSummaryHtml(c, escHtmlServer)}</p>
       <p style="font-size:.8rem;color:var(--text-dim);margin-top:.5rem">Impact: ${escHtmlServer(c.impact)} &middot; <a href="${escHtmlServer(c.source_url)}" target="_blank" rel="noopener">Source &rarr;</a></p>
     </div>`).join("\n    ") : `<div class="context-box">No recent pricing changes tracked for Datadog or New Relic. Both vendors have maintained stable free tier limits through early 2026. Check our <a href="/changes">full pricing timeline</a> for all vendor changes.</div>`}
-  </div>
+  </div>${upcomingDealChangeCardsHtml(["Datadog", "New Relic"])}
 
   <h2>Related Guides</h2>
   <p class="section-intro">Deep-dive guides for monitoring and observability selection.</p>
@@ -27389,6 +27425,48 @@ ${mcpCtaCss()}
 </html>`;
 }
 
+function changeRowNamingTheVendorHtml(c: DealChange): string {
+  const dateStr = changeEntryLongDateLabel(c);
+  const impactColor = changeImpactColor(c.impact);
+  return '<tr>' +
+    '<td style="font-family:var(--mono);font-size:.8rem">' + escHtmlServer(dateStr) + '</td>' +
+    '<td style="font-weight:600">' + escHtmlServer(c.vendor) + '</td>' +
+    '<td style="font-size:.85rem">' + changeSummaryHtml(c, escHtmlServer) + '</td>' +
+    '<td><span style="color:' + impactColor + ';font-size:.8rem;font-weight:600">' + escHtmlServer(changeImpactLabel(c.impact)) + '</span></td>' +
+    '</tr>';
+}
+
+function changesNamingTheVendorTableHtml(rows: string): string {
+  return '  <div style="overflow-x:auto">\n' +
+    '  <table class="pricing-table">\n' +
+    '    <thead>\n' +
+    '      <tr>\n' +
+    '        <th>Date</th>\n' +
+    '        <th>Vendor</th>\n' +
+    '        <th>Change</th>\n' +
+    '        <th>Impact</th>\n' +
+    '      </tr>\n' +
+    '    </thead>\n' +
+    '    <tbody>\n' +
+    '        ' + rows + '\n' +
+    '    </tbody>\n' +
+    '  </table>\n' +
+    '  </div>\n';
+}
+
+function upcomingChangesTocLineHtml(upcoming: readonly DealChange[]): string {
+  return upcoming.length > 0 ? '      <li><a href="#upcoming-changes">' + escHtmlServer(UPCOMING_CHANGES_HEADING) + '</a></li>\n' : '';
+}
+
+function upcomingChangesNamingTheVendorHtml(upcomingRows: string[]): string {
+  if (upcomingRows.length === 0) return '';
+  return '\n' +
+    '  <h2 id="upcoming-changes">' + escHtmlServer(UPCOMING_CHANGES_HEADING) + '</h2>\n' +
+    '  <p class="section-intro">' + escHtmlServer(UPCOMING_CHANGES_INTRO) + '</p>\n' +
+    '\n' +
+    changesNamingTheVendorTableHtml(upcomingRows.join("\n        "));
+}
+
 function buildStartupCreditsPage(): string {
   const title = "Startup Credits Comparison 2026 — Cloud Credits, Eligibility & Hidden Constraints";
   const metaDesc = STARTUP_CREDITS_META_DESCRIPTION;
@@ -27480,16 +27558,8 @@ function buildStartupCreditsPage(): string {
     { title: "Overlapping Perks Problem", desc: "Brex, Mercury, Ramp, SVB and Stripe Atlas all offer AWS Activate credits. A later AWS Activate award pays only the difference, so several $5,000 perks give $5,000 in total. Mercury states that credits are not added on." },
   ];
 
-  const changeTimelineRows = startupChanges.map(c => {
-    const dateStr = changeEntryLongDateLabel(c);
-    const impactColor = changeImpactColor(c.impact);
-    return '<tr>' +
-      '<td style="font-family:var(--mono);font-size:.8rem">' + escHtmlServer(dateStr) + '</td>' +
-      '<td style="font-weight:600">' + escHtmlServer(c.vendor) + '</td>' +
-      '<td style="font-size:.85rem">' + changeSummaryHtml(c, escHtmlServer) + '</td>' +
-      '<td><span style="color:' + impactColor + ';font-size:.8rem;font-weight:600">' + escHtmlServer(changeImpactLabel(c.impact)) + '</span></td>' +
-      '</tr>';
-  }).join("\n        ");
+  const startupChangesByDayServed = splitAtTheDayServed(startupChanges, utcToday());
+  const changeTimelineRows = startupChangesByDayServed.inEffect.map(changeRowNamingTheVendorHtml).join("\n        ");
 
   const faqEntries = [
     { q: "What are the highest-value startup credit programs?", a: "The largest published offers are Google Scale AI and Cloudflare Tier 1, each up to $350,000. Then Google Scale and AWS Activate Portfolio, up to $200,000 each. Then Microsoft for Startups, up to $150,000. Most require VC funding or an affiliated partner." },
@@ -27635,6 +27705,7 @@ function buildStartupCreditsPage(): string {
     '      <li><a href="#hidden-constraints">Hidden Constraints</a></li>\n' +
     '      <li><a href="#stacking">Stacking Strategy</a></li>\n' +
     '      <li><a href="#changes">Recent Changes</a></li>\n' +
+    upcomingChangesTocLineHtml(startupChangesByDayServed.upcoming) +
     '      <li><a href="#faq">Frequently Asked Questions</a></li>\n' +
     '    </ol>\n' +
     '  </div>\n' +
@@ -27709,23 +27780,8 @@ function buildStartupCreditsPage(): string {
     '  <h2 id="changes">Recent Changes</h2>\n' +
     '  <p class="section-intro">Startup credit programs change frequently. Here are the changes we\'ve tracked. See <a href="/pricing-changes">full change timeline</a> for all tracked changes.</p>\n' +
     '\n' +
-    (startupChanges.length > 0 ? (
-    '  <div style="overflow-x:auto">\n' +
-    '  <table class="pricing-table">\n' +
-    '    <thead>\n' +
-    '      <tr>\n' +
-    '        <th>Date</th>\n' +
-    '        <th>Vendor</th>\n' +
-    '        <th>Change</th>\n' +
-    '        <th>Impact</th>\n' +
-    '      </tr>\n' +
-    '    </thead>\n' +
-    '    <tbody>\n' +
-    '        ' + changeTimelineRows + '\n' +
-    '    </tbody>\n' +
-    '  </table>\n' +
-    '  </div>\n'
-    ) : '  <p class="section-intro">No startup credit program changes tracked yet.</p>\n') +
+    (startupChangesByDayServed.inEffect.length > 0 ? changesNamingTheVendorTableHtml(changeTimelineRows) : '  <p class="section-intro">No startup credit program changes tracked yet.</p>\n') +
+    upcomingChangesNamingTheVendorHtml(startupChangesByDayServed.upcoming.map(changeRowNamingTheVendorHtml)) +
     '\n' +
     '  <h2 id="faq">Frequently Asked Questions</h2>\n' +
     faqEntries.map(f =>
@@ -28904,16 +28960,8 @@ function buildCiCdPricingPage(): string {
       '</tr>';
   }).join("\n        ");
 
-  const changeTimelineRows = cicdChanges.map(c => {
-    const dateStr = changeEntryLongDateLabel(c);
-    const impactColor = changeImpactColor(c.impact);
-    return '<tr>' +
-      '<td style="font-family:var(--mono);font-size:.8rem">' + escHtmlServer(dateStr) + '</td>' +
-      '<td style="font-weight:600">' + escHtmlServer(c.vendor) + '</td>' +
-      '<td style="font-size:.85rem">' + changeSummaryHtml(c, escHtmlServer) + '</td>' +
-      '<td><span style="color:' + impactColor + ';font-size:.8rem;font-weight:600">' + escHtmlServer(changeImpactLabel(c.impact)) + '</span></td>' +
-      '</tr>';
-  }).join("\n        ");
+  const cicdChangesByDayServed = splitAtTheDayServed(cicdChanges, utcToday());
+  const changeTimelineRows = cicdChangesByDayServed.inEffect.map(changeRowNamingTheVendorHtml).join("\n        ");
 
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["ci-cd-alternatives", "cicd-free-tier-comparison-2026", "github-actions-alternatives", "free-devops-stack", "free-tier-risk", "testing-free-tier-comparison-2026"].includes(p.slug)
@@ -29063,6 +29111,7 @@ function buildCiCdPricingPage(): string {
     '      <li><a href="#cost-analysis">Cost Analysis by Team Size</a></li>\n' +
     '      <li><a href="#hidden-costs">Hidden Costs</a></li>\n' +
     '      <li><a href="#changes">Recent Pricing Changes</a></li>\n' +
+    upcomingChangesTocLineHtml(cicdChangesByDayServed.upcoming) +
     '      <li><a href="#recommendations">Best-for-Use-Case Recommendations</a></li>\n' +
     '      <li><a href="#faq">FAQ</a></li>\n' +
     '    </ol>\n' +
@@ -29179,23 +29228,8 @@ function buildCiCdPricingPage(): string {
     '  <h2 id="changes">Recent Pricing Changes</h2>\n' +
     '  <p class="section-intro">CI/CD pricing is generally stable, but runner costs and free tier limits are shifting. See <a href="/pricing-changes">full change timeline</a> for all tracked changes.</p>\n' +
     '\n' +
-    (cicdChanges.length > 0 ? (
-    '  <div style="overflow-x:auto">\n' +
-    '  <table class="pricing-table">\n' +
-    '    <thead>\n' +
-    '      <tr>\n' +
-    '        <th>Date</th>\n' +
-    '        <th>Vendor</th>\n' +
-    '        <th>Change</th>\n' +
-    '        <th>Impact</th>\n' +
-    '      </tr>\n' +
-    '    </thead>\n' +
-    '    <tbody>\n' +
-    '        ' + changeTimelineRows + '\n' +
-    '    </tbody>\n' +
-    '  </table>\n' +
-    '  </div>\n'
-    ) : '  <p class="section-intro">No CI/CD-specific pricing changes tracked recently. This category has been relatively stable.</p>\n') +
+    (cicdChangesByDayServed.inEffect.length > 0 ? changesNamingTheVendorTableHtml(changeTimelineRows) : '  <p class="section-intro">No CI/CD-specific pricing changes tracked recently. This category has been relatively stable.</p>\n') +
+    upcomingChangesNamingTheVendorHtml(cicdChangesByDayServed.upcoming.map(changeRowNamingTheVendorHtml)) +
     '\n' +
     '  <h2 id="recommendations">Best-for-Use-Case Recommendations</h2>\n' +
     '\n' +
@@ -29793,16 +29827,8 @@ function buildDatabasePricingPage(): string {
       '</tr>';
   }).join("\n        ");
 
-  const changeTimelineRows = dbChanges.map(c => {
-    const dateStr = changeEntryLongDateLabel(c);
-    const impactColor = changeImpactColor(c.impact);
-    return '<tr>' +
-      '<td style="font-family:var(--mono);font-size:.8rem">' + escHtmlServer(dateStr) + '</td>' +
-      '<td style="font-weight:600">' + escHtmlServer(c.vendor) + '</td>' +
-      '<td style="font-size:.85rem">' + changeSummaryHtml(c, escHtmlServer) + '</td>' +
-      '<td><span style="color:' + impactColor + ';font-size:.8rem;font-weight:600">' + escHtmlServer(changeImpactLabel(c.impact)) + '</span></td>' +
-      '</tr>';
-  }).join("\n        ");
+  const dbChangesByDayServed = splitAtTheDayServed(dbChanges, utcToday());
+  const changeTimelineRows = dbChangesByDayServed.inEffect.map(changeRowNamingTheVendorHtml).join("\n        ");
 
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["database-free-tier-comparison-2026", "database-alternatives", "supabase-alternatives", "free-startup-stack", "free-tier-risk", "cloud-free-tier-comparison-2026", "vector-database-pricing"].includes(p.slug)
@@ -29954,6 +29980,7 @@ function buildDatabasePricingPage(): string {
     '      <li><a href="#cost-analysis">Cost Analysis by Team Size</a></li>\n' +
     '      <li><a href="#hidden-costs">Hidden Costs</a></li>\n' +
     '      <li><a href="#changes">Recent Pricing Changes</a></li>\n' +
+    upcomingChangesTocLineHtml(dbChangesByDayServed.upcoming) +
     '      <li><a href="#recommendations">Best-for-Use-Case Recommendations</a></li>\n' +
     '      <li><a href="#faq">FAQ</a></li>\n' +
     '    </ol>\n' +
@@ -30070,23 +30097,8 @@ function buildDatabasePricingPage(): string {
     '  <h2 id="changes">Recent Pricing Changes</h2>\n' +
     '  <p class="section-intro">Database pricing is the most volatile category in developer tools. See <a href="/pricing-changes">full change timeline</a> for all tracked changes.</p>\n' +
     '\n' +
-    (dbChanges.length > 0 ? (
-    '  <div style="overflow-x:auto">\n' +
-    '  <table class="pricing-table">\n' +
-    '    <thead>\n' +
-    '      <tr>\n' +
-    '        <th>Date</th>\n' +
-    '        <th>Vendor</th>\n' +
-    '        <th>Change</th>\n' +
-    '        <th>Impact</th>\n' +
-    '      </tr>\n' +
-    '    </thead>\n' +
-    '    <tbody>\n' +
-    '        ' + changeTimelineRows + '\n' +
-    '    </tbody>\n' +
-    '  </table>\n' +
-    '  </div>\n'
-    ) : '  <p class="section-intro">No database-specific pricing changes tracked recently.</p>\n') +
+    (dbChangesByDayServed.inEffect.length > 0 ? changesNamingTheVendorTableHtml(changeTimelineRows) : '  <p class="section-intro">No database-specific pricing changes tracked recently.</p>\n') +
+    upcomingChangesNamingTheVendorHtml(dbChangesByDayServed.upcoming.map(changeRowNamingTheVendorHtml)) +
     '\n' +
     '  <div class="context-box">\n' +
     '    <strong>The trend:</strong> Database pricing is in upheaval. PlanetScale killed its free tier entirely (2024). Supabase tightened inactivity pausing to 1 week. Neon moved to fully usage-based pricing post-Databricks acquisition. Firebase removed Cloud Storage from the free plan. The counter-trend: Amazon Aurora PostgreSQL joined the AWS Free Tier (March 2026), while CockroachDB closed its free Basic plan to new deployments on 2026-09-15.\n' +
@@ -30459,14 +30471,15 @@ function buildVectorDatabasePricingPage(): string {
       ).join("\n");
   }).join("\n\n  ");
 
-  const changeTimelineRows = vectorChanges.slice(0, 15).map((c: any) =>
+  const vectorChangeRow = (c: any) =>
     '<tr>' +
     '<td style="font-size:.85rem;white-space:nowrap">' + escHtmlServer(changeEntryDateLabel(c)) + '</td>' +
     '<td style="font-weight:600;font-size:.85rem">' + changeVendorLinkHtml(c.vendor) + '</td>' +
     '<td style="font-size:.85rem">' + escHtmlServer(c.change_type || "update") + '</td>' +
     '<td style="font-size:.85rem;color:var(--text-muted)">' + changeSummaryHtml(c, escHtmlServer) + '</td>' +
-    '</tr>'
-  ).join("\n        ");
+    '</tr>';
+  const vectorChangesByDayServed = splitAtTheDayServed(vectorChanges, utcToday());
+  const changeTimelineRows = vectorChangesByDayServed.inEffect.slice(0, 15).map(vectorChangeRow).join("\n        ");
 
   const faqEntries = [
     { q: "What is a vector database and why do I need one?", a: "A vector database stores high-dimensional numerical representations (embeddings) of data like text, images, or audio, and enables fast similarity search. You need one if you're building RAG (Retrieval-Augmented Generation) pipelines, semantic search, recommendation systems, or any AI application that needs to find similar items. Traditional databases can't efficiently search across hundreds of dimensions." },
@@ -30612,6 +30625,7 @@ function buildVectorDatabasePricingPage(): string {
     '      <li><a href="#cost-analysis">Cost Analysis by Team Size</a></li>\n' +
     '      <li><a href="#hidden-costs">Hidden Costs</a></li>\n' +
     '      <li><a href="#changes">Recent Pricing Changes</a></li>\n' +
+    upcomingChangesTocLineHtml(vectorChangesByDayServed.upcoming) +
     '      <li><a href="#recommendations">Best-for-Use-Case Recommendations</a></li>\n' +
     '      <li><a href="#faq">FAQ</a></li>\n' +
     '    </ol>\n' +
@@ -30724,23 +30738,8 @@ function buildVectorDatabasePricingPage(): string {
     '  <h2 id="changes">Recent Pricing Changes</h2>\n' +
     '  <p class="section-intro">Vector database pricing is evolving rapidly as the market matures. See <a href="/pricing-changes">full change timeline</a> for all tracked changes.</p>\n' +
     '\n' +
-    (vectorChanges.length > 0 ? (
-    '  <div style="overflow-x:auto">\n' +
-    '  <table class="pricing-table">\n' +
-    '    <thead>\n' +
-    '      <tr>\n' +
-    '        <th>Date</th>\n' +
-    '        <th>Vendor</th>\n' +
-    '        <th>Change</th>\n' +
-    '        <th>Impact</th>\n' +
-    '      </tr>\n' +
-    '    </thead>\n' +
-    '    <tbody>\n' +
-    '        ' + changeTimelineRows + '\n' +
-    '    </tbody>\n' +
-    '  </table>\n' +
-    '  </div>\n'
-    ) : '  <p class="section-intro">No vector database-specific pricing changes tracked recently. This is a new and rapidly evolving category \u2014 check back for updates.</p>\n') +
+    (vectorChangesByDayServed.inEffect.length > 0 ? changesNamingTheVendorTableHtml(changeTimelineRows) : '  <p class="section-intro">No vector database-specific pricing changes tracked recently. This is a new and rapidly evolving category \u2014 check back for updates.</p>\n') +
+    upcomingChangesNamingTheVendorHtml(vectorChangesByDayServed.upcoming.map(vectorChangeRow)) +
     '\n' +
     '  <h2 id="recommendations">Best-for-Use-Case Recommendations</h2>\n' +
     '\n' +
@@ -31166,16 +31165,8 @@ function buildHostingPricingPage(): string {
       '</tr>';
   }).join("\n        ");
 
-  const changeTimelineRows = hostingChanges.map(c => {
-    const dateStr = changeEntryLongDateLabel(c);
-    const impactColor = changeImpactColor(c.impact);
-    return '<tr>' +
-      '<td style="font-family:var(--mono);font-size:.8rem">' + escHtmlServer(dateStr) + '</td>' +
-      '<td style="font-weight:600">' + escHtmlServer(c.vendor) + '</td>' +
-      '<td style="font-size:.85rem">' + changeSummaryHtml(c, escHtmlServer) + '</td>' +
-      '<td><span style="color:' + impactColor + ';font-size:.8rem;font-weight:600">' + escHtmlServer(changeImpactLabel(c.impact)) + '</span></td>' +
-      '</tr>';
-  }).join("\n        ");
+  const hostingChangesByDayServed = splitAtTheDayServed(hostingChanges, utcToday());
+  const changeTimelineRows = hostingChangesByDayServed.inEffect.map(changeRowNamingTheVendorHtml).join("\n        ");
 
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["hosting-alternatives", "heroku-alternatives", "database-alternatives", "ci-cd-alternatives", "storage-alternatives"].includes(p.slug)
@@ -31344,6 +31335,7 @@ function buildHostingPricingPage(): string {
     '      <li><a href="#cost-analysis">Cost Analysis by Use Case</a></li>\n' +
     '      <li><a href="#hidden-costs">Pricing Gotchas</a></li>\n' +
     '      <li><a href="#changes">Recent Pricing Changes</a></li>\n' +
+    upcomingChangesTocLineHtml(hostingChangesByDayServed.upcoming) +
     '      <li><a href="#recommendations">Best-for-Use-Case Recommendations</a></li>\n' +
     '      <li><a href="#faq">FAQ</a></li>\n' +
     '    </ol>\n' +
@@ -31457,23 +31449,8 @@ function buildHostingPricingPage(): string {
     '  <h2 id="changes">Recent Pricing Changes</h2>\n' +
     '  <p class="section-intro">Cloud hosting pricing has been volatile. Here are the changes we\'ve tracked. See <a href="/pricing-changes">full change timeline</a> for all tracked changes.</p>\n' +
     '\n' +
-    (hostingChanges.length > 0 ? (
-    '  <div style="overflow-x:auto">\n' +
-    '  <table class="pricing-table">\n' +
-    '    <thead>\n' +
-    '      <tr>\n' +
-    '        <th>Date</th>\n' +
-    '        <th>Vendor</th>\n' +
-    '        <th>Change</th>\n' +
-    '        <th>Impact</th>\n' +
-    '      </tr>\n' +
-    '    </thead>\n' +
-    '    <tbody>\n' +
-    '        ' + changeTimelineRows + '\n' +
-    '    </tbody>\n' +
-    '  </table>\n' +
-    '  </div>\n'
-    ) : '  <p class="section-intro">No hosting pricing changes tracked yet.</p>\n') +
+    (hostingChangesByDayServed.inEffect.length > 0 ? changesNamingTheVendorTableHtml(changeTimelineRows) : '  <p class="section-intro">No hosting pricing changes tracked yet.</p>\n') +
+    upcomingChangesNamingTheVendorHtml(hostingChangesByDayServed.upcoming.map(changeRowNamingTheVendorHtml)) +
     '\n' +
     '  <div class="context-box">\n' +
     '    <strong>The pattern:</strong> Free tiers are shrinking across the board. Heroku removed theirs entirely (2022). Render shortened spin-down time (Sep 2025). Netlify moved to credit-based pricing (Sep 2025). Vercel moved to credits (Jan 2026). The edge platforms (Cloudflare, Deno Deploy) have bucked this trend with genuinely generous free tiers \u2014 likely subsidized by their broader platform ecosystems.\n' +
@@ -33328,6 +33305,49 @@ railway up
 </html>`;
 }
 
+function cloudGuideChangeRowHtml(c: DealChange): string {
+  const dateStr = changeEntryLongDateLabel(c);
+  const impactColor = changeImpactColor(c.impact);
+  return `<tr>
+      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(dateStr)}</td>
+      <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
+      <td style="font-size:.85rem">${changeSummaryHtml(c, escHtmlServer)}</td>
+      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
+    </tr>`;
+}
+
+function cloudGuideChangesTableHtml(changes: readonly DealChange[]): string {
+  return `<div style="overflow-x:auto">
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Service</th>
+        <th>Change</th>
+        <th>Impact</th>
+      </tr>
+    </thead>
+    <tbody>
+        ${changes.map(cloudGuideChangeRowHtml).join("\n        ")}
+    </tbody>
+  </table>
+  </div>`;
+}
+
+function upcomingChangesTocEntryHtml(upcoming: readonly DealChange[]): string {
+  return upcoming.length > 0 ? `\n      <li><a href="#upcoming-changes">${escHtmlServer(UPCOMING_CHANGES_HEADING)}</a></li>` : "";
+}
+
+function cloudGuideUpcomingChangesHtml(upcoming: readonly DealChange[]): string {
+  if (upcoming.length === 0) return "";
+  return `
+
+  <h2 id="upcoming-changes">${escHtmlServer(UPCOMING_CHANGES_HEADING)}</h2>
+  <p class="section-intro">${escHtmlServer(UPCOMING_CHANGES_INTRO)}</p>
+
+  ${cloudGuideChangesTableHtml(upcoming)}`;
+}
+
 function buildAwsFreeTier2026Page(): string {
   const title = AWS_FREE_TIER_TITLE;
   const metaDesc = "AWS Free plan: up to $200 in credits over 6 months, 30+ always-free services, short-term trials, hidden costs, cheaper alternatives.";
@@ -33434,16 +33454,7 @@ function buildAwsFreeTier2026Page(): string {
       <td style="font-size:.8rem;color:var(--text-muted)">${escHtmlServer(a.bestFor)}${guideRowReferralHtml(a.name)}</td>
     </tr>${vendorPageConditionsRowHtml(a.slug, 3)}`).join("\n        ");
 
-  const changeTimelineRows = awsChanges.slice(0, 10).map((c: any) => {
-    const dateStr = changeEntryLongDateLabel(c);
-    const impactColor = changeImpactColor(c.impact);
-    return `<tr>
-      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(dateStr)}</td>
-      <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
-      <td style="font-size:.85rem">${changeSummaryHtml(c, escHtmlServer)}</td>
-      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
-    </tr>`;
-  }).join("\n        ");
+  const awsChangesByDayServed = splitAtTheDayServed(awsChanges, utcToday());
 
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["cloud-free-tier-comparison-2026", "gcp-free-tier-2026", "azure-free-tier-2026", "digitalocean-free-tier-2026", "database-alternatives", "hosting-alternatives", "neon-vs-supabase", "free-startup-stack", "free-tier-risk", "startup-credits"].includes(p.slug)
@@ -33567,7 +33578,7 @@ ${mcpCtaCss()}
       <li><a href="#stacks">Developer-Focused Stacks</a></li>
       <li><a href="#gotchas">Hidden Costs &amp; Gotchas</a></li>
       <li><a href="#alternatives">AWS vs Alternatives</a></li>
-      <li><a href="#changes">Recent Changes</a></li>
+      <li><a href="#changes">Recent Changes</a></li>${upcomingChangesTocEntryHtml(awsChangesByDayServed.upcoming)}
       <li><a href="#data-source">Data Source</a></li>
     </ol>
   </div>
@@ -33686,21 +33697,7 @@ ${mcpCtaCss()}
   <h2 id="changes">Recent AWS Changes</h2>
   <p class="section-intro">AWS free tier changes we've tracked. See the <a href="/changes">full timeline</a> for all ${trackedChangeCount} tracked changes across all providers.</p>
 
-  ${awsChanges.length > 0 ? `<div style="overflow-x:auto">
-  <table class="pricing-table">
-    <thead>
-      <tr>
-        <th>Date</th>
-        <th>Service</th>
-        <th>Change</th>
-        <th>Impact</th>
-      </tr>
-    </thead>
-    <tbody>
-        ${changeTimelineRows}
-    </tbody>
-  </table>
-  </div>` : `<p class="section-intro">No AWS-specific pricing changes tracked yet.</p>`}
+  ${awsChangesByDayServed.inEffect.length > 0 ? cloudGuideChangesTableHtml(awsChangesByDayServed.inEffect.slice(0, 10)) : `<p class="section-intro">No AWS-specific pricing changes tracked yet.</p>`}${cloudGuideUpcomingChangesHtml(awsChangesByDayServed.upcoming)}
 
   <h2 id="data-source">Data Source</h2>
   <div class="methodology">
@@ -33873,16 +33870,7 @@ function buildGcpFreeTier2026Page(): string {
       <td style="font-size:.8rem;color:var(--text-muted)">${escHtmlServer(a.bestFor)}${guideRowReferralHtml(a.name)}</td>
     </tr>${vendorPageConditionsRowHtml(a.slug, 3)}`).join("\n        ");
 
-  const changeTimelineRows = gcpChanges.slice(0, 12).map((c: any) => {
-    const dateStr = changeEntryLongDateLabel(c);
-    const impactColor = changeImpactColor(c.impact);
-    return `<tr>
-      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(dateStr)}</td>
-      <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
-      <td style="font-size:.85rem">${changeSummaryHtml(c, escHtmlServer)}</td>
-      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
-    </tr>`;
-  }).join("\n        ");
+  const gcpChangesByDayServed = splitAtTheDayServed(gcpChanges, utcToday());
 
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["cloud-free-tier-comparison-2026", "aws-free-tier-2026", "azure-free-tier-2026", "digitalocean-free-tier-2026", "firebase-alternatives", "hosting-alternatives", "database-alternatives", "free-startup-stack", "supabase-vs-firebase", "gemini-api-pricing-2026", "google-developer-program-2026"].includes(p.slug)
@@ -34004,7 +33992,7 @@ ${mcpCtaCss()}
       <li><a href="#stacks">Best Picks by Use Case</a></li>
       <li><a href="#gotchas">Hidden Costs &amp; Gotchas</a></li>
       <li><a href="#alternatives">GCP vs AWS vs Others</a></li>
-      <li><a href="#changes">Recent GCP Changes</a></li>
+      <li><a href="#changes">Recent GCP Changes</a></li>${upcomingChangesTocEntryHtml(gcpChangesByDayServed.upcoming)}
       <li><a href="#data-source">Data Source</a></li>
     </ol>
   </div>
@@ -34119,21 +34107,7 @@ ${mcpCtaCss()}
   <h2 id="changes">Recent GCP &amp; Google Changes</h2>
   <p class="section-intro">GCP and Google pricing changes we've tracked. See the <a href="/changes">full timeline</a> for all ${trackedChangeCount} tracked changes across all providers.</p>
 
-  ${gcpChanges.length > 0 ? `<div style="overflow-x:auto">
-  <table class="pricing-table">
-    <thead>
-      <tr>
-        <th>Date</th>
-        <th>Service</th>
-        <th>Change</th>
-        <th>Impact</th>
-      </tr>
-    </thead>
-    <tbody>
-        ${changeTimelineRows}
-    </tbody>
-  </table>
-  </div>` : `<p class="section-intro">No GCP-specific pricing changes tracked yet.</p>`}
+  ${gcpChangesByDayServed.inEffect.length > 0 ? cloudGuideChangesTableHtml(gcpChangesByDayServed.inEffect.slice(0, 12)) : `<p class="section-intro">No GCP-specific pricing changes tracked yet.</p>`}${cloudGuideUpcomingChangesHtml(gcpChangesByDayServed.upcoming)}
 
   <h2 id="data-source">Data Source</h2>
   <div class="methodology">
@@ -34318,16 +34292,7 @@ function buildAzureFreeTier2026Page(): string {
       <td style="font-size:.8rem;color:var(--text-muted)">${escHtmlServer(a.bestFor)}${guideRowReferralHtml(a.name)}</td>
     </tr>${vendorPageConditionsRowHtml(a.slug, 3)}`).join("\n        ");
 
-  const changeTimelineRows = azureChanges.slice(0, 10).map((c: any) => {
-    const dateStr = changeEntryLongDateLabel(c);
-    const impactColor = changeImpactColor(c.impact);
-    return `<tr>
-      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(dateStr)}</td>
-      <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
-      <td style="font-size:.85rem">${changeSummaryHtml(c, escHtmlServer)}</td>
-      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
-    </tr>`;
-  }).join("\n        ");
+  const azureChangesByDayServed = splitAtTheDayServed(azureChanges, utcToday());
 
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["cloud-free-tier-comparison-2026", "aws-free-tier-2026", "gcp-free-tier-2026", "digitalocean-free-tier-2026", "database-alternatives", "hosting-alternatives", "free-startup-stack", "free-tier-risk", "startup-credits"].includes(p.slug)
@@ -34451,7 +34416,7 @@ ${mcpCtaCss()}
       <li><a href="#gotchas">Hidden Costs &amp; Gotchas</a></li>
       <li><a href="#alternatives">Azure vs Alternatives</a></li>
       <li><a href="#startups">Azure for Startups</a></li>
-      <li><a href="#changes">Recent Changes</a></li>
+      <li><a href="#changes">Recent Changes</a></li>${upcomingChangesTocEntryHtml(azureChangesByDayServed.upcoming)}
       <li><a href="#data-source">Data Source</a></li>
     </ol>
   </div>
@@ -34606,21 +34571,7 @@ ${mcpCtaCss()}
   <h2 id="changes">Recent Azure Changes</h2>
   <p class="section-intro">Azure pricing changes we've tracked. See the <a href="/changes">full timeline</a> for all ${trackedChangeCount} tracked changes across all providers.</p>
 
-  ${azureChanges.length > 0 ? `<div style="overflow-x:auto">
-  <table class="pricing-table">
-    <thead>
-      <tr>
-        <th>Date</th>
-        <th>Service</th>
-        <th>Change</th>
-        <th>Impact</th>
-      </tr>
-    </thead>
-    <tbody>
-        ${changeTimelineRows}
-    </tbody>
-  </table>
-  </div>` : `<p class="section-intro">No Azure-specific pricing changes tracked yet. We're actively expanding our Azure coverage — check back soon or <a href="/changes">browse all provider changes</a>.</p>`}
+  ${azureChangesByDayServed.inEffect.length > 0 ? cloudGuideChangesTableHtml(azureChangesByDayServed.inEffect.slice(0, 10)) : `<p class="section-intro">No Azure-specific pricing changes tracked yet. We're actively expanding our Azure coverage — check back soon or <a href="/changes">browse all provider changes</a>.</p>`}${cloudGuideUpcomingChangesHtml(azureChangesByDayServed.upcoming)}
 
   <h2 id="data-source">Data Source</h2>
   <div class="methodology">
@@ -34764,16 +34715,7 @@ function buildDigitalOceanFreeTier2026Page(): string {
       <td style="font-size:.8rem;color:var(--text-muted)">${escHtmlServer(a.bestFor)}${guideRowReferralHtml(a.name)}</td>
     </tr>${vendorPageConditionsRowHtml(a.slug, 3)}`).join("\n        ");
 
-  const changeTimelineRows = doChanges.slice(0, 10).map((c: any) => {
-    const dateStr = changeEntryLongDateLabel(c);
-    const impactColor = changeImpactColor(c.impact);
-    return `<tr>
-      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(dateStr)}</td>
-      <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
-      <td style="font-size:.85rem">${changeSummaryHtml(c, escHtmlServer)}</td>
-      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
-    </tr>`;
-  }).join("\n        ");
+  const doChangesByDayServed = splitAtTheDayServed(doChanges, utcToday());
 
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["cloud-free-tier-comparison-2026", "aws-free-tier-2026", "gcp-free-tier-2026", "azure-free-tier-2026", "hosting-alternatives", "database-alternatives", "free-startup-stack", "free-tier-risk", "startup-credits"].includes(p.slug)
@@ -34896,7 +34838,7 @@ ${mcpCtaCss()}
       <li><a href="#gotchas">Hidden Costs &amp; Gotchas</a></li>
       <li><a href="#alternatives">DigitalOcean vs Alternatives</a></li>
       <li><a href="#startups">For Startups</a></li>
-      <li><a href="#changes">Recent Changes</a></li>
+      <li><a href="#changes">Recent Changes</a></li>${upcomingChangesTocEntryHtml(doChangesByDayServed.upcoming)}
       <li><a href="#data-source">Data Source</a></li>
     </ol>
   </div>
@@ -35041,21 +34983,7 @@ ${mcpCtaCss()}
   <h2 id="changes">Recent DigitalOcean Changes</h2>
   <p class="section-intro">DigitalOcean pricing changes we've tracked. See the <a href="/changes">full timeline</a> for all ${trackedChangeCount} tracked changes across all providers.</p>
 
-  ${doChanges.length > 0 ? `<div style="overflow-x:auto">
-  <table class="pricing-table">
-    <thead>
-      <tr>
-        <th>Date</th>
-        <th>Service</th>
-        <th>Change</th>
-        <th>Impact</th>
-      </tr>
-    </thead>
-    <tbody>
-        ${changeTimelineRows}
-    </tbody>
-  </table>
-  </div>` : `<p class="section-intro">No DigitalOcean-specific pricing changes tracked yet. Check the <a href="/changes">full timeline</a> for all provider changes.</p>`}
+  ${doChangesByDayServed.inEffect.length > 0 ? cloudGuideChangesTableHtml(doChangesByDayServed.inEffect.slice(0, 10)) : `<p class="section-intro">No DigitalOcean-specific pricing changes tracked yet. Check the <a href="/changes">full timeline</a> for all provider changes.</p>`}${cloudGuideUpcomingChangesHtml(doChangesByDayServed.upcoming)}
 
   <h2 id="data-source">Data Source</h2>
   <div class="methodology">
@@ -47091,11 +47019,20 @@ ${globalNavCss()}
     html += '<a href="/vendor/' + slug + '">Details</a>';
     html += '<a href="/alternative-to/' + slug + '">Alternatives</a>';
     html += '</div>';
-    if (changes.length > 0) {
+    var servedOn = new Date().toISOString().slice(0, 10);
+    var inEffect = changes.filter(function(c) { return !(c.date > servedOn); });
+    var upcoming = changes.filter(function(c) { return c.date > servedOn; }).sort(function(a, b) { return a.date < b.date ? -1 : a.date > b.date ? 1 : 0; });
+    var changeItemHtml = function(c) {
+      return '<div class="change-item' + (isNoLongerInForce(c) ? ' change-resolved' : '') + '"><span class="change-date">' + escHtml(changeEntryDateLabel(c)) + '</span> ' + changeTypeBadge(c.change_type) + ' ' + citedSummary(c, 120) + '</div>';
+    };
+    if (inEffect.length > 0) {
       html += '<div class="changes-timeline"><strong style="font-size:.85rem">Recent Changes</strong>';
-      changes.slice(0, 5).forEach(function(c) {
-        html += '<div class="change-item' + (isNoLongerInForce(c) ? ' change-resolved' : '') + '"><span class="change-date">' + escHtml(changeEntryDateLabel(c)) + '</span> ' + changeTypeBadge(c.change_type) + ' ' + citedSummary(c, 120) + '</div>';
-      });
+      inEffect.slice(0, 5).forEach(function(c) { html += changeItemHtml(c); });
+      html += '</div>';
+    }
+    if (upcoming.length > 0) {
+      html += '<div class="changes-timeline"><strong style="font-size:.85rem">${escHtmlServer(UPCOMING_CHANGES_HEADING)}</strong>';
+      upcoming.slice(0, 5).forEach(function(c) { html += changeItemHtml(c); });
       html += '</div>';
     }
     html += '</div>';

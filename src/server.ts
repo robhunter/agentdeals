@@ -30,6 +30,7 @@ import { withProvenance } from "./provenance.js";
 import { PKG_VERSION } from "./package-version.js";
 import { conditionsField } from "./conditions-field.js";
 import { conditionsBesideStoredTerms, withConditionsAfter } from "./listing-conditions.js";
+import { LATEST_PRICING_CHANGES_DESCRIPTION, latestPricingChangesText } from "./upcoming-changes.js";
 
 const SIGNAL_FOOTER_CONTENT = { type: "text" as const, text: MCP_SIGNAL_FOOTER };
 
@@ -885,16 +886,15 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
     "changes-latest",
     "agentdeals://changes/latest",
     {
-      description: "Most recent pricing changes (last 10)",
+      description: LATEST_PRICING_CHANGES_DESCRIPTION,
       mimeType: "text/plain",
     },
     async () => {
       const changes = loadDealChanges();
-      const sorted = [...changes].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 10);
-      const lines = sorted.map(c =>
+      const newestFirst = [...changes].sort((a, b) => b.date.localeCompare(a.date));
+      const text = latestPricingChangesText(newestFirst, c =>
         `- **${c.date}** | ${c.vendor} [${c.change_type}]\n  ${c.summary}\n  Previous: ${c.previous_state}\n  Current: ${c.current_state}`
       );
-      const text = `# Latest Pricing Changes\n\n${lines.join("\n\n")}`;
       return { contents: [{ uri: "agentdeals://changes/latest", text, mimeType: "text/plain" }] };
     }
   );
