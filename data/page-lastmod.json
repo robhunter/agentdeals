@@ -4763,7 +4763,7 @@
       "changed": "2026-10-10"
     },
     "/vendor/cloudflare-r2": {
-      "hash": "232c1587da5ecc28",
+      "hash": "1fd578f79663e28f",
       "changed": "2026-10-10"
     },
     "/vendor/cloudflare-sandboxes": {
@@ -5939,25 +5939,25 @@
       "changed": "2026-10-10"
     },
     "/vendor/google-artifact-registry": {
-      "hash": "41a6ba2281e7ef4b",
+      "hash": "36cf2be574b299af",
       "changed": "2026-10-10"
     },
     "/vendor/google-cloud-bigquery": {
       "daily": true
     },
     "/vendor/google-cloud-build": {
-      "hash": "78f12eef2d9ed9dc",
+      "hash": "5b56b5630406f51b",
       "changed": "2026-10-10"
     },
     "/vendor/google-cloud-logging": {
-      "hash": "d4f53b3f0dff842f",
+      "hash": "4068f65296f1fc57",
       "changed": "2026-10-10"
     },
     "/vendor/google-cloud-monitoring": {
       "daily": true
     },
     "/vendor/google-cloud-pub-sub": {
-      "hash": "dabc005e49bf8e89",
+      "hash": "b4ab9bcf294d460e",
       "changed": "2026-10-10"
     },
     "/vendor/google-cloud-run": {
@@ -5968,14 +5968,14 @@
       "changed": "2026-10-10"
     },
     "/vendor/google-cloud-storage": {
-      "hash": "3bc87463b4f11083",
+      "hash": "690f044a050a22a2",
       "changed": "2026-10-10"
     },
     "/vendor/google-colab": {
       "daily": true
     },
     "/vendor/google-compute-engine": {
-      "hash": "4cd4150e6ce37667",
+      "hash": "8f4259f762d9664d",
       "changed": "2026-10-10"
     },
     "/vendor/google-content-api-for-shopping": {
@@ -6015,7 +6015,7 @@
       "changed": "2026-10-10"
     },
     "/vendor/google-secret-manager": {
-      "hash": "9c8f0f00af7667c6",
+      "hash": "8235b0945a02480d",
       "changed": "2026-10-10"
     },
     "/vendor/google-vector-search-2-0": {
