@@ -4081,7 +4081,7 @@
     {
       "vendor": "Brex Partner Perks",
       "category": "Startup Perks",
-      "description": "Over $350K in partner discounts and credits for Brex customers, including up to $5K of AWS credits for new Brex customers (subject to AWS Activate eligibility), $1K of OpenAI credits for a year, up to $200K of Google Cloud and Firebase credits over 2 years, 6 months of Notion Plus and 30% off Slack for 12 months.",
+      "description": "Over $350K in partner discounts and credits for Brex customers, including up to $5K of AWS credits for new Brex customers (subject to AWS Activate eligibility), $1K of OpenAI credits for a year, up to $200K of Google Cloud and Firebase credits over 2 years, 6 months of Notion Business with Notion AI and 30% off Slack for 12 months.",
       "tier": "Startup Credits",
       "url": "https://www.brex.com/solutions/startups",
       "tags": [
@@ -4192,7 +4192,7 @@
     {
       "vendor": "SVB Startup Banking Offers",
       "category": "Startup Perks",
-      "description": "Offers for SVB clients (SVB is a division of First Citizens Bank): $5K of AWS Activate credits (with an Activate Provider Org ID, before Series B), $5K of MongoDB credits for 12 months, and 25% off Slack upgrades (up to $9K), among 79 offers from 58 vendors. There is no Google Cloud offer.",
+      "description": "Offers for clients of First Citizens Innovation Banking (formerly Silicon Valley Bank): $5K of AWS Activate credits (with an Activate Provider Org ID, before Series B), $5K of MongoDB credits for 12 months, and 25% off Slack upgrades (up to $9K), among 79 offers from 58 vendors. There is no Google Cloud offer.",
       "tier": "Startup Credits",
       "url": "https://www.svb.com/startup-banking/",
       "tags": [

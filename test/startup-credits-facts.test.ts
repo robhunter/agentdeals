@@ -18,6 +18,8 @@ const PAGES_THIS_GUIDE_STATES_PROGRAMMES_ON = [
   "/hosting-alternatives",
   "/free-tier-tracker",
   "/vendor/microsoft-for-startups",
+  "/vendor/brex-partner-perks",
+  "/vendor/svb-startup-banking-offers",
 ];
 
 const CLOUDFLARE_PROGRAMME_LINKS: [string, string][] = [
@@ -49,6 +51,10 @@ const WITHDRAWN = [
   "AWS Activate credits usually expire within 1-2 years.",
   "pre-seed to Series C",
   "Not past Series C funding",
+  "Kiro's startup page asks for VC backing",
+  "Kiro's page asks for VC backing",
+  "6 months of Notion Plus",
+  "SVB is a division of First Citizens Bank",
 ];
 
 const PROGRAMMES: Record<string, [string, string, string, string]> = {
@@ -61,9 +67,9 @@ const PROGRAMMES: Record<string, [string, string, string, string]> = {
   "Brex Partner Perks": ["Over $350K in partner discounts and credits", "Brex customers", "", ""],
   "Mercury Perks": ["", "", "", ""],
   "Ramp Partner Rewards": ["Over $350K in partner rewards", "Ramp customers", "", ""],
-  "SVB Startup Banking Offers": ["$5K AWS + partner offers", "SVB clients (SVB is a division of First Citizens Bank)", "", "Per-partner activation"],
+  "SVB Startup Banking Offers": ["$5K AWS + partner offers", "Clients of First Citizens Innovation Banking (formerly Silicon Valley Bank)", "", "Per-partner activation"],
   "PostHog for Startups": ["$50K in credits (YC: $50K a year)", "Under 2 years old and under $5M raised. YC companies under $25M raised get $50K a year instead.", "12 months (YC: renews yearly while eligible)", "Credits for 12 months; the YC deal renews yearly"],
-  "Amazon Kiro (AWS Startups)": ["Up to 1 year of Kiro Pro+ ($40 per user a month)", "Early stage to Series A, without active AWS Activate credits; Kiro's startup page asks for VC backing and its terms do not; not available in France, Germany, Italy, Spain, Poland, Brazil, Mexico, Argentina, the UAE, China or sanctioned regions; apply by 2026-12-31.", "Credits expire 1 year after they are issued", "Deposited once to your AWS account"],
+  "Amazon Kiro (AWS Startups)": ["Up to 1 year of Kiro Pro+ ($40 per user a month)", "Early stage to Series A, without active AWS Activate credits; not available in France, Germany, Italy, Spain, Poland, Brazil, Mexico, Argentina, the UAE, China or sanctioned regions; apply by 2026-12-31.", "Credits expire 1 year after they are issued", "Deposited once to your AWS account"],
   "Amplitude Early Stage Startup Pricing": ["1 year of the Growth plan free", "Under 20 employees and under $10M raised", "1 year; year 2 at 40% off the annual Plus plan, or move to the free plan", "Full plan for 12 months"],
 };
 
@@ -76,7 +82,7 @@ const INCLUDED: Record<string, string> = {
   "DigitalOcean Startups": "Compute credits for most DigitalOcean services, 15 months of free Standard-tier support; GPU credits are a separate benefit for selected startups",
   "Cloudflare Startup Program": "Credits for usage-based services such as Workers and R2 (R2 up to $10K; Workers AI up to $2.5K, $10K or $50K by tier). AI Gateway is not covered. Core security and networking features are free at every tier.",
   "Stripe Atlas": "$2.5K of Stripe product credits for the first year, $5K of AWS Activate credits (new AWS users), $100K of Cloudflare credits through the Cloudflare Startup Program, Microsoft for Startups Azure credits, a 30-minute immigration attorney consult (Ellis), and banking through Stripe Treasury.",
-  "Brex Partner Perks": "Up to $5K of AWS credits for new Brex customers (subject to Activate eligibility), $1K of OpenAI credits for a year, up to $200K of Google Cloud and Firebase credits over 2 years, 6 months of Notion Plus, 30% off Slack for 12 months.",
+  "Brex Partner Perks": "Up to $5K of AWS credits for new Brex customers (subject to Activate eligibility), $1K of OpenAI credits for a year, up to $200K of Google Cloud and Firebase credits over 2 years, 6 months of Notion Business with Notion AI, 30% off Slack for 12 months.",
   "Mercury Perks": "1 year of Datadog free (up to $100K in credits; Series A or earlier, new Datadog customers), up to $5K of AWS Activate credits, 50% off QuickBooks Online for 3 months. Mercury's Google Cloud offer is paused.",
   "Ramp Partner Rewards": "AWS credits through AWS Activate and OpenAI API credits (Ramp states no amount for either), $350 of Google Cloud credits, 6 months of Notion Business with Notion AI.",
   "SVB Startup Banking Offers": "$5K of AWS Activate credits (with an Activate Provider Org ID, pre-Series B), $5K of MongoDB credits for 12 months, 25% off Slack upgrades (up to $9K). 79 offers from 58 vendors; no Google Cloud offer.",
@@ -119,7 +125,7 @@ const STATED_ON_THE_GUIDE = [
 const FAQ_ANSWERS = [
   "The largest published offers are Google Scale AI and Cloudflare Tier 1, each up to $350,000. Then Google Scale and AWS Activate Portfolio, up to $200,000 each. Then Microsoft for Startups, up to $150,000. Most require VC funding or an affiliated partner.",
   "Yes. Programs on different platforms stack: Google Scale (up to $200K), AWS Activate Portfolio (up to $200K) and Cloudflare Tier 2 ($100K) can combine to $500K. Credits from fintech platforms come from the same programmes: a later AWS Activate award pays only the difference, and Stripe Atlas's Cloudflare and Azure credits are Cloudflare's and Microsoft's own programmes.",
-  "Programmes that need no funding: AWS Founders, Google Start, Microsoft, Cloudflare Tier 3, PostHog, Amplitude and DigitalOcean Startups. Programmes that need VC backing or an affiliated partner: Google Scale, AWS Portfolio, Cloudflare Tiers 1 and 2. Kiro's page asks for VC backing; its terms do not. Banking programs (Brex, Mercury, Ramp, SVB) need an account; Stripe Atlas needs incorporation through Atlas.",
+  "Programmes that need no funding: AWS Founders, Google Start, Microsoft, Cloudflare Tier 3, PostHog, Amplitude, DigitalOcean Startups and Kiro. Programmes that need VC backing or an affiliated partner: Google Scale, AWS Portfolio, Cloudflare Tiers 1 and 2. Banking programs (Brex, Mercury, Ramp, SVB) need an account; Stripe Atlas needs incorporation through Atlas.",
   "Yes, startup credits expire. AWS Activate credits expire on a date shown in the AWS Billing console.",
 ];
 
