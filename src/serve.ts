@@ -124,6 +124,7 @@ import { changeAnchor, changeRecordHref } from "./change-anchor.js";
 import { SSE_KEEPALIVE_FRAME, keepaliveIntervalMs, sessionRecoveryBody } from "./mcp-stream.js";
 import { ASSISTANTS_API_SHUTDOWN } from "./assistants-shutdown.js";
 import { changeTouchesTheListing, countsAsANegativeChange, discontinuedClause, discontinuedOnOrBefore, endsAFreeTier } from "./product-deprecation.js";
+import { countsAsALoss, LOSSES_SECTION_DESCRIPTION, lossLabelsOf } from "./loss-label.js";
 import { rankOffers, rankForListing, rotateListing, utcDate, gateFor, notAFreeOfferGateFor, GATES_LEAVING_NO_FREE_TIER, GATES_LEAVING_NOTHING_TO_RUN_IN_PRODUCTION, descriptionDeniesFreeTier, classifyTier, timeLimitedTierRule, CRITERIA_PATH, DEMOTE_ONLY_POLICY, DISCLOSURE_RATIONALE, TIE_BREAK_ALGORITHM, NAMED_SUBSET_RULE, NAMED_SUBSET_FIELD_RULE, wholeRankedOrderClause, GATE_TABLE, gateTableRowText, DEMERIT_TABLE, demeritTableRowText, NOT_FREE_TIER_RULES, TIME_LIMITED_TIER_RULES, type TieBreak, type Gate } from "./ranking.js";
 import type { RankedEntry, RankingResult } from "./ranking.js";
 import { eligibilityGateAsPublished, gatedShareDescriptionClause, gatedShareLede, publishableEligibilityConditions } from "./eligibility.js";
@@ -692,6 +693,11 @@ const changesByVendorName = (() => {
 
 function changesFor(vendorName: string): DealChange[] {
   return changesByVendorName.get(vendorName.toLowerCase()) ?? [];
+}
+
+function firstListingOf(vendorName: string): Offer | null {
+  const key = vendorName.toLowerCase();
+  return offers.find(o => o.vendor.toLowerCase() === key) ?? null;
 }
 
 const refusalsHeldByVendor = refusalsByVendor(loadChangeRefusals());
@@ -10097,8 +10103,9 @@ function buildMonthlyReportPage(yearMonth: string): string | null {
     editorialSummary = monthName + " " + yearStr + " was a mixed month with " + monthChanges.length + " total changes. " + negative.length + " negative and " + positive.length + " positive changes balanced out.";
   }
 
+  const losses = negative.filter(countsAsALoss);
   const vendorNegCounts = new Map<string, number>();
-  for (const c of negative) vendorNegCounts.set(c.vendor, (vendorNegCounts.get(c.vendor) || 0) + 1);
+  for (const c of losses) vendorNegCounts.set(c.vendor, (vendorNegCounts.get(c.vendor) || 0) + 1);
   const biggestLosers = [...vendorNegCounts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 10);
 
   const vendorPosCounts = new Map<string, number>();
@@ -10121,10 +10128,12 @@ function buildMonthlyReportPage(yearMonth: string): string | null {
   }).join("");
 
   const losersHtml = biggestLosers.length > 0
-    ? '<h2>Biggest Losers</h2><p class="section-desc">Vendors that eliminated or reduced free tiers</p><ul class="vendor-list">'
+    ? '<h2>Biggest Losers</h2><p class="section-desc">' + LOSSES_SECTION_DESCRIPTION + '</p><ul class="vendor-list">'
       + biggestLosers.map(([vendor, count]) => {
-        const details = negative.filter(c => c.vendor === vendor).map(c => changeSummaryHtml(c, escHtmlServer)).join("</li><li>");
-        return '<li><strong>' + escHtmlServer(vendor) + '</strong> (' + count + ' negative change' + (count > 1 ? "s" : "") + ')<ul><li>' + details + '</li></ul></li>';
+        const held = losses.filter(c => c.vendor === vendor);
+        const details = held.map(c => changeSummaryHtml(c, escHtmlServer)).join("</li><li>");
+        const labels = lossLabelsOf(held, firstListingOf(vendor));
+        return '<li><strong>' + escHtmlServer(vendor) + '</strong> (' + count + ' negative change' + (count > 1 ? "s" : "") + ': ' + escHtmlServer(labels) + ')<ul><li>' + details + '</li></ul></li>';
       }).join("") + '</ul>'
     : '';
 
