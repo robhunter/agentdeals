@@ -90,6 +90,12 @@ function changeLogSupersedingTheTermsOf(vendors: string[]): string {
   return at;
 }
 
+function anEmptyChangeLog(): string {
+  const at = path.join(dir, "no-changes.json");
+  writeFileSync(at, JSON.stringify({ changes: [] }));
+  return at;
+}
+
 function startServer(indexPath: string, env: Record<string, string> = {}): Promise<{ child: ChildProcess; base: string }> {
   return new Promise((resolve, reject) => {
     const child = spawn("node", [path.join(REPO, "dist", "serve.js")], {
@@ -144,17 +150,20 @@ function alwaysFreeRows(html: string): Array<{ name: string; limits: string }> {
 let conditioned: { child: ChildProcess; base: string };
 let unconditioned: { child: ChildProcess; base: string };
 let superseded: { child: ChildProcess; base: string };
+let withholdingNothing: { child: ChildProcess; base: string };
 
 before(async () => {
   const conditionedIndex = scratchIndex("conditioned.json", conditionedOffers);
   conditioned = await startServer(conditionedIndex);
   unconditioned = await startServer(scratchIndex("unconditioned.json", unconditionedOffers));
   superseded = await startServer(conditionedIndex, { AGENTDEALS_CHANGES_PATH: changeLogSupersedingTheTermsOf([HETZNER, COMPUTE_ENGINE, SUPABASE, RENDER]) });
+  withholdingNothing = await startServer(conditionedIndex, { AGENTDEALS_CHANGES_PATH: anEmptyChangeLog() });
 });
 after(() => {
   conditioned?.child.kill();
   unconditioned?.child.kill();
   superseded?.child.kill();
+  withholdingNothing?.child.kill();
   rmSync(dir, { recursive: true, force: true });
 });
 
@@ -528,6 +537,12 @@ describe("every guide that compares vendors prints each vendor's conditions of u
 
   it("prints every vendor's list once: in its card where the guide has one, else after the first table row that names it", async () => {
     assert.deepStrictEqual(await placementsNotMatchingTheirVendorPage(conditioned.base, await readingsOn(conditioned.base)), []);
+  });
+
+  it("prints every vendor's list where no record withholds it, so no row is silent only because a record withholds its list today", async () => {
+    const routes = (await everyRouteTheSitemapPublishes(withholdingNothing.base)).filter(coveredByThisTest).sort();
+    assert.ok(routes.length >= routesCovered.length / 2, `only ${routes.length} of ${routesCovered.length} guides are served without records`);
+    assert.deepStrictEqual(await placementsNotMatchingTheirVendorPage(withholdingNothing.base, await readGuides(withholdingNothing.base, routes)), []);
   });
 
   it("ties every vendor row to a vendor page, by a link in its first cell or by a name one answers to, unless the row is listed as naming no listing", async () => {

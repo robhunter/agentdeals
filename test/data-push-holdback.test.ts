@@ -281,10 +281,16 @@ describe("#1898 a held-back vendor loses every row its run wrote", () => {
     const withoutThem = VENDOR_KEYED_DATA.filter(
       (f) => f.path !== "data/restated_terms.json" && f.path !== "data/change_corroboration.json",
     );
-    assert.deepStrictEqual(vendorRowsNoHoldbackRestores(pathsAGatedWorkflowCommits(), withoutThem), [
+    const holdingVendorRowsToday = (at: string): boolean => {
+      const [path, key] = at.split(":");
+      return arraysOfVendorRows(path!).includes(key!);
+    };
+    const expected = [
       "data/change_corroboration.json:held",
       "data/change_corroboration.json:resolved",
       "data/restated_terms.json:restatements",
-    ]);
+    ].filter(holdingVendorRowsToday);
+    assert.ok(expected.length >= 2, `only ${expected.join(", ")} hold vendor rows, so the omission is barely exercised`);
+    assert.deepStrictEqual(vendorRowsNoHoldbackRestores(pathsAGatedWorkflowCommits(), withoutThem), expected);
   });
 });

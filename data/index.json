@@ -2085,7 +2085,7 @@
       ],
       "verifiedDate": "2026-08-22",
       "source_check": {
-        "checked": "2026-10-09",
+        "checked": "2026-10-10",
         "outcome": "ok",
         "detail": "the page names WorkOS as \"workos\" and states \"$125\""
       },
@@ -2965,6 +2965,30 @@
           "quote": "As part of our fraud prevention measures, we may ask you to verify your account before we process an order. You can do this in two ways: Verification via ID document: You provide us with a copy of a valid government-issued ID (e.g., ID card or passport). This allows us to confirm that the information provided during registration matches your identity. Verification via prepayment (credit card): Alternatively, you can verify your account by making an advance payment with your own credit card.",
           "url": "https://docs.hetzner.com/general/security-and-identify/fraud-prevention-faq/",
           "read_on": "2026-10-07"
+        },
+        {
+          "text": "A cloud server can run with only an IPv6 address. Hetzner charges €0.50 a month for a Primary IPv4, and nothing for a Primary IPv6, so an IPv6-only server costs €0.50 a month less than the same server with IPv4.",
+          "quote": "We do not charge for our Primary IPv6s. We charge € 0.50 / $ 0.60 per month (excl. VAT) for our Primary IPv4s.",
+          "url": "https://docs.hetzner.com/cloud/servers/primary-ips/overview/",
+          "read_on": "2026-10-10"
+        },
+        {
+          "text": "A server with only an IPv6 address has no public IPv4 connectivity.",
+          "quote": "Servers that only have a Primary IPv6 do not have public IPv4 connectivity.",
+          "url": "https://docs.hetzner.com/cloud/servers/primary-ips/faq/",
+          "read_on": "2026-10-10"
+        },
+        {
+          "text": "Private Networks, and the traffic on their private interfaces, are free.",
+          "quote": "The Networks feature is free. The traffic on the private network interfaces is free; we will not charge you for it.",
+          "url": "https://docs.hetzner.com/cloud/networks/faq/",
+          "read_on": "2026-10-10"
+        },
+        {
+          "text": "Cloud Firewalls are free.",
+          "quote": "We do not charge for our Cloud Firewalls.",
+          "url": "https://docs.hetzner.com/cloud/firewalls/overview/",
+          "read_on": "2026-10-10"
         }
       ]
     },
@@ -3224,7 +3248,7 @@
       ],
       "verifiedDate": "2026-07-25",
       "source_check": {
-        "checked": "2026-10-03",
+        "checked": "2026-10-10",
         "outcome": "unreadable",
         "detail": "HTTP 429"
       }
@@ -3330,7 +3354,7 @@
     {
       "vendor": "Groq",
       "category": "AI / ML",
-      "description": "Fast LLM inference on Groq's LPU hardware. Free plan: gpt-oss-120b, gpt-oss-20b and Qwen3.8 27B, each at 30 requests a minute, 1,000 requests and 200,000 tokens a day, plus Whisper speech-to-text at 2,000 requests a day. Llama 3.3 70B and Llama 3.1 8B left the free and developer plans on 2026-08-16 and are Enterprise-only. Orpheus text-to-speech (English and Saudi Arabic) is also on the free plan, at 10 requests a minute, 100 requests and 3,600 tokens a day. Developer plan prices per 1M tokens: gpt-oss-120b $0.15/$0.60; gpt-oss-20b $0.075/$0.30. Orpheus text-to-speech costs $22 per 1M characters in English and $40 in Saudi Arabic.",
+      "description": "Fast LLM inference on Groq's LPU hardware. Free plan: gpt-oss-120b, gpt-oss-20b and Qwen3.8 27B, each at 30 requests a minute, 1,000 requests and 200,000 tokens a day, plus Whisper speech-to-text at 2,000 requests a day. Each of the three free models is also limited to 8,000 tokens a minute, and Groq applies whichever limit is reached first. On the free plan, gpt-oss-safeguard-20b is limited to 3 requests a minute, 1,000 requests a day, 2,000 tokens a minute and 200,000 tokens a day. Qwen3.8 27B and gpt-oss-safeguard-20b are Preview models. Groq says Preview models \"are intended for evaluation purposes only and should not be used in production environments as they may be discontinued at short notice\". Llama 3.3 70B and Llama 3.1 8B left the free and developer plans on 2026-08-16 and are Enterprise-only. Orpheus text-to-speech (English and Saudi Arabic) is also on the free plan, at 10 requests a minute, 100 requests and 3,600 tokens a day. Developer plan prices per 1M tokens: gpt-oss-120b $0.15/$0.60; gpt-oss-20b $0.075/$0.30. Qwen3.8 27B costs $0.80 input and $4.00 output per 1M tokens on the Developer plan. Orpheus text-to-speech costs $22 per 1M characters in English and $40 in Saudi Arabic.",
       "tier": "Free",
       "url": "https://console.groq.com/docs/rate-limits",
       "tags": [
@@ -3394,7 +3418,7 @@
     {
       "vendor": "Google Gemini API",
       "category": "AI / ML",
-      "description": "Free tier: Gemini 3.8 Flash, 3.6 Flash, 3.5 Flash-Lite, 3.1 Flash-Lite, Gemini 3 Flash Preview, Gemini Embedding 2 and Gemma 4 are free of charge. Also free of charge are Gemini 3.8 Live (real-time voice), Gemini 3.5 Live Translate (translation), Gemini 3.5 Transcribe (speech-to-text), Gemini 3.8 Flash TTS and Gemini 3.8 Flash-Lite TTS (text-to-speech). Gemini 3.1 Pro Preview and Gemini Omni Flash Preview are paid only. No Gemini image model has a free tier in the API. Nano Banana 2.1 (gemini-nano-banana-2.1) became generally available on 2026-10-06. It costs $0.0336 per 1K image, $0.0504 per 2K image and $0.113 per 4K image. The Batch API halves those prices. Nano Banana Pro costs $0.134 per 1K or 2K image and $0.24 per 4K image. Google publishes no free-tier rate limits; each project's limits are shown in Google AI Studio. Since 2026-09-18 Google serves the Gemini 2.5 models only to users who have used them before, and points new projects to 3.5 Flash-Lite or 3.8 Flash. If your app calls gemini-3.7-flash, Google deprecated it on 2026-10-08. Requests to gemini-3.7-flash are routed automatically to gemini-3.8-flash. Google says to update the model string to gemini-3.8-flash. If your app calls Gemini 3.5 Flash (gemini-3.5-flash), Google deprecated it on 2026-10-08. Requests to gemini-3.5-flash are routed automatically to gemini-3.6-flash. Google says to update the model string to gemini-3.6-flash or gemini-3.8-flash. Paid, per million tokens (input/output): Gemini 3.8 Flash $0.75/$3.75 until 2026-12-31, then $1.50 input and $7.50 output from 2027-01-01 (3.6 Flash: the same prices and dates); Gemini 3.5 Flash-Lite $0.30/$2.50; Gemini 3.1 Flash-Lite $0.25/$1.50; Gemini 3.1 Pro Preview $2/$12 (prompts up to 200K tokens). The Batch API costs half the standard price; Gemini 3.8 Flash is $0.375/$1.875 per million tokens through 2026-12-31. Grounding with Google Search is not available on the free tier for Gemini 3.x models. On the paid tier, 5,000 search requests a month are free, shared across all Gemini 3.x models, then $14 per 1,000. Accounts opened after 2026-03-02 cannot spend the $300 Google Cloud welcome credit on the Gemini API.",
+      "description": "Free tier: Gemini 3.8 Flash, 3.6 Flash, 3.5 Flash-Lite, 3.1 Flash-Lite, Gemini 3 Flash Preview, Gemini Embedding 2 and Gemma 4 are free of charge. Also free of charge are Gemini 3.8 Live (real-time voice), Gemini 3.5 Live Translate (translation), Gemini 3.5 Transcribe (speech-to-text), Gemini 3.8 Flash TTS and Gemini 3.8 Flash-Lite TTS (text-to-speech). Gemini 3.1 Pro Preview and Gemini Omni Flash (gemini-omni-1.1-flash) are paid only. No Gemini image model has a free tier in the API. Nano Banana 2.1 (gemini-nano-banana-2.1) became generally available on 2026-10-06. It costs $0.0336 per 1K image, $0.0504 per 2K image and $0.113 per 4K image. The Batch API halves those prices. Nano Banana Pro costs $0.134 per 1K or 2K image and $0.24 per 4K image. Google publishes no free-tier rate limits; each project's limits are shown in Google AI Studio. Since 2026-09-18 Google serves the Gemini 2.5 models only to users who have used them before, and points new projects to 3.5 Flash-Lite or 3.8 Flash. If your app calls gemini-3.7-flash, Google deprecated it on 2026-10-08. Requests to gemini-3.7-flash are routed automatically to gemini-3.8-flash. Google says to update the model string to gemini-3.8-flash. If your app calls Gemini 3.5 Flash (gemini-3.5-flash), Google deprecated it on 2026-10-08. Requests to gemini-3.5-flash are routed automatically to gemini-3.6-flash. Google says to update the model string to gemini-3.6-flash or gemini-3.8-flash. If your app calls gemini-omni-flash-preview, it can be called until 2026-10-22, when Google shuts it down. Google's replacement is gemini-omni-1.1-flash. Gemini 3.1 Flash-Lite (gemini-3.1-flash-lite) can be called until 2027-05-07, when Google shuts it down. Google's replacement is gemini-3.5-flash-lite. Paid, per million tokens (input/output): Gemini 3.8 Flash $0.75/$3.75 until 2026-12-31, then $1.50 input and $7.50 output from 2027-01-01 (3.6 Flash: the same prices and dates); Gemini 3.5 Flash-Lite $0.30/$2.50; Gemini 3.1 Flash-Lite $0.25/$1.50; Gemini 3.1 Pro Preview $2/$12 (prompts up to 200K tokens). The Batch API costs half the standard price; Gemini 3.8 Flash is $0.375/$1.875 per million tokens through 2026-12-31. Grounding with Google Search is not available on the free tier for Gemini 3.x models. On the paid tier, 5,000 search requests a month are free, shared across all Gemini 3.x models, then $14 per 1,000. Accounts opened after 2026-03-02 cannot spend the $300 Google Cloud welcome credit on the Gemini API.",
       "tier": "Free (Reduced)",
       "url": "https://ai.google.dev/pricing",
       "tags": [
@@ -3635,9 +3659,9 @@
         "ab testing",
         "free tier"
       ],
-      "verifiedDate": "2026-10-09",
+      "verifiedDate": "2026-10-10",
       "source_check": {
-        "checked": "2026-10-09",
+        "checked": "2026-10-10",
         "outcome": "ok",
         "detail": "the page names PostHog as \"posthog\" and states \"$0\""
       }
@@ -4433,7 +4457,7 @@
         "notes": "Technology and SI partner programs. No individual referral program."
       },
       "source_check": {
-        "checked": "2026-10-03",
+        "checked": "2026-10-10",
         "outcome": "unreadable",
         "detail": "HTTP 429"
       },
@@ -5108,7 +5132,7 @@
         "startup-credits",
         "cloud-storage"
       ],
-      "verifiedDate": "2026-10-08",
+      "verifiedDate": "2026-10-10",
       "eligibility": {
         "type": "accelerator",
         "conditions": [
@@ -5118,9 +5142,9 @@
         "program": "Backblaze Flamethrower"
       },
       "source_check": {
-        "checked": "2026-10-09",
-        "outcome": "unreadable",
-        "detail": "HTTP 403"
+        "checked": "2026-10-10",
+        "outcome": "ok",
+        "detail": "the page names Backblaze as \"backblaze\" and states \"$100,000\""
       }
     },
     {
@@ -5211,7 +5235,7 @@
       ],
       "verifiedDate": "2026-04-19",
       "source_check": {
-        "checked": "2026-10-03",
+        "checked": "2026-10-10",
         "outcome": "unreadable",
         "detail": "HTTP 429"
       }
@@ -5271,7 +5295,7 @@
       ],
       "verifiedDate": "2026-07-23",
       "source_check": {
-        "checked": "2026-10-03",
+        "checked": "2026-10-10",
         "outcome": "unreadable",
         "detail": "page content too short (likely JS-rendered SPA); the rendering client failed: the rendering client did not finish in time",
         "rendered": true
@@ -6526,7 +6550,7 @@
       ],
       "verifiedDate": "2026-05-02",
       "source_check": {
-        "checked": "2026-10-03",
+        "checked": "2026-10-10",
         "outcome": "unreadable",
         "detail": "HTTP 404"
       },
@@ -7384,9 +7408,9 @@
       ],
       "verifiedDate": "2026-07-30",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-10-10",
         "outcome": "states_no_terms",
-        "detail": "the page names Strapi but states no amount, tier or rate we can read"
+        "detail": "the page names Strapi but states no amount, tier or rate we can read, and the 3 structured-data blocks in its markup state no price"
       },
       "free_grounds": [
         "licence"
@@ -7407,9 +7431,9 @@
       ],
       "verifiedDate": "2026-08-25",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-10-10",
         "outcome": "states_no_terms",
-        "detail": "the page names Payload CMS but states no amount, tier or rate we can read"
+        "detail": "the page names Payload CMS but states no amount, tier or rate we can read, and its markup carries no structured data"
       },
       "free_grounds": [
         "licence"
@@ -7432,9 +7456,9 @@
       ],
       "verifiedDate": "2026-08-22",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-10-10",
         "outcome": "states_no_terms",
-        "detail": "the page names Prometheus but states no amount, tier or rate we can read"
+        "detail": "the page names Prometheus but states no amount, tier or rate we can read, and its markup carries no structured data"
       },
       "product_subtypes": {
         "taxonomy": "Monitoring",
@@ -7468,9 +7492,9 @@
       ],
       "verifiedDate": "2026-08-26",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-10-10",
         "outcome": "states_no_terms",
-        "detail": "the page names Jaeger but states no amount, tier or rate we can read"
+        "detail": "the page names Jaeger but states no amount, tier or rate we can read, and its markup carries no structured data"
       },
       "product_subtypes": {
         "taxonomy": "Monitoring",
@@ -7576,9 +7600,9 @@
       ],
       "verifiedDate": "2026-08-21",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-10-10",
         "outcome": "states_no_terms",
-        "detail": "the page names Woodpecker CI but states no amount, tier or rate we can read"
+        "detail": "the page names Woodpecker CI but states no amount, tier or rate we can read, and its markup carries no structured data"
       },
       "free_grounds": [
         "licence"
@@ -7753,9 +7777,9 @@
       ],
       "verifiedDate": "2026-08-23",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-10-10",
         "outcome": "states_no_terms",
-        "detail": "the page names Moto but states no amount, tier or rate we can read"
+        "detail": "the page names Moto but states no amount, tier or rate we can read, and its markup carries no structured data"
       },
       "free_grounds": [
         "licence"
@@ -7777,9 +7801,9 @@
       ],
       "verifiedDate": "2026-08-13",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-10-10",
         "outcome": "states_no_terms",
-        "detail": "the page names AWS SAM CLI but states no amount, tier or rate we can read"
+        "detail": "the page names AWS SAM CLI but states no amount, tier or rate we can read, and its markup carries no structured data"
       },
       "free_grounds": [
         "licence"
@@ -7808,9 +7832,9 @@
         "reviewed": "2026-08-25"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-10-10",
         "outcome": "states_no_terms",
-        "detail": "the page names DynamoDB Local but states no amount, tier or rate we can read"
+        "detail": "the page names DynamoDB Local but states no amount, tier or rate we can read, and the 1 structured-data block in its markup states no price"
       }
     },
     {
@@ -7871,9 +7895,9 @@
         "reviewed": "2026-08-25"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-10-10",
         "outcome": "states_no_terms",
-        "detail": "the page names CloudDev but states no amount, tier or rate we can read"
+        "detail": "the page names CloudDev but states no amount, tier or rate we can read, and its markup carries no structured data"
       },
       "free_grounds": [
         "licence"
@@ -7905,9 +7929,9 @@
         "reviewed": "2026-08-25"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-10-10",
         "outcome": "states_no_terms",
-        "detail": "the page names Vera AWS but states no amount, tier or rate we can read"
+        "detail": "the page names Vera AWS but states no amount, tier or rate we can read, and its markup carries no structured data"
       },
       "free_grounds": [
         "licence"
@@ -8662,9 +8686,9 @@
       ],
       "verifiedDate": "2026-07-31",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names OpenWeatherMap but states no amount, tier or rate we can read"
+        "checked": "2026-10-10",
+        "outcome": "does_not_name_vendor",
+        "detail": "the page never names OpenWeatherMap, on a domain that carries its name"
       }
     },
     {
@@ -8790,9 +8814,14 @@
         "reviewed": "2026-08-25"
       },
       "source_check": {
-        "checked": "2026-09-21",
+        "checked": "2026-10-10",
         "outcome": "ok",
         "detail": "the page names Prisma Accelerate as \"accelerate\" and states \"$0\""
+      },
+      "free_plan_excerpt": {
+        "text": "Free $0 / month Free forever. No credit card required. Prisma Compute 1M requests / month 360 GB-hours memory / month 4 active vCPU-hours / month 10 GB outbound bandwidth / month Prisma Postgres 200k operations / month 1.01 GB storage 50 databases",
+        "url": "https://www.prisma.io/pricing",
+        "read_on": "2026-10-10"
       }
     },
     {
@@ -9016,7 +9045,7 @@
       ],
       "verifiedDate": "2026-08-23",
       "source_check": {
-        "checked": "2026-09-21",
+        "checked": "2026-10-10",
         "outcome": "ok",
         "detail": "the page names Hunter.io as \"hunter io\" and states \"0 Get started 50 credits per month\""
       }
@@ -9054,9 +9083,9 @@
         "finance",
         "forex"
       ],
-      "verifiedDate": "2026-09-21",
+      "verifiedDate": "2026-10-10",
       "source_check": {
-        "checked": "2026-09-21",
+        "checked": "2026-10-10",
         "outcome": "ok",
         "detail": "the page names CurrencyFreaks as \"currencyfreaks\" and states \"1,000 API calls a month\" and \"1,000 API calls/month\"",
         "unrendered_prices": [
@@ -9118,7 +9147,7 @@
       ],
       "verifiedDate": "2026-09-04",
       "source_check": {
-        "checked": "2026-09-21",
+        "checked": "2026-10-10",
         "outcome": "ok",
         "detail": "the page names URLscan.io as \"urlscan io\" and states \"$0\""
       }
@@ -9213,9 +9242,9 @@
         "object-detection",
         "model-training"
       ],
-      "verifiedDate": "2026-10-09",
+      "verifiedDate": "2026-10-10",
       "source_check": {
-        "checked": "2026-10-09",
+        "checked": "2026-10-10",
         "outcome": "states_a_free_price",
         "detail": "the page names Roboflow and states its price in words as \"Free Tier\", and its markup carries no structured data"
       },
@@ -9255,9 +9284,9 @@
       ],
       "verifiedDate": "2026-07-31",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-10-10",
         "outcome": "states_no_terms",
-        "detail": "the page names Scale AI but states no amount, tier or rate we can read"
+        "detail": "the page names Scale AI but states no amount, tier or rate we can read, and its markup carries no structured data"
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -9372,7 +9401,7 @@
       ],
       "verifiedDate": "2026-07-05",
       "source_check": {
-        "checked": "2026-10-03",
+        "checked": "2026-10-10",
         "outcome": "ok",
         "detail": "the page names LanceDB as \"lancedb\" and states amounts, none of which we matched to the terms we publish"
       },
@@ -9669,9 +9698,9 @@
       ],
       "verifiedDate": "2026-07-31",
       "source_check": {
-        "checked": "2026-09-21",
+        "checked": "2026-10-10",
         "outcome": "ok",
-        "detail": "the page names Comet ML as \"comet ml\" and states \"10 team members 25k spans per month\""
+        "detail": "the page names Comet ML as \"comet ml\" and states \"10 team members 25k spans per month\" and \"100GB/month\""
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -9832,7 +9861,7 @@
       ],
       "verifiedDate": "2026-07-30",
       "source_check": {
-        "checked": "2026-09-21",
+        "checked": "2026-10-10",
         "outcome": "ok",
         "detail": "the page writes \"swagger\", the domain we cite SwaggerHub from, and states amounts, none of which we matched to the terms we publish"
       }
@@ -10129,8 +10158,8 @@
     {
       "vendor": "Amazon SP-API",
       "category": "API Development",
-      "description": "Amazon Selling Partner API for building seller and vendor tools on Amazon. Sellers/vendors using SP-API for their own business remain fully exempt (free). Third-party developers: $1,400/year annual fee active since Jan 31 2026; Basic tier includes 2.5M GET calls/month. Per-call overage fees ($0.40 per 1K GET calls) were scheduled for 2026-04-30 but postponed indefinitely after developer backlash — no new date announced.",
-      "tier": "Exempt / Paid",
+      "description": "The Amazon Selling Partner API (SP-API) is for building seller and vendor tools on Amazon. SP-API is free for sellers and third-party developers. Amazon announced a $1,400 annual fee for developers and per-call fees in late 2025, but delayed and then postponed them. In May 2026, Amazon said it \"will not move forward with the SP-API usage and annual fees at this time.\"",
+      "tier": "Free",
       "url": "https://developer.amazonservices.com/",
       "tags": [
         "api",
@@ -10143,9 +10172,9 @@
       ],
       "verifiedDate": "2026-08-23",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Amazon SP-API but states no amount, tier or rate we can read"
+        "checked": "2026-10-10",
+        "outcome": "does_not_name_vendor",
+        "detail": "the page never names Amazon SP-API and is not served from its domain"
       }
     },
     {
@@ -10465,13 +10494,18 @@
       ],
       "verifiedDate": "2026-07-06",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-10-10",
         "outcome": "states_no_terms",
-        "detail": "the page names Drone CI but states no amount, tier or rate we can read"
+        "detail": "the page names Drone CI but states no amount, tier or rate we can read, and its markup carries no structured data"
       },
       "free_grounds": [
         "licence"
-      ]
+      ],
+      "free_plan_excerpt": {
+        "text": "Install Drone in Minutes Download our official Docker image or build from source. No need to talk with a sales person or request a trial license. Install Drone Try free cloud offering",
+        "url": "https://www.drone.io/",
+        "read_on": "2026-10-10"
+      }
     },
     {
       "vendor": "Codefresh",
@@ -10713,9 +10747,9 @@
       ],
       "verifiedDate": "2026-08-14",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-10-10",
         "outcome": "states_no_terms",
-        "detail": "the page names Zoho but states no amount, tier or rate we can read"
+        "detail": "the page names Zoho but states no amount, tier or rate we can read, and the 1 structured-data block in its markup states no price"
       }
     },
     {
@@ -10730,9 +10764,14 @@
       ],
       "verifiedDate": "2026-07-29",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-10-10",
         "outcome": "states_no_terms",
-        "detail": "the page names Zoho Assist but states no amount, tier or rate we can read"
+        "detail": "the page names Zoho Assist but states no amount, tier or rate we can read, and the 1 structured-data block in its markup states no price"
+      },
+      "free_plan_excerpt": {
+        "text": "Yes, Zoho Assist offers a free remote support plan that includes 1 technician, 5 unattended computers, instant chat, multi-monitor navigation, and 1 concurrent session with no credit card required.",
+        "url": "https://www.zoho.com/assist",
+        "read_on": "2026-10-10"
       }
     },
     {
@@ -10788,9 +10827,9 @@
       ],
       "verifiedDate": "2026-08-01",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-10-10",
         "outcome": "states_no_terms",
-        "detail": "the page names Zoho Connect but states no amount, tier or rate we can read"
+        "detail": "the page names Zoho Connect but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
     },
     {
@@ -10845,9 +10884,9 @@
       ],
       "verifiedDate": "2026-07-31",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-10-10",
         "outcome": "states_no_terms",
-        "detail": "the page names Zoho Showtime but states no amount, tier or rate we can read"
+        "detail": "the page names Zoho Showtime but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
     },
     {
@@ -10884,9 +10923,9 @@
       ],
       "verifiedDate": "2026-07-27",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-10-10",
         "outcome": "states_no_terms",
-        "detail": "the page names Zoho Wiki but states no amount, tier or rate we can read"
+        "detail": "the page names Zoho Wiki but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
     },
     {
@@ -10923,9 +10962,9 @@
       ],
       "verifiedDate": "2026-07-31",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-10-10",
         "outcome": "states_no_terms",
-        "detail": "the page names Zoho Desk but states no amount, tier or rate we can read"
+        "detail": "the page names Zoho Desk but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
     },
     {
@@ -10940,9 +10979,9 @@
       ],
       "verifiedDate": "2026-07-30",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-10-10",
         "outcome": "states_no_terms",
-        "detail": "the page names Zoho Cliq but states no amount, tier or rate we can read"
+        "detail": "the page names Zoho Cliq but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
     },
     {
@@ -11133,9 +11172,9 @@
         "free tier",
         "terraform-alternative"
       ],
-      "verifiedDate": "2026-08-22",
+      "verifiedDate": "2026-10-10",
       "source_check": {
-        "checked": "2026-09-21",
+        "checked": "2026-10-10",
         "outcome": "ok",
         "detail": "the page names Scalr as \"scalr\" and states \"50 runs/mo\" and \"50 runs per month\""
       },
@@ -11145,6 +11184,11 @@
         "record_date": "2026-09-21",
         "change_type": "limits_increased",
         "restated_on": "2026-09-21"
+      },
+      "free_plan_excerpt": {
+        "text": "Free up to 50 runs/mo Start free Features All core features Plan details Free, up to 50 runs per month",
+        "url": "https://www.scalr.com/pricing",
+        "read_on": "2026-10-10"
       }
     },
     {
@@ -11192,9 +11236,9 @@
       ],
       "verifiedDate": "2026-08-26",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-10-10",
         "outcome": "states_no_terms",
-        "detail": "the page names Codeberg but states no amount, tier or rate we can read"
+        "detail": "the page names Codeberg but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
     },
     {
@@ -11227,7 +11271,7 @@
       ],
       "verifiedDate": "2026-06-12",
       "source_check": {
-        "checked": "2026-10-03",
+        "checked": "2026-10-10",
         "outcome": "unreadable",
         "detail": "HTTP 403"
       }
@@ -11244,9 +11288,9 @@
       ],
       "verifiedDate": "2026-08-03",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names heptapod.net but states no amount, tier or rate we can read"
+        "checked": "2026-10-10",
+        "outcome": "does_not_name_vendor",
+        "detail": "the page never names heptapod.net, on a domain that carries its name"
       }
     },
     {
@@ -11285,9 +11329,9 @@
       ],
       "verifiedDate": "2026-08-02",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-10-10",
         "outcome": "states_no_terms",
-        "detail": "the page names pijul.com but states no amount, tier or rate we can read"
+        "detail": "the page names pijul.com but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
     },
     {
@@ -11302,9 +11346,9 @@
       ],
       "verifiedDate": "2026-08-01",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-10-10",
         "outcome": "states_no_terms",
-        "detail": "the page names RocketGit but states no amount, tier or rate we can read"
+        "detail": "the page names RocketGit but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
     },
     {
@@ -11353,9 +11397,9 @@
       ],
       "verifiedDate": "2026-08-26",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-10-10",
         "outcome": "states_no_terms",
-        "detail": "the page names APITemplate.io but states no amount, tier or rate we can read"
+        "detail": "the page names APITemplate.io but states no amount, tier or rate we can read, and the 1 structured-data block in its markup states no price"
       }
     },
     {
@@ -11518,9 +11562,9 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-10-07",
+      "verifiedDate": "2026-10-10",
       "source_check": {
-        "checked": "2026-10-09",
+        "checked": "2026-10-10",
         "outcome": "ok",
         "detail": "the page names Composio as \"composio\" and states \"$0\" and \"100,000 tool calls / mo\" and \"50,000 triggers / mo\" and \"100K tool calls a month\""
       },
@@ -11874,9 +11918,14 @@
       ],
       "verifiedDate": "2026-08-25",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-10-10",
         "outcome": "states_no_terms",
-        "detail": "the page names Disease.sh but states no amount, tier or rate we can read"
+        "detail": "the page names Disease.sh but states no amount, tier or rate we can read, and its markup carries no structured data"
+      },
+      "free_plan_excerpt": {
+        "text": "Our services are free to use, and have a 100/100 page insight performance score.",
+        "url": "https://disease.sh/",
+        "read_on": "2026-10-10"
       }
     },
     {
@@ -12035,9 +12084,14 @@
       ],
       "verifiedDate": "2026-07-06",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-10-10",
         "outcome": "states_no_terms",
-        "detail": "the page names FraudLabs Pro but states no amount, tier or rate we can read"
+        "detail": "the page names FraudLabs Pro but states no amount, tier or rate we can read, and the 1 structured-data block in its markup states no price"
+      },
+      "free_plan_excerpt": {
+        "text": "500 Validation for Free Validation Rules Customization Standard Fraud Validation",
+        "url": "https://www.fraudlabspro.com",
+        "read_on": "2026-10-10"
       }
     },
     {
@@ -12210,9 +12264,9 @@
       ],
       "verifiedDate": "2026-07-08",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-10-10",
         "outcome": "states_no_terms",
-        "detail": "the page names IP.City but states no amount, tier or rate we can read"
+        "detail": "the page names IP.City but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
     },
     {
@@ -12386,9 +12440,9 @@
       ],
       "verifiedDate": "2026-07-06",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-10-10",
         "outcome": "states_no_terms",
-        "detail": "the page names JSONGrid but states no amount, tier or rate we can read"
+        "detail": "the page names JSONGrid but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
     },
     {
@@ -12403,9 +12457,9 @@
       ],
       "verifiedDate": "2026-08-02",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-10-10",
         "outcome": "states_no_terms",
-        "detail": "the page names JSONing but states no amount, tier or rate we can read"
+        "detail": "the page names JSONing but states no amount, tier or rate we can read, and the 1 structured-data block in its markup states no price"
       }
     },
     {
@@ -12651,9 +12705,9 @@
       ],
       "verifiedDate": "2026-08-01",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-10-10",
         "outcome": "states_no_terms",
-        "detail": "the page names Mocko.dev but states no amount, tier or rate we can read"
+        "detail": "the page names Mocko.dev but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
     },
     {
@@ -12668,9 +12722,9 @@
       ],
       "verifiedDate": "2026-08-02",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-10-10",
         "outcome": "states_no_terms",
-        "detail": "the page names Multi-Exit IP Address Checker but states no amount, tier or rate we can read"
+        "detail": "the page names Multi-Exit IP Address Checker but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
     },
     {
@@ -12699,9 +12753,9 @@
         "notes": "Channel partner program only. No individual referral program."
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-10-10",
         "outcome": "states_no_terms",
-        "detail": "the page names Cloudflare Mesh but states no amount, tier or rate we can read"
+        "detail": "the page names Cloudflare Mesh but states no amount, tier or rate we can read, and the 1 structured-data block in its markup states no price"
       }
     },
     {
@@ -12782,9 +12836,9 @@
       ],
       "verifiedDate": "2026-07-30",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-10-10",
         "outcome": "states_no_terms",
-        "detail": "the page names OpenAPI3 Designer but states no amount, tier or rate we can read"
+        "detail": "the page names OpenAPI3 Designer but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
     },
     {
@@ -12884,9 +12938,9 @@
       ],
       "verifiedDate": "2026-07-08",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-10-10",
         "outcome": "states_no_terms",
-        "detail": "the page names Pixela but states no amount, tier or rate we can read"
+        "detail": "the page names Pixela but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
     },
     {
@@ -13017,9 +13071,9 @@
       ],
       "verifiedDate": "2026-07-10",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-10-10",
         "outcome": "states_no_terms",
-        "detail": "the page names ROBOHASH but states no amount, tier or rate we can read"
+        "detail": "the page names ROBOHASH but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
     },
     {
@@ -13173,9 +13227,9 @@
       ],
       "verifiedDate": "2026-07-06",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-10-10",
         "outcome": "states_no_terms",
-        "detail": "the page names Sqlable but states no amount, tier or rate we can read"
+        "detail": "the page names Sqlable but states no amount, tier or rate we can read, and the 1 structured-data block in its markup states no price"
       }
     },
     {
@@ -13249,8 +13303,11 @@
         {
           "text": "Production API keys need an active paid plan or pay-as-you-go enabled. Development keys are limited to 100 requests per minute, production keys 1,000.",
           "quote": "Access to production keys requires either an active Paid Plan or PAYGO enabled.",
+          "rules_out": [
+            "production"
+          ],
           "url": "https://docs.tavily.com/documentation/rate-limits",
-          "read_on": "2026-10-06"
+          "read_on": "2026-10-10"
         },
         {
           "text": "Tavily may use your query data to improve its services; an account setting turns this off, and then query data is not stored or used for improvements.",
@@ -13341,9 +13398,9 @@
       ],
       "verifiedDate": "2026-08-04",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-10-10",
         "outcome": "states_no_terms",
-        "detail": "the page names Treblle but states no amount, tier or rate we can read"
+        "detail": "the page names Treblle but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
     },
     {
@@ -13547,9 +13604,9 @@
       ],
       "verifiedDate": "2026-07-07",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-10-10",
         "outcome": "states_no_terms",
-        "detail": "the page names jitpack.io but states no amount, tier or rate we can read"
+        "detail": "the page names jitpack.io but states no amount, tier or rate we can read, and the 2 structured-data blocks in its markup state no price"
       }
     },
     {
@@ -13564,9 +13621,9 @@
       ],
       "verifiedDate": "2026-08-22",
       "source_check": {
-        "checked": "2026-09-21",
+        "checked": "2026-10-10",
         "outcome": "ok",
-        "detail": "the page names paperspace as \"paperspace\" and states \"$ 39\" and \"$ 12\""
+        "detail": "the page names paperspace as \"paperspace\" and states \"$8.00\" and \"$39.00\" and \"$12.00\""
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -13601,9 +13658,9 @@
       ],
       "verifiedDate": "2026-07-08",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-10-10",
         "outcome": "states_no_terms",
-        "detail": "the page names RepoFlow but states no amount, tier or rate we can read"
+        "detail": "the page names RepoFlow but states no amount, tier or rate we can read, and the 2 structured-data blocks in its markup state no price"
       }
     },
     {
@@ -13745,9 +13802,9 @@
       ],
       "verifiedDate": "2026-08-01",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-10-10",
         "outcome": "states_no_terms",
-        "detail": "the page names cally.com but states no amount, tier or rate we can read"
+        "detail": "the page names cally.com but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
     },
     {
@@ -13796,9 +13853,9 @@
       ],
       "verifiedDate": "2026-07-11",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-10-10",
         "outcome": "states_no_terms",
-        "detail": "the page names DevToolLab but states no amount, tier or rate we can read"
+        "detail": "the page names DevToolLab but states no amount, tier or rate we can read, and the 3 structured-data blocks in its markup state no price"
       }
     },
     {
@@ -13830,9 +13887,9 @@
       ],
       "verifiedDate": "2026-08-03",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-10-10",
         "outcome": "states_no_terms",
-        "detail": "the page names element.io but states no amount, tier or rate we can read"
+        "detail": "the page names element.io but states no amount, tier or rate we can read, and the 1 structured-data block in its markup states no price"
       }
     },
     {
@@ -13883,7 +13940,7 @@
       ],
       "verifiedDate": "2026-07-07",
       "source_check": {
-        "checked": "2026-10-09",
+        "checked": "2026-10-10",
         "outcome": "states_no_terms",
         "detail": "the page names Fizzy but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
@@ -13917,9 +13974,14 @@
       ],
       "verifiedDate": "2026-08-01",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-10-10",
         "outcome": "states_no_terms",
-        "detail": "the page names flock.com but states no amount, tier or rate we can read"
+        "detail": "the page names flock.com but states no amount, tier or rate we can read, and its markup carries no structured data"
+      },
+      "free_plan_excerpt": {
+        "text": "Start Your 30-Day Free Trial of Flock",
+        "url": "https://flock.com",
+        "read_on": "2026-10-10"
       }
     },
     {
@@ -13951,9 +14013,9 @@
       ],
       "verifiedDate": "2026-08-04",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-10-10",
         "outcome": "states_no_terms",
-        "detail": "the page names gitter.im but states no amount, tier or rate we can read"
+        "detail": "the page names gitter.im but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
     },
     {
@@ -15018,7 +15080,7 @@
       ],
       "verifiedDate": "2026-08-04",
       "source_check": {
-        "checked": "2026-10-03",
+        "checked": "2026-10-10",
         "outcome": "unreadable",
         "detail": "fetch failed"
       }
@@ -22829,11 +22891,16 @@
         "open-source",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-04-12",
+      "verifiedDate": "2026-10-10",
       "source_check": {
-        "checked": "2026-10-03",
+        "checked": "2026-10-10",
         "outcome": "ok",
         "detail": "the page names SourceForge as \"sourceforge\" and states amounts, none of which we matched to the terms we publish"
+      },
+      "free_plan_excerpt": {
+        "text": "New customers get $300 in free credits to run, test, and deploy workloads. All customers can use 25+ products for free, up to monthly usage limits.",
+        "url": "https://sourceforge.net/",
+        "read_on": "2026-10-10"
       }
     },
     {
@@ -23257,7 +23324,7 @@
       ],
       "verifiedDate": "2026-08-26",
       "source_check": {
-        "checked": "2026-10-09",
+        "checked": "2026-10-10",
         "outcome": "states_no_terms",
         "detail": "the page names DigitalPlat but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
@@ -23547,7 +23614,7 @@
       ],
       "verifiedDate": "2026-07-14",
       "source_check": {
-        "checked": "2026-10-03",
+        "checked": "2026-10-10",
         "outcome": "ok",
         "detail": "the page names skyvia.com as \"skyvia com\" and states amounts, none of which we matched to the terms we publish"
       },
@@ -25337,7 +25404,7 @@
       ],
       "verifiedDate": "2026-07-17",
       "source_check": {
-        "checked": "2026-10-03",
+        "checked": "2026-10-10",
         "outcome": "ok",
         "detail": "the page names sirv.com as \"sirv com\" and states amounts, none of which we matched to the terms we publish"
       }
@@ -26622,7 +26689,7 @@
       ],
       "verifiedDate": "2026-07-19",
       "source_check": {
-        "checked": "2026-10-03",
+        "checked": "2026-10-10",
         "outcome": "ok",
         "detail": "the page names ShadcnUI as \"shadcn ui\" and states amounts, none of which we matched to the terms we publish"
       }
@@ -28678,7 +28745,7 @@
       ],
       "verifiedDate": "2026-07-20",
       "source_check": {
-        "checked": "2026-10-03",
+        "checked": "2026-10-10",
         "outcome": "ok",
         "detail": "the page names inspectlet.com as \"inspectlet com\" and states amounts, none of which we matched to the terms we publish"
       }
@@ -32306,10 +32373,10 @@
       },
       "conditions": [
         {
-          "text": "NVIDIA does not store or use prompts or outputs after each API session, except for fine-tuning services, services where the catalog says otherwise, and logging for security, fraud or abuse.",
-          "quote": "NVIDIA will not store or use User Content or Generated Content at the end of each API Service session.",
+          "text": "NVIDIA records prompts and outputs from free API use to improve its products and services, including AI models. Do not send confidential information or personal data unless expressly permitted.",
+          "quote": "User Content and Generated Content to improve NVIDIA products and services, including AI models",
           "url": "https://assets.ngc.nvidia.com/products/api-catalog/legal/NVIDIA%20API%20Trial%20Terms%20of%20Service.pdf",
-          "read_on": "2026-10-06"
+          "read_on": "2026-10-10"
         },
         {
           "text": "Using the API in production, or after the trial credits are used up, needs a separate subscription from NVIDIA or a third-party provider.",
@@ -34097,7 +34164,7 @@
         }
       ],
       "source_check": {
-        "checked": "2026-10-03",
+        "checked": "2026-10-10",
         "outcome": "ok",
         "detail": "the page names Hyperbrowser as \"hyperbrowser\" and states \"$0\"",
         "rendered": true
@@ -34120,7 +34187,7 @@
       ],
       "verifiedDate": "2026-10-07",
       "source_check": {
-        "checked": "2026-10-01",
+        "checked": "2026-10-10",
         "outcome": "unreadable",
         "detail": "fetch failed"
       }
@@ -35229,7 +35296,7 @@
     {
       "vendor": "Parallel",
       "category": "AI / ML",
-      "description": "Web search and research APIs for AI agents. Organizations with a credit card on file get $5 of free credit each month, and unused credit expires at month end. $5 covers up to 5,000 Search requests in Turbo or Fast mode, or 1,000 in Basic or Advanced (Advanced is the API default); usage beyond $5 is billed to the card at standard rates. One monthly credit per organization and per card; marketplace and postpaid organizations are not eligible. The pricing page also offers \"up to $80 at signup\" without stating its terms. A hosted Search MCP is free without an account or API key, at lower rate limits, for personal and hobby use. Then pay as you go: Search $1 per 1,000 requests (Turbo, Fast) or $5 (Basic, Advanced) with 10 results, at 600 requests a minute.",
+      "description": "Web search and research APIs for AI agents. Organizations with a credit card on file get $5 of free credit each month, and unused credit expires at month end. $5 covers up to 1,000 requests a month in Search's Basic or Advanced mode (Advanced is the API default), or 5,000 in Turbo or Fast mode; usage beyond $5 is billed to the card at standard rates. One monthly credit per organization and per card; marketplace and postpaid organizations are not eligible. The pricing page also offers \"up to $80 at signup\" without stating its terms. A hosted Search MCP is free without an account or API key, at lower rate limits, for personal and hobby use. Then pay as you go: Search $1 per 1,000 requests (Turbo, Fast) or $5 (Basic, Advanced) with 10 results, at 600 requests a minute.",
       "tier": "Free",
       "url": "https://parallel.ai/pricing",
       "tags": [

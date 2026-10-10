@@ -82,6 +82,16 @@ function readableText(html: string): string {
 
 const CREDIT_AFTER_VULTR = /Vultr[^${}]{0,200}?\$([\d,]+(?:\.\d+)?)\s*(?:in\s+)?(?:free\s+)?credits?\b/gi;
 
+const A_BLOCK_OF_ITS_OWN = /(?=<(?:tr|li|p|h[1-6])\b|<div class="(?:best-pick|diff-card|alt-card)")/i;
+
+function blocksOf(html: string): string[] {
+  return html.split(A_BLOCK_OF_ITS_OWN).map(readableText);
+}
+
+function creditFiguresAfterVultr(html: string): RegExpMatchArray[] {
+  return blocksOf(html).flatMap((block) => [...block.matchAll(CREDIT_AFTER_VULTR)]);
+}
+
 describe("the record carries the terms the reader is held to and the terms we are paid under", () => {
   it("publishes one Vultr code and keeps the second stored but inactive", () => {
     const rows = rowsFor(VENDOR);
@@ -288,6 +298,14 @@ describe("every surface that offers the code also states its conditions", () => 
     assert.deepStrictEqual(details.offer.referral_code.restrictions, CONDITIONS);
   });
 
+  it("reads a credit figure as Vultr's only inside the entry, row, item or paragraph that names Vultr", () => {
+    const theNextEntrysCredit = '<div class="best-pick"><a href="/go/vultr">www.vultr.com/free-tier-program/ &nearr;</a></div>'
+      + '<div class="best-pick"><p>AWS. New accounts get $100 credit.</p></div>';
+    const theSameParagraph = "<p>Vultr gives new accounts <strong>$300 in credit</strong>.</p>";
+    assert.deepStrictEqual(creditFiguresAfterVultr(theNextEntrysCredit).map((match) => match[1]), []);
+    assert.deepStrictEqual(creditFiguresAfterVultr(theSameParagraph).map((match) => match[1]), ["300"]);
+  });
+
   it("publishes no Vultr credit figure that contradicts the record", async () => {
     const paths = await sitemapPaths();
     assertCoversPopulation(paths.length, vendorsInTheCatalogue(), "routes in the sitemap the sweep read");
@@ -297,8 +315,7 @@ describe("every surface that offers the code also states its conditions", () => 
     for (const p of paths) {
       const res = await fetch(`http://localhost:${port}${p}`);
       assert.strictEqual(res.status, 200, `${p} answered ${res.status}`);
-      const text = readableText(await res.text());
-      for (const match of text.matchAll(CREDIT_AFTER_VULTR)) {
+      for (const match of creditFiguresAfterVultr(await res.text())) {
         readerCreditMentions++;
         if (match[1] !== "300") {
           offenders.push(`${p}: ${match[0].trim().slice(0, 120)}`);
