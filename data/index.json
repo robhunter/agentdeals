@@ -826,7 +826,7 @@
     {
       "vendor": "Neon",
       "category": "Databases",
-      "description": "Serverless Postgres with branching — free tier includes 100 CU-hours/month per project, 1 GB of Postgres storage per project (20 GB total across all projects), up to 100 projects, 10 branches per project, Neon Auth (60K MAU), auto-scaling up to 2 CU, scale-to-zero, 5 GB of Object Storage, and Functions (10 active capacity-hours, 400 waiting capacity-hours, 1M invocations). No credit card is required.",
+      "description": "Serverless Postgres with branching — free tier includes 100 CU-hours/month per project, 1 GB of Postgres storage per project (20 GB total across all projects), up to 100 projects, 10 branches per project, Neon Auth (60K MAU), auto-scaling up to 2 CU, scale-to-zero, 5 GB of Object Storage, and Functions (10 active capacity-hours, 400 waiting capacity-hours, 1M invocations). No credit card is required. The AI Gateway (one Neon credential for models from OpenAI, Anthropic, Google and others) is not included on the Free plan. It comes with the Launch and Scale plans and is billed from prepaid credits bought in the Neon Console. Model prices match each provider's list price with no markup.",
       "tier": "Free",
       "url": "https://neon.com/pricing",
       "tags": [
