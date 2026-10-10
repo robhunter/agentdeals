@@ -1,17 +1,5 @@
 {
-  "held": [
-    {
-      "vendor": "WorkOS",
-      "change_type": "limits_reduced",
-      "impact": "medium",
-      "summary": "The free tier for User Management is now limited to 1 million monthly active users. Previously it was stated as simply 'up to 1 million users'. Single Sign-On and Directory Sync are priced per connection, starting at $125/connection. Audit Logs are free. Log streaming and event retention are now explicitly priced at $125/mo and $99/mo respectively. Radar is free for the first 1,000 checks.",
-      "previous_state": "User Management is free for up to 1 million users. Single Sign-On starts at $125/connection. Directory Sync starts at $125/connection. Audit Logs are free with paid options for log streaming and event retention. Radar is free for the first 1,000 checks.",
-      "current_state": "First 1 million users Free. Per additional 1M users $2,500 / mo",
-      "source_url": "https://workos.com/pricing",
-      "category": "Auth",
-      "first_read_date": "2026-10-09"
-    }
-  ],
+  "held": [],
   "resolved": [
     {
       "vendor": "CatchJS.com",
@@ -2318,6 +2306,18 @@
       "outcome": "corroborated",
       "detail": "a reading on 2026-10-09 read it as limits_reduced too",
       "resolved_date": "2026-10-09"
+    },
+    {
+      "vendor": "WorkOS",
+      "change_type": "limits_reduced",
+      "impact": "medium",
+      "summary": "The free tier for User Management is now limited to 1 million monthly active users. Previously it was stated as simply 'up to 1 million users'. Single Sign-On and Directory Sync are priced per connection, starting at $125/connection. Audit Logs are free. Log streaming and event retention are now explicitly priced at $125/mo and $99/mo respectively. Radar is free for the first 1,000 checks.",
+      "previous_state": "User Management is free for up to 1 million users. Single Sign-On starts at $125/connection. Directory Sync starts at $125/connection. Audit Logs are free with paid options for log streaming and event retention. Radar is free for the first 1,000 checks.",
+      "source_url": "https://workos.com/pricing",
+      "first_read_date": "2026-10-09",
+      "outcome": "contradicted",
+      "detail": "a reading on 2026-10-10 read a change the gate refused as confirmed_unchanged",
+      "resolved_date": "2026-10-10"
     }
   ]
 }

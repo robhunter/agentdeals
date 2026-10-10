@@ -220,6 +220,18 @@
       "refused_date": "2026-09-26"
     },
     {
+      "vendor": "Amazon SP-API",
+      "change_type": "limits_reduced",
+      "reason": "page_does_not_name_vendor",
+      "detail": "the page read never names Amazon SP-API and is not served from its domain, so any terms on it belong to somebody else",
+      "summary": "The page states that over one million sellers use SP-API and that there are 2,500+ applications. It does not mention the $1,400/year fee or the 2.5M GET calls/month limit. It also does not mention the postponed overage fees.",
+      "previous_state": "Amazon Selling Partner API for building seller and vendor tools on Amazon. Sellers/vendors using SP-API for their own business remain fully exempt (free). Third-party developers: $1,400/year annual fee active since Jan 31 2026; Basic tier includes 2.5M GET calls/month. Per-call overage fees ($0.40 per 1K GET calls) were scheduled for 2026-04-30 but postponed indefinitely after developer backlash — no new date announced.",
+      "current_state": "The page does not mention any pricing or limits for SP-API, only that it allows programmatic access to data and helps increase selling efficiency.",
+      "source_url": "https://developer.amazonservices.com/",
+      "category": "API Development",
+      "refused_date": "2026-10-10"
+    },
+    {
       "vendor": "Amplitude",
       "change_type": "new_tier",
       "reason": "dangling_reference",
@@ -291,6 +303,18 @@
       "category": "Web Scraping",
       "refused_date": "2026-09-13",
       "collided_with": "Apify|limits_increased|2026-09-01|https://apify.com/pricing"
+    },
+    {
+      "vendor": "APITemplate.io",
+      "change_type": "free_tier_removed",
+      "reason": "no_price_signal",
+      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 14049 characters, so it states no terms to have changed",
+      "summary": "The pricing page does not explicitly mention a free tier with 50 images/PDFs per month and three templates. It highlights a 'Start For Free' option but doesn't detail the limits of that free plan. The page focuses on the capabilities of the API and integrations, and mentions enterprise options.",
+      "previous_state": "Auto-generate images and PDF documents with a simple API or automation tools like Zapier & Airtable. No CSS/HTML is required. The free plan comes with 50 images/PDFs per month and three templates.",
+      "current_state": "The page mentions 'Start For Free' but provides no details on limits or features included in the free plan.",
+      "source_url": "https://apitemplate.io",
+      "category": "Dev Utilities",
+      "refused_date": "2026-10-10"
     },
     {
       "vendor": "APIVerve",
@@ -1013,6 +1037,18 @@
       "refused_date": "2026-09-26"
     },
     {
+      "vendor": "cally.com",
+      "change_type": "new_tier",
+      "reason": "no_price_signal",
+      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 1328 characters, so it states no terms to have changed",
+      "summary": "The page promotes a 'PLUS' plan with additional features (no ads, retained events, document uploads, custom logo, CC email addresses) which suggests the free tier is no longer the only option.",
+      "previous_state": "Find the perfect time and date for a meeting. Simple to use, works great for small and large groups.",
+      "current_state": "The page offers a 'PLUS' plan with features beyond the basic functionality.",
+      "source_url": "https://cally.com/",
+      "category": "Team Collaboration",
+      "refused_date": "2026-10-10"
+    },
+    {
       "vendor": "CatchJS.com",
       "change_type": "limits_reduced",
       "reason": "same_transition_graded_differently",
@@ -1536,6 +1572,18 @@
       "refused_date": "2026-09-21"
     },
     {
+      "vendor": "Comet ML",
+      "change_type": "limits_increased",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this page refused on 2026-09-21 (confirmed_unchanged) stated the same 3 figures, so the page showed these terms before the date this record gives",
+      "summary": "The Free Cloud plan still exists, but the description of the Free Cloud plan has been expanded to include more features. The page also details a Pro Cloud plan and an Enterprise plan, which were not mentioned in the stored deal info. The Opik Connect feature is a free trial then purchase tokens, which was not mentioned in the stored deal info.",
+      "previous_state": "Comet makes Opik, for LLM and agent observability and evaluation, and an MLOps platform for ML experiment tracking. Opik is open source and free to self-host. Opik Free Cloud allows up to 10 team members, 25k spans per month and 60-day data retention, with agent tracing and analysis, test suites and assertions, and Agent Playground. MLOps Free covers 1 platform user, with experiment tracking, dataset management and versioning, Model Registry and 100GB of data storage. Academics can apply for a free Pro plan.",
+      "current_state": "Up to 10 team members, 25k spans per month, 60-day data retention. Includes: Agent tracing & analysis, Test Suites & assertions, Agent Playground",
+      "source_url": "https://www.comet.com/site/pricing/",
+      "category": "AI / ML",
+      "refused_date": "2026-10-10"
+    },
+    {
       "vendor": "Composio",
       "change_type": "new_tier",
       "reason": "confirmed_unchanged",
@@ -2033,6 +2081,18 @@
       "refused_date": "2026-10-07"
     },
     {
+      "vendor": "DevToolLab",
+      "change_type": "new_tier",
+      "reason": "no_price_signal",
+      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 2801 characters, so it states no terms to have changed",
+      "summary": "The page mentions an 'Upgrade to Pro (Ad-free)' option, indicating a paid tier exists. The stored deal info only mentions a free tier.",
+      "previous_state": "Online developer tools offering free access to all basic tools, with the ability to auto save one entry per tool, standard processing speed, and community support.",
+      "current_state": "Users can upgrade to a Pro version for an ad-free experience.",
+      "source_url": "https://devtoollab.com",
+      "category": "Dev Utilities",
+      "refused_date": "2026-10-10"
+    },
+    {
       "vendor": "DhiWise",
       "change_type": "free_tier_removed",
       "reason": "page_does_not_name_vendor",
@@ -2217,6 +2277,18 @@
       "refused_date": "2026-09-15"
     },
     {
+      "vendor": "Drone CI",
+      "change_type": "rebranded",
+      "reason": "no_price_signal",
+      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 2671 characters, so it states no terms to have changed",
+      "summary": "Drone CI is now part of Harness and the page focuses on the Harness platform. While self-hosted is still mentioned, the emphasis is on cloud offerings and enterprise solutions. The free open-source edition is still mentioned, but the page doesn't detail the limits or features beyond stating it's available for open-source projects.",
+      "previous_state": "Container-native CI/CD (now part of Harness) — free open-source edition (self-hosted): unlimited users and concurrency, YAML pipelines, Docker-based builds. Cloud available free for open-source projects",
+      "current_state": "The page mentions a free cloud offering for open-source projects and continues to support self-hosted deployments.",
+      "source_url": "https://www.drone.io/",
+      "category": "CI/CD",
+      "refused_date": "2026-10-10"
+    },
+    {
       "vendor": "Dropbox",
       "change_type": "pricing_restructured",
       "reason": "confirmed_unchanged",
@@ -2325,6 +2397,18 @@
       "source_url": "https://www.elastic.co/pricing/self-managed",
       "category": "Monitoring",
       "refused_date": "2026-10-08"
+    },
+    {
+      "vendor": "element.io",
+      "change_type": "pricing_restructured",
+      "reason": "no_price_signal",
+      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 9781 characters, so it states no terms to have changed",
+      "summary": "While a free app is mentioned for personal use, the page focuses heavily on paid plans like 'Element Pro' and 'Element Server Suite' for teams and organizations. The free tier is not explicitly detailed or highlighted as a primary offering. The page emphasizes 'digital sovereignty' and interoperability, positioning Element as a solution for secure communications, particularly for governments and organizations, rather than a simple free communication tool.",
+      "previous_state": "A decentralized and open-source communication tool built on Matrix. Group chats, direct messaging, encrypted file transfers, voice and video chats, and easy integration with other services.",
+      "current_state": "The page mentions a 'Get the free app' for personal use, but the primary focus is on paid plans like 'Element Pro' and 'Element Server Suite' for teams and organizations.",
+      "source_url": "https://element.io/",
+      "category": "Team Collaboration",
+      "refused_date": "2026-10-10"
     },
     {
       "vendor": "EmailOctopus",
@@ -2655,6 +2739,18 @@
       "source_url": "https://www.ravion.com/pricing",
       "category": "Cloud Hosting",
       "refused_date": "2026-09-20"
+    },
+    {
+      "vendor": "flock.com",
+      "change_type": "limits_reduced",
+      "reason": "no_price_signal",
+      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 5282 characters, so it states no terms to have changed",
+      "summary": "The page promotes a 30-day free trial, indicating the free tier is time-limited and not unlimited as previously stated.",
+      "previous_state": "A faster way for your team to communicate. Free Unlimited Messages, Channels, Users, Apps & Integrations",
+      "current_state": "Offers a 30-day free trial.",
+      "source_url": "https://flock.com",
+      "category": "Team Collaboration",
+      "refused_date": "2026-10-10"
     },
     {
       "vendor": "Flows",
@@ -3549,6 +3645,18 @@
     },
     {
       "vendor": "Hunter.io",
+      "change_type": "limits_reduced",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-09-05 (measures_no_change) claimed the same change, limits_reduced, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "The free tier now offers 50 credits per month, which is consistent with the stored information, but the page details the cost of each credit (1 credit for email found, 0.5 credit for email verified).",
+      "previous_state": "Email finder and verification API — free tier: 50 credits/month (searches + verifications), 1 connected email account, 500 recipients per sequence, unlimited team members",
+      "current_state": "The free tier offers 50 credits per month. Email found costs 1 credit, email verified costs 0.5 credit. Credits reset monthly and don't roll over.",
+      "source_url": "https://hunter.io/pricing",
+      "category": "Dev Utilities",
+      "refused_date": "2026-10-10"
+    },
+    {
+      "vendor": "Hunter.io",
       "change_type": "limits_increased",
       "reason": "states_no_difference",
       "detail": "the summary states that the page agrees with what we hold, and names no figure the stored description did not already carry",
@@ -3889,6 +3997,18 @@
       "source_url": "https://www.jetbrains.com/community/opensource/",
       "category": "IDE & Code Editors",
       "refused_date": "2026-09-13"
+    },
+    {
+      "vendor": "jitpack.io",
+      "change_type": "limits_reduced",
+      "reason": "no_price_signal",
+      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 2788 characters, so it states no terms to have changed",
+      "summary": "The page mentions private repositories are a paid feature. While the free tier is still mentioned as allowing public projects, the page details paid options for private repositories and other features like custom domains and immutable artifacts.",
+      "previous_state": "Maven repository for JVM and Android projects on GitHub, free for public projects.",
+      "current_state": "Public projects are free. Private repositories require a paid subscription.",
+      "source_url": "https://jitpack.io/",
+      "category": "CI/CD",
+      "refused_date": "2026-10-10"
     },
     {
       "vendor": "JotForm",
@@ -5246,6 +5366,18 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "OpenWeatherMap",
+      "change_type": "limits_reduced",
+      "reason": "page_does_not_name_vendor",
+      "detail": "the page read never names OpenWeatherMap and is not served from its domain, so any terms on it belong to somebody else",
+      "summary": "The free tier now offers 1,000 API calls per day with the first 1,000 calls free, and then $0.0015 per call. The stored information stated 1M API calls/month (60/min).",
+      "previous_state": "Weather API — free tier: 1M API calls/month (60/min), current weather, 5-day forecast, air pollution, weather maps (15 layers), geocoding. Student plan includes historical data and extended forecasts at same limits",
+      "current_state": "First 1,000 API calls per day are FREE. Each additional call costs 0.0015 USD",
+      "source_url": "https://openweathermap.org/price",
+      "category": "Maps/Geolocation",
+      "refused_date": "2026-10-10"
+    },
+    {
       "vendor": "Ory",
       "change_type": "limits_increased",
       "reason": "measures_no_change",
@@ -5466,6 +5598,18 @@
       "vendor": "paperspace",
       "change_type": "pricing_restructured",
       "reason": "restates_stored_quantities",
+      "detail": "narrowing claimed, and every quantity the current state names is one the stored description already held at the same value (8 currency/mo, 12 currency/mo), and drops 4 the stored description carried",
+      "summary": "The free tier now has a maximum monthly price of $8/month for individuals and $12/month for teams. Free machines are still available, including C4 and M4000, but are now explicitly for Notebooks in private workspaces.",
+      "previous_state": "ML platform (Gradient Notebooks, Workflows and Deployments) from Paperspace, now part of DigitalOcean. The Free plan is $0 with public projects, 5 GB of storage and free machines for Notebooks in your private workspace (Free CPU C4 and Free GPU M4000; free machines shut down after at most 6 hours). Other machines are billed per hour. Pro is $8/month for individuals and $12/month for teams; Growth is $39/month. DigitalOcean says new customers can still sign up but recommends its own GPU products instead.",
+      "current_state": "The Free plan has a maximum monthly price of $8/month for individuals and $12/month for teams. Free machines (C4, M4000) are available for Notebooks in private workspaces.",
+      "source_url": "https://docs.digitalocean.com/products/paperspace/pricing/",
+      "category": "AI / ML",
+      "refused_date": "2026-10-10"
+    },
+    {
+      "vendor": "paperspace",
+      "change_type": "pricing_restructured",
+      "reason": "restates_stored_quantities",
       "detail": "narrowing claimed, and every quantity the current state names is one the stored description already held at the same value (5 GB storage), and drops 2 the stored description carried",
       "summary": "The free tier now explicitly states 'Plus utilization costs on paid instances' and 'Basic instances (billed per hour)'. The stored information only mentioned 'billed per hour' without specifying it applied to basic instances. The Pro tier is now $8/month instead of $12/month. The free tier now appears twice on the page.",
       "previous_state": "ML platform (now part of DigitalOcean) — There is a 'Free' tier offering public projects, 5GB storage, and basic instances (billed per hour). Other tiers include 'Pro' ($12/month), 'Growth' ($39/month), and various team plans (T0, T1, T2) with different storage and instance limits, all with utilization costs on paid instances.",
@@ -5594,6 +5738,18 @@
       "category": "Monitoring",
       "refused_date": "2026-09-11",
       "collided_with": "Pingmeter.com|restriction|2026-08-28|https://pingmeter.com/"
+    },
+    {
+      "vendor": "Pixela",
+      "change_type": "new_tier",
+      "reason": "no_price_signal",
+      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 4628 characters, so it states no terms to have changed",
+      "summary": "While basic functionality remains free, the page indicates support for Pixela is now also available through Patreon, unlocking supporter-only features.",
+      "previous_state": "Free daystream database service. All operations are performed by API. Visualization with heat maps and line graphs is also possible.",
+      "current_state": "Most Pixela features are free, but you can support Pixela through Patreon and unlock supporter-only features.",
+      "source_url": "https://pixe.la/",
+      "category": "Dev Utilities",
+      "refused_date": "2026-10-10"
     },
     {
       "vendor": "Pixlr",
@@ -5825,6 +5981,18 @@
       "source_url": "https://preset.io/",
       "category": "Notebooks & Data Science",
       "refused_date": "2026-09-19"
+    },
+    {
+      "vendor": "Prisma Accelerate",
+      "change_type": "limits_reduced",
+      "reason": "measures_the_opposite",
+      "detail": "limits_reduced claimed, and every quantity that moved between the two states moved the other way — 100,000 operation/mo against 200,000 operation/mo, 500 MB storage against 1.01 GB storage",
+      "summary": "The free tier now offers 200,000 operations/month and 1.01 GB storage, down from 100,000 operations and no storage limit stated.",
+      "previous_state": "Connection pooling and caching for any database — 100,000 operations/month, 10 connection pool limit, auto-scaling. Also available: Prisma Postgres free tier with 500 MB storage and up to 5 databases",
+      "current_state": "200,000 operations / month, 1.01 GB storage",
+      "source_url": "https://www.prisma.io/pricing",
+      "category": "Databases",
+      "refused_date": "2026-10-10"
     },
     {
       "vendor": "Prisma Accelerate",
@@ -6132,6 +6300,18 @@
       "collided_with": "Replit|pricing_restructured|2026-09-01|https://replit.com/pricing"
     },
     {
+      "vendor": "RepoFlow",
+      "change_type": "free_tier_removed",
+      "reason": "no_price_signal",
+      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 18753 characters, so it states no terms to have changed",
+      "summary": "The free tier information is no longer explicitly stated. The page highlights features and offers a 'Start Free' option without detailing specific limits like storage, bandwidth, or package count. It focuses on cloud and self-hosted options without specifying the free tier's limitations.",
+      "previous_state": "RepoFlow Simplifies package management with support for npm, PyPI, Docker, Go, Helm, and more. Try it for free with 10GB storage, 10GB bandwidth, 100 packages, and unlimited users in the cloud, or self-hosted for personal use only.",
+      "current_state": "The page offers a 'Start Free' option with no credit card needed, but does not detail any specific limits or features included in the free tier.",
+      "source_url": "https://repoflow.io",
+      "category": "CI/CD",
+      "refused_date": "2026-10-10"
+    },
+    {
       "vendor": "RepoForge",
       "change_type": "restriction",
       "reason": "confirmed_unchanged",
@@ -6313,6 +6493,18 @@
       "source_url": "https://saucelabs.com/pricing",
       "category": "Testing",
       "refused_date": "2026-10-02"
+    },
+    {
+      "vendor": "Scale AI",
+      "change_type": "free_tier_removed",
+      "reason": "no_price_signal",
+      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 1170 characters, so it states no terms to have changed",
+      "summary": "The pricing page now only offers a call to action to book an intro call and does not list any pricing information or self-serve options.",
+      "previous_state": "Data labeling and AI data platform. scale.com/pricing now redirects to a form for booking an intro call and states no prices. Self-serve sign-up for labeling and Nucleus dataset management is open at dashboard.scale.com, and Scale's docs describe a billing tab for on-demand customers. Until at least August 25, 2026, the pricing page offered a Self-Serve Data Engine, paid as you go by credit card, with the first 1,000 labeling units free when you label with your own workforce and the first 10,000 images free in data management. Scale's Nucleus docs still show a 2022 pricing table with a free Nucleus tier that includes 10,000 items of data.",
+      "current_state": "The page states to book a 1:1 intro call to get started.",
+      "source_url": "https://scale.com/pricing",
+      "category": "AI / ML",
+      "refused_date": "2026-10-10"
     },
     {
       "vendor": "ScaleGrid Startup Program",
@@ -7019,6 +7211,18 @@
       "refused_date": "2026-09-21"
     },
     {
+      "vendor": "SwaggerHub",
+      "change_type": "free_tier_removed",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-09-21 (free_tier_still_offered) claimed the same change, free_tier_removed, against the same stored description",
+      "summary": "The page prominently features a 'Try Free Trial' button and FAQ section discussing the difference between free tools and commercial products, but does not mention a permanent free tier. It emphasizes starting a free trial, which aligns with the stored information, but the page does not confirm the existence of a continuing free offering beyond the trial.",
+      "previous_state": "API design and documentation platform (SmartBear) — no permanent free tier. Swagger's own pricing FAQ, read 2026-09-05: \"You can get started with Swagger with a free trial, no credit card required, then choose the plan that best fits your usage and requirements.\" The same FAQ puts the free Swagger tools on the open-source side — Swagger Editor, Swagger UI and Swagger Codegen, run locally — and SwaggerHub among the commercial products. Plan prices are client-rendered and were not read.",
+      "current_state": "The page offers a 'Free Trial' and distinguishes between free Swagger tools (Editor, Codegen, UI) and commercial Swagger products like SwaggerHub.",
+      "source_url": "https://swagger.io/tools/swaggerhub/pricing/",
+      "category": "API Development",
+      "refused_date": "2026-10-10"
+    },
+    {
       "vendor": "SweetUptime",
       "change_type": "limits_increased",
       "reason": "same_transition_graded_differently",
@@ -7619,6 +7823,18 @@
     {
       "vendor": "URLscan.io",
       "change_type": "limits_reduced",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-09-21 (unquantified_limit) claimed the same change, limits_reduced, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "The free tier limits for Private Scans, Unlisted Scans, Search Requests, and Result Requests have been updated.",
+      "previous_state": "URL and website security scanner API — free tier: 50 private scans/day, 1,000 unlisted scans/day, 5,000 public scans/day, 1,000 search requests/day, 10,000 result requests/day",
+      "current_state": "The free tier now offers 50 Private Scans, 1,000 Unlisted Scans, 1,000 Search Requests, and 10,000 Result Requests per day.",
+      "source_url": "https://urlscan.io/pricing",
+      "category": "Security",
+      "refused_date": "2026-10-10"
+    },
+    {
+      "vendor": "URLscan.io",
+      "change_type": "limits_reduced",
       "reason": "unquantified_limit",
       "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (50 private, 1,000 unlisted, 5,000 public, 1,000 search, 10,000 result)",
       "summary": "The free tier now has different limits for Private Scans, Unlisted Scans, and Search/Result Requests.",
@@ -7886,6 +8102,18 @@
       "source_url": "https://windsurf.com/pricing",
       "category": "AI Coding",
       "refused_date": "2026-09-24"
+    },
+    {
+      "vendor": "WorkOS",
+      "change_type": "pricing_restructured",
+      "reason": "confirmed_unchanged",
+      "detail": "The current page details pricing tiers for connections, which is a different feature than Directory Sync or Single Sign-On. The stored description states Single Sign-On and Directory Sync start at $125/connection, while the current page provides tiered pricing for connections. The report incorrectly claims a change to Directory Sync/SSO. The audit log information is consistent with the stored description.",
+      "summary": "The pricing for Directory Sync and Single Sign-On has been updated. Audit Logs are now free. Log streaming and event retention are paid features.",
+      "previous_state": "User Management is free for up to 1 million users. Single Sign-On starts at $125/connection. Directory Sync starts at $125/connection. Audit Logs are free with paid options for log streaming and event retention. Radar is free for the first 1,000 checks.",
+      "current_state": "Number of connections 1-15 $125 / ea 16-30 20% off $100 / ea 31-50 36% off $80 / ea 51-100 48% off $65 / ea",
+      "source_url": "https://workos.com/pricing",
+      "category": "Auth",
+      "refused_date": "2026-10-10"
     },
     {
       "vendor": "Wraps",
@@ -8203,6 +8431,18 @@
       "refused_date": "2026-09-13"
     },
     {
+      "vendor": "Zoho Cliq",
+      "change_type": "free_tier_removed",
+      "reason": "no_price_signal",
+      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 5049 characters, so it states no terms to have changed",
+      "summary": "The page promotes a 15-day free trial, but does not mention a permanently free tier with the features described (100 GB storage, unlimited users, 100 users per channel & SSO).",
+      "previous_state": "Team chat software with 100 GB storage, unlimited users, 100 users per channel & SSO.",
+      "current_state": "The page offers a 15-day free trial.",
+      "source_url": "https://zoho.com/cliq",
+      "category": "Messaging",
+      "refused_date": "2026-10-10"
+    },
+    {
       "vendor": "Zoho Docs",
       "change_type": "limits_increased",
       "reason": "confirmed_unchanged",
@@ -8251,6 +8491,18 @@
       "refused_date": "2026-08-31"
     },
     {
+      "vendor": "Zoho Showtime",
+      "change_type": "product_deprecated",
+      "reason": "no_price_signal",
+      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 3370 characters, so it states no terms to have changed",
+      "summary": "Zoho ShowTime is being deprecated and will shut down on May 30, 2026. Users are encouraged to migrate to TrainerCentral.",
+      "previous_state": "Yet another Meeting software for training for a remote session of up to 5 attendees.",
+      "current_state": "Zoho ShowTime will shut down on May 30, 2026. Migrate to TrainerCentral.",
+      "source_url": "https://zoho.com/showtime",
+      "category": "Video",
+      "refused_date": "2026-10-10"
+    },
+    {
       "vendor": "Zoho Sign",
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
@@ -8285,6 +8537,18 @@
       "source_url": "https://zoho.com/vault",
       "category": "Password Managers",
       "refused_date": "2026-10-01"
+    },
+    {
+      "vendor": "Zoho",
+      "change_type": "limits_reduced",
+      "reason": "no_price_signal",
+      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 3710 characters, so it states no terms to have changed",
+      "summary": "The page does not explicitly state the free tier limits for individual apps (Zoho Mail, CRM, Projects, Invoice, Forms, Cliq). It mentions Zoho One, a suite of 50+ applications, starting at /user/month. The free tier information is not readily available on the main pricing page.",
+      "previous_state": "Suite of 45+ business apps with free tiers — Zoho Mail (5 users, 5 GB/user), CRM (3 users), Projects (3 users, 2 projects), Invoice (5 customers), Cliq (unlimited users), Forms (3 forms), and more",
+      "current_state": "The page states that access to 50+ applications is available starting at /user/month.",
+      "source_url": "https://www.zoho.com",
+      "category": "Productivity & Notes",
+      "refused_date": "2026-10-10"
     },
     {
       "vendor": "zoneedit.com",
