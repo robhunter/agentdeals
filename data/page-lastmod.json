@@ -1286,8 +1286,8 @@
       "changed": "2026-10-10"
     },
     "/category/startup-perks": {
-      "hash": "ddfe985ed6baf8e4",
-      "changed": "2026-10-09"
+      "hash": "6225cd4d259fe046",
+      "changed": "2026-10-10"
     },
     "/category/status-pages": {
       "hash": "f4d090b919724028",
@@ -3586,7 +3586,7 @@
       "changed": "2026-10-09"
     },
     "/startup-credits": {
-      "hash": "d38af40376535fd7",
+      "hash": "360908ad045b5ab1",
       "changed": "2026-10-10"
     },
     "/state-of-free-tiers": {
@@ -7057,7 +7057,7 @@
       "changed": "2026-10-10"
     },
     "/vendor/microsoft-for-startups": {
-      "hash": "143efad719df1d0c",
+      "hash": "d7c5cc94a46a6b66",
       "changed": "2026-10-10"
     },
     "/vendor/microsoft-teams": {

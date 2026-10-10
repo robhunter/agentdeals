@@ -45048,7 +45048,7 @@ ${globalNavCss()}
     <tbody>
       <tr><td><a href="/vendor/google-for-startups-cloud-program">Google for Startups</a></td><td style="color:#3fb950;font-weight:600">Up to $350K</td><td>AI-first startups</td><td>GCP credits, technical support</td></tr>
       <tr><td><a href="/vendor/cloudflare-for-startups">Cloudflare Startup Program</a></td><td style="color:#3fb950;font-weight:600">Up to $350K</td><td>3 tiers; upper two via affiliated partners</td><td>Workers, R2, CDN, security</td></tr>
-      <tr><td><a href="/vendor/microsoft-azure">Microsoft for Startups</a></td><td style="color:#3fb950;font-weight:600">Up to $150K</td><td>B2B tech startups, pre-seed to Series C</td><td>Azure credits, Foundry models</td></tr>
+      <tr><td><a href="/vendor/microsoft-azure">Microsoft for Startups</a></td><td style="color:#3fb950;font-weight:600">Up to $150K</td><td>B2B tech startups, pre-seed through Series B</td><td>Azure credits, Foundry models</td></tr>
       <tr><td><a href="/vendor/digitalocean">DigitalOcean Startups</a></td><td style="color:#3fb950;font-weight:600">Amount varies</td><td>Early-stage</td><td>Compute + support credits</td></tr>
       <tr><td><a href="/vendor/aws">AWS Activate</a></td><td style="color:#3fb950;font-weight:600">Up to $200K</td><td>Portfolio needs an Activate Provider Org ID</td><td>AWS credits, technical support</td></tr>
       <tr><td><a href="/vendor/railway">Railway</a></td><td style="color:#3fb950;font-weight:600">$5 free/month</td><td>Everyone</td><td>No credit card, usage-based</td></tr>

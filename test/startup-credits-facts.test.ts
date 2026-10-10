@@ -17,6 +17,7 @@ const PAGES_THIS_GUIDE_STATES_PROGRAMMES_ON = [
   "/q1-2026-developer-pricing-report",
   "/hosting-alternatives",
   "/free-tier-tracker",
+  "/vendor/microsoft-for-startups",
 ];
 
 const CLOUDFLARE_PROGRAMME_LINKS: [string, string][] = [
@@ -46,12 +47,14 @@ const WITHDRAWN = [
   "expanded its startup program to $250K",
   "Usually 1–2 years, by package",
   "AWS Activate credits usually expire within 1-2 years.",
+  "pre-seed to Series C",
+  "Not past Series C funding",
 ];
 
 const PROGRAMMES: Record<string, [string, string, string, string]> = {
   "AWS Activate": ["$1K–$5K (Founders), up to $200K (Portfolio)", "Pre-Series B, founded in the last 10 years, AWS account on a paid plan. Founders: self-funded. Portfolio: needs an Activate Provider Org ID.", "Activate credits expire on a date shown in the AWS Billing console.", "One award per approved application; a later, larger award pays only the difference"],
   "Google Cloud for Startups": ["$2K (Start), up to $200K (Scale), up to $350K (Scale AI)", "Start: no funding yet but plans to raise venture funding soon, founded within 24 months, working MVP; Scale: VC funding from pre-seed to Series A (Series A within the last 12 months; angel money does not count), founded within 5 years.", "12 months (Start), 2 years (Scale)", "Scale: year 1 covers usage up to $100K ($250K for AI); year 2 covers 20% of spend, up to $100K more"],
-  "Microsoft for Startups (formerly Founders Hub)": ["$200 on sign-up; up to $150K as Azure usage grows or with an Investor Network partner", "B2B software, AI or tech startups, pre-seed to Series C, privately held; no investor needed. Business verification and sustained Azure usage unlock more credits, and Investor Network backing starts most startups at $100K.", "Activate within 90 days; the first $200 lasts 90 days, the verification credit 180 days, and credits from the $25K milestone up to 2 years", "Released in milestones as you verify the business and use more Azure"],
+  "Microsoft for Startups (formerly Founders Hub)": ["$200 on sign-up; up to $150K as Azure usage grows or with an Investor Network partner", "B2B software, AI or tech startups, pre-seed through Series B, privately held; no investor needed. Business verification and sustained Azure usage unlock more credits, and Investor Network backing starts most startups at $100K.", "Activate within 90 days; the first $200 lasts 90 days, the verification credit 180 days, and credits from the $25K milestone up to 2 years", "Released in milestones as you verify the business and use more Azure"],
   "DigitalOcean Startups": ["Credits for 12 months; amount varies, up to $10,000 a month", "Raised $10M or less; apply through a partner or directly", "12 months", ""],
   "Cloudflare Startup Program": ["$10K, $100K or $350K by tier", "Tier 3 ($10K): bootstrapped or self-funded, under $1M raised; Tiers 2 ($100K) and 1 ($350K): funded by an affiliated partner, Tier 1 with $5M+ raised.", "1 year or until used up", "Lump sum per tier"],
   "Stripe Atlas": ["Over $50K in partner discounts, plus $2.5K of Stripe credits", "Companies incorporated through Atlas ($500, then $100 a year after the first year)", "Varies by perk; Stripe credits last the first year", "Available once the Atlas application is approved"],
@@ -142,7 +145,7 @@ const STATED_ELSEWHERE: Record<string, string[]> = {
   ],
   "/state-of-free-tiers": [
     "Cloudflare Startup Program Up to $350K 3 tiers; upper two via affiliated partners",
-    "Microsoft for Startups Up to $150K B2B tech startups, pre-seed to Series C Azure credits, Foundry models",
+    "Microsoft for Startups Up to $150K B2B tech startups, pre-seed through Series B Azure credits, Foundry models",
     "DigitalOcean Startups Amount varies",
     "AWS Activate Up to $200K Portfolio needs an Activate Provider Org ID",
     "for 15 programs.",

@@ -5466,7 +5466,7 @@
         "conditions": [
           "Software product or service owned by the company",
           "Privately held and for-profit",
-          "Not past Series C funding",
+          "Pre-seed through Series B funding",
           "No more than $350,000 in lifetime free Azure credits"
         ],
         "program": "Microsoft for Startups"
