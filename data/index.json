@@ -10740,12 +10740,6 @@
           "read_on": "2026-10-10"
         },
         {
-          "text": "The free version gives access to Nvidia T4 GPUs, subject to quota and availability.",
-          "quote": "The free of charge version of Colab grants access to Nvidia's T4 GPUs subject to quota restrictions and availability.",
-          "url": "https://colab.research.google.com/notebooks/pro.ipynb",
-          "read_on": "2026-10-10"
-        },
-        {
           "text": "Colab bans file hosting, media serving and other web services not related to interactive compute on every managed runtime, free or paid.",
           "quote": "The following are disallowed from all managed Colab runtimes: file hosting, media serving, or other web service offerings not related to interactive compute with Colab",
           "url": "https://research.google.com/colaboratory/faq.html",
