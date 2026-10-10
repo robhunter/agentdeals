@@ -154,6 +154,11 @@
           "label": "Recent Pricing Changes",
           "figures": 22,
           "from_records": 22
+        },
+        {
+          "label": "Upcoming Changes",
+          "figures": 0,
+          "from_records": 0
         }
       ],
       "reads_changes": true,
@@ -2838,6 +2843,11 @@
       "tables": [
         {
           "label": "Related Pricing Changes",
+          "figures": 0,
+          "from_records": 0
+        },
+        {
+          "label": "Upcoming Changes",
           "figures": 0,
           "from_records": 0
         }
