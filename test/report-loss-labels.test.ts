@@ -57,9 +57,15 @@ describe("the label a Biggest Losers entry gives each change", () => {
         assert.strictEqual(lossLabel(change(type, { tier_direction: "unchanged" }), null), "paid pricing changed");
       });
 
-      it("reads as a paid-price change when the tier we list is not a free tier", () => {
+      it("reads as a paid-price change when the tier we list is a paid tier", () => {
         assert.strictEqual(lossLabel(change(type), PAID_LISTING), "paid pricing changed");
-        assert.strictEqual(lossLabel(change(type), CREDIT_LISTING), "paid pricing changed");
+        assert.strictEqual(lossLabel(change(type), { vendor: "Example", tier: "Paid" }), "paid pricing changed");
+      });
+
+      it("claims no paid price for a credit grant or a trial, unless the free tier did not move", () => {
+        assert.strictEqual(lossLabel(change(type), CREDIT_LISTING), "pricing changed");
+        assert.strictEqual(lossLabel(change(type), { vendor: "Example", tier: "Free Trial" }), "pricing changed");
+        assert.strictEqual(lossLabel(change(type, { tier_direction: "unchanged" }), CREDIT_LISTING), "paid pricing changed");
       });
 
       it("reads as a paid-price change when the record names a tier other than the one we list", () => {

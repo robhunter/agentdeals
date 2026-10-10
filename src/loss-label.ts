@@ -7,6 +7,7 @@ import {
   type DeprecationCall,
   type DeprecationSubject,
 } from "./product-deprecation.js";
+import { classifyTier } from "./ranking.js";
 import type { DealChange } from "./types.js";
 
 export const LOSS_LABELS = [
@@ -63,8 +64,8 @@ function priceChangeLabel(change: LabelledChange, listing: GradedOffer | null): 
   if (change.tier_direction === "narrowed" && listedTierIsFree && changeGradesTheListedTier(change, listing)) {
     return "free tier reduced";
   }
-  const listedTierIsNotFree = listing !== null && !listedTierIsFree;
-  if (change.tier_direction === "unchanged" || listedTierIsNotFree || namesADifferentTier(change, listing?.tier)) {
+  const listedTierIsPaid = listing !== null && classifyTier(listing.tier ?? "").class === "not_free";
+  if (change.tier_direction === "unchanged" || listedTierIsPaid || namesADifferentTier(change, listing?.tier)) {
     return "paid pricing changed";
   }
   return "pricing changed";
