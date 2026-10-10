@@ -2222,8 +2222,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 93,
-      "table_figures_from_records": 92,
+      "table_figures": 98,
+      "table_figures_from_records": 96,
       "tables": [
         {
           "label": "Pricing Comparison Table",
@@ -2237,8 +2237,13 @@
         },
         {
           "label": "Recent Pricing Changes",
-          "figures": 21,
-          "from_records": 21
+          "figures": 26,
+          "from_records": 25
+        },
+        {
+          "label": "Upcoming Changes",
+          "figures": 0,
+          "from_records": 0
         }
       ],
       "reads_changes": true,
@@ -2435,6 +2440,11 @@
           "label": "OpenAI Pricing Change Timeline",
           "figures": 2,
           "from_records": 2
+        },
+        {
+          "label": "Upcoming Changes",
+          "figures": 0,
+          "from_records": 0
         }
       ],
       "reads_changes": true,
@@ -2486,6 +2496,11 @@
           "label": "OpenAI Pricing Changes Timeline",
           "figures": 2,
           "from_records": 2
+        },
+        {
+          "label": "Upcoming Changes",
+          "figures": 0,
+          "from_records": 0
         }
       ],
       "reads_changes": true,
@@ -2548,6 +2563,11 @@
           "label": "7. OpenAI Pricing Change Timeline",
           "figures": 2,
           "from_records": 2
+        },
+        {
+          "label": "Upcoming Changes",
+          "figures": 0,
+          "from_records": 0
         }
       ],
       "reads_changes": true,

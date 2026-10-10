@@ -3262,7 +3262,7 @@
       "daily": true
     },
     "/llm-api-pricing": {
-      "hash": "5da45cb6d0f9b796",
+      "hash": "82bb99ff24ae4773",
       "changed": "2026-10-10"
     },
     "/localstack-alternatives": {
