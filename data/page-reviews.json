@@ -1684,7 +1684,7 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 56,
+      "table_figures": 58,
       "table_figures_from_records": 0,
       "tables": [
         {
@@ -1694,7 +1694,7 @@
         },
         {
           "label": "3. 🟡 Medium Risk — Use with Caution",
-          "figures": 12,
+          "figures": 13,
           "from_records": 0
         },
         {
@@ -1714,7 +1714,7 @@
         },
         {
           "label": "7. Full Scoring Table",
-          "figures": 28,
+          "figures": 29,
           "from_records": 0
         }
       ],

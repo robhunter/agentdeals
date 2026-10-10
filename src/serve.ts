@@ -68,7 +68,7 @@ import { CORRECTION_TO_OUR_OWN_RECORD, isACorrectionToOurOwnRecord, isNoLongerIn
 import { trackedChanges, howEachRecordWasRead, isTrackedChange, isIndexHousekeeping, recordsOtherThanOurOwnIndexHousekeeping, changeCensus, changeCountPhrase, recordsNotCountedSentence, sliceById, CHANGE_SLICES, CENSUS_NOTE, TRACKED_CHANGE_RULE_ANCHOR, TRACKED_CHANGE_RULE_PATH, TRACKED_CHANGE_NOUN, INDEX_HOUSEKEEPING_CLASS, CORRECTION_TO_OUR_OWN_RECORD_CLASS, INDEX_HOUSEKEEPING_BADGE, INDEX_HOUSEKEEPING_BADGE_COLOR, INDEX_HOUSEKEEPING_NOTE, INCLUDE_INDEX_HOUSEKEEPING_REJECTED, indexHousekeepingHeadline } from "./change-census.js";
 import { SINCE_DEFAULT_SENTENCE } from "./change-window.js";
 import { NAME_MATCH_SENTENCE } from "./name-match.js";
-import { FREE_TIER_STANDING_LABELS, GRADE_FACTORS_WITHOUT_PRICING_HISTORY, NOT_EVIDENCE_LABELS, citesAChangeOlderThanTheGrade, freeTierStanding, gradesFirstSet, gradesLastSet, gradingDatesClause, neverTracked, pricingHistoryCoverageAnswer, pricingHistoryCoverageSentence, riskEntries, scorecard, splitByFreeTierStanding, trackedSinceGrading, type RiskEntry } from "./risk-scorecard.js";
+import { FREE_TIER_STANDING_LABELS, GRADE_FACTORS_WITHOUT_PRICING_HISTORY, NOT_EVIDENCE_LABELS, citesAChangeOlderThanTheGrade, lastChangeShown, freeTierStanding, gradesFirstSet, gradesLastSet, gradingDatesClause, neverTracked, pricingHistoryCoverageAnswer, pricingHistoryCoverageSentence, riskEntries, scorecard, splitByFreeTierStanding, trackedSinceGrading, type RiskEntry } from "./risk-scorecard.js";
 import { CHANGE_DIRECTION, changeDirectionTable, directionRatioLabel } from "./change-direction.js";
 import { removalDurability, removalReturnRateSentence, removalDurabilityPattern, lastingRemovalExamplesFor } from "./removal-durability.js";
 import { cutsByQuarterNewestFirst, cutsWindow, freeTierCutsIn } from "./free-tier-cuts.js";
@@ -23146,7 +23146,8 @@ function buildFreeTierRiskPage(): string {
 
   const buildRiskRow = (e: RiskEntry) => {
     const color = riskColors[e.risk];
-    const beforeTheGrade = citesAChangeOlderThanTheGrade(e)
+    const lastChange = lastChangeShown(e, dealChanges, utcToday());
+    const beforeTheGrade = citesAChangeOlderThanTheGrade(e, lastChange)
       ? `<div style="color:var(--text-dim);font-family:var(--sans);font-size:.72rem">before the grade</div>`
       : "";
     return `<tr>
@@ -23154,7 +23155,7 @@ function buildFreeTierRiskPage(): string {
       <td style="color:${color};font-weight:600;font-size:.85rem">${riskEmoji[e.risk]} ${riskLabels[e.risk]}<div style="color:var(--text-dim);font-weight:400;font-size:.72rem;font-family:var(--mono);white-space:nowrap">graded ${escHtmlServer(e.graded)}</div></td>
       <td style="color:var(--text-muted);font-size:.85rem">${escHtmlServer(e.category)}</td>
       <td style="color:var(--text-muted);font-size:.8rem">${escHtmlServer(e.reasoning)}</td>
-      <td style="font-family:var(--mono);font-size:.8rem;color:var(--text-dim)">${e.lastChange ? `<div style="white-space:nowrap">${escHtmlServer(e.lastChange)}</div>${beforeTheGrade}` : "&mdash;"}</td>
+      <td style="font-family:var(--mono);font-size:.8rem;color:var(--text-dim)">${lastChange ? `<div style="white-space:nowrap">${escHtmlServer(lastChange)}</div>${beforeTheGrade}` : "&mdash;"}</td>
       <td style="color:var(--text-muted);font-size:.75rem;min-width:200px">${sinceGradedCell(e)}</td>
     </tr>`;
   };
@@ -23204,7 +23205,7 @@ function buildFreeTierRiskPage(): string {
     { q: "How do you calculate risk scores?", a: "We weight four factors: pricing history (40%) — has the vendor changed before and how recently; financial signals (25%) — profitable vs VC-subsidized, recent acquisitions; competitive pressure (20%) — intense competition keeps free tiers alive; free tier strategic value (15%) — is the free tier a funnel or a cost center. " + pricingHistoryCoverageAnswer(gradedWithNoRecordAtAll, riskEntries) },
     { q: "How accurate have the risk grades been?", a: gradingDates + ", and scored against every change tracked since: " + bandScores.map(b => riskLabels[b.grade].toLowerCase() + " " + b.vendorsWithANegative + " of " + b.vendors + " (" + b.rate + "%)").join(", ") + ". A vendor counts if our change log holds a record in force since its grading date that removed a free tier, cut limits, added a restriction, killed an open-source edition, or deprecated the graded product itself. Vendors with nothing tracked stay in the denominator rather than being dropped." },
     { q: "What should I do if a tool I depend on is rated high risk?", a: "Start planning your migration now. Use abstractions (ORMs, S3-compatible APIs, OpenTelemetry) to minimize switching cost. Identify 2-3 alternatives and test them in a staging environment. Subscribe to our pricing change feed at /feed.xml for early warning." },
-    { q: "Are there any categories where free tiers are expanding?", a: "Yes — AI coding tools (GitHub Copilot Free, Anthropic increases, Windsurf launch) and cloud infrastructure (Cloudflare Queues, Workers expansion, AWS restructuring). Competition for developer mindshare drives expansion. See the Counter-Trends section for details." },
+    { q: "Are there any categories where free tiers are expanding?", a: "Yes — AI coding tools (GitHub Copilot Free, Windsurf launch) and cloud infrastructure (Cloudflare Queues, Workers expansion, AWS restructuring). Competition for developer mindshare drives expansion. See the Counter-Trends section for details." },
   ];
 
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
@@ -23390,7 +23391,7 @@ ${mcpCtaCss()}
     </table>
   </div>
   <div class="context-box">
-    <strong>Pattern:</strong> Medium-risk vendors typically show one or more warning signs: credit-based pricing transitions (Vercel, Netlify), post-acquisition uncertainty (Neon/Databricks), or incremental tightening (Supabase project pausing, Render sleep reduction). The free tier still works today — but the trend line points toward further restrictions.
+    <strong>Pattern:</strong> Medium-risk vendors typically show one or more warning signs: credit-based pricing transitions (Vercel, Netlify) or post-acquisition uncertainty (Neon/Databricks). The free tier still works today — but the trend line points toward further restrictions.
   </div>
 
   <h2 id="high">4. \u{1F534} High Risk — Plan Your Exit</h2>
@@ -23406,7 +23407,7 @@ ${mcpCtaCss()}
     </table>
   </div>
   <div class="context-box">
-    <strong>Pattern:</strong> High-risk vendors share traits: multiple negative changes in a short period (OpenAI, X/Twitter), hostile stance toward free users (Spotify, Amazon SP-API), or entering "sustaining mode" with no investment (Heroku). When you see a vendor make 2+ negative changes in 6 months, the third is coming.
+    <strong>Pattern:</strong> High-risk vendors share traits: a free tier already removed (OpenAI, X/Twitter), hostile stance toward free users (Spotify, Amazon SP-API), or entering "sustaining mode" with no investment (Heroku). When you see a vendor make 2+ negative changes in 6 months, the third is coming.
   </div>
   <div class="context-box">
     <strong>How this band is split:</strong> the grade is editorial and unchanged; only where it renders is derived. A vendor appears above if our catalogue holds a free tier for it today. ${highBand.alreadyGone.length === 0 ? "Every vendor in this band still has one." : highBand.alreadyGone.map(e => `${escHtmlServer(e.vendor)} (${escHtmlServer(FREE_TIER_STANDING_LABELS[freeTierStanding(e, offers)])})`).join(", ")}${highBand.alreadyGone.length === 0 ? "" : " did not, so they moved down a section."}
@@ -23539,7 +23540,7 @@ ${mcpCtaCss()}
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;margin:1.5rem 0">
     <div class="diff-card" style="border-left-color:#3fb950">
       <h3>AI Coding Tools</h3>
-      <p class="diff-desc">GitHub Copilot Free (2K completions), Windsurf launch, Anthropic rate increases. The AI coding wars are forcing vendors to compete on free tier generosity. This is the most expansionary category in our dataset.</p>
+      <p class="diff-desc">GitHub Copilot Free (2K completions) and the Windsurf launch. The AI coding wars are forcing vendors to compete on free tier generosity. This is the most expansionary category in our dataset.</p>
     </div>
     <div class="diff-card" style="border-left-color:#3fb950">
       <h3>Cloud Providers</h3>
