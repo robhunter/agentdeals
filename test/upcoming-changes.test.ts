@@ -1,6 +1,7 @@
 import { describe, it, before } from "node:test";
 import assert from "node:assert";
 import { spawn } from "node:child_process";
+import vm from "node:vm";
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -9,7 +10,7 @@ import { fileURLToPath } from "node:url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
 
-const { splitAtTheDayServed, UPCOMING_CHANGES_HEADING, UPCOMING_CHANGES_INTRO } = await import("../dist/upcoming-changes.js");
+const { splitAtTheDayServed, UPCOMING_CHANGES_HEADING, UPCOMING_CHANGES_INTRO, LATEST_PRICING_CHANGES_HEADING, LATEST_PRICING_CHANGES_SHOWN } = await import("../dist/upcoming-changes.js");
 
 type Change = { vendor: string; date: string; change_type: string; summary: string };
 
@@ -23,6 +24,29 @@ const PAGES = [
   { route: "/openai-assistants-migration", inEffectAnchor: "openai-changes", shownAtMost: 10, vendor: "OpenAI" },
   { route: "/shutdowns", inEffectAnchor: "pricing-changes", shownAtMost: 10, vendor: "OpenAI" },
   { route: "/ai-coding-tools-pricing", inEffectAnchor: "changes", shownAtMost: null, vendor: "OpenAI Codex" },
+  { route: "/gcp-free-tier-2026", inEffectAnchor: "changes", shownAtMost: 12, vendor: "Google Gemini API" },
+  { route: "/aws-free-tier-2026", inEffectAnchor: "changes", shownAtMost: 10, vendor: "AWS" },
+  { route: "/azure-free-tier-2026", inEffectAnchor: "changes", shownAtMost: 10, vendor: "Microsoft for Startups" },
+  { route: "/digitalocean-free-tier-2026", inEffectAnchor: "changes", shownAtMost: 10, vendor: "DigitalOcean" },
+  { route: "/startup-credits", inEffectAnchor: "changes", shownAtMost: null, vendor: "Google for Startups Cloud Program" },
+  { route: "/ci-cd-pricing", inEffectAnchor: "changes", shownAtMost: null, vendor: "GitHub Actions" },
+  { route: "/database-pricing", inEffectAnchor: "changes", shownAtMost: null, vendor: "Xata" },
+  { route: "/vector-database-pricing", inEffectAnchor: "changes", shownAtMost: 15, vendor: "Pinecone" },
+  { route: "/hosting-pricing", inEffectAnchor: "changes", shownAtMost: null, vendor: "PythonAnywhere" },
+];
+
+const TOC_LINKED_ROUTES = [
+  "/llm-api-pricing",
+  "/ai-coding-tools-pricing",
+  "/gcp-free-tier-2026",
+  "/aws-free-tier-2026",
+  "/azure-free-tier-2026",
+  "/digitalocean-free-tier-2026",
+  "/startup-credits",
+  "/ci-cd-pricing",
+  "/database-pricing",
+  "/vector-database-pricing",
+  "/hosting-pricing",
 ];
 
 function fixture(vendor: string, date: string, change_type: string, summary: string) {
@@ -77,13 +101,14 @@ function rowCount(section: string): number {
   return (section.split("<tbody>")[1]?.split("</tbody>")[0].match(/<tr>/g) ?? []).length;
 }
 
-async function servedPages(changes: unknown[]): Promise<Map<string, string>> {
+async function withServedChangeLog<T>(changes: unknown[], use: (base: string, inventoryPath: string) => Promise<T>): Promise<T> {
   const dir = mkdtempSync(path.join(tmpdir(), "upcoming-changes-"));
   const changesPath = path.join(dir, "changes.json");
+  const inventoryPath = path.join(dir, "inventory.json");
   writeFileSync(changesPath, JSON.stringify({ changes }));
   const proc = spawn("node", [path.join(REPO, "dist", "serve.js")], {
     stdio: ["pipe", "pipe", "pipe"],
-    env: { ...process.env, PORT: "0", BASE_URL: "http://localhost", TZ: "UTC", AGENTDEALS_CHANGES_PATH: changesPath },
+    env: { ...process.env, PORT: "0", BASE_URL: "http://localhost", TZ: "UTC", AGENTDEALS_CHANGES_PATH: changesPath, AGENTDEALS_PAGE_INVENTORY_OUT: inventoryPath },
   });
   try {
     const base = await new Promise<string>((resolve, reject) => {
@@ -100,6 +125,15 @@ async function servedPages(changes: unknown[]): Promise<Map<string, string>> {
         reject(err);
       });
     });
+    return await use(base, inventoryPath);
+  } finally {
+    proc.kill();
+    rmSync(dir, { recursive: true, force: true });
+  }
+}
+
+async function servedPages(changes: unknown[]): Promise<Map<string, string>> {
+  return withServedChangeLog(changes, async (base) => {
     const pages = new Map<string, string>();
     for (const { route } of PAGES) {
       const response = await fetch(base + route);
@@ -107,10 +141,7 @@ async function servedPages(changes: unknown[]): Promise<Map<string, string>> {
       pages.set(route, await response.text());
     }
     return pages;
-  } finally {
-    proc.kill();
-    rmSync(dir, { recursive: true, force: true });
-  }
+  });
 }
 
 const shipped: Change[] = JSON.parse(readFileSync(path.join(REPO, "data", "deal_changes.json"), "utf-8")).changes;
@@ -180,7 +211,7 @@ describe("announced records added to a copy of the change log", () => {
     assert.ok(!/later this year/i.test(html), "/shutdowns still says later this year");
   });
 
-  for (const route of ["/llm-api-pricing", "/ai-coding-tools-pricing"]) {
+  for (const route of TOC_LINKED_ROUTES) {
     it(`links the section from ${route}'s list of sections`, () => {
       assert.ok(pages.get(route)!.includes(`<li><a href="#upcoming-changes">${UPCOMING_CHANGES_HEADING}</a></li>`));
     });
@@ -204,4 +235,336 @@ describe("a copy of the change log with no record dated after the day served", (
       if (shownAtMost !== null) assert.ok(rows <= shownAtMost, `${route} prints ${rows} rows, more than ${shownAtMost}`);
     });
   }
+});
+
+const CENSUS_CHANGE_TYPES = ["pricing_restructured", "limits_reduced", "limits_increased", "product_deprecated"];
+const CENSUS_VENDORS = [...new Set([...shipped.map((c) => c.vendor), "Datadog", "New Relic"])];
+const CENSUS_FIXTURES = CENSUS_VENDORS.flatMap((vendor, index) =>
+  CENSUS_CHANGE_TYPES.map((type) => fixture(vendor, dayOffset(30), type, `Census fixture ${index}-${type} announced for a later day.`)),
+);
+const A_CENSUS_FIXTURE = /Census fixture \d+-[a-z_]+ announced for a later day\./;
+const HEADED_RECENT = /(?<![\w-])(recent|recently|latest|newest)(?![\w-])/i;
+
+const UPCOMING_LISTED_ON = [
+  ...PAGES.map((p) => p.route),
+  "/alternative-to/openai",
+  "/alternative-to/google-gemini-api",
+  "/events/google-io-2026",
+  "/events/microsoft-build-2026",
+  "/supabase-vs-firebase",
+  "/vercel-vs-netlify",
+  "/neon-vs-supabase",
+  "/railway-vs-render",
+  "/datadog-vs-new-relic",
+];
+
+interface Heading {
+  at: number;
+  end: number;
+  level: number;
+  id: string | null;
+  text: string;
+}
+
+function headingsOf(page: string): Heading[] {
+  return [...page.matchAll(/<h([1-6])\b([^>]*)>([\s\S]*?)<\/h\1>/gi)].map((m) => ({
+    at: m.index!,
+    end: m.index! + m[0].length,
+    level: Number(m[1]),
+    id: m[2]!.match(/\bid="([^"]+)"/)?.[1] ?? null,
+    text: m[3]!.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim(),
+  }));
+}
+
+function withoutScriptsOrStyles(html: string): string {
+  return html.replace(/<script\b[\s\S]*?<\/script>/gi, "").replace(/<style\b[\s\S]*?<\/style>/gi, "");
+}
+
+function bodyUnder(page: string, headings: Heading[], heading: Heading): string {
+  const next = headings.find((other) => other.at > heading.at && other.level <= heading.level);
+  return page.slice(heading.end, next ? next.at : page.length);
+}
+
+function sectionsHeadedRecent(html: string): { heading: string; body: string }[] {
+  const page = withoutScriptsOrStyles(html);
+  const headings = headingsOf(page);
+  return headings.filter((h) => HEADED_RECENT.test(h.text)).map((h) => ({ heading: h.text, body: bodyUnder(page, headings, h) }));
+}
+
+function sectionWithId(html: string, id: string): string | null {
+  const page = withoutScriptsOrStyles(html);
+  const headings = headingsOf(page);
+  const heading = headings.find((h) => h.id === id);
+  return heading ? bodyUnder(page, headings, heading) : null;
+}
+
+describe("every section a page heads Recent or Latest, with announced changes for every vendor in the change log", () => {
+  let inventory: string[] = [];
+  const pages = new Map<string, string>();
+  const refused: string[] = [];
+
+  before(async () => {
+    await withServedChangeLog([...shipped, ...CENSUS_FIXTURES], async (base, inventoryPath) => {
+      inventory = JSON.parse(readFileSync(inventoryPath, "utf-8"));
+      for (let i = 0; i < inventory.length; i += 8) {
+        await Promise.all(inventory.slice(i, i + 8).map(async (route) => {
+          const response = await fetch(base + route);
+          if (response.status !== 200) refused.push(`${route} ${response.status}`);
+          pages.set(route, await response.text());
+        }));
+      }
+    });
+  });
+
+  it("reads every page the site serves", () => {
+    assert.ok(inventory.length > 2000, `the inventory lists ${inventory.length} pages`);
+    assert.deepStrictEqual(refused, []);
+  });
+
+  it("lists none of those announced changes as a recent or latest change", () => {
+    const listed: string[] = [];
+    let sections = 0;
+    for (const [route, html] of pages) {
+      for (const { heading, body } of sectionsHeadedRecent(html)) {
+        sections++;
+        const found = body.match(A_CENSUS_FIXTURE);
+        if (found) listed.push(`${route} "${heading}": ${found[0]}`);
+      }
+    }
+    assert.ok(sections > 100, `only ${sections} sections are headed Recent or Latest`);
+    assert.deepStrictEqual(listed, []);
+  });
+
+  for (const route of UPCOMING_LISTED_ON) {
+    it(`${route} lists its vendors' announced changes under ${UPCOMING_CHANGES_HEADING}`, () => {
+      const upcoming = sectionWithId(pages.get(route)!, "upcoming-changes");
+      assert.ok(upcoming, `${route} prints no ${UPCOMING_CHANGES_HEADING} section`);
+      assert.match(upcoming, A_CENSUS_FIXTURE);
+      assert.ok(upcoming.includes(UPCOMING_CHANGES_INTRO), `${route}'s ${UPCOMING_CHANGES_HEADING} section does not open with its intro`);
+    });
+  }
+});
+
+async function resourceTextOverHttp(base: string, uri: string): Promise<string> {
+  const headers: Record<string, string> = { "Content-Type": "application/json", Accept: "application/json, text/event-stream" };
+  const initialized = await fetch(`${base}/mcp`, {
+    method: "POST",
+    headers,
+    body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "initialize", params: { protocolVersion: "2025-06-18", capabilities: {}, clientInfo: { name: "upcoming-changes", version: "1" } } }),
+  });
+  await initialized.text();
+  const session = initialized.headers.get("mcp-session-id");
+  if (session) headers["mcp-session-id"] = session;
+  await (await fetch(`${base}/mcp`, { method: "POST", headers, body: JSON.stringify({ jsonrpc: "2.0", method: "notifications/initialized" }) })).text();
+  const response = await fetch(`${base}/mcp`, {
+    method: "POST",
+    headers,
+    body: JSON.stringify({ jsonrpc: "2.0", id: 2, method: "resources/read", params: { uri } }),
+  });
+  const line = (await response.text()).split("\n").find((one) => one.startsWith("data: "));
+  return line ? JSON.parse(line.slice(6)).result?.contents?.[0]?.text ?? "" : "";
+}
+
+function latestPricingChangesOverStdio(base: string): Promise<string> {
+  const child = spawn("node", [path.join(REPO, "dist", "index.js")], {
+    stdio: ["pipe", "pipe", "pipe"],
+    env: { ...process.env, AGENTDEALS_API_URL: base },
+  });
+  return new Promise((resolve, reject) => {
+    const timer = setTimeout(() => { child.kill(); reject(new Error("stdio MCP timeout")); }, 60000);
+    let buffer = "";
+    child.stdout!.on("data", (chunk: Buffer) => {
+      buffer += chunk.toString();
+      const lines = buffer.split("\n");
+      buffer = lines.pop() ?? "";
+      for (const line of lines) {
+        let payload: { id?: number; result?: { contents?: Array<{ text?: string }> } };
+        try { payload = JSON.parse(line); } catch { continue; }
+        if (payload.id !== 2) continue;
+        clearTimeout(timer);
+        child.kill();
+        resolve(payload.result?.contents?.[0]?.text ?? "");
+      }
+    });
+    child.on("error", (err) => { clearTimeout(timer); reject(err); });
+    child.stdin!.write(`${JSON.stringify({ jsonrpc: "2.0", id: 1, method: "initialize", params: { protocolVersion: "2024-11-05", capabilities: {}, clientInfo: { name: "upcoming-changes", version: "1" } } })}\n`);
+    child.stdin!.write(`${JSON.stringify({ jsonrpc: "2.0", method: "notifications/initialized" })}\n`);
+    child.stdin!.write(`${JSON.stringify({ jsonrpc: "2.0", id: 2, method: "resources/read", params: { uri: "agentdeals://changes/latest" } })}\n`);
+  });
+}
+
+function entryDatesUnder(text: string, heading: string): string[] {
+  const at = text.indexOf(`# ${heading}\n`);
+  if (at < 0) return [];
+  const rest = text.slice(at + heading.length + 3);
+  const next = rest.search(/^# /m);
+  return [...(next < 0 ? rest : rest.slice(0, next)).matchAll(/^- \*\*(\d{4}-\d{2}-\d{2})\*\* \|/gm)].map((m) => m[1]!);
+}
+
+describe(`the ${LATEST_PRICING_CHANGES_HEADING} MCP resource, with announced records in the change log`, () => {
+  const announced = [...FIXTURES.values()].flatMap((f) => [f.later, f.sooner]);
+  const resource = new Map<string, string>();
+
+  before(async () => {
+    await withServedChangeLog([...shipped, ...announced], async (base) => {
+      resource.set("Streamable HTTP", await resourceTextOverHttp(base, "agentdeals://changes/latest"));
+      resource.set("stdio", await latestPricingChangesOverStdio(base));
+    });
+  });
+
+  for (const transport of ["Streamable HTTP", "stdio"]) {
+    it(`over ${transport}, lists ${LATEST_PRICING_CHANGES_SHOWN} changes in effect as the latest`, () => {
+      const latest = entryDatesUnder(resource.get(transport)!, LATEST_PRICING_CHANGES_HEADING);
+      assert.strictEqual(latest.length, LATEST_PRICING_CHANGES_SHOWN);
+      assert.deepStrictEqual(latest.filter((date) => date > TODAY), []);
+      assert.deepStrictEqual(latest, [...latest].sort().reverse());
+    });
+
+    it(`over ${transport}, lists every announced record under ${UPCOMING_CHANGES_HEADING}, soonest first`, () => {
+      const text = resource.get(transport)!;
+      const upcoming = entryDatesUnder(text, UPCOMING_CHANGES_HEADING);
+      assert.ok(text.includes(`# ${UPCOMING_CHANGES_HEADING}\n\n${UPCOMING_CHANGES_INTRO}\n\n`), `the ${UPCOMING_CHANGES_HEADING} part does not open with its intro`);
+      assert.deepStrictEqual(upcoming, [...upcoming].sort());
+      assert.ok(upcoming.every((date) => date > TODAY));
+      for (const change of announced) assert.ok(text.slice(text.indexOf(`# ${UPCOMING_CHANGES_HEADING}`)).includes(change.summary), `${change.summary} is not listed as upcoming`);
+    });
+  }
+});
+
+function inlineScripts(html: string): string[] {
+  return [...html.matchAll(/<script([^>]*)>([\s\S]*?)<\/script>/gi)]
+    .filter(([, attrs]) => !/\bsrc\s*=/i.test(attrs!) && !/type\s*=\s*["'][^"']*json/i.test(attrs!))
+    .map(([, , source]) => source!);
+}
+
+function browserElement() {
+  let text = "";
+  return {
+    value: "",
+    innerHTML: "",
+    get textContent() { return text; },
+    set textContent(value: string) {
+      text = String(value);
+      this.innerHTML = text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    },
+    className: "",
+    disabled: false,
+    firstChild: null,
+    children: [],
+    style: {},
+    dataset: {},
+    classList: { add() {}, remove() {}, toggle() {} },
+    addEventListener() {},
+    insertBefore() {},
+    setAttribute() {},
+    querySelectorAll() { return []; },
+  };
+}
+
+function comparisonToolCards(pageHtml: string, comparison: unknown): string[] {
+  const elements = new Map<string, ReturnType<typeof browserElement>>();
+  const document = {
+    getElementById(id: string) {
+      if (!elements.has(id)) elements.set(id, browserElement());
+      return elements.get(id)!;
+    },
+    createElement: () => browserElement(),
+    querySelector: () => null,
+    querySelectorAll: () => [],
+    addEventListener() {},
+  };
+  const context = vm.createContext({
+    window: { location: { search: "", pathname: "/", origin: "http://localhost", href: "http://localhost/" }, open() {} },
+    document,
+    navigator: { clipboard: { writeText: async () => {} } },
+    history: { replaceState() {} },
+    alert() {},
+    fetch: (url: string) => Promise.reject(new Error(`unexpected request for ${url}`)),
+    URL,
+    URLSearchParams,
+    console,
+    setTimeout,
+    clearTimeout,
+  });
+  const blocks = inlineScripts(pageHtml).filter((source) => source.includes("function renderComparison("));
+  assert.strictEqual(blocks.length, 1, "one script block defines renderComparison");
+  vm.runInContext(blocks[0]!, context, { timeout: 10000 });
+  (context.renderComparison as (data: unknown) => void)(comparison);
+  return elements.get("results")!.innerHTML.split('<div class="vendor-card">').slice(1);
+}
+
+function riskViewRendering(viewHtml: string, data: unknown): string {
+  const script = viewHtml.slice(viewHtml.indexOf("function render(args, data)"), viewHtml.lastIndexOf("</script>"));
+  assert.ok(script.startsWith("function render(args, data)"), "the Compare Vendors view no longer defines render(args, data)");
+  const app = { innerHTML: "", querySelectorAll: () => [] };
+  const document = {
+    getElementById: (id: string) => (id === "app" ? app : null),
+    createElement: () => {
+      let text = "";
+      return {
+        set textContent(value: string) { text = value; },
+        get innerHTML() { return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); },
+      };
+    },
+  };
+  vm.runInNewContext(`${script}\nrender({ vendors: ["Google Gemini API"] }, data);`, { document, data });
+  return app.innerHTML;
+}
+
+function partsAround(html: string, recentMarker: string, upcomingMarker: string): { recent: string; upcoming: string } {
+  const recentAt = html.indexOf(recentMarker);
+  const upcomingAt = html.indexOf(upcomingMarker);
+  return {
+    recent: recentAt < 0 ? "" : html.slice(recentAt, upcomingAt > recentAt ? upcomingAt : html.length),
+    upcoming: upcomingAt < 0 ? "" : html.slice(upcomingAt),
+  };
+}
+
+const labelledDatesIn = (html: string) => [...html.matchAll(/<span class="change-date">[^<]*?(\d{4}-\d{2}-\d{2})[^<]*<\/span>/g)].map((m) => m[1]!);
+
+describe("the change lists the browser builds from the API, with announced records in the change log", () => {
+  const announced = [...FIXTURES.values()].flatMap((f) => [f.later, f.sooner]);
+  let cards: string[] = [];
+  let riskView = "";
+
+  before(async () => {
+    await withServedChangeLog([...shipped, ...announced], async (base) => {
+      const comparison = await (await fetch(`${base}/api/compare?a=OpenAI&b=${encodeURIComponent("OpenAI Codex")}`)).json();
+      cards = comparisonToolCards(await (await fetch(`${base}/compare-tool`)).text(), comparison);
+      riskView = riskViewRendering(
+        await resourceTextOverHttp(base, "ui://agentdeals/compare-vendors"),
+        await (await fetch(`${base}/api/vendor-risk/google-gemini-api`)).json(),
+      );
+    });
+  });
+
+  it("the comparison tool's cards keep announced changes out of Recent Changes and list them under Upcoming Changes, soonest first", () => {
+    assert.strictEqual(cards.length, 2);
+    const { later, sooner } = FIXTURES.get("OpenAI Codex")!;
+    for (const card of cards) {
+      const { recent, upcoming } = partsAround(card, ">Recent Changes</strong>", `>${UPCOMING_CHANGES_HEADING}</strong>`);
+      assert.ok(recent, "a card prints no Recent Changes");
+      assert.ok(labelledDatesIn(recent).length > 0, "a card dates none of its Recent Changes");
+      assert.deepStrictEqual(labelledDatesIn(recent).filter((date) => date > TODAY), [], "a card lists an announced change under Recent Changes");
+      assert.ok(upcoming, `a card prints no ${UPCOMING_CHANGES_HEADING}`);
+      assert.ok(labelledDatesIn(upcoming).length > 0, `a card dates none of its ${UPCOMING_CHANGES_HEADING}`);
+      assert.deepStrictEqual(labelledDatesIn(upcoming).filter((date) => date <= TODAY), [], `a card lists a change in effect under ${UPCOMING_CHANGES_HEADING}`);
+      assert.deepStrictEqual(labelledDatesIn(upcoming), [...labelledDatesIn(upcoming)].sort(), `a card lists its ${UPCOMING_CHANGES_HEADING} out of date order`);
+    }
+    const codexUpcoming = partsAround(cards[1]!, ">Recent Changes</strong>", `>${UPCOMING_CHANGES_HEADING}</strong>`).upcoming;
+    assert.ok(codexUpcoming.indexOf(sooner.summary) >= 0 && codexUpcoming.indexOf(sooner.summary) < codexUpcoming.indexOf(later.summary));
+  });
+
+  it("the Compare Vendors view's risk assessment keeps announced changes out of Recent Pricing Changes and lists them under Upcoming Changes, soonest first", () => {
+    const { recent, upcoming } = partsAround(riskView, "<h3>Recent Pricing Changes</h3>", `<h3>${UPCOMING_CHANGES_HEADING}</h3>`);
+    assert.ok(recent, "the view prints no Recent Pricing Changes");
+    const recentDates = [...recent.matchAll(/<td style="white-space:nowrap">(\d{4}-\d{2}-\d{2})<\/td>/g)].map((m) => m[1]!);
+    assert.ok(recentDates.length > 0, "the view dates none of its Recent Pricing Changes");
+    assert.deepStrictEqual(recentDates.filter((date) => date > TODAY), []);
+    const upcomingDates = [...upcoming.matchAll(/<td style="white-space:nowrap">(\d{4}-\d{2}-\d{2})<\/td>/g)].map((m) => m[1]!);
+    const { later, sooner } = FIXTURES.get("Google Gemini API")!;
+    assert.ok(upcomingDates.includes(sooner.date) && upcomingDates.includes(later.date), `the view lists ${upcomingDates.join(", ")} as upcoming`);
+    assert.ok(upcomingDates.every((date) => date > TODAY));
+    assert.deepStrictEqual(upcomingDates, [...upcomingDates].sort());
+  });
 });
