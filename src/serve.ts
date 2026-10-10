@@ -100,6 +100,7 @@ import { figureProvenanceAgainst, statementsWeHold } from "./figure-provenance.j
 import { statesNoFreeTier } from "./retired-terms.js";
 import { countsDownTo, shutdownDeadlineHtml } from "./shutdown-deadline.js";
 import { forecastShutdownsWithoutACard, whatEnds, type RecordACardCovers } from "./forecast-shutdowns.js";
+import { UPCOMING_CHANGES_HEADING, UPCOMING_CHANGES_INTRO, splitAtTheDayServed } from "./upcoming-changes.js";
 import { createRegistrationLimiter, rateLimitHeaders } from "./rate-limit.js";
 import { offerForSlug, vendorRates, cheapestRate, dearestRate, spanOfRates, formatRate, formatRateSpan, monthlyTokenCost, formatDollars, amountValue, type ModelRate } from "./model-rates.js";
 import { DECLARED_FIGURE_READS, READ_DATES_THAT_ARE_NOT_FIGURE_READS, STALE_FACT_PAGES_BASELINE, TABLE_STALENESS_DISCLOSURES, declaredFigureReadsFor, factsOutdatedBy, linkifyVerdictBlocks, newestChangeBySlug, overdueReport, pageCompiledClause, pageDataProvenance, pageDateModified, pageFigureSource, tabulatedVendorSlots, tabulatedVendors, utcToday, verdictsOutdatedBy } from "./page-reviews.js";
@@ -24026,6 +24027,29 @@ function listingTermsCellHtml(slug: string): string {
   return escHtmlServer(opening) + profile + (unconfirmed ? unconfirmedTermsSpanHtml(unconfirmed) : "") + conditions;
 }
 
+function upcomingOpenAIChangesHtml(rows: readonly string[]): string {
+  if (rows.length === 0) return "";
+  return `
+  <h3 id="upcoming-changes">${escHtmlServer(UPCOMING_CHANGES_HEADING)}</h3>
+  <p class="section-intro">${escHtmlServer(UPCOMING_CHANGES_INTRO)}</p>
+
+  <div style="overflow-x:auto">
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Change</th>
+        <th>Impact</th>
+      </tr>
+    </thead>
+    <tbody>
+        ${rows.join("\n        ")}
+    </tbody>
+  </table>
+  </div>
+`;
+}
+
 function buildOpenaiAssistantsAlternativesPage(): string {
   const title = "OpenAI Assistants API Sunset: Free Alternatives & Migration Guide for AI Agent Builders";
   const metaDesc = "OpenAI shut down the Assistants API on August 26, 2026. Compare migration paths: Responses API, Claude, Gemini, open-source frameworks. Free tier comparison for 10+ AI API providers with stability ratings.";
@@ -24117,7 +24141,7 @@ function buildOpenaiAssistantsAlternativesPage(): string {
     return tierClass === "free" || tierClass === "time_limited";
   });
 
-  const changeTimelineRows = openaiChanges.map(c => {
+  const openaiChangeRow = (c: (typeof openaiChanges)[number]) => {
     const dateStr = changeEntryLongDateLabel(c);
     const impactColor = changeImpactColor(c.impact);
     return `<tr>
@@ -24125,7 +24149,10 @@ function buildOpenaiAssistantsAlternativesPage(): string {
       <td style="font-size:.85rem">${changeSummaryHtml(c, escHtmlServer)}</td>
       <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
     </tr>`;
-  }).join("\n        ");
+  };
+  const openaiChangesByDayServed = splitAtTheDayServed(openaiChanges, utcToday());
+  const changeTimelineRows = openaiChangesByDayServed.inEffect.map(openaiChangeRow).join("\n        ");
+  const upcomingChangesHtml = upcomingOpenAIChangesHtml(openaiChangesByDayServed.upcoming.map(openaiChangeRow));
 
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["ai-ml-alternatives", "ai-coding-tools-pricing", "free-ai-stack", "free-llm-apis", "free-tier-risk", "stability"].includes(p.slug)
@@ -24388,7 +24415,7 @@ ${mcpCtaCss()}
     </tbody>
   </table>
   </div>
-
+${upcomingChangesHtml}
   <h2 id="recommendations">Which Alternative for Which Developer</h2>
 
   <div class="verdict-box">
@@ -24607,7 +24634,7 @@ function buildOpenaiAssistantsMigration2026Page(): string {
     </tr>`;
   }).join("\n        ");
 
-  const changeTimelineRows = openaiChanges.map(c => {
+  const openaiChangeRow = (c: (typeof openaiChanges)[number]) => {
     const dateStr = changeEntryLongDateLabel(c);
     const impactColor = changeImpactColor(c.impact);
     return `<tr>
@@ -24615,7 +24642,10 @@ function buildOpenaiAssistantsMigration2026Page(): string {
       <td style="font-size:.85rem">${changeSummaryHtml(c, escHtmlServer)}</td>
       <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
     </tr>`;
-  }).join("\n        ");
+  };
+  const openaiChangesByDayServed = splitAtTheDayServed(openaiChanges, utcToday());
+  const changeTimelineRows = openaiChangesByDayServed.inEffect.map(openaiChangeRow).join("\n        ");
+  const upcomingChangesHtml = upcomingOpenAIChangesHtml(openaiChangesByDayServed.upcoming.map(openaiChangeRow));
 
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["openai-assistants-alternatives", "shutdowns", "free-llm-apis", "ai-ml-alternatives", "ai-coding-tools-pricing", "free-ai-stack", "stability", "free-tier-risk"].includes(p.slug)
@@ -24980,7 +25010,7 @@ ${mcpCtaCss()}
     </tbody>
   </table>
   </div>
-
+${upcomingChangesHtml}
   <h2>Recommendations by Use Case</h2>
 
   <div class="verdict-box">
@@ -26062,7 +26092,7 @@ function buildOpenAIAssistantsMigrationPage(): string {
       '</tr>';
   }).join("\n        ");
 
-  const changeTimelineRows = openaiChanges.slice(0, 10).map(c => {
+  const openaiChangeRow = (c: (typeof openaiChanges)[number]) => {
     const dateStr = changeEntryLongDateLabel(c);
     const impactColor = changeImpactColor(c.impact);
     return '<tr>' +
@@ -26070,7 +26100,10 @@ function buildOpenAIAssistantsMigrationPage(): string {
       '<td style="font-size:.85rem">' + changeSummaryHtml(c, escHtmlServer) + '</td>' +
       '<td><span style="color:' + impactColor + ';font-size:.8rem;font-weight:600">' + escHtmlServer(changeImpactLabel(c.impact)) + '</span></td>' +
       '</tr>';
-  }).join("\n        ");
+  };
+  const openaiChangesByDayServed = splitAtTheDayServed(openaiChanges, utcToday());
+  const changeTimelineRows = openaiChangesByDayServed.inEffect.slice(0, 10).map(openaiChangeRow).join("\n        ");
+  const upcomingChangesHtml = upcomingOpenAIChangesHtml(openaiChangesByDayServed.upcoming.map(openaiChangeRow));
 
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["ai-ml-alternatives", "free-llm-apis", "free-ai-stack", "ai-coding-tools-pricing", "gemini-api-pricing-2026", "free-tier-risk", "shutdowns", "llm-api-pricing"].includes(p.slug)
@@ -26321,6 +26354,7 @@ function buildOpenAIAssistantsMigrationPage(): string {
     '    </tbody>\n' +
     '  </table>\n' +
     '  </div>\n' +
+    upcomingChangesHtml +
     '\n' +
     '  <h2 id="faq">Frequently Asked Questions</h2>\n' +
     '\n' +
@@ -31752,7 +31786,7 @@ function buildLlmApiPricingPage(): string {
       cards;
   }).join("\n\n  ");
 
-  const changeTimelineRows = llmChanges.slice(0, 20).map(c => {
+  const llmChangeRow = (c: (typeof llmChanges)[number]) => {
     const dateStr = changeEntryLongDateLabel(c);
     const impactColor = changeImpactColor(c.impact);
     return '<tr>' +
@@ -31761,7 +31795,32 @@ function buildLlmApiPricingPage(): string {
       '<td style="font-size:.85rem">' + changeSummaryHtml(c, escHtmlServer) + '</td>' +
       '<td><span style="color:' + impactColor + ';font-size:.8rem;font-weight:600">' + escHtmlServer(changeImpactLabel(c.impact)) + '</span></td>' +
       '</tr>';
-  }).join("\n        ");
+  };
+  const llmChangesTable = (rows: string) =>
+    '  <div style="overflow-x:auto">\n' +
+    '  <table class="pricing-table">\n' +
+    '    <thead>\n' +
+    '      <tr>\n' +
+    '        <th>Date</th>\n' +
+    '        <th>Vendor</th>\n' +
+    '        <th>Change</th>\n' +
+    '        <th>Impact</th>\n' +
+    '      </tr>\n' +
+    '    </thead>\n' +
+    '    <tbody>\n' +
+    '        ' + rows + '\n' +
+    '    </tbody>\n' +
+    '  </table>\n' +
+    '  </div>\n';
+  const llmChangesByDayServed = splitAtTheDayServed(llmChanges, utcToday());
+  const changeTimelineRows = llmChangesByDayServed.inEffect.slice(0, 20).map(llmChangeRow).join("\n        ");
+  const upcomingChangesSection = llmChangesByDayServed.upcoming.length > 0 ? (
+    '\n' +
+    '  <h2 id="upcoming-changes">' + escHtmlServer(UPCOMING_CHANGES_HEADING) + '</h2>\n' +
+    '  <p class="section-intro">' + escHtmlServer(UPCOMING_CHANGES_INTRO) + '</p>\n' +
+    '\n' +
+    llmChangesTable(llmChangesByDayServed.upcoming.map(llmChangeRow).join("\n        "))
+  ) : '';
 
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["ai-ml-alternatives", "free-llm-apis", "free-ai-stack", "ai-coding-tools-pricing", "gemini-api-pricing-2026"].includes(p.slug)
@@ -31990,6 +32049,7 @@ function buildLlmApiPricingPage(): string {
     '      <li><a href="#free-tiers">What You Actually Get for Free</a></li>\n' +
     '      <li><a href="#hidden-costs">Pricing Gotchas</a></li>\n' +
     '      <li><a href="#changes">Recent Pricing Changes</a></li>\n' +
+    (llmChangesByDayServed.upcoming.length > 0 ? '      <li><a href="#upcoming-changes">' + escHtmlServer(UPCOMING_CHANGES_HEADING) + '</a></li>\n' : '') +
     '      <li><a href="#recommendations">By Use Case</a></li>\n' +
     '      <li><a href="#faq">FAQ</a></li>\n' +
     '    </ol>\n' +
@@ -32067,23 +32127,8 @@ function buildLlmApiPricingPage(): string {
     '  <h2 id="changes">Recent Pricing Changes</h2>\n' +
     '  <p class="section-intro">LLM API pricing is the most volatile in the developer tools space. Here are the changes we\'ve tracked. See <a href="/pricing-changes">full change timeline</a> for all tracked changes.</p>\n' +
     '\n' +
-    (llmChanges.length > 0 ? (
-    '  <div style="overflow-x:auto">\n' +
-    '  <table class="pricing-table">\n' +
-    '    <thead>\n' +
-    '      <tr>\n' +
-    '        <th>Date</th>\n' +
-    '        <th>Vendor</th>\n' +
-    '        <th>Change</th>\n' +
-    '        <th>Impact</th>\n' +
-    '      </tr>\n' +
-    '    </thead>\n' +
-    '    <tbody>\n' +
-    '        ' + changeTimelineRows + '\n' +
-    '    </tbody>\n' +
-    '  </table>\n' +
-    '  </div>\n'
-    ) : '  <p class="section-intro">No LLM pricing changes tracked yet.</p>\n') +
+    (llmChangesByDayServed.inEffect.length > 0 ? llmChangesTable(changeTimelineRows) : '  <p class="section-intro">No LLM pricing changes tracked yet.</p>\n') +
+    upcomingChangesSection +
     '\n' +
     '  <div class="context-box">\n' +
     '    <strong>The trend:</strong> Opus-class prices fell from $15/$75 per M tokens (Opus 4.1) to $5/$25 in November 2025 and $4/$20 with Opus 5.5, while each lab\'s top model costs $10/$50 (Claude Fable 5.1, OpenAI GPT-6 Astra). Open-weight inference is cheap: Groq\'s free plan allows 200K tokens a day on each of its free chat models. The implication: if you\'re paying more than $5/M input tokens, you should evaluate whether a cheaper model handles your use case.\n' +
