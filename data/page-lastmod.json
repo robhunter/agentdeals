@@ -3070,12 +3070,20 @@
       "hash": "ce6767cfe3f1cb3a",
       "changed": "2026-10-10"
     },
+    "/digest/2027-w01": {
+      "hash": "292c9526bf39a8c4",
+      "changed": "2026-10-10"
+    },
     "/digest/2027-w03": {
       "hash": "fcfd9b94e1f0b7ac",
       "changed": "2026-10-10"
     },
     "/digest/2027-w08": {
       "hash": "92d13a69fb066c77",
+      "changed": "2026-10-10"
+    },
+    "/digest/2027-w13": {
+      "hash": "a75ae9ed0403b814",
       "changed": "2026-10-10"
     },
     "/digest/archive": {
@@ -3498,6 +3506,10 @@
     },
     "/reports/2027-02": {
       "hash": "e118d300fcda201e",
+      "changed": "2026-10-10"
+    },
+    "/reports/2027-04": {
+      "hash": "5432c37461fc2ff9",
       "changed": "2026-10-10"
     },
     "/security-alternatives": {

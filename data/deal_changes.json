@@ -14402,6 +14402,38 @@
       "what_ends": "whisper-1 and the gpt-4o transcription models"
     },
     {
+      "vendor": "OpenAI",
+      "change_type": "product_deprecated",
+      "date": "2027-01-06",
+      "summary": "The OpenAI API keeps running. The tts-1, tts-1-hd, gpt-4o-mini-tts-2025-03-20 and gpt-4o-mini-tts-2025-12-15 models can be called until January 6, 2027. OpenAI's replacement for each: gpt-realtime-2.1-mini.",
+      "previous_state": "The four text-to-speech models were callable in the OpenAI API at pay-as-you-go rates.",
+      "current_state": "OpenAI's deprecations page (notice of 2026-10-01) lists January 6, 2027 as the date the four text-to-speech models are removed from the API.",
+      "impact": "low",
+      "source_url": "https://developers.openai.com/api/docs/deprecations",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-10-10",
+      "date_source": "hand_written",
+      "listing_effect": "none",
+      "what_ends": "OpenAI tts-1, tts-1-hd and gpt-4o-mini-tts"
+    },
+    {
+      "vendor": "OpenAI",
+      "change_type": "product_deprecated",
+      "date": "2027-04-01",
+      "summary": "The OpenAI API keeps running. The gpt-5.3-codex, gpt-5.1 and gpt-5.4-nano models can be called until April 1, 2027. OpenAI's replacements: gpt-6-sol for gpt-5.3-codex and gpt-5.1; gpt-6-luna for gpt-5.4-nano.",
+      "previous_state": "The three models were callable in the OpenAI API at pay-as-you-go rates.",
+      "current_state": "OpenAI's deprecations page (notice of 2026-10-01) lists April 1, 2027 as the date the three models are removed from the API.",
+      "impact": "medium",
+      "source_url": "https://developers.openai.com/api/docs/deprecations",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-10-10",
+      "date_source": "hand_written",
+      "listing_effect": "none",
+      "what_ends": "gpt-5.1, gpt-5.3-codex and gpt-5.4-nano"
+    },
+    {
       "vendor": "Cursor",
       "change_type": "record_corrected",
       "date": "2026-09-27",
