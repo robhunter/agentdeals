@@ -35,6 +35,7 @@ import { NOT_VERIFIED, theReadConfirmedThePrice, publishedTermsEvidence, termsTh
 import { reasonWeCannotConfirmTheTerms } from "./vendor-verdict-input.js";
 import { SINCE_DEFAULT_SENTENCE } from "./change-window.js";
 import { NAME_MATCH_SENTENCE } from "./name-match.js";
+import { LATEST_PRICING_CHANGES_DESCRIPTION, latestPricingChangesText } from "./upcoming-changes.js";
 
 function mcpError(msg: string) {
   return {
@@ -761,16 +762,15 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
     "changes-latest",
     "agentdeals://changes/latest",
     {
-      description: "Most recent pricing changes (last 10)",
+      description: LATEST_PRICING_CHANGES_DESCRIPTION,
       mimeType: "text/plain",
     },
     async () => {
-      const data = (await fetchDealChanges({ since: "2020-01-01" })) as { changes: Array<{ date: string; vendor: string; change_type: string; summary: string; previous_state: string; current_state: string }> };
-      const latest = data.changes.slice(0, 10);
-      const lines = latest.map(c =>
+      const { total } = (await fetchDealChanges({ since: "2020-01-01", limit: "0" })) as { total: number };
+      const data = (await fetchDealChanges({ since: "2020-01-01", limit: String(total) })) as { changes: Array<{ date: string; vendor: string; change_type: string; summary: string; previous_state: string; current_state: string }> };
+      const text = latestPricingChangesText(data.changes, c =>
         `- **${c.date}** | ${c.vendor} [${c.change_type}]\n  ${c.summary}\n  Previous: ${c.previous_state}\n  Current: ${c.current_state}`
       );
-      const text = `# Latest Pricing Changes\n\n${lines.join("\n\n")}`;
       return { contents: [{ uri: "agentdeals://changes/latest", text, mimeType: "text/plain" }] };
     }
   );

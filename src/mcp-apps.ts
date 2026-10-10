@@ -1,6 +1,7 @@
 import { registerAppTool, registerAppResource, RESOURCE_MIME_TYPE } from "@modelcontextprotocol/ext-apps/server";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { POSITIVE_CHANGE_TYPES } from "./change-direction.js";
+import { UPCOMING_CHANGES_HEADING } from "./upcoming-changes.js";
 
 const SHARED_STYLES = `
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -269,6 +270,14 @@ function render(args, data) {
     if (!showRisk) risk = "unknown";
     const riskBadge = risk === "stable" || risk === "low" ? "badge-green" : risk === "watch" || risk === "medium" ? "badge-yellow" : risk === "unknown" ? "badge-gray" : "badge-red";
     const changes = data.changes || data.recent_changes || [];
+    const servedOn = new Date().toISOString().slice(0, 10);
+    const inEffect = changes.filter(c => !(c.date > servedOn));
+    const upcoming = changes.filter(c => c.date > servedOn).sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : 0));
+    const changeTable = list => \`
+        <table>
+          <thead><tr><th>Date</th><th>Type</th><th>Summary</th></tr></thead>
+          <tbody>\${list.map(c => \`<tr><td style="white-space:nowrap">\${esc(c.date)}</td><td><span class="badge \${c.change_type?.includes("removed") || c.change_type?.includes("reduced") ? "badge-red" : c.change_type?.includes("increased") || c.change_type?.includes("new") ? "badge-green" : "badge-yellow"}">\${esc(c.change_type)}</span></td><td style="font-size:13px">\${esc(c.summary)}</td></tr>\`).join("")}</tbody>
+        </table>\`;
     el.innerHTML = \`
       <div class="card">
         <div style="display:flex;justify-content:space-between;align-items:center">
@@ -278,12 +287,11 @@ function render(args, data) {
         \${cause && risk !== "stable" ? \`<p style="margin-top:8px;font-size:13px;color:#94a3b8"><strong>Why \${esc(risk)}:</strong> \${esc(cause.date)} \u2014 \${esc(cause.summary)}</p>\` : ""}
         \${data.summary ? \`<p style="margin-top:8px;font-size:14px">\${esc(data.summary)}</p>\` : ""}
       </div>
-      \${changes.length > 0 ? \`
-        <h3>Recent Pricing Changes</h3>
-        <table>
-          <thead><tr><th>Date</th><th>Type</th><th>Summary</th></tr></thead>
-          <tbody>\${changes.map(c => \`<tr><td style="white-space:nowrap">\${esc(c.date)}</td><td><span class="badge \${c.change_type?.includes("removed") || c.change_type?.includes("reduced") ? "badge-red" : c.change_type?.includes("increased") || c.change_type?.includes("new") ? "badge-green" : "badge-yellow"}">\${esc(c.change_type)}</span></td><td style="font-size:13px">\${esc(c.summary)}</td></tr>\`).join("")}</tbody>
-        </table>
+      \${inEffect.length > 0 ? \`
+        <h3>Recent Pricing Changes</h3>\${changeTable(inEffect)}
+      \` : ""}
+      \${upcoming.length > 0 ? \`
+        <h3>${UPCOMING_CHANGES_HEADING}</h3>\${changeTable(upcoming)}
       \` : ""}
       <div class="link-row"><a href="${BASE_URL}/stability" target="_blank">View stability dashboard \\u2192</a></div>
     \`;

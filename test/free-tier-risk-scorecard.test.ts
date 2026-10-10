@@ -400,3 +400,31 @@ describe("no route on the site states a stale count or a cadence the grades do n
     assert.deepStrictEqual(offenders, [], offenders.join("; "));
   });
 });
+
+describe("Amazon SP-API, whose announced fees were never charged", () => {
+  const SP_API_REASONING = "Amazon announced a $1,400 annual fee and per-call fees for third-party developers in November 2025, then said in May 2026 it \"will not move forward with the SP-API usage and annual fees at this time\". No fee was charged.";
+  const escapedLikeThePage = (text: string) => text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+
+  it("is graded medium from 2026-10-10 on the reasoning that no fee was charged", () => {
+    const entry = riskEntries.find(e => e.vendor === "Amazon SP-API");
+    assert.ok(entry, "Amazon SP-API is not on the scorecard");
+    assert.strictEqual(entry.risk, "medium");
+    assert.strictEqual(entry.graded, "2026-10-10");
+    assert.strictEqual(entry.reasoning, SP_API_REASONING);
+    assert.strictEqual(entry.lastChange, undefined, "the row types a last change, and every record of one is retracted");
+  });
+
+  it("sits under Use with Caution, with that reasoning, and under no other band", () => {
+    const medium = sectionBetween(riskHtml, "medium", "high");
+    assert.ok(namesVendor(medium, "Amazon SP-API"), "Amazon SP-API is not listed under Use with Caution");
+    assert.ok(medium.includes(escapedLikeThePage(SP_API_REASONING)), "the Use with Caution row does not give the reasoning");
+    assert.ok(!namesVendor(sectionBetween(riskHtml, "high", "dead"), "Amazon SP-API"), "Amazon SP-API is still told to plan an exit");
+    assert.ok(!namesVendor(sectionBetween(riskHtml, "dead", "scorecard"), "Amazon SP-API"), "Amazon SP-API is listed as already changed");
+  });
+
+  it("is not named as hostile to free users in the pattern the page draws from high-risk vendors, or in any other band's pattern", () => {
+    const patterns = [...riskHtml.matchAll(/<strong>Pattern:<\/strong>([\s\S]*?)<\/div>/g)].map(m => m[1]!);
+    assert.ok(patterns.some(pattern => pattern.includes("High-risk vendors share traits")), "the page draws no pattern from its high-risk vendors");
+    assert.deepStrictEqual(patterns.filter(pattern => pattern.includes("SP-API")), []);
+  });
+});

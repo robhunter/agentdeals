@@ -4,6 +4,7 @@
     "A": 30,
     "B": 90
   },
+  "measured_on": "2026-10-10",
   "pages": [
     {
       "path": "/agent-payments",
@@ -1699,12 +1700,12 @@
         },
         {
           "label": "3. 🟡 Medium Risk — Use with Caution",
-          "figures": 13,
+          "figures": 14,
           "from_records": 0
         },
         {
           "label": "4. 🔴 High Risk — Plan Your Exit",
-          "figures": 1,
+          "figures": 0,
           "from_records": 0
         },
         {
@@ -1882,6 +1883,11 @@
           "label": "Recent GCP & Google Changes",
           "figures": 7,
           "from_records": 6
+        },
+        {
+          "label": "Upcoming Changes",
+          "figures": 0,
+          "from_records": 0
         }
       ],
       "reads_changes": true,

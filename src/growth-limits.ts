@@ -118,13 +118,14 @@ type LimitPattern = {
   format: (m: RegExpMatchArray, description: string) => string;
 };
 
-const NOT_INSIDE_A_WORD_OR_A_FIGURE = "(?<![\\p{L}\\p{N}.\\-])";
+const NOT_INSIDE_A_WORD_OR_A_FIGURE = "(?<![\\p{L}\\p{N}.\\-])(?<!\\p{N},)";
+const NOT_A_PRICE_UNIT = "(?<!\\bper\\s+)";
 const A_WHOLE_NUMBER = "\\d[\\d,]*";
 const A_DECIMAL = `${A_WHOLE_NUMBER}(?:\\.\\d+)?`;
 const A_COUNT_IN_THOUSANDS = `${A_DECIMAL}k?`;
 
 function aLimitOf(figure: string, nouns: string): RegExp {
-  return new RegExp(`${NOT_INSIDE_A_WORD_OR_A_FIGURE}(${figure}(?:\\s*[-–]\\s*${figure})?)\\s*${nouns}`, "iu");
+  return new RegExp(`${NOT_INSIDE_A_WORD_OR_A_FIGURE}${NOT_A_PRICE_UNIT}(${figure}(?:\\s*[-–]\\s*${figure})?)\\s*${nouns}`, "iu");
 }
 
 export const LIMIT_PATTERNS: LimitPattern[] = [
