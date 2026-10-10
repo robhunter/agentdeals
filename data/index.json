@@ -2965,6 +2965,30 @@
           "quote": "As part of our fraud prevention measures, we may ask you to verify your account before we process an order. You can do this in two ways: Verification via ID document: You provide us with a copy of a valid government-issued ID (e.g., ID card or passport). This allows us to confirm that the information provided during registration matches your identity. Verification via prepayment (credit card): Alternatively, you can verify your account by making an advance payment with your own credit card.",
           "url": "https://docs.hetzner.com/general/security-and-identify/fraud-prevention-faq/",
           "read_on": "2026-10-07"
+        },
+        {
+          "text": "A cloud server can run with only an IPv6 address. Hetzner charges €0.50 a month for a Primary IPv4, and nothing for a Primary IPv6, so an IPv6-only server costs €0.50 a month less than the same server with IPv4.",
+          "quote": "We do not charge for our Primary IPv6s. We charge € 0.50 / $ 0.60 per month (excl. VAT) for our Primary IPv4s.",
+          "url": "https://docs.hetzner.com/cloud/servers/primary-ips/overview/",
+          "read_on": "2026-10-10"
+        },
+        {
+          "text": "A server with only an IPv6 address has no public IPv4 connectivity.",
+          "quote": "Servers that only have a Primary IPv6 do not have public IPv4 connectivity.",
+          "url": "https://docs.hetzner.com/cloud/servers/primary-ips/faq/",
+          "read_on": "2026-10-10"
+        },
+        {
+          "text": "Private Networks, and the traffic on their private interfaces, are free.",
+          "quote": "The Networks feature is free. The traffic on the private network interfaces is free; we will not charge you for it.",
+          "url": "https://docs.hetzner.com/cloud/networks/faq/",
+          "read_on": "2026-10-10"
+        },
+        {
+          "text": "Cloud Firewalls are free.",
+          "quote": "We do not charge for our Cloud Firewalls.",
+          "url": "https://docs.hetzner.com/cloud/firewalls/overview/",
+          "read_on": "2026-10-10"
         }
       ]
     },
