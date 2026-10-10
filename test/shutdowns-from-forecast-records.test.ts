@@ -288,7 +288,7 @@ describe("/shutdowns prints a card for each shutdown a record forecast and no ca
           "Active Shutdowns": active,
           "Imminent (<30 days)": inSection("imminent"),
           "Upcoming (30–90 days)": inSection("upcoming"),
-          "Later this year": inSection("later"),
+          Later: inSection("later"),
         },
       },
     );
