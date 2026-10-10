@@ -13977,6 +13977,21 @@
       "recorded_date": "2026-09-26"
     },
     {
+      "vendor": "Groq",
+      "change_type": "limits_reduced",
+      "date": "2026-10-06",
+      "summary": "Groq cut the free limits of gpt-oss-safeguard-20b from 30 to 3 requests a minute and from 8,000 to 2,000 tokens a minute; 1,000 requests and 200,000 tokens a day are unchanged. The Internet Archive's capture of console.groq.com/docs/rate-limits on 2026-09-28 lists 30 RPM and 8K TPM, and its capture of 2026-10-06 lists 3 RPM and 2K TPM. Groq announced no change. The other free chat models keep 30 requests and 8,000 tokens a minute.",
+      "tier": "Free",
+      "previous_state": "gpt-oss-safeguard-20b on the free plan: 30 requests a minute, 1,000 requests a day, 8,000 tokens a minute, 200,000 tokens a day",
+      "current_state": "gpt-oss-safeguard-20b on the free plan: 3 requests a minute, 1,000 requests a day, 2,000 tokens a minute, 200,000 tokens a day (Free Plan Limits table)",
+      "impact": "low",
+      "source_url": "http://web.archive.org/web/20261006074250/https://console.groq.com/docs/rate-limits",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-10-10",
+      "date_source": "hand_written"
+    },
+    {
       "vendor": "Windsurf",
       "change_type": "rebranded",
       "date": "2026-06-02",
