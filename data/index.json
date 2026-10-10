@@ -6702,7 +6702,15 @@
         "checked": "2026-09-30",
         "outcome": "ok",
         "detail": "the page names Formspree as \"formspree\" and states \"50 submissions/mo\""
-      }
+      },
+      "conditions": [
+        {
+          "text": "Forms keep working for visitors, but Formspree stops processing new submissions when the monthly limit is reached. It saves them to the Over Limit folder without sending notification emails or running plugins. They can be reprocessed from the dashboard once the account has room in its limit again.",
+          "quote": "When your account reaches it, your forms keep working for visitors, but Formspree stops processing new submissions. It saves them to your account without sending notification emails or running plugins, and emails you when this starts happening. Formspree holds those submissions in the Over Limit folder. Once you have room in your limit again, you can reprocess them from the dashboard.",
+          "url": "https://help.formspree.io/articles/form-and-project-settings/over-limit-submissions",
+          "read_on": "2026-10-10"
+        }
+      ]
     },
     {
       "vendor": "JotForm",
@@ -34728,7 +34736,7 @@
     {
       "vendor": "Mockoon",
       "category": "API Development",
-      "description": "Free and open-source desktop app for creating local API mocks — dynamic responses, request logging, record/replay and OpenAPI import. Mockoon Cloud adds hosted mocks and collaboration: Team is $100/month billed annually for 5 members, 3 deployed mocks and 100,000 calls/month, with a 14-day trial on a work email (7 days and a card otherwise).",
+      "description": "Free and open-source desktop app for creating local API mocks — dynamic responses, request logging, record/replay and OpenAPI import. Mockoon Pro adds team collaboration and deployed mock instances. It is self-hosted on the customer's own infrastructure. The Team plan costs €10 per license a month, billed €120 per license a year, with a minimum of 5 licenses. A 14-day free trial is available for companies with a verified work email.",
       "tier": "Free OSS",
       "url": "https://mockoon.com/pricing/",
       "tags": [
