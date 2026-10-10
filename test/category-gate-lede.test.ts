@@ -340,6 +340,7 @@ describe("a category page discloses every gated record, not eligibility alone", 
 
   it("carries the widened clause list into the search snippet", async () => {
     let ordered = 0;
+    const shortenedThoughTheFullClauseFits: string[] = [];
     for (const c of census) {
       const description = descriptionOf(await page(`/category/${c.slug}`));
       if (c.gated === 0) {
@@ -356,14 +357,12 @@ describe("a category page discloses every gated record, not eligibility alone", 
       const shortened = lapsed > 0 ? clause.replace(CLAUSE_FORMS.verification_lapsed(lapsed), SHORT_LAPSE_FORM(lapsed)) : clause;
       const carried = description.includes(clause) ? clause : description.includes(shortened) ? shortened : null;
       assert.ok(carried, `/category/${c.slug} description is ${description}`);
-      if (carried !== clause) {
-        assert.ok(
-          description.replace(shortened, clause).length > DESCRIPTION_CAP,
-          `/category/${c.slug} shortens its lapse clause though the full clause fits: ${description}`,
-        );
+      if (carried !== clause && description.replace(shortened, clause).length <= DESCRIPTION_CAP) {
+        shortenedThoughTheFullClauseFits.push(`/category/${c.slug}: ${description}`);
       }
       if (assertAheadOfTheVendorList(description, carried, `/category/${c.slug}`)) ordered++;
     }
+    assert.deepStrictEqual(shortenedThoughTheFullClauseFits, [], "a description shortens its lapse clause though the full clause fits");
     assert.ok(ordered > 0, "no category description states both a clause list and a vendor list, so the ordering is read on nothing");
   });
 });

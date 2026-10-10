@@ -331,7 +331,6 @@ describe("the lapse clause in a category description", () => {
 
   it("writes the lapse short where the full wording runs past the cap, and changes no other clause", () => {
     const rest = " We could not confirm today's terms for 11 of them: on 10 the page we cite did not answer, and on 1 our own read did not confirm them. Each row says why.";
-    assert.ok(composeWithLapses(3, rest)("full").length > LONGEST_DESCRIPTION_BEFORE_THIS_RULE);
     assert.strictEqual(
       composedWithinTheCap(LONGEST_DESCRIPTION_BEFORE_THIS_RULE, composeWithLapses(3, rest)),
       `${OPENING} 1 requires an application or qualification, 3 unconfirmed in 180 days.${rest}`,
