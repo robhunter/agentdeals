@@ -40,7 +40,13 @@
       "category": "API Development",
       "alternatives": [],
       "recorded_date": "2026-04-19",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-10-10",
+        "detail": "Retracted 2026-10-10: an announcement of fees Amazon never charged, so SP-API's terms did not change. Amazon delayed the fees in January 2026, postponed them indefinitely in March, and its developer portal says it \"will not move forward with the SP-API usage and annual fees at this time\".",
+        "source_url": "https://developer.amazonservices.com/cancellation-of-sp-api-fees"
+      }
     },
     {
       "vendor": "Xata",
@@ -257,7 +263,13 @@
         "BigCommerce API"
       ],
       "recorded_date": "2026-02-25",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-10-10",
+        "detail": "Retracted 2026-10-10: free access did not end and the annual fee did not start. Amazon delayed the fees in January 2026, postponed them indefinitely in March, and its developer portal says it \"will not move forward with the SP-API usage and annual fees at this time\".",
+        "source_url": "https://developer.amazonservices.com/cancellation-of-sp-api-fees"
+      }
     },
     {
       "vendor": "PythonAnywhere",
@@ -1959,7 +1971,13 @@
         "BigCommerce API"
       ],
       "recorded_date": "2026-04-14",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-10-10",
+        "detail": "Retracted 2026-10-10: the $1,400 annual fee it says remains in effect never started. Amazon postponed all SP-API fees indefinitely in March 2026, and its developer portal says it \"will not move forward with the SP-API usage and annual fees at this time\".",
+        "source_url": "https://developer.amazonservices.com/cancellation-of-sp-api-fees"
+      }
     },
     {
       "vendor": "Amazon Kiro",

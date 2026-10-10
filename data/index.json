@@ -10129,8 +10129,8 @@
     {
       "vendor": "Amazon SP-API",
       "category": "API Development",
-      "description": "Amazon Selling Partner API for building seller and vendor tools on Amazon. Sellers/vendors using SP-API for their own business remain fully exempt (free). Third-party developers: $1,400/year annual fee active since Jan 31 2026; Basic tier includes 2.5M GET calls/month. Per-call overage fees ($0.40 per 1K GET calls) were scheduled for 2026-04-30 but postponed indefinitely after developer backlash — no new date announced.",
-      "tier": "Exempt / Paid",
+      "description": "The Amazon Selling Partner API (SP-API) is for building seller and vendor tools on Amazon. SP-API is free for sellers and third-party developers. Amazon announced a $1,400 annual fee for developers and per-call fees in late 2025, but delayed and then postponed them. In May 2026, Amazon said it \"will not move forward with the SP-API usage and annual fees at this time.\"",
+      "tier": "Free",
       "url": "https://developer.amazonservices.com/",
       "tags": [
         "api",
