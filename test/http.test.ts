@@ -11,6 +11,7 @@ import { API_ENDPOINTS } from "../dist/api-inventory.js";
 import { PATHS_OUTSIDE_THE_ENDPOINT_INVENTORY } from "../dist/openapi.js";
 import { entryDay, isDailyEntry, readPageLastmod } from "../dist/page-lastmod.js";
 import { cheapestOrderableHetznerPlan } from "../dist/hetzner-pricing.js";
+import { isoWeekOf, isoWeekWindow } from "../dist/change-dates.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 let serverPort = 0;
@@ -26,14 +27,30 @@ const catalogue: StoredRecord[] = JSON.parse(
   fs.readFileSync(path.join(__dirname, "..", "data", "index.json"), "utf-8"),
 ).offers;
 
-const changeLogByVendor = new Map<string, { date: string; change_type: string }[]>();
-for (const change of JSON.parse(
+const recordedChanges: { vendor: string; date: string; change_type: string }[] = JSON.parse(
   fs.readFileSync(path.join(__dirname, "..", "data", "deal_changes.json"), "utf-8"),
-).changes) {
+).changes;
+
+const changeLogByVendor = new Map<string, { date: string; change_type: string }[]>();
+for (const change of recordedChanges) {
   const key = change.vendor.toLowerCase();
   const held = changeLogByVendor.get(key);
   if (held) held.push(change);
   else changeLogByVendor.set(key, [change]);
+}
+
+function isoWeekKeyOf(day: string): string {
+  const { year, week } = isoWeekOf(new Date(day + "T00:00:00Z"));
+  return `${year}-w${String(week).padStart(2, "0")}`;
+}
+
+function latestRecordedChangeDay(): string {
+  return recordedChanges.map((c) => c.date).sort().at(-1)!;
+}
+
+function isoWeekKeyAfter(day: string): string {
+  const mondayOfItsWeek = Date.parse(isoWeekWindow(new Date(day + "T00:00:00Z")).start + "T00:00:00Z");
+  return isoWeekKeyOf(new Date(mondayOfItsWeek + 7 * 86400000).toISOString().slice(0, 10));
 }
 
 function primaryRecordOf(vendor: string): StoredRecord | undefined {
@@ -1372,9 +1389,14 @@ describe("HTTP transport", () => {
   });
 
   it("GET /digest/:week shows empty state for weeks with no changes", async () => {
+    const latest = latestRecordedChangeDay();
+    const week = isoWeekKeyAfter(latest);
+    const weeksHoldingARecord = new Set(recordedChanges.map((c) => isoWeekKeyOf(c.date)));
+    assert.ok(weeksHoldingARecord.has(isoWeekKeyOf(latest)), `the week of ${latest} holds no recorded change`);
+    assert.ok(!weeksHoldingARecord.has(week), `${week} holds a recorded change`);
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${serverPort}/digest/2026-w50`);
+    const response = await fetch(`http://localhost:${serverPort}/digest/${week}`);
     assert.strictEqual(response.status, 200);
     const html = await response.text();
     assert.ok(html.includes("No pricing changes tracked this week"), "Should show empty message");
