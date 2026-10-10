@@ -150,8 +150,10 @@ describe(`${PAGE} on paying after use once Prepay starts`, () => {
       "Google's billing FAQ states that accounts cannot switch from Prepay to Postpay, and Prepay is not available for invoiced accounts. " +
       "To pay after use instead of prepaying, use Gemini Enterprise Agent Platform (formerly Vertex AI). " +
       "Google bills it on the standard Cloud charging cycle, not Prepay. " +
-      "Gemini 3.5 Flash costs $1.50 input and $9.00 output per million tokens on the global endpoint, the same as the Gemini API's paid tier. " +
+      "Agent Platform charges $0.75 input and $3.75 output per million tokens for Gemini 3.8 Flash and 3.6 Flash on the global endpoint through 2026-12-31, then $1.50 input and $7.50 output. " +
       "Non-global endpoints cost 10% more. " +
+      "These match Gemini API paid-tier prices. " +
+      "If moving from gemini-3.5-flash, change the model to gemini-3.6-flash or gemini-3.8-flash, as Agent Platform still lists Gemini 3.5 Flash at $1.50 input and $9.00 output. " +
       "Accounts that use only the free tier need take no action.",
     ), text);
   });
@@ -159,7 +161,7 @@ describe(`${PAGE} on paying after use once Prepay starts`, () => {
   it("links the charging cycle to Google's billing doc and both prices to the Agent Platform pricing page", () => {
     const paragraph = prepayParagraph(page);
     assert.ok(paragraph.includes('Google <a href="https://ai.google.dev/gemini-api/docs/billing" target="_blank" rel="noopener">bills it on the standard Cloud charging cycle</a>, not Prepay.'), paragraph);
-    assert.ok(paragraph.includes('Gemini 3.5 Flash costs <a href="https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing" target="_blank" rel="noopener">$1.50 input and $9.00 output per million tokens on the global endpoint</a>, the same as the Gemini API\'s paid tier.'), paragraph);
+    assert.ok(paragraph.includes('Agent Platform charges <a href="https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing" target="_blank" rel="noopener">$0.75 input and $3.75 output per million tokens for Gemini 3.8 Flash and 3.6 Flash on the global endpoint through 2026-12-31, then $1.50 input and $7.50 output</a>. Non-global endpoints cost 10% more.'), paragraph);
   });
 
   it("ends by saying usage can run past a $0 balance and that a negative balance comes off the next purchase", () => {
