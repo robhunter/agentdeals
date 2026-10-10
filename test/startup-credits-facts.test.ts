@@ -69,7 +69,7 @@ const PROGRAMMES: Record<string, [string, string, string, string]> = {
   "Ramp Partner Rewards": ["Over $350K in partner rewards", "Ramp customers", "", ""],
   "SVB Startup Banking Offers": ["$5K AWS + partner offers", "Clients of First Citizens Innovation Banking (formerly Silicon Valley Bank)", "", "Per-partner activation"],
   "PostHog for Startups": ["$50K in credits (YC: $50K a year)", "Under 2 years old and under $5M raised. YC companies under $25M raised get $50K a year instead.", "12 months (YC: renews yearly while eligible)", "Credits for 12 months; the YC deal renews yearly"],
-  "Amazon Kiro (AWS Startups)": ["Up to 1 year of Kiro Pro+ ($40 per user a month)", "Early stage to Series A, without active AWS Activate credits; not available in France, Germany, Italy, Spain, Poland, Brazil, Mexico, Argentina, the UAE, China or sanctioned regions; apply by 2026-12-31.", "Credits expire 1 year after they are issued", "Deposited once to your AWS account"],
+  "Amazon Kiro (AWS Startups)": ["Up to 1 year of Kiro Pro+ ($40 per user a month)", "Early stage to Series A, without active AWS Activate credits; not available in France, Germany, Italy, Spain, Poland, Brazil, Mexico, Argentina, the UAE, China or sanctioned regions; apply by 2026-12-31. The AWS account email must match the startup's corporate website domain, and applicants must be 18 years or older.", "Credits expire 1 year after they are issued", "Deposited once to your AWS account"],
   "Amplitude Early Stage Startup Pricing": ["1 year of the Growth plan free", "Under 20 employees and under $10M raised", "1 year; year 2 at 40% off the annual Plus plan, or move to the free plan", "Full plan for 12 months"],
 };
 
@@ -91,13 +91,12 @@ const INCLUDED: Record<string, string> = {
   "Amplitude Early Stage Startup Pricing": "The full Growth plan for 200K monthly tracked users or 100M events a month.",
 };
 
-const WHEN_CREDITS_RUN_OUT: Record<string, [string, string]> = {
-  "AWS Activate": ["Your AWS account is billed for usage beyond the credits. Some services are not eligible for the credits.", "https://aws.amazon.com/awscredits/"],
-  "Google Cloud for Startups": ["Usage beyond the credits is billed to you. Google is not required to notify you when the credits are exhausted.", "https://cloud.google.com/terms/startup-program-tos"],
-  "Microsoft for Startups (formerly Founders Hub)": ["When the credits are used up or reach their end date, the subscription converts automatically to Pay-As-You-Go and you pay for further usage.", "https://azure.microsoft.com/en-us/pricing/offers/ms-azr-0036p"],
+const WHEN_CREDITS_RUN_OUT: Record<string, [string, string, string]> = {
+  "AWS Activate": ["Your AWS account is billed for usage beyond the credits. Some services are not eligible for the credits.", "https://aws.amazon.com/awscredits/", "2026-10-08"],
+  "Google Cloud for Startups": ["Usage beyond the credits is billed to you. Google is not required to notify you when the credits are exhausted.", "https://cloud.google.com/terms/startup-program-tos", "2026-10-08"],
+  "Microsoft for Startups (formerly Founders Hub)": ["When the credits are used up or reach their end date, the subscription converts automatically to Pay-As-You-Go and you pay for further usage.", "https://azure.microsoft.com/en-us/pricing/offers/ms-azr-0036p", "2026-10-08"],
+  "Amazon Kiro (AWS Startups)": ["Your AWS Account automatically switches to standard Kiro Pro+ billing at the then-current rates, billed monthly to your AWS-associated credit card.", "https://kiro.dev/startups/terms/", "2026-10-10"],
 };
-
-const CREDITS_RUN_OUT_TERMS_READ = "2026-10-08";
 
 const CREDITS_ENDING_WITHOUT_CHARGES: [string, RegExp][] = [
   ["usage past the credits is not charged or billed", /\b(?:not|never|won't|will not) (?:be )?(?:charged|billed)\b|\bnothing is (?:charged|billed)\b|\bno charges?\b|\bwithout (?:a )?charge\b/i],
@@ -296,13 +295,13 @@ describe("the startup credits guide states each programme's terms as the program
     assert.deepStrictEqual(wrong, []);
   });
 
-  it("says what happens when each cloud programme's credits run out, citing the programme's own terms and the day they were read", () => {
+  it("says what happens when each programme's credits run out, where its terms say, citing those terms and the day they were read", () => {
     const html = served.get("/startup-credits")!;
     const stated = Object.fromEntries([...programmeCards(html)]
       .filter(([, fields]) => "When credits run out" in fields)
       .map(([name, fields]) => [name, fields["When credits run out"]]));
-    const expected = Object.fromEntries(Object.entries(WHEN_CREDITS_RUN_OUT).map(([name, [terms, url]]) =>
-      [name, `${terms} (From ${url.replace(/^https:\/\//, "").replace(/\/$/, "")}, read ${CREDITS_RUN_OUT_TERMS_READ}.)`]));
+    const expected = Object.fromEntries(Object.entries(WHEN_CREDITS_RUN_OUT).map(([name, [terms, url, readOn]]) =>
+      [name, `${terms} (From ${url.replace(/^https:\/\//, "").replace(/\/$/, "")}, read ${readOn}.)`]));
     assert.deepStrictEqual(stated, expected);
     const cards = programmeCardMarkup(html);
     const unlinked = Object.entries(WHEN_CREDITS_RUN_OUT)
