@@ -73,6 +73,10 @@ const CLAUSE_FORMS: Record<string, (n: number) => string> = {
 
 const CLAUSE_ORDER = ["eligibility_restricted", "not_a_free_offer", "offer_expired", "offer_retired", "product_discontinued", "verification_lapsed"];
 
+const DESCRIPTION_CAP = 307;
+
+const SHORT_LAPSE_FORM = (n: number) => `${n} unconfirmed in 180 days`;
+
 function clausesFor(codes: string[]): string {
   const parts: string[] = [];
   for (const code of CLAUSE_ORDER) {
@@ -348,8 +352,17 @@ describe("a category page discloses every gated record, not eligibility alone", 
       const clause = c.codes.length >= c.total && c.codes.every((code) => code === "eligibility_restricted")
         ? `All ${c.total} require an application or qualification.`
         : `${clausesFor(c.codes)}.`;
-      assert.ok(description.includes(clause), `/category/${c.slug} description is ${description}`);
-      if (assertAheadOfTheVendorList(description, clause, `/category/${c.slug}`)) ordered++;
+      const lapsed = c.codes.filter((code) => code === "verification_lapsed").length;
+      const shortened = lapsed > 0 ? clause.replace(CLAUSE_FORMS.verification_lapsed(lapsed), SHORT_LAPSE_FORM(lapsed)) : clause;
+      const carried = description.includes(clause) ? clause : description.includes(shortened) ? shortened : null;
+      assert.ok(carried, `/category/${c.slug} description is ${description}`);
+      if (carried !== clause) {
+        assert.ok(
+          description.replace(shortened, clause).length > DESCRIPTION_CAP,
+          `/category/${c.slug} shortens its lapse clause though the full clause fits: ${description}`,
+        );
+      }
+      if (assertAheadOfTheVendorList(description, carried, `/category/${c.slug}`)) ordered++;
     }
     assert.ok(ordered > 0, "no category description states both a clause list and a vendor list, so the ordering is read on nothing");
   });
