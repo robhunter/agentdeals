@@ -1184,8 +1184,12 @@ export interface PageSourceMeasurement {
   vendors_tabulated: string[];
 }
 
+function tablesCarryingFigures(tables: TableCredit[] | undefined): TableCredit[] {
+  return (tables ?? []).filter(table => table.figures > 0);
+}
+
 function tableSplit(tables: TableCredit[] | undefined): string {
-  return (tables ?? []).map(table => `${table.label ?? "unlabelled"} ${table.from_records}/${table.figures}`).join(", ") || "no tables";
+  return tablesCarryingFigures(tables).map(table => `${table.label ?? "unlabelled"} ${table.from_records}/${table.figures}`).join(", ") || "no tables";
 }
 
 function namedVendors(slugs: string[] | undefined): string {
