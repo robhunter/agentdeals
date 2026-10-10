@@ -34661,7 +34661,7 @@
     {
       "vendor": "Mockoon",
       "category": "API Development",
-      "description": "Free and open-source desktop app for creating local API mocks — dynamic responses, request logging, record/replay and OpenAPI import. Mockoon Pro adds team collaboration and deployed mock instances. It is self-hosted on the customer's own infrastructure. The Team plan costs €10 per license a month, billed €120 per license a year, with a minimum of 5 licenses. A 14-day free trial is available for companies with a verified work email.",
+      "description": "Free and open-source desktop app for creating local API mocks — dynamic responses, request logging, record/replay and OpenAPI import. Mockoon Cloud adds hosted mocks and collaboration: Team is $100/month billed annually for 5 members, 3 deployed mocks and 100,000 calls/month, with a 14-day trial on a work email (7 days and a card otherwise).",
       "tier": "Free OSS",
       "url": "https://mockoon.com/pricing/",
       "tags": [
