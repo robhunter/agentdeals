@@ -292,7 +292,7 @@ describe("the shipped scorecard", () => {
     );
   });
 
-  it("restates no retracted record in its Reasoning cells or pattern notes", () => {
+  it("prints the replacement Reasoning cells and pattern notes, and none of the clauses they replaced", () => {
     const visible = page.replace(/<script[\s\S]*?<\/script>/g, "");
     for (const retired of [
       "Project pause tightened",
@@ -302,6 +302,9 @@ describe("the shipped scorecard", () => {
       "Free tier removed twice",
       "incremental tightening",
       "multiple negative changes in a short period",
+      "Realtime Database EOL",
+      "restrictions tightened",
+      "Migration advisable for RTDB users",
     ]) {
       assert.ok(!visible.includes(retired), `the page still says "${retired}"`);
     }
@@ -311,6 +314,7 @@ describe("the shipped scorecard", () => {
       "X replaced its free API tier with pay-per-use pricing, announced 2026-02-06. Recently active free-tier users got a one-time $10 voucher. Only Public Utility Apps keep free access.",
       "credit-based pricing transitions (Vercel, Netlify) or post-acquisition uncertainty (Neon/Databricks).",
       "High-risk vendors share traits: a free tier already removed (OpenAI, X/Twitter),",
+      "From February 3, 2026, Cloud Storage for Firebase requires the pay-as-you-go Blaze plan. Projects on the no-cost Spark plan have no access to any Cloud Storage bucket.",
     ]) {
       assert.ok(visible.includes(given), `the page does not say "${given}"`);
     }
