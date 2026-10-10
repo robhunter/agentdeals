@@ -63,6 +63,18 @@ export const HETZNER_OBJECT_STORAGE_PRICES = {
   egressPerTbBeyondTheQuota: { eur: 1, usd: 1.2 },
 };
 
+export const HETZNER_VOLUME_PRICES = {
+  perGbMonth: { eur: 0.0572, usd: 0.0767 },
+  perGbMonthBeforeApril: { eur: 0.044 },
+};
+
+export const HETZNER_STORAGE_BOX_PRICES = [
+  { sku: "BX11", tb: 1, eur: 3.2, usd: 4 },
+  { sku: "BX21", tb: 5, eur: 10.9, usd: 13 },
+  { sku: "BX31", tb: 10, eur: 20.8, usd: 24 },
+  { sku: "BX41", tb: 20, eur: 40.6, usd: 46 },
+];
+
 export const HETZNER_APRIL_CHANGES = [
   { product: "CX23 (2 vCPU, 4 GB) — entry cloud server", before: "€2.99", after: "€3.99", pctChange: 33 },
   { product: "LB11 (Load Balancer)", before: "€5.39", after: "€7.49", pctChange: 39 },

@@ -2931,6 +2931,24 @@
           "read_on": "2026-10-08"
         },
         {
+          "text": "Volumes (block storage) cost €0.0572 per GB a month ($0.0767), billed hourly up to that monthly price, from 10 GB to 10 TB in 1 GB steps. A 100 GB Volume costs €5.72 a month. Before 1 April 2026 the price was €0.044 per GB.",
+          "quote": "Volumes have a monthly price cap and are billed hourly. They can have a storage capacity of 10 GB to 10 TB and you can select the desired size in 1 GB increments.",
+          "url": "https://docs.hetzner.com/cloud/volumes/overview/",
+          "read_on": "2026-10-10"
+        },
+        {
+          "text": "A Volume can be made larger at any time but never smaller.",
+          "quote": "You can increase its size at any time, but shrinking is not possible.",
+          "url": "https://www.hetzner.com/cloud/block-storage/",
+          "read_on": "2026-10-10"
+        },
+        {
+          "text": "Storage Boxes cost €3.20 a month for 1 TB (BX11), €10.90 for 5 TB, €20.80 for 10 TB and €40.60 for 20 TB, billed hourly up to that monthly price, with no setup fee.",
+          "quote": "For information about available plans and prices, see hetzner.com/storage/storage-box",
+          "url": "https://docs.hetzner.com/storage/storage-box/general/",
+          "read_on": "2026-10-10"
+        },
+        {
           "text": "Hetzner's prices are net, so VAT is added by the customer's country of residence: 19% in Germany, and each EU country's own rate for EU customers without a valid VAT ID.",
           "quote": "Our net prices are the same for all customers. The rate of Value Added Tax (VAT) that we charge is based on your country of residence … We charge clients based in Germany 19% VAT. … We charge customers from EU Member States the VAT rate of their respective country of origin",
           "url": "https://docs.hetzner.com/general/billing-and-account-management/billing-at-hetzner/value-added-tax/",
@@ -10732,6 +10750,18 @@
           "quote": "Subscribing to an eligible Google AI plan now also unlocks premium Colab benefits, similar to those offered by Colab's own paid plans: a monthly allotment of Colab compute units, access to more powerful GPUs and TPUs, and, on higher plans, additional capabilities such as background execution. The exact benefits depend on your plan, and they are included only with eligible paid Google AI plans (not with storage-only Google One plans ). … Premium Colab benefits are only available to paid Google AI plan subscribers. They are not included during a free trial of a Google One plan",
           "url": "https://research.google.com/colaboratory/faq.html",
           "read_on": "2026-10-08"
+        },
+        {
+          "text": "A running notebook can be terminated if compute units run out. The account then uses the free tier's rules until more units are added.",
+          "quote": "You can expect to experience backend termination if you exhaust your available compute units on a Pro, Pro+, or Pay As You Go plan. … Paid users whose compute unit balance is exhausted will revert to the free-of-charge tier policies and restrictions until the balance is increased.",
+          "url": "https://research.google.com/colaboratory/faq.html",
+          "read_on": "2026-10-10"
+        },
+        {
+          "text": "Colab bans file hosting, media serving and other web services not related to interactive compute on every managed runtime, free or paid.",
+          "quote": "The following are disallowed from all managed Colab runtimes: file hosting, media serving, or other web service offerings not related to interactive compute with Colab",
+          "url": "https://research.google.com/colaboratory/faq.html",
+          "read_on": "2026-10-10"
         }
       ]
     },
