@@ -1,7 +1,8 @@
 import type { DealChange, Offer } from "./types.js";
 import { PRODUCT_DEPRECATED, deprecationTouchesTheListing } from "./product-deprecation.js";
-import { isNoLongerInForce } from "./change-resolution.js";
+import { isACorrectionToOurOwnRecord, isNoLongerInForce } from "./change-resolution.js";
 import { isIndexHousekeeping } from "./change-census.js";
+import { newestChangeInEffect } from "./change-dates.js";
 import { tierRecordsAFreeTier } from "./free-tier-record.js";
 
 export { INDEX_SWEEP_STATE } from "./change-census.js";
@@ -209,8 +210,31 @@ export function splitByFreeTierStanding(
   };
 }
 
-export function citesAChangeOlderThanTheGrade(entry: RiskEntry): boolean {
-  return Boolean(entry.lastChange && entry.lastChange < entry.graded);
+function recordsTypedAsLastChange<T extends GradableChange>(entry: RiskEntry, changes: readonly T[]): T[] {
+  if (!entry.lastChange) return [];
+  return recordsFor(entry, changes).filter(
+    c => c.date === entry.lastChange && (!entry.changeType || c.change_type === entry.changeType),
+  );
+}
+
+function typedLastChangeIsNoLongerInForce(entry: RiskEntry, changes: readonly GradableChange[]): boolean {
+  const typed = recordsTypedAsLastChange(entry, changes);
+  return typed.length > 0 && typed.every(isNoLongerInForce);
+}
+
+function latestChangeInForce<T extends GradableChange>(entry: RiskEntry, changes: readonly T[], asOf: string): T | null {
+  const theVendorsOwn = recordsFor(entry, changes).filter(c => !isNoLongerInForce(c) && !isACorrectionToOurOwnRecord(c));
+  return newestChangeInEffect(theVendorsOwn, asOf);
+}
+
+export function lastChangeShown(entry: RiskEntry, changes: readonly GradableChange[], asOf: string): string | null {
+  if (!entry.lastChange) return null;
+  if (!typedLastChangeIsNoLongerInForce(entry, changes)) return entry.lastChange;
+  return latestChangeInForce(entry, changes, asOf)?.date ?? null;
+}
+
+export function citesAChangeOlderThanTheGrade(entry: RiskEntry, shown: string | null): boolean {
+  return Boolean(shown && shown < entry.graded);
 }
 
 const FIRST_GRADING = "2026-03-26";
@@ -225,7 +249,7 @@ export const riskEntries: RiskEntry[] = [
   { vendor: "Google Cloud (Always Free)", risk: "low", category: "Cloud IaaS", reasoning: "Google Always Free tier unchanged for years — f1-micro VM, 5 GB Cloud Storage, BigQuery 1 TB/mo. Separate from promotional credits. Backed by Alphabet's cloud growth strategy.", graded: FIRST_GRADING, lastChange: "2026-01-01", changeType: "limits_increased", changeLogNames: ["Google Cloud"], catalogueVendor: "Google Cloud" },
   { vendor: "AWS Free Tier", risk: "low", category: "Cloud IaaS", reasoning: "On 2025-07-15 AWS replaced the 12-month free tier for new accounts with a Free plan: up to $200 in credits, closing after 6 months. 30+ services, including Lambda (1M requests a month) and DynamoDB (25 GB), stay always free on both plans.", graded: FIRST_GRADING, lastChange: "2026-01-04", changeType: "pricing_restructured", changeLogNames: ["AWS"], catalogueVendor: "AWS" },
   { vendor: "GitHub Copilot Free", risk: "low", category: "AI Coding", reasoning: "New free tier launched Dec 2025 (2K completions + 50 chat/mo). Microsoft strategic investment in AI developer tools. Competitive pressure from Cursor/Claude ensures free tier stays.", graded: FIRST_GRADING, lastChange: "2025-12-18", changeType: "new_free_tier", changeLogNames: ["GitHub Copilot"], catalogueVendor: "GitHub Copilot" },
-  { vendor: "Anthropic", risk: "low", category: "AI/ML APIs", reasoning: "New API users receive a small amount of free credits to test the API.", graded: FIRST_GRADING, lastChange: "2026-03-13", changeType: "limits_increased", changeLogNames: ["Anthropic", "Anthropic API", "Anthropic Claude"], catalogueVendor: "Anthropic API" },
+  { vendor: "Anthropic", risk: "low", category: "AI/ML APIs", reasoning: "New API users receive a small amount of free credits to test the API.", graded: FIRST_GRADING, changeLogNames: ["Anthropic", "Anthropic API", "Anthropic Claude"], catalogueVendor: "Anthropic API" },
 
   { vendor: "Supabase", risk: "medium", category: "Databases/BaaS", reasoning: "Project pause tightened to 1 week inactivity (Feb 2026). Core free tier preserved but signals efficiency pressure. Post-Series C ($80M) — profitable path unclear.", graded: FIRST_GRADING, lastChange: "2026-02-01", changeType: "limits_reduced" },
   { vendor: "Vercel", risk: "medium", category: "Hosting", reasoning: "Restructured to credit-based model (Jan 2026). Free tier still generous for personal projects but commercial use restricted (Hobby plan). Watch for further tightening.", graded: FIRST_GRADING, lastChange: "2026-01-01", changeType: "pricing_restructured" },
