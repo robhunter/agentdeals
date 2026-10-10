@@ -22,12 +22,12 @@
       "changed": "2026-10-09"
     },
     "/ai-free-tiers": {
-      "hash": "545eb2e1739b4d33",
-      "changed": "2026-10-09"
+      "hash": "615cc8380aff75e2",
+      "changed": "2026-10-10"
     },
     "/ai-ml-alternatives": {
-      "hash": "27a074e35526337d",
-      "changed": "2026-10-09"
+      "hash": "1bde00c03103813f",
+      "changed": "2026-10-10"
     },
     "/alternative-to": {
       "hash": "98f81db01b6e49f0",
@@ -1093,8 +1093,8 @@
       "changed": "2026-10-09"
     },
     "/category/ai-ml": {
-      "hash": "ef2310eec0dbf7bf",
-      "changed": "2026-10-09"
+      "hash": "9af816eb71120178",
+      "changed": "2026-10-10"
     },
     "/category/analytics": {
       "hash": "3cd3778193c4e1e8",
@@ -1161,8 +1161,8 @@
       "changed": "2026-10-09"
     },
     "/category/databases": {
-      "hash": "e9d229f13063ec0c",
-      "changed": "2026-10-09"
+      "hash": "b9419c385c6d6cb0",
+      "changed": "2026-10-10"
     },
     "/category/design": {
       "hash": "0c809012bcf55cad",
@@ -1665,8 +1665,8 @@
       "changed": "2026-10-09"
     },
     "/compare/cockroachdb-vs-neon": {
-      "hash": "be9eed488963d065",
-      "changed": "2026-10-09"
+      "hash": "5a98ed8b5d04c103",
+      "changed": "2026-10-10"
     },
     "/compare/codeberg-vs-gitgud": {
       "hash": "1e6dd2918db013c6",
@@ -2385,8 +2385,8 @@
       "changed": "2026-10-09"
     },
     "/compare/neon-vs-supabase": {
-      "hash": "57376d6d28a876c4",
-      "changed": "2026-10-09"
+      "hash": "649724f01ae756e0",
+      "changed": "2026-10-10"
     },
     "/compare/netlify-vs-railway": {
       "hash": "1506ce3278d3ec9b",
@@ -2692,7 +2692,7 @@
       "changed": "2026-10-09"
     },
     "/database-alternatives": {
-      "hash": "af1b2883f6b811f8",
+      "hash": "d2214caf66431f64",
       "changed": "2026-10-10"
     },
     "/database-free-tier-comparison-2026": {
@@ -3095,20 +3095,20 @@
       "changed": "2026-10-09"
     },
     "/estimate": {
-      "hash": "abad4936715b49d4",
-      "changed": "2026-10-09"
+      "hash": "fea382753f0ccfc2",
+      "changed": "2026-10-10"
     },
     "/events": {
       "hash": "10c036e7bfb60e32",
       "changed": "2026-10-09"
     },
     "/events/google-cloud-next-2026": {
-      "hash": "3d294fa4c46571a2",
-      "changed": "2026-10-09"
+      "hash": "ff2f18cf7701f0c3",
+      "changed": "2026-10-10"
     },
     "/events/google-io-2026": {
-      "hash": "81112a51ca8e0410",
-      "changed": "2026-10-09"
+      "hash": "2dc2c5b1d9da69ee",
+      "changed": "2026-10-10"
     },
     "/events/microsoft-build-2026": {
       "hash": "d4283cda745d4191",
@@ -3153,8 +3153,8 @@
       "changed": "2026-10-09"
     },
     "/free-llm-apis": {
-      "hash": "86e29e4e2e90be7d",
-      "changed": "2026-10-09"
+      "hash": "aeae4ee6ef427ee1",
+      "changed": "2026-10-10"
     },
     "/free-nextjs-stack": {
       "hash": "7b4900f95e01e70c",
@@ -3191,7 +3191,7 @@
       "changed": "2026-10-09"
     },
     "/gemini-api-pricing-2026": {
-      "hash": "68eed13f3ab662c6",
+      "hash": "e388e4df970b2de1",
       "changed": "2026-10-10"
     },
     "/github-actions-alternatives": {
@@ -3262,16 +3262,16 @@
       "daily": true
     },
     "/llm-api-pricing": {
-      "hash": "52ceb801428eb40a",
-      "changed": "2026-10-09"
+      "hash": "eec45e75bb06756f",
+      "changed": "2026-10-10"
     },
     "/localstack-alternatives": {
       "hash": "6fec5c44e8104677",
       "changed": "2026-10-09"
     },
     "/mongodb-alternatives": {
-      "hash": "a46aacaea1cd0d86",
-      "changed": "2026-10-09"
+      "hash": "8054da3f145de615",
+      "changed": "2026-10-10"
     },
     "/monitoring-alternatives": {
       "hash": "c8ea3ed3d50e6974",
@@ -3282,12 +3282,12 @@
       "changed": "2026-10-09"
     },
     "/neon-vs-supabase": {
-      "hash": "234d6a4488eac8ca",
-      "changed": "2026-10-09"
+      "hash": "30202dfe11dfeefd",
+      "changed": "2026-10-10"
     },
     "/neon-vs-turso": {
-      "hash": "3f6b1b66aa5e5e60",
-      "changed": "2026-10-09"
+      "hash": "7145be1c9b4c95d6",
+      "changed": "2026-10-10"
     },
     "/netlify-vs-render": {
       "hash": "8367acc2de1fe89b",
