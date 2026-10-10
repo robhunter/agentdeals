@@ -399,6 +399,31 @@ describe("a review date means a review happened, and the outcome says what it fo
     );
   });
 
+  it("holds no table that carries no figures to the served page, so a table that empties or fills on the day served moves no split", () => {
+    const registered = tabulating("/p", split(["Comparison", 0, 39], ["Recent Pricing Changes", 37, 40], ["Upcoming Changes", 0, 0]));
+    const servedWithout = seen({
+      reads_index: true, tables_read_index: true, table_figures: 79, table_figures_from_records: 37,
+      tables: split(["Comparison", 0, 39], ["Recent Pricing Changes", 37, 40]),
+    });
+    const servedWith = seen({ ...servedWithout, tables: split(["Comparison", 0, 39], ["Recent Pricing Changes", 37, 40], ["Upcoming Changes", 0, 0]) });
+    const registeredWithout = tabulating("/p", split(["Comparison", 0, 39], ["Recent Pricing Changes", 37, 40]));
+    const splitProblems = (problems: string[]) => problems.filter(p => p.includes("splits the figures"));
+    assert.deepStrictEqual(splitProblems(problemsFor([registered], new Map([["/p", servedWithout]]), 1)), []);
+    assert.deepStrictEqual(splitProblems(problemsFor([registeredWithout], new Map([["/p", servedWith]]), 1)), []);
+  });
+
+  it("still refuses a register naming a table that carries figures the served page no longer lays out", () => {
+    const registered = tabulating("/p", split(["Comparison", 0, 39], ["Recent Pricing Changes", 37, 40], ["Upcoming Changes", 2, 2]));
+    const problems = problemsFor([registered], new Map([["/p", seen({
+      reads_index: true, tables_read_index: true, table_figures: 81, table_figures_from_records: 39,
+      tables: split(["Comparison", 0, 39], ["Recent Pricing Changes", 39, 42]),
+    })]]), 1);
+    assert.ok(
+      problems.some(p => p.includes("the register splits the figures as Comparison 0/39, Recent Pricing Changes 37/40, Upcoming Changes 2/2")),
+      `a table holding figures went missing from the served page unnoticed: ${JSON.stringify(problems)}`,
+    );
+  });
+
   it("names our index nowhere on a page none of whose table figures it supplies", () => {
     const none = page({ path: "/p", published: "2026-04-03", reads_index: true, tables_read_index: true, table_figures: 12, table_figures_from_records: 0, data_source: "catalogue", reviewed_at: "2026-08-26", review_outcome: "pass" });
     assert.strictEqual(dataProvenanceFor(none, 1580, "2026-08-27"), "Figures compiled 2026-04-03, last checked 2026-08-26");
