@@ -15135,7 +15135,8 @@
       "category": "Cloud Hosting",
       "alternatives": [],
       "recorded_date": "2026-10-02",
-      "date_source": "vendor_page"
+      "date_source": "vendor_page",
+      "tier_direction": "unchanged"
     },
     {
       "vendor": "DatoCMS",
