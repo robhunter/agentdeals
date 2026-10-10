@@ -229,7 +229,7 @@ describe("/criteria publishes the method", () => {
     assert.match(html, /the site publishes \d+ categories in all/);
     assert.ok(!/of 57 categories have/.test(html), "57 counts best-of pages, and the site publishes more categories than that");
     if (finding[1] !== "Zero") {
-      assert.match(html, /have a unique number one \([^)]+\)/, "a page with a unique number one must be named, not just counted");
+      assert.match(html, /(?:has|have) a unique number one \([^)]+\)/, "a page with a unique number one must be named, not just counted");
     }
   });
 
