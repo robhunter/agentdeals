@@ -14414,7 +14414,7 @@
       "vendor": "OpenAI",
       "change_type": "product_deprecated",
       "date": "2026-12-11",
-      "summary": "The OpenAI API keeps running. The gpt-5-2025-08-07, gpt-5-mini-2025-08-07, gpt-5-nano-2025-08-07, gpt-5-pro-2025-10-06, o3-2025-04-16 and o3-pro-2025-06-10 snapshots can be called until December 11, 2026. OpenAI's substitutes: gpt-5.6-sol for gpt-5-2025-08-07 and o3-2025-04-16; gpt-5.6-terra for gpt-5-mini-2025-08-07; gpt-5.6-luna for gpt-5-nano-2025-08-07; gpt-5.6-sol with reasoning.mode: pro for gpt-5-pro-2025-10-06 and o3-pro-2025-06-10.",
+      "summary": "The OpenAI API keeps running. gpt-5-2025-08-07 is available until December 11, 2026, replaced by gpt-5.6-sol. gpt-5-mini-2025-08-07 is available until December 11, 2026, replaced by gpt-5.6-terra. gpt-5-nano-2025-08-07 is available until December 11, 2026, replaced by gpt-5.6-luna. gpt-5-pro-2025-10-06 is available until December 11, 2026, replaced by gpt-5.6-sol with reasoning.mode: pro. o3-2025-04-16 is available until December 11, 2026, replaced by gpt-5.6-sol. o3-pro-2025-06-10 is available until December 11, 2026, replaced by gpt-5.6-sol with reasoning.mode: pro.",
       "previous_state": "The gpt-5-2025-08-07, gpt-5-mini-2025-08-07, gpt-5-nano-2025-08-07, gpt-5-pro-2025-10-06, o3-2025-04-16 and o3-pro-2025-06-10 snapshots were callable in the OpenAI API at pay-as-you-go rates.",
       "current_state": "OpenAI's deprecations page (notice of 2026-06-11) lists December 11, 2026 as the date the six snapshots are removed from the API.",
       "impact": "medium",
