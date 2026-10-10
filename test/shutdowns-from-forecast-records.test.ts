@@ -59,7 +59,7 @@ const COVERED_BY_TENORS_CARD = { ...A_DEPRECATION, vendor: "Google Tenor API", d
 const COVERED_BY_THIN_CLIENTS_CARD = { ...A_DEPRECATION, vendor: "AWS", date: "2026-04-20", recorded_date: "2026-04-10", summary: "Fixture of the end of WorkSpaces Thin Client sales.", source_url: "https://example.com/notices/thin-client", listing_effect: "none" };
 
 const AWS_ON_ANOTHER_DATE = forecast("AWS", 75, "Fixture of an AWS shutdown no card states.", { listing_effect: "none" });
-const ANOTHER_VENDOR_ON_A_CARDS_DATE = { ...A_DEPRECATION, vendor: "Pipedream", date: "2026-10-23", recorded_date: "2026-09-01", summary: "Fixture of a Pipedream shutdown on the day of an OpenAI card.", source_url: "https://example.com/notices/pipedream-october" };
+const ANOTHER_VENDOR_ON_A_CARDS_DATE = { ...A_DEPRECATION, vendor: "Fly.io", date: "2026-10-23", recorded_date: "2026-09-01", summary: "Fixture of a Fly.io shutdown on the day of an OpenAI card.", source_url: "https://example.com/notices/fly-io-october" };
 const UNLISTED_ON_TENORS_DATE = { ...A_DEPRECATION, vendor: "Qwzx Clips", date: "2026-06-30", recorded_date: "2026-03-01", summary: "Fixture of an unlisted product closing on the day the Tenor API closed.", source_url: "https://example.com/notices/qwzx" };
 const SAME_DAY_AS_UPCOMING = forecast("Pipedream", 60, "Fixture of a Pipedream shutdown on the day the apiary.io fixture closes.");
 
@@ -247,7 +247,7 @@ describe("/shutdowns prints a card for each shutdown a record forecast and no ca
   it("prints a card for a hand-typed card's vendor on another date, and for another vendor on a hand-typed card's date", () => {
     assert.deepStrictEqual(
       [AWS_ON_ANOTHER_DATE, ANOTHER_VENDOR_ON_A_CARDS_DATE].map((record) => cardFor(cards, record).map((card) => [card.title, card.href])),
-      [[["AWS", "/vendor/aws"]], [["Pipedream", "/vendor/pipedream"]]],
+      [[["AWS", "/vendor/aws"]], [["Fly.io", "/vendor/fly-io"]]],
     );
   });
 
