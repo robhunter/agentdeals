@@ -337,6 +337,38 @@
       "source_url": "https://zoho.com/docs",
       "tier_direction": "unchanged",
       "finding": "5 GB storage unchanged; \"previously 1GB upload limit\" is a different axis"
+    },
+    {
+      "vendor": "Docker Hub",
+      "change_type": "pricing_restructured",
+      "date": "2024-12-10",
+      "source_url": "https://www.docker.com/blog/november-2024-updated-plans-announcement/",
+      "tier_direction": "narrowed",
+      "finding": "\"Free tier: Build Cloud minutes removed, Scout repos cut 3→1, private repos limited to 1 with 2GB storage\""
+    },
+    {
+      "vendor": "Render",
+      "change_type": "pricing_restructured",
+      "date": "2026-04-23",
+      "source_url": "https://render.com/changelog/updated-plans-for-render-workspaces",
+      "tier_direction": "narrowed",
+      "finding": "\"Bandwidth for the Hobby tier went from 100 GB to 5 GB included per month, then $0.15 per GB, and Hobby workspaces are now capped at 25 services\""
+    },
+    {
+      "vendor": "PythonAnywhere",
+      "change_type": "pricing_restructured",
+      "date": "2026-01-15",
+      "source_url": "https://blog.pythonanywhere.com/221/",
+      "tier_direction": "narrowed",
+      "finding": "\"New free accounts lost MySQL and scheduled tasks; unused free web apps now expire after 1 month instead of 3\""
+    },
+    {
+      "vendor": "AWS",
+      "change_type": "pricing_restructured",
+      "date": "2026-01-04",
+      "source_url": "https://www.theregister.com/2026/01/05/aws_price_increase/",
+      "tier_direction": "unchanged",
+      "finding": "EC2 Capacity Blocks for ML are paid GPU reservations: \"p5e.48xlarge went from $34.61 to $39.80/hr\"; no free-tier term moves"
     }
   ]
 }
