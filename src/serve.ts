@@ -76,6 +76,7 @@ import { STARTUP_CREDITS_META_DESCRIPTION, STARTUP_PROGRAMS, type DatedTerms, ty
 import { CHANGE_TIMELINE_LINK_TEXT, CHANGE_TIMELINE_PATH, CUTS_THIS_YEAR_ANCHOR, CUTS_THIS_YEAR_HEADING, CUTS_THIS_YEAR_SUMMARY_CLASS, FIGURES_AS_OF_CLASS, FREE_TIER_TRACKER_HEADING, FREE_TIER_TRACKER_META_DESCRIPTION, FREE_TIER_TRACKER_TITLE, FREE_TIER_TRACKER_YEAR, NO_KNOWN_EFFECTIVE_DATE_LEFT_OUT, UNTIL_ITS_DATE_ARRIVES, changeTypesAmong, cutsThisYearSummary, figuresAsOfTheChangeHtml, isAFirstQuarterCard, neonFiguresWereJanuarysHtml, quarterAnchor, quarterHeading } from "./free-tier-tracker.js";
 import { changeCitesASource, citationLabel, changeIsUncited, changeSourceCitation, changeSourceLinkHtml, changeCitationHtml, citedClaimHtml, changeSummaryHtml, changeSummaryText, citedChanges, uncitedChangeNotice, uncitedChangeNoticeHtml, ratingWithheldForNoSourceClause, ratingWithheldForNoSourceSentence, ratingWithheldClause, ratingWithheldSentence, type WithheldRecordCounts, UNCITED_CHANGE_LABEL, RECORD_SOURCE_CLASS, CITATION_REL, type CitableChangeRow } from "./change-citation.js";
 import { growthLimitPhrases } from "./growth-limits.js";
+import { listingStatements, statesUsageBeyondTheFreeTierIsBilled } from "./overage-billing.js";
 import { registerAgent, authenticateRequest, validateVestauthUrl, hashApiKey, updateAgentX402Address, getAgentById } from "./agents.js";
 import { attributeAuthenticatedRequest } from "./referral-attribution.js";
 import { recordConversion, confirmEligibleEntries, clawbackEntry, getAgentBalance, getAgentLedgerEntries, recordPayout, MAX_COMMISSION_AMOUNT, MINIMUM_PAYOUT_AMOUNT, getLeaderboard } from "./ledger.js";
@@ -5373,6 +5374,8 @@ const OUTGROW_SENTENCE_BY_VENDOR_AND_TEMPLATE_PHRASE: Record<string, Record<stri
   },
 };
 
+const WHEN_YOU_OUTGROW_THE_FREE_TIER = "When you outgrow the free tier, evaluate paid plans against alternatives — sometimes a competitor's free tier covers what you need.";
+
 function outgrowSentence(vendorName: string, phrase: string): string {
   return OUTGROW_SENTENCE_BY_VENDOR_AND_TEMPLATE_PHRASE[vendorName]?.[phrase] ?? `At ${phrase}, you'll need to upgrade.`;
 }
@@ -5622,18 +5625,19 @@ function buildVendorPage(slug: string): string | null {
     <span class="cat-context-label">One of ${categoryCount} ${escHtmlServer(primary.category)} services we track.</span> See our ${catContextLink} &rarr;
   </div>`;
 
+  const usageBeyondTheFreeTierIsBilled = statesUsageBeyondTheFreeTierIsBilled(listingStatements(primary));
   const growthBullets: string[] = [];
   for (const phrase of growthLimitPhrases(publishableTerms)) {
-    growthBullets.push(termsWeCannotConfirm
-      ? unconfirmedThresholdSentence(phrase, termsWeCannotConfirm)
-      : outgrowSentence(vendorName, phrase));
+    if (termsWeCannotConfirm) growthBullets.push(unconfirmedThresholdSentence(phrase, termsWeCannotConfirm));
+    else if (!usageBeyondTheFreeTierIsBilled) growthBullets.push(outgrowSentence(vendorName, phrase));
   }
   const whenTheFreeAllowanceIsUsed = timeLimitedOffer
     ? whatFollowsTheOffer(timeLimitedOffer.kind)
-    : `When your usage exceeds the free tier limits, you'll need to upgrade.`;
+    : usageBeyondTheFreeTierIsBilled ? null : `When your usage exceeds the free tier limits, you'll need to upgrade.`;
   if (growthBullets.length === 0 && hasFree && !termsSuperseded && whenTheFreeAllowanceIsUsed) {
     growthBullets.push(whenTheFreeAllowanceIsUsed);
   }
+  const outgrowStatementsBeforeTheAlternatives = growthBullets.length;
   if (alternatives.length > 2 && !termsSuperseded) {
     growthBullets.push(`At that point, the <a href="#alternatives">${alternatives.length} alternatives in ${escHtmlServer(primary.category)}</a> are each listed with the free tier they offer, so you can compare what they give you against what you have outgrown.`);
   }
@@ -6011,8 +6015,10 @@ ${allCompareLinks.join("\n")}
       alternativesRanking.gated_count,
     ),
   });
-  const faqOutgrowAnswer = growthBullets.length > 0
-    ? `${growthBullets[0].replace(/<[^>]*>/g, "")} When you outgrow the free tier, evaluate paid plans against alternatives — sometimes a competitor's free tier covers what you need.`
+  const faqOutgrowAnswer = usageBeyondTheFreeTierIsBilled && outgrowStatementsBeforeTheAlternatives === 0
+    ? WHEN_YOU_OUTGROW_THE_FREE_TIER
+    : growthBullets.length > 0
+    ? `${growthBullets[0].replace(/<[^>]*>/g, "")} ${WHEN_YOU_OUTGROW_THE_FREE_TIER}`
     : `When your usage exceeds the free tier limits, you'll need to upgrade or evaluate alternatives in the same category.`;
 
   const gateStatesThereIsNoFreeTier = noFreeTierGate !== null;
