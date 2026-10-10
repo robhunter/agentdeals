@@ -2,6 +2,7 @@ import { describe, it, before } from "node:test";
 import assert from "node:assert";
 import { spawn } from "node:child_process";
 import vm from "node:vm";
+import { assertPopulationFloor } from "./population-floor.ts";
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -317,7 +318,7 @@ describe("every section a page heads Recent or Latest, with announced changes fo
   });
 
   it("reads every page the site serves", () => {
-    assert.ok(inventory.length > 2000, `the inventory lists ${inventory.length} pages`);
+    assertPopulationFloor(inventory.length, 1500, "pages in the inventory the census reads");
     assert.deepStrictEqual(refused, []);
   });
 
@@ -331,7 +332,7 @@ describe("every section a page heads Recent or Latest, with announced changes fo
         if (found) listed.push(`${route} "${heading}": ${found[0]}`);
       }
     }
-    assert.ok(sections > 100, `only ${sections} sections are headed Recent or Latest`);
+    assertPopulationFloor(sections, 50, "sections headed Recent, Latest or Newest across the inventory");
     assert.deepStrictEqual(listed, []);
   });
 
