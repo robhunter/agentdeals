@@ -22,11 +22,11 @@
       "changed": "2026-10-10"
     },
     "/ai-free-tiers": {
-      "hash": "7e970b0dad52181d",
+      "hash": "850eaeec674dc4a1",
       "changed": "2026-10-10"
     },
     "/ai-ml-alternatives": {
-      "hash": "1385f3b4946b7c0e",
+      "hash": "b459bbf0be4367d7",
       "changed": "2026-10-10"
     },
     "/alternative-to": {
@@ -1093,7 +1093,7 @@
       "changed": "2026-10-09"
     },
     "/category/ai-ml": {
-      "hash": "51419536432715ef",
+      "hash": "6b3df600aa0fcf9a",
       "changed": "2026-10-10"
     },
     "/category/analytics": {
@@ -1215,7 +1215,7 @@
       "daily": true
     },
     "/category/infrastructure": {
-      "hash": "f09ecc9f29f709de",
+      "hash": "2a7b6ba214f1cfc5",
       "changed": "2026-10-10"
     },
     "/category/localization": {
@@ -3063,7 +3063,7 @@
       "changed": "2026-10-10"
     },
     "/digest/2026-w50": {
-      "hash": "6ce79248d38e605d",
+      "hash": "a248d475113bc7f7",
       "changed": "2026-10-10"
     },
     "/digest/2027-w01": {
@@ -3087,7 +3087,7 @@
       "changed": "2026-10-10"
     },
     "/digitalocean-free-tier-2026": {
-      "hash": "6af7ff502667a815",
+      "hash": "16eb3b5fca5e23c0",
       "changed": "2026-10-10"
     },
     "/disclosure": {
@@ -3259,7 +3259,7 @@
       "changed": "2026-10-09"
     },
     "/hetzner-pricing-2026": {
-      "hash": "535a22359ceb183e",
+      "hash": "d0184acbe87055e6",
       "changed": "2026-10-10"
     },
     "/hosting-alternatives": {
@@ -3278,7 +3278,7 @@
       "daily": true
     },
     "/llm-api-pricing": {
-      "hash": "764bb42d0c98ec4a",
+      "hash": "fe8d0fd1422a95e6",
       "changed": "2026-10-10"
     },
     "/localstack-alternatives": {
@@ -3310,15 +3310,15 @@
       "changed": "2026-10-09"
     },
     "/openai-assistants-alternatives": {
-      "hash": "65f97ded57580194",
+      "hash": "0af63ddf52864027",
       "changed": "2026-10-10"
     },
     "/openai-assistants-migration": {
-      "hash": "7b9dbc2aafab3c6f",
+      "hash": "771df24c9e16d0c0",
       "changed": "2026-10-10"
     },
     "/openai-assistants-migration-2026": {
-      "hash": "6a40e25bd49ad1ec",
+      "hash": "5484c68d1d5c8bfd",
       "changed": "2026-10-10"
     },
     "/postman-alternatives": {
