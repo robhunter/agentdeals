@@ -10708,6 +10708,24 @@
           "quote": "Subscribing to an eligible Google AI plan now also unlocks premium Colab benefits, similar to those offered by Colab's own paid plans: a monthly allotment of Colab compute units, access to more powerful GPUs and TPUs, and, on higher plans, additional capabilities such as background execution. The exact benefits depend on your plan, and they are included only with eligible paid Google AI plans (not with storage-only Google One plans ). … Premium Colab benefits are only available to paid Google AI plan subscribers. They are not included during a free trial of a Google One plan",
           "url": "https://research.google.com/colaboratory/faq.html",
           "read_on": "2026-10-08"
+        },
+        {
+          "text": "A running notebook can be terminated if compute units run out. The account then uses the free tier's rules until more units are added.",
+          "quote": "You can expect to experience backend termination if you exhaust your available compute units on a Pro, Pro+, or Pay As You Go plan. … Paid users whose compute unit balance is exhausted will revert to the free-of-charge tier policies and restrictions until the balance is increased.",
+          "url": "https://research.google.com/colaboratory/faq.html",
+          "read_on": "2026-10-10"
+        },
+        {
+          "text": "The free version gives access to Nvidia T4 GPUs, subject to quota and availability.",
+          "quote": "The free of charge version of Colab grants access to Nvidia's T4 GPUs subject to quota restrictions and availability.",
+          "url": "https://colab.research.google.com/notebooks/pro.ipynb",
+          "read_on": "2026-10-10"
+        },
+        {
+          "text": "Colab bans file hosting, media serving and other web services not related to interactive compute on every managed runtime, free or paid.",
+          "quote": "The following are disallowed from all managed Colab runtimes: file hosting, media serving, or other web service offerings not related to interactive compute with Colab",
+          "url": "https://research.google.com/colaboratory/faq.html",
+          "read_on": "2026-10-10"
         }
       ]
     },
