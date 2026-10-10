@@ -1066,8 +1066,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 74,
-      "table_figures_from_records": 31,
+      "table_figures": 88,
+      "table_figures_from_records": 45,
       "tables": [
         {
           "label": "Free Services (Permanent)",
@@ -1081,8 +1081,8 @@
         },
         {
           "label": "DigitalOcean vs Alternatives",
-          "figures": 35,
-          "from_records": 23
+          "figures": 49,
+          "from_records": 37
         },
         {
           "label": "Recent DigitalOcean Changes",
