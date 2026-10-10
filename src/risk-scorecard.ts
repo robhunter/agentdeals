@@ -1,7 +1,8 @@
 import type { DealChange, Offer } from "./types.js";
 import { PRODUCT_DEPRECATED, deprecationTouchesTheListing } from "./product-deprecation.js";
-import { isNoLongerInForce } from "./change-resolution.js";
+import { isACorrectionToOurOwnRecord, isNoLongerInForce } from "./change-resolution.js";
 import { isIndexHousekeeping } from "./change-census.js";
+import { newestChangeInEffect } from "./change-dates.js";
 import { tierRecordsAFreeTier } from "./free-tier-record.js";
 
 export { INDEX_SWEEP_STATE } from "./change-census.js";
@@ -209,8 +210,34 @@ export function splitByFreeTierStanding(
   };
 }
 
-export function citesAChangeOlderThanTheGrade(entry: RiskEntry): boolean {
-  return Boolean(entry.lastChange && entry.lastChange < entry.graded);
+function recordsTypedAsLastChange<T extends GradableChange>(entry: RiskEntry, changes: readonly T[]): T[] {
+  if (!entry.lastChange) return [];
+  return recordsFor(entry, changes).filter(
+    c => c.date === entry.lastChange && (!entry.changeType || c.change_type === entry.changeType),
+  );
+}
+
+function countedByTheScorecard(change: GradableChange): boolean {
+  return whyNotEvidence(change) === null && !isACorrectionToOurOwnRecord(change);
+}
+
+function typedLastChangeIsNotCounted(entry: RiskEntry, changes: readonly GradableChange[]): boolean {
+  const typed = recordsTypedAsLastChange(entry, changes);
+  return typed.length > 0 && !typed.some(countedByTheScorecard);
+}
+
+function newestCountedChange<T extends GradableChange>(entry: RiskEntry, changes: readonly T[], asOf: string): T | null {
+  return newestChangeInEffect(recordsFor(entry, changes).filter(countedByTheScorecard), asOf);
+}
+
+export function lastChangeShown(entry: RiskEntry, changes: readonly GradableChange[], asOf: string): string | null {
+  if (!entry.lastChange) return null;
+  if (!typedLastChangeIsNotCounted(entry, changes)) return entry.lastChange;
+  return newestCountedChange(entry, changes, asOf)?.date ?? null;
+}
+
+export function citesAChangeOlderThanTheGrade(entry: RiskEntry, shown: string | null): boolean {
+  return Boolean(shown && shown < entry.graded);
 }
 
 const FIRST_GRADING = "2026-03-26";
@@ -227,14 +254,14 @@ export const riskEntries: RiskEntry[] = [
   { vendor: "GitHub Copilot Free", risk: "low", category: "AI Coding", reasoning: "New free tier launched Dec 2025 (2K completions + 50 chat/mo). Microsoft strategic investment in AI developer tools. Competitive pressure from Cursor/Claude ensures free tier stays.", graded: FIRST_GRADING, lastChange: "2025-12-18", changeType: "new_free_tier", changeLogNames: ["GitHub Copilot"], catalogueVendor: "GitHub Copilot" },
   { vendor: "Anthropic", risk: "low", category: "AI/ML APIs", reasoning: "New API users receive a small amount of free credits to test the API.", graded: FIRST_GRADING, lastChange: "2026-03-13", changeType: "limits_increased", changeLogNames: ["Anthropic", "Anthropic API", "Anthropic Claude"], catalogueVendor: "Anthropic API" },
 
-  { vendor: "Supabase", risk: "medium", category: "Databases/BaaS", reasoning: "Project pause tightened to 1 week inactivity (Feb 2026). Core free tier preserved but signals efficiency pressure. Post-Series C ($80M) — profitable path unclear.", graded: FIRST_GRADING, lastChange: "2026-02-01", changeType: "limits_reduced" },
+  { vendor: "Supabase", risk: "medium", category: "Databases/BaaS", reasoning: "Free projects pause after 1 week of inactivity. Core free tier preserved but signals efficiency pressure.", graded: FIRST_GRADING, lastChange: "2026-02-01", changeType: "limits_reduced" },
   { vendor: "Vercel", risk: "medium", category: "Hosting", reasoning: "Restructured to credit-based model (Jan 2026). Free tier still generous for personal projects but commercial use restricted (Hobby plan). Watch for further tightening.", graded: FIRST_GRADING, lastChange: "2026-01-01", changeType: "pricing_restructured" },
   { vendor: "Netlify", risk: "medium", category: "Hosting", reasoning: "Restructured to credit-based pricing (Sep 2025) — sites pause on exhaustion. 300 credits/month is sufficient for small sites but represents a philosophical shift toward metered billing.", graded: FIRST_GRADING, lastChange: "2025-09-04", changeType: "pricing_restructured" },
   { vendor: "Neon", risk: "medium", category: "Databases", reasoning: "Databricks acquired Neon in 2025. Since then Neon has widened its Free plan: compute from 50 to 100 CU-hours per project, auth on Free, up to 100 projects, unlimited organization members, and on 2026-10-01 storage from 0.5 GB to 1 GB per project. The acquisition leaves its long-term commitment to a free tier uncertain.", graded: FIRST_GRADING, lastChange: "2026-10-01", changeType: "limits_increased" },
   { vendor: "Railway", risk: "medium", category: "Hosting/PaaS", reasoning: "Added a Free plan in 2025: $1 of free credit a month after a 30-day trial with a one-time $5 credit. Raised a $100M Series B in January 2026. But VC-funded PaaS companies have a history of removing free tiers (see: Heroku). Watch burn rate.", graded: FIRST_GRADING, lastChange: "2025-09-03", changeType: "new_free_tier" },
-  { vendor: "Render", risk: "medium", category: "Hosting/PaaS", reasoning: "Sleep time reduced (Sep 2025) — 15-min spin-down is aggressive. Free PostgreSQL limited to 256 MB with 30-day expiry. Signals tightening, though core free tier intact.", graded: FIRST_GRADING, lastChange: "2025-09-01", changeType: "limits_reduced" },
+  { vendor: "Render", risk: "medium", category: "Hosting/PaaS", reasoning: "A free web service spins down after 15 minutes without inbound traffic. Free Postgres is limited to 1 GB of storage and expires 30 days after creation. Signals tightening, though core free tier intact.", graded: FIRST_GRADING, lastChange: "2025-09-01", changeType: "limits_reduced" },
   { vendor: "Stripe", risk: "medium", category: "Payments", reasoning: "Processing fees restructured Feb 2026 (2.7% + 5¢ domestic card). No free tier per se — pay-per-transaction model. Risk is in rate changes, not tier removal.", graded: FIRST_GRADING, lastChange: "2026-02-01", changeType: "pricing_restructured" },
-  { vendor: "Firebase", risk: "medium", category: "BaaS", reasoning: "Multiple changes in 2026: Cloud Storage limits reduced (Feb), Realtime Database EOL announced (Mar), restrictions tightened (Feb). Google consolidating around Firestore. Migration advisable for RTDB users.", graded: FIRST_GRADING, lastChange: "2026-03-19", changeType: "product_deprecated" },
+  { vendor: "Firebase", risk: "medium", category: "BaaS", reasoning: "From February 3, 2026, Cloud Storage for Firebase requires the pay-as-you-go Blaze plan. Projects on the no-cost Spark plan have no access to any Cloud Storage bucket.", graded: FIRST_GRADING, lastChange: "2026-03-19", changeType: "product_deprecated" },
   { vendor: "Docker Hub", risk: "medium", category: "Containers", reasoning: "Rate limits tightened (Dec 2024) — 100 pulls/6h anonymous, 200 authenticated. Docker Desktop commercial license required for large orgs ($5/user/mo+). Free for small teams but trending paid.", graded: FIRST_GRADING, lastChange: "2024-12-10", changeType: "pricing_restructured" },
   { vendor: "Dub.co", risk: "medium", category: "Dev Utilities", reasoning: "Free tier limits reduced sharply (Mar 2026). Link shortener with declining free allowance signals monetization pressure.", graded: FIRST_GRADING, lastChange: "2026-03-22", changeType: "limits_reduced" },
   { vendor: "Google Gemini API", risk: "medium", category: "AI/ML", reasoning: "Google cut the free tier on 2025-12-06: 2.5 Flash went from 250 requests a day to about 20, and 2.5 Pro to none. Since 2026-09-18 the 2.5 models are limited to earlier users. The 3.x Flash models are free, with limits Google does not publish.", graded: FIRST_GRADING, lastChange: "2025-12-06", changeType: "limits_reduced", changeLogNames: ["Google Gemini API", "Google Gemini"] },
@@ -246,7 +273,7 @@ export const riskEntries: RiskEntry[] = [
   { vendor: "OpenAI", risk: "high", category: "AI/ML", reasoning: "Its API prices one model free (omni-moderation-latest); no GPT model is priced free. Market leader extracting value — expect continued tightening.", graded: FIRST_GRADING, lastChange: "2026-02-09", changeType: "limits_reduced" },
   { vendor: "HCP Terraform", risk: "high", category: "Infrastructure", reasoning: "Legacy tier EOL March 31, 2026. HashiCorp BSL license change (Aug 2023) already fractured community. IBM acquisition adds enterprise pricing pressure. Migrate to OpenTofu.", graded: FIRST_GRADING, lastChange: "2026-03-31", changeType: "pricing_restructured" },
   { vendor: "LocalStack", risk: "high", category: "Testing", reasoning: "On March 23, 2026, LocalStack ended Community Edition support. The free Hobby plan is for non-commercial use and requires an account. Alternatives include Moto, aws-sdk-mock, and Testcontainers.", graded: FIRST_GRADING, lastChange: "2026-03-23", changeType: "restriction" },
-  { vendor: "X API (Twitter)", risk: "high", category: "APIs", reasoning: "Free tier removed twice in 2026 (Feb 1 + Feb 9). Pay-per-use only with $10 one-time credit. Unpredictable management. Do not build on this API without paid plan budget.", graded: FIRST_GRADING, lastChange: "2026-02-09", changeType: "free_tier_removed", changeLogNames: ["X API (Twitter)", "X (Twitter)"], catalogueVendor: "X (Twitter)" },
+  { vendor: "X API (Twitter)", risk: "high", category: "APIs", reasoning: "X replaced its free API tier with pay-per-use pricing, announced 2026-02-06. Recently active free-tier users got a one-time $10 voucher. Only Public Utility Apps keep free access. Unpredictable management. Do not build on this API without paid plan budget.", graded: FIRST_GRADING, lastChange: "2026-02-09", changeType: "free_tier_removed", changeLogNames: ["X API (Twitter)", "X (Twitter)"], catalogueVendor: "X (Twitter)" },
   { vendor: "Spotify API", risk: "high", category: "APIs", reasoning: "Premium subscription now required for dev mode (Feb 2026). Test users cut from 25 to 5. Multiple endpoints deprecated. Hostile to free developers.", graded: FIRST_GRADING, lastChange: "2026-02-11", changeType: "limits_reduced" },
   { vendor: "Amazon SP-API", risk: "high", category: "APIs", reasoning: "Free access ended after 10+ years — now $1,400/year + per-call fees (Apr 2026). Zero warning. Shows even long-stable APIs can go paid overnight.", graded: FIRST_GRADING, lastChange: "2026-01-31", changeType: "pricing_restructured" },
 

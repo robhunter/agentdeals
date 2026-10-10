@@ -68,7 +68,7 @@ import { CORRECTION_TO_OUR_OWN_RECORD, isACorrectionToOurOwnRecord, isNoLongerIn
 import { trackedChanges, howEachRecordWasRead, isTrackedChange, isIndexHousekeeping, recordsOtherThanOurOwnIndexHousekeeping, changeCensus, changeCountPhrase, recordsNotCountedSentence, sliceById, CHANGE_SLICES, CENSUS_NOTE, TRACKED_CHANGE_RULE_ANCHOR, TRACKED_CHANGE_RULE_PATH, TRACKED_CHANGE_NOUN, INDEX_HOUSEKEEPING_CLASS, CORRECTION_TO_OUR_OWN_RECORD_CLASS, INDEX_HOUSEKEEPING_BADGE, INDEX_HOUSEKEEPING_BADGE_COLOR, INDEX_HOUSEKEEPING_NOTE, INCLUDE_INDEX_HOUSEKEEPING_REJECTED, indexHousekeepingHeadline } from "./change-census.js";
 import { SINCE_DEFAULT_SENTENCE } from "./change-window.js";
 import { NAME_MATCH_SENTENCE } from "./name-match.js";
-import { FREE_TIER_STANDING_LABELS, GRADE_FACTORS_WITHOUT_PRICING_HISTORY, NOT_EVIDENCE_LABELS, citesAChangeOlderThanTheGrade, freeTierStanding, gradesFirstSet, gradesLastSet, gradingDatesClause, neverTracked, pricingHistoryCoverageAnswer, pricingHistoryCoverageSentence, riskEntries, scorecard, splitByFreeTierStanding, trackedSinceGrading, type RiskEntry } from "./risk-scorecard.js";
+import { FREE_TIER_STANDING_LABELS, GRADE_FACTORS_WITHOUT_PRICING_HISTORY, NOT_EVIDENCE_LABELS, citesAChangeOlderThanTheGrade, lastChangeShown, freeTierStanding, gradesFirstSet, gradesLastSet, gradingDatesClause, neverTracked, pricingHistoryCoverageAnswer, pricingHistoryCoverageSentence, riskEntries, scorecard, splitByFreeTierStanding, trackedSinceGrading, type RiskEntry } from "./risk-scorecard.js";
 import { CHANGE_DIRECTION, changeDirectionTable, directionRatioLabel } from "./change-direction.js";
 import { removalDurability, removalReturnRateSentence, removalDurabilityPattern, lastingRemovalExamplesFor } from "./removal-durability.js";
 import { cutsByQuarterNewestFirst, cutsWindow, freeTierCutsIn } from "./free-tier-cuts.js";
@@ -100,6 +100,7 @@ import { figureProvenanceAgainst, statementsWeHold } from "./figure-provenance.j
 import { statesNoFreeTier } from "./retired-terms.js";
 import { countsDownTo, shutdownDeadlineHtml } from "./shutdown-deadline.js";
 import { forecastShutdownsWithoutACard, whatEnds, type RecordACardCovers } from "./forecast-shutdowns.js";
+import { UPCOMING_CHANGES_HEADING, UPCOMING_CHANGES_INTRO, splitAtTheDayServed } from "./upcoming-changes.js";
 import { createRegistrationLimiter, rateLimitHeaders } from "./rate-limit.js";
 import { offerForSlug, vendorRates, cheapestRate, dearestRate, spanOfRates, formatRate, formatRateSpan, monthlyTokenCost, formatDollars, amountValue, type ModelRate } from "./model-rates.js";
 import { DECLARED_FIGURE_READS, READ_DATES_THAT_ARE_NOT_FIGURE_READS, STALE_FACT_PAGES_BASELINE, TABLE_STALENESS_DISCLOSURES, declaredFigureReadsFor, factsOutdatedBy, linkifyVerdictBlocks, newestChangeBySlug, overdueReport, pageCompiledClause, pageDataProvenance, pageDateModified, pageFigureSource, tabulatedVendorSlots, tabulatedVendors, utcToday, verdictsOutdatedBy } from "./page-reviews.js";
@@ -23146,7 +23147,8 @@ function buildFreeTierRiskPage(): string {
 
   const buildRiskRow = (e: RiskEntry) => {
     const color = riskColors[e.risk];
-    const beforeTheGrade = citesAChangeOlderThanTheGrade(e)
+    const lastChange = lastChangeShown(e, dealChanges, utcToday());
+    const beforeTheGrade = citesAChangeOlderThanTheGrade(e, lastChange)
       ? `<div style="color:var(--text-dim);font-family:var(--sans);font-size:.72rem">before the grade</div>`
       : "";
     return `<tr>
@@ -23154,7 +23156,7 @@ function buildFreeTierRiskPage(): string {
       <td style="color:${color};font-weight:600;font-size:.85rem">${riskEmoji[e.risk]} ${riskLabels[e.risk]}<div style="color:var(--text-dim);font-weight:400;font-size:.72rem;font-family:var(--mono);white-space:nowrap">graded ${escHtmlServer(e.graded)}</div></td>
       <td style="color:var(--text-muted);font-size:.85rem">${escHtmlServer(e.category)}</td>
       <td style="color:var(--text-muted);font-size:.8rem">${escHtmlServer(e.reasoning)}</td>
-      <td style="font-family:var(--mono);font-size:.8rem;color:var(--text-dim)">${e.lastChange ? `<div style="white-space:nowrap">${escHtmlServer(e.lastChange)}</div>${beforeTheGrade}` : "&mdash;"}</td>
+      <td style="font-family:var(--mono);font-size:.8rem;color:var(--text-dim)">${lastChange ? `<div style="white-space:nowrap">${escHtmlServer(lastChange)}</div>${beforeTheGrade}` : "&mdash;"}</td>
       <td style="color:var(--text-muted);font-size:.75rem;min-width:200px">${sinceGradedCell(e)}</td>
     </tr>`;
   };
@@ -23204,7 +23206,7 @@ function buildFreeTierRiskPage(): string {
     { q: "How do you calculate risk scores?", a: "We weight four factors: pricing history (40%) — has the vendor changed before and how recently; financial signals (25%) — profitable vs VC-subsidized, recent acquisitions; competitive pressure (20%) — intense competition keeps free tiers alive; free tier strategic value (15%) — is the free tier a funnel or a cost center. " + pricingHistoryCoverageAnswer(gradedWithNoRecordAtAll, riskEntries) },
     { q: "How accurate have the risk grades been?", a: gradingDates + ", and scored against every change tracked since: " + bandScores.map(b => riskLabels[b.grade].toLowerCase() + " " + b.vendorsWithANegative + " of " + b.vendors + " (" + b.rate + "%)").join(", ") + ". A vendor counts if our change log holds a record in force since its grading date that removed a free tier, cut limits, added a restriction, killed an open-source edition, or deprecated the graded product itself. Vendors with nothing tracked stay in the denominator rather than being dropped." },
     { q: "What should I do if a tool I depend on is rated high risk?", a: "Start planning your migration now. Use abstractions (ORMs, S3-compatible APIs, OpenTelemetry) to minimize switching cost. Identify 2-3 alternatives and test them in a staging environment. Subscribe to our pricing change feed at /feed.xml for early warning." },
-    { q: "Are there any categories where free tiers are expanding?", a: "Yes — AI coding tools (GitHub Copilot Free, Anthropic increases, Windsurf launch) and cloud infrastructure (Cloudflare Queues, Workers expansion, AWS restructuring). Competition for developer mindshare drives expansion. See the Counter-Trends section for details." },
+    { q: "Are there any categories where free tiers are expanding?", a: "Yes — AI coding tools (GitHub Copilot Free, Windsurf launch) and cloud infrastructure (Cloudflare Queues, Workers expansion, AWS restructuring). Competition for developer mindshare drives expansion. See the Counter-Trends section for details." },
   ];
 
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
@@ -23390,7 +23392,7 @@ ${mcpCtaCss()}
     </table>
   </div>
   <div class="context-box">
-    <strong>Pattern:</strong> Medium-risk vendors typically show one or more warning signs: credit-based pricing transitions (Vercel, Netlify), post-acquisition uncertainty (Neon/Databricks), or incremental tightening (Supabase project pausing, Render sleep reduction). The free tier still works today — but the trend line points toward further restrictions.
+    <strong>Pattern:</strong> Medium-risk vendors typically show one or more warning signs: credit-based pricing transitions (Vercel, Netlify) or post-acquisition uncertainty (Neon/Databricks). The free tier still works today — but the trend line points toward further restrictions.
   </div>
 
   <h2 id="high">4. \u{1F534} High Risk — Plan Your Exit</h2>
@@ -23406,7 +23408,7 @@ ${mcpCtaCss()}
     </table>
   </div>
   <div class="context-box">
-    <strong>Pattern:</strong> High-risk vendors share traits: multiple negative changes in a short period (OpenAI, X/Twitter), hostile stance toward free users (Spotify, Amazon SP-API), or entering "sustaining mode" with no investment (Heroku). When you see a vendor make 2+ negative changes in 6 months, the third is coming.
+    <strong>Pattern:</strong> High-risk vendors share traits: a free tier already removed (OpenAI, X/Twitter), hostile stance toward free users (Spotify, Amazon SP-API), or entering "sustaining mode" with no investment (Heroku). When you see a vendor make 2+ negative changes in 6 months, the third is coming.
   </div>
   <div class="context-box">
     <strong>How this band is split:</strong> the grade is editorial and unchanged; only where it renders is derived. A vendor appears above if our catalogue holds a free tier for it today. ${highBand.alreadyGone.length === 0 ? "Every vendor in this band still has one." : highBand.alreadyGone.map(e => `${escHtmlServer(e.vendor)} (${escHtmlServer(FREE_TIER_STANDING_LABELS[freeTierStanding(e, offers)])})`).join(", ")}${highBand.alreadyGone.length === 0 ? "" : " did not, so they moved down a section."}
@@ -23539,7 +23541,7 @@ ${mcpCtaCss()}
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;margin:1.5rem 0">
     <div class="diff-card" style="border-left-color:#3fb950">
       <h3>AI Coding Tools</h3>
-      <p class="diff-desc">GitHub Copilot Free (2K completions), Windsurf launch, Anthropic rate increases. The AI coding wars are forcing vendors to compete on free tier generosity. This is the most expansionary category in our dataset.</p>
+      <p class="diff-desc">GitHub Copilot Free (2K completions) and the Windsurf launch. The AI coding wars are forcing vendors to compete on free tier generosity. This is the most expansionary category in our dataset.</p>
     </div>
     <div class="diff-card" style="border-left-color:#3fb950">
       <h3>Cloud Providers</h3>
@@ -24026,6 +24028,29 @@ function listingTermsCellHtml(slug: string): string {
   return escHtmlServer(opening) + profile + (unconfirmed ? unconfirmedTermsSpanHtml(unconfirmed) : "") + conditions;
 }
 
+function upcomingOpenAIChangesHtml(rows: readonly string[]): string {
+  if (rows.length === 0) return "";
+  return `
+  <h3 id="upcoming-changes">${escHtmlServer(UPCOMING_CHANGES_HEADING)}</h3>
+  <p class="section-intro">${escHtmlServer(UPCOMING_CHANGES_INTRO)}</p>
+
+  <div style="overflow-x:auto">
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Change</th>
+        <th>Impact</th>
+      </tr>
+    </thead>
+    <tbody>
+        ${rows.join("\n        ")}
+    </tbody>
+  </table>
+  </div>
+`;
+}
+
 function buildOpenaiAssistantsAlternativesPage(): string {
   const title = "OpenAI Assistants API Sunset: Free Alternatives & Migration Guide for AI Agent Builders";
   const metaDesc = "OpenAI shut down the Assistants API on August 26, 2026. Compare migration paths: Responses API, Claude, Gemini, open-source frameworks. Free tier comparison for 10+ AI API providers with stability ratings.";
@@ -24117,7 +24142,7 @@ function buildOpenaiAssistantsAlternativesPage(): string {
     return tierClass === "free" || tierClass === "time_limited";
   });
 
-  const changeTimelineRows = openaiChanges.map(c => {
+  const openaiChangeRow = (c: (typeof openaiChanges)[number]) => {
     const dateStr = changeEntryLongDateLabel(c);
     const impactColor = changeImpactColor(c.impact);
     return `<tr>
@@ -24125,7 +24150,10 @@ function buildOpenaiAssistantsAlternativesPage(): string {
       <td style="font-size:.85rem">${changeSummaryHtml(c, escHtmlServer)}</td>
       <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
     </tr>`;
-  }).join("\n        ");
+  };
+  const openaiChangesByDayServed = splitAtTheDayServed(openaiChanges, utcToday());
+  const changeTimelineRows = openaiChangesByDayServed.inEffect.map(openaiChangeRow).join("\n        ");
+  const upcomingChangesHtml = upcomingOpenAIChangesHtml(openaiChangesByDayServed.upcoming.map(openaiChangeRow));
 
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["ai-ml-alternatives", "ai-coding-tools-pricing", "free-ai-stack", "free-llm-apis", "free-tier-risk", "stability"].includes(p.slug)
@@ -24388,7 +24416,7 @@ ${mcpCtaCss()}
     </tbody>
   </table>
   </div>
-
+${upcomingChangesHtml}
   <h2 id="recommendations">Which Alternative for Which Developer</h2>
 
   <div class="verdict-box">
@@ -24607,7 +24635,7 @@ function buildOpenaiAssistantsMigration2026Page(): string {
     </tr>`;
   }).join("\n        ");
 
-  const changeTimelineRows = openaiChanges.map(c => {
+  const openaiChangeRow = (c: (typeof openaiChanges)[number]) => {
     const dateStr = changeEntryLongDateLabel(c);
     const impactColor = changeImpactColor(c.impact);
     return `<tr>
@@ -24615,7 +24643,10 @@ function buildOpenaiAssistantsMigration2026Page(): string {
       <td style="font-size:.85rem">${changeSummaryHtml(c, escHtmlServer)}</td>
       <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
     </tr>`;
-  }).join("\n        ");
+  };
+  const openaiChangesByDayServed = splitAtTheDayServed(openaiChanges, utcToday());
+  const changeTimelineRows = openaiChangesByDayServed.inEffect.map(openaiChangeRow).join("\n        ");
+  const upcomingChangesHtml = upcomingOpenAIChangesHtml(openaiChangesByDayServed.upcoming.map(openaiChangeRow));
 
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["openai-assistants-alternatives", "shutdowns", "free-llm-apis", "ai-ml-alternatives", "ai-coding-tools-pricing", "free-ai-stack", "stability", "free-tier-risk"].includes(p.slug)
@@ -24980,7 +25011,7 @@ ${mcpCtaCss()}
     </tbody>
   </table>
   </div>
-
+${upcomingChangesHtml}
   <h2>Recommendations by Use Case</h2>
 
   <div class="verdict-box">
@@ -26062,7 +26093,7 @@ function buildOpenAIAssistantsMigrationPage(): string {
       '</tr>';
   }).join("\n        ");
 
-  const changeTimelineRows = openaiChanges.slice(0, 10).map(c => {
+  const openaiChangeRow = (c: (typeof openaiChanges)[number]) => {
     const dateStr = changeEntryLongDateLabel(c);
     const impactColor = changeImpactColor(c.impact);
     return '<tr>' +
@@ -26070,7 +26101,10 @@ function buildOpenAIAssistantsMigrationPage(): string {
       '<td style="font-size:.85rem">' + changeSummaryHtml(c, escHtmlServer) + '</td>' +
       '<td><span style="color:' + impactColor + ';font-size:.8rem;font-weight:600">' + escHtmlServer(changeImpactLabel(c.impact)) + '</span></td>' +
       '</tr>';
-  }).join("\n        ");
+  };
+  const openaiChangesByDayServed = splitAtTheDayServed(openaiChanges, utcToday());
+  const changeTimelineRows = openaiChangesByDayServed.inEffect.slice(0, 10).map(openaiChangeRow).join("\n        ");
+  const upcomingChangesHtml = upcomingOpenAIChangesHtml(openaiChangesByDayServed.upcoming.map(openaiChangeRow));
 
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["ai-ml-alternatives", "free-llm-apis", "free-ai-stack", "ai-coding-tools-pricing", "gemini-api-pricing-2026", "free-tier-risk", "shutdowns", "llm-api-pricing"].includes(p.slug)
@@ -26321,6 +26355,7 @@ function buildOpenAIAssistantsMigrationPage(): string {
     '    </tbody>\n' +
     '  </table>\n' +
     '  </div>\n' +
+    upcomingChangesHtml +
     '\n' +
     '  <h2 id="faq">Frequently Asked Questions</h2>\n' +
     '\n' +
@@ -31752,7 +31787,7 @@ function buildLlmApiPricingPage(): string {
       cards;
   }).join("\n\n  ");
 
-  const changeTimelineRows = llmChanges.slice(0, 20).map(c => {
+  const llmChangeRow = (c: (typeof llmChanges)[number]) => {
     const dateStr = changeEntryLongDateLabel(c);
     const impactColor = changeImpactColor(c.impact);
     return '<tr>' +
@@ -31761,7 +31796,32 @@ function buildLlmApiPricingPage(): string {
       '<td style="font-size:.85rem">' + changeSummaryHtml(c, escHtmlServer) + '</td>' +
       '<td><span style="color:' + impactColor + ';font-size:.8rem;font-weight:600">' + escHtmlServer(changeImpactLabel(c.impact)) + '</span></td>' +
       '</tr>';
-  }).join("\n        ");
+  };
+  const llmChangesTable = (rows: string) =>
+    '  <div style="overflow-x:auto">\n' +
+    '  <table class="pricing-table">\n' +
+    '    <thead>\n' +
+    '      <tr>\n' +
+    '        <th>Date</th>\n' +
+    '        <th>Vendor</th>\n' +
+    '        <th>Change</th>\n' +
+    '        <th>Impact</th>\n' +
+    '      </tr>\n' +
+    '    </thead>\n' +
+    '    <tbody>\n' +
+    '        ' + rows + '\n' +
+    '    </tbody>\n' +
+    '  </table>\n' +
+    '  </div>\n';
+  const llmChangesByDayServed = splitAtTheDayServed(llmChanges, utcToday());
+  const changeTimelineRows = llmChangesByDayServed.inEffect.slice(0, 20).map(llmChangeRow).join("\n        ");
+  const upcomingChangesSection = llmChangesByDayServed.upcoming.length > 0 ? (
+    '\n' +
+    '  <h2 id="upcoming-changes">' + escHtmlServer(UPCOMING_CHANGES_HEADING) + '</h2>\n' +
+    '  <p class="section-intro">' + escHtmlServer(UPCOMING_CHANGES_INTRO) + '</p>\n' +
+    '\n' +
+    llmChangesTable(llmChangesByDayServed.upcoming.map(llmChangeRow).join("\n        "))
+  ) : '';
 
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["ai-ml-alternatives", "free-llm-apis", "free-ai-stack", "ai-coding-tools-pricing", "gemini-api-pricing-2026"].includes(p.slug)
@@ -31990,6 +32050,7 @@ function buildLlmApiPricingPage(): string {
     '      <li><a href="#free-tiers">What You Actually Get for Free</a></li>\n' +
     '      <li><a href="#hidden-costs">Pricing Gotchas</a></li>\n' +
     '      <li><a href="#changes">Recent Pricing Changes</a></li>\n' +
+    (llmChangesByDayServed.upcoming.length > 0 ? '      <li><a href="#upcoming-changes">' + escHtmlServer(UPCOMING_CHANGES_HEADING) + '</a></li>\n' : '') +
     '      <li><a href="#recommendations">By Use Case</a></li>\n' +
     '      <li><a href="#faq">FAQ</a></li>\n' +
     '    </ol>\n' +
@@ -32067,23 +32128,8 @@ function buildLlmApiPricingPage(): string {
     '  <h2 id="changes">Recent Pricing Changes</h2>\n' +
     '  <p class="section-intro">LLM API pricing is the most volatile in the developer tools space. Here are the changes we\'ve tracked. See <a href="/pricing-changes">full change timeline</a> for all tracked changes.</p>\n' +
     '\n' +
-    (llmChanges.length > 0 ? (
-    '  <div style="overflow-x:auto">\n' +
-    '  <table class="pricing-table">\n' +
-    '    <thead>\n' +
-    '      <tr>\n' +
-    '        <th>Date</th>\n' +
-    '        <th>Vendor</th>\n' +
-    '        <th>Change</th>\n' +
-    '        <th>Impact</th>\n' +
-    '      </tr>\n' +
-    '    </thead>\n' +
-    '    <tbody>\n' +
-    '        ' + changeTimelineRows + '\n' +
-    '    </tbody>\n' +
-    '  </table>\n' +
-    '  </div>\n'
-    ) : '  <p class="section-intro">No LLM pricing changes tracked yet.</p>\n') +
+    (llmChangesByDayServed.inEffect.length > 0 ? llmChangesTable(changeTimelineRows) : '  <p class="section-intro">No LLM pricing changes tracked yet.</p>\n') +
+    upcomingChangesSection +
     '\n' +
     '  <div class="context-box">\n' +
     '    <strong>The trend:</strong> Opus-class prices fell from $15/$75 per M tokens (Opus 4.1) to $5/$25 in November 2025 and $4/$20 with Opus 5.5, while each lab\'s top model costs $10/$50 (Claude Fable 5.1, OpenAI GPT-6 Astra). Open-weight inference is cheap: Groq\'s free plan allows 200K tokens a day on each of its free chat models. The implication: if you\'re paying more than $5/M input tokens, you should evaluate whether a cheaper model handles your use case.\n' +
