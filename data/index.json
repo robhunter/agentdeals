@@ -3518,6 +3518,12 @@
           "quote": "To prevent service interruptions after switching, configure auto-reload to top up your credit balance when it runs low.",
           "url": "https://ai.google.dev/gemini-api/docs/billing",
           "read_on": "2026-10-07"
+        },
+        {
+          "text": "The monthly Google Cloud credits from Google AI Pro or Ultra are eligible Google Cloud credits. On the Prepay billing plan, these credits pay for Gemini API usage only after you buy Prepay credits in AI Studio. With a $0 Prepay balance, requests fail even with unused Google Cloud credits, according to a Google staff member on discuss.ai.google.dev.",
+          "quote": "On the Prepay billing plan, eligible Google Cloud credits (including monthly Google Developer Program credits from a Google AI Pro subscription) cannot be applied to Gemini API usage until you establish an active, positive balance in your AIS prepaid wallet",
+          "url": "https://discuss.ai.google.dev/t/error-code-402-message-your-prepayment-credits-are-depleted/185524",
+          "read_on": "2026-10-10"
         }
       ]
     },

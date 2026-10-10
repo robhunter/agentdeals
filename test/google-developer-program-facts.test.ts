@@ -41,6 +41,11 @@ const STATED = [
   "Eligible U.S. college students aged 18+ get Google AI Pro free for a year (redeem by December 31, 2026; a payment method is required, and it then renews at $19.99/month).",
 ];
 
+const PREPAY_CREDITS =
+  "The Gemini API keeps a free tier of its own; check Google's pricing page for your model. The monthly Google Cloud credits from Google AI Pro or Ultra are eligible Google Cloud credits. On the Prepay billing plan, these credits pay for Gemini API usage only after you buy Prepay credits in AI Studio. With a $0 Prepay balance, requests fail even with unused Google Cloud credits, according to a Google staff member on discuss.ai.google.dev.";
+
+const PREPAY_CREDITS_SOURCE = "https://discuss.ai.google.dev/t/error-code-402-message-your-prepayment-credits-are-depleted/185524";
+
 const PLAN_CELLS: Record<string, [string, string, string]> = {
   "GDP Premium (standalone, closed)": ["$500/year (annual plan) or $45/mo (monthly plan)", "Gemini 3 Pro access; $50/yr GenAI credit (annual plan)", "30 Firebase Studio workspaces"],
   "Google AI Pro": ["$10/mo ($120/yr)", "Expanded Gemini 3.1 Pro and Deep Research", "30 Firebase Studio workspaces"],
@@ -96,6 +101,10 @@ function structuredStrings(html: string): string[] {
     }
   }
   return strings;
+}
+
+function geminiApiUsersCard(html: string): string {
+  return html.split("<h3>Gemini API Users</h3>")[1]?.split("</div>")[0] ?? "";
 }
 
 function planRows(html: string): Map<string, string[]> {
@@ -168,6 +177,13 @@ describe("the Google Developer Program guide states Google's, Microsoft's, Appwr
   it("states each corrected line as written", () => {
     const text = readable(served.get(PAGE)!);
     assert.deepStrictEqual(STATED.filter((line) => !text.includes(line)), []);
+  });
+
+  it("tells Gemini API users that AI Pro and Ultra credits pay for Prepay usage only once Prepay credits are bought, linking the Google staff member's forum answer", () => {
+    const card = geminiApiUsersCard(served.get(PAGE)!);
+    assert.ok(readable(card).includes(PREPAY_CREDITS), readable(card));
+    const links = [...card.matchAll(/<a\b[^>]*\bhref="([^"]*)"[^>]*>([\s\S]*?)<\/a>/g)].map(([, href, text]) => `${readable(text)} -> ${href}`);
+    assert.deepStrictEqual(links, [`a Google staff member on discuss.ai.google.dev -> ${PREPAY_CREDITS_SOURCE}`]);
   });
 
   it("names both Premium plans' credits and every plan's Firebase Studio workspaces in the plan table", () => {
