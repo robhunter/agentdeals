@@ -26713,9 +26713,26 @@ function buildShutdownTrackerPage(): string {
   }
 
   const shutdownVendorSlugs = [...new Set(handTyped.map(s => s.vendorSlug))];
-  const relevantChanges = changesTheVendorMade(dealChanges).filter(c =>
+  const shutdownVendorChangesByDayServed = splitAtTheDayServed(changesTheVendorMade(dealChanges).filter(c =>
     shutdownVendorSlugs.some(slug => toSlug(c.vendor) === slug)
-  ).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).slice(0, 10);
+  ).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()), utcToday());
+  const relevantChanges = shutdownVendorChangesByDayServed.inEffect.slice(0, 10);
+  const upcomingRelevantChanges = shutdownVendorChangesByDayServed.upcoming;
+  const relatedChangesTable = (changes: typeof relevantChanges) => `<table class="pricing-table">
+    <thead><tr><th>Date</th><th>Vendor</th><th>Change</th><th>Impact</th></tr></thead>
+    <tbody>
+      ${changes.map(c => {
+        const dateStr = changeEntryLongDateLabel(c);
+        const impactColor = changeImpactColor(c.impact);
+        return `<tr>
+          <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(dateStr)}</td>
+          <td>${changeVendorLinkHtml(c.vendor, ' style="color:var(--text)"')}</td>
+          <td style="font-size:.85rem">${changeSummaryHtml(c, escHtmlServer)}</td>
+          <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
+        </tr>`;
+      }).join("\n      ")}
+    </tbody>
+  </table>`;
 
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["openai-assistants-alternatives", "stability", "free-tier-risk", "free-tier-tracker", "state-of-free-tiers", "ai-ml-alternatives"].includes(p.slug)
@@ -26835,7 +26852,7 @@ ${buildGlobalNav("guides")}
   <h1>${escHtmlServer(title)}</h1>
   <p class="subtitle">${escHtmlServer(subtitle)}</p>
   ${datedSectionNoticeHtml(
-    `A shutdown is grouped by how many days its deadline is from ${today.toISOString().slice(0, 10)}: 30 or fewer is Imminent, up to 90 is Upcoming, beyond that is Later This Year.`,
+    `A shutdown is grouped by how many days its deadline is from ${today.toISOString().slice(0, 10)}: 30 or fewer is Imminent, up to 90 is Upcoming, beyond that is Later.`,
     [
       { when: "On the day its deadline passes it moves to", text: "Recently Completed, below", href: "#completed" },
       { when: "Nothing is removed from this page when its deadline arrives, and every pricing change we hold for these vendors is in", text: "the full change log", href: "/changes" },
@@ -26849,7 +26866,7 @@ ${buildGlobalNav("guides")}
     <div class="stat-card"><div class="stat-number">${activeCount}</div><div class="stat-label">Active Shutdowns</div></div>
     <div class="stat-card"><div class="stat-number red">${imminent.length}</div><div class="stat-label">Imminent (&lt;30 days)</div></div>
     <div class="stat-card"><div class="stat-number yellow">${upcoming.length}</div><div class="stat-label">Upcoming (30\u201390 days)</div></div>
-    <div class="stat-card"><div class="stat-number green">${later.length}</div><div class="stat-label">Later this year</div></div>
+    <div class="stat-card"><div class="stat-number green">${later.length}</div><div class="stat-label">Later</div></div>
   </div>
 
   <div class="timeline-bar">
@@ -26863,28 +26880,18 @@ ${buildGlobalNav("guides")}
 
   ${buildSection("\u23f3 Upcoming", "These shutdowns are 30\u201390 days away. Plan your migration now.", upcoming, "upcoming")}
 
-  ${buildSection("\u2705 Later This Year", "These shutdowns are 90+ days away. Start planning when convenient.", later, "later")}
+  ${buildSection("Later", "These shutdowns are more than 90 days away.", later, "later")}
 
   ${buildSection("\u2705 Recently Completed", "These shutdowns have already happened. Listed for reference.", completed, "completed")}
 
   ${relevantChanges.length > 0 ? `
   <h2 id="pricing-changes">Related Pricing Changes</h2>
   <p class="section-intro">Recent pricing and policy changes from vendors on our shutdown list \u2014 from our <a href="/changes">deal changes database</a>.</p>
-  <table class="pricing-table">
-    <thead><tr><th>Date</th><th>Vendor</th><th>Change</th><th>Impact</th></tr></thead>
-    <tbody>
-      ${relevantChanges.map(c => {
-        const dateStr = changeEntryLongDateLabel(c);
-        const impactColor = changeImpactColor(c.impact);
-        return `<tr>
-          <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(dateStr)}</td>
-          <td>${changeVendorLinkHtml(c.vendor, ' style="color:var(--text)"')}</td>
-          <td style="font-size:.85rem">${changeSummaryHtml(c, escHtmlServer)}</td>
-          <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
-        </tr>`;
-      }).join("\n      ")}
-    </tbody>
-  </table>` : ""}
+  ${relatedChangesTable(relevantChanges)}` : ""}
+  ${upcomingRelevantChanges.length > 0 ? `
+  <h2 id="upcoming-changes">${escHtmlServer(UPCOMING_CHANGES_HEADING)}</h2>
+  <p class="section-intro">${escHtmlServer(UPCOMING_CHANGES_INTRO)}</p>
+  ${relatedChangesTable(upcomingRelevantChanges)}` : ""}
 
   <h2 id="methodology">Methodology</h2>
   <div class="methodology">
@@ -28117,7 +28124,7 @@ function buildAiCodingToolsPricingPage(): string {
 
   const supersededAiCodingLineups = supersededLineups(aiCodingChanges);
 
-  const changeTimelineRows = aiCodingChanges.map((c: any) => {
+  const aiCodingChangeRow = (c: any) => {
     const dateStr = changeEntryLongDateLabel(c);
     const impactColor = changeImpactColor(c.impact);
     const newest = supersededAiCodingLineups.get(c);
@@ -28130,7 +28137,32 @@ function buildAiCodingToolsPricingPage(): string {
       '<td style="font-size:.85rem">' + changeSummaryHtml(c, escHtmlServer) + historyNote + '</td>' +
       '<td><span style="color:' + impactColor + ';font-size:.8rem;font-weight:600">' + escHtmlServer(changeImpactLabel(c.impact)) + '</span></td>' +
       '</tr>';
-  }).join("\n        ");
+  };
+  const aiCodingChangesTable = (rows: string) =>
+    '  <div style="overflow-x:auto">\n' +
+    '  <table class="pricing-table">\n' +
+    '    <thead>\n' +
+    '      <tr>\n' +
+    '        <th>Date</th>\n' +
+    '        <th>Vendor</th>\n' +
+    '        <th>Change</th>\n' +
+    '        <th>Impact</th>\n' +
+    '      </tr>\n' +
+    '    </thead>\n' +
+    '    <tbody>\n' +
+    '        ' + rows + '\n' +
+    '    </tbody>\n' +
+    '  </table>\n' +
+    '  </div>\n';
+  const aiCodingChangesByDayServed = splitAtTheDayServed(aiCodingChanges, utcToday());
+  const changeTimelineRows = aiCodingChangesByDayServed.inEffect.map(aiCodingChangeRow).join("\n        ");
+  const upcomingChangesSection = aiCodingChangesByDayServed.upcoming.length > 0 ? (
+    '\n' +
+    '  <h2 id="upcoming-changes">' + escHtmlServer(UPCOMING_CHANGES_HEADING) + '</h2>\n' +
+    '  <p class="section-intro">' + escHtmlServer(UPCOMING_CHANGES_INTRO) + '</p>\n' +
+    '\n' +
+    aiCodingChangesTable(aiCodingChangesByDayServed.upcoming.map(aiCodingChangeRow).join("\n        "))
+  ) : '';
 
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["ide-code-editors-alternatives", "ai-ml-alternatives", "free-ai-stack", "free-llm-apis", "free-tier-risk", "cursor-alternatives"].includes(p.slug)
@@ -28283,6 +28315,7 @@ function buildAiCodingToolsPricingPage(): string {
     '      <li><a href="#cost-analysis">Cost Analysis by Use Case</a></li>\n' +
     '      <li><a href="#hidden-costs">Hidden Costs</a></li>\n' +
     '      <li><a href="#changes">Recent Pricing Changes</a></li>\n' +
+    (aiCodingChangesByDayServed.upcoming.length > 0 ? '      <li><a href="#upcoming-changes">' + escHtmlServer(UPCOMING_CHANGES_HEADING) + '</a></li>\n' : '') +
     '      <li><a href="#recommendations">Best-for-Use-Case Recommendations</a></li>\n' +
     '      <li><a href="#faq">FAQ</a></li>\n' +
     '    </ol>\n' +
@@ -28399,23 +28432,8 @@ function buildAiCodingToolsPricingPage(): string {
     '  <h2 id="changes">Recent Pricing Changes</h2>\n' +
     '  <p class="section-intro">The AI coding market has been in flux. Here are the pricing changes we\'ve tracked. See <a href="/pricing-changes">full change timeline</a> for all tracked changes.</p>\n' +
     '\n' +
-    (aiCodingChanges.length > 0 ? (
-    '  <div style="overflow-x:auto">\n' +
-    '  <table class="pricing-table">\n' +
-    '    <thead>\n' +
-    '      <tr>\n' +
-    '        <th>Date</th>\n' +
-    '        <th>Vendor</th>\n' +
-    '        <th>Change</th>\n' +
-    '        <th>Impact</th>\n' +
-    '      </tr>\n' +
-    '    </thead>\n' +
-    '    <tbody>\n' +
-    '        ' + changeTimelineRows + '\n' +
-    '    </tbody>\n' +
-    '  </table>\n' +
-    '  </div>\n'
-    ) : '  <p class="section-intro">No AI coding pricing changes tracked yet.</p>\n') +
+    (aiCodingChangesByDayServed.inEffect.length > 0 ? aiCodingChangesTable(changeTimelineRows) : '  <p class="section-intro">No AI coding pricing changes tracked yet.</p>\n') +
+    upcomingChangesSection +
     '\n' +
     '  <div class="context-box">\n' +
     '    <strong>The pattern:</strong> Credits and quotas are replacing flat subscriptions. Cursor moved first (June 2025), Augment Code followed (October 2025), and Windsurf completed the shift (March 2026). This lets vendors monetize power users at $200/month while keeping entry prices at $20. Expect GitHub Copilot to adopt a similar model as competitive pressure mounts.\n' +
