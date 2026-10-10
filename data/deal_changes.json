@@ -10088,21 +10088,45 @@
     {
       "vendor": "DeepSeek API",
       "change_type": "pricing_restructured",
-      "date": "2026-09-03",
-      "date_source": "discovered",
-      "summary": "Pricing has significantly changed. The previous pricing of $0.28/$0.42/M tokens is no longer accurate. New models (deepseek-v4-flash, deepseek-v4-pro, deepseek-v4-flash-vision-exp) are available with different pricing tiers for peak and off-peak hours, and cache hits/misses.",
-      "previous_state": "Among the cheapest LLM APIs available. DeepSeek V3.2 (deepseek-chat): $0.28/M input, $0.42/M output (1M context). DeepSeek V3.2 Thinking (deepseek-reasoner): $0.28/M input, $0.42/M output. Cache hits 90% cheaper. Off-peak discounts available. China-based.",
-      "current_state": "Pricing is now per 1M tokens with different rates for input and output tokens, peak and off-peak hours, and cache hits/misses. For example, deepseek-v4-flash has input token prices ranging from $0.007 to $0.44 depending on these factors, and output tokens cost $0.66 to $1.32 per 1M tokens.",
+      "date": "2026-08-16",
+      "date_source": "vendor_page",
+      "summary": "At 16:00 UTC on 2026-08-16, DeepSeek introduced peak and off-peak pricing, with off-peak at half the peak rate. V4 Flash and V4 Pro output prices rose, with Flash from $0.28 to $1.32 at peak and Pro from $0.87 to $3.96 at peak.",
+      "previous_state": "Per 1M tokens, cache-hit input / cache-miss input / output. Before 2026-08-16, deepseek-v4-flash was $0.0028 / $0.14 / $0.28 and deepseek-v4-pro was $0.003625 / $0.435 / $0.87, with one price at all hours.",
+      "current_state": "Per 1M tokens, cache-hit input / cache-miss input / output. From 2026-08-16, peak hours are 01:00-04:00 and 06:00-10:00 UTC. deepseek-v4-flash peak is $0.014 / $0.44 / $1.32, off-peak $0.007 / $0.22 / $0.66. deepseek-v4-pro peak is $0.044 / $1.32 / $3.96, off-peak $0.022 / $0.66 / $1.98.",
       "impact": "high",
-      "source_url": "https://api-docs.deepseek.com/quick_start/pricing",
+      "source_url": "https://api-docs.deepseek.com/updates",
       "category": "AI / ML",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-03",
-      "archive_check": {
-        "checked": "2026-10-02",
-        "outcome": "no_usable_capture"
-      }
+      "recorded_date": "2026-09-03"
+    },
+    {
+      "vendor": "DeepSeek API",
+      "change_type": "pricing_restructured",
+      "date": "2026-09-10",
+      "date_source": "vendor_page",
+      "summary": "On 2026-09-10, DeepSeek released deepseek-flash (V4.1-Flash) and retired deepseek-v4-flash and deepseek-v4-flash-vision-exp. These retired names still route to V4.1-Flash at Flash prices. Flash prices fell from 04:00 UTC; V4 Pro prices did not change.",
+      "previous_state": "Per 1M tokens, cache-hit input / cache-miss input / output. Before 2026-09-10, deepseek-v4-flash peak was $0.014 / $0.44 / $1.32 and off-peak $0.007 / $0.22 / $0.66.",
+      "current_state": "Per 1M tokens, cache-hit input / cache-miss input / output. From 2026-09-10, deepseek-flash (V4.1-Flash) peak is $0.006 / $0.30 / $1.20 and off-peak $0.003 / $0.15 / $0.60.",
+      "impact": "medium",
+      "source_url": "https://api-docs.deepseek.com/news/news260910",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-10-10"
+    },
+    {
+      "vendor": "DeepSeek API",
+      "change_type": "record_corrected",
+      "date": "2026-10-10",
+      "summary": "Data correction - DeepSeek's August prices took effect at 16:00 UTC on 2026-08-16. Our record dated the change 2026-09-03, the day we found it, called the effective date unknown, and listed as available models DeepSeek retired on 2026-09-10.",
+      "previous_state": "Recorded 2026-09-03 as: Pricing has significantly changed. The previous pricing of $0.28/$0.42/M tokens is no longer accurate. New models (deepseek-v4-flash, deepseek-v4-pro, deepseek-v4-flash-vision-exp) are available with different pricing tiers for peak and off-peak hours, and cache hits/misses.",
+      "current_state": "\"The new prices will take effect at 16:00 (UTC Time) on August 16, 2026.\"",
+      "impact": "medium",
+      "source_url": "https://api-docs.deepseek.com/updates",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-10-10",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Internxt",
