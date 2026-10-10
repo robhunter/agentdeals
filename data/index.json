@@ -13249,8 +13249,11 @@
         {
           "text": "Production API keys need an active paid plan or pay-as-you-go enabled. Development keys are limited to 100 requests per minute, production keys 1,000.",
           "quote": "Access to production keys requires either an active Paid Plan or PAYGO enabled.",
+          "rules_out": [
+            "production"
+          ],
           "url": "https://docs.tavily.com/documentation/rate-limits",
-          "read_on": "2026-10-06"
+          "read_on": "2026-10-10"
         },
         {
           "text": "Tavily may use your query data to improve its services; an account setting turns this off, and then query data is not stored or used for improvements.",
