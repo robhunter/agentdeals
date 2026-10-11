@@ -164,11 +164,11 @@ describe(`${PAGE} on paying after use once Prepay starts`, () => {
     assert.ok(paragraph.includes('Agent Platform charges <a href="https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing" target="_blank" rel="noopener">$0.75 input and $3.75 output per million tokens for Gemini 3.8 Flash and 3.6 Flash on the global endpoint through 2026-12-31, then $1.50 input and $7.50 output</a>. Non-global endpoints cost 10% more.'), paragraph);
   });
 
-  it("ends by saying usage can run past a $0 balance and that a negative balance comes off the next purchase", () => {
-    assert.ok(withoutTags(prepayParagraph(page)).endsWith(
+  it("says usage can run past a $0 balance and that a negative balance comes off the next purchase", () => {
+    assert.ok(withoutTags(prepayParagraph(page)).includes(
       "Usage can continue for approximately 10 minutes past a $0 balance due to billing latency. " +
       "Batch jobs and agents may consume credits beyond the balance. " +
-      "A negative balance is deducted from the next credit purchase.",
+      "A negative balance is deducted from the next credit purchase. ",
     ));
   });
 });
@@ -191,6 +191,24 @@ describe(`${PAGE} on accounts billed by invoice`, () => {
 
   it("states it once on the page", () => {
     assert.strictEqual(readable(page).match(/not available for invoiced/gi)?.length ?? 0, 1);
+  });
+});
+
+describe(`${PAGE} on credits that still read as depleted after buying them`, () => {
+  it("ends the paragraph with the depleted-credits error, that no manual billing sync exists, the checks to make, and where to report it", () => {
+    assert.ok(withoutTags(prepayParagraph(page)).endsWith(
+      "A negative balance is deducted from the next credit purchase. " +
+      'After buying credits, calls may still fail with "Your prepayment credits are depleted". ' +
+      "Google staff say there is no manual billing sync to request. " +
+      "Check that the credits are a Prepay balance on the AI Studio Billing page, not a spend cap or funds in the Google Cloud billing account, and that the API key belongs to a project on that billing account. " +
+      "Retry the calls; if the error continues, post the exact error message and request time on Google's AI developer forum.",
+    ));
+  });
+
+  it("links what Google staff say to their reply and the forum to Google's AI developer forum", () => {
+    const paragraph = prepayParagraph(page);
+    assert.ok(paragraph.includes('<a href="https://discuss.ai.google.dev/t/manual-sync-request-prepayment-credits-depleted-429-despite-funded-account/172183" target="_blank" rel="noopener">Google staff say</a> there is no manual billing sync'), paragraph);
+    assert.ok(paragraph.includes('request time on <a href="https://discuss.ai.google.dev/" target="_blank" rel="noopener">Google\'s AI developer forum</a>.'), paragraph);
   });
 });
 
