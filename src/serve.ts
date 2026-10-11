@@ -27704,9 +27704,16 @@ function buildStartupCreditsPage(): string {
       ? '<a href="' + escHtmlServer(p.programmePage) + '" rel="nofollow noopener" style="color:var(--text)">' + escHtmlServer(p.name) + '</a>'
       : escHtmlServer(p.name);
 
+  const datedTermsHtml = (terms: DatedTerms) =>
+    escHtmlServer(terms.text) +
+    ' (From <a href="' + escHtmlServer(terms.url) + '" rel="nofollow noopener">' + escHtmlServer(citationLabel(terms.url)) + '</a>, read ' + escHtmlServer(terms.readOn) + '.)';
+
   const whenCreditsRunOutHtml = (terms: DatedTerms) =>
-    '<p class="diff-desc"><strong>When credits run out:</strong> ' + escHtmlServer(terms.text) +
-    ' (From <a href="' + escHtmlServer(terms.url) + '" rel="nofollow noopener">' + escHtmlServer(citationLabel(terms.url)) + '</a>, read ' + escHtmlServer(terms.readOn) + '.)</p>';
+    '<p class="diff-desc"><strong>When credits run out:</strong> ' + datedTermsHtml(terms) + '</p>';
+
+  const whatsIncludedHtml = (p: StartupProgram) =>
+    '<p class="diff-desc"><strong>What\'s included:</strong> ' + escHtmlServer(p.whatsIncluded) +
+    (p.modelsTheCreditsCover ? ' ' + datedTermsHtml(p.modelsTheCreditsCover) : '') + '</p>';
 
   const categorySections = categories.map(cat => {
     const catPrograms = STARTUP_PROGRAMS.filter(p => p.category === cat);
@@ -27718,7 +27725,7 @@ function buildStartupCreditsPage(): string {
         '<p class="diff-desc"><strong>Credit value:</strong> ' + escHtmlServer(p.creditValue) + '</p>' +
         '<p class="diff-desc"><strong>Eligibility:</strong> ' + escHtmlServer(p.eligibility) + '</p>' +
         (p.duration ? '<p class="diff-desc"><strong>Duration:</strong> ' + escHtmlServer(p.duration) + '</p>' : '') +
-        '<p class="diff-desc"><strong>What\'s included:</strong> ' + escHtmlServer(p.whatsIncluded) + '</p>' +
+        whatsIncludedHtml(p) +
         (p.vestingSchedule ? '<p class="diff-desc"><strong>Vesting:</strong> ' + escHtmlServer(p.vestingSchedule) + '</p>' : '') +
         (p.status ? '<p class="diff-desc"><strong>Status:</strong> ' + escHtmlServer(p.status) + '</p>' : '') +
         (p.whenCreditsRunOut ? whenCreditsRunOutHtml(p.whenCreditsRunOut) : '') +

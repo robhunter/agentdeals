@@ -98,6 +98,20 @@ const WHEN_CREDITS_RUN_OUT: Record<string, [string, string, string]> = {
   "Amazon Kiro (AWS Startups)": ["Your AWS Account automatically switches to standard Kiro Pro+ billing at the then-current rates, billed monthly to your AWS-associated credit card.", "https://kiro.dev/startups/terms/", "2026-10-10"],
 };
 
+const MODELS_THE_CREDITS_COVER: Record<string, [string, string, string]> = {
+  "Google Cloud for Startups": ["Google Cloud for Startups credits cover Google's own models, such as Gemini and Gemma. Third-party models, such as Anthropic's Claude, are billed directly and not covered.", "https://cloud.google.com/startup/ai", "2026-10-11"],
+  "Microsoft for Startups (formerly Founders Hub)": ["Anthropic's Claude, Hugging Face models and some Cohere, Meta and Mistral AI models in Microsoft Foundry are not covered by Microsoft for Startups credits; the model provider bills that usage separately. The credits cover Foundry models billed directly by Azure.", "https://learn.microsoft.com/en-us/startups/benefits/technical-benefits/azure-credits/foundry-model-sponsorship-coverage", "2026-10-11"],
+};
+
+function asCited([terms, url, readOn]: [string, string, string]): string {
+  return `${terms} (From ${url.replace(/^https:\/\//, "").replace(/\/$/, "")}, read ${readOn}.)`;
+}
+
+function includedAsStated(name: string): string {
+  const models = MODELS_THE_CREDITS_COVER[name];
+  return models ? `${INCLUDED[name]} ${asCited(models)}` : INCLUDED[name];
+}
+
 const CREDITS_ENDING_WITHOUT_CHARGES: [string, RegExp][] = [
   ["usage past the credits is not charged or billed", /\b(?:not|never|won't|will not) (?:be )?(?:charged|billed)\b|\bnothing is (?:charged|billed)\b|\bno charges?\b|\bwithout (?:a )?charge\b/i],
   ["a programme is free until its credits end", /\bfree until\b/i],
@@ -286,7 +300,7 @@ describe("the startup credits guide states each programme's terms as the program
     const wrong = Object.entries(PROGRAMMES).flatMap(([name, [credit, eligibility, duration, vesting]]) => {
       const card = cards.get(name) ?? {};
       const expected: Array<[string, string]> = [
-        ["Credit value", credit], ["Eligibility", eligibility], ["Duration", duration], ["Vesting", vesting], ["What's included", INCLUDED[name]],
+        ["Credit value", credit], ["Eligibility", eligibility], ["Duration", duration], ["Vesting", vesting], ["What's included", includedAsStated(name)],
       ];
       return expected
         .filter(([label, value]) => value !== "" && card[label] !== value)
@@ -300,14 +314,28 @@ describe("the startup credits guide states each programme's terms as the program
     const stated = Object.fromEntries([...programmeCards(html)]
       .filter(([, fields]) => "When credits run out" in fields)
       .map(([name, fields]) => [name, fields["When credits run out"]]));
-    const expected = Object.fromEntries(Object.entries(WHEN_CREDITS_RUN_OUT).map(([name, [terms, url, readOn]]) =>
-      [name, `${terms} (From ${url.replace(/^https:\/\//, "").replace(/\/$/, "")}, read ${readOn}.)`]));
+    const expected = Object.fromEntries(Object.entries(WHEN_CREDITS_RUN_OUT).map(([name, terms]) => [name, asCited(terms)]));
     assert.deepStrictEqual(stated, expected);
     const cards = programmeCardMarkup(html);
     const unlinked = Object.entries(WHEN_CREDITS_RUN_OUT)
       .filter(([name, [, url]]) => !cards.get(name)?.includes(`(From <a href="${url}" rel="nofollow noopener">`))
       .map(([name]) => name);
     assert.deepStrictEqual(unlinked, []);
+  });
+
+  it("ends the Google and Microsoft inclusions with the AI models their credits cover, linking the page that says so", () => {
+    const html = served.get("/startup-credits")!;
+    const cards = programmeCards(html);
+    const markup = programmeCardMarkup(html);
+    const wrong = Object.entries(MODELS_THE_CREDITS_COVER).flatMap(([name, terms]) => {
+      const included = cards.get(name)?.["What's included"] ?? "";
+      const includedMarkup = markup.get(name)?.match(/<strong>What's included:<\/strong>([\s\S]*?)<\/p>/)?.[1] ?? "";
+      return [
+        ...(included.endsWith(` ${asCited(terms)}`) ? [] : [`${name} ends its inclusions with "${included.slice(-120)}"`]),
+        ...(includedMarkup.includes(`(From <a href="${terms[1]}" rel="nofollow noopener">`) ? [] : [`${name} does not link ${terms[1]} from its inclusions`]),
+      ];
+    });
+    assert.deepStrictEqual(wrong, []);
   });
 
   it("says nowhere on the guide that a programme's credits end without charges", () => {
