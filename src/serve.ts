@@ -13,7 +13,7 @@ import { getStackRecommendation } from "./stacks.js";
 import { estimateCosts } from "./costs.js";
 import { classifyRequest } from "./client-class.js";
 import { acceptSignal, ackMissing, checkRateLimit, clientAddress, RATE_LIMIT_PER_MINUTE, SIGNAL_ACK_PARAM, SIGNAL_BODY_MAX, SIGNAL_DOC_PATH, SIGNAL_PATH, type SignalInput } from "./signal.js";
-import { agentBlock, DEFERENCE, signalExampleSlug, signalHeaderValue, signalHtmlBlock, signalLlmsSection, SIGNAL_HEADER_NAME } from "./signal-copy.js";
+import { agentBlock, DEFERENCE, signalExampleSlug, signalHeaderValue, signalLlmsSection, SIGNAL_HEADER_NAME } from "./signal-copy.js";
 import { BASE_URL } from "./base-url.js";
 import { CONTACT_EMAIL } from "./contact.js";
 import { RATED_LEVELS, isRated, gradeForStack } from "./stack-grade.js";
@@ -2733,7 +2733,6 @@ ${offersHtml}
     </div>
   </div>
 
-  ${signalHtmlBlock(BASE_URL, null, catOffers[0] ? toSlug(catOffers[0].vendor) : null)}
   ${buildMcpCta("Browse this category from your AI coding assistant. Search 1,600+ deals, compare free tiers, and track pricing changes — directly in your editor.")}
   <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
@@ -3343,7 +3342,6 @@ ${bestOfFaqHtml}
     ${otherBestOf}
   </div>
 
-  ${signalHtmlBlock(BASE_URL, null, qualified[0] ? toSlug(qualified[0].offer.vendor) : null)}
   ${buildMcpCta("Get personalized recommendations from your AI. Search 1,600+ deals, compare free tiers, and track pricing changes — directly in your editor.")}
   <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
@@ -4177,7 +4175,6 @@ ${verdictHtml}
   </div>
 ${watchCtaHtml}
 ${relatedHtml}
-  ${signalHtmlBlock(BASE_URL, null, toSlug(a.vendor))}
   ${buildMcpCta("Compare any two vendors from your AI coding assistant. Search 1,600+ deals, compare free tiers, and track pricing changes — directly in your editor.")}
   <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
@@ -6228,7 +6225,6 @@ ${internalLinksHtml}
     <code>${escHtmlServer(mcpSnippet)}</code>
   </div>
 ${faqHtml}
-  ${signalHtmlBlock(BASE_URL, slug)}
   ${buildMcpCta("Want to compare this vendor in your AI? Search 1,600+ deals, compare free tiers, and track pricing changes — directly in your editor.")}
   <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
@@ -6605,7 +6601,6 @@ ${allAltsHtml}
     ${trendsHtml}
   </div>
 ${altFaqHtml}
-  ${signalHtmlBlock(BASE_URL, null, enrichedAlts[0] ? toSlug(enrichedAlts[0].vendor) : null)}
   ${buildMcpCta("Find alternatives from your AI coding assistant. Search 1,600+ deals, compare free tiers, and track pricing changes — directly in your editor.")}
   <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
