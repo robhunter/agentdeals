@@ -98,6 +98,7 @@ const WRITTEN_BLURBS: Readonly<Record<string, string>> = {
   "accounting-software-pricing-2026": "QuickBooks Free connects one bank account. QuickBooks, Xero, FreshBooks raised prices in 2026. Zoho Books and Wave did not.",
   "business-bank-account-fees-2026": "Mercury and Brex send domestic wires for $0 on free accounts. Found Plus now costs $35 a month. northone.com redirects to Relay.",
   "company-formation-pricing-2026": "Firstbase Start costs $99 under an offer plus a required $299-a-year agent. Stripe pays the $500 Atlas fee back for a $5,000 Treasury deposit. Delaware's LLC tax is $400.",
+  "whatsapp-business-api-pricing-2026": "Since 2026-10-01 each business phone number gets 1,000 free service messages a month and then pays per message.",
 };
 
 export function guideBlurb(slug: string): string {

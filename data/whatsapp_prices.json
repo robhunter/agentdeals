@@ -1,0 +1,347 @@
+{
+  "published": "2026-10-11",
+  "title": "WhatsApp Business API Pricing 2026: Service Messages No Longer Free",
+  "meta_description": "Since 2026-10-01 each business phone number gets 1,000 free service messages a month and then pays per message.",
+  "lead": "Since 2026-10-01 service replies are no longer free. Each business phone number gets 1,000 free service messages a month, then pays the market's rate. Utility templates sent inside the 24-hour window are now charged. An account with no payment method stops delivering replies past 1,000. The next possible price change is 2027-01-01.",
+  "read_line": "Prices read on Meta's pricing page (updated 2026-09-30) and its rate cards effective 2026-10-01, on 2026-10-10. Meta's fees only, before any provider's markup and before tax.",
+  "free_service_messages_per_number": 1000,
+  "changes": {
+    "heading": "What changed on 2026-10-01",
+    "intro": "Each row gives the rule until 2026-09-30 and from 2026-10-01.",
+    "columns": [
+      "Message",
+      "Until 2026-09-30",
+      "From 2026-10-01"
+    ],
+    "rows": [
+      {
+        "label": "Service messages (non-template replies inside the 24-hour customer service window)",
+        "cells": [
+          "Free, with no monthly limit (since 2024-11-01)",
+          "1,000 free per business phone number a month; from the 1,001st, the market's service rate. Unused free messages do not roll over"
+        ]
+      },
+      {
+        "label": "Service messages from eligible governments and non-profits",
+        "cells": [
+          "Free, with no monthly limit",
+          "Still free past the 1,000 through 2027-12-31, for organisations Meta deems eligible. Eligible: government departments and agencies, inter-governmental organisations, and community non-profits, including public health, crisis response, disaster relief and non-partisan civic engagement"
+        ]
+      },
+      {
+        "label": "Non-template messages from AI Providers' general-purpose AI assistants",
+        "cells": [
+          "Allowed only where Meta is legally required to permit them. Meta has charged $0.0625 per message in Brazil since 2026-03-11",
+          "The 2026-10-01 changes do not apply to them, so they get no 1,000 free messages. Brazil: $0.0625 per message. Users in the EU and EEA (Austria, Belgium, Bulgaria, Croatia, Cyprus, the Czech Republic, Denmark, Estonia, Finland, France, Germany, Greece, Hungary, Iceland, Ireland, Italy, Latvia, Liechtenstein, Lithuania, Luxembourg, Malta, the Netherlands, Norway, Poland, Portugal, Romania, Slovakia, Slovenia, Spain and Sweden): no charge since 2026-05-13"
+        ]
+      },
+      {
+        "label": "Utility templates sent in reply inside an open customer service window",
+        "cells": [
+          "Free (since 2025-07-01)",
+          "Charged at the market's utility rate"
+        ]
+      },
+      {
+        "label": "Service messages past the 1,000 free ones, on an account with no payment method",
+        "cells": [
+          "Delivered",
+          "Not delivered"
+        ]
+      },
+      {
+        "label": "Webhook `pricing.type` of a charged service or in-window utility message",
+        "cells": [
+          "`free_customer_service`",
+          "`regular`"
+        ]
+      },
+      {
+        "label": "Rates",
+        "cells": [
+          "",
+          "Meta updated 40 rates. Bangladesh, Iraq, Kazakhstan, Kuwait, Morocco, Nepal, Oman, Sri Lanka and Ukraine moved from a regional rate to their own. Marketing rose in Kuwait, Mexico, Morocco, Saudi Arabia, the United Arab Emirates, Rest of Asia Pacific and Rest of Middle East"
+        ]
+      }
+    ]
+  },
+  "rates": {
+    "heading": "Rates per message by market",
+    "intro": "Rates are per delivered message in US dollars, by the user's country calling code. At list rates, utility, authentication and service cost the same in each market. Past a monthly volume, utility and authentication cost less: in North America, past 80,000 utility or 100,000 authentication messages a month. Every business pays the table's rates, except AI Providers offering a general-purpose AI assistant. Meta permits these only in Brazil and the EU and EEA. In Brazil they pay $0.0625 per non-template message. In the EU and EEA, including Germany, France, Spain and the Netherlands, Meta does not charge them. A business using AI to answer its own customers pays the table's rates.",
+    "columns": [
+      "Market",
+      "Marketing",
+      "Utility, authentication, service"
+    ],
+    "markets": [
+      {
+        "name": "United States and Canada (North America)",
+        "marketing": "0.025",
+        "utility": "0.0034",
+        "authentication": "0.0034",
+        "service": "0.0034",
+        "marketing_note": {
+          "text": "charged on Canadian numbers; WhatsApp does not deliver marketing templates to US numbers",
+          "links": [
+            {
+              "text": "WhatsApp does not deliver marketing templates to US numbers",
+              "url": "https://developers.facebook.com/documentation/business-messaging/whatsapp/templates/marketing-templates/per-user-limits/"
+            }
+          ]
+        }
+      },
+      {
+        "name": "India",
+        "marketing": "0.0118",
+        "utility": "0.0014",
+        "authentication": "0.0014",
+        "service": "0.0014"
+      },
+      {
+        "name": "Brazil",
+        "marketing": "0.0625",
+        "utility": "0.0068",
+        "authentication": "0.0068",
+        "service": "0.0068"
+      },
+      {
+        "name": "Mexico",
+        "marketing": "0.0397",
+        "utility": "0.0085",
+        "authentication": "0.0085",
+        "service": "0.0085"
+      },
+      {
+        "name": "Indonesia",
+        "marketing": "0.0411",
+        "utility": "0.025",
+        "authentication": "0.025",
+        "service": "0.025"
+      },
+      {
+        "name": "United Kingdom",
+        "marketing": "0.0635",
+        "utility": "0.022",
+        "authentication": "0.022",
+        "service": "0.022"
+      },
+      {
+        "name": "Germany",
+        "marketing": "0.1365",
+        "utility": "0.055",
+        "authentication": "0.055",
+        "service": "0.055"
+      },
+      {
+        "name": "France",
+        "marketing": "0.0859",
+        "utility": "0.03",
+        "authentication": "0.03",
+        "service": "0.03"
+      },
+      {
+        "name": "Spain",
+        "marketing": "0.0707",
+        "utility": "0.02",
+        "authentication": "0.02",
+        "service": "0.02"
+      },
+      {
+        "name": "Netherlands",
+        "marketing": "0.1597",
+        "utility": "0.05",
+        "authentication": "0.05",
+        "service": "0.05"
+      },
+      {
+        "name": "Nigeria",
+        "marketing": "0.0516",
+        "utility": "0.0067",
+        "authentication": "0.0067",
+        "service": "0.0067"
+      },
+      {
+        "name": "Pakistan",
+        "marketing": "0.0473",
+        "utility": "0.015",
+        "authentication": "0.015",
+        "service": "0.015"
+      },
+      {
+        "name": "Rest of Western Europe",
+        "marketing": "0.0592",
+        "utility": "0.0171",
+        "authentication": "0.0171",
+        "service": "0.0171"
+      },
+      {
+        "name": "Other (countries not listed by Meta)",
+        "marketing": "0.0604",
+        "utility": "0.0077",
+        "authentication": "0.0077",
+        "service": "0.0077"
+      }
+    ],
+    "business_agent": {
+      "columns": [
+        "Meta Business Agent (replies written by Meta's own AI agent)",
+        ""
+      ],
+      "rows": [
+        {
+          "label": "Rate",
+          "cells": [
+            "$2.00 per million tokens, every market"
+          ]
+        },
+        {
+          "label": "Typical message",
+          "cells": [
+            "20,000 to 25,000 tokens, about $0.04 to $0.05 (Meta's estimate)"
+          ]
+        },
+        {
+          "label": "Free messages",
+          "cells": [
+            "None, including in the free entry point window"
+          ]
+        }
+      ]
+    },
+    "note": "A business that sends more than 750,000 messages outside customer service windows in a moving 30-day period to users in the 18 markets with an authentication-international rate becomes eligible. After 30 days' notice, its authentication messages to users in those markets cost the authentication-international rate, unless the business is based in the same country as the user. India's rate is $0.0304, against its list rate of $0.0014. Source: Meta's USD rate card, effective 2026-10-01. INR, EUR, BRL and 12 other currencies have their own cards."
+  },
+  "cost_example": {
+    "heading": "What {replies} replies a month cost",
+    "intro": "The table counts {charged} charged messages after the {free} free ones, from one number, Meta's fee only.",
+    "columns": [
+      "Users in",
+      "Service rate",
+      "{replies} replies a month"
+    ],
+    "replies": 10000,
+    "rows": [
+      {
+        "label": "United States or Canada",
+        "market": "United States and Canada (North America)"
+      },
+      {
+        "label": "India",
+        "market": "India"
+      },
+      {
+        "label": "Brazil",
+        "market": "Brazil"
+      },
+      {
+        "label": "United Kingdom",
+        "market": "United Kingdom"
+      },
+      {
+        "label": "Germany",
+        "market": "Germany"
+      }
+    ]
+  },
+  "free_messages": {
+    "heading": "Free messages",
+    "columns": [
+      "Case",
+      "What is free",
+      "Limit"
+    ],
+    "rows": [
+      {
+        "label": "Monthly free service messages",
+        "cells": [
+          "Service messages",
+          "1,000 per business phone number a month, reset at midnight in the account's timezone; no roll-over"
+        ]
+      },
+      {
+        "label": "Free entry point window",
+        "cells": [
+          "Marketing, utility, authentication and service messages (not Meta Business Agent)",
+          "Up to 7 days, after a user messages from a Click to WhatsApp ad on Android or iOS and the business replies inside the customer service window"
+        ]
+      },
+      {
+        "label": "Messages from users",
+        "cells": [
+          "Every message a user sends to the business",
+          "No limit"
+        ]
+      }
+    ]
+  },
+  "deadlines": {
+    "heading": "Deadlines and when prices can change",
+    "text": "Businesses whose Sold-To country in Meta's Billing Hub is India must move all Messaging accounts in their business portfolio to INR billing by 2026-12-31. From 2027-01-01 Meta stops delivering messages from their accounts that are not billed in INR. Brazil has the same rule for BRL with a 2027-06-30 deadline.",
+    "calendar": {
+      "columns": [
+        "Pricing calendar",
+        ""
+      ],
+      "rows": [
+        {
+          "label": "Dates Meta may change prices",
+          "cells": [
+            "January 1, April 1, July 1, October 1"
+          ]
+        },
+        {
+          "label": "Notice for a rate change",
+          "cells": [
+            "At least 1 month"
+          ]
+        },
+        {
+          "label": "Notice for a pricing model add-on (such as new volume tiers)",
+          "cells": [
+            "At least 3 months"
+          ]
+        },
+        {
+          "label": "Notice for a change to the pricing model",
+          "cells": [
+            "At least 6 months"
+          ]
+        },
+        {
+          "label": "Next possible change",
+          "cells": [
+            "2027-01-01"
+          ]
+        }
+      ]
+    }
+  },
+  "other_pages": {
+    "heading": "Why other pages say replies are free",
+    "text": "Many third-party pages, and some copies of Meta's own page, still say service messages are free. That was Meta's rule from 2024-11-01 to 2026-09-30. The current rule applies from 2026-10-01.",
+    "sources": {
+      "text": "Sources: developers.facebook.com/documentation/business-messaging/whatsapp/pricing (updated 2026-09-30, read 2026-10-10); Meta's rate cards linked from that page, effective 2026-10-01; Meta's AI Providers page (updated 2026-09-01), its authentication-international page (updated 2026-05-21) and section 4.7 of Meta's terms for the WhatsApp Business Platform, read 2026-10-11.",
+      "links": [
+        {
+          "text": "developers.facebook.com/documentation/business-messaging/whatsapp/pricing",
+          "url": "https://developers.facebook.com/documentation/business-messaging/whatsapp/pricing/"
+        },
+        {
+          "text": "Meta's rate cards",
+          "url": "https://developers.facebook.com/documentation/business-messaging/whatsapp/pricing/#rate-cards-and-volume-tiers"
+        },
+        {
+          "text": "Meta's AI Providers page",
+          "url": "https://developers.facebook.com/documentation/business-messaging/whatsapp/pricing/ai-providers/"
+        },
+        {
+          "text": "its authentication-international page",
+          "url": "https://developers.facebook.com/documentation/business-messaging/whatsapp/pricing/authentication-international-rates/"
+        },
+        {
+          "text": "Meta's terms for the WhatsApp Business Platform",
+          "url": "https://www.facebook.com/legal/Meta-Terms-for-WhatsApp-Business-Platform"
+        }
+      ]
+    }
+  }
+}

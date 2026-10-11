@@ -58,6 +58,7 @@ import { guideBlurb } from "./guide-blurbs.js";
 import { ACCOUNTING_PRICES_PATH, ACCOUNTING_PRICES_SLUG, readAccountingPrices, type AccountingPrices, type AccountingSource } from "./accounting-prices.js";
 import { BANKING_FEES_PATH, BANKING_FEES_SLUG, readBankingFees, type BankingFees } from "./banking-fees.js";
 import { COMPANY_FORMATION_PATH, COMPANY_FORMATION_SLUG, readCompanyFormationPrices, type CompanyFormationPrices } from "./company-formation-prices.js";
+import { WHATSAPP_PRICES_PATH, WHATSAPP_PRICES_SLUG, costExampleLines, dollars, readWhatsAppPrices, withCostExampleFigures, type WhatsAppPrices } from "./whatsapp-prices.js";
 import { archiveCaptureDate, archivedAddress, type ColumnTable } from "./guide-data.js";
 import { MODEL_BELIEFS_CLOSING, MODEL_BELIEFS_HEADING, MODEL_BELIEFS_PATH, MODEL_BELIEFS_RERUN_SENTENCE, MODEL_BELIEFS_SLUG, MODEL_BELIEFS_TITLE, MOSTLY_OLD_ANSWERS, QUOTED_MODEL_BELIEFS_CLASS, answersFor, answersPerFact, answersPerModel, changedLabel, factsByOldAnswers, findingOf, introOf, metaDescriptionOf, methodOf, modelsByOldAnswers, modelsMostlyOld, numberWord, oldAnswersFrom, readModelBeliefs, testedOnOf, type ModelBeliefs } from "./model-beliefs.js";
 import { changesToStartupProgrammes } from "./startup-programme-changes.js";
@@ -582,6 +583,7 @@ const modelBeliefs: ModelBeliefs = readModelBeliefs();
 const accountingPrices: AccountingPrices = readAccountingPrices();
 const bankingFees: BankingFees = readBankingFees();
 const companyFormationPrices: CompanyFormationPrices = readCompanyFormationPrices();
+const whatsAppPrices: WhatsAppPrices = readWhatsAppPrices();
 const trackedChangeRecords = trackedChanges(dealChanges);
 const trackedChangeCount = trackedChangeRecords.length;
 
@@ -8588,6 +8590,14 @@ const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
     metaDesc: companyFormationPrices.meta_description,
     contextHtml: "",
     tag: "company-formation",
+    primaryVendor: "AgentDeals",
+  },
+  {
+    slug: WHATSAPP_PRICES_SLUG,
+    title: whatsAppPrices.title,
+    metaDesc: whatsAppPrices.meta_description,
+    contextHtml: "",
+    tag: "whatsapp-business-platform",
     primaryVendor: "AgentDeals",
   },
 ];
@@ -19843,12 +19853,12 @@ function daysKeptWholeHtml(text: string): string {
   return escHtmlServer(text).replace(/\d{4}-\d{2}-\d{2}/g, (day) => `<span class="day">${day}</span>`);
 }
 
-function columnTableHtml(table: ColumnTable, tableClass: string): string {
+function columnTableHtml(table: Pick<ColumnTable, "columns" | "rows">, tableClass: string, cellHtml: (text: string) => string = daysKeptWholeHtml, labelHtml: (text: string) => string = escHtmlServer): string {
   const rows = table.rows.map((row) =>
-    `<tr><th scope="row">${escHtmlServer(row.label)}</th>${row.cells.map((text) => `<td>${daysKeptWholeHtml(text)}</td>`).join("")}</tr>`
+    `<tr><th scope="row">${labelHtml(row.label)}</th>${row.cells.map((text) => `<td>${cellHtml(text)}</td>`).join("")}</tr>`
   ).join("\n    ");
   return `<table class="pricing-table ${tableClass}">
-    <thead><tr>${table.columns.map((column) => `<th>${escHtmlServer(column)}</th>`).join("")}</tr></thead>
+    <thead><tr>${table.columns.map((column) => `<th>${labelHtml(column)}</th>`).join("")}</tr></thead>
     <tbody>
     ${rows}
     </tbody>
@@ -20095,6 +20105,154 @@ ${globalNavCss()}
   <ul class="formation-sources">
     ${prices.sources.map(guideSourcesItemHtml).join("\n    ")}
   </ul>
+  </article>
+
+  ${buildMoreAlternativesGuides(slug)}
+
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
+</div>
+</body>
+</html>`;
+}
+
+function codeSpansAndDaysKeptWholeHtml(text: string): string {
+  return daysKeptWholeHtml(text).replace(/`([^`]+)`/g, (_, code: string) => `<code>${code}</code>`);
+}
+
+function whatsAppMarketingRateHtml(market: WhatsAppPrices["rates"]["markets"][number]): string {
+  const rate = codeSpansAndDaysKeptWholeHtml(dollars(market.marketing));
+  const note = market.marketing_note;
+  return note ? `${rate} (${guideLinkedWordsHtml(note.text, note.links, codeSpansAndDaysKeptWholeHtml)})` : rate;
+}
+
+function buildWhatsAppBusinessApiPricingPage(prices: WhatsAppPrices = whatsAppPrices): string {
+  const title = prices.title;
+  const metaDesc = prices.meta_description;
+  const slug = WHATSAPP_PRICES_SLUG;
+  const pubDate = prices.published;
+  const text = codeSpansAndDaysKeptWholeHtml;
+  const tableHtml = (table: Pick<ColumnTable, "columns" | "rows">, tableClass: string) => columnTableHtml(table, tableClass, text, text);
+  const example = prices.cost_example;
+  const exampleText = (words: string) => text(withCostExampleFigures(prices, words));
+
+  const rateRows = prices.rates.markets.map((market) =>
+    `<tr><th scope="row">${text(market.name)}</th><td>${whatsAppMarketingRateHtml(market)}</td><td>${text(dollars(market.utility))}</td></tr>`
+  ).join("\n    ");
+
+  const costRows = costExampleLines(prices).map((line) =>
+    `<tr><th scope="row">${text(line.label)}</th><td>${text(line.rate)}</td><td>${text(line.cost)}</td></tr>`
+  ).join("\n    ");
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: title,
+    description: metaDesc,
+    datePublished: pubDate,
+    dateModified: pageDateModified(WHATSAPP_PRICES_PATH, pubDate),
+    author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+    mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)} — AgentDeals</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="${BASE_URL}/${slug}">
+<meta property="article:published_time" content="${escHtmlServer(pubDate)}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="alternate" type="application/atom+xml" title="AgentDeals — Weekly Pricing Digest" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:1100px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}
+.pub-date{color:var(--text-dim);font-size:.85rem;margin-bottom:1.5rem}
+.section-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:1.25rem;line-height:1.7}
+.table-scroll{overflow-x:auto}
+.pricing-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.85rem}
+.pricing-table th{text-align:left;padding:.75rem .5rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.pricing-table td{padding:.6rem .5rem;border-bottom:1px solid var(--border);vertical-align:top}
+.pricing-table th[scope="row"]{text-transform:none;letter-spacing:normal;font-size:.85rem;border-bottom:1px solid var(--border);vertical-align:top}
+.whatsapp-guide .day{white-space:nowrap}
+.whatsapp-guide code{font-family:var(--mono);font-size:.9em;color:var(--text)}
+.whatsapp-sources{color:var(--text-muted);font-size:.85rem;line-height:1.7;margin-bottom:2rem}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+footer a{color:var(--accent)}
+@media(max-width:768px){h1{font-size:1.6rem}.pricing-table{font-size:.75rem}.pricing-table td,.pricing-table th{padding:.4rem .25rem}}
+${globalNavCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("guides")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; ${escHtmlServer(title)}</div>
+  <article class="whatsapp-guide">
+  <h1>${escHtmlServer(title)}</h1>
+  <p class="section-intro">${text(prices.lead)}</p>
+  <p class="pub-date">${text(prices.read_line)}</p>
+
+  <h2 id="changes">${text(prices.changes.heading)}</h2>
+  <p class="section-intro">${text(prices.changes.intro)}</p>
+  <div class="table-scroll">
+  ${tableHtml(prices.changes, "whatsapp-changes")}
+  </div>
+
+  <h2 id="rates">${text(prices.rates.heading)}</h2>
+  <p class="section-intro">${text(prices.rates.intro)}</p>
+  <div class="table-scroll">
+  <table class="pricing-table whatsapp-rates">
+    <thead><tr>${prices.rates.columns.map((column) => `<th>${text(column)}</th>`).join("")}</tr></thead>
+    <tbody>
+    ${rateRows}
+    </tbody>
+  </table>
+  </div>
+  <div class="table-scroll">
+  ${tableHtml(prices.rates.business_agent, "whatsapp-business-agent")}
+  </div>
+  <p class="section-intro">${text(prices.rates.note)}</p>
+
+  <h2 id="cost-example">${exampleText(example.heading)}</h2>
+  <p class="section-intro">${exampleText(example.intro)}</p>
+  <div class="table-scroll">
+  <table class="pricing-table whatsapp-cost-example">
+    <thead><tr>${example.columns.map((column) => `<th>${exampleText(column)}</th>`).join("")}</tr></thead>
+    <tbody>
+    ${costRows}
+    </tbody>
+  </table>
+  </div>
+
+  <h2 id="free-messages">${text(prices.free_messages.heading)}</h2>
+  <div class="table-scroll">
+  ${tableHtml(prices.free_messages, "whatsapp-free-messages")}
+  </div>
+
+  <h2 id="deadlines">${text(prices.deadlines.heading)}</h2>
+  <p class="section-intro">${text(prices.deadlines.text)}</p>
+  <div class="table-scroll">
+  ${tableHtml(prices.deadlines.calendar, "whatsapp-pricing-calendar")}
+  </div>
+
+  <h2 id="other-pages">${text(prices.other_pages.heading)}</h2>
+  <p class="section-intro">${text(prices.other_pages.text)}</p>
+  <p class="whatsapp-sources">${guideLinkedWordsHtml(prices.other_pages.sources.text, prices.other_pages.sources.links, text)}</p>
   </article>
 
   ${buildMoreAlternativesGuides(slug)}
@@ -54082,6 +54240,7 @@ ${MCP_TOOLS.map(t => `- **${t.name}**: ${t.brief}`).join("\n")}
 - [${accountingPrices.title}](${BASE_URL}${ACCOUNTING_PRICES_PATH})
 - [${bankingFees.title}](${BASE_URL}${BANKING_FEES_PATH})
 - [${companyFormationPrices.title}](${BASE_URL}${COMPANY_FORMATION_PATH})
+- [${whatsAppPrices.title}](${BASE_URL}${WHATSAPP_PRICES_PATH})
 - [Full details for LLMs](${BASE_URL}/llms-full.txt)
 `;
     res.writeHead(200, { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "public, max-age=3600" });
@@ -54895,6 +55054,11 @@ ${catList}
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/company-formation-pricing-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildCompanyFormationPricingPage());
+  } else if (url.pathname === "/whatsapp-business-api-pricing-2026" && isGetOrHead) {
+    recordApiHit("/whatsapp-business-api-pricing-2026");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/whatsapp-business-api-pricing-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+    res.end(buildWhatsAppBusinessApiPricingPage());
   } else if (url.pathname === "/hetzner-pricing-2026" && isGetOrHead) {
     recordApiHit("/hetzner-pricing-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/hetzner-pricing-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
