@@ -1484,6 +1484,19 @@ function freeTierClaimFor(vendorName: string, servedOn: string): FreeTierClaim |
   return context ? freeTierClaim(context.input) : null;
 }
 
+function verdictLapseSentence(context: VendorVerdictContext): string | null {
+  const recordTheVerdictRestsOn = endingStatedInPlaceOfARating(context.input) ?? demotionTheVerdictNames(context.input);
+  return recordTheVerdictRestsOn
+    ? lapsingDemotionStated(recordTheVerdictRestsOn, changesRatingTheListedTier(context.primary, context.vendorChanges))
+    : null;
+}
+
+function verdictLapseLineHtml(sentence: string | null): string {
+  return sentence
+    ? `  <p class="verdict-lapse-line" style="margin:.4rem 0 .6rem;font-size:.85rem;color:var(--text-muted)">${escHtmlServer(sentence)}</p>`
+    : "";
+}
+
 const changeLogNamesBySubject = (() => {
   const bySubject = new Map<string, string[]>();
   for (const [slug, vendor] of changeLogVendorMap) {
@@ -4447,6 +4460,12 @@ function buildVsPage(slug: string): string | null {
   const vendorMadeB = changesTheVendorMade(b.deal_changes);
 
   const riskBadge = (o: { risk_level: string | null; risk_cause: RiskCause | null }) => riskBadgeHtml(o.risk_level, o.risk_cause, { margin: false });
+  const servedOn = new Date().toISOString().slice(0, 10);
+  const vsVerdictLapseLine = (vendor: string) => {
+    const context = vendorVerdictContext(vendor, servedOn);
+    const line = verdictLapseLineHtml(context ? verdictLapseSentence(context) : null);
+    return line ? `      ${line.trim()}\n` : "";
+  };
 
   const stabilityBadge = (stability: string) => {
     const colors: Record<string, string> = { stable: "#3fb950", watch: "#d29922", volatile: "#f85149", improving: "#58a6ff" };
@@ -4603,7 +4622,7 @@ ${globalNavCss()}
   <div class="compare-grid">
     <div class="vendor-col">
       <h3><a href="/vendor/${toSlug(a.vendor)}">${escHtmlServer(a.vendor)}</a> ${riskBadge(riskA)} ${stabilityBadge(riskA.stability ?? "stable")}</h3>
-      <div class="detail-row"><span class="detail-label">Category</span><span class="detail-value">${escHtmlServer(a.category)}</span></div>
+${vsVerdictLapseLine(a.vendor)}      <div class="detail-row"><span class="detail-label">Category</span><span class="detail-value">${escHtmlServer(a.category)}</span></div>
       <div class="detail-row"><span class="detail-label">Tier</span><span class="detail-value" style="color:var(--accent)">${escHtmlServer(a.tier)}</span></div>
       <div class="detail-row"><span class="detail-label">Verified</span><span class="detail-value">${escHtmlServer(a.verifiedDate)}</span></div>
       <div class="detail-row"><span class="detail-label">${LAST_READ_LABEL}</span><span class="detail-value">${escHtmlServer(lastReadDate(a))}</span></div>
@@ -4613,7 +4632,7 @@ ${globalNavCss()}
     </div>
     <div class="vendor-col">
       <h3><a href="/vendor/${toSlug(b.vendor)}">${escHtmlServer(b.vendor)}</a> ${riskBadge(riskB)} ${stabilityBadge(riskB.stability ?? "stable")}</h3>
-      <div class="detail-row"><span class="detail-label">Category</span><span class="detail-value">${escHtmlServer(b.category)}</span></div>
+${vsVerdictLapseLine(b.vendor)}      <div class="detail-row"><span class="detail-label">Category</span><span class="detail-value">${escHtmlServer(b.category)}</span></div>
       <div class="detail-row"><span class="detail-label">Tier</span><span class="detail-value" style="color:var(--accent)">${escHtmlServer(b.tier)}</span></div>
       <div class="detail-row"><span class="detail-label">Verified</span><span class="detail-value">${escHtmlServer(b.verifiedDate)}</span></div>
       <div class="detail-row"><span class="detail-label">${LAST_READ_LABEL}</span><span class="detail-value">${escHtmlServer(lastReadDate(b))}</span></div>
@@ -5451,10 +5470,7 @@ function buildVendorPage(slug: string): string | null {
     ? causeLineHtml(`Why ${riskLevel}:`, riskColor, riskCause)
     : "";
 
-  const recordTheVerdictRestsOn = endedBy ?? demotionTheVerdictNames(verdictInput);
-  const verdictLapseLine = recordTheVerdictRestsOn
-    ? `  <p class="verdict-lapse-line" style="margin:.4rem 0 .6rem;font-size:.85rem;color:var(--text-muted)">${escHtmlServer(lapsingDemotionStated(recordTheVerdictRestsOn, changesRatingTheListedTier(primary, vendorChanges)))}</p>`
-    : "";
+  const verdictLapseLine = verdictLapseLineHtml(verdictLapseSentence(context));
 
   const headingBadge = vendorHeadingBadge(verdictInput);
   const h1RiskBadge = headingBadge
