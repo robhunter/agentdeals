@@ -37,6 +37,8 @@ const STATED_COUNTS = /([\d,]+) offers? meets? the criteria and ([\d,]+) offers?
 const CHANGES_STATED = /(?:across )?([\d,]+) developer tool pricing changes? tracked this week|across ([\d,]+) developer tool pricing changes?/;
 const CHANGE_SECTION = /^(?:Biggest Losses|Bright Spots|Other Notable Changes) \(([\d,]+)\)$/;
 const A_DATE = /\b\d{4}-\d{2}-\d{2}\b/;
+const A_MONTH = "(?:January|February|March|April|May|June|July|August|September|October|November|December)";
+const A_RANGE_OF_DAYS = new RegExp(`\\b${A_MONTH} \\d{1,2}(?:\u2013| \u2013 ${A_MONTH} )\\d{1,2}, \\d{4}\\b`);
 const EVERY_DATE = new RegExp(A_DATE.source, "g");
 const A_ROLLING_WINDOW = /\bin the last \d+ days?\b|\bunconfirmed in \d+ days\b|\bthis week\b/i;
 const A_SENTENCE = /[^.!?]+[.!?]*/g;
@@ -523,7 +525,7 @@ function sentencesItChangedWithoutSayingWhy(before: Surfaces, after: Surfaces): 
   const says = [after.metaDescription ?? "", ...after.faqAnswers];
   const differing = sentencesThatDiffer(said, says);
   if (differing.length === 0) return [];
-  if (differing.some(sentence => A_DATE.test(sentence) || A_ROLLING_WINDOW.test(sentence))) return [];
+  if (differing.some(sentence => A_DATE.test(sentence) || A_RANGE_OF_DAYS.test(sentence) || A_ROLLING_WINDOW.test(sentence))) return [];
   return sentencesThatDiffer(said.map(withoutItsFigures), says.map(withoutItsFigures));
 }
 
@@ -1125,6 +1127,20 @@ describe("what counts as a page saying why, on pages built to test it", () => {
       sections: [listing(["alfa", "bravo"])],
     }));
     assert.deepEqual(sentencesItChangedWithoutSayingWhy(said, rewritten), ["# of them dropped off the ranked list."]);
+  });
+
+  it("reads a sentence that names the days it covers as the page dating the change", () => {
+    for (const days of ["October 19\u201325, 2026", "October 26 \u2013 November 1, 2026"]) {
+      const before = surfacesOf(aPage({ title: TITLE, description: `2 pricing changes scheduled for developer tools during ${days}.`, sections: [listing(["alfa", "bravo"])] }));
+      const after = surfacesOf(aPage({ title: TITLE, description: `2 pricing changes tracked for developer tools during ${days}.`, sections: [listing(["alfa", "bravo"])] }));
+      assert.deepEqual(sentencesItChangedWithoutSayingWhy(before, after), [], days);
+    }
+  });
+
+  it("reads a sentence naming a month and a year but no range of days as the page not saying why", () => {
+    const before = surfacesOf(aPage({ title: TITLE, description: "2 pricing changes scheduled for developer tools during October 2026.", sections: [listing(["alfa", "bravo"])] }));
+    const after = surfacesOf(aPage({ title: TITLE, description: "2 pricing changes tracked for developer tools during October 2026.", sections: [listing(["alfa", "bravo"])] }));
+    assert.deepEqual(sentencesItChangedWithoutSayingWhy(before, after).length, 2);
   });
 });
 
