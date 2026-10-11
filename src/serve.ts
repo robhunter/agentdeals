@@ -4808,14 +4808,15 @@ function buildDigestPage(weekKey: string): string | null {
     : "";
   const title = `Developer Tool Pricing Changes: ${dateRange} — AgentDeals`;
   const notStarted = changes.length > 0 && weekHasNotStarted(year, week, servedOn);
-  const everyChangeIsAScheduledShutdown = changes.length > 0 && changes.every(c => isScheduledShutdown(c, servedOn));
   const metaDesc = changes.length > 0
     ? `${changes.length} pricing changes ${notStarted ? "scheduled" : "tracked"} for developer tools during ${dateRange}. ${changes.filter(c => c.impact === "high").length} high-impact changes.${discoveryClause}`
     : `No pricing changes tracked for developer tools during ${dateRange}.${discoveryClause}`;
 
-  const byType = new Map<string, number>();
+  const byCountLabel = new Map<string, { count: number; color: string }>();
   for (const c of changes) {
-    byType.set(c.change_type, (byType.get(c.change_type) ?? 0) + 1);
+    const badge = changeBadge(c.change_type);
+    const label = isScheduledShutdown(c, servedOn) ? SCHEDULED_COUNT_LABEL : badge.label;
+    byCountLabel.set(label, { count: (byCountLabel.get(label)?.count ?? 0) + 1, color: badge.color });
   }
 
   const discoveryPill = discovered.length > 0
@@ -4824,11 +4825,9 @@ function buildDigestPage(weekKey: string): string | null {
   const statsHtml = changes.length > 0 ? `
   <div class="stats-bar">
     <div class="stat-pill"><strong>${changes.length}</strong> change${changes.length !== 1 ? "s" : ""}</div>
-    ${Array.from(byType.entries()).map(([type, count]) => {
-      const badge = changeBadge(type);
-      const label = notStarted && everyChangeIsAScheduledShutdown ? SCHEDULED_COUNT_LABEL : badge.label;
-      return `<div class="stat-pill"><span style="width:8px;height:8px;border-radius:50%;background:${badge.color};display:inline-block"></span> <strong>${count}</strong> ${label}</div>`;
-    }).join("\n    ")}${discoveryPill}
+    ${Array.from(byCountLabel.entries()).map(([label, { count, color }]) =>
+      `<div class="stat-pill"><span style="width:8px;height:8px;border-radius:50%;background:${color};display:inline-block"></span> <strong>${count}</strong> ${label}</div>`
+    ).join("\n    ")}${discoveryPill}
   </div>` : (discovered.length > 0 ? `
   <div class="stats-bar">
     <div class="stat-pill"><strong>0</strong> changes</div>${discoveryPill}

@@ -167,8 +167,8 @@ describe("a digest week that has not started", () => {
     assert.deepStrictEqual(page(BEFORE_THE_WEEK, ONE_SHUTDOWN_WEEK).typeCounts, ["1 scheduled"]);
   });
 
-  it("keeps each type's count when it holds a change that is not a shutdown", () => {
-    assert.deepStrictEqual(page(BEFORE_THE_WEEK, MIXED_WEEK).typeCounts, ["1 deprecated", "1 reduced"]);
+  it("counts a change that is not a shutdown under its own type beside the scheduled shutdowns", () => {
+    assert.deepStrictEqual([...page(BEFORE_THE_WEEK, MIXED_WEEK).typeCounts].sort(), ["1 reduced", "1 scheduled"]);
     assert.strictEqual(
       page(BEFORE_THE_WEEK, MIXED_WEEK).lineUnderTheHeading,
       "Week 45, 2026 has not started. 2 changes are scheduled; each service below still works until its date.",
@@ -185,21 +185,22 @@ describe("a digest week that has not started", () => {
 });
 
 describe("a digest week that has started", () => {
-  it("labels a shutdown dated after the day served a scheduled shutdown, and keeps the week's own line, count and meta description from its first day", () => {
+  it("labels and counts a shutdown dated after the day served as scheduled, and keeps the week's own line and meta description from its first day", () => {
     for (const instant of [THE_WEEK_S_FIRST_DAY, INSIDE_THE_WEEK_BEFORE_EITHER_DATE]) {
       const week = page(instant, SHUTDOWN_WEEK);
       assert.deepStrictEqual(week.entries.map((e) => e.badge), ["scheduled shutdown", "scheduled shutdown"], instant);
       assert.strictEqual(week.lineUnderTheHeading, "2 changes tracked in week 43, 2026.", instant);
-      assert.deepStrictEqual(week.typeCounts, ["2 deprecated"], instant);
+      assert.deepStrictEqual(week.typeCounts, ["2 scheduled"], instant);
       assert.ok(week.metaDescription.startsWith("2 pricing changes tracked for developer tools during October 19–25, 2026."), `${instant}: ${week.metaDescription}`);
     }
   });
 
-  it("labels a shutdown dated the day served deprecated", () => {
+  it("labels and counts a shutdown dated the day served as deprecated, beside one still scheduled", () => {
     assert.deepStrictEqual(
       page(ON_THE_FIRST_DATE, SHUTDOWN_WEEK).entries.map((e) => `${e.date}: ${e.badge}`),
       ["2026-10-22: deprecated", "2026-10-23: scheduled shutdown"],
     );
+    assert.deepStrictEqual([...page(ON_THE_FIRST_DATE, SHUTDOWN_WEEK).typeCounts].sort(), ["1 deprecated", "1 scheduled"]);
   });
 
   it("labels every shutdown deprecated once its date has passed", () => {
@@ -225,6 +226,18 @@ describe("every digest week served today", () => {
       .filter((e) => (e.badge === "scheduled shutdown" && e.date <= today) || (e.badge === "deprecated" && e.date > today))
       .map((e) => `${route} ${e.vendor} ${e.date}: ${e.badge}`));
     assert.deepStrictEqual(mislabelled, []);
+  });
+
+  it("counts as scheduled exactly the changes it labels scheduled shutdowns", () => {
+    const disagreeing = [...weeksServedToday]
+      .map(([route, week]) => {
+        const labelled = week.entries.filter((e) => e.badge === "scheduled shutdown").length;
+        const counted = Number(week.typeCounts.find((c) => c.endsWith(" scheduled"))?.split(" ")[0] ?? 0);
+        return { route, labelled, counted };
+      })
+      .filter(({ labelled, counted }) => labelled !== counted)
+      .map(({ route, labelled, counted }) => `${route}: ${labelled} labelled, ${counted} counted`);
+    assert.deepStrictEqual(disagreeing, []);
   });
 
   it("says a week has not started exactly while its first day is after the day served", () => {
