@@ -28079,7 +28079,7 @@ function buildAiCodingToolsPricingPage(): string {
       freeType: "limited",
       monthlyCostSolo: "$20",
       monthlyCostTeam5: "$200",
-      hiddenCosts: "Credit consumption varies by model — Opus burns 10x faster than Sonnet.",
+      hiddenCosts: "Usage cost varies by model. Claude Opus 5.5 costs $4/$20 per million tokens, twice the $2/$10 cost of Claude Sonnet 5.5.",
     },
     {
       name: "Windsurf",

@@ -193,6 +193,11 @@ describe("the AI coding guides state the plans the vendors' own pricing pages li
     assert.strictEqual(pricingRow(TOOLS_PAGE, "Lovable").pro, "$25/mo");
   });
 
+  it("gives Cursor's usage cost by model from Cursor's own prices, with Claude Opus at twice Claude Sonnet", () => {
+    const [, , usageCost] = rowFor(rowsBetween(TOOLS_PAGE, '<h2 id="cost-analysis">', '<h2 id="hidden-costs">'), "Cursor");
+    assert.strictEqual(usageCost, "Usage cost varies by model. Claude Opus 5.5 costs $4/$20 per million tokens, twice the $2/$10 cost of Claude Sonnet 5.5.");
+  });
+
   it("keeps none of the retired plan text in the hand-written rows, cards and answers", () => {
     const retired = [
       "$500/mo (250 credits)",
@@ -219,6 +224,7 @@ describe("the AI coding guides state the plans the vendors' own pricing pages li
       "2M+ weekly users",
       "$100 credits for new team members",
       "Pay-as-you-go seats available",
+      "burns 10x faster",
     ];
     const source = readdirSync(path.join(REPO, "src"))
       .filter((file) => file.endsWith(".ts"))
