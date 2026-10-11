@@ -32,6 +32,7 @@ const WITHDRAWN: Record<string, RegExp> = {
   "one free CodePipeline pipeline with no V2 allowance": /1 free active pipeline/,
   "CodeBuild's free minutes on general1.small alone": /\(general1\.small\)/,
   "a 3-month Lightsail trial for new accounts": /750 hrs\/month of 512 MB instance|3 months free/,
+  "Amazon Q Developer as free for individuals": /always free for individuals|Amazon Q Developer \(free individual tier\)/,
 };
 
 const META = "AWS Free plan: up to $200 in credits over 6 months, 30+ always-free services, short-term trials, hidden costs, cheaper alternatives.";
@@ -52,12 +53,13 @@ const STATED_ON_THE_PAGE = [
   "Trials are for Paid plan services and start when you activate the service; credits cover usage past the trial limits.",
   "Only the always-free services stay at zero cost after the Free plan; S3, EC2, RDS and Aurora draw on the credits.",
   "On the Free plan nothing is billed: the account closes at 6 months or when credits run out, and content is deleted after 90 days unless you upgrade. On the Paid plan, usage past the credits is billed.",
+  "SageMaker Studio Lab (free, no AWS account needed) + Bedrock free tier models. For more options",
 ];
 
 const ALWAYS_FREE_ROWS: [string, string][] = [
   ["Amazon CloudFront", "1 TB data transfer out, 10M HTTP/HTTPS requests, 2M CloudFront Function invocations/month"],
   ["Amazon ECR Public", "50 GB storage, 500 GB/month transfer out anonymously, 5 TB/month with an AWS account"],
-  ["Amazon Q Developer", "Inline suggestions, chat, 50 agent invocations/month (always free for individuals)"],
+  ["Amazon Q Developer", "Inline suggestions, chat, 50 agent invocations/month. New sign-ups blocked since 2026-05-15. Support ends 2027-04-30."],
 ];
 
 const STATED_AS_THE_PRICING_PAGES_STATE_THEM: [string, string][] = [

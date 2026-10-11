@@ -28114,11 +28114,11 @@ function buildAiCodingToolsPricingPage(): string {
       power: "\u2014",
       teams: "$22.80/seat",
       model: "Standard + Enterprise (per user)",
-      freeDetails: "Google stopped serving the free individuals tier on 2026-06-18 (deprecation notice). codeassist.google still advertises 6,000 code-related requests and 240 chat requests a day. Standard and Enterprise subscriptions are unchanged.",
+      freeDetails: "Google stopped serving the free individuals tier on 2026-06-18 (deprecation notice). codeassist.google still advertises 6,000 code-related requests and 240 chat requests a day. Google stopped selling new Standard and Enterprise subscriptions on 2026-10-09. Existing subscribers can add licenses until 2027-01-31. Annual subscriptions can auto-renew until 2027-01-31; monthly subscriptions can auto-renew until 2027-12-31. Agentic coding assistance is now available through Antigravity, included in Gemini Enterprise editions.",
       freeType: "none",
       monthlyCostSolo: "$22.80",
       monthlyCostTeam5: "$114",
-      hiddenCosts: "$19/user/month with an annual commitment.",
+      hiddenCosts: "Gemini Code Assist Standard is $22.80/user/month or $19/user/month annually. Enterprise is $54/user/month or $45/user/month annually.",
     },
     {
       name: "Google Antigravity",
@@ -28174,7 +28174,7 @@ function buildAiCodingToolsPricingPage(): string {
       power: "BYO API key",
       teams: "\u2014",
       model: "Open source + BYO key",
-      freeDetails: "Fully free, open-source (MIT). VS Code extension \u2014 users provide their own API keys (OpenRouter, Anthropic, OpenAI, etc.). No usage limits beyond API provider costs. Autonomous file editing, terminal commands, browser interaction.",
+      freeDetails: "Cline is Apache 2.0 licensed. Users can bring their own API keys or use the Cline provider. No usage limits beyond API provider costs. Autonomous file editing, terminal commands, browser interaction.",
       freeType: "byok",
       monthlyCostSolo: "$5\u201350 (API)",
       monthlyCostTeam5: "$25\u2013250 (API)",
@@ -28199,16 +28199,16 @@ function buildAiCodingToolsPricingPage(): string {
       name: "Amazon Q Developer",
       slug: "amazon-q-developer",
       category: "cli",
-      free: "Generous free tier",
+      free: "New signups blocked 2026-05-15",
       pro: "$19/mo",
       power: "\u2014",
       teams: "\u2014",
       model: "Tier-based",
-      freeDetails: "Inline code suggestions, chat, code transformation, 50 agent invocations/month, /doc and /test commands. Supports VS Code, JetBrains, CLI, and AWS Console. Best value if already on AWS.",
-      freeType: "generous",
-      monthlyCostSolo: "$0\u201319",
+      freeDetails: "Inline code suggestions, chat, code transformation, 50 agent invocations/month. Supports VS Code, JetBrains, CLI, and AWS Console. New sign-ups and subscriptions were blocked from 2026-05-15. Existing subscriptions can add users. Support ends on 2027-04-30. AWS recommends Kiro.",
+      freeType: "none",
+      monthlyCostSolo: "$19",
       monthlyCostTeam5: "$95",
-      hiddenCosts: "Free tier is genuinely useful for AWS-centric workflows. 50 agent invocations/month is the main limit. Pro at $19/mo unlocks higher limits and security scanning.",
+      hiddenCosts: "50 agent invocations/month is the main limit. Pro at $19/mo unlocks higher limits and security scanning.",
     },
     {
       name: "Augment Code",
@@ -28231,14 +28231,14 @@ function buildAiCodingToolsPricingPage(): string {
       category: "cloud-agent",
       free: "Limited (ChatGPT Free)",
       pro: "$20/mo (Plus)",
-      power: "From $100/mo (Pro)",
+      power: "$100, $200 or $500/mo (ChatGPT Pro)",
       teams: "$20/user",
       model: "Subscription + pay-as-you-go",
-      freeDetails: "Coding agent by OpenAI, included in every ChatGPT plan. Free ($0) and Go ($8/mo) cover quick and lightweight coding tasks in the desktop app. Plus ($20/mo) adds Codex on the web, in the CLI, in the IDE extension and on iOS, with cloud code review. Pro (from $100/mo) gives 5x or 20x Plus's usage. Business is $20/user/mo billed annually ($25 monthly). With an API key, Codex runs in the CLI, SDK or IDE extension at API prices.",
+      freeDetails: "Coding agent by OpenAI, included in every ChatGPT plan. Free ($0) and Go ($8/mo) cover quick and lightweight coding tasks in the desktop app. Plus ($20/mo) adds Codex on the web, in the CLI, in the IDE extension and on iOS, with cloud code review. ChatGPT Pro plans are $100, $200, or $500 USD per month and currently have no five-hour limit. Business is $20/user/mo billed annually ($25 monthly). With an API key, Codex runs in the CLI, SDK or IDE extension at API prices.",
       freeType: "limited",
       monthlyCostSolo: "$0–100+",
       monthlyCostTeam5: "$100",
-      hiddenCosts: "Free and Go state no message count. Paid plans' allowances are ranges per five-hour window that depend on the model and the task, and weekly limits may also apply; cloud tasks use more of the allowance than local messages. Pro buys 5x or 20x Plus's usage. API-key use is billed per token.",
+      hiddenCosts: "Free and Go state no message count. Plus and Business allowances are per five-hour window, vary by model and task, and may have weekly limits. Cloud tasks use more than local messages. Pro has no five-hour limit. API-key use is billed per token.",
     },
     {
       name: "Devin",
@@ -28289,16 +28289,16 @@ function buildAiCodingToolsPricingPage(): string {
       name: "MarsCode",
       slug: "marscode",
       category: "ide",
-      free: "Free cloud IDE",
+      free: "Ended 2025-04-01",
       pro: "\u2014",
       power: "\u2014",
       teams: "\u2014",
       model: "Free tier only",
-      freeDetails: "Cloud IDE with AI coding assistant by ByteDance. Code completion, debugging, code explanation, unit test generation. 2 GB workspace storage. Supports 100+ languages. AI features are free and built into the cloud IDE.",
-      freeType: "generous",
-      monthlyCostSolo: "$0",
-      monthlyCostTeam5: "$0",
-      hiddenCosts: "No paid tiers announced. 2 GB workspace storage is the main limit. ByteDance-backed \u2014 data privacy considerations for some organizations.",
+      freeDetails: "The MarsCode cloud IDE ended on 2025-04-01. The extension is now Trae Plugin. marscode.com promotes the Trae AI IDE.",
+      freeType: "none",
+      monthlyCostSolo: "\u2014",
+      monthlyCostTeam5: "\u2014",
+      hiddenCosts: "\u2014",
     },
   ];
 
@@ -28438,7 +28438,7 @@ function buildAiCodingToolsPricingPage(): string {
     { q: "How much does Cursor cost vs Windsurf?", a: "Both start at $20/month for an individual paid plan and top out at $200/month: Cursor Ultra and Windsurf Max. For teams, Cursor charges $40/user/month for a Standard seat or $120 for Premium, and Windsurf $80/month plus $40 per seat. Cursor's free plan is called Hobby; between Pro and Ultra sits Pro+ at $60/mo with 3x Pro's Agent limits, and Ultra is 20x. Windsurf, renamed Devin Desktop, raised Pro from $15 to $20 in March 2026." },
     { q: "Is GitHub Copilot still the cheapest AI coding tool?", a: "Yes \u2014 Copilot Pro at $10/month is the cheapest paid plan among the tools compared here. The free tier gives 2,000 code completions a month plus limited chat and agent use. On paid plans, completions and next edit suggestions are unlimited and consume nothing; agent and chat work is metered in GitHub AI Credits at $0.01 each \u2014 $15 of credits on Pro, $70 on Pro+ ($39/mo), $200 on Max ($100/mo). GitHub's premium-request billing and its $0.04 overage are retired; the docs now label that model legacy." },
     { q: "What are the hidden costs of BYO-key AI coding tools?", a: "Tools like Cline and Aider are free to install but require API keys. Typical costs: $5-50/month for moderate use with Claude Sonnet or GPT-4o. Heavy agentic usage (Cline with Opus) can reach $50-100/month in API costs alone." },
-    { q: "Which AI coding tool is best for teams?", a: "GitHub Copilot Business ($19/seat) is cheapest for teams. Gemini Code Assist Enterprise matches at $19/seat with Google Cloud integration. Cursor and Windsurf Business ($40/seat) offer the highest AI throughput per developer." },
+    { q: "Which AI coding tool is best for teams?", a: "GitHub Copilot Business ($19/seat) is cheapest for teams. Gemini Code Assist is no longer sold to new customers. Cursor Teams is $40/user/month. Devin Desktop (Windsurf) Teams is $80/month plus $40/month per full dev seat." },
     { q: "Are AI app builders like Bolt.new and Lovable worth it?", a: "For prototyping and MVPs, yes. Bolt.new offers 1M free tokens/month and Lovable gives 5 daily credits. Both generate full-stack apps from natural language. They are not designed for production-grade software development." },
     { q: "What is Google Antigravity?", a: "Google Antigravity is Google's agentic development platform, announced in November 2025 and now generally available. The individual plan is free, with basic weekly rate limits; Google AI Pro ($19.99/month) and Google AI Ultra (from $99.99/month) raise the limits, and organizations can use it through Google Cloud." },
     { q: "How do cloud coding agents (Codex, Devin) differ from IDE tools?", a: "Cloud agents run code in sandboxed environments and work autonomously — they can execute tests, create branches, and open PRs. Codex does both: it runs cloud tasks and also works locally in its desktop app, CLI and IDE extension. IDE tools assist while you code. Cloud agents are better for delegated tasks; IDE tools are better for interactive development." },
@@ -28678,7 +28678,7 @@ function buildAiCodingToolsPricingPage(): string {
     '  </div>\n' +
     '  <div class="hidden-cost-card">\n' +
     '    <h4>Data Privacy</h4>\n' +
-    '    <p>All cloud-based tools send your code to external servers. Cline, Aider, and Gemini CLI with local models are the only fully private options. MarsCode (ByteDance) and cloud agents may process code on servers with varying data retention policies.</p>\n' +
+    '    <p>All cloud-based tools send your code to external servers. Cline, Aider, and Gemini CLI with local models are the only fully private options. Cloud agents may process code on servers with varying data retention policies.</p>\n' +
     '  </div>\n' +
     '\n' +
     '  <h2 id="changes">Recent Pricing Changes</h2>\n' +
@@ -28698,12 +28698,12 @@ function buildAiCodingToolsPricingPage(): string {
     '\n' +
     '    <div class="verdict-item">\n' +
     '      <strong>Best if budget is $20/mo</strong>\n' +
-    '      <p><a href="/vendor/cursor">Cursor Pro</a> or <a href="/vendor/windsurf">Windsurf Pro</a> (both $20/mo). Cursor has more mature multi-model support. Windsurf\'s agentic Cascade flows are compelling for complex tasks. Or save $10: <a href="/vendor/github-copilot">GitHub Copilot Pro</a> at $10/mo covers most needs.</p>\n' +
+    '      <p><a href="/vendor/cursor">Cursor Pro</a> or <a href="/vendor/windsurf">Windsurf Pro</a> (both $20/mo). Cursor has more mature multi-model support. Cascade was removed from Devin Desktop in version 3.9.19 on 2026-09-08. Devin Local is now the only agent. Or save $10: <a href="/vendor/github-copilot">GitHub Copilot Pro</a> at $10/mo covers most needs.</p>\n' +
     '    </div>\n' +
     '\n' +
     '    <div class="verdict-item">\n' +
     '      <strong>Best for enterprise teams</strong>\n' +
-    '      <p><a href="/vendor/github-copilot">GitHub Copilot Business</a> ($19/seat) is cheapest. <a href="/vendor/google-gemini-code-assist">Gemini Code Assist Enterprise</a> ($19/seat) matches price with deep Google Cloud integration. Cursor/Windsurf Business ($40/seat) for max AI throughput.</p>\n' +
+    '      <p><a href="/vendor/github-copilot">GitHub Copilot Business</a> ($19/seat) is cheapest. <a href="/vendor/google-gemini-code-assist">Gemini Code Assist</a> is no longer sold to new customers. Cursor Teams is $40/user/month. Devin Desktop (Windsurf) Teams is $80/month plus $40/month per full dev seat.</p>\n' +
     '    </div>\n' +
     '\n' +
     '    <div class="verdict-item">\n' +
@@ -28723,7 +28723,7 @@ function buildAiCodingToolsPricingPage(): string {
     '\n' +
     '    <div class="verdict-item">\n' +
     '      <strong>Best for students / budget-conscious</strong>\n' +
-    '      <p><a href="/vendor/github-copilot">GitHub Copilot</a> \u2014 free unlimited access for verified students, teachers, and OSS maintainers.</p>\n' +
+    '      <p><a href="/vendor/github-copilot">GitHub Copilot</a> \u2014 Copilot Student is free with an allowance of GitHub AI Credits, available to verified students. Verified teachers and maintainers of popular open source projects may be eligible for free Copilot Pro access.</p>\n' +
     '    </div>\n' +
     '  </div>\n' +
     '\n' +
@@ -33575,7 +33575,7 @@ function buildAwsFreeTier2026Page(): string {
     { name: "AWS CodeBuild", slug: "aws", limits: "100 build minutes/month (general1.small or arm1.small)", category: "DevOps", source: "https://aws.amazon.com/codebuild/pricing/" },
     { name: "AWS X-Ray", slug: "aws", limits: "100K traces recorded, 1M traces scanned/month", category: "Monitoring", noFetchablePageStatesIt: true },
     { name: "AWS Step Functions", slug: "aws", limits: "4,000 state transitions/month", category: "Compute", source: "https://aws.amazon.com/step-functions/pricing/" },
-    { name: "Amazon Q Developer", slug: "amazon-q-developer", limits: "Inline suggestions, chat, 50 agent invocations/month (always free for individuals)", category: "AI Coding" },
+    { name: "Amazon Q Developer", slug: "amazon-q-developer", limits: "Inline suggestions, chat, 50 agent invocations/month. New sign-ups blocked since 2026-05-15. Support ends 2027-04-30.", category: "AI Coding" },
   ];
 
   const trialServices: AwsService[] = [
@@ -33841,7 +33841,7 @@ ${mcpCtaCss()}
 
     <div class="verdict-item">
       <strong>AI/ML experimentation</strong>
-      <p>SageMaker Studio Lab (free, no AWS account needed) + Bedrock free tier models + Amazon Q Developer (free individual tier). For more options, see our <a href="/ai-ml-alternatives">AI/ML tools guide</a>.</p>
+      <p>SageMaker Studio Lab (free, no AWS account needed) + Bedrock free tier models. For more options, see our <a href="/ai-ml-alternatives">AI/ML tools guide</a>.</p>
     </div>
 
     <div class="verdict-item">
