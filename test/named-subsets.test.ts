@@ -65,6 +65,7 @@ interface Surfaces {
   destinationsOf: Record<string, string[]>;
   headingAtAnchor: Record<string, string>;
   completeLogHeadings: string[];
+  headingsSayingNothingQualifies: string[];
   datesBehindEachDemotion: Record<string, string[]>;
   metaDescription: string | null;
   itemListNames: string[];
@@ -198,7 +199,13 @@ function withoutItsDate(heading: string): string {
   return heading.replace(A_DATE_IN_A_HEADING, "").replace(/\s+/g, " ").trim();
 }
 
-const SECTIONS_GROUPED_BY_A_DATE: Array<{ page: string; heading: string; served: "always" | "when it holds one" }> = [
+interface SectionGroupedByADate {
+  page: string;
+  heading: string;
+  served: "always" | "when it holds one";
+}
+
+const SECTIONS_GROUPED_BY_A_DATE: SectionGroupedByADate[] = [
   { page: "/", heading: "Recent pricing changes", served: "always" },
   { page: "/ci-cd-pricing", heading: "Category Breakdown", served: "always" },
   { page: "/deadlines", heading: "Developer Tool Deadline Tracker", served: "always" },
@@ -244,6 +251,10 @@ function headingsCoveringARollingWindow(body: string): string[] {
 
 function headingsDeclaringACompleteLog(body: string): string[] {
   return headingsWhoseSectionSays(body, section => section.includes(A_COMPLETE_LOG_NOTICE));
+}
+
+function headingsSayingNothingQualifies(body: string): string[] {
+  return headingsWhoseSectionSays(body, section => section.includes(stripTags(NOTHING_CHANGING_SOON_HTML)));
 }
 
 function demotedRegionOf(body: string): string | null {
@@ -340,6 +351,7 @@ function surfacesOf(body: string): Surfaces {
     destinationsOf,
     headingAtAnchor: headingAtEachAnchor(body),
     completeLogHeadings: headingsDeclaringACompleteLog(body),
+    headingsSayingNothingQualifies: headingsSayingNothingQualifies(body),
     datesBehindEachDemotion: datesBehindEachDemotion(body),
     metaDescription,
     itemListNames: itemListNames.sort(),
@@ -347,6 +359,28 @@ function surfacesOf(body: string): Surfaces {
     statedCounts: counts ? { qualified: asCount(counts[1]!), demoted: asCount(counts[2]!) } : null,
     offersHeld: [...stripTags(body).matchAll(EVERY_HELD_COUNT)].map(m => asCount(m[1]!)),
   };
+}
+
+function listsNoRecordToday(surfaces: Surfaces, heading: string): boolean {
+  return surfaces.headingsSayingNothingQualifies.includes(heading) && (surfaces.regions[heading] ?? []).length === 0;
+}
+
+function dateRulesStated(pages: Map<string, Surfaces>, sections: SectionGroupedByADate[]): { gone: string[]; rendered: string[]; silent: string[] } {
+  const silent: string[] = [];
+  const rendered: string[] = [];
+  const gone: string[] = [];
+  for (const { page, heading, served } of sections) {
+    const surfaces = pages.get(page)!;
+    if (!surfaces.headings.includes(heading)) {
+      if (served === "always") gone.push(`${page} "${heading}"`);
+      continue;
+    }
+    if (served === "when it holds one" && listsNoRecordToday(surfaces, heading)) continue;
+    rendered.push(`${page} "${heading}"`);
+    if (surfaces.datedHeadings.includes(heading) || surfaces.datedCitationHeadings.includes(heading)) continue;
+    silent.push(`${page} "${heading}"`);
+  }
+  return { gone, rendered, silent };
 }
 
 function headingsNaming(surfaces: Surfaces, vendor: string): string {
@@ -677,19 +711,7 @@ describe("what a page names changes overnight only where the page itself says wh
       [],
       "a page this reads for a stated date rule is not served on both clocks, so the rule below is read on fewer sections than it names",
     );
-    const silent: string[] = [];
-    const rendered: string[] = [];
-    const gone: string[] = [];
-    for (const { page, heading, served } of SECTIONS_GROUPED_BY_A_DATE) {
-      const surfaces = today.get(page)!;
-      if (!surfaces.headings.includes(heading)) {
-        if (served === "always") gone.push(`${page} "${heading}"`);
-        continue;
-      }
-      rendered.push(`${page} "${heading}"`);
-      if (surfaces.datedHeadings.includes(heading) || surfaces.datedCitationHeadings.includes(heading)) continue;
-      silent.push(`${page} "${heading}"`);
-    }
+    const { gone, rendered, silent } = dateRulesStated(today, SECTIONS_GROUPED_BY_A_DATE);
     assert.deepEqual(
       gone,
       [],
@@ -986,6 +1008,28 @@ describe("what counts as a page saying why, on pages built to test it", () => {
     const namedUnder = (heading: string) => surfacesOf(aPage({ title: TITLE, sections: [{ heading, vendors: ["alfa"] }] }));
     assert.deepEqual(movesWithNoDatedReason(namedUnder("Top 3 Picks"), namedUnder("Top 4 Picks")), ["alfa"]);
     assert.deepEqual(movesWithNoDatedReason(namedUnder("Picks (3) for Widgets"), namedUnder("Picks (4) for Widgets")), ["alfa"]);
+  });
+
+  const CHANGING_SOON: SectionGroupedByADate[] = [{ page: "/", heading: "Upcoming deal changes", served: "when it holds one" }];
+  const changingSoon = (note: string, vendors: string[]): Map<string, Surfaces> =>
+    new Map([["/", surfacesOf(aPage({ title: TITLE, sections: [{ heading: "Upcoming deal changes", note, vendors }] }))]]);
+  const A_STATED_DATE_RULE = `${A_DATED_SECTION_MARKER} A change is named here only while the date we hold for it is later than 2026-10-30. On the day its date arrives it moves to <a href="#recent-changes">Recent pricing changes, below</a>.`;
+
+  it("reads a section served while it holds a record as owing no date rule on a day it says nothing qualifies and lists nothing", () => {
+    assert.deepEqual(dateRulesStated(changingSoon(NOTHING_CHANGING_SOON_HTML, []), CHANGING_SOON), { gone: [], rendered: [], silent: [] });
+  });
+
+  it("reads a section that lists a record without a date rule as silent, even when it also says nothing qualifies", () => {
+    assert.deepEqual(dateRulesStated(changingSoon("Free tiers disappearing, prices increasing.", ["alfa"]), CHANGING_SOON).silent, ['/ "Upcoming deal changes"']);
+    assert.deepEqual(dateRulesStated(changingSoon(NOTHING_CHANGING_SOON_HTML, ["alfa"]), CHANGING_SOON).silent, ['/ "Upcoming deal changes"']);
+  });
+
+  it("reads a section that links no vendor as silent unless it says nothing qualifies", () => {
+    assert.deepEqual(dateRulesStated(changingSoon("Free tiers disappearing, prices increasing.", []), CHANGING_SOON).silent, ['/ "Upcoming deal changes"']);
+  });
+
+  it("reads a section that lists a record under a stated date rule as stating it", () => {
+    assert.deepEqual(dateRulesStated(changingSoon(A_STATED_DATE_RULE, ["alfa"]), CHANGING_SOON), { gone: [], rendered: ['/ "Upcoming deal changes"'], silent: [] });
   });
 
   it("reads a page whose own title covers a different day as free to name a different set", () => {
