@@ -371,9 +371,19 @@ function citedUndated(surfaces: Surfaces, heading: string): string {
   return surfaces.datedCitationHeadings.includes(heading) ? withoutItsDate(heading) : heading;
 }
 
+const A_COUNT_ENDING_A_HEADING = / \(\d[\d,]*\)$/;
+
+function withoutItsCount(heading: string): string {
+  return heading.replace(A_COUNT_ENDING_A_HEADING, "");
+}
+
+function stableName(surfaces: Surfaces, heading: string): string {
+  return withoutItsCount(citedUndated(surfaces, heading));
+}
+
 function headingsGainedAndLost(before: Surfaces, after: Surfaces, vendor: string): { lost: string[]; gained: string[] } {
-  const was = new Map(headingsNamingEach(before, vendor).map(h => [citedUndated(before, h), h]));
-  const now = new Map(headingsNamingEach(after, vendor).map(h => [citedUndated(after, h), h]));
+  const was = new Map(headingsNamingEach(before, vendor).map(h => [stableName(before, h), h]));
+  const now = new Map(headingsNamingEach(after, vendor).map(h => [stableName(after, h), h]));
   return {
     lost: [...was].filter(([stable]) => !now.has(stable)).map(([, heading]) => heading),
     gained: [...now].filter(([stable]) => !was.has(stable)).map(([, heading]) => heading),
@@ -395,7 +405,7 @@ function headingsADeclarationSendsThemTo(surfaces: Surfaces, after: Surfaces, he
 function stableRegions(surfaces: Surfaces): Map<string, Set<string>> {
   const named = new Map<string, Set<string>>();
   for (const [heading, vendors] of Object.entries(surfaces.regions)) {
-    const stable = citedUndated(surfaces, heading);
+    const stable = stableName(surfaces, heading);
     if (!named.has(stable)) named.set(stable, new Set());
     for (const vendor of vendors) named.get(stable)!.add(vendor);
   }
@@ -411,7 +421,7 @@ function destinationNames(
   if (destination.startsWith("#")) {
     const heading = after.headingAtAnchor[destination.slice(1)];
     if (heading === undefined) return false;
-    return (stableRegions(after).get(citedUndated(after, heading)) ?? new Set<string>()).has(vendor);
+    return (stableRegions(after).get(stableName(after, heading)) ?? new Set<string>()).has(vendor);
   }
   if (!destination.startsWith("/")) return false;
   return pages.get(destination.split("#")[0]!)?.vendors.includes(vendor) ?? false;
@@ -644,7 +654,7 @@ describe("what a page names changes overnight only where the page itself says wh
       if (coversADifferentDay(before, after)) continue;
       const namedNow = stableRegions(after);
       for (const heading of declared) {
-        const stable = citedUndated(before, heading);
+        const stable = stableName(before, heading);
         const held = namedNow.get(stable) ?? new Set<string>();
         for (const vendor of (before.regions[heading] ?? []).filter(v => !held.has(v))) {
           const destinations = before.destinationsOf[heading] ?? [];
@@ -698,7 +708,7 @@ describe("what a page names changes overnight only where the page itself says wh
       const surfaces = today.get(pagePath)!;
       const byStableName = new Map<string, string[]>();
       for (const heading of Object.keys(surfaces.regions)) {
-        const stable = citedUndated(surfaces, heading);
+        const stable = stableName(surfaces, heading);
         byStableName.set(stable, [...(byStableName.get(stable) ?? []), heading]);
       }
       for (const [stable, headings] of byStableName) {
@@ -708,7 +718,7 @@ describe("what a page names changes overnight only where the page itself says wh
     assert.deepEqual(
       confused.slice(0, 8),
       [],
-      `${confused.length} pages let a rule about dates in headings strip away enough that two different sections carry the same name`,
+      `${confused.length} pages let a rule about dates or counts in headings strip away enough that two different sections carry the same name`,
     );
   });
 
@@ -950,6 +960,32 @@ describe("what counts as a page saying why, on pages built to test it", () => {
     const droppedEntirely = surfacesOf(aPage({ title: TITLE, sections: [listing(["alfa"])] }));
     assert.deepEqual(movesWithNoDatedReason(listedTogether, droppedEntirely), ["bravo"]);
     assert.deepEqual(droppedEntirely.vendors, ["alfa"]);
+  });
+
+  it("reads a vendor that stays under a heading whose count goes up as not moving", () => {
+    const holdingOne = surfacesOf(aPage({ title: TITLE, sections: [{ heading: "Recent Pricing Changes (1)", vendors: ["alfa"] }] }));
+    const holdingTwo = surfacesOf(aPage({ title: TITLE, sections: [{ heading: "Recent Pricing Changes (2)", vendors: ["alfa"] }] }));
+    assert.deepEqual(vendorsThatChangeHeading(holdingOne, holdingTwo), ["alfa"]);
+    assert.deepEqual(movesWithNoDatedReason(holdingOne, holdingTwo), []);
+  });
+
+  it("reads a vendor that moves between two differently named headings as moving, whatever their counts", () => {
+    const upcoming = surfacesOf(aPage({ title: TITLE, sections: [{ heading: "Upcoming Changes (1)", vendors: ["alfa"] }] }));
+    const recent = surfacesOf(aPage({ title: TITLE, sections: [{ heading: "Recent Pricing Changes (2)", vendors: ["alfa"] }] }));
+    assert.deepEqual(movesWithNoDatedReason(upcoming, recent), ["alfa"]);
+  });
+
+  it("reads a vendor that leaves a counted heading and is named nowhere as unexplained", () => {
+    const holdingTwo = surfacesOf(aPage({ title: TITLE, sections: [{ heading: "Recent Pricing Changes (2)", vendors: ["alfa", "bravo"] }] }));
+    const holdingOne = surfacesOf(aPage({ title: TITLE, sections: [{ heading: "Recent Pricing Changes (1)", vendors: ["alfa"] }] }));
+    assert.deepEqual(movesWithNoDatedReason(holdingTwo, holdingOne), ["bravo"]);
+    assert.deepEqual(vendorsNoLongerNamed(holdingTwo, holdingOne), ["bravo"]);
+  });
+
+  it("reads a number as part of a heading's name unless it closes the heading in parentheses", () => {
+    const namedUnder = (heading: string) => surfacesOf(aPage({ title: TITLE, sections: [{ heading, vendors: ["alfa"] }] }));
+    assert.deepEqual(movesWithNoDatedReason(namedUnder("Top 3 Picks"), namedUnder("Top 4 Picks")), ["alfa"]);
+    assert.deepEqual(movesWithNoDatedReason(namedUnder("Picks (3) for Widgets"), namedUnder("Picks (4) for Widgets")), ["alfa"]);
   });
 
   it("reads a page whose own title covers a different day as free to name a different set", () => {
