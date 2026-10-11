@@ -137,7 +137,7 @@ import { buildProductFunctions, functionMembers, functionDefinitions, functionMe
 import { curatedAlternativesFor } from "./curated-alternatives.js";
 import { vendorSubstitutes, substitutesListedFor } from "./vendor-substitutes.js";
 import type { Agent, ChangeDateSource, DealChange, FreePlanExcerpt, RiskCause, RatingWithheld, LinkUnreachable, ListingCondition, Offer, StabilityClass, SubtypeLabel } from "./types.js";
-import { A_DATED_HEADING_MARKER, A_DATED_SECTION_MARKER, archiveBracketOf, datedHeadingNoticeHtml, datedSectionNoticeHtml, namedFromItsDate, namedOnceItsDateArrived, namedWhileAheadOf, namedWhileNotBefore, ANNOUNCED_BADGE, ANNOUNCED_HEADING, announcedIntro, changeDateLabel, changeEntryDateLabel, changeEntryLongDateLabel, changeDateClause, changeDatePublished, changeEventStartDate, capListSections, latestEventDate, offerExpiryAfter, feedEntryUpdated, UNDATED_TILE_LABEL, firstReadHeading, discoveryBatchNote, coveringBracketedChanges, changeEntryDateLabelHtml, isoWeekOf, monthlyChangeSeries, changesInWindow, discoveryMonthSeriesHeading, periodComparisonSentence, DISCOVERED_DATE_PREFIX, EFFECTIVE_DATE_PREFIX, UNKNOWN_EFFECTIVE_DATE_MARKER, EFFECTIVE_BY_DATE_MEANING, BRACKETED_DATE_PREFIX, RECORDED_DATE_PREFIX, CORRECTED_DATE_PREFIX, EFFECTIVE_MONTH_SERIES_NOTE, DISCOVERY_MONTH_SERIES_NOTE, weekRangeLabel, newestChangeInEffect, vendorPageLastUpdated } from "./change-dates.js";
+import { A_DATED_HEADING_MARKER, A_DATED_SECTION_MARKER, archiveBracketOf, datedHeadingNoticeHtml, datedSectionNoticeHtml, namedFromItsDate, namedOnceItsDateArrived, namedWhileAheadOf, namedWhileNotBefore, ANNOUNCED_BADGE, ANNOUNCED_HEADING, announcedIntro, changeDateLabel, changeEntryDateLabel, changeEntryLongDateLabel, changeDateClause, changeDatePublished, changeEventStartDate, capListSections, latestEventDate, offerExpiryAfter, feedEntryUpdated, UNDATED_TILE_LABEL, firstReadHeading, discoveryBatchNote, coveringBracketedChanges, changeEntryDateLabelHtml, isoWeekOf, monthlyChangeSeries, changesInWindow, discoveryMonthSeriesHeading, periodComparisonSentence, DISCOVERED_DATE_PREFIX, EFFECTIVE_DATE_PREFIX, UNKNOWN_EFFECTIVE_DATE_MARKER, EFFECTIVE_BY_DATE_MEANING, BRACKETED_DATE_PREFIX, RECORDED_DATE_PREFIX, CORRECTED_DATE_PREFIX, EFFECTIVE_MONTH_SERIES_NOTE, DISCOVERY_MONTH_SERIES_NOTE, weekRangeLabel, newestChangeInEffect, hasNotTakenEffect, vendorPageLastUpdated } from "./change-dates.js";
 import { changeFeedEntries, feedEntryFields, feedUpdatedTimestamp, changeFeedProvenanceNote, CHANGE_FEED_ENTRY_LIMIT, CHANGE_FEED_DESCRIPTION, CHANGE_FEED_NAMESPACE, CHANGE_FEED_NAMESPACE_PREFIX, channelUpdatedTimestamp, WEEKLY_FEED_POPULATION_NOTE, feedLinkTag, feedEntrySourceXml, digestSourceXml, PER_CHANGE_FEED, WEEKLY_DIGEST_FEED } from "./change-feed.js";
 import { changeLogInPageOrder, changeLogSections, changeLogSectionsHtml, monthHeadingLabel } from "./change-log-sections.js";
 import { FEED_CORRECTIONS, correctionEntriesXml } from "./feed-corrections.js";
@@ -4769,10 +4769,34 @@ footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2r
 @media(max-width:768px){h1{font-size:1.5rem}.stats-bar{flex-direction:column}}
 ${globalNavCss()}`;
 
+const SCHEDULED_SHUTDOWN_BADGE_LABEL = "scheduled shutdown";
+
+const SCHEDULED_COUNT_LABEL = "scheduled";
+
+function isScheduledShutdown(c: Pick<DealChange, "change_type" | "date">, servedOn: string): boolean {
+  return c.change_type === "product_deprecated" && hasNotTakenEffect(c, servedOn);
+}
+
+function digestEntryBadge(c: DealChange, servedOn: string): { label: string; color: string } {
+  const badge = changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
+  return isScheduledShutdown(c, servedOn) ? { ...badge, label: SCHEDULED_SHUTDOWN_BADGE_LABEL } : badge;
+}
+
+function weekHasNotStarted(year: number, week: number, servedOn: string): boolean {
+  return getWeekStart(year, week).toISOString().slice(0, 10) > servedOn;
+}
+
+function weekNotStartedLine(year: number, week: number, count: number): string {
+  return count === 1
+    ? `Week ${week}, ${year} has not started. 1 change is scheduled; the service below still works until its date.`
+    : `Week ${week}, ${year} has not started. ${count} changes are scheduled; each service below still works until its date.`;
+}
+
 function buildDigestPage(weekKey: string): string | null {
   const parsed = parseWeekKey(weekKey);
   if (!parsed) return null;
   const { year, week } = parsed;
+  const servedOn = new Date().toISOString().slice(0, 10);
 
   const byWeek = getChangesByWeek();
   const weekRecords = vendorChangesAmong(byWeek.get(weekKey) ?? []);
@@ -4783,8 +4807,10 @@ function buildDigestPage(weekKey: string): string | null {
     ? ` ${discovered.length} more recorded with no known effective date.`
     : "";
   const title = `Developer Tool Pricing Changes: ${dateRange} — AgentDeals`;
+  const notStarted = changes.length > 0 && weekHasNotStarted(year, week, servedOn);
+  const everyChangeIsAScheduledShutdown = changes.length > 0 && changes.every(c => isScheduledShutdown(c, servedOn));
   const metaDesc = changes.length > 0
-    ? `${changes.length} pricing changes tracked for developer tools during ${dateRange}. ${changes.filter(c => c.impact === "high").length} high-impact changes.${discoveryClause}`
+    ? `${changes.length} pricing changes ${notStarted ? "scheduled" : "tracked"} for developer tools during ${dateRange}. ${changes.filter(c => c.impact === "high").length} high-impact changes.${discoveryClause}`
     : `No pricing changes tracked for developer tools during ${dateRange}.${discoveryClause}`;
 
   const byType = new Map<string, number>();
@@ -4800,7 +4826,8 @@ function buildDigestPage(weekKey: string): string | null {
     <div class="stat-pill"><strong>${changes.length}</strong> change${changes.length !== 1 ? "s" : ""}</div>
     ${Array.from(byType.entries()).map(([type, count]) => {
       const badge = changeBadge(type);
-      return `<div class="stat-pill"><span style="width:8px;height:8px;border-radius:50%;background:${badge.color};display:inline-block"></span> <strong>${count}</strong> ${badge.label}</div>`;
+      const label = notStarted && everyChangeIsAScheduledShutdown ? SCHEDULED_COUNT_LABEL : badge.label;
+      return `<div class="stat-pill"><span style="width:8px;height:8px;border-radius:50%;background:${badge.color};display:inline-block"></span> <strong>${count}</strong> ${label}</div>`;
     }).join("\n    ")}${discoveryPill}
   </div>` : (discovered.length > 0 ? `
   <div class="stats-bar">
@@ -4816,7 +4843,7 @@ function buildDigestPage(weekKey: string): string | null {
   const impactLabels = { high: "High Impact", medium: "Medium Impact", low: "Low Impact", ungraded: "Impact Not Graded" };
 
   function digestEntry(c: typeof weekRecords[0], borderColor: string): string {
-    const badge = changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
+    const badge = digestEntryBadge(c, servedOn);
     return `<div class="change-entry" style="border-left-color:${borderColor}">
       <div class="change-header">
         <span class="change-badge" style="background:${badge.color}">${badge.label}</span>
@@ -4902,7 +4929,7 @@ ${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" hre
   ${buildGlobalNav("digest")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/digest/archive">Digest</a> &rsaquo; ${weekKey}</div>
   <h1>Pricing Changes: ${dateRange}</h1>
-  <p class="page-meta">${changes.length} change${changes.length !== 1 ? "s" : ""} tracked in week ${week}, ${year}.${discoveryClause}</p>
+  <p class="page-meta">${notStarted ? weekNotStartedLine(year, week, changes.length) : `${changes.length} change${changes.length !== 1 ? "s" : ""} tracked in week ${week}, ${year}.`}${discoveryClause}</p>
 ${statsHtml}
 ${bodyHtml}
 ${trendingHtml}

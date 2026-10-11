@@ -3040,56 +3040,55 @@
       "changed": "2026-10-10"
     },
     "/digest/2026-w42": {
-      "hash": "364c443f67715a3f",
-      "changed": "2026-10-09"
+      "daily": true
     },
     "/digest/2026-w43": {
-      "hash": "661c39cee5134124",
-      "changed": "2026-10-10"
+      "hash": "f3d06a763e2d3216",
+      "changed": "2026-10-11"
     },
     "/digest/2026-w44": {
-      "hash": "5fef913616cc86a6",
-      "changed": "2026-10-10"
+      "hash": "440d15314903b136",
+      "changed": "2026-10-11"
     },
     "/digest/2026-w47": {
-      "hash": "b99e86e4250aad88",
-      "changed": "2026-10-10"
+      "hash": "0aad8b2b605a6cab",
+      "changed": "2026-10-11"
     },
     "/digest/2026-w49": {
-      "hash": "8e58363d446468e3",
-      "changed": "2026-10-10"
+      "hash": "c32aad713365ac52",
+      "changed": "2026-10-11"
     },
     "/digest/2026-w50": {
-      "hash": "a248d475113bc7f7",
-      "changed": "2026-10-10"
+      "hash": "04a2e9f8adb7d9ee",
+      "changed": "2026-10-11"
     },
     "/digest/2027-w01": {
-      "hash": "292c9526bf39a8c4",
-      "changed": "2026-10-10"
+      "hash": "19f8232192e16537",
+      "changed": "2026-10-11"
     },
     "/digest/2027-w03": {
-      "hash": "1ab35c81f5ff0a66",
-      "changed": "2026-10-10"
+      "hash": "fe5675459e855bbd",
+      "changed": "2026-10-11"
     },
     "/digest/2027-w08": {
-      "hash": "a0dfda43718af767",
-      "changed": "2026-10-10"
+      "hash": "faedd28b21349cd0",
+      "changed": "2026-10-11"
     },
     "/digest/2027-w11": {
-      "hash": "12619f69d49a28a0",
-      "changed": "2026-10-10"
+      "hash": "d3992b2684634d0b",
+      "changed": "2026-10-11"
     },
     "/digest/2027-w13": {
-      "hash": "696f28c23ab18da6",
-      "changed": "2026-10-10"
+      "hash": "d5c2f3b4b7c9d882",
+      "changed": "2026-10-11"
     },
     "/digest/2027-w18": {
-      "hash": "39148feba6c9bc7a",
-      "changed": "2026-10-10"
+      "hash": "34e3b68daa189273",
+      "changed": "2026-10-11"
     },
     "/digest/2028-w19": {
-      "hash": "9b879b9780f81fd4",
-      "changed": "2026-10-10"
+      "hash": "40b5e1da5cd626f2",
+      "changed": "2026-10-11"
     },
     "/digest/archive": {
       "hash": "12f6896cc99a8beb",
