@@ -222,6 +222,10 @@ describe("#1206 the badge and the vendor page read the same scale", () => {
       const listed = offers.find(o => o.vendor === vendor);
       return listed !== undefined && endingTheListingConfirms(listed, held.get(vendor.toLowerCase()) ?? []) !== null;
     };
+    const heldByTheDiscontinuedGate = (vendor: string) => {
+      const listed = offers.find(o => o.vendor === vendor);
+      return listed !== undefined && publishedRisk(listed, held.get(vendor.toLowerCase()) ?? []).gate?.code === "product_discontinued";
+    };
     const ratedOnAChangeThatEndsNoFreeTier = (vendor: string) => {
       const cause = vendorRiskAssessment(held.get(vendor.toLowerCase()) ?? []).cause;
       return cause !== null && !riskyCauseEndsTheFreeTier(cause);
@@ -257,6 +261,7 @@ describe("#1206 the badge and the vendor page read the same scale", () => {
         const expected = scaleFor(vendor).level;
         if (level === expected) continue;
         if (label === "free tier removed" && endedByTheListing(vendor)) continue;
+        if (label === "deprecated" && heldByTheDiscontinuedGate(vendor)) continue;
         if (label === "at risk" && expected === "risky" && ratedOnAChangeThatEndsNoFreeTier(vendor)) continue;
         disagreeing.push(`/badge/${slug}.svg reads ${level}, the risk scale reads ${expected}`);
       }
