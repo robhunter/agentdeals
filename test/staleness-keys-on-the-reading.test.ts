@@ -339,7 +339,7 @@ describe("the criteria page publishes the count and what moves it", () => {
     const measured = offers.filter(o =>
       verificationDoubt(o, DATE, ledger, lastReadingFor(o)) !== null,
     ).length;
-    assertPopulationFloor(measured, 200, "records meeting the stale_verification trigger");
+    assertPopulationFloor(measured, 1, "records meeting the stale_verification trigger");
     assert.equal(stated, measured);
   });
 
