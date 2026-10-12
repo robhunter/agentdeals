@@ -1262,7 +1262,7 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 21,
+      "table_figures": 19,
       "table_figures_from_records": 8,
       "tables": [
         {
@@ -1272,7 +1272,7 @@
         },
         {
           "label": "Cloud IDE Free Tier Comparison",
-          "figures": 11,
+          "figures": 9,
           "from_records": 1
         },
         {

@@ -25863,7 +25863,7 @@ function buildFirebaseStudioShutdownPage(): string {
     { name: "Google Antigravity", slug: "", freeCompute: "TBA (launching 2026)", freeStorage: "TBA", collaboration: "TBA", aiFeatures: "Agentic local workflows, code-first IDE", bestFor: "Google ecosystem developers, agentic coding", type: "google-path" },
     { name: "Google AI Studio", slug: "google-gemini-api", freeCompute: "Web-based (no compute needed)", freeStorage: "N/A", collaboration: "N/A", aiFeatures: "Gemini API prototyping, prompt testing", bestFor: "Quick AI prototyping, Gemini API testing", type: "google-path" },
     { name: "GitHub Codespaces", slug: "github-codespaces", freeCompute: "120 core hours/month on GitHub Free personal accounts (60 hours on 2 cores)", freeStorage: "15 GB/month", collaboration: "Live Share (VS Code extension)", aiFeatures: "Copilot integration", bestFor: "Full dev environment, GitHub-native workflows", type: "cloud-ide" },
-    { name: "Ona (formerly Gitpod)", slug: "gitpod", freeCompute: "No free plan; $100 in starting credits (Core from $20/month)", freeStorage: "None free", collaboration: "Core plan", aiFeatures: "Core plan", bestFor: "Pre-configured dev environments, open-source projects", type: "cloud-ide" },
+    { name: "Ona (formerly Gitpod)", slug: "gitpod", freeCompute: "Closed to new self-serve customers: Ona joined OpenAI on 2026-08-10 and no longer sells Core subscriptions; it points new users to OpenAI's Codex", freeStorage: "None free", collaboration: "Core plan", aiFeatures: "Core plan", bestFor: "Pre-configured dev environments, open-source projects", type: "cloud-ide" },
     { name: "Replit", slug: "replit", freeCompute: "Not published for Starter", freeStorage: "2 GB (Starter)", collaboration: "None on Starter (0 seats)", aiFeatures: "Replit Agent (daily credits, monthly cap)", bestFor: "Rapid prototyping, learning, pair programming", type: "cloud-ide" },
     { name: "CodeSandbox", slug: "codesandbox", freeCompute: "No VM credits on the free plan", freeStorage: "20 GB", collaboration: "Live sessions (VM Sandboxes only; need VM credits)", aiFeatures: "AI code suggestions", bestFor: "Web development, React/Vue/Angular projects", type: "cloud-ide" },
     { name: "StackBlitz", slug: "stackblitz", freeCompute: "Runs in the browser; unlimited public projects", freeStorage: "1 MB uploads per project", collaboration: "Share via URL", aiFeatures: "Bolt.new integration", bestFor: "Instant startup, frontend frameworks, no server needed", type: "cloud-ide" },
@@ -26202,7 +26202,7 @@ ${globalNavCss()}
   </ul>
 
   <div class="cost-insight">
-    <p><strong>Key insight:</strong> Firebase Studio offered free access to 3 workspaces per user, or 10 with a Google Developer Program profile. Ona has no free plan (it offers $100 in credits to start), and CodeSandbox's free plan no longer includes VM time.</p>
+    <p><strong>Key insight:</strong> Firebase Studio offered free access to 3 workspaces per user, or 10 with a Google Developer Program profile. Ona no longer sells self-serve subscriptions since joining OpenAI, and CodeSandbox's free plan no longer includes VM time.</p>
     <p>See our <a href="/ide-code-editors-alternatives">IDE &amp; Code Editors guide</a> for detailed free tier comparisons across all ${ideAlternativesCount} alternatives.</p>
   </div>
 

@@ -28,7 +28,7 @@ const WITHDRAWN: Record<string, RegExp> = {
 
 const TABLE_ROWS: Record<string, string[]> = {
   "GitHub Codespaces": ["120 core hours/month on GitHub Free personal accounts (60 hours on 2 cores)", "15 GB/month", "Live Share (VS Code extension)"],
-  "Ona (formerly Gitpod)": ["No free plan; $100 in starting credits (Core from $20/month)", "None free", "Core plan", "Core plan"],
+  "Ona (formerly Gitpod)": ["Closed to new self-serve customers: Ona joined OpenAI on 2026-08-10 and no longer sells Core subscriptions; it points new users to OpenAI's Codex", "None free", "Core plan", "Core plan"],
   Replit: ["Not published for Starter", "2 GB (Starter)", "None on Starter (0 seats)", "Replit Agent (daily credits, monthly cap)"],
   CodeSandbox: ["No VM credits on the free plan", "20 GB", "Live sessions (VM Sandboxes only; need VM credits)"],
   StackBlitz: ["Runs in the browser; unlimited public projects", "1 MB uploads per project"],
@@ -52,10 +52,10 @@ const STATED_ON_THE_PAGE = [
   "Cursor or Devin Desktop (formerly Windsurf): local editors, not cloud IDEs. Cursor's free Hobby plan includes limited Agent requests. Devin Desktop's free plan includes a light agent quota, limited models, and unlimited Tab completions and inline edits.",
   "Google Antigravity (a local, code-first desktop app) or Google AI Studio (full-stack apps in the browser), Google's two recommended paths.",
   "(for example devcontainer.json for Codespaces)",
-  "Key insight: Firebase Studio offered free access to 3 workspaces per user, or 10 with a Google Developer Program profile. Ona has no free plan (it offers $100 in credits to start), and CodeSandbox's free plan no longer includes VM time.",
+  "Key insight: Firebase Studio offered free access to 3 workspaces per user, or 10 with a Google Developer Program profile. Ona no longer sells self-serve subscriptions since joining OpenAI, and CodeSandbox's free plan no longer includes VM time.",
 ];
 
-const WITHDRAWN_FROM_THE_PAGE = ["Best for open-source projects", "productivity loss", "retraining cost", "Hidden Costs of Migration", "Team retraining"];
+const WITHDRAWN_FROM_THE_PAGE = ["Best for open-source projects", "productivity loss", "retraining cost", "Hidden Costs of Migration", "Team retraining", "$100 in starting credits", "Core from $20/month", "$100 in credits to start"];
 
 const TITLE = "Firebase Studio Shutdown: Migration Paths & Free IDE Alternatives";
 const META_DESCRIPTION = "Firebase Studio has taken no new workspaces since June 22, 2026 and shuts down on March 22, 2027. Compare Google's two recommended paths (Antigravity and Google AI Studio) with the free terms of GitHub Codespaces, Replit, CodeSandbox, StackBlitz and Coder, plus a migration checklist.";
