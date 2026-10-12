@@ -115,10 +115,16 @@ describe("#1317 the suite sees every commit that reaches main", () => {
     const scripts = JSON.parse(readFileSync(join(REPO, "package.json"), "utf8")).scripts;
     const stripReporters = (cmd: string) =>
       cmd.replace(/--test-reporter(-destination)?=\S+\s*/g, "").replace(/\s+/g, " ").trim();
+    const everyShard = (cmd: string) => cmd.replace(/\$\{TEST_SHARD:\+--test-shard=\$TEST_SHARD\}\s*/, "");
     assert.strictEqual(
       stripReporters(scripts["test:gated"]),
-      stripReporters(scripts.test),
+      stripReporters(everyShard(scripts.test)),
       "the gate's suite and the suite main runs differ by more than which reporters they load",
+    );
+    assert.doesNotMatch(
+      scripts["test:gated"],
+      /--test-shard/,
+      "the gate would run one shard of the suite and push data past the tests it skipped",
     );
     assert.match(
       scripts["test:gated"],

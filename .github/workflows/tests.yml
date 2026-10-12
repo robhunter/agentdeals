@@ -15,9 +15,14 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  test:
+  suite:
+    name: suite ${{ matrix.shard }}/3
     runs-on: ubuntu-latest
     timeout-minutes: 50
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3]
     steps:
       - uses: actions/checkout@v4
 
@@ -36,12 +41,13 @@ jobs:
         env:
           POPULATION_FLOOR_LOG: /tmp/population-floors.jsonl
           SUITE_TIME_LIMIT_MINUTES: 45
+          TEST_SHARD: ${{ matrix.shard }}/3
         run: |
           set +e
           timeout --kill-after=1m "${SUITE_TIME_LIMIT_MINUTES}m" npm test
           status=$?
           if [ "$status" -eq 124 ] || [ "$status" -eq 137 ]; then
-            message="npm test ran past its ${SUITE_TIME_LIMIT_MINUTES}-minute limit and was stopped, so this run reports as failed."
+            message="npm test (shard ${TEST_SHARD}) ran past its ${SUITE_TIME_LIMIT_MINUTES}-minute limit and was stopped, so this run reports as failed."
             echo "::error title=Tests timed out::$message"
             echo "Tests timed out: $message" >> "$GITHUB_STEP_SUMMARY"
           fi
@@ -54,4 +60,19 @@ jobs:
             node scripts/report-population-floors.js /tmp/population-floors.jsonl --summary "$GITHUB_STEP_SUMMARY"
           else
             echo "The suite wrote no floor log, so no margin can be read off this run."
+          fi
+
+  test:
+    needs: suite
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Pass only when every shard of the suite passed
+        env:
+          SHARDS: ${{ needs.suite.result }}
+        run: |
+          if [ "$SHARDS" != "success" ]; then
+            echo "::error title=Suite failed::At least one of the suite's three shards did not pass (result: $SHARDS)."
+            exit 1
           fi

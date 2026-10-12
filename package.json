@@ -31,7 +31,7 @@
     "start": "node dist/index.js",
     "serve": "node dist/serve.js",
     "dev": "ts-node src/index.ts",
-    "test": "AGENTDEALS_API_URL=http://tests-start-their-own-api.invalid AGENTDEALS_REFERRAL_HEALTH=off node --test --test-concurrency 1 test/**/*.test.ts",
+    "test": "AGENTDEALS_API_URL=http://tests-start-their-own-api.invalid AGENTDEALS_REFERRAL_HEALTH=off node --test --test-concurrency 1 ${TEST_SHARD:+--test-shard=$TEST_SHARD} test/**/*.test.ts",
     "mutate:1479": "node scripts/mutate-1479.mjs",
     "mutate:1481": "node scripts/mutate-1481.mjs",
     "mutate:1434": "node scripts/mutate-1434.mjs",
