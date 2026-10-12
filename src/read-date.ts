@@ -424,21 +424,44 @@ export function unreconciledConfirmationNote(confirmed: string, withheld: TermsW
       + ` since without confirming them: ${withheld.clause}.`;
 }
 
+function asSentence(clause: string): string {
+  return `${clause.charAt(0).toUpperCase()}${clause.slice(1)}.`;
+}
+
+function theNoteDescribesTheReadOn(
+  day: string | null,
+  read: string,
+  outcome: string | null,
+  settled: SettledRead | null,
+  restatedFrom: string | null,
+): boolean {
+  if (restatedFrom || readRestatedTheTermsWePublish(outcome, settled)) return false;
+  return day === read && whatTheLastReadFound(outcome, settled) !== null;
+}
+
 export function lastReadNote(
   offer: DatedRecord | null | undefined,
   withheld: TermsWeCannotConfirm | null,
   refusals: readonly RefusedRead[],
+  refusalTheRatingWaitsOn: TermsWeCannotConfirm | null = null,
 ): string {
   const { read, verified, confirmed, attempted } = verificationDates(offer);
   const tail = attempted
     ? ` We tried again on ${attempted} and did not read the page, so that attempt confirmed nothing.`
     : "";
   if (!confirmed) {
+    const outcome = lastReadOutcome(offer);
     const settled = howWeSettledTheRead(refusals, read);
-    return noConfirmationNote(read, verified, lastReadOutcome(offer), settled, restatedReadingDate(offer)) + tail;
+    const restatedFrom = restatedReadingDate(offer);
+    const refusal = refusalTheRatingWaitsOn
+      && !theNoteDescribesTheReadOn(refusalTheRatingWaitsOn.on, read, outcome, settled, restatedFrom)
+      ? ` ${asSentence(refusalTheRatingWaitsOn.clause)}`
+      : "";
+    return noConfirmationNote(read, verified, outcome, settled, restatedFrom) + refusal + tail;
   }
-  if (withheld) {
-    return `The day we last read the vendor's page. ${unreconciledConfirmationNote(confirmed, withheld)}` + tail;
+  const unreconciled = withheld ?? refusalTheRatingWaitsOn;
+  if (unreconciled) {
+    return `The day we last read the vendor's page. ${unreconciledConfirmationNote(confirmed, unreconciled)}` + tail;
   }
   return (confirmed < read
     ? `The day we last read the vendor's page. The terms we publish were last confirmed on ${confirmed}.`

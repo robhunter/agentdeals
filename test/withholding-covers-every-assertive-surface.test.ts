@@ -17,6 +17,7 @@ import {
 import { supersededTermsNotice, supersedingChange } from "../dist/superseded-description.js";
 import {
   badgeWithholding,
+  refusalWithholdsTheTerms,
   termsNotVerifiedMetaSentence,
   whyWeCannotConfirmTheseTerms,
   withholdingTag,
@@ -53,8 +54,12 @@ interface Page {
   badgeTag: string | null;
   termsTag: string | null;
   caveats: string[];
-  unconfirmed: { sentence: string; theReadFoundAFreePlan: boolean } | null;
+  unconfirmed: { sentence: string; theReadFoundAFreePlan: boolean; on: string | null } | null;
+  refusalInTheLastReadNote: boolean;
 }
+
+const lastReadNoteIn = (html: string): string =>
+  html.match(/Last read<\/div>\s*<div class="detail-value"[^>]*>[^<]*<\/div>\s*<div class="detail-note">([\s\S]*?)<\/div>/)?.[1] ?? "";
 
 const A_MONTH = "(?:January|February|March|April|May|June|July|August|September|October|November|December)";
 const A_BARE_VERIFICATION = new RegExp(`(?<!Not )Verified ${A_MONTH} \\d{4}\\.`);
@@ -210,6 +215,7 @@ before(async () => {
         ...(superseded ? [supersededTermsNotice(vendor, superseded)] : []),
       ],
       unconfirmed,
+      refusalInTheLastReadNote: refusalWithholdsTheTerms(unconfirmed),
     }];
   });
 
@@ -332,7 +338,7 @@ describe("a withholding we publish reaches every surface that states the terms",
     assert.ok(TERMS_ONLY_OUTCOMES.length > 0, "no source-check outcome withholds the terms alone");
   });
 
-  it("opens the answer with the reason the page gives for withholding", () => {
+  it("opens the answer with the reason the page gives for withholding, unless that reason is a refused read, which the Last read note states with its day", () => {
     const carrying = pages.filter(page => {
       const unconfirmed = page.unconfirmed;
       if (!unconfirmed) return false;
@@ -342,18 +348,19 @@ describe("a withholding we publish reaches every surface that states the terms",
     assertSharesPopulation(
       carrying.length,
       vendorsInTheCatalogue(),
-      0.3,
+      0.22,
       "vendor pages opening the free-tier answer with the reason they withhold",
     );
-    const refused = pages.filter(page => page.unconfirmed && page.termsTag !== null
-      && ["read_not_reconciled", "change_measured_no_difference"].includes(page.termsTag));
-    const silent = refused.filter(page => !(page.faq.get(`Is ${page.vendor} free?`) ?? "")
-      .includes(page.unconfirmed!.sentence)).map(page => page.slug);
-    assert.deepStrictEqual(
-      silent.slice(0, 20),
-      [],
-      `${silent.length} of ${refused.length} answers name no day for the read they withhold on`,
-    );
+    const refused = pages.filter(page => page.refusalInTheLastReadNote);
+    assertSharesPopulation(refused.length, vendorsInTheCatalogue(), 0.04, "vendor pages whose rating a refused read withholds");
+    const misplaced = refused.flatMap(page => {
+      const answer = page.faq.get(`Is ${page.vendor} free?`) ?? "";
+      const note = lastReadNoteIn(page.html);
+      if (answer.includes(page.unconfirmed!.sentence)) return [`${page.slug}: the answer restates the refused read`];
+      if (!note.includes(page.unconfirmed!.on ?? "")) return [`${page.slug}: the Last read note names no ${page.unconfirmed!.on}`];
+      return [];
+    });
+    assert.deepStrictEqual(misplaced.slice(0, 20), [], `${misplaced.length} of ${refused.length} pages place the refused read wrongly`);
   });
 
   it("still answers yes where the read found the free plan and could not read the amount", () => {

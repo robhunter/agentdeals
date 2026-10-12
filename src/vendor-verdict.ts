@@ -532,6 +532,14 @@ export function withUnconfirmedTerms(terms: string, unconfirmed: UnconfirmedTerm
   return `${closingTerms(terms)} ${unconfirmed.theReadFoundAFreePlan ? unconfirmed.sentence : UNVERIFIED_TERMS_CAVEAT}`;
 }
 
+export function lastConfirmedAgainstThePageWeCite(confirmed: string): string {
+  return `We last confirmed these terms against the page we cite on ${confirmed}.`;
+}
+
+export function withTheConfirmationWeHold(terms: string, confirmed: string): string {
+  return `${closingTerms(terms)} ${lastConfirmedAgainstThePageWeCite(confirmed)}`;
+}
+
 export function termsWithTheReasonWeCannotConfirmThem(terms: string, unconfirmed: UnconfirmedTerms): string {
   return `${closingTerms(terms)} ${unconfirmedTermsSentence(unconfirmed)}`;
 }
@@ -580,6 +588,25 @@ export function termsNotVerifiedMetaSentence(input: VendorVerdictInput): string 
 export function unconfirmedThresholdSentence(phrase: string, unconfirmed: UnconfirmedTerms): string {
   return `We record ${phrase} as the limit, but ${unconfirmed.clause},`
     + ` so we cannot confirm that threshold today.`;
+}
+
+export function recordedLimitSentence(phrase: string): string {
+  return `We record ${phrase} as the limit.`;
+}
+
+export function notRatedTodaySentence(subject: string): string {
+  return `We are not rating ${subject} today; this page's Last read note says why.`;
+}
+
+export const WE_PUBLISH_NO_REFUSED_CHANGE = "We publish no change we refused to record";
+
+export function emptyHistoryBesideARefusalSentence(subject: string): string {
+  return `No recorded pricing changes for ${subject}. ${WE_PUBLISH_NO_REFUSED_CHANGE},`
+    + ` so treat the empty history as a statement about our records, not about this vendor's pricing.`;
+}
+
+export function refusalWithholdsTheTerms(unconfirmed: UnconfirmedTerms | null | undefined): boolean {
+  return unconfirmed != null && withheldForARefusedRead(unconfirmed.because);
 }
 
 function ratingWithheldReasonOf(input: VendorVerdictInput): RatingWithheldReason {

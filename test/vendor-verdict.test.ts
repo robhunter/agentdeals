@@ -15,13 +15,16 @@ import {
   gateStatesAnEnding,
   narrowingChanges,
   narrowingSentence,
+  notRatedTodaySentence,
   publishedVendorLevel,
   ratingWithheldForNoSource,
+  refusalWithholdsTheTerms,
   refusedReadWeHold,
   statesRiskCause,
   vendorBadge,
   vendorVerdictSentence,
   vendorVerdictWord,
+  whyWeCannotConfirmTheseTerms,
   type VendorVerdictInput,
 } from "../dist/vendor-verdict.js";
 import { CHANGE_DIRECTION, gateForOffer, loadDealChanges, loadOffers, refusalsForVendor, vendorRiskAssessment, classifyStability } from "../dist/data.js";
@@ -453,6 +456,7 @@ interface VendorRow {
   ratingWithheld: boolean;
   badgeRendered: boolean;
   sentence: string;
+  verdictOnThePage: string;
   readAgainOn: string | null;
   termsSuperseded: boolean;
   tier: string;
@@ -504,6 +508,9 @@ function vendorRows(): VendorRow[] {
       ratingWithheld: ratingWithheldForNoSource(context.input),
       badgeRendered: endingLabel !== null || badgeEnded || !(gate || enriched.risk_level === null || (enriched.link_unreachable && expected === "stable")),
       sentence: vendorVerdictSentence(context.input),
+      verdictOnThePage: refusalWithholdsTheTerms(whyWeCannotConfirmTheseTerms(context.input))
+        ? notRatedTodaySentence("this offer")
+        : vendorVerdictSentence(context.input),
       readAgainOn: refusedReadWeHold(context.input)?.read_again_on ?? null,
       termsSuperseded,
       tier: primary.tier,
@@ -694,8 +701,8 @@ describe("vendor verdict — as rendered", () => {
         if (!row.badgeRendered && badge !== null) {
           wrong.push(`${row.slug}: h1 badge renders ${badge} for a rating we are withholding`);
         }
-        if (!verdict.includes(row.sentence)) {
-          wrong.push(`${row.slug}: verdict does not render "${row.sentence}"`);
+        if (!verdict.includes(row.verdictOnThePage)) {
+          wrong.push(`${row.slug}: verdict does not render "${row.verdictOnThePage}"`);
         }
         if (STABILITY_SCALE_WORDS.test(verdict)) {
           wrong.push(`${row.slug}: verdict reaches for a second scale — ${verdict}`);

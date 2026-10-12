@@ -164,8 +164,14 @@ function clausesThatStateTheTerms(description: string): string {
   return stated.length === clauses.length ? description : stated.join(" ");
 }
 
+const A_CONVERSION_RATE = /\d[\d,.]*\s*\p{L}+\s*=\s*[^()[\];,]*/gu;
+
+function withoutConversionRates(terms: string): string {
+  return terms.replace(A_CONVERSION_RATE, "");
+}
+
 export function growthLimitPhrases(description: string): string[] {
-  const stated = clausesThatStateTheTerms(description);
+  const stated = withoutConversionRates(clausesThatStateTheTerms(description));
   const phrases: string[] = [];
   for (const pattern of LIMIT_PATTERNS) {
     const m = stated.match(pattern.regex);

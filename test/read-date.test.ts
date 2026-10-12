@@ -289,6 +289,56 @@ describe("the day we last read the page", () => {
     });
   });
 
+  describe("a refused read that withholds the rating", () => {
+    const UNRECONCILED = "when we last read the page we cite for this offer, on 2026-09-10,"
+      + " we found a change we could not reconcile with the terms we publish";
+    const refusal = { clause: UNRECONCILED, on: "2026-09-10" };
+    const AS_A_SENTENCE = "When we last read the page we cite for this offer, on 2026-09-10,"
+      + " we found a change we could not reconcile with the terms we publish.";
+
+    it("adds nothing where the note already describes the refused read on its day", () => {
+      withState([record({ last_attempt_at: "2026-09-10", last_outcome: ATTEMPT_CHANGED, last_success: null })]);
+      const note = lastReadNote(offer, null, [], refusal);
+      assert.strictEqual(note, lastReadNote(offer, null, []));
+      assert.match(note, /on 2026-09-10, found the page different from the terms we hold/);
+    });
+
+    it("states it with its day where the note describes a later read", () => {
+      withState([record({ last_attempt_at: "2026-10-04", last_outcome: ATTEMPT_CHANGED, last_success: null })]);
+      const note = lastReadNote(offer, null, [], refusal);
+      assert.ok(note.startsWith(lastReadNote(offer, null, [])), note);
+      assert.ok(note.endsWith(` ${AS_A_SENTENCE}`), note);
+    });
+
+    it("states it before an attempt that did not read the page, where the note could not say what the refused read found", () => {
+      withState([record({ last_attempt_at: "2026-10-07", last_outcome: ATTEMPT_FETCH_FAILED, last_success: null, last_read_at: "2026-09-10" })]);
+      const note = lastReadNote(offer, null, [], refusal);
+      assert.ok(!lastReadNote(offer, null, []).includes("2026-09-10"), "the note already names the refused read, so this case proves nothing");
+      assert.ok(note.includes(` ${AS_A_SENTENCE} We tried again on 2026-10-07`), note);
+    });
+
+    it("states it after a note saying a later read found the terms we published", () => {
+      withState([record({ last_attempt_at: "2026-09-28", last_outcome: ATTEMPT_CHANGED, last_success: null })]);
+      const restated = [{ reason: "confirmed_unchanged", refused_date: "2026-09-28" }];
+      const note = lastReadNote(offer, null, restated, refusal);
+      assert.match(note, /on 2026-09-28, found the terms we published that day\. When we last read/);
+      assert.ok(note.endsWith(AS_A_SENTENCE), note);
+    });
+
+    it("states it where the read of the same day is described as finding the terms we published", () => {
+      withState([record({ last_attempt_at: "2026-09-10", last_outcome: ATTEMPT_CHANGED, last_success: null })]);
+      const sameDay = [{ reason: "confirmed_unchanged", refused_date: "2026-09-10" }, { reason: "states_no_difference", refused_date: "2026-09-10" }];
+      assert.match(lastReadNote(offer, null, sameDay), /found the terms we published that day\.$/);
+      assert.ok(lastReadNote(offer, null, sameDay, refusal).endsWith(` ${AS_A_SENTENCE}`), lastReadNote(offer, null, sameDay, refusal));
+    });
+
+    it("names it as the read since the confirmation where the facts box holds one and nothing else is withheld", () => {
+      withState([record({ last_attempt_at: "2026-09-10", last_outcome: ATTEMPT_CHANGED, last_success: "2026-08-30" })]);
+      assert.strictEqual(lastReadNote(offer, null, [], refusal), lastReadNote(offer, refusal, []));
+      assert.match(lastReadNote(offer, null, [], refusal), /a confirmation of these terms from 2026-08-30, and we have read the page since without confirming them: when we last read/);
+    });
+  });
+
   describe("a confirmation a later read has already contradicted", () => {
     const READING = { date: "2026-09-02", url: "https://examplebase.dev/pricing", label: "examplebase.dev", terms: "Free: 1 GB" };
 

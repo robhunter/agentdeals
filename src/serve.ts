@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { createServer, getServerCard } from "./server.js";
-import { changesForVendor, oldestVerifiedDateForSlug, vendorRiskAssessment, withheldRecordCounts, publishedRisk, levelWithheldStatement, vendorNotIndexedSentence, riskCauseOf, freeTierEndingRecord, NEGATIVE_CHANGE_TYPES, POSITIVE_CHANGE_TYPES, SEVERE_CHANGE_TYPES, loadOffers, getCategories, getNewOffers, getNewestDeals, searchOffers, enrichOffers, gateForOffer, loadDealChanges, getDealChanges, changeContext, DEFAULT_CHANGE_WINDOW_DAYS, getOfferDetails, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, getFormattedWeeklyDigest, getFreshnessMetrics, publishedStabilityIndex, stabilityWithheldDisclosure, UNRATED_STABILITY, type StabilityIndex, type PublishedStabilityClass, getVendorReferral, sanitizeQuery, getChangeLogFreshness, isEventDated, partitionByDateProvenance } from "./data.js";
+import { changesForVendor, oldestVerifiedDateForSlug, vendorRiskAssessment, withheldRecordCounts, publishedRisk, levelWithheldStatement, levelWithheldForARefusedRead, vendorNotIndexedSentence, riskCauseOf, freeTierEndingRecord, NEGATIVE_CHANGE_TYPES, POSITIVE_CHANGE_TYPES, SEVERE_CHANGE_TYPES, loadOffers, getCategories, getNewOffers, getNewestDeals, searchOffers, enrichOffers, gateForOffer, loadDealChanges, getDealChanges, changeContext, DEFAULT_CHANGE_WINDOW_DAYS, getOfferDetails, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, getFormattedWeeklyDigest, getFreshnessMetrics, publishedStabilityIndex, stabilityWithheldDisclosure, UNRATED_STABILITY, type StabilityIndex, type PublishedStabilityClass, getVendorReferral, sanitizeQuery, getChangeLogFreshness, isEventDated, partitionByDateProvenance } from "./data.js";
 import { loadChangeRefusals, vendorWhoseAlternativesAQueryAsksFor, changesRatingTheListedTier, changesTheVendorMade, stabilityDeciders, vendorNameAsPublished, freePlanExcerptHeldFor, freePlanExcerptHoldOn } from "./data.js";
 import { A_DEMOTION_IN_FORCE_RULE, NO_DEMOTION_IN_FORCE_RULE, stablePicksAmong, A_COMPLETE_LOG_NOTICE, A_VERDICT_ROLLS_NOTICE, A_WITHHELD_RATING_DOES_NOT_LAPSE, lapsingDemotionStated, VOLATILE_WHILE_A_DEMOTION_COUNTS_RULE, WATCH_RECEIVES_FROM_VOLATILE_RULE , confirmationCoverage, confirmationCoverageSentence, HOW_THE_CATALOGUE_IS_MAINTAINED, NOTHING_CONTRADICTS_OUR_TERMS_FOR, THE_DATES_WE_HOLD } from "./data.js";
 import { confirmingRead, confirmingReadSentence, refusalsByVendor, refusedReadSentence, supersededRefusalSentence, type ChangeRefusal } from "./change-refusal.js";
@@ -33,14 +33,14 @@ import { dropEndedFromNameList, endedIndex, endedRowStatement, markEndedVendorRo
 import { amountUnstatedSentence, freePriceConfirmedSentence, freePriceOnlySentence, LAST_RESOLVED, levelWithheldReason, levelWithheldSince, recordPublishesAQuantity, withheldLevelClause, withheldLevelSentence, type LevelWithheldReason } from "./source-check.js";
 import { offerVerdictInput, reasonWeCannotConfirmTheTerms, vendorVerdictContextFrom, type VendorVerdictContext } from "./vendor-verdict-input.js";
 import { readingIsBehindTheLoop, reverificationIntervalDays } from "./badge-staleness.js";
-import { LAST_READ_LABEL, READ_CONTRADICTS_LABEL, RESTATED_DATE_LABEL, UNCONFIRMED_DATE_LABEL, VERIFICATION_DATES_HEADING, contradictedTermsSentence, lastReadDate, lastReadNote, publishedDateLabel, publishedDateValue, readThatContradictsOurTerms, restatedReadingDate, verificationDatesCell, verificationDatesSentence, whereOurTermsCameFrom, whereOurTermsCameFromClause, type LastReading } from "./read-date.js";
+import { LAST_READ_LABEL, READ_CONTRADICTS_LABEL, RESTATED_DATE_LABEL, UNCONFIRMED_DATE_LABEL, VERIFICATION_DATES_HEADING, confirmationDate, contradictedTermsSentence, lastReadDate, lastReadNote, publishedDateLabel, publishedDateValue, readThatContradictsOurTerms, restatedReadingDate, verificationDatesCell, verificationDatesSentence, whereOurTermsCameFrom, whereOurTermsCameFromClause, type LastReading } from "./read-date.js";
 import { SUPERSEDED_TERMS_LABEL, SUPERSEDED_TERMS_RULE, readingBehindTheChange, storedTermsLabel, supersededTermsAnswer, supersededTermsMetaSentence, supersededTermsNotice, supersededTermsNoticeHtml, supersededTermsRecord, supersededTermsVerdictSentence, supersedingChange, type SupersededTermsRecord } from "./superseded-description.js";
 import { openingOfTerms, punctuated, punctuatedOpeningOfTerms } from "./terms-opening.js";
 import { NO_CURRENT_FIGURE, costHeadlineCaveat, limitCellText, mayRecommendAsFree, proseWithoutNames, readsActive, stackFreshnessStatement } from "./stack-claim.js";
 import { changesByVendor } from "./superseded-census.js";
 import { buildComparisonMap, comparisonSlug } from "./comparison-pairs.js";
 import { comparisonVerdictText, freeTierFaqAnswer, stabilityFaqAnswer, type ComparisonSide, type FreeTierSide, type SideFreeTier, type StabilityRating } from "./comparison-verdict.js";
-import { gateStatesAnEnding, publishedVendorLevel, restorationClause, restoredRemovalReason, vendorVerdictSentence, withheldRecordCountsOf, WITHHOLDING_BADGE_LABELS, vendorBadge, freeTierClaim, endingStatedInPlaceOfARating, endingShutsTheProductDown, endedClaimReliabilityAnswer, statesRiskCause, withholdingThatDoesNotLapse, demotionTheVerdictNames, narrowingSentence, ourOwnRecordsSentence, changeKindNoun, isOurOwnBookkeeping, emptyHistoryCaveatSentence, refusedReadOurConfirmationSupersedes, refusedReadWeHold, refusedReadWithholdingSentence, nothingWeReadDescribesTheTerms, unconfirmedThresholdSentence, unconfirmedTermsOpening, whyWeCannotConfirmTheseTerms, withheldForARefusedRead, withUnconfirmedTerms, refusalWithholdsStability, termsUnconfirmedBySource, termsTheVerdictWithholds, closingTerms, termsWithTheReasonWeCannotConfirmThem, termsNotVerifiedMetaSentence, termsWithheldLabel, theReadConfirmedThePrice, unconfirmedTermsSentence, whereTheDoubtSits, withheldBadgeLabel, type BadgeWithholding, type UnconfirmedTerms, type FreeTierClaim, type VendorVerdictInput, type WhereTheDoubtSits } from "./vendor-verdict.js";
+import { gateStatesAnEnding, publishedVendorLevel, restorationClause, restoredRemovalReason, vendorVerdictSentence, withheldRecordCountsOf, WITHHOLDING_BADGE_LABELS, vendorBadge, freeTierClaim, endingStatedInPlaceOfARating, endingShutsTheProductDown, endedClaimReliabilityAnswer, statesRiskCause, withholdingThatDoesNotLapse, demotionTheVerdictNames, narrowingSentence, ourOwnRecordsSentence, changeKindNoun, isOurOwnBookkeeping, emptyHistoryCaveatSentence, emptyHistoryBesideARefusalSentence, notRatedTodaySentence, recordedLimitSentence, refusalWithholdsTheTerms, WE_PUBLISH_NO_REFUSED_CHANGE, withTheConfirmationWeHold, refusedReadOurConfirmationSupersedes, refusedReadWeHold, refusedReadWithholdingSentence, nothingWeReadDescribesTheTerms, unconfirmedThresholdSentence, unconfirmedTermsOpening, whyWeCannotConfirmTheseTerms, withheldForARefusedRead, withUnconfirmedTerms, refusalWithholdsStability, termsUnconfirmedBySource, termsTheVerdictWithholds, closingTerms, termsWithTheReasonWeCannotConfirmThem, termsNotVerifiedMetaSentence, termsWithheldLabel, theReadConfirmedThePrice, unconfirmedTermsSentence, whereTheDoubtSits, withheldBadgeLabel, type BadgeWithholding, type UnconfirmedTerms, type FreeTierClaim, type VendorVerdictInput, type WhereTheDoubtSits } from "./vendor-verdict.js";
 import { descriptionDeniesAFreeTier, listingOffersAFreeTier, tierMayCarryAFreePlanExcerpt, tierRecordsAFreeTier, tierWhoseFreeOfferIsTheLicence } from "./free-tier-record.js";
 import { whyTheExcerptCannotStand } from "./free-plan-excerpt-rules.js";
 import { alternativesUnderTheVendorsRule, conditionRulingOut, conditionsBesideStoredTerms, conditionsForTheBrowser, conditionsHtml, conditionsOf, levelBesideTheVendorsRule, productionAnswerOpening, rowSpanningTheTableHtml, stableRatingBesideTheVendorsRule, theVendorsRuleOnProduction, trialProductionAnswer, withConditionsAfter, type TheVendorsRule } from "./listing-conditions.js";
@@ -5447,7 +5447,17 @@ function buildVendorPage(slug: string): string | null {
     : confirmingRead(verdictInput.refusedReads ?? []);
   const riskLevel = publishedVendorLevel(enriched.risk_level ?? null, riskCause);
   const historyLevel = verdictInput.historyLevel;
-  const levelWithheldBecause = levelWithheldStatement(vendorName, publishedRisk(primary, vendorChanges, servedOn));
+  const termsWeCannotConfirm = whyWeCannotConfirmTheseTerms(verdictInput);
+  const theRefusalIsStatedOnce = refusalWithholdsTheTerms(termsWeCannotConfirm);
+  const refusalTheLastReadNoteStates = theRefusalIsStatedOnce ? termsTheVerdictWithholds(termsWeCannotConfirm) : null;
+  const primaryPublishedRisk = publishedRisk(primary, vendorChanges, servedOn);
+  const theAnswersLeaveTheRefusalToTheNote = theRefusalIsStatedOnce && levelWithheldForARefusedRead(primaryPublishedRisk);
+  const levelWithheldBecause = theAnswersLeaveTheRefusalToTheNote
+    ? notRatedTodaySentence(`${vendorName}'s free tier`)
+    : levelWithheldStatement(vendorName, primaryPublishedRisk);
+  const levelWithheldAfterNamingTheFreeTier = theAnswersLeaveTheRefusalToTheNote
+    ? notRatedTodaySentence("it")
+    : levelWithheldBecause;
   const riskColor = (riskLevel ? riskColors[riskLevel] : null) ?? "#8b949e";
 
   const discontinuedOn = discontinuedOnOrBefore(vendorChanges, servedOn);
@@ -5456,7 +5466,6 @@ function buildVendorPage(slug: string): string | null {
   const offerHasEnded = offerEnded(primary);
   const primaryGate = context.gate;
   const withheldClause = levelWithheld ? withheldLevelClause(levelWithheld, unconfirmableSince) : "";
-  const termsWeCannotConfirm = whyWeCannotConfirmTheseTerms(verdictInput);
   const ratingWithheld = withholdingThatDoesNotLapse(verdictInput);
 
   const endedBy = endingStatedInPlaceOfARating(verdictInput);
@@ -5607,7 +5616,7 @@ function buildVendorPage(slug: string): string | null {
     : `${vendorName} pricing details${alternatives.length > 0 ? ` and ${alternatives.length} free alternatives in ${primary.category}` : ""}.${metaVerifiedSentence}`);
 
   const keyLimit = openingOfTerms(publishableTerms, 120);
-  const verdictLine2 = vendorVerdictSentence(verdictInput);
+  const verdictLine2 = theRefusalIsStatedOnce ? notRatedTodaySentence("this offer") : vendorVerdictSentence(verdictInput);
   const verdictLine3 = discontinuedOn
     ? `${discontinuedClause(vendorName, discontinuedOn)}${alternatives.length > 0 ? ` — the ${alternatives.length} alternatives below are replacements` : ""}.`
     : alternatives.length > 0 && !termsWeCannotConfirm && !primaryGate
@@ -5642,7 +5651,8 @@ function buildVendorPage(slug: string): string | null {
   const usageBeyondTheFreeTierIsBilled = statesUsageBeyondTheFreeTierIsBilled(listingStatements(primary));
   const growthBullets: string[] = [];
   for (const phrase of growthLimitPhrases(publishableTerms)) {
-    if (termsWeCannotConfirm) growthBullets.push(unconfirmedThresholdSentence(phrase, termsWeCannotConfirm));
+    if (theRefusalIsStatedOnce) growthBullets.push(recordedLimitSentence(phrase));
+    else if (termsWeCannotConfirm) growthBullets.push(unconfirmedThresholdSentence(phrase, termsWeCannotConfirm));
     else if (!usageBeyondTheFreeTierIsBilled) growthBullets.push(outgrowSentence(vendorName, phrase));
   }
   const whenTheFreeAllowanceIsUsed = timeLimitedOffer
@@ -5681,6 +5691,8 @@ function buildVendorPage(slug: string): string | null {
       </div>`;
   }).join("\n") : offerHasEnded
     ? `<p class="no-changes">${escHtmlServer(endedHistorySentence(vendorName))}</p>`
+    : theRefusalIsStatedOnce
+    ? `<p class="no-changes">${escHtmlServer(emptyHistoryBesideARefusalSentence(vendorName))}</p>`
     : termsWeCannotConfirm && nothingWeReadDescribesTheTerms(termsWeCannotConfirm)
     ? `<p class="no-changes">${escHtmlServer(emptyHistoryCaveatSentence(vendorName, termsWeCannotConfirm))}</p>`
     : primaryGate
@@ -5893,11 +5905,14 @@ ${allCompareLinks.join("\n")}
   }
 
   const storedTerms = storedTermsOf(primary);
-  const unconfirmedTermsPreamble = termsWeCannotConfirm
+  const unconfirmedTermsPreamble = termsWeCannotConfirm && !theRefusalIsStatedOnce
     ? unconfirmedTermsOpening(termsWeCannotConfirm)
     : "";
+  const confirmationBesideTheRefusal = theRefusalIsStatedOnce ? confirmationDate(primary) : null;
   const withUnconfirmedTermsCaveat = (terms: string) =>
-    termsWeCannotConfirm ? withUnconfirmedTerms(terms, termsWeCannotConfirm) : terms;
+    confirmationBesideTheRefusal
+      ? withTheConfirmationWeHold(terms, confirmationBesideTheRefusal)
+      : termsWeCannotConfirm ? withUnconfirmedTerms(terms, termsWeCannotConfirm) : terms;
   const reasonARecordedEndingDoesNotAnswer = reasonWeCannotConfirmFor(primary);
   const withTheReasonARecordedEndingLeaves = (terms: string) =>
     reasonARecordedEndingDoesNotAnswer
@@ -5995,7 +6010,7 @@ ${allCompareLinks.join("\n")}
       : riskLevel === "stable" || (primaryGate && historyLevel === "stable")
       ? `${vendorName}'s free tier can be suitable for small production workloads and side projects. ${primaryGate ? "It" : "We rate it stable and it"} offers ${keyLimit}, so it's a reasonable starting point.${vendorChanges.length > 0 ? ` ${narrowingSentence(vendorChanges, primary, termsSuperseded !== null)}` : ""} Monitor your usage against the limits and have an upgrade plan ready.`
       : riskLevel === null
-      ? `${vendorName}'s free tier is usable for prototyping and development. ${primaryGate ? vendorHistorySentence(vendorName, historyLevel, riskCause) : levelWithheldBecause}`
+      ? `${vendorName}'s free tier is usable for prototyping and development. ${primaryGate ? vendorHistorySentence(vendorName, historyLevel, riskCause) : levelWithheldAfterNamingTheFreeTier}`
       : restoredRemovalLowersTheRating
       ? `${vendorName}'s free tier is usable for prototyping and development, but we rate it ${riskLevel}. ${restoredRemovalLowersTheRating} Consider alternatives with more stable pricing for critical services.`
       : `${vendorName}'s free tier is usable for prototyping and development, but we rate it ${riskLevel}${riskCause ? ` because of one recorded ${changeKindNoun(riskCause.change_type)}, ${changeDateClause(riskCause)}${restorationClause(riskCause, verdictInput.changes)}` : ""}. Consider alternatives with more stable pricing for critical services.`)
@@ -6008,8 +6023,10 @@ ${allCompareLinks.join("\n")}
     ? `${ourOwnRecordsSentence(vendorChanges)}${offerHasEnded ? ` ${ENDED_SINCE_CHANGES_SENTENCE}` : ""}`
     : offerHasEnded
     ? endedEmptyChangeHistorySentence(vendorName)
+    : refusedRead && unreconciled
+    ? `${WE_PUBLISH_NO_REFUSED_CHANGE}, so we cannot tell you that nothing changed.`
     : refusedRead
-    ? `${refusedReadSentence(vendorName, refusedRead)} We publish no change we refused to record, so we cannot tell you that nothing changed.`
+    ? `${refusedReadSentence(vendorName, refusedRead)} ${WE_PUBLISH_NO_REFUSED_CHANGE}, so we cannot tell you that nothing changed.`
     : levelWithheld
     ? `We hold no recorded pricing changes for ${vendorName}, but ${withheldClause}, so that is a statement about our records rather than a positive signal.`
     : supersededRefusal
@@ -6193,7 +6210,7 @@ ${referralCalloutHtml}
     ` : ""}<div class="detail-card">
       <div class="detail-label">${LAST_READ_LABEL}</div>
       <div class="detail-value" style="font-family:var(--mono)">${escHtmlServer(primaryLastRead)}</div>
-      <div class="detail-note">${escHtmlServer(lastReadNote(primary, primaryTermsWithheld, verdictInput.refusedReads ?? []))}</div>
+      <div class="detail-note">${escHtmlServer(lastReadNote(primary, primaryTermsWithheld, verdictInput.refusedReads ?? [], refusalTheLastReadNoteStates))}</div>
     </div>
   </div>
 

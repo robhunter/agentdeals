@@ -6,7 +6,7 @@ import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path, { join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { assertCoversPopulation, assertSharesPopulation, recordsInTheCatalogue, vendorsInTheCatalogue, type Population } from "./population-floor.ts";
+import { assertCoversPopulation, assertPopulationFloor, assertSharesPopulation, recordsInTheCatalogue, vendorsInTheCatalogue, type Population } from "./population-floor.ts";
 import { GATE_REASONS, REJECT_MEASURES_NO_CHANGE, REJECT_NULL_COMPARISON, REJECT_RESTATES_STORED_QUANTITIES, REJECT_STATES_NO_DIFFERENCE } from "../scripts/change-gate.js";
 import { SUPPRESSED_SAME_TRANSITION_REGRADED } from "../scripts/change-log.js";
 import { refusalsByVendor, refusedReadRegister, refusedReadTheConfirmationSupersedes, refusedReadWithholdingStability, supersededRefusalSentence, REFUSAL_REASONS_THAT_CONFIRM_THE_STORED_TERMS, REFUSAL_REASONS_THAT_MEASURED_NO_DIFFERENCE, REFUSED_READ_REGISTERS, MEASURED_NO_DIFFERENCE_BADGE_LABEL, READ_HAD_NO_STANDING_BADGE_LABEL, UNRECONCILED_READ_BADGE_LABEL, WHAT_A_VOIDED_READ_FOUND } from "../dist/change-refusal.js";
@@ -16,7 +16,7 @@ import { LEVEL_WITHHOLDING_OUTCOMES } from "../dist/source-check.js";
 import { offerEnded } from "../dist/retirement.js";
 import { classifyTier } from "../dist/ranking.js";
 import { vendorSlugMap } from "../dist/vendor-slug.js";
-import { termsNotVerifiedMetaSentence, vendorVerdictSentence, whyWeCannotConfirmTheseTerms } from "../dist/vendor-verdict.js";
+import { lastConfirmedAgainstThePageWeCite, notRatedTodaySentence, termsNotVerifiedMetaSentence, UNVERIFIED_TERMS_CAVEAT, vendorVerdictSentence, whyWeCannotConfirmTheseTerms } from "../dist/vendor-verdict.js";
 import { vendorVerdictContextFrom } from "../dist/vendor-verdict-input.js";
 import { OUTCOMES_THAT_READ_THE_PAGE } from "../dist/read-date.js";
 
@@ -38,9 +38,12 @@ const A_STABLE_HISTORY = /has a stable pricing history/;
 const A_VERDICT_A_PUBLISHED_CHANGE_SETS = /We rate it | — one recorded [^.]+\. We no longer rate it\./;
 
 const A_BARE_THRESHOLD = /<li>At [^<]*?, you'll need to upgrade\.<\/li>/;
-const A_THRESHOLD_WE_CANNOT_CONFIRM = /we cannot confirm that threshold today/;
+const A_RECORDED_THRESHOLD = /We record [^<"]*? as the limit\./;
 const AN_EMPTY_HISTORY_ABOUT_OUR_RECORDS =
-  /Treat the empty history as a statement about our records, not about this vendor's pricing/;
+  /[Tt]reat the empty history as a statement about our records, not about this vendor's pricing/;
+const NOT_RATED_TODAY = notRatedTodaySentence("this offer");
+const A_REFUSAL_RESTATED = /[Ww]hen we (?:last )?read the page we cite for/;
+const FACTS_BOX_CONFIRMATION = /<div class="detail-label">Verified<\/div>\s*<div class="detail-value"[^>]*>(\d{4}-\d{2}-\d{2})</;
 
 const growthBlockOf = (html: string): string =>
   html.match(/<div class="section growth-section">[\s\S]*?<\/div>/)?.[0] ?? "";
@@ -50,6 +53,17 @@ const emptyHistoryParagraphOf = (html: string): string =>
 
 const verdictParagraphOf = (html: string): string =>
   html.match(/<div class="quick-verdict">\s*<p>([\s\S]*?)<\/p>/)?.[1] ?? "";
+
+const headerLineOf = (html: string): string =>
+  html.match(/<p class="page-claim">([\s\S]*?)<\/p>/)?.[1] ?? "";
+
+const lastReadNoteOf = (html: string): string =>
+  html.match(/Last read<\/div>\s*<div class="detail-value"[^>]*>[^<]*<\/div>\s*<div class="detail-note">([\s\S]*?)<\/div>/)?.[1] ?? "";
+
+const answersOf = (html: string): string[] => [
+  ...[...html.matchAll(/<div class="faq-a">([\s\S]*?)<\/div>/g)].map(m => m[1].replace(/<[^>]+>/g, "").trim()),
+  ...[...html.matchAll(/"acceptedAnswer":\{"@type":"Answer","text":"((?:[^"\\]|\\.)*)"/g)].map(m => m[1].trim()),
+];
 
 const badgeLabelOf = (svg: string): string => {
   const title = svg.match(/<title>([\s\S]*?)<\/title>/)?.[1] ?? "";
@@ -380,12 +394,16 @@ describe("a refused change is not a signal that nothing changed", () => {
     );
   });
 
-  it("names the reason on every rating it withholds for a refused read", () => {
+  it("names the day of the refused read on every rating it withholds for one, and points the verdict to that note", () => {
     const silent: string[] = [];
     for (const subject of subjects.filter(s => s.onlyTheRefusal)) {
-      const verdict = verdictParagraphOf(pages.get(subject.slug) ?? "");
+      const page = pages.get(subject.slug) ?? "";
+      const verdict = verdictParagraphOf(page);
       if (verdict === "") { silent.push(`/vendor/${subject.slug} renders no verdict paragraph`); continue; }
-      if (!reasonWePublish(subject).test(verdict)) silent.push(`/vendor/${subject.slug}: ${verdict.slice(0, 120)}`);
+      if (!verdict.includes(NOT_RATED_TODAY)) silent.push(`/vendor/${subject.slug}: ${verdict.slice(-120)}`);
+      const day = subject.refusedRead!.refused_date;
+      if (!headerLineOf(page).includes(day)) silent.push(`/vendor/${subject.slug} header line names no ${day}`);
+      if (!lastReadNoteOf(page).includes(day)) silent.push(`/vendor/${subject.slug} Last read note names no ${day}`);
     }
     assert.deepStrictEqual(silent.slice(0, 20), [], `verdicts withheld with nothing saying why:\n${silent.slice(0, 20).join("\n")}`);
   });
@@ -575,6 +593,92 @@ describe("a refused change is not a signal that nothing changed", () => {
   });
 });
 
+describe("a refused read that withholds the rating is stated once, in the header line and the Last read note", () => {
+  const statedOnce = () => subjects.filter(s => s.onlyTheRefusal);
+
+  it("restates the refusal in no verdict, outgrow line, empty history or answer", () => {
+    const restated: string[] = [];
+    for (const subject of statedOnce()) {
+      const page = pages.get(subject.slug) ?? "";
+      const places: Array<[string, string]> = [
+        ["verdict", verdictParagraphOf(page)],
+        ["outgrow", growthBlockOf(page)],
+        ["history", emptyHistoryParagraphOf(page)],
+        ...answersOf(page).map((answer): [string, string] => ["answer", answer]),
+      ];
+      for (const [place, text] of places) {
+        if (reasonWePublish(subject).test(text) || A_REFUSAL_RESTATED.test(text)) restated.push(`/vendor/${subject.slug} ${place}: ${text.slice(0, 100)}`);
+      }
+    }
+    assert.deepStrictEqual(restated.slice(0, 20), [], `the refusal is restated:\n${restated.slice(0, 20).join("\n")}`);
+    assertCoversPopulation(builtAmong(statedOnce()), listingsBuiltToHoldARefusedRead(), "built listings have the refused read as the only reason we withhold");
+  });
+
+  it("says cannot confirm fewer than three times on the page", () => {
+    const repeating = statedOnce()
+      .map(subject => ({ subject, times: (pages.get(subject.slug) ?? "").match(/cannot confirm/g)?.length ?? 0 }))
+      .filter(({ times }) => times >= 3)
+      .map(({ subject, times }) => `/vendor/${subject.slug}: ${times}`);
+    assert.deepStrictEqual(repeating.slice(0, 20), [], `pages repeating "cannot confirm":\n${repeating.slice(0, 20).join("\n")}`);
+  });
+
+  it("leaves no answer empty, and calls no offer stable while a refused read withholds its rating", () => {
+    const wrong: string[] = [];
+    let answers = 0;
+    for (const subject of statedOnce()) {
+      for (const answer of answersOf(pages.get(subject.slug) ?? "")) {
+        answers++;
+        if (answer === "") wrong.push(`/vendor/${subject.slug} prints an empty answer`);
+        else if (/considered stable|rate it stable|It's stable|positive stability signal|stable pricing/.test(answer)) wrong.push(`/vendor/${subject.slug}: ${answer.slice(0, 100)}`);
+      }
+    }
+    assert.ok(answers > 0, "no answer was read on a page a refused read withholds");
+    assert.deepStrictEqual(wrong.slice(0, 20), [], wrong.slice(0, 20).join("\n"));
+  });
+
+  it("answers the production question with what the free tier is usable for, then that it is not rated today", () => {
+    const NOT_RATED_IN_THE_ANSWER = notRatedTodaySentence("it");
+    const wrong: string[] = [];
+    let answered = 0;
+    for (const subject of statedOnce()) {
+      const page = pages.get(subject.slug) ?? "";
+      const answer = page.match(/"name":"Is [^"]*good for production\?","acceptedAnswer":\{"@type":"Answer","text":"((?:[^"\\]|\\.)*)"/)?.[1] ?? "";
+      if (!answer.includes("free tier is usable for prototyping and development.")) continue;
+      answered++;
+      if (!answer.endsWith(` ${NOT_RATED_IN_THE_ANSWER}`)) wrong.push(`/vendor/${subject.slug}: ${answer.slice(-120)}`);
+    }
+    assert.deepStrictEqual(wrong.slice(0, 20), [], wrong.slice(0, 20).join("\n"));
+    assertSharesPopulation(answered, vendorsWithheldForTheRefusedReadAlone(), 0.5, "pages a refused read withholds that answer the production question");
+  });
+
+  it("dates the confirmation the facts box shows in the answers that state the terms, and calls them unverified where it shows none", () => {
+    const wrong: string[] = [];
+    let dated = 0;
+    let caveated = 0;
+    for (const subject of statedOnce()) {
+      const page = pages.get(subject.slug) ?? "";
+      const confirmedOn = page.match(FACTS_BOX_CONFIRMATION)?.[1] ?? null;
+      const answers = answersOf(page).join("\n");
+      if (confirmedOn) {
+        if (answers.includes(UNVERIFIED_TERMS_CAVEAT)) wrong.push(`/vendor/${subject.slug} calls terms confirmed on ${confirmedOn} unverified`);
+        if (answers.includes(lastConfirmedAgainstThePageWeCite(confirmedOn))) dated++;
+      } else {
+        if (/We last confirmed these terms/.test(answers)) wrong.push(`/vendor/${subject.slug} dates a confirmation its facts box does not show`);
+        if (answers.includes(UNVERIFIED_TERMS_CAVEAT)) caveated++;
+      }
+    }
+    assert.deepStrictEqual(wrong.slice(0, 20), [], wrong.slice(0, 20).join("\n"));
+    assertPopulationFloor(dated, 3, "pages a refused read withholds that answer with the date we last confirmed the terms");
+    assertSharesPopulation(caveated, vendorsWithheldForTheRefusedReadAlone(), 0.5, "pages a refused read withholds that call the terms unverified");
+
+    const elsewhere = subjects
+      .filter(s => !verdictParagraphOf(pages.get(s.slug) ?? "").includes(NOT_RATED_TODAY))
+      .filter(s => /We last confirmed these terms against the page we cite/.test(answersOf(pages.get(s.slug) ?? "").join("\n")))
+      .map(s => `/vendor/${s.slug}`);
+    assert.deepStrictEqual(elsewhere.slice(0, 20), [], "pages that do not leave a refused read to the Last read note date a confirmation in their answers");
+  });
+});
+
 describe("an empty history and a recorded threshold are claims a refused read withholds too", () => {
   it("states no threshold as fact on a page whose last read we refused", () => {
     const stating: string[] = [];
@@ -585,7 +689,7 @@ describe("an empty history and a recorded threshold are claims a refused read wi
     assert.deepStrictEqual(stating.slice(0, 20), [], `thresholds stated as fact over a read we refused:\n${stating.slice(0, 20).join("\n")}`);
 
     const withheld = subjects.filter(
-      s => s.unreconciled && A_THRESHOLD_WE_CANNOT_CONFIRM.test(growthBlockOf(pages.get(s.slug) ?? "")),
+      s => s.unreconciled && A_RECORDED_THRESHOLD.test(growthBlockOf(pages.get(s.slug) ?? "")),
     );
     assertCoversPopulation(builtAmong(withheld), listingsBuiltToHoldARefusedRead(), "built listings' pages hold a recorded threshold behind a refused read");
   });
@@ -597,23 +701,24 @@ describe("an empty history and a recorded threshold are claims a refused read wi
       classifyTier(listed.find(o => o.vendor === subject.vendor)!.tier).class !== "time_limited";
     for (const subject of subjects.filter(s => s.unreconciled && asksWhenTheReaderOutgrowsIt(s))) {
       const page = pages.get(subject.slug) ?? "";
-      if (!A_THRESHOLD_WE_CANNOT_CONFIRM.test(growthBlockOf(page))) continue;
+      if (!A_RECORDED_THRESHOLD.test(growthBlockOf(page))) continue;
       const answer = page.match(/"name":"When will I outgrow[^"]*","acceptedAnswer":\{"@type":"Answer","text":"((?:[^"\\]|\\.)*)"/)?.[1] ?? "";
-      if (!A_THRESHOLD_WE_CANNOT_CONFIRM.test(answer)) stating.push(`/vendor/${subject.slug}: ${answer.slice(0, 80)}`);
+      if (!A_RECORDED_THRESHOLD.test(answer)) stating.push(`/vendor/${subject.slug}: ${answer.slice(0, 80)}`);
     }
     assert.deepStrictEqual(stating.slice(0, 20), [], `structured data states a threshold the page withholds:\n${stating.slice(0, 20).join("\n")}`);
   });
 
-  it("names the refusal and its date where an empty history is all we hold", () => {
+  it("calls an empty history a statement about our records where a refused read is all we hold, and leaves its day to the Last read note", () => {
     const silent: string[] = [];
     let named = 0;
     for (const subject of subjects.filter(s => s.onlyTheRefusal && s.published === 0)) {
-      const paragraph = emptyHistoryParagraphOf(pages.get(subject.slug) ?? "");
+      const page = pages.get(subject.slug) ?? "";
+      const paragraph = emptyHistoryParagraphOf(page);
       if (paragraph === "") continue;
       named++;
       if (!AN_EMPTY_HISTORY_ABOUT_OUR_RECORDS.test(paragraph)) silent.push(`/vendor/${subject.slug}: no statement about our records`);
-      else if (!reasonWePublish(subject).test(paragraph)) silent.push(`/vendor/${subject.slug}: ${paragraph.slice(0, 120)}`);
-      else if (!paragraph.includes(subject.refusedRead?.refused_date ?? "")) silent.push(`/vendor/${subject.slug}: names no date`);
+      else if (!paragraph.includes("We publish no change we refused to record")) silent.push(`/vendor/${subject.slug}: ${paragraph.slice(0, 120)}`);
+      else if (!lastReadNoteOf(page).includes(subject.refusedRead?.refused_date ?? "")) silent.push(`/vendor/${subject.slug}: its Last read note names no date`);
     }
     assert.deepStrictEqual(silent.slice(0, 20), [], `empty histories that do not say why we cannot read them:\n${silent.slice(0, 20).join("\n")}`);
     assertSharesPopulation(named, vendorsWithheldForTheRefusedReadAlone(), 0.5, "vendor pages hold an empty history and a refused read as the only reason");

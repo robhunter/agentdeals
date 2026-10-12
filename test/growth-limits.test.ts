@@ -208,6 +208,22 @@ describe("the other free-tier limits the page reports", () => {
   });
 });
 
+describe("a conversion rate is not a free-tier threshold", () => {
+  it("reads no limit from the figures a credit converts into", () => {
+    assert.deepEqual(
+      growthLimitPhrases("Media management — 25 credits/month (1 credit = 1 GB storage OR 1 GB bandwidth OR 1K transformations), up to 3 users"),
+      [],
+    );
+  });
+
+  it("still reads a limit the description states outside the conversion", () => {
+    assert.deepEqual(
+      growthLimitPhrases("10 GB storage and 100 GB bandwidth a month; 1 credit = 1 GB storage"),
+      ["10 GB storage", "100 GB bandwidth"],
+    );
+  });
+});
+
 describe("a free-tier threshold starts where a figure starts", () => {
   it("reads no quantity out of a model or product name", () => {
     assert.deepEqual(growthLimitPhrases("Token Plan subscriptions from $10/mo (Starter: 1,500 M2.7 requests/5hr)"), []);
@@ -468,7 +484,7 @@ describe("a page whose last read we refused states neither a threshold nor an em
     for (const slug of ["refusedcorp", "equalcorp"]) {
       const res = await get(`/vendor/${slug}`);
       assert.equal(res.status, 200);
-      assert.match(res.body, /so we cannot confirm these terms and are not rating this offer today/);
+      assert.match(res.body, /We are not rating this offer today; this page's Last read note says why\./);
     }
   });
 
@@ -476,36 +492,27 @@ describe("a page whose last read we refused states neither a threshold nor an em
     const { body } = await get("/vendor/refusedcorp");
     const block = growthBlock(body);
     assert.doesNotMatch(block, /At 250 GB bandwidth, you'll need to upgrade/);
-    assert.equal(
-      block.match(/<li>([^<]*)<\/li>/)?.[1],
-      `We record 250 GB bandwidth as the limit, but ${A_READ_WE_COULD_NOT_RECONCILE},`
-      + ` so we cannot confirm that threshold today.`,
-    );
+    assert.equal(block.match(/<li>([^<]*)<\/li>/)?.[1], "We record 250 GB bandwidth as the limit.");
   });
 
   it("states no threshold as fact on a read that moved no figure", async () => {
     const { body } = await get("/vendor/equalcorp");
-    assert.equal(
-      growthBlock(body).match(/<li>([^<]*)<\/li>/)?.[1],
-      `We record 40 projects as the limit, but ${A_READ_THAT_MOVED_NO_FIGURE},`
-      + ` so we cannot confirm that threshold today.`,
-    );
+    assert.equal(growthBlock(body).match(/<li>([^<]*)<\/li>/)?.[1], "We record 40 projects as the limit.");
   });
 
   it("withholds the same threshold in structured data as on the page", async () => {
     const { body } = await get("/vendor/refusedcorp");
     const answer = outgrowAnswer(body);
     assert.doesNotMatch(answer, /^At 250 GB bandwidth/);
-    assert.match(answer, /we cannot confirm that threshold today/);
+    assert.match(answer, /^We record 250 GB bandwidth as the limit\. /);
   });
 
   it("calls an empty history a statement about our records on a read it could not reconcile", async () => {
     const { body } = await get("/vendor/refusedcorp");
     assert.equal(
       emptyHistoryParagraph(body),
-      `No recorded pricing changes for Refusedcorp — but ${A_READ_WE_COULD_NOT_RECONCILE},`
-      + ` so we cannot tell you that nothing changed.`
-      + ` Treat the empty history as a statement about our records, not about this vendor's pricing.`,
+      "No recorded pricing changes for Refusedcorp. We publish no change we refused to record,"
+      + " so treat the empty history as a statement about our records, not about this vendor's pricing.",
     );
   });
 
@@ -513,10 +520,23 @@ describe("a page whose last read we refused states neither a threshold nor an em
     const { body } = await get("/vendor/equalcorp");
     assert.equal(
       emptyHistoryParagraph(body),
-      `No recorded pricing changes for Equalcorp — but ${A_READ_THAT_MOVED_NO_FIGURE},`
-      + ` so we cannot tell you that nothing changed.`
-      + ` Treat the empty history as a statement about our records, not about this vendor's pricing.`,
+      "No recorded pricing changes for Equalcorp. We publish no change we refused to record,"
+      + " so treat the empty history as a statement about our records, not about this vendor's pricing.",
     );
+  });
+
+  it("states the refusal and its day in the header line, and not again beside the threshold or the empty history", async () => {
+    const cases = [
+      { slug: "refusedcorp", refusal: A_READ_WE_COULD_NOT_RECONCILE, day: "2026-08-29" },
+      { slug: "equalcorp", refusal: A_READ_THAT_MOVED_NO_FIGURE, day: "2026-08-30" },
+    ];
+    for (const { slug, refusal, day } of cases) {
+      const { body } = await get(`/vendor/${slug}`);
+      const header = body.match(/<p class="page-claim">([\s\S]*?)<\/p>/)?.[1] ?? "";
+      assert.match(header, new RegExp(`Not verified — [^<]*${day}`), `/vendor/${slug} header: ${header}`);
+      assert.ok(!growthBlock(body).includes(refusal), `/vendor/${slug} restates the refusal beside its threshold`);
+      assert.ok(!emptyHistoryParagraph(body).includes(refusal), `/vendor/${slug} restates the refusal in its empty history`);
+    }
   });
 
   it("leaves both sentences on a vendor whose page we read and confirmed", async () => {

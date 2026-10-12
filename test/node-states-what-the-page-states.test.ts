@@ -7,7 +7,9 @@ import { fileURLToPath } from "node:url";
 import { assertPopulationFloor } from "./population-floor.ts";
 import { plainConditionsByVendor, withoutConditionsLists, withoutItsOwnConditions } from "./conditions-after-descriptions.ts";
 
-const { UNVERIFIED_TERMS_CAVEAT } = await import("../dist/vendor-verdict.js");
+const { UNVERIFIED_TERMS_CAVEAT, notRatedTodaySentence } = await import("../dist/vendor-verdict.js");
+
+const LEFT_TO_THE_LAST_READ_NOTE = notRatedTodaySentence("this offer");
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -122,7 +124,16 @@ interface VendorPage {
   terms: TermsBlock;
   answer: string;
   reason: string | null;
+  verdict: string;
+  headerLine: string;
+  lastReadNote: string;
 }
+
+function visibleText(html: string, pattern: RegExp): string {
+  return (html.match(pattern)?.[1] ?? "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+}
+
+const datesIn = (text: string): string[] => text.match(/\d{4}-\d{2}-\d{2}/g) ?? [];
 
 describe("a vendor page's structured data states the reason its own prose states", () => {
   let server: { proc: ChildProcess; port: number } | null = null;
@@ -151,7 +162,16 @@ describe("a vendor page's structured data states the reason its own prose states
         if (terms.withheld) { withheldPages.push({ route, node }); continue; }
         const answer = faqAnswer(html, node.vendor);
         if (answer === null) { unreadable.push(route); continue; }
-        pages.push({ route, node, terms, answer, reason: reasonTheNodeAdds(node, terms.text) });
+        pages.push({
+          route,
+          node,
+          terms,
+          answer,
+          reason: reasonTheNodeAdds(node, terms.text),
+          verdict: visibleText(html, /<div class="quick-verdict">\s*<p>([\s\S]*?)<\/p>/),
+          headerLine: visibleText(html, /<p class="page-claim">([\s\S]*?)<\/p>/),
+          lastReadNote: visibleText(html, /Last read<\/div>\s*<div class="detail-value"[^>]*>[^<]*<\/div>\s*<div class="detail-note">([\s\S]*?)<\/div>/),
+        });
       }
     }));
   });
@@ -180,11 +200,19 @@ describe("a vendor page's structured data states the reason its own prose states
     );
   });
 
-  it("states no reason in the node the page's own answer does not state", () => {
+  it("states no reason in the node the page does not state: in its answer, or for a refused read in its header line or Last read note", () => {
     const hedged = pages.filter(p => p.reason !== null && p.reason !== "");
     assertPopulationFloor(hedged.length, 162, "node descriptions state a reason we cannot confirm the terms");
+    const leftToTheNote = hedged.filter(p => p.verdict.includes(LEFT_TO_THE_LAST_READ_NOTE));
+    assertPopulationFloor(leftToTheNote.length, 20, "node descriptions state a refused read the page leaves to its Last read note");
     assert.deepStrictEqual(
-      hedged.filter(p => !p.answer.includes(UNVERIFIED_TERMS_CAVEAT) && !p.answer.includes(p.reason!))
+      hedged.filter(p => !leftToTheNote.includes(p) && !p.answer.includes(UNVERIFIED_TERMS_CAVEAT) && !p.answer.includes(p.reason!))
+        .map(p => `${p.route}: ${p.reason!.slice(0, 80)}`).slice(0, 15),
+      [],
+    );
+    assert.deepStrictEqual(
+      leftToTheNote.filter(p => datesIn(p.reason!).length === 0
+        || datesIn(p.reason!).some(day => !p.headerLine.includes(day) && !p.lastReadNote.includes(day)))
         .map(p => `${p.route}: ${p.reason!.slice(0, 80)}`).slice(0, 15),
       [],
     );

@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 import { assertPopulationFloor, assertSharesPopulation, type Population } from "./population-floor.ts";
 import { plainConditionsByVendor, withoutItsOwnConditions } from "./conditions-after-descriptions.ts";
 
-const { CANNOT_CONFIRM_THESE_TERMS, whyWeCannotConfirmTheseTerms } = await import("../dist/vendor-verdict.js");
+const { CANNOT_CONFIRM_THESE_TERMS, refusalWithholdsTheTerms, whyWeCannotConfirmTheseTerms } = await import("../dist/vendor-verdict.js");
 const { vendorVerdictContextFrom, reasonWeCannotConfirmTheTerms } = await import("../dist/vendor-verdict-input.js");
 const { loadOffers, changesByVendor, refusalsForVendor } = await import("../dist/data.js");
 const { vendorSlugMap } = await import("../dist/vendor-slug.js");
@@ -65,6 +65,12 @@ function sectionOf(html: string, pattern: RegExp): string | null {
 const quickVerdictOf = (html: string): string | null =>
   sectionOf(html, /<div class="quick-verdict">\s*<p>([\s\S]*?)<\/p>/);
 
+const headerLineOf = (html: string): string =>
+  sectionOf(html, /<p class="page-claim">([\s\S]*?)<\/p>/) ?? "";
+
+const lastReadNoteOf = (html: string): string =>
+  sectionOf(html, /Last read<\/div>\s*<div class="detail-value"[^>]*>[^<]*<\/div>\s*<div class="detail-note">([\s\S]*?)<\/div>/) ?? "";
+
 const termsBlockOf = (html: string): string | null =>
   sectionOf(html, /<h2>Free Tier Details<\/h2>\s*<p class="(?:desc-text|terms-superseded-text)"[^>]*>([\s\S]*?)<\/p>/);
 
@@ -111,7 +117,7 @@ function occurrences(haystack: string, needle: string): number {
   return seen;
 }
 
-interface Withholding { clause: string; sentence: string }
+interface Withholding { clause: string; sentence: string; refusedOn: string | null }
 
 function reasonsByVendorSlug(): Map<string, Withholding> {
   const changes = changesByVendor();
@@ -135,7 +141,13 @@ function reasonsByVendorSlug(): Map<string, Withholding> {
     });
     if (!context) continue;
     const unconfirmed = reasonWeCannotConfirmTheTerms(context.primary, whyWeCannotConfirmTheseTerms(context.input));
-    if (unconfirmed) found.set(slug, { clause: unconfirmed.clause, sentence: unconfirmed.sentence });
+    if (unconfirmed) {
+      found.set(slug, {
+        clause: unconfirmed.clause,
+        sentence: unconfirmed.sentence,
+        refusedOn: refusalWithholdsTheTerms(unconfirmed) ? unconfirmed.on : null,
+      });
+    }
   }
   return found;
 }
@@ -159,13 +171,16 @@ interface VendorPage {
   slug: string;
   tier: string | null;
   verdict: string;
+  headerLine: string;
+  lastReadNote: string;
   visible: string;
   reason: string | null;
+  refusedOn: string | null;
   citesARead: boolean;
   restated: number | null;
 }
 
-describe("a vendor page states the reason it cannot confirm the terms in its own verdict, and states it once", () => {
+describe("a vendor page states the reason it cannot confirm the terms where a reader sees it, and states it once", () => {
   let server: { proc: ChildProcess; port: number } | null = null;
   const pages: VendorPage[] = [];
   const unreadable: string[] = [];
@@ -203,8 +218,11 @@ describe("a vendor page states the reason it cannot confirm the terms in its own
           slug,
           tier: tierOf(html),
           verdict,
+          headerLine: headerLineOf(html),
+          lastReadNote: lastReadNoteOf(html),
           visible,
           reason: reasonTheNodeAdds(withoutItsOwnConditions(description, OWN_CONDITIONS.get(vendorSlugMap.get(slug) ?? "")), displayed),
+          refusedOn: withholding?.refusedOn ?? null,
           citesARead: /class="free-tier-source-line"/.test(html),
           restated: withholding ? restatements(visible, withholding) : null,
         });
@@ -219,7 +237,7 @@ describe("a vendor page states the reason it cannot confirm the terms in its own
     assert.deepStrictEqual(unreadable.slice(0, 15), [], "vendor pages served no node, no terms block or no verdict");
   });
 
-  it("says in the verdict a reader sees that it cannot confirm the terms, wherever the node says so", () => {
+  it("tells the reader whatever the node says about terms we cannot confirm: in the verdict, or for a refused read in the header line or the Last read note", () => {
     const stated = pages.filter(p => p.reason !== null && p.reason.includes(CANNOT_CONFIRM_THESE_TERMS));
     assertSharesPopulation(
       stated.length,
@@ -227,9 +245,16 @@ describe("a vendor page states the reason it cannot confirm the terms in its own
       0.29,
       "vendor pages whose node states a reason we cannot confirm the terms",
     );
+    const refused = stated.filter(p => p.refusedOn !== null);
+    assertSharesPopulation(refused.length, pagesRead(), 0.04, "vendor pages whose node states a refused read");
     assert.deepStrictEqual(
-      stated.filter(p => !p.verdict.includes(CANNOT_CONFIRM_THESE_TERMS))
+      stated.filter(p => p.refusedOn === null && !p.verdict.includes(CANNOT_CONFIRM_THESE_TERMS))
         .map(p => `${p.route}: ${p.verdict.slice(-120)}`).slice(0, 15),
+      [],
+    );
+    assert.deepStrictEqual(
+      refused.filter(p => !p.headerLine.includes(p.refusedOn!) && !p.lastReadNote.includes(p.refusedOn!))
+        .map(p => `${p.route}: names no ${p.refusedOn} in "${p.headerLine.slice(-80)}" or "${p.lastReadNote.slice(0, 120)}"`).slice(0, 15),
       [],
     );
   });

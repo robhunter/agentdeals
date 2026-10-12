@@ -1531,6 +1531,11 @@ export function levelWithheldStatement(vendor: string, risk: PublishedRisk): str
   return withheldLevelSentence(reason, vendor, since);
 }
 
+export function levelWithheldForARefusedRead(risk: PublishedRisk): boolean {
+  if (risk.risk_level !== null || risk.gate || risk.rating_withheld || !risk.refused_read) return false;
+  return !levelWithheldReason({ source_check: risk.source_check ?? undefined }, risk.link_unreachable);
+}
+
 export function checkVendorRisk(
   vendorName: string
 ): { result: VendorRiskResult } | { error: string; suggestions?: string[] } {

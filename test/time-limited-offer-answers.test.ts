@@ -12,7 +12,7 @@ const { toSlug } = await import("../dist/slug.js");
 const { loadDealChanges, refusalsForVendor } = await import("../dist/data.js");
 const { supersedingChange, supersededTermsVerdictSentence } = await import("../dist/superseded-description.js");
 const { vendorVerdictContextFrom } = await import("../dist/vendor-verdict-input.js");
-const { whyWeCannotConfirmTheseTerms } = await import("../dist/vendor-verdict.js");
+const { refusalWithholdsTheTerms, whyWeCannotConfirmTheseTerms } = await import("../dist/vendor-verdict.js");
 
 type Offer = import("../src/types.ts").Offer;
 type DealChange = import("../src/types.ts").DealChange;
@@ -157,6 +157,7 @@ interface Subject {
   levelWithheld: boolean;
   productionRuledOutBy: ListingCondition | null;
   termsUnconfirmed: boolean;
+  refusalInTheLastReadNote: boolean;
   restriction: string;
 }
 
@@ -189,6 +190,7 @@ function subjectOf(offer: Offer): Subject {
     levelWithheld: (context?.levelWithheld ?? null) !== null,
     productionRuledOutBy: supersededBy ? null : (offer.conditions ?? []).find(c => (c.rules_out ?? []).includes("production")) ?? null,
     termsUnconfirmed: context ? whyWeCannotConfirmTheseTerms(context.input) !== null : false,
+    refusalInTheLastReadNote: context ? refusalWithholdsTheTerms(whyWeCannotConfirmTheseTerms(context.input)) : false,
     restriction: gate?.code === "eligibility_restricted" ? `${gate.reason} ` : "",
   };
 }
@@ -318,6 +320,10 @@ const productionSentence = (s: Subject) => `Not for long. It is ${s.note}, so pl
 const THE_TRIAL_EXPIRES = "The trial also expires.";
 const whatItOffers = (s: Subject) => `No. What ${s.vendor} offers is ${s.note}:`;
 const whatItOffersBeforeTheCaveat = (s: Subject) => `No. What ${s.vendor} offers is ${s.note}. We cannot confirm that today.`;
+const whatItOffersBeforeItsTerms = (s: Subject) => `No. What ${s.vendor} offers is ${s.note}. ${s.description.slice(0, 30)}`;
+const openingOf = (s: Subject) => s.refusalInTheLastReadNote
+  ? whatItOffersBeforeItsTerms(s)
+  : s.termsUnconfirmed ? whatItOffersBeforeTheCaveat(s) : `${whatItOffers(s)} ${s.description.slice(0, 30)}`;
 const verdictLead = (s: Subject) => `${s.vendor} has no ongoing free tier; what it offers is ${s.note}: `;
 const NOT_RECOMMENDED_FOR_PRODUCTION = /we are not recommending it for production/;
 
@@ -362,26 +368,26 @@ describe("a vendor whose listed tier is a trial or a credit grant is not said to
     for (const s of answered) {
       for (const faqs of [page(`/vendor/${s.slug}`).body, page(`/vendor/${s.slug}`).ld]) {
         const answer = answerTo(faqs, `Is ${s.vendor} free?`) ?? "";
-        const opening = s.termsUnconfirmed ? whatItOffersBeforeTheCaveat(s) : `${whatItOffers(s)} ${s.description.slice(0, 30)}`;
-        assert.ok(answer.includes(opening), `/vendor/${s.slug} answers "${answer.slice(0, 160)}"`);
+        assert.ok(answer.includes(openingOf(s)), `/vendor/${s.slug} answers "${answer.slice(0, 160)}"`);
         assert.ok(answer.includes(s.description.slice(0, 30)), `/vendor/${s.slug} answers without its terms: "${answer.slice(0, 160)}"`);
       }
     }
   });
 
-  it("leads with no where we cannot confirm the terms, and follows it with that caveat", () => {
+  it("leads with no where we cannot confirm the terms, and follows it with that caveat unless a refused read is the reason", () => {
     const unconfirmed = timeLimited.filter(s => !s.superseded && s.termsUnconfirmed);
     assertPopulationFloor(unconfirmed.length, 3, "trial and credit vendor pages whose stored terms we cannot confirm");
-    const caveatFirst: string[] = [];
+    const misplaced: string[] = [];
     for (const s of unconfirmed) {
       for (const faqs of [page(`/vendor/${s.slug}`).body, page(`/vendor/${s.slug}`).ld]) {
         const answer = answerTo(faqs, `Is ${s.vendor} free?`) ?? "";
-        const no = answer.indexOf(whatItOffersBeforeTheCaveat(s));
+        const no = answer.indexOf(s.refusalInTheLastReadNote ? whatItOffersBeforeItsTerms(s) : whatItOffersBeforeTheCaveat(s));
         const caveat = answer.indexOf("We cannot confirm that today");
-        if (no < 0 || caveat < no) caveatFirst.push(`/vendor/${s.slug}: ${answer.slice(0, 120)}`);
+        const placed = s.refusalInTheLastReadNote ? caveat < 0 : caveat > no;
+        if (no < 0 || !placed) misplaced.push(`/vendor/${s.slug}: ${answer.slice(0, 120)}`);
       }
     }
-    assert.deepStrictEqual(caveatFirst, []);
+    assert.deepStrictEqual(misplaced, []);
   });
 
   it("asks about the free offer rather than a free tier, and drops the questions only a free tier answers", () => {
