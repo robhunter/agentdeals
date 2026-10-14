@@ -21,6 +21,7 @@ import {
   CHEAPER_VPS_IN_GERMANY,
   cheaperUnorderablePlanWithMoreServer,
   cheaperVpsInGermanyParagraph,
+  mostRamForTheMoneyParagraph,
   cheapestOrderableEuPlanForEachMemorySize,
   cheapestOrderableEuPlanForEachMemorySizeSentence,
   cheapestOrderableHetznerPlan,
@@ -33,6 +34,8 @@ import { parseHetznerPricesRead } from "../dist/page-reviews.js";
 import { everyRouteTheSitemapPublishes } from "./sitemap-routes.ts";
 
 type HetznerPlan = import("../src/hetzner-pricing.ts").HetznerPlan;
+type CheaperVpsInGermany = import("../src/hetzner-pricing.ts").CheaperVpsInGermany;
+type VpsPlanWeChecked = import("../src/hetzner-pricing.ts").VpsPlanWeChecked;
 type ListingCondition = import("../src/types.ts").ListingCondition;
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -467,6 +470,7 @@ describe("the pricing page prices what Hetzner sells today", () => {
       ...STORAGE_BOX_EUROS_AS_WRITTEN,
       withoutIpv4(cheapestOf(COST_OPTIMIZED_LINE).eur),
       ...[CHEAPER_VPS_IN_GERMANY.eightGb.eurPerMonth, CHEAPER_VPS_IN_GERMANY.eightGb.eurPerMonthOnA24MonthTerm, CHEAPER_VPS_IN_GERMANY.fourGb.eurPerMonth].map(price => `€${price.toFixed(2)}`),
+      ...[CHEAPER_VPS_IN_GERMANY.mostRamUnderTenEuros.eurPerMonth, CHEAPER_VPS_IN_GERMANY.fourGbProvidersEightGb.eurPerMonth].map(price => `€${price.toFixed(2)}`),
     ]);
     const quoted = new Set(eurosIn(visible(withoutItemsOrRowsHeadedByAnotherVendor(body))));
     const strays = [...quoted].filter(price => !allowed.has(price));
@@ -876,6 +880,77 @@ describe("the cheaper VPS in Germany than Hetzner's plan of the same memory size
     const body = source.slice(start, next > 0 ? next : undefined);
     assert.ok(body.includes("cheaperVpsInGermanyParagraph()"), "the guide does not take the paragraph from the plan table");
     assert.ok(!body.includes("of the providers we checked"), "the guide types the paragraph instead of printing it from the plan table");
+  });
+});
+
+const MOST_RAM_FOR_THE_MONEY_AS_WRITTEN = "Most RAM for the money: of the paid plans we checked, the most memory under €10 a month is Contabo's Cloud VPS 6: 12 GB of RAM for €7.50 a month, with no setup fee on a one-month term. Contabo's Cloud VPS 4 has 8 GB for €5.50. OVHcloud's VPS-1 has 4 GB for €4.49 and its VPS-2 has 8 GB for €8.49. Prices exclude VAT.";
+
+const paragraphRightBeforeTheBottomLine = (body: string) => {
+  const sectionSix = body.slice(body.indexOf('<h2 id="alternatives">'), body.indexOf('<h2 id="industry">'));
+  const inner = sectionSix.match(/<p\b[^>]*>((?:(?!<p\b)[\s\S])*?)<\/p>\s*<div class="context-box">\s*<strong>Bottom line:<\/strong>/)?.[1];
+  return inner === undefined ? null : visible(inner).trim();
+};
+
+const vpsPlansIn = (cheaper: CheaperVpsInGermany) =>
+  Object.values(cheaper).filter((value): value is VpsPlanWeChecked => typeof value === "object" && value !== null && "ram" in value && "eurPerMonth" in value);
+
+const plansThatBeatTheFirstNamedOnRamUnderItsBudget = (cheaper: CheaperVpsInGermany) => {
+  const paragraph = mostRamForTheMoneyParagraph(cheaper);
+  const named = paragraph.match(/the most memory under €(\d+) a month is .+?: (\d+) GB of RAM for €(\d+\.\d{2}) a month/);
+  assert.ok(named, paragraph);
+  const [budget, ram, eur] = named.slice(1).map(Number);
+  assert.ok(eur < budget, `the plan named first costs €${eur.toFixed(2)}, not under €${budget}: ${paragraph}`);
+  return vpsPlansIn(cheaper).filter(plan => plan.eurPerMonth < budget && plan.ram > ram);
+};
+
+describe("the most RAM for the money on /hetzner-pricing-2026", () => {
+  it("is the paragraph right before section 6's bottom line, word for word", async () => {
+    const { body } = await get("/hetzner-pricing-2026");
+    assert.strictEqual(paragraphRightBeforeTheBottomLine(body), MOST_RAM_FOR_THE_MONEY_AS_WRITTEN);
+  });
+
+  it("names first a plan under €10 a month that no other plan in the providers' constant under €10 has more RAM than", () => {
+    assert.deepStrictEqual(plansThatBeatTheFirstNamedOnRamUnderItsBudget(CHEAPER_VPS_IN_GERMANY), []);
+  });
+
+  it("finds the plan that beats the one named first once another plan under €10 a month in the constant has more RAM", () => {
+    const sixteenGb = { ...CHEAPER_VPS_IN_GERMANY.fourGbProvidersEightGb, ram: 16, eurPerMonth: 9.99 };
+    const withMoreRamUnderTheBudget = { ...CHEAPER_VPS_IN_GERMANY, fourGbProvidersEightGb: sixteenGb };
+    assert.deepStrictEqual(plansThatBeatTheFirstNamedOnRamUnderItsBudget(withMoreRamUnderTheBudget), [sixteenGb]);
+  });
+
+  it("does not count a plan with more RAM at €10 a month or more", () => {
+    const atTheBudget = { ...CHEAPER_VPS_IN_GERMANY, fourGbProvidersEightGb: { ...CHEAPER_VPS_IN_GERMANY.fourGbProvidersEightGb, ram: 16, eurPerMonth: 10 } };
+    assert.deepStrictEqual(plansThatBeatTheFirstNamedOnRamUnderItsBudget(atTheBudget), []);
+  });
+
+  it("rejects a plan named first that costs €10 a month or more", () => {
+    const repriced = { ...CHEAPER_VPS_IN_GERMANY, mostRamUnderTenEuros: { ...CHEAPER_VPS_IN_GERMANY.mostRamUnderTenEuros, eurPerMonth: 10.5 } };
+    assert.throws(() => plansThatBeatTheFirstNamedOnRamUnderItsBudget(repriced), /not under €10/);
+  });
+
+  it("takes every plan's name, memory and price from the providers' constant", () => {
+    const readAgain: CheaperVpsInGermany = {
+      ...CHEAPER_VPS_IN_GERMANY,
+      eightGb: { ...CHEAPER_VPS_IN_GERMANY.eightGb, plan: "Cloud VPS 40", eurPerMonth: 5.75 },
+      fourGb: { ...CHEAPER_VPS_IN_GERMANY.fourGb, plan: "VPS-10", eurPerMonth: 4.99 },
+      mostRamUnderTenEuros: { provider: "Example Cloud", plan: "EC 14", ram: 14, eurPerMonth: 9.25 },
+      fourGbProvidersEightGb: { ...CHEAPER_VPS_IN_GERMANY.fourGbProvidersEightGb, plan: "VPS-20", ram: 10, eurPerMonth: 8.99 },
+    };
+    const paragraph = mostRamForTheMoneyParagraph(readAgain);
+    for (const figure of ["is Example Cloud's EC 14: 14 GB of RAM for €9.25 a month", "Contabo's Cloud VPS 40 has 8 GB for €5.75.", "OVHcloud's VPS-10 has 4 GB for €4.99 and its VPS-20 has 10 GB for €8.99."]) {
+      assert.ok(paragraph.includes(figure), `${figure}: ${paragraph}`);
+    }
+  });
+
+  it("is printed by the guide's builder from the providers' constant, not typed into it", () => {
+    const source = readFileSync(path.join(REPO, "src", "serve.ts"), "utf-8");
+    const start = source.indexOf("function buildHetznerPricing2026Page(");
+    assert.ok(start > 0, "buildHetznerPricing2026Page is no longer in src/serve.ts");
+    const next = source.indexOf("\nfunction ", start + 1);
+    const body = source.slice(start, next > 0 ? next : undefined);
+    assert.ok(body.includes("mostRamForTheMoneyParagraph()"), "the guide does not take the paragraph from the providers' constant");
+    assert.ok(!body.includes("the most memory under"), "the guide types the paragraph instead of printing it from the providers' constant");
   });
 });
 

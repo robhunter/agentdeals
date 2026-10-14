@@ -63,7 +63,7 @@ import { MISTRAL_PRICES_PATH, MISTRAL_PRICES_SLUG, readMistralPrices, type Mistr
 import { archiveCaptureDate, archivedAddress, type ColumnTable } from "./guide-data.js";
 import { MODEL_BELIEFS_CLOSING, MODEL_BELIEFS_HEADING, MODEL_BELIEFS_PATH, MODEL_BELIEFS_RERUN_SENTENCE, MODEL_BELIEFS_SLUG, MODEL_BELIEFS_TITLE, MOSTLY_OLD_ANSWERS, QUOTED_MODEL_BELIEFS_CLASS, answersFor, answersPerFact, answersPerModel, changedLabel, factsByOldAnswers, findingOf, introOf, metaDescriptionOf, methodOf, modelsByOldAnswers, modelsMostlyOld, numberWord, oldAnswersFrom, readModelBeliefs, testedOnOf, type ModelBeliefs } from "./model-beliefs.js";
 import { changesToStartupProgrammes } from "./startup-programme-changes.js";
-import { HETZNER_APRIL_CHANGES, HETZNER_AVAILABILITY_READ, HETZNER_AX102_GERMANY, HETZNER_AX42_GERMANY, HETZNER_CLOUD_PLANS, HETZNER_PRICES_READ, HETZNER_PRICE_SOURCE, HETZNER_PROMO_CODE_PAGE, HETZNER_COST_OPTIMIZED_PAGE, HETZNER_PRICE_ADJUSTMENT_PAGE, HETZNER_SETUP_FEE_STATEMENTS, HETZNER_SINGAPORE_EXAMPLE, HETZNER_APRIL_DOLLAR_EXAMPLE, cheaperUnorderablePlanWithMoreServer, cheapestListedHetznerPlan, cheapestOrderableEuPlanForEachMemorySizeSentence, cheapestOrderableHetznerPlan, cheaperVpsInGermanyParagraph, costOptimizedLineNobodyCanOrder, hetznerEntryPriceClause, unorderableHetznerPlans, unpayableLowestPricesSentence } from "./hetzner-pricing.js";
+import { HETZNER_APRIL_CHANGES, HETZNER_AVAILABILITY_READ, HETZNER_AX102_GERMANY, HETZNER_AX42_GERMANY, HETZNER_CLOUD_PLANS, HETZNER_PRICES_READ, HETZNER_PRICE_SOURCE, HETZNER_PROMO_CODE_PAGE, HETZNER_COST_OPTIMIZED_PAGE, HETZNER_PRICE_ADJUSTMENT_PAGE, HETZNER_SETUP_FEE_STATEMENTS, HETZNER_SINGAPORE_EXAMPLE, HETZNER_APRIL_DOLLAR_EXAMPLE, cheaperUnorderablePlanWithMoreServer, cheapestListedHetznerPlan, cheapestOrderableEuPlanForEachMemorySizeSentence, cheapestOrderableHetznerPlan, cheaperVpsInGermanyParagraph, mostRamForTheMoneyParagraph, costOptimizedLineNobodyCanOrder, hetznerEntryPriceClause, unorderableHetznerPlans, unpayableLowestPricesSentence } from "./hetzner-pricing.js";
 import { HUNDRED_GB_SCENARIO, HUNDRED_TB_SCENARIO, ONE_TO_ONE_SCENARIO, STORAGE_RATES_READ, STORAGE_SCALE_WORKLOADS, TEN_TO_ONE_SCENARIO, cheapestProviderAt, costAfterMonthlyEgressGrantFor, costliestProviderAt, egressAllowanceSentence, egressBillAfterMonthlyGrantFor, egressBillOnceOverAllowance, egressRatioWhereCostsMatch, fixedMonthlyGrantsSentence, monthlyEgressGrantGb, monthlyEgressGrantSentence, monthlyStorageCost, providersWithScalingEgressAllowance, rateCardFor, scaleCostFor } from "./storage-cost-model.js";
 import { changeTimelineDate, supersededLineups, supersessionNote } from "./change-lineup.js";
 import { CORRECTION_TO_OUR_OWN_RECORD, isACorrectionToOurOwnRecord, isNoLongerInForce, printsBeforeAndAfter, eventResolutionFields, recordsStillInForce, recordsWeStandBehind, INCLUDE_RETRACTED_REJECTED } from "./change-resolution.js";
@@ -19187,6 +19187,7 @@ function buildHetznerPricing2026Page(): string {
   const moreServerForLess = cheaperUnorderablePlanWithMoreServer();
   const cheapestForEachMemorySize = cheapestOrderableEuPlanForEachMemorySizeSentence();
   const cheaperVpsInGermany = cheaperVpsInGermanyParagraph();
+  const mostRamForTheMoney = mostRamForTheMoneyParagraph();
   const eur = (n: number) => `€${n.toFixed(2)}`;
   const usd = (n: number) => `$${n.toFixed(2)}`;
 
@@ -19447,6 +19448,7 @@ ${globalNavCss()}
       </tbody>
     </table>
   </div>
+  <p class="section-intro"><strong>Most RAM for the money:</strong> ${escHtmlServer(mostRamForTheMoney)}</p>
   <div class="context-box">
     <strong>Bottom line:</strong> On entry price, Hetzner is no longer the cheap option. ${escHtmlServer(cheapestOrderable.sku)} at ${eur(cheapestOrderable.eur)} is above DigitalOcean's $4 Basic Droplet and Vultr's and Linode's $5 tiers, and the plans that used to sit below them cannot be ordered. Hetzner's case now rests on what you get per euro further up the range — ${escHtmlServer(dedicatedExample.sku)} buys ${dedicatedExample.vcpu} dedicated vCPUs and ${dedicatedExample.ram} GB for ${eur(dedicatedExample.eur)}. Of the VMs here, only Oracle Cloud's Always Free tier is open to every new account at no cost. Vultr gives a free 1 vCPU, 512 MB instance to accepted applicants in Miami, Seattle and Frankfurt. Railway and Render have free plans for apps, not VMs.
     <p style="margin-top:.75rem">For a full comparison of ${altOffers.length} free-tier hosting alternatives, see <a href="/hetzner-alternatives">Hetzner Alternatives</a>.</p>

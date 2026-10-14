@@ -161,12 +161,15 @@ export function cheapestOrderableEuPlanForEachMemorySizeSentence(plans: readonly
   return `Hetzner's cheapest orderable EU plan for each memory size: ${sizes.join("; ")}.`;
 }
 
-export interface VpsOrderableInGermany {
+export interface VpsPlanWeChecked {
   provider: string;
   plan: string;
-  spec: string;
   ram: number;
   eurPerMonth: number;
+}
+
+export interface VpsOrderableInGermany extends VpsPlanWeChecked {
+  spec: string;
 }
 
 export interface CheaperVpsInGermany {
@@ -174,6 +177,8 @@ export interface CheaperVpsInGermany {
   providersChecked: readonly string[];
   eightGb: VpsOrderableInGermany & { eurPerMonthOnA24MonthTerm: number };
   fourGb: VpsOrderableInGermany;
+  mostRamUnderTenEuros: VpsPlanWeChecked;
+  fourGbProvidersEightGb: VpsPlanWeChecked;
 }
 
 export const CHEAPER_VPS_IN_GERMANY: CheaperVpsInGermany = {
@@ -181,6 +186,8 @@ export const CHEAPER_VPS_IN_GERMANY: CheaperVpsInGermany = {
   providersChecked: ["Contabo", "Hostinger", "IONOS", "netcup", "OVHcloud"],
   eightGb: { provider: "Contabo", plan: "Cloud VPS 4", spec: "4 vCPU, 8 GB RAM, 100 GB SSD", ram: 8, eurPerMonth: 5.5, eurPerMonthOnA24MonthTerm: 4.4 },
   fourGb: { provider: "OVHcloud", plan: "VPS-1", spec: "2 vCores, 4 GB RAM, 40 GB NVMe", ram: 4, eurPerMonth: 4.49 },
+  mostRamUnderTenEuros: { provider: "Contabo", plan: "Cloud VPS 6", ram: 12, eurPerMonth: 7.5 },
+  fourGbProvidersEightGb: { provider: "OVHcloud", plan: "VPS-2", ram: 8, eurPerMonth: 8.49 },
 };
 
 const euros = (amount: number): string => `€${amount.toFixed(2)}`;
@@ -217,6 +224,16 @@ export function cheaperVpsInGermanyParagraph(
     cheaperFourGbVpsSentence(cheaper.fourGb, undercutAtFourGb),
     "Both prices are before VAT and include one IPv4 address, and Contabo's European Union region is its data centres in Germany.",
     `We checked ${namesInAList(cheaper.providersChecked)} on their own price pages on ${cheaper.readOn}.`,
+  ].join(" ");
+}
+
+export function mostRamForTheMoneyParagraph(cheaper: CheaperVpsInGermany = CHEAPER_VPS_IN_GERMANY): string {
+  const { mostRamUnderTenEuros: most, eightGb, fourGb, fourGbProvidersEightGb } = cheaper;
+  return [
+    `of the paid plans we checked, the most memory under €10 a month is ${most.provider}'s ${most.plan}: ${most.ram} GB of RAM for ${euros(most.eurPerMonth)} a month, with no setup fee on a one-month term.`,
+    `${eightGb.provider}'s ${eightGb.plan} has ${eightGb.ram} GB for ${euros(eightGb.eurPerMonth)}.`,
+    `${fourGb.provider}'s ${fourGb.plan} has ${fourGb.ram} GB for ${euros(fourGb.eurPerMonth)} and its ${fourGbProvidersEightGb.plan} has ${fourGbProvidersEightGb.ram} GB for ${euros(fourGbProvidersEightGb.eurPerMonth)}.`,
+    "Prices exclude VAT.",
   ].join(" ");
 }
 
