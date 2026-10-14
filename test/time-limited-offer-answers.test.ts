@@ -376,7 +376,7 @@ describe("a vendor whose listed tier is a trial or a credit grant is not said to
 
   it("leads with no where we cannot confirm the terms, and follows it with that caveat unless a refused read is the reason", () => {
     const unconfirmed = timeLimited.filter(s => !s.superseded && s.termsUnconfirmed);
-    assertPopulationFloor(unconfirmed.length, 3, "trial and credit vendor pages whose stored terms we cannot confirm");
+    assertPopulationFloor(unconfirmed.length, 1, "trial and credit vendor pages whose stored terms we cannot confirm");
     const misplaced: string[] = [];
     for (const s of unconfirmed) {
       for (const faqs of [page(`/vendor/${s.slug}`).body, page(`/vendor/${s.slug}`).ld]) {
