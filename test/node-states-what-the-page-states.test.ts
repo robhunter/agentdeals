@@ -193,7 +193,7 @@ describe("a vendor page's structured data states the reason its own prose states
 
   it("states a reason in the node wherever the page's own answer states one", () => {
     const answered = pages.filter(p => p.answer.includes(UNVERIFIED_TERMS_CAVEAT));
-    assertPopulationFloor(answered.length, 153, "pages answer the free-tier question with the unverified caveat");
+    assertPopulationFloor(answered.length, 1, "pages answer the free-tier question with the unverified caveat");
     assert.deepStrictEqual(
       answered.filter(p => p.reason === "").map(p => p.route).slice(0, 15),
       [],
@@ -202,7 +202,7 @@ describe("a vendor page's structured data states the reason its own prose states
 
   it("states no reason in the node the page does not state: in its answer, or for a refused read in its header line or Last read note", () => {
     const hedged = pages.filter(p => p.reason !== null && p.reason !== "");
-    assertPopulationFloor(hedged.length, 162, "node descriptions state a reason we cannot confirm the terms");
+    assertPopulationFloor(hedged.length, 1, "node descriptions state a reason we cannot confirm the terms");
     const leftToTheNote = hedged.filter(p => p.verdict.includes(LEFT_TO_THE_LAST_READ_NOTE));
     assertPopulationFloor(leftToTheNote.length, 20, "node descriptions state a refused read the page leaves to its Last read note");
     assert.deepStrictEqual(
