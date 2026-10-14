@@ -158,7 +158,66 @@ export function cheapestOrderableEuPlanForEachMemorySize(plans: readonly Hetzner
 export function cheapestOrderableEuPlanForEachMemorySizeSentence(plans: readonly HetznerPlan[] = HETZNER_CLOUD_PLANS): string {
   const sizes = cheapestOrderableEuPlanForEachMemorySize(plans).map(p => `${p.ram} GB, ${p.sku} at €${p.eur.toFixed(2)} ($${p.usd.toFixed(2)})`);
   if (sizes.length === 0) return "";
-  return `Cheapest orderable EU plan for each memory size: ${sizes.join("; ")}.`;
+  return `Hetzner's cheapest orderable EU plan for each memory size: ${sizes.join("; ")}.`;
+}
+
+export interface VpsOrderableInGermany {
+  provider: string;
+  plan: string;
+  spec: string;
+  ram: number;
+  eurPerMonth: number;
+}
+
+export interface CheaperVpsInGermany {
+  readOn: string;
+  providersChecked: readonly string[];
+  eightGb: VpsOrderableInGermany & { eurPerMonthOnA24MonthTerm: number };
+  fourGb: VpsOrderableInGermany;
+}
+
+export const CHEAPER_VPS_IN_GERMANY: CheaperVpsInGermany = {
+  readOn: "2026-10-14",
+  providersChecked: ["Contabo", "Hostinger", "IONOS", "netcup", "OVHcloud"],
+  eightGb: { provider: "Contabo", plan: "Cloud VPS 4", spec: "4 vCPU, 8 GB RAM, 100 GB SSD", ram: 8, eurPerMonth: 5.5, eurPerMonthOnA24MonthTerm: 4.4 },
+  fourGb: { provider: "OVHcloud", plan: "VPS-1", spec: "2 vCores, 4 GB RAM, 40 GB NVMe", ram: 4, eurPerMonth: 4.49 },
+};
+
+const euros = (amount: number): string => `€${amount.toFixed(2)}`;
+
+function namesInAList(names: readonly string[]): string {
+  return names.length <= 2 ? names.join(" and ") : `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}`;
+}
+
+export function hetznerPlanTheOtherProviderUndercuts(
+  other: VpsOrderableInGermany,
+  plans: readonly HetznerPlan[] = HETZNER_CLOUD_PLANS,
+): HetznerPlan | null {
+  const hetzner = cheapestOrderableEuPlanForEachMemorySize(plans).find(p => p.ram === other.ram);
+  return hetzner !== undefined && hetzner.eur > other.eurPerMonth ? hetzner : null;
+}
+
+function cheaperEightGbVpsSentence(other: CheaperVpsInGermany["eightGb"], hetzner: HetznerPlan): string {
+  return `The cheapest paid VPS with ${other.ram} GB of RAM you can order in Germany today, of the providers we checked, is not at Hetzner: ${other.provider}'s ${other.plan} (${other.spec}) is ${euros(other.eurPerMonth)} a month with no setup fee and a one-month minimum term, or ${euros(other.eurPerMonthOnA24MonthTerm)} a month on a 24-month term, against ${euros(hetzner.eur)} for Hetzner's ${hetzner.sku}.`;
+}
+
+function cheaperFourGbVpsSentence(other: VpsOrderableInGermany, hetzner: HetznerPlan): string {
+  return `The cheapest paid VPS with ${other.ram} GB of RAM you can order in Germany today, of the providers we checked, is ${other.provider}'s ${other.plan} (${other.spec}) at ${euros(other.eurPerMonth)} a month with no commitment or setup fee, against ${euros(hetzner.eur)} for Hetzner's ${hetzner.sku}.`;
+}
+
+export function cheaperVpsInGermanyParagraph(
+  plans: readonly HetznerPlan[] = HETZNER_CLOUD_PLANS,
+  cheaper: CheaperVpsInGermany = CHEAPER_VPS_IN_GERMANY,
+): string {
+  const undercutAtEightGb = hetznerPlanTheOtherProviderUndercuts(cheaper.eightGb, plans);
+  const undercutAtFourGb = hetznerPlanTheOtherProviderUndercuts(cheaper.fourGb, plans);
+  if (undercutAtEightGb === null || undercutAtFourGb === null) return "";
+  return [
+    cheaperEightGbVpsSentence(cheaper.eightGb, undercutAtEightGb),
+    cheaperFourGbVpsSentence(cheaper.fourGb, undercutAtFourGb),
+    "Both prices are before VAT and include one IPv4 address, and Contabo's European Union region is its data centres in Germany.",
+    `We checked ${namesInAList(cheaper.providersChecked)} on their own price pages on ${cheaper.readOn}.`,
+  ].join(" ");
 }
 
 export function hetznerEntryPriceClause(): string {

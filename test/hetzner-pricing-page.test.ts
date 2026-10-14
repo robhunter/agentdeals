@@ -18,7 +18,9 @@ import {
   HETZNER_SINGAPORE_EXAMPLE,
   HETZNER_STORAGE_BOX_PRICES,
   HETZNER_VOLUME_PRICES,
+  CHEAPER_VPS_IN_GERMANY,
   cheaperUnorderablePlanWithMoreServer,
+  cheaperVpsInGermanyParagraph,
   cheapestOrderableEuPlanForEachMemorySize,
   cheapestOrderableEuPlanForEachMemorySizeSentence,
   cheapestOrderableHetznerPlan,
@@ -302,7 +304,7 @@ describe("the cheapest orderable EU plan for each memory size", () => {
   it("prints each size with that plan's euro and dollar prices, and nothing when no EU plan can be ordered", () => {
     assert.equal(
       cheapestOrderableEuPlanForEachMemorySizeSentence([sized("CPX8", 8, 7, 8.25), sized("CPX2", 2, 3.5, 4.1)]),
-      "Cheapest orderable EU plan for each memory size: 2 GB, CPX2 at €3.50 ($4.10); 8 GB, CPX8 at €7.00 ($8.25).",
+      "Hetzner's cheapest orderable EU plan for each memory size: 2 GB, CPX2 at €3.50 ($4.10); 8 GB, CPX8 at €7.00 ($8.25).",
     );
     assert.equal(cheapestOrderableEuPlanForEachMemorySizeSentence([sized("CX2", 2, 3, 3.5, false), sized("CPX2", 2, 3, 3.5, true, "US")]), "");
   });
@@ -464,10 +466,11 @@ describe("the pricing page prices what Hetzner sells today", () => {
       ...volumeExamples(),
       ...STORAGE_BOX_EUROS_AS_WRITTEN,
       withoutIpv4(cheapestOf(COST_OPTIMIZED_LINE).eur),
+      ...[CHEAPER_VPS_IN_GERMANY.eightGb.eurPerMonth, CHEAPER_VPS_IN_GERMANY.eightGb.eurPerMonthOnA24MonthTerm, CHEAPER_VPS_IN_GERMANY.fourGb.eurPerMonth].map(price => `€${price.toFixed(2)}`),
     ]);
     const quoted = new Set(eurosIn(visible(withoutItemsOrRowsHeadedByAnotherVendor(body))));
     const strays = [...quoted].filter(price => !allowed.has(price));
-    assert.deepEqual(strays, [], `prices with no plan, April row, dedicated-server figure, add-on, Object Storage, Volume or Storage Box price, or the cheapest Cost-Optimized plan's price less IPv4, behind them: ${strays.join(", ")}`);
+    assert.deepEqual(strays, [], `prices with no plan, April row, dedicated-server figure, add-on, Object Storage, Volume or Storage Box price, the cheapest Cost-Optimized plan's price less IPv4, or the price of a cheaper VPS in Germany behind them: ${strays.join(", ")}`);
   });
 
   it("quotes no dollar price that is not in the plan table, the April example, the Object Storage prices or the Volume price", async () => {
@@ -771,7 +774,7 @@ describe("the cheapest orderable EU plan for each memory size on /hetzner-pricin
 
   it("gives every size the memory and the euro and dollar prices of the table row for the plan it names, an orderable EU plan", async () => {
     const { body } = await get("/hetzner-pricing-2026");
-    const line = sectionOneParagraphs(body).find(paragraph => paragraph.startsWith("Cheapest orderable EU plan for each memory size: ")) ?? "";
+    const line = sectionOneParagraphs(body).find(paragraph => paragraph.startsWith("Hetzner's cheapest orderable EU plan for each memory size: ")) ?? "";
     const entries = [...line.matchAll(/(\d+) GB, (\w+) at €(\d+\.\d{2}) \(\$(\d+\.\d{2})\)/g)];
     assert.ok(entries.length > 0, line);
     for (const [entry, ram, sku, eur, usd] of entries) {
@@ -792,16 +795,88 @@ describe("the cheapest orderable EU plan for each memory size on /hetzner-pricin
   });
 });
 
+const CHEAPER_VPS_IN_GERMANY_AS_WRITTEN = "The cheapest paid VPS with 8 GB of RAM you can order in Germany today, of the providers we checked, is not at Hetzner: Contabo's Cloud VPS 4 (4 vCPU, 8 GB RAM, 100 GB SSD) is €5.50 a month with no setup fee and a one-month minimum term, or €4.40 a month on a 24-month term, against €35.99 for Hetzner's CPX32. The cheapest paid VPS with 4 GB of RAM you can order in Germany today, of the providers we checked, is OVHcloud's VPS-1 (2 vCores, 4 GB RAM, 40 GB NVMe) at €4.49 a month with no commitment or setup fee, against €19.99 for Hetzner's CPX22. Both prices are before VAT and include one IPv4 address, and Contabo's European Union region is its data centres in Germany. We checked Contabo, Hostinger, IONOS, netcup and OVHcloud on their own price pages on 2026-10-14.";
+
+const sentenceForSize = (ram: number) => `The cheapest paid VPS with ${ram} GB of RAM you can order in Germany today`;
+
+const withEuroPrice = (sku: string, eur: number) => HETZNER_CLOUD_PLANS.map(p => (p.sku === sku ? { ...p, eur } : p));
+
+const hetznerPlanAtSize = (ram: number) => {
+  const plan = cheapestOrderableEuPlanForEachMemorySize().find(p => p.ram === ram);
+  assert.ok(plan, `the plan table holds no orderable EU plan with ${ram} GB`);
+  return plan;
+};
+
+describe("the cheaper VPS in Germany than Hetzner's plan of the same memory size", () => {
+  const sizes = [CHEAPER_VPS_IN_GERMANY.eightGb, CHEAPER_VPS_IN_GERMANY.fourGb];
+
+  it("is the paragraph right after Hetzner's cheapest plan for each memory size on /hetzner-pricing-2026, word for word", async () => {
+    const { body } = await get("/hetzner-pricing-2026");
+    const paragraphs = sectionOneParagraphs(body);
+    const memorySizeLine = paragraphs.indexOf(cheapestOrderableEuPlanForEachMemorySizeSentence());
+    assert.ok(memorySizeLine > -1, paragraphs.join(" | "));
+    assert.strictEqual(paragraphs[memorySizeLine + 1], CHEAPER_VPS_IN_GERMANY_AS_WRITTEN);
+  });
+
+  it("names the plan and price the memory-size line gives Hetzner at each size", () => {
+    const plans = [sized("CCX8", 8, 31, 36.5), sized("CPX8", 8, 30, 35.4), sized("CPX4", 4, 12, 14.2)];
+    const line = cheapestOrderableEuPlanForEachMemorySizeSentence(plans);
+    const paragraph = cheaperVpsInGermanyParagraph(plans);
+    for (const [ram, sku, eur] of [[8, "CPX8", "€30.00"], [4, "CPX4", "€12.00"]] as const) {
+      assert.ok(line.includes(`${ram} GB, ${sku} at ${eur} `), line);
+      assert.ok(paragraph.includes(`against ${eur} for Hetzner's ${sku}.`), paragraph);
+    }
+  });
+
+  it("drops a size's sentence once Hetzner's plan of that size costs no more than the other provider's, and keeps it while Hetzner's costs more", () => {
+    for (const other of sizes) {
+      const hetzner = hetznerPlanAtSize(other.ram);
+      for (const eur of [other.eurPerMonth, other.eurPerMonth - 1]) {
+        const paragraph = cheaperVpsInGermanyParagraph(withEuroPrice(hetzner.sku, eur));
+        assert.ok(!paragraph.includes(sentenceForSize(other.ram)), `${hetzner.sku} at €${eur.toFixed(2)}: ${paragraph}`);
+        assert.ok(!paragraph.includes("Both prices"), `${hetzner.sku} at €${eur.toFixed(2)}: ${paragraph}`);
+      }
+      const aCentMore = cheaperVpsInGermanyParagraph(withEuroPrice(hetzner.sku, other.eurPerMonth + 0.01));
+      assert.ok(aCentMore.includes(sentenceForSize(other.ram)), aCentMore);
+    }
+  });
+
+  it("drops a size's sentence when Hetzner has no orderable EU plan of that size", () => {
+    for (const other of sizes) {
+      const plans = HETZNER_CLOUD_PLANS.map(p => (p.ram === other.ram && p.region === "EU" ? { ...p, available: false } : p));
+      const paragraph = cheaperVpsInGermanyParagraph(plans);
+      assert.ok(!paragraph.includes(sentenceForSize(other.ram)), paragraph);
+    }
+  });
+
+  it("prints nothing while either size's sentence is dropped", () => {
+    for (const other of sizes) {
+      assert.strictEqual(cheaperVpsInGermanyParagraph(withEuroPrice(hetznerPlanAtSize(other.ram).sku, other.eurPerMonth)), "");
+    }
+  });
+
+  it("is printed by the guide's builder from the plan table and the providers' figures, not typed into it", () => {
+    const source = readFileSync(path.join(REPO, "src", "serve.ts"), "utf-8");
+    const start = source.indexOf("function buildHetznerPricing2026Page(");
+    assert.ok(start > 0, "buildHetznerPricing2026Page is no longer in src/serve.ts");
+    const next = source.indexOf("\nfunction ", start + 1);
+    const body = source.slice(start, next > 0 ? next : undefined);
+    assert.ok(body.includes("cheaperVpsInGermanyParagraph()"), "the guide does not take the paragraph from the plan table");
+    assert.ok(!body.includes("of the providers we checked"), "the guide types the paragraph instead of printing it from the plan table");
+  });
+});
+
 describe("what a Hetzner cloud price on /hetzner-pricing-2026 includes", () => {
   const INCLUDED_IN_THE_PRICE = "Every cloud price in this table includes the primary IPv4 address. Cloud servers include at least 20 TB of outgoing traffic a month in the EU, 1 TB in the US and 0.5 TB in Singapore; incoming traffic is free.";
 
-  it("is the paragraph after the table's availability note and the cheapest plan for each memory size, ahead of the dedicated-server prices that exclude IPv4", async () => {
+  it("is the paragraph after the table's availability note, the cheapest plan for each memory size and the cheaper VPS in Germany, ahead of the dedicated-server prices that exclude IPv4", async () => {
     const { body } = await get("/hetzner-pricing-2026");
     const paragraphs = sectionOneParagraphs(body);
     const availabilityNote = paragraphs.findIndex(isTheAvailabilityNote);
     assert.ok(availabilityNote > -1, paragraphs.join(" | "));
-    assert.strictEqual(paragraphs[availabilityNote + 2], INCLUDED_IN_THE_PRICE);
-    assert.match(paragraphs[availabilityNote + 3] ?? "", /^A new AX42 dedicated server in Germany costs .*, excluding IPv4\./);
+    const included = availabilityNote + (cheaperVpsInGermanyParagraph() === "" ? 2 : 3);
+    assert.strictEqual(paragraphs[included], INCLUDED_IN_THE_PRICE);
+    assert.match(paragraphs[included + 1] ?? "", /^A new AX42 dedicated server in Germany costs .*, excluding IPv4\./);
   });
 });
 
