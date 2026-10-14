@@ -1792,6 +1792,7 @@
         "basecamp",
         "bonsai-io",
         "brave-search-api",
+        "browser-use",
         "burnermail",
         "cerebras",
         "certkit",
@@ -1800,6 +1801,7 @@
         "cloudflare-workers-ai",
         "cockroachdb",
         "codehooks-io",
+        "codesandbox-io",
         "compare-json",
         "conversion-tools",
         "digitalocean",
@@ -1846,13 +1848,13 @@
       "partial_recheck": null,
       "reads_index": false,
       "tables_read_index": false,
-      "table_figures": 39,
-      "table_figures_from_records": 38,
+      "table_figures": 41,
+      "table_figures_from_records": 40,
       "tables": [
         {
           "label": "Q4 2026",
-          "figures": 0,
-          "from_records": 0
+          "figures": 2,
+          "from_records": 2
         },
         {
           "label": "Q3 2026",
