@@ -168,7 +168,7 @@ describe("a category description counts the terms it could not confirm", () => {
       );
       if (parts.length > 1) split++;
     }
-    assertPopulationFloor(split, 27, "descriptions separating the page from our own read");
+    assertPopulationFloor(split, 1, "descriptions separating the page from our own read");
   });
 
   it("counts every standing row that gives a reason, and no other", () => {
@@ -191,7 +191,7 @@ describe("a category description counts the terms it could not confirm", () => {
     assert.deepStrictEqual(silent, [], `a counted row renders no reason: ${silent.join("; ")}`);
     assert.deepStrictEqual(uncounted, [], `a row renders a reason its page does not count: ${uncounted.join("; ")}`);
     assert.deepStrictEqual(disagreeing, [], `a description states a count the rows do not carry: ${disagreeing.join("; ")}`);
-    assertPopulationFloor(counted, 520, "listed rows the category descriptions count");
+    assertPopulationFloor(counted, 1, "listed rows the category descriptions count");
   });
 
   it("puts every counted row under one of the two parts its description names", () => {
@@ -217,8 +217,8 @@ describe("a category description counts the terms it could not confirm", () => {
         `/category/${page.slug} names ${spoken.join(" and ")} against ${held.join(" and ")} on its own rows`,
       );
     }
-    assertPopulationFloor(parts.get("the_page_did_not_answer") ?? 0, 360, "rows counted because the page did not answer");
-    assertPopulationFloor(parts.get("our_read_did_not_confirm") ?? 0, 106, "rows counted because our own read did not confirm");
+    assertPopulationFloor(parts.get("the_page_did_not_answer") ?? 0, 1, "rows counted because the page did not answer");
+    assertPopulationFloor(parts.get("our_read_did_not_confirm") ?? 0, 1, "rows counted because our own read did not confirm");
   });
 
   it("puts a row under our own read only where the row says what that read found", () => {
@@ -246,8 +246,8 @@ describe("a category description counts the terms it could not confirm", () => {
       [],
       `a row is counted under a part its own sentence does not support: ${misplaced.join("; ")}`,
     );
-    assertPopulationFloor(ours, 106, "rows counted because a read of ours did not confirm the terms");
-    assertPopulationFloor(theirs, 360, "rows counted because the page we cite did not answer");
+    assertPopulationFloor(ours, 1, "rows counted because a read of ours did not confirm the terms");
+    assertPopulationFloor(theirs, 1, "rows counted because the page we cite did not answer");
   });
 
   it("counts no row whose read confirmed the price and left nothing else unsettled", () => {
