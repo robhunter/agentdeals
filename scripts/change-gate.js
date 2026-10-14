@@ -244,6 +244,7 @@ const MAGNITUDE_AFTER_NUMBER = /^(?:(bn|k|m|b)|\s(thousand|million|billion|trill
 
 const DURATION_AFTER_NUMBER =
   /^[\s-]?(seconds?|secs?|minutes?|mins?|hours?|hrs?|h|days?|weeks?|wks?|months?|years?|yrs?)\b/i;
+const HOUR = "hour";
 
 const PERIOD_SECONDS = new Map([
   ["sec", 1],
@@ -395,10 +396,12 @@ export function readQuantities(text) {
     const magnitudeMatch = unit === null ? trailing.match(MAGNITUDE_AFTER_NUMBER) : null;
     const magnitude = magnitudeMatch ? (magnitudeMatch[1] ?? magnitudeMatch[2]).toLowerCase() : "";
     const durationMatch = unit === null && magnitude === "" ? trailing.match(DURATION_AFTER_NUMBER) : null;
+    const span = spanOf(durationMatch ? durationMatch[1] : null);
+    if (span === PERIOD_SECONDS.get(HOUR) && !words.includes(HOUR)) words.push(HOUR);
     const scale =
       BYTE_UNITS.get(unit ?? "") ??
       MAGNITUDE_UNITS.get(magnitude) ??
-      spanOf(durationMatch ? durationMatch[1] : null) ??
+      span ??
       1;
     const period = rate?.period ?? null;
     const scope = scopeOf(beside, rate);

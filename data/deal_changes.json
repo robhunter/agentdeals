@@ -16674,6 +16674,48 @@
       "recorded_date": "2026-10-14",
       "date_source": "vendor_page",
       "listing_effect": "none"
+    },
+    {
+      "vendor": "Browser Use",
+      "change_type": "limits_reduced",
+      "date": "2026-10-04",
+      "date_source": "hand_written",
+      "summary": "By October 4, 2026, Browser Use cut its one-time sign-up credit from $15 to $1. Its pricing page read \"$15 once per person\" on September 21 and \"$1 once per person\" on October 4; its homepage still said \"$15 free credits\" on September 29.",
+      "tier": "Free Credits",
+      "previous_state": "A one-time $15 credit for eligible Google, GitHub or Microsoft sign-ups: \"$ 15 once per person. Eligible Google, GitHub or Microsoft signups.\" (browser-use.com/pricing, Internet Archive 2026-09-21)",
+      "current_state": "\"Free is a one-time $1 credit granted to eligible Google, GitHub, or Microsoft signups; it does not renew, and free accounts are limited to cost-efficient models.\" (browser-use.com/pricing.md, read 2026-10-14)",
+      "impact": "high",
+      "source_url": "https://browser-use.com/pricing",
+      "category": "Browser Automation",
+      "alternatives": [],
+      "recorded_date": "2026-10-14",
+      "archive_check": {
+        "checked": "2026-10-14",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-09-21",
+            "first_new": "2026-10-04",
+            "last_old_capture": "https://web.archive.org/web/20260921021809/https://browser-use.com/pricing",
+            "first_new_capture": "https://web.archive.org/web/20261004210720/https://browser-use.com/pricing"
+          }
+        ]
+      }
+    },
+    {
+      "vendor": "codesandbox.io",
+      "change_type": "limits_reduced",
+      "date": "2026-09-07",
+      "date_source": "vendor_page",
+      "summary": "On September 7, 2026, CodeSandbox stopped including VM credits in its Free plan: new accounts get no free credits, so VM Sandboxes need a paid plan. Free balances from before were not cleared at once, and paid plans kept their credits.",
+      "tier": "Free",
+      "previous_state": "The Free plan included 400 VM credits a month (up to 40 hours of VM Sandboxes), refreshed each billing cycle.",
+      "current_state": "\"Free workspaces no longer include monthly credits\"; new accounts get no free credits, and existing free balances are not cleared at once. Pro keeps 1,000 credits (100 hours) a month. (codesandbox/codesandbox-client pull request 8907, merged 2026-09-07)",
+      "impact": "high",
+      "source_url": "https://github.com/codesandbox/codesandbox-client/pull/8907",
+      "category": "IDE & Code Editors",
+      "alternatives": [],
+      "recorded_date": "2026-10-14"
     }
   ]
 }
