@@ -855,6 +855,19 @@ describe("the cheaper VPS in Germany than Hetzner's plan of the same memory size
     }
   });
 
+  it("takes the other providers' figures and the day they were read from the providers' constant", () => {
+    const readAgain = {
+      ...CHEAPER_VPS_IN_GERMANY,
+      readOn: "2026-11-02",
+      eightGb: { ...CHEAPER_VPS_IN_GERMANY.eightGb, eurPerMonth: 6.25, eurPerMonthOnA24MonthTerm: 5.1 },
+      fourGb: { ...CHEAPER_VPS_IN_GERMANY.fourGb, eurPerMonth: 4.99 },
+    };
+    const paragraph = cheaperVpsInGermanyParagraph(HETZNER_CLOUD_PLANS, readAgain);
+    for (const figure of ["is €6.25 a month", "or €5.10 a month on a 24-month term", "at €4.99 a month", "on their own price pages on 2026-11-02."]) {
+      assert.ok(paragraph.includes(figure), `${figure}: ${paragraph}`);
+    }
+  });
+
   it("is printed by the guide's builder from the plan table and the providers' figures, not typed into it", () => {
     const source = readFileSync(path.join(REPO, "src", "serve.ts"), "utf-8");
     const start = source.indexOf("function buildHetznerPricing2026Page(");
