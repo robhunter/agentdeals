@@ -1846,8 +1846,8 @@
       "partial_recheck": null,
       "reads_index": false,
       "tables_read_index": false,
-      "table_figures": 40,
-      "table_figures_from_records": 39,
+      "table_figures": 39,
+      "table_figures_from_records": 38,
       "tables": [
         {
           "label": "Q4 2026",
@@ -1866,8 +1866,8 @@
         },
         {
           "label": "Q1 2026",
-          "figures": 2,
-          "from_records": 2
+          "figures": 1,
+          "from_records": 1
         },
         {
           "label": "All Q1 2026 Changes",

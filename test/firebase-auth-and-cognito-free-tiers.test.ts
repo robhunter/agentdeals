@@ -45,7 +45,13 @@ const BAAS_ROWS: [string, string][] = [
   ["AWS Cognito", "10,000"],
 ];
 
-const ESTIMATOR_ROUTES = ["/estimate", "/budget-builder"];
+type EstimatorVendor = { name: string; free: string; notes: string };
+
+const ESTIMATOR_VENDORS: Record<string, (html: string) => EstimatorVendor[]> = {
+  "/estimate": (html) => ((embeddedData(html, "EST_DATA") ?? []) as { vendors: EstimatorVendor[] }[]).flatMap(({ vendors }) => vendors),
+  "/budget-builder": (html) => Object.values((embeddedData(html, "CATEGORY_VENDORS") ?? {}) as Record<string, EstimatorVendor[]>).flat(),
+};
+const ESTIMATOR_ROUTES = Object.keys(ESTIMATOR_VENDORS);
 const FIREBASE_AUTH_ESTIMATE = {
   free: "No cost; SMS on Blaze only",
   notes: "SMS billed per message. Identity Platform: 50K MAU free, then $0.0025-$0.0055/MAU.",
@@ -93,8 +99,8 @@ function tableAfter(html: string, anchor: string): string {
   return section.slice(0, section.indexOf("</table>"));
 }
 
-function embeddedFirebaseAuth(html: string): { free: string; notes: string } | null {
-  const json = html.match(/\{[^{}]*"name":"Firebase Auth"[^{}]*\}/)?.[0];
+function embeddedData(html: string, variable: string): unknown {
+  const json = html.match(new RegExp(`var ${variable} = ([^\\n]+);\\n`))?.[1];
   return json ? JSON.parse(json) : null;
 }
 
@@ -177,11 +183,11 @@ describe("Firebase Auth and Amazon Cognito free tiers are stated as Google and A
 
   it("gives the cost estimators Firebase Auth's free terms and Identity Platform's prices", () => {
     const wrong = ESTIMATOR_ROUTES.flatMap((route) => {
-      const firebase = embeddedFirebaseAuth(served.get(route)!);
-      if (!firebase) return [`${route}: no Firebase Auth entry`];
-      return firebase.free === FIREBASE_AUTH_ESTIMATE.free && firebase.notes === FIREBASE_AUTH_ESTIMATE.notes
-        ? []
-        : [`${route}: ${firebase.free} | ${firebase.notes}`];
+      const entries = ESTIMATOR_VENDORS[route](served.get(route)!).filter(({ name }) => name === "Firebase Auth");
+      if (entries.length === 0) return [`${route}: no Firebase Auth entry`];
+      return entries
+        .filter(({ free, notes }) => free !== FIREBASE_AUTH_ESTIMATE.free || notes !== FIREBASE_AUTH_ESTIMATE.notes)
+        .map(({ free, notes }) => `${route}: ${free} | ${notes}`);
     });
     assert.deepStrictEqual(wrong, []);
   });
