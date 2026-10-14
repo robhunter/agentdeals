@@ -8439,9 +8439,9 @@
         "notes": "No individual referral program."
       },
       "source_check": {
-        "checked": "2026-10-06",
+        "checked": "2026-10-14",
         "outcome": "ok",
-        "detail": "the page names GitHub Codespaces as \"github codespaces\" and states amounts, none of which we matched to the terms we publish"
+        "detail": "the page names GitHub Codespaces as \"github codespaces\" and states \"60 hours a month\""
       },
       "free_plan_excerpt": {
         "text": "GitHub will provide users in the free plan 120 core hours or 60 hours of run time on a 2 core codespace, plus 15 GB of storage each month. See how it's balanced on the billing page .",
@@ -9365,9 +9365,9 @@
       ],
       "verifiedDate": "2026-09-26",
       "source_check": {
-        "checked": "2026-10-11",
+        "checked": "2026-10-14",
         "outcome": "ok",
-        "detail": "the page names Kaggle as \"kaggle\" and states amounts, none of which we matched to the terms we publish",
+        "detail": "the page names Kaggle as \"kaggle\" and states \"30 hours\"",
         "rendered": true
       },
       "product_subtypes": {
@@ -32653,9 +32653,9 @@
       ],
       "verifiedDate": "2026-08-19",
       "source_check": {
-        "checked": "2026-10-11",
+        "checked": "2026-10-14",
         "outcome": "ok",
-        "detail": "the page names Google Cloud Shell as \"shell\" and states amounts, none of which we matched to the terms we publish"
+        "detail": "the page names Google Cloud Shell as \"shell\" and states \"50 hours\""
       }
     },
     {
