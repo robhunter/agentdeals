@@ -1,60 +1,5 @@
 {
-  "proposals": [
-    {
-      "proposal_id": "2026-10-14/google-cloud-run/new_tier",
-      "proposed_on": "2026-10-14",
-      "vendor": "Google Cloud Run",
-      "change_type": "new_tier",
-      "date": "2026-10-14",
-      "date_source": "discovered",
-      "summary": "The free tier for request-based billing is 2 million requests/month. The page details different free tier limits for instance-based billing and Jobs. Specifically, instance-based billing offers 240,000 vCPU-seconds and 450,000 GiB-seconds. Jobs offers 240,000 vCPU-seconds and 450,000 GiB-seconds.",
-      "tier": "Instance-based billing and Jobs",
-      "tier_direction": "widened",
-      "previous_state": "Always Free: 2M requests/month, 360K GB-seconds memory, 180K vCPU-seconds compute, 1 GB North America egress. Fully managed serverless containers. If your service uses instance-based billing, its free tier is 240K vCPU-seconds and 450K GiB-seconds a month instead of 180K and 360K. Jobs get the same 240K and 450K",
-      "current_state": "Instance-based billing and Jobs have a free tier of 240,000 vCPU-seconds and 450,000 GiB-seconds per month.",
-      "impact": "medium",
-      "source_url": "https://cloud.google.com/run/pricing",
-      "category": "Cloud Hosting",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-10-14",
-      "restatement": [
-        {
-          "url": "https://cloud.google.com/run/pricing",
-          "refused": "reading_drops_a_figure_our_source_check_found",
-          "figures": [
-            "180,000 vCPU-seconds free per month",
-            "2 million requests free per month"
-          ]
-        }
-      ]
-    },
-    {
-      "proposal_id": "2026-10-14/lensdump-com/free_tier_removed",
-      "proposed_on": "2026-10-14",
-      "vendor": "lensdump.com",
-      "change_type": "free_tier_removed",
-      "date": "2026-10-14",
-      "date_source": "discovered",
-      "summary": "The free tier no longer exists. The page now offers paid plans starting at $4/month.",
-      "tier": "Spark",
-      "tier_direction": "narrowed",
-      "previous_state": "Free image hosting with no storage limits, 100 MB max file size, no compression",
-      "current_state": "Plans start at $4/month for 10,000 images and 10 MB files.",
-      "impact": "high",
-      "source_url": "https://lensdump.com/",
-      "category": "Design",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-10-14",
-      "restatement": [
-        {
-          "url": "https://lensdump.com/",
-          "refused": "reading_answers_for_something_else"
-        }
-      ]
-    }
-  ],
+  "proposals": [],
   "dropped": [
     {
       "proposal_id": "2026-10-12/taskade-com/new_tier",
@@ -82,6 +27,37 @@
       ],
       "dropped_on": "2026-10-12",
       "drop_reason": "Misreading: the reading is of taskade.com's homepage, which promotes Taskade Genesis and lists no plans. taskade.com/pricing, read 2026-10-12, still shows the Free plan: $0 a month, free forever, 2 users, no monthly AI credits."
+    },
+    {
+      "proposal_id": "2026-10-14/google-cloud-run/new_tier",
+      "proposed_on": "2026-10-14",
+      "vendor": "Google Cloud Run",
+      "change_type": "new_tier",
+      "date": "2026-10-14",
+      "date_source": "discovered",
+      "summary": "The free tier for request-based billing is 2 million requests/month. The page details different free tier limits for instance-based billing and Jobs. Specifically, instance-based billing offers 240,000 vCPU-seconds and 450,000 GiB-seconds. Jobs offers 240,000 vCPU-seconds and 450,000 GiB-seconds.",
+      "tier": "Instance-based billing and Jobs",
+      "tier_direction": "widened",
+      "previous_state": "Always Free: 2M requests/month, 360K GB-seconds memory, 180K vCPU-seconds compute, 1 GB North America egress. Fully managed serverless containers. If your service uses instance-based billing, its free tier is 240K vCPU-seconds and 450K GiB-seconds a month instead of 180K and 360K. Jobs get the same 240K and 450K",
+      "current_state": "Instance-based billing and Jobs have a free tier of 240,000 vCPU-seconds and 450,000 GiB-seconds per month.",
+      "impact": "medium",
+      "source_url": "https://cloud.google.com/run/pricing",
+      "category": "Cloud Hosting",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-10-14",
+      "restatement": [
+        {
+          "url": "https://cloud.google.com/run/pricing",
+          "refused": "reading_drops_a_figure_our_source_check_found",
+          "figures": [
+            "180,000 vCPU-seconds free per month",
+            "2 million requests free per month"
+          ]
+        }
+      ],
+      "dropped_on": "2026-10-14",
+      "drop_reason": "Not a change: the listing already states both free tiers, 2 million requests, 180,000 vCPU-seconds and 360,000 GiB-seconds for request-based billing, and 240,000 vCPU-seconds and 450,000 GiB-seconds for instance-based billing and Jobs. cloud.google.com/run/pricing, read 2026-10-14, states the same figures."
     }
   ]
 }

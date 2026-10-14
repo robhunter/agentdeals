@@ -2894,6 +2894,19 @@
       "change_type": "limits_reduced",
       "summary": "The current page only mentions a 'free plan' with limited features (automated tests, live manual sessions, screenshot tests, visual comparisons, Safari on macOS, limited macOS sessions).",
       "reverted_on": "2026-10-07"
+    },
+    {
+      "vendor": "lensdump.com",
+      "url": "https://lensdump.com/",
+      "restated_on": "2026-10-14",
+      "previous_description": "Free image hosting with no storage limits, 100 MB max file size, no compression",
+      "description": "New accounts must choose a paid plan, from Spark at $4 a month (10,000 images, 10 MB files). The Free plan is kept only by accounts created before paid plans were introduced, or created by Lensdump, and cannot be selected at sign-up (Terms of Service, effective 10 October 2026, section 6.2).",
+      "reading_date": "2026-10-14",
+      "reading_terms": "New accounts must choose a paid plan, from Spark at $4 a month (10,000 images, 10 MB files). The Free plan is kept only by accounts created before paid plans were introduced, or created by Lensdump, and cannot be selected at sign-up (Terms of Service, effective 10 October 2026, section 6.2).",
+      "source_url": "https://lensdump.com/page/tos",
+      "record_date": "2026-10-10",
+      "change_type": "free_tier_removed",
+      "summary": "Lensdump's Terms of Service, effective 10 October 2026, create every new account on a paid plan; the Free plan cannot be selected at sign-up and stays only with accounts that existed before paid plans were introduced."
     }
   ]
 }

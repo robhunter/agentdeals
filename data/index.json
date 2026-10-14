@@ -3519,7 +3519,7 @@
     {
       "vendor": "Google Gemini API",
       "category": "AI / ML",
-      "description": "Free tier: Gemini 3.8 Flash, 3.6 Flash, 3.5 Flash-Lite, 3.1 Flash-Lite, Gemini 3 Flash Preview, Gemini Embedding 2 and Gemma 4 are free of charge. Also free of charge are Gemini 3.8 Live (real-time voice), Gemini 3.5 Live Translate (translation), Gemini 3.5 Transcribe (speech-to-text), Gemini 3.8 Flash TTS and Gemini 3.8 Flash-Lite TTS (text-to-speech). Gemini 3.1 Pro Preview and Gemini Omni Flash (gemini-omni-1.1-flash) are paid only. No Gemini image model has a free tier in the API. Nano Banana 2.1 (gemini-nano-banana-2.1) became generally available on 2026-10-06. It costs $0.0336 per 1K image, $0.0504 per 2K image and $0.113 per 4K image. The Batch API halves those prices. Nano Banana Pro costs $0.134 per 1K or 2K image and $0.24 per 4K image. Google publishes no free-tier rate limits; each project's limits are shown in Google AI Studio. Since 2026-09-18 Google serves the Gemini 2.5 models only to users who have used them before, and points new projects to 3.5 Flash-Lite or 3.8 Flash. If your app calls gemini-3.7-flash, Google deprecated it on 2026-10-08. Requests to gemini-3.7-flash are routed automatically to gemini-3.8-flash. Google says to update the model string to gemini-3.8-flash. If your app calls Gemini 3.5 Flash (gemini-3.5-flash), Google deprecated it on 2026-10-08. Requests to gemini-3.5-flash are routed automatically to gemini-3.6-flash. Google says to update the model string to gemini-3.6-flash or gemini-3.8-flash. If your app calls gemini-omni-flash-preview, it can be called until 2026-10-22, when Google shuts it down. Google's replacement is gemini-omni-1.1-flash. Gemini 3.1 Flash-Lite (gemini-3.1-flash-lite) can be called until 2027-05-07, when Google shuts it down. Google's replacement is gemini-3.5-flash-lite. Paid, per million tokens (input/output): Gemini 3.8 Flash $0.75/$3.75 until 2026-12-31, then $1.50 input and $7.50 output from 2027-01-01 (3.6 Flash: the same prices and dates); Gemini 3.5 Flash-Lite $0.30/$2.50; Gemini 3.1 Flash-Lite $0.25/$1.50; Gemini 3.1 Pro Preview $2/$12 (prompts up to 200K tokens). The Batch API costs half the standard price; Gemini 3.8 Flash is $0.375/$1.875 per million tokens through 2026-12-31. Grounding with Google Search is not available on the free tier for Gemini 3.x models. On the paid tier, 5,000 search requests a month are free, shared across all Gemini 3.x models, then $14 per 1,000. Accounts opened after 2026-03-02 cannot spend the $300 Google Cloud welcome credit on the Gemini API.",
+      "description": "Free tier: Gemini 3.8 Flash, 3.6 Flash, 3.5 Flash-Lite, 3.1 Flash-Lite, Gemini 3 Flash Preview, Gemini Embedding 2 and Gemma 4 are free of charge. Also free of charge are Gemini 3.8 Live (real-time voice), Gemini 3.5 Live Translate (translation), Gemini 3.5 Transcribe (speech-to-text), Gemini 3.8 Flash TTS and Gemini 3.8 Flash-Lite TTS (text-to-speech). Gemini 4 Argon (gemini-4-argon), Gemini 3.1 Pro Preview and Gemini Omni Flash (gemini-omni-1.1-flash) are paid only. Gemini 4 Argon, generally available since 2026-10-13, is not available on the free tier or on the Google AI Pro plan. No Gemini image model has a free tier in the API. Nano Banana 2.1 (gemini-nano-banana-2.1) became generally available on 2026-10-06. It costs $0.0336 per 1K image, $0.0504 per 2K image and $0.113 per 4K image. The Batch API halves those prices. Nano Banana Pro costs $0.134 per 1K or 2K image and $0.24 per 4K image. Google publishes no free-tier rate limits; each project's limits are shown in Google AI Studio. Since 2026-09-18 Google serves the Gemini 2.5 models only to users who have used them before, and points new projects to 3.5 Flash-Lite or 3.8 Flash. If your app calls gemini-3.7-flash, Google deprecated it on 2026-10-08. Requests to gemini-3.7-flash are routed automatically to gemini-3.8-flash. Google says to update the model string to gemini-3.8-flash. If your app calls Gemini 3.5 Flash (gemini-3.5-flash), Google deprecated it on 2026-10-08. Requests to gemini-3.5-flash are routed automatically to gemini-3.6-flash. Google says to update the model string to gemini-3.6-flash or gemini-3.8-flash. If your app calls gemini-omni-flash-preview, it can be called until 2026-10-22, when Google shuts it down. Google's replacement is gemini-omni-1.1-flash. Gemini 3.1 Flash-Lite (gemini-3.1-flash-lite) can be called until 2027-05-07, when Google shuts it down. Google's replacement is gemini-3.5-flash-lite. Paid, per million tokens (input/output): Gemini 4 Argon $2/$10 through 2026-11-30, then $4/$20 from 2026-12-01 (input and output both double; context caching $0.10, then $0.20, implicit caching only); Gemini 3.8 Flash $0.75/$3.75 until 2026-12-31, then $1.50 input and $7.50 output from 2027-01-01 (3.6 Flash: the same prices and dates); Gemini 3.5 Flash-Lite $0.30/$2.50; Gemini 3.1 Flash-Lite $0.25/$1.50; Gemini 3.1 Pro Preview $2/$12 (prompts up to 200K tokens). The Batch API costs half the standard price; Gemini 3.8 Flash is $0.375/$1.875 per million tokens through 2026-12-31. Grounding with Google Search is not available on the free tier for Gemini 3.x models. On the paid tier, 5,000 search requests a month are free, shared across Gemini 3 and newer models, then $14 per 1,000. Accounts opened after 2026-03-02 cannot spend the $300 Google Cloud welcome credit on the Gemini API.",
       "tier": "Free (Reduced)",
       "url": "https://ai.google.dev/pricing",
       "tags": [
@@ -26433,7 +26433,7 @@
     {
       "vendor": "lensdump.com",
       "category": "Design",
-      "description": "Free image hosting with no storage limits, 100 MB max file size, no compression",
+      "description": "New accounts must choose a paid plan, from Spark at $4 a month (10,000 images, 10 MB files). The Free plan is kept only by accounts created before paid plans were introduced, or created by Lensdump, and cannot be selected at sign-up (Terms of Service, effective 10 October 2026, section 6.2).",
       "tier": "Free",
       "url": "https://lensdump.com/",
       "tags": [
@@ -26446,6 +26446,13 @@
         "checked": "2026-10-14",
         "outcome": "ok",
         "detail": "the page names lensdump.com as \"lensdump\" and states amounts, none of which we matched to the terms we publish"
+      },
+      "restated_from": {
+        "reading_date": "2026-10-14",
+        "source_url": "https://lensdump.com/page/tos",
+        "record_date": "2026-10-10",
+        "change_type": "free_tier_removed",
+        "restated_on": "2026-10-14"
       }
     },
     {
@@ -35363,7 +35370,7 @@
     {
       "vendor": "Ona",
       "category": "IDE & Code Editors",
-      "description": "There is no free tier, and new self-serve subscriptions are closed. Ona, formerly Gitpod, has been part of OpenAI since the acquisition closed on 2026-08-10. Ona's billing docs, read 2026-10-12, say new Core subscriptions are no longer available, existing Core subscriptions remain supported, and new users should get started with OpenAI's Codex; ona.com/pricing redirects to a contact-sales form for Enterprise. Self-hosted cloud development environments and agents.",
+      "description": "There is no free tier. Ona Cloud shuts down on 2026-10-31: Ona's post of 2026-10-13 says new signups have closed, existing users can keep using it until then, and Ona will refund October payments and unused purchased credits. Ona, formerly Gitpod, has been part of OpenAI since the acquisition closed on 2026-08-10, and points Ona Cloud users to OpenAI's Codex Cloud; ona.com/pricing redirects to a contact-sales form for Enterprise.",
       "tier": "Retired",
       "url": "https://ona.com/docs/ona/billing/overview",
       "tags": [

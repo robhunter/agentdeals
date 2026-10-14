@@ -16642,6 +16642,38 @@
       "alternatives": [],
       "recorded_date": "2026-10-12",
       "date_source": "hand_written"
+    },
+    {
+      "vendor": "lensdump.com",
+      "change_type": "free_tier_removed",
+      "date": "2026-10-10",
+      "date_source": "vendor_page",
+      "summary": "Lensdump's Terms of Service, effective 10 October 2026, create every new account on a paid plan; the Free plan cannot be selected at sign-up and stays only with accounts that existed before paid plans were introduced.",
+      "tier": "Free",
+      "tier_direction": "narrowed",
+      "previous_state": "Free image hosting with no storage limits, 100 MB max file size, no compression",
+      "current_state": "New accounts must choose a paid plan, from Spark at $4 a month (10,000 images, 10 MB files). The Free plan is kept only by accounts created before paid plans were introduced, or created by Lensdump, and cannot be selected at sign-up (Terms of Service, effective 10 October 2026, section 6.2).",
+      "impact": "high",
+      "source_url": "https://lensdump.com/page/tos",
+      "category": "Design",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-10-14"
+    },
+    {
+      "vendor": "OpenAI",
+      "change_type": "product_deprecated",
+      "date": "2027-01-14",
+      "summary": "The OpenAI API keeps running. The gpt-4o (gpt-4o-2024-08-06 and gpt-4o-2024-11-20), gpt-4o-mini, gpt-4.1 and gpt-4.1-mini models, with their fine-tuned versions, can be called until January 14, 2027, when OpenAI shuts down their access. OpenAI names gpt-6-luna as the replacement for all four.",
+      "previous_state": "gpt-4o (gpt-4o-2024-08-06 and gpt-4o-2024-11-20), gpt-4o-mini, gpt-4.1 and gpt-4.1-mini were callable in the OpenAI API at pay-as-you-go rates.",
+      "current_state": "OpenAI's deprecations page gives January 14, 2027 as the shutdown date. The models can be called until then.",
+      "impact": "medium",
+      "source_url": "https://developers.openai.com/api/docs/deprecations",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-10-14",
+      "date_source": "vendor_page",
+      "listing_effect": "none"
     }
   ]
 }

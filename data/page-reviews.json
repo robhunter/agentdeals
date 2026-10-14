@@ -1816,6 +1816,7 @@
         "hcp-terraform",
         "incidenthub-cloud",
         "koyeb",
+        "lensdump-com",
         "localstack",
         "minimax",
         "minio",
@@ -1848,6 +1849,11 @@
       "table_figures": 40,
       "table_figures_from_records": 39,
       "tables": [
+        {
+          "label": "Q4 2026",
+          "figures": 0,
+          "from_records": 0
+        },
         {
           "label": "Q3 2026",
           "figures": 10,
