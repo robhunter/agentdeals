@@ -2282,10 +2282,10 @@
       ],
       "badge_subjects_unresolved": [],
       "stat_card_subjects_unresolved": [],
-      "reviewed_at": "2026-09-12",
+      "reviewed_at": "2026-10-15",
       "reviewer": "pm",
-      "review_outcome": "fail",
-      "review_note": null,
+      "review_outcome": "pass",
+      "review_note": "Checked on 2026-10-15 against the pricing, models, deprecations and terms pages of the 19 vendors the page names. No figure that a vendor page states differs from ours. Not re-read: Mistral Embed's and Voxtral Realtime's prices, the start date of OpenAI's usage tiers and Mistral Large 4's context window. Kimi K3's retirement on NVIDIA on 2026-10-15 stands: NVIDIA's API answers 410, \"reached its end of life on 2026-10-15T08:00:00Z\". The page states no training terms for OpenRouter, Cohere, Cloudflare Workers AI or Hugging Face.",
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
@@ -2493,8 +2493,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 45,
-      "table_figures_from_records": 45,
+      "table_figures": 46,
+      "table_figures_from_records": 46,
       "tables": [
         {
           "label": "What’s Changing",
@@ -2503,8 +2503,8 @@
         },
         {
           "label": "Free Tier Comparison Table",
-          "figures": 43,
-          "from_records": 43
+          "figures": 44,
+          "from_records": 44
         },
         {
           "label": "OpenAI Pricing Change Timeline",

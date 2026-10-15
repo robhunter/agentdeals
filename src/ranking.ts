@@ -4,7 +4,7 @@ import { recordsStillInForce } from "./change-resolution.js";
 import { gateCensusSentence, VERIFICATION_LAPSED_DAYS } from "./gate-disclosure.js";
 import { LINK_GRACE_DAYS, unreachableNoticeForUrl } from "./link-health.js";
 import { discontinuedClause, discontinuedOnOrBefore, endsAFreeTier } from "./product-deprecation.js";
-import { lastReadingFor, type LastReading, type ReadingLookup } from "./read-date.js";
+import { lastReadingWeHoldFor, type LastReading, type ReadingLookup } from "./read-date.js";
 import { listEndedTiers, offerEnded, recordedTierSentence, THE_PAGE_STAYS_UP_UNRANKED } from "./retirement.js";
 import { LAST_RESOLVED, withheldLevelSentence } from "./source-check.js";
 import type { ChangeDateSource, DealChange, LinkUnreachable, Offer } from "./types.js";
@@ -220,7 +220,7 @@ export const DEMERIT_TABLE: DemeritTableRow[] = [
       `Our most recent reading of the vendor's own pricing page did not confirm the offer, or there has been no reading of it for more than ${STALE_VERIFICATION_DAYS} days. This measures our confidence, not the vendor.`,
     census: (offers, date, ledger, lastReading) =>
       staleVerificationCensusSentence(
-        offers.map(offer => verificationDoubt(offer, date, ledger, (lastReading ?? lastReadingFor)(offer))),
+        offers.map(offer => verificationDoubt(offer, date, ledger, (lastReading ?? lastReadingWeHoldFor)(offer))),
         date,
       ),
   },
@@ -613,7 +613,7 @@ export function evaluate<T extends Offer>(
 ): RankedEntry<T> {
   const { date, changesForVendor, verificationLedger } = opts;
   const lookUpLink = opts.linkHealth ?? unreachableNoticeForUrl;
-  const lookUpReading = opts.lastReading ?? lastReadingFor;
+  const lookUpReading = opts.lastReading ?? lastReadingWeHoldFor;
   const demerits: Demerit[] = [];
   const disclosures: Disclosure[] = [];
 

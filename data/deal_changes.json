@@ -16746,6 +16746,22 @@
       "category": "AI Coding",
       "alternatives": [],
       "recorded_date": "2026-10-15"
+    },
+    {
+      "vendor": "Together AI",
+      "change_type": "product_deprecated",
+      "date": "2026-10-22",
+      "summary": "The Together AI API keeps running. meta-llama/Llama-3.3-70B-Instruct-Turbo and deepseek-ai/DeepSeek-V4-Flash-0731 can be called on serverless inference until October 22, 2026, when Together removes them. Together recommends meta-models/Muse-Glimmer-30B or a dedicated endpoint in place of Llama 3.3 70B, and deepseek-ai/DeepSeek-V4.1-Flash in place of DeepSeek-V4-Flash-0731.",
+      "previous_state": "Both models could be called on Together's serverless inference at per-token rates.",
+      "current_state": "Together's deprecations page lists October 22, 2026 as the removal date for both models from serverless inference, with the recommended replacements.",
+      "impact": "low",
+      "source_url": "https://docs.together.ai/docs/deprecations",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-10-15",
+      "date_source": "hand_written",
+      "listing_effect": "none",
+      "what_ends": "serverless access to meta-llama/Llama-3.3-70B-Instruct-Turbo and deepseek-ai/DeepSeek-V4-Flash-0731"
     }
   ]
 }

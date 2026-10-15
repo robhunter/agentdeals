@@ -14,7 +14,7 @@ import {
   type VerificationDoubt,
   type VerificationLedger,
 } from "../dist/ranking.js";
-import { lastReadingFor, WHAT_THE_LAST_READ_FOUND, type LastReading } from "../dist/read-date.js";
+import { lastReadingFor, lastReadingWeHoldFor, WHAT_THE_LAST_READ_FOUND, type LastReading } from "../dist/read-date.js";
 import { loadVerificationState, resetVerificationStateCache, verificationLedger } from "../dist/verification-state.js";
 import { howWeSettledTheRead } from "../dist/change-refusal.js";
 import { storedRefusalsFor } from "../dist/refusal-store.js";
@@ -319,15 +319,24 @@ describe("no published reason states a gap a reading we hold contradicts", () =>
     assert.deepEqual(contradicted.map(c => c.offer.vendor), []);
   });
 
+  function dateTheDemeritRestsOn(offer: Offer): string | null {
+    const doubt = verificationDoubt(offer, TODAY, ledger, lastReadingWeHoldFor(offer));
+    if (!doubt || doubt.basis === "no_reading") return null;
+    return doubt.basis === "could_not_read" ? doubt.attempts.last_attempt : doubt.reading.date;
+  }
+
   it("dates every reason to the reading it is drawn from, where a reading falls inside the window", () => {
     const reasons = everyStaleReason(TODAY);
     assertPopulationFloor(reasons.length, 250, "records carrying a stale_verification demerit");
     const drawnFromAReading = reasons.filter(({ offer }) => {
-      const held = lastReadingFor(offer);
+      const held = lastReadingWeHoldFor(offer);
       return Boolean(held) && daysApart(held!.date, TODAY) <= STALE_VERIFICATION_DAYS;
     });
     assertPopulationFloor(drawnFromAReading.length, 250, "demerits drawn from a reading inside the window");
-    const undated = drawnFromAReading.filter(({ offer, reason }) => !reason.includes(lastReadingFor(offer)!.date));
+    const undated = drawnFromAReading.filter(({ offer, reason }) => {
+      const restsOn = dateTheDemeritRestsOn(offer);
+      return restsOn === null || !reason.includes(restsOn);
+    });
     assert.deepEqual(undated.map(u => u.offer.vendor), []);
   });
 
@@ -375,7 +384,7 @@ describe("the criteria page publishes the count and what moves it", () => {
   const row = DEMERIT_TABLE.find(d => d.code === "stale_verification")!;
 
   function census(date: string): string {
-    return demeritTableRowText(row, offers, date, ledger, lastReadingFor);
+    return demeritTableRowText(row, offers, date, ledger);
   }
 
   function countedIn(sentence: string): number {
@@ -386,7 +395,7 @@ describe("the criteria page publishes the count and what moves it", () => {
   it("states a count that matches the rule it describes", () => {
     const stated = countedIn(census(DATE));
     const measured = offers.filter(o =>
-      verificationDoubt(o, DATE, ledger, lastReadingFor(o)) !== null,
+      verificationDoubt(o, DATE, ledger, lastReadingWeHoldFor(o)) !== null,
     ).length;
     assertPopulationFloor(measured, 1, "records meeting the stale_verification trigger");
     assert.equal(stated, measured);
