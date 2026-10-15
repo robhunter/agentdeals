@@ -1,6 +1,7 @@
 import { howWeSettledTheRead, READ_NO_TERMS_FROM_THE_PAGE, WHAT_A_VOIDED_READ_FOUND, type ReadSettlement, type RefusedRead, type SettledRead, type VoidingRefusalReason } from "./change-refusal.js";
 
 export { WHAT_A_VOIDED_READ_FOUND };
+import { figuresWeAlsoPublish } from "./quantity-reading.js";
 import { storedRefusalsFor } from "./refusal-store.js";
 import { loadVerificationState } from "./verification-state.js";
 
@@ -25,6 +26,7 @@ export interface RestatableRecord {
 }
 
 export interface CheckedRecord {
+  description?: string | null;
   source_check?: { checked?: string; outcome?: string; detail?: string } | null;
 }
 
@@ -494,9 +496,23 @@ export function figuresTheCheckStated(check: CheckedRecord["source_check"]): str
   return stated ? [...stated[1].matchAll(A_QUOTED_FIGURE)].map(quoted => quoted[1]) : [];
 }
 
-export function figuresTheCheckFoundThatTheListingGives(check: CheckedRecord["source_check"]): string[] {
-  const figures = figuresTheCheckStated(check);
+const A_TRAILING_STOP = /[,.;:]+$/;
+
+export function withoutATrailingStop(figure: string): string {
+  return figure.replace(A_TRAILING_STOP, "");
+}
+
+export function figuresTheCheckStatedOnce(check: CheckedRecord["source_check"]): string[] {
+  return [...new Set(figuresTheCheckStated(check).map(withoutATrailingStop))];
+}
+
+export function figuresTheCheckFoundThatTheListingGives(offer: CheckedRecord | null | undefined): string[] {
+  const figures = figuresWeAlsoPublish(figuresTheCheckStatedOnce(offer?.source_check), offer?.description ?? "");
   return figures.every(statesAnAmountOfZero) ? [] : figures;
+}
+
+export function noteQuotesTheCheck(offer: CheckedRecord | null | undefined): boolean {
+  return figuresTheCheckFoundThatTheListingGives(offer).length > 0;
 }
 
 export function figuresInASentence(figures: readonly string[]): string {
@@ -529,7 +545,7 @@ export function sourceCheckNote(
   standing: LastReading | null = null,
 ): string {
   const check = offer.source_check;
-  const figures = figuresTheCheckFoundThatTheListingGives(check);
+  const figures = figuresTheCheckFoundThatTheListingGives(offer);
   if (figures.length > 0) {
     const contradiction = standing ? ` ${contradictedTermsSentence(standing)}` : "";
     return `The day we last read the vendor's page. ${checkStatedFiguresTheListingGivesSentence(read, offer.vendor, figures)}${contradiction}`;
@@ -585,12 +601,13 @@ export function lastReadNote(
     const settled = howWeSettledTheRead(refusals, read);
     const restatedFrom = restatedReadingDate(offer);
     const byTheCheck = latest?.kind === "source_check";
-    const refusal = refusalTheRatingWaitsOn
+    const quotesTheCheck = byTheCheck && noteQuotesTheCheck(offer);
+    const refusal = refusalTheRatingWaitsOn && !quotesTheCheck
       && (byTheCheck || !theNoteDescribesTheReadOn(refusalTheRatingWaitsOn.on, read, outcome, settled, restatedFrom))
       ? ` ${asSentence(refusalTheRatingWaitsOn.clause)}`
       : "";
     const standing = byTheCheck ? readThatContradictsOurTerms(offer) : null;
-    const statedByTheRefusal = refusal !== "" && standing?.date === refusalTheRatingWaitsOn?.on;
+    const statedByTheRefusal = byTheCheck && refusalTheRatingWaitsOn !== null && standing?.date === refusalTheRatingWaitsOn.on;
     const note = byTheCheck && offer
       ? sourceCheckNote(offer, read, verified, restatedFrom, statedByTheRefusal ? null : standing)
       : noConfirmationNote(read, verified, outcome, settled, restatedFrom);
