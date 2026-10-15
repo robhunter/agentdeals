@@ -23,7 +23,13 @@ const CATALOGUE_DATE_PAST_THE_WINDOW = "2026-05-01";
 const VENDOR = "Constructed One Last Read";
 const PAGE = "https://one-last-read.example/pricing";
 
-function constructed(checkedOn: string, verifiedDate: string): Offer {
+const WHAT_EACH_CHECK_FOUND: Record<string, string> = {
+  ok: "the page names the vendor and states a price",
+  does_not_name_vendor: "the page never writes the vendor's name",
+  does_not_name_product: "the page writes the platform's name and never the product's",
+};
+
+function constructed(checkedOn: string, verifiedDate: string, outcome = "ok"): Offer {
   return {
     vendor: VENDOR,
     url: PAGE,
@@ -32,7 +38,7 @@ function constructed(checkedOn: string, verifiedDate: string): Offer {
     tier: "Free",
     tags: [],
     verifiedDate,
-    source_check: { checked: checkedOn, outcome: "ok", detail: "the page names the vendor and states a price" },
+    source_check: { checked: checkedOn, outcome, detail: WHAT_EACH_CHECK_FOUND[outcome] },
   } as unknown as Offer;
 }
 
@@ -97,6 +103,16 @@ describe("a card's stale_verification reason dates our last read to the card's o
   it("lifts the demerit where that newer check settles a record whose catalogue date is inside the window", () => {
     const offer = constructed(LATER_CHECK, CATALOGUE_DATE_INSIDE_THE_WINDOW);
     assert.equal(staleDemeritOf(offer), undefined);
+  });
+
+  it("keeps the demerit, dated to that newer check, where the check found a page that does not name the vendor or the product", () => {
+    for (const outcome of ["does_not_name_vendor", "does_not_name_product"]) {
+      const offer = constructed(LATER_CHECK, CATALOGUE_DATE_INSIDE_THE_WINDOW, outcome);
+      assert.equal(lastReadDate(offer), LATER_CHECK);
+      const demerit = staleDemeritOf(offer);
+      assert.ok(demerit, `a newer check reading ${outcome} lifted the demerit`);
+      assert.equal(dateTheReasonGivesOurLastRead(demerit), LATER_CHECK);
+    }
   });
 
   it("keeps the stored read where it is the latest read we hold, and the demerit it found", () => {
