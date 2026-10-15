@@ -75,7 +75,9 @@ const LATER_READ = "2026-01-02";
 
 const listingVerifiedEarlier: Catalogue = {
   ...shipped,
-  offers: shipped.offers.map((o) => (o.vendor === LISTING ? { ...o, verifiedDate: EARLIER_VERIFIED } : o)),
+  offers: shipped.offers.map((o) => (o.vendor === LISTING
+    ? { ...o, verifiedDate: EARLIER_VERIFIED, ...(o.source_check ? { source_check: { ...o.source_check, checked: EARLIER_VERIFIED } } : {}) }
+    : o)),
 };
 
 const shippedVerification: VerificationState = JSON.parse(readFileSync(path.join(REPO, "data", "verification_state.json"), "utf8"));

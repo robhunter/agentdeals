@@ -1,6 +1,7 @@
-import { howWeSettledTheRead, READ_NO_TERMS_FROM_THE_PAGE, WHAT_A_VOIDED_READ_FOUND, type ReadSettlement, type RefusedRead, type SettledRead, type VoidingRefusalReason } from "./change-refusal.js";
+import { howWeSettledTheRead, READ_NO_TERMS_FROM_THE_PAGE, theRefusedReadAlone, WHAT_A_VOIDED_READ_FOUND, type ReadSettlement, type RefusedRead, type SettledRead, type VoidingRefusalReason } from "./change-refusal.js";
 
 export { WHAT_A_VOIDED_READ_FOUND };
+import { figuresWeAlsoPublish } from "./quantity-reading.js";
 import { storedRefusalsFor } from "./refusal-store.js";
 import { loadVerificationState } from "./verification-state.js";
 
@@ -21,10 +22,15 @@ const UNCONFIRMED_DATE_WORDS = UNCONFIRMED_DATE_LABEL.toLowerCase();
 export const VERIFICATION_DATES_HEADING = `Read / ${UNCONFIRMED_DATE_WORDS}`;
 
 export interface RestatableRecord {
-  restated_from?: { reading_date: string } | null;
+  restated_from?: { reading_date: string; source_url?: string | null } | null;
 }
 
-export interface DatedRecord extends RestatableRecord {
+export interface CheckedRecord {
+  description?: string | null;
+  source_check?: { checked?: string; outcome?: string; detail?: string } | null;
+}
+
+export interface DatedRecord extends RestatableRecord, CheckedRecord {
   vendor: string;
   url: string;
   verifiedDate: string;
@@ -34,14 +40,57 @@ export function outcomeReadThePage(outcome: string | null | undefined): boolean 
   return typeof outcome === "string" && READ_THE_PAGE.has(outcome);
 }
 
-export function lastReadDate(offer: DatedRecord | null | undefined): string {
-  const verified = offer?.verifiedDate ?? "";
-  if (!offer?.vendor || !offer?.url) return verified;
+export const SOURCE_CHECK_THAT_DID_NOT_READ = "unreadable";
+
+export const KINDS_OF_READ = ["rotation", "source_check", "refusal", "restatement"] as const;
+
+export type KindOfRead = (typeof KINDS_OF_READ)[number];
+
+export interface ReadWeHold {
+  kind: KindOfRead;
+  on: string;
+}
+
+function theRotationsRead(offer: DatedRecord): string {
+  const verified = offer.verifiedDate ?? "";
   const record = loadVerificationState().get(`${offer.vendor}|${offer.url}`);
   if (outcomeReadThePage(record?.last_outcome) && record?.last_attempt_at) return record.last_attempt_at;
   const candidates = [verified, record?.last_read_at ?? null, record?.last_success ?? null];
   const dates = candidates.filter((d): d is string => Boolean(d)).sort();
   return dates.length > 0 ? dates[dates.length - 1] : verified;
+}
+
+function citesThePage(source: string | null | undefined, cited: string): boolean {
+  return typeof source === "string" && source.trim() === cited.trim();
+}
+
+export function readsWeHold(offer: DatedRecord): ReadWeHold[] {
+  const reads: ReadWeHold[] = [{ kind: "rotation", on: theRotationsRead(offer) }];
+  const check = offer.source_check;
+  if (check?.checked && check.outcome && check.outcome !== SOURCE_CHECK_THAT_DID_NOT_READ) {
+    reads.push({ kind: "source_check", on: check.checked });
+  }
+  for (const refusal of storedRefusalsFor(offer.vendor)) {
+    if (citesThePage(refusal.source_url, offer.url)) reads.push({ kind: "refusal", on: refusal.refused_date });
+  }
+  const restated = offer.restated_from;
+  if (restated?.reading_date && citesThePage(restated.source_url, offer.url)) {
+    reads.push({ kind: "restatement", on: restated.reading_date });
+  }
+  return reads.filter(read => Boolean(read.on));
+}
+
+export function latestReadWeHold(offer: DatedRecord | null | undefined): ReadWeHold | null {
+  if (!offer?.vendor || !offer?.url) return null;
+  let latest: ReadWeHold | null = null;
+  for (const read of readsWeHold(offer)) {
+    if (latest === null || read.on > latest.on) latest = read;
+  }
+  return latest;
+}
+
+export function lastReadDate(offer: DatedRecord | null | undefined): string {
+  return latestReadWeHold(offer)?.on ?? offer?.verifiedDate ?? "";
 }
 
 export function termsCameFromAReading(
@@ -248,6 +297,18 @@ function readingFromSourceCheck(offer: ReadRecord): LastReading | null {
   };
 }
 
+export function readingOfTheSourceCheck(offer: ReadRecord): LastReading | null {
+  if (offer.source_check?.outcome === SOURCE_CHECK_THAT_DID_NOT_READ) return null;
+  return readingFromSourceCheck(offer);
+}
+
+export function readingOnTheLastReadDate(offer: DatedRecord & ReadRecord): LastReading | null {
+  const latest = latestReadWeHold(offer);
+  if (!latest) return null;
+  const reading = latest.kind === "source_check" ? readingOfTheSourceCheck(offer) : lastReadingFor(offer);
+  return reading?.date === latest.on ? reading : null;
+}
+
 export function lastReadingFor(offer: ReadRecord): LastReading | null {
   return readingSettledByRefusals(readingFromVerificationState(offer), storedRefusalsFor(offer.vendor));
 }
@@ -389,6 +450,23 @@ export function readFoundTheTermsWePublishedNote(read: string): string {
   return `The day we last read the vendor's page. Our last read of it, on ${read}, found the terms we published that day.`;
 }
 
+function noConfirmationNoteStating(
+  read: string,
+  verified: string,
+  found: string | null,
+  restatedFrom: string | null,
+  standing: LastReading | null = null,
+): string {
+  const reading = restatedFrom
+    ? theReadOurTermsCameFrom(read, restatedFrom)
+    : read && found ? ` Our last read of it, on ${read}, ${found}.` : "";
+  if (standing) return `The day we last read the vendor's page.${reading} ${contradictedTermsSentence(standing)}`;
+  const beside = verified && verified !== read
+    ? ` — the ${verified} beside this date is not one we can source to a read that confirmed them`
+    : "";
+  return `The day we last read the vendor's page.${reading} ${NO_CONFIRMATION_HELD}${beside}.`;
+}
+
 export function noConfirmationNote(
   read: string,
   verified: string,
@@ -397,14 +475,82 @@ export function noConfirmationNote(
   restatedFrom: string | null = null,
 ): string {
   if (!restatedFrom && readRestatedTheTermsWePublish(outcome, settled)) return readFoundTheTermsWePublishedNote(read);
-  const found = whatTheLastReadFound(outcome, settled);
-  const reading = restatedFrom
-    ? theReadOurTermsCameFrom(read, restatedFrom)
-    : read && found ? ` Our last read of it, on ${read}, ${found}.` : "";
-  const beside = verified && verified !== read
-    ? ` — the ${verified} beside this date is not one we can source to a read that confirmed them`
-    : "";
-  return `The day we last read the vendor's page.${reading} ${NO_CONFIRMATION_HELD}${beside}.`;
+  return noConfirmationNoteStating(read, verified, whatTheLastReadFound(outcome, settled), restatedFrom);
+}
+
+const A_CHECK_THAT_STATED_FIGURES = /^.*? and states ("[^"]*"(?: and "[^"]*")*)$/;
+
+const A_QUOTED_FIGURE = /"([^"]*)"/g;
+
+const AN_AMOUNT_OF_ZERO = /^(?:[$€£¥₹]\s?0(?:[.,]0+)?|0(?:\.0+)?\s?(?:USD|EUR|GBP))$/i;
+
+export const SOURCE_CHECK_THAT_PASSED = "ok";
+
+export function statesAnAmountOfZero(figure: string): boolean {
+  return AN_AMOUNT_OF_ZERO.test(figure.trim());
+}
+
+export function figuresTheCheckStated(check: CheckedRecord["source_check"]): string[] {
+  if (check?.outcome !== SOURCE_CHECK_THAT_PASSED) return [];
+  const stated = A_CHECK_THAT_STATED_FIGURES.exec((check.detail ?? "").trim());
+  return stated ? [...stated[1].matchAll(A_QUOTED_FIGURE)].map(quoted => quoted[1]) : [];
+}
+
+const A_TRAILING_STOP = /[,.;:]+$/;
+
+export function withoutATrailingStop(figure: string): string {
+  return figure.replace(A_TRAILING_STOP, "");
+}
+
+export function figuresTheCheckStatedOnce(check: CheckedRecord["source_check"]): string[] {
+  return [...new Set(figuresTheCheckStated(check).map(withoutATrailingStop))];
+}
+
+export function figuresTheCheckFoundThatTheListingGives(offer: CheckedRecord | null | undefined): string[] {
+  const figures = figuresWeAlsoPublish(figuresTheCheckStatedOnce(offer?.source_check), offer?.description ?? "");
+  return figures.every(statesAnAmountOfZero) ? [] : figures;
+}
+
+export function noteQuotesTheCheck(offer: CheckedRecord | null | undefined): boolean {
+  return figuresTheCheckFoundThatTheListingGives(offer).length > 0;
+}
+
+export function figuresInASentence(figures: readonly string[]): string {
+  if (figures.length < 2) return figures.join("");
+  return `${figures.slice(0, -1).join(", ")} and ${figures[figures.length - 1]}`;
+}
+
+export function checkStatedFiguresTheListingGivesSentence(
+  checked: string,
+  vendor: string,
+  figures: readonly string[],
+): string {
+  const noun = figures.length === 1 ? "a figure" : "figures";
+  return `On ${checked}, the page we cite for ${vendor} stated ${figuresInASentence(figures)}, ${noun} this listing gives.`;
+}
+
+export function whatASourceCheckReadFor(vendor: string): string {
+  return `checked the page for ${vendor}'s name and a price`;
+}
+
+export function whatTheSourceCheckFound(vendor: string, outcome: string | undefined): string {
+  return (outcome ? WHAT_A_SOURCE_CHECK_FOUND[outcome] : undefined) ?? whatASourceCheckReadFor(vendor);
+}
+
+export function sourceCheckNote(
+  offer: DatedRecord,
+  read: string,
+  verified: string,
+  restatedFrom: string | null,
+  standing: LastReading | null = null,
+): string {
+  const check = offer.source_check;
+  const figures = figuresTheCheckFoundThatTheListingGives(offer);
+  if (figures.length > 0) {
+    const contradiction = standing ? ` ${contradictedTermsSentence(standing)}` : "";
+    return `The day we last read the vendor's page. ${checkStatedFiguresTheListingGivesSentence(read, offer.vendor, figures)}${contradiction}`;
+  }
+  return noConfirmationNoteStating(read, verified, whatTheSourceCheckFound(offer.vendor, check?.outcome), restatedFrom, standing);
 }
 
 export interface TermsWeCannotConfirm {
@@ -450,14 +596,22 @@ export function lastReadNote(
     ? ` We tried again on ${attempted} and did not read the page, so that attempt confirmed nothing.`
     : "";
   if (!confirmed) {
-    const outcome = lastReadOutcome(offer);
+    const latest = latestReadWeHold(offer);
+    const outcome = latest?.kind === "refusal" ? OUTCOME_CONTRADICTING_WHAT_WE_STORE : lastReadOutcome(offer);
     const settled = howWeSettledTheRead(refusals, read);
     const restatedFrom = restatedReadingDate(offer);
+    const byTheCheck = latest?.kind === "source_check";
+    const quotesTheCheck = byTheCheck && noteQuotesTheCheck(offer);
     const refusal = refusalTheRatingWaitsOn
-      && !theNoteDescribesTheReadOn(refusalTheRatingWaitsOn.on, read, outcome, settled, restatedFrom)
-      ? ` ${asSentence(refusalTheRatingWaitsOn.clause)}`
+      && (byTheCheck || !theNoteDescribesTheReadOn(refusalTheRatingWaitsOn.on, read, outcome, settled, restatedFrom))
+      ? ` ${asSentence(quotesTheCheck ? theRefusedReadAlone(refusalTheRatingWaitsOn.clause) : refusalTheRatingWaitsOn.clause)}`
       : "";
-    return noConfirmationNote(read, verified, outcome, settled, restatedFrom) + refusal + tail;
+    const standing = byTheCheck ? readThatContradictsOurTerms(offer) : null;
+    const statedByTheRefusal = refusal !== "" && standing?.date === refusalTheRatingWaitsOn?.on;
+    const note = byTheCheck && offer
+      ? sourceCheckNote(offer, read, verified, restatedFrom, statedByTheRefusal ? null : standing)
+      : noConfirmationNote(read, verified, outcome, settled, restatedFrom);
+    return note + refusal + tail;
   }
   const unreconciled = withheld ?? refusalTheRatingWaitsOn;
   if (unreconciled) {

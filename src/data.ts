@@ -11,7 +11,7 @@ import { rankForListing, gateFor, utcDate, type TieBreak, type Gate, type GateCo
 import { unreachableNoticeForUrl, resetLinkHealthCache } from "./link-health.js";
 import { quarantineSummary, resetVerificationStateCache, type QuarantineSummary } from "./verification-state.js";
 import { resetRefusalStoreCache } from "./refusal-store.js";
-import { confirmationDate, daysSince, lastAttemptDate, lastReadDate, lastReadingFor, restatedReadingDate } from "./read-date.js";
+import { confirmationDate, daysSince, lastAttemptDate, lastReadDate, readingOnTheLastReadDate, restatedReadingDate } from "./read-date.js";
 import {
   amountUnstatedSentence,
   cannotVouchForLevel,
@@ -719,7 +719,7 @@ export function whatTheLastReadConcluded(
   offer: Offer,
   publishedReadDate: string,
 ): WhatTheLastReadConcluded {
-  const reading = lastReadingFor(offer);
+  const reading = readingOnTheLastReadDate(offer);
   if (!reading || reading.date !== publishedReadDate) {
     return { last_read_outcome: null, last_read_found: null };
   }

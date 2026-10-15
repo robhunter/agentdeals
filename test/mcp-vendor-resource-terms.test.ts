@@ -300,8 +300,10 @@ describe("the vendor page built from the same index", () => {
         new RegExp(`<div class="detail-label">${LAST_READ_LABEL}</div>[\\s\\S]*?<div class="detail-note">([^<]*)<`),
       )?.[1];
       assert.ok(note, `${offer.vendor} renders no note beside the day we last read it`);
+      const readOn = cardValue(body, LAST_READ_LABEL);
+      assert.ok(readOn, `${offer.vendor} renders no day we last read it`);
       assert.ok(
-        note.includes(theReadOurTermsCameFrom(offer.verifiedDate, offer.restated_from.reading_date).trim()),
+        note.includes(theReadOurTermsCameFrom(readOn, offer.restated_from.reading_date).trim()),
         `${offer.vendor} does not say which read its terms came from: ${note}`,
       );
       assert.ok(

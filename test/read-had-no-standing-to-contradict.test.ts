@@ -31,6 +31,7 @@ const {
 } = await import("../dist/read-date.js");
 
 const FOUND_A_DIFFERENCE = WHAT_THE_LAST_READ_FOUND.changed;
+const A_REFUSAL_THAT_LEFT_THE_DIFFERENCE_STANDING = "we found a change we could not reconcile with the terms we publish";
 const READ_NO_TERMS = WHAT_THE_LAST_READ_FOUND.states_no_price;
 const READ = "2026-09-11";
 
@@ -317,10 +318,10 @@ describe("the pages that describe a read our own refusal voided", () => {
     const spoke: string[] = [];
     const wrong: string[] = [];
     for (const offer of voidedByItsOwnRefusal) {
-      const reason = sameDayRefusals(offer)[0].reason;
+      const { reason, refused_date } = sameDayRefusals(offer)[0];
       const { status, body } = await get(`/vendor/${slugOf(offer.vendor)}`);
       if (status !== 200) continue;
-      if (!body.includes("Our last read of it, on ")) continue;
+      if (!body.includes(`Our last read of it, on ${refused_date}, `)) continue;
       spoke.push(offer.vendor);
       if (!body.includes(WHAT_A_VOIDED_READ_FOUND[reason])) {
         wrong.push(`/vendor/${slugOf(offer.vendor)} (${reason})`);
@@ -360,7 +361,9 @@ describe("the pages that describe a read our own refusal voided", () => {
       if (status !== 200) continue;
       if (!body.includes("Our last read of it, on ")) continue;
       spoke++;
-      if (!body.includes(FOUND_A_DIFFERENCE)) quiet.push(`/vendor/${slugOf(offer.vendor)}`);
+      if (!body.includes(FOUND_A_DIFFERENCE) && !body.includes(A_REFUSAL_THAT_LEFT_THE_DIFFERENCE_STANDING)) {
+        quiet.push(`/vendor/${slugOf(offer.vendor)}`);
+      }
     }
     assertPopulationFloor(spoke, 50, "unsettled contradicting reads whose vendor page states what the read found");
     assert.deepStrictEqual(quiet.slice(0, 20), [], quiet.slice(0, 20).join("\n"));

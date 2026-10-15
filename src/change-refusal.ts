@@ -267,10 +267,17 @@ export function measuredNoDifferenceSentence(subject: string, refusedOn: string)
     + ` and refusing a change is not a confirmation of the terms we publish for it.`;
 }
 
+export const READ_AGAIN_SINCE = " and we have read it again since, on ";
+
+export function theRefusedReadAlone(clause: string): string {
+  const at = clause.indexOf(`,${READ_AGAIN_SINCE}`);
+  return at === -1 ? clause : clause.slice(0, at);
+}
+
 export function unreconciledReadThenReadAgainClause(refusedOn: string, readOn: string): string {
   return `when we read the page we cite for this offer on ${refusedOn},`
     + ` we found a change we could not reconcile with the terms we publish,`
-    + ` and we have read it again since, on ${readOn}, without confirming them`;
+    + `${READ_AGAIN_SINCE}${readOn}, without confirming them`;
 }
 
 export function unreconciledReadThenReadAgainSentence(
@@ -280,13 +287,13 @@ export function unreconciledReadThenReadAgainSentence(
 ): string {
   return `When we read the page we cite for ${subject} on ${refusedOn},`
     + ` we found a change we could not reconcile with the terms we publish for it,`
-    + ` and we have read it again since, on ${readOn}, without confirming them.`;
+    + `${READ_AGAIN_SINCE}${readOn}, without confirming them.`;
 }
 
 export function measuredNoDifferenceThenReadAgainClause(refusedOn: string, readOn: string): string {
   return `when we read the page we cite for this offer on ${refusedOn},`
     + ` we refused the change we considered recording because it named no figure that had moved,`
-    + ` and we have read it again since, on ${readOn}, without confirming the terms above`;
+    + `${READ_AGAIN_SINCE}${readOn}, without confirming the terms above`;
 }
 
 export function measuredNoDifferenceThenReadAgainSentence(
@@ -296,7 +303,7 @@ export function measuredNoDifferenceThenReadAgainSentence(
 ): string {
   return `When we read the page we cite for ${subject} on ${refusedOn},`
     + ` we refused the change we considered recording because it named no figure that had moved,`
-    + ` and we have read it again since, on ${readOn}, without confirming the terms we publish for it.`;
+    + `${READ_AGAIN_SINCE}${readOn}, without confirming the terms we publish for it.`;
 }
 
 export function unreconciledReadMetaClause(refusedOn: string): string {
@@ -335,7 +342,7 @@ export function readHadNoStandingThenReadAgainClause(
   found: string,
 ): string {
   return `when we read the page we cite for this offer on ${refusedOn}, we ${found},`
-    + ` and we have read it again since, on ${readOn}, without confirming the terms above`;
+    + `${READ_AGAIN_SINCE}${readOn}, without confirming the terms above`;
 }
 
 export function readHadNoStandingThenReadAgainSentence(
@@ -345,7 +352,7 @@ export function readHadNoStandingThenReadAgainSentence(
   found: string,
 ): string {
   return `When we read the page we cite for ${subject} on ${refusedOn}, we ${found},`
-    + ` and we have read it again since, on ${readOn}, without confirming the terms we publish for it.`;
+    + `${READ_AGAIN_SINCE}${readOn}, without confirming the terms we publish for it.`;
 }
 
 export function readHadNoStandingThenReadAgainMetaClause(
