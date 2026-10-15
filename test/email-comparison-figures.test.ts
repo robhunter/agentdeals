@@ -191,12 +191,20 @@ describe("an email free tier typed into a page states what the vendor's own reco
     assert.doesNotMatch(card, /1,000 daily API requests|10 templates|5 seats/, `MailerSend's card reads: ${card}`);
   });
 
+  it("gives MailerSend the daily limit its record states, and never says it has no daily cap", () => {
+    const [daily] = recordFigures("MailerSend.com", /at most (\d[\d,]*) a day/);
+    const card = cardText(html[COMPARISON], "MailerSend");
+    assert.strictEqual(rowCells(html[COMPARISON], "MailerSend")[3], `${daily} API requests`);
+    assert.match(card, new RegExp(`${daily} daily API requests`), `MailerSend's card reads: ${card}`);
+    assert.doesNotMatch(card, /no daily cap/i, `MailerSend's card reads: ${card}`);
+  });
+
   it("prices dedicated IPs as Resend and Maileroo sell them, and keeps Resend's free volume and daily cap", () => {
     const resend = rowCells(html[COMPARISON], "Resend");
     assert.deepStrictEqual([resend[2], resend[3], resend[8]], ["3,000/mo", "100/day", "$30/mo add-on (Scale)"]);
     assert.strictEqual(rowCells(html[COMPARISON], "Maileroo")[8], "Included (all plans)");
     const trap = readableText(html[COMPARISON]).match(/The dedicated IP trap: .*? This hidden cost/)?.[0] ?? "";
-    assert.match(trap, /Resend offers dedicated IPs as a \$30\/month add-on on the Scale plan/, `the dedicated IP paragraph reads: ${trap}`);
+    assert.match(trap, /Resend offers dedicated IPs as a \$30\/month add-on on the Scale plan, for senders above 3,000 emails a day\./, `the dedicated IP paragraph reads: ${trap}`);
     assert.doesNotMatch(trap, /Pro \(\$80\/month\)/, `the dedicated IP paragraph reads: ${trap}`);
   });
 });

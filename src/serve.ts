@@ -39058,7 +39058,7 @@ ${globalNavCss()}
         <td class="provider-col">MailerSend<span class="caution-badge">SHRINKING</span></td>
         <td>Transactional</td>
         <td>500/mo</td>
-        <td>None</td>
+        <td>100 API requests</td>
         <td>Unlimited</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003; Both</td>
@@ -39282,7 +39282,7 @@ ${globalNavCss()}
 
   <div class="diff-card">
     <h3>MailerSend <span class="caution-badge">SHRINKING</span></h3>
-    <div class="diff-desc"><strong>Free tier:</strong> 500 emails/month, down from 3,000 in April 2026. Free accounts get 1 sending domain and 100 daily API requests; the 14-day Professional trial carries the same 500 emails/month. Built by the team behind MailerLite. Clean API, inbound email processing, and email verification included. No daily cap. Good template editor. SMS support on paid tiers. Hobby is $7.00/month for 5,000 emails ($5.60/month billed yearly), which is where a project sending more than 500 lands.</div>
+    <div class="diff-desc"><strong>Free tier:</strong> 500 emails/month, down from 3,000 in April 2026. Free accounts get 1 sending domain and 100 daily API requests; the 14-day Professional trial carries the same 500 emails/month. Built by the team behind MailerLite. Clean API, inbound email processing, and email verification included. Good template editor. SMS support on paid tiers. Hobby is $7.00/month for 5,000 emails ($5.60/month billed yearly), which is where a project sending more than 500 lands.</div>
   </div>
 
   <div class="diff-card">
@@ -39634,7 +39634,7 @@ ${globalNavCss()}
   </div>
 
   <div class="context-box">
-    <strong>The dedicated IP trap:</strong> Shared IP pools work fine for low-volume senders. But once you're sending 50K+ emails/month, you need a dedicated IP for deliverability control. <strong>Postmark charges $50/month</strong> per dedicated IP. <strong>SendGrid charges $80/month.</strong> <strong>Resend offers dedicated IPs as a $30/month add-on on the Scale plan.</strong> SES dedicated IPs are free but require manual warm-up. This hidden cost doubles your bill on lower tiers.
+    <strong>The dedicated IP trap:</strong> Shared IP pools work fine for low-volume senders. But once you're sending 50K+ emails/month, you need a dedicated IP for deliverability control. <strong>Postmark charges $50/month</strong> per dedicated IP. <strong>SendGrid charges $80/month.</strong> <strong>Resend offers dedicated IPs as a $30/month add-on on the Scale plan, for senders above 3,000 emails a day.</strong> SES dedicated IPs are free but require manual warm-up. This hidden cost doubles your bill on lower tiers.
   </div>
 
   <div class="context-box">
