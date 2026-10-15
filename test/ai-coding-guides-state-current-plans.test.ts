@@ -92,6 +92,8 @@ const STATED_ON_THE_TOOLS_PAGE = [
   "Price convergence: Windsurf, Augment, Bolt.new, Lovable, Codex (via ChatGPT Plus), and Devin all land at or near $20/month for their entry paid tier. GitHub Copilot is $10/mo. Since 2026-10-12, Cursor's entry paid plan for new subscribers is Plus at $8/mo, which runs only Grok models and Cursor's Composer.",
   "Amazon Kiro is an AI coding tool from AWS, generally available since November 2025, built around spec-driven development: requirements, design docs and tests. By default it runs on Auto, a mix of frontier models. Free: 50 credits/month. Pro: $20/month (1,000 credits). Paid plans can buy add-on credits at $0.04 each. Enterprise adds SAML/SCIM SSO.",
   "Cursor's Free plan lists \"Agent and Chat with limited usage\"",
+  "The pattern: Credits and quotas are replacing flat subscriptions: Cursor in June 2025, Augment Code in October 2025, Windsurf in March 2026, and GitHub Copilot, which moved every plan to AI credits, in June 2026. Most entry plans are $20/month and power-user plans $200/month. Since 2026-10-12, Cursor's entry plan for new subscribers is Plus at $8/month, and Claude, GPT and Gemini cost API list price on top from Premium ($30/month) up.",
+  "Key trends: Credit and quota models are replacing flat subscriptions (Cursor Jun 2025, Augment Oct 2025, Windsurf Mar 2026, Copilot Jun 2026).",
   "Cline is Apache 2.0 licensed. Users can bring their own API keys or use the Cline provider.",
 ];
 
@@ -127,6 +129,8 @@ const WITHDRAWN_FROM_THE_TOOLS_PAGE: Record<string, RegExp> = {
   "Kiro Pro priced to match Cursor": /matching Cursor's price/,
   "Hobby as the free plan a new Cursor subscriber gets": /Hobby is Cursor's free plan|Cursor's free plan is called Hobby|Cursor's free Hobby plan/,
   "Cursor's entry tier among those near $20": /Price convergence: Cursor/,
+  "entry prices held at $20 by the credit model": /keeping entry prices at \$20/,
+  "GitHub Copilot's move to credits as still to come": /Expect GitHub Copilot to adopt/,
 };
 
 function rowsBetween(page: string, from: string, to: string): string[][] {
@@ -174,14 +178,17 @@ describe("/ai-coding-tools-pricing says which of its products are closed, as the
   it("prices Cursor's table rows at the plans a new subscriber can buy", () => {
     assert.deepStrictEqual(pricingRow(TOOLS_PAGE, "Cursor"), {
       free: "Limited Agent and Chat usage",
-      pro: "$8/mo (Plus)",
+      pro: "$8/mo (Plus); $30/mo (Premium) for Claude and GPT",
       power: "$200/mo (Ultra)",
       teams: "$30, $100 or $200/user/mo",
     });
     const freeTiers = rowsBetween(TOOLS_PAGE, 'id="free-tiers"', 'id="cost-analysis"');
     assert.strictEqual(rowFor(freeTiers, "Cursor")[1], "Limited Agent and Chat usage");
     const costs = rowsBetween(TOOLS_PAGE, 'id="cost-analysis"', 'id="hidden-costs"');
-    assert.deepStrictEqual(rowFor(costs, "Cursor").slice(0, 2), ["$8", "$150"]);
+    assert.deepStrictEqual(rowFor(costs, "Cursor").slice(0, 2), [
+      "$8 (Plus, Grok and Composer only) or $30 (Premium) plus Claude and GPT at API list price",
+      "$150 (5 × $30 seats) plus Claude and GPT at API list price and the Cursor Token Rate",
+    ]);
   });
 
   it("lists Amazon Q Developer and MarsCode with no free tier, saying when each closed", () => {

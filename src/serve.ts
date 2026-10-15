@@ -28131,14 +28131,14 @@ function buildAiCodingToolsPricingPage(): string {
       slug: "cursor",
       category: "ide",
       free: "Limited Agent and Chat usage",
-      pro: "$8/mo (Plus)",
+      pro: "$8/mo (Plus); $30/mo (Premium) for Claude and GPT",
       power: "$200/mo (Ultra)",
       teams: "$30, $100 or $200/user/mo",
       model: "Credit-based",
       freeDetails: "Since 2026-10-12, Cursor's pricing docs say: \"Cursor is sold as part of The X Subscription, one subscription for Grok, Cursor, and X.\" Free is $0, with limited Agent and Chat usage. Plus is $8/mo, Premium $30/mo (4x Plus's usage), Super $100/mo (15x) and Ultra $200/mo (50x), all from one weekly usage pool shared with Grok. Claude, GPT and Gemini are outside every plan's pool: Premium and above pay the model's API list price from prepaid credit, and Free and Plus cannot use them. Teams seats are $30, $100 or $200 per user a month. Existing Hobby, Pro ($20), Pro+ ($60) and Ultra subscribers keep their plans until they choose to switch.",
       freeType: "limited",
-      monthlyCostSolo: "$8",
-      monthlyCostTeam5: "$150",
+      monthlyCostSolo: "$8 (Plus, Grok and Composer only) or $30 (Premium) plus Claude and GPT at API list price",
+      monthlyCostTeam5: "$150 (5 × $30 seats) plus Claude and GPT at API list price and the Cursor Token Rate",
       hiddenCosts: "Usage cost varies by model. Claude Opus 5.5 costs $4/$20 per million tokens, twice the $2/$10 cost of Claude Sonnet 5.5.",
     },
     {
@@ -28634,7 +28634,7 @@ function buildAiCodingToolsPricingPage(): string {
     '\n' +
     '  <div class="executive-summary">\n' +
     '    <p><strong>The AI coding tools market in April 2026:</strong> 17 tools across four categories \u2014 IDE-based editors, CLI/terminal agents, cloud coding agents, and AI app builders. $20/month has become the standard price point. Some free tiers are metered by the month (GitHub Copilot Free: 2,000 completions), some publish no figure (Devin\'s Free plan: a "light quota"), and Google ended the free Gemini Code Assist individuals tier on 2026-06-18. The BYOK (bring your own key) tools \u2014 Cline, Aider, Gemini CLI \u2014 are technically free but shift costs to API providers.</p>\n' +
-    '    <p><strong>Key trends:</strong> Credit and quota models are replacing flat subscriptions (Cursor Jun 2025, Augment Oct 2025, Windsurf Mar 2026). Cloud agents (Codex, Devin) are a newer category.</p>\n' +
+    '    <p><strong>Key trends:</strong> Credit and quota models are replacing flat subscriptions (Cursor Jun 2025, Augment Oct 2025, Windsurf Mar 2026, Copilot Jun 2026). Cloud agents (Codex, Devin) are a newer category.</p>\n' +
     '    <p><strong>This guide covers:</strong> pricing tables, category breakdowns, what you actually get for free, cost analysis for solo devs and teams, hidden costs, and best-for-use-case recommendations \u2014 compiled by hand from vendor pricing pages.</p>\n' +
     '  </div>\n' +
     '\n' +
@@ -28768,7 +28768,7 @@ function buildAiCodingToolsPricingPage(): string {
     upcomingChangesSection +
     '\n' +
     '  <div class="context-box">\n' +
-    '    <strong>The pattern:</strong> Credits and quotas are replacing flat subscriptions. Cursor moved first (June 2025), Augment Code followed (October 2025), and Windsurf completed the shift (March 2026). This lets vendors monetize power users at $200/month while keeping entry prices at $20. Expect GitHub Copilot to adopt a similar model as competitive pressure mounts.\n' +
+    '    <strong>The pattern:</strong> Credits and quotas are replacing flat subscriptions: Cursor in June 2025, Augment Code in October 2025, Windsurf in March 2026, and GitHub Copilot, which moved every plan to AI credits, in June 2026. Most entry plans are $20/month and power-user plans $200/month. Since 2026-10-12, Cursor\'s entry plan for new subscribers is Plus at $8/month, and Claude, GPT and Gemini cost API list price on top from Premium ($30/month) up.\n' +
     '  </div>\n' +
     '\n' +
     '  <h2 id="recommendations">Best-for-Use-Case Recommendations</h2>\n' +
