@@ -4,7 +4,7 @@
     "A": 30,
     "B": 90
   },
-  "measured_on": "2026-10-14",
+  "measured_on": "2026-10-15",
   "pages": [
     {
       "path": "/agent-payments",
@@ -136,12 +136,12 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 122,
+      "table_figures": 124,
       "table_figures_from_records": 22,
       "tables": [
         {
           "label": "Pricing Comparison Table",
-          "figures": 38,
+          "figures": 40,
           "from_records": 0
         },
         {
