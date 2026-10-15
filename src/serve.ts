@@ -19233,7 +19233,7 @@ function buildHetznerPricing2026Page(): string {
       <td style="font-family:var(--mono);font-size:.85rem">${escHtmlServer(c.spec)}</td>
       <td style="font-family:var(--mono);font-weight:600;color:var(--accent)">${escHtmlServer(c.price)}</td>
       <td>${escHtmlServer(c.region)}</td>
-      <td style="color:var(--text-muted);font-size:.85rem">${escHtmlServer(c.note)}${isHetzner ? "" : guideRowReferralHtml(listedAs)}</td>
+      <td style="color:var(--text-muted);font-size:.85rem">${escHtmlServer(c.note)}</td>
       <td class="figure-provenance" style="color:var(--text-muted);font-size:.85rem">${isHetzner ? hetznerReadProvenanceHtml() : figureProvenanceHtml(`${c.spec} ${c.price}`, listedAs, vendorSlug)}</td>
     </tr>${isHetzner ? "" : vendorPageConditionsRowHtml(vendorSlug, 6)}`;
   }).join("\n        ");
