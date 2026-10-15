@@ -268,6 +268,16 @@ describe("what the Last read note says that read found", () => {
     );
   });
 
+  it("states an earlier difference once, where the refusal the rating waits on already states that read", () => {
+    holding([rotation({ last_attempt_at: "2026-10-01", last_outcome: "changed", last_read_at: "2026-10-01" })], [refusal({ refused_date: "2026-10-01" })]);
+    const offer = listing({ source_check: passingCheck("2026-10-06", ["$0"]) });
+    const waitsOn = { clause: "when we read the page we cite for this offer on 2026-10-01, we found a change we could not reconcile with the terms we publish", on: "2026-10-01" };
+    const note = lastReadNote(offer, null, [{ reason: "unquantified_limit", refused_date: "2026-10-01" }], waitsOn);
+    assert.ok(!note.includes("found the page different"), note);
+    assert.ok(note.includes(NO_CONFIRMATION_HELD), note);
+    assert.ok(note.endsWith("When we read the page we cite for this offer on 2026-10-01, we found a change we could not reconcile with the terms we publish."), note);
+  });
+
   it("drops an earlier difference that a refusal of the same day settled", () => {
     const refused = [refusal({ reason: "confirmed_unchanged", refused_date: "2026-09-21" })];
     holding([rotation({ last_attempt_at: "2026-09-21", last_outcome: "changed", last_read_at: "2026-09-21" })], refused);

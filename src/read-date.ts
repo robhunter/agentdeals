@@ -589,8 +589,10 @@ export function lastReadNote(
       && (byTheCheck || !theNoteDescribesTheReadOn(refusalTheRatingWaitsOn.on, read, outcome, settled, restatedFrom))
       ? ` ${asSentence(refusalTheRatingWaitsOn.clause)}`
       : "";
+    const standing = byTheCheck ? readThatContradictsOurTerms(offer) : null;
+    const statedByTheRefusal = refusal !== "" && standing?.date === refusalTheRatingWaitsOn?.on;
     const note = byTheCheck && offer
-      ? sourceCheckNote(offer, read, verified, restatedFrom, readThatContradictsOurTerms(offer))
+      ? sourceCheckNote(offer, read, verified, restatedFrom, statedByTheRefusal ? null : standing)
       : noConfirmationNote(read, verified, outcome, settled, restatedFrom);
     return note + refusal + tail;
   }
