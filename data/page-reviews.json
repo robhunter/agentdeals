@@ -2215,17 +2215,17 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 135,
+      "table_figures": 138,
       "table_figures_from_records": 45,
       "tables": [
         {
           "label": "Pricing Comparison Table",
-          "figures": 36,
+          "figures": 38,
           "from_records": 0
         },
         {
           "label": "What You Actually Get for Free",
-          "figures": 13,
+          "figures": 14,
           "from_records": 0
         },
         {
