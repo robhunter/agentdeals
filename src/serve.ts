@@ -10984,7 +10984,7 @@ ${buildCards(startupCredits)}
       <tr>
         <td style="font-weight:600"><a href="/vendor/google-cloud-run" style="color:var(--text)">Google Cloud Run</a></td>
         <td>Containers</td>
-        <td>2M req/mo, 360K vCPU-sec</td>
+        <td>2M req/mo, 180K vCPU-sec</td>
         <td>1 GB/mo</td>
         <td>Containerized APIs, auto-scaling to zero</td>
       </tr>
@@ -31119,6 +31119,7 @@ function buildHostingPricingPage(): string {
     monthlyCostSolo: string;
     monthlyCostTeam: string;
     hiddenCosts: string;
+    wall?: string;
   }
 
   const services: HostingService[] = [
@@ -31144,9 +31145,9 @@ function buildHostingPricingPage(): string {
       freeTier: "Free web services",
       paidFrom: "$7/mo (Starter instance)",
       freeBandwidth: "5 GB (then $0.15/GB)",
-      freeBuildMinutes: "750 hrs/mo",
+      freeBuildMinutes: "500 min/mo",
       freeCompute: "Less than 1 CPU, 512 MB RAM (spins down)",
-      freeDetails: "Free web services with less than 1 CPU, 512 MB RAM, auto-sleep after 15 minutes of inactivity. 750 build hours/month, 5 GB bandwidth/month included then $0.15/GB. Free PostgreSQL (30-day expiry, 256 MB). Free Redis (25 MB, 50 connections). Supports Docker, Node, Python, Go, Ruby, Rust.",
+      freeDetails: "Free web services with less than 1 CPU, 512 MB RAM, auto-sleep after 15 minutes of inactivity. 750 free instance hours/month, 500 build minutes/month, 5 GB bandwidth/month included then $0.15/GB. Free PostgreSQL (30-day expiry, 256 MB). Free Redis (25 MB, 50 connections). Supports Docker, Node, Python, Go, Ruby, Rust.",
       freeType: "limited",
       monthlyCostSolo: "$0–7",
       monthlyCostTeam: "$25/mo flat (Pro) + usage",
@@ -31166,6 +31167,7 @@ function buildHostingPricingPage(): string {
       monthlyCostSolo: "Usage-based",
       monthlyCostTeam: "$29/mo (Scale) + usage",
       hiddenCosts: "No free plan for new accounts: a trial of 2 machine hours or 7 days, whichever comes first, then pay-as-you-go. Legacy free allowances only for pre-Oct-2024 accounts on deprecated plans. Volume snapshots billed at $0.08/GB-month (first 10 GB free).",
+      wall: "Immediately (pay-as-you-go after a trial of 2 machine hours or 7 days)",
     },
     {
       name: "Koyeb",
@@ -31181,13 +31183,14 @@ function buildHostingPricingPage(): string {
       monthlyCostSolo: "$29+",
       monthlyCostTeam: "Usage-based",
       hiddenCosts: "No free plan for new users since February 2026; Pro is $29 a month plus compute.",
+      wall: "Immediately ($29/mo Pro minimum)",
     },
     {
       name: "Northflank",
       slug: "northflank",
       category: "traditional-paas",
       freeTier: "2 services",
-      paidFrom: "$0.007/hr",
+      paidFrom: "$2.70/mo (0.1 vCPU, 256 MB)",
       freeBandwidth: "Included",
       freeBuildMinutes: "Included",
       freeCompute: "2 services (0.2 vCPU, 512 MB each)",
@@ -31279,7 +31282,7 @@ function buildHostingPricingPage(): string {
       freeTier: "Hobby plan (free)",
       paidFrom: "$20/mo (Pro)",
       freeBandwidth: "100 GB",
-      freeBuildMinutes: "6000/mo",
+      freeBuildMinutes: "No monthly quota (45 min per build, 100 deployments/day)",
       freeCompute: "100 GB bandwidth, serverless functions",
       freeDetails: "Hobby plan: 100 GB Fast Data Transfer, 1M Function Invocations and 4 hours Fluid Active CPU a month; builds included, up to 45 minutes each; non-commercial personal use only. Deploy from Git with preview deployments. Optimized for Next.js, supports all frameworks. Edge Functions, Image Optimization, Analytics (limited).",
       freeType: "generous",
@@ -31295,8 +31298,8 @@ function buildHostingPricingPage(): string {
       paidFrom: "Usage-based",
       freeBandwidth: "1 GB North America",
       freeBuildMinutes: "2,500/mo (Cloud Build)",
-      freeCompute: "2M requests/mo, 360K vCPU-sec, 180K GiB-sec",
-      freeDetails: "Always Free tier: 2 million requests/month, 360,000 vCPU-seconds, 180,000 GiB-seconds of memory, 1 GB outbound (North America). Runs containers, auto-scales to zero. Supports any language/framework via Docker. Integrated with Google Cloud ecosystem.",
+      freeCompute: "2M requests/mo, 180K vCPU-sec, 360K GiB-sec",
+      freeDetails: "Always Free tier: 2 million requests/month, 180,000 vCPU-seconds, 360,000 GiB-seconds of memory, 1 GB outbound (North America). Runs containers, auto-scales to zero. Supports any language/framework via Docker. Integrated with Google Cloud ecosystem.",
       freeType: "generous",
       monthlyCostSolo: "$0",
       monthlyCostTeam: "Usage-based",
@@ -31322,15 +31325,15 @@ function buildHostingPricingPage(): string {
       slug: "pythonanywhere",
       category: "static-specialized",
       freeTier: "1 web app",
-      paidFrom: "$0 (Hacker tier removed)",
+      paidFrom: "$10/mo (Developer)",
       freeBandwidth: "Included",
       freeBuildMinutes: "N/A",
       freeCompute: "1 web app, 512 MB storage",
       freeDetails: "1 free web app on yourusername.pythonanywhere.com. 512 MB storage, daily CPU seconds limit. Python 2.7/3.x. Built-in Bash console, MySQL database. No custom domain on free tier. Good for learning and small projects.",
       freeType: "limited",
-      monthlyCostSolo: "$0–12",
+      monthlyCostSolo: "$0–10",
       monthlyCostTeam: "Per-account",
-      hiddenCosts: "$5 Hacker tier was eliminated (Jan 2026). Jump from free to $12/month for custom domain and more resources. Limited outbound HTTP on free tier (whitelist only).",
+      hiddenCosts: "$5 Hacker tier was eliminated (Jan 2026). Jump from free to $10/month for custom domain and more resources. Limited outbound HTTP on free tier (whitelist only).",
     },
     {
       name: "Heroku",
@@ -31346,6 +31349,7 @@ function buildHostingPricingPage(): string {
       monthlyCostSolo: "$5–7",
       monthlyCostTeam: "$7/dyno + add-ons",
       hiddenCosts: "No free tier at all. Add-on costs stack up fast (Postgres Mini $5/mo, Redis Mini $3/mo). Eco dynos sleep and have shared compute. Basic dynos ($7) are the real minimum for production use.",
+      wall: "Immediately ($5/mo minimum)",
     },
   ];
 
@@ -31642,11 +31646,11 @@ function buildHostingPricingPage(): string {
     '    </thead>\n' +
     '    <tbody>\n' +
     services.map(s => {
-      const wallDesc = s.freeType === "generous" ? "Months of real traffic" :
+      const wallDesc = s.wall ?? (s.freeType === "generous" ? "Months of real traffic" :
         s.freeType === "credits" ? "When credits run out" :
-        s.freeType === "removed" ? "Immediately ($5/mo minimum)" :
+        s.freeType === "removed" ? "Immediately" :
         s.freeType === "trial" ? "When trial expires" :
-        "Weeks of moderate use";
+        "Weeks of moderate use");
       return '      <tr>' +
         '<td style="font-weight:600">' + escHtmlServer(s.name) + '</td>' +
         '<td><span style="color:' + (freeTypeColors[s.freeType] || "var(--text-muted)") + ';font-size:.8rem;font-weight:600">' + escHtmlServer(freeTypeLabels[s.freeType]) + '</span></td>' +
@@ -33001,7 +33005,7 @@ function buildAppRunnerMigrationPage(): string {
     { name: "Amazon ECS Express Mode", slug: "aws", freeTier: "Free plan: $100 credit at sign-up + up to $100 more, 6 months", startingPrice: "~$0.01/hr (Fargate)", pricingModel: "Per-hour (Fargate vCPU + memory)", sourceCodeDeploy: "No — container images only", autoScaling: "Yes (Service Auto Scaling)", migrationEffort: "Moderate — different API, same AWS ecosystem", bestFor: "Existing AWS users (official recommendation)" },
     { name: "AWS Fargate", slug: "aws", freeTier: "AWS Free Tier (limited)", startingPrice: "$0.04048/vCPU-hr + $0.004445/GB-hr", pricingModel: "Per-second (vCPU + memory)", sourceCodeDeploy: "No — container images only", autoScaling: "Yes (ECS Service Auto Scaling)", migrationEffort: "Moderate — different API, same ECR", bestFor: "Serverless containers on AWS" },
     { name: "Elastic Beanstalk", slug: "aws", freeTier: "No EB fee (pay for underlying resources)", startingPrice: "EC2 pricing", pricingModel: "Per-hour (underlying EC2/RDS)", sourceCodeDeploy: "Yes — source code + Dockerfiles", autoScaling: "Yes (EC2 Auto Scaling)", migrationEffort: "Low — supports source code deploy like App Runner", bestFor: "Source code deploy with full AWS control" },
-    { name: "Google Cloud Run", slug: "google-cloud-run", freeTier: "2M requests/mo, 360K vCPU-sec, 180K GiB-sec free", startingPrice: "$0.00002400/vCPU-sec", pricingModel: "Per-request + per-second (scale to zero)", sourceCodeDeploy: "Yes — source code via buildpacks", autoScaling: "Yes (scale to zero)", migrationEffort: "Moderate — different cloud, similar DX", bestFor: "Pay-per-request with generous free tier" },
+    { name: "Google Cloud Run", slug: "google-cloud-run", freeTier: "2M requests/mo, 180K vCPU-sec, 360K GiB-sec free", startingPrice: "$0.00002400/vCPU-sec", pricingModel: "Per-request + per-second (scale to zero)", sourceCodeDeploy: "Yes — source code via buildpacks", autoScaling: "Yes (scale to zero)", migrationEffort: "Moderate — different cloud, similar DX", bestFor: "Pay-per-request with generous free tier" },
     { name: "Azure Container Apps", slug: "azure", freeTier: "180K vCPU-sec, 360K GiB-sec/mo free", startingPrice: "$0.000024/vCPU-sec", pricingModel: "Per-second (consumption) or dedicated", sourceCodeDeploy: "Yes — source code via buildpacks", autoScaling: "Yes (KEDA-based, scale to zero)", migrationEffort: "Moderate — different cloud, similar concepts", bestFor: "Azure ecosystem, event-driven scaling" },
     { name: "Railway", slug: "railway", freeTier: "$5 trial credit (30 days), then $1 of free credit a month", startingPrice: "$5/mo + usage ($0.000463/vCPU-min)", pricingModel: "Per-minute (vCPU + memory) + subscription", sourceCodeDeploy: "Yes — GitHub/GitLab auto-deploy", autoScaling: "Yes (horizontal + vertical)", migrationEffort: "Low — push to deploy, minimal config", bestFor: "Developer experience, fast deployment" },
     { name: "Render", slug: "render", freeTier: "Free tier (750 hrs/mo, sleeps after inactivity)", startingPrice: "$7/mo (Starter)", pricingModel: "Per-service fixed monthly", sourceCodeDeploy: "Yes — GitHub auto-deploy", autoScaling: "Yes (paid plans)", migrationEffort: "Low — similar DX to App Runner", bestFor: "Simple web services, closest App Runner experience" },
@@ -33034,7 +33038,7 @@ function buildAppRunnerMigrationPage(): string {
   const pricingComparisonRows = [
     { name: "App Runner (closing)", free: "None for new customers", monthly: "From $5/mo (1 vCPU, 2GB)", scaling: "Per-request auto-scaling", color: "#f85149" },
     { name: "ECS Express Mode (Fargate)", free: "AWS Free Tier (limited)", monthly: "~$30/mo (0.5 vCPU, 1GB 24/7)", scaling: "Per-second, service auto-scaling", color: "var(--accent)" },
-    { name: "Google Cloud Run", free: "2M req + 360K vCPU-sec/mo", monthly: "Pay-per-use (scale to zero)", scaling: "Per-request, scale to zero", color: "#3fb950" },
+    { name: "Google Cloud Run", free: "2M req + 180K vCPU-sec/mo", monthly: "Pay-per-use (scale to zero)", scaling: "Per-request, scale to zero", color: "#3fb950" },
     { name: "Azure Container Apps", free: "180K vCPU-sec/mo", monthly: "Pay-per-use (scale to zero)", scaling: "Per-second, KEDA events", color: "#3fb950" },
     { name: "Railway", free: "$5 trial credit (30 days), then $1 of free credit a month", monthly: "From $5/mo + usage", scaling: "Per-minute, horizontal", color: "#d29922" },
     { name: "Render", free: "750 hrs/mo (sleeps)", monthly: "From $7/mo (Starter)", scaling: "Fixed + auto-scaling (paid)", color: "#3fb950" },
@@ -33065,7 +33069,7 @@ function buildAppRunnerMigrationPage(): string {
     { q: "When does AWS App Runner shut down?", a: "AWS App Runner closed to new customers on April 30, 2026. Existing customers can keep using it, including creating new services, and AWS says it does not plan new features. AWS has not announced a shutdown date for existing services, and recommends Amazon ECS Express Mode for migrations." },
     { q: "What is ECS Express Mode and how does it replace App Runner?", a: "ECS Express Mode is AWS's recommended migration path. It simplifies Amazon ECS by providing a streamlined container deployment experience similar to App Runner — easier configuration, managed networking, and automatic scaling — while giving you access to the full ECS ecosystem. The main difference is that ECS Express Mode only supports container images (no source code deploy), so you'll need to build your container first." },
     { q: "Can I still use App Runner if I'm already a customer?", a: "Yes. AWS says existing customers can continue to use App Runner as normal, including creating new services. AWS does not plan new features and recommends ECS Express Mode when you migrate." },
-    { q: "What are the best free alternatives to App Runner?", a: "Google Cloud Run's free tier is 2 million requests/month, 360K vCPU-seconds, and scale to zero. Fly.io provides 3 free shared VMs. Render has a free tier with 750 hours/month (services sleep after inactivity). Azure Container Apps offers 180K vCPU-seconds/month free. For AWS-native options, Elastic Beanstalk has no management fee — you only pay for underlying resources." },
+    { q: "What are the best free alternatives to App Runner?", a: "Google Cloud Run's free tier is 2 million requests/month, 180K vCPU-seconds, and scale to zero. Fly.io provides 3 free shared VMs. Render has a free tier with 750 hours/month (services sleep after inactivity). Azure Container Apps offers 180K vCPU-seconds/month free. For AWS-native options, Elastic Beanstalk has no management fee — you only pay for underlying resources." },
     { q: "Which alternative supports source code deployment like App Runner?", a: "App Runner's source code deployment (push code, AWS builds the container) is available on: Google Cloud Run (Cloud Build + buildpacks), Railway (GitHub auto-deploy), Render (GitHub auto-deploy), Fly.io (Dockerfiles + buildpacks), DigitalOcean App Platform (GitHub/GitLab auto-deploy), Azure Container Apps (source code via buildpacks), Elastic Beanstalk (source bundles + Dockerfiles), and Northflank (buildpacks + Dockerfiles). ECS Express Mode does NOT support source code deploy — you must provide a container image." },
   ];
 
@@ -33476,7 +33480,7 @@ railway up
     </div>
     <div class="verdict-item">
       <strong>Best free tier:</strong>
-      <p>Google Cloud Run — 2M requests/month, 360K vCPU-seconds, scale to zero. The most generous free tier for container workloads. Source code deployment supported via buildpacks.</p>
+      <p>Google Cloud Run — 2M requests/month, 180K vCPU-seconds, scale to zero. The most generous free tier for container workloads. Source code deployment supported via buildpacks.</p>
     </div>
     <div class="verdict-item">
       <strong>Closest App Runner experience:</strong>
@@ -35740,7 +35744,7 @@ ${globalNavCss()}
         <td class="provider-col">GCP</td>
         <td>Cloud Run</td>
         <td>2M requests/mo</td>
-        <td>360K vCPU-seconds, 180K GiB-seconds</td>
+        <td>180K vCPU-seconds, 360K GiB-seconds</td>
         <td style="color:#3fb950">Always free</td>
       </tr>
       <tr>
@@ -35788,14 +35792,14 @@ ${globalNavCss()}
       <tr>
         <td class="provider-col">GCP</td>
         <td>Cloud Storage: 5 GB regional</td>
-        <td>1 GB egress to NA/EU; Cloud CDN not free</td>
+        <td>100 GB egress from North America; Cloud CDN not free</td>
         <td style="color:#3fb950">Always free (storage)</td>
       </tr>
       <tr>
         <td class="provider-col">Azure</td>
         <td>Blob Storage: 5 GB LRS hot</td>
-        <td>Azure CDN not free-tier; 15 GB outbound</td>
-        <td style="color:#d29922">12 months</td>
+        <td>Azure CDN not free-tier; first 100 GB/mo outbound free from North America and Europe</td>
+        <td style="color:#d29922">12 months (Blob Storage)</td>
       </tr>
       <tr>
         <td class="provider-col">DigitalOcean</td>
@@ -41225,7 +41229,7 @@ ${globalNavCss()}
 
   <div class="diff-card">
     <h3>Google Cloud Storage</h3>
-    <div class="diff-desc"><strong>Free tier:</strong> 5 GB-months/month in US regions (us-east1, us-west1, us-central1). 5,000 Class A ops, 50,000 Class B ops, 1 GB egress to North America per month. <strong>Always Free</strong> &mdash; does not expire. S3 interoperability mode available. Egress at $0.12/GB is even more expensive than S3. Integrated with BigQuery, Cloud Functions, and other GCP services. Best for GCP-native apps or when you need the Always Free guarantee.</div>
+    <div class="diff-desc"><strong>Free tier:</strong> 5 GB-months/month in US regions (us-east1, us-west1, us-central1). 5,000 Class A ops, 50,000 Class B ops, 100 GB egress from North America per month. <strong>Always Free</strong> &mdash; does not expire. S3 interoperability mode available. Egress at $0.12/GB is even more expensive than S3. Integrated with BigQuery, Cloud Functions, and other GCP services. Best for GCP-native apps or when you need the Always Free guarantee.</div>
   </div>
 
   <div class="diff-card">
