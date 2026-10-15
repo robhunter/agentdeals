@@ -35,6 +35,24 @@ const heldState: Array<{ vendor: string; url: string; last_attempt_at: string | 
   JSON.parse(readFileSync(path.join(REPO, "data", "verification_state.json"), "utf-8")).records;
 const stateByKey = new Map(heldState.map((r) => [`${r.vendor}|${r.url}`, r]));
 
+const heldRefusals: Array<{ vendor: string; source_url: string | null; refused_date: string }> =
+  JSON.parse(readFileSync(path.join(REPO, "data", "change_refusals.json"), "utf-8")).refusals;
+
+type ReadElsewhere = {
+  vendor: string;
+  url: string;
+  source_check?: { checked: string; outcome: string };
+  restated_from?: { reading_date: string; source_url: string };
+};
+
+const readsOutsideTheStore = (o: ReadElsewhere): string[] => [
+  ...(o.source_check && o.source_check.outcome !== "unreadable" ? [o.source_check.checked] : []),
+  ...heldRefusals
+    .filter((r) => r.vendor.trim().toLowerCase() === o.vendor.trim().toLowerCase() && r.source_url?.trim() === o.url.trim())
+    .map((r) => r.refused_date),
+  ...(o.restated_from && o.restated_from.source_url?.trim() === o.url.trim() ? [o.restated_from.reading_date] : []),
+];
+
 const byGap = (from: CatalogueOffer[]) =>
   from
     .map((o) => ({ offer: o, read: lastReadDate(o), gap: daysBetween(o.verifiedDate, lastReadDate(o)) }))
@@ -175,10 +193,11 @@ describe("every record publishes the day we last read its page", () => {
       const answered = byRecord.get(`${o.vendor}|${o.url}`);
       if (!answered) continue;
       fromTheStore++;
+      const latest = [held.last_attempt_at ?? "", ...readsOutsideTheStore(o as ReadElsewhere)].sort().pop();
       assert.equal(
         answered.last_read_date,
-        held.last_attempt_at,
-        `${o.vendor} publishes a read date of ${answered.last_read_date} where the store's own attempt read the page on ${held.last_attempt_at}`,
+        latest,
+        `${o.vendor} publishes a read date of ${answered.last_read_date} where the latest read we hold of its page, the store's own attempt included, is ${latest}`,
       );
     }
     assertSharesPopulation(fromTheStore, recordsInTheCatalogue(), 0.5, "records the API dates from the store's own attempt");

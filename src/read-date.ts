@@ -453,10 +453,12 @@ function noConfirmationNoteStating(
   verified: string,
   found: string | null,
   restatedFrom: string | null,
+  standing: LastReading | null = null,
 ): string {
   const reading = restatedFrom
     ? theReadOurTermsCameFrom(read, restatedFrom)
     : read && found ? ` Our last read of it, on ${read}, ${found}.` : "";
+  if (standing) return `The day we last read the vendor's page.${reading} ${contradictedTermsSentence(standing)}`;
   const beside = verified && verified !== read
     ? ` — the ${verified} beside this date is not one we can source to a read that confirmed them`
     : "";
@@ -524,13 +526,15 @@ export function sourceCheckNote(
   read: string,
   verified: string,
   restatedFrom: string | null,
+  standing: LastReading | null = null,
 ): string {
   const check = offer.source_check;
   const figures = figuresTheCheckFoundThatTheListingGives(check);
   if (figures.length > 0) {
-    return `The day we last read the vendor's page. ${checkStatedFiguresTheListingGivesSentence(read, offer.vendor, figures)}`;
+    const contradiction = standing ? ` ${contradictedTermsSentence(standing)}` : "";
+    return `The day we last read the vendor's page. ${checkStatedFiguresTheListingGivesSentence(read, offer.vendor, figures)}${contradiction}`;
   }
-  return noConfirmationNoteStating(read, verified, whatTheSourceCheckFound(offer.vendor, check?.outcome), restatedFrom);
+  return noConfirmationNoteStating(read, verified, whatTheSourceCheckFound(offer.vendor, check?.outcome), restatedFrom, standing);
 }
 
 export interface TermsWeCannotConfirm {
@@ -586,7 +590,7 @@ export function lastReadNote(
       ? ` ${asSentence(refusalTheRatingWaitsOn.clause)}`
       : "";
     const note = byTheCheck && offer
-      ? sourceCheckNote(offer, read, verified, restatedFrom)
+      ? sourceCheckNote(offer, read, verified, restatedFrom, readThatContradictsOurTerms(offer))
       : noConfirmationNote(read, verified, outcome, settled, restatedFrom);
     return note + refusal + tail;
   }

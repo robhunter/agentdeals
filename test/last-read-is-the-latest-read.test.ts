@@ -248,6 +248,33 @@ describe("what the Last read note says that read found", () => {
     assert.match(note, /Our last read of it, on 2026-09-07, is where the terms above come from\./);
   });
 
+  it("keeps saying an earlier read found the page different, where nothing settled that read", () => {
+    holding([rotation({ last_attempt_at: "2026-09-21", last_outcome: "changed", last_read_at: "2026-09-21" })]);
+    const note = noteFor(listing({ source_check: passingCheck("2026-10-04", ["$0"]) }));
+    assert.strictEqual(
+      note,
+      "The day we last read the vendor's page. Our last read of it, on 2026-10-04, checked the page for Examplebase's name and a price."
+        + " Our read on 2026-09-21 found the page different from the terms we hold, and we hold no confirmation of the terms we publish.",
+    );
+  });
+
+  it("keeps saying an earlier read found the page different beside the figures a later check stated", () => {
+    holding([rotation({ last_attempt_at: "2026-09-26", last_outcome: "changed", last_read_at: "2026-09-26" })]);
+    const note = noteFor(listing({ source_check: passingCheck("2026-10-02", ["$10.00", "$50.00"]) }));
+    assert.strictEqual(
+      note,
+      "The day we last read the vendor's page. On 2026-10-02, the page we cite for Examplebase stated $10.00 and $50.00, figures this listing gives."
+        + " Our read on 2026-09-26 found the page different from the terms we hold, and we hold no confirmation of the terms we publish.",
+    );
+  });
+
+  it("drops an earlier difference that a refusal of the same day settled", () => {
+    const refused = [refusal({ reason: "confirmed_unchanged", refused_date: "2026-09-21" })];
+    holding([rotation({ last_attempt_at: "2026-09-21", last_outcome: "changed", last_read_at: "2026-09-21" })], refused);
+    const note = noteFor(listing({ source_check: passingCheck("2026-10-04", ["$0"]) }), refused);
+    assert.ok(!note.includes("found the page different"), note);
+  });
+
   it("names no attempt that did not read the page as later, where a check read it after that attempt", () => {
     holding([rotation({ last_attempt_at: "2026-10-10", last_outcome: "source_unusable", last_read_at: null })]);
     const note = noteFor(listing({ source_check: { checked: "2026-10-10", outcome: "does_not_name_vendor", detail: `the page never names ${VENDOR}` } }));

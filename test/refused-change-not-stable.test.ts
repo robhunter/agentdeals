@@ -12,6 +12,7 @@ import { SUPPRESSED_SAME_TRANSITION_REGRADED } from "../scripts/change-log.js";
 import { refusalsByVendor, refusedReadRegister, refusedReadTheConfirmationSupersedes, refusedReadWithholdingStability, supersededRefusalSentence, REFUSAL_REASONS_THAT_CONFIRM_THE_STORED_TERMS, REFUSAL_REASONS_THAT_MEASURED_NO_DIFFERENCE, REFUSED_READ_REGISTERS, MEASURED_NO_DIFFERENCE_BADGE_LABEL, READ_HAD_NO_STANDING_BADGE_LABEL, UNRECONCILED_READ_BADGE_LABEL, WHAT_A_VOIDED_READ_FOUND } from "../dist/change-refusal.js";
 import { checkVendorRisk, enrichOffers, loadChangeRefusals, loadDealChanges, loadOffers, publishedChangeCount, publishedRisk } from "../dist/data.js";
 import { resetVerificationStateCache } from "../dist/verification-state.js";
+import { readsWeHold } from "../dist/read-date.js";
 import { LEVEL_WITHHOLDING_OUTCOMES } from "../dist/source-check.js";
 import { offerEnded } from "../dist/retirement.js";
 import { classifyTier } from "../dist/ranking.js";
@@ -1291,6 +1292,7 @@ describe("the day the catalogue reports as our last read reaches the refusal it 
         refusals: refusals.get(offer.vendor.toLowerCase()) ?? [],
       });
       if (!withholding) continue;
+      if (readsWeHold(offer).some((read: { kind: string; on: string }) => read.kind !== "rotation" && read.on > withholding.refused_date)) continue;
       subject = offer;
       refusedOn = withholding.refused_date;
       break;

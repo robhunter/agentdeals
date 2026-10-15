@@ -317,10 +317,10 @@ describe("the pages that describe a read our own refusal voided", () => {
     const spoke: string[] = [];
     const wrong: string[] = [];
     for (const offer of voidedByItsOwnRefusal) {
-      const reason = sameDayRefusals(offer)[0].reason;
+      const { reason, refused_date } = sameDayRefusals(offer)[0];
       const { status, body } = await get(`/vendor/${slugOf(offer.vendor)}`);
       if (status !== 200) continue;
-      if (!body.includes("Our last read of it, on ")) continue;
+      if (!body.includes(`Our last read of it, on ${refused_date}, `)) continue;
       spoke.push(offer.vendor);
       if (!body.includes(WHAT_A_VOIDED_READ_FOUND[reason])) {
         wrong.push(`/vendor/${slugOf(offer.vendor)} (${reason})`);
