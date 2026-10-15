@@ -2115,7 +2115,7 @@
       "source_url": "https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtimes.html",
       "category": "Serverless",
       "alternatives": [
-        "Node.js 22 Lambda runtime"
+        "Node.js 24 Lambda runtime"
       ],
       "recorded_date": "2026-04-10",
       "date_source": "hand_written",

@@ -26883,7 +26883,7 @@ function buildShutdownTrackerPage(): string {
       dateSource: "https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtimes.html",
       impact: "Lambda blocks creating functions on nodejs20.x from 2027-07-29 and updating them from 2027-08-31. Functions keep running; AWS never blocks invocations.",
       whoAffected: "All AWS Lambda functions running on the nodejs20.x runtime",
-      migrationPath: "Upgrade to Node.js 22 runtime (nodejs22.x) \u2014 test for breaking changes in Node.js 22 (fetch global, V8 updates)",
+      migrationPath: "Upgrade to Node.js 24 (nodejs24.x), which AWS deprecates on 2028-04-30, or Node.js 26 (nodejs26.x), which has no deprecation date yet. Lambda blocks Node.js 22 (nodejs22.x) on the same dates as nodejs20.x: creating functions from 2027-07-29 and updating them from 2027-08-31. Test for breaking changes between Node.js versions.",
       status: "active",
     },
     {

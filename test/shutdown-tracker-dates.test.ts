@@ -1,6 +1,7 @@
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
 import { spawn, type ChildProcess } from "node:child_process";
+import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { countsDownTo, shutdownDeadlineHtml } from "../dist/shutdown-deadline.js";
@@ -91,6 +92,20 @@ describe("the shutdown tracker counts down only to dates a vendor set", () => {
     const deadlines = section.split('<div class="shutdown-card"').slice(1).map((html) => Date.parse(`${printedDeadline(html)} UTC`));
     assert.ok(deadlines.length >= 2 && deadlines.every((at) => !Number.isNaN(at)), `the Lambda card's section holds no other dated card: ${deadlines}`);
     assert.deepStrictEqual(deadlines, [...deadlines].sort((a, b) => a - b), "the Lambda card's section is not in deadline order");
+  });
+
+  it("sends nodejs20.x users past Node.js 22, which Lambda blocks on the same dates", () => {
+    const lambda = cards.find((c) => /Node\.js 20 AWS Lambda/.test(c.title));
+    assert.ok(lambda, "the Node.js 20 Lambda entry is missing");
+    assert.ok(lambda!.text.includes(
+      "Upgrade to Node.js 24 (nodejs24.x), which AWS deprecates on 2028-04-30, or Node.js 26 (nodejs26.x), which has no deprecation date yet."
+        + " Lambda blocks Node.js 22 (nodejs22.x) on the same dates as nodejs20.x: creating functions from 2027-07-29 and updating them from 2027-08-31."
+        + " Test for breaking changes between Node.js versions.",
+    ), lambda!.text);
+    const { changes } = JSON.parse(readFileSync(path.join(REPO, "data", "deal_changes.json"), "utf-8"));
+    const deprecation = changes.filter((c: { vendor: string; change_type: string; summary: string }) =>
+      c.vendor === "AWS" && c.change_type === "product_deprecated" && c.summary.includes("nodejs20.x"));
+    assert.deepStrictEqual(deprecation.map((c: { alternatives?: string[] }) => c.alternatives), [["Node.js 24 Lambda runtime"]]);
   });
 
   it("states that Proton's deployed stacks keep running", () => {

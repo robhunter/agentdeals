@@ -541,7 +541,7 @@
       ]
     },
     {
-      "name": "Node.js 22 Lambda runtime",
+      "name": "Node.js 24 Lambda runtime",
       "named_by": [
         "AWS"
       ]
