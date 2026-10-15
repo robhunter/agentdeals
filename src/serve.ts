@@ -28135,7 +28135,7 @@ function buildAiCodingToolsPricingPage(): string {
       power: "$200/mo (Ultra)",
       teams: "$40/user/mo",
       model: "Credit-based",
-      freeDetails: "Hobby is Cursor's free plan — no credit card required, limited Agent requests, access to Composer. Cursor's pricing page states no completion or premium-request figure for it. Pro is $20/mo, Pro+ $60/mo at 3x Pro's Agent limits, Ultra $200/mo at 20x. Teams $40/user/mo (Premium at 5x Standard). Enterprise is custom-priced with pooled usage and SCIM. Cursor renders only the selected tier's price in the page body; the full ladder is in the page's JSON-LD Offer list.",
+      freeDetails: "Since 2026-10-12, Cursor's pricing docs say: \"Cursor is sold as part of The X Subscription, one subscription for Grok, Cursor, and X.\" Free is $0, with limited Agent and Chat usage. Plus is $8/mo, Premium $30/mo (4x Plus's usage), Super $100/mo (15x) and Ultra $200/mo (50x), all from one weekly usage pool shared with Grok. Claude, GPT and Gemini are outside every plan's pool: Premium and above pay the model's API list price from prepaid credit, and Free and Plus cannot use them. Teams seats are $30, $100 or $200 per user a month. Existing Hobby, Pro ($20), Pro+ ($60) and Ultra subscribers keep their plans until they choose to switch.",
       freeType: "limited",
       monthlyCostSolo: "$20",
       monthlyCostTeam5: "$200",
@@ -28516,14 +28516,14 @@ function buildAiCodingToolsPricingPage(): string {
 
   const faqEntries = [
     { q: "Which AI coding tools are free in 2026?", a: "Cline and Aider are free and open source; you pay only for the model API you connect. Gemini CLI is also open source and runs on a Gemini API key: Google stopped personal-account sign-in on 2026-06-18, when it ended the free Gemini Code Assist individuals tier. GitHub Copilot Free includes 2,000 code completions a month." },
-    { q: "How much does Cursor cost vs Windsurf?", a: "Both start at $20/month for an individual paid plan and top out at $200/month: Cursor Ultra and Windsurf Max. For teams, Cursor charges $40/user/month for a Standard seat or $120 for Premium, and Windsurf $80/month plus $40 per seat. Cursor's free plan is called Hobby; between Pro and Ultra sits Pro+ at $60/mo with 3x Pro's Agent limits, and Ultra is 20x. Windsurf, renamed Devin Desktop, raised Pro from $15 to $20 in March 2026." },
+    { q: "How much does Cursor cost vs Windsurf?", a: "Since 2026-10-12, Cursor's paid plans for new subscribers start at $8/month (Plus, Grok models and Composer only) and $30/month (Premium, the first plan that can use Claude and GPT, billed at API list price on top); Windsurf's start at $20/month. Both top out at $200/month: Cursor Ultra and Windsurf Max. For teams, Cursor seats are $30, $100 or $200 per user a month, and Windsurf is $80/month plus $40 per seat. Existing Cursor Pro ($20) and Pro+ ($60) subscribers keep their plans until they switch. Windsurf, renamed Devin Desktop, raised Pro from $15 to $20 in March 2026." },
     { q: "Is GitHub Copilot still the cheapest AI coding tool?", a: "Yes \u2014 Copilot Pro at $10/month is the cheapest paid plan among the tools compared here. The free tier gives 2,000 code completions a month plus limited chat and agent use. On paid plans, completions and next edit suggestions are unlimited and consume nothing; agent and chat work is metered in GitHub AI Credits at $0.01 each \u2014 $15 of credits on Pro, $70 on Pro+ ($39/mo), $200 on Max ($100/mo). GitHub's premium-request billing and its $0.04 overage are retired; the docs now label that model legacy." },
     { q: "What are the hidden costs of BYO-key AI coding tools?", a: "Tools like Cline and Aider are free to install but require API keys. Typical costs: $5-50/month for moderate use with Claude Sonnet or GPT-4o. Heavy agentic usage (Cline with Opus) can reach $50-100/month in API costs alone." },
-    { q: "Which AI coding tool is best for teams?", a: "GitHub Copilot Business ($19/seat) is cheapest for teams. Gemini Code Assist is no longer sold to new customers. Cursor Teams is $40/user/month. Devin Desktop (Windsurf) Teams is $80/month plus $40/month per full dev seat." },
+    { q: "Which AI coding tool is best for teams?", a: "GitHub Copilot Business ($19/seat) is cheapest for teams. Gemini Code Assist is no longer sold to new customers. Cursor Teams seats are $30, $100 or $200 per user a month, with Claude and GPT billed at API list price plus the Cursor Token Rate. Devin Desktop (Windsurf) Teams is $80/month plus $40/month per full dev seat." },
     { q: "Are AI app builders like Bolt.new and Lovable worth it?", a: "For prototyping and MVPs, yes. Bolt.new offers 1M free tokens/month and Lovable gives 5 daily credits. Both generate full-stack apps from natural language. They are not designed for production-grade software development." },
     { q: "What is Google Antigravity?", a: "Google Antigravity is Google's agentic development platform, announced in November 2025 and now generally available. The individual plan is free, with basic weekly rate limits; Google AI Pro ($19.99/month) and Google AI Ultra (from $99.99/month) raise the limits, and organizations can use it through Google Cloud." },
     { q: "How do cloud coding agents (Codex, Devin) differ from IDE tools?", a: "Cloud agents run code in sandboxed environments and work autonomously — they can execute tests, create branches, and open PRs. Codex does both: it runs cloud tasks and also works locally in its desktop app, CLI and IDE extension. IDE tools assist while you code. Cloud agents are better for delegated tasks; IDE tools are better for interactive development." },
-    { q: "What is Amazon Kiro and how does it compare to Cursor?", a: "Amazon Kiro is an AI coding tool from AWS, generally available since November 2025, built around spec-driven development: requirements, design docs and tests. By default it runs on Auto, a mix of frontier models. Free: 50 credits/month. Pro: $20/month (1,000 credits), matching Cursor's price. Paid plans can buy add-on credits at $0.04 each. Enterprise adds SAML/SCIM SSO." },
+    { q: "What is Amazon Kiro and how does it compare to Cursor?", a: "Amazon Kiro is an AI coding tool from AWS, generally available since November 2025, built around spec-driven development: requirements, design docs and tests. By default it runs on Auto, a mix of frontier models. Free: 50 credits/month. Pro: $20/month (1,000 credits). Paid plans can buy add-on credits at $0.04 each. Enterprise adds SAML/SCIM SSO." },
   ];
 
   const faqJsonLd = faqPageJsonLd("/ai-coding-tools-pricing", faqEntries);
@@ -28674,7 +28674,7 @@ function buildAiCodingToolsPricingPage(): string {
     '  </div>\n' +
     '\n' +
     '  <div class="context-box">\n' +
-    '    <strong>Price convergence:</strong> Cursor, Windsurf, Augment, Bolt.new, Lovable, Codex (via ChatGPT Plus), and Devin all land at or near $20/month for their entry paid tier. GitHub Copilot at $10/mo is the outlier \u2014 kept low by Microsoft\'s distribution strategy.\n' +
+    '    <strong>Price convergence:</strong> Windsurf, Augment, Bolt.new, Lovable, Codex (via ChatGPT Plus), and Devin all land at or near $20/month for their entry paid tier. GitHub Copilot is $10/mo. Since 2026-10-12, Cursor\'s entry paid plan for new subscribers is Plus at $8/mo, which runs only Grok models and Cursor\'s Composer.\n' +
     '  </div>\n' +
     '\n' +
     '  <h2 id="categories">Category Breakdown</h2>\n' +
@@ -28778,12 +28778,12 @@ function buildAiCodingToolsPricingPage(): string {
     '\n' +
     '    <div class="verdict-item">\n' +
     '      <strong>Best if budget is $20/mo</strong>\n' +
-    '      <p><a href="/vendor/cursor">Cursor Pro</a> or <a href="/vendor/windsurf">Windsurf Pro</a> (both $20/mo). Cursor has more mature multi-model support. Cascade was removed from Devin Desktop in version 3.9.19 on 2026-09-08. Devin Local is now the only agent. Or save $10: <a href="/vendor/github-copilot">GitHub Copilot Pro</a> at $10/mo covers most needs.</p>\n' +
+    '      <p><a href="/vendor/windsurf">Windsurf Pro</a> ($20/mo) or <a href="/vendor/cursor">Cursor Premium</a> ($30/mo, with Claude and GPT billed at API list price on top; Cursor\'s $8 Plus plan runs only Grok models and Composer). Cascade was removed from Devin Desktop in version 3.9.19 on 2026-09-08. Devin Local is now the only agent. Or save $10: <a href="/vendor/github-copilot">GitHub Copilot Pro</a> at $10/mo covers most needs.</p>\n' +
     '    </div>\n' +
     '\n' +
     '    <div class="verdict-item">\n' +
     '      <strong>Best for enterprise teams</strong>\n' +
-    '      <p><a href="/vendor/github-copilot">GitHub Copilot Business</a> ($19/seat) is cheapest. <a href="/vendor/google-gemini-code-assist">Gemini Code Assist</a> is no longer sold to new customers. Cursor Teams is $40/user/month. Devin Desktop (Windsurf) Teams is $80/month plus $40/month per full dev seat.</p>\n' +
+    '      <p><a href="/vendor/github-copilot">GitHub Copilot Business</a> ($19/seat) is cheapest. <a href="/vendor/google-gemini-code-assist">Gemini Code Assist</a> is no longer sold to new customers. Cursor Teams seats are $30, $100 or $200 per user a month, with Claude and GPT billed at API list price plus the Cursor Token Rate. Devin Desktop (Windsurf) Teams is $80/month plus $40/month per full dev seat.</p>\n' +
     '    </div>\n' +
     '\n' +
     '    <div class="verdict-item">\n' +
