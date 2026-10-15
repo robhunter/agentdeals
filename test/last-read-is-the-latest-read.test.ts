@@ -20,6 +20,13 @@ const {
   readThatContradictsOurTerms,
   statesAnAmountOfZero,
 } = await import("../dist/read-date.js");
+const {
+  measuredNoDifferenceThenReadAgainClause,
+  readHadNoStandingClause,
+  readHadNoStandingThenReadAgainClause,
+  theRefusedReadAlone,
+  unreconciledReadThenReadAgainClause,
+} = await import("../dist/change-refusal.js");
 const { resetVerificationStateCache } = await import("../dist/verification-state.js");
 const { resetRefusalStoreCache } = await import("../dist/refusal-store.js");
 const { refusalsForVendor } = await import("../dist/data.js");
@@ -341,28 +348,54 @@ describe("what the Last read note says that read found", () => {
     );
   });
 
-  it("leaves the refusal the rating waits on to the header, where the note quotes the check", () => {
+  it("names the refused read the rating waits on, and not the later read the check already describes, where the note quotes the check", () => {
     holding([rotation({ last_attempt_at: "2026-09-16", last_read_at: "2026-09-16" })], [refusal({ refused_date: "2026-09-16" })]);
     const offer = listing({ description: "The default weekly quota is 50 hours of use.", source_check: passingCheck("2026-10-14", ["50 hours"]) });
-    const waitsOn = {
-      clause: "when we read the page we cite for this offer on 2026-09-16, we could read no amount, tier or rate on the page,"
-        + " and we have read it again since, on 2026-10-14, without confirming the terms above",
-      on: "2026-09-16",
-    };
+    const waitsOn = { clause: readHadNoStandingThenReadAgainClause("2026-09-16", "2026-10-14", "could read no amount, tier or rate on the page"), on: "2026-09-16" };
     assert.strictEqual(
       lastReadNote(offer, null, [{ reason: "unquantified_limit", refused_date: "2026-09-16" }], waitsOn),
-      "The day we last read the vendor's page. On 2026-10-14, the page we cite for Examplebase stated 50 hours, a figure this listing gives.",
+      "The day we last read the vendor's page. On 2026-10-14, the page we cite for Examplebase stated 50 hours, a figure this listing gives."
+        + " When we read the page we cite for this offer on 2026-09-16, we could read no amount, tier or rate on the page.",
     );
   });
 
-  it("leaves an earlier difference to the header too, where the refusal it states is that read and the note quotes the check", () => {
+  it("states an earlier difference once beside the check's figures, where the refusal the rating waits on states that read", () => {
     holding([rotation({ last_attempt_at: "2026-10-01", last_outcome: "changed", last_read_at: "2026-10-01" })], [refusal({ refused_date: "2026-10-01" })]);
     const offer = listing({ description: "Basic is $10.00 a month.", source_check: passingCheck("2026-10-06", ["$10.00"]) });
-    const waitsOn = { clause: "when we read the page we cite for this offer on 2026-10-01, we found a change we could not reconcile with the terms we publish", on: "2026-10-01" };
+    const waitsOn = { clause: unreconciledReadThenReadAgainClause("2026-10-01", "2026-10-06"), on: "2026-10-01" };
     assert.strictEqual(
       lastReadNote(offer, null, [{ reason: "unquantified_limit", refused_date: "2026-10-01" }], waitsOn),
-      "The day we last read the vendor's page. On 2026-10-06, the page we cite for Examplebase stated $10.00, a figure this listing gives.",
+      "The day we last read the vendor's page. On 2026-10-06, the page we cite for Examplebase stated $10.00, a figure this listing gives."
+        + " When we read the page we cite for this offer on 2026-10-01, we found a change we could not reconcile with the terms we publish.",
     );
+  });
+
+  it("keeps the later read in the refusal, where the note does not quote the check", () => {
+    holding([rotation({ last_attempt_at: "2026-09-16", last_read_at: "2026-09-16" })], [refusal({ refused_date: "2026-09-16" })]);
+    const offer = listing({ description: "The free plan costs $0 a month.", source_check: passingCheck("2026-10-14", ["$0"]) });
+    const waitsOn = { clause: readHadNoStandingThenReadAgainClause("2026-09-16", "2026-10-14", "could read no amount, tier or rate on the page"), on: "2026-09-16" };
+    const note = lastReadNote(offer, null, [{ reason: "unquantified_limit", refused_date: "2026-09-16" }], waitsOn);
+    assert.ok(note.endsWith(
+      " When we read the page we cite for this offer on 2026-09-16, we could read no amount, tier or rate on the page,"
+        + " and we have read it again since, on 2026-10-14, without confirming the terms above.",
+    ), note);
+  });
+
+  it("cuts every kind of refusal at the later read, and leaves one with no later read whole", () => {
+    assert.strictEqual(
+      theRefusedReadAlone(unreconciledReadThenReadAgainClause("2026-10-01", "2026-10-06")),
+      "when we read the page we cite for this offer on 2026-10-01, we found a change we could not reconcile with the terms we publish",
+    );
+    assert.strictEqual(
+      theRefusedReadAlone(measuredNoDifferenceThenReadAgainClause("2026-10-01", "2026-10-06")),
+      "when we read the page we cite for this offer on 2026-10-01, we refused the change we considered recording because it named no figure that had moved",
+    );
+    assert.strictEqual(
+      theRefusedReadAlone(readHadNoStandingThenReadAgainClause("2026-10-01", "2026-10-06", "could read no amount, tier or rate on the page")),
+      "when we read the page we cite for this offer on 2026-10-01, we could read no amount, tier or rate on the page",
+    );
+    const whole = readHadNoStandingClause("2026-10-01", "could read no amount, tier or rate on the page");
+    assert.strictEqual(theRefusedReadAlone(whole), whole);
   });
 
   it("drops an earlier difference that a refusal of the same day settled", () => {

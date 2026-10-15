@@ -1,4 +1,4 @@
-import { howWeSettledTheRead, READ_NO_TERMS_FROM_THE_PAGE, WHAT_A_VOIDED_READ_FOUND, type ReadSettlement, type RefusedRead, type SettledRead, type VoidingRefusalReason } from "./change-refusal.js";
+import { howWeSettledTheRead, READ_NO_TERMS_FROM_THE_PAGE, theRefusedReadAlone, WHAT_A_VOIDED_READ_FOUND, type ReadSettlement, type RefusedRead, type SettledRead, type VoidingRefusalReason } from "./change-refusal.js";
 
 export { WHAT_A_VOIDED_READ_FOUND };
 import { figuresWeAlsoPublish } from "./quantity-reading.js";
@@ -602,12 +602,12 @@ export function lastReadNote(
     const restatedFrom = restatedReadingDate(offer);
     const byTheCheck = latest?.kind === "source_check";
     const quotesTheCheck = byTheCheck && noteQuotesTheCheck(offer);
-    const refusal = refusalTheRatingWaitsOn && !quotesTheCheck
+    const refusal = refusalTheRatingWaitsOn
       && (byTheCheck || !theNoteDescribesTheReadOn(refusalTheRatingWaitsOn.on, read, outcome, settled, restatedFrom))
-      ? ` ${asSentence(refusalTheRatingWaitsOn.clause)}`
+      ? ` ${asSentence(quotesTheCheck ? theRefusedReadAlone(refusalTheRatingWaitsOn.clause) : refusalTheRatingWaitsOn.clause)}`
       : "";
     const standing = byTheCheck ? readThatContradictsOurTerms(offer) : null;
-    const statedByTheRefusal = byTheCheck && refusalTheRatingWaitsOn !== null && standing?.date === refusalTheRatingWaitsOn.on;
+    const statedByTheRefusal = refusal !== "" && standing?.date === refusalTheRatingWaitsOn?.on;
     const note = byTheCheck && offer
       ? sourceCheckNote(offer, read, verified, restatedFrom, statedByTheRefusal ? null : standing)
       : noConfirmationNote(read, verified, outcome, settled, restatedFrom);
