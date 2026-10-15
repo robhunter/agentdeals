@@ -16731,6 +16731,21 @@
       "category": "Browser Automation",
       "alternatives": [],
       "recorded_date": "2026-10-15"
+    },
+    {
+      "vendor": "Cursor",
+      "change_type": "pricing_restructured",
+      "date": "2026-10-12",
+      "date_source": "vendor_page",
+      "tier": "Free",
+      "summary": "From October 12, 2026, new subscribers buy Cursor as part of The X Subscription, one plan for Grok, Cursor and X: Free $0, Plus $8, Premium $30, Super $100 and Ultra $200 a month, with one weekly usage pool shared with Grok that covers Cursor's own models. Third-party models such as Claude, GPT and Gemini are not included in any plan: on Premium and above they cost the model's API list price, paid from prepaid credit, and Free and Plus cannot use them. Hobby, Pro ($20), Pro+ ($60), Ultra and the Teams Standard and Premium seats continue for existing subscribers until they switch.",
+      "previous_state": "Hobby (free: limited Agent requests, access to Composer), Pro $20/month, Pro+ $60/month, Ultra $200/month, Teams $40/user/month for a Standard seat or $120 for a Premium seat; monthly usage pools (cursor.com/pricing, read 2026-10-03)",
+      "current_state": "\"Today we’re introducing The X Subscription, which brings together Grok, Grok Bot, Cursor, and X Premium in one plan.\" (Cursor forum, 2026-10-12). \"Cursor is sold as part of The X Subscription, one subscription for Grok, Cursor, and X.\" Free $0, Plus $8/mo, Premium $30/mo (4x Plus), Super $100/mo (15x Plus), Ultra $200/mo (50x Plus); Teams $30, $100 or $200 per seat/mo. \"Third-party models like Claude, GPT, and Gemini aren't part of the included pool. On Premium and above, they're available in Cursor at the model's API list price from the first request, paid from your prepaid credit. Plus and Free don't include third-party models.\" (cursor.com/docs/models-and-pricing, read 2026-10-15)",
+      "impact": "high",
+      "source_url": "https://forum.cursor.com/t/introducing-the-x-subscription/174450",
+      "category": "AI Coding",
+      "alternatives": [],
+      "recorded_date": "2026-10-15"
     }
   ]
 }
