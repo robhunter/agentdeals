@@ -41,7 +41,12 @@ function firstUngatedAlternative(passOver: ReadonlySet<string> = new Set()) {
 }
 
 const deadLink = firstUngatedAlternative();
-const unconfirmedRead = firstUngatedAlternative(new Set(deadLink ? [deadLink.alternative.vendor] : []));
+const readBySourceCheckAfterTheCopiedRead = loadOffers()
+  .filter((o) => (o.source_check?.checked ?? "") > LAST_READ)
+  .map((o) => o.vendor);
+const unconfirmedRead = firstUngatedAlternative(
+  new Set([...(deadLink ? [deadLink.alternative.vendor] : []), ...readBySourceCheckAfterTheCopiedRead]),
+);
 
 const scratchData = mkdtempSync(path.join(tmpdir(), "ranked-surfaces-data-"));
 const linkHealthWithOneDeadAlternative = path.join(scratchData, "link_health.json");

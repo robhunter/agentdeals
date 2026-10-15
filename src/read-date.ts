@@ -273,7 +273,7 @@ export interface ReadRecord {
   source_check?: { checked?: string; outcome?: string } | null;
 }
 
-export type ReadingLookup = (offer: ReadRecord) => LastReading | null;
+export type ReadingLookup = (offer: DatedRecord & ReadRecord) => LastReading | null;
 
 export const WHAT_A_SOURCE_CHECK_FOUND: Record<string, string> = {
   states_no_terms: WHAT_THE_LAST_READ_FOUND.states_no_price,
@@ -311,6 +311,13 @@ export function readingOnTheLastReadDate(offer: DatedRecord & ReadRecord): LastR
 
 export function lastReadingFor(offer: ReadRecord): LastReading | null {
   return readingSettledByRefusals(readingFromVerificationState(offer), storedRefusalsFor(offer.vendor));
+}
+
+export function lastReadingWeHoldFor(offer: DatedRecord & ReadRecord): LastReading | null {
+  const stored = lastReadingFor(offer);
+  const latest = latestReadWeHold(offer);
+  if (!stored || !latest || latest.on <= stored.date) return stored;
+  return readingOnTheLastReadDate(offer) ?? stored;
 }
 
 function readingFromVerificationState(offer: ReadRecord): LastReading | null {
