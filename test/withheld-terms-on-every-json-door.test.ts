@@ -36,7 +36,7 @@ const REQUESTS: Record<string, string[]> = {
   "/api/costs": [`/api/costs?services=${PINNED.join(",")}`],
   "/api/stack": [
     ...STACK_USE_CASES.map((useCase) => `/api/stack?use_case=${encodeURIComponent(useCase)}`),
-    ...[...new Set(pinnedListings.map((offer) => offer.category))].map((category) => `/api/stack?use_case=pinned&requirements=${encodeURIComponent(category)}`),
+    ...[...new Set<string>(catalogue.offers.map((offer: Offer) => offer.category))].map((category) => `/api/stack?use_case=every-category&requirements=${encodeURIComponent(category)}`),
   ],
   "/api/details/{vendor}": PINNED.flatMap((vendor) => [`/api/details/${vendor}`, `/api/details/${vendor}?alternatives=true`]),
   "/api/vendor-risk/{vendor}": PINNED.map((vendor) => `/api/vendor-risk/${vendor}`),
