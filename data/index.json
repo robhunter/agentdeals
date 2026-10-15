@@ -975,6 +975,12 @@
           "quote": "Eligible projects receive up to $5,000 yearly in credits and promotional support.",
           "url": "https://neon.com/programs/open-source.md",
           "read_on": "2026-10-11"
+        },
+        {
+          "text": "After the free plan, Neon's paid plans bill only for usage, with no monthly minimum: Launch charges $0.106 per CU-hour of compute and Scale $0.222, both charge $0.35 per GB-month of storage, extra branches cost $1.50 per branch-month, and network transfer beyond 500 GB per project costs $0.10 per GB.",
+          "quote": "Paid plans are pay-as-you-go: usage is metered hourly and billed at the end of the month, with no monthly minimum.",
+          "url": "https://neon.com/pricing.md",
+          "read_on": "2026-10-15"
         }
       ]
     },
@@ -2758,7 +2764,7 @@
     {
       "vendor": "Cursor",
       "category": "AI Coding",
-      "description": "AI-powered code editor built on VS Code. Hobby is the free plan: no credit card required, limited Agent requests, access to Composer — cursor.com/pricing states no completion or request figure for it. Individual paid plans: Pro $20/month, Pro+ $60/month (3x Pro's Agent limits), Ultra $200/month (20x). Teams is $40/user/month for a Standard seat or $120/user/month for a Premium seat (5x Standard's Agent limits). Enterprise is custom-priced with pooled usage, invoice/PO billing and SCIM. Cursor renders only the selected tier's price in the page body.",
+      "description": "AI code editor built on VS Code. Since 2026-10-12, Cursor's pricing docs (cursor.com/docs/models-and-pricing) say: \"Cursor is sold as part of The X Subscription, one subscription for Grok, Cursor, and X.\" Free is $0, with limited Agent and Chat usage. Paid plans are Plus $8/month, Premium $30/month (4x Plus's usage), Super $100/month (15x) and Ultra $200/month (50x), or $80, $300, $1,000 and $2,000 a year. Each paid plan's usage is one weekly pool shared with Grok, covering Grok 4.7, Grok 4.6, Grok 4.5 and Cursor's Composer 2.5. Claude, GPT, Gemini and other third-party models are outside every plan's pool: on Premium and above they cost the model's API list price, paid from prepaid credit, and Free and Plus cannot use them or your own API keys. Teams seats are $30, $100 or $200 per user a month, and on Teams and Enterprise third-party models cost API list price plus the Cursor Token Rate. Existing Hobby, Pro ($20), Pro+ ($60), Ultra and Teams Standard and Premium subscribers keep their plans, with monthly usage pools and included third-party usage, until they choose to switch. Cursor announced the change on its forum on 2026-10-12 (forum.cursor.com/t/introducing-the-x-subscription/174450).",
       "tier": "Free",
       "url": "https://www.cursor.com/pricing",
       "tags": [
@@ -2769,7 +2775,7 @@
         "free tier",
         "deal-change"
       ],
-      "verifiedDate": "2026-10-03",
+      "verifiedDate": "2026-10-15",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -2781,17 +2787,20 @@
       "source_check": {
         "checked": "2026-10-03",
         "outcome": "ok",
-        "detail": "the page names Cursor as \"cursor\" and states \"$20\" and \"$40\"",
+        "detail": "the page names Cursor as \"cursor\" and states \"$20\"",
         "unrendered_prices": [
           "Pro+ USD 60",
           "Ultra USD 200"
         ]
       },
-      "free_plan_excerpt": {
-        "text": "Hobby For the tinkerer Free Includes: ✓ No credit card required ✓ Limited Agent requests ✓ Access to Composer Try Cursor",
-        "url": "https://www.cursor.com/pricing",
-        "read_on": "2026-10-03"
-      }
+      "conditions": [
+        {
+          "text": "Cursor's data-use page says that with Privacy Mode off it may use and store your codebase data, prompts, editor actions and code snippets to train its models. To keep your code out of training, check that Privacy Mode is on in Cursor's settings; any user can turn it on.",
+          "quote": "If you choose to turn off “Privacy Mode”: we may use and store codebase data, prompts, editor actions, code snippets, and other code data and actions to improve our AI features and train our models.",
+          "url": "https://cursor.com/data-use",
+          "read_on": "2026-10-15"
+        }
+      ]
     },
     {
       "vendor": "Linear",
@@ -22193,6 +22202,12 @@
           "rules_out": [
             "production"
           ]
+        },
+        {
+          "text": "Beyond the free Sandbox, Northflank bills pay-as-you-go: $0.01667 per vCPU-hour and $0.00833 per GB of memory per hour (the smallest plan, 0.1 vCPU and 256 MB, is $2.70 a month), GPUs from $0.80 an hour (NVIDIA L4) to $2.74 (H100 80GB) and $3.00 (RTX PRO 6000), disk $0.15 per GB a month, and egress $0.06 per GB.",
+          "quote": "Only pay for consumption",
+          "url": "https://northflank.com/pricing",
+          "read_on": "2026-10-15"
         }
       ]
     },

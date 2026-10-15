@@ -136,12 +136,12 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 124,
-      "table_figures_from_records": 22,
+      "table_figures": 135,
+      "table_figures_from_records": 29,
       "tables": [
         {
           "label": "Pricing Comparison Table",
-          "figures": 40,
+          "figures": 41,
           "from_records": 0
         },
         {
@@ -151,13 +151,13 @@
         },
         {
           "label": "Cost Comparison by Use Case",
-          "figures": 61,
+          "figures": 64,
           "from_records": 0
         },
         {
           "label": "Recent Pricing Changes",
-          "figures": 22,
-          "from_records": 22
+          "figures": 29,
+          "from_records": 29
         }
       ],
       "reads_changes": true,
@@ -407,8 +407,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 44,
-      "table_figures_from_records": 7,
+      "table_figures": 55,
+      "table_figures_from_records": 18,
       "tables": [
         {
           "label": "Deprecation Timeline",
@@ -417,8 +417,8 @@
         },
         {
           "label": "Container Deployment Alternatives",
-          "figures": 25,
-          "from_records": 2
+          "figures": 36,
+          "from_records": 13
         },
         {
           "label": "Pricing Comparison",
@@ -471,8 +471,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 51,
-      "table_figures_from_records": 23,
+      "table_figures": 56,
+      "table_figures_from_records": 28,
       "tables": [
         {
           "label": "Always Free Services",
@@ -486,8 +486,8 @@
         },
         {
           "label": "AWS vs Alternatives",
-          "figures": 31,
-          "from_records": 14
+          "figures": 36,
+          "from_records": 19
         },
         {
           "label": "Recent AWS Changes",
@@ -526,8 +526,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 56,
-      "table_figures_from_records": 16,
+      "table_figures": 61,
+      "table_figures_from_records": 21,
       "tables": [
         {
           "label": "Always Free Services",
@@ -546,8 +546,8 @@
         },
         {
           "label": "Azure vs Alternatives",
-          "figures": 25,
-          "from_records": 14
+          "figures": 30,
+          "from_records": 19
         },
         {
           "label": "Recent Azure Changes",
@@ -875,13 +875,13 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 70,
-      "table_figures_from_records": 38,
+      "table_figures": 75,
+      "table_figures_from_records": 43,
       "tables": [
         {
           "label": "Main Comparison Table",
-          "figures": 25,
-          "from_records": 10
+          "figures": 30,
+          "from_records": 15
         },
         {
           "label": "Postgres-Compatible Databases",
@@ -1913,8 +1913,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 72,
-      "table_figures_from_records": 21,
+      "table_figures": 77,
+      "table_figures_from_records": 26,
       "tables": [
         {
           "label": "Always Free Products",
@@ -1928,8 +1928,8 @@
         },
         {
           "label": "GCP vs AWS vs Others",
-          "figures": 31,
-          "from_records": 14
+          "figures": 36,
+          "from_records": 19
         },
         {
           "label": "Recent GCP & Google Changes",
