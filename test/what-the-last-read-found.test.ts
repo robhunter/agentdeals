@@ -17,6 +17,7 @@ import {
 } from "../dist/change-refusal.js";
 import {
   NO_CONFIRMATION_HELD,
+  OUTCOMES_THAT_READ_THE_PAGE,
   WHAT_A_SETTLED_READ_FOUND,
   WHAT_A_VOIDED_READ_FOUND,
   WHAT_THE_LAST_READ_FOUND,
@@ -277,8 +278,10 @@ describe("the catalogue as it stands", () => {
     );
   });
 
-  it("publishes the clause the stored refusal reason selects", () => {
-    const wrong = settled.filter((o) => o.last_read_found !== settledFromStore(o));
+  it("publishes the clause the stored refusal reason selects, where that read is still the last one", () => {
+    const stillLast = settled.filter((o) => o.last_read_date === state.get(`${o.vendor}|${o.url}`)?.last_attempt_at);
+    assertPopulationFloor(stillLast.length, 40, "records whose last read is the one our own change gate then refused");
+    const wrong = stillLast.filter((o) => o.last_read_found !== settledFromStore(o));
     assert.deepStrictEqual(wrong.map((o) => `${o.vendor}: ${o.last_read_found}`), []);
   });
 
@@ -307,10 +310,12 @@ describe("the catalogue as it stands", () => {
   it("carries the outcome of the read whose date it publishes", () => {
     const dated = enriched.filter((o) => o.last_read_outcome !== null);
     assertPopulationFloor(dated.length, 850, "records publishing what the read on their last read date concluded");
+    const readThePage = new Set<string>(OUTCOMES_THAT_READ_THE_PAGE);
     for (const offer of dated) {
       const record = state.get(`${offer.vendor}|${offer.url}`);
-      if (!record?.last_attempt_at) continue;
+      if (!record?.last_attempt_at || !record.last_outcome) continue;
       if (record.last_attempt_at !== offer.last_read_date) continue;
+      if (!readThePage.has(record.last_outcome)) continue;
       assert.strictEqual(
         offer.last_read_outcome,
         record.last_outcome,
@@ -319,12 +324,27 @@ describe("the catalogue as it stands", () => {
     }
   });
 
-  it("answers nothing about a read date the store holds no outcome for", () => {
+  it("carries the source check's outcome where that check is the read whose date it publishes", () => {
+    const readThePage = new Set<string>(OUTCOMES_THAT_READ_THE_PAGE);
+    const byTheCheck = enriched.filter((o) => {
+      const record = state.get(`${o.vendor}|${o.url}`);
+      const check = o.source_check;
+      if (!check || check.outcome === "unreadable" || check.checked !== o.last_read_date) return false;
+      const rotationRead = record?.last_outcome && readThePage.has(record.last_outcome) ? record.last_attempt_at ?? "" : "";
+      return [o.verifiedDate, rotationRead, record?.last_read_at ?? "", record?.last_success ?? ""].every((day) => day < check.checked);
+    });
+    assert.ok(byTheCheck.length > 0, "no record dates its last read from a source check, so this assertion proves nothing");
+    const wrong = byTheCheck.filter((o) => o.last_read_outcome !== o.source_check!.outcome);
+    assert.deepStrictEqual(wrong.map((o) => `${o.vendor}: ${o.last_read_outcome}`), []);
+  });
+
+  it("answers nothing about a read date neither the store nor the source check holds an outcome for", () => {
     const mismatched = enriched.filter((o) => {
       const record = state.get(`${o.vendor}|${o.url}`);
-      return record?.last_attempt_at && record.last_attempt_at !== o.last_read_date;
+      const byTheCheck = o.source_check && o.source_check.outcome !== "unreadable" && o.source_check.checked === o.last_read_date;
+      return record?.last_attempt_at && record.last_attempt_at !== o.last_read_date && !byTheCheck;
     });
-    assertPopulationFloor(mismatched.length, 100, "records whose last read date is earlier than their last attempt");
+    assertPopulationFloor(mismatched.length, 60, "records whose last read date is neither their last attempt's nor their source check's");
     const claiming = mismatched.filter((o) => o.last_read_outcome !== null || o.last_read_found !== null);
     assert.deepStrictEqual(claiming.map((o) => o.vendor), []);
   });

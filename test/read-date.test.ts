@@ -402,11 +402,21 @@ describe("the state the re-verification writes", () => {
 });
 
 describe("the catalogue", () => {
-  const offers: Array<{ vendor: string; url: string; verifiedDate: string; source_check?: { outcome: string; checked: string } }> =
+  const offers: Array<{ vendor: string; url: string; verifiedDate: string; source_check?: { outcome: string; checked: string }; restated_from?: { reading_date: string; source_url: string } }> =
     JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf-8")).offers;
   const state: StateRecord[] =
     JSON.parse(readFileSync(path.join(REPO, "data", "verification_state.json"), "utf-8")).records;
   const byKey = new Map(state.map((r) => [`${r.vendor}|${r.url}`, r]));
+  const refusals: Array<{ vendor: string; source_url: string | null; refused_date: string }> =
+    JSON.parse(readFileSync(path.join(REPO, "data", "change_refusals.json"), "utf-8")).refusals;
+  const readsOutsideTheRotation = (o: (typeof offers)[number]): string[] => [
+    ...(o.source_check && o.source_check.outcome !== "unreadable" ? [o.source_check.checked] : []),
+    ...refusals
+      .filter((r) => r.vendor.trim().toLowerCase() === o.vendor.trim().toLowerCase() && r.source_url?.trim() === o.url.trim())
+      .map((r) => r.refused_date),
+    ...(o.restated_from && o.restated_from.source_url?.trim() === o.url.trim() ? [o.restated_from.reading_date] : []),
+  ];
+  const latestOf = (dates: string[]): string => dates.filter(Boolean).sort().pop() ?? "";
 
   it("publishes a read date for every record it holds", () => {
     const dated = offers.filter((o) => /^\d{4}-\d{2}-\d{2}$/.test(lastReadDate(o)));
@@ -421,7 +431,21 @@ describe("the catalogue", () => {
     assert.deepEqual(backwards.map((o) => o.vendor), [], "a record cannot be confirmed on a day we did not read it");
   });
 
-  it("dates the read from the store's attempt and not from the date the record publishes", () => {
+  it("never publishes a read date earlier than a read we hold of the page it cites", () => {
+    const behind = offers.flatMap((o) => {
+      const held = byKey.get(`${o.vendor}|${o.url}`);
+      const rotationReads = [
+        held?.last_outcome && ANSWERED_OUTCOMES.has(held.last_outcome) ? held.last_attempt_at ?? "" : "",
+        held?.last_read_at ?? "",
+        held?.last_success ?? "",
+      ];
+      const latest = latestOf([...rotationReads, ...readsOutsideTheRotation(o)]);
+      return latest && lastReadDate(o) < latest ? [`${o.vendor}: ${lastReadDate(o)} < ${latest}`] : [];
+    });
+    assert.deepEqual(behind, []);
+  });
+
+  it("dates the read from the store's attempt, or a later read of the same page, and not from the date the record publishes", () => {
     const answered = offers.filter((o) => {
       const held = byKey.get(`${o.vendor}|${o.url}`);
       return Boolean(held?.last_outcome && ANSWERED_OUTCOMES.has(held.last_outcome));
@@ -430,8 +454,8 @@ describe("the catalogue", () => {
     for (const o of answered) {
       assert.equal(
         lastReadDate(o),
-        byKey.get(`${o.vendor}|${o.url}`)!.last_attempt_at,
-        `${o.vendor} publishes a read date the store's own attempt does not give`,
+        latestOf([byKey.get(`${o.vendor}|${o.url}`)!.last_attempt_at ?? "", ...readsOutsideTheRotation(o)]),
+        `${o.vendor} publishes a read date that neither the store's own attempt nor a later read gives`,
       );
     }
     const earlierThanPublished = answered.filter((o) => lastReadDate(o) < o.verifiedDate);
@@ -494,7 +518,7 @@ describe("the catalogue", () => {
     assertSharesPopulation(failed.length, recordsInTheCatalogue(), 0.05, "records whose last attempt failed");
     for (const o of failed) {
       const held = byKey.get(`${o.vendor}|${o.url}`)!;
-      const known = [o.verifiedDate, held.last_read_at ?? "", held.last_success ?? ""].sort().pop();
+      const known = latestOf([o.verifiedDate, held.last_read_at ?? "", held.last_success ?? "", ...readsOutsideTheRotation(o)]);
       assert.equal(
         lastReadDate(o),
         known,
