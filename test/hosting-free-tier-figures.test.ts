@@ -140,7 +140,7 @@ const RETIRED_FIGURES: Retired[] = [
   {
     what: "Cursor's Opus requests as burning credits ten times faster than Sonnet",
     pattern: /burn credits 10.? faster/i,
-    replacedBy: /Limited Agent requests/,
+    replacedBy: /limited Agent and Chat usage/i,
     vendorRecord: () => recordFor("Cursor", "AI Coding").description,
   },
   {

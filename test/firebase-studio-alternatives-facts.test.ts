@@ -49,7 +49,7 @@ const STATED_ON_THE_PAGE = [
   "GitHub Codespaces: cloud VMs with VS Code in the browser. A GitHub Free personal account includes 120 core hours a month (60 hours on a 2-core machine); organization plans include no free quota. Live Share works through the VS Code extension.",
   "Browser-only Node.js projects: StackBlitz: the free Personal plan includes unlimited public projects and up to 1MB of file uploads per project. Localhost backends and CORS-protected APIs need Pro.",
   "Replit's free Starter plan: Replit: the free Starter plan includes 2GB of file storage, 1 published app (taken down after 30 days) and daily Agent credits up to a monthly cap, with Lite builds only. It has no collaboration seats; Core ($20 a month) has 5.",
-  "Cursor or Devin Desktop (formerly Windsurf): local editors, not cloud IDEs. Cursor's free Hobby plan includes limited Agent requests. Devin Desktop's free plan includes a light agent quota, limited models, and unlimited Tab completions and inline edits.",
+  "Cursor or Devin Desktop (formerly Windsurf): local editors, not cloud IDEs. Cursor's free plan, Free, includes limited Agent and Chat usage. Devin Desktop's free plan includes a light agent quota, limited models, and unlimited Tab completions and inline edits.",
   "Google Antigravity (a local, code-first desktop app) or Google AI Studio (full-stack apps in the browser), Google's two recommended paths.",
   "(for example devcontainer.json for Codespaces)",
   "Key insight: Firebase Studio offered free access to 3 workspaces per user, or 10 with a Google Developer Program profile. Ona no longer sells self-serve subscriptions since joining OpenAI, and CodeSandbox's free plan no longer includes VM time.",

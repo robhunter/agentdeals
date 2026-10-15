@@ -80,17 +80,22 @@ const GEMINI_CODE_ASSIST_SALES_STOP = "Google stopped selling new Standard and E
 const STATED_ON_THE_TOOLS_PAGE = [
   GEMINI_CODE_ASSIST_SALES_STOP,
   "Gemini Code Assist Standard is $22.80/user/month or $19/user/month annually. Enterprise is $54/user/month or $45/user/month annually.",
-  "GitHub Copilot Business ($19/seat) is cheapest. Gemini Code Assist is no longer sold to new customers. Cursor Teams is $40/user/month. Devin Desktop (Windsurf) Teams is $80/month plus $40/month per full dev seat.",
+  "GitHub Copilot Business ($19/seat) is cheapest. Gemini Code Assist is no longer sold to new customers. Cursor Teams seats are $30, $100 or $200 per user a month, with Claude and GPT billed at API list price plus the Cursor Token Rate. Devin Desktop (Windsurf) Teams is $80/month plus $40/month per full dev seat.",
   "Inline code suggestions, chat, code transformation, 50 agent invocations/month. Supports VS Code, JetBrains, CLI, and AWS Console. New sign-ups and subscriptions were blocked from 2026-05-15. Existing subscriptions can add users. Support ends on 2027-04-30. AWS recommends Kiro.",
   "The MarsCode cloud IDE ended on 2025-04-01. The extension is now Trae Plugin. marscode.com promotes the Trae AI IDE.",
   "Cline, Aider, and Gemini CLI with local models are the only fully private options. Cloud agents may process code on servers with varying data retention policies.",
   "GitHub Copilot — Copilot Student is free with an allowance of GitHub AI Credits, available to verified students. Verified teachers and maintainers of popular open source projects may be eligible for free Copilot Pro access.",
   "Free and Go state no message count. Plus and Business allowances are per five-hour window, vary by model and task, and may have weekly limits. Cloud tasks use more than local messages. Pro has no five-hour limit. API-key use is billed per token.",
-  "Cursor has more mature multi-model support. Cascade was removed from Devin Desktop in version 3.9.19 on 2026-09-08. Devin Local is now the only agent.",
+  "Windsurf Pro ($20/mo) or Cursor Premium ($30/mo, with Claude and GPT billed at API list price on top; Cursor's $8 Plus plan runs only Grok models and Composer). Cascade was removed from Devin Desktop in version 3.9.19 on 2026-09-08. Devin Local is now the only agent.",
+  "Since 2026-10-12, Cursor's pricing docs say: \"Cursor is sold as part of The X Subscription, one subscription for Grok, Cursor, and X.\" Free is $0, with limited Agent and Chat usage. Plus is $8/mo, Premium $30/mo (4x Plus's usage), Super $100/mo (15x) and Ultra $200/mo (50x), all from one weekly usage pool shared with Grok. Claude, GPT and Gemini are outside every plan's pool: Premium and above pay the model's API list price from prepaid credit, and Free and Plus cannot use them. Teams seats are $30, $100 or $200 per user a month. Existing Hobby, Pro ($20), Pro+ ($60) and Ultra subscribers keep their plans until they choose to switch.",
+  "Since 2026-10-12, Cursor's paid plans for new subscribers start at $8/month (Plus, Grok models and Composer only) and $30/month (Premium, the first plan that can use Claude and GPT, billed at API list price on top); Windsurf's start at $20/month. Both top out at $200/month: Cursor Ultra and Windsurf Max. For teams, Cursor seats are $30, $100 or $200 per user a month, and Windsurf is $80/month plus $40 per seat. Existing Cursor Pro ($20) and Pro+ ($60) subscribers keep their plans until they switch. Windsurf, renamed Devin Desktop, raised Pro from $15 to $20 in March 2026.",
+  "Price convergence: Windsurf, Augment, Bolt.new, Lovable, Codex (via ChatGPT Plus), and Devin all land at or near $20/month for their entry paid tier. GitHub Copilot is $10/mo. Since 2026-10-12, Cursor's entry paid plan for new subscribers is Plus at $8/mo, which runs only Grok models and Cursor's Composer.",
+  "Amazon Kiro is an AI coding tool from AWS, generally available since November 2025, built around spec-driven development: requirements, design docs and tests. By default it runs on Auto, a mix of frontier models. Free: 50 credits/month. Pro: $20/month (1,000 credits). Paid plans can buy add-on credits at $0.04 each. Enterprise adds SAML/SCIM SSO.",
+  "Cursor's Free plan lists \"Agent and Chat with limited usage\"",
   "Cline is Apache 2.0 licensed. Users can bring their own API keys or use the Cline provider.",
 ];
 
-const TEAMS_ANSWER = "GitHub Copilot Business ($19/seat) is cheapest for teams. Gemini Code Assist is no longer sold to new customers. Cursor Teams is $40/user/month. Devin Desktop (Windsurf) Teams is $80/month plus $40/month per full dev seat.";
+const TEAMS_ANSWER = "GitHub Copilot Business ($19/seat) is cheapest for teams. Gemini Code Assist is no longer sold to new customers. Cursor Teams seats are $30, $100 or $200 per user a month, with Claude and GPT billed at API list price plus the Cursor Token Rate. Devin Desktop (Windsurf) Teams is $80/month plus $40/month per full dev seat.";
 
 const WITHDRAWN_GEMINI_CODE_ASSIST_RECORD_TEXT: Record<string, RegExp> = {
   "Gemini Code Assist's paid subscriptions as unchanged": /subscriptions are unchanged|Standard and Enterprise continue/,
@@ -117,6 +122,11 @@ const WITHDRAWN_FROM_THE_TOOLS_PAGE: Record<string, RegExp> = {
   "Cascade as a current Windsurf feature": /agentic Cascade flows/,
   "Cline as MIT-licensed": /open-source \(MIT\)/,
   "Devin Teams as $40 a seat with an $80 minimum": /\$40\/full seat with an \$80 monthly minimum/,
+  "Cursor's Teams seat at $40": /Cursor Teams is \$40|Cursor charges \$40/,
+  "Cursor's individual plans starting at $20 beside Windsurf's": /both \$20\/mo|Both start at \$20/,
+  "Kiro Pro priced to match Cursor": /matching Cursor's price/,
+  "Hobby as the free plan a new Cursor subscriber gets": /Hobby is Cursor's free plan|Cursor's free plan is called Hobby|Cursor's free Hobby plan/,
+  "Cursor's entry tier among those near $20": /Price convergence: Cursor/,
 };
 
 function rowsBetween(page: string, from: string, to: string): string[][] {
@@ -159,6 +169,19 @@ describe("/ai-coding-tools-pricing says which of its products are closed, as the
     const text = textOf(served.get(GEMINI_CODE_ASSIST_PAGE)!);
     assert.deepStrictEqual(STATED_ON_THE_GEMINI_CODE_ASSIST_PAGE.filter((line) => !text.includes(line)), []);
     assert.deepStrictEqual(Object.entries(WITHDRAWN_GEMINI_CODE_ASSIST_RECORD_TEXT).filter(([, claim]) => claim.test(text)).map(([what]) => what), []);
+  });
+
+  it("prices Cursor's table rows at the plans a new subscriber can buy", () => {
+    assert.deepStrictEqual(pricingRow(TOOLS_PAGE, "Cursor"), {
+      free: "Limited Agent and Chat usage",
+      pro: "$8/mo (Plus)",
+      power: "$200/mo (Ultra)",
+      teams: "$30, $100 or $200/user/mo",
+    });
+    const freeTiers = rowsBetween(TOOLS_PAGE, 'id="free-tiers"', 'id="cost-analysis"');
+    assert.strictEqual(rowFor(freeTiers, "Cursor")[1], "Limited Agent and Chat usage");
+    const costs = rowsBetween(TOOLS_PAGE, 'id="cost-analysis"', 'id="hidden-costs"');
+    assert.deepStrictEqual(rowFor(costs, "Cursor").slice(0, 2), ["$8", "$150"]);
   });
 
   it("lists Amazon Q Developer and MarsCode with no free tier, saying when each closed", () => {

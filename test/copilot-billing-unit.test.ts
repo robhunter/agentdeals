@@ -94,11 +94,11 @@ describe("the AI coding guide carries Copilot's current plan ladder", () => {
     assert.match(body, /the \$0\.04 per-request overage are retired/, "the hidden-cost cell stops before the correction");
   });
 
-  it("prices Cursor's paid ladder at the figures its pricing page publishes", async () => {
+  it("prices Cursor's paid ladder at the figures its pricing docs publish", async () => {
     for (const page of AI_CODING_PAGES) {
       const body = await get(page);
       assert.match(body, /\$200\/mo \(Ultra\)/, `${page} omits Cursor Ultra's price`);
-      assert.match(body, /Pro\+ \$60\/mo/, `${page} omits Cursor Pro\\+'s price`);
+      assert.match(body, /Plus is \$8\/mo, Premium \$30\/mo \(4x Plus(?:'|&#39;)s usage\), Super \$100\/mo \(15x\) and Ultra \$200\/mo \(50x\)/, `${page} omits Cursor's ladder`);
     }
   });
 });
