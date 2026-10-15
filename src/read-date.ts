@@ -3,6 +3,7 @@ import { howWeSettledTheRead, READ_NO_TERMS_FROM_THE_PAGE, theRefusedReadAlone, 
 export { WHAT_A_VOIDED_READ_FOUND };
 import { figuresWeAlsoPublish } from "./quantity-reading.js";
 import { storedRefusalsFor } from "./refusal-store.js";
+import { LEVEL_WITHHOLDING_OUTCOMES } from "./source-check.js";
 import { loadVerificationState } from "./verification-state.js";
 
 export const OUTCOMES_THAT_READ_THE_PAGE = [
@@ -273,11 +274,17 @@ export interface ReadRecord {
   source_check?: { checked?: string; outcome?: string } | null;
 }
 
-export type ReadingLookup = (offer: ReadRecord) => LastReading | null;
+export type ReadingLookup = (offer: DatedRecord & ReadRecord) => LastReading | null;
 
 export const WHAT_A_SOURCE_CHECK_FOUND: Record<string, string> = {
   states_no_terms: WHAT_THE_LAST_READ_FOUND.states_no_price,
 };
+
+const SOURCE_CHECKS_THAT_WITHHOLD_THE_LEVEL = new Set<string>(LEVEL_WITHHOLDING_OUTCOMES);
+
+function sourceCheckSettles(outcome: string): boolean {
+  return !SOURCE_CHECKS_THAT_WITHHOLD_THE_LEVEL.has(outcome);
+}
 
 function readingFromSourceCheck(offer: ReadRecord): LastReading | null {
   const checked = offer.source_check?.checked;
@@ -288,7 +295,7 @@ function readingFromSourceCheck(offer: ReadRecord): LastReading | null {
     date: checked,
     outcome,
     confirmed: false,
-    settles: found === null,
+    settles: sourceCheckSettles(outcome),
     read_the_page: true,
     found,
     consecutive_failures: 0,
@@ -311,6 +318,13 @@ export function readingOnTheLastReadDate(offer: DatedRecord & ReadRecord): LastR
 
 export function lastReadingFor(offer: ReadRecord): LastReading | null {
   return readingSettledByRefusals(readingFromVerificationState(offer), storedRefusalsFor(offer.vendor));
+}
+
+export function lastReadingWeHoldFor(offer: DatedRecord & ReadRecord): LastReading | null {
+  const stored = lastReadingFor(offer);
+  const latest = latestReadWeHold(offer);
+  if (!stored || !latest || latest.on <= stored.date) return stored;
+  return readingOnTheLastReadDate(offer) ?? stored;
 }
 
 function readingFromVerificationState(offer: ReadRecord): LastReading | null {

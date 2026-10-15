@@ -814,7 +814,7 @@
       "changed": "2026-10-12"
     },
     "/aws-app-runner-migration": {
-      "hash": "0596301ef65910dd",
+      "hash": "756d63fb2ed57643",
       "changed": "2026-10-15"
     },
     "/aws-free-tier-2026": {
@@ -1347,7 +1347,7 @@
       "changed": "2026-10-11"
     },
     "/cloud-free-tier-comparison-2026": {
-      "hash": "9984be1e35b32143",
+      "hash": "9b4a0da5793356bc",
       "changed": "2026-10-15"
     },
     "/cloudflare-pages-vs-vercel": {
@@ -3121,16 +3121,16 @@
       "changed": "2026-10-11"
     },
     "/email-alternatives": {
-      "hash": "518636c64a2ea90d",
+      "hash": "dea37728663869fe",
       "changed": "2026-10-15"
     },
     "/email-comparison-2026": {
-      "hash": "1ad6aa4c0f266485",
+      "hash": "b00c529515fd4596",
       "changed": "2026-10-15"
     },
     "/email-service-alternatives": {
-      "hash": "eb8570248fe8f755",
-      "changed": "2026-10-11"
+      "hash": "a5f928b43534a8de",
+      "changed": "2026-10-15"
     },
     "/embed": {
       "hash": "0f2a7d35b82e440f",
@@ -3187,7 +3187,7 @@
       "changed": "2026-10-15"
     },
     "/free-frontend-stack": {
-      "hash": "b4084596c8c400f3",
+      "hash": "fdd6ce89de2716e5",
       "changed": "2026-10-15"
     },
     "/free-go-stack": {
@@ -3289,7 +3289,7 @@
       "changed": "2026-10-15"
     },
     "/hosting-alternatives": {
-      "hash": "7f1408a893303a78",
+      "hash": "c936bad7388803af",
       "changed": "2026-10-15"
     },
     "/hosting-free-tier-comparison-2026": {
@@ -3297,7 +3297,7 @@
       "changed": "2026-10-15"
     },
     "/hosting-pricing": {
-      "hash": "8b236b2482755533",
+      "hash": "aa10b26b128b5789",
       "changed": "2026-10-15"
     },
     "/ide-code-editors-alternatives": {
@@ -3305,7 +3305,7 @@
       "changed": "2026-10-15"
     },
     "/llm-api-pricing": {
-      "hash": "83a784ffdd4c129d",
+      "hash": "eb21894819d4b6d5",
       "changed": "2026-10-15"
     },
     "/localstack-alternatives": {
@@ -3617,7 +3617,7 @@
       "changed": "2026-10-15"
     },
     "/storage-comparison-2026": {
-      "hash": "422cbd5a411444bb",
+      "hash": "bc4fcc906760018f",
       "changed": "2026-10-15"
     },
     "/supabase-vs-firebase": {

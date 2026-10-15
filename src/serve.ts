@@ -7964,7 +7964,7 @@ const ALTERNATIVES_PAGE_CONTENT: Omit<AlternativesPageConfig, "hubDesc">[] = [
       <tr>
         <td style="font-weight:600"><a href="/vendor/mailjet" style="color:var(--text)">Mailjet</a></td>
         <td>6K/mo (200/day)</td>
-        <td>Unlimited</td>
+        <td>1,000</td>
         <td>Both</td>
         <td>\u2705 / \u2705</td>
         <td>6K/mo on a 200/day cap — built-in email editor</td>
@@ -13883,7 +13883,7 @@ ${buildCards(other)}
       <tr>
         <td style="font-weight:600"><a href="/vendor/mailtrap-io" style="color:var(--text)">Mailtrap.io</a></td>
         <td>Testing/Transactional</td>
-        <td>3,500 emails/mo</td>
+        <td>4,000 emails/mo (150/day)</td>
         <td>No</td>
         <td>Email sandbox for testing + transactional sending</td>
       </tr>
@@ -16808,7 +16808,7 @@ function buildFreeFrontendStackPage(): string {
       icon: "✉️",
       recommended: { vendor: "Resend", why: "3,000 emails/month, 100 emails/day on the free tier. Modern developer-first email API with React Email support, deliverability insights, and simple SDK. Perfect for transactional emails and small newsletters." },
       alternatives: ["Buttondown", "Mailchimp", "Brevo"],
-      outgrow: "When you exceed 3K emails/month or need dedicated IP. Buttondown offers 100 subscribers free for newsletters specifically. Mailchimp gives 500 contacts with marketing automation. Brevo offers 300 emails/day with no subscriber limits.",
+      outgrow: "When you exceed 3K emails/month or need dedicated IP. Buttondown offers 100 subscribers free for newsletters specifically. Mailchimp gives 250 contacts with marketing automation. Brevo offers 300 emails/day with no subscriber limits.",
       relatedPage: "/email-alternatives",
     },
     {
@@ -39031,7 +39031,7 @@ ${globalNavCss()}
         <td class="check">&#10003;</td>
         <td class="check">&#10003; Both</td>
         <td class="check">&#10003;</td>
-        <td class="cross">Pro+ ($80/mo)</td>
+        <td class="cross">$30/mo add-on (Scale)</td>
         <td><span style="color:#3fb950">Stable</span></td>
       </tr>${vendorPageConditionsRowHtml("resend", 10)}
       <tr>
@@ -39043,7 +39043,7 @@ ${globalNavCss()}
         <td class="check">&#10003;</td>
         <td class="check">&#10003; Both</td>
         <td class="check">&#10003;</td>
-        <td class="cross">Paid</td>
+        <td class="check">Included (all plans)</td>
         <td><span style="color:#3fb950">Stable</span></td>
       </tr>${vendorPageConditionsRowHtml("maileroo", 10)}
       <tr>
@@ -39062,7 +39062,7 @@ ${globalNavCss()}
         <td class="provider-col">MailerSend<span class="caution-badge">SHRINKING</span></td>
         <td>Transactional</td>
         <td>500/mo</td>
-        <td>None</td>
+        <td>100 API requests</td>
         <td>Unlimited</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003; Both</td>
@@ -39087,7 +39087,7 @@ ${globalNavCss()}
         <td>All-in-One</td>
         <td>6,000/mo</td>
         <td>200/day</td>
-        <td>Unlimited</td>
+        <td>1,000</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003; Both</td>
         <td class="check">&#10003;</td>
@@ -39119,9 +39119,9 @@ ${globalNavCss()}
         <td><span style="color:#3fb950">Stable</span></td>
       </tr>${vendorPageConditionsRowHtml("emaillabs-io", 10)}
       <tr>
-        <td class="provider-col">Postmark<span class="caution-badge">TEST ONLY</span></td>
+        <td class="provider-col">Postmark</td>
         <td>Transactional</td>
-        <td>100/mo (test)</td>
+        <td>100/mo</td>
         <td>N/A</td>
         <td>N/A</td>
         <td class="check">&#10003;</td>
@@ -39134,8 +39134,8 @@ ${globalNavCss()}
         <td class="provider-col">Mailchimp<span class="caution-badge">LIMITED</span></td>
         <td>Marketing</td>
         <td>500/mo</td>
-        <td>500/day</td>
-        <td>500</td>
+        <td>250/day</td>
+        <td>250</td>
         <td class="cross">&#10007; Paid</td>
         <td class="check">&#10003; API</td>
         <td class="check">&#10003;</td>
@@ -39205,8 +39205,8 @@ ${globalNavCss()}
       <tr>
         <td class="provider-col">Sweego</td>
         <td>Transactional</td>
-        <td>500/day (~15K/mo)</td>
-        <td>500/day</td>
+        <td>100/day (~3K/mo)</td>
+        <td>100/day</td>
         <td>Unlimited</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003; Both</td>
@@ -39217,7 +39217,7 @@ ${globalNavCss()}
       <tr>
         <td class="provider-col">Plunk</td>
         <td>Transactional</td>
-        <td>3,000/mo (cloud)</td>
+        <td>1,000/mo (cloud)</td>
         <td>N/A</td>
         <td>Unlimited</td>
         <td class="check">&#10003;</td>
@@ -39286,22 +39286,22 @@ ${globalNavCss()}
 
   <div class="diff-card">
     <h3>MailerSend <span class="caution-badge">SHRINKING</span></h3>
-    <div class="diff-desc"><strong>Free tier:</strong> 500 emails/month, down from 3,000 in April 2026. Free accounts get 1 domain, 10 templates, 5 seats, 1,000 daily API requests and 1-day activity retention; the 14-day Professional trial carries the same 500 emails/month. Built by the team behind MailerLite. Clean API, inbound email processing, and email verification included. No daily cap. Good template editor. SMS support on paid tiers. Hobby is $7.00/month for 5,000 emails ($5.60/month billed yearly), which is where a project sending more than 500 lands.</div>
+    <div class="diff-desc"><strong>Free tier:</strong> 500 emails/month, down from 3,000 in April 2026. Free accounts get 1 sending domain and 100 daily API requests; the 14-day Professional trial carries the same 500 emails/month. Built by the team behind MailerLite. Clean API, inbound email processing, and email verification included. Good template editor. SMS support on paid tiers. Hobby is $7.00/month for 5,000 emails ($5.60/month billed yearly), which is where a project sending more than 500 lands.</div>
   </div>
 
   <div class="diff-card">
-    <h3>Postmark <span class="caution-badge">TEST ONLY FREE</span></h3>
-    <div class="diff-desc"><strong>Free tier:</strong> 100 test emails/month in a sandbox. Not usable for production without paying ($15/mo for 10K emails). Postmark's differentiator is delivery speed &mdash; average delivery in &lt;10 seconds. Best deliverability reputation in the industry. Excellent bounce handling. The "free tier" is effectively a testing sandbox, not a production service. Worth the $15/mo for production if delivery speed matters.</div>
+    <h3>Postmark</h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 100 emails a month, never expires. New accounts can send only to verified domains until approved, usually within a day. After approval, it sends to any address, within 100 emails a month. Postmark's differentiator is delivery speed &mdash; average delivery in &lt;10 seconds. Best deliverability reputation in the industry. Excellent bounce handling. Postmark lists the free plan for testing integrations, evaluating deliverability, and side projects. More than 100 emails a month requires the Basic plan, at $15 monthly for 10,000 emails.</div>
   </div>
 
   <div class="diff-card">
     <h3>Sweego</h3>
-    <div class="diff-desc"><strong>Free tier:</strong> 500 emails/day (~15,000/month). European email service with SMTP and REST API. Custom domain, webhooks, and analytics included. The daily volume is generous and the monthly equivalent rivals paid tiers on other services. Good option for GDPR-conscious European teams.</div>
+    <div class="diff-desc"><strong>Free tier:</strong> 100 emails a day by API and SMTP, about 3,000 a month. European email service with SMTP and REST API. Custom domain, webhooks, and analytics included. The daily cap of 100 emails means you cannot burst-send a newsletter. Good option for GDPR-conscious European teams.</div>
   </div>
 
   <div class="diff-card">
     <h3>Plunk</h3>
-    <div class="diff-desc"><strong>Free tier:</strong> 3,000 emails/month on cloud, unlimited self-hosted. Open-source transactional email platform. React-based email templates. Event-driven automations (welcome sequences, usage alerts). Can self-host for unlimited volume with your own SMTP provider (e.g., SES). The open-source hedge against future free tier removals.</div>
+    <div class="diff-desc"><strong>Free tier:</strong> 1,000 emails/month on cloud, with Plunk branding on emails; unlimited self-hosted. Open-source transactional email platform. React-based email templates. Event-driven automations (welcome sequences, usage alerts). Can self-host for unlimited volume with your own SMTP provider (e.g., SES). The open-source hedge against future free tier removals.</div>
   </div>
 
   <div class="diff-card">
@@ -39319,7 +39319,7 @@ ${globalNavCss()}
 
   <div class="diff-card">
     <h3>Mailjet</h3>
-    <div class="diff-desc"><strong>Free tier:</strong> 6,000 emails/month (200/day cap). Both transactional and marketing email in one platform. SMTP relay and REST API. Contact list management included. The daily cap is restrictive for transactional bursts, but the monthly volume is generous for small projects. Template collaboration features on paid tiers.</div>
+    <div class="diff-desc"><strong>Free tier:</strong> 6,000 emails/month (200/day cap), up to 1,000 contacts. Both transactional and marketing email in one platform. SMTP relay and REST API. Contact list management included. The daily cap is restrictive for transactional bursts, but the monthly volume is generous for small projects. Template collaboration features on paid tiers.</div>
   </div>
 
   <div class="diff-card">
@@ -39347,7 +39347,7 @@ ${globalNavCss()}
 
   <div class="diff-card">
     <h3>Mailchimp <span class="caution-badge">SHRINKING</span></h3>
-    <div class="diff-desc"><strong>Free tier:</strong> 500 contacts, 500 emails/month, 500/day cap. Reduced from 2,000 contacts and 10,000 emails/month. The industry standard that keeps shrinking its free tier since the Intuit acquisition. Still has the largest ecosystem of integrations. No custom domain on free tier (Mailchimp branding). The free tier is now so limited it's mostly useful for testing the platform, not running a real newsletter.</div>
+    <div class="diff-desc"><strong>Free tier:</strong> 250 contacts, 500 emails/month, 250/day cap. Reduced from 2,000 contacts and 10,000 emails/month. The industry standard that keeps shrinking its free tier since the Intuit acquisition. Still has the largest ecosystem of integrations. No custom domain on free tier (Mailchimp branding). The free tier is now so limited it's mostly useful for testing the platform, not running a real newsletter.</div>
   </div>
 
   <div class="diff-card">
@@ -39638,7 +39638,7 @@ ${globalNavCss()}
   </div>
 
   <div class="context-box">
-    <strong>The dedicated IP trap:</strong> Shared IP pools work fine for low-volume senders. But once you're sending 50K+ emails/month, you need a dedicated IP for deliverability control. <strong>Postmark charges $50/month</strong> per dedicated IP. <strong>SendGrid charges $80/month.</strong> <strong>Resend includes dedicated IPs on Pro ($80/month).</strong> SES dedicated IPs are free but require manual warm-up. This hidden cost doubles your bill on lower tiers.
+    <strong>The dedicated IP trap:</strong> Shared IP pools work fine for low-volume senders. But once you're sending 50K+ emails/month, you need a dedicated IP for deliverability control. <strong>Postmark charges $50/month</strong> per dedicated IP. <strong>SendGrid charges $80/month.</strong> <strong>Resend offers dedicated IPs as a $30/month add-on on the Scale plan, for senders above 3,000 emails a day.</strong> SES dedicated IPs are free but require manual warm-up. This hidden cost doubles your bill on lower tiers.
   </div>
 
   <div class="context-box">

@@ -99,6 +99,116 @@ describe("the email comparison states the free volumes our own records hold (#11
   });
 });
 
+const COMPARISON = "/email-comparison-2026";
+
+function rowCells(html: string, vendor: string): string[] {
+  for (const [, row] of html.matchAll(/<tr\b[^>]*>([\s\S]*?)<\/tr>/g)) {
+    const cells = [...row.matchAll(/<td\b[^>]*>([\s\S]*?)<\/td>/g)].map((m) => readableText(m[1]));
+    if (cells[0] === vendor || cells[0]?.startsWith(`${vendor} `)) return cells;
+  }
+  assert.fail(`no table row names ${vendor}`);
+}
+
+function cardText(html: string, vendor: string): string {
+  const card = html.match(new RegExp(`<h3>${vendor}\\b([\\s\\S]*?)(?=<h[23]\\b)`));
+  assert.ok(card, `no card is headed ${vendor}`);
+  return readableText(card![1]);
+}
+
+function recordFigures(vendor: string, pattern: RegExp): string[] {
+  const description = recordFor(vendor).description;
+  const match = description.match(pattern);
+  assert.ok(match, `the ${vendor} record no longer matches ${pattern}: ${description}`);
+  return match!.slice(1);
+}
+
+describe("an email free tier typed into a page states what the vendor's own record holds", () => {
+  let proc: ChildProcess | undefined;
+  const html: Record<string, string> = {};
+
+  before(async () => {
+    proc = await startServer();
+    for (const route of [COMPARISON, "/email-service-alternatives", "/email-alternatives", "/free-frontend-stack"]) {
+      html[route] = await (await fetch(`${base}${route}`)).text();
+    }
+  });
+
+  after(() => { proc?.kill(); });
+
+  it("gives Plunk's cloud plan the monthly allowance its record states", () => {
+    const [allowance] = recordFigures("Plunk", /(\d[\d,]*) [a-z/]+ emails\/month/i);
+    const card = cardText(html[COMPARISON], "Plunk");
+    assert.strictEqual(rowCells(html[COMPARISON], "Plunk")[2], `${allowance}/mo (cloud)`);
+    assert.match(card, new RegExp(`Free tier: ${allowance} emails/month on cloud`), `Plunk's card reads: ${card}`);
+  });
+
+  it("gives Mailchimp the contact allowance and daily cap its record states, on every page that names them", () => {
+    const [contacts] = recordFigures("Mailchimp", /(\d[\d,]*) contacts/);
+    const [daily] = recordFigures("Mailchimp", /\((\d[\d,]*)\/day cap\)/);
+    const cells = rowCells(html[COMPARISON], "Mailchimp");
+    const card = cardText(html[COMPARISON], "Mailchimp");
+    assert.deepStrictEqual([cells[3], cells[4]], [`${daily}/day`, contacts]);
+    assert.match(card, new RegExp(`Free tier: ${contacts} contacts, [\\d,]+ emails/month, ${daily}/day cap`), `Mailchimp's card reads: ${card}`);
+    const outgrow = readableText(html["/free-frontend-stack"]).match(/Mailchimp gives ([\d,]+) contacts/);
+    assert.strictEqual(outgrow?.[1], contacts);
+  });
+
+  it("gives Mailjet the contact allowance its record states, in both tables with a contacts column", () => {
+    const [contacts] = recordFigures("Mailjet", /(\d[\d,]*) contacts/);
+    const card = cardText(html[COMPARISON], "Mailjet");
+    assert.strictEqual(rowCells(html[COMPARISON], "Mailjet")[4], contacts);
+    assert.strictEqual(rowCells(html["/email-service-alternatives"], "Mailjet")[2], contacts);
+    assert.match(card, new RegExp(`up to ${contacts} contacts`), `Mailjet's card reads: ${card}`);
+  });
+
+  it("gives Sweego the daily allowance its record states", () => {
+    const [daily] = recordFigures("Sweego", /(\d[\d,]*) emails\/day/);
+    const cells = rowCells(html[COMPARISON], "Sweego");
+    const card = cardText(html[COMPARISON], "Sweego");
+    assert.deepStrictEqual([cells[2].split(" ")[0], cells[3]], [`${daily}/day`, `${daily}/day`]);
+    assert.match(card, new RegExp(`Free tier: ${daily} emails a day`), `Sweego's card reads: ${card}`);
+  });
+
+  it("presents Postmark's free plan as the allowance its record says never expires, not as a test sandbox", () => {
+    const [allowance] = recordFigures("Postmark", /(\d[\d,]*) emails\/month free, never expires/);
+    const cells = rowCells(html[COMPARISON], "Postmark");
+    const card = cardText(html[COMPARISON], "Postmark");
+    assert.strictEqual(cells[2], `${allowance}/mo`);
+    assert.match(card, new RegExp(`Free tier: ${allowance} emails a month, never expires`), `Postmark's card reads: ${card}`);
+    for (const surface of [cells.join(" | "), card]) {
+      assert.doesNotMatch(surface, /test only|test emails|sandbox|not usable for production/i, `Postmark reads: ${surface}`);
+    }
+  });
+
+  it("gives Mailtrap.io the sending allowance and daily cap its record states", () => {
+    const [monthly, daily] = recordFigures("Mailtrap.io", /Email API\/SMTP: (\d[\d,]*) emails\/month \((\d[\d,]*)\/day cap\)/);
+    assert.strictEqual(rowCells(html["/email-alternatives"], "Mailtrap.io")[2], `${monthly} emails/mo (${daily}/day)`);
+  });
+
+  it("gives MailerSend's free plan its own limits rather than the Hobby plan's", () => {
+    const card = cardText(html[COMPARISON], "MailerSend");
+    assert.match(card, /Free accounts get 1 sending domain and 100 daily API requests/, `MailerSend's card reads: ${card}`);
+    assert.doesNotMatch(card, /1,000 daily API requests|10 templates|5 seats/, `MailerSend's card reads: ${card}`);
+  });
+
+  it("gives MailerSend the daily limit its record states, and never says it has no daily cap", () => {
+    const [daily] = recordFigures("MailerSend.com", /at most (\d[\d,]*) a day/);
+    const card = cardText(html[COMPARISON], "MailerSend");
+    assert.strictEqual(rowCells(html[COMPARISON], "MailerSend")[3], `${daily} API requests`);
+    assert.match(card, new RegExp(`${daily} daily API requests`), `MailerSend's card reads: ${card}`);
+    assert.doesNotMatch(card, /no daily cap/i, `MailerSend's card reads: ${card}`);
+  });
+
+  it("prices dedicated IPs as Resend and Maileroo sell them, and keeps Resend's free volume and daily cap", () => {
+    const resend = rowCells(html[COMPARISON], "Resend");
+    assert.deepStrictEqual([resend[2], resend[3], resend[8]], ["3,000/mo", "100/day", "$30/mo add-on (Scale)"]);
+    assert.strictEqual(rowCells(html[COMPARISON], "Maileroo")[8], "Included (all plans)");
+    const trap = readableText(html[COMPARISON]).match(/The dedicated IP trap: .*? This hidden cost/)?.[0] ?? "";
+    assert.match(trap, /Resend offers dedicated IPs as a \$30\/month add-on on the Scale plan, for senders above 3,000 emails a day\./, `the dedicated IP paragraph reads: ${trap}`);
+    assert.doesNotMatch(trap, /Pro \(\$80\/month\)/, `the dedicated IP paragraph reads: ${trap}`);
+  });
+});
+
 describe("a catalogue record carries what its own newest change record states", () => {
   it("gives Resend the domain count its 2026-09-05 change record announced", () => {
     const change = newestChangeFor("Resend");
