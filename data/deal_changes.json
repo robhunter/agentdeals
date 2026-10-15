@@ -16716,6 +16716,21 @@
       "category": "IDE & Code Editors",
       "alternatives": [],
       "recorded_date": "2026-10-14"
+    },
+    {
+      "vendor": "Anchor Browser",
+      "change_type": "pricing_restructured",
+      "date": "2026-08-21",
+      "date_source": "vendor_page",
+      "tier": "Free",
+      "summary": "From August 21, 2026, Anchor Browser bills each AI step by the tier of the model that runs it: $0.01 for Light models, $0.05 for Standard models such as Claude Haiku 4.5 and GPT-5, and $0.10 for High Performance models such as Claude Sonnet, Claude Opus and GPT-5.5. Before that date every AI step cost $0.01. With your own model key, a step is still a flat $0.01. Browser, browser-hour and proxy prices did not change.",
+      "previous_state": "Every AI step cost $0.01: \"AI Steps $0.01 per step\" (docs.anchorbrowser.io/pricing, Internet Archive 2026-06-12)",
+      "current_state": "\"AI Steps $0.01 to $0.10 per step\"; \"This AI pricing takes effect on August 21, 2026.\" Light $0.01, Standard $0.05, High Performance $0.10 per AI step; \"When you bring your own key, each AI step is charged at a flat $0.01, regardless of the model tier.\" (docs.anchorbrowser.io/pricing, read 2026-10-15)",
+      "impact": "medium",
+      "source_url": "https://docs.anchorbrowser.io/pricing",
+      "category": "Browser Automation",
+      "alternatives": [],
+      "recorded_date": "2026-10-15"
     }
   ]
 }
