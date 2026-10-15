@@ -84,6 +84,18 @@ const APP_RUNNER = "/aws-app-runner-migration";
 const CLOUD = "/cloud-free-tier-comparison-2026";
 const ALTERNATIVES = "/hosting-alternatives";
 const STORAGE = "/storage-comparison-2026";
+const FRONTEND_STACK = "/free-frontend-stack";
+const NEXTJS_STACK = "/free-nextjs-stack";
+const DIGITALOCEAN = "/digitalocean-free-tier-2026";
+const VERCEL_ALTERNATIVES = "/vercel-alternatives";
+const NETLIFY_ROUTES = [ALTERNATIVES, FRONTEND_STACK, NEXTJS_STACK, DIGITALOCEAN, VERCEL_ALTERNATIVES];
+
+const BLOCK_END_OUTSIDE_ROWS = /<\/(?:p|li|tr|div|h[1-6]|dd|dt|section|article|table|ul|ol|summary|details|blockquote)>|<br\s*\/?>/i;
+
+const sentencesAndTableRows = (html: string) => html
+  .replace(/<(script|style|svg)\b[\s\S]*?<\/\1>/gi, " ")
+  .split(BLOCK_END_OUTSIDE_ROWS)
+  .flatMap((block) => readableText(block).split(/(?<=[.!?])\s+/));
 
 describe("a hosting or cloud free tier typed into a page states what the vendor's own listing holds", () => {
   let proc: ChildProcess | undefined;
@@ -91,7 +103,7 @@ describe("a hosting or cloud free tier typed into a page states what the vendor'
 
   before(async () => {
     proc = await startServer();
-    for (const route of [HOSTING, APP_RUNNER, CLOUD, ALTERNATIVES, STORAGE]) {
+    for (const route of new Set([HOSTING, APP_RUNNER, CLOUD, ALTERNATIVES, STORAGE, ...NETLIFY_ROUTES])) {
       html[route] = await (await fetch(`${base}${route}`)).text();
     }
   });
@@ -164,5 +176,28 @@ describe("a hosting or cloud free tier typed into a page states what the vendor'
     const azure = rowStarting(tableRows(html[CLOUD], "CDN / Data Transfer"), "Azure", "Blob Storage");
     assert.deepStrictEqual(azure.slice(2, 4), ["Azure CDN not free-tier; first 100 GB/mo outbound free from North America and Europe", "12 months (Blob Storage)"]);
     assert.doesNotMatch(readableText(html[CLOUD]), /15 GB (of )?outbound/);
+  });
+
+  it("gives Netlify's Free plan the monthly credits its listing states, and only the bandwidth those credits buy", () => {
+    const [credits, perGb] = listingFigures("Netlify", /limit of (\d+) credits per month[\s\S]*?bandwidth \((\d+) credits per GB\)/);
+    const gb = Number(credits) / Number(perGb);
+    assert.match(readableText(html[FRONTEND_STACK]), new RegExp(`Netlify's Free plan gives ${credits} credits a month for deploys, compute and bandwidth; at ${perGb} credits per GB, that is at most ${gb} GB of bandwidth\\. Accounts created before September 4, 2025 keep the legacy plan's 100 GB and 300 build minutes\\.`));
+    assert.match(readableText(html[NEXTJS_STACK]), new RegExp(`Netlify's Free plan includes serverless functions and ${credits} credits a month, which cover at most ${gb} GB of bandwidth at ${perGb} credits per GB\\.`));
+    assert.match(readableText(html[DIGITALOCEAN]), new RegExp(`while Cloudflare Pages has unlimited bandwidth and Netlify's Free plan covers up to ${gb} GB a month from its ${credits} credits\\.`));
+    const row = rowStarting(tableRows(html[ALTERNATIVES], "Compute / Resources"), "Netlify");
+    assert.deepStrictEqual(row.slice(2, 4), [`${credits} credits/mo (deploys, compute, bandwidth, requests)`, `Up to ${gb} GB/mo (${perGb} credits/GB)`]);
+  });
+
+  it("gives Netlify 100 GB of bandwidth or 300 build minutes only in a sentence or table row that names them as the legacy plan's", () => {
+    let legacy = 0;
+    for (const route of NETLIFY_ROUTES) {
+      const naming = sentencesAndTableRows(html[route]).filter((sentence) => sentence.includes("Netlify"));
+      assert.ok(naming.length > 0, `${route} no longer names Netlify`);
+      for (const sentence of naming.filter((s) => /100 GB|300 build min/.test(s))) {
+        assert.match(sentence, /legacy/, `${route} reads: ${sentence}`);
+        legacy += 1;
+      }
+    }
+    assert.ok(legacy > 0, "no page names Netlify's legacy allowance, so nothing here was checked");
   });
 });

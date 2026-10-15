@@ -10956,8 +10956,8 @@ ${buildCards(startupCredits)}
       <tr>
         <td style="font-weight:600"><a href="/vendor/netlify" style="color:var(--text)">Netlify</a></td>
         <td>Static + Functions</td>
-        <td>300 build min/mo, 125K fn calls</td>
-        <td>100 GB/mo</td>
+        <td>300 credits/mo (deploys, compute, bandwidth, requests)</td>
+        <td>Up to 15 GB/mo (20 credits/GB)</td>
         <td>JAMstack, forms, identity</td>
       </tr>
       <tr>
@@ -16752,7 +16752,7 @@ function buildFreeFrontendStackPage(): string {
       icon: "🌐",
       recommended: { vendor: "Cloudflare Pages", why: "Unlimited bandwidth, 500 builds/month, 1 build at a time. Automatic edge deployment to 300+ locations. Git integration, preview deploys, and serverless Functions included. The most generous free hosting for static and Jamstack sites." },
       alternatives: ["Vercel", "Netlify", "GitHub Pages"],
-      outgrow: "When you need more than 500 builds/month or concurrent builds. Vercel offers 100 GB bandwidth with serverless functions. Netlify gives 100 GB bandwidth and 300 build minutes. GitHub Pages is unlimited bandwidth for public repos but static-only.",
+      outgrow: "When you need more than 500 builds/month or concurrent builds. Vercel offers 100 GB bandwidth with serverless functions. Netlify's Free plan gives 300 credits a month for deploys, compute and bandwidth; at 20 credits per GB, that is at most 15 GB of bandwidth. Accounts created before September 4, 2025 keep the legacy plan's 100 GB and 300 build minutes. GitHub Pages is unlimited bandwidth for public repos but static-only.",
       relatedPage: "/hosting-alternatives",
     },
     {
@@ -17078,7 +17078,7 @@ function buildFreeNextjsStackPage(): string {
       icon: "🚀",
       recommended: { vendor: "Vercel", why: "The creators of Next.js. Zero-config deployments with automatic edge optimization, ISR, middleware, and server components. Hobby plan: 100 GB Fast Data Transfer, 1M function invocations and 4 hours Fluid Active CPU a month; builds included. Preview deploys on every PR. The only platform with day-one support for every Next.js feature." },
       alternatives: ["Railway", "Netlify", "Cloudflare Pages"],
-      outgrow: "When you exceed 100 GB bandwidth/month or need commercial use (Hobby plan is non-commercial). Railway's Hobby plan is $5/month including $5 of usage, with no commercial restriction. Netlify gives 100 GB bandwidth with serverless functions. Cloudflare Pages has unlimited bandwidth but limited Next.js feature support.",
+      outgrow: "When you exceed 100 GB bandwidth/month or need commercial use (Hobby plan is non-commercial). Railway's Hobby plan is $5/month including $5 of usage, with no commercial restriction. Netlify's Free plan includes serverless functions and 300 credits a month, which cover at most 15 GB of bandwidth at 20 credits per GB. Cloudflare Pages has unlimited bandwidth but limited Next.js feature support.",
       whyNot: "Why not Heroku: No free tier since November 2022. Why not Render: Free tier spins down after 15 minutes of inactivity — cold starts of about one minute kill the Next.js experience.",
       relatedPage: "/hosting-free-tier-comparison-2026",
     },
@@ -35089,7 +35089,7 @@ ${globalNavCss()}
   </div>
 
   <div class="context-box">
-    <strong>App Platform static sites are the standout.</strong> 3 free static sites with automatic HTTPS, global CDN, and Git-based deployments. This competes directly with Vercel, Netlify, and Cloudflare Pages — all of which also offer generous free static hosting. The key difference: DigitalOcean limits outbound transfer to 1 GiB/month per app, while Cloudflare Pages and Netlify offer 100 GB+.
+    <strong>App Platform static sites are the standout.</strong> 3 free static sites with automatic HTTPS, global CDN, and Git-based deployments. This competes directly with Vercel, Netlify, and Cloudflare Pages — all of which also offer generous free static hosting. The key difference: DigitalOcean limits outbound transfer to 1 GiB/month per app, while Cloudflare Pages has unlimited bandwidth and Netlify's Free plan covers up to 15 GB a month from its 300 credits.
   </div>
 
   <h2 id="pricing">2026 Pricing Highlights</h2>
