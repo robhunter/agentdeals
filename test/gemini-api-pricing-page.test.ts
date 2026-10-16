@@ -144,20 +144,76 @@ function prepayParagraph(html: string): string {
 
 const withoutTags = (html: string) => html.replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
 
+const agentPlatformRetirements = () =>
+  (changesByVendor().get(listing.vendor.toLowerCase()) ?? []).filter(
+    (c) => c.change_type === "product_deprecated" && /on Gemini Enterprise Agent Platform/.test(c.what_ends ?? ""),
+  );
+
+const modelsIn = (text: string) => text.match(/gemini-\d+\.\d+-[a-z]+(?:-[a-z]+)*/g) ?? [];
+
+const longDate = (day: string) =>
+  new Date(`${day}T00:00:00Z`).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" });
+
+function retirementsStated(html: string): { models: string[]; day: string }[] {
+  const stated = withoutTags(prepayParagraph(html)).match(/Agent Platform retires (.+?)\. On the Gemini API none of these/)?.[1] ?? "";
+  return [...stated.matchAll(/((?:gemini-[\d.]+-[a-z-]+(?:, | and )?)+) on ([A-Z][a-z]+ \d{1,2}, \d{4})/g)].map(([, models, day]) => ({
+    models: modelsIn(models),
+    day,
+  }));
+}
+
 describe(`${PAGE} on paying after use once Prepay starts`, () => {
-  it("says what cannot be undone, then the route that bills after use, what gemini-3.5-flash calls cost there, and the two models priced the same on both platforms", () => {
+  it("says what cannot be undone, then the route that bills after use, what gemini-3.5-flash calls cost there, the one model to move to, priced the same on both platforms, and when Agent Platform retires gemini-3.6-flash and the Gemini 2.5 models", () => {
     const text = withoutTags(prepayParagraph(page));
     assert.ok(text.includes(
       "Google's billing FAQ states that accounts cannot switch from Prepay to Postpay. " +
       "To pay after use instead of prepaying, use Gemini Enterprise Agent Platform (formerly Vertex AI). " +
       "Google bills it on the standard Cloud charging cycle, not Prepay. " +
       "Calls to gemini-3.5-flash cost $1.50 input and $9.00 output per million tokens on Agent Platform, compared to $0.75 input and $3.75 output on the Gemini API, which routes to gemini-3.6-flash. " +
-      "Change the model ID to gemini-3.6-flash or gemini-3.8-flash before moving; those two models cost the same on both platforms. " +
+      "Change the model ID to gemini-3.8-flash before moving; it costs the same on both platforms. " +
+      "Agent Platform retires gemini-3.6-flash on November 19, 2026, and gemini-2.5-pro, gemini-2.5-flash and gemini-2.5-flash-lite on October 20, 2026. " +
+      "On the Gemini API none of these four has a shutdown date. " +
       "Agent Platform charges $0.75 input and $3.75 output per million tokens for Gemini 3.8 Flash and 3.6 Flash on the global endpoint through 2026-12-31, then $1.50 input and $7.50 output. " +
       "Non-global endpoints cost 10% more. " +
       "These match Gemini API paid-tier prices for gemini-3.6-flash and gemini-3.8-flash. " +
       "Accounts that use only the free tier need take no action.",
     ), text);
+  });
+
+  it("gives each Agent Platform retirement date as the date of the change record that retires those models there", () => {
+    const stated = retirementsStated(page);
+    assert.strictEqual(stated.length, 2, "the paragraph no longer gives two Agent Platform retirement dates");
+    for (const { models, day } of stated) {
+      const record = agentPlatformRetirements().find((c) => longDate(c.date) === day);
+      assert.ok(record, `no Google Gemini API change record retires models on Agent Platform on ${day}`);
+      assert.deepStrictEqual([...modelsIn(record!.previous_state)].sort(), [...models].sort(), `the change record dated ${record!.date} retires other models`);
+    }
+  });
+
+  it("tells readers to move to the replacement each of those records names, and to no model an Agent Platform retirement record retires", () => {
+    const moveTo = withoutTags(prepayParagraph(page)).match(/Change the model ID to (gemini-[\d.]+-[a-z-]+) before moving;/)?.[1];
+    assert.ok(moveTo, "the paragraph no longer names the model to change the ID to before moving");
+    const records = agentPlatformRetirements();
+    assert.ok(records.length > 0, "the Google Gemini API change records hold no Agent Platform retirement");
+    for (const c of records) assert.ok(!modelsIn(c.previous_state).includes(moveTo!), `Agent Platform retires ${moveTo} on ${c.date}`);
+    for (const { day } of retirementsStated(page)) {
+      const record = records.find((c) => longDate(c.date) === day);
+      assert.match(record?.summary ?? "", new RegExp(`Google names ${moveTo!.replace(/\./g, "\\.")} as (?:a|the) replacement`), day);
+    }
+  });
+
+  it("says the Gemini API gives those models no shutdown date only while each record retiring them on Agent Platform says the Gemini API keeps serving them", () => {
+    assert.ok(withoutTags(prepayParagraph(page)).includes("On the Gemini API none of these four has a shutdown date."));
+    const stated = retirementsStated(page);
+    assert.strictEqual(stated.flatMap(({ models }) => models).length, 4);
+    for (const { day } of stated) {
+      const record = agentPlatformRetirements().find((c) => longDate(c.date) === day);
+      assert.match(record?.summary ?? "", /^The Gemini API keeps serving [^.]*(?:\.\d[^.]*)* with no shutdown date\./, day);
+    }
+  });
+
+  it("no longer tells readers to move to gemini-3.6-flash", () => {
+    assert.doesNotMatch(readable(page), /Change the model ID to gemini-3\.6-flash/);
   });
 
   it("gives gemini-3.5-flash's Agent Platform prices in one sentence on the page, beside the Gemini API price of the model the listing routes it to", () => {
