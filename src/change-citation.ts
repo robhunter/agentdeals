@@ -70,6 +70,14 @@ export function changeSourceLinkHtml(change: CitableChange, esc: (text: string) 
   );
 }
 
+export function listingSourceLinkHtml(url: string | null, esc: (text: string) => string): string {
+  if (typeof url !== "string" || url.trim() === "") return "";
+  return (
+    `<a href="${esc(url.trim())}" target="_blank" rel="${CITATION_REL}" class="${RECORD_SOURCE_CLASS}"` +
+    ` style="${CITATION_STYLE}" title="${esc(citationLabel(url.trim()))}">${CITATION_LINK_HTML}</a>`
+  );
+}
+
 export function changeSourceCitation(change: CitableChange): { "@type": string; url: string; name: string } | null {
   if (!changeCitesASource(change)) return null;
   const url = change.source_url!.trim();

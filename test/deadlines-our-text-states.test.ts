@@ -308,6 +308,21 @@ describe("a deadline stated in a listing or an earlier record joins the deadline
     assert.strictEqual(cards.find((card) => card.summary.startsWith(CONDITION_SENTENCE))?.badge, null);
   });
 
+  it("orders its cards by date, with the stated deadlines among the records", () => {
+    const cards = cardsOf(html);
+    const order = [CONDITION_SENTENCE, PRICE_SENTENCE, DESCRIPTION_SENTENCE, RECORD_SENTENCE, `Deadline Fixture Cloud's legacy runtime stops on ${IN_90}.`]
+      .map((sentence) => cards.findIndex((card) => card.summary.startsWith(sentence)));
+    assert.ok(order.every((at) => at >= 0), `a card is missing: ${order.join(", ")}`);
+    assert.deepStrictEqual(order, [...order].sort((a, b) => a - b));
+  });
+
+  it("links a listing's sentence to its page as the listing's source and a record's to the record's source", () => {
+    const cardHolding = (sentence: string) => html.split('<div class="dl-card').slice(1).find((chunk) => chunk.includes(sentence)) ?? "";
+    const classOfLinkTo = (chunk: string, url: string) => chunk.match(new RegExp(`<a href="${url.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}"[^>]*class="([^"]+)"`))?.[1];
+    assert.strictEqual(classOfLinkTo(cardHolding(CONDITION_SENTENCE), CONDITION_URL), "record-source");
+    assert.strictEqual(classOfLinkTo(cardHolding(RECORD_SENTENCE), RECORD_URL), "change-source");
+  });
+
   it("keeps a listing's stated deadlines out of a change-type filter and a record's in its own type", async () => {
     const response = await fetch(`${base}/api/deadlines?type=product_deprecated`);
     assert.strictEqual(response.status, 200);

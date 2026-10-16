@@ -170,6 +170,7 @@ const NOT_A_CHANGE_RECORD: Array<{ expr: string; why: string }> = [
   { expr: "escHtmlServer(p.date)", why: "the day a press mention was published" },
   { expr: "escHtmlServer(e.date)", why: "a hand-written editorial timeline, which carries no record" },
   { expr: "date: r.date", why: "the day an analytics rollup covers" },
+  { expr: "date: s.date", why: "the day a listing's sentence, or an earlier record's, names as a deadline; stated_in says which" },
 ];
 
 describe("nothing renders a change date without saying which kind of date it is", () => {

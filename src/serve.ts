@@ -77,7 +77,7 @@ import { removalDurability, removalReturnRateSentence, removalDurabilityPattern,
 import { cutsByQuarterNewestFirst, cutsWindow, freeTierCutsIn } from "./free-tier-cuts.js";
 import { STARTUP_CREDITS_META_DESCRIPTION, STARTUP_PROGRAMS, type DatedTerms, type StartupProgram } from "./startup-programmes.js";
 import { CHANGE_TIMELINE_LINK_TEXT, CHANGE_TIMELINE_PATH, CUTS_THIS_YEAR_ANCHOR, CUTS_THIS_YEAR_HEADING, CUTS_THIS_YEAR_SUMMARY_CLASS, FIGURES_AS_OF_CLASS, FREE_TIER_TRACKER_HEADING, FREE_TIER_TRACKER_META_DESCRIPTION, FREE_TIER_TRACKER_TITLE, FREE_TIER_TRACKER_YEAR, NO_KNOWN_EFFECTIVE_DATE_LEFT_OUT, UNTIL_ITS_DATE_ARRIVES, changeTypesAmong, cutsThisYearSummary, figuresAsOfTheChangeHtml, isAFirstQuarterCard, neonFiguresWereJanuarysHtml, quarterAnchor, quarterHeading } from "./free-tier-tracker.js";
-import { changeCitesASource, citationLabel, changeIsUncited, changeSourceCitation, changeSourceLinkHtml, changeCitationHtml, citedClaimHtml, changeSummaryHtml, changeSummaryText, citedChanges, uncitedChangeNotice, uncitedChangeNoticeHtml, ratingWithheldForNoSourceClause, ratingWithheldForNoSourceSentence, ratingWithheldClause, ratingWithheldSentence, type WithheldRecordCounts, UNCITED_CHANGE_LABEL, RECORD_SOURCE_CLASS, CITATION_REL, type CitableChangeRow } from "./change-citation.js";
+import { changeCitesASource, citationLabel, changeIsUncited, changeSourceCitation, changeSourceLinkHtml, changeCitationHtml, citedClaimHtml, changeSummaryHtml, changeSummaryText, citedChanges, uncitedChangeNotice, uncitedChangeNoticeHtml, ratingWithheldForNoSourceClause, ratingWithheldForNoSourceSentence, ratingWithheldClause, ratingWithheldSentence, type WithheldRecordCounts, UNCITED_CHANGE_LABEL, RECORD_SOURCE_CLASS, CITATION_REL, listingSourceLinkHtml, type CitableChangeRow } from "./change-citation.js";
 import { growthLimitPhrases } from "./growth-limits.js";
 import { listingStatements, statesUsageBeyondTheFreeTierIsBilled } from "./overage-billing.js";
 import { registerAgent, authenticateRequest, validateVestauthUrl, hashApiKey, updateAgentX402Address, getAgentById } from "./agents.js";
@@ -50167,8 +50167,7 @@ function buildDeadlinesPage(): string {
     return changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
   }
 
-  function deadlineCardHtml(card: {
-    date: string;
+  function deadlineCardHtml(due: string, card: {
     badge: { label: string; color: string } | null;
     vendor: string;
     category: string;
@@ -50177,8 +50176,8 @@ function buildDeadlinesPage(): string {
     alternatives: readonly string[];
     guideText: string;
   }): string {
-    const urgency = urgencyBadge(card.date);
-    const countdown = countdownText(card.date);
+    const urgency = urgencyBadge(due);
+    const countdown = countdownText(due);
     const guide = findMigrationGuide(card.vendor, card.guideText);
     const altHtml = card.alternatives.length > 0
       ? `<div class="dl-alts"><span class="dl-alts-label">Alternatives:</span> ${card.alternatives.map(a => changeVendorLinkHtml(a)).join(", ")}</div>`
@@ -50209,9 +50208,8 @@ ${altHtml}${guideHtml}
   }
 
   const recordCards = deadlines.map(c => ({
-    date: c.date,
-    html: deadlineCardHtml({
-      date: c.date,
+    entry: c,
+    html: deadlineCardHtml(c.date, {
       badge: badgeOf(c),
       vendor: c.vendor,
       category: c.category,
@@ -50222,22 +50220,21 @@ ${altHtml}${guideHtml}
     }),
   }));
   const statedCards = stated.map(s => ({
-    date: s.date,
-    html: deadlineCardHtml({
-      date: s.date,
+    entry: s,
+    html: deadlineCardHtml(s.date, {
       badge: s.record ? badgeOf(s.record) : null,
       vendor: s.vendor,
       category: s.category,
       dateLabel: s.date,
       summaryHtml: s.record
         ? changeSummaryHtml({ ...s.record, summary: s.sentence }, escHtmlServer)
-        : [escHtmlServer(s.sentence), changeSourceLinkHtml({ source_url: s.sourceUrl }, escHtmlServer)].filter(Boolean).join(" "),
+        : [escHtmlServer(s.sentence), listingSourceLinkHtml(s.sourceUrl, escHtmlServer)].filter(Boolean).join(" "),
       alternatives: s.record?.alternatives ?? [],
       guideText: s.sentence,
     }),
   }));
   const cardsHtml = [...recordCards, ...statedCards]
-    .sort((a, b) => a.date.localeCompare(b.date))
+    .sort((a, b) => a.entry.date.localeCompare(b.entry.date))
     .map(card => card.html)
     .join("\n");
 
@@ -50260,17 +50257,17 @@ ${altHtml}${guideHtml}
     numberOfItems: entryCount,
     url: `${BASE_URL}/deadlines`,
     itemListElement: [
-      ...deadlines.map(c => ({ vendor: c.vendor, date: c.date, headline: `${c.vendor}: ${(changeTypeBadge[c.change_type] ?? { label: c.change_type }).label}`, description: c.summary })),
-      ...stated.map(s => ({ vendor: s.vendor, date: s.date, headline: s.record ? `${s.vendor}: ${badgeOf(s.record).label}` : s.vendor, description: s.sentence })),
-    ].sort((a, b) => a.date.localeCompare(b.date)).slice(0, 50).map((entry, i) => ({
+      ...deadlines.map(c => ({ entry: c, headline: `${c.vendor}: ${(changeTypeBadge[c.change_type] ?? { label: c.change_type }).label}`, description: c.summary })),
+      ...stated.map(s => ({ entry: s, headline: s.record ? `${s.vendor}: ${badgeOf(s.record).label}` : s.vendor, description: s.sentence })),
+    ].sort((a, b) => a.entry.date.localeCompare(b.entry.date)).slice(0, 50).map((item, i) => ({
       "@type": "ListItem",
       position: i + 1,
       item: {
         "@type": "NewsArticle",
-        headline: entry.headline,
-        description: entry.description,
-        datePublished: entry.date,
-        ...changeVendorUrlField(entry.vendor),
+        headline: item.headline,
+        description: item.description,
+        datePublished: item.entry.date,
+        ...changeVendorUrlField(item.entry.vendor),
         publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
       },
     })),

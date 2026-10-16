@@ -103,6 +103,8 @@ function startServer(indexPath: string): Promise<{ proc: ChildProcess; base: str
 
 const ROUTES_NO_SITEMAP_LISTS = ["/", "/estimate", "/budget-builder", "/compare-tool", "/stack-check"];
 
+const ROUTES_QUOTING_THE_ONE_SENTENCE_THAT_NAMES_A_DEADLINE = new Set(["/deadlines"]);
+
 const THE_VENDOR_PAGE = "/vendor/";
 
 function withoutTheHeadsSummaries(body: string): string {
@@ -197,7 +199,9 @@ describe("every route that prints a listing's description in full prints the lis
       if (response.status !== 200) continue;
       routesRead += 1;
       const body = withoutTheHeadsSummaries(await response.text());
-      readings.push(...readingsOf(route, body).filter(reading => planted.get(reading.code)?.role !== "set aside"));
+      if (!ROUTES_QUOTING_THE_ONE_SENTENCE_THAT_NAMES_A_DEADLINE.has(route)) {
+        readings.push(...readingsOf(route, body).filter(reading => planted.get(reading.code)?.role !== "set aside"));
+      }
       conditionsSeen.push(...conditionsPrintedOn(route, body));
       listsMisplaced.push(...elementsHoldingAList(route, body));
       for (const match of body.matchAll(new RegExp(`${SET_ASIDE_TOKEN}([a-z]{3})`, "g"))) setAsideSeen.push(`${route}: ${planted.get(match[1]!)?.vendor}`);
