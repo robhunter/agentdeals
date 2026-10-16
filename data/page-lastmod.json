@@ -1334,7 +1334,7 @@
       "changed": "2026-10-16"
     },
     "/ci-cd-pricing": {
-      "hash": "1bb51c9161110da5",
+      "hash": "4c61b56b63def45f",
       "changed": "2026-10-16"
     },
     "/cicd-free-tier-comparison-2026": {
@@ -3556,8 +3556,8 @@
       "changed": "2026-10-16"
     },
     "/security-free-tier-comparison-2026": {
-      "hash": "426d4c0f755722c1",
-      "changed": "2026-10-15"
+      "hash": "65e40b135bf818c9",
+      "changed": "2026-10-16"
     },
     "/serverless-free-tier-comparison-2026": {
       "hash": "8c1953bfbf1cbab0",

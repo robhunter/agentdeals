@@ -629,7 +629,7 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 101,
+      "table_figures": 100,
       "table_figures_from_records": 4,
       "tables": [
         {
@@ -644,7 +644,7 @@
         },
         {
           "label": "Cost Comparison by Team Size",
-          "figures": 51,
+          "figures": 50,
           "from_records": 0
         },
         {
