@@ -77,6 +77,48 @@ function dated(dateSource: string, date: string) {
   return { vendor: "Acme", date, date_source: dateSource, change_type: "limits_reduced", recorded_date };
 }
 
+function announcedChange(vendor: string, date: string) {
+  return {
+    vendor,
+    date,
+    date_source: "vendor_page",
+    change_type: "product_deprecated",
+    recorded_date: "2026-10-16",
+    summary: `${vendor} retires its free model.`,
+  };
+}
+
+function weeklyDigestAt(instant: string, changes: unknown[]) {
+  const dir = mkdtempSync(path.join(tmpdir(), "weekly-window-at-"));
+  const changesPath = path.join(dir, "deal_changes.json");
+  writeFileSync(changesPath, JSON.stringify({ changes }));
+  try {
+    const dataModule = pathToFileURL(path.join(REPO, "dist", "data.js")).href;
+    const run = spawnSync(
+      "node",
+      [
+        "--import",
+        path.join(REPO, "scripts", "shifted-clock.mjs"),
+        "-e",
+        `import(${JSON.stringify(dataModule)}).then((m) => process.stdout.write(JSON.stringify(m.getWeeklyDigest())))`,
+      ],
+      {
+        env: {
+          ...process.env,
+          AGENTDEALS_CHANGES_PATH: changesPath,
+          AGENTDEALS_CLOCK_SHIFT_MS: String(Date.parse(instant) - Date.now()),
+          TZ: "UTC",
+        },
+        encoding: "utf-8",
+      }
+    );
+    assert.strictEqual(run.status, 0, run.stderr);
+    return JSON.parse(run.stdout);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+}
+
 const WEEKS_OF_ARCHIVE = 120;
 const FEED_WEEKS = 4;
 
@@ -452,6 +494,43 @@ describe("the digest returns only what the window it names contains", () => {
         `${c.vendor} ${c.date} should be an upcoming deadline`
       );
     }
+  });
+
+  it("on a Monday, counts only the change that has taken effect and leaves the week's later ones to the deadlines", () => {
+    const later = [
+      announcedChange("Thursday Model A", "2026-10-22"),
+      announcedChange("Thursday Model B", "2026-10-22"),
+      announcedChange("Friday Model A", "2026-10-23"),
+      announcedChange("Friday Model B", "2026-10-23"),
+    ];
+    const digest = weeklyDigestAt("2026-10-19T12:00:00Z", [announcedChange("Monday Model", "2026-10-19"), ...later]);
+    assert.strictEqual(digest.week, "2026-10-19 to 2026-10-25");
+    assert.deepStrictEqual(digest.deal_changes.map((c: { vendor: string }) => c.vendor), ["Monday Model"]);
+    assert.strictEqual(digest.date_range, "2026-09-19 to 2026-10-19");
+    assert.ok(digest.summary.startsWith("1 pricing change with a known effective date tracked in the past 30 days"), digest.summary);
+    for (const c of later) {
+      assert.ok(
+        digest.upcoming_deadlines.some((d: { vendor: string; date: string }) => d.vendor === c.vendor && d.date === c.date),
+        `${c.vendor} ${c.date} should be an upcoming deadline`
+      );
+    }
+  });
+
+  it("on a Wednesday holding three of the week's changes, reports the week up to today", () => {
+    const digest = weeklyDigestAt("2026-10-21T12:00:00Z", [
+      announcedChange("Monday Model", "2026-10-19"),
+      announcedChange("Tuesday Model", "2026-10-20"),
+      announcedChange("Wednesday Model", "2026-10-21"),
+      announcedChange("Thursday Model", "2026-10-22"),
+      announcedChange("Friday Model", "2026-10-23"),
+    ]);
+    assert.strictEqual(digest.week, "2026-10-19 to 2026-10-25");
+    assert.strictEqual(digest.date_range, "2026-10-19 to 2026-10-21");
+    assert.deepStrictEqual(
+      digest.deal_changes.map((c: { vendor: string }) => c.vendor),
+      ["Wednesday Model", "Tuesday Model", "Monday Model"]
+    );
+    assert.ok(digest.summary.startsWith("3 pricing changes with a known effective date tracked this week"), digest.summary);
   });
 
   it("opens its summary with the number of changes it actually returns", async () => {
