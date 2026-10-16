@@ -2037,12 +2037,13 @@ export function getWeeklyDigest(): {
   const weekWindow = isoWeekWindow(now);
   const week = `${weekWindow.start} to ${weekWindow.end}`;
   const inWeek = changesInWindow(allDealChanges, weekWindow);
+  const weekSoFar: DateWindow = { start: weekWindow.start, end: today };
 
   const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
-  const usedFallback = inWeek.dated.length < 3;
+  const usedFallback = changesInWindow(allDealChanges, weekSoFar).dated.length < 3;
   const changeWindow: DateWindow = usedFallback
     ? { start: thirtyDaysAgo, end: today }
-    : weekWindow;
+    : weekSoFar;
   const changes = [...changesInWindow(allDealChanges, changeWindow).dated].sort((a, b) =>
     b.date.localeCompare(a.date)
   );

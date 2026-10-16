@@ -1,59 +1,37 @@
 {
   "held": [
     {
-      "vendor": "Crowdin",
-      "change_type": "free_tier_removed",
+      "vendor": "Google Meet",
+      "change_type": "pricing_restructured",
       "impact": "high",
-      "summary": "The free plan is now a 14-day trial of the Team plan. There is a free option for Open Source projects, but it requires a request. The CDN is free up to 1M requests and 10GB of data transfer.",
-      "previous_state": "Localization management. The Free plan is $0 a month: 60,000 hosted words, 1 private project, unlimited public projects, 1 integration, unlimited translators and Crowdin AI. Users on the Free plan donate their translations to Crowdin's translation memory. Pro starts at $50 a month (2 private projects), Team at $150 and Team+ at $450. Open-source and non-profit projects can apply for a free Open Source License. The CDN for over-the-air translations is free up to 1M requests and 10 GB of data transfer. CLI, GitHub integration, REST API",
-      "current_state": "The free plan is now a 14-day trial of the Team plan.",
-      "source_url": "https://crowdin.com/pricing",
-      "category": "Localization",
-      "first_read_date": "2026-10-15"
+      "summary": "1-hour group meetings with up to 100 participants and unlimited 1-on-1 calls are still available, features like recordings and breakout rooms are now premium features requiring a paid plan. Are also part of paid plans.",
+      "previous_state": "1-hour group meetings (up to 100 participants). Unlimited 1-on-1 calls (24-hour limit). Screen sharing. Real-time captions. Background effects. No recording or breakout rooms on free.",
+      "current_state": "Premium features include recordings, transcripts, meetings up to 24 hours long, and up to 1000 participants.",
+      "source_url": "https://workspace.google.com/products/meet/",
+      "category": "Communication & Messaging",
+      "first_read_date": "2026-10-16"
     },
     {
-      "vendor": "encore.dev",
-      "change_type": "pricing_model_change",
-      "impact": "high",
-      "summary": "The free tier is now the 'Starter' plan and is for local development and small projects.",
-      "previous_state": "Backend framework with static analysis for automatic infrastructure provisioning. Free cloud hosting for hobby projects, up to 2 environments, built-in monitoring and tracing",
-      "current_state": "The Starter plan is free for local development and small projects. The Pro plan is $49 per team member per month, plus per-environment and per-resource fees.",
-      "source_url": "https://encore.dev/",
-      "category": "Cloud Hosting",
-      "first_read_date": "2026-10-15"
-    },
-    {
-      "vendor": "Pulsetic",
-      "change_type": "limits_reduced",
-      "impact": "low",
-      "summary": "The free tier still exists, but the description is incomplete. The free tier now includes dependency monitors (1), monitor screenshots (—), and annotations (—).",
-      "previous_state": "Uptime monitoring — 10 monitors (HTTP/heartbeat/API), 5-minute check interval, 3 regions, 3-month history, 3 status pages",
-      "current_state": "The free plan includes 10 monitors, 5-minute check interval, 3 regions, 3-month history, 3 status pages, 1 dependency monitor, and no monitor screenshots or annotations.",
-      "source_url": "https://pulsetic.com/pricing/",
-      "category": "Monitoring",
-      "first_read_date": "2026-10-15"
-    },
-    {
-      "vendor": "Resend",
+      "vendor": "Simple Observability",
       "change_type": "limits_reduced",
       "impact": "medium",
-      "summary": "The free tier now has a daily limit of 100 emails, and 3 inboxes. It also includes 5 AI credits and 30-day data retention. Previously 3K emails/month (100/day cap), 3 domains, 1K marketing contacts/month, 5 AI credits, and 30-day data retention.",
-      "previous_state": "Developer-first email API — 3K emails/month free (100/day cap), 3 domains, 1K marketing contacts/month, 5 AI credits, 30-day data retention",
-      "current_state": "Daily limit 100, Inboxes 3, AI credits / mo 5, Data retention 30 days",
-      "source_url": "https://resend.com/pricing",
-      "category": "Email",
-      "first_read_date": "2026-10-15"
+      "summary": "The free tier now includes 50 metrics per server, low log volume, 1 server, 1 job, 1 endpoint and 5 alert rules. The paid tier is $3 per month per server.",
+      "previous_state": "Powerful server monitoring in a unified platform for metrics and logs, with no setup complexity. Free for one server.",
+      "current_state": "The free tier includes 50 metrics per server, low log volume, 1 server, 1 job, 1 endpoint and 5 alert rules.",
+      "source_url": "https://simpleobservability.com/pricing",
+      "category": "Monitoring",
+      "first_read_date": "2026-10-16"
     },
     {
-      "vendor": "Vercel",
-      "change_type": "limits_reduced",
+      "vendor": "Tugboat",
+      "change_type": "free_tier_removed",
       "impact": "high",
-      "summary": "The Hobby plan still exists and is $0/month. Many of the included limits now have associated pay-as-you-go pricing. For example, Function Invocations are 1M/month included. Cost $0.60 per 1M after that. Blob Storage is 1GB/month included. Costs $0.023 per GB after that. Image Transformations are 5K/month included. Cost $0.05 per 1K after that.",
-      "previous_state": "Hobby plan, $0 a month, for non-commercial personal use only. Includes 100 GB Fast Data Transfer, 1M Edge Requests, 1M Function Invocations, 4 hours Fluid Active CPU, 360 GB-hrs Fluid Provisioned Memory, 1 GB Blob Storage and 5K image transformations a month. Hobby accounts are limited to these caps and cannot buy more usage. Pro is $20 a month with one deploying seat; each additional deploying seat is $20 a month.",
-      "current_state": "Hobby $0 /mo. Includes 1M CDN Requests, 100 GB Fast Data Transfer, 1M Function Invocations, 4 hours Fluid Active CPU, 360 GB-hrs Fluid Provisioned Memory, 1 GB Blob Storage and 5K image transformations a month. Additional usage is available at a cost.",
-      "source_url": "https://vercel.com/pricing",
-      "category": "Cloud Hosting",
-      "first_read_date": "2026-10-15"
+      "summary": "Tugboat's own page now redirects to tugboatqa.com. The free tier no longer exists. The lowest tier is now 'Intro' at $39/month.",
+      "previous_state": "Preview every pull request, automated and on-demand. Free tier: $0/month, 5GB storage, 512MB RAM, no credit card required.",
+      "current_state": "The Intro plan costs $39/month and includes 15GB preview storage and 1GB RAM.",
+      "source_url": "https://tugboat.qa/pricing",
+      "category": "CI/CD",
+      "first_read_date": "2026-10-16"
     }
   ],
   "resolved": [
@@ -2412,6 +2390,66 @@
       "outcome": "contradicted",
       "detail": "a reading on 2026-10-15 read a change the gate refused as confirmed_unchanged",
       "resolved_date": "2026-10-15"
+    },
+    {
+      "vendor": "Crowdin",
+      "change_type": "free_tier_removed",
+      "impact": "high",
+      "summary": "The free plan is now a 14-day trial of the Team plan. There is a free option for Open Source projects, but it requires a request. The CDN is free up to 1M requests and 10GB of data transfer.",
+      "previous_state": "Localization management. The Free plan is $0 a month: 60,000 hosted words, 1 private project, unlimited public projects, 1 integration, unlimited translators and Crowdin AI. Users on the Free plan donate their translations to Crowdin's translation memory. Pro starts at $50 a month (2 private projects), Team at $150 and Team+ at $450. Open-source and non-profit projects can apply for a free Open Source License. The CDN for over-the-air translations is free up to 1M requests and 10 GB of data transfer. CLI, GitHub integration, REST API",
+      "source_url": "https://crowdin.com/pricing",
+      "first_read_date": "2026-10-15",
+      "outcome": "contradicted",
+      "detail": "a reading on 2026-10-16 read it as new_tier",
+      "resolved_date": "2026-10-16"
+    },
+    {
+      "vendor": "encore.dev",
+      "change_type": "pricing_model_change",
+      "impact": "high",
+      "summary": "The free tier is now the 'Starter' plan and is for local development and small projects.",
+      "previous_state": "Backend framework with static analysis for automatic infrastructure provisioning. Free cloud hosting for hobby projects, up to 2 environments, built-in monitoring and tracing",
+      "source_url": "https://encore.dev/",
+      "first_read_date": "2026-10-15",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-10-16 read it as pricing_model_change too",
+      "resolved_date": "2026-10-16"
+    },
+    {
+      "vendor": "Pulsetic",
+      "change_type": "limits_reduced",
+      "impact": "low",
+      "summary": "The free tier still exists, but the description is incomplete. The free tier now includes dependency monitors (1), monitor screenshots (—), and annotations (—).",
+      "previous_state": "Uptime monitoring — 10 monitors (HTTP/heartbeat/API), 5-minute check interval, 3 regions, 3-month history, 3 status pages",
+      "source_url": "https://pulsetic.com/pricing/",
+      "first_read_date": "2026-10-15",
+      "outcome": "contradicted",
+      "detail": "a reading on 2026-10-16 read a change the gate refused as measures_no_change",
+      "resolved_date": "2026-10-16"
+    },
+    {
+      "vendor": "Resend",
+      "change_type": "limits_reduced",
+      "impact": "medium",
+      "summary": "The free tier now has a daily limit of 100 emails, and 3 inboxes. It also includes 5 AI credits and 30-day data retention. Previously 3K emails/month (100/day cap), 3 domains, 1K marketing contacts/month, 5 AI credits, and 30-day data retention.",
+      "previous_state": "Developer-first email API — 3K emails/month free (100/day cap), 3 domains, 1K marketing contacts/month, 5 AI credits, 30-day data retention",
+      "source_url": "https://resend.com/pricing",
+      "first_read_date": "2026-10-15",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-10-16 read it as limits_reduced too",
+      "resolved_date": "2026-10-16"
+    },
+    {
+      "vendor": "Vercel",
+      "change_type": "limits_reduced",
+      "impact": "high",
+      "summary": "The Hobby plan still exists and is $0/month. Many of the included limits now have associated pay-as-you-go pricing. For example, Function Invocations are 1M/month included. Cost $0.60 per 1M after that. Blob Storage is 1GB/month included. Costs $0.023 per GB after that. Image Transformations are 5K/month included. Cost $0.05 per 1K after that.",
+      "previous_state": "Hobby plan, $0 a month, for non-commercial personal use only. Includes 100 GB Fast Data Transfer, 1M Edge Requests, 1M Function Invocations, 4 hours Fluid Active CPU, 360 GB-hrs Fluid Provisioned Memory, 1 GB Blob Storage and 5K image transformations a month. Hobby accounts are limited to these caps and cannot buy more usage. Pro is $20 a month with one deploying seat; each additional deploying seat is $20 a month.",
+      "source_url": "https://vercel.com/pricing",
+      "first_read_date": "2026-10-15",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-10-16 read it as limits_reduced too",
+      "resolved_date": "2026-10-16"
     }
   ]
 }

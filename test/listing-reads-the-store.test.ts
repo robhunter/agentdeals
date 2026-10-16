@@ -6,6 +6,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { assertPopulationFloor } from "./population-floor.ts";
 import { vendorsNamedAsUncontradicted } from "./snippet-order.ts";
+import { listingBlocksOf, withoutTheListingBlocks } from "./vendor-listing-blocks.ts";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -44,6 +45,12 @@ interface CatalogueOffer {
 const offers: CatalogueOffer[] = JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf-8")).offers;
 
 const slugOf = (vendor: string) => vendor.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+
+const escaped = (text: string) =>
+  text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+
+const unescaped = (text: string) =>
+  text.replace(/&quot;/g, '"').replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&");
 
 const heldState: Array<{ vendor: string; url: string; last_outcome: string | null; last_success: string | null }> =
   JSON.parse(readFileSync(path.join(REPO, "data", "verification_state.json"), "utf-8")).records;
@@ -221,7 +228,7 @@ describe("the two surfaces that describe one read", () => {
   before(async () => { if (!proc) proc = await startServer(); });
   after(() => { proc?.kill(); proc = null; });
 
-  it("names no vendor as uncontradicted whose own page says our read found a difference", async () => {
+  it("names no vendor as uncontradicted whose page says our read of its listing there found a difference", async () => {
     const disagreements: string[] = [];
     let named = 0;
     const vendorPages = new Map<string, string>();
@@ -230,12 +237,17 @@ describe("the two surfaces that describe one read", () => {
       if (status !== 200) continue;
       for (const vendor of namedAsUncontradicted(body)) {
         named++;
-        const vendorSlug = slugOf(vendor);
+        const vendorSlug = slugOf(unescaped(vendor));
         if (!vendorPages.has(vendorSlug)) {
           const page = await get(`/vendor/${vendorSlug}`);
           vendorPages.set(vendorSlug, page.status === 200 ? page.body : "");
         }
-        if (vendorPages.get(vendorSlug)!.includes(FOUND_A_DIFFERENCE)) {
+        const page = vendorPages.get(vendorSlug)!;
+        const blocks = listingBlocksOf(page);
+        const statedForThisCategory = offers
+          .filter((o) => slugOf(o.vendor) === vendorSlug && slugOf(o.category) === slug)
+          .map((o) => blocks.get(escaped(o.url)) ?? withoutTheListingBlocks(page));
+        if (statedForThisCategory.length === 0 || statedForThisCategory.some((said) => said.includes(FOUND_A_DIFFERENCE))) {
           disagreements.push(`/category/${slug} names ${vendor}`);
         }
       }

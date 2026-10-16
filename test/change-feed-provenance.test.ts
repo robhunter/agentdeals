@@ -147,7 +147,7 @@ function startServer(changesPath?: string): Promise<{ proc: ChildProcess; port: 
 
 describe("the change feeds date every entry by when we recorded it and say what its date means", () => {
   const servers: ChildProcess[] = [];
-  let tmp = "";
+  const tmpDirs: string[] = [];
   let port = 0;
   let perChange = "";
   let weekly = "";
@@ -170,8 +170,18 @@ describe("the change feeds date every entry by when we recorded it and say what 
 
   after(() => {
     for (const proc of servers) proc.kill();
-    if (tmp) rmSync(tmp, { recursive: true, force: true });
+    for (const dir of tmpDirs) rmSync(dir, { recursive: true, force: true });
   });
+
+  async function feedServedFrom(changes: Record<string, unknown>[]): Promise<string> {
+    const dir = mkdtempSync(path.join(tmpdir(), "change-feed-provenance-"));
+    tmpDirs.push(dir);
+    const changesPath = path.join(dir, "changes.json");
+    writeFileSync(changesPath, JSON.stringify({ changes }));
+    const fixture = await startServer(changesPath);
+    servers.push(fixture.proc);
+    return (await fetch(`http://localhost:${fixture.port}${PER_CHANGE_FEED.path}`)).text();
+  }
 
   it("carries an entry for each of the most recently recorded changes", () => {
     assert.strictEqual(entries.length, CHANGE_FEED_ENTRY_LIMIT);
@@ -217,13 +227,16 @@ describe("the change feeds date every entry by when we recorded it and say what 
     assert.deepStrictEqual(absent.map((e) => `${e.title} — ${e.summary.slice(0, 50)}`), []);
   });
 
-  it("tells an entry read on its own that a date with no known effective date is the day we recorded the change", () => {
+  it("tells an entry read on its own that a date with no known effective date is the day we recorded the change", async () => {
+    const recordedOnly = parseEntries(
+      await feedServedFrom([fixtureChange("Fixture Recorded Only", TODAY, "discovered", TODAY)])
+    );
+    assert.deepStrictEqual(recordedOnly.map((e) => [e.dateSource, e.effectiveDate]), [["discovered", null]]);
     const undated = entries.filter((e) => {
       const record = recordFor(e)!;
       return !statesWhenItTookEffect(record) && archiveBracketOf(record as never) === null && dayWeCorrectedIt(record as never) === null;
     });
-    assert.ok(undated.length > 0, "no entry without a known effective date in the feed to check");
-    for (const entry of undated) {
+    for (const entry of [...recordedOnly, ...undated]) {
       assert.match(entry.summary, /effective date unknown — this is the day we recorded the change\. We do not know when it took effect\./);
     }
   });
@@ -376,18 +389,11 @@ describe("the change feeds date every entry by when we recorded it and say what 
   });
 
   it("keeps a future effective date out of the newest position", async () => {
-    tmp = mkdtempSync(path.join(tmpdir(), "change-feed-provenance-"));
-    const changesPath = path.join(tmp, "changes.json");
     const injected = [
       fixtureChange("Fixture Announced", dayOffset(30), "vendor_page", dayOffset(-400)),
       fixtureChange("Fixture Recorded Today", dayOffset(-1), "discovered", TODAY),
     ];
-    writeFileSync(changesPath, JSON.stringify({ changes: [...storedChanges(), ...injected] }));
-    const fixture = await startServer(changesPath);
-    servers.push(fixture.proc);
-    const doc = await (
-      await fetch(`http://localhost:${fixture.port}${PER_CHANGE_FEED.path}`)
-    ).text();
+    const doc = await feedServedFrom([...storedChanges(), ...injected]);
     const fixtureEntries = parseEntries(doc);
     assert.ok(
       !fixtureEntries.some((e) => e.title.startsWith("Fixture Announced")),
