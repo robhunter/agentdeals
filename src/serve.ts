@@ -33692,12 +33692,12 @@ function buildAwsFreeTier2026Page(): string {
   const gotchas: GotchaItem[] = [
     { title: "Data transfer out", desc: "First 100 GB/month free to internet, then $0.09/GB. Transfers between regions always charged.", cost: "$0.09/GB" },
     { title: "NAT Gateway", desc: "If your Lambda/ECS needs internet access in a VPC, NAT Gateway costs $0.045/hr + $0.045/GB. Running 24/7 = $32/month before data.", cost: "$32+/mo" },
-    { title: "Elastic IP addresses", desc: "Free when attached to a running instance. Charged $0.005/hr (~$3.60/month) when idle or unattached. Easy to forget.", cost: "$3.60/mo idle" },
+    { title: "Public IPv4 addresses", desc: "Every public IPv4 address is charged $0.005/hr, whether attached to a running instance or idle. AWS: “Effective February 1, 2024 there will be a charge of $0.005 per IP per hour for all public IPv4 addresses, whether attached to a service or not.”", cost: "$3.60/mo each" },
     { title: "CloudWatch detailed monitoring", desc: "Basic monitoring is free (5-minute intervals). Detailed monitoring (1-minute) costs $2.10/metric/month. EC2 auto-enables it in some launch configs.", cost: "$2.10/metric" },
     { title: "EBS volumes on stopped instances", desc: "You pay for EBS storage even when EC2 instances are stopped. 30 GB gp3 = $2.40/month sitting idle.", cost: "$0.08/GB-mo" },
     { title: "Free tier expiration", desc: "On the Free plan nothing is billed: the account closes at 6 months or when credits run out, and content is deleted after 90 days unless you upgrade. On the Paid plan, usage past the credits is billed.", cost: "Varies" },
     { title: "S3 request costs", desc: "Storage is cheap but requests add up. PUT/COPY/POST at $0.005/1K requests. A deployment pipeline doing thousands of S3 operations can cost more in requests than storage.", cost: "$0.005/1K PUT" },
-    { title: "Multi-AZ deployments", desc: "RDS Multi-AZ doubles your cost. The free tier only covers single-AZ. Some tutorials default to Multi-AZ.", cost: "2× RDS cost" },
+    { title: "Multi-AZ deployments", desc: "RDS Multi-AZ doubles your cost: a Multi-AZ instance is billed at twice the Single-AZ rate (db.t4g.micro PostgreSQL in US East: $0.032 an hour against $0.016), and new accounts pay for both from their credits. Some tutorials default to Multi-AZ.", cost: "2× RDS cost" },
   ];
 
   interface CloudAlt {
@@ -33850,7 +33850,7 @@ ${globalNavCss()}
   <div class="executive-summary">
     <p>New AWS accounts choose a Free plan or a Paid plan; both get $100 in credits at sign-up and can earn up to $100 more. The Free plan covers over 90 services, charges nothing, and closes at 6 months or when the credits run out. 30+ services stay always free on both plans. Short-term trials are for the Paid plan.</p>
     <p><strong>What's new:</strong> Aurora PostgreSQL serverless joined the Free plan on 2026-03-25 with up to 4 ACUs and 1 GiB per cluster, paid from the credits. The 12-month free tier ended for the last eligible accounts in July 2026.</p>
-    <p><strong>The hidden costs:</strong> data transfer, NAT Gateway fees, idle Elastic IPs and EBS volumes on stopped instances use up credits fast. On the Free plan, using up the credits closes the account and nothing is charged to your card; on the Paid plan, usage past the credits is billed. We cover all of them below.</p>
+    <p><strong>The hidden costs:</strong> data transfer, NAT Gateway fees, public IPv4 addresses and EBS volumes on stopped instances use up credits fast. On the Free plan, using up the credits closes the account and nothing is charged to your card; on the Paid plan, usage past the credits is billed. We cover all of them below.</p>
     <p><strong>Comparing clouds?</strong> See our <a href="/cloud-free-tier-comparison-2026">Cloud Free Tier Comparison</a> for a side-by-side matrix of AWS vs GCP vs Azure vs DigitalOcean.</p>
   </div>
 
@@ -35966,7 +35966,7 @@ ${globalNavCss()}
 
   <div class="diff-card" style="border-left-color:#f85149">
     <h3>AWS <span style="font-size:.75rem;color:#f85149;font-weight:400">Most gotchas</span></h3>
-    <p class="diff-desc"><strong>Data transfer:</strong> $0.09/GB after 100 GB free. <strong>NAT Gateway:</strong> $32+/mo if Lambda needs VPC internet. <strong>Idle Elastic IPs:</strong> $3.60/mo when unattached. <strong>EBS on stopped instances:</strong> You pay for disk even when EC2 is stopped. <strong>Free plan closure:</strong> nothing is charged to your card on the Free plan; the account closes at 6 months or when credits run out, and content is deleted after 90 days unless you upgrade to the Paid plan.</p>
+    <p class="diff-desc"><strong>Data transfer:</strong> $0.09/GB after 100 GB free. <strong>NAT Gateway:</strong> $32+/mo if Lambda needs VPC internet. <strong>Public IPv4:</strong> $0.005/hr ($3.60/mo) whether in use or idle. <strong>EBS on stopped instances:</strong> You pay for disk even when EC2 is stopped. <strong>Free plan closure:</strong> nothing is charged to your card on the Free plan; the account closes at 6 months or when credits run out, and content is deleted after 90 days unless you upgrade to the Paid plan.</p>
   </div>
 
   <div class="diff-card" style="border-left-color:#d29922">
@@ -35981,7 +35981,7 @@ ${globalNavCss()}
 
   <div class="diff-card" style="border-left-color:#3fb950">
     <h3>DigitalOcean <span style="font-size:.75rem;color:#3fb950;font-weight:400">Fewest gotchas</span></h3>
-    <p class="diff-desc"><strong>Minimal free tier:</strong> The biggest "gotcha" is that there's almost nothing free — but what you do pay for is predictable. <strong>Bandwidth overage:</strong> $0.01/GB beyond your Droplet's allocation (much cheaper than AWS/GCP). <strong>Backups:</strong> 20% surcharge if enabled. <strong>Floating IPs:</strong> Free when attached, $4/mo when unattached.</p>
+    <p class="diff-desc"><strong>Minimal free tier:</strong> The biggest "gotcha" is that there's almost nothing free — but what you do pay for is predictable. <strong>Bandwidth overage:</strong> $0.01/GB beyond your Droplet's allocation (much cheaper than AWS/GCP). <strong>Backups:</strong> 20% surcharge if enabled. <strong>Reserved IPs:</strong> Free when assigned. Unassigned IPv4 costs $5/month.</p>
   </div>
 
   <h2 id="changes">Pricing Change Timeline</h2>
