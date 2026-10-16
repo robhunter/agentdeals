@@ -80,6 +80,12 @@
           "quote": "Each Hobby project now keeps its 3 most recent production deployments, plus its 3 most recent deployments of any type, regardless of age.",
           "url": "https://vercel.com/changelog/hobby-projects-now-retain-fewer-deployments-to-free-up-storage",
           "read_on": "2026-10-12"
+        },
+        {
+          "text": "Flat Rate CDN is available on Pro plans. Pro includes the lowest tier at no extra cost: 1M CDN requests and 1 TB of data transfer a month. Paid tiers are $20 a month for 10M requests and 50 TB, $100 for 50M and 50 TB, and $300 for 150M and 50 TB. A Pro team turns it on in Billing settings. Usage above a tier moves the team to a higher tier at the start of the next cycle. Flat Rate CDN is not for bulk file distribution or download services, or large-scale media or file delivery that uses most bandwidth.",
+          "quote": "Pro includes the lowest tier at no additional cost.",
+          "url": "https://vercel.com/docs/pricing/flat-rate-cdn",
+          "read_on": "2026-10-16"
         }
       ],
       "free_plan_excerpt": {
@@ -3738,7 +3744,7 @@
     {
       "vendor": "OpenRouter",
       "category": "AI / ML",
-      "description": "AI model router. Free plan: 25+ free models, 4 free providers, 50 requests a day, no BYOK. Free models are capped at 20 requests a minute; accounts that have bought at least $10 of credits get 1,000 free-model requests a day. The Standard plan (pay-as-you-go) charges a 5.5% fee on credit purchases and includes BYOK up to $25,000 of list-price inference a month with no fees, 5% after.",
+      "description": "AI model router. Free plan: 25+ free models, 4 free providers, 50 requests a day, no BYOK. Free models are capped at 20 requests a minute; accounts that have bought at least $10 of credits get 1,000 free-model requests a day. The Standard plan (pay-as-you-go) charges a 5.5% fee on credit purchases and includes BYOK up to $25,000 of list-price inference a month with no fees, 5% after. On 2026-08-19 OpenRouter announced it is joining Stripe. OpenRouter says it will continue to operate as it is, with the same name, product and roadmap, and that existing integrations do not change.",
       "tier": "Free",
       "url": "https://openrouter.ai/pricing",
       "tags": [
@@ -34695,7 +34701,21 @@
         "text": "KIRO FREE $0 per month 50 credits Access to open weight models* and Claude Sonnet 4.5",
         "url": "https://kiro.dev/pricing",
         "read_on": "2026-10-16"
-      }
+      },
+      "conditions": [
+        {
+          "text": "Kiro subscriptions can be used with Kiro IDE, Kiro CLI, Kiro Web, Kiro Crew, ACP compatible IDEs, and automation in software development. Use through third-party automation harnesses such as OpenClaw is not permitted.",
+          "quote": "Use through third-party automation harnesses (such as OpenClaw) that route requests outside of Kiro's native interfaces is not permitted.",
+          "url": "https://kiro.dev/pricing",
+          "read_on": "2026-10-16"
+        },
+        {
+          "text": "Monthly plan credits reset at the start of each billing month and unused ones do not roll over. Add-on credits roll over and expire 12 months after purchase.",
+          "quote": "Usage limits reset at the start of each billing month. Unused credits do not roll over to the next month.",
+          "url": "https://kiro.dev/pricing",
+          "read_on": "2026-10-16"
+        }
+      ]
     },
     {
       "vendor": "OVHcloud",

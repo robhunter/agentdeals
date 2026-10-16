@@ -10,6 +10,7 @@ import { loadChangeRefusals, vendorWhoseAlternativesAQueryAsksFor, changesRating
 import { A_DEMOTION_IN_FORCE_RULE, NO_DEMOTION_IN_FORCE_RULE, stablePicksAmong, A_COMPLETE_LOG_NOTICE, A_VERDICT_ROLLS_NOTICE, A_WITHHELD_RATING_DOES_NOT_LAPSE, lapsingDemotionStated, VOLATILE_WHILE_A_DEMOTION_COUNTS_RULE, WATCH_RECEIVES_FROM_VOLATILE_RULE , confirmationCoverage, confirmationCoverageSentence, HOW_THE_CATALOGUE_IS_MAINTAINED, NOTHING_CONTRADICTS_OUR_TERMS_FOR, THE_DATES_WE_HOLD } from "./data.js";
 import { confirmingRead, confirmingReadSentence, refusalsByVendor, refusedReadSentence, supersededRefusalSentence, type ChangeRefusal } from "./change-refusal.js";
 import { getStackRecommendation } from "./stacks.js";
+import { vendorsWhoseEveryListingHolds } from "./vendor-listings.js";
 import { estimateCosts } from "./costs.js";
 import { classifyRequest } from "./client-class.js";
 import { acceptSignal, ackMissing, checkRateLimit, clientAddress, RATE_LIMIT_PER_MINUTE, SIGNAL_ACK_PARAM, SIGNAL_BODY_MAX, SIGNAL_DOC_PATH, SIGNAL_PATH, type SignalInput } from "./signal.js";
@@ -2396,6 +2397,10 @@ function listingEligibilityNoticeHtml(offer: Offer): string {
   return `<span class="listing-eligibility-restricted" style="display:block;margin-top:.3rem;color:#d29922">${escHtmlServer(gate.reason)}${conditionsHtml}</span>`;
 }
 
+function listingTermsAndNoticesHtml(offer: Offer): string {
+  return `${storedTermsHtml(offer)}${conditionsAfterTheTermsHtml(offer)}${listingEligibilityNoticeHtml(offer)}${listingUnreachableNoticeHtml(offer)}${termsUnconfirmedNoticeHtml(offer)}`;
+}
+
 function buildCategoryPage(slug: string): string | null {
   const categoryName = categorySlugMap.get(slug);
   if (!categoryName) return null;
@@ -2412,15 +2417,15 @@ function buildCategoryPage(slug: string): string | null {
     return `Compare ${catStandingCount} free ${categoryName.toLowerCase()} tools, free tiers, and developer deals.${gatedClause ? ` ${gatedClause}` : ""}${termsWeCannotConfirmMetaClause(catStanding)}`;
   };
   const title = `Free ${categoryName} Tools & Deals (${catCount} offers) — AgentDeals`;
-  const catUncontradicted = catStanding.filter(nothingOnRecordContradictsOurTerms);
+  const catUncontradicted = vendorsWhoseEveryListingHolds(catStanding, nothingOnRecordContradictsOurTerms);
   const catMeasured = composedWithinTheCap(DESCRIPTION_CHARACTER_CAP, catMeasuredWith);
   const metaDesc = catMeasured
-    + uncontradictedVendorClause(catUncontradicted.map(o => o.vendor), DESCRIPTION_CHARACTER_CAP - catMeasured.length);
+    + uncontradictedVendorClause(catUncontradicted, DESCRIPTION_CHARACTER_CAP - catMeasured.length);
 
   const offersHtml = catOffers.map((o) => `        <tr${catStanding.includes(o) ? unconfirmedRowAttribute(o) : ""}>
           <td style="font-weight:600;color:var(--text);white-space:nowrap"><a href="/vendor/${toSlug(o.vendor)}" style="color:var(--text)">${escHtmlServer(o.vendor)}</a></td>
           <td style="font-family:var(--mono);color:var(--accent);white-space:nowrap">${escHtmlServer(o.tier)}</td>
-          <td style="color:var(--text-muted)">${storedTermsHtml(o)}${conditionsAfterTheTermsHtml(o)}${listingEligibilityNoticeHtml(o)}${listingUnreachableNoticeHtml(o)}${termsUnconfirmedNoticeHtml(o)}${contradictedTermsNoticeHtml(o)}</td>
+          <td style="color:var(--text-muted)">${listingTermsAndNoticesHtml(o)}${contradictedTermsNoticeHtml(o)}</td>
           <td style="font-family:var(--mono);color:var(--text-dim);white-space:nowrap">${escHtmlServer(verificationDatesCell(o))}</td>
         </tr>`).join("\n");
 
@@ -5420,6 +5425,60 @@ function listingInFullHtml(slug: string): string {
   </div>`;
 }
 
+function listingLastReadNote(offer: Offer): string {
+  const unconfirmed = unconfirmedTermsFor(offer);
+  const withheld = termsTheVerdictWithholds(unconfirmed);
+  return lastReadNote(offer, withheld, refusalsFor(offer.vendor), refusalWithholdsTheTerms(unconfirmed) ? withheld : null);
+}
+
+function otherListingHtml(slug: string, offer: Offer): string {
+  const restatedOn = restatedReadingDate(offer);
+  return `
+    <div class="vendor-listing" data-listing-url="${escHtmlServer(offer.url)}" style="margin-bottom:1.5rem">
+      <h3 style="font-size:1rem;color:var(--text);margin-bottom:.75rem">${escHtmlServer(offer.vendor)} ${escHtmlServer(offer.tier)}</h3>
+      <div class="detail-grid">
+        <div class="detail-card">
+          <div class="detail-label">Tier</div>
+          <div class="detail-value" style="color:var(--accent)">${escHtmlServer(offer.tier)}</div>
+        </div>
+        <div class="detail-card">
+          <div class="detail-label">Category</div>
+          <div class="detail-value">
+            <div class="cat-pills"><a href="/category/${toSlug(offer.category)}" class="cat-pill">${escHtmlServer(offer.category)}</a></div>
+          </div>
+        </div>
+        ${offerRetired(offer) ? "" : `<div class="detail-card">
+          <div class="detail-label">Pricing Page</div>
+          <div class="detail-value">${pricingPageCardLink(slug, offer.url)}</div>
+        </div>
+        `}<div class="detail-card">
+          <div class="detail-label">${publishedDateLabel(offer)}</div>
+          <div class="detail-value" style="font-family:var(--mono)">${escHtmlServer(publishedDateValue(offer))}</div>
+        </div>
+        ${restatedOn ? `<div class="detail-card">
+          <div class="detail-label">${RESTATED_DATE_LABEL}</div>
+          <div class="detail-value" style="font-family:var(--mono)">${escHtmlServer(restatedOn)}</div>
+        </div>
+        ` : ""}<div class="detail-card">
+          <div class="detail-label">${LAST_READ_LABEL}</div>
+          <div class="detail-value" style="font-family:var(--mono)">${escHtmlServer(lastReadDate(offer))}</div>
+          <div class="detail-note">${escHtmlServer(listingLastReadNote(offer))}</div>
+        </div>
+      </div>
+      <div class="desc-block">
+        <div class="desc-text">${listingTermsAndNoticesHtml(offer)}</div>
+      </div>
+    </div>`;
+}
+
+function otherListingsHtml(slug: string, vendorName: string, others: readonly Offer[]): string {
+  if (others.length === 0) return "";
+  return `
+  <div class="section other-listings">
+    <h2 id="other-listings">Other ${escHtmlServer(vendorName)} Offers We List</h2>${others.map(offer => otherListingHtml(slug, offer)).join("")}
+  </div>`;
+}
+
 function buildVendorPage(slug: string): string | null {
   const vendorName = vendorSlugMap.get(slug);
   if (!vendorName) return null;
@@ -6220,7 +6279,7 @@ ${referralCalloutHtml}
       ? `<p class="terms-superseded-text"><strong>${storedTermsLabel(termsSuperseded)}:</strong> ${supersededTermsNoticeHtml(vendorName, termsSuperseded, escHtmlServer)} <a href="#changes">Read what we recorded &darr;</a></p>`
       : `<p class="desc-text">${escHtmlServer(primary.description)}</p>`}${freeTierSourceLine}${freePlanExcerptBlock}${listingConditionsBlock}
   </div>
-${growthPathHtml}
+${growthPathHtml}${otherListingsHtml(slug, vendorName, vendorOffers.filter(o => o !== primary))}
 
   <div class="section">
     <h2 id="changes">Pricing Change History (${vendorChanges.length} recorded)</h2>
@@ -23336,7 +23395,7 @@ ${globalNavCss()}
 
   <div class="impact-card" style="border-left-color:#d29922">
     <h3 style="color:#d29922">Prepaid billing for all paid accounts</h3>
-    <p class="impact-desc">New users default to Prepay and buy at least $5 of credits to set up billing. To keep a high-spend account running, you can <a href="https://ai.google.dev/gemini-api/docs/billing" target="_blank" rel="noopener">prepay up to $5,000 in credits</a>. For amounts larger than $5,000 a month, use auto-reload to automatically add credits. If you set a monthly auto-reload limit, auto-reload stops when reached. Manual purchases still work. Auto-reload resumes at the next billing cycle start. If you start the switch to Prepay and stop before paying, other projects may lose service. To restore service, complete the setup, or contact Cloud Billing Support to set the account back to Postpay. <a href="https://ai.google.dev/gemini-api/docs/billing" target="_blank" rel="noopener">Google is moving existing paid accounts from Postpay to Prepay for Gemini API usage</a>: switch on the AI Studio Billing page and buy credits before the cutover date in your account notice, <a href="https://www.watch.impress.co.jp/docs/news/2132505.html" target="_blank" rel="noopener">reported as October 12, 2026</a>, or the account's paid Gemini API service is interrupted. An account that missed its cutover date can still switch. <a href="https://ai.google.dev/gemini-api/docs/billing" target="_blank" rel="noopener">Google's billing FAQ says an existing Postpay account can transition to Prepay</a> on the AI Studio Billing page. The doc gives no deadline for the switch. Paid Gemini API service resumes only after the credit purchase is confirmed. Only Gemini API usage moves to Prepay; other Google Cloud services on the same billing account stay on Postpay. If your company pays Google Cloud by monthly invoice, Google's billing doc says <a href="https://ai.google.dev/gemini-api/docs/billing" target="_blank" rel="noopener">Prepay is not available for invoiced (offline) billing accounts</a>. If you received a cutover notice, ask Cloud Billing Support what it requires before the date in it. If your Cloud Billing account has a Gemini API Prepay credit balance but your card expired or a payment for another Google Cloud service was declined, the Gemini API <a href="https://ai.google.dev/gemini-api/docs/billing#missed-payment" target="_blank" rel="noopener">can still be suspended</a>. This happens with an overdue balance, a declined payment, or an invalid payment method. Resolve the issue in the Google Cloud Billing console to restore service. Google's billing FAQ states that accounts cannot switch from Prepay to Postpay. To pay after use instead of prepaying, use Gemini Enterprise Agent Platform (formerly Vertex AI). Google <a href="https://ai.google.dev/gemini-api/docs/billing" target="_blank" rel="noopener">bills it on the standard Cloud charging cycle</a>, not Prepay. Agent Platform charges <a href="https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing" target="_blank" rel="noopener">$0.75 input and $3.75 output per million tokens for Gemini 3.8 Flash and 3.6 Flash on the global endpoint through 2026-12-31, then $1.50 input and $7.50 output</a>. Non-global endpoints cost 10% more. These match Gemini API paid-tier prices. If moving from gemini-3.5-flash, change the model to gemini-3.6-flash or gemini-3.8-flash, as Agent Platform still lists Gemini 3.5 Flash at $1.50 input and $9.00 output. Accounts that use only the free tier need take no action. Eligible Google Cloud credits are used only after you have bought Prepay credits, and stop being used when the Prepay balance reaches $0. Prepaid credits expire 12 months after purchase and are non-refundable. Prepay credits remain with the Cloud Billing account they were purchased on, so a project moving to another account will not use them. <a href="https://discuss.ai.google.dev/t/trapped-prepay-balance-14-73-api-blocked-and-gcp-billing-account-split-disconnect/182319" target="_blank" rel="noopener">Google staff state</a> funds cannot be transferred between billing accounts, and closing the account forfeits any remaining credits. When the balance reaches $0, every API key on the billing account stops working until you add credits. Calls failing with HTTP 403 "Your project has been denied access" are not from a $0 Prepay balance, which returns 402. <a href="https://discuss.ai.google.dev/t/get-v1beta-models-returns-200-ok-but-generatecontent-returns-http-403-your-project-has-been-denied-access/187288" target="_blank" rel="noopener">Google staff say</a> 403 or "Unavailable" in AI Studio means a flag is on the account. For free-tier projects, complete age verification in your Google Account, then retry or create a new API key. If access is still denied, staff suggest adding Prepay credits, which ends your free tier quota. If you pay by bank transfer, some payments take <a href="https://ai.google.dev/gemini-api/docs/billing#processing-times" target="_blank" rel="noopener">several days to clear</a>. Most card payments are instant. Gemini API service resumes only after the purchase is confirmed. Usage can continue for approximately 10 minutes past a $0 balance due to billing latency. Batch jobs and agents may consume credits beyond the balance. A negative balance is deducted from the next credit purchase. After buying credits, calls may still fail with "Your prepayment credits are depleted". <a href="https://discuss.ai.google.dev/t/manual-sync-request-prepayment-credits-depleted-429-despite-funded-account/172183" target="_blank" rel="noopener">Google staff say</a> there is no manual billing sync to request. Check that the credits are a Prepay balance on the AI Studio Billing page, not a spend cap or funds in the Google Cloud billing account, and that the API key belongs to a project on that billing account. Retry the calls; if the error continues, post the exact error message and request time on <a href="https://discuss.ai.google.dev/" target="_blank" rel="noopener">Google's AI developer forum</a>. The AI Studio Billing page may show "The billing account type is inactive or unsupported". <a href="https://ai.google.dev/gemini-api/docs/billing#eligible-accounts" target="_blank" rel="noopener">Google's billing FAQ</a> says this means the billing account's type or status is not eligible for the Paid Tier. Check the Cloud Console for the account's status. For a Free Trial account, activate billing in AI Studio. For a Closed account, reopen it. There is no manual billing sync to request.</p>
+    <p class="impact-desc">New users default to Prepay and buy at least $5 of credits to set up billing. To keep a high-spend account running, you can <a href="https://ai.google.dev/gemini-api/docs/billing" target="_blank" rel="noopener">prepay up to $5,000 in credits</a>. For amounts larger than $5,000 a month, use auto-reload to automatically add credits. If you set a monthly auto-reload limit, auto-reload stops when reached. Manual purchases still work. Auto-reload resumes at the next billing cycle start. If you start the switch to Prepay and stop before paying, other projects may lose service. To restore service, complete the setup, or contact Cloud Billing Support to set the account back to Postpay. <a href="https://ai.google.dev/gemini-api/docs/billing" target="_blank" rel="noopener">Google is moving existing paid accounts from Postpay to Prepay for Gemini API usage</a>: switch on the AI Studio Billing page and buy credits before the cutover date in your account notice, <a href="https://www.watch.impress.co.jp/docs/news/2132505.html" target="_blank" rel="noopener">reported as October 12, 2026</a>, or the account's paid Gemini API service is interrupted. An account that missed its cutover date can still switch. <a href="https://ai.google.dev/gemini-api/docs/billing" target="_blank" rel="noopener">Google's billing FAQ says an existing Postpay account can transition to Prepay</a> on the AI Studio Billing page. The doc gives no deadline for the switch. Paid Gemini API service resumes only after the credit purchase is confirmed. Only Gemini API usage moves to Prepay; other Google Cloud services on the same billing account stay on Postpay. If your company pays Google Cloud by monthly invoice, Google's billing doc says <a href="https://ai.google.dev/gemini-api/docs/billing" target="_blank" rel="noopener">Prepay is not available for invoiced (offline) billing accounts</a>. If you received a cutover notice, ask Cloud Billing Support what it requires before the date in it. If your Cloud Billing account has a Gemini API Prepay credit balance but your card expired or a payment for another Google Cloud service was declined, the Gemini API <a href="https://ai.google.dev/gemini-api/docs/billing#missed-payment" target="_blank" rel="noopener">can still be suspended</a>. This happens with an overdue balance, a declined payment, or an invalid payment method. Resolve the issue in the Google Cloud Billing console to restore service. Google's billing FAQ states that accounts cannot switch from Prepay to Postpay. To pay after use instead of prepaying, use Gemini Enterprise Agent Platform (formerly Vertex AI). Google <a href="https://ai.google.dev/gemini-api/docs/billing" target="_blank" rel="noopener">bills it on the standard Cloud charging cycle</a>, not Prepay. Calls to gemini-3.5-flash cost $1.50 input and $9.00 output per million tokens on Agent Platform, compared to $0.75 input and $3.75 output on the Gemini API, which routes to gemini-3.6-flash. Change the model ID to gemini-3.6-flash or gemini-3.8-flash before moving; those two models cost the same on both platforms. Agent Platform charges <a href="https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing" target="_blank" rel="noopener">$0.75 input and $3.75 output per million tokens for Gemini 3.8 Flash and 3.6 Flash on the global endpoint through 2026-12-31, then $1.50 input and $7.50 output</a>. Non-global endpoints cost 10% more. These match Gemini API paid-tier prices for gemini-3.6-flash and gemini-3.8-flash. Accounts that use only the free tier need take no action. Eligible Google Cloud credits are used only after you have bought Prepay credits, and stop being used when the Prepay balance reaches $0. Prepaid credits expire 12 months after purchase and are non-refundable. Prepay credits remain with the Cloud Billing account they were purchased on, so a project moving to another account will not use them. <a href="https://discuss.ai.google.dev/t/trapped-prepay-balance-14-73-api-blocked-and-gcp-billing-account-split-disconnect/182319" target="_blank" rel="noopener">Google staff state</a> funds cannot be transferred between billing accounts, and closing the account forfeits any remaining credits. When the balance reaches $0, every API key on the billing account stops working until you add credits. Calls failing with HTTP 403 "Your project has been denied access" are not from a $0 Prepay balance, which returns 402. <a href="https://discuss.ai.google.dev/t/get-v1beta-models-returns-200-ok-but-generatecontent-returns-http-403-your-project-has-been-denied-access/187288" target="_blank" rel="noopener">Google staff say</a> 403 or "Unavailable" in AI Studio means a flag is on the account. For free-tier projects, complete age verification in your Google Account, then retry or create a new API key. If access is still denied, staff suggest adding Prepay credits, which ends your free tier quota. If you pay by bank transfer, some payments take <a href="https://ai.google.dev/gemini-api/docs/billing#processing-times" target="_blank" rel="noopener">several days to clear</a>. Most card payments are instant. Gemini API service resumes only after the purchase is confirmed. Usage can continue for approximately 10 minutes past a $0 balance due to billing latency. Batch jobs and agents may consume credits beyond the balance. A negative balance is deducted from the next credit purchase. After buying credits, calls may still fail with "Your prepayment credits are depleted". <a href="https://discuss.ai.google.dev/t/manual-sync-request-prepayment-credits-depleted-429-despite-funded-account/172183" target="_blank" rel="noopener">Google staff say</a> there is no manual billing sync to request. Check that the credits are a Prepay balance on the AI Studio Billing page, not a spend cap or funds in the Google Cloud billing account, and that the API key belongs to a project on that billing account. Retry the calls; if the error continues, post the exact error message and request time on <a href="https://discuss.ai.google.dev/" target="_blank" rel="noopener">Google's AI developer forum</a>. The AI Studio Billing page may show "The billing account type is inactive or unsupported". <a href="https://ai.google.dev/gemini-api/docs/billing#eligible-accounts" target="_blank" rel="noopener">Google's billing FAQ</a> says this means the billing account's type or status is not eligible for the Paid Tier. Check the Cloud Console for the account's status. For a Free Trial account, activate billing in AI Studio. For a Closed account, reopen it. There is no manual billing sync to request.</p>
   </div>
   <div class="impact-card" style="border-left-color:#f85149">
     <h3 style="color:#f85149">Gemini 3.1 Pro is paid-only</h3>
@@ -43908,7 +43967,7 @@ ${globalNavCss()}
       <tr>
         <td class="provider-col">Tailscale</td>
         <td>Zero Trust VPN</td>
-        <td>3 users, 100 devices, MagicDNS</td>
+        <td>6 users, unlimited devices, MagicDNS</td>
         <td class="partial">&#9679; Clients OSS</td>
         <td class="cross">&#10007;</td>
         <td class="check">&#10003;</td>
@@ -44044,8 +44103,8 @@ ${globalNavCss()}
     <div class="diff-desc">Free, automated SSL/TLS certificates trusted by all major browsers. ACME protocol for automated renewal. No limit on certificates. The default choice for any web service that needs HTTPS. Integration via certbot, Caddy, Traefik, nginx, and most cloud providers. There is no reason to pay for basic SSL certificates in 2026.</div>
   </div>
   <div class="diff-card">
-    <h3>Tailscale &mdash; best free mesh VPN</h3>
-    <div class="diff-desc">3 users, 100 devices free with WireGuard-based mesh networking. MagicDNS, exit nodes, subnet routers, ACLs, and split tunneling included. Zero-config networking between devices &mdash; no port forwarding, no firewall rules. The free tier is generous for personal use and small teams. Requires personal email domain (no business/custom domain on free).</div>
+    <h3>Tailscale &mdash; free mesh VPN</h3>
+    <div class="diff-desc">Free for 6 users with unlimited devices and WireGuard-based mesh networking. MagicDNS, exit nodes, subnet routers, ACLs, and split tunneling included. Zero-config networking between devices &mdash; no port forwarding, no firewall rules. The free plan is only suitable for non-commercial use. A custom domain starts a 14-day Enterprise trial.</div>
   </div>
   <div class="diff-card">
     <h3>Twingate &mdash; zero trust network access</h3>
@@ -44186,8 +44245,8 @@ ${globalNavCss()}
   </div>
 
   <div class="diff-card">
-    <h3>Tailscale requires personal email domain</h3>
-    <div class="diff-desc">Tailscale&rsquo;s free tier requires a personal email domain (Gmail, Outlook, GitHub) &mdash; custom/business domains require a paid plan. This limits team use: you can&rsquo;t onboard employees with company email addresses on the free tier. For small teams using personal accounts, the 3-user limit is the real constraint. Headscale (open-source, self-hosted Tailscale-compatible coordination server) removes both limitations.</div>
+    <h3>Tailscale free plan is non-commercial only</h3>
+    <div class="diff-desc">The free plan is only for non-commercial use. Using Tailscale for company or client work is commercial use, even with personal email accounts. A custom domain starts a 14-day Enterprise trial. Headscale (open-source, self-hosted Tailscale-compatible coordination server) removes both limitations.</div>
   </div>
 
   <h2 id="changes">Pricing Change Timeline</h2>

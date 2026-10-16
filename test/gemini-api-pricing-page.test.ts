@@ -145,18 +145,46 @@ function prepayParagraph(html: string): string {
 const withoutTags = (html: string) => html.replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
 
 describe(`${PAGE} on paying after use once Prepay starts`, () => {
-  it("says what cannot be undone, then the route that bills after use, at the Gemini API's paid-tier prices", () => {
+  it("says what cannot be undone, then the route that bills after use, what gemini-3.5-flash calls cost there, and the two models priced the same on both platforms", () => {
     const text = withoutTags(prepayParagraph(page));
     assert.ok(text.includes(
       "Google's billing FAQ states that accounts cannot switch from Prepay to Postpay. " +
       "To pay after use instead of prepaying, use Gemini Enterprise Agent Platform (formerly Vertex AI). " +
       "Google bills it on the standard Cloud charging cycle, not Prepay. " +
+      "Calls to gemini-3.5-flash cost $1.50 input and $9.00 output per million tokens on Agent Platform, compared to $0.75 input and $3.75 output on the Gemini API, which routes to gemini-3.6-flash. " +
+      "Change the model ID to gemini-3.6-flash or gemini-3.8-flash before moving; those two models cost the same on both platforms. " +
       "Agent Platform charges $0.75 input and $3.75 output per million tokens for Gemini 3.8 Flash and 3.6 Flash on the global endpoint through 2026-12-31, then $1.50 input and $7.50 output. " +
       "Non-global endpoints cost 10% more. " +
-      "These match Gemini API paid-tier prices. " +
-      "If moving from gemini-3.5-flash, change the model to gemini-3.6-flash or gemini-3.8-flash, as Agent Platform still lists Gemini 3.5 Flash at $1.50 input and $9.00 output. " +
+      "These match Gemini API paid-tier prices for gemini-3.6-flash and gemini-3.8-flash. " +
       "Accounts that use only the free tier need take no action.",
     ), text);
+  });
+
+  it("gives gemini-3.5-flash's Agent Platform prices in one sentence on the page, beside the Gemini API price of the model the listing routes it to", () => {
+    const description = String(listing.description);
+    const routedTo = description.match(/Requests to gemini-3\.5-flash are routed automatically to (gemini-[\d.]+-flash)\./);
+    assert.ok(routedTo, "the Google Gemini API listing no longer says which model gemini-3.5-flash requests are routed to");
+    assert.strictEqual(routedTo![1], "gemini-3.6-flash");
+    const flash = description.match(/Gemini 3\.8 Flash \$([\d.]+)\/\$([\d.]+) until [\d-]+, [^(]*\(3\.6 Flash: the same prices and dates\)/);
+    assert.ok(flash, "the Google Gemini API listing no longer prices 3.6 Flash as 3.8 Flash");
+    const statingIt = readable(page)
+      .split(/(?<=\.)\s+/)
+      .filter((s) => /gemini-3\.5-flash(?!-lite)|Gemini 3\.5 Flash(?!-Lite)/.test(s) && /Agent Platform|Vertex AI/.test(s) && /\$\d/.test(s));
+    assert.deepStrictEqual(statingIt, [
+      `Calls to gemini-3.5-flash cost $1.50 input and $9.00 output per million tokens on Agent Platform, compared to $${flash![1]} input and $${flash![2]} output on the Gemini API, which routes to ${routedTo![1]}.`,
+    ]);
+  });
+
+  it("says 3.6 Flash and 3.8 Flash cost the same on both platforms only while the Agent Platform prices it gives are the listing's Gemini API prices", () => {
+    const flash = String(listing.description).match(/Gemini 3\.8 Flash \$([\d.]+)\/\$([\d.]+) until ([\d-]+), then \$([\d.]+) input and \$([\d.]+) output from [\d-]+ \(3\.6 Flash: the same prices and dates\)/);
+    assert.ok(flash, "the Google Gemini API listing no longer gives 3.8 Flash's two prices with 3.6 Flash priced the same");
+    const [, input, output, through, laterInput, laterOutput] = flash!;
+    assert.ok(
+      withoutTags(prepayParagraph(page)).includes(
+        `Agent Platform charges $${input} input and $${output} output per million tokens for Gemini 3.8 Flash and 3.6 Flash on the global endpoint through ${through}, then $${laterInput} input and $${laterOutput} output. `,
+      ),
+      "the Agent Platform prices for 3.8 Flash and 3.6 Flash no longer match the listing's Gemini API prices",
+    );
   });
 
   it("links the charging cycle to Google's billing doc and both prices to the Agent Platform pricing page", () => {

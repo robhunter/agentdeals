@@ -1,6 +1,7 @@
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
 import { assertPopulationFloor } from "./population-floor.ts";
+import { withoutTheListingBlocks } from "./vendor-listing-blocks.ts";
 import { spawn, type ChildProcess } from "node:child_process";
 import { readFileSync } from "node:fs";
 import path from "node:path";
@@ -134,10 +135,11 @@ describe("a page never disclaims provenance our records hold", () => {
       const res = await fetch(`${server.base}${route}`);
       const html = await res.text();
       if (res.status !== 200) continue;
+      const ownListing = withoutTheListingBlocks(html);
       served.set(route, {
-        sourceLine: html.match(SOURCE_LINE)?.[0] ?? "",
-        labels: [...html.matchAll(DETAIL_LABEL)].map(m => m[1]!),
-        readNote: html.match(DETAIL_NOTE)?.[1] ?? "",
+        sourceLine: ownListing.match(SOURCE_LINE)?.[0] ?? "",
+        labels: [...ownListing.matchAll(DETAIL_LABEL)].map(m => m[1]!),
+        readNote: ownListing.match(DETAIL_NOTE)?.[1] ?? "",
       });
     }
     for (const route of COMPILED_PAGES_CITING_A_LIST) {
