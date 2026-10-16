@@ -10,6 +10,7 @@ import { loadChangeRefusals, vendorWhoseAlternativesAQueryAsksFor, changesRating
 import { A_DEMOTION_IN_FORCE_RULE, NO_DEMOTION_IN_FORCE_RULE, stablePicksAmong, A_COMPLETE_LOG_NOTICE, A_VERDICT_ROLLS_NOTICE, A_WITHHELD_RATING_DOES_NOT_LAPSE, lapsingDemotionStated, VOLATILE_WHILE_A_DEMOTION_COUNTS_RULE, WATCH_RECEIVES_FROM_VOLATILE_RULE , confirmationCoverage, confirmationCoverageSentence, HOW_THE_CATALOGUE_IS_MAINTAINED, NOTHING_CONTRADICTS_OUR_TERMS_FOR, THE_DATES_WE_HOLD } from "./data.js";
 import { confirmingRead, confirmingReadSentence, refusalsByVendor, refusedReadSentence, supersededRefusalSentence, type ChangeRefusal } from "./change-refusal.js";
 import { getStackRecommendation } from "./stacks.js";
+import { vendorsWhoseEveryListingHolds } from "./vendor-listings.js";
 import { estimateCosts } from "./costs.js";
 import { classifyRequest } from "./client-class.js";
 import { acceptSignal, ackMissing, checkRateLimit, clientAddress, RATE_LIMIT_PER_MINUTE, SIGNAL_ACK_PARAM, SIGNAL_BODY_MAX, SIGNAL_DOC_PATH, SIGNAL_PATH, type SignalInput } from "./signal.js";
@@ -2396,6 +2397,10 @@ function listingEligibilityNoticeHtml(offer: Offer): string {
   return `<span class="listing-eligibility-restricted" style="display:block;margin-top:.3rem;color:#d29922">${escHtmlServer(gate.reason)}${conditionsHtml}</span>`;
 }
 
+function listingTermsAndNoticesHtml(offer: Offer): string {
+  return `${storedTermsHtml(offer)}${conditionsAfterTheTermsHtml(offer)}${listingEligibilityNoticeHtml(offer)}${listingUnreachableNoticeHtml(offer)}${termsUnconfirmedNoticeHtml(offer)}`;
+}
+
 function buildCategoryPage(slug: string): string | null {
   const categoryName = categorySlugMap.get(slug);
   if (!categoryName) return null;
@@ -2412,15 +2417,15 @@ function buildCategoryPage(slug: string): string | null {
     return `Compare ${catStandingCount} free ${categoryName.toLowerCase()} tools, free tiers, and developer deals.${gatedClause ? ` ${gatedClause}` : ""}${termsWeCannotConfirmMetaClause(catStanding)}`;
   };
   const title = `Free ${categoryName} Tools & Deals (${catCount} offers) — AgentDeals`;
-  const catUncontradicted = catStanding.filter(nothingOnRecordContradictsOurTerms);
+  const catUncontradicted = vendorsWhoseEveryListingHolds(catStanding, nothingOnRecordContradictsOurTerms);
   const catMeasured = composedWithinTheCap(DESCRIPTION_CHARACTER_CAP, catMeasuredWith);
   const metaDesc = catMeasured
-    + uncontradictedVendorClause(catUncontradicted.map(o => o.vendor), DESCRIPTION_CHARACTER_CAP - catMeasured.length);
+    + uncontradictedVendorClause(catUncontradicted, DESCRIPTION_CHARACTER_CAP - catMeasured.length);
 
   const offersHtml = catOffers.map((o) => `        <tr${catStanding.includes(o) ? unconfirmedRowAttribute(o) : ""}>
           <td style="font-weight:600;color:var(--text);white-space:nowrap"><a href="/vendor/${toSlug(o.vendor)}" style="color:var(--text)">${escHtmlServer(o.vendor)}</a></td>
           <td style="font-family:var(--mono);color:var(--accent);white-space:nowrap">${escHtmlServer(o.tier)}</td>
-          <td style="color:var(--text-muted)">${storedTermsHtml(o)}${conditionsAfterTheTermsHtml(o)}${listingEligibilityNoticeHtml(o)}${listingUnreachableNoticeHtml(o)}${termsUnconfirmedNoticeHtml(o)}${contradictedTermsNoticeHtml(o)}</td>
+          <td style="color:var(--text-muted)">${listingTermsAndNoticesHtml(o)}${contradictedTermsNoticeHtml(o)}</td>
           <td style="font-family:var(--mono);color:var(--text-dim);white-space:nowrap">${escHtmlServer(verificationDatesCell(o))}</td>
         </tr>`).join("\n");
 
@@ -5420,6 +5425,60 @@ function listingInFullHtml(slug: string): string {
   </div>`;
 }
 
+function listingLastReadNote(offer: Offer): string {
+  const unconfirmed = unconfirmedTermsFor(offer);
+  const withheld = termsTheVerdictWithholds(unconfirmed);
+  return lastReadNote(offer, withheld, refusalsFor(offer.vendor), refusalWithholdsTheTerms(unconfirmed) ? withheld : null);
+}
+
+function otherListingHtml(slug: string, offer: Offer): string {
+  const restatedOn = restatedReadingDate(offer);
+  return `
+    <div class="vendor-listing" data-listing-url="${escHtmlServer(offer.url)}" style="margin-bottom:1.5rem">
+      <h3 style="font-size:1rem;color:var(--text);margin-bottom:.75rem">${escHtmlServer(offer.vendor)} ${escHtmlServer(offer.tier)}</h3>
+      <div class="detail-grid">
+        <div class="detail-card">
+          <div class="detail-label">Tier</div>
+          <div class="detail-value" style="color:var(--accent)">${escHtmlServer(offer.tier)}</div>
+        </div>
+        <div class="detail-card">
+          <div class="detail-label">Category</div>
+          <div class="detail-value">
+            <div class="cat-pills"><a href="/category/${toSlug(offer.category)}" class="cat-pill">${escHtmlServer(offer.category)}</a></div>
+          </div>
+        </div>
+        ${offerRetired(offer) ? "" : `<div class="detail-card">
+          <div class="detail-label">Pricing Page</div>
+          <div class="detail-value">${pricingPageCardLink(slug, offer.url)}</div>
+        </div>
+        `}<div class="detail-card">
+          <div class="detail-label">${publishedDateLabel(offer)}</div>
+          <div class="detail-value" style="font-family:var(--mono)">${escHtmlServer(publishedDateValue(offer))}</div>
+        </div>
+        ${restatedOn ? `<div class="detail-card">
+          <div class="detail-label">${RESTATED_DATE_LABEL}</div>
+          <div class="detail-value" style="font-family:var(--mono)">${escHtmlServer(restatedOn)}</div>
+        </div>
+        ` : ""}<div class="detail-card">
+          <div class="detail-label">${LAST_READ_LABEL}</div>
+          <div class="detail-value" style="font-family:var(--mono)">${escHtmlServer(lastReadDate(offer))}</div>
+          <div class="detail-note">${escHtmlServer(listingLastReadNote(offer))}</div>
+        </div>
+      </div>
+      <div class="desc-block">
+        <div class="desc-text">${listingTermsAndNoticesHtml(offer)}</div>
+      </div>
+    </div>`;
+}
+
+function otherListingsHtml(slug: string, vendorName: string, others: readonly Offer[]): string {
+  if (others.length === 0) return "";
+  return `
+  <div class="section other-listings">
+    <h2 id="other-listings">Other ${escHtmlServer(vendorName)} Offers We List</h2>${others.map(offer => otherListingHtml(slug, offer)).join("")}
+  </div>`;
+}
+
 function buildVendorPage(slug: string): string | null {
   const vendorName = vendorSlugMap.get(slug);
   if (!vendorName) return null;
@@ -6220,7 +6279,7 @@ ${referralCalloutHtml}
       ? `<p class="terms-superseded-text"><strong>${storedTermsLabel(termsSuperseded)}:</strong> ${supersededTermsNoticeHtml(vendorName, termsSuperseded, escHtmlServer)} <a href="#changes">Read what we recorded &darr;</a></p>`
       : `<p class="desc-text">${escHtmlServer(primary.description)}</p>`}${freeTierSourceLine}${freePlanExcerptBlock}${listingConditionsBlock}
   </div>
-${growthPathHtml}
+${growthPathHtml}${otherListingsHtml(slug, vendorName, vendorOffers.filter(o => o !== primary))}
 
   <div class="section">
     <h2 id="changes">Pricing Change History (${vendorChanges.length} recorded)</h2>
