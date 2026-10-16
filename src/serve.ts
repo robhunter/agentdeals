@@ -22149,7 +22149,7 @@ function buildNeonVsSupabasePage(): string {
     { feature: "Auth (MAU)", neon: "60K MAU (Neon Auth)", supabase: "50K MAU (Supabase Auth)", notes: "Both include auth on the free plan." },
     { feature: "File Storage", neon: "5 GB object storage per project", supabase: "1 GB", notes: "Both include file storage on the free plan." },
     { feature: "Functions", neon: "1M invocations, 10 active capacity-hours a month", supabase: "500K invocations/month", notes: "Both include functions on the free plan." },
-    { feature: "Realtime", neon: "None", supabase: "200 concurrent connections", notes: "Supabase includes realtime subscriptions. Neon's pricing page lists no realtime service." },
+    { feature: "Realtime", neon: "Realtime (Beta) — free during beta", supabase: "200 concurrent connections", notes: "Neon's Realtime is in beta. Supabase's Realtime is generally available." },
     { feature: "Scale-to-Zero", neon: "Yes (5 min idle timeout)", supabase: "Pauses after 1 week inactivity", notes: "Neon scales to zero quickly and resumes in ~1s. Supabase pauses entirely after a week — requires manual unpause" },
     { feature: "Connection Pooling", neon: "10K connections via pooler", supabase: "Pooler included (Supavisor)", notes: "Both include connection pooling. Neon's 10K limit is generous for serverless workloads" },
   ];
@@ -22162,7 +22162,7 @@ function buildNeonVsSupabasePage(): string {
     </tr>`).join("\n        ");
 
   const differences = [
-    { title: "Both Are Backend Platforms Now", desc: "Both free plans bundle Postgres with auth, file storage and functions. Neon made Object Storage, Functions and Managed Better Auth generally available on 2026-09-17 (neon.com/blog/neon-backend-is-ga). Supabase also includes realtime subscriptions, which Neon's pricing page does not list." },
+    { title: "Both Are Backend Platforms Now", desc: "Both free plans bundle Postgres with auth, file storage and functions. Neon made Object Storage, Functions and Managed Better Auth generally available on 2026-09-17 (neon.com/blog/neon-backend-is-ga). Neon's Free plan includes Realtime (Beta); Supabase's Free plan includes GA Realtime with 200 concurrent connections." },
     { title: "Project Limits: 100 vs. 2", desc: "Neon's 100 free projects is the standout difference. Each project gets its own 1 GB of storage (20 GB across all projects) and 100 CU-hours/month. This makes Neon ideal for per-client databases, microservices architectures, or agencies managing multiple sites. Supabase's 2-project limit means you'll hit the paid tier quickly if you need more than a couple apps." },
     { title: "Branching: Dev Workflows vs. Production-First", desc: "Neon's database branching (10 branches per project) lets you create instant copy-on-write database copies for development, testing, and previews. This is transformative for CI/CD — branch your database like you branch your code. Supabase doesn't offer branching on the free tier (it's a Pro feature), so testing against production-like data requires manual setup." },
     { title: "Scale-to-Zero vs. Inactivity Pausing", desc: "Neon scales to zero after 5 minutes of idle and resumes in ~1 second — designed for intermittent workloads. Supabase pauses projects entirely after 1 week of inactivity, requiring manual unpause from the dashboard. For always-on projects this doesn't matter, but for side projects you check weekly, Neon's approach is significantly better." },
@@ -22303,7 +22303,7 @@ ${globalNavCss()}
   </div>
 
   <div class="executive-summary">
-    <p><strong>Quick verdict:</strong> Both free plans include Postgres, auth, file storage and functions. Choose <strong>Neon</strong> for database branching on the free plan, scale-to-zero after 5 minutes idle, and up to 100 free projects. Choose <strong>Supabase</strong> for realtime subscriptions, which Neon's pricing page does not list.</p>
+    <p><strong>Quick verdict:</strong> Both free plans include Postgres, auth, file storage and functions. Choose <strong>Neon</strong> for database branching on the free plan, scale-to-zero after 5 minutes idle, and up to 100 free projects. Choose <strong>Supabase</strong> for realtime with 200 concurrent connections on the free plan. Neon's Realtime is in beta and free during the beta.</p>
     <p><strong>What each free plan includes:</strong> Neon's Free plan gives 100 CU-hours and 1 GB of Postgres storage per project (20 GB in total), auth up to 60k MAU, 5 GB of object storage and Functions, across up to 100 projects. Supabase's Free plan gives a 500 MB database, 50,000 MAU, 1 GB of file storage, 500,000 Edge Function invocations and realtime, across 2 active projects that pause after a week of inactivity.</p>
   </div>
 
@@ -22356,7 +22356,7 @@ ${globalNavCss()}
     </table>
   </div>
   <div class="context-box">
-    <strong>Bottom line on scaling:</strong> Neon Launch has no fixed price. It bills $0.106 per CU-hour and $0.35 per GB-month with no monthly minimum, and nothing while compute is scaled to zero. Supabase Pro starts at $25 a month with 8 GB of disk and $10 of compute credits. Both paid plans include auth, file storage and functions; Supabase also includes realtime.
+    <strong>Bottom line on scaling:</strong> Neon Launch has no fixed price. It bills $0.106 per CU-hour and $0.35 per GB-month with no monthly minimum, and nothing while compute is scaled to zero. Supabase Pro starts at $25 a month with 8 GB of disk and $10 of compute credits. Both paid plans include auth, file storage and functions; Neon adds Realtime (Beta), Supabase adds GA Realtime.
   </div>
 
   <h2 id="when">4. When to Choose Each</h2>
@@ -22368,7 +22368,7 @@ ${globalNavCss()}
     </div>
     <div class="verdict-item">
       <strong>Choose Supabase if:</strong>
-      <p>You want realtime subscriptions alongside Postgres, auth, file storage and edge functions on one platform. Neon's pricing page does not list realtime. Best for: apps that push live updates to clients.</p>
+      <p>You want realtime subscriptions alongside Postgres, auth, file storage and edge functions on one platform. Neon's Realtime is in beta; Supabase's is generally available. Best for: apps that push live updates to clients.</p>
     </div>
     <div class="verdict-item">
       <strong>Consider alternatives if:</strong>
@@ -36171,7 +36171,7 @@ ${globalNavCss()}
   </div>
 
   <div class="executive-summary">
-    <p><strong>Quick verdict:</strong> <strong>Supabase</strong> wins for most developers — 500 MB Postgres, auth, storage, and real-time in one package. Choose <strong>Neon</strong> for serverless Postgres with branching and scale-to-zero. Both Neon and Supabase now include auth and storage on their free plans. <strong>Firebase</strong> has the largest ecosystem (auth, hosting, Cloud Functions) but locks you into Google. <strong>Turso</strong> is the edge play — SQLite with embedded replicas for ultra-low-latency reads. <strong>PlanetScale</strong> removed its free tier in April 2024, making it a cautionary tale for relying on free database hosting.</p>
+    <p><strong>Quick verdict:</strong> <strong>Supabase</strong>'s Free plan includes 500 MB Postgres, auth, storage, and realtime. Choose <strong>Neon</strong> for serverless Postgres with branching and scale-to-zero. Both Neon and Supabase now include auth and storage on their free plans. <strong>Firebase</strong> has the largest ecosystem (auth, hosting, Cloud Functions) but locks you into Google. <strong>Turso</strong> is the edge play — SQLite with embedded replicas for ultra-low-latency reads. <strong>PlanetScale</strong> removed its free tier in April 2024, making it a cautionary tale for relying on free database hosting.</p>
     <p><strong>The database landscape has shifted:</strong> Serverless Postgres (Neon, Supabase) has won the developer mindshare battle. Edge databases (Turso, Cloudflare D1) are the new frontier. Traditional managed databases (RDS, Cloud SQL) are being replaced by platform-specific alternatives. And the PlanetScale free tier removal showed that even popular free tiers can disappear overnight.</p>
   </div>
 
