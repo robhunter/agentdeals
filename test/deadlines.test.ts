@@ -44,9 +44,11 @@ describe("deadlines REST endpoint", () => {
       assert.ok(first.vendor, "Should have vendor");
       assert.ok(first.date, "Should have date");
       assert.ok(first.summary, "Should have summary");
-      assert.ok(first.change_type, "Should have change_type");
       assert.ok(typeof first.countdown_days === "number", "Should have countdown_days");
       assert.ok(first.countdown_days > 0, "countdown_days should be positive (future date)");
+    }
+    for (const record of body.deadlines.filter((d: any) => d.stated_in === undefined)) {
+      assert.ok(record.change_type, `${record.vendor} ${record.date} should have change_type`);
     }
   });
 
