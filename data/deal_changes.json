@@ -16810,6 +16810,22 @@
       "date_source": "hand_written",
       "listing_effect": "none",
       "what_ends": "free endpoint access to z-ai/glm-5.3"
+    },
+    {
+      "vendor": "MiniMax",
+      "change_type": "product_deprecated",
+      "date": "2026-11-18",
+      "summary": "MiniMax's API keeps running. MiniMax is retiring the M2.5 and M2.7 model families. These models are no longer available to new users from 2026-10-19 and are retired on 2026-11-18.",
+      "previous_state": "MiniMax's pay-as-you-go API offered the M2.5 and M2.7 models with no end date.",
+      "current_state": "From 2026-10-19, new users cannot call the M2.5 and M2.7 models. On 2026-11-18, they are retired. For M Plan and Token Plan users, requests are routed to MiniMax-M3.1-Flash-Preview.",
+      "impact": "low",
+      "source_url": "https://platform.minimax.io/docs/guides/models-intro",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-10-16",
+      "date_source": "hand_written",
+      "listing_effect": "none",
+      "what_ends": "pay-as-you-go API access to MiniMax-M2.7, MiniMax-M2.7-highspeed, MiniMax-M2.5 and MiniMax-M2.5-highspeed"
     }
   ]
 }

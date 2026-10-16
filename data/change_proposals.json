@@ -1,5 +1,200 @@
 {
-  "proposals": [],
+  "proposals": [
+    {
+      "proposal_id": "2026-10-16/crowdin/new_tier",
+      "proposed_on": "2026-10-16",
+      "vendor": "Crowdin",
+      "change_type": "new_tier",
+      "date": "2026-10-16",
+      "date_source": "discovered",
+      "summary": "The free tier is now a 14-day free trial of the Team plan.",
+      "tier": "Team",
+      "tier_direction": "narrowed",
+      "previous_state": "Localization management. The Free plan is $0 a month: 60,000 hosted words, 1 private project, unlimited public projects, 1 integration, unlimited translators and Crowdin AI. Users on the Free plan donate their translations to Crowdin's translation memory. Pro starts at $50 a month (2 private projects), Team at $150 and Team+ at $450. Open-source and non-profit projects can apply for a free Open Source License. The CDN for over-the-air translations is free up to 1M requests and 10 GB of data transfer. CLI, GitHub integration, REST API",
+      "current_state": "The Team plan is available for a 14-day free trial.",
+      "impact": "high",
+      "source_url": "https://crowdin.com/pricing",
+      "category": "Localization",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-10-16",
+      "restatement": []
+    },
+    {
+      "proposal_id": "2026-10-16/transfernow/limits_increased",
+      "proposed_on": "2026-10-16",
+      "vendor": "transfernow",
+      "change_type": "limits_increased",
+      "date": "2026-10-16",
+      "date_source": "discovered",
+      "summary": "The free tier still exists. The page details a 'Starter' plan with 10 GB per transfer and 100 GB of storage, available for 3 EUR/month. Previously info states 5 GB per transfer and 100 GB of storage for the free tier.",
+      "tier": "Starter",
+      "tier_direction": "narrowed",
+      "previous_state": "simplest, fastest and safest interface to transfer and share files — TransferNow Free – 5 GB per transfer to send and receive files quickly and for free. 100 GB of storage. Retention up to 7 days.",
+      "current_state": "Free plan offers 5 GB per transfer and no storage. Starter plan offers 10 GB per transfer and 100 GB of storage for 3 EUR/month.",
+      "impact": "medium",
+      "source_url": "https://www.transfernow.net/en/prices",
+      "category": "Storage",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-10-16",
+      "restatement": [
+        {
+          "url": "https://www.transfernow.net/en/prices",
+          "description": "simplest, fastest and safest interface to transfer and share files — Free plan offers 5 GB per transfer and no storage. Starter plan offers 10 GB per transfer and 100 GB of storage for 3 EUR/month."
+        }
+      ]
+    },
+    {
+      "proposal_id": "2026-10-16/storyblok/limits_increased",
+      "proposed_on": "2026-10-16",
+      "vendor": "Storyblok",
+      "change_type": "limits_increased",
+      "date": "2026-10-16",
+      "date_source": "discovered",
+      "summary": "The free Starter plan now includes 25k AI credits, whereas previously it included none. The page also states a 45-day free trial of the Growth Plus plan is available before needing to subscribe.",
+      "tier": "Starter",
+      "tier_direction": "widened",
+      "previous_state": "Headless CMS with visual editor for developers and marketers — Starter plan is free and includes 1 space, 1 user seat (with an additional seat available for $15/month), 100GB traffic/month, 100k API requests/month, 2 locales, 200 components, 20,000 stories, 2,000 assets, 1 day content versioning retention, 500MB max asset size, and 3 webhooks.",
+      "current_state": "Monthly price if billed monthly: Free. Includes 1 team member seat, add 1 more user at $15.00 /month. Start with: 1 space, 1 user seat included, up to 2 user seats at $15.00 /month, 100GB traffic/month, 100k API requests/month, 2 locales, 25k AI credits.",
+      "impact": "low",
+      "source_url": "https://www.storyblok.com/pricing",
+      "category": "Headless CMS",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-10-16",
+      "restatement": []
+    },
+    {
+      "proposal_id": "2026-10-16/8base-com/limits_increased",
+      "proposed_on": "2026-10-16",
+      "vendor": "8base.com",
+      "change_type": "limits_increased",
+      "date": "2026-10-16",
+      "date_source": "discovered",
+      "summary": "The free tier now has different limits. Database rows are 5,000,000, File Storage is 500 GB, Serverless Computing is 200 GB-Hours, and Client App Users are 10,000. Previously rows: 2,500, Storage: 500, Serverless computing: 1Gb/h, and client app users: 5.",
+      "tier": "Free",
+      "tier_direction": "widened",
+      "previous_state": "8base is a full-stack low-code development platform built for JavaScript developers built on top of MySQL and GraphQL and serverless backend-as-a-service. It allows you to start building web applications quickly using a UI app builder and scale quickly, The Free tier includes rows: 2,500, Storage: 500, Serverless computing: 1Gb/h, and client app users: 5.",
+      "current_state": "The Free tier includes Database Rows 5,000,000, File Storage 500 GB, Serverless Computing 200GB-Hours, and Client App Users 10,000.",
+      "impact": "high",
+      "source_url": "https://www.8base.com/pricing",
+      "category": "Databases",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-10-16",
+      "restatement": [
+        {
+          "url": "https://www.8base.com/pricing",
+          "refused": "reading_drops_a_figure_our_source_check_found",
+          "figures": [
+            "1 GB-Hours 2 GB /mo",
+            "1GB-Hours Bandwidth 2 GB /mo"
+          ]
+        }
+      ]
+    },
+    {
+      "proposal_id": "2026-10-16/proton-mail/limits_increased",
+      "proposed_on": "2026-10-16",
+      "vendor": "Proton Mail",
+      "change_type": "limits_increased",
+      "date": "2026-10-16",
+      "date_source": "discovered",
+      "summary": "The free tier now offers 1 GB of storage instead of 500 MB.",
+      "tier": "Proton Free",
+      "tier_direction": "widened",
+      "previous_state": "Proton Free offers 500 MB storage (expandable to 1 GB), 1 user, and 1 encrypted email address.",
+      "current_state": "1 GB storage",
+      "impact": "medium",
+      "source_url": "https://proton.me/mail/pricing",
+      "category": "Consumer Email",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-10-16",
+      "restatement": [
+        {
+          "url": "https://proton.me/mail/pricing",
+          "refused": "reading_answers_for_something_else"
+        }
+      ]
+    },
+    {
+      "proposal_id": "2026-10-16/encore-dev/pricing_model_change",
+      "proposed_on": "2026-10-16",
+      "vendor": "encore.dev",
+      "change_type": "pricing_model_change",
+      "date": "2026-10-16",
+      "date_source": "discovered",
+      "summary": "The free tier is now the 'Starter plan' and is for local development and small projects.",
+      "tier": "Starter",
+      "tier_direction": "narrowed",
+      "previous_state": "Backend framework with static analysis for automatic infrastructure provisioning. Free cloud hosting for hobby projects, up to 2 environments, built-in monitoring and tracing",
+      "current_state": "The Starter plan is free for local development and small projects. The Pro plan is $49 per team member per month, plus per-environment and per-resource fees.",
+      "impact": "high",
+      "source_url": "https://encore.dev/",
+      "category": "Cloud Hosting",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-10-16",
+      "restatement": [
+        {
+          "url": "https://encore.dev/",
+          "refused": "reading_states_only_prices_where_our_terms_state_allowances"
+        }
+      ]
+    },
+    {
+      "proposal_id": "2026-10-16/resend/limits_reduced",
+      "proposed_on": "2026-10-16",
+      "vendor": "Resend",
+      "change_type": "limits_reduced",
+      "date": "2026-10-16",
+      "date_source": "discovered",
+      "summary": "The free tier now has a daily limit of 100 emails, matching previously.",
+      "tier": "Free",
+      "tier_direction": "narrowed",
+      "previous_state": "Developer-first email API — 3K emails/month free (100/day cap), 3 domains, 1K marketing contacts/month, 5 AI credits, 30-day data retention",
+      "current_state": "Daily limit 100, 3 custom domains.",
+      "impact": "medium",
+      "source_url": "https://resend.com/pricing",
+      "category": "Email",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-10-16",
+      "restatement": [
+        {
+          "url": "https://resend.com/pricing",
+          "refused": "reading_answers_for_something_else"
+        }
+      ]
+    },
+    {
+      "proposal_id": "2026-10-16/vercel/limits_reduced",
+      "proposed_on": "2026-10-16",
+      "vendor": "Vercel",
+      "change_type": "limits_reduced",
+      "date": "2026-10-16",
+      "date_source": "discovered",
+      "summary": "The Hobby plan still exists and is $0/month, but many limits are now 'starting at' a price, meaning they are no longer included in the free tier. Specifically, data transfer, blob storage, image transformations, function invocations, and compute resources all have associated costs beyond the included amounts.",
+      "tier": "Hobby",
+      "tier_direction": "narrowed",
+      "previous_state": "Hobby plan, $0 a month, for non-commercial personal use only. Includes 100 GB Fast Data Transfer, 1M Edge Requests, 1M Function Invocations, 4 hours Fluid Active CPU, 360 GB-hrs Fluid Provisioned Memory, 1 GB Blob Storage and 5K image transformations a month. Hobby accounts are limited to these caps and cannot buy more usage. Pro is $20 a month with one deploying seat; each additional deploying seat is $20 a month.",
+      "current_state": "Hobby $0 /mo. Includes 1M CDN Requests, 100 GB Fast Data Transfer, 1M Function Invocations, 4 hours Fluid Active CPU, 360 GB-hrs Fluid Provisioned Memory, 1 GB Blob Storage and 5K image transformations a month, but all of these have 'starting at' costs beyond the included amounts.",
+      "impact": "high",
+      "source_url": "https://vercel.com/pricing",
+      "category": "Cloud Hosting",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-10-16",
+      "restatement": [
+        {
+          "url": "https://vercel.com/pricing",
+          "refused": "reading_drops_the_cap_on_who_may_use_it"
+        }
+      ]
+    }
+  ],
   "dropped": [
     {
       "proposal_id": "2026-10-12/taskade-com/new_tier",
