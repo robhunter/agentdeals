@@ -154,6 +154,12 @@ const modelsIn = (text: string) => text.match(/gemini-\d+\.\d+-[a-z]+(?:-[a-z]+)
 const longDate = (day: string) =>
   new Date(`${day}T00:00:00Z`).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" });
 
+function retirementRecordDated(day: string) {
+  const record = agentPlatformRetirements().find((c) => longDate(c.date) === day);
+  assert.ok(record, `no Google Gemini API change record retires models on Agent Platform on ${day}`);
+  return record;
+}
+
 function retirementsStated(html: string): { models: string[]; day: string }[] {
   const stated = withoutTags(prepayParagraph(html)).match(/Agent Platform retires (.+?)\. On the Gemini API none of these/)?.[1] ?? "";
   return [...stated.matchAll(/((?:gemini-[\d.]+-[a-z-]+(?:, | and )?)+) on ([A-Z][a-z]+ \d{1,2}, \d{4})/g)].map(([, models, day]) => ({
@@ -184,9 +190,7 @@ describe(`${PAGE} on paying after use once Prepay starts`, () => {
     const stated = retirementsStated(page);
     assert.strictEqual(stated.length, 2, "the paragraph no longer gives two Agent Platform retirement dates");
     for (const { models, day } of stated) {
-      const record = agentPlatformRetirements().find((c) => longDate(c.date) === day);
-      assert.ok(record, `no Google Gemini API change record retires models on Agent Platform on ${day}`);
-      assert.deepStrictEqual([...modelsIn(record!.previous_state)].sort(), [...models].sort(), `the change record dated ${record!.date} retires other models`);
+      assert.deepStrictEqual([...modelsIn(retirementRecordDated(day).previous_state)].sort(), [...models].sort());
     }
   });
 
@@ -197,8 +201,7 @@ describe(`${PAGE} on paying after use once Prepay starts`, () => {
     assert.ok(records.length > 0, "the Google Gemini API change records hold no Agent Platform retirement");
     for (const c of records) assert.ok(!modelsIn(c.previous_state).includes(moveTo!), `Agent Platform retires ${moveTo} on ${c.date}`);
     for (const { day } of retirementsStated(page)) {
-      const record = records.find((c) => longDate(c.date) === day);
-      assert.match(record?.summary ?? "", new RegExp(`Google names ${moveTo!.replace(/\./g, "\\.")} as (?:a|the) replacement`), day);
+      assert.match(retirementRecordDated(day).summary, new RegExp(`Google names ${moveTo!.replace(/\./g, "\\.")} as (?:a|the) replacement`));
     }
   });
 
@@ -207,8 +210,7 @@ describe(`${PAGE} on paying after use once Prepay starts`, () => {
     const stated = retirementsStated(page);
     assert.strictEqual(stated.flatMap(({ models }) => models).length, 4);
     for (const { day } of stated) {
-      const record = agentPlatformRetirements().find((c) => longDate(c.date) === day);
-      assert.match(record?.summary ?? "", /^The Gemini API keeps serving [^.]*(?:\.\d[^.]*)* with no shutdown date\./, day);
+      assert.match(retirementRecordDated(day).summary, /^The Gemini API keeps serving [^.]*(?:\.\d[^.]*)* with no shutdown date\./);
     }
   });
 
