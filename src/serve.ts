@@ -43908,7 +43908,7 @@ ${globalNavCss()}
       <tr>
         <td class="provider-col">Tailscale</td>
         <td>Zero Trust VPN</td>
-        <td>3 users, 100 devices, MagicDNS</td>
+        <td>6 users, unlimited devices, MagicDNS</td>
         <td class="partial">&#9679; Clients OSS</td>
         <td class="cross">&#10007;</td>
         <td class="check">&#10003;</td>
@@ -44044,8 +44044,8 @@ ${globalNavCss()}
     <div class="diff-desc">Free, automated SSL/TLS certificates trusted by all major browsers. ACME protocol for automated renewal. No limit on certificates. The default choice for any web service that needs HTTPS. Integration via certbot, Caddy, Traefik, nginx, and most cloud providers. There is no reason to pay for basic SSL certificates in 2026.</div>
   </div>
   <div class="diff-card">
-    <h3>Tailscale &mdash; best free mesh VPN</h3>
-    <div class="diff-desc">3 users, 100 devices free with WireGuard-based mesh networking. MagicDNS, exit nodes, subnet routers, ACLs, and split tunneling included. Zero-config networking between devices &mdash; no port forwarding, no firewall rules. The free tier is generous for personal use and small teams. Requires personal email domain (no business/custom domain on free).</div>
+    <h3>Tailscale &mdash; free mesh VPN</h3>
+    <div class="diff-desc">Free for 6 users with unlimited devices and WireGuard-based mesh networking. MagicDNS, exit nodes, subnet routers, ACLs, and split tunneling included. Zero-config networking between devices &mdash; no port forwarding, no firewall rules. The free plan is only suitable for non-commercial use. A custom domain starts a 14-day Enterprise trial.</div>
   </div>
   <div class="diff-card">
     <h3>Twingate &mdash; zero trust network access</h3>
@@ -44186,8 +44186,8 @@ ${globalNavCss()}
   </div>
 
   <div class="diff-card">
-    <h3>Tailscale requires personal email domain</h3>
-    <div class="diff-desc">Tailscale&rsquo;s free tier requires a personal email domain (Gmail, Outlook, GitHub) &mdash; custom/business domains require a paid plan. This limits team use: you can&rsquo;t onboard employees with company email addresses on the free tier. For small teams using personal accounts, the 3-user limit is the real constraint. Headscale (open-source, self-hosted Tailscale-compatible coordination server) removes both limitations.</div>
+    <h3>Tailscale free plan is non-commercial only</h3>
+    <div class="diff-desc">The free plan is only for non-commercial use. Using Tailscale for company or client work is commercial use, even with personal email accounts. A custom domain starts a 14-day Enterprise trial. Headscale (open-source, self-hosted Tailscale-compatible coordination server) removes both limitations.</div>
   </div>
 
   <h2 id="changes">Pricing Change Timeline</h2>
