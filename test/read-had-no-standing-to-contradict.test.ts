@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 import { GATE_REASONS } from "../scripts/change-gate.js";
 import { SUPPRESSED_SAME_TRANSITION_REGRADED } from "../scripts/change-log.js";
 import { assertPopulationFloor } from "./population-floor.ts";
+import { listingBlocksOf, withoutTheListingBlocks } from "./vendor-listing-blocks.ts";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -85,6 +86,8 @@ for (const refusal of storedRefusals) {
   if (held) held.push(refusal);
   else refusalsOf.set(key, [refusal]);
 }
+
+const escapedUrl = (url: string) => url.replace(/&/g, "&amp;").replace(/"/g, "&quot;");
 
 const slugOf = (vendor: string) =>
   vendor.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
@@ -401,8 +404,9 @@ describe("the pages that describe a read our own refusal voided", () => {
     for (const offer of confirmed.slice(0, 120)) {
       const { status, body } = await get(`/vendor/${slugOf(offer.vendor)}`);
       if (status !== 200) continue;
+      const said = listingBlocksOf(body).get(escapedUrl(offer.url)) ?? withoutTheListingBlocks(body);
       for (const clause of voidedClauses) {
-        if (body.includes(`Our last read of it, on `) && body.includes(clause)) {
+        if (said.includes(`Our last read of it, on `) && said.includes(clause)) {
           speaking.push(`/vendor/${slugOf(offer.vendor)}: ${clause}`);
         }
       }
