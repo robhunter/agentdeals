@@ -133,6 +133,8 @@ const WITHDRAWN: Record<string, RegExp> = {
   "Appcircle's free plan given as 300 build minutes and 2 build profiles": /300 build minutes\/month, 1 concurrent build, 2 build profiles/,
   "Appcircle's Professional plan at $49 a month": /Professional at \$49\/mo/,
   "Buddy priced per pipeline": /per-pipeline \(Buddy\)/i,
+  "Bitbucket Pipelines' self-hosted runners as paid only": /Paid only \(runners\)/,
+  "Bitbucket Pipelines' self-hosted runners as needing Standard or higher": /require Standard plan or higher/,
 };
 
 describe("/ci-cd-pricing states the current plans of Bitbucket Pipelines, Codemagic, Buddy, Appcircle and CircleCI", () => {
@@ -146,8 +148,8 @@ describe("/ci-cd-pricing states the current plans of Bitbucket Pipelines, Codema
 
   after(() => { proc?.kill(); });
 
-  it("prices Bitbucket Pipelines' Standard plan at $3.65 a user in the pricing and cost tables", () => {
-    assert.deepStrictEqual(rowOf(tableRows(html, PRICING_TABLE), "Bitbucket Pipelines"), ["50 min/mo", "1 concurrent", "Paid only (runners)", "$3.65/user/mo (Standard)", "Per-user + minutes"]);
+  it("prices Bitbucket Pipelines' Standard plan at $3.65 a user in the pricing and cost tables, and gives its free plan self-hosted runners that use no build minutes", () => {
+    assert.deepStrictEqual(rowOf(tableRows(html, PRICING_TABLE), "Bitbucket Pipelines"), ["50 min/mo", "1 concurrent", "Yes (no build minutes used)", "$3.65/user/mo (Standard)", "Per-user + minutes"]);
     assert.deepStrictEqual(rowOf(tableRows(html, COST_TABLE), "Bitbucket Pipelines").slice(0, 2), ["$3.65/user", "$3.65/user + overages"]);
   });
 
