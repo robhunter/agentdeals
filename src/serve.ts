@@ -35550,7 +35550,7 @@ ${globalNavCss()}
         <td class="provider-col"><a href="/gcp-free-tier-2026" style="color:var(--text)">GCP</a></td>
         <td style="font-family:var(--mono);color:#3fb950">$300</td>
         <td>90 days</td>
-        <td>Cannot use GPUs or create &gt;8 vCPU VMs during trial</td>
+        <td>New accounts only: never a paying user of Google Cloud, Google Maps Platform or Firebase; no GPUs during the trial</td>
         <td>Yes</td>
       </tr>
       <tr>

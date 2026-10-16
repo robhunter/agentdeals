@@ -4,7 +4,7 @@
     "A": 30,
     "B": 90
   },
-  "measured_on": "2026-10-15",
+  "measured_on": "2026-10-16",
   "pages": [
     {
       "path": "/agent-payments",
@@ -767,12 +767,12 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 73,
+      "table_figures": 72,
       "table_figures_from_records": 17,
       "tables": [
         {
           "label": "Free Trial Credits",
-          "figures": 11,
+          "figures": 10,
           "from_records": 0
         },
         {
