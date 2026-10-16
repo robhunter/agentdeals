@@ -28987,14 +28987,14 @@ function buildCiCdPricingPage(): string {
       category: "general",
       freeMinutes: "6,000 min/mo",
       concurrency: "30 concurrent jobs",
-      selfHosted: "Paid only",
+      selfHosted: "Free runner time; 5 concurrent self-hosted tasks",
       paidFrom: "$15/seat (Performance)",
       pricingModel: "Credit-based",
       freeDetails: "30,000 credits/month (up to 6,000 build minutes on small Docker), 5 users, 30x concurrency, no credit card required. Credits consumed at different rates by resource class: small Docker is 5 credits/min, medium is 10, large is 20. Free plan includes parallelism and test splitting.",
       freeType: "generous",
       monthlyCostSmall: "$0",
       monthlyCostTeam: "$15/seat + credits",
-      hiddenCosts: "Credit consumption varies dramatically by resource class. macOS builds cost 100 credits/min (20x Linux). GPU and Arm builds consume credits at premium rates. Self-hosted runners only on paid plans.",
+      hiddenCosts: "Credit consumption varies dramatically by resource class. macOS builds cost 100 credits/min (20x Linux). GPU and Arm builds consume credits at premium rates.",
     },
     {
       name: "Buildkite",
@@ -29051,16 +29051,16 @@ function buildCiCdPricingPage(): string {
       name: "Buddy",
       slug: "buddy",
       category: "general",
-      freeMinutes: "120 min/mo",
+      freeMinutes: "300 pipeline GB-min/mo",
       concurrency: "1 concurrent",
       selfHosted: "Paid only",
-      paidFrom: "$35/mo (Pro)",
-      pricingModel: "Per-pipeline",
-      freeDetails: "120 build minutes/month, 5 projects, 1 concurrent pipeline, 500 MB cache. Visual pipeline builder with drag-and-drop actions. Supports 100+ pre-configured actions. Free plan includes all integrations but limits execution time.",
+      paidFrom: "$29/mo (Pro, 2 seats)",
+      pricingModel: "Per-seat + concurrency",
+      freeDetails: "Free plan: 1 seat, 1 concurrent run, 300 pipeline GB-minutes a month, 1 GB cache, 300 sandbox CPU-minutes. Visual pipeline builder with drag-and-drop actions. Supports 100+ pre-configured actions. Free plan includes all integrations but limits execution time.",
       freeType: "limited",
-      monthlyCostSmall: "$35",
-      monthlyCostTeam: "$35+ (per pipeline)",
-      hiddenCosts: "120 minutes is extremely limited. Pro plan at $35/mo is per-workspace, not per-user, which can be cost-effective for small teams but expensive at scale.",
+      monthlyCostSmall: "$29",
+      monthlyCostTeam: "$29+ (Pro)",
+      hiddenCosts: "Buddy's Pro plan: $29 a month, includes 2 seats; each additional seat $9 a month; each additional concurrent run $50 a month.",
     },
     {
       name: "AWS CodeBuild",
@@ -29113,14 +29113,14 @@ function buildCiCdPricingPage(): string {
       category: "cloud-native",
       freeMinutes: "50 min/mo",
       concurrency: "1 concurrent",
-      selfHosted: "Paid only (runners)",
-      paidFrom: "$15/user/mo (Standard)",
+      selfHosted: "Yes (no build minutes used)",
+      paidFrom: "$3.65/user/mo (Standard)",
       pricingModel: "Per-user + minutes",
       freeDetails: "50 build minutes/month, 1 GB Git LFS, 5 users on free plan. Built into Bitbucket — no separate CI service to configure. Supports Docker, caching, and deployment environments. Integrates with Jira for deployment tracking.",
       freeType: "limited",
-      monthlyCostSmall: "$15/user",
-      monthlyCostTeam: "$15/user + overages",
-      hiddenCosts: "50 minutes is extremely stingy — barely enough for a few builds. Standard plan ($15/user) includes 2,500 minutes. Self-hosted runners require Standard plan or higher. Additional minutes: $10/1,000 min.",
+      monthlyCostSmall: "$3.65/user",
+      monthlyCostTeam: "$3.65/user + overages",
+      hiddenCosts: "50 minutes is extremely stingy — barely enough for a few builds. Standard plan ($3.65/user) includes 2,500 minutes. Additional minutes: $10/1,000 min.",
     },
     {
       name: "Bitrise",
@@ -29144,28 +29144,28 @@ function buildCiCdPricingPage(): string {
       freeMinutes: "500 min/mo",
       concurrency: "1 concurrent",
       selfHosted: "N/A (managed)",
-      paidFrom: "$49/seat/mo (Pay-as-you-go)",
+      paidFrom: "Per minute (Pay-as-you-go); $49/mo per extra concurrent build",
       pricingModel: "Per-minute",
-      freeDetails: "500 build minutes/month on macOS standard VMs, 1 concurrent build. Optimized for Flutter, React Native, native iOS/Android, and Unity. Free plan includes Apple Silicon M2 builds. Automatic code signing and App Store/Play Store publishing.",
+      freeDetails: "Single-user plan with unlimited number of applications and 500 free build minutes a month on macOS M2 machines, for personal accounts only; Linux and Windows builds get no free minutes, and teams get none. 1 concurrent build. Optimized for Flutter, React Native, native iOS/Android, and Unity. Free plan includes Apple Silicon M2 builds. Automatic code signing and App Store/Play Store publishing.",
       freeType: "limited",
       monthlyCostSmall: "$0\u201349",
-      monthlyCostTeam: "$49/seat",
-      hiddenCosts: "500 minutes is reasonable for mobile. Pay-as-you-go charges per minute after free tier. macOS M2 Pro instances cost more per minute. Concurrent build limits can slow teams.",
+      monthlyCostTeam: "Per minute + $49/concurrency",
+      hiddenCosts: "500 minutes is reasonable for mobile. Pay-as-you-go charges per minute. macOS M2 Pro instances cost more per minute. Concurrent build limits can slow teams.",
     },
     {
       name: "Appcircle",
       slug: "appcircle",
       category: "mobile",
-      freeMinutes: "300 min/mo",
+      freeMinutes: "20 builds/mo, 30 min/build",
       concurrency: "1 concurrent",
-      selfHosted: "Enterprise only",
-      paidFrom: "$49/mo (Professional)",
+      selfHosted: "Corporate only",
+      paidFrom: "Custom (Corporate)",
       pricingModel: "Per-plan",
-      freeDetails: "300 build minutes/month, 1 concurrent build, 2 build profiles. Mobile CI/CD with built-in distribution portal, Enterprise App Store, and in-app update support. Supports iOS (Xcode), Android (Gradle), React Native, and Flutter.",
+      freeDetails: "Starter plan: 1 concurrent build, 30 minutes maximum per build, 20 builds a month. Mobile CI/CD with built-in distribution portal, Enterprise App Store, and in-app update support. Supports iOS (Xcode), Android (Gradle), React Native, and Flutter.",
       freeType: "limited",
-      monthlyCostSmall: "$0\u201349",
-      monthlyCostTeam: "$49+ (Pro)",
-      hiddenCosts: "300 minutes is tight for iOS builds. Professional at $49/mo adds more minutes and concurrent builds. Self-hosted runners only on Enterprise tier. Testing distribution portal is a nice differentiator.",
+      monthlyCostSmall: "$0",
+      monthlyCostTeam: "Custom (Corporate)",
+      hiddenCosts: "20 builds a month is tight for iOS. Above Starter, the only plan is Corporate, tailored per customer. Self-hosted runners only on Corporate plan. Testing distribution portal is a nice differentiator.",
     },
     {
       name: "Jenkins",
@@ -29308,7 +29308,7 @@ function buildCiCdPricingPage(): string {
   const faqEntries = [
     { q: "Which CI/CD tool has the best free tier?", a: "Google Cloud Build offers 2,500 build-minutes a month on e2-standard-2 machines for free. GitHub Actions offers unlimited minutes for public repos and 2,000 min/month for private repos. For self-hosted, Jenkins and Woodpecker CI are 100% free with no limits." },
     { q: "Is Jenkins really free?", a: "Yes, Jenkins is 100% free and open-source (MIT license). The software costs nothing. However, you need to provide and maintain your own servers, which typically costs $20-100/month in cloud hosting. You also handle security patches, plugin updates, and scaling." },
-    { q: "How do CI/CD pricing models differ?", a: "There are four main models: per-seat (GitLab, Buildkite), per-minute/credit (CircleCI, AWS CodeBuild, Google Cloud Build), per-parallel-job (Azure DevOps), and per-pipeline (Buddy). Per-seat is predictable but penalizes large teams. Per-minute rewards fast builds but can spike. Per-parallel-job charges for concurrency." },
+    { q: "How do CI/CD pricing models differ?", a: "There are three main models: per-seat (GitLab, Buildkite), per-minute/credit (CircleCI, AWS CodeBuild, Google Cloud Build), and per-parallel-job (Azure DevOps). Per-seat is predictable but penalizes large teams. Per-minute rewards fast builds but can spike. Per-parallel-job charges for concurrency." },
     { q: "GitHub Actions vs GitLab CI — which is cheaper?", a: "For open-source: GitHub Actions (unlimited free minutes). For small private projects: both are effectively free (GitHub: 2,000 min, GitLab: 400 min + free self-hosted runners). For teams: GitLab Premium is $29/user/month, GitHub Team is $4/user/month but with limited CI minutes. GitLab includes more DevOps features (registry, security scanning) in its price." },
     { q: "What is the cheapest CI/CD for mobile apps?", a: "Codemagic offers 500 free minutes/month with Apple Silicon (M2) builds included on the free tier. Bitrise offers 300 free minutes. For maximum savings, use GitHub Actions with self-hosted macOS runners — the CI/CD is free, you just pay for the Mac hardware or cloud Mac rental." },
     { q: "How many build minutes do I need per month?", a: "A solo developer on a small project: 200-500 min/month. A small team (5 devs) with moderate CI: 2,000-5,000 min/month. An active team with comprehensive testing: 5,000-20,000 min/month. Mobile builds (especially iOS) consume 2-5x more minutes than web/backend builds." },
@@ -33693,12 +33693,12 @@ function buildAwsFreeTier2026Page(): string {
   const gotchas: GotchaItem[] = [
     { title: "Data transfer out", desc: "First 100 GB/month free to internet, then $0.09/GB. Transfers between regions always charged.", cost: "$0.09/GB" },
     { title: "NAT Gateway", desc: "If your Lambda/ECS needs internet access in a VPC, NAT Gateway costs $0.045/hr + $0.045/GB. Running 24/7 = $32/month before data.", cost: "$32+/mo" },
-    { title: "Elastic IP addresses", desc: "Free when attached to a running instance. Charged $0.005/hr (~$3.60/month) when idle or unattached. Easy to forget.", cost: "$3.60/mo idle" },
+    { title: "Public IPv4 addresses", desc: "Every public IPv4 address is charged $0.005/hr, whether attached to a running instance or idle. AWS: “Effective February 1, 2024 there will be a charge of $0.005 per IP per hour for all public IPv4 addresses, whether attached to a service or not.”", cost: "$3.60/mo each" },
     { title: "CloudWatch detailed monitoring", desc: "Basic monitoring is free (5-minute intervals). Detailed monitoring (1-minute) costs $2.10/metric/month. EC2 auto-enables it in some launch configs.", cost: "$2.10/metric" },
     { title: "EBS volumes on stopped instances", desc: "You pay for EBS storage even when EC2 instances are stopped. 30 GB gp3 = $2.40/month sitting idle.", cost: "$0.08/GB-mo" },
     { title: "Free tier expiration", desc: "On the Free plan nothing is billed: the account closes at 6 months or when credits run out, and content is deleted after 90 days unless you upgrade. On the Paid plan, usage past the credits is billed.", cost: "Varies" },
     { title: "S3 request costs", desc: "Storage is cheap but requests add up. PUT/COPY/POST at $0.005/1K requests. A deployment pipeline doing thousands of S3 operations can cost more in requests than storage.", cost: "$0.005/1K PUT" },
-    { title: "Multi-AZ deployments", desc: "RDS Multi-AZ doubles your cost. The free tier only covers single-AZ. Some tutorials default to Multi-AZ.", cost: "2× RDS cost" },
+    { title: "Multi-AZ deployments", desc: "RDS Multi-AZ doubles your cost: a Multi-AZ instance is billed at twice the Single-AZ rate (db.t4g.micro PostgreSQL in US East: $0.032 an hour against $0.016), and new accounts pay for both from their credits. Some tutorials default to Multi-AZ.", cost: "2× RDS cost" },
   ];
 
   interface CloudAlt {
@@ -33851,7 +33851,7 @@ ${globalNavCss()}
   <div class="executive-summary">
     <p>New AWS accounts choose a Free plan or a Paid plan; both get $100 in credits at sign-up and can earn up to $100 more. The Free plan covers over 90 services, charges nothing, and closes at 6 months or when the credits run out. 30+ services stay always free on both plans. Short-term trials are for the Paid plan.</p>
     <p><strong>What's new:</strong> Aurora PostgreSQL serverless joined the Free plan on 2026-03-25 with up to 4 ACUs and 1 GiB per cluster, paid from the credits. The 12-month free tier ended for the last eligible accounts in July 2026.</p>
-    <p><strong>The hidden costs:</strong> data transfer, NAT Gateway fees, idle Elastic IPs and EBS volumes on stopped instances use up credits fast. On the Free plan, using up the credits closes the account and nothing is charged to your card; on the Paid plan, usage past the credits is billed. We cover all of them below.</p>
+    <p><strong>The hidden costs:</strong> data transfer, NAT Gateway fees, public IPv4 addresses and EBS volumes on stopped instances use up credits fast. On the Free plan, using up the credits closes the account and nothing is charged to your card; on the Paid plan, usage past the credits is billed. We cover all of them below.</p>
     <p><strong>Comparing clouds?</strong> See our <a href="/cloud-free-tier-comparison-2026">Cloud Free Tier Comparison</a> for a side-by-side matrix of AWS vs GCP vs Azure vs DigitalOcean.</p>
   </div>
 
@@ -35967,7 +35967,7 @@ ${globalNavCss()}
 
   <div class="diff-card" style="border-left-color:#f85149">
     <h3>AWS <span style="font-size:.75rem;color:#f85149;font-weight:400">Most gotchas</span></h3>
-    <p class="diff-desc"><strong>Data transfer:</strong> $0.09/GB after 100 GB free. <strong>NAT Gateway:</strong> $32+/mo if Lambda needs VPC internet. <strong>Idle Elastic IPs:</strong> $3.60/mo when unattached. <strong>EBS on stopped instances:</strong> You pay for disk even when EC2 is stopped. <strong>Free plan closure:</strong> nothing is charged to your card on the Free plan; the account closes at 6 months or when credits run out, and content is deleted after 90 days unless you upgrade to the Paid plan.</p>
+    <p class="diff-desc"><strong>Data transfer:</strong> $0.09/GB after 100 GB free. <strong>NAT Gateway:</strong> $32+/mo if Lambda needs VPC internet. <strong>Public IPv4:</strong> $0.005/hr ($3.60/mo) whether in use or idle. <strong>EBS on stopped instances:</strong> You pay for disk even when EC2 is stopped. <strong>Free plan closure:</strong> nothing is charged to your card on the Free plan; the account closes at 6 months or when credits run out, and content is deleted after 90 days unless you upgrade to the Paid plan.</p>
   </div>
 
   <div class="diff-card" style="border-left-color:#d29922">
@@ -35982,7 +35982,7 @@ ${globalNavCss()}
 
   <div class="diff-card" style="border-left-color:#3fb950">
     <h3>DigitalOcean <span style="font-size:.75rem;color:#3fb950;font-weight:400">Fewest gotchas</span></h3>
-    <p class="diff-desc"><strong>Minimal free tier:</strong> The biggest "gotcha" is that there's almost nothing free — but what you do pay for is predictable. <strong>Bandwidth overage:</strong> $0.01/GB beyond your Droplet's allocation (much cheaper than AWS/GCP). <strong>Backups:</strong> 20% surcharge if enabled. <strong>Floating IPs:</strong> Free when attached, $4/mo when unattached.</p>
+    <p class="diff-desc"><strong>Minimal free tier:</strong> The biggest "gotcha" is that there's almost nothing free — but what you do pay for is predictable. <strong>Bandwidth overage:</strong> $0.01/GB beyond your Droplet's allocation (much cheaper than AWS/GCP). <strong>Backups:</strong> 20% surcharge if enabled. <strong>Reserved IPs:</strong> Free when assigned. Unassigned IPv4 costs $5/month.</p>
   </div>
 
   <h2 id="changes">Pricing Change Timeline</h2>
