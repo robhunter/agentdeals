@@ -59,7 +59,7 @@ export const API_ENDPOINTS: readonly ApiEndpoint[] = [
   { method: "GET", path: "/api/compare", desc: "Compare two vendors side by side", params: "a, b", group: "product", request: "/api/compare?a={vendor}&b={otherVendor}" , requiresParams: true, cites: true },
   { method: "GET", path: "/api/audit-stack", desc: "Audit your infrastructure stack", params: "services", group: "product", request: "/api/audit-stack?services={vendor},{otherVendor}" , requiresParams: true, cites: true },
   { method: "GET", path: "/api/vendor-risk/:vendor", desc: "Check vendor pricing risk", params: "", group: "product", request: "/api/vendor-risk/{vendor}", cites: true },
-  { method: "GET", path: "/api/deadlines", desc: "Future-dated changes with countdown", params: "type", group: "product", cites: true },
+  { method: "GET", path: "/api/deadlines", desc: "Future-dated changes, and later dates our listings and earlier change records state, with countdown", params: "type", group: "product", cites: true },
   { method: "GET", path: "/api/ai-coding-pricing", desc: "AI coding tools pricing comparison data", params: "type (ide, cli, cloud-agent, app-builder)", group: "product", cites: true },
   { method: "GET", path: "/api/hosting-pricing", desc: "Cloud hosting & PaaS pricing comparison data", params: "type (traditional-paas, edge-serverless, full-featured, static-specialized)", group: "product", cites: true },
   { method: "GET", path: "/api/llm-pricing", desc: "LLM API pricing comparison data", params: "type (frontier, inference, open-source-host, specialized)", group: "product", cites: true },

@@ -9,6 +9,7 @@ export interface DeadlineText {
   sourceUrl: string | null;
   statedIn: DeadlineStatedIn;
   record?: DealChange;
+  listing?: Offer;
 }
 
 export interface StatedDeadline {
@@ -19,6 +20,11 @@ export interface StatedDeadline {
   sourceUrl: string | null;
   statedIn: DeadlineStatedIn;
   record?: DealChange;
+  listing?: Offer;
+}
+
+export function quotesTheWholeDescription(deadline: StatedDeadline): deadline is StatedDeadline & { listing: Offer } {
+  return deadline.statedIn === "description" && deadline.listing !== undefined && deadline.sentence === (deadline.listing.description ?? "").trim();
 }
 
 export const DEADLINE_WORDS = new RegExp(
@@ -92,13 +98,14 @@ function dayAfter(iso: string): string {
 
 export function deadlineTextsOf(offers: readonly Offer[], recordsBeforeToday: readonly DealChange[]): DeadlineText[] {
   const listingTexts = offers.flatMap((offer): DeadlineText[] => [
-    { vendor: offer.vendor, category: offer.category, text: offer.description ?? "", sourceUrl: offer.url ?? null, statedIn: "description" },
+    { vendor: offer.vendor, category: offer.category, text: offer.description ?? "", sourceUrl: offer.url ?? null, statedIn: "description", listing: offer },
     ...(offer.conditions ?? []).map((condition): DeadlineText => ({
       vendor: offer.vendor,
       category: offer.category,
       text: condition.text ?? "",
       sourceUrl: condition.url ?? offer.url ?? null,
       statedIn: "condition",
+      listing: offer,
     })),
   ]);
   const recordTexts = recordsBeforeToday.map((record): DeadlineText => ({
@@ -133,6 +140,7 @@ export function statedDeadlines(
           sourceUrl: text.sourceUrl,
           statedIn: text.statedIn,
           ...(text.record ? { record: text.record } : {}),
+          ...(text.listing ? { listing: text.listing } : {}),
         });
       }
     }

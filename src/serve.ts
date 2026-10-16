@@ -104,7 +104,7 @@ import { figureProvenanceAgainst, statementsWeHold } from "./figure-provenance.j
 import { statesNoFreeTier } from "./retired-terms.js";
 import { countsDownTo, shutdownDeadlineHtml } from "./shutdown-deadline.js";
 import { forecastShutdownsWithoutACard, whatEnds, type RecordACardCovers } from "./forecast-shutdowns.js";
-import { deadlineTextsOf, statedDeadlines, type StatedDeadline } from "./stated-deadlines.js";
+import { deadlineTextsOf, quotesTheWholeDescription, statedDeadlines, type StatedDeadline } from "./stated-deadlines.js";
 import { UPCOMING_CHANGES_HEADING, UPCOMING_CHANGES_INTRO, splitAtTheDayServed } from "./upcoming-changes.js";
 import { createRegistrationLimiter, rateLimitHeaders } from "./rate-limit.js";
 import { offerForSlug, vendorRates, cheapestRate, dearestRate, spanOfRates, formatRate, formatRateSpan, monthlyTokenCost, formatDollars, amountValue, type ModelRate } from "./model-rates.js";
@@ -140,7 +140,7 @@ import { buildProductFunctions, functionMembers, functionDefinitions, functionMe
 import { curatedAlternativesFor } from "./curated-alternatives.js";
 import { vendorSubstitutes, substitutesListedFor } from "./vendor-substitutes.js";
 import type { Agent, ChangeDateSource, DealChange, FreePlanExcerpt, RiskCause, RatingWithheld, LinkUnreachable, ListingCondition, Offer, StabilityClass, SubtypeLabel } from "./types.js";
-import { A_DATED_HEADING_MARKER, A_DATED_SECTION_MARKER, archiveBracketOf, datedHeadingNoticeHtml, datedSectionNoticeHtml, namedFromItsDate, namedOnceItsDateArrived, namedWhileAheadOf, namedWhileNotBefore, ANNOUNCED_BADGE, ANNOUNCED_HEADING, announcedIntro, changeDateLabel, changeEntryDateLabel, changeEntryLongDateLabel, changeDateClause, changeDatePublished, changeEventStartDate, capListSections, latestEventDate, offerExpiryAfter, feedEntryUpdated, UNDATED_TILE_LABEL, firstReadHeading, discoveryBatchNote, coveringBracketedChanges, changeEntryDateLabelHtml, isoWeekOf, monthlyChangeSeries, changesInWindow, discoveryMonthSeriesHeading, periodComparisonSentence, DISCOVERED_DATE_PREFIX, EFFECTIVE_DATE_PREFIX, UNKNOWN_EFFECTIVE_DATE_MARKER, EFFECTIVE_BY_DATE_MEANING, BRACKETED_DATE_PREFIX, RECORDED_DATE_PREFIX, CORRECTED_DATE_PREFIX, EFFECTIVE_MONTH_SERIES_NOTE, DISCOVERY_MONTH_SERIES_NOTE, weekRangeLabel, newestChangeInEffect, hasNotTakenEffect, vendorPageLastUpdated } from "./change-dates.js";
+import { A_DATED_HEADING_MARKER, A_DATED_SECTION_MARKER, archiveBracketOf, datedHeadingNoticeHtml, datedSectionNoticeHtml, namedFromItsDate, namedOnceItsDateArrived, namedWhileAheadOf, namedWhileNotBefore, statedDatesShownWhileLaterThan, ANNOUNCED_BADGE, ANNOUNCED_HEADING, announcedIntro, changeDateLabel, changeEntryDateLabel, changeEntryLongDateLabel, changeDateClause, changeDatePublished, changeEventStartDate, capListSections, latestEventDate, offerExpiryAfter, feedEntryUpdated, UNDATED_TILE_LABEL, firstReadHeading, discoveryBatchNote, coveringBracketedChanges, changeEntryDateLabelHtml, isoWeekOf, monthlyChangeSeries, changesInWindow, discoveryMonthSeriesHeading, periodComparisonSentence, DISCOVERED_DATE_PREFIX, EFFECTIVE_DATE_PREFIX, UNKNOWN_EFFECTIVE_DATE_MARKER, EFFECTIVE_BY_DATE_MEANING, BRACKETED_DATE_PREFIX, RECORDED_DATE_PREFIX, CORRECTED_DATE_PREFIX, EFFECTIVE_MONTH_SERIES_NOTE, DISCOVERY_MONTH_SERIES_NOTE, weekRangeLabel, newestChangeInEffect, hasNotTakenEffect, vendorPageLastUpdated } from "./change-dates.js";
 import { changeFeedEntries, feedEntryFields, feedUpdatedTimestamp, changeFeedProvenanceNote, CHANGE_FEED_ENTRY_LIMIT, CHANGE_FEED_DESCRIPTION, CHANGE_FEED_NAMESPACE, CHANGE_FEED_NAMESPACE_PREFIX, channelUpdatedTimestamp, WEEKLY_FEED_POPULATION_NOTE, feedLinkTag, feedEntrySourceXml, digestSourceXml, PER_CHANGE_FEED, WEEKLY_DIGEST_FEED } from "./change-feed.js";
 import { changeLogInPageOrder, changeLogSections, changeLogSectionsHtml, monthHeadingLabel } from "./change-log-sections.js";
 import { FEED_CORRECTIONS, correctionEntriesXml } from "./feed-corrections.js";
@@ -50103,6 +50103,16 @@ function deadlinesOurTextStates(changes: readonly DealChange[], listed: readonly
   return statedDeadlines(deadlineTextsOf(offers, recordsBeforeToday), listed, today);
 }
 
+function conditionsAfterAWholeDescriptionHtml(deadline: StatedDeadline): string {
+  return quotesTheWholeDescription(deadline) ? conditionsAfterTheTermsHtml(deadline.listing) : "";
+}
+
+function statedSentenceWithAnyConditions(deadline: StatedDeadline): string {
+  return quotesTheWholeDescription(deadline)
+    ? withConditionsAfter(deadline.sentence, conditionsBesideTheStoredTerms(deadline.listing))
+    : deadline.sentence;
+}
+
 function buildDeadlinesPage(): string {
   const allChanges = loadDealChanges();
   const today = new Date().toISOString().slice(0, 10);
@@ -50228,7 +50238,7 @@ ${altHtml}${guideHtml}
       dateLabel: s.date,
       summaryHtml: s.record
         ? changeSummaryHtml({ ...s.record, summary: s.sentence }, escHtmlServer)
-        : [escHtmlServer(s.sentence), listingSourceLinkHtml(s.sourceUrl, escHtmlServer)].filter(Boolean).join(" "),
+        : [escHtmlServer(s.sentence), listingSourceLinkHtml(s.sourceUrl, escHtmlServer)].filter(Boolean).join(" ") + conditionsAfterAWholeDescriptionHtml(s),
       alternatives: s.record?.alternatives ?? [],
       guideText: s.sentence,
     }),
@@ -50258,7 +50268,7 @@ ${altHtml}${guideHtml}
     url: `${BASE_URL}/deadlines`,
     itemListElement: [
       ...deadlines.map(c => ({ entry: c, headline: `${c.vendor}: ${(changeTypeBadge[c.change_type] ?? { label: c.change_type }).label}`, description: c.summary })),
-      ...stated.map(s => ({ entry: s, headline: s.record ? `${s.vendor}: ${badgeOf(s.record).label}` : s.vendor, description: s.sentence })),
+      ...stated.map(s => ({ entry: s, headline: s.record ? `${s.vendor}: ${badgeOf(s.record).label}` : s.vendor, description: statedSentenceWithAnyConditions(s) })),
     ].sort((a, b) => a.entry.date.localeCompare(b.entry.date)).slice(0, 50).map((item, i) => ({
       "@type": "ListItem",
       position: i + 1,
@@ -50352,12 +50362,13 @@ ${globalNavCss()}
   <h1>Developer Tool Deadline Tracker</h1>
   <p class="page-intro">${entryCount} upcoming deadlines across developer infrastructure \u2014 API shutdowns, free tier removals, and price changes. ${listOrderSentence("soonest-first")}</p>
   ${datedSectionNoticeHtml(
-    `${namedWhileAheadOf("A deadline", today)} It is not removed because the shutdown was cancelled or because we stopped holding the record.`,
+    `${namedWhileAheadOf("A change record", today)} It is not removed because the shutdown was cancelled or because we stopped holding the record.`,
     [
       { when: "On the day its date arrives it leaves this page for", text: "the full change log", href: "/changes" },
     ],
     escHtmlServer,
     ' class="page-intro dated-rule"',
+    statedDatesShownWhileLaterThan(today),
   )}
   <a href="/feed.xml" class="rss-link">\u{1F4E1} Subscribe to changes</a>
 

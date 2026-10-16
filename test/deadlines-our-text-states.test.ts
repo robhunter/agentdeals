@@ -8,6 +8,7 @@ import { fileURLToPath } from "node:url";
 
 const { changesTheVendorMade } = await import("../dist/data.js");
 const { recordsStillInForce } = await import("../dist/change-resolution.js");
+const { openapiSpec } = await import("../dist/openapi.js");
 
 const REPO = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const A_DAY_IN_MS = 86400000;
@@ -152,6 +153,22 @@ describe("the deadline tracker lists every later date our listings and records s
     assert.strictEqual(total, deadlines.length);
     assert.strictEqual(cardsOf(html).length, deadlines.length);
   });
+
+  it("says above the list when a change record leaves and when a quoted date leaves", () => {
+    const today = dayFromToday(0);
+    const notice = decode((html.match(/<p class="page-intro dated-rule">([\s\S]*?)<\/p>/)?.[1] ?? "").replace(/<[^>]+>/g, ""));
+    assert.strictEqual(
+      notice,
+      "What this section prints is decided by the calendar, not by anything the vendor did. " +
+      `A change record is named here only while the date we hold for it is later than ${today}. ` +
+      "That date is the effective date where the vendor states one, and the day we discovered the change where the vendor does not. " +
+      "It is not removed because the shutdown was cancelled or because we stopped holding the record. " +
+      "On the day its date arrives it leaves this page for the full change log. " +
+      "Other entries quote a date stated by a listing or an earlier change record. " +
+      `We show them while that text states the date and the date is later than ${today}. ` +
+      "They leave when the date arrives, or when we rewrite or retract the text.",
+    );
+  });
 });
 
 describe("a deadline stated in a listing or an earlier record joins the deadline tracker and nothing else", () => {
@@ -176,6 +193,10 @@ describe("a deadline stated in a listing or an earlier record joins the deadline
   const RECORD_SENTENCE = `The v1 API is retired on ${IN_60}.`;
   const PAST_SENTENCE = "The beta console shut down on 2026-01-20.";
   const TODAY_SENTENCE = `The old importer works until ${TODAY}.`;
+  const WHOLE_VENDOR = "Deadline Fixture Queue";
+  const WHOLE_LISTING_URL = "https://deadline-fixture-queue.example/pricing";
+  const WHOLE_DESCRIPTION = `The free queue plan is discontinued on ${dayFromToday(2)}.`;
+  const WHOLE_CONDITION = "Free queues hold at most 1,000 messages at a time.";
 
   let server: ChildProcess;
   let base = "";
@@ -204,6 +225,15 @@ describe("a deadline stated in a listing or an earlier record joins the deadline
         url: CONDITION_URL,
         read_on: "2026-01-10",
       }],
+    });
+    catalogue.offers.push({
+      vendor: WHOLE_VENDOR,
+      category: "Cloud Hosting",
+      tier: "Free",
+      url: WHOLE_LISTING_URL,
+      description: WHOLE_DESCRIPTION,
+      verifiedDate: "2026-01-10",
+      conditions: [{ text: WHOLE_CONDITION, quote: "Free queues hold 1,000 messages.", url: CONDITION_URL, read_on: "2026-01-10" }],
     });
     changeLog.changes.push(
       {
@@ -336,5 +366,38 @@ describe("a deadline stated in a listing or an earlier record joins the deadline
     const changes = ((await response.json()) as { changes: { date: string }[] }).changes;
     assert.ok(changes.some((change) => change.date === "2026-01-15"), "the fixture's own record is not in /api/changes");
     assert.deepStrictEqual(changes.filter((change) => [IN_20, IN_31, IN_40, IN_60].includes(change.date)), []);
+  });
+
+  it("follows a quote of a listing's whole description with the listing's conditions, on the card and in the structured data, and a quote of one of its sentences with none", () => {
+    const cardHolding = (sentence: string) => html.split('<div class="dl-card').slice(1).find((chunk) => chunk.includes(sentence)) ?? "";
+    const whole = cardHolding(WHOLE_DESCRIPTION);
+    assert.ok(whole.includes('<ul class="listing-conditions"'), "the card quoting a whole description prints no list of conditions");
+    assert.ok(whole.indexOf(WHOLE_CONDITION) > whole.indexOf(WHOLE_DESCRIPTION), "the conditions do not follow the description");
+    assert.ok(!cardHolding(DESCRIPTION_SENTENCE).includes('class="listing-conditions"'), "a card quoting one sentence of a longer description prints conditions");
+    const items = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)]
+      .flatMap(([, json]) => {
+        const node = JSON.parse(json!);
+        return node["@type"] === "ItemList" ? node.itemListElement : [];
+      })
+      .map((element: { item: { headline: string; description: string } }) => element.item);
+    const described = items.find((item: { headline: string }) => item.headline === WHOLE_VENDOR)?.description ?? "";
+    assert.ok(described.startsWith(WHOLE_DESCRIPTION) && described.includes(WHOLE_CONDITION), described);
+    assert.strictEqual(items.find((item: { description: string }) => item.description.startsWith(DESCRIPTION_SENTENCE))?.description, DESCRIPTION_SENTENCE);
+  });
+
+  it("gives the sentence alone as the API's summary, whether or not it is the whole description", () => {
+    assert.strictEqual(deadlines.find((entry) => entry.vendor === WHOLE_VENDOR)?.summary, WHOLE_DESCRIPTION);
+  });
+
+  it("documents every field a stated deadline carries in the OpenAPI spec, and requires only fields every one carries", () => {
+    const items = (openapiSpec as any).paths["/api/deadlines"].get.responses["200"].content["application/json"].schema.properties.deadlines.items;
+    const stated = items.oneOf.find((branch: any) => branch.properties?.stated_in);
+    const entries = deadlines.filter((entry) => entry.stated_in !== undefined);
+    assert.ok(entries.some((entry) => entry.stated_in === "listing") && entries.some((entry) => entry.stated_in === "record"), "the fixture no longer serves both kinds of stated deadline");
+    const undocumented = [...new Set(entries.flatMap((entry) => Object.keys(entry)))].filter((key) => !(key in stated.properties));
+    assert.deepStrictEqual(undocumented, []);
+    const missing = entries.flatMap((entry) => stated.required.filter((key: string) => !(key in entry)).map((key: string) => `${entry.vendor} ${entry.date}: ${key}`));
+    assert.deepStrictEqual(missing, []);
+    assert.deepStrictEqual([...new Set(entries.map((entry) => entry.stated_in))].sort(), [...stated.properties.stated_in.enum].sort());
   });
 });

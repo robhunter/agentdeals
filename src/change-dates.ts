@@ -366,11 +366,17 @@ export function datedSectionNoticeHtml(
   destinations: readonly DatedSectionDestination[],
   esc: (text: string) => string,
   attributes = ' class="dated-rule"',
+  afterTheDestinations = "",
 ): string {
   const whereToLook = destinations
     .map((d) => `${esc(d.when)} <a href="${d.href}">${esc(d.text)}</a>.`)
     .join(" ");
-  return `<p${attributes}>${esc(A_DATED_SECTION_MARKER)} ${esc(rule)} ${whereToLook}</p>`;
+  const after = afterTheDestinations ? ` ${esc(afterTheDestinations)}` : "";
+  return `<p${attributes}>${esc(A_DATED_SECTION_MARKER)} ${esc(rule)} ${whereToLook}${after}</p>`;
+}
+
+export function statedDatesShownWhileLaterThan(asOf: string): string {
+  return `Other entries quote a date stated by a listing or an earlier change record. We show them while that text states the date and the date is later than ${asOf}. They leave when the date arrives, or when we rewrite or retract the text.`;
 }
 
 export function datedHeadingNoticeHtml(

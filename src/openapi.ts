@@ -1113,14 +1113,14 @@ const DOCUMENTED_OPERATIONS: Record<string, Record<string, any>> = {
   },
   "/api/deadlines": {
     get: {
-      summary: "Future-dated changes with a countdown",
-      description: "Every tracked change whose date is still ahead of today, soonest first, each with the number of days remaining. Use it to find the deadlines a stack is about to run into rather than the ones it has already passed.",
+      summary: "Future-dated changes and stated deadlines, with a countdown",
+      description: "Two kinds of entry, soonest first, each with the number of days remaining. A change record: every tracked change whose date is still ahead of today, returned as the record. A stated deadline: a date later than today that a sentence names in a listing's description or conditions, or in the summary of a change record dated today or earlier that is still in force, where that text also uses a deadline word such as shut down, retire, discontinue, deprecate, until or through. A stated deadline carries that sentence as its summary, and a stated_in field, which a change record does not. There is at most one stated deadline per vendor and date, none within a day of a future-dated change record of the same vendor, and where a vendor has stated deadlines on two consecutive days only the later is returned. Use it to find the deadlines a stack is about to run into rather than the ones it has already passed.",
       parameters: [
-        { name: "type", in: "query", description: "Return only changes of this type.", schema: { type: "string", enum: [...CHANGE_TYPES] } }
+        { name: "type", in: "query", description: "Return only entries of this change type. A stated deadline from a listing has no change type, so none is returned when this is set; one from a change record is returned when that record has this type.", schema: { type: "string", enum: [...CHANGE_TYPES] } }
       ],
       responses: {
         "200": {
-          description: "Future-dated changes ordered by date",
+          description: "Future-dated changes and stated deadlines ordered by date",
           content: {
             "application/json": {
               schema: {
@@ -1128,7 +1128,26 @@ const DOCUMENTED_OPERATIONS: Record<string, Record<string, any>> = {
                 properties: {
                   deadlines: {
                     type: "array",
-                    items: { allOf: [{ $ref: "#/components/schemas/DealChange" }, { type: "object", properties: { countdown_days: { type: "integer", description: "Whole days from today, UTC, to the date on the record." } } }] }
+                    items: {
+                      oneOf: [
+                        { allOf: [{ $ref: "#/components/schemas/DealChange" }, { type: "object", properties: { countdown_days: { type: "integer", description: "Whole days from today, UTC, to the date on the record." } } }] },
+                        {
+                          type: "object",
+                          required: ["vendor", "category", "date", "summary", "source_url", "stated_in", "countdown_days"],
+                          properties: {
+                            vendor: { type: "string" },
+                            category: { type: "string" },
+                            date: { type: "string", format: "date", description: "The date the sentence names." },
+                            summary: { type: "string", description: "The sentence that names the date, as our listing or change record writes it." },
+                            source_url: { type: "string", format: "uri", nullable: true, description: "Where that sentence's text comes from: the link of the listing condition that states it (the listing's own URL where the condition has none), the listing's URL for its description, or the source_url of the change record whose summary states it. Null when that text has none." },
+                            stated_in: { type: "string", enum: ["listing", "record"], description: "listing: a listing's description or one of its conditions states the date. record: the summary of a change record dated today or earlier states it." },
+                            change_type: { type: "string", enum: [...CHANGE_TYPES], description: "Present only when stated_in is record: the type of the change record whose summary states the date. Absent when stated_in is listing." },
+                            record_date: { type: "string", format: "date", description: "Present only when stated_in is record: the date of the change record whose summary states the date." },
+                            countdown_days: { type: "integer", description: "Whole days from today, UTC, to the date the sentence names." }
+                          }
+                        }
+                      ]
+                    }
                   },
                   count: { type: "integer" }
                 }
