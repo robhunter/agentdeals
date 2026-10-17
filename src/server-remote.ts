@@ -16,7 +16,7 @@ import {
   fetchWeeklyDigest,
   fetchReferralCode,
 } from "./api-client.js";
-import { getGuideList, getGuideBySlug } from "./guides.js";
+import { getGuideList, getGuideBySlug, guideNamesVendor } from "./guides.js";
 import { registerMcpAppsResources, TOOL_UI_META } from "./mcp-apps.js";
 import { mcpInstructions, mcpServerDescription } from "./mcp-instructions.js";
 import { MCP_TOOLS } from "./mcp-tool-inventory.js";
@@ -805,7 +805,7 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
 
   server.registerResource(
     "guide",
-    new ResourceTemplate("agentdeals://guide/{slug}", {
+    new ResourceTemplate("agentdeals://guide/{+slug}", {
       list: async () => {
         const guides = getGuideList();
         return {
@@ -840,11 +840,7 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
 
       try {
         const changesData = (await fetchEveryDealChange({ since: "2020-01-01" })) as { changes: Array<{ date: string; vendor: string; change_type: string; summary: string }> };
-        const slugLower = guide.slug.toLowerCase();
-        const relatedChanges = changesData.changes.filter(c => {
-          const vendorSlug = c.vendor.toLowerCase().replace(/[^a-z0-9]+/g, "-");
-          return slugLower.includes(vendorSlug) || vendorSlug.includes(slugLower.replace(/-alternatives$/, "").replace(/-vs-.*/, ""));
-        });
+        const relatedChanges = changesData.changes.filter(c => guideNamesVendor(guide.slug, c.vendor));
         if (relatedChanges.length > 0) {
           text += `\n## Related Pricing Changes\n\n`;
           for (const c of relatedChanges.slice(0, 5)) {

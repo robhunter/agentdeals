@@ -131,3 +131,21 @@ export function getGuideBySlug(slug: string): GuideMetadata | null {
     type: classifyGuide(entry.slug),
   };
 }
+
+function slugWords(text: string): string[] {
+  return text.toLowerCase().split(/[^a-z0-9]+/).filter(Boolean);
+}
+
+function containsWordRun(words: readonly string[], run: readonly string[]): boolean {
+  if (run.length === 0) return false;
+  for (let start = 0; start + run.length <= words.length; start++) {
+    if (run.every((word, offset) => words[start + offset] === word)) return true;
+  }
+  return false;
+}
+
+export function guideNamesVendor(guideSlug: string, vendor: string): boolean {
+  const vendorWords = slugWords(vendor);
+  const subjectWords = slugWords(guideSlug.replace(/-alternatives$/, "").replace(/-vs-.*/, ""));
+  return containsWordRun(slugWords(guideSlug), vendorWords) || containsWordRun(vendorWords, subjectWords);
+}

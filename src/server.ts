@@ -15,7 +15,7 @@ import { getBestReferralCode } from "./platform-codes.js";
 import { platformCodeAsVendorReferral, type VendorReferralAnswer } from "./referral-surfaces.js";
 import { getStackRecommendation } from "./stacks.js";
 import { estimateCosts } from "./costs.js";
-import { getGuideList, getGuideBySlug } from "./guides.js";
+import { getGuideList, getGuideBySlug, guideNamesVendor } from "./guides.js";
 import type { Offer, EnrichedOffer, DealChange } from "./types.js";
 import { wholeRankedOrderList } from "./ranking.js";
 import { registerMcpAppsResources, TOOL_UI_META } from "./mcp-apps.js";
@@ -926,7 +926,7 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
 
   server.registerResource(
     "guide",
-    new ResourceTemplate("agentdeals://guide/{slug}", {
+    new ResourceTemplate("agentdeals://guide/{+slug}", {
       list: async () => {
         const guides = getGuideList();
         return {
@@ -961,12 +961,8 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
 
       const offers = loadOffers();
       const changes = loadDealChanges();
-      const slugLower = guide.slug.toLowerCase();
 
-      const relatedChanges = changes.filter(c => {
-        const vendorSlug = c.vendor.toLowerCase().replace(/[^a-z0-9]+/g, "-");
-        return slugLower.includes(vendorSlug) || vendorSlug.includes(slugLower.replace(/-alternatives$/, "").replace(/-vs-.*/, ""));
-      });
+      const relatedChanges = changes.filter(c => guideNamesVendor(guide.slug, c.vendor));
 
       if (relatedChanges.length > 0) {
         text += `\n## Related Pricing Changes\n\n`;
