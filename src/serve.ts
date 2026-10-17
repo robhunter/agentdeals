@@ -36,7 +36,7 @@ import { offerVerdictInput, reasonWeCannotConfirmTheTerms, vendorVerdictContextF
 import { readingIsBehindTheLoop, reverificationIntervalDays } from "./badge-staleness.js";
 import { LAST_READ_LABEL, READ_CONTRADICTS_LABEL, RESTATED_DATE_LABEL, UNCONFIRMED_DATE_LABEL, VERIFICATION_DATES_HEADING, confirmationDate, contradictedTermsSentence, lastReadDate, lastReadNote, publishedDateLabel, publishedDateValue, readThatContradictsOurTerms, restatedReadingDate, verificationDatesCell, verificationDatesSentence, whereOurTermsCameFrom, whereOurTermsCameFromClause, type LastReading } from "./read-date.js";
 import { SUPERSEDED_TERMS_LABEL, SUPERSEDED_TERMS_RULE, readingBehindTheChange, storedTermsLabel, supersededTermsAnswer, supersededTermsMetaSentence, supersededTermsNotice, supersededTermsNoticeHtml, supersededTermsRecord, supersededTermsVerdictSentence, supersedingChange, type SupersededTermsRecord } from "./superseded-description.js";
-import { openingOfTerms, punctuated, punctuatedOpeningOfTerms } from "./terms-opening.js";
+import { openingOfTerms, punctuated, punctuatedOpeningOfTerms, withoutFinalStop } from "./terms-opening.js";
 import { NO_CURRENT_FIGURE, costHeadlineCaveat, limitCellText, mayRecommendAsFree, proseWithoutNames, readsActive, stackFreshnessStatement } from "./stack-claim.js";
 import { changesByVendor } from "./superseded-census.js";
 import { buildComparisonMap, comparisonSlug } from "./comparison-pairs.js";
@@ -6068,7 +6068,7 @@ ${allCompareLinks.join("\n")}
       : vendorsRuleOnProduction
       ? productionAnswerUnderTheVendorsRule(vendorsRuleOnProduction)
       : riskLevel === "stable" || (primaryGate && historyLevel === "stable")
-      ? `${vendorName}'s free tier can be suitable for small production workloads and side projects. ${primaryGate ? "It" : "We rate it stable and it"} offers ${keyLimit}, so it's a reasonable starting point.${vendorChanges.length > 0 ? ` ${narrowingSentence(vendorChanges, primary, termsSuperseded !== null)}` : ""} Monitor your usage against the limits and have an upgrade plan ready.`
+      ? `${vendorName}'s free tier can be suitable for small production workloads and side projects. ${primaryGate ? "It" : "We rate it stable and it"} offers ${withoutFinalStop(keyLimit)}, so it's a reasonable starting point.${vendorChanges.length > 0 ? ` ${narrowingSentence(vendorChanges, primary, termsSuperseded !== null)}` : ""} Monitor your usage against the limits and have an upgrade plan ready.`
       : riskLevel === null
       ? `${vendorName}'s free tier is usable for prototyping and development. ${primaryGate ? vendorHistorySentence(vendorName, historyLevel, riskCause) : levelWithheldAfterNamingTheFreeTier}`
       : restoredRemovalLowersTheRating

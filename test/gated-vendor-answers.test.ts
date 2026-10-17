@@ -382,6 +382,14 @@ describe("the ungated pages keep the answer they had", () => {
     const rating = ungated().filter(p => productionAnswer(p).includes(STABLE_RATING_CLAUSE)).length;
     assertSharesPopulation(rating, ungatedPages(), 0.2, "ungated pages carry the stable rating");
   });
+
+  it("runs the listing's opening into the recommendation with no full stop before its comma", () => {
+    const recommending = rendered.filter(p => productionAnswer(p).includes(RECOMMENDATION_CLAUSE));
+    const sentenceOpenings = recommending.filter(p => p.primary.description.trim().length <= 120 && /[.!?]$/.test(p.primary.description.trim()));
+    assertPopulationFloor(sentenceOpenings.length, 20, "recommending answers whose listing is one short text ending a sentence");
+    const stopBeforeTheComma = /(?<!\b(?:etc|Inc|Ltd|Co|e\.g|i\.e))[.!?], so it's a reasonable starting point/;
+    assert.deepStrictEqual(recommending.filter(p => stopBeforeTheComma.test(productionAnswer(p))).map(p => p.slug), []);
+  });
 });
 
 describe("the production answer reads the same gate", () => {
