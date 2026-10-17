@@ -13,6 +13,7 @@ import {
   isEventDated,
   partitionByDateProvenance,
 } from "./change-dates.js";
+import { punctuated } from "./terms-opening.js";
 
 export interface FeedDescriptor {
   title: string;
@@ -99,7 +100,7 @@ export function feedEntryDateSentence(change: FeedChange): string {
 export function feedEntrySummary(change: DealChange): string {
   const states =
     printsBeforeAndAfter(change)
-      ? ` Before: ${change.previous_state}. After: ${change.current_state}.`
+      ? ` Before: ${punctuated(change.previous_state)} After: ${punctuated(change.current_state)}`
       : "";
   return `${feedEntryDateSentence(change)} ${change.summary}${states}`;
 }

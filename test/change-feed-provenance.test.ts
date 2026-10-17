@@ -18,6 +18,7 @@ import {
 } from "../dist/change-feed.js";
 import { weekRangeLabel, archiveBracketOf, changeEntryDateLabel, dayWeCorrectedIt, DISCOVERED_DATE_PREFIX, EFFECTIVE_DATE_PREFIX, UNKNOWN_EFFECTIVE_DATE_MARKER } from "../dist/change-dates.js";
 import { statesWhenItTookEffect } from "./effective-date-rule.ts";
+import { printsBeforeAndAfter } from "../dist/change-resolution.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -215,6 +216,21 @@ describe("the change feeds date every entry by when we recorded it and say what 
       return !e.summary.startsWith(changeEntryDateLabel(record as any));
     });
     assert.deepStrictEqual(unlabelled.map((e) => `${e.title} — ${e.summary.slice(0, 60)}`), []);
+  });
+
+  it("closes each state an entry prints with one full stop, and adds none to a state that already ends a sentence", () => {
+    const closed = (state: string) => (/[.!?…]["'”’]*$/.test(state) ? state : `${state}.`);
+    let printed = 0;
+    const misprinted: string[] = [];
+    for (const entry of entries) {
+      const record = recordFor(entry);
+      if (!record || !printsBeforeAndAfter(record)) continue;
+      printed++;
+      const expected = ` Before: ${closed(record.previous_state.trim())} After: ${closed(record.current_state.trim())}`;
+      if (!entry.summary.endsWith(expected)) misprinted.push(`${entry.title}: …${entry.summary.slice(-100)}`);
+    }
+    assert.deepStrictEqual(misprinted, []);
+    assertPopulationFloor(printed, 20, "feed entries printing a before and after state");
   });
 
   it("dates an entry in the same words as the page the entry links to", async () => {
@@ -456,6 +472,44 @@ describe("a feed entry summary states its own date provenance", () => {
 
   it("falls back to the change date when no recorded date is stored", () => {
     assert.strictEqual(recordedOn({ date: "2026-01-01", date_source: "discovered" } as any), "2026-01-01");
+  });
+});
+
+describe("a feed entry summary prints each state as one sentence", () => {
+  const withStates = (previous_state: string, current_state: string) =>
+    feedEntrySummary({
+      vendor: "Example",
+      change_type: "limits_reduced",
+      date: "2026-09-05",
+      date_source: "discovered",
+      recorded_date: "2026-09-05",
+      summary: "The free tier now offers 5 GB.",
+      previous_state,
+      current_state,
+      impact: "low",
+      source_url: "https://example.com/pricing",
+      category: "Databases",
+      alternatives: [],
+    } as any);
+
+  it("closes a state that ends without a mark with a full stop", () => {
+    const text = withStates("15 GB storage", "5 GB storage");
+    assert.ok(text.endsWith(" Before: 15 GB storage. After: 5 GB storage."), text);
+  });
+
+  it("adds no full stop to a state that already ends a sentence", () => {
+    const text = withStates("The free tier offered 15 GB.", "Is there still a free tier?");
+    assert.ok(text.endsWith(" Before: The free tier offered 15 GB. After: Is there still a free tier?"), text);
+  });
+
+  it("counts a sentence that ends inside closing quotation marks as ended", () => {
+    const text = withStates('The page said: "15 GB is free."', "The page says: “5 GB is free!”");
+    assert.ok(text.endsWith(' Before: The page said: "15 GB is free." After: The page says: “5 GB is free!”'), text);
+  });
+
+  it("still closes a state whose bracket ends on an abbreviation", () => {
+    const text = withStates("Basic endpoints (Like, Follow, etc.)", "None");
+    assert.ok(text.endsWith(" Before: Basic endpoints (Like, Follow, etc.). After: None."), text);
   });
 });
 

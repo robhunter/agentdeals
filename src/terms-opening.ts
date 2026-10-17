@@ -57,7 +57,7 @@ export function openingOfTerms(terms: string, cap: number): string {
 export function punctuated(text: string): string {
   const trimmed = text.trim();
   if (trimmed === "") return "";
-  return /[.!?…]$/.test(trimmed) ? trimmed : `${trimmed}.`;
+  return /[.!?…]["'”’]*$/.test(trimmed) ? trimmed : `${trimmed}.`;
 }
 
 export function punctuatedOpeningOfTerms(terms: string, cap: number): string {
