@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2026-10-16",
+  "generated": "2026-10-17",
   "pages": {
     "/": {
       "daily": true
@@ -3230,8 +3230,8 @@
       "changed": "2026-10-16"
     },
     "/gemini-api-pricing-2026": {
-      "hash": "03ef5cecb3915236",
-      "changed": "2026-10-16"
+      "hash": "07014a6f7b281512",
+      "changed": "2026-10-17"
     },
     "/github-actions-alternatives": {
       "hash": "920f18d0e8e36e8d",
