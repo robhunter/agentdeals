@@ -57,7 +57,14 @@ export function openingOfTerms(terms: string, cap: number): string {
 export function punctuated(text: string): string {
   const trimmed = text.trim();
   if (trimmed === "") return "";
-  return /[.!?…]$/.test(trimmed) ? trimmed : `${trimmed}.`;
+  return /[.!?…]["'”’]*$/.test(trimmed) ? trimmed : `${trimmed}.`;
+}
+
+const ENDS_WITH_AN_ABBREVIATION = /\b(?:etc|Inc|Ltd|Co|e\.g|i\.e)\.$/;
+
+export function withoutFinalStop(text: string): string {
+  const trimmed = text.trim();
+  return ENDS_WITH_AN_ABBREVIATION.test(trimmed) ? trimmed : trimmed.replace(/[.!?]$/, "");
 }
 
 export function punctuatedOpeningOfTerms(terms: string, cap: number): string {

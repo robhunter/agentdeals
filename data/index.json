@@ -250,6 +250,18 @@
           "quote": "Cloudflare may change Cloudflare Workers/Pages subdomain names of projects hosted at workers.dev or pages.dev for any or no reason.",
           "url": "https://www.cloudflare.com/service-specific-terms-developer-platform/",
           "read_on": "2026-10-06"
+        },
+        {
+          "text": "Until December 1, 2026, Workers Logs on the Free plan allows 200,000 log events written per day with 3-day retention; from that date it allows 0.5 GB of log and trace ingestion per day for the whole account with seven-day retention. The Paid plan includes 20 million log events per month, then $0.60 per additional million, with 7-day retention.",
+          "quote": "Beginning December 1, 2026, Workers Logs will use Cloudflare Observability pricing. Until then, the Workers Logs pricing in this table applies.",
+          "url": "https://developers.cloudflare.com/workers/platform/pricing/",
+          "read_on": "2026-10-17"
+        },
+        {
+          "text": "From December 1, 2026, all Cloudflare logs and traces use the same pricing model. These share one account-level ingestion and storage allowance: Workers Logs, Workers Traces, Cloudflare Traces, Containers logs, R2 Data Access Logs, AI Gateway logs and Issues. Free includes 0.5 GB of ingestion per day and seven-day retention; ingestion stops at the daily limit and resumes at 00:00 UTC. Paid includes 50 GB of ingestion and 10 GB-month of storage per billing cycle, then $0.25 per GB of ingestion and $0.10 per GB-month of storage.",
+          "quote": "On Free, Cloudflare stops ingesting new data when the account reaches its daily limit. Ingestion resumes when the allowance resets at 00:00 UTC.",
+          "url": "https://developers.cloudflare.com/observability/pricing/",
+          "read_on": "2026-10-17"
         }
       ]
     },

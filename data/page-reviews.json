@@ -471,8 +471,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 61,
-      "table_figures_from_records": 33,
+      "table_figures": 67,
+      "table_figures_from_records": 39,
       "tables": [
         {
           "label": "Always Free Services",
@@ -486,8 +486,8 @@
         },
         {
           "label": "AWS vs Alternatives",
-          "figures": 41,
-          "from_records": 24
+          "figures": 47,
+          "from_records": 30
         },
         {
           "label": "Recent AWS Changes",
@@ -526,8 +526,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 66,
-      "table_figures_from_records": 26,
+      "table_figures": 72,
+      "table_figures_from_records": 32,
       "tables": [
         {
           "label": "Always Free Services",
@@ -546,8 +546,8 @@
         },
         {
           "label": "Azure vs Alternatives",
-          "figures": 35,
-          "from_records": 24
+          "figures": 41,
+          "from_records": 30
         },
         {
           "label": "Recent Azure Changes",
@@ -1096,8 +1096,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 90,
-      "table_figures_from_records": 47,
+      "table_figures": 96,
+      "table_figures_from_records": 53,
       "tables": [
         {
           "label": "Free Services (Permanent)",
@@ -1111,8 +1111,8 @@
         },
         {
           "label": "DigitalOcean vs Alternatives",
-          "figures": 51,
-          "from_records": 39
+          "figures": 57,
+          "from_records": 45
         },
         {
           "label": "Recent DigitalOcean Changes",
@@ -1913,8 +1913,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 82,
-      "table_figures_from_records": 31,
+      "table_figures": 88,
+      "table_figures_from_records": 37,
       "tables": [
         {
           "label": "Always Free Products",
@@ -1928,8 +1928,8 @@
         },
         {
           "label": "GCP vs AWS vs Others",
-          "figures": 41,
-          "from_records": 24
+          "figures": 47,
+          "from_records": 30
         },
         {
           "label": "Recent GCP & Google Changes",
@@ -2857,13 +2857,13 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 57,
-      "table_figures_from_records": 20,
+      "table_figures": 63,
+      "table_figures_from_records": 26,
       "tables": [
         {
           "label": "Main Comparison Table",
-          "figures": 35,
-          "from_records": 7
+          "figures": 41,
+          "from_records": 13
         },
         {
           "label": "Traditional FaaS",
