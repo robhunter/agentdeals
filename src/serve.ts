@@ -2929,15 +2929,7 @@ function buildBestOfMiniReview(offer: ReturnType<typeof enrichOffers>[number]): 
   const superseded = supersedingChangeFor(offer);
   if (superseded) return `${supersededTermsListingHtml(offer.vendor, superseded)}${caveatFor(offer)}`;
 
-  const bestFor: string[] = [];
-  const desc = offer.description.toLowerCase();
-  if (desc.includes("hobby") || desc.includes("personal")) bestFor.push("personal projects");
-  if (desc.includes("startup") || desc.includes("small team")) bestFor.push("startups");
-  if (desc.includes("open source") || desc.includes("oss")) bestFor.push("open source projects");
-  if (desc.includes("student") || desc.includes("education")) bestFor.push("students");
-  if (desc.includes("unlimited") || desc.includes("no limit")) bestFor.push("unlimited usage needs");
-  const bestForText = bestFor.length > 0 ? ` Best for ${bestFor.join(" and ")}.` : "";
-  const stated = `${escHtmlServer(offer.description)}${bestForText}`;
+  const stated = escHtmlServer(offer.description);
   const unconfirmed = unconfirmedTermsFor(offer);
   if (!unconfirmed) return `${stated}${caveatFor(offer)}`;
   return `${closingTerms(stated)} <span class="listing-terms-unconfirmed" style="color:#d29922">`
