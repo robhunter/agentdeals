@@ -817,12 +817,12 @@
       "changed": "2026-10-15"
     },
     "/aws-free-tier-2026": {
-      "hash": "5bb9c909f72c67a9",
-      "changed": "2026-10-16"
+      "hash": "86228583bbbf8abd",
+      "changed": "2026-10-17"
     },
     "/azure-free-tier-2026": {
-      "hash": "4bc8871674485e3e",
-      "changed": "2026-10-16"
+      "hash": "6f46460de6b70166",
+      "changed": "2026-10-17"
     },
     "/backblaze-b2-vs-cloudflare-r2": {
       "hash": "972578452c14e151",
@@ -1072,8 +1072,8 @@
       "daily": true
     },
     "/brevo-vs-resend": {
-      "hash": "edc6f2faa85853f3",
-      "changed": "2026-10-16"
+      "hash": "6e45fc6235e91f7b",
+      "changed": "2026-10-17"
     },
     "/budget-builder": {
       "hash": "514f9c44526f67e3",
@@ -1128,8 +1128,8 @@
       "changed": "2026-10-16"
     },
     "/category/cloud-hosting": {
-      "hash": "9996cfaa18de50e5",
-      "changed": "2026-10-16"
+      "hash": "74a2f8433fde4e14",
+      "changed": "2026-10-17"
     },
     "/category/cloud-iaas": {
       "hash": "86b7360f04c29f47",
@@ -1350,12 +1350,12 @@
       "changed": "2026-10-16"
     },
     "/cloudflare-pages-vs-vercel": {
-      "hash": "c29541ac482be73a",
-      "changed": "2026-10-16"
+      "hash": "77934708c0d575e8",
+      "changed": "2026-10-17"
     },
     "/cloudinary-vs-imagekit": {
-      "hash": "aeea190ba300deee",
-      "changed": "2026-10-15"
+      "hash": "a6cfd445cf09c575",
+      "changed": "2026-10-17"
     },
     "/company-formation-pricing-2026": {
       "hash": "971bd8803b8b4282",
@@ -1658,12 +1658,12 @@
       "changed": "2026-10-16"
     },
     "/compare/cloudflare-workers-vs-duolingo": {
-      "hash": "0e2fb69a75b7b4e7",
-      "changed": "2026-10-12"
+      "hash": "18bd055356862fdb",
+      "changed": "2026-10-17"
     },
     "/compare/cloudflare-workers-vs-mit-opencourseware": {
-      "hash": "7246e6a13f4e2072",
-      "changed": "2026-10-15"
+      "hash": "64ba39561794c6ad",
+      "changed": "2026-10-17"
     },
     "/compare/cockroachdb-vs-neon": {
       "hash": "a8f4473d91a0c9bc",
@@ -3112,8 +3112,8 @@
       "changed": "2026-10-16"
     },
     "/digitalocean-free-tier-2026": {
-      "hash": "7517bff7be645a2f",
-      "changed": "2026-10-16"
+      "hash": "5af1d931e676bd15",
+      "changed": "2026-10-17"
     },
     "/disclosure": {
       "hash": "c63bbb64815c1ddb",
@@ -3136,7 +3136,7 @@
       "changed": "2026-10-11"
     },
     "/estimate": {
-      "hash": "2aedf3ddff4916a5",
+      "hash": "a73e97b767a01369",
       "changed": "2026-10-17"
     },
     "/events": {
@@ -3228,8 +3228,8 @@
       "changed": "2026-10-16"
     },
     "/gcp-free-tier-2026": {
-      "hash": "4cc93d5e462ca6ea",
-      "changed": "2026-10-16"
+      "hash": "1117ab651c6fbebf",
+      "changed": "2026-10-17"
     },
     "/gemini-api-pricing-2026": {
       "hash": "07014a6f7b281512",
@@ -3276,28 +3276,28 @@
       "changed": "2026-10-11"
     },
     "/heroku-alternatives": {
-      "hash": "5f8df90e09295c39",
-      "changed": "2026-10-12"
+      "hash": "d7697fd1e2b19910",
+      "changed": "2026-10-17"
     },
     "/hetzner-alternatives": {
-      "hash": "121f5f796b07abc5",
-      "changed": "2026-10-14"
+      "hash": "7e1f1385370d0d82",
+      "changed": "2026-10-17"
     },
     "/hetzner-pricing-2026": {
       "hash": "730e6bc2413ea1f6",
       "changed": "2026-10-16"
     },
     "/hosting-alternatives": {
-      "hash": "1d7fa4aa14aeb5a5",
-      "changed": "2026-10-16"
+      "hash": "79e30c5effe39088",
+      "changed": "2026-10-17"
     },
     "/hosting-free-tier-comparison-2026": {
-      "hash": "0d065e52a89fc86b",
-      "changed": "2026-10-16"
+      "hash": "4008358e397b11dd",
+      "changed": "2026-10-17"
     },
     "/hosting-pricing": {
-      "hash": "2e25867c58a9aec6",
-      "changed": "2026-10-16"
+      "hash": "a1209b7ae2c7e641",
+      "changed": "2026-10-17"
     },
     "/ide-code-editors-alternatives": {
       "daily": true
@@ -3561,8 +3561,8 @@
       "changed": "2026-10-16"
     },
     "/serverless-free-tier-comparison-2026": {
-      "hash": "0a76cadddb355376",
-      "changed": "2026-10-16"
+      "hash": "8324d8cc8da8328c",
+      "changed": "2026-10-17"
     },
     "/setup": {
       "hash": "eb646d7d3dfff83f",
@@ -9589,8 +9589,8 @@
       "changed": "2026-10-16"
     },
     "/vercel-alternatives": {
-      "hash": "547e87ca981d27b5",
-      "changed": "2026-10-15"
+      "hash": "d8859598b7bf90ef",
+      "changed": "2026-10-17"
     },
     "/vercel-vs-netlify": {
       "hash": "198bc6172c76c42e",
