@@ -471,7 +471,7 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 67,
+      "table_figures": 68,
       "table_figures_from_records": 39,
       "tables": [
         {
@@ -486,7 +486,7 @@
         },
         {
           "label": "AWS vs Alternatives",
-          "figures": 47,
+          "figures": 48,
           "from_records": 30
         },
         {
@@ -526,7 +526,7 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 72,
+      "table_figures": 73,
       "table_figures_from_records": 32,
       "tables": [
         {
@@ -546,7 +546,7 @@
         },
         {
           "label": "Azure vs Alternatives",
-          "figures": 41,
+          "figures": 42,
           "from_records": 30
         },
         {
@@ -1096,7 +1096,7 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 96,
+      "table_figures": 97,
       "table_figures_from_records": 53,
       "tables": [
         {
@@ -1111,7 +1111,7 @@
         },
         {
           "label": "DigitalOcean vs Alternatives",
-          "figures": 57,
+          "figures": 58,
           "from_records": 45
         },
         {
@@ -1913,7 +1913,7 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 88,
+      "table_figures": 89,
       "table_figures_from_records": 37,
       "tables": [
         {
@@ -1928,7 +1928,7 @@
         },
         {
           "label": "GCP vs AWS vs Others",
-          "figures": 47,
+          "figures": 48,
           "from_records": 30
         },
         {
