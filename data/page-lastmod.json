@@ -22,11 +22,11 @@
       "changed": "2026-10-17"
     },
     "/ai-free-tiers": {
-      "hash": "70c3d4439dae0897",
+      "hash": "0389cd762f7b1b79",
       "changed": "2026-10-17"
     },
     "/ai-ml-alternatives": {
-      "hash": "21a27f5e94fd5e34",
+      "hash": "7d87135664b68792",
       "changed": "2026-10-17"
     },
     "/alternative-to": {
@@ -1088,11 +1088,11 @@
       "changed": "2026-10-11"
     },
     "/category/ai-coding": {
-      "hash": "5ebf1398fd2d3b13",
+      "hash": "27a6fd5402a203a9",
       "changed": "2026-10-17"
     },
     "/category/ai-ml": {
-      "hash": "bf9898c062685dc7",
+      "hash": "b1e36165cfed5f2b",
       "changed": "2026-10-17"
     },
     "/category/analytics": {
@@ -2689,8 +2689,8 @@
       "daily": true
     },
     "/cursor-alternatives": {
-      "hash": "f73a2b452f9254ee",
-      "changed": "2026-10-16"
+      "hash": "d52c029211a8d26d",
+      "changed": "2026-10-17"
     },
     "/database-alternatives": {
       "hash": "858a04f45a3af2a7",
@@ -3193,7 +3193,7 @@
       "changed": "2026-10-16"
     },
     "/free-llm-apis": {
-      "hash": "da698efd3cb3fa37",
+      "hash": "004f0e6ef4bcecf1",
       "changed": "2026-10-17"
     },
     "/free-nextjs-stack": {
@@ -3231,7 +3231,7 @@
       "changed": "2026-10-17"
     },
     "/gemini-api-pricing-2026": {
-      "hash": "b9a82acfcd6b95b2",
+      "hash": "bbe0890113dc82bc",
       "changed": "2026-10-17"
     },
     "/github-actions-alternatives": {
@@ -3302,7 +3302,7 @@
       "daily": true
     },
     "/llm-api-pricing": {
-      "hash": "112a0f78f71bbe32",
+      "hash": "0c9e20b42bcf08b7",
       "changed": "2026-10-17"
     },
     "/localstack-alternatives": {
@@ -3338,7 +3338,7 @@
       "changed": "2026-10-12"
     },
     "/openai-assistants-alternatives": {
-      "hash": "4f1e51b2fc4d27f2",
+      "hash": "998f00b609bae83a",
       "changed": "2026-10-17"
     },
     "/openai-assistants-migration": {
@@ -3346,7 +3346,7 @@
       "changed": "2026-10-14"
     },
     "/openai-assistants-migration-2026": {
-      "hash": "846605caa45073bc",
+      "hash": "0b6c740f66f1ff2d",
       "changed": "2026-10-17"
     },
     "/postman-alternatives": {
@@ -5795,8 +5795,8 @@
       "changed": "2026-10-16"
     },
     "/vendor/gemini-cli": {
-      "hash": "39851f626773b6cb",
-      "changed": "2026-10-16"
+      "hash": "88b6bfb7ac5f5a35",
+      "changed": "2026-10-17"
     },
     "/vendor/geoapify-com": {
       "hash": "e511db39643b4b3d",

@@ -122,8 +122,11 @@ describe(`${PAGE}'s timeline`, () => {
     scratchDir = mkdtempSync(path.join(tmpdir(), "gemini-timeline-"));
     const index = JSON.parse(readFileSync(path.join(root, "data", "index.json"), "utf-8"));
     const listing = index.offers.find((o: { vendor: string }) => o.vendor === "Google Gemini API");
-    const edited = listing.description.replace(/then \$\d+(?:\.\d+)? input/, "then $1.60 input");
-    assert.notStrictEqual(edited, listing.description, "the scratch edit finds the listing's 2027 input price");
+    const edited = listing.description.replace(
+      /(?<=Gemini \d+(?:\.\d+)? Flash \$\d+(?:\.\d+)?\/\$\d+(?:\.\d+)? until \d{4}-\d{2}-\d{2}, then \$)\d+(?:\.\d+)?(?= input)/,
+      "1.60",
+    );
+    assert.strictEqual(flashPriceStepIn(edited)?.then.input, "1.60", "the scratch edit changes the Flash step's 2027 input price");
     listing.description = edited;
     const scratchIndex = path.join(scratchDir, "index.json");
     writeFileSync(scratchIndex, JSON.stringify(index, null, 2));
