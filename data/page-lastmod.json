@@ -813,15 +813,15 @@
       "changed": "2026-10-12"
     },
     "/aws-app-runner-migration": {
-      "hash": "756d63fb2ed57643",
-      "changed": "2026-10-15"
+      "hash": "0be07cb1ba8529b1",
+      "changed": "2026-10-17"
     },
     "/aws-free-tier-2026": {
-      "hash": "86228583bbbf8abd",
+      "hash": "dd22e1951fc6e33a",
       "changed": "2026-10-17"
     },
     "/azure-free-tier-2026": {
-      "hash": "6f46460de6b70166",
+      "hash": "95c3b37bbf9fe0e6",
       "changed": "2026-10-17"
     },
     "/backblaze-b2-vs-cloudflare-r2": {
@@ -3112,7 +3112,7 @@
       "changed": "2026-10-16"
     },
     "/digitalocean-free-tier-2026": {
-      "hash": "5af1d931e676bd15",
+      "hash": "2518e9473792c7cf",
       "changed": "2026-10-17"
     },
     "/disclosure": {
@@ -3228,7 +3228,7 @@
       "changed": "2026-10-16"
     },
     "/gcp-free-tier-2026": {
-      "hash": "1117ab651c6fbebf",
+      "hash": "b7c95f5bf07b8acb",
       "changed": "2026-10-17"
     },
     "/gemini-api-pricing-2026": {
