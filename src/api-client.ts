@@ -105,6 +105,11 @@ export async function fetchDealChanges(params: {
   return apiFetch("/api/changes", p);
 }
 
+export async function fetchEveryDealChange(params: Omit<Parameters<typeof fetchDealChanges>[0], "limit">): Promise<unknown> {
+  const { total } = (await fetchDealChanges({ ...params, limit: "0" })) as { total: number };
+  return fetchDealChanges({ ...params, limit: String(total) });
+}
+
 export async function fetchStackRecommendation(useCase: string, requirements?: string[]): Promise<unknown> {
   const p: Record<string, string> = { use_case: useCase };
   if (requirements && requirements.length > 0) p.requirements = requirements.join(",");

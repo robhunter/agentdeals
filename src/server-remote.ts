@@ -5,6 +5,7 @@ import {
   fetchOffers,
   fetchOfferDetails,
   fetchDealChanges,
+  fetchEveryDealChange,
   fetchStackRecommendation,
   fetchCosts,
   fetchCompare,
@@ -632,7 +633,9 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
       mimeType: "text/plain",
     },
     async (_uri, { slug }) => {
-      const data = (await fetchOffers({ category: slug as string, limit: 200 })) as { offers: Array<{ vendor: string; tier: string; description: string; verifiedDate: string; last_read_date: string; category: string; conditions?: ListingCondition[]; terms_superseded?: unknown }>; total: number };
+      const categories = (await fetchCategories()) as Array<{ name: string; count: number }>;
+      const category = categories.find(c => toSlug(c.name) === slug);
+      const data = (category ? await fetchOffers({ category: category.name, limit: 200 }) : { offers: [], total: 0 }) as { offers: Array<{ vendor: string; tier: string; description: string; verifiedDate: string; last_read_date: string; category: string; conditions?: ListingCondition[]; terms_superseded?: unknown }>; total: number };
       if (!data.offers || data.offers.length === 0) {
         return { contents: [{ uri: `agentdeals://category/${slug}`, text: `No category found matching "${slug}".`, mimeType: "text/plain" }] };
       }
@@ -691,7 +694,8 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
         return { contents: [{ uri: `agentdeals://vendor/${slug}`, text: `No vendor found matching "${slug}".`, mimeType: "text/plain" }] };
       }
 
-      const changesData = (await fetchDealChanges({ vendor: match.vendor, since: "2020-01-01" })) as { changes: Array<{ date: string; change_type: string; summary: string; previous_state: string; current_state: string }> };
+      const changesData = (await fetchEveryDealChange({ vendor: match.vendor, since: "2020-01-01" })) as { changes: Array<{ vendor: string; date: string; change_type: string; summary: string; previous_state: string; current_state: string }> };
+      const vendorChanges = changesData.changes.filter(c => c.vendor.toLowerCase() === match.vendor.toLowerCase());
       const details = (await fetchOfferDetails(match.vendor)) as { relatedVendors?: string[]; offer?: { relatedVendors?: string[] } };
       const byVendor = new Map(data.offers.map(o => [o.vendor, o]));
       const alternatives = (details.relatedVendors ?? details.offer?.relatedVendors ?? []).flatMap(name => {
@@ -720,9 +724,9 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
       }
       text += `**Tags:** ${match.tags.join(", ")}\n`;
 
-      if (changesData.changes.length > 0) {
+      if (vendorChanges.length > 0) {
         text += `\n## Pricing Changes\n\n`;
-        for (const c of changesData.changes) {
+        for (const c of vendorChanges) {
           text += `- **${c.date}** [${c.change_type}] ${c.summary}\n  Previous: ${c.previous_state}\n  Current: ${c.current_state}\n`;
         }
       }
@@ -747,7 +751,7 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
       mimeType: "text/plain",
     },
     async () => {
-      const data = (await fetchDealChanges({ since: "2020-01-01" })) as {
+      const data = (await fetchEveryDealChange({ since: "2020-01-01", include_index_housekeeping: "true" })) as {
         changes: Array<{ date: string; vendor: string; change_type: string; summary: string; current_state?: string }>;
         change_census?: { tracked_pricing_changes?: number };
       };
@@ -766,8 +770,7 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
       mimeType: "text/plain",
     },
     async () => {
-      const { total } = (await fetchDealChanges({ since: "2020-01-01", limit: "0" })) as { total: number };
-      const data = (await fetchDealChanges({ since: "2020-01-01", limit: String(total) })) as { changes: Array<{ date: string; vendor: string; change_type: string; summary: string; previous_state: string; current_state: string }> };
+      const data = (await fetchEveryDealChange({ since: "2020-01-01" })) as { changes: Array<{ date: string; vendor: string; change_type: string; summary: string; previous_state: string; current_state: string }> };
       const text = latestPricingChangesText(data.changes, c =>
         `- **${c.date}** | ${c.vendor} [${c.change_type}]\n  ${c.summary}\n  Previous: ${c.previous_state}\n  Current: ${c.current_state}`
       );
@@ -836,7 +839,7 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
       text += `**URL:** /${guide.slug}\n`;
 
       try {
-        const changesData = (await fetchDealChanges({ since: "2020-01-01" })) as { changes: Array<{ date: string; vendor: string; change_type: string; summary: string }> };
+        const changesData = (await fetchEveryDealChange({ since: "2020-01-01" })) as { changes: Array<{ date: string; vendor: string; change_type: string; summary: string }> };
         const slugLower = guide.slug.toLowerCase();
         const relatedChanges = changesData.changes.filter(c => {
           const vendorSlug = c.vendor.toLowerCase().replace(/[^a-z0-9]+/g, "-");
