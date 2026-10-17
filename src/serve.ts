@@ -33548,7 +33548,7 @@ railway up
     </div>
     <div class="verdict-item">
       <strong>Best developer experience:</strong>
-      <p>Railway — push to deploy with zero config. $5/mo free trial credit. Auto-detects language and builds without Dockerfiles. Closest to App Runner&rsquo;s simplicity.</p>
+      <p>Railway — push to deploy with zero config. Free plan: 30-day $5 trial credit, then $1 of free credit a month. Auto-detects language and builds without Dockerfiles. Closest to App Runner&rsquo;s simplicity.</p>
     </div>
     <div class="verdict-item">
       <strong>Multi-region deployment:</strong>
@@ -33712,7 +33712,7 @@ function buildAwsFreeTier2026Page(): string {
   const cloudAlts: CloudAlt[] = [
     { name: "GCP (Google Cloud)", slug: "google-cloud", freeTier: "Always Free: e2-micro VM, 1 TiB BigQuery, Cloud Run 2M req/mo", strength: "Most generous always-free compute", bestFor: "Side projects needing a persistent VM" },
     { name: "Azure", slug: "azure", freeTier: "12 months: 750 hours each of B2pts v2 and B2ats v2 VMs. Always free: SQL Database (100K vCore seconds/mo, 32 GB), Cosmos DB (1K RU/s, 25 GB). $200 credit for 30 days, then pay-as-you-go to keep the free services.", strength: "Enterprise integration, .NET ecosystem", bestFor: "Teams already on Microsoft stack" },
-    { name: "Railway", slug: "railway", freeTier: "$5 free trial credit, usage-based pricing after", strength: "Best developer experience, instant deploys", bestFor: "Quick prototypes, hobby projects" },
+    { name: "Railway", slug: "railway", freeTier: "$1 of free credit a month after 30-day $5 trial", strength: "Best developer experience, instant deploys", bestFor: "Quick prototypes, hobby projects" },
     { name: "Render", slug: "render", freeTier: "Free web services (512 MB RAM), free PostgreSQL (30 days)", strength: "Simple PaaS with generous free tier", bestFor: "Replacing Heroku for small apps" },
     { name: "Supabase", slug: "supabase", freeTier: "500 MB database, 50K MAU auth, 1 GB storage", strength: "Full BaaS with PostgreSQL + auth + storage", bestFor: "Firebase alternative with SQL" },
     { name: "Neon", slug: "neon", freeTier: "100 CU-hours and 1 GB of storage per project, auth up to 60k MAU, branching", strength: "Serverless PostgreSQL with scale-to-zero", bestFor: "Serverless Postgres with branching and scale-to-zero" },
@@ -34122,7 +34122,7 @@ function buildGcpFreeTier2026Page(): string {
     { name: "AWS", slug: "aws", freeTier: "Always Free: Lambda 1M req/mo, DynamoDB 25 GB", strength: "Broadest service catalog, most enterprise adoption", bestFor: "Enterprise workloads, serverless (Lambda)", noFetchablePageStatesIt: true },
     { name: "Azure", slug: "azure", freeTier: "12 months: 750 hours each of B2pts v2 and B2ats v2 VMs. Always free: SQL Database (100K vCore seconds/mo, 32 GB), Cosmos DB (1K RU/s, 25 GB). $200 credit for 30 days, then pay-as-you-go to keep the free services.", strength: "Best .NET/Windows integration, hybrid cloud", bestFor: "Microsoft stack teams, enterprise" },
     { name: "Cloudflare", slug: "cloudflare-workers", freeTier: "Workers 100K req/day, R2 10 GB (zero egress), D1 5 GB, Pages unlimited", strength: "Zero egress on R2, global edge network", bestFor: "Edge computing, static sites, storage" },
-    { name: "Railway", slug: "railway", freeTier: "$5 free trial credit, usage-based pricing", strength: "Best developer experience, instant deploys", bestFor: "Quick prototypes, hobby projects" },
+    { name: "Railway", slug: "railway", freeTier: "$1 of free credit a month after 30-day $5 trial", strength: "Best developer experience, instant deploys", bestFor: "Quick prototypes, hobby projects" },
     { name: "Render", slug: "render", freeTier: "Free web services (512 MB RAM), free PostgreSQL (30 days)", strength: "Simple PaaS, Heroku replacement", bestFor: "Small web apps, side projects" },
     { name: "Supabase", slug: "supabase", freeTier: "500 MB database, 50K MAU auth, 1 GB storage", strength: "Full BaaS with PostgreSQL + auth + storage", bestFor: "Firebase alternative with SQL" },
     { name: "Vercel", slug: "vercel", freeTier: "Hobby plan (personal, non-commercial use only): 100 deployments/day, 100 GB Fast Data Transfer/month, 1M function invocations/month.", strength: "Best Next.js hosting, instant previews", bestFor: "Frontend apps and Jamstack sites" },
@@ -34533,7 +34533,7 @@ function buildAzureFreeTier2026Page(): string {
   const cloudAlts: CloudAlt[] = [
     { name: "AWS", slug: "aws", freeTier: "Always Free: Lambda 1M req/mo, DynamoDB 25 GB, 30+ services", strength: "Most services under one roof", bestFor: "Serverless backends, broadest ecosystem", noFetchablePageStatesIt: true },
     { name: "GCP (Google Cloud)", slug: "google-cloud", freeTier: "Always Free: e2-micro VM, BigQuery 1 TiB, Cloud Run 2M req/mo", strength: "Most generous always-free compute", bestFor: "Side projects needing a persistent VM" },
-    { name: "Railway", slug: "railway", freeTier: "$5 free trial credit, usage-based pricing after", strength: "Best developer experience, instant deploys", bestFor: "Quick prototypes, hobby projects" },
+    { name: "Railway", slug: "railway", freeTier: "$1 of free credit a month after 30-day $5 trial", strength: "Best developer experience, instant deploys", bestFor: "Quick prototypes, hobby projects" },
     { name: "Render", slug: "render", freeTier: "Free web services (512 MB RAM), free PostgreSQL (30 days)", strength: "Simple PaaS with generous free tier", bestFor: "Replacing Heroku for small apps" },
     { name: "Supabase", slug: "supabase", freeTier: "500 MB database, 50K MAU auth, 1 GB storage", strength: "Full BaaS with PostgreSQL + auth + storage", bestFor: "Firebase alternative with SQL" },
     { name: "Neon", slug: "neon", freeTier: "100 CU-hours and 1 GB of storage per project, auth up to 60k MAU, branching", strength: "Serverless PostgreSQL with scale-to-zero", bestFor: "Serverless Postgres with branching and scale-to-zero" },
@@ -34967,7 +34967,7 @@ function buildDigitalOceanFreeTier2026Page(): string {
     { name: "Azure", slug: "azure", freeTier: "Always Free: Functions 1M req/mo, Cosmos DB 25 GB, 65+ services", strength: "Best free database (Cosmos DB), enterprise identity", bestFor: ".NET apps, enterprise auth, Cosmos DB" },
     { name: "Hetzner", slug: "hetzner", freeTier: `No free tier — cheapest orderable plan is ${hetznerEntryPriceClause()}`, strength: "Strong price/performance above the entry tier", bestFor: "European hosting, raw compute power" },
     { name: "Vultr", slug: "vultr", freeTier: "Free DNS hosting on any account, cheapest VPS at $2.50/mo", strength: "Global locations, competitive pricing", bestFor: "Low-cost VPS, multiple regions" },
-    { name: "Railway", slug: "railway", freeTier: "$5 free trial credit, usage-based pricing", strength: "Best DX, instant deploys from Git", bestFor: "Quick prototypes, hobby projects" },
+    { name: "Railway", slug: "railway", freeTier: "$1 of free credit a month after 30-day $5 trial", strength: "Best DX, instant deploys from Git", bestFor: "Quick prototypes, hobby projects" },
     { name: "Render", slug: "render", freeTier: "Free web services (512 MB RAM), free PostgreSQL (30 days)", strength: "Simple PaaS, free hobby tier", bestFor: "Heroku replacement, small apps" },
     { name: "Cloudflare", slug: "cloudflare-workers", freeTier: "Workers 100K req/day, R2 10 GB, D1 5 GB, Pages unlimited", strength: "Edge-first, zero egress on R2", bestFor: "Edge computing, static sites, storage" },
   ];

@@ -193,7 +193,7 @@ const RETIRED_FIGURES: Retired[] = [
   },
   {
     what: "Railway's $5 Hobby credit described as free",
-    pattern: /\$5\/(?:month|mo)(?: free)? credit|Railway[^.]{0,120}\$5 free credit|\$5 free credit[^.]{0,120}Railway|\$5 credit\/mo|Free \$5 monthly|Railway's \$5 credit|Railway \(\$5 credit\)|same \$5 credit/i,
+    pattern: /\$5\/(?:month|mo)(?: free)?(?: trial)? credit|\$5 free trial credit, usage-based pricing|Railway[^.]{0,120}\$5 free credit|\$5 free credit[^.]{0,120}Railway|\$5 credit\/mo|Free \$5 monthly|Railway's \$5 credit|Railway \(\$5 credit\)|same \$5 credit/i,
     replacedBy: /\$1\/(?:month|mo)|\$1 of free credit|trial credit/i,
     vendorRecord: () => recordFor("Railway", "Cloud Hosting").description,
   },
@@ -427,12 +427,16 @@ describe("hosting pages publish the free-tier figures our records hold (#1183)",
       "For full-stack: Railway ($5 free credit, no card required), Render (free tier with 15-min spin-down), or Vercel Hobby.",
       "Railway for full-stack apps ($5 free credit, no credit card).",
       "Railway | $5 free credit | Usage-based",
+      "Railway $5 free trial credit, usage-based pricing after Best developer experience, instant deploys",
+      "Railway $5 free trial credit, usage-based pricing Best DX, instant deploys from Git",
+      "Railway — push to deploy with zero config. $5/mo free trial credit. Auto-detects language and builds without Dockerfiles.",
     ]) {
       assert.ok(railway.pattern.test(old), old);
     }
     for (const other of [
       "Complete DigitalOcean guide — $5 free credits, App Platform free tier, per-second billing, and Big Three comparison",
       "You need a valid credit card or PayPal to claim the $5 free credits.",
+      "Between 2024-03-13 and 2024-03-20, OpenAI stopped giving new API accounts the $5 free trial credit, which could be used during an account's first 3 months.",
     ]) {
       assert.ok(!railway.pattern.test(other), other);
     }
@@ -459,7 +463,10 @@ describe("hosting pages publish the free-tier figures our records hold (#1183)",
       "a Sentry free session-replay allowance of 10K": ["/monitoring-comparison-2026"],
       "Sentry's free data retention as 90 days": ["/monitoring-comparison-2026"],
       "a Better Stack free log allowance of 1 GB": ["/monitoring-comparison-2026"],
-      "Railway's $5 Hobby credit described as free": ["/hetzner-pricing-2026", "/hosting-pricing", "/hosting-alternatives", "/free-django-stack", "/free-fastapi-stack", "/free-go-stack"],
+      "Railway's $5 Hobby credit described as free": [
+        "/hetzner-pricing-2026", "/hosting-pricing", "/hosting-alternatives", "/free-django-stack", "/free-fastapi-stack", "/free-go-stack",
+        "/aws-free-tier-2026", "/gcp-free-tier-2026", "/azure-free-tier-2026", "/digitalocean-free-tier-2026", "/aws-app-runner-migration",
+      ],
       "Railway's Free plan credit called enough to run an app": ["/free-django-stack", "/free-fastapi-stack", "/free-go-stack", "/free-saas-stack"],
       "Railway crowned the best free hosting for a stack": ["/free-django-stack", "/free-fastapi-stack", "/free-go-stack", "/free-saas-stack"],
       "Railway's free tier graded as expanded in October 2025": ["/free-tier-risk"],
