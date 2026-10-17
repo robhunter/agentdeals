@@ -8,6 +8,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
 
 const NO_RATING = "—";
+const RATING_WORDS = ["stable", "caution", "risky"];
 
 let proc: ChildProcess | null = null;
 let port = 0;
@@ -35,11 +36,18 @@ function textOf(html: string): string {
   return html.replace(/<[^>]+>/g, " ").replace(/&mdash;/g, "—").replace(/\s+/g, " ").trim();
 }
 
-async function riskRows(): Promise<Array<{ slug: string; rating: string }>> {
+async function comparisonTable(): Promise<string> {
   const page = await get("/gemini-api-pricing-2026");
-  const header = page.indexOf("<th>Risk</th>");
-  assert.ok(header > 0, "/gemini-api-pricing-2026 has no Risk column");
-  const table = page.slice(header, page.indexOf("</table>", header));
+  const section = page.indexOf('<h2 id="comparison">');
+  assert.ok(section > 0, "/gemini-api-pricing-2026 has no comparison section");
+  return page.slice(section, page.indexOf("</table>", section));
+}
+
+async function stabilityRows(): Promise<Array<{ slug: string; rating: string }>> {
+  const comparison = await comparisonTable();
+  const header = comparison.indexOf("<th>Stability</th>");
+  assert.ok(header > 0, "/gemini-api-pricing-2026's comparison table has no Stability column");
+  const table = comparison.slice(header);
   return [...table.matchAll(/<tr>([\s\S]*?)<\/tr>/g)].map(([, row]) => {
     const cells = [...row.matchAll(/<td[^>]*>([\s\S]*?)<\/td>/g)].map((cell) => cell[1]);
     const slug = cells[0].match(/href="\/vendor\/([^"]+)"/)?.[1];
@@ -53,16 +61,27 @@ async function headingRating(slug: string): Promise<string> {
   return h1.match(/<span class="risk-badge"[^>]*>([^<]*)<\/span>/)?.[1] ?? NO_RATING;
 }
 
+const namingTheFreeTier = (heading: string) => (RATING_WORDS.includes(heading) ? `free tier ${heading}` : heading);
+
 describe("/gemini-api-pricing-2026 rates each alternative the way its vendor page does", () => {
-  it("states the vendor page's heading rating in every Risk cell, and no rating where the page states none", async () => {
-    const rows = await riskRows();
-    assert.ok(rows.length >= 5, `the Risk column has ${rows.length} rows`);
+  it("states the vendor page's heading rating in every Stability cell as a rating of the free tier, and no rating where the page states none", async () => {
+    const rows = await stabilityRows();
+    assert.ok(rows.length >= 5, `the Stability column has ${rows.length} rows`);
     const disagreeing: string[] = [];
     for (const { slug, rating } of rows) {
       const heading = await headingRating(slug);
-      if (rating !== heading) disagreeing.push(`${slug}: table "${rating}", vendor page "${heading}"`);
+      if (rating !== namingTheFreeTier(heading)) disagreeing.push(`${slug}: table "${rating}", vendor page "${heading}"`);
     }
     assert.deepStrictEqual(disagreeing, []);
-    assert.ok(rows.some((row) => row.rating !== NO_RATING), "no row states a rating, so the comparison proves nothing");
+    assert.ok(
+      rows.some((row) => RATING_WORDS.some((word) => row.rating === `free tier ${word}`)),
+      "no row states a rating, so the comparison proves nothing",
+    );
+  });
+
+  it("heads the rating column Stability, not Risk", async () => {
+    const comparison = await comparisonTable();
+    assert.ok(comparison.includes("<th>Stability</th>"));
+    assert.ok(!comparison.includes("<th>Risk</th>"));
   });
 });

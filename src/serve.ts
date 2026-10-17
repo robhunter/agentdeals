@@ -1790,6 +1790,7 @@ function removedClaimLabel(cause: { change_type: string }): string {
 }
 
 interface HeadingBadge {
+  kind: "ended" | "rating";
   label: string;
   color: string;
 }
@@ -1800,11 +1801,15 @@ const RATING_BADGE_COLORS: Record<string, string> = { stable: "#3fb950", caution
 
 function vendorHeadingBadge(input: VendorVerdictInput): HeadingBadge | null {
   const endedBy = endingStatedInPlaceOfARating(input);
-  if (endedBy) return { label: removedClaimLabel(endedBy), color: BADGE_COLORS.removed };
+  if (endedBy) return { kind: "ended", label: removedClaimLabel(endedBy), color: BADGE_COLORS.removed };
   const badge = vendorBadge(input);
-  if (badge.kind === "ended") return { label: ENDED_BADGE_LABEL, color: RETIRED_BADGE_COLOR };
-  if (badge.kind === "rating") return { label: badge.word, color: RATING_BADGE_COLORS[badge.word] };
+  if (badge.kind === "ended") return { kind: "ended", label: ENDED_BADGE_LABEL, color: RETIRED_BADGE_COLOR };
+  if (badge.kind === "rating") return { kind: "rating", label: badge.word, color: RATING_BADGE_COLORS[badge.word] };
   return null;
+}
+
+function labelNamingTheFreeTier(badge: HeadingBadge): string {
+  return badge.kind === "rating" ? `free tier ${badge.label}` : badge.label;
 }
 
 function vendorHeadingBadgeForName(name: string, servedOn: string): HeadingBadge | null {
@@ -23178,7 +23183,7 @@ function buildGeminiApiPricing2026Page(): string {
   const servedRatingHtml = (name: string) => {
     const heading = vendorHeadingBadgeForName(name, servedOn);
     return heading
-      ? `<span style="display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;background:${heading.color}22;color:${heading.color};font-weight:600">${escHtmlServer(heading.label)}</span>`
+      ? `<span style="display:inline-block;font-size:.7rem;padding:.15rem .5rem;border-radius:10px;background:${heading.color}22;color:${heading.color};font-weight:600">${escHtmlServer(labelNamingTheFreeTier(heading))}</span>`
       : "&mdash;";
   };
 
@@ -23420,7 +23425,7 @@ ${globalNavCss()}
 
   <table class="pricing-table" data-figures="index">
     <thead>
-      <tr><th>Provider</th><th>Free Tier</th><th>Paid Rate</th><th>Risk</th></tr>
+      <tr><th>Provider</th><th>Free Tier</th><th>Paid Rate</th><th>Stability</th></tr>
     </thead>
     <tbody>
       ${llmProviders.map(p => `<tr>
