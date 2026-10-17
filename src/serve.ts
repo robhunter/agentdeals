@@ -4449,6 +4449,8 @@ function buildVsPage(slug: string): string | null {
     const color = colors[stability] ?? "#8b949e";
     return `<span style="display:inline-block;padding:.15rem .5rem;border-radius:12px;font-size:.7rem;font-weight:600;background:${color}20;color:${color};border:1px solid ${color}40">${stability}</span>`;
   };
+  const publishedStabilityBadge = (offer: EnrichedOfferRow) => (offer.stability ? stabilityBadge(offer.stability) : "");
+  const stabilityRowValue = (offer: EnrichedOfferRow) => (offer.stability ? escHtmlServer(offer.stability) : durabilityCellHtml(offer));
 
   const changesHtml = (changes: typeof a.deal_changes, vendor: string) => {
     if (changes.length === 0) return `<p style="color:var(--text-dim);font-size:.85rem">No recorded pricing changes for ${escHtmlServer(vendor)}.</p>`;
@@ -4597,22 +4599,22 @@ ${globalNavCss()}
   <h2>Side-by-Side Comparison</h2>
   <div class="compare-grid">
     <div class="vendor-col">
-      <h3><a href="/vendor/${toSlug(a.vendor)}">${escHtmlServer(a.vendor)}</a> ${riskBadge(riskA)} ${stabilityBadge(riskA.stability ?? "stable")}</h3>
+      <h3><a href="/vendor/${toSlug(a.vendor)}">${escHtmlServer(a.vendor)}</a> ${riskBadge(riskA)} ${publishedStabilityBadge(riskA)}</h3>
 ${vsVerdictLapseLine(a.vendor)}      <div class="detail-row"><span class="detail-label">Category</span><span class="detail-value">${escHtmlServer(a.category)}</span></div>
       <div class="detail-row"><span class="detail-label">Tier</span><span class="detail-value" style="color:var(--accent)">${escHtmlServer(a.tier)}</span></div>
       <div class="detail-row"><span class="detail-label">Verified</span><span class="detail-value">${escHtmlServer(a.verifiedDate)}</span></div>
       <div class="detail-row"><span class="detail-label">${LAST_READ_LABEL}</span><span class="detail-value">${escHtmlServer(lastReadDate(a))}</span></div>
-      <div class="detail-row"><span class="detail-label">Stability</span><span class="detail-value">${escHtmlServer(riskA.stability ?? "stable")}</span></div>
+      <div class="detail-row"><span class="detail-label">Stability</span><span class="detail-value">${stabilityRowValue(riskA)}</span></div>
       <div class="detail-row"><span class="detail-label">Changes</span><span class="detail-value">${vendorMadeA.length} recorded</span></div>
       <div class="desc-block">${publishedTermsHtml(a)}${conditionsAfterTheTermsHtml(a)}</div>
     </div>
     <div class="vendor-col">
-      <h3><a href="/vendor/${toSlug(b.vendor)}">${escHtmlServer(b.vendor)}</a> ${riskBadge(riskB)} ${stabilityBadge(riskB.stability ?? "stable")}</h3>
+      <h3><a href="/vendor/${toSlug(b.vendor)}">${escHtmlServer(b.vendor)}</a> ${riskBadge(riskB)} ${publishedStabilityBadge(riskB)}</h3>
 ${vsVerdictLapseLine(b.vendor)}      <div class="detail-row"><span class="detail-label">Category</span><span class="detail-value">${escHtmlServer(b.category)}</span></div>
       <div class="detail-row"><span class="detail-label">Tier</span><span class="detail-value" style="color:var(--accent)">${escHtmlServer(b.tier)}</span></div>
       <div class="detail-row"><span class="detail-label">Verified</span><span class="detail-value">${escHtmlServer(b.verifiedDate)}</span></div>
       <div class="detail-row"><span class="detail-label">${LAST_READ_LABEL}</span><span class="detail-value">${escHtmlServer(lastReadDate(b))}</span></div>
-      <div class="detail-row"><span class="detail-label">Stability</span><span class="detail-value">${escHtmlServer(riskB.stability ?? "stable")}</span></div>
+      <div class="detail-row"><span class="detail-label">Stability</span><span class="detail-value">${stabilityRowValue(riskB)}</span></div>
       <div class="detail-row"><span class="detail-label">Changes</span><span class="detail-value">${vendorMadeB.length} recorded</span></div>
       <div class="desc-block">${publishedTermsHtml(b)}${conditionsAfterTheTermsHtml(b)}</div>
     </div>

@@ -1072,8 +1072,8 @@
       "daily": true
     },
     "/brevo-vs-resend": {
-      "hash": "edc6f2faa85853f3",
-      "changed": "2026-10-16"
+      "hash": "6e45fc6235e91f7b",
+      "changed": "2026-10-17"
     },
     "/budget-builder": {
       "hash": "514f9c44526f67e3",
@@ -1350,12 +1350,12 @@
       "changed": "2026-10-16"
     },
     "/cloudflare-pages-vs-vercel": {
-      "hash": "c29541ac482be73a",
-      "changed": "2026-10-16"
+      "hash": "77934708c0d575e8",
+      "changed": "2026-10-17"
     },
     "/cloudinary-vs-imagekit": {
-      "hash": "aeea190ba300deee",
-      "changed": "2026-10-15"
+      "hash": "a6cfd445cf09c575",
+      "changed": "2026-10-17"
     },
     "/company-formation-pricing-2026": {
       "hash": "971bd8803b8b4282",
