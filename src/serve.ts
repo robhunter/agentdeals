@@ -23425,7 +23425,7 @@ ${globalNavCss()}
 
   <table class="pricing-table" data-figures="index">
     <thead>
-      <tr><th>Provider</th><th>Free Tier</th><th>Paid Rate</th><th>Stability</th></tr>
+      <tr><th>Provider</th><th>Free Tier</th><th>Paid Rate</th><th>Risk</th></tr>
     </thead>
     <tbody>
       ${llmProviders.map(p => `<tr>

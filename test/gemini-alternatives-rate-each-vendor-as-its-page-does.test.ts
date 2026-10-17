@@ -43,10 +43,10 @@ async function comparisonTable(): Promise<string> {
   return page.slice(section, page.indexOf("</table>", section));
 }
 
-async function stabilityRows(): Promise<Array<{ slug: string; rating: string }>> {
+async function riskRows(): Promise<Array<{ slug: string; rating: string }>> {
   const comparison = await comparisonTable();
-  const header = comparison.indexOf("<th>Stability</th>");
-  assert.ok(header > 0, "/gemini-api-pricing-2026's comparison table has no Stability column");
+  const header = comparison.indexOf("<th>Risk</th>");
+  assert.ok(header > 0, "/gemini-api-pricing-2026's comparison table has no Risk column");
   const table = comparison.slice(header);
   return [...table.matchAll(/<tr>([\s\S]*?)<\/tr>/g)].map(([, row]) => {
     const cells = [...row.matchAll(/<td[^>]*>([\s\S]*?)<\/td>/g)].map((cell) => cell[1]);
@@ -64,9 +64,9 @@ async function headingRating(slug: string): Promise<string> {
 const namingTheFreeTier = (heading: string) => (RATING_WORDS.includes(heading) ? `free tier ${heading}` : heading);
 
 describe("/gemini-api-pricing-2026 rates each alternative the way its vendor page does", () => {
-  it("states the vendor page's heading rating in every Stability cell as a rating of the free tier, and no rating where the page states none", async () => {
-    const rows = await stabilityRows();
-    assert.ok(rows.length >= 5, `the Stability column has ${rows.length} rows`);
+  it("states the vendor page's heading rating in every Risk cell as a rating of the free tier, and no rating where the page states none", async () => {
+    const rows = await riskRows();
+    assert.ok(rows.length >= 5, `the Risk column has ${rows.length} rows`);
     const disagreeing: string[] = [];
     for (const { slug, rating } of rows) {
       const heading = await headingRating(slug);
@@ -79,9 +79,9 @@ describe("/gemini-api-pricing-2026 rates each alternative the way its vendor pag
     );
   });
 
-  it("heads the rating column Stability, not Risk", async () => {
+  it("heads the rating column Risk, not Stability", async () => {
     const comparison = await comparisonTable();
-    assert.ok(comparison.includes("<th>Stability</th>"));
-    assert.ok(!comparison.includes("<th>Risk</th>"));
+    assert.ok(comparison.includes("<th>Risk</th>"));
+    assert.ok(!comparison.includes("<th>Stability</th>"));
   });
 });
