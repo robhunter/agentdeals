@@ -9,6 +9,11 @@ export interface ModelRate {
   output: string | null;
 }
 
+export interface PlacedModelRate extends ModelRate {
+  at: number;
+  end: number;
+}
+
 const AMOUNT = String.raw`\$(\d{1,3}(?:,\d{3})*(?:\.\d+)?)`;
 const PAIRED = new RegExp(`${AMOUNT}\\s*/\\s*${AMOUNT}`, "g");
 const SPLIT = new RegExp(`${AMOUNT}\\s*/\\s*1?M\\s+input[^.$]{0,40}?${AMOUNT}\\s*/\\s*1?M\\s+output`, "g");
@@ -63,8 +68,12 @@ function acceptableName(candidate: string): string | null {
   return name;
 }
 
+export function clauseBefore(prefix: string): string {
+  return afterLastClauseBreak(stripTail(prefix));
+}
+
 function nameBefore(prefix: string): string | null {
-  return acceptableName(afterLastClauseBreak(stripTail(prefix)));
+  return acceptableName(clauseBefore(prefix));
 }
 
 function nameAfter(suffix: string): string | null {
@@ -72,10 +81,10 @@ function nameAfter(suffix: string): string | null {
   return named ? acceptableName(named[1]) : null;
 }
 
-export function readModelRates(description: string | null | undefined): ModelRate[] {
+export function readPlacedModelRates(description: string | null | undefined): PlacedModelRate[] {
   if (!description) return [];
   const claimed: Array<[number, number]> = [];
-  const found: Array<ModelRate & { at: number }> = [];
+  const found: PlacedModelRate[] = [];
 
   const scan = (re: RegExp, toRate: (m: RegExpExecArray) => { input: string; output: string | null }) => {
     re.lastIndex = 0;
@@ -86,7 +95,7 @@ export function readModelRates(description: string | null | undefined): ModelRat
       if (claimed.some(([s, e]) => start < e && end > s)) continue;
       claimed.push([start, end]);
       const model = nameAfter(description.slice(end, end + 60)) ?? nameBefore(description.slice(0, start));
-      found.push({ model, at: start, ...toRate(m) });
+      found.push({ model, at: start, end, ...toRate(m) });
     }
   };
 
@@ -94,9 +103,11 @@ export function readModelRates(description: string | null | undefined): ModelRat
   scan(PAIRED, m => ({ input: `$${m[1]}`, output: `$${m[2]}` }));
   scan(INPUT_ONLY, m => ({ input: `$${m[1]}`, output: null }));
 
-  return found
-    .sort((a, b) => a.at - b.at)
-    .map(({ model, input, output }) => ({ model, input, output }));
+  return found.sort((a, b) => a.at - b.at);
+}
+
+export function readModelRates(description: string | null | undefined): ModelRate[] {
+  return readPlacedModelRates(description).map(({ model, input, output }) => ({ model, input, output }));
 }
 
 export function amountValue(amount: string): number {
