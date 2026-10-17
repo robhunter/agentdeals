@@ -3052,8 +3052,7 @@
       "changed": "2026-10-14"
     },
     "/digest/2026-w42": {
-      "hash": "529bb23725ca5f13",
-      "changed": "2026-10-16"
+      "daily": true
     },
     "/digest/2026-w43": {
       "hash": "bf6d9b5a0ba532ab",
@@ -3642,8 +3641,7 @@
       "changed": "2026-10-16"
     },
     "/this-week": {
-      "hash": "759612685d384ee5",
-      "changed": "2026-10-16"
+      "daily": true
     },
     "/trends": {
       "hash": "944183a3d5acd981",

@@ -14,9 +14,15 @@ type ListingCondition = import("../src/types.ts").ListingCondition;
 const { supersedingChange } = await import("../dist/superseded-description.js");
 const { offerRetired } = await import("../dist/retirement.js");
 const { LISTING_CONDITIONS_CLASS, VENDOR_CONDITIONS_ROW_CLASS } = await import("../dist/listing-conditions.js");
+const { isoWeekOf } = await import("../dist/change-dates.js");
 
 const REPO = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const TODAY = new Date().toISOString().slice(0, 10);
+
+function digestRouteOfTheWeekHolding(day: string): string {
+  const { year, week } = isoWeekOf(new Date(`${day}T00:00:00Z`));
+  return `/digest/${year}-w${String(week).padStart(2, "0")}`;
+}
 const CONDITIONS_PAGE = "https://conditions.example/terms";
 
 const catalogue = JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf-8"));
@@ -103,7 +109,7 @@ function startServer(indexPath: string): Promise<{ proc: ChildProcess; base: str
 
 const ROUTES_NO_SITEMAP_LISTS = ["/", "/estimate", "/budget-builder", "/compare-tool", "/stack-check"];
 
-const ROUTES_QUOTING_THE_ONE_SENTENCE_THAT_NAMES_A_DEADLINE = new Set(["/deadlines"]);
+const ROUTES_QUOTING_THE_ONE_SENTENCE_THAT_NAMES_A_DEADLINE = new Set(["/deadlines", "/this-week", digestRouteOfTheWeekHolding(TODAY)]);
 
 const scratchDescriptions = new Map(scratchOffers.map((offer, index) => [codeFor(index), offer.description]));
 

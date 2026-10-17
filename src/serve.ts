@@ -105,6 +105,7 @@ import { statesNoFreeTier } from "./retired-terms.js";
 import { countsDownTo, shutdownDeadlineHtml } from "./shutdown-deadline.js";
 import { forecastShutdownsWithoutACard, whatEnds, type RecordACardCovers } from "./forecast-shutdowns.js";
 import { deadlineTextsOf, quotesTheWholeDescription, statedDeadlines, type StatedDeadline } from "./stated-deadlines.js";
+import { COMING_UP_HEADING, lastDayComingUp } from "./coming-up.js";
 import { UPCOMING_CHANGES_HEADING, UPCOMING_CHANGES_INTRO, splitAtTheDayServed } from "./upcoming-changes.js";
 import { createRegistrationLimiter, rateLimitHeaders } from "./rate-limit.js";
 import { offerForSlug, vendorRates, cheapestRate, dearestRate, spanOfRates, formatRate, formatRateSpan, monthlyTokenCost, formatDollars, amountValue, type ModelRate } from "./model-rates.js";
@@ -4782,6 +4783,7 @@ function buildDigestPage(weekKey: string): string | null {
   const byWeek = getChangesByWeek();
   const weekRecords = vendorChangesAmong(byWeek.get(weekKey) ?? []);
   const { dated: changes, discovered } = partitionByDateProvenance(weekRecords);
+  const comingUpHtml = weekKey === getCurrentWeekKey() ? comingUpSectionHtml(servedOn, new Set(weekRecords), "impact-section coming-up") : "";
   const dateRange = formatDateRange(year, week);
   const discoveryNote = discovered.length > 0 ? coveringBracketedChanges(discoveryBatchNote(discovered.length, `during ${dateRange}`), discovered) : "";
   const discoveryClause = discovered.length > 0
@@ -4902,7 +4904,7 @@ ${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" hre
 <link rel="alternate" type="application/atom+xml" title="AgentDeals — Weekly Pricing Digest" href="/feed.xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
-<style>${digestCss}</style>
+<style>${digestCss}${comingUpHtml ? COMING_UP_CSS : ""}</style>
 </head>
 <body>
 <div class="container">
@@ -4912,7 +4914,7 @@ ${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" hre
   <p class="page-meta">${notStarted ? weekNotStartedLine(year, week, changes.length) : `${changes.length} change${changes.length !== 1 ? "s" : ""} tracked in week ${week}, ${year}.`}${discoveryClause}</p>
 ${statsHtml}
 ${bodyHtml}
-${trendingHtml}
+${trendingHtml}${comingUpHtml}
 
   <div class="rss-cta">
     <p>Get pricing changes delivered automatically</p>
@@ -5054,6 +5056,10 @@ function buildThisWeekPage(weeksAgo: number): string {
 
   const contentHtml = [changesHtml, firstReadHtml].filter(Boolean).join("\n");
 
+  const comingUpHtml = weeksAgo === 0
+    ? comingUpSectionHtml(new Date().toISOString().slice(0, 10), new Set([...digest.top_changes, ...digest.discovered_changes]), "tw-section tw-coming-up")
+    : "";
+
   const { summary: s } = digest;
   const summaryPills: string[] = [];
   if (s.free_tiers_removed > 0) summaryPills.push(`<span class="tw-pill" style="border-color:#f85149"><strong>${s.free_tiers_removed}</strong> free tier${s.free_tiers_removed !== 1 ? "s" : ""} removed</span>`);
@@ -5134,7 +5140,7 @@ ${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" hre
 ${feedLinkTag(PER_CHANGE_FEED)}
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
-<style>${thisWeekCss}</style>
+<style>${thisWeekCss}${comingUpHtml ? COMING_UP_CSS : ""}</style>
 </head>
 <body>
 <div class="container">
@@ -5143,7 +5149,7 @@ ${feedLinkTag(PER_CHANGE_FEED)}
   <h1>This Week in Developer Pricing</h1>
   <p class="tw-headline">${escHtmlServer(digest.headline)}</p>
 ${summaryBar}
-${contentHtml}
+${contentHtml}${comingUpHtml}
 
   <div class="tw-share">
     <p>Share this digest</p>
@@ -50105,6 +50111,89 @@ function deadlinesOurTextStates(changes: readonly DealChange[], listed: readonly
   return statedDeadlines(deadlineTextsOf(offers, recordsBeforeToday), listed, today);
 }
 
+function vendorRecordsDatedAfter(changes: readonly DealChange[], today: string): DealChange[] {
+  return changesTheVendorMade(changes)
+    .filter(c => c.date > today)
+    .sort((a, b) => a.date.localeCompare(b.date));
+}
+
+interface DeadlineLine {
+  date: string;
+  vendor: string;
+  category: string;
+  dateLabel: string;
+  sentence: string;
+  summaryHtml: string;
+  citedRecord: DealChange | null;
+  datedRecord: DealChange | null;
+}
+
+function recordDeadlineLine(record: DealChange): DeadlineLine {
+  return {
+    date: record.date, dateLabel: changeEntryDateLabel(record),
+    vendor: record.vendor,
+    category: record.category,
+    sentence: record.summary,
+    summaryHtml: changeSummaryHtml(record, escHtmlServer),
+    citedRecord: record,
+    datedRecord: record,
+  };
+}
+
+function statedDeadlineLine(s: StatedDeadline): DeadlineLine {
+  return {
+    date: s.date,
+    vendor: s.vendor,
+    category: s.category,
+    dateLabel: s.date,
+    sentence: s.sentence,
+    summaryHtml: s.record
+      ? changeSummaryHtml({ ...s.record, summary: s.sentence }, escHtmlServer)
+      : [escHtmlServer(s.sentence), listingSourceLinkHtml(s.sourceUrl, escHtmlServer)].filter(Boolean).join(" ") + conditionsAfterAWholeDescriptionHtml(s),
+    citedRecord: s.record ?? null,
+    datedRecord: null,
+  };
+}
+
+function deadlineLinesOf(records: readonly DealChange[], stated: readonly StatedDeadline[]): DeadlineLine[] {
+  return [...records.map(recordDeadlineLine), ...stated.map(statedDeadlineLine)]
+    .sort((a, b) => a.date.localeCompare(b.date));
+}
+
+const COMING_UP_WHERE_EVERY_DEADLINE_IS_HTML =
+  'Every deadline we hold is on <a href="/deadlines">the deadline tracker</a>, and every change record we hold is in <a href="/changes">the full change log</a>.';
+
+const COMING_UP_CSS = `
+.coming-up-list{list-style:none;margin:0 0 .75rem}
+.coming-up-list li{font-size:.85rem;color:var(--text-muted);line-height:1.5;padding:.5rem 0;border-bottom:1px solid var(--border)}
+.coming-up-date{font-family:var(--mono);font-size:.75rem;color:var(--text-dim)}
+.coming-up .dated-rule,.tw-coming-up .dated-rule{font-size:.78rem;color:var(--text-dim)}`;
+
+function comingUpLines(today: string, listedInTheWeek: ReadonlySet<DealChange>): DeadlineLine[] {
+  const allChanges = loadDealChanges();
+  const records = vendorRecordsDatedAfter(allChanges, today);
+  const lastDay = lastDayComingUp(today);
+  return deadlineLinesOf(records, deadlinesOurTextStates(allChanges, records, today))
+    .filter(line => line.date <= lastDay)
+    .filter(line => line.datedRecord === null || !listedInTheWeek.has(line.datedRecord));
+}
+
+function comingUpSectionHtml(today: string, listedInTheWeek: ReadonlySet<DealChange>, sectionClass: string): string {
+  const lines = comingUpLines(today, listedInTheWeek);
+  if (lines.length === 0) return "";
+  const items = lines
+    .map(line => `<li><span class="coming-up-date">${escHtmlServer(line.dateLabel)}</span> ${changeVendorLinkHtml(line.vendor, ' class="change-vendor"')}: ${line.summaryHtml}</li>`)
+    .join("\n      ");
+  return `
+  <section class="${sectionClass}">
+    <h2>${escHtmlServer(COMING_UP_HEADING)}</h2>
+    <ul class="coming-up-list">
+      ${items}
+    </ul>
+    <p class="dated-rule">${escHtmlServer(A_DATED_SECTION_MARKER)} ${COMING_UP_WHERE_EVERY_DEADLINE_IS_HTML}</p>
+  </section>`;
+}
+
 function conditionsAfterAWholeDescriptionHtml(deadline: StatedDeadline): string {
   return quotesTheWholeDescription(deadline) ? conditionsAfterTheTermsHtml(deadline.listing) : "";
 }
@@ -50120,9 +50209,7 @@ function buildDeadlinesPage(): string {
   const today = new Date().toISOString().slice(0, 10);
   const todayMs = new Date(today + "T00:00:00Z").getTime();
 
-  const deadlines = changesTheVendorMade(allChanges)
-    .filter(c => c.date > today)
-    .sort((a, b) => a.date.localeCompare(b.date));
+  const deadlines = vendorRecordsDatedAfter(allChanges, today);
   const stated = deadlinesOurTextStates(allChanges, deadlines, today);
   const entryCount = deadlines.length + stated.length;
 
@@ -50219,35 +50306,16 @@ ${altHtml}${guideHtml}
       </div>`;
   }
 
-  const recordCards = deadlines.map(c => ({
-    entry: c,
-    html: deadlineCardHtml(c.date, {
-      badge: badgeOf(c),
-      vendor: c.vendor,
-      category: c.category,
-      dateLabel: changeEntryDateLabel(c),
-      summaryHtml: changeSummaryHtml(c, escHtmlServer),
-      alternatives: c.alternatives ?? [],
-      guideText: c.summary,
-    }),
-  }));
-  const statedCards = stated.map(s => ({
-    entry: s,
-    html: deadlineCardHtml(s.date, {
-      badge: s.record ? badgeOf(s.record) : null,
-      vendor: s.vendor,
-      category: s.category,
-      dateLabel: s.date,
-      summaryHtml: s.record
-        ? changeSummaryHtml({ ...s.record, summary: s.sentence }, escHtmlServer)
-        : [escHtmlServer(s.sentence), listingSourceLinkHtml(s.sourceUrl, escHtmlServer)].filter(Boolean).join(" ") + conditionsAfterAWholeDescriptionHtml(s),
-      alternatives: s.record?.alternatives ?? [],
-      guideText: s.sentence,
-    }),
-  }));
-  const cardsHtml = [...recordCards, ...statedCards]
-    .sort((a, b) => a.entry.date.localeCompare(b.entry.date))
-    .map(card => card.html)
+  const cardsHtml = deadlineLinesOf(deadlines, stated)
+    .map(line => deadlineCardHtml(line.date, {
+      badge: line.citedRecord ? badgeOf(line.citedRecord) : null,
+      vendor: line.vendor,
+      category: line.category,
+      dateLabel: line.dateLabel,
+      summaryHtml: line.summaryHtml,
+      alternatives: line.citedRecord?.alternatives ?? [],
+      guideText: line.sentence,
+    }))
     .join("\n");
 
   const filterButtons = Array.from(typeGroups.entries())

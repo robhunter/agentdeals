@@ -27,6 +27,7 @@ import { changeTouchesTheListing } from "../dist/product-deprecation.js";
 import { A_DATED_HEADING_MARKER, A_DATED_SECTION_MARKER, ANNOUNCED_HEADING } from "../dist/change-dates.js";
 import { NOTHING_CHANGING_SOON_HTML, RECENT_CHANGES_ON_THE_HOME_PAGE, UPCOMING_DEADLINES_ON_THE_HOME_PAGE, atMostShownHere, onlyTheMostRecentShown } from "../dist/homepage-claims.js";
 import { CUTS_THIS_YEAR_HEADING } from "../dist/free-tier-tracker.js";
+import { COMING_UP_HEADING } from "../dist/coming-up.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -217,6 +218,7 @@ const SECTIONS_GROUPED_BY_A_DATE: SectionGroupedByADate[] = [
   { page: "/", heading: "Upcoming deal changes", served: "when it holds one" },
   { page: "/pricing-changes", heading: "Upcoming Changes", served: "when it holds one" },
   { page: "/trends/cloud-hosting", heading: ANNOUNCED_HEADING, served: "when it holds one" },
+  { page: "/this-week", heading: COMING_UP_HEADING, served: "when it holds one" },
 ];
 
 const DECLARED_DATED_HEADINGS_FLOOR = 126;
