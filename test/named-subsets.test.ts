@@ -66,6 +66,7 @@ interface Surfaces {
   datedHeadings: string[];
   datedCitationHeadings: string[];
   destinationsOf: Record<string, string[]>;
+  quotedDateVendors: Record<string, string[]>;
   headingAtAnchor: Record<string, string>;
   completeLogHeadings: string[];
   headingsSayingNothingQualifies: string[];
@@ -284,6 +285,45 @@ function datesBehindEachDemotion(body: string): Record<string, string[]> {
   return dated;
 }
 
+function elementAt(body: string, at: number, tag: string): string {
+  const tags = new RegExp(`<(/?)${tag}\\b[^>]*>`, "g");
+  tags.lastIndex = at;
+  let depth = 0;
+  for (let match = tags.exec(body); match; match = tags.exec(body)) {
+    depth += match[1] ? -1 : 1;
+    if (depth === 0) return body.slice(at, tags.lastIndex);
+  }
+  return "";
+}
+
+function quotedDateVendorsByHeading(body: string): Record<string, string[]> {
+  const cards = [...body.matchAll(/<div\b[^>]*class="dl-card\b[^"]*"[^>]*>/g)]
+    .map(match => ({ at: match.index!, html: elementAt(body, match.index!, "div") }));
+  for (const list of body.matchAll(/<ul class="coming-up-list">([\s\S]*?)<\/ul>/g)) {
+    const starts = list.index! + list[0].indexOf(list[1]!);
+    for (const item of list[1]!.matchAll(/<li\b[^>]*>/g)) {
+      const at = starts + item.index!;
+      cards.push({ at, html: elementAt(body, at, "li") });
+    }
+  }
+  const headings = headingsOf(body);
+  const sources = new Map<string, Map<string, boolean>>();
+  for (const card of cards) {
+    const heading = headings.filter(h => h.at < card.at).pop()?.text;
+    if (heading === undefined) continue;
+    const vendor = card.html.match(/<a\b[^>]*href="\/vendor\/([a-z0-9-]+)"[^>]*class="(?:dl-vendor|change-vendor)"[^>]*>/)?.[1];
+    if (!vendor) continue;
+    const quoted = /<a\b[^>]*class="record-source"[^>]*>/.test(card.html)
+      && !/<a\b[^>]*class="change-source"[^>]*>/.test(card.html);
+    if (!sources.has(heading)) sources.set(heading, new Map());
+    const vendors = sources.get(heading)!;
+    vendors.set(vendor, (vendors.get(vendor) ?? true) && quoted);
+  }
+  return Object.fromEntries([...sources].map(([heading, vendors]) => [
+    heading, [...vendors].filter(([, quoted]) => quoted).map(([vendor]) => vendor),
+  ]));
+}
+
 function jsonLdBlocks(body: string): unknown[] {
   const out: unknown[] = [];
   const re = /<script type="application\/ld\+json">([\s\S]*?)<\/script>/g;
@@ -353,6 +393,7 @@ function surfacesOf(body: string): Surfaces {
     datedHeadings: [...new Set(dated.flatMap(declaration => declaration.headings))],
     datedCitationHeadings: [...new Set(citations.flatMap(declaration => declaration.headings))],
     destinationsOf,
+    quotedDateVendors: quotedDateVendorsByHeading(body),
     headingAtAnchor: headingAtEachAnchor(body),
     completeLogHeadings: headingsDeclaringACompleteLog(body),
     headingsSayingNothingQualifies: headingsSayingNothingQualifies(body),
@@ -465,6 +506,23 @@ function destinationNames(
   return pages.get(destination.split("#")[0]!)?.vendors.includes(vendor) ?? false;
 }
 
+function missingDateDestinations(before: Surfaces, after: Surfaces, pages: Map<string, Surfaces>): string[] {
+  if (coversADifferentDay(before, after)) return [];
+  const stranded: string[] = [];
+  const namedNow = stableRegions(after);
+  const declared = [...new Set([...before.datedHeadings, ...before.datedCitationHeadings])];
+  for (const heading of declared) {
+    const held = namedNow.get(stableName(before, heading)) ?? new Set<string>();
+    for (const vendor of (before.regions[heading] ?? []).filter(v => !held.has(v))) {
+      if (before.quotedDateVendors[heading]?.includes(vendor)) continue;
+      const destinations = before.destinationsOf[heading] ?? [];
+      if (destinations.some(destination => destinationNames(destination, vendor, after, pages))) continue;
+      stranded.push(`"${heading}": ${vendor} is not at ${destinations.join(" or ") || "any destination it names"}`);
+    }
+  }
+  return stranded;
+}
+
 function movedOnlyBetweenDatedSections(before: Surfaces, after: Surfaces, vendor: string): boolean {
   const { lost, gained } = headingsGainedAndLost(before, after, vendor);
   if (lost.length === 0 && gained.length === 0) return true;
@@ -563,6 +621,72 @@ async function readEveryPage(base: string, paths: string[]): Promise<{ read: Map
   }
   return { read, refused };
 }
+
+describe("a quoted deadline can leave without a change-log entry", () => {
+  const source = (kind: string) => `<a href="https://example.com/terms" class="${kind}">Source</a>`;
+  const vendor = (slug: string, style: string) => `<a href="/vendor/${slug}" class="${style}">${slug}</a>`;
+  const card = (slug: string, kind: string) => `<div class="dl-card urgency-warning"><div class="dl-body"><div class="dl-meta">${vendor(slug, "dl-vendor")}</div><div class="dl-summary">Terms ${source(kind)}</div></div></div>`;
+  const item = (slug: string, kind: string) => `<li><span class="coming-up-date">2026-11-02</span> ${vendor(slug, "change-vendor")}: Terms ${source(kind)}</li>`;
+  const section = (heading: string, content: string) => `<h2>${heading}</h2><p>${A_DATED_SECTION_MARKER} <a href="/changes">The full change log</a>.</p>${content}`;
+  const page = (content: string) => surfacesOf(`<title>Deadlines</title>${content}`);
+  const empty = page("");
+  const missing = (html: string, pages = new Map<string, Surfaces>()) => missingDateDestinations(page(html), empty, pages);
+
+  for (const [layout, render] of [
+    ["tracker card", (slug: string, kind: string) => card(slug, kind)],
+    ["coming-up item", (slug: string, kind: string) => `<ul class="coming-up-list">${item(slug, kind)}</ul>`],
+  ] as const) {
+    it(`lets a quoted date leave a ${layout} without a change-log entry`, () => {
+      assert.deepEqual(missing(section("Upcoming", render("alfa", "record-source"))), []);
+    });
+
+    it(`requires a change record leaving a ${layout} to appear at its destination`, () => {
+      const html = section("Upcoming", render("alfa", "change-source"));
+      assert.deepEqual(missing(html), ['"Upcoming": alfa is not at /changes']);
+      const log = page('<h1>Changes</h1><a href="/vendor/alfa">alfa</a>');
+      assert.deepEqual(missing(html, new Map([["/changes", log]])), []);
+    });
+
+    it(`does not treat an uncited ${layout} as a quoted date`, () => {
+      assert.deepEqual(missing(section("Upcoming", render("alfa", ""))), ['"Upcoming": alfa is not at /changes']);
+    });
+  }
+
+  it("keeps the source distinction between neighboring deadline cards", () => {
+    for (const cards of [card("alfa", "record-source") + card("bravo", "change-source"), card("bravo", "change-source") + card("alfa", "record-source")]) {
+      assert.deepEqual(missing(section("Upcoming", cards)), ['"Upcoming": bravo is not at /changes']);
+    }
+  });
+
+  it("keeps the source distinction between neighboring coming-up items", () => {
+    assert.deepEqual(missing(section("Upcoming", `<ul class="coming-up-list">${item("alfa", "record-source")}${item("bravo", "change-source")}</ul>`)), ['"Upcoming": bravo is not at /changes']);
+  });
+
+  it("does not exempt a vendor whose quoted date and change record both leave", () => {
+    for (const cards of [card("alfa", "record-source") + card("alfa", "change-source"), card("alfa", "change-source") + card("alfa", "record-source")]) {
+      assert.deepEqual(missing(section("Upcoming", cards)), ['"Upcoming": alfa is not at /changes']);
+    }
+  });
+
+  it("does not transfer a quoted-date exemption to another heading", () => {
+    const html = section("Upcoming", card("alfa", "record-source")) + section("Later", card("alfa", "change-source"));
+    assert.deepEqual(missing(html), ['"Later": alfa is not at /changes']);
+  });
+
+  it("does not transfer a quoted-date exemption to an alternative linked from the card", () => {
+    const html = card("alfa", "record-source").replace('</div></div>', '<div class="dl-alts"><a href="/vendor/bravo">bravo</a></div></div></div>');
+    assert.deepEqual(missing(section("Upcoming", html)), ['"Upcoming": bravo is not at /changes']);
+  });
+
+  it("does not exempt a card that also cites a change record", () => {
+    const html = card("alfa", "record-source").replace("Terms ", `Terms ${source("change-source")} `);
+    assert.deepEqual(missing(section("Upcoming", html)), ['"Upcoming": alfa is not at /changes']);
+  });
+
+  it("does not read a citation outside a deadline card as its source", () => {
+    assert.deepEqual(missing(section("Upcoming", card("alfa", "change-source") + source("record-source"))), ['"Upcoming": alfa is not at /changes']);
+  });
+});
 
 describe("what a page names changes overnight only where the page itself says why", () => {
   let served: string[] = [];
@@ -689,17 +813,7 @@ describe("what a page names changes overnight only where the page itself says wh
       const [before, after] = bothDays(pagePath);
       const declared = [...new Set([...before.datedHeadings, ...before.datedCitationHeadings])];
       declaring += declared.length;
-      if (coversADifferentDay(before, after)) continue;
-      const namedNow = stableRegions(after);
-      for (const heading of declared) {
-        const stable = stableName(before, heading);
-        const held = namedNow.get(stable) ?? new Set<string>();
-        for (const vendor of (before.regions[heading] ?? []).filter(v => !held.has(v))) {
-          const destinations = before.destinationsOf[heading] ?? [];
-          if (destinations.some(destination => destinationNames(destination, vendor, after, tomorrow))) continue;
-          stranded.push(`${pagePath} "${heading}": ${vendor} is not at ${destinations.join(" or ") || "any destination it names"}`);
-        }
-      }
+      stranded.push(...missingDateDestinations(before, after, tomorrow).map(missing => `${pagePath} ${missing}`));
     }
     assertPopulationFloor(declaring, DECLARED_DATED_HEADINGS_FLOOR, "headings covered by a stated date rule");
     assert.deepEqual(
