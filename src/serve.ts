@@ -10334,6 +10334,13 @@ function buildMonthlyReportPage(yearMonth: string): string | null {
       }).join("") + '</ul>'
     : '';
 
+  const neutralHtml = neutral.length > 0
+    ? '<h2>Deprecations and Other Changes</h2><p class="section-desc">Changes counted as neither negative nor positive, such as products and models retired or closed to new users</p><ul class="vendor-list">'
+      + [...neutral].sort((a, b) => a.date.localeCompare(b.date)).map(c =>
+        '<li><strong>' + escHtmlServer(c.vendor) + '</strong> (' + escHtmlServer(c.change_type.replace(/_/g, " ")) + ' ' + escHtmlServer(c.date) + ')<ul><li>' + changeSummaryHtml(c, escHtmlServer) + '</li></ul></li>'
+      ).join("") + '</ul>'
+    : '';
+
   const months = getAvailableReportMonths();
   const currentIdx = months.indexOf(yearMonth);
   const newerMonth = currentIdx > 0 ? months[currentIdx - 1] : null;
@@ -10420,6 +10427,7 @@ function buildMonthlyReportPage(yearMonth: string): string | null {
         + '<table><thead><tr><th>Change Type</th><th>Count</th></tr></thead><tbody>' + typeBreakdownRows + '</tbody></table>\n'
         + losersHtml
         + winnersHtml
+        + neutralHtml
         + '<h2>Category Breakdown</h2>\n'
         + '<p class="section-desc">Which categories saw the most pricing changes</p>\n'
         + '<table><thead><tr><th>Category</th><th>Total</th><th>Negative</th><th>Positive</th></tr></thead><tbody>' + catBreakdownRows + '</tbody></table>\n')
