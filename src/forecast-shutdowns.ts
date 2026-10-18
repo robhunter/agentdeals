@@ -4,8 +4,7 @@ import { changeIsUnconfirmed } from "./change-confirmation.js";
 import { isNoLongerInForce } from "./change-resolution.js";
 import { PRODUCT_DEPRECATED, discontinuationDate } from "./product-deprecation.js";
 import { servedVendorSlug, servedVendorSlugForName } from "./vendor-slug.js";
-
-const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
+import { statedShutdownDateOf } from "./shutdown-date.js";
 
 export interface RecordACardCovers {
   vendor: string;
@@ -25,10 +24,7 @@ export interface ForecastShutdown {
 }
 
 export function shutdownDateOf(record: DealChange): string {
-  const stated = typeof record.discontinued_date === "string" && ISO_DATE.test(record.discontinued_date)
-    ? record.discontinued_date
-    : null;
-  return stated ?? discontinuationDate(record) ?? record.date;
+  return statedShutdownDateOf(record) ?? discontinuationDate(record) ?? record.date;
 }
 
 export function whatEnds(record: DealChange): string | null {

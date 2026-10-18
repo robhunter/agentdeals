@@ -106,7 +106,7 @@ import { countsDownTo, shutdownDeadlineHtml } from "./shutdown-deadline.js";
 import { forecastShutdownsWithoutACard, whatEnds, type RecordACardCovers } from "./forecast-shutdowns.js";
 import { deadlineTextsOf, quotesTheWholeDescription, statedDeadlines, type StatedDeadline } from "./stated-deadlines.js";
 import { COMING_UP_HEADING, lastDayComingUp } from "./coming-up.js";
-import { UPCOMING_CHANGES_HEADING, UPCOMING_CHANGES_INTRO, splitAtTheDayServed } from "./upcoming-changes.js";
+import { UPCOMING_CHANGES_HEADING, UPCOMING_CHANGES_INTRO, splitAtTheDayServed, upcomingDateOf, atUpcomingDate } from "./upcoming-changes.js";
 import { createRegistrationLimiter, rateLimitHeaders } from "./rate-limit.js";
 import { offerForSlug, vendorRates, cheapestRate, dearestRate, spanOfRates, formatRate, formatRateSpan, monthlyTokenCost, formatDollars, amountValue, type ModelRate } from "./model-rates.js";
 import { DECLARED_FIGURE_READS, READ_DATES_THAT_ARE_NOT_FIGURE_READS, STALE_FACT_PAGES_BASELINE, TABLE_STALENESS_DISCLOSURES, declaredFigureReadsFor, factsOutdatedBy, linkifyVerdictBlocks, newestChangeBySlug, overdueReport, pageCompiledClause, pageDataProvenance, pageDateModified, pageFigureSource, tabulatedVendorSlots, tabulatedVendors, utcToday, verdictsOutdatedBy } from "./page-reviews.js";
@@ -27097,7 +27097,10 @@ function buildShutdownTrackerPage(): string {
     shutdownVendorSlugs.some(slug => toSlug(c.vendor) === slug)
   ).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()), utcToday());
   const relevantChanges = shutdownVendorChangesByDayServed.inEffect.slice(0, 10);
-  const upcomingRelevantChanges = shutdownVendorChangesByDayServed.upcoming;
+  const upcomingRelevantChanges = splitAtTheDayServed(changesTheVendorMade(dealChanges).filter(c =>
+    shutdownVendorSlugs.includes(toSlug(c.vendor))
+      || (upcomingDateOf(c) !== c.date && shutdowns.some(shutdown => shutdown.vendorSlug === toSlug(c.vendor)))
+  ), utcToday()).upcoming;
   const relatedChangesTable = (changes: typeof relevantChanges) => `<table class="pricing-table">
     <thead><tr><th>Date</th><th>Vendor</th><th>Change</th><th>Impact</th></tr></thead>
     <tbody>
@@ -49043,7 +49046,7 @@ ${altHtml}
   const countedAll = trackedChanges(allChanges);
   const countable = changesTheVendorMade(trackedChanges(sorted));
   const undatedCounted = trackedChanges(undatedChanges).length;
-  const upcomingCount = countable.filter(c => c.date >= today).length;
+  const upcomingCount = countable.filter(c => upcomingDateOf(c) >= today).length;
   const removedCount = changesTheVendorMade(countedAll).filter(endsAFreeTier).length;
   const thisMonth = today.slice(0, 7);
   const thisMonthCount = countable.filter(c => c.date.slice(0, 7) === thisMonth).length;
@@ -49060,7 +49063,7 @@ ${altHtml}
   const ytdNetLabel = ytdNet > 0 ? "net positive" : ytdNet < 0 ? "net negative" : "neutral";
   const ytdNetColor = ytdNet > 0 ? "#3fb950" : ytdNet < 0 ? "#f85149" : "#8b949e";
 
-  const upcomingChanges = countable.filter(c => c.date >= today);
+  const upcomingChanges = countable.map(atUpcomingDate).filter(c => c.date >= today);
 
   const vendorCategories = [...new Set(sorted.map(c => c.category || "").filter(Boolean))].sort();
   const years = [...new Set(sorted.map(c => c.date.slice(0, 4)))].sort().reverse();

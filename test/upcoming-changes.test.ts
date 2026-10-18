@@ -223,7 +223,7 @@ describe("a copy of the change log with no record dated after the day served", (
   let pages = new Map<string, string>();
 
   before(async () => {
-    pages = await servedPages(shipped.filter((c) => c.date <= TODAY));
+    pages = await servedPages(shipped.map((c) => ({ ...c, discontinued_date: "unknown" })).filter((c) => c.date <= TODAY));
   });
 
   for (const { route, inEffectAnchor, shownAtMost } of PAGES) {
@@ -568,4 +568,120 @@ describe("the change lists the browser builds from the API, with announced recor
     assert.ok(upcomingDates.every((date) => date > TODAY));
     assert.deepStrictEqual(upcomingDates, [...upcomingDates].sort());
   });
+});
+
+
+describe("announced retirements on records already in effect", () => {
+  const retirement = dayOffset(18);
+  const earlier = dayOffset(6);
+  const subjects = [...FIXTURES.keys(), "Prisma Accelerate", "smartlook.com"].map((vendor) => ({
+    later: { ...fixture(vendor, dayOffset(-1), "product_deprecated", `The ${vendor} later retirement fixture.`), discontinued_date: retirement },
+    sooner: { ...fixture(vendor, dayOffset(-2), "product_deprecated", `The ${vendor} sooner retirement fixture.`), discontinued_date: earlier },
+    unknown: { ...fixture(vendor, dayOffset(-3), "product_deprecated", `The ${vendor} unknown retirement fixture.`), discontinued_date: "unknown" },
+  }));
+  const pages = new Map<string, string>();
+  const resources = new Map<string, string>();
+  let pricingUpcoming = "";
+
+  before(async () => {
+    await withServedChangeLog([...shipped, ...subjects.flatMap((s) => [s.later, s.sooner, s.unknown])], async (base) => {
+      for (const route of [...PAGES.map((p) => p.route), "/alternative-to/openai", "/pricing-changes", "/changes"]) {
+        const response = await fetch(base + route, { redirect: "error" });
+        assert.strictEqual(response.status, 200);
+        pages.set(route, await response.text());
+      }
+      pricingUpcoming = pages.get("/pricing-changes")!.split('<div class="upcoming-section" id="upcoming">')[1]!.split('<div class="pc-filters">')[0]!;
+      resources.set("Streamable HTTP", await resourceTextOverHttp(base, "agentdeals://changes/latest"));
+      resources.set("stdio", await latestPricingChangesOverStdio(base));
+    });
+  });
+
+  for (const { route, vendor, inEffectAnchor } of PAGES) {
+    it(`${route} lists a future retirement on its retirement date and retains its earlier event`, () => {
+      const subject = subjects.find((s) => s.later.vendor === vendor)!;
+      const html = pages.get(route)!;
+      const upcoming = sectionFrom(html, "upcoming-changes")!;
+      assert.ok(upcoming.includes(subject.sooner.summary));
+      assert.ok(upcoming.includes(subject.later.summary));
+      assert.ok(upcoming.indexOf(subject.sooner.summary) < upcoming.indexOf(subject.later.summary));
+      assert.ok(!upcoming.includes(subject.unknown.summary));
+      const inEffect = sectionFrom(html, inEffectAnchor)!;
+      assert.ok(inEffect.includes(subject.later.summary));
+      assert.ok(inEffect.includes(subject.unknown.summary));
+      const row = upcoming.split(/<tr>/).find((r) => r.includes(subject.later.summary))!;
+      const label = new Date(retirement + "T00:00:00Z").toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" });
+      assert.ok((row.replace(/\u00a0/g, " ").includes(label) || row.includes(retirement)), `${route} retirement row does not label ${label}`);
+    });
+  }
+
+  it("lists retirement dates on vendor alternatives and in the pricing tracker without removing history", () => {
+    const subject = subjects.find((s) => s.later.vendor === "OpenAI")!;
+    const upcoming = sectionFrom(pages.get("/alternative-to/openai")!, "upcoming-changes")!;
+    assert.ok(upcoming.includes(subject.later.summary));
+    assert.ok(!upcoming.includes(subject.unknown.summary));
+    assert.ok(upcoming.includes(retirement));
+    for (const subject of subjects) {
+      assert.ok(pricingUpcoming.includes(subject.later.summary));
+      assert.ok(!pricingUpcoming.includes(subject.unknown.summary));
+      assert.ok(pages.get("/changes")!.includes(subject.later.summary));
+    }
+    const label = new Date(retirement + "T00:00:00Z").toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" });
+    const entry = pricingUpcoming.split('<div class="pc-entry').find((e) => e.includes(subject.later.summary))!;
+    assert.ok(entry.includes(retirement));
+  });
+
+  it("includes retirements represented by forecast cards and counts every upcoming tracker entry", () => {
+    const shutdowns = sectionFrom(pages.get("/shutdowns")!, "upcoming-changes")!;
+    for (const vendor of ["Prisma Accelerate", "smartlook.com"]) {
+      const subject = subjects.find((s) => s.later.vendor === vendor)!;
+      assert.ok(shutdowns.includes(subject.later.summary));
+      assert.ok(shutdowns.includes(subject.sooner.summary));
+      assert.ok(!shutdowns.includes(subject.unknown.summary));
+    }
+    const count = pages.get("/pricing-changes")!.match(/<div class="stat-value">(\d+)<\/div>\s*<div class="stat-label">Upcoming<\/div>/);
+    assert.ok(count);
+    assert.strictEqual(Number(count[1]), (pricingUpcoming.match(/class="pc-entry/g) ?? []).length);
+  });
+
+  for (const transport of ["Streamable HTTP", "stdio"]) {
+    it(`over ${transport}, labels and sorts retirement dates without discarding the earlier event`, () => {
+      const text = resources.get(transport)!;
+      const upcoming = text.split(`# ${UPCOMING_CHANGES_HEADING}\n`)[1]!;
+      const latest = text.split(`# ${UPCOMING_CHANGES_HEADING}\n`)[0]!;
+      const subject = subjects.find((s) => s.later.vendor === "OpenAI")!;
+      assert.ok(upcoming.includes(`**${retirement}** | OpenAI`));
+      assert.ok(upcoming.includes(subject.later.summary));
+      assert.ok(!upcoming.includes(subject.unknown.summary));
+      assert.ok(latest.includes(subject.later.summary));
+      const dates = entryDatesUnder(text, UPCOMING_CHANGES_HEADING);
+      assert.deepStrictEqual(dates, [...dates].sort());
+    });
+  }
+});
+
+describe("the retirement date boundary", () => {
+  const record = { date: "2026-10-02", discontinued_date: "2026-12-01", summary: "An earlier event with a later retirement." };
+
+  it("preserves the original event and does not mutate the stored record", () => {
+    const split = splitAtTheDayServed([record], "2026-10-18");
+    assert.deepStrictEqual(split.inEffect, [record]);
+    assert.deepStrictEqual(split.upcoming.map((c) => c.date), ["2026-12-01"]);
+    assert.strictEqual(record.date, "2026-10-02");
+  });
+
+  for (const discontinued_date of ["unknown", "December 1, 2026", "12/01/2026", "", null, undefined]) {
+    it(`does not schedule a retirement from ${JSON.stringify(discontinued_date)}`, () => {
+      const split = splitAtTheDayServed([{ ...record, discontinued_date }], "2026-10-18");
+      assert.strictEqual(split.upcoming.length, 0);
+      assert.strictEqual(split.inEffect.length, 1);
+    });
+  }
+
+  for (const day of ["2026-12-01", "2026-12-02"]) {
+    it(`keeps the earlier event and leaves the upcoming list on ${day}`, () => {
+      const split = splitAtTheDayServed([record], day);
+      assert.deepStrictEqual(split.upcoming, []);
+      assert.deepStrictEqual(split.inEffect, [record]);
+    });
+  }
 });
