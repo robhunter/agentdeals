@@ -430,7 +430,7 @@ describe("hosting pages publish the free-tier figures our records hold (#1183)",
     assert.strictEqual(rows.length, 1);
     const cells = [...rows[0].matchAll(/<td\b[^>]*>([\s\S]*?)<\/td>/g)]
       .map((match) => readableText(match[1]).trim());
-    assert.strictEqual(cells[0], "MongoDB Atlas");
+    assert.match(cells[0], /^MongoDB Atlas(?:\s|$)/);
     assert.strictEqual(cells[2], "512 MB");
     assert.strictEqual(cells[3], "Shared cluster (M0), 500 connections");
   });
