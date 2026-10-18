@@ -27099,7 +27099,7 @@ function buildShutdownTrackerPage(): string {
   const relevantChanges = shutdownVendorChangesByDayServed.inEffect.slice(0, 10);
   const upcomingRelevantChanges = splitAtTheDayServed(changesTheVendorMade(dealChanges).filter(c =>
     shutdownVendorSlugs.includes(toSlug(c.vendor))
-      || (upcomingDateOf(c) !== c.date && shutdowns.some(shutdown => shutdown.vendorSlug === toSlug(c.vendor)))
+      || (upcomingDateOf(c, utcToday()) !== c.date && shutdowns.some(shutdown => shutdown.vendorSlug === toSlug(c.vendor)))
   ), utcToday()).upcoming;
   const relatedChangesTable = (changes: typeof relevantChanges) => `<table class="pricing-table">
     <thead><tr><th>Date</th><th>Vendor</th><th>Change</th><th>Impact</th></tr></thead>
@@ -49046,7 +49046,7 @@ ${altHtml}
   const countedAll = trackedChanges(allChanges);
   const countable = changesTheVendorMade(trackedChanges(sorted));
   const undatedCounted = trackedChanges(undatedChanges).length;
-  const upcomingCount = countable.filter(c => upcomingDateOf(c) >= today).length;
+  const upcomingCount = countable.filter(c => upcomingDateOf(c, today) >= today).length;
   const removedCount = changesTheVendorMade(countedAll).filter(endsAFreeTier).length;
   const thisMonth = today.slice(0, 7);
   const thisMonthCount = countable.filter(c => c.date.slice(0, 7) === thisMonth).length;
@@ -49063,7 +49063,7 @@ ${altHtml}
   const ytdNetLabel = ytdNet > 0 ? "net positive" : ytdNet < 0 ? "net negative" : "neutral";
   const ytdNetColor = ytdNet > 0 ? "#3fb950" : ytdNet < 0 ? "#f85149" : "#8b949e";
 
-  const upcomingChanges = countable.map(atUpcomingDate).filter(c => c.date >= today);
+  const upcomingChanges = countable.map(c => atUpcomingDate(c, today)).filter(c => c.date >= today);
 
   const vendorCategories = [...new Set(sorted.map(c => c.category || "").filter(Boolean))].sort();
   const years = [...new Set(sorted.map(c => c.date.slice(0, 4)))].sort().reverse();

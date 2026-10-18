@@ -3,12 +3,13 @@ import { statedShutdownDateOf } from "./shutdown-date.js";
 
 type ChangeWithShutdownDate = { date: string; discontinued_date?: string | null };
 
-export function upcomingDateOf(change: ChangeWithShutdownDate): string {
-  return statedShutdownDateOf(change) ?? change.date;
+export function upcomingDateOf(change: ChangeWithShutdownDate, servedOn: string): string {
+  const stated = statedShutdownDateOf(change);
+  return stated !== null && (stated > servedOn || change.date <= servedOn) ? stated : change.date;
 }
 
-export function atUpcomingDate<T extends ChangeWithShutdownDate>(change: T): T {
-  const date = upcomingDateOf(change);
+export function atUpcomingDate<T extends ChangeWithShutdownDate>(change: T, servedOn: string): T {
+  const date = upcomingDateOf(change, servedOn);
   return date === change.date ? change : { ...change, date };
 }
 
@@ -24,7 +25,7 @@ export interface SplitAtTheDayServed<T> {
 export function splitAtTheDayServed<T extends ChangeWithShutdownDate>(newestFirst: readonly T[], servedOn: string): SplitAtTheDayServed<T> {
   return {
     inEffect: newestFirst.filter((c) => !hasNotTakenEffect(c, servedOn)),
-    upcoming: newestFirst.map(atUpcomingDate).filter((c) => hasNotTakenEffect(c, servedOn)).sort((a, b) => a.date.localeCompare(b.date)),
+    upcoming: newestFirst.map((c) => atUpcomingDate(c, servedOn)).filter((c) => hasNotTakenEffect(c, servedOn)).sort((a, b) => a.date.localeCompare(b.date)),
   };
 }
 

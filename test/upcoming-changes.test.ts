@@ -677,6 +677,15 @@ describe("the retirement date boundary", () => {
     });
   }
 
+  for (const discontinued_date of ["2026-10-17", "2026-10-18"]) {
+    it(`keeps a separate future event when its retirement date is ${discontinued_date}`, () => {
+      const event = { ...record, date: "2026-11-01", discontinued_date };
+      const split = splitAtTheDayServed([event], "2026-10-18");
+      assert.deepStrictEqual(split.inEffect, []);
+      assert.deepStrictEqual(split.upcoming, [event]);
+    });
+  }
+
   for (const day of ["2026-12-01", "2026-12-02"]) {
     it(`keeps the earlier event and leaves the upcoming list on ${day}`, () => {
       const split = splitAtTheDayServed([record], day);
