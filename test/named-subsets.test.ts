@@ -28,6 +28,7 @@ import { A_DATED_HEADING_MARKER, A_DATED_SECTION_MARKER, ANNOUNCED_HEADING } fro
 import { NOTHING_CHANGING_SOON_HTML, RECENT_CHANGES_ON_THE_HOME_PAGE, UPCOMING_DEADLINES_ON_THE_HOME_PAGE, atMostShownHere, onlyTheMostRecentShown } from "../dist/homepage-claims.js";
 import { CUTS_THIS_YEAR_HEADING } from "../dist/free-tier-tracker.js";
 import { COMING_UP_HEADING } from "../dist/coming-up.js";
+import { monthHeadingLabel } from "../dist/change-log-sections.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -56,6 +57,9 @@ const ROLLING_VERDICT_HEADINGS = ["At-Risk Vendors", "Stable Picks"];
 const CLOCK_BASE_DAYS = Number(process.env.AGENTDEALS_CLOCK_BASE_DAYS ?? 0);
 
 interface Surfaces {
+  day: string;
+  timelineEntries: { heading: string; vendor: string; date: string }[];
+  upcomingDeclaresMonthMove: boolean;
   title: string | null;
   regions: Record<string, string[]>;
   vendors: string[];
@@ -326,6 +330,19 @@ function quotedDateVendorsByHeading(body: string): Record<string, string[]> {
   ]));
 }
 
+function timelineEntriesOf(body: string): Surfaces["timelineEntries"] {
+  const headings = headingsOf(body);
+  const entries: Surfaces["timelineEntries"] = [];
+  for (const match of body.matchAll(/<div\b[^>]*class="(?:chg|pc)-(?:entry|preview)\b[^"]*"[^>]*>/g)) {
+    const html = elementAt(body, match.index!, "div");
+    const heading = headings.filter(h => h.at < match.index!).pop()?.text;
+    const vendor = html.match(/<a\b[^>]*href="\/vendor\/([a-z0-9-]+)"[^>]*class="(?:chg|pc)-vendor"[^>]*>/)?.[1];
+    const date = html.match(/<div class="(?:chg|pc)-date">effective (\d{4}-\d{2}-\d{2})<\/div>/)?.[1];
+    if (heading && vendor && date) entries.push({ heading, vendor, date });
+  }
+  return entries;
+}
+
 function jsonLdBlocks(body: string): unknown[] {
   const out: unknown[] = [];
   const re = /<script type="application\/ld\+json">([\s\S]*?)<\/script>/g;
@@ -353,7 +370,7 @@ function walkJsonLd(body: string, visit: (node: Record<string, unknown>) => void
   jsonLdBlocks(body).forEach(walk);
 }
 
-function surfacesOf(body: string): Surfaces {
+function surfacesOf(body: string, day = new Date().toISOString().slice(0, 10)): Surfaces {
   const itemListNames: string[] = [];
   const faqAnswers: string[] = [];
   walkJsonLd(body, node => {
@@ -381,6 +398,12 @@ function surfacesOf(body: string): Surfaces {
     }
   }
   return {
+    day,
+    timelineEntries: timelineEntriesOf(body),
+    upcomingDeclaresMonthMove: headingsWhoseSectionSays(body, section =>
+      section.includes(A_DATED_SECTION_MARKER)
+      && section.includes("The day after that date it stops being upcoming and is listed only under the month it falls in")
+    ).includes("Upcoming Changes") && dated.some(declaration => declaration.headings.includes("Upcoming Changes")),
     changesStated: changes ? asCount(changes[1] ?? changes[2]!) : null,
     changesListed: headingsOf(body)
       .map(heading => heading.text.match(CHANGE_SECTION))
@@ -530,7 +553,18 @@ function movedOnlyBetweenDatedSections(before: Surfaces, after: Surfaces, vendor
   if (lost.length === 0 && gained.length === 0) return true;
   if (!lost.every(heading => before.datedHeadings.includes(heading))) return false;
   const sentTo = headingsADeclarationSendsThemTo(before, after, lost);
-  return gained.every(heading => after.datedHeadings.includes(heading) || sentTo.has(heading));
+  return gained.every(heading => after.datedHeadings.includes(heading) || sentTo.has(heading)
+    || entersItsEffectiveMonth(before, after, vendor, heading));
+}
+
+function entersItsEffectiveMonth(before: Surfaces, after: Surfaces, vendor: string, heading: string): boolean {
+  if (!before.upcomingDeclaresMonthMove) return false;
+  if (Date.parse(after.day) - Date.parse(before.day) !== A_DAY_IN_MS) return false;
+  return before.timelineEntries.some(entry =>
+    entry.heading === "Upcoming Changes" && entry.vendor === vendor && entry.date === before.day
+    && heading === monthHeadingLabel(entry.date.slice(0, 7))
+    && !after.timelineEntries.some(next => next.heading === "Upcoming Changes" && next.vendor === vendor && next.date === entry.date)
+    && after.timelineEntries.some(next => next.heading === heading && next.vendor === vendor && next.date === entry.date));
 }
 
 function vendorsThatChangeHeading(before: Surfaces, after: Surfaces): string[] {
@@ -612,14 +646,14 @@ function vendorsNoLongerNamed(before: Surfaces, after: Surfaces): string[] {
   return [...lost, ...gained].sort();
 }
 
-async function readEveryPage(base: string, paths: string[]): Promise<{ read: Map<string, Surfaces>; refused: string[] }> {
+async function readEveryPage(base: string, paths: string[], day: string): Promise<{ read: Map<string, Surfaces>; refused: string[] }> {
   const read = new Map<string, Surfaces>();
   const refused: string[] = [];
   for (const pagePath of paths) {
     const response = await fetch(base + pagePath);
     const body = await response.text();
     if (response.status !== 200) refused.push(`${pagePath} answered ${response.status}`);
-    else read.set(pagePath, surfacesOf(body));
+    else read.set(pagePath, surfacesOf(body, day));
   }
   return { read, refused };
 }
@@ -690,6 +724,81 @@ describe("a quoted deadline can leave without a change-log entry", () => {
   });
 });
 
+describe("a timeline entry moves into its effective month", () => {
+  const rule = `${A_DATED_SECTION_MARKER} A change is upcoming while its effective date is 2026-10-20 or later. The day after that date it stops being upcoming and is listed only under the month it falls in, in <a href="/changes">the timeline below</a>.`;
+  const section = (heading: string, content: string, note = "") => `<h2>${heading}</h2><p>${note}</p>${content}`;
+  const page = (content: string, day: string) => surfacesOf(`<title>Changes</title>${content}`, day);
+
+  for (const layout of ["chg", "pc"]) {
+    const entry = (vendor = "alfa", date = "2026-10-20", label = "effective", kind = "entry") =>
+      `<div class="${layout}-${kind}"><div class="${layout}-left"><div class="${layout}-date">${label} ${date}</div></div><div><a href="/vendor/${vendor}" class="${layout}-vendor">${vendor}</a></div></div>`;
+    const before = (content = entry(), note = rule, day = "2026-10-20") => page(section("Upcoming Changes", content, note), day);
+    const after = (content = entry(), heading = "October 2026", day = "2026-10-21", upcoming = "") =>
+      page(section("Upcoming Changes", upcoming, rule) + section(heading, content), day);
+    const unexplained = (first: Surfaces, next: Surfaces) => movesWithNoDatedReason(first, next);
+
+    it(`${layout}: reads the entry's effective date and vendor from its own card`, () => {
+      assert.deepEqual(before().timelineEntries, [{ heading: "Upcoming Changes", vendor: "alfa", date: "2026-10-20" }]);
+    });
+
+    it(`${layout}: explains an entry leaving Upcoming the day after its effective date`, () => {
+      assert.deepEqual(unexplained(before(), after()), []);
+      assert.deepEqual(unexplained(before(entry("alfa", "2026-10-20", "effective", "preview")), after()), []);
+    });
+
+    it(`${layout}: handles the last day of a month without assigning the entry to the new month`, () => {
+      assert.deepEqual(unexplained(before(entry("alfa", "2026-10-31"), rule, "2026-10-31"), after(entry("alfa", "2026-10-31"), "October 2026", "2026-11-01")), []);
+    });
+
+    it(`${layout}: explains a month gain while another entry keeps the vendor in Upcoming`, () => {
+      const later = entry("alfa", "2026-11-01");
+      assert.deepEqual(unexplained(before(entry() + later), after(entry(), "October 2026", "2026-10-21", later)), []);
+    });
+
+    it(`${layout}: rejects a vendor gaining an older month even when another entry crosses its date`, () => {
+      const older = entry("alfa", "2026-09-20");
+      const next = page(section("October 2026", entry()) + section("September 2026", older), "2026-10-21");
+      assert.deepEqual(unexplained(before(), next), ["alfa"]);
+    });
+
+    it(`${layout}: rejects a month gain without a crossing effective date`, () => {
+      for (const date of ["2026-10-19", "2026-10-21"]) {
+        assert.deepEqual(unexplained(before(entry("alfa", date)), after(entry("alfa", date))), ["alfa"]);
+      }
+      assert.deepEqual(unexplained(before(), after(entry("alfa", "2026-10-19"))), ["alfa"]);
+    });
+
+    it(`${layout}: requires consecutive days and the month named by the effective date`, () => {
+      assert.deepEqual(unexplained(before(), after(entry(), "October 2026", "2026-10-22")), ["alfa"]);
+      assert.deepEqual(unexplained(before(), after(entry(), "September 2026")), ["alfa"]);
+    });
+
+    it(`${layout}: rejects a move when the same entry remains in Upcoming`, () => {
+      assert.deepEqual(unexplained(before(), after(entry(), "October 2026", "2026-10-21", entry())), ["alfa"]);
+    });
+
+    it(`${layout}: does not borrow another vendor's crossing date`, () => {
+      const first = before(entry("bravo") + entry("alfa", "2026-10-19"));
+      const next = after(entry("bravo") + entry("alfa", "2026-10-19"));
+      assert.deepEqual(unexplained(first, next), ["alfa"]);
+      assert.deepEqual(unexplained(first, after(entry("bravo") + entry("alfa"))), ["alfa"]);
+    });
+
+    it(`${layout}: does not borrow an effective date from the summary or an alternative`, () => {
+      const discovered = entry("alfa", "2026-10-20", "recorded").replace("</div></div>", "</div><p>effective 2026-10-20</p></div>");
+      assert.deepEqual(unexplained(before(discovered), after(discovered)), ["alfa"]);
+      const alternative = entry("bravo").replace("</a>", '</a><a href="/vendor/alfa">alfa</a>');
+      assert.deepEqual(unexplained(before(alternative), after(alternative)), ["alfa"]);
+    });
+
+    it(`${layout}: requires Upcoming to state the calendar rule, its month destination and a link`, () => {
+      for (const note of ["", rule.replace(A_DATED_SECTION_MARKER, ""), rule.replace("The day after that date it stops being upcoming and is listed only under the month it falls in", "The entry moves elsewhere"), rule.replace(/<a[^>]*>.*?<\/a>/, "the timeline below")]) {
+        assert.deepEqual(unexplained(before(entry(), note), after()), ["alfa"]);
+      }
+    });
+  }
+});
+
 describe("what a page names changes overnight only where the page itself says why", () => {
   let served: string[] = [];
   let inventory: string[] = [];
@@ -703,12 +812,12 @@ describe("what a page names changes overnight only where the page itself says wh
     const inventoryOut = path.join(scratch, "inventory.json");
     const first = await startServer(inventoryOut, CLOCK_BASE_DAYS * A_DAY_IN_MS);
     served = JSON.parse(readFileSync(inventoryOut, "utf-8"));
-    const read = await readEveryPage(first.base, served);
+    const read = await readEveryPage(first.base, served, new Date(Date.now() + CLOCK_BASE_DAYS * A_DAY_IN_MS).toISOString().slice(0, 10));
     today = read.read;
     first.proc.kill();
 
     const ahead = await startServer(path.join(scratch, "inventory-ahead.json"), (CLOCK_BASE_DAYS + 1) * A_DAY_IN_MS);
-    const readAhead = await readEveryPage(ahead.base, served);
+    const readAhead = await readEveryPage(ahead.base, served, new Date(Date.now() + (CLOCK_BASE_DAYS + 1) * A_DAY_IN_MS).toISOString().slice(0, 10));
     tomorrow = readAhead.read;
     ahead.proc.kill();
     refused = [...read.refused, ...readAhead.refused];
