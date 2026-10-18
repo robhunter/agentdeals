@@ -16858,6 +16858,35 @@
       "date_source": "hand_written",
       "listing_effect": "none",
       "what_ends": "gemini-3.6-flash on Gemini Enterprise Agent Platform (formerly Vertex AI)"
+    },
+    {
+      "vendor": "Tugboat",
+      "change_type": "free_tier_removed",
+      "date": "2026-10-16",
+      "date_source": "discovered",
+      "summary": "Tugboat no longer offers its Free plan; its cheapest plan is Intro at $39 a month.",
+      "tier": "Free",
+      "tier_direction": "narrowed",
+      "previous_state": "The 2026-08-24 archive capture of tugboatqa.com/pricing listed a Free plan: \"$0 /month\", 5GB preview storage, 512MB RAM, no credit card required.",
+      "current_state": "tugboatqa.com/pricing, read 2026-10-18, lists three plans: Intro $39/month, Plus $119/month, Premium from $599/month. No Free plan is listed.",
+      "impact": "high",
+      "source_url": "https://www.tugboatqa.com/pricing",
+      "category": "CI/CD",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-10-18",
+      "archive_check": {
+        "checked": "2026-10-18",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-08-24",
+            "first_new": null,
+            "last_old_capture": "https://web.archive.org/web/20260824061509/https://www.tugboatqa.com/pricing",
+            "first_new_capture": null
+          }
+        ]
+      }
     }
   ]
 }

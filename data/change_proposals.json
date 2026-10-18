@@ -253,6 +253,95 @@
       ],
       "dropped_on": "2026-10-14",
       "drop_reason": "Not a change: the listing already states both free tiers, 2 million requests, 180,000 vCPU-seconds and 360,000 GiB-seconds for request-based billing, and 240,000 vCPU-seconds and 450,000 GiB-seconds for instance-based billing and Jobs. cloud.google.com/run/pricing, read 2026-10-14, states the same figures."
+    },
+    {
+      "proposal_id": "2026-10-18/nhost/limits_increased",
+      "proposed_on": "2026-10-18",
+      "vendor": "Nhost",
+      "change_type": "limits_increased",
+      "date": "2026-10-18",
+      "date_source": "discovered",
+      "summary": "The free tier (Starter) now allows unlimited projects, pausing is no longer after 1 week of inactivity, and the page details additional costs for exceeding limits (database, storage, functions, egress).",
+      "tier": "Starter",
+      "tier_direction": "widened",
+      "previous_state": "Open-source backend with Postgres and Hasura GraphQL, plus Auth, Storage and Functions. The Starter plan is $0 a month: 1 GB database, 1 GB storage and 5 GB egress, with functions, realtime APIs and unlimited users. It is limited to 1 project, and the project is paused after 1 week of inactivity. Pro starts at $25 a month with $15 of compute credits, a 10 GB database, 50 GB storage and 50 GB egress.",
+      "current_state": "$0 / month. Limit of 1 project. Project paused after 1 week of inactivity. 1 GB database, 1 GB storage, 5 GB egress, Functions, Realtime APIs, IaC Automated deployments, Unlimited users, OAuth providers, Community support.",
+      "impact": "high",
+      "source_url": "https://nhost.io/pricing",
+      "category": "Databases",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-10-18",
+      "restatement": [
+        {
+          "url": "https://nhost.io/pricing",
+          "refused": "reading_drops_a_figure_our_source_check_found",
+          "figures": [
+            "$25",
+            "$15",
+            "$ 15"
+          ]
+        }
+      ],
+      "dropped_on": "2026-10-18",
+      "drop_reason": "nhost.io/pricing, read 2026-10-18: Starter still says 'Limit of 1 project. Project paused after 1 week of inactivity.' The 'Unlimited' projects are the paid plans' column; nothing on the free plan widened"
+    },
+    {
+      "proposal_id": "2026-10-18/onesignal/limits_increased",
+      "proposed_on": "2026-10-18",
+      "vendor": "OneSignal",
+      "change_type": "limits_increased",
+      "date": "2026-10-18",
+      "date_source": "discovered",
+      "summary": "The free tier now has limits on the number of data tags (6) and audience segments (6). The free tier also has limited event streams. The email send limit is now 20,000 free sends / month, up from 10,000.",
+      "tier": "Free",
+      "tier_direction": "widened",
+      "previous_state": "Push notification platform — Free $0/mo. Access to: All channels, Basic automation & analytics, OneSignal AI & MCP, Basic personalization. Mobile Push Notifications for organizations with up to 1,000 monthly active users. Web Push Notifications Max 10,000 subscribers per send. Email 10,000 sends / month.",
+      "current_state": "Free $0/mo. Access to: All channels, Basic automation & analytics, OneSignal AI & MCP, Basic personalization. Data Tags 6, Audience Segments 6. Email 20,000 sends / month.",
+      "impact": "low",
+      "source_url": "https://onesignal.com/pricing",
+      "category": "Messaging",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-10-18",
+      "restatement": [
+        {
+          "url": "https://onesignal.com/pricing",
+          "refused": "reading_drops_a_figure_our_source_check_found",
+          "figures": [
+            "10,000 sends / month"
+          ]
+        }
+      ],
+      "dropped_on": "2026-10-18",
+      "drop_reason": "onesignal.com/pricing, read 2026-10-18: Free email is still 10,000 sends / month; '20,000 free sends / month, then $1.50 / 1,000 sends' is the Growth plan (from $19/mo)"
+    },
+    {
+      "proposal_id": "2026-10-18/simple-observability/limits_reduced",
+      "proposed_on": "2026-10-18",
+      "vendor": "Simple Observability",
+      "change_type": "limits_reduced",
+      "date": "2026-10-18",
+      "date_source": "discovered",
+      "summary": "The free tier now includes 50 metrics per server and low log volume, instead of unlimited as previously.",
+      "tier": "Free",
+      "tier_direction": "narrowed",
+      "previous_state": "Powerful server monitoring in a unified platform for metrics and logs, with no setup complexity. Free for one server.",
+      "current_state": "The Free plan is $0 / month and includes 50 metrics per server and low log volume.",
+      "impact": "medium",
+      "source_url": "https://simpleobservability.com/pricing",
+      "category": "Monitoring",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-10-18",
+      "restatement": [
+        {
+          "url": "https://simpleobservability.com/pricing",
+          "description": "Powerful server monitoring in a unified platform for metrics and logs, with no setup complexity — The Free plan is $0 / month and includes 50 metrics per server and low log volume."
+        }
+      ],
+      "dropped_on": "2026-10-18",
+      "drop_reason": "simpleobservability.com/pricing, read 2026-10-17 and 2026-10-18: Free is $0 with 50 metrics per server, low log volume, 1 server, 1 job, 1 endpoint and 5 alert rules; our listing never said unlimited, so nothing narrowed (the 10-17 reading, which never reached main, called the same page limits_increased)"
     }
   ]
 }

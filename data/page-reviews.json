@@ -698,8 +698,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 56,
-      "table_figures_from_records": 9,
+      "table_figures": 57,
+      "table_figures_from_records": 10,
       "tables": [
         {
           "label": "Main Comparison Table",
@@ -733,8 +733,8 @@
         },
         {
           "label": "Pricing Change Timeline",
-          "figures": 5,
-          "from_records": 5
+          "figures": 6,
+          "from_records": 6
         }
       ],
       "reads_changes": true,
@@ -1832,6 +1832,7 @@
         "roboflow",
         "smartlook-com",
         "stripe",
+        "tugboat",
         "unity-devops",
         "vercel",
         "windsurf",
@@ -1848,13 +1849,13 @@
       "partial_recheck": null,
       "reads_index": false,
       "tables_read_index": false,
-      "table_figures": 41,
-      "table_figures_from_records": 40,
+      "table_figures": 42,
+      "table_figures_from_records": 41,
       "tables": [
         {
           "label": "Q4 2026",
-          "figures": 2,
-          "from_records": 2
+          "figures": 3,
+          "from_records": 3
         },
         {
           "label": "Q3 2026",

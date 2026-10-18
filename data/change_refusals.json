@@ -37,6 +37,18 @@
       "refused_date": "2026-09-09"
     },
     {
+      "vendor": "Ably",
+      "change_type": "limits_reduced",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this page refused on 2026-09-09 (measures_the_opposite) stated the same 3 figures, so the page showed these terms before the date this record gives",
+      "summary": "The free tier now has a limit of 500 messages/second and 200 concurrent connections, while the stored information states 6M messages/month and 200 concurrent connections.",
+      "previous_state": "Real-time infrastructure — 6M messages/month, 200 concurrent connections, 200 channels, pub/sub + chat + spaces",
+      "current_state": "Capacity 200 concurrent connections 500 messages / second 6M messages / month",
+      "source_url": "https://ably.com/pricing",
+      "category": "Messaging",
+      "refused_date": "2026-10-18"
+    },
+    {
       "vendor": "AbstractAPI",
       "change_type": "restriction",
       "reason": "repeats_a_refused_reading",
@@ -1439,6 +1451,18 @@
     {
       "vendor": "Cloudflare DNS",
       "change_type": "limits_reduced",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-09-24 (states_no_difference) claimed the same change, limits_reduced, against the same stored description",
+      "summary": "The page confirms a free plan exists, but states a records-per-zone cap of 200 for zones created on or after 2024-09-01, while zones created before that date retain the legacy 1,000-record cap. This matches the stored deal info. However, the page also promotes numerous paid add-ons and plans, and does not focus on the free plan's details beyond its existence.",
+      "previous_state": "Free authoritative DNS hosting — unlimited zones and queries, DDoS protection, free SSL/TLS. Records-per-zone cap is 200 for zones created on or after 2024-09-01; zones created before that date retain the legacy 1,000-record cap.",
+      "current_state": "The free plan exists, with a 200 record limit for zones created on or after 2024-09-01, and a 1,000 record limit for zones created before that date.",
+      "source_url": "https://www.cloudflare.com/plans/free/",
+      "category": "DNS & Domain Management",
+      "refused_date": "2026-10-18"
+    },
+    {
+      "vendor": "Cloudflare DNS",
+      "change_type": "limits_reduced",
       "reason": "states_no_difference",
       "detail": "limits_reduced claimed, summary asserts the page matches what we stored, and the two states carry the same quantities",
       "summary": "The page confirms a free plan exists, but states a records-per-zone cap of 200 for zones created on or after 2024-09-01, while zones created before that date retain the legacy 1,000-record cap. This matches the stored information. However, the page also promotes numerous paid add-ons and plans, and does not focus on the free plan's details beyond its existence.",
@@ -1755,13 +1779,13 @@
       "vendor": "Composio",
       "change_type": "new_tier",
       "reason": "repeats_a_refused_reading",
-      "detail": "the reading of this page refused on 2026-10-12 (repeats_a_refused_reading) stated the same 4 figures, so the page showed these terms before the date this record gives",
-      "summary": "The free tier, now called 'Hobby', still exists with the same limits (100,000 tool calls / mo, 50,000 triggers / mo, 3 team members), but the pricing page details additional paid tiers ('Pro' and 'Enterprise') and add-ons that were not previously mentioned.",
+      "detail": "the reading of this page refused on 2026-10-16 (repeats_a_refused_reading) stated the same 4 figures, so the page showed these terms before the date this record gives",
+      "summary": "The free tier is now called \"Hobby\" and is still available with the same limits (100,000 tool calls / mo, 50,000 triggers / mo, 3 team members). However, there are now paid tiers (Pro and Enterprise) with additional features and limits.",
       "previous_state": "Integration platform for AI Agents and LLMs — Free $0 No credit card required 100,000 tool calls / mo 50,000 triggers / mo 3 team members",
       "current_state": "Hobby $0 No credit card required 100,000 tool calls / mo 50,000 triggers / mo 3 team members",
       "source_url": "https://composio.dev/pricing",
       "category": "AI / ML",
-      "refused_date": "2026-10-16"
+      "refused_date": "2026-10-18"
     },
     {
       "vendor": "ConfigCat",
@@ -2370,6 +2394,18 @@
       "collided_with": "DigitalOcean|restriction|2026-08-28|https://www.digitalocean.com/startups"
     },
     {
+      "vendor": "DigitalOcean",
+      "change_type": "restriction",
+      "reason": "states_no_terms",
+      "detail": "every clause of the summary states narration rather than a term the page carries, so it reports the reading rather than a change",
+      "summary": "The page states that core DigitalOcean Startup credits do not cover GPU Droplet usage, and charges will apply for usage of GPU Droplets.",
+      "previous_state": "DigitalOcean Startups: credits for 12 months in an amount that varies by startup, usable up to $10,000 a month; use beyond that in a month is charged. Since 2026-05-13 the credits exclude GPU Droplets, NVIDIA H100 GPU Kubernetes, Bare Metal GPUs, Dedicated and Serverless Inference, third-party AI models, Paperspace Machines and Cloudways. GPU credits are a separate benefit for selected startups. 15 months of free Standard-tier support. For startups that have raised $10M or less and have not used DigitalOcean credits before; AI-native startups are prioritised and service businesses are not eligible.",
+      "current_state": "Credits can be used on any DigitalOcean services except GPU Droplets, NVIDIA H100 GPU Kubernetes, Bare Metal GPUs, Dedicated and Serverless Inference, third-party AI models hosted outside of DigitalOcean Infrastructure, Paperspace Machines and Cloudways services.",
+      "source_url": "https://www.digitalocean.com/startups",
+      "category": "Startup Perks",
+      "refused_date": "2026-10-18"
+    },
+    {
       "vendor": "Directus",
       "change_type": "new_free_tier",
       "reason": "same_transition_graded_differently",
@@ -2936,13 +2972,13 @@
       "vendor": "Fizzy",
       "change_type": "limits_reduced",
       "reason": "repeats_a_refused_reading",
-      "detail": "the reading of this page refused on 2026-10-14 (repeats_a_refused_reading) stated the same figure, so the page showed these terms before the date this record gives",
-      "summary": "The stored deal info mentions a limit of 1000 items, but the pricing page states that Fizzy is entirely free with a file space limit of 1 GB.",
+      "detail": "the reading of this page refused on 2026-10-15 (repeats_a_refused_reading) stated the same figure, so the page showed these terms before the date this record gives",
+      "summary": "The stored deal info mentions a limit of 1000 items, but the pricing page states that Fizzy is entirely free with a 1 GB file storage limit.",
       "previous_state": "Kanban-based platform for project management and issue tracking. Create public boards, set up webhooks, use card stamping, and track unlimited users — free for up to 1000 items.",
-      "current_state": "Fizzy is entirely free. It does limit file space usage to 1 GB.",
+      "current_state": "Fizzy is entirely free with a 1 GB file storage limit.",
       "source_url": "https://www.fizzy.do/",
       "category": "Project Management",
-      "refused_date": "2026-10-15"
+      "refused_date": "2026-10-18"
     },
     {
       "vendor": "Flagsmith",
@@ -3408,6 +3444,18 @@
     {
       "vendor": "GitHub",
       "change_type": "limits_reduced",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-08-28 (unquantified_limit) claimed the same change, limits_reduced, against the same stored description",
+      "summary": "GitHub Copilot access is now limited to credits for students, and Copilot signups are paused. Namecheap and .TECH domains are offered, as well as Microsoft Azure credits. Many other tools and services are available as part of various 'Experiences'.",
+      "previous_state": "Free access to GitHub Pro, JetBrains, Namecheap domain, and 100+ developer tools for verified students. Includes GitHub Copilot (new Copilot Student signups paused 2026-04-20 due to infrastructure strain — existing students unaffected), Codespaces, and Actions minutes",
+      "current_state": "GitHub Copilot Student is available to verified students. The plan includes unlimited code completions and an allowance of GitHub AI Credits, plus limited chat and agent usage with models available through auto model selection only.",
+      "source_url": "https://education.github.com/pack",
+      "category": "Source Control",
+      "refused_date": "2026-10-18"
+    },
+    {
+      "vendor": "GitHub",
+      "change_type": "limits_reduced",
       "reason": "unquantified_limit",
       "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (100 developer, 2026 due, 04 due, 20 due)",
       "summary": "GitHub Copilot access for students has been altered. While previously included with the Student Developer Pack, the page now states that Copilot Student is available to verified students with 'unlimited code completions and an allowance of GitHub AI Credits, plus limited chat and agent usage'. The original deal info mentioned a pause on new Copilot Student signups due to infrastructure strain, but the current page details a different access model with credits and limitations.",
@@ -3659,6 +3707,18 @@
       "refused_date": "2026-09-22"
     },
     {
+      "vendor": "Google Meet",
+      "change_type": "limits_reduced",
+      "reason": "states_no_terms",
+      "detail": "every clause of the summary states bookkeeping rather than a term the page carries, so it reports the reading rather than a change",
+      "summary": "The free tier of Google Meet now has limitations on meeting length and features that were previously unlimited or available.",
+      "previous_state": "1-hour group meetings (up to 100 participants). Unlimited 1-on-1 calls (24-hour limit). Screen sharing. Real-time captions. Background effects. No recording or breakout rooms on free.",
+      "current_state": "Premium features like recordings, breakout rooms, and meetings longer than 1 hour require a Google Workspace or Google One Premium plan. The free tier allows up to 100 participants, but does not explicitly state a time limit beyond the general description of 'group meetings'.",
+      "source_url": "https://workspace.google.com/products/meet/",
+      "category": "Communication & Messaging",
+      "refused_date": "2026-10-18"
+    },
+    {
       "vendor": "Google Photos",
       "change_type": "pricing_restructured",
       "reason": "confirmed_unchanged",
@@ -3693,6 +3753,18 @@
       "source_url": "https://cloud.google.com/vertex-ai/docs/vector-search/overview",
       "category": "AI / ML",
       "refused_date": "2026-09-02"
+    },
+    {
+      "vendor": "Google Vector Search 2.0",
+      "change_type": "pricing_model_change",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-09-02 (dangling_reference) claimed the same change, pricing_model_change, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "The page details Vector Search as part of the Gemini Enterprise Agent Platform and mentions pricing that includes VM costs and index building/updating expenses. It provides a link to the Google Cloud pricing calculator for estimation.",
+      "previous_state": "Vector Search 2.0 now GA on Vertex AI. High-performance approximate nearest neighbor (ANN) vector similarity search for AI/RAG applications. Supports billion-scale indexes.",
+      "current_state": "Vector Search pricing includes the cost of virtual machines used to host deployed indexes, as well as expenses for building and updating indexes.",
+      "source_url": "https://cloud.google.com/vertex-ai/docs/vector-search/overview",
+      "category": "AI / ML",
+      "refused_date": "2026-10-18"
     },
     {
       "vendor": "goreportcard.com",
@@ -4078,6 +4150,18 @@
     {
       "vendor": "Hygraph",
       "change_type": "limits_reduced",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-09-09 (unquantified_limit) claimed the same change, limits_reduced, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "The Hobby plan is still available at $0, but the asset upload size limit is now 50MB instead of unlimited. The number of locales is 2 instead of unlimited.",
+      "previous_state": "GraphQL headless CMS — 1K content entries, 500K API calls/month, 3 seats, 20 models, unlimited asset storage",
+      "current_state": "Hobby $0 , free forever Get started 2 locales 3 seats 2 standard roles 10 components Unlimited asset storage 50MB per asset upload size (maximum)",
+      "source_url": "https://hygraph.com/pricing",
+      "category": "Headless CMS",
+      "refused_date": "2026-10-18"
+    },
+    {
+      "vendor": "Hygraph",
+      "change_type": "limits_reduced",
       "reason": "unquantified_limit",
       "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (1 content, 500 api, 3 seat, 20 model)",
       "summary": "The asset upload size limit for the Hobby plan is now 50MB, down from the stored value of unlimited.",
@@ -4086,6 +4170,18 @@
       "source_url": "https://hygraph.com/pricing",
       "category": "Headless CMS",
       "refused_date": "2026-09-09"
+    },
+    {
+      "vendor": "Hyperbrowser",
+      "change_type": "pricing_model_change",
+      "reason": "no_terms_to_narrow",
+      "detail": "pricing_model_change claimed against \"Pay-per-use cloud browser sessions for AI agents — x402 micropayments, no API key needed. Headless Chrome instances with full browser automation, screenshot capture, and page interaction. Built for agent workflows.\", a stored description that states no price, no allowance and nothing free, so there is nothing for the terms to have narrowed from",
+      "summary": "The pricing model has changed. Hyperbrowser now offers a free tier with 5,000 credits, and paid tiers starting at $30/month for 30,000 credits. The previous pay-per-use model with x402 micropayments is no longer mentioned.",
+      "previous_state": "Pay-per-use cloud browser sessions for AI agents — x402 micropayments, no API key needed. Headless Chrome instances with full browser automation, screenshot capture, and page interaction. Built for agent workflows.",
+      "current_state": "Start with 5,000 free credits. Startup $ 30 / month 30,000 credits included",
+      "source_url": "https://hyperbrowser.ai",
+      "category": "Browser Automation",
+      "refused_date": "2026-10-18"
     },
     {
       "vendor": "Hyperping",
@@ -4588,6 +4684,18 @@
       "collided_with": "LambdaTest|pricing_restructured|2026-09-03|https://www.testmuai.com/pricing/"
     },
     {
+      "vendor": "LanceDB",
+      "change_type": "product_deprecated",
+      "reason": "confirmed_unchanged",
+      "detail": "The report restates information already in the stored description.",
+      "summary": "LanceDB Cloud is no longer available for new accounts.",
+      "previous_state": "Embedded vector database — OSS: fully free, runs locally or in your cloud, no limits. LanceDB Cloud is closed to new accounts: its sign-up page says \"Sign ups are currently disabled\" (read 2026-10-14), and lancedb.com/pricing redirects to a contact form, so the one-time $100 Cloud credit is no longer offered. LanceDB Enterprise is sold through sales.",
+      "current_state": "LanceDB Cloud is closed to new accounts: its sign-up page says \"Sign ups are currently disabled\".",
+      "source_url": "https://lancedb.com/pricing/",
+      "category": "Databases",
+      "refused_date": "2026-10-18"
+    },
+    {
       "vendor": "Langfuse",
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
@@ -4635,6 +4743,18 @@
       "source_url": "https://www.lastpass.com/pricing",
       "category": "Password Managers",
       "refused_date": "2026-09-24"
+    },
+    {
+      "vendor": "LastPass",
+      "change_type": "pricing_restructured",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this page refused on 2026-09-24 (confirmed_unchanged) stated the same figure, so the page showed these terms before the date this record gives",
+      "summary": "The free plan is now described as 'Limited to 1 device type. Simple password management with unlimited password storage, autofill, dark web monitoring, and basic password sharing.' which matches the stored information. However, the page also prominently features multiple trials for Premium and Business plans, and details paid plans with varying features and pricing. The free plan is still offered, but the page focuses on converting users to paid subscriptions.",
+      "previous_state": "Free plan: Limited to 1 device type. Simple password management with unlimited password storage, autofill, dark web monitoring, and basic password sharing.",
+      "current_state": "Free plan: Limited to 1 device type. Simple password management with unlimited password storage, autofill, dark web monitoring, and basic password sharing.",
+      "source_url": "https://www.lastpass.com/pricing",
+      "category": "Password Managers",
+      "refused_date": "2026-10-18"
     },
     {
       "vendor": "LaunchDarkly",
@@ -4992,6 +5112,18 @@
       "refused_date": "2026-09-24"
     },
     {
+      "vendor": "Logz.io",
+      "change_type": "new_tier",
+      "reason": "states_no_terms",
+      "detail": "every clause of the summary states bookkeeping or narration rather than a term the page carries, so it reports the reading rather than a change",
+      "summary": "The stored deal info states a 14-day free trial only, but the page offers a 'Free Trial' for Log Management, Infrastructure Monitoring, and Distributed Tracing, and also mentions 'Pro' and 'Enterprise' plans with quote options.",
+      "previous_state": "ELK-based log management — 14-day free trial only. No permanent free tier. Consumption-based pricing starts at $0.92/ingested GB/day. Community plan removed",
+      "current_state": "The page offers a 'Free Trial' for Log Management, Infrastructure Monitoring, and Distributed Tracing. Pro and Enterprise plans are also available with a 'Get a Quote' option.",
+      "source_url": "https://logz.io/pricing/",
+      "category": "Logging",
+      "refused_date": "2026-10-18"
+    },
+    {
       "vendor": "Lokalise",
       "change_type": "free_tier_removed",
       "reason": "no_baseline",
@@ -5344,6 +5476,18 @@
     },
     {
       "vendor": "MEGA",
+      "change_type": "pricing_restructured",
+      "reason": "confirmed_unchanged",
+      "detail": "The current page states a free plan exists with storage and transfer, which aligns with the stored description. The report details additional plans and add-ons, which are not a contradiction of the free tier description.",
+      "summary": "The page details multiple Pro plans with varying storage and transfer limits, as well as MEGA VPN and MEGA Pass add-ons.",
+      "previous_state": "20 GB permanent storage. End-to-end encrypted. MEGA Chat. File sharing with encryption. Desktop and mobile sync. 1 GB transfer quota that replenishes. Up to 5 GB additional via achievements (temporary).",
+      "current_state": "The free plan offers !{freePlanStorage} storage and limited transfer for €0 forever.",
+      "source_url": "https://mega.io/pricing",
+      "category": "Cloud Storage",
+      "refused_date": "2026-10-18"
+    },
+    {
+      "vendor": "MEGA",
       "change_type": "limits_reduced",
       "reason": "states_no_terms",
       "detail": "every clause of the summary states absence or bookkeeping rather than a term the page carries, so it reports the reading rather than a change",
@@ -5661,6 +5805,18 @@
       "refused_date": "2026-09-24"
     },
     {
+      "vendor": "Momento",
+      "change_type": "free_tier_removed",
+      "reason": "restates_stored_quantities",
+      "detail": "narrowing claimed, and every quantity the current state names is one the stored description already held at the same value (13 currency, 0 currency), and drops 7 the stored description carried",
+      "summary": "The page no longer mentions a free tier. Momento Cache Flex is now $13 per GB-month, and Valkey Router is $0.01 per GB. There is a 'Starter Basic Support' plan at $0, but this is for support, not product usage.",
+      "previous_state": "Managed Valkey cache, cluster and pub/sub, formerly a serverless cache with a free tier. No free tier. gomomento.com/pricing, read 2026-09-05, prices every plan: Momento Cache Flex from $13 per GB-month, Momento Cache Cluster from $0.0105 per instance-hour, Pub/sub Topics from $1 per 1M operations, Valkey Router $0.01 per GB of data transfer. The only $0 on the page is the Starter Basic Support plan, which is a support level and not a product allowance.",
+      "current_state": "Momento Cache Flex from $13 per GB-month. Starter Basic Support $0 included for personal or hobby projects.",
+      "source_url": "https://www.gomomento.com/pricing",
+      "category": "Databases",
+      "refused_date": "2026-10-18"
+    },
+    {
       "vendor": "mouseflow.com",
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
@@ -5779,6 +5935,18 @@
       "source_url": "https://www.thenile.dev/pricing",
       "category": "Databases",
       "refused_date": "2026-10-09"
+    },
+    {
+      "vendor": "Ninja Outreach",
+      "change_type": "rebranded",
+      "reason": "page_does_not_name_vendor",
+      "detail": "the page read never names Ninja Outreach and is not served from its domain, so any terms on it belong to somebody else",
+      "summary": "Ninja Outreach is no longer mentioned on the page. The site has been rebranded to Lime Connect and now offers AI-powered customer communication solutions. The former offer is not available.",
+      "previous_state": "There is no free tier: ninjaoutreach.com no longer serves the product. Checked 2026-09-06, the domain resolves to Cloudflare and returned 522 on three consecutive requests, so the origin is unreachable; the Internet Archive's most recent capture of the site is 2025-09-10. The cited source, userlike.com/en/blog/startup-deals, now redirects to connect.lime-technologies.com/en/blog/ after Userlike's rebrand to Lime Technologies, and the destination does not name Ninja Outreach. The former offer was a 20% lifetime discount on the Blogger plan, which was a discount and not a free tier.",
+      "current_state": "The page does not mention Ninja Outreach or the Blogger plan. It focuses on Lime Connect's AI-powered customer communication platform with features like Connect AI, Message Center, WhatsApp Marketing, and Workflows.",
+      "source_url": "https://www.userlike.com/en/blog/startup-deals",
+      "category": "Logging",
+      "refused_date": "2026-10-18"
     },
     {
       "vendor": "noip",
@@ -5950,6 +6118,18 @@
       "category": "Dev Utilities",
       "refused_date": "2026-09-13",
       "collided_with": "numverify|limits_increased|2026-08-28|https://numverify.com/"
+    },
+    {
+      "vendor": "Oaysus",
+      "change_type": "rebranded",
+      "reason": "page_does_not_name_vendor",
+      "detail": "the page read never names Oaysus and is not served from its domain, so any terms on it belong to somebody else",
+      "summary": "Oaysus no longer exists and has been replaced by Mirin, which offers a free website redesign with limited features. The original offer of a visual page builder with specific limits (1 site, 3 pages, CDN) is no longer available. Mirin's free plan provides a website hosted at a Mirin address, up to 3 pages, and 10 AI credits per 30 days.",
+      "previous_state": "There is no free tier: oaysus.com no longer serves the product. Checked 2026-09-01, the domain redirects to mirin.com, a website design agency with no connection to the former product. The former offer was a visual page builder for React, Vue and Svelte components with 1 site, 3 pages and CDN hosting on the free tier.",
+      "current_state": "The free plan provides a website hosted at a Mirin address, up to 3 pages, and 10 AI credits every 30 days.",
+      "source_url": "https://oaysus.com",
+      "category": "Cloud Hosting",
+      "refused_date": "2026-10-18"
     },
     {
       "vendor": "OCR.Space",
@@ -6232,6 +6412,18 @@
     {
       "vendor": "packagecloud.io",
       "change_type": "limits_reduced",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this page refused on 2026-09-24 (unquantified_limit) stated the same 2 figures, so the page showed these terms before the date this record gives",
+      "summary": "The free plan now has defined limits of 10 GB bandwidth and 2 GB storage.",
+      "previous_state": "Hosted Package Repositories for YUM, APT, RubyGem and PyPI — Maven Repository: Create a Maven repository for Java artifacts and SNAPSHOTS in 10 seconds, for FREE. Python Repository: Easy to use private hosted PyPi repositories. Works with all Python package types. Get started for FREE! Alpine Repository: Easy to use private hosted Alpine repositories. Get started for FREE! Helm Repository: Create a Helm repository for Helm charts in 10 seconds, for FREE.",
+      "current_state": "Free Plan: 10 GB bandwidth, 2 GB storage, Unlimited CI/CD Minutes",
+      "source_url": "https://packagecloud.io/pricing",
+      "category": "Storage",
+      "refused_date": "2026-10-18"
+    },
+    {
+      "vendor": "packagecloud.io",
+      "change_type": "limits_reduced",
       "reason": "unquantified_limit",
       "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (10 python)",
       "summary": "The free plan now has limits of 10 GB bandwidth and 2 GB storage. The stored information indicated unlimited storage and bandwidth for the free tier, as well as free Maven, Python, Alpine, and Helm repositories.",
@@ -6264,6 +6456,18 @@
       "source_url": "https://pagecrawl.io/",
       "category": "Monitoring",
       "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "PagerDuty",
+      "change_type": "limits_reduced",
+      "reason": "confirmed_unchanged",
+      "detail": "The stored description already stated 100 intl phone/SMS notifications/month.",
+      "summary": "The free tier now includes a limit of 100 SMS/Phone notifications per month.",
+      "previous_state": "Incident management — 5 users, 1 on-call schedule, 1 escalation policy, 100 intl phone/SMS notifications/month, 700+ integrations, API access",
+      "current_state": "Free plan accounts receive 100 free global SMS or phone notifications per month.",
+      "source_url": "https://www.pagerduty.com/pricing/",
+      "category": "Monitoring",
+      "refused_date": "2026-10-18"
     },
     {
       "vendor": "pagertree.com",
@@ -6639,6 +6843,18 @@
       "source_url": "https://www.progress.com/podio/pricing",
       "category": "Storage",
       "refused_date": "2026-09-07"
+    },
+    {
+      "vendor": "Polar",
+      "change_type": "pricing_restructured",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-09-25 (same_transition_graded_differently) claimed the same change, pricing_restructured, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "The pricing structure has been significantly restructured. The original pay-as-you-go model is no longer the primary offering. Instead, there are tiered plans (Starter, Pro, Growth, Scale) with monthly fees and reduced transaction fees. A Startup Program is also available, offering the Scale plan for free for 12 months.",
+      "previous_state": "Merchant of record — no monthly fee, 4% + $0.40 per transaction (includes Stripe fees). +1.5% for international cards, +0.5% for subscriptions",
+      "current_state": "Starter: $0/month, 5.00% + $0.50 per transaction. Pro: $20/month, 3.80% + $0.40 per transaction. Growth: $100/month, 3.60% + $0.35 per transaction. Scale: $400/month, 3.40% + $0.30 per transaction. Startup Program: Scale plan free for 12 months, 3.40% + $0.30 per transaction.",
+      "source_url": "https://polar.sh/",
+      "category": "Payments",
+      "refused_date": "2026-10-18"
     },
     {
       "vendor": "Polar",
@@ -7224,6 +7440,18 @@
       "refused_date": "2026-10-13"
     },
     {
+      "vendor": "Retool",
+      "change_type": "limits_reduced",
+      "reason": "measures_no_change",
+      "detail": "limits_reduced claimed, and every quantity the record compares holds the same value once notation and period are normalised — 5 user against 5 user, 250 credit/mo against 250 pooled/mo",
+      "summary": "The free tier no longer includes unlimited web & mobile apps, database capacity, or file storage. It now includes up to 5 users and 250 AI credits per month. Workflow runs are no longer mentioned.",
+      "previous_state": "Internal tools builder — The Free tier costs $0/mo and includes unlimited web & mobile apps, 500 workflow runs/month, 5GB of database capacity, 5GB of file storage, up to 5 users, up to 20 hours/month of Agents, and 250 AI credits/month.",
+      "current_state": "Includes up to 5 users and 250 pooled AI credits per month.",
+      "source_url": "https://retool.com/pricing",
+      "category": "Low-Code Platforms",
+      "refused_date": "2026-10-18"
+    },
+    {
       "vendor": "reviewable.io",
       "change_type": "free_tier_removed",
       "reason": "no_price_signal",
@@ -7805,6 +8033,18 @@
     {
       "vendor": "SonarQube Cloud",
       "change_type": "free_tier_removed",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-09-24 (states_no_terms) claimed the same change, free_tier_removed, against the same stored description",
+      "summary": "The free tier described in stored info (unlimited open source projects) is no longer explicitly mentioned. While SonarQube Cloud offers features for open source projects, the page focuses on paid plans and features like Vortex and Remediation Agent. There is no clear indication of unlimited free use for open source projects.",
+      "previous_state": "Code quality and security analysis — free and unlimited for open-source projects, 15+ languages, CI/CD integration. Formerly SonarCloud.",
+      "current_state": "SonarQube Cloud offers automated code quality and security reviews for high velocity software development. It verifies AI-generated and developer-written code in real time. There are options to sign up free or view plans.",
+      "source_url": "https://www.sonarsource.com/products/sonarcloud/",
+      "category": "Security",
+      "refused_date": "2026-10-18"
+    },
+    {
+      "vendor": "SonarQube Cloud",
+      "change_type": "free_tier_removed",
       "reason": "states_no_terms",
       "detail": "every clause of the summary states absence or hedge or narration rather than a term the page carries, so it reports the reading rather than a change",
       "summary": "The pricing page does not explicitly mention a free tier with unlimited analysis for open-source projects. It highlights features like AI code review and security analysis but focuses on paid plans and features like SonarQube Advanced Security. The page emphasizes a 'Start now' and 'View plans' call to action, suggesting a move away from a purely free offering for all use cases.",
@@ -8338,6 +8578,18 @@
       "source_url": "https://teleporthq.io/pricing",
       "category": "Design",
       "refused_date": "2026-09-24"
+    },
+    {
+      "vendor": "TeleportHQ",
+      "change_type": "free_tier_removed",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-09-24 (no_baseline) claimed the same change, free_tier_removed, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "The free tier has been removed. The page now offers a 7-day free trial of all plans, after which users must upgrade to a paid plan. The stored deal info stated three free projects, unlimited collaborators, and free code export, which are no longer available.",
+      "previous_state": "Low-code Front-end Design & Development Platform. TeleportHQ is the collaborative front-end platform to instantly create and publish headless static websites. Three free projects, unlimited collaborators, and free code export.",
+      "current_state": "After a 7-day trial, users must upgrade to Pro ($14/month) or add a slot ($19.99/month) to continue using the platform. Code export is limited to static projects only during the trial.",
+      "source_url": "https://teleporthq.io/pricing",
+      "category": "Design",
+      "refused_date": "2026-10-18"
     },
     {
       "vendor": "temp-mail.io",

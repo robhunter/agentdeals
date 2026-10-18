@@ -1,37 +1,37 @@
 {
   "held": [
     {
-      "vendor": "Google Meet",
+      "vendor": "Algolia",
+      "change_type": "pricing_restructured",
+      "impact": "medium",
+      "summary": "The price per additional 1K search requests is now $1.75 for Grow Plus and $0.50 for Grow, differing from the stored $0.50 and $0.40 respectively.",
+      "previous_state": "Search-as-a-service. The Free plan needs no credit card and includes 10K search requests/month, 50K records, 5K recommendation requests/month, 5K crawls/month and 1 application, with some features reserved for paid plans. Grow is pay as you go: 10K search requests and 100K records a month included, then $0.50 per 1K search requests and $0.40 per 1K records.",
+      "current_state": "Grow Plus: 10K search requests /month included then $1.75 per additional 1K search requests, 100K records included then $0.40 per additional 1K records. Grow: 10K search requests /month included then $0.50 per additional 1K search requests, 100K records included then $0.40 per additional 1K records.",
+      "source_url": "https://www.algolia.com/pricing",
+      "category": "Search",
+      "first_read_date": "2026-10-18"
+    },
+    {
+      "vendor": "Directus",
+      "change_type": "pricing_restructured",
+      "impact": "medium",
+      "summary": "Directus's own page now redirects to directus.com. Team plan is now $499/mo billed annually or $599/mo rolling monthly, up from $499/mo billed annually.",
+      "previous_state": "Self-hostable headless CMS. Core is $0 a month with 3 user seats, 25 collections and 5 flows. The Open Innovation Grant gives organizations under $5M in annual revenue and fewer than 50 employees a fully permissive license at no cost. Directus Cloud hosting is a $99 a month add-on; Team is $499 a month billed annually.",
+      "current_state": "Team is $499/mo billed annually or $599/mo on a rolling monthly basis.",
+      "source_url": "https://directus.io/pricing",
+      "category": "Headless CMS",
+      "first_read_date": "2026-10-18"
+    },
+    {
+      "vendor": "Harness Feature Flags",
       "change_type": "pricing_restructured",
       "impact": "high",
-      "summary": "1-hour group meetings with up to 100 participants and unlimited 1-on-1 calls are still available, features like recordings and breakout rooms are now premium features requiring a paid plan. Are also part of paid plans.",
-      "previous_state": "1-hour group meetings (up to 100 participants). Unlimited 1-on-1 calls (24-hour limit). Screen sharing. Real-time captions. Background effects. No recording or breakout rooms on free.",
-      "current_state": "Premium features include recordings, transcripts, meetings up to 24 hours long, and up to 1000 participants.",
-      "source_url": "https://workspace.google.com/products/meet/",
-      "category": "Communication & Messaging",
-      "first_read_date": "2026-10-16"
-    },
-    {
-      "vendor": "Simple Observability",
-      "change_type": "limits_reduced",
-      "impact": "medium",
-      "summary": "The free tier now includes 50 metrics per server, low log volume, 1 server, 1 job, 1 endpoint and 5 alert rules. The paid tier is $3 per month per server.",
-      "previous_state": "Powerful server monitoring in a unified platform for metrics and logs, with no setup complexity. Free for one server.",
-      "current_state": "The free tier includes 50 metrics per server, low log volume, 1 server, 1 job, 1 endpoint and 5 alert rules.",
-      "source_url": "https://simpleobservability.com/pricing",
-      "category": "Monitoring",
-      "first_read_date": "2026-10-16"
-    },
-    {
-      "vendor": "Tugboat",
-      "change_type": "free_tier_removed",
-      "impact": "high",
-      "summary": "Tugboat's own page now redirects to tugboatqa.com. The free tier no longer exists. The lowest tier is now 'Intro' at $39/month.",
-      "previous_state": "Preview every pull request, automated and on-demand. Free tier: $0/month, 5GB storage, 512MB RAM, no credit card required.",
-      "current_state": "The Intro plan costs $39/month and includes 15GB preview storage and 1GB RAM.",
-      "source_url": "https://tugboat.qa/pricing",
-      "category": "CI/CD",
-      "first_read_date": "2026-10-16"
+      "summary": "The free tier now includes Harness Open Source and Litmus Chaos.",
+      "previous_state": "Feature flags (formerly Split.io) — 2 developers, 25K client MAU, unlimited flags and environments, CI/CD pipelines for rollout",
+      "current_state": "The Free Plan includes Harness Open Source and Litmus Chaos, Community support.",
+      "source_url": "https://www.harness.io/pricing",
+      "category": "Feature Flags",
+      "first_read_date": "2026-10-18"
     }
   ],
   "resolved": [
@@ -2450,6 +2450,42 @@
       "outcome": "corroborated",
       "detail": "a reading on 2026-10-16 read it as limits_reduced too",
       "resolved_date": "2026-10-16"
+    },
+    {
+      "vendor": "Google Meet",
+      "change_type": "pricing_restructured",
+      "impact": "high",
+      "summary": "1-hour group meetings with up to 100 participants and unlimited 1-on-1 calls are still available, features like recordings and breakout rooms are now premium features requiring a paid plan. Are also part of paid plans.",
+      "previous_state": "1-hour group meetings (up to 100 participants). Unlimited 1-on-1 calls (24-hour limit). Screen sharing. Real-time captions. Background effects. No recording or breakout rooms on free.",
+      "source_url": "https://workspace.google.com/products/meet/",
+      "first_read_date": "2026-10-16",
+      "outcome": "contradicted",
+      "detail": "a reading on 2026-10-18 read a change the gate refused as states_no_terms",
+      "resolved_date": "2026-10-18"
+    },
+    {
+      "vendor": "Simple Observability",
+      "change_type": "limits_reduced",
+      "impact": "medium",
+      "summary": "The free tier now includes 50 metrics per server, low log volume, 1 server, 1 job, 1 endpoint and 5 alert rules. The paid tier is $3 per month per server.",
+      "previous_state": "Powerful server monitoring in a unified platform for metrics and logs, with no setup complexity. Free for one server.",
+      "source_url": "https://simpleobservability.com/pricing",
+      "first_read_date": "2026-10-16",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-10-18 read it as limits_reduced too",
+      "resolved_date": "2026-10-18"
+    },
+    {
+      "vendor": "Tugboat",
+      "change_type": "free_tier_removed",
+      "impact": "high",
+      "summary": "Tugboat's own page now redirects to tugboatqa.com. The free tier no longer exists. The lowest tier is now 'Intro' at $39/month.",
+      "previous_state": "Preview every pull request, automated and on-demand. Free tier: $0/month, 5GB storage, 512MB RAM, no credit card required.",
+      "source_url": "https://tugboat.qa/pricing",
+      "first_read_date": "2026-10-16",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-10-18 read it as free_tier_removed too",
+      "resolved_date": "2026-10-18"
     }
   ]
 }
