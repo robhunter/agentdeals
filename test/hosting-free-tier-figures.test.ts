@@ -420,6 +420,21 @@ describe("hosting pages publish the free-tier figures our records hold (#1183)",
     assertPopulationFloor(scanned, 1000, "routes read from the sitemap");
   });
 
+  it("states 500 connections in MongoDB Atlas's free-cluster cell and retains its 512 MB storage", async () => {
+    const response = await fetch(`${base}/database-free-tier-comparison-2026`, { redirect: "error" });
+    assert.strictEqual(response.status, 200);
+    const html = await response.text();
+    const rows = [...html.matchAll(/<tr\b[^>]*>([\s\S]*?)<\/tr>/g)]
+      .map((match) => match[1])
+      .filter((row) => /href="\/vendor\/mongodb-atlas"/.test(row));
+    assert.strictEqual(rows.length, 1);
+    const cells = [...rows[0].matchAll(/<td\b[^>]*>([\s\S]*?)<\/td>/g)]
+      .map((match) => readableText(match[1]).trim());
+    assert.strictEqual(cells[0], "MongoDB Atlas");
+    assert.strictEqual(cells[2], "512 MB");
+    assert.strictEqual(cells[3], "Shared cluster (M0), 500 connections");
+  });
+
   it("reads Railway's old $5 wording as the retired figure, and another vendor's $5 credit as not Railway's", () => {
     const railway = RETIRED_FIGURES.find((r) => r.what === "Railway's $5 Hobby credit described as free")!;
     for (const old of [

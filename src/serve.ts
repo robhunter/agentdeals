@@ -36325,7 +36325,7 @@ ${globalNavCss()}
         <td class="provider-col"><a href="/vendor/mongodb-atlas" style="color:var(--text)">MongoDB Atlas</a></td>
         <td>Document NoSQL</td>
         <td style="font-family:var(--mono)">512 MB</td>
-        <td>Shared cluster (M0), 100 connections</td>
+        <td>Shared cluster (M0), 500 connections</td>
         <td>AWS/Azure/GCP regions</td>
         <td class="cross">No</td>
         <td style="color:#3fb950">Yes</td>
