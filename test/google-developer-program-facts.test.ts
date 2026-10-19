@@ -54,10 +54,7 @@ const PROGRAM_SITE = "https://developers.google.com/program";
 const CODE_ASSIST_DEPRECATION = "https://developers.google.com/gemini-code-assist/docs/deprecations/code-assist-individuals";
 
 const RENEWALS_ENDED =
-  "annual plans stopped renewing after March 30, 2026 and monthly plans after June 30, 2026. Google's FAQ (updated 2026-10-07) says no existing subscription can be renewed since September 18, 2026. Monthly subscribers keep benefits until October 18, 2026 and annual subscribers until September 18, 2027. The FAQ does not exempt Workspace accounts, though Google's older benefits page says Workspace subscriptions are not changing.";
-
-const PLAN_FOR_THE_END_DATES =
-  "Plan for your Workspace Premium benefits to end on October 18, 2026 if monthly, or September 18, 2027 if annual, while the two Google pages disagree.";
+  'annual plans stopped renewing after March 30, 2026 and monthly plans after June 30, 2026. Google\'s FAQ updated 2026-10-07 states: "The Google Developer Program premium standalone subscription has been deprecated, and new users can no longer sign up for it. Since September 18, 2026, existing subscriptions can no longer be renewed." It also says: "Existing monthly plan subscribers: Can continue to enjoy benefits until October 18, 2026. Existing annual plan subscribers: Can continue to enjoy benefits until September 18, 2027." Monthly benefits ended on October 18, 2026. The FAQ does not exempt Workspace accounts, but Google\'s older benefits page says Workspace subscriptions are not changing.';
 
 const DEVELOPER_PROGRAM_FAQ = "https://developers.google.com/profile/help/faq";
 const OLDER_BENEFITS_PAGE = "https://developers.google.com/profile/help/benefits";
@@ -236,7 +233,7 @@ describe("the Google Developer Program guide states Google's, Microsoft's, Appwr
     ]);
   });
 
-  it("says no Premium subscription can be renewed since September 18, 2026, when monthly and annual benefits end, and that only the older benefits page exempts Workspace accounts, linking both pages", () => {
+  it("quotes the FAQ on Premium renewals and benefit end dates, linking the FAQ and the conflicting older benefits page", () => {
     const page = served.get(PAGE)!;
     assert.ok(readable(page).includes(RENEWALS_ENDED));
     const summary = page.split('<div class="executive-summary">')[1]?.split("</p>")[0] ?? "";
@@ -246,9 +243,10 @@ describe("the Google Developer Program guide states Google's, Microsoft's, Appwr
     ]);
   });
 
-  it("tells Workspace subscribers to plan for the FAQ's end dates right after saying the two Google pages disagree, before turning to what replaced Premium", () => {
+  it("states the monthly cutoff as a past event without telling readers what to plan for or assume", () => {
     const text = readable(served.get(PAGE)!);
-    assert.ok(text.includes(`${RENEWALS_ENDED} ${PLAN_FOR_THE_END_DATES} Its Google Cloud credits`), text);
+    assert.ok(text.includes(`${RENEWALS_ENDED} Its Google Cloud credits`), text);
+    assert.doesNotMatch(text, /\b(?:plan for|assume)\b/i);
   });
 
   it("dates the end of Workspace renewals in the June 30 timeline entry", () => {
