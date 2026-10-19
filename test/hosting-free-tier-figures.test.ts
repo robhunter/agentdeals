@@ -56,6 +56,7 @@ function readableText(html: string): string {
   return decode(
     html
       .replace(/<(script|style|svg)\b[\s\S]*?<\/\1>/gi, " ")
+      .replace(/<\/tr\s*>/gi, ". ")
       .replace(/<[^>]+>/g, " "),
   );
 }
@@ -462,6 +463,25 @@ describe("hosting pages publish the free-tier figures our records hold (#1183)",
       .map((h) => `${h.route} (${h.surface}) states ${h.what}: ${h.excerpt}`)
       .sort();
     assert.deepStrictEqual(published, []);
+  });
+
+  it("keeps a neighboring vendor's free database out of Koyeb's row", () => {
+    const retired = RETIRED_FIGURES.find((r) => r.what === "a Koyeb free Postgres database offered to new users as its free tier")!;
+    const koyeb = '<tr><td>Koyeb</td><td>Legacy Free</td><td>not_a_free_offer</td></tr>';
+    const nile = '<tr><td>Nile</td><td>Free Postgres for multi-tenant apps</td></tr>';
+    for (const rows of [koyeb + nile, nile + koyeb]) {
+      assert.strictEqual(firstUnquotedMatch(readableText(`<table>${rows}</table>`), retired.pattern, ""), null);
+    }
+  });
+
+  it("still detects a retired database figure across cells of the vendor's own row and in prose", () => {
+    const retired = RETIRED_FIGURES.find((r) => r.what === "a Koyeb free Postgres database offered to new users as its free tier")!;
+    for (const html of [
+      '<table><tr><td>Koyeb</td><td>Free</td><td>Free <strong>Postgres</strong> database</td></tr></table>',
+      '<p>Koyeb offers a free Postgres database.</p>',
+    ]) {
+      assert.ok(firstUnquotedMatch(readableText(html), retired.pattern, ""));
+    }
   });
 
   it("states the current figure on every page that carried a retired one", async () => {
