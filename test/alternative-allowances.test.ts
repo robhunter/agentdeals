@@ -115,6 +115,8 @@ describe("alternative allowances use the opening of their vendor details", () =>
   for (const [details, expected] of [
     [SHORT, "Free plan gives 42 searches per month. No card required!"],
     ["Free plan? Yes! A third sentence.", "Free plan? Yes!"],
+    ["Search API. 2,500 free requests each month. Paid follows.", "Search API. 2,500 free requests each month."],
+    ['The plan is "free." No card required. Paid follows.', 'The plan is "free." No card required.'],
     ["Credits cost $0.008 each at api.example.com. Free: 1,000 per month. Paid follows.", "Credits cost $0.008 each at api.example.com. Free: 1,000 per month."],
     ["A single sentence without punctuation", "A single sentence without punctuation"],
     [LONG, WORD_CUT],
@@ -139,6 +141,7 @@ describe("alternative allowances use the opening of their vendor details", () =>
     for (const [vendor, expected] of [["Short Allowance", "Free plan gives 42 searches per month. No card required!"], ["Escaped Allowance", ESCAPED], ["Long Allowance", WORD_CUT]]) {
       it(`${route} prints ${vendor}'s bounded, escaped details`, () => {
         assert.deepEqual(allowances(pages.get(route)!, route, vendor), [expected]);
+        if (vendor === "Escaped Allowance") assert.ok(pages.get(route)!.includes('Free plan gives &lt;50 searches &amp; &quot;unlimited&quot; projects. No card required.'));
       });
     }
     for (const vendor of ["Withheld Allowance", "Unread Allowance", "Corrected Allowance"]) it(`${route} repeats ${vendor}'s published notice without its stored terms`, () => {
