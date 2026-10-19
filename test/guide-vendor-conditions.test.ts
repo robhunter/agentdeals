@@ -123,6 +123,25 @@ function conditionLists(html: string): string[] {
   return html.match(CONDITIONS_LIST) ?? [];
 }
 
+function primaryConditions(html: string): string {
+  const details = html.match(/<div class="desc-block">\s*<h2>Free Tier Details<\/h2>([\s\S]*?)<\/div>/);
+  assert.ok(details, "the vendor page has primary Free Tier Details");
+  return conditionLists(details[1]!)[0] ?? "";
+}
+
+describe("the vendor conditions oracle", () => {
+  const own = '<ul class="listing-conditions"><li>Own conditions.</li></ul>';
+  const peer = '<ul class="listing-conditions"><li>Alternative conditions.</li></ul>';
+
+  it("returns no conditions when primary details withhold them and an alternative has some", () => {
+    assert.equal(primaryConditions(`<div class="desc-block"><h2>Free Tier Details</h2><p>Terms withheld.</p></div><div class="alternative-allowance">${peer}</div>`), "");
+  });
+
+  it("takes the primary list when an alternative also has conditions", () => {
+    assert.equal(primaryConditions(`<div class="desc-block"><h2>Free Tier Details</h2><p>Own terms.</p>${own}</div><div class="alternative-allowance">${peer}</div>`), own);
+  });
+});
+
 function asLiteralPattern(text: string): string {
   return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
@@ -175,7 +194,7 @@ describe("the Hetzner and Google Cloud guides print their vendor's conditions of
 
   it("ends the Hetzner guide's section 1 with the Hetzner listing's conditions, byte for byte as /vendor/hetzner lists them", async () => {
     const guide = await page(conditioned.base, HETZNER_GUIDE);
-    const [onTheVendorPage] = conditionLists(await page(conditioned.base, `/vendor/${vendorSlug(HETZNER)}`));
+    const onTheVendorPage = primaryConditions(await page(conditioned.base, `/vendor/${vendorSlug(HETZNER)}`));
     assert.ok(onTheVendorPage, "the vendor page lists the conditions");
     assert.deepStrictEqual(onTheVendorPage.match(ANY_TOKEN), tokensOf.get(HETZNER));
     assert.ok(sectionOne(guide).trimEnd().endsWith(onTheVendorPage), "section 1 ends with the vendor page's list, after the plan table and its notes");
@@ -185,7 +204,7 @@ describe("the Hetzner and Google Cloud guides print their vendor's conditions of
 
   it("prints the Google Compute Engine listing's conditions in the e2-micro row of the Always Free table, and in no other row", async () => {
     const guide = await page(conditioned.base, GCP_GUIDE);
-    const [onTheVendorPage] = conditionLists(await page(conditioned.base, `/vendor/${vendorSlug(COMPUTE_ENGINE)}`));
+    const onTheVendorPage = primaryConditions(await page(conditioned.base, `/vendor/${vendorSlug(COMPUTE_ENGINE)}`));
     assert.ok(onTheVendorPage, "the vendor page lists the conditions");
     assert.deepStrictEqual(onTheVendorPage.match(ANY_TOKEN), tokensOf.get(COMPUTE_ENGINE));
     const rows = alwaysFreeRows(guide);
@@ -216,7 +235,7 @@ describe("the Hetzner and Google Cloud guides print their vendor's conditions of
   it("withholds the conditions wherever the vendor page does, as for a listing whose stored terms a recorded change supersedes", async () => {
     for (const vendor of [HETZNER, COMPUTE_ENGINE]) {
       const vendorPage = await page(superseded.base, `/vendor/${vendorSlug(vendor)}`);
-      assert.deepStrictEqual(vendorPage.match(ANY_TOKEN) ?? [], [], `${vendor}: the vendor page withholds the conditions beside superseded terms`);
+      assert.deepStrictEqual(primaryConditions(vendorPage).match(ANY_TOKEN) ?? [], [], `${vendor}: the vendor page withholds the conditions beside superseded terms`);
     }
     const hetzner = sectionOne(await page(superseded.base, HETZNER_GUIDE));
     const e2Micro = alwaysFreeRows(await page(superseded.base, GCP_GUIDE)).find((row) => row.name === E2_MICRO_ROW)!;
@@ -359,7 +378,7 @@ async function listTheVendorPagePrints(base: string, slug: string, memo: Map<str
   const location = response.headers.get("location");
   const redirected = response.status >= 300 && response.status < 400 && location !== null;
   const landing = redirected ? await fetch(new URL(location, base)) : response;
-  const found = { list: landing.status === 200 ? conditionLists(await landing.text())[0] ?? "" : "", landsOnAnotherListing: redirected };
+  const found = { list: landing.status === 200 ? primaryConditions(await landing.text()) : "", landsOnAnotherListing: redirected };
   memo.set(slug, found);
   return found;
 }
