@@ -5398,7 +5398,9 @@ function alternativeAllowanceHtml(offer: Offer): string {
   const details = superseded
     ? `${storedTermsLabel(superseded)}: ${supersededTermsNotice(primary.vendor, superseded)} Read what we recorded ↓`
     : primary.description;
-  return `<div class="alternative-allowance" style="margin-top:.35rem;font-family:var(--sans);font-size:.85rem;color:var(--text-muted);white-space:normal">${escHtmlServer(alternativeAllowanceOpening(details))}</div>`;
+  const opening = alternativeAllowanceOpening(details);
+  const conditions = !superseded && opening === primary.description.trim() ? conditionsAfterTheTermsHtml(primary) : "";
+  return `<div class="alternative-allowance" style="margin-top:.35rem;font-family:var(--sans);font-size:.85rem;color:var(--text-muted);white-space:normal"><span class="alternative-allowance-text">${escHtmlServer(opening)}</span>${conditions}</div>`;
 }
 
 function storedTermsOf(offer: StoredTermsOf): string {

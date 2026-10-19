@@ -18,11 +18,12 @@ const ESCAPED = 'Free plan gives <50 searches & "unlimited" projects. No card re
 const LONG = `Free plan gives ${"search requests ".repeat(23)}each month. Another sentence.`;
 const WORD_CUT = `Free plan gives ${"search requests ".repeat(17)}search…`;
 const WITHHELD = "Free plan: 900 searches per month. Stored obsolete allowance.";
+const CONDITION = { text: "Personal use only.", quote: "Personal use only.", url: "https://allowance.example/terms", read_on: "2026-08-01" };
 
 function listing(vendor: string, description: string, category = "AI / ML"): Offer {
   return {
     vendor, description, category, tier: "Free", url: `https://${toSlug(vendor)}.example/pricing`,
-    verifiedDate: "2026-08-01", tags: [],
+    verifiedDate: "2026-08-01", tags: [], conditions: [CONDITION],
     product_subtypes: {
       taxonomy: category,
       labels: [{ subtype: category === "AI / ML" ? "web_search_api" : "relational", source_url: "https://allowance.example", source_quote: "Search API" }],
@@ -36,6 +37,7 @@ const fixtures = [
   listing("Short Allowance", SHORT),
   listing("Long Allowance", LONG),
   listing("Escaped Allowance", ESCAPED),
+  listing("Whole Allowance", "Free plan gives 42 searches per month. No card required."),
   listing("Withheld Allowance", WITHHELD),
   listing("Unread Allowance", WITHHELD),
   listing("Corrected Allowance", WITHHELD),
@@ -90,7 +92,7 @@ function allowances(html: string, route: string, vendor: string): string[] {
   const found = blocks.filter(block => block.includes(`href="/vendor/${toSlug(vendor)}"`));
   assert.ok(found.length > 0, `${route}: ${vendor} row missing`);
   return found.map(block => {
-    const match = block.match(/<div class="alternative-allowance"[^>]*>([\s\S]*?)<\/div>/);
+    const match = block.match(/<span class="alternative-allowance-text">([\s\S]*?)<\/span>/);
     assert.ok(match, `${route}: ${vendor} allowance missing`);
     return text(match[1]);
   });
@@ -160,6 +162,22 @@ describe("alternative allowances use the opening of their vendor details", () =>
       const terms = allowances(pages.get(route)!, route, "Duplicate Allowance");
       assert.equal(terms.length, route.startsWith("/vendor/") ? 2 : 1);
       for (const term of terms) assert.equal(term, "Free plan gives 42 searches per month. No card required!");
+    });
+    it(`${route} follows a complete description with its conditions`, () => {
+      const html = pages.get(route)!;
+      const at = html.indexOf('<span class="alternative-allowance-text">Free plan gives 42 searches per month. No card required.</span>');
+      assert.ok(at >= 0);
+      const block = html.slice(at, html.indexOf('</div>', at));
+      assert.match(block, /<ul class="listing-conditions"/);
+      assert.match(block, /Personal use only\./);
+      assert.match(block, /href="https:\/\/allowance.example\/terms"/);
+      assert.match(block, /read 2026-08-01/);
+    });
+    it(`${route} adds no conditions to a clipped description or a withholding notice`, () => {
+      const blocks = [...pages.get(route)!.matchAll(/<div class="alternative-allowance"[^>]*>([\s\S]*?)<\/div>/g)].map(m => m[1]);
+      const clipped = blocks.filter(block => /search…|Superseded:|Withheld:/.test(block));
+      assert.ok(clipped.length >= 4);
+      for (const block of clipped) assert.doesNotMatch(block, /listing-conditions|Personal use only/);
     });
   }
 
