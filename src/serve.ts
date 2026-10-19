@@ -3,6 +3,7 @@ import { readFileSync, existsSync, statSync, writeFileSync, writeSync } from "no
 import { randomUUID } from "node:crypto";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
+import { alternativeAllowanceOpening } from "./alternative-allowance.js";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { createServer, getServerCard } from "./server.js";
 import { changesForVendor, oldestVerifiedDateForSlug, vendorRiskAssessment, withheldRecordCounts, publishedRisk, levelWithheldStatement, levelWithheldForARefusedRead, vendorNotIndexedSentence, riskCauseOf, freeTierEndingRecord, NEGATIVE_CHANGE_TYPES, POSITIVE_CHANGE_TYPES, SEVERE_CHANGE_TYPES, loadOffers, getCategories, getNewOffers, getNewestDeals, searchOffers, enrichOffers, gateForOffer, loadDealChanges, getDealChanges, changeContext, DEFAULT_CHANGE_WINDOW_DAYS, getOfferDetails, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, getFormattedWeeklyDigest, getFreshnessMetrics, publishedStabilityIndex, stabilityWithheldDisclosure, UNRATED_STABILITY, type StabilityIndex, type PublishedStabilityClass, getVendorReferral, sanitizeQuery, getChangeLogFreshness, isEventDated, partitionByDateProvenance } from "./data.js";
@@ -5391,6 +5392,15 @@ function curatedAltsNote(vendorName: string): string {
   return `These alternatives were identified from ${escHtmlServer(vendorName)}&rsquo;s pricing changes as recommended replacements.`;
 }
 
+function alternativeAllowanceHtml(offer: Offer): string {
+  const primary = vendorVerdictContext(offer.vendor, utcDate())?.primary ?? offer;
+  const superseded = supersedingChangeFor(primary);
+  const details = superseded
+    ? `${storedTermsLabel(superseded)}: ${supersededTermsNotice(primary.vendor, superseded)} Read what we recorded ↓`
+    : primary.description;
+  return `<div class="alternative-allowance" style="margin-top:.35rem;font-family:var(--sans);font-size:.85rem;color:var(--text-muted);white-space:normal">${escHtmlServer(alternativeAllowanceOpening(details))}</div>`;
+}
+
 function storedTermsOf(offer: StoredTermsOf): string {
   const superseded = supersedingChangeFor(offer);
   if (superseded) return supersededTermsVerdictSentence(offer.vendor, superseded);
@@ -5848,7 +5858,7 @@ ${renderAuditBlock(curatedVendorRanking.tie_break, { total: curatedVendorRanking
 ${enrichedAlts.map(a => {
   return `          <tr>
             <td><a href="/vendor/${toSlug(a.vendor)}">${escHtmlServer(a.vendor)}</a></td>
-            <td>${escHtmlServer(a.tier)}</td>
+            <td>${escHtmlServer(a.tier)}${alternativeAllowanceHtml(a)}</td>
             <td>${stabilityCellHtml(a.risk_level, a.risk_cause, a.link_unreachable, a, null, a.rating_withheld)}</td>
           </tr>`;
 }).join("\n")}
@@ -6454,7 +6464,7 @@ function buildAlternativesPage(slug: string): string | null {
           ${riskBadgeHtml(a.risk_level, a.risk_cause, { compact: true, margin: false })}
           ${curated ? '<span class="curated-badge">recommended</span>' : ""}
         </div>
-        <div class="alt-tier">${escHtmlServer(a.tier)}</div>
+        <div class="alt-tier">${escHtmlServer(a.tier)}</div>${alternativeAllowanceHtml(a)}
         <div class="alt-meta">
           <span class="alt-category">${escHtmlServer(a.category)}</span>
           <span class="alt-date">${a.link_unreachable ? `Link unreachable${a.link_unreachable.last_reachable ? ` since ${escHtmlServer(a.link_unreachable.last_reachable)}` : ""}` : escHtmlServer(verificationDatesSentence(a))}</span>
