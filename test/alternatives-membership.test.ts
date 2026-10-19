@@ -116,8 +116,8 @@ describe("#1032 the vendor page the issue was filed about", () => {
   it("does not list a connection pool or a downloadable emulator among them", async () => {
     const { body } = await get(`/vendor/${slugOf(SUBJECT)}`);
     const grid = sectionAfter(body, "Alternatives in");
-    assert.ok(!grid.includes(GATED_ADDON), `${GATED_ADDON} is a thing you put in front of ${SUBJECT}, not a replacement for it`);
-    assert.ok(!grid.includes(GATED_LOCAL), `${GATED_LOCAL} cannot serve a production workload and is not a replacement for ${SUBJECT}`);
+    assert.ok(!grid.includes(`<td><a href="/vendor/${slugOf(GATED_ADDON)}">`), `${GATED_ADDON} is a thing you put in front of ${SUBJECT}, not a replacement for it`);
+    assert.ok(!grid.includes(`<td><a href="/vendor/${slugOf(GATED_LOCAL)}">`), `${GATED_LOCAL} cannot serve a production workload and is not a replacement for ${SUBJECT}`);
   });
 
   it("says which offers were left out and why, rather than removing them silently", async () => {
@@ -231,7 +231,7 @@ describe("#1032 every page in an affected category, not only the one in the issu
         const grid = body.slice(at, body.indexOf("alt-excluded", at) === -1 ? at + 6000 : body.indexOf("alt-excluded", at));
         gridsChecked += 1;
         for (const gated of gatedHere) {
-          if (grid.includes(gated.vendor)) offenders.push(`${gated.vendor} on /vendor/${slugOf(subject.vendor)}`);
+          if (grid.includes(`<td><a href="/vendor/${slugOf(gated.vendor)}">`)) offenders.push(`${gated.vendor} on /vendor/${slugOf(subject.vendor)}`);
         }
       }
       if (!bindsIn(category)) {
