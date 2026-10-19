@@ -5400,7 +5400,7 @@ function alternativeAllowanceHtml(offer: Offer): string {
     : primary.description;
   const opening = alternativeAllowanceOpening(details);
   const conditions = !superseded && opening === primary.description.trim() ? conditionsAfterTheTermsHtml(primary) : "";
-  return `<div class="alternative-allowance" style="margin-top:.35rem;font-family:var(--sans);font-size:.85rem;color:var(--text-muted);white-space:normal"><span class="alternative-allowance-text">${escHtmlServer(opening)}</span>${conditions}</div>`;
+  return `<div class="alternative-allowance" style="margin-top:.35rem;font-family:var(--sans);font-size:.85rem;color:var(--text-muted);white-space:normal;overflow-wrap:anywhere"><span class="alternative-allowance-text">${escHtmlServer(opening)}</span>${conditions}</div>`;
 }
 
 function storedTermsOf(offer: StoredTermsOf): string {
