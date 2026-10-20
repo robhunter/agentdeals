@@ -1465,10 +1465,28 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
     assert.ok(html.includes("SoftwareApplication"), "JSON-LD should use SoftwareApplication");
     assert.ok(html.includes("Pricing Change History"), "Should show pricing history section");
-    assert.ok(html.includes("Query via MCP"), "Should show MCP snippet");
     assert.ok(html.includes("Alternatives in"), "Should show alternatives");
     assert.ok(html.includes("canonical"), "Should have canonical link");
     assert.ok(html.includes("risk-badge"), "Should show risk badge");
+  });
+
+  it("keeps MCP tool-call documentation on setup and LLM pages rather than vendor profiles", async () => {
+    proc = await startHttpServer();
+
+    for (const slug of ["vercel", "hetzner", "oracle-cloud", "xai", "kaggle"]) {
+      const response = await fetch(`http://localhost:${serverPort}/vendor/${slug}`);
+      assert.strictEqual(response.status, 200, slug);
+      const html = await response.text();
+      assert.doesNotMatch(html, /Query via MCP/i, slug);
+      assert.doesNotMatch(html, /programmatically with the AgentDeals MCP server/i, slug);
+      assert.doesNotMatch(html.replaceAll("&quot;", '"'), /"tool"\s*:\s*"search_deals"/, slug);
+    }
+
+    for (const route of ["/setup", "/llms.txt", "/llms-full.txt"]) {
+      const response = await fetch(`http://localhost:${serverPort}${route}`);
+      assert.strictEqual(response.status, 200, route);
+      assert.match(await response.text(), /search_deals/, route);
+    }
   });
 
   it("GET /vendor/:slug returns 404 for unknown vendor", async () => {

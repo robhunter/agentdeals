@@ -5951,14 +5951,6 @@ ${allCompareLinks.join("\n")}
     <p style="margin-top:.75rem;font-size:.8rem"><a href="/developers">API docs &rarr;</a></p>
   </div>`;
 
-  const mcpSnippet = `{
-  "tool": "search_deals",
-  "arguments": {
-    "query": "${vendorName.replace(/"/g, '\\"')}",
-    "limit": 5
-  }
-}`;
-
   const pricingEvents = citedChanges(vendorChanges).slice(0, 10).map(c => ({
     "@type": "Event",
     name: `${vendorName} pricing change: ${c.change_type.replace(/_/g, " ")}`,
@@ -6317,11 +6309,6 @@ ${reportAppearancesHtml}
 ${referralProgramHtml}
 ${watchCtaHtml}
 ${internalLinksHtml}
-  <div class="section mcp-section">
-    <h2>Query via MCP</h2>
-    <p style="color:var(--text-muted);font-size:.85rem;margin-bottom:.75rem">Look up ${escHtmlServer(vendorName)} programmatically with the AgentDeals MCP server:</p>
-    <code>${escHtmlServer(mcpSnippet)}</code>
-  </div>
 ${faqHtml}
   <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a> | <a href="/contact">Contact</a></footer>
 </div>
