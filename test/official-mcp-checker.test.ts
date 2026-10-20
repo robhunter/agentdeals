@@ -24,6 +24,7 @@ const server = createServer(async (request, response) => {
     if (name === "missing") response.writeHead(404).end("not found");
     else if (name === "malformed") response.end("not JSON");
     else if (name === "no-latest") response.end(JSON.stringify({ versions: {} }));
+    else if (name === "malformed-version") response.end(JSON.stringify({ "dist-tags": { latest: "1.0.0" }, versions: { "1.0.0": "broken" } }));
     else response.end(JSON.stringify({ "dist-tags": { latest: "1.0.0" }, versions: {
       "1.0.0": { name, version: "1.0.0", ...(name === "deprecated" || name === "retired"
         ? { deprecated: "Package no longer supported." } : {}) }, "2.0.0-beta": { deprecated: "Do not use this beta." },
@@ -93,9 +94,14 @@ describe("an official MCP entry checked over HTTP", () => {
 
   it("reads npm latest rather than a deprecated prerelease", async () => {
     assert.deepEqual(await checkOfficialMcpEntry({ ...entry, kind: "npm", target: "active" }, { fetchImpl }), { passed: true });
-    for (const target of ["deprecated", "missing", "malformed", "no-latest"]) {
+    for (const target of ["deprecated", "missing", "malformed", "no-latest", "malformed-version"]) {
       assert.equal((await checkOfficialMcpEntry({ ...entry, kind: "npm", target }, { fetchImpl })).passed, false, target);
     }
+  });
+
+  it("looks up a scoped npm name as one registry path segment", async () => {
+    assert.deepEqual(await checkOfficialMcpEntry({ ...entry, kind: "npm", target: "@example/mcp-server" }, { fetchImpl }), { passed: true });
+    assert.ok(requests.some(request => request.url === "https://registry.npmjs.org/%40example%2Fmcp-server"));
   });
 
   it("checks current PyPI files without treating an old yanked release as current", async () => {

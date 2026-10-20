@@ -21,12 +21,16 @@ async function readUrl(url, options, init = {}, readBody = true) {
 }
 
 async function npmLatest(target, options) {
-  const response = await readUrl(`https://registry.npmjs.org/${encodeURIComponent(target)}`, options);
+  const response = await readUrl(`https://registry.npmjs.org/${encodeURIComponent(target)}`, options, {
+    headers: { Accept: "application/vnd.npm.install-v1+json" },
+  });
   if (response.status !== 200) throw new Error(`npm returned HTTP ${response.status}`);
   const data = JSON.parse(response.text);
   const latest = data["dist-tags"]?.latest;
   const version = latest && data.versions?.[latest];
-  if (!version) throw new Error("npm returned no latest version");
+  if (!version || typeof version !== "object" || Array.isArray(version) || version.version !== latest) {
+    throw new Error("npm returned no valid latest version");
+  }
   return version;
 }
 
