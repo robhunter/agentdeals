@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2026-10-19",
+  "generated": "2026-10-20",
   "pages": {
     "/": {
       "daily": true
@@ -1354,8 +1354,8 @@
       "changed": "2026-10-11"
     },
     "/cloud-free-tier-comparison-2026": {
-      "hash": "e074d43401cd8b08",
-      "changed": "2026-10-19"
+      "hash": "8c67eb6c7f9c4018",
+      "changed": "2026-10-20"
     },
     "/cloudflare-pages-vs-vercel": {
       "hash": "77934708c0d575e8",

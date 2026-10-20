@@ -120,8 +120,8 @@ const STATED: Record<string, string[]> = {
   ],
   "/cloud-free-tier-comparison-2026": [
     "GCP is the only provider of the four with a permanent free VM. AWS gives new accounts no free VM hours, with EC2 paid from the Free plan's credits, and the plan closes after 6 months unless upgraded. Azure's free VM hours last 12 months for accounts that move to pay-as-you-go within 30 days, and VMs still running after 12 months are billed at pay-as-you-go rates. If you need a persistent server",
-    "Azure's Cosmos DB has a lifetime free tier.",
-    "AWS has DynamoDB (always free, 25 GB) and Aurora PostgreSQL serverless (Free plan, paid from credits).",
+    "AWS, GCP and Azure each have a managed database that stays free with no time limit.",
+    "AWS RDS and Aurora PostgreSQL serverless are paid from the Free plan's credits for up to 6 months.",
     "Free plan closure: nothing is charged to your card on the Free plan; the account closes at 6 months or when credits run out, and content is deleted after 90 days unless you upgrade to the Paid plan.",
     "CloudFront is always free up to 1 TB of data transfer out and 10,000,000 requests a month. S3 is paid from the Free plan credits, which last up to 6 months.",
   ],
@@ -248,6 +248,28 @@ describe("pages beyond the AWS guide describe AWS's 6-month Free plan, not the 1
         .map((cells) => `${page}: ${cells.join(" | ")}`);
     });
     assert.deepStrictEqual(missing, []);
+  });
+
+  it("qualifies the cloud comparison's free VM claims and names each permanent database allowance", () => {
+    const markup = html.get("/cloud-free-tier-comparison-2026")!;
+    const verdict = markup.match(/<div class="executive-summary">([\s\S]*?)<\/div>/)![1];
+    const uses = markup.split('<h2 id="best-for">')[1].split('<h2 ')[0];
+    assert.ok(textOf(verdict).includes("of these four clouds, it's the only one with a permanent free VM (e2-micro), and it has the most generous always-free limits (Cloud Run 2M req/mo, BigQuery 1 TiB). Oracle Cloud, not compared here, also has Always Free VMs."));
+    assert.ok(textOf(uses).includes("GCP's e2-micro VM is the only permanent free VM among these four clouds. Oracle Cloud, not compared here, also has Always Free VMs."));
+    assert.ok(textOf(uses).includes("Azure's Cosmos DB and SQL Database both stay free with no time limit."));
+    const databases = markup.split('<h2 id="databases">')[1].split('<h2 id="serverless">')[0];
+    const cosmos = rowsOf(databases).find((row) => row[0] === "Azure" && row[1] === "Cosmos DB");
+    assert.ok(cosmos);
+    assert.strictEqual(cosmos[4], "Always free");
+    const context = databases.match(/<div class="context-box">([\s\S]*?)<\/div>/)![1];
+    assert.strictEqual(textOf(context), "AWS, GCP and Azure each have a managed database that stays free with no time limit. AWS DynamoDB has 25 GB storage and 25 WCU/RCU. GCP Firestore has 1 GiB storage and 50K reads and 20K writes a day; BigQuery has 1 TiB of queries a month and 10 GB storage. Azure Cosmos DB has 1,000 RU/s and 25 GB storage; Azure SQL Database has up to 10 serverless databases, each 100K vCore seconds a month and 32 GB. AWS RDS and Aurora PostgreSQL serverless are paid from the Free plan's credits for up to 6 months. Azure Database for PostgreSQL and MySQL have 750 free hours a month for 12 months. DigitalOcean has no free managed database.");
+  });
+
+  it("serves none of the unqualified cloud exclusivity claims", () => {
+    const markup = html.get("/cloud-free-tier-comparison-2026")!;
+    for (const claim of ["only provider with a permanent free VM", "Only provider with a permanent free VM", "only lifetime-free managed database"]) {
+      assert.ok(!markup.includes(claim), claim);
+    }
   });
 
   it("gives Amazon SES's row in both estimators its per-email price and no 12-month credit expiry", () => {

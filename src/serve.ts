@@ -35619,7 +35619,7 @@ ${globalNavCss()}
   </div>
 
   <div class="executive-summary">
-    <p><strong>Quick verdict:</strong> <strong>GCP</strong> wins for side projects — it's the only provider with a permanent free VM (e2-micro) and the most generous always-free limits (Cloud Run 2M req/mo, BigQuery 1 TiB). <strong>AWS</strong> has the broadest service catalog and the best serverless stack (Lambda + DynamoDB). <strong>Azure</strong> has the strongest enterprise play (Active Directory, Cosmos DB lifetime free tier, .NET ecosystem). <strong>DigitalOcean</strong> doesn't compete on free tiers but wins on simplicity and competitive paid pricing ($4/mo Droplets).</p>
+    <p><strong>Quick verdict:</strong> <strong>GCP</strong> wins for side projects — of these four clouds, it's the only one with a permanent free VM (e2-micro), and it has the most generous always-free limits (Cloud Run 2M req/mo, BigQuery 1 TiB). Oracle Cloud, not compared here, also has Always Free VMs. <strong>AWS</strong> has the broadest service catalog and the best serverless stack (Lambda + DynamoDB). <strong>Azure</strong> has the strongest enterprise play (Active Directory, Cosmos DB lifetime free tier, .NET ecosystem). <strong>DigitalOcean</strong> doesn't compete on free tiers but wins on simplicity and competitive paid pricing ($4/mo Droplets).</p>
     <p><strong>The catch:</strong> Every cloud hides costs differently. AWS charges for data transfer and NAT gateways. GCP charges for egress and has confusing Firestore pricing tiers. Azure has no spending cap on pay-as-you-go. DigitalOcean has minimal free services but the fewest gotchas. We compare all of them below.</p>
   </div>
 
@@ -35791,7 +35791,7 @@ ${globalNavCss()}
         <td>Cosmos DB</td>
         <td>Multi-model NoSQL</td>
         <td>1,000 RU/s, 25 GB storage</td>
-        <td style="color:#3fb950">Lifetime free</td>
+        <td style="color:#3fb950">Always free</td>
       </tr>
       <tr>
         <td class="provider-col">Azure</td>
@@ -35823,7 +35823,7 @@ ${globalNavCss()}
   </div>
 
   <div class="context-box">
-    <strong>Azure's Cosmos DB has a lifetime free tier.</strong> 1,000 RU/s and 25 GB with no expiration. AWS has DynamoDB (always free, 25 GB) and Aurora PostgreSQL serverless (Free plan, paid from credits). GCP has Firestore for document storage and BigQuery for analytics. DigitalOcean offers no free databases.
+    <strong>AWS, GCP and Azure each have a managed database that stays free with no time limit.</strong> AWS DynamoDB has 25 GB storage and 25 WCU/RCU. GCP Firestore has 1 GiB storage and 50K reads and 20K writes a day; BigQuery has 1 TiB of queries a month and 10 GB storage. Azure Cosmos DB has 1,000 RU/s and 25 GB storage; Azure SQL Database has up to 10 serverless databases, each 100K vCore seconds a month and 32 GB. AWS RDS and Aurora PostgreSQL serverless are paid from the Free plan's credits for up to 6 months. Azure Database for PostgreSQL and MySQL have 750 free hours a month for 12 months. DigitalOcean has no free managed database.
   </div>
 
   <h2 id="serverless">Serverless Functions</h2>
@@ -35988,7 +35988,7 @@ ${globalNavCss()}
 
     <div class="verdict-item">
       <strong>Side project / hobby &rarr; GCP</strong>
-      <p>Only provider with a permanent free VM (e2-micro). Cloud Run's 2M req/mo and Firestore give you a complete stack at $0 indefinitely. <a href="/gcp-free-tier-2026">Read the full GCP guide &rarr;</a></p>
+      <p>GCP's e2-micro VM is the only permanent free VM among these four clouds. Oracle Cloud, not compared here, also has Always Free VMs. Cloud Run's 2M req/mo and Firestore give you a complete stack at $0 indefinitely. <a href="/gcp-free-tier-2026">Read the full GCP guide &rarr;</a></p>
     </div>
 
     <div class="verdict-item">
@@ -35998,7 +35998,7 @@ ${globalNavCss()}
 
     <div class="verdict-item">
       <strong>Startup (easiest qualification) &rarr; Azure</strong>
-      <p>Microsoft for Startups needs no investor. B2B tech startups can reach $150K in credits with Azure usage, and the only lifetime-free managed database (Cosmos DB). <a href="/azure-free-tier-2026">Read the full Azure guide &rarr;</a></p>
+      <p>Microsoft for Startups needs no investor. B2B tech startups can reach $150K in credits with Azure usage. Azure's Cosmos DB and SQL Database both stay free with no time limit. <a href="/azure-free-tier-2026">Read the full Azure guide &rarr;</a></p>
     </div>
 
     <div class="verdict-item">
