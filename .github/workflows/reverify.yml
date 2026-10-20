@@ -45,6 +45,9 @@ jobs:
       - name: Compile, so the gate and the restatement pass read the predicates the site reads
         run: npm run build
 
+      - name: Check the vendor MCP entries and record failures for review
+        run: node scripts/check-official-mcp.js --write | tee /tmp/official-mcp-checks.json
+
       - name: Run rolling re-verification
         id: reverify
         env:
@@ -127,7 +130,7 @@ jobs:
           bash scripts/gate-data-push.sh \
             data-quarantine/rolling-reverification \
             "$MESSAGE" \
-            data/index.json data/deal_changes.json data/change_proposals.json data/change_refusals.json data/change_corroboration.json data/verification_state.json data/restated_terms.json data/quality_budgets.json data/page-lastmod.json data/page-reviews.json artifacts/free-llm-api-index/README.md
+            data/official_mcp_checks.json data/index.json data/deal_changes.json data/change_proposals.json data/change_refusals.json data/change_corroboration.json data/verification_state.json data/restated_terms.json data/quality_budgets.json data/page-lastmod.json data/page-reviews.json artifacts/free-llm-api-index/README.md
 
       - name: Say where it can be seen what the gate did with this run's data
         if: always() && (steps.gate.outputs.quarantined == 'true' || steps.gate.outputs.pushed_over_failures == 'true' || steps.gate.outputs.drifted_guards != '' || steps.gate.outputs.pushed_commit != '' || steps.gate.outputs.pushed_nothing == 'true' || steps.gate.outputs.held_back_vendors != '')

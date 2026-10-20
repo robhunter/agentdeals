@@ -2,6 +2,8 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import type { Offer, EnrichedOffer, OfferIndex, DealChange, DateMeaning, PublishedDealChange, DealChangesIndex, ChangeDateSource, StabilityClass, Referral, RiskCause, RatingWithheld, RatingWithheldReason, LinkUnreachable, SourceCheck, FreePlanExcerpt, FreePlanExcerptHold, ListingCondition } from "./types.js";
+import { officialMcpProblems, withCheckedOfficialMcp } from "./official-mcp.js";
+import { readOfficialMcpStore } from "./official-mcp-store.js";
 import { conditionsField } from "./conditions-field.js";
 import { isUrlSuspended } from "./referral-health.js";
 import { CHANGE_DIRECTION, NEGATIVE_CHANGE_TYPES, POSITIVE_CHANGE_TYPES } from "./change-direction.js";
@@ -119,7 +121,12 @@ export function loadOffers(): Offer[] {
     return cachedOffers;
   }
 
-  cachedOffers = data.offers.map(withoutGateInput).map(withFreePlanExcerptHeldAside).map(withPaymentCostsTheirSourcesState);
+  const { checks } = readOfficialMcpStore();
+  cachedOffers = data.offers.map(offer => {
+    const problems = officialMcpProblems(offer.official_mcp_servers);
+    if (problems.length) throw new Error(`${offer.vendor}: ${problems.join("; ")}`);
+    return withCheckedOfficialMcp(offer, checks);
+  }).map(withoutGateInput).map(withFreePlanExcerptHeldAside).map(withPaymentCostsTheirSourcesState);
   return cachedOffers;
 }
 

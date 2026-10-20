@@ -164,3 +164,14 @@ export function officialMcpPassage(vendor: string, entry: OfficialMcpServer): st
     `${NOTICE_LABELS[name.kind]} marks ${name.target} "${name.notice}" (From ${name.url}, read ${name.read_on}.)`);
   return [passage, ...retired].join(" ");
 }
+
+export function officialMcpField(offer: { official_mcp_servers?: unknown }): { official_mcp_servers?: unknown } {
+  return offer.official_mcp_servers ? { official_mcp_servers: offer.official_mcp_servers } : {};
+}
+
+export function withOfficialMcpPassages(text: string, offer: {
+  vendor: string; official_mcp_servers?: OfficialMcpServer[];
+}): string {
+  const passages = (offer.official_mcp_servers ?? []).map(entry => officialMcpPassage(offer.vendor, entry));
+  return passages.length ? [text, ...passages].join(" ") : text;
+}

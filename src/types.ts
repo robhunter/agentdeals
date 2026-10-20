@@ -86,6 +86,7 @@ export interface Offer {
   free_plan_excerpt?: FreePlanExcerpt;
   free_plan_excerpt_hold?: FreePlanExcerptHold;
   conditions?: ListingCondition[];
+  official_mcp_servers?: import("./official-mcp.js").OfficialMcpServer[];
 }
 
 export type UseAVendorRulesOut = "production" | "commercial use";

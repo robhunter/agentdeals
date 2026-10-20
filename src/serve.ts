@@ -46,6 +46,7 @@ import { gateStatesAnEnding, publishedVendorLevel, restorationClause, restoredRe
 import { descriptionDeniesAFreeTier, listingOffersAFreeTier, tierMayCarryAFreePlanExcerpt, tierRecordsAFreeTier, tierWhoseFreeOfferIsTheLicence } from "./free-tier-record.js";
 import { whyTheExcerptCannotStand } from "./free-plan-excerpt-rules.js";
 import { alternativesUnderTheVendorsRule, conditionRulingOut, conditionsBesideStoredTerms, conditionsForTheBrowser, conditionsHtml, conditionsOf, levelBesideTheVendorsRule, productionAnswerOpening, rowSpanningTheTableHtml, stableRatingBesideTheVendorsRule, theVendorsRuleOnProduction, trialProductionAnswer, withConditionsAfter, type TheVendorsRule } from "./listing-conditions.js";
+import { officialMcpPassage, withOfficialMcpPassages } from "./official-mcp.js";
 import { conditionsField } from "./conditions-field.js";
 import { PAGE_HEAD_OPEN, withLedeBeforeNav } from "./page-lede.js";
 import { withReviewByline } from "./page-byline.js";
@@ -2406,8 +2407,8 @@ function listingEligibilityNoticeHtml(offer: Offer): string {
   return `<span class="listing-eligibility-restricted" style="display:block;margin-top:.3rem;color:#d29922">${escHtmlServer(gate.reason)}${conditionsHtml}</span>`;
 }
 
-function listingTermsAndNoticesHtml(offer: Offer): string {
-  return `${storedTermsHtml(offer)}${conditionsAfterTheTermsHtml(offer)}${listingEligibilityNoticeHtml(offer)}${listingUnreachableNoticeHtml(offer)}${termsUnconfirmedNoticeHtml(offer)}`;
+function listingTermsAndNoticesHtml(offer: Offer, includeOfficialMcp = false): string {
+  return `${storedTermsHtml(offer)}${includeOfficialMcp ? officialMcpParagraphsHtml(offer) : ""}${conditionsAfterTheTermsHtml(offer)}${listingEligibilityNoticeHtml(offer)}${listingUnreachableNoticeHtml(offer)}${termsUnconfirmedNoticeHtml(offer)}`;
 }
 
 function buildCategoryPage(slug: string): string | null {
@@ -5450,6 +5451,10 @@ function listingLastReadNote(offer: Offer): string {
   return lastReadNote(offer, withheld, refusalsFor(offer.vendor), refusalWithholdsTheTerms(unconfirmed) ? withheld : null);
 }
 
+function officialMcpParagraphsHtml(offer: Offer): string {
+  return (offer.official_mcp_servers ?? []).map(entry => `<p>${escHtmlServer(officialMcpPassage(offer.vendor, entry))}</p>`).join("");
+}
+
 function otherListingHtml(slug: string, offer: Offer): string {
   const restatedOn = restatedReadingDate(offer);
   return `
@@ -5485,7 +5490,7 @@ function otherListingHtml(slug: string, offer: Offer): string {
         </div>
       </div>
       <div class="desc-block">
-        <div class="desc-text">${listingTermsAndNoticesHtml(offer)}</div>
+        <div class="desc-text">${listingTermsAndNoticesHtml(offer, true)}</div>
       </div>
     </div>`;
 }
@@ -5958,7 +5963,7 @@ ${allCompareLinks.join("\n")}
     ...eventResolutionFields(c),
     description: c.summary,
   }));
-  const primaryDescribedAs = publishedTermsText(primary);
+  const primaryDescribedAs = withOfficialMcpPassages(publishedTermsText(primary), primary);
   const jsonLd: Record<string, any> = {
     "@context": "https://schema.org",
     "@type": "WebPage",
@@ -6141,14 +6146,20 @@ ${allCompareLinks.join("\n")}
     { q: `What category is ${vendorName} in?`, a: faqCategoryAnswer },
   ];
 
+  const answerWithOfficialMcp = (question: string, answer: string): string =>
+    question === `Is ${vendorName} free?` || question === `What is ${vendorName}'s free tier?`
+      ? withOfficialMcpPassages(answer, primary) : answer;
   const faqJsonLd = faqPageJsonLd("/vendor/" + slug, vendorFaqItems);
+  for (const item of faqJsonLd.mainEntity as { name: string; acceptedAnswer: { text: string } }[]) {
+    item.acceptedAnswer.text = answerWithOfficialMcp(item.name, item.acceptedAnswer.text);
+  }
 
   const faqHtml = `
   <div class="section faq-section">
     <h2>Frequently Asked Questions</h2>
     ${vendorFaqItems.map(item => `<details class="faq-item">
       <summary class="faq-q">${escHtmlServer(item.q)}</summary>
-      <div class="faq-a">${escHtmlServer(item.a)}</div>
+      <div class="faq-a">${escHtmlServer(answerWithOfficialMcp(item.q, item.a))}</div>
     </details>`).join("\n    ")}
   </div>`;
 
@@ -6293,7 +6304,7 @@ ${referralCalloutHtml}
     <h2>Free Tier Details</h2>
     ${termsSuperseded
       ? `<p class="terms-superseded-text"><strong>${storedTermsLabel(termsSuperseded)}:</strong> ${supersededTermsNoticeHtml(vendorName, termsSuperseded, escHtmlServer)} <a href="#changes">Read what we recorded &darr;</a></p>`
-      : `<p class="desc-text">${escHtmlServer(primary.description)}</p>`}${freeTierSourceLine}${freePlanExcerptBlock}${listingConditionsBlock}
+      : `<p class="desc-text">${escHtmlServer(primary.description)}</p>`}${officialMcpParagraphsHtml(primary)}${freeTierSourceLine}${freePlanExcerptBlock}${listingConditionsBlock}
   </div>
 ${growthPathHtml}${otherListingsHtml(slug, vendorName, vendorOffers.filter(o => o !== primary))}
 

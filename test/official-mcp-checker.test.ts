@@ -100,6 +100,19 @@ describe("an official MCP entry checked over HTTP", () => {
     assert.equal((await checkOfficialMcpEntry({ ...entry, doc_url: "https://docs.example.com/joined" }, { fetchImpl })).passed, false);
   });
 
+  it("reads numeric HTML entities as the document renders them", async () => {
+    for (const encoded of ["&#39;", "&#x27;", "&#X27;"]) {
+      const source_quote = "The vendor's MCP server connects an AI agent.";
+      const fetchImpl = async (url: string) => new Response(url.includes("docs.")
+        ? `<p>The vendor${encoded}s MCP server connects an AI agent.</p>` : "", { status: url.includes("docs.") ? 200 : 401 });
+      assert.equal((await checkOfficialMcpEntry({ ...entry, source_quote }, { fetchImpl })).passed, true);
+      assert.equal((await checkOfficialMcpEntry({ ...entry, source_quote: source_quote + " Extra." }, { fetchImpl })).passed, false);
+    }
+    const fetchImpl = async (url: string) => new Response(url.includes("docs.")
+      ? "<p>Connect &#x1F680; with &#233; and &#x110000;.</p>" : "", { status: url.includes("docs.") ? 200 : 401 });
+    assert.equal((await checkOfficialMcpEntry({ ...entry, source_quote: "Connect 🚀 with é and &#x110000;." }, { fetchImpl })).passed, true);
+  });
+
   it("reads npm latest rather than a deprecated prerelease", async () => {
     assert.deepEqual(await checkOfficialMcpEntry({ ...entry, kind: "npm", target: "active" }, { fetchImpl }), { passed: true });
     for (const target of ["deprecated", "missing", "malformed", "no-latest", "malformed-version"]) {

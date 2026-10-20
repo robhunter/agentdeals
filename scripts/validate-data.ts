@@ -5,6 +5,7 @@ import { resolve, dirname } from "path";
 import { fileURLToPath } from "url";
 import { summaryCallsItsSourceUnreadable } from "../dist/change-citation.js";
 import { CHANGE_IMPACT_LEVELS, isChangeImpactLevel } from "../dist/change-impact.js";
+import { officialMcpProblems } from "../dist/official-mcp.js";
 import { USES_A_VENDOR_CAN_RULE_OUT } from "../dist/listing-conditions.js";
 import {
   CHANGE_REPORT_RULE,
@@ -269,6 +270,10 @@ function validateOffers(offers: Offer[]): ValidationError[] {
       errors.push({ file: "data/index.json", index: i, vendor, field: "conditions", message });
     }
 
+    for (const message of officialMcpProblems(offer.official_mcp_servers)) {
+      errors.push({ file: "data/index.json", index: i, vendor, field: "official_mcp_servers", message });
+    }
+
     const key = `${offer.vendor}|||${offer.category}`;
     if (seen.has(key)) {
       errors.push({
@@ -422,7 +427,7 @@ function uncitedOverBudget(changes: DealChange[]): ValidationError[] {
 }
 
 function main(): void {
-  const indexPath = resolve(ROOT, "data/index.json");
+  const indexPath = process.env.AGENTDEALS_INDEX_PATH || resolve(ROOT, "data/index.json");
   const changesPath = resolve(ROOT, "data/deal_changes.json");
 
   const indexData = JSON.parse(readFileSync(indexPath, "utf8"));

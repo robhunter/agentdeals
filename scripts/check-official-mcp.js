@@ -1,9 +1,19 @@
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
+import { pathToFileURL } from "node:url";
+import { parseArgs } from "node:util";
+import { readOfficialMcpStore, writeOfficialMcpStore, officialMcpStorePath } from "../dist/official-mcp-store.js";
 import { officialMcpProblems, officialMcpKey, advanceOfficialMcpCheck } from "../dist/official-mcp.js";
 import { MCP_PROTOCOL_VERSION } from "../dist/mcp-tool-inventory.js";
 import { stripHtml, readBodyWithin } from "./verify-freshness.js";
 
 const normalize = text => text.replace(/\s+/g, " ").replace(/\s+([.,;:!?])/g, "$1").trim();
-const quotePresent = (body, quote) => normalize(stripHtml(body)).includes(normalize(quote));
+const renderedText = body => stripHtml(body).replace(/&#(x[0-9a-f]+|[0-9]+);/gi, (entity, code) => {
+  const point = code[0].toLowerCase() === "x" ? Number.parseInt(code.slice(1), 16) : Number.parseInt(code, 10);
+  return point > 0 && point <= 0x10ffff && !(point >= 0xd800 && point <= 0xdfff)
+    ? String.fromCodePoint(point) : entity;
+});
+const quotePresent = (body, quote) => normalize(renderedText(body)).includes(normalize(quote));
 
 async function readUrl(url, options, init = {}, readBody = true) {
   const response = await (options.fetchImpl ?? fetch)(url, {
@@ -131,4 +141,35 @@ export async function checkOfficialMcpListings(offers, previous = { checks: {}, 
     }
   }
   return { checks, proposals };
+}
+
+export async function runOfficialMcpCheck(options = {}) {
+  const indexPath = options.indexPath ?? process.env.AGENTDEALS_INDEX_PATH ?? new URL("../data/index.json", import.meta.url);
+  const storePath = options.storePath ?? officialMcpStorePath();
+  const offers = JSON.parse(readFileSync(indexPath, "utf8")).offers;
+  if (!Array.isArray(offers)) throw new Error("The catalogue must carry an offers array");
+  const previous = readOfficialMcpStore(storePath);
+  const checkedOn = options.checkedOn ?? new Date().toISOString().slice(0, 10);
+  const result = await checkOfficialMcpListings(offers, previous, checkedOn, options);
+  if (options.write) writeOfficialMcpStore(result, storePath);
+  const entries = offers.flatMap(offer => (offer.official_mcp_servers ?? []).map(entry => ({
+    vendor: offer.vendor, target: entry.target, ...result.checks[officialMcpKey(offer, entry)],
+  })));
+  return { ...result, entries };
+}
+
+if (process.argv[1] && pathToFileURL(resolve(process.argv[1])).href === import.meta.url) {
+  try {
+    const { values } = parseArgs({ options: {
+      write: { type: "boolean", default: false }, index: { type: "string" }, state: { type: "string" },
+      date: { type: "string" }, preflight: { type: "boolean", default: false },
+    } });
+    const result = await runOfficialMcpCheck({ write: values.write, indexPath: values.index,
+      storePath: values.state, checkedOn: values.date });
+    console.log(JSON.stringify(result, null, 2));
+    if (values.preflight && result.entries.some(entry => !entry.passed)) process.exitCode = 1;
+  } catch (error) {
+    console.error(error.message);
+    process.exitCode = 1;
+  }
 }

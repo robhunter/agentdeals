@@ -1561,12 +1561,38 @@ export const openapiSpec = {
           ai_agent_by_trigger: { type: "object", additionalProperties: { type: "integer" }, description: "AI-agent hits split by whether a person asked for them." }
         }
       },
+      OfficialMcpServer: {
+        type: "object",
+        required: ["kind", "target", "transport", "authentication", "doc_url", "source_quote", "read_on"],
+        properties: {
+          kind: { type: "string", enum: ["remote", "npm", "pypi", "github"] },
+          target: { type: "string" },
+          transport: { type: "string" },
+          authentication: { type: "string" },
+          doc_url: { type: "string", format: "uri" },
+          source_quote: { type: "string" },
+          read_on: { type: "string", format: "date" },
+          retired_names: { type: "array", items: {
+            type: "object", required: ["kind", "target", "notice", "url", "read_on"],
+            properties: {
+              kind: { type: "string", enum: ["remote", "npm", "pypi", "github"] },
+              target: { type: "string" }, notice: { type: "string" },
+              url: { type: "string", format: "uri" }, read_on: { type: "string", format: "date" },
+            },
+          } },
+        },
+      },
       Offer: {
         type: "object",
         properties: {
           vendor: { type: "string", description: "Vendor/service name" },
           category: { type: "string", description: "Offer category" },
           description: { type: "string", description: "Description of the offer and free tier details" },
+          official_mcp_servers: {
+            type: "array", minItems: 1,
+            description: "Sourced MCP servers published by the vendor. Entries failing their check on two consecutive days are withheld. Absence does not establish that the vendor has no server.",
+            items: { $ref: "#/components/schemas/OfficialMcpServer" },
+          },
           terms_superseded: { $ref: TERMS_SUPERSEDED_REF },
           tier: { type: "string", description: "Tier name (e.g. Free, Free Credits, Open Source)" },
           url: { type: "string", format: "uri", description: "Pricing/offer page URL" },

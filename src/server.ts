@@ -28,6 +28,7 @@ import { NOT_VERIFIED, theReadConfirmedThePrice, termsTheVerdictWithholds, terms
 import { BASE_URL } from "./base-url.js";
 import { withProvenance } from "./provenance.js";
 import { PKG_VERSION } from "./package-version.js";
+import { officialMcpField, withOfficialMcpPassages } from "./official-mcp.js";
 import { conditionsField } from "./conditions-field.js";
 import { conditionsBesideStoredTerms, withConditionsAfter } from "./listing-conditions.js";
 import { LATEST_PRICING_CHANGES_DESCRIPTION, latestPricingChangesText } from "./upcoming-changes.js";
@@ -54,7 +55,7 @@ function citedJsonAcrossTheWholeIndex<T extends object>(payload: T): string {
 
 
 function toConciseOffer(offer: Offer | EnrichedOffer) {
-  const base = { vendor: offer.vendor, tier: offer.tier, description: offer.description, terms_superseded: withTermsSuperseded(offer).terms_superseded, ...conditionsField(offer), url: offer.url, gate: gateForOffer(offer), ...(offer.payment_protocols?.length ? { payment_protocols: offer.payment_protocols.map(p => p.protocol) } : {}) };
+  const base = { vendor: offer.vendor, tier: offer.tier, description: offer.description, terms_superseded: withTermsSuperseded(offer).terms_superseded, ...conditionsField(offer), ...officialMcpField(offer), url: offer.url, gate: gateForOffer(offer), ...(offer.payment_protocols?.length ? { payment_protocols: offer.payment_protocols.map(p => p.protocol) } : {}) };
   const enriched = offer as Partial<EnrichedOffer>;
   if (enriched.risk_level !== undefined) {
     return { ...base, risk_level: enriched.risk_level, risk_cause: enriched.risk_cause ?? null, stability: enriched.stability };
@@ -64,7 +65,7 @@ function toConciseOffer(offer: Offer | EnrichedOffer) {
 
 function termsWithTheirConditions(offer: Offer, terms: string, allChanges: readonly DealChange[]): string {
   const vendorChanges = allChanges.filter(change => change.vendor.toLowerCase() === offer.vendor.toLowerCase());
-  return withConditionsAfter(terms, conditionsBesideStoredTerms(offer, vendorChanges));
+  return withOfficialMcpPassages(withConditionsAfter(terms, conditionsBesideStoredTerms(offer, vendorChanges)), offer);
 }
 
 function toConciseDealChange(change: DealChange) {
