@@ -773,7 +773,7 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
     },
     async () => {
       const offers = loadOffers();
-      const lines = offers
+      const lines = [...offers]
         .sort((a, b) => a.vendor.localeCompare(b.vendor))
         .map(o => `- **${o.vendor}** | ${o.category} | ${o.tier}`);
       const text = `# AgentDeals Vendors\n\n${offers.length} vendors.\n\n${lines.join("\n")}`;

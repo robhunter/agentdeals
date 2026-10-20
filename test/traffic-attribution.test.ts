@@ -11,6 +11,7 @@ const {
   recordToolCall,
   getTrafficReport,
   getPageViews,
+  getPageViewsToday,
   resetTelemetryHealth,
   resetTelemetryBuffers,
   resetCounters,
@@ -174,6 +175,33 @@ describe("client-class traffic attribution (#1019)", () => {
     assert.equal(report.today.by_class.ai_agent, 1);
     assert.equal(report.today.by_class.search_crawler, 1);
     assert.equal(report.today.by_class.seo_crawler, 1);
+  });
+
+  it("internal validation leaves page views and referrers unchanged while browsers still count", async () => {
+    await boot();
+    const internal = "agentdeals-internal/1.0 vendor-profile-validation";
+    assert.equal(classifyRequest("/vendor/neon", internal).client_class, "internal");
+    for (const status of [200, 302, 404]) {
+      recordPageView("/vendor/neon", internal, "https://validation.example/", status);
+    }
+    const before = await getPageViews();
+    assert.equal(before.today.total, 0);
+    await flushPending();
+    const internalOnly = await getPageViews();
+    for (const key of ["today", "yesterday", "all_time", "referrers_today"] as const) {
+      assert.deepEqual(internalOnly[key], before[key], key);
+    }
+    assert.equal(getPageViewsToday(), 0);
+
+    recordPageView("/vendor/neon", UA.chrome, "https://reader.example/", 200);
+    await flushPending();
+    const report = await getPageViews();
+    assert.equal(report.today.total, 1);
+    assert.equal(getPageViewsToday(), 1);
+    assert.deepEqual(report.today.top_pages, [{ path: "/vendor/:slug", views: 1 }]);
+    const persisted = JSON.stringify(storedSnapshot());
+    assert.ok(!persisted.includes("validation.example"));
+    assert.ok(persisted.includes("reader.example"));
   });
 
   it("observing the service is not using it", async () => {

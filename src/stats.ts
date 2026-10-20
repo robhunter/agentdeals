@@ -1,6 +1,6 @@
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { dirname } from "node:path";
-import { AGENT_TRIGGERS, agentFamiliesByTrigger, agentTriggerForFamily, type AgentTrigger } from "./client-class.js";
+import { classifyClient, AGENT_TRIGGERS, agentFamiliesByTrigger, agentTriggerForFamily, type AgentTrigger } from "./client-class.js";
 import { recordedQueryForm } from "./search-query.js";
 
 const startedAt = Date.now();
@@ -1678,7 +1678,7 @@ export function recordTraffic(
 }
 
 export function recordPageView(path: string, userAgent: string, referer?: string, statusCode?: number): void {
-  if (isBot(userAgent)) return;
+  if (classifyClient(userAgent).client_class === "internal" || isBot(userAgent)) return;
 
   const today = new Date().toISOString().slice(0, 10);
   if (today !== pageViewsTodayDate) {
