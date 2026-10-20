@@ -17059,6 +17059,35 @@
           }
         ]
       }
+    },
+    {
+      "vendor": "cDox",
+      "change_type": "limits_increased",
+      "date": "2026-10-20",
+      "date_source": "discovered",
+      "summary": "The Free plan moved from 50 MB of storage and 3 public links to 150 pages and sheets and unlimited public links.",
+      "tier": "Free",
+      "tier_direction": "widened",
+      "previous_state": "The 2026-08-28 archive capture of cdox.studio/pricing listed the Free plan, $0 forever, with \"50 MB storage\" and \"3 public links\".",
+      "current_state": "cdox.studio/pricing, read 2026-10-20 (cdox.ca now redirects there), lists the Free plan with \"150 pages and sheets\" and \"Unlimited public links\". Pro is $8 a month or $70 a year.",
+      "impact": "medium",
+      "source_url": "https://cdox.studio/pricing",
+      "category": "Team Collaboration",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-10-20",
+      "archive_check": {
+        "checked": "2026-10-20",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-08-28",
+            "first_new": null,
+            "last_old_capture": "https://web.archive.org/web/20260828130523/https://cdox.studio/pricing",
+            "first_new_capture": null
+          }
+        ]
+      }
     }
   ]
 }

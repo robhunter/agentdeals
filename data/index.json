@@ -14482,9 +14482,9 @@
     {
       "vendor": "cDox",
       "category": "Team Collaboration",
-      "description": "Private document editor hosted in Canada. Write, format, collaborate, and publish documents with clean public links. Data is never used for AI training. Free plan includes 50 MB storage, up to 3 public links, and export to PDF, Word, and Markdown.",
+      "description": "Private document editor hosted in Canada. Write, format, collaborate, and publish documents with clean public links. Data is never used for AI training. Free plan includes 150 pages and sheets and unlimited public links.",
       "tier": "Free",
-      "url": "https://cdox.ca",
+      "url": "https://cdox.studio/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
@@ -17103,7 +17103,7 @@
     {
       "vendor": "Corgea",
       "category": "Security",
-      "description": "Free autonomous security platform that finds, validates and fixes insecure code and packages across +20 languages and frameworks. Free plan includes 10 repos, 10 PR scans/month, and 10 SAST auto fixes. Features: AI SAST, Logic/Auth Scanning, Dependency Scanning, Secrets Detection, Container Scanning, IaC Scanning.",
+      "description": "Free autonomous security platform that finds, validates and fixes insecure code and packages across +20 languages and frameworks. Free plan for up to 2 team members and 10 repositories, with 10 PR scans a month and 10 SAST auto fixes. Features: AI SAST, Logic/Auth Scanning, Dependency Scanning, Secrets Detection, Container Scanning, IaC Scanning.",
       "tier": "Free",
       "url": "https://corgea.com/pricing/",
       "tags": [

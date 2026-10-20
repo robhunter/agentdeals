@@ -1,96 +1,5 @@
 {
-  "proposals": [
-    {
-      "proposal_id": "2026-10-20/logrocket/new_free_tier",
-      "proposed_on": "2026-10-20",
-      "vendor": "LogRocket",
-      "change_type": "new_free_tier",
-      "date": "2026-10-20",
-      "date_source": "discovered",
-      "summary": "LogRocket now offers a 14-day free trial for Core, Pro, and Enterprise plans, no credit card required.",
-      "tier": "Core",
-      "tier_direction": "widened",
-      "previous_state": "Session replay, product analytics and error monitoring, priced by sessions captured; analytics, logs and errors are unlimited on every plan. No free plan: Core, Pro and Enterprise each start with a free trial, no credit card required.",
-      "current_state": "Start for free Access all of LogRocket's features free for 14 days. Cancel any time.",
-      "impact": "high",
-      "source_url": "https://logrocket.com/pricing",
-      "category": "Error Tracking",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-10-20",
-      "restatement": []
-    },
-    {
-      "proposal_id": "2026-10-20/cdox/limits_increased",
-      "proposed_on": "2026-10-20",
-      "vendor": "cDox",
-      "change_type": "limits_increased",
-      "date": "2026-10-20",
-      "date_source": "discovered",
-      "summary": "cDox's own page now redirects to cdox.studio. The free plan now includes 150 pages and sheets, and unlimited public links, instead of 50 MB storage and up to 3 public links.",
-      "tier": "Free",
-      "tier_direction": "widened",
-      "previous_state": "Private document editor hosted in Canada. Write, format, collaborate, and publish documents with clean public links. Data is never used for AI training. Free plan includes 50 MB storage, up to 3 public links, and export to PDF, Word, and Markdown.",
-      "current_state": "cDox offers a free plan with 150 pages and sheets and unlimited public links.",
-      "impact": "medium",
-      "source_url": "https://cdox.ca",
-      "category": "Team Collaboration",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-10-20",
-      "restatement": [
-        {
-          "url": "https://cdox.ca",
-          "description": "Private document editor hosted in Canada — cDox offers a free plan with 150 pages and sheets and unlimited public links."
-        }
-      ]
-    },
-    {
-      "proposal_id": "2026-10-20/webvizio/new_free_tier",
-      "proposed_on": "2026-10-20",
-      "vendor": "Webvizio",
-      "change_type": "new_free_tier",
-      "date": "2026-10-20",
-      "date_source": "discovered",
-      "summary": "The pricing page offers a 'Free Forever' plan. Is still available. The Solo plan is $8/month as stated.",
-      "tier": "Solo",
-      "tier_direction": "unchanged",
-      "previous_state": "Website feedback and bug reporting tool for web development teams — no permanent free tier. 7-day free trial of the Advanced plan, no credit card required; Solo is $8/month for 2 users and 5 projects.",
-      "current_state": "Solo $ 8 per month. Includes 2 users, 5 projects, unlimited tasks, screenshot annotations, and all integrations.",
-      "impact": "high",
-      "source_url": "https://webvizio.com/pricing/",
-      "category": "Communication",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-10-20",
-      "restatement": []
-    },
-    {
-      "proposal_id": "2026-10-20/corgea/pricing_restructured",
-      "proposed_on": "2026-10-20",
-      "vendor": "Corgea",
-      "change_type": "pricing_restructured",
-      "date": "2026-10-20",
-      "date_source": "discovered",
-      "summary": "The free plan now has a limit of 2 team members.",
-      "tier": "Free",
-      "tier_direction": "narrowed",
-      "previous_state": "Free autonomous security platform that finds, validates and fixes insecure code and packages across +20 languages and frameworks. Free plan includes 10 repos, 10 PR scans/month, and 10 SAST auto fixes. Features: AI SAST, Logic/Auth Scanning, Dependency Scanning, Secrets Detection, Container Scanning, IaC Scanning.",
-      "current_state": "The Free plan includes AI SAST, logic and auth scanning, dependency scanning, secrets detection, container scanning, and IaC scanning for up to 2 team members and 10 repositories.",
-      "impact": "medium",
-      "source_url": "https://corgea.com/pricing/",
-      "category": "Security",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-10-20",
-      "restatement": [
-        {
-          "url": "https://corgea.com/pricing/",
-          "description": "The Free plan includes AI SAST, logic and auth scanning, dependency scanning, secrets detection, container scanning, and IaC scanning for up to 2 team members and 10 repositories."
-        }
-      ]
-    }
-  ],
+  "proposals": [],
   "dropped": [
     {
       "proposal_id": "2026-10-12/taskade-com/new_tier",
@@ -502,6 +411,77 @@
       ],
       "dropped_on": "2026-10-19",
       "drop_reason": "algolia.com/pricing listed Grow at $0.50 per 1K search requests and $0.40 per 1K records, and Grow Plus at $1.75 per 1K search requests, in the Internet Archive's captures of 2026-08-30 and 2026-10-13 as today; the Free plan is still 10K search requests and 50K records; nothing changed"
+    },
+    {
+      "proposal_id": "2026-10-20/logrocket/new_free_tier",
+      "proposed_on": "2026-10-20",
+      "vendor": "LogRocket",
+      "change_type": "new_free_tier",
+      "date": "2026-10-20",
+      "date_source": "discovered",
+      "summary": "LogRocket now offers a 14-day free trial for Core, Pro, and Enterprise plans, no credit card required.",
+      "tier": "Core",
+      "tier_direction": "widened",
+      "previous_state": "Session replay, product analytics and error monitoring, priced by sessions captured; analytics, logs and errors are unlimited on every plan. No free plan: Core, Pro and Enterprise each start with a free trial, no credit card required.",
+      "current_state": "Start for free Access all of LogRocket's features free for 14 days. Cancel any time.",
+      "impact": "high",
+      "source_url": "https://logrocket.com/pricing",
+      "category": "Error Tracking",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-10-20",
+      "restatement": [],
+      "dropped_on": "2026-10-20",
+      "drop_reason": "Misreading: logrocket.com/pricing (read 2026-10-20) offers a 14-day free trial on Core, Pro and Enterprise and no free plan, which the listing already says. A trial is not a free tier."
+    },
+    {
+      "proposal_id": "2026-10-20/webvizio/new_free_tier",
+      "proposed_on": "2026-10-20",
+      "vendor": "Webvizio",
+      "change_type": "new_free_tier",
+      "date": "2026-10-20",
+      "date_source": "discovered",
+      "summary": "The pricing page offers a 'Free Forever' plan. Is still available. The Solo plan is $8/month as stated.",
+      "tier": "Solo",
+      "tier_direction": "unchanged",
+      "previous_state": "Website feedback and bug reporting tool for web development teams — no permanent free tier. 7-day free trial of the Advanced plan, no credit card required; Solo is $8/month for 2 users and 5 projects.",
+      "current_state": "Solo $ 8 per month. Includes 2 users, 5 projects, unlimited tasks, screenshot annotations, and all integrations.",
+      "impact": "high",
+      "source_url": "https://webvizio.com/pricing/",
+      "category": "Communication",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-10-20",
+      "restatement": [],
+      "dropped_on": "2026-10-20",
+      "drop_reason": "Misreading: webvizio.com/pricing (read 2026-10-20) lists Solo $8, Starter $28, Advanced and Enterprise; 'Start for free' is the 7-day Advanced trial. No Free Forever plan."
+    },
+    {
+      "proposal_id": "2026-10-20/corgea/pricing_restructured",
+      "proposed_on": "2026-10-20",
+      "vendor": "Corgea",
+      "change_type": "pricing_restructured",
+      "date": "2026-10-20",
+      "date_source": "discovered",
+      "summary": "The free plan now has a limit of 2 team members.",
+      "tier": "Free",
+      "tier_direction": "narrowed",
+      "previous_state": "Free autonomous security platform that finds, validates and fixes insecure code and packages across +20 languages and frameworks. Free plan includes 10 repos, 10 PR scans/month, and 10 SAST auto fixes. Features: AI SAST, Logic/Auth Scanning, Dependency Scanning, Secrets Detection, Container Scanning, IaC Scanning.",
+      "current_state": "The Free plan includes AI SAST, logic and auth scanning, dependency scanning, secrets detection, container scanning, and IaC scanning for up to 2 team members and 10 repositories.",
+      "impact": "medium",
+      "source_url": "https://corgea.com/pricing/",
+      "category": "Security",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-10-20",
+      "restatement": [
+        {
+          "url": "https://corgea.com/pricing/",
+          "description": "The Free plan includes AI SAST, logic and auth scanning, dependency scanning, secrets detection, container scanning, and IaC scanning for up to 2 team members and 10 repositories."
+        }
+      ],
+      "dropped_on": "2026-10-20",
+      "drop_reason": "No change shown: corgea.com/pricing (read 2026-10-20) Free column still has 10 repos, 10 PR scans a month and 10 SAST auto fixes. The 2-member team size is newly read with no before state; it goes into the listing instead."
     }
   ]
 }
