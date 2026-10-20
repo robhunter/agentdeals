@@ -46,7 +46,7 @@ jobs:
         run: npm run build
 
       - name: Check the vendor MCP entries and record failures for review
-        run: node scripts/check-official-mcp.js --write | tee /tmp/official-mcp-checks.json
+        run: node scripts/check-official-mcp.js --write
 
       - name: Run rolling re-verification
         id: reverify

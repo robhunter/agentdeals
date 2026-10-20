@@ -4,7 +4,7 @@ import { mkdtempSync, readFileSync, writeFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { spawn } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
@@ -219,4 +219,21 @@ it("the daily re-read checks and commits MCP state inside its existing data gate
   assert.ok(workflow.indexOf("node scripts/check-official-mcp.js --write") < workflow.indexOf("bash scripts/gate-data-push.sh"));
   const paths = workflow.slice(workflow.indexOf("bash scripts/gate-data-push.sh"), workflow.indexOf("      - name: Say where"));
   assert.match(paths, /data\/official_mcp_checks\.json/);
+});
+
+it("the daily workflow propagates a failed checker and logs a successful one", () => {
+  const workflow = readFileSync(path.join(REPO, ".github/workflows/reverify.yml"), "utf8");
+  const command = workflow.match(/- name: Check the vendor MCP entries and record failures for review\n\s+run: (.+)/)![1];
+  const dir = mkdtempSync(path.join(tmpdir(), "official-mcp-workflow-"));
+  const node = path.join(dir, "node");
+  const isolated = command.replace("/tmp/official-mcp-checks.json", path.join(dir, "checks.json"));
+  try {
+    writeFileSync(node, "#!/bin/sh\nexit 23\n", { mode: 0o755 });
+    const failed = spawnSync("bash", ["-e", "-c", isolated], { env: { ...process.env, PATH: dir + path.delimiter + process.env.PATH }, encoding: "utf8" });
+    assert.equal(failed.status, 23, failed.stderr);
+    writeFileSync(node, "#!/bin/sh\nprintf '%s\\n' '{\"checked\":true}'\n");
+    const passed = spawnSync("bash", ["-e", "-c", isolated], { env: { ...process.env, PATH: dir + path.delimiter + process.env.PATH }, encoding: "utf8" });
+    assert.equal(passed.status, 0, passed.stderr);
+    assert.equal(passed.stdout.trim(), '{"checked":true}');
+  } finally { rmSync(dir, { recursive: true, force: true }); }
 });
