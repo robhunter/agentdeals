@@ -40,6 +40,7 @@ it("publishes and withholds checked entries across pages, APIs and both MCP tran
     { ...listing, vendor: "Zqplain", url: "https://plain.example/pricing" }];
   writeFileSync(indexPath, JSON.stringify({ offers }));
   const original = readFileSync(indexPath, "utf8");
+  let plainPage: string | undefined;
   let failing = false;
   const fetchImpl = async (url: string) => {
     if (url.startsWith("https://docs.")) return new Response(`<p>${remote.source_quote}</p>`);
@@ -58,12 +59,18 @@ it("publishes and withholds checked entries across pages, APIs and both MCP tran
       const pageResponse = await fetch(api.url + "/vendor/zqmcp");
       assert.equal(pageResponse.status, 200);
       const page = await pageResponse.text();
+      const plain = await (await fetch(api.url + "/vendor/zqplain")).text();
+      assert.ok(!plain.includes("runs its own MCP server"), "no entry makes no server claim");
+      if (plainPage === undefined) plainPage = plain;
+      else assert.equal(plain, plainPage, "a listing without entries keeps its bytes through check transitions");
       const details = await (await fetch(api.url + "/api/details/Zqmcp")).json();
       assert.deepEqual(details.offer.official_mcp_servers, expected);
       const all = await (await fetch(api.url + "/api/offers?q=Zqmcp&limit=50")).json();
       assert.deepEqual(all.offers.find((o: typeof listing) => o.tier === "Free").official_mcp_servers, expected);
-      assert.equal(page.includes(`<p>${escapeHtml(passage)}</p>`), mainPassage, "primary passage");
-      assert.equal(page.includes(`<p>${escapeHtml(packagePassage)}</p>`), secondaryPassage, "secondary passage");
+      assert.deepEqual(all.offers.find((o: typeof listing) => o.tier === "Startup").official_mcp_servers,
+        secondaryPassage ? [npm] : undefined, "all failing entries leave no published field");
+      assert.equal(page.includes(`<p class="desc-text">${escapeHtml(passage)}</p>`), mainPassage, "primary passage");
+      assert.equal(page.includes(`<p class="desc-text">${escapeHtml(packagePassage)}</p>`), secondaryPassage, "secondary passage");
       const scripts = [...page.matchAll(/<script type="application\/ld\+json">(.*?)<\/script>/gs)].map(m => JSON.parse(m[1]));
       const web = scripts.find(node => node["@type"] === "WebPage");
       assert.equal(web.mainEntity.description.includes(passage), mainPassage, "application description");

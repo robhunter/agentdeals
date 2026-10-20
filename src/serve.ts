@@ -5452,7 +5452,7 @@ function listingLastReadNote(offer: Offer): string {
 }
 
 function officialMcpParagraphsHtml(offer: Offer): string {
-  return (offer.official_mcp_servers ?? []).map(entry => `<p>${escHtmlServer(officialMcpPassage(offer.vendor, entry))}</p>`).join("");
+  return (offer.official_mcp_servers ?? []).map(entry => `<p class="desc-text">${escHtmlServer(officialMcpPassage(offer.vendor, entry))}</p>`).join("");
 }
 
 function otherListingHtml(slug: string, offer: Offer): string {
