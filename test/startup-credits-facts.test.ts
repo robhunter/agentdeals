@@ -58,7 +58,7 @@ const WITHDRAWN = [
 ];
 
 const PROGRAMMES: Record<string, [string, string, string, string]> = {
-  "AWS Activate": ["$1K–$5K (Founders), up to $200K (Portfolio)", "Pre-Series B, founded in the last 10 years, AWS account on a paid plan. Founders: self-funded. Portfolio: needs an Activate Provider Org ID.", "Activate credits expire on a date shown in the AWS Billing console.", "One award per approved application; a later, larger award pays only the difference"],
+  "AWS Activate": ["$1K–$5K (Founders), up to $200K (Portfolio), $200K+ (AI Startups, invite only)", "Pre-Series B, founded in the last 10 years, AWS account on a paid plan. Founders: self-funded. Portfolio: needs an Activate Provider Org ID. AWS Credits for AI Startups is by invitation only, for startups ready to scale after Activate Portfolio, through an AWS account manager; AWS states \"$200,000+\" with no upper amount.", "Activate credits expire on a date shown in the AWS Billing console.", "One award per approved application; a later, larger award pays only the difference"],
   "Google Cloud for Startups": ["$2K (Start), up to $200K (Scale), up to $350K (Scale AI)", "Start: no funding yet but plans to raise venture funding soon, founded within 24 months, working MVP; Scale: VC funding from pre-seed to Series A (Series A within the last 12 months; angel money does not count), founded within 5 years.", "12 months (Start), 2 years (Scale)", "Scale: year 1 covers usage up to $100K ($250K for AI); year 2 covers 20% of spend, up to $100K more"],
   "Microsoft for Startups (formerly Founders Hub)": ["Up to $200 on joining Microsoft for Startups; up to $150K over time as Azure usage grows; up to $200K for Investor Network-backed startups. Startups new to Azure can start with $1,000 for 90 days and $4,000 more after business verification.", "B2B software, AI or tech startups, pre-seed through Series B, privately held; no investor needed. Business verification and sustained Azure usage unlock more credits, and Investor Network backing starts most startups at $100K.", "Activate Microsoft for Startups credits within 90 days; the first $200 lasts 90 days, the verification credit 180 days, and credits from the $25K milestone up to 2 years. The Azure startup credit offer's $1,000 lasts 90 days and its $4,000 lasts 180 days after business verification.", "Released in milestones as you verify the business and use more Azure"],
   "DigitalOcean Startups": ["Credits for 12 months; amount varies, up to $10,000 a month", "Raised $10M or less; apply through a partner or directly", "12 months", ""],
@@ -308,6 +308,19 @@ describe("the startup credits guide states each programme's terms as the program
         .map(([label, value]) => `${name} ${label}: "${card[label]}" where the programme says "${value}"`);
     });
     assert.deepStrictEqual(wrong, []);
+  });
+
+  it("states the invite-only AWS AI startup tier in the comparison cell and programme card", () => {
+    const html = served.get("/startup-credits")!;
+    const value = "$1K–$5K (Founders), up to $200K (Portfolio), $200K+ (AI Startups, invite only)";
+    const table = html.split('id="comparison-table"')[1]?.split("</table>")[0] ?? "";
+    const row = [...table.matchAll(/<tr[^>]*>([\s\S]*?)<\/tr>/g)]
+      .find(([, markup]) => readable(markup.match(/<td[^>]*>([\s\S]*?)<\/td>/)?.[1] ?? "") === "AWS Activate")?.[1] ?? "";
+    const cells = [...row.matchAll(/<td[^>]*>([\s\S]*?)<\/td>/g)].map(([, cell]) => readable(cell));
+    assert.strictEqual(cells[1], value);
+    const card = programmeCards(html).get("AWS Activate");
+    assert.strictEqual(card?.["Credit value"], value);
+    assert.ok(card?.Eligibility.endsWith('AWS Credits for AI Startups is by invitation only, for startups ready to scale after Activate Portfolio, through an AWS account manager; AWS states "$200,000+" with no upper amount.'));
   });
 
   it("says what happens when each programme's credits run out, where its terms say, citing those terms and the day they were read", () => {
