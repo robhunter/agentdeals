@@ -37755,7 +37755,7 @@ ${globalNavCss()}
   </div>
 
   <div class="context-box">
-    <strong>Key takeaway:</strong> The main comparison table reveals two distinct models. <strong>Traditional FaaS</strong> (Lambda, Cloud Functions, Azure Functions) bills by wall-clock time with generous monthly invocation counts. <strong>Edge platforms</strong> (Workers, Deno Deploy) bill by CPU time with near-zero cold starts. <strong>Cloud Run</strong> bridges the gap as a container-based serverless with the most generous free tier overall. For background jobs, <strong>Inngest</strong> and <strong>Trigger.dev</strong> offer serverless workflow orchestration rather than raw compute.
+    <strong>Key takeaway:</strong> The main comparison table reveals two distinct models. <strong>Traditional FaaS</strong> (Lambda, Cloud Functions, Azure Functions) bills by wall-clock time with generous monthly invocation counts. <strong>Edge platforms</strong> (Workers, Deno Deploy) bill by CPU time with near-zero cold starts. <strong>Cloud Run</strong> and <strong>Azure Container Apps</strong> are container-based serverless platforms with an always-free tier, between the two models. For background jobs, <strong>Inngest</strong> and <strong>Trigger.dev</strong> offer serverless workflow orchestration rather than raw compute.
   </div>
 
   <h2 id="traditional-faas">Traditional FaaS</h2>
@@ -37891,7 +37891,7 @@ ${globalNavCss()}
   </div>
 
   <div class="context-box">
-    <strong>Cloud Run is the clear winner here</strong> — it&rsquo;s the only container-based serverless with a genuinely generous always-free tier. You can run any Docker image, handle up to 1000 concurrent requests per instance, and the 2M requests/month free tier is competitive with any FaaS. AWS App Runner closed to new customers on April 30, 2026. New AWS accounts cannot use it. AWS recommends Amazon ECS Express Mode instead. For containerized workloads that need more than FaaS constraints allow, Cloud Run is the answer.
+    <strong>Google Cloud Run and Azure Container Apps give the same always-free monthly grant: 2 million requests, 360,000 GB-seconds and 180,000 vCPU-seconds.</strong> Azure Container Apps is not in this table. Google Cloud Run runs any Docker image, handles up to 1,000 concurrent requests per instance, and its 2M requests a month compare with any FaaS free tier. AWS App Runner closed to new customers on April 30, 2026. New AWS accounts cannot use it. AWS recommends Amazon ECS Express Mode instead.
   </div>
 
   <h2 id="specialized">Specialized Serverless</h2>

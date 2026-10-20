@@ -91,6 +91,12 @@ type Retired = { what: string; pattern: RegExp; replacedBy: RegExp; vendorRecord
 
 const RETIRED_FIGURES: Retired[] = [
   {
+    what: "Cloud Run as the only container serverless with an always-free tier",
+    pattern: /the only container-based serverless|Cloud Run[^.]{0,100}most generous free tier overall|For containerized workloads that need more than FaaS constraints allow, Cloud Run is the answer/i,
+    replacedBy: /Google Cloud Run and Azure Container Apps give the same always-free monthly grant: 2 million requests, 360,000 GB-seconds and 180,000 vCPU-seconds\./,
+    vendorRecord: () => recordFor("Azure", "Cloud IaaS").description,
+  },
+  {
     what: "Cloud Functions as free on Firebase's Spark plan",
     pattern: /Cloud Functions \(2M invocations\/month\)/i,
     replacedBy: /Cloud Functions and Cloud Storage need the Blaze plan/,
@@ -486,6 +492,7 @@ describe("hosting pages publish the free-tier figures our records hold (#1183)",
 
   it("states the current figure on every page that carried a retired one", async () => {
     const carried: Record<string, string[]> = {
+      "Cloud Run as the only container serverless with an always-free tier": ["/serverless-free-tier-comparison-2026"],
       "Cloud Functions as free on Firebase's Spark plan": ["/vendor/firebase"],
       "Deno Deploy free egress of 100 GB": ["/hosting-free-tier-comparison-2026", "/serverless-free-tier-comparison-2026", "/hosting-pricing", "/vercel-alternatives"],
       "Deno Deploy free CPU allowance of 15 hours": ["/hosting-free-tier-comparison-2026", "/serverless-free-tier-comparison-2026", "/heroku-alternatives"],
@@ -548,6 +555,15 @@ describe("hosting pages publish the free-tier figures our records hold (#1183)",
       }
     }
     assert.deepStrictEqual(missing.sort(), []);
+  });
+
+  it("places Cloud Run and Azure Container Apps together in the serverless takeaway and preserves App Runner terms", async () => {
+    const response = await fetch(`${base}/serverless-free-tier-comparison-2026`, { redirect: "error" });
+    assert.strictEqual(response.status, 200);
+    const text = readableText(await response.text());
+    assert.ok(text.includes("Cloud Run and Azure Container Apps are container-based serverless platforms with an always-free tier, between the two models."));
+    assert.ok(text.includes("Azure Container Apps is not in this table. Google Cloud Run runs any Docker image, handles up to 1,000 concurrent requests per instance, and its 2M requests a month compare with any FaaS free tier."));
+    assert.ok(text.includes("AWS App Runner closed to new customers on April 30, 2026. New AWS accounts cannot use it. AWS recommends Amazon ECS Express Mode instead."));
   });
 
   it("holds Render's bandwidth in the record its own change entry corrected", () => {
