@@ -2,7 +2,7 @@ import { officialMcpProblems, officialMcpKey, advanceOfficialMcpCheck } from "..
 import { MCP_PROTOCOL_VERSION } from "../dist/mcp-tool-inventory.js";
 import { stripHtml, readBodyWithin } from "./verify-freshness.js";
 
-const normalize = text => text.replace(/\s+/g, " ").trim();
+const normalize = text => text.replace(/\s+/g, " ").replace(/\s+([.,;:!?])/g, "$1").trim();
 const quotePresent = (body, quote) => normalize(stripHtml(body)).includes(normalize(quote));
 
 async function readUrl(url, options, init = {}, readBody = true) {

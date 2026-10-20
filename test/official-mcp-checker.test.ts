@@ -18,7 +18,10 @@ const server = createServer(async (request, response) => {
   requests.push({ url: url.toString(), method: request.method!, body, session: request.headers["mcp-session-id"] as string });
   if (url.hostname === "docs.example.com") {
     if (url.pathname === "/blocked") response.writeHead(403).end("Access denied");
-    else response.end(url.pathname === "/missing" ? "The guide describes something else." : `<p>The MCP server connects an <b>AI</b> agent to your workspace.</p>`);
+    else response.end(url.pathname === "/missing" ? "The guide describes something else."
+      : url.pathname === "/linked" ? `<p>The MCP server connects an AI agent to your <a href="/workspace">workspace</a>.</p>`
+      : url.pathname === "/joined" ? `<p>The MCP server connects an AIagent to your workspace.</p>`
+      : `<p>The MCP server connects an <b>AI</b> agent to your workspace.</p>`);
   } else if (url.hostname === "registry.npmjs.org") {
     const name = decodeURIComponent(url.pathname.slice(1));
     if (name === "missing") response.writeHead(404).end("not found");
@@ -90,6 +93,11 @@ describe("an official MCP entry checked over HTTP", () => {
     }
     const script = async () => new Response(`<script>${quote}</script><p>No matching visible quote.</p>`);
     assert.equal((await checkOfficialMcpEntry(entry, { fetchImpl: script })).passed, false);
+  });
+
+  it("ignores a markup-generated space before punctuation while preserving word boundaries", async () => {
+    assert.equal((await checkOfficialMcpEntry({ ...entry, doc_url: "https://docs.example.com/linked" }, { fetchImpl })).passed, true);
+    assert.equal((await checkOfficialMcpEntry({ ...entry, doc_url: "https://docs.example.com/joined" }, { fetchImpl })).passed, false);
   });
 
   it("reads npm latest rather than a deprecated prerelease", async () => {
