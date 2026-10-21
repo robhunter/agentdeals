@@ -77,7 +77,7 @@ describe("/this-week page", () => {
 
     });
     const html = await res.text();
-    const hasSections = html.includes("Biggest Losses") || html.includes("Bright Spots") || html.includes("Other Notable Changes") || html.includes("No pricing changes tracked");
+    const hasSections = html.includes("Scheduled this week") || html.includes("Biggest Losses") || html.includes("Bright Spots") || html.includes("Other Notable Changes") || html.includes("No pricing changes tracked");
     assert.ok(hasSections, "Should have at least one content section or empty message");
   });
 

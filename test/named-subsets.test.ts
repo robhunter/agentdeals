@@ -37,7 +37,7 @@ const DEMOTED_HEADING = "Demoted — and exactly why";
 const QUALIFIED_HEADING = "Quick Comparison";
 const STATED_COUNTS = /([\d,]+) offers? meets? the criteria and ([\d,]+) offers? (?:is|are) demoted with a named reason/;
 const CHANGES_STATED = /(?:across )?([\d,]+) developer tool pricing changes? tracked this week|across ([\d,]+) developer tool pricing changes?/;
-const CHANGE_SECTION = /^(?:Biggest Losses|Bright Spots|Other Notable Changes) \(([\d,]+)\)$/;
+const CHANGE_SECTION = /^(?:Scheduled this week|Biggest Losses|Bright Spots|Other Notable Changes) \(([\d,]+)\)$/;
 const A_DATE = /\b\d{4}-\d{2}-\d{2}\b/;
 const A_MONTH = "(?:January|February|March|April|May|June|July|August|September|October|November|December)";
 const A_RANGE_OF_DAYS = new RegExp(`\\b${A_MONTH} \\d{1,2}(?:\u2013| \u2013 ${A_MONTH} )\\d{1,2}, \\d{4}\\b`);
@@ -226,6 +226,7 @@ const SECTIONS_GROUPED_BY_A_DATE: SectionGroupedByADate[] = [
   { page: "/changes", heading: "Upcoming Changes", served: "when it holds one" },
   { page: "/trends/cloud-hosting", heading: ANNOUNCED_HEADING, served: "when it holds one" },
   { page: "/this-week", heading: COMING_UP_HEADING, served: "when it holds one" },
+  { page: "/this-week", heading: "Scheduled this week", served: "when it holds one" },
 ];
 
 const DECLARED_DATED_HEADINGS_FLOOR = 126;
@@ -441,13 +442,14 @@ function dateRulesStated(pages: Map<string, Surfaces>, sections: SectionGroupedB
   const gone: string[] = [];
   for (const { page, heading, served } of sections) {
     const surfaces = pages.get(page)!;
-    if (!surfaces.headings.includes(heading)) {
+    const actualHeading = surfaces.headings.find(h => h === heading || h.replace(/ \([\d,]+\)$/, "") === heading);
+    if (!actualHeading) {
       if (served === "always") gone.push(`${page} "${heading}"`);
       continue;
     }
-    if (served === "when it holds one" && listsNoRecordToday(surfaces, heading)) continue;
+    if (served === "when it holds one" && listsNoRecordToday(surfaces, actualHeading)) continue;
     rendered.push(`${page} "${heading}"`);
-    if (surfaces.datedHeadings.includes(heading) || surfaces.datedCitationHeadings.includes(heading)) continue;
+    if (surfaces.datedHeadings.includes(actualHeading) || surfaces.datedCitationHeadings.includes(actualHeading)) continue;
     silent.push(`${page} "${heading}"`);
   }
   return { gone, rendered, silent };
@@ -1153,6 +1155,23 @@ describe("what a page names changes overnight only where the page itself says wh
     );
   });
 
+});
+
+describe("weekly section counts", () => {
+  it("requires a dated rule for the populated scheduled heading", () => {
+    const heading = "<h2>Scheduled this week (2)</h2>";
+    const sections: SectionGroupedByADate[] = [{ page: "/this-week", heading: "Scheduled this week", served: "when it holds one" }];
+    const read = (body: string) => dateRulesStated(new Map([["/this-week", surfacesOf(body)]]), sections);
+    assert.deepEqual(read(heading).silent, ['/this-week "Scheduled this week"']);
+    const note = `<h1>This week</h1><p>${A_DATED_SECTION_MARKER} <a href="/changes">Every change</a>.</p>`;
+    assert.deepEqual(read(note + heading), { gone: [], rendered: ['/this-week "Scheduled this week"'], silent: [] });
+  });
+  it("includes a populated scheduled section in the changes listed", () => {
+    const html = '<meta name="description" content="2 developer tool pricing changes tracked this week"><h2>Scheduled this week (2)</h2><a href="/vendor/alfa">Alfa</a><a href="/vendor/bravo">Bravo</a>';
+    const page = surfacesOf(html);
+    assert.strictEqual(page.changesStated, 2);
+    assert.strictEqual(page.changesListed, 2);
+  });
 });
 
 describe("what counts as a page saying why, on pages built to test it", () => {

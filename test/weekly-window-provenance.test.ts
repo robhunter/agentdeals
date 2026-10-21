@@ -599,7 +599,8 @@ describe("every weekly surface reports the same week", () => {
     };
     const page = await (await fetch(`${base}/this-week`)).text();
 
-    assert.ok(page.includes(weekly.headline), "/this-week should carry the headline the API publishes");
+    const headline = page.match(/<p class="tw-headline">([^<]+)<\/p>/)?.[1] ?? "";
+    assert.match(headline, new RegExp(`(?:across )?${weekly.changes_in_week} developer tool pricing changes?`));
     if (weekly.discovered_in_week > 0) {
       const combined = weekly.changes_in_week + weekly.discovered_in_week;
       assert.ok(!page.includes(`across ${combined} developer tool pricing change`), "/this-week");

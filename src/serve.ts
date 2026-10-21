@@ -5045,30 +5045,48 @@ ${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" hre
 }
 
 function buildThisWeekPage(weeksAgo: number): string {
-  const digest = getFormattedWeeklyDigest(weeksAgo, 50);
+  const wholeWeek = getFormattedWeeklyDigest(weeksAgo, Infinity);
+  const digest = { ...wholeWeek, top_changes: wholeWeek.top_changes.slice(0, 50), discovered_changes: wholeWeek.discovered_changes.slice(0, 50) };
+  const servedOn = new Date().toISOString().slice(0, 10);
+  const isScheduled = (c: DealChange) => c.date >= servedOn;
+  const scheduledCount = wholeWeek.top_changes.filter(isScheduled).length;
+  const headline = scheduledCount > 0
+    ? `${digest.changes_in_week} developer tool pricing change${digest.changes_in_week === 1 ? "" : "s"} tracked this week. ${scheduledCount} scheduled for ${servedOn} or later.`
+    : digest.headline;
+  const calendarNotice = weeksAgo === 0 ? datedSectionNoticeHtml(
+    `Entries with an effective date on or after ${servedOn} appear in Scheduled this week. After that date they appear under the other sections for this week.`,
+    [{ when: "Every recorded change remains in", text: "the full change log", href: "/changes" }],
+    escHtmlServer,
+  ) : "";
   const dateRange = weekRangeLabel(digest.week_of, digest.week_ending);
 
   const title = weeksAgo === 0
     ? `This Week in Developer Pricing \u2014 ${dateRange} \u2014 AgentDeals`
     : `Developer Pricing: ${dateRange} \u2014 AgentDeals`;
-  const metaDesc = digest.headline;
+  const metaDesc = headline;
   const canonicalPath = weeksAgo === 0 ? "/this-week" : `/this-week?week=${weeksAgo}`;
 
   const negativeTypes = NEGATIVE_CHANGE_TYPES;
   const positiveTypes = POSITIVE_CHANGE_TYPES;
 
-  const losses = digest.top_changes.filter(c => negativeTypes.has(c.change_type));
-  const brightSpots = digest.top_changes.filter(c => positiveTypes.has(c.change_type));
-  const other = digest.top_changes.filter(c => !negativeTypes.has(c.change_type) && !positiveTypes.has(c.change_type));
+  const scheduled = digest.top_changes.filter(isScheduled);
+  const effective = digest.top_changes.filter(c => !isScheduled(c));
+  const losses = effective.filter(c => negativeTypes.has(c.change_type));
+  const brightSpots = effective.filter(c => positiveTypes.has(c.change_type));
+  const other = effective.filter(c => !negativeTypes.has(c.change_type) && !positiveTypes.has(c.change_type));
 
   function renderSection(heading: string, items: typeof digest.top_changes, sectionColor: string): string {
     if (items.length === 0) return "";
     const rows = items.map(c => {
       const badge = changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
+      const label = isScheduled(c)
+        ? c.change_type === "product_deprecated" ? SCHEDULED_SHUTDOWN_BADGE_LABEL : `scheduled ${badge.label}`
+        : badge.label;
       return `<div class="tw-change" style="border-left-color:${sectionColor}">
         <div class="change-header">
-          <span class="change-badge" style="background:${badge.color}">${badge.label}</span>
-          ${changeVendorLinkHtml(c.vendor, ' class="change-vendor"')}
+          <span class="change-badge" style="background:${badge.color}">${label}</span>
+          ${changeVendorLinkHtml(c.vendor, ' class="change-vendor"')}${isScheduled(c) ? `
+          <span class="change-cat">${changeEntryDateLabelHtml(c, escHtmlServer)}</span>` : ""}
           <span class="change-cat">${escHtmlServer(c.category)}</span>
         </div>
         <div class="change-summary">${changeSummaryHtml(c, escHtmlServer)}</div>
@@ -5082,6 +5100,7 @@ function buildThisWeekPage(weeksAgo: number): string {
 
   const changesHtml = digest.top_changes.length > 0
     ? [
+        renderSection("Scheduled this week", scheduled, "#d29922"),
         renderSection("Biggest Losses", losses, "#f85149"),
         renderSection("Bright Spots", brightSpots, "#3fb950"),
         renderSection("Other Notable Changes", other, "#d29922"),
@@ -5114,8 +5133,17 @@ function buildThisWeekPage(weeksAgo: number): string {
     ? comingUpSectionHtml(new Date().toISOString().slice(0, 10), new Set([...digest.top_changes, ...digest.discovered_changes]), "tw-section tw-coming-up")
     : "";
 
-  const { summary: s } = digest;
+  const pastChanges = wholeWeek.top_changes.filter(c => !isScheduled(c));
+  const s = {
+    free_tiers_removed: pastChanges.filter(c => c.change_type === "free_tier_removed").length,
+    new_free_tiers: pastChanges.filter(c => c.change_type === "new_free_tier").length,
+    limits_reduced: pastChanges.filter(c => c.change_type === "limits_reduced").length,
+    limits_increased: pastChanges.filter(c => c.change_type === "limits_increased").length,
+    products_deprecated: pastChanges.filter(c => c.change_type === "product_deprecated").length,
+    pricing_restructured: pastChanges.filter(c => c.change_type === "pricing_restructured").length,
+  };
   const summaryPills: string[] = [];
+  if (scheduledCount > 0) summaryPills.push(`<span class="tw-pill" style="border-color:#d29922"><strong>${scheduledCount}</strong> scheduled</span>`);
   if (s.free_tiers_removed > 0) summaryPills.push(`<span class="tw-pill" style="border-color:#f85149"><strong>${s.free_tiers_removed}</strong> free tier${s.free_tiers_removed !== 1 ? "s" : ""} removed</span>`);
   if (s.new_free_tiers > 0) summaryPills.push(`<span class="tw-pill" style="border-color:#3fb950"><strong>${s.new_free_tiers}</strong> new free tier${s.new_free_tiers !== 1 ? "s" : ""}</span>`);
   if (s.limits_reduced > 0) summaryPills.push(`<span class="tw-pill" style="border-color:#d29922"><strong>${s.limits_reduced}</strong> limit${s.limits_reduced !== 1 ? "s" : ""} reduced</span>`);
@@ -5135,7 +5163,7 @@ function buildThisWeekPage(weeksAgo: number): string {
     "@context": "https://schema.org",
     "@type": "Article",
     headline: `This Week in Developer Pricing: ${dateRange}`,
-    description: digest.headline,
+    description: headline,
     url: `${BASE_URL}${canonicalPath}`,
     datePublished: digest.week_of,
     dateModified: digest.week_ending ?? digest.week_of,
@@ -5176,7 +5204,7 @@ footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2r
 ${globalNavCss()}`;
 
   const shareUrl = encodeURIComponent(`${BASE_URL}${canonicalPath}`);
-  const shareText = encodeURIComponent(`This Week in Developer Pricing: ${digest.headline}`);
+  const shareText = encodeURIComponent(`This Week in Developer Pricing: ${headline}`);
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -5201,8 +5229,9 @@ ${feedLinkTag(PER_CHANGE_FEED)}
   ${buildGlobalNav("this-week")}
   <span class="tw-date">${escHtmlServer(dateRange)}</span>
   <h1>This Week in Developer Pricing</h1>
-  <p class="tw-headline">${escHtmlServer(digest.headline)}</p>
-${summaryBar}
+  <p class="tw-headline">${escHtmlServer(headline)}</p>
+${summaryBar}${calendarNotice ? `
+${calendarNotice}` : ""}
 ${contentHtml}${comingUpHtml}
 
   <div class="tw-share">
