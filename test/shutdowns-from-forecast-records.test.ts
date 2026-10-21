@@ -128,7 +128,7 @@ function cardsOn(page: string): Card[] {
       profile: piece.match(/<a href="([^"]+)">Vendor profile/)?.[1] ?? null,
       date: textOf(piece.match(/<span class="deadline-icon">[^<]*<\/span>\s*<span>([^<]+)<\/span>/)?.[1] ?? ""),
       what: textOf(piece.match(/<p class="shutdown-what">([\s\S]*?)<\/p>/)?.[1] ?? ""),
-      source: piece.match(/<a href="([^"]+)"[^>]*class="figure-source"/)?.[1] ?? null,
+      source: piece.match(/<a href="([^"]+)"[^>]*class="(?:figure-source|record-source)"/)?.[1] ?? null,
       countsDown: piece.includes('class="days-badge"'),
       detailRows: (piece.match(/class="detail-row"/g) ?? []).length,
     });

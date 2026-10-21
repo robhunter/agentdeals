@@ -27167,7 +27167,7 @@ function buildShutdownTrackerPage(): string {
       <div class="shutdown-header">
         <div>
           <h3 style="margin:0">${handwrittenVendorLinkHtml(s.vendorSlug, s.service, ' style="color:var(--text)"')}</h3>
-          ${shutdownDeadlineHtml(s, { date: dateStr, color, countdown: daysLabel(s.deadline) }, escHtmlServer)}
+          ${shutdownDeadlineHtml(s, { date: dateStr, color, countdown: daysLabel(s.deadline) }, escHtmlServer, s.statedDeadline ? (url, esc) => " " + listingSourceLinkHtml(url, esc) : undefined)}
         </div>
         <div class="stability-badge" style="color:${stabColor}">${escHtmlServer(stability.toUpperCase())}</div>
       </div>

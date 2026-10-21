@@ -6,6 +6,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { countsDownTo, shutdownDeadlineHtml } from "../dist/shutdown-deadline.js";
 import { FIGURE_SOURCE_CLASS } from "../dist/source-citation.js";
+import { RECORD_SOURCE_CLASS } from "../dist/change-citation.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -62,7 +63,7 @@ describe("the shutdown tracker counts down only to dates a vendor set", () => {
     const uncited = cards
       .filter((c) => {
         const deadline = c.html.match(/<div class="shutdown-deadline"[\s\S]*?<\/div>/)?.[0] ?? "";
-        return !new RegExp(`<a href="https?://[^"]+"[^>]*class="${FIGURE_SOURCE_CLASS}"`).test(deadline);
+        return !new RegExp(`<a href="https?://[^"]+"[^>]*class="(?:${FIGURE_SOURCE_CLASS}|${RECORD_SOURCE_CLASS})"`).test(deadline);
       })
       .map((c) => c.title);
     assert.deepStrictEqual(uncited, []);

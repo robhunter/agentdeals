@@ -85,6 +85,7 @@ const listings = [
   listing("Upcoming Cloud", "The API is discontinued on 2026-12-20.", conditions),
   listing("First Unlisted Cloud", "The API shuts down on 2026-11-10."),
   listing("Second Unlisted Cloud", "The API shuts down on 2026-11-10."),
+  listing("Retired Listing Cloud", "The legacy console shuts down on 2026-11-05.", [], "Retired"),
   listing("Past Cloud", "The API retired on 2026-10-20."),
   listing("Checked Cloud", "Checked 2026-11-10, the page lists a retired service."),
   listing("Published Cloud", "The post of 2026-11-10 describes the retired API."),
@@ -167,6 +168,15 @@ describe("the shutdown tracker includes shutdowns stated only by listings", () =
       assert.ok(found[0].html.includes(`href="${offer.conditions[0]?.url ?? offer.url}"`), vendor);
       assert.ok(found[0].html.includes("Vendor profile"), vendor);
     }
+  });
+
+  it("marks a retired listing's URL as a citation rather than an offer", () => {
+    const card = cardsOf(pages.get(clocks[0])!).find(card => card.name === "Retired Listing Cloud")!;
+    const url = listings.find(offer => offer.vendor === "Retired Listing Cloud")!.url;
+    const link = card.html.match(new RegExp(`<a href="${url}"[^>]*>`))?.[0] ?? "";
+    assert.ok(link.includes('class="record-source"'));
+    assert.ok(link.includes('rel="nofollow noopener"'));
+    assert.ok(card.html.includes('class="days-badge"'));
   });
 
   it("puts each date in order in its urgency group", () => {
