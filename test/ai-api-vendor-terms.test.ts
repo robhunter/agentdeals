@@ -213,7 +213,7 @@ const STATED: Record<string, string[]> = {
   ],
   "/llm-api-pricing": [
     "25+ free models",
-    "Free inference endpoints on build.nvidia.com: models marked Free Endpoint, including DeepSeek V4.1 Flash, GLM 5.3 Flash, gpt-oss-20b, Gemma 4 31B and NVIDIA Nemotron 3 Super and Ultra, can be called at no cost.",
+    "Free inference endpoints on build.nvidia.com: models marked Free Endpoint, including DeepSeek V4.1 Flash, GLM 5.3 Flash, gpt-oss-20b, Gemma 4 31B and NVIDIA Nemotron 3 Ultra, can be called at no cost.",
     "Up to 40 requests per minute; limits may vary by model, and traffic from other users may cause throttling. NVIDIA's API Trial Terms allow free use for testing and evaluation only, not production.",
     "New workspaces receive credits for testing and deployment; Baseten does not state the amount. Basic plan: $0 per month, pay as you go. Dedicated deployments bill per minute. Model APIs bill per 1M tokens: GLM-5.3 $1.40/$4.40. GLM-5.3-Flash $0.15/$0.50.",
     "LLM7.io (100,000 tokens/24h with a free token)",
