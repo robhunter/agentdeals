@@ -158,11 +158,10 @@ describe("a page may only name the source it actually reads", () => {
     const readingChanges = pages.filter((p) => measured.get(p.path)!.reads_changes);
     assert.ok(readingChanges.length > 5, `only ${readingChanges.length} pages responded to the change log at all`);
     assert.ok(readingChanges.length < pages.length, "every page responded, so the measurement cannot distinguish anything");
-    const blindToCatalogue = pages.filter((p) => !p.reads_index);
-    const alsoReadingChanges = blindToCatalogue.filter((p) => measured.get(p.path)!.reads_changes);
-    assert.ok(
-      alsoReadingChanges.length > blindToCatalogue.length / 2,
-      "most pages blind to the catalogue read the change log, so the two measurements must stay distinct"
+    const wrong = pages.filter((p) => p.reads_changes !== measured.get(p.path)!.reads_changes);
+    assert.deepStrictEqual(
+      wrong.map((p) => `${p.path} register=${p.reads_changes} measured=${measured.get(p.path)!.reads_changes}`),
+      [],
     );
   });
 

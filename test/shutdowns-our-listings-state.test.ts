@@ -203,6 +203,18 @@ describe("the shutdown tracker includes shutdowns stated only by listings", () =
     }
   });
 
+  it("states when quoted listing entries leave and keeps the recorded-shutdown archive link", () => {
+    for (const day of clocks) {
+      const html = pages.get(day)!;
+      const notice = html.match(/<p class="subtitle dated-rule">([\s\S]*?)<\/p>/)?.[1] ?? "";
+      assert.ok(textOf(notice).includes(`Entries quoted from listings appear only while the stated date is later than ${day}.`));
+      assert.ok(textOf(notice).replace(/ \./g, ".").includes("Recorded shutdowns move to Recently Completed, below."));
+      assert.ok(notice.includes('href="#completed"'));
+      assert.ok(notice.includes('href="/changes"'));
+      assert.ok(!notice.includes("Nothing is removed"));
+    }
+  });
+
   it("carries conditions beside a whole description and in its structured description", () => {
     const page = pages.get(clocks[0])!;
     const card = cardsOf(page).find(card => card.name === "Upcoming Cloud")!;
