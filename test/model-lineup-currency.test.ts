@@ -54,6 +54,15 @@ function everySurface(html: string): string {
   return decode(parts.join(" "));
 }
 
+function retiredHaikuRateClaims(html: string): string[] {
+  const surfaces = everySurface(html);
+  const name = String.raw`(?:Claude\s+)?Haiku(?:\s+\d+(?:\.\d+)?)?`;
+  const rate = String.raw`\$0\.80\s*/\s*\$4(?:\.00)?(?![\d.])`;
+  const before = String.raw`${name}\s*(?:(?:costs?|is|at|priced at)\s*)?[:=—–-]?\s*${rate}`;
+  const after = String.raw`${rate}\s*(?:per\s+(?:MTok|1M\s+tokens)\s*)?\(?${name}\b`;
+  return [...surfaces.matchAll(new RegExp(`${before}|${after}`, "gi"))].map(m => m[0]);
+}
+
 const SUPERSEDED_BY = new Map([
   ["Opus 4.6", "Opus 5"],
   ["Sonnet 4.6", "Sonnet 5"],
@@ -142,12 +151,31 @@ describe("#1362 a superseded Claude version is not published as the current one"
     }
   });
 
+  it("attaches a retired rate to its Haiku model name in visible and structured claims", () => {
+    for (const claim of [
+      "Claude Haiku 4.5 $0.80/$4",
+      "Haiku 4.5 costs $0.80/$4.00 per MTok",
+      "$0.80/$4 (Haiku 4.5)",
+      "$0.80/$4.00 per MTok (Claude Haiku 4.5)",
+      "<tr><td>Haiku 4.5</td><td>$0.80/$4</td></tr>",
+      '<meta name="description" content="Haiku 4.5: $0.80/$4">',
+      '<script type="application/ld+json">{"text":"Haiku 4.5 at $0.80/$4"}</script>',
+    ]) assert.ok(retiredHaikuRateClaims(claim).length > 0, claim);
+  });
+
+  it("allows another provider's model to share the retired Haiku price", () => {
+    for (const claim of [
+      "Claude Haiku 4.5 $1/$5. Groq Qwen3.8 27B $0.80/$4.00.",
+      "Haiku 4.5 $0.80/$4.50.",
+      "<tr><td>Anthropic Haiku 4.5</td><td>$1/$5</td></tr><tr><td>Groq</td><td>$0.80/$4.00 (Qwen3.8 27B)</td></tr>",
+      '<meta name="description" content="Claude Haiku 4.5 $1/$5"><script type="application/ld+json">{"text":"Qwen3.8 27B $0.80/$4.00"}</script>',
+    ]) assert.deepEqual(retiredHaikuRateClaims(claim), [], claim);
+  });
+
   it("publishes Anthropic's own price for Haiku 4.5 and never Haiku 3.5's", async () => {
     const wrong: string[] = [];
     for (const route of routes) {
-      const surfaces = everySurface(await body(route));
-      if (!surfaces.includes("Haiku")) continue;
-      if (/\$0\.80\s*\/\s*\$4\b/.test(surfaces)) wrong.push(route);
+      if (retiredHaikuRateClaims(await body(route)).length) wrong.push(route);
     }
     assert.deepEqual(wrong, [], `Haiku 3.5's retired price is published beside a Haiku 4.5 claim on ${wrong.join(", ")}`);
   });
