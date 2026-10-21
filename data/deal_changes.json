@@ -2226,7 +2226,7 @@
       "vendor": "Augment Code",
       "change_type": "free_tier_removed",
       "date": "2026-04-12",
-      "summary": "Free tier removed. The lowest plan was then Indie at $20/month with 40K credits. As of 2026-10-16, Augment Code's plans are Standard at $20 a month flat and Business at $100 a month flat, each for up to 50 seats with no per-seat charge",
+      "summary": "Free tier removed. The lowest plan was then Indie at $20/month with 40K credits. As of 2026-10-16, Augment Code's plans are Standard at $20 a month flat and Business at $100 a month flat, each for up to 50 seats with no per-seat charge; teams of more than 50 need Enterprise, which is custom-priced",
       "previous_state": "Free tier: individual developers with limited usage",
       "current_state": "Indie plan $20/month (40K credits), Standard $60/dev/month (130K credits)",
       "impact": "medium",

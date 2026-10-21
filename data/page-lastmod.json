@@ -18,7 +18,7 @@
       "changed": "2026-10-20"
     },
     "/ai-coding-tools-pricing": {
-      "hash": "cbac8f9707fa4a27",
+      "hash": "ce4eb295490a7f28",
       "changed": "2026-10-21"
     },
     "/ai-free-tiers": {
@@ -1525,8 +1525,8 @@
       "changed": "2026-10-19"
     },
     "/compare/augment-code-vs-cursor": {
-      "hash": "2f6c9e94eb21222d",
-      "changed": "2026-10-16"
+      "hash": "8f2a80329de953fa",
+      "changed": "2026-10-21"
     },
     "/compare/auth0-vs-clerk": {
       "hash": "570802d0bdb3d71a",
@@ -2955,8 +2955,8 @@
       "changed": "2026-10-12"
     },
     "/digest/2026-w15": {
-      "hash": "4c88d0d02e076748",
-      "changed": "2026-10-16"
+      "hash": "b21bbb7e8179b5fd",
+      "changed": "2026-10-21"
     },
     "/digest/2026-w16": {
       "hash": "fcbf187f36e9342c",
@@ -3386,7 +3386,7 @@
       "changed": "2026-10-21"
     },
     "/q2-pricing-preview-2026": {
-      "hash": "f9694a98c037c2e4",
+      "hash": "3005bf4b04debad8",
       "changed": "2026-10-21"
     },
     "/railway-vs-render": {
