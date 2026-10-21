@@ -9,6 +9,9 @@ const REPO = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const SITEMAPS_OF_GUIDES_AND_REPORTS = ["/sitemap-pages.xml", "/sitemap-reports.xml", "/sitemap-misc.xml"];
 
 const WITHDRAWN: Record<string, RegExp> = {
+  "Copilot Pro as the lowest paid plan compared": /is the cheapest paid plan among the tools compared here/i,
+  "Copilot Business as cheapest for teams": /is cheapest for teams/i,
+  "Copilot Business as the cheapest managed option": /is the cheapest managed option/i,
   "a self-hosted runner fee GitHub charges": /self-hosted runners? (?:now )?costs?\b|self-hosted runner (?:charges|costs) introduced|introduced self-hosted runner charges|private repos pay \$0\.002|private: \$0\.002|\$0\.002\/min \(private\)|runners now \$0\.002|per-minute fees for (?:private )?self-hosted runners|self-hosted runner per-minute fees|new cost only applies to self-hosted runners|GitHub Actions runner fees/i,
   "Mailgun's free tier removed": /Mailgun (?:had already |has )?(?:killed|eliminated|removed|dropped)|Mailgun and [^.;]{0,40} (?:have|has) (?:since )?dropped their free tiers|Mailgun free tier gone|Why not Mailgun: Free tier removed|Sinch 2021, free tier removed|Mailgun<span class="removed-badge">/i,
   "a SendGrid free tier of 100 a day": /SendGrid (?:restricted|down) to 100\/day|SendGrid gives you 100 emails\/day|SendGrid<\/strong> (?:cut|slashed) its free tier|SendGrid slashed its free tier|free plans reduced to 100 emails\/day|>SendGrid<\/(?:a|span)><\/td>\s*<td>[^<]*<\/td>\s*<td>100 emails\/day|"name":"SendGrid","free":"100 emails\/day"/i,

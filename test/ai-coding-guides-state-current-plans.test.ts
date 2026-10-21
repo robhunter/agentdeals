@@ -97,7 +97,7 @@ const STATED_ON_THE_TOOLS_PAGE = [
   "Cline is Apache 2.0 licensed. Users can bring their own API keys or use the Cline provider.",
 ];
 
-const TEAMS_ANSWER = "GitHub Copilot Business ($19/seat) is cheapest for teams. Gemini Code Assist is no longer sold to new customers. Cursor Teams seats are $30, $100 or $200 per user a month, with Claude and GPT billed at API list price plus the Cursor Token Rate. Devin Desktop (Windsurf) Teams is $80/month plus $40/month per full dev seat.";
+const TEAMS_ANSWER = "Augment Code Standard costs $20 a month flat for up to 50 seats and includes $20 of usage a month for the whole team. GitHub Copilot Business costs $19 per seat a month and includes 1,900 AI credits ($19 of usage) per user. Gemini Code Assist is no longer sold to new customers. Cursor Teams seats are $30, $100 or $200 per user a month, with Claude and GPT billed at API list price plus the Cursor Token Rate. Devin Desktop (Windsurf) Teams is $80/month plus $40/month per full dev seat.";
 
 const WITHDRAWN_GEMINI_CODE_ASSIST_RECORD_TEXT: Record<string, RegExp> = {
   "Gemini Code Assist's paid subscriptions as unchanged": /subscriptions are unchanged|Standard and Enterprise continue/,
@@ -261,5 +261,38 @@ describe("the AI coding guides state the plans the vendors' own pricing pages li
       .map((file) => [file, readFileSync(path.join(REPO, "src", file), "utf-8")] as const);
     const found = source.flatMap(([file, text]) => retired.filter((phrase) => text.includes(phrase)).map((phrase) => `src/${file}: ${phrase}`));
     assert.deepStrictEqual(found, []);
+  });
+});
+
+const PLAN_ANSWERS = {
+  "Is GitHub Copilot still the cheapest AI coding tool?": "No — Cursor Plus and ChatGPT Go cost $8/month against $10/month for Copilot Pro. Cursor Plus runs only Grok models and Cursor's Composer. ChatGPT Go includes Codex for quick, lightweight coding tasks in the desktop app. The free tier gives 2,000 code completions a month plus limited chat and agent use. On paid plans, completions and next edit suggestions are unlimited and consume nothing; agent and chat work is metered in GitHub AI Credits at $0.01 each — $15 of credits on Pro, $70 on Pro+ ($39/mo), $200 on Max ($100/mo). GitHub's premium-request billing and its $0.04 overage are retired; the docs now label that model legacy.",
+  "Which AI coding tool is best for teams?": "Augment Code Standard costs $20 a month flat for up to 50 seats and includes $20 of usage a month for the whole team. GitHub Copilot Business costs $19 per seat a month and includes 1,900 AI credits ($19 of usage) per user. Gemini Code Assist is no longer sold to new customers. Cursor Teams seats are $30, $100 or $200 per user a month, with Claude and GPT billed at API list price plus the Cursor Token Rate. Devin Desktop (Windsurf) Teams is $80/month plus $40/month per full dev seat."
+};
+
+const TEAM_VALUE_SENTENCE = "For teams, Augment Code Standard is $20 a month flat for up to 50 seats, with $20 of usage a month included for the whole team. GitHub Copilot Business is $19 per seat a month, or $95 a month for 5 seats, with $19 of usage included per user.";
+
+describe("AI coding plan comparisons state prices and included usage", () => {
+  for (const [question, expected] of Object.entries(PLAN_ANSWERS)) {
+    it(`answers ${question} in the visible FAQ and structured data`, () => {
+      const html = served.get(TOOLS_PAGE)!;
+      const visible = [...html.matchAll(/<div class="faq-q">([\s\S]*?)<\/div>\s*<div class="faq-a">([\s\S]*?)<\/div>/g)]
+        .filter(([, name]) => textOf(name) === question)
+        .map(([, , answer]) => textOf(answer));
+      assert.strictEqual(visible.length, 1, `visible FAQ count for ${question}`);
+      assert.strictEqual(visible[0], expected);
+      const answers = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)]
+        .flatMap(([, json]) => [JSON.parse(json)].flat())
+        .flatMap((block) => block?.["@type"] === "FAQPage" ? block.mainEntity : [])
+        .filter((entry) => entry.name === question)
+        .map((entry) => entry.acceptedAnswer.text);
+      assert.strictEqual(answers.length, 1);
+      assert.ok(answers[0] === expected || answers[0].startsWith(`${expected} `), answers[0]);
+    });
+  }
+
+  it("compares the flat team plan and per-seat usage in the value note", () => {
+    const box = served.get(TOOLS_PAGE)!.match(/<div class="context-box">\s*<strong>Best value picks:<\/strong>([\s\S]*?)<\/div>/);
+    assert.ok(box);
+    assert.strictEqual(textOf(box[1]), `${TEAM_VALUE_SENTENCE} BYO-key tools (Cline, Aider) can be cheapest or most expensive depending on usage patterns.`);
   });
 });
