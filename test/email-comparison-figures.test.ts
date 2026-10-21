@@ -199,6 +199,30 @@ describe("an email free tier typed into a page states what the vendor's own reco
     assert.doesNotMatch(card, /no daily cap/i, `MailerSend's card reads: ${card}`);
   });
 
+  it("states SendGrid's included Pro and Premier IP and optional additional IPs in the cell and paragraph", () => {
+    const cell = rowCells(html[COMPARISON], "SendGrid")[8];
+    const trap = readableText(html[COMPARISON]).match(/The dedicated IP trap: .*? This hidden cost/)?.[0] ?? "";
+    for (const value of [cell, trap]) {
+      assert.match(value, /(?:1|one) (?:included|dedicated IP)/);
+      assert.match(value, /Pro \(from \$89\.95\/(?:mo|month)\)/);
+      assert.match(value, /Premier/);
+      assert.match(value, /(?:more|additional IPs).*add-on/);
+      assert.doesNotMatch(value, /\$80/);
+    }
+  });
+
+  it("labels Brevo's monthly Starter prices and bounds the daily free plan's monthly volume", () => {
+    const growth = html[COMPARISON].match(/<h2 id="cost-trap">Growth Cost Trap<\/h2>([\s\S]*?)(?=<h2\b)/)?.[1] ?? "";
+    assert.match(readableText(growth), /Brevo column: Starter, billed monthly/);
+    assert.match(growth, /href="https:\/\/www\.brevo\.com\/pricing\/"/);
+    const tenK = growth.match(/<tr>\s*<td><strong>10K emails<\/strong><\/td>([\s\S]*?)<\/tr>/)?.[1] ?? "";
+    const lastCell = [...tenK.matchAll(/<td\b[^>]*>.*?<\/td>/g)].at(-1)?.[0] ?? "";
+    assert.strictEqual(lastCell, "<td>$17.00</td>");
+    const card = cardText(html[COMPARISON], "Brevo");
+    assert.match(card, /300 emails\/day.*at most 9,300 a month/);
+    assert.doesNotMatch(card, /no monthly cap/);
+  });
+
   it("prices dedicated IPs as Resend and Maileroo sell them, and keeps Resend's free volume and daily cap", () => {
     const resend = rowCells(html[COMPARISON], "Resend");
     assert.deepStrictEqual([resend[2], resend[3], resend[8]], ["3,000/mo", "100/day", "$30/mo add-on (Scale)"]);
@@ -261,6 +285,12 @@ describe("the email growth table prices monthly sending volumes", () => {
     }
   });
 
+  it("prices Brevo Starter with monthly billing and leaves unquoted volumes without an invented price", () => {
+    for (const [volume, expected] of [["10K", "$17.00"], ["50K", "$56.00"], ["100K", "$82.00"], ["500K", "No public price"], ["1M", "No public price"]]) {
+      assert.strictEqual(price(volume, "Brevo"), expected, `Brevo at ${volume}`);
+    }
+  });
+
   it("uses MailerSend's 100K monthly subscription", () => {
     assert.strictEqual(price("100K", "MailerSend"), "$68.00");
   });
@@ -268,11 +298,11 @@ describe("the email growth table prices monthly sending volumes", () => {
   it("preserves every other price, including SES at one million emails", () => {
     const unchanged: Record<string, Array<string | null>> = {
       "3K": ["$0.30", "$0 (free)", "$0 (free)", "$7.00", "$19.95", "$15.00", "$0 (free)"],
-      "10K": ["$1.00", "$20.00", "$10.00", "$28.00", "$19.95", "$15.00", "$0 (free)"],
-      "50K": ["$5.00", "$20.00", null, "$28.00", "$19.95", "$42.50", "$25.00"],
-      "100K": ["$10.00", null, null, null, "$89.95", "$70.00", "$65.00"],
-      "500K": ["$50.00", null, null, "$210.00", "$449.95", "$245.00", "$169.00"],
-      "1M": ["$100.00", null, null, "$360.00", "$749.95", "$400.00", "$339.00"],
+      "10K": ["$1.00", "$20.00", "$10.00", "$28.00", "$19.95", "$15.00", null],
+      "50K": ["$5.00", "$20.00", null, "$28.00", "$19.95", "$42.50", null],
+      "100K": ["$10.00", null, null, null, "$89.95", "$70.00", null],
+      "500K": ["$50.00", null, null, "$210.00", "$449.95", "$245.00", null],
+      "1M": ["$100.00", null, null, "$360.00", "$749.95", "$400.00", null],
     };
     for (const [volume, expected] of Object.entries(unchanged)) {
       expected.forEach((value, column) => {

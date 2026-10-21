@@ -1197,7 +1197,7 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 55,
+      "table_figures": 53,
       "table_figures_from_records": 5,
       "tables": [
         {
@@ -1217,7 +1217,7 @@
         },
         {
           "label": "Growth Cost Trap",
-          "figures": 42,
+          "figures": 40,
           "from_records": 0
         },
         {

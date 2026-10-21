@@ -39415,7 +39415,7 @@ ${globalNavCss()}
         <td class="check">&#10003;</td>
         <td class="check">&#10003; Both</td>
         <td class="check">&#10003;</td>
-        <td class="partial">$80/mo</td>
+        <td class="partial">1 included on Pro (from $89.95/mo) and Premier; more as an add-on</td>
         <td><span style="color:#f85149">Volatile</span></td>
       </tr>
       <tr>
@@ -39482,7 +39482,7 @@ ${globalNavCss()}
 
   <div class="diff-card">
     <h3>Brevo (formerly Sendinblue)</h3>
-    <div class="diff-desc"><strong>Free tier:</strong> 300 emails/day permanent free tier (no monthly cap). Marketing automation, transactional email, SMS, WhatsApp, and CRM in one platform. The daily cap works well for steady-state sending (welcome emails, password resets) but limits burst sending. At 300/day, you get ~9,000/month &mdash; more than enough for most early-stage projects. The most feature-complete free tier in this category.</div>
+    <div class="diff-desc"><strong>Free tier:</strong> 300 emails/day permanent free tier (at most 9,300 a month). Marketing automation, transactional email, SMS, WhatsApp, and CRM in one platform. The daily cap works well for steady-state sending (welcome emails, password resets) but limits burst sending. At 300/day, you get ~9,000/month &mdash; more than enough for most early-stage projects. The most feature-complete free tier in this category.</div>
   </div>
 
   <div class="diff-card">
@@ -39720,7 +39720,7 @@ ${globalNavCss()}
   </div>
 
   <h2 id="cost-trap">Growth Cost Trap</h2>
-  <p class="section-intro">Email costs seem trivial at small scale. They're not. Here's what happens when you grow.</p>
+  <p class="section-intro">Email costs seem trivial at small scale. They're not. Here's what happens when you grow. Brevo column: <a href="https://www.brevo.com/pricing/" target="_blank" rel="noopener">Starter, billed monthly</a>.</p>
 
   <div style="overflow-x:auto">
   <table class="growth-table">
@@ -39755,7 +39755,7 @@ ${globalNavCss()}
         <td>$28.00</td>
         <td>$19.95</td>
         <td>$15.00</td>
-        <td class="cheapest">$0 (free)</td>
+        <td>$17.00</td>
       </tr>
       <tr>
         <td><strong>50K emails</strong></td>
@@ -39765,7 +39765,7 @@ ${globalNavCss()}
         <td>$28.00</td>
         <td>$19.95</td>
         <td>$42.50</td>
-        <td>$25.00</td>
+        <td>$56.00</td>
       </tr>
       <tr>
         <td><strong>100K emails</strong></td>
@@ -39775,7 +39775,7 @@ ${globalNavCss()}
         <td>$68.00</td>
         <td>$89.95</td>
         <td>$70.00</td>
-        <td>$65.00</td>
+        <td>$82.00</td>
       </tr>
       <tr>
         <td><strong>500K emails</strong></td>
@@ -39785,7 +39785,7 @@ ${globalNavCss()}
         <td>$210.00</td>
         <td class="expensive">$449.95</td>
         <td>$245.00</td>
-        <td>$169.00</td>
+        <td>No public price</td>
       </tr>
       <tr>
         <td><strong>1M emails</strong></td>
@@ -39795,7 +39795,7 @@ ${globalNavCss()}
         <td>$360.00</td>
         <td class="expensive">$749.95</td>
         <td>$400.00</td>
-        <td>$339.00</td>
+        <td>No public price</td>
       </tr>
     </tbody>
   </table>
@@ -39806,7 +39806,7 @@ ${globalNavCss()}
   </div>
 
   <div class="context-box">
-    <strong>The dedicated IP trap:</strong> Shared IP pools work fine for low-volume senders. But once you're sending 50K+ emails/month, you need a dedicated IP for deliverability control. <strong>Postmark charges $50/month</strong> per dedicated IP. <strong>SendGrid charges $80/month.</strong> <strong>Resend offers dedicated IPs as a $30/month add-on on the Scale plan, for senders above 3,000 emails a day.</strong> SES dedicated IPs are free but require manual warm-up. This hidden cost doubles your bill on lower tiers.
+    <strong>The dedicated IP trap:</strong> Shared IP pools work fine for low-volume senders. But once you're sending 50K+ emails/month, you need a dedicated IP for deliverability control. <strong>Postmark charges $50/month</strong> per dedicated IP. <strong>SendGrid includes one dedicated IP on Pro (from $89.95/month) and Premier; additional IPs are available as an add-on.</strong> <strong>Resend offers dedicated IPs as a $30/month add-on on the Scale plan, for senders above 3,000 emails a day.</strong> SES dedicated IPs are free but require manual warm-up. This hidden cost doubles your bill on lower tiers.
   </div>
 
   <div class="context-box">
