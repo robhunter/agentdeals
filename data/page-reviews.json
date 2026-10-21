@@ -2914,7 +2914,7 @@
       "review_outcome": "pass",
       "review_note": "Two readers checked every card except the AWS ones (checked on https://github.com/robhunter/agentdeals/issues/1972) against the vendors' own pages on 2026-09-28. The page had no card for OpenAI's 2026-09-28 shutdown, named a Videos API endpoint that does not exist and sent Firebase Studio users to Gitpod, which has no free plan. The corrections in https://github.com/robhunter/agentdeals/issues/2160 were read on production on 2026-09-28.",
       "partial_recheck": null,
-      "reads_index": false,
+      "reads_index": true,
       "tables_read_index": false,
       "table_figures": 0,
       "table_figures_from_records": 0,
@@ -2931,7 +2931,7 @@
         }
       ],
       "reads_changes": true,
-      "data_source": "unsourced",
+      "data_source": "catalogue",
       "data_source_reason": null
     },
     {

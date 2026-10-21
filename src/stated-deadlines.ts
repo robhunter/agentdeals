@@ -149,20 +149,27 @@ export function deadlineTextsOf(offers: readonly Offer[], recordsBeforeToday: re
   return [...listingTexts, ...recordTexts];
 }
 
-export function statedDeadlines(
+const SHUTDOWN_WORDS = /\b(?:shut(?:s|ting)?[\s-]?down|retir(?:e|es|ed|ing|ement)|discontinu(?:e|es|ed|ing|ation)|end[\s-]of[\s-]life|ends?\s+support|end[\s-]of[\s-]support)\b/i;
+
+function deadlinesInTexts(
   texts: readonly DeadlineText[],
   listedRecords: readonly Pick<DealChange, "vendor" | "date">[],
   today: string,
+  shutdownsOnly: boolean,
 ): StatedDeadline[] {
   const byVendorAndDay = new Map<string, StatedDeadline>();
   for (const text of texts) {
-    if (!DEADLINE_WORDS.test(text.text)) continue;
+    if (!(shutdownsOnly ? SHUTDOWN_WORDS : DEADLINE_WORDS).test(text.text)) continue;
     let inDeadlineList = false;
     for (const sentence of sentencesOf(text.text)) {
       const listItem = inDeadlineList && /^[^:;.!?]+:\s/.test(sentence);
       if (!listItem) inDeadlineList = DEADLINE_LIST.test(sentence);
-      if (!listItem && !OFFER_CHANGE.test(sentence)) continue;
-      for (const date of datesWithDeadlineMeaning(sentence).filter((day) => day > today)) {
+      if (!listItem && !(shutdownsOnly ? SHUTDOWN_WORDS : OFFER_CHANGE).test(sentence)) continue;
+      const clauses = shutdownsOnly && !listItem
+        ? sentence.split(/;\s*/).filter(clause => SHUTDOWN_WORDS.test(clause))
+        : [sentence];
+      const dates = [...new Set(clauses.flatMap(datesWithDeadlineMeaning))];
+      for (const date of dates.filter((day) => day > today)) {
         const key = `${text.vendor}\u0000${date}`;
         const held = byVendorAndDay.get(key);
         if (held && PREFERENCE[held.statedIn] <= PREFERENCE[text.statedIn]) continue;
@@ -183,6 +190,21 @@ export function statedDeadlines(
     !listedRecords.some((record) => record.vendor === deadline.vendor && daysBetween(record.date, deadline.date) <= 1));
   const unlistedDays = new Set(unlisted.map((deadline) => `${deadline.vendor}\u0000${deadline.date}`));
   return unlisted
-    .filter((deadline) => !unlistedDays.has(`${deadline.vendor}\u0000${dayAfter(deadline.date)}`))
+    .filter((deadline) => shutdownsOnly || !unlistedDays.has(`${deadline.vendor}\u0000${dayAfter(deadline.date)}`))
     .sort((a, b) => a.date.localeCompare(b.date) || a.vendor.localeCompare(b.vendor));
+}
+
+export function statedDeadlines(
+  texts: readonly DeadlineText[],
+  listedRecords: readonly Pick<DealChange, "vendor" | "date">[],
+  today: string,
+): StatedDeadline[] {
+  return deadlinesInTexts(texts, listedRecords, today, false);
+}
+
+export function statedShutdowns(
+  texts: readonly DeadlineText[],
+  today: string,
+): StatedDeadline[] {
+  return deadlinesInTexts(texts, [], today, true);
 }

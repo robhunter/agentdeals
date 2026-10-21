@@ -109,7 +109,7 @@ function startServer(indexPath: string): Promise<{ proc: ChildProcess; base: str
 
 const ROUTES_NO_SITEMAP_LISTS = ["/", "/estimate", "/budget-builder", "/compare-tool", "/stack-check"];
 
-const ROUTES_QUOTING_THE_ONE_SENTENCE_THAT_NAMES_A_DEADLINE = new Set(["/deadlines", "/this-week"]);
+const ROUTES_QUOTING_THE_ONE_SENTENCE_THAT_NAMES_A_DEADLINE = new Set(["/deadlines", "/this-week", "/shutdowns"]);
 
 const scratchDescriptions = new Map(scratchOffers.map((offer, index) => [codeFor(index), offer.description]));
 
@@ -127,7 +127,7 @@ describe("a deadline quotation and a full listing description need different con
   const sentence = "The legacy runtime retires on 2026-11-01.";
 
   it("recognizes a sentence excerpt on past, current and future digest routes", () => {
-    for (const route of ["/deadlines", "/this-week", "/digest/2024-w47", digestRouteOfTheWeekHolding(TODAY), "/digest/2099-w01"]) {
+    for (const route of ["/deadlines", "/this-week", "/shutdowns", "/digest/2024-w47", digestRouteOfTheWeekHolding(TODAY), "/digest/2099-w01"]) {
       assert.ok(quotesLessThanTheWholeDescription(route, sentence, description), route);
       assert.ok(!quotesLessThanTheWholeDescription(route, asServed(description), description), route);
     }
