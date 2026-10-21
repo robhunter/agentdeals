@@ -57,7 +57,7 @@ function everySurface(html: string): string {
 function retiredHaikuRateClaims(html: string): string[] {
   const surfaces = everySurface(html);
   const name = String.raw`(?:Claude\s+)?Haiku(?:\s+\d+(?:\.\d+)?)?`;
-  const rate = String.raw`\$0\.80\s*/\s*\$4(?:\.00)?(?![\d.])`;
+  const rate = String.raw`\$0\.80\s*/\s*\$4(?:\.00)?(?!\d|\.\d)`;
   const before = String.raw`${name}\s*(?:(?:costs?|is|at|priced at)\s*)?[:=—–-]?\s*${rate}`;
   const after = String.raw`${rate}\s*(?:per\s+(?:MTok|1M\s+tokens)\s*)?\(?${name}\b`;
   return [...surfaces.matchAll(new RegExp(`${before}|${after}`, "gi"))].map(m => m[0]);
@@ -154,6 +154,8 @@ describe("#1362 a superseded Claude version is not published as the current one"
   it("attaches a retired rate to its Haiku model name in visible and structured claims", () => {
     for (const claim of [
       "Claude Haiku 4.5 $0.80/$4",
+      "Claude Haiku 4.5 $0.80/$4.",
+      "Haiku 4.5 $0.80/$4.00.",
       "Haiku 4.5 costs $0.80/$4.00 per MTok",
       "$0.80/$4 (Haiku 4.5)",
       "$0.80/$4.00 per MTok (Claude Haiku 4.5)",
