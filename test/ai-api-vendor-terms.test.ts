@@ -235,7 +235,7 @@ const STATED: Record<string, string[]> = {
     "Of the proprietary frontier APIs, xAI and Anthropic are pay-as-you-go (Anthropic gives new users a small amount of free credits to test the API), and OpenAI prices no GPT model free.",
     "OpenRouter — 25+ free models through one OpenAI-compatible API; free models are capped at 20 requests a minute and 50 a day, or 1,000 a day once you have bought at least $10 of credits.",
     "Want to test hosted models before paying?",
-    "NVIDIA NIM — free endpoints on build.nvidia.com for models marked Free Endpoint, such as Kimi K3, DeepSeek V4.1 Flash and NVIDIA Nemotron, at up to 40 requests per minute; NVIDIA's API Trial Terms allow testing and evaluation only, not production. Baseten — new workspaces receive credits for testing and deployment; Baseten does not state the amount.",
+    "NVIDIA NIM — free endpoints on build.nvidia.com for models marked Free Endpoint, such as DeepSeek V4.1 Flash, GLM 5.3 Flash and gpt-oss-20b, at up to 40 requests per minute; NVIDIA retires hosted models on dates it posts on each model's page, and NVIDIA's API Trial Terms allow testing and evaluation only, not production. Baseten — new workspaces receive credits for testing and deployment; Baseten does not state the amount.",
     "Or download Hugging Face models and run them locally; Hugging Face's hosted Inference Providers API serves 200+ models; since 2026-10-07, free accounts buy credits to call it, or upgrade to PRO ($9/month, $2.00 a month of credits).",
   ],
   "/gemini-api-pricing-2026": [

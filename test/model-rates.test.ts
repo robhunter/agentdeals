@@ -103,8 +103,27 @@ describe("choosing and formatting a rate to publish", () => {
     assert.equal(formatRate({ model: "GPT-4o", input: "$2.50", output: null }), "$2.50 (GPT-4o, input only)");
   });
 
+  it("lists two models even when their figures match", () => {
+    const rates = readModelRates("Flash $1/$4. Flash Thinking $1/$4.");
+    assert.equal(formatRateSpan(rates), "$1/$4 (Flash), $1/$4 (Flash Thinking)");
+  });
+
+  it("keeps a single input-only rate and orders short lists without changing the input", () => {
+    const rates = readModelRates("Large $10/$50. Small $1/M input.");
+    const original = structuredClone(rates);
+    assert.equal(formatRateSpan(rates.slice(1)), "$1 (Small, input only)");
+    assert.equal(formatRateSpan(rates), "$1 (Small, input only), $10/$50 (Large)");
+    assert.deepEqual(rates, original);
+  });
+
+  it("retains the cheapest-to-dearest span for four or more rates", () => {
+    const rates = readModelRates("Large $10/$50. Mid $5/$25. Small $1/$5. Mini $0.1/$0.5.");
+    assert.equal(formatRateSpan(rates), "$0.1/$0.5 (Mini) – $10/$50 (Large)");
+    assert.equal(formatRateSpan([...rates, { model: "Medium", input: "$3", output: "$15" }]), "$0.1/$0.5 (Mini) – $10/$50 (Large)");
+  });
+
   it("names the model beside the figures", () => {
-    assert.equal(formatRateSpan(lineup), "$1/$5 (Haiku 4.5) – $10/$50 (Fable 5.1)");
+    assert.equal(formatRateSpan(lineup), "$1/$5 (Haiku 4.5), $5/$25 (Opus 5), $10/$50 (Fable 5.1)");
   });
 });
 

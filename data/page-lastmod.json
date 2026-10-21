@@ -22,11 +22,11 @@
       "changed": "2026-10-20"
     },
     "/ai-free-tiers": {
-      "hash": "5aee700297581745",
+      "hash": "ea841bab221edc14",
       "changed": "2026-10-21"
     },
     "/ai-ml-alternatives": {
-      "hash": "a6460f82e8b2f855",
+      "hash": "c96f42a7a99ccada",
       "changed": "2026-10-21"
     },
     "/alternative-to": {
@@ -1099,7 +1099,7 @@
       "changed": "2026-10-19"
     },
     "/category/ai-ml": {
-      "hash": "b8d4d491690d803c",
+      "hash": "bac334afd05bd9a8",
       "changed": "2026-10-21"
     },
     "/category/analytics": {
@@ -3205,7 +3205,7 @@
       "changed": "2026-10-21"
     },
     "/free-llm-apis": {
-      "hash": "0184eb41181884ca",
+      "hash": "52a8bf7daca0cc90",
       "changed": "2026-10-21"
     },
     "/free-nextjs-stack": {
@@ -3241,7 +3241,7 @@
       "daily": true
     },
     "/gemini-api-pricing-2026": {
-      "hash": "fdbbfa0e7aef4aeb",
+      "hash": "42496e6563273731",
       "changed": "2026-10-21"
     },
     "/github-actions-alternatives": {
@@ -3257,12 +3257,12 @@
       "changed": "2026-10-20"
     },
     "/groq-vs-hugging-face": {
-      "hash": "cc1b446b22f9c34a",
-      "changed": "2026-10-15"
+      "hash": "5c70db8ac91294d0",
+      "changed": "2026-10-21"
     },
     "/groq-vs-mistral-ai": {
-      "hash": "b00222699359986a",
-      "changed": "2026-10-20"
+      "hash": "51ed6fdf0e40ed5d",
+      "changed": "2026-10-21"
     },
     "/guides": {
       "hash": "5da15951ed9663a5",
@@ -3348,15 +3348,15 @@
       "changed": "2026-10-21"
     },
     "/openai-assistants-alternatives": {
-      "hash": "c0ef3a2ff9e62341",
-      "changed": "2026-10-17"
+      "hash": "d858f699b7993118",
+      "changed": "2026-10-21"
     },
     "/openai-assistants-migration": {
       "daily": true
     },
     "/openai-assistants-migration-2026": {
-      "hash": "d393c69fe23007df",
-      "changed": "2026-10-17"
+      "hash": "94c2f7ef1539c5f7",
+      "changed": "2026-10-21"
     },
     "/postman-alternatives": {
       "hash": "349a8bbf6802a38f",

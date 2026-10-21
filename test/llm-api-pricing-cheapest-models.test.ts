@@ -163,7 +163,7 @@ let deepseekRepricedPage = "";
 let deepseekRenamedPage = "";
 let deepseekUnpricedPage = "";
 
-const cheaperModelCatalogue = withDescription("Groq", replacing("gpt-oss-20b $0.075/$0.30.", "gpt-oss-20b $0.075/$0.30; gpt-oss-1b $0.01/$0.02."));
+const cheaperModelCatalogue = withDescription("Groq", description => `${description} gpt-oss-1b $0.01/$0.02.`);
 const deepseekAmongThemCatalogue = withDescription(DEEPSEEK, replacing("$0.30/M input, $1.20/M output at peak", "$0.01/M input, $0.02/M output at peak"));
 
 before(async () => {

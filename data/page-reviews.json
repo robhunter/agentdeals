@@ -1980,8 +1980,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 64,
-      "table_figures_from_records": 50,
+      "table_figures": 66,
+      "table_figures_from_records": 52,
       "tables": [
         {
           "label": "1. What Changed on April 1",
@@ -1995,8 +1995,8 @@
         },
         {
           "label": "6. Free LLM API Comparison",
-          "figures": 50,
-          "from_records": 50
+          "figures": 52,
+          "from_records": 52
         }
       ],
       "reads_changes": true,
@@ -2295,13 +2295,13 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 91,
-      "table_figures_from_records": 90,
+      "table_figures": 97,
+      "table_figures_from_records": 96,
       "tables": [
         {
           "label": "Pricing Comparison Table",
-          "figures": 43,
-          "from_records": 43
+          "figures": 49,
+          "from_records": 49
         },
         {
           "label": "What You Actually Get for Free",
@@ -2499,8 +2499,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 49,
-      "table_figures_from_records": 49,
+      "table_figures": 51,
+      "table_figures_from_records": 51,
       "tables": [
         {
           "label": "What’s Changing",
@@ -2509,8 +2509,8 @@
         },
         {
           "label": "Free Tier Comparison Table",
-          "figures": 47,
-          "from_records": 47
+          "figures": 49,
+          "from_records": 49
         },
         {
           "label": "OpenAI Pricing Change Timeline",

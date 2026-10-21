@@ -164,9 +164,9 @@ export function formatRate(rate: ModelRate): string {
 }
 
 export function formatRateSpan(rates: ModelRate[]): string | null {
-  const span = spanOfRates(rates);
-  if (!span.length) return null;
-  return span.map(formatRate).join(" – ");
+  if (!rates.length) return null;
+  if (rates.length <= 3) return [...rates].sort(byInputRate).map(formatRate).join(", ");
+  return spanOfRates(rates).map(formatRate).join(" – ");
 }
 
 export function monthlyTokenCost(rate: ModelRate, millionsIn: number, millionsOut: number): number | null {

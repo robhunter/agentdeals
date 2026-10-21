@@ -31,7 +31,7 @@ function catalogueWith(change: (offer: Offer) => Offer): Catalogue {
   return { ...shipped, offers: shipped.offers.map(change) };
 }
 
-async function servePages(catalogue: Catalogue): Promise<Map<string, string>> {
+async function servePages(catalogue: Catalogue, pages = PAGES): Promise<Map<string, string>> {
   const dir = mkdtempSync(path.join(tmpdir(), "llm-tables-"));
   const indexPath = path.join(dir, "index.json");
   writeFileSync(indexPath, JSON.stringify(catalogue));
@@ -55,7 +55,7 @@ async function servePages(catalogue: Catalogue): Promise<Map<string, string>> {
       });
     });
     const served = new Map<string, string>();
-    for (const page of PAGES) served.set(page, await (await fetch(`${base}${page}`)).text());
+    for (const page of pages) served.set(page, await (await fetch(`${base}${page}`)).text());
     return served;
   } finally {
     proc.kill();
@@ -175,5 +175,76 @@ describe("the LLM provider tables on the AI guides read each vendor's listing", 
     }
     assert.ok(rows >= PAGES.length, `read only ${rows} rows`);
     assert.deepStrictEqual(typed, []);
+  });
+});
+
+function dollars(amount: string): number {
+  return Number(amount.replace(/[$,]/g, ""));
+}
+
+const RATE_PAGES = [...PAGES, "/openai-assistants-alternatives"];
+
+describe("short model price lists in provider tables", () => {
+  let pages: Map<string, string>;
+  let changed: Map<string, string>;
+
+  before(async () => {
+    pages = await servePages(shipped, [...RATE_PAGES, "/vendor/groq"]);
+    changed = await servePages(catalogueWith(o => o.vendor === SUBJECT ? {
+      ...o,
+      description: "High $3/$9; Low $0.1/$0.4; Middle $1/$4.",
+    } : o), RATE_PAGES);
+  });
+
+  function rateCell(html: string, slug: string): string {
+    for (const table of listingTables(html)) {
+      const headers = [...table.matchAll(/<th\b[^>]*>([\s\S]*?)<\/th>/gi)].map(m => readable(m[1]));
+      const at = headers.indexOf("Paid Rate");
+      const row = rowFor(table, slug);
+      if (at >= 0 && row) return readable(row[at]);
+    }
+    assert.fail(`No Paid Rate cell for ${slug}`);
+  }
+
+  for (const page of RATE_PAGES) {
+    it(`prints Groq's recorded model prices on ${page}`, () => {
+      const rates = readModelRates(subjectOffer.description);
+      const cell = rateCell(pages.get(page)!, "groq");
+      const shown = rates.length <= 3 ? rates : [rates.reduce((a, b) => dollars(a.input) <= dollars(b.input) ? a : b), rates.reduce((a, b) => dollars(a.input) >= dollars(b.input) ? a : b)];
+      for (const rate of shown) assert.ok(cell.includes(`${rate.input}/${rate.output} (${rate.model})`), cell);
+    });
+
+    it(`follows a replacement listing's middle rate on ${page}`, () => {
+      assert.equal(rateCell(changed.get(page)!, "groq"), "$0.1/$0.4 (Low), $1/$4 (Middle), $3/$9 (High) per MTok");
+    });
+  }
+
+  for (const page of ["/llm-api-pricing", "/free-llm-apis"]) {
+    it(`prints xAI's middle model on ${page}`, () => {
+      const offer = shipped.offers.find(o => o.vendor === "xAI")!;
+      const rates = readModelRates(offer.description);
+      const cell = rateCell(pages.get(page)!, "xai");
+      if (rates.length <= 3) {
+        for (const rate of rates) assert.ok(cell.includes(`${rate.input}/${rate.output} (${rate.model})`), cell);
+        assert.ok(!cell.includes(" – "), cell);
+      }
+    });
+  }
+
+  it("keeps the three Groq prices together on the vendor page", () => {
+    const text = readable(pages.get("/vendor/groq")!);
+    const sentence = subjectOffer.description.match(/Developer plan prices per 1M tokens: .*?\.(?=\s|$)/)![0];
+    assert.ok(text.includes(sentence));
+  });
+
+  it("names only NVIDIA free models carried by its listing in the free API answer", () => {
+    const html = pages.get("/free-llm-apis")!;
+    const answer = readable(html.match(/<dd><a href="\/vendor\/nvidia-nim">[\s\S]*?<\/dd>/)![0]);
+    const models = answer.match(/such as (.*?), at up to/)![1].split(/, | and /);
+    const listing = shipped.offers.find(o => toSlug(o.vendor) === "nvidia-nim")!;
+    assert.deepEqual(models, ["DeepSeek V4.1 Flash", "GLM 5.3 Flash", "gpt-oss-20b"]);
+    for (const model of models) assert.ok(listing.description.includes(model), model);
+    assert.ok(!answer.includes("Kimi K3"));
+    assert.ok(answer.includes("NVIDIA retires hosted models on dates it posts on each model's page"));
   });
 });
