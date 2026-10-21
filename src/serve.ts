@@ -39720,7 +39720,7 @@ ${globalNavCss()}
   </div>
 
   <h2 id="cost-trap">Growth Cost Trap</h2>
-  <p class="section-intro">Email costs seem trivial at small scale. They're not. Here's what happens when you grow. Brevo column: <a href="https://www.brevo.com/pricing/" target="_blank" rel="noopener">Starter, billed monthly</a>.</p>
+  <p class="section-intro">Email costs seem trivial at small scale. They're not. Here's what happens when you grow. Brevo column: <a href="https://www.brevo.com/pricing/" target="_blank" rel="nofollow noopener">Starter, billed monthly</a>.</p>
 
   <div style="overflow-x:auto">
   <table class="growth-table">

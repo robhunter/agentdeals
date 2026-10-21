@@ -214,7 +214,7 @@ describe("an email free tier typed into a page states what the vendor's own reco
   it("labels Brevo's monthly Starter prices and bounds the daily free plan's monthly volume", () => {
     const growth = html[COMPARISON].match(/<h2 id="cost-trap">Growth Cost Trap<\/h2>([\s\S]*?)(?=<h2\b)/)?.[1] ?? "";
     assert.match(readableText(growth), /Brevo column: Starter, billed monthly/);
-    assert.match(growth, /href="https:\/\/www\.brevo\.com\/pricing\/"/);
+    assert.match(growth, /href="https:\/\/www\.brevo\.com\/pricing\/"[^>]*rel="nofollow noopener"/);
     const tenK = growth.match(/<tr>\s*<td><strong>10K emails<\/strong><\/td>([\s\S]*?)<\/tr>/)?.[1] ?? "";
     const lastCell = [...tenK.matchAll(/<td\b[^>]*>.*?<\/td>/g)].at(-1)?.[0] ?? "";
     assert.strictEqual(lastCell, "<td>$17.00</td>");
