@@ -19,7 +19,7 @@ A remote MCP server that aggregates publicly available discounts, free tiers, st
 
 - **Language:** TypeScript
 - **Framework:** MCP SDK (`@modelcontextprotocol/sdk`)
-- **Runtime:** Node.js (>=20)
+- **Runtime:** Node.js (>=22)
 - **Index:** JSON file loaded into memory on server start
 - **Deploy:** ngrok for dev, hosted service (Railway/Render/Fly) when approaching launch
 
