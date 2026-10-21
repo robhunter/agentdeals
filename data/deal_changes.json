@@ -13175,12 +13175,12 @@
       "change_type": "product_deprecated",
       "date": "2026-10-14",
       "date_source": "vendor_page",
-      "summary": "ChatGPT and Codex keep running. Only the GPT-5.5 model retires from ChatGPT, ChatGPT Work and Codex on all plans on 2026-10-14: OpenAI names GPT-6 Sol as the replacement on Plus, Pro, Business, Enterprise and Edu plans and GPT-6 Luna on Free and Go plans. The OpenAI API is not affected.",
+      "summary": "ChatGPT and Codex keep running. Only the GPT-5.5 model retires from ChatGPT, ChatGPT Work and Codex on all plans on 2026-10-14. For Codex with ChatGPT sign-in, OpenAI names GPT-6.1 Sol as the replacement on Plus, Pro, Business, Enterprise and Edu plans (its page named GPT-6 Sol when we read it on 2026-10-06) and GPT-6 Luna on Free and Go plans. The OpenAI API is not affected.",
       "what_ends": "GPT-5.5",
       "tier": "Codex",
       "tier_direction": "narrowed",
       "previous_state": "GPT-5.5 available in ChatGPT, ChatGPT Work and Codex",
-      "current_state": "\"On October 14, 2026, GPT-5.5 will retire from ChatGPT, ChatGPT Work, and Codex on all plans, including consumer, Business, Enterprise, and Edu plans. This retirement does not apply to the OpenAI API.\" \"On Plus, Pro, Business, Enterprise, and Edu plans, choose GPT-6 Sol (gpt-6-sol) when available. On Free and Go plans, choose GPT-6 Luna (gpt-6-luna) in the desktop app when available.\" (learn.chatgpt.com/docs/models, read 2026-10-06)",
+      "current_state": "\"On October 14, 2026, GPT-5.5 will retire from ChatGPT, ChatGPT Work, and Codex on all plans, including consumer, Business, Enterprise, and Edu plans. This retirement does not apply to the OpenAI API.\" (learn.chatgpt.com/docs/models, read 2026-10-06) \"For Codex with ChatGPT sign-in, choose an available replacement: On Plus, Pro, Business, Enterprise, and Edu plans, choose GPT-6.1 Sol (gpt-6.1-sol) when available. On Free and Go plans, choose GPT-6 Luna (gpt-6-luna) in the desktop app when available.\" (learn.chatgpt.com/docs/models, read 2026-10-21)",
       "impact": "medium",
       "source_url": "https://learn.chatgpt.com/docs/models",
       "category": "AI Coding",
@@ -17088,6 +17088,23 @@
           }
         ]
       }
+    },
+    {
+      "vendor": "OpenAI Codex",
+      "change_type": "product_deprecated",
+      "date": "2026-06-24",
+      "date_source": "vendor_page",
+      "summary": "ChatGPT Business and Codex keep running. From 2026-06-24, new self-serve ChatGPT Business workspaces cannot add Codex-only seats, which OpenAI now calls a legacy seat type. A workspace that added one before that date can keep adding them, and Standard and Premium ChatGPT seats include Codex.",
+      "what_ends": "Codex-only seats for new self-serve ChatGPT Business workspaces",
+      "tier": "Business",
+      "previous_state": "ChatGPT Business and Enterprise workspaces could add Codex-only seats with no fixed seat fee, billed on token consumption (OpenAI, 2026-04-02)",
+      "current_state": "\"Starting June 24, 2026, new self-serve ChatGPT Business workspaces cannot add Codex seats, which are a legacy seat type. A Business workspace that added a legacy Codex seat before June 24, 2026, can continue to manage and add that legacy seat type. Standard and Premium ChatGPT seats both already include access to Codex.\" (help.openai.com/en/articles/8542115, read 2026-10-21)",
+      "impact": "low",
+      "source_url": "https://help.openai.com/en/articles/8542115",
+      "category": "AI Coding",
+      "alternatives": [],
+      "recorded_date": "2026-10-21",
+      "listing_effect": "none"
     }
   ]
 }
