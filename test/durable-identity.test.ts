@@ -342,7 +342,7 @@ describe("An unrecognised API key is reported as unrecognised, not silently unat
     assert.strictEqual(withKey.status, "key_not_recognised");
 
     assert.strictEqual(hasAuthCredential({ authorization: "Bearer " }), false);
-    assert.strictEqual(hasAuthCredential({ signature: "s", "signature-input": "i" }), true);
+    assert.strictEqual(hasAuthCredential({ signature: "s", "signature-input": "i" }), false);
   });
 });
 

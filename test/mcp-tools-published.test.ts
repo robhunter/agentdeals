@@ -135,6 +135,16 @@ describe("what tools/list publishes is what the product offers", () => {
     }
   });
 
+  it("offers API capabilities without signature registration or authentication", async () => {
+    const { tools } = await listedTools();
+    assert.ok(!tools.some(tool => tool.name === "register_agent"));
+    assert.doesNotMatch(JSON.stringify(tools), /vestauth|signature-input|signed requests|http message signatures/i);
+    for (const pathname of ["/developers", "/api/docs", "/api/openapi.json", "/setup", "/llms.txt", "/llms-full.txt"]) {
+      const text = await localHtml(pathname);
+      assert.doesNotMatch(text, /vestauth|signature-input|signed requests|http message signatures/i, pathname);
+    }
+  });
+
   it("registers exactly what it publishes, on both servers we ship", () => {
     assert.deepStrictEqual(registeredToolNames(SERVER_SOURCE), [...MCP_TOOL_NAMES].sort(), "the hosted server registers a different set");
     assert.deepStrictEqual(registeredToolNames(REMOTE_SERVER_SOURCE), [...MCP_TOOL_NAMES].sort(), "the published stdio server registers a different set");

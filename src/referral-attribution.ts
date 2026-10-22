@@ -41,7 +41,7 @@ export function hasAuthCredential(headers: Record<string, string | string[] | un
   if (typeof authHeader === "string" && authHeader.startsWith("Bearer ") && authHeader.slice(7).trim()) {
     return true;
   }
-  return typeof headers["signature"] === "string" && typeof headers["signature-input"] === "string";
+  return false;
 }
 
 export async function recordAttribution(

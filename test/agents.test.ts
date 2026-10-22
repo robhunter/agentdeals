@@ -3,6 +3,7 @@ import assert from "node:assert";
 import { spawn, type ChildProcess } from "node:child_process";
 import path from "node:path";
 import fs from "node:fs";
+import { createServer, type Server } from "node:http";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -60,24 +61,14 @@ describe("Agent Registration", () => {
     );
   });
 
-  it("rejects duplicate vestauth URL", () => {
-    const agents = JSON.parse(fs.readFileSync(AGENTS_PATH, "utf-8"));
-    agents.agents.push({
-      id: "agent_test1",
-      name: "VestauthBot1",
-      api_key_hash: "",
-      vestauth_public_key_url: "https://example.com/.well-known/vestauth",
-      x402_address: null,
-      status: "active",
-      registered_at: new Date().toISOString(),
-    });
-    fs.writeFileSync(AGENTS_PATH, JSON.stringify(agents), "utf-8");
-    resetAgentsCache();
-
-    assert.throws(
-      () => registerAgent({ name: "VestauthBot2", vestauth_public_key_url: "https://example.com/.well-known/vestauth" }),
-      /already exists/
-    );
+  it("rejects the retired registration field without storing an agent", () => {
+    for (const value of ["https://example.com/.well-known/vestauth", "", null, false, 0, {}]) {
+      assert.throws(
+        () => registerAgent({ name: "UnsupportedAuthBot", vestauth_public_key_url: value }),
+        /vestauth_public_key_url is no longer accepted/
+      );
+    }
+    assert.deepStrictEqual(JSON.parse(fs.readFileSync(AGENTS_PATH, "utf-8")), { agents: [] });
   });
 
   it("persists agents to disk", () => {
@@ -318,5 +309,88 @@ describe("Agent Registry HTTP Endpoints", () => {
     const regData = await regRes.json() as any;
 
     assert.strictEqual(regData.api_key_hash, undefined);
+  });
+});
+
+
+describe("API key authentication for stored agents", () => {
+  let sink: Server;
+  let proc: ChildProcess;
+  let keyUrl: string;
+  let apiKey: string;
+  let agentId: string;
+  const requests: string[] = [];
+
+  before(async () => {
+    resetAgentsFile();
+    sink = createServer((req, res) => {
+      requests.push(req.url!);
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ public_key: "test-key" }));
+    });
+    await new Promise<void>(resolve => sink.listen(0, "127.0.0.1", resolve));
+    const address = sink.address();
+    assert.ok(address && typeof address !== "string");
+    keyUrl = `http://127.0.0.1:${address.port}/.well-known/vestauth`;
+    const registered = registerAgent({ name: "StoredKeyBot" });
+    apiKey = registered.api_key!;
+    agentId = registered.agent.id;
+    const data = JSON.parse(fs.readFileSync(AGENTS_PATH, "utf-8"));
+    data.agents[0].vestauth_public_key_url = keyUrl;
+    fs.writeFileSync(AGENTS_PATH, JSON.stringify(data));
+    resetAgentsCache();
+    proc = await startHttpServer();
+  });
+
+  after(async () => {
+    if (proc && proc.exitCode === null) {
+      const exited = new Promise(resolve => proc.once("exit", resolve));
+      proc.kill();
+      await exited;
+    }
+    if (sink) await new Promise<void>(resolve => sink.close(() => resolve()));
+    resetAgentsFile();
+  });
+
+  it("refuses forged signatures and never reads the stored key URL", async () => {
+    const headers = { signature: "garbage", "signature-input": `sig1=("@method");keyid="${keyUrl}"` };
+    for (const authorization of [undefined, "Bearer invalid", "Bearer ", "Basic test"]) {
+      const requestHeaders = authorization === undefined ? headers : { ...headers, authorization };
+      assert.strictEqual(await authenticateRequest({ headers: requestHeaders }), null);
+      const response = await fetch(`http://localhost:${serverPort}/api/agents/me`, { headers: requestHeaders });
+      assert.strictEqual(response.status, 401);
+    }
+    assert.deepStrictEqual(requests, []);
+  });
+
+  it("keeps the API key of an agent with a stored key URL working", async () => {
+    const headers = {
+      authorization: `Bearer ${apiKey}`,
+      signature: "garbage",
+      "signature-input": `sig1=("@method");keyid="${keyUrl}"`,
+    };
+    const agent = await authenticateRequest({ headers });
+    assert.strictEqual(agent?.id, agentId);
+    const response = await fetch(`http://localhost:${serverPort}/api/agents/me`, { headers });
+    assert.strictEqual(response.status, 200);
+    const body = await response.json() as any;
+    assert.strictEqual(body.id, agentId);
+    assert.strictEqual(body.vestauth_public_key_url, keyUrl);
+    assert.deepStrictEqual(requests, []);
+  });
+
+  it("refuses every supplied retired registration field without fetching or storing it", async () => {
+    const before = fs.readFileSync(AGENTS_PATH, "utf-8");
+    for (const value of [keyUrl, "", null, false, 0, {}, [keyUrl]]) {
+      const response = await fetch(`http://localhost:${serverPort}/api/agents/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: "RejectedBot", vestauth_public_key_url: value }),
+      });
+      assert.strictEqual(response.status, 400);
+      assert.match((await response.json() as any).error, /vestauth_public_key_url is no longer accepted/);
+    }
+    assert.strictEqual(fs.readFileSync(AGENTS_PATH, "utf-8"), before);
+    assert.deepStrictEqual(requests, []);
   });
 });

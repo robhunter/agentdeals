@@ -82,7 +82,7 @@ import { CHANGE_TIMELINE_LINK_TEXT, CHANGE_TIMELINE_PATH, CUTS_THIS_YEAR_ANCHOR,
 import { changeCitesASource, citationLabel, changeIsUncited, changeSourceCitation, changeSourceLinkHtml, changeCitationHtml, citedClaimHtml, changeSummaryHtml, changeSummaryText, citedChanges, uncitedChangeNotice, uncitedChangeNoticeHtml, ratingWithheldForNoSourceClause, ratingWithheldForNoSourceSentence, ratingWithheldClause, ratingWithheldSentence, type WithheldRecordCounts, UNCITED_CHANGE_LABEL, RECORD_SOURCE_CLASS, CITATION_REL, listingSourceLinkHtml, type CitableChangeRow } from "./change-citation.js";
 import { growthLimitPhrases } from "./growth-limits.js";
 import { listingStatements, usageBeyondTheFreeTierBillingSentence } from "./overage-billing.js";
-import { registerAgent, authenticateRequest, validateVestauthUrl, hashApiKey, updateAgentX402Address, getAgentById } from "./agents.js";
+import { registerAgent, authenticateRequest, hashApiKey, updateAgentX402Address, getAgentById } from "./agents.js";
 import { attributeAuthenticatedRequest } from "./referral-attribution.js";
 import { recordConversion, confirmEligibleEntries, clawbackEntry, getAgentBalance, getAgentLedgerEntries, recordPayout, MAX_COMMISSION_AMOUNT, MINIMUM_PAYOUT_AMOUNT, getLeaderboard } from "./ledger.js";
 import { PLATFORM_CREDENTIAL_REQUIRED, authorizedAsPlatform } from "./platform-auth.js";
@@ -55854,6 +55854,12 @@ ${catList}
       return;
     }
 
+    if (parsed && Object.hasOwn(parsed, "vestauth_public_key_url")) {
+      res.writeHead(400, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*", ...registrationHeaders });
+      res.end(JSON.stringify({ error: "vestauth_public_key_url is no longer accepted. Use API key authentication." }));
+      return;
+    }
+
     if (!parsed.name || typeof parsed.name !== "string" || parsed.name.trim().length === 0) {
       res.writeHead(400, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*", ...registrationHeaders });
       res.end(JSON.stringify({ error: "name is required and must be a non-empty string" }));
@@ -55861,19 +55867,9 @@ ${catList}
     }
 
     try {
-      if (parsed.vestauth_public_key_url) {
-        const validation = await validateVestauthUrl(parsed.vestauth_public_key_url);
-        if (!validation.valid) {
-          res.writeHead(400, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*", ...registrationHeaders });
-          res.end(JSON.stringify({ error: `Invalid vestauth URL: ${validation.error}` }));
-          return;
-        }
-      }
-
       const result = registerAgent({
         name: parsed.name.trim(),
         api_key: parsed.api_key,
-        vestauth_public_key_url: parsed.vestauth_public_key_url,
       });
 
       const responseBody: any = {
