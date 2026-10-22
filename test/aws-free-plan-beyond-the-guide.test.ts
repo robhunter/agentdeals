@@ -254,7 +254,7 @@ describe("pages beyond the AWS guide describe AWS's 6-month Free plan, not the 1
     const markup = html.get("/cloud-free-tier-comparison-2026")!;
     const verdict = markup.match(/<div class="executive-summary">([\s\S]*?)<\/div>/)![1];
     const uses = markup.split('<h2 id="best-for">')[1].split('<h2 ')[0];
-    assert.ok(textOf(verdict).includes("of these four clouds, it's the only one with a permanent free VM (e2-micro), and it has the most generous always-free limits (Cloud Run 2M req/mo, BigQuery 1 TiB). Oracle Cloud, not compared here, also has Always Free VMs."));
+    assert.ok(textOf(verdict).includes("Of these four clouds, GCP is the only one with a permanent free VM (e2-micro), with always-free limits of Cloud Run 2M req/mo and BigQuery 1 TiB. Oracle Cloud, not compared here, also has Always Free VMs."));
     assert.ok(textOf(uses).includes("GCP's e2-micro VM is the only permanent free VM among these four clouds. Oracle Cloud, not compared here, also has Always Free VMs."));
     assert.ok(textOf(uses).includes("Azure's Cosmos DB and SQL Database both stay free with no time limit."));
     const databases = markup.split('<h2 id="databases">')[1].split('<h2 id="serverless">')[0];
