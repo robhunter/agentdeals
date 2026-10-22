@@ -216,7 +216,6 @@ const STATED: Record<string, string[]> = {
     "Free inference endpoints on build.nvidia.com: models marked Free Endpoint, including DeepSeek V4.1 Flash, GLM 5.3 Flash, gpt-oss-20b, Gemma 4 31B and NVIDIA Nemotron 3 Ultra, can be called at no cost.",
     "Up to 40 requests per minute; limits may vary by model, and traffic from other users may cause throttling. NVIDIA's API Trial Terms allow free use for testing and evaluation only, not production.",
     "New workspaces receive credits for testing and deployment; Baseten does not state the amount. Basic plan: $0 per month, pay as you go. Dedicated deployments bill per minute. Model APIs bill per 1M tokens: GLM-5.3 $1.40/$4.40. GLM-5.3-Flash $0.15/$0.50.",
-    "LLM7.io (100,000 tokens/24h with a free token)",
     "Free for light use: LLM7.io — 100,000 tokens/24h with a free token",
     "xAI retired Grok 4.1 Fast on 2026-05-15; requests to its model names now go to grok-4.3 at $1.25/M input and $2.50/M output (under 200k prompt tokens).",
     "The price floor: For open models,",
