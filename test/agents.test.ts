@@ -352,11 +352,21 @@ describe("API key authentication for stored agents", () => {
     resetAgentsFile();
   });
 
-  it("refuses forged signatures and never reads the stored key URL", async () => {
+  beforeEach(() => { requests.length = 0; });
+
+  it("refuses forged signatures without fetching a stored key", async () => {
     const headers = { signature: "garbage", "signature-input": `sig1=("@method");keyid="${keyUrl}"` };
     for (const authorization of [undefined, "Bearer invalid", "Bearer ", "Basic test"]) {
       const requestHeaders = authorization === undefined ? headers : { ...headers, authorization };
       assert.strictEqual(await authenticateRequest({ headers: requestHeaders }), null);
+    }
+    assert.deepStrictEqual(requests, []);
+  });
+
+  it("refuses forged signatures over HTTP without fetching a stored key", async () => {
+    const headers = { signature: "garbage", "signature-input": `sig1=("@method");keyid="${keyUrl}"` };
+    for (const authorization of [undefined, "Bearer invalid", "Bearer ", "Basic test"]) {
+      const requestHeaders = authorization === undefined ? headers : { ...headers, authorization };
       const response = await fetch(`http://localhost:${serverPort}/api/agents/me`, { headers: requestHeaders });
       assert.strictEqual(response.status, 401);
     }
