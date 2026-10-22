@@ -32198,11 +32198,21 @@ function buildLlmApiPricingPage(): string {
 
   const freeInferenceLeaders = sentenceNamingTheFree(["groq", "cerebras"], "offers", "offer", "genuinely free inference at thousands of tokens/second.");
 
-  const freeTiersThisPageStandsBehind = "The other free tiers on this page are "
-    + stillOffered(["openrouter", "cloudflare-workers-ai", "llm7-io"])
-      .map(p => p.name + " (" + p.freeTier + ")")
-      .join(", ")
-    + ".";
+  const freeApiProviders = providers.filter(p => {
+    const offer = offerForSlug(p.slug);
+    return listingOffersAFreeTier(offer)
+      && !/\bno (?:included )?inference(?: providers)? credits\b/i.test(offer?.description ?? "");
+  });
+  const groqFreeTierLead = freeApiProviders.some(p => p.slug === "groq")
+    ? "Groq's free plan allows 30 RPM, 1,000 requests and 200K tokens a day per model, no credit card required, with fast LPU-accelerated inference."
+    : "";
+  const otherFreeApiProviders = freeApiProviders.filter(p => p.slug !== "groq");
+  const freeTiersThisPageStandsBehind = otherFreeApiProviders.length === 0 ? ""
+    : (groqFreeTierLead ? "Other providers" : "Providers")
+      + " on this page with an ongoing free tier: "
+      + otherFreeApiProviders.map(p => p.name).join(", ") + ".";
+  const freeTierAnswer = [groqFreeTierLead, freeTiersThisPageStandsBehind].filter(Boolean).join(" ")
+    || "No provider on this page currently lists an ongoing free API tier.";
 
   const thirdChoiceForPrototyping = withAFreeTier(["cerebras", "cloudflare-workers-ai", "llm7-io"])[0] ?? null;
   const thirdForPrototyping = thirdChoiceForPrototyping === null
@@ -32350,7 +32360,7 @@ function buildLlmApiPricingPage(): string {
   ].filter(sentence => sentence !== "").join(" ");
 
   const faqEntries: FaqItem[] = [
-    { q: "Which LLM API has the best free tier in 2026?", a: "Groq's free plan allows 30 RPM, 1,000 requests and 200K tokens a day per model, no credit card required, with fast LPU-accelerated inference. " + freeTiersThisPageStandsBehind + " For frontier models specifically, Mistral's Free plan includes monthly API usage; its pricing page listed $10 a month until 2026-10-07, then stopped stating the amount." },
+    { q: "Which LLM API has the best free tier in 2026?", a: freeTierAnswer },
     { q: "How much does GPT-4o cost per token?", a: "GPT-4o costs $2.50 per million input tokens and $10 per million output tokens. For reference, 1 million tokens is roughly 750,000 words. The batch API offers 50% discount ($1.25/$5 per M tokens). GPT-4o-mini is significantly cheaper at $0.15/$0.60 per M tokens." },
     {
       q: "How much does Claude cost per token?",
