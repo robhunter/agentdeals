@@ -417,7 +417,7 @@ describe("#1086 every structured answer that states a vendor figure carries the 
       const after = perturbedAnswers.get(page.path) ?? [];
       for (let i = 0; i < before.length; i++) {
         if (!PROVENANCE.test(before[i].text)) continue;
-        if (after[i] && !statesVendorFigure(after[i].text)) continue;
+        if (after[i] && !statesVendorFigure(after[i].text) && !PROVENANCE.test(after[i].text)) continue;
         if (!after[i] || after[i].text !== before[i].text) moved.push(`${page.path} :: ${before[i].question}`);
         else frozen += 1;
       }
