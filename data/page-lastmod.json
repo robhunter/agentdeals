@@ -788,16 +788,16 @@
       "changed": "2026-10-22"
     },
     "/analytics-free-tier-comparison-2026": {
-      "hash": "1b600476a0b52a38",
-      "changed": "2026-10-21"
+      "hash": "e37d293dc919b885",
+      "changed": "2026-10-22"
     },
     "/api-development-alternatives": {
       "hash": "f7f0b7d282e67f1a",
       "changed": "2026-10-22"
     },
     "/api-development-free-tier-comparison-2026": {
-      "hash": "01c2603367c191ef",
-      "changed": "2026-10-21"
+      "hash": "4f0593a8ed33e208",
+      "changed": "2026-10-22"
     },
     "/api/docs": {
       "hash": "6caafc224756b472",
@@ -1346,7 +1346,7 @@
       "changed": "2026-10-22"
     },
     "/cicd-free-tier-comparison-2026": {
-      "hash": "744b3ae15e487dd6",
+      "hash": "f31e4072a5efe66b",
       "changed": "2026-10-22"
     },
     "/circleci-vs-github-actions": {
@@ -1354,7 +1354,7 @@
       "changed": "2026-10-11"
     },
     "/cloud-free-tier-comparison-2026": {
-      "hash": "143bd3bed49591c7",
+      "hash": "57de0e6b8dade4c9",
       "changed": "2026-10-22"
     },
     "/cloudflare-pages-vs-vercel": {
@@ -2705,7 +2705,7 @@
       "changed": "2026-10-22"
     },
     "/database-free-tier-comparison-2026": {
-      "hash": "75cf08f71a38b084",
+      "hash": "229ed3b6b5510e23",
       "changed": "2026-10-22"
     },
     "/database-pricing": {
@@ -3139,8 +3139,8 @@
       "changed": "2026-10-22"
     },
     "/email-comparison-2026": {
-      "hash": "d7e91c755280f536",
-      "changed": "2026-10-21"
+      "hash": "de75fff39c5697ab",
+      "changed": "2026-10-22"
     },
     "/email-service-alternatives": {
       "hash": "7617b776592c8c54",
@@ -3333,8 +3333,8 @@
       "changed": "2026-10-22"
     },
     "/monitoring-comparison-2026": {
-      "hash": "16a7787e16e3457a",
-      "changed": "2026-10-21"
+      "hash": "0ef21b2ca1523a7f",
+      "changed": "2026-10-22"
     },
     "/neon-vs-supabase": {
       "hash": "e6eb6254379bca98",
@@ -3567,7 +3567,7 @@
       "changed": "2026-10-19"
     },
     "/serverless-free-tier-comparison-2026": {
-      "hash": "e407dbfb62395076",
+      "hash": "9ae6e174c551a871",
       "changed": "2026-10-22"
     },
     "/setup": {
@@ -3620,7 +3620,7 @@
       "changed": "2026-10-22"
     },
     "/storage-comparison-2026": {
-      "hash": "a3fd31f67afc4281",
+      "hash": "164304eda5b7d9b3",
       "changed": "2026-10-22"
     },
     "/supabase-vs-firebase": {
@@ -3644,8 +3644,8 @@
       "changed": "2026-10-22"
     },
     "/testing-free-tier-comparison-2026": {
-      "hash": "89c233f22eb55998",
-      "changed": "2026-10-21"
+      "hash": "fdca8497f03e5c47",
+      "changed": "2026-10-22"
     },
     "/this-week": {
       "daily": true

@@ -309,10 +309,10 @@ describe("#1063 the two verdicts checked against the vendor's own pricing page",
     assert.deepStrictEqual(badgedSubjects(html).filter(b => b.subject === "Storj"), [], "Storj still carries a badge");
   });
 
-  it("names one vendor for the monitoring page's overall verdict", () => {
+  it("names a resolvable vendor on the monitoring free-tier card", () => {
     const html = rendered.get("/monitoring-comparison-2026")!;
-    const card = html.match(/<div class="stat-number green">([\s\S]*?)<\/div><div class="stat-label">Best Overall Free Tier<\/div>/);
-    assert.ok(card, "the Best Overall Free Tier stat card is missing");
+    const card = html.match(/<div class="stat-number green">([\s\S]*?)<\/div><div class="stat-label">Free Tier<\/div>/);
+    assert.ok(card, "the Free Tier stat card is missing");
     const cardSlug = card[1].match(/href="\/vendor\/([a-z0-9-]+)"/)?.[1] ?? null;
     assert.ok(cardSlug, `the stat card names "${card[1].replace(/<[^>]*>/g, "")}", which resolves to no record`);
     const badged = badgedSubjects(html).filter(b => b.badge === "BEST OVERALL").map(b => b.subject);

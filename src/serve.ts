@@ -35714,13 +35714,13 @@ ${globalNavCss()}
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number">4</div><div class="stat-label">Clouds Compared</div></div>
-    <div class="stat-card"><div class="stat-number green">GCP</div><div class="stat-label">Most Free Services</div></div>
+    <div class="stat-card"><div class="stat-number green">GCP</div><div class="stat-label">Free Services</div></div>
     <div class="stat-card"><div class="stat-number amber">$5&ndash;300</div><div class="stat-label">Trial Credits Range</div></div>
     <div class="stat-card"><div class="stat-number">Up to $350K</div><div class="stat-label">Startup Program Credits</div></div>
   </div>
 
   <div class="executive-summary">
-    <p><strong>Quick verdict:</strong> <strong>GCP</strong> wins for side projects — of these four clouds, it's the only one with a permanent free VM (e2-micro), and it has the most generous always-free limits (Cloud Run 2M req/mo, BigQuery 1 TiB). Oracle Cloud, not compared here, also has Always Free VMs. <strong>AWS</strong> has the broadest service catalog and the best serverless stack (Lambda + DynamoDB). <strong>Azure</strong> has the strongest enterprise play (Active Directory, Cosmos DB lifetime free tier, .NET ecosystem). <strong>DigitalOcean</strong> doesn't compete on free tiers but wins on simplicity and competitive paid pricing ($4/mo Droplets).</p>
+    <p><strong>Quick verdict:</strong> Of these four clouds, <strong>GCP</strong> is the only one with a permanent free VM (e2-micro), with always-free limits of Cloud Run 2M req/mo and BigQuery 1 TiB. Oracle Cloud, not compared here, also has Always Free VMs. <strong>AWS</strong> has a service catalog and serverless stack (Lambda + DynamoDB). <strong>Azure</strong> has Active Directory, Cosmos DB lifetime free tier, and the .NET ecosystem. <strong>DigitalOcean</strong> doesn't compete on free tiers but offers paid Droplets ($4/mo).</p>
     <p><strong>The catch:</strong> Every cloud hides costs differently. AWS charges for data transfer and NAT gateways. GCP charges for egress and has confusing Firestore pricing tiers. Azure has no spending cap on pay-as-you-go. DigitalOcean has minimal free services but the fewest gotchas. We compare all of them below.</p>
   </div>
 
@@ -36381,13 +36381,13 @@ ${globalNavCss()}
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number">44</div><div class="stat-label">Database Services</div></div>
-    <div class="stat-card"><div class="stat-number green">Supabase</div><div class="stat-label">Most Generous All-in-One</div></div>
+    <div class="stat-card"><div class="stat-number green">Supabase</div><div class="stat-label">All-in-One</div></div>
     <div class="stat-card"><div class="stat-number green">Neon</div><div class="stat-label">Serverless Postgres with branching</div></div>
     <div class="stat-card"><div class="stat-number red">PlanetScale</div><div class="stat-label">Free Tier Removed</div></div>
   </div>
 
   <div class="executive-summary">
-    <p><strong>Quick verdict:</strong> <strong>Supabase</strong>'s Free plan includes 500 MB Postgres, auth, storage, and realtime. Choose <strong>Neon</strong> for serverless Postgres with branching and scale-to-zero. Both Neon and Supabase now include auth and storage on their free plans. <strong>Firebase</strong> has the largest ecosystem (auth, hosting, Cloud Functions) but locks you into Google. <strong>Turso</strong> is the edge play — SQLite with embedded replicas for ultra-low-latency reads. <strong>PlanetScale</strong> removed its free tier in April 2024, making it a cautionary tale for relying on free database hosting.</p>
+    <p><strong>Quick verdict:</strong> <strong>Supabase</strong>'s Free plan includes 500 MB Postgres, auth, storage, and realtime. Choose <strong>Neon</strong> for serverless Postgres with branching and scale-to-zero. Both Neon and Supabase now include auth and storage on their free plans. <strong>Firebase</strong> has auth, hosting, and Cloud Functions but locks you into Google. <strong>Turso</strong> is the edge play — SQLite with embedded replicas for ultra-low-latency reads. <strong>PlanetScale</strong> removed its free tier in April 2024, making it a cautionary tale for relying on free database hosting.</p>
     <p><strong>The database landscape has shifted:</strong> Serverless Postgres (Neon, Supabase) has won the developer mindshare battle. Edge databases (Turso, Cloudflare D1) are the new frontier. Traditional managed databases (RDS, Cloud SQL) are being replaced by platform-specific alternatives. And the PlanetScale free tier removal showed that even popular free tiers can disappear overnight.</p>
   </div>
 
@@ -37057,7 +37057,7 @@ ${globalNavCss()}
       <li><a href="#mobile">Mobile CI/CD</a></li>
       <li><a href="#specialized">Specialized CI/CD</a></li>
       <li><a href="#self-hosted">Self-Hosted (Unlimited Free)</a></li>
-      <li><a href="#best-for">Best for Each Use Case</a></li>
+      <li><a href="#best-for">By Use Case</a></li>
       <li><a href="#hidden-costs">Hidden Costs and Gotchas</a></li>
       <li><a href="#changes">Pricing Change Timeline</a></li>
       <li><a href="#data-source">Data Source</a></li>
@@ -37437,7 +37437,7 @@ ${globalNavCss()}
     Drone's open-source edition runs on one machine. Its Enterprise edition is free for individuals and small companies; larger ones get a trial. Woodpecker CI is an Apache 2.0 community fork of Drone. You pay for the machines that run them.
   </div>
 
-  <h2 id="best-for">Best for Each Use Case</h2>
+  <h2 id="best-for">By Use Case</h2>
 
   <div class="verdict-box">
     <h3>When to Pick Each CI/CD Tool</h3>
@@ -37698,12 +37698,12 @@ ${globalNavCss()}
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number">10+</div><div class="stat-label">Serverless Platforms</div></div>
-    <div class="stat-card"><div class="stat-number green">Workers</div><div class="stat-label">Best Edge / Low Latency</div></div>
-    <div class="stat-card"><div class="stat-number green">Cloud Run</div><div class="stat-label">Most Generous Overall</div></div>
+    <div class="stat-card"><div class="stat-number green">Workers</div><div class="stat-label">Edge / Low Latency</div></div>
+    <div class="stat-card"><div class="stat-number green">Cloud Run</div><div class="stat-label">Free Tier</div></div>
   </div>
 
   <div class="executive-summary">
-    <p><strong>Quick verdict:</strong> <strong>AWS Lambda</strong> gives 1M invocations/month free and has the largest ecosystem. <strong>Google Cloud Run</strong> is the most generous overall with 2M requests, 360K GB-seconds, and 1 GB free egress. <strong>Cloudflare Workers</strong> dominates edge computing with 100K requests/day, sub-5ms cold starts, and the unique advantage of <strong>CPU-time billing</strong> (you don&rsquo;t pay for I/O waits). <strong>Azure Functions</strong> matches Lambda at 1M requests/month with a consumption-based model.</p>
+    <p><strong>Quick verdict:</strong> <strong>AWS Lambda</strong> gives 1M invocations/month free. <strong>Google Cloud Run</strong> includes 2M requests, 360K GB-seconds, and 1 GB free egress. <strong>Cloudflare Workers</strong> includes 100K requests/day, sub-5ms cold starts, and <strong>CPU-time billing</strong> (you don&rsquo;t pay for I/O waits). <strong>Azure Functions</strong> matches Lambda at 1M requests/month with a consumption-based model.</p>
     <p><strong>The critical distinction most developers miss:</strong> Cloudflare Workers bills by <strong>CPU time</strong> while AWS Lambda, Google Cloud Functions, and Azure Functions bill by <strong>wall-clock time</strong> (including time spent waiting for network I/O, database queries, and external API calls). For I/O-heavy workloads, this can mean 10-50x cheaper effective compute on Workers. This single billing model difference matters more than headline invocation counts.</p>
   </div>
 
@@ -39170,13 +39170,13 @@ ${globalNavCss()}
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number">20+</div><div class="stat-label">Email Services Compared</div></div>
-    <div class="stat-card"><div class="stat-number green">Resend</div><div class="stat-label">Best Developer Experience</div></div>
+    <div class="stat-card"><div class="stat-number green">Resend</div><div class="stat-label">Developer Experience</div></div>
     <div class="stat-card"><div class="stat-number red">SendGrid</div><div class="stat-label">Free Tier Removed (May 2025)</div></div>
     <div class="stat-card"><div class="stat-number amber">3</div><div class="stat-label">Major Free Tiers Removed (2023-2025)</div></div>
   </div>
 
   <div class="executive-summary">
-    <p><strong>Quick verdict:</strong> <strong>Amazon SES</strong> is the cheapest at volume at $0.10 per 1,000 emails, but it no longer has a free tier &mdash; AWS replaced the old 62,000/month-from-EC2 allowance with $200 of Free Tier credits that expire, so budget for it from the first email. <strong>Resend</strong> has the best developer experience with a modern API, React Email integration, and 3,000 emails/month free. <strong>Brevo</strong> is ideal for daily drip sending with 300 emails/day permanent free (no monthly cap concern). <strong>Mailtrap</strong> is best for email testing with 4,000 emails/month production plus a separate sandbox for inbox simulation. <strong>Maileroo</strong> is the hidden gem with 3,000 emails/month free and no daily cap.</p>
+    <p><strong>Quick verdict:</strong> <strong>Amazon SES</strong> is the cheapest at volume at $0.10 per 1,000 emails, but it no longer has a free tier &mdash; AWS replaced the old 62,000/month-from-EC2 allowance with $200 of Free Tier credits that expire, so budget for it from the first email. <strong>Resend</strong> has a modern API, React Email integration, and 3,000 emails/month free. <strong>Brevo</strong> is ideal for daily drip sending with 300 emails/day permanent free (no monthly cap concern). <strong>Mailtrap</strong> is best for email testing with 4,000 emails/month production plus a separate sandbox for inbox simulation. <strong>Maileroo</strong> is the hidden gem with 3,000 emails/month free and no daily cap.</p>
     <p><strong>The SendGrid exodus:</strong> SendGrid &mdash; the most widely-used transactional email API &mdash; permanently removed its free tier on May 27, 2025. The perpetual 100 emails/day plan is gone, replaced by a 60-day trial only, then $19.95/month minimum. Thousands of side projects and startups were forced to migrate. The email API market is now split: pure-play transactional APIs (Resend, Postmark, MailerSend), all-in-one platforms (Brevo, Loops), and infrastructure (SES). This guide covers all paths.</p>
     <p><strong>Pricing is confusing:</strong> Per-email vs per-contact vs per-day caps. Transactional vs marketing distinctions. Overage charges that 10x your bill. Deliverability reputation that takes months to build, making switching costly. This comparison cuts through the confusion with concrete numbers.</p>
   </div>
@@ -40137,12 +40137,12 @@ ${globalNavCss()}
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number">25+</div><div class="stat-label">Monitoring Services Compared</div></div>
     <div class="stat-card"><div class="stat-number green">500GB</div><div class="stat-label">Axiom Free Ingest</div></div>
-    <div class="stat-card"><div class="stat-number green">Grafana Cloud</div><div class="stat-label">Best Overall Free Tier</div></div>
+    <div class="stat-card"><div class="stat-number green">Grafana Cloud</div><div class="stat-label">Free Tier</div></div>
     <div class="stat-card"><div class="stat-number red">$66K/yr</div><div class="stat-label">Datadog at 100 Hosts</div></div>
   </div>
 
   <div class="executive-summary">
-    <p><strong>Quick verdict:</strong> <strong>Grafana Cloud</strong> offers the best overall free tier for monitoring &mdash; 10,000 metrics series, 50GB logs, 50GB traces, and 14-day retention with full dashboarding and alerting. <strong>New Relic</strong> has the most generous unified platform ingest at 100GB/month with full APM, but limits you to 1 full platform user. <strong>Axiom</strong> offers 500GB/month raw ingest free. <strong>Better Stack</strong> is the best combined uptime + logging starter. For self-hosted: <strong>SigNoz</strong> is the modern all-in-one alternative; <strong>Prometheus + Grafana</strong> is the most battle-tested.</p>
+    <p><strong>Quick verdict:</strong> <strong>Grafana Cloud</strong> offers a free tier for monitoring &mdash; 10,000 metrics series, 50GB logs, 50GB traces, and 14-day retention with full dashboarding and alerting. <strong>New Relic</strong> has unified platform ingest at 100GB/month with full APM, but limits you to 1 full platform user. <strong>Axiom</strong> offers 500GB/month raw ingest free. For self-hosted: <strong>SigNoz</strong> is the modern all-in-one alternative; <strong>Prometheus + Grafana</strong>.</p>
     <p><strong>The observability cost trap:</strong> Monitoring is the #1 developer spending complaint. Datadog bills can go from $0 to $10,000+/month because pricing compounds across per-host fees, separate product charges (APM, logs, synthetics are each billed independently), and cardinality penalties. At 100 hosts with APM and logs, Datadog costs ~$5,500/mo while Grafana Cloud Pro runs ~$300-800/mo. The worst trap: <strong>Datadog&rsquo;s free tier retains metrics for only 1 day</strong> &mdash; you literally cannot investigate yesterday&rsquo;s incident.</p>
   </div>
 
@@ -41169,7 +41169,7 @@ ${globalNavCss()}
   </div>
 
   <div class="executive-summary">
-    <p><strong>Quick verdict:</strong> <strong>Cloudflare R2</strong> is the standout choice for most developers &mdash; 10 GB storage with zero egress fees, S3-compatible API, and a permanent free tier. At scale, the savings are staggering: 5 TB stored + 50 TB egress costs $75/month on R2 vs $4,625/month on S3. <strong>Storj</strong> offers the largest starting capacity at 25 GB, but as a 30-day trial rather than a free tier &mdash; a $5 minimum monthly fee applies once it ends. <strong>Backblaze B2</strong> has the cheapest paid storage at ${rateCardFor("Backblaze B2").publishedStorageRate} and gives every account free egress up to 3x what it stores, no CDN needed &mdash; which makes it the cheapest column in the scaling table below, not R2&rsquo;s equal. For media: <strong>Cloudinary</strong> (25 credits/month) and <strong>BunnyCDN</strong> ($0.01/GB, 14-day trial) are best-in-class. For self-hosted: ${SELF_HOSTED_S3_STORAGE_ANSWER}</p>
+    <p><strong>Quick verdict:</strong> <strong>Cloudflare R2</strong> offers 10 GB storage with zero egress fees, S3-compatible API, and a permanent free tier. At scale, the savings are staggering: 5 TB stored + 50 TB egress costs $75/month on R2 vs $4,625/month on S3. <strong>Storj</strong> offers the largest starting capacity at 25 GB, but as a 30-day trial rather than a free tier &mdash; a $5 minimum monthly fee applies once it ends. <strong>Backblaze B2</strong> has the cheapest paid storage at ${rateCardFor("Backblaze B2").publishedStorageRate} and gives every account free egress up to 3x what it stores, no CDN needed &mdash; which makes it the cheapest column in the scaling table below, not R2&rsquo;s equal. For media: <strong>Cloudinary</strong> (25 credits/month) and <strong>BunnyCDN</strong> ($0.01/GB, 14-day trial) are best-in-class. For self-hosted: ${SELF_HOSTED_S3_STORAGE_ANSWER}</p>
     <p><strong>The S3 egress tax is legendary.</strong> AWS S3 egress charges are the #1 developer bill shock story. S3 bills across 6 dimensions most developers don&rsquo;t know about: storage, egress, PUT requests, GET requests, lifecycle transitions, and the hidden NAT Gateway charge ($0.045/GB) that appears on your EC2 bill, not your S3 bill. At 1 TB/month egress, S3 costs ${egressBillAfterMonthlyGrantFor("AWS S3", ONE_TO_ONE_SCENARIO)} in bandwidth alone &mdash; 1 TB less the ${monthlyEgressGrantGb("AWS S3")} GB every account gets free each month, billed at $${rateCardFor("AWS S3").egressPerGb.toFixed(2)}/GB. R2 costs $0. This single difference has disrupted the entire cloud storage market.</p>
   </div>
 
@@ -41947,7 +41947,7 @@ ${globalNavCss()}
   </div>
 
   <div class="executive-summary">
-    <p><strong>Quick verdict:</strong> <strong>Playwright</strong> is the best free E2E framework &mdash; fully open-source with no cloud lock-in, parallel execution, and multi-browser support. <strong>Checkly</strong> offers the most generous cloud testing free tier (50K API check runs + 10 browser checks/month). <strong>Grafana k6 Cloud</strong> leads for load testing (500 VU hours free). <strong>Chromatic</strong> wins visual regression (5K snapshots/month free). <strong>Postman</strong> is the default for API testing but now single-user only on free plans.</p>
+    <p><strong>Quick verdict:</strong> <strong>Playwright</strong> is a free E2E framework &mdash; fully open-source with no cloud lock-in, parallel execution, and multi-browser support. <strong>Checkly</strong> offers a cloud testing free tier (50K API check runs + 10 browser checks/month). <strong>Grafana k6 Cloud</strong> offers load testing (500 VU hours free). <strong>Chromatic</strong> offers visual regression (5K snapshots/month free). <strong>Postman</strong> is the default for API testing but now single-user only on free plans.</p>
     <p><strong>The open-source advantage:</strong> Testing is uniquely favourable for open-source tools. Playwright, Selenium, k6, Locust, Gatling, Artillery, and Testcontainers are all free with no usage limits when self-hosted. The cost conversation in testing is really about <em>cloud execution platforms</em> &mdash; CI minutes, parallel sessions, and hosted dashboards &mdash; not the testing frameworks themselves.</p>
   </div>
 
@@ -42609,7 +42609,7 @@ ${globalNavCss()}
   </div>
 
   <div class="executive-summary">
-    <p><strong>Quick verdict:</strong> <strong>PostHog</strong> is the most generous all-in-one platform &mdash; 1M events/month free plus 5K session replays, 1M feature flag evaluations, and experiments. <strong>Mixpanel</strong> matches with 1M events/month on a polished behavioral analytics UI. <strong>Amplitude</strong> gives 2M events/month free, with 1 year of data access. <strong>Google Analytics</strong> is unlimited and free but comes with privacy trade-offs and data sampling. For privacy-focused analytics, <strong>Plausible</strong> and <strong>Umami</strong> are the leading options (self-hosted free, cloud plans paid).</p>
+    <p><strong>Quick verdict:</strong> <strong>PostHog</strong> offers 1M events/month free plus 5K session replays, 1M feature flag evaluations, and experiments. <strong>Mixpanel</strong> matches with 1M events/month on a polished behavioral analytics UI. <strong>Amplitude</strong> gives 2M events/month free, with 1 year of data access. <strong>Google Analytics</strong> is unlimited and free but comes with privacy trade-offs and data sampling. For privacy-focused analytics, <strong>Plausible</strong> and <strong>Umami</strong> are the leading options (self-hosted free, cloud plans paid).</p>
     <p><strong>The all-in-one shift:</strong> PostHog has redefined the category by bundling analytics, session replays, feature flags, experiments, and surveys into one platform with a generous free tier. Mixpanel and Amplitude remain focused on behavioral analytics, while the privacy-focused segment (Plausible, Fathom, Umami) targets teams that need GDPR compliance without cookie banners.</p>
   </div>
 
@@ -43288,7 +43288,7 @@ ${globalNavCss()}
   </div>
 
   <div class="executive-summary">
-    <p><strong>Quick verdict:</strong> <strong>Bruno</strong> is the best fully free API client &mdash; open-source, local-first, Git-native, with no cloud dependency or usage limits. <strong>Hoppscotch</strong> is the best web-based option (open source, self-hostable). <strong>Postman</strong> remains the most feature-rich client but is now single-user only on free plans (March 2026 change). <strong>Thunder Client</strong> is the best choice for VS Code-native workflows.</p>
+    <p><strong>Quick verdict:</strong> <strong>Bruno</strong> is a fully free API client &mdash; open-source, local-first, Git-native, with no cloud dependency or usage limits. <strong>Hoppscotch</strong> is a web-based option (open source, self-hostable). <strong>Postman</strong> is now single-user only on free plans (March 2026 change).</p>
     <p><strong>The local-first shift:</strong> The API development tool market is splitting into two camps. Cloud-dependent tools (Postman, RapidAPI) offer collaboration and ecosystem features but increasingly restrict free tiers. Local-first tools (Bruno, Insomnia, Yaak) store collections as files on disk, enabling Git-based collaboration with zero vendor lock-in. For teams that already use Git, local-first tools provide better collaboration than cloud platforms &mdash; at zero cost.</p>
   </div>
 

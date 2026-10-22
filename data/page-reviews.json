@@ -761,9 +761,7 @@
         "google-compute-engine"
       ],
       "badge_subjects_unresolved": [],
-      "stat_card_subjects_unresolved": [
-        "GCP"
-      ],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": "2026-10-21",
       "reviewer": "pm",
       "review_outcome": "pass",
@@ -2328,7 +2326,6 @@
       "tier": "A",
       "vendors_asserted": [
         "axiom",
-        "better-stack-logs",
         "checkly",
         "datadog",
         "elastic",

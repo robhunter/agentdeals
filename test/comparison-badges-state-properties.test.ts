@@ -52,7 +52,7 @@ const PAGES_THAT_RANKED_BY_BADGE = [
   "/monitoring-comparison-2026", "/email-comparison-2026", "/testing-free-tier-comparison-2026",
   "/api-development-free-tier-comparison-2026", "/storage-comparison-2026", "/analytics-free-tier-comparison-2026",
   "/database-free-tier-comparison-2026", "/serverless-free-tier-comparison-2026", "/cloud-free-tier-comparison-2026",
-  "/security-free-tier-comparison-2026",
+  "/security-free-tier-comparison-2026", "/cicd-free-tier-comparison-2026",
 ];
 
 const RANKS_OR_JUDGES = /BEST|MOST|WINNER|LEADER|CHEAPEST|EASIEST|SIMPLEST|LARGEST|GEM|STANDARD|MODERN|MATURE/;
@@ -151,7 +151,58 @@ describe("#2191 a comparison badge states a property the vendor's own page state
     assert.deepStrictEqual(unlisted, ['/database-free-tier-comparison-2026: "Neon" carries BEST POSTGRES']);
   });
 
-  it("calls the use-case section By Use Case on the ten pages that ranked by badge", () => {
+  it("uses no ranking label on any comparison stat card", () => {
+    const comparisonRoutes = routesPublished.filter(route => /comparison[^/]*$/.test(route));
+    assert.ok(comparisonRoutes.length > 0, "the sitemap publishes no comparison pages");
+    for (const route of comparisonRoutes) {
+      const html = rendered.get(route)!;
+      for (const card of html.matchAll(/<div class="stat-label">([\s\S]*?)<\/div>/g)) {
+        assert.doesNotMatch(card[1]!, /\b(best|most|highest|lowest|largest|smallest|cheapest|winner|leading)\b/i, `${route}: ${card[1]}`);
+      }
+      assert.doesNotMatch(html, /A badge on this page reads/, `${route} still quotes a removed ranking card`);
+      if (route !== "/serverless-free-tier-comparison-2026") {
+        assert.match(html, /We publish no ranking of these/, `${route} lost its no-ranking answer`);
+      }
+    }
+  });
+
+  it("keeps each renamed stat card's subject with a neutral label", () => {
+    const cards = [
+      ["/monitoring-comparison-2026", "Grafana Cloud", "Free Tier"],
+      ["/email-comparison-2026", "Resend", "Developer Experience"],
+      ["/database-free-tier-comparison-2026", "Supabase", "All-in-One"],
+      ["/serverless-free-tier-comparison-2026", "Workers", "Edge / Low Latency"],
+      ["/serverless-free-tier-comparison-2026", "Cloud Run", "Free Tier"],
+      ["/cloud-free-tier-comparison-2026", "GCP", "Free Services"],
+    ];
+    for (const [route, subject, label] of cards) {
+      const html = rendered.get(route!)!;
+      const matches = [...html.matchAll(/<div class="stat-number[^\"]*">([\s\S]*?)<\/div><div class="stat-label">([\s\S]*?)<\/div>/g)];
+      const matching = matches.filter(card => card[1]!.replace(/<[^>]*>/g, "").trim() === subject && card[2] === label);
+      assert.strictEqual(matching.length, 1, `${route} should name ${subject} on its ${label} card`);
+    }
+  });
+
+  it("removes unconditional winner clauses from the comparison verdicts", () => {
+    const retired: [string, RegExp][] = [
+      ["/monitoring-comparison-2026", /best overall free tier|most generous unified|best combined uptime|most battle-tested/i],
+      ["/email-comparison-2026", /best developer experience/i],
+      ["/database-free-tier-comparison-2026", /wins for most developers|largest ecosystem/i],
+      ["/serverless-free-tier-comparison-2026", /largest ecosystem|most generous overall|dominates edge computing|unique advantage/i],
+      ["/cloud-free-tier-comparison-2026", /wins for side projects|most generous always-free|broadest service catalog|best serverless stack|strongest enterprise play|wins on simplicity/i],
+      ["/storage-comparison-2026", /standout choice for most developers/i],
+      ["/analytics-free-tier-comparison-2026", /most generous all-in-one|most restrictive of the big three/i],
+      ["/api-development-free-tier-comparison-2026", /best fully free|best web-based|most feature-rich|best choice for VS Code/i],
+      ["/testing-free-tier-comparison-2026", /best free E2E|most generous cloud testing|leads for load testing|wins visual regression/i],
+    ];
+    for (const [route, pattern] of retired) {
+      const verdict = rendered.get(route)!.match(/<p><strong>Quick verdict:<\/strong>([\s\S]*?)<\/p>/)?.[1];
+      assert.ok(verdict, `${route} has no Quick verdict`);
+      assert.doesNotMatch(verdict.replace(/<[^>]*>/g, ""), pattern, route);
+    }
+  });
+
+  it("calls the use-case section By Use Case on the comparison pages", () => {
     for (const route of PAGES_THAT_RANKED_BY_BADGE) {
       const html = rendered.get(route);
       assert.ok(html, `${route} is not served`);
