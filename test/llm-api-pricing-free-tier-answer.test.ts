@@ -141,6 +141,11 @@ describe("the LLM API free-tier answer follows its provider listings", () => {
     assert.equal(answers(empty).visible, "No provider on this page currently lists an ongoing free API tier.");
   });
 
+  it("removes the compile date when the numeric lead leaves the answer", () => {
+    for (const html of [changed, restored, empty, missing]) assert.ok(!answers(html).structured.includes("Figures compiled"));
+    assert.ok(answers(groqOnly).structured.includes("Figures compiled"));
+  });
+
   it("carries the same answer in HTML and structured data, with only the existing figure provenance suffix", () => {
     for (const html of [current, changed, restored, empty, groqOnly, missing]) {
       const { visible, structured } = answers(html);

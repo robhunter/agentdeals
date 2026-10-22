@@ -409,7 +409,7 @@ describe("#1086 every structured answer that states a vendor figure carries the 
     }
   });
 
-  it("only dates an answer whose figures the catalogue cannot move", () => {
+  it("only keeps a compile date on figures the catalogue cannot move", () => {
     const moved: string[] = [];
     let frozen = 0;
     for (const page of pages) {
@@ -417,6 +417,7 @@ describe("#1086 every structured answer that states a vendor figure carries the 
       const after = perturbedAnswers.get(page.path) ?? [];
       for (let i = 0; i < before.length; i++) {
         if (!PROVENANCE.test(before[i].text)) continue;
+        if (after[i] && !statesVendorFigure(after[i].text)) continue;
         if (!after[i] || after[i].text !== before[i].text) moved.push(`${page.path} :: ${before[i].question}`);
         else frozen += 1;
       }
