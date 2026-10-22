@@ -4286,7 +4286,8 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("Mobile CI/CD"), "Should have mobile section");
     assert.ok(html.includes("Specialized CI/CD"), "Should have specialized section");
     assert.ok(html.includes("Self-Hosted CI/CD"), "Should have self-hosted section");
-    assert.ok(html.includes("Best for Each Use Case"), "Should have best-for section");
+    assert.ok(html.includes('<h2 id="best-for">By Use Case</h2>'), "Should have the By Use Case heading");
+    assert.ok(html.includes('<a href="#best-for">By Use Case</a>'), "Should link to By Use Case in the contents");
     assert.ok(html.includes("Hidden Costs and Gotchas"), "Should have hidden costs section");
     assert.ok(html.includes("Pricing Change Timeline"), "Should have timeline section");
     assert.ok(html.includes("/ci-cd-alternatives"), "Should cross-link to CI/CD alternatives");
