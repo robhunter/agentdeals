@@ -184,7 +184,7 @@ describe("the shutdown tracker includes shutdowns stated only by listings", () =
     assert.deepEqual(["Ona", "xAI", "Upcoming Cloud", "Amazon Q Developer"].map(name => cards.find(card => card.name === name)?.section), ["imminent", "imminent", "upcoming", "later"]);
     for (const section of ["imminent", "upcoming", "later", "completed"]) {
       const dates = cards.filter(card => card.section === section).map(card => Date.parse(card.date));
-      assert.deepEqual(dates, [...dates].sort((a, b) => a - b));
+      assert.deepEqual(dates, [...dates].sort((a, b) => section === "completed" ? b - a : a - b));
     }
   });
 

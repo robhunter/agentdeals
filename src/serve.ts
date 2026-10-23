@@ -27157,6 +27157,8 @@ function buildShutdownTrackerPage(): string {
     }
   }
 
+  completed.sort((a, b) => new Date(b.deadline).getTime() - new Date(a.deadline).getTime());
+
   const activeCount = imminent.length + upcoming.length + later.length;
   const nextDeadline = shutdowns.find(s => countsDownTo(s) && new Date(s.deadline) > today);
   const nextDaysLeft = nextDeadline ? Math.max(0, Math.ceil((new Date(nextDeadline.deadline).getTime() - today.getTime()) / (1000 * 60 * 60 * 24))) : 0;
