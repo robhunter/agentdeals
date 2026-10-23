@@ -824,8 +824,8 @@
       "changed": "2026-10-23"
     },
     "/aws-free-tier-2026": {
-      "hash": "33673c84d9c90811",
-      "changed": "2026-10-22"
+      "hash": "0e5e10ad6fdd36c6",
+      "changed": "2026-10-23"
     },
     "/azure-free-tier-2026": {
       "hash": "2323249b5a82c7a5",
@@ -1354,7 +1354,7 @@
       "changed": "2026-10-11"
     },
     "/cloud-free-tier-comparison-2026": {
-      "hash": "5ae23f1b2c221837",
+      "hash": "55891fefbb52e948",
       "changed": "2026-10-23"
     },
     "/cloudflare-pages-vs-vercel": {
