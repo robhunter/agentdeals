@@ -22,7 +22,7 @@ const STATED: Record<string, string[]> = {
   ],
   "/cloud-free-tier-comparison-2026": [
     "$5–300 Trial Credits Range",
-    "GCP offers the most generous trial: $300 over 90 days vs Azure's $200/30 days. AWS gives new accounts $100 in credits and up to $100 more for trying key services, on a Free plan that closes after 6 months or when the credits run out. DigitalOcean gives new accounts a $5 credit for 90 days. All require a credit card.",
+    "GCP offers the most generous trial: $300 over 90 days vs Azure's $200/30 days. AWS gives new accounts $100 in credits and up to $100 more for trying key services, on a Free plan that closes after 6 months or when the credits run out. DigitalOcean gives new accounts a $5 credit for 90 days. GCP, Azure and DigitalOcean require a credit card.",
   ],
   "/heroku-alternatives": ["DigitalOcean credit expires after 90 days."],
   "/storage-comparison-2026": ["Available during the $5/90-day trial."],
@@ -63,7 +63,7 @@ const TRIAL_ROWS: Record<string, string[]> = {
     "$100 + up to $100",
     "6 months (Free plan)",
     "New accounts only; the Free plan closes at 6 months or when the credits run out, and AWS erases the account 90 days later unless you upgrade",
-    "Yes",
+    "No for most new customers on the new sign-up, which AWS is still rolling out; a card is required on the advanced sign-up",
   ],
   GCP: ["$300", "90 days"],
   Azure: ["$200", "30 days"],

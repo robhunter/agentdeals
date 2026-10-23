@@ -8,7 +8,7 @@ const REPO = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const PAGE = "/cloud-free-tier-comparison-2026";
 
 const STATED = [
-  "All require a credit card. None of the AWS, GCP or Azure trials charges that card when its credit runs out unless you upgrade: Google closes the Free Trial billing account, AWS closes the Free plan account, and Azure disables the subscription.",
+  "GCP, Azure and DigitalOcean require a credit card. None of the AWS, GCP or Azure trials charges that card when its credit runs out unless you upgrade: Google closes the Free Trial billing account, AWS closes the Free plan account, and Azure disables the subscription.",
   "Spending limit: the free account's spending limit is on by default, so your card is not charged; at 30 days or when the $200 credit runs out, services are disabled unless you upgrade. Upgrading to pay-as-you-go removes the limit, and from then on there is no automatic stop.",
 ];
 
