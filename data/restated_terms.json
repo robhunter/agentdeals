@@ -2921,6 +2921,19 @@
       "record_date": "2026-10-10",
       "change_type": "free_tier_removed",
       "summary": "Lensdump's Terms of Service, effective 10 October 2026, create every new account on a paid plan; the Free plan cannot be selected at sign-up and stays only with accounts that existed before paid plans were introduced."
+    },
+    {
+      "vendor": "webhookrelay.com",
+      "url": "https://webhookrelay.com",
+      "restated_on": "2026-10-23",
+      "previous_description": "Manage, debug, fan-out, and proxy all your webhooks to public or internal (i.e. localhost) destinations. Also, expose servers running in a private network over a tunnel by getting a public HTTP endpoint (`https://yoursubdomain.webrelay.io <----> http://localhost:8080`).",
+      "description": "Manage, debug, fan-out, and proxy all your webhooks to public or internal (i.e. localhost) destinations — Free plan · 150 webhooks/month · No credit card required",
+      "reading_date": "2026-09-01",
+      "reading_terms": "Free plan · 150 webhooks/month · No credit card required",
+      "source_url": "https://webhookrelay.com",
+      "record_date": "2026-09-01",
+      "change_type": "limits_reduced",
+      "summary": "The free tier now has a limit of 150 webhooks/month."
     }
   ]
 }

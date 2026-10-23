@@ -1181,15 +1181,15 @@
     },
     {
       "vendor": "Bugsink",
-      "change_type": "limits_increased",
+      "change_type": "limits_reduced",
       "reason": "unquantified_limit",
-      "detail": "limits_increased claimed, but the current state names no quantity for anything the stored state measured (5,000 error)",
-      "summary": "The free tier now has a limit of 15,000 monthly events, and chat/email alerts are included. Previously, the free tier was 5,000 errors/month.",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (5,000 error)",
+      "summary": "The free tier now has a limit of 15,000 monthly events, and includes a single user. The stored information stated 5,000 errors/month or unlimited with self-hosting.",
       "previous_state": "Error-tracking with Sentry-SDK compatability. Free for up to 5,000 errors/month, or unlimited use when self-hosted.",
-      "current_state": "15K monthly events, Single user, 5K events retained, Chat/email alerts",
+      "current_state": "15K / Evaluation Free 15K monthly events Single user 5K events retained Chat/email alerts",
       "source_url": "https://www.bugsink.com/",
       "category": "Error Tracking",
-      "refused_date": "2026-09-30"
+      "refused_date": "2026-10-23"
     },
     {
       "vendor": "Bugsnag",
@@ -1325,6 +1325,18 @@
       "source_url": "https://chanty.com/",
       "category": "Team Collaboration",
       "refused_date": "2026-09-02"
+    },
+    {
+      "vendor": "checkbot.io",
+      "change_type": "limits_reduced",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this page refused on 2026-09-30 (unquantified_limit) stated the same figure, so the page showed these terms before the date this record gives",
+      "summary": "The free tier still exists, but the description is no longer accurate. The free tier is limited to 100 URLs per crawl, and is ad-supported. Paid plans are available starting at $10/month.",
+      "previous_state": "Browser extension that tests if your website follows 50+ SEO, speed and security best practices. Free tier for smaller websites.",
+      "current_state": "The free plan crawls up to 100 URLs per crawl, has unlimited crawls and sites, and is ad-supported.",
+      "source_url": "https://www.checkbot.io/",
+      "category": "Testing",
+      "refused_date": "2026-10-23"
     },
     {
       "vendor": "checkbot.io",
@@ -1959,13 +1971,13 @@
       "vendor": "Composio",
       "change_type": "new_tier",
       "reason": "repeats_a_refused_reading",
-      "detail": "the reading of this page refused on 2026-10-20 (repeats_a_refused_reading) stated the same 4 figures, so the page showed these terms before the date this record gives",
-      "summary": "The free tier, now called \"Hobby\", still exists with the same limits (100,000 tool calls / mo, 50,000 triggers / mo, 3 team members). However, the page details additional paid tiers (Pro and Enterprise) and add-ons that were not mentioned in the stored deal information.",
+      "detail": "the reading of this page refused on 2026-10-22 (repeats_a_refused_reading) stated the same 4 figures, so the page showed these terms before the date this record gives",
+      "summary": "The free tier is now called 'Hobby' and still exists, but the pricing page details additional paid tiers (Pro and Enterprise).",
       "previous_state": "Integration platform for AI Agents and LLMs — Free $0 No credit card required 100,000 tool calls / mo 50,000 triggers / mo 3 team members",
       "current_state": "Hobby $0 No credit card required 100,000 tool calls / mo 50,000 triggers / mo 3 team members",
       "source_url": "https://composio.dev/pricing",
       "category": "AI / ML",
-      "refused_date": "2026-10-22"
+      "refused_date": "2026-10-23"
     },
     {
       "vendor": "ConfigCat",
@@ -2624,6 +2636,18 @@
     },
     {
       "vendor": "DNSExit",
+      "change_type": "limits_increased",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this vendor refused on 2026-09-30 (states_no_terms) stated the same current state, word for word",
+      "summary": "The free tier now offers unlimited email addresses, whereas the stored information states up to 2. The storage limit is no longer mentioned.",
+      "previous_state": "Up to 2 Email addresses under your domain for free with 100MB of storage space. IMAP, POP3, SMTP, SPF/DKIM support.",
+      "current_state": "Unlimited email addresses. Access mail through Webmail, POP, or IMAP.",
+      "source_url": "https://dnsexit.com/",
+      "category": "Email",
+      "refused_date": "2026-10-23"
+    },
+    {
+      "vendor": "DNSExit",
       "change_type": "pricing_restructured",
       "reason": "same_transition_graded_differently",
       "detail": "same vendor, source_url and previous_state as DNSExit|pricing_restructured|2026-08-28|https://dnsexit.com/",
@@ -2929,6 +2953,18 @@
     {
       "vendor": "EmailOctopus",
       "change_type": "limits_reduced",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-09-30 (unquantified_limit) claimed the same change, limits_reduced, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "The free tier is not explicitly mentioned with specific limits like 2,500 subscribers and 10,000 emails. The page highlights 'Start for Free' but doesn't detail the limits. It does mention users utilizing the free service and positive experiences with customer support, but doesn't define the free tier's capabilities. Pricing is shown for 100,000 subscribers at $480/year or $1,620 one-time.",
+      "previous_state": "Up to 2,500 subscribers and 10,000 emails per month free",
+      "current_state": "The page offers a 'Start for Free' option with no credit card required, but does not specify subscriber or email limits. It highlights pricing for 100,000 subscribers.",
+      "source_url": "https://emailoctopus.com",
+      "category": "Email",
+      "refused_date": "2026-10-23"
+    },
+    {
+      "vendor": "EmailOctopus",
+      "change_type": "limits_reduced",
       "reason": "unquantified_limit",
       "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (2,500 subscriber, 10,000 email)",
       "summary": "The free tier is still offered, but the stored information about limits is not present on the pricing page. The page does not explicitly state limits for the free tier. Multiple users in the testimonials mention using the free service, and the page repeatedly offers a 'GET STARTED FOR FREE' option.",
@@ -3224,13 +3260,13 @@
       "vendor": "Fizzy",
       "change_type": "limits_reduced",
       "reason": "repeats_a_refused_reading",
-      "detail": "the reading of this page refused on 2026-10-21 (repeats_a_refused_reading) stated the same figure, so the page showed these terms before the date this record gives",
-      "summary": "The stored deal information states a limit of 1000 items, but the pricing page states that Fizzy is 'entirely free' with a file space limit of 1 GB.",
+      "detail": "the reading of this page refused on 2026-10-22 (repeats_a_refused_reading) stated the same figure, so the page showed these terms before the date this record gives",
+      "summary": "The stored deal info mentions a limit of 1000 items, but the pricing page does not mention any item limits. It does state a 1 GB file storage limit.",
       "previous_state": "Kanban-based platform for project management and issue tracking. Create public boards, set up webhooks, use card stamping, and track unlimited users — free for up to 1000 items.",
-      "current_state": "Fizzy is entirely free with a 1 GB file space limit.",
+      "current_state": "Fizzy is entirely free and subsidized by Basecamp and HEY. File space usage is limited to 1 GB.",
       "source_url": "https://www.fizzy.do/",
       "category": "Project Management",
-      "refused_date": "2026-10-22"
+      "refused_date": "2026-10-23"
     },
     {
       "vendor": "Flagsmith",
@@ -4279,6 +4315,18 @@
     {
       "vendor": "heap.io",
       "change_type": "free_tier_removed",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-09-30 (states_no_terms) claimed the same change, free_tier_removed, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "The page states Heap has joined forces with Contentsquare and focuses on a 'Experience Intelligence Platform'. While a free trial is mentioned, the specific free tier of 'up to 10K monthly sessions' is no longer explicitly stated. The focus is now on requesting a demo or contacting sales.",
+      "previous_state": "Automatically captures every user action in iOS or web apps. Free for up to 10K monthly sessions.",
+      "current_state": "The page mentions a free trial and the ability to capture all user interactions automatically, but does not detail a specific free tier with session limits.",
+      "source_url": "https://heap.io",
+      "category": "Analytics",
+      "refused_date": "2026-10-23"
+    },
+    {
+      "vendor": "heap.io",
+      "change_type": "free_tier_removed",
       "reason": "states_no_terms",
       "detail": "every clause of the summary states absence or narration rather than a term the page carries, so it reports the reading rather than a change",
       "summary": "The free tier is no longer explicitly mentioned. The page highlights a free trial and emphasizes a partnership with Contentsquare, focusing on a complete data capture solution.",
@@ -4324,6 +4372,18 @@
       "source_url": "https://heroui.com/",
       "category": "Design",
       "refused_date": "2026-09-28"
+    },
+    {
+      "vendor": "HeroUI",
+      "change_type": "pricing_restructured",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this page refused on 2026-09-28 (removal_read_from_root) stated the same 2 figures, so the page showed these terms before the date this record gives",
+      "summary": "The page mentions a free 7-day trial and states that components are available in Pro as a template, indicating a tiered pricing structure beyond the stated free tier. It also mentions a credit system with limited credits and an upgrade option for more.",
+      "previous_state": "Free. Beautiful, fast, and modern React & Next.js UI library. Rebranded from NextUI to HeroUI.",
+      "current_state": "HeroUI offers a free 7-day trial, and components are available in Pro as templates. Users have 2 credits and can upgrade for more.",
+      "source_url": "https://heroui.com/",
+      "category": "Design",
+      "refused_date": "2026-10-23"
     },
     {
       "vendor": "HeroUI",
@@ -4385,6 +4445,18 @@
       "source_url": "https://hotjar.com",
       "category": "Analytics",
       "refused_date": "2026-09-30"
+    },
+    {
+      "vendor": "Hotjar",
+      "change_type": "limits_increased",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this page refused on 2026-09-30 (confirmed_unchanged) stated the same figure, so the page showed these terms before the date this record gives",
+      "summary": "Hotjar has been rebranded to Contentsquare. The free plan still exists and offers 200k sessions per month, heatmaps, session replay, surveys, error monitoring, funnels, and 10+ integrations. However, the free plan now offers 200k sessions *per month* instead of 35 sessions *per day* as previously stated.",
+      "previous_state": "Website Analytics and Reports — The Contentsquare Free plan includes 200k sessions per month, heatmaps, session replay, surveys, error monitoring, funnels, and 10+ integrations. It also includes a 15-day trial of the Growth plan.",
+      "current_state": "Capture up to 200k sessions per month. Get attention maps, funnels, and error monitoring. Connect your favorite AI assistant (MCP).",
+      "source_url": "https://hotjar.com",
+      "category": "Analytics",
+      "refused_date": "2026-10-23"
     },
     {
       "vendor": "Hotjar",
@@ -4679,6 +4751,18 @@
       "refused_date": "2026-09-30"
     },
     {
+      "vendor": "Imitate Email",
+      "change_type": "limits_increased",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this page refused on 2026-09-30 (measures_no_change) stated the same figure, so the page showed these terms before the date this record gives",
+      "summary": "The free tier now offers 450 test emails a month, instead of 15 emails a day.",
+      "previous_state": "Sandbox Email Server for testing email functionality across build/qa and ci/cd. Free accounts get 15 emails a day forever.",
+      "current_state": "Get started with 450 test emails a month, free forever",
+      "source_url": "https://imitate.email",
+      "category": "Email",
+      "refused_date": "2026-10-23"
+    },
+    {
       "vendor": "incidenthub.cloud",
       "change_type": "limits_reduced",
       "reason": "measures_no_change",
@@ -4787,6 +4871,18 @@
       "source_url": "https://integrately.com",
       "category": "Cloud Hosting",
       "refused_date": "2026-09-30"
+    },
+    {
+      "vendor": "Integrately",
+      "change_type": "free_tier_removed",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this page refused on 2026-09-30 (removal_read_from_root) stated the same figure, so the page showed these terms before the date this record gives",
+      "summary": "The page promotes a $5 first month offer for premium plans and does not explicitly mention a free tier with 100 tasks and 15 minute limits. It does offer a 'Free' signup with Google, but doesn't detail any limits associated with that free access.",
+      "previous_state": "Automate tedious tasks with a single click. Free 100 Tasks, 15 Minute",
+      "current_state": "Premium plans are available for $5 for the first month. A 'Free' signup option with Google is available, but its limits are not specified.",
+      "source_url": "https://integrately.com",
+      "category": "Cloud Hosting",
+      "refused_date": "2026-10-23"
     },
     {
       "vendor": "IP Geolocation API by ipwho.org",
@@ -5313,6 +5409,18 @@
     {
       "vendor": "linkok.com",
       "change_type": "pricing_restructured",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this page refused on 2026-09-11 (same_transition_graded_differently) stated the same 4 figures, so the page showed these terms before the date this record gives",
+      "summary": "The free tier now offers weekly and daily scans at $4/month and $8/month respectively, billed annually at $50 and $100 plus taxes. The stored information stated monthly scans for the free tier.",
+      "previous_state": "Free forever for small sites (up to 100 pages) with monthly scans and email reports. Paid tiers available for weekly and daily scans, ranging from $4/month to $400/month depending on the number of pages scanned.",
+      "current_state": "Free forever for small sites. No credit card required. Weekly scans $4 /month Billed annually at $50 + local taxes*. Daily scans $8 /month Billed annually at $100 + local taxes*.",
+      "source_url": "https://linkok.com",
+      "category": "Monitoring",
+      "refused_date": "2026-10-23"
+    },
+    {
+      "vendor": "linkok.com",
+      "change_type": "pricing_restructured",
       "reason": "same_transition_graded_differently",
       "detail": "same vendor, source_url and previous_state as linkok.com|pricing_restructured|2026-08-28|https://linkok.com",
       "summary": "The free tier now has multiple options: a monthly scan with public reports, or weekly/daily scans with private reports, all for up to 100 pages.",
@@ -5492,6 +5600,18 @@
       "source_url": "https://logflare.app/",
       "category": "Logging",
       "refused_date": "2026-09-30"
+    },
+    {
+      "vendor": "logflare.app",
+      "change_type": "pricing_model_change",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this page refused on 2026-09-13 (same_transition_graded_differently) stated the same figure, so the page showed these terms before the date this record gives",
+      "summary": "Logflare is now part of Supabase and the free tier details have changed. The free tier no longer offers a fixed number of entries and retention days. Instead, it offers unlimited events with 7 days of data retention in BigQuery, and the option to bring your own BigQuery table for longer retention.",
+      "previous_state": "Free for up to 12,960,000 entries per app per month, 3 days retention",
+      "current_state": "Unlimited events with 7 days of data retention in BigQuery. Bring your own BigQuery table for longer retention.",
+      "source_url": "https://logflare.app/",
+      "category": "Logging",
+      "refused_date": "2026-10-23"
     },
     {
       "vendor": "logflare.app",
@@ -6039,6 +6159,18 @@
       "category": "Startup Perks",
       "refused_date": "2026-09-25",
       "collided_with": "Mercury|limits_reduced|2026-08-28|https://mercury.com/perks"
+    },
+    {
+      "vendor": "Mergify",
+      "change_type": "free_tier_removed",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-09-30 (states_no_terms) claimed the same change, free_tier_removed, against the same stored description",
+      "summary": "The free tier is no longer explicitly mentioned as being for public GitHub repositories. The page focuses on a free trial and then paid plans (Mergify Cloud and Mergify Enterprise Server).",
+      "previous_state": "workflow automation and merge queue for GitHub — Free for public GitHub repositories",
+      "current_state": "The page promotes a free trial and then lists Mergify Cloud and Mergify Enterprise Server as paid options. It does not state a permanently free tier for public repositories.",
+      "source_url": "https://mergify.com",
+      "category": "CI/CD",
+      "refused_date": "2026-10-23"
     },
     {
       "vendor": "Mergify",
@@ -7158,6 +7290,18 @@
     {
       "vendor": "Phase Two",
       "change_type": "free_tier_removed",
+      "reason": "confirmed_unchanged",
+      "detail": "The stored description already stated there was no free tier since 2026-07-30 and the Starter plan was $149/month with a 30-day trial, supporting unlimited users for 5,000 active users. The report simply restates this information.",
+      "summary": "The free tier has been removed. The Starter plan is now $149/month with a 30-day free trial, and supports unlimited users sized for 5,000 active users.",
+      "previous_state": "Managed Keycloak hosting with Phase Two's Organization extension. No free tier since 2026-07-30, when Phase Two shut down its free shared realms. The Starter cluster is $149/month after a 30-day free trial; users are unlimited, and it is sized for 5,000 active users a month.",
+      "current_state": "The Starter plan is $149/month with a 30-day free trial, supports unlimited users sized for 5,000 active users, and includes a dedicated cluster, 95% uptime target, unlimited SSO connections, 2 custom domains, and email support.",
+      "source_url": "https://phasetwo.io/pricing/hosting/",
+      "category": "Auth",
+      "refused_date": "2026-10-23"
+    },
+    {
+      "vendor": "Phase Two",
+      "change_type": "free_tier_removed",
       "reason": "removal_read_from_root",
       "detail": "a free tier was recorded as removed from https://phasetwo.io, a domain root that states no price, ending or replacement where the free tier was — a homepage's silence is not evidence that one ended",
       "summary": "The free tier information is no longer explicitly stated. The page focuses on managed hosting and enterprise support, with pricing based on concurrent sessions rather than a free tier with user limits. The page highlights cost savings compared to other IAMs but doesn't mention a free starter realm.",
@@ -7945,6 +8089,18 @@
       "refused_date": "2026-09-30"
     },
     {
+      "vendor": "ReportGPT",
+      "change_type": "free_tier_removed",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this page refused on 2026-09-30 (removal_read_from_root) stated the same 3 figures, so the page showed these terms before the date this record gives",
+      "summary": "The platform is no longer entirely free with your own API key. While a 'Free Demo Document' is available, it's a one-time use. There are now paid one-time purchase options for generating 1, 3, or 10 reports. The original description stated the entire platform was free with your own API key, which is no longer the case.",
+      "previous_state": "AI Powered Writing Assistant. The entire platform is free as long as you bring your own API key.",
+      "current_state": "ReportGPT offers a 'Free Demo Document' which allows you to generate one document structure, chapters, and run AI-Plagiarism Checks. Beyond that, access requires a one-time purchase of 1, 3, or 10 AI-Reports. If you have your own OpenAI API key, you can use it on our platform without any additional cost.",
+      "source_url": "https://ReportGPT.app",
+      "category": "AI / ML",
+      "refused_date": "2026-10-23"
+    },
+    {
       "vendor": "repsy.io",
       "change_type": "limits_increased",
       "reason": "no_price_signal",
@@ -8089,6 +8245,18 @@
       "source_url": "https://home.robusta.dev/",
       "category": "Monitoring",
       "refused_date": "2026-09-30"
+    },
+    {
+      "vendor": "robusta.dev",
+      "change_type": "free_tier_removed",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-09-30 (dangling_reference) claimed the same change, free_tier_removed, against the same stored description",
+      "summary": "The pricing page does not mention a free tier with up to 20 Kubernetes nodes. It focuses on a usage-based pricing model tied to AI incident investigations, with costs scaling based on the number of unique incidents rather than nodes.",
+      "previous_state": "Powerful Kubernetes monitoring based on Prometheus. Bring your own Prometheus or install the all-in-one bundle. The free tier includes up to 20 Kubernetes nodes. Alerts via Slack, Microsoft Teams, Discord, and more. Integrations with PagerDuty, OpsGenie, VictorOps, DataDog, and many other tools.",
+      "current_state": "The pricing is based on the number of incidents investigated by the AI, with costs determined by the number of alerts and investigations. There is no mention of a free tier with a node limit.",
+      "source_url": "https://home.robusta.dev/",
+      "category": "Monitoring",
+      "refused_date": "2026-10-23"
     },
     {
       "vendor": "robusta.dev",
@@ -8387,6 +8555,18 @@
     },
     {
       "vendor": "serveravatar.com",
+      "change_type": "pricing_restructured",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-09-30 (confirmed_unchanged) claimed the same change, pricing_restructured, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "The 'Lite' plan is still offered as a free plan, but the pricing page details several paid plans (Newbie, Pro, Master, Business) with varying server limits and features. The free plan now appears to be a 4-day trial.",
+      "previous_state": "Manage and monitor PHP-based web servers with automated configurations — ServerAvatar Lite is a free cloud server management platform designed to help developers and businesses deploy, manage, and scale unlimited websites and applications with ease.",
+      "current_state": "The 'Newbie' plan is normally $12/month or $120/year, but is offered at $10/month for the first month. It includes 5 servers, unlimited apps and databases, all management and security features, AI Bot Blocker, Team Management, Log Monitoring Suite, White-Label Suite, and Hosting Reseller Panel.",
+      "source_url": "https://serveravatar.com",
+      "category": "Server Management",
+      "refused_date": "2026-10-23"
+    },
+    {
+      "vendor": "serveravatar.com",
       "change_type": "limits_increased",
       "reason": "same_transition_graded_differently",
       "detail": "same vendor, source_url and previous_state as serveravatar.com|limits_increased|2026-08-28|https://serveravatar.com",
@@ -8611,13 +8791,13 @@
       "vendor": "smartmockups.com",
       "change_type": "limits_increased",
       "reason": "repeats_a_refused_reading",
-      "detail": "the reading of this page refused on 2026-10-09 (repeats_a_refused_reading) stated the same figure, so the page showed these terms before the date this record gives",
-      "summary": "The free tier now allows up to 2,500 mockups, whereas the stored information states 200 free mockups.",
+      "detail": "the reading of this page refused on 2026-10-16 (repeats_a_refused_reading) stated the same figure, so the page showed these terms before the date this record gives",
+      "summary": "The free tier now allows up to 2,500 mockups, an increase from the previously stated 200.",
       "previous_state": "Create product mockups, 200 free mockups.",
       "current_state": "As a Canva Free user, you can create and use up to 2,500 mockups for free. If you exceed this total number of uses, you will need a Canva Pro account to create and use more mockups.",
       "source_url": "https://smartmockups.com/",
       "category": "Design",
-      "refused_date": "2026-10-16"
+      "refused_date": "2026-10-23"
     },
     {
       "vendor": "SmartParse",
@@ -10095,15 +10275,15 @@
     },
     {
       "vendor": "Visual Studio Community",
-      "change_type": "restriction",
+      "change_type": "limits_reduced",
       "reason": "no_terms_to_narrow",
-      "detail": "a restriction was measured against \"Fully-featured IDE with thousands of extensions, cross-platform app development (Microsoft extensions available for download for iOS and Android), desktop, web and cloud development, multi-language support (C#, C++, JavaScript, Python, PHP and more).\", a stored description that states no price, named tier or allowance, so there is nothing for the terms to have narrowed from",
-      "summary": "The Visual Studio Community edition has usage restrictions based on organization size and revenue. It's free for individuals, students, and open-source contributors. For organizations, it's free for up to 5 users in non-enterprise organizations, but not permitted for use in enterprise organizations (over 250 PCs or $1M USD revenue) except for specific scenarios like academic research or classroom learning.",
+      "detail": "limits_reduced claimed against \"Fully-featured IDE with thousands of extensions, cross-platform app development (Microsoft extensions available for download for iOS and Android), desktop, web and cloud development, multi-language support (C#, C++, JavaScript, Python, PHP and more).\", a stored description that states no price, no allowance and nothing free, so there is nothing for the terms to have narrowed from",
+      "summary": "The page details usage restrictions for Visual Studio Community that were not present in the stored deal info. Specifically, it outlines limitations for non-enterprise organizations (up to five users) and enterprise organizations (limited to open-source, academic research, and classroom learning).",
       "previous_state": "Fully-featured IDE with thousands of extensions, cross-platform app development (Microsoft extensions available for download for iOS and Android), desktop, web and cloud development, multi-language support (C#, C++, JavaScript, Python, PHP and more).",
-      "current_state": "Visual Studio Community is free for individuals, open-source contributors, and academic use. For organizations, it's limited to 5 users if the organization has less than 250 PCs or less than $1 Million USD in annual revenue. Enterprise organizations are restricted to academic research, classroom learning, or open-source contributions.",
+      "current_state": "In non-enterprise organizations, up to five users can use Visual Studio Community. In enterprise organizations (meaning those with >250 PCs or >$1 Million US Dollars in annual revenue), no use is permitted beyond the open source, academic research, and classroom learning environment scenarios described above.",
       "source_url": "https://visualstudio.microsoft.com/vs/community/",
       "category": "IDE & Code Editors",
-      "refused_date": "2026-09-30"
+      "refused_date": "2026-10-23"
     },
     {
       "vendor": "WaiverStevie.com",
@@ -10177,6 +10357,18 @@
       "source_url": "https://webhook.site",
       "category": "Testing",
       "refused_date": "2026-09-28"
+    },
+    {
+      "vendor": "webhookrelay.com",
+      "change_type": "limits_reduced",
+      "reason": "no_terms_to_narrow",
+      "detail": "limits_reduced claimed against \"Manage, debug, fan-out, and proxy all your webhooks to public or internal (i.e. localhost) destinations. Also, expose servers running in a private network over a tunnel by getting a public HTTP endpoint (`https://yoursubdomain.webrelay.io <----> http://localhost:8080`).\", a stored description that states no price, no allowance and nothing free, so there is nothing for the terms to have narrowed from",
+      "summary": "The free plan now offers 150 webhooks/month, whereas the stored information does not specify a limit.",
+      "previous_state": "Manage, debug, fan-out, and proxy all your webhooks to public or internal (i.e. localhost) destinations. Also, expose servers running in a private network over a tunnel by getting a public HTTP endpoint (`https://yoursubdomain.webrelay.io <----> http://localhost:8080`).",
+      "current_state": "Free plan · 150 webhooks/month · No credit card required",
+      "source_url": "https://webhookrelay.com",
+      "category": "Tunneling & Networking",
+      "refused_date": "2026-10-23"
     },
     {
       "vendor": "Webvizio",
@@ -10388,6 +10580,18 @@
       "refused_date": "2026-09-10"
     },
     {
+      "vendor": "xcloud.host",
+      "change_type": "limits_reduced",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this page refused on 2026-09-30 (confirmed_unchanged) stated the same 2 figures, so the page showed these terms before the date this record gives",
+      "summary": "The free tier now offers 1 server and 10 sites, which matches the stored information. However, the page primarily focuses on paid hosting options and add-ons. The free tier is mentioned as part of the 'Self-Managed Hosting' option, but the overall emphasis is on paid plans.",
+      "previous_state": "Server management and deployment platform with a user-friendly interface — Free: 1 server and 10 sites included",
+      "current_state": "Free: 1 server and 10 sites included",
+      "source_url": "https://xcloud.host",
+      "category": "Server Management",
+      "refused_date": "2026-10-23"
+    },
+    {
       "vendor": "Xirsys",
       "change_type": "limits_reduced",
       "reason": "confirmed_unchanged",
@@ -10470,6 +10674,18 @@
       "source_url": "https://zapier.com/pricing",
       "category": "Workflow Automation",
       "refused_date": "2026-09-25"
+    },
+    {
+      "vendor": "Zenable",
+      "change_type": "limits_reduced",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this page refused on 2026-09-30 (unquantified_limit) stated the same 3 figures, so the page showed these terms before the date this record gives",
+      "summary": "The free tier now offers 5,000 Zenable Credits/Seat/Week, whereas the stored information states 15 PR reviews/week and 100 agentic reviews/day. The page details a tiered pricing structure with different credit limits for Free, Professional, and Enterprise plans.",
+      "previous_state": "Free accounts get 15 PR reviews/week and 100 agentic reviews/day.",
+      "current_state": "Free accounts get 5,000 Zenable Credits/Seat/Week. AI reviews consume 10-25 credits per reviewed file; deterministic Guardrails are free.",
+      "source_url": "https://zenable.io",
+      "category": "AI / ML",
+      "refused_date": "2026-10-23"
     },
     {
       "vendor": "Zenable",
@@ -10783,6 +10999,18 @@
       "source_url": "https://www.zoneedit.com/free-dns/",
       "category": "DNS & Domain Management",
       "refused_date": "2026-09-30"
+    },
+    {
+      "vendor": "zoneedit.com",
+      "change_type": "restriction",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this page refused on 2026-09-30 (no_terms_to_narrow) stated the same 2 figures, so the page showed these terms before the date this record gives",
+      "summary": "The free tier is now explicitly for non-commercial use only, and includes a limit of 100,000 DNS queries per month and 5 email forwarders. The description now states that production and business use should choose a paid plan.",
+      "previous_state": "Free DNS hosting with Dynamic DNS Support.",
+      "current_state": "Free DNS is for a single personal domain for non-commercial or academic use, with 100,000 DNS queries per month, 5 email forwarders, and Dynamic DNS support.",
+      "source_url": "https://www.zoneedit.com/free-dns/",
+      "category": "DNS & Domain Management",
+      "refused_date": "2026-10-23"
     },
     {
       "vendor": "Zonomi",

@@ -1,15 +1,26 @@
 {
   "held": [
     {
-      "vendor": "HeroUI",
+      "vendor": "Activepieces",
       "change_type": "pricing_model_change",
       "impact": "high",
-      "summary": "The page mentions a free 7-day trial, but also indicates that some components (Dashboard, Mail, Chat, Finances, CRM) are 'Available in Pro as template' and requires a paid plan for more credits. It also mentions a $250.00 price for various durations.",
-      "previous_state": "Free. Beautiful, fast, and modern React & Next.js UI library. Rebranded from NextUI to HeroUI.",
-      "current_state": "Some components are only available in the Pro plan, and a paid plan is required for more credits. A 7-day free trial is available.",
-      "source_url": "https://heroui.com/",
-      "category": "Design",
-      "first_read_date": "2026-10-22"
+      "summary": "The free plan exists.",
+      "previous_state": "Build automation flows to connect several apps together in your app's backend. For example, send a Slack message or add a Google Sheet row when an event fires in your app. Free up to 5,000 tasks per month.",
+      "current_state": "The free plan has unlimited flows, but users pay for how often flows actually run.",
+      "source_url": "https://www.activepieces.com",
+      "category": "Cloud Hosting",
+      "first_read_date": "2026-10-23"
+    },
+    {
+      "vendor": "Aionda Mail",
+      "change_type": "pricing_restructured",
+      "impact": "low",
+      "summary": "The Plus tier pricing has changed. It is now €1.99/month or €18.49/year. The free tier still includes up to 25 disposable addresses, encrypted mailbox, calendar & contacts.",
+      "previous_state": "Free tier includes up to 25 disposable addresses, encrypted mailbox, calendar & contacts. Plus tier is €1.99/month for up to 10,000 disposable addresses, unlimited forwarding, custom domains, calendar invitations, and 5 GB encrypted drive. Enterprise tier starts at €1.49/employee/month.",
+      "current_state": "Unlock Plus €18.49 (~$20.71 USD)/year",
+      "source_url": "https://mail.aionda.com/",
+      "category": "Email",
+      "first_read_date": "2026-10-23"
     }
   ],
   "resolved": [
@@ -2644,6 +2655,18 @@
       "outcome": "corroborated",
       "detail": "a reading on 2026-10-22 read it as limits_reduced too",
       "resolved_date": "2026-10-22"
+    },
+    {
+      "vendor": "HeroUI",
+      "change_type": "pricing_model_change",
+      "impact": "high",
+      "summary": "The page mentions a free 7-day trial, but also indicates that some components (Dashboard, Mail, Chat, Finances, CRM) are 'Available in Pro as template' and requires a paid plan for more credits. It also mentions a $250.00 price for various durations.",
+      "previous_state": "Free. Beautiful, fast, and modern React & Next.js UI library. Rebranded from NextUI to HeroUI.",
+      "source_url": "https://heroui.com/",
+      "first_read_date": "2026-10-22",
+      "outcome": "contradicted",
+      "detail": "a reading on 2026-10-23 read a change the gate refused as repeats_a_refused_reading",
+      "resolved_date": "2026-10-23"
     }
   ]
 }
