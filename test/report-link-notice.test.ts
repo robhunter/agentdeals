@@ -12,7 +12,8 @@ const URL = "https://report-metrics.example/pricing";
 const TERMS = "Free analytics includes 3,000 sessions per month for a single project.";
 const OLD_TERMS = "Historical analytics included 1,500 sessions per month.";
 const ROUTES = ["/q1-2026-developer-pricing-report", "/q2-pricing-preview-2026"];
-const dayAgo = (days: number) => new Date(Date.now() - days * 86_400_000).toISOString().slice(0, 10);
+const NOW = Date.parse("2026-11-06T00:00:00Z");
+const dayAgo = (days: number) => new Date(NOW - days * 86_400_000).toISOString().slice(0, 10);
 
 for (const scenario of [
   { name: "at the grace boundary", outcome: "unreachable", last: dayAgo(14), terminal: false, notice: true },
@@ -44,7 +45,15 @@ for (const scenario of [
         previous_state: "No sessions included.", summary: "Analytics sessions increased.",
         source_url: URL, category: "Analytics", alternatives: [],
       });
-      server = spawn(process.execPath, [path.join(REPO, "dist/serve.js")], {
+      const clock = path.join(directory, "clock.mjs");
+      writeFileSync(clock, `
+        const NativeDate = Date;
+        globalThis.Date = class extends NativeDate {
+          constructor(...args) { super(...(args.length ? args : [${NOW}])); }
+          static now() { return ${NOW}; }
+        };
+      `);
+      server = spawn(process.execPath, ["--import", clock, path.join(REPO, "dist/serve.js")], {
         cwd: REPO,
         env: {
           ...process.env, PORT: "0", BASE_URL: "http://localhost", TZ: "UTC",
