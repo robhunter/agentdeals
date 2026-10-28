@@ -15332,7 +15332,7 @@ ${buildCards(aiGateways)}
       <dd><a href="/vendor/nvidia-nim">NVIDIA NIM</a> \u2014 free endpoints on build.nvidia.com for models marked Free Endpoint, such as DeepSeek V4.1 Flash, GLM 5.3 Flash and gpt-oss-20b, at up to 40 requests per minute; NVIDIA retires hosted models on dates it posts on each model's page, and NVIDIA's API Trial Terms allow testing and evaluation only, not production. <a href="/vendor/baseten">Baseten</a> \u2014 new workspaces receive credits for testing and deployment; Baseten does not state the amount.</dd>
 
       <dt>Want completely free, self-hosted inference?</dt>
-      <dd><a href="/vendor/ollama-cloud">Ollama</a> \u2014 open source (MIT) and free to run on your own machine; its cloud models are paid with usage credits, and the Free plan includes starter credits. Or download <a href="/vendor/hugging-face">Hugging Face</a> models and run them locally; Hugging Face's hosted Inference Providers API serves 200+ models; since 2026-10-07, free accounts buy credits to call it, or upgrade to PRO ($9/month, $2.00 a month of credits).</dd>
+      <dd><a href="/vendor/ollama-cloud">Ollama</a> \u2014 open source (MIT) and free to run on your own machine; its cloud models are paid per token on the $0 Pay as you go plan. Pro and higher plans include monthly usage credits. Or download <a href="/vendor/hugging-face">Hugging Face</a> models and run them locally; Hugging Face's hosted Inference Providers API serves 200+ models; since 2026-10-07, free accounts buy credits to call it, or upgrade to PRO ($9/month, $2.00 a month of credits).</dd>
     </dl>
   </div>
 

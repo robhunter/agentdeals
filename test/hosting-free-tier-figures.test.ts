@@ -91,6 +91,11 @@ type Retired = { what: string; pattern: RegExp; replacedBy: RegExp; vendorRecord
 
 const RETIRED_FIGURES: Retired[] = [
   {
+    what: "Ollama Cloud's retired Free plan with starter credits",
+    pattern: /Ollama[^.]{0,240}(?:Free plan includes starter (?:credits|usage)|cloud models are free)/i,
+    replacedBy: /Ollama[^.]{0,180}open source \(MIT\) and free to run on your own machine; its cloud models are paid per token on the \$0 Pay as you go plan\. Pro and higher plans include monthly usage credits\./,
+  },
+  {
     what: "MinIO's AGPL edition described as relicensed to proprietary software",
     pattern: /MinIO.{0,100}(?:switched from Apache|AGPL(?:v3)?\s*(?:to|→)\s*proprietary)|Self-hosted users now need a commercial license for production use/i,
     replacedBy: /(?:MinIO.{0,100}AGPLv3|end of open-source maintenance \(MinIO's AGPLv3 server\))/,
@@ -518,6 +523,7 @@ describe("hosting pages publish the free-tier figures our records hold (#1183)",
 
   it("states the current figure on every page that carried a retired one", async () => {
     const carried: Record<string, string[]> = {
+      "Ollama Cloud's retired Free plan with starter credits": ["/free-llm-apis"],
       "MinIO's AGPL edition described as relicensed to proprietary software": ["/q1-2026-developer-pricing-report", "/free-tier-risk"],
       "Wasabi storage at $6.99 per TB": ["/storage-comparison-2026"],
       "Oracle object storage with only 10 GB of free outbound data": ["/storage-comparison-2026"],

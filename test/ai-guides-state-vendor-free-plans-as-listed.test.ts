@@ -18,7 +18,7 @@ const STATED: Record<string, string[]> = {
     "Mistral's Free plan includes monthly API usage; its pricing page listed $10 a month until 2026-10-07, then stopped stating the amount. OpenRouter aggregates",
     "Mistral's Free plan includes monthly API usage; its pricing page listed $10 a month until 2026-10-07, then stopped stating the amount. OpenRouter gives one API key",
     "Cloudflare Workers AI — 10,000 Neurons a day at no charge on every account; on the Workers Free plan, requests beyond that fail until the daily reset at 00:00 UTC. Some models, including Kimi K2.6 and GLM-5.3, need the Workers Paid plan or prepaid AI Gateway credits.",
-    "Ollama — open source (MIT) and free to run on your own machine; its cloud models are paid with usage credits, and the Free plan includes starter credits.",
+    "Ollama — open source (MIT) and free to run on your own machine; its cloud models are paid per token on the $0 Pay as you go plan. Pro and higher plans include monthly usage credits.",
   ],
   "/free-ai-stack": [
     "Qdrant Cloud's free cluster (1 GB RAM, 4 GB disk) is an alternative; Qdrant suspends it after a week without use.",
@@ -39,6 +39,8 @@ const DESCRIBED: Record<string, string[]> = {
 };
 
 const WITHDRAWN = [
+  "the Free plan includes starter credits",
+  "the Free plan includes starter usage",
   "including Large and Codestral",
   "broadest model access",
   "Best free access to frontier-class models",
