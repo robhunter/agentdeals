@@ -1,326 +1,5 @@
 {
-  "proposals": [
-    {
-      "proposal_id": "2026-10-24/postman/limits_increased",
-      "proposed_on": "2026-10-24",
-      "vendor": "Postman",
-      "change_type": "limits_increased",
-      "date": "2026-10-24",
-      "date_source": "discovered",
-      "summary": "The free plan now offers 100 AI credits instead of 50. The free plan also includes 1,000 Context Graph API queries per month.",
-      "tier": "Free",
-      "tier_direction": "widened",
-      "previous_state": "Free plan for one user: 50 Postman AI credits a month, the API client and core tools, specs and mock servers, native Git, unlimited manual Flows, automated API testing with the Collection Runner (without data files), unlimited local performance testing and 1,000 API monitoring requests a month. Cloud performance testing is on paid plans only, at $0.04 per virtual-user hour. Team collaboration needs the Team plan ($19 per user a month, billed annually).",
-      "current_state": "The Free plan costs $0 per month and includes 100 AI credits, API client & core tools, Specs & mock servers, Native Git, Collection Runner & Performance Testing runs, Manual Flows, 1,000 Context Graph API queries per month, and 1,000 API monitoring requests per month.",
-      "impact": "low",
-      "source_url": "https://www.postman.com/pricing/",
-      "category": "Testing",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-10-24",
-      "restatement": [
-        {
-          "url": "https://www.postman.com/pricing/",
-          "refused": "reading_drops_the_cap_on_who_may_use_it"
-        }
-      ]
-    },
-    {
-      "proposal_id": "2026-10-24/browserbase/limits_increased",
-      "proposed_on": "2026-10-24",
-      "vendor": "Browserbase",
-      "change_type": "limits_increased",
-      "date": "2026-10-24",
-      "date_source": "discovered",
-      "summary": "The free plan limits have been clarified and expanded. The page now explicitly states 1,000 Search calls and 1,000 Fetch calls.",
-      "tier": "Free",
-      "tier_direction": "widened",
-      "previous_state": "Headless browser infrastructure — Free Plan $0/mo Get started with Browserbase. Explore and prototype ideas. Infrastructure 3 concurrent browsers 1 browser hour 3 Agent runs included 1,000 Search calls 1,000 Fetch calls 15 minutes /session Capabilities 7 days data retention Models $5 in tokens Runtime included Start for free",
-      "current_state": "Free Plan $0/mo. Includes: 3 concurrent browsers, 1 browser hour, 3 Agent runs, 1,000 Search calls, 1,000 Fetch calls, 15 minutes /session, $5 in tokens.",
-      "impact": "medium",
-      "source_url": "https://www.browserbase.com/pricing",
-      "category": "Browser Automation",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-10-24",
-      "restatement": [
-        {
-          "url": "https://www.browserbase.com/pricing",
-          "description": "Headless browser infrastructure — Free Plan $0/mo. Includes: 3 concurrent browsers, 1 browser hour, 3 Agent runs, 1,000 Search calls, 1,000 Fetch calls, 15 minutes /session, $5 in tokens."
-        }
-      ]
-    },
-    {
-      "proposal_id": "2026-10-24/aionda-mail/pricing_restructured",
-      "proposed_on": "2026-10-24",
-      "vendor": "Aionda Mail",
-      "change_type": "pricing_restructured",
-      "date": "2026-10-24",
-      "date_source": "discovered",
-      "summary": "The Plus tier pricing has changed from €1.99/month to €18.49/year. The free tier still exists with up to 25 disposable addresses, but the Plus tier now offers up to 10,000 disposable addresses, unlimited forwarding, custom domains, calendar invitations, and 5 GB encrypted drive.",
-      "tier": "Plus",
-      "tier_direction": "narrowed",
-      "previous_state": "Free tier includes up to 25 disposable addresses, encrypted mailbox, calendar & contacts. Plus tier is €1.99/month for up to 10,000 disposable addresses, unlimited forwarding, custom domains, calendar invitations, and 5 GB encrypted drive. Enterprise tier starts at €1.49/employee/month.",
-      "current_state": "Unlock Plus €18.49 (~$20.71 USD)/year 90,000+ users",
-      "impact": "low",
-      "source_url": "https://mail.aionda.com/",
-      "category": "Email",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-10-24",
-      "restatement": [
-        {
-          "url": "https://mail.aionda.com/",
-          "refused": "reading_answers_for_something_else"
-        }
-      ]
-    },
-    {
-      "proposal_id": "2026-10-25/doppler/limits_increased",
-      "proposed_on": "2026-10-25",
-      "vendor": "Doppler",
-      "change_type": "limits_increased",
-      "date": "2026-10-25",
-      "date_source": "discovered",
-      "summary": "The free tier now has limits of 25 users, 15 environments, and 100 configs per environment, whereas previously it was 3 users, 4 environments, and 10 configs per environment.",
-      "tier": "Developer",
-      "tier_direction": "widened",
-      "previous_state": "Secrets management — up to 3 users, 10 projects, 4 environments per project. CLI, SDKs, and integrations included",
-      "current_state": "Free for 25 users, 15 environments, and 100 configs per environment",
-      "impact": "high",
-      "source_url": "https://www.doppler.com/pricing",
-      "category": "Secrets Management",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-10-25",
-      "restatement": [
-        {
-          "url": "https://www.doppler.com/pricing",
-          "description": "Secrets management — Free for 25 users, 15 environments, and 100 configs per environment"
-        }
-      ]
-    },
-    {
-      "proposal_id": "2026-10-25/siliconflow/pricing_restructured",
-      "proposed_on": "2026-10-25",
-      "vendor": "SiliconFlow",
-      "change_type": "pricing_restructured",
-      "date": "2026-10-25",
-      "date_source": "discovered",
-      "summary": "Specifically, DeepSeek-V4.1-Flash, DeepSeek-V4-Flash, DeepSeek-V4-Pro, GLM-5.3-Flash, GLM-5.3, GLM-5.2, GLM-5.1 (Pro), GLM-4.5V, GLM-4.5-Air, Hy4 preview, Hunyuan-A13B-Instruct, LongCat-2.0, Kimi-K2.7-Code, Kimi-K2.6 (Pro), Qwen3.8-27B, Qwen3.6-35B-A3B, Qwen3.6-27B, Qwen3.5-122B-A10B, Qwen3.5-35B-A3B, Qwen3.5-27B, Step-3.5-Flash, Ling-flash-2.0, Ling-mini-2.0, Seed-OSS-36B-Instruct, and Wan2.2-I2V-A14B and Wan2.2-T2V-A14B now have associated costs. Hunyuan-MT-7B remains free.",
-      "tier": "Qwen3.8-27B",
-      "tier_direction": "narrowed",
-      "previous_state": "Pay-as-you-go model inference. siliconflow.cn, run by a Beijing company, lists these models at no charge: the chat models Qwen3-8B, Qwen2.5-7B-Instruct (Free), Qwen3.5-4B, GLM-4-9B-0414, GLM-Z1-9B-0414, DeepSeek-R1-0528-Qwen3-8B (Free) and Xing4.0-29B; the translation model Hunyuan-MT-7B; the OCR models PaddleOCR-VL-1.5 and DeepSeek-OCR; the embedding models bge-m3, bge-large-zh-v1.5 and bge-large-en-v1.5; the reranker bge-reranker-v2-m3; Kolors image generation; and the speech recognition models XingChenAGI/XingChenGSR-V1.0, XingChenAGI/XingChenASR-V3.2-Ultra, XingChenAGI/XingChenASR-Diarize-V3.0, XingChenAGI/XingChenASR-V3.2 and FunAudioLLM/SenseVoiceSmall. Qwen3-ASR-1.7B is paid at ¥0.00022 per second of audio. The Pro versions are paid: Qwen2.5-7B-Instruct (Pro), bge-m3 (Pro) and bge-reranker-v2-m3 (Pro). All other models are paid too, including DeepSeek-V4-Flash, DeepSeek-V4-Pro and GLM-5.3. Using all the free models requires real-name verification, and online personal verification accepts only Chinese-issued documents, such as a resident ID card or a Foreign Permanent Resident ID Card. The international site, siliconflow.com, is run by SiliconFlow Labs Pte. Ltd. under Singapore law, is not offered in mainland China, and gives $1 in free credits to start. Its paid rates per million input/output tokens: gpt-oss-20b $0.04/$0.18; gpt-oss-120b $0.05/$0.45; DeepSeek-V4.1-Flash $0.15/$0.60.",
-      "current_state": "¥ 3.00 for input, ¥ 12.00 for output",
-      "impact": "high",
-      "source_url": "https://siliconflow.cn/pricing",
-      "category": "AI / ML",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-10-25",
-      "restatement": [
-        {
-          "url": "https://siliconflow.cn/pricing",
-          "refused": "reading_answers_for_something_else"
-        }
-      ]
-    },
-    {
-      "proposal_id": "2026-10-25/windmill-dev/limits_reduced",
-      "proposed_on": "2026-10-25",
-      "vendor": "windmill.dev",
-      "change_type": "limits_reduced",
-      "date": "2026-10-25",
-      "date_source": "discovered",
-      "summary": "The free tier now has a maximum of 50 users. Previously it was unlimited. The number of free app guests is now 100 per 30 days.",
-      "tier": "Free",
-      "tier_direction": "narrowed",
-      "previous_state": "Windmill is an open-source developer platform for building multi-step automations and internal apps from Python and TypeScript scripts. Windmill Cloud's Free plan is $0 with no credit card: 1,000 executions a month, unlimited scripts, flows, apps, variables and resources, Google, GitHub and GitLab sign-in, and community support on Discord. A free user can create and be a member of at most three non-premium workspaces. Cloud's Team plan is $10 a month per developer, with 10,000 executions a month per seat and at most 10 seats. The self-hosted open-source edition is free with unlimited executions and at most 10 users with SSO.",
-      "current_state": "Unlimited executions. Platform Executions per month Unlimited Number of workspaces 3 Maximum number of users 50",
-      "impact": "high",
-      "source_url": "https://www.windmill.dev/pricing",
-      "category": "Low-Code Platforms",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-10-25",
-      "restatement": [
-        {
-          "url": "https://www.windmill.dev/pricing",
-          "refused": "reading_answers_for_something_else"
-        }
-      ]
-    },
-    {
-      "proposal_id": "2026-10-26/firebase/limits_increased",
-      "proposed_on": "2026-10-26",
-      "vendor": "Firebase",
-      "change_type": "limits_increased",
-      "date": "2026-10-26",
-      "date_source": "discovered",
-      "summary": "Several limits have been updated for the Spark plan. Hosting bandwidth is now 10 GiB/month, up from 360 MB/day. Cloud Storage limits vary by bucket location.",
-      "tier": "Spark",
-      "tier_direction": "widened",
-      "previous_state": "Spark plan, no payment method needed: Auth (50K MAU), Firestore Standard edition (1 GiB stored, 50K reads/day, 20K writes/day, 20K deletes/day), Realtime Database (100 simultaneous connections, 1 GB stored, 10 GB/month downloaded), Hosting (10 GB storage, 360 MB/day transfer), and no-cost Analytics, Crashlytics and Cloud Messaging. Firestore Enterprise on Spark includes 1 GiB stored, 10 GiB/month network egress, 40K write units/day, 50K read units/day, 50K real-time update units/day. Cloud Functions and Cloud Storage need the Blaze plan.",
-      "current_state": "App Hosting: No-cost up to 10 GiB/month. Cloud Storage: No-cost up to 5 GB. Realtime Database: 1 GB stored",
-      "impact": "medium",
-      "source_url": "https://firebase.google.com/pricing",
-      "category": "Databases",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-10-26",
-      "restatement": [
-        {
-          "url": "https://firebase.google.com/pricing",
-          "refused": "tier_is_not_one_we_record_as_free"
-        }
-      ]
-    },
-    {
-      "proposal_id": "2026-10-26/brave-search-api/limits_increased",
-      "proposed_on": "2026-10-26",
-      "vendor": "Brave Search API",
-      "change_type": "limits_increased",
-      "date": "2026-10-26",
-      "date_source": "discovered",
-      "summary": "The free tier now offers \"Up to $20 in free calls every month\". Previously \"$5 in free credits every month\".",
-      "tier": "Brave Search API",
-      "tier_direction": "widened",
-      "previous_state": "$5 in free credits every month, applied automatically. Brave's \"up to $20\" figure is $5 on each of four plans: Search, Answers, Spellcheck and Autosuggest. Search is $5 per 1,000 requests; Answers is $4 per 1,000 requests plus $5 per million tokens. Web search, news, videos, images, LLM context endpoints. 50 queries/sec. Credit card required. The earlier free plan (2,000 queries/mo) ended Feb 2026. The tools of Brave's MCP server include brave_web_search, brave_news_search, brave_image_search, brave_llm_context and brave_summarizer.",
-      "current_state": "Up to $20 in free calls every month · Prepaid credits, no subscription",
-      "impact": "medium",
-      "source_url": "https://brave.com/search/api/",
-      "category": "AI / ML",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-10-26",
-      "restatement": [
-        {
-          "url": "https://brave.com/search/api/",
-          "refused": "reading_drops_a_figure_our_source_check_found",
-          "figures": [
-            "$5",
-            "$4",
-            "50 queries per second"
-          ]
-        }
-      ]
-    },
-    {
-      "proposal_id": "2026-10-26/anthropic-api/pricing_restructured",
-      "proposed_on": "2026-10-26",
-      "vendor": "Anthropic API",
-      "change_type": "pricing_restructured",
-      "date": "2026-10-26",
-      "date_source": "discovered",
-      "summary": "Pricing for Claude models has been updated. Several models have been added and pricing for existing models has changed.",
-      "tier": "Claude Opus 5.5",
-      "tier_direction": "unchanged",
-      "previous_state": "Claude API with usage-based pricing per million tokens (input/output). Claude Fable 5.1 $10/$50. Claude Opus 5.5 $4/$20. Claude Sonnet 5.5 $2/$10. Claude Sonnet 5 $2/$10. Claude Haiku 5.5 $0.10/$0.50 (for prompts up to 100,000 tokens; longer prompts cost five times as much). Claude Haiku 4.5 $1/$5. The Batch API gives a 50% discount on input and output tokens. Claude Opus 5.5 cache hits $0.20, Claude Sonnet 5.5 cache hits $0.10, Claude Fable 5.1 cache hits $0.25. Other models’ cache hits cost 0.1x the input price. Cache writes cost 1.25x the input price for 5-minute lifetime and 2x for 1-hour lifetime. Anthropic states \"Claude Max and Team plans include monthly credits for the Claude API.\" Max 5x gets $100 a month, Max 20x gets $200, Team gets up to $500 pooled. Anthropic's pages state no free credit amount for new API users.",
-      "current_state": "Claude Opus 5.5 costs $4 / MTok for input and $20 / MTok for output. Cache hits cost $0.20 / MTok. 5-minute cache writes cost $5 / MTok, 1-hour cache writes cost $8 / MTok.",
-      "impact": "high",
-      "source_url": "https://platform.claude.com/docs/en/about-claude/pricing",
-      "category": "AI / ML",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-10-26",
-      "restatement": []
-    },
-    {
-      "proposal_id": "2026-10-26/cohere/free_tier_removed",
-      "proposed_on": "2026-10-26",
-      "vendor": "Cohere",
-      "change_type": "free_tier_removed",
-      "date": "2026-10-26",
-      "date_source": "discovered",
-      "summary": "The free trial is still offered. The pricing for production keys has changed significantly.",
-      "tier": "Command",
-      "tier_direction": "unchanged",
-      "previous_state": "AI model API for Command chat models, Embed, Rerank, Transcribe and Parse. Every account starts with a Trial API key: calls made with it are free and limited to 1,000 API calls a month. Trial rate limits: 20 requests a minute per Chat model, 2,000 Embed inputs a minute and 10 Rerank requests a minute. Trial keys can use all of Cohere's models and APIs. Production keys are pay-as-you-go. Prices per 1M tokens: Command R7B $0.0375/$0.15; Command R $0.15/$0.60. The pricing page lists Command A+ (Apache 2.0) at $0 through an API key and as a model download.",
-      "current_state": "API calls made from a Trial API key are free. API calls made from a Production API key will be charged on a pay-as-you-go basis. Your bill will be issued at the end of every calendar month or when you reach $250 in outstanding balances. Legacy Command pricing is $1.00/1M tokens for input and $2.00/1M tokens for output. Aya Expanse models are charged at $0.50/1M tokens for input and $1.50/1M tokens for output. Model Vault pricing varies by model and tier.",
-      "impact": "high",
-      "source_url": "https://cohere.com/pricing",
-      "category": "AI / ML",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-10-26",
-      "restatement": []
-    },
-    {
-      "proposal_id": "2026-10-26/conversion-tools/limits_reduced",
-      "proposed_on": "2026-10-26",
-      "vendor": "Conversion Tools",
-      "change_type": "limits_reduced",
-      "date": "2026-10-26",
-      "date_source": "discovered",
-      "summary": "The free tier file size limit has been reduced from 50 GB to 10 MB. The free tier also now has 100 free API calls/month + 100 AI credits/month.",
-      "tier": "Free",
-      "tier_direction": "narrowed",
-      "previous_state": "Online File Converter for documents, images, video, audio, and eBooks. REST API is available. Libraries for Node.js, PHP, Python. Support files up to 50 GB (for paid plans). Registered free users get 10 conversions a day (100 a month) and a 20 MB file size limit.",
-      "current_state": "Free users can convert files up to 10 MB. The API offers 100 free API calls/month + 100 AI credits/month.",
-      "impact": "high",
-      "source_url": "https://conversiontools.io/",
-      "category": "Dev Utilities",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-10-26",
-      "restatement": [
-        {
-          "url": "https://conversiontools.io/",
-          "description": "Online File Converter for documents, images, video, audio, and eBooks — Free users can convert files up to 10 MB. The API offers 100 free API calls/month + 100 AI credits/month."
-        }
-      ]
-    },
-    {
-      "proposal_id": "2026-10-28/sentry/limits_increased",
-      "proposed_on": "2026-10-28",
-      "vendor": "Sentry",
-      "change_type": "limits_increased",
-      "date": "2026-10-28",
-      "date_source": "discovered",
-      "summary": "The free Developer plan now has a limit of 50k errors/month. Previously it was 5k errors/month. The free plan also includes 5GB of logs, 5M spans, 50 session replays, and 1GB of attachments.",
-      "tier": "Developer",
-      "tier_direction": "widened",
-      "previous_state": "Developer tier: 1 user, 5K errors/month, 5M spans/month, 50 session replays, 5GB application logs, 1GB attachments",
-      "current_state": "Free $0 Limited to one user One user Error Monitoring and Tracing Alerts and notifications via email 10 custom dashboards MCP access. Includes 50k errors/month, 5GB logs, 5M spans, 50 session replays, and 1GB attachments.",
-      "impact": "low",
-      "source_url": "https://sentry.io/pricing/",
-      "category": "Monitoring",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-10-28",
-      "restatement": [
-        {
-          "url": "https://sentry.io/pricing/",
-          "description": "Free $0 Limited to one user One user Error Monitoring and Tracing Alerts and notifications via email 10 custom dashboards MCP access. Includes 50k errors/month, 5GB logs, 5M spans, 50 session replays, and 1GB attachments."
-        }
-      ]
-    },
-    {
-      "proposal_id": "2026-10-28/zoho-projects/pricing_restructured",
-      "proposed_on": "2026-10-28",
-      "vendor": "Zoho Projects",
-      "change_type": "pricing_restructured",
-      "date": "2026-10-28",
-      "date_source": "discovered",
-      "summary": "The page states Zoho Projects is a free project management platform without compromising on quality and functionality, and allows users to break down project activities, allocate resources, and schedule work items using the Gantt chart with the free version.",
-      "tier": "Free",
-      "tier_direction": "narrowed",
-      "previous_state": "Free for up to 5 users: 3 projects, subtasks, whiteboard, 5 GB of storage and the iOS and Android apps. Zoho's [Bugtracker](https://zoho.com/bugtracker) has its own free plan: 3 users, 2 projects and 5 GB of attachments.",
-      "current_state": "Zoho Projects is a free project management platform that allows users to break down project activities, allocate resources, and schedule work items using the Gantt chart.",
-      "impact": "medium",
-      "source_url": "https://zoho.com/projects",
-      "category": "Project Management",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-10-28",
-      "restatement": [
-        {
-          "url": "https://zoho.com/projects",
-          "refused": "reading_states_no_figure_where_our_terms_do"
-        }
-      ]
-    }
-  ],
+  "proposals": [],
   "dropped": [
     {
       "proposal_id": "2026-10-12/taskade-com/new_tier",
@@ -1082,6 +761,352 @@
       ],
       "dropped_on": "2026-10-22",
       "drop_reason": "No datable change: the Free plan's 5 MiB of storage per memory repository and the API Plan's $0.00015/sec tool execution are on docs.letta.com/pricing (read 2026-10-22), but the last archive capture (2026-10-15) is an empty shell, so the reading cannot date them. Free is already a Personal Plan in the listing. The 5 MiB limit goes into the listing."
+    },
+    {
+      "proposal_id": "2026-10-24/browserbase/limits_increased",
+      "proposed_on": "2026-10-24",
+      "vendor": "Browserbase",
+      "change_type": "limits_increased",
+      "date": "2026-10-24",
+      "date_source": "discovered",
+      "summary": "The free plan limits have been clarified and expanded. The page now explicitly states 1,000 Search calls and 1,000 Fetch calls.",
+      "tier": "Free",
+      "tier_direction": "widened",
+      "previous_state": "Headless browser infrastructure — Free Plan $0/mo Get started with Browserbase. Explore and prototype ideas. Infrastructure 3 concurrent browsers 1 browser hour 3 Agent runs included 1,000 Search calls 1,000 Fetch calls 15 minutes /session Capabilities 7 days data retention Models $5 in tokens Runtime included Start for free",
+      "current_state": "Free Plan $0/mo. Includes: 3 concurrent browsers, 1 browser hour, 3 Agent runs, 1,000 Search calls, 1,000 Fetch calls, 15 minutes /session, $5 in tokens.",
+      "impact": "medium",
+      "source_url": "https://www.browserbase.com/pricing",
+      "category": "Browser Automation",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-10-24",
+      "restatement": [
+        {
+          "url": "https://www.browserbase.com/pricing",
+          "description": "Headless browser infrastructure — Free Plan $0/mo. Includes: 3 concurrent browsers, 1 browser hour, 3 Agent runs, 1,000 Search calls, 1,000 Fetch calls, 15 minutes /session, $5 in tokens."
+        }
+      ],
+      "dropped_on": "2026-10-28",
+      "drop_reason": "measures no change: the listing already states 3 concurrent browsers, 1 browser hour, 3 Agent runs, 1,000 Search calls, 1,000 Fetch calls, 15 minutes a session and $5 in tokens"
+    },
+    {
+      "proposal_id": "2026-10-24/aionda-mail/pricing_restructured",
+      "proposed_on": "2026-10-24",
+      "vendor": "Aionda Mail",
+      "change_type": "pricing_restructured",
+      "date": "2026-10-24",
+      "date_source": "discovered",
+      "summary": "The Plus tier pricing has changed from €1.99/month to €18.49/year. The free tier still exists with up to 25 disposable addresses, but the Plus tier now offers up to 10,000 disposable addresses, unlimited forwarding, custom domains, calendar invitations, and 5 GB encrypted drive.",
+      "tier": "Plus",
+      "tier_direction": "narrowed",
+      "previous_state": "Free tier includes up to 25 disposable addresses, encrypted mailbox, calendar & contacts. Plus tier is €1.99/month for up to 10,000 disposable addresses, unlimited forwarding, custom domains, calendar invitations, and 5 GB encrypted drive. Enterprise tier starts at €1.49/employee/month.",
+      "current_state": "Unlock Plus €18.49 (~$20.71 USD)/year 90,000+ users",
+      "impact": "low",
+      "source_url": "https://mail.aionda.com/",
+      "category": "Email",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-10-24",
+      "restatement": [
+        {
+          "url": "https://mail.aionda.com/",
+          "refused": "reading_answers_for_something_else"
+        }
+      ],
+      "dropped_on": "2026-10-28",
+      "drop_reason": "Plus is still 1.99 EUR a month in the plan table (mail.aionda.com, read 2026-10-28); EUR 18.49 a year is the annual price in the page banner; Free unchanged (up to 25 disposable addresses)"
+    },
+    {
+      "proposal_id": "2026-10-24/postman/limits_increased",
+      "proposed_on": "2026-10-24",
+      "vendor": "Postman",
+      "change_type": "limits_increased",
+      "date": "2026-10-24",
+      "date_source": "discovered",
+      "summary": "The free plan now offers 100 AI credits instead of 50. The free plan also includes 1,000 Context Graph API queries per month.",
+      "tier": "Free",
+      "tier_direction": "widened",
+      "previous_state": "Free plan for one user: 50 Postman AI credits a month, the API client and core tools, specs and mock servers, native Git, unlimited manual Flows, automated API testing with the Collection Runner (without data files), unlimited local performance testing and 1,000 API monitoring requests a month. Cloud performance testing is on paid plans only, at $0.04 per virtual-user hour. Team collaboration needs the Team plan ($19 per user a month, billed annually).",
+      "current_state": "The Free plan costs $0 per month and includes 100 AI credits, API client & core tools, Specs & mock servers, Native Git, Collection Runner & Performance Testing runs, Manual Flows, 1,000 Context Graph API queries per month, and 1,000 API monitoring requests per month.",
+      "impact": "low",
+      "source_url": "https://www.postman.com/pricing/",
+      "category": "Testing",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-10-24",
+      "restatement": [
+        {
+          "url": "https://www.postman.com/pricing/",
+          "refused": "reading_drops_the_cap_on_who_may_use_it"
+        }
+      ],
+      "dropped_on": "2026-10-28",
+      "drop_reason": "postman.com/pricing contradicts itself (read 2026-10-28): the Free card says '100 AI credits' while the plan comparison table says Postman AI credits '50 / month' for Free; Context Graph API queries (1,000 a month) is a new feature, not a widened limit; re-read when the page agrees"
+    },
+    {
+      "proposal_id": "2026-10-25/doppler/limits_increased",
+      "proposed_on": "2026-10-25",
+      "vendor": "Doppler",
+      "change_type": "limits_increased",
+      "date": "2026-10-25",
+      "date_source": "discovered",
+      "summary": "The free tier now has limits of 25 users, 15 environments, and 100 configs per environment, whereas previously it was 3 users, 4 environments, and 10 configs per environment.",
+      "tier": "Developer",
+      "tier_direction": "widened",
+      "previous_state": "Secrets management — up to 3 users, 10 projects, 4 environments per project. CLI, SDKs, and integrations included",
+      "current_state": "Free for 25 users, 15 environments, and 100 configs per environment",
+      "impact": "high",
+      "source_url": "https://www.doppler.com/pricing",
+      "category": "Secrets Management",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-10-25",
+      "restatement": [
+        {
+          "url": "https://www.doppler.com/pricing",
+          "description": "Secrets management — Free for 25 users, 15 environments, and 100 configs per environment"
+        }
+      ],
+      "dropped_on": "2026-10-28",
+      "drop_reason": "misreads the comparison table: Developer is still 'Free for 3 users' ($8/mo per additional user, up to 25), 10 projects, 4 environments, 10 configs per environment; 15 environments and 100 configs are Team's column"
+    },
+    {
+      "proposal_id": "2026-10-25/siliconflow/pricing_restructured",
+      "proposed_on": "2026-10-25",
+      "vendor": "SiliconFlow",
+      "change_type": "pricing_restructured",
+      "date": "2026-10-25",
+      "date_source": "discovered",
+      "summary": "Specifically, DeepSeek-V4.1-Flash, DeepSeek-V4-Flash, DeepSeek-V4-Pro, GLM-5.3-Flash, GLM-5.3, GLM-5.2, GLM-5.1 (Pro), GLM-4.5V, GLM-4.5-Air, Hy4 preview, Hunyuan-A13B-Instruct, LongCat-2.0, Kimi-K2.7-Code, Kimi-K2.6 (Pro), Qwen3.8-27B, Qwen3.6-35B-A3B, Qwen3.6-27B, Qwen3.5-122B-A10B, Qwen3.5-35B-A3B, Qwen3.5-27B, Step-3.5-Flash, Ling-flash-2.0, Ling-mini-2.0, Seed-OSS-36B-Instruct, and Wan2.2-I2V-A14B and Wan2.2-T2V-A14B now have associated costs. Hunyuan-MT-7B remains free.",
+      "tier": "Qwen3.8-27B",
+      "tier_direction": "narrowed",
+      "previous_state": "Pay-as-you-go model inference. siliconflow.cn, run by a Beijing company, lists these models at no charge: the chat models Qwen3-8B, Qwen2.5-7B-Instruct (Free), Qwen3.5-4B, GLM-4-9B-0414, GLM-Z1-9B-0414, DeepSeek-R1-0528-Qwen3-8B (Free) and Xing4.0-29B; the translation model Hunyuan-MT-7B; the OCR models PaddleOCR-VL-1.5 and DeepSeek-OCR; the embedding models bge-m3, bge-large-zh-v1.5 and bge-large-en-v1.5; the reranker bge-reranker-v2-m3; Kolors image generation; and the speech recognition models XingChenAGI/XingChenGSR-V1.0, XingChenAGI/XingChenASR-V3.2-Ultra, XingChenAGI/XingChenASR-Diarize-V3.0, XingChenAGI/XingChenASR-V3.2 and FunAudioLLM/SenseVoiceSmall. Qwen3-ASR-1.7B is paid at ¥0.00022 per second of audio. The Pro versions are paid: Qwen2.5-7B-Instruct (Pro), bge-m3 (Pro) and bge-reranker-v2-m3 (Pro). All other models are paid too, including DeepSeek-V4-Flash, DeepSeek-V4-Pro and GLM-5.3. Using all the free models requires real-name verification, and online personal verification accepts only Chinese-issued documents, such as a resident ID card or a Foreign Permanent Resident ID Card. The international site, siliconflow.com, is run by SiliconFlow Labs Pte. Ltd. under Singapore law, is not offered in mainland China, and gives $1 in free credits to start. Its paid rates per million input/output tokens: gpt-oss-20b $0.04/$0.18; gpt-oss-120b $0.05/$0.45; DeepSeek-V4.1-Flash $0.15/$0.60.",
+      "current_state": "¥ 3.00 for input, ¥ 12.00 for output",
+      "impact": "high",
+      "source_url": "https://siliconflow.cn/pricing",
+      "category": "AI / ML",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-10-25",
+      "restatement": [
+        {
+          "url": "https://siliconflow.cn/pricing",
+          "refused": "reading_answers_for_something_else"
+        }
+      ],
+      "dropped_on": "2026-10-28",
+      "drop_reason": "every model the listing names as free still has price 0 and status normal in the page's model data (siliconflow.cn/pricing, read 2026-10-28), including Qwen3-8B, Qwen2.5-7B-Instruct, Qwen3.5-4B, GLM-4-9B-0414, GLM-Z1-9B-0414, DeepSeek-OCR and Hunyuan-MT-7B; the models the reading names were never free in our listing"
+    },
+    {
+      "proposal_id": "2026-10-25/windmill-dev/limits_reduced",
+      "proposed_on": "2026-10-25",
+      "vendor": "windmill.dev",
+      "change_type": "limits_reduced",
+      "date": "2026-10-25",
+      "date_source": "discovered",
+      "summary": "The free tier now has a maximum of 50 users. Previously it was unlimited. The number of free app guests is now 100 per 30 days.",
+      "tier": "Free",
+      "tier_direction": "narrowed",
+      "previous_state": "Windmill is an open-source developer platform for building multi-step automations and internal apps from Python and TypeScript scripts. Windmill Cloud's Free plan is $0 with no credit card: 1,000 executions a month, unlimited scripts, flows, apps, variables and resources, Google, GitHub and GitLab sign-in, and community support on Discord. A free user can create and be a member of at most three non-premium workspaces. Cloud's Team plan is $10 a month per developer, with 10,000 executions a month per seat and at most 10 seats. The self-hosted open-source edition is free with unlimited executions and at most 10 users with SSO.",
+      "current_state": "Unlimited executions. Platform Executions per month Unlimited Number of workspaces 3 Maximum number of users 50",
+      "impact": "high",
+      "source_url": "https://www.windmill.dev/pricing",
+      "category": "Low-Code Platforms",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-10-25",
+      "restatement": [
+        {
+          "url": "https://www.windmill.dev/pricing",
+          "refused": "reading_answers_for_something_else"
+        }
+      ],
+      "dropped_on": "2026-10-28",
+      "drop_reason": "reads the self-hosted column ('tier-free-selfhost': unlimited executions, 3 workspaces, 50 users, 10 with SSO, 100 app guests per 30 days) as Windmill Cloud's Free plan; nothing the listing states moved"
+    },
+    {
+      "proposal_id": "2026-10-26/firebase/limits_increased",
+      "proposed_on": "2026-10-26",
+      "vendor": "Firebase",
+      "change_type": "limits_increased",
+      "date": "2026-10-26",
+      "date_source": "discovered",
+      "summary": "Several limits have been updated for the Spark plan. Hosting bandwidth is now 10 GiB/month, up from 360 MB/day. Cloud Storage limits vary by bucket location.",
+      "tier": "Spark",
+      "tier_direction": "widened",
+      "previous_state": "Spark plan, no payment method needed: Auth (50K MAU), Firestore Standard edition (1 GiB stored, 50K reads/day, 20K writes/day, 20K deletes/day), Realtime Database (100 simultaneous connections, 1 GB stored, 10 GB/month downloaded), Hosting (10 GB storage, 360 MB/day transfer), and no-cost Analytics, Crashlytics and Cloud Messaging. Firestore Enterprise on Spark includes 1 GiB stored, 10 GiB/month network egress, 40K write units/day, 50K read units/day, 50K real-time update units/day. Cloud Functions and Cloud Storage need the Blaze plan.",
+      "current_state": "App Hosting: No-cost up to 10 GiB/month. Cloud Storage: No-cost up to 5 GB. Realtime Database: 1 GB stored",
+      "impact": "medium",
+      "source_url": "https://firebase.google.com/pricing",
+      "category": "Databases",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-10-26",
+      "restatement": [
+        {
+          "url": "https://firebase.google.com/pricing",
+          "refused": "tier_is_not_one_we_record_as_free"
+        }
+      ],
+      "dropped_on": "2026-10-28",
+      "drop_reason": "different products: Hosting still states 10 GB storage and 360 MB/day transfer at no cost; 10 GiB/month is App Hosting's outgoing bandwidth (firebase.google.com/pricing, read 2026-10-28)"
+    },
+    {
+      "proposal_id": "2026-10-26/brave-search-api/limits_increased",
+      "proposed_on": "2026-10-26",
+      "vendor": "Brave Search API",
+      "change_type": "limits_increased",
+      "date": "2026-10-26",
+      "date_source": "discovered",
+      "summary": "The free tier now offers \"Up to $20 in free calls every month\". Previously \"$5 in free credits every month\".",
+      "tier": "Brave Search API",
+      "tier_direction": "widened",
+      "previous_state": "$5 in free credits every month, applied automatically. Brave's \"up to $20\" figure is $5 on each of four plans: Search, Answers, Spellcheck and Autosuggest. Search is $5 per 1,000 requests; Answers is $4 per 1,000 requests plus $5 per million tokens. Web search, news, videos, images, LLM context endpoints. 50 queries/sec. Credit card required. The earlier free plan (2,000 queries/mo) ended Feb 2026. The tools of Brave's MCP server include brave_web_search, brave_news_search, brave_image_search, brave_llm_context and brave_summarizer.",
+      "current_state": "Up to $20 in free calls every month · Prepaid credits, no subscription",
+      "impact": "medium",
+      "source_url": "https://brave.com/search/api/",
+      "category": "AI / ML",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-10-26",
+      "restatement": [
+        {
+          "url": "https://brave.com/search/api/",
+          "refused": "reading_drops_a_figure_our_source_check_found",
+          "figures": [
+            "$5",
+            "$4",
+            "50 queries per second"
+          ]
+        }
+      ],
+      "dropped_on": "2026-10-28",
+      "drop_reason": "measures no change: 'Up to $20' is $5 a month on each of four plans (Search, Answers, Spellcheck, Autosuggest), as the listing already states"
+    },
+    {
+      "proposal_id": "2026-10-26/anthropic-api/pricing_restructured",
+      "proposed_on": "2026-10-26",
+      "vendor": "Anthropic API",
+      "change_type": "pricing_restructured",
+      "date": "2026-10-26",
+      "date_source": "discovered",
+      "summary": "Pricing for Claude models has been updated. Several models have been added and pricing for existing models has changed.",
+      "tier": "Claude Opus 5.5",
+      "tier_direction": "unchanged",
+      "previous_state": "Claude API with usage-based pricing per million tokens (input/output). Claude Fable 5.1 $10/$50. Claude Opus 5.5 $4/$20. Claude Sonnet 5.5 $2/$10. Claude Sonnet 5 $2/$10. Claude Haiku 5.5 $0.10/$0.50 (for prompts up to 100,000 tokens; longer prompts cost five times as much). Claude Haiku 4.5 $1/$5. The Batch API gives a 50% discount on input and output tokens. Claude Opus 5.5 cache hits $0.20, Claude Sonnet 5.5 cache hits $0.10, Claude Fable 5.1 cache hits $0.25. Other models’ cache hits cost 0.1x the input price. Cache writes cost 1.25x the input price for 5-minute lifetime and 2x for 1-hour lifetime. Anthropic states \"Claude Max and Team plans include monthly credits for the Claude API.\" Max 5x gets $100 a month, Max 20x gets $200, Team gets up to $500 pooled. Anthropic's pages state no free credit amount for new API users.",
+      "current_state": "Claude Opus 5.5 costs $4 / MTok for input and $20 / MTok for output. Cache hits cost $0.20 / MTok. 5-minute cache writes cost $5 / MTok, 1-hour cache writes cost $8 / MTok.",
+      "impact": "high",
+      "source_url": "https://platform.claude.com/docs/en/about-claude/pricing",
+      "category": "AI / ML",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-10-26",
+      "restatement": [],
+      "dropped_on": "2026-10-28",
+      "drop_reason": "measures no change: every price the listing states matches platform.claude.com/docs/en/about-claude/pricing (read 2026-10-28); the new rows (Claude Mythos 5.1, Mythos 5) carry no free tier"
+    },
+    {
+      "proposal_id": "2026-10-26/cohere/free_tier_removed",
+      "proposed_on": "2026-10-26",
+      "vendor": "Cohere",
+      "change_type": "free_tier_removed",
+      "date": "2026-10-26",
+      "date_source": "discovered",
+      "summary": "The free trial is still offered. The pricing for production keys has changed significantly.",
+      "tier": "Command",
+      "tier_direction": "unchanged",
+      "previous_state": "AI model API for Command chat models, Embed, Rerank, Transcribe and Parse. Every account starts with a Trial API key: calls made with it are free and limited to 1,000 API calls a month. Trial rate limits: 20 requests a minute per Chat model, 2,000 Embed inputs a minute and 10 Rerank requests a minute. Trial keys can use all of Cohere's models and APIs. Production keys are pay-as-you-go. Prices per 1M tokens: Command R7B $0.0375/$0.15; Command R $0.15/$0.60. The pricing page lists Command A+ (Apache 2.0) at $0 through an API key and as a model download.",
+      "current_state": "API calls made from a Trial API key are free. API calls made from a Production API key will be charged on a pay-as-you-go basis. Your bill will be issued at the end of every calendar month or when you reach $250 in outstanding balances. Legacy Command pricing is $1.00/1M tokens for input and $2.00/1M tokens for output. Aya Expanse models are charged at $0.50/1M tokens for input and $1.50/1M tokens for output. Model Vault pricing varies by model and tier.",
+      "impact": "high",
+      "source_url": "https://cohere.com/pricing",
+      "category": "AI / ML",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-10-26",
+      "restatement": [],
+      "dropped_on": "2026-10-28",
+      "drop_reason": "the reading's own first sentence says the trial is still offered: cohere.com/pricing (read 2026-10-28) says 'API calls made from a Trial API key are free' and a Trial key is created with every account; the dollar figures it quotes are the FAQ's legacy-model prices"
+    },
+    {
+      "proposal_id": "2026-10-26/conversion-tools/limits_reduced",
+      "proposed_on": "2026-10-26",
+      "vendor": "Conversion Tools",
+      "change_type": "limits_reduced",
+      "date": "2026-10-26",
+      "date_source": "discovered",
+      "summary": "The free tier file size limit has been reduced from 50 GB to 10 MB. The free tier also now has 100 free API calls/month + 100 AI credits/month.",
+      "tier": "Free",
+      "tier_direction": "narrowed",
+      "previous_state": "Online File Converter for documents, images, video, audio, and eBooks. REST API is available. Libraries for Node.js, PHP, Python. Support files up to 50 GB (for paid plans). Registered free users get 10 conversions a day (100 a month) and a 20 MB file size limit.",
+      "current_state": "Free users can convert files up to 10 MB. The API offers 100 free API calls/month + 100 AI credits/month.",
+      "impact": "high",
+      "source_url": "https://conversiontools.io/",
+      "category": "Dev Utilities",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-10-26",
+      "restatement": [
+        {
+          "url": "https://conversiontools.io/",
+          "description": "Online File Converter for documents, images, video, audio, and eBooks — Free users can convert files up to 10 MB. The API offers 100 free API calls/month + 100 AI credits/month."
+        }
+      ],
+      "dropped_on": "2026-10-28",
+      "drop_reason": "10 MB is the non-registered limit; registered Free users still get a 20 MB file size limit and 10 conversions a day, max 100 a month (conversiontools.io/pricing, read 2026-10-28)"
+    },
+    {
+      "proposal_id": "2026-10-28/sentry/limits_increased",
+      "proposed_on": "2026-10-28",
+      "vendor": "Sentry",
+      "change_type": "limits_increased",
+      "date": "2026-10-28",
+      "date_source": "discovered",
+      "summary": "The free Developer plan now has a limit of 50k errors/month. Previously it was 5k errors/month. The free plan also includes 5GB of logs, 5M spans, 50 session replays, and 1GB of attachments.",
+      "tier": "Developer",
+      "tier_direction": "widened",
+      "previous_state": "Developer tier: 1 user, 5K errors/month, 5M spans/month, 50 session replays, 5GB application logs, 1GB attachments",
+      "current_state": "Free $0 Limited to one user One user Error Monitoring and Tracing Alerts and notifications via email 10 custom dashboards MCP access. Includes 50k errors/month, 5GB logs, 5M spans, 50 session replays, and 1GB attachments.",
+      "impact": "low",
+      "source_url": "https://sentry.io/pricing/",
+      "category": "Monitoring",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-10-28",
+      "restatement": [
+        {
+          "url": "https://sentry.io/pricing/",
+          "description": "Free $0 Limited to one user One user Error Monitoring and Tracing Alerts and notifications via email 10 custom dashboards MCP access. Includes 50k errors/month, 5GB logs, 5M spans, 50 session replays, and 1GB attachments."
+        }
+      ],
+      "dropped_on": "2026-10-28",
+      "drop_reason": "reads the Team column: the plan table gives Developer 5k errors and Team and Business 50k errors (sentry.io/pricing, read 2026-10-28)"
+    },
+    {
+      "proposal_id": "2026-10-28/zoho-projects/pricing_restructured",
+      "proposed_on": "2026-10-28",
+      "vendor": "Zoho Projects",
+      "change_type": "pricing_restructured",
+      "date": "2026-10-28",
+      "date_source": "discovered",
+      "summary": "The page states Zoho Projects is a free project management platform without compromising on quality and functionality, and allows users to break down project activities, allocate resources, and schedule work items using the Gantt chart with the free version.",
+      "tier": "Free",
+      "tier_direction": "narrowed",
+      "previous_state": "Free for up to 5 users: 3 projects, subtasks, whiteboard, 5 GB of storage and the iOS and Android apps. Zoho's [Bugtracker](https://zoho.com/bugtracker) has its own free plan: 3 users, 2 projects and 5 GB of attachments.",
+      "current_state": "Zoho Projects is a free project management platform that allows users to break down project activities, allocate resources, and schedule work items using the Gantt chart.",
+      "impact": "medium",
+      "source_url": "https://zoho.com/projects",
+      "category": "Project Management",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-10-28",
+      "restatement": [
+        {
+          "url": "https://zoho.com/projects",
+          "refused": "reading_states_no_figure_where_our_terms_do"
+        }
+      ],
+      "dropped_on": "2026-10-28",
+      "drop_reason": "states no figure: zoho.com/projects/pricing.html (read 2026-10-28) still gives Free for up to 5 users with 3 projects"
     }
   ]
 }
