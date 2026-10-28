@@ -22,11 +22,11 @@
       "changed": "2026-10-23"
     },
     "/ai-free-tiers": {
-      "hash": "a25513e3fcf2b4bf",
+      "hash": "200d14527c05a57b",
       "changed": "2026-10-28"
     },
     "/ai-ml-alternatives": {
-      "hash": "def646caaaed229b",
+      "hash": "266799fc0e6c1304",
       "changed": "2026-10-28"
     },
     "/alternative-to": {
@@ -1099,7 +1099,7 @@
       "changed": "2026-10-24"
     },
     "/category/ai-ml": {
-      "hash": "550b8eaecaa94b71",
+      "hash": "192eef26f7a11217",
       "changed": "2026-10-28"
     },
     "/category/analytics": {
@@ -3247,7 +3247,7 @@
       "changed": "2026-10-28"
     },
     "/gemini-api-pricing-2026": {
-      "hash": "757a02a148e56538",
+      "hash": "d5914aaea958d0a8",
       "changed": "2026-10-28"
     },
     "/github-actions-alternatives": {
@@ -3319,7 +3319,7 @@
       "changed": "2026-10-25"
     },
     "/llm-api-pricing": {
-      "hash": "cf811468d0c4d2e7",
+      "hash": "42a3e185c56b2881",
       "changed": "2026-10-28"
     },
     "/localstack-alternatives": {
@@ -3355,16 +3355,16 @@
       "changed": "2026-10-28"
     },
     "/openai-assistants-alternatives": {
-      "hash": "5f3e0aa69b4ee0f0",
-      "changed": "2026-10-23"
+      "hash": "b68bea2618d6bd34",
+      "changed": "2026-10-28"
     },
     "/openai-assistants-migration": {
-      "hash": "e7822bc9bb1d2f8b",
-      "changed": "2026-10-23"
+      "hash": "572075ddeccabbb6",
+      "changed": "2026-10-28"
     },
     "/openai-assistants-migration-2026": {
-      "hash": "b5c9a449a805aa4f",
-      "changed": "2026-10-23"
+      "hash": "ee07fdd343aae38b",
+      "changed": "2026-10-28"
     },
     "/postman-alternatives": {
       "hash": "d29fb3a7bbcff17c",
@@ -3592,7 +3592,7 @@
       "changed": "2026-10-28"
     },
     "/stack-check": {
-      "hash": "311f308c70bb1860",
+      "hash": "cf189d29eaf1c965",
       "changed": "2026-10-28"
     },
     "/stacks": {
