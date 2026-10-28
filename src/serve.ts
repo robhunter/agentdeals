@@ -821,7 +821,7 @@ function termsUnconfirmedNoticeHtml(offer: Offer): string {
 function termsNoticeWhereAChangeRepeatsAListing(vendor: string, stated: string): string {
   return offers
     .filter((offer) => offer.vendor === vendor && offer.description === stated)
-    .map((offer) => termsUnconfirmedNoticeHtml(offer))
+    .map((offer) => listingUnreachableNoticeHtml(offer) + termsUnconfirmedNoticeHtml(offer))
     .join("");
 }
 
