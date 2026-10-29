@@ -27942,6 +27942,7 @@ function buildStartupCreditsPage(): string {
     "vc-referral": "#d29922",
     "accelerator-only": "#bc8cff",
     "invite-only": "#f85149",
+    "closed": "#f85149",
   };
   const difficultyLabels: Record<string, string> = {
     "open": "Open application",
@@ -27949,6 +27950,7 @@ function buildStartupCreditsPage(): string {
     "vc-referral": "Referral from a partner VC",
     "accelerator-only": "Accelerator required",
     "invite-only": "Invite only",
+    "closed": "Not accepting applications",
   };
 
   const categoryLabels: Record<string, string> = {

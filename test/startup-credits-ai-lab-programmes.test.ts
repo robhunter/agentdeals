@@ -11,6 +11,7 @@ const REPO = path.join(__dirname, "..");
 const PAGE = "/startup-credits";
 const CLAUDE = "Claude Startups (Anthropic)";
 const OPENAI = "OpenAI for Startups";
+const XAI = "Grok for Startups (xAI)";
 const KIRO = "Amazon Kiro (AWS Startups)";
 
 const { guideBlurb } = await import("../dist/guide-blurbs.js");
@@ -35,13 +36,25 @@ type Card = { name: string; label: string; href: string | null; lines: Map<strin
 
 const EXPECTED: Record<string, { label: string; href: string; lines: Array<[string, string]> }> = {
   [CLAUDE]: {
-    label: "Open application",
+    label: "Not accepting applications",
     href: "https://claude.com/programs/startups",
     lines: [
-      ["Credit value", "Up to $7,000 in Claude products and credits. Includes a free year of Claude Team and a $1,000 API credit."],
-      ["Eligibility", "Founded in the last five years or funded in the last two. VC funding is not required."],
-      ["What's included", "One year of Claude Team with up to five Premium seats, a one-time $1,000 API credit, and third-party offers worth up to $45,000. Partner VCs may add up to $100K. Credits apply to the first-party Claude API only."],
-      ["Status", "As of 2026-10-09, the Team and $1,000 API credit offers are over capacity. All applications will be re-reviewed."],
+      ["Credit value", "Not accepting new applications. Members: Claude Startup Stack offers worth up to $45,000; startups backed by a VC in Anthropic's partner network may get up to $100K in API credits through the VC."],
+      ["Eligibility", "Not accepting new applications: the current cohort is full."],
+      ["What's included", "Members keep Claude Startup Stack offers worth up to $45,000, Applied AI group sessions and events. Startups backed by a VC in Anthropic's partner network may get up to $100K in API credits through the VC. Credits apply to the first-party Claude API only."],
+      ["Status", "Since between 2026-10-12 and 2026-10-14, Anthropic says the current cohort is full and it is not accepting new applications. Applications still in review were not taken forward."],
+    ],
+  },
+  [XAI]: {
+    label: "VC/funding required",
+    href: "https://x.ai/startups",
+    lines: [
+      ["Credit value", "No amount stated. Sized by funding, revenue and AI spend to about six months of usage."],
+      ["Eligibility", "Venture backing, a live product, and a company email matching the website. One grant per company."],
+      ["Duration", "Credits expire six months after they are applied unless the approval says otherwise."],
+      ["What's included", "Credits for Grok, Grok Build, Grok Bot and the Grok API from one balance."],
+      ["Vesting", "20% on approval, the other 80% after onboarding."],
+      ["When credits run out", "Usage continues at xAI's standard pricing. (From x.ai/startups , read 2026-10-29.)"],
     ],
   },
   [OPENAI]: {
@@ -128,10 +141,10 @@ function tableRow(name: string): string[] {
 }
 
 describe("/startup-credits lists the AI labs' own startup programmes", () => {
-  it("prints Claude Startups and then OpenAI for Startups first under AI Tool Credits, before Amazon Kiro", () => {
+  it("prints the three AI lab programmes first under AI Tool Credits, before Amazon Kiro", () => {
     const names = cardsIn(section("cat-ai-tools")).map((c) => c.name);
-    assert.deepStrictEqual(names.slice(0, 2), [CLAUDE, OPENAI]);
-    assert.ok(names.indexOf(KIRO) > 1, `AI Tool Credits lists ${names.join(", ")}`);
+    assert.deepStrictEqual(names.slice(0, 3), [CLAUDE, OPENAI, XAI]);
+    assert.ok(names.indexOf(KIRO) > 2, `AI Tool Credits lists ${names.join(", ")}`);
   });
 
   it("prints each programme's credit value, eligibility and inclusions, and Claude Startups' status, under its label", () => {
@@ -158,19 +171,35 @@ describe("/startup-credits lists the AI labs' own startup programmes", () => {
         name,
         fields.get("Credit value"),
         fields.get("Eligibility")!.split(".")[0],
-        "—",
+        fields.get("Duration") ?? "—",
         expected.label,
       ]);
     }
   });
 
-  it("dates Claude Startups' capacity status, and the source states it once", () => {
+  it("dates the interval in which Claude Startups closed, and the source states it once", () => {
     const status = cardsIn(section("cat-ai-tools")).find((c) => c.name === CLAUDE)?.lines.get("Status") ?? "";
-    const dated = /^As of (\d{4}-\d{2}-\d{2}), /.exec(status);
+    const dated = /^Since between (\d{4}-\d{2}-\d{2}) and (\d{4}-\d{2}-\d{2}), /.exec(status);
     assert.ok(dated, `the status carries no read date: ${status}`);
-    assert.ok(dated[1] <= new Date().toISOString().slice(0, 10), `the status is dated ${dated[1]}`);
+    assert.ok(dated[1] < dated[2] && dated[2] <= new Date().toISOString().slice(0, 10), `the status interval is ${dated[1]} to ${dated[2]}`);
     const sources = readdirSync(path.join(REPO, "src")).filter((f) => f.endsWith(".ts")).map((f) => readFileSync(path.join(REPO, "src", f), "utf8"));
-    assert.strictEqual(sources.join("\n").split("API credit offers are over capacity").length - 1, 1);
+    assert.strictEqual(sources.join("\n").split("Applications still in review were not taken forward.").length - 1, 1);
+  });
+
+  it("offers none of Claude Startups' withdrawn benefits anywhere on the page", () => {
+    assert.doesNotMatch(readable(html), /up to \$7,000|free year of Claude Team|one year of Claude Team|\$1,000 API credit|one-time \$1,000|VC funding is not required|All applications will be re-reviewed/i);
+    const card = cardsIn(section("cat-ai-tools")).find((c) => c.name === CLAUDE)!;
+    assert.strictEqual(card.label, "Not accepting applications");
+    assert.ok(card.lines.get("Credit value")?.startsWith("Not accepting new applications."));
+    assert.strictEqual(tableRow(CLAUDE)[4], "Not accepting applications");
+    assert.ok(html.includes('<div class="diff-card" style="border-left-color:#f85149"><h3><a href="https://claude.com/programs/startups"'));
+    assert.ok(html.includes('<span style="color:#f85149;font-size:.8rem;font-weight:600">Not accepting applications</span>'));
+  });
+
+  it("links Grok's billing continuation to the programme with citation attributes", () => {
+    const ai = section("cat-ai-tools");
+    assert.ok(ai.includes('<a href="https://x.ai/startups" rel="nofollow noopener"'));
+    assert.ok(ai.includes('(From <a href="https://x.ai/startups" rel="nofollow noopener">x.ai/startups</a>, read 2026-10-29.)'));
   });
 
   it("counts every card among the programmes compared and the open ones among those open to application", () => {
