@@ -7431,6 +7431,12 @@
           "quote": "No, credits do not roll over or accrue.",
           "url": "https://expo.dev/pricing",
           "read_on": "2026-10-29"
+        },
+        {
+          "text": "Expo's Terms of Service grant a limited right to use the services for your own business purposes of building and deploying your own apps. They set no different permitted purposes for the Free plan.",
+          "quote": "solely for your own business purposes of building and deploying your own apps, websites, and web services",
+          "url": "https://expo.dev/terms",
+          "read_on": "2026-10-29"
         }
       ],
       "free_plan_excerpt": {
