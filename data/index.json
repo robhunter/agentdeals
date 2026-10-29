@@ -38400,7 +38400,15 @@
         "text": "Get 2,500 free queries No credit card required",
         "url": "https://serper.dev/",
         "read_on": "2026-10-21"
-      }
+      },
+      "conditions": [
+        {
+          "text": "Serper is a business-to-business service. The Terms of Service do not restrict commercial use. The same Terms apply to free and paid queries.",
+          "quote": "Serper is a business-to-business service and does not provide end-user (consumer) services.",
+          "url": "https://serper.dev/terms",
+          "read_on": "2026-10-29"
+        }
+      ]
     },
     {
       "vendor": "Linkup",
