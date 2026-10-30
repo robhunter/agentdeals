@@ -7924,6 +7924,12 @@
           "quote": "When your account reaches it, your forms keep working for visitors, but Formspree stops processing new submissions. It saves them to your account without sending notification emails or running plugins, and emails you when this starts happening. Formspree holds those submissions in the Over Limit folder. Once you have room in your limit again, you can reprocess them from the dashboard.",
           "url": "https://help.formspree.io/articles/form-and-project-settings/over-limit-submissions",
           "read_on": "2026-10-10"
+        },
+        {
+          "text": "An AI agent can set up a Formspree form using Formspree's published instructions. It builds a claim URL with the form's fields. The user opens the claim link and signs in or signs up, which creates the form. The user then gives the agent the form's endpoint URL. No password or API key is needed. This also works from a chat with no project files.",
+          "quote": "Build a \"claim\" URL. Send the user to it and Formspree creates the form (after they sign in or sign up) with the fields, validation, and integrations you specified.",
+          "url": "https://formspree.io/ai/",
+          "read_on": "2026-10-30"
         }
       ],
       "free_plan_excerpt": {
