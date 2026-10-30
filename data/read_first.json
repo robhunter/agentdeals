@@ -46,6 +46,31 @@
       "since": "2026-10-30"
     },
     {
+      "vendor": "Pollinations.AI",
+      "tier": "Free Credits",
+      "since": "2026-10-30"
+    },
+    {
+      "vendor": "DigitalOcean",
+      "tier": "Credits",
+      "since": "2026-10-30"
+    },
+    {
+      "vendor": "LLM7.io",
+      "tier": "Free",
+      "since": "2026-10-30"
+    },
+    {
+      "vendor": "ZITADEL Cloud",
+      "tier": "Free",
+      "since": "2026-10-30"
+    },
+    {
+      "vendor": "Composio",
+      "tier": "Free",
+      "since": "2026-10-30"
+    },
+    {
       "vendor": "NVIDIA NIM",
       "tier": "Free"
     },
