@@ -2734,8 +2734,8 @@
       "changed": "2026-10-30"
     },
     "/digest/2022-w48": {
-      "hash": "134365aa0a98ed6a",
-      "changed": "2026-10-09"
+      "hash": "97d7fbee9495f2fc",
+      "changed": "2026-10-30"
     },
     "/digest/2023-w32": {
       "hash": "710bdafdb540e444",
@@ -2754,8 +2754,8 @@
       "changed": "2026-10-09"
     },
     "/digest/2024-w22": {
-      "hash": "1abf9e0c77685bf5",
-      "changed": "2026-10-19"
+      "hash": "4308755c8927c2e6",
+      "changed": "2026-10-30"
     },
     "/digest/2024-w24": {
       "hash": "5ed89eced86c091c",
@@ -2778,24 +2778,24 @@
       "changed": "2026-10-09"
     },
     "/digest/2025-w01": {
-      "hash": "34fb74009e612bc9",
-      "changed": "2026-10-29"
+      "hash": "eed4113fd0cd1488",
+      "changed": "2026-10-30"
     },
     "/digest/2025-w04": {
       "hash": "02d76b554ccdf962",
       "changed": "2026-10-09"
     },
     "/digest/2025-w09": {
-      "hash": "b215973c84452185",
-      "changed": "2026-10-09"
+      "hash": "f6091e872cc0572d",
+      "changed": "2026-10-30"
     },
     "/digest/2025-w13": {
       "hash": "af66de134f523c3f",
       "changed": "2026-10-09"
     },
     "/digest/2025-w14": {
-      "hash": "c83cbdc298b3aeeb",
-      "changed": "2026-10-09"
+      "hash": "7bd2d2eaab919607",
+      "changed": "2026-10-30"
     },
     "/digest/2025-w16": {
       "hash": "45194e1a6a1cb1b9",
@@ -2806,8 +2806,8 @@
       "changed": "2026-10-09"
     },
     "/digest/2025-w22": {
-      "hash": "d80613cf7a8421b6",
-      "changed": "2026-10-09"
+      "hash": "7b0240cf8c291dc4",
+      "changed": "2026-10-30"
     },
     "/digest/2025-w23": {
       "hash": "fee71fc44671db7a",
@@ -2822,8 +2822,8 @@
       "changed": "2026-10-09"
     },
     "/digest/2025-w27": {
-      "hash": "8aa6d93bfb651ec0",
-      "changed": "2026-10-09"
+      "hash": "5eac14056ff88b87",
+      "changed": "2026-10-30"
     },
     "/digest/2025-w29": {
       "hash": "061d71263bf217d8",
@@ -2858,8 +2858,8 @@
       "changed": "2026-10-09"
     },
     "/digest/2025-w40": {
-      "hash": "b4a9f5e274b4fdea",
-      "changed": "2026-10-09"
+      "hash": "8ae549b773035ab3",
+      "changed": "2026-10-30"
     },
     "/digest/2025-w41": {
       "hash": "33a056318d72b823",
@@ -2870,8 +2870,8 @@
       "changed": "2026-10-09"
     },
     "/digest/2025-w44": {
-      "hash": "95d13550fd8257e2",
-      "changed": "2026-10-10"
+      "hash": "ad6d571980e2b982",
+      "changed": "2026-10-30"
     },
     "/digest/2025-w46": {
       "hash": "33441883cf54a226",
@@ -2894,8 +2894,8 @@
       "changed": "2026-10-09"
     },
     "/digest/2026-w01": {
-      "hash": "04b5eef56ac28d05",
-      "changed": "2026-10-21"
+      "hash": "a0e7523dd852d7a9",
+      "changed": "2026-10-30"
     },
     "/digest/2026-w02": {
       "hash": "3adb18ed5070d114",
@@ -2910,8 +2910,8 @@
       "changed": "2026-10-21"
     },
     "/digest/2026-w05": {
-      "hash": "07bb8c24bbe7003b",
-      "changed": "2026-10-10"
+      "hash": "b6396a98b2544a0e",
+      "changed": "2026-10-30"
     },
     "/digest/2026-w06": {
       "hash": "63e95c402510250a",
@@ -2926,8 +2926,8 @@
       "changed": "2026-10-21"
     },
     "/digest/2026-w09": {
-      "hash": "552c4012ab5a3b5f",
-      "changed": "2026-10-21"
+      "hash": "22a3415b80c01f30",
+      "changed": "2026-10-30"
     },
     "/digest/2026-w10": {
       "hash": "f2874bbe56674edc",
@@ -2946,8 +2946,8 @@
       "changed": "2026-10-09"
     },
     "/digest/2026-w14": {
-      "hash": "edc7b83230fc59f6",
-      "changed": "2026-10-21"
+      "hash": "2b7af41560395d2b",
+      "changed": "2026-10-30"
     },
     "/digest/2026-w15": {
       "hash": "d4aa357b4be1b052",
@@ -2962,8 +2962,8 @@
       "changed": "2026-10-21"
     },
     "/digest/2026-w18": {
-      "hash": "6012e16f518e38d5",
-      "changed": "2026-10-09"
+      "hash": "fd84af466ec12697",
+      "changed": "2026-10-30"
     },
     "/digest/2026-w19": {
       "hash": "66fac8ab82b9b793",
@@ -2998,8 +2998,8 @@
       "changed": "2026-10-21"
     },
     "/digest/2026-w27": {
-      "hash": "c233b66c76f7ec19",
-      "changed": "2026-10-28"
+      "hash": "a7a6393fab72bac9",
+      "changed": "2026-10-30"
     },
     "/digest/2026-w28": {
       "hash": "4c89f2084dfed0a6",
@@ -3014,8 +3014,8 @@
       "changed": "2026-10-21"
     },
     "/digest/2026-w31": {
-      "hash": "af1436d6ab4dc118",
-      "changed": "2026-10-21"
+      "hash": "7bb0b0bd57cfe3d4",
+      "changed": "2026-10-30"
     },
     "/digest/2026-w32": {
       "hash": "54fd6c5962d86920",
@@ -3034,8 +3034,8 @@
       "changed": "2026-10-21"
     },
     "/digest/2026-w36": {
-      "hash": "f3207fe77b936187",
-      "changed": "2026-10-23"
+      "hash": "bf19d9f30772fff0",
+      "changed": "2026-10-30"
     },
     "/digest/2026-w37": {
       "hash": "6159885d7d637c0b",
@@ -3050,8 +3050,8 @@
       "changed": "2026-10-21"
     },
     "/digest/2026-w40": {
-      "hash": "612049e734ecf895",
-      "changed": "2026-10-21"
+      "hash": "78cb2a0f5e108f76",
+      "changed": "2026-10-30"
     },
     "/digest/2026-w41": {
       "hash": "16155929e4a3762d",
@@ -3077,8 +3077,8 @@
       "changed": "2026-10-29"
     },
     "/digest/2026-w49": {
-      "hash": "bc89b330dbb21fe6",
-      "changed": "2026-10-21"
+      "hash": "c6dcc9a69bb2824e",
+      "changed": "2026-10-30"
     },
     "/digest/2026-w50": {
       "hash": "04a2e9f8adb7d9ee",
@@ -3105,7 +3105,7 @@
       "changed": "2026-10-11"
     },
     "/digest/2027-w13": {
-      "hash": "29f3332c01c55eaa",
+      "hash": "45379099ca7aa401",
       "changed": "2026-10-30"
     },
     "/digest/2027-w18": {
@@ -3113,7 +3113,7 @@
       "changed": "2026-10-30"
     },
     "/digest/2027-w39": {
-      "hash": "821c0e21aeeac3d4",
+      "hash": "59fbc709b67e4929",
       "changed": "2026-10-30"
     },
     "/digest/2028-w19": {
@@ -3121,7 +3121,7 @@
       "changed": "2026-10-30"
     },
     "/digest/archive": {
-      "hash": "eac8d3e4060784c3",
+      "hash": "3323c2c077431cc2",
       "changed": "2026-10-30"
     },
     "/digitalocean-free-tier-2026": {
