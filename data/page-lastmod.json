@@ -1080,7 +1080,7 @@
       "changed": "2026-10-23"
     },
     "/budget-builder": {
-      "hash": "d5c543c8aae1346b",
+      "hash": "0cf5b1f78edb6155",
       "changed": "2026-10-30"
     },
     "/business-bank-account-fees-2026": {
@@ -3149,7 +3149,7 @@
       "changed": "2026-10-11"
     },
     "/estimate": {
-      "hash": "e2b22c5db7a3e05a",
+      "hash": "2851708053c7169f",
       "changed": "2026-10-30"
     },
     "/events": {
@@ -3190,11 +3190,11 @@
       "changed": "2026-10-30"
     },
     "/free-django-stack": {
-      "hash": "b6a20f02c7ee4ec5",
+      "hash": "7e65a47aeb2911ff",
       "changed": "2026-10-30"
     },
     "/free-fastapi-stack": {
-      "hash": "cb1a73dd1e2a7a50",
+      "hash": "319d870245c0eb73",
       "changed": "2026-10-30"
     },
     "/free-frontend-stack": {
@@ -3202,7 +3202,7 @@
       "changed": "2026-10-30"
     },
     "/free-go-stack": {
-      "hash": "839f9f1ce88fb180",
+      "hash": "2874a34b6a47834c",
       "changed": "2026-10-30"
     },
     "/free-llm-apis": {
@@ -3210,11 +3210,11 @@
       "changed": "2026-10-30"
     },
     "/free-nextjs-stack": {
-      "hash": "efc6b40c785a4d30",
+      "hash": "0820bb9d6fc3e146",
       "changed": "2026-10-30"
     },
     "/free-saas-stack": {
-      "hash": "311572362c65543b",
+      "hash": "35d2350991f9aae1",
       "changed": "2026-10-30"
     },
     "/free-startup-stack": {
@@ -3567,12 +3567,12 @@
       "changed": "2026-10-30"
     },
     "/security-alternatives": {
-      "hash": "97429df147dc3d7e",
+      "hash": "92055101cd042de9",
       "changed": "2026-10-30"
     },
     "/security-free-tier-comparison-2026": {
-      "hash": "91e10d7eef60c149",
-      "changed": "2026-10-29"
+      "hash": "3283ddc155510904",
+      "changed": "2026-10-30"
     },
     "/serverless-free-tier-comparison-2026": {
       "hash": "54f8e7b6261239ab",
@@ -3592,7 +3592,7 @@
       "daily": true
     },
     "/stacks": {
-      "hash": "2bc226781e97e4d7",
+      "hash": "bab3659fe6df08c2",
       "changed": "2026-10-30"
     },
     "/stacks/ai-startup": {
@@ -3608,7 +3608,7 @@
       "changed": "2026-10-30"
     },
     "/stacks/saas-mvp": {
-      "hash": "2469f9ac409615d2",
+      "hash": "befaddced433a10e",
       "changed": "2026-10-30"
     },
     "/stacks/side-project": {

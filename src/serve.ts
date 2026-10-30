@@ -12344,7 +12344,7 @@ ${globalNavCss()}
   <h1>Best Free Security Tools for Developers</h1>
 
   <div class="context">
-    <p>Security is no longer optional \u2014 even side projects get supply chain attacks, credential leaks, and dependency vulnerabilities. The good news: the security tool ecosystem has an unusually strong free tier landscape. <strong>Snyk</strong> offers free SAST scanning for up to <strong>200 tests/month</strong>. <strong>Semgrep</strong> and <strong>CodeQL</strong> are free for open-source. <strong>Trivy</strong> and <strong>Grype</strong> are fully open-source container scanners.</p>
+    <p>Security is no longer optional \u2014 even side projects get supply chain attacks, credential leaks, and dependency vulnerabilities. The good news: the security tool ecosystem has an unusually strong free tier landscape. <strong>Snyk</strong> offers free SAST scanning for up to <strong>100 tests/month</strong> on up to 5 projects. <strong>Semgrep</strong> and <strong>CodeQL</strong> are free for open-source. <strong>Trivy</strong> and <strong>Grype</strong> are fully open-source container scanners.</p>
     <p>This page compares every free security tool in our index \u2014 <strong>${securityOffers.length} tools</strong> across application security (SAST/DAST), secret scanning, dependency analysis, container security, identity/auth, error tracking, and SSL/compliance. Whether you need code scanning or user authentication, we have the comparison with exact free tier limits.</p>
   </div>
 
@@ -12470,7 +12470,7 @@ ${buildCards(other)}
       <tr>
         <td style="font-weight:600"><a href="/vendor/clerk" style="color:var(--text)">Clerk</a></td>
         <td>Identity / Auth</td>
-        <td>10K MAU</td>
+        <td>50K MRU per app</td>
         <td>\u2014</td>
         <td>Modern DX: React components, webhooks</td>
       </tr>
@@ -12509,7 +12509,7 @@ ${buildCards(other)}
       <dd><a href="/vendor/trivy">Trivy</a> is the standard \u2014 scans containers, IaC, and generates SBOMs. <a href="/vendor/grype">Grype</a> is a fast alternative from the Anchore team. Both are open-source with no limits.</dd>
 
       <dt>Need user authentication for your app?</dt>
-      <dd><a href="/vendor/auth0">Auth0</a> (25K MAU free) for enterprise features like SSO and MFA. <a href="/vendor/clerk">Clerk</a> (10K MAU) for modern React-first DX. <a href="/vendor/keycloak">Keycloak</a> for self-hosted with unlimited users. See our <a href="/auth0-alternatives">Auth0 Alternatives</a> guide.</dd>
+      <dd><a href="/vendor/auth0">Auth0</a> (25K MAU free) for enterprise features like SSO and MFA. <a href="/vendor/clerk">Clerk</a> (50K MRU per app free) for modern React-first DX. <a href="/vendor/keycloak">Keycloak</a> for self-hosted with unlimited users. See our <a href="/auth0-alternatives">Auth0 Alternatives</a> guide.</dd>
 
       <dt>Managing secrets at runtime?</dt>
       <dd><a href="/vendor/hashicorp-vault">HashiCorp Vault</a> for dynamic secrets and encryption (community edition self-hosted). <a href="/vendor/doppler">Doppler</a> (5 users free) or <a href="/vendor/infisical">Infisical</a> for cloud-hosted secret management with team sharing.</dd>
@@ -17269,9 +17269,9 @@ function buildFreeNextjsStackPage(): string {
     {
       name: "Authentication",
       icon: "🔐",
-      recommended: { vendor: "Clerk", why: "Best-in-class Next.js DX with @clerk/nextjs SDK, middleware integration, and pre-built UI components. Free tier: 10,000 monthly active users, unlimited social logins, email/password, MFA, organizations, and webhooks. Drops right into App Router with zero auth boilerplate." },
+      recommended: { vendor: "Clerk", why: "Best-in-class Next.js DX with @clerk/nextjs SDK, middleware integration, and pre-built UI components. Free tier: 50,000 monthly retained users (MRU) per app, unlimited social logins, email/password, organizations, and webhooks. MFA needs Pro ($25/month). Drops right into App Router with zero auth boilerplate." },
       alternatives: ["Auth0", "Supabase", "Kinde"],
-      outgrow: "When you exceed 10,000 MAU ($0.02/MAU overage — $1,800/month at 100K MAU). Auth0 offers 25,000 MAU free but with fewer built-in UI components. Supabase Auth gives 50,000 MAU with the cheapest scale-up ($0.00325/MAU). For maximum free ceiling, WorkOS AuthKit offers 1M MAU free for basic auth.",
+      outgrow: "When you exceed 50,000 MRU per app, Pro costs $25 a month with 50,000 MRU included, then $0.02 per extra MRU. At 100,000 MRU, it costs $1,025 a month. Auth0 offers 25,000 MAU free but with fewer built-in UI components. Supabase Auth gives 50,000 MAU with the cheapest scale-up ($0.00325/MAU). For maximum free ceiling, WorkOS AuthKit offers 1M MAU free for basic auth.",
       whyNot: "Why not NextAuth/Auth.js: Self-hosted and free at any scale, but you build every UI yourself and manage session storage. Good if you want full control; Clerk if you want to ship fast.",
       relatedPage: "/auth-comparison-2026",
     },
@@ -17296,7 +17296,7 @@ function buildFreeNextjsStackPage(): string {
     {
       name: "Monitoring & Error Tracking",
       icon: "🐛",
-      recommended: { vendor: "Sentry", why: "Developer tier: 5,000 errors/month, 10,000 performance transactions, 50 session replays, 1 GB attachments. First-class Next.js SDK with automatic instrumentation for API routes, server components, middleware, and client-side errors. Source map support for production debugging." },
+      recommended: { vendor: "Sentry", why: "Developer tier: 5,000 errors/month, 5M spans, 50 session replays, 1 GB attachments. First-class Next.js SDK with automatic instrumentation for API routes, server components, middleware, and client-side errors. Source map support for production debugging." },
       alternatives: ["BetterStack", "Grafana Cloud", "Highlight.io"],
       outgrow: "When you exceed 5,000 errors/month or need more than 1 team member. BetterStack combines uptime monitoring (10 monitors) with incident management. Grafana Cloud offers 10,000 series metrics + 50 GB logs + 50 GB traces. Highlight.io bundles 500 sessions + 1,000 errors + 1M logs on free tier.",
       whyNot: "Why not Datadog: Free tier has only 1-day metric retention — practically unusable for debugging. The per-host pricing model gets expensive fast: ~$5,500/month at 100 hosts.",
@@ -17323,18 +17323,18 @@ function buildFreeNextjsStackPage(): string {
     {
       name: "Search",
       icon: "🔍",
-      recommended: { vendor: "Algolia", why: "10,000 records and 10,000 search requests/month on the free tier. Instant search with typo tolerance, faceting, and geo-search. The InstantSearch.js React library integrates cleanly with Next.js. Best-in-class search relevance out of the box." },
+      recommended: { vendor: "Algolia", why: "50,000 records and 10,000 search requests/month on the free tier. Instant search with typo tolerance, faceting, and geo-search. The InstantSearch.js React library integrates cleanly with Next.js. Best-in-class search relevance out of the box." },
       alternatives: ["Meilisearch", "Typesense", "Orama"],
-      outgrow: "When you exceed 10,000 records or 10,000 searches/month. Meilisearch Cloud offers 100,000 documents free. Typesense Cloud gives 100 search operations/hour on free tier. Both Meilisearch and Typesense are self-hostable with no limits. Orama runs client-side in the browser — zero backend cost.",
+      outgrow: "When you exceed 50,000 records or 10,000 searches/month. Meilisearch Cloud has no free plan. It starts at $20 a month and offers a 14-day free trial with no credit card required. Typesense Cloud gives 100 search operations/hour on free tier. Both Meilisearch and Typesense are self-hostable with no limits. Orama runs client-side in the browser — zero backend cost.",
       whyNot: null,
       relatedPage: null,
     },
     {
       name: "Background Jobs & Cron",
       icon: "⏱️",
-      recommended: { vendor: "Inngest", why: "Free tier: 25,000 function runs/month with event-driven architecture, retries, scheduling, and step functions. First-class Next.js integration — define functions in your API routes, Inngest handles queuing, retries, and scheduling. No infrastructure to manage." },
+      recommended: { vendor: "Inngest", why: "Free tier: 50,000 executions/month with event-driven architecture, retries, scheduling, and step functions. First-class Next.js integration — define functions in your API routes, Inngest handles queuing, retries, and scheduling. No infrastructure to manage." },
       alternatives: ["QStash", "Trigger.dev", "Vercel Cron"],
-      outgrow: "When you exceed 25,000 runs/month. QStash (Upstash) offers 1,000 messages/day for simple HTTP-based job queuing. Trigger.dev gives 50,000 runs/month with a more code-first approach. Vercel Cron Jobs are free on Hobby for scheduled tasks (1/day minimum interval) but don't handle event-driven workflows.",
+      outgrow: "When you exceed 50,000 executions/month. QStash (Upstash) offers 1,000 messages/day for simple HTTP-based job queuing. Trigger.dev's free plan includes $5 of compute credits monthly and allows 20 concurrent runs. It has a more code-first approach. Vercel Cron Jobs are free on Hobby for scheduled tasks (1/day minimum interval) but don't handle event-driven workflows.",
       whyNot: null,
       relatedPage: null,
     },
@@ -17363,7 +17363,7 @@ function buildFreeNextjsStackPage(): string {
   const faqJsonLd = faqPageJsonLd("/free-nextjs-stack", [
     { q: "Is Vercel free for Next.js?", a: "Yes. Vercel's Hobby plan is free, with 100 GB of Fast Data Transfer, 1M function invocations and 4 hours of Fluid Active CPU a month, and builds included. However, it's limited to non-commercial, personal use. For commercial projects, Vercel Pro is $20 a month with one deploying seat, and $20 for each additional deploying seat. Alternatives like Railway ($5 trial credit for 30 days, then $1 of free credit a month) and Cloudflare Pages (unlimited bandwidth) allow commercial use on free tiers." },
     { q: "What's the best free database for Next.js?", a: "Neon (serverless Postgres) has a serverless driver that works in Vercel Edge Functions, it scales to zero when not in use, and offers 1 GB of storage per project free. Supabase (500 MB, includes auth and realtime) is great if you need a full BaaS. Turso (5 GB, edge SQLite) is ideal for read-heavy apps. PlanetScale removed its free tier in April 2024." },
-    { q: "Can I build a SaaS for free with Next.js?", a: "Yes — with limits. This guide covers 10 infrastructure layers that cost $0/month total: hosting (Vercel), database (Neon), auth (Clerk 10K MAU), storage (R2), email (Resend 3K/mo), monitoring (Sentry), CI/CD (GitHub Actions), analytics (PostHog 1M events), search (Algolia 10K records), and background jobs (Inngest 25K runs). Most projects can run their entire stack on free tiers until they hit significant traction." },
+    { q: "Can I build a SaaS for free with Next.js?", a: "Yes — with limits. This guide covers 10 infrastructure layers that cost $0/month total: hosting (Vercel), database (Neon), auth (Clerk 50K MRU), storage (R2), email (Resend 3K/mo), monitoring (Sentry), CI/CD (GitHub Actions), analytics (PostHog 1M events), search (Algolia 50K records), and background jobs (Inngest 50K executions). Most projects can run their entire stack on free tiers until they hit significant traction." },
     { q: "What's the first thing to spend money on when scaling a Next.js app?", a: "Database. Neon's 1 GB of free storage per project is the tightest limit in the stack. Neon's Launch plan is usage-based with no monthly minimum: $0.106 per CU-hour of compute and $0.35 per GB-month of storage. After that, hosting: Vercel Pro at $20/month unlocks commercial use, 1 TB bandwidth, and faster builds. Everything else (auth, email, monitoring, analytics) scales to meaningful traffic on free tiers." },
   ]);
 
@@ -17428,13 +17428,13 @@ function buildFreeNextjsStackPage(): string {
   const growthCosts = [
     { layer: "Database", vendor: "Neon", freeLimit: "1 GB storage per project", firstPaid: "Launch, usage-based", gets: "$0.106/CU-hour, $0.35/GB-month, autoscaling up to 16 CU", hitFirst: true },
     { layer: "Hosting", vendor: "Vercel", freeLimit: "100 GB bandwidth", firstPaid: "Pro $20/mo/member", gets: "1 TB bandwidth, commercial use, faster builds", hitFirst: true },
-    { layer: "Auth", vendor: "Clerk", freeLimit: "10,000 MAU", firstPaid: "Pro $25/mo + $0.02/MAU", gets: "Unlimited MAU, custom domains, premium support", hitFirst: false },
+    { layer: "Auth", vendor: "Clerk", freeLimit: "50,000 MRU per app", firstPaid: "Pro $25/mo", gets: "50,000 MRU, then $0.02 each; no Clerk branding", hitFirst: false },
     { layer: "Email", vendor: "Resend", freeLimit: "3,000 emails/mo", firstPaid: "Pro $20/mo", gets: "50,000 emails/mo, custom domains, analytics", hitFirst: false },
     { layer: "Storage", vendor: "Cloudflare R2", freeLimit: "10 GB", firstPaid: "$0.015/GB/mo", gets: "Unlimited storage, still zero egress", hitFirst: false },
     { layer: "Monitoring", vendor: "Sentry", freeLimit: "5,000 errors/mo", firstPaid: "Team $26/mo", gets: "50,000 errors, unlimited members, integrations", hitFirst: false },
     { layer: "Analytics", vendor: "PostHog", freeLimit: "1M events/mo", firstPaid: "$0.00031/event", gets: "Pay-as-you-go beyond 1M, group analytics", hitFirst: false },
-    { layer: "Search", vendor: "Algolia", freeLimit: "10,000 records", firstPaid: "Build $0.50/1K req", gets: "100,000 records, more search requests", hitFirst: false },
-    { layer: "Jobs", vendor: "Inngest", freeLimit: "25,000 runs/mo", firstPaid: "Team $50/mo", gets: "125,000 runs, concurrency, priority support", hitFirst: false },
+    { layer: "Search", vendor: "Algolia", freeLimit: "50,000 records", firstPaid: "Grow, $0.50 per 1K requests past 10K", gets: "100,000 records, then $0.40 per 1K records", hitFirst: false },
+    { layer: "Jobs", vendor: "Inngest", freeLimit: "50,000 executions/mo", firstPaid: "Pro from $99/mo", gets: "1M executions, 100+ concurrent steps", hitFirst: false },
     { layer: "CI/CD", vendor: "GitHub Actions", freeLimit: "2,000 min/mo", firstPaid: "Team $4/user/mo", gets: "3,000 min/mo, required reviewers", hitFirst: false },
   ];
 
@@ -17572,7 +17572,7 @@ ${growthCosts.map(g => `      <tr>
   </table>
   </div>
   <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1rem 0">
-    <p style="color:var(--text-muted);font-size:.9rem;line-height:1.7"><strong style="color:var(--text)">The first paid upgrade:</strong> Database (Neon Launch, usage-based, no monthly minimum) + Hosting (Vercel Pro $20/mo) unlocks commercial use, Postgres beyond 1 GB at $0.35/GB-month, 1 TB bandwidth, and faster builds. Everything else — auth (10K MAU), email (3K/mo), monitoring (5K errors), analytics (1M events), storage (10 GB R2), search (10K records), jobs (25K runs), CI (2,000 min) — stays free well past your first 1,000 users.</p>
+    <p style="color:var(--text-muted);font-size:.9rem;line-height:1.7"><strong style="color:var(--text)">The first paid upgrade:</strong> Database (Neon Launch, usage-based, no monthly minimum) + Hosting (Vercel Pro $20/mo) unlocks commercial use, Postgres beyond 1 GB at $0.35/GB-month, 1 TB bandwidth, and faster builds. Everything else — auth (50K MRU), email (3K/mo), monitoring (5K errors), analytics (1M events), storage (10 GB R2), search (50K records), jobs (50K executions), CI (2,000 min) — stays free well past your first 1,000 users.</p>
   </div>
 
   <h2>Architecture: How It Fits Together</h2>
@@ -17640,7 +17640,7 @@ function buildFreeDjangoStackPage(): string {
       icon: "🔐",
       recommended: { vendor: "Django Built-in Auth", why: "Django's batteries-included advantage — django.contrib.auth is free at any scale. User model, login/logout views, password hashing (PBKDF2 + Argon2 support), permissions, groups, session management, CSRF protection, and the admin interface for user management. Add django-allauth for social login (Google, GitHub, etc.) — also free and open source." },
       alternatives: ["Auth0", "Clerk", "Supabase"],
-      outgrow: "You won't outgrow Django's built-in auth — it scales with your app. If you need managed social login without django-allauth, Auth0 offers 25,000 MAU free. Clerk gives 10,000 MAU with pre-built UI components. But for most Django projects, the built-in auth + django-allauth covers everything.",
+      outgrow: "You won't outgrow Django's built-in auth — it scales with your app. If you need managed social login without django-allauth, Auth0 offers 25,000 MAU free. Clerk gives 50,000 MRU per app free with pre-built UI components. But for most Django projects, the built-in auth + django-allauth covers everything.",
       whyNot: "Why not rolling your own: Django already rolled it for you. Custom auth code is the #1 source of security vulnerabilities in web apps. Use the framework's battle-tested implementation.",
       relatedPage: "/auth-comparison-2026",
     },
@@ -17649,7 +17649,7 @@ function buildFreeDjangoStackPage(): string {
       icon: "📦",
       recommended: { vendor: "Cloudflare R2", why: "Zero egress fees — the standout differentiator. 10 GB storage, 1 million Class A operations, 10 million Class B operations per month. S3-compatible API means django-storages works out of the box with the S3Boto3Storage backend. Perfect for Django file uploads (ImageField, FileField), static file hosting (collectstatic), and media storage." },
       alternatives: ["Backblaze B2", "Supabase"],
-      outgrow: "When you exceed 10 GB storage. At scale, R2 saves dramatically vs S3: 1 TB stored + 10 TB egress costs ~$15/month on R2 vs ~$925/month on S3. Backblaze B2 offers 10 GB free and free egress up to 3x what you store, no CDN required — also works with django-storages. Supabase Storage gives 1 GB free with image transformations.",
+      outgrow: "When you exceed 10 GB storage. At scale, R2 saves dramatically vs S3: 1 TB stored + 10 TB egress costs ~$15/month on R2 vs ~$925/month on S3. Backblaze B2 offers 10 GB free and free egress up to 3x what you store, no CDN required — also works with django-storages. Supabase Storage gives 1 GB free. Image transformations require the Pro plan or above.",
       whyNot: `Why not AWS S3: new accounts get no free storage, only Free plan credits that last at most 6 months; then storage costs ${rateCardFor("AWS S3").publishedStorageRate}. Bandwidth is the part that does not expire — ${monthlyEgressGrantSentence(rateCardFor("AWS S3"))} — so a Django app serving under ${monthlyEgressGrantGb("AWS S3")} GB of media a month pays nothing for egress on S3 either. Past that S3 charges $0.09/GB and R2 still charges $0.`,
       relatedPage: "/storage-comparison-2026",
     },
@@ -17665,7 +17665,7 @@ function buildFreeDjangoStackPage(): string {
     {
       name: "Monitoring & Error Tracking",
       icon: "🐛",
-      recommended: { vendor: "Sentry", why: "Developer tier: 5,000 errors/month, 10,000 performance transactions, 50 session replays, 1 GB attachments. First-class Django SDK with automatic instrumentation for views, middleware, Celery tasks, database queries, and template rendering. The sentry-sdk Python package integrates in 3 lines of code in settings.py." },
+      recommended: { vendor: "Sentry", why: "Developer tier: 5,000 errors/month, 5M spans, 50 session replays, 1 GB attachments. First-class Django SDK with automatic instrumentation for views, middleware, Celery tasks, database queries, and template rendering. The sentry-sdk Python package integrates in 3 lines of code in settings.py." },
       alternatives: ["BetterStack", "Grafana Cloud"],
       outgrow: "When you exceed 5,000 errors/month or need more than 1 team member. BetterStack combines uptime monitoring (10 monitors) with incident management. Grafana Cloud offers 10,000 series metrics + 50 GB logs + 50 GB traces — great if you want full observability beyond error tracking.",
       whyNot: "Why not Datadog: Free tier has only 1-day metric retention — practically unusable for debugging. The per-host pricing model ($15/host/month for infrastructure) gets expensive fast.",
@@ -17685,16 +17685,16 @@ function buildFreeDjangoStackPage(): string {
       icon: "⏱️",
       recommended: { vendor: "Upstash", why: "Celery + Upstash Redis is the Django-native solution for background jobs. Celery handles async tasks (email sending, image processing, report generation), periodic tasks (cron-like scheduling), and task chaining/grouping. Upstash's 500K commands/month free tier covers moderate task queue usage. Celery is free, open source, and the Django ecosystem's standard task runner." },
       alternatives: ["Redis Cloud", "Inngest"],
-      outgrow: "When you exceed 500,000 Redis commands a month. Redis Cloud's 30 MB free with unlimited commands is better for high-throughput task queues. Inngest offers 25,000 function runs/month but requires adapting away from Celery's Django-native patterns.",
+      outgrow: "When you exceed 500,000 Redis commands a month. Redis Cloud's 30 MB free with unlimited commands is better for high-throughput task queues. Inngest offers 50,000 executions/month free but requires adapting away from Celery's Django-native patterns.",
       whyNot: "Why not RQ (Redis Queue): Simpler than Celery but less feature-rich — no periodic tasks, no task chains, smaller ecosystem. Celery is the standard for a reason. Why not Django-Q2: Good lightweight alternative if Celery feels too heavy, but smaller community and fewer production deployments.",
       relatedPage: null,
     },
     {
       name: "Search",
       icon: "🔍",
-      recommended: { vendor: "Algolia", why: "10,000 records and 10,000 search requests/month on the free tier. The algoliasearch Python client and django-algoliasearch library handle indexing Django models automatically — decorate your model, and Algolia syncs on save/delete. Instant search with typo tolerance, faceting, and geo-search." },
+      recommended: { vendor: "Algolia", why: "50,000 records and 10,000 search requests/month on the free tier. The algoliasearch Python client and django-algoliasearch library handle indexing Django models automatically — decorate your model, and Algolia syncs on save/delete. Instant search with typo tolerance, faceting, and geo-search." },
       alternatives: ["Meilisearch"],
-      outgrow: "When you exceed 10,000 records or 10,000 searches/month. Meilisearch Cloud offers 100,000 documents free. Both Meilisearch and Typesense are self-hostable with no limits. For simpler needs, Django's built-in Postgres full-text search (django.contrib.postgres.search) is free and requires no external service.",
+      outgrow: "When you exceed 50,000 records or 10,000 searches/month. Meilisearch Cloud has no free plan. It starts at $20 a month and offers a 14-day free trial with no credit card required. Both Meilisearch and Typesense are self-hostable with no limits. For simpler needs, Django's built-in Postgres full-text search (django.contrib.postgres.search) is free and requires no external service.",
       whyNot: null,
       relatedPage: null,
     },
@@ -17819,7 +17819,7 @@ function buildFreeDjangoStackPage(): string {
     { layer: "Storage", vendor: "Cloudflare R2", freeLimit: "10 GB", firstPaid: "$0.015/GB/mo", gets: "Unlimited storage, still zero egress", hitFirst: false },
     { layer: "Monitoring", vendor: "Sentry", freeLimit: "5,000 errors/mo", firstPaid: "Team $26/mo", gets: "50,000 errors, unlimited members, integrations", hitFirst: false },
     { layer: "Task Queue", vendor: "Celery + Upstash", freeLimit: "500K cmds/mo", firstPaid: "Pay-as-you-go $0.2/100K", gets: "Unlimited task dispatches", hitFirst: false },
-    { layer: "Search", vendor: "Algolia", freeLimit: "10,000 records", firstPaid: "Build $0.50/1K req", gets: "100,000 records, more search requests", hitFirst: false },
+    { layer: "Search", vendor: "Algolia", freeLimit: "50,000 records", firstPaid: "Grow, $0.50 per 1K requests past 10K", gets: "100,000 records, then $0.40 per 1K records", hitFirst: false },
     { layer: "CI/CD", vendor: "GitHub Actions", freeLimit: "2,000 min/mo", firstPaid: "Team $4/user/mo", gets: "3,000 min/mo, required reviewers", hitFirst: false },
   ];
 
@@ -17979,7 +17979,7 @@ ${growthCosts.map(g => `      <tr>
   </table>
   </div>
   <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1rem 0">
-    <p style="color:var(--text-muted);font-size:.9rem;line-height:1.7"><strong style="color:var(--text)">The first paid upgrade:</strong> Database (Neon Launch, usage-based, no monthly minimum) + Hosting (Railway Hobby $5/mo) gives you Postgres beyond 1 GB at $0.35/GB-month, no sleep timers. Everything else — auth (unlimited with Django), email (3K/mo), monitoring (5K errors), cache/Redis (500K cmds/mo), storage (10 GB R2), search (10K records), CI (2,000 min) — stays free well past your first 1,000 users. Django's built-in auth means you never pay for authentication.</p>
+    <p style="color:var(--text-muted);font-size:.9rem;line-height:1.7"><strong style="color:var(--text)">The first paid upgrade:</strong> Database (Neon Launch, usage-based, no monthly minimum) + Hosting (Railway Hobby $5/mo) gives you Postgres beyond 1 GB at $0.35/GB-month, no sleep timers. Everything else — auth (unlimited with Django), email (3K/mo), monitoring (5K errors), cache/Redis (500K cmds/mo), storage (10 GB R2), search (50K records), CI (2,000 min) — stays free well past your first 1,000 users. Django's built-in auth means you never pay for authentication.</p>
   </div>
 
   <h2>Architecture: How It Fits Together</h2>
@@ -18047,7 +18047,7 @@ function buildFreeFastapiStackPage(): string {
       icon: "🔐",
       recommended: { vendor: "Auth0", why: "25,000 MAU free — the most generous managed auth tier. FastAPI has no built-in auth (unlike Django), so you need an external provider or roll your own. Auth0's Python SDK + FastAPI dependency injection pattern works cleanly: create a dependency that validates JWTs, inject it into protected routes. Social login, MFA, and RBAC included on free tier." },
       alternatives: ["Clerk", "Supabase"],
-      outgrow: "When you exceed 25,000 MAU or need advanced enterprise features. Clerk offers 10,000 MAU free with pre-built UI components (less useful for API-only FastAPI). Supabase Auth gives 50,000 MAU free if you're already using Supabase for your database. For API-only services, rolling your own with python-jose + passlib + OAuth2PasswordBearer is viable but more work.",
+      outgrow: "When you exceed 25,000 MAU or need advanced enterprise features. Clerk offers 50,000 MRU per app free with pre-built UI components (less useful for API-only FastAPI). Supabase Auth gives 50,000 MAU free if you're already using Supabase for your database. For API-only services, rolling your own with python-jose + passlib + OAuth2PasswordBearer is viable but more work.",
       whyNot: "Why not rolling your own from scratch: FastAPI's security utilities (OAuth2PasswordBearer, HTTPBearer) make it tempting, but you'll end up reimplementing password reset flows, email verification, rate limiting, and session management. Auth0 handles all of this on free tier. Only roll your own for simple API-key auth or internal services.",
       relatedPage: "/auth-comparison-2026",
     },
@@ -18056,7 +18056,7 @@ function buildFreeFastapiStackPage(): string {
       icon: "📦",
       recommended: { vendor: "Cloudflare R2", why: "Zero egress fees — the standout differentiator. 10 GB storage, 1 million Class A operations, 10 million Class B operations per month. S3-compatible API means boto3 and aioboto3 work directly. FastAPI's UploadFile with async streaming to R2 handles file uploads efficiently without buffering entire files in memory." },
       alternatives: ["Backblaze B2", "Supabase"],
-      outgrow: "When you exceed 10 GB storage. At scale, R2 saves dramatically vs S3: 1 TB stored + 10 TB egress costs ~$15/month on R2 vs ~$925/month on S3. Backblaze B2 offers 10 GB free and free egress up to 3x what you store, no CDN required. Supabase Storage gives 1 GB free with image transformations.",
+      outgrow: "When you exceed 10 GB storage. At scale, R2 saves dramatically vs S3: 1 TB stored + 10 TB egress costs ~$15/month on R2 vs ~$925/month on S3. Backblaze B2 offers 10 GB free and free egress up to 3x what you store, no CDN required. Supabase Storage gives 1 GB free. Image transformations require the Pro plan or above.",
       whyNot: `Why not AWS S3: new accounts get no free storage, only Free plan credits that last at most 6 months; then storage costs ${rateCardFor("AWS S3").publishedStorageRate}. Bandwidth is the part that does not expire — ${monthlyEgressGrantSentence(rateCardFor("AWS S3"))} — so an API serving under ${monthlyEgressGrantGb("AWS S3")} GB of pre-signed downloads a month pays nothing for egress on S3 either. Past that S3 charges $0.09/GB and R2 still charges $0.`,
       relatedPage: "/storage-comparison-2026",
     },
@@ -18072,7 +18072,7 @@ function buildFreeFastapiStackPage(): string {
     {
       name: "Monitoring & Error Tracking",
       icon: "🐛",
-      recommended: { vendor: "Sentry", why: "Developer tier: 5,000 errors/month, 10,000 performance transactions, 50 session replays, 1 GB attachments. Official FastAPI integration via sentry-sdk — auto-instruments ASGI middleware, captures unhandled exceptions with full request context (path, query params, headers). Starlette transaction naming gives clean performance traces per endpoint." },
+      recommended: { vendor: "Sentry", why: "Developer tier: 5,000 errors/month, 5M spans, 50 session replays, 1 GB attachments. Official FastAPI integration via sentry-sdk — auto-instruments ASGI middleware, captures unhandled exceptions with full request context (path, query params, headers). Starlette transaction naming gives clean performance traces per endpoint." },
       alternatives: ["BetterStack", "Grafana Cloud"],
       outgrow: "When you exceed 5,000 errors/month or need more than 1 team member. BetterStack combines uptime monitoring (10 monitors) with incident management — useful for API health checks. Grafana Cloud offers 10,000 series metrics + 50 GB logs + 50 GB traces — great for full observability beyond error tracking.",
       whyNot: "Why not Datadog: Free tier has only 1-day metric retention — practically unusable for debugging. Per-host pricing ($15/host/month) gets expensive fast for containerized FastAPI deployments.",
@@ -18469,7 +18469,7 @@ function buildFreeGoStackPage(): string {
       icon: "🔐",
       recommended: { vendor: "Auth0", why: "25,000 MAU free — the most generous managed auth tier. Go has no framework-level auth (unlike Django), so you need an external provider or roll your own. Auth0's Go SDK + middleware pattern works cleanly: validate JWTs with go-jose or golang-jwt, wrap protected handlers with an auth middleware function. Go's crypto/bcrypt and crypto/subtle are in the standard library — if you roll your own, the crypto primitives are solid." },
       alternatives: ["Clerk", "Supabase"],
-      outgrow: "When you exceed 25,000 MAU or need enterprise features. Clerk offers 10,000 MAU with pre-built UI (less useful for API-only Go services). Supabase Auth gives 50,000 MAU if you're already using Supabase for your database. For API-only services, rolling your own with golang-jwt + bcrypt is viable — Go's stdlib makes the crypto parts safe.",
+      outgrow: "When you exceed 25,000 MAU or need enterprise features. Clerk offers 50,000 MRU per app free with pre-built UI (less useful for API-only Go services). Supabase Auth gives 50,000 MAU if you're already using Supabase for your database. For API-only services, rolling your own with golang-jwt + bcrypt is viable — Go's stdlib makes the crypto parts safe.",
       whyNot: "Why not rolling your own from scratch: Go's crypto stdlib (bcrypt, hmac, subtle) is excellent, making it tempting. But you'll still need to implement password reset flows, email verification, rate limiting, CSRF protection, and session management. Auth0 handles all of this on free tier. Only roll your own for API-key auth, internal services, or if you're already comfortable with the security implications.",
       relatedPage: "/auth-comparison-2026",
     },
@@ -18478,7 +18478,7 @@ function buildFreeGoStackPage(): string {
       icon: "📦",
       recommended: { vendor: "Cloudflare R2", why: "Zero egress fees — the standout differentiator. 10 GB storage, 1 million Class A operations, 10 million Class B operations per month. S3-compatible API via aws-sdk-go-v2. Go's io.Reader/io.Writer interfaces make streaming uploads and downloads natural — no buffering entire files in memory. Multipart uploads work out of the box with the AWS SDK." },
       alternatives: ["Backblaze B2", "Supabase"],
-      outgrow: "When you exceed 10 GB storage. At scale, R2 saves dramatically vs S3: 1 TB stored + 10 TB egress costs ~$15/month on R2 vs ~$925/month on S3. Backblaze B2 offers 10 GB free and free egress up to 3x what you store, no CDN required. Supabase Storage gives 1 GB free with image transformations.",
+      outgrow: "When you exceed 10 GB storage. At scale, R2 saves dramatically vs S3: 1 TB stored + 10 TB egress costs ~$15/month on R2 vs ~$925/month on S3. Backblaze B2 offers 10 GB free and free egress up to 3x what you store, no CDN required. Supabase Storage gives 1 GB free. Image transformations require the Pro plan or above.",
       whyNot: `Why not AWS S3: new accounts get no free storage, only Free plan credits that last at most 6 months; then storage costs ${rateCardFor("AWS S3").publishedStorageRate}. Bandwidth is the part that does not expire — ${monthlyEgressGrantSentence(rateCardFor("AWS S3"))} — so a Go service serving under ${monthlyEgressGrantGb("AWS S3")} GB of pre-signed downloads a month pays nothing for egress on S3 either. Past that S3 charges $0.09/GB and R2 still charges $0.`,
       relatedPage: "/storage-comparison-2026",
     },
@@ -18494,7 +18494,7 @@ function buildFreeGoStackPage(): string {
     {
       name: "Monitoring & Observability",
       icon: "🐛",
-      recommended: { vendor: "Sentry", why: "Developer tier: 5,000 errors/month, 10,000 performance transactions, 50 session replays, 1 GB attachments. Official Go SDK with HTTP middleware integration — captures panics, request context, and goroutine stack traces. Go also has excellent built-in observability: pprof (CPU/memory profiling), expvar (metrics), and net/http/pprof (live profiling endpoint). OpenTelemetry's Go SDK (otel-go) is mature — export traces to Grafana Cloud, Jaeger, or any OTLP-compatible backend." },
+      recommended: { vendor: "Sentry", why: "Developer tier: 5,000 errors/month, 5M spans, 50 session replays, 1 GB attachments. Official Go SDK with HTTP middleware integration — captures panics, request context, and goroutine stack traces. Go also has excellent built-in observability: pprof (CPU/memory profiling), expvar (metrics), and net/http/pprof (live profiling endpoint). OpenTelemetry's Go SDK (otel-go) is mature — export traces to Grafana Cloud, Jaeger, or any OTLP-compatible backend." },
       alternatives: ["Grafana Cloud", "BetterStack"],
       outgrow: "When you exceed 5,000 errors/month or need more than 1 team member. Grafana Cloud offers 10,000 series metrics + 50 GB logs + 50 GB traces — great for full observability with OpenTelemetry. BetterStack combines uptime monitoring (10 monitors) with incident management.",
       whyNot: "Why not Datadog: Free tier has only 1-day metric retention — practically unusable for debugging. Per-host pricing ($15/host/month) gets expensive fast. Why not just pprof: pprof is excellent for development profiling but doesn't capture production errors, alerting, or request tracing across services. Use both — pprof for profiling, Sentry for errors.",
@@ -18925,7 +18925,7 @@ function buildFreeSaasStackPage(): string {
     {
       name: "Monitoring & Error Tracking",
       icon: "\u{1F41B}",
-      recommended: { vendor: "Sentry", why: "5,000 errors/month, 10,000 performance transactions, 50 session replays, 1 GB attachments \u2014 all free. Best-in-class error tracking with stack traces, release tracking, and user context. Integrates with every framework (Next.js, Django, FastAPI, Go, Rails). Session replay shows you exactly what the user saw when the error occurred." },
+      recommended: { vendor: "Sentry", why: "5,000 errors/month, 5M spans, 50 session replays, 1 GB attachments \u2014 all free. Best-in-class error tracking with stack traces, release tracking, and user context. Integrates with every framework (Next.js, Django, FastAPI, Go, Rails). Session replay shows you exactly what the user saw when the error occurred." },
       alternatives: ["Grafana Cloud", "BetterStack", "New Relic"],
       outgrow: "When you exceed 5,000 errors/month (fix your bugs first). For full observability beyond error tracking: Grafana Cloud offers 10K metrics series + 50 GB logs + 50 GB traces free. New Relic gives 100 GB data ingest/month (most generous, but limited to 1 user). BetterStack combines uptime monitoring with incident management.",
       whyNot: "Why not Datadog: Free tier has 1-day metric retention \u2014 practically unusable. Per-host pricing ($15/host/month) gets expensive fast. Why not just console.log: You'll miss errors in production, have no alerting, and can't see trends. Sentry catches errors you didn't know about.",
@@ -18955,9 +18955,9 @@ function buildFreeSaasStackPage(): string {
     {
       name: "Background Jobs & Queues",
       icon: "\u23F1\uFE0F",
-      recommended: { vendor: "Inngest", why: "Free tier: 25,000 function runs/month with 5 concurrent steps. Durable workflow orchestration \u2014 retries, scheduling, fan-out, and step functions. TypeScript-first with Next.js integration. No infrastructure to manage \u2014 send an event, Inngest runs your function reliably. Perfect for SaaS: onboarding workflows, scheduled reports, webhook processing, billing reconciliation." },
+      recommended: { vendor: "Inngest", why: "Free tier: 50,000 executions/month with 5 concurrent steps. Durable workflow orchestration \u2014 retries, scheduling, fan-out, and step functions. TypeScript-first with Next.js integration. No infrastructure to manage \u2014 send an event, Inngest runs your function reliably. Perfect for SaaS: onboarding workflows, scheduled reports, webhook processing, billing reconciliation." },
       alternatives: ["Trigger.dev", "Upstash"] as string[],
-      outgrow: "When you exceed 25,000 runs/month. Trigger.dev offers 10,000 runs/month free with a similar developer experience. For simpler needs: Upstash QStash (1,000 messages/day free) provides HTTP-based async messaging \u2014 send a POST, it delivers reliably with retries. For self-managed: BullMQ (Redis-backed) with Upstash Redis (500K commands/month) handles moderate queue needs.",
+      outgrow: "When you exceed 50,000 executions/month. Trigger.dev's free plan includes $5 of compute credits monthly and allows 20 concurrent runs. For simpler needs: Upstash QStash (1,000 messages/day free) provides HTTP-based async messaging \u2014 send a POST, it delivers reliably with retries. For self-managed: BullMQ (Redis-backed) with Upstash Redis (500K commands/month) handles moderate queue needs.",
       whyNot: "Why not cron jobs alone: Cron doesn't retry failures, handle concurrency limits, or provide observability. Why not AWS SQS/Lambda: Complex setup. Inngest and Trigger.dev give you managed, durable execution with a serverless DX.",
       relatedPage: null,
       isFrameworkSection: false,
@@ -18989,7 +18989,7 @@ function buildFreeSaasStackPage(): string {
   };
 
   const faqJsonLd = faqPageJsonLd("/free-saas-stack", [
-    { q: "What's the cheapest way to launch a SaaS in 2026?", a: "You can launch a complete SaaS for $0/month using free tiers: Railway or Render (hosting), Neon (Postgres database), Clerk (auth with 50K users free), Stripe (payments \u2014 no monthly fee, only per-transaction), Resend (3K emails/month), Cloudflare R2 (10 GB storage, zero egress), Sentry (error tracking), GitHub Actions (CI/CD), PostHog (1M analytics events), and Inngest (25K background job runs). Total monthly cost at launch: $0. You'll hit your first paid tier around 1,000-5,000 users." },
+    { q: "What's the cheapest way to launch a SaaS in 2026?", a: "You can launch a complete SaaS for $0/month using free tiers: Railway or Render (hosting), Neon (Postgres database), Clerk (auth with 50K users free), Stripe (payments \u2014 no monthly fee, only per-transaction), Resend (3K emails/month), Cloudflare R2 (10 GB storage, zero egress), Sentry (error tracking), GitHub Actions (CI/CD), PostHog (1M analytics events), and Inngest (50K background job executions). Total monthly cost at launch: $0. You'll hit your first paid tier around 1,000-5,000 users." },
     { q: "Can I build a SaaS for free?", a: "Yes. Every layer of SaaS infrastructure \u2014 hosting, database, authentication, email, storage, monitoring, CI/CD, and analytics \u2014 has a viable free tier in 2026. The only category without a free option is payment processing (Stripe charges 2.9% + 30\u00a2 per transaction but has no monthly fee). Most free tiers support 1,000-5,000 active users before you need to upgrade." },
     { q: "Which free databases can a SaaS start on?", a: "Neon's Free plan gives 1 GB of storage and 100 CU-hours per project and scales to zero after 5 minutes idle. Supabase's gives a 500 MB database per project with auth, storage and realtime, and pauses free projects after a week of inactivity. For edge SQLite, Turso's Free plan gives 5 GB of storage across up to 100 databases. We publish no ranking of these." },
     { q: "When should I start paying for infrastructure?", a: "Most SaaS products can run entirely on free tiers through their first 1,000-5,000 users. Database storage (Neon 1 GB per project) is typically the first limit you'll hit, followed by email volume (Resend 3K/month) and hosting compute. By the time you need to pay, you should have paying customers. Plan your growth path: at 10K users expect ~$150-300/month total infrastructure, at 100K users ~$1,500-3,000/month." },
@@ -19104,7 +19104,7 @@ function buildFreeSaasStackPage(): string {
     { layer: "Storage", vendor: "Cloudflare R2", freeLimit: "10 GB", firstPaid: "$0.015/GB/mo", atScale: "$15/mo (1TB)", hitFirst: false },
     { layer: "Monitoring", vendor: "Sentry", freeLimit: "5K errors", firstPaid: "Team $26/mo", atScale: "$80/mo", hitFirst: false },
     { layer: "Payments", vendor: "Stripe", freeLimit: "No fixed cost", firstPaid: "2.9% + 30\u00a2/txn", atScale: "2.9% + 30\u00a2/txn", hitFirst: false },
-    { layer: "Background Jobs", vendor: "Inngest", freeLimit: "25K runs/mo", firstPaid: "$50/mo", atScale: "$150/mo", hitFirst: false },
+    { layer: "Background Jobs", vendor: "Inngest", freeLimit: "50K executions/mo", firstPaid: "Pro from $99/mo", atScale: "$99/mo (1M executions)", hitFirst: false },
     { layer: "CI/CD", vendor: "GitHub Actions", freeLimit: "2K min/mo", firstPaid: "Team $4/user/mo", atScale: "$19/user/mo", hitFirst: false },
   ];
 
@@ -43956,7 +43956,7 @@ ${globalNavCss()}
         <td>200 SCA + 100 SAST + 100 container + 300 IaC tests/mo</td>
         <td class="cross">&#10007;</td>
         <td class="check">&#10003;</td>
-        <td class="check">&#10003; Unlimited devs</td>
+        <td class="check">&#10003; Up to 5 projects</td>
         <td class="cross">&#10007;</td>
       </tr>${vendorPageConditionsRowHtml("snyk", 7)}
       <tr>
@@ -46055,7 +46055,7 @@ const STACK_TEMPLATES: StackTemplate[] = [
     services: [
       { category: "Database", vendor: "Supabase", slug: "supabase", estimatorCategory: "database", freeTier: "500 MB storage, 50K MAU", whyChosen: "Postgres + auth + storage + realtime in one platform. Perfect for MVPs that need to move fast.", starter: 25, growth: 25, scale: 75 },
       { category: "Hosting", vendor: "Vercel", slug: "vercel", estimatorCategory: "hosting", freeTier: "100 GB bandwidth, 1M function calls", whyChosen: "Best-in-class Next.js deployment with instant previews and edge functions.", starter: 20, growth: 20, scale: 150 },
-      { category: "Auth", vendor: "Clerk", slug: "clerk", estimatorCategory: "auth", freeTier: "50K monthly active users", whyChosen: "Most generous free auth. Drop-in components, MFA, organizations — all free up to 50K MAU.", starter: 0, growth: 0, scale: 100 },
+      { category: "Auth", vendor: "Clerk", slug: "clerk", estimatorCategory: "auth", freeTier: "50K monthly retained users per app", whyChosen: "Most generous free auth. Drop-in components and organizations, free up to 50K MRU per app; MFA needs Pro.", starter: 0, growth: 0, scale: 1025 },
       { category: "Monitoring", vendor: "Sentry", slug: "sentry", estimatorCategory: "monitoring", freeTier: "5K errors/mo, 1 user", whyChosen: "Industry-standard error tracking with source maps, breadcrumbs, and release tracking.", starter: 26, growth: 26, scale: 80 },
       { category: "Email", vendor: "Resend", slug: "resend", estimatorCategory: "email", freeTier: "3K emails/mo", whyChosen: "Modern email API built for developers. React email templates, excellent deliverability.", starter: 0, growth: 20, scale: 90 },
       { category: "CI/CD", vendor: "GitHub Actions", slug: "github-actions", estimatorCategory: "cicd", freeTier: "2K minutes/mo (private repos)", whyChosen: "Native to your repo. No extra config, generous free tier for private repos.", starter: 0, growth: 4, scale: 21 },
@@ -46615,7 +46615,7 @@ function buildEstimatorData(): EstimatorCategory[] {
       id: "auth",
       label: "Auth",
       vendors: [
-        { slug: "clerk", name: "Clerk", free: "50K MAU", starter: 0, growth: 0, scale: 100, notes: "Pro $0.02/MAU after 10K on Pro plan" },
+        { slug: "clerk", name: "Clerk", free: "50K MRU", starter: 0, growth: 0, scale: 1025, notes: "Pro $25/mo, then $0.02/MRU past 50K" },
         { slug: "auth0", name: "Auth0", free: "25K MAU", starter: 0, growth: 35, scale: 240, notes: "Essentials $35/mo (500-10K MAU)" },
         { slug: "kinde", name: "Kinde", free: "10.5K MAU", starter: 0, growth: 25, scale: 100, notes: "Pro $25/mo (10K-50K MAU)" },
         { slug: "workos", name: "WorkOS", free: "1M MAU (AuthKit)", starter: 0, growth: 0, scale: 0, notes: "Free up to 1M MAU for user management" },
