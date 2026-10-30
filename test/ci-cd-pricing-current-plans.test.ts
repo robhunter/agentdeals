@@ -155,7 +155,7 @@ describe("/ci-cd-pricing states the current plans of Bitbucket Pipelines, Codema
 
   it("prices Codemagic by the minute, with $49 buying an extra concurrent build rather than a seat", () => {
     assert.deepStrictEqual(rowOf(tableRows(html, PRICING_TABLE), "Codemagic"), ["500 min/mo", "1 concurrent", "N/A (managed)", "Per minute (Pay-as-you-go); $49/mo per extra concurrent build", "Per-minute"]);
-    assert.deepStrictEqual(rowOf(tableRows(html, COST_TABLE), "Codemagic"), ["$0–49", "Per minute + $49/concurrency", "500 minutes is reasonable for mobile. Pay-as-you-go charges per minute. macOS M2..."]);
+    assert.deepStrictEqual(rowOf(tableRows(html, COST_TABLE), "Codemagic"), ["$0–49", "Per minute + $49/concurrency", "500 minutes is reasonable for mobile. Pay-as-you-go charges per minute. Concurre..."]);
   });
 
   it("opens the Codemagic card with the single-user plan its listing states, which teams do not get", () => {
@@ -268,6 +268,98 @@ describe("/ci-cd-pricing states the current plans of Bitbucket Pipelines, Codema
 
   it("names three pricing models in the FAQ, on the page and in its structured data, with no per-pipeline model for Buddy", () => {
     assert.deepStrictEqual(faqAnswers(html, PRICING_MODELS_QUESTION).map((answer) => answer.startsWith(PRICING_MODELS_ANSWER)), [true, true]);
+  });
+
+  it("distinguishes Azure DevOps hosted and self-hosted prices in its complete cost cell", () => {
+    assert.strictEqual(rowOf(tableRows(html, COST_TABLE), "Azure DevOps")[2], "One free Microsoft-hosted and one free self-hosted parallel job. Each extra: $40/month Microsoft-hosted, $15/month self-hosted.");
+  });
+
+  it("names Codeberg's request-based hosted Woodpecker instance in its complete cost cell", () => {
+    assert.strictEqual(rowOf(tableRows(html, COST_TABLE), "Woodpecker CI")[2], "Woodpecker CI is self-hosted software; a hosted instance is available via Codeberg by request.");
+  });
+
+  it("states self-hosted runner concurrency and additional-job costs in both summaries", () => {
+    const expected = "GitHub Actions, GitLab CI, Buildkite, and Azure DevOps offer self-hosted runners without per-minute charges. Buildkite’s Free plan allows 10 concurrent jobs. Azure DevOps charges $15/month per additional self-hosted parallel job.";
+    const text = readableText(html);
+    for (const label of ["Key trends:", "The self-hosted advantage:"]) {
+      const from = text.indexOf(label);
+      assert.ok(from >= 0, label);
+      assert.ok(text.slice(from + label.length).trimStart().startsWith(expected), label);
+    }
+  });
+
+  it("withdraws unlimited self-hosted concurrency and the denial of managed Woodpecker from raw and readable content", () => {
+    for (const content of [html, readableText(html)]) {
+      assert.doesNotMatch(content, /free\s*unlimited|no\s*managed\s*option/i);
+    }
+  });
+
+  it("states macOS cost ranges in the summary and hidden costs", () => {
+    const text = readableText(html);
+    assert.ok(text.includes("Mobile CI/CD is the most expensive category, with macOS build minutes costing about 2x to 80x Linux minutes, depending on the provider."));
+    assert.ok(text.includes("If you build iOS apps, budget 2x to 80x what you'd expect from Linux-only CI."));
+    assert.doesNotMatch(text, /macOS build minutes costing 2–10x|budget 5–10x/);
+  });
+
+  it("gives the six free concurrency allowances without applying hosted Azure prices to self-hosted jobs", () => {
+    const paragraph = [...html.matchAll(/<div class="hidden-cost-card">([\s\S]*?)<\/div>/g)].find(([, body]) => readableText(body).startsWith("Parallel Job Limits"));
+    assert.ok(paragraph);
+    assert.strictEqual(readableText(paragraph![1]), "Parallel Job Limits Free tiers allow 1 to 30 concurrent jobs. Examples: Azure DevOps 1, Codemagic 1, Bitrise 5, Buildkite 10, GitHub Actions 20, CircleCI 30.");
+  });
+
+  it("keeps self-hosted Jenkins and Woodpecker free without a time-to-upgrade limit", () => {
+    const rows = tableRows(html, FREE_TIER_TABLE);
+    for (const vendor of ["Jenkins", "Woodpecker CI", "Drone CI"]) assert.strictEqual(rowOf(rows, vendor)[2], "Never (self-hosted)", vendor);
+    assert.strictEqual(rowOf(rows, "Google Cloud Build")[2], "Months of daily use");
+  });
+
+  it("distinguishes GitLab Free features and Premium compute minutes in its enterprise recommendation", () => {
+    assert.ok(readableText(html).includes("Premium ($29/user) includes CI/CD and 10,000 compute minutes per month. Built-in CI/CD, the container registry, the package registry and Static Application Security Testing are on Free."));
+    assert.doesNotMatch(readableText(html), /includes CI\/CD \+ security scanning \+ container registry \+ package registry/);
+  });
+
+  it("discloses Drone's beta Kubernetes runner and the three cloud free-minute allowances", () => {
+    assert.ok(readableText(html).includes("Drone CI provides lightweight container-native pipelines, but its Kubernetes runner is currently in Beta."));
+    assert.ok(readableText(html).includes("Google Cloud Build offers 2,500 free minutes a month. Azure DevOps offers 1,800. AWS CodeBuild offers 100."));
+    assert.doesNotMatch(readableText(html), /for lightweight container-native pipelines on your own K8s cluster|Azure DevOps has the best free tier at 1,800/);
+  });
+
+  it("states container and VM execution separately in both copies of the Docker FAQ", () => {
+    const answers = faqAnswers(html, "Which CI/CD tools support Docker and Kubernetes natively?");
+    assert.strictEqual(answers.length, 2);
+    for (const answer of answers) {
+      assert.ok(answer.startsWith("Drone CI and Woodpecker CI run every pipeline step in a container. CircleCI runs jobs on Docker, Linux VM, Windows, Arm and macOS."), answer);
+      assert.doesNotMatch(answer, /CircleCI, Codefresh, and Drone CI are container-native/);
+    }
+  });
+
+  it("states Bitrise's pre-built workflow steps in its card", () => {
+    assert.ok(cardText(html, "bitrise").includes("400+ pre-built workflow steps"));
+    assert.doesNotMatch(cardText(html, "bitrise"), /300\+ pre-built integrations/);
+  });
+
+  it("keeps corrected storage, enterprise features, test intelligence and pipeline pricing in stored cost notes", () => {
+    const compiled = readFileSync(path.join(root, "dist", "serve.js"), "utf8");
+    const from = compiled.indexOf("function buildCiCdPricingPage()");
+    assert.ok(from >= 0);
+    const tools = compiled.slice(from, compiled.indexOf("const categoryLabels", from));
+    for (const [vendor, required, retired] of [
+      ["GitLab CI", "Past 10 GiB, projects go read-only until you buy more storage.", /Storage overage charges apply beyond 10 GiB/],
+      ["Buildkite", "SSO is on Pro; SCIM, custom SAML and the activity log are Enterprise-only (custom pricing).", /Enterprise features \(SSO, audit logs\) require custom pricing/],
+      ["Harness CI", "Test intelligence is a genuine differentiator.", /requires Harness-managed runners/],
+      ["AWS CodeBuild", "CodePipeline charges separately ($1 per active V1 pipeline a month; V2 pipelines $0.002 per action execution minute).", /Larger instances cost 2–8x|\$1\/pipeline\/month/],
+      ["Codemagic", "Pay-as-you-go charges per minute. Concurrent build limits can slow teams.", /macOS M2 Pro/],
+    ] as const) {
+      const start = tools.indexOf(`name: "${vendor}"`);
+      assert.ok(start >= 0, vendor);
+      const next = tools.indexOf('name: "', start + 1);
+      const block = tools.slice(start, next < 0 ? tools.length : next);
+      const match = block.match(/hiddenCosts: ("(?:[^"\\]|\\.)*")/);
+      assert.ok(match, vendor);
+      const cost = JSON.parse(match![1]);
+      assert.ok(cost.includes(required), `${vendor}: ${cost}`);
+      assert.doesNotMatch(cost, retired, vendor);
+    }
   });
 
   it("leaves no guide, report, other hand-written page or llms text making any of the withdrawn CI/CD plan claims", async () => {
