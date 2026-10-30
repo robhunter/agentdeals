@@ -29202,7 +29202,7 @@ function buildCiCdPricingPage(): string {
       pricingModel: "Per-seat + concurrency",
       freeDetails: "Free plan: 1 seat, 2 concurrent runs, a $1 monthly usage credit for compute and storage, 1 GB pipeline cache. Visual pipeline builder with drag-and-drop actions. Supports 100+ pre-configured actions. Free plan includes all integrations but limits execution time.",
       freeType: "limited",
-      monthlyCostSmall: "€29",
+      monthlyCostSmall: "€0 within the $1 credit",
       monthlyCostTeam: "€29+ (Pro)",
       keyCostFactor: "Pro: €29/mo, 1 seat; extra seat $20/mo; extra concurrent run $5/mo.",
     },
@@ -29219,7 +29219,7 @@ function buildCiCdPricingPage(): string {
       freeType: "limited",
       monthlyCostSmall: "$0\u201310",
       monthlyCostTeam: "$20\u2013100+",
-      hiddenCosts: "100 free minutes is on the smallest instance (3 GB RAM, 2 vCPU). Larger instances cost 2\u20138x more per minute. Data transfer and S3 cache storage add to costs. CodePipeline charges separately ($1/pipeline/month).",
+      hiddenCosts: "100 free minutes is on the smallest instance (4 GiB RAM, 2 vCPU). Larger instances cost 2\u20138x more per minute. Data transfer and S3 cache storage add to costs. CodePipeline charges separately ($1/pipeline/month).",
     },
     {
       name: "Google Cloud Build",

@@ -167,7 +167,7 @@ describe("/ci-cd-pricing states the current plans of Bitbucket Pipelines, Codema
     assert.deepStrictEqual(rowOf(tableRows(html, PRICING_TABLE), "Buddy"), [`${credit}/mo usage credit`, "2 concurrent", "Paid only", "€29/mo (Pro, 1 seat)", "Per-seat + concurrency"]);
     assert.deepStrictEqual(rowOf(tableRows(html, FREE_TIER_TABLE), "Buddy"), ["Limited free tier", `${credit}/mo usage credit`, "1–4 weeks for active team"]);
     assert.ok(cardText(html, "buddy").startsWith(`Free plan: 1 seat, 2 concurrent runs, a ${credit} monthly usage credit for compute and storage, ${cache} pipeline cache. Visual pipeline builder`), cardText(html, "buddy"));
-    assert.deepStrictEqual(rowOf(tableRows(html, COST_TABLE), "Buddy"), ["€29", "€29+ (Pro)", "Pro: €29/mo, 1 seat; extra seat $20/mo; extra concurrent run $5/mo."]);
+    assert.deepStrictEqual(rowOf(tableRows(html, COST_TABLE), "Buddy"), ["€0 within the $1 credit", "€29+ (Pro)", "Pro: €29/mo, 1 seat; extra seat $20/mo; extra concurrent run $5/mo."]);
   });
 
   it("gives Appcircle's free Starter plan in the builds and build time its listing states, with Corporate as the only other plan", () => {
@@ -221,6 +221,12 @@ describe("/ci-cd-pricing states the current plans of Bitbucket Pipelines, Codema
     assert.ok(rowOf(tableRows(html, COST_TABLE), "CircleCI")[2].includes("macOS M4 Pro: 200 credits/min Medium, 400 Large"));
     assert.ok(readableText(html).includes("macOS M4 Pro VMs cost 200 credits/min for Medium and 400 for Large, compared with 5 credits/min for small Linux Docker."));
     assert.doesNotMatch(readableText(html), /macOS builds cost 100 credits/);
+  });
+
+  it("gives CodeBuild's free build machine 4 GiB of RAM and 2 vCPUs", () => {
+    assert.ok(rowOf(tableRows(html, COST_TABLE), "AWS CodeBuild")[2].startsWith("100 free minutes is on the smallest instance (4 GiB RAM, 2 vCPU)."));
+    assert.doesNotMatch(html, /3 GB RAM/i);
+    assert.doesNotMatch(readableText(html), /3\s*G(?:i)?B\s*RAM/i);
   });
 
   it("scopes CodeBuild's adjustable default to Linux Small and a Region", () => {
