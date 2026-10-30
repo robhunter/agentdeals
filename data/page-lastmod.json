@@ -1200,7 +1200,7 @@
       "changed": "2026-10-30"
     },
     "/category/error-tracking": {
-      "hash": "beedc7a0625511c4",
+      "hash": "3537104195e13ba6",
       "changed": "2026-10-30"
     },
     "/category/feature-flags": {
@@ -1244,8 +1244,8 @@
       "changed": "2026-10-30"
     },
     "/category/mobile-development": {
-      "hash": "b2e3b9ff3d11c821",
-      "changed": "2026-10-29"
+      "hash": "35c328a63e6cc1f8",
+      "changed": "2026-10-30"
     },
     "/category/monitoring": {
       "hash": "5f33730518dee5ee",
@@ -1268,7 +1268,7 @@
       "changed": "2026-10-30"
     },
     "/category/project-management": {
-      "hash": "5e8d37197261fc9c",
+      "hash": "ddb0a3d79274eed6",
       "changed": "2026-10-30"
     },
     "/category/search": {
@@ -1308,7 +1308,7 @@
       "changed": "2026-10-26"
     },
     "/category/testing": {
-      "hash": "a14c2f4b4a83f1aa",
+      "hash": "564d80aa8dcc56a9",
       "changed": "2026-10-30"
     },
     "/category/tunneling-networking": {
@@ -1867,8 +1867,8 @@
       "changed": "2026-10-26"
     },
     "/compare/diawi-vs-expo": {
-      "hash": "94a2c5186da4d326",
-      "changed": "2026-10-29"
+      "hash": "c217f8e025b7ea14",
+      "changed": "2026-10-30"
     },
     "/compare/diawi-vs-loadly": {
       "hash": "0b508e59b296f8a7",
@@ -1959,12 +1959,12 @@
       "changed": "2026-10-23"
     },
     "/compare/expo-vs-loadly": {
-      "hash": "37cc67b78fcb889d",
-      "changed": "2026-10-29"
+      "hash": "5e7c0647da3764e3",
+      "changed": "2026-10-30"
     },
     "/compare/expo-vs-shake": {
-      "hash": "d3fdda9ca5c8d518",
-      "changed": "2026-10-29"
+      "hash": "cd311d558461518d",
+      "changed": "2026-10-30"
     },
     "/compare/export-sdk-vs-windmill-dev": {
       "hash": "d9781b9682ce0185",
@@ -3381,7 +3381,7 @@
       "changed": "2026-10-09"
     },
     "/project-management-alternatives": {
-      "hash": "82f93b1b52d670f9",
+      "hash": "df14f3eb053c418c",
       "changed": "2026-10-30"
     },
     "/q1-2026-developer-pricing-report": {
@@ -3567,7 +3567,7 @@
       "changed": "2026-10-30"
     },
     "/security-alternatives": {
-      "hash": "1fd1b4293f2de67d",
+      "hash": "96fd9e269625a10f",
       "changed": "2026-10-30"
     },
     "/security-free-tier-comparison-2026": {
@@ -3647,11 +3647,11 @@
       "changed": "2026-10-29"
     },
     "/testing-alternatives": {
-      "hash": "cc497de8d9734942",
+      "hash": "05d16198ad7a4942",
       "changed": "2026-10-30"
     },
     "/testing-free-tier-comparison-2026": {
-      "hash": "9f9876a29cbad411",
+      "hash": "6d358ff6859efc1f",
       "changed": "2026-10-30"
     },
     "/this-week": {
@@ -5535,7 +5535,7 @@
       "changed": "2026-10-30"
     },
     "/vendor/expo": {
-      "hash": "d10a9c6333dd716b",
+      "hash": "39a688066dd84bf9",
       "changed": "2026-10-30"
     },
     "/vendor/export-sdk": {
@@ -6497,7 +6497,7 @@
       "daily": true
     },
     "/vendor/jam": {
-      "hash": "6aa3db22b89d1b22",
+      "hash": "4a2e8c8f94874c48",
       "changed": "2026-10-30"
     },
     "/vendor/jamf-com": {
@@ -7664,7 +7664,7 @@
       "changed": "2026-10-30"
     },
     "/vendor/plane": {
-      "hash": "4dc0fefb98b28fb0",
+      "hash": "956b290eeb672c03",
       "changed": "2026-10-30"
     },
     "/vendor/planetscale": {

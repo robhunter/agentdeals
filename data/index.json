@@ -7420,6 +7420,12 @@
           "read_on": "2026-10-05"
         },
         {
+          "text": "Free builds can run 5 at a time, of which at most 1 can be a macOS build.",
+          "quote": "5 concurrencies, up to 1 on macOS",
+          "url": "https://expo.dev/pricing",
+          "read_on": "2026-10-30"
+        },
+        {
           "text": "Over-the-air updates on the Free plan reach up to 1,000 monthly active users, and there is no overage billing beyond that limit.",
           "quote": "The Free plan has no update overage pricing; it is limited to its included monthly active users.",
           "url": "https://expo.dev/pricing.md",
@@ -9007,6 +9013,12 @@
           "quote": "you may not: … Use of the LocalStack Assets outside of the Hobby Plan (which is limited to a single user, just you) … Share your credentials with any third party",
           "url": "https://www.localstack.cloud/legal/terms-of-service",
           "read_on": "2026-10-05"
+        },
+        {
+          "text": "LocalStack for Azure, LocalStack's Azure emulator, is free during its Public Preview.",
+          "quote": "Free during Public Preview",
+          "url": "https://www.localstack.cloud/pricing",
+          "read_on": "2026-10-30"
         },
         {
           "text": "Maintainers of a non-commercial open-source project can apply for a free Ultimate license if the project is not owned by a for-profit entity, uses an OSI-approved license, has a public repository and shows active maintenance.",
@@ -21171,7 +21183,7 @@
     {
       "vendor": "Jam",
       "category": "Error Tracking",
-      "description": "Developer friendly bug reports in one click. Free plan with unlimited jams.",
+      "description": "Bug reports with console logs, network requests and device details captured in one click, from a browser extension or the Jam for Mac app. The Free plan is $0 with 30 Jams a month, 5 Recording Links and recordings up to 5 minutes; it includes Jira and Linear integrations, webhooks and debugging Jams through Jam's MCP server. Team is $14 per creator a month, billed yearly, with unlimited Jams and 150 Recording Links.",
       "tier": "Free",
       "url": "https://jam.dev/pricing",
       "tags": [
@@ -26759,9 +26771,9 @@
     {
       "vendor": "Plane",
       "category": "Project Management",
-      "description": "Plane is a simple, extensible, open-source project and product management tool. Free for unlimited members, up to 5MB file upload size, 1000 issues.",
+      "description": "Plane is an open-source project and product management tool. The Free plan is $0 for up to 12 users in a workspace, with projects and work items, cycles and modules, five layouts with unlimited views, work item intake, estimates and project pages. Paid plans have no seat limit.",
       "tier": "Free",
-      "url": "https://plane.so/",
+      "url": "https://plane.so/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
