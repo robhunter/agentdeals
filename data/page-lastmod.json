@@ -1112,8 +1112,8 @@
       "changed": "2026-10-26"
     },
     "/category/auth": {
-      "hash": "717ece35f5a1f312",
-      "changed": "2026-10-29"
+      "hash": "ec3b4c68ee3d5548",
+      "changed": "2026-10-30"
     },
     "/category/background-jobs": {
       "hash": "6ee72b73526ec644",
@@ -1611,8 +1611,8 @@
       "changed": "2026-10-24"
     },
     "/compare/cerbos-hub-vs-zitadel-cloud": {
-      "hash": "3a95c676539b091e",
-      "changed": "2026-10-29"
+      "hash": "e5b14d494efb07c2",
+      "changed": "2026-10-30"
     },
     "/compare/cerebras-vs-deepgram": {
       "hash": "8e41f686d9630d58",
@@ -1643,8 +1643,8 @@
       "changed": "2026-10-30"
     },
     "/compare/clerk-vs-zitadel-cloud": {
-      "hash": "359fbabc394355ce",
-      "changed": "2026-10-29"
+      "hash": "fd332d96e840a3a8",
+      "changed": "2026-10-30"
     },
     "/compare/cline-vs-aider": {
       "hash": "22daeb8fe896b912",
@@ -2047,8 +2047,8 @@
       "changed": "2026-10-16"
     },
     "/compare/fusionauth-vs-zitadel-cloud": {
-      "hash": "93984b3dba84a4a2",
-      "changed": "2026-10-29"
+      "hash": "716243de1a52f937",
+      "changed": "2026-10-30"
     },
     "/compare/geekflare-api-vs-screenshotbase-com": {
       "hash": "3cd3dac5c09a4a36",
@@ -3567,7 +3567,7 @@
       "changed": "2026-10-30"
     },
     "/security-alternatives": {
-      "hash": "7cd1ee6328efbc8b",
+      "hash": "1fd1b4293f2de67d",
       "changed": "2026-10-30"
     },
     "/security-free-tier-comparison-2026": {
@@ -9492,7 +9492,7 @@
       "changed": "2026-10-30"
     },
     "/vendor/zitadel-cloud": {
-      "hash": "c24153a48b71622b",
+      "hash": "bc5a85ce0a8f7322",
       "changed": "2026-10-30"
     },
     "/vendor/zoho": {
