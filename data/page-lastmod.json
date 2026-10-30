@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2026-10-29",
+  "generated": "2026-10-30",
   "pages": {
     "/": {
       "daily": true
@@ -788,24 +788,23 @@
       "changed": "2026-10-29"
     },
     "/analytics-free-tier-comparison-2026": {
-      "hash": "6ecc937e8acb353a",
-      "changed": "2026-10-29"
+      "hash": "abcb9c82b4bedc61",
+      "changed": "2026-10-30"
     },
     "/api-development-alternatives": {
       "hash": "438049cc1949cb41",
       "changed": "2026-10-29"
     },
     "/api-development-free-tier-comparison-2026": {
-      "hash": "6b4a9c6c652bb81f",
-      "changed": "2026-10-29"
+      "daily": true
     },
     "/api/docs": {
       "hash": "6caafc224756b472",
       "changed": "2026-10-09"
     },
     "/auth-comparison-2026": {
-      "hash": "f405ef3648d89ae2",
-      "changed": "2026-10-29"
+      "hash": "66372b9dc5bde0d6",
+      "changed": "2026-10-30"
     },
     "/auth0-alternatives": {
       "hash": "e36d869c97781fb8",
@@ -820,8 +819,8 @@
       "changed": "2026-10-12"
     },
     "/aws-app-runner-migration": {
-      "hash": "e21e2b312bc526bd",
-      "changed": "2026-10-29"
+      "hash": "712b45b6194b993f",
+      "changed": "2026-10-30"
     },
     "/aws-free-tier-2026": {
       "hash": "f3726d233f0d54ee",
@@ -2704,8 +2703,8 @@
       "changed": "2026-10-29"
     },
     "/database-free-tier-comparison-2026": {
-      "hash": "3a962b793e8b150c",
-      "changed": "2026-10-29"
+      "hash": "1fbd8562629e1049",
+      "changed": "2026-10-30"
     },
     "/database-pricing": {
       "hash": "21fdb45695bc21c4",
