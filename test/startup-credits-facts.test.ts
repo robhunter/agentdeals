@@ -160,15 +160,15 @@ const STATED_ELSEWHERE: Record<string, string[]> = {
     "Investor Network-backed startups also get GitHub Enterprise and Visual Studio Enterprise offers.",
   ],
   "/digitalocean-free-tier-2026": [
-    "DigitalOcean Startups applications are paused until an updated program launches in early 2027. Active members keep their existing benefits.",
+    "DigitalOcean's FAQ, read 2026-10-30: applications for the current cohort are temporarily paused while it prepares an updated program for early 2027; active members are not affected.",
     "Credits for 12 months in an amount that varies by startup, usable up to $10,000 a month. They do not cover GPU Droplets, H100 GPU products, inference or third-party AI models; GPU credits are a separate benefit for selected startups. 15 months of free Standard-tier support.",
-    "Not accepting new applications: paused until early 2027. Active members keep their existing benefits.",
+    "Not accepting new applications: paused until early 2027",
     "AWS Activate: up to $200K (Portfolio needs an Activate Provider Org ID). Google for Startups: up to $200K, or $350K for AI-first startups; a $2K Start tier needs no funding. Microsoft for Startups: up to $150K (no investor needed).",
   ],
   "/state-of-free-tiers": [
     "Cloudflare Startup Program Up to $350K 3 tiers; upper two via affiliated partners",
     "Microsoft for Startups Up to $150K B2B tech startups, pre-seed through Series B Azure credits, Foundry models",
-    "DigitalOcean Startups Amount varies Not accepting new applications: paused until early 2027 Active members keep compute + support credits",
+    "DigitalOcean Startups Amount varies Not accepting new applications: paused until early 2027 Compute + support credits",
     "AWS Activate Up to $200K Portfolio needs an Activate Provider Org ID",
     "for 16 programs.",
   ],
@@ -181,7 +181,7 @@ const CLOUD_STARTUP_ROWS = [
   ["Activate", "Up to $200K", "—", "Activate Provider Org ID (Portfolio)"],
   ["Google for Startups", "Up to $350K", "1–2 years", "VC funding, pre-seed to Series A"],
   ["Microsoft for Startups", "Up to $150K", "90 days to 2 years", "No funding requirement (easiest to qualify)"],
-  ["DigitalOcean Startups", "Amount varies (up to $10,000 a month)", "12 months", "Not accepting new applications: paused until early 2027; active members keep their benefits"],
+  ["DigitalOcean Startups", "Amount varies (up to $10,000 a month)", "12 months", "Not accepting new applications: paused until early 2027"],
 ];
 
 const ENTITIES: Record<string, string> = {

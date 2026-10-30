@@ -35403,7 +35403,7 @@ ${globalNavCss()}
   </div>
 
   <h2 id="startups">For Startups</h2>
-  <p class="section-intro">DigitalOcean Startups applications are paused until an updated program launches in early 2027. Active members keep their existing benefits.</p>
+  <p class="section-intro">DigitalOcean's FAQ, read 2026-10-30: applications for the current cohort are temporarily paused while it prepares an updated program for early 2027; active members are not affected.</p>
 
   <div class="verdict-box">
     <h3>DigitalOcean Startups</h3>
@@ -35415,7 +35415,7 @@ ${globalNavCss()}
 
     <div class="verdict-item">
       <strong>Eligibility</strong>
-      <p>Not accepting new applications: paused until early 2027. Active members keep their existing benefits. See our <a href="/startup-credits">Startup Credits guide</a> for a full comparison of all programs.</p>
+      <p>Not accepting new applications: paused until early 2027. See our <a href="/startup-credits">Startup Credits guide</a> for a full comparison of all programs.</p>
     </div>
 
     <div class="verdict-item">
@@ -36097,7 +36097,7 @@ ${globalNavCss()}
         <td>DigitalOcean Startups</td>
         <td style="font-family:var(--mono)">Amount varies (up to $10,000 a month)</td>
         <td>12 months</td>
-        <td>Not accepting new applications: paused until early 2027; active members keep their benefits</td>
+        <td>Not accepting new applications: paused until early 2027</td>
       </tr>
     </tbody>
   </table>
@@ -45461,7 +45461,7 @@ ${globalNavCss()}
       <tr><td><a href="/vendor/google-for-startups-cloud-program">Google for Startups</a></td><td style="color:#3fb950;font-weight:600">Up to $350K</td><td>AI-first startups</td><td>GCP credits, technical support</td></tr>
       <tr><td><a href="/vendor/cloudflare-for-startups">Cloudflare Startup Program</a></td><td style="color:#3fb950;font-weight:600">Up to $350K</td><td>3 tiers; upper two via affiliated partners</td><td>Workers, R2, CDN, security</td></tr>
       <tr><td><a href="/vendor/microsoft-azure">Microsoft for Startups</a></td><td style="color:#3fb950;font-weight:600">Up to $150K</td><td>B2B tech startups, pre-seed through Series B</td><td>Azure credits, Foundry models</td></tr>
-      <tr><td><a href="/vendor/digitalocean">DigitalOcean Startups</a></td><td style="color:#3fb950;font-weight:600">Amount varies</td><td>Not accepting new applications: paused until early 2027</td><td>Active members keep compute + support credits</td></tr>
+      <tr><td><a href="/vendor/digitalocean">DigitalOcean Startups</a></td><td style="color:#3fb950;font-weight:600">Amount varies</td><td>Not accepting new applications: paused until early 2027</td><td>Compute + support credits</td></tr>
       <tr><td><a href="/vendor/aws">AWS Activate</a></td><td style="color:#3fb950;font-weight:600">Up to $200K</td><td>Portfolio needs an Activate Provider Org ID</td><td>AWS credits, technical support</td></tr>
       <tr><td><a href="/vendor/railway">Railway</a></td><td style="color:#3fb950;font-weight:600">$5 free/month</td><td>Everyone</td><td>No credit card, usage-based</td></tr>
       <tr><td><a href="/vendor/vercel">Vercel</a></td><td style="color:#3fb950;font-weight:600">Hobby plan free</td><td>Non-commercial</td><td>Edge functions, serverless</td></tr>
