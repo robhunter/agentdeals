@@ -948,7 +948,7 @@
     {
       "vendor": "DigitalOcean",
       "category": "Startup Perks",
-      "description": "DigitalOcean Startups: credits for 12 months in an amount that varies by startup, usable up to $10,000 a month; use beyond that in a month is charged. Since 2026-05-13 the credits exclude GPU Droplets, NVIDIA H100 GPU Kubernetes, Bare Metal GPUs, Dedicated and Serverless Inference, third-party AI models, Paperspace Machines and Cloudways. GPU credits are a separate benefit for selected startups. 15 months of free Standard-tier support. For startups that have raised $10M or less and have not used DigitalOcean credits before; AI-native startups are prioritised and service businesses are not eligible.",
+      "description": "DigitalOcean Startups is not taking new applications. Its FAQ, read 2026-10-30: \"Applications for our current cohort are temporarily paused as we prepare to launch an updated program experience in early 2027.\" Active members keep their benefits. For members: credits for 12 months in an amount that varies by startup, usable up to $10,000 a month; use beyond that in a month is charged. Since 2026-05-13 the credits exclude GPU Droplets, NVIDIA H100 GPU Kubernetes, Bare Metal GPUs, Dedicated and Serverless Inference, third-party AI models, Paperspace Machines and Cloudways. GPU credits are a separate benefit for selected startups. 15 months of free Standard-tier support. For startups that have raised $10M or less and have not used DigitalOcean credits before; AI-native startups are prioritised and service businesses are not eligible.",
       "tier": "Startup Credits",
       "url": "https://www.digitalocean.com/startups",
       "tags": [
@@ -7771,7 +7771,7 @@
     {
       "vendor": "Daily.co",
       "category": "Video",
-      "description": "Video calling API with 10,000 free participant-minutes/month. Up to 200 participants per room. No credit card required",
+      "description": "Video calling API with 10,000 free participant-minutes/month. After those, video calls cost $0.004 per participant-minute and audio-only calls $0.00099, with volume discounts, and Daily's pricing FAQ says there is no hard cap that stops calls. Real-time calls support up to 1,000 active participants. Signing up is free, but Daily's quickstart asks new accounts to add a credit card before creating a room, and recording, transcription and live streaming are for paid accounts (a card on file). Deepgram is acquiring Daily (announced October 29, 2026); Daily says that for its customers \"nothing will change\" and that Deepgram will sell, support and develop all of Daily's current products and services.",
       "tier": "Free",
       "url": "https://www.daily.co/pricing",
       "tags": [
@@ -7929,6 +7929,12 @@
           "quote": "When your account reaches it, your forms keep working for visitors, but Formspree stops processing new submissions. It saves them to your account without sending notification emails or running plugins, and emails you when this starts happening. Formspree holds those submissions in the Over Limit folder. Once you have room in your limit again, you can reprocess them from the dashboard.",
           "url": "https://help.formspree.io/articles/form-and-project-settings/over-limit-submissions",
           "read_on": "2026-10-10"
+        },
+        {
+          "text": "An AI agent can set up a Formspree form using Formspree's published instructions. It builds a claim URL with the form's fields. The user opens the claim link and signs in or signs up, which creates the form. The user then gives the agent the form's endpoint URL. No password or API key is needed. This also works from a chat with no project files.",
+          "quote": "Build a \"claim\" URL. Send the user to it and Formspree creates the form (after they sign in or sign up) with the fields, validation, and integrations you specified.",
+          "url": "https://formspree.io/ai/",
+          "read_on": "2026-10-30"
         }
       ],
       "free_plan_excerpt": {
@@ -12570,7 +12576,7 @@
     {
       "vendor": "Zoho Campaigns",
       "category": "Email",
-      "description": "Email marketing with 2,000 contacts, 6,000 emails/month, and 3 campaigns/month free",
+      "description": "Email marketing: the Forever Free plan allows up to 2,000 contacts and 6,000 emails a month. Zoho's pricing FAQ gives the 6,000 emails as an example of 3 campaigns sent to 2,000 contacts.",
       "tier": "Free",
       "url": "https://zoho.com/campaigns",
       "tags": [
@@ -13141,9 +13147,9 @@
     {
       "vendor": "Cloudmersive",
       "category": "Dev Utilities",
-      "description": "Utility API platform with full access to expansive API Library including Document Conversion, Virus Scanning, and more with 600 calls/month, North America AZ only, 2.5MB maximum file size.",
+      "description": "Utility API platform with access to all of Cloudmersive's APIs, including Document Conversion and Virus Scanning. The Free Tier gives 600 calls a month at 1 call per second, a 3.5 MB maximum file size and North America data centers, with no expiration; some APIs use more than one call per request.",
       "tier": "Free",
-      "url": "https://cloudmersive.com/",
+      "url": "https://cloudmersive.com/pricing-small-business",
       "tags": [
         "developer-tools",
         "free-for-dev"
@@ -13153,11 +13159,6 @@
         "checked": "2026-10-19",
         "outcome": "ok",
         "detail": "the page names Cloudmersive as \"cloudmersive\" and states \"600 free API calls/month\""
-      },
-      "free_plan_excerpt": {
-        "text": "600 free API calls/month, with no expiration",
-        "url": "https://cloudmersive.com/",
-        "read_on": "2026-10-19"
       }
     },
     {
@@ -14461,9 +14462,9 @@
     {
       "vendor": "OCR.Space",
       "category": "AI / ML",
-      "description": "Free OCR API that parses image and PDF files and returns the text as JSON: 25,000 requests/month, 1 MB file size limit, 3-page PDF limit, 500 requests/day per IP address, plus 2,500 Engine 3 conversions/month. Free-tier searchable PDFs carry a watermark. The online OCR web form needs no registration and accepts files up to 5MB.",
+      "description": "Free OCR API that parses image and PDF files and returns the text as JSON: 25,000 requests/month, 1 MB file size limit, 3-page PDF limit, 500 requests/day per IP address, plus 1,000 Engine 3 conversions/month, down from 2,500 in October 2026. Engine 1 is retired; OCR.Space redirects calls to it to Engine 2. Free-tier searchable PDFs carry a watermark. PRO is $30/month for 300,000 requests and 5 MB files. The online OCR web form needs no registration and accepts files up to 5MB.",
       "tier": "Free",
-      "url": "https://ocr.space/",
+      "url": "https://ocr.space/ocrapi",
       "tags": [
         "developer-tools",
         "free-for-dev"
@@ -24104,9 +24105,9 @@
     {
       "vendor": "leapcell",
       "category": "Cloud Hosting",
-      "description": "Leapcell is a reliable distributed applications platform, providing everything you need to seamlessly support your rapid growth. The free plan includes 100k service invocations, 10k async tasks and 100k Redis commands.",
+      "description": "Serverless platform for web services, APIs and background jobs. The free Hobby plan ($0 per seat a month) includes 20 projects with up to 3 vCPUs and 4 GB RAM each, 1 free PostgreSQL database, and each month 100,000 serverless invocations, 3 GB-hours of serverless duration, 10,000 async invocations, 100,000 Redis commands (each write counts as 10) and 2 GB of data transfer.",
       "tier": "Free",
-      "url": "https://leapcell.io/",
+      "url": "https://leapcell.io/pricing",
       "tags": [
         "hosting",
         "paas",

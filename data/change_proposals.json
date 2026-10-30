@@ -1,34 +1,5 @@
 {
-  "proposals": [
-    {
-      "proposal_id": "2026-10-30/ticktick/limits_increased",
-      "proposed_on": "2026-10-30",
-      "vendor": "TickTick",
-      "change_type": "limits_increased",
-      "date": "2026-10-30",
-      "date_source": "discovered",
-      "summary": "The free tier now includes unlimited calendar views, timeline view, widgets, themes, and statistics, as well as increased limits for lists (299), tasks per list (999), attachments (199), checklist items (199), task reminders (5), habit count (299), and countdowns (299).",
-      "tier": "Free",
-      "tier_direction": "widened",
-      "previous_state": "Up to 9 lists. Up to 99 tasks per list. 1 calendar subscription. 2 reminders per task. Basic Pomodoro timer. Basic habit tracker (up to 5 habits). Free includes a basic calendar view; multiple calendar views and task duration need Premium (US$49.99 a year).",
-      "current_state": "Free includes: 9 Lists, 99 Tasks per list List & Kanban Views NLP Task Reminders Cross-Platform Sync. Essentials List Count 9 299 Task & Note Count 99 per list 999 per list Attachment Count 1 per day 199 per day Checklist Item Count 19 per task 199 per task Task Reminders 2 5 Member Count 2 29 Habit Count 5 299 Countdown Count 5 299 Task Priority Tag Subtask Recurring Task Comment Template Duration Constant Reminder Checklist Item Reminder List/Task Activities Filter AI Features Features Calendar View Basic Unlimited Timeline View Integrations Eisenhower Matrix Basic Unlimited Widgets Basic Unlimited Themes Basic Unlimited Statistics Basic Unlimited",
-      "impact": "high",
-      "source_url": "https://ticktick.com/about/upgrade",
-      "category": "Productivity & Notes",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-10-30",
-      "restatement": [
-        {
-          "url": "https://ticktick.com/about/upgrade",
-          "refused": "reading_drops_a_figure_our_source_check_found",
-          "figures": [
-            "$49.99"
-          ]
-        }
-      ]
-    }
-  ],
+  "proposals": [],
   "dropped": [
     {
       "proposal_id": "2026-10-12/taskade-com/new_tier",
@@ -1242,6 +1213,36 @@
       ],
       "dropped_on": "2026-10-29",
       "drop_reason": "cloud.google.com/bigquery/pricing still states 'The first 1 TiB of query data processed per month is free' and 'The first 10 GiB is free each month' for storage; the reading left out the storage line"
+    },
+    {
+      "proposal_id": "2026-10-30/ticktick/limits_increased",
+      "proposed_on": "2026-10-30",
+      "vendor": "TickTick",
+      "change_type": "limits_increased",
+      "date": "2026-10-30",
+      "date_source": "discovered",
+      "summary": "The free tier now includes unlimited calendar views, timeline view, widgets, themes, and statistics, as well as increased limits for lists (299), tasks per list (999), attachments (199), checklist items (199), task reminders (5), habit count (299), and countdowns (299).",
+      "tier": "Free",
+      "tier_direction": "widened",
+      "previous_state": "Up to 9 lists. Up to 99 tasks per list. 1 calendar subscription. 2 reminders per task. Basic Pomodoro timer. Basic habit tracker (up to 5 habits). Free includes a basic calendar view; multiple calendar views and task duration need Premium (US$49.99 a year).",
+      "current_state": "Free includes: 9 Lists, 99 Tasks per list List & Kanban Views NLP Task Reminders Cross-Platform Sync. Essentials List Count 9 299 Task & Note Count 99 per list 999 per list Attachment Count 1 per day 199 per day Checklist Item Count 19 per task 199 per task Task Reminders 2 5 Member Count 2 29 Habit Count 5 299 Countdown Count 5 299 Task Priority Tag Subtask Recurring Task Comment Template Duration Constant Reminder Checklist Item Reminder List/Task Activities Filter AI Features Features Calendar View Basic Unlimited Timeline View Integrations Eisenhower Matrix Basic Unlimited Widgets Basic Unlimited Themes Basic Unlimited Statistics Basic Unlimited",
+      "impact": "high",
+      "source_url": "https://ticktick.com/about/upgrade",
+      "category": "Productivity & Notes",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-10-30",
+      "restatement": [
+        {
+          "url": "https://ticktick.com/about/upgrade",
+          "refused": "reading_drops_a_figure_our_source_check_found",
+          "figures": [
+            "$49.99"
+          ]
+        }
+      ],
+      "dropped_on": "2026-10-30",
+      "drop_reason": "ticktick.com/about/upgrade (read 2026-10-30): Free is still 9 lists, 99 tasks per list, 5 habits, a basic calendar view; 299 lists, 999 tasks per list and unlimited calendar views are the Premium column (US$49.99/year) of the same table"
     }
   ]
 }

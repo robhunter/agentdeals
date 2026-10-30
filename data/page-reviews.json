@@ -784,7 +784,7 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 73,
+      "table_figures": 72,
       "table_figures_from_records": 18,
       "tables": [
         {
@@ -814,7 +814,7 @@
         },
         {
           "label": "Startup Credit Programs",
-          "figures": 9,
+          "figures": 8,
           "from_records": 0
         },
         {
@@ -3161,12 +3161,12 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 95,
+      "table_figures": 94,
       "table_figures_from_records": 39,
       "tables": [
         {
           "label": "Comparison Table",
-          "figures": 56,
+          "figures": 55,
           "from_records": 0
         },
         {
@@ -3187,6 +3187,7 @@
       "vendors_tabulated": [
         "aws",
         "cloudflare-for-startups",
+        "digitalocean",
         "google-for-startups-cloud-program",
         "microsoft-azure",
         "railway"
