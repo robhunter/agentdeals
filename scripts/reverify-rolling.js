@@ -38,6 +38,8 @@ import {
   TAKES_NO_QUOTE,
   drawnFirstForAQuote,
   placesOnTheReadFirstList,
+  markedReadFirstLines,
+  whyNotReadSince,
   readFirstLines,
   readReadFirstList,
 } from "./read-first.js";
@@ -120,6 +122,7 @@ export function pickOldestEntries(offers, limit, now = new Date(), options = {})
   const state = options.verificationState ?? new Map();
   const awaiting = options.awaitingCorroboration ?? new Set();
   const places = options.readFirst ?? new Map();
+  const since = options.readFirstSince ?? new Map();
   const today = isoDay(now);
   const entries = offers.map((offer, index) => {
     const key = offerKey(offer?.vendor, offer?.url);
@@ -127,6 +130,7 @@ export function pickOldestEntries(offers, limit, now = new Date(), options = {})
     const attempted = lastAttemptedDate(offer, holds.get(key), record);
     const ts = attempted ? new Date(attempted).getTime() : 0;
     const place = places.get(key);
+    const markReason = since.has(key) ? whyNotReadSince(since.get(key), attempted, today) : null;
     return {
       index,
       offer,
@@ -137,7 +141,10 @@ export function pickOldestEntries(offers, limit, now = new Date(), options = {})
       awaitingCorroboration: awaiting.has(key),
       keptOnlyTheName: checkKeptOnlyTheName(offer),
       place,
-      readFirst: drawnFirstForAQuote(offer, place),
+      markedSince: since.has(key),
+      since: since.get(key),
+      markReason,
+      readFirst: since.has(key) ? markReason === null : drawnFirstForAQuote(offer, place),
     };
   });
   const byAge = (a, b) =>
@@ -176,6 +183,16 @@ export function pickOldestEntries(offers, limit, now = new Date(), options = {})
     : null;
   return {
     picked,
+    markedReadFirst: entries.filter((entry) => entry.markedSince).sort((a, b) => a.place - b.place).map((entry) => {
+      const selected = drawn.some((one) => one.index === entry.index);
+      return {
+        vendor: entry.offer.vendor,
+        tier: entry.offer.tier,
+        since: entry.since,
+        drawn: selected,
+        why: selected ? entry.markReason : entry.markReason ?? (isQuarantined(entry.record) ? IN_QUARANTINE : "batch limit reached"),
+      };
+    }),
     pickedAfterAFailedRead: drawn.filter((entry) => entry.readFailed).length,
     pickedForASecondReading: secondReadings.length,
     pickedBecauseTheCheckKeptOnlyTheName: fromQueue.filter((entry) => entry.keptOnlyTheName).length,
@@ -701,10 +718,12 @@ async function main() {
   if (readFirstList.problem) {
     console.log(`The read-first list could not be read, so no listing is drawn first from it: ${readFirstList.problem}`);
   }
-  const { places: readFirst, unmatched: readFirstUnmatched } = placesOnTheReadFirstList(readFirstList.listings, offers);
-  const selection = { refusalHolds: holds, verificationState: state, awaitingCorroboration, readFirst };
-  const { picked, oldestRemaining, retriedFromQuarantine, pickedAfterAFailedRead, pickedForASecondReading, drawnFromQueue, deferredATurn, liveQueueLength, turnDays, pickedBecauseTheCheckKeptOnlyTheName, queuedWithACheckThatKeptOnlyTheName, pickedFromTheReadFirstList, queuedOnTheReadFirstList, listedButNotDrawnFirst } =
+  const { places: readFirst, since: readFirstSince, unmatched: readFirstUnmatched } = placesOnTheReadFirstList(readFirstList.listings, offers);
+  const selection = { refusalHolds: holds, verificationState: state, awaitingCorroboration, readFirst, readFirstSince };
+  const { picked, oldestRemaining, retriedFromQuarantine, pickedAfterAFailedRead, pickedForASecondReading, drawnFromQueue, deferredATurn, liveQueueLength, turnDays, pickedBecauseTheCheckKeptOnlyTheName, queuedWithACheckThatKeptOnlyTheName, pickedFromTheReadFirstList, queuedOnTheReadFirstList, listedButNotDrawnFirst, markedReadFirst } =
     pickOldestEntries(offers, limit, now, selection);
+
+  for (const line of markedReadFirstLines([...readFirstUnmatched.filter((entry) => Object.hasOwn(entry, "since")), ...markedReadFirst])) console.log(line);
 
   const renderer = findRenderer();
   console.log(
