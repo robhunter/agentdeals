@@ -12,6 +12,7 @@ export const VENDOR_KEYED_DATA: readonly VendorKeyedData[] = [
   { path: "data/restated_terms.json", arrayKeys: ["restatements"] },
   { path: "data/change_corroboration.json", arrayKeys: ["held", "resolved"] },
   { path: "data/change_proposals.json", arrayKeys: ["proposals", "dropped"], mayHoldNoRows: true },
+  { path: "data/official_mcp_checks.json", arrayKeys: ["proposals"], mayHoldNoRows: true },
 ];
 
 export const DERIVED_FROM_THE_VENDOR_DATA: readonly string[] = [

@@ -204,10 +204,10 @@ describe("#1337 putting a held vendor back the way main had it", () => {
     }
   });
 
-  it("lets only the proposals store hold no rows, since it is empty whenever nothing awaits review", () => {
+  it("lets the proposals stores hold no rows when nothing awaits review", () => {
     assert.deepStrictEqual(
       VENDOR_KEYED_DATA.filter((f) => f.mayHoldNoRows).map((f) => f.path),
-      ["data/change_proposals.json"],
+      ["data/change_proposals.json", "data/official_mcp_checks.json"],
     );
   });
 
