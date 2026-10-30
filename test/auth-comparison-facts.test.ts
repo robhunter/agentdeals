@@ -1003,11 +1003,13 @@ describe("the auth comparison states each service's terms as the vendor does", (
 
   it("lists in its timeline only services the page tabulates", () => {
     const html = served.get(PAGE)!;
-    const timeline = tableWithHeader(html, "Impact");
+    const timelines = [...html.matchAll(/<table[^>]*>[\s\S]*?<\/table>/g)].map(([table]) => table)
+      .filter(table => table.includes("<th>Impact</th>"));
+    assert.ok(timelines.length > 0, "the page has change tables");
     const names = [...html.matchAll(/<td class="provider-col"[^>]*>([\s\S]*?)<\/td>/g)].map(([, cell]) => nameOf(cell));
     const formerly = names.flatMap((name) => name.match(/^(.+) \(formerly (.+)\)$/)?.slice(1) ?? []);
     const tabulated = new Set([...names, ...formerly].map((name) => name.toLowerCase()));
-    const strangers = rowsOf(timeline).map((cells) => textOf(cells[1])).filter((vendor) => !tabulated.has(vendor.toLowerCase()));
+    const strangers = timelines.flatMap(rowsOf).map((cells) => textOf(cells[1])).filter((vendor) => !tabulated.has(vendor.toLowerCase()));
     assert.deepStrictEqual(strangers, []);
   });
 });

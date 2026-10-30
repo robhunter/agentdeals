@@ -38,9 +38,10 @@ function changesWithOneUnderEachName() {
   const changes: Change[] = log.changes;
   const template = changes.find((change) => change.vendor === "Clerk" && change.change_type === "limits_increased" && !change.resolution)
     ?? changes.find((change) => change.vendor === "Clerk" && !change.resolution)!;
-  const latest = changes.map((change) => change.date).filter((date) => /^\d{4}-\d{2}-\d{2}$/.test(String(date))).sort().at(-1)!;
-  const filed = (vendor: string, summary: string): Change => ({ ...template, vendor, summary, date: latest, recorded_date: latest });
-  log.changes = [filed(RETIRED, FILED_UNDER_RETIRED), filed(SURVIVOR, FILED_UNDER_SURVIVOR), ...changes];
+  const today = new Date().toISOString().slice(0, 10);
+  const tomorrow = new Date(Date.parse(today) + 86_400_000).toISOString().slice(0, 10);
+  const filed = (vendor: string, summary: string, date: string): Change => ({ ...template, vendor, summary, date, date_source: "vendor_page", recorded_date: today });
+  log.changes = [filed(RETIRED, FILED_UNDER_RETIRED, today), filed(SURVIVOR, FILED_UNDER_SURVIVOR, tomorrow), ...changes];
   return log;
 }
 
@@ -69,9 +70,9 @@ function startServer(env: NodeJS.ProcessEnv): Promise<{ proc: ChildProcess; port
 }
 
 function timelineRows(html: string): string[][] {
-  const table = [...html.matchAll(/<table[^>]*>[\s\S]*?<\/table>/g)].map(([t]) => t).find((t) => t.includes("<th>Impact</th>"));
-  assert.ok(table, "the page has a timeline headed Impact");
-  return [...table.matchAll(/<tr[^>]*>([\s\S]*?)<\/tr>/g)]
+  const tables = [...html.matchAll(/<table[^>]*>[\s\S]*?<\/table>/g)].map(([t]) => t).filter((t) => t.includes("<th>Impact</th>"));
+  assert.ok(tables.length > 0, "the page has change tables headed Impact");
+  return tables.flatMap(table => [...table.matchAll(/<tr[^>]*>([\s\S]*?)<\/tr>/g)])
     .map(([, row]) => [...row.matchAll(/<td[^>]*>([\s\S]*?)<\/td>/g)].map(([, cell]) => cell.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim()))
     .filter((cells) => cells.length >= 3);
 }
@@ -109,4 +110,17 @@ describe("the auth comparison's timeline after a tabulated listing is renamed", 
     const vendors = timelineRows(html).filter((cells) => cells[2].startsWith("Synthetic change")).map((cells) => cells[1]);
     assert.deepStrictEqual(vendors, [SURVIVOR, SURVIVOR]);
   });
+
+  it("keeps the renamed listing's announced record separate from its history", () => {
+    const start = html.indexOf('<h2 id="changes">');
+    const future = html.indexOf('<h2 id="upcoming-changes">', start);
+    assert.ok(start >= 0 && future > start);
+    const history = html.slice(start, future);
+    const announced = html.slice(future, html.indexOf('<h2', future + 1));
+    assert.ok(history.includes(FILED_UNDER_RETIRED));
+    assert.ok(!history.includes(FILED_UNDER_SURVIVOR));
+    assert.ok(announced.includes(FILED_UNDER_SURVIVOR));
+    assert.ok(!announced.includes(FILED_UNDER_RETIRED));
+  });
+
 });
