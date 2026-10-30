@@ -3905,7 +3905,7 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("Drone CI"), "Should include Drone CI");
     assert.ok(html.includes("Woodpecker CI"), "Should include Woodpecker CI");
     assert.ok(html.includes("Buddy"), "Should include Buddy");
-    assert.ok(html.includes("Codefresh"), "Should include Codefresh");
+    assert.ok(html.includes('href="/vendor/appcircle"'), "Should link to Appcircle");
     assert.ok(html.includes("Bitbucket Pipelines"), "Should include Bitbucket Pipelines");
     assert.ok(html.includes("Semaphore CI"), "Should include Semaphore CI");
     assert.ok(html.includes("Category Breakdown"), "Should have category breakdown");
