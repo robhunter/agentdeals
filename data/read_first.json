@@ -1,6 +1,31 @@
 {
   "listings": [
     {
+      "vendor": "Formspree",
+      "tier": "Free",
+      "since": "2026-10-30"
+    },
+    {
+      "vendor": "Cloudflare Pages",
+      "tier": "Free",
+      "since": "2026-10-30"
+    },
+    {
+      "vendor": "Hetzner Inference API",
+      "tier": "Free",
+      "since": "2026-10-30"
+    },
+    {
+      "vendor": "Hunter.io",
+      "tier": "Free",
+      "since": "2026-10-30"
+    },
+    {
+      "vendor": "surge.sh",
+      "tier": "Free",
+      "since": "2026-10-30"
+    },
+    {
       "vendor": "NVIDIA NIM",
       "tier": "Free"
     },
