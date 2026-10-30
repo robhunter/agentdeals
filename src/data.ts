@@ -32,7 +32,7 @@ import { vendorPhraseOfAnAlternativesQuery } from "./alternatives-query.js";
 import { substitutesListedFor } from "./vendor-substitutes.js";
 export { sanitizeQuery } from "./search-query.js";
 import { matchingSubject } from "./gate-disclosure.js";
-import { DATE_SOURCES, isEventDated, withDateMeaningDeclared, type DatedChange, changeDateClause, changeEntryDateLabel, isoWeekWindow, changesInWindow, discoveryBatchNote, coveringBracketedChanges, firstReadHeading, hasNotTakenEffect, newestChangeInEffect, type DateWindow } from "./change-dates.js";
+import { DATE_SOURCES, isEventDated, withDateMeaningDeclared, type DatedChange, changeDateClause, changeEntryDateLabel, isoWeekWindow, weekRangeLabel, changesInWindow, discoveryBatchNote, coveringBracketedChanges, firstReadHeading, hasNotTakenEffect, newestChangeInEffect, type DateWindow } from "./change-dates.js";
 import { PRODUCT_DEPRECATED, deprecationCall, withListingEffectDeclared } from "./product-deprecation.js";
 import { DEMOTION_FOR_A_DEPRECATION, RISK_DEMOTION } from "./change-demotion.js";
 import { sinceFilterDay } from "./since-parameter.js";
@@ -2171,8 +2171,6 @@ export function getFormattedWeeklyDigest(weeksAgo: number = 0, limit: number = 2
   const week = isoWeekWindow(targetDate);
   const weekStartStr = week.start;
   const weekEndStr = week.end!;
-  const weekStart = new Date(weekStartStr + "T00:00:00Z");
-  const weekEnd = new Date(weekEndStr + "T00:00:00Z");
 
   const { dated: weekChanges, discovered: weekDiscovered } = changesInWindow(changesTheVendorMade(allChanges), week);
   const sorted = [...weekChanges].sort((a, b) => scoreChange(b) - scoreChange(a));
@@ -2188,8 +2186,7 @@ export function getFormattedWeeklyDigest(weeksAgo: number = 0, limit: number = 2
     pricing_restructured: weekChanges.filter(c => c.change_type === "pricing_restructured").length,
   };
 
-  const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-  const dateLabel = `${months[weekStart.getUTCMonth()]} ${weekStart.getUTCDate()}\u2013${weekEnd.getUTCDate()}, ${weekStart.getUTCFullYear()}`;
+  const dateLabel = weekRangeLabel(weekStartStr, weekEndStr);
   const discoveryNote = weekDiscovered.length > 0 ? coveringBracketedChanges(discoveryBatchNote(weekDiscovered.length, `during ${dateLabel}`), weekDiscovered) : "";
 
   const headlineParts: string[] = [];

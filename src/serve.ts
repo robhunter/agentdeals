@@ -143,7 +143,7 @@ import { buildProductFunctions, functionMembers, functionDefinitions, functionMe
 import { curatedAlternativesFor } from "./curated-alternatives.js";
 import { vendorSubstitutes, substitutesListedFor } from "./vendor-substitutes.js";
 import type { Agent, ChangeDateSource, DealChange, FreePlanExcerpt, RiskCause, RatingWithheld, LinkUnreachable, ListingCondition, Offer, StabilityClass, SubtypeLabel } from "./types.js";
-import { A_DATED_HEADING_MARKER, A_DATED_SECTION_MARKER, archiveBracketOf, datedHeadingNoticeHtml, datedSectionNoticeHtml, namedFromItsDate, namedOnceItsDateArrived, namedWhileAheadOf, statedDatesShownWhileLaterThan, ANNOUNCED_BADGE, ANNOUNCED_HEADING, announcedIntro, changeDateLabel, changeEntryDateLabel, changeEntryLongDateLabel, changeDateClause, changeDatePublished, changeEventStartDate, capListSections, latestEventDate, offerExpiryAfter, feedEntryUpdated, UNDATED_TILE_LABEL, firstReadHeading, discoveryBatchNote, coveringBracketedChanges, changeEntryDateLabelHtml, isoWeekOf, monthlyChangeSeries, changesInWindow, discoveryMonthSeriesHeading, periodComparisonSentence, DISCOVERED_DATE_PREFIX, EFFECTIVE_DATE_PREFIX, UNKNOWN_EFFECTIVE_DATE_MARKER, EFFECTIVE_BY_DATE_MEANING, BRACKETED_DATE_PREFIX, RECORDED_DATE_PREFIX, CORRECTED_DATE_PREFIX, EFFECTIVE_MONTH_SERIES_NOTE, DISCOVERY_MONTH_SERIES_NOTE, weekRangeLabel, newestChangeInEffect, hasNotTakenEffect, vendorPageLastUpdated } from "./change-dates.js";
+import { A_DATED_HEADING_MARKER, A_DATED_SECTION_MARKER, archiveBracketOf, datedHeadingNoticeHtml, datedSectionNoticeHtml, namedFromItsDate, namedOnceItsDateArrived, namedWhileAheadOf, statedDatesShownWhileLaterThan, ANNOUNCED_BADGE, ANNOUNCED_HEADING, announcedIntro, changeDateLabel, changeEntryDateLabel, changeEntryLongDateLabel, changeDateClause, changeDatePublished, changeEventStartDate, capListSections, latestEventDate, offerExpiryAfter, feedEntryUpdated, UNDATED_TILE_LABEL, firstReadHeading, discoveryBatchNote, coveringBracketedChanges, changeEntryDateLabelHtml, isoWeekOf, monthlyChangeSeries, changesInWindow, discoveryMonthSeriesHeading, periodComparisonSentence, DISCOVERED_DATE_PREFIX, EFFECTIVE_DATE_PREFIX, UNKNOWN_EFFECTIVE_DATE_MARKER, EFFECTIVE_BY_DATE_MEANING, BRACKETED_DATE_PREFIX, RECORDED_DATE_PREFIX, CORRECTED_DATE_PREFIX, EFFECTIVE_MONTH_SERIES_NOTE, DISCOVERY_MONTH_SERIES_NOTE, weekRangeLabel, isoWeekWindow, newestChangeInEffect, hasNotTakenEffect, vendorPageLastUpdated } from "./change-dates.js";
 import { changeFeedEntries, feedEntryFields, feedUpdatedTimestamp, changeFeedProvenanceNote, CHANGE_FEED_ENTRY_LIMIT, CHANGE_FEED_DESCRIPTION, CHANGE_FEED_NAMESPACE, CHANGE_FEED_NAMESPACE_PREFIX, channelUpdatedTimestamp, WEEKLY_FEED_POPULATION_NOTE, feedLinkTag, feedEntrySourceXml, digestSourceXml, PER_CHANGE_FEED, WEEKLY_DIGEST_FEED } from "./change-feed.js";
 import { changeLogInPageOrder, changeLogSections, changeLogSectionsHtml, monthHeadingLabel } from "./change-log-sections.js";
 import { FEED_CORRECTIONS, correctionEntriesXml } from "./feed-corrections.js";
@@ -4709,17 +4709,6 @@ function vendorChangesAmong(records: typeof dealChanges): typeof dealChanges {
   return changesTheVendorMade(records.filter(c => !isIndexHousekeeping(c)));
 }
 
-function formatDateRange(year: number, week: number): string {
-  const start = getWeekStart(year, week);
-  const end = new Date(start.getTime() + 6 * 86400000);
-  const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-  const startMonth = months[start.getUTCMonth()];
-  const endMonth = months[end.getUTCMonth()];
-  if (startMonth === endMonth) {
-    return `${startMonth} ${start.getUTCDate()}\u2013${end.getUTCDate()}, ${year}`;
-  }
-  return `${startMonth} ${start.getUTCDate()} \u2013 ${endMonth} ${end.getUTCDate()}, ${year}`;
-}
 
 const digestCss = `*{margin:0;padding:0;box-sizing:border-box}
 :root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
@@ -4823,7 +4812,8 @@ function buildDigestPage(weekKey: string): string | null {
     ...(recordDeadlineCount ? [`${recordDeadlineCount} deadline${recordDeadlineCount === 1 ? "" : "s"} stated in earlier change records`] : []),
   ].join(" and ");
   const comingUpHtml = weekKey === getCurrentWeekKey() ? comingUpSectionHtml(servedOn, new Set(weekRecords), "impact-section coming-up") : "";
-  const dateRange = formatDateRange(year, week);
+  const window = isoWeekWindow(getWeekStart(year, week));
+  const dateRange = weekRangeLabel(window.start, window.end!);
   const discoveryNote = discovered.length > 0 ? coveringBracketedChanges(discoveryBatchNote(discovered.length, `during ${dateRange}`), discovered) : "";
   const discoveryClause = discovered.length > 0
     ? ` ${discovered.length} more recorded with no known effective date.`
@@ -4996,7 +4986,8 @@ function buildDigestArchivePage(): string {
 
   const listHtml = weeks.map(([key, records]) => {
     const parsed = parseWeekKey(key)!;
-    const dateRange = formatDateRange(parsed.year, parsed.week);
+    const window = isoWeekWindow(getWeekStart(parsed.year, parsed.week));
+    const dateRange = weekRangeLabel(window.start, window.end!);
     const { dated, discovered } = partitionByDateProvenance(vendorChangesAmong(records));
     const firstRead = discovered.length > 0 ? ` + ${discovered.length} first read` : "";
     return `<li><a href="/digest/${key}"><span class="week-label">${dateRange}</span><span class="week-count">${dated.length} change${dated.length !== 1 ? "s" : ""}${firstRead}</span></a></li>`;
