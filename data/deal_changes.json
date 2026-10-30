@@ -17218,6 +17218,33 @@
       "category": "Databases",
       "alternatives": [],
       "recorded_date": "2026-10-30"
+    },
+    {
+      "vendor": "OCR.Space",
+      "change_type": "limits_reduced",
+      "date": "2026-10-30",
+      "date_source": "hand_written",
+      "summary": "By October 30, 2026, OCR.Space's free OCR API plan includes 1,000 Engine 3 conversions a month, down from 2,500 on October 3. Engine 1 is retired, and OCR.Space redirects calls to it to Engine 2. The 25,000 monthly requests for Engines 1 and 2 are unchanged.",
+      "tier": "Free",
+      "previous_state": "\"Free plan: 2,500 Engine 3 conversions in addition to the 25,000 for Engine 1/2\" and \"Engine 1 is our original OCR engine. It is deprecated and gets retired.\" (ocr.space/ocrapi, Internet Archive 2026-10-03)",
+      "current_state": "\"Free plan: 1000 Engine 3 conversions in addition to the 25,000 for Engine 1/2\" and \"Engine 1 is our original OCR engine. It has served us well and is now retired ... Calls to Engine 1 are automatically redirected to Engine 2.\" (ocr.space/ocrapi, read 2026-10-30)",
+      "impact": "medium",
+      "source_url": "https://ocr.space/ocrapi",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-10-30",
+      "archive_check": {
+        "checked": "2026-10-30",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-10-03",
+            "first_new": "2026-10-30",
+            "last_old_capture": "https://web.archive.org/web/20261003205043/https://ocr.space/ocrapi",
+            "first_new_capture": "https://web.archive.org/web/20261030102017/https://ocr.space/ocrapi"
+          }
+        ]
+      }
     }
   ]
 }

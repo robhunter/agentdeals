@@ -14456,9 +14456,9 @@
     {
       "vendor": "OCR.Space",
       "category": "AI / ML",
-      "description": "Free OCR API that parses image and PDF files and returns the text as JSON: 25,000 requests/month, 1 MB file size limit, 3-page PDF limit, 500 requests/day per IP address, plus 2,500 Engine 3 conversions/month. Free-tier searchable PDFs carry a watermark. The online OCR web form needs no registration and accepts files up to 5MB.",
+      "description": "Free OCR API that parses image and PDF files and returns the text as JSON: 25,000 requests/month, 1 MB file size limit, 3-page PDF limit, 500 requests/day per IP address, plus 1,000 Engine 3 conversions/month, down from 2,500 in October 2026. Engine 1 is retired; OCR.Space redirects calls to it to Engine 2. Free-tier searchable PDFs carry a watermark. PRO is $30/month for 300,000 requests and 5 MB files. The online OCR web form needs no registration and accepts files up to 5MB.",
       "tier": "Free",
-      "url": "https://ocr.space/",
+      "url": "https://ocr.space/ocrapi",
       "tags": [
         "developer-tools",
         "free-for-dev"
