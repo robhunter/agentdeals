@@ -19034,6 +19034,18 @@
           "quote": "We exclusively accept Credit Cards for Pro subscriptions.",
           "url": "https://help.zitadel.com/payment-methods-billing-cycles-for-zitadel-cloud",
           "read_on": "2026-10-29"
+        },
+        {
+          "text": "ZITADEL's terms say a free plan with no Daily Active User for 30 days is terminated automatically.",
+          "quote": "will be considered automatically terminated after 30 days without any Daily Active User on the Unit",
+          "url": "https://zitadel.com/docs/legal/terms-of-service",
+          "read_on": "2026-10-30"
+        },
+        {
+          "text": "When an agreement is terminated, ZITADEL may irrevocably delete all of the customer's data.",
+          "quote": "In the event of the termination of the contract, we reserve the right to irrevocably delete all of your data.",
+          "url": "https://zitadel.com/docs/legal/terms-of-service",
+          "read_on": "2026-10-30"
         }
       ]
     },
@@ -24198,10 +24210,10 @@
           "kind": "remote",
           "target": "https://mcp.northflank.com/mcp",
           "transport": "Streamable HTTP",
-          "authentication": "a team API token or team workload identity token in the header \"Authorization: Bearer <token>\"",
+          "authentication": "the Northflank CLI login, which the command \"nf agent setup\" connects, or a team API token in the header \"Authorization: Bearer <token>\"; Northflank MCP does not support OAuth login",
           "doc_url": "https://northflank.com/docs/v1/application/ai-agents/mcp-server.md",
-          "source_quote": "The hosted server lets agents deploy applications and jobs, manage databases, and inspect resources.",
-          "read_on": "2026-10-20"
+          "source_quote": "Connect your coding agent to Northflank to deploy applications, manage databases, and inspect resources.",
+          "read_on": "2026-10-30"
         }
       ]
     },
