@@ -1639,9 +1639,15 @@ function comparisonPageWithLiveRecords(
     changesTheVendorMade(declaredScope),
     includeComparedVendors ? vendorSubjectsOnCompiledPage(html) : [],
     (vendor) => changesTheVendorMade(changesFor(vendor)),
-    TIMELINE_ROW_LIMIT,
+    Number.MAX_SAFE_INTEGER,
   );
-  return fillComparedServicesCount(replaceTimelineRows(marked, changeTimelineRowsHtml(rows)));
+  const { inEffect, upcoming } = splitAtTheDayServed(rows, utcToday());
+  const history = replaceTimelineRows(marked, changeTimelineRowsHtml(inEffect.slice(0, TIMELINE_ROW_LIMIT)));
+  const announced = upcomingChangesNamingTheVendorHtml(upcoming.map(c => changeTimelineRowsHtml([c])));
+  return fillComparedServicesCount(history.replace(
+    /(<h2\b[^>]*\bid="changes"[\s\S]*?)(?=<h2\b|$)/,
+    section => section + announced,
+  ));
 }
 
 const SOURCE_READ_DATE_CLASS = "cited-source-read";
@@ -24537,7 +24543,7 @@ function listingTermsCellHtml(slug: string): string {
   return escHtmlServer(opening) + profile + (unconfirmed ? unconfirmedTermsSpanHtml(unconfirmed) : "") + conditions;
 }
 
-function upcomingOpenAIChangesHtml(rows: readonly string[]): string {
+function upcomingChangesWithoutVendorHtml(rows: readonly string[]): string {
   if (rows.length === 0) return "";
   return `
   <h3 id="upcoming-changes">${escHtmlServer(UPCOMING_CHANGES_HEADING)}</h3>
@@ -24662,7 +24668,7 @@ function buildOpenaiAssistantsAlternativesPage(): string {
   };
   const openaiChangesByDayServed = splitAtTheDayServed(openaiChanges, utcToday());
   const changeTimelineRows = openaiChangesByDayServed.inEffect.map(openaiChangeRow).join("\n        ");
-  const upcomingChangesHtml = upcomingOpenAIChangesHtml(openaiChangesByDayServed.upcoming.map(openaiChangeRow));
+  const upcomingChangesHtml = upcomingChangesWithoutVendorHtml(openaiChangesByDayServed.upcoming.map(openaiChangeRow));
 
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["ai-ml-alternatives", "ai-coding-tools-pricing", "free-ai-stack", "free-llm-apis", "free-tier-risk", "stability"].includes(p.slug)
@@ -25152,7 +25158,7 @@ function buildOpenaiAssistantsMigration2026Page(): string {
   };
   const openaiChangesByDayServed = splitAtTheDayServed(openaiChanges, utcToday());
   const changeTimelineRows = openaiChangesByDayServed.inEffect.map(openaiChangeRow).join("\n        ");
-  const upcomingChangesHtml = upcomingOpenAIChangesHtml(openaiChangesByDayServed.upcoming.map(openaiChangeRow));
+  const upcomingChangesHtml = upcomingChangesWithoutVendorHtml(openaiChangesByDayServed.upcoming.map(openaiChangeRow));
 
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["openai-assistants-alternatives", "shutdowns", "free-llm-apis", "ai-ml-alternatives", "ai-coding-tools-pricing", "free-ai-stack", "stability", "free-tier-risk"].includes(p.slug)
@@ -25621,7 +25627,8 @@ function buildTenorAlternativesPage(): string {
     </tr>`;
   }).join("\n        ");
 
-  const changeTimelineRows = tenorChanges.map(c => {
+  const tenorChangesByDayServed = splitAtTheDayServed(tenorChanges, utcToday());
+  const tenorChangeRow = (c: DealChange) => {
     const dateStr = changeEntryLongDateLabel(c);
     const impactColor = changeImpactColor(c.impact);
     return `<tr>
@@ -25629,7 +25636,9 @@ function buildTenorAlternativesPage(): string {
       <td style="font-size:.85rem">${changeSummaryHtml(c, escHtmlServer)}</td>
       <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
     </tr>`;
-  }).join("\n        ");
+  };
+  const changeTimelineRows = tenorChangesByDayServed.inEffect.map(tenorChangeRow).join("\n        ");
+  const upcomingChangesHtml = upcomingChangesWithoutVendorHtml(tenorChangesByDayServed.upcoming.map(tenorChangeRow));
 
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["shutdowns", "stability", "free-tier-risk", "state-of-free-tiers"].includes(p.slug)
@@ -25958,7 +25967,7 @@ ${globalNavCss()}
     </tbody>
   </table>
   </div>` : ""}
-
+${upcomingChangesHtml}
   <h2 id="recommendations">Recommendations</h2>
 
   <div class="verdict-box">
@@ -26078,7 +26087,8 @@ function buildFirebaseStudioShutdownPage(): string {
     }).join("\n        ");
   }
 
-  const changeTimelineRows = firebaseChanges.slice(0, 10).map(c => {
+  const firebaseChangesByDayServed = splitAtTheDayServed(firebaseChanges, utcToday());
+  const firebaseChangeRow = (c: DealChange) => {
     const dateStr = changeEntryLongDateLabel(c);
     const impactColor = changeImpactColor(c.impact);
     return `<tr>
@@ -26086,7 +26096,9 @@ function buildFirebaseStudioShutdownPage(): string {
       <td style="font-size:.85rem">${changeSummaryHtml(c, escHtmlServer)}</td>
       <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
     </tr>`;
-  }).join("\n        ");
+  };
+  const changeTimelineRows = firebaseChangesByDayServed.inEffect.slice(0, 10).map(firebaseChangeRow).join("\n        ");
+  const upcomingChangesHtml = upcomingChangesWithoutVendorHtml(firebaseChangesByDayServed.upcoming.map(firebaseChangeRow));
 
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["firebase-alternatives", "stability", "shutdowns", "ide-code-editors-alternatives", "ai-coding-tools-pricing", "google-developer-program-2026"].includes(p.slug)
@@ -26406,7 +26418,7 @@ ${globalNavCss()}
     </tbody>
   </table>
   </div>` : ""}
-
+${upcomingChangesHtml}
   <h2 id="methodology">Methodology</h2>
 
   <div class="methodology">
@@ -26601,7 +26613,7 @@ function buildOpenAIAssistantsMigrationPage(): string {
   };
   const openaiChangesByDayServed = splitAtTheDayServed(openaiChanges, utcToday());
   const changeTimelineRows = openaiChangesByDayServed.inEffect.slice(0, 10).map(openaiChangeRow).join("\n        ");
-  const upcomingChangesHtml = upcomingOpenAIChangesHtml(openaiChangesByDayServed.upcoming.map(openaiChangeRow));
+  const upcomingChangesHtml = upcomingChangesWithoutVendorHtml(openaiChangesByDayServed.upcoming.map(openaiChangeRow));
 
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["ai-ml-alternatives", "free-llm-apis", "free-ai-stack", "ai-coding-tools-pricing", "gemini-api-pricing-2026", "free-tier-risk", "shutdowns", "llm-api-pricing"].includes(p.slug)
@@ -33262,7 +33274,8 @@ function buildAppRunnerMigrationPage(): string {
       <td style="font-size:.8rem">${escHtmlServer(r.scaling)}</td>
     </tr>`).join("\n        ");
 
-  const changeTimelineRows = awsChanges.slice(0, 10).map(c => {
+  const awsChangesByDayServed = splitAtTheDayServed(awsChanges, utcToday());
+  const awsChangeRow = (c: DealChange) => {
     const dateStr = changeEntryLongDateLabel(c);
     const impactColor = changeImpactColor(c.impact);
     return `<tr>
@@ -33270,7 +33283,9 @@ function buildAppRunnerMigrationPage(): string {
       <td style="font-size:.85rem">${changeSummaryHtml(c, escHtmlServer)}</td>
       <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
     </tr>`;
-  }).join("\n        ");
+  };
+  const changeTimelineRows = awsChangesByDayServed.inEffect.slice(0, 10).map(awsChangeRow).join("\n        ");
+  const upcomingChangesHtml = upcomingChangesWithoutVendorHtml(awsChangesByDayServed.upcoming.map(awsChangeRow));
 
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["shutdowns", "aws-free-tier-2026", "cloud-comparison-2026", "free-tier-risk", "state-of-free-tiers"].includes(p.slug)
@@ -33680,6 +33695,7 @@ railway up
   </table>
   </div>` : `<h2 id="aws-timeline">AWS Change Timeline</h2>
   <p class="section-intro">Check our <a href="/changes">deal changes database</a> for the latest AWS updates.</p>`}
+${upcomingChangesHtml}
 
   <h2 id="recommendations">Recommendations</h2>
 
@@ -38217,7 +38233,8 @@ function buildAuthComparison2026Page(): string {
     tabulatedListings.has(c.vendor.toLowerCase())
   ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
-  const changeTimelineRows = authChanges.slice(0, 12).map((c: any) => {
+  const authChangesByDayServed = splitAtTheDayServed(authChanges, utcToday());
+  const authChangeRow = (c: DealChange) => {
     const dateStr = changeEntryLongDateLabel(c);
     const impactColor = changeImpactColor(c.impact);
     return `<tr>
@@ -38226,7 +38243,9 @@ function buildAuthComparison2026Page(): string {
       <td style="font-size:.85rem">${changeSummaryHtml(c, escHtmlServer)}</td>
       <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
     </tr>`;
-  }).join("\n        ");
+  };
+  const changeTimelineRows = authChangesByDayServed.inEffect.slice(0, 12).map(authChangeRow).join("\n        ");
+  const upcomingChangesHtml = upcomingChangesNamingTheVendorHtml(authChangesByDayServed.upcoming.map(authChangeRow));
 
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["security-alternatives", "supabase-vs-firebase", "free-startup-stack", "free-tier-risk", "database-free-tier-comparison-2026", "free-ai-stack"].includes(p.slug)
@@ -38997,7 +39016,7 @@ ${globalNavCss()}
   <p class="section-intro">Recent auth-related pricing changes from our tracker. See the <a href="/changes">full timeline</a> for all ${trackedChangeCount} tracked changes.</p>
 
   ${changeTimelineHtml}
-
+${upcomingChangesHtml}
   <h2 id="data-source">Data Source</h2>
   <div class="methodology">
     <strong>Powered by AgentDeals.</strong> The tables on this page were compiled by hand from official pricing pages and have not been re-checked since. We track pricing changes across all major auth providers. The pricing changes we track are updated continuously; the tables above are not.<br><br>

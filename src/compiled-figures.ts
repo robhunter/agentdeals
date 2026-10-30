@@ -430,7 +430,7 @@ export function fillComparedServicesCount(html: string): string {
 }
 
 export function replaceTimelineRows(html: string, rowsHtml: string): string {
-  return html.replace(TIMELINE_BODY, (whole, open: string, _body: string, close: string) =>
-    rowsHtml.trim() === "" ? whole : `${open}\n        ${rowsHtml}\n      ${close}`,
+  return html.replace(TIMELINE_BODY, (_whole, open: string, _body: string, close: string) =>
+    `${open}\n        ${rowsHtml}\n      ${close}`,
   );
 }

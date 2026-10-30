@@ -4,7 +4,7 @@
     "A": 30,
     "B": 90
   },
-  "measured_on": "2026-10-29",
+  "measured_on": "2026-10-30",
   "pages": [
     {
       "path": "/agent-payments",
@@ -221,6 +221,11 @@
           "label": "Pricing Change Timeline",
           "figures": 3,
           "from_records": 3
+        },
+        {
+          "label": "Upcoming Changes",
+          "figures": 0,
+          "from_records": 0
         }
       ],
       "reads_changes": true,
@@ -278,6 +283,11 @@
           "label": "Pricing Change Timeline",
           "figures": 10,
           "from_records": 10
+        },
+        {
+          "label": "Upcoming Changes",
+          "figures": 0,
+          "from_records": 0
         }
       ],
       "reads_changes": true,
@@ -372,6 +382,11 @@
         },
         {
           "label": "Pricing Change Timeline",
+          "figures": 0,
+          "from_records": 0
+        },
+        {
+          "label": "Upcoming Changes",
           "figures": 0,
           "from_records": 0
         }
@@ -913,6 +928,11 @@
           "label": "Pricing Change Timeline",
           "figures": 21,
           "from_records": 21
+        },
+        {
+          "label": "Upcoming Changes",
+          "figures": 0,
+          "from_records": 0
         }
       ],
       "reads_changes": true,
