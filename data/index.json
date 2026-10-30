@@ -24098,9 +24098,9 @@
     {
       "vendor": "leapcell",
       "category": "Cloud Hosting",
-      "description": "Leapcell is a reliable distributed applications platform, providing everything you need to seamlessly support your rapid growth. The free plan includes 100k service invocations, 10k async tasks and 100k Redis commands.",
+      "description": "Serverless platform for web services, APIs and background jobs. The free Hobby plan ($0 per seat a month) includes 20 projects with up to 3 vCPUs and 4 GB RAM each, 1 free PostgreSQL database, and each month 100,000 serverless invocations, 3 GB-hours of serverless duration, 10,000 async invocations, 100,000 Redis commands (each write counts as 10) and 2 GB of data transfer.",
       "tier": "Free",
-      "url": "https://leapcell.io/",
+      "url": "https://leapcell.io/pricing",
       "tags": [
         "hosting",
         "paas",
