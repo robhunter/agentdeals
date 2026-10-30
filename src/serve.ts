@@ -28040,7 +28040,7 @@ function buildStartupCreditsPage(): string {
     { q: "What are the highest-value startup credit programs?", a: "The largest published offers are Google Scale AI and Cloudflare Tier 1, each up to $350,000. Google Scale, AWS Activate Portfolio and Microsoft for Startups with an Investor Network partner each offer up to $200,000. Microsoft for Startups without one offers up to $150,000. Most require VC funding or an affiliated partner." },
     { q: "Can I stack multiple startup programs?", a: "Yes. Programs on different platforms stack: Google Scale (up to $200K), AWS Activate Portfolio (up to $200K) and Cloudflare Tier 2 ($100K) can combine to $500K. Credits from fintech platforms come from the same programmes: a later AWS Activate award pays only the difference, and Stripe Atlas's Cloudflare and Azure credits are Cloudflare's and Microsoft's own programmes." },
     { q: "Do startup credits expire?", a: "Yes, startup credits expire. AWS Activate credits expire on a date shown in the AWS Billing console. Google's Start tier credits last 12 months; Scale tier credits last two years. Microsoft for Startups credits must be activated within 90 days; the first $200 lasts 90 days and the business-verification credit 180 days, and from the $25K milestone credits last up to two years. The Azure startup credit offer's $1,000 lasts 90 days and its $4,000 lasts 180 days after business verification. Cloudflare credits last one year or until used up. PostHog credits last 12 months from application. Kiro credits expire one year after they are issued." },
-    { q: "What do I need to qualify for startup credits?", a: "Programmes that need no funding: AWS Founders, Google Start, Microsoft, Cloudflare Tier 3, PostHog, Amplitude, DigitalOcean Startups and Kiro. Programmes that need VC backing or an affiliated partner: Google Scale, AWS Portfolio, Cloudflare Tiers 1 and 2. Banking programs (Brex, Mercury, Ramp, SVB) need an account; Stripe Atlas needs incorporation through Atlas." },
+    { q: "What do I need to qualify for startup credits?", a: "Programmes that need no funding: AWS Founders, Google Start, Microsoft, Cloudflare Tier 3, PostHog, Amplitude and Kiro. Programmes that need VC backing or an affiliated partner: Google Scale, AWS Portfolio, Cloudflare Tiers 1 and 2. Banking programs (Brex, Mercury, Ramp, SVB) need an account; Stripe Atlas needs incorporation through Atlas." },
     { q: "Are startup credits worth the lock-in?", a: "Credits significantly lower early-stage cloud costs but create platform dependency. After credits expire, you're on full production pricing with established data gravity. Mitigate this by using credits for experimentation and development rather than production architecture. A multi-cloud strategy with credits from 2\u20133 providers reduces single-vendor risk." },
   ];
 
@@ -35403,7 +35403,7 @@ ${globalNavCss()}
   </div>
 
   <h2 id="startups">For Startups</h2>
-  <p class="section-intro">DigitalOcean's startup program is one of the most accessible cloud startup programs available.</p>
+  <p class="section-intro">DigitalOcean Startups applications are paused until an updated program launches in early 2027. Active members keep their existing benefits.</p>
 
   <div class="verdict-box">
     <h3>DigitalOcean Startups</h3>
@@ -35415,7 +35415,7 @@ ${globalNavCss()}
 
     <div class="verdict-item">
       <strong>Eligibility</strong>
-      <p>Raised $10M or less, not a service business, and new to DigitalOcean credits. Apply through a partner accelerator, incubator or VC, or directly. See our <a href="/startup-credits">Startup Credits guide</a> for a full comparison of all programs.</p>
+      <p>Not accepting new applications: paused until early 2027. Active members keep their existing benefits. See our <a href="/startup-credits">Startup Credits guide</a> for a full comparison of all programs.</p>
     </div>
 
     <div class="verdict-item">
@@ -36097,7 +36097,7 @@ ${globalNavCss()}
         <td>DigitalOcean Startups</td>
         <td style="font-family:var(--mono)">Amount varies (up to $10,000 a month)</td>
         <td>12 months</td>
-        <td>$10M raised or less; partner or direct application</td>
+        <td>Not accepting new applications: paused until early 2027; active members keep their benefits</td>
       </tr>
     </tbody>
   </table>
@@ -45461,7 +45461,7 @@ ${globalNavCss()}
       <tr><td><a href="/vendor/google-for-startups-cloud-program">Google for Startups</a></td><td style="color:#3fb950;font-weight:600">Up to $350K</td><td>AI-first startups</td><td>GCP credits, technical support</td></tr>
       <tr><td><a href="/vendor/cloudflare-for-startups">Cloudflare Startup Program</a></td><td style="color:#3fb950;font-weight:600">Up to $350K</td><td>3 tiers; upper two via affiliated partners</td><td>Workers, R2, CDN, security</td></tr>
       <tr><td><a href="/vendor/microsoft-azure">Microsoft for Startups</a></td><td style="color:#3fb950;font-weight:600">Up to $150K</td><td>B2B tech startups, pre-seed through Series B</td><td>Azure credits, Foundry models</td></tr>
-      <tr><td><a href="/vendor/digitalocean">DigitalOcean Startups</a></td><td style="color:#3fb950;font-weight:600">Amount varies</td><td>Early-stage</td><td>Compute + support credits</td></tr>
+      <tr><td><a href="/vendor/digitalocean">DigitalOcean Startups</a></td><td style="color:#3fb950;font-weight:600">Amount varies</td><td>Not accepting new applications: paused until early 2027</td><td>Active members keep compute + support credits</td></tr>
       <tr><td><a href="/vendor/aws">AWS Activate</a></td><td style="color:#3fb950;font-weight:600">Up to $200K</td><td>Portfolio needs an Activate Provider Org ID</td><td>AWS credits, technical support</td></tr>
       <tr><td><a href="/vendor/railway">Railway</a></td><td style="color:#3fb950;font-weight:600">$5 free/month</td><td>Everyone</td><td>No credit card, usage-based</td></tr>
       <tr><td><a href="/vendor/vercel">Vercel</a></td><td style="color:#3fb950;font-weight:600">Hobby plan free</td><td>Non-commercial</td><td>Edge functions, serverless</td></tr>

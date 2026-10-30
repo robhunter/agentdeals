@@ -61,7 +61,7 @@ const PROGRAMMES: Record<string, [string, string, string, string]> = {
   "AWS Activate": ["$1K–$5K (Founders), up to $200K (Portfolio), $200K+ (AI Startups, invite only)", "Pre-Series B, founded in the last 10 years, AWS account on a paid plan. Founders: self-funded. Portfolio: needs an Activate Provider Org ID. AWS Credits for AI Startups is by invitation only, for startups ready to scale after Activate Portfolio, through an AWS account manager; AWS states \"$200,000+\" with no upper amount.", "Activate credits expire on a date shown in the AWS Billing console.", "One award per approved application; a later, larger award pays only the difference"],
   "Google Cloud for Startups": ["$2K (Start), up to $200K (Scale), up to $350K (Scale AI)", "Start: no funding yet but plans to raise venture funding soon, founded within 24 months, working MVP; Scale: VC funding from pre-seed to Series A (Series A within the last 12 months; angel money does not count), founded within 5 years.", "12 months (Start), 2 years (Scale)", "Scale: year 1 covers usage up to $100K ($250K for AI); year 2 covers 20% of spend, up to $100K more"],
   "Microsoft for Startups (formerly Founders Hub)": ["Up to $200 on joining Microsoft for Startups; up to $150K over time as Azure usage grows; up to $200K for Investor Network-backed startups. Startups new to Azure can start with $1,000 for 90 days and $4,000 more after business verification.", "B2B software, AI or tech startups, pre-seed through Series B, privately held; no investor needed. Business verification and sustained Azure usage unlock more credits, and Investor Network backing starts most startups at $100K.", "Activate Microsoft for Startups credits within 90 days; the first $200 lasts 90 days, the verification credit 180 days, and credits from the $25K milestone up to 2 years. The Azure startup credit offer's $1,000 lasts 90 days and its $4,000 lasts 180 days after business verification.", "Released in milestones as you verify the business and use more Azure"],
-  "DigitalOcean Startups": ["Credits for 12 months; amount varies, up to $10,000 a month", "Raised $10M or less; apply through a partner or directly", "12 months", ""],
+  "DigitalOcean Startups": ["Not accepting new applications until an updated program launches in early 2027. Members: credits for 12 months; amount varies, up to $10,000 a month", "Not accepting new applications: paused until early 2027", "12 months", ""],
   "Cloudflare Startup Program": ["$10K, $100K or $350K by tier", "Tier 3 ($10K): bootstrapped or self-funded, under $1M raised; Tiers 2 ($100K) and 1 ($350K): funded by an affiliated partner, Tier 1 with $5M+ raised.", "1 year or until used up", "Lump sum per tier"],
   "Stripe Atlas": ["Over $50K in partner discounts, plus $2.5K of Stripe credits", "Companies incorporated through Atlas ($500, then $100 a year after the first year)", "Varies by perk; Stripe credits last the first year", "Available once the Atlas application is approved"],
   "Brex Partner Perks": ["Over $350K in partner discounts and credits", "Brex customers", "", ""],
@@ -140,7 +140,7 @@ const STATED_ON_THE_GUIDE = [
 const FAQ_ANSWERS = [
   "The largest published offers are Google Scale AI and Cloudflare Tier 1, each up to $350,000. Google Scale, AWS Activate Portfolio and Microsoft for Startups with an Investor Network partner each offer up to $200,000. Microsoft for Startups without one offers up to $150,000. Most require VC funding or an affiliated partner.",
   "Yes. Programs on different platforms stack: Google Scale (up to $200K), AWS Activate Portfolio (up to $200K) and Cloudflare Tier 2 ($100K) can combine to $500K. Credits from fintech platforms come from the same programmes: a later AWS Activate award pays only the difference, and Stripe Atlas's Cloudflare and Azure credits are Cloudflare's and Microsoft's own programmes.",
-  "Programmes that need no funding: AWS Founders, Google Start, Microsoft, Cloudflare Tier 3, PostHog, Amplitude, DigitalOcean Startups and Kiro. Programmes that need VC backing or an affiliated partner: Google Scale, AWS Portfolio, Cloudflare Tiers 1 and 2. Banking programs (Brex, Mercury, Ramp, SVB) need an account; Stripe Atlas needs incorporation through Atlas.",
+  "Programmes that need no funding: AWS Founders, Google Start, Microsoft, Cloudflare Tier 3, PostHog, Amplitude and Kiro. Programmes that need VC backing or an affiliated partner: Google Scale, AWS Portfolio, Cloudflare Tiers 1 and 2. Banking programs (Brex, Mercury, Ramp, SVB) need an account; Stripe Atlas needs incorporation through Atlas.",
   "Yes, startup credits expire. AWS Activate credits expire on a date shown in the AWS Billing console.",
 ];
 
@@ -160,14 +160,15 @@ const STATED_ELSEWHERE: Record<string, string[]> = {
     "Investor Network-backed startups also get GitHub Enterprise and Visual Studio Enterprise offers.",
   ],
   "/digitalocean-free-tier-2026": [
+    "DigitalOcean Startups applications are paused until an updated program launches in early 2027. Active members keep their existing benefits.",
     "Credits for 12 months in an amount that varies by startup, usable up to $10,000 a month. They do not cover GPU Droplets, H100 GPU products, inference or third-party AI models; GPU credits are a separate benefit for selected startups. 15 months of free Standard-tier support.",
-    "Raised $10M or less, not a service business, and new to DigitalOcean credits. Apply through a partner accelerator, incubator or VC, or directly.",
+    "Not accepting new applications: paused until early 2027. Active members keep their existing benefits.",
     "AWS Activate: up to $200K (Portfolio needs an Activate Provider Org ID). Google for Startups: up to $200K, or $350K for AI-first startups; a $2K Start tier needs no funding. Microsoft for Startups: up to $150K (no investor needed).",
   ],
   "/state-of-free-tiers": [
     "Cloudflare Startup Program Up to $350K 3 tiers; upper two via affiliated partners",
     "Microsoft for Startups Up to $150K B2B tech startups, pre-seed through Series B Azure credits, Foundry models",
-    "DigitalOcean Startups Amount varies",
+    "DigitalOcean Startups Amount varies Not accepting new applications: paused until early 2027 Active members keep compute + support credits",
     "AWS Activate Up to $200K Portfolio needs an Activate Provider Org ID",
     "for 16 programs.",
   ],
@@ -180,7 +181,7 @@ const CLOUD_STARTUP_ROWS = [
   ["Activate", "Up to $200K", "—", "Activate Provider Org ID (Portfolio)"],
   ["Google for Startups", "Up to $350K", "1–2 years", "VC funding, pre-seed to Series A"],
   ["Microsoft for Startups", "Up to $150K", "90 days to 2 years", "No funding requirement (easiest to qualify)"],
-  ["DigitalOcean Startups", "Amount varies (up to $10,000 a month)", "12 months", "$10M raised or less; partner or direct application"],
+  ["DigitalOcean Startups", "Amount varies (up to $10,000 a month)", "12 months", "Not accepting new applications: paused until early 2027; active members keep their benefits"],
 ];
 
 const ENTITIES: Record<string, string> = {
@@ -309,6 +310,22 @@ describe("the startup credits guide states each programme's terms as the program
         .map(([label, value]) => `${name} ${label}: "${card[label]}" where the programme says "${value}"`);
     });
     assert.deepStrictEqual(wrong, []);
+  });
+
+  it("marks DigitalOcean applications closed in the comparison and card while preserving member benefits", () => {
+    const html = served.get("/startup-credits")!;
+    const table = html.split('id="comparison-table"')[1]?.split("</table>")[0] ?? "";
+    const row = [...table.matchAll(/<tr[^>]*>([\s\S]*?)<\/tr>/g)]
+      .find(([, markup]) => readable(markup.match(/<td[^>]*>([\s\S]*?)<\/td>/)?.[1] ?? "") === "DigitalOcean Startups")?.[1] ?? "";
+    const cells = [...row.matchAll(/<td[^>]*>([\s\S]*?)<\/td>/g)].map(([, cell]) => readable(cell));
+    assert.strictEqual(cells.length, 5);
+    assert.strictEqual(cells[1], "Not accepting new applications until an updated program launches in early 2027. Members: credits for 12 months; amount varies, up to $10,000 a month");
+    assert.strictEqual(cells[2], "Not accepting new applications: paused until early 2027");
+    assert.strictEqual(cells[4], "Not accepting applications");
+    const card = programmeCardMarkup(html).get("DigitalOcean Startups") ?? "";
+    assert.strictEqual(readable(card.match(/<h3>([\s\S]*?)<\/h3>/)?.[1] ?? ""), "DigitalOcean Startups Not accepting applications");
+    assert.strictEqual(programmeCards(html).get("DigitalOcean Startups")?.Status,
+      "DigitalOcean's FAQ, read 2026-10-30: applications for the current cohort are temporarily paused while it prepares an updated program for early 2027; active members are not affected.");
   });
 
   it("states the invite-only AWS AI startup tier in the comparison cell and programme card", () => {
