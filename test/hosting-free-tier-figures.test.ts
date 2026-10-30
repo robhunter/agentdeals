@@ -91,6 +91,42 @@ type Retired = { what: string; pattern: RegExp; replacedBy: RegExp; vendorRecord
 
 const RETIRED_FIGURES: Retired[] = [
   {
+    what: "Clerk free auth stated as 10K MAU",
+    pattern: /Clerk(?: gives| offers)?(?: 10,000 MAU| \(10K MAU\))/i,
+    replacedBy: /50(?:,000|K) (?:MRU|monthly retained users)/i,
+  },
+  {
+    what: "Supabase free Storage including image transformations",
+    pattern: /Supabase Storage gives 1 GB free with image transformations/i,
+    replacedBy: /Image transformations require the Pro plan or above/i,
+  },
+  {
+    what: "Sentry Developer with 10K performance transactions",
+    pattern: /10,000 performance transactions/i,
+    replacedBy: /5M spans/i,
+  },
+  {
+    what: "Meilisearch Cloud offering 100K documents free",
+    pattern: /Meilisearch Cloud offers 100,000 documents free/i,
+    replacedBy: /Meilisearch Cloud has no free plan/i,
+  },
+  {
+    what: "Inngest with 25K free runs",
+    pattern: /Inngest (?:offers 25,000 function runs|\(25K background job runs\))|background jobs \(Inngest 25K runs\)/i,
+    replacedBy: /50(?:,000|K) (?:executions|background job executions)/i,
+  },
+  {
+    what: "Algolia with 10K free records",
+    pattern: /Algolia 10K records/i,
+    replacedBy: /50(?:,000|K) records/i,
+  },
+  {
+    what: "Trigger.dev free compute credit described as a run allowance",
+    pattern: /Trigger\.dev (?:offers 10,000 runs\/month free|gives 50,000 runs\/month)/i,
+    replacedBy: /Trigger\.dev's free plan includes \$5 of compute credits monthly and allows 20 concurrent runs/i,
+  },
+
+  {
     what: "Ollama Cloud's retired Free plan with starter credits",
     pattern: /Ollama[^.]{0,240}(?:Free plan includes starter (?:credits|usage)|cloud models are free)/i,
     replacedBy: /Ollama[^.]{0,180}open source \(MIT\) and free to run on your own machine; its cloud models are paid per token on the \$0 Pay as you go plan\. Pro and higher plans include monthly usage credits\./,
@@ -523,6 +559,14 @@ describe("hosting pages publish the free-tier figures our records hold (#1183)",
 
   it("states the current figure on every page that carried a retired one", async () => {
     const carried: Record<string, string[]> = {
+      "Clerk free auth stated as 10K MAU": ["/free-nextjs-stack", "/free-django-stack", "/free-fastapi-stack", "/free-go-stack", "/security-alternatives"],
+      "Supabase free Storage including image transformations": ["/free-django-stack", "/free-fastapi-stack", "/free-go-stack"],
+      "Sentry Developer with 10K performance transactions": ["/free-nextjs-stack", "/free-django-stack", "/free-fastapi-stack", "/free-go-stack", "/free-saas-stack"],
+      "Meilisearch Cloud offering 100K documents free": ["/free-nextjs-stack", "/free-django-stack"],
+      "Inngest with 25K free runs": ["/free-nextjs-stack", "/free-django-stack", "/free-saas-stack"],
+      "Algolia with 10K free records": ["/free-nextjs-stack", "/free-django-stack"],
+      "Trigger.dev free compute credit described as a run allowance": ["/free-nextjs-stack", "/free-saas-stack"],
+
       "Ollama Cloud's retired Free plan with starter credits": ["/free-llm-apis"],
       "MinIO's AGPL edition described as relicensed to proprietary software": ["/q1-2026-developer-pricing-report", "/free-tier-risk"],
       "Wasabi storage at $6.99 per TB": ["/storage-comparison-2026"],

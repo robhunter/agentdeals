@@ -1429,7 +1429,7 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 33,
+      "table_figures": 34,
       "table_figures_from_records": 15,
       "tables": [
         {
@@ -1439,7 +1439,7 @@
         },
         {
           "label": "The First Paid Upgrade — What to Spend First",
-          "figures": 18,
+          "figures": 19,
           "from_records": 6
         }
       ],
@@ -1601,7 +1601,7 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 29,
+      "table_figures": 30,
       "table_figures_from_records": 11,
       "tables": [
         {
@@ -1611,7 +1611,7 @@
         },
         {
           "label": "The First Paid Upgrade — What to Spend First",
-          "figures": 18,
+          "figures": 19,
           "from_records": 4
         }
       ],
@@ -2830,12 +2830,12 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 28,
+      "table_figures": 29,
       "table_figures_from_records": 3,
       "tables": [
         {
           "label": "Main Comparison Table",
-          "figures": 5,
+          "figures": 6,
           "from_records": 0
         },
         {
