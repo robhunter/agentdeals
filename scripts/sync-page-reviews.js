@@ -177,7 +177,7 @@ function writePerturbed(dir, name, key, fields) {
 
 async function render(port, route) {
   const res = await fetch(`http://localhost:${port}${route}`, {
-    headers: { "user-agent": "agentdeals-internal/1.0 (sync-page-reviews)" },
+    headers: { "user-agent": "agentdeals-internal/1.0 (sync-page-reviews)", connection: "close" },
   });
   if (res.status !== 200) throw new Error(`${route} returned ${res.status}`);
   return res.text();
