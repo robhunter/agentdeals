@@ -1,15 +1,59 @@
 {
   "held": [
     {
-      "vendor": "MATLAB and Simulink for Startups",
+      "vendor": "Amazon Q Developer",
+      "change_type": "pricing_restructured",
+      "impact": "medium",
+      "summary": "The Amazon Q Developer now has two tiers: Free and Pro ($19/month per user). The free tier includes 50 agentic requests per month and 1,000 lines of code transformation. The Pro tier includes increased limits for agentic requests and code transformation (4,000 lines pooled at the account level, with overages at $0.003/line), admin controls, and IP indemnity.",
+      "previous_state": "AI coding assistant by AWS. Free tier: inline code suggestions, chat, 1,000 lines code transformation/month, 50 agentic requests/month, access to latest Claude models. Supports VS Code, JetBrains, CLI, and AWS Console. Pro plan $19/user/month (higher limits, admin controls, IP indemnity). AWS will end support for the Amazon Q Developer IDE plugins on April 30, 2027, and points IDE users to Kiro.",
+      "current_state": "Amazon Q Developer offers two pricing tiers: Free and Pro ($19/mo. per user). The Free Tier includes 50 agentic requests per month and 1,000 lines of code transformation. The Pro Tier includes increased limits for agentic requests and code transformation (4,000 lines of code per month per user pooled at account level, with overages at $0.003 per line of code submitted), admin controls, and IP indemnity.",
+      "source_url": "https://aws.amazon.com/q/developer/pricing/",
+      "category": "AI Coding",
+      "first_read_date": "2026-10-30"
+    },
+    {
+      "vendor": "Amazon SES",
       "change_type": "pricing_restructured",
       "impact": "high",
-      "summary": "The pricing for MATLAB and Simulink for Startups has changed. The page details an annual individual license for the MATLAB Suite (90+ add-ons) at USD 4,235 and a smaller MATLAB Suite (40+ add-ons) at USD 1,770. The Accelerator Program offers free licensing through partnerships with accelerators.",
-      "previous_state": "Eligible early stage technology startups can get MATLAB, Simulink, and more than 90 industry-specific toolboxes at a startup-friendly price along with other exclusive benefits.",
-      "current_state": "MATLAB and Simulink Suite Includes 40+ add-on products Annual individual license USD 1,770. MATLAB and Simulink Suite Includes 90+ add-on products Annual individual license USD 4,235",
-      "source_url": "https://mathworks.com/products/startups.html",
-      "category": "Startup Perks",
-      "first_read_date": "2026-10-29"
+      "summary": "The free tier information is outdated. The pricing starts at $0.16 per 1,000 emails for the Essentials plan, and there are additional costs for features like dedicated IPs and email validation. New SES accounts start on the Essentials plan beginning July 21, 2026.",
+      "previous_state": "Transactional and bulk email API/SMTP. No perpetual free tier: new AWS accounts get up to $200 in AWS Free Tier credits usable across eligible services, and the free plan runs for 6 months after account creation. $0.10 per 1,000 outbound emails after that, plus EC2 compute and data transfer if you send from AWS.",
+      "current_state": "Amazon SES offers three pricing plans: Essentials, Pro, and Enterprise. The Essentials plan starts at $0.16 per 1,000 emails. New SES accounts start on the Essentials plan beginning July 21, 2026.",
+      "source_url": "https://aws.amazon.com/ses/pricing/",
+      "category": "Email",
+      "first_read_date": "2026-10-30"
+    },
+    {
+      "vendor": "GitHub Actions",
+      "change_type": "pricing_restructured",
+      "impact": "high",
+      "summary": "The free tier for GitHub Actions now provides a monetary allowance ($12 USD for Free, $18 USD for Pro, $300 USD for Enterprise) instead of a fixed number of minutes. Artifact storage limits have also changed (500MB Free, 1GB Pro, 50GB Enterprise). Cache storage is 10GB per repository for all plans.",
+      "previous_state": "Free CI/CD for public repos (unlimited minutes). Private repos: 2,000 min/mo GitHub-hosted runners, 500 MB artifact storage, 10 GB cache/repo. Self-hosted runners remain free — planned $0.002/min charge was postponed indefinitely after community backlash (March 2026). Hosted runner prices reduced 39% (Jan 2026)",
+      "current_state": "The GitHub Free plan includes $12 USD of included compute usage per month, 500 MB of artifact storage, and 10 GB of cache storage per repository.",
+      "source_url": "https://docs.github.com/en/billing/managing-billing-for-github-actions/about-billing-for-github-actions",
+      "category": "CI/CD",
+      "first_read_date": "2026-10-30"
+    },
+    {
+      "vendor": "GitHub Copilot",
+      "change_type": "pricing_restructured",
+      "impact": "high",
+      "summary": "The free tier now has access to Haiku 4.5, GPT-5 mini, and more, and explicitly states no credit card is required.",
+      "previous_state": "AI coding assistant by GitHub. Copilot Free is $0 with no credit card: 2,000 code completions a month, a limited monthly allowance of GitHub AI Credits for chat and agent features, and models through auto model selection only. Copilot Student is free for verified students. Paid plans include a monthly allowance of AI credits: Pro $10 (1,500 credits), Pro+ $39 (7,000) and Max $100 (20,000); Business $19 (1,900) and Enterprise $39 (3,900) per seat. Code completions are unlimited on paid plans, and usage beyond an allowance costs $0.01 per AI credit.",
+      "current_state": "The Free plan is $0 USD and includes 2,000 completions per month, access to Haiku 4.5, GPT-5 mini, and more, Copilot CLI, and Community Support. No credit card is required.",
+      "source_url": "https://github.com/features/copilot",
+      "category": "AI Coding",
+      "first_read_date": "2026-10-30"
+    },
+    {
+      "vendor": "zilore.com",
+      "change_type": "pricing_restructured",
+      "impact": "high",
+      "summary": "The free plan now includes unlimited records and requests, whereas previously it included 1000 resource records per domain and 10,000,000 DNS queries.",
+      "previous_state": "The free plan costs $0/month or $0/year and includes 5 domains, 1000 resource records per domain, and 10,000,000 DNS queries.",
+      "current_state": "All of our plans include an unlimited number of DNS records and an unlimited number of DNS requests to them.",
+      "source_url": "https://zilore.com/en/dns",
+      "category": "DNS & Domain Management",
+      "first_read_date": "2026-10-30"
     }
   ],
   "resolved": [
@@ -2944,6 +2988,18 @@
       "outcome": "baseline_moved",
       "detail": "the terms it was read against are no longer the terms we publish",
       "resolved_date": "2026-10-29"
+    },
+    {
+      "vendor": "MATLAB and Simulink for Startups",
+      "change_type": "pricing_restructured",
+      "impact": "high",
+      "summary": "The pricing for MATLAB and Simulink for Startups has changed. The page details an annual individual license for the MATLAB Suite (90+ add-ons) at USD 4,235 and a smaller MATLAB Suite (40+ add-ons) at USD 1,770. The Accelerator Program offers free licensing through partnerships with accelerators.",
+      "previous_state": "Eligible early stage technology startups can get MATLAB, Simulink, and more than 90 industry-specific toolboxes at a startup-friendly price along with other exclusive benefits.",
+      "source_url": "https://mathworks.com/products/startups.html",
+      "first_read_date": "2026-10-29",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-10-30 read it as pricing_restructured too",
+      "resolved_date": "2026-10-30"
     }
   ]
 }

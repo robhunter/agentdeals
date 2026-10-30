@@ -137,13 +137,13 @@
       "vendor": "Airtable",
       "change_type": "pricing_restructured",
       "reason": "confirmed_unchanged",
-      "detail": "The report restates information already present in the stored description (Team plan price) and adds descriptive text about the free plan's target users which doesn't alter the technical limits.",
-      "summary": "The Free plan is still available. The details have changed. The page states the Free plan is for individual users, very small teams, or those with lightweight needs. The Team plan is now $20/user/month billed annually.",
+      "detail": "The report highlights a clarification of the target user for the free plan (individual/small teams) and reiterates the Team plan pricing, both of which don't alter the core functionality or limits previously described. The report doesn't indicate a change in the *features* of the free tier, only *who* it's intended for.",
+      "summary": "The Free plan is still available, but the details have changed. The page states the Free plan is for individual users or small teams with lightweight needs. It also mentions that users with edit permissions are charged on Team and Business plans, and that the Free plan has no charges for users. The page also states Team plan is $20/user/month billed annually.",
       "previous_state": "Database and app-building platform. Free: unlimited bases, 1,000 records per base, 1 GB attachments per base, 1 workspace, up to 5 editors and 50 commenters, 500 AI credits per editor/month, 100 automation runs, 1,000 API calls/month, 2-week revision and snapshot history, Interface Designer. Extensions, synced tables, Gantt/timeline views and expanded color/formatting are paid only; Team is $20/user/month billed annually.",
-      "current_state": "The Free plan is available at no cost for users just getting started and is formulated for individual users, very small teams, or those with lightweight needs.",
+      "current_state": "Airtable has multiple packages to help teams of all sizes orchestrate their work. Our Free plan is available to teams for no charge and provides the key building blocks to help you build applications. The Free plan is formulated for individual users, very small teams, or those with lightweight needs.",
       "source_url": "https://airtable.com/pricing",
       "category": "Productivity & Notes",
-      "refused_date": "2026-10-05"
+      "refused_date": "2026-10-30"
     },
     {
       "vendor": "Airtable",
@@ -169,6 +169,18 @@
       "source_url": "https://aiven.io/pricing",
       "category": "Databases",
       "refused_date": "2026-08-29"
+    },
+    {
+      "vendor": "Aiven",
+      "change_type": "pricing_restructured",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this page refused on 2026-08-29 (measures_no_change) stated the same 5 figures, so the page showed these terms before the date this record gives",
+      "summary": "The free tier now offers 1 dedicated VM with 1 CPU, 1 GB RAM, and 1 GB storage, and does not allow selection of a specific cloud or region. The stored information stated no credit card was required and no time limit, which is still true. The stored information also mentioned specific limits for PostgreSQL, MySQL, Valkey, Kafka, and OpenSearch, which are no longer explicitly listed for the free tier.",
+      "previous_state": "Managed PostgreSQL, MySQL, Valkey (Redis-compatible), Apache Kafka, or OpenSearch — one free service of each type per organization. PostgreSQL and MySQL: 1 CPU, 1 GB RAM, 1 GB disk; PostgreSQL has 20 connections and no connection pooling. Valkey: 1 CPU, 1 GB RAM. Apache Kafka: 250 KiB/s ingress and 250 KiB/s egress, up to 5 topics with two partitions each. OpenSearch: 4 GB RAM, 20 GB storage. No credit card, no time limit. Developer plan for PostgreSQL is $5 a month with 8 GB storage.",
+      "current_state": "The Free tier costs $0 / month and includes 1 dedicated VM, 1 CPU per VM, 1 GB RAM per VM, and 1 GB total storage. It does not allow selection of a specific cloud or region.",
+      "source_url": "https://aiven.io/pricing",
+      "category": "Databases",
+      "refused_date": "2026-10-30"
     },
     {
       "vendor": "Algolia",
@@ -2174,15 +2186,15 @@
     },
     {
       "vendor": "Composio",
-      "change_type": "new_tier",
+      "change_type": "limits_increased",
       "reason": "repeats_a_refused_reading",
-      "detail": "the reading of this page refused on 2026-10-23 (repeats_a_refused_reading) stated the same 4 figures, so the page showed these terms before the date this record gives",
-      "summary": "The free tier is now called \"Hobby\" and is still available, but the page details additional paid tiers (Pro and Enterprise) that were not previously mentioned.",
+      "detail": "the reading of this page refused on 2026-10-25 (repeats_a_refused_reading) stated the same 4 figures, so the page showed these terms before the date this record gives",
+      "summary": "The free tier now explicitly lists limits: 100,000 tool calls / mo, 50,000 triggers / mo, and 3 team members. There is also a 'Pro' tier at $29/mo with a $29 monthly usage credit.",
       "previous_state": "Integration platform for AI Agents and LLMs — Free $0 No credit card required 100,000 tool calls / mo 50,000 triggers / mo 3 team members",
       "current_state": "Hobby $0 No credit card required 100,000 tool calls / mo 50,000 triggers / mo 3 team members",
       "source_url": "https://composio.dev/pricing",
       "category": "AI / ML",
-      "refused_date": "2026-10-25"
+      "refused_date": "2026-10-30"
     },
     {
       "vendor": "ConfigCat",
@@ -2559,6 +2571,18 @@
       "refused_date": "2026-09-16"
     },
     {
+      "vendor": "Databricks (Lakeflow Connect)",
+      "change_type": "free_tier_removed",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-09-16 (no_price_signal) claimed the same change, free_tier_removed, against the same stored description",
+      "summary": "The free tier information is no longer explicitly stated. Lakeflow Connect is mentioned as a way to create managed ingestion pipelines, but the page focuses on Unity Catalog connections and various connector options (query federation, catalog federation, streaming connectors, etc.). The 100 DBU/day limit is not mentioned.",
+      "previous_state": "Azure Databricks Lakeflow Connect — managed data ingestion. Free tier: 100 DBUs/day per workspace (~100M records/day). Supports 40+ data sources including SQL Server, PostgreSQL, MySQL, Salesforce, Sharepoint, Google Sheets. Serverless compute included",
+      "current_state": "Lakeflow Connect allows admin users to create a connection and a managed ingestion pipeline in the data ingestion UI. Non-admin users or those using Databricks APIs/SDKs/CLI/Declarative Automation Bundles require an admin to first create the connection in Catalog Explorer.",
+      "source_url": "https://learn.microsoft.com/en-us/azure/databricks/connect/",
+      "category": "Databases",
+      "refused_date": "2026-10-30"
+    },
+    {
       "vendor": "Dataimporter.io",
       "change_type": "free_tier_removed",
       "reason": "no_price_signal",
@@ -2836,6 +2860,18 @@
       "source_url": "https://www.dhiwise.com/",
       "category": "IDE & Code Editors",
       "refused_date": "2026-09-17"
+    },
+    {
+      "vendor": "DhiWise",
+      "change_type": "free_tier_removed",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-09-17 (page_does_not_name_vendor) claimed the same change, free_tier_removed, against the same stored description",
+      "summary": "The pricing page does not mention a free tier. It focuses on a paid service that converts prompts into full-stack applications with backend and integrations. The page highlights features like code generation, database setup, and deployment.",
+      "previous_state": "Converts Figma designs into dynamic Flutter and React applications. Its code generation technology is designed to optimize workflows for building production-ready mobile and web experiences.",
+      "current_state": "The page does not mention a free tier. It describes a service that generates full applications from prompts, offering features like backend setup, database schemas, and deployment.",
+      "source_url": "https://www.dhiwise.com/",
+      "category": "IDE & Code Editors",
+      "refused_date": "2026-10-30"
     },
     {
       "vendor": "Diawi",
@@ -3621,13 +3657,13 @@
       "vendor": "Fizzy",
       "change_type": "limits_reduced",
       "reason": "repeats_a_refused_reading",
-      "detail": "the reading of this page refused on 2026-10-26 (repeats_a_refused_reading) stated the same figure, so the page showed these terms before the date this record gives",
-      "summary": "The stored deal info mentions a limit of 1000 items, but the pricing page states that Fizzy is entirely free with a 1 GB file storage limit.",
+      "detail": "the reading of this page refused on 2026-10-29 (repeats_a_refused_reading) stated the same figure, so the page showed these terms before the date this record gives",
+      "summary": "The stored deal info mentions a limit of 1000 items, but the pricing page states that Fizzy is 'totally free' with a 1 GB file storage limit.",
       "previous_state": "Kanban-based platform for project management and issue tracking. Create public boards, set up webhooks, use card stamping, and track unlimited users — free for up to 1000 items.",
-      "current_state": "Fizzy is entirely free with a 1 GB file storage limit.",
+      "current_state": "Fizzy is entirely free and is subsidized by Basecamp and HEY. It limits file space usage to 1 GB.",
       "source_url": "https://www.fizzy.do/",
       "category": "Project Management",
-      "refused_date": "2026-10-29"
+      "refused_date": "2026-10-30"
     },
     {
       "vendor": "Flagsmith",
@@ -4273,6 +4309,18 @@
     {
       "vendor": "Glauca",
       "change_type": "pricing_restructured",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this page refused on 2026-09-13 (same_transition_graded_differently) stated the same 4 figures, so the page showed these terms before the date this record gives",
+      "summary": "The free tier now only includes up to 3 zones, and costs 0.00 GBP per zone per month for the first 3 zones, and 1.00 GBP plus VAT for zones above 3.",
+      "previous_state": "Free DNS hosting for up to 3 domains and DNSSEC support",
+      "current_state": "For the first X zones Price per zone per month 3 0.00 GBP Above 3 1.00 GBP Plus EU VAT where applicable.",
+      "source_url": "https://docs.glauca.digital/hexdns/",
+      "category": "DNS & Domain Management",
+      "refused_date": "2026-10-30"
+    },
+    {
+      "vendor": "Glauca",
+      "change_type": "pricing_restructured",
       "reason": "same_transition_graded_differently",
       "detail": "same vendor, source_url and previous_state as Glauca|pricing_restructured|2026-09-01|https://docs.glauca.digital/hexdns/",
       "summary": "The free tier now only includes up to 3 zones, and costs 0.00 GBP per zone per month. Any zones above 3 cost 1.00 GBP per zone per month plus EU VAT.",
@@ -4438,6 +4486,18 @@
       "source_url": "https://cloud.google.com/storage/pricing",
       "category": "Storage",
       "refused_date": "2026-10-02"
+    },
+    {
+      "vendor": "Google Compute Engine",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (1 non, 30 gb, 1 gb)",
+      "summary": "The Always Free tier now includes access to 20+ free products, including Compute Engine, but the specific e2-micro VM, disk, and egress limits are no longer explicitly mentioned. The Free Trial offers a $300 credit and access to the Free Tier, but also restricts adding GPUs to VM instances during the trial.",
+      "previous_state": "Always Free: 1 non-preemptible e2-micro VM (us-west1, us-central1, or us-east1), 30 GB standard persistent disk, 1 GB North America egress. GPUs/TPUs excluded.",
+      "current_state": "Access 20+ free products for common use cases, including AI APIs, VMs, data warehouses, and more.",
+      "source_url": "https://docs.cloud.google.com/free/docs/free-cloud-features",
+      "category": "Cloud IaaS",
+      "refused_date": "2026-10-30"
     },
     {
       "vendor": "Google Content API for Shopping",
@@ -5026,6 +5086,30 @@
       "collided_with": "houndci.com|free_tier_removed|2026-09-28|https://houndci.com/"
     },
     {
+      "vendor": "howuku.com",
+      "change_type": "free_tier_removed",
+      "reason": "states_no_terms",
+      "detail": "every clause of the summary states absence or narration rather than a term the page carries, so it reports the reading rather than a change",
+      "summary": "The page does not mention a free tier or any limits on usage. It focuses on Howuku as an alternative to Google Optimize and mentions AI-powered A/B testing.",
+      "previous_state": "Track user interaction, engagement, and event. Free for up to 5,000 visits/month",
+      "current_state": "The page does not mention a free tier or any usage limits. It highlights Howuku's features as an A/B testing and experimentation platform, particularly as a Google Optimize alternative.",
+      "source_url": "https://howuku.com",
+      "category": "Analytics",
+      "refused_date": "2026-10-30"
+    },
+    {
+      "vendor": "httpSMS",
+      "change_type": "limits_increased",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-10-05 (unquantified_limit) claimed the same change, limits_increased, against the same stored description",
+      "summary": "The free tier now allows up to 200 SMS messages per month, but the page also details paid tiers with higher limits.",
+      "previous_state": "Send and receive text messages using your Android phone as an SMS Gateway. Free to send and receive up to 200 messages per month.",
+      "current_state": "Free to use. Send or receive up to 200 SMS/month.",
+      "source_url": "https://httpsms.com",
+      "category": "Messaging",
+      "refused_date": "2026-10-30"
+    },
+    {
       "vendor": "httpSMS",
       "change_type": "limits_increased",
       "reason": "unquantified_limit",
@@ -5039,15 +5123,15 @@
     },
     {
       "vendor": "Hugging Face",
-      "change_type": "limits_reduced",
+      "change_type": "free_tier_removed",
       "reason": "confirmed_unchanged",
-      "detail": "The stored description already implied a credit system ($0.10/month) rather than completely free access. The current page clarifies terms and adds tiers, but doesn't fundamentally alter the free tier's credit amount.",
-      "summary": "The free tier now offers $0.10 in monthly credits, subject to change, instead of being completely free. There are also options for PRO and Team/Enterprise users with $2.00 in monthly credits. Custom Provider Key) and clarifies that users can continue using the API after exhausting credits by purchasing additional credits.",
-      "previous_state": "ML model hub — $0.10/month free inference credits, 200+ models via Inference Providers, unlimited model hosting on Hub",
-      "current_state": "Free users receive $0.10 monthly credits, subject to change. PRO and Team/Enterprise users receive $2.00 monthly credits. Usage beyond credits is pay-as-you-go.",
+      "detail": "The report restates the stored description; both describe the same change in access to Inference Providers for free accounts.",
+      "summary": "Free accounts no longer get any included Inference Providers credits; they must purchase credits or upgrade to PRO to use them. PRO users receive $2.00 monthly credits.",
+      "previous_state": "ML model hub. Since 2026-10-07, free accounts get no included Inference Providers credits: free users buy credits or upgrade to PRO to call Inference Providers, which serves 200+ models. PRO ($9/month) gets $2.00 a month. Free accounts get 100GB of private storage and best-effort public storage; substantial storage needs PRO, Team or Enterprise.",
+      "current_state": "Free users can use Inference Providers by purchasing credits, or by upgrading to PRO.",
       "source_url": "https://huggingface.co/docs/inference-providers/pricing",
       "category": "AI / ML",
-      "refused_date": "2026-09-01"
+      "refused_date": "2026-10-30"
     },
     {
       "vendor": "Hugging Face",
@@ -5864,15 +5948,15 @@
     },
     {
       "vendor": "LaunchDarkly",
-      "change_type": "limits_increased",
+      "change_type": "pricing_restructured",
       "reason": "states_no_difference",
       "detail": "the summary states that the page agrees with what we hold, and names no figure the stored description did not already carry",
-      "summary": "The Developer tier still exists and is $0/mo, but the page details more limits and features than were originally stored. Specifically, it mentions service connections (5 included, pay as you go beyond), and details around client-side MAU, and AgentControl features. The page also details Foundation and Enterprise tiers with different pricing and features.",
+      "summary": "The Developer tier still exists and is free, but the page details usage-based billing for service connections and client-side MAU beyond the included limits. The stored information does not mention these costs. Additionally, the page details more complex pricing for Foundation and Enterprise tiers, and introduces AgentControl with its own pricing structure.",
       "previous_state": "Feature management — $0 / mo, forever. Unlimited seats. A/B Tests and Experiments includes 100K experimentation MAU per month. 10M logs and 10M traces /mo. 5K session replays and 5K errors /mo. 5K AI runs/mo included. 1K client-side MAU /mo.",
-      "current_state": "$0 / mo, forever. Unlimited seats. A/B Tests and Experiments includes 100K experimentation MAU per month. 10M logs and 10M traces /mo. 5K session replays and 5K errors /mo. 5K AI runs/mo included. 1K client-side MAU /mo. 5 service connections included, pay as you go beyond.",
+      "current_state": "$0 / mo, forever. Unlimited seats. Includes 100K experimentation MAU per month. 10M logs and 10M traces /mo. 5K session replays and 5K errors /mo. 5K AI runs/mo included. 1K client-side MAU /mo. Usage beyond included limits is billed as you go (e.g., $10 per Service Connection / mo, $8.33 per 1k client-side MAU / mo).",
       "source_url": "https://launchdarkly.com/pricing/",
       "category": "Feature Flags",
-      "refused_date": "2026-10-05"
+      "refused_date": "2026-10-30"
     },
     {
       "vendor": "LeanCloud",
@@ -5951,13 +6035,13 @@
       "vendor": "lil'bots",
       "change_type": "limits_reduced",
       "reason": "repeats_a_refused_reading",
-      "detail": "the reading of this page refused on 2026-09-13 (unquantified_limit) stated the same figure, so the page showed these terms before the date this record gives",
-      "summary": "The free tier now includes 3,600 execution credits per month, down from the previously stated 10,000.",
+      "detail": "the reading of this page refused on 2026-10-05 (repeats_a_refused_reading) stated the same figure, so the page showed these terms before the date this record gives",
+      "summary": "The free tier now includes 3,600 seconds of execution credits per month, down from the previously stated 10,000 credits.",
       "previous_state": "write and run scripts online utilizing free built-in APIs like OpenAI, Anthropic, Firecrawl and others. Great for building AI agents / internal tooling and sharing with team. Free-tier includes full access to APIs, AI coding assistant and 10,000 execution credits / month.",
       "current_state": "Free Plan $0 / month...Execution Credits: 3,600s / month",
       "source_url": "https://www.lilbots.io/",
       "category": "Low-Code Platforms",
-      "refused_date": "2026-10-05"
+      "refused_date": "2026-10-30"
     },
     {
       "vendor": "lil'bots",
@@ -6572,13 +6656,13 @@
       "vendor": "ManageEngine Log360 Cloud",
       "change_type": "free_tier_removed",
       "reason": "repeats_a_refused_reading",
-      "detail": "the reading of this page refused on 2026-09-14 (no_removal_evidence) stated the same figure, so the page showed these terms before the date this record gives",
-      "summary": "The page no longer mentions a free plan with 50 GB storage and 15-day retention. Instead, it promotes a 30-day free trial and then directs users to paid editions (Standard, MSSP).",
+      "detail": "the reading of this page refused on 2026-10-05 (repeats_a_refused_reading) stated the same figure, so the page showed these terms before the date this record gives",
+      "summary": "The free tier is not explicitly mentioned. The page highlights a 30-day free trial, but then directs users to MSSP or Standard editions.",
       "previous_state": "Log Management service powered by Manage Engine. Free Plan offers 50 GB storage with 15 days Storage Retention and 7 days search.",
-      "current_state": "The page offers a 30 day free trial, then directs users to Standard or MSSP editions.",
+      "current_state": "The page promotes a 30-day free trial, after which users must select a Standard or MSSP edition.",
       "source_url": "https://www.manageengine.com/cloud-siem/",
       "category": "Logging",
-      "refused_date": "2026-10-05"
+      "refused_date": "2026-10-30"
     },
     {
       "vendor": "MantleDB",
@@ -6663,6 +6747,19 @@
       "source_url": "https://www.marketdata.app",
       "category": "Dev Utilities",
       "refused_date": "2026-10-26"
+    },
+    {
+      "vendor": "MATLAB and Simulink for Startups",
+      "change_type": "pricing_restructured",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as MATLAB and Simulink for Startups|pricing_restructured|2026-10-04|https://mathworks.com/products/startups.html",
+      "summary": "The Startup program now offers access to MATLAB and Simulink at 'low startup pricing' and includes options for training credits and co-marketing. The pricing for the MATLAB Suite is $1,770 annually and the MATLAB and Simulink Suite is $4,235 annually. The Accelerator Program provides free licensing through partnerships with over 500 accelerators.",
+      "previous_state": "Eligible early stage technology startups can get MATLAB, Simulink, and more than 90 industry-specific toolboxes at a startup-friendly price along with other exclusive benefits.",
+      "current_state": "MATLAB Suite is $1,770 annually and MATLAB and Simulink Suite is $4,235 annually.",
+      "source_url": "https://mathworks.com/products/startups.html",
+      "category": "Startup Perks",
+      "refused_date": "2026-10-30",
+      "collided_with": "MATLAB and Simulink for Startups|pricing_restructured|2026-10-04|https://mathworks.com/products/startups.html"
     },
     {
       "vendor": "MDBootstrap",
@@ -8567,6 +8664,18 @@
     },
     {
       "vendor": "PromoProxy",
+      "change_type": "startup_program_expanded",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this page refused on 2026-09-13 (same_transition_graded_differently) stated the same 3 figures, so the page showed these terms before the date this record gives",
+      "summary": "PromoProxy is currently paused for a service renewal and new sign-ups are suspended. While a Free plan is still listed, it's unclear if it's currently accessible.",
+      "previous_state": "The Free plan is ¥0 /month, includes up to 5 users, and 3 GB of data per day.",
+      "current_state": "The Free plan is ¥0 /month, includes up to 5 users, and 3 GB of data per day.",
+      "source_url": "https://promoproxy.net/",
+      "category": "CDN",
+      "refused_date": "2026-10-30"
+    },
+    {
+      "vendor": "PromoProxy",
       "change_type": "limits_increased",
       "reason": "same_transition_graded_differently",
       "detail": "same vendor, source_url and previous_state as PromoProxy|limits_reduced|2026-09-01|https://promoproxy.net/",
@@ -8722,6 +8831,18 @@
       "source_url": "https://qrtracer.io",
       "category": "Storage",
       "refused_date": "2026-10-02"
+    },
+    {
+      "vendor": "Railway",
+      "change_type": "limits_reduced",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this page refused on 2026-10-06 (restates_stored_quantities) stated the same 10 figures, so the page showed these terms before the date this record gives",
+      "summary": "The free tier now has limits on projects (5 during trial, then 1), services per project (5 during trial, then 3), CPU per service (up to 2 vCPU during trial, then up to 1 vCPU), RAM per service (up to 1 GB during trial, then up to 0.5 GB), ephemeral disk (1 GB), volume storage (0.5 GB), and replicas per service (2 during the free trial, then 1).",
+      "previous_state": "Free $0 per month. Start with a 30-day free trial with $5 credits, then $1 per month. Up to 1 vCPU / 0.5 GB RAM per service. 0.5 GB of volume storage. 2 replicas during the free trial, then 1. Projects: 5 during trial, then 1",
+      "current_state": "Free $0 per month. Start with a 30-day free trial with $5 credits, then $1 per month. Up to 1 vCPU / 0.5 GB RAM per service. 0.5 GB of volume storage. 2 replicas during the free trial, then 1. Projects: 5 during trial, then 1",
+      "source_url": "https://railway.com/pricing",
+      "category": "Cloud Hosting",
+      "refused_date": "2026-10-30"
     },
     {
       "vendor": "Railway",
@@ -9824,13 +9945,13 @@
       "vendor": "smartmockups.com",
       "change_type": "limits_increased",
       "reason": "repeats_a_refused_reading",
-      "detail": "the reading of this page refused on 2026-10-16 (repeats_a_refused_reading) stated the same figure, so the page showed these terms before the date this record gives",
-      "summary": "The free tier now allows up to 2,500 mockups, an increase from the previously stated 200.",
+      "detail": "the reading of this page refused on 2026-10-23 (repeats_a_refused_reading) stated the same figure, so the page showed these terms before the date this record gives",
+      "summary": "The free tier now allows up to 2,500 mockups, whereas the stored information states 200 free mockups.",
       "previous_state": "Create product mockups, 200 free mockups.",
       "current_state": "As a Canva Free user, you can create and use up to 2,500 mockups for free. If you exceed this total number of uses, you will need a Canva Pro account to create and use more mockups.",
       "source_url": "https://smartmockups.com/",
       "category": "Design",
-      "refused_date": "2026-10-23"
+      "refused_date": "2026-10-30"
     },
     {
       "vendor": "SmartParse",
@@ -10466,6 +10587,18 @@
       "refused_date": "2026-10-05"
     },
     {
+      "vendor": "Tailark",
+      "change_type": "free_tier_removed",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-10-05 (no_price_signal) claimed the same change, free_tier_removed, against the same stored description",
+      "summary": "The page focuses on 'Get full access' which implies a paid plan. It doesn't explicitly mention a free tier with pre-built UI blocks. It describes a collection of blocks, pages, and illustrations for building marketing websites, but access to these requires 'full access'.",
+      "previous_state": "A collection of modern, responsive, pre-built UI blocks designed for marketing websites.",
+      "current_state": "Get full access to dashboard, shadcn registry for building marketing websites.",
+      "source_url": "https://tailark.com/",
+      "category": "Design",
+      "refused_date": "2026-10-30"
+    },
+    {
       "vendor": "Tailkits",
       "change_type": "limits_increased",
       "reason": "no_price_signal",
@@ -10988,6 +11121,18 @@
       "refused_date": "2026-10-11"
     },
     {
+      "vendor": "Trello",
+      "change_type": "limits_reduced",
+      "reason": "confirmed_unchanged",
+      "detail": "AI features and command runs were already in the stored description. Unlimited storage was always 10MB/file.",
+      "summary": "The Free plan now has AI features included, along with a limit of 250 Workspace command runs per month. Unlimited storage is now 10MB/file instead of unlimited.",
+      "previous_state": "Unlimited cards. Up to 10 boards per workspace. Unlimited Power-Ups. 10 MB per file attachment. 250 Workspace command runs per month (automation). Unlimited activity log.",
+      "current_state": "Free plan For individuals or small teams looking to keep work organized.\n\nIncluded in Free:\nUnlimited cards\nUp to 10 boards per Workspace\nQuickly capture to-dos from email, Slack, and Teams\nInbox\nPlanner (view-only)\nAI Summarization\nAssignee and due dates\niOS and Android mobile apps\n2-factor authentication\nUnlimited storage (10MB/file)\n250 Workspace command runs per month\nCustom backgrounds & stickers\nUnlimited activity log",
+      "source_url": "https://trello.com/pricing",
+      "category": "Productivity & Notes",
+      "refused_date": "2026-10-30"
+    },
+    {
       "vendor": "TruffleHog",
       "change_type": "new_tier",
       "reason": "no_price_signal",
@@ -11022,6 +11167,18 @@
       "source_url": "https://turbopuffer.com/pricing",
       "category": "Databases",
       "refused_date": "2026-10-02"
+    },
+    {
+      "vendor": "Tweek",
+      "change_type": "limits_reduced",
+      "reason": "states_no_difference",
+      "detail": "limits_reduced claimed, summary asserts the page matches what we stored, and the two states carry the same quantities",
+      "summary": "While the free tier still exists and allows unlimited users, the API has a lower monthly limit on the free plan. Premium is required for Google/Outlook calendar sync and Apple Reminders via Siri. Subtasks, checklists, and attachments are now Premium features.",
+      "previous_state": "Simple Weekly To-Do Calendar & Task Management. — Tweek is free for unlimited users. Share your calendars along with all todo lists and tasks with your friends, family or teammates. Collaborate, add new tasks, set reminders, create notes and checklists for your colleagues and family. The API is available in the free version.",
+      "current_state": "The REST API and the MCP server work on the free plan too, with a lower monthly limit. Premium adds subtasks and attachments.",
+      "source_url": "https://tweek.so/",
+      "category": "Project Management",
+      "refused_date": "2026-10-30"
     },
     {
       "vendor": "Tyk",
@@ -11974,6 +12131,18 @@
     },
     {
       "vendor": "Zhipu AI",
+      "change_type": "limits_reduced",
+      "reason": "page_does_not_name_vendor",
+      "detail": "the page read never names Zhipu AI and is not served from its domain, so any terms on it belong to somebody else",
+      "summary": "The models previously listed as free (GLM-4.7-Flash, GLM-4-Flash-250414, GLM-Z1-Flash, GLM-4.6V-Flash, GLM-4V-Flash, GLM-4.1V-Thinking-Flash, CogView-3-Flash, CogVideoX-Flash) are now listed as '限时免费' (limited-time free).  Many models now have a price per million tokens for input and output.",
+      "previous_state": "China-based GLM model API. The price list marks these models free: GLM-4.7-Flash, GLM-4-Flash-250414 and GLM-Z1-Flash (text); GLM-4.6V-Flash, GLM-4V-Flash and GLM-4.1V-Thinking-Flash (vision); CogView-3-Flash (image); CogVideoX-Flash (video). API calls are rate limited, with a separate concurrency limit per model.",
+      "current_state": "GLM-4.7-Flash is now '限时免费' with an input price of 2 元/百万 Tokens and an output price of 8 元/百万 Tokens.",
+      "source_url": "https://docs.bigmodel.cn/cn/guide/start/pricing",
+      "category": "AI / ML",
+      "refused_date": "2026-10-30"
+    },
+    {
+      "vendor": "Zhipu AI",
       "change_type": "limits_increased",
       "reason": "page_does_not_name_vendor",
       "detail": "the page read never names Zhipu AI and is not served from its domain, so any terms on it belong to somebody else",
@@ -12061,13 +12230,13 @@
       "vendor": "Zoho Checkout",
       "change_type": "limits_reduced",
       "reason": "repeats_a_refused_reading",
-      "detail": "the reading of this page refused on 2026-09-13 (unquantified_limit) stated the same figure, so the page showed these terms before the date this record gives",
-      "summary": "The free tier still exists, but the description is no longer accurate. The page states the free tier allows unlimited checkout pages, but does not mention a limit of 3 pages.",
+      "detail": "the reading of this page refused on 2026-10-05 (repeats_a_refused_reading) stated the same figure, so the page showed these terms before the date this record gives",
+      "summary": "The free tier still exists, but the description is no longer accurate. The page states the free tier allows you to 'Start creating checkout pages and accept payment for free' with no mention of a page limit or payment limit.",
       "previous_state": "Product Billing management with 3 pages & up to 50 payments.",
       "current_state": "Start creating checkout pages for free and accept payment for free. $0 Per Organization /Month Billed Annually",
       "source_url": "https://zoho.com/checkout",
       "category": "Payments",
-      "refused_date": "2026-10-05"
+      "refused_date": "2026-10-30"
     },
     {
       "vendor": "Zoho Checkout",
