@@ -13154,17 +13154,12 @@
         "checked": "2026-10-19",
         "outcome": "ok",
         "detail": "the page names Cloudmersive as \"cloudmersive\" and states \"600 free API calls/month\""
-      },
-      "free_plan_excerpt": {
-        "text": "600 free API calls/month, with no expiration",
-        "url": "https://cloudmersive.com/",
-        "read_on": "2026-10-19"
       }
     },
     {
       "vendor": "Composio",
       "category": "AI / ML",
-      "description": "Integration platform for AI agents and LLMs. The free Hobby plan costs $0 with no credit card required and includes 100,000 tool calls, 50,000 triggers and 3 team members a month.",
+      "description": "Integration platform for AI Agents and LLMs — Free $0 No credit card required 100,000 tool calls / mo 50,000 triggers / mo 3 team members",
       "tier": "Free",
       "url": "https://composio.dev/pricing",
       "tags": [
