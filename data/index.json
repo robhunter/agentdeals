@@ -26771,9 +26771,9 @@
     {
       "vendor": "Plane",
       "category": "Project Management",
-      "description": "Plane is a simple, extensible, open-source project and product management tool. Free for unlimited members, up to 5MB file upload size, 1000 issues.",
+      "description": "Plane is an open-source project and product management tool. The Free plan is $0 for up to 12 users in a workspace, with projects and work items, cycles and modules, five layouts with unlimited views, work item intake, estimates and project pages. Paid plans have no seat limit.",
       "tier": "Free",
-      "url": "https://plane.so/",
+      "url": "https://plane.so/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
