@@ -1208,8 +1208,8 @@
       "changed": "2026-10-29"
     },
     "/category/forms": {
-      "hash": "2d2e3913a1ade104",
-      "changed": "2026-10-29"
+      "hash": "0ee98201fe750875",
+      "changed": "2026-10-30"
     },
     "/category/headless-cms": {
       "hash": "3e65ba96a3654bce",
@@ -5710,7 +5710,7 @@
       "changed": "2026-10-30"
     },
     "/vendor/formspree": {
-      "hash": "c6e5476716764f4d",
+      "hash": "17df26a4d173a68c",
       "changed": "2026-10-30"
     },
     "/vendor/formsubmit-co": {
