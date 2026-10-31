@@ -1824,6 +1824,7 @@
         "burnermail",
         "cerebras",
         "certkit",
+        "claw-cloud",
         "cloudflare-durable-objects",
         "cloudflare-queues",
         "cloudflare-workers-ai",
@@ -2183,8 +2184,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 108,
-      "table_figures_from_records": 31,
+      "table_figures": 106,
+      "table_figures_from_records": 29,
       "tables": [
         {
           "label": "Main Comparison Table",
@@ -2198,8 +2199,8 @@
         },
         {
           "label": "Pricing Change Timeline",
-          "figures": 31,
-          "from_records": 31
+          "figures": 29,
+          "from_records": 29
         }
       ],
       "reads_changes": true,
