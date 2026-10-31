@@ -29845,7 +29845,7 @@ function buildDatabasePricingPage(): string {
       freeType: "generous",
       monthlyCostSmall: "$0",
       monthlyCostTeam: "Usage-based, no minimum",
-      hiddenCosts: "On Free, running out of CU-hours or the 5 GB egress allowance suspends compute until the next billing period, and exceeding 0.5 GB of storage blocks writes. Paid plans bill compute and storage by use, with no flat monthly price.",
+      hiddenCosts: "On Free, running out of CU-hours or the 5 GB egress allowance suspends compute until the next billing period, and exceeding 1 GB of storage blocks writes. Paid plans bill compute and storage by use, with no flat monthly price.",
     },
     {
       name: "CockroachDB",

@@ -329,6 +329,7 @@ describe("database, vector and CI/CD pricing pages state each vendor's plan as t
   it("prints the corrected complete cost notes without the withdrawn sentences", () => {
     const rows = costTableRows("/database-pricing");
     const stated: Record<string, string> = {
+      Neon: "On Free, running out of CU-hours or the 5 GB egress allowance suspends compute until the next billing period, and exceeding 1 GB of storage blocks writes. Paid plans bill compute and storage by use, with no flat monthly price.",
       Convex: "Proprietary query language (not SQL). Vendor lock-in — no standard protocol for data export. Limited community compared to PostgreSQL ecosystem.",
       Upstash: "500K commands/month is tight for production use. Per-command pricing can spike with chatty applications. REST-based means higher latency than native Redis protocol.",
       "Prisma Accelerate": "60,000 cache operations a month on every plan, with no overage rate on Free; the cache retires on 2026-12-01. Requires Prisma ORM — doesn't work with other query builders. Cache invalidation complexity.",
