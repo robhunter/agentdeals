@@ -15303,7 +15303,7 @@ ${buildCards(aiGateways)}
     </tbody>
   </table>
   </div>
-  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Mistral's Free plan includes monthly API usage; its pricing page listed $10 a month until 2026-10-07, then stopped stating the amount. OpenRouter gives one API key for 25+ free models. ${summaryClause} Of the proprietary frontier APIs, xAI and Anthropic are pay-as-you-go (Anthropic's Claude Max and Team plans include monthly credits for the Claude API), and OpenAI prices no GPT model free. [[freshness]]</p>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Mistral's Free plan includes monthly API usage; its pricing page listed $10 a month until 2026-10-07, then stopped stating the amount. OpenRouter gives one API key for 25+ free models. ${summaryClause} Of the proprietary frontier APIs, xAI and Anthropic are pay-as-you-go (Anthropic's Claude Max, Ultra and Team plans include monthly credits for the Claude API), and OpenAI prices no GPT model free. [[freshness]]</p>
 
   <h2>Which Free LLM API Should I Use?</h2>
   <div class="decision-guide">
@@ -26491,7 +26491,7 @@ function buildOpenAIAssistantsMigrationPage(): string {
       monthlyCostMid: "$50\u2013200",
       monthlyCostHigh: "$500\u20133,000",
       migrationEffort: "Medium\u2013High",
-      freeOption: "Monthly credits for Max and Team plans",
+      freeOption: "Monthly credits for Max, Ultra and Team plans",
       bestFor: "Teams wanting longer context, better reasoning, or tool use capabilities",
       details: "Drop-in replacement for many use cases. Current models: Claude Fable 5.1, Opus 5.5, Sonnet 5 and Haiku 4.5. Tool use (function calling) built in. 200K\u20131M context window vs GPT-4o's 128K. Prompt caching reduces costs 90% for repeated context.",
     },
@@ -26612,7 +26612,7 @@ function buildOpenAIAssistantsMigrationPage(): string {
 
   const faqEntries = [
     { q: "When did the OpenAI Assistants API shut down?", a: "OpenAI shut down the Assistants API on August 26, 2026; it is no longer available. OpenAI recommends the Responses API for prompts and tool use and the Conversations API for thread and session state." },
-    { q: "What is the cheapest alternative to the OpenAI Assistants API?", a: "Google Gemini API has a free tier on its 3.x Flash models. For open-source options, LangChain and CrewAI are free frameworks \u2014 you only pay for the LLM API you choose (or use free local models via Ollama). Claude Max and Team plans include monthly Claude API credits ($100, $200, up to $500 pooled). They do not cover Claude Code. Anthropic's pages state no free credit amount for new API users." },
+    { q: "What is the cheapest alternative to the OpenAI Assistants API?", a: "Google Gemini API has a free tier on its 3.x Flash models. For open-source options, LangChain and CrewAI are free frameworks \u2014 you only pay for the LLM API you choose (or use free local models via Ollama). Claude Max, Ultra and Team plans include monthly Claude API credits ($100, $200, up to $500 pooled). They do not cover Claude Code. Anthropic's pages state no free credit amount for new API users." },
     { q: "Can I keep using the Assistants API on Azure OpenAI?", a: `No. Microsoft retired the Azure OpenAI Assistants API on ${ASSISTANTS_API_SHUTDOWN.date}, the same date OpenAI retired its own. Microsoft's documentation states that the Assistants API is retired and directs Azure workloads to ${ASSISTANTS_API_SHUTDOWN.azureSuccessor}, which is generally available; inference-only workloads can use the ${ASSISTANTS_API_SHUTDOWN.azureInferenceApi} instead. Running on Azure does not extend the deadline.` },
     { q: "What replaces Threads in the new Responses API?", a: "OpenAI's Conversations API replaces the Threads functionality from the Assistants API. It provides session management, message history, and context handling. The migration is not automated \u2014 you need to manually update your code to use the new Conversations API endpoints." },
     { q: "How much will migration cost in developer time?", a: "For a small project (single assistant), expect 1\u20132 days of developer time for the Responses API migration. For complex multi-assistant systems, budget 1\u20132 weeks. Switching to a different provider (Anthropic, Gemini, LangChain) adds additional time for API differences and testing. See our cost comparison table for per-path estimates." },
@@ -26799,7 +26799,7 @@ function buildOpenAIAssistantsMigrationPage(): string {
     '    <tbody>\n' +
     '      <tr><td style="font-weight:600"><a href="/vendor/google-gemini-api" style="color:var(--text)">Google Gemini API</a></td><td style="color:#3fb950;font-weight:600">Free on 3.x Flash models</td><td style="font-size:.85rem">Limits shown in AI Studio</td><td style="font-size:.85rem">Function calling, code execution</td></tr>\n' +
     '      <tr><td style="font-weight:600"><a href="/vendor/openai" style="color:var(--text)">OpenAI (Responses API)</a></td><td style="color:#d29922;font-weight:600">No GPT model priced free</td><td style="font-size:.85rem">omni-moderation-latest is the only Free model</td><td style="font-size:.85rem">Prompts + tool use</td></tr>\n' +
-    '      <tr><td style="font-weight:600">Anthropic Claude</td><td style="color:#d29922;font-weight:600">Monthly credits for Max and Team plans</td><td style="font-size:.85rem">$100 (Max 5x), $200 (Max 20x), up to $500 (Team)</td><td style="font-size:.85rem">Tool use, 200K\u20131M context</td></tr>\n' +
+    '      <tr><td style="font-weight:600">Anthropic Claude</td><td style="color:#d29922;font-weight:600">Monthly credits for Max, Ultra and Team plans</td><td style="font-size:.85rem">$100 (Max), $200 (Ultra), up to $500 (Team)</td><td style="font-size:.85rem">Tool use, 200K\u20131M context</td></tr>\n' +
     '      <tr><td style="font-weight:600">LangChain</td><td style="color:#3fb950;font-weight:600">Fully free (MIT)</td><td style="font-size:.85rem">LLM API costs only</td><td style="font-size:.85rem">LangGraph agents, tool calling</td></tr>\n' +
     '      <tr><td style="font-weight:600">CrewAI</td><td style="color:#3fb950;font-weight:600">Fully free (MIT)</td><td style="font-size:.85rem">LLM API costs only</td><td style="font-size:.85rem">Multi-agent orchestration</td></tr>\n' +
     '      <tr><td style="font-weight:600"><a href="/vendor/azure" style="color:var(--text)">Azure OpenAI</a></td><td style="color:#d29922;font-weight:600">$200 credit, 30 days</td><td style="font-size:.85rem">General Azure trial credit, not an agent entitlement</td><td style="font-size:.85rem">' + escHtmlServer(ASSISTANTS_API_SHUTDOWN.azureSuccessor) + ' — Assistants API retired ' + escHtmlServer(ASSISTANTS_API_SHUTDOWN.date) + '</td></tr>\n' +
@@ -32031,7 +32031,7 @@ function buildLlmApiPricingPage(): string {
       name: "Anthropic",
       slug: "anthropic-api",
       category: "frontier",
-      freeTier: "Monthly credits for Max and Team plans",
+      freeTier: "Monthly credits for Max, Ultra and Team plans",
       freeType: "pay-as-you-go",
     },
     {
