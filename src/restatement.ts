@@ -79,20 +79,14 @@ export interface AReadingHeldBackByName {
   the_rule_that_should_reach_it: string;
 }
 
-export const READINGS_HELD_BACK_BY_NAME: readonly AReadingHeldBackByName[] = [
-  {
-    vendor: "Prisma Accelerate",
-    reading_opens: "Free tier includes 1M requests / month",
-    we_go_on_storing: "100,000 operations/month",
-    the_rule_that_should_reach_it: "https://github.com/robhunter/agentdeals/issues/1756",
-  },
-];
+export const READINGS_HELD_BACK_BY_NAME: readonly AReadingHeldBackByName[] = [];
 
 export function theHoldOnThisReading(
   offer: Pick<RestatableOffer, "vendor">,
   reading: string,
+  holds: readonly AReadingHeldBackByName[] = READINGS_HELD_BACK_BY_NAME,
 ): AReadingHeldBackByName | null {
-  const held = READINGS_HELD_BACK_BY_NAME.find(
+  const held = holds.find(
     (hold) => hold.vendor.toLowerCase() === offer.vendor.toLowerCase(),
   );
   if (!held) return null;
@@ -160,6 +154,7 @@ export function restatementRefusal(
   offer: RestatableOffer,
   change: QuotingChange,
   reading: SourcedReading,
+  holds: readonly AReadingHeldBackByName[] = READINGS_HELD_BACK_BY_NAME,
 ): string | null {
   if (aRestatementFromThisRecordWasReverted(change, offer.restatement_reverted)) {
     return A_RESTATEMENT_FROM_THIS_RECORD_WAS_REVERTED;
@@ -192,7 +187,7 @@ export function restatementRefusal(
   if (!aLaterRecordThanTheOneWeRestatedFrom(change, offer.restated_from)) {
     return A_RECORD_NO_NEWER_ALREADY_RESTATED_THIS;
   }
-  if (theHoldOnThisReading(offer, reading.terms)) {
+  if (theHoldOnThisReading(offer, reading.terms, holds)) {
     return THIS_READING_IS_HELD_BACK_BY_NAME;
   }
   return null;
@@ -211,10 +206,11 @@ export function ruleOnRestating(
   offer: RestatableOffer,
   change: QuotingChange,
   today: string,
+  holds: readonly AReadingHeldBackByName[] = READINGS_HELD_BACK_BY_NAME,
 ): RestatementRuling | null {
   const reading = readingBehindTheChange(change);
   if (!reading) return null;
-  const refusal = restatementRefusal(offer, change, reading);
+  const refusal = restatementRefusal(offer, change, reading, holds);
   return {
     offer,
     change,
