@@ -5972,7 +5972,7 @@
       "category": "Cloud Hosting",
       "description": "Static site hosting — 1 GB published site size, 100 GB bandwidth/month, 10 builds/hour. Included with all GitHub accounts",
       "tier": "Free",
-      "url": "https://docs.github.com/en/pages",
+      "url": "https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits",
       "tags": [
         "hosting",
         "static",
