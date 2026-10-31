@@ -282,12 +282,12 @@ const STATED: Record<string, string[]> = {
   ],
   "/openai-assistants-migration": [
     "No GPT model is priced free",
-    "Monthly credits for Max and Team plans",
+    "Monthly credits for Max, Ultra and Team plans",
     "Current models: Claude Fable 5.1, Opus 5.5, Sonnet 5 and Haiku 4.5.",
     "Claude Max and Team plans include monthly Claude API credits ($100, $200, up to $500 pooled). They do not cover Claude Code. Anthropic's pages state no free credit amount for new API users.",
     "No GPT model priced free",
     "omni-moderation-latest is the only Free model",
-    "$100 (Max 5x), $200 (Max 20x), up to $500 (Team)",
+    "$100 (Max), $200 (Ultra), up to $500 (Team)",
     "Anthropic Claude — Claude Fable 5.1 for demanding reasoning and long-horizon agentic work.",
   ],
 };
@@ -378,10 +378,12 @@ describe("AI API vendors' free terms on the guides", () => {
 
   it("states the subscription credit amounts in the Anthropic migration row", () => {
     const html = served.get("/openai-assistants-migration")!;
+    assert.doesNotMatch(html, /Max (?:5x|20x)/);
+    assert.doesNotMatch(readableText(html), /Max (?:5x|20x)/);
     const rows = [...html.matchAll(/<tr\b[^>]*>([\s\S]*?)<\/tr>/g)]
       .map((m) => [...m[1].matchAll(/<td\b[^>]*>([\s\S]*?)<\/td>/g)].map((c) => readableText(c[1])))
       .filter((cells) => cells[0] === "Anthropic Claude");
-    assert.deepStrictEqual(rows, [["Anthropic Claude", "Monthly credits for Max and Team plans", "$100 (Max 5x), $200 (Max 20x), up to $500 (Team)", "Tool use, 200K–1M context"]]);
+    assert.deepStrictEqual(rows, [["Anthropic Claude", "Monthly credits for Max, Ultra and Team plans", "$100 (Max), $200 (Ultra), up to $500 (Team)", "Tool use, 200K–1M context"]]);
   });
 
   it("states the subscription credits once in the Anthropic migration card", () => {
