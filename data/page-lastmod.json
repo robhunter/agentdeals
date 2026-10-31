@@ -22,12 +22,12 @@
       "changed": "2026-10-30"
     },
     "/ai-free-tiers": {
-      "hash": "e3bf4a6c763f2aac",
-      "changed": "2026-10-30"
+      "hash": "e9d2f56c97b82712",
+      "changed": "2026-10-31"
     },
     "/ai-ml-alternatives": {
-      "hash": "2b87c7aac4e3e6ff",
-      "changed": "2026-10-30"
+      "hash": "97f56f069c8885de",
+      "changed": "2026-10-31"
     },
     "/alternative-to": {
       "daily": true
@@ -1094,12 +1094,12 @@
       "changed": "2026-10-19"
     },
     "/category/ai-coding": {
-      "hash": "4f56f5572aa41715",
-      "changed": "2026-10-30"
+      "hash": "95c7153012706a2d",
+      "changed": "2026-10-31"
     },
     "/category/ai-ml": {
-      "hash": "78d3ab270fde141f",
-      "changed": "2026-10-30"
+      "hash": "2bc942e2131e12df",
+      "changed": "2026-10-31"
     },
     "/category/analytics": {
       "hash": "676eba82f4a3489e",
@@ -1294,8 +1294,8 @@
       "changed": "2026-10-30"
     },
     "/category/startup-perks": {
-      "hash": "ef72563bab3690fc",
-      "changed": "2026-10-30"
+      "hash": "ebfaf4c7e708422a",
+      "changed": "2026-10-31"
     },
     "/category/status-pages": {
       "hash": "277dec071e9b5629",
@@ -1508,8 +1508,8 @@
       "changed": "2026-10-25"
     },
     "/compare/atlassian-for-startups-vs-stripe-atlas": {
-      "hash": "78b308abfeeb3003",
-      "changed": "2026-10-24"
+      "hash": "5dc46ae279487ed7",
+      "changed": "2026-10-31"
     },
     "/compare/atlassian-statuspage-vs-instatus": {
       "hash": "c3e7299bb77507b2",
@@ -1636,12 +1636,12 @@
       "changed": "2026-10-28"
     },
     "/compare/claude-code-vs-cursor": {
-      "hash": "acf62cfea258d3a3",
-      "changed": "2026-10-15"
+      "hash": "b2c461f29c6ebd55",
+      "changed": "2026-10-31"
     },
     "/compare/claude-code-vs-openai-codex": {
-      "hash": "2f0ff1797cfbf46c",
-      "changed": "2026-10-30"
+      "hash": "6241db0472926e2f",
+      "changed": "2026-10-31"
     },
     "/compare/clerk-vs-zitadel-cloud": {
       "hash": "fd332d96e840a3a8",
@@ -2208,8 +2208,8 @@
       "changed": "2026-10-29"
     },
     "/compare/help-scout-for-startups-vs-stripe-atlas": {
-      "hash": "c4e440edbee08638",
-      "changed": "2026-10-25"
+      "hash": "7a83d6d7a91d5e35",
+      "changed": "2026-10-31"
     },
     "/compare/highlight-io-vs-logz-io": {
       "hash": "56fe3a7edbbc1675",
@@ -2292,8 +2292,8 @@
       "changed": "2026-10-22"
     },
     "/compare/knowlarity-for-startups-vs-stripe-atlas": {
-      "hash": "aecb972357619f31",
-      "changed": "2026-10-29"
+      "hash": "6b84b5980ac55196",
+      "changed": "2026-10-31"
     },
     "/compare/kong-vs-unkey": {
       "hash": "126eddb3dd94b986",
@@ -2695,8 +2695,8 @@
       "daily": true
     },
     "/cursor-alternatives": {
-      "hash": "fd8a514476bf9e39",
-      "changed": "2026-10-30"
+      "hash": "ac45cc1bbbf81db4",
+      "changed": "2026-10-31"
     },
     "/database-alternatives": {
       "hash": "535c4f27fb23f292",
@@ -3210,8 +3210,8 @@
       "changed": "2026-10-30"
     },
     "/free-llm-apis": {
-      "hash": "a67f56e1f5b7de70",
-      "changed": "2026-10-30"
+      "hash": "05496892456657f9",
+      "changed": "2026-10-31"
     },
     "/free-nextjs-stack": {
       "hash": "0820bb9d6fc3e146",
@@ -3248,8 +3248,8 @@
       "changed": "2026-10-30"
     },
     "/gemini-api-pricing-2026": {
-      "hash": "9625c8eb2cdb0315",
-      "changed": "2026-10-30"
+      "hash": "e87fb51d526e6add",
+      "changed": "2026-10-31"
     },
     "/github-actions-alternatives": {
       "hash": "381d7d1f240d272f",
@@ -3268,8 +3268,8 @@
       "changed": "2026-10-30"
     },
     "/groq-vs-mistral-ai": {
-      "hash": "536c7f8e99e2cf7c",
-      "changed": "2026-10-29"
+      "hash": "1e8fe8b141123de9",
+      "changed": "2026-10-31"
     },
     "/guides": {
       "hash": "f39ec64461e044ff",
@@ -3316,20 +3316,20 @@
       "changed": "2026-10-30"
     },
     "/ide-code-editors-alternatives": {
-      "hash": "2938433d49e2e7b8",
-      "changed": "2026-10-30"
+      "hash": "a521d52a2d4bb3c5",
+      "changed": "2026-10-31"
     },
     "/llm-api-pricing": {
-      "hash": "aee85fb998b63039",
-      "changed": "2026-10-30"
+      "hash": "3abc3b246dbca1fc",
+      "changed": "2026-10-31"
     },
     "/localstack-alternatives": {
       "hash": "1ad734f977bd3cc6",
       "changed": "2026-10-29"
     },
     "/mistral-api-pricing-2026": {
-      "hash": "baa47de8cb19ff91",
-      "changed": "2026-10-29"
+      "hash": "3f43271f0b07eebd",
+      "changed": "2026-10-31"
     },
     "/mongodb-alternatives": {
       "hash": "b3ddc0f0945ae6f1",
@@ -3356,16 +3356,16 @@
       "changed": "2026-10-29"
     },
     "/openai-assistants-alternatives": {
-      "hash": "3df5e31755abab42",
-      "changed": "2026-10-30"
+      "hash": "6d8af6a5d757376e",
+      "changed": "2026-10-31"
     },
     "/openai-assistants-migration": {
       "hash": "c0b3803cdac27a05",
       "changed": "2026-10-29"
     },
     "/openai-assistants-migration-2026": {
-      "hash": "33e9a400522ea89e",
-      "changed": "2026-10-29"
+      "hash": "291174ed5bc02e33",
+      "changed": "2026-10-31"
     },
     "/postman-alternatives": {
       "hash": "75bb46f9296aaff0",
@@ -8586,8 +8586,8 @@
       "daily": true
     },
     "/vendor/stripe-atlas": {
-      "hash": "a07075411cd4da0b",
-      "changed": "2026-10-30"
+      "hash": "5b3672be3bf495ce",
+      "changed": "2026-10-31"
     },
     "/vendor/stytch": {
       "hash": "48f10667c2baa11e",
