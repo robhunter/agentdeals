@@ -34221,7 +34221,7 @@
     {
       "vendor": "Claude Code",
       "category": "AI Coding",
-      "description": "Agentic coding tool by Anthropic: it reads a codebase, edits files, runs commands and works with development tools, in the terminal, IDEs, a desktop app and the browser. No free plan: \"Claude Code is included in all paid plans\", and Claude's Free plan does not include it. Pro is $20/month billed monthly ($17/month billed annually), Max is $100/month (5x) or $200/month (20x), Team Standard seats are $25/seat billed monthly ($20 billed annually), and Enterprise is \"$20 per seat per month plus usage billed at API rates\". Plan usage is shared with Claude chat. At the limit, paid plans can turn on usage credits billed at standard API rates, or use an Anthropic API key billed pay-as-you-go.",
+      "description": "Agentic coding tool by Anthropic: it reads a codebase, edits files, runs commands and works with development tools, in the terminal, IDEs, a desktop app and the browser. No free plan: \"Claude Code is included in all paid plans\", and Claude's Free plan does not include it. Pro is $20/month billed monthly ($17/month billed annually), Max is $100/month (5x Pro usage), Ultra is $200/month (10x Pro usage every week, with no 5-hour limit for verified accounts), Team Standard seats are $25/seat billed monthly ($20 billed annually), and Enterprise is \"$20 per seat per month plus usage billed at API rates\". Plan usage is shared with Claude chat. At the limit, paid plans can turn on usage credits billed at standard API rates, or use an Anthropic API key billed pay-as-you-go.",
       "tier": "Paid",
       "url": "https://docs.anthropic.com/en/docs/claude-code/overview",
       "tags": [
@@ -34590,10 +34590,10 @@
     {
       "vendor": "Anthropic API",
       "category": "AI / ML",
-      "description": "Claude API with usage-based pricing per million tokens (input/output). Claude Fable 5.1 $10/$50. Claude Opus 5.5 $4/$20. Claude Sonnet 5.5 $2/$10. Claude Sonnet 5 $2/$10. Claude Haiku 5.5 $0.10/$0.50 (for prompts up to 100,000 tokens; longer prompts cost five times as much). Claude Haiku 4.5 $1/$5. The Batch API gives a 50% discount on input and output tokens. Claude Opus 5.5 cache hits $0.20, Claude Sonnet 5.5 cache hits $0.10, Claude Fable 5.1 cache hits $0.25. Other models’ cache hits cost 0.1x the input price. Cache writes cost 1.25x the input price for 5-minute lifetime and 2x for 1-hour lifetime. Anthropic states \"Claude Max and Team plans include monthly credits for the Claude API.\" Max 5x gets $100 a month, Max 20x gets $200, Team gets up to $500 pooled. Anthropic's pages state no free credit amount for new API users.",
+      "description": "Claude API with usage-based pricing per million tokens (input/output). Claude Fable 5.1 $10/$50. Claude Opus 5.5 $4/$20. Claude Sonnet 5.5 $2/$10. Claude Sonnet 5 $2/$10. Claude Haiku 5.5 $0.10/$0.50 (for prompts up to 100,000 tokens; longer prompts cost five times as much). Claude Haiku 4.5 $1/$5. The Batch API gives a 50% discount on input and output tokens. Claude Opus 5.5 cache hits $0.20, Claude Sonnet 5.5 cache hits $0.10, Claude Fable 5.1 cache hits $0.25. Other models’ cache hits cost 0.1x the input price. Cache writes cost 1.25x the input price for 5-minute lifetime and 2x for 1-hour lifetime. Anthropic states \"Claude Max, Ultra, and Team plans include monthly credits for the Claude API.\" Max gets $100 a month, Ultra gets $200, and Team gets $20 per Standard seat and $100 per Premium seat, pooled up to $500. Anthropic's pages state no free credit amount for new API users.",
       "conditions": [
         {
-          "text": "Monthly credits included with Claude Max and Team plans do not cover Claude Code or extra usage in Claude apps. They expire at the end of each billing cycle with no rollover. Free, Pro and Enterprise plans are not eligible.",
+          "text": "Monthly credits included with Claude Max, Ultra and Team plans do not cover Claude Code or extra usage in Claude apps. They expire at the end of each billing cycle with no rollover. Free, Pro and Enterprise plans are not eligible.",
           "quote": "Free, Pro, and Enterprise plans aren't eligible.",
           "url": "https://platform.claude.com/docs/en/about-claude/api-credits-for-subscribers",
           "read_on": "2026-10-21"
