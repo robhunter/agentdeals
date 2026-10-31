@@ -4,7 +4,7 @@
     "A": 30,
     "B": 90
   },
-  "measured_on": "2026-10-30",
+  "measured_on": "2026-10-31",
   "pages": [
     {
       "path": "/agent-payments",
@@ -283,11 +283,6 @@
           "label": "Pricing Change Timeline",
           "figures": 10,
           "from_records": 10
-        },
-        {
-          "label": "Upcoming Changes",
-          "figures": 0,
-          "from_records": 0
         }
       ],
       "reads_changes": true,
@@ -1819,6 +1814,7 @@
         "alibaba-cloud-qwen-code",
         "amazon-aurora-postgresql",
         "amplitude",
+        "apiary-io",
         "appwrite-cloud",
         "aws",
         "basecamp",
@@ -2119,10 +2115,10 @@
         "CPX02",
         "CX23, unavailable"
       ],
-      "reviewed_at": "2026-10-02",
+      "reviewed_at": "2026-10-31",
       "reviewer": "pm",
       "review_outcome": "pass",
-      "review_note": "Re-checked on 2026-10-02: section 1's prices against Hetzner's price API, sections 2 and 4 against Hetzner's April and June tables and its price API's AX42 and AX102 prices, section 8's Server Auction figure against Hetzner's April table, section 3 against The Register's article of 2026-02-24, and section 6's DigitalOcean, Vultr, Linode, AWS Lightsail, Oracle Cloud, OVHcloud and Fly.io trial rows against those vendors' own pages, plan APIs or notices. The corrections in https://github.com/robhunter/agentdeals/issues/2238, https://github.com/robhunter/agentdeals/issues/2243, https://github.com/robhunter/agentdeals/issues/2247 and https://github.com/robhunter/agentdeals/issues/2258 were read on production that day.",
+      "review_note": "Re-checked on 2026-10-31: section 1's 26 plan prices in euros and dollars, the plans marked not available and the cheapest orderable plan against Hetzner's price API and its three cloud line pages; the AX42 and AX102 prices and setup fees and the Volume, Storage Box, traffic, snapshot and Object Storage prices against the price API and Hetzner's own pages; the €50 sign-up credit and its rule against combining it with a referral code; and the status page's notice on creating new cloud servers, which is still open. The introduction's June percentages and section 4's Singapore example against Hetzner's June table and price API. Section 6's DigitalOcean, Vultr, Linode, OVHcloud, AWS Lightsail, Oracle Cloud, Railway, Render and Fly.io rows, and the Contabo, OVHcloud, Hostinger, IONOS and netcup prices behind the cheapest-VPS sentences, against those vendors' own pages, configurators or APIs. Section 7's OVHcloud figures against OVHcloud's announcement. Sections 2 and 3 are dated history, checked against Hetzner's April table and The Register on 2026-10-02. Nothing needed correcting; the plan prices' read date moves to 2026-10-31.",
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
@@ -2187,8 +2183,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 104,
-      "table_figures_from_records": 27,
+      "table_figures": 108,
+      "table_figures_from_records": 31,
       "tables": [
         {
           "label": "Main Comparison Table",
@@ -2202,8 +2198,8 @@
         },
         {
           "label": "Pricing Change Timeline",
-          "figures": 27,
-          "from_records": 27
+          "figures": 31,
+          "from_records": 31
         }
       ],
       "reads_changes": true,
@@ -2250,8 +2246,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 144,
-      "table_figures_from_records": 38,
+      "table_figures": 149,
+      "table_figures_from_records": 43,
       "tables": [
         {
           "label": "Pricing Comparison Table",
@@ -2270,8 +2266,8 @@
         },
         {
           "label": "Recent Pricing Changes",
-          "figures": 38,
-          "from_records": 38
+          "figures": 43,
+          "from_records": 43
         }
       ],
       "reads_changes": true,
@@ -2891,8 +2887,8 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 79,
-      "table_figures_from_records": 42,
+      "table_figures": 84,
+      "table_figures_from_records": 47,
       "tables": [
         {
           "label": "Main Comparison Table",
@@ -2921,8 +2917,8 @@
         },
         {
           "label": "Pricing Change Timeline",
-          "figures": 12,
-          "from_records": 12
+          "figures": 17,
+          "from_records": 17
         }
       ],
       "reads_changes": true,
@@ -3264,13 +3260,13 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 87,
-      "table_figures_from_records": 28,
+      "table_figures": 88,
+      "table_figures_from_records": 29,
       "tables": [
         {
           "label": "Main Comparison Table",
-          "figures": 41,
-          "from_records": 10
+          "figures": 42,
+          "from_records": 11
         },
         {
           "label": "Media & Image CDN",
@@ -3348,10 +3344,10 @@
       "vendors_tabulated": [],
       "badge_subjects_unresolved": [],
       "stat_card_subjects_unresolved": [],
-      "reviewed_at": "2026-09-28",
+      "reviewed_at": "2026-10-31",
       "reviewer": "pm",
       "review_outcome": "pass",
-      "review_note": "Two readers checked every claim against Klipy's, GIPHY's, Imgur's, Discord's and Bluesky's own pages on 2026-09-28. The corrections in https://github.com/robhunter/agentdeals/issues/2135 were read on production on 2026-09-28: none of the eleven wrong strings is served on any of 2,593 routes.",
+      "review_note": "Re-read on 2026-10-31 against the providers' own pages: Klipy's 100-request hourly limit for testing keys and its client-side and caching rules (docs.klipy.com/integration-requirements), GIPHY's 100-call beta keys, production-key application and Tenor-compatible endpoints (developers.giphy.com/docs/api), and Imgur's UK block (help.imgur.com). Stored media.tenor.com GIF and MP4 links still load. Two readers checked every claim on 2026-09-28 (https://github.com/robhunter/agentdeals/issues/2135). Not re-read: Imgur's API limits and its non-commercial term, and GIPHY's FAQ wording on the production-key fee; both pages load only in a browser.",
       "partial_recheck": null,
       "reads_index": false,
       "tables_read_index": false,
