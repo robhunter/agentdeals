@@ -2250,7 +2250,7 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 129,
+      "table_figures": 144,
       "table_figures_from_records": 38,
       "tables": [
         {
@@ -2265,7 +2265,7 @@
         },
         {
           "label": "Cost Comparison by Use Case",
-          "figures": 41,
+          "figures": 56,
           "from_records": 0
         },
         {
