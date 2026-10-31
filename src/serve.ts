@@ -30114,11 +30114,11 @@ function buildDatabasePricingPage(): string {
       freeCompute: "Shared",
       paidFrom: "$5/mo (Essentials)",
       pricingModel: "Per-plan",
-      freeDetails: "30 MB dataset size, 30 connections on free tier. Managed Redis with persistence, replication, and high availability on paid plans. Supports Redis modules (Search, JSON, TimeSeries, Graph, Bloom) on paid tiers. Available on AWS, GCP, and Azure.",
+      freeDetails: "30 MB dataset size, 30 connections on free tier. Managed Redis with persistence, replication, and high availability on paid plans. Search and query, JSON, time series and probabilistic data types are available on the Free plan too. Available on AWS, GCP, and Azure.",
       freeType: "limited",
       monthlyCostSmall: "$0\u20135",
       monthlyCostTeam: "$5\u201350+",
-      hiddenCosts: "30 MB is extremely small — barely enough for caching. Redis moved to SSPL/RSALv2 in March 2024; Redis 8 and later can also be used under AGPLv3, an open source license. Modules like RedisSearch and RedisJSON only on paid plans. Consider Upstash or Valkey/KeyDB as alternatives.",
+      hiddenCosts: "30 MB is extremely small — barely enough for caching. Redis moved to SSPL/RSALv2 in March 2024; Redis 8 and later can also be used under AGPLv3, an open source license. Consider Upstash or Valkey/KeyDB as alternatives.",
     },
     {
       name: "Neo4j AuraDB",
