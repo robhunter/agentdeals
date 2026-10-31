@@ -10229,7 +10229,7 @@
     {
       "vendor": "Prisma Accelerate",
       "category": "Databases",
-      "description": "Connection pooling and caching for any database — 100,000 operations/month, 10 connection pool limit, auto-scaling. Also available: Prisma Postgres free tier with 500 MB storage and up to 5 databases",
+      "description": "Global query cache and connection pool for Prisma ORM, retiring December 1, 2026. Every plan includes 60,000 cache operations a month, with no overage rate on Free. Also available: Prisma Postgres, which continues after that date, has a Free plan with 200,000 operations a month, 2 GB of storage, 50 databases and 10 pooled connections, with no credit card required.",
       "tier": "Free",
       "url": "https://www.prisma.io/pricing",
       "tags": [
@@ -10252,11 +10252,6 @@
         "checked": "2026-10-10",
         "outcome": "ok",
         "detail": "the page names Prisma Accelerate as \"accelerate\" and states \"$0\""
-      },
-      "free_plan_excerpt": {
-        "text": "Free $0 / month Free forever. No credit card required. Prisma Compute 1M requests / month 360 GB-hours memory / month 4 active vCPU-hours / month 10 GB outbound bandwidth / month Prisma Postgres 200k operations / month 1.01 GB storage 50 databases",
-        "url": "https://www.prisma.io/pricing",
-        "read_on": "2026-10-10"
       },
       "conditions": [
         {

@@ -52,6 +52,13 @@ type DealChange = import("../src/types.ts").DealChange;
 
 const TODAY = "2026-09-17";
 
+const NAMED_HOLD = {
+  vendor: "Held example",
+  reading_opens: "Free tier includes 1M requests / month",
+  we_go_on_storing: "100,000 operations/month",
+  the_rule_that_should_reach_it: "https://github.com/robhunter/agentdeals/issues/1756",
+};
+
 function offer(over: Partial<Offer> = {}): Offer {
   return {
     vendor: "Example",
@@ -413,7 +420,7 @@ describe("restating a withheld description from the reading the page already sho
   });
 
   it("holds back the reading a hold names, and only while the vendor keeps reading that way", () => {
-    const hold = READINGS_HELD_BACK_BY_NAME[0]!;
+    const hold = NAMED_HOLD;
     const held = {
       offer: offer({ vendor: hold.vendor, description: `Terms stating ${hold.we_go_on_storing}.` }),
       change: change({
@@ -423,13 +430,26 @@ describe("restating a withheld description from the reading the page already sho
       }),
     };
     assert.equal(
-      ruleOnRestating(held.offer, held.change, TODAY)?.refusal,
+      ruleOnRestating(held.offer, held.change, TODAY, [hold])?.refusal,
       THIS_READING_IS_HELD_BACK_BY_NAME,
     );
 
     const readAgain = { ...held.change, current_state: "The Free plan gives you 5 GB of storage." };
-    assert.equal(theHoldOnThisReading(held.offer, readAgain.current_state), null);
-    assert.equal(ruleOnRestating(held.offer, readAgain, TODAY)?.refusal, null);
+    assert.equal(theHoldOnThisReading(held.offer, readAgain.current_state, [hold]), null);
+    assert.equal(ruleOnRestating(held.offer, readAgain, TODAY, [hold])?.refusal, null);
+    assert.equal(ruleOnRestating(held.offer, held.change, TODAY, [])?.refusal, null);
+    assert.equal(ruleOnRestating(held.offer, held.change, TODAY, [hold])?.restatement, null);
+  });
+
+  it("matches a named hold's vendor without case and allows leading whitespace in its reading", () => {
+    const reading = ` \n\t${NAMED_HOLD.reading_opens} Free plan, 5 GB.`;
+    assert.equal(theHoldOnThisReading({ vendor: NAMED_HOLD.vendor.toUpperCase() }, reading, [NAMED_HOLD]), NAMED_HOLD);
+  });
+
+  it("does not apply a named hold to another vendor or a later mention of the reading", () => {
+    assert.equal(theHoldOnThisReading({ vendor: "Other example" }, NAMED_HOLD.reading_opens, [NAMED_HOLD]), null);
+    assert.equal(theHoldOnThisReading({ vendor: NAMED_HOLD.vendor }, `Other terms. ${NAMED_HOLD.reading_opens}`, [NAMED_HOLD]), null);
+    assert.equal(theHoldOnThisReading({ vendor: NAMED_HOLD.vendor }, NAMED_HOLD.reading_opens, []), null);
   });
 
   it("holds back no vendor a hold does not name", () => {
