@@ -17337,7 +17337,7 @@
       "discontinued_date": "2026-05-11",
       "date_source": "vendor_page",
       "summary": "ClawCloud Run shut down: its notice of April 23, 2026 suspended new sign-ups and purchases that day, and all services for free-tier customers ended on May 11, 2026.",
-      "previous_state": "PaaS with $5/month in free credits for users whose GitHub account is older than 180 days",
+      "previous_state": "PaaS with $5/month in free credits for users whose GitHub account was more than 180 days old",
       "current_state": "ClawCloud's notice of April 23, 2026 (archived copy): \"After careful consideration, we have made the difficult decision to discontinue our product and related services.\" Its schedule: Console, new customer sign-ups and purchases suspended April 23, 00:00 UTC; Console, existing free-tier customers, all services discontinued May 11, 00:00 UTC; the official website and documentation taken offline May 11. run.claw.cloud no longer resolves.",
       "impact": "high",
       "source_url": "https://web.archive.org/web/20260423055650/https://question.run.claw.cloud/questions/10010000000003261",
