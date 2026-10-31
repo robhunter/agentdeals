@@ -1166,7 +1166,7 @@
       "changed": "2026-10-28"
     },
     "/category/databases": {
-      "hash": "f33ca93731bf7111",
+      "hash": "c81d387874ed3210",
       "changed": "2026-10-31"
     },
     "/category/design": {
@@ -1764,8 +1764,8 @@
       "changed": "2026-10-18"
     },
     "/compare/couchbase-capella-vs-prisma-accelerate": {
-      "hash": "30a0971b89fb751f",
-      "changed": "2026-10-12"
+      "hash": "8f7b263fba6596c8",
+      "changed": "2026-10-31"
     },
     "/compare/courier-com-vs-webpushr": {
       "hash": "a44a6f0d1b276ee1",
@@ -2244,8 +2244,8 @@
       "changed": "2026-10-24"
     },
     "/compare/influxdb-cloud-vs-prisma-accelerate": {
-      "hash": "2dbdeb2ef4719e87",
-      "changed": "2026-10-24"
+      "hash": "20f85eef0d45defe",
+      "changed": "2026-10-31"
     },
     "/compare/inkscape-vs-krita": {
       "hash": "8bd6f952cf08a1bb",
@@ -2699,7 +2699,7 @@
       "changed": "2026-10-31"
     },
     "/database-alternatives": {
-      "hash": "2dacc5bbc3070733",
+      "hash": "3f07674b3265cc8c",
       "changed": "2026-10-31"
     },
     "/database-free-tier-comparison-2026": {
@@ -2707,7 +2707,7 @@
       "changed": "2026-10-31"
     },
     "/database-pricing": {
-      "hash": "b1b7c175d4977018",
+      "hash": "4decfdb7381d631a",
       "changed": "2026-10-31"
     },
     "/datadog-alternatives": {
@@ -4361,7 +4361,7 @@
       "changed": "2026-10-31"
     },
     "/vendor/bismuth-cloud": {
-      "hash": "369a69d600b94f67",
+      "hash": "9913495fc3d15201",
       "changed": "2026-10-31"
     },
     "/vendor/bitbucket-pipelines": {
@@ -4700,7 +4700,7 @@
       "daily": true
     },
     "/vendor/claw-cloud": {
-      "hash": "d52c4a5c2d6d74db",
+      "hash": "637d48138c264b21",
       "changed": "2026-10-31"
     },
     "/vendor/clerk": {
@@ -5089,7 +5089,7 @@
       "changed": "2026-10-31"
     },
     "/vendor/cstate": {
-      "hash": "706af32f347ec7e5",
+      "hash": "b96840f1af5847aa",
       "changed": "2026-10-31"
     },
     "/vendor/cube": {
@@ -5495,7 +5495,7 @@
       "changed": "2026-10-31"
     },
     "/vendor/engagespot-co": {
-      "hash": "f64618f4e30622a7",
+      "hash": "e93bfec5900bed5b",
       "changed": "2026-10-31"
     },
     "/vendor/ente": {
@@ -5515,7 +5515,7 @@
       "changed": "2026-10-31"
     },
     "/vendor/evernote": {
-      "hash": "45b8a138bd7389d1",
+      "hash": "6afa259b3b90e6c4",
       "changed": "2026-10-31"
     },
     "/vendor/everystep-automation-com": {
@@ -6057,7 +6057,7 @@
       "daily": true
     },
     "/vendor/google-vertex-ai-agent-engine": {
-      "hash": "e7b80dc5a34019e1",
+      "hash": "2e714ffdc955c1bb",
       "changed": "2026-10-31"
     },
     "/vendor/goreportcard-com": {
@@ -6581,7 +6581,7 @@
       "changed": "2026-10-31"
     },
     "/vendor/karbon-sites": {
-      "hash": "798dbae9a4d61ab5",
+      "hash": "e1d0e26ccc503555",
       "changed": "2026-10-31"
     },
     "/vendor/katalon-com": {
@@ -6683,7 +6683,7 @@
       "daily": true
     },
     "/vendor/langtrace": {
-      "hash": "edc4791a73a27a88",
+      "hash": "1edc5677f8b93c98",
       "changed": "2026-10-31"
     },
     "/vendor/langwatch": {
@@ -7201,7 +7201,7 @@
       "daily": true
     },
     "/vendor/moss-sh": {
-      "hash": "321120c1f41c7c7a",
+      "hash": "d2055f43c2862f50",
       "changed": "2026-10-31"
     },
     "/vendor/mossaik": {
@@ -7780,7 +7780,7 @@
       "changed": "2026-10-31"
     },
     "/vendor/prisma-accelerate": {
-      "hash": "4dee7438b1edeb49",
+      "hash": "6615bc72da08db5f",
       "changed": "2026-10-31"
     },
     "/vendor/prismic": {
@@ -7823,7 +7823,7 @@
       "changed": "2026-10-31"
     },
     "/vendor/proxysentry": {
-      "hash": "906009420bcba0bf",
+      "hash": "2854ff0afb5cba1c",
       "changed": "2026-10-31"
     },
     "/vendor/public-cloud-threat-intelligence": {
@@ -8445,7 +8445,7 @@
       "daily": true
     },
     "/vendor/soos": {
-      "hash": "4ac2d3b46e36e6d1",
+      "hash": "e4af08d4570a4b62",
       "changed": "2026-10-31"
     },
     "/vendor/sourceforge": {
@@ -9116,7 +9116,7 @@
       "changed": "2026-10-31"
     },
     "/vendor/uuid-generator": {
-      "hash": "a2ca18e5c9d4657b",
+      "hash": "9405d39761f8ddc2",
       "changed": "2026-10-31"
     },
     "/vendor/uxtweak-com": {
@@ -9224,7 +9224,7 @@
       "changed": "2026-10-31"
     },
     "/vendor/volaryddns": {
-      "hash": "eb6f1684ed59a56f",
+      "hash": "b653c16608515271",
       "changed": "2026-10-31"
     },
     "/vendor/volume": {
@@ -9267,7 +9267,7 @@
       "changed": "2026-10-31"
     },
     "/vendor/wdrfree-svg": {
-      "hash": "c69c815ec2b68a2a",
+      "hash": "cbf2ab028b07c53e",
       "changed": "2026-10-31"
     },
     "/vendor/we-team": {
@@ -9357,7 +9357,7 @@
       "changed": "2026-10-31"
     },
     "/vendor/whitespace": {
-      "hash": "828a092487e9cff3",
+      "hash": "1134230e3a81750c",
       "changed": "2026-10-31"
     },
     "/vendor/windmill-dev": {
