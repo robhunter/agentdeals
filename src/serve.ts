@@ -29845,7 +29845,7 @@ function buildDatabasePricingPage(): string {
       freeType: "generous",
       monthlyCostSmall: "$0",
       monthlyCostTeam: "Usage-based, no minimum",
-      hiddenCosts: "On Free, running out of CU-hours or the 5 GB egress allowance suspends compute until the next billing period, and exceeding 0.5 GB of storage blocks writes. Paid plans bill compute and storage by use, with no flat monthly price.",
+      hiddenCosts: "On Free, running out of CU-hours or the 5 GB egress allowance suspends compute until the next billing period, and exceeding 1 GB of storage blocks writes. Paid plans bill compute and storage by use, with no flat monthly price.",
     },
     {
       name: "CockroachDB",
@@ -29931,33 +29931,33 @@ function buildDatabasePricingPage(): string {
       name: "Upstash",
       slug: "upstash",
       category: "serverless-edge",
-      dbType: "Redis + Kafka + QStash",
-      freeStorage: "256 MB (Redis)",
+      dbType: "Redis + QStash",
+      freeStorage: "250 MB (Redis)",
       freeConnections: "N/A (HTTP)",
       freeCompute: "500K commands/month",
       paidFrom: "$0.2/100K commands",
       pricingModel: "Per-command",
-      freeDetails: "Redis: 256 MB, 500K commands/month, 1 database. QStash: 1,000 messages/day, 3 retries. Kafka: removed from free tier. REST-based Redis — works in serverless/edge environments where TCP connections are unavailable. Global replication on paid plans.",
+      freeDetails: "Redis: 250 MB, 500K commands/month, 1 database. QStash: 1,000 messages/day, 3 retries. Kafka is no longer offered: it is not on upstash.com/pricing (read 2026-10-31). REST-based Redis — works in serverless/edge environments where TCP connections are unavailable. Global replication on paid plans.",
       freeType: "limited",
       monthlyCostSmall: "$0\u20135",
       monthlyCostTeam: "$10\u201350+",
-      hiddenCosts: "500K commands/month is tight for production use. Per-command pricing can spike with chatty applications. Kafka free tier was removed. REST-based means higher latency than native Redis protocol.",
+      hiddenCosts: "500K commands/month is tight for production use. Per-command pricing can spike with chatty applications. REST-based means higher latency than native Redis protocol.",
     },
     {
       name: "Convex",
       slug: "convex",
       category: "serverless-edge",
       dbType: "Document (Reactive)",
-      freeStorage: "512 MB",
+      freeStorage: "0.5 GB database, 1 GB files",
       freeConnections: "Unlimited (WebSocket)",
       freeCompute: "Shared",
       paidFrom: "$25/dev/mo (Professional)",
       pricingModel: "Per-developer",
-      freeDetails: "512 MB database + file storage, 2 free projects, automatic real-time sync, built-in auth, serverless functions, cron jobs, file storage. TypeScript-first with end-to-end type safety. Automatic caching and reactivity — queries re-run when data changes.",
+      freeDetails: "0.5 GB database storage, 1 GB file storage and 1M function calls a month, for 1–6 developers, automatic real-time sync, built-in auth, serverless functions, cron jobs, file storage. TypeScript-first with end-to-end type safety. Automatic caching and reactivity — queries re-run when data changes.",
       freeType: "generous",
       monthlyCostSmall: "$0",
       monthlyCostTeam: "$125+ (5 devs)",
-      hiddenCosts: "Proprietary query language (not SQL). Vendor lock-in — no standard protocol for data export. Limited community compared to PostgreSQL ecosystem. 2-project limit on free tier.",
+      hiddenCosts: "Proprietary query language (not SQL). Vendor lock-in — no standard protocol for data export. Limited community compared to PostgreSQL ecosystem.",
     },
     {
       name: "PlanetScale",
@@ -29981,15 +29981,15 @@ function buildDatabasePricingPage(): string {
       category: "serverless-edge",
       dbType: "Connection pooler + Cache",
       freeStorage: "N/A (proxy)",
-      freeConnections: "1,000 queries/day",
+      freeConnections: "60,000 operations/month",
       freeCompute: "Edge caching",
       paidFrom: "$10/mo (Starter)",
       pricingModel: "Per-query",
-      freeDetails: "Retires December 1, 2026. 1,000 cached queries/day, global edge caching, connection pooling for serverless. Not a database — sits in front of your existing database to provide connection pooling (essential for serverless) and edge caching. Works with any Prisma-supported database.",
+      freeDetails: "Retires December 1, 2026. 60,000 cache operations a month, global edge caching, connection pooling for serverless. Not a database — sits in front of your existing database to provide connection pooling (essential for serverless) and edge caching. Works with any Prisma-supported database.",
       freeType: "limited",
       monthlyCostSmall: "$0",
       monthlyCostTeam: "$10+",
-      hiddenCosts: "1,000 queries/day is very limited. Requires Prisma ORM — doesn't work with other query builders. Cache invalidation complexity. Pro plan at $49/mo for higher query limits.",
+      hiddenCosts: "60,000 cache operations a month on every plan, with no overage rate on Free; the cache retires on 2026-12-01. Requires Prisma ORM — doesn't work with other query builders. Cache invalidation complexity.",
     },
     {
       name: "MongoDB Atlas",
@@ -30029,16 +30029,16 @@ function buildDatabasePricingPage(): string {
       slug: "couchbase-capella",
       category: "document-nosql",
       dbType: "Document + Key-Value",
-      freeStorage: "Shared",
+      freeStorage: "8 GB (1 node)",
       freeConnections: "Unlimited",
       freeCompute: "Shared",
       paidFrom: "$0.15/hr per node (Basic)",
       pricingModel: "Per-node-hour",
-      freeDetails: "Free tier cluster with shared resources. Couchbase Capella is a managed Couchbase service with SQL++ query language, full-text search, key-value access, and mobile sync (via Couchbase Lite). Multi-model: document, key-value, and search in one platform. Turns off after 72 hours idle (data kept); deleted after 30 days idle.",
+      freeDetails: "One free operational cluster per organization: one node with 8 GB, with SQL, key-value, vector and full-text search, and App Services. No credit card. Couchbase Capella is a managed Couchbase service with SQL++ query language, full-text search, key-value access, and mobile sync (via Couchbase Lite). Multi-model: document, key-value, and search in one platform. Turns off after 72 hours idle (data kept); deleted after 30 days idle.",
       freeType: "limited",
       monthlyCostSmall: "$0",
       monthlyCostTeam: "≈$110+",
-      hiddenCosts: "Free tier is minimal shared resources. Basic clusters start at 1 node. Multi-model is powerful but adds complexity. Smaller community than MongoDB.",
+      hiddenCosts: "The free cluster is one 8 GB node. Basic clusters start at 1 node. Multi-model is powerful but adds complexity. Smaller community than MongoDB.",
     },
     {
       name: "SurrealDB Cloud",
@@ -30053,7 +30053,7 @@ function buildDatabasePricingPage(): string {
       freeDetails: "1 GiB storage on free tier. Multi-model database — document, graph, and relational in one. SurrealQL query language with SQL-like syntax. Real-time subscriptions, authentication, and permissions built in. Newer entrant but growing rapidly.",
       freeType: "limited",
       monthlyCostSmall: "$0",
-      monthlyCostTeam: "TBD",
+      monthlyCostTeam: "From $0.021/hr per extra instance",
       hiddenCosts: "Relatively new cloud service — stability and ecosystem are still maturing. SurrealQL is not SQL — learning curve. Limited managed tooling compared to established databases.",
     },
     {
@@ -30070,7 +30070,7 @@ function buildDatabasePricingPage(): string {
       freeType: "generous",
       monthlyCostSmall: "$0",
       monthlyCostTeam: "$0\u201325+",
-      hiddenCosts: "Capacity unit pricing is confusing — WCUs and RCUs differ based on item size and consistency. On-demand pricing is simpler but 6x more expensive than provisioned. Global tables double the WCU cost. DynamoDB Streams charges separately.",
+      hiddenCosts: "Capacity unit pricing is confusing — WCUs and RCUs differ based on item size and consistency. On-demand pricing is simpler but costs more than provisioned capacity at steady load; AWS halved on-demand prices on 2024-11-01. Global tables double the WCU cost. DynamoDB Streams charges separately.",
     },
     {
       name: "Google Cloud BigQuery",
@@ -30118,7 +30118,7 @@ function buildDatabasePricingPage(): string {
       freeType: "limited",
       monthlyCostSmall: "$0\u20135",
       monthlyCostTeam: "$5\u201350+",
-      hiddenCosts: "30 MB is extremely small — barely enough for caching. Redis license changed to SSPL/RSALv2 (March 2024) — no longer open source. Modules like RedisSearch and RedisJSON only on paid plans. Consider Upstash or Valkey/KeyDB as alternatives.",
+      hiddenCosts: "30 MB is extremely small — barely enough for caching. Redis moved to SSPL/RSALv2 in March 2024; Redis 8 and later can also be used under AGPLv3, an open source license. Modules like RedisSearch and RedisJSON only on paid plans. Consider Upstash or Valkey/KeyDB as alternatives.",
     },
     {
       name: "Neo4j AuraDB",
@@ -30146,7 +30146,7 @@ function buildDatabasePricingPage(): string {
       freeCompute: "Limited writes",
       paidFrom: "$0 (usage-based)",
       pricingModel: "Usage-based",
-      freeDetails: "Free plan with limited write and query rates. Purpose-built time-series database for metrics, events, and IoT data. InfluxQL and Flux query languages. Built-in dashboarding, alerting, and downsampling. InfluxDB 3.0 (new engine) in preview.",
+      freeDetails: "Free plan with limited write and query rates. Purpose-built time-series database for metrics, events, and IoT data. InfluxQL and Flux query languages. Built-in dashboarding, alerting, and downsampling. Cloud Serverless runs on the InfluxDB 3 storage engine.",
       freeType: "limited",
       monthlyCostSmall: "$0",
       monthlyCostTeam: "$0\u201350+",
@@ -30293,7 +30293,7 @@ function buildDatabasePricingPage(): string {
       '<td style="font-weight:600">' + handwrittenVendorLinkHtml(s.slug, s.name, ' style="color:var(--text)"') + '</td>' +
       '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(s.monthlyCostSmall) + '</td>' +
       '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(s.monthlyCostTeam) + '</td>' +
-      '<td style="font-size:.85rem;color:var(--text-muted)">' + escHtmlServer(keyCostFactorCell(s)) + '</td>' +
+      '<td style="font-size:.85rem;color:var(--text-muted)">' + escHtmlServer(s.keyCostFactor ?? s.hiddenCosts ?? "") + '</td>' +
       '</tr>';
   }).join("\n        ");
 
@@ -30548,7 +30548,7 @@ function buildDatabasePricingPage(): string {
     '  </div>\n' +
     '  <div class="hidden-cost-card">\n' +
     '    <h4>Project Pausing and Cold Starts</h4>\n' +
-    '    <p>Supabase pauses free projects after 1 week of inactivity. Neon scales to zero (fast wake-up but not instant). This means free-tier databases are unsuitable for always-on production use. If uptime matters, budget for a paid tier or choose a service without pausing (CockroachDB, DynamoDB).</p>\n' +
+    '    <p>Supabase pauses free projects after 1 week of inactivity. Neon scales to zero (fast wake-up but not instant). This means free-tier databases are unsuitable for always-on production use. If uptime matters, budget for a paid tier or choose a service without pausing (DynamoDB or Nile).</p>\n' +
     '  </div>\n' +
     '  <div class="hidden-cost-card">\n' +
     '    <h4>Per-Operation Pricing Surprises</h4>\n' +
