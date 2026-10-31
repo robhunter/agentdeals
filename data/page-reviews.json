@@ -4,7 +4,7 @@
     "A": 30,
     "B": 90
   },
-  "measured_on": "2026-10-30",
+  "measured_on": "2026-10-31",
   "pages": [
     {
       "path": "/agent-payments",
@@ -283,11 +283,6 @@
           "label": "Pricing Change Timeline",
           "figures": 10,
           "from_records": 10
-        },
-        {
-          "label": "Upcoming Changes",
-          "figures": 0,
-          "from_records": 0
         }
       ],
       "reads_changes": true,
@@ -1819,6 +1814,7 @@
         "alibaba-cloud-qwen-code",
         "amazon-aurora-postgresql",
         "amplitude",
+        "apiary-io",
         "appwrite-cloud",
         "aws",
         "basecamp",
