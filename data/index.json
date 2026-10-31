@@ -3037,6 +3037,12 @@
           "quote": "Budget alerts are informational only. They do not pause or cap usage.",
           "url": "https://developers.cloudflare.com/billing/manage/budget-alerts/",
           "read_on": "2026-10-04"
+        },
+        {
+          "text": "Every account includes 100,000 R2 buckets; each additional bucket costs $0.10 a month. The allowance covers all storage classes, whatever your Workers plan.",
+          "quote": "First 100,000 included + $0.10 per additional bucket per month",
+          "url": "https://developers.cloudflare.com/r2/pricing/",
+          "read_on": "2026-10-31"
         }
       ]
     },
