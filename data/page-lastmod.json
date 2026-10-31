@@ -14,7 +14,7 @@
       "changed": "2026-10-29"
     },
     "/agent-stack": {
-      "hash": "bf64e240880120aa",
+      "hash": "3d26750e07e0c0c8",
       "changed": "2026-10-31"
     },
     "/ai-coding-tools-pricing": {
@@ -1082,7 +1082,7 @@
       "changed": "2026-10-23"
     },
     "/budget-builder": {
-      "hash": "d638fc044300795c",
+      "hash": "c7265dbd312586ef",
       "changed": "2026-10-31"
     },
     "/business-bank-account-fees-2026": {
@@ -1356,7 +1356,7 @@
       "changed": "2026-10-31"
     },
     "/cloudflare-pages-vs-vercel": {
-      "hash": "f7950f815b8d9b93",
+      "hash": "7fc86a24456e8ab9",
       "changed": "2026-10-31"
     },
     "/cloudinary-vs-imagekit": {
@@ -1664,7 +1664,7 @@
       "changed": "2026-10-30"
     },
     "/compare/cloudflare-pages-vs-vercel": {
-      "hash": "f3443559c468f61e",
+      "hash": "5739042bd4a49700",
       "changed": "2026-10-31"
     },
     "/compare/cloudflare-warp-vs-proton-vpn": {
@@ -1984,7 +1984,7 @@
       "changed": "2026-10-30"
     },
     "/compare/firebase-vs-vercel": {
-      "hash": "a3e27f64f40b5f7f",
+      "hash": "a6e4862cf5f8a81a",
       "changed": "2026-10-31"
     },
     "/compare/fivetran-activations-vs-heap-io": {
@@ -2416,7 +2416,7 @@
       "changed": "2026-10-29"
     },
     "/compare/netlify-vs-vercel": {
-      "hash": "eaf8a535d7c4e2ca",
+      "hash": "6c39c641c110e4c0",
       "changed": "2026-10-31"
     },
     "/compare/nextra-vs-sphinx": {
@@ -2548,7 +2548,7 @@
       "changed": "2026-10-19"
     },
     "/compare/render-vs-vercel": {
-      "hash": "466c2085a39f1fb8",
+      "hash": "c8ffa6b9a631d9af",
       "changed": "2026-10-31"
     },
     "/compare/resend-vs-mail-tester-com": {
@@ -3203,7 +3203,7 @@
       "changed": "2026-10-31"
     },
     "/free-frontend-stack": {
-      "hash": "5d89728eeb71b657",
+      "hash": "ea94e66a56d6be19",
       "changed": "2026-10-31"
     },
     "/free-go-stack": {
@@ -3215,15 +3215,15 @@
       "changed": "2026-10-31"
     },
     "/free-nextjs-stack": {
-      "hash": "c59f2521cb007314",
+      "hash": "60d282cf28017b94",
       "changed": "2026-10-31"
     },
     "/free-saas-stack": {
-      "hash": "286676736b1bdf00",
+      "hash": "224fa5d550cf5a7f",
       "changed": "2026-10-31"
     },
     "/free-startup-stack": {
-      "hash": "45aca33295d50f7e",
+      "hash": "b846cdd915a0d2a8",
       "changed": "2026-10-31"
     },
     "/free-tier-facts-ai-models-get-wrong": {
@@ -3305,7 +3305,7 @@
       "changed": "2026-10-31"
     },
     "/hosting-alternatives": {
-      "hash": "8bc04dd9e68fb69a",
+      "hash": "7278ced326b34549",
       "changed": "2026-10-31"
     },
     "/hosting-free-tier-comparison-2026": {
@@ -3523,7 +3523,7 @@
       "changed": "2026-10-23"
     },
     "/reports/2026-07": {
-      "hash": "0d87fd4470d6d482",
+      "hash": "d019e2903d095e25",
       "changed": "2026-10-31"
     },
     "/reports/2026-08": {
@@ -3592,7 +3592,7 @@
       "daily": true
     },
     "/stability": {
-      "hash": "85fd331fb739ea7f",
+      "hash": "abcf1018190f17f1",
       "changed": "2026-10-31"
     },
     "/stack-check": {
@@ -3615,7 +3615,7 @@
       "changed": "2026-10-30"
     },
     "/stacks/saas-mvp": {
-      "hash": "26cc2238db7efc76",
+      "hash": "befaddced433a10e",
       "changed": "2026-10-31"
     },
     "/stacks/side-project": {
@@ -3706,7 +3706,7 @@
       "daily": true
     },
     "/trends/cloud-hosting": {
-      "hash": "c0786ff7221625c7",
+      "hash": "1f139d63cc58c93f",
       "changed": "2026-10-31"
     },
     "/trends/cloud-iaas": {
