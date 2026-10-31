@@ -165,11 +165,16 @@ describe("the shutdown tracker states each shutdown as the vendor's own pages do
 
   it("counts every card, the new one included, in exactly one of the page's sections and in its structured list", () => {
     const html = served.get(PAGE)!;
-    const cards = cardsOn(html);
+    const cards = html.split('<div class="shutdown-card"').slice(1);
+    const identities = cards.map(card => [
+      readable(card.match(/<h3[^>]*>([\s\S]*?)<\/h3>/)?.[1] ?? ""),
+      readable(card.match(/<span class="deadline-icon">[^<]*<\/span>\s*<span>([^<]+)<\/span>/)?.[1] ?? ""),
+    ].join("\u0000"));
+    assert.strictEqual(new Set(identities).size, cards.length);
     const sectionCounts = [...html.matchAll(/class="section-count"[^>]*>\((\d+)\)/g)].reduce((sum, [, n]) => sum + Number(n), 0);
-    assert.strictEqual(sectionCounts, cards.size);
+    assert.strictEqual(sectionCounts, cards.length);
     const listed = html.match(/"numberOfItems":(\d+)/)?.[1];
-    assert.strictEqual(Number(listed), cards.size);
+    assert.strictEqual(Number(listed), cards.length);
     assert.ok(html.includes(`"name":"${NEW_CARD[0]}"`), "the new card is not in the structured list");
   });
 

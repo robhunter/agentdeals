@@ -85,10 +85,11 @@ export function sentencesOf(text: string): string[] {
 const OFFER_CHANGE = /\b(?:shut(?:s|ting)?\s?down|retir\w*|discontinu\w*|deprecat\w*|end(?:s|ed|ing)?|until|through|deadline|delet\w*|renew\w*|block\w*|remov\w*|stop\w*|no longer|unavailable|not available|no charge|bill\w*|costs?|keep|kept|permitted|replaced|deactivat\w*|credits don.t pay)\b/i;
 const DEADLINE_LIST = /\b(?:retired|removed|deprecated|discontinued)\b[^.!?]*\b(?:include|following|these)\b/i;
 
-function datesWithDeadlineMeaning(sentence: string): string[] {
+function datesWithDeadlineMeaning(sentence: string, shutdownsOnly = false): string[] {
   return [...new Set(dateMentionsIn(sentence).filter(({ start, end }) => {
     const before = sentence.slice(0, start);
     const after = sentence.slice(end);
+    if (shutdownsOnly && /\b(?:said|says|reported)(?:\s+on)?\s*$/i.test(before)) return false;
     if (/\b(?:apply|eligible|eligibility)\b/i.test(before) && /\bsigned up on or after\s*$/i.test(before)) return false;
     if (/\bterms(?: of service)?[, ]+(?:revised|updated|effective)(?:\s+on)?\s*$/i.test(before)) return false;
     if (/\b(?:read|checked|observed|fetched|retrieved|reviewed)\s+from\s+\S+\s+on\s*$/i.test(before)) return false;
@@ -136,6 +137,7 @@ export function deadlineTextsOf(offers: readonly Offer[], recordsBeforeToday: re
 }
 
 const SHUTDOWN_WORDS = /\b(?:shut(?:s|ting)?[\s-]?down|retir(?:e|es|ed|ing|ement)|discontinu(?:e|es|ed|ing|ation)|end[\s-]of[\s-]life|ends?\s+support|end[\s-]of[\s-]support)\b/i;
+const SHUTDOWN_CONJUNCTION = new RegExp(`\\band\\s+(?=(?:then\\s+)?${SHUTDOWN_WORDS.source})`, "i");
 
 function deadlinesInTexts(
   texts: readonly DeadlineText[],
@@ -152,10 +154,10 @@ function deadlinesInTexts(
       if (!listItem) inDeadlineList = DEADLINE_LIST.test(sentence);
       if (!listItem && !(shutdownsOnly ? SHUTDOWN_WORDS : OFFER_CHANGE).test(sentence)) continue;
       const clauses = shutdownsOnly && !listItem
-        ? sentence.split(/;\s*/).filter(clause => SHUTDOWN_WORDS.test(clause))
+        ? sentence.split(/;\s*/).flatMap(clause => clause.split(SHUTDOWN_CONJUNCTION)).filter(clause => SHUTDOWN_WORDS.test(clause))
         : [sentence];
-      const dates = [...new Set(clauses.flatMap(datesWithDeadlineMeaning))];
-      for (const date of dates.filter((day) => day > today)) {
+      const dates = [...new Set(clauses.flatMap(clause => datesWithDeadlineMeaning(clause, shutdownsOnly)))];
+      for (const date of dates.filter((day) => shutdownsOnly || day > today)) {
         const key = `${text.vendor}\u0000${date}`;
         const held = byVendorAndDay.get(key);
         if (held && PREFERENCE[held.statedIn] <= PREFERENCE[text.statedIn]) continue;
