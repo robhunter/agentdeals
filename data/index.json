@@ -37654,15 +37654,20 @@
           {
             "subtype": "gpu_compute",
             "source_url": "https://modal.com/pricing",
-            "source_quote": "Simple, transparent pricing that scales based on the amount of compute you use"
+            "source_quote": "Fine-tune, run RL, and evaluate models on GPUs that spin up in seconds"
           },
           {
             "subtype": "agent_sandbox",
             "source_url": "https://modal.com/pricing",
-            "source_quote": "Modal Sandbox + Notebooks Pricing"
+            "source_quote": "Isolated environments for coding agents, RL rollouts, and untrusted code"
+          },
+          {
+            "subtype": "model_hosting",
+            "source_url": "https://modal.com/pricing",
+            "source_quote": "Serve LLMs, image, video, and audio models, from real-time to batch"
           }
         ],
-        "reviewed": "2026-09-01"
+        "reviewed": "2026-10-31"
       },
       "free_plan_excerpt": {
         "text": "$0 + compute / month $30 / month free credits 3 workspace seats included 100 containers + 10 GPU concurrency Scheduled and Web Functions (limited) Real-time metrics and logs Region selection 1 TiB / month free network egress",
