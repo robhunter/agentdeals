@@ -13,6 +13,7 @@ const PLANETSCALE_ESTIMATE_AT_39 = /"slug":"planetscale"[^}]*"starter":39|Free H
 
 const WITHDRAWN: Record<string, Record<string, RegExp>> = {
   "/database-pricing": {
+    "Redis Cloud advanced capabilities as paid-only": /Supports Redis modules \(Search, JSON, TimeSeries, Graph, Bloom\) on paid tiers\.|Modules like RedisSearch and RedisJSON only on paid plans\./i,
     "Weaviate's free cluster as a trial sandbox": /only has a trial sandbox|Sandbox \(limited\)|Free sandbox cluster|Sandbox is trial-only/,
     "Weaviate's paid plans from $25": /\$25\/mo \(Serverless\)/,
     "PlanetScale's cheapest plan as Scaler at $39": /minimum plan is now Scaler|\$39\/mo \(Scaler\)|The \$39\/mo Scaler plan/,
@@ -286,6 +287,7 @@ describe("database, vector and CI/CD pricing pages state each vendor's plan as t
   it("states the corrected database free terms on each vendor card", () => {
     const markup = html.get("/database-pricing")!;
     const expected: Record<string, string[]> = {
+      "redis-cloud": ["Search and query, JSON, time series and probabilistic data types are available on the Free plan too.", "30 MB dataset size, 30 connections on free tier."],
       convex: ["0.5 GB database storage, 1 GB file storage and 1M function calls a month, for 1–6 developers"],
       upstash: ["Redis: 250 MB", "Kafka is no longer offered: it is not on upstash.com/pricing (read 2026-10-31)."],
       "prisma-accelerate": ["60,000 cache operations a month"],
@@ -334,7 +336,7 @@ describe("database, vector and CI/CD pricing pages state each vendor's plan as t
       Upstash: "500K commands/month is tight for production use. Per-command pricing can spike with chatty applications. REST-based means higher latency than native Redis protocol.",
       "Prisma Accelerate": "60,000 cache operations a month on every plan, with no overage rate on Free; the cache retires on 2026-12-01. Requires Prisma ORM — doesn't work with other query builders. Cache invalidation complexity.",
       "Couchbase Capella": "The free cluster is one 8 GB node. Basic clusters start at 1 node. Multi-model is powerful but adds complexity. Smaller community than MongoDB.",
-      "Redis Cloud": "30 MB is extremely small — barely enough for caching. Redis moved to SSPL/RSALv2 in March 2024; Redis 8 and later can also be used under AGPLv3, an open source license. Modules like RedisSearch and RedisJSON only on paid plans. Consider Upstash or Valkey/KeyDB as alternatives.",
+      "Redis Cloud": "30 MB is extremely small — barely enough for caching. Redis moved to SSPL/RSALv2 in March 2024; Redis 8 and later can also be used under AGPLv3, an open source license. Consider Upstash or Valkey/KeyDB as alternatives.",
       "Amazon DynamoDB": "Capacity unit pricing is confusing — WCUs and RCUs differ based on item size and consistency. On-demand pricing is simpler but costs more than provisioned capacity at steady load; AWS halved on-demand prices on 2024-11-01. Global tables double the WCU cost. DynamoDB Streams charges separately.",
     };
     for (const [vendor, expected] of Object.entries(stated)) {

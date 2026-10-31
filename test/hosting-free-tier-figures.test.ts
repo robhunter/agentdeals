@@ -91,6 +91,11 @@ type Retired = { what: string; pattern: RegExp; replacedBy: RegExp; vendorRecord
 
 const RETIRED_FIGURES: Retired[] = [
   {
+    what: "Redis Cloud advanced capabilities restricted to paid tiers",
+    pattern: /Supports Redis modules \(Search, JSON, TimeSeries, Graph, Bloom\) on paid tiers\.|Modules like RedisSearch and RedisJSON only on paid plans\./i,
+    replacedBy: /Search and query, JSON, time series and probabilistic data types are available on the Free plan too\./,
+  },
+  {
     what: "Clerk free auth stated as 10K MAU",
     pattern: /Clerk(?: gives| offers)?(?: 10,000 MAU| \(10K MAU\))/i,
     replacedBy: /50(?:,000|K) (?:MRU|monthly retained users)/i,
@@ -559,6 +564,7 @@ describe("hosting pages publish the free-tier figures our records hold (#1183)",
 
   it("states the current figure on every page that carried a retired one", async () => {
     const carried: Record<string, string[]> = {
+      "Redis Cloud advanced capabilities restricted to paid tiers": ["/database-pricing"],
       "Clerk free auth stated as 10K MAU": ["/free-nextjs-stack", "/free-django-stack", "/free-fastapi-stack", "/free-go-stack", "/security-alternatives"],
       "Supabase free Storage including image transformations": ["/free-django-stack", "/free-fastapi-stack", "/free-go-stack"],
       "Sentry Developer with 10K performance transactions": ["/free-nextjs-stack", "/free-django-stack", "/free-fastapi-stack", "/free-go-stack", "/free-saas-stack"],
