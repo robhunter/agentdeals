@@ -31354,7 +31354,7 @@ function buildHostingPricingPage(): string {
       freeBandwidth: "5 GB (then $0.15/GB)",
       freeBuildMinutes: "500 min/mo",
       freeCompute: "Less than 1 CPU, 512 MB RAM (spins down)",
-      freeDetails: "Free web services with less than 1 CPU, 512 MB RAM, auto-sleep after 15 minutes of inactivity. 750 free instance hours/month, 500 build minutes/month, 5 GB bandwidth/month included then $0.15/GB. Free PostgreSQL (30-day expiry, 256 MB). Free Redis (25 MB, 50 connections). Supports Docker, Node, Python, Go, Ruby, Rust.",
+      freeDetails: "Free web services with less than 1 CPU, 512 MB RAM, auto-sleep after 15 minutes of inactivity. 750 free instance hours/month, 500 build minutes/month, 5 GB bandwidth/month included then $0.15/GB. Free PostgreSQL (30-day expiry, 1 GB storage). Free Redis (25 MB, 50 connections). Supports Docker, Node, Python, Go, Ruby, Rust.",
       freeType: "limited",
       monthlyCostSolo: "$0–7",
       monthlyCostTeam: "$25/mo flat (Pro) + usage",
@@ -31372,7 +31372,7 @@ function buildHostingPricingPage(): string {
       freeDetails: "No free tier for new accounts since October 2024. New accounts get a trial of 2 machine hours or 7 days, whichever comes first, before adding a payment method; apps stop at the end of the trial unless one is added. Legacy accounts (Hobby/Launch/Scale plans) retain: 3 shared-cpu-1x VMs (256 MB RAM), 3 GB volume storage, 100 GB transfer/month. Volume snapshots: first 10 GB free, then $0.08/GB/month.",
       freeType: "removed",
       monthlyCostSolo: "Usage-based",
-      monthlyCostTeam: "$29/mo (Scale) + usage",
+      monthlyCostTeam: "Usage-based",
       hiddenCosts: "No free plan for new accounts: a trial of 2 machine hours or 7 days, whichever comes first, then pay-as-you-go. Legacy free allowances only for pre-Oct-2024 accounts on deprecated plans. Volume snapshots billed at $0.08/GB-month (first 10 GB free).",
       wall: "Immediately (pay-as-you-go after a trial of 2 machine hours or 7 days)",
     },
@@ -31416,11 +31416,11 @@ function buildHostingPricingPage(): string {
       freeBandwidth: "Unlimited",
       freeBuildMinutes: "N/A",
       freeCompute: "100K requests/day, 10ms CPU/req",
-      freeDetails: "100,000 requests/day, 10ms CPU time per invocation, 1 MB script size. Runs on Cloudflare's 300+ edge locations. V8 isolates — no cold starts. KV storage: 100K reads/day, 1K writes/day. R2 storage: 10 GB free. Workers AI: 10K neurons/day.",
+      freeDetails: "100,000 requests/day, 10ms CPU time per invocation, 64 MiB Worker size (uncompressed). Runs on Cloudflare's 300+ edge locations. V8 isolates — no cold starts. KV storage: 100K reads/day, 1K writes/day. R2 storage: 10 GB free. Workers AI: 10K neurons/day.",
       freeType: "generous",
       monthlyCostSolo: "$0–5",
       monthlyCostTeam: "$5+",
-      hiddenCosts: "10ms CPU time limit is restrictive for compute-heavy tasks. 1 MB script size limit. Daily (not monthly) request quota means bursts get throttled. KV eventual consistency — not suitable for real-time state.",
+      hiddenCosts: "10ms CPU time limit is restrictive for compute-heavy tasks. Daily (not monthly) request quota means bursts get throttled. KV eventual consistency — not suitable for real-time state.",
     },
     {
       name: "Cloudflare Pages",
@@ -31465,22 +31465,22 @@ function buildHostingPricingPage(): string {
       freeType: "generous",
       monthlyCostSolo: "$0",
       monthlyCostTeam: "$20+",
-      hiddenCosts: "Deno runtime only — no Node.js compatibility layer for all packages. 50ms CPU limit per request. 1M requests/month is generous but production traffic can exceed it.",
+      hiddenCosts: "1M requests/month is generous but production traffic can exceed it.",
     },
     {
       name: "Val Town",
       slug: "val-town",
       category: "edge-serverless",
       freeTier: "Free tier",
-      paidFrom: "$10/mo (Pro)",
+      paidFrom: "$25/mo (Pro)",
       freeBandwidth: "Included",
       freeBuildMinutes: "N/A",
       freeCompute: "Free requests with limits",
       freeDetails: "Code snippets (\"vals\") that run as HTTP endpoints, cron jobs, or email handlers. Free tier includes public vals, SQLite storage, email sending. Community-driven code sharing. TypeScript/JavaScript runtime. Instant deployment.",
       freeType: "generous",
-      monthlyCostSolo: "$0–10",
-      monthlyCostTeam: "$10+",
-      hiddenCosts: "Free tier vals are public. Private vals require Pro ($10/mo). Limited compute per val execution. Not designed for traditional full-stack apps.",
+      monthlyCostSolo: "$0–25",
+      monthlyCostTeam: "From $200/mo (Business)",
+      hiddenCosts: "Free tier vals are public. Private vals require Pro ($25/mo, or $21/mo billed yearly). Limited compute per val execution. Not designed for traditional full-stack apps.",
     },
     {
       name: "Vercel",
@@ -31495,7 +31495,7 @@ function buildHostingPricingPage(): string {
       freeType: "generous",
       monthlyCostSolo: "$0",
       monthlyCostTeam: "$20/seat",
-      hiddenCosts: "WATCH: New Pro projects default to Turbo build machines ($0.126/min vs $0.014/min Standard — 9x cost difference). Credit-based Pro plan ($20/mo credit pool, changed Jan 2026). Hobby plan is personal use only — commercial use requires Pro. Image Optimization has separate quotas.",
+      hiddenCosts: "New Pro teams default to Elastic build machines, which scale between 4 and 30 vCPUs and bill $0.0035 per CPU minute. A fixed Turbo machine (30 vCPUs) costs $0.105 a minute and Standard (4 vCPUs) $0.014. Credit-based Pro plan ($20/mo credit pool, changed Jan 2026). Hobby plan is personal use only — commercial use requires Pro. Image Optimization has separate quotas.",
     },
     {
       name: "Google Cloud Run",
@@ -31536,7 +31536,7 @@ function buildHostingPricingPage(): string {
       freeBandwidth: "Included",
       freeBuildMinutes: "N/A",
       freeCompute: "1 web app, 512 MB storage",
-      freeDetails: "1 free web app on yourusername.pythonanywhere.com. 512 MB storage, daily CPU seconds limit. Python 2.7/3.x. Built-in Bash console, MySQL database. No custom domain on free tier. Good for learning and small projects.",
+      freeDetails: "1 free web app on yourusername.pythonanywhere.com. 512 MB storage, daily CPU seconds limit. Python 2.7/3.x. Built-in Bash console. No custom domain on free tier. Good for learning and small projects.",
       freeType: "limited",
       monthlyCostSolo: "$0–10",
       monthlyCostTeam: "Per-account",
@@ -31555,7 +31555,7 @@ function buildHostingPricingPage(): string {
       freeType: "removed",
       monthlyCostSolo: "$5–7",
       monthlyCostTeam: "$7/dyno + add-ons",
-      hiddenCosts: "No free tier at all. Add-on costs stack up fast (Postgres Mini $5/mo, Redis Mini $3/mo). Eco dynos sleep and have shared compute. Basic dynos ($7) are the real minimum for production use.",
+      hiddenCosts: "No free tier at all. Add-on costs stack up fast (Postgres Essential-0 $5/mo, Key-Value Store Mini $3/mo). Eco dynos sleep and have shared compute. Basic dynos ($7) are the real minimum for production use.",
       wall: "Immediately ($5/mo minimum)",
     },
   ];
@@ -31629,7 +31629,7 @@ function buildHostingPricingPage(): string {
       '<td style="font-weight:600">' + handwrittenVendorLinkHtml(s.slug, s.name, ' style="color:var(--text)"') + '</td>' +
       '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(s.monthlyCostSolo) + '</td>' +
       '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(s.monthlyCostTeam) + '</td>' +
-      '<td style="font-size:.85rem;color:var(--text-muted)">' + escHtmlServer(s.hiddenCosts.substring(0, 80)) + (s.hiddenCosts.length > 80 ? "..." : "") + '</td>' +
+      '<td style="font-size:.85rem;color:var(--text-muted)">' + escHtmlServer(s.hiddenCosts) + '</td>' +
       '</tr>';
   }).join("\n        ");
 
@@ -31643,7 +31643,7 @@ function buildHostingPricingPage(): string {
   const faqEntries = [
     { q: "What is the best free cloud hosting platform in 2026?", a: "Cloudflare Pages offers unlimited sites, unlimited bandwidth, and 500 builds/month. For full-stack apps, Vercel's Hobby plan (100 GB of Fast Data Transfer, builds included; non-commercial use only) is a strong free option. Railway offers $5 in free credits to get started." },
     { q: "Is Heroku still worth it without a free tier?", a: "Heroku removed its free tier in November 2022. The cheapest option is now Eco dynos at $5/month (shared compute, sleeps after 30 min). For most use cases, Railway ($5/mo with $5 credit), Render (free tier with spin-down), or Fly.io provide better value." },
-    { q: "What are the hidden costs of Vercel?", a: "New Pro projects default to Turbo build machines at $0.126/min — 9x the cost of Standard builds ($0.014/min). The Pro plan moved to a credit-based model ($20/mo credit pool) in January 2026. Image Optimization has separate quotas. The Hobby plan is restricted to personal, non-commercial use." },
+    { q: "What are the hidden costs of Vercel?", a: "New Pro teams default to Elastic build machines, which scale between 4 and 30 vCPUs and bill $0.0035 per CPU minute. A fixed Turbo machine (30 vCPUs) costs $0.105 a minute and Standard (4 vCPUs) $0.014. The Pro plan moved to a credit-based model ($20/mo credit pool) in January 2026. Image Optimization has separate quotas. The Hobby plan is restricted to personal, non-commercial use." },
     { q: "Which PaaS is best for side projects?", a: "For static sites: Cloudflare Pages (unlimited free bandwidth) or GitHub Pages. For full-stack: Railway ($5 trial credit for 30 days, no card required), Render (free tier with 15-min spin-down), or Vercel Hobby. For serverless APIs: Cloudflare Workers (100K req/day free)." },
     { q: "Which hosting platform is best for production apps?", a: "Vercel for Next.js/React apps ($20/seat). Railway for general-purpose apps ($5/mo Hobby; Pro is a $20 monthly minimum with unlimited seats). Google Cloud Run for container workloads with auto-scaling. Fly.io for latency-sensitive apps needing multi-region deployment." },
   ];
@@ -31897,8 +31897,8 @@ function buildHostingPricingPage(): string {
     '  <p class="section-intro">The sticker price is rarely the full story. These are the costs that surprise developers after they commit to a platform.</p>\n' +
     '\n' +
     '  <div class="hidden-cost-card">\n' +
-    '    <h4>Vercel Turbo Builds: 9x Cost Multiplier</h4>\n' +
-    '    <p>New Pro projects on Vercel default to Turbo build machines at $0.126/min \u2014 9 times the cost of Standard builds ($0.014/min). A 5-minute build costs $0.63 on Turbo vs $0.07 on Standard. Switch to Standard builds in project settings unless you genuinely need faster builds.</p>\n' +
+    '    <h4>Vercel Builds: Billed per CPU Minute</h4>\n' +
+    '    <p>New Pro teams on Vercel default to Elastic build machines, which scale from 4 to 30 vCPUs and bill $0.0035 per CPU minute. A 5-minute build costs $0.07 on Standard (4 vCPUs) and $0.525 if it scales to Turbo (30 vCPUs). Pick a fixed machine type in project settings if you need predictable build costs.</p>\n' +
     '  </div>\n' +
     '    <div class="hidden-cost-card">\n' +
     '    <h4>Render Free Tier Spin-Down</h4>\n' +
