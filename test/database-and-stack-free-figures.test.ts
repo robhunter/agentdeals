@@ -55,7 +55,7 @@ const STATED: Record<string, string[]> = {
   "/free-saas-stack": ["Upstash QStash (1,000 messages/day free)", "Upstash Redis (500K commands/month)"],
   "/free-nextjs-stack": ["QStash (Upstash) offers 1,000 messages/day"],
   "/database-pricing": [
-    "Redis: 256 MB, 500K commands/month, 1 database. QStash: 1,000 messages/day, 3 retries.",
+    "Redis: 250 MB, 500K commands/month, 1 database. QStash: 1,000 messages/day, 3 retries.",
     "500K commands/month is tight for production use.",
     "1 GB storage, unlimited tenants, built-in tenant isolation for SaaS applications.",
     "built-in isolation. 1 GB free. The only database with first-class tenant primitives.",

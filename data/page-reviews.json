@@ -1012,22 +1012,22 @@
       },
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 148,
+      "table_figures": 165,
       "table_figures_from_records": 31,
       "tables": [
         {
           "label": "Pricing Comparison Table",
-          "figures": 45,
+          "figures": 47,
           "from_records": 0
         },
         {
           "label": "What You Actually Get for Free",
-          "figures": 19,
+          "figures": 21,
           "from_records": 0
         },
         {
           "label": "Cost Comparison by Team Size",
-          "figures": 52,
+          "figures": 65,
           "from_records": 0
         },
         {
