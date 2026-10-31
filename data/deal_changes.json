@@ -17297,7 +17297,8 @@
             "first_new_capture": "https://web.archive.org/web/20260720175103/https://vercel.com/docs/builds/managing-builds"
           }
         ]
-      }
+      },
+      "tier": "Pro"
     }
   ]
 }
