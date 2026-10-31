@@ -54,12 +54,16 @@ function run(failure = "", measuredOnly = false) {
   writeFileSync(log, "");
   writeFileSync(out, "unchanged output\n");
   const source = readFileSync(fixture.file, "utf8");
+  const measuredOn = JSON.parse(source).measured_on;
+  const today = new Date().toISOString().slice(0, 10);
+  const clockShift = Number(process.env.AGENTDEALS_CLOCK_SHIFT_MS ?? 0) + Date.parse(measuredOn) - Date.parse(today);
   const result = spawnSync(process.execPath, [join(REPO, "scripts/sync-page-reviews.js"), "--out", out, ...(measuredOnly ? ["--measured-only"] : [])], {
     cwd: REPO,
     encoding: "utf8",
     env: {
       ...process.env,
-      NODE_OPTIONS: `${process.env.NODE_OPTIONS ?? ""} --import=${pathToFileURL(preload).href}`,
+      NODE_OPTIONS: `${process.env.NODE_OPTIONS ?? ""} --import=${pathToFileURL(join(REPO, "scripts/shifted-clock.mjs")).href} --import=${pathToFileURL(preload).href}`,
+      AGENTDEALS_CLOCK_SHIFT_MS: String(clockShift),
       AGENTDEALS_PAGE_REVIEWS_PATH: fixture.file,
       REGISTER_TRANSPORT_LOG: log,
       REGISTER_TRANSPORT_FAILURE: failure,
@@ -82,11 +86,12 @@ function assertSuccessful(result: ReturnType<typeof run>) {
   assert.equal(servers.length, 4);
   assert.ok(servers.every(event => event.timeout === 25));
   const requests = result.events.filter(event => event.kind === "request");
-  const original = JSON.parse(readFileSync(join(REPO, "data/page-reviews.json"), "utf8"));
+  const original = JSON.parse(result.source);
   assert.equal(requests.length, original.pages.length * 4);
   assert.ok(requests.every(event => event.connection === "close"));
   assert.ok(requests.every(event => event.userAgent === "agentdeals-internal/1.0 (sync-page-reviews)"));
   const written = JSON.parse(readFileSync(result.out, "utf8"));
+  assert.equal(written.measured_on, original.measured_on);
   assert.equal(written.pages.length, original.pages.length);
   for (const before of original.pages) {
     const after = written.pages.find((page: { path: string }) => page.path === before.path);
