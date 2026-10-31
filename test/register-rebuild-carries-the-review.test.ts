@@ -70,8 +70,26 @@ describe("rebuilding the review register to a path of its own", () => {
 
   it("carries every partial re-check, which no measurement can restore", () => {
     const rechecked = onRecord().filter((p) => p.partial_recheck !== null);
-    assertPopulationFloor(rechecked.length, 1, "pages holding a partial re-check");
     for (const page of rechecked) assert.deepStrictEqual(written.get(page.path)?.partial_recheck, page.partial_recheck, page.path);
+  });
+
+  it("carries a synthetic partial re-check through a full rebuild and leaves an unchecked page alone", () => {
+    const recheck = { on: "2026-10-12", vendors: ["mongodb-atlas", "turso"] };
+    const fixture = registerWith(REPO, "register-partial-recheck-", {
+      "/database-pricing": { partial_recheck: recheck },
+      "/llm-api-pricing": { partial_recheck: null },
+    });
+    try {
+      const out = path.join(fixture.dir, "written.json");
+      const source = readFileSync(fixture.file, "utf-8");
+      rebuild(["--out", out], { AGENTDEALS_PAGE_REVIEWS_PATH: fixture.file });
+      const pages = new Map(parsePageReviews(readFileSync(out, "utf-8")).pages.map((p) => [p.path, p]));
+      assert.deepStrictEqual(pages.get("/database-pricing")?.partial_recheck, recheck);
+      assert.strictEqual(pages.get("/llm-api-pricing")?.partial_recheck, null);
+      assert.strictEqual(readFileSync(fixture.file, "utf-8"), source);
+    } finally {
+      rmSync(fixture.dir, { recursive: true, force: true });
+    }
   });
 });
 
