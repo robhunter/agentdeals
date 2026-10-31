@@ -92,13 +92,16 @@ describe("discontinued hosting cards", () => {
       const card = endedCards.get(vendor);
       assert.ok(card, `${vendor} retains its card`);
       const sentence = `${vendor} was discontinued on ${today}, so it is not a current option.`;
-      assert.ok(card.includes(sentence));
+      assert.equal(card.match(/<p class="alt-card-desc">([\s\S]*?)<\/p>/)![1], sentence);
       const slug = card.match(/href="\/vendor\/([^"]+)"/)![1];
       const vendorPage = await read(ended, `/vendor/${slug}`);
       assert.ok(vendorPage.includes(sentence.slice(0, -1)));
       assert.doesNotMatch(card, /alt-card-tier|https?:\/\/|Pricing|sponsored|listing-condition/);
       assert.ok(card.includes(`href="/vendor/${slug}">Full profile`));
       assert.ok(card.includes(`href="/alternative-to/${slug}">Alternatives`));
+      assert.deepEqual([...card.matchAll(/href="([^"]+)"/g)].map(match => match[1]), [
+        `/vendor/${slug}`, `/vendor/${slug}`, `/alternative-to/${slug}`,
+      ]);
       const before = baseCards.get(vendor)!;
       assert.ok(before.includes('class="alt-card-tier"'));
       assert.notEqual(card, before);
