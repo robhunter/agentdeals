@@ -107,6 +107,7 @@ const listings = [
   listing("Second Unlisted Cloud", "The API shuts down on 2026-11-10."),
   listing("Retired Listing Cloud", "The legacy console shuts down on 2026-11-05.", [], "Retired"),
   listing("Deno Deploy", "Deno said on 2026-10-09 that Deno Deploy will keep running for six months and then shut down; it gave no exact date."),
+  listing("Repeated Cloud", "The first API retired on 2026-10-20. The second API retires on 2026-11-02."),
   listing("Past Cloud", "The API retired on 2026-10-20."),
   listing("Checked Cloud", "Checked 2026-11-10, the page lists a retired service."),
   listing("Published Cloud", "The post of 2026-11-10 describes the retired API."),
@@ -212,6 +213,11 @@ describe("the shutdown tracker includes shutdowns stated only by listings", () =
   it("keeps separate unlisted vendors on the same day", () => {
     const cards = cardsOf(pages.get(clocks[0])!);
     for (const name of ["First Unlisted Cloud", "Second Unlisted Cloud"]) assert.equal(cards.filter(card => card.name === name).length, 1);
+    for (const day of clocks) {
+      const repeated = cardsOf(pages.get(day)!).filter(card => card.name === "Repeated Cloud");
+      assert.equal(repeated.length, 2, day);
+      assert.equal(repeated[0].date === repeated[1].date, false, day);
+    }
   });
 
   it("adds no second card where a record or a hand-typed card already covers the event", () => {
