@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2026-10-30",
+  "generated": "2026-10-31",
   "pages": {
     "/": {
       "daily": true
@@ -791,10 +791,12 @@
       "changed": "2026-10-30"
     },
     "/api-development-alternatives": {
-      "daily": true
+      "hash": "550869aaa7dc1b35",
+      "changed": "2026-10-31"
     },
     "/api-development-free-tier-comparison-2026": {
-      "daily": true
+      "hash": "5938cf738ee87b0d",
+      "changed": "2026-10-31"
     },
     "/api/docs": {
       "hash": "6caafc224756b472",
@@ -1335,12 +1337,11 @@
       "daily": true
     },
     "/ci-cd-alternatives": {
-      "hash": "9014e328e28f5a4f",
-      "changed": "2026-10-30"
+      "daily": true
     },
     "/ci-cd-pricing": {
-      "hash": "97daca3eae5bedf3",
-      "changed": "2026-10-30"
+      "hash": "a0f1d5f4d2342a1b",
+      "changed": "2026-10-31"
     },
     "/cicd-free-tier-comparison-2026": {
       "hash": "d3337db3cd74540b",
@@ -2363,7 +2364,8 @@
       "changed": "2026-10-20"
     },
     "/compare/mintlify-vs-apiary-io": {
-      "daily": true
+      "hash": "9e39586044c795bb",
+      "changed": "2026-10-31"
     },
     "/compare/mintlify-vs-rapidapi": {
       "hash": "f1f3ffcf4546a44f",
@@ -2622,7 +2624,8 @@
       "changed": "2026-10-21"
     },
     "/compare/treblle-vs-apiary-io": {
-      "daily": true
+      "hash": "8c7f3bb0b1e66eb8",
+      "changed": "2026-10-31"
     },
     "/compare/trello-vs-zoho-docs": {
       "hash": "4804af9567c9674c",
@@ -2708,7 +2711,8 @@
       "changed": "2026-10-30"
     },
     "/datadog-alternatives": {
-      "daily": true
+      "hash": "969895437e2930b4",
+      "changed": "2026-10-31"
     },
     "/datadog-vs-grafana-cloud": {
       "hash": "69ef41cea288cd88",
@@ -3226,7 +3230,8 @@
       "changed": "2026-10-29"
     },
     "/free-tier-risk": {
-      "daily": true
+      "hash": "61d3957542096eeb",
+      "changed": "2026-10-31"
     },
     "/free-tier-tracker": {
       "daily": true
@@ -3331,7 +3336,8 @@
       "changed": "2026-10-30"
     },
     "/monitoring-alternatives": {
-      "daily": true
+      "hash": "5a9022461cf0913f",
+      "changed": "2026-10-31"
     },
     "/monitoring-comparison-2026": {
       "hash": "032038b47ceb9289",
@@ -3531,8 +3537,7 @@
       "daily": true
     },
     "/reports/2026-11": {
-      "hash": "4b2841e9a55a5230",
-      "changed": "2026-10-19"
+      "daily": true
     },
     "/reports/2026-12": {
       "hash": "1095d7a29323f71f",
@@ -3586,7 +3591,8 @@
       "daily": true
     },
     "/stability": {
-      "daily": true
+      "hash": "ed9b82e8a9c6bd2c",
+      "changed": "2026-10-31"
     },
     "/stack-check": {
       "daily": true
@@ -3620,7 +3626,8 @@
       "changed": "2026-10-30"
     },
     "/state-of-free-tiers": {
-      "daily": true
+      "hash": "3301d5a16b522bf9",
+      "changed": "2026-10-31"
     },
     "/storage-alternatives": {
       "hash": "da6f979aeb54cdbf",
@@ -3672,7 +3679,8 @@
       "changed": "2026-10-25"
     },
     "/trends/api-development": {
-      "daily": true
+      "hash": "c2c0625e4c7b28b5",
+      "changed": "2026-10-31"
     },
     "/trends/api-gateway": {
       "hash": "716f8076c88e7185",
@@ -3694,8 +3702,7 @@
       "changed": "2026-10-09"
     },
     "/trends/ci-cd": {
-      "hash": "2c9af5332cb89b6e",
-      "changed": "2026-10-26"
+      "daily": true
     },
     "/trends/cloud-hosting": {
       "hash": "74632facb8057011",
@@ -3813,7 +3820,8 @@
       "changed": "2026-10-09"
     },
     "/trends/monitoring": {
-      "daily": true
+      "hash": "84382e16b5e2b858",
+      "changed": "2026-10-31"
     },
     "/trends/notebooks-data-science": {
       "hash": "fe17afcab54b68f9",
@@ -4083,7 +4091,8 @@
       "changed": "2026-10-30"
     },
     "/vendor/apiary-io": {
-      "daily": true
+      "hash": "0117a7ad705360c3",
+      "changed": "2026-10-31"
     },
     "/vendor/apidog": {
       "hash": "3a142fcc710b488f",
@@ -7362,8 +7371,7 @@
       "daily": true
     },
     "/vendor/nx-cloud": {
-      "hash": "1800c175c98cc0d8",
-      "changed": "2026-10-30"
+      "daily": true
     },
     "/vendor/oaysus": {
       "hash": "c3aef7ad895cf40a",
