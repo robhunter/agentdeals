@@ -3264,13 +3264,13 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 87,
-      "table_figures_from_records": 28,
+      "table_figures": 88,
+      "table_figures_from_records": 29,
       "tables": [
         {
           "label": "Main Comparison Table",
-          "figures": 41,
-          "from_records": 10
+          "figures": 42,
+          "from_records": 11
         },
         {
           "label": "Media & Image CDN",
@@ -3348,10 +3348,10 @@
       "vendors_tabulated": [],
       "badge_subjects_unresolved": [],
       "stat_card_subjects_unresolved": [],
-      "reviewed_at": "2026-09-28",
+      "reviewed_at": "2026-10-31",
       "reviewer": "pm",
       "review_outcome": "pass",
-      "review_note": "Two readers checked every claim against Klipy's, GIPHY's, Imgur's, Discord's and Bluesky's own pages on 2026-09-28. The corrections in https://github.com/robhunter/agentdeals/issues/2135 were read on production on 2026-09-28: none of the eleven wrong strings is served on any of 2,593 routes.",
+      "review_note": "Re-read on 2026-10-31 against the providers' own pages: Klipy's 100-request hourly limit for testing keys and its client-side and caching rules (docs.klipy.com/integration-requirements), GIPHY's 100-call beta keys, production-key application and Tenor-compatible endpoints (developers.giphy.com/docs/api), and Imgur's UK block (help.imgur.com). Stored media.tenor.com GIF and MP4 links still load. Two readers checked every claim on 2026-09-28 (https://github.com/robhunter/agentdeals/issues/2135). Not re-read: Imgur's API limits and its non-commercial term, and GIPHY's FAQ wording on the production-key fee; both pages load only in a browser.",
       "partial_recheck": null,
       "reads_index": false,
       "tables_read_index": false,
