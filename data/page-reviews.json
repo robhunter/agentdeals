@@ -1948,12 +1948,12 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 100,
+      "table_figures": 97,
       "table_figures_from_records": 48,
       "tables": [
         {
           "label": "Always Free Products",
-          "figures": 29,
+          "figures": 26,
           "from_records": 2
         },
         {

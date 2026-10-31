@@ -34231,7 +34231,6 @@ function buildGcpFreeTier2026Page(): string {
     { name: "Cloud Speech-to-Text", slug: "google-cloud", limits: "60 minutes/month per account on the V1 API. The V2 API has no free minutes.", category: "AI/ML", source: GOOGLE_FREE_TIER_LIST },
     { name: "Cloud Video Intelligence API", slug: "google-cloud", limits: "1,000 units/month (label detection, shot detection)", category: "AI/ML", source: GOOGLE_FREE_TIER_LIST },
     { name: "Cloud Translation API", slug: "google-cloud", limits: "500,000 characters/month (applied as a $10 monthly credit)", category: "AI/ML", source: "https://cloud.google.com/translate/pricing" },
-    { name: "Agent Runtime (Gemini Enterprise Agent Platform)", slug: "google-cloud", limits: "First 180,000 vCPU-seconds (50 hours) and 360,000 GiB-seconds of memory a month", category: "AI/ML", source: GOOGLE_FREE_TIER_LIST },
     { name: "Workflows", slug: "google-cloud", limits: "5,000 internal steps and 2,000 external HTTP calls per month", category: "Integration", source: GOOGLE_FREE_TIER_LIST },
     { name: "Application Integration", slug: "google-cloud", limits: "400 executions/month, first 2 connection nodes for Google services; up to 20 GiB of data processed per month", category: "Integration", source: GOOGLE_FREE_TIER_LIST },
     { name: "reCAPTCHA", slug: "google-cloud", limits: "10,000 assessments/month free on the Essentials and Premium tiers, counted per organization. Enterprise tier: $1 per 1,000 assessments on a 12-month commitment.", category: "Security", source: GOOGLE_FREE_TIER_LIST },

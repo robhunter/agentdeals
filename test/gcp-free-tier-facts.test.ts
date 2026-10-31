@@ -76,7 +76,6 @@ const ROWS_AS_GOOGLE_STATES_THEM: [string, string][] = [
 ];
 
 const FREE_TIER_ROWS_THE_TABLE_LACKED: [string, string, string][] = [
-  ["Agent Runtime (Gemini Enterprise Agent Platform)", "First 180,000 vCPU-seconds (50 hours) and 360,000 GiB-seconds of memory a month", "AI/ML"],
   ["Cloud Deploy", "First active delivery pipeline per billing account", "CI/CD"],
   ["Datastream", "100 GiB of change data capture a month per billing account (AlloyDB or Spanner to BigQuery)", "Data"],
   ["Security Command Center", "Standard tier", "Security"],
@@ -278,7 +277,7 @@ describe("the GCP free tier guide states Google's terms as Google's own pages st
     assert.equal(text.slice(introduced, introduced + FREE_TRIAL_CARD_SENTENCE.length + 1 + FREE_TRIAL_ELIGIBILITY.length), `${FREE_TRIAL_CARD_SENTENCE} ${FREE_TRIAL_ELIGIBILITY}`);
   });
 
-  it("lists the six Free Tier products the Always Free table lacked, with the limits and category Google gives", () => {
+  it("lists the remaining Free Tier products the Always Free table lacked, with the limits and category Google gives", () => {
     const rows = rowsOf(tableAfter(served.get(PAGE)!, 'id="always-free"'));
     const wrong = FREE_TIER_ROWS_THE_TABLE_LACKED.flatMap(([name, limits, category]) => {
       const row = rows.find(([cell]) => cell === name);

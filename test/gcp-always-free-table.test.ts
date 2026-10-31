@@ -98,6 +98,17 @@ describe(`${PAGE} publishes Google's Always Free quotas (#1623)`, () => {
     server?.kill();
   });
 
+  it("omits Agent Runtime and its withdrawn free allowance", () => {
+    assert.doesNotMatch(html, /Agent Runtime|180,000 vCPU-seconds|360,000 GiB-seconds/);
+    assert.doesNotMatch(text(html), /Agent Runtime|180,000 vCPU-seconds|360,000 GiB-seconds/);
+  });
+
+  it("counts the 34 remaining services in the table, stat card and contents", () => {
+    assert.equal(alwaysFreeRows().length, 34);
+    assert.match(html, /<div class="stat-number">34<\/div>\s*<div class="stat-label">Always Free<\/div>/);
+    assert.match(html, /Always Free Products \(34 services\)/);
+  });
+
   it("reads a populated table", () => {
     assert.ok(alwaysFreeRows().length >= 20, `only ${alwaysFreeRows().length} rows were read from the Always Free table`);
   });
