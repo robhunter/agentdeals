@@ -16612,18 +16612,48 @@
     {
       "vendor": "Auth0",
       "change_type": "product_deprecated",
-      "date": "2026-11-18",
+      "date": "2027-04-30",
       "date_source": "vendor_page",
-      "summary": "Auth0 keeps running. Auth0 Rules and Hooks reach end of life on November 18, 2026, when they stop executing and are removed. They have been read-only since November 18, 2024, and tenants created from October 16, 2023 never had them. Auth0 says to move to Actions.",
-      "what_ends": "Auth0 Rules and Hooks",
+      "summary": "Auth0 keeps running. Auth0 Hooks reach end of life on April 30, 2027, when they stop running and are removed. They have been read-only since November 18, 2024, and tenants created from October 16, 2023 never had them. Auth0 says to move to Actions.",
+      "what_ends": "Auth0 Hooks",
       "listing_effect": "none",
-      "previous_state": "Auth0 Rules and Hooks ran custom code in the login pipeline. Auth0 deprecated them on May 16, 2023 and made them read-only on November 18, 2024.",
-      "current_state": "\"End-of-life: November 18, 2026. After November 18, 2026, Rules and Hooks will stop being executed and removed.\" (auth0.com/docs, Deprecations and Migrations)",
+      "previous_state": "Auth0 Hooks ran custom code at points in Auth0's flows. Auth0 deprecated them on May 16, 2023 and made them read-only on November 18, 2024.",
+      "current_state": "\"After April 30, 2027, Hooks stop running and are removed.\" (auth0.com/docs, Hooks)",
       "impact": "medium",
-      "source_url": "https://auth0.com/docs/troubleshoot/product-lifecycle/deprecations-and-migrations",
+      "source_url": "https://auth0.com/docs/customize/hooks",
       "category": "Auth",
       "alternatives": [],
       "recorded_date": "2026-10-12"
+    },
+    {
+      "vendor": "Auth0",
+      "change_type": "product_deprecated",
+      "date": "2028-01-31",
+      "date_source": "vendor_page",
+      "summary": "Auth0 keeps running. Auth0 Rules reach end of life on January 31, 2028, when they stop running and are removed. They have been read-only since November 18, 2024, and tenants created from October 16, 2023 never had them. Auth0 says to move to Actions.",
+      "what_ends": "Auth0 Rules",
+      "listing_effect": "none",
+      "previous_state": "Auth0 Rules ran custom code in the login pipeline. Auth0 deprecated them on May 16, 2023 and made them read-only on November 18, 2024.",
+      "current_state": "\"After January 31, 2028, Rules stop running and are removed.\" (auth0.com/docs, Rules)",
+      "impact": "medium",
+      "source_url": "https://auth0.com/docs/customize/rules",
+      "category": "Auth",
+      "alternatives": [],
+      "recorded_date": "2026-10-31"
+    },
+    {
+      "vendor": "Auth0",
+      "change_type": "record_corrected",
+      "date": "2026-10-31",
+      "summary": "Data correction - our Auth0 Rules and Hooks record carried the November 18, 2026 date that Auth0's docs gave when we read them on 2026-10-12. Read on 2026-10-31, Auth0's docs date Hooks April 30, 2027 and Rules January 31, 2028, so that record now covers Hooks and a second record covers Rules.",
+      "previous_state": "One record for Rules and Hooks, dated 2026-11-18",
+      "current_state": "Hooks dated 2027-04-30 and Rules dated 2028-01-31, from Auth0's docs",
+      "impact": "low",
+      "source_url": "https://auth0.com/docs/troubleshoot/product-lifecycle/deprecations-and-migrations",
+      "category": "Auth",
+      "alternatives": [],
+      "recorded_date": "2026-10-31",
+      "date_source": "hand_written"
     },
     {
       "vendor": "Microsoft for Startups",
@@ -17299,6 +17329,22 @@
         ]
       },
       "tier": "Pro"
+    },
+    {
+      "vendor": "Claw.cloud",
+      "change_type": "product_deprecated",
+      "date": "2026-04-23",
+      "discontinued_date": "2026-05-11",
+      "date_source": "vendor_page",
+      "summary": "ClawCloud Run shut down: its notice of April 23, 2026 suspended new sign-ups and purchases that day, and all services for free-tier customers ended on May 11, 2026.",
+      "previous_state": "PaaS with $5/month in free credits for users whose GitHub account was more than 180 days old",
+      "current_state": "ClawCloud's notice of April 23, 2026 (archived copy): \"After careful consideration, we have made the difficult decision to discontinue our product and related services.\" Its schedule: Console, new customer sign-ups and purchases suspended April 23, 00:00 UTC; Console, existing free-tier customers, all services discontinued May 11, 00:00 UTC; the official website and documentation taken offline May 11. run.claw.cloud no longer resolves.",
+      "impact": "high",
+      "source_url": "https://web.archive.org/web/20260423055650/https://question.run.claw.cloud/questions/10010000000003261",
+      "category": "Cloud Hosting",
+      "alternatives": [],
+      "recorded_date": "2026-10-31",
+      "listing_effect": "ends"
     }
   ]
 }
