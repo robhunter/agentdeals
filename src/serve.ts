@@ -10924,6 +10924,17 @@ function buildHostingAlternativesPage(): string {
   );
 
   const buildCards = (items: ReturnType<typeof enrichOffers>) => items.map(o => {
+    const discontinuedOn = discontinuedOnOrBefore(changesFor(o.vendor), utcDate());
+    if (discontinuedOn) return `<div class="alt-card">
+        <div class="alt-card-header">
+          <a href="/vendor/${toSlug(o.vendor)}" class="alt-card-name">${escHtmlServer(o.vendor)}</a>
+        </div>
+        <p class="alt-card-desc">${escHtmlServer(discontinuedClause(o.vendor, discontinuedOn))}.</p>
+        <div class="alt-card-links">
+          <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
+          <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
+        </div>
+      </div>`;
     const riskBadge = riskBadgeHtml(o.risk_level, o.risk_cause);
     return `<div class="alt-card">
         <div class="alt-card-header">
