@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 import { confirmationCoverage, confirmationCoverageSentence, loadDealChanges, loadOffers, CONFIRMATION_WINDOW_DAYS } from "../dist/data.js";
 import { confirmationDate, CONFIRMED_DATE_LABEL } from "../dist/read-date.js";
 import { toSlug } from "../dist/slug.js";
+import { freePlanExcerptHtml } from "../dist/source-citation.js";
 import { assertCoversPopulation, assertPopulationFloor, categoriesInTheCatalogue } from "./population-floor.ts";
 import { everyRouteTheSitemapPublishes } from "./sitemap-routes.ts";
 import { bundleExclusions, everyFileThisRepositoryPublishes, excludedFromTheBundle } from "./published-files.ts";
@@ -15,7 +16,7 @@ const REPO = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const A_DAY_IN_MS = 86400000;
 
 const A_VERIFICATION_ADJECTIVE = /\b(?:verified|human-verified|fact-checked|fact checked)\b/i;
-const A_SENTENCE = /[^.!?\n]+[.!?]*/g;
+const A_SENTENCE = /(?:[^.!?\n]|(?<=\d)\.(?=\d))+[.!?]*/g;
 const A_CATALOGUE_SCALE_FIGURE = /\b\d{1,3},?\d{3}\+?\b/;
 const A_LISTING_SET = /\b(?:each|every|all)\b/i;
 const A_CONFIRMED_OF_A_LISTING_SET =
@@ -614,8 +615,14 @@ async function everyDoorTheOpenApiPublishes(base: string): Promise<string[]> {
   return ["/openapi.json", ...doors];
 }
 
-function proseSurfacesOf(html: string): { where: string; text: string }[] {
-  const surfaces: { where: string; text: string }[] = [];
+interface ProseSurface {
+  where: string;
+  text: string;
+  vendorQuotation?: boolean;
+}
+
+function proseSurfacesOf(html: string): ProseSurface[] {
+  const surfaces: ProseSurface[] = [];
   const meta = html.match(/<meta name="description" content="([^"]*)"/);
   if (meta) surfaces.push({ where: "meta description", text: unescapeHtml(meta[1]!) });
   const og = html.match(/<meta property="og:description" content="([^"]*)"/);
@@ -625,13 +632,18 @@ function proseSurfacesOf(html: string): { where: string; text: string }[] {
     try { parsed = JSON.parse(block[1]!); } catch { continue; }
     for (const described of describedIn(parsed)) surfaces.push({ where: "JSON-LD description", text: described });
   }
-  const stripped = html.replace(/<script[\s\S]*?<\/script>/g, " ").replace(/<style[\s\S]*?<\/style>/g, " ");
+  const stripped = html.replace(/<script[\s\S]*?<\/script>/g, " ").replace(/<style[\s\S]*?<\/style>/g, " ")
+    .replace(/<figure\b[^>]*\bclass="free-plan-excerpt"[^>]*>([\s\S]*?)<\/figure>/g, (figure) =>
+      figure.replace(/<blockquote\b[^>]*>([\s\S]*?)<\/blockquote>/g, (_quote: string, text: string) => {
+        surfaces.push({ where: "quoted vendor excerpt", text: unescapeHtml(text.replace(/<[^>]+>/g, " ")), vendorQuotation: true });
+        return ".\n";
+      }));
   const broken = stripped.replace(/<\/(?:p|div|td|th|tr|li|h[1-6]|section|article|figcaption|blockquote)>/g, ".\n");
   surfaces.push({ where: "body", text: unescapeHtml(broken.replace(/<[^>]+>/g, " ")).replace(/[^\S\n]+/g, " ") });
   return surfaces;
 }
 
-function proseAnswersOf(served: string): { where: string; text: string }[] {
+function proseAnswersOf(served: string): ProseSurface[] {
   if (!served.trimStart().startsWith("{") && !served.trimStart().startsWith("[")) return proseSurfacesOf(served);
   try {
     return describedIn(JSON.parse(served)).map((text) => ({ where: "JSON description", text }));
@@ -639,6 +651,65 @@ function proseAnswersOf(served: string): { where: string; text: string }[] {
     return proseSurfacesOf(served);
   }
 }
+
+function reasonForVerificationWord(route: string, surface: ProseSurface, said: string, vendorProse: string[]): string | undefined {
+  if (surface.vendorQuotation) return "the word is inside an attributed vendor excerpt";
+  return THE_WORD_IS_NOT_A_CLAIM_OVER_OUR_LISTINGS.find((one) => {
+    if (one.sentence) return (one.route ? one.route.test(route) : true) && one.sentence.test(said);
+    if (one.storedVerbatim !== true) return false;
+    return theWordInContext(said).some((probe) => vendorProse.some((held) => held.includes(probe)));
+  })?.why;
+}
+
+describe("verification words inside attributed vendor excerpts", () => {
+  const quote = freePlanExcerptHtml({
+    text: "Email found · 1 credit Email verified · 0.5 credit. Credits reset monthly.",
+    url: "https://example.test/pricing", read_on: "2026-10-31",
+  }, (text: string) => text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"));
+  const claim = "We verified Hunter.io's free tier.";
+
+  function unexplainedIn(html: string): string[] {
+    return proseAnswersOf(html).flatMap((surface) => (surface.text.match(A_SENTENCE) ?? [])
+      .filter((said) => A_VERIFICATION_ADJECTIVE.test(said) && !reasonForVerificationWord("/vendor/example", surface, said.trim(), [])));
+  }
+
+  it("names the quotation reason and keeps the complete decimal quantity", () => {
+    const surfaces = proseAnswersOf(quote);
+    const excerpt = surfaces.find((surface) => surface.vendorQuotation)!;
+    assert.ok(excerpt);
+    const sentence = excerpt.text.match(A_SENTENCE)![0];
+    assert.equal(sentence, "Email found · 1 credit Email verified · 0.5 credit.");
+    assert.equal(reasonForVerificationWord("/vendor/example", excerpt, sentence, []), "the word is inside an attributed vendor excerpt");
+    assert.deepEqual(unexplainedIn(quote), []);
+  });
+
+  it("still rejects our own sentence on either side of the quote", () => {
+    for (const html of [`<p>${claim}</p>${quote}`, `${quote}<p>${claim}</p>`, `<p>${claim}</p>${quote}<p>${claim}</p>`,
+      quote.replace("</figure>", `<p>${claim}</p></figure>`)]) {
+      const found = unexplainedIn(html);
+      assert.ok(found.length > 0, html);
+      assert.ok(found.every((said) => said.includes("We verified Hunter")), found.join("\n"));
+    }
+  });
+
+  it("keeps the attribution caption and other blockquotes inside the claim guard", () => {
+    for (const html of [quote.replace("From example.test/pricing", claim), `<blockquote>${claim}</blockquote>`, quote.replace("free-plan-excerpt", "other-quote")]) {
+      assert.ok(unexplainedIn(html).length > 0, html);
+    }
+  });
+
+  it("does not excuse the same words in metadata or structured answers", () => {
+    for (const html of [`<meta name="description" content="${claim}">${quote}`, `<meta property="og:description" content="${claim}">${quote}`,
+      `<script type="application/ld+json">${JSON.stringify({ description: claim })}</script>${quote}`, JSON.stringify({ description: claim })]) {
+      assert.ok(unexplainedIn(html).length > 0, html);
+    }
+  });
+
+  it("separates adjacent sentences while retaining multiple decimal values", () => {
+    assert.deepEqual("Verified at 0.5 credit and 1.25 credits. We verified all listings!".match(A_SENTENCE),
+      ["Verified at 0.5 credit and 1.25 credits.", " We verified all listings!"]);
+  });
+});
 
 describe("the word verified, over every page family the sitemap publishes", () => {
   let proc: ChildProcess | null = null;
@@ -671,12 +742,8 @@ describe("the word verified, over every page family the sitemap publishes", () =
           if (!A_VERIFICATION_ADJECTIVE.test(sentence)) continue;
           carryingTheWord += 1;
           const said = sentence.trim();
-          const exempt = THE_WORD_IS_NOT_A_CLAIM_OVER_OUR_LISTINGS.find((one) => {
-            if (one.sentence) return (one.route ? one.route.test(route) : true) && one.sentence.test(said);
-            if (one.storedVerbatim !== true) return false;
-            return theWordInContext(said).some((probe) => vendorProse.some((held) => held.includes(probe)));
-          });
-          if (exempt) explainedBy.add(exempt.why);
+          const reason = reasonForVerificationWord(route, surface, said, vendorProse);
+          if (reason) explainedBy.add(reason);
           else unexplained.push(`${route} (${surface.where}): ${sentence.trim().slice(0, 200)}`);
         }
       }
