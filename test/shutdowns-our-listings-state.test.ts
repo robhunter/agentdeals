@@ -5,7 +5,7 @@ import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { statedShutdowns, type DeadlineText } from "../dist/stated-deadlines.js";
+import { statedDeadlines, statedShutdowns, type DeadlineText } from "../dist/stated-deadlines.js";
 
 const REPO = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -55,8 +55,28 @@ describe("shutdown dates stated in listings", () => {
     assert.deepEqual(dates("Retired models include these. Small: example/small on 2026-10-31. Large: example/large on 2026-11-02. The company was founded in 2020. Launch: example/new on 2026-11-03."), ["2026-10-31", "2026-11-02"]);
   });
 
-  it("excludes past events and read, check, publication and launch dates", () => {
-    assert.deepEqual(dates("The old API retired on 2026-10-20. The new API retires on 2026-10-31 (checked 2026-10-28; its post of 2026-10-27 describes the move). Read 2026-10-29, the page says the API is retired. The replacement launched on 2026-10-30."), ["2026-10-31"]);
+  it("retains past events and excludes read, check, publication and launch dates", () => {
+    assert.deepEqual(dates("The old API retired on 2026-10-20. The new API retires on 2026-10-31 (checked 2026-10-28; its post of 2026-10-27 describes the move). Read 2026-10-29, the page says the API is retired. The replacement launched on 2026-10-30."), ["2026-10-20", "2026-10-31"]);
+  });
+
+  it("keeps shutdowns on and after their stated day", () => {
+    for (const today of ["2026-10-30", "2026-10-31", "2026-11-01"]) {
+      assert.deepEqual(statedShutdowns([text("The API retires on 2026-10-31.")], today).map(entry => entry.date), ["2026-10-31"]);
+    }
+  });
+
+  it("keeps the general deadline reader future-only", () => {
+    const input = [text("The old API retired on 2026-10-20. The new API retires on 2026-10-31.")];
+    assert.deepEqual(statedDeadlines(input, [], "2026-10-21").map(entry => entry.date), ["2026-10-31"]);
+    assert.deepEqual(statedDeadlines(input, [], "2026-10-31"), []);
+    assert.deepEqual(statedDeadlines(input, [], "2026-11-01"), []);
+  });
+
+  it("separates signup closure and announcement dates from shutdown dates", () => {
+    assert.deepEqual(dates("Workflows stopped taking new signups and subscriptions on 2026-09-30 and shuts down on 2027-03-31; data is deleted by 2027-04-30."), ["2027-03-31"]);
+    assert.deepEqual(dates("The company said on 2026-10-09 that the service will keep running for six months and then shut down; it gave no exact date."), []);
+    assert.deepEqual(dates("The company said on 2026-10-09 that the service shuts down on 2027-04-09."), ["2027-04-09"]);
+    assert.deepEqual(dates("On 2026-10-31 the company retired the API."), ["2026-10-31"]);
   });
 });
 
@@ -86,6 +106,7 @@ const listings = [
   listing("First Unlisted Cloud", "The API shuts down on 2026-11-10."),
   listing("Second Unlisted Cloud", "The API shuts down on 2026-11-10."),
   listing("Retired Listing Cloud", "The legacy console shuts down on 2026-11-05.", [], "Retired"),
+  listing("Deno Deploy", "Deno said on 2026-10-09 that Deno Deploy will keep running for six months and then shut down; it gave no exact date."),
   listing("Past Cloud", "The API retired on 2026-10-20."),
   listing("Checked Cloud", "Checked 2026-11-10, the page lists a retired service."),
   listing("Published Cloud", "The post of 2026-11-10 describes the retired API."),
@@ -94,7 +115,7 @@ const listings = [
   listing("Quota Cloud", "The free plan stays until 2026-11-02, then allows 100 calls."),
   listing("apiary.io", "The legacy API shuts down on 2026-10-31."),
   listing("Prisma Accelerate", "Accelerate is retired on 2026-12-01."),
-  listing("Pipedream", "Workflows shuts down on 2027-03-31; its data is deleted by 2027-04-30."),
+  listing("Pipedream", "Workflows stopped taking new signups and subscriptions on 2026-09-30 and shuts down on 2027-03-31; its data is deleted by 2027-04-30."),
   listing("smartlook.com", "The service is discontinued on 2027-09-30."),
   listing("OpenAI", "Legacy models shut down on 2026-10-23."),
 ];
@@ -194,31 +215,40 @@ describe("the shutdown tracker includes shutdowns stated only by listings", () =
   });
 
   it("adds no second card where a record or a hand-typed card already covers the event", () => {
-    const cards = cardsOf(pages.get(clocks[0])!);
-    for (const vendor of ["apiary.io", "Prisma Accelerate", "Pipedream", "smartlook.com"]) {
-      assert.equal(cards.filter(card => card.html.includes(`https://example.com/${vendor}/notice`)).length, 1, vendor);
-      assert.ok(!cards.some(card => card.html.includes(`https://example.com/${vendor.toLowerCase().replaceAll(" ", "-")}/pricing`)), vendor);
-    }
-    assert.ok(!cards.some(card => card.html.includes("https://example.com/openai/pricing")));
-  });
-
-  it("excludes prices, quotas and metadata, and never leaves a past listing date active", () => {
     for (const day of clocks) {
       const cards = cardsOf(pages.get(day)!);
-      assert.ok(!cards.some(card => /^(Past|Checked|Published|Launched|Billing|Quota) Cloud$/.test(card.name)), day);
+      for (const vendor of ["apiary.io", "Prisma Accelerate", "Pipedream", "smartlook.com"]) {
+        assert.equal(cards.filter(card => card.html.includes(`https://example.com/${vendor}/notice`)).length, 1, vendor);
+        assert.ok(!cards.some(card => card.html.includes(`https://example.com/${vendor.toLowerCase().replaceAll(" ", "-")}/pricing`)), vendor);
+      }
+      assert.ok(!cards.some(card => card.html.includes("https://example.com/openai/pricing")));
+    }
+  });
+
+  it("archives past listing dates and excludes prices, quotas and metadata", () => {
+    for (const day of clocks) {
+      const cards = cardsOf(pages.get(day)!);
+      assert.ok(!cards.some(card => /^(Checked|Published|Launched|Billing|Quota) Cloud$|^Deno Deploy$/.test(card.name)), day);
+      assert.ok(!cards.some(card => card.name === "Pipedream" && card.date === "September 30, 2026"), day);
+      const past = cards.filter(card => card.name === "Past Cloud");
+      assert.equal(past.length, 1, day);
+      assert.equal(past[0].section, "completed", day);
       for (const card of cards.filter(card => card.section !== "completed")) assert.ok(Date.parse(card.date) >= Date.parse(day), `${day}: ${card.name}`);
       for (const [name, date] of [["Ona", "2026-10-31"], ["Mistral AI", "2026-10-31"], ["xAI", "2026-11-02"]]) {
-        assert.equal(cards.filter(card => card.name === name).length, date > day ? 1 : 0, `${day}: ${name}`);
+        const found = cards.filter(card => card.name === name);
+        assert.equal(found.length, 1, `${day}: ${name}`);
+        assert.equal(found[0].section, date < day ? "completed" : "imminent", `${day}: ${name}`);
+        if (date === day) assert.ok(found[0].html.includes(">Today</span>"), `${day}: ${name}`);
       }
     }
   });
 
-  it("states when quoted listing entries leave and keeps the recorded-shutdown archive link", () => {
+  it("states when listing shutdowns happen and keeps the archive link", () => {
     for (const day of clocks) {
       const html = pages.get(day)!;
       const notice = html.match(/<p class="subtitle dated-rule">([\s\S]*?)<\/p>/)?.[1] ?? "";
-      assert.ok(textOf(notice).includes(`Entries quoted from listings appear only while the stated date is later than ${day}.`));
-      assert.ok(textOf(notice).replace(/ \./g, ".").includes("Recorded shutdowns move to Recently Completed, below."));
+      assert.ok(textOf(notice).includes("Shutdowns quoted from listings are marked Today on their stated date."));
+      assert.ok(textOf(notice).replace(/ \./g, ".").includes("After their stated date, shutdowns move to Recently Completed, below."));
       assert.ok(notice.includes('href="#completed"'));
       assert.ok(notice.includes('href="/changes"'));
       assert.ok(!notice.includes("Nothing is removed"));

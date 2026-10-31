@@ -27368,9 +27368,9 @@ ${buildGlobalNav("guides")}
   <h1>${escHtmlServer(title)}</h1>
   <p class="subtitle">${escHtmlServer(subtitle)}</p>
   ${datedSectionNoticeHtml(
-    `A shutdown is grouped by how many days its deadline is from ${today.toISOString().slice(0, 10)}: 30 or fewer is Imminent, up to 90 is Upcoming, beyond that is Later. Entries quoted from listings appear only while the stated date is later than ${utcToday()}.`,
+    `A shutdown is grouped by how many days its deadline is from ${today.toISOString().slice(0, 10)}: 30 or fewer is Imminent, up to 90 is Upcoming, beyond that is Later. Shutdowns quoted from listings are marked Today on their stated date.`,
     [
-      { when: "Recorded shutdowns move to", text: "Recently Completed, below", href: "#completed" },
+      { when: "After their stated date, shutdowns move to", text: "Recently Completed, below", href: "#completed" },
       { when: "Every pricing change we hold for these vendors is in", text: "the full change log", href: "/changes" },
     ],
     escHtmlServer,
