@@ -5190,7 +5190,7 @@
       "source_check": {
         "checked": "2026-10-24",
         "outcome": "ok",
-        "detail": "the page names Stripe Atlas as \"stripe atlas\" and states \"$500\" and \"$50,000\" and \"$2,500\" and \"$100\""
+        "detail": "the page names Stripe Atlas as \"stripe atlas\" and states \"$500\" and \"$2,500\" and \"$100\""
       }
     },
     {
@@ -34221,7 +34221,7 @@
     {
       "vendor": "Claude Code",
       "category": "AI Coding",
-      "description": "Agentic coding tool by Anthropic: it reads a codebase, edits files, runs commands and works with development tools, in the terminal, IDEs, a desktop app and the browser. No free plan: \"Claude Code is included in all paid plans\", and Claude's Free plan does not include it. Pro is $20/month billed monthly ($17/month billed annually), Max is $100/month (5x Pro usage), Ultra is $200/month (10x Pro usage every week, with no 5-hour limit for verified accounts), Team Standard seats are $25/seat billed monthly ($20 billed annually), and Enterprise is \"$20 per seat per month plus usage billed at API rates\". Plan usage is shared with Claude chat. At the limit, paid plans can turn on usage credits billed at standard API rates, or use an Anthropic API key billed pay-as-you-go.",
+      "description": "Agentic coding tool by Anthropic: it reads a codebase, edits files, runs commands and works with development tools, in the terminal, IDEs, a desktop app and the browser. No free plan: \"Claude Code is included in all paid plans\", and Claude's Free plan does not include it. Pro is $20/month billed monthly ($17/month billed annually), Max is $100/month (5x Pro usage), Ultra is $200/month (10x Pro usage every week, with no 5-hour limit for accounts that complete Anthropic's verification), Team Standard seats are $25/seat billed monthly ($20 billed annually), and Enterprise is \"$20 per seat per month plus usage billed at API rates\". Plan usage is shared with Claude chat. At the limit, paid plans can turn on usage credits billed at standard API rates, or use an Anthropic API key billed pay-as-you-go.",
       "tier": "Paid",
       "url": "https://docs.anthropic.com/en/docs/claude-code/overview",
       "tags": [
