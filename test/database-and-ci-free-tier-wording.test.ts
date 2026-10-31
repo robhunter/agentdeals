@@ -104,7 +104,6 @@ const CARD_LABELS: Record<string, [string, string][]> = {
 };
 
 const COST_TABLES_WITH_STATED_KEY_COST_FACTORS: Record<string, string[]> = {
-  "/database-pricing": ["Weaviate", "PlanetScale", "MongoDB Atlas"],
   "/ci-cd-pricing": ["Semaphore CI", "Azure DevOps", "Woodpecker CI"],
 };
 
@@ -273,6 +272,78 @@ describe("database, vector and CI/CD pricing pages state each vendor's plan as t
 
   it("gives the estimators PlanetScale's cheapest plans and the note on what they price", () => {
     assert.deepStrictEqual(["/estimate", "/budget-builder"].filter((page) => !html.get(page)!.includes(PLANETSCALE_ESTIMATE)), []);
+  });
+
+  it("prints every database key cost factor in full", () => {
+    const rows = costTableRows("/database-pricing");
+    assert.ok(rows.length > 20);
+    assert.deepStrictEqual(rows.filter((row) => row[3].endsWith("...")).map((row) => row[0]), []);
+    const kv = rows.filter(([name]) => name === "Cloudflare KV");
+    assert.strictEqual(kv.length, 1);
+    assert.strictEqual(kv[0][3], "Eventually consistent — writes take up to 60 seconds to propagate globally. 1,000 writes/day is very limited for write-heavy use cases. Values limited to 25 MiB. Requires Cloudflare Workers runtime.");
+  });
+
+  it("states the corrected database free terms on each vendor card", () => {
+    const markup = html.get("/database-pricing")!;
+    const expected: Record<string, string[]> = {
+      convex: ["0.5 GB database storage, 1 GB file storage and 1M function calls a month, for 1–6 developers"],
+      upstash: ["Redis: 250 MB", "Kafka is no longer offered: it is not on upstash.com/pricing (read 2026-10-31)."],
+      "prisma-accelerate": ["60,000 cache operations a month"],
+      "influxdb-cloud": ["Cloud Serverless runs on the InfluxDB 3 storage engine."],
+      "couchbase-capella": ["One free operational cluster per organization: one node with 8 GB, with SQL, key-value, vector and full-text search, and App Services. No credit card."],
+    };
+    for (const [slug, lines] of Object.entries(expected)) {
+      const cards = [...markup.matchAll(/<div class="diff-card"[^>]*>([\s\S]*?)<\/div>/g)].filter(([, card]) => card.includes(`href="/vendor/${slug}"`));
+      assert.strictEqual(cards.length, 1, slug);
+      const card = textOf(cards[0][1]);
+      for (const line of lines) assert.ok(card.includes(line), `${slug}: ${line}`);
+    }
+  });
+
+  it("puts the corrected database allowances and instance price in their columns", () => {
+    const markup = html.get("/database-pricing")!;
+    for (const [section, vendor, column, expected] of [
+      ["pricing-table", "Convex", "Free Storage", "0.5 GB database, 1 GB files"],
+      ["free-tiers", "Convex", "Free Storage", "0.5 GB database, 1 GB files"],
+      ["pricing-table", "Upstash", "Type", "Redis + QStash"],
+      ["pricing-table", "Upstash", "Free Storage", "250 MB (Redis)"],
+      ["free-tiers", "Upstash", "Free Storage", "250 MB (Redis)"],
+      ["pricing-table", "Prisma Accelerate", "Free Connections", "60,000 operations/month"],
+      ["pricing-table", "Couchbase Capella", "Free Storage", "8 GB (1 node)"],
+      ["free-tiers", "Couchbase Capella", "Free Storage", "8 GB (1 node)"],
+      ["cost-analysis", "SurrealDB Cloud", "Team /mo", "From $0.021/hr per extra instance"],
+    ]) {
+      const at = markup.indexOf(`id="${section}"`);
+      assert.ok(at >= 0, section);
+      const table = markup.slice(at).match(/<table\b[^>]*>([\s\S]*?)<\/table>/);
+      assert.ok(table, section);
+      const headers = [...table[1].matchAll(/<th\b[^>]*>([\s\S]*?)<\/th>/g)].map(([, cell]) => textOf(cell));
+      const index = headers.indexOf(column);
+      assert.ok(index >= 0, `${section}: ${column}: ${headers}`);
+      const rows = rowsOf(table[1]).filter(([name]) => name === vendor);
+      assert.strictEqual(rows.length, 1, `${section}: ${vendor}`);
+      assert.strictEqual(rows[0][index], expected, `${section}: ${vendor}: ${column}`);
+    }
+  });
+
+  it("prints the corrected complete cost notes without the withdrawn sentences", () => {
+    const rows = costTableRows("/database-pricing");
+    const stated: Record<string, string> = {
+      Convex: "Proprietary query language (not SQL). Vendor lock-in — no standard protocol for data export. Limited community compared to PostgreSQL ecosystem.",
+      Upstash: "500K commands/month is tight for production use. Per-command pricing can spike with chatty applications. REST-based means higher latency than native Redis protocol.",
+      "Prisma Accelerate": "60,000 cache operations a month on every plan, with no overage rate on Free; the cache retires on 2026-12-01. Requires Prisma ORM — doesn't work with other query builders. Cache invalidation complexity.",
+      "Couchbase Capella": "The free cluster is one 8 GB node. Basic clusters start at 1 node. Multi-model is powerful but adds complexity. Smaller community than MongoDB.",
+      "Redis Cloud": "30 MB is extremely small — barely enough for caching. Redis moved to SSPL/RSALv2 in March 2024; Redis 8 and later can also be used under AGPLv3, an open source license. Modules like RedisSearch and RedisJSON only on paid plans. Consider Upstash or Valkey/KeyDB as alternatives.",
+      "Amazon DynamoDB": "Capacity unit pricing is confusing — WCUs and RCUs differ based on item size and consistency. On-demand pricing is simpler but costs more than provisioned capacity at steady load; AWS halved on-demand prices on 2024-11-01. Global tables double the WCU cost. DynamoDB Streams charges separately.",
+    };
+    for (const [vendor, expected] of Object.entries(stated)) {
+      const found = rows.filter(([name]) => name === vendor);
+      assert.strictEqual(found.length, 1, vendor);
+      assert.strictEqual(found[0][3], expected, vendor);
+    }
+    const text = textOf(html.get("/database-pricing")!);
+    assert.ok(text.includes("choose a service without pausing (DynamoDB or Nile)."));
+    for (const old of ["512 MB database + file storage, 2 free projects", "Redis + Kafka + QStash", "Redis: 256 MB", "Kafka: removed from free tier.", "1,000 cached queries/day", "InfluxDB 3.0 (new engine) in preview.", "Free tier cluster with shared resources.", "(CockroachDB, DynamoDB)"]) assert.ok(!text.includes(old), old);
   });
 
   it("still cuts every other row's key cost factor at 80 characters", () => {

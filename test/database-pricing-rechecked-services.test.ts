@@ -43,7 +43,7 @@ const STATED = [
   "D1 charges no egress and nothing extra for read replicas; Turso closed edge replicas to new users in January 2025.",
   "Enough for about 200M requests/month on provisioned capacity. A Free-plan AWS account closes after 6 months unless upgraded.",
   "Free instances pause after 72 hours idle and are deleted after 30 days paused.",
-  "Retires December 1, 2026. 1,000 cached queries/day",
+  "Retires December 1, 2026. 60,000 cache operations a month",
   "Turns off after 72 hours idle (data kept); deleted after 30 days idle.",
   "Free cluster with up to 5 collections and 5 GB storage; suspended after 7 days of inactivity.",
 ];
@@ -78,7 +78,7 @@ const ROWS: string[][] = [
 
 const KEY_COST_FACTOR_OPENS: Record<string, string> = {
   "Zilliz Cloud": "5-collection limit on free tier; idle clusters suspend after 7 days.",
-  "Couchbase Capella": "Free tier is minimal shared resources. Basic clusters start at 1 node.",
+  "Couchbase Capella": "The free cluster is one 8 GB node. Basic clusters start at 1 node.",
 };
 
 function decode(text: string): string {
