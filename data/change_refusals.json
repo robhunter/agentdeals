@@ -610,6 +610,18 @@
     {
       "vendor": "asgardeo.io",
       "change_type": "limits_reduced",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-10-06 (repeats_a_refused_reading) claimed the same change, limits_reduced, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "The pricing information is not directly stated on the page. The page mentions a 'generous free-forever tier' and a '30-day full-feature trial', but does not specify limits like 7,500 Consumer MAUs or 250 B2B MAUs. It also does not mention the number of social login providers included in the free tier.",
+      "previous_state": "Seamless Integration of SSO, MFA, passwordless auth and more. Includes SDKs for frontend and backend apps. Free tier: 7,500 Consumer MAUs (B2C), 250 B2B MAUs, 2 social login providers.",
+      "current_state": "The page states a 'generous free-forever tier' is available with no specific limits mentioned.",
+      "source_url": "https://wso2.com/asgardeo",
+      "category": "Auth",
+      "refused_date": "2026-10-31"
+    },
+    {
+      "vendor": "asgardeo.io",
+      "change_type": "limits_reduced",
       "reason": "repeats_a_refused_reading",
       "detail": "the reading of this page refused on 2026-09-17 (dangling_reference) stated the same figure, so the page showed these terms before the date this record gives",
       "summary": "The free tier information is no longer explicitly stated on the pricing page. The page highlights a 'generous free-forever tier' but does not specify limits like MAUs or social login providers. It mentions starting with a 30-day full-feature trial and PAYG/enterprise plans.",
@@ -1361,6 +1373,18 @@
       "refused_date": "2026-10-10"
     },
     {
+      "vendor": "Canva",
+      "change_type": "limits_reduced",
+      "reason": "states_no_difference",
+      "detail": "the summary states that the page agrees with what we hold, and names no figure the stored description did not already carry",
+      "summary": "The free tier still exists, but the AI access is more limited than previously stated. The stored information indicates 'AI usage' and 'Up to 20 Standard or Premium AI uses', while the current pricing page states 'Limited access to Standard and Premium AI'. Additionally, the page details various AI tools with different access levels depending on the plan, and introduces the 'AI Pass' add-on for increased AI usage.",
+      "previous_state": "With Free, get: Easy drag-and-drop editor and 1,000+ design types 1.6M+ templates to start fast 4.7M+ photos, videos, graphics, and audio 1 Brand Kit (3 colors only) Ad insights and AI ad creation^ Access to Affinity 5GB of cloud storage AI usage Up to 20 Standard or Premium AI uses^",
+      "current_state": "With Free, get: Easy drag-and-drop editor and 1,000+ design types 1.6M+ templates to start fast 4.7M+ photos, videos, graphics, and audio 1 Brand Kit (3 colors only) Ad insights and AI ad creation^ Access to Affinity 5GB of cloud storage AI usage Limited access to Standard and Premium AI^",
+      "source_url": "https://www.canva.com/pricing/",
+      "category": "Design",
+      "refused_date": "2026-10-31"
+    },
+    {
       "vendor": "Carbon.now.sh",
       "change_type": "limits_reduced",
       "reason": "no_price_signal",
@@ -1834,6 +1858,18 @@
       "refused_date": "2026-10-01"
     },
     {
+      "vendor": "Cloudflare for Startups",
+      "change_type": "limits_increased",
+      "reason": "confirmed_unchanged",
+      "detail": "The stored description already states Tier 1 credits are $350K and Tier 3 is $10K. The Workers AI limits are consistent with the stored description (though less detail is given on the current page). The exclusion of AI Gateway was already stated.",
+      "summary": "Tier 1 credits increased from $250K to $350K, Tier 3 from $5K to $10K. Workers AI limits are now $2.5K for Tier 3, $10K for Tier 2, and $50K for Tier 1. AI Gateway is now explicitly excluded from credit coverage.",
+      "previous_state": "Credits for one year or until used up, in three tiers: Tier 3 gives $10K to bootstrapped or self-funded startups with under $1M raised; Tier 2 ($100K) and Tier 1 ($350K) are for startups funded by an affiliated partner, Tier 1 with $5M+ raised. Credits cover usage-based services such as Workers and R2 (R2 up to $10K; Workers AI up to $2.5K, $10K or $50K by tier). AI Gateway is not covered. Core security and networking features are free at every tier.",
+      "current_state": "Tier 1 offers $350k in credits, bi-weekly Solutions Architect office hours, and priority technical support. Workers AI is covered up to $50,000. AI Gateway is temporarily not covered by credits.",
+      "source_url": "https://www.cloudflare.com/startups/",
+      "category": "Startup Perks",
+      "refused_date": "2026-10-31"
+    },
+    {
       "vendor": "Cloudflare KV",
       "change_type": "limits_reduced",
       "reason": "restates_stored_quantities",
@@ -1893,6 +1929,18 @@
       "source_url": "https://one.one.one.one/",
       "category": "VPN & Privacy",
       "refused_date": "2026-10-15"
+    },
+    {
+      "vendor": "Cloudflare Workers AI",
+      "change_type": "restriction",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this page refused on 2026-09-13 (same_transition_graded_differently) stated the same 3 figures, so the page showed these terms before the date this record gives",
+      "summary": "The pricing page confirms the 10,000 Neurons per day free allocation and $0.011/1,000 Neurons pricing for usage above that limit. However, it explicitly states that several models, including @cf/moonshotai/kimi-k2.6, require either the Workers Paid plan or prepaid AI Gateway credits. This aligns with the stored information but is now more prominently highlighted. The page also lists pricing for many more models, including embeddings and image models, which were not in the original stored information.",
+      "previous_state": "Workers AI runs AI models on Cloudflare's global network. Every account gets 10,000 Neurons per day at no charge, reset daily at 00:00 UTC; on the Workers Free plan, requests beyond that fail until the reset. On the Workers Paid plan (from $5 per month), usage above 10,000 Neurons per day costs $0.011 per 1,000 Neurons. Seven models, including @cf/moonshotai/kimi-k2.6, @cf/zai-org/glm-5.3 and @cf/deepseek-ai/deepseek-v4-pro-0813, require the Workers Paid plan or prepaid AI Gateway credits. On 2026-05-30, Cloudflare deprecated 18 models and told users to remove references to them: @cf/meta/llama-3.1-8b-instruct, @cf/meta/llama-3.1-8b-instruct-awq, @cf/meta/llama-3.1-70b-instruct, @cf/meta/llama-3-8b-instruct, @cf/meta/llama-3-8b-instruct-awq, @hf/meta-llama/meta-llama-3-8b-instruct, @cf/meta/llama-2-7b-chat-int8, @cf/meta/llama-2-7b-chat-fp16, @cf/mistral/mistral-7b-instruct-v0.1, @hf/mistral/mistral-7b-instruct-v0.2, @hf/google/gemma-7b-it, @cf/google/gemma-3-12b-it, @hf/nousresearch/hermes-2-pro-mistral-7b, @cf/microsoft/phi-2, @cf/defog/sqlcoder-7b-2, @cf/unum/uform-gen2-qwen-500m, @cf/facebook/bart-large-cnn and @cf/moonshotai/kimi-k2.5. On 2026-10-15, Cloudflare's model catalog still lists @cf/meta/llama-3.1-8b-instruct-fp8, @cf/meta/llama-3.3-70b-instruct-fp8-fast and the -lora variants, but no longer lists @cf/meta/llama-3.1-8b-instruct-fast. Cloudflare's suggested replacements are @cf/zai-org/glm-4.7-flash, @cf/google/gemma-4-26b-a4b-it and @cf/moonshotai/kimi-k2.6. Since 2026-05-30, requests to @cf/moonshotai/kimi-k2.5 go to @cf/moonshotai/kimi-k2.6, which costs more and requires the Workers Paid plan or prepaid AI Gateway credits; without them, requests get HTTP 403 (error 5035).",
+      "current_state": "Workers Free includes 10,000 Neurons per day. Usage above that limit costs $0.011 / 1,000 Neurons. Some models require the Workers Paid plan or prepaid AI Gateway credits.",
+      "source_url": "https://developers.cloudflare.com/workers-ai/platform/pricing/",
+      "category": "AI / ML",
+      "refused_date": "2026-10-31"
     },
     {
       "vendor": "Cloudflare Workers AI",
@@ -2414,15 +2462,15 @@
     },
     {
       "vendor": "Cronhooks",
-      "change_type": "pricing_restructured",
+      "change_type": "restriction",
       "reason": "repeats_a_refused_reading",
-      "detail": "the reading of this page refused on 2026-09-15 (measures_no_change) stated the same 2 figures, so the page showed these terms before the date this record gives",
-      "summary": "The free plan now has a limit of 5 ad-hoc schedules, which matches the stored information. However, the page also details several paid tiers with varying schedule limits and features. The free plan is explicitly listed as 'Just for playing around' and includes email alerts and unlimited team members.",
+      "detail": "the reading of this page refused on 2026-10-06 (repeats_a_refused_reading) stated the same 2 figures, so the page showed these terms before the date this record gives",
+      "summary": "The free plan now has a limit of 5 ad-hoc schedules, which matches the stored information. However, the page details a free plan with only ad-hoc schedules, while the stored information doesn't specify this restriction.",
       "previous_state": "Schedule on-time or recurring webhooks. The free plan allows 5 ad-hoc schedules.",
-      "current_state": "The free plan costs $0/month and includes 5 ad-hoc schedules, email alerts, and unlimited team members.",
+      "current_state": "The free plan costs $0/month, allows 5 schedules, and is limited to ad-hoc schedules only. It includes email alerts and unlimited team members.",
       "source_url": "https://cronhooks.io/",
       "category": "Dev Utilities",
-      "refused_date": "2026-10-06"
+      "refused_date": "2026-10-31"
     },
     {
       "vendor": "Cronitor",
@@ -3657,13 +3705,13 @@
       "vendor": "Fizzy",
       "change_type": "limits_reduced",
       "reason": "repeats_a_refused_reading",
-      "detail": "the reading of this page refused on 2026-10-29 (repeats_a_refused_reading) stated the same figure, so the page showed these terms before the date this record gives",
-      "summary": "The stored deal info mentions a limit of 1000 items, but the pricing page states that Fizzy is 'totally free' with a 1 GB file storage limit.",
+      "detail": "the reading of this page refused on 2026-10-30 (repeats_a_refused_reading) stated the same figure, so the page showed these terms before the date this record gives",
+      "summary": "The stored deal info mentions a limit of 1000 items, but the pricing page states that Fizzy is 'entirely free' with a file space limit of 1 GB.",
       "previous_state": "Kanban-based platform for project management and issue tracking. Create public boards, set up webhooks, use card stamping, and track unlimited users — free for up to 1000 items.",
-      "current_state": "Fizzy is entirely free and is subsidized by Basecamp and HEY. It limits file space usage to 1 GB.",
+      "current_state": "Fizzy is entirely free and subsidized by Basecamp and HEY, with a file space limit of 1 GB.",
       "source_url": "https://www.fizzy.do/",
       "category": "Project Management",
-      "refused_date": "2026-10-30"
+      "refused_date": "2026-10-31"
     },
     {
       "vendor": "Flagsmith",
@@ -4236,6 +4284,19 @@
     },
     {
       "vendor": "GitHub Actions",
+      "change_type": "pricing_restructured",
+      "reason": "same_transition_graded_differently",
+      "detail": "graded as GitHub Actions|pricing_restructured|2026-09-02|https://docs.github.com/en/billing/managing-billing-for-github-actions/about-billing-for-github-actions, a record we withdrew",
+      "summary": "The free tier for GitHub Actions now provides a monetary allowance ($12 USD for Free, $18 USD for Pro, $300 USD for Enterprise) instead of a fixed number of minutes. Artifact storage limits have also changed (500MB Free, 1GB Pro, 50GB Enterprise). Cache storage is now 10GB per repository for all plans.",
+      "previous_state": "Free CI/CD for public repos (unlimited minutes). Private repos: 2,000 min/mo GitHub-hosted runners, 500 MB artifact storage, 10 GB cache/repo. Self-hosted runners remain free — planned $0.002/min charge was postponed indefinitely after community backlash (March 2026). Hosted runner prices reduced 39% (Jan 2026)",
+      "current_state": "The GitHub Free plan includes $12 USD of included compute usage per month, 500 MB of artifact storage, and 10 GB of cache storage per repository.",
+      "source_url": "https://docs.github.com/en/billing/managing-billing-for-github-actions/about-billing-for-github-actions",
+      "category": "CI/CD",
+      "refused_date": "2026-10-31",
+      "collided_with": "GitHub Actions|pricing_restructured|2026-09-02|https://docs.github.com/en/billing/managing-billing-for-github-actions/about-billing-for-github-actions"
+    },
+    {
+      "vendor": "GitHub Actions",
       "change_type": "limits_reduced",
       "reason": "states_no_difference",
       "detail": "limits_reduced claimed, and every figure the summary carried sat in a clause about our own record rather than about the vendor's terms",
@@ -4257,6 +4318,19 @@
       "source_url": "https://github.com/features/packages",
       "category": "Container Registry",
       "refused_date": "2026-10-09"
+    },
+    {
+      "vendor": "GitHub Copilot",
+      "change_type": "pricing_restructured",
+      "reason": "same_transition_graded_differently",
+      "detail": "graded as GitHub Copilot|pricing_restructured|2026-10-05|https://github.com/features/copilot, a record we withdrew",
+      "summary": "The free tier now has access to Haiku 4.5, GPT-5 mini, and more, and explicitly states no credit card is required.",
+      "previous_state": "AI coding assistant by GitHub. Copilot Free is $0 with no credit card: 2,000 code completions a month, a limited monthly allowance of GitHub AI Credits for chat and agent features, and models through auto model selection only. Copilot Student is free for verified students. Paid plans include a monthly allowance of AI credits: Pro $10 (1,500 credits), Pro+ $39 (7,000) and Max $100 (20,000); Business $19 (1,900) and Enterprise $39 (3,900) per seat. Code completions are unlimited on paid plans, and usage beyond an allowance costs $0.01 per AI credit.",
+      "current_state": "The Free plan costs $0 USD and includes 2,000 completions per month, access to Haiku 4.5, GPT-5 mini, and more, Copilot CLI, and Community Support. No credit card is required.",
+      "source_url": "https://github.com/features/copilot",
+      "category": "AI Coding",
+      "refused_date": "2026-10-31",
+      "collided_with": "GitHub Copilot|pricing_restructured|2026-10-05|https://github.com/features/copilot"
     },
     {
       "vendor": "GitHub Models",
@@ -6144,6 +6218,18 @@
     {
       "vendor": "LiveKit",
       "change_type": "pricing_restructured",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-10-06 (repeats_a_refused_reading) claimed the same change, pricing_restructured, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "The 'Build' plan is now a free tier with different limits and features. The free tier includes 1,000 agent session minutes, 5 concurrent agent sessions, and 100 concurrent connections. It also includes 1 free US phone number. The stored deal info stated 5,000 WebRTC minutes/mo, 1,000 agent session minutes/mo, 5 concurrent agent sessions, 100 concurrent connections, and 1 free US phone number. The page now lists per-minute costs for various services like LLM, STT, and TTS.",
+      "previous_state": "Real-time audio/video and AI agent infrastructure — 5,000 WebRTC minutes/mo, 1,000 agent session minutes/mo, 5 concurrent agent sessions, 100 concurrent connections, 1 free US phone number. Open source",
+      "current_state": "The Build plan is free and includes Agent deployment, Agent observability, Agent simulations, Inference credits, Global edge network, Telephony (1 free number), Session metrics and analytics, and Community support. It offers 1,000 agent session minutes, 5 concurrent agent sessions, and 100 concurrent connections.",
+      "source_url": "https://livekit.io/pricing",
+      "category": "Communication",
+      "refused_date": "2026-10-31"
+    },
+    {
+      "vendor": "LiveKit",
+      "change_type": "pricing_restructured",
       "reason": "repeats_a_refused_reading",
       "detail": "the reading of this page refused on 2026-10-04 (repeats_a_refused_reading) stated the same 6 figures, so the page showed these terms before the date this record gives",
       "summary": "The 'Build' plan is now a $0/mo plan with specific included limits, whereas the stored information indicated it was a free tier. The limits for agent session minutes, concurrent agent sessions, and concurrent connections have been clarified and quantified. The inclusion of a free US phone number remains.",
@@ -6323,6 +6409,18 @@
       "category": "Error Tracking",
       "refused_date": "2026-09-26",
       "collided_with": "LogRocket|free_tier_removed|2026-08-28|https://logrocket.com/pricing"
+    },
+    {
+      "vendor": "Logto",
+      "change_type": "pricing_restructured",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-10-06 (repeats_a_refused_reading) claimed the same change, pricing_restructured, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "The Free tier still exists with the same MAU and token limits, but several features previously listed as included in the free tier (RBAC, MFA, Organizations) are now listed as paid add-ons. The Pro tier is now $24/month and includes 50K free tokens, then billed by usage.",
+      "previous_state": "Open-source identity solution — Free tier is $0/month for up to 50,000 MAU and 50K tokens. Includes user authentication, machine-to-machine apps, account APIs, audit logs, and user management. Additional features like RBAC, MFA, and Organizations are paid add-ons.",
+      "current_state": "The Free tier is $0/month for up to 50,000 MAU and 50K tokens. The Pro tier starts at $24/month and includes 50K free tokens, then billed by usage. Add-ons like RBAC, MFA, and Organizations are billed separately.",
+      "source_url": "https://logto.io/pricing",
+      "category": "Auth",
+      "refused_date": "2026-10-31"
     },
     {
       "vendor": "Logto",
@@ -6579,6 +6677,18 @@
       "source_url": "https://www.mailinator.com/",
       "category": "Email",
       "refused_date": "2026-09-11"
+    },
+    {
+      "vendor": "mailsac.com",
+      "change_type": "limits_reduced",
+      "reason": "repeats_a_refused_reading",
+      "detail": "the reading of this vendor refused on 2026-10-06 (unquantified_limit) stated the same current state, word for word",
+      "summary": "The free tier now includes only one private address, and paid plans start at $18/month for custom test domains. The API limit of 1,500 monthly API calls is no longer explicitly mentioned.",
+      "previous_state": "Free API for temporary email testing, free public email hosting, outbound capture, email-to-slack/websocket/webhook (1,500 monthly API limit)",
+      "current_state": "The free plan includes one private address. Sending to @mailsac.com addresses is public and subject to throttling.",
+      "source_url": "https://mailsac.com",
+      "category": "Email",
+      "refused_date": "2026-10-31"
     },
     {
       "vendor": "mailsac.com",
@@ -7274,6 +7384,18 @@
     {
       "vendor": "Neo4j AuraDB",
       "change_type": "limits_reduced",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-10-06 (unquantified_limit) claimed the same change, limits_reduced, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "The free tier now has limits on node and relationship counts (up to 200,000 nodes and 400,000 relationships), which were not mentioned in the stored deal info.",
+      "previous_state": "Graph database cloud service — free tier: single database, up to 200,000 nodes and 400,000 relationships. Full Cypher query language support. No credit card required",
+      "current_state": "AuraDB Free starts at $0 and includes limits on node and relationship counts.",
+      "source_url": "https://neo4j.com/pricing/",
+      "category": "Databases",
+      "refused_date": "2026-10-31"
+    },
+    {
+      "vendor": "Neo4j AuraDB",
+      "change_type": "limits_reduced",
       "reason": "unquantified_limit",
       "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (200,000 nod, 400,000 relationship)",
       "summary": "The free tier now has limits on node and relationship counts (up to 200,000 nodes and 400,000 relationships), and does not include multiple databases per instance.",
@@ -7426,6 +7548,18 @@
       "source_url": "https://northflank.com/pricing",
       "category": "Cloud Hosting",
       "refused_date": "2026-10-03"
+    },
+    {
+      "vendor": "Notion",
+      "change_type": "limits_reduced",
+      "reason": "confirmed_unchanged",
+      "detail": "The stored description already states a block limit for workspaces with two or more members.",
+      "summary": "The free plan now has a block limit for 2+ members.",
+      "previous_state": "Notion Free is $0 per member a month. Workspaces with one member have unlimited pages and blocks, while workspaces with two or more members have a block limit. The Free plan includes file uploads up to 5 MB per file, 7 days of page history, and 10 external guests. It also includes a trial of Notion AI, basic forms, basic sites, Notion Calendar, and databases. Plus costs $10 per seat a month and provides unlimited file uploads, 30 days of page history, and unlimited guests.",
+      "current_state": "On the Free plan, pages & blocks are limited for 2+ members. You can upload images, videos and file attachments up to 5 MB each.",
+      "source_url": "https://www.notion.com/pricing",
+      "category": "Productivity & Notes",
+      "refused_date": "2026-10-31"
     },
     {
       "vendor": "Notion",
@@ -10233,6 +10367,18 @@
     {
       "vendor": "StatusCake",
       "change_type": "limits_reduced",
+      "reason": "repeats_a_refused_claim",
+      "detail": "the reading of this vendor refused on 2026-10-06 (repeats_a_refused_reading) claimed the same change, limits_reduced, against the same stored description, and the two readings state different figures, so the vendor may have changed since",
+      "summary": "The free tier now includes alerts through integrations, but no longer includes a page speed monitor, domain monitor, or SSL monitor. The test interval for uptime monitors is 5 minutes.",
+      "previous_state": "Uptime monitoring — 10 monitors, 5-min intervals, 1 page speed monitor, 1 domain monitor, 1 SSL monitor, email alerts, basic integrations",
+      "current_state": "The Free plan includes 10 Uptime Monitors, 5 Mins Test Intervals, 1 Page Speed Monitor, 1 Domain Monitor, 1 SSL Monitor, Alerts through Integrations.",
+      "source_url": "https://www.statuscake.com/pricing/",
+      "category": "Monitoring",
+      "refused_date": "2026-10-31"
+    },
+    {
+      "vendor": "StatusCake",
+      "change_type": "limits_reduced",
       "reason": "repeats_a_refused_reading",
       "detail": "the reading of this page refused on 2026-09-18 (same_transition_graded_differently) stated the same 6 figures, so the page showed these terms before the date this record gives",
       "summary": "The free tier now includes server monitoring (3 tests) and SMS credits, but the test intervals for uptime monitoring are now 5 minutes, and the page speed monitor is limited to 1.",
@@ -12302,13 +12448,13 @@
       "vendor": "Zoho Meeting",
       "change_type": "limits_reduced",
       "reason": "repeats_a_refused_reading",
-      "detail": "the reading of this page refused on 2026-09-17 (measures_the_opposite) stated the same 2 figures, so the page showed these terms before the date this record gives",
-      "summary": "The free tier now has a 60-minute meeting limit and supports up to 100 participants, whereas the stored information stated up to 3 meeting participants and no time limit.",
+      "detail": "the reading of this page refused on 2026-10-06 (repeats_a_refused_reading) stated the same 2 figures, so the page showed these terms before the date this record gives",
+      "summary": "The free tier now has a 60-minute meeting limit and supports up to 100 participants, whereas the stored deal info stated unlimited meetings and 3 participants/10 webinar attendees.",
       "previous_state": "Meetings with upto 3 meeting participants & 10 Webinar attendees.",
-      "current_state": "The free plan offers up to 60 minutes of meetings and supports 100 meeting participants.",
+      "current_state": "Free plan offers up to 60 minutes of meetings and 100 meeting participants.",
       "source_url": "https://zoho.com/meeting",
       "category": "Video",
-      "refused_date": "2026-10-06"
+      "refused_date": "2026-10-31"
     },
     {
       "vendor": "Zoho Projects",

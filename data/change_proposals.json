@@ -1,5 +1,116 @@
 {
-  "proposals": [],
+  "proposals": [
+    {
+      "proposal_id": "2026-10-31/foursquare/limits_increased",
+      "proposed_on": "2026-10-31",
+      "vendor": "Foursquare",
+      "change_type": "limits_increased",
+      "date": "2026-10-31",
+      "date_source": "discovered",
+      "summary": "The free tier for Places API Pro endpoints has been updated. The page now states 10,000 free calls on Pro endpoints. Previously 500 free calls.",
+      "tier": "Places API",
+      "tier_direction": "widened",
+      "previous_state": "Location discovery, venue search, and context-aware content. The first 500 Pro endpoint calls each month are free. Pro endpoints are Place Search, Place Details, Autocomplete, Place Match and Geotagging Candidates with default fields. Premium endpoints are Tips, Photos, and Pro endpoints when requested with premium fields. They have no free calls. The first 100,000 each month cost $18.75 per 1,000 calls. Places API Pro endpoints: 0-500 Calls $0.00 CPM, 501 to 100,000 Calls $15.00 CPM, 100,001 to 500,000 Calls $12.00 CPM, 500,001+ Calls $9.00 CPM. Places API Premium endpoints: 0-100,000 Calls $18.75 CPM, 100,001 to 500,000 Calls $15.00 CPM, 500,001+ Calls $11.25 CPM.",
+      "current_state": "Enjoy up to 10,000 free calls on Pro endpoints.",
+      "impact": "high",
+      "source_url": "https://foursquare.com/pricing/",
+      "category": "Maps/Geolocation",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-10-31",
+      "restatement": [
+        {
+          "url": "https://foursquare.com/pricing/",
+          "refused": "reading_drops_a_figure_our_source_check_found",
+          "figures": [
+            "$15.00",
+            "$12.00"
+          ]
+        }
+      ]
+    },
+    {
+      "proposal_id": "2026-10-31/numverify/limits_increased",
+      "proposed_on": "2026-10-31",
+      "vendor": "numverify",
+      "change_type": "limits_increased",
+      "date": "2026-10-31",
+      "date_source": "discovered",
+      "summary": "The free plan now offers 1,000 API requests per month instead of 100. The paid plans have also changed: $19.99/month (5,000 requests), $59.99/month (50,000 requests) and $129.99/month (250,000 requests).",
+      "tier": "Free Plan",
+      "tier_direction": "widened",
+      "previous_state": "Global phone number validation and lookup JSON API. Free Plan: 100 API requests a month, non-commercial use only, no support. Paid plans: $14.99/month (5,000 requests), $59.99/month (50,000 requests) and $129.99/month (250,000 requests), all for commercial use.",
+      "current_state": "The Free Plan offers 1000 API Requests, no support, and is for 232 countries.",
+      "impact": "high",
+      "source_url": "https://numverify.com/",
+      "category": "Dev Utilities",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-10-31",
+      "restatement": [
+        {
+          "url": "https://numverify.com/",
+          "refused": "reading_drops_a_figure_our_source_check_found",
+          "figures": [
+            "$14.99",
+            "$ 14.99",
+            "$ 59.99",
+            "$ 129.99"
+          ]
+        }
+      ]
+    },
+    {
+      "proposal_id": "2026-10-31/amazon-q-developer/pricing_restructured",
+      "proposed_on": "2026-10-31",
+      "vendor": "Amazon Q Developer",
+      "change_type": "pricing_restructured",
+      "date": "2026-10-31",
+      "date_source": "discovered",
+      "summary": "The Amazon Q Developer now has two tiers: Free and Pro ($19/month per user). The free tier includes 50 agentic requests per month and 1,000 lines of code transformation. The Pro tier includes increased limits for agentic requests and code transformation (4,000 lines pooled at the account level, with overages at $0.003/line), admin controls, and IP indemnity.",
+      "tier": "Amazon Q Developer",
+      "tier_direction": "unchanged",
+      "previous_state": "AI coding assistant by AWS. Free tier: inline code suggestions, chat, 1,000 lines code transformation/month, 50 agentic requests/month, access to latest Claude models. Supports VS Code, JetBrains, CLI, and AWS Console. Pro plan $19/user/month (higher limits, admin controls, IP indemnity). AWS will end support for the Amazon Q Developer IDE plugins on April 30, 2027, and points IDE users to Kiro.",
+      "current_state": "Amazon Q Developer offers two pricing tiers. Free Tier: Advanced capabilities at zero cost. Pro Tier: Expanded limits $19/mo. per user. The Free Tier includes 50 agentic requests per month and 1,000 lines of code per month for Java upgrades. The Pro Tier includes increased limits for agentic requests and 4,000 lines of code per month per user pooled at account level.",
+      "impact": "medium",
+      "source_url": "https://aws.amazon.com/q/developer/pricing/",
+      "category": "AI Coding",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-10-31",
+      "restatement": [
+        {
+          "url": "https://aws.amazon.com/q/developer/pricing/",
+          "description": "AI coding assistant by AWS — Amazon Q Developer offers two pricing tiers. Free Tier: Advanced capabilities at zero cost. Pro Tier: Expanded limits $19/mo. per user. The Free Tier includes 50 agentic requests per month and 1,000 lines of code per month for Java upgrades. The Pro Tier includes increased limits for agentic requests and 4,000 lines of code per month per user pooled at account level."
+        }
+      ]
+    },
+    {
+      "proposal_id": "2026-10-31/zilore-com/pricing_restructured",
+      "proposed_on": "2026-10-31",
+      "vendor": "zilore.com",
+      "change_type": "pricing_restructured",
+      "date": "2026-10-31",
+      "date_source": "discovered",
+      "summary": "The free plan now includes unlimited records and requests, whereas previously it included 1000 resource records per domain and 10,000,000 DNS queries.",
+      "tier": "Free",
+      "tier_direction": "widened",
+      "previous_state": "The free plan costs $0/month or $0/year and includes 5 domains, 1000 resource records per domain, and 10,000,000 DNS queries.",
+      "current_state": "All of our plans include an unlimited number of DNS records and an unlimited number of DNS requests to them.",
+      "impact": "high",
+      "source_url": "https://zilore.com/en/dns",
+      "category": "DNS & Domain Management",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-10-31",
+      "restatement": [
+        {
+          "url": "https://zilore.com/en/dns",
+          "refused": "reading_answers_for_something_else"
+        }
+      ]
+    }
+  ],
   "dropped": [
     {
       "proposal_id": "2026-10-12/taskade-com/new_tier",
