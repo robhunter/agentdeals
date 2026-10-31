@@ -1,7 +1,8 @@
-import { describe, it, before, after } from "node:test";
+import { describe, it, before } from "node:test";
 import assert from "node:assert";
 import { spawn, type ChildProcess } from "node:child_process";
-import { readFileSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -128,14 +129,12 @@ function registered(): any[] {
   return parsePageReviews(readFileSync(path.join(REPO, "data", "page-reviews.json"), "utf-8")).pages;
 }
 
-let server: ChildProcess;
-let html = "";
-
-describe("/database-pricing states the 13 services it re-checked as each vendor's own page does", () => {
-  before(async () => {
+async function renderedPage(reviewsPath?: string): Promise<string> {
+  let server: ChildProcess | undefined;
+  try {
     server = spawn("node", [path.join(REPO, "dist", "serve.js")], {
       stdio: ["pipe", "pipe", "pipe"],
-      env: { ...process.env, PORT: "0", BASE_URL: "http://localhost", TZ: "UTC" },
+      env: { ...process.env, ...(reviewsPath ? { AGENTDEALS_PAGE_REVIEWS_PATH: reviewsPath } : {}), PORT: "0", BASE_URL: "http://localhost", TZ: "UTC" },
     });
     const base = await new Promise<string>((resolve, reject) => {
       const timeout = setTimeout(() => reject(new Error("Server startup timeout")), 30000);
@@ -153,10 +152,17 @@ describe("/database-pricing states the 13 services it re-checked as each vendor'
     });
     const response = await fetch(`${base}${PAGE}`);
     assert.strictEqual(response.status, 200);
-    html = await response.text();
-  });
-  after(() => {
+    return await response.text();
+  } finally {
     server?.kill();
+  }
+}
+
+let html = "";
+
+describe("/database-pricing states the 13 services it re-checked as each vendor's own page does", () => {
+  before(async () => {
+    html = await renderedPage();
   });
 
   it("serves none of the replaced figures anywhere on the page", () => {
@@ -194,28 +200,6 @@ describe("/database-pricing states the 13 services it re-checked as each vendor'
       return !row || !row[3].startsWith(opening);
     }).map(([name]) => name);
     assert.deepStrictEqual(wrong, []);
-  });
-
-  it("prints the re-check the register holds in every place the page dates its compiled figures", () => {
-    const record = registered().find((p) => p.path === PAGE);
-    assert.ok(record?.partial_recheck, `${PAGE} holds no partial re-check on the register`);
-    const { on, vendors } = record.partial_recheck;
-    const tail = `${record.published}; ${vendors.length} services re-checked ${on}`;
-    const metaOf = (attribute: string) => html.match(new RegExp(`<meta ${attribute} content="([^"]*)"`))?.[1] ?? "";
-    const places: Record<string, string> = {
-      "meta description": decode(metaOf('name="description"')),
-      "og:description": decode(metaOf('property="og:description"')),
-      "Article structured data": articleDescription(html),
-      byline: textOf(html.match(/<p class="pub-date">[\s\S]*?<\/p>/)?.[0] ?? ""),
-      "table note": textOf(html.match(/<p class="section-intro">[\s\S]*?<\/p>/)?.[0] ?? ""),
-    };
-    const answers = faqAnswersIn(PAGE, html).filter((answer: { text: string }) => statesVendorFigure(answer.text));
-    assert.ok(answers.length >= 5, `only ${answers.length} structured answers state a figure`);
-    for (const answer of answers) places[`answer: ${answer.question}`] = answer.text;
-    const dated = new RegExp(`(?:Figures compiled|Compiled) ${tail.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`);
-    const silent = Object.entries(places).filter(([, text]) => !dated.test(text)).map(([place]) => place);
-    assert.deepStrictEqual(silent, []);
-    assert.ok(places.byline.includes("Not yet reviewed"), places.byline);
   });
 
   it("re-checks only vendors whose figures a registered page puts in a table", () => {
@@ -289,4 +273,37 @@ describe("a partial re-check dates a page's compiled figures and counts as no re
     assert.strictEqual(parse({ on: "2026-10-12", vendors: [] }), null);
     assert.strictEqual(parse(undefined), null);
   });
+});
+
+describe("a partial re-check on a served page", () => {
+  it("prints a synthetic partial re-check in every place the page dates its compiled figures", async () => {
+    const page = record({ path: PAGE, partial_recheck: RECHECKED });
+    const scratch = mkdtempSync(path.join(tmpdir(), "database-recheck-"));
+    const reviewsPath = path.join(scratch, "page-reviews.json");
+    let html: string;
+    try {
+      writeFileSync(reviewsPath, JSON.stringify({ version: 1, sla_days: { A: 30, B: 90 }, pages: [page] }));
+      html = await renderedPage(reviewsPath);
+    } finally {
+      rmSync(scratch, { recursive: true, force: true });
+    }
+    const { on, vendors } = page.partial_recheck;
+    const tail = `${page.published}; ${vendors.length} services re-checked ${on}`;
+    const metaOf = (attribute: string) => html.match(new RegExp(`<meta ${attribute} content="([^"]*)"`))?.[1] ?? "";
+    const places: Record<string, string> = {
+      "meta description": decode(metaOf('name="description"')),
+      "og:description": decode(metaOf('property="og:description"')),
+      "Article structured data": articleDescription(html),
+      byline: textOf(html.match(/<p class="pub-date">[\s\S]*?<\/p>/)?.[0] ?? ""),
+      "table note": textOf(html.match(/<p class="section-intro">[\s\S]*?<\/p>/)?.[0] ?? ""),
+    };
+    const answers = faqAnswersIn(PAGE, html).filter((answer: { text: string }) => statesVendorFigure(answer.text));
+    assert.ok(answers.length >= 5, `only ${answers.length} structured answers state a figure`);
+    for (const answer of answers) places[`answer: ${answer.question}`] = answer.text;
+    const dated = new RegExp(`(?:Figures compiled|Compiled) ${tail.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`);
+    const silent = Object.entries(places).filter(([, text]) => !dated.test(text)).map(([place]) => place);
+    assert.deepStrictEqual(silent, []);
+    assert.ok(places.byline.includes("Not yet reviewed"), places.byline);
+  });
+
 });
