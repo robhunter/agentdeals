@@ -136,7 +136,7 @@
   ],
   "retirements": {
     "heading": "Which Mistral models are being retired?",
-    "intro": "Z.ai GLM 5.2 (zai-glm-5-2) retires on 2026-10-31; Mistral names GLM 5.3 as its replacement. Mistral gives 6 months' notice for generally available models and 1 month for public preview, Labs and third-party models. A request to a retired model fails with a 404 error.",
+    "intro": "Mistral deprecated Mistral Large 3 (mistral-large-2512), Mistral Medium 3.5 (mistral-medium-3-5) and Voxtral TTS (voxtral-mini-tts-2603) on 2026-10-31. All three retire on 2027-04-30; Mistral names Mistral Large 4 as the replacement for both text models and Voxtral TTS 3 for Voxtral TTS. Z.ai GLM 5.2 (zai-glm-5-2) retired on 2026-10-31; Mistral names GLM 5.3 as its replacement. Mistral gives 6 months' notice for generally available models and 1 month for public preview, Labs and third-party models. A request to a retired model fails with a 404 error.",
     "columns": [
       "Model",
       "Retired",
@@ -144,11 +144,32 @@
     ],
     "rows": [
       {
+        "model": "Mistral Large 3",
+        "retired": "2027-04-30 (scheduled)",
+        "replacement": "Mistral Large 4",
+        "source": "https://docs.mistral.ai/models",
+        "read_on": "2026-10-31"
+      },
+      {
+        "model": "Mistral Medium 3.5",
+        "retired": "2027-04-30 (scheduled)",
+        "replacement": "Mistral Large 4",
+        "source": "https://docs.mistral.ai/models",
+        "read_on": "2026-10-31"
+      },
+      {
+        "model": "Voxtral TTS",
+        "retired": "2027-04-30 (scheduled)",
+        "replacement": "Voxtral TTS 3",
+        "source": "https://docs.mistral.ai/models",
+        "read_on": "2026-10-31"
+      },
+      {
         "model": "Z.ai GLM 5.2",
-        "retired": "2026-10-31 (scheduled)",
+        "retired": "2026-10-31",
         "replacement": "Z.ai GLM 5.3",
         "source": "https://docs.mistral.ai/models",
-        "read_on": "2026-10-11"
+        "read_on": "2026-10-31"
       },
       {
         "model": "OCR 4.0",
