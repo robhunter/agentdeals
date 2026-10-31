@@ -17272,6 +17272,33 @@
           }
         ]
       }
+    },
+    {
+      "vendor": "Vercel",
+      "change_type": "pricing_restructured",
+      "date": "2026-07-20",
+      "date_source": "hand_written",
+      "summary": "By July 20, 2026, new Vercel Pro and Enterprise accounts use Elastic build machines by default, which scale between 4 and 30 vCPUs and bill $0.0035 per CPU minute. From February 2026 the default for new Pro projects had been Turbo, billed at $0.126 a minute. Vercel now lists Turbo at $0.105 a minute and Standard at $0.014.",
+      "previous_state": "\"Turbo build machines are enabled by default for new Pro projects.\" Turbo (always billed) $0.126 a build minute (vercel.com/docs/builds/managing-builds, Internet Archive 2026-05-12)",
+      "current_state": "\"New Pro and Enterprise accounts use Elastic machines by default.\" \"Elastic build machines are also billed by CPU minute, starting at $0.0035 per CPU minute.\" (vercel.com/docs/builds/managing-builds, read 2026-10-31). Standard $0.014 and Turbo $0.105 a build minute (vercel.com/docs/pricing, read 2026-10-31)",
+      "impact": "medium",
+      "source_url": "https://vercel.com/docs/builds/managing-builds",
+      "category": "Cloud Hosting",
+      "alternatives": [],
+      "recorded_date": "2026-10-31",
+      "archive_check": {
+        "checked": "2026-10-31",
+        "outcome": "vendor_changed",
+        "brackets": [
+          {
+            "last_old": "2026-05-12",
+            "first_new": "2026-07-20",
+            "last_old_capture": "https://web.archive.org/web/20260512145055/https://vercel.com/docs/builds/managing-builds",
+            "first_new_capture": "https://web.archive.org/web/20260720175103/https://vercel.com/docs/builds/managing-builds"
+          }
+        ]
+      },
+      "tier": "Pro"
     }
   ]
 }

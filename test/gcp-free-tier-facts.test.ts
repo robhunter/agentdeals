@@ -46,7 +46,7 @@ const WITHDRAWN_FROM_THE_PAGE = [
 ];
 
 const STATED_ON_THE_PAGE = [
-  "Three ways to start free. Google offers the Free Tier, the $300 Free Trial and product-specific free offers such as the Gemini API free tier in Google AI Studio. Google's Free Tier table lists 29 products, including Cloud Run (2 million requests a month) and BigQuery (1 TiB of querying a month). It has no end date, but Google can change or remove its limits with 30 days' notice. Most limits are monthly; App Engine's limits and Firestore's operation limits are daily. The $300 Free Trial runs for 90 days and needs a credit card or other payment method; the trial billing account is not billed. Only new customers get it: Google gives the Free Trial to accounts that have never been paying users of Google Cloud, Google Maps Platform or Firebase and have not signed up for the Free Trial before. An app built in Google AI Studio can be deployed to Google Cloud (Cloud Run, with Firestore, Firebase Authentication and Cloud SQL for PostgreSQL) using the Starter Tier without a credit card or billing account. The BigQuery sandbox also needs no credit card or billing account and includes 1 TiB of queries a month; its tables expire after 60 days. Accounts opened after 2026-03-02 cannot spend the credit on the Gemini API. The Gemini API free tier has per-minute and per-day limits; the Cloud AI APIs in the Free Tier have monthly limits.",
+  "Three ways to start free. Google offers the Free Tier, the $300 Free Trial and product-specific free offers such as the Gemini API free tier in Google AI Studio. Google's Free Tier table lists 28 products, including Cloud Run (2 million requests a month) and BigQuery (1 TiB of querying a month). It has no end date, but Google can change or remove its limits with 30 days' notice. Most limits are monthly; App Engine's limits and Firestore's operation limits are daily. The $300 Free Trial runs for 90 days and needs a credit card or other payment method; the trial billing account is not billed. Only new customers get it: Google gives the Free Trial to accounts that have never been paying users of Google Cloud, Google Maps Platform or Firebase and have not signed up for the Free Trial before. An app built in Google AI Studio can be deployed to Google Cloud (Cloud Run, with Firestore, Firebase Authentication and Cloud SQL for PostgreSQL) using the Starter Tier without a credit card or billing account. The BigQuery sandbox also needs no credit card or billing account and includes 1 TiB of queries a month; its tables expire after 60 days. Accounts opened after 2026-03-02 cannot spend the credit on the Gemini API. The Gemini API free tier has per-minute and per-day limits; the Cloud AI APIs in the Free Tier have monthly limits.",
   "The hidden costs: the e2-micro VM is free only in us-west1, us-central1 and us-east1. Outbound data transfer beyond each product's free allowance is billed. Firestore's free operations are counted per day. Load balancers are billed (forwarding rules and data processed).",
   "GCP's free tier is generous, but these costs catch developers off guard.",
   "Egress charges $0.12–0.23/GiB Premium Tier is the default. From us-central1 it costs $0.12 per GiB (up to 1,024 GiB) to North America, Europe and Asia (excluding Korea and Indonesia), and up to $0.23 elsewhere. The Free Tier covers 1 GB a month from North America to every destination except China and Australia, on Premium Tier only; Cloud Storage's Free Tier adds 100 GB. Standard Tier's first 200 GiB a month are free, per account. Cross-region transfer is also billed.",
@@ -76,7 +76,6 @@ const ROWS_AS_GOOGLE_STATES_THEM: [string, string][] = [
 ];
 
 const FREE_TIER_ROWS_THE_TABLE_LACKED: [string, string, string][] = [
-  ["Agent Runtime (Gemini Enterprise Agent Platform)", "First 180,000 vCPU-seconds (50 hours) and 360,000 GiB-seconds of memory a month", "AI/ML"],
   ["Cloud Deploy", "First active delivery pipeline per billing account", "CI/CD"],
   ["Datastream", "100 GiB of change data capture a month per billing account (AlloyDB or Spanner to BigQuery)", "Data"],
   ["Security Command Center", "Standard tier", "Security"],
@@ -278,7 +277,7 @@ describe("the GCP free tier guide states Google's terms as Google's own pages st
     assert.equal(text.slice(introduced, introduced + FREE_TRIAL_CARD_SENTENCE.length + 1 + FREE_TRIAL_ELIGIBILITY.length), `${FREE_TRIAL_CARD_SENTENCE} ${FREE_TRIAL_ELIGIBILITY}`);
   });
 
-  it("lists the six Free Tier products the Always Free table lacked, with the limits and category Google gives", () => {
+  it("lists the remaining Free Tier products the Always Free table lacked, with the limits and category Google gives", () => {
     const rows = rowsOf(tableAfter(served.get(PAGE)!, 'id="always-free"'));
     const wrong = FREE_TIER_ROWS_THE_TABLE_LACKED.flatMap(([name, limits, category]) => {
       const row = rows.find(([cell]) => cell === name);
