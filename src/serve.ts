@@ -42706,9 +42706,9 @@ ${globalNavCss()}
       <tr>
         <td class="provider-col">Mixpanel</td>
         <td>1M events/mo</td>
-        <td class="cross">&#10007;</td>
-        <td class="cross">&#10007;</td>
-        <td>Unlimited</td>
+        <td class="check">&#10003; 10K/mo</td>
+        <td class="check">&#10003; Up to 10 active</td>
+        <td>2 years (default)</td>
         <td class="cross">&#10007;</td>
         <td class="check">&#10003; EU residency</td>
         <td class="check">&#10003;</td>
@@ -42739,7 +42739,7 @@ ${globalNavCss()}
       <tr>
         <td class="provider-col"><a href="/vendor/heap-io" style="color:var(--text)">Heap (Contentsquare)</a></td>
         <td>10K sessions/mo</td>
-        <td class="check">&#10003; Included</td>
+        <td class="cross">&#10007; Paid add-on (Pro, Premier)</td>
         <td class="cross">&#10007;</td>
         <td>6 months</td>
         <td class="cross">&#10007;</td>
@@ -42747,17 +42747,6 @@ ${globalNavCss()}
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
       </tr>${vendorPageConditionsRowHtml("heap-io", 9)}
-      <tr>
-        <td class="provider-col">June.so</td>
-        <td>1K MAUs</td>
-        <td class="cross">&#10007;</td>
-        <td class="cross">&#10007;</td>
-        <td>12 months</td>
-        <td class="cross">&#10007;</td>
-        <td class="check">&#10003; EU hosting</td>
-        <td class="check">&#10003;</td>
-        <td class="check">&#10003;</td>
-      </tr>
       <tr>
         <td class="provider-col"><a href="/vendor/plausible-analytics" style="color:var(--text)">Plausible</a></td>
         <td>Self-hosted: unlimited</td>
@@ -42774,11 +42763,11 @@ ${globalNavCss()}
         <td>Cloud: 100K events/mo</td>
         <td class="cross">&#10007;</td>
         <td class="cross">&#10007;</td>
-        <td>Unlimited</td>
+        <td>Cloud free: 6 months; self-hosted: unlimited</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003; No cookies</td>
         <td class="check">&#10003;</td>
-        <td class="check">&#10003;</td>
+        <td class="check">&#10003; Self-hosted; Cloud Pro and up</td>
       </tr>${vendorPageConditionsRowHtml("umami", 9)}
       <tr>
         <td class="provider-col">Fathom</td>
@@ -42793,13 +42782,13 @@ ${globalNavCss()}
       </tr>
       <tr>
         <td class="provider-col">Simple Analytics</td>
-        <td>No free tier</td>
+        <td>Free for hobby sites: 5 websites, badge required</td>
         <td class="cross">&#10007;</td>
         <td class="cross">&#10007;</td>
-        <td>Unlimited</td>
+        <td>Free plan: 1 month</td>
         <td class="cross">&#10007;</td>
         <td class="check">&#10003; No cookies</td>
-        <td class="cross">&#10007;</td>
+        <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
       </tr>
       <tr>
@@ -42826,13 +42815,13 @@ ${globalNavCss()}
       </tr>
       <tr>
         <td class="provider-col">Pirsch</td>
-        <td>10K pageviews/mo</td>
+        <td>No free plan (30-day trial, then from $6/mo for 10K pageviews)</td>
         <td class="cross">&#10007;</td>
         <td class="cross">&#10007;</td>
         <td>Unlimited</td>
         <td class="cross">&#10007;</td>
         <td class="check">&#10003; No cookies</td>
-        <td class="check">&#10003;</td>
+        <td class="cross">&#10007;</td>
         <td class="check">&#10003;</td>
       </tr>
     </tbody>
@@ -42844,12 +42833,12 @@ ${globalNavCss()}
 
   <div class="diff-card">
     <h3>PostHog</h3>
-    <div class="diff-desc"><strong>Free tier:</strong> 1M events/month, 5K session replays, 1M feature flag evaluations, unlimited experiments and surveys. Open-source, self-hostable. The only platform that bundles analytics, session replay, feature flags, A/B testing, and surveys into a single free tier. EU and US cloud hosting. Transparent usage-based pricing beyond free tier ($0.00031/event). The free tier resets monthly and unused quota doesn't roll over. Best for teams that want a single platform for product analytics + experimentation.</div>
+    <div class="diff-desc"><strong>Free tier:</strong> 1M events/month, 5K session replays, 1M feature flag evaluations, experiments billed with feature flags, and 1,500 survey responses a month. Open-source, self-hostable. The only platform that bundles analytics, session replay, feature flags, A/B testing, and surveys into a single free tier. EU and US cloud hosting. Transparent usage-based pricing beyond free tier ($0.00031/event). The free tier resets monthly and unused quota doesn't roll over. Best for teams that want a single platform for product analytics + experimentation.</div>
   </div>
 
   <div class="diff-card">
     <h3>Mixpanel</h3>
-    <div class="diff-desc"><strong>Free tier:</strong> 1M events/month. Polished UI focused on behavioral analytics: funnels, retention, cohorts, user flows. Unlimited data retention on the free plan. No session replay (they partner with other tools). Changed pricing from MTU-based to event-based, simplifying the model. EU data residency available. Powerful query builder and segmentation. Best for teams that want focused behavioral analytics with a refined UI.</div>
+    <div class="diff-desc"><strong>Free tier:</strong> 1M events/month. Polished UI focused on behavioral analytics: funnels, retention, cohorts, user flows. Free plan: 10K session replays a month, up to 10 active feature flags, data kept 2 years by default. Changed pricing from MTU-based to event-based, simplifying the model. EU data residency available. Powerful query builder and segmentation. Best for teams that want focused behavioral analytics with a refined UI.</div>
   </div>
 
   <div class="diff-card">
@@ -42859,12 +42848,12 @@ ${globalNavCss()}
 
   <div class="diff-card">
     <h3>Heap (Contentsquare)</h3>
-    <div class="diff-desc"><strong>Free tier:</strong> 10K monthly sessions. Unique auto-capture approach &mdash; automatically tracks every click, form submission, and page view without manual instrumentation. Session replay included. 6-month data retention on free plan. Acquired by Contentsquare in 2023. Best for teams that want retroactive analytics without needing to instrument every event upfront.</div>
+    <div class="diff-desc"><strong>Free tier:</strong> 10K monthly sessions. Unique auto-capture approach &mdash; automatically tracks every click, form submission, and page view without manual instrumentation. Session replay is a paid add-on on Pro and Premier. 6-month data retention on free plan. Acquired by Contentsquare in 2023. Best for teams that want retroactive analytics without needing to instrument every event upfront.</div>
   </div>
 
   <div class="diff-card">
     <h3>June.so</h3>
-    <div class="diff-desc"><strong>Free tier:</strong> 1K Monthly Active Users. Auto-generated product analytics reports &mdash; activation, retention, active users delivered to your inbox. Segment integration. Built specifically for B2B SaaS with company-level analytics. EU hosting available. Best for early-stage B2B startups that want automated reporting without configuration.</div>
+    <div class="diff-desc">June shut down its product after joining Amplitude in August 2025.</div>
   </div>
 
   <h2 id="web-analytics">Web Analytics</h2>
@@ -42877,7 +42866,7 @@ ${globalNavCss()}
 
   <div class="diff-card">
     <h3>Pirsch</h3>
-    <div class="diff-desc"><strong>Free tier:</strong> 10K pageviews/month. Privacy-friendly, cookie-free web analytics. GDPR compliant out of the box. Clean dashboard with referrers, UTM parameters, and conversion goals. Built as a simpler alternative to Google Analytics. Server-side tracking option available. Best for small sites that want basic privacy-friendly analytics without self-hosting.</div>
+    <div class="diff-desc"><strong>Pricing:</strong> No free plan; a 30-day trial, then from $6/month for 10K pageviews. Privacy-friendly, cookie-free web analytics. GDPR compliant out of the box. Clean dashboard with referrers, UTM parameters, and conversion goals. Built as a simpler alternative to Google Analytics. Server-side tracking option available. Best for small sites that want basic privacy-friendly analytics without self-hosting.</div>
   </div>
 
   <h2 id="privacy-focused">Privacy-Focused Analytics</h2>
@@ -42885,7 +42874,7 @@ ${globalNavCss()}
 
   <div class="diff-card">
     <h3>Plausible</h3>
-    <div class="diff-desc"><strong>Pricing:</strong> Cloud plans from $9/month (10K pageviews). Self-hosted Community Edition is free and open-source (AGPL). No cookies, no personal data, GDPR compliant without consent banners. Lightweight script (&lt;1KB). Dashboard is clean and intentionally simple. Built-in goal and event tracking. Revenue tracking available. EU-owned and operated (Estonia). Best for privacy-conscious teams that want simple, compliant analytics. Self-host for free or pay for the cloud convenience.</div>
+    <div class="diff-desc"><strong>Pricing:</strong> Cloud plans from $9/month (10K pageviews). Self-hosted Community Edition is free and open-source (AGPL). No cookies, no personal data, GDPR compliant without consent banners. Lightweight script (2.5KB). Dashboard is clean and intentionally simple. Built-in goal and event tracking. Revenue tracking available. EU-owned and operated (Estonia). Best for privacy-conscious teams that want simple, compliant analytics. Self-host for free or pay for the cloud convenience.</div>
   </div>
 
   <div class="diff-card">
@@ -42895,7 +42884,7 @@ ${globalNavCss()}
 
   <div class="diff-card">
     <h3>Simple Analytics</h3>
-    <div class="diff-desc"><strong>Pricing:</strong> From $9/month (100K pageviews). No free tier. Cookie-free, GDPR compliant. Mini websites for each referrer source. Tweet analytics for social tracking. AI-powered insights. Notable for transparency &mdash; their own dashboard is public. Best for teams that want privacy analytics with social media tracking integration.</div>
+    <div class="diff-desc"><strong>Pricing:</strong> From $20/month (100K pageviews). A free plan for hobby sites: 5 websites, the latest month of data, badge required. Cookie-free, GDPR compliant. Mini websites for each referrer source. Tweet analytics for social tracking. AI-powered insights. Notable for transparency &mdash; their own dashboard is public. Best for teams that want privacy analytics with social media tracking integration.</div>
   </div>
 
   <h2 id="all-in-one">All-in-One Platforms</h2>
@@ -43069,7 +43058,7 @@ ${globalNavCss()}
 
     <div class="verdict-item">
       <strong>Best behavioral analytics &rarr; Mixpanel</strong>
-      <p>1M events free with unlimited retention. The most polished UI for funnels, retention, and cohort analysis. Focused on doing behavioral analytics exceptionally well rather than bundling everything.</p>
+      <p>1M events free, with data kept 2 years by default. The most polished UI for funnels, retention, and cohort analysis. Focused on doing behavioral analytics exceptionally well rather than bundling everything.</p>
     </div>
 
     <div class="verdict-item">
@@ -43092,10 +43081,6 @@ ${globalNavCss()}
       <p>2M events a month free, with 1 year of data access. Best for companies that know they'll scale to paid and want enterprise governance from day one.</p>
     </div>
 
-    <div class="verdict-item">
-      <strong>Startup-friendly auto-reports &rarr; June.so</strong>
-      <p>1K MAUs free with auto-generated reports. Built for B2B SaaS with company-level analytics delivered to your inbox. Best for early-stage startups that want insights without configuration.</p>
-    </div>
   </div>
 
   <h2 id="hidden-costs">Hidden Costs and Gotchas</h2>
@@ -43127,7 +43112,7 @@ ${globalNavCss()}
 
   <div class="diff-card">
     <h3>Data retention limits on free plans</h3>
-    <div class="diff-desc">PostHog retains data for 1 year on the free plan. Amplitude's Free plan gives 1 year of data access. Heap retains for 6 months. GA4 retains for 14 months (adjustable to 2 or 14 months only). After the retention period, your historical data is gone. Mixpanel offers unlimited retention on its free plan, which is a significant advantage for long-term trend analysis.</div>
+    <div class="diff-desc">PostHog retains data for 1 year on the free plan. Amplitude's Free plan gives 1 year of data access. Heap retains for 6 months. GA4 retains for 14 months (adjustable to 2 or 14 months only). After the retention period, your historical data is gone. Mixpanel keeps data for 2 years by default on its free plan.</div>
   </div>
 
   <h2 id="changes">Pricing Change Timeline</h2>

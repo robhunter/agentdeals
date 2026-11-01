@@ -152,10 +152,57 @@ describe(`${PAGE} states Amplitude's Free plan and GA4's sampling quota as the v
     assert.doesNotMatch(plain(body), /500K sessions/);
   });
 
-  it("gives Amplitude 1 year of data access in the retention card and leaves unlimited retention to Mixpanel", () => {
+  it("gives Amplitude 1 year of data access and Mixpanel 2 years by default in the retention card", () => {
     const card = plain(body.match(/<h3>Data retention limits on free plans<\/h3>\s*<div class="diff-desc">([\s\S]*?)<\/div>/)?.[1] ?? "");
     assert.ok(card.includes("Amplitude's Free plan gives 1 year of data access."), card);
-    assert.ok(card.includes("Mixpanel offers unlimited retention on its free plan"), card);
+    assert.ok(card.includes("Mixpanel keeps data for 2 years by default on its free plan."), card);
+  });
+
+  it("states replay, flag, retention and permanent free terms in the named provider's columns", () => {
+    const table = body.match(/<table class="comp-table">([\s\S]*?)<\/table>/)?.[1];
+    assert.ok(table);
+    assert.deepStrictEqual([...table.matchAll(/<th\b[^>]*>([\s\S]*?)<\/th>/g)].map(c => plain(c[1])), [
+      "Service", "Free Tier Limit", "Session Replay", "Feature Flags", "Data Retention", "Self-Hosted", "Privacy / GDPR", "Permanent Free", "API Access",
+    ]);
+    const rows = [...table.matchAll(/<tr>([\s\S]*?)<\/tr>/g)].map(r => [...r[1].matchAll(/<td\b([^>]*)>([\s\S]*?)<\/td>/g)].map(c => ({ text: plain(c[2]), attributes: c[1] })));
+    const row = (vendor: string) => {
+      const matches = rows.filter(r => r[0]?.text === vendor || r[0]?.text.startsWith(vendor + " "));
+      assert.strictEqual(matches.length, 1, vendor);
+      assert.strictEqual(matches[0].length, 9, vendor);
+      return matches[0];
+    };
+    assert.deepStrictEqual(rows.filter(r => r[0]?.text.includes("June.so")), []);
+    assert.deepStrictEqual(rows.filter(r => r.length === 9).map(r => r[0].text.replace(/ No record.*$/, "").replace(/ PRIVACY TRADE-OFF.*$/, "")), [
+      "PostHog", "Mixpanel", "Amplitude", "Google Analytics", "Heap (Contentsquare)", "Plausible", "Umami", "Fathom", "Simple Analytics", "Matomo", "Countly", "Pirsch",
+    ]);
+    assert.deepStrictEqual(row("Mixpanel").slice(2, 5).map(c => c.text), ["✓ 10K/mo", "✓ Up to 10 active", "2 years (default)"]);
+    assert.strictEqual(row("Heap (Contentsquare)")[2].text, "&#10007; Paid add-on (Pro, Premier)");
+    assert.match(row("Heap (Contentsquare)")[2].attributes, /class="cross"/);
+    assert.strictEqual(row("Umami")[4].text, "Cloud free: 6 months; self-hosted: unlimited");
+    assert.strictEqual(row("Umami")[8].text, "✓ Self-hosted; Cloud Pro and up");
+    assert.strictEqual(row("Simple Analytics")[1].text, "Free for hobby sites: 5 websites, badge required");
+    assert.strictEqual(row("Simple Analytics")[4].text, "Free plan: 1 month");
+    assert.strictEqual(row("Simple Analytics")[7].text, "✓");
+    assert.match(row("Simple Analytics")[7].attributes, /class="check"/);
+    assert.strictEqual(row("Pirsch")[1].text, "No free plan (30-day trial, then from $6/mo for 10K pageviews)");
+    assert.strictEqual(row("Pirsch")[7].text, "&#10007;");
+    assert.match(row("Pirsch")[7].attributes, /class="cross"/);
+  });
+
+  it("keeps June's shutdown in its card and withdraws its startup recommendation", () => {
+    const card = body.match(/<h3>June\.so<\/h3>\s*<div class="diff-desc">([\s\S]*?)<\/div>/)?.[1];
+    assert.ok(card);
+    assert.strictEqual(plain(card), "June shut down its product after joining Amplitude in August 2025.");
+    assert.doesNotMatch(html, /Startup-friendly auto-reports|No session replay \(they partner with other tools\)|unlimited retention on its free plan/);
+    for (const sentence of [
+      "Free plan: 10K session replays a month, up to 10 active feature flags, data kept 2 years by default.",
+      "Session replay is a paid add-on on Pro and Premier.",
+      "Pricing: No free plan; a 30-day trial, then from $6/month for 10K pageviews.",
+      "From $20/month (100K pageviews). A free plan for hobby sites: 5 websites, the latest month of data, badge required.",
+      "1M events free, with data kept 2 years by default.",
+      "Lightweight script (2.5KB).",
+      "experiments billed with feature flags, and 1,500 survey responses a month.",
+    ]) assert.ok(plain(body).includes(sentence), sentence);
   });
 
   it("counts Amplitude's free session replays at 10K a month", () => {
