@@ -37769,7 +37769,7 @@
     {
       "vendor": "Storj",
       "category": "Storage",
-      "description": "Distributed S3-compatible object storage. Free trial only: 25 GB free storage for 30 days, no credit card required, and 2 Object Mount licenses. After the trial, $7/TB storage and $7/TB egress with a $5 monthly minimum fee (waived while the trial is running and for accounts paying in STORJ token).",
+      "description": "Distributed S3-compatible object storage. Free trial only: 25 GB free storage for 30 days, no credit card required, and 2 Object Mount licenses. After the trial, $7/TB storage and $7/TB egress with a $5 monthly minimum fee (waived while the trial is running and for accounts paying with USDC).",
       "tier": "Trial",
       "url": "https://storj.io/pricing",
       "tags": [
@@ -37785,7 +37785,15 @@
         "checked": "2026-10-28",
         "outcome": "ok",
         "detail": "the page names Storj as \"storj\" and states \"$7\" and \"$5\" and \"$5,\""
-      }
+      },
+      "conditions": [
+        {
+          "text": "Storj Labs filed for Chapter 11 on July 26, 2026, in the US Bankruptcy Court for the Northern District of West Virginia. Storj says it will continue operating and does not anticipate interruptions in service to its customers.",
+          "quote": "Today Storj Labs, Inc. voluntarily filed Chapter 11 in the United States Bankruptcy Court for the Northern District of West Virginia … Storj will continue operating in the ordinary course throughout the Chapter 11 process. Storj also does not anticipate any interruptions in service to its customers",
+          "url": "https://www.storj.io/blog/storj-announces-voluntary-financial-restructuring-to-resolve-legacy-liabilities-and-position-the-business-for-growth/",
+          "read_on": "2026-11-01"
+        }
+      ]
     },
     {
       "vendor": "SigNoz",

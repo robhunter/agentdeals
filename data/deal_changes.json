@@ -17345,6 +17345,20 @@
       "alternatives": [],
       "recorded_date": "2026-10-31",
       "listing_effect": "ends"
+    },
+    {
+      "vendor": "Storj",
+      "change_type": "pricing_restructured",
+      "date": "2026-09-25",
+      "date_source": "vendor_page",
+      "summary": "On September 25, 2026, Storj stopped accepting STORJ token deposits for its service bills and switched to USDC. Accounts that deposit USDC are exempt from the $5 minimum monthly fee, as STORJ payers had been. The 10% discount on STORJ deposits ended the same day.",
+      "previous_state": "\"Accounts paying with STORJ token are exempt from the minimum monthly fee.\" (storj.io/pricing, Internet Archive 2026-09-15)",
+      "current_state": "Accounts paying with USDC are exempt from the $5 minimum monthly fee, and Storj no longer accepts STORJ token deposits. \"We’ll stop accepting STORJ as a deposit for Storj service fees and will accept USDC instead.\" \"If you deposit USDC, we’ll still waive the $5/month minimum fee.\" (Storj's announcement, 2026-09-25); \"Accounts paying with USDC are exempt from the minimum monthly fee.\" (storj.io/pricing, read 2026-11-01)",
+      "impact": "low",
+      "source_url": "https://forum.storj.io/t/storj-is-moving-node-operator-payouts-and-customer-deposits-to-usdc/32809",
+      "category": "Storage",
+      "alternatives": [],
+      "recorded_date": "2026-11-01"
     }
   ]
 }

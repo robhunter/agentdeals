@@ -526,6 +526,11 @@
       "vendor": "Nhost",
       "tier": "Free",
       "since": "2026-11-02"
+    },
+    {
+      "vendor": "Storj",
+      "tier": "Trial",
+      "since": "2026-11-02"
     }
   ]
 }
