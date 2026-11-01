@@ -205,8 +205,13 @@ describe(`${PAGE} states Amplitude's Free plan and GA4's sampling quota as the v
     ]) assert.ok(plain(body).includes(sentence), sentence);
   });
 
-  it("counts Amplitude's free session replays at 10K a month", () => {
-    const trap = plain(body.match(/<strong>The session replay add-on trap:<\/strong>([\s\S]*?)<\/div>/)?.[1] ?? "");
-    assert.ok(trap.includes("Amplitude's Free plan includes 10K a month."), trap);
+  it("states each free replay allowance and Heap's paid add-on in the replay paragraph", () => {
+    const traps = [...body.matchAll(/<strong>The session replay add-on trap:<\/strong>([\s\S]*?)<\/div>/g)];
+    assert.strictEqual(traps.length, 1);
+    assert.strictEqual(plain(traps[0][1]), "Session replay is increasingly essential for debugging and UX research. PostHog includes 5K replays free, and Amplitude's and Mixpanel's Free plans include 10K a month. Heap sells replay only as an add-on on its Pro and Premier plans.");
+  });
+
+  it("does not publish the withdrawn replay exclusion, third-party prices or bundle multiplier", () => {
+    assert.doesNotMatch(html, /Mixpanel doesn't offer replay at all|FullStory \(\$300\+\/mo\)|Hotjar \(\$80\+\/mo\)|LogRocket \(\$99\+\/mo\)|2(?:&ndash;|–|-)3x what PostHog charges/);
   });
 });
