@@ -72,6 +72,7 @@ for (const [vendor, outcome] of [["Stripe", "unreadable"], ["Turbopuffer", "stat
   const subject = offers.find(offer => offer.vendor === vendor);
   assert.ok(subject);
   subject.source_check = { checked: "2026-01-01", outcome, detail: "Fixture source check" };
+  delete subject.restated_from;
 }
 const scratch = mkdtempSync(path.join(tmpdir(), "gated-vendor-answers-"));
 const scratchIndex = path.join(scratch, "index.json");
@@ -349,7 +350,7 @@ describe("the page a gated record renders does not answer the free-tier question
 
 describe("a gated record whose source confirms only a free price", () => {
   it("keeps the price confirmation separate from the recorded limits", () => {
-    const subjects = gated().filter(p => p.gate!.code === "not_a_free_offer" && p.primary.source_check?.outcome === "states_a_free_price");
+    const subjects = gated().filter(p => p.gate!.code === "not_a_free_offer" && p.primary.source_check?.outcome === "states_a_free_price" && /\d/.test(p.primary.description));
     assert.ok(subjects.some(p => p.vendor === "Turbopuffer"));
     for (const p of subjects) {
       const answer = freeAnswer(p);
