@@ -1238,8 +1238,8 @@
       "changed": "2026-11-01"
     },
     "/category/maps-geolocation": {
-      "hash": "bfb155e9cbc14043",
-      "changed": "2026-10-31"
+      "hash": "15a05514054d36d7",
+      "changed": "2026-11-01"
     },
     "/category/messaging": {
       "hash": "68890808aff778bd",
@@ -3603,7 +3603,7 @@
       "daily": true
     },
     "/stack-check": {
-      "hash": "50f40058fa954268",
+      "hash": "1c1fe4c2e7c7baf5",
       "changed": "2026-11-01"
     },
     "/stacks": {
@@ -5748,8 +5748,8 @@
       "changed": "2026-10-31"
     },
     "/vendor/foursquare": {
-      "hash": "47be618cce8ad90c",
-      "changed": "2026-10-31"
+      "hash": "9a42c1fd36f99a98",
+      "changed": "2026-11-01"
     },
     "/vendor/framagit-org": {
       "hash": "a0ee73ee26ac084f",
@@ -9621,8 +9621,8 @@
       "changed": "2026-10-31"
     },
     "/whatsapp-business-api-pricing-2026": {
-      "hash": "e0578ff6fcad835c",
-      "changed": "2026-10-29"
+      "hash": "02d3381848caef5b",
+      "changed": "2026-11-01"
     },
     "/x402-services": {
       "hash": "62f7c1dc274a373b",
