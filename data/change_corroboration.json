@@ -1,59 +1,26 @@
 {
   "held": [
     {
-      "vendor": "Bitrise",
-      "change_type": "free_tier_removed",
-      "impact": "high",
-      "summary": "The Hobby plan is now a paid tier called 'Starter' starting at $89/month. The free Hobby plan is no longer available.",
-      "previous_state": "Mobile CI/CD platform — free Hobby plan: 300 credits/month, 1 private app, 1 user, 5 concurrent builds, 90-minute build timeout. Supports iOS, Android, Flutter, React Native",
-      "current_state": "Explore our new starter package options. Hobby Build and distribute your passion project without the extra cost. ‍ Free Forever Get started Access for a team of one (that's you!) Enough build credits for you to build your small project a few times per month Support from the Bitrise Community via Slack or Discuss forum Starter Designed for indie developers and small teams to get up and running. Recommended up to 100 builds/month. From $89 per month when billed annually, or $99 per month when billed monthly",
-      "source_url": "https://bitrise.io/pricing",
-      "category": "CI/CD",
-      "first_read_date": "2026-10-31"
-    },
-    {
-      "vendor": "Bugsnag",
-      "change_type": "limits_reduced",
-      "impact": "medium",
-      "summary": "The free tier now has a 7-day data retention period, down from unlimited retention. The free tier also includes 7.5K events and 1M spans per month, matching previously.",
-      "previous_state": "Error monitoring — Includes: 1 user Error and performance monitoring 7.5K events and 1M spans per month 50+ platforms 30+ third-party integrations Free plan features, plus: Unlimited users End-to-end diagnostics Basic notifications",
-      "current_state": "Includes: 1 user Error and performance monitoring 7.5K events and 1M spans per month 50+ platforms 30+ third-party integrations Free plan features, plus: Unlimited users End-to-end diagnostics Basic notifications. Our Free tier includes 7 days of data retention",
-      "source_url": "https://www.bugsnag.com/pricing/",
-      "category": "Error Tracking",
-      "first_read_date": "2026-10-31"
-    },
-    {
-      "vendor": "GoFile.io",
-      "change_type": "restriction",
-      "impact": "medium",
-      "summary": "The free tier still exists. The description of its limitations has changed. Is now the primary limitation.",
-      "previous_state": "Free file sharing and storage by web UI or API, no account needed. Free files are kept while they keep being downloaded and deleted after 10 days without a download. Free accounts get 100 GB of traffic per 30 days; past it, some downloads are restricted until usage falls back under the limit. Uploading and basic file management work on free accounts; most other API endpoints need Premium.",
-      "current_state": "Free to use — upload and share files instantly, no account required. Files are kept temporarily, perfect for quick shares.",
-      "source_url": "https://gofile.io/",
-      "category": "Storage",
-      "first_read_date": "2026-10-31"
-    },
-    {
-      "vendor": "MiniMax",
-      "change_type": "product_deprecated",
-      "impact": "high",
-      "summary": "Music and lyrics APIs are no longer available to new users as of August 20, 2026. The Token Plan is no longer accepting new purchases.",
-      "previous_state": "MiniMax sells API access pay-as-you-go on platform.minimax.io. Its pricing pages list no free API allowance; one docs page mentions a free quota for new pay-as-you-go users but gives no amount. Text: MiniMax-M3 $0.30/$1.20 (per 1M tokens, inputs up to 512k, after a permanent 50% discount); MiniMax-M2.7 $0.30/$1.20 (per 1M tokens); MiniMax-M2.7-highspeed $0.60/$2.40 (per 1M tokens). MiniMax M2.5 and M2.7 models are unavailable to new users from 2026-10-19. They are retired on 2026-11-18, after which API requests will not work. For M Plan and Token Plan users, requests to these models are routed to MiniMax-M3.1-Flash-Preview from 2026-10-19. MiniMax-M3.1-Flash-Preview is not available to pay-as-you-go users; MiniMax-M3 is the pay-as-you-go option. Speech: speech-2.8-turbo $60 and speech-2.8-hd $100 per 1M characters. Video: MiniMax-H3 $0.08 per second at 768P. Image: image-01 $0.0035 per image. Music and lyrics APIs closed to new users on 2026-08-20. Subscriptions: M Plan Go $22, Explore $55 and Build $132 a month, with the first month half price on monthly billing during the M Plan launch; annual billing charges 10 months for 12. The Token Plan no longer takes new purchases.",
-      "current_state": "The paid APIs (Music Generation and Lyrics Generation) will no longer be available to new users starting August 20, 2026; existing paying users can continue to use the current API services. The free music generation APIs (Music-3.0-free, Music-2.6-free, music-cover-free) will be discontinued.",
-      "source_url": "https://platform.minimax.io/docs/guides/pricing-paygo",
-      "category": "AI / ML",
-      "first_read_date": "2026-10-31"
-    },
-    {
-      "vendor": "xAI",
+      "vendor": "Grafana Cloud",
       "change_type": "pricing_restructured",
       "impact": "high",
-      "summary": "Several models have been retired or replaced, and pricing has been updated. The Imagine API pricing has changed, and the Voice API has been updated. The Batch API now has specific discounts per model. Priority Processing is described. The US regional endpoint has a 10% premium. Grok 4.7 Fast pricing is detailed.",
-      "previous_state": "Grok API, pay as you go: sign up at console.x.ai, then load it with credits. grok-4.7 $2.00/$6.00 (per 1M tokens, under 200k prompt tokens). grok-4.3 $1.25/$2.50 (under 200k prompt tokens). grok-build-0.1 $1.00/$2.00 (under 200k prompt tokens). grok-4.6 and grok-4.5 cost the same as grok-4.7 ($2.00 input and $6.00 output per 1M tokens under 200k prompt tokens), and grok-4.20 (0309 reasoning, non-reasoning and multi-agent) the same as grok-4.3 ($1.25 input and $2.50 output). A request whose prompt reaches 200k tokens is billed at the long-context rate for all its tokens, twice the standard rate: grok-4.7 and grok-4.6 go from $2.00 input and $6.00 output per 1M tokens to $4.00 and $12.00; grok-4.3 and grok-4.20 from $1.25 and $2.50 to $2.50 and $5.00; grok-build-0.1 from $1.00 and $2.00 to $2.00 and $4.00. Cached input costs $0.50 on grok-4.7 and grok-4.6, $0.30 on grok-4.5, and $0.20 on grok-4.3, grok-4.20 and grok-build-0.1. These cached rates also double from 200k prompt tokens. Context windows: 500k tokens for grok-4.7, grok-4.6 and grok-4.5; 1M for grok-4.3 and grok-4.20; 256k for grok-build-0.1. The US endpoint costs 10% more than the global endpoint. Priority Processing (service_tier \"priority\" on Chat Completions and the Responses API) bills text requests at 2x standard rates. A request xAI's system finds in violation of its usage guidelines is still charged for its generation; one caught before generation in the Responses API costs a $0.05 violation fee. On 2026-05-15 xAI retired eight model names, which still resolve, so code that calls them keeps working: requests to Grok 4.1 Fast (grok-4-1-fast-reasoning, grok-4-1-fast-non-reasoning), Grok 4 Fast (grok-4-fast-reasoning, grok-4-fast-non-reasoning), grok-4-0709 and grok-3 are served by grok-4.3 (low reasoning effort for the reasoning names and grok-4-0709, none for the non-reasoning names and grok-3) and billed at grok-4.3 rates; grok-code-fast-1 is served by grok-build-0.1; grok-imagine-image-pro is served by grok-imagine-image-quality. grok-voice-transcribe-1.0 reached end of life on 2026-10-02; its requests are served by grok-voice-transcribe-2.0 at the same price. Image generation: grok-imagine-image $0.02 per image; grok-imagine-image-2.0 $0.04 per image at 1K resolution and low quality, up to $0.08 per image at 2K resolution and medium quality; $0.01 per input image when editing. grok-imagine-image-quality ($0.05 per image at 1K resolution) is retired on 2026-11-02, when its requests are served by grok-imagine-image-2.0 at low quality. Voice API: speech-to-text costs $0.10 per hour of audio (REST) or $0.20 per hour (streaming), text-to-speech $15.00 per 1M characters, and speech-to-speech with grok-voice-3.0 $0.08 a minute ($4.80 an hour). grok-voice-3.0 replaced grok-voice-2.0 on 2026-10-14 at the same price; grok-voice-2.0 is deprecated, and the grok-voice-latest alias now points to grok-voice-3.0. Video generation: grok-imagine-video-1.5 $0.08 per second at 480p, $0.14 at 720p, $0.25 at 1080p. grok-imagine-video-1.5-lite $0.02 per second at 480p, $0.03 at 720p, $0.14 at 1080p. grok-imagine-video $0.05 per second at 480p, $0.07 at 720p. Batch API discounts: 20% off input, cached input, output and reasoning tokens on grok-4.7, grok-4.6, grok-4.5, grok-4.3, grok-4.20-0309-reasoning, grok-4.20-0309-non-reasoning and grok-4.20-multi-agent-0309. grok-4.7 under 200k prompt tokens: $1.60 input, $0.40 cached input, $4.80 output per 1M tokens. grok-build-0.1 does not support Batch API. Image and video generation in Batch API are at standard rates. Server-side tools cost extra, per call, on top of tokens: web_search, code_execution and attachment_search $5 per 1,000 calls, collections_search $2.50 per 1,000, and x_search $5 per 1,000 posts and $10 per 1,000 profiles it returns. view_image, view_x_video and remote MCP tools are billed for their tokens only.",
-      "current_state": "Text API prices per 1M tokens are listed for several models including grok-4.7, grok-build-0.1, grok-4.6, grok-4.5, grok-4.3, grok-4.20-multi-agent-0309, grok-4.20-0309-reasoning, and grok-4.20-0309-non-reasoning, with different rates for short and long context (>=200k tokens). Imagine API pricing is provided for image and video generation/editing. Voice API pricing is provided for Speech to Speech, Speech to Text, and Text to Speech. Tool pricing is listed for Web Search, X Search, Code Execution, Image Generation, File Attachments, Collections Search, and Remote MCP Tools. Batch API discounts are listed per model. Priority Processing is a 2x premium. A 10% premium applies to the US regional endpoint.",
-      "source_url": "https://docs.x.ai/developers/pricing",
-      "category": "AI / ML",
-      "first_read_date": "2026-10-31"
+      "summary": "The free tier now includes access to all Grafana Cloud services. Has specific limits for each service (metrics, logs, traces, profiles, Kubernetes Monitoring, Application Observability, Frontend Observability, Database Observability, and AI Assistant). The Pro tier now starts at $6.50 / 1k series and includes a $19/month platform fee, and has different limits for each service.",
+      "previous_state": "Free tier includes access to all Grafana Cloud services with limited usage, 14-day retention, and community support. 10k metric series, 50 GB logs, and 50 GB traces are included. Pro costs $19 a month plus usage, includes 10k active series and 50 GB each of logs and traces, and bills usage above them. Pro keeps metrics for 13 months and logs, traces, profiles and k6 tests for 30 days.",
+      "current_state": "The free tier includes access to all Grafana Cloud services with usage limits. Pro starts at $6.50 / 1k series and includes a $19/month platform fee, with pay-as-you-go above the free tier.",
+      "source_url": "https://grafana.com/pricing/",
+      "category": "Monitoring",
+      "first_read_date": "2026-11-01"
+    },
+    {
+      "vendor": "Harness CI",
+      "change_type": "pricing_restructured",
+      "impact": "high",
+      "summary": "The free plan now includes Harness Open Source and Litmus Chaos, and community support. It has limits of 60 concurrent pipeline executions, 250GB storage, and up to 5 users.",
+      "previous_state": "CI/CD platform — free plan: 2,000 Harness Cloud credits a month that expire monthly, 2,000 minutes on the 2-core Linux machine and 1,000 on the 4-core one. Harness Cloud on the Free plan needs a business email address and credit card validation. Builds on your own machine with the local runner have no limits. Paid plans have no published price.",
+      "current_state": "The Free Plan includes Harness Open Source, Litmus Chaos, and Community support. It allows up to 5 users, 250GB of storage, and 60 concurrent pipeline executions.",
+      "source_url": "https://www.harness.io/pricing",
+      "category": "CI/CD",
+      "first_read_date": "2026-11-01"
     }
   ],
   "resolved": [
@@ -3060,6 +3027,66 @@
       "outcome": "corroborated",
       "detail": "a reading on 2026-10-31 read it as pricing_restructured too",
       "resolved_date": "2026-10-31"
+    },
+    {
+      "vendor": "Bitrise",
+      "change_type": "free_tier_removed",
+      "impact": "high",
+      "summary": "The Hobby plan is now a paid tier called 'Starter' starting at $89/month. The free Hobby plan is no longer available.",
+      "previous_state": "Mobile CI/CD platform — free Hobby plan: 300 credits/month, 1 private app, 1 user, 5 concurrent builds, 90-minute build timeout. Supports iOS, Android, Flutter, React Native",
+      "source_url": "https://bitrise.io/pricing",
+      "first_read_date": "2026-10-31",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-11-01 read it as free_tier_removed too",
+      "resolved_date": "2026-11-01"
+    },
+    {
+      "vendor": "Bugsnag",
+      "change_type": "limits_reduced",
+      "impact": "medium",
+      "summary": "The free tier now has a 7-day data retention period, down from unlimited retention. The free tier also includes 7.5K events and 1M spans per month, matching previously.",
+      "previous_state": "Error monitoring — Includes: 1 user Error and performance monitoring 7.5K events and 1M spans per month 50+ platforms 30+ third-party integrations Free plan features, plus: Unlimited users End-to-end diagnostics Basic notifications",
+      "source_url": "https://www.bugsnag.com/pricing/",
+      "first_read_date": "2026-10-31",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-11-01 read it as limits_reduced too",
+      "resolved_date": "2026-11-01"
+    },
+    {
+      "vendor": "GoFile.io",
+      "change_type": "restriction",
+      "impact": "medium",
+      "summary": "The free tier still exists. The description of its limitations has changed. Is now the primary limitation.",
+      "previous_state": "Free file sharing and storage by web UI or API, no account needed. Free files are kept while they keep being downloaded and deleted after 10 days without a download. Free accounts get 100 GB of traffic per 30 days; past it, some downloads are restricted until usage falls back under the limit. Uploading and basic file management work on free accounts; most other API endpoints need Premium.",
+      "source_url": "https://gofile.io/",
+      "first_read_date": "2026-10-31",
+      "outcome": "contradicted",
+      "detail": "a reading on 2026-11-01 read it as pricing_restructured",
+      "resolved_date": "2026-11-01"
+    },
+    {
+      "vendor": "MiniMax",
+      "change_type": "product_deprecated",
+      "impact": "high",
+      "summary": "Music and lyrics APIs are no longer available to new users as of August 20, 2026. The Token Plan is no longer accepting new purchases.",
+      "previous_state": "MiniMax sells API access pay-as-you-go on platform.minimax.io. Its pricing pages list no free API allowance; one docs page mentions a free quota for new pay-as-you-go users but gives no amount. Text: MiniMax-M3 $0.30/$1.20 (per 1M tokens, inputs up to 512k, after a permanent 50% discount); MiniMax-M2.7 $0.30/$1.20 (per 1M tokens); MiniMax-M2.7-highspeed $0.60/$2.40 (per 1M tokens). MiniMax M2.5 and M2.7 models are unavailable to new users from 2026-10-19. They are retired on 2026-11-18, after which API requests will not work. For M Plan and Token Plan users, requests to these models are routed to MiniMax-M3.1-Flash-Preview from 2026-10-19. MiniMax-M3.1-Flash-Preview is not available to pay-as-you-go users; MiniMax-M3 is the pay-as-you-go option. Speech: speech-2.8-turbo $60 and speech-2.8-hd $100 per 1M characters. Video: MiniMax-H3 $0.08 per second at 768P. Image: image-01 $0.0035 per image. Music and lyrics APIs closed to new users on 2026-08-20. Subscriptions: M Plan Go $22, Explore $55 and Build $132 a month, with the first month half price on monthly billing during the M Plan launch; annual billing charges 10 months for 12. The Token Plan no longer takes new purchases.",
+      "source_url": "https://platform.minimax.io/docs/guides/pricing-paygo",
+      "first_read_date": "2026-10-31",
+      "outcome": "contradicted",
+      "detail": "a reading on 2026-11-01 read a change the gate refused as confirmed_unchanged",
+      "resolved_date": "2026-11-01"
+    },
+    {
+      "vendor": "xAI",
+      "change_type": "pricing_restructured",
+      "impact": "high",
+      "summary": "Several models have been retired or replaced, and pricing has been updated. The Imagine API pricing has changed, and the Voice API has been updated. The Batch API now has specific discounts per model. Priority Processing is described. The US regional endpoint has a 10% premium. Grok 4.7 Fast pricing is detailed.",
+      "previous_state": "Grok API, pay as you go: sign up at console.x.ai, then load it with credits. grok-4.7 $2.00/$6.00 (per 1M tokens, under 200k prompt tokens). grok-4.3 $1.25/$2.50 (under 200k prompt tokens). grok-build-0.1 $1.00/$2.00 (under 200k prompt tokens). grok-4.6 and grok-4.5 cost the same as grok-4.7 ($2.00 input and $6.00 output per 1M tokens under 200k prompt tokens), and grok-4.20 (0309 reasoning, non-reasoning and multi-agent) the same as grok-4.3 ($1.25 input and $2.50 output). A request whose prompt reaches 200k tokens is billed at the long-context rate for all its tokens, twice the standard rate: grok-4.7 and grok-4.6 go from $2.00 input and $6.00 output per 1M tokens to $4.00 and $12.00; grok-4.3 and grok-4.20 from $1.25 and $2.50 to $2.50 and $5.00; grok-build-0.1 from $1.00 and $2.00 to $2.00 and $4.00. Cached input costs $0.50 on grok-4.7 and grok-4.6, $0.30 on grok-4.5, and $0.20 on grok-4.3, grok-4.20 and grok-build-0.1. These cached rates also double from 200k prompt tokens. Context windows: 500k tokens for grok-4.7, grok-4.6 and grok-4.5; 1M for grok-4.3 and grok-4.20; 256k for grok-build-0.1. The US endpoint costs 10% more than the global endpoint. Priority Processing (service_tier \"priority\" on Chat Completions and the Responses API) bills text requests at 2x standard rates. A request xAI's system finds in violation of its usage guidelines is still charged for its generation; one caught before generation in the Responses API costs a $0.05 violation fee. On 2026-05-15 xAI retired eight model names, which still resolve, so code that calls them keeps working: requests to Grok 4.1 Fast (grok-4-1-fast-reasoning, grok-4-1-fast-non-reasoning), Grok 4 Fast (grok-4-fast-reasoning, grok-4-fast-non-reasoning), grok-4-0709 and grok-3 are served by grok-4.3 (low reasoning effort for the reasoning names and grok-4-0709, none for the non-reasoning names and grok-3) and billed at grok-4.3 rates; grok-code-fast-1 is served by grok-build-0.1; grok-imagine-image-pro is served by grok-imagine-image-quality. grok-voice-transcribe-1.0 reached end of life on 2026-10-02; its requests are served by grok-voice-transcribe-2.0 at the same price. Image generation: grok-imagine-image $0.02 per image; grok-imagine-image-2.0 $0.04 per image at 1K resolution and low quality, up to $0.08 per image at 2K resolution and medium quality; $0.01 per input image when editing. grok-imagine-image-quality ($0.05 per image at 1K resolution) is retired on 2026-11-02, when its requests are served by grok-imagine-image-2.0 at low quality. Voice API: speech-to-text costs $0.10 per hour of audio (REST) or $0.20 per hour (streaming), text-to-speech $15.00 per 1M characters, and speech-to-speech with grok-voice-3.0 $0.08 a minute ($4.80 an hour). grok-voice-3.0 replaced grok-voice-2.0 on 2026-10-14 at the same price; grok-voice-2.0 is deprecated, and the grok-voice-latest alias now points to grok-voice-3.0. Video generation: grok-imagine-video-1.5 $0.08 per second at 480p, $0.14 at 720p, $0.25 at 1080p. grok-imagine-video-1.5-lite $0.02 per second at 480p, $0.03 at 720p, $0.14 at 1080p. grok-imagine-video $0.05 per second at 480p, $0.07 at 720p. Batch API discounts: 20% off input, cached input, output and reasoning tokens on grok-4.7, grok-4.6, grok-4.5, grok-4.3, grok-4.20-0309-reasoning, grok-4.20-0309-non-reasoning and grok-4.20-multi-agent-0309. grok-4.7 under 200k prompt tokens: $1.60 input, $0.40 cached input, $4.80 output per 1M tokens. grok-build-0.1 does not support Batch API. Image and video generation in Batch API are at standard rates. Server-side tools cost extra, per call, on top of tokens: web_search, code_execution and attachment_search $5 per 1,000 calls, collections_search $2.50 per 1,000, and x_search $5 per 1,000 posts and $10 per 1,000 profiles it returns. view_image, view_x_video and remote MCP tools are billed for their tokens only.",
+      "source_url": "https://docs.x.ai/developers/pricing",
+      "first_read_date": "2026-10-31",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-11-01 read it as pricing_restructured too",
+      "resolved_date": "2026-11-01"
     }
   ]
 }

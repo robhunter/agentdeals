@@ -19,7 +19,7 @@ export const MIN_PAGE_TEXT_LENGTH = 500;
 export const PAGE_TOO_SHORT_ERROR = "page content too short (likely JS-rendered SPA)";
 const MAX_RESPONSE_TOKENS = 400;
 
-export const VERIFIER_MODEL = "google/gemma-3-27b-it";
+export const VERIFIER_MODEL = "deepseek/deepseek-v4.1-flash";
 export const VERIFIER_API_KEY_ENV = "OPENROUTER_API_KEY";
 export const VERIFIER_BASE_URL = "https://openrouter.ai/api/v1";
 
@@ -296,6 +296,7 @@ export function createVerifierClient(options = {}) {
           model,
           max_tokens: maxTokens,
           temperature: 0,
+          reasoning: { enabled: false },
           messages: [{ role: "user", content: prompt }],
         }),
       });
