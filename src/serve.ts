@@ -30722,7 +30722,7 @@ function buildVectorDatabasePricingPage(): string {
       vectorType: "Managed (Dedicated)",
       freeVectors: "~1M at 768 dimensions",
       freeStorage: "0.5 vCPU, 1 GB RAM, 4 GB disk",
-      freeDimensions: "Unlimited",
+      freeDimensions: "Up to 65,535",
       freeQueries: "Unlimited",
       paidFrom: "Usage-based (CPU, memory, disk); no published starting price",
       pricingModel: "Per-cluster (RAM/disk)",
@@ -30884,7 +30884,7 @@ function buildVectorDatabasePricingPage(): string {
       vectorType: "Document DB + Vector Search",
       freeVectors: "~100K (within 512 MB)",
       freeStorage: "512 MB (M0 cluster)",
-      freeDimensions: "Up to 4,096",
+      freeDimensions: "Up to 8,192",
       freeQueries: "Unlimited",
       paidFrom: "Flex: $8\u201330/mo (prototyping); Dedicated from $56.94/mo (M10)",
       pricingModel: "Per-cluster",
@@ -30963,7 +30963,7 @@ function buildVectorDatabasePricingPage(): string {
     { q: "What is a vector database and why do I need one?", a: "A vector database stores high-dimensional numerical representations (embeddings) of data like text, images, or audio, and enables fast similarity search. You need one if you're building RAG (Retrieval-Augmented Generation) pipelines, semantic search, recommendation systems, or any AI application that needs to find similar items. Traditional databases can't efficiently search across hundreds of dimensions." },
     { q: "Should I use a dedicated vector database or pgvector?", a: "For prototypes and small-to-medium workloads (under 1M vectors), pgvector in Supabase or Neon is the simplest choice — no extra infrastructure, SQL queries, and your vectors live alongside your relational data. For production RAG at scale (1M+ vectors), dedicated solutions like Pinecone, Qdrant, or Weaviate offer better query performance, more indexing options, and purpose-built features like hybrid search and reranking." },
     { q: "Which vector database has the best free tier?", a: "For managed cloud: Pinecone offers 2 GB (~1M vectors) free and Zilliz Cloud (5 GB, about 1M 768-dimension vectors). For self-hosted: Qdrant, Chroma, Milvus, and LanceDB are all fully open-source with no limits. For the simplest setup: Supabase pgvector (500 MB, included with Postgres) or Neon pgvector (1 GB per project) require zero extra infrastructure." },
-    { q: "What is the cheapest vector database for production RAG?", a: "Self-hosted Qdrant or Milvus on a $5-10/month VPS is the absolute cheapest for small-to-medium scale. Turbopuffer bills usage with a $16 monthly minimum on its Launch plan. Upstash Vector (10K queries/day free) is also cost-effective. Supabase pgvector is free if your total database is under 500 MB." },
+    { q: "What is the cheapest vector database for production RAG?", a: "Self-hosted Qdrant on a $5-10/month VPS is the cheapest for small-to-medium scale; self-hosted Milvus costs about $15-30 a month because it also runs etcd, MinIO and Pulsar. Turbopuffer bills usage with a $16 monthly minimum on its Launch plan. Upstash Vector (10K queries/day free) is also cost-effective. Supabase pgvector is free if your total database is under 500 MB." },
     { q: "How many vectors can I store in 1 GB?", a: "It depends on dimensions. With 1,536 dimensions (OpenAI text-embedding-3-small): ~170K vectors per GB raw, but with indexing overhead expect ~100K-150K. With 768 dimensions (many open-source models): ~340K vectors per GB raw, ~200K-250K with indexes. With 3,072 dimensions (OpenAI text-embedding-3-large): ~85K vectors per GB. Lower-dimension models are more cost-effective for storage." },
   ];
 
@@ -31245,7 +31245,7 @@ function buildVectorDatabasePricingPage(): string {
     '\n' +
     '    <div class="verdict-item">\n' +
     '      <strong>Best for serverless / edge</strong>\n' +
-    '      <p><a href="/vendor/upstash-vector">Upstash Vector</a> (REST API, edge-native, free tier) or <a href="/vendor/turbopuffer">Turbopuffer</a> (S3-backed, pay-per-use, no minimum). Both work in serverless environments where TCP connections are unavailable.</p>\n' +
+    '      <p><a href="/vendor/upstash-vector">Upstash Vector</a> (REST API, edge-native, free tier) or <a href="/vendor/turbopuffer">Turbopuffer</a> (S3-backed, pay-per-use, $16 monthly minimum on Launch). Both work in serverless environments where TCP connections are unavailable.</p>\n' +
     '    </div>\n' +
     '\n' +
     '    <div class="verdict-item">\n' +

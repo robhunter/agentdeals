@@ -28,7 +28,7 @@ const WITHDRAWN: Record<string, Record<string, RegExp>> = {
     "Weaviate Cloud as a 14-day sandbox": /Sandbox only|Sandbox \(14-day\)|14-day free sandbox with full features/,
     "Weaviate Cloud's paid plans from $25": /\$25\/mo \(Shared\)|Shared cloud from \$25/,
     "Zilliz Cloud's free tier as about 5M vectors": /~5M/,
-    "Turbopuffer with no minimum": /[Nn]o minimum commitment/,
+    "Turbopuffer with no minimum": /[Nn]o minimum commitment|S3-backed, pay-per-use, no minimum/,
     "Turbopuffer priced from $0.30 a month": /\$0\.30\/M vectors\/mo stored|\$0\.30–5|Turbopuffer's pay-per-use model/,
     "Chroma Cloud's pricing as TBA or in early access": /pricing TBA|cloud TBA|Chroma Cloud in early access/,
     "Qdrant's free cluster with backups included": /backups included/,
@@ -62,6 +62,7 @@ const STATED: Record<string, string[]> = {
     "Pinecone (2 GB, ~1M vectors) or Zilliz Cloud (5 GB, about 1M 768-dimension vectors).",
     "No free tier. S3-native architecture — vectors stored on S3 with warm cache layer. Every plan has a monthly minimum: $16 on Launch and $256 on Scale (turbopuffer.com/pricing, read 2026-10-07).",
     "Turbopuffer bills usage with a $16 monthly minimum on its Launch plan.",
+    "(S3-backed, pay-per-use, $16 monthly minimum on Launch)",
     "Chroma Cloud's Starter plan is $0 a month plus usage, with $5 in free credits; Team is $250 a month plus usage (trychroma.com/pricing, read 2026-10-07).",
   ],
   "/ci-cd-pricing": [
@@ -212,6 +213,8 @@ describe("database, vector and CI/CD pricing pages state each vendor's plan as t
     const markup = html.get("/vector-database-pricing")!;
     const cases = [
       ["pricing-table", "Qdrant Cloud", "Free Vectors", "~1M at 768 dimensions"],
+      ["pricing-table", "Qdrant Cloud", "Dimensions", "Up to 65,535"],
+      ["pricing-table", "MongoDB Atlas Vector Search", "Dimensions", "Up to 8,192"],
       ["pricing-table", "Qdrant Cloud", "Free Storage", "0.5 vCPU, 1 GB RAM, 4 GB disk"],
       ["pricing-table", "Qdrant Cloud", "Paid From", "Usage-based (CPU, memory, disk); no published starting price"],
       ["pricing-table", "Zilliz Cloud", "Paid From", "$0/mo + usage (Standard, Serverless)"],
@@ -257,7 +260,7 @@ describe("database, vector and CI/CD pricing pages state each vendor's plan as t
     const answer = faq?.mainEntity.find((entry: any) => entry.name === question)?.acceptedAnswer.text;
     assert.ok(answer, question);
     for (const text of [textOf(markup), answer]) {
-      assert.ok(text.includes("Self-hosted Qdrant or Milvus on a $5-10/month VPS"));
+      assert.ok(text.includes("Self-hosted Qdrant on a $5-10/month VPS is the cheapest for small-to-medium scale; self-hosted Milvus costs about $15-30 a month because it also runs etcd, MinIO and Pulsar."));
       assert.ok(text.includes("Upstash Vector (10K queries/day free) is also cost-effective."));
       assert.doesNotMatch(text, /Qdrant Cloud \(\$10\/month\)/);
     }
