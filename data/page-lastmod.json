@@ -21,12 +21,12 @@
       "daily": true
     },
     "/ai-free-tiers": {
-      "hash": "3e23a4ef04722680",
-      "changed": "2026-10-31"
+      "hash": "f218eb9d9ec94756",
+      "changed": "2026-11-01"
     },
     "/ai-ml-alternatives": {
-      "hash": "2bc07b160211ce10",
-      "changed": "2026-10-31"
+      "hash": "29ae40b6765d0dea",
+      "changed": "2026-11-01"
     },
     "/alternative-to": {
       "hash": "71c46cb785764b0c",
@@ -823,11 +823,11 @@
       "changed": "2026-10-30"
     },
     "/aws-free-tier-2026": {
-      "hash": "2dfff28492b1c58b",
-      "changed": "2026-10-31"
+      "hash": "f172ae70004945de",
+      "changed": "2026-11-01"
     },
     "/azure-free-tier-2026": {
-      "hash": "e7e76c618e66be74",
+      "hash": "d7c6a1e5313d8be7",
       "changed": "2026-11-01"
     },
     "/backblaze-b2-vs-cloudflare-r2": {
@@ -1098,8 +1098,8 @@
       "changed": "2026-10-31"
     },
     "/category/ai-ml": {
-      "hash": "7228c2b1462f31a1",
-      "changed": "2026-10-31"
+      "hash": "bf5552f8bf80c947",
+      "changed": "2026-11-01"
     },
     "/category/analytics": {
       "hash": "ad4b39324186d7e6",
@@ -1166,8 +1166,8 @@
       "changed": "2026-10-28"
     },
     "/category/databases": {
-      "hash": "c81d387874ed3210",
-      "changed": "2026-10-31"
+      "hash": "b6c2255f3079d711",
+      "changed": "2026-11-01"
     },
     "/category/design": {
       "hash": "816a8af6c3d18364",
@@ -1294,8 +1294,8 @@
       "changed": "2026-10-30"
     },
     "/category/startup-perks": {
-      "hash": "3670dea06571f242",
-      "changed": "2026-10-31"
+      "hash": "6a919011a72e51f5",
+      "changed": "2026-11-01"
     },
     "/category/status-pages": {
       "hash": "277dec071e9b5629",
@@ -1685,8 +1685,8 @@
       "changed": "2026-10-29"
     },
     "/compare/cockroachdb-vs-neon": {
-      "hash": "418d7192720e0560",
-      "changed": "2026-10-29"
+      "hash": "92dd3dd062a72c4d",
+      "changed": "2026-11-01"
     },
     "/compare/codeberg-vs-gitgud": {
       "hash": "01eb3407c468c978",
@@ -2405,8 +2405,8 @@
       "changed": "2026-10-31"
     },
     "/compare/neon-vs-supabase": {
-      "hash": "0200c33c375b8e64",
-      "changed": "2026-10-29"
+      "hash": "f5edafff4e0cdb54",
+      "changed": "2026-11-01"
     },
     "/compare/netlify-vs-railway": {
       "hash": "8faf2bbeef9a78f9",
@@ -2700,16 +2700,16 @@
       "changed": "2026-10-31"
     },
     "/database-alternatives": {
-      "hash": "1eb1e6a9edb7dbbf",
-      "changed": "2026-10-31"
+      "hash": "f47d87af0cff07ab",
+      "changed": "2026-11-01"
     },
     "/database-free-tier-comparison-2026": {
-      "hash": "c55a89fb2ee7790e",
-      "changed": "2026-10-31"
+      "hash": "13e0e29ea2ba915b",
+      "changed": "2026-11-01"
     },
     "/database-pricing": {
-      "hash": "24a85b2433ef4650",
-      "changed": "2026-10-31"
+      "hash": "d8f52d74aae55d41",
+      "changed": "2026-11-01"
     },
     "/datadog-alternatives": {
       "hash": "969895437e2930b4",
@@ -3161,8 +3161,8 @@
       "changed": "2026-10-11"
     },
     "/estimate": {
-      "hash": "b650f7c085a70c62",
-      "changed": "2026-10-31"
+      "hash": "4da9f2c96c1a7e17",
+      "changed": "2026-11-01"
     },
     "/events": {
       "hash": "10c036e7bfb60e32",
@@ -3252,8 +3252,8 @@
       "daily": true
     },
     "/gemini-api-pricing-2026": {
-      "hash": "e9bc4de5d35f0b4c",
-      "changed": "2026-10-31"
+      "hash": "7ae3d09c1857b716",
+      "changed": "2026-11-01"
     },
     "/github-actions-alternatives": {
       "hash": "381d7d1f240d272f",
@@ -3324,8 +3324,8 @@
       "changed": "2026-10-31"
     },
     "/llm-api-pricing": {
-      "hash": "5c07587c85a1148f",
-      "changed": "2026-10-31"
+      "hash": "e142bd2469279b98",
+      "changed": "2026-11-01"
     },
     "/localstack-alternatives": {
       "hash": "1ad734f977bd3cc6",
@@ -3336,8 +3336,8 @@
       "changed": "2026-10-31"
     },
     "/mongodb-alternatives": {
-      "hash": "b3ddc0f0945ae6f1",
-      "changed": "2026-10-30"
+      "hash": "9883c3a2ad1c657f",
+      "changed": "2026-11-01"
     },
     "/monitoring-alternatives": {
       "hash": "406772cba14a73a0",
@@ -3348,28 +3348,28 @@
       "changed": "2026-10-31"
     },
     "/neon-vs-supabase": {
-      "hash": "9899037e8a8e40fa",
-      "changed": "2026-10-31"
+      "hash": "5e78bfec430a1c2b",
+      "changed": "2026-11-01"
     },
     "/neon-vs-turso": {
-      "hash": "de33f0621e3a3331",
-      "changed": "2026-10-30"
+      "hash": "edd42530666a7289",
+      "changed": "2026-11-01"
     },
     "/netlify-vs-render": {
       "hash": "c048d756be400465",
       "changed": "2026-10-29"
     },
     "/openai-assistants-alternatives": {
-      "hash": "6d8af6a5d757376e",
-      "changed": "2026-10-31"
+      "hash": "f0690ce9c02d6d31",
+      "changed": "2026-11-01"
     },
     "/openai-assistants-migration": {
       "hash": "f8c9da0d9dc90b53",
       "changed": "2026-10-31"
     },
     "/openai-assistants-migration-2026": {
-      "hash": "291174ed5bc02e33",
-      "changed": "2026-10-31"
+      "hash": "857eb70272d887b7",
+      "changed": "2026-11-01"
     },
     "/postman-alternatives": {
       "hash": "75bb46f9296aaff0",
@@ -3603,7 +3603,7 @@
       "daily": true
     },
     "/stack-check": {
-      "hash": "ee8cc1810da9f220",
+      "hash": "045191562af6151a",
       "changed": "2026-11-01"
     },
     "/stacks": {
@@ -3631,7 +3631,7 @@
       "changed": "2026-10-30"
     },
     "/startup-credits": {
-      "hash": "e998a4d8d31ab33a",
+      "hash": "620c67653084a156",
       "changed": "2026-11-01"
     },
     "/state-of-free-tiers": {
@@ -3912,8 +3912,8 @@
       "changed": "2026-10-20"
     },
     "/vector-database-pricing": {
-      "hash": "9376676e0a986004",
-      "changed": "2026-10-31"
+      "hash": "8c0693080fea5871",
+      "changed": "2026-11-01"
     },
     "/vendor": {
       "hash": "74c9741297436ba1",
@@ -8663,8 +8663,8 @@
       "changed": "2026-10-31"
     },
     "/vendor/svb-startup-banking-offers": {
-      "hash": "db264795c118ee46",
-      "changed": "2026-10-31"
+      "hash": "fa4a372ebd1153e7",
+      "changed": "2026-11-01"
     },
     "/vendor/svg-converter": {
       "hash": "7e3a7a56edf9b082",
