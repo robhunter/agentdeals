@@ -83,7 +83,7 @@ const STATED_ON_THE_TOOLS_PAGE = [
   "GitHub Copilot Business ($19/seat) is cheapest. Gemini Code Assist is no longer sold to new customers. Cursor Teams seats are $30, $100 or $200 per user a month, with Claude and GPT billed at API list price plus the Cursor Token Rate. Devin Desktop (Windsurf) Teams is $80/month plus $40/month per full dev seat.",
   "Inline code suggestions, chat, code transformation, 50 agent invocations/month. Supports VS Code, JetBrains, CLI, and AWS Console. New sign-ups and subscriptions were blocked from 2026-05-15. Existing subscriptions can add users. Support ends on 2027-04-30. AWS recommends Kiro.",
   "The MarsCode cloud IDE ended on 2025-04-01. The extension is now Trae Plugin. marscode.com promotes the Trae AI IDE.",
-  "Cline, Aider, and Gemini CLI with local models are the only fully private options. Cloud agents may process code on servers with varying data retention policies.",
+  "Cline and Aider with local models are the only fully private options. Gemini CLI only runs on Google's hosted models. Cloud agents may process code on servers with varying data retention policies.",
   "GitHub Copilot — Copilot Student is free with an allowance of GitHub AI Credits, available to verified students. Verified teachers and maintainers of popular open source projects may be eligible for free Copilot Pro access.",
   "Free and Go state no message count. Plus and Business allowances are per five-hour window, vary by model and task, and may have weekly limits. Cloud tasks use more than local messages. Pro has no five-hour limit. API-key use is billed per token.",
   "Windsurf Pro ($20/mo) or Cursor Premium ($30/mo, with Claude and GPT billed at API list price on top; Cursor's $8 Plus plan runs only Grok models and Composer). Cascade was removed from Devin Desktop in version 3.9.19 on 2026-09-08. Devin Local is now the only agent.",
@@ -294,5 +294,39 @@ describe("AI coding plan comparisons state prices and included usage", () => {
     const box = served.get(TOOLS_PAGE)!.match(/<div class="context-box">\s*<strong>Best value picks:<\/strong>([\s\S]*?)<\/div>/);
     assert.ok(box);
     assert.strictEqual(textOf(box[1]), `${TEAM_VALUE_SENTENCE} BYO-key tools (Cline, Aider) can be cheapest or most expensive depending on usage patterns.`);
+  });
+});
+
+const CLAUDE_PLAN_DETAILS = "Claude Code is in every paid Claude plan and not in Free. Pro is $20/mo billed monthly or $17/mo billed annually. Max is $100/mo with 5x Pro's usage. Ultra is $200/mo with 10x Pro's weekly usage and no five-hour limit for verified accounts. Team Standard seat is $25/mo ($20/mo billed annually). Team Premium seat is $125/mo ($100/mo billed annually) with 5x Standard's usage. Enterprise is $20/seat/mo plus usage at API rates, billed annually with a 20-seat minimum. Max includes $100/mo and Ultra $200/mo of Claude API credits; they expire monthly and do not cover Claude Code.";
+const CLAUDE_USAGE_DETAILS = "Usage is shared with Claude chat. Limits reset every five hours and every week. Ultra has no five-hour limit for verified accounts.";
+
+describe("/ai-coding-tools-pricing states Claude's plan and billing boundaries", () => {
+  it("names Max and Ultra separately in the power cell", () => {
+    assert.strictEqual(pricingRow(TOOLS_PAGE, "Claude Code").power, "$100/mo (Max) / $200/mo (Ultra)");
+  });
+
+  it("states plan prices, seat minimums, verified-account limits and API credit exclusions in the card", () => {
+    assert.ok(cardText(TOOLS_PAGE, "claude-code").includes(CLAUDE_PLAN_DETAILS));
+  });
+
+  it("states both reset windows and Ultra's exception with the retained usage-credit sentence", () => {
+    const text = rowFor(rowsBetween(TOOLS_PAGE, 'id="cost-analysis"', 'id="hidden-costs"'), "Claude Code")[2];
+    assert.ok(text.includes(CLAUDE_USAGE_DETAILS));
+    assert.ok(text.includes("At the limit, paid plans can turn on usage credits billed at standard API rates, so heavy use can cost more than the plan price."));
+  });
+
+  it("states delegated-task pricing, hosted Gemini CLI and Copilot's model-selection rule", () => {
+    const text = textOf(served.get(TOOLS_PAGE)!);
+    assert.ok(text.includes("Claude Code (Max $100/mo, Ultra $200/mo)"));
+    assert.ok(text.includes("Devin (Pro $20/mo, extra usage billed at API pricing)"));
+    assert.ok(text.includes("Cline and Aider with local models are the only fully private options. Gemini CLI only runs on Google's hosted models."));
+    assert.ok(cardText(TOOLS_PAGE, "github-copilot").includes("Since 2026-06-24, Student and Free plans use Auto as the only model selection."));
+  });
+
+  it("withdraws the former plan, privacy and billing claims from the complete response", () => {
+    const html = served.get(TOOLS_PAGE)!;
+    for (const phrase of ["Max $100 or $200/mo", "$100–200/mo (Max)", "+ ACUs", "and Gemini CLI with local models", "Student plan (Mar 2026)"]) {
+      assert.ok(!html.includes(phrase), phrase);
+    }
   });
 });
