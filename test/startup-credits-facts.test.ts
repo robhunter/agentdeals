@@ -85,7 +85,7 @@ const INCLUDED: Record<string, string> = {
   "Brex Partner Perks": "Up to $5K of AWS credits for new Brex customers (subject to Activate eligibility), $1K of OpenAI credits for a year, up to $200K of Google Cloud and Firebase credits over 2 years, 6 months of Notion Business with Notion AI, 30% off Slack for 12 months.",
   "Mercury Perks": "1 year of Datadog free (up to $100K in credits; Series A or earlier, new Datadog customers), up to $5K of AWS Activate credits, 50% off QuickBooks Online for 3 months. Mercury's Google Cloud offer is paused.",
   "Ramp Partner Rewards": "AWS credits through AWS Activate and OpenAI API credits (Ramp states no amount for either), $350 of Google Cloud credits, 6 months of Notion Business with Notion AI.",
-  "SVB Startup Banking Offers": "$5K of AWS Activate credits (with an Activate Provider Org ID, pre-Series B), $5K of MongoDB credits for 12 months, 25% off Slack upgrades (up to $9K). 79 offers from 58 vendors; no Google Cloud offer.",
+  "SVB Startup Banking Offers": "$5K of AWS Activate credits (with an Activate Provider Org ID, pre-Series B), up to $15K of credits for MongoDB Atlas and Voyage AI, 25% off Slack upgrades (up to $9K). 80 offers from 57 vendors; no Google Cloud offer.",
   "PostHog for Startups": "Credits for product analytics, session replay, feature flags and experiments, plus about $12K of partner perks. Since 2026-09-14, credits don't cover PostHog AI, Desktop, the Slack app, Replay Vision or Inbox.",
   "Amazon Kiro (AWS Startups)": "Kiro Pro+ for up to 2, 10 or 30 users (Starter, Growth and Scale tiers).",
   "Amplitude Early Stage Startup Pricing": "The full Growth plan for 200K monthly tracked users or 100M events a month.",
@@ -134,7 +134,7 @@ const STATED_ON_THE_GUIDE = [
   "YC / Accelerator company (up to $350K) AWS Activate Portfolio (up to $200K) + Google Scale (up to $100K in the first year) + PostHog ($50K) = up to $350K in the first year.",
   "AI-focused startup (up to $550K, plus Kiro) Google Scale AI (up to $350K) + Kiro (up to one year of Kiro Pro+, $40 per user a month) + AWS Activate Portfolio (up to $200K). Apply for Kiro first: it excludes startups with active Activate credits.",
   "Careful: their AWS credits don't add up; a later Activate award pays only the difference.",
-  "All credit values were read by hand from the programmes' own pages on 2026-09-28.",
+  "All credit values were read by hand from the programmes' own pages between 2026-10-31 and 2026-11-01.",
 ];
 
 const FAQ_ANSWERS = [
@@ -305,6 +305,13 @@ describe("the startup credits guide states each programme's terms as the program
     const html = served.get("/startup-credits")!;
     const withdrawn = /\$1,000 for 90 days|\$1,000 in credits instantly|Azure startup credit offer|\$4,000 more|\$4,000 lasts/gi;
     assert.deepStrictEqual(html.match(withdrawn) ?? [], []);
+  });
+
+  it("serves no previous MongoDB offer, catalogue count or read date in the startup guide", () => {
+    const html = served.get("/startup-credits")!;
+    for (const claim of ["$5K of MongoDB", "79 offers from 58 vendors", "own pages on 2026-09-28"]) {
+      assert.ok(!html.includes(claim), claim);
+    }
   });
 
   it("lists sixteen programmes, without IBM or Segment, and counts sixteen", () => {
