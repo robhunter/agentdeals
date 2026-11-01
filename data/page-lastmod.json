@@ -1302,7 +1302,7 @@
       "changed": "2026-11-01"
     },
     "/category/storage": {
-      "hash": "6dd601a4c4d7e68c",
+      "hash": "d25697203184f4ae",
       "changed": "2026-11-01"
     },
     "/category/team-collaboration": {
@@ -3603,7 +3603,7 @@
       "daily": true
     },
     "/stack-check": {
-      "hash": "36461bccf60c41b6",
+      "hash": "7db9e871a60665d2",
       "changed": "2026-11-01"
     },
     "/stacks": {
@@ -3638,11 +3638,11 @@
       "daily": true
     },
     "/storage-alternatives": {
-      "hash": "08cc2fa76ea963f0",
+      "hash": "72669ba5142beac0",
       "changed": "2026-11-01"
     },
     "/storage-comparison-2026": {
-      "hash": "5cff69d106090c20",
+      "hash": "2da38cba78738ced",
       "changed": "2026-11-01"
     },
     "/supabase-vs-firebase": {

@@ -37788,9 +37788,9 @@
       },
       "conditions": [
         {
-          "text": "Storj began a voluntary, court-supervised financial restructuring on July 26, 2026, which it calls its Chapter 11 process. Storj said the network continues to operate normally.",
-          "quote": "Today Storj Management and Board have commenced a voluntary, court-supervised financial restructuring — an accelerated reorganization. … The network continues to operate normally.",
-          "url": "https://forum.storj.io/t/an-open-letter-to-the-storj-token-community-the-restructuring-the-network-and-a-proposed-path-to-shared-ownership/32068",
+          "text": "Storj Labs filed for Chapter 11 on July 26, 2026, in the US Bankruptcy Court for the Northern District of West Virginia. Storj says it will continue operating and does not anticipate interruptions in service to its customers.",
+          "quote": "Today Storj Labs, Inc. voluntarily filed Chapter 11 in the United States Bankruptcy Court for the Northern District of West Virginia … Storj will continue operating in the ordinary course throughout the Chapter 11 process. Storj also does not anticipate any interruptions in service to its customers",
+          "url": "https://www.storj.io/blog/storj-announces-voluntary-financial-restructuring-to-resolve-legacy-liabilities-and-position-the-business-for-growth/",
           "read_on": "2026-11-01"
         }
       ]
