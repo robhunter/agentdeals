@@ -27949,7 +27949,7 @@ function buildStartupCreditsPage(): string {
   const metaDesc = STARTUP_CREDITS_META_DESCRIPTION;
   const slug = "startup-credits";
   const pubDate = "2026-03-27";
-  const STARTUP_CREDIT_FIGURES_READ = "2026-09-28";
+  const STARTUP_CREDIT_FIGURES_READ = "between 2026-10-31 and 2026-11-01";
 
   const difficultyColors: Record<string, string> = {
     "open": "#3fb950",
@@ -28278,7 +28278,7 @@ function buildStartupCreditsPage(): string {
     '\n' +
     '  <h2>Data Source &amp; Methodology</h2>\n' +
     '  <div class="methodology">\n' +
-    '    <strong>Powered by AgentDeals.</strong> All credit values were read by hand from the programmes\' own pages on ' + STARTUP_CREDIT_FIGURES_READ + '. Changes are tracked via our <a href="/pricing-changes">deal changes timeline</a> (' + trackedChangeCount + ' total changes tracked). The pricing changes we track are updated continuously; the tables above are not.<br><br>\n' +
+    '    <strong>Powered by AgentDeals.</strong> All credit values were read by hand from the programmes\' own pages ' + STARTUP_CREDIT_FIGURES_READ + '. Changes are tracked via our <a href="/pricing-changes">deal changes timeline</a> (' + trackedChangeCount + ' total changes tracked). The pricing changes we track are updated continuously; the tables above are not.<br><br>\n' +
     '    <strong>Query this data programmatically</strong> via <a href="/api/startup-credits">/api/startup-credits</a> (JSON), our <a href="/setup">MCP tools</a>, or <a href="/developers">REST API</a> \u2014 search for startup programs, compare eligibility, or track changes from your AI coding assistant.\n' +
     '  </div>\n' +
     '\n' +
