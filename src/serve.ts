@@ -21984,7 +21984,7 @@ ${globalNavCss()}
   </div>
 
   <div class="search-cta">
-    <p>This comparison covers Supabase vs Firebase free tiers as of March 2026. For more database options, see our <a href="/database-alternatives">full database comparison</a> with 30+ free options. Browse all ${offers.length.toLocaleString()} developer tools at <a href="/search">/search</a>.</p>
+    <p>This comparison covers Supabase vs Firebase free tiers. For more database options, see our <a href="/database-alternatives">full database comparison</a> with 30+ free options. Browse all ${offers.length.toLocaleString()} developer tools at <a href="/search">/search</a>.</p>
   </div>
 
   ${buildMoreAlternativesGuides(slug)}
@@ -22015,9 +22015,9 @@ function buildVercelVsNetlifyPage(): string {
     { feature: "Bandwidth", vercel: "100 GB/mo Fast Data Transfer", netlify: "300 credits/mo (20 credits/GB ≈ 15 GB)", notes: "Vercel has 6.7× more raw bandwidth. Netlify's credit model bundles bandwidth with deploys and compute" },
     { feature: "Serverless Functions", vercel: "1M invocations, 4 hrs Active CPU", netlify: "Credit-based (shared pool)", notes: "Vercel has explicit function limits. Netlify shares credits across all usage" },
     { feature: "Edge Requests", vercel: "1M/month", netlify: "Included in credits", notes: "Vercel tracks edge requests separately" },
-    { feature: "Builds", vercel: "Included (no separate limit)", netlify: "15 credits per production deploy", notes: "Vercel includes builds. Netlify's 300 credits cover about 20 production deploys if spent on nothing else" },
-    { feature: "Storage", vercel: "1 GB Blob Storage", netlify: "Varies by add-on", notes: "Vercel includes Blob Storage. Netlify has no built-in equivalent on free tier" },
-    { feature: "Image Optimization", vercel: "5K transformations/month", netlify: "Add-on (not free)", notes: "Vercel includes image optimization. Netlify requires paid add-on" },
+    { feature: "Builds", vercel: "Included; up to 100 deployments a day, one build at a time, 45 minutes each", netlify: "15 credits per production deploy", notes: "Vercel includes builds. Netlify's 300 credits cover about 20 production deploys if spent on nothing else" },
+    { feature: "Storage", vercel: "1 GB Blob Storage", netlify: "Netlify Blobs (beta) and up to 3 Netlify Databases", notes: "Both free plans include blob storage. Netlify's Free plan also includes Netlify Database" },
+    { feature: "Image Optimization", vercel: "5K transformations/month", netlify: "Netlify Image CDN, billed as web bandwidth", notes: "Vercel counts transformations. Netlify bills Image CDN traffic as web bandwidth, at 20 credits per GB" },
     { feature: "Team Members", vercel: "1 (Hobby = personal)", netlify: "1 (Free plan)", notes: "Both free tiers are single-developer" },
     { feature: "Commercial Use", vercel: "Non-commercial only", netlify: "Commercial OK", notes: "Critical difference: Vercel Hobby prohibits commercial use. Netlify Free allows it" },
   ];
@@ -22042,10 +22042,10 @@ function buildVercelVsNetlifyPage(): string {
     { metric: "First paid plan", vercel: "$20/mo per developer seat (Pro)", netlify: "$9/mo, 1 member (Personal)", notes: "Netlify Personal includes 1,000 credits a month. Vercel has no plan between Hobby and Pro" },
     { metric: "Team plan", vercel: "$20/mo per developer seat (Pro)", netlify: "$20/mo, unlimited members (Pro)", notes: "Vercel bills each developer seat; viewer seats are free. Netlify Pro charges for no seat" },
     { metric: "Bandwidth at 1 TB", vercel: "$20/mo (1 TB included in Pro)", netlify: "$126/mo (20,000-credit Pro tier)", notes: "Vercel Pro includes 1 TB. Netlify charges 20 credits per GB, so 1 TB takes its largest Pro tier before any deploy or compute" },
-    { metric: "Builds", vercel: "Included in Pro", netlify: "15 credits per production deploy", notes: "Netlify has no build-minute allowance on current plans. Each production deploy draws on the plan's monthly credits" },
-    { metric: "Serverless compute", vercel: "1,000 GB-hrs in Pro", netlify: "Credits pool in Pro", notes: "Vercel more predictable. Netlify credits blur compute vs bandwidth" },
+    { metric: "Builds", vercel: "Billed per build minute from the $20 monthly credit; new Pro accounts default to Elastic machines at $0.0035 per CPU minute", netlify: "15 credits per production deploy", notes: "Netlify has no build-minute allowance on current plans. Each production deploy draws on the plan's monthly credits" },
+    { metric: "Serverless compute", vercel: "No fixed allowance: Active CPU from $0.128 an hour and memory from $0.0106 per GB-hour, paid from the $20 monthly credit", netlify: "Credits pool in Pro", notes: "Both pay for compute from a monthly credit. Netlify charges 10 credits per GB-hour" },
     { metric: "SAML SSO", vercel: "$300/mo add-on to Pro; included in Enterprise", netlify: "Enterprise only (price not published)", notes: "Neither $20 plan includes SAML SSO" },
-    { metric: "Spending protection", vercel: "Spend management, alerts, hard limits", netlify: "Credit-based (auto-pause on free, alerts on Pro)", notes: "Both offer protection. Vercel's spend management is more granular" },
+    { metric: "Spending protection", vercel: "Spend management, alerts, hard limits", netlify: "Every plan pauses all projects when credits run out, with alerts at 50%, 75% and 100%; Personal and Pro can turn on auto recharge", notes: "Both offer protection. Vercel's spend management is more granular" },
   ];
 
   const scalingRows = scalingComparison.map(r => `<tr>
@@ -22301,7 +22301,7 @@ ${globalNavCss()}
   </div>
 
   <div class="search-cta">
-    <p>This comparison covers Vercel vs Netlify free tiers as of March 2026. For more hosting options, see our <a href="/hosting-free-tier-comparison-2026">hosting free tier comparison</a> with 12+ platforms compared side-by-side, or our <a href="/hosting-alternatives">hosting alternatives hub</a> with 30+ free options. Browse all ${offers.length.toLocaleString()} developer tools at <a href="/search">/search</a>.</p>
+    <p>This comparison covers Vercel vs Netlify free tiers. For more hosting options, see our <a href="/hosting-free-tier-comparison-2026">hosting free tier comparison</a> with 12+ platforms compared side-by-side, or our <a href="/hosting-alternatives">hosting alternatives hub</a> with 30+ free options. Browse all ${offers.length.toLocaleString()} developer tools at <a href="/search">/search</a>.</p>
   </div>
 
   ${buildMoreAlternativesGuides(slug)}

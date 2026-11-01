@@ -3526,17 +3526,17 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 58,
+      "table_figures": 63,
       "table_figures_from_records": 42,
       "tables": [
         {
           "label": "1. Free Tier Comparison Table",
-          "figures": 4,
+          "figures": 5,
           "from_records": 0
         },
         {
           "label": "3. Cost at Scale",
-          "figures": 12,
+          "figures": 16,
           "from_records": 0
         },
         {

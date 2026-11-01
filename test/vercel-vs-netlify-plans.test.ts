@@ -58,6 +58,8 @@ function readPage(html: string): Page {
 
 let proc: ChildProcess | null = null;
 let page: Page;
+let html: string;
+let supabaseHtml: string;
 
 function startServer(): Promise<{ child: ChildProcess; port: number }> {
   return new Promise((resolve, reject) => {
@@ -128,7 +130,11 @@ describe("/vercel-vs-netlify prices each vendor's plans as the vendor does", () 
     proc = started.child;
     const res = await fetch(`http://localhost:${started.port}/vercel-vs-netlify`);
     assert.strictEqual(res.status, 200);
-    page = readPage(await res.text());
+    html = await res.text();
+    page = readPage(html);
+    const supabase = await fetch(`http://localhost:${started.port}/supabase-vs-firebase`);
+    assert.strictEqual(supabase.status, 200);
+    supabaseHtml = await supabase.text();
   });
 
   after(() => proc?.kill());
@@ -150,13 +156,41 @@ describe("/vercel-vs-netlify prices each vendor's plans as the vendor does", () 
       "Vercel Pro includes 1 TB. Netlify charges 20 credits per GB, so 1 TB takes its largest Pro tier before any deploy or compute",
     ]);
     assert.deepStrictEqual(rowNamed(scale.rows, "Builds"), [
-      "Builds", "Included in Pro", "15 credits per production deploy",
+      "Builds", "Billed per build minute from the $20 monthly credit; new Pro accounts default to Elastic machines at $0.0035 per CPU minute", "15 credits per production deploy",
       "Netlify has no build-minute allowance on current plans. Each production deploy draws on the plan's monthly credits",
     ]);
     assert.deepStrictEqual(rowNamed(scale.rows, "SAML SSO"), [
       "SAML SSO", "$300/mo add-on to Pro; included in Enterprise", "Enterprise only (price not published)",
       "Neither $20 plan includes SAML SSO",
     ]);
+  });
+
+  it("includes Netlify storage and meters Image CDN traffic in the Free comparison", () => {
+    const free = page.tables.find(t => t.head[0] === "Feature");
+    assert.ok(free);
+    assert.deepStrictEqual(rowNamed(free.rows, "Storage"), [
+      "Storage", "1 GB Blob Storage", "Netlify Blobs (beta) and up to 3 Netlify Databases",
+      "Both free plans include blob storage. Netlify's Free plan also includes Netlify Database",
+    ]);
+    assert.strictEqual(rowNamed(free.rows, "Image Optimization")?.[2], "Netlify Image CDN, billed as web bandwidth");
+    assert.strictEqual(rowNamed(free.rows, "Image Optimization")?.[3], "Vercel counts transformations. Netlify bills Image CDN traffic as web bandwidth, at 20 credits per GB");
+  });
+
+  it("prices Pro compute from credits and states when Netlify pauses projects", () => {
+    const scale = page.tables.find(t => t.head.join("|") === "Metric|Vercel|Netlify|Notes");
+    assert.ok(scale);
+    assert.deepStrictEqual(rowNamed(scale.rows, "Serverless compute"), [
+      "Serverless compute", "No fixed allowance: Active CPU from $0.128 an hour and memory from $0.0106 per GB-hour, paid from the $20 monthly credit",
+      "Credits pool in Pro", "Both pay for compute from a monthly credit. Netlify charges 10 credits per GB-hour",
+    ]);
+    assert.strictEqual(rowNamed(scale.rows, "Spending protection")?.[2], "Every plan pauses all projects when credits run out, with alerts at 50%, 75% and 100%; Personal and Pro can turn on auto recharge");
+  });
+
+  it("leaves the review date to the byline on both reviewed comparisons", () => {
+    assert.ok(html.includes("This comparison covers Vercel vs Netlify free tiers."));
+    assert.ok(supabaseHtml.includes("This comparison covers Supabase vs Firebase free tiers."));
+    assert.doesNotMatch(html, /This comparison covers Vercel vs Netlify free tiers as of March 2026/);
+    assert.doesNotMatch(supabaseHtml, /This comparison covers Supabase vs Firebase free tiers as of March 2026/);
   });
 
   it("introduces the section with each vendor's next plans and closes it on what they cost", () => {
@@ -175,7 +209,7 @@ describe("/vercel-vs-netlify prices each vendor's plans as the vendor does", () 
     assert.ok(free, JSON.stringify(page.tables.map(t => t.head)));
     assert.deepStrictEqual(free.head, ["Feature", "Vercel Hobby", "Netlify Free", "Notes"]);
     assert.deepStrictEqual(rowNamed(free.rows, "Builds"), [
-      "Builds", "Included (no separate limit)", "15 credits per production deploy",
+      "Builds", "Included; up to 100 deployments a day, one build at a time, 45 minutes each", "15 credits per production deploy",
       "Vercel includes builds. Netlify's 300 credits cover about 20 production deploys if spent on nothing else",
     ]);
     assert.strictEqual(rowNamed(free.rows, "Team Members")?.[2], "1 (Free plan)");
