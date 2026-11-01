@@ -171,11 +171,17 @@ function retirementsStated(html: string): { models: string[]; day: string }[] {
 }
 
 describe(`${PAGE} on paying after use once Prepay starts`, () => {
-  it("says what cannot be undone, then the route that bills after use, what gemini-3.5-flash calls cost there, the one model to move to, priced the same on both platforms, and when Agent Platform retires gemini-3.6-flash and the Gemini 2.5 models", () => {
+  it("does not state an unconditional bar on moving back to Postpay and preserves the Cloud billing link", () => {
+    assert.ok(!page.includes("accounts cannot switch from Prepay to Postpay"));
+    assert.ok(prepayParagraph(page).includes('<a href="https://ai.google.dev/gemini-api/docs/billing" target="_blank" rel="noopener">bills it on the standard Cloud charging cycle</a>, not Prepay.'));
+  });
+
+  it("states the qualified Postpay upgrade, then the route that bills after use, what gemini-3.5-flash calls cost there, the one model to move to, priced the same on both platforms, and when Agent Platform retires gemini-3.6-flash and the Gemini 2.5 models", () => {
     const text = withoutTags(prepayParagraph(page));
     assert.ok(text.includes(
-      "Google's billing FAQ states that accounts cannot switch from Prepay to Postpay. " +
-      "To pay after use instead of prepaying, use Gemini Enterprise Agent Platform (formerly Vertex AI). " +
+      "Google's billing FAQ says switching from Prepay to Postpay is not supported. " +
+      "The same doc says accounts meeting Google's unpublished criteria can manually upgrade to Postpay, with unused credits refunded. " +
+      "Any account can pay after use instead of prepaying by using Gemini through Gemini Enterprise Agent Platform (formerly Vertex AI). " +
       "Google bills it on the standard Cloud charging cycle, not Prepay. " +
       "Calls to gemini-3.5-flash cost $1.50 input and $9.00 output per million tokens on Agent Platform, compared to $0.75 input and $3.75 output on the Gemini API, which routes to gemini-3.6-flash. " +
       "Change the model ID to gemini-3.8-flash before moving; it costs the same on both platforms. " +
@@ -350,14 +356,14 @@ describe(`${PAGE} on Prepay credits when a project moves or the billing account 
 });
 
 describe(`${PAGE} on a missed payment for another Google Cloud service`, () => {
-  it("follows the route that bills after use on any account with the suspension a declined payment can cause whatever the Prepay balance, before what cannot be undone", () => {
+  it("follows the route that bills after use on any account with the suspension a declined payment can cause whatever the Prepay balance, before the qualified Postpay upgrade", () => {
     const text = withoutTags(prepayParagraph(page));
     assert.ok(text.includes(
       "On any account, Gemini Enterprise Agent Platform (formerly Vertex AI) bills after use on the standard Cloud charging cycle. " +
       "If your Cloud Billing account has a Gemini API Prepay credit balance but your card expired or a payment for another Google Cloud service was declined, the Gemini API can still be suspended. " +
       "This happens with an overdue balance, a declined payment, or an invalid payment method. " +
       "Resolve the issue in the Google Cloud Billing console to restore service. " +
-      "Google's billing FAQ states that accounts cannot switch from Prepay to Postpay",
+      "Google's billing FAQ says switching from Prepay to Postpay is not supported.",
     ), text);
   });
 
