@@ -4369,8 +4369,8 @@
       "changed": "2026-10-31"
     },
     "/vendor/bismuth-cloud": {
-      "hash": "d713804fc9ca8614",
-      "changed": "2026-10-31"
+      "hash": "265447eac3e22e76",
+      "changed": "2026-11-01"
     },
     "/vendor/bitbucket-pipelines": {
       "hash": "4d4bf7a953b39cf9",
@@ -4708,8 +4708,8 @@
       "daily": true
     },
     "/vendor/claw-cloud": {
-      "hash": "6d46797265ba4840",
-      "changed": "2026-10-31"
+      "hash": "b06f09dfa208ee27",
+      "changed": "2026-11-01"
     },
     "/vendor/clerk": {
       "hash": "516d995015829bc6",
@@ -5097,7 +5097,7 @@
       "changed": "2026-10-31"
     },
     "/vendor/cstate": {
-      "hash": "12183241d88f0a3f",
+      "hash": "f459763f62594983",
       "changed": "2026-11-01"
     },
     "/vendor/cube": {
@@ -5503,8 +5503,8 @@
       "changed": "2026-10-31"
     },
     "/vendor/engagespot-co": {
-      "hash": "b3eea00483f50ba4",
-      "changed": "2026-10-31"
+      "hash": "63c90f93e4427d38",
+      "changed": "2026-11-01"
     },
     "/vendor/ente": {
       "hash": "765d8627a15331e3",
@@ -5523,8 +5523,8 @@
       "changed": "2026-10-31"
     },
     "/vendor/evernote": {
-      "hash": "929f808a07e50cfc",
-      "changed": "2026-10-31"
+      "hash": "3cbd1eff75844ae2",
+      "changed": "2026-11-01"
     },
     "/vendor/everystep-automation-com": {
       "daily": true
@@ -6064,7 +6064,7 @@
       "daily": true
     },
     "/vendor/google-vertex-ai-agent-engine": {
-      "hash": "82d174303de00483",
+      "hash": "8891e1a477e316a7",
       "changed": "2026-11-01"
     },
     "/vendor/goreportcard-com": {
@@ -6588,7 +6588,7 @@
       "changed": "2026-10-31"
     },
     "/vendor/karbon-sites": {
-      "hash": "7777a6af76fb8123",
+      "hash": "c7d475f94412c878",
       "changed": "2026-11-01"
     },
     "/vendor/katalon-com": {
@@ -6690,8 +6690,8 @@
       "daily": true
     },
     "/vendor/langtrace": {
-      "hash": "f9e3b874ca392ca4",
-      "changed": "2026-10-31"
+      "hash": "3726120346368a35",
+      "changed": "2026-11-01"
     },
     "/vendor/langwatch": {
       "daily": true
@@ -7208,8 +7208,8 @@
       "daily": true
     },
     "/vendor/moss-sh": {
-      "hash": "7f27059a177e44b0",
-      "changed": "2026-10-31"
+      "hash": "eb4331d49717c0c3",
+      "changed": "2026-11-01"
     },
     "/vendor/mossaik": {
       "hash": "48a1ba3124dc90ee",
@@ -7831,8 +7831,8 @@
       "changed": "2026-10-31"
     },
     "/vendor/proxysentry": {
-      "hash": "58528ec4b8ed3ea9",
-      "changed": "2026-10-31"
+      "hash": "84eb5780b893f34b",
+      "changed": "2026-11-01"
     },
     "/vendor/public-cloud-threat-intelligence": {
       "hash": "bfde838737c1c310",
@@ -8453,8 +8453,8 @@
       "daily": true
     },
     "/vendor/soos": {
-      "hash": "70c2f5a3214690cc",
-      "changed": "2026-10-31"
+      "hash": "2654486a664cf96e",
+      "changed": "2026-11-01"
     },
     "/vendor/sourceforge": {
       "hash": "81748bccdb7173f6",
@@ -9124,8 +9124,8 @@
       "changed": "2026-10-31"
     },
     "/vendor/uuid-generator": {
-      "hash": "2876c2cdcebb8658",
-      "changed": "2026-10-31"
+      "hash": "ac6a7ee3ebb41084",
+      "changed": "2026-11-01"
     },
     "/vendor/uxtweak-com": {
       "hash": "559a596b812a045b",
@@ -9232,8 +9232,8 @@
       "changed": "2026-10-31"
     },
     "/vendor/volaryddns": {
-      "hash": "d2ab281c31484315",
-      "changed": "2026-10-31"
+      "hash": "a3bc6b57e52f54c3",
+      "changed": "2026-11-01"
     },
     "/vendor/volume": {
       "hash": "45cb03ad3de706e6",
@@ -9275,8 +9275,8 @@
       "changed": "2026-10-31"
     },
     "/vendor/wdrfree-svg": {
-      "hash": "6901ee4bd9162cd1",
-      "changed": "2026-10-31"
+      "hash": "ac080ea518b7243a",
+      "changed": "2026-11-01"
     },
     "/vendor/we-team": {
       "hash": "a171ab8bf91873f8",
@@ -9365,8 +9365,8 @@
       "changed": "2026-10-31"
     },
     "/vendor/whitespace": {
-      "hash": "5b5aef809ab84fc5",
-      "changed": "2026-10-31"
+      "hash": "094b5b51c051a678",
+      "changed": "2026-11-01"
     },
     "/vendor/windmill-dev": {
       "hash": "9b354137d60ac6c8",
