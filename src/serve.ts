@@ -28395,11 +28395,11 @@ function buildAiCodingToolsPricingPage(): string {
       power: "$100/mo (Max)",
       teams: "$19/seat",
       model: "Tier + AI credits",
-      freeDetails: "2,000 code completions/month plus limited chat and agent usage, no credit card. On every paid plan, code completions and next edit suggestions are unlimited and do not consume credits — all other usage is metered in GitHub AI Credits at $0.01 per credit. Pro $10/mo: $15 of monthly credits (1,000 base + 500 flex). Pro+ $39/mo: $70 (3,900 + 3,100), adds premium models including Opus. Max $100/mo: $200 (10,000 + 10,000), 2.9x Pro+'s included usage. Business $19/seat: 1,900 credits/user. Enterprise $39/seat: 3,900/user. Student plan (Mar 2026): premium models available only via Auto mode.",
+      freeDetails: "2,000 code completions/month plus limited chat and agent usage, no credit card. On every paid plan, code completions and next edit suggestions are unlimited and do not consume credits — all other usage is metered in GitHub AI Credits at $0.01 per credit. Pro $10/mo: $15 of monthly credits (1,000 base + 500 flex). Pro+ $39/mo: $70 (3,900 + 3,100), adds premium models including Opus. Max $100/mo: $200 (10,000 + 10,000), 2.9x Pro+'s included usage. Business $19/seat: 1,900 credits/user. Enterprise $39/seat: 3,900/user. Since 2026-06-24, Student and Free plans use Auto as the only model selection.",
       freeType: "limited",
       monthlyCostSolo: "$10",
       monthlyCostTeam5: "$95",
-      hiddenCosts: "Agent and chat usage is metered — an AI credit is $0.01, and Pro's $15 monthly allowance drains faster on premium models. Code completions and next edit suggestions are exempt and unlimited on every paid plan. Premium requests, their 5x–20x model multipliers and the $0.04 per-request overage are retired; GitHub's own billing docs label that model legacy. Reaching the full model lineup still means Pro+ at $39/mo. Student plan (Mar 2026): premium model self-selection removed — GPT-5.4, Claude Opus, Sonnet only via Auto mode.",
+      hiddenCosts: "Agent and chat usage is metered — an AI credit is $0.01, and Pro's $15 monthly allowance drains faster on premium models. Code completions and next edit suggestions are exempt and unlimited on every paid plan. Premium requests, their 5x–20x model multipliers and the $0.04 per-request overage are retired; GitHub's own billing docs label that model legacy. Reaching the full model lineup still means Pro+ at $39/mo. Since 2026-06-24, Student and Free plans use Auto as the only model selection.",
     },
     {
       name: "Gemini Code Assist",
@@ -28437,14 +28437,14 @@ function buildAiCodingToolsPricingPage(): string {
       category: "cli",
       free: "None (paid plans or API key)",
       pro: "$20/mo (Pro)",
-      power: "$100\u2013200/mo (Max)",
+      power: "$100/mo (Max) / $200/mo (Ultra)",
       teams: "$25/seat",
       model: "Subscription + usage credits",
-      freeDetails: "Agentic coding tool by Anthropic, in the terminal, IDEs, a desktop app and the browser. Included in every paid Claude plan, not in Free: Pro $20/mo ($17 billed annually), Max $100 or $200/mo, Team Standard $25/seat ($20 billed annually), Enterprise $20/seat plus usage at API rates. Also runs on an Anthropic API key, billed per token.",
+      freeDetails: "Agentic coding tool by Anthropic, in the terminal, IDEs, a desktop app and the browser. Claude Code is in every paid Claude plan and not in Free. Pro is $20/mo billed monthly or $17/mo billed annually. Max is $100/mo with 5x Pro's usage. Ultra is $200/mo with 10x Pro's weekly usage and no five-hour limit for verified accounts. Team Standard seat is $25/mo ($20/mo billed annually). Team Premium seat is $125/mo ($100/mo billed annually) with 5x Standard's usage. Enterprise is $20/seat/mo plus usage at API rates, billed annually with a 20-seat minimum. Max includes $100/mo and Ultra $200/mo of Claude API credits; they expire monthly and do not cover Claude Code. Also runs on an Anthropic API key, billed per token.",
       freeType: "none",
       monthlyCostSolo: "$20\u2013200+",
       monthlyCostTeam5: "$125+",
-      hiddenCosts: "Plan usage is shared with Claude chat and resets in five-hour windows. At the limit, paid plans can turn on usage credits billed at standard API rates, so heavy use can cost more than the plan price.",
+      hiddenCosts: "Usage is shared with Claude chat. Limits reset every five hours and every week. Ultra has no five-hour limit for verified accounts. At the limit, paid plans can turn on usage credits billed at standard API rates, so heavy use can cost more than the plan price.",
     },
     {
       name: "Gemini CLI",
@@ -28973,7 +28973,7 @@ function buildAiCodingToolsPricingPage(): string {
     '  </div>\n' +
     '  <div class="hidden-cost-card">\n' +
     '    <h4>Data Privacy</h4>\n' +
-    '    <p>All cloud-based tools send your code to external servers. Cline, Aider, and Gemini CLI with local models are the only fully private options. Cloud agents may process code on servers with varying data retention policies.</p>\n' +
+    '    <p>All cloud-based tools send your code to external servers. Cline and Aider with local models are the only fully private options. Gemini CLI only runs on Google\'s hosted models. Cloud agents may process code on servers with varying data retention policies.</p>\n' +
     '  </div>\n' +
     '\n' +
     '  <h2 id="changes">Recent Pricing Changes</h2>\n' +
@@ -29008,7 +29008,7 @@ function buildAiCodingToolsPricingPage(): string {
     '\n' +
     '    <div class="verdict-item">\n' +
     '      <strong>Best for autonomous/delegated tasks</strong>\n' +
-    '      <p><a href="/vendor/claude-code">Claude Code</a> (Max $100\u2013200/mo) or <a href="/vendor/openai-codex">OpenAI Codex</a> (via ChatGPT Plus $20/mo). Both can work autonomously across files. <a href="/vendor/devin">Devin</a> ($20/mo + ACUs) for fully delegated engineering tasks.</p>\n' +
+    '      <p><a href="/vendor/claude-code">Claude Code</a> (Max $100/mo, Ultra $200/mo) or <a href="/vendor/openai-codex">OpenAI Codex</a> (via ChatGPT Plus $20/mo). Both can work autonomously across files. <a href="/vendor/devin">Devin</a> (Pro $20/mo, extra usage billed at API pricing) for fully delegated engineering tasks.</p>\n' +
     '    </div>\n' +
     '\n' +
     '    <div class="verdict-item">\n' +
