@@ -39,7 +39,7 @@ const STATED = [
   "AWS's free plan and Azure's free account add more, but AWS's plan closes within 6 months, sooner if its credits run out, and Azure's 12 months of free services need a move to pay-as-you-go within 30 days.",
   "= $0/month within free limits. AWS's free plan closes within 6 months, but its always-free services, such as Lambda's 1M requests a month, continue on a Paid plan.",
   "Switch to always-free tiers (Oracle Cloud, Firebase Spark, free LLM APIs), and use AWS's and Azure's free offers while they last.",
-  "The other $9.99 buys expanded Gemini 3.1 Pro access and the rest of the AI Pro bundle, including 5 TB of storage.",
+  "The other $9.99 buys Gemini 4 Argon access and the rest of the AI Pro bundle, including 5 TB of storage.",
 ];
 
 const PREPAY_CREDITS =
@@ -48,7 +48,7 @@ const PREPAY_CREDITS =
 const PREPAY_CREDITS_SOURCE = "https://discuss.ai.google.dev/t/error-code-402-message-your-prepayment-credits-are-depleted/185524";
 
 const LINK_THE_PLAN =
-  "AI Pro gives expanded access to Gemini 3.1 Pro and Deep Research in the Gemini app. Link your Google AI Pro or Ultra plan on the Google Developer Program site to receive monthly Google Cloud credits and higher Antigravity quotas. Since June 18, 2026, Gemini CLI and the Gemini Code Assist IDE extensions no longer serve Google AI Pro or Ultra subscribers. Google points them to Antigravity. The Gemini API keeps a free tier of its own;";
+  "AI Pro gives access to Gemini 4 Argon and Deep Research in the Gemini app. Link your Google AI Pro or Ultra plan on the Google Developer Program site to receive monthly Google Cloud credits and higher Antigravity quotas. Since June 18, 2026, Gemini CLI and the Gemini Code Assist IDE extensions no longer serve Google AI Pro or Ultra subscribers. Google points them to Antigravity. The Gemini API keeps a free tier of its own;";
 
 const PROGRAM_SITE = "https://developers.google.com/program";
 const CODE_ASSIST_DEPRECATION = "https://developers.google.com/gemini-code-assist/docs/deprecations/code-assist-individuals";
@@ -63,7 +63,7 @@ const MONTHLY_RENEWALS_ENDED =
   "Monthly standalone Premium ($24.99) on @gmail.com accounts stopped auto-renewing. Workspace subscriptions kept renewing until Google stopped all renewals on September 18, 2026. No new standalone sign-ups are accepted.";
 
 const STUDENT_OFFER =
-  "Eligible college students aged 18+ in countries where the plan is offered, except Bolivia, Albania, Canada, Hong Kong, Macau, and Tunisia, get Google AI Pro free for a year (redeem by December 31, 2026; a payment method is required, and it then renews at $19.99/month).";
+  "Eligible college students aged 18+ in countries where the plan is offered, except Hong Kong, Macau and Tunisia, get a Google AI plan free for 12 months (which plan depends on the school's country; redeem by December 31, 2026; student status is verified through SheerID, a payment method is required, and the plan then renews at its standard monthly price).";
 
 const STUDENT_OFFER_TERMS = "https://one.google.com/offer/studentoffer8";
 
@@ -78,9 +78,9 @@ function geminiContextBox(html: string): string {
 
 const PLAN_CELLS: Record<string, [string, string, string]> = {
   "GDP Premium (standalone, closed)": ["$500/year (annual plan) or $45/mo (monthly plan)", "Gemini 3 Pro access; $50/yr GenAI credit (annual plan)", "30 Firebase Studio workspaces"],
-  "Google AI Pro": ["$10/mo ($120/yr)", "Expanded Gemini 3.1 Pro and Deep Research", "30 Firebase Studio workspaces"],
-  "Google AI Ultra 5x (20 TB)": ["$40/mo ($480/yr)", "5x AI Pro's usage limits", "30 Firebase Studio workspaces"],
-  "Google AI Ultra 20x (30 TB)": ["$100/mo ($1,200/yr)", "20x AI Pro's usage limits", "30 Firebase Studio workspaces"],
+  "Google AI Pro": ["$10/mo ($120/yr)", "Gemini 4 Argon and Deep Research", "No new Firebase Studio workspaces since 2026-06-22"],
+  "Google AI Ultra 5x (20 TB)": ["$40/mo ($480/yr)", "5x AI Pro's usage limits", "No new Firebase Studio workspaces since 2026-06-22"],
+  "Google AI Ultra 20x (30 TB)": ["$100/mo ($1,200/yr)", "20x AI Pro's usage limits", "No new Firebase Studio workspaces since 2026-06-22"],
 };
 
 const KEPT = [
@@ -268,10 +268,19 @@ describe("the Google Developer Program guide states Google's, Microsoft's, Appwr
   it("gives the student offer's countries in the Students card and the student verdict, each linking Google One's offer terms", () => {
     const page = served.get(PAGE)!;
     assert.strictEqual(readable(page).split(STUDENT_OFFER).length - 1, 2);
-    assert.strictEqual(page.split(`get <a href="${STUDENT_OFFER_TERMS}" target="_blank" rel="noopener">Google AI Pro free for a year</a> (redeem`).length - 1, 2);
+    assert.strictEqual(page.split(`get <a href="${STUDENT_OFFER_TERMS}" target="_blank" rel="noopener">a Google AI plan free for 12 months</a> (which plan`).length - 1, 2);
   });
 
-  it("names both Premium plans' credits and every plan's Firebase Studio workspaces in the plan table", () => {
+  it("withdraws the old student exclusions and model and reserves the workspace allowance for the closed plan", () => {
+    const page = served.get(PAGE)!;
+    for (const phrase of ["Bolivia", "Albania, Canada", "Google AI Pro free for a year", "Expanded Gemini 3.1 Pro", "expanded access to Gemini 3.1 Pro", "expanded Gemini 3.1 Pro access"]) {
+      assert.ok(!page.includes(phrase), phrase);
+    }
+    assert.strictEqual(page.split("30 Firebase Studio workspaces").length - 1, 1);
+    assert.strictEqual(planRows(page).get("GDP Premium (standalone, closed)")?.[3], "30 Firebase Studio workspaces");
+  });
+
+  it("names plan credits, models and Firebase Studio availability in their table columns", () => {
     const rows = planRows(served.get(PAGE)!);
     const wrong = Object.entries(PLAN_CELLS).flatMap(([plan, [credits, gemini, firebase]]) => {
       const cells = rows.get(plan);

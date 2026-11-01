@@ -21,11 +21,11 @@
       "daily": true
     },
     "/ai-free-tiers": {
-      "hash": "095b13c179efcf8c",
+      "hash": "b93ce669483dacd1",
       "changed": "2026-11-01"
     },
     "/ai-ml-alternatives": {
-      "hash": "af95389b7bbf56b7",
+      "hash": "e20e3f3892cb6c7f",
       "changed": "2026-11-01"
     },
     "/alternative-to": {
@@ -1098,7 +1098,7 @@
       "changed": "2026-10-31"
     },
     "/category/ai-ml": {
-      "hash": "0fcebccce9596fe0",
+      "hash": "b190f1fec67fa0a6",
       "changed": "2026-11-01"
     },
     "/category/analytics": {
@@ -1238,8 +1238,8 @@
       "changed": "2026-11-01"
     },
     "/category/maps-geolocation": {
-      "hash": "bfb155e9cbc14043",
-      "changed": "2026-10-31"
+      "hash": "15a05514054d36d7",
+      "changed": "2026-11-01"
     },
     "/category/messaging": {
       "hash": "68890808aff778bd",
@@ -3081,8 +3081,8 @@
       "changed": "2026-10-31"
     },
     "/digest/2026-w49": {
-      "hash": "69198d455191cf30",
-      "changed": "2026-11-01"
+      "hash": "c6dcc9a69bb2824e",
+      "changed": "2026-10-30"
     },
     "/digest/2026-w50": {
       "hash": "04a2e9f8adb7d9ee",
@@ -3216,7 +3216,7 @@
       "changed": "2026-10-31"
     },
     "/free-llm-apis": {
-      "hash": "1d4605e85ec5cf99",
+      "hash": "38c31e59d2db6878",
       "changed": "2026-11-01"
     },
     "/free-nextjs-stack": {
@@ -3252,7 +3252,7 @@
       "daily": true
     },
     "/gemini-api-pricing-2026": {
-      "hash": "9915380bbec95eb4",
+      "hash": "7ae3d09c1857b716",
       "changed": "2026-11-01"
     },
     "/github-actions-alternatives": {
@@ -3324,7 +3324,7 @@
       "changed": "2026-10-31"
     },
     "/llm-api-pricing": {
-      "hash": "268e1519036a308f",
+      "hash": "e142bd2469279b98",
       "changed": "2026-11-01"
     },
     "/localstack-alternatives": {
@@ -3603,7 +3603,7 @@
       "daily": true
     },
     "/stack-check": {
-      "hash": "91f466f996368ce5",
+      "hash": "1c1fe4c2e7c7baf5",
       "changed": "2026-11-01"
     },
     "/stacks": {
@@ -5748,8 +5748,8 @@
       "changed": "2026-10-31"
     },
     "/vendor/foursquare": {
-      "hash": "47be618cce8ad90c",
-      "changed": "2026-10-31"
+      "hash": "9a42c1fd36f99a98",
+      "changed": "2026-11-01"
     },
     "/vendor/framagit-org": {
       "hash": "a0ee73ee26ac084f",
@@ -9621,8 +9621,8 @@
       "changed": "2026-10-31"
     },
     "/whatsapp-business-api-pricing-2026": {
-      "hash": "e0578ff6fcad835c",
-      "changed": "2026-10-29"
+      "hash": "02d3381848caef5b",
+      "changed": "2026-11-01"
     },
     "/x402-services": {
       "hash": "62f7c1dc274a373b",

@@ -86,11 +86,13 @@
     },
     {
       "vendor": "Google Cloud Run",
-      "tier": "Always Free"
+      "tier": "Always Free",
+      "since": "2026-11-02"
     },
     {
       "vendor": "Mistral AI",
-      "tier": "Free"
+      "tier": "Free",
+      "since": "2026-11-02"
     },
     {
       "vendor": "Cerebras",
@@ -106,7 +108,8 @@
     },
     {
       "vendor": "LocalStack",
-      "tier": "Free"
+      "tier": "Free",
+      "since": "2026-11-02"
     },
     {
       "vendor": "Exa",
@@ -114,7 +117,8 @@
     },
     {
       "vendor": "Bitrise",
-      "tier": "Hobby"
+      "tier": "Hobby",
+      "since": "2026-11-02"
     },
     {
       "vendor": "Tavily AI",
@@ -126,7 +130,8 @@
     },
     {
       "vendor": "Supabase",
-      "tier": "Free"
+      "tier": "Free",
+      "since": "2026-11-02"
     },
     {
       "vendor": "Google Cloud Build",
@@ -138,7 +143,8 @@
     },
     {
       "vendor": "LiveKit",
-      "tier": "Build"
+      "tier": "Build",
+      "since": "2026-11-02"
     },
     {
       "vendor": "Roboflow",
@@ -174,11 +180,13 @@
     },
     {
       "vendor": "Xata",
-      "tier": "Free"
+      "tier": "Free",
+      "since": "2026-11-02"
     },
     {
       "vendor": "Appetize",
-      "tier": "Free"
+      "tier": "Free",
+      "since": "2026-11-02"
     },
     {
       "vendor": "Netlify",
@@ -194,7 +202,8 @@
     },
     {
       "vendor": "Sentry",
-      "tier": "Developer"
+      "tier": "Developer",
+      "since": "2026-11-02"
     },
     {
       "vendor": "Sentry",
@@ -267,6 +276,256 @@
     {
       "vendor": "HiveMQ",
       "tier": "Legacy Free"
+    },
+    {
+      "vendor": "xAI",
+      "tier": "Pay-as-you-go",
+      "since": "2026-11-02"
+    },
+    {
+      "vendor": "Ollama Cloud",
+      "tier": "Pay-as-you-go",
+      "since": "2026-11-02"
+    },
+    {
+      "vendor": "Google Compute Engine",
+      "tier": "Always Free",
+      "since": "2026-11-02"
+    },
+    {
+      "vendor": "Cloudflare Workers",
+      "tier": "Free",
+      "since": "2026-11-02"
+    },
+    {
+      "vendor": "PythonAnywhere",
+      "tier": "Free",
+      "since": "2026-11-02"
+    },
+    {
+      "vendor": "Appwrite Cloud",
+      "tier": "Free",
+      "since": "2026-11-02"
+    },
+    {
+      "vendor": "Foursquare",
+      "tier": "Free",
+      "since": "2026-11-02"
+    },
+    {
+      "vendor": "Koyeb",
+      "tier": "Legacy Free",
+      "since": "2026-11-02"
+    },
+    {
+      "vendor": "DeepSeek API",
+      "tier": "Pay-as-you-go",
+      "since": "2026-11-02"
+    },
+    {
+      "vendor": "Cloudflare Durable Objects",
+      "tier": "Free",
+      "since": "2026-11-02"
+    },
+    {
+      "vendor": "httpSMS",
+      "tier": "Free",
+      "since": "2026-11-02"
+    },
+    {
+      "vendor": "Microsoft for Startups",
+      "tier": "Startup Credits",
+      "since": "2026-11-02"
+    },
+    {
+      "vendor": "OpenAI Codex",
+      "tier": "Free",
+      "since": "2026-11-02"
+    },
+    {
+      "vendor": "Google Gemini API",
+      "tier": "Free (Reduced)",
+      "since": "2026-11-02"
+    },
+    {
+      "vendor": "SiliconFlow",
+      "tier": "Free",
+      "since": "2026-11-02"
+    },
+    {
+      "vendor": "Railway",
+      "tier": "Free",
+      "since": "2026-11-02"
+    },
+    {
+      "vendor": "Parallel",
+      "tier": "Free",
+      "since": "2026-11-02"
+    },
+    {
+      "vendor": "MEGA",
+      "tier": "Free",
+      "since": "2026-11-02"
+    },
+    {
+      "vendor": "GoatCounter",
+      "tier": "Free",
+      "since": "2026-11-02"
+    },
+    {
+      "vendor": "GoFile.io",
+      "tier": "Free",
+      "since": "2026-11-02"
+    },
+    {
+      "vendor": "Cloudflare for Startups",
+      "tier": "Startup Credits",
+      "since": "2026-11-02"
+    },
+    {
+      "vendor": "Anthropic API",
+      "tier": "Pay-as-you-go",
+      "since": "2026-11-02"
+    },
+    {
+      "vendor": "Zep",
+      "tier": "Free",
+      "since": "2026-11-02"
+    },
+    {
+      "vendor": "Storyblok",
+      "tier": "Free",
+      "since": "2026-11-02"
+    },
+    {
+      "vendor": "PostHog",
+      "tier": "Startup Credits",
+      "since": "2026-11-02"
+    },
+    {
+      "vendor": "MiniMax",
+      "tier": "Pay-as-you-go",
+      "since": "2026-11-02"
+    },
+    {
+      "vendor": "Mapbox",
+      "tier": "Free",
+      "since": "2026-11-02"
+    },
+    {
+      "vendor": "Google Gemini Embedding 2",
+      "tier": "Pay-as-you-go",
+      "since": "2026-11-02"
+    },
+    {
+      "vendor": "Google Cloud Storage",
+      "tier": "Always Free",
+      "since": "2026-11-02"
+    },
+    {
+      "vendor": "GitHub Actions",
+      "tier": "Free",
+      "since": "2026-11-02"
+    },
+    {
+      "vendor": "Filebase",
+      "tier": "Free",
+      "since": "2026-11-02"
+    },
+    {
+      "vendor": "Apify",
+      "tier": "Free",
+      "since": "2026-11-02"
+    },
+    {
+      "vendor": "Resend",
+      "tier": "Free",
+      "since": "2026-11-02"
+    },
+    {
+      "vendor": "OneSignal",
+      "tier": "Free",
+      "since": "2026-11-02"
+    },
+    {
+      "vendor": "Mux",
+      "tier": "Free",
+      "since": "2026-11-02"
+    },
+    {
+      "vendor": "Have I been pwned?",
+      "tier": "Free",
+      "since": "2026-11-02"
+    },
+    {
+      "vendor": "Grafana k6 Cloud",
+      "tier": "Free",
+      "since": "2026-11-02"
+    },
+    {
+      "vendor": "Google Maps Platform",
+      "tier": "Free",
+      "since": "2026-11-02"
+    },
+    {
+      "vendor": "GitHub Models",
+      "tier": "Retired",
+      "since": "2026-11-02"
+    },
+    {
+      "vendor": "Fly.io",
+      "tier": "Legacy Free",
+      "since": "2026-11-02"
+    },
+    {
+      "vendor": "CloudAMQP",
+      "tier": "Little Lemur",
+      "since": "2026-11-02"
+    },
+    {
+      "vendor": "Clarifai",
+      "tier": "Retired",
+      "since": "2026-11-02"
+    },
+    {
+      "vendor": "Amplitude",
+      "tier": "Free",
+      "since": "2026-11-02"
+    },
+    {
+      "vendor": "You.com",
+      "tier": "Free",
+      "since": "2026-11-02"
+    },
+    {
+      "vendor": "Xirsys",
+      "tier": "Free",
+      "since": "2026-11-02"
+    },
+    {
+      "vendor": "WorkOS",
+      "tier": "Free",
+      "since": "2026-11-02"
+    },
+    {
+      "vendor": "Thunder Client",
+      "tier": "Free",
+      "since": "2026-11-02"
+    },
+    {
+      "vendor": "Stream",
+      "tier": "Maker Account",
+      "since": "2026-11-02"
+    },
+    {
+      "vendor": "Notion",
+      "tier": "Free",
+      "since": "2026-11-02"
+    },
+    {
+      "vendor": "Nhost",
+      "tier": "Free",
+      "since": "2026-11-02"
     }
   ]
 }
