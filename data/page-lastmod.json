@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2026-10-31",
+  "generated": "2026-11-01",
   "pages": {
     "/": {
       "daily": true
@@ -827,8 +827,8 @@
       "changed": "2026-10-31"
     },
     "/azure-free-tier-2026": {
-      "hash": "af7bab60738689d7",
-      "changed": "2026-10-31"
+      "hash": "e7e76c618e66be74",
+      "changed": "2026-11-01"
     },
     "/backblaze-b2-vs-cloudflare-r2": {
       "hash": "2908e65ee9fa44f7",
@@ -3635,8 +3635,8 @@
       "changed": "2026-10-30"
     },
     "/startup-credits": {
-      "hash": "301d76117d0054c8",
-      "changed": "2026-10-31"
+      "hash": "f8b205b0d8aec09b",
+      "changed": "2026-11-01"
     },
     "/state-of-free-tiers": {
       "hash": "11e1816b4765014a",

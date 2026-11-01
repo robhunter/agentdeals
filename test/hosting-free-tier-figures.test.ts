@@ -91,6 +91,11 @@ type Retired = { what: string; pattern: RegExp; replacedBy: RegExp; vendorRecord
 
 const RETIRED_FIGURES: Retired[] = [
   {
+    what: "Azure's previous startup entry offer stated as current",
+    pattern: /Azure startup credit offer|\$1,000 in credits instantly|Startups new to Azure can start with \$1,000|Microsoft offers \$1,000 for 90 days/i,
+    replacedBy: /(?:can start with|credits:) \$200 for 90 days(?: and|, then) \$4,800 more/,
+  },
+  {
     what: "Redis Cloud advanced capabilities restricted to paid tiers",
     pattern: /Supports Redis modules \(Search, JSON, TimeSeries, Graph, Bloom\) on paid tiers\.|Modules like RedisSearch and RedisJSON only on paid plans\./i,
     replacedBy: /Search and query, JSON, time series and probabilistic data types are available on the Free plan too\./,
@@ -564,6 +569,7 @@ describe("hosting pages publish the free-tier figures our records hold (#1183)",
 
   it("states the current figure on every page that carried a retired one", async () => {
     const carried: Record<string, string[]> = {
+      "Azure's previous startup entry offer stated as current": ["/startup-credits", "/azure-free-tier-2026"],
       "Redis Cloud advanced capabilities restricted to paid tiers": ["/database-pricing"],
       "Clerk free auth stated as 10K MAU": ["/free-nextjs-stack", "/free-django-stack", "/free-fastapi-stack", "/free-go-stack", "/security-alternatives"],
       "Supabase free Storage including image transformations": ["/free-django-stack", "/free-fastapi-stack", "/free-go-stack"],
