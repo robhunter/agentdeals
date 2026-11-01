@@ -22672,9 +22672,9 @@ function buildRailwayVsRenderPage(): string {
     { metric: "Cheapest paid plan", railway: "$5/mo Hobby ($5 credit incl.)", render: "$7/mo Starter (512 MB, 0.5 CPU)", notes: "Railway Hobby effectively free if usage stays under $5. Render Starter is fixed $7/mo regardless of usage" },
     { metric: "At low utilization (10%)", railway: "~$0.50-1/mo", render: "$7/mo", notes: "Railway wins big for variable/low-traffic workloads — pay only for what you use" },
     { metric: "At full utilization (100%)", railway: "~$5-8/mo (512 MB)", render: "$7/mo", notes: "Break-even around 70-80% utilization. Above that, Render's fixed rate is cheaper" },
-    { metric: "With managed database", railway: "$5/mo + DB container usage", render: "$7/mo (web) + $7/mo (Postgres Starter)", notes: "Both ~$12-14/mo total. Railway maintains the templates; you turn on backups and run upgrades." },
-    { metric: "Auto-scaling", railway: "Vertical only (auto-scales resources)", render: "Horizontal + Vertical (Pro $19/mo)", notes: "Railway auto-scales CPU/RAM within plan limits. Render requires Pro plan for horizontal auto-scaling" },
-    { metric: "SOC 2 / Compliance", railway: "Not advertised", render: "SOC 2 Type II (available on all plans)", notes: "Render has SOC 2 certification. Railway does not currently advertise compliance certifications" },
+    { metric: "With managed database", railway: "$5/mo + DB container usage", render: "$7/mo (web) + $6/mo (Postgres, 256 MB RAM)", notes: "Both ~$12-14/mo total. Railway maintains the templates; you turn on backups and run upgrades." },
+    { metric: "Auto-scaling", railway: "Vertical only (auto-scales resources)", render: "Horizontal + Vertical (Pro, $25/mo plus compute)", notes: "Railway auto-scales CPU/RAM within plan limits. Render requires Pro plan for horizontal auto-scaling" },
+    { metric: "SOC 2 / Compliance", railway: "SOC 2 on Pro and Enterprise", render: "SOC 2 Type II (available on all plans)", notes: "Render lists SOC 2 Type II on every plan. Railway lists SOC 2 compliance on its Pro and Enterprise plans" },
   ];
 
   const scalingRows = scalingComparison.map(r => `<tr>
@@ -22803,7 +22803,7 @@ ${globalNavCss()}
   </div>
 
   <div class="executive-summary">
-    <p><strong>Quick verdict:</strong> Choose <strong>Railway</strong> for variable-traffic prototypes and MVPs where great developer experience matters — fast deploys, no cold starts, usage-based billing. Choose <strong>Render</strong> for production workloads needing managed databases, predictable billing, and SOC 2 compliance.</p>
+    <p><strong>Quick verdict:</strong> Choose <strong>Railway</strong> for variable-traffic prototypes and MVPs where great developer experience matters — fast deploys, no cold starts, usage-based billing. Choose <strong>Render</strong> for production workloads needing managed databases and predictable billing.</p>
     <p><strong>On free tiers:</strong> Both offer ~512 MB RAM, but with fundamentally different trade-offs. Railway stays awake 24/7 (no cold starts) but offers no custom domains. Render includes managed PostgreSQL and Redis, custom domains, and unlimited free static sites — but web services sleep after 15 minutes.</p>
     <p><strong>The key framing:</strong> Railway is <strong>usage-based flexibility</strong> — pay per second, scale to zero, great for variable workloads. Render is <strong>predictable billing</strong> — fixed monthly rates, managed services included, better for production where you need to know the cost upfront.</p>
   </div>
@@ -22869,7 +22869,7 @@ ${globalNavCss()}
     </div>
     <div class="verdict-item">
       <strong>Choose Render if:</strong>
-      <p>You need managed databases (Postgres, Redis) without DevOps overhead, you want predictable monthly billing, you need SOC 2 compliance, or you're hosting static sites (free and unlimited on Render). Best for: production apps, startups needing compliance, static sites, projects requiring managed infrastructure.</p>
+      <p>You need managed databases (Postgres, Redis) without DevOps overhead, you want predictable monthly billing, or you're hosting static sites (free and unlimited on Render). Best for: production apps, startups needing compliance, static sites, projects requiring managed infrastructure.</p>
     </div>
     <div class="verdict-item">
       <strong>Consider Fly.io if:</strong>
@@ -22930,7 +22930,7 @@ ${globalNavCss()}
   </div>
 
   <div class="search-cta">
-    <p>This comparison covers Railway vs Render free tiers as of March 2026. For more hosting options, see our <a href="/hosting-free-tier-comparison-2026">hosting free tier comparison</a> with 12+ platforms compared side-by-side, or our <a href="/hosting-alternatives">hosting alternatives hub</a> with 30+ free options. Browse all ${offers.length.toLocaleString()} developer tools at <a href="/search">/search</a>.</p>
+    <p>This comparison covers Railway vs Render free tiers. For more hosting options, see our <a href="/hosting-free-tier-comparison-2026">hosting free tier comparison</a> with 12+ platforms compared side-by-side, or our <a href="/hosting-alternatives">hosting alternatives hub</a> with 30+ free options. Browse all ${offers.length.toLocaleString()} developer tools at <a href="/search">/search</a>.</p>
   </div>
 
   ${buildMoreAlternativesGuides(slug)}

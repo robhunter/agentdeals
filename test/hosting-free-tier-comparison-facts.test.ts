@@ -407,6 +407,33 @@ describe("the hosting free tier comparison states each host's terms as the host 
     assert.deepStrictEqual(missing, []);
   });
 
+  it("states Railway compliance and Render's database and autoscaling prices in their own columns", () => {
+    const html = served.get("/railway-vs-render")!;
+    const table = [...html.matchAll(/<table[^>]*>([\s\S]*?)<\/table>/g)]
+      .find(t => [...t[1].matchAll(/<th[^>]*>([\s\S]*?)<\/th>/g)].map(c => textOf(c[1])).join("|") === "Metric|Railway|Render|Notes");
+    assert.ok(table);
+    const rows = rowsOf(table[0]);
+    const row = (name: string) => {
+      const matches = rows.filter(r => r[0] === name);
+      assert.strictEqual(matches.length, 1, name);
+      return matches[0];
+    };
+    assert.deepStrictEqual(row("SOC 2 / Compliance"), [
+      "SOC 2 / Compliance", "SOC 2 on Pro and Enterprise", "SOC 2 Type II (available on all plans)",
+      "Render lists SOC 2 Type II on every plan. Railway lists SOC 2 compliance on its Pro and Enterprise plans",
+    ]);
+    assert.strictEqual(row("With managed database")[2], "$7/mo (web) + $6/mo (Postgres, 256 MB RAM)");
+    assert.strictEqual(row("Auto-scaling")[2], "Horizontal + Vertical (Pro, $25/mo plus compute)");
+  });
+
+  it("leaves compliance out of its Render-only reasons and dates the comparison through its byline", () => {
+    const html = served.get("/railway-vs-render")!;
+    const text = textOf(html);
+    assert.ok(text.includes("for production workloads needing managed databases and predictable billing."));
+    assert.ok(text.includes("This comparison covers Railway vs Render free tiers."));
+    assert.doesNotMatch(html, /does not currently advertise compliance|SOC 2 compliance\.<\/p>|Postgres Starter|Pro \$19\/mo|you need SOC 2 compliance,|This comparison covers Railway vs Render free tiers as of March 2026/);
+  });
+
   it("gives /hosting-pricing's structured data Railway's minimum and its meta none of the withdrawn claims", () => {
     const html = served.get("/hosting-pricing")!;
     assert.ok(faqAnswersOf(html).some((answer) => answer.includes(RAILWAY_FOR_GENERAL_PURPOSE_APPS)));
