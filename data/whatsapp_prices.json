@@ -1172,7 +1172,7 @@
         "label": "Test phone number",
         "cells": [
           "Test WhatsApp account, test Messaging account and test business phone number created automatically when starting with Cloud API",
-          "Relaxed messaging limits apply; template messages do not need a payment method on file. No limit is published."
+          "Relaxed limits apply to the test number; Meta publishes no figure for them. Only test accounts and test numbers may send template messages with no payment method on file. A business's own number needs a payment method first: Meta lists a missing payment account as a cause of its send error 131042."
         ]
       },
       {
@@ -1237,7 +1237,7 @@
     "heading": "Why other pages say replies are free",
     "text": "Many third-party pages, and some copies of Meta's own page, still say service messages are free. That was Meta's rule from 2024-11-01 to 2026-09-30. The current rule applies from 2026-10-01.",
     "sources": {
-      "text": "Sources: developers.facebook.com/documentation/business-messaging/whatsapp/pricing (updated 2026-09-30, read 2026-10-10); Meta's rate cards linked from that page, effective 2026-10-01; Meta's AI Providers page (updated 2026-10-15, read 2026-10-23), its authentication-international page (updated 2026-05-21) and section 4.7 of Meta's terms for the WhatsApp Business Platform, read 2026-10-11; Meta's messaging-limits page (updated 2026-05-21) and Twilio's WhatsApp pricing page (current as of September 2026), read 2026-10-18; Meta's About the WhatsApp Business Platform page (updated 2026-08-04) and its WhatsApp accounts and Messaging accounts page (updated 2026-08-05), read 2026-11-01.",
+      "text": "Sources: developers.facebook.com/documentation/business-messaging/whatsapp/pricing (updated 2026-09-30, read 2026-10-10); Meta's rate cards linked from that page, effective 2026-10-01; Meta's AI Providers page (updated 2026-10-15, read 2026-10-23), its authentication-international page (updated 2026-05-21) and section 4.7 of Meta's terms for the WhatsApp Business Platform, read 2026-10-11; Meta's messaging-limits page (updated 2026-05-21) and Twilio's WhatsApp pricing page (current as of September 2026), read 2026-10-18; Meta's About the WhatsApp Business Platform page (updated 2026-08-04) and its WhatsApp accounts and Messaging accounts page (updated 2026-08-05), read 2026-11-01; Meta's Cloud API error codes page (updated 2026-06-18), read 2026-11-01.",
       "links": [
         {
           "text": "developers.facebook.com/documentation/business-messaging/whatsapp/pricing",
@@ -1274,6 +1274,10 @@
         {
           "text": "WhatsApp accounts and Messaging accounts page",
           "url": "https://developers.facebook.com/documentation/business-messaging/whatsapp/whatsapp-business-accounts"
+        },
+        {
+          "text": "Meta's Cloud API error codes page",
+          "url": "https://developers.facebook.com/documentation/business-messaging/whatsapp/support/error-codes"
         }
       ]
     }
