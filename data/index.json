@@ -37769,7 +37769,7 @@
     {
       "vendor": "Storj",
       "category": "Storage",
-      "description": "Distributed S3-compatible object storage. Free trial only: 25 GB free storage for 30 days, no credit card required, and 2 Object Mount licenses. After the trial, $7/TB storage and $7/TB egress with a $5 monthly minimum fee (waived while the trial is running and for accounts paying in STORJ token).",
+      "description": "Distributed S3-compatible object storage. Free trial only: 25 GB free storage for 30 days, no credit card required, and 2 Object Mount licenses. After the trial, $7/TB storage and $7/TB egress with a $5 monthly minimum fee (waived while the trial is running and for accounts paying with USDC).",
       "tier": "Trial",
       "url": "https://storj.io/pricing",
       "tags": [
@@ -37785,7 +37785,15 @@
         "checked": "2026-10-28",
         "outcome": "ok",
         "detail": "the page names Storj as \"storj\" and states \"$7\" and \"$5\" and \"$5,\""
-      }
+      },
+      "conditions": [
+        {
+          "text": "Storj began a voluntary, court-supervised financial restructuring on July 26, 2026, which it calls its Chapter 11 process. Storj said the network continues to operate normally.",
+          "quote": "Today Storj Management and Board have commenced a voluntary, court-supervised financial restructuring — an accelerated reorganization. … The network continues to operate normally.",
+          "url": "https://forum.storj.io/t/an-open-letter-to-the-storj-token-community-the-restructuring-the-network-and-a-proposed-path-to-shared-ownership/32068",
+          "read_on": "2026-11-01"
+        }
+      ]
     },
     {
       "vendor": "SigNoz",
