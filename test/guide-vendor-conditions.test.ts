@@ -471,7 +471,6 @@ const ROWS_THEIR_LISTINGS_CONDITIONS_DO_NOT_DESCRIBE = [
 const ROWS_NAMING_NO_LISTING = [
   { route: "/analytics-free-tier-comparison-2026", row: "countly" },
   { route: "/analytics-free-tier-comparison-2026", row: "fathom" },
-  { route: "/analytics-free-tier-comparison-2026", row: "june-so" },
   { route: "/analytics-free-tier-comparison-2026", row: "matomo" },
   { route: "/analytics-free-tier-comparison-2026", row: "pirsch" },
   { route: "/analytics-free-tier-comparison-2026", row: "simple-analytics" },
