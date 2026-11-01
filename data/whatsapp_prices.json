@@ -1169,6 +1169,13 @@
         ]
       },
       {
+        "label": "Test phone number",
+        "cells": [
+          "Test WhatsApp account, test Messaging account and test business phone number created automatically when starting with Cloud API",
+          "Relaxed messaging limits apply; template messages do not need a payment method on file. No limit is published."
+        ]
+      },
+      {
         "label": "Messaging limit (business-initiated messages)",
         "cells": [
           "Only messages delivered outside a customer service window, counted per unique user in a moving 24 hours and shared by all numbers in the business portfolio. Replies inside a customer service window are not limited",
@@ -1230,7 +1237,7 @@
     "heading": "Why other pages say replies are free",
     "text": "Many third-party pages, and some copies of Meta's own page, still say service messages are free. That was Meta's rule from 2024-11-01 to 2026-09-30. The current rule applies from 2026-10-01.",
     "sources": {
-      "text": "Sources: developers.facebook.com/documentation/business-messaging/whatsapp/pricing (updated 2026-09-30, read 2026-10-10); Meta's rate cards linked from that page, effective 2026-10-01; Meta's AI Providers page (updated 2026-10-15, read 2026-10-23), its authentication-international page (updated 2026-05-21) and section 4.7 of Meta's terms for the WhatsApp Business Platform, read 2026-10-11; Meta's messaging-limits page (updated 2026-05-21) and Twilio's WhatsApp pricing page (current as of September 2026), read 2026-10-18.",
+      "text": "Sources: developers.facebook.com/documentation/business-messaging/whatsapp/pricing (updated 2026-09-30, read 2026-10-10); Meta's rate cards linked from that page, effective 2026-10-01; Meta's AI Providers page (updated 2026-10-15, read 2026-10-23), its authentication-international page (updated 2026-05-21) and section 4.7 of Meta's terms for the WhatsApp Business Platform, read 2026-10-11; Meta's messaging-limits page (updated 2026-05-21) and Twilio's WhatsApp pricing page (current as of September 2026), read 2026-10-18; Meta's About the WhatsApp Business Platform page (updated 2026-08-04), read 2026-11-01.",
       "links": [
         {
           "text": "developers.facebook.com/documentation/business-messaging/whatsapp/pricing",
@@ -1259,6 +1266,10 @@
         {
           "text": "Twilio's WhatsApp pricing page",
           "url": "https://www.twilio.com/en-us/whatsapp/pricing"
+        },
+        {
+          "text": "Meta's About the WhatsApp Business Platform page",
+          "url": "https://developers.facebook.com/documentation/business-messaging/whatsapp/about-the-platform"
         }
       ]
     }
