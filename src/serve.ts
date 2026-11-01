@@ -43039,7 +43039,7 @@ ${globalNavCss()}
   </div>
 
   <div class="context-box">
-    <strong>The session replay add-on trap:</strong> Session replay is increasingly essential for debugging and UX research. PostHog includes 5K replays free, and Amplitude's Free plan includes 10K a month. Mixpanel doesn't offer replay at all &mdash; you'd need a separate tool like FullStory ($300+/mo), Hotjar ($80+/mo), or LogRocket ($99+/mo). At growth stage, buying analytics + replay separately typically costs 2&ndash;3x what PostHog charges for both bundled.
+    <strong>The session replay add-on trap:</strong> Session replay is increasingly essential for debugging and UX research. PostHog includes 5K replays free, and Amplitude's and Mixpanel's Free plans include 10K a month. Heap sells replay only as an add-on on its Pro and Premier plans.
   </div>
 
   <div class="context-box">
