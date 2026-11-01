@@ -68,6 +68,12 @@ const restrictedSubjectWithAPricingHistory = [...vendorSlugMap.entries()]
     ["caution", "risky"].includes(publishedRisk(records[0], dealChanges.filter(c => c.vendor.toLowerCase() === vendor.toLowerCase()), TODAY).risk_level ?? ""),
   ) ?? null;
 if (restrictedSubjectWithAPricingHistory) restrictedSubjectWithAPricingHistory.records[0].eligibility = RESTRICTION_GIVEN_TO_A_RECORD_WITH_A_PRICING_HISTORY;
+for (const [vendor, outcome] of [["Stripe", "unreadable"], ["Turbopuffer", "states_a_free_price"]] as const) {
+  const subject = offers.find(offer => offer.vendor === vendor);
+  assert.ok(subject);
+  subject.source_check = { checked: "2026-01-01", outcome, detail: "Fixture source check" };
+  delete subject.restated_from;
+}
 const scratch = mkdtempSync(path.join(tmpdir(), "gated-vendor-answers-"));
 const scratchIndex = path.join(scratch, "index.json");
 writeFileSync(scratchIndex, JSON.stringify(catalogue));
@@ -324,9 +330,9 @@ describe("the page a gated record renders does not answer the free-tier question
 
   it("keeps the unverified-terms caveat where the source check also withholds the level", () => {
     const withheld = gated().filter(
-      p => p.gate!.code === "not_a_free_offer" && p.primary.source_check && p.primary.source_check.outcome !== "ok",
+      p => p.gate!.code === "not_a_free_offer" && p.primary.source_check && p.primary.source_check.outcome !== "ok" && p.primary.source_check.outcome !== "states_a_free_price",
     );
-    assert.ok(withheld.length > 0, "no gated record's source check withholds the level, so this branch has no subject");
+    assert.ok(withheld.some(p => p.vendor === "Stripe"));
     for (const p of withheld) {
       const answer = freeAnswer(p);
       assert.ok(answer.startsWith(p.gate!.reason), `/vendor/${p.slug} leads with our reading rather than the tier`);
@@ -338,6 +344,21 @@ describe("the page a gated record renders does not answer the free-tier question
         !answer.includes(`offers a free tier: ${p.primary.tier}`),
         `/vendor/${p.slug} still says the record holds a free tier`,
       );
+    }
+  });
+});
+
+describe("a gated record whose source confirms only a free price", () => {
+  it("keeps the price confirmation separate from the recorded limits", () => {
+    const subjects = gated().filter(p => p.gate!.code === "not_a_free_offer" && p.primary.source_check?.outcome === "states_a_free_price" && /\d/.test(p.primary.description));
+    assert.ok(subjects.some(p => p.vendor === "Turbopuffer"));
+    for (const p of subjects) {
+      const answer = freeAnswer(p);
+      assert.ok(answer.startsWith(p.gate!.reason));
+      assert.ok(answer.includes(`The page we cite for ${p.vendor} states in words that it is free, which confirms the price`));
+      if (p.vendor === "Turbopuffer") assert.ok(answer.includes("the limits stated here come from our own record rather than from that page"));
+      assert.ok(!answer.includes("treat them as unverified"));
+      assert.ok(!answer.includes(`offers a free tier: ${p.primary.tier}`));
     }
   });
 });
