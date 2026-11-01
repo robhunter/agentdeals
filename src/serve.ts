@@ -35088,8 +35088,8 @@ function buildDigitalOceanFreeTier2026Page(): string {
   const freeServices: DOService[] = [
     { name: "App Platform (Static Sites)", slug: "digitalocean", limits: "3 static site apps, 1 GiB outbound transfer/month each, automatic HTTPS", category: "Hosting", highlight: true },
     { name: "Functions (Serverless)", slug: "digitalocean", limits: "90,000 GiB-seconds/month", category: "Compute", highlight: true },
-    { name: "DNS Management", slug: "digitalocean", limits: "Up to ~50 domains, no active Droplet required, free for all accounts", category: "Networking" },
-    { name: "Monitoring & Alerting", slug: "digitalocean", limits: "Built-in metrics, uptime checks, and alerting for all resources — no extra charge", category: "Monitoring" },
+    { name: "DNS Management", slug: "digitalocean", limits: "Free for all accounts, no active Droplet required; how many domains an account can add depends on its resource limits", category: "Networking" },
+    { name: "Monitoring & Alerting", slug: "digitalocean", limits: "Built-in metrics and alerts at no extra charge. Uptime checks cost $1.00 a month each, and one check a month is free", category: "Monitoring" },
     { name: "VPC (Virtual Private Cloud)", slug: "digitalocean", limits: "Free private networking between resources in same datacenter", category: "Networking" },
     { name: "Cloud Firewalls", slug: "digitalocean", limits: "Free inbound traffic filtering rules for Droplets", category: "Security" },
     { name: "Container Registry", slug: "digitalocean", limits: "Starter plan: 1 repo, 500 MB storage (free with account)", category: "Containers" },
@@ -35107,8 +35107,8 @@ function buildDigitalOceanFreeTier2026Page(): string {
     { name: "Basic Droplet", price: "$6/mo", specs: "1 vCPU, 1 GB RAM, 25 GB SSD, 1 TB transfer", note: "" },
     { name: "Basic Droplet", price: "$12/mo", specs: "1 vCPU, 2 GB RAM, 50 GB SSD, 2 TB transfer", note: "" },
     { name: "Spaces Object Storage", price: "$5/mo", specs: "250 GB storage + 1 TB outbound transfer", note: "S3-compatible, CDN included" },
-    { name: "Managed Database (PostgreSQL)", price: "$15/mo", specs: "1 vCPU, 1 GB RAM, 10 GB storage", note: "Not free tier — starts at $15" },
-    { name: "Managed Kubernetes", price: "$12/mo", specs: "Free control plane + $4/mo per worker node (Basic)", note: "Per-second billing applies" },
+    { name: "Managed Database (PostgreSQL)", price: "$15.15/mo", specs: "1 vCPU, 1 GiB RAM, 10 GiB storage", note: "Not free tier — starts at $15.15" },
+    { name: "Managed Kubernetes", price: "$12/mo", specs: "Free control plane; worker nodes are Droplets from $12/mo each", note: "Per-second billing applies" },
     { name: "App Platform (Web Service)", price: "$5/mo", specs: "1 container, 512 MB RAM, auto-deploy from Git", note: "Static sites are free" },
   ];
 
@@ -35124,8 +35124,8 @@ function buildDigitalOceanFreeTier2026Page(): string {
     { title: "Per-second billing minimum", desc: "Per-second billing sounds great, but there's a 60-second minimum charge ($0.01). Creating and destroying Droplets rapidly still costs money — each creation incurs at least $0.01.", cost: "$0.01 minimum" },
     { title: "App Platform build minutes", desc: "Free static sites don't include build minutes for dynamic apps. Web service builds consume resources and the free tier only covers static content. Dynamic apps start at $5/mo.", cost: "$5/mo for dynamic" },
     { title: "Spaces CDN bandwidth", desc: "Spaces includes 1 TB outbound transfer, but CDN bandwidth beyond that is $0.01/GiB. If you're serving files through the CDN, monitor your transfer usage.", cost: "$0.01/GiB overage" },
-    { title: "Managed database is never free", desc: "Despite the free credits, managed databases (PostgreSQL, MySQL, Redis, MongoDB, Kafka) start at $15/month with no free tier. This is the #1 gotcha — AWS, GCP, and Azure all offer always-free database options.", cost: "$15/mo minimum" },
-    { title: "Backups cost extra", desc: "Droplet backups cost 20% of the Droplet price. A $4/mo Droplet's backup is $0.80/mo. Snapshots are $0.06/GiB/mo. Neither is included in the base price.", cost: "20% of Droplet price" },
+    { title: "Managed database is never free", desc: "Despite the free credits, no managed database has a free tier. The smallest plans cost $15.00 a month for Valkey (DigitalOcean's Redis-compatible engine; it does not sell managed Redis), $15.15 for PostgreSQL or MySQL, $15.23 for MongoDB, $19.60 for OpenSearch and $148.80 for Kafka. This is the #1 gotcha — AWS, GCP, and Azure all offer always-free database options.", cost: "$15/mo minimum" },
+    { title: "Backups cost extra", desc: "Weekly Droplet backups cost 20% of the Droplet price and daily backups 30%, so backups for a $4/mo Droplet cost $0.80 or $1.20 a month. Usage-based backup plans start at $0.01 per GiB a month. Snapshots are $0.06/GiB/mo. Neither is included in the base price.", cost: "20% weekly, 30% daily" },
     { title: "Payment method required to use the credit", desc: "The $5 credit is applied automatically, but you must add a valid payment method before you can create Droplets or other resources. If you forget to cancel or exceed limits during the trial, charges begin immediately.", cost: "Immediate billing" },
   ];
 
@@ -35365,12 +35365,12 @@ ${globalNavCss()}
 
     <div class="verdict-item">
       <strong>Full-stack web app</strong>
-      <p>$6/mo Droplet (1 GB RAM) + $15/mo Managed PostgreSQL + free DNS. Total: $21/mo. One-click app marketplace for WordPress, Ghost, Node.js, Django. Compare with: Railway (~$10/mo), Render ($7/mo + $7/mo DB).</p>
+      <p>$6/mo Droplet (1 GB RAM) + $15.15/mo Managed PostgreSQL + free DNS. Total: $21.15/mo. One-click app marketplace for WordPress, Ghost, Node.js, Django. Compare with: Railway (~$10/mo), Render ($7/mo + $6/mo for its smallest paid Postgres).</p>
     </div>
 
     <div class="verdict-item">
       <strong>Kubernetes cluster</strong>
-      <p>Free DOKS control plane + 3× $12/mo Droplet workers. Total: $36/mo. Managed Kubernetes with free control plane is unique — AWS EKS charges $72/mo for the control plane alone. See our <a href="/hosting-alternatives">hosting alternatives</a> for more options.</p>
+      <p>Free DOKS control plane + 3× $12/mo Droplet workers. Total: $36/mo. Azure's AKS Free tier also has no control-plane fee, while AWS EKS charges $0.10 an hour (about $73 a month) per cluster. See our <a href="/hosting-alternatives">hosting alternatives</a> for more options.</p>
     </div>
 
     <div class="verdict-item">
@@ -35390,7 +35390,7 @@ ${globalNavCss()}
     ${gotchaCards}
 
   <div class="context-box">
-    <strong>Pro tip:</strong> Enable billing alerts immediately. Go to Settings &rarr; Billing &rarr; Alerts &rarr; set a threshold at $5 or $10. DigitalOcean sends email alerts when you hit 50%, 80%, and 100% of your alert threshold. Also consider <strong>reserved Droplets</strong> for long-running workloads — they offer ~20% savings over on-demand pricing with 1-year commitments.
+    <strong>Pro tip:</strong> Set a spend alert immediately: on the Billing page's Spend alerts tab, set a monthly budget (say $5 or $10) and one or more percentage thresholds, and DigitalOcean emails you as spending crosses each. A spend alert is not a spending cap: usage continues past the budget. DigitalOcean sells no reserved Droplets. Its commitment savings plans are contracts, with the discount set in each contract.
   </div>
 
   <h2 id="alternatives">DigitalOcean vs Alternatives</h2>
