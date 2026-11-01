@@ -4385,6 +4385,12 @@
           "read_on": "2026-10-07"
         },
         {
+          "text": "Google's billing FAQ says switching from Prepay to Postpay is not supported. The same doc's refunds section says an account that meets Google's criteria can manually upgrade from Prepay to Postpay, which closes the Prepay account and refunds unused prepaid credits; eligible new projects can choose Postpay at setup. Google publishes no criteria.",
+          "quote": "When a Prepay account switches to the Postpay account type (after you meet the criteria and manually upgrade your account), the Prepay account is closed and any remaining prepaid credits are automatically refunded to the payment method on file.",
+          "url": "https://ai.google.dev/gemini-api/docs/billing",
+          "read_on": "2026-11-01"
+        },
+        {
           "text": "Impress Watch reported the cutover date as 2026-10-12.",
           "quote": "10月12日までに切り替えとクレジット購入を行なわなかった場合、サービスが中断される。",
           "url": "https://www.watch.impress.co.jp/docs/news/2132505.html",
