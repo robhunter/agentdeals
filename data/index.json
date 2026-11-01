@@ -1235,6 +1235,12 @@
           "read_on": "2026-10-04"
         },
         {
+          "text": "Neon doesn't pause Free projects for inactivity: an idle database starts again on the next query, with no restore step.",
+          "quote": "Neon doesn't pause Free projects for inactivity, and there's no restore step. When a database is idle, its compute scales to zero after 5 minutes and starts again on the next query, typically within a few hundred milliseconds.",
+          "url": "https://neon.com/pricing",
+          "read_on": "2026-11-01"
+        },
+        {
           "text": "Running out of CU-hours or network transfer suspends the compute until the next billing period or an upgrade.",
           "quote": "when you run out of CU-hours or public network transfer, your compute is suspended until the next billing period or until you upgrade.",
           "url": "https://neon.com/docs/introduction/plans",
@@ -5197,7 +5203,7 @@
     {
       "vendor": "SVB Startup Banking Offers",
       "category": "Startup Perks",
-      "description": "Offers for clients of First Citizens Innovation Banking (formerly Silicon Valley Bank): $5K of AWS Activate credits (with an Activate Provider Org ID, before Series B), $5K of MongoDB credits for 12 months, and 25% off Slack upgrades (up to $9K), among 79 offers from 58 vendors. There is no Google Cloud offer.",
+      "description": "Offers for clients of First Citizens Innovation Banking (formerly Silicon Valley Bank): $5K of AWS Activate credits (with an Activate Provider Org ID, before Series B), up to $15K of credits for MongoDB Atlas and Voyage AI, and 25% off Slack upgrades (up to $9K), among 80 offers from 57 vendors. There is no Google Cloud offer.",
       "tier": "Startup Credits",
       "url": "https://www.svb.com/startup-banking/",
       "tags": [
@@ -35619,10 +35625,10 @@
       },
       "conditions": [
         {
-          "text": "Until November 1, 2026, 00:00 Beijing time, server-side Search and Fetch calls via DeepSeek Harness, Claude Code, or Codex are free; after that, they are billed at $0.75 per 1,000 successful requests.",
-          "quote": "These calls are currently free of charge; per-request billing starts at 00:00 Beijing time on November 1, 2026.",
+          "text": "Since November 1, 2026, 00:00 Beijing time (16:00 UTC on October 31), server-side Search and Fetch calls via DeepSeek Harness, Claude Code, or Codex are billed at $0.75 per 1,000 successful requests; they were free until then.",
+          "quote": "per-request billing starts at 00:00 Beijing time on November 1, 2026.",
           "url": "https://api-docs.deepseek.com/quick_start/pricing/",
-          "read_on": "2026-10-17"
+          "read_on": "2026-11-01"
         },
         {
           "text": "DeepSeek's Search API and Fetch API are standalone APIs billed per request. Search finds web pages for a query; Fetch retrieves one web page as Markdown. Each costs $0.75 per 1,000 successful requests. Failed requests, empty search results, and timeouts are not billed.",
