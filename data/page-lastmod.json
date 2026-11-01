@@ -18,8 +18,7 @@
       "changed": "2026-10-31"
     },
     "/ai-coding-tools-pricing": {
-      "hash": "1e2c493330ee5a96",
-      "changed": "2026-10-31"
+      "daily": true
     },
     "/ai-free-tiers": {
       "hash": "3e23a4ef04722680",
@@ -30,7 +29,8 @@
       "changed": "2026-10-31"
     },
     "/alternative-to": {
-      "daily": true
+      "hash": "71c46cb785764b0c",
+      "changed": "2026-11-01"
     },
     "/alternative-to/360-monitoring": {
       "daily": true
@@ -1337,7 +1337,8 @@
       "daily": true
     },
     "/ci-cd-alternatives": {
-      "daily": true
+      "hash": "ae2386547374c7db",
+      "changed": "2026-11-01"
     },
     "/ci-cd-pricing": {
       "hash": "0afd46a8cac8bc43",
@@ -3073,8 +3074,7 @@
       "daily": true
     },
     "/digest/2026-w45": {
-      "hash": "21d5c4f386b24ecf",
-      "changed": "2026-10-23"
+      "daily": true
     },
     "/digest/2026-w47": {
       "hash": "63c4c4a5c2529a93",
@@ -3169,12 +3169,10 @@
       "changed": "2026-10-09"
     },
     "/events/google-cloud-next-2026": {
-      "hash": "0439e0a220796801",
-      "changed": "2026-10-30"
+      "daily": true
     },
     "/events/google-io-2026": {
-      "hash": "2d94795fc25050d6",
-      "changed": "2026-10-30"
+      "daily": true
     },
     "/events/microsoft-build-2026": {
       "hash": "0b4f95ebac23d153",
@@ -3184,8 +3182,7 @@
       "daily": true
     },
     "/feed.xml": {
-      "hash": "4249895263a94730",
-      "changed": "2026-10-31"
+      "daily": true
     },
     "/firebase-alternatives": {
       "hash": "39596f13c96facda",
@@ -3239,8 +3236,7 @@
       "changed": "2026-10-29"
     },
     "/free-tier-risk": {
-      "hash": "7ba73736fd5c295a",
-      "changed": "2026-10-31"
+      "daily": true
     },
     "/free-tier-tracker": {
       "daily": true
@@ -3253,8 +3249,7 @@
       "changed": "2026-10-29"
     },
     "/gcp-free-tier-2026": {
-      "hash": "933c94d68a8c8bc6",
-      "changed": "2026-10-31"
+      "daily": true
     },
     "/gemini-api-pricing-2026": {
       "hash": "e9bc4de5d35f0b4c",
@@ -3543,7 +3538,8 @@
       "changed": "2026-10-23"
     },
     "/reports/2026-10": {
-      "daily": true
+      "hash": "d346c87e6a139c9f",
+      "changed": "2026-11-01"
     },
     "/reports/2026-11": {
       "daily": true
@@ -3604,11 +3600,11 @@
       "daily": true
     },
     "/stability": {
-      "hash": "d2112b9f86884eb1",
-      "changed": "2026-10-31"
+      "daily": true
     },
     "/stack-check": {
-      "daily": true
+      "hash": "ee8cc1810da9f220",
+      "changed": "2026-11-01"
     },
     "/stacks": {
       "hash": "bab3659fe6df08c2",
@@ -3639,8 +3635,7 @@
       "changed": "2026-11-01"
     },
     "/state-of-free-tiers": {
-      "hash": "11e1816b4765014a",
-      "changed": "2026-10-31"
+      "daily": true
     },
     "/storage-alternatives": {
       "hash": "bb8306f4110504f3",
@@ -3715,7 +3710,8 @@
       "changed": "2026-10-09"
     },
     "/trends/ci-cd": {
-      "daily": true
+      "hash": "9c068b4536d07ab1",
+      "changed": "2026-11-01"
     },
     "/trends/cloud-hosting": {
       "hash": "2925c70345bc940e",
@@ -5982,8 +5978,7 @@
       "changed": "2026-10-31"
     },
     "/vendor/google-antigravity": {
-      "hash": "63d477e71f727f0d",
-      "changed": "2026-10-31"
+      "daily": true
     },
     "/vendor/google-artifact-registry": {
       "hash": "e06f462591adbcaa",
@@ -7384,7 +7379,8 @@
       "daily": true
     },
     "/vendor/nx-cloud": {
-      "daily": true
+      "hash": "8a43cbc83df4c774",
+      "changed": "2026-11-01"
     },
     "/vendor/oaysus": {
       "hash": "94c9eff2557097bd",
