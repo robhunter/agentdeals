@@ -43,7 +43,7 @@ const STATED = [
   "Monthly standalone Premium ($24.99) on @gmail.com accounts stopped auto-renewing. Workspace subscriptions kept renewing until Google stopped all renewals on September 18, 2026. No new standalone sign-ups are accepted.",
   "Cloud Run, BigQuery and Cloud Build keep their free tiers. Firebase's Spark plan lost Cloud Storage on February 3, 2026. The free Google Developer Program (non-Premium) continues.",
   "$120/year in credits for $199.99/year",
-  "Eligible college students aged 18+ in countries where the plan is offered, except Bolivia, Albania, Canada, Hong Kong, Macau, and Tunisia, get Google AI Pro free for a year (redeem by December 31, 2026; a payment method is required, and it then renews at $19.99/month). Otherwise, Oracle's Always Free tier and AWS's free plan cost nothing.",
+  "Eligible college students aged 18+ in countries where the plan is offered, except Hong Kong, Macau and Tunisia, get a Google AI plan free for 12 months (which plan depends on the school's country; redeem by December 31, 2026; student status is verified through SheerID, a payment method is required, and the plan then renews at its standard monthly price). Otherwise, Oracle's Always Free tier and AWS's free plan cost nothing.",
   "4. If You Held Premium",
   "(Cloud Run free tier, BigQuery 1 TiB of queries a month, Cloud Build 2,500 build-minutes a month)",
   "If staying with Google: subscribe to AI Pro or AI Ultra; standalone Premium no longer takes sign-ups.",

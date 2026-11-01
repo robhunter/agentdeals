@@ -1100,7 +1100,7 @@
       "partial_recheck": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 151,
+      "table_figures": 154,
       "table_figures_from_records": 107,
       "tables": [
         {
@@ -1115,7 +1115,7 @@
         },
         {
           "label": "DigitalOcean vs Alternatives",
-          "figures": 112,
+          "figures": 115,
           "from_records": 99
         },
         {
