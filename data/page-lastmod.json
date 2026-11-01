@@ -21,11 +21,11 @@
       "daily": true
     },
     "/ai-free-tiers": {
-      "hash": "095b13c179efcf8c",
+      "hash": "72d6d62a426b6eea",
       "changed": "2026-11-01"
     },
     "/ai-ml-alternatives": {
-      "hash": "af95389b7bbf56b7",
+      "hash": "dd44e559a9f2b53a",
       "changed": "2026-11-01"
     },
     "/alternative-to": {
@@ -1098,7 +1098,7 @@
       "changed": "2026-10-31"
     },
     "/category/ai-ml": {
-      "hash": "0fcebccce9596fe0",
+      "hash": "acb28e80336887b3",
       "changed": "2026-11-01"
     },
     "/category/analytics": {
@@ -3137,7 +3137,7 @@
       "changed": "2026-10-31"
     },
     "/digitalocean-free-tier-2026": {
-      "hash": "a21daa4b8f00425a",
+      "hash": "af4c5e1416192893",
       "changed": "2026-11-01"
     },
     "/disclosure": {
@@ -3216,7 +3216,7 @@
       "changed": "2026-10-31"
     },
     "/free-llm-apis": {
-      "hash": "1d4605e85ec5cf99",
+      "hash": "5f83e0f5afba2c96",
       "changed": "2026-11-01"
     },
     "/free-nextjs-stack": {
@@ -3252,7 +3252,7 @@
       "daily": true
     },
     "/gemini-api-pricing-2026": {
-      "hash": "9915380bbec95eb4",
+      "hash": "a3f631d90fbd0aa6",
       "changed": "2026-11-01"
     },
     "/github-actions-alternatives": {
@@ -3324,7 +3324,7 @@
       "changed": "2026-10-31"
     },
     "/llm-api-pricing": {
-      "hash": "268e1519036a308f",
+      "hash": "d5877931193a4311",
       "changed": "2026-11-01"
     },
     "/localstack-alternatives": {
@@ -3360,15 +3360,15 @@
       "changed": "2026-10-29"
     },
     "/openai-assistants-alternatives": {
-      "hash": "f0690ce9c02d6d31",
+      "hash": "5c1e2c0903ea8021",
       "changed": "2026-11-01"
     },
     "/openai-assistants-migration": {
-      "hash": "f8c9da0d9dc90b53",
-      "changed": "2026-10-31"
+      "hash": "cc451ea90026ba0d",
+      "changed": "2026-11-01"
     },
     "/openai-assistants-migration-2026": {
-      "hash": "857eb70272d887b7",
+      "hash": "532f95ee9fe891dc",
       "changed": "2026-11-01"
     },
     "/postman-alternatives": {
@@ -3403,8 +3403,8 @@
       "changed": "2026-10-31"
     },
     "/railway-vs-render": {
-      "hash": "2a623704c3ec7cbc",
-      "changed": "2026-10-31"
+      "hash": "0d0d1989718e287a",
+      "changed": "2026-11-01"
     },
     "/redis-alternatives": {
       "hash": "00f2a16065c6b1cf",
@@ -3603,7 +3603,7 @@
       "daily": true
     },
     "/stack-check": {
-      "hash": "a4bb299977683844",
+      "hash": "d25a6f9efdf55e6b",
       "changed": "2026-11-01"
     },
     "/stacks": {
@@ -9617,8 +9617,8 @@
       "changed": "2026-10-30"
     },
     "/vercel-vs-netlify": {
-      "hash": "57d276dea7597b59",
-      "changed": "2026-10-31"
+      "hash": "a2dcd5e86bc30824",
+      "changed": "2026-11-01"
     },
     "/whatsapp-business-api-pricing-2026": {
       "hash": "0b8f560eb4d70ef3",
