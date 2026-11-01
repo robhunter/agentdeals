@@ -1,31 +1,5 @@
 {
-  "proposals": [
-    {
-      "proposal_id": "2026-11-01/strale/new_free_tier",
-      "proposed_on": "2026-11-01",
-      "vendor": "Strale",
-      "change_type": "new_free_tier",
-      "date": "2026-11-01",
-      "date_source": "discovered",
-      "summary": "The free tier now includes 11 free tools with 300 calls per month per IP.",
-      "tier": "Pay-per-use",
-      "tier_direction": "widened",
-      "previous_state": "Business data APIs for AI agents: 298+ capabilities across 25 countries by Strale's count (read 2026-10-07), including IBAN validation, VAT lookup, sanctions screening and company data. Callable over MCP, A2A or REST with an API key, or per call over x402 in USDC on Base with no API key or signup.",
-      "current_state": "11 free tools: bitcoin-address-validate, dns-lookup, dogecoin-address-validate, email-validate, eth-address-validate, iban-validate, json-repair, solana-address-validate, tron-address-validate, url-to-markdown, xrp-address-validate. Use POST /v1/do without an API key for eligible free tools, with 300 calls per calendar month (UTC) per IP and an hourly anti-abuse guard.",
-      "impact": "medium",
-      "source_url": "https://api.strale.io/llms.txt",
-      "category": "Dev Utilities",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-11-01",
-      "restatement": [
-        {
-          "url": "https://api.strale.io/llms.txt",
-          "refused": "tier_is_not_one_we_record_as_free"
-        }
-      ]
-    }
-  ],
+  "proposals": [],
   "dropped": [
     {
       "proposal_id": "2026-10-12/taskade-com/new_tier",
@@ -1493,6 +1467,33 @@
       "restatement": [],
       "dropped_on": "2026-11-01",
       "drop_reason": "docs.x.ai/developers/pricing (read 2026-11-01): the reading's own table gives grok-4.7 $2.00/$6.00 and grok-build-0.1 $1.00/$2.00, the page still lists grok-4.6, grok-4.5, grok-4.3 and the grok-4.20 models the listing prices, and the only model marked Deprecated is grok-voice-2.0, which the listing already calls deprecated"
+    },
+    {
+      "proposal_id": "2026-11-01/strale/new_free_tier",
+      "proposed_on": "2026-11-01",
+      "vendor": "Strale",
+      "change_type": "new_free_tier",
+      "date": "2026-11-01",
+      "date_source": "discovered",
+      "summary": "The free tier now includes 11 free tools with 300 calls per month per IP.",
+      "tier": "Pay-per-use",
+      "tier_direction": "widened",
+      "previous_state": "Business data APIs for AI agents: 298+ capabilities across 25 countries by Strale's count (read 2026-10-07), including IBAN validation, VAT lookup, sanctions screening and company data. Callable over MCP, A2A or REST with an API key, or per call over x402 in USDC on Base with no API key or signup.",
+      "current_state": "11 free tools: bitcoin-address-validate, dns-lookup, dogecoin-address-validate, email-validate, eth-address-validate, iban-validate, json-repair, solana-address-validate, tron-address-validate, url-to-markdown, xrp-address-validate. Use POST /v1/do without an API key for eligible free tools, with 300 calls per calendar month (UTC) per IP and an hourly anti-abuse guard.",
+      "impact": "medium",
+      "source_url": "https://api.strale.io/llms.txt",
+      "category": "Dev Utilities",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-11-01",
+      "restatement": [
+        {
+          "url": "https://api.strale.io/llms.txt",
+          "refused": "tier_is_not_one_we_record_as_free"
+        }
+      ],
+      "dropped_on": "2026-11-01",
+      "drop_reason": "Not a new free tier on 2026-11-01: iban-validate was already free on 2026-10-10 (Internet Archive capture of api.strale.io/llms.txt); the llms.txt has listed every free tool since Strale's change of 2026-10-26 (github.com/strale-io/strale/pull/743), and Strale's change of 2026-10-28 (pull/789) replaced a per-IP daily limit with 300 calls a calendar month per IP."
     }
   ]
 }

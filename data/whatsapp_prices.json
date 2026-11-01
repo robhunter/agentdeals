@@ -1101,7 +1101,7 @@
   },
   "cost_example": {
     "heading": "What {replies} replies a month cost",
-    "intro": "The table counts {charged} charged messages after the {free} free ones, from one number, Meta's fee only. Twilio adds $0.005 per message sent or received, on top of Meta's fee, so a reply to a user's message costs $0.01 in Twilio fees: $0.005 for the user's message and $0.005 for the reply. For the table's 10,000 replies, answering 10,000 user messages, Twilio's fees add $100. Twilio also charges $0.001 per failed message.",
+    "intro": "The table counts {charged} charged messages after the {free} free ones, from one number, Meta's fee only. A business can use Meta's Cloud API directly, without a provider, and Meta bills it through Billing Hub. Twilio adds $0.005 per message sent or received, on top of Meta's fee, so a reply to a user's message costs $0.01 in Twilio fees: $0.005 for the user's message and $0.005 for the reply. For the table's 10,000 replies, answering 10,000 user messages, Twilio's fees add $100. Twilio also charges $0.001 per failed message.",
     "columns": [
       "Users in",
       "Service rate",
@@ -1237,7 +1237,7 @@
     "heading": "Why other pages say replies are free",
     "text": "Many third-party pages, and some copies of Meta's own page, still say service messages are free. That was Meta's rule from 2024-11-01 to 2026-09-30. The current rule applies from 2026-10-01.",
     "sources": {
-      "text": "Sources: developers.facebook.com/documentation/business-messaging/whatsapp/pricing (updated 2026-09-30, read 2026-10-10); Meta's rate cards linked from that page, effective 2026-10-01; Meta's AI Providers page (updated 2026-10-15, read 2026-10-23), its authentication-international page (updated 2026-05-21) and section 4.7 of Meta's terms for the WhatsApp Business Platform, read 2026-10-11; Meta's messaging-limits page (updated 2026-05-21) and Twilio's WhatsApp pricing page (current as of September 2026), read 2026-10-18; Meta's About the WhatsApp Business Platform page (updated 2026-08-04), read 2026-11-01.",
+      "text": "Sources: developers.facebook.com/documentation/business-messaging/whatsapp/pricing (updated 2026-09-30, read 2026-10-10); Meta's rate cards linked from that page, effective 2026-10-01; Meta's AI Providers page (updated 2026-10-15, read 2026-10-23), its authentication-international page (updated 2026-05-21) and section 4.7 of Meta's terms for the WhatsApp Business Platform, read 2026-10-11; Meta's messaging-limits page (updated 2026-05-21) and Twilio's WhatsApp pricing page (current as of September 2026), read 2026-10-18; Meta's About the WhatsApp Business Platform page (updated 2026-08-04) and its WhatsApp accounts and Messaging accounts page (updated 2026-08-05), read 2026-11-01.",
       "links": [
         {
           "text": "developers.facebook.com/documentation/business-messaging/whatsapp/pricing",
@@ -1270,6 +1270,10 @@
         {
           "text": "Meta's About the WhatsApp Business Platform page",
           "url": "https://developers.facebook.com/documentation/business-messaging/whatsapp/about-the-platform"
+        },
+        {
+          "text": "WhatsApp accounts and Messaging accounts page",
+          "url": "https://developers.facebook.com/documentation/business-messaging/whatsapp/whatsapp-business-accounts"
         }
       ]
     }
